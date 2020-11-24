@@ -2,15 +2,16 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.PlotPenInterface
 import scala.collection.immutable
 
 trait PlotInterface {
   def name: String
+  def pens: Seq[PlotPenInterface]
   def getPen(pen: String): Option[PlotPenInterface]
   def currentPen: Option[PlotPenInterface]
   def currentPenByName: String
   def currentPenByName_=(pen: String)
+  def legendIsOpen: Boolean
   def legendIsOpen_=(open: Boolean)
   var state: PlotState
   def plot(y: Double)

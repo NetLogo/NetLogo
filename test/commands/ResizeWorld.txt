@@ -8,6 +8,12 @@ ResizeWorld_2D
   O> resize-world -5 0 -8 0
   (list world-width world-height) => [6 9]
   (list min-pxcor max-pxcor min-pycor max-pycor) => [-5 0 -8 0]
+  O> resize-world -0.5 10.5 -0.5 10.5
+  (list world-width world-height) => [11 11]
+  (list min-pxcor max-pxcor min-pycor max-pycor) => [0 10 0 10]
+  O> resize-world 0.5 10.5 0.5 10.5
+  (list world-width world-height) => [11 11]
+  (list min-pxcor max-pxcor min-pycor max-pycor) => [0 10 0 10]
 
 ResizeWorldBad_2D
   O> resize-world 1 0 0 0 => ERROR You must include the point (0, 0) in the world.

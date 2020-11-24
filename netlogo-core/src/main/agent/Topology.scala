@@ -231,14 +231,18 @@ abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boole
 
       } else if (low_within) { // wider on low side
         if (yWraps) {
-          Array((0, y + r - world.worldHeight + 1), (y - r, world.worldHeight))
+          val max1 = y + r - world.worldHeight + 1
+          val min2 = if ((y - r) <= max1) { max1 } else { y - r }
+          Array((0, max1), (min2, world.worldHeight))
         } else {
           Array((y - r, world.worldHeight))
         }
 
       } else { // wider on high side
         if (yWraps) {
-          Array((0, y + r + 1), (world.worldHeight + y - r, world.worldHeight))
+          val max1 = y + r + 1
+          val min2 = if ((world.worldHeight + y - r) <= max1) { max1 } else { world.worldHeight + y - r }
+          Array((0, max1), (min2, world.worldHeight))
         } else {
           Array((0, y + r + 1))
         }

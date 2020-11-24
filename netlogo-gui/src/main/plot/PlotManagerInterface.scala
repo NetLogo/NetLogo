@@ -2,9 +2,10 @@
 
 package org.nlogo.plot
 
+import org.nlogo.api
 import org.nlogo.core.CompilerException
 
-trait PlotManagerInterface {
+trait PlotManagerInterface extends api.PlotManagerInterface {
   def nextName:String
   def addPlot(plot: Plot) : Unit
   def newPlot(name:String): Plot
@@ -29,4 +30,13 @@ class DummyPlotManager extends PlotManagerInterface{
   def getPlotUpdateError(plot:Plot): Option[CompilerException] = None
   def getPenSetupError(pen:PlotPen): Option[CompilerException] = None
   def getPenUpdateError(pen:PlotPen): Option[CompilerException] = None
+
+  // Added for api compatibility -Jeremy B Octover 2020
+  def currentPlot: Option[org.nlogo.api.PlotInterface] = ???
+  def getPlotNames: Seq[String] = ???
+  def hasPlot(name: String): Boolean = ???
+  def maybeGetPlot(name: String): Option[org.nlogo.api.PlotInterface] = ???
+  def publish(action: org.nlogo.api.PlotAction): Unit = ???
+  def setCurrentPlot(name: String): Unit = ???
+
 }

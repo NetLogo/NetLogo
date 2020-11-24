@@ -21,10 +21,10 @@ object NativeLibs {
 
   lazy val nativeLibsTask =
     nativeLibs := {
-        val baseURL = "http://ccl-artifacts.s3.amazonaws.com/"
+        val baseURL = "https://s3.amazonaws.com/ccl-artifacts/"
         val joglNatives = baseDirectory.value / "natives"
-        val joglTmp = baseDirectory.value / "jogl-2.3.2.zip"
-        val joglUrl = new URL(baseURL + "jogl-2.3.2.zip")
+        val joglTmp = baseDirectory.value / "jogl-2.4.0-natives-rc-20200307.zip"
+        val joglUrl = new URL(baseURL + "jogl-2.4.0-natives-rc-20200307.zip")
         IO.createDirectory(joglNatives)
         FileActions.download(joglUrl, joglTmp)
         IO.unzip(joglTmp, joglNatives)

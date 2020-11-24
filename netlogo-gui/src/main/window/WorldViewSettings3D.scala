@@ -308,4 +308,11 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
       tickCounterLabel = label,
       frameRate = frameRate)
   }
+
+  override def fontSize(newSize: Int): Unit = {
+    // AAB 03/26/2020 - fix issue #1811
+    // Font value not being set from .nlogo3d file
+    gWidget.view.applyNewFontSize(newSize, 0)
+    super.fontSize(newSize)
+  }
 }

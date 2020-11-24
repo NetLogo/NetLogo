@@ -91,35 +91,35 @@ class WorldTests extends FunSuite with AbstractTestWorld {
     assertResult(100)(world.turtles.count)
   }
   test("saves breeds between recompiles") {
-    val breedProgram = Program.empty.copy(breeds = ListMap("FOOS" -> Breed("FOOS", "FOO")))
+    val breedProgram = Program.empty.copy(breeds = ListMap("FOOS" -> Breed("FOOS", "FOO", "foos", "foo")))
     val world = makeWorld(worldRectangle, breedProgram)
     for (i <- 1 to 100) { makeBreededTurtle(world, "FOOS") }
     changeProgram(world,
-      breedProgram.copy(breeds = breedProgram.breeds + ("BARS" -> Breed("BARS", "BAR"))))
+      breedProgram.copy(breeds = breedProgram.breeds + ("BARS" -> Breed("BARS", "BAR", "bars", "bar"))))
     assertResult(100)(world.turtles.count)
     assertResult(100)(world.getBreed("FOOS").count)
     assertResult(0)(world.getBreed("BARS").count)
   }
   test("saves link breeds between recompiles") {
-    val lbProgram = Program.empty.copy(linkBreeds = ListMap("FOOS" -> Breed("FOOS", "FOO", isLinkBreed = true)))
+    val lbProgram = Program.empty.copy(linkBreeds = ListMap("FOOS" -> Breed("FOOS", "FOO", "foos", "foo", isLinkBreed = true)))
     val world = makeWorld(worldRectangle, lbProgram)
     for (i <- 1 to 100) { makeTurtle(world, Array(0, 0)) }
     for (i <- 1 to 99) { makeBreededLink(world, "FOOS", i - 1, i) }
     changeProgram(world,
-      lbProgram.copy(linkBreeds = lbProgram.linkBreeds + ("BARS" -> Breed("BARS", "BAR", isLinkBreed = true))))
+      lbProgram.copy(linkBreeds = lbProgram.linkBreeds + ("BARS" -> Breed("BARS", "BAR", "bars", "bar", isLinkBreed = true))))
     assertResult(99)(world.links.count)
     assertResult(99)(world.getLinkBreed("FOOS").count)
     assertResult(0)(world.getLinkBreed("BARS").count)
   }
   test("breedsOwnIndexOf returns the index for the breed variable") {
-    val program = Program.empty.copy(breeds = ListMap("FOOS" -> Breed("FOOS", "FOO", owns = Seq("A", "B"))))
+    val program = Program.empty.copy(breeds = ListMap("FOOS" -> Breed("FOOS", "FOO", "foos", "foo", owns = Seq("A", "B"))))
     val world = makeWorld(worldRectangle, program)
     assertResult(13)(world.breedsOwnIndexOf(world.getBreed("FOOS"), "A"))
     assertResult(14)(world.breedsOwnIndexOf(world.getBreed("FOOS"), "B"))
     assertResult(-1)(world.breedsOwnIndexOf(world.getBreed("FOOS"), "C"))
   }
   test("linkBreedsOwnIndexOf returns the index for link breed variable") {
-    val program = Program.empty.copy(linkBreeds = ListMap("FOOS" -> Breed("FOOS", "FOO", owns = Seq("A", "B"), isLinkBreed = true)))
+    val program = Program.empty.copy(linkBreeds = ListMap("FOOS" -> Breed("FOOS", "FOO", "foos", "foo", owns = Seq("A", "B"), isLinkBreed = true)))
     val world = makeWorld(worldRectangle, program)
     assertResult(10)(world.linkBreedsOwnIndexOf(world.getLinkBreed("FOOS"), "A"))
     assertResult(11)(world.linkBreedsOwnIndexOf(world.getLinkBreed("FOOS"), "B"))
@@ -132,7 +132,7 @@ class WorldTests extends FunSuite with AbstractTestWorld {
   }
 
   test("worlds can be copied") {
-    val program = Program.empty.copy(linkBreeds = ListMap("FOOS" -> Breed("FOOS", "FOO", owns = Seq("A", "B"), isLinkBreed = true)))
+    val program = Program.empty.copy(linkBreeds = ListMap("FOOS" -> Breed("FOOS", "FOO", "foos", "foo", owns = Seq("A", "B"), isLinkBreed = true)))
     val world = makeWorld(worldRectangle, program)
     val t1 = world.createTurtle(world.turtles)
     t1.xandycor(1, 2)

@@ -83,7 +83,6 @@ org.nlogo.prim.etc._setDefaultShape.notADefinedTurtleShape ="{0}" não é uma fo
 org.nlogo.prim._greaterthan.cannotCompareParameters = O operador > só pode ser usado com dois números, duas strings, ou dois agentes do mesmo tipo, mas não em {0} e {1}.
 org.nlogo.prim._max.cantFindMaxOfListWithNoNumbers = Não é possível encontrar o máximo de uma lista que não contém números: {0}
 org.nlogo.prim._min.cantFindMinOfListWithNoNumbers = Não é possível encontrar o mínimo de uma lista que não contém números: {0}
-org.nlogo.prim._mean.cantFindMeanOfNonNumbers = Não é possível encontrar a média (mean) de uma lista que não contém números: {0} é um {1}.
 
 org.nlogo.prim.etc.$common.emptyList = A lista está vazia.
 org.nlogo.prim.etc.$common.emptyString = A string está vazia.

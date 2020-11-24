@@ -482,3 +482,128 @@ InRadiusLargeRadius5_3D
   [ count patches in-radius 14 ] of patch 0 min-pycor 0 => 1728
   [ count turtles in-radius 1 ] of patch -11 -11 -11 => 0
   [ count turtles in-radius 1 ] of patch max-pxcor max-pycor 0 => 10
+
+InRadius_Unwrapped_OppositeCorners1_2D
+  O> resize-world -50 50 -50 50
+  O> __change-topology false false
+  O> create-turtles 1 [ setxy -48 -48 ]
+  O> create-turtles 1 [ setxy 48 48 ]
+  [ distance turtle 1 ] of turtle 0 => 135.7645019878171
+  O> ask turtles [ create-links-with other turtles in-radius 100.5 ]
+  count links => 0
+  [ count other turtles in-radius 1 ] of turtle 0 => 0
+  [ count other turtles in-radius 2 ] of turtle 0 => 0
+  [ count other turtles in-radius 30 ] of turtle 0 => 0
+  [ count other turtles in-radius 95 ] of turtle 0 => 0
+  [ count other turtles in-radius 96 ] of turtle 0 => 0
+
+InRadius_Unwrapped_OppositeCorners2_2D
+  O> resize-world -50 50 -50 50
+  O> __change-topology false false
+  O> create-turtles 1 [ setxy 48 -48 ]
+  O> create-turtles 1 [ setxy -48 48 ]
+  [ distance turtle 1 ] of turtle 0 => 135.7645019878171
+  O> ask turtles [ create-links-with other turtles in-radius 100.5 ]
+  count links => 0
+  [ count other turtles in-radius 1 ] of turtle 0 => 0
+  [ count other turtles in-radius 2 ] of turtle 0 => 0
+  [ count other turtles in-radius 30 ] of turtle 0 => 0
+  [ count other turtles in-radius 95 ] of turtle 0 => 0
+  [ count other turtles in-radius 96 ] of turtle 0 => 0
+
+InRadius_With_Changing_World_2D
+  O> resize-world -16 16 -16 16
+  O> __change-topology true true
+  O> create-turtles 2 [ fd 15 ]
+  O> ask one-of turtles [ ask turtles in-radius 100 [ set color blue ] ]
+  O> resize-world -50 50 -50 50
+  O> __change-topology false false
+  O> create-turtles 2 [ fd 15 ]
+  O> ask one-of turtles [ ask turtles in-radius 100 [ set color green ] ]
+  count turtles with [ color = green ] => 2
+
+InRadius_Wrapping_Checks_Wide_2D
+  O> resize-world -6 6 -4 4
+  O> __change-topology true true
+  count [ patches in-radius 5 ] of (patch -3 2) => 79
+  count [ patches in-radius 5 ] of (patch 3 2) => 79
+  count [ patches in-radius 5 ] of (patch 3 -2) => 79
+  count [ patches in-radius 5 ] of (patch -3 -2) => 79
+  O> __change-topology true false
+  count [ patches in-radius 5 ] of (patch -3 2) => 64
+  count [ patches in-radius 5 ] of (patch 3 2) => 64
+  count [ patches in-radius 5 ] of (patch 3 -2) => 64
+  count [ patches in-radius 5 ] of (patch -3 -2) => 64
+  O> __change-topology false true
+  count [ patches in-radius 5 ] of (patch -3 2) => 71
+  count [ patches in-radius 5 ] of (patch 3 2) => 71
+  count [ patches in-radius 5 ] of (patch 3 -2) => 71
+  count [ patches in-radius 5 ] of (patch -3 -2) => 71
+  O> __change-topology false false
+  count [ patches in-radius 5 ] of (patch -3 2) => 57
+  count [ patches in-radius 5 ] of (patch 3 2) => 57
+  count [ patches in-radius 5 ] of (patch 3 -2) => 57
+  count [ patches in-radius 5 ] of (patch -3 -2) => 57
+
+InRadius_Wrapping_Checks_Tall_2D
+  O> resize-world -4 4 -6 6
+  O> __change-topology true true
+  count [ patches in-radius 5 ] of (patch -2 3) => 79
+  count [ patches in-radius 5 ] of (patch 2 3) => 79
+  count [ patches in-radius 5 ] of (patch 2 -3) => 79
+  count [ patches in-radius 5 ] of (patch -2 -3) => 79
+  O> __change-topology true false
+  count [ patches in-radius 5 ] of (patch -2 3) => 71
+  count [ patches in-radius 5 ] of (patch 2 3) => 71
+  count [ patches in-radius 5 ] of (patch 2 -3) => 71
+  count [ patches in-radius 5 ] of (patch -2 -3) => 71
+  O> __change-topology false true
+  count [ patches in-radius 5 ] of (patch -2 3) => 64
+  count [ patches in-radius 5 ] of (patch 2 3) => 64
+  count [ patches in-radius 5 ] of (patch 2 -3) => 64
+  count [ patches in-radius 5 ] of (patch -2 -3) => 64
+  O> __change-topology false false
+  count [ patches in-radius 5 ] of (patch -2 3) => 57
+  count [ patches in-radius 5 ] of (patch 2 3) => 57
+  count [ patches in-radius 5 ] of (patch 2 -3) => 57
+  count [ patches in-radius 5 ] of (patch -2 -3) => 57
+
+InRadius_Zero
+  O> create-turtles 1
+  count [ patches in-radius 0 ] of (turtle 0) => 1
+  O> ask turtle 0 [ fd 0.1 ]
+  count [ patches in-radius 0 ] of (turtle 0) => 0
+  O> ask turtle 0 [ hatch 1 ]
+  count [ turtles in-radius 0 ] of (turtle 0) => 2
+
+# These were for working specific issues discovered from Tortoise, but they can't hurt to leave here.
+# Jeremy B August 2020
+
+InRadius1_Tortoise_2D
+  O> random-seed 123456
+  O> create-turtles 10
+  O> __change-topology true true
+  [ [(list pxcor pycor)] of patches in-radius 1 ] of patch max-pxcor max-pycor => [[-5 5] [5 5] [5 4] [4 5] [5 -5]]
+
+InRadius2_Tortoise_2D
+  O> resize-world -4 3 -2 6
+  O> __change-topology true false
+  O> random-seed 0
+  O> crt 50 [ setxy random-xcor random-ycor ]
+  to-report in-radius-nl [ targets radius ] /
+    report targets with [ distance myself < radius ] /
+  end
+  [(in-radius-nl turtles 2.822502957111528) = (turtles in-radius 2.822502957111528)] of patch -4 6 => true
+
+# These tests are from failures in the InSanityRadius tests, placed here for easier debugging.
+# -Jeremy B September 2020
+
+InRadius1_Sanity_3D
+  O> random-seed -1388674027
+  O> resize-world -10 10 -2 2 -10 10
+  O> create-turtles 100 [ /
+    set xcor random-xcor /
+    set ycor random-ycor /
+    set zcor random-zcor /
+  ]
+  word sort [other turtles in-radius 2] of turtle 37 => "[(turtle 54) (turtle 83) (turtle 93) (turtle 95)]"

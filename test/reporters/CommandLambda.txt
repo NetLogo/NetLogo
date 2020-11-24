@@ -310,10 +310,17 @@ LoopBindings3
   O> foreach lambdas [  l -> run l ]
   glob1 => 5
 
-LoopBindings4
+LoopBindings4_2D
   globals [glob1 lambdas]
   O> set lambdas []
   O> repeat 5 [ let bar 0 ask patch 0 0 [ set lambdas lput [ -> set bar bar + 1 set glob1 bar ] lambdas ] ]
+  O> foreach lambdas [ l -> run l ]
+  glob1 => 1
+
+LoopBindings4_3D
+  globals [glob1 lambdas]
+  O> set lambdas []
+  O> repeat 5 [ let bar 0 ask patch 0 0 0 [ set lambdas lput [ -> set bar bar + 1 set glob1 bar ] lambdas ] ]
   O> foreach lambdas [ l -> run l ]
   glob1 => 1
 

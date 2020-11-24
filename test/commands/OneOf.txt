@@ -22,3 +22,7 @@ OneOfChangeSameBreed
   O> ask turtle 0 [set breed mice]
   O> ask turtle 0 [set breed frogs]
   [who] of one-of frogs => 0
+
+OneOfEmpties
+  one-of patches with [pcolor = blue] => nobody
+  one-of (sort patches with [pcolor = blue]) => ERROR ONE-OF got an empty list as input.

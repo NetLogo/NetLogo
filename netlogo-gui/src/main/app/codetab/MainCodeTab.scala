@@ -18,7 +18,7 @@ class MainCodeTab(workspace: GUIWorkspace, tabs: TabsInterface, editorMenu: Edit
 extends CodeTab(workspace, tabs)
 with WindowEvents.LoadModelEvent.Handler
 {
-
+  val mainCodeTab = this
   var tabbing: JCheckBox = null
   val smartTabAction: Action = new SmartTabAction
 
@@ -27,6 +27,16 @@ with WindowEvents.LoadModelEvent.Handler
       setIndenter(tabbing.isSelected)
       new AppEvents.IndenterChangedEvent(tabbing.isSelected)
         .raise(MainCodeTab.this)
+    }
+  }
+
+  var poppingCheckBox: JCheckBox = null
+  val codeTabPopOutAction: Action = new CodeTabPopOutAction
+
+  def getPoppingCheckBox = { poppingCheckBox }
+  private class CodeTabPopOutAction extends AbstractAction("Code Tab in separate window") {
+    def actionPerformed(e: ActionEvent) {
+      tabs.switchToSpecifiedCodeWindowState(poppingCheckBox.isSelected)
     }
   }
 
@@ -41,12 +51,23 @@ with WindowEvents.LoadModelEvent.Handler
     tabbing.setSelected(true)
     // hack, to get it to realize it's really checked. ~Forrest (10/23/2007)
     smartTabAction.actionPerformed(null)
-    Seq(tabbing)
+    // The state of the check box is set in Tabs.handle(e: AfterLoadEvent). AAB 10/2020
+    poppingCheckBox = new JCheckBox(codeTabPopOutAction)
+    Seq(tabbing, poppingCheckBox)
   }
 
   override def dirty_=(b: Boolean) = {
     super.dirty_=(b)
-    if (b) new WindowEvents.DirtyEvent(None).raise(this)
+    if (b) {
+      // TODO: uncomment the following line when ready.
+      // tabs.asInstanceOf[AbstractTabsPanel].getTabManager.setDirtyMonitorCodeWindow
+      // What it does is cause the '*' dirty marker to appear in the separate code window,
+      // when that window exists. It does that correctly.
+      // The problem is that the code to properly clear the '*' does not exist.
+      // There is a TODO in /netlogo-gui/src/main/app/FileManager.scala
+      // at a location where the needed code might be added
+      new WindowEvents.DirtyEvent(None).raise(this)
+    }
   }
 
   def handle(e: WindowEvents.LoadModelEvent) {

@@ -83,7 +83,6 @@ org.nlogo.prim.etc._setDefaultShape.notADefinedTurtleShape =海龟形状 "{0}" �
 org.nlogo.prim._greaterthan.cannotCompareParameters = > 只能用于两个数字、字符串或同类主体，不能用于 {0} 和 {1}.
 org.nlogo.prim._max.cantFindMaxOfListWithNoNumbers = 不包含数值的列表无法找到最大值: {0}
 org.nlogo.prim._min.cantFindMinOfListWithNoNumbers = 不包含数值的列表无法找到最小值: {0}
-org.nlogo.prim._mean.cantFindMeanOfNonNumbers= 不包含数值的列表无法计算平均值: {0} is a {1}.
 org.nlogo.prim.etc._mean.cantFindMeanOfListWithNoNumbers = 不包含数值的列表无法找到最平均值: {0}.
 
 org.nlogo.prim.etc.$common.emptyList = 空列表.

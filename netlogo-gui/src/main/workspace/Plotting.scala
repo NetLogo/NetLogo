@@ -10,14 +10,16 @@ trait Plotting { this: AbstractWorkspace =>
 
   val plotRNG = new MersenneTwisterFast()
 
-  val plotManager = new PlotManager(this, plotRNG)
+  val realPlotManager = new PlotManager(this, plotRNG)
+  val plotManager     = realPlotManager
 
   // methods used when importing plots
   def currentPlot(plot: String) {
-    plotManager.currentPlot = Some(plotManager.getPlot(plot))
+    plotManager.currentPlot = plotManager.maybeGetPlot(plot)
   }
 
-  def getPlot(plot: String): PlotInterface = plotManager.getPlot(plot)
+  def getPlot(plot: String): PlotInterface =
+    plotManager.maybeGetPlot(plot).getOrElse(throw new Exception(s"plot not found: $plot"))
 
   // The PlotManager has already-compiled thunks that it runs to setup and update
   // plots.  But those thunks need a Context to run in, which isn't known until

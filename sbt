@@ -9,8 +9,8 @@ if [[ `uname -s` == *CYGWIN* ]] ; then
   JH=`cygpath -up "\Java\jdk1.8.0_31"`
 else
   CURR_DIR=`dirname $0`
-  if [ `uname -s` = Linux ] ; then
-    HIGHEST_PRIORITY_JAVA_8=`update-alternatives --display javac | grep priority | grep -E 'java-8|1\.8' | sort -g -k 4 | tail -1 | cut -d\  -f1`
+  if [[ `uname -s` = Linux && -z $JENKINS_URL ]] ; then
+    HIGHEST_PRIORITY_JAVA_8=`update-alternatives --display javac | grep priority | grep -E 'java8|java-8|java1\.8' | sort -g -k 4 | tail -1 | cut -d\  -f1`
     if [ -e "$HIGHEST_PRIORITY_JAVA_8" ] ; then
       export JAVA_HOME="${HIGHEST_PRIORITY_JAVA_8%/bin/javac}"
     elif ! $JAVA_HOME/bin/java -version 2>&1 | head -n 1 | grep "1\.8" >> /dev/null ; then
@@ -19,9 +19,7 @@ else
     fi
   else
     if [ `uname -s` = Darwin ] ; then
-      export JAVA_HOME=`/usr/libexec/java_home -F -v1.8*`
-    else
-      export JAVA_HOME=/usr
+      export JAVA_HOME=`/usr/libexec/java_home -F -v1.8`
     fi
   fi
   JH=$JAVA_HOME
@@ -47,8 +45,8 @@ BOOT=xsbt.boot.Boot
 GOGO_JAVA=-Dnetlogo.extensions.gogo.javaexecutable=$JAVA
 
 
-SBT_LAUNCH=$HOME/.sbt/sbt-launch-1.1.1.jar
-URL='http://central.maven.org/maven2/org/scala-sbt/sbt-launch/1.1.1/sbt-launch-1.1.1.jar'
+SBT_LAUNCH=$HOME/.sbt/sbt-launch-1.3.10.jar
+URL='https://repo.maven.apache.org/maven2/org/scala-sbt/sbt-launch/1.3.10/sbt-launch-1.3.10.jar'
 
 if [ ! -f $BUILD_NUMBER ] ; then
   JAVA_OPTS="-Dsbt.log.noformat=true"
@@ -74,6 +72,14 @@ if [[ `uname -s` == *CYGWIN* ]] ; then
     TERMINAL=-Djline.terminal=jline.UnixTerminal
   fi
 
+fi
+
+if [ ! -z $JENKINS_URL ] ; then
+  echo $JAVA_HOME
+  which java
+  java -version
+  which javac
+  javac -version
 fi
 
 # UseQuartz=false so that we get pixel for pixel identical drawings between OS's, so TestChecksums works - ST 6/9/10

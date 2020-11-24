@@ -89,56 +89,59 @@ class OptimizerTests extends AbstractOptimizerTest {
     assertResult("_patchsw[]")(compileReporter("patch-at -1 -1"))
   } }
 
-  test("PatchColumn1") { new OptTest {
-    withReporterOptimization("PatchVariableDouble")
-    withReporterOptimization("With")
-    assertResult("_patchcol[_constdouble:5.0[]]")(
-      compileReporter("patches with [pxcor = 5]"))
-  } }
-  test("PatchColumn2") { new OptTest {
-    withReporterOptimization("PatchVariableDouble")
-    withReporterOptimization("With")
-    assertResult("_patchcol[_constdouble:5.0[]]")(
-      compileReporter("patches with [5 = pxcor]"))
-  } }
-  test("PatchColumn3") { new OptTest {
-    withReporterOptimization("PatchVariableDouble")
-    withReporterOptimization("With")
-    assertResult("_patchcol[_observervariable:0[]]")(
-      compileReporter("patches with [pxcor = glob1]"))
-  } }
-  test("PatchColumn4") { new OptTest {
-    withReporterOptimization("PatchVariableDouble")
-    withReporterOptimization("With")
-    assertResult("_patchcol[_procedurevariable:X[]]")(
-      compileReporter("patches with [pxcor = x]"))
-  } }
+// The PatchColumnN and PatchRowN tests are for 2D optimizations, not 3D
+// AAB Feb-21-2020
+  if(!org.nlogo.api.Version.is3D) {
+    test("PatchColumn1") { new OptTest {
+      withReporterOptimization("PatchVariableDouble")
+      withReporterOptimization("With")
+      assertResult("_patchcol[_constdouble:5.0[]]")(
+        compileReporter("patches with [pxcor = 5]"))
+    } }
+    test("PatchColumn2") { new OptTest {
+      withReporterOptimization("PatchVariableDouble")
+      withReporterOptimization("With")
+      assertResult("_patchcol[_constdouble:5.0[]]")(
+        compileReporter("patches with [5 = pxcor]"))
+    } }
+    test("PatchColumn3") { new OptTest {
+      withReporterOptimization("PatchVariableDouble")
+      withReporterOptimization("With")
+      assertResult("_patchcol[_observervariable:0[]]")(
+        compileReporter("patches with [pxcor = glob1]"))
+    } }
+    test("PatchColumn4") { new OptTest {
+      withReporterOptimization("PatchVariableDouble")
+      withReporterOptimization("With")
+      assertResult("_patchcol[_procedurevariable:X[]]")(
+        compileReporter("patches with [pxcor = x]"))
+    } }
 
-  test("PatchRow1") { new OptTest {
-    withReporterOptimization("PatchVariableDouble")
-    withReporterOptimization("With")
-    assertResult("_patchrow[_constdouble:6.0[]]")(
-      compileReporter("patches with [pycor = 6]"))
-  } }
-  test("PatchRow2") { new OptTest {
-    withReporterOptimization("PatchVariableDouble")
-    withReporterOptimization("With")
-    assertResult("_patchrow[_constdouble:6.0[]]")(
-      compileReporter("patches with [6 = pycor]"))
-  } }
-  test("PatchRow3") { new OptTest {
-    withReporterOptimization("PatchVariableDouble")
-    withReporterOptimization("With")
-    assertResult("_patchrow[_observervariable:0[]]")(
-      compileReporter("patches with [pycor = glob1]"))
-  } }
-  test("PatchRow4") { new OptTest {
-    withReporterOptimization("PatchVariableDouble")
-    withReporterOptimization("With")
-    assertResult("_patchrow[_procedurevariable:X[]]")(
-      compileReporter("patches with [pycor = x]"))
-  } }
-
+    test("PatchRow1") { new OptTest {
+      withReporterOptimization("PatchVariableDouble")
+      withReporterOptimization("With")
+      assertResult("_patchrow[_constdouble:6.0[]]")(
+        compileReporter("patches with [pycor = 6]"))
+    } }
+    test("PatchRow2") { new OptTest {
+      withReporterOptimization("PatchVariableDouble")
+      withReporterOptimization("With")
+      assertResult("_patchrow[_constdouble:6.0[]]")(
+        compileReporter("patches with [6 = pycor]"))
+    } }
+    test("PatchRow3") { new OptTest {
+      withReporterOptimization("PatchVariableDouble")
+      withReporterOptimization("With")
+      assertResult("_patchrow[_observervariable:0[]]")(
+        compileReporter("patches with [pycor = glob1]"))
+    } }
+    test("PatchRow4") { new OptTest {
+      withReporterOptimization("PatchVariableDouble")
+      withReporterOptimization("With")
+      assertResult("_patchrow[_procedurevariable:X[]]")(
+        compileReporter("patches with [pycor = x]"))
+    } }
+  }
   test("HatchFast1") { new OptTest {
     withCommandOptimization("HatchFast")
     assertResult("_hatchfast:[_constdouble:5.0[]]")(
@@ -302,5 +305,45 @@ class OptimizerTests extends AbstractOptimizerTest {
     withReporterOptimization("CountOtherWith")
     assertResult("_countotherwith[_turtles[], [_constboolean:true[]]]")(
       compileReporter("count other turtles with [true]"))
+  } }
+  test("hasEqual1") { new OptTest {
+    withReporterOptimization("HasEqual")
+    assertResult("_optimizecount[_patches[], _constdouble:10.0[]]")(
+      compileReporter("count patches = 10"))
+  } }
+  test("hasEqual2") { new OptTest {
+    withReporterOptimization("HasEqual")
+    assertResult("_optimizecount[_patches[], _constdouble:10.0[]]")(
+      compileReporter("10 = count patches"))
+  } }
+  test("hasGreaterThan1") { new OptTest {
+    withReporterOptimization("HasGreaterThan")
+    assertResult("_optimizecount[_patches[], _constdouble:10.0[]]")(
+      compileReporter("count patches > 10"))
+  } }
+  test("hasGreaterThan2") { new OptTest {
+    withReporterOptimization("HasGreaterThan")
+    assertResult("_optimizecount[_patches[], _constdouble:10.0[]]")(
+      compileReporter("10 > count patches"))
+  } }
+  test("hasLessThan1") { new OptTest {
+    withReporterOptimization("HasLessThan")
+    assertResult("_optimizecount[_patches[], _constdouble:10.0[]]")(
+      compileReporter("count patches < 10"))
+  } }
+  test("hasLessThan2") { new OptTest {
+    withReporterOptimization("HasLessThan")
+    assertResult("_optimizecount[_patches[], _constdouble:10.0[]]")(
+      compileReporter("10 < count patches"))
+  } }
+  test("hasNotEqual1") { new OptTest {
+    withReporterOptimization("HasNotEqual")
+    assertResult("_optimizecount[_patches[], _constdouble:10.0[]]")(
+      compileReporter("count patches != 10"))
+  } }
+  test("hasNotEqual2") { new OptTest {
+    withReporterOptimization("HasNotEqual")
+    assertResult("_optimizecount[_patches[], _constdouble:10.0[]]")(
+      compileReporter("10 != count patches"))
   } }
 }

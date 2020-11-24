@@ -20,24 +20,22 @@ public final strictfp class _mean extends Reporter implements Pure {
 
   public double report_1(Context context, LogoList list) {
     double sum = 0;
+    int count = 0;
 
-    if (list.isEmpty()) {
+    for (Object elt : list.toJava()) {
+      if (elt instanceof Double) {
+        sum += ((Double)elt).doubleValue();
+        count += 1;
+      }
+    }
+
+    if (count == 0) {
       String i18nMsg = I18N.errorsJ().getN(
         "org.nlogo.prim.etc._mean.cantFindMeanOfListWithNoNumbers", Dump.logoObject(list)
       );
       throw new RuntimePrimitiveException(context, this, i18nMsg);
     }
 
-    for (Object elt : list.toJava()) {
-      if (!(elt instanceof Double)) {
-        String i18nMsg = I18N.errorsJ().getN(
-          "org.nlogo.prim._mean.cantFindMeanOfNonNumbers", Dump.logoObject(elt), TypeNames.name(elt)
-        );
-        throw new RuntimePrimitiveException(context, this, i18nMsg);
-      }
-      sum += ((Double) elt).doubleValue();
-    }
-
-    return validDouble(sum / list.size(), context);
+    return validDouble(sum / count, context);
   }
 }

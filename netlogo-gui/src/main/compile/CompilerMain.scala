@@ -29,19 +29,22 @@ private[compile] object CompilerMain {
     Femto.scalaSingleton[FrontEndInterface]("org.nlogo.parse.FrontEnd")
 
   def compile(
-    sources:          Map[String, String],
-    displayName:      Option[String],
-    program:          Program,
-    subprogram:       Boolean,
-    oldProcedures:    ListMap[String, Procedure],
-    extensionManager: ExtensionManager,
-    libManager:       LibraryManager,
-    compilationEnv:   CompilationEnvironment): (ListMap[String, Procedure], Program) = {
+    sources:               Map[String, String],
+    displayName:           Option[String],
+    program:               Program,
+    subprogram:            Boolean,
+    oldProcedures:         ListMap[String, Procedure],
+    extensionManager:      ExtensionManager,
+    libManager:            LibraryManager,
+    compilationEnv:        CompilationEnvironment,
+    shouldAutoInstallLibs: Boolean = false
+  ): (ListMap[String, Procedure], Program) = {
 
     val oldProceduresListMap = ListMap[String, Procedure](oldProcedures.toSeq: _*)
     val (topLevelDefs, feStructureResults) =
       frontEnd.frontEnd(CompilationOperand( sources, extensionManager, libManager, compilationEnv, program
-                                          , oldProceduresListMap, subprogram, displayName))
+                                          , oldProceduresListMap, subprogram, displayName
+                                          , shouldAutoInstallLibs))
 
     val bridged = bridge(feStructureResults, oldProcedures, topLevelDefs, backifier(feStructureResults.program, extensionManager))
 

@@ -26,10 +26,8 @@ object World {
   }
 
   trait InRadiusOrCone {
-    def inRadiusSimple(agent: Agent, sourceSet: AgentSet, radius: Double, wrap: Boolean): JList[Agent]
     def inRadius(agent: Agent, sourceSet: AgentSet, radius: Double, wrap: Boolean): JList[Agent]
     def inCone(turtle: Turtle, sourceSet: AgentSet, radius: Double, angle: Double, wrap: Boolean): JList[Agent]
-
   }
 }
 

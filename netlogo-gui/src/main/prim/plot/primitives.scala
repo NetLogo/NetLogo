@@ -15,7 +15,7 @@ import org.nlogo.plot.PlotManager
 
 trait Helpers extends Instruction {
   def plotManager =
-    workspace.plotManager.asInstanceOf[PlotManager]
+    workspace.realPlotManager.asInstanceOf[PlotManager]
   def currentPlot(context: Context) =
     plotManager.currentPlot.getOrElse(
       throw new RuntimePrimitiveException(
@@ -62,11 +62,11 @@ class _updateplots extends PlotCommand {
 class _setcurrentplot extends PlotCommand {
   override def perform(context: Context) {
     val name = argEvalString(context, 0)
-    val plot = plotManager.getPlot(name)
-    if (plot == null)
-      throw new RuntimePrimitiveException(context, this,
-        "no such plot: \"" + name + "\"")
-    plotManager.currentPlot = Some(plot)
+    val maybePlot = plotManager.maybeGetPlot(name)
+    if (!maybePlot.isDefined) {
+      throw new RuntimePrimitiveException(context, this, "no such plot: \"" + name + "\"")
+    }
+    plotManager.setCurrentPlot(name)
     context.ip = next
   }
 }
@@ -208,7 +208,7 @@ class _exportplot extends PlotCommand {
   override def perform(context: Context) {
     val name = argEvalString(context, 0)
     val path = argEvalString(context, 1)
-    if (plotManager.getPlot(name) == null) {
+    if (!plotManager.maybeGetPlot(name).isDefined) {
       throw new RuntimePrimitiveException(context, this, "no such plot: \"" + name + "\"")
     }
     // Workspace.waitFor() switches to the event thread if we're running with a GUI - ST 12/17/04

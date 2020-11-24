@@ -16,7 +16,7 @@ import org.nlogo.editor.DumbIndenter
 import org.nlogo.ide.FocusedOnlyAction
 import org.nlogo.swing.Utils.icon
 import org.nlogo.swing.{PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction, Printable => NlogoPrintable}
-import org.nlogo.window.{EditorAreaErrorLabel, ProceduresInterface, Zoomable, Events => WindowEvents}
+import org.nlogo.window.{CommentableError, ProceduresInterface, Zoomable, Events => WindowEvents}
 import org.nlogo.workspace.AbstractWorkspace
 
 abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) extends JPanel
@@ -69,7 +69,7 @@ with MenuTab {
 
   override def zoomTarget = text
 
-  val errorLabel = new EditorAreaErrorLabel(text)
+  val errorLabel = new CommentableError(text)
   val toolBar = getToolBar
   val scrollableEditor = editorFactory.scrollPane(text)
   def compiler = workspace
@@ -81,27 +81,32 @@ with MenuTab {
     add(toolBar, BorderLayout.NORTH)
     val codePanel = new JPanel(new BorderLayout) {
       add(scrollableEditor, BorderLayout.CENTER)
-      add(errorLabel, BorderLayout.NORTH)
+      add(errorLabel.component, BorderLayout.NORTH)
     }
     add(codePanel, BorderLayout.CENTER)
   }
 
   def getToolBar = new ToolBar {
     override def addControls() {
-      val proceduresMenu = new ProceduresMenu(CodeTab.this)
-      this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-        .put(UserAction.KeyBindings.keystroke('G', withMenu = true), "procmenu")
-      this.getActionMap.put("procmenu", proceduresMenu.getAction)
+      // Only want to add toolbar items once
+      // This method gets called when the code tab pops in or pops out
+      // because org.nlogo.swing.ToolBar overrides addNotify. AAB 10/2020
+      if (this.getActionMap.get("procmenu") == null) {
+        val proceduresMenu = new ProceduresMenu(CodeTab.this)
+        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+          .put(UserAction.KeyBindings.keystroke('G', withMenu = true), "procmenu")
+        this.getActionMap.put("procmenu", proceduresMenu.getAction)
 
-      add(new ToolBarActionButton(FindDialog.FIND_ACTION))
-      add(new ToolBarActionButton(CompileAction))
-      add(new ToolBar.Separator)
-      add(proceduresMenu)
-      add(new IncludedFilesMenu(getIncludesTable, tabs))
-      val additionalComps = getAdditionalToolBarComponents
-      if (additionalComps.nonEmpty) {
+        add(new ToolBarActionButton(FindDialog.FIND_ACTION))
+        add(new ToolBarActionButton(CompileAction))
         add(new ToolBar.Separator)
-        additionalComps foreach add
+        add(proceduresMenu)
+        add(new IncludedFilesMenu(getIncludesTable, tabs))
+        val additionalComps = getAdditionalToolBarComponents
+        if (additionalComps.nonEmpty) {
+          add(new ToolBar.Separator)
+          additionalComps foreach add
+        }
       }
     }
   }

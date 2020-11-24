@@ -31,6 +31,8 @@ object NetLogoCoreApp extends SubApplication {
   override def jvmOptions    = Seq()
   override def jvmArguments  = Seq()
   override def allIcons: Seq[String] = Seq(iconName) :+ "Model"
+  override def additionalArtifacts(config: File): Seq[File] =
+    Seq(config / "NetLogo Logging" / "netlogo_logging.xml", config / "NetLogo Logging" / "netlogo_logging.dtd")
 }
 
 object NetLogoThreeDApp extends SubApplication {
@@ -39,15 +41,6 @@ object NetLogoThreeDApp extends SubApplication {
   override def jvmOptions    = Seq("-Dorg.nlogo.is3d=true")
   override def jvmArguments  = Seq()
   override def allIcons: Seq[String] = Seq(iconName) :+ "Model"
-}
-
-object NetLogoLoggingApp extends SubApplication {
-  override def name          = "NetLogo Logging"
-  override def jarName       = "NetLogo"
-  override def jvmOptions    = Seq()
-  override def jvmArguments  = Seq("--logging", "netlogo_logging.xml")
-  override def additionalArtifacts(config: File): Seq[File] =
-    Seq(config / "NetLogo Logging" / "netlogo_logging.xml", config / "NetLogo Logging" / "netlogo_logging.dtd")
 }
 
 object HubNetClientApp extends SubApplication {

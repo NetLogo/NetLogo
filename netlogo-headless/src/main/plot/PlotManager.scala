@@ -4,7 +4,7 @@ package org.nlogo.plot
 
 import org.nlogo.core.CompilerException
 
-import org.nlogo.api.{ PlotAction, LogoThunkFactory, CommandLogoThunk, ActionBroker }
+import org.nlogo.api.{ ActionBroker, CommandLogoThunk, LogoThunkFactory, PlotAction }
 
 import scala.collection.mutable
 import scala.util.{ Failure, Success, Try }
@@ -26,7 +26,7 @@ class PlotManager(factory: LogoThunkFactory)
   // needed for backwards comp with pre 5.0 plotting style.
   var currentPlot: Option[Plot] = None
   override def setCurrentPlot(name: String) {
-    currentPlot = getPlot(name)
+    currentPlot = maybeGetPlot(name)
   }
 
   // plot creation
@@ -46,15 +46,15 @@ class PlotManager(factory: LogoThunkFactory)
     plot
   }
 
-  def hasPlot(name: String): Boolean = getPlot(name).isDefined
-  def getPlot(name: String) = _plots.find(_.name.equalsIgnoreCase(name))
+  def hasPlot(name: String): Boolean = maybeGetPlot(name).isDefined
+  def maybeGetPlot(name: String): Option[Plot] = _plots.find(_.name.equalsIgnoreCase(name))
 
   def getPlotPen(plotName: String, penName: String) =
-    getPlot(plotName).flatMap(_.getPen(penName))
+    maybeGetPlot(plotName).flatMap(_.getPen(penName))
 
   // used for letting the user choose which plot to export
   def getPlotNames = _plots.map(_.name)
-  def nextName = Stream.from(1).map("plot " + _).find(getPlot(_).isEmpty).get
+  def nextName = Stream.from(1).map("plot " + _).find(maybeGetPlot(_).isEmpty).get
 
   def forgetPlot(goner: Plot) {
     if (currentPlot == Some(goner)) currentPlot = None

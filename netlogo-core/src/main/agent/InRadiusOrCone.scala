@@ -10,10 +10,6 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
   private[this] var patches: Array[Patch] = null // world.patches is not defined when this class is initiated
   private[this] var end: Int = 0
 
-  override def inRadiusSimple(agent: Agent, sourceSet: AgentSet, radius: Double, wrap: Boolean) = {
-    InRadiusSimple.apply(world)(agent, sourceSet, radius, wrap)
-  }
-
   override def inRadius(agent: Agent, sourceSet: AgentSet, radius: Double, wrap: Boolean): JList[Agent] = {
     val (worldWidth, worldHeight) = (world.worldWidth, world.worldHeight)
     val result = new ArrayList[Agent]
@@ -66,11 +62,11 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
         val patch = patches(i)
 
         dx = Math.abs(patch.pxcor - patchX)
-        if (dx > worldWidth2)
+        if (world.topology.xWraps && dx > worldWidth2)
           dx = worldWidth - dx
 
         dy = Math.abs(patch.pycor - patchY)
-        if (dy > worldHeight2)
+        if (world.topology.yWraps && dy > worldHeight2)
           dy = worldHeight - dy
 
         gRoot = world.rootsTable.gridRoot(dx * dx + dy * dy)
@@ -145,10 +141,11 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
     // x offset from -m to m and y offset from -n to n.
     val offsets = new ArrayList[(Int, Int)]
     var x = -m
+    val looseRadius = StrictMath.ceil(radius).toInt + 1
     while (x <= m) {
       var y = -n
       while (y <= n) {
-        if (closestPointIsInRadius(startTurtle.xcor, startTurtle.ycor, x, y, radius)) {
+        if (closestPointIsInRadius(startTurtle.xcor, startTurtle.ycor, x, y, looseRadius)) {
           offsets.add((x, y))
         }
         y += 1
@@ -284,7 +281,7 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
 
   @scala.inline
   private def initPatches(): Unit = {
-    if (patches eq null) {
+    if ((patches eq null) || patches.length != world.patches.count) {
       patches = new Array[Patch](world.patches.count)
     }
   }
@@ -383,7 +380,7 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
 
     val x = StrictMath.round(X).toInt
     val y = StrictMath.round(Y).toInt
-    val r = if (x != X || y != Y) R.toInt + 1 else R.toInt
+    val r = R.toInt + 1
 
     val regionIterator = world.topology.getRegion(x, y, r).iterator
     var length, curr = 0

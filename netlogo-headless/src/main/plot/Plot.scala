@@ -2,7 +2,7 @@
 
 package org.nlogo.plot
 
-import org.nlogo.api.{ PlotState, PlotInterface, PlotAction }
+import org.nlogo.api.{ PlotAction, PlotInterface, PlotPenInterface, PlotState }
 import PlotAction.{ PlotXY, SoftResetPen }
 import org.nlogo.core.PlotPenInterface
 import scala.collection.immutable

@@ -5,7 +5,7 @@ import org.jsoup.parser.Tag
 import sbt._, Keys.resourceDirectory
 
 object NetLogoWebExport {
-  val StandaloneURL = url("http://netlogoweb.org/standalone")
+  val StandaloneURL = url("https://netlogoweb.org/standalone")
   // it would be better to do this with a JSoup element, but it doesn't like
   // creating custom self-closing tags :P
   val ModelSigil = "______NetLogoModel_______"

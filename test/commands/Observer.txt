@@ -6,3 +6,46 @@ ClearGlobals
   O> clear-globals
   glob1 => 0
   count turtles => 10
+
+ClearPatches_2D
+  patches-own [ apples ]
+  O> ask patches [ set apples one-of [ true 200 "hello" ] set plabel "test" set pcolor 139 ]
+  count patches with [ apples != 0 ] => 121
+  O> clear-patches
+  count patches with [ apples != 0 or plabel = "test" or pcolor = 139 ] => 0
+
+ClearTurtles
+  breed [ mice mouse ]
+  breed [ frogs frog ]
+  O> create-turtles 100
+  O> create-mice 75
+  O> create-frogs 50
+  count turtles => 225
+  count mice => 75
+  count frogs => 50
+  O> clear-turtles
+  count turtles => 0
+  count mice => 0
+  count frogs => 0
+
+ClearAll_2D
+  globals [ glob1 ]
+  breed [ mice mouse ]
+  breed [ frogs frog ]
+  patches-own [ apples ]
+  O> set glob1 5
+  O> create-turtles 100
+  O> create-mice 75
+  O> create-frogs 50
+  O> ask patches [ set apples one-of [ true 200 "hello" ] set plabel "test" set pcolor 139 ]
+  glob1 => 5
+  count turtles => 225
+  count mice => 75
+  count frogs => 50
+  count patches with [ apples != 0 ] => 121
+  O> clear-all
+  glob1 => 0
+  count turtles => 0
+  count mice => 0
+  count frogs => 0
+  count patches with [ apples != 0 or plabel = "test" or pcolor = 139 ] => 0

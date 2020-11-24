@@ -2,13 +2,6 @@
 
 package org.nlogo.core
 
-trait PlotPenInterface {
-  def name: String
-  def state: PlotPenState
-  def state_=(s: PlotPenState): Unit
-  def plot(x: Double, y: Double, color: Int, isDown: Boolean): Unit
-}
-
 object PlotPenInterface {
   val MinMode = 0
   val MaxMode = 2

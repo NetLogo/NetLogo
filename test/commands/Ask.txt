@@ -57,6 +57,10 @@ AskConcurrentDoesntWorkOnSingleAgent
   O> crt 1 [ set glob1 self ]
   O> ask-concurrent glob1 [ set pcolor red ] => ERROR ASK-CONCURRENT expected input to be an agentset but got the turtle (turtle 0) instead.
 
+AskNobody
+  O> ask Nobody [set color blue] => ERROR ASK expected input to be an agent or agentset but got NOBODY instead.
+  O> ask one-of patches with [pcolor = blue] [set pcolor red] => ERROR ASK expected input to be an agent or agentset but got NOBODY instead.
+
 AskAllTurtles
   O> crt 1
   O> ask one-of patches [ ask turtles [ die ] ] => ERROR Only the observer can ASK the set of all turtles.
@@ -71,3 +75,24 @@ AskWithCarefullyWithRunresult
   globals [ zero ]
   to careful-run [t] ask turtles [ carefully [ show runresult t ] [] ] end
   O> crt 2 careful-run [[] -> 1 / zero]
+
+NestedAsksMaintainOrder_2D
+  globals [ check-list ]
+  O> resize-world -4 4 -4 4
+  O> random-seed 123456
+  O> crt 30 [ set color one-of [red yellow white] setxy random-xcor random-ycor ]
+  O> set check-list []
+  O> ask one-of turtles [ ask other turtles [ set check-list lput who check-list ] ]
+  check-list => [17 2 18 27 10 7 5 25 21 20 1 3 24 23 19 14 26 4 22 12 28 6 16 15 13 11 0 29 8]
+  O> set check-list []
+  O> ask one-of turtles with [color = red] [ ask other turtles [ set check-list lput who check-list ] ]
+  check-list => [26 16 15 11 21 18 29 8 2 27 17 13 12 25 28 4 3 24 10 23 0 22 6 14 1 19 9 5 20]
+  O> set check-list []
+  O> ask one-of turtles with [color = red] [ ask other turtles with [color = yellow] [ set check-list lput who check-list ] ]
+  check-list => [1 18 19 15 28 27 10 13 2 11 3]
+  O> set check-list []
+  O> ask one-of turtles [ ask other turtles in-radius 3 [ set check-list lput who check-list ] ]
+  check-list => [25 16 29 15 21 10 17 28 8 27 11 6]
+  O> set check-list []
+  O> ask turtles with [color = red] [ let turtle-list [] ask other turtles in-radius 3 with [color = yellow] [ set turtle-list lput who turtle-list ] set check-list lput turtle-list check-list ]
+  check-list => [[28 13 1 10] [10 28 1 13] [10 11 2 27 1 28] [11 18 2] [11 2 18] [11 28 10 13 2 1] [3 19 11] [19 3 13 1]]

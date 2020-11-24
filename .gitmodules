@@ -68,3 +68,6 @@
 [submodule "extensions/py"]
 	path = extensions/py
 	url = https://github.com/NetLogo/Python-Extension
+[submodule "extensions/time"]
+	path = extensions/time
+	url = https://github.com/NetLogo/Time-Extension

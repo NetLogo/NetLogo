@@ -52,9 +52,18 @@ trait FrontEndMain extends NetLogoParser {
   def tokenizeForColorizationIterator(source: String, dialect: Dialect, extensionManager: ExtensionManager): Iterator[core.Token] = {
     tokenizer.tokenizeString(source).map(Namer.basicNamer(dialect, extensionManager))
   }
+
   @throws(classOf[CompilerException])
   def findIncludes(source: String): Seq[String] = {
-    val tokens = tokenizer.tokenizeString(source)
-    StructureParser.findIncludes(tokens)
+    // The tokenizing and parsing just for the `__includes` declaration is quite slow on large (5000+ line) models that
+    // do *not* have an `__includes`.  Maybe there is a better way to handle it by storing that info when the file is
+    // parsed/checked but for now, we have a workaround of just doing a quick regex to check if `__includes` is there
+    // before bothering with the tokenizing and parsing.  -Jeremy B November 2020
+    if (FrontEndInterface.hasIncludes(source)) {
+      val tokens = tokenizer.tokenizeString(source)
+      StructureParser.findIncludes(tokens)
+    } else {
+      Seq()
+    }
   }
 }

@@ -78,6 +78,16 @@ trait Argument {
   def getIntValue: Int
 
   /**
+   * Returns the value of the argument as a boxed <code>java.lang.Double</code>.
+   *
+   * @throws api.ExtensionException if the argument is not a number.
+   * @throws api.LogoException      if a LogoException occurred while evaluating this argument
+   */
+  @throws(classOf[ExtensionException])
+  @throws(classOf[LogoException])
+  def getDouble: java.lang.Double
+  
+  /**
    * Returns the value of the argument as an unboxed <code>double</code>.
    *
    * @throws api.ExtensionException if the argument is not a number.

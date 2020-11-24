@@ -210,3 +210,45 @@ HatchInheritShape
   T> set shape "circle"
   T> hatch 1
   [shape] of turtles => ["circle" "circle"]
+
+# When hatch takes no commands it uses an optimized implementation hatchfast
+# AAB 04/08/2020
+HatchFastInheritLocation_2D
+  O> crt 1 [ setxy 3 4 ]
+  T> hatch 1
+  [(list xcor ycor)] of turtle 1 => [3 4]
+
+HatchInheritLocation_2D
+  O> crt 1 [ setxy 3 4 ]
+  T> hatch 1
+  [(list xcor ycor)] of turtle 1 => [3 4]
+
+HatchFastInheritOrientation_2D
+  O> crt 1 [ set heading 3.14259 ]
+  T> hatch 1
+  [heading] of turtle 1 => 3.14259
+
+HatchInheritOrientation_2D
+  O> crt 1 [ set heading 3.14259 ]
+  T> hatch 1 [ set color yellow ]
+  [heading] of turtle 1 => 3.14259
+
+HatchFastInheritLocation_3D
+  O> crt 1 [ setxyz 3 4 5 ]
+  T> hatch 1
+  [(list xcor ycor zcor)] of turtle 1 => [3 4 5]
+
+HatchInheritLocation_3D
+  O> crt 1 [ setxyz 3 4 5 ]
+  T> hatch 1 [ set color yellow ]
+  [(list xcor ycor zcor)] of turtle 1 => [3 4 5]
+
+HatchFastInheritOrientation_3D
+  O> crt 1 [ set heading 0 tilt-up 30  roll-right 20 rt 45 ]
+  T> hatch 1
+  [(list precision heading 12 precision pitch 12 precision roll 12)]  of turtle 1 =>  [42.180779225595 8.285726273243 34.676049813587]
+
+HatchInheritOrientation_3D
+  O> crt 1 [ set heading 0 tilt-up 30  roll-right 20 rt 45 ]
+  T> hatch 1 [ set color yellow ]
+  [(list precision heading 12 precision pitch 12 precision roll 12)]  of turtle 1 =>  [42.180779225595 8.285726273243 34.676049813587]

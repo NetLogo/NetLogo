@@ -25,7 +25,7 @@ lazy val commonSettings = Seq(
 // These settings are common to all builds involving scala
 // Any scala-specific settings should change here (and thus for all projects at once)
 lazy val scalaSettings = Seq(
-  scalaVersion           := "2.12.8",
+  scalaVersion           := "2.12.12",
   scalaSource in Compile := baseDirectory.value / "src" / "main",
   scalaSource in Test    := baseDirectory.value / "src" / "test",
   crossPaths             := false, // don't cross-build for different Scala versions
@@ -128,7 +128,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
            Depend.dependTask: _*).
   settings(
     name := "NetLogo",
-    version := "6.1.0",
+    version := "6.1.2-beta1",
     isSnapshot := true,
     mainClass in Compile := Some("org.nlogo.app.App"),
     modelsDirectory := baseDirectory.value.getParentFile / "models",
@@ -141,6 +141,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     resourceGenerators in Compile += I18n.resourceGeneratorTask.taskValue,
     threed := { System.setProperty("org.nlogo.is3d", "true") },
     nogen  := { System.setProperty("org.nlogo.noGenerator", "true") },
+    noopt  := { System.setProperty("org.nlogo.noOptimizer", "true") },
     libraryDependencies ++= Seq(
       "org.ow2.asm" % "asm-all" % "5.0.4",
       "org.picocontainer" % "picocontainer" % "2.13.6",
@@ -148,8 +149,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "javax.media" % "jmf" % "2.1.1e",
       "commons-codec" % "commons-codec" % "1.10",
       "org.parboiled" %% "parboiled" % "2.1.3",
-      "org.jogamp.jogl" % "jogl-all" % "2.3.2",
-      "org.jogamp.gluegen" % "gluegen-rt" % "2.3.2",
+      "org.jogamp.jogl" % "jogl-all" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0-rc-20200307/jar/jogl-all.jar",
+      "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0-rc-20200307/jar/gluegen-rt.jar",
       "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
       "org.jmock" % "jmock" % "2.5.1" % "test",
       "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
@@ -161,7 +162,12 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "com.typesafe" % "config" % "1.3.1",
       "net.lingala.zip4j" % "zip4j" % "1.3.2"
     ),
-    all := {},
+    all := {
+      IO.copyFile(
+        file(".") / "dist" / "configuration" / "NetLogo Logging" / "netlogo_logging.xml",
+        baseDirectory.value / "netlogo_logging.xml"
+      )
+    },
     all := {
       all.dependsOn(
         htmlDocs,
@@ -175,6 +181,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
 
 lazy val threed = TaskKey[Unit]("threed", "enable NetLogo 3D")
 lazy val nogen = TaskKey[Unit]("nogen", "disable bytecode generator")
+lazy val noopt = TaskKey[Unit]("noopt", "disable compiler optimizations")
 
 lazy val headless = (project in file ("netlogo-headless")).
   dependsOn(parserJVM % "test-internal->test;compile-internal->compile").
@@ -198,7 +205,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(ChecksumsAndPreviews.settings: _*).
   settings(
     name          := "NetLogoHeadless",
-    version       := "6.1.0",
+    version       := "6.1.2-beta1",
     isSnapshot    := true,
     autogenRoot   := (baseDirectory.value.getParentFile / "autogen").getAbsoluteFile,
     extensionRoot := baseDirectory.value.getParentFile / "extensions",

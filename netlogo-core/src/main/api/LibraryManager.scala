@@ -3,6 +3,7 @@
 package org.nlogo.api
 
 import java.io.File
+import java.lang.Boolean
 import java.net.URL
 import java.nio.file.{ Files, FileAlreadyExistsException, Path, Paths }
 
@@ -12,6 +13,9 @@ import org.nlogo.core.LibraryInfo
 import org.nlogo.core.{ LibraryManager => CoreLibraryManager }
 
 object LibraryManager {
+
+  def enabled: Boolean = !Boolean.getBoolean("netlogo.libraries.disabled")
+
   private val libsLocationSite = "https://ccl.northwestern.edu/netlogo/config"
   private val libsLocation     = "libraries-location.conf"
   private val allLibsName      = "libraries.conf"
@@ -19,16 +23,21 @@ object LibraryManager {
   private val metadataURL      = getMetadataURL()
 
   private def getMetadataURL(): URL = {
-    val locationURL    = new URL(s"$libsLocationSite/$libsLocation")
-    LibraryInfoDownloader(locationURL)
-    val locationPath   = FileIO.perUserFile(libsLocation)
-    val locationConfig = ConfigFactory.parseFile(new File(locationPath))
-    val location       = try {
-      locationConfig.getString("location")
-    } catch {
-      case ex: ConfigException => bundledsConfig.getString("fallback-libraries-location")
+    if (enabled) {
+      val locationURL    = new URL(s"$libsLocationSite/$libsLocation")
+      LibraryInfoDownloader(locationURL)
+      val locationPath   = FileIO.perUserFile(libsLocation)
+      val locationConfig = ConfigFactory.parseFile(new File(locationPath))
+      val location       = try {
+        locationConfig.getString("location")
+      } catch {
+        case ex: ConfigException => bundledsConfig.getString("fallback-libraries-location")
+      }
+      new URL(s"$location/${APIVersion.version}/$allLibsName")
+    } else {
+      val location = bundledsConfig.getString("fallback-libraries-location")
+      new URL(s"$location/${APIVersion.version}/$allLibsName")
     }
-    new URL(s"$location/${APIVersion.version}/$allLibsName")
   }
 
   private var loadedOnce = false
@@ -37,7 +46,7 @@ object LibraryManager {
     // If not first load (user clicked a button) or metadata not loaded once, load it!
     // This is an attempt to avoid multiple redundant remote fetches during test runs.
     // -JeremyB April 2019
-    if (!isFirstLoad || !loadedOnce) {
+    if (enabled && (!isFirstLoad || !loadedOnce)) {
       LibraryInfoDownloader.invalidateCache(metadataURL)
       LibraryInfoDownloader(metadataURL)
       loadedOnce = true
@@ -77,35 +86,41 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
     libraries.find(ext => ext.codeName == name)
 
   override def installExtension(ext: LibraryInfo): Unit = {
-    extInstaller.install(ext)
-    updateInstalledVersion("extensions", ext)
+    if (LibraryManager.enabled) {
+      extInstaller.install(ext)
+      updateInstalledVersion("extensions", ext)
+    }
   }
 
   def uninstallExtension(ext: LibraryInfo): Unit = {
-    extInstaller.uninstall(ext)
-    updateInstalledVersion("extensions", ext, uninstall = true)
+    if (LibraryManager.enabled) {
+      extInstaller.uninstall(ext)
+      updateInstalledVersion("extensions", ext, uninstall = true)
+    }
   }
 
   override def reloadMetadata(): Unit = reloadMetadata(false)
 
-  def reloadMetadata(isFirstLoad: Boolean = false): Unit = {
+  def reloadMetadata(isFirstLoad: Boolean = false, useBundled: Boolean = true): Unit = {
     LibraryManager.reloadMetadata(isFirstLoad)
-    updateLists(new File(allLibsPath), isFirstLoad)
+    updateLists(new File(allLibsPath), isFirstLoad, useBundled)
   }
 
   def onLibInfoChange(callback: InfoChangeCallback): Unit = {
     infoChangeCallbacks = infoChangeCallbacks :+ callback
   }
 
-  def updateLists(configFile: File, isFirstLoad: Boolean = false): Unit = {
+  def updateLists(configFile: File, isFirstLoad: Boolean = false, useBundled: Boolean = true): Unit = {
 
     try {
 
       val config = ConfigFactory.parseFile(configFile)
-      val installedLibsConf =
+      val installedLibsConf = if (useBundled)
         ConfigFactory.parseFile(new File(userInstalledsPath)).withFallback(bundledsConfig)
+      else
+        ConfigFactory.parseFile(new File(userInstalledsPath))
 
-      updateList(config, installedLibsConf, "extensions")
+      updateList(config, installedLibsConf, "extensions", useBundled)
 
     } catch {
       case ex: ConfigException =>
@@ -118,7 +133,7 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
 
   }
 
-  private def updateList(config: Config, installedLibsConf: Config, category: String) = {
+  private def updateList(config: Config, installedLibsConf: Config, category: String, useBundled: Boolean) = {
 
     import scala.collection.JavaConverters._
 
@@ -135,7 +150,7 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
           val downloadURL = new URL(c.getString("downloadURL"))
 
           val installedVersionPath = s"""$category."$codeName".installedVersion"""
-          val bundled              = bundledsConfig.hasPath(installedVersionPath)
+          val bundled              = useBundled && bundledsConfig.hasPath(installedVersionPath)
           val installedVersion     =
             if (!installedLibsConf.hasPath(installedVersionPath))
               None

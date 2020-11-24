@@ -66,6 +66,7 @@ object Docs {
         "rnd"      -> "Rnd",
         "sound"    -> "Sound",
         "table"    -> "Table",
+        "time"     -> "Time",
         "vid"      -> "Vid",
         "view2.5d" -> "View2.5D"
       )

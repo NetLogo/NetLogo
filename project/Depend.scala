@@ -45,7 +45,7 @@ object Depend {
       "app/codetab" -> List("app/common"),
       "app/infotab" -> List("app/common"),
       "app/interfacetab" -> List("app/common", "app/tools"),
-      "app/tools" -> List("app/common"),
+      "app/tools" -> List("app/common", "app/infotab"),
       "app/common" -> List("ide", "window"),
       "awt" -> Nil,
       "compile" -> List("compile/api", "compile/prim", "prim", "prim/dead", "prim/threed"),

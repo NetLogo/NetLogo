@@ -4,7 +4,7 @@
 
 ## Release notes
 
-See our [online release notes](https://github.com/NetLogo/NetLogo/wiki/Release-notes).
+See our [online release notes](http://ccl.northwestern.edu/netlogo/docs/versions.html).
 
 ## Upgrading
 
@@ -25,10 +25,16 @@ add-ons, and more.
 
 Choose NetLogo from the Start menu.
 
-### Mac
+### macOS
 
-Double click on the NetLogo icon in the NetLogo folder.  (You may wish
-to drag this icon to the dock for easy access.)
+First, make sure **Allow apps downloaded from:** is set to **App Store
+and identified developers** in the macOS [Security and Privacy
+settings General tab](https://support.apple.com/en-us/HT202491).
+Then double click on the NetLogo icon in the NetLogo folder.
+You may wish to drag this icon to the dock for easy access.
+
+If NetLogo does not open on macOS Catalina
+(10.15) or later, see [this known issue for a workaround](https://github.com/NetLogo/NetLogo/wiki/Known-Issues#netlogo-wont-start-on-mac-os-catalina-mojave-high-sierra-and-sierra).
 
 ### Linux et al
 
@@ -69,6 +75,9 @@ IIS-1438813, IIS-1441552, CNS-1441041, IIS-1546120, DRL-1546122, DRL-1614745
 and DRL-1640201. Additional support came from the Spencer Foundation,
 Texas Instruments, the Brady Fund, the Murphy fund,
 and the Northwestern Institute on Complex Systems.
+
+For development of the View 2.5D NetLogo Extension, we acknowledge financial
+support from Joshua M. Epstein's NIH Director's Pioneer Award (DP1).
 
 ## License
 
@@ -282,7 +291,7 @@ MASON Open Source License. The copyright for that code is as follows:
 > or combinations.
 >
 > In return you agree to the following conditions:
-> 
+>
 > If you redistribute all or any portion of the source code of this
 > software or related data, it must retain the above copyright notice
 > and this license and disclaimer. If you redistribute all or any
@@ -992,7 +1001,7 @@ distributed under the following license:
 For Java bytecode generation, NetLogo uses the ASM library.  It is
 distributed under the following license:
 
-> Copyright (c) 2000-2011 INRIA, France Telecom  
+> Copyright (c) 2000-2011 INRIA, France Telecom
 > All rights reserved.
 >
 > Redistribution and use in source and binary forms, with or without

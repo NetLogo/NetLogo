@@ -3061,9 +3061,37 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             ASTORE 2
             DCONST_0
             DSTORE 3
+            ICONST_0
+            ISTORE 5
             ALOAD 2
-            INVOKEVIRTUAL org/nlogo/core/LogoList.isEmpty ()Z
-            IFEQ L5
+            INVOKEVIRTUAL org/nlogo/core/LogoList.toJava ()Ljava/util/AbstractSequentialList;
+            INVOKEVIRTUAL java/util/AbstractSequentialList.iterator ()Ljava/util/Iterator;
+            ASTORE 6
+           L5
+           FRAME FULL [org/nlogo/prim/_asm_proceduredoplot_mean_36 org/nlogo/nvm/Context org/nlogo/core/LogoList D I java/util/Iterator] []
+            ALOAD 6
+            INVOKEINTERFACE java/util/Iterator.hasNext ()Z
+            IFEQ L6
+            ALOAD 6
+            INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
+            ASTORE 7
+            ALOAD 7
+            INSTANCEOF java/lang/Double
+            IFEQ L7
+            DLOAD 3
+            ALOAD 7
+            CHECKCAST java/lang/Double
+            INVOKEVIRTUAL java/lang/Double.doubleValue ()D
+            DADD
+            DSTORE 3
+            IINC 5 1
+           L7
+           FRAME APPEND [java/lang/Object]
+            GOTO L5
+           L6
+           FRAME CHOP 1
+            ILOAD 5
+            IFNE L8
             INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
             LDC "org.nlogo.prim.etc._mean.cantFindMeanOfListWithNoNumbers"
             ICONST_1
@@ -3074,68 +3102,19 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
             AASTORE
             INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
-            ASTORE 5
-            NEW org/nlogo/nvm/RuntimePrimitiveException
-            DUP
-            ALOAD 1
-            ALOAD 0
-            ALOAD 5
-            INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
-            ATHROW
-           L5
-           FRAME FULL [org/nlogo/prim/_asm_proceduredoplot_mean_36 org/nlogo/nvm/Context org/nlogo/core/LogoList D] []
-            ALOAD 2
-            INVOKEVIRTUAL org/nlogo/core/LogoList.javaIterator ()Ljava/util/Iterator;
-            ASTORE 5
-           L6
-           FRAME APPEND [java/util/Iterator]
-            ALOAD 5
-            INVOKEINTERFACE java/util/Iterator.hasNext ()Z
-            IFEQ L7
-            ALOAD 5
-            INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object;
             ASTORE 6
-            ALOAD 6
-            INSTANCEOF java/lang/Double
-            IFNE L8
-            INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
-            LDC "org.nlogo.prim._mean.cantFindMeanOfNonNumbers"
-            ICONST_2
-            ANEWARRAY java/lang/Object
-            DUP
-            ICONST_0
-            ALOAD 6
-            INVOKESTATIC org/nlogo/api/Dump.logoObject (Ljava/lang/Object;)Ljava/lang/String;
-            AASTORE
-            DUP
-            ICONST_1
-            ALOAD 6
-            INVOKESTATIC org/nlogo/api/TypeNames.name (Ljava/lang/Object;)Ljava/lang/String;
-            AASTORE
-            INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
-            ASTORE 7
             NEW org/nlogo/nvm/RuntimePrimitiveException
             DUP
             ALOAD 1
             ALOAD 0
-            ALOAD 7
+            ALOAD 6
             INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
             ATHROW
            L8
-           FRAME APPEND [java/lang/Object]
-            DLOAD 3
-            ALOAD 6
-            CHECKCAST java/lang/Double
-            INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-            DADD
-            DSTORE 3
-            GOTO L6
-           L7
-           FRAME CHOP 1
+           FRAME SAME
             ALOAD 0
             DLOAD 3
-            ALOAD 2
-            INVOKEVIRTUAL org/nlogo/core/LogoList.size ()I
+            ILOAD 5
             I2D
             DDIV
             ALOAD 1

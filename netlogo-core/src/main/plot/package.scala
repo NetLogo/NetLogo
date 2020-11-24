@@ -21,7 +21,7 @@ package org.nlogo
  * and max, y min and max).  "Auto plot" (whether the range expands automatically to the fit the data)
  * is a boolean with both default and current values.
  *
- * PlotExporter is used to export the plot data in CSV format.
+ * CorePlotExporter is used to export the plot data in CSV format.
  *
  */
 

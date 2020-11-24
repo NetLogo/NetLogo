@@ -28,6 +28,10 @@ extends AgentSet(kind, printName) {
 
   override def isEmpty = _agents.isEmpty
 
+  override def checkCount(checkValue: Int, check: (Int, Int) => Boolean): Boolean = {
+    check(count, checkValue)
+  }
+
   // Assumes we've already checked that the counts are equal. - ST 7/6/06
   override def containsSameAgents(otherSet: api.AgentSet): Boolean = {
     val iter = otherSet.agents.iterator
@@ -64,8 +68,10 @@ extends AgentSet(kind, printName) {
     simpleChangeEventPublisher.publish()
   }
 
-  override def contains(agent: api.Agent): Boolean =
-    _agents.containsValue(agent)
+  override def contains(agent: api.Agent): Boolean = agent match {
+    case a: Agent => _agents.containsKey(a.agentKey)
+    case _ => _agents.containsValue(agent)
+  }
 
   // the next few methods take precomputedCount as an argument since we want to avoid _randomoneof
   // and _randomnof resulting in more than one total call to count(), since count() can be O(n)

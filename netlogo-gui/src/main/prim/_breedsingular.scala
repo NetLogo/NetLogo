@@ -19,7 +19,7 @@ class _breedsingular(breedName: String) extends Reporter {
     val turtle = world.getTurtle(id)
     if (turtle == null) return Nobody
     val breed = world.getBreed(breedName)
-    if (!breed.contains(turtle))
+    if (turtle.getBreed != breed)
       throw new RuntimePrimitiveException(
         context, this, s"$turtle is not a ${world.getBreedSingular(breed)}")
     turtle

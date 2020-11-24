@@ -6,7 +6,7 @@ object NetLogoBuild {
   lazy val all = TaskKey[Unit]("all", "build everything!!!")
 
   def cclArtifacts(path: String): String =
-    s"http://ccl-artifacts.s3-website-us-east-1.amazonaws.com/$path"
+    s"https://s3.amazonaws.com/ccl-artifacts/$path"
 
   val autogenRoot = taskKey[File]("source root for autogeneration files")
 
@@ -18,8 +18,8 @@ object NetLogoBuild {
   lazy val numericMarketingVersion = settingKey[String]("Numeric-only version attached to the build for end-user identification")
 
   val settings = Seq(
-    marketingVersion        := "6.1.0",
-    numericMarketingVersion := "6.1.0",
+    marketingVersion        := "6.1.2-beta1",
+    numericMarketingVersion := "6.1.2",
     buildDate := {
       val dateFormat =
         new java.text.SimpleDateFormat("MMMMMMMMMMMMMMM d, yyyy")
@@ -35,6 +35,7 @@ object NetLogoBuild {
     })
 
   def includeInPackaging(project: Project): Seq[Setting[_]] =
+    Seq(sources in Compile ++= (sources in (project, Compile)).value) ++
     Seq(packageBin, packageSrc, packageDoc).flatMap(task => inTask(task)(
       mappings in Compile ++= {
         val existingMappings = (mappings in Compile).value.map(_._2)

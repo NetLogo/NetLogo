@@ -7,11 +7,14 @@ import org.nlogo.api.{PlotAction, ActionRunner},
 
 trait PlotActionRunner extends ActionRunner[PlotAction] {
 
-  def getPlot(name: String): Option[Plot]
+  // This is `maybeGetPlot()` to avoid colliding with the deprecated `getPlot()` method from the GUI
+  // `PlotManager` class.  We want GUI and headless plot managers converging towards a common API.
+  // -Jeremy B November 2020
+  def maybeGetPlot(name: String): Option[Plot]
   def getPlotPen(plotName: String, penName: String): Option[PlotPen]
 
   def withPlot(plotName: String)(f: (Plot) => Unit) {
-    getPlot(plotName).foreach(f)
+    maybeGetPlot(plotName).foreach(f)
   }
 
   def withPen(plotName: String, penName: String)(f: (PlotPen) => Unit) {
@@ -20,7 +23,7 @@ trait PlotActionRunner extends ActionRunner[PlotAction] {
 
   def withPlotAndPen(plotName: String, penName: String)(f: (Plot, PlotPen) => Unit) {
     for {
-      plot <- getPlot(plotName)
+      plot <- maybeGetPlot(plotName)
       pen <- plot.getPen(penName)
     } f(plot, pen)
   }
@@ -110,8 +113,8 @@ trait PlotActionRunner extends ActionRunner[PlotAction] {
 }
 
 class BasicPlotActionRunner(plots: Seq[Plot]) extends PlotActionRunner {
-  override def getPlot(name: String) =
+  override def maybeGetPlot(name: String) =
     plots.find(_.name.equalsIgnoreCase(name))
   override def getPlotPen(plotName: String, penName: String) =
-    getPlot(plotName).flatMap(_.getPen(penName))
+    maybeGetPlot(plotName).flatMap(_.getPen(penName))
 }

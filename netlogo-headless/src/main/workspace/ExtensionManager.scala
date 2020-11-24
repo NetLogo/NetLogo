@@ -303,7 +303,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
   def exportWorld(writer: PrintWriter) {
     writer.println(Dump.csv.encode("EXTENSIONS"))
     writer.println()
-    for (container <- jars.values) {
+    for (container <- jars.values.toList.sortWith((c1, c2) => c1.extensionName < c2.extensionName)) {
       val data = container.classManager.exportWorld
       if (data.length > 0) {
         writer.println(Dump.csv.encode(container.extensionName))

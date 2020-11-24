@@ -17,11 +17,6 @@ public strictfp class InRadiusOrCone3D
     this.world = world;
   }
 
-  public List<Agent> inRadiusSimple(Agent agent, AgentSet sourceSet,
-      double radius, boolean wrap) {
-    return inRadius(agent, sourceSet, radius, wrap);
-  }
-
   @Override
   public List<Agent> inRadius(Agent agent, AgentSet sourceSet,
                               double radius, boolean wrap) {
@@ -118,10 +113,10 @@ public strictfp class InRadiusOrCone3D
             }
           } else {
             // Only check patches that might have turtles within the radius on them.
-            // The 1.415 (square root of 2) adjustment is necessary because it is
-            // possible for portions of a patch to be within the circle even though
-            // the center of the patch is outside the circle.
-            if (StrictMath.sqrt(dx * dx + dy * dy + dz * dz) <= radius + 1.415) {
+            // The 1.733 (square root of 3) adjustment is necessary because it is
+            // possible for portions of a patch to be within the sphere even though
+            // the center of the patch is outside the sphere.
+            if (StrictMath.sqrt(dx * dx + dy * dy + dz * dz) <= radius + 1.733) {
               for (Turtle turtle : patch.turtlesHere()) {
                 if ((sourceSet == world.turtles() ||
                     // any turtle set with a non-null print name is either
@@ -250,7 +245,7 @@ public strictfp class InRadiusOrCone3D
                 }
               }
             } else {
-              if (StrictMath.sqrt(dx * dx + dy * dy + dz * dz) <= radius + 1.415) {
+              if (StrictMath.sqrt(dx * dx + dy * dy + dz * dz) <= radius + 1.733) {
                 for (Turtle turtle : patch.turtlesHere()) {
                   // loop through our world copies
                   outer:

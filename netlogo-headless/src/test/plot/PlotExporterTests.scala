@@ -37,7 +37,7 @@ class PlotExporterTests extends SimplePlotTest {
   def exportPlotToString(plot:Plot) = {
     val stringWriter = new java.io.StringWriter
     val printWriter = new java.io.PrintWriter(stringWriter)
-    val exporter = new PlotExporter(plot,csv)
+    val exporter = new CorePlotExporter(plot,csv)
     exporter.export(printWriter)
     printWriter.flush()
     stringWriter.toString

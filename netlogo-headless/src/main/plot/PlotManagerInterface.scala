@@ -15,7 +15,6 @@ trait PlotManagerInterface extends api.PlotManagerInterface {
   def getPlotUpdateError(plot: Plot): Option[CompilerException]
   def getPenSetupError(pen: PlotPen): Option[CompilerException]
   def getPenUpdateError(pen: PlotPen): Option[CompilerException]
-  def getPlot(name: String): Option[Plot]
   def currentPlot: Option[Plot]
 }
 
@@ -34,6 +33,6 @@ class DummyPlotManager extends PlotManagerInterface {
   override def publish(action: PlotAction) { }
   override def setCurrentPlot(name: String) { }
   override def hasPlot(name: String) = false
-  override def getPlot(name: String) = None
+  override def maybeGetPlot(name: String) = None
   override def getPlotNames = Seq()
 }

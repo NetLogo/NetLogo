@@ -915,14 +915,14 @@ if all? turtles [color = red]
           <a>and<span class="since">1.0</span></a>
         </h3>
         <h4>
-          <span class="prim_example"><i>condition1</i> and <i>condition2</i></span>
+          <span class="prim_example"><i>boolean1</i> and <i>boolean2</i></span>
         </h4>
         <p>
-          Reports true if both <i>condition1</i> and <i>condition2</i> are
-          true.
+          Reports true if both <i>boolean1</i> and <i>boolean2</i> are
+          true.  Otherwise reports false.
         </p>
         <p>
-          Note that if <i>condition1</i> is false, then <i>condition2</i>
+          Note that if <i>boolean1</i> is false, then <i>boolean2</i>
           will not be run (since it can't affect the result).
         </p>
         <pre>
@@ -1263,9 +1263,23 @@ end
           This pair of commands is used to control the NetLogo feature of
           auto-plotting in the current plot. Auto-plotting will automatically
           update the x and y axes of the plot whenever the current pen
-          exceeds these boundaries. It is useful when wanting to show all
-          plotted values in the current plot, regardless of the current plot
-          ranges.
+          exceeds these boundaries when adding a new point with <code>plot</code>
+          or <code>plotxy</code>.  When using <code>histogram</code> to plot
+          values, only the y axis will automatically update its ranges, the x
+          axis will be unchanged.
+          Each plot has an auto-plotting setting called
+          <i>Auto Scale?</i> in the user interface that determines if the plot
+          will enable auto-plotting when the model starts.
+          Auto-plotting is useful when wanting to show all plotted values in
+          the current plot, regardless of the current plot ranges.
+        </p>
+        <p>
+          These commands will produce a runtime error if the current plot has not been set.
+        </p>
+        <p>
+          See also <a href="#plot">plot</a>, <a href="#plotxy">plotxy</a>, and
+          <a href="#histogram">histogram</a>, and also the
+          <a href="interfacetab.html#plots">Plots section of the Interface Tab guide</a>.
         </p>
       </div><!-- ======================================== -->
     </div>
@@ -1713,6 +1727,9 @@ show ceiling -4.5
       <p>
         See also <a href="#clear-all-plots">clear-all-plots</a>.
       </p>
+        <p>
+          This command will produce a runtime error if the current plot has not been set.
+        </p>
     </div>
     <div class="dict_entry" id="clear-ticks">
       <h3>
@@ -2027,6 +2044,9 @@ end
         <li>Mode: 0 (line mode)</li>
         <li>Interval: 1</li>
       </ul>
+      <p>
+        This command will produce a runtime error if the current plot has not been set.
+      </p>
       <p>
         See: <a href="#clear-plot">clear-plot</a>, <a href="#clear-all-plots">clear-all-plots</a>, and <a href="#set-current-plot-pen">set-current-plot-pen</a>.
       </p>
@@ -3507,9 +3527,9 @@ set hidden? not hidden?
         <p>
           The histogram is drawn on the current plot using the current plot
           pen and pen color. Auto scaling does not affect a histogram's
-          horizontal range, so set-plot-x-range should be used to control the
+          horizontal range, so <a href="#set-plot--range">set-plot-x-range</a> should be used to control the
           range, and the pen interval can then be set (either directly with
-          set-plot-pen-interval, or indirectly via set-histogram-num-bars) to
+          <a href="#set-plot-pen-interval">set-plot-pen-interval</a>, or indirectly via <a href="#set-histogram-num-bars">set-histogram-num-bars</a>) to
           control how many bars that range is split up into.
         </p>
         <p>
@@ -3526,6 +3546,13 @@ histogram [color] of turtles
 ;; draws a histogram showing how many turtles there are
 ;; of each color
 </pre>
+        <p>
+          This command will produce a runtime error if either the current plot or the current
+          pen has not been set.
+        </p>
+        <p>
+          See also <a href="#set-histogram-num-bars">set-histogram-num-bars</a>, <a href="#set-plot-pen-interval">set-plot-pen-interval</a>, <a href="#set-plot--range">set-plot-x-range</a>.
+        </p>
       </div>
       <div class="dict_entry" id="home">
         <h3>
@@ -3958,22 +3985,25 @@ ask turtles [ hubnet-send-override client-name self &quot;color&quot; [ red ] ]
           <a>if<span class="since">1.0</span></a>
         </h3>
         <h4>
-          <span class="prim_example">if <i>condition</i> [ <i>commands</i> ]</span>
+          <span class="prim_example">if <i>boolean</i> [ <i>commands</i> ]</span>
         </h4>
         <p>
-          Reporter must report a boolean (true or false) value.
+          If <i>boolean</i> reports true then the <i>commands</i> are run, otherwise the
+          commands are not run if <i>boolean</i> reports false.
         </p>
         <p>
-          If <i>condition</i> reports true, runs <i>commands</i>.
+          If <i>boolean</i> reports a value other than true or false a runtime error will occur.
         </p>
         <p>
-          The reporter may report a different value for different agents, so
+          The <i>boolean</i> may report a different value for different agents when used with a primitive like <a href="#ask">ask</a>, so
           some agents may run <i>commands</i> and others don't.
         </p>
         <pre>
-if xcor &gt; 0[ set color blue ]
-;; turtles in the right half of the world
-;; turn blue
+ask turtles [
+  if xcor &gt; 0 [ set color blue ]
+  ;; turtles in the right half of the world
+  ;; turn blue
+]
 </pre>
         <p>
           See also <a href="#ifelse">ifelse</a>, <a href="#ifelse-value">ifelse-value</a>.
@@ -3984,19 +4014,19 @@ if xcor &gt; 0[ set color blue ]
           <a>ifelse<span class="since">1.0</span></a>
         </h3>
         <h4>
-          <span class="prim_example">ifelse <i>reporter1</i> [ <i>commands1</i> ] [ <i>elsecommands</i> ]</span>
-          <span class="prim_example">(ifelse <i>reporter1</i> [ <i>commands1</i> ] <i>reporter2</i> [ <i>commands2</i> ] ... [ <i>elsecommands</i> ])</span>
+          <span class="prim_example">ifelse <i>boolean1</i> [ <i>commands1</i> ] [ <i>elsecommands</i> ]</span>
+          <span class="prim_example">(ifelse <i>boolean1</i> [ <i>commands1</i> ] <i>boolean2</i> [ <i>commands2</i> ] ... [ <i>elsecommands</i> ])<span class="since">6.1</span></span>
         </h4>
         <p>
-          The <i>reporter</i>s must report boolean (true or false) values.
+          For the first <i>boolean</i> that reports true, runs the <i>commands</i> that follow.
         </p>
         <p>
-          For the first <i>reporter</i> that reports true, runs the <i>commands</i> that follow.
-        </p>
-        <p>
-          If no <i>reporter</i> reports true, runs <i>elsecommands</i> or does nothing if
-          <i>elsecommands</i> is not given.  When using only one <i>reporter</i>
+          If no <i>boolean</i> reports true, runs <i>elsecommands</i> or does nothing if
+          <i>elsecommands</i> is not given.  When using only one <i>boolean</i>
           you do not need to surround the entire <i>ifelse</i> primitive and its blocks in parentheses.
+        </p>
+        <p>
+          If a <i>boolean</i> reports a value other than true or false a runtime error will occur.
         </p>
         <pre>
 ask patches
@@ -4008,8 +4038,9 @@ ask patches
 </pre>
         <p>
           The reporters may report a different value for different agents, so
-          some agents may run different command blocks.  When using more than one <i>reporter</i> you
+          some agents may run different command blocks.  When using more than one <i>boolean</i> you
           must surround the whole <i>ifelse</i> primitive and its blocks in parentheses.
+          This functionality was added in NetLogo 6.1.
         </p>
         <pre>
 ask patches [
@@ -4043,21 +4074,21 @@ ask patches [
           <a>ifelse-value<span class="since">2.0</span></a>
         </h3>
         <h4>
-          <span class="prim_example">ifelse-value <i>tfreporter1</i> [ <i>reporter1</i> ] [ <i>elsereporter</i> ]</span>
-          <span class="prim_example">(ifelse-value <i>tfreporter1</i> [ <i>reporter1</i> ] <i>tfreporter2</i> [ <i>reporter2</i> ] ... [ <i>elsereporter</i> ])</span>
+          <span class="prim_example">ifelse-value <i>boolean1</i> [ <i>reporter1</i> ] [ <i>elsereporter</i> ]</span>
+          <span class="prim_example">(ifelse-value <i>boolean1</i> [ <i>reporter1</i> ] <i>boolean2</i> [ <i>reporter2</i> ] ... [ <i>elsereporter</i> ])<span class="since">6.1</span></span>
         </h4>
         <p>
-          The <i>tfreporter</i>s must report boolean (true or false) values.
-        </p>
-        <p>
-          For the first <i>tfreporter</i> that reports true, runs the
-          <i>reporter</i> that follows and reports that result.  When using only one <i>tfreporter1</i>
+          For the first <i>boolean</i> that reports true, runs the
+          <i>reporter</i> that follows and reports that result.  When using only one <i>boolean</i>
           you do not need to surround the entire <i>ifelse-value</i> primitive and its blocks in parentheses.
         </p>
         <p>
-          If all <i>tfreporter</i>s report false, the result is the value of
+          If all <i>boolean</i>s report false, the result is the value of
           <i>elsereporter</i>.  You may leave out the <i>elsereporter</i>, but
-          if all <i>tfreporter</i>s report false then a runtime error will occur.
+          if all <i>boolean</i>s report false then a runtime error will occur.
+        </p>
+        <p>
+          If a <i>boolean</i> reports a value other than true or false a runtime error will occur.
         </p>
         <p>
           This can be used when a conditional is needed in the context of a
@@ -4070,15 +4101,16 @@ ask patches [
 ]
 ;; the left half of the world turns red and
 ;; the right half turns blue
-show n-values 10 [ifelse-value (? &lt; 5) [0] [1]]
+show n-values 10 [ n -&gt; ifelse-value (n &lt; 5) [0] [1] ]
 =&gt; [0 0 0 0 0 1 1 1 1 1]
 show reduce [ [a b] -&gt; ifelse-value (a &gt; b) [a] [b] ]
   [1 3 2 5 3 8 3 2 1]
 =&gt; 8
 </pre>
         <p>
-          When using more than one <i>tfreporter</i> you
+          When using more than one <i>boolean</i> you
           must surround the whole <i>ifelse-value</i> primitive and its blocks in parentheses.
+          This functionality was added in NetLogo 6.1.
         </p>
         <pre>
 ask patches [
@@ -5266,8 +5298,8 @@ show max-n-of 5 patches with [pycor = 0] [pxcor]
           coordinates must be greater than or equal to zero.
         </p>
         <p>
-          Note: You can set the size of the world only by editing the view
-          -- these are reporters which cannot be set.
+          Note: You can set the size of the world by editing the view or using
+          <a href="#resize-world">resize-world</a>.
         </p>
         <pre>
 crt 100 [ setxy random-float max-pxcor
@@ -5288,8 +5320,12 @@ crt 100 [ setxy random-float max-pxcor
         </h4>
         <p>
           Reports the statistical mean of the numeric items in the given
-          list. Errors on non-numeric items. The mean is the average, i.e.,
+          list. Ignores non-numeric items. The mean is the average, i.e.,
           the sum of the items divided by the total number of items.
+        </p>
+        <p>
+          In NetLogo 6.1.1 and earlier, mean would error when finding
+          non-number values in the given list.
         </p>
         <pre>
 show mean [xcor] of turtles
@@ -5448,8 +5484,8 @@ show min-one-of turtles [xcor + ycor]
           coordinates must be less than or equal to zero.
         </p>
         <p>
-          Note: You can set the size of the world only by editing the view
-          -- these are reporters which cannot be set.
+          Note: You can set the size of the world by editing the view or using
+          <a href="#resize-world">resize-world</a>.
         </p>
         <pre>
 crt 100 [ setxy random-float min-pxcor
@@ -6130,11 +6166,11 @@ show one-of mylist
           <span class="prim_example"><i>boolean1</i> or <i>boolean2</i></span>
         </h4>
         <p>
-          Reports true if either <i>boolean1</i> or <i>boolean2</i>, or both,
-          is true.
+          Reports true if <i>boolean1</i> is true, <i>boolean2</i> is true, or both
+          are true.  Otherwise returns false if both <i>boolean</i>s are false.
         </p>
         <p>
-          Note that if <i>condition1</i> is true, then <i>condition2</i> will
+          Note that if <i>boolean1</i> is true, then <i>boolean2</i> will
           not be run (since it can't affect the result).
         </p>
         <pre>
@@ -6690,6 +6726,9 @@ patch-set [neighbors] of turtles
           <i>number</i>. (The first time the command is used on a plot, the
           point plotted has an x-value of 0.)
         </p>
+        <p>
+          This command will produce a runtime error if the current plot has not been set.
+        </p>
       </div>
       <div class="dict_entry" id="plot-name">
         <h3>
@@ -6700,6 +6739,9 @@ patch-set [neighbors] of turtles
         </h4>
         <p>
           Reports the name of the current plot (a string)
+        </p>
+        <p>
+          This command will produce a runtime error if the current plot has not been set.
         </p>
       </div>
       <div class="dict_entry" id="plot-pen-exists">
@@ -6712,6 +6754,9 @@ patch-set [neighbors] of turtles
         <p>
           Reports true if a plot pen with the given name is defined in the
           current plot. Otherwise reports false.
+        </p>
+        <p>
+          This command will produce a runtime error if the current plot has not been set.
         </p>
       </div>
       <div class="dict_entry" id="plot-pen-switch-status">
@@ -6727,6 +6772,10 @@ patch-set [neighbors] of turtles
           Puts down (or up) the current plot-pen, so that it draws (or
           doesn't). (By default, all pens are down initially.)
         </p>
+        <p>
+         These commands will produce a runtime error if either the current plot or the current
+          pen has not been set.
+        </p>
       </div>
       <div class="dict_entry" id="plot-pen-reset">
         <h3>
@@ -6741,6 +6790,10 @@ patch-set [neighbors] of turtles
           mode, and interval are reset to the default values from the plot
           Edit dialog.
         </p>
+        <p>
+          This command will produce a runtime error if either the current plot or the current
+          pen has not been set.
+        </p>
       </div>
       <div class="dict_entry" id="plotxy">
         <h3>
@@ -6753,6 +6806,9 @@ patch-set [neighbors] of turtles
           Moves the current plot pen to the point with coordinates
           (<i>number1</i>, <i>number2</i>). If the pen is down, a line, bar,
           or point will be drawn (depending on the pen's mode).
+        </p>
+        <p>
+          This command will produce a runtime error if the current plot has not been set.
         </p>
       </div>
       <div class="dict_entry" id="plot-cor-max-or-min">
@@ -6776,6 +6832,9 @@ patch-set [neighbors] of turtles
           These values can be set with the commands set-plot-x-range and
           set-plot-y-range. (Their default values are set from the plot Edit
           dialog.)
+        </p>
+        <p>
+          These commands will produce a runtime error if the current plot has not been set.
         </p>
       </div>
       <div class="dict_entry" id="position">
@@ -7842,7 +7901,7 @@ file-open &quot;my-file.txt&quot;
         <p>
           The current plot's current pen is set to the pen named
           <i>penname</i> (a string). If no such pen exists in the current
-          plot, a runtime error occurs.
+          plot, a runtime error occurs. If the current plot has not been set, a runtime error occurs.
         </p>
       </div>
       <div class="dict_entry" id="set-default-shape">
@@ -7912,6 +7971,10 @@ ask cats [ set breed dogs ]
         <p>
           See also <a href="#histogram">histogram</a>.
         </p>
+        <p>
+          This command will produce a runtime error if either the current plot or the current
+          pen has not been set.
+        </p>
       </div>
       <div class="dict_entry" id="set-line-thickness">
         <h3>
@@ -7974,6 +8037,9 @@ ask cats [ set breed dogs ]
           <b>Note:</b> Plot backgrounds do not support transparency.
           If a list is used to set the color, the alpha component will be ignored.
         </p>
+        <p>
+          This command will produce a runtime error if the current plot has not been set.
+        </p>
       </div>
       <div class="dict_entry" id="set-plot-pen-color">
         <h3>
@@ -7985,6 +8051,10 @@ ask cats [ set breed dogs ]
         <p>
           Sets the color of the current plot pen to <i>color</i>.
         </p>
+      <p>
+        This command will produce a runtime error if either the current plot or the current
+        pen has not been set.
+      </p>
       </div>
       <div class="dict_entry" id="set-plot-pen-interval">
         <h3>
@@ -7997,6 +8067,10 @@ ask cats [ set breed dogs ]
           Tells the current plot pen to move a distance of <i>number</i> in
           the x direction during each use of the plot command. (The plot pen
           interval also affects the behavior of the histogram command.)
+        </p>
+        <p>
+          This command will produce a runtime error if either the current plot or the current
+          pen has not been set.
         </p>
       </div>
       <div class="dict_entry" id="set-plot-pen-mode">
@@ -8024,6 +8098,10 @@ ask cats [ set breed dogs ]
         </ul>
         <p>
           The default mode for new pens is 0 (line mode).
+        </p>
+        <p>
+          This command will produce a runtime error if either the current plot or the current
+          pen has not been set.
         </p>
       </div>
       <div class="dict_entry" id="setup-plots">
@@ -8067,6 +8145,9 @@ ask cats [ set breed dogs ]
           The change is temporary and is not saved with the model. When the
           plot is cleared, the ranges will revert to their default values as
           set in the plot's Edit dialog.
+        </p>
+        <p>
+          These commands will produce a runtime error if the current plot has not been set.
         </p>
       </div>
       <div class="dict_entry" id="setxy">
@@ -10057,7 +10138,7 @@ write &quot;hello world&quot;
         </h4>
         <p>
           Reports true if either <i>boolean1</i> or <i>boolean2</i> is true,
-          but not when both are true.
+          but not when both are true.  Otherwise returns false.
         </p>
         <pre>
 if (pxcor &gt; 0) xor (pycor &gt; 0)

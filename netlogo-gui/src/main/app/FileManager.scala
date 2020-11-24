@@ -383,6 +383,12 @@ class FileManager(workspace: AbstractWorkspaceScala,
       r.foreach { uri =>
         val path = Paths.get(uri).toString
         modelSaver.setCurrentModel(modelSaver.currentModel.copy(version = Version.version))
+        // TODO: make change so the separate code tab shows as unchanged
+        // in the case where it is being saved, and is in a separate code tab
+        // the appropriate code is tabManager.setDirtyMonitorCodeWindow
+        // problem 1) how to access the _tabManager
+        // problem 2) only call the code for the main code tab
+        // one approach be to create a special SaveMainCodeTab event. Nov 2020 AAB
         new ModelSavedEvent(path).raise(eventRaiser)
       }
       result = Some(r)

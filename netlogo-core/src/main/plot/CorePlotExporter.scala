@@ -2,10 +2,13 @@
 
 package org.nlogo.plot
 
-import org.nlogo.api.CSV
+import org.nlogo.api.{ CSV, PlotInterface, PlotPointInterface }
 import collection.mutable.Buffer
 
-class PlotExporter(private val plot: Plot, private val csv: CSV) {
+// This would be called just `PlotExporter` but we need to leave the class with
+// that name and a similar constructor in place in GUI for deprecation.
+// -Jeremy B November 2020
+class CorePlotExporter(private val plot: PlotInterface, private val csv: CSV) {
   def export(writer: java.io.PrintWriter) {
     exportIntro(writer)
     exportPens(writer)
@@ -67,14 +70,14 @@ class PlotExporter(private val plot: Plot, private val csv: CSV) {
     // Output data rows
     // Get pen data lists, put them in a list,
     // and transpose that list into a 2 dimensional array
-    val penDataListsList = Buffer[Seq[PlotPoint]]()
+    val penDataListsList = Buffer[Seq[PlotPointInterface]]()
     var maxPenDataListSize = 0
     for (pen <- plot.pens) {
       val penDataList = Option(pen.points).getOrElse(Vector())
       maxPenDataListSize = maxPenDataListSize max penDataList.size
       penDataListsList += penDataList
     }
-    val outColumnsArray:Array[Array[PlotPoint]] = Array.ofDim(maxPenDataListSize, numPens)
+    val outColumnsArray:Array[Array[PlotPointInterface]] = Array.ofDim(maxPenDataListSize, numPens)
     for (i <- 0 until numPens) {
       val penDataList = penDataListsList(i)
       val penDataListSize = penDataList.size

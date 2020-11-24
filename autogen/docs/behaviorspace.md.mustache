@@ -283,6 +283,10 @@ Fifth, doing runs in parallel will multiply the experiment's memory requirements
 accordingly. You may need to increase NetLogo's memory ceiling (see
 [this FAQ entry](faq.html#how-big-can-my-model-be-how-many-turtles-patches-procedures-buttons-and-so-on-can-my-model-contain)).
 
+Sixth, each parallel run will get its own world for the model to run in.  This world is *not* cleared automatically by BehaviorSpace if a parallel run gets re-used for another repitition, which happens quite frequently.  This means, for example, if you do `ask patches [ set pcolor red ]` in one run and do not use `clear-all` or `clear-patches` in the setup commands of the next run, then the patches will all still be red.  In general using `clear-all` before each run would be a best practice, but there are times when you might not want to, such as loading data from a file that doesn't change run-to-run.  Just be careful with whatever data is not cleared out.
+
+Seventh, there is a very, very small chance that at startup multiple parallel runs could wind up with the same random number generator state if they startup at the eact same moment in time.  This means the runs would produce identical output for all random operations and likely the same results.  This would have a chance to happen when running on very fast processors and with lots of parallel runs at once.  If you need to make sure this doesn't impact your results, you can add `random-seed new-seed` to your setup commands to re-generate a new unique random seed for each run.  In fact, storing the `new-seed` as a global variable so you can output it with the rest of your results would let you re-run a run later on by manually using that value to set the `random-seed`.
+
 #### Observing runs
 
 After you complete the run options dialog, another dialog will appear, titled

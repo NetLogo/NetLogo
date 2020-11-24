@@ -93,6 +93,8 @@ package optimize {
   object With extends RewritingReporterMunger {
     val clazz = classOf[_with]
     def munge(root: Match) {
+      // This optimization works only in 2D AAB Feb-21-2020
+      if (org.nlogo.api.Version.is3D) return
       root.matchArg(0, classOf[_patches])
       val arg1 = root.matchArg(1).matchReporterBlock().matchit(classOf[_equal])
       val pcor = arg1.matchOneArg(classOf[_patchvariabledouble])
@@ -332,6 +334,60 @@ package optimize {
         root.replace(classOf[_randomconst], d.toLong)
         root.strip()
       }
+    }
+  }
+  // _equal(_count, _constdouble: n) => _optimizecount(*, n)
+  object HasEqual extends RewritingReporterMunger {
+    val clazz = classOf[_equal]
+    def munge(root: Match) {
+      val count = root.matchOneArg(classOf[_count])
+      val constDouble = root.matchOtherArg(count, classOf[_constdouble])
+      root.strip()
+      root.replace(new _optimizecount((a: Int, b: Int) => a == b))
+      root.graftArg(count.matchArg(0))
+      root.graftArg(constDouble)
+    }
+  }
+  // _greaterthan(_count, _constdouble: n) => _optimizecount(*, n)
+  object HasGreaterThan extends RewritingReporterMunger {
+    val clazz = classOf[_greaterthan]
+    def munge(root: Match) {
+      val count = root.matchOneArg(classOf[_count])
+      val constDouble = root.matchOtherArg(count, classOf[_constdouble])
+      if (root.matchArg(0).reporter.isInstanceOf[_constdouble])
+        root.replace(new _optimizecount((a: Int, b: Int) => a < b))
+      else
+        root.replace(new _optimizecount((a: Int, b: Int) => a > b))
+      root.strip()
+      root.graftArg(count.matchArg(0))
+      root.graftArg(constDouble)
+    }
+  }
+  // _lessthan(_count, _constdouble: n) => _optimizecount(*, n)
+  object HasLessThan extends RewritingReporterMunger {
+    val clazz = classOf[_lessthan]
+    def munge(root: Match) {
+      val count = root.matchOneArg(classOf[_count])
+      val constDouble = root.matchOtherArg(count, classOf[_constdouble])
+      if (root.matchArg(0).reporter.isInstanceOf[_constdouble])
+        root.replace(new _optimizecount((a: Int, b: Int) => a > b))
+      else
+        root.replace(new _optimizecount((a: Int, b: Int) => a < b))
+      root.strip()
+      root.graftArg(count.matchArg(0))
+      root.graftArg(constDouble)
+    }
+  }
+  // _notequal(_count, _constdouble: n) => _optimizecount(*, n)
+  object HasNotEqual extends RewritingReporterMunger {
+    val clazz = classOf[_notequal]
+    def munge(root: Match) {
+      val count = root.matchOneArg(classOf[_count])
+      val constDouble = root.matchOtherArg(count, classOf[_constdouble])
+      root.strip()
+      root.replace(new _optimizecount((a: Int, b: Int) => a != b))
+      root.graftArg(count.matchArg(0))
+      root.graftArg(constDouble)
     }
   }
 }

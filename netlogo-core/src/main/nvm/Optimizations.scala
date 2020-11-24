@@ -33,7 +33,11 @@ object Optimizations {
         "Nsum4",       // optimizes summing neighbor4 values
         "PatchAt",     // optimizes patch at offsets
         "RandomConst", // inlines const argument to random
-        "With"))       // optimizes "with" to patch-col / patch-row
+        "With",        // optimizes "with" to patch-col / patch-row
+        "HasEqual",
+        "HasGreaterThan",
+        "HasLessThan",
+        "HasNotEqual"))
 
   val standardOptimizations =
     fdOptimizations ++
@@ -50,8 +54,8 @@ object Optimizations {
     standardOptimizations ++ Seq(
       Reporter -> toOptimizerClassName("PatchVariableDouble"),
       Reporter -> toOptimizerClassName("TurtleVariableDouble"),
-      Reporter -> "org.nlogo.compile.optimize.Constants",
-      Reporter -> "org.nlogo.compile.optimize.InRadiusBoundingBox")
+      Reporter -> "org.nlogo.compile.optimize.Constants"
+    )
 
   private def optList(tpe: OptimizationType, opts: Seq[String]): OptimizationList =
     opts.map(klass => tpe -> toOptimizerClassName(klass))

@@ -47,9 +47,12 @@ with ViewSettings with Controllable {
   def setModelPath(path: String)
   def getModelDir: String
   def getModelFileName: String
-  // kludgy this is AnyRef, but we don't want to have a compile-time dependency on the plot
-  // package. should be cleaned up sometime by introducing PlotManager? ST 2/12/08
+  @deprecated("Use `realPlotManager`", "6.1.2")
   def plotManager: AnyRef
+  // Annoyingly this will still likely have to be cast with `asInstanceOf` in GUI and headless because the
+  // `api.PlotManagerInterface` doesn't have everything needed for the concrete implementations... yet.
+  // -Jeremy Octover 2020
+  def realPlotManager: PlotManagerInterface
   def previewCommands: PreviewCommands
   def clearTicks()
   @throws(classOf[InterruptedException])

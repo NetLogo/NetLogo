@@ -2,9 +2,9 @@
 
 package org.nlogo.prim.etc
 
-import org.nlogo.{core, api, nvm},
-  core.{ Syntax, PlotPenInterface },
-  api.{PlotInterface, PlotManagerInterface, PlotAction},
+import org.nlogo.{ core, api, nvm },
+  core.{ PlotPenInterface => PlotPenModes, Syntax },
+  api.{ PlotAction, PlotInterface, PlotManagerInterface, PlotPenInterface },
   nvm.{ Command, Context, RuntimePrimitiveException, Instruction, Reporter }
 
 //
@@ -13,7 +13,7 @@ import org.nlogo.{core, api, nvm},
 
 trait PlotHelpers extends Instruction {
   def plotManager =
-    workspace.plotManager.asInstanceOf[PlotManagerInterface]
+    workspace.realPlotManager.asInstanceOf[PlotManagerInterface]
   def currentPlotState(context: Context) =
     currentPlot(context).state
   def currentPlot(context: Context): PlotInterface =
@@ -298,7 +298,7 @@ class _plotpenreset extends PlotActionCommand() {
 class _setplotpenmode extends PlotActionCommand(Syntax.NumberType) {
   override def action(context: Context) = {
     val mode = argEvalIntValue(context, 0)
-    if (mode < PlotPenInterface.MinMode || mode > PlotPenInterface.MaxMode) {
+    if (mode < PlotPenModes.MinMode || mode > PlotPenModes.MaxMode) {
       throw new RuntimePrimitiveException(context, this,
         mode + " is not a valid plot pen mode (valid modes are 0, 1, and 2)")
     }

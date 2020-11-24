@@ -456,6 +456,8 @@ edit.hubnet.view.height = Height (pixels)
 tools.preferences = NetLogo Preferences
 tools.preferences.restartRequired = (restart required)
 tools.preferences.uiLanguage = User Interface Language:
+tools.preferences.loggingEnabled = Enable logging:
+tools.preferences.loggingConfigFile = Logging configuration file:
 tools.preferences.editorLineNumbers = Show Line Numbers (in editor):
 tools.preferences.includedFilesMenu = Always show "Included Files" menu (in Code tab):
 tools.preferences.proceduresMenuSortOrder = Sort order of procedures menu (in Code tab):
@@ -580,6 +582,8 @@ tools.behaviorSpace.timeLimit.info = stop after this many steps (0 = no limit)
 
 tools.loggingMode.enterName = Enter your name:
 tools.loggingMode.fileDoesNotExist = The file {0} does not exist.
+tools.loggingMode.errorComment.button = Log a comment
+tools.loggingMode.errorComment.label = What is your comment about the error?
 
 tools.magicModelMatcher = Magic Model Matcher
 tools.magicModelMathcer.mustChoose = You must choose!

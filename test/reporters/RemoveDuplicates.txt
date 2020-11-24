@@ -1,2 +1,5 @@
-TestRemoveDuplicateAgentSets
+TestRemoveDuplicateAgentSets_2D
   length remove-duplicates list (patch-set patch 0 0 patch 0 1) (patch-set patch 0 1 patch 0 0) => 1
+
+TestRemoveDuplicateAgentSets_3D
+  length remove-duplicates list (patch-set patch 0 0 0 patch 0 1 0) (patch-set patch 0 1 0 patch 0 0 0) => 1

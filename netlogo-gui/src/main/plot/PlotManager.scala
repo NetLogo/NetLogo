@@ -3,10 +3,9 @@
 package org.nlogo.plot
 
 import scala.collection.mutable
-import org.nlogo.api.{CommandLogoThunk, HaltSignal, LogoThunkFactory, MersenneTwisterFast}
+import org.nlogo.api.{ CommandLogoThunk, HaltSignal, LogoThunkFactory, PlotAction, MersenneTwisterFast }
 import org.nlogo.core.CompilerException
-
-import scala.util.{Failure, Success, Try}
+import scala.util.{ Failure, Success, Try }
 
 // handles compilation and execution of plot code
 // among a couple of other little tasks.
@@ -45,12 +44,18 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
     plot
   }
 
-  // possible null return
-  def getPlot(name: String) = _plots.find(_.name.equalsIgnoreCase(name)).orNull
+  @deprecated("Use `maybeGetPlot()`", "6.1.2")
+  def getPlot(name: String): Plot = _plots.find(_.name.equalsIgnoreCase(name)).orNull
 
   // used for letting the user choose which plot to export
-  def getPlotNames: Array[String] = _plots.map(_.name).toArray
-  def nextName = Stream.from(1).map("plot " + _).find(getPlot(_) == null).get
+  def getPlotNames: Seq[String] = _plots.map(_.name)
+  def nextName = Stream.from(1).map("plot " + _).find(maybeGetPlot(_) == None).get
+
+  // these are for api compatibility - Jeremy B Octover 2020
+  def hasPlot(name: String): Boolean = _plots.exists(_.name == name)
+  def maybeGetPlot(name: String): Option[Plot] = _plots.find(_.name.equalsIgnoreCase(name))
+  def publish(action: PlotAction): Unit = ???
+  def setCurrentPlot(name: String): Unit = currentPlot = maybeGetPlot(name)
 
   def forgetPlot(goner: Plot) {
     if (currentPlot == Some(goner)) currentPlot = None

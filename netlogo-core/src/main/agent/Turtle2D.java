@@ -29,8 +29,23 @@ public strictfp class Turtle2D
     super(world);
   }
 
-  public Turtle hatch() {
-    return hatch(getBreed());
+  @Override
+  public Turtle hatch(TreeAgentSet breed) {
+    Turtle2D child = new Turtle2D((World2D) _world);
+    child.heading = heading;
+    child.xcor = xcor;
+    child.ycor = ycor;
+    child.setVariables(_variables.clone());
+    child.setId(_world.newTurtleId());
+    _world.turtles().add(child);
+    if (breed != getBreed()) {
+      child.setBreed(breed);
+    }
+    if (breed != _world.turtles()) {
+      breed.add(child);
+    }
+    child.getPatchHere().addTurtle(child);
+    return child;
   }
 
   Turtle makeTurtle(World world) {

@@ -11,6 +11,7 @@ import java.awt.{ Color, Dimension, Frame, Toolkit }
 import java.awt.event.{ ActionEvent, ActionListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent,
   WindowAdapter, WindowEvent }
 import java.io.File
+import java.nio.file.Paths
 import java.net.URI
 import java.util.{ Enumeration, LinkedList, List => JList }
 import javax.swing.{ AbstractAction, Action, Box, BorderFactory, BoxLayout,
@@ -39,7 +40,7 @@ object ModelsLibraryDialog {
   // finish is a callback called *on the UI Thread* with the URI of the selected model
   @throws(classOf[UserCancelException])
   def open(parent: Frame, onSelect: URI => Unit): Unit = {
-    if (me == null) {
+    if (me == null || ModelsLibrary.needsModelScan) {
       ModalProgressTask.onUIThread(parent, I18N.gui.get("modelsLibrary.loading"), { () =>
         try {
           buildRootNode.foreach { node =>
@@ -102,11 +103,13 @@ object ModelsLibraryDialog {
     val info: String = {
       if (allowsChildren) ""
       else {
-        val _info  =
-          infoMap.get(
-            path.substring(path.indexOf("models"))
-              .replace(System.getProperty("file.separator"), "/"))
-            .getOrElse("")
+        val modelsIndex = path.indexOf("models")
+        val _info = if (modelsIndex >= 0) {
+          val infoKey = path.substring(modelsIndex).replace(System.getProperty("file.separator"), "/")
+          infoMap.get(infoKey).getOrElse("")
+        } else {
+          ModelsLibraryIndexReader.getWhatIsIt(Paths.get(path)).getOrElse("")
+        }
 
         // All of the above the calls to String.substring and
         // String.trim will leave the char array containing the

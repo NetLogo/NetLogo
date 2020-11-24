@@ -44,4 +44,4 @@ SET "ABSOLUTE_CLASSPATH=%BASE_DIR%{{{netlogoJar}}}"
 REM -classpath ....               specify jars
 REM org.nlogo.headless.Main       specify we want headless, not GUI
 
-"%JAVA%" %JVM_OPTS% -classpath "%ABSOLUTE_CLASSPATH%" org.nlogo.headless.Main %ARGS%
+"%JAVA%" %JVM_OPTS% -classpath "%ABSOLUTE_CLASSPATH%" {{{mainClass}}} %ARGS%

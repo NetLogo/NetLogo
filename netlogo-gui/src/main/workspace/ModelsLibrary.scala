@@ -6,7 +6,7 @@ import java.io.File
 import java.nio.file.{ Files, Path }
 import javax.swing.tree.DefaultMutableTreeNode
 
-import org.nlogo.api.Version
+import org.nlogo.api.{ FileIO, Version }
 
 import scala.annotation.tailrec
 import scala.math.Ordering
@@ -99,7 +99,18 @@ object ModelsLibrary {
       val directoryRoot =
         if (!Version.is3D || !exclusive) new File(modelsRoot, "").getCanonicalFile
         else new File(modelsRoot, "3D").getCanonicalFile
-      rootNode = scanDirectory(directoryRoot.toPath, true, exclusive)
+      rootNode = scanDirectory(directoryRoot.toPath, exclusive) match {
+        case Some(rn: Tree) => {
+          val extensionsRoot = new File(FileIO.perUserDir("extensions", true), "").getCanonicalFile
+          val extensionsNode = scanDirectory(extensionsRoot.toPath, exclusive, Some("Extension Manager Samples"))
+          val children = extensionsNode match {
+            case Some(en) => rn.children ++ Seq(en)
+            case _        => rn.children
+          }
+          Some(Tree(name = rn.name, path = "", children = children)(new TopLevelOrdering(exclusive)))
+        }
+        case rn => rn
+      }
     } catch {
       case e: java.io.IOException =>
         System.err.println("error: IOException canonicalizing models library path")
@@ -108,7 +119,7 @@ object ModelsLibrary {
   }
 
   def scanForModelsAtRoot(path: String, exclusive: Boolean): Option[Node] =
-    scanDirectory(new File(path, "").toPath, true, exclusive)
+    scanDirectory(new File(path, "").toPath, exclusive)
 
   def getImagePath(filePath: String): String = {
     val index = filePath.indexOf(".nlogo");
@@ -133,23 +144,17 @@ object ModelsLibrary {
     }
   }
 
-  private def scanDirectory(directory: Path, topLevel: Boolean, exclusive: Boolean): Option[Node] = {
+  private def scanDirectory(directory: Path, exclusive: Boolean, nameOverride: Option[String] = None): Option[Node] = {
     if (! Files.isDirectory(directory) || Files.isSymbolicLink(directory)) {
       None
     }
 
-    val ordering =
-      if (topLevel)
-        new TopLevelOrdering(exclusive)
-      else
-        NLogoModelOrdering
-
     val children =
-      getChildPaths(directory).sortBy(_.getFileName.toString)(ordering)
+      getChildPaths(directory).sortBy(_.getFileName.toString)(NLogoModelOrdering)
         .filterNot(p => isBadName(p.getFileName.toString))
         .flatMap { (p: Path) =>
         if (Files.isDirectory(p))
-          scanDirectory(p, false, exclusive)
+          scanDirectory(p, exclusive)
         else {
           val fileName = p.getFileName.toString.toUpperCase
           if (fileName.endsWith(".NLOGO") || fileName.endsWith(".NLOGO3D"))
@@ -163,9 +168,9 @@ object ModelsLibrary {
 
     // don't add empty folders
     if (children.nonEmpty) {
-      val path = if (topLevel) "" else directory.toString + File.separator
-      val displayName = directory.getFileName.toString
-      Some(Tree(displayName, path, children.toSeq)(ordering))
+      val path        = directory.toString + File.separator
+      val displayName = nameOverride.getOrElse(directory.getFileName.toString)
+      Some(Tree(displayName, path, children.toSeq)(NLogoModelOrdering))
     } else
       None
   }
@@ -199,13 +204,15 @@ object ModelsLibrary {
         if (! Version.is3D)
           Seq(
             "SAMPLE MODELS", "CURRICULAR MODELS", "CODE EXAMPLES",
-            "HUBNET ACTIVITIES", "IABM TEXTBOOK", "ALTERNATIVE VISUALIZATIONS")
+            "HUBNET ACTIVITIES", "IABM TEXTBOOK", "ALTERNATIVE VISUALIZATIONS",
+            "EXTENSION MANAGER SAMPLES")
         else if (Version.is3D && exclusive)
           Seq("3D")
         else if (Version.is3D && ! exclusive)
           Seq(
             "3D", "SAMPLE MODELS", "CURRICULAR MODELS", "CODE EXAMPLES",
-            "HUBNET ACTIVITIES", "IABM TEXTBOOK", "ALTERNATIVE VISUALIZATIONS")
+            "HUBNET ACTIVITIES", "IABM TEXTBOOK", "ALTERNATIVE VISUALIZATIONS",
+            "EXTENSION MANAGER SAMPLES")
         else
           Seq()
 

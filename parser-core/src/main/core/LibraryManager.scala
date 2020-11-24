@@ -2,6 +2,8 @@
 
 package org.nlogo.core
 
+import scala.util.matching.Regex
+
 import LibraryStatus.{ CanInstall, CanUpdate, UpToDate }
 
 trait LibraryManager {
@@ -18,6 +20,32 @@ class DummyLibraryManager extends LibraryManager {
 
 import java.net.URL
 
+object LibraryInfo {
+  def isAvailableNewer(available: String, installed: String): Boolean = {
+    val (availableMajor, availableMinor, availablePatch, availableExtra) = parseVersion(available)
+    val (installedMajor, installedMinor, installedPatch, installedExtra) = parseVersion(installed)
+
+    (availableMajor > installedMajor ||
+      availableMinor > installedMinor ||
+      availablePatch > installedPatch ||
+      // this works for most basic scenarios, like: "" > "-beta1", "-beta2" > "-beta1", etc.
+      // it might break on some edge cases, but our versions so far have been pretty simple.
+      // -Jeremy B November 2020
+      availableExtra > installedExtra)
+  }
+
+  def parseVersion(version: String): (Int, Int, Int, String) = {
+    val versionRegex = new Regex("(\\d+)\\.(\\d+)(?:\\.(\\d+))?(.*)?")
+    val versionRegex(major, minor, patch, extra) = version
+    (
+      major.toInt
+    , minor.toInt
+    , Option(patch).map(_.toInt).getOrElse(0)
+    , Option(extra).getOrElse("")
+    )
+  }
+}
+
 case class LibraryInfo(
   name: String,
   codeName: String,
@@ -32,11 +60,11 @@ case class LibraryInfo(
 
   def status: LibraryStatus =
     installedVersionOpt.map {
-      iv =>
-        if (iv == version)
-          UpToDate
-        else
+      installed =>
+        if (LibraryInfo.isAvailableNewer(version, installed))
           CanUpdate
+        else
+          UpToDate
     }.getOrElse(CanInstall)
 
   // We override `equals`, because we don't want to compare URLs directly. Checking equality

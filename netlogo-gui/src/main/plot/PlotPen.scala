@@ -6,17 +6,17 @@ import collection.mutable.Buffer
 
 import java.io.{ Serializable => JSerializable }
 
-import org.nlogo.core.{ PlotPenState, PlotPenInterface }
-
+import org.nlogo.api.PlotPenInterface
+import org.nlogo.core.{ PlotPenInterface => PlotPenModes, PlotPenState }
 
 object PlotPen {
   // modes (all static)
   // These are integers, not an enum, because modelers actually use
   // these numbers to refer to the modes in their NetLogo yAxisCode.
   // (Why we didn't use strings, I'm not sure.) - ST 3/21/08
-  val LINE_MODE = PlotPenInterface.LineMode
-  val BAR_MODE = PlotPenInterface.BarMode
-  val POINT_MODE = PlotPenInterface.PointMode
+  val LINE_MODE = PlotPenModes.LineMode
+  val BAR_MODE = PlotPenModes.BarMode
+  val POINT_MODE = PlotPenModes.PointMode
   def isValidPlotPenMode(mode: Int) = mode >= 0 && mode <= 2
 }
 
@@ -42,7 +42,7 @@ class PlotPen (
         var penModeChanged: Boolean = false,
         private var _isDown: Boolean = true,
         private var _hidden: Boolean = false)
-extends org.nlogo.core.PlotPenInterface with JSerializable {
+extends PlotPenInterface with JSerializable {
 
   private var _runtimeError: Option[Exception] = None
 

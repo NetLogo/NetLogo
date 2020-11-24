@@ -33,6 +33,10 @@ Ifelse-value-gives-type-errors-in-variadic-position
 Ifelse-value-handles-prefix-predicates
   (ifelse-value any? links [ 0 ] any? turtles [ 1 ] any? patches [ 2 ]  [ 3 ]) => 2
 
-Ifelse-value-handles-complex-conditions
+Ifelse-value-handles-complex-conditions_2D
   (ifelse-value count turtles > 0 [ 0 ] any? turtles [ 10 ] any? patches [ 100 ] [ -1 ]) => 100
   (ifelse-value count patches < 0 [ 0 ] count patches < 10 [ 10 ] count patches < 100 [ 100 ] count patches < 1000 [ 1000 ] [ -1 ]) => 1000
+
+Ifelse-value-handles-complex-conditions_3D
+  (ifelse-value count turtles > 0 [ 0 ] any? turtles [ 10 ] any? patches [ 100 ] [ -1 ]) => 100
+  (ifelse-value count patches < 0 [ 0 ] count patches < 10 [ 10 ] count patches < 100 [ 100 ] count patches < 10000 [ 10000 ] [ -1 ]) => 10000

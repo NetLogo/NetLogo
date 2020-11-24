@@ -3,39 +3,39 @@
 NetLogo's logging facility allows researchers to record student actions for
 later analysis.
 
-Logging in NetLogo, once initiated, is invisible to the student. The researcher
+Logging in NetLogo is invisible to the student once initiated. The researcher
 can choose the type of events logged through a configuration file.
 
 NetLogo uses the log4j package for logging. If you have previous experience with
 this package you'll find logging in NetLogo familiar.
 
-Logging is supported only by the special NetLogo Logging application.
-
 [TOC]
 
 ## Starting logging
 
-This depends on what operating system you are using.
+There is a NetLogo preference to enable logging:
 
-### Mac OS X or Windows
+- Open NetLogo, then open **Preferences** from the **Tools** menu.
+- Check the box for **Enable Logging:** then click **OK**.
+- Restart NetLogo and logging will be enabled.
 
-There is a special logging launcher in the NetLogo directory called
-NetLogo Logging. Double click on the icon.
+The setting will remain in effect until it is unchecked and NetLogo is restarted again.
 
-On Windows, the NetLogo directory can be found at `C:\Program Files`, unless you
-chose a different location when you installed NetLogo.
+You can also specify the **Logging configuration file:** to use in the NetLogo **Preferences** as well.  If you leave
+this value blank, then a default configuration file will be used (see below for more information).
 
-### Linux and others
+### Starting with the command line
 
-To enable logging, invoke the `netlogo.sh` script as follows:
+You can also enable logging and specify the configuration file to use by using a command line switch on Windows
+and Linux.
 
-    netlogo.sh --logging netlogo_logging.xml
+Let's assume you are running on Linux and you have NetLogo installed in a `NetLogo 6.1.1` directory in your
+home folder.  To enable logging, invoke the `NetLogo` executable like so:
 
-You could also modify the script to include these flags, or copy the script and
-modify the copy.
+    ~/NetLogo\ 6.1.1/NetLogo --logging ~/NetLogo\ 6.1.1/app/netlogo_logging.xml
 
-You can replace netlogo_logging.xml with any valid log4j XML configuration file,
-which will be discussed in more detail later.
+You can replace the path to `netlogo_logging.xml` with any valid log4j XML configuration file (see below for more
+information).
 
 ## Using logging
 
@@ -44,15 +44,13 @@ the logs generated during this session.
 
 ### Where logs are stored
 
-Logs are stored in the OS-specific temp directory. On most Unix-like systems
-that is `/tmp`. On Windows Vista the logs can be found in
-`c:\Users\<user>\AppData\Local\Temp`, where `<user>` is the logged in user. On
-Mac OS X, the temp directory varies for each user. You can determine your temp
-directory by opening the Terminal application and typing `echo $TMPDIR`> at the
-prompt.
+Logs are stored in the OS-specific home directory. On most Unix-like systems
+that is `/home/<username>/`.  On Windows the logs can be found in
+`C:\Users\<username>\`, where `<username>` is the logged in user. On macOS the
+usual location is `/Users/<username>/`.
 
 There are two convenience commands that will help you manage the logs.
-<code>__zip-log-files *filename*</code> will gather all the logs in the temp
+`__zip-log-files *filename*` will gather all the logs in the temp
 directory and put them in one zip file, at the location specified. After doing
 `__zip-log-files` the existing logs are **not** deleted, you can do so
 explicitly by using `__delete-log-files`.
@@ -182,7 +180,7 @@ name. So, for example, the logger `GLOBALS` would actually be
 
 ### How to configure the logging output
 
-The default logging configuration (netlogo_logging.xml) looks something like
+The default logging configuration (`netlogo_logging.xml`) looks something like
 this:
 
 NetLogo defines 8 loggers, all descend directly from the root logger, which
@@ -260,4 +258,3 @@ configuration file, as it is not serving any other purpose.
 This is only a basic introduction to configuration files for logging in NetLogo.
 There are many more configuration options available through the log4j framework.
 See the [log4j documentation](https://logging.apache.org/log4j/1.2/manual.html).
-
