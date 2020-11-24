@@ -30,28 +30,26 @@ object HeadlessWorkspace {
    * Makes a new instance of NetLogo capable of running a model "headless", with no GUI.
    */
   def newInstance: HeadlessWorkspace =
-    newInstance(classOf[HeadlessWorkspace],false)
+    newInstance(Version.is3D)
 
-  def newInstance(is3d: Boolean): HeadlessWorkspace = newInstance(classOf[HeadlessWorkspace],is3d)
+  def newInstance(is3d: Boolean): HeadlessWorkspace = newInstance(classOf[HeadlessWorkspace], is3d)
 
   /**
    * If you derive your own subclass of HeadlessWorkspace, use this method to instantiate it.
    */
-  def newInstance(subclass: Class[_ <: HeadlessWorkspace],is3d: Boolean = false): HeadlessWorkspace = {
+  def newInstance(subclass: Class[_ <: HeadlessWorkspace], is3d: Boolean = Version.is3D): HeadlessWorkspace = {
     val pico = new Pico
-    //pico.addComponent(if (Version.is3D) classOf[World3D] else classOf[World2D])
     pico.addComponent(if (is3d) classOf[World3D] else classOf[World2D])
     pico.add("org.nlogo.compile.Compiler")
-    if (is3d)//(Version.is3D)
-      pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
-    else
-      pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
+    if (is3d) pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect") else pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
     pico.add("org.nlogo.sdm.AggregateManagerLite")
     pico.add("org.nlogo.render.Renderer")
     pico.addComponent(subclass)
     pico.addAdapter(new ModelLoaderComponent())
     pico.add(classOf[HubNetManagerFactory], "org.nlogo.hubnet.server.HeadlessHubNetManagerFactory")
-    pico.getComponent(subclass)
+    val hw = pico.getComponent(subclass)
+    hw.set3d(is3d)
+    hw
   }
 
   /**
@@ -144,8 +142,9 @@ with org.nlogo.api.ViewSettings {
    */
   override def isHeadless = true
 
-
-  def is3d: Boolean = _world.is3d
+  private var _is3d = false
+  def set3d(newMode: Boolean) = {_is3d = newMode}
+  def is3d: Boolean = _is3d
 
   /**
    * Internal use only.

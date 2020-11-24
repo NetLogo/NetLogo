@@ -893,6 +893,4 @@ public strictfp class ClientWorld
   public Timer timer() {
     throw new UnsupportedOperationException();
   }
-
-  public boolean is3d() {return(false);}
 }
