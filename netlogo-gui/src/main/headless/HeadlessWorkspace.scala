@@ -180,7 +180,7 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   def initForTesting(worldSize: Int, modelString: String) {
-    if (is3d) //(Version.is3D)
+    if (is3d)
       initForTesting(new WorldDimensions3D(
           -worldSize, worldSize, -worldSize, worldSize, -worldSize, worldSize),
           modelString)
@@ -203,7 +203,7 @@ with org.nlogo.api.ViewSettings {
     world.linkShapes.add(org.nlogo.shape.LinkShape.getDefaultLinkShape)
     world.createPatches(d)
     val dialect =
-      if (is3d) NetLogoThreeDDialect//(Version.is3D) NetLogoThreeDDialect
+      if (is3d) NetLogoThreeDDialect
       else NetLogoLegacyDialect
     val newProgram = Program.fromDialect(dialect)
     val results = compiler.compileProgram(source, newProgram,
