@@ -23,6 +23,7 @@ object NetLogoPackaging {
   lazy val configRoot              = settingKey[File]("configuration directory")
   lazy val iconFiles               = settingKey[Seq[File]]("icon files to make available")
   lazy val resaveModels            = taskKey[Unit]("prep models library for packaging")
+  lazy val buildMathematicaLink    = taskKey[Unit]("build and package Mathematica Link submodule")
   lazy val generateLocalWebsite    = taskKey[File]("package the web download pages")
   lazy val localSiteTarget         = settingKey[File]("directory into which local copy of the site is built")
   lazy val mathematicaRoot         = settingKey[File]("root of Mathematica-Link directory")
@@ -87,7 +88,7 @@ object NetLogoPackaging {
       (allDocs in netlogo).value
       (allPreviews in netlogo).toTask("").value
       resaveModels.value
-      RunProcess(Seq("sbt", "package"), mathematicaRoot.value, s"package mathematica link")
+      buildMathematicaLink.value
       (packageBin in Compile in behaviorsearchProject).value
     },
     resaveModels := {
@@ -96,6 +97,10 @@ object NetLogoPackaging {
         workingDirectory = baseDirectory(_.getParentFile)).toTask("").value
     },
     resaveModels := (resaveModels dependsOn (extensions in netlogo)).value,
+    buildMathematicaLink := {
+      val sbt = if (System.getProperty("os.name").contains("Windows")) "sbt.bat" else "sbt"
+      RunProcess(Seq(sbt, "package"), mathematicaRoot.value, "package mathematica link")
+    },
     packagedMathematicaLink := {
       val mathematicaLinkDir = mathematicaRoot.value
       IO.createDirectory(target.value / "Mathematica Link")
