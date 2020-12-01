@@ -38,8 +38,8 @@ with SaveModel.Controller
   private var loading = true
   private var _modelDirty = false
   private var priorTempFile = Option.empty[Path]
-  private var _codeWindow : Option[javax.swing.JFrame] = None
-  def setCodeWindow(codeWindow: Option[javax.swing.JFrame]): Unit = {
+  private var _codeWindow : Option[JFrame] = None
+  def setCodeWindow(codeWindow: Option[JFrame]): Unit = {
     _codeWindow = codeWindow
   }
 
