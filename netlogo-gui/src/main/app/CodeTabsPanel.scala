@@ -42,7 +42,6 @@ class CodeTabsPanel(workspace:            GUIWorkspace,
   val frame = workspace.getFrame
 
   // CodeTabContainer contains the CodeTabsPanel and is owned by frame
-  // It is currently implemented as a JDialog. AAB 10/2020
   val codeTabContainer = new CodeTabContainer(frame, this)
   val codeTabsPanel = this
 
