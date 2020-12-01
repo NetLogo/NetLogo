@@ -6,13 +6,20 @@ package org.nlogo.swing;
 //   http://www.macdevcenter.com/pub/a/mac/2002/03/22/vertical_text.html
 //   http://www.macdevcenter.com/mac/2002/03/22/examples/VTextIcon.java
 
-import javax.swing.Icon;
 import java.awt.Component;
+import java.awt.Font;
 import java.awt.FontMetrics;
+import java.awt.font.FontRenderContext;
+import java.awt.font.GlyphVector;
+import java.awt.font.TextAttribute;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.Map;
+import java.util.HashMap;
+import javax.swing.Icon;
 
 /**
  * VTextIcon is an Icon implementation which draws a short string vertically.
@@ -181,11 +188,27 @@ public strictfp class VTextIcon implements Icon, PropertyChangeListener {
         yPos += fCharHeight;
       }
     } else if (fRotation == ROTATE_LEFT) {
-      g.translate(x + fWidth, y + fHeight);
-      ((Graphics2D) g).rotate(-NINETY_DEGREES);
-      g.drawString(fLabel, K_BUFFER_SPACE, -fDescent);
-      ((Graphics2D) g).rotate(NINETY_DEGREES);
-      g.translate(-(x + fWidth), -(y + fHeight));
+      // All this business for `drawGlyphVector()` is to work around an OpenJDK bug (present in 8u275 at least).
+      // On Windows the `drawString()` method compresses the space between characters when rotation is used
+      // and so is pretty unreadable.
+      // -Jeremy B December 2020
+      Graphics2D g2d = (Graphics2D) g;
+
+      Font f = c.getFont();
+      Map<TextAttribute, Object> textAttributes = new HashMap<>();
+      textAttributes.put(TextAttribute.KERNING, TextAttribute.KERNING_ON);
+      textAttributes.put(TextAttribute.SIZE, f.getSize() + 2);
+      Font newF = f.deriveFont(textAttributes);
+      g2d.setFont(newF);
+
+      FontRenderContext frc = new FontRenderContext(new AffineTransform(), true, true);
+      GlyphVector gv = newF.createGlyphVector(frc, fLabel);
+
+      g2d.translate(x + fWidth, y + fHeight);
+      g2d.rotate(-NINETY_DEGREES);
+      g2d.drawGlyphVector(gv, (float) K_BUFFER_SPACE, (float) -fDescent);
+      g2d.rotate(NINETY_DEGREES);
+      g2d.translate(-(x + fWidth), -(y + fHeight));
     } else if (fRotation == ROTATE_RIGHT) {
       g.translate(x, y);
       ((Graphics2D) g).rotate(NINETY_DEGREES);
