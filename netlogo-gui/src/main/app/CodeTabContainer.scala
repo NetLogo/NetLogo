@@ -3,14 +3,14 @@
 package org.nlogo.app
 
 import java.awt.{ BorderLayout, Dimension, Frame }
-import javax.swing.{ JDialog, JTabbedPane, WindowConstants }
+import javax.swing.{ JFrame, JTabbedPane, WindowConstants }
 import org.nlogo.window.Event.LinkChild
 
 // This is the separate code tab window.
 // It contains the CodeTabsPanel which owns and manages the CodeTabs.
 // It is created and destroyed 'on demand' as needed. AAB 10/2020
 class CodeTabContainer(owner:          Frame,
-                       codeTabbedPane: JTabbedPane) extends JDialog(owner) with LinkChild {
+                       codeTabbedPane: JTabbedPane) extends JFrame with LinkChild {
 
   this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE)
   this.add(codeTabbedPane, BorderLayout.CENTER)

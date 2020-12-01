@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import java.awt.Component
 import java.awt.event.{ ActionEvent, KeyEvent }
-import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent, JDialog, JTabbedPane, KeyStroke }
+import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent, JFrame, JTabbedPane, KeyStroke }
 
 import org.nlogo.app.codetab.{ CodeTab }
 import org.nlogo.swing.UserAction
@@ -92,7 +92,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
   def setDirtyMonitorCodeWindow(): Unit = {
     codeTabsPanelOption match {
       case None                => dirtyMonitor.setCodeWindow(None)
-      case Some(codeTabsPanel) => dirtyMonitor.setCodeWindow(Some(codeTabsPanel.getCodeTabContainer.asInstanceOf[JDialog]))
+      case Some(codeTabsPanel) => dirtyMonitor.setCodeWindow(Some(codeTabsPanel.getCodeTabContainer.asInstanceOf[JFrame]))
     }
   }
 
