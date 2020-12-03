@@ -1,6 +1,8 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.window
+import java.awt.KeyboardFocusManager
+import javax.swing.SwingUtilities
 
 trait Zoomable extends javax.swing.JComponent
 with Events.ZoomedEvent.Handler {
@@ -12,7 +14,8 @@ with Events.ZoomedEvent.Handler {
   def zoomSubcomponents = true
   def zoomTarget: java.awt.Component = this
   def handle(e: org.nlogo.window.Events.ZoomedEvent) {
-    if (isShowing) { // ignore unless we're the front tab
+    val isFocused = SwingUtilities.isDescendingFrom(this, KeyboardFocusManager.getCurrentKeyboardFocusManager.getFocusedWindow)
+    if (isShowing && isFocused) { // ignore unless we're the front tab
       val oldFactor = zoomFactor
       _zoomSteps = e.action match {
         case -1 =>
