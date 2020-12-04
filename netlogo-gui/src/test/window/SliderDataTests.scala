@@ -21,6 +21,8 @@ class SliderDataTests extends PropSpec with PropertyChecks {
     inc <- Gen.oneOf(0.0, 0.1, 0.01, 1.0, 2.0)
   } yield new SliderData(dummyErrorHandler, min, max, inc)
 
+  val genPosOddInt: Gen[Int] = for (n <- Gen.choose(0, Int.MaxValue - 1)) yield if (n % 2 == 1) n else n + 1
+
   // set value tests
   property("after setting constraints, value is never higher than max(min,max)") {
     forAll((s: SliderData, d: Double) =>
@@ -35,11 +37,14 @@ class SliderDataTests extends PropSpec with PropertyChecks {
   // precision tests.
   //
   property("double precision") {
-    forAll((r: Int) =>
-      whenever(r % 2 == 1) { // get an odd number so it doesn't end in zero.
-        // use 1.r
-        assertResult(r.toString.length)(
-          new SliderData(dummyErrorHandler, minimum = (1 + "." + r).toDouble).precision)})}
+    forAll(genPosOddInt) { (r) =>
+      // use 1.r
+      val min      = (1 + "." + r).toDouble
+      val result   = new SliderData(dummyErrorHandler, minimum = min).precision
+      val expected = r.toString.length
+      assertResult(expected)(result)
+    }
+  }
 
   property("precision for ints should always be zero") {
     forAll((i: Int) =>
