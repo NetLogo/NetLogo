@@ -377,16 +377,16 @@ class AppTabManager(val appTabsPanel:          Tabs,
     addComponentKeyStroke(appContentPane, mapKey, action, actionName)
   }
 
-  def intKeyToMenuKeystroke(key: Int): KeyStroke = {
-    UserAction.KeyBindings.keystroke(key, withMenu = true, withAlt = false)
+  def intKeyToMenuKeystroke(key: Int, withShift: Boolean = false, withAlt: Boolean = false): KeyStroke = {
+    UserAction.KeyBindings.keystroke(key, withMenu = true, withShift = withShift, withAlt = withAlt)
   }
 
   def setAppCodeTabBindings(): Unit = {
-    addAppFrameKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_OPEN_BRACKET), SeparateCodeTabsAction, "popOutCodeTab")
+    addAppFrameKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_W, withShift = true), SeparateCodeTabsAction, "popOutCodeTab")
   }
 
   def setSeparateCodeTabBindings(): Unit = {
-    addCodeTabContainerKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_CLOSE_BRACKET), RejoinCodeTabsAction, "popInCodeTab")
+    addCodeTabContainerKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_W), RejoinCodeTabsAction, "popInCodeTab")
   }
 
   // Get Named App Menu
