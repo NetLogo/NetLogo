@@ -756,11 +756,11 @@ class App extends
     }
     tabManager.codeTabsPanelOption match {
       case None           => {
-        val AppWindowTitle = e.newTab match {
+        val appWindowTitle = e.newTab match {
           case tab: TemporaryCodeTab => externalFileTitle(tab.filename.merge)
           case _                     => modelTitle()
         }
-        frame.setTitle(AppWindowTitle)
+        frame.setTitle(appWindowTitle)
       }
       case Some(thePanel) =>  {
         val codeWindowTitle = e.newTab match {
@@ -803,7 +803,7 @@ class App extends
   def handle(e: LoadBeginEvent): Unit = {
     val modelName = workspace.modelNameForDisplay
     errorDialogManager.setModelName(modelName)
-    if(AbstractWorkspace.isApp) {
+    if (AbstractWorkspace.isApp) {
       frame.setTitle(modelTitle())
       tabManager.codeTabsPanelOption match {
         case None           =>
@@ -880,7 +880,7 @@ class App extends
     if (dirty) s"* $title" else title
   }
 
-  private def modelTitle(allowDirtyMarker:Boolean = true) = {
+  private def modelTitle(allowDirtyMarker: Boolean = true) = {
     if (workspace.getModelFileName == null) "NetLogo"
     else {
       val title = frameTitle(workspace.modelNameForDisplay, allowDirtyMarker && dirtyMonitor.modelDirty)
