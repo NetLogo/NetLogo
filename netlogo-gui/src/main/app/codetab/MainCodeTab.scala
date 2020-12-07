@@ -59,13 +59,6 @@ with WindowEvents.LoadModelEvent.Handler
   override def dirty_=(b: Boolean) = {
     super.dirty_=(b)
     if (b) {
-      // TODO: uncomment the following line when ready.
-      // tabs.asInstanceOf[AbstractTabsPanel].getTabManager.setDirtyMonitorCodeWindow
-      // What it does is cause the '*' dirty marker to appear in the separate code window,
-      // when that window exists. It does that correctly.
-      // The problem is that the code to properly clear the '*' does not exist.
-      // There is a TODO in /netlogo-gui/src/main/app/FileManager.scala
-      // at a location where the needed code might be added
       new WindowEvents.DirtyEvent(None).raise(this)
     }
   }
