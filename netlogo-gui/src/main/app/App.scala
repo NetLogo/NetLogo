@@ -446,7 +446,7 @@ class App extends
     labManager = pico.getComponent(classOf[LabManagerInterface])
     frame.addLinkComponent(labManager)
 
-    val titler = (file: Option[String]) => { file map externalFileTitle getOrElse modelTitle }
+    val titler = (file: Option[String]) => { file map externalFileTitle getOrElse modelTitle() }
     pico.add(classOf[DirtyMonitor], "org.nlogo.app.DirtyMonitor",
       new ComponentParameter, new ComponentParameter, new ComponentParameter, new ComponentParameter,
       new ConstantParameter(titler))
@@ -754,16 +754,21 @@ class App extends
     } else if (e.oldTab == tabs.interfaceTab) {
       monitorManager.hideAll()
     }
-
-    val title = e.newTab match {
-        case tab: TemporaryCodeTab => externalFileTitle(tab.filename.merge)
-        case _                     => modelTitle
-      }
-    frame.setTitle(title)
     tabManager.codeTabsPanelOption match {
-      case None           =>
+      case None           => {
+        val appWindowTitle = e.newTab match {
+          case tab: TemporaryCodeTab => externalFileTitle(tab.filename.merge)
+          case _                     => modelTitle()
+        }
+        frame.setTitle(appWindowTitle)
+      }
       case Some(thePanel) =>  {
-        thePanel.codeTabContainer.setTitle(title)
+        val codeWindowTitle = e.newTab match {
+          case tab: TemporaryCodeTab => externalFileTitle(tab.filename.merge)
+          case _                     => modelTitle(allowDirtyMarker = false)
+        }
+        thePanel.codeTabContainer.setTitle(codeWindowTitle)
+        frame.setTitle(modelTitle())
       }
     }
   }
@@ -781,7 +786,11 @@ class App extends
     workspace.modelSaved(e.modelPath)
     errorDialogManager.setModelName(workspace.modelNameForDisplay)
     if (AbstractWorkspace.isApp) {
-      frame.setTitle(modelTitle)
+      frame.setTitle(modelTitle())
+      tabManager.codeTabsPanelOption match {
+        case None           =>
+        case Some(thePanel) => thePanel.codeTabContainer.setTitle(modelTitle(allowDirtyMarker = false))
+      }
       workspace.hubNetManager.foreach { manager =>
         manager.setTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType)
       }
@@ -794,10 +803,12 @@ class App extends
   def handle(e: LoadBeginEvent): Unit = {
     val modelName = workspace.modelNameForDisplay
     errorDialogManager.setModelName(modelName)
-    if(AbstractWorkspace.isApp) frame.setTitle(modelTitle)
-    tabManager.codeTabsPanelOption match {
-      case None           =>
-      case Some(thePanel) => thePanel.codeTabContainer.setTitle(modelTitle)
+    if (AbstractWorkspace.isApp) {
+      frame.setTitle(modelTitle())
+      tabManager.codeTabsPanelOption match {
+        case None           =>
+        case Some(thePanel) => thePanel.codeTabContainer.setTitle(modelTitle(allowDirtyMarker = false))
+      }
     }
     workspace.hubNetManager.foreach(_.closeClientEditor())
   }
@@ -869,10 +880,10 @@ class App extends
     if (dirty) s"* $title" else title
   }
 
-  private def modelTitle = {
+  private def modelTitle(allowDirtyMarker: Boolean = true) = {
     if (workspace.getModelFileName == null) "NetLogo"
     else {
-      val title = frameTitle(workspace.modelNameForDisplay, dirtyMonitor.modelDirty)
+      val title = frameTitle(workspace.modelNameForDisplay, allowDirtyMarker && dirtyMonitor.modelDirty)
       // OS X UI guidelines prohibit paths in title bars, but oh well...
       if (workspace.getModelType == ModelType.Normal) s"$title {${workspace.getModelDir}}" else title
     }

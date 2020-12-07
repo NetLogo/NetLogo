@@ -48,8 +48,6 @@ class CodeTabsPanel(workspace:            GUIWorkspace,
   override def getMainCodeTab(): MainCodeTab = { mainCodeTab }
   def getCodeTabContainer = { codeTabContainer }
 
-  codeTabContainer.setTitle("Code Tab Window")
-
   currentTab = mainCodeTab
 
   // Because of the order in which elements of the NetLogo application come into being

@@ -94,7 +94,7 @@ class Tabs(workspace:           GUIWorkspace,
 
     tabManager.setDirtyMonitor(monitor)
 
-    // Currently Ctrl-OPEN_BRACKET = Ctrl-[ creates a separate code window. AAB 10/2020
+    // Set hotkey to create a separate code window. AAB 12/2020
     tabManager.setAppCodeTabBindings
   }
 
