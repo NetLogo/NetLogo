@@ -208,11 +208,17 @@ Exp2
 Exp3
   ln exp -1 => -1
 
+Exp4
+  exp 10000 => ERROR math operation produced a number too large for NetLogo
+
 Int1
   int 4.7 => 4
 
 Int2
   int -3.5 => -3
+
+Int3
+  int 1e16 => ERROR 1.0E16 is too large to be represented exactly as an integer in NetLogo
 
 Log1
   log 64 2 => 6
@@ -237,6 +243,12 @@ Log7
 
 Log8
   log 216 6 => 3.0000000000000004
+
+Log9
+  log 0 100 => ERROR Can't take logarithm of 0.
+
+Log10
+  ln -10 => ERROR Can't take logarithm of -10.
 
 Max1
   max [] => ERROR Can't find the maximum of a list with no numbers: []
