@@ -8,6 +8,7 @@ import org.nlogo.nvm.{ Context, Reporter }
 class _exp extends Reporter with Pure {
   override def report(context: Context): java.lang.Double =
     Double.box(report_1(context, argEvalDoubleValue(context, 0)))
+
   def report_1(context: Context, d0: Double): Double =
-    StrictMath.exp(d0)
+    validDouble(StrictMath.exp(d0), context)
 }
