@@ -1319,8 +1319,11 @@ procedure UPDATE:[EDIFF]{-TP-}:
           DDIV
          L30
           DSTORE 2
+          ALOAD 0
           DLOAD 2
           INVOKESTATIC java/lang/StrictMath.exp (D)D
+          ALOAD 1
+          INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdate_if_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L31
           DSTORE 4
           DSTORE 2
