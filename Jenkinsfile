@@ -1,5 +1,9 @@
 #!/usr/bin/env groovy
 
+def buildNumber = BUILD_NUMBER as int
+if (buildNumber > 1) milestone(buildNumber - 1)
+milestone(buildNumber)
+
 pipeline {
 
   agent any
