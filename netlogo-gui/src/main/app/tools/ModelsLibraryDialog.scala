@@ -63,6 +63,7 @@ object ModelsLibraryDialog {
   private def finishOpen(me: ModelsLibraryDialog, onSelect: URI => Unit): Unit = {
     this.me = me
     me.setVisible(true)
+    me.searchField.selectAll()
     me.sourceURI.foreach(onSelect)
   }
 
