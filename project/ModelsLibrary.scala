@@ -84,7 +84,12 @@ object ModelsLibrary {
         val firstParagraph = info.replaceFirst(whatIsItPattern, "").split('\n').head
         val formattedFirstParagraph = Markdown(firstParagraph, "", false)
         val q3 = "\"\"\""
-        println(s"  { path: ${q3}models/${modelsPath.toPath.relativize(path)}${q3}, info: ${q3}${formattedFirstParagraph}${q3} },")
+        val relativeText = modelsPath.toPath.relativize(path).toString
+        // if we generate the `index.conf` on Windows, we need to replace any backslashes so they'll work
+        // when reading in later on in `ModelsLibraryDialog` where we assume forward-slashes make up the key.
+        // -Jeremy B December 2020
+        val keyText = relativeText.replace(System.getProperty("file.separator"), "/")
+        println(s"  { path: ${q3}models/${keyText}${q3}, info: ${q3}${formattedFirstParagraph}${q3} },")
       } else {
         System.err.println("WHAT IS IT not found: " + path)
       }
