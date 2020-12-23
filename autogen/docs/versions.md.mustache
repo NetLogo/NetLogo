@@ -5,6 +5,147 @@ For help running models made in old versions, see the
 
 [TOC]
 
+## Version 6.2.0 (December 2020)
+
+### Features
+
+A premier feature for this release is a pop-out code tab, that allows you to detach the code tab from the main application and into a separate window in order to view the interface and the model code side-by-side.
+
+- The models library now shows code examples that come with extensions installed through the extensions manager.
+- We now bundle the Liberica OpenJDK Java runtime instead of the Oracle Java runtime, which has a less restrictive license.
+- The `mean` primitive will now work on lists that contain non-numbers as other number processing primitives do.
+- The extensions manager can be disabled with a command-line switch to avoid network traffic or to lock down installed extensions.
+
+### Bugfixes
+
+- We've made changes to how we bundle NetLogo on macOS in order to satisfy Apple's package notarization process for detecting malware.  NetLogo now runs without any special workarounds, as long as your macOS settings allow running software from identified developers.
+- When first opening a model and installing a new extension for it through the extensions manager prompt, the model widgets would not be usable until the model's code was recompiled.  Now the model will be ready to use right after the extension is installed.
+- When using `in-cone` on wrapped worlds, occasionally turtles at the very edge of the wrapped cone would be missing from the results.
+- When using `in-radius` on a patch to get nearby turtles, sometimes turtles at the edge of the radius would be missing from the results.
+- The performance of a turtle lookup by breed and who-number, like `sheep 10`, could take an unreasonable amount of time.
+- Models with a large amount of code (5000+ lines) would take a very long time to check and compile.
+
+### Logging Improvements
+
+- Logging can now be enabled and a configuration file chosen through the NetLogo preferences menu.  The logging standalone application is no longer necessary, so it has been removed.
+- The command line switch to set the logging directory would previously be ignored.
+- Users now get a chance to add a comment to the log when they get a compiler error.
+
+### NetLogo 3D Bugfixes
+
+- The `in-radius` and `in-cone` primitives could give incorrect results, omitting some agents in rare cases.
+- When hatching turtles the z-coordinates would sometimes not be copied from the parent turtle.
+- The font size value for the world view would be ignored.
+- When using `with` with patches, the results could include only patches with a zero z-coordinate.
+- NetLogo 3D should run more reliably on Linux systems.
+
+### Extension Changes
+
+- The Time extension is now bundled with NetLogo.  This extension lets you work with real-world dates and times in your model, and includes an event scheduler for triggering events at points in time.  It also includes an NLS library file you can add to your model to handle time series reading from CSV files.  See [the Time extension docs](https://github.com/NetLogo/Time-Extension) for more information.
+- The View2.5D extension has been significantly upgraded. Turtle stem color can be set by a reporter. Links are now visible in the 2.5D window. They can be visualized either going from turtle to turtle (the default) or in the xy-plane.  The choice can be made using radio buttons or through new commands
+- LevelSpace now always runs hidden models at full speed and should give better error messages when errors occur when loading a model.
+- The Network (NW) extension will not add extra whitespace when using `nw:save-matrix`.
+- The Python extension gives better error messages when the paths to the Python executables are incorrect.
+
+### Documentation Changes
+
+- Tutorial #1 referenced an older version of the Wolf Sheep Predation model.
+- Added a couple more common problems to look out for in the BehaviorSpace guide.
+- Clarify the version of NetLogo Web used to export models as HTML files.
+- Clarify that the auto scale feature for plots does not scale the X axis when used with `histogram`.
+- Clarify the location of the `NetLogo.cfg` files on each operating system.
+- Update steps to take for common issues opening on macOS, added an alert about known issues to the download page.
+- The docs for `ifelse` had some incorrect argument names.
+- Add info about the Pioneer Award for the View 2.5D extension.
+
+### Model Changes
+#### New Sample Models:
+- Dislocation Motion and Deformation
+- Repressilator 1D
+- Sex Ratio Equilibrium
+
+#### New Curricular Models:
+- CT-STEM (for more information, visit [ct-stem.northwestern.edu](http://ct-stem.northwestern.edu)):
+  - Free Fall
+  - Habitat Preference Behavior
+  - Hardy Weinberg Equilibrium
+  - Kidney Absorption
+  - Mendelian Inheritance
+  - Natural Selection - Camouflage
+  - Pendulum
+  - 1D Motion Maps
+
+#### New Code Examples:
+- Extension Examples
+  - `time` Extension - Discrete Event Mousetrap
+  - `view2.5d` Extension - 2.5d Turtle View Example
+
+#### Sample Model Updates:
+- Anisogamy: INTERFACE re-design, expanded INFO tab, and refactored CODE. Now includes additional BehaviorSpace experiments.
+- Autumn: Minor updates to INFO tab.
+- Bug Hunt Speeds: Minor updates to INFO tab.
+- Fire: Minor updates to INFO tab.
+- Fur: Minor updates to INFO tab.
+- Grand Canyon: Minor updates to INFO tab.
+- Lightning: Minor updates to INFO tab.
+- Moths: Minor updates to INFO tab.
+- Particle System Basic: Minor updates to INFO tab.
+- Paths: Minor updates to INFO tab.
+- Shuffle Board: Minor updates to INFO tab.
+- Small Worlds: The INTERFACE tab has been overhauled to make the model easier to use. The INFO tab has been rewritten to be more clear and concise. The CODE tab has been restyled and now uses curved link shapes for neighbors' neighbor links.
+- Team Assembly: Minor updates to INFO tab.
+- Tumor: Additional credits and references added.
+- Wealth Distribution: Got rid of one line of CODE that didn't do anything.
+
+Our `Chemistry & Physics` folder now contains enough examples that can be classified as "Materials Science" that they deserve their own folder. This means a number of models have been physically moved into this new sub-folder of Chemistry and Physics:
+- Solid Diffusion
+- Polymer Dynamics
+- Lennard-Jones
+- Dislocation Motion and Deformation
+- Crystallization Models
+
+Also in this folder are the MaterialSim models. They have been physically moved to the Curricular Models folder, but will be cross-referenced in `Chemistry & Physics/Materials Science`.
+
+### Alternative Visualization Updates:
+- Heat Diffusion - Alternative Visualization: Minor INFO tab updates.
+
+#### Curricular Model Updates:
+- BEAGLE Evolution
+  - Altruism: Minor INFO tab updates.
+  - Cooperation: Minor INFO tab updates.
+  - Divide the Cake: Promoted from Unverified after updates to CODE and INFO.
+  - Guppy Spots HubNet: Promoted from Unverified after updates to CODE and INFO.
+- Chemical Equilibrium: Fix plot and monitor bug that incorrectly counted pink molecules.
+- EACH (now appears as a sub-directory of the `BEAGLE Evolution` directory)
+
+Note, the above BEAGLE models have now been physically moved into the `Curricular Models/BEAGLE Evolution/` folder. In the Models Library browser, they will appear cross-referenced in the usual places.
+
+#### Code Examples Updates:
+- `view2.5d` Extension - 2.5d Patch View Example: Fixed issue with perspective not being updated on `setup`.
+- `gogo` Extension - GoGoMonitor: Minor INFO tab updates.
+
+#### HubNet Activities Updates:
+All HubNet models now include a citation for the HubNet software and their web links have been updated. This resulted in a change to 37 models in total.
+
+#### IABM Model Updates:
+- Arduino Example: Minor INFO tab updates.
+- Heroes and Cowards: Minor INFO tab updates.
+- Simple Economy: Updated INFO tab and now listed as a Sample Model under the `Economics` folder.
+
+Fixed inconsistent bracket styling across IABM Textbook models. This resulted in changes to 12 models.
+
+- Turtles Circling Simple
+- Life Simple
+- Wolf Sheep Simple 1
+- Wolf Sheep Simple 2
+- Wolf Sheep Simple 3
+- Wolf Sheep Simple 4
+- Wolf Sheep Simple 5
+- Agentset Efficiency
+- Voting Analysis
+- Simple Machine Learning
+- Simple Viral Marketing
+
 ## Version 6.1.1 (September 2019)
 
 ### Bugfixes
