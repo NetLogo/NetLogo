@@ -10,7 +10,7 @@ jobs:
          submodules: recursive
      - uses: actions/setup-java@v1
        with:
-         java-version: '1.8'
+         java-version: '1.8.0_252'
          java-package: jdk+fx
      - run: ./sbt update
      - name: Build NetLogo
