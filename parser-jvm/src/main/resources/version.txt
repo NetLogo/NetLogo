@@ -1,5 +1,6 @@
-NetLogo 6.1
+NetLogo 6.2
 INTERIM DEVEL BUILD
+NetLogo 6.1
 NetLogo 6.0
 NetLogo 5.2.0
 NetLogo 5.1
