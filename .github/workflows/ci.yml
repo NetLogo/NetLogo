@@ -12,24 +12,36 @@ jobs:
        with:
          java-version: '1.8.0.252'
          java-package: jdk+fx
-     - run: ./sbt update
+     - run: |
+         git clean -fdx
+         git submodule foreach git reset --hard
+         git submodule foreach git clean -xdf
+         git submodule update --init
+         ./sbt update
      - name: Build NetLogo
        run: ./sbt all
-     - name: Test NetLogo
+     - run: git submodule update --init
+     - name: Depend, headless and parsers tests
        run: |
          ./sbt depend
          ./sbt headless/depend
          ./sbt parserJS/test
          ./sbt parserJVM/test
+     - name: Fast tests
+       run: |
          ./sbt netlogo/test:fast
          ./sbt nogen netlogo/test:fast
          ./sbt threed netlogo/test:fast
          ./sbt headless/test:fast
+     - name: Medium tests
+       run: |
          ./sbt netlogo/test:medium
          ./sbt nogen netlogo/test:medium
          ./sbt threed netlogo/test:medium
          ./sbt headless/test:medium
          ./sbt nogen headless/test:medium
+     - name: Slow tests
+       run: |
          ./sbt netlogo/test:slow
          ./sbt threed netlogo/test:slow
          ./sbt netlogo/test:extensionTests
