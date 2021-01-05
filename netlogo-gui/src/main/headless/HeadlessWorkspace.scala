@@ -29,32 +29,40 @@ object HeadlessWorkspace {
   /**
    * Makes a new instance of NetLogo capable of running a model "headless", with no GUI.
    */
-  def newInstance: HeadlessWorkspace =
-    newInstance(classOf[HeadlessWorkspace])
+  def newInstance: HeadlessWorkspace = newInstance(Version.is3D)
+
+  def newInstance(is3d: Boolean): HeadlessWorkspace = newInstance(classOf[HeadlessWorkspace], is3d)
+
+  def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = newInstance(subclass, Version.is3D)
 
   /**
    * If you derive your own subclass of HeadlessWorkspace, use this method to instantiate it.
    */
-  def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
+  def newInstance(subclass: Class[_ <: HeadlessWorkspace], is3d: Boolean): HeadlessWorkspace = {
     val pico = new Pico
-    pico.addComponent(if (Version.is3D) classOf[World3D] else classOf[World2D])
+    pico.addComponent(if (is3d) classOf[World3D] else classOf[World2D])
     pico.add("org.nlogo.compile.Compiler")
-    if (Version.is3D)
-      pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
-    else
-      pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
+    if (is3d) pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect") else pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
     pico.add("org.nlogo.sdm.AggregateManagerLite")
     pico.add("org.nlogo.render.Renderer")
     pico.addComponent(subclass)
     pico.addAdapter(new ModelLoaderComponent())
     pico.add(classOf[HubNetManagerFactory], "org.nlogo.hubnet.server.HeadlessHubNetManagerFactory")
-    pico.getComponent(subclass)
+    val hw = pico.getComponent(subclass)
+    hw.set3d(is3d)
+    hw
   }
 
-  def newLab: LabInterface = {
+  /**
+    * the newLab by default uses the [[Version.is3D]]
+    * @return
+    */
+  def newLab: LabInterface = newLab(Version.is3D)
+
+  def newLab(is3d: Boolean): LabInterface = {
     val pico = new Pico
     pico.add("org.nlogo.compile.Compiler")
-    if (Version.is3D)
+    if (is3d)
       pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
     else
       pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
@@ -135,6 +143,10 @@ with org.nlogo.api.ViewSettings {
    */
   override def isHeadless = true
 
+  private var _is3d = false
+  def set3d(newMode: Boolean) = { _is3d = newMode }
+  def is3d: Boolean = _is3d
+
   /**
    * Internal use only.
    */
@@ -169,7 +181,7 @@ with org.nlogo.api.ViewSettings {
    * Internal use only.
    */
   def initForTesting(worldSize: Int, modelString: String) {
-    if (Version.is3D)
+    if (is3d)
       initForTesting(new WorldDimensions3D(
           -worldSize, worldSize, -worldSize, worldSize, -worldSize, worldSize),
           modelString)
@@ -192,7 +204,7 @@ with org.nlogo.api.ViewSettings {
     world.linkShapes.add(org.nlogo.shape.LinkShape.getDefaultLinkShape)
     world.createPatches(d)
     val dialect =
-      if (Version.is3D) NetLogoThreeDDialect
+      if (is3d) NetLogoThreeDDialect
       else NetLogoLegacyDialect
     val newProgram = Program.fromDialect(dialect)
     val results = compiler.compileProgram(source, newProgram,
