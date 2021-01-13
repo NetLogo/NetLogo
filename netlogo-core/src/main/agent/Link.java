@@ -670,6 +670,10 @@ public strictfp class Link
       return 0;
     }
     Link otherLink = (Link) a;
+
+    System.out.println("Comparing link from " +  end1._id + " to " + end2._id + " breed: " + getBreed().getPrintName());
+    System.out.println("To        link from " +  otherLink.end1._id + " to " + otherLink.end2._id + " breed: " + otherLink.getBreed().getPrintName());
+
     if (end1._id < otherLink.end1._id) {
       return -1;
     }
@@ -693,7 +697,9 @@ public strictfp class Link
     }
     // when all else fails
     // whichever breed was declared first comes first in the list.
-    return _world.compareLinkBreeds(getBreed(), otherLink.getBreed());
+    int retval  = _world.compareLinkBreeds(getBreed(), otherLink.getBreed());
+    System.out.println("retval: " +  retval);
+    return retval;
   }
 
   public int alpha() {

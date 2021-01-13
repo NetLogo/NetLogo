@@ -111,7 +111,9 @@ trait LinkManagement extends WorldKernel {
   // assumes caller has already checked to see if the breeds are equal
   def compareLinkBreeds(breed1: AgentSet, breed2: AgentSet): Int = {
     import scala.collection.JavaConverters._
-
+    println("compareLinkBreeds ")
+    println("breed1: " + breed1.printName + " + breed2: " + breed2.printName)
+    println(linkBreeds.values.asScala.map(_.getPrintName))
     linkBreeds.values.iterator.asScala.collectFirst {
       case b if b eq breed1 => -1
       case b if b eq breed2 => 1
