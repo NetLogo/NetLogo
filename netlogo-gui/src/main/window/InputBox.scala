@@ -10,7 +10,7 @@ import org.nlogo.api.Exceptions
 import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.Color.{getColor, getColorNameByIndex, modulateDouble}
 import org.nlogo.swing.ButtonPanel
-import org.nlogo.awt.Fonts.{platformFont, platformMonospacedFont}
+import org.nlogo.awt.Fonts.{adjustDefaultFont, platformFont, platformMonospacedFont}
 import org.nlogo.api.{Options, ValueConstraint, LogoException, CompilerServices, Dump, Editable}
 import java.awt.{Color, Component, Dimension, Font, Frame, Graphics}
 import java.awt.event.{ActionListener, WindowEvent, WindowAdapter, FocusListener, FocusEvent, ActionEvent, KeyEvent}
@@ -156,7 +156,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     layout.setConstraints(widgetLabel, c)
     add(widgetLabel)
 
-    widgetLabel.setFont(new Font(platformFont, Font.PLAIN, 10))
+    adjustDefaultFont(widgetLabel)
 
     c.gridx = 1
     c.weightx = 0
