@@ -573,8 +573,6 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
 
   // The following callback are not used for anything
   // but the Interfaces demands them
-  public void mouseDragged(MouseEvent e) {
-  }
 
   public void mouseClicked(MouseEvent e) {
   }

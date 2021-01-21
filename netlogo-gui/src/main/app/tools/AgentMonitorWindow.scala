@@ -3,20 +3,19 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Container, Frame }
-import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
-import javax.swing.{ AbstractAction, BorderFactory, JWindow, LayoutFocusTraversalPolicy }
+import java.awt.event.{ ActionEvent,  WindowAdapter, WindowEvent }
+import javax.swing.{ AbstractAction, BorderFactory, JDialog, LayoutFocusTraversalPolicy }
 
 import scala.collection.JavaConverters._
 
 import org.nlogo.agent.{ Agent, Link, Observer, Turtle }
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ Utils => SwingUtils, WindowDragger, WindowResizer }
+import org.nlogo.swing.{ Utils => SwingUtils }
 import org.nlogo.window.{ Event, Events => WindowEvents }
 
 class AgentMonitorWindow(agentKind: AgentKind, _agent: Agent, radius: Double,
                          manager: AgentMonitorManager, parent: Frame)
-// JWindow not JFrame so we can float on top of the App window - ev 1/7/09
-extends JWindow(parent)
+extends JDialog(parent)
 with Event.LinkChild
 with WindowEvents.PeriodicUpdateEvent.Handler
 with WindowEvents.PatchesCreatedEvent.Handler
@@ -32,8 +31,7 @@ with WindowEvents.LoadBeginEvent.Handler
     }
   }
 
-  private val dragger = new WindowDragger(this)
-  private var wasShiftDownOnCloseBox = false
+  private val wasShiftDownOnCloseBox = false // var aab
   private var dead = false
   private var lastAliveTitle: String = null
 
@@ -45,8 +43,6 @@ with WindowEvents.LoadBeginEvent.Handler
     getRootPane.setBorder(BorderFactory.createRaisedBevelBorder)
   getContentPane.setLayout(new BorderLayout)
   getContentPane.add(monitor, BorderLayout.CENTER)
-  getContentPane.add(dragger, BorderLayout.NORTH)
-  getContentPane.add(new WindowResizer(this), BorderLayout.SOUTH)
   setFocusTraversalPolicy(
     new LayoutFocusTraversalPolicy {
       override def getFirstComponent(focusCycleRoot: Container) =
@@ -58,11 +54,6 @@ with WindowEvents.LoadBeginEvent.Handler
       override def windowClosing(e: WindowEvent) {
         if(wasShiftDownOnCloseBox) manager.closeAll()
         else close()
-      }})
-  dragger.getCloseBox.addMouseListener(
-    new MouseAdapter {
-      override def mousePressed(e: MouseEvent) {
-        wasShiftDownOnCloseBox = e.isShiftDown
       }})
   SwingUtils.addEscKeyAction(
     getRootPane, new AbstractAction {
@@ -93,18 +84,18 @@ with WindowEvents.LoadBeginEvent.Handler
   def refresh() {
     if(!dead && agent != null && agent.id == -1) {
       dead = true
-      dragger.setTitle(title)
+      setTitle(getUpdatedTitle)
     }
     val oldPref = monitor.getPreferredSize
     monitor.refresh()
     val newPref = monitor.getPreferredSize
     if(oldPref != newPref)
       pack()
-    if(title != dragger.getTitle)
-      dragger.setTitle(title)
+    if(getUpdatedTitle != getTitle)
+      setTitle(getUpdatedTitle)
   }
 
-  def title = {
+def getUpdatedTitle = {
     monitor.agentKind match {
       case AgentKind.Observer => I18N.gui.get("tools.agentMonitor.window.globals")
       case AgentKind.Turtle if agent == null => I18N.gui.get("tools.agentMonitor.window.noTurtle")
@@ -125,7 +116,7 @@ with WindowEvents.LoadBeginEvent.Handler
   // KLUDGE
   def agentChangeNotify(oldAgent: Agent) {
     dead = agent != null && agent.id == -1
-    dragger.setTitle(title)
+    setTitle(getUpdatedTitle)
     manager.agentChangeNotify(this, oldAgent)
     pack()
   }
@@ -137,7 +128,7 @@ with WindowEvents.LoadBeginEvent.Handler
       close()
   }
 
-  class ObserverMonitor(window: JWindow)
+  class ObserverMonitor(window: JDialog)
   extends AgentMonitor(manager.workspace, window) {
     override def agentKind = AgentKind.Observer
     override def repaintPrompt() { }
@@ -149,7 +140,7 @@ with WindowEvents.LoadBeginEvent.Handler
     }
   }
 
-  class TurtleMonitor(window: JWindow)
+  class TurtleMonitor(window: JDialog)
   extends AgentMonitor(manager.workspace, window){
     override def agentKind = AgentKind.Turtle
     override def repaintPrompt() { }
@@ -165,14 +156,14 @@ with WindowEvents.LoadBeginEvent.Handler
     }
   }
 
-  class PatchMonitor(window: JWindow)
+  class PatchMonitor(window: JDialog)
   extends AgentMonitor(manager.workspace, window) {
     override def agentKind = AgentKind.Patch
     override def repaintPrompt() { }
     override def vars = workspace.world.program.patchesOwn.asJava
   }
 
-  class LinkMonitor(window: JWindow)
+  class LinkMonitor(window: JDialog)
   extends AgentMonitor(manager.workspace, window) {
     override def agentKind = AgentKind.Link
     override def repaintPrompt() { }

@@ -4,7 +4,7 @@ package org.nlogo.swing
 
 import java.awt.{ BorderLayout, FlowLayout }
 import java.awt.event.{ MouseAdapter, MouseEvent }
-import javax.swing.{ JComponent, JLabel, JPanel, JWindow }
+import javax.swing.{ JComponent, JDialog, JLabel, JPanel }
 
 import org.nlogo.swing.Utils.icon
 
@@ -13,7 +13,7 @@ object CollapsiblePane {
   private val ClosedIcon = icon("/images/closedarrow.gif")
 }
 
-class CollapsiblePane(title: String, element: JComponent, parent: JWindow)
+class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
 extends JPanel(new BorderLayout) {
   import CollapsiblePane._
 
