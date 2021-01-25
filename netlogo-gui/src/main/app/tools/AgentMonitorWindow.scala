@@ -15,7 +15,7 @@ import org.nlogo.window.{ Event, Events => WindowEvents }
 
 class AgentMonitorWindow(agentKind: AgentKind, _agent: Agent, radius: Double,
                          manager: AgentMonitorManager, parent: Frame)
-extends JDialog(parent)
+extends JDialog()
 with Event.LinkChild
 with WindowEvents.PeriodicUpdateEvent.Handler
 with WindowEvents.PatchesCreatedEvent.Handler
