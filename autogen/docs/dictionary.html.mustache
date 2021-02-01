@@ -229,6 +229,7 @@
       <a href="#in-link-neighbor">in-link-neighbor?</a>
       <a href="#in-link-neighbors">in-link-neighbors</a>
       <a href="#in-link-from">in-link-from</a>
+      <a href="#inspect">inspect</a>
       <a href="#is-of-type">is-directed-link?</a>
       <a href="#is-of-type">is-link?</a>
       <a href="#is-of-type">is-link-set?</a>
@@ -264,6 +265,7 @@
       <a href="#out-link-neighbors">out-link-neighbors</a>
       <a href="#out-link-to">out-link-to</a>
       <a href="#show-link">show-link</a>
+      <a href="#stop-inspecting">stop-inspecting</a>
       <a href="#tie">tie</a>
       <a href="#undirected-link-breed">undirected-link-breed</a>
       <a href="#untie">untie</a>
@@ -1068,7 +1070,7 @@ show approximate-rgb 0 255 255
         </p>
         <p>
           Agentsets can be tested for equality or inequality. Two agentsets
-          are equal if they are the same type (turtle or patch) and contain
+          are equal if they are the same type (turtle or patch or link) and contain
           the same agents.
         </p>
         <p>
@@ -4477,7 +4479,7 @@ show insert-item 2 &quot;cat&quot; &quot;re&quot;
           <span class="prim_example">inspect <i>agent</i></span>
         </h4>
         <p>
-          Opens an agent monitor for the given agent (turtle or patch).
+          Opens an agent monitor for the given agent (turtle or patch or link).
         </p>
         <pre>
 inspect patch 2 4
@@ -4485,6 +4487,8 @@ inspect patch 2 4
 inspect one-of sheep
 ;; an agent monitor opens for a random turtle from
 ;; the &quot;sheep&quot; breed
+inspect one-of links
+;; an agent monitor opens for a random link
 </pre>
         <p>
           See <a href="#stop-inspecting">stop-inspecting</a> and <a href="#stop-inspecting-dead-agents">stop-inspecting-dead-agents</a>
@@ -7448,9 +7452,9 @@ show replace-item 1 &quot;cat&quot; &quot;are&quot;
         </h4>
         <p>
           The observer stops watching, following, or riding any turtles (or
-          patches). (If it wasn't watching, following, or riding anybody,
+          patches or links). (If it wasn't watching, following, or riding anybody,
           nothing happens.) In the 3D view, the observer also returns to its
-          default position (above the origin, looking straight down).
+          default position (above the origin, looking straight down).  Note: following and riding are valid for turtles only.
         </p>
         <p>
           See also <a href="#follow">follow</a>, <a href="#ride">ride</a>,
@@ -8667,7 +8671,7 @@ if not any? turtles [ stop ]
           <span class="prim_example">stop-inspecting <i>agent</i></span>
         </h4>
         <p>
-          Closes the agent monitor for the given agent (turtle or patch).
+          Closes the agent monitor for the given agent (turtle or patch or link).
           In the case that no agent monitor is open, <code>stop-inspecting</code> does
           nothing.
         </p>
@@ -8676,6 +8680,8 @@ stop-inspecting patch 2 4
 ;; the agent monitor for that patch closes
 ask sheep [ stop-inspecting self ]
 ;; close all agent monitors for sheep
+ask links [ stop-inspecting self ]
+;; close all agent monitors for links
 </pre>
         <p>
           See <a href="#inspect">inspect</a> and <a href="#stop-inspecting-dead-agents">stop-inspecting-dead-agents</a>.
@@ -8701,8 +8707,8 @@ ask sheep [ stop-inspecting self ]
           <span class="prim_example">subject</span>
         </h4>
         <p>
-          Reports the turtle (or patch) that the observer is currently
-          watching, following, or riding. Reports <a href="#nobody">nobody</a> if there is no such turtle (or patch).
+          Reports the turtle (or patch or link) that the observer is currently
+          watching, following, or riding. Reports <a href="#nobody">nobody</a> if there is no such turtle (or patch or link).  Note: following and riding are valid for turtles only.
         </p>
         <p>
           See also <a href="#watch">watch</a>, <a href="#follow">follow</a>,
@@ -9745,7 +9751,7 @@ repeat 10 [ fd 1 wait 0.5 ]
         </h3>
         <h4>
           <span class="prim_example">watch-me</span>
-          <img alt="Turtle Command" src="images/turtle.gif"/> <img alt="Patch Command" src="images/patch.gif"/>
+          <img alt="Turtle Command" src="images/turtle.gif"/> <img alt="Patch Command" src="images/patch.gif"/> <img alt="Link Command" src="images/link.gif"/>
         </h4>
         <p>
           Asks the observer to watch this agent.

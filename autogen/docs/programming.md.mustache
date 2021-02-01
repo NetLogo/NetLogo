@@ -2022,15 +2022,16 @@ The 2D and the 3D view show the world from the perspective of the observer. By
 default the observer is looking down on the world from the positive z-axis at
 the origin. You can change the perspective of the observer by using the
 [[follow]], [[ride]] and [[watch]] observer commands and [[follow-me]],
-[[ride-me]] and [[watch-me]] turtle commands. When in follow or ride mode the
-observer moves with the subject agent around the world. The difference between
-follow and ride is only visible in the 3D view. In the 3D view the user can
-change the distance behind the agent using the mouse. When the observer is
-following at zero distance from the agent it is actually riding the agent. When
-the observer is in watch mode it tracks the movements of one turtle without
-moving. In both views you will see a spotlight appear on the subject and in the
-3D view the observer will turn to face the subject. To determine which agent is
-the focus you can use the [[subject]] reporter.
+[[ride-me]] and [[watch-me]] turtle commands. [[watch-me]] is also a patch or
+link command. When in follow or ride mode the observer moves with the subject
+agent around the world. The difference between follow and ride is only visible
+in the 3D view. In the 3D view the user can change the distance behind the agent
+using the mouse. When the observer is following at zero distance from the agent
+it is actually riding the agent. When the observer is in watch mode it tracks
+the movements of one turtle (or patch or link) without moving. In both views you
+will see a spotlight appear on the subject and in the 3D view the observer will
+turn to face the subject. To determine which agent is the focus you can use the
+[[subject]] reporter.
 
 > **Code Example:** Perspective Example
 
