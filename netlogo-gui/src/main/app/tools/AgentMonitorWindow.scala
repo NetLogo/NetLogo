@@ -3,7 +3,7 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Container, Frame }
-import java.awt.event.{ ActionEvent,  WindowAdapter, WindowEvent }
+import java.awt.event.{ ActionEvent }
 import javax.swing.{ AbstractAction, BorderFactory, JDialog, LayoutFocusTraversalPolicy }
 
 import scala.collection.JavaConverters._
@@ -15,6 +15,8 @@ import org.nlogo.window.{ Event, Events => WindowEvents }
 
 class AgentMonitorWindow(agentKind: AgentKind, _agent: Agent, radius: Double,
                          manager: AgentMonitorManager, parent: Frame)
+// to force the window to stay above the application window replace the following
+// line with 'extends JDialog(parent)' AAB - Feb 02 2021
 extends JDialog()
 with Event.LinkChild
 with WindowEvents.PeriodicUpdateEvent.Handler
@@ -31,7 +33,6 @@ with WindowEvents.LoadBeginEvent.Handler
     }
   }
 
-  private val wasShiftDownOnCloseBox = false // var aab
   private var dead = false
   private var lastAliveTitle: String = null
 
@@ -48,13 +49,6 @@ with WindowEvents.LoadBeginEvent.Handler
       override def getFirstComponent(focusCycleRoot: Container) =
         monitor.commandLine.textField
     })
-  // Add check for shift-key to close all windows
-  addWindowListener(
-    new WindowAdapter {
-      override def windowClosing(e: WindowEvent) {
-        if(wasShiftDownOnCloseBox) manager.closeAll()
-        else close()
-      }})
   SwingUtils.addEscKeyAction(
     getRootPane, new AbstractAction {
       def actionPerformed(e: ActionEvent) {
@@ -95,7 +89,7 @@ with WindowEvents.LoadBeginEvent.Handler
       setTitle(getUpdatedTitle)
   }
 
-def getUpdatedTitle = {
+  def getUpdatedTitle = {
     monitor.agentKind match {
       case AgentKind.Observer => I18N.gui.get("tools.agentMonitor.window.globals")
       case AgentKind.Turtle if agent == null => I18N.gui.get("tools.agentMonitor.window.noTurtle")
