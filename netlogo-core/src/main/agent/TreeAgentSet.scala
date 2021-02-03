@@ -17,7 +17,7 @@ import
 
 class TreeAgentSet(kind: AgentKind, printName: String)
 extends AgentSet(kind, printName) {
-  def getPrintName = printName
+
   private val _agents = new java.util.TreeMap[AnyRef, Agent]
   override val agents: java.lang.Iterable[api.Agent] =
     _agents.values.asInstanceOf[java.lang.Iterable[api.Agent]]
