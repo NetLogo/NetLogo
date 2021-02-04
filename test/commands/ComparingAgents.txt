@@ -13,6 +13,8 @@ ComparingLinks
   directed-edge 1 0 > directed-edge 0 1 => true
   undirected-edge 0 1 > directed-edge 0 1 => true
   directed-edge2 0 1 > undirected-edge2 0 1 => true
+  undirected-edge2 0 1 > undirected-edge 0 1 => true
+  directed-edge2 0 1 > directed-edge 0 1 => true
   directed-edge 1 0 >= directed-edge 0 1 => true
   undirected-edge 0 1 >= directed-edge 0 1 => true
   directed-edge 0 1 > directed-edge 0 1 => false
