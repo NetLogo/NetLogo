@@ -2,12 +2,19 @@ ComparingLinks
   globals [ glob1 ]
   directed-link-breed [directed-edges directed-edge]
   undirected-link-breed [undirected-edges undirected-edge]
+  undirected-link-breed [undirected-edges2 undirected-edge2]
+  directed-link-breed [directed-edges2 directed-edge2]
   O> crt 3 [ fd 5 ]
   O> ask turtle 0 [ create-directed-edges-to other turtles ]
   O> ask turtle 1 [ create-directed-edges-to other turtles ]
   O> ask turtle 0 [ create-undirected-edges-with other turtles ]
+  O> ask turtle 0 [ create-directed-edges2-to other turtles ]
+  O> ask turtle 0 [ create-undirected-edges2-with other turtles ]
   directed-edge 1 0 > directed-edge 0 1 => true
   undirected-edge 0 1 > directed-edge 0 1 => true
+  directed-edge2 0 1 > undirected-edge2 0 1 => true
+  undirected-edge2 0 1 > undirected-edge 0 1 => true
+  directed-edge2 0 1 > directed-edge 0 1 => true
   directed-edge 1 0 >= directed-edge 0 1 => true
   undirected-edge 0 1 >= directed-edge 0 1 => true
   directed-edge 0 1 > directed-edge 0 1 => false

@@ -2,7 +2,7 @@
 
 package org.nlogo.agent
 
-import java.util.{ HashMap => JHashMap, Map => JMap }
+import java.util.{ HashMap => JHashMap, LinkedHashMap => JLinkedHashMap, Map => JMap }
 
 import org.nlogo.core.{ AgentKind, Program, Shape, ShapeListTracker }
 
@@ -24,7 +24,7 @@ trait LinkManagement extends WorldKernel {
   // 3 element list. ev 5/1/08
   private var _nextLinkIndex: Long = 0
 
-  var linkBreeds: JMap[String, TreeAgentSet] = new JHashMap[String, TreeAgentSet]()
+  var linkBreeds: JMap[String, TreeAgentSet] = new JLinkedHashMap[String, TreeAgentSet]()
   def linkShapeList = linkShapes.shapeList
 
   def linksOwnIndexOf(name: String): Int = program.linksOwn.indexOf(name)
@@ -111,7 +111,6 @@ trait LinkManagement extends WorldKernel {
   // assumes caller has already checked to see if the breeds are equal
   def compareLinkBreeds(breed1: AgentSet, breed2: AgentSet): Int = {
     import scala.collection.JavaConverters._
-
     linkBreeds.values.iterator.asScala.collectFirst {
       case b if b eq breed1 => -1
       case b if b eq breed2 => 1
