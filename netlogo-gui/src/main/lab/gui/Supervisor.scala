@@ -2,30 +2,34 @@
 
 package org.nlogo.lab.gui
 
-import org.nlogo.api.LabProtocol
+import collection.mutable.ListBuffer
+
+import java.awt.{ Dialog, FileDialog => JFileDialog }
+import java.io.{ FileWriter, IOException, PrintWriter }
+
+import org.nlogo.api.{ Exceptions, LabProtocol, LogoException }
+import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ CompilerException, I18N }
-import org.nlogo.awt.UserCancelException
-import org.nlogo.lab.{Exporter,SpreadsheetExporter,TableExporter,Worker}
-import org.nlogo.api.LabProtocol
-import org.nlogo.window.{EditDialogFactoryInterface,GUIWorkspace}
-import org.nlogo.nvm.{EngineException, Workspace}
-import org.nlogo.workspace.{CurrentModelOpener, WorkspaceFactory}
+import org.nlogo.lab.{ Exporter, SpreadsheetExporter, TableExporter, Worker }
+import org.nlogo.nvm.{ EngineException, Workspace }
 import org.nlogo.nvm.LabInterface.ProgressListener
-import org.nlogo.api.LogoException
+import org.nlogo.swing.{ FileDialog, OptionDialog }
+import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace }
+import org.nlogo.workspace.{ CurrentModelOpener, WorkspaceFactory }
 
 object Supervisor {
   case class RunOptions(threadCount: Int, table: Boolean, spreadsheet: Boolean, updateView: Boolean, updatePlotsAndMonitors: Boolean)
 }
-class Supervisor(dialog: java.awt.Dialog,
-                 val workspace: GUIWorkspace,
-                 protocol: LabProtocol,
-                 factory: WorkspaceFactory with CurrentModelOpener,
-                 dialogFactory: EditDialogFactoryInterface)
-  extends Thread("BehaviorSpace Supervisor")
-{
-  var options:Supervisor.RunOptions = null
+class Supervisor(
+  dialog: Dialog,
+  val workspace: GUIWorkspace,
+  protocol: LabProtocol,
+  factory: WorkspaceFactory with CurrentModelOpener,
+  dialogFactory: EditDialogFactoryInterface
+) extends Thread("BehaviorSpace Supervisor") {
+  var options: Supervisor.RunOptions = null
   val worker = new Worker(protocol)
-  val headlessWorkspaces = new collection.mutable.ListBuffer[Workspace]
+  val headlessWorkspaces = new ListBuffer[Workspace]
   val queue = new collection.mutable.Queue[Workspace]
   val listener =
     new ProgressListener {
@@ -44,7 +48,7 @@ class Supervisor(dialog: java.awt.Dialog,
             System.err.println("Run #" + runNumber + ", JAVA EXCEPTION: " + e.getMessage)
             e.printStackTrace(System.err)
         }
-        org.nlogo.api.Exceptions.handle(e)
+        Exceptions.handle(e)
       }}
   def nextWorkspace = queue.synchronized { queue.dequeue() }
   val runnable = new Runnable { override def run() {
@@ -52,43 +56,60 @@ class Supervisor(dialog: java.awt.Dialog,
   } }
   private val workerThread  = new Thread(runnable, "BehaviorSpace Worker")
   private val progressDialog = new ProgressDialog(dialog,  this)
-  private val exporters = new collection.mutable.ListBuffer[Exporter]
+  private val exporters = new ListBuffer[Exporter]
   worker.addListener(progressDialog)
   def addExporter(exporter: Exporter) {
-    if(!exporters.contains(exporter)) {
+    if (!exporters.contains(exporter)) {
       exporters += exporter
       worker.addListener(exporter)
     }
   }
 
   override def start() {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     workspace.jobManager.haltSecondary()
     workspace.jobManager.haltPrimary()
-    try worker.compile(workspace) // result discarded. just to make sure compilation succeeds
-    catch { case e: CompilerException => failure(e); return }
+    try {
+      worker.compile(workspace) // result discarded. just to make sure compilation succeeds
+    } catch {
+      case e: CompilerException =>
+        failure(e)
+        return
+    }
     options =
       try { new RunOptionsDialog(dialog, dialogFactory).get }
-      catch{ case ex: UserCancelException => return }
-    if(options.spreadsheet) {
-      val fileName = org.nlogo.swing.FileDialog.showFiles(
-        workspace.getFrame, "Exporting as spreadsheet", java.awt.FileDialog.SAVE,
+      catch { case ex: UserCancelException => return }
+    if (options.spreadsheet) {
+      val fileName = FileDialog.showFiles(
+        workspace.getFrame, "Exporting as spreadsheet", JFileDialog.SAVE,
         workspace.guessExportName(worker.protocol.name + "-spreadsheet.csv"))
-      addExporter(new SpreadsheetExporter(
-        workspace.getModelFileName,
-        workspace.world.getDimensions,
-        worker.protocol,
-        new java.io.PrintWriter(new java.io.FileWriter(fileName))))
+      try {
+        addExporter(new SpreadsheetExporter(
+          workspace.getModelFileName,
+          workspace.world.getDimensions,
+          worker.protocol,
+          new PrintWriter(new FileWriter(fileName))))
+	    } catch {
+		    case e: IOException =>
+          failure(e)
+          return
+      }
     }
-    if(options.table) {
-      val fileName = org.nlogo.swing.FileDialog.showFiles(
-        workspace.getFrame, "Exporting as table", java.awt.FileDialog.SAVE,
+    if (options.table) {
+      val fileName = FileDialog.showFiles(
+        workspace.getFrame, "Exporting as table", JFileDialog.SAVE,
         workspace.guessExportName(worker.protocol.name + "-table.csv"))
-      addExporter(new TableExporter(
-        workspace.getModelFileName,
-        workspace.world.getDimensions,
-        worker.protocol,
-        new java.io.PrintWriter(new java.io.FileWriter(fileName))))
+      try {
+        addExporter(new TableExporter(
+          workspace.getModelFileName,
+          workspace.world.getDimensions,
+          worker.protocol,
+          new PrintWriter(new FileWriter(fileName))))
+	    } catch {
+		    case e: IOException =>
+          failure(e)
+          return
+      }
     }
     progressDialog.setUpdateView(options.updateView)
     progressDialog.setPlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
@@ -104,38 +125,44 @@ class Supervisor(dialog: java.awt.Dialog,
     worker.addListener(listener)
     super.start()
   }
+
   override def run() {
     try {
       workerThread.setUncaughtExceptionHandler(
         new Thread.UncaughtExceptionHandler {
           def uncaughtException(t: Thread, e: Throwable) {
-            org.nlogo.awt.EventQueue.invokeLater(new Runnable() { def run() { failure(e) } } )
-          }})
+            EventQueue.invokeLater(new Runnable() { def run() { failure(e) } })
+          }
+        }
+      )
       workerThread.start()
-      org.nlogo.awt.EventQueue.invokeLater(new Runnable() { def run() {
-        progressDialog.setVisible(true) } })
+      EventQueue.invokeLater(new Runnable() { def run() {
+        progressDialog.setVisible(true)
+      }})
       workerThread.join()
-      org.nlogo.awt.EventQueue.invokeLater(new Runnable { def run() {
-        progressDialog.close() } })
+      EventQueue.invokeLater(new Runnable { def run() {
+        progressDialog.close()
+      }})
     }
     catch {
       case e: InterruptedException => // ignore
-      case e: Throwable            => org.nlogo.api.Exceptions.handle(e)
+      case e: Throwable            => Exceptions.handle(e)
     }
     finally { bailOut() }
   }
+
   private def bailOut() {
     worker.abort()
     workspace.jobManager.haltPrimary()
     workerThread.interrupt()
-    while(workerThread.isAlive) {
+    while (workerThread.isAlive) {
       try {
         Thread.sleep(100)
       } catch {
         case e: InterruptedException => // ignore
       }
     }
-    org.nlogo.awt.EventQueue.invokeLater(
+    EventQueue.invokeLater(
       new Runnable { def run() {
         workspace.jobManager.haltPrimary()
         workspace.jobManager.haltSecondary()
@@ -145,25 +172,29 @@ class Supervisor(dialog: java.awt.Dialog,
       } } )
     headlessWorkspaces.foreach(_.dispose())
   }
+
   private def failure(t: Throwable) {
-    org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
+    EventQueue.mustBeEventDispatchThread()
     t match {
       case ex: CompilerException =>
-        org.nlogo.swing.OptionDialog.showMessage(
+        OptionDialog.showMessage(
           workspace.getFrame, "Error During Experiment",
           "Experiment aborted due to syntax error:\n" + ex.getMessage,
-          Array(I18N.gui.get("common.buttons.ok")))
+          Array(I18N.gui.get("common.buttons.ok"))
+        )
       case ex: LogoException =>
-        org.nlogo.swing.OptionDialog.showMessage(
+        OptionDialog.showMessage(
           workspace.getFrame, "Error During Experiment",
           "Experiment aborted due to runtime error:\n" + ex.getMessage,
-          Array(I18N.gui.get("common.buttons.ok")))
-      case ex: java.io.IOException =>
-        org.nlogo.swing.OptionDialog.showMessage(
+          Array(I18N.gui.get("common.buttons.ok"))
+        )
+      case ex: IOException =>
+        OptionDialog.showMessage(
           workspace.getFrame, "Error During Experiment",
-          "Experiment aborted due to I/O error:\n" + ex.getMessage,
-          Array(I18N.gui.get("common.buttons.ok")))
-      case _ => org.nlogo.api.Exceptions.handle(t)
+          "Experiment aborted due to file input or output (I/O) error:\n" + ex.getMessage,
+          Array(I18N.gui.get("common.buttons.ok"))
+        )
+      case _ => Exceptions.handle(t)
     }
   }
 }
