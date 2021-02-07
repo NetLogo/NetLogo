@@ -19,21 +19,21 @@ public strictfp class TurtleDrawer {
   public void drawTurtle(GraphicsInterface g, TopologyRenderer topology,
                          org.nlogo.api.Turtle turtle, double patchSize) {
     if (!turtle.hidden()) {
-      if (turtle.size() * patchSize >= MIN_PATCH_SIZE_FOR_TURTLE_SHAPES) {
-        drawTurtleShape(g, topology, turtle, patchSize);
-      } else {
-        topology.drawWrappedRect(g, org.nlogo.api.Color.getColor(turtle.color()),
-            0.0f, turtle.xcor(), turtle.ycor(), turtle.size(), patchSize, true);
-      }
-      if (turtle.hasLabel()) {
-        drawTurtleLabel(g, topology, turtle, patchSize);
-      }
+      drawTurtleShape(g, topology, turtle, patchSize);
+    }
+    if (turtle.hasLabel()) {
+      drawTurtleLabel(g, topology, turtle, patchSize);
     }
   }
 
   void drawTurtleShape(GraphicsInterface g, TopologyRenderer topology, org.nlogo.api.Turtle turtle, double patchSize) {
-    Drawable d = getShapeFromCacheOrCreateDrawable(turtle, patchSize, shapes.getShape(turtle));
-    topology.wrapDrawable(d, g, turtle.xcor(), turtle.ycor(), turtle.size(), patchSize);
+    if (Math.abs(turtle.size() * patchSize) >= MIN_PATCH_SIZE_FOR_TURTLE_SHAPES) {
+	  Drawable d = getShapeFromCacheOrCreateDrawable(turtle, patchSize, shapes.getShape(turtle));
+      topology.wrapDrawable(d, g, turtle.xcor(), turtle.ycor(), turtle.size(), patchSize);
+	} else {
+      topology.drawWrappedRect(g, org.nlogo.api.Color.getColor(turtle.color()),
+		0.0f, turtle.xcor(), turtle.ycor(), turtle.size(), patchSize, true);
+	}
   }
 
   private Drawable getShapeFromCacheOrCreateDrawable(Turtle turtle, double patchSize, VectorShape shape) {
