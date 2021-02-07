@@ -128,9 +128,12 @@ public strictfp class Link
 
   ///
 
-  @Override
+ @Override
   public Agent realloc(Program oldProgram, Program newProgram) {
-    TreeAgentSet oldBreed = getBreed();
+    return realloc(oldProgram, newProgram, null);
+  }
+
+  Agent realloc(Program oldProgram, Program program, AgentSet oldBreed) {
     boolean compiling = oldProgram != null;
 
     // first check if we recompiled and our breed disappeared!
@@ -644,7 +647,7 @@ public strictfp class Link
       _world.linkManager().addLink(this);
     }
     shape(_world.linkBreedShapes().breedShape(breed));
-    realloc(null, _world.program());
+    realloc(null, _world.program(), oldBreed);
   }
 
   // returns the index of the breed of this link, 0 means a generic link;
