@@ -12,6 +12,7 @@ import org.nlogo.nvm.{EngineException, Workspace}
 import org.nlogo.workspace.{CurrentModelOpener, WorkspaceFactory}
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.api.LogoException
+import java.io.{IOException}
 
 object Supervisor {
   case class RunOptions(threadCount: Int, table: Boolean, spreadsheet: Boolean, updateView: Boolean, updatePlotsAndMonitors: Boolean)
@@ -74,21 +75,31 @@ class Supervisor(dialog: java.awt.Dialog,
       val fileName = org.nlogo.swing.FileDialog.showFiles(
         workspace.getFrame, "Exporting as spreadsheet", java.awt.FileDialog.SAVE,
         workspace.guessExportName(worker.protocol.name + "-spreadsheet.csv"))
-      addExporter(new SpreadsheetExporter(
+      try{
+	    addExporter(new SpreadsheetExporter(
         workspace.getModelFileName,
         workspace.world.getDimensions,
         worker.protocol,
-        new java.io.PrintWriter(new java.io.FileWriter(fileName))))
+		new java.io.PrintWriter(new java.io.FileWriter(fileName))))
+	  }
+	  catch{
+		case e: IOException => failure(e); return
+      }
     }
     if(options.table) {
       val fileName = org.nlogo.swing.FileDialog.showFiles(
         workspace.getFrame, "Exporting as table", java.awt.FileDialog.SAVE,
         workspace.guessExportName(worker.protocol.name + "-table.csv"))
-      addExporter(new TableExporter(
+      try{
+	  addExporter(new TableExporter(
         workspace.getModelFileName,
         workspace.world.getDimensions,
         worker.protocol,
         new java.io.PrintWriter(new java.io.FileWriter(fileName))))
+	  }
+	  catch{
+		case e: IOException => failure(e); return
+      }
     }
     progressDialog.setUpdateView(options.updateView)
     progressDialog.setPlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
