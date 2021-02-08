@@ -54,6 +54,11 @@ Agentsets3
   count (up-to-n-of 50 patches) => 50
   (word up-to-n-of (count patches) patches) => "patches"
   (word up-to-n-of (1 + count patches) patches) => "patches"
+  O> create-turtles 100 [ fd 100 set color black ]
+  O> ask up-to-n-of 75 turtles [ set color blue ]
+  count turtles with [color = blue] => 75
+  O> ask up-to-n-of 125 turtles [ set color red ]
+  count turtles with [color = red] => 100
 
 Agentsets4_2D
   globals [ glob1 ]
