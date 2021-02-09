@@ -3,7 +3,7 @@ on: [push, pull_request]
 jobs:
   build-test:
     name: Build & Test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
      - uses: actions/checkout@v2
        with:
@@ -12,15 +12,9 @@ jobs:
        with:
          java-version: '1.8'
          java-package: jdk+fx
-     - run: |
-         git clean -fdx
-         git submodule foreach git reset --hard
-         git submodule foreach git clean -xdf
-         git submodule update --init
-         ./sbt update
+     - run: ./sbt update
      - name: Build NetLogo
        run: ./sbt all
-     - run: git submodule update --init
      - name: Depend, headless and parsers tests
        run: |
          ./sbt depend
