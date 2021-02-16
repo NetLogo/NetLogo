@@ -8,13 +8,11 @@ org.nlogo.agent.Agent.rgbValueError = RGB values must be 0-255
 org.nlogo.agent.Agent.shapeUndefined = \"{0}\" is not a currently defined shape.
 
 org.nlogo.agent.BooleanConstraint.bool = Value must be a boolean.
+org.nlogo.agent.Topology.cantMoveTurtleBeyondWorldEdge = Cannot move turtle beyond the world''s edge.
 
 # Value must be one of: ["Hello" 5 [1 2 3]]
 org.nlogo.agent.ChooserConstraint.invalidValue = Value must be one of: {0}
 org.nlogo.agent.ImportPatchColors.unsupportedImageFormat = The following file is not in a supported image format: {0}
-
-org.nlogo.agent.Topology.cantMoveTurtleBeyondWorldEdge = Cannot move turtle beyond the world''s edge.
-org.nlogo.agent.Topology.cantMoveTurtleBeyondWorldEdge = Cannot move turtle beyond the world''s edge.
 
 org.nlogo.agent.Turtle.patchBeyondLimits = Cannot get patch beyond limits of current world.
 org.nlogo.agent.Turtle.cantChangeWho = You can''t change a turtle''s ID number.
@@ -106,7 +104,7 @@ org.nlogo.prim.etc.$common.negativeIndex = {0} isn''t greater than or equal to z
 org.nlogo.prim.etc.$common.indexExceedsListSize = Can''t find element {0} of the list {1}, which is only of length {2}.
 org.nlogo.prim.etc.$common.indexExceedsStringSize = Can''t find element {0} of the string {1}, which is only of length {2}.
 
-org.nlogo.prim.etc._median.emptyList = Can''t find the median of a list with no numbers: {0}
+org.nlogo.prim.etc._median.emptyList = Can''t find the median of a list with no numbers: {0}.
 
 org.nlogo.$common.tooBigForInt = {0} is too large to be represented exactly as an integer in NetLogo.
 
@@ -142,7 +140,7 @@ org.nlogo.prim.etc._setdefaultshape.canOnlySetDefaultShapeOfEntireBreed = Can on
 
 org.nlogo.prim.etc._tickadvance.noNegativeTickAdvances = Cannot advance the tick counter by a negative amount.
 org.nlogo.prim.etc.$common.tickCounterNotStarted = The tick counter has not been started yet. Use RESET-TICKS.
-org.nlogo.prim.etc._turtleset.incorrectInputType = List inputs to {0} must only contain turtle or turtle agentset elements.  The list {1} contained {2} which is NOT a turtle or turtle agentset.
+org.nlogo.prim.etc._turtleset.incorrectInputType = List inputs to {0} must only contain turtle, turtle agentset, or list elements.  The list {1} contained {2} which is NOT a turtle or turtle agentset.
 org.nlogo.prim.etc._variance.listMustHaveMoreThanOneNumber = Can''t find the variance of a list without at least two numbers: {0}.
 
 org.nlogo.prim.etc._randomgamma.noNegativeInputs = Both inputs to {0} must be positive.
@@ -151,7 +149,8 @@ org.nlogo.prim.$common.withExpectedBooleanValue = WITH expected a true/false val
 org.nlogo.prim.$common.expectedBooleanValue = {0} expected a true/false value from {1}, but got {2} instead.
 
 
-org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset = List inputs to {0} must only contain turtle or turtle agentset elements.  The list {1} contained a different type agentset: {2}.
+org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset = List inputs to {0} must only contain turtle, turtle agentset, or list elements.  The list {1} contained a different type agentset: {2}.
+org.nlogo.prim.etc._importdrawing.cantImportDrawingin3D = You can''t import drawing in 3D.
 
 
 org.nlogo.prim.etc._linkheading.noLinkHeadingWithSameEndpoints = There is no heading of a link whose endpoints are in the same position.
@@ -197,6 +196,7 @@ compiler.SetVisitor.notSettable = This isn''t something you can use "set" on.
 compiler.TaskVisitor.notDefined = This special variable isn''t defined here.
 compiler.LocalsVisitor.notDefined = Nothing named {0} has been defined.
 compiler.LetVariable.notDefined = Nothing named {0} has been defined.
+compiler.Backifier.replaced = {0} is no longer a primitive, use {1} instead.
 compiler.StructureParser.includeNotFound = Could not find {0}
 compiler.StructureConverter.noBreed = There is no breed "{0}"
 
