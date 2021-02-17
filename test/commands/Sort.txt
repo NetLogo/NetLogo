@@ -117,3 +117,11 @@ sort-by-catches-java-7-general-contract-violation-error
   glob1 = "success" or glob1 = "predicate is not a strictly-less-than or strictly-greater than relation" => true
   # should the above line be more strict?
   # err => "predicate is not a strictly-less-than or strictly-greater than relation"
+
+SortOnMixedAgentsets
+  O> random-seed 100
+  O> create-turtles 10 [ fd 100 set label false ]
+  O> ask turtles [ create-link-with one-of other turtles ]
+  sort-on [ifelse-value who mod 2 = 0 [one-of patches] [one-of links]] turtles => ERROR SORT-ON works on numbers, strings, or agents of the same type, but not on a patch and a link
+  sort-on [ifelse-value who mod 2 = 0 [one-of patches] [one-of turtles]] turtles => ERROR SORT-ON works on numbers, strings, or agents of the same type, but not on a patch and a turtle
+  sort-on [ifelse-value who mod 2 = 0 [one-of links] [one-of turtles]] turtles => ERROR SORT-ON works on numbers, strings, or agents of the same type, but not on a link and a turtle

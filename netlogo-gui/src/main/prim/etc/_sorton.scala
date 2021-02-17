@@ -39,6 +39,11 @@ class _sorton extends Reporter {
           case (s1: String, s2: String) =>
             s1.compareTo(s2)
           case (a1: Agent, a2: Agent) =>
+            if (a1.kind != a2.kind) {
+              throw new RuntimePrimitiveException(context, _sorton.this,
+                "SORT-ON works on numbers, strings, or agents of the same type, " +
+                "but not on " + TypeNames.aName(a1) + " and " + TypeNames.aName(a2))
+            }
             a1.compareTo(a2)
           case (o1: AnyRef, o2: AnyRef) =>
             throw new RuntimePrimitiveException(
