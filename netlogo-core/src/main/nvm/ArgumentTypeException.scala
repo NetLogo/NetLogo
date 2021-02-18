@@ -2,9 +2,8 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.{ core, api },
-  core.{Nobody, TypeNames},
-  api.{ Context => ApiContext, Dump }
+import org.nlogo.api.{ Dump, TypeNames => ApiTypeNames }
+import org.nlogo.core.{ Nobody, TypeNames}
 
 object ArgumentTypeException {
   def buildMessage(instruction: Instruction, wantedType: Int, argumentValue: Object): String = {
@@ -28,23 +27,23 @@ object ArgumentTypeException {
       // if badValue is a Class object, then it's not REALLY a value at all -- it's just something
       // to tell us what kind of bad value was returned.
       case c: Class[_] =>
-        Some(TypeNames.aName(api.TypeNames.getTypeConstant(c)))
+        Some(TypeNames.aName(ApiTypeNames.getTypeConstant(c)))
       case Nobody =>
         Some("NOBODY")
       case null =>
         None
       case _ =>
-        Some("the " + api.TypeNames.name(badValue) + " " + Dump.logoObject(badValue, true, false))
+        Some("the " + ApiTypeNames.name(badValue) + " " + Dump.logoObject(badValue, true, false))
     }
 }
 
 import ArgumentTypeException._
 
 class ArgumentTypeException(context: Context, baseInstruction: Instruction, badArgIndex: Int, wantedType: Int, badValue: Object)
-  extends RuntimePrimitiveException(context, baseInstruction, "bad message") { // buildMessage(baseInstruction, wantedType, badValue)) {
-    override def computeRuntimeErrorMessage(ctx: ApiContext, instruction: Option[Instruction], cause: Option[Exception], defaultMessage: String) = {
-      instruction.map(i => buildMessage(i, wantedType, badValue)).getOrElse(defaultMessage)
-    }
+  extends RuntimePrimitiveException(context, baseInstruction, "bad message") {
 
-    override def getMessage: String = runtimeErrorMessage
+  override def getMessage: String = {
+    responsibleInstruction.map(i => buildMessage(i, wantedType, badValue)).getOrElse("Argument types were not as expected, but no further details can be found.")
   }
+
+}
