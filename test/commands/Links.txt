@@ -582,10 +582,44 @@ BreedTest3
 LinkCantChangeBreeds
   globals [ glob1 ]
   breed [frogs frog]
+  directed-link-breed   [directed-edges directed-edge]
   O> crt 2
   O> ask turtle 0 [ create-link-to turtle 1 [ set glob1 self ] ]
   [breed] of glob1 = links => true
   O> ask glob1 [ set breed frogs ] => ERROR You can't set BREED to a non-link-breed agentset.
+  O> ask glob1 [ set breed directed-edges ] => ERROR You cannot have both breeded and unbreeded links in the same world.
+
+LinkCanChangeBreeds
+  globals [ glob1 ]
+  directed-link-breed   [directed-edges directed-edge]
+  undirected-link-breed [undirected-edges undirected-edge]
+  O> crt 2
+  O> ask turtle 0 [ create-directed-edge-to turtle 1 [ set glob1 self ] ]
+  [breed] of glob1 = directed-edges => true
+  O> ask glob1 [ set breed undirected-edges ]
+  [breed] of glob1 = undirected-edges => true
+
+LinkCanChangeBreedsWithDiffOwnVariable1
+  globals [ glob1 ]
+  directed-link-breed   [directed-edges directed-edge]
+  undirected-link-breed [undirected-edges undirected-edge]
+  undirected-edges-own [myvar]
+  O> crt 2
+  O> ask turtle 0 [ create-directed-edge-to turtle 1 [ set glob1 self ] ]
+  [breed] of glob1 = directed-edges => true
+  O> ask glob1 [ set breed undirected-edges ]
+  [breed] of glob1 = undirected-edges => true
+
+LinkCanChangeBreedsWithDiffOwnVariable2
+  globals [ glob1 ]
+  directed-link-breed   [directed-edges directed-edge]
+  undirected-link-breed [undirected-edges undirected-edge]
+  directed-edges-own [myvar]
+  O> crt 2
+  O> ask turtle 0 [ create-directed-edge-to turtle 1 [ set glob1 self ] ]
+  [breed] of glob1 = directed-edges => true
+  O> ask glob1 [ set breed undirected-edges ]
+  [breed] of glob1 = undirected-edges => true
 
 LinkEquality
   O> crt 3 [ create-links-with other turtles ]

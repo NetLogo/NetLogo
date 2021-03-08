@@ -67,6 +67,27 @@ SetBreedOfUnbreededTurtleWithVar
   O> crt 1 [ set apples 10 set breed wolves set apples 20 ]
   [apples] of wolf 0 => 20
 
+SetBreedOfBreededTurtleWithVar1
+  breed [frogs frog]
+  breed [wolves wolf]
+  frogs-own [apples]
+  O> create-frogs 1 [ set apples 10 ]
+  [breed] of turtle 0 = frogs => true
+  O> ask turtle 0 [set breed wolves]
+  [breed] of turtle 0 = wolves => true
+  [apples] of wolf 0 => ERROR WOLVES breed does not own variable APPLES
+
+SetBreedOfBreededTurtleWithVar2
+  breed [frogs frog]
+  breed [wolves wolf]
+  wolves-own [apples]
+  O> create-frogs 1
+  [breed] of turtle 0 = frogs => true
+  O> ask turtle 0 [set breed wolves]
+  [breed] of turtle 0 = wolves => true
+  O> ask turtle 0 [set apples 20]
+  [apples] of wolf 0 => 20
+
 DontPropagateGivenShapeOnHatch
   breed [apples apple]
   breed [grapes grape]
