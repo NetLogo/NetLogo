@@ -36,3 +36,55 @@ run-evaluate-string-input-only-once
   to-report foo set glob1 glob1 + 1 report "__ignore glob1" end
   O> run foo
   glob1 => 1
+
+VarClosureWithRunStrings
+  globals [check message]
+  turtles-own [turtle-var]
+  to-report test1 [vars proc-arg] /
+    let proc-let 20 /
+    let t1 [ [task-arg] -> /
+      let task-let 50000 /
+      run (word "set check (" vars ")") /
+    ] /
+    ask turtles [ /
+      let ask-let 300 /
+      (run t1 4000) /
+    ] /
+    report check
+  end
+  to-report test2 [vars proc-arg] /
+    let proc-let 20 /
+    ask turtles [ /
+      let ask-let 300 /
+      run (word "set check (" vars ")") /
+    ] /
+    report check /
+  end
+  to-report test3 [proc-arg] /
+    let proc-let 20 /
+    run "set check (proc-arg + proc-let)" /
+    report check /
+  end
+  to-report test4 [vars proc-arg] /
+    let proc-let 20 /
+    ask turtle 0 [ /
+      let ask-let 300 /
+      ask other turtles [ /
+        run (word "set check (" vars ")") /
+      ] /
+    ] /
+    report check /
+  end
+  O> create-turtles 1 [ set turtle-var 600000 ]
+  test1 "proc-arg + proc-let + ask-let + task-arg + task-let + turtle-var" 1 => ERROR Nothing named PROC-ARG has been defined.
+  test1 "ask-let + task-arg + task-let + turtle-var" 1 => ERROR Nothing named ASK-LET has been defined.
+  test1 "task-arg + task-let + turtle-var" 1 => ERROR Nothing named TASK-ARG has been defined.
+  test1 "task-let + turtle-var" 1 => ERROR Nothing named TASK-LET has been defined.
+  test1 "turtle-var" 1 => 600000
+  test2 "proc-arg + proc-let + ask-let + turtle-var" 1 => ERROR Nothing named ASK-LET has been defined.
+  test2 "proc-arg + proc-let + turtle-var" 1 => 600021
+  test2 "ask-let + turtle-var" 1 => ERROR Nothing named ASK-LET has been defined.
+  test3 1 => 21
+  O> create-turtles 1 [ set turtle-var 7000000 ]
+  O> set check 0
+  test4 "proc-arg + proc-let + turtle-var" 1 => 7000021

@@ -252,3 +252,10 @@ HatchInheritOrientation_3D
   O> crt 1 [ set heading 0 tilt-up 30  roll-right 20 rt 45 ]
   T> hatch 1 [ set color yellow ]
   [(list precision heading 12 precision pitch 12 precision roll 12)]  of turtle 1 =>  [42.180779225595 8.285726273243 34.676049813587]
+
+SetPosition_2D
+  O> __change-topology false false
+  O> create-turtles 100
+  O> ask one-of turtles [ set heading (towards one-of other turtles) ] => ERROR No heading is defined from a point (0,0) to that same point.
+  O> ask turtles [ set xcor random 100 ] => ERROR Cannot move turtle beyond the world's edge.
+  O> ask turtles [ face one-of other turtles ]
