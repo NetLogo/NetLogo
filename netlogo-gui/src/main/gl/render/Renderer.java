@@ -254,7 +254,7 @@ public class Renderer
     final GL2 gl = (GL2) gLDrawable.getGL();
 
     gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-    shapeManager.checkQueue(gl, glu);
+    shapeManager.checkQueue(gl, glu, world.turtleShapeList(), world.linkShapeList());
 
     render(gl);
     gl.glFlush();
@@ -906,12 +906,10 @@ public class Renderer
 
   public void invalidateTurtleShape(String shape) {
     shapeManager.invalidateTurtleShape(shape);
-    shapeManager.updateWorldTurtleShapeList(world.turtleShapeList());
   }
 
   public void invalidateLinkShape(String shape) {
     shapeManager.invalidateLinkShape(shape);
-    shapeManager.updateWorldLinkShapeList(world.linkShapeList());
   }
 
   public void translateWorld(GL2 gl, World world) {
