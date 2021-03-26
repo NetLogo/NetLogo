@@ -213,7 +213,6 @@ public class Renderer
     gl.glEnable(GL2.GL_CULL_FACE);
 
     // Initialize ShapesManager
-
     shapeManager = new ShapeManager(gl, glu, world.turtleShapeList(), world.linkShapeList(),
                                     shapeManager == null ? null : shapeManager.customShapes,
                                     this instanceof Renderer3D);
@@ -907,10 +906,12 @@ public class Renderer
 
   public void invalidateTurtleShape(String shape) {
     shapeManager.invalidateTurtleShape(shape);
+    shapeManager.updateWorldTurtleShapeList(world.turtleShapeList());
   }
 
   public void invalidateLinkShape(String shape) {
     shapeManager.invalidateLinkShape(shape);
+    shapeManager.updateWorldLinkShapeList(world.linkShapeList());
   }
 
   public void translateWorld(GL2 gl, World world) {

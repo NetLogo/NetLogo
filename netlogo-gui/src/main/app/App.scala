@@ -250,6 +250,8 @@ class App extends
   // all these guys get set in the locally block
   private var _workspace: GUIWorkspace = null
   def workspace = _workspace
+  private var _shapeChangeListener: ShapeChangeListener = null
+  def shapeChangeListener = _shapeChangeListener
   lazy val owner = new SimpleJobOwner("App", workspace.world.mainRNG, AgentKind.Observer)
   private var _tabs: Tabs = null
   private var _codeTabsPanel: CodeTabsPanel = null
@@ -361,6 +363,8 @@ class App extends
         model.withOptionalSection("org.nlogo.modelsection.modelsettings", Some(ModelSettings(snapOn)), Some(ModelSettings(false)))
       }
     }
+
+    _shapeChangeListener = new ShapeChangeListener(_workspace, world)
 
     pico.addComponent(new EditorColorizer(workspace))
 
