@@ -22,7 +22,9 @@ class ShapeChangeListener(workspace: GUIWorkspace, world: World) {
 
   def handleShapeEvent(event: ShapeEvent): Unit = {
     event match {
-      case ShapeAdded(_, oldShapeOption, _) => oldShapeOption.foreach(workspace.shapeChanged)
+      case ShapeAdded(newShape, oldShapeOption, _) =>
+        oldShapeOption.foreach(workspace.shapeChanged)
+        workspace.shapeChanged(newShape)
       case ShapeRemoved(removedShape, _) => workspace.shapeChanged(removedShape)
       case _ =>
         // note that the other cases aren't handled here as they happen only when a view refresh would happen anyway
