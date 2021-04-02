@@ -11,7 +11,7 @@ object PrimIndex {
     val anchorHref = new Regex("""<a href="#([^"]*)"""", "anchor")
 
     def replaceHref(m: Match): String = {
-      if (m.group("link").startsWith("http:"))
+      if (m.group("link").startsWith("http:") || m.group("link").startsWith("https:"))
         m.matched
       else
         s"""<a href="../${m.group("link")}""""
