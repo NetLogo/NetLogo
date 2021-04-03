@@ -21,9 +21,11 @@ jobs:
          ./sbt headless/depend
          ./sbt parserJS/test
          ./sbt parserJVM/test
-     - name: Fast tests
+     - name: NetLogo fast tests (error allowed)
+       continue-on-error: True
+       run: ./sbt netlogo/test:fast
+     - name: Other fast tests
        run: |
-         ./sbt netlogo/test:fast
          ./sbt nogen netlogo/test:fast
          ./sbt threed netlogo/test:fast
          ./sbt headless/test:fast
