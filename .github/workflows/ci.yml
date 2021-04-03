@@ -12,6 +12,10 @@ jobs:
        with:
          java-version: '1.8'
          java-package: jdk+fx
+     - name: Update Java alternatives
+       run: |
+         sudo update-alternatives --install /usr/bin/java java /media/mydisk/jdk/bin/java 1
+         sudo update-alternatives --config java
      - run: ./sbt update
      - name: Build NetLogo
        run: ./sbt all
