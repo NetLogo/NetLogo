@@ -80,7 +80,11 @@ class ShapeManager {
   }
 
   GLLinkShape getLinkShape(String name) {
-    return linkShapes.get(name);
+    if (linkShapes.containsKey(name)) {
+      return linkShapes.get(name);
+    } else {
+      return linkShapes.get("default");
+    }
   }
 
   // a model library shape that doesn't have a built-in 3D shape
