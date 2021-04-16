@@ -31,14 +31,17 @@ object ChecksumsAndPreviews {
       else
         library
     }
+
+    def readVariants(): Map[String, Seq[String]] = Map()
+
     // The option names correspond to task names in sbt - ST 2/12/09
     // except "checksums" is "all-checksums" since in sbt the former
     // is already taken - ST 6/28/12
     argv match {
       case Array("--checksum", path) =>
-        Checksums.update(List(path))
+        Checksums.update(List(path), readVariants)
       case Array("--checksums") =>
-        Checksums.update(paths(Checksums.okPath, includeBenchmarks = !Version.is3D))
+        Checksums.update(paths(Checksums.okPath, includeBenchmarks = !Version.is3D), readVariants)
       case Array("--preview", path) =>
         Previews.remake(path)
       case Array("--previews") =>
@@ -76,10 +79,10 @@ object ChecksumsAndPreviews {
 
   object Checksums {
     val separator = " * " // used to separate fields in the checksums file
-    case class Entry(path: String, worldSum: String, graphicsSum: String, revision: String) {
+    case class Entry(path: String, variant: String, worldSum: String, graphicsSum: String, revision: String) {
       def equalsExceptRevision(other: Entry) =
-        path == other.path && worldSum == other.worldSum && graphicsSum == other.graphicsSum
-      override def toString = List(path, worldSum, graphicsSum, revision).mkString(separator)
+        path == other.path && variant == other.variant && worldSum == other.worldSum && graphicsSum == other.graphicsSum
+      override def toString = List(path, variant, worldSum, graphicsSum, revision).mkString(separator)
     }
     type ChecksumMap = collection.mutable.LinkedHashMap[String, Entry]
 
@@ -91,12 +94,12 @@ object ChecksumsAndPreviews {
       for (msg <- message) println("SKIPPING MODEL: " + path + "  because " + msg)
     }).isEmpty
 
-    def update(paths: List[String]) {
+    def update(paths: List[String], variants: Map[String, Seq[String]]) {
       val m = load()
-      paths.foreach(updateOne(m, _))
+      paths.foreach((p) => updateOne(m, p, variants.getOrElse(p, Seq())))
       write(m, ChecksumsFilePath)
     }
-    def updateOne(m: ChecksumMap, model: String) {
+    def updateOne(m: ChecksumMap, model: String, variants: Seq[String]) {
       val workspace = HeadlessWorkspace.newInstance
       workspace.silent = true
       try {
@@ -108,7 +111,8 @@ object ChecksumsAndPreviews {
         }
         else {
           workspace.open(model)
-          updateOneHelper(m, model, workspace)
+          updateOneHelper(m, model, "", workspace)
+          variants.foreach(updateOneHelper(m, model, _, workspace))
         }
       }
       catch { case e: Exception =>
@@ -116,13 +120,13 @@ object ChecksumsAndPreviews {
                 e.printStackTrace() }
       finally { workspace.dispose() }
     }
-    def updateOneHelper(m: ChecksumMap, model: String, workspace: HeadlessWorkspace) {
+    def updateOneHelper(m: ChecksumMap, model: String, variant: String, workspace: HeadlessWorkspace) {
       Checksummer.initModelForChecksumming(workspace)
       val newCheckSum = Checksummer.calculateWorldChecksum(workspace)
       val newGraphicsChecksum = Checksummer.calculateGraphicsChecksum(workspace)
       val revision = getRevisionNumber(workspace.getModelPath)
       val oldEntry = m.get(model)
-      val newEntry = Entry(model, newCheckSum, newGraphicsChecksum, revision)
+      val newEntry = Entry(model, variant, newCheckSum, newGraphicsChecksum, revision)
       // figure out if the entry is new, changed, or the same
       val action =
         if(!m.contains(model)) "* Added"
@@ -136,12 +140,12 @@ object ChecksumsAndPreviews {
     }
     def load(): ChecksumMap = {
       val m = new ChecksumMap
-      for(line <- io.Source.fromFile(ChecksumsFilePath).getLines.map(_.trim))
-        if(!line.startsWith("#") && !line.isEmpty) {
+      for (line <- io.Source.fromFile(ChecksumsFilePath).getLines.map(_.trim))
+        if (!line.startsWith("#") && !line.isEmpty) {
           val strs = line.split(java.util.regex.Pattern.quote(separator))
-          if(strs.size != 4)
+          if (strs.size != 5)
             throw new IllegalStateException("bad line: " + line)
-          m.put(strs(0), Entry(strs(0), strs(1), strs(2), strs(3)))
+          m.put(strs(0), Entry(strs(0), strs(1), strs(2), strs(3), strs(4)))
         }
       m
     }
