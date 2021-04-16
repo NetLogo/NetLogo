@@ -38,7 +38,7 @@ object PreviewCommandsRunner {
   def initWorkspace(
     workspaceFactory: WorkspaceFactory,
     openModelIn: AbstractWorkspace => Unit,
-    previewCommands: Option[PreviewCommands] = None): AbstractWorkspaceScala = {
+    previewCommands: Option[PreviewCommands] = None): AbstractWorkspace = {
 
     def newWorkspace(openModelIn: AbstractWorkspace => Unit) = {
       val ws = workspaceFactory.newInstance
@@ -67,7 +67,7 @@ object PreviewCommandsRunner {
         // the rest of the model, they'll work. NP 2016-01-12
         newWorkspace(_.openString(FileIO.getResourceAsString("/system/empty.nlogo")))
     }
-    previewCommands.foreach(ws.previewCommands = _)
+    previewCommands.foreach(ws.setPreviewCommands(_))
     ws
   }
 

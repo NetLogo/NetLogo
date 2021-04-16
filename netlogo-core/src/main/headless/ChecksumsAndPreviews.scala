@@ -6,6 +6,7 @@ import java.nio.file.{ Files, Paths }
 
 import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.core.CompilerException
+import org.nlogo.headless.ChecksumsAndPreviewsSettings.ChecksumsFilePath
 import org.nlogo.workspace.{ Checksummer, ModelsLibrary, PreviewCommandsRunner }
 
 object ChecksumsAndPreviews {
@@ -30,7 +31,9 @@ object ChecksumsAndPreviews {
       else
         library
     }
-    // The option names correspond to target names in the Makefile - ST 2/12/09
+    // The option names correspond to task names in sbt - ST 2/12/09
+    // except "checksums" is "all-checksums" since in sbt the former
+    // is already taken - ST 6/28/12
     argv match {
       case Array("--checksum", path) =>
         Checksums.update(List(path))
@@ -72,7 +75,7 @@ object ChecksumsAndPreviews {
   /// checksums
 
   object Checksums {
-    val separator = " * " // used to separate fields in checksums.txt
+    val separator = " * " // used to separate fields in the checksums file
     case class Entry(path: String, worldSum: String, graphicsSum: String, revision: String) {
       def equalsExceptRevision(other: Entry) =
         path == other.path && worldSum == other.worldSum && graphicsSum == other.graphicsSum
@@ -81,17 +84,7 @@ object ChecksumsAndPreviews {
     type ChecksumMap = collection.mutable.LinkedHashMap[String, Entry]
 
     def okPath(path: String) = (for {
-      (message, slices) <- Seq(
-        None -> List("HUBNET", "/CURRICULAR MODELS/"),
-        Some("it renders slightly differently on Mac vs. Linux") -> List(
-          "/CODE EXAMPLES/LINK BREEDS EXAMPLE.NLOGO"), // see 407ddcdd49f88395915b1a87c663b13000758d35 in `models` repo
-        Some("it uses the sound extension") -> List(
-          "/GAMES/FROGGER.NLOGO",
-          "/ART/SOUND MACHINES.NLOGO",
-          "/ART/GENJAM - DUPLE.NLOGO",
-          "/EXTENSIONS EXAMPLES/SOUND/"),
-        Some("it uses the vid extension") -> List(
-          "/EXTENSIONS EXAMPLES/VID/"))
+      (message, slices) <- ChecksumsAndPreviewsSettings.ModelsToSkip
       slice <- slices
       if path.toUpperCase.containsSlice(slice)
     } yield {
@@ -99,16 +92,15 @@ object ChecksumsAndPreviews {
     }).isEmpty
 
     def update(paths: List[String]) {
-      val path = if(Version.is3D) "test/checksums3d.txt"
-                 else "test/checksums.txt"
-      val m = load(path)
+      val m = load()
       paths.foreach(updateOne(m, _))
-      write(m, path)
+      write(m, ChecksumsFilePath)
     }
     def updateOne(m: ChecksumMap, model: String) {
       val workspace = HeadlessWorkspace.newInstance
+      workspace.silent = true
       try {
-        if(!new java.io.File(model).exists && m.contains(model)) {
+        if (!new java.io.File(model).exists && m.contains(model)) {
           // if the model doesn't exist and it's in the checksum file just remove it. if it's not in
           // the checksum file let it fall through and report the error
           m.remove(model)
@@ -142,9 +134,9 @@ object ChecksumsAndPreviews {
         println(action + ": \"" + model + separator + newCheckSum
                 + separator + newGraphicsChecksum + separator + revision + "\"")
     }
-    def load(path: String): ChecksumMap = {
+    def load(): ChecksumMap = {
       val m = new ChecksumMap
-      for(line <- io.Source.fromFile(path).getLines.map(_.trim))
+      for(line <- io.Source.fromFile(ChecksumsFilePath).getLines.map(_.trim))
         if(!line.startsWith("#") && !line.isEmpty) {
           val strs = line.split(java.util.regex.Pattern.quote(separator))
           if(strs.size != 4)
@@ -174,8 +166,6 @@ object ChecksumsAndPreviews {
 
   // For when you need to know what the checksummed world exports are
   object ChecksumExports {
-    import scala.collection.JavaConverters._
-
     def export(paths: List[String]): Unit = {
       paths.foreach(exportOne)
     }
@@ -183,6 +173,7 @@ object ChecksumsAndPreviews {
     def exportOne(path: String): Unit = {
       val workspace = HeadlessWorkspace.newInstance
       try {
+        import scala.collection.JavaConverters._
         workspace.open(path)
         Checksummer.initModelForChecksumming(workspace)
         val modelPath = Paths.get(path)
@@ -195,12 +186,14 @@ object ChecksumsAndPreviews {
               modelPath.subpath(modelIndex, pathCount - 2)
                 .resolve(modelName.replaceAllLiterally(".nlogo", ".csv")))
 
-            Files.createDirectories(exportPath.getParent)
-            workspace.exportWorld(exportPath.toString)
-        } catch { case e: Exception =>
+        Files.createDirectories(exportPath.getParent)
+        workspace.exportWorld(exportPath.toString)
+      } catch {
+        case e: Exception =>
           println("SKIPPING MODEL: " + path + "\n  because of exception:")
-          e.printStackTrace() }
-        finally { workspace.dispose() }
+          e.printStackTrace()
+      }
+      finally { workspace.dispose() }
     }
   }
 }

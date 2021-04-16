@@ -52,6 +52,18 @@ public abstract strictfp class AbstractWorkspace
 
   //public final WorldLoader worldLoader ;
 
+  // We're moving `previewCommands` here from `AbstractWorkspaceScala` so that
+  // `ChecksumsAndPreviews` can be moved into core.  We cannot put this on `Workspace`
+  // because it's read-only there and changing it would be breaking in many places.
+  // -Jeremy B April 2016
+  private PreviewCommands _previewCommands = PreviewCommands$.MODULE$.DEFAULT();
+  public PreviewCommands previewCommands() {
+    return this._previewCommands;
+  }
+  public void setPreviewCommands(PreviewCommands commands) {
+    this._previewCommands = commands;
+  }
+
   /// startup
 
   protected AbstractWorkspace(org.nlogo.agent.World world) {

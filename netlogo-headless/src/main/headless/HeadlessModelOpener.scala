@@ -52,7 +52,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     ws.clearRunCache()
 
     // Read preview commands. If the model doesn't specify preview commands, the default ones will be used.
-    model.optionalSectionValue[PreviewCommands]("org.nlogo.modelsection.previewcommands").foreach(ws.previewCommands = _)
+    model.optionalSectionValue[PreviewCommands]("org.nlogo.modelsection.previewcommands").foreach(ws.setPreviewCommands(_))
 
     // parse turtle and link shapes, updating the workspace.
     parseShapes(model.turtleShapes, model.linkShapes)

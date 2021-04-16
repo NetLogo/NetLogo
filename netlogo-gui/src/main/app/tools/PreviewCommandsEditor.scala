@@ -26,7 +26,7 @@ object PreviewCommandsEditor {
       override def actionPerformed(actionEvent: ActionEvent): Unit = {
         val model = f()
 
-        workspace.previewCommands = previewCommandsEditor.getPreviewCommands(model, workspace.getModelPath)
+        workspace.setPreviewCommands(previewCommandsEditor.getPreviewCommands(model, workspace.getModelPath))
       }
     }
 }

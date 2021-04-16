@@ -9,5 +9,5 @@ trait CurrentModelOpener {
 }
 
 trait WorkspaceFactory {
-  def newInstance: AbstractWorkspaceScala
+  def newInstance: AbstractWorkspace
 }

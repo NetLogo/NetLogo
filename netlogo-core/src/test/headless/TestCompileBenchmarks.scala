@@ -2,11 +2,13 @@
 
 package org.nlogo.headless
 
-import org.nlogo.api.Version
 import org.scalatest.FunSuite
-import org.nlogo.util.SlowTest
 
-class TestCompileBenchmarks extends FunSuite with SlowTest{
+import org.nlogo.api.Version
+import org.nlogo.util.SlowTest
+import org.nlogo.headless.ChecksumsAndPreviewsSettings.DumpsPath
+
+class TestCompileBenchmarks extends FunSuite with SlowTest {
 
   private val names = Seq(
     "ANN", "Ants", "Bureaucrats", "BZ", "CA1D", "Erosion", "Fire", "FireBig", "Flocking", "GasLabCirc",
@@ -30,7 +32,7 @@ class TestCompileBenchmarks extends FunSuite with SlowTest{
           result
         }
         val source =
-          io.Source.fromFile("test/benchdumps/" + name + ".txt")
+          io.Source.fromFile(DumpsPath + name + ".txt")
         assert(dump === source.getLines.mkString("","\n","\n"))
       }
   }

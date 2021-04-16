@@ -66,10 +66,13 @@ with RunCache with Jobs with Warning with OutputArea with Importing
 with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant {
   val fileManager: FileManager = new DefaultFileManager(this)
 
+  private var _previewCommands: PreviewCommands = PreviewCommands.Default
   /**
    * previewCommands used by make-preview and model test
    */
-  var previewCommands: PreviewCommands = PreviewCommands.Default
+  def previewCommands: PreviewCommands = this._previewCommands
+  def setPreviewCommands(commands: PreviewCommands): Unit =
+    this._previewCommands = commands
 
   val lastRunTimes = new WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]]
 
@@ -114,6 +117,8 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
     mainRNG.setSeed(seed)
     auxRNG.setSeed(seed)
   }
+
+  def openString(modelContents: String)
 
   override def getCompilationEnvironment = {
     import java.net.MalformedURLException

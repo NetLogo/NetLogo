@@ -9,7 +9,8 @@ package org.nlogo.headless
 import
   org.nlogo.{ agent, api, core, drawing, fileformat, nvm, workspace },
     agent.{ Agent, World, World2D },
-    api.{ CommandRunnable, FileIO, LogoException, RendererInterface, ReporterRunnable, SimpleJobOwner },
+    api.{ CommandRunnable, FileIO, LogoException, ModelReader, RendererInterface, ReporterRunnable, SimpleJobOwner },
+      ModelReader.modelSuffix,
     core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, Output, UpdateMode, WorldDimensions },
     drawing.DrawingActionBroker,
     fileformat.{ NLogoFormat, NLogoPreviewCommandsFormat },
@@ -398,6 +399,10 @@ with org.nlogo.workspace.WorldLoaderInterface {
    */
   override def openModel(model: Model = Model(), shouldAutoInstallLibs: Boolean = false): Unit = {
     new HeadlessModelOpener(this).openFromModel(model, shouldAutoInstallLibs)
+  }
+
+  override def openString(modelContents: String): Unit = {
+    loader.readModel(modelContents, modelSuffix).foreach(m => openModel(m, false))
   }
 
   /**

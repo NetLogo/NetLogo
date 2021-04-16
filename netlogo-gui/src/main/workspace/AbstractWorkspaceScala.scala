@@ -43,8 +43,6 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
 
   def compilerTestingMode: Boolean
 
-  var previewCommands: PreviewCommands = PreviewCommands.Default
-
   // used by `_every`
   val lastRunTimes: WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]] =
     new WeakHashMap[Job, WeakHashMap[Agent, WeakHashMap[Command, MutableLong]]]()
@@ -155,7 +153,7 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
 
   protected def loadFromModel(model: Model): Unit = {
     model.optionalSectionValue[PreviewCommands]("org.nlogo.modelsection.previewcommands").foreach { pc =>
-      previewCommands = pc
+      setPreviewCommands(pc)
     }
     model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient").foreach { hnWidgets =>
       if (hnWidgets.nonEmpty)

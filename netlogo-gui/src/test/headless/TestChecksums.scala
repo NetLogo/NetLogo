@@ -2,7 +2,6 @@
 
 package org.nlogo.headless
 
-import org.nlogo.api.Version
 import org.nlogo.workspace.Checksummer
 import java.util.concurrent.{Executors, TimeUnit}
 import org.nlogo.util.SlowTest
@@ -44,9 +43,7 @@ class TestChecksums extends FunSuite {
 
 object TestChecksums extends ChecksumTester(println _) {
   def checksums = {
-    val path = if (Version.is3D) "test/checksums3d.txt"
-               else "test/checksums.txt"
-    ChecksumsAndPreviews.Checksums.load(path)
+    ChecksumsAndPreviews.Checksums.load()
   }
 
   def main(args: Array[String]) {

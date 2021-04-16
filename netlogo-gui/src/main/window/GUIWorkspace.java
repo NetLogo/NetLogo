@@ -1083,7 +1083,7 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
     jobManager.haltPrimary();
     getExtensionManager().reset();
     fileManager().handleModelChange();
-    previewCommands_$eq(PreviewCommands$.MODULE$.DEFAULT());
+    setPreviewCommands(PreviewCommands$.MODULE$.DEFAULT());
     clearDrawing();
     viewManager().resetMouseCors();
     displaySwitchOn(true);

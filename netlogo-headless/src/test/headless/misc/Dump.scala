@@ -3,8 +3,9 @@
 package org.nlogo.headless
 package misc
 
-import org.nlogo.workspace.ModelsLibrary
 import org.nlogo.api.SimpleJobOwner
+import org.nlogo.headless.ChecksumsAndPreviewsSettings.DumpsPath
+import org.nlogo.workspace.ModelsLibrary
 
 // This is accessible through the "bench" task in the sbt build.  It makes it convenient
 // to run the `__dump` command on a particular models, or on whole groups of models.
@@ -35,7 +36,7 @@ object Dump {
   def benchPath(name:String) = "models/test/benchmarks/" + name + " Benchmark.nlogo"
   def dumpBenchmarks() {
     for(name <- ChecksumsAndPreviews.allBenchmarks)
-      writeFile("netlogo-headless/test/benchdumps/" + name + ".txt",
+      writeFile(DumpsPath + name + ".txt",
                 dump(benchPath(name)))
   }
   def dumpAll() {
