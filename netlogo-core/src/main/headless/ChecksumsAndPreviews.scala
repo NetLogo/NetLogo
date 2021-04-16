@@ -2,7 +2,12 @@
 
 package org.nlogo.headless
 
+import collection.mutable.LinkedHashMap
+
+import java.io.{ BufferedReader, File, FileWriter, InputStreamReader }
 import java.nio.file.{ Files, Paths }
+
+import scala.io.Source
 
 import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.core.CompilerException
@@ -32,7 +37,12 @@ object ChecksumsAndPreviews {
         library
     }
 
-    def readVariants(): Map[String, Seq[String]] = Map()
+    def readVariants(): Map[String, Seq[String]] = {
+      // val lines = Source.fromFile("test/checksum-variants.txt").getLines
+      //   .map(_.trim)
+      //   .filter(!_.startsWith("#") && !_.isEmpty)
+      Map()
+    }
 
     // The option names correspond to task names in sbt - ST 2/12/09
     // except "checksums" is "all-checksums" since in sbt the former
@@ -55,11 +65,14 @@ object ChecksumsAndPreviews {
   }
 
   object Previews {
+
     def needsManualPreview(previewCommands: String) =
       previewCommands contains "need-to-manually-make-preview-for-this-model"
+
     def okPath(path: String) =
       List("HUBNET", "/GOGO/", "/CODE EXAMPLES/SOUND/", "GIS GRADIENT EXAMPLE")
         .forall(!path.toUpperCase.containsSlice(_))
+
     def remake(path: String) {
       val previewPath = path.replaceFirst("\\.nlogo$", ".png")
       try {
@@ -73,18 +86,26 @@ object ChecksumsAndPreviews {
           println("skipping: " + path + "\n  " + e.getMessage)
       }
     }
+
   }
 
   /// checksums
 
   object Checksums {
+
     val separator = " * " // used to separate fields in the checksums file
+
     case class Entry(path: String, variant: String, worldSum: String, graphicsSum: String, revision: String) {
+
       def equalsExceptRevision(other: Entry) =
         path == other.path && variant == other.variant && worldSum == other.worldSum && graphicsSum == other.graphicsSum
-      override def toString = List(path, variant, worldSum, graphicsSum, revision).mkString(separator)
+
+      override def toString =
+        List(path, variant, worldSum, graphicsSum, revision).mkString(separator)
+
     }
-    type ChecksumMap = collection.mutable.LinkedHashMap[String, Entry]
+
+    type ChecksumMap = LinkedHashMap[String, Entry]
 
     def okPath(path: String) = (for {
       (message, slices) <- ChecksumsAndPreviewsSettings.ModelsToSkip
@@ -99,11 +120,12 @@ object ChecksumsAndPreviews {
       paths.foreach((p) => updateOne(m, p, variants.getOrElse(p, Seq())))
       write(m, ChecksumsFilePath)
     }
+
     def updateOne(m: ChecksumMap, model: String, variants: Seq[String]) {
       val workspace = HeadlessWorkspace.newInstance
       workspace.silent = true
       try {
-        if (!new java.io.File(model).exists && m.contains(model)) {
+        if (!new File(model).exists && m.contains(model)) {
           // if the model doesn't exist and it's in the checksum file just remove it. if it's not in
           // the checksum file let it fall through and report the error
           m.remove(model)
@@ -120,6 +142,7 @@ object ChecksumsAndPreviews {
                 e.printStackTrace() }
       finally { workspace.dispose() }
     }
+
     def updateOneHelper(m: ChecksumMap, model: String, variant: String, workspace: HeadlessWorkspace) {
       Checksummer.initModelForChecksumming(workspace)
       val newCheckSum = Checksummer.calculateWorldChecksum(workspace)
@@ -129,18 +152,19 @@ object ChecksumsAndPreviews {
       val newEntry = Entry(model, variant, newCheckSum, newGraphicsChecksum, revision)
       // figure out if the entry is new, changed, or the same
       val action =
-        if(!m.contains(model)) "* Added"
-        else if(oldEntry.get == newEntry) "Didn't change"
-        else if(oldEntry.get.equalsExceptRevision(newEntry)) "* Changed rev # only"
+        if (!m.contains(model)) "* Added"
+        else if (oldEntry.get == newEntry) "Didn't change"
+        else if (oldEntry.get.equalsExceptRevision(newEntry)) "* Changed rev # only"
         else "* Changed"
       m.put(model, newEntry)
-      if(action != "Didn't change")
+      if (action != "Didn't change")
         println(action + ": \"" + model + separator + newCheckSum
                 + separator + newGraphicsChecksum + separator + revision + "\"")
     }
+
     def load(): ChecksumMap = {
       val m = new ChecksumMap
-      for (line <- io.Source.fromFile(ChecksumsFilePath).getLines.map(_.trim))
+      for (line <- Source.fromFile(ChecksumsFilePath).getLines.map(_.trim))
         if (!line.startsWith("#") && !line.isEmpty) {
           val strs = line.split(java.util.regex.Pattern.quote(separator))
           if (strs.size != 5)
@@ -149,18 +173,20 @@ object ChecksumsAndPreviews {
         }
       m
     }
+
     def write(m: ChecksumMap, path: String) {
-      val fw = new java.io.FileWriter(path)
+      val fw = new FileWriter(path)
       m.values.foreach(entry => fw.write(entry.toString + '\n'))
       fw.close()
     }
+
     def getRevisionNumber(modelPath: String): String = {
       val cmds = Array("git", "log", "--pretty=format:%H",
-        new java.io.File(modelPath).getAbsolutePath)
+        new File(modelPath).getAbsolutePath)
       val proc =
-        Runtime.getRuntime().exec(cmds, Array[String](), new java.io.File(ModelsLibrary.modelsRoot))
-      val stdInput = new java.io.BufferedReader(new java.io.InputStreamReader(proc.getInputStream))
-      val stdError = scala.io.Source.fromInputStream(proc.getErrorStream)
+        Runtime.getRuntime().exec(cmds, Array[String](), new File(ModelsLibrary.modelsRoot))
+      val stdInput = new BufferedReader(new InputStreamReader(proc.getInputStream))
+      val stdError = Source.fromInputStream(proc.getErrorStream)
       // rather than use %h, we take the first 10 of %H. Git changed things making %h different
       // across versions (see https://github.com/git/git/commit/e6c587c733b4634030b353f4024794b08bc86892)
       Option(stdInput.readLine()).map(_.trim.take(10)).getOrElse(
@@ -170,6 +196,7 @@ object ChecksumsAndPreviews {
 
   // For when you need to know what the checksummed world exports are
   object ChecksumExports {
+
     def export(paths: List[String]): Unit = {
       paths.foreach(exportOne)
     }
@@ -199,5 +226,6 @@ object ChecksumsAndPreviews {
       }
       finally { workspace.dispose() }
     }
+
   }
 }
