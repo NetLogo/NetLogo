@@ -30,9 +30,9 @@ class TestChecksums extends FunSuite  {
   var versionMismatchCount = 0
 
   for(entry <- entries)
-    test(entry.path, SlowTestTag) {
+    test(entry.key, SlowTestTag) {
       val tester = new ChecksumTester(info(_), () => versionMismatchCount += 1)
-      tester.testChecksum(entry.path, entry.worldSum, entry.graphicsSum, entry.revision)
+      tester.testChecksum(entry.path, entry.variant, entry.worldSum, entry.graphicsSum, entry.revision)
       val failures = tester.failures.toString
       if (failures.nonEmpty)
         fail(failures)
@@ -57,7 +57,7 @@ class ChecksumTester(val info: String => Unit, versionMismatch: () => Unit = () 
     finally ws.dispose()
   }
 
-  def testChecksum(model: String, expectedWorldSum: String, expectedGraphicsSum: String, expectedRevision: String) {
+  def testChecksum(model: String, variant: String, expectedWorldSum: String, expectedGraphicsSum: String, expectedRevision: String) {
     withWorkspace { workspace =>
       val actualRevision = ChecksumsAndPreviews.Checksums.getRevisionNumber(model)
       val revisionMatches = expectedRevision == actualRevision
@@ -66,7 +66,7 @@ class ChecksumTester(val info: String => Unit, versionMismatch: () => Unit = () 
         info(s"checksums.txt has $expectedRevision but model is $actualRevision")
       }
       workspace.open(model)
-      Checksummer.initModelForChecksumming(workspace)
+      Checksummer.initModelForChecksumming(workspace, variant)
       val actual = Checksummer.calculateWorldChecksum(workspace)
       if (expectedWorldSum != actual) {
         val message = model + "\n  expected world checksum " + expectedWorldSum + "\n  but got " + actual + "\n"

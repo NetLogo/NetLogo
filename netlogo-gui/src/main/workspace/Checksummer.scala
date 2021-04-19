@@ -7,14 +7,14 @@ import org.nlogo.util.HexString.toHexString
 import java.io.PrintWriter
 
 object Checksummer {
-  def initModelForChecksumming(workspace: Workspace) {
+  def initModelForChecksumming(workspace: Workspace, variant: String) {
     workspace.renderer.renderLabelsAsRectangles_=(true)
     val source = workspace.previewCommands match {
       case PreviewCommands.Custom(source) => source
       case _ => PreviewCommands.Default.source // may or may not compile, but we'll try
     }
     workspace.seedRNGs(0)
-    workspace.command(source)
+    workspace.command(s"$source\n$variant")
   }
 
   def calculateWorldChecksum(workspace: Workspace): String =

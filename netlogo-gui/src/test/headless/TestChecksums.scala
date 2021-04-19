@@ -31,9 +31,9 @@ class TestChecksums extends FunSuite {
   // We're disabling nw and ls extension models from getting checksummed due to the fact that they're inconsistent at the moment
   // this MUST BE FIXED - RG 8/31/16
   for (entry <- TestChecksums.checksums.values if ! entry.path.contains("Examples/nw") && ! entry.path.contains("Examples/ls")) {
-    test(entry.path, SlowTest.Tag) {
+    test(entry.key, SlowTest.Tag) {
       val tester = new ChecksumTester(info(_))
-      tester.testChecksum(entry.path, entry.worldSum, entry.graphicsSum, entry.revision)
+      tester.testChecksum(entry.path, entry.variant, entry.worldSum, entry.graphicsSum, entry.revision)
       val failures = tester.failures.toString
       if (failures.nonEmpty)
         fail(failures)
@@ -42,9 +42,7 @@ class TestChecksums extends FunSuite {
 }
 
 object TestChecksums extends ChecksumTester(println _) {
-  def checksums = {
-    ChecksumsAndPreviews.Checksums.load()
-  }
+  val checksums = ChecksumsAndPreviews.Checksums.load()
 
   def main(args: Array[String]) {
 
@@ -62,7 +60,7 @@ object TestChecksums extends ChecksumTester(println _) {
           runTimes.update(entry.path, System.currentTimeMillis)
           // for now, store current time; we'll replace it later with the difference
           // between this value and the time then - ST 3/27/08
-          testChecksum(entry.path, entry.worldSum, entry.graphicsSum, entry.revision)
+          testChecksum(entry.path, entry.variant, entry.worldSum, entry.graphicsSum, entry.revision)
           runTimes.update(entry.path, System.currentTimeMillis - runTimes(entry.path))
         }
         catch {
@@ -95,12 +93,12 @@ class ChecksumTester(info: String => Unit) {
   // it's time to abstract - ST 2/12/09  maybe using ExecutorServices.invokeAll - ST 3/29/09
   val failures = new StringBuilder
 
-  def testChecksum(model: String, expectedWorldSum: String, expectedGraphicsSum: String, revision: String) {
+  def testChecksum(model: String, variant: String, expectedWorldSum: String, expectedGraphicsSum: String, revision: String) {
     val workspace = HeadlessWorkspace.newInstance
     workspace.silent = true
     val revisionMatches = revision == ChecksumsAndPreviews.Checksums.getRevisionNumber(model)
     workspace.open(model)
-    Checksummer.initModelForChecksumming(workspace)
+    Checksummer.initModelForChecksumming(workspace, variant)
     val actual = Checksummer.calculateWorldChecksum(workspace)
     if (expectedWorldSum != actual) {
       val message = model + "\n  expected world checksum " + expectedWorldSum + "\n  but got " + actual + "\n"

@@ -15,7 +15,6 @@ object ChecksumsAndPreviews {
   lazy val checksumExport = InputKey[Try[Unit]]("checksumExport", "run export on preview commands for one model")
   lazy val allChecksumsExport = InputKey[Try[Unit]]("allChecksumsExport", "run export on preview commands for all models")
 
-
   val settings = Seq(
     Def.setting(checksum, makeTask("--checksum")),
     Def.setting(allChecksums, makeTask("--checksums")),

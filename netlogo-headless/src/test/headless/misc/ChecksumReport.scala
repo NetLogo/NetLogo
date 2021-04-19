@@ -28,8 +28,7 @@ object ChecksumReport {
     try {
       print(".")
       val start = System.currentTimeMillis
-      tester.testChecksum(
-        entry.path, entry.worldSum, entry.graphicsSum, entry.revision)
+      tester.testChecksum(entry.path, entry.variant, entry.worldSum, entry.graphicsSum, entry.revision)
       Some(System.currentTimeMillis - start)
     }
     catch {

@@ -1,0 +1,19 @@
+# You can list extra "variants" of a model to test in this file.
+# Lines that start with `*` are expected to have a model path, the same
+# as it would appear in the checksums.txt (or headless/3d) file.  The
+# non-empty, non-comment lines that follow will each be treated as NetLogo
+# commands that define the variant.
+
+* models/IABM Textbook/chapter 2/Heroes and Cowards.nlogo
+preset -1177467632
+preset -608717654
+preset -1315170766
+preset -180308068
+preset -1153988890
+preset 1086013561
+preset 878469395
+preset 961107169
+
+* models/Sample Models/Chemistry & Physics/Chaos in a Box.nlogo
+setup-periodic-x
+setup-periodic-quilt

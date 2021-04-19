@@ -38,10 +38,33 @@ object ChecksumsAndPreviews {
     }
 
     def readVariants(): Map[String, Seq[String]] = {
-      // val lines = Source.fromFile("test/checksum-variants.txt").getLines
-      //   .map(_.trim)
-      //   .filter(!_.startsWith("#") && !_.isEmpty)
-      Map()
+      val lines = Source.fromFile("test/checksum-variants.txt").getLines
+        .map((s: String) => s.trim.split("#")(0))
+        .filter((s: String) => !s.startsWith("#") && !s.isEmpty)
+      if (!lines.hasNext) {
+        return Map()
+      }
+      val firstModelLine = lines.next
+      if (!firstModelLine.startsWith("*")) {
+        throw new IllegalStateException(s"variants file must start with a '*' model entry: $lines")
+      }
+
+      def cleanModelPath(path: String): String = path.split("\\*")(1).trim
+
+      def mapper(current: (String, Map[String, Seq[String]]), line: String): (String, Map[String, Seq[String]]) = {
+        if (line.startsWith("*")) {
+          val newModel = cleanModelPath(line)
+          (newModel, current._2 + (newModel -> Seq()))
+        } else {
+          val currentVariants = current._2.getOrElse(current._1, Seq())
+          (current._1, current._2 + (current._1 -> (currentVariants :+ line)))
+        }
+      }
+
+      val firstModel = cleanModelPath(firstModelLine)
+      val starter: (String, Map[String, Seq[String]]) = (firstModel, Map(firstModel -> Seq("")))
+      val variants = lines.foldLeft(starter)(mapper)
+      variants._2
     }
 
     // The option names correspond to task names in sbt - ST 2/12/09
@@ -95,10 +118,15 @@ object ChecksumsAndPreviews {
 
     val separator = " * " // used to separate fields in the checksums file
 
+    def variantKey(path: String, variant: String): String =
+      s"$path${if (variant == "") "" else s" ($variant)"}"
+
     case class Entry(path: String, variant: String, worldSum: String, graphicsSum: String, revision: String) {
 
       def equalsExceptRevision(other: Entry) =
         path == other.path && variant == other.variant && worldSum == other.worldSum && graphicsSum == other.graphicsSum
+
+      val key = Checksums.variantKey(path, variant)
 
       override def toString =
         List(path, variant, worldSum, graphicsSum, revision).mkString(separator)
@@ -130,11 +158,15 @@ object ChecksumsAndPreviews {
           // the checksum file let it fall through and report the error
           m.remove(model)
           println("Model does not exist, deleting checksum for: " + model)
+          if (variants.length != 0) {
+            variants.foreach((v) => m.remove(Checksums.variantKey(model, v)))
+            println(s"** Variants found for a deleted model, they should be removed if the model is really gone or changed if the model moved: $variants")
+          }
         }
         else {
           workspace.open(model)
           updateOneHelper(m, model, "", workspace)
-          variants.foreach(updateOneHelper(m, model, _, workspace))
+          variants.sortWith(_ < _).foreach(updateOneHelper(m, model, _, workspace))
         }
       }
       catch { case e: Exception =>
@@ -144,22 +176,22 @@ object ChecksumsAndPreviews {
     }
 
     def updateOneHelper(m: ChecksumMap, model: String, variant: String, workspace: HeadlessWorkspace) {
-      Checksummer.initModelForChecksumming(workspace)
+      val key = Checksums.variantKey(model, variant)
+      Checksummer.initModelForChecksumming(workspace, variant)
       val newCheckSum = Checksummer.calculateWorldChecksum(workspace)
       val newGraphicsChecksum = Checksummer.calculateGraphicsChecksum(workspace)
       val revision = getRevisionNumber(workspace.getModelPath)
-      val oldEntry = m.get(model)
+      val oldEntry = m.get(key)
       val newEntry = Entry(model, variant, newCheckSum, newGraphicsChecksum, revision)
       // figure out if the entry is new, changed, or the same
       val action =
-        if (!m.contains(model)) "* Added"
+        if (!m.contains(key)) "* Added"
         else if (oldEntry.get == newEntry) "Didn't change"
         else if (oldEntry.get.equalsExceptRevision(newEntry)) "* Changed rev # only"
         else "* Changed"
-      m.put(model, newEntry)
+      m.put(newEntry.key, newEntry)
       if (action != "Didn't change")
-        println(action + ": \"" + model + separator + newCheckSum
-                + separator + newGraphicsChecksum + separator + revision + "\"")
+        println(action + ": \"" + newEntry.toString + "\"")
     }
 
     def load(): ChecksumMap = {
@@ -169,7 +201,8 @@ object ChecksumsAndPreviews {
           val strs = line.split(java.util.regex.Pattern.quote(separator))
           if (strs.size != 5)
             throw new IllegalStateException("bad line: " + line)
-          m.put(strs(0), Entry(strs(0), strs(1), strs(2), strs(3), strs(4)))
+          val entry = Entry(strs(0), strs(1), strs(2), strs(3), strs(4))
+          m.put(entry.key, entry)
         }
       m
     }
@@ -206,7 +239,7 @@ object ChecksumsAndPreviews {
       try {
         import scala.collection.JavaConverters._
         workspace.open(path)
-        Checksummer.initModelForChecksumming(workspace)
+        Checksummer.initModelForChecksumming(workspace, "")
         val modelPath = Paths.get(path)
         val modelIndex = modelPath.iterator.asScala.indexWhere(_.toString == "models")
         val pathCount = modelPath.getNameCount

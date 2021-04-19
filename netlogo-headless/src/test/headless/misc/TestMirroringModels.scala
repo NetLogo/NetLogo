@@ -29,7 +29,7 @@ class TestMirroringModels extends FunSuite  {
       drawingActionBuffer.activate()
 
       ws.open(path)
-      Checksummer.initModelForChecksumming(ws)
+      Checksummer.initModelForChecksumming(ws, "")
 
       val (_, u0) = diffs(Map(), mirrorables())
       val state = Mirroring.merge(
@@ -79,7 +79,7 @@ class TestMirroringModels extends FunSuite  {
     ChecksumsAndPreviews.Checksums.load()
 
   for {
-    path <- checksums.values.map(_.path)
+    path <- checksums.values.map(_.path).toSet
     if !exclusions.exists(name => path.endsWith(name + ".nlogo"))
     if !moreExclusions.exists(name => path.containsSlice(name))
   } test("Mirroring: " + path, SlowTestTag) {

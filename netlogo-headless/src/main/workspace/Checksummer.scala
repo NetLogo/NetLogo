@@ -8,13 +8,13 @@ import org.nlogo.api.HexString
 
 object Checksummer {
 
-  def initModelForChecksumming(workspace: Workspace) {
+  def initModelForChecksumming(workspace: Workspace, variant: String) {
     workspace.renderer.renderLabelsAsRectangles_=(true)
     val commands = workspace.previewCommands match {
       case PreviewCommands.Custom(source) => source
       case _ => PreviewCommands.Default.source // may or may not compile, but we'll try
     }
-    workspace.command("random-seed 0\n" + commands)
+    workspace.command(s"random-seed 0\n$commands\n$variant")
   }
 
   def calculateWorldChecksum(workspace: Workspace): String =
