@@ -24,17 +24,17 @@ object ChecksumsAndPreviews {
   def main(argv: Array[String]) {
     Main.setHeadlessProperty()
     def paths(fn: String => Boolean, includeBenchmarks: Boolean) = {
-      val benchmarks = allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogo")
-      val library =
-        ModelsLibrary.getModelPaths(true)
-          .filter(fn)
-          .map(p => p.substring(p.indexOf(ModelsLibrary.modelsRoot)))
-          .distinct
-          .toList
-      if (includeBenchmarks)
-        benchmarks ::: library
+      val allLibrary = ModelsLibrary.getModelPaths(true).toList
+      val library = if (includeBenchmarks)
+        allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogo") ::: allLibrary
       else
-        library
+        allLibrary
+
+      library
+        .filter(fn)
+        .map(p => p.substring(p.indexOf(ModelsLibrary.modelsRoot)))
+        .distinct
+        .toList
     }
 
     def readVariants(): Map[String, Seq[String]] = {
@@ -72,7 +72,7 @@ object ChecksumsAndPreviews {
     // is already taken - ST 6/28/12
     argv match {
       case Array("--checksum", path) =>
-        Checksums.update(List(path), readVariants)
+        if (Checksums.okPath(path)) Checksums.update(List(path), readVariants)
       case Array("--checksums") =>
         Checksums.update(paths(Checksums.okPath, includeBenchmarks = !Version.is3D), readVariants)
       case Array("--preview", path) =>
@@ -135,21 +135,33 @@ object ChecksumsAndPreviews {
 
     type ChecksumMap = LinkedHashMap[String, Entry]
 
-    def okPath(path: String) = (for {
-      (message, slices) <- ChecksumsAndPreviewsSettings.ModelsToSkip
-      slice <- slices
-      if path.toUpperCase.containsSlice(slice)
-    } yield {
-      for (msg <- message) println("SKIPPING MODEL: " + path + "  because " + msg)
-    }).isEmpty
-
-    def update(paths: List[String], variants: Map[String, Seq[String]]) {
-      val m = load()
-      paths.foreach((p) => updateOne(m, p, variants.getOrElse(p, Seq())))
-      write(m, ChecksumsFilePath)
+    def okPath(path: String): Boolean = {
+      val skips = ChecksumsAndPreviewsSettings.ModelsToSkip.filter({ case (_, paths) =>
+        paths.exists((s) => path.toUpperCase.containsSlice(s.toUpperCase))
+      })
+      if (skips.length > 0) {
+        println(s"SKIPPING MODEL: $path because ${skips.head._1.getOrElse("of unspecified reasons.")}")
+        false
+      } else {
+        true
+      }
     }
 
-    def updateOne(m: ChecksumMap, model: String, variants: Seq[String]) {
+    def update(paths: List[String], variants: Map[String, Seq[String]]) {
+      // prevent annoying JAI message on Linux when using JAI extension
+      // (old.nabble.com/get-rid-of-%22Could-not-find-mediaLib-accelerator-wrapper-classes%22-td11025745.html)
+      System.setProperty("com.sun.media.jai.disableMediaLib", "true")
+
+      val m = load()
+      val results: List[(String, Exception)] = paths.flatMap( (p) => updateOne(m, p, variants.getOrElse(p, Seq())) )
+      write(m, ChecksumsFilePath)
+      if (!results.isEmpty) {
+        val errors = results.map({ case (model, ex) => s"Exception in $model: ${ex.toString()}" }).mkString("\n\n")
+        throw new Exception(s"Not all checksums completed.  Review the errors and resolve them or add to `ModelsToSkip` as needed.\n\n$errors")
+      }
+    }
+
+    def updateOne(m: ChecksumMap, model: String, variants: Seq[String]): Option[(String, Exception)] = {
       val workspace = HeadlessWorkspace.newInstance
       workspace.silent = true
       try {
@@ -169,10 +181,13 @@ object ChecksumsAndPreviews {
           variants.sortWith(_ < _).foreach(updateOneHelper(m, model, _, workspace))
         }
       }
-      catch { case e: Exception =>
-                println("SKIPPING MODEL: " + model + "\n  because of exception:")
-                e.printStackTrace() }
+      catch {
+        case e: Exception =>
+          println(s"Exception occured making checksums for $model")
+          return Some((model, e))
+      }
       finally { workspace.dispose() }
+      None
     }
 
     def updateOneHelper(m: ChecksumMap, model: String, variant: String, workspace: HeadlessWorkspace) {
