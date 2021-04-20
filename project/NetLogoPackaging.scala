@@ -170,10 +170,13 @@ object NetLogoPackaging {
       val host = "ccl.northwestern.edu"
       val sourceDir = netLogoRoot.value / "docs"
       val targetDir = s"/usr/local/www/netlogo/${netLogoLongVersion.value}"
-      (htmlDocs in netlogo).value
-      RunProcess(Seq("rsync", "-av", "--inplace", "--progress", sourceDir.getPath, s"${user}@${host}:${targetDir}"), "rsync docs")
-      RunProcess(Seq("ssh", s"${user}@${host}", "chgrp", "-R", "apache", s"${targetDir}"), "ssh - change release group")
-      RunProcess(Seq("ssh", s"${user}@${host}", "chmod", "-R", "g+rwX",  s"${targetDir}"), "ssh - change release permissions")
+      val manualSource = netLogoRoot.value / "NetLogo User Manual.pdf"
+      val manualTarget = s"$targetDir/docs/NetLogo User Manual.pdf"
+      (allDocs in netlogo).value
+      RunProcess(Seq("rsync", "-av", "--inplace", "--progress", sourceDir.getPath, s"$user@$host:$targetDir"), "rsync docs")
+      RunProcess(Seq("rsync", "-av", "--inplace", "--progress", manualSource.getPath, s"$user@$host:$manualTarget"), "rsync user manual")
+      RunProcess(Seq("ssh", s"$user@$host", "chgrp", "-R", "apache", targetDir), "ssh - change release group")
+      RunProcess(Seq("ssh", s"$user@$host", "chmod", "-R", "g+rwX", targetDir), "ssh - change release permissions")
     },
     packagingClasspath := {
       val allDeps = (dependencyClasspath in netlogo in Runtime).value ++
