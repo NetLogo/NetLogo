@@ -1,11 +1,5 @@
 scalacOptions += "-deprecation"
 
-resolvers += "Typesafe Public Repo" at "https://repo.typesafe.com/typesafe/releases"
-
-resolvers += "sonatype-releases" at "https://oss.sonatype.org/content/repositories/releases/"
-
-// addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "0.9.3")
-
 // so we can use native2ascii on Linux.
 unmanagedJars in Compile += {
   // prefer JAVA_HOME to java.home
@@ -17,48 +11,29 @@ unmanagedJars in Compile += {
   home / "lib" / "tools.jar"
 }
 
-libraryDependencies +=
-  "de.jflex" % "jflex" % "1.4.3"
+resolvers ++= Seq(
+  "netlogo-publish-versioned" at "https://dl.cloudsmith.io/public/netlogo/publish-versioned/maven/"
+, "netlogo-extension-documentation" at "https://dl.cloudsmith.io/public/netlogo/netlogo-extension-documentation/maven/"
+)
 
-libraryDependencies +=
-  "classycle" % "classycle" % "1.4.2" from
-    "https://s3.amazonaws.com/ccl-artifacts/classycle-1.4.2.jar"
-
-addSbtPlugin("org.scalastyle" %% "scalastyle-sbt-plugin" % "1.0.0")
-
-resolvers += Resolver.url(
-  "bintray-sbt-plugin-releases",
-    url("https://dl.bintray.com/content/sbt/sbt-plugin-releases"))(
-        Resolver.ivyStylePatterns)
-
-addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "0.6.0")
-addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.33")
-
-addSbtPlugin("org.foundweekends" % "sbt-bintray" % "0.5.3")
-
-// prevents noise from bintray stuff
-libraryDependencies += "org.slf4j" % "slf4j-nop" % "1.6.0"
-
-resolvers += Resolver.url(
-  "publish-versioned-plugin-releases",
-    url("https://dl.bintray.com/content/netlogo/publish-versioned"))(
-        Resolver.ivyStylePatterns)
-
-addSbtPlugin("org.nlogo" % "publish-versioned-plugin" % "2.1")
-
-resolvers += Resolver.url(
-  "NetLogo-JVM",
-  url("https://dl.bintray.com/content/netlogo/NetLogo-JVM"))(
-    Resolver.ivyStylePatterns)
-
-addSbtPlugin("org.nlogo" % "netlogo-extension-documentation" % "0.8.0")
+addSbtPlugin("org.scalastyle"     %% "scalastyle-sbt-plugin"           % "1.0.0")
+addSbtPlugin("org.portable-scala" %  "sbt-scalajs-crossproject"        % "0.6.0")
+addSbtPlugin("org.scala-js"       %  "sbt-scalajs"                     % "0.6.33")
+addSbtPlugin("org.nlogo"          %  "publish-versioned-plugin"        % "3.0.0")
+addSbtPlugin("org.nlogo"          %  "netlogo-extension-documentation" % "0.8.3")
+addSbtPlugin("com.timushev.sbt"   %  "sbt-updates"                     % "0.5.0")
 
 libraryDependencies ++= Seq(
-  "com.github.spullara.mustache.java" % "compiler" % "0.9.5",
-  "com.github.spullara.mustache.java" % "scala-extensions-2.10" % "0.9.5",
-  "org.jsoup"                         % "jsoup" % "1.10.3",
-  "org.apache.commons"                % "commons-lang3" % "3.1",
-  "commons-io"                        % "commons-io"    % "2.6"
+  "com.github.spullara.mustache.java" % "compiler"              % "0.9.5"
+, "de.jflex"                          % "jflex"                 % "1.4.3"
+, "classycle"                         % "classycle"             % "1.4.2" from
+  "https://s3.amazonaws.com/ccl-artifacts/classycle-1.4.2.jar"
+, "com.github.spullara.mustache.java" % "scala-extensions-2.10" % "0.9.5"
+, "org.jsoup"                         % "jsoup"                 % "1.10.3"
+, "org.apache.commons"                % "commons-lang3"         % "3.1"
+, "commons-io"                        % "commons-io"            % "2.6"
+// prevents noise from bintray stuff
+, "org.slf4j"                         % "slf4j-nop"             % "1.6.0"
 )
 
 {
@@ -76,5 +51,3 @@ libraryDependencies ++= Seq(
     "com.vladsch.flexmark" % "flexmark-util" % flexmarkVersion
   )
 }
-
-addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.5.0")

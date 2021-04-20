@@ -88,11 +88,6 @@ lazy val scalastyleSettings = Seq(
     baseDirectory.value.getParentFile / "target" / s"scalastyle-result-${name.value}.xml"
   })
 
-def publicationSettings(repository: String) =
-  Seq(
-    bintrayRepository   := repository,
-    bintrayOrganization := Some("netlogo"))
-
 lazy val root =
    project.in(file(".")).
    aggregate(netlogo, parserJVM)
@@ -109,7 +104,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
   settings(JFlexRunner.settings: _*).
   settings(EventsGenerator.settings: _*).
   settings(Docs.settings: _*).
-  settings(publicationSettings("NetLogo-JVM"): _*).
   settings(flexmarkDependencies).
   settings(Defaults.coreDefaultSettings ++
            Testing.settings ++
@@ -130,6 +124,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     name := "NetLogo",
     version := "6.2.0",
     isSnapshot := true,
+    publishTo := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     mainClass in Compile := Some("org.nlogo.app.App"),
     modelsDirectory := baseDirectory.value.getParentFile / "models",
     extensionRoot   := (baseDirectory.value.getParentFile / "extensions").getAbsoluteFile,
@@ -197,7 +192,6 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(Testing.useLanguageTestPrefix("org.nlogo.headless.lang.Test"): _*).
   settings(Depend.dependTask: _*).
   settings(Extensions.settings: _*).
-  settings(publicationSettings("NetLogoHeadless"): _*).
   settings(JFlexRunner.settings: _*).
   settings(includeInPackaging(parserJVM): _*).
   settings(shareSourceDirectory("netlogo-core"): _*).
@@ -207,6 +201,7 @@ lazy val headless = (project in file ("netlogo-headless")).
     name          := "NetLogoHeadless",
     version       := "6.2.0",
     isSnapshot    := true,
+    publishTo     := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     autogenRoot   := (baseDirectory.value.getParentFile / "autogen").getAbsoluteFile,
     extensionRoot := baseDirectory.value.getParentFile / "extensions",
     mainClass in Compile         := Some("org.nlogo.headless.Main"),
@@ -293,10 +288,10 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
   settings(commonSettings: _*).
   settings(scalaSettings: _*).
   settings(scalastyleSettings: _*).
-  settings(publicationSettings("NetLogoHeadless"): _*).
   settings(
     isSnapshot := true,
     name := "parser",
+    publishTo := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     version := "0.3.0",
     unmanagedSourceDirectories in Compile += baseDirectory.value.getParentFile / "parser-core" / "src" / "main",
     unmanagedSourceDirectories in Test    += baseDirectory.value.getParentFile / "parser-core" / "src" / "test").
