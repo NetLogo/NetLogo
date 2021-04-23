@@ -22,7 +22,7 @@ trait ExportRenderer extends Renderer with GLEventListener {
     init(gLDrawable)
     val gl = gLDrawable.getGL().asInstanceOf[GL2]
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
-    shapeManager.checkQueue(gl, glu)
+    shapeManager.checkQueue(gl, glu, world.turtleShapeList, world.linkShapeList)
     render(gl)
     gl.glFinish()
     exportGraphics(gLDrawable)

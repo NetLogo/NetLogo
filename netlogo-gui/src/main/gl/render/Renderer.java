@@ -213,7 +213,6 @@ public class Renderer
     gl.glEnable(GL2.GL_CULL_FACE);
 
     // Initialize ShapesManager
-
     shapeManager = new ShapeManager(gl, glu, world.turtleShapeList(), world.linkShapeList(),
                                     shapeManager == null ? null : shapeManager.customShapes,
                                     this instanceof Renderer3D);
@@ -255,7 +254,7 @@ public class Renderer
     final GL2 gl = (GL2) gLDrawable.getGL();
 
     gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);
-    shapeManager.checkQueue(gl, glu);
+    shapeManager.checkQueue(gl, glu, world.turtleShapeList(), world.linkShapeList());
 
     render(gl);
     gl.glFlush();

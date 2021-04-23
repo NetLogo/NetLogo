@@ -362,6 +362,8 @@ class App extends
       }
     }
 
+    ShapeChangeListener.listen(_workspace, world)
+
     pico.addComponent(new EditorColorizer(workspace))
 
     frame.addLinkComponent(workspace)

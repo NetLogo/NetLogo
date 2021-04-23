@@ -31,8 +31,6 @@ class ShapeManager {
   private final List<AddShapeRequest> queue = new LinkedList<AddShapeRequest>();
   private final Map<String, String> shapeMap = new HashMap<String, String>();
   final Map<String, List<String>> customShapes = new HashMap<String, List<String>>();
-  private final ShapeList turtleShapeList;
-  private final ShapeList linkShapeList;
   private final Map<String, GLShape> modelShapes = new HashMap<String, GLShape>();
   private final Map<String, GLLinkShape> linkShapes = new HashMap<String, GLLinkShape>();
   private final Tessellator tessellator = new Tessellator();
@@ -58,10 +56,8 @@ class ShapeManager {
     quadric = glu.gluNewQuadric();
     glu.gluQuadricNormals(quadric, GLU.GLU_SMOOTH);
     lastList = new Builtins(gl, glu, quadric).add(shapes, shapeMap);
-    this.turtleShapeList = turtleShapeList;
-    this.linkShapeList = linkShapeList;
-    addModelShapes(gl, glu);
-    addLinkShapes(gl, glu);
+    addModelShapes(gl, glu, turtleShapeList);
+    addLinkShapes(gl, glu, linkShapeList);
     if (customShapes != null) {
       lastList = CustomShapes.updateShapes(gl, lastList, shapes, customShapes);
     }
@@ -80,7 +76,11 @@ class ShapeManager {
   }
 
   GLLinkShape getLinkShape(String name) {
-    return linkShapes.get(name);
+    if (linkShapes.containsKey(name)) {
+      return linkShapes.get(name);
+    } else {
+      return linkShapes.get("default");
+    }
   }
 
   // a model library shape that doesn't have a built-in 3D shape
@@ -119,7 +119,7 @@ class ShapeManager {
   }
 
   // Need to do it this way because we need the GL
-  void checkQueue(GL2 gl, GLU glu) {
+  void checkQueue(GL2 gl, GLU glu, ShapeList turtleShapeList, ShapeList linkShapeList) {
     for (AddShapeRequest req : queue) {
       if (req.type == AddShapeRequestType.IMPORT) {
         CustomShapes.Description shape = (CustomShapes.Description) req.data;
@@ -162,7 +162,7 @@ class ShapeManager {
     queue.clear();
   }
 
-  private void addLinkShapes(GL2 gl, GLU glu) {
+  private void addLinkShapes(GL2 gl, GLU glu, ShapeList linkShapeList) {
     scala.collection.Seq<Shape> lols = linkShapeList.shapes();
     int nextIndex = gl.glGenLists(lols.size());
     scala.collection.Iterator<Shape> iter = lols.iterator();
@@ -181,7 +181,7 @@ class ShapeManager {
     compileShape(gl, glu, vShape, index, vShape.isRotatable());
   }
 
-  private void addModelShapes(GL2 gl, GLU glu) {
+  private void addModelShapes(GL2 gl, GLU glu, ShapeList turtleShapeList) {
     scala.collection.Seq<Shape> modelShapeList = turtleShapeList.shapes();
     lastList = gl.glGenLists(modelShapeList.size());
 
