@@ -96,3 +96,9 @@ NestedAsksMaintainOrder_2D
   O> set check-list []
   O> ask turtles with [color = red] [ let turtle-list [] ask other turtles in-radius 3 with [color = yellow] [ set turtle-list lput who turtle-list ] set check-list lput turtle-list check-list ]
   check-list => [[28 13 1 10] [10 28 1 13] [10 11 2 27 1 28] [11 18 2] [11 2 18] [11 28 10 13 2 1] [3 19 11] [19 3 13 1]]
+
+DieInDoubleAskShouldNotError
+  to run-die ask turtles [ ask self [ die ] ] end
+  O> clear-all
+  O> create-turtles 1
+  O> run-die
