@@ -251,7 +251,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
       cw.visitEnd()
       val bytecode = cw.toByteArray
       val cName = fullClassName.replace('/', '.')
-      val result = loader.loadBytecodeClass(cName, bytecode).newInstance.asInstanceOf[A]
+      val result = loader.loadBytecodeClass(cName, bytecode).getDeclaredConstructor().newInstance().asInstanceOf[A]
       setAllKeptFields(result)
       result.args   = original.args
       result.copyMetadataFrom(original)

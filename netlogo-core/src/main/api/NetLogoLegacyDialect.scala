@@ -48,7 +48,7 @@ trait DelegatingMapper extends CoreTokenMapperInterface {
   def allReporterNames: Set[String] = (reporters.keySet ++ defaultMapper.allReporterNames)
 
   private def instantiate[T](name: String) =
-    Class.forName(name).newInstance.asInstanceOf[T]
+    Class.forName(name).getDeclaredConstructor().newInstance().asInstanceOf[T]
 
   private def magicOpenToken(s: String): Option[CoreCommand] =
     if (s.startsWith("___") && s.length > 3)

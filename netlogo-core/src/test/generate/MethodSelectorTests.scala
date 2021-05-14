@@ -34,8 +34,7 @@ class MethodSelectorTests extends FunSuite {
         case e: ClassNotFoundException =>
           Class.forName("org.nlogo.prim." + name)
       }
-      klass.newInstance
-      .asInstanceOf[T]
+      klass.getDeclaredConstructor().newInstance().asInstanceOf[T]
   }
   // make sure our cost metric prefers specific types.  there is no actual conversion cost, but
   // presumably the method that knows to handle the specific type will be more efficient than the
