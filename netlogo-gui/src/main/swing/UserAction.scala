@@ -64,8 +64,8 @@ object UserAction {
     def keystrokeChar(key: Char, withMenu: Boolean = false, withShift: Boolean = false, withAlt: Boolean = false): KeyStroke = {
       val mask: Int = (
             (if (withMenu)  Toolkit.getDefaultToolkit.getMenuShortcutKeyMask else 0)
-          | (if (withShift) InputEvent.SHIFT_MASK else 0)
-          | (if (withAlt)   InputEvent.ALT_MASK else 0)
+          | (if (withShift) InputEvent.SHIFT_DOWN_MASK else 0)
+          | (if (withAlt)   InputEvent.ALT_DOWN_MASK else 0)
         )
       KeyStroke.getKeyStroke(Character.toUpperCase(key), mask)
     }
@@ -73,8 +73,8 @@ object UserAction {
     def keystroke(key: Int, withMenu: Boolean = false, withShift: Boolean = false, withAlt: Boolean = false): KeyStroke = {
       val mask: Int = (
             (if (withMenu)  Toolkit.getDefaultToolkit.getMenuShortcutKeyMask else 0)
-          | (if (withShift) InputEvent.SHIFT_MASK else 0)
-          | (if (withAlt)   InputEvent.ALT_MASK else 0)
+          | (if (withShift) InputEvent.SHIFT_DOWN_MASK else 0)
+          | (if (withAlt)   InputEvent.ALT_DOWN_MASK else 0)
         )
       KeyStroke.getKeyStroke(key, mask)
     }

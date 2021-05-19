@@ -562,7 +562,7 @@ public strictfp class WidgetWrapper
     int x = p.x;
     int y = p.y;
     if (mouseMode() == MouseMode.DRAG) {
-      if ((e.getModifiers() & java.awt.event.InputEvent.SHIFT_MASK) == 0) {
+      if ((e.getModifiersEx() & java.awt.event.InputEvent.SHIFT_DOWN_MASK) == 0) {
         constrainToHorizontal = false;
         constrainToVertical = false;
       } else {

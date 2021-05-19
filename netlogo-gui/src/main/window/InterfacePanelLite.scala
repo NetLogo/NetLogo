@@ -63,7 +63,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   class ButtonKeyAdapter extends KeyAdapter {
     protected def keyIsHandleable(e: KeyEvent): Boolean =
       e.getKeyChar != KeyEvent.CHAR_UNDEFINED &&
-        !e.isActionKey && (e.getModifiers & getToolkit.getMenuShortcutKeyMask) == 0
+        !e.isActionKey && (e.getModifiersEx & getToolkit.getMenuShortcutKeyMask) == 0
 
     override def keyTyped(e: KeyEvent): Unit = {
       if (keyIsHandleable(e))
