@@ -76,7 +76,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
       this.isLocal = isLocal
       setIconImage(Images.loadImageResource("/images/arrowhead.gif"))
       getContentPane.setLayout(new BorderLayout())
-      loginDialog = new LoginDialog(this, userid, hostip, port, false)
+      loginDialog = new LoginDialog(this, userid, hostip, port)
       clientPanel =
         if (isRobo) new RoboClientPanel(editorFactory, this, waitTime, compiler)
         else new ClientPanel(editorFactory, this, compiler)

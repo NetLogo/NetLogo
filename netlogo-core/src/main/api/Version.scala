@@ -49,6 +49,7 @@ trait Version {
   def is3D =
     try java.lang.Boolean.getBoolean("org.nlogo.is3d")
     // can't check arbitrary properties from applets... - ST 10/4/04, 1/31/05
+    // no more applets - is this still needed - AAB 05/2012
     catch {
       case _: java.security.AccessControlException => false
     }
@@ -69,6 +70,7 @@ trait Version {
   def useOptimizer =
     try !java.lang.Boolean.getBoolean("org.nlogo.noOptimizer")
     // can't check arbitrary properties from applets... - ST 10/4/04, 1/31/05
+    // no more applets - is this still needed - AAB 05/2012
     catch {
       case _: java.security.AccessControlException =>
         false
@@ -86,6 +88,7 @@ trait Version {
       case _: ClassNotFoundException =>
         false
       // can't check arbitrary properties from applets... - ST 10/4/04, 1/31/05
+      // no more applets - is this still needed - AAB 05/2012
       case _: java.security.AccessControlException =>
         false
     }

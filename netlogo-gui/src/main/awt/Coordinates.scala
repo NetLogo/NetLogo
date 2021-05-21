@@ -3,7 +3,6 @@
 package org.nlogo.awt
 
 import java.awt.{ Component, Point, Window }
-import java.applet.Applet
 
 object Coordinates {
 
@@ -12,9 +11,9 @@ object Coordinates {
    * Always returns a freshly constructed Point object.
    */
   def convertPointToScreen(p: Point, c: Component): Point =
-    if(c == null)
+    if (c == null)
       new Point(p)
-    else if(c.isInstanceOf[Applet] || c.isInstanceOf[Window])
+    else if (c.isInstanceOf[Window])
       new Point(p.x + c.getLocationOnScreen.x,
                 p.y + c.getLocationOnScreen.y)
     else

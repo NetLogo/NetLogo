@@ -6,7 +6,7 @@ import org.nlogo.core.AgentKind
 import org.nlogo.nvm.Workspace
 import org.nlogo.window.{ Event, Events, ProceduresInterface }
 
-// for use from Applet; we don't want the whole ProceduresTab class in that context, because
+// for use when we don't want the whole ProceduresTab class, because
 // ProceduresTab depends on the new editor, which we don't want in the lite jar
 
 class ProceduresLite(linkParent: AnyRef, workspace: Workspace) extends ProceduresInterface

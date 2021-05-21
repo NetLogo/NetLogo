@@ -6,12 +6,12 @@ import java.awt.Frame
 
 import org.nlogo.core.{ AgentKind, Model, Femto }
 import org.nlogo.agent.{ Agent, World }
-import org.nlogo.api.{ AggregateManagerInterface, ControlSet, FileIO, NetLogoThreeDDialect, NetLogoLegacyDialect, RendererInterface, Version }
+import org.nlogo.api.{ AggregateManagerInterface, ControlSet, NetLogoThreeDDialect, NetLogoLegacyDialect, RendererInterface, Version }
 import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.window.{ ErrorDialogManager, GUIWorkspace, NetLogoListenerManager, UpdateManager }
 import org.nlogo.workspace.BufferedReaderImporter
 
-class LiteWorkspace(appletPanel: AppletPanel, isApplet: Boolean, world: World, frame: Frame, listenerManager: NetLogoListenerManager, errorDialogManager: ErrorDialogManager, controlSet: ControlSet)
+class LiteWorkspace(LitePanel: LitePanel, world: World, frame: Frame, listenerManager: NetLogoListenerManager, errorDialogManager: ErrorDialogManager, controlSet: ControlSet)
 extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null, null, listenerManager, errorDialogManager, controlSet) {
   val compiler = Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
   // lazy to avoid initialization order snafu - ST 3/1/11
@@ -23,16 +23,7 @@ extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null
   val aggregateManager =
     Femto.get[AggregateManagerInterface]("org.nlogo.sdm.AggregateManagerLite")
   override def doImport(importer: BufferedReaderImporter) {
-    if(isApplet)
-      // it's pretty gruesome here efficiency-wise that we slurp
-      // the entire contents into a giant string -- ST 9/29/04
-      importer.doImport(
-        new java.io.BufferedReader(
-          new java.io.StringReader(
-            FileIO.url2String(
-              appletPanel.getFileURL(importer.filename).toString))))
-    else
-      super.doImport(importer)
+    super.doImport(importer)
   }
   override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) { }
   override def inspectAgent(agentClass: AgentKind, agent: Agent, radius: Double) { }

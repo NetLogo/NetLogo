@@ -217,7 +217,7 @@ public abstract strictfp class Event {
   // walking the component hierarchy looking for handlers.  first
   // findTop() chases getParent() and getLinkParent() links upward,
   // until it hits the object at the root of the entire tree
-  // (probably a Window or an Applet or something like that).  then
+  // (probably a Window or something like that).  then
   // findHandlers() traverses the entire tree by following
   // getComponents() and getLinkChildren() links, collecting any
   // objects which implement the handler interface we're looking for

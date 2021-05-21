@@ -111,9 +111,9 @@ public abstract strictfp class AbstractWorkspace
     return true;
   }
 
-  /// isApp/isApplet
+  /// isApp
 
-  // Note that if using the embedding API, both isApp and isApplet are false.
+  // Note that if using the embedding API isApp is false.
 
   private static boolean isApp = false;
 
@@ -123,16 +123,6 @@ public abstract strictfp class AbstractWorkspace
 
   public static void isApp(boolean isApp) {
     AbstractWorkspace.isApp = isApp;
-  }
-
-  private static boolean isApplet = true;
-
-  public static boolean isApplet() {
-    return isApplet;
-  }
-
-  public static void isApplet(boolean isApplet) {
-    AbstractWorkspace.isApplet = isApplet;
   }
 
   /// hubnet
@@ -352,13 +342,7 @@ public abstract strictfp class AbstractWorkspace
   protected void doImport(FileImporter importer)
       throws java.io.IOException {
     final org.nlogo.core.File newFile;
-
-    if (AbstractWorkspace.isApplet()) {
-      newFile = new org.nlogo.api.RemoteFile(importer.filename);
-    } else {
-      newFile = new org.nlogo.api.LocalFile(importer.filename);
-    }
-
+    newFile = new org.nlogo.api.LocalFile(importer.filename);
     importer.doImport(newFile);
   }
 

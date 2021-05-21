@@ -21,7 +21,6 @@ object App {
     handler.getClass.getDeclaredMethod("init").invoke(handler)
     handler.getClass.getDeclaredMethod("ready", classOf[AnyRef]).invoke(handler, this)
     AbstractWorkspace.isApp(true)
-    AbstractWorkspace.isApplet(false)
     VMCheck.detectBadJVMs()
     val compiler = new org.nlogo.nvm.DefaultCompilerServices(
       Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect))
