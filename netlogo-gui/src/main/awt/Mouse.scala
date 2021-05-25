@@ -11,5 +11,8 @@ object Mouse {
         e.getX + offsets.x, e.getY + offsets.y,
         e.getClickCount, e.isPopupTrigger)
   def hasButton1(e: MouseEvent) =
-    (e.getModifiersEx & InputEvent.BUTTON1_DOWN_MASK) != 0
+    e.getID match {
+      case MouseEvent.MOUSE_RELEASED => (e.getButton & MouseEvent.BUTTON1) != 0
+      case _ => (e.getModifiersEx & InputEvent.BUTTON1_DOWN_MASK) != 0
+    }
 }
