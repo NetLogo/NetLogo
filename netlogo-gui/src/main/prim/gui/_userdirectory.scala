@@ -4,7 +4,6 @@ package org.nlogo.prim.gui
 
 import java.lang.{ Boolean => JBoolean }
 import java.io.File
-import org.nlogo.workspace.AbstractWorkspace.isApplet
 import org.nlogo.awt.UserCancelException
 import org.nlogo.nvm.{ Context, Reporter, RuntimePrimitiveException }
 import org.nlogo.swing.FileDialog
@@ -12,12 +11,7 @@ import org.nlogo.window.GUIWorkspace
 
 class _userdirectory extends Reporter {
 
-
-
   override def report(context: Context) = {
-    if (isApplet)
-      throw new RuntimePrimitiveException(
-        context, this, "You cannot choose a directory from an applet.")
     var result: AnyRef = null
     workspace match {
       case gw: GUIWorkspace =>
@@ -50,4 +44,3 @@ class _userdirectory extends Reporter {
   }
 
 }
-

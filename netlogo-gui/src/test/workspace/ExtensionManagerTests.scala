@@ -12,11 +12,9 @@ import scala.collection.JavaConverters._
 
 class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
   before {
-    AbstractWorkspace.isApplet(false)
   }
 
   after {
-    AbstractWorkspace.isApplet(true)
   }
 
   val dummyWorkspace = new DummyWorkspace

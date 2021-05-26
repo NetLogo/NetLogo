@@ -65,7 +65,7 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
         item.setText(text)
         item
       }
-    val mask = if(shift) java.awt.event.InputEvent.SHIFT_MASK else 0
+    val mask = if(shift) java.awt.event.InputEvent.SHIFT_DOWN_MASK else 0
     if(shortcut != 0) {
       val menuMask = if (addMenuMask) java.awt.Toolkit.getDefaultToolkit.getMenuShortcutKeyMask else 0
       item.setAccelerator(

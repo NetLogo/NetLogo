@@ -5,7 +5,7 @@ package org.nlogo.hubnet.client
 import java.awt.event.{ActionEvent, ActionListener, MouseEvent, MouseAdapter}
 import java.awt.{BorderLayout, FlowLayout, Dimension, Frame}
 import java.net.{ InetAddress, NetworkInterface }
-import javax.swing.{BorderFactory, Box, BoxLayout, JPanel, JButton, JComboBox, JDialog, JScrollPane, JTable, SwingUtilities}
+import javax.swing.{Box, BoxLayout, JPanel, JButton, JComboBox, JDialog, JScrollPane, JTable, SwingUtilities}
 import javax.swing.event.{DocumentEvent, ListSelectionEvent, DocumentListener, ListSelectionListener}
 import javax.swing.table.{AbstractTableModel, DefaultTableCellRenderer}
 import org.nlogo.hubnet.connection.NetworkUtils
@@ -19,7 +19,7 @@ abstract class LoginCallback{
  * The HubNet client login graphical interface.
  **/
 class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: String,
-                  defaultPort: Int, inApplet: Boolean)
+                  defaultPort: Int)
         extends JDialog(parent, "HubNet", true)
         with ListSelectionListener with ActionListener with DocumentListener {
 
@@ -51,10 +51,8 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
       add(new TextFieldBox() {
         addField("User name:", nameField)
-        if (! inApplet) {
-          add(Box.createVerticalStrut(12))
-          addField("Server:", serverField)
-        }
+        add(Box.createVerticalStrut(12))
+        addField("Server:", serverField)
         addField("Port:", portField)
       })
     }
@@ -62,40 +60,35 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
 
     val buttonEnabler = new NonemptyTextFieldButtonEnabler(enterButton)
 
-    // we don't show the server field or table in the applet
-    // because it can only connect to one place.
-    if (! inApplet) {
-      centerPanel.add(Box.createVerticalStrut(12))
-      centerPanel.add(Box.createVerticalStrut(2))
+    centerPanel.add(Box.createVerticalStrut(12))
+    centerPanel.add(Box.createVerticalStrut(2))
 
-      // Set up server table
-      val serverTablePane = new JScrollPane(serverTable) {
-        setPreferredSize(new Dimension(100, 88))
-        setVisible(false)
-      }
-      centerPanel.add(serverTablePane)
-      if (interfaceChooser.getItemCount > 1) {
-        centerPanel.add(interfaceChooser)
-      }
-
-      // Register event handlers
-      serverTable.getSelectionModel.addListSelectionListener(this)
-      serverField.getDocument.addDocumentListener(this)
-      // Allow double clicks on server entries
-      serverTable.addMouseListener(new MouseAdapter() {
-        override def mouseClicked(e: MouseEvent) {
-          if (e.getClickCount == 2)
-            if (enterButton.isEnabled) enterButton.doClick()
-            else nameField.requestFocus()
-        }
-      })
-
-      buttonEnabler.addRequiredField(serverField)
-      serverTablePane.setVisible(true)
-      serverTable.setActive(true)
-      centerPanel.add(Box.createVerticalGlue())
+    // Set up server table
+    val serverTablePane = new JScrollPane(serverTable) {
+      setPreferredSize(new Dimension(100, 88))
+      setVisible(false)
     }
-    else centerPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10))
+    centerPanel.add(serverTablePane)
+    if (interfaceChooser.getItemCount > 1) {
+      centerPanel.add(interfaceChooser)
+    }
+
+    // Register event handlers
+    serverTable.getSelectionModel.addListSelectionListener(this)
+    serverField.getDocument.addDocumentListener(this)
+    // Allow double clicks on server entries
+    serverTable.addMouseListener(new MouseAdapter() {
+      override def mouseClicked(e: MouseEvent) {
+        if (e.getClickCount == 2)
+          if (enterButton.isEnabled) enterButton.doClick()
+          else nameField.requestFocus()
+      }
+    })
+
+    buttonEnabler.addRequiredField(serverField)
+    serverTablePane.setVisible(true)
+    serverTable.setActive(true)
+    centerPanel.add(Box.createVerticalGlue())
 
     add(new JPanel(new FlowLayout(FlowLayout.RIGHT)) {add(enterButton)}, java.awt.BorderLayout.SOUTH)
 

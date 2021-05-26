@@ -10,7 +10,7 @@ import org.nlogo.api.{ ControlSet, LogoException, ModelType, Version, SimpleJobO
 import org.nlogo.awt.EventQueue
 import org.nlogo.agent.{ World2D, World3D }
 import org.nlogo.core.{ AgentKind, CompilerException }
-import org.nlogo.window.{ Event, FileController, AppletAdPanel, CompilerManager,
+import org.nlogo.window.{ Event, FileController, LiteAdPanel, CompilerManager,
   DefaultEditorFactory, LinkRoot, InterfacePanelLite, InvalidVersionException,
   ReconfigureWorkspaceUI, NetLogoListenerManager, OutputWidget, ErrorDialogManager }
 import org.nlogo.window.Events.{ CompiledEvent, LoadModelEvent }
@@ -21,13 +21,13 @@ import scala.concurrent.{ Future, Promise }
 import scala.util.Try
 
 /**
- * The superclass of org.nlogo.lite.InterfaceComponent.  Also used by org.nlogo.lite.Applet.
+ * The superclass of org.nlogo.lite.InterfaceComponent.
  *
  * See the "Controlling" section of the NetLogo User Manual for example code.
  */
 
-abstract class AppletPanel(
-  frame: java.awt.Frame, iconListener: java.awt.event.MouseListener, isApplet: Boolean)
+abstract class LitePanel(
+  frame: java.awt.Frame, iconListener: java.awt.event.MouseListener)
 extends javax.swing.JPanel
 with org.nlogo.api.Exceptions.Handler
 with Event.LinkParent
@@ -42,21 +42,19 @@ with ControlSet {
    */
   val listenerManager = new NetLogoListenerManager
 
-  org.nlogo.workspace.AbstractWorkspace.isApplet(isApplet)
-
   val errorDialogManager = new ErrorDialogManager(this)
   org.nlogo.api.Exceptions.setHandler(this)
 
   protected val world = if(Version.is3D) new World3D() else new World2D()
-  val workspace = new LiteWorkspace(this, isApplet, world, frame, listenerManager, errorDialogManager, this)
+  val workspace = new LiteWorkspace(this, world, frame, listenerManager, errorDialogManager, this)
   val procedures = new ProceduresLite(workspace, workspace)
   protected val liteEditorFactory = new DefaultEditorFactory(workspace)
 
   val iP = createInterfacePanel(workspace)
 
-  val defaultOwner = new SimpleJobOwner("AppletPanel", workspace.world.mainRNG, AgentKind.Observer)
+  val defaultOwner = new SimpleJobOwner("LitePanel", workspace.world.mainRNG, AgentKind.Observer)
 
-  val panel = new AppletAdPanel(iconListener)
+  val panel = new LiteAdPanel(iconListener)
 
   addLinkComponent(workspace.aggregateManager)
   addLinkComponent(workspace)
@@ -82,7 +80,7 @@ with ControlSet {
   def getFileURL(filename: String): java.net.URL =
     throw new UnsupportedOperationException
 
-  /** AppletPanel passes the focus request to the InterfacePanel */
+  /** LitePanel passes the focus request to the InterfacePanel */
   override def requestFocus() {
     if (iP != null)
       iP.requestFocus()
@@ -209,9 +207,8 @@ with ControlSet {
     // I haven't thoroughly searched for all the places where the type of model matters, but it
     // seems to me like it ought to be OK; the main thing the model type affects in the engine (as
     // opposed to e.g. the behavior of Save in the File menu) is where files are read or written
-    // from, but in the applet case 1) you can't write files and 2) we have special code for the
-    // reading case that goes out to the web server instead of 1the file system.... so, I think
-    // TYPE_LIBRARY is probably OK. - ST 10/11/05
+    // from, so, I think  the TYPE_LIBRARY is probably OK. - ST 10/11/05
+    // AAB 5/2021 removed references to applet
     errorDialogManager.setModelName(uri.getPath.split("/").last)
     val controller = new FileController(this, workspace)
     val converter =

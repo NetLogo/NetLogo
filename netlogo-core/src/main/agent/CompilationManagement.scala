@@ -108,7 +108,7 @@ trait CompilationManagement extends CoreWorld { this: AgentManagement =>
         (_, b)       <- breeds
         (varName, i) <- b.owns.zipWithIndex
         key = b.name + "~" + varName
-      } { breedsOwnCache.put(key, new Integer(offset + i)) }
+      } { breedsOwnCache.put(key, Integer.valueOf(offset + i)) }
     }
 
     addBreedCache(program.breeds,     program.turtlesOwn.size)

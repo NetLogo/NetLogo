@@ -31,7 +31,7 @@ class TokenMapper(path: String, prefix: String) extends TokenMapperInterface {
   def allReporterNames = reporters.keySet
   /// private helper
   private def instantiate[T](name: String) =
-    Class.forName(name).newInstance.asInstanceOf[T]
+    Class.forName(name).getDeclaredConstructor().newInstance().asInstanceOf[T]
   // for integration testing
   def allCommandClassNames = commands.values.toSet
   def allReporterClassNames = reporters.values.toSet

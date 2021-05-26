@@ -15,7 +15,7 @@ import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface,
 import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions }
 import org.nlogo.agent.{ CompilationManagement, World, World2D, World3D }
 import org.nlogo.nvm.{ LabInterface, DefaultCompilerServices, PresentationCompilerInterface }
-import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, HubNetManagerFactory }
+import org.nlogo.workspace.{ AbstractWorkspaceScala, HubNetManagerFactory }
 import org.nlogo.fileformat, fileformat.{ NLogoFormat, NLogoThreeDFormat }
 import org.nlogo.util.Pico
 
@@ -120,7 +120,6 @@ with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface
 with org.nlogo.api.ViewSettings {
 
-  AbstractWorkspace.isApplet(false)
   world.trailDrawer(renderer.trailDrawer)
 
   /**

@@ -41,7 +41,7 @@ class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManag
         KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.CTRL_DOWN_MASK),
         autoSuggestAction)
       .addKeymap(
-        KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_MASK), shiftTabAction)
+        KeyStroke.getKeyStroke(KeyEvent.VK_TAB, InputEvent.SHIFT_DOWN_MASK), shiftTabAction)
       .withLineNumbers(
         Preferences.userRoot.node("/org/nlogo/NetLogo").get("line_numbers", "false").toBoolean)
       .forThreeDLanguage(Version.is3D)

@@ -23,7 +23,7 @@ abstract class AbstractTabsPanel(val workspace:           GUIWorkspace,
     setFocusable(false)
     if (System.getProperty("os.name").startsWith("Mac")) {
       try {
-        val ui = Class.forName("org.nlogo.app.MacTabbedPaneUI").newInstance.asInstanceOf[ComponentUI]
+        val ui = Class.forName("org.nlogo.app.MacTabbedPaneUI").getDeclaredConstructor().newInstance().asInstanceOf[ComponentUI]
         setUI(ui)
       } catch {
         case e: ClassNotFoundException =>

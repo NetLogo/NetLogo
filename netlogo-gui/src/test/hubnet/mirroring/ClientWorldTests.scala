@@ -8,9 +8,9 @@ import java.io.{ ByteArrayInputStream, ByteArrayOutputStream, DataInputStream, D
 
 class ClientWorldTests extends FunSuite {
 
-  val BLACK = new java.lang.Double(0)
-  val WHITE = new java.lang.Double(9.9)
-  val GRAY = new java.lang.Double(5)
+  val BLACK = Double.box(0)
+  val WHITE = Double.box(9.9)
+  val GRAY = Double.box(5)
 
   // we pass "false" to the ClientWorld constructor so we don't
   // print out error messages since we are intending to trigger them

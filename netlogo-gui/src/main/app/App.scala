@@ -73,7 +73,6 @@ object App{
     appHandler.getClass.getDeclaredMethod("init").invoke(appHandler)
 
     AbstractWorkspace.isApp(true)
-    AbstractWorkspace.isApplet(false)
     org.nlogo.window.VMCheck.detectBadJVMs()
     Logger.beQuiet()
     processCommandLineArguments(args)

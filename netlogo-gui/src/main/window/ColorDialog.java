@@ -547,10 +547,10 @@ public strictfp class ColorDialog extends JDialog implements ActionListener,
     JToggleButton selectedSwatch = (JToggleButton) e.getSource();
     selectedSwatch.setBorder(BorderFactory.createLineBorder(Color.gray));
 
-    // Why does (e.getModifiers()) return 16 instead of
+    // Why does (e.getModifiersEx()) return 16 instead of
     // 503 which is equal to MouseEvent.MOUSE_PRESSED
-    // Thus (e.getModifiers() & MouseEvent.MOUSE_PRESSED) should return 503?
-    if ((e.getModifiers() & MouseEvent.MOUSE_PRESSED) == 16) {
+    // Thus (e.getModifiersEx() & MouseEvent.MOUSE_PRESSED) should return 503?
+    if ((e.getModifiersEx() & MouseEvent.MOUSE_PRESSED) == 16) {
       selectedSwatch.doClick();
     }
   }

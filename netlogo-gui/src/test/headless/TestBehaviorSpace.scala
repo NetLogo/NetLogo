@@ -5,7 +5,6 @@ package org.nlogo.headless
 import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
 import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.nvm.{ LabInterface, Workspace }
-import org.nlogo.workspace.AbstractWorkspace
 import org.nlogo.util.SlowTest
 
 class TestBehaviorSpace extends FunSuite with SlowTest
@@ -28,7 +27,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
     HeadlessWorkspace.newLab.newWorker(protocol)
   }
 
-  override def beforeEach() { AbstractWorkspace.isApplet(false) }
+  override def beforeEach() { }
   override def afterEach() { workspaces.foreach(_.dispose()) }
 
   // first 6 lines of results are header lines. we'll need to discard them

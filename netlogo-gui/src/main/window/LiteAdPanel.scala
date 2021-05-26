@@ -7,7 +7,7 @@ import javax.swing.{ BorderFactory, Box, BoxLayout, Icon }
 
 import org.nlogo.swing.Utils.icon
 
-class AppletAdPanel(iconListener: java.awt.event.MouseListener)
+class LiteAdPanel(iconListener: java.awt.event.MouseListener)
 extends javax.swing.JPanel {
 
   locally {
