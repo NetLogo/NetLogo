@@ -15,7 +15,7 @@ object NetworkUtils {
     NetworkInterface.getNetworkInterfaces
       .asScala
       .toSeq
-      .filter(i => ! i.isLoopback)
+      .filter(i => !i.isLoopback && i.isUp)
       .flatMap(i => i.getInetAddresses.asScala.toSeq.map(a => (i, a)))
       .collect {
         case (i, a: Inet4Address) => (i, a)
