@@ -74,14 +74,6 @@ if [[ `uname -s` == *CYGWIN* ]] ; then
 
 fi
 
-if [ ! -z $JENKINS_URL ] ; then
-  echo $JAVA_HOME
-  which java
-  java -version
-  which javac
-  javac -version
-fi
-
 # UseQuartz=false so that we get pixel for pixel identical drawings between OS's, so TestChecksums works - ST 6/9/10
 "$JAVA" \
     $XSS $XMX $XX \

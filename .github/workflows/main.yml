@@ -1,0 +1,67 @@
+name: build-and-test
+
+on:
+  push:
+  workflow_dispatch:
+
+env:
+  LIBERICA_URL: https://download.bell-sw.com/java/8u292+10/bellsoft-jdk8u292+10-linux-amd64-full.tar.gz
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        with:
+          access_token: ${{ github.token }}
+
+      - uses: actions/checkout@v2
+
+      - uses: olafurpg/setup-scala@v10
+        id: setup-scala
+        with:
+          java-version: liberica@1.8=tgz+${{ env.LIBERICA_URL }}
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      # The `update-alternatives` step is not needed to build and test but it avoids some superfluous error messages in the logs.
+      # The Python stuff is just for testing the Python extension, it's not part of NetLogo's build process.
+      - name: Install Dependencies
+        run: |
+          pip3 install numpy
+          pip3 install sklearn
+          sudo apt-get install python2
+          curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
+          python2 get-pip.py
+          pip2 install numpy
+          sudo update-alternatives --install /usr/bin/javapackager javapackager ${{ env.JAVA_HOME }}/bin/javapackager 100 --slave /usr/share/man/man1/javapackager.1 javapackager.1 ${{ env.JAVA_HOME }}/man/man1/javapackager.1
+
+      - name: Build
+        run: |
+          git submodule update --init
+          ./sbt update all headless/compile parserJS/compile
+          ./sbt depend headless/depend
+
+      - name: Test Parser
+        run: ./sbt parserJS/test parserJVM/test
+
+      - name: Test 2D
+        run: ./sbt netlogo/test:fast netlogo/test:medium netlogo/test:slow
+
+      - name: Test 2D NoGen
+        run: ./sbt nogen netlogo/test:fast netlogo/test:medium
+
+      - name: Test 3D
+        run: ./sbt threed netlogo/test:fast netlogo/test:medium netlogo/test:slow
+
+      - name: Test Extensions
+        run: ./sbt netlogo/test:extensionTests
+
+      - name: Test Headless
+        run: ./sbt headless/test:fast headless/test:medium headless/test:slow
+
+      - name: Test Headless NoGen
+        run: ./sbt nogen headless/test:fast headless/test:medium
