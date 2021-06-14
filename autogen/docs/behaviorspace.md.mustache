@@ -354,19 +354,24 @@ NetLogo Headless launch script. If you are using Windows, please substitute
 
 It is easiest if you create your experiment setup ahead of time in the GUI, so
 it is saved as part of the model. To run an experiment setup saved in a model,
-here is an example command line:
+here is an example command line, run from the NetLogo {{version}} installation
+folder so the paths to the `netlogo-headless.sh` script and `Wolf Sheep Simple 5.nlogo`
+model are correct.
 
-    netlogo-headless.sh \
-      --model Fire.nlogo \
-      --experiment experiment1 \
-      --table -
+```sh
+# on macOS use "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" instead
+./netlogo-headless.sh \
+  --model "app/models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
+  --experiment "Wolf Sheep Simple model analysis" \
+  --table -
+```
 
 For this to work, Java (version 1.8 or later) must be available.
 You can make Java available to headless in either of two ways
 
 1. Set the `JAVA_HOME` environment variable to the path to the Java
    installation. This is the directory of the Java installation which contains a
-   "bin" directory.
+   `bin` directory.
 2. Add the directory containing the Java executable to the `PATH` environment
    variable
 
@@ -374,8 +379,8 @@ If `JAVA_HOME` is defined, netlogo-headless will run NetLogo using the Java that
 it points to, ignoring the version of Java available on the path.
 
 After the named experiment has run, the results are sent to standard output in
-table format, as CSV. ("-" is how you specify standard output instead of output
-to a file.)
+table format, as CSV. `-` is how you specify standard output instead of output
+to a file.
 
 When running netlogo headless, it forces the system property `java.awt.headless`
 to be true. This tells Java to run in headless mode, allowing NetLogo to run on
@@ -390,13 +395,16 @@ it a name.)
 
 Here's another example that shows some additional, optional arguments:
 
-    netlogo-headless.sh \
-      --model Fire.nlogo \
-      --experiment experiment2 \
-      --max-pxcor 100 \
-      --min-pxcor -100 \
-      --max-pycor 100 \
-      --min-pycor -100
+```sh
+# on macOS use "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" instead
+./netlogo-headless.sh \
+  --model "app/models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
+  --experiment "Wolf Sheep Simple model analysis" \
+  --max-pxcor 5 \
+  --min-pxcor -5 \
+  --max-pycor 5 \
+  --min-pycor -5
+```
 
 Note the use of the optional `--max-pxcor`, `--max-pycor`, etc. arguments to
 specify a different world size than that saved in the model. (It's also possible
@@ -411,11 +419,14 @@ file.
 
 Yet another example:
 
-    netlogo-headless.sh \
-      --model Fire.nlogo \
-      --experiment experiment2 \
-      --table table-output.csv \
-      --spreadsheet spreadsheet-output.csv
+```sh
+# on macOS use "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" instead
+./netlogo-headless.sh \
+  --model "app/models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
+  --experiment "Wolf Sheep Simple model analysis" \
+  --table wsp5-table-output.csv \
+  --spreadsheet wsp5-spreadsheet-output.csv
+```
 
 The optional `--table <filename>` argument specifies that output should be
 generated in a table format and written to the given file as CSV data. If `-` is
@@ -431,13 +442,19 @@ finished.
 Note that it is legal to specify both `--table` and `--spreadsheet`, and if you
 do, both kinds of output file will be generated.
 
-Here is one final example that shows how to run an experiment setup which is
-stored in a separate XML file, instead of in the model file:
+Here is an example that shows how to run an experiment setup which is
+stored in a separate XML file, instead of in the model file (see below for more
+information on the XML file format).  This assumes you've created a
+`my-wsp-setups.xml` file with a `My WSP Exploration" experiment and placed it
+in your home directory.
 
-    netlogo-headless.sh \
-      --model Fire.nlogo \
-      --setup-file fire-setups.xml \
-      --experiment experiment3
+```sh
+# on macOS use "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" instead
+./netlogo-headless.sh \
+  --model "app/models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
+  --setup-file ~/my-wsp-setups.xml \
+  --experiment "My WSP Exploration"
+```
 
 If the XML file contains more than one experiment setup, it is necessary to use
 the `--experiment` argument to specify the name of the setup to use.
@@ -445,11 +462,14 @@ the `--experiment` argument to specify the name of the setup to use.
 In order to run a NetLogo 3D experiment, run headless with the `--3D` argument,
 for example:
 
-    netlogo-headless.sh \
-      --3D \
-      --model "Mousetraps 3D.nlogo3d" \
-      --experiment experiment1 \
-      --table -
+```sh
+# on macOS use "models/3D/Sample Models/GasLab/GasLab Free Gas 3D.nlogo3d" instead
+./netlogo-headless.sh \
+  --3D \
+  --model "app/models/3D/Sample Models/GasLab/GasLab Free Gas 3D.nlogo3d" \
+  --experiment "100 runs" \
+  --table -
+```
 
 Note that you should supply a 3D model and there are also 3D arguments
 `--max-pzcor <number>` and `--min-pzcor <number>`.
@@ -475,19 +495,36 @@ resulting .nlogo file in a text editor. The experiment setups are stored towards
 the end of the .nlogo file, in a section that begins and ends with a
 `experiments` tag. Example:
 
-    <experiments>
-      <experiment name="experiment" repetitions="10" runMetricsEveryStep="true">
-        <setup>setup</setup>
-        <go>go</go>
-        <exitCondition>not any? fires</exitCondition>
-        <metric>burned-trees</metric>
-        <enumeratedValueSet variable="density">
-          <value value="40"/>
-          <value value="0.1"/>
-          <value value="70"/>
-        </enumeratedValueSet>
-      </experiment>
-    </experiments>
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE experiments SYSTEM "behaviorspace.dtd">
+<experiments>
+  <experiment name="My WSP Exploration" repetitions="5" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="2000"/>
+    <metric>count wolves</metric>
+    <metric>count sheep</metric>
+    <metric>sum [grass-amount] of patches</metric>
+    <enumeratedValueSet variable="energy-gain-from-grass">
+      <value value="2"/>
+    </enumeratedValueSet>
+    <steppedValueSet variable="number-of-wolves" first="5" step="1" last="15"/>
+    <enumeratedValueSet variable="movement-cost">
+      <value value="0.5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="energy-gain-from-sheep">
+      <value value="5"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="number-of-sheep">
+      <value value="500"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="grass-regrowth-rate">
+      <value value="0.3"/>
+    </enumeratedValueSet>
+  </experiment>
+</experiments>
+```
 
 In this example, only one experiment setup is given, but you can put as many as
 you want between the beginning and ending `experiments` tags.
@@ -503,8 +540,10 @@ keep experiment setups in their own file, separate from the model file, then the
 extension on the file should be .xml not .nlogo, and you'll need to begin the
 file with proper XML headers, as follows:
 
-    <?xml version="1.0" encoding="UTF-8"?>
-    <!DOCTYPE experiments SYSTEM "behaviorspace.dtd">
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE experiments SYSTEM "behaviorspace.dtd">
+```
 
 The second line must be included exactly as shown. In the first line, you may
 specify a different encoding than `UTF-8`, such as `ISO-8859-1`.
