@@ -181,8 +181,7 @@ class LibrariesTab( category:           String
     add(                     sidebar, BorderLayout.EAST)
     add(                    topPanel, BorderLayout.NORTH)
 
-    uninstallButton.addActionListener(_ => perform("uninstalling", uninstall,
-      lib => lib.status != LibraryStatus.CanInstall && !lib.bundled))
+    uninstallButton.addActionListener(_ => perform("uninstalling", uninstall, _.canUninstall))
 
     listModel.addListDataListener(
       new ListDataListener {

@@ -150,12 +150,13 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
           val downloadURL = new URL(c.getString("downloadURL"))
 
           val installedVersionPath = s"""$category."$codeName".installedVersion"""
-          val bundled              = useBundled && bundledsConfig.hasPath(installedVersionPath)
           val installedVersion     =
             if (!installedLibsConf.hasPath(installedVersionPath))
               None
             else
               Option(installedLibsConf.getString(installedVersionPath))
+
+          val bundled = useBundled && bundledsConfig.hasPath(installedVersionPath) && installedVersion.isEmpty
 
           LibraryInfo(name, codeName, shortDesc, longDesc, version, homepage, downloadURL, bundled, installedVersion)
 

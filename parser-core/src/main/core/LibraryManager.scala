@@ -56,7 +56,7 @@ case class LibraryInfo(
   downloadURL: URL,
   bundled: Boolean,
   installedVersionOpt: Option[String]
-  ) {
+) {
 
   def status: LibraryStatus =
     installedVersionOpt.map {
@@ -66,6 +66,9 @@ case class LibraryInfo(
         else
           UpToDate
     }.getOrElse(CanInstall)
+
+  def canUninstall: Boolean =
+    status != LibraryStatus.CanInstall && !bundled
 
   // We override `equals`, because we don't want to compare URLs directly. Checking equality
   // for URLs (which is what the case class would do otherwise), results in
