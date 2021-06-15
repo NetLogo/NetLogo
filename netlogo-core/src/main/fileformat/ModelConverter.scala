@@ -4,10 +4,23 @@ package org.nlogo.fileformat
 
 import java.nio.file.Path
 
-import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, Dialect, ExtensionManager, Femto,
-  FrontEndInterface, LibraryManager, LiteralParser, Model, Program, SourceRewriter, StructureResults },
-  FrontEndInterface.ProceduresMap
-import org.nlogo.api.{ AutoConverter, AutoConvertable, FileIO, Version }
+import org.nlogo.core.{
+  CompilationEnvironment
+, CompilationOperand
+, Dialect
+, ExtensionManager
+, Femto
+, FrontEndInterface
+, LibraryManager
+, LiteralParser
+, Model
+, Program
+, SourceRewriter
+, StructureResults
+, VersionUtils
+}
+import org.nlogo.core.FrontEndInterface.ProceduresMap
+import org.nlogo.api.{ AutoConverter, AutoConvertable, FileIO }
 
 import scala.util.{ Failure, Success, Try }
 import scala.util.matching.Regex
@@ -22,7 +35,7 @@ object ModelConverter {
     conversionSections:     Seq[AutoConvertable] = Seq()): ModelConversion = {
     val modelConversions = {(m: Model) =>
       AutoConversionList.conversions.collect {
-        case (version, conversionSet) if Version.numericValue(m.version) < Version.numericValue(version) =>
+        case (version, conversionSet) if VersionUtils.numericValue(m.version) < VersionUtils.numericValue(version) =>
           conversionSet
       }
     }
