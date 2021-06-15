@@ -1,9 +1,11 @@
 
 package org.nlogo.api
 
+import java.io.FileNotFoundException
 import java.net.URI
+import java.nio.file.{ Files, Paths }
 
-import org.nlogo.core.Model
+import org.nlogo.core.{ I18N, Model }
 
 import scala.util.{ Failure, Try }
 import scala.reflect.ClassTag
@@ -104,6 +106,17 @@ trait ModelLoader {
 }
 
 class ConfigurableModelLoader(val formats: Seq[FormatterPair[_, _]] = Seq()) extends ModelLoader {
+  override def readModel(uri: URI): Try[Model] = {
+    if (uri.getScheme == "file") {
+      val path = Paths.get(uri)
+      if (!Files.exists(path)) {
+        val message = I18N.errors.getN("fileformat.notFound", path)
+        return Failure(new FileNotFoundException(message))
+      }
+    }
+    super.readModel(uri)
+  }
+
   def addFormat[A, B <: ModelFormat[A, B]](f: B)(implicit aTag: ClassTag[A]): ConfigurableModelLoader =
     new ConfigurableModelLoader(formats :+ new FormatterPair[A, B](f, Seq()))
 

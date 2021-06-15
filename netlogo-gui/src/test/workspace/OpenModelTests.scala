@@ -5,7 +5,7 @@ package org.nlogo.workspace
 import org.scalatest.FunSuite
 
 import java.net.URI
-import java.nio.file.Path
+import java.nio.file.{ Path, Paths }
 
 import org.nlogo.core.{ Model, View, WorldDimensions }
 import org.nlogo.api.WorldDimensions3D
@@ -15,7 +15,7 @@ import org.nlogo.api.{ ConfigurableModelLoader, Version }
 import scala.util.{ Success, Try }
 
 class OpenModelTests extends FunSuite {
-  val testURI = new URI("file:///foo.test")
+  val testURI = Paths.get("test/fileformat/non-nlogo-extension.txt").toUri
 
   trait OpenTest {
     val uri: URI = testURI
@@ -44,8 +44,13 @@ class OpenModelTests extends FunSuite {
     assert(controller.invalidURI == null)
   } }
 
+  test("if the model doesn't exist, doesn't continue loading") { new OpenTest {
+    override val uri = Paths.get("test/fileformat/does-not-exist.nlogo").toUri
+    assert(openedModel.isEmpty)
+  } }
+
   test("if the model doesn't match an available format, notifies the user it is invalid") { new OpenTest {
-    override val uri = new URI("file:///tmp/foo.jpg")
+    override val uri = Paths.get("test/fileformat/WidgetSection.txt").toUri
     assert(!openedModel.isEmpty)
   } }
 

@@ -185,7 +185,7 @@ object App{
         val modelFile = new java.io.File(fileToken)
         // Best to check if the file exists here, because after the GUI thread has started,
         // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
-        if (!modelFile.exists) throw new IllegalStateException(I18N.gui.getN("file.open.error.notFound", fileToken))
+        if (!modelFile.exists) throw new IllegalStateException(I18N.errors.getN("fileformat.notFound", fileToken))
         commandLineModel = modelFile.getAbsolutePath()
       }
       else if (token == "--magic") {
@@ -221,7 +221,7 @@ object App{
         // Best to check if the file exists here, because after the GUI thread has started,
         // NetLogo just hangs with the splash screen showing if file doesn't exist. ~Forrest (2/12/2009)
         if (!modelFile.exists())
-          throw new IllegalStateException(I18N.gui.getN("file.open.error.notFound", token))
+          throw new IllegalStateException(I18N.errors.getN("fileformat.notFound", token))
         commandLineModel = modelFile.getAbsolutePath()
       }
     }

@@ -53,13 +53,16 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
 
   def sections(location: URI) =
     Try {
-      if (location.getScheme == "jar") Source.fromInputStream(location.toURL.openStream)(UTF8)
-      else Source.fromURI(location)(UTF8)
-      }.flatMap { s =>
-        val sections = sectionsFromSource(s.mkString)
-        s.close()
-        sections
+      if (location.getScheme == "jar") {
+        Source.fromInputStream(location.toURL.openStream)(UTF8)
+      } else {
+        Source.fromURI(location)(UTF8)
       }
+    }.flatMap { s =>
+      val sections = sectionsFromSource(s.mkString)
+      s.close()
+      sections
+    }
 
   lazy val sectionNames =
     Seq("code",
