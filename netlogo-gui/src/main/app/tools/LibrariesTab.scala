@@ -14,7 +14,7 @@ import java.util.Collections
 
 import scala.collection.mutable.Buffer
 
-import org.nlogo.api.LibraryManager
+import org.nlogo.api.{ LibraryManager, Version }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus }
 import org.nlogo.swing.{ BrowserLauncher, EmptyIcon, FilterableListModel, RichAction, SwingWorker }
@@ -113,8 +113,10 @@ class LibrariesTab( category:           String
 
   private val info = new JTextArea(2, 28)
 
-  private val installedVersion = new JLabel
-  private val    latestVersion = new JLabel
+  private val  installedVersion = new JLabel
+  private val     latestVersion = new JLabel
+  private val minNetLogoVersion = new JLabel
+  private val nlvPanel          = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0))
 
   locally {
 
@@ -130,11 +132,13 @@ class LibrariesTab( category:           String
     libraryButtonsPanel.add(addToCodeTabButton)
     libraryButtonsPanel.add(homepageButton)
 
-    val installedVersionLabel = new JLabel(s"${I18N.gui("installedVersion")}: ")
-    val    latestVersionLabel = new JLabel(s"${I18N.gui("latestVersion")}: "   )
+    val installedVersionLabel  = new JLabel(s"${I18N.gui("installedVersion")}: ")
+    val    latestVersionLabel  = new JLabel(s"${I18N.gui("latestVersion")}: "   )
+    val minNetLogoVersionLabel = new JLabel(s"${I18N.gui("minimumVersion")}: "  )
 
     embolden(installedVersionLabel)
     embolden(latestVersionLabel)
+    embolden(minNetLogoVersionLabel)
 
     val ivPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0))
     ivPanel.add(installedVersionLabel)
@@ -145,6 +149,11 @@ class LibrariesTab( category:           String
     lvPanel.add(latestVersionLabel)
     lvPanel.add(latestVersion)
     lvPanel.setMaximumSize(new Dimension(Short.MaxValue, 20))
+
+    nlvPanel.add(minNetLogoVersionLabel)
+    nlvPanel.add(minNetLogoVersion)
+    nlvPanel.setMaximumSize(new Dimension(Short.MaxValue, 20))
+    nlvPanel.setVisible(true)
 
     libraryButtonsPanel.setMaximumSize(new Dimension(Short.MaxValue, 20))
 
@@ -162,6 +171,7 @@ class LibrariesTab( category:           String
     libraryButtonsPanel.setAlignmentX(Component.LEFT_ALIGNMENT)
     ivPanel            .setAlignmentX(Component.LEFT_ALIGNMENT)
     lvPanel            .setAlignmentX(Component.LEFT_ALIGNMENT)
+    nlvPanel           .setAlignmentX(Component.LEFT_ALIGNMENT)
     infoScroll         .setAlignmentX(Component.LEFT_ALIGNMENT)
 
     val d = new Dimension(5, 5)
@@ -169,6 +179,7 @@ class LibrariesTab( category:           String
     sidebar.add(new Box.Filler(d, d, d))
     sidebar.add(ivPanel)
     sidebar.add(lvPanel)
+    sidebar.add(nlvPanel)
     sidebar.add(new Box.Filler(d, d, d))
     sidebar.add(infoScroll)
 
@@ -205,7 +216,7 @@ class LibrariesTab( category:           String
     filterField.getDocument.addDocumentListener(() => listModel.filter(filterField.getText))
 
     installButton.addActionListener(_ => perform("installing", wrappedInstall,
-      lib => lib.status != LibraryStatus.UpToDate))
+      lib => lib.isVersionRequirementMet(Version.version) && lib.status != LibraryStatus.UpToDate))
 
     addToCodeTabButton.addActionListener(_ => {
       updateSource(addExtsToSource(_, selectedValues.map(_.codeName).toSet))
@@ -235,16 +246,27 @@ class LibrariesTab( category:           String
     }
   })
 
-  private def actionableLibraries = selectedValues.filterNot(_.status == LibraryStatus.UpToDate)
+  private def actionableLibraries = selectedValues.filterNot((lib) => !lib.isVersionRequirementMet(Version.version) || lib.status == LibraryStatus.UpToDate)
 
   private def updateSidebar(): Unit = {
 
     if (selectedValue != null) { // It's `null` when the download fails --JAB (3/6/19)
 
-      installedVersion.setText(selectedValue.installedVersionOpt.getOrElse("N/A"))
-      latestVersion   .setText(selectedValue.version)
+      installedVersion .setText(selectedValue.installedVersionOpt.getOrElse("N/A"))
+      latestVersion    .setText(selectedValue.version)
+      minNetLogoVersion.setText(selectedValue.minNetLogoVersion.getOrElse(""))
 
-      val infoText = if (numSelected == 1) selectedValue.longDescription else null
+      nlvPanel.setVisible(numSelected == 1 && !selectedValue.minNetLogoVersion.isEmpty)
+
+      val infoText = if (numSelected != 1) {
+        null
+      } else {
+        if (selectedValue.isVersionRequirementMet(Version.version)) {
+          selectedValue.longDescription
+        } else {
+          s"${I18N.gui("unmetMinimumVersion", selectedValue.name, selectedValue.minNetLogoVersion.get)}\n\n${selectedValue.longDescription}"
+        }
+      }
       info.setText(infoText)
       info.select(0, 0)
 

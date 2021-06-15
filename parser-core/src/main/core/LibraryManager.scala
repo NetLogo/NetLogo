@@ -55,7 +55,8 @@ case class LibraryInfo(
   homepage: URL,
   downloadURL: URL,
   bundled: Boolean,
-  installedVersionOpt: Option[String]
+  installedVersionOpt: Option[String],
+  minNetLogoVersion: Option[String]
 ) {
 
   def status: LibraryStatus =
@@ -69,6 +70,11 @@ case class LibraryInfo(
 
   def canUninstall: Boolean =
     status != LibraryStatus.CanInstall && !bundled
+
+  def isVersionRequirementMet(currentVersion: String): Boolean =
+    minNetLogoVersion.map( (v) =>
+      VersionUtils.isNetLogoVersionString(v) && (VersionUtils.numericValue(currentVersion) >= VersionUtils.numericValue(v))
+    ).getOrElse(true)
 
   // We override `equals`, because we don't want to compare URLs directly. Checking equality
   // for URLs (which is what the case class would do otherwise), results in

@@ -137,6 +137,9 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
 
     import scala.collection.JavaConverters._
 
+    def getStringOption(c: Config, path: String, default: Option[String] = None): Option[String] =
+      if (c.hasPath(path)) Option(c.getString(path)) else default
+
     libraries =
       config.getConfigList(category).asScala.map {
         c =>
@@ -150,15 +153,11 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
           val downloadURL = new URL(c.getString("downloadURL"))
 
           val installedVersionPath = s"""$category."$codeName".installedVersion"""
-          val installedVersion     =
-            if (!installedLibsConf.hasPath(installedVersionPath))
-              None
-            else
-              Option(installedLibsConf.getString(installedVersionPath))
+          val installedVersion     = getStringOption(c, installedVersionPath)
+          val bundled              = useBundled && bundledsConfig.hasPath(installedVersionPath) && installedVersion.isEmpty
+          val minNetLogoVersion    = getStringOption(c, "minNetLogoVersion")
 
-          val bundled = useBundled && bundledsConfig.hasPath(installedVersionPath) && installedVersion.isEmpty
-
-          LibraryInfo(name, codeName, shortDesc, longDesc, version, homepage, downloadURL, bundled, installedVersion)
+          LibraryInfo(name, codeName, shortDesc, longDesc, version, homepage, downloadURL, bundled, installedVersion, minNetLogoVersion)
 
       }
 

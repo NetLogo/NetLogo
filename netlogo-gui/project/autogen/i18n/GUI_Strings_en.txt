@@ -489,6 +489,9 @@ Check your Internet connectivity. If you think the URL is incorrect or unreachab
 please report to us at https://github.com/NetLogo/NetLogo/issues, or to bugs@ccl.northwestern.edu, with details.
 tools.libraries.installedVersion = Installed Version
 tools.libraries.latestVersion = Latest Version
+tools.libraries.minimumVersion = Minimum NetLogo Version
+tools.libraries.unmetMinimumVersion = This version of {0} can only be used with NetLogo version {1} or newer. \n\n\
+You can upgrade NetLogo to the latest version to use this extension by going to the CCL website, https://ccl.northwestern.edu/netlogo.
 
 tools.agentMonitor.view = View
 tools.agentMonitor.properties = Properties
