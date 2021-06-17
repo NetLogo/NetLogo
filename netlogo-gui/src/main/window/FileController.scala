@@ -197,20 +197,11 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
       newFileName)
     val extensionPath = FileIO.ensureExtension(userPath, modelSuffix)
     val path = Paths.get(extensionPath)
-    if (path.toFile.exists && userPath != extensionPath) {
-      // The FileDialog checks for overwrite, but we just changed the path
-      // so we need to check with the user to see if they meant to use
-      // the extension so we don't overwrite anything we're not meant to.
-      // -Jeremy B June 2021
-      val options = Array[Object](
-        I18N.gui.get("common.buttons.replace"),
-        I18N.gui.get("common.buttons.cancel"))
-      val message = I18N.gui.getN("file.save.warn.overwrite", extensionPath)
-      if (OptionDialog.showMessage(owner, "NetLogo", message, options) != 0) {
-        return None
-      }
+    if (!path.toFile.exists || userPath == extensionPath) {
+      Some(path.toUri)
+    } else {
+      FileDialog.confirmFileOverwrite(owner, extensionPath).map((_) => path.toUri)
     }
-    Some(path.toUri)
   }
 
   /**

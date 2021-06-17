@@ -5,6 +5,7 @@ package org.nlogo.window
 import java.awt.{ Component, Frame, FileDialog => AwtFileDialog }
 import java.awt.image.BufferedImage
 import java.io.{ IOException, PrintWriter }
+import java.nio.file.Paths
 import javax.swing.{ JScrollPane, JTextArea }
 
 import scala.concurrent.{ Await, Future }
@@ -191,7 +192,15 @@ with LoadModelEvent.Handler {
   def doExportView(exportee: LocalViewInterface): Unit = {
     val exportPathOption =
       try {
-        Some(FileDialog.showFiles(getExportWindowFrame, I18N.gui.get("menu.file.export.view"), AwtFileDialog.SAVE, guessExportName("view.png")))
+        val userPath      = FileDialog.showFiles(getExportWindowFrame, I18N.gui.get("menu.file.export.view"), AwtFileDialog.SAVE, guessExportName("view.png"))
+        val extensionPath = FileIO.ensureExtension(userPath, "png")
+        val path          = Paths.get(extensionPath)
+        if (!path.toFile.exists || userPath == extensionPath) {
+          Some(extensionPath)
+        } else {
+          FileDialog.confirmFileOverwrite(frame, extensionPath)
+        }
+
       } catch {
         case ex: UserCancelException =>
           Exceptions.ignore(ex)

@@ -7,6 +7,7 @@ import java.io.File
 import javax.swing.JFileChooser
 
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
+import org.nlogo.core.I18N
 
 object FileDialog {
   /**
@@ -28,6 +29,22 @@ object FileDialog {
   @throws[UserCancelException]
   def showFiles(component: Component, title: String, mode: Int, file: String): String =
     showFiles(Hierarchy.getFrame(component), title, mode, file)
+
+  def confirmFileOverwrite(owner: Component, path: String) = {
+    // The FileDialog checks for overwrite, but we munge extensions after
+    // so we need to check with the user to see if they really meant to use
+    // the extension so we don't overwrite anything we're not meant to.
+    // -Jeremy B June 2021
+    val options = Array[Object](
+      I18N.gui.get("common.buttons.replace"),
+      I18N.gui.get("common.buttons.cancel"))
+    val message = I18N.gui.getN("file.save.warn.overwrite", path)
+    if (OptionDialog.showMessage(owner, "NetLogo", message, options) != 0) {
+      None
+    } else {
+      Some(path)
+    }
+  }
 
   /**
     * shows the file dialog. The given frame will be used, and there will
