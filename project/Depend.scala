@@ -99,7 +99,7 @@ object Depend {
       "sdm/gui" -> List("sdm","window"),
       "shape" -> List("api"),
       "shape/editor" -> List("shape","swing"),
-      "swing" -> List("awt"),
+      "swing" -> List("awt", "core"),
       "util" -> Nil,
       "widget" -> List("window"),
       "window" -> List("core/model","editor","log","fileformat","shape","swing","workspace"),
