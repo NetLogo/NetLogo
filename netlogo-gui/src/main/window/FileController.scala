@@ -8,7 +8,7 @@ import java.nio.file.Paths
 import java.net.URI
 import javax.swing.{ AbstractAction, JButton, JComponent, JDialog }
 
-import org.nlogo.api.{ ModelReader, ModelType, Version }, ModelReader.modelSuffix
+import org.nlogo.api.{ FileIO, ModelReader, ModelType, Version }, ModelReader.modelSuffix
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.{ ConversionError, ConversionWithErrors, ErroredConversion, FailedConversionResult }
@@ -192,13 +192,25 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
       FileDialog.setDirectory(modelTracker.getModelDir)
     }
 
-    var path = FileDialog.showFiles(
+    val userPath = FileDialog.showFiles(
       owner, I18N.gui.get("menu.file.saveAs"), AWTFileDialog.SAVE,
       newFileName)
-    if(! path.contains(".")){
-      path += "." + modelSuffix
+    val extensionPath = FileIO.ensureExtension(userPath, modelSuffix)
+    val path = Paths.get(extensionPath)
+    if (path.toFile.exists && userPath != extensionPath) {
+      // The FileDialog checks for overwrite, but we just changed the path
+      // so we need to check with the user to see if they meant to use
+      // the extension so we don't overwrite anything we're not meant to.
+      // -Jeremy B June 2021
+      val options = Array[Object](
+        I18N.gui.get("common.buttons.replace"),
+        I18N.gui.get("common.buttons.cancel"))
+      val message = I18N.gui.getN("file.save.warn.overwrite", extensionPath)
+      if (OptionDialog.showMessage(owner, "NetLogo", message, options) != 0) {
+        return None
+      }
     }
-    Some(Paths.get(path).toUri)
+    Some(path.toUri)
   }
 
   /**
@@ -206,10 +218,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
    * This is the model name if there is one, "Untitled.nlogo" otherwise.
    */
   private def guessFileName: String =
-    if(modelTracker.modelNameForDisplay.contains("."))
-      modelTracker.modelNameForDisplay
-    else
-      modelTracker.modelNameForDisplay + "." + modelSuffix
+    FileIO.ensureExtension(modelTracker.modelNameForDisplay, modelSuffix)
 
   def shouldSaveModelOfDifferingVersion(version: String): Boolean = {
     Version.compatibleVersion(version) || {

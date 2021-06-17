@@ -173,4 +173,12 @@ object FileIO {
       case e: InvalidPathException => None
     }
   }
+
+  def ensureExtension(path: String, extension: String): String =
+    if (path.endsWith("." + extension)) {
+      path
+    } else {
+      s"$path.$extension"
+    }
+
 }
