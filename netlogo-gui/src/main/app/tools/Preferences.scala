@@ -13,6 +13,19 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.RichJButton
 
 object Preferences {
+  abstract class BooleanPreference(val i18nKey: String, val restartRequired: Boolean, default: Boolean) extends Preference {
+    val component = new JCheckBox
+
+    def load(prefs: JavaPreferences) = {
+      val value = prefs.get(i18nKey, default.toString).toBoolean
+      component.setSelected(value)
+    }
+
+    def save(prefs: JavaPreferences) = {
+      prefs.put(i18nKey, component.isSelected.toString)
+    }
+  }
+
   object Language extends Preference {
     case class LocaleWrapper(val locale: Locale) {
       override def toString = locale.getDisplayName
@@ -51,20 +64,7 @@ object Preferences {
     }
   }
 
-  object IsLoggingEnabled extends Preference {
-    val i18nKey = "loggingEnabled"
-    val component = new JCheckBox
-    val restartRequired = true
-
-    def load(prefs: JavaPreferences) = {
-      val loggingEnabled = prefs.get("loggingEnabled", "false").toBoolean
-      component.setSelected(loggingEnabled)
-    }
-
-    def save(prefs: JavaPreferences) = {
-      prefs.put("loggingEnabled", component.isSelected.toString)
-    }
-  }
+  object IsLoggingEnabled extends BooleanPreference("loggingEnabled", true, false) {}
 
   class LoggingConfigFile(val frame: Frame) extends Preference {
     val i18nKey         = "loggingConfigFile"
@@ -100,20 +100,7 @@ object Preferences {
 
   }
 
-  object IncludedFilesMenu extends Preference {
-    val i18nKey = "includedFilesMenu"
-    val component = new JCheckBox
-    val restartRequired: Boolean = true
-
-    def load(prefs: JavaPreferences) = {
-      val alwaysVisible = prefs.get("includedFilesMenu", "false").toBoolean
-      component.setSelected(alwaysVisible)
-    }
-
-    def save(prefs: JavaPreferences) = {
-      prefs.put("includedFilesMenu", component.isSelected.toString)
-    }
-  }
+  object IncludedFilesMenu  extends BooleanPreference("includedFilesMenu", true, false) {}
 
   object ProceduresMenuSortOrder extends Preference {
     val i18nKey = "proceduresMenuSortOrder"
