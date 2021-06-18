@@ -48,6 +48,8 @@ object Preferences {
     }
   }
 
+  object LoadLastOnStartup extends BooleanPreference("loadLastOnStartup", false, false) {}
+
   class LineNumbers(tabs: TabsInterface) extends Preference {
     val i18nKey = "editorLineNumbers"
     val component = new JCheckBox

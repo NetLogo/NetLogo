@@ -40,7 +40,7 @@ import scala.io.Codec
  * <p>See the "Controlling" section of the NetLogo User Manual
  * for example code.
  */
-object App{
+object App {
   private val pico = new Pico()
   // all these guys are assigned in main. yuck
   var app: App = null
@@ -243,6 +243,8 @@ class App extends
     ZoomedEvent.Handler with
     Controllable {
 
+  private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
+
   import App.{ pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingConfigPath, loggingDir, popOutCodeTab }
   val frame = new AppFrame
 
@@ -402,7 +404,6 @@ class App extends
 
     frame.addLinkComponent(new CompilerManager(workspace, world, tabs.mainCodeTab))
     frame.addLinkComponent(listenerManager)
-    val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
     if (loggingConfigPath != null || prefs.get("loggingEnabled", "false").toBoolean) {
       if (loggingConfigPath == null) {
         val prefsConfigFile = prefs.get("loggingConfigFile", "")
@@ -543,8 +544,7 @@ class App extends
     def createZoomMenu:  JMenu = new ZoomMenu
   }
 
-  ///
-  private def loadDefaultModel(){
+  private def loadDefaultModel() {
     if (commandLineModel != null) {
       if (commandLineModelIsLaunch) { // --launch through InstallAnywhere?
         // open up the blank model first so in case
@@ -553,14 +553,15 @@ class App extends
         fileManager.newModel()
         open(commandLineModel)
       }
-      else libraryOpen(commandLineModel) // --open from command line
-    }
-    else if (commandLineMagic != null)
+      else {
+        libraryOpen(commandLineModel) // --open from command line
+      }
+
+    } else if (commandLineMagic != null) {
       workspace.magicOpen(commandLineMagic)
-    else if (commandLineURL != null) {
 
+    } else if (commandLineURL != null) {
       try {
-
         fileManager.openFromURI(new java.net.URI(commandLineURL), ModelType.Library)
 
         import org.nlogo.awt.EventQueue
@@ -607,8 +608,18 @@ class App extends
             I18N.gui.get("file.open.error.unloadable.title"), JOptionPane.DEFAULT_OPTION)
       }
 
+    } else if (prefs.get("loadLastOnStartup", "false").toBoolean) {
+      // if recent list is empty we need the new model, or if loading the recent model
+      // fails then we'll fall back on it.  -Jeremy B June 2021
+      fileManager.newModel()
+      val recentFiles = new RecentFiles
+      if (!recentFiles.models.isEmpty) {
+        val modelEntry = recentFiles.models.head
+        fileManager.openFromPath(modelEntry.path, modelEntry.modelType)
+      }
+    } else {
+      fileManager.newModel()
     }
-    else fileManager.newModel()
   }
 
   /// zooming
