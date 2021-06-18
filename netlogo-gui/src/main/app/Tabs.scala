@@ -165,16 +165,21 @@ class Tabs(workspace:           GUIWorkspace,
   }
 
   def handle(e: RuntimeErrorEvent) = {
-   if(!e.jobOwner.isInstanceOf[MonitorWidget])
-    e.sourceOwner match {
-      case file: ExternalFileInterface =>
-        val filename = file.getFileName
-        val tab = getTabWithFilename(Right(filename)).getOrElse {
-          openExternalFile(filename)
-          getTabWithFilename(Right(filename)).get
-        }
-        highlightRuntimeError(tab, e)
-      case _ =>
+    if (!e.jobOwner.isInstanceOf[MonitorWidget]) {
+      e.sourceOwner match {
+        case `mainCodeTab` =>
+          highlightRuntimeError(mainCodeTab, e)
+
+        case file: ExternalFileInterface =>
+          val filename = file.getFileName
+          val tab = getTabWithFilename(Right(filename)).getOrElse {
+            openExternalFile(filename)
+            getTabWithFilename(Right(filename)).get
+          }
+          highlightRuntimeError(tab, e)
+
+        case _ =>
+      }
     }
   }
 

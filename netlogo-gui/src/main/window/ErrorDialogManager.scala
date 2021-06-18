@@ -78,16 +78,16 @@ class ErrorDialogManager(owner: Component, additionalDialogs: => Map[Class[_ <: 
   }
 
   def show(context: Context, instruction: Instruction, thread: Thread, throwable: Throwable): Unit = {
-      debuggingInfo.threadName     = thread.getName
-      debuggingInfo.eventTrace     = Event.recentEventTrace()
-      debuggingInfo.javaStackTrace = Utils.getStackTrace(throwable)
-      errorInfo.throwable   = throwable
-      errorInfo.context     = Option(context)
-      errorInfo.instruction = Option(instruction)
-      val dialog = dialogs.collectFirst {
-        case (exType, d) if exType.isInstance(throwable) => d
-      }.get
-      dialog.show(errorInfo, debuggingInfo)
+    debuggingInfo.threadName     = thread.getName
+    debuggingInfo.eventTrace     = Event.recentEventTrace()
+    debuggingInfo.javaStackTrace = Utils.getStackTrace(throwable)
+    errorInfo.throwable   = throwable
+    errorInfo.context     = Option(context)
+    errorInfo.instruction = Option(instruction)
+    val dialog = dialogs.collectFirst {
+      case (exType, d) if exType.isInstance(throwable) => d
+    }.get
+    dialog.show(errorInfo, debuggingInfo)
   }
 
   // This was added to work around https://bugs.openjdk.java.net/browse/JDK-8198809,
