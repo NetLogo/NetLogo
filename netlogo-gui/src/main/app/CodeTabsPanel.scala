@@ -132,10 +132,9 @@ class CodeTabsPanel(workspace:            GUIWorkspace,
     }
   }
   java.awt.EventQueue.invokeLater(new Runnable() {
-
     override def run(): Unit = {
-        codeTabContainer.toFront()
-        codeTabContainer.repaint()
+      codeTabContainer.toFront()
+      codeTabContainer.repaint()
     }
-})
+  })
 }
