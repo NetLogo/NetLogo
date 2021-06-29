@@ -350,7 +350,7 @@ class Tabs(workspace:           GUIWorkspace,
     val newAction = TabsMenu.tabAction(tabManager, i)
     tabActions = tabActions :+ newAction
     menu.offerAction(newAction)
-    tabManager.copyMenuAcceleratorsByName("Tabs")
+    tabManager.copyMenuAcceleratorsByName(I18N.gui.get("menu.tabs"))
   }
 
   override def processMouseMotionEvent(e: MouseEvent) {
