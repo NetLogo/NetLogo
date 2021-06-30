@@ -131,4 +131,10 @@ class CodeTabsPanel(workspace:            GUIWorkspace,
       new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
     }
   }
+  java.awt.EventQueue.invokeLater(new Runnable() {
+    override def run(): Unit = {
+      codeTabContainer.toFront()
+      codeTabContainer.repaint()
+    }
+  })
 }
