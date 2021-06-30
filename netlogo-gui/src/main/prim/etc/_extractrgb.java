@@ -5,17 +5,24 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
+import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
 public final strictfp class _extractrgb
     extends Reporter {
 
-
   @Override
   public Object report(final org.nlogo.nvm.Context context) throws LogoException {
-
-    return report_1(context, argEvalDoubleValue(context, 0));
+    try{
+      double d = argEvalDoubleValue(context, 0);
+      return report_1(context, d);
+    }
+    catch(LogoException l){
+      org.nlogo.api.Exceptions.ignore( l ) ;
+      LogoList rgb = argEvalList(context, 0);
+      return rgb;
+    }
   }
 
   public LogoList report_1(final Context context, double color) {
