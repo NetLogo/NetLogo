@@ -508,7 +508,7 @@ with org.nlogo.api.ViewSettings {
   @throws(classOf[java.io.IOException])
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
-  override def open(path: String, shouldAutoInstallLibs: Boolean = false) {
+  override def open(path: String, shouldAutoInstallLibs: Boolean) {
     try {
       val m = loader.readModel(Paths.get(path).toUri).get
       setModelPath(path)
@@ -546,7 +546,7 @@ with org.nlogo.api.ViewSettings {
     loader.readModel(source, extension).foreach(m => openModel(m, false))
   }
 
-  def openModel(model: Model, shouldAutoInstallLibs: Boolean = false): Unit = {
+  def openModel(model: Model, shouldAutoInstallLibs: Boolean): Unit = {
     new HeadlessModelOpener(this).openFromModel(model, shouldAutoInstallLibs)
   }
 

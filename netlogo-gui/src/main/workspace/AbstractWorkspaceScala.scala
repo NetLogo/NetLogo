@@ -101,7 +101,7 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   @throws(classOf[CompilerException])
   @throws(classOf[IOException])
   @throws(classOf[LogoException])
-  def open(path: String, shouldAutoInstallLibs: Boolean = false): Unit
+  def open(path: String, shouldAutoInstallLibs: Boolean): Unit
 
   @throws(classOf[IOException])
   def getSource(filename: String): String = {

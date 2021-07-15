@@ -376,7 +376,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
    * @param shouldAutoInstallLibs whether or not missing libraries (extensions) should be automatically installed
    */
   @throws(classOf[java.io.IOException])
-  override def open(path: String, shouldAutoInstallLibs: Boolean = false) {
+  override def open(path: String, shouldAutoInstallLibs: Boolean) {
     setModelPath(path)
     val modelContents = FileIO.fileToString(path)(Codec.UTF8)
     try loader.readModel(Paths.get(path).toUri).foreach(m => openModel(m, shouldAutoInstallLibs))
@@ -397,7 +397,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
    * @param source The complete model, including widgets and so forth, as created from core.Model()
    * @param shouldAutoInstallLibs whether or not missing libraries (extensions) should be automatically installed
    */
-  override def openModel(model: Model = Model(), shouldAutoInstallLibs: Boolean = false): Unit = {
+  override def openModel(model: Model = Model(), shouldAutoInstallLibs: Boolean): Unit = {
     new HeadlessModelOpener(this).openFromModel(model, shouldAutoInstallLibs)
   }
 

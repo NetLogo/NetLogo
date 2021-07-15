@@ -67,6 +67,6 @@ extends AbstractWorkspaceScala(
   override def deleteLogFiles(): Unit = unsupported
   override def compiler: PresentationCompilerInterface = unsupported
 
-  def openModel(model: org.nlogo.core.Model, shouldAutoInstallLibs: Boolean = false): Unit = unsupported
+  def openModel(model: org.nlogo.core.Model, shouldAutoInstallLibs: Boolean): Unit = unsupported
   def renderer: org.nlogo.api.RendererInterface = unsupported
 }

@@ -16,7 +16,8 @@ trait Controllable {
   def report(source: String): AnyRef
 
   @throws(classOf[java.io.IOException])
-  def open(path: String, shouldAutoInstallLibs: Boolean = false): Unit
+  def open(path: String): Unit = open(path, false)
+  def open(path: String, shouldAutoInstallLibs: Boolean): Unit
 
   @throws(classOf[CompilerException])
   def evaluateCommands(owner: JobOwner, source: String): Unit
