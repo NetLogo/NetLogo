@@ -2,7 +2,7 @@
 
 package org.nlogo.headless
 
-import org.nlogo.core.CompilerException
+import org.nlogo.core.{ CompilerException, Model }
 import org.nlogo.api.Version
 import org.nlogo.workspace, workspace.AbstractWorkspace.setHeadlessProperty
 
@@ -14,7 +14,7 @@ object Shell extends workspace.Shell {
     val workspace = HeadlessWorkspace.newInstance
     argv.headOption match {
       case None =>
-        workspace.openModel()
+        workspace.openModel(Model())
       case Some(path) =>
         workspace.open(path)
     }
