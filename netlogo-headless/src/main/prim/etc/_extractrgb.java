@@ -1,8 +1,8 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
-
 package org.nlogo.prim.etc;
 
 import org.nlogo.api.LogoException;
+import org.nlogo.api.AgentException;
 import org.nlogo.core.LogoList;
 import org.nlogo.core.Syntax;
 import org.nlogo.core.SyntaxJ;
@@ -21,6 +21,12 @@ public final strictfp class _extractrgb
     catch(LogoException l){
       org.nlogo.api.Exceptions.ignore( l ) ;
       LogoList rgb = argEvalList(context, 0);
+      try{
+        org.nlogo.api.Color.validRGBList(rgb,true);
+      }
+      catch(AgentException a){
+        throw new org.nlogo.nvm.RuntimePrimitiveException(context, this, "Color must be a number or a valid RGB List.");
+      }
       return rgb;
     }
   }
