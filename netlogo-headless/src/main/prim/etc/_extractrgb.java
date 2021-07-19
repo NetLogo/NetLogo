@@ -5,6 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.api.AgentException;
 import org.nlogo.core.LogoList;
+import org.nlogo.api.LogoListBuilder;
 import org.nlogo.core.Syntax;
 import org.nlogo.core.SyntaxJ;
 import org.nlogo.nvm.Context;
@@ -28,7 +29,11 @@ public final strictfp class _extractrgb
       catch(AgentException a){
         throw new org.nlogo.nvm.RuntimePrimitiveException(context, this, "Color must be a number or a valid RGB(A) List.");
       }
-      return rgb;
+      LogoListBuilder rgbNoAlpha = new LogoListBuilder();
+      for(int i = 0; i < 3; i++){
+        rgbNoAlpha.add(rgb.get(i));
+      }
+      return rgbNoAlpha.toLogoList();
     }
   }
 
