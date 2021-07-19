@@ -26,7 +26,7 @@ public final strictfp class _extractrgb
         org.nlogo.api.Color.validRGBList(rgb,true);
       }
       catch(AgentException a){
-        throw new org.nlogo.nvm.RuntimePrimitiveException(context, this, "Color must be a number or a valid RGB List.");
+        throw new org.nlogo.nvm.RuntimePrimitiveException(context, this, "Color must be a number or a valid RGB(A) List.");
       }
       return rgb;
     }
