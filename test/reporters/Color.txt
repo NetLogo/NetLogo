@@ -135,4 +135,4 @@ ExtractRGB
   extract-rgb red => [215 50 41]
   extract-rgb [215 50 41] => [215 50 41]
   extract-rgb [215 50 41 100] => [215 50 41 100]
-  extract-rgb [10 10 10 10 10] => ERROR Color must be a number or a valid RGB List.
+  extract-rgb [10 10 10 10 10] => ERROR Color must be a number or a valid RGB(A) List.
