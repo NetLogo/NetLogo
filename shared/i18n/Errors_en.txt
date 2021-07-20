@@ -187,6 +187,8 @@ org.nlogo.prim.$common.agentKind.turtle = a turtle
 org.nlogo.prim.$common.agentKind.patch = a patch
 org.nlogo.prim.$common.agentKind.link = a link
 
+org.nlogo.prim.$common.invalidColor = Input must be a number or a valid RGB/A color list with 3 - 4 numbers that have values between 0 and 255.
+
 org.nlogo.prim.etc._range.zeroStep = The step-size for range must be non-zero.
 
 org.nlogo.prim.etc._randomNormal.secondInputNotNegative = random-normal''s second input can''t be negative.
