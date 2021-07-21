@@ -20,7 +20,7 @@ public final strictfp class _extractrgb
     if(val instanceof Double) {
       double d = (double) val;
       return report_1(context, d);
-    } // if this if-statement^ is false, then val must be a list
+    }
     LogoList rgb = (LogoList) val;
     try {
       org.nlogo.api.Color.validRGBList(rgb,true);
