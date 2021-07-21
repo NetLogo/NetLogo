@@ -29,7 +29,7 @@ public final strictfp class _extractrgb
     }
     catch(AgentException a) {
       throw new org.nlogo.nvm.RuntimePrimitiveException(
-        context, this, I18N.errorsJ().getN("org.nlogo.prim.$common.invalidColor"));
+        context, this, I18N.errorsJ().getN("org.nlogo.prim.etc._extractrgb.invalidColor"));
     }
     LogoListBuilder rgbNoAlpha = new LogoListBuilder();
     for(int i = 0; i < 3; i++) {
