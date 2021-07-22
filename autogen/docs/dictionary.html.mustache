@@ -2699,14 +2699,15 @@ show extract-hsb [255 0 0]
         <p>
           Reports a list of three values in the range 0 to 255 representing
           the levels of red, green, and blue, respectively, of the given
-          NetLogo <i>color</i> in the range 0 to 140, not including 140
-          itself.
+          NetLogo or RGB(A) color.
         </p>
         <pre>
 show extract-rgb red
 =&gt; [215 50 41]
 show extract-rgb cyan
 =&gt; [84 196 196]
+show extract-rgb [31 41 59]
+=&gt; [31 41 59]
 </pre>
         <p>
           See also <a href="#approximate-rgb">approximate-rgb</a>, <a href="#approximate-hsb">approximate-hsb</a>, <a href="#extract-hsb">extract-hsb</a>.

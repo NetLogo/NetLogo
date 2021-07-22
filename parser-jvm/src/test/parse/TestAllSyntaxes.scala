@@ -66,7 +66,7 @@ class TestAllSyntaxes extends FunSuite {
                      |_errormessage ,string,OTPL,None,10,0,0
                      |_exp number,number,OTPL,None,10,1,1
                      |_extracthsb number or list,list,OTPL,None,10,1,1
-                     |_extractrgb number,list,OTPL,None,10,1,1
+                     |_extractrgb number or list,list,OTPL,None,10,1,1
                      |_fileatend ,TRUE/FALSE,OTPL,None,10,0,0
                      |_fileexists string,TRUE/FALSE,OTPL,None,10,1,1
                      |_fileread ,number or TRUE/FALSE or string or list or NOBODY,OTPL,None,10,0,0

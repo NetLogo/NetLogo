@@ -132,6 +132,7 @@ org.nlogo.prim.etc._otherend.onlyTurtleCanGetLinkEnd = Only a turtle can get the
 org.nlogo.prim.etc._otherend.onlyLinkCanGetTurtleEnd = Only a link can get the OTHER-END from a turtle.
 org.nlogo.prim.etc._layoutcircle.patchesImmovable = Patches are immovable.
 org.nlogo.prim.etc._patchset.listInputNonPatch = List inputs to {0} must only contain patch, patch agentset, or list elements.  The list {1} contained {2} which is NOT a patch or patch agentset.
+org.nlogo.prim.etc._extractrgb.invalidColor = Color must be a number or a valid RGB/A color list with 3 - 4 numbers that have values between 0 and 255.
 
 org.nlogo.prim.etc._patchset.listInputNonPatchAgentset = List inputs to {0} must only contain patch, patch agentset, or list elements.  The list {1} contained a different type agentset: {2}.
 

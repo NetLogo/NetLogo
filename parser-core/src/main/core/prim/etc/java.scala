@@ -114,7 +114,7 @@ case class _extracthsb() extends Reporter {
 case class _extractrgb() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
-      right = List(Syntax.NumberType),
+      right = List(Syntax.NumberType | Syntax.ListType),
       ret = Syntax.ListType)
 }
 case class _first() extends Reporter {
