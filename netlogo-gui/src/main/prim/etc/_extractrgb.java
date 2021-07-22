@@ -18,7 +18,7 @@ public final strictfp class _extractrgb
     throws LogoException {
     Object val = args[0].report(context);
 
-    if(val instanceof Double) {
+    if (val instanceof Double) {
       double d = (double) val;
       return report_1(context, d);
     }
@@ -27,12 +27,12 @@ public final strictfp class _extractrgb
     try {
       org.nlogo.api.Color.validRGBList(rgb,true);
     }
-    catch(AgentException a) {
+    catch (AgentException a) {
       throw new org.nlogo.nvm.RuntimePrimitiveException(
         context, this, I18N.errorsJ().getN("org.nlogo.prim.etc._extractrgb.invalidColor"));
     }
     LogoListBuilder rgbNoAlpha = new LogoListBuilder();
-    for(int i = 0; i < 3; i++) {
+    for (int i = 0; i < 3; i++) {
       rgbNoAlpha.add(rgb.get(i));
     }
     return rgbNoAlpha.toLogoList();
