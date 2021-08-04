@@ -327,9 +327,10 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
   // For a Menu - copy Menu Items Accelerators
   def copyMenuAccelerators(menu: javax.swing.JMenu): Unit = {
+    if (menu == null) { throw new Exception("menu may not be null.") }
     codeTabsPanelOption match {
       case None                =>
-      case Some(codeTabsPanel) => {
+      case Some(codeTabsPanel)  => {
         for (i <- 0 until menu.getItemCount) {
           val  item = menu.getItem(i)
           if (item != null && item.getAccelerator != null) {
@@ -391,6 +392,9 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
   // Get Named App Menu
   def getMenuByName(menuName: String): Option[javax.swing.JMenu] = {
+    if (getAppMenuBar == null) {
+      return None
+    }
     for (i <- 0 until getAppMenuBar.getMenuCount) {
       val  item = getAppMenuBar.getMenu(i)
       if (item != null) {
@@ -402,6 +406,30 @@ class AppTabManager(val appTabsPanel:          Tabs,
     None
   }
 
+  // Get Named Item from Menu
+  def getMenuItemByName(menu: javax.swing.JMenu, menuItemName: String): Option[javax.swing.JMenuItem] = {
+    if (menu == null) {
+      return None
+    }
+    for (i <- 0 until menu.getItemCount) {
+      val  item = menu.getItem(i)
+      if (item != null) {
+        if (item.getText() == menuItemName) {
+          return Some(item)
+        }
+      }
+    }
+    None
+  }
+
+  def getMenuItembyNameAndMenuName(menuName: String, menuItemName: String): Option[javax.swing.JMenuItem] = {
+      getMenuByName(menuName)  match {
+      case None                => return(None)
+      case Some(menu) =>  {
+          return getMenuItemByName(menu, menuItemName)
+      }
+    }
+  }
 
   // *** Begin official tab manipulation methods ***
   // Code outside the org.nlogo.app and org.nlogo.app.codetab packages must
@@ -456,6 +484,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
     * @param tab The Component to remove.
     */
    def removeTab(tab: Component): Unit = {
+    if (tab == null) { throw new Exception("Tab component may not be null.") }
     val (tabOwner, _) = ownerAndIndexOfTab(tab)
     if (tabOwner != null) {
       tabOwner.remove(tab)
@@ -474,6 +503,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
     * @throws Exception if one Tab is a CodeTab and the other is not.
     */
   def replaceTab(oldTab: Component, newTab: Component): Unit = {
+    if (oldTab == null || newTab == null) { throw new Exception("Tab components may not be null.") }
 
     if (oldTab.isInstanceOf[CodeTab] && !oldTab.isInstanceOf[CodeTab]) {
       throw new Exception("A CodeTab must be replaced by a CodeTab")
@@ -510,6 +540,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
    * @param tab the Component to be selected
    */
   def setPanelsSelectedComponent(tab: Component): Unit = {
+    if (tab == null) { throw new Exception("Tab component may not be null.") }
     val (tabOwner, tabIndex) = ownerAndIndexOfTab(tab)
     if (tabOwner.isInstanceOf[CodeTabsPanel]) {
       tabOwner.requestFocus
@@ -588,8 +619,10 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
   // Prints list of tabs in a JTabbedPane
   def __printTabsOfTabsPanel(pane: JTabbedPane): Unit = {
-    for (n <- 0 until pane.getTabCount) {
-      __printSwingObject(pane.getComponentAt(n), "")
+    if (pane != null) {
+      for (n <- 0 until pane.getTabCount) {
+        __printSwingObject(pane.getComponentAt(n), "")
+      }
     }
   }
 
@@ -671,6 +704,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
   // For a Menu - prints Menu Items and their Accelerators
   def __printMenuItems(menu: javax.swing.JMenu, level: Int): Unit = {
+    if (menu == null) { return}
     for (i <- 0 until menu.getItemCount) {
       val  item = menu.getItem(i)
       if (item != null) {
@@ -685,6 +719,27 @@ class AppTabManager(val appTabsPanel:          Tabs,
       } else {
         println(indent(level * 2) + "Separater");
       }
+    }
+  }
+
+  // For a Menu - prints Menu Items and their Accelerators
+  def __printMenuItem(menuItem: javax.swing.JMenuItem, level: Int): Unit = {
+    if (menuItem == null) { return}
+    if (menuItem.isInstanceOf[javax.swing.JMenu]) {
+      __printMenuItems(menuItem.asInstanceOf[javax.swing.JMenu], 1);
+    } else {
+      println(menuItem.getText)
+      val accelerator = menuItem.getAccelerator
+      if (accelerator != null) {
+        println(indent(level * 2) + "Accelerator: " + accelerator);
+      }
+    }
+  }
+
+  def __printMenuItembyNameAndMenuName(menuName: String, menuItemName: String): Unit = {
+    getMenuItembyNameAndMenuName(menuName, menuItemName) match {
+      case None       => println("Menu Item '" + menuName + ":" + menuItemName + "' does not exist.")
+      case Some(menuItem) => __printMenuItem(menuItem, 1)
     }
   }
 
@@ -709,7 +764,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
   // For App MenuBar - Prints Named Menu
   def __printAppMenuByName(menuName: String): Unit = {
     getMenuByName(menuName).fold(println(menuName + " Menu not found"))( {
-      println(getAppMenuBar + " Menu")
+      println(menuName + " Menu")
       __printMenuItems(_, 1)
     })
   }
@@ -737,6 +792,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
   // For a Menu - print Menu Items Accelerators
   def __printMenuAccelerators(menu: javax.swing.JMenu): Unit = {
+    if (menu == null) { return }
     for (i <- 0 until menu.getItemCount) {
       val  item = menu.getItem(i)
       if (item != null && item.getAccelerator != null) {
@@ -770,6 +826,25 @@ class AppTabManager(val appTabsPanel:          Tabs,
       case Some(theObject) =>  __printNonNullSwingObject(theObject, description)
     }
   }
+
+  def __countMenuItembyNameAndMenuName(menuName: String, menuItemName: String): Int = {
+    getMenuByName(menuName)  match {
+      case None                => return 0
+      case Some(menu) =>  {
+        var itemCount = 0
+        for (i <- 0 until menu.getItemCount) {
+          val  item = menu.getItem(i)
+          if (item != null) {
+            if (item.getText() == menuItemName) {
+              itemCount = itemCount + 1
+            }
+          }
+        }
+        return itemCount
+      }
+    }
+  }
+
 
   // *** End debugging tools AAB 10/2020.
 }
