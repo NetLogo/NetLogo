@@ -311,6 +311,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
       case Some(codeTabsPanel) => {
         for (i <- 0 until getAppMenuBar.getMenuCount) {
           val  item = getAppMenuBar.getMenu(i)
+          // getMenu returns null for separators
           if (item != null) {
             copyMenuAccelerators(item)
           }
@@ -328,12 +329,14 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
   // For a Menu - copy Menu Items Accelerators
   def copyMenuAccelerators(menu: JMenu): Unit = {
-    require(menu == null)
+    require(menu != null)
     codeTabsPanelOption match {
       case None                =>
       case Some(codeTabsPanel) => {
         for (i <- 0 until menu.getItemCount) {
           val  item = menu.getItem(i)
+          // getItem returns null for non-menu items such as separators
+          // getAccelerator returns null when there is no accelerator
           if (item != null && item.getAccelerator != null) {
             addCodeTabContainerKeyStroke(item.getAccelerator, item.getAction, item.getActionCommand)
           }
@@ -460,7 +463,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
     * @param tab The Component to remove.
     */
    def removeTab(tab: Component): Unit = {
-    if (tab == null) { throw new Exception("Tab component may not be null.") }
+    require (tab != null)
     val (tabOwner, _) = ownerAndIndexOfTab(tab)
     if (tabOwner != null) {
       tabOwner.remove(tab)
@@ -479,7 +482,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
     * @throws Exception if one Tab is a CodeTab and the other is not.
     */
   def replaceTab(oldTab: Component, newTab: Component): Unit = {
-    if (oldTab == null || newTab == null) { throw new Exception("Tab components may not be null.") }
+    require(oldTab != null && newTab != null)
 
     if (oldTab.isInstanceOf[CodeTab] && !oldTab.isInstanceOf[CodeTab]) {
       throw new Exception("A CodeTab must be replaced by a CodeTab")
@@ -516,7 +519,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
    * @param tab the Component to be selected
    */
   def setPanelsSelectedComponent(tab: Component): Unit = {
-    if (tab == null) { throw new Exception("Tab component may not be null.") }
+    require(tab != null)
     val (tabOwner, tabIndex) = ownerAndIndexOfTab(tab)
     if (tabOwner.isInstanceOf[CodeTabsPanel]) {
       tabOwner.requestFocus
@@ -680,7 +683,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
   // For a Menu - prints Menu Items and their Accelerators
   def __printMenuItems(menu: JMenu, level: Int): Unit = {
-    if (menu == null) { return}
+    if (menu == null) { return }
     for (i <- 0 until menu.getItemCount) {
       val  item = menu.getItem(i)
       if (item != null) {
@@ -693,14 +696,14 @@ class AppTabManager(val appTabsPanel:          Tabs,
           __printMenuItems(item.asInstanceOf[JMenu], level + 1);
         }
       } else {
-        println(indent(level * 2) + "Separater");
+        println(indent(level * 2) + "Separator");
       }
     }
   }
 
   // For a Menu - prints Menu Items and their Accelerators
   def __printMenuItem(menuItem: JMenuItem, level: Int): Unit = {
-    if (menuItem == null) { return}
+    if (menuItem == null) { return }
     if (menuItem.isInstanceOf[JMenu]) {
       __printMenuItems(menuItem.asInstanceOf[JMenu], 1);
     } else {
@@ -835,7 +838,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
       case Some(menu) =>  {
         var itemCount = 0
         for (i <- 0 until menu.getItemCount) {
-          val  item = menu.getItem(i)
+          val item = menu.getItem(i)
           if (item != null) {
             if (item.getText() == menuItemName) {
               itemCount = itemCount + 1
