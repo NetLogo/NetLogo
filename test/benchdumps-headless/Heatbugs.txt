@@ -1621,7 +1621,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           DLOAD 4
           DLOAD 6
           DCMPG
-          IFGE L18
+          IFGT L18
           DCONST_0
           DSTORE 10
           GOTO L15
