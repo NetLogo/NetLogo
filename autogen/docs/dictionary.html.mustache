@@ -7737,17 +7737,16 @@ show (runresult [ [a b] -&gt; a + b ] 10 5)
           <i>number</i>.
         </p>
         <p>
-          If <i>range1</i> is less or equal to than <i>range2</i>, then the larger the
-          number, the lighter the shade of <i>color</i>. But if <i>range2</i>
+          When <i>range1</i> is less or equal to than <i>range2</i>, then the larger the
+          number, the lighter the shade of <i>color</i>. However, if <i>range2</i>
           is less than <i>range1</i>, the color scaling is inverted.
         </p>
         <p>
-          If <i>number</i> is less than or equal to <i>range1</i>, then the darkest shade
-          of <i>color</i> is chosen.
-        </p>
-        <p>
-          If <i>number</i> is greater than <i>range2</i>, then the lightest
-          shade of <i>color</i> is chosen.
+          Let <i>min-range</i> be the minimum of <i>range1</i> and <i>range2</i>.
+          If <i>number</i> is less than or equal to <i>min-range</i>, then the result is the same
+          as if number was equal to <i>min-range</i>.
+          Let <i>max-range</i> be the maximum of <i>range1</i> and <i>range2</i>. If <i>number</i> is greater than <i>max-range</i>,
+          then the result is the same as if <i>number</i> was equal to <i>max-range</i>.
         </p>
         <p>
           Note: for <i>color</i> shade is irrelevant, e.g. green and green +
