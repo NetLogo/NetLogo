@@ -3414,7 +3414,7 @@ procedure RECOLOR:[]{-TP-}:
           DLOAD 4
           DLOAD 6
           DCMPG
-          IFGE L18
+          IFGT L18
           DCONST_0
           DSTORE 10
           GOTO L15
@@ -3680,7 +3680,7 @@ procedure RECOLOR:[]{-TP-}:
           DLOAD 4
           DLOAD 6
           DCMPG
-          IFGE L25
+          IFGT L25
           DCONST_0
           DSTORE 10
           GOTO L22

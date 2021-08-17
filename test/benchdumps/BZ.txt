@@ -1989,7 +1989,7 @@ procedure GO:[]{O---}:
           DLOAD 4
           DLOAD 6
           DCMPG
-          IFGE L21
+          IFGT L21
           DCONST_0
           DSTORE 10
           GOTO L18
@@ -2421,7 +2421,7 @@ procedure SETUP:[]{O---}:
           DLOAD 4
           DLOAD 6
           DCMPG
-          IFGE L21
+          IFGT L21
           DCONST_0
           DSTORE 10
           GOTO L18
