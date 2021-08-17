@@ -39,7 +39,7 @@ public final strictfp class _scalecolor extends Reporter implements Pure {
     } else {
       if (var > max) {
         perc = 1.0;
-      } else if (var < min) {
+      } else if (var <= min) {
         perc = 0.0;
       } else {
         double tempval = var - min;
