@@ -49,6 +49,11 @@ ScaleColor7
 ScaleColor8
   scale-color red 0.9999999999999998 0 1 => 19.9999
 
+ScaleColor9
+  scale-color grey 0 1 1 => 0
+  scale-color grey 1 1 1 => 0
+  scale-color grey 2 1 1 => 9.9999
+
 HSB1
   approximate-hsb 0 0 0 => 0
 
