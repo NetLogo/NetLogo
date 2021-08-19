@@ -293,7 +293,7 @@ event is to occur, then advance the tick counter to exactly that time.
 
 NetLogo represents colors in different ways. A color can be number in the range
 0 to 140, with the exception of 140 itself. Below is a chart showing the range
-of such colors you can use in NetLogo.
+of such NetLogo colors.
 ![[/colors.jpg]]
 
 The chart shows that:
@@ -346,8 +346,7 @@ NetLogo also represents colors as RGB (red/green/blue) lists and RGBA
 (red/green/blue/alpha) lists. When using RGB colors the full range of colors is
 available to you. RGBA colors allow all the colors that RGB allows and you can
 also vary the transparency of a color. RGB and RGBA lists are made up of three
-or four integers, respectively, between 0 and 255 if a number is outside that
-range 255 is repeatedly subtracted until it is in the range. You can set any
+or four integers, respectively, between 0 and 255. You can set any
 color variables in NetLogo ([[color]] for turtles and links and [[pcolor]] for
 patches) to an RGB list and that agent will be rendered appropriately. So you
 can set the color of patch 0 0 to pure red using the following code:
@@ -355,7 +354,7 @@ can set the color of patch 0 0 to pure red using the following code:
     set pcolor [255 0 0]
 
 Turtles, links, and labels can all contain RGBA lists as their color variables,
-however, patches cannot have RGBA `pcolors` You can set the color of a turtle to
+however, patches can only have RGBA `pcolors` in NetLogo 3D. You can set the color of a turtle to
 be approximately half transparent pure red with the following code:
 
     set color [255 0 0 125]
@@ -368,13 +367,39 @@ Since many colors are missing from the NetLogo color space, [[approximate-hsb]]
 and [[approximate-rgb]] often can't give you the exact color you ask for, but
 they try to come as close as possible.
 
-Example: you can change any turtle from it's existing NetLogo color to a half
-transparent version of that color using:
+Example:
 
-    set color lput 125 extract-rgb color
+    show extract-rgb approximate-rgb 0 0 255 ;; shows [48 88 161]
+
+This is an approximation, but it is still near NetLogo blue 104.7.
+
+Using RGBA colors, the user has more options when it comes to an agent's color.
+
+Example: you can change any turtle from its existing NetLogo color to a sixty percent transparent version of that color using:
+
+    ask turtle turtle-number [set color lput 102 extract-rgb color]
+
+Note: because 255 is fully opaque and sixty percent transparent is equal to forty percent opaque, the correct alpha value is  255 * .4 = 102.
+See the palette extension section below for an alternate implementation.
 
 > **Code Examples:** HSB and RGB Example (lets you experiment with the HSB and
 > RGB color systems), Transparency Example
+
+**Palette Extension**
+
+The palette extension offers primitives that give the user more control over colors. It allows for direct
+manipulation of RGBA and HSB components without the requiring list manipulations.
+
+Example: changing the transparency of any turtle to sixty percent transparent with the palette extension:
+
+    extensions [palette]
+    ask turtle turtle-number [palette:set-transparency 60]
+
+The extension offers similar commands for Red, Green, Blue, Alpha, Hue, Saturation, and Brightness.
+
+See the documentation of the palette extension for more information.
+
+> **Code Examples:** Palette Example, Color Bubbles, Color Painting, Color Reveal
 
 **Color Swatches dialog**
 
