@@ -394,11 +394,11 @@ manipulation of RGBA and HSB components without the requiring list manipulations
 Example: changing the transparency of any turtle to sixty percent transparent with the palette extension:
 
     extensions [palette]
-    ask turtle turtle-number [palette:set-transparency 60]
+    ask one-of turtles [palette:set-transparency 60]
 
 The extension offers similar commands for Red, Green, Blue, Alpha, Hue, Saturation, and Brightness.
 
-See the [documentation](https://ccl.northwestern.edu/netlogo/docs/palette.html) of the palette extension for more information.
+See the [documentation](palette.html) of the palette extension for more information.
 
 > **Code Examples:** Palette Example, Color Bubbles, Color Painting, Color Reveal
 
