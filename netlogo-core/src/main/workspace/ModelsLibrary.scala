@@ -18,8 +18,10 @@ object ModelsLibrary {
 
   def getModelPaths: Array[String] = getModelPaths(false)
 
-  def getModelPaths(exclusive: Boolean): Array[String] = {
-    scanForModels(exclusive)
+  def getModelPaths(exclusive: Boolean): Array[String] = getModelPaths(exclusive, true)
+
+  def getModelPaths(exclusive: Boolean, useExtensionExamples: Boolean): Array[String] = {
+    scanForModels(exclusive, useExtensionExamples)
     val fileSep = File.separator
     rootNode.map {
       _.depthFirstIterable.filter {
@@ -91,7 +93,9 @@ object ModelsLibrary {
 
   def needsModelScan: Boolean = rootNode.isEmpty
 
-  def scanForModels(exclusive: Boolean): Unit = {
+  def scanForModels(exclusive: Boolean): Unit = scanForModels(exclusive, true)
+
+  def scanForModels(exclusive: Boolean, useExtensionExamples: Boolean): Unit = {
     if (! needsModelScan) {
       return
     }
@@ -100,7 +104,7 @@ object ModelsLibrary {
         if (!Version.is3D || !exclusive) new File(modelsRoot, "").getCanonicalFile
         else new File(modelsRoot, "3D").getCanonicalFile
       rootNode = scanDirectory(directoryRoot.toPath, exclusive) match {
-        case Some(rn: Tree) => {
+        case Some(rn: Tree) if useExtensionExamples => {
           val extensionsRoot = new File(FileIO.perUserDir("extensions", true), "").getCanonicalFile
           val extensionsNode = scanDirectory(extensionsRoot.toPath, exclusive, Some("Extension Manager Samples"))
           val children = extensionsNode match {

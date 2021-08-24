@@ -24,7 +24,7 @@ object ChecksumsAndPreviews {
   def main(argv: Array[String]) {
     Main.setHeadlessProperty()
     def paths(fn: String => Boolean, includeBenchmarks: Boolean) = {
-      val allLibrary = ModelsLibrary.getModelPaths(true).toList
+      val allLibrary = ModelsLibrary.getModelPaths(true, false).toList
       val library = if (includeBenchmarks)
         allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogo") ::: allLibrary
       else
@@ -32,7 +32,11 @@ object ChecksumsAndPreviews {
 
       library
         .filter(fn)
-        .map(p => p.substring(p.indexOf(ModelsLibrary.modelsRoot)))
+        .map(p => {
+          val iOf = p.indexOf(ModelsLibrary.modelsRoot)
+          val r = p.substring(iOf)
+          r
+        })
         .distinct
         .toList
     }
