@@ -93,5 +93,9 @@ object ChecksumsAndPreviewsSettings {
       "/IABM TEXTBOOK/CHAPTER 8/SIMPLE VIRAL MARKETING.NLOGO"
     )
 
+    , Some("it uses finnicky Python packages") -> List(
+      "/Code Examples/Extensions Examples/py/Python Flocking Clusters.nlogo"
+    )
+
   )
 }

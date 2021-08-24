@@ -49,6 +49,10 @@ object ChecksumsAndPreviewsSettings {
       "/Code Examples/Extensions Examples/ls/"
     )
 
+    , Some("it uses finnicky Python packages") -> List(
+      "/Code Examples/Extensions Examples/py/Python Flocking Clusters.nlogo"
+    )
+
     , Some("it uses the sound extension") -> List(
       "/SAMPLE MODELS/GAMES/FROGGER.NLOGO",
       "/SAMPLE MODELS/ART/SOUND MACHINES.NLOGO",
