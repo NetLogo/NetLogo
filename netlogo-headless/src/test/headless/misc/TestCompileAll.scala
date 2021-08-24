@@ -106,7 +106,7 @@ class TestCompileAll extends FunSuite  {
     // slowing things down), and has some other effects too - ST 1/13/05, 12/6/07
     workspace.compilerTestingMode = true
     try {
-      workspace.open(path)
+      workspace.open(path, true)
       val lab = HeadlessWorkspace.newLab
       val protocols = BehaviorSpaceCoordinator.protocolsFromModel(path)
       protocols.foreach(lab.newWorker(_).compile(workspace))

@@ -48,7 +48,7 @@ class TestCompileAll extends FunSuite with SlowTest {
     // and has some other effects - ST 12/6/07
     workspace.compilerTestingMode = true
     try {
-      workspace.open(path)
+      workspace.open(path, true)
       if (!excludePreviewCommands(path)) compilePreviewCommands(workspace)
       // compile BehaviorSpace experiments
       val lab = HeadlessWorkspace.newLab
