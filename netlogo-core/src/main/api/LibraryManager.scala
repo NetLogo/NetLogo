@@ -153,7 +153,7 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
           val downloadURL = new URL(c.getString("downloadURL"))
 
           val installedVersionPath = s"""$category."$codeName".installedVersion"""
-          val installedVersion     = getStringOption(c, installedVersionPath)
+          val installedVersion     = getStringOption(installedLibsConf, installedVersionPath)
           val bundled              = useBundled && bundledsConfig.hasPath(installedVersionPath) && installedVersion.isEmpty
           val minNetLogoVersion    = getStringOption(c, "minNetLogoVersion")
 
