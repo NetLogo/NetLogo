@@ -101,7 +101,6 @@ class Tabs(workspace:           GUIWorkspace,
   jframe.addWindowFocusListener(new WindowAdapter() {
     override def windowGainedFocus(e: WindowEvent) {
       val currentTab = getTabs.getSelectedComponent
-      tabManager.setCurrentTab(currentTab)
       if (tabManager.getMainCodeTab.dirty) {
         // The SwitchedTabsEvent can lead to compilation. AAB 10/2020
          new AppEvents.SwitchedTabsEvent(tabManager.getMainCodeTab, currentTab).raise(getTabs)
@@ -116,9 +115,9 @@ class Tabs(workspace:           GUIWorkspace,
     // In that case do nothing. The correct action will happen when
     // the selected index is reset. AAB 10/2020
     if (tabManager.getSelectedAppTabIndex != -1) {
-      val previousTab = tabManager.getCurrentTab
+      val previousTab = currentTab
       currentTab = getSelectedComponent
-      tabManager.setCurrentTab(currentTab)
+
       previousTab match {
         case mt: MenuTab => mt.activeMenuActions foreach menu.revokeAction
         case _ =>
@@ -133,7 +132,6 @@ class Tabs(workspace:           GUIWorkspace,
         case (false, true) => saveModelActions foreach menu.revokeAction
         case _             =>
       }
-      currentTab.requestFocus()
       new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
     }
   }
@@ -143,8 +141,8 @@ class Tabs(workspace:           GUIWorkspace,
       // A single mouse control-click on the MainCodeTab in a separate window
       // opens the code window, and takes care of the bookkeeping. AAB 10/2020
       if (me.getClickCount() == 1 && me.isControlDown) {
-        val currentTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
-        if (currentTab.isInstanceOf[MainCodeTab]) {
+        val clickedTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
+        if (clickedTab.isInstanceOf[MainCodeTab]) {
           tabManager.switchToSeparateCodeWindow
         }
       }
@@ -350,6 +348,7 @@ class Tabs(workspace:           GUIWorkspace,
     val newAction = TabsMenu.tabAction(tabManager, i)
     tabActions = tabActions :+ newAction
     menu.offerAction(newAction)
+    // This may not be necessary AAB 08/21
     tabManager.copyMenuAcceleratorsByName(I18N.gui.get("menu.tabs"))
   }
 
