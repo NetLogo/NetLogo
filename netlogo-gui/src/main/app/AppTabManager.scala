@@ -316,6 +316,13 @@ class AppTabManager(val appTabsPanel:          Tabs,
         setSeparateCodeTabBindings()
         // Add keystrokes for actions from existing menus to the codeTabsPanel. AAB 10/2020
         copyMenuBarAccelerators()
+
+        // Remove the command center related accelerators
+        val contentPane = codeTabsPanel.getCodeTabContainer.getContentPane.asInstanceOf[JComponent]
+        val slash = intKeyToMenuKeystroke(KeyEvent.VK_SLASH)
+        val capC = intKeyToMenuKeystroke(KeyEvent.VK_C, withShift = true)
+        removeComponentKeyStroke(contentPane, slash)
+        removeComponentKeyStroke(contentPane, capC)
       }
     }
   }
@@ -369,6 +376,18 @@ class AppTabManager(val appTabsPanel:          Tabs,
     val actionMap: ActionMap = component.getActionMap();
     inputMap.put(mapKey, actionName)
     actionMap.put(actionName, action)
+  }
+
+  // removes a mapKey from both the inputMap and actionMap of a component
+  def removeComponentKeyStroke(component: JComponent, mapKey: KeyStroke): Unit = {
+    val inputMap: InputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    val actionMap: ActionMap = component.getActionMap();
+    val actionName = inputMap.get(mapKey)
+    inputMap.remove(mapKey)
+
+    if (actionName != null) {
+      actionMap.remove(actionName)
+    }
   }
 
   def removeCodeTabContainerAccelerators(): Unit = {
@@ -833,14 +852,6 @@ class AppTabManager(val appTabsPanel:          Tabs,
     }
   }
 
-  def __printNonNullSwingObject(obj: java.awt.Component, description: String): Unit = {
-    val pattern = """(^[^\[]*)\[(.*$)""".r
-    val pattern(name, _) = obj.toString
-    val shortName = name.split("\\.").last
-    println(description + " " + System.identityHashCode(obj) +
-    ", " + shortName)
-  }
-
   def __printSwingObject(obj: java.awt.Component, description: String): Unit = {
     val some = Option(obj) // Because Option(null) = None 11/2020 AAB
     var objID = ""
@@ -854,7 +865,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
   def __printOptionSwingObject(obj: Option[java.awt.Component], description: String): Unit = {
     obj match {
       case None            => println(description + " None")
-      case Some(theObject) =>  __printNonNullSwingObject(theObject, description)
+      case Some(theObject) =>  __printSwingObject(theObject, description)
     }
   }
 
