@@ -896,7 +896,6 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
   def __PrintStateInfo(previousTab: Component, currentTab: Component): Unit = {
     println("    Previous Tab: " + __getSimpleName(previousTab))
-
     println("    Current Tab: " + __getSimpleName(currentTab))
     val owner = getCodeTabsOwner
     println("    CodeTabOwner " + __getSimpleName(owner) + " Selected Index: " + owner.getSelectedIndex)
