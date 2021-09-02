@@ -9,7 +9,7 @@ import javax.swing.event.{ ChangeEvent, ChangeListener }
 import scala.collection.mutable
 
 import org.nlogo.app.codetab.{ ExternalFileManager, MainCodeTab, TemporaryCodeTab }
-import org.nlogo.app.common.{ Events => AppEvents, MenuTab }
+import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.window.GUIWorkspace
@@ -68,18 +68,12 @@ class CodeTabsPanel(workspace:            GUIWorkspace,
   }
 
   this.addMouseListener(new MouseAdapter() {
-    override def mouseClicked(me: MouseEvent) {
-      // A single mouse click switches focus to a tab. AAB 10/2020
-      if (me.getClickCount() == 1) {
-        val currentTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
-        tabManager.setCurrentTab(currentTab)
-        currentTab.requestFocus()
-      }
-      // A single mouse control-click on the MainCodeTab in a separate window
-      // closes the code window, and takes care of the bookkeeping. AAB 10/2020
+    override def mouseClicked(me: MouseEvent): Unit =  {
+      // A single mouse control-click on the MainCodeTab when it is in a separate window
+      // closes the separate code window, and takes care of the bookkeeping. AAB 10/2020
       if (me.getClickCount() == 1 && me.isControlDown) {
-        val currentTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
-        if (currentTab.isInstanceOf[MainCodeTab]) {
+        val clickedTab = me.getSource.asInstanceOf[JTabbedPane].getSelectedComponent
+        if (clickedTab.isInstanceOf[MainCodeTab]) {
           tabManager.switchToNoSeparateCodeWindow
         }
       }
@@ -93,44 +87,25 @@ class CodeTabsPanel(workspace:            GUIWorkspace,
     }
   })
 
-  // If focus returns to the code tab window, make its currentTab
-  // be selected. AAB 10/2020
-  codeTabContainer.addWindowFocusListener(new WindowAdapter() {
-    override def  windowGainedFocus(e: WindowEvent) {
-      val currentTab = codeTabsPanel.getSelectedComponent
-      tabManager.setCurrentTab(currentTab)
-    }
-  })
-
   def stateChanged(e: ChangeEvent) = {
     // for explanation of index -1, see comment in Tabs.stateChanged. AAB 10/2020
     if (tabManager.getSelectedAppTabIndex != -1) {
-      val previousTab = tabManager.getCurrentTab
+      val previousTab = getCurrentTab
       currentTab = getSelectedComponent
       // currentTab could be null in the case where the CodeTabPanel has only the MainCodeTab. AAB 10/2020
       if (currentTab == null) {
         currentTab = mainCodeTab
-      }
-      tabManager.setCurrentTab(currentTab)
-      previousTab match {
-        case mt: MenuTab => mt.activeMenuActions foreach tabManager.menuBar.revokeAction
-        case _ =>
-      }
-      currentTab match {
-        case mt: MenuTab => mt.activeMenuActions foreach tabManager.menuBar.offerAction
-        case _ =>
       }
       (previousTab.isInstanceOf[TemporaryCodeTab], currentTab.isInstanceOf[TemporaryCodeTab]) match {
         case (true, false) => tabManager.appTabsPanel.saveModelActions foreach tabManager.menuBar.offerAction
         case (false, true) => tabManager.appTabsPanel.saveModelActions foreach tabManager.menuBar.revokeAction
         case _             =>
       }
-      currentTab.requestFocus()
-      tabManager.createCodeTabAccelerators
       // The SwitchedTabsEvent will cause compilation when the user leaves an edited CodeTab. AAB 10/2020
       new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
     }
   }
+
   java.awt.EventQueue.invokeLater(new Runnable() {
     override def run(): Unit = {
       codeTabContainer.toFront()

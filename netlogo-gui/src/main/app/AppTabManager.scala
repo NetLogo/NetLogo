@@ -64,7 +64,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
   // might want access to these owner methods to be only in the app package
   // Need to carefully decide which methods are private. AAB 10/2020
-  def getCodeTabsOwner = {
+  def getCodeTabsOwner() : AbstractTabsPanel = {
     codeTabsPanelOption match {
       case None           => appTabsPanel
       case Some(theValue) => theValue
@@ -110,16 +110,6 @@ class AppTabManager(val appTabsPanel:          Tabs,
   }
 
   def getSelectedAppTabIndex() = { appTabsPanel.getSelectedIndex }
-
-  private var currentTab: Component = { appTabsPanel.interfaceTab }
-
-  def getCurrentTab(): Component = {
-    currentTab
-  }
-
-  def setCurrentTab(tab: Component): Unit = {
-    currentTab = tab
-  }
 
   // Input: combinedTabIndex - index a tab would have if there were no separate code tab.
   // Returns (tabOwner, tabIndex)
@@ -198,16 +188,34 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
   def setPanelsSelectedIndex(index: Int): Unit =  {
     val (tabOwner, tabIndex) = ownerAndIndexFromCombinedIndex(index)
-    if (tabOwner.isInstanceOf[CodeTabsPanel]) {
-      tabOwner.requestFocus
-      tabOwner.setSelectedIndex(tabIndex)
-    } else {
-      val selectedIndex = getSelectedAppTabIndex
-      if (selectedIndex == tabIndex) {
-       setSelectedAppTab(-1)
-      }
-       setSelectedAppTab(tabIndex)
-      }
+    setPanelsSelectedIndexHelper(tabOwner, tabIndex)
+  }
+
+  /**
+    * Makes a tab component, specified by owner and index, selected or selectable, whether or not a separate code window exists.
+    *
+    * Usual effect: the specified component becomes the selected tab of the tabOwner.
+    * An important alternative case occurs when a specified App Tab component is already selected.
+    * This should only happen when focus is in the separate code tab window.
+    * Swing will not allow the selection unless the Tab is first deselected. To deselect the tab without selecting
+    * another tab, the selected tab index of the tabOwner must be set to -1.
+    * The App Tab of interest is saved as the currentTab.
+    * Documentation August 2021 - AAB
+    *
+    * @param tabOwner Owner of the Tab to be selected
+    *
+    * @param index    Index of the Tab to be selected
+    */
+  private def setPanelsSelectedIndexHelper(tabOwner: AbstractTabsPanel, tabIndex: Int): Unit = {
+    val selectedIndex = tabOwner.getSelectedIndex
+    if (selectedIndex == tabIndex) {
+      // Saves selected tab as current tab
+      tabOwner.setCurrentTab(tabOwner.getComponentAt(tabIndex))
+      // Deselects the tab
+      tabOwner.setSelectedIndex(-1)
+    }
+    tabOwner.setSelectedIndex(tabIndex)
+    tabOwner.requestFocus
   }
 
   def getIndexOfCodeTab(tab: CodeTab): Int = {
@@ -267,6 +275,14 @@ class AppTabManager(val appTabsPanel:          Tabs,
         appTabsPanel.externalFileTabs)
       codeTabsPanelOption = Some(codeTabsPanel)
       codeTabsPanel.setTabManager(this)
+
+      // If the Selected Component in the App Tabs Panel was the CodeTab
+      // set it to be the Interface Tab, otherwise moving the CodeTab will
+      // cause swing to make the Info Tab the Selected Component
+      if (appTabsPanel.getSelectedComponent == appTabsPanel.mainCodeTab) {
+        appTabsPanel.setSelectedComponent(appTabsPanel.interfaceTab)
+      }
+
       // Move tabs from appTabsPanel to codeTabsPanel.
       // Iterate starting at last tab so that indexing remains valid when
       // tabs are removed (add to codeTabsPanel), AAB 10/2020
@@ -280,7 +296,6 @@ class AppTabManager(val appTabsPanel:          Tabs,
            appTabsPanel.getToolTipTextAt(n),
            0)
         }
-
       }
 
       appTabsPanel.mainCodeTab.getPoppingCheckBox.setSelected(true)
@@ -289,6 +304,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
       appTabsPanel.getAppFrame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
       createCodeTabAccelerators()
       Event.rehash()
+      codeTabsPanel.mainCodeTab.requestFocus
     }
   }
 
@@ -300,6 +316,13 @@ class AppTabManager(val appTabsPanel:          Tabs,
         setSeparateCodeTabBindings()
         // Add keystrokes for actions from existing menus to the codeTabsPanel. AAB 10/2020
         copyMenuBarAccelerators()
+
+        // Remove the command center related accelerators
+        val contentPane = codeTabsPanel.getCodeTabContainer.getContentPane.asInstanceOf[JComponent]
+        val slash = intKeyToMenuKeystroke(KeyEvent.VK_SLASH)
+        val capC = intKeyToMenuKeystroke(KeyEvent.VK_C, withShift = true)
+        removeComponentKeyStroke(contentPane, slash)
+        removeComponentKeyStroke(contentPane, capC)
       }
     }
   }
@@ -353,6 +376,18 @@ class AppTabManager(val appTabsPanel:          Tabs,
     val actionMap: ActionMap = component.getActionMap();
     inputMap.put(mapKey, actionName)
     actionMap.put(actionName, action)
+  }
+
+  // removes a mapKey from both the inputMap and actionMap of a component
+  def removeComponentKeyStroke(component: JComponent, mapKey: KeyStroke): Unit = {
+    val inputMap: InputMap = component.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    val actionMap: ActionMap = component.getActionMap();
+    val actionName = inputMap.get(mapKey)
+    inputMap.remove(mapKey)
+
+    if (actionName != null) {
+      actionMap.remove(actionName)
+    }
   }
 
   def removeCodeTabContainerAccelerators(): Unit = {
@@ -514,23 +549,22 @@ class AppTabManager(val appTabsPanel:          Tabs,
   }
 
   /**
-   * Makes a tab component selected, whether or not separate code window exists.
-   *
-   * @param tab the Component to be selected
-   */
+    * Makes a tab component selected or selectable, whether or not a separate code window exists.
+    *
+    * Usual effect: the specified component becomes the selected tab of the tabOwner.
+    * An important alternative case occurs when a specified App Tab component is already selected.
+    * This should only happen when focus is in the separate code tab window.
+    * Swing will not allow the selection unless the Tab is first deselected. To deselect the tab without selecting
+    * another tab, the selected tab index of the tabOwner must be set to -1.
+    * The App Tab of interest is saved as the currentTab.
+    * Documentation update August 2021 - AAB
+    *
+    * @param tab the Component to be selected
+    */
   def setPanelsSelectedComponent(tab: Component): Unit = {
     require(tab != null)
     val (tabOwner, tabIndex) = ownerAndIndexOfTab(tab)
-    if (tabOwner.isInstanceOf[CodeTabsPanel]) {
-      tabOwner.requestFocus
-      tabOwner.setSelectedIndex(tabIndex)
-    } else {
-      val selectedIndex = getSelectedAppTabIndex
-      if (selectedIndex == tabIndex) {
-        setSelectedAppTab(-1)
-      }
-        setSelectedAppTab(tabIndex)
-      }
+    setPanelsSelectedIndexHelper(tabOwner, tabIndex)
   }
 
   /**
@@ -701,7 +735,8 @@ class AppTabManager(val appTabsPanel:          Tabs,
     }
   }
 
-  // For a Menu - prints Menu Items and their Accelerators
+  // For a Menu Item - prints Menu Item its Accelerator or
+  // if it is a JMenu prints Menu Items and their Accelerators
   def __printMenuItem(menuItem: JMenuItem, level: Int): Unit = {
     if (menuItem == null) { return }
     if (menuItem.isInstanceOf[JMenu]) {
@@ -809,26 +844,28 @@ class AppTabManager(val appTabsPanel:          Tabs,
     }
   }
 
-  def __printNonNullSwingObject(obj: java.awt.Component, description: String): Unit = {
-    val pattern = """(^[^\[]*)\[(.*$)""".r
-    val pattern(name, _) = obj.toString
-    val shortName = name.split("\\.").last
-    println(description + " " + System.identityHashCode(obj) +
-    ", " + shortName)
+  def __getSimpleName(c: Any) : String = {
+    if (c == null){
+      return "<null>"
+    } else {
+      return c.getClass.getSimpleName
+    }
   }
 
   def __printSwingObject(obj: java.awt.Component, description: String): Unit = {
     val some = Option(obj) // Because Option(null) = None 11/2020 AAB
+    var objID = ""
     some match {
-      case None           => println(description + " <null>")
-      case Some(theValue) =>  __printNonNullSwingObject(obj, description)
+      case None           =>
+      case Some(theValue) => objID = System.identityHashCode(obj) + ", "
     }
+    println(description + " " + objID + __getSimpleName(obj))
   }
 
   def __printOptionSwingObject(obj: Option[java.awt.Component], description: String): Unit = {
     obj match {
       case None            => println(description + " None")
-      case Some(theObject) =>  __printNonNullSwingObject(theObject, description)
+      case Some(theObject) =>  __printSwingObject(theObject, description)
     }
   }
 
@@ -850,6 +887,49 @@ class AppTabManager(val appTabsPanel:          Tabs,
     }
   }
 
+  def __PrintWindowEventInfo(e: java.awt.event.WindowEvent): Unit = {
+    println("    " + "ID: " + e.getID)
+    println("    " + "source: " + __getSimpleName(e.getSource))
+    println("    " + "window: " + __getSimpleName(e.getWindow))
+    println("    " + "opposite window: " + __getSimpleName(e.getOppositeWindow))
+  }
 
+  def __PrintStateInfo(previousTab: Component, currentTab: Component): Unit = {
+    println("    Previous Tab: " + __getSimpleName(previousTab))
+    println("    Current Tab: " + __getSimpleName(currentTab))
+    val owner = getCodeTabsOwner
+    println("    CodeTabOwner " + __getSimpleName(owner) + " Selected Index: " + owner.getSelectedIndex)
+  }
+
+  def __printFocusOwner(topContainer: javax.swing.JFrame): Unit = {
+    __printFocusOwner(topContainer, false)
+  }
+
+  def __printFocusOwner(topContainer: javax.swing.JFrame, fullInfo: Boolean): Unit = {
+    if (fullInfo) {
+      println("    " + __getSimpleName(topContainer) + " is Active " + topContainer.isActive())
+      println("    " + __getSimpleName(topContainer) + " is Focused " + topContainer.isFocused())
+    }
+    if (topContainer.isFocused()) {
+      val focusOwner = topContainer.getFocusOwner
+      if (focusOwner != null) {
+        println("    Focus owner is " + __getSimpleName(focusOwner))
+      } else {
+        println("    No focus owner.")
+      }
+    } else {
+      val prevFocusOwner = topContainer.getMostRecentFocusOwner
+      if (prevFocusOwner != null) {
+        println("    Focus owner is " + __getSimpleName(prevFocusOwner))
+      } else {
+        println("    No previous focus owner.")
+      }
+    }
+  }
+
+  def __PrintHideUndoMenuCounts(): Unit = {
+    println("    Hide count: " + __countMenuItembyNameAndMenuName("Tools", "Hide Command Center"))
+    println("    Undo count: " + __countMenuItembyNameAndMenuName("Edit", "Undo"))
+  }
   // *** End debugging tools AAB 10/2020.
 }
