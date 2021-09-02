@@ -122,7 +122,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
            Depend.dependTask: _*).
   settings(
     name := "NetLogo",
-    version := "6.2.0",
+    version := "6.2.1-beta1",
     isSnapshot := true,
     publishTo := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     mainClass in Compile := Some("org.nlogo.app.App"),

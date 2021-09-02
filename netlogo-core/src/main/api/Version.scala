@@ -124,7 +124,8 @@ trait Version {
 
   private def compatibleOverrides = Map(
     "6.1" -> Seq("6.0"),
-    "6.2" -> Seq("6.1", "6.0")
+    "6.2" -> Seq("6.1", "6.0"),
+     "6.2.1-beta1" -> Seq( "6.2", "6.1", "6.0")
   )
 
   private def versionNumber(v: String) =

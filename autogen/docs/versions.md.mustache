@@ -5,6 +5,81 @@ For help running models made in old versions, see the
 
 [TOC]
 
+## Version 6.2.1-beta1 (September 2021)
+
+### Features and Changes
+
+- Agent monitor inspection windows can now move across monitors
+- Improved error message on BehaviorSpace file access failures
+- Use a common error message for `turtle-set`, `patch-set`, and `link-set`
+- Use same font for input widgets as choosers/sliders/buttons
+- Select the search text on models library dialog open for easy replacement on a new search
+- Automatically add the png extension when exporting the world view
+- Added a preference to have NetLogo automatically load the last used model on startup
+- The "mammoth" shape is available in the shapes library for easy import into models
+- Substantial GIS extension improvements and new primitives, see [the GIS extension changelog for more information](https://github.com/NetLogo/GIS-Extension/blob/hexy/CHANGELOG.md#130)
+- Substantial Palette extension improvements and new primitives, see [the Palette extension docs for more information](https://github.com/NetLogo/Palette-Extension/blob/hexy/README.md)
+
+### Documentation Updates
+
+- Add a note about transparent colors to the `color` dictionary entry
+- Updated link and inspect related documentation
+- Make sure https links in standalone dictionary entries work correctly
+- Make the BehaviorSpace command-line examples use real models from the library with experiments that can be run without modification
+- Link to the new Beginner's Interactive NetLogo Dictionary site from the help menu (BIND)
+
+### Bugfixes
+
+- Shape changes in 3D mode will take effect without a restart
+- Runtime exceptions with wrong argument types properly generate stack traces
+- `sort-on` generates a sensible error when used with different-kind agents
+- Breeded links are properly checked for equality
+- `exp` now errors when it generates an invalid, out-of-range number result
+- A proper "file not found" error will be given when a model in the recent files list was deleted or moved and cannot be located
+- Bundled extensions updated through the extensions manager can have those updates uninstalled through it, too, just like unbundled extensions
+- Properly add the nlogo file extension when saving a model with a filename that contains dots
+- When a runtime error occurs, NetLogo will show the location in the code tab, as it did in prior versions
+- Mathematica-Link: Clear up some issues with the tutorial being out-of-date
+- Extension: View2.5d shape change bugfixes
+- Extension: LevelSpace bugfixes for running GUI-mode models headlessly
+
+### Models Library Changes
+All external URLs in models' INFO tabs were validated resulting in URL updates to 15 models.
+
+#### New Sample Models:
+- Limited Order Book
+- River Meanders
+- Robotic Factory
+- Taxi Cab
+
+#### New Curricula Models:
+- CT-STEM:
+  - Calorimetry
+
+#### New Code Examples:
+- `palette`: Color Bubbles
+- `palette`: Color Painting
+- `palette`: Color Reveal
+
+#### Sample Models
+- Brian's Brain: Rewritten erasing function for NLW compatibility.
+- Crystallization Basic: Fixed issue where world size depended on `height` rather than `width`.
+- Geometron Top-Down: Promoted from `unverified`. Updated INTERFACE, INFO, and CODE tabs.
+- Kaleidoscope: Promoted from `unverified`. Updated INTERFACE, INFO, and CODE tabs.
+- Lattice Gas Automaton: Mouse movement moved to a forever button for NLW compatibility.
+- Life: Rewritten erasing function for NLW compatibility.
+- Life Turtle-Based: Rewritten erasing function for NLW compatibility
+- N-Bodies: Rewritten mouse handling routine for NLW compatibility.
+- Planarity: Updated for NLW full compatibility
+- Small Worlds: Fixed bug with clustering coefficient being undefined for single-link.
+- Sunflower Biomorphs: Rewritten mouse handling routine for NLW compatibility
+- Surface Walking 2D: Mouse movement moved to forever button for NLW compatibility.
+- PANDA BEAR Solo: Mouse movement rewritten for NLW compatibility.
+
+#### Code Examples
+- `gis` – GIS General Examples: Rewritten to take advantage of new primitives released in `gis` v1.3.0.
+- `palette` – Palette Example: Rewritten to take advantage of new primitives release in `palette` v2.0.0.
+
 ## Version 6.2.0 (December 2020)
 
 ### Features
