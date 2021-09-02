@@ -88,3 +88,9 @@ VarClosureWithRunStrings
   O> create-turtles 1 [ set turtle-var 7000000 ]
   O> set check 0
   test4 "proc-arg + proc-let + turtle-var" 1 => 7000021
+
+LetVarsStayContained
+  to-report test1 let s 0 run "set s -1" report s end
+  to-report test2 run "show s" report runresult "s" end
+  test1 => 0
+  test2 => ERROR Nothing named S has been defined.
