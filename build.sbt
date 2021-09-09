@@ -199,7 +199,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(ChecksumsAndPreviews.settings: _*).
   settings(
     name          := "NetLogoHeadless",
-    version       := "6.2.0",
+    version       := "6.2.1-beta1",
     isSnapshot    := true,
     publishTo     := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     autogenRoot   := (baseDirectory.value.getParentFile / "autogen").getAbsoluteFile,
