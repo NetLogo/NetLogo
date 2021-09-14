@@ -94,3 +94,34 @@ LetVarsStayContained
   to-report test2 run "show s" report runresult "s" end
   test1 => 0
   test2 => ERROR Nothing named S has been defined.
+
+StringRunLetVarsDoNotEscape1
+  to foo run "let a 1" end
+  O> foo
+  O> foo
+  O> foo foo
+
+StringRunLetVarsDoNotEscape2
+  to foo run "let a 1" run "let a 2" end
+  O> foo
+
+StringRunLetVarsDoNotEscape3
+  to foo run "run \"let a 1\" run \"let a 2\"" end
+  O> foo
+
+StringRunLetVarsDoNotEscape4
+  globals [b]
+  to bar run "let a 2 set b a" end
+  to foo run "let a 2 set b a run \"let a 3 set b a\"" end
+  O> bar
+  b => 2
+  O> foo => ERROR There is already a local variable here called A
+
+CannotReportOutOfRunString
+  to-report foo run "report 10" end
+  foo => ERROR REPORT can only be used inside TO-REPORT.
+
+StopInRunString
+  globals [b]
+  to foo run "stop set b 10" set b 5 end
+  b => 0
