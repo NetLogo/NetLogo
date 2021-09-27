@@ -215,7 +215,7 @@ object JavaPackager {
       val permissions = {
         import PosixFilePermission._
         import scala.collection.JavaConverters._
-        Set(OWNER_READ, OWNER_WRITE , OWNER_EXECUTE, GROUP_READ, OTHERS_READ).asJava
+        Set(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ, OTHERS_READ).asJava
       }
       val linuxRoot = stubBuildDirectory / "bundles" / stubApplicationName
       val libpackagerSO  = linuxRoot / "libpackager.so"
