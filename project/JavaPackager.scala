@@ -3,6 +3,8 @@ import sbt._
 import Keys.{ artifactPath, dependencyClasspath, packageOptions, packageBin }
 import sbt.io.Using
 import java.nio.file.FileSystems
+import java.nio.file.Files
+import java.nio.file.attribute.PosixFilePermission
 import java.io.File
 import java.util.jar.Attributes.Name._
 import scala.sys.process.Process
@@ -210,7 +212,14 @@ object JavaPackager {
     stubApplicationName:     String,
     newApplicationDirectory: File,
     subApplicationNames:     Seq[String]): Unit = {
+      val permissions = {
+        import PosixFilePermission._
+        import scala.collection.JavaConverters._
+        Set(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ, OTHERS_READ).asJava
+      }
       val linuxRoot = stubBuildDirectory / "bundles" / stubApplicationName
+      val libpackagerSO  = linuxRoot / "libpackager.so"
+      Files.setPosixFilePermissions(libpackagerSO.toPath, permissions)
       FileActions.createDirectories(newApplicationDirectory)
       FileActions.copyDirectory(linuxRoot, newApplicationDirectory)
       subApplicationNames.foreach { appName =>
