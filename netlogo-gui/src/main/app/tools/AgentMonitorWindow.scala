@@ -3,7 +3,7 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Container, Frame }
-import java.awt.event.{ ActionEvent }
+import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import javax.swing.{ AbstractAction, BorderFactory, JDialog, LayoutFocusTraversalPolicy }
 
 import scala.collection.JavaConverters._
@@ -56,6 +56,13 @@ with WindowEvents.LoadBeginEvent.Handler
       }})
   agentChangeNotify(null)
   pack()
+
+  // Make sure the window is fully removed
+  addWindowListener(
+    new WindowAdapter {
+      override def windowClosing(e: WindowEvent) {
+        close()
+      }})
 
   override def requestFocus() {
     monitor.requestFocus()
