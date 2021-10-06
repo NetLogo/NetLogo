@@ -9,7 +9,7 @@ import java.util.prefs.Preferences
 import org.nlogo.agent.{ Agent, World2D, World3D }
 import java.awt.{ Dimension, Frame, Toolkit }
 import org.nlogo.api._
-import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
+import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, TemporaryCodeTab }
 import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, FindDialog, SaveModelingCommonsAction }
 import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManagerErrorDialog, PreviewCommandsEditor }
@@ -762,7 +762,12 @@ class App extends
   final def handle(e: AppEvents.SwitchedTabsEvent): Unit = {
     if (e.newTab == tabs.interfaceTab) {
       monitorManager.showAll()
-      frame.toFront()
+      if (e.oldTab.isInstanceOf[CodeTab]) {
+        // This handles the case performing a save from a code tab via a hotkey
+        tabManager.getCodeTabsOwner.toFront()
+      } else {
+        frame.toFront()
+      }
     } else if (e.oldTab == tabs.interfaceTab) {
       monitorManager.hideAll()
     }
