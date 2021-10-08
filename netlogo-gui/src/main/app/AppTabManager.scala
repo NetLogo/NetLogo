@@ -847,8 +847,13 @@ class AppTabManager(val appTabsPanel:          Tabs,
   def __getSimpleName(c: Any) : String = {
     if (c == null){
       return "<null>"
-    } else {
+    } else if (!c.isInstanceOf[Option[Any]]){
       return c.getClass.getSimpleName
+    } else {
+      c match {
+        case None            => return "None"
+        case Some(theObject) => return "Some(" + __getSimpleName(theObject) + ")"
+      }
     }
   }
 

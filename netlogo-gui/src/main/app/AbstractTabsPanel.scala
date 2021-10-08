@@ -52,6 +52,8 @@ abstract class AbstractTabsPanel(val workspace:           GUIWorkspace,
     currentTab
   }
 
+  def toFront(): Unit = { jframe.toFront() }
+
   def initManagerMonitor(manager: FileManager, monitor: DirtyMonitor): Unit =  {
     fileManager = manager
     dirtyMonitor = monitor

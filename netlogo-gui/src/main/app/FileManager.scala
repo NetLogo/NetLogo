@@ -352,6 +352,9 @@ class FileManager(workspace: AbstractWorkspaceScala,
         case _ =>
       }
     }
+    if (!App.app.frame.isActive) {
+      App.app.tabManager.getCodeTabsOwner.toFront()
+    }
   }
 
   private def openFromModel( model: Model, uri: URI, modelType: ModelType
