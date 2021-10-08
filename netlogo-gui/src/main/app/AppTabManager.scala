@@ -360,9 +360,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
         removeComponentKeyStroke(contentPane, capS)
 
         // Add Key Tabs specific to Separate code tab window
-        addCodeTabContainerKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_W), RejoinCodeTabsAction, "popInCodeTab")
-        addCodeTabContainerKeyStroke(S, SaveModelAction, "SaveModel")
-        addCodeTabContainerKeyStroke(capS, SaveModelAsAction, "SaveModelAs")
+        setSeparateCodeTabBindings()
       }
     }
   }
@@ -463,6 +461,12 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
   def setAppCodeTabBindings(): Unit = {
     addAppFrameKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_W, withShift = true), SeparateCodeTabsAction, "popOutCodeTab")
+  }
+
+  def setSeparateCodeTabBindings(): Unit = {
+    addCodeTabContainerKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_W), RejoinCodeTabsAction, "popInCodeTab")
+    addCodeTabContainerKeyStroke(S, SaveModelAction, "SaveModel")
+    addCodeTabContainerKeyStroke(capS, SaveModelAsAction, "SaveModelAs")
   }
 
   // Get Named App Menu
