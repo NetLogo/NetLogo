@@ -465,6 +465,8 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
   def setSeparateCodeTabBindings(): Unit = {
     addCodeTabContainerKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_W), RejoinCodeTabsAction, "popInCodeTab")
+    val S = intKeyToMenuKeystroke(KeyEvent.VK_S)
+    val capS = intKeyToMenuKeystroke(KeyEvent.VK_S, withShift = true)
     addCodeTabContainerKeyStroke(S, SaveModelAction, "SaveModel")
     addCodeTabContainerKeyStroke(capS, SaveModelAsAction, "SaveModelAs")
   }
