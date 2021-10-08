@@ -48,8 +48,6 @@ class CodeTabsPanel(workspace:            GUIWorkspace,
   override def getMainCodeTab(): MainCodeTab = { mainCodeTab }
   def getCodeTabContainer = { codeTabContainer }
 
-  override def toFront(): Unit = { codeTabContainer.toFront() }
-
   currentTab = mainCodeTab
 
   // Because of the order in which elements of the NetLogo application come into being
@@ -59,8 +57,6 @@ class CodeTabsPanel(workspace:            GUIWorkspace,
     addTab(I18N.gui.get("tabs.code"), mainCodeTab)
     initManagerMonitor(manager, monitor)
 
-    // Currently Ctrl-CLOSE_BRACKET = Ctrl-] closes the separate code window. AAB 10/2020
-    tabManager.setSeparateCodeTabBindings()
     getAppFrame.addLinkComponent(getCodeTabContainer)
     Event.rehash()
   }
