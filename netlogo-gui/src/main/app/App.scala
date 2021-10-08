@@ -798,15 +798,6 @@ class App extends
     workspace.modelSaved(e.modelPath)
     errorDialogManager.setModelName(workspace.modelNameForDisplay)
     if (AbstractWorkspace.isApp) {
-      // Fix problem where saving the model with a hotkey in a detached code
-      // window left the main app window in front. AAB Oct 2021
-      if (!App.app.frame.isActive) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-          override def run(): Unit = {
-            tabManager.getCodeTabsOwner.toFront()
-          }
-        })
-      }
       frame.setTitle(modelTitle())
       tabManager.codeTabsPanelOption match {
         case None           =>
