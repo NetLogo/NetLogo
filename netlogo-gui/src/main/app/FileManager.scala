@@ -340,13 +340,10 @@ class FileManager(workspace: AbstractWorkspaceScala,
       var tempParent = parent
       if (!App.app.frame.isFocused) {
          tempParent = App.app.tabManager.getCodeTabsOwner()
-         println("Save model parent:" + tempParent)
-         println("Save model frame:" + Hierarchy.getFrame(tempParent))
        }
+
       ModalProgressTask.onUIThread(Hierarchy.getFrame(tempParent),
         I18N.gui.get("dialog.interface.saving.task"), saver)
-
-      //saver.run()
 
       if (! saver.result.isDefined)
         throw new UserCancelException()

@@ -236,36 +236,6 @@ class AppTabManager(val appTabsPanel:          Tabs,
     }
   }
 
-  object SaveModelAction extends AbstractAction("SaveModel") {
-    def actionPerformed(e: ActionEvent) {
-      App.app.fileManager.saveModel(false)
-      // Fix problem where saving the model with a hotkey in a detached code
-      // window left the main app window in front. AAB Oct 2021
-      // codeTabsPanelOption.foreach { codeTabsPanel =>
-      //   java.awt.EventQueue.invokeLater(new Runnable() {
-      //     override def run(): Unit = {
-      //       codeTabsPanel.codeTabContainer.toFront()
-      //     }
-      //   })
-      // }
-    }
-  }
-
-  object SaveModelAsAction extends AbstractAction("SaveModelAs") {
-    def actionPerformed(e: ActionEvent) {
-      App.app.fileManager.saveModel(true)
-      // Fix problem where saving the model with a hotkey in a detached code
-      // window left the main app window in front. AAB Oct 2021
-      // codeTabsPanelOption.foreach { codeTabsPanel =>
-      //   java.awt.EventQueue.invokeLater(new Runnable() {
-      //     override def run(): Unit = {
-      //       codeTabsPanel.codeTabContainer.toFront()
-      //     }
-      //   })
-      // }
-    }
-  }
-
   def switchToSpecifiedCodeWindowState(isSeparate: Boolean): Unit = {
     if (isSeparate) {
       switchToSeparateCodeWindow
@@ -343,6 +313,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
     codeTabsPanelOption match {
       case None                =>
       case Some(codeTabsPanel) => {
+        setSeparateCodeTabBindings()
         // Add keystrokes for actions from existing menus to the codeTabsPanel. AAB 10/2020
         copyMenuBarAccelerators()
 
@@ -352,15 +323,6 @@ class AppTabManager(val appTabsPanel:          Tabs,
         val capC = intKeyToMenuKeystroke(KeyEvent.VK_C, withShift = true)
         removeComponentKeyStroke(contentPane, slash)
         removeComponentKeyStroke(contentPane, capC)
-
-        // Remove the save model accelerators
-        // val S = intKeyToMenuKeystroke(KeyEvent.VK_S)
-        // val capS = intKeyToMenuKeystroke(KeyEvent.VK_S, withShift = true)
-        // removeComponentKeyStroke(contentPane, S)
-        // removeComponentKeyStroke(contentPane, capS)
-
-        // Add Key Tabs specific to Separate code tab window
-        setSeparateCodeTabBindings()
       }
     }
   }
@@ -465,10 +427,6 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
   def setSeparateCodeTabBindings(): Unit = {
     addCodeTabContainerKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_W), RejoinCodeTabsAction, "popInCodeTab")
-    // val S = intKeyToMenuKeystroke(KeyEvent.VK_S)
-    // val capS = intKeyToMenuKeystroke(KeyEvent.VK_S, withShift = true)
-    // addCodeTabContainerKeyStroke(S, SaveModelAction, "SaveModel")
-    // addCodeTabContainerKeyStroke(capS, SaveModelAsAction, "SaveModelAs")
   }
 
   // Get Named App Menu
@@ -889,13 +847,8 @@ class AppTabManager(val appTabsPanel:          Tabs,
   def __getSimpleName(c: Any) : String = {
     if (c == null){
       return "<null>"
-    } else if (!c.isInstanceOf[Option[Any]]){
-      return c.getClass.getSimpleName
     } else {
-      c match {
-        case None            => return "None"
-        case Some(theObject) => return "Some(" + __getSimpleName(theObject) + ")"
-      }
+      return c.getClass.getSimpleName
     }
   }
 
