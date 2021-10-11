@@ -337,13 +337,8 @@ class FileManager(workspace: AbstractWorkspaceScala,
     // if there's no thunk, the user canceled the save
     saveThunk.foreach { thunk =>
       val saver = new Saver(thunk)
-      var tempParent = parent
-      if (!App.app.frame.isFocused) {
-         tempParent = App.app.tabManager.getCodeTabsOwner()
-       }
 
-      ModalProgressTask.onUIThread(Hierarchy.getFrame(tempParent),
-        I18N.gui.get("dialog.interface.saving.task"), saver)
+      saver.run()
 
       if (! saver.result.isDefined)
         throw new UserCancelException()
