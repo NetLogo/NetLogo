@@ -338,8 +338,10 @@ class FileManager(workspace: AbstractWorkspaceScala,
     saveThunk.foreach { thunk =>
       val saver = new Saver(thunk)
 
-      ModalProgressTask.onUIThread(Hierarchy.getFrame(parent),
-        I18N.gui.get("dialog.interface.saving.task"), saver)
+      // ModalProgressTask.onUIThread(Hierarchy.getFrame(parent),
+      //   I18N.gui.get("dialog.interface.saving.task"), saver)
+
+      saver.run()
 
       if (! saver.result.isDefined)
         throw new UserCancelException()
