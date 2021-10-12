@@ -337,8 +337,10 @@ class FileManager(workspace: AbstractWorkspaceScala,
     // if there's no thunk, the user canceled the save
     saveThunk.foreach { thunk =>
       val saver = new Saver(thunk)
+      val focusOwner = java.awt.KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner()
+      val tempParent = if (focusOwner == null) parent else focusOwner
 
-      ModalProgressTask.onUIThread(Hierarchy.getFrame(parent),
+      ModalProgressTask.onUIThread(Hierarchy.getFrame(tempParent),
         I18N.gui.get("dialog.interface.saving.task"), saver)
 
       if (! saver.result.isDefined)
