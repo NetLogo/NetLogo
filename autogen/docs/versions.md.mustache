@@ -23,7 +23,7 @@ For help running models made in old versions, see the
 ### Documentation Updates
 
 - Add a note about transparent colors to the `color` dictionary entry
-- Updated link and inspect related documentation
+- Documentation for `inspect` and `stop-inspecting` now includes links
 - Make sure https links in standalone dictionary entries work correctly
 - Make the BehaviorSpace command-line examples use real models from the library with experiments that can be run without modification
 - Link to the new Beginner's Interactive NetLogo Dictionary site from the help menu (BIND)
@@ -32,7 +32,7 @@ For help running models made in old versions, see the
 
 - Shape changes in 3D mode will take effect without a restart
 - Runtime exceptions with wrong argument types properly generate stack traces
-- `sort-on` generates a sensible error when used with different-kind agents
+- When sort-on receives input values that are not all numbers, all strings, or all agents of the same type, a user-friendly error message is generated
 - Breeded links are properly checked for equality
 - `exp` now errors when it generates an invalid, out-of-range number result
 - A proper "file not found" error will be given when a model in the recent files list was deleted or moved and cannot be located
