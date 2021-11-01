@@ -139,7 +139,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     noopt  := { System.setProperty("org.nlogo.noOptimizer", "true") },
     libraryDependencies ++= Seq(
       "org.ow2.asm" % "asm-all" % "5.0.4",
-      "org.picocontainer" % "picocontainer" % "2.13.6",
+      "org.picocontainer" % "picocontainer" % "2.15",
       "log4j" % "log4j" % "1.2.16",
       "javax.media" % "jmf" % "2.1.1e",
       "commons-codec" % "commons-codec" % "1.10",
