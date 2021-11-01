@@ -30,7 +30,7 @@ libraryDependencies ++= Seq(
   "https://s3.amazonaws.com/ccl-artifacts/classycle-1.4.2.jar"
 , "com.github.spullara.mustache.java" % "scala-extensions-2.10" % "0.9.5"
 , "org.jsoup"                         % "jsoup"                 % "1.14.3"
-, "org.apache.commons"                % "commons-lang3"         % "3.1"
+, "org.apache.commons"                % "commons-lang3"         % "3.12.0"
 , "commons-io"                        % "commons-io"            % "2.6"
 // prevents noise from bintray stuff
 , "org.slf4j"                         % "slf4j-nop"             % "1.6.6"
