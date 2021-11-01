@@ -138,7 +138,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     nogen  := { System.setProperty("org.nlogo.noGenerator", "true") },
     noopt  := { System.setProperty("org.nlogo.noOptimizer", "true") },
     libraryDependencies ++= Seq(
-      "org.ow2.asm" % "asm-all" % "5.0.4",
+      "org.ow2.asm" % "asm-all" % "5.2",
       "org.picocontainer" % "picocontainer" % "2.15",
       "log4j" % "log4j" % "1.2.16",
       "javax.media" % "jmf" % "2.1.1e",
@@ -207,7 +207,7 @@ lazy val headless = (project in file ("netlogo-headless")).
     mainClass in Compile         := Some("org.nlogo.headless.Main"),
     nogen                        := { System.setProperty("org.nlogo.noGenerator", "true") },
     libraryDependencies          ++= Seq(
-      "org.ow2.asm" % "asm-all" % "5.0.4",
+      "org.ow2.asm" % "asm-all" % "5.2",
       "org.parboiled" %% "parboiled" % "2.1.8",
       "commons-codec" % "commons-codec" % "1.10",
       "com.typesafe" % "config" % "1.3.1",
