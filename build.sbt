@@ -56,7 +56,7 @@ lazy val scalatestSettings = Seq(
   logBuffered in testOnly in Test := false,
   libraryDependencies ++= Seq(
     "org.scalatest"  %% "scalatest"  % "3.0.1"  % "test",
-    "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
+    "org.scalacheck" %% "scalacheck" % "1.13.5" % "test"
   )
 )
 
@@ -308,7 +308,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
           "org.scala-lang.modules"   %%% "scala-parser-combinators" % "1.0.5",
           "org.scalatest"  %%% "scalatest" % "3.0.0" % "test",
           // scalatest doesn't yet play nice with scalacheck 1.13.0
-          "org.scalacheck" %%% "scalacheck" % "1.13.4" % "test",
+          "org.scalacheck" %%% "scalacheck" % "1.13.5" % "test",
       )}).
   jvmConfigure(_.dependsOn(sharedResources)).
   jvmSettings(jvmSettings: _*).
