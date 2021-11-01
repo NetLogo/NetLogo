@@ -33,7 +33,7 @@ libraryDependencies ++= Seq(
 , "org.apache.commons"                % "commons-lang3"         % "3.1"
 , "commons-io"                        % "commons-io"            % "2.6"
 // prevents noise from bintray stuff
-, "org.slf4j"                         % "slf4j-nop"             % "1.6.0"
+, "org.slf4j"                         % "slf4j-nop"             % "1.6.6"
 )
 
 {
