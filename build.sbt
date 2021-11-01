@@ -155,7 +155,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "com.googlecode.json-simple" % "json-simple" % "1.1.1",
       "com.fifesoft" % "rsyntaxtextarea" % "2.6.0",
       "com.typesafe" % "config" % "1.3.1",
-      "net.lingala.zip4j" % "zip4j" % "1.3.2"
+      "net.lingala.zip4j" % "zip4j" % "1.3.3"
     ),
     all := {
       IO.copyFile(
@@ -211,7 +211,7 @@ lazy val headless = (project in file ("netlogo-headless")).
       "org.parboiled" %% "parboiled" % "2.1.8",
       "commons-codec" % "commons-codec" % "1.10",
       "com.typesafe" % "config" % "1.3.1",
-      "net.lingala.zip4j" % "zip4j" % "1.3.2"
+      "net.lingala.zip4j" % "zip4j" % "1.3.3"
     ),
     (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
     resourceDirectory in Compile := baseDirectory.value / "resources" / "main",
