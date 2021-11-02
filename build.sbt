@@ -305,7 +305,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
       libraryDependencies ++= {
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.toScalaJSGroupID
         Seq(
-          "org.scala-lang.modules"   %%% "scala-parser-combinators" % "1.0.7",
+          "org.scala-lang.modules"   %%% "scala-parser-combinators" % "1.1.2",
           "org.scalatest"  %%% "scalatest" % "3.0.0" % "test",
           // scalatest doesn't yet play nice with scalacheck 1.13.0
           "org.scalacheck" %%% "scalacheck" % "1.13.5" % "test",
@@ -316,7 +316,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
   jvmSettings(
       mappings in (Compile, packageBin) ++= mappings.in(sharedResources, Compile, packageBin).value,
       mappings in (Compile, packageSrc) ++= mappings.in(sharedResources, Compile, packageSrc).value,
-      libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.7"
+      libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
     )
 
 lazy val parserJVM = parser.jvm
