@@ -154,7 +154,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.apache.httpcomponents" % "httpmime" % "4.2",
       "com.googlecode.json-simple" % "json-simple" % "1.1.1",
       "com.fifesoft" % "rsyntaxtextarea" % "2.6.1",
-      "com.typesafe" % "config" % "1.3.1",
+      "com.typesafe" % "config" % "1.3.4",
       "net.lingala.zip4j" % "zip4j" % "1.3.3"
     ),
     all := {
@@ -210,7 +210,7 @@ lazy val headless = (project in file ("netlogo-headless")).
       "org.ow2.asm" % "asm-all" % "5.2",
       "org.parboiled" %% "parboiled" % "2.1.8",
       "commons-codec" % "commons-codec" % "1.15",
-      "com.typesafe" % "config" % "1.3.1",
+      "com.typesafe" % "config" % "1.3.4",
       "net.lingala.zip4j" % "zip4j" % "1.3.3"
     ),
     (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
