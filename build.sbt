@@ -143,7 +143,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "log4j" % "log4j" % "1.2.17",
       "javax.media" % "jmf" % "2.1.1e",
       "commons-codec" % "commons-codec" % "1.15",
-      "org.parboiled" %% "parboiled" % "2.1.8",
+      "org.parboiled" %% "parboiled" % "2.3.0",
       "org.jogamp.jogl" % "jogl-all" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0-rc-20210111/jar/jogl-all.jar",
       "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0-rc-20210111/jar/gluegen-rt.jar",
       "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
@@ -208,7 +208,7 @@ lazy val headless = (project in file ("netlogo-headless")).
     nogen                        := { System.setProperty("org.nlogo.noGenerator", "true") },
     libraryDependencies          ++= Seq(
       "org.ow2.asm" % "asm-all" % "5.2",
-      "org.parboiled" %% "parboiled" % "2.1.8",
+      "org.parboiled" %% "parboiled" % "2.3.0",
       "commons-codec" % "commons-codec" % "1.15",
       "com.typesafe" % "config" % "1.3.4",
       "net.lingala.zip4j" % "zip4j" % "1.3.3"
