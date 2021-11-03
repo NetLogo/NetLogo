@@ -103,15 +103,30 @@ object ModelsLibrary {
       val directoryRoot =
         if (!Version.is3D || !exclusive) new File(modelsRoot, "").getCanonicalFile
         else new File(modelsRoot, "3D").getCanonicalFile
+
+      def getExtensionExamples(): Option[Node] = {
+        def unverifyIfTree(c: Node): Node = c match {
+          case Tree(name, path, children) => Tree(name = s"${name} (unverified)", path = path, children = children)
+          case n                          => n
+        }
+
+        val extensionsRoot = new File(FileIO.perUserDir("extensions", true), "").getCanonicalFile
+        val extensionsNode = scanDirectory(extensionsRoot.toPath, exclusive, Some("Extension Manager Samples"))
+
+        extensionsNode match {
+          case Some(Tree(name, path, children)) =>
+            val unverifiedChildren = children.map(unverifyIfTree)
+            Some(Tree(name = name, path = path, children = unverifiedChildren))
+
+          case en => en
+        }
+      }
+
       rootNode = scanDirectory(directoryRoot.toPath, exclusive) match {
-        case Some(rn: Tree) if useExtensionExamples => {
-          val extensionsRoot = new File(FileIO.perUserDir("extensions", true), "").getCanonicalFile
-          val extensionsNode = scanDirectory(extensionsRoot.toPath, exclusive, Some("Extension Manager Samples"))
-          val children = extensionsNode match {
-            case Some(en) => rn.children ++ Seq(en)
-            case _        => rn.children
-          }
-          Some(Tree(name = rn.name, path = "", children = children)(new TopLevelOrdering(exclusive)))
+        case Some(Tree(name, _, children)) if useExtensionExamples => {
+          val extensionsNode = getExtensionExamples()
+          val allChildren    = children ++ extensionsNode.map((en) => Seq(en)).getOrElse(Seq())
+          Some(Tree(name = name, path = "", children = allChildren)(new TopLevelOrdering(exclusive)))
         }
         case rn => rn
       }
