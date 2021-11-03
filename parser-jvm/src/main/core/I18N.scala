@@ -104,7 +104,7 @@ object I18N {
   }
 
   lazy val errors = new BundleKind("Errors")
-
+  lazy val shared = new BundleKind("Shared_Strings")
   lazy val gui = new BundleKind("GUI_Strings")
 
   // for easy use from Java

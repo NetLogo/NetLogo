@@ -106,8 +106,8 @@ object ModelsLibrary {
         else new File(modelsRoot, "3D").getCanonicalFile
 
       def getExtensionExamples(): Option[Node] = {
-        val unverified              = I18N.gui.get("modelsLibrary.unverified")
-        val extensionManagerSamples = I18N.gui.get("modelsLibrary.extensionManagerSamples")
+        val unverified              = I18N.shared.get("modelsLibrary.unverified")
+        val extensionManagerSamples = I18N.shared.get("modelsLibrary.extensionManagerSamples")
 
         def unverifyIfTree(c: Node): Node = c match {
           case Tree(name, path, children) => Tree(name = s"${name} $unverified", path = path, children = children)
