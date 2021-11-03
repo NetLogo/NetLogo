@@ -2,6 +2,8 @@
 
 package org.nlogo.nvm
 
+import java.util.Set
+
 abstract class Tracer {
 
   // control
@@ -16,5 +18,7 @@ abstract class Tracer {
   def calls(name: String): Long
   def exclusiveTime(name: String): Long
   def inclusiveTime(name: String): Long
+
+  def procedureNames(): Set[String]
 
 }
