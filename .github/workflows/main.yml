@@ -29,6 +29,12 @@ jobs:
         with:
           python-version: '3.x'
 
+      - uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: ${{ runner.os }}-pip-
+
       # The `update-alternatives` step is not needed to build and test but it avoids some superfluous error messages in the logs.
       # The Python stuff is just for testing the Python extension, it's not part of NetLogo's build process.
       - name: Install Dependencies
