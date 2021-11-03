@@ -608,7 +608,7 @@ modelsLibrary.community = Go to User Community Models web page
 modelsLibrary.open = Open
 modelsLibrary.loading = Loading Models Library…
 modelsLibrary.unverified = (unverified)
-
+modelsLibrary.extensionManagerSamples = Extension Manager Samples
 
 # CONTROL CENTER
 menu.tools.hubnetControlCenter.removedViaControlCenter = Removed via Control Center.

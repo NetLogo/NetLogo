@@ -7,6 +7,7 @@ import java.nio.file.{ Files, Path }
 import javax.swing.tree.DefaultMutableTreeNode
 
 import org.nlogo.api.{ FileIO, Version }
+import org.nlogo.core.I18N
 
 import scala.annotation.tailrec
 import scala.math.Ordering
@@ -105,13 +106,16 @@ object ModelsLibrary {
         else new File(modelsRoot, "3D").getCanonicalFile
 
       def getExtensionExamples(): Option[Node] = {
+        val unverified              = I18N.gui.get("modelsLibrary.unverified")
+        val extensionManagerSamples = I18N.gui.get("modelsLibrary.extensionManagerSamples")
+
         def unverifyIfTree(c: Node): Node = c match {
-          case Tree(name, path, children) => Tree(name = s"${name} (unverified)", path = path, children = children)
+          case Tree(name, path, children) => Tree(name = s"${name} $unverified", path = path, children = children)
           case n                          => n
         }
 
         val extensionsRoot = new File(FileIO.perUserDir("extensions", true), "").getCanonicalFile
-        val extensionsNode = scanDirectory(extensionsRoot.toPath, exclusive, Some("Extension Manager Samples"))
+        val extensionsNode = scanDirectory(extensionsRoot.toPath, exclusive, Some(extensionManagerSamples))
 
         extensionsNode match {
           case Some(Tree(name, path, children)) =>
