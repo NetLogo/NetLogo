@@ -27,14 +27,14 @@ val classpath =
       home + "/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.12.10.jar",
       home + "/.ivy2/cache/org.typelevel/cats-core_2.12/jars/cats-core_2.12-1.0.0-MF.jar",
       home + "/.ivy2/local/org.nlogo/xml-lib_2.12/0.0.1/jars/xml-lib_2.12.jar",
-      home + "/.ivy2/cache/com.typesafe/config/bundles/config-1.3.1.jar",
-      home + "/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.12/bundles/scala-parser-combinators_2.12-1.0.7.jar",
+      home + "/.ivy2/cache/com.typesafe/config/bundles/config-1.3.4.jar",
+      home + "/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.12/bundles/scala-parser-combinators_2.12-1.1.2.jar",
       home + "/.ivy2/cache/org.scala-lang.modules/scala-xml_2.12/bundles/scala-xml_2.12-1.0.6.jar",
       home + "/.ivy2/cache/org.typelevel/cats-core_2.12/jars/cats-core_2.12-1.0.0-MF.jar",
       home + "/.ivy2/cache/org.ow2.asm/asm-all/jars/asm-all-5.2.jar",
-      home + "/.ivy2/cache/log4j/log4j/jars/log4j-1.2.16.jar",
+      home + "/.ivy2/cache/log4j/log4j/jars/log4j-1.2.17.jar",
       home + "/.ivy2/cache/commons-codec/commons-codec/jars/commons-codec-1.15.jar",
-      home + "/.ivy2/cache/org.parboiled/parboiled_2.12/jars/parboiled_2.12-2.1.8.jar",
+      home + "/.ivy2/cache/org.parboiled/parboiled_2.12/jars/parboiled_2.12-2.3.0.jar",
       home + "/.ivy2/cache/org.picocontainer/picocontainer/jars/picocontainer-2.15.jar")
 
     .mkString(":")
