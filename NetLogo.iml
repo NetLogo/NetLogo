@@ -24,7 +24,7 @@
     <orderEntry type="library" name="org.picocontainer:picocontainer:2.13.6" level="project" />
     <orderEntry type="library" name="log4j:log4j:1.2.16" level="project" />
     <orderEntry type="library" name="javax.media:jmf:2.1.1e" level="project" />
-    <orderEntry type="library" name="org.pegdown:pegdown:1.6.6" level="project" />
+    <orderEntry type="library" name="org.pegdown:pegdown:1.6.0" level="project" />
     <orderEntry type="library" name="org.jogamp.jogl:jogl-all:2.3.2" level="project" />
     <orderEntry type="library" name="org.jogamp.gluegen:gluegen-rt:2.3.2" level="project" />
     <orderEntry type="library" name="org.apache.httpcomponents:httpclient:4.2" level="project" />
