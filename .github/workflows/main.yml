@@ -26,7 +26,7 @@ jobs:
           java-version: liberica@1.8=tgz+${{ env.LIBERICA_URL }}
 
       - name: Clone Git submodules
-        run: git submodule update --init --depth 1
+        run: git submodule update --init
 
       - name: Build NetLogo
         run: |
