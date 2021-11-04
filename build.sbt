@@ -55,7 +55,7 @@ lazy val scalatestSettings = Seq(
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oS"),
   logBuffered in testOnly in Test := false,
   libraryDependencies ++= Seq(
-    "org.scalatest"  %% "scalatest"  % "3.0.1"  % "test",
+    "org.scalatest"  %% "scalatest"  % "3.0.5"  % "test",
     "org.scalacheck" %% "scalacheck" % "1.13.5" % "test"
   )
 )
@@ -79,7 +79,7 @@ lazy val mockDependencies = Seq(
     "org.jmock" % "jmock-legacy" % "2.8.1" % "test",
     "org.jmock" % "jmock-junit4" % "2.8.1" % "test",
     "org.reflections" % "reflections" % "0.9.10" % "test",
-    "org.slf4j" % "slf4j-nop" % "1.7.12" % "test"
+    "org.slf4j" % "slf4j-nop" % "1.7.32" % "test"
   )
 )
 
@@ -140,10 +140,10 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     libraryDependencies ++= Seq(
       "org.ow2.asm" % "asm-all" % "5.2",
       "org.picocontainer" % "picocontainer" % "2.15",
-      "log4j" % "log4j" % "1.2.16",
+      "log4j" % "log4j" % "1.2.17",
       "javax.media" % "jmf" % "2.1.1e",
       "commons-codec" % "commons-codec" % "1.15",
-      "org.parboiled" %% "parboiled" % "2.1.8",
+      "org.parboiled" %% "parboiled" % "2.3.0",
       "org.jogamp.jogl" % "jogl-all" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0-rc-20210111/jar/jogl-all.jar",
       "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0-rc-20210111/jar/gluegen-rt.jar",
       "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
@@ -153,8 +153,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.apache.httpcomponents" % "httpclient" % "4.2",
       "org.apache.httpcomponents" % "httpmime" % "4.2",
       "com.googlecode.json-simple" % "json-simple" % "1.1.1",
-      "com.fifesoft" % "rsyntaxtextarea" % "2.6.1",
-      "com.typesafe" % "config" % "1.3.1",
+      "com.fifesoft" % "rsyntaxtextarea" % "3.1.3",
+      "com.typesafe" % "config" % "1.3.4",
       "net.lingala.zip4j" % "zip4j" % "1.3.3"
     ),
     all := {
@@ -208,9 +208,9 @@ lazy val headless = (project in file ("netlogo-headless")).
     nogen                        := { System.setProperty("org.nlogo.noGenerator", "true") },
     libraryDependencies          ++= Seq(
       "org.ow2.asm" % "asm-all" % "5.2",
-      "org.parboiled" %% "parboiled" % "2.1.8",
+      "org.parboiled" %% "parboiled" % "2.3.0",
       "commons-codec" % "commons-codec" % "1.15",
-      "com.typesafe" % "config" % "1.3.1",
+      "com.typesafe" % "config" % "1.3.4",
       "net.lingala.zip4j" % "zip4j" % "1.3.3"
     ),
     (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
@@ -305,8 +305,8 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
       libraryDependencies ++= {
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.toScalaJSGroupID
         Seq(
-          "org.scala-lang.modules"   %%% "scala-parser-combinators" % "1.0.7",
-          "org.scalatest"  %%% "scalatest" % "3.0.0" % "test",
+          "org.scala-lang.modules"   %%% "scala-parser-combinators" % "1.1.2",
+          "org.scalatest"  %%% "scalatest" % "3.0.5" % "test",
           // scalatest doesn't yet play nice with scalacheck 1.13.0
           "org.scalacheck" %%% "scalacheck" % "1.13.5" % "test",
       )}).
@@ -316,7 +316,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
   jvmSettings(
       mappings in (Compile, packageBin) ++= mappings.in(sharedResources, Compile, packageBin).value,
       mappings in (Compile, packageSrc) ++= mappings.in(sharedResources, Compile, packageSrc).value,
-      libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.7"
+      libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
     )
 
 lazy val parserJVM = parser.jvm

@@ -17,7 +17,7 @@ resolvers ++= Seq(
 )
 
 addSbtPlugin("org.scalastyle"     %% "scalastyle-sbt-plugin"           % "1.0.0")
-addSbtPlugin("org.portable-scala" %  "sbt-scalajs-crossproject"        % "0.6.1")
+addSbtPlugin("org.portable-scala" %  "sbt-scalajs-crossproject"        % "1.1.0")
 addSbtPlugin("org.scala-js"       %  "sbt-scalajs"                     % "0.6.33")
 addSbtPlugin("org.nlogo"          %  "publish-versioned-plugin"        % "3.0.0")
 addSbtPlugin("org.nlogo"          %  "netlogo-extension-documentation" % "0.8.3")
@@ -33,7 +33,7 @@ libraryDependencies ++= Seq(
 , "org.apache.commons"                % "commons-lang3"         % "3.12.0"
 , "commons-io"                        % "commons-io"            % "2.11.0"
 // prevents noise from bintray stuff
-, "org.slf4j"                         % "slf4j-nop"             % "1.6.6"
+, "org.slf4j"                         % "slf4j-nop"             % "1.7.32"
 )
 
 {
