@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.scalatest.PropSpec
-import org.scalatest.prop.PropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import org.scalacheck.{ Arbitrary, Gen }
 
 import org.nlogo.api.{ LogoException, MultiErrorHandler, ReporterLogoThunk }
@@ -11,7 +11,7 @@ import org.nlogo.agent.{ ConstantSliderConstraint, DynamicSliderConstraint }
 
 import scala.util.{ Failure, Success, Try }
 
-class SliderDataTests extends PropSpec with PropertyChecks {
+class SliderDataTests extends PropSpec with ScalaCheckPropertyChecks {
   val dummyErrorHandler = new MultiErrorHandler {}
 
   implicit def arbSlider: Arbitrary[SliderData] = Arbitrary(genSlider)

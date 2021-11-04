@@ -3,7 +3,7 @@
 package org.nlogo.util
 
 import org.scalatest.{ FunSuite, PropSpec }
-import org.scalatest.prop.PropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import HexString._
 
 class HexStringTests extends FunSuite {
@@ -21,7 +21,7 @@ class HexStringTests extends FunSuite {
 
 // now let's throw ScalaCheck at it.
 
-class HexStringTests2 extends PropSpec with PropertyChecks {
+class HexStringTests2 extends PropSpec with ScalaCheckPropertyChecks {
 
 
   property("8 characters per Int") {
