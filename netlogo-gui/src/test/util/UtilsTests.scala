@@ -3,7 +3,7 @@
 package org.nlogo.util
 
 import org.scalatest.{ FunSuite, PropSpec }
-import org.scalatest.prop.PropertyChecks
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
 // These are actually tests for the Utils class.
 // Not to be confused with utilities for tests (TestUtils)
@@ -15,7 +15,7 @@ class UtilsTests extends FunSuite {
   }
 }
 
-class UtilsTests2 extends PropSpec with PropertyChecks {
+class UtilsTests2 extends PropSpec with ScalaCheckPropertyChecks {
   property("unescape is inverse of escape") {
     forAll((ns: String) =>
       assertResult(ns)(

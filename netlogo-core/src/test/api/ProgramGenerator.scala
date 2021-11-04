@@ -6,9 +6,9 @@ import
   org.scalacheck.{ Gen, Shrink }, Gen.{ listOf, oneOf }
 
 import
-  org.scalatest.prop.GeneratorDrivenPropertyChecks
+  org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-trait ProgramGenerator extends GeneratorDrivenPropertyChecks {
+trait ProgramGenerator extends ScalaCheckDrivenPropertyChecks {
   val breedTypes = Seq("breed", "directed-link-breed", "undirected-link-breed")
 
   val procedureTypes = Seq("to", "to-report")

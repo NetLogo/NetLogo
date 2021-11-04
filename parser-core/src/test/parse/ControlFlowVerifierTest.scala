@@ -12,10 +12,12 @@ import
   org.scalacheck.Gen
 
 import
-  org.scalatest.{ FunSuite, prop },
-    prop.GeneratorDrivenPropertyChecks
+  org.scalatest.FunSuite
 
-class ControlFlowVerifierTest extends FunSuite with GeneratorDrivenPropertyChecks {
+import
+  org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
+
+class ControlFlowVerifierTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
 
   test("no stop in command marks procedure as local-exit-only") {
     forAll(generateProcedure(genNestingPrim, genericPrim)) { pd =>
