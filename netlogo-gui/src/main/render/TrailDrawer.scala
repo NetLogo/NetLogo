@@ -153,8 +153,9 @@ class TrailDrawer(world: World, turtleDrawer: TurtleDrawer, linkDrawer: LinkDraw
   // ev 7/31/06
   def getAndCreateDrawing(dirty: Boolean): BufferedImage = {
 
-    if (drawingImage == null)
+    if (drawingImage == null) {
       setUpDrawingImage()
+    }
 
     if (dirty) {
       drawingBlank = false
@@ -175,25 +176,24 @@ class TrailDrawer(world: World, turtleDrawer: TurtleDrawer, linkDrawer: LinkDraw
   def drawLine( x1: Double, y1: Double, x2: Double, y2: Double
               , penColor: AnyRef, penSize: Double, penMode: String): Unit = {
 
-    if (drawingImage == null)
+    if (drawingImage == null) {
       setUpDrawingImage()
-    else {
-
-      val tg = new Graphics2DWrapper(drawingImage.getGraphics.asInstanceOf[Graphics2D])
-      tg.setPenWidth(penSize)
-
-      if (penMode.equals("erase")) {
-        tg.setComposite(AlphaComposite.Clear)
-        drawWrappedLine(tg, x1, y1, x2, y2, penSize)
-        tg.setComposite(AlphaComposite.SrcOver)
-      } else {
-        tg.antiAliasing(true)
-        tg.setColor(Color.getColor(penColor))
-        drawWrappedLine(tg, x1, y1, x2, y2, penSize)
-        tg.antiAliasing(false)
-      }
-
     }
+
+    val tg = new Graphics2DWrapper(drawingImage.getGraphics.asInstanceOf[Graphics2D])
+    tg.setPenWidth(penSize)
+
+    if (penMode.equals("erase")) {
+      tg.setComposite(AlphaComposite.Clear)
+      drawWrappedLine(tg, x1, y1, x2, y2, penSize)
+      tg.setComposite(AlphaComposite.SrcOver)
+    } else {
+      tg.antiAliasing(true)
+      tg.setColor(Color.getColor(penColor))
+      drawWrappedLine(tg, x1, y1, x2, y2, penSize)
+      tg.antiAliasing(false)
+    }
+
   }
 
   private def setUpDrawingImage(): Unit = {
