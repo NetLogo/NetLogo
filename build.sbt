@@ -56,7 +56,7 @@ lazy val scalatestSettings = Seq(
   logBuffered in testOnly in Test := false,
   libraryDependencies ++= Seq(
     "org.scalatest"  %% "scalatest"  % "3.0.5"  % "test",
-    "org.scalacheck" %% "scalacheck" % "1.13.5" % "test"
+    "org.scalacheck" %% "scalacheck" % "1.15.1" % "test"
   )
 )
 
@@ -154,7 +154,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.apache.httpcomponents" % "httpmime" % "4.2",
       "com.googlecode.json-simple" % "json-simple" % "1.1.1",
       "com.fifesoft" % "rsyntaxtextarea" % "3.1.3",
-      "com.typesafe" % "config" % "1.3.4",
+      "com.typesafe" % "config" % "1.4.1",
       "net.lingala.zip4j" % "zip4j" % "1.3.3"
     ),
     all := {
@@ -210,7 +210,7 @@ lazy val headless = (project in file ("netlogo-headless")).
       "org.ow2.asm" % "asm-all" % "5.2",
       "org.parboiled" %% "parboiled" % "2.3.0",
       "commons-codec" % "commons-codec" % "1.15",
-      "com.typesafe" % "config" % "1.3.4",
+      "com.typesafe" % "config" % "1.4.1",
       "net.lingala.zip4j" % "zip4j" % "1.3.3"
     ),
     (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
@@ -308,7 +308,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
           "org.scala-lang.modules"   %%% "scala-parser-combinators" % "1.1.2",
           "org.scalatest"  %%% "scalatest" % "3.0.5" % "test",
           // scalatest doesn't yet play nice with scalacheck 1.13.0
-          "org.scalacheck" %%% "scalacheck" % "1.13.5" % "test",
+          "org.scalacheck" %%% "scalacheck" % "1.15.1" % "test",
       )}).
   jvmConfigure(_.dependsOn(sharedResources)).
   jvmSettings(jvmSettings: _*).

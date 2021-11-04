@@ -27,7 +27,7 @@ val classpath =
       home + "/.ivy2/cache/log4j/log4j/jars/log4j-1.2.17.jar",
       home + "/.ivy2/cache/commons-codec/commons-codec/jars/commons-codec-1.15.jar",
       home + "/.ivy2/cache/org.parboiled/parboiled_2.12/jars/parboiled_2.12-2.3.0.jar",
-      home + "/.ivy2/cache/com.typesafe/config/bundles/config-1.3.4.jar",
+      home + "/.ivy2/cache/com.typesafe/config/bundles/config-1.4.1.jar",
       home + "/.ivy2/cache/org.scala-lang.modules/scala-parser-combinators_2.12/bundles/scala-parser-combinators_2.12-1.1.2.jar")
     .mkString(":")
 
