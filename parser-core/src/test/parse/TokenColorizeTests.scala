@@ -2,10 +2,10 @@
 
 package org.nlogo.parse
 
-import org.scalatest.FunSuite
 import org.nlogo.core
+import org.scalatest.funsuite.AnyFunSuite
 
-class TokenColorizeTests extends FunSuite {
+class TokenColorizeTests extends AnyFunSuite {
   import FrontEndTests.extensionManager
 
   def colorTokenize(source: String): Seq[core.Token] = {

@@ -2,9 +2,9 @@
 
 package org.nlogo.headless.test
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ParserTests extends FunSuite {
+class ParserTests extends AnyFunSuite {
 
   // simple regex tests
   test(" command regex") {

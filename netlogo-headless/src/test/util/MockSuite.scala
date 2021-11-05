@@ -2,7 +2,7 @@
 
 package org.nlogo.util
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import scala.util.DynamicVariable
 import org.hamcrest.{Description, BaseMatcher, Matcher}
 import reflect.ClassTag
@@ -63,7 +63,7 @@ import
 //    [info] what happened before this: nothing!
 // - ST 8/16/11
 
-trait MockSuite extends FunSuite {
+trait MockSuite extends AnyFunSuite {
 
   // this is the main test method provided by this trait.
   def mockTest(name: String)(f: => Unit) {

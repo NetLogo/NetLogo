@@ -3,7 +3,7 @@
 package org.nlogo.compile
 package middle
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.api.NetLogoLegacyDialect
 import org.nlogo.agent.{ Link, Patch, Turtle }
 import org.nlogo.core.{CompilerException, Let, Program, SourceLocation}
@@ -11,7 +11,7 @@ import org.nlogo.nvm.{ Command, Reporter }
 import org.nlogo.prim._
 import org.nlogo.compile.api.{ ReporterApp, Statement }
 
-class SetVisitorTests extends FunSuite {
+class SetVisitorTests extends AnyFunSuite {
   val emptyLocation = SourceLocation(0, 0, "")
   def tester(r: Reporter, spec: String, setterClass: Class[_ <: Command]) {
     val args = Seq(new ReporterApp(null, r, emptyLocation),

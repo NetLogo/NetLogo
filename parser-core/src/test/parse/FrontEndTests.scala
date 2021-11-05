@@ -2,15 +2,15 @@
 
 package org.nlogo.parse
 
-import org.scalatest.FunSuite
 import org.nlogo.core
 import org.nlogo.core.{CompilerException}
 import org.nlogo.core.SourceLocation
+import org.scalatest.funsuite.AnyFunSuite
 
 // This is where ExpressionParser gets most of its testing.  (It's a lot easier to test it as part
 // of the overall front end than it would be to test in strict isolation.)
 
-class FrontEndTests extends FunSuite with BaseParserTest {
+class FrontEndTests extends AnyFunSuite with BaseParserTest {
   test("DoParseSimpleCommand") {
     testParse("__ignore round 0.5", "_ignore()[_round()[_const(0.5)[]]]")
   }

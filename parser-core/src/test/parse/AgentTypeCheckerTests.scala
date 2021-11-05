@@ -3,9 +3,9 @@
 package org.nlogo.parse
 
 import org.nlogo.core.{CommandBlock, CompilerException, ProcedureDefinition, ReporterApp}
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class AgentTypeCheckerTests extends FunSuite {
+class AgentTypeCheckerTests extends AnyFunSuite {
 
   /// first some helpers
   def compile(source: String): Seq[ProcedureDefinition] = {

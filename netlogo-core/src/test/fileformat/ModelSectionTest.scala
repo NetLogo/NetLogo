@@ -2,7 +2,7 @@
 
 package org.nlogo.fileformat
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import org.nlogo.core.Model
 
@@ -11,7 +11,7 @@ import org.nlogo.api.{ ComponentSerialization, ModelFormat }
 import scala.util.{ Failure, Success }
 import scala.reflect.ClassTag
 
-trait ModelSectionTest[A, B <: ModelFormat[A, B], C] extends FunSuite {
+trait ModelSectionTest[A, B <: ModelFormat[A, B], C] extends AnyFunSuite {
   def subject: ComponentSerialization[A, B]
 
   def modelComponent(model: Model): C

@@ -3,9 +3,9 @@
 package org.nlogo.headless
 
 import org.nlogo.api.{ NetLogoLegacyDialect, NetLogoThreeDDialect }
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class TestAllTokens extends FunSuite {
+class TestAllTokens extends AnyFunSuite {
   val tokenMappers = Seq(
     NetLogoLegacyDialect.tokenMapper,
     NetLogoThreeDDialect.tokenMapper)

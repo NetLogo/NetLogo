@@ -2,10 +2,10 @@
 
 package org.nlogo.parse
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.util.SlowTestTag
 
-class SlowColorizerTests extends FunSuite  {
+class SlowColorizerTests extends AnyFunSuite  {
 
   // very long Code tabs shouldn't blow the stack.
   // slow, hence SlowTest

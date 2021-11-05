@@ -4,9 +4,9 @@ package org.nlogo.parse
 
 import org.nlogo.core
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class SourcePositionTests extends FunSuite with BaseParserTest {
+class SourcePositionTests extends AnyFunSuite with BaseParserTest {
   /// tests using testStartAndEnd
   test("StartAndEndPositions0") {
     testStartAndEnd("ca",

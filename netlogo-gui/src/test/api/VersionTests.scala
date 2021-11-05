@@ -2,10 +2,10 @@
 
 package org.nlogo.api
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import Version._
 
-class VersionTests extends FunSuite {
+class VersionTests extends AnyFunSuite {
   /// update this section every time the version changes -- ev 11/7/07
   if (!is3D) test("currentVersion2D") {
     // these differ from the current version in suffix only

@@ -3,9 +3,9 @@
 package org.nlogo.api
 
 import org.nlogo.core.LogoList
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ColorTests extends FunSuite {
+class ColorTests extends AnyFunSuite {
   test("modulate") {
     assertResult(0)(Color.modulateDouble(0))
     assertResult(0)(Color.modulateDouble(140))

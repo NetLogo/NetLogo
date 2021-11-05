@@ -5,9 +5,9 @@ package org.nlogo.lex
 import java.text.StringCharacterIterator
 
 import org.nlogo.core.TokenType
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class CharacterIteratorInputTest extends FunSuite {
+class CharacterIteratorInputTest extends AnyFunSuite {
   trait Helper {
     var text: String = ""
     lazy val seg = new StringCharacterIterator(text)

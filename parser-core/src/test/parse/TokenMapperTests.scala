@@ -2,9 +2,9 @@
 
 package org.nlogo.parse
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class TokenMapperTests extends FunSuite {
+class TokenMapperTests extends AnyFunSuite {
 
   import FrontEnd.tokenMapper._
 

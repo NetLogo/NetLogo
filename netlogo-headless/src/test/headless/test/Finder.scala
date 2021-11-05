@@ -3,7 +3,8 @@
 package org.nlogo.headless.test
 
 import java.io.File
-import org.scalatest.{ FunSuite, Tag }
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.Tag
 
 import
   org.nlogo.{ api, core },
@@ -51,7 +52,7 @@ abstract class ExtensionTests extends Finder {
 
 // don't use FixtureSuite here because we may need two fixtures, not just
 // one, and FixtureSuite assumes one - ST 8/7/13
-trait Finder extends FunSuite  {
+trait Finder extends AnyFunSuite  {
   def files: Iterable[(String, String)]
   def suiteName(f: File): String =
     if (f.getName == "tests.txt")

@@ -3,14 +3,14 @@
 package org.nlogo.headless
 package misc
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.{ api, mirror }
 import org.nlogo.util.SlowTestTag
 import mirror._, Mirroring._, Mirrorables._
 import org.nlogo.drawing.DrawingActionRunner
 import org.nlogo.workspace.Checksummer
 
-class TestMirroringModels extends FunSuite  {
+class TestMirroringModels extends AnyFunSuite  {
 
   def withWorkspace[T](body: (HeadlessWorkspace, () => Iterable[Mirrorable]) => T): T = {
     val ws = HeadlessWorkspace.newInstance

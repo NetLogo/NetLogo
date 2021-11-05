@@ -2,12 +2,13 @@
 
 package org.nlogo.headless
 
-import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.{ OneInstancePerTest, BeforeAndAfterEach }
 import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.nvm.{ LabInterface, Workspace }
 import org.nlogo.util.SlowTest
 
-class TestBehaviorSpace extends FunSuite with SlowTest
+class TestBehaviorSpace extends AnyFunSuite with SlowTest
 with OneInstancePerTest with BeforeAndAfterEach {
 
   val TestProtocolsFilePath = "test/lab/protocols.xml"

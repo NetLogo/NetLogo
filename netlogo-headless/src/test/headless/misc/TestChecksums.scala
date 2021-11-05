@@ -5,9 +5,10 @@ package misc
 
 import org.nlogo.util.SlowTestTag
 import org.nlogo.workspace.Checksummer
-import org.scalatest.{ FunSuite, Args, Status, SucceededStatus }
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.{ Args, Status, SucceededStatus }
 
-class TestChecksums extends FunSuite  {
+class TestChecksums extends AnyFunSuite  {
 
   // overriding this so we can pass in a model filter to run checksums against one
   // model, or a subset. example: `ts GenDrift`

@@ -2,9 +2,9 @@
 
 package org.nlogo.parse
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ConstantsTests extends FunSuite {
+class ConstantsTests extends AnyFunSuite {
   def isConstant(s: String) = Constants.get(s).isDefined
   def get(s: String) = Constants.get(s).get
   test("BadConstant") { assert(!isConstant("fnord666")) }

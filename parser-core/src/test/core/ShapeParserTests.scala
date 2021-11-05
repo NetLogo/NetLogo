@@ -2,11 +2,11 @@
 
 package org.nlogo.core
 
-import org.scalatest.FunSuite
 
 import TestUtils.cleanJsNumbers
+import org.scalatest.funsuite.AnyFunSuite
 
-class ShapeParserTests extends FunSuite {
+class ShapeParserTests extends AnyFunSuite {
   import Shape.{ Element, RgbColor }
   import ShapeParser._
 

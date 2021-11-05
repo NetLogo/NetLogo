@@ -2,14 +2,14 @@
 
 package org.nlogo.parse
 
-import org.scalatest.FunSuite
 
 import org.nlogo.core.{ CompilerException, SourceLocation, Token, TokenType }
 import org.nlogo.core.prim.{ _lambdavariable, Lambda }, Lambda.Arguments
 import org.nlogo.core.TokenDSL._
 import PrimDSL._
+import org.scalatest.funsuite.AnyFunSuite
 
-class ArrowLambdaScoperTests extends FunSuite {
+class ArrowLambdaScoperTests extends AnyFunSuite {
   test("non-blocks return None") {
     assert(scope(Seq()).isEmpty)
     assert(scope(Seq(`[`)).isEmpty)

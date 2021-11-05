@@ -4,9 +4,9 @@ package org.nlogo.core.model
 
 import org.nlogo.core.{ View, Slider }
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ModelReaderTest extends FunSuite {
+class ModelReaderTest extends AnyFunSuite {
   test("writes and reads sliders without units") {
     import org.nlogo.core.Model
     val slider = Slider(display = Some("xs"), variable = Some("xs"))

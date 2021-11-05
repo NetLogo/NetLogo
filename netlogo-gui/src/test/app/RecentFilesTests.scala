@@ -1,10 +1,10 @@
 package org.nlogo.app
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import org.nlogo.api
 
-class RecentFilesTests extends FunSuite {
+class RecentFilesTests extends AnyFunSuite {
 
   val rf = new RecentFiles
   val models = (1 to rf.maxEntries).map(makePath).map(ModelEntry(_, api.ModelType.Normal)).toList ++

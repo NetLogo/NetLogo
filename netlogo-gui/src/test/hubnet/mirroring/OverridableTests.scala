@@ -2,9 +2,9 @@
 
 package org.nlogo.hubnet.mirroring
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class OverridableTests extends FunSuite {
+class OverridableTests extends AnyFunSuite {
   val BLACK = Double.box(0)
   val WHITE = Double.box(9.9)
   val GRAY = Double.box(5)

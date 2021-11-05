@@ -2,9 +2,9 @@
 
 package org.nlogo.ide
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class AutoSuggestTests extends FunSuite {
+class AutoSuggestTests extends AnyFunSuite {
   val autoSuggest = new AutoSuggest(Set.empty[String], () => Set.empty[String])
   test("empty"){
     val testList = Seq()

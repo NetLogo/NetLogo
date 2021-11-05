@@ -2,9 +2,9 @@
 
 package org.nlogo.core
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class StringEscaperTests extends FunSuite {
+class StringEscaperTests extends AnyFunSuite {
   test("escape empty") {
     assert("" === StringEscaper.escapeString(""))
   }

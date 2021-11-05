@@ -5,10 +5,10 @@ package middle
 
 import org.nlogo.compile.api.Optimizations
 import org.nlogo.core.Femto
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.compile.api.{ CommandMunger, ProcedureDefinition, ReporterMunger, RewritingReporterMunger }
 
-trait AbstractOptimizerTest extends FunSuite {
+trait AbstractOptimizerTest extends AnyFunSuite {
   val OptimizationPrefix = "org.nlogo.compile.middle.optimize"
   val ConstantOptimizer = s"org.nlogo.compile.optimize.Constants"
 

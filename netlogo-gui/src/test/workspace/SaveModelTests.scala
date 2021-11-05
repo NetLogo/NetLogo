@@ -7,11 +7,11 @@ import java.net.URI
 import org.nlogo.core.Model
 import org.nlogo.api.{ ConfigurableModelLoader, ModelType, Version }
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import scala.util.{ Failure, Try }
 
-class SaveModelTests extends FunSuite {
+class SaveModelTests extends AnyFunSuite {
   val model = Model()
 
   def testSave(withModel: Model => Model = identity,

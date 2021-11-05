@@ -2,10 +2,10 @@
 
 package org.nlogo.workspace
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import ModelsLibrary._
 
-class TestLibrary extends FunSuite {
+class TestLibrary extends AnyFunSuite {
   test("there are no empty leaf folders") {
     val exclusions = Set("project", "src", "target")
       .map("/models/" + _ + "/")

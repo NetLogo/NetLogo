@@ -2,10 +2,10 @@
 
 package org.nlogo.parse
 
-import org.scalatest.FunSuite
 import java.awt.Color
+import org.scalatest.funsuite.AnyFunSuite
 
-class ColorizerTests extends FunSuite {
+class ColorizerTests extends AnyFunSuite {
 
   import Colorizer.Colors
 

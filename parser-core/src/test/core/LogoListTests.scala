@@ -2,9 +2,9 @@
 
 package org.nlogo.core
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class LogoListTests extends FunSuite {
+class LogoListTests extends AnyFunSuite {
   test("iteratorNextThrowsException") {
     intercept[java.util.NoSuchElementException] {
       LogoList().javaIterator.next

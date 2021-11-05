@@ -2,9 +2,9 @@
 
 package org.nlogo.core
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class NumberParserTests extends FunSuite {
+class NumberParserTests extends AnyFunSuite {
   for(input <- List("", "-", ".", "-.", ".-"))
     test(s"isLeft $input") {
       assert(NumberParser.parse(input).isLeft)

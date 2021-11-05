@@ -9,8 +9,8 @@ import org.nlogo.core.{ TextBox, Output, ChooseableList,
   Monitor, UpdateMode, View, Horizontal, Button, Slider, StringInput,
   Widget, WorldDimensions },
   ConstraintSpecification.{ BoundedNumericConstraintSpecification, UnboundedNumericConstraintSpecification }
-import org.scalatest.FunSuite
 import scala.reflect.ClassTag
+import org.scalatest.funsuite.AnyFunSuite
 
 object SimpleLiteralParser extends LiteralParser {
   override def readFromString(s: String): AnyRef =
@@ -34,7 +34,7 @@ object SimpleLiteralParser extends LiteralParser {
   }
 }
 
-class WidgetTest extends FunSuite {
+class WidgetTest extends AnyFunSuite {
 
   val literalParser = SimpleLiteralParser
 

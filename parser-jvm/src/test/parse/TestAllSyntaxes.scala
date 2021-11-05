@@ -7,10 +7,10 @@ package org.nlogo.parse
 // against regressions.  (It also means new primitives have to be added here at the same time they
 // are added to tokens.txt.) - ST 12/5/09
 
-import org.scalatest.FunSuite
 import org.nlogo.core.Instruction
+import org.scalatest.funsuite.AnyFunSuite
 
-class TestAllSyntaxes extends FunSuite {
+class TestAllSyntaxes extends AnyFunSuite {
   def shorten(name: String) =
     Class.forName(name).getSimpleName
   def instruction(name: String) =

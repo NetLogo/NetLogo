@@ -2,7 +2,7 @@
 
 package org.nlogo.app.tools
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import com.typesafe.config.ConfigFactory
 
@@ -10,7 +10,7 @@ import org.nlogo.workspace.ModelsLibrary.{ Leaf, Node, Tree }
 
 import ModelCrossReferencer.addReference
 
-class ModelsCrossReferencerTests extends FunSuite {
+class ModelsCrossReferencerTests extends AnyFunSuite {
   val model = Leaf("Bar.nlogo", "foo/Bar.nlogo")
   val model2 = Leaf("Wolf.nlogo", "qux/Wolf.nlogo")
 

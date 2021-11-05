@@ -2,7 +2,7 @@
 
 package org.nlogo.plot
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.api.DummyLogoThunkFactory
 import org.nlogo.core.{ Pen, Femto, LiteralParser }
 import org.nlogo.core.model.{PlotReader, PenReader}
@@ -335,7 +335,7 @@ PENS
 
 
 
-trait TestPlotLoaderHelper extends FunSuite {
+trait TestPlotLoaderHelper extends AnyFunSuite {
   private val literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
 
   def testPlotsFromModels(model:String, plots:List[String]) {

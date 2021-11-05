@@ -2,11 +2,11 @@
 
 package org.nlogo.lex
 
-import org.scalatest.FunSuite
 import org.nlogo.core.{ SourceLocation, Token, TokenType, TestUtils },
   TestUtils.cleanJsNumbers
+import org.scalatest.funsuite.AnyFunSuite
 
-class TokenizerTests extends FunSuite {
+class TokenizerTests extends AnyFunSuite {
   import Tokenizer.{ isValidIdentifier, getTokenAtPosition }
 
   def tokenize(s: String) = {

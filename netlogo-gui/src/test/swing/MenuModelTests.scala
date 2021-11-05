@@ -2,9 +2,9 @@
 
 package org.nlogo.swing
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class MenuModelTests extends FunSuite {
+class MenuModelTests extends AnyFunSuite {
   trait Helper {
     val model = new MenuModel[String, Int]
 
