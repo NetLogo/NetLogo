@@ -2,14 +2,14 @@
 
 package org.nlogo.generate
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import java.lang.reflect.Method
 import org.nlogo.agent.{ AgentSet, Agent, Turtle }
 import org.nlogo.prim._
 import org.nlogo.core.LogoList
 import org.nlogo.nvm.Reporter
 
-class MethodSelectorTests extends FunSuite {
+class MethodSelectorTests extends AnyFunSuite {
   import MethodSelector._
   /// helpers
   def cost(c1: Class[_], c2: Class[_]) =

@@ -2,13 +2,13 @@
 
 package org.nlogo.compile
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.api.{ DummyExtensionManager, DummyLibraryManager, Version }
 import org.nlogo.core.{ DummyCompilationEnvironment, Program }
 import org.nlogo.nvm.{ CompilerFlags, Optimizations, Procedure }, Procedure.NoProcedures
 
 
-class TestGenerator extends FunSuite {
+class TestGenerator extends AnyFunSuite {
 
   val program = Program.empty().copy(interfaceGlobals = List("glob1"))
   def condense(disassembly: String) =

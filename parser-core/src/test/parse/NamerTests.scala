@@ -2,11 +2,11 @@
 
 package org.nlogo.parse
 
-import org.scalatest.FunSuite
 import org.nlogo.{ core, parse },
   core._
+import org.scalatest.funsuite.AnyFunSuite
 
-class NamerTests extends FunSuite {
+class NamerTests extends AnyFunSuite {
 
   def compile(source: String): Iterator[Token] = {
     val wrappedSource = "to __test " + source + "\nend"

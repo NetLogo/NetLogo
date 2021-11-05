@@ -10,9 +10,9 @@ import AstPath._
 import WhiteSpace.Context
 import WhiteSpace._
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class WhiteSpaceTests extends FunSuite with NetLogoParser {
+class WhiteSpaceTests extends AnyFunSuite with NetLogoParser {
   val tokenizer: TokenizerInterface =
     Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer")
 

@@ -4,9 +4,10 @@ package org.nlogo.agent
 
 import org.nlogo.core.{ AgentKind, ShapeListTracker }
 import org.nlogo.core.Shape.{ VectorShape }
-import org.scalatest.{ FunSuite, OneInstancePerTest }
+import org.scalatest.OneInstancePerTest
+import org.scalatest.funsuite.AnyFunSuite
 
-class BreedShapesTests extends FunSuite with OneInstancePerTest {
+class BreedShapesTests extends AnyFunSuite with OneInstancePerTest {
   val airplaneShape = new VectorShape {
     val name = "AIRPLANE"
     def name_=(n: String): Unit = {}

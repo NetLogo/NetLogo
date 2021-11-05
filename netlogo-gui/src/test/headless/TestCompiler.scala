@@ -2,10 +2,11 @@
 
 package org.nlogo.headless
 
-import org.scalatest.{ FunSuite, OneInstancePerTest, BeforeAndAfterEach }
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.{ OneInstancePerTest, BeforeAndAfterEach }
 import org.nlogo.core.{ CompilerException, I18N }
 
-class TestCompiler extends FunSuite with OneInstancePerTest with BeforeAndAfterEach {
+class TestCompiler extends AnyFunSuite with OneInstancePerTest with BeforeAndAfterEach {
 
   var workspace: HeadlessWorkspace = _
   override def beforeEach() { workspace = HeadlessWorkspace.newInstance }

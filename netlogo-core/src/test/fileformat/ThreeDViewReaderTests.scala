@@ -8,10 +8,10 @@ import org.nlogo.api.WorldDimensions3D
 
 import org.scalacheck.{ Arbitrary, Gen }
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class ThreeDViewReaderTest extends FunSuite with ScalaCheckDrivenPropertyChecks {
+class ThreeDViewReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
   val dimensionsThreeD: Gen[WorldDimensions3D] = for {
     minPx     <- Arbitrary.arbInt.arbitrary
     maxPx     <- Arbitrary.arbInt.arbitrary.map(_.abs + minPx)

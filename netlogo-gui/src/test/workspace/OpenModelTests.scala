@@ -2,7 +2,7 @@
 
 package org.nlogo.workspace
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import java.net.URI
 import java.nio.file.{ Path, Paths }
@@ -14,7 +14,7 @@ import org.nlogo.fileformat.{ defaultConverter, ConversionError, FailedConversio
 import org.nlogo.api.{ ConfigurableModelLoader, Version }
 import scala.util.{ Success, Try }
 
-class OpenModelTests extends FunSuite {
+class OpenModelTests extends AnyFunSuite {
   val testURI = Paths.get("test/fileformat/non-nlogo-extension.txt").toUri
 
   trait OpenTest {

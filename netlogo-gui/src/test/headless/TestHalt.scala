@@ -2,7 +2,7 @@
 
 package org.nlogo.headless
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.api.{ AggregateManagerInterface, LogoException, RendererInterface, Version }
 import org.nlogo.agent.{ CompilationManagement, World }
 import org.nlogo.nvm.{ PresentationCompilerInterface, HaltException }
@@ -17,7 +17,7 @@ object TestHalt {
     override def finalize() { finalized = true; super.finalize() }
   }
 }
-class TestHalt extends FunSuite with SlowTest {
+class TestHalt extends AnyFunSuite with SlowTest {
   if(!Version.is3D)
     test("halt", SlowTest.Tag) {
       import TestHalt._

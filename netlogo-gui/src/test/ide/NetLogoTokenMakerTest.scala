@@ -10,9 +10,9 @@ import org.nlogo.core.TokenType
 import org.nlogo.api.DummyExtensionManager
 import org.nlogo.nvm.ExtensionManager
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class NetLogoTokenMakerTest extends FunSuite {
+class NetLogoTokenMakerTest extends AnyFunSuite {
   trait Helper {
     var text: String = ""
     val offset = 0

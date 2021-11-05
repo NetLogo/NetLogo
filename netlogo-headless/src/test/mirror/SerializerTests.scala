@@ -2,10 +2,10 @@
 
 package org.nlogo.mirror
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import Serializer.{ toBytes, fromBytes }
 
-class SerializerTests extends FunSuite {
+class SerializerTests extends AnyFunSuite {
 
   def roundTrip(update: Update) {
     assertResult(update) { fromBytes(toBytes(update)) }

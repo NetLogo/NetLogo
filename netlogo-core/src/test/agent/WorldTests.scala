@@ -2,12 +2,12 @@
 
 package org.nlogo.agent
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.core.{ Breed, Program, WorldDimensions }
 
 import scala.collection.immutable.ListMap
 
-class WorldTests extends FunSuite with AbstractTestWorld {
+class WorldTests extends AnyFunSuite with AbstractTestWorld {
 
   val worldSquare = new WorldDimensions(-2, 2, -2, 2)
   val worldRectangle = new WorldDimensions(-3, 3, -2, 2)

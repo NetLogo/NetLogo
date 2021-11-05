@@ -2,9 +2,9 @@
 
 package org.nlogo.plot
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class HistogramTests extends FunSuite {
+class HistogramTests extends AnyFunSuite {
   test("empty histogram") {
     val histogram = new Histogram(0, 3, 1)
     assertResult(0)(histogram.ceiling)

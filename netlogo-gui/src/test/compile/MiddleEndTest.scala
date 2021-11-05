@@ -2,11 +2,11 @@
 
 package org.nlogo.compile
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.core.{ DummyCompilationEnvironment, Femto, Program }
 import org.nlogo.compile.api.{ MiddleEndInterface, Optimizations, ProcedureDefinition }
 
-class MiddleEndTest extends FunSuite {
+class MiddleEndTest extends AnyFunSuite {
   val middleEnd =
     Femto.scalaSingleton[MiddleEndInterface]("org.nlogo.compile.middle.MiddleEnd")
 

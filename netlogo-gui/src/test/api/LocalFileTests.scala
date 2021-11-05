@@ -2,9 +2,9 @@
 
 package org.nlogo.api
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class LocalFileTests extends FunSuite {
+class LocalFileTests extends AnyFunSuite {
   test("file path") {
     new LocalFile(TestEnvironment.projectFilePath("resources/system/tokens.txt")).getAbsolutePath
   }

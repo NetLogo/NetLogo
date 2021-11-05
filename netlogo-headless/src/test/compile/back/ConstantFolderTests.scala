@@ -4,9 +4,9 @@ package org.nlogo.compile
 package back
 
 import org.nlogo.core.CompilerException
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ConstantFolderTests extends FunSuite {
+class ConstantFolderTests extends AnyFunSuite {
 
   def compile(source: String): String = {
     val procdef +: _ =

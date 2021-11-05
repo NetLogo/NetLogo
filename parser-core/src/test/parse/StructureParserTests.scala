@@ -4,11 +4,11 @@ package org.nlogo.parse
 
 import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment, DummyExtensionManager,
   DummyLibraryManager, CompilerException, Femto, StructureResults}
-import org.scalatest.FunSuite
 
 import org.nlogo._
+import org.scalatest.funsuite.AnyFunSuite
 
-class StructureParserTests extends FunSuite {
+class StructureParserTests extends AnyFunSuite {
 
   val tokenizer: core.TokenizerInterface =
     Femto.scalaSingleton[core.TokenizerInterface]("org.nlogo.lex.Tokenizer")

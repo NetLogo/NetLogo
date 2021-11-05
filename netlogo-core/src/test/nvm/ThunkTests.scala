@@ -2,9 +2,9 @@
 
 package org.nlogo.nvm
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ThunkTests extends FunSuite {
+class ThunkTests extends AnyFunSuite {
   test("thunks") {
     var x = 0
     val thunk = new Thunk[Int]() { def compute = { x += 1 ; x } }

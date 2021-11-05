@@ -9,7 +9,7 @@ import org.scalatest._
 
 import scala.language.implicitConversions
 
-class TestChecksums extends FunSuite {
+class TestChecksums extends funsuite.AnyFunSuite {
 
   // overriding this so we can pass in a model filter to run checksums against a single model.
   // example   sbt> checksums model=Echo

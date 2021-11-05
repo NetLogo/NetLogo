@@ -6,12 +6,12 @@ import
   org.nlogo.core.Let
 
 import
-  org.scalatest.FunSuite
+  org.scalatest.funsuite.AnyFunSuite
 
 import
   org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
-class BindingTests extends FunSuite with ScalaCheckDrivenPropertyChecks {
+class BindingTests extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
 
   trait BindingTestHelper {
     val abc = Let("abc")

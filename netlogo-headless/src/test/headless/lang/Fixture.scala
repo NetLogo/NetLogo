@@ -12,7 +12,7 @@ import org.nlogo.headless.test.{RunMode, NormalMode, TestMode, CompileError,
                                 Success, Result, Reporter, Command, Compile,
                                 AbstractFixture, RuntimeError, StackTrace}
 
-trait FixtureSuite extends scalatest.fixture.FunSuite {
+trait FixtureSuite extends scalatest.funsuite.FixtureAnyFunSuite {
   type FixtureParam = Fixture
   override def withFixture(test: OneArgTest) =
     Fixture.withFixture(test.name) { fixture =>

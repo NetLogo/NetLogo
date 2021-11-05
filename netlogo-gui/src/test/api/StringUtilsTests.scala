@@ -2,9 +2,9 @@
 
 package org.nlogo.api
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class StringUtilsTests extends FunSuite {
+class StringUtilsTests extends AnyFunSuite {
   test("escape empty") {
     assert("" === StringUtils.escapeString(""))
   }

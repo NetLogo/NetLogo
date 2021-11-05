@@ -15,9 +15,10 @@ org.nlogo.{core, agent, api, nvm},
       FrontEndInterface.ProceduresMap
 
 import
-  org.scalatest.{ FunSuite, OneInstancePerTest }
+  org.scalatest.funsuite.AnyFunSuite,
+  org.scalatest.OneInstancePerTest
 
-class DefaultFileManagerTests extends FunSuite with OneInstancePerTest {
+class DefaultFileManagerTests extends AnyFunSuite with OneInstancePerTest {
 
   test("openFile allows opening files that do not exist") {
     fileManager.getFile("foobar")

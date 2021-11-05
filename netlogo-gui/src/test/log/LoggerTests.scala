@@ -2,11 +2,11 @@
 
 package org.nlogo.log
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.apache.log4j.xml.DOMConfigurator
 import org.nlogo.core.CompilerException
 
-class LoggerTests extends FunSuite {
+class LoggerTests extends AnyFunSuite {
   org.apache.log4j.helpers.LogLog.setQuietMode(true)
   val logger = new Logger("esther")
   DOMConfigurator.configure("dist/configuration/NetLogo Logging/netlogo_logging.xml")

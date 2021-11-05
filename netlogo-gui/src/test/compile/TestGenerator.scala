@@ -3,11 +3,11 @@
 package org.nlogo.compile
 
 import org.nlogo.core.{ DummyCompilationEnvironment, Program }
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.api.{ AgentVariableNumbers, DummyExtensionManager, DummyLibraryManager, Version, NetLogoThreeDDialect, NetLogoLegacyDialect }
 import org.nlogo.nvm.{ Command, Procedure }
 
-class TestGenerator extends FunSuite {
+class TestGenerator extends AnyFunSuite {
 
   val dialect =
     if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect

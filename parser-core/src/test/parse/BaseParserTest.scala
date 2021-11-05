@@ -6,9 +6,10 @@ import
   org.nlogo.core.{ CompilerException, Statements, TestUtils },
     TestUtils.cleanJsNumbers
 
-import org.scalatest.FunSuite
+import
+  org.scalatest.funsuite.AnyFunSuite
 
-trait BaseParserTest { this: FunSuite =>
+trait BaseParserTest { this: AnyFunSuite =>
   val PREAMBLE = "to __test "
   val POSTAMBLE = "\nend"
 

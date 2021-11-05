@@ -2,10 +2,10 @@
 
 package org.nlogo.parse
 
-import org.scalatest.FunSuite
 import org.nlogo.core._
+import org.scalatest.funsuite.AnyFunSuite
 
-class CompilerUtilitiesTests extends FunSuite {
+class CompilerUtilitiesTests extends AnyFunSuite {
 
   /// helpers
 

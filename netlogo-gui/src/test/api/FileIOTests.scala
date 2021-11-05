@@ -4,10 +4,11 @@ package org.nlogo.api
 
 import java.nio.file.{ Files, Paths }
 
-import org.scalatest.{ FunSuite, PropSpec }
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.propspec.AnyPropSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 
-class FileIOTests extends FunSuite {
+class FileIOTests extends AnyFunSuite {
   test("getResourceLines") {
     val expected = "\nNetLogo author: Uri Wilensky"
     assert(FileIO.getResourceAsString("/system/about.txt").take(expected.size) ===
@@ -41,7 +42,7 @@ class FileIOTests extends FunSuite {
   }
 }
 
-class FileIOTests2 extends PropSpec with ScalaCheckPropertyChecks {
+class FileIOTests2 extends AnyPropSpec with ScalaCheckPropertyChecks {
 
   import org.scalacheck.Gen
   import org.scalacheck.Arbitrary.arbitrary

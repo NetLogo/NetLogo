@@ -3,9 +3,9 @@
 package org.nlogo.plot
 
 import org.nlogo.core.PlotPenInterface
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-trait SimplePlotTest extends FunSuite {
+trait SimplePlotTest extends AnyFunSuite {
 
   def testPlot(name: String)(f: Plot => Unit) {
     test(name) {

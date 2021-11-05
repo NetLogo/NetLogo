@@ -2,9 +2,9 @@
 
 package org.nlogo.agent
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ImportLexerTests extends FunSuite {
+class ImportLexerTests extends AnyFunSuite {
   def testSimple(source: String, expectedFields: List[String]) {
     assertResult(expectedFields)(ImportLexer.lex(source).toList)
   }

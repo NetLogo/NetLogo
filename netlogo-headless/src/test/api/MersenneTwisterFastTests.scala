@@ -2,9 +2,9 @@
 
 package org.nlogo.api
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class MersenneTwisterFastTests extends FunSuite {
+class MersenneTwisterFastTests extends AnyFunSuite {
   // Note: I got the expected values in the following tests by actually running our actual code, not
   // by comparing to some other reference implementation or anything like that.  So this is just
   // regression testing, not actual correctness testing.  - ST 6/14/04

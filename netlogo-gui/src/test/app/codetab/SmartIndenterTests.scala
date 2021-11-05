@@ -6,7 +6,7 @@ import org.nlogo.api.{ EditorAreaInterface, NetLogoLegacyDialect, NetLogoThreeDD
 import org.nlogo.nvm.{ PresentationCompilerInterface, DefaultCompilerServices }
 import org.nlogo.core.Femto
 import org.nlogo.api.FileIO.fileToString
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import scala.util.matching.Regex
 
@@ -83,7 +83,7 @@ object SmartIndenterTests {
 
 import SmartIndenterTests.Scaffold
 
-class SmartIndenterTests extends FunSuite {
+class SmartIndenterTests extends AnyFunSuite {
   val path = "test/indent.txt" // where the actual test cases live
 
   // read tests from file

@@ -2,10 +2,10 @@
 
 package org.nlogo.api
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.core.LogoList
 
-class ScalaConversionsTests extends FunSuite {
+class ScalaConversionsTests extends AnyFunSuite {
 
   import ScalaConversions._
 

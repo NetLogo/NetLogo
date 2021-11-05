@@ -2,12 +2,12 @@
 
 package org.nlogo.sdm
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.api.DummyCompilerServices
 
 // actually this tests Translator too, since Loader calls Translator
 
-class LoaderTests extends FunSuite {
+class LoaderTests extends AnyFunSuite {
 
   test("scientific notation") {
     assertResult(expected)(new Translator(Loader.load(ScientificDT).get, new DummyCompilerServices).source)

@@ -2,9 +2,10 @@ package org.nlogo.fileformat
 
 import org.nlogo.core.{ Model }
 import org.nlogo.core.{ Pen, Plot, View }
-import org.scalatest.{ FunSuite, DiagrammedAssertions }
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.diagrams.Diagrams
 
-class PlotConverterTests extends FunSuite with ConversionHelper with DiagrammedAssertions {
+class PlotConverterTests extends AnyFunSuite with ConversionHelper with Diagrams {
 
   /*************
    * Plot Name *

@@ -2,14 +2,14 @@
 
 package org.nlogo.parse
 
-import org.scalatest.FunSuite
 
 import org.nlogo.core.{Dump, CompilerException, LogoList, Token, LiteralImportHandler},
   LiteralImportHandler.Parser
 
 import org.nlogo.core.TestUtils.cleanJsNumbers
+import org.scalatest.funsuite.AnyFunSuite
 
-class TestLiteralParser extends FunSuite {
+class TestLiteralParser extends AnyFunSuite {
 
   def importHandler(isImport: Boolean) =
     if (isImport)
