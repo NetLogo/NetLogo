@@ -373,6 +373,26 @@ Tan4
 Tan5
   tan 315 => -1.0000000000000004
 
+Tan6
+  globals [ error-count ]
+  to test-tan [x] /
+    carefully [ /
+      __ignore tan x /
+    ] [ /
+      if error-message = "math operation produced a number too large for NetLogo" [ /
+        set error-count (error-count + 1) /
+      ] /
+    ] /
+  end
+  O> foreach [-450 -270 -90 90 270 450] [ x -> test-tan x ]
+  error-count => 6
+
+Tan7
+  globals [ zero-count ]
+  O> foreach [-540 -360 -180 0 180 360 540] [ x -> /
+    if tan x = 0 [ set zero-count (zero-count + 1)]]
+  zero-count => 7
+
 Median1
   median [] => ERROR Can't find the median of a list with no numbers: [].
 
