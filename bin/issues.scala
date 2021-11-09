@@ -7,7 +7,7 @@
 // don't panic; it may take a few minutes to download dependencies
 
 /***
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.15"
 onLoadMessage := ""
 scalacOptions ++= Seq(
   "-deprecation", "-unchecked", "-feature", "-Xfatal-warnings")

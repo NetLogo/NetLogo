@@ -25,7 +25,7 @@ lazy val commonSettings = Seq(
 // These settings are common to all builds involving scala
 // Any scala-specific settings should change here (and thus for all projects at once)
 lazy val scalaSettings = Seq(
-  scalaVersion           := "2.12.12",
+  scalaVersion           := "2.12.15",
   scalaSource in Compile := baseDirectory.value / "src" / "main",
   scalaSource in Test    := baseDirectory.value / "src" / "test",
   crossPaths             := false, // don't cross-build for different Scala versions
@@ -154,7 +154,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.apache.httpcomponents" % "httpmime" % "4.2",
       "com.googlecode.json-simple" % "json-simple" % "1.1.1",
       "com.fifesoft" % "rsyntaxtextarea" % "3.1.3",
-      "com.typesafe" % "config" % "1.3.4",
+      "com.typesafe" % "config" % "1.4.1",
       "net.lingala.zip4j" % "zip4j" % "1.3.3"
     ),
     all := {
@@ -210,7 +210,7 @@ lazy val headless = (project in file ("netlogo-headless")).
       "org.ow2.asm" % "asm-all" % "5.2",
       "org.parboiled" %% "parboiled" % "2.3.0",
       "commons-codec" % "commons-codec" % "1.15",
-      "com.typesafe" % "config" % "1.3.4",
+      "com.typesafe" % "config" % "1.4.1",
       "net.lingala.zip4j" % "zip4j" % "1.3.3"
     ),
     (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
@@ -303,7 +303,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
       resolvers += Resolver.sonatypeRepo("releases"),
       parallelExecution in Test := false,
       libraryDependencies ++= {
-      import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.toScalaJSGroupID
+      import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
         Seq(
           "org.scala-lang.modules"   %%% "scala-parser-combinators" % "1.1.2",
           "org.scalatest"     %% "scalatest"       % "3.2.10"   % Test,
