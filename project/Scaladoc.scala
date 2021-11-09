@@ -1,11 +1,21 @@
-import java.io.File
-import sbt._
+import java.io.{ File, PrintWriter }
+import sbt._, internal.util.Attributed.data
 import Keys._
 import NetLogoBuild.netlogoVersion
 
 object Scaladoc {
 
   val apiScaladoc = TaskKey[File]("apiScaladoc", "for docs/scaladoc/")
+
+  // copy-and-paste from sbt sources (Defaults.scala)
+  private def exported(s: TaskStreams, command: String): Seq[String] => Unit = {
+    import sbt.internal.CommandStrings.ExportStream
+    val w = s.text(ExportStream)
+    try exported(w, command)
+    finally w.close() // workaround for #937
+  }
+  private[this] def exported(w: PrintWriter, command: String): Seq[String] => Unit =
+    args => w.println((command +: args).mkString(" "))
 
   val settings = NetLogoBuild.settings ++ Seq(
     apiMappings += (
@@ -20,17 +30,11 @@ object Scaladoc {
       Opts.doc.version(netlogoVersion.value) ++
       Opts.doc.sourceUrl("https://github.com/NetLogo/NetLogo/blob/" +
         netlogoVersion.value + "€{FILE_PATH}.scala")
-    },
-    doc in Compile ~= mungeScaladocSourceUrls,
-    // The regular doc task includes doc for the entire main source tree.  But for the NetLogo
-    // web site we want to document only select classes.  So I copy and pasted
-    // the code for the main doc task and tweaked it. - ST 6/29/12, 7/18/12
-    // sureiscute.com/images/cutepictures/I_Have_No_Idea_What_I_m_Doing.jpg
-    apiScaladoc := {
-      val classpath = (compileInputs in compile in Compile).value.options.classpath
-      val out = baseDirectory.value / "docs" / "scaladoc"
-      IO.createDirectory(out)
-      val excludedePackages = Seq("org.nlogo.app.previewcommands", "org.nlogo.awt",
+    }) ++
+    // The regular doc task includes doc for the entire main source tree.  But for
+    // the NetLogo web site we want to document only select classes
+    inConfig(Compile)(Defaults.docTaskSettings(apiScaladoc)) :+ {
+      val excludedPackages = Seq("org.nlogo.app.previewcommands", "org.nlogo.awt",
         "org.nlogo.compile", "org.nlogo.core.prim",
         "org.nlogo.gl", "org.nlogo.hubnet", "org.nlogo.job",
         "org.nlogo.lex", "org.nlogo.log", "org.nlogo.mc",
@@ -38,24 +42,25 @@ object Scaladoc {
         "org.nlogo.sdm", "org.nlogo.shape", "org.nlogo.widget",
         "org.nlogo.window", "org.nlogo.generate", "org.nlogo.lab",
         "org.nlogo.prim", "org.nlogo.swing")
-      val opts = (scalacOptions in Compile in doc).value ++
-        Seq("-skip-packages", excludedePackages.mkString(":"))
+      Compile / apiScaladoc / scalacOptions ++=
+        Seq("-skip-packages", excludedPackages.mkString(":"))
+    }
+}
+
+/*
+{
+      val classpath = data((Compile / dependencyClasspath).value).toList
+      val out = baseDirectory.value / "docs" / "scaladoc"
+      IO.createDirectory(out)
       Doc.scaladoc("NetLogo", streams.value.cacheStoreFactory.sub("apiScaladoc"),
         compilers.value.scalac match {
-          case ac: sbt.internal.inc.AnalyzingCompiler => ac
+          case ac: sbt.internal.inc.AnalyzingCompiler => ac.onArgs(exported(streams.value, "scaladoc"))
         }, opts)(
           (sources in Compile).value, classpath, out, opts,
           (compileInputs in compile in Compile).value.options.maxErrors, streams.value.log)
-      mungeScaladocSourceUrls(out)
+      out
     }
-    )
-
-  // compensate for issues.scala-lang.org/browse/SI-5388
-  private def mungeScaladocSourceUrls(path: File): File = {
-    for (file <- (path ** "*.html").get)
-      IO.write(file,
-        IO.read(file).replaceAll("\\.java\\.scala", ".java"))
-    path
-  }
+  )
 
 }
+ */

@@ -170,7 +170,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
         Extensions.extensions,
         NativeLibs.nativeLibs,
         ModelsLibrary.modelIndex,
-        Scaladoc.apiScaladoc).value
+        Scaladoc.apiScaladoc in Compile in headless).value
     }
   )
 

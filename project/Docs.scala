@@ -36,7 +36,7 @@ object Docs {
         extensionDocsGen.value)
     },
     allDocs := {
-      htmlDocs.value :+ manualPDF.value :+ apiScaladoc.value
+      htmlDocs.value :+ manualPDF.value :+ (apiScaladoc in Compile).value
     },
     htmlDocs := {
       netLogoDocs.value.generateHTML(buildVariables.value, documentedExtensions.value)
