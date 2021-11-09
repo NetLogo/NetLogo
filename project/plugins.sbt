@@ -18,10 +18,10 @@ resolvers ++= Seq(
 
 addSbtPlugin("org.scalastyle"     %% "scalastyle-sbt-plugin"           % "1.0.0")
 addSbtPlugin("org.portable-scala" %  "sbt-scalajs-crossproject"        % "1.1.0")
-addSbtPlugin("org.scala-js"       %  "sbt-scalajs"                     % "0.6.33")
+addSbtPlugin("org.scala-js"       %  "sbt-scalajs"                     % "1.7.1")
 addSbtPlugin("org.nlogo"          %  "publish-versioned-plugin"        % "3.0.0")
 addSbtPlugin("org.nlogo"          %  "netlogo-extension-documentation" % "0.8.3")
-addSbtPlugin("com.timushev.sbt"   %  "sbt-updates"                     % "0.5.0")
+addSbtPlugin("com.timushev.sbt"   %  "sbt-updates"                     % "0.6.0")
 
 libraryDependencies ++= Seq(
   "com.github.spullara.mustache.java" % "compiler"              % "0.9.5"
