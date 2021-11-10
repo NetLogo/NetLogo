@@ -305,7 +305,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
       libraryDependencies ++= {
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
         Seq(
-          "org.scala-lang.modules"   %%% "scala-parser-combinators" % "1.1.2",
+          "org.scala-lang.modules"   %%% "scala-parser-combinators" % "2.1.0",
           "org.scalatest"     %% "scalatest"       % "3.2.10"   % Test,
           "org.scalatestplus" %% "scalacheck-1-15" % "3.2.10.0" % Test,
       )}).
