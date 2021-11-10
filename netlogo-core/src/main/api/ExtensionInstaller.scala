@@ -7,7 +7,7 @@ import java.net.HttpURLConnection
 import java.nio.file.{ Files, FileVisitResult, Path, SimpleFileVisitor, StandardCopyOption }
 import java.nio.file.attribute.BasicFileAttributes
 
-import net.lingala.zip4j.core.ZipFile
+import net.lingala.zip4j.ZipFile
 
 import org.nlogo.core.LibraryInfo
 
