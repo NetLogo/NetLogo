@@ -7,7 +7,6 @@ import java.awt.Window
 import scala.collection.mutable
 
 import org.nlogo.agent.Agent
-import org.nlogo.awt.EventQueue
 import org.nlogo.core.AgentKind
 import org.nlogo.swing.Tiler
 import org.nlogo.window.{ Event, GUIWorkspace }
@@ -150,11 +149,7 @@ extends Event.LinkChild with Event.LinkParent
     else window.radius(radius)
     window.setVisible(true)
     org.nlogo.window.Event.rehash()
-    if(agent == null && (agentKind != AgentKind.Observer))
-      window.requestFocus()
-    else
-      EventQueue.invokeLater(
-        new Runnable() { def run() { frame.requestFocus() }})
+    if(agent == null && (agentKind != AgentKind.Observer)) { window.requestFocus() }
   }
 
   def stopInspecting(agent: Agent) {
