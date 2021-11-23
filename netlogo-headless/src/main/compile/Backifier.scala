@@ -67,7 +67,7 @@ class Backifier(
           null, closedVariables, source.getOrElse("")) // LambdaLifter will fill in
 
       case core.prim._reporterlambda(args, closedVariables, source) =>
-        new nvmprim._reporterlambda(args.argumentNames, closedVariables, source.getOrElse(""))
+        new nvmprim._reporterlambda(args.argumentNames, args.isVariadic, closedVariables, source.getOrElse(""))
 
       case core.prim._externreport(_) =>
         new nvmprim._externreport(

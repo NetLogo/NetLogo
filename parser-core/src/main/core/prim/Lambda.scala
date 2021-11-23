@@ -9,7 +9,7 @@ trait Lambda {
   def argumentNames: Seq[String] = arguments.argumentNames
   def minArgCount: Int = argumentNames.length
   def synthetic: Boolean = arguments match {
-    case Lambda.ConciseArguments(_) => true
+    case Lambda.ConciseArguments(_, _) => true
     case _ => false
   }
 }
@@ -21,12 +21,13 @@ object Lambda {
   sealed trait Arguments {
     def argumentNames:  Seq[String]
     def argumentTokens: Seq[Token]
+    def isVariadic:     Boolean = false
   }
   case class NoArguments(usesArrow: Boolean) extends Arguments {
     val argumentNames = Seq()
     def argumentTokens: Seq[Token] = Seq()
   }
-  case class ConciseArguments(argumentNames: Seq[String]) extends Arguments {
+  case class ConciseArguments(argumentNames: Seq[String], override val isVariadic: Boolean = false) extends Arguments {
     def argumentTokens: Seq[Token] = Seq()
   }
   case class UnbracketedArgument(t: Token) extends Arguments {

@@ -7,6 +7,7 @@ import org.nlogo.nvm.{ AnonymousReporter, Context, Reporter }
 
 class _reporterlambda(
   argumentNames:       Seq[String],
+  val isVariadic:      Boolean,
   val closedVariables: Set[ClosedVariable],
   lambdaSource:        String) extends Reporter {
 
@@ -17,10 +18,11 @@ class _reporterlambda(
 
   override def report(c: Context): AnyRef = {
     AnonymousReporter(
-      body    = args(0),
-      formals = formalsArray,
-      binding = c.activation.binding,
-      locals  = c.activation.args,
-      source  = lambdaSource)
+      body       = args(0),
+      formals    = formalsArray,
+      isVariadic = isVariadic,
+      binding    = c.activation.binding,
+      locals     = c.activation.args,
+      source     = lambdaSource)
   }
 }

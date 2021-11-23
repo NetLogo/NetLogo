@@ -109,15 +109,15 @@ class Formatter extends PositionalAstFolder[AstFormat] {
             val args = l.arguments match {
               case Lambda.NoArguments(true)        => "[ ->"
               case Lambda.NoArguments(false)       => "["
-              case Lambda.ConciseArguments(_)      => ""
+              case Lambda.ConciseArguments(_, _)   => ""
               case Lambda.UnbracketedArgument(t)   => s"[ ${t.text} ->"
               case Lambda.BracketedArguments(args) => s"[ [${args.map(_.text).mkString(" ")}] ->"
             }
             val arrowSpace = if (args.endsWith(">") && ! body.startsWith(" ")) " " else ""
             val backMargin = c.wsMap.backMargin(position)
             val close = l.arguments match {
-              case Lambda.ConciseArguments(_) => ""
-              case _                          => "]"
+              case Lambda.ConciseArguments(_, _) => ""
+              case _                             => "]"
             }
             val backMargin2 =
               if (body.lastOption.contains(' ') && backMargin.headOption.contains(' '))

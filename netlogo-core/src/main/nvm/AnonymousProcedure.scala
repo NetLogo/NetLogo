@@ -72,16 +72,17 @@ import org.nlogo.nvm.AnonymousProcedure._
 // bind actuals to formals, call report(), then unswap.
 
 case class AnonymousReporter(
-  body:           Reporter,
-  formals:        Array[Let],
-  binding:        Binding,
-  locals:         Array[AnyRef],
-  source:         String)
+  body:       Reporter,
+  formals:    Array[Let],
+  isVariadic: Boolean,
+  binding:    Binding,
+  locals:     Array[AnyRef],
+  source:     String)
   extends AnonymousProcedure with org.nlogo.api.AnonymousReporter {
 
   @deprecated("Construct an anonymous reporter using Binding instead of List[LetBinding]", "6.0.1")
-  def this(body: Reporter, formals: Array[Let], allLets: List[LetBinding], locals: Array[AnyRef]) = {
-    this(body, formals, letBindingsToBinding(allLets), locals, "")
+  def this(body: Reporter, formals: Array[Let], isVariadic: Boolean, allLets: List[LetBinding], locals: Array[AnyRef]) = {
+    this(body, formals, isVariadic, letBindingsToBinding(allLets), locals, "")
     System.err.println("Constructing Anonymous Reporters using a list of bindings is deprecated, please update")
   }
 
@@ -116,6 +117,13 @@ case class AnonymousReporter(
       binding.enterScope(formals, args)
     )
     try {
+      if (isVariadic) {
+        body.args = args.map( (a) => {
+          new org.nlogo.nvm.Reporter {
+            def report(context: Context): AnyRef = a
+          }
+        })
+      }
       body.report(context)
     } finally {
       context.activation = oldActivation
