@@ -247,6 +247,7 @@ class App extends
 
   import App.{ pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingConfigPath, loggingDir, popOutCodeTab }
   val frame = new AppFrame
+  def getFrame = frame
 
   // all these guys get set in the locally block
   private var _workspace: GUIWorkspace = null
@@ -261,6 +262,7 @@ class App extends
   var menuBar: MenuBar = null
   var _fileManager: FileManager = null
   var monitorManager: AgentMonitorManager = null
+  def getMonitorManager = monitorManager
   var aggregateManager: AggregateManagerInterface = null
   var dirtyMonitor: DirtyMonitor = null
   var labManager: LabManagerInterface = null

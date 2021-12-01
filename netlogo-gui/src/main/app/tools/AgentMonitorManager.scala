@@ -184,6 +184,14 @@ extends Event.LinkChild with Event.LinkParent
       emptyLinkMonitorWindow.setVisible(show)
   }
 
+  def inUseEmptyMonitors(): List[AgentMonitorWindow] = {
+    List(emptyPatchMonitorWindow, emptyTurtleMonitorWindow, emptyLinkMonitorWindow).filter( (w) => w != null)
+  }
+
+  def areAnyVisible(): Boolean = {
+    monitorWindows.values.exists( (w) => w.isVisible() ) || inUseEmptyMonitors().exists( (w) => w.isVisible() )
+  }
+
   def refresh() {
     monitorWindows.values.foreach(_.refresh())
   }
