@@ -13,7 +13,7 @@ import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.{ Utils => SwingUtils }
 import org.nlogo.window.{ Event, Events => WindowEvents }
 
-class AgentMonitorWindow(agentKind: AgentKind, _agent: Agent, radius: Double,
+class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double,
                          manager: AgentMonitorManager, parent: Frame)
 // to force the window to stay above the application window replace the following
 // line with 'extends JDialog(parent)' AAB - Feb 02 2021
@@ -54,7 +54,10 @@ with WindowEvents.LoadBeginEvent.Handler
       def actionPerformed(e: ActionEvent) {
         close()
       }})
-  agentChangeNotify(null)
+  setTitle(getUpdatedTitle)
+  // not sure why the second `pack()` is needed, but without it patch inspectors
+  // can show up with their fields initially hidden.  -Jeremy B December 2021
+  pack()
   pack()
 
   // Make sure the window is fully removed
