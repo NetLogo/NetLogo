@@ -7,8 +7,7 @@ import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent, JMenu, JMenuItem, JTabbedPane, KeyStroke }
 
 import org.nlogo.app.codetab.{ CodeTab }
-
-import org.nlogo.ide.{ JumpToDeclarationAction, ShiftActions, ToggleComments }
+import org.nlogo.ide.{ JumpToDeclarationAction, ShiftActions, ShowUsageBox, ShowUsageBoxAction, ToggleComments }
 import org.nlogo.swing.UserAction
 import org.nlogo.window.Event
 
@@ -434,11 +433,11 @@ class AppTabManager(val appTabsPanel:          Tabs,
     // Shift Right: meta pressed CLOSE_BRACKET
     // Show Usage: meta pressed U
     // Jump To Declaration: meta pressed E
-    println(getMainCodeTab.editorFactory)
     addCodeTabContainerKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_SEMICOLON), new ToggleComments(), "CommentUncomment")
     addCodeTabContainerKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_OPEN_BRACKET), new ShiftActions.Left(), "ShiftLeft")
     addCodeTabContainerKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_CLOSE_BRACKET), new ShiftActions.Right(), "ShiftRight")
-    //addCodeTabContainerKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_U), new ShowUsageBoxAction(showUsageBox()), "ShowUsage")
+    val showUsageBox = new ShowUsageBox(getMainCodeTab.editorFactory.colorizer)
+    addCodeTabContainerKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_U), new ShowUsageBoxAction(showUsageBox), "ShowUsage")
     addCodeTabContainerKeyStroke(intKeyToMenuKeystroke(KeyEvent.VK_E), new JumpToDeclarationAction(), "JumpToDeclaration")
 
     // Close the separate code tab: meta pressed W
