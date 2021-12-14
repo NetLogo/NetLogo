@@ -34,12 +34,11 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
         // do not generate the bytecode for the built-in, as the argument count
         // will not exist until it is actually run.  -Jeremy B November 2021
         case rl: org.nlogo.prim._reporterlambda if rl.isVariadic =>
-          instr
 
         case _ =>
           instr.args = instr.args.map(recurse(_))
-          instr
       }
+      instr
     }
   private var customClassNumUID = -1
   private def nextCustomClassNumUID(): Int = {
