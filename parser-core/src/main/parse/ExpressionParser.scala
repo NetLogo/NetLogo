@@ -448,7 +448,7 @@ object ExpressionParser {
    *  take at least one input (since otherwise a simple "map f xs" wouldn't evaluate f).
    */
   private def expandConciseReporterLambda(rApp: core.ReporterApp, reporter: core.Reporter, scope: SymbolTable): core.ReporterApp = {
-    val argsCount = if (reporter.syntax.isInfix) 2 else reporter.syntax.minimum
+    val argsCount = reporter.syntax.totalMinimum
     val (varNames, varApps) = syntheticVariables(argsCount, reporter.token, scope)
     val lambda = new core.prim._reporterlambda(Lambda.ConciseArguments(varNames, reporter.syntax.isVariadic))
     lambda.token = reporter.token
