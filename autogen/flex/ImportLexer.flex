@@ -8,9 +8,6 @@ package org.nlogo.agent;
 
 %%
 
-/* this option decreases code size; see JFlex documentation */
-%switch
-
 %unicode
 
 %yylexthrow{
