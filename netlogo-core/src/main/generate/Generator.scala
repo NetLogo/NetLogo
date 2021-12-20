@@ -33,7 +33,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
         // syntax of a built-in reporter, `(map word ["a" "b" "c"]...)` so in that case
         // do not generate the bytecode for the built-in, as the argument count
         // will not exist until it is actually run.  -Jeremy B November 2021
-        case rl: org.nlogo.prim._reporterlambda if rl.isVariadic =>
+        case rl: org.nlogo.prim._reporterlambda if rl.arguments.isVariadic =>
 
         case _ =>
           instr.args = instr.args.map(recurse(_))

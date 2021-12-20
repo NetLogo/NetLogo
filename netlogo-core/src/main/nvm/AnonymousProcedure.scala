@@ -3,8 +3,9 @@
 package org.nlogo.nvm
 
 import org.nlogo.api
-import org.nlogo.api.{AnonymousProcedure => ApiLambda}
-import org.nlogo.core.{AgentKind, I18N, Let, Syntax}
+import org.nlogo.api.{ AnonymousProcedure => ApiLambda }
+import org.nlogo.core.{ AgentKind, I18N, Let, Syntax }
+import org.nlogo.core.prim.Lambda
 
 // anonymous procedures are created by the compiler via the `->` prim,
 // which may appear in user code, or may be inserted by
@@ -18,6 +19,8 @@ import org.nlogo.core.{AgentKind, I18N, Let, Syntax}
 
 sealed trait AnonymousProcedure {
   val formals: Array[Let] // don't mutate please! Array for efficiency
+  val arguments: Lambda.Arguments
+  val argsHandler: LambdaArgsHandler.Instruction
   val binding: Binding
   val locals: Array[AnyRef]
 
@@ -72,19 +75,27 @@ import org.nlogo.nvm.AnonymousProcedure._
 // bind actuals to formals, call report(), then unswap.
 
 case class AnonymousReporter(
-  body:       Reporter,
-  formals:    Array[Let],
-  isVariadic: Boolean,
-  binding:    Binding,
-  locals:     Array[AnyRef],
-  source:     String)
+  body:      Reporter,
+  formals:   Array[Let],
+  arguments: Lambda.Arguments,
+  binding:   Binding,
+  locals:    Array[AnyRef],
+  source:    String)
   extends AnonymousProcedure with org.nlogo.api.AnonymousReporter {
 
+  @deprecated("Provide defined arguments for the anonymous reporter", "6.2.3")
+  def this(body: Reporter, formals: Array[Let], binding: Binding, locals: Array[AnyRef], source: String) = {
+    this(body, formals, new Lambda.NoArguments(false), binding, locals, source)
+    System.err.println("Constructing Anonymous Reporters without defined arguments deprecated, please update")
+  }
+
   @deprecated("Construct an anonymous reporter using Binding instead of List[LetBinding]", "6.0.1")
-  def this(body: Reporter, formals: Array[Let], isVariadic: Boolean, allLets: List[LetBinding], locals: Array[AnyRef]) = {
-    this(body, formals, isVariadic, letBindingsToBinding(allLets), locals, "")
+  def this(body: Reporter, formals: Array[Let], allLets: List[LetBinding], locals: Array[AnyRef]) = {
+    this(body, formals, new Lambda.NoArguments(false), letBindingsToBinding(allLets), locals, "")
     System.err.println("Constructing Anonymous Reporters using a list of bindings is deprecated, please update")
   }
+
+  val argsHandler = LambdaArgsHandler.createInstruction(arguments, body)
 
   // anonymous reporters are allowed to take more than the number of arguments (hence repeatable-type)
   val syntax =
@@ -103,8 +114,12 @@ case class AnonymousReporter(
       case e: ExtensionContext => report(e.nvmContext, args)
       case c: Context          => report(c, args)
     }
+
   def report(context: Context, args: Array[AnyRef]): AnyRef = {
     checkAgentClass(context, syntax.agentClassString)
+
+    val reportFormals = argsHandler.updateRuntimeArgs(formals, args)
+
     // We replace this to set the arguments up correctly, the return address shouldn't matter
     val oldActivation = context.activation
     context.activation = new Activation(
@@ -114,16 +129,9 @@ case class AnonymousReporter(
       oldActivation.returnAddress,
       // Since `enterScope`ed `Binding` is dropped with this new `Activation`
       // we don't actually need to call `exitScope`. -- BCH 06/28/2017
-      binding.enterScope(formals, args)
+      binding.enterScope(reportFormals, args)
     )
     try {
-      if (isVariadic) {
-        body.args = args.map( (a) => {
-          new org.nlogo.nvm.Reporter {
-            def report(context: Context): AnyRef = a
-          }
-        })
-      }
       body.report(context)
     } finally {
       context.activation = oldActivation
@@ -140,16 +148,25 @@ case class AnonymousReporter(
 case class AnonymousCommand(
   procedure: LiftedLambda,
   formals:   Array[Let],
+  arguments: Lambda.Arguments,
   binding:   Binding,
   locals:    Array[AnyRef],
   source:    String)
 extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
 
+  @deprecated("Provide defined arguments for the anonymous command", "6.2.3")
+  def this(procedure: LiftedLambda, formals: Array[Let], binding: Binding, locals: Array[AnyRef], source: String) = {
+    this(procedure, formals, new Lambda.NoArguments(false), binding, locals, source)
+    System.err.println("Constructing Anonymous Commands without defined arguments deprecated, please update")
+  }
+
   @deprecated("Construct an anonymous command using Binding instead of List[LetBinding]", "6.0.1")
   def this(procedure: LiftedLambda, formals: Array[Let], allLets: List[LetBinding], locals: Array[AnyRef]) = {
-    this(procedure, formals, letBindingsToBinding(allLets), locals, "")
+    this(procedure, formals, new Lambda.NoArguments(false), letBindingsToBinding(allLets), locals, "")
     System.err.println("Constructing Anonymous Commands using a list of bindings is deprecated, please update")
   }
+
+  val argsHandler = LambdaArgsHandler.createCommand(arguments, procedure)
 
   val syntax =
     Syntax.commandSyntax(
@@ -157,17 +174,22 @@ extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
       minimumOption = Some(formals.length),
       right = AnonymousProcedure.rightArgs,
       agentClassString = procedure.agentClassString)
+
   override def toString =
     AnonymousProcedure.displayString("command", source)
   // anonymous commands are allowed to take more than the number of arguments (hence repeatable-type)
+
   def perform(context: api.Context, args: Array[AnyRef]) {
     context match {
       case e: ExtensionContext => perform(e.nvmContext, args)
       case c: Context          => perform(c, args)
     }
   }
+
   def perform(context: Context, args: Array[AnyRef]) {
     checkAgentClass(context, syntax.agentClassString)
+    val performFormals = argsHandler.updateRuntimeArgs(formals, args)
+
     val oldActivation = context.activation
     // the return address doesn't matter here since we're not actually using
     // _call and _return, we're just executing the body - ST 2/4/11
@@ -178,10 +200,12 @@ extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
       0,
       // Since `enterScope`ed `Binding` is dropped with this new `Activation`
       // we don't actually need to call `exitScope`. -- BCH 06/28/2017
-      binding.enterScope(formals, args))
+      binding.enterScope(performFormals, args)
+    )
     context.ip = 0
-    try context.runExclusive()
-    catch {
+    try {
+      context.runExclusive()
+    } catch {
       case ex: api.LogoException =>
         // the stuff in the finally block is going to throw away some of
         // the information we need to build an accurate stack trace, so we'd

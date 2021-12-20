@@ -21,20 +21,24 @@ object Lambda {
   sealed trait Arguments {
     def argumentNames:  Seq[String]
     def argumentTokens: Seq[Token]
-    def isVariadic:     Boolean = false
+    def argumentSyntax: Seq[Int]
+    def isVariadic:     Boolean = Syntax.isVariadic(argumentSyntax)
   }
   case class NoArguments(usesArrow: Boolean) extends Arguments {
     val argumentNames = Seq()
     def argumentTokens: Seq[Token] = Seq()
+    def argumentSyntax = Seq()
   }
-  case class ConciseArguments(argumentNames: Seq[String], override val isVariadic: Boolean = false) extends Arguments {
+  case class ConciseArguments(argumentNames: Seq[String], override val argumentSyntax: Seq[Int]) extends Arguments {
     def argumentTokens: Seq[Token] = Seq()
   }
   case class UnbracketedArgument(t: Token) extends Arguments {
     def argumentNames = Seq(t.text.toUpperCase)
     def argumentTokens: Seq[Token] = Seq(t)
+    def argumentSyntax = Seq(Syntax.WildcardType)
   }
   case class BracketedArguments(argumentTokens: Seq[Token]) extends Arguments {
-    def argumentNames = argumentTokens.map(_.text.toUpperCase)
+    def argumentNames  = argumentTokens.map(_.text.toUpperCase)
+    def argumentSyntax = argumentTokens.map(_ => Syntax.WildcardType)
   }
 }

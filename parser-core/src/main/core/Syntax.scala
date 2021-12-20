@@ -70,7 +70,7 @@ case class Syntax private(
    * determines whether an instruction allows a variable number of args.
    */
   def isVariadic: Boolean =
-    right.exists(compatible(_, Syntax.RepeatableType))
+    Syntax.isVariadic(right)
 
   def dfault =
     defaultOption.getOrElse(right.size)
@@ -97,6 +97,9 @@ case class Syntax private(
 
   def takesOptionalCommandBlock =
     right.lastOption.exists(compatible(_, OptionalType))
+
+  def allArgs =
+    (if (isInfix) List(left) else List()) ++ right
 
   def dump = {
     val buf = new java.lang.StringBuilder
@@ -178,6 +181,9 @@ object Syntax {
     introducesContext = blockAgentClassString.nonEmpty,
     canBeConcise = true
   )
+
+  def isVariadic(args: Seq[Int]): Boolean =
+    args.exists(compatible(_, Syntax.RepeatableType))
 
   /** <i>Unsupported. Do not use.</i> */
   val VoidType = 0

@@ -129,6 +129,7 @@ MapNotEnoughInputs
 
 MapDoublyVariadic
   globals [apples oranges pears]
+  (map word ["f" "g" "h"] ["i" "j" "k"]) => ["fi" "gj" "hk"]
   (map word ["a" "b" "c"] ["x" "y" "z"] ["q" "r" "s"]) => ["axq" "byr" "czs"]
   (map list [1 2 3] [4 5 6] [7 8 9]) => [[1 4 7] [2 5 8] [3 6 9]]
   O> set apples ["a" "b" "c"]

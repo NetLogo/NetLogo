@@ -3,26 +3,29 @@
 package org.nlogo.prim
 
 import org.nlogo.core.{ ClosedVariable, Let }
+import org.nlogo.core.prim.Lambda
 import org.nlogo.nvm.{ AnonymousReporter, Context, Reporter }
 
 class _reporterlambda(
-  argumentNames:       Seq[String],
-  val isVariadic:      Boolean,
+  val arguments:       Lambda.Arguments,
   val closedVariables: Set[ClosedVariable],
   lambdaSource:        String) extends Reporter {
 
   source = lambdaSource
 
-  val formals: Seq[Let] = argumentNames.map(name => Let(name))
+  // This exists for backwards compatibility.  -Jeremy B December 2021
+  def argumentNames = arguments.argumentNames
+
+  val formals: Seq[Let] = arguments.argumentNames.map(name => Let(name))
   val formalsArray: Array[Let] = formals.toArray
 
   override def report(c: Context): AnyRef = {
     AnonymousReporter(
-      body       = args(0),
-      formals    = formalsArray,
-      isVariadic = isVariadic,
-      binding    = c.activation.binding,
-      locals     = c.activation.args,
-      source     = lambdaSource)
+      body      = args(0),
+      formals   = formalsArray,
+      arguments = arguments,
+      binding   = c.activation.binding,
+      locals    = c.activation.args,
+      source    = lambdaSource)
   }
 }
