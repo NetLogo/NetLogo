@@ -50,8 +50,7 @@ strictfp class DoubleClickCaret extends javax.swing.text.DefaultCaret {
   public int getMousePosition(java.awt.event.MouseEvent e) {
     JTextComponent source = (JTextComponent) e.getSource();
 
-    Position.Bias[] biasRes = new Position.Bias[1];
-    return source.getUI().viewToModel2D(source, e.getPoint(), biasRes);
+    return source.getUI().viewToModel2D(source, e.getPoint());
   }
 
   /**
