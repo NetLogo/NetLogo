@@ -2,25 +2,25 @@
 
 package org.nlogo.editor;
 
-import java.awt.Rectangle;
+import java.awt.Rectangle2D;
 
 public strictfp class HighlightView
     extends javax.swing.text.PlainView {
 
   private final javax.swing.JEditorPane pane;
   private final Colorizer colorizer;
-  private Rectangle lastView;
+  private Rectangle2D lastView;
 
   public HighlightView(javax.swing.JEditorPane pane,
                 javax.swing.text.Element element, Colorizer colorizer) {
     super(element);
     this.pane = pane;
     this.colorizer = colorizer;
-    lastView = new Rectangle(0, 0, 0, 0);
+    lastView = new Rectangle2D(0, 0, 0, 0);
   }
 
   @Override
-  protected void drawLine(int lineIndex, java.awt.Graphics g, int x, int y) {
+  protected void drawLine(int lineIndex, java.awt.Graphics2D g, float x, float y) {
     try {
       studyLine(lineIndex);
       super.drawLine(lineIndex, g, x, y);
@@ -59,33 +59,33 @@ public strictfp class HighlightView
   ///
 
   @Override
-  protected int drawUnselectedText(java.awt.Graphics g,
-                                   int x, int y,
-                                   int p0, int p1)
+  protected int drawUnselectedText(java.awt.Graphics2D g,
+                                  float x, float y,
+                                  int p0, int p1)
       throws javax.swing.text.BadLocationException {
     return drawText(g, x, y, p0, p1, false);
   }
 
   @Override
-  protected int drawSelectedText(java.awt.Graphics g,
-                                 int x, int y,
-                                 int p0, int p1)
+  protected int drawSelectedText(java.awt.Graphics2D g,
+                                float x, float y,
+                                int p0, int p1)
       throws javax.swing.text.BadLocationException {
     return drawText(g, x, y, p0, p1, true);
   }
 
   private static final boolean LEAVE_COLORS_ALONE =
       System.getProperty("os.name").startsWith("Mac");
-
-  protected int drawText(java.awt.Graphics g,
-                       int x, int y,
-                       int p0, int p1,
-                       boolean isSelected)
+  // This is public so it can be overriden in ShowUsageBox - RG 2/14/18 AAB 6/2021
+  protected int drawText(java.awt.Graphics2D g,
+                        float x, float y,
+                        int p0, int p1,
+                        boolean isSelected)
       throws javax.swing.text.BadLocationException {
     int offset = pane.getCaretPosition();
-    Rectangle currentView = pane.modelToView(offset);
-    if (lastView.y != currentView.y) {
-      pane.repaint(0, lastView.y, pane.getWidth(), lastView.height);
+    Rectangle2D currentView = pane.modelToView2D(offset);
+     if (((int) lastView.getY()) != ((int) currentView.getY())) {
+       pane.repaint(0, (int) lastView.getY(), pane.getWidth(), (int) lastView.getHeight());
       lastView = currentView;
     }
     javax.swing.text.PlainDocument doc =

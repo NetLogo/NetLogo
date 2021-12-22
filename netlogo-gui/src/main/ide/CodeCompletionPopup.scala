@@ -135,13 +135,13 @@ case class CodeCompletionPopup(autoSuggest: AutoSuggest,
     */
   def placeWindowOnScreen(eA: JTextComponent, position: Int): Unit = {
     val screenHeight = GraphicsEnvironment.getLocalGraphicsEnvironment.getDefaultScreenDevice.getDisplayMode.getHeight
-    if (window.getSize.height + eA.getLocationOnScreen.y + eA.modelToView(position).y +
+    if (window.getSize.height + eA.getLocationOnScreen.y + eA.modelToView2D(position).getY +
       eA.getFont.getSize > screenHeight) {
-      window.setLocation(eA.getLocationOnScreen.x + eA.modelToView(position).x,
-        (eA.getLocationOnScreen.y + eA.modelToView(position).y - window.getSize.getHeight).toInt)
+      window.setLocation(eA.getLocationOnScreen.x + eA.modelToView2D(position).getX.toInt,
+        (eA.getLocationOnScreen.y + eA.modelToView2D(position).getY - window.getSize.getHeight).toInt)
     } else {
-      window.setLocation(eA.getLocationOnScreen.x + eA.modelToView(position).x,
-        eA.getLocationOnScreen.y + eA.modelToView(position).y + eA.getFont.getSize)
+      window.setLocation(eA.getLocationOnScreen.x + eA.modelToView2D(position).getX.toInt,
+        eA.getLocationOnScreen.y + eA.modelToView2D(position).getY.toInt + eA.getFont.getSize)
     }
   }
 

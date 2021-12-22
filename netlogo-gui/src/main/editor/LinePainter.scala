@@ -2,13 +2,13 @@
 
 package org.nlogo.editor
 
-import java.awt.{ Color, Graphics, Rectangle, Shape }
+import java.awt.{ geom, Color, Graphics, Rectangle, Shape }, geom.Rectangle2D
 import javax.swing.event.{CaretEvent, CaretListener}
 import javax.swing.text.{ BadLocationException, Highlighter, JTextComponent }
 
 class LinePainter(private var component: JTextComponent) extends Highlighter.HighlightPainter with CaretListener {
 
-  private var lastView: Rectangle = new Rectangle(0, 0, 0, 0)
+  private var lastView: Rectangle = new Rectangle2D(0, 0, 0, 0)
   private val color = new Color(255, 249, 228, 100)
   component.addCaretListener(this)
   try {
@@ -23,9 +23,9 @@ class LinePainter(private var component: JTextComponent) extends Highlighter.Hig
     bounds: Shape,
     c: JTextComponent) {
       try {
-        val r = c.modelToView(c.getCaretPosition)
+        val r = c.modelToView2D(c.getCaretPosition)
         g.setColor(color)
-        g.fillRect(0, r.y, c.getWidth, r.height)
+        g.fillRect(0,  r.getY.toInt, c.getWidth, r.getHeight.toInt)
         if (lastView == null) lastView = r
       } catch {
         case ble: BadLocationException => println(ble)
@@ -35,9 +35,9 @@ class LinePainter(private var component: JTextComponent) extends Highlighter.Hig
   private def resetHighlight() {
     try {
       val offset = component.getCaretPosition
-      val currentView = component.modelToView(offset)
-      if (currentView != null && lastView.y != currentView.y) {
-        component.repaint(0, lastView.y, component.getWidth, lastView.height)
+      val currentView = component.modelToView2D(offset)
+      if (currentView != null &&  lastView.getY != currentView.getY) {
+        component.repaint(0, lastView.getY.toInt, component.getWidth, lastView.getHeight.toInt)
         lastView = currentView
       }
     } catch {
