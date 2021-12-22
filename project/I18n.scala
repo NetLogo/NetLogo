@@ -1,4 +1,4 @@
-import java.io.File
+import java.io.{File,FileInputStream,FileOutputStream}
 import sbt._
 import Keys._
 
@@ -26,8 +26,8 @@ object I18n {
     val in = i18nDir / (name + ".txt")
     val result = dir / (name + ".properties")
     IO.createDirectory(dir)
-    (new sun.tools.native2ascii.Main).convert(
-      Array("-encoding", "UTF-8", in.getPath, result.getPath))
+    new FileOutputStream(result) getChannel() transferFrom(
+        new FileInputStream(in) getChannel, 0, Long.MaxValue)
     result
   }
 

@@ -1,3 +1,4 @@
+import java.io.{File,FileInputStream,FileOutputStream}
 ///
 /// I18n
 ///
@@ -28,8 +29,7 @@ def native2ascii(dir: File, i18nDir: File, name: String): File = {
   val in = i18nDir / (name + ".txt")
   val result = dir / (name + ".properties")
   IO.createDirectory(dir)
-  (new sun.tools.native2ascii.Main).convert(
-    Array("-encoding", "UTF-8", in.getPath, result.getPath))
+  new FileOutputStream(result) getChannel() transferFrom(
+      new FileInputStream(in) getChannel, 0, Long.MaxValue)
   result
 }
-
