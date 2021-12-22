@@ -230,12 +230,12 @@ strictfp class BracketMatcher
                       java.awt.Shape bounds, JTextComponent c) {
       try {
         g.setColor(color);
-        java.awt.geom.Rectangle2D rect =
-            c.getUI().modelToView2D(c, p0, Position.Bias.Forward)
+        java.awt.Rectangle2D rect =
+            c.getUI().modelToView2D(c, p0)
                 .createUnion
-                    (c.getUI().modelToView2D(c, p1, Position.Bias.Forward));
-        g.drawRect((int) rect.getX(), (int)rect.getY(),
-            (int) rect.getWidth() - 1, (int) rect.getHeight() - 1);
+                    (c.getUI().modelToView2D(c, p1,  Position.Bias.Forward));
+        g.drawRect(rect.getX, rect.getY,
+            rect.getWidth - 1, rect.getHeight - 1);
       } catch (javax.swing.text.BadLocationException ex) {
         throw new IllegalStateException(ex);
       }
