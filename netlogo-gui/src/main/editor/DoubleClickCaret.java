@@ -3,6 +3,8 @@
 package org.nlogo.editor;
 
 import javax.swing.text.JTextComponent;
+import javax.swing.text.Position;
+import javax.swing.text.Position.Bias;
 import java.util.List;
 
 import org.nlogo.core.TokenType;
@@ -33,10 +35,11 @@ strictfp class DoubleClickCaret extends javax.swing.text.DefaultCaret {
         e.getClickCount() == 2) {
       JTextComponent source = (JTextComponent) e.getSource();
 
+      Position.Bias[] biasRes = new Position.Bias[1];
       if (!handleDoubleClick
           (source,
               colorizer.getCharacterTokenTypes(source.getText()),
-              source.getUI().viewToModel(source, e.getPoint()))) {
+              source.getUI().viewToModel2D(source, e.getPoint(), biasRes))) {
         super.mouseClicked(e);
       }
     } else {
@@ -47,7 +50,7 @@ strictfp class DoubleClickCaret extends javax.swing.text.DefaultCaret {
   public int getMousePosition(java.awt.event.MouseEvent e) {
     JTextComponent source = (JTextComponent) e.getSource();
 
-    return source.getUI().viewToModel(source, e.getPoint());
+    return source.getUI().viewToModel2D(source, e.getPoint());
   }
 
   /**
