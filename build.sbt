@@ -133,7 +133,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     testChecksumsClass in Test              := "org.nlogo.headless.TestChecksums",
     resourceDirectory in Compile            := baseDirectory.value / "resources",
     unmanagedResourceDirectories in Compile ++= (unmanagedResourceDirectories in Compile in sharedResources).value,
-    resourceGenerators in Compile += I18n.resourceGeneratorTask.taskValue,
     threed := { System.setProperty("org.nlogo.is3d", "true") },
     nogen  := { System.setProperty("org.nlogo.noGenerator", "true") },
     noopt  := { System.setProperty("org.nlogo.noOptimizer", "true") },
