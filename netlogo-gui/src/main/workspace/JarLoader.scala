@@ -45,7 +45,7 @@ class JarLoader(workspace: ExtendableWorkspace) extends ExtensionManager.Extensi
 
   def extensionClassManager(classLoader: ClassLoader, data: ExtensionData): ClassManager =
     try {
-      classLoader.loadClass(data.classManagerName).newInstance match {
+      classLoader.loadClass(data.classManagerName).getDeclaredConstructor().newInstance() match {
         case cm: ClassManager => cm
         case _                =>
           throw new ExtensionManagerException(InvalidClassManager(data.extensionName))
