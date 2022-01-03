@@ -3,7 +3,6 @@
 package org.nlogo.nvm
 
 import org.nlogo.nvm.{ Instruction => NvmInstruction }
-import org.nlogo.prim._letvariable
 import org.nlogo.core.Let
 import org.nlogo.core.prim.Lambda
 
@@ -34,14 +33,21 @@ object LambdaArgsHandler {
 
   case class Static() extends LambdaArgsHandler.Instruction {
     def updateRuntimeArgs(formals: Array[Let], args: Array[AnyRef]): Array[Let] = formals
-    def updateArgs(formals: Array[Let]): Unit = {}
   }
 
   case class ConciseVariadic(instruction: NvmInstruction) extends LambdaArgsHandler.Instruction {
     def updateRuntimeArgs(formals: Array[Let], args: Array[AnyRef]): Array[Let] = {
       if (formals.length < args.length) {
         val runtimeFormals = (0 until args.length).map( (i) => new Let(s"__$i|concise")).toArray
-        instruction.args = runtimeFormals.map( (l) => new _letvariable(l) )
+        // We make a quasi-letvariable here instead of just making a `prim._letvariable` instance to avoid
+        // circular deps between the nvm and prim packages.
+        // -Jeremy B January 2022
+        instruction.args = runtimeFormals.map( (l) => new Reporter {
+          override def toString(): String = s"${super.toString}(${l.name})"
+          override def report(context: Context): AnyRef = {
+            context.activation.binding.getLet(l)
+          }
+        })
         runtimeFormals
       } else {
         formals
