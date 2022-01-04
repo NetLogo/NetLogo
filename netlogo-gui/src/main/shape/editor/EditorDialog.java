@@ -3,9 +3,10 @@
 package org.nlogo.shape.editor;
 
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
@@ -21,9 +22,7 @@ import static org.nlogo.swing.Utils.icon;
 
 strictfp class EditorDialog
     extends javax.swing.JDialog
-    implements java.util.Observer
-
-{
+    implements PropertyChangeListener {
 
   private final VectorShape originalShape;
   private final VectorShape shape;
@@ -32,7 +31,6 @@ strictfp class EditorDialog
 
   private Class<? extends Element> elementType = null;
   private java.awt.Color elementColor;
-  //private boolean shapeChanged = false ;
   private boolean editingElements = false;
 
   private final ShapePreview[] previews;
@@ -66,9 +64,9 @@ strictfp class EditorDialog
 
     // edit a copy, not the original
     shape = originalShape.clone();
-    shape.addObserver(this);
+    shape.addPropertyChangeListener(this);
     shapeView = new ShapeView(this, shape);
-    shape.addObserver(shapeView);
+    shape.addPropertyChangeListener(shapeView);
     setResizable(false);
     AbstractAction closingAction = new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
@@ -450,7 +448,7 @@ strictfp class EditorDialog
     previews[4] = new ShapePreview(shape, 50, 1);
 
     for (int i = 0; i < previews.length; i++) {
-      shape.addObserver(previews[i]);
+      shape.addPropertyChangeListener(previews[i]);
     }
 
     // LAYOUT
@@ -605,9 +603,7 @@ strictfp class EditorDialog
     undoButton.setEnabled(undoableEdit.canUndo());
   }
 
-  // Handle changes to current model
-  public void update(Observable o, Object obj) {
-    //shapeChanged = true ;
+  public void propertyChange(PropertyChangeEvent evt) {
     deleteSelected.setEnabled(shapeView.hasSelectedElement());
     duplicateSelected.setEnabled(shapeView.hasSelectedElement());
     bringToFront.setEnabled(shapeView.hasSelectedElement());
