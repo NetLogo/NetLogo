@@ -4,12 +4,12 @@ package org.nlogo.shape.editor;
 
 import org.nlogo.shape.Element;
 import org.nlogo.shape.VectorShape;
-
-import java.util.Observable;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 strictfp class ShapePreview
     extends javax.swing.JPanel
-    implements java.util.Observer {
+    implements PropertyChangeListener {
 
   // Information regarding how and whether to rotate the shape
   private int rotationAngle;
@@ -61,7 +61,7 @@ strictfp class ShapePreview
   }
 
   // Method called by VectorShape when it has changed
-  public void update(Observable o, Object rect) {
+  public void propertyChange(PropertyChangeEvent evt) {
     repaint();
   }
 

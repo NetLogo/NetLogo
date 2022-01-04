@@ -10,12 +10,13 @@ import org.nlogo.shape.Rectangle;
 import org.nlogo.shape.VectorShape;
 import org.nlogo.shape.VectorShape$;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.List;
-import java.util.Observable;
 
 strictfp class ShapeView
     extends javax.swing.JPanel
-    implements java.util.Observer {
+    implements PropertyChangeListener {
 
   private final VectorShape shape;
   private final EditorDialog editorDialog;
@@ -125,12 +126,8 @@ strictfp class ShapeView
     return new java.awt.Dimension(300, 300);
   }
 
-  public void update(Observable o, Object rect) {
-    if (rect == null) {
-      repaint();
-    } else {
-      repaint((java.awt.Rectangle) rect);
-    }
+  public void propertyChange(PropertyChangeEvent evt) {
+    repaint();
   }
 
   public void snapPointToGrid(java.awt.Point pointToChange) {
