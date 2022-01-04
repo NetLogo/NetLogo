@@ -123,11 +123,6 @@ public class MacHandler {
 
   public void ready(Object app) {
     this.app = app;
-    // This may not be needed in Java 9 - AAB 01-04-2022
-    // if (this.app instanceof App) {
-    //   App a = (App)app;
-    //   MacFullScreenListener.addFullScreenListener(a.getFrame(), a.getMonitorManager());
-    // }
     if (openMeLater != null) {
       doOpen(openMeLater);
     }
