@@ -2,7 +2,7 @@
 package org.nlogo.shape
 
 import java.awt.Color
-import java.util.Observable
+import java.beans.{ PropertyChangeListener, PropertyChangeSupport }
 
 import org.nlogo.{ core, api },
   core.Shape,
@@ -41,11 +41,18 @@ object VectorShape {
 }
 
 @SerialVersionUID(0L)
-class VectorShape extends Observable with BaseVectorShape with Cloneable with java.io.Serializable with DrawableShape {
+class VectorShape
+  extends BaseVectorShape
+  with Cloneable
+  with java.io.Serializable
+  with DrawableShape {
+
   var name: String = ""
 
   var editableColorIndex: Int = 0
   var rotatable: Boolean = true
+
+  val propertyChangeSupport = new PropertyChangeSupport(this)
 
   private var _fgRecolorable: VectorShape.Recolorable.Recolorable =
     VectorShape.Recolorable.UNKNOWN
@@ -118,14 +125,24 @@ class VectorShape extends Observable with BaseVectorShape with Cloneable with ja
     val modifiedElements = newEls
     if (modifiedElements != elementList) {
       elementList = modifiedElements
-      setChanged()
       notifyObservers()
     }
   }
 
   def changed(): Unit = {
-    setChanged()
     notifyObservers()
+  }
+
+  def addPropertyChangeListener(listener: PropertyChangeListener): Unit = {
+    propertyChangeSupport.addPropertyChangeListener(listener)
+  }
+
+  def removePropertyChangeListener(listener: PropertyChangeListener): Unit = {
+    propertyChangeSupport.removePropertyChangeListener(listener)
+  }
+
+  def notifyObservers(): Unit = {
+    propertyChangeSupport.firePropertyChange("shape", this, this)
   }
 
   def remove(element: Element) =
