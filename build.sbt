@@ -74,7 +74,7 @@ lazy val flexmarkDependencies = {
 }
 
 lazy val mockDependencies = {
-  val mockVersion = "2.5.1"
+  val mockVersion = "2.8.1"
   Seq(
     libraryDependencies ++= Seq(
       "org.jmock" % "jmock" % mockVersion % "test",
@@ -84,28 +84,13 @@ lazy val mockDependencies = {
   )
 }
 
-lazy val mockHeadlessDependencies = {
-  val mockHeadlessVersion = "2.8.1"
+lazy val mockHeadlessDependencies = mockDependencies ++ {
   Seq(
     libraryDependencies ++= Seq(
-      "org.jmock" % "jmock" % mockHeadlessVersion % "test",
-      "org.jmock" % "jmock-legacy" % mockHeadlessVersion % "test",
-      "org.jmock" % "jmock-junit4" % mockHeadlessVersion % "test",
       "org.reflections" % "reflections" % "0.9.10" % "test",
       "org.slf4j" % "slf4j-nop" % "1.7.32" % "test"
     )
   )
-}
-
-lazy val asmDependencies = {
-  val asmVersion = "7.0"
-  Seq(
-    libraryDependencies ++= Seq(
-      "org.ow2.asm" % "asm" % asmVersion,
-      "org.ow2.asm" % "asm-commons" % asmVersion,
-      "org.ow2.asm" % "asm-util" % asmVersion,
-      )
-    )
 }
 
 lazy val asmDependencies = {
@@ -235,15 +220,6 @@ lazy val headless = (project in file ("netlogo-headless")).
     mainClass in Compile         := Some("org.nlogo.headless.Main"),
     nogen                        := { System.setProperty("org.nlogo.noGenerator", "true") },
     libraryDependencies          ++= Seq(
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-      "org.ow2.asm" % "asm" % "7.0",
-      "org.ow2.asm" % "asm-commons" % "7.0",
-      "org.ow2.asm" % "asm-util" % "7.0",
->>>>>>> 68fa3b3c6 (Basic NetLogo runs. Replace asm-all-5.2 with)
-=======
->>>>>>> 21c9bde06 (Create asmDependencies containing asm, asm-common, asm-util)
       "org.parboiled" %% "parboiled" % "2.3.0",
       "commons-codec" % "commons-codec" % "1.15",
       "com.typesafe" % "config" % "1.4.1",
