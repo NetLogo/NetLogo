@@ -108,6 +108,17 @@ lazy val asmDependencies = {
     )
 }
 
+lazy val asmDependencies = {
+  val asmVersion = "0.20.0"
+  Seq(
+    libraryDependencies ++= Seq(
+      "org.ow2.asm" % "asm" % asmVersion,
+      "org.ow2.asm" % "asm-commons" % asmVersion,
+      "org.ow2.asm" % "asm-util" % asmVersion,
+      )
+    )
+}
+
 lazy val scalastyleSettings = Seq(
   scalastyleTarget in Compile := {
     baseDirectory.value.getParentFile / "target" / s"scalastyle-result-${name.value}.xml"
@@ -225,11 +236,14 @@ lazy val headless = (project in file ("netlogo-headless")).
     nogen                        := { System.setProperty("org.nlogo.noGenerator", "true") },
     libraryDependencies          ++= Seq(
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       "org.ow2.asm" % "asm" % "7.0",
       "org.ow2.asm" % "asm-commons" % "7.0",
       "org.ow2.asm" % "asm-util" % "7.0",
 >>>>>>> 68fa3b3c6 (Basic NetLogo runs. Replace asm-all-5.2 with)
+=======
+>>>>>>> 21c9bde06 (Create asmDependencies containing asm, asm-common, asm-util)
       "org.parboiled" %% "parboiled" % "2.3.0",
       "commons-codec" % "commons-codec" % "1.15",
       "com.typesafe" % "config" % "1.4.1",
