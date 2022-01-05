@@ -224,6 +224,12 @@ lazy val headless = (project in file ("netlogo-headless")).
     mainClass in Compile         := Some("org.nlogo.headless.Main"),
     nogen                        := { System.setProperty("org.nlogo.noGenerator", "true") },
     libraryDependencies          ++= Seq(
+<<<<<<< HEAD
+=======
+      "org.ow2.asm" % "asm" % "7.0",
+      "org.ow2.asm" % "asm-commons" % "7.0",
+      "org.ow2.asm" % "asm-util" % "7.0",
+>>>>>>> 68fa3b3c6 (Basic NetLogo runs. Replace asm-all-5.2 with)
       "org.parboiled" %% "parboiled" % "2.3.0",
       "commons-codec" % "commons-codec" % "1.15",
       "com.typesafe" % "config" % "1.4.1",
