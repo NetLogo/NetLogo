@@ -83,6 +83,17 @@ lazy val mockDependencies = Seq(
   )
 )
 
+lazy val asmDependencies = {
+  val asmVersion = "0.20.0"
+  Seq(
+    libraryDependencies ++= Seq(
+      "org.ow2.asm" % "asm" % asmVersion,
+      "org.ow2.asm" % "asm-commons" % asmVersion,
+      "org.ow2.asm" % "asm-util" % asmVersion,
+      )
+    )
+}
+
 lazy val scalastyleSettings = Seq(
   scalastyleTarget in Compile := {
     baseDirectory.value.getParentFile / "target" / s"scalastyle-result-${name.value}.xml"
@@ -105,6 +116,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
   settings(EventsGenerator.settings: _*).
   settings(Docs.settings: _*).
   settings(flexmarkDependencies).
+  settings(asmDependencies).
   settings(Defaults.coreDefaultSettings ++
            Testing.settings ++
            Testing.useLanguageTestPrefix("org.nlogo.headless.Test") ++
@@ -137,9 +149,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     nogen  := { System.setProperty("org.nlogo.noGenerator", "true") },
     noopt  := { System.setProperty("org.nlogo.noOptimizer", "true") },
     libraryDependencies ++= Seq(
-      "org.ow2.asm" % "asm" % "7.0",
-      "org.ow2.asm" % "asm-commons" % "7.0",
-      "org.ow2.asm" % "asm-util" % "7.0",
       "org.picocontainer" % "picocontainer" % "2.15",
       "javax.media" % "jmf" % "2.1.1e",
       "commons-codec" % "commons-codec" % "1.15",
@@ -182,6 +191,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(jvmSettings: _*).
   settings(scalatestSettings: _*).
   settings(mockDependencies: _*).
+  settings(asmDependencies).
   settings(Scaladoc.settings: _*).
   settings(Testing.settings: _*).
   settings(Testing.useLanguageTestPrefix("org.nlogo.headless.lang.Test"): _*).
@@ -202,9 +212,6 @@ lazy val headless = (project in file ("netlogo-headless")).
     mainClass in Compile         := Some("org.nlogo.headless.Main"),
     nogen                        := { System.setProperty("org.nlogo.noGenerator", "true") },
     libraryDependencies          ++= Seq(
-      "org.ow2.asm" % "asm" % "7.0",
-      "org.ow2.asm" % "asm-commons" % "7.0",
-      "org.ow2.asm" % "asm-util" % "7.0",
       "org.parboiled" %% "parboiled" % "2.3.0",
       "commons-codec" % "commons-codec" % "1.15",
       "com.typesafe" % "config" % "1.4.1",
