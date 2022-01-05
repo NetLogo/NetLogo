@@ -138,6 +138,7 @@ object ModelsLibrary {
       case e: java.io.IOException =>
         System.err.println("error: IOException canonicalizing models library path")
         System.err.println(e.getMessage)
+        e.printStackTrace()
     }
   }
 
@@ -168,34 +169,35 @@ object ModelsLibrary {
   }
 
   private def scanDirectory(directory: Path, exclusive: Boolean, nameOverride: Option[String] = None): Option[Node] = {
-    if (! Files.isDirectory(directory) || Files.isSymbolicLink(directory)) {
+    if (!Files.isDirectory(directory) || Files.isSymbolicLink(directory)) {
       None
-    }
+    } else {
 
-    val children =
-      getChildPaths(directory).sortBy(_.getFileName.toString)(NLogoModelOrdering)
-        .filterNot(p => isBadName(p.getFileName.toString))
-        .flatMap { (p: Path) =>
-        if (Files.isDirectory(p))
-          scanDirectory(p, exclusive)
-        else {
-          val fileName = p.getFileName.toString.toUpperCase
-          if (fileName.endsWith(".NLOGO") || fileName.endsWith(".NLOGO3D"))
-            Some(Leaf(
-              p.getFileName.toString,
-              p.toString))
-          else
-            None
+      val children =
+        getChildPaths(directory).sortBy(_.getFileName.toString)(NLogoModelOrdering)
+          .filterNot(p => isBadName(p.getFileName.toString))
+          .flatMap { (p: Path) =>
+            if (Files.isDirectory(p)) {
+              scanDirectory(p, exclusive)
+            } else {
+              val fileName = p.getFileName.toString.toUpperCase
+              if (fileName.endsWith(".NLOGO") || fileName.endsWith(".NLOGO3D")) {
+                Some(Leaf(p.getFileName.toString, p.toString))
+              } else {
+                None
+              }
+            }
         }
-      }
 
-    // don't add empty folders
-    if (children.nonEmpty) {
-      val path        = directory.toString + File.separator
-      val displayName = nameOverride.getOrElse(directory.getFileName.toString)
-      Some(Tree(displayName, path, children.toSeq)(NLogoModelOrdering))
-    } else
-      None
+      // don't add empty folders
+      if (children.nonEmpty) {
+        val path        = directory.toString + File.separator
+        val displayName = nameOverride.getOrElse(directory.getFileName.toString)
+        Some(Tree(displayName, path, children.toSeq)(NLogoModelOrdering))
+      } else {
+        None
+      }
+    }
   }
 
   /// helpers
