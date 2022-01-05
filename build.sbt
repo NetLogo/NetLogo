@@ -73,15 +73,25 @@ lazy val flexmarkDependencies = {
     )
 }
 
-lazy val mockDependencies = Seq(
-  libraryDependencies ++= Seq(
-    "org.jmock" % "jmock" % "2.8.1" % "test",
-    "org.jmock" % "jmock-legacy" % "2.8.1" % "test",
-    "org.jmock" % "jmock-junit4" % "2.8.1" % "test",
-    "org.reflections" % "reflections" % "0.9.10" % "test",
-    "org.slf4j" % "slf4j-nop" % "1.7.32" % "test"
+lazy val mockDependencies = {
+  val mockVersion = "2.8.1"
+  Seq(
+    libraryDependencies ++= Seq(
+      "org.jmock" % "jmock" % mockVersion % "test",
+      "org.jmock" % "jmock-legacy" % mockVersion % "test",
+      "org.jmock" % "jmock-junit4" % mockVersion % "test",
+    )
   )
-)
+}
+
+lazy val mockHeadlessDependencies = mockDependencies ++ {
+  Seq(
+    libraryDependencies ++= Seq(
+      "org.reflections" % "reflections" % "0.9.10" % "test",
+      "org.slf4j" % "slf4j-nop" % "1.7.32" % "test"
+    )
+  )
+}
 
 lazy val asmDependencies = {
   val asmVersion = "7.0"
@@ -116,6 +126,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
   settings(EventsGenerator.settings: _*).
   settings(Docs.settings: _*).
   settings(flexmarkDependencies).
+  settings(mockDependencies: _*).
   settings(asmDependencies).
   settings(Defaults.coreDefaultSettings ++
            Testing.settings ++
@@ -156,9 +167,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.jogamp.jogl" % "jogl-all" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0-rc-20210111/jar/jogl-all.jar",
       "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0-rc-20210111/jar/gluegen-rt.jar",
       "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
-      "org.jmock" % "jmock" % "2.5.1" % "test",
-      "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
-      "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
       "org.apache.httpcomponents" % "httpclient" % "4.2",
       "org.apache.httpcomponents" % "httpmime" % "4.2",
       "com.googlecode.json-simple" % "json-simple" % "1.1.1",
@@ -190,7 +198,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(scalastyleSettings: _*).
   settings(jvmSettings: _*).
   settings(scalatestSettings: _*).
-  settings(mockDependencies: _*).
+  settings(mockHeadlessDependencies: _*).
   settings(asmDependencies).
   settings(Scaladoc.settings: _*).
   settings(Testing.settings: _*).
