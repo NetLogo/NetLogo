@@ -74,7 +74,7 @@ lazy val flexmarkDependencies = {
 }
 
 lazy val mockDependencies = {
-  val mockVersion = "2.8.1"
+  val mockVersion = "2.5.1"
   Seq(
     libraryDependencies ++= Seq(
       "org.jmock" % "jmock" % mockVersion % "test",
@@ -84,9 +84,13 @@ lazy val mockDependencies = {
   )
 }
 
-lazy val mockHeadlessDependencies = mockDependencies ++ {
+lazy val mockHeadlessDependencies = {
+  val mockHeadlessVersion = "2.8.1"
   Seq(
     libraryDependencies ++= Seq(
+      "org.jmock" % "jmock" % mockHeadlessVersion % "test",
+      "org.jmock" % "jmock-legacy" % mockHeadlessVersion % "test",
+      "org.jmock" % "jmock-junit4" % mockHeadlessVersion % "test",
       "org.reflections" % "reflections" % "0.9.10" % "test",
       "org.slf4j" % "slf4j-nop" % "1.7.32" % "test"
     )
