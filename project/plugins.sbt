@@ -25,7 +25,7 @@ addSbtPlugin("com.timushev.sbt"   %  "sbt-updates"                     % "0.6.0"
 
 libraryDependencies ++= Seq(
   "com.github.spullara.mustache.java" % "compiler"              % "0.9.5"
-, "de.jflex"                          % "jflex"                 % "1.5.1"
+, "de.jflex"                          % "jflex"                 % "1.6.1"
 , "classycle"                         % "classycle"             % "1.4.2" from
   "https://s3.amazonaws.com/ccl-artifacts/classycle-1.4.2.jar"
 , "com.github.spullara.mustache.java" % "scala-extensions-2.10" % "0.9.5"
