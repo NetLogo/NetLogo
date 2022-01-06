@@ -14,7 +14,7 @@ class TestAllSyntaxes extends AnyFunSuite {
   def shorten(name: String) =
     Class.forName(name).getSimpleName
   def instruction(name: String) =
-    Class.forName(name).newInstance().asInstanceOf[Instruction]
+    Class.forName(name).getDeclaredConstructor().newInstance().asInstanceOf[Instruction]
   def entry(name: String) =
     shorten(name) + " " + instruction(name).syntax.dump
   def doTest(classNames: Set[String], expected: String) {

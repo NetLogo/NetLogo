@@ -10,19 +10,13 @@ import org.nlogo.{ core, api, agent, nvm }
 object TestHalt {
   // This is ugly, but since we use reflection to instantiate HeadlessWorkspace it's hard to
   // subclass.  Oh well, this is only test code. - ST 3/4/09
-  var finalized = false
   class MyWorkspace(world: agent.World, compiler: nvm.CompilerInterface,
     renderer: api.RendererInterface)
-  extends HeadlessWorkspace(world, compiler, renderer) {
-    override def finalize() {
-      finalized = true
-      super.finalize()
-    }
-  }
+  extends HeadlessWorkspace(world, compiler, renderer)
 }
 
 class TestHalt extends AnyFunSuite  {
-
+  @volatile var finalized = false
   // I've had weird Heisenbug-type problems with the workspace not getting GC'ed if
   // it's a local variable rather than a top-level class member - ST 1/8/13
   var workspace: HeadlessWorkspace = null
@@ -31,6 +25,11 @@ class TestHalt extends AnyFunSuite  {
     import TestHalt._
     finalized = false
     workspace = HeadlessWorkspace.newInstance(classOf[MyWorkspace])
+    cleaner.register(workspace, new Runnable() {
+      override def run(): Unit = {
+        finalized = true
+      }
+    })
     body
     workspace.halt()
     workspace.dispose()

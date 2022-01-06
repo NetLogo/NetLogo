@@ -4,7 +4,7 @@ package org.nlogo.headless
 
 import java.lang.ref.Cleaner
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.api.{ AggregateManagerInterface, LogoException, RendererInterface, Version }
 import org.nlogo.agent.{ CompilationManagement, World }
 import org.nlogo.nvm.{ PresentationCompilerInterface, HaltException }
@@ -15,16 +15,21 @@ object TestHalt {
   // subclass.  Oh well, this is only test code. - ST 3/4/09
   class MyWorkspace(world: World with CompilationManagement, compiler: PresentationCompilerInterface, renderer: RendererInterface, aggregateManager: AggregateManagerInterface)
   extends HeadlessWorkspace(world, compiler, renderer, aggregateManager, null)
-    override def finalize() { finalized = true; super.finalize() }
-  }
 }
-class TestHalt extends FunSuite with SlowTest {
+class TestHalt extends AnyFunSuite with SlowTest {
+  @volatile var finalized = false
   if(!Version.is3D)
     test("halt", SlowTest.Tag) {
       import TestHalt._
+      val cleaner = Cleaner.create()
       finalized = false
       var workspace =
         HeadlessWorkspace.newInstance(classOf[MyWorkspace]).asInstanceOf[MyWorkspace]
+      cleaner.register(workspace, new Runnable() {
+        override def run(): Unit = {
+          finalized = true
+        }
+      })
       workspace.initForTesting(0, 0, 0, 0, "globals [x]")
       var ex: LogoException = null
       val thread = new Thread("TestHalt.testHalt") {
