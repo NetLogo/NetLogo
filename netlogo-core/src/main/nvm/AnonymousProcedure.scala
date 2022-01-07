@@ -83,10 +83,10 @@ case class AnonymousReporter(
   source:    String)
   extends AnonymousProcedure with org.nlogo.api.AnonymousReporter {
 
-  @deprecated("Provide defined arguments for the anonymous reporter", "6.2.3")
+  @deprecated("Provide defined arguments for the anonymous reporter", "6.2.2")
   def this(body: Reporter, formals: Array[Let], binding: Binding, locals: Array[AnyRef], source: String) = {
     this(body, formals, new Lambda.NoArguments(false), binding, locals, source)
-    System.err.println("Constructing Anonymous Reporters without defined arguments deprecated, please update")
+    System.err.println("Constructing Anonymous Reporters without defined arguments is deprecated, please update")
   }
 
   @deprecated("Construct an anonymous reporter using Binding instead of List[LetBinding]", "6.0.1")
@@ -154,10 +154,10 @@ case class AnonymousCommand(
   source:    String)
 extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
 
-  @deprecated("Provide defined arguments for the anonymous command", "6.2.3")
+  @deprecated("Provide defined arguments for the anonymous command", "6.2.2")
   def this(procedure: LiftedLambda, formals: Array[Let], binding: Binding, locals: Array[AnyRef], source: String) = {
     this(procedure, formals, new Lambda.NoArguments(false), binding, locals, source)
-    System.err.println("Constructing Anonymous Commands without defined arguments deprecated, please update")
+    System.err.println("Constructing Anonymous Commands without defined arguments is deprecated, please update")
   }
 
   @deprecated("Construct an anonymous command using Binding instead of List[LetBinding]", "6.0.1")
