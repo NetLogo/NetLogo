@@ -2,10 +2,6 @@
 
 package org.nlogo.agent;
 
-// Since this is automatically generated code it's not surprising
-// it'd produce a few warnings - ST 3/6/08
-@SuppressWarnings({"unused","fallthrough"})
-
 %%
 
 %unicode
