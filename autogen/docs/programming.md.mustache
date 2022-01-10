@@ -1347,6 +1347,37 @@ state of the main random generator, so the outcome of the model is not affected.
 The [[with-local-randomness]] command is provided for this purpose. See its
 entry in the NetLogo Dictionary for more information.
 
+### Saving a Random Seed for a Run
+
+If you want to know what the random seed used by a "run" of a model was, you can
+add some simple code to track it.  Then if an interesting behavior emerges or
+an intermittent error condition occurs, you have a way to reproduce the run by
+grabbing the seed and re-using it.
+
+Add a `starting-seed` global variable, then use [[new-seed]] to give it a value
+after you use [[clear-all]] in your `setup` procedure.  Then give that value
+to the [[random-seed]] command so it will be used for the rest of the run.
+
+```netlogo
+globals [starting-seed]
+
+to setup
+  clear-all
+  set starting-seed new-seed
+  random-seed starting-seed
+  ; ... rest of normal setup code
+end
+
+to go
+  ; ... the rest of normal model code will use the random seed set in `setup`
+end
+```
+
+You can then add a monitor for the `starting-seed` global or simply output it
+to the command center whenever you want to know its value.  If you are using
+BehaviorSpace to run experiments, you can also include it in the output to be
+able to later reproduce runs that it generates.
+
 ## Turtle shapes
 
 In NetLogo, turtle shapes are vector shapes. They are built up from basic
