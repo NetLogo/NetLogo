@@ -5,7 +5,6 @@ package org.nlogo.nvm
 import org.nlogo.api
 import org.nlogo.api.{ AnonymousProcedure => ApiLambda }
 import org.nlogo.core.{ AgentKind, I18N, Let, Syntax }
-import org.nlogo.core.prim.Lambda
 
 // anonymous procedures are created by the compiler via the `->` prim,
 // which may appear in user code, or may be inserted by
@@ -19,7 +18,7 @@ import org.nlogo.core.prim.Lambda
 
 sealed trait AnonymousProcedure {
   val formals: Array[Let] // don't mutate please! Array for efficiency
-  val arguments: Lambda.Arguments
+  val arguments: LambdaArgs
   val argsHandler: LambdaArgsHandler.Instruction
   val binding: Binding
   val locals: Array[AnyRef]
@@ -77,7 +76,7 @@ import org.nlogo.nvm.AnonymousProcedure._
 case class AnonymousReporter(
   body:      Reporter,
   formals:   Array[Let],
-  arguments: Lambda.Arguments,
+  arguments: LambdaArgs,
   binding:   Binding,
   locals:    Array[AnyRef],
   source:    String)
@@ -85,13 +84,13 @@ case class AnonymousReporter(
 
   @deprecated("Provide defined arguments for the anonymous reporter", "6.2.2")
   def this(body: Reporter, formals: Array[Let], binding: Binding, locals: Array[AnyRef], source: String) = {
-    this(body, formals, new Lambda.NoArguments(false), binding, locals, source)
+    this(body, formals, LambdaArgs.fromFormals(formals), binding, locals, source)
     System.err.println("Constructing Anonymous Reporters without defined arguments is deprecated, please update")
   }
 
   @deprecated("Construct an anonymous reporter using Binding instead of List[LetBinding]", "6.0.1")
   def this(body: Reporter, formals: Array[Let], allLets: List[LetBinding], locals: Array[AnyRef]) = {
-    this(body, formals, new Lambda.NoArguments(false), letBindingsToBinding(allLets), locals, "")
+    this(body, formals, LambdaArgs.fromFormals(formals), letBindingsToBinding(allLets), locals, "")
     System.err.println("Constructing Anonymous Reporters using a list of bindings is deprecated, please update")
   }
 
@@ -148,7 +147,7 @@ case class AnonymousReporter(
 case class AnonymousCommand(
   procedure: LiftedLambda,
   formals:   Array[Let],
-  arguments: Lambda.Arguments,
+  arguments: LambdaArgs,
   binding:   Binding,
   locals:    Array[AnyRef],
   source:    String)
@@ -156,13 +155,13 @@ extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
 
   @deprecated("Provide defined arguments for the anonymous command", "6.2.2")
   def this(procedure: LiftedLambda, formals: Array[Let], binding: Binding, locals: Array[AnyRef], source: String) = {
-    this(procedure, formals, new Lambda.NoArguments(false), binding, locals, source)
+    this(procedure, formals, LambdaArgs.fromFormals(formals), binding, locals, source)
     System.err.println("Constructing Anonymous Commands without defined arguments is deprecated, please update")
   }
 
   @deprecated("Construct an anonymous command using Binding instead of List[LetBinding]", "6.0.1")
   def this(procedure: LiftedLambda, formals: Array[Let], allLets: List[LetBinding], locals: Array[AnyRef]) = {
-    this(procedure, formals, new Lambda.NoArguments(false), letBindingsToBinding(allLets), locals, "")
+    this(procedure, formals, LambdaArgs.fromFormals(formals), letBindingsToBinding(allLets), locals, "")
     System.err.println("Constructing Anonymous Commands using a list of bindings is deprecated, please update")
   }
 

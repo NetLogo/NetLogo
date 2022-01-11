@@ -4,7 +4,7 @@ package org.nlogo.prim
 
 import org.nlogo.core.{ ClosedVariable, Let }
 import org.nlogo.core.prim.Lambda
-import org.nlogo.nvm.{ AnonymousReporter, Context, Reporter }
+import org.nlogo.nvm.{ AnonymousReporter, Context, LambdaArgs, Reporter }
 
 class _reporterlambda(
   val arguments:       Lambda.Arguments,
@@ -25,7 +25,7 @@ class _reporterlambda(
     AnonymousReporter(
       body      = args(0),
       formals   = formalsArray,
-      arguments = arguments,
+      arguments = LambdaArgs.fromPrim(arguments),
       binding   = c.activation.binding,
       locals    = c.activation.args,
       source    = lambdaSource)

@@ -4,7 +4,7 @@ package org.nlogo.prim
 
 import org.nlogo.core.ClosedVariable
 import org.nlogo.core.prim.Lambda
-import org.nlogo.nvm.{ AnonymousCommand, Context, LiftedLambda, Reporter, SelfScoping }
+import org.nlogo.nvm.{ AnonymousCommand, Context, LambdaArgs, LiftedLambda, Reporter, SelfScoping }
 
 class _commandlambda(
   val arguments:       Lambda.Arguments,
@@ -22,7 +22,7 @@ class _commandlambda(
     AnonymousCommand(
       procedure = proc,
       formals   = proc.lambdaFormalsArray,
-      arguments = arguments,
+      arguments = LambdaArgs.fromPrim(arguments),
       binding   = c.activation.binding,
       locals    = c.activation.args,
       source    = lambdaSource)

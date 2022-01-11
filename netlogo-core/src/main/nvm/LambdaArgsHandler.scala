@@ -4,11 +4,10 @@ package org.nlogo.nvm
 
 import org.nlogo.nvm.{ Instruction => NvmInstruction }
 import org.nlogo.core.Let
-import org.nlogo.core.prim.Lambda
 
 object LambdaArgsHandler {
 
-  def createInstruction(arguments: Lambda.Arguments, instruction: NvmInstruction): LambdaArgsHandler.Instruction = {
+  def createInstruction(arguments: LambdaArgs, instruction: NvmInstruction): LambdaArgsHandler.Instruction = {
     if (arguments.isVariadic) {
       return new ConciseVariadic(instruction)
     } else {
@@ -16,7 +15,7 @@ object LambdaArgsHandler {
     }
   }
 
-  def createCommand(arguments: Lambda.Arguments, procedure: Procedure): LambdaArgsHandler.Instruction = {
+  def createCommand(arguments: LambdaArgs, procedure: Procedure): LambdaArgsHandler.Instruction = {
     // At the moment the only way an anonymous command can be variadic is by being concise.  So we're
     // Safe to assume `procedure.code(0)` is the actual, single command that'll be run.
     // -Jeremy B December 2021
