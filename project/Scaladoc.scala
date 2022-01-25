@@ -7,16 +7,6 @@ object Scaladoc {
 
   val apiScaladoc = TaskKey[File]("apiScaladoc", "for docs/scaladoc/")
 
-  // copy-and-paste from sbt sources (Defaults.scala)
-  private def exported(s: TaskStreams, command: String): Seq[String] => Unit = {
-    import sbt.internal.CommandStrings.ExportStream
-    val w = s.text(ExportStream)
-    try exported(w, command)
-    finally w.close() // workaround for #937
-  }
-  private[this] def exported(w: PrintWriter, command: String): Seq[String] => Unit =
-    args => w.println((command +: args).mkString(" "))
-
   val settings = NetLogoBuild.settings ++ Seq(
     apiMappings += (
       file(System.getenv("JAVA_HOME") + "/jre/lib/rt.jar") ->
