@@ -44,23 +44,6 @@ object Scaladoc {
         "org.nlogo.prim", "org.nlogo.swing")
       Compile / apiScaladoc / scalacOptions ++=
         Seq("-skip-packages", excludedPackages.mkString(":"))
-    }
-}
-
-/*
-{
-      val classpath = data((Compile / dependencyClasspath).value).toList
-      val out = baseDirectory.value / "docs" / "scaladoc"
-      IO.createDirectory(out)
-      Doc.scaladoc("NetLogo", streams.value.cacheStoreFactory.sub("apiScaladoc"),
-        compilers.value.scalac match {
-          case ac: sbt.internal.inc.AnalyzingCompiler => ac.onArgs(exported(streams.value, "scaladoc"))
-        }, opts)(
-          (sources in Compile).value, classpath, out, opts,
-          (compileInputs in compile in Compile).value.options.maxErrors, streams.value.log)
-      out
-    }
-  )
+    } :+ (Compile / apiScaladoc / target := baseDirectory.value / "docs" / "scaladoc")
 
 }
- */
