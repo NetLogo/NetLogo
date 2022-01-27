@@ -1,16 +1,20 @@
 <!DOCTYPE html>
-<title>
+<html lang="en">
+  <head>
+    <title>
       NetLogo {{version}} User Manual: NetLogoLab and the GoGo Board Extension
     </title>
     <link rel="stylesheet" href="netlogo.css" type="text/css">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  </head>
     <!--
 - Explain why we need the third party installer, and what it does.
 - Document and explain timeouts of attempts to communicate with device when it is not hooked up properly, or wrong serial port used.
 - Change Ping to Test in GoGoMonitor and have it pop up a success message when good
 - Improve GoGo Board is not responding message, with some suggested thing to look for or try (such as, specifying a different serial port, turning board on etc... )
 -->
-  <h1>
+  <body
+    <h1>
       NetLogoLab and the GoGo Board Extension
     </h1>
     <h2>
@@ -257,7 +261,7 @@ gogo:output-port-reverse
       command to the Code Tab. For this sensing project we do not need motors,
       but we will need another device: a temperature sensor. A standard GoGo board
       comes with a temperature sensor. It is labeled (TEMP Sensor). More info on
-      the sensors that come standard with a gogo board can be found <a href="https://docs.gogoboard.org/*/en/sensor/sensor-sety" target="_blank">in the GoGo Docs</a>.
+      the sensors that come standard with a gogo board can be found <a href="https://docs.gogoboard.org/#/en/sensor/sensor-set" target="_blank">in the GoGo Docs</a>.
 
       The simplest use of a temperature sensor, obviously, is to display
       the temperature. We could achieve this by plugging the sensor in to input 1
@@ -338,3 +342,5 @@ plot (gogo:read-sensor 1)
       functionalities and primitives, please refer to these two sample
       models: GoGoMonitor.nlogo and GoGoMonitorSimple.nlogo and see the
       <a href="http://ccl.northwestern.edu/netlogo/docs/gogo.html" target="_blank">documentation for GoGo Extension</a>.
+  </body>
+</html>
