@@ -39,6 +39,16 @@ object BrowserLauncher {
     }
   }
 
+    def openURI(uri: URI): Unit = {
+      openURI(new JDialog, uri)
+    }
+
+    def openURIString(s: String): Unit = {
+      val dialog = new JDialog
+      val uri = makeURI(dialog, s)
+      openURI(dialog, uri)
+    }
+
   def openPath(comp: Component, path: Path, anchor: String): Unit = {
     val u = path.toUri
     if (anchor == null || anchor == "")
@@ -51,6 +61,10 @@ object BrowserLauncher {
       Files.write(redirectFile, redirectHelper(uriWithAnchor).getBytes("UTF-8"))
       openURI(comp, redirectFile.toUri)
     }
+  }
+
+  def openPath(path: Path, anchor: String): Unit = {
+    openPath(new JDialog, path, anchor)
   }
 
   private def redirectHelper(targetUri: URI): String = {
