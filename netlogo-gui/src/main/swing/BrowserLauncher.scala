@@ -7,7 +7,7 @@ import java.lang.Process
 import java.io.IOException
 import java.net.{ URI, URISyntaxException }
 import java.nio.file.{ Files, Path, Paths }
-import javax.swing.JOptionPane
+import javax.swing.{ JDialog, JOptionPane }
 
 object BrowserLauncher {
   private val osName = System.getProperty("os.name")
