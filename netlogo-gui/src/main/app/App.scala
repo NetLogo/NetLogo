@@ -1106,7 +1106,7 @@ class App extends
    */
   def makeWidget(text:String) {
     dispatchThreadOrBust(
-      tabs.interfaceTab.getInterfacePanel.loadWidget(WidgetReader.read(text.lines.toList, workspace, fileformat.nlogoReaders(Version.is3D))))
+      tabs.interfaceTab.getInterfacePanel.loadWidget(WidgetReader.read(text.linesIterator.toList, workspace, fileformat.nlogoReaders(Version.is3D))))
   }
 
   /// helpers for controlling methods

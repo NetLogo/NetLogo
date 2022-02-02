@@ -19,7 +19,7 @@ class NLogoPreviewCommandsFormat extends ComponentSerialization[Array[String], N
     m.optionalSectionValue[PreviewCommands](componentName) match {
       case Some(PreviewCommands.Default) => Array("")
       case Some(commands) =>
-        commands.source.lines.map(_.stripTrailingWhiteSpace).toArray
+        commands.source.linesIterator.map(_.stripTrailingWhiteSpace).toArray
       case _ => Array("")
     }
   }
@@ -44,8 +44,8 @@ object NLogoThreeDPreviewCommandsFormat extends ComponentSerialization[Array[Str
     m.optionalSectionValue[PreviewCommands](componentName) match {
       case Some(PreviewCommands.Default) => Array("")
       case Some(commands) =>
-        commands.source.lines.map(_.stripTrailingWhiteSpace).toArray
-      case _ => PreviewCommands.Manual.source.lines.map(_.stripTrailingWhiteSpace).toArray
+        commands.source.linesIterator.map(_.stripTrailingWhiteSpace).toArray
+      case _ => PreviewCommands.Manual.source.linesIterator.map(_.stripTrailingWhiteSpace).toArray
     }
   }
 

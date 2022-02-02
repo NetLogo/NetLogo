@@ -25,7 +25,7 @@ object JavaPackager {
     import java.util.jar.Attributes.Name._
     Package.ManifestAttributes(
       "Permissions"                   -> "sandbox",
-      "JavaFX-Version"                -> "8.0", // this is required for javapackager to determine the main jar
+      "JavaFX-Version"                -> "17.0.1", // this is required for javapackager to determine the main jar
       "Created-By"                    -> "JavaFX Packager",
       IMPLEMENTATION_VENDOR.toString  -> "org.nlogo",
       IMPLEMENTATION_TITLE.toString   -> "NetLogo",

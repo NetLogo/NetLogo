@@ -113,7 +113,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
     try {
       val sectionLines = source
         .split(SeparatorRegex)
-        .map(_.lines.toSeq)
+        .map(_.linesIterator.toSeq)
         .map(s => if (s.headOption.contains("")) s.tail else s)
         .map(_.toArray)
 
@@ -135,7 +135,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
     val EndOfLineSpaces = new scala.util.matching.Regex("(?m)[ ]+$", "content")
     override def addDefault = ((m: Model) => m.copy(code = ""))
     def serialize(m: Model): Array[String] =
-      EndOfLineSpaces.replaceAllIn(m.code, "").lines.toArray
+      EndOfLineSpaces.replaceAllIn(m.code, "").linesIterator.toArray
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(lines: Array[String]) = { (m: Model) =>
       Try(m.copy(code = lines.mkString("\n")))
@@ -147,7 +147,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
     val EmptyInfoPath = "/system/empty-info.md"
     override def addDefault =
       ((m: Model) => m.copy(info = FileIO.url2String(EmptyInfoPath)))
-    def serialize(m: Model): Array[String] = m.info.lines.toArray
+    def serialize(m: Model): Array[String] = m.info.linesIterator.toArray
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(s: Array[String]) = {(m: Model) =>
       Try {
@@ -190,7 +190,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
     override def addDefault = _.copy(widgets = Seq(defaultView))
 
     def serialize(m: Model): Array[String] =
-      m.widgets.flatMap((w: Widget) => (WidgetReader.format(w, additionalReaders).lines.toSeq :+ "")).toArray
+      m.widgets.flatMap((w: Widget) => (WidgetReader.format(w, additionalReaders).linesIterator.toSeq :+ "")).toArray
 
     def validationErrors(m: Model): Option[String] = None
 
@@ -222,7 +222,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
     val componentName = "org.nlogo.modelsection.turtleshapes"
     override def addDefault = _.copy(turtleShapes = Model.defaultShapes)
     def serialize(m: Model): Array[String] =
-      ShapeParser.formatVectorShapes(m.turtleShapes).lines.toArray
+      ShapeParser.formatVectorShapes(m.turtleShapes).linesIterator.toArray
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(s: Array[String]) = {(m: Model) =>
       Try {
@@ -235,7 +235,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
   object LinkShapesComponent extends ComponentSerialization[Array[String], A] {
     val componentName = "org.nlogo.modelsection.linkshapes"
     override def addDefault = ((m: Model) => m.copy(linkShapes = Model.defaultLinkShapes.toSeq))
-    def serialize(m: Model): Array[String] = ShapeParser.formatLinkShapes(m.linkShapes).lines.toArray
+    def serialize(m: Model): Array[String] = ShapeParser.formatLinkShapes(m.linkShapes).linesIterator.toArray
     def validationErrors(m: Model): Option[String] = None
     override def deserialize(s: Array[String]) = { (m: Model) =>
       Try {
