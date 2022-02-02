@@ -18,7 +18,7 @@ class NLogoHubNetFormat(literalParser: LiteralParser)
 
   def serialize(m: Model): Array[String] =
     m.optionalSectionValue[Seq[CoreWidget]](componentName)
-      .map(_.map(w => WidgetReader.format(w, hubNetReaders).lines.toSeq :+ "").flatten.toArray[String])
+      .map(_.map(w => WidgetReader.format(w, hubNetReaders).linesIterator.toSeq :+ "").flatten.toArray[String])
       .getOrElse(Array[String]())
 
   def validationErrors(m: Model): Option[String] = None

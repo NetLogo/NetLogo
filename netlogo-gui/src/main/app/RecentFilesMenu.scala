@@ -106,7 +106,7 @@ class RecentFiles {
     catch { case _: java.io.IOException => None }
 
   def loadFromPrefs() {
-    models = prefs.get(key, "").lines.toList.map(new ModelEntry(_))
+    models = prefs.get(key, "").linesIterator.toList.map(new ModelEntry(_))
   }
 
   def add(modelEntry: ModelEntry) {

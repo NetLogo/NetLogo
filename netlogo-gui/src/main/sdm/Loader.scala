@@ -22,7 +22,7 @@ object Loader {
       case Some(dt) =>
         val model = buildModel(new Tokenizer(lines.tail.mkString("", "\n", "\n")),
                                dt.toDouble,
-                               input.lines.drop(1).mkString("\n"))
+                               input.linesIterator.drop(1).mkString("\n"))
         Some(model)
     }
   }

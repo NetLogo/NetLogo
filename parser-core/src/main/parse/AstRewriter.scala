@@ -167,7 +167,7 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand) ext
     val rewrittenProcedures = format(edit, procsToRewrite)
     val rewritten =
       wholeFile(structureResults, headers, rewrittenProcedures, footer)
-    rewritten.lines.map(eolWhitespace.replaceAllIn(_, "")).mkString("\n")
+    rewritten.linesIterator.map(eolWhitespace.replaceAllIn(_, "")).mkString("\n")
   }
 
   def trackWhitespace(

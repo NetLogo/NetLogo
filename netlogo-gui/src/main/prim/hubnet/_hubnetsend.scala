@@ -43,7 +43,7 @@ class _hubnetsend extends Command with HubNetPrim {
           context, this,
           s"""|HUBNET-SEND is unable to send the message $message
               |of type ${TypeNames.name(message)} because it could not be
-              |transmitted over the network""".stripMargin.lines.mkString(" "))
+              |transmitted over the network""".stripMargin.linesIterator.mkString(" "))
     }
     context.ip = next
   }

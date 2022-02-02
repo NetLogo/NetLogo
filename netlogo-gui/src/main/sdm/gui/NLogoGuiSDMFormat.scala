@@ -54,7 +54,7 @@ abstract class AbstractNLogoGuiSDMFormat[A <: ModelFormat[Array[String], A]](imp
       // JHotDraw has an annoying habit of including spaces at the end of lines.  we have stripped
       // those out of the models in version control, so to prevent spurious diffs, we need to keep
       // them from coming back - ST 3/10/09
-      s.toString.lines.map(_.replaceAll("\\s*$", "")).toArray
+      s.toString.linesIterator.map(_.replaceAll("\\s*$", "")).toArray
     }
   }
 
