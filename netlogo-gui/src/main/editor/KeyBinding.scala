@@ -11,5 +11,5 @@ object KeyBinding {
   def charKeystroke(char: Char, mask: Int = 0): KeyStroke =
     KeyStroke.getKeyStroke(Character.valueOf(char), mask)
 
-  def menuShortcutMask = java.awt.Toolkit.getDefaultToolkit.getMenuShortcutKeyMask
+  def menuShortcutMask = java.awt.Toolkit.getDefaultToolkit.getMenuShortcutKeyMaskEx
 }
