@@ -290,7 +290,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   def keyTyped(e: KeyEvent): Unit = {
     if (e.getKeyChar() != KeyEvent.CHAR_UNDEFINED &&
       !e.isActionKey &&
-    (e.getModifiersEx & getToolkit.getMenuShortcutKeyMask) == 0) {
+    (e.getModifiersEx & getToolkit.getMenuShortcutKeyMaskEx) == 0) {
       Option(findActionButton(e.getKeyChar)).foreach { button =>
         button.keyTriggered()
       }
