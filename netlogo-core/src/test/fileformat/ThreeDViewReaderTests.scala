@@ -42,7 +42,7 @@ class ThreeDViewReaderTest extends AnyFunSuite with ScalaCheckDrivenPropertyChec
 
   test("round-tripping works") {
     forAll(threeDViewWidgets) { (view: View) =>
-      val serialized = ThreeDViewReader.format(view).lines.toList
+      val serialized = ThreeDViewReader.format(view).linesIterator.toList
       assert(ThreeDViewReader.validate(serialized), "serialized widget should be valid")
       val deserialized = ThreeDViewReader.parse(serialized, litParser)
       assert(view == deserialized, "round-trip must not change widget, written as: " + serialized)

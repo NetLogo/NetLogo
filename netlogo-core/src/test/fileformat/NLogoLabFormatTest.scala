@@ -15,7 +15,7 @@ class NLogoLabFormatTest extends NLogoFormatTest[Seq[LabProtocol]] {
     Model().withOptionalSection("org.nlogo.modelsection.behaviorspace", Some(protocols), Seq())
   def testBehaviorSpaceXml(fileName: String): Array[String] =
     scala.io.Source.fromFile(s"test/fileformat/$fileName")
-      .mkString.lines.toArray
+      .mkString.linesIterator.toArray
   val sampleLines = testBehaviorSpaceXml("BehaviorSpaceExample.xml")
 
   val expectedProto = LabProtocol("experiment", "setup", "go", "", 10, true, true, 0, "not any? fires", List("burned-trees"), List(new RefEnumeratedValueSet("density", List(Double.box(40d), Double.box(0.1d), Double.box(70d)))))
@@ -25,5 +25,5 @@ class NLogoLabFormatTest extends NLogoFormatTest[Seq[LabProtocol]] {
   testRoundTripsObjectForm("empty list of experiment protocols", Seq())
   testRoundTripsObjectForm("a simple experiment protocol", Seq(expectedProto))
   testRoundTripsSerialForm("a multi-experiment protocol", testBehaviorSpaceXml("BehaviorSpaceMultiples.xml"))
-  testRoundTripsSerialForm("all test protocols", FileIO.fileToString("test/lab/protocols.xml").lines.toArray)
+  testRoundTripsSerialForm("all test protocols", FileIO.fileToString("test/lab/protocols.xml").linesIterator.toArray)
 }

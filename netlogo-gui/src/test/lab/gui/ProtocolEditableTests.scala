@@ -24,7 +24,7 @@ class ProtocolEditableTests extends AnyFunSuite {
       override def readFromString(s: String): AnyRef =
         compiler.readFromString(s)
     }
-    val protocolLines = FileIO.fileToString("test/lab/protocols.xml").lines.toArray
+    val protocolLines = FileIO.fileToString("test/lab/protocols.xml").linesIterator.toArray
     val protocols = new NLogoLabFormat(literalParser).load(protocolLines, None).get
     protocols.foreach { protocol =>
       val editedProtocol = new ProtocolEditable(protocol, null, workspace, new AnyRef).get.get
@@ -37,7 +37,7 @@ class ProtocolEditableTests extends AnyFunSuite {
       override def readFromString(s: String): AnyRef =
         compiler.readFromString(s)
     }
-    val protocolLines = FileIO.fileToString("test/lab/protocolsFailure.xml").lines.toArray
+    val protocolLines = FileIO.fileToString("test/lab/protocolsFailure.xml").linesIterator.toArray
     val protocols = new NLogoLabFormat(literalParser).load(protocolLines, None).get
     protocols.foreach { protocol =>
       val validSetting = new ProtocolEditable(protocol, null, workspace, new AnyRef).invalidSettings
