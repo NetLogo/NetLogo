@@ -331,7 +331,7 @@ class WidgetTest extends AnyFunSuite {
 
   test("tick-based view") {
     val view = View(updateMode = UpdateMode.TickBased)
-    assertResult(view)(ViewReader.parse(ViewReader.format(view).lines.toList, literalParser))
+    assertResult(view)(ViewReader.parse(ViewReader.format(view).linesIterator.toList, literalParser))
   }
 
   test("monitor") {

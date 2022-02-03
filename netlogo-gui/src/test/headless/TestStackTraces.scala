@@ -68,7 +68,7 @@ error while observer running __BOOM
     assert(trace.take(2000).startsWith(
       """|stack overflow (recursion too deep)
          |  error while observer running RUN""".stripMargin))
-    trace.lines.drop(2).take(100).toSeq.dropRight(1).foreach(l =>
+    trace.linesIterator.drop(2).take(100).toSeq.dropRight(1).foreach(l =>
         assert(l === "  called by run" ||
           l === "  called by procedure OVERFLOW-RUN"))
   }
@@ -78,7 +78,7 @@ error while observer running __BOOM
     assert(trace.take(2000).startsWith(
       """|stack overflow (recursion too deep)
          |  error while observer running REPORT""".stripMargin))
-    trace.lines.drop(2).take(100).foreach(l =>
+    trace.linesIterator.drop(2).take(100).foreach(l =>
         assert(l === "  called by runresult" ||
           l === "  called by procedure OVERFLOW"))
   }
@@ -89,7 +89,7 @@ error while observer running __BOOM
     assert(trace.take(2000).startsWith(
       """|stack overflow (recursion too deep)
          |  error while observer running FOREACH""".stripMargin))
-    trace.lines.drop(2).take(100).toSeq.dropRight(1).foreach(l =>
+    trace.linesIterator.drop(2).take(100).toSeq.dropRight(1).foreach(l =>
         assert(l === "  called by foreach" ||
           l === "  called by procedure OVERFLOW-FOREACH"))
   }
