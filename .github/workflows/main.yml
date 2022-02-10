@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  LIBERICA_URL: https://download.bell-sw.com/java/8u292+10/bellsoft-jdk8u292+10-linux-amd64-full.tar.gz
+  LIBERICA_URL: https://download.bell-sw.com/java/11.0.14.1+1/bellsoft-jdk11.0.14.1+1-linux-amd64-full.tar.gz
 
 jobs:
   build:
@@ -23,7 +23,7 @@ jobs:
       - uses: olafurpg/setup-scala@v13
         id: setup-scala
         with:
-          java-version: liberica@1.8=tgz+${{ env.LIBERICA_URL }}
+          java-version: liberica@11=tgz+${{ env.LIBERICA_URL }}
 
       - name: Clone Git submodules
         run: git submodule update --init
@@ -52,7 +52,7 @@ jobs:
       - uses: olafurpg/setup-scala@v13
         id: setup-scala
         with:
-          java-version: liberica@1.8=tgz+${{ env.LIBERICA_URL }}
+          java-version: liberica@11=tgz+${{ env.LIBERICA_URL }}
 
       - name: Test Parser
         run: ./sbt parserJS/test parserJVM/test
@@ -70,7 +70,7 @@ jobs:
       - uses: olafurpg/setup-scala@v13
         id: setup-scala
         with:
-          java-version: liberica@1.8=tgz+${{ env.LIBERICA_URL }}
+          java-version: liberica@11=tgz+${{ env.LIBERICA_URL }}
 
       - name: Test 2D
         run: ./sbt netlogo/test:fast netlogo/test:medium netlogo/test:slow
@@ -91,7 +91,7 @@ jobs:
       - uses: olafurpg/setup-scala@v13
         id: setup-scala
         with:
-          java-version: liberica@1.8=tgz+${{ env.LIBERICA_URL }}
+          java-version: liberica@11=tgz+${{ env.LIBERICA_URL }}
 
       - name: Test 3D
         run: ./sbt threed netlogo/test:fast netlogo/test:medium netlogo/test:slow
@@ -109,7 +109,7 @@ jobs:
       - uses: olafurpg/setup-scala@v13
         id: setup-scala
         with:
-          java-version: liberica@1.8=tgz+${{ env.LIBERICA_URL }}
+          java-version: liberica@11=tgz+${{ env.LIBERICA_URL }}
 
       - uses: actions/setup-python@v2
         with:
@@ -143,7 +143,7 @@ jobs:
       - uses: olafurpg/setup-scala@v13
         id: setup-scala
         with:
-          java-version: liberica@1.8=tgz+${{ env.LIBERICA_URL }}
+          java-version: liberica@11=tgz+${{ env.LIBERICA_URL }}
 
       - name: Test Headless
         run: ./sbt headless/test:fast headless/test:medium headless/test:slow
