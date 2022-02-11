@@ -286,14 +286,14 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
       if (extensionVer.isEmpty)
         workspace.warningMessage(
           """|Could not determine version of NetLogo extension.
-             |NetLogo can try to load the extension, but it might not work.""".stripMargin.lines.mkString(" "))
+             |NetLogo can try to load the extension, but it might not work.""".stripMargin.linesIterator.mkString(" "))
       else if (currentVer != extensionVer.get)
         workspace.warningMessage(
           s"""|You are attempting to open a NetLogo extension file that was created
               |for a different version of the NetLogo Extension API.
               |(This NetLogo uses Extension API $currentVer;
               |the extension uses NetLogo Extension API ${extensionVer.get}.)
-              |NetLogo can try to load the extension, but it might not work.""".stripMargin.lines.mkString(" "))
+              |NetLogo can try to load the extension, but it might not work.""".stripMargin.linesIterator.mkString(" "))
       else
         true
     if (! shouldContinue)
