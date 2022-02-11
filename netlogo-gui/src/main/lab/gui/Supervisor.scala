@@ -90,8 +90,8 @@ class Supervisor(
           ex.printStackTrace
           println("RunOptionsDialog threw UserCancelException")
           return
-        case e =>
-          println(a"RunOptionsDialog threw something else: ${e}")
+        case e: Throwable =>
+          println(s"RunOptionsDialog threw something else: ${e}")
           e.printStackTrace
           throw e
           return

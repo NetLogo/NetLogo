@@ -53,9 +53,10 @@ object FileDialog {
     * be no default file selection.
     */
   @throws[UserCancelException]
-  def showFiles(parentFrame: Frame, title: String, mode: Int): String =
+  def showFiles(parentFrame: Frame, title: String, mode: Int): String = {
     println("FileDialog.showFiles(parentFrame: Frame, title: String, mode: Int)")
     showFiles(parentFrame, title, mode, null)
+  }
 
   @throws[UserCancelException]
   def showDirectories(parentFrame: Frame, title: String): String = {
@@ -70,10 +71,34 @@ object FileDialog {
     chooser.getSelectedFile.getAbsolutePath
   }
 
+  private class LoggingFileDialog(w: Frame, t: String, m: Int) extends java.awt.FileDialog(w, t, m) {
+
+    override def show() = {
+      println("FileDialog.show()")
+      super.show()
+      println("FileDialog.show() complete.")
+    }
+
+    override def hide() = {
+      println("FileDialog.hide()")
+      Thread.dumpStack
+      super.hide()
+      println("FileDialog.hide() complete.")
+    }
+
+    override def setVisible(visible: Boolean) = {
+      println(s"FileDialog.setVisible(${visible})")
+      Thread.dumpStack()
+      super.setVisible(visible)
+      println("FileDialog.setVisible() complete.")
+    }
+
+  }
+
   @throws[UserCancelException]
   private def showFiles(parentFrame: Frame, title: String, mode: Int, file: String): String = {
     println(s"FileDialog.showFiles(parentFrame: ${parentFrame}, title: ${title}, mode: ${mode}, file: ${file})")
-    val dialog = new java.awt.FileDialog(parentFrame, title, mode)
+    val dialog = new LoggingFileDialog(parentFrame, title, mode)
     println("java.awt.FileDialog created.")
     dialog.setDirectory(currentDirectory)
     println(s"Directory set to $currentDirectory.")
@@ -81,24 +106,26 @@ object FileDialog {
       dialog.setFile(file)
       println(s"File set to $file.")
     }
-    println("Showing dialog")
+    println("Showing file dialog.")
     dialog.setVisible(true)
-    val file = dialog.getFile
-    if (file == null) {
-      println("Dialog did not return a file, assume user cancel.")
+    println("Getting user file choice from the dialog.")
+    val chosenFile = dialog.getFile
+    println(s"File choice complete: ${chosenFile}.")
+    if (chosenFile == null) {
+      println("Dialog did not return a chosenFile, assume user cancel.")
       throw new UserCancelException
     }
     println("Getting directory.")
     currentDirectory = dialog.getDirectory
-    if (mode == java.awt.FileDialog.LOAD && !new File(currentDirectory + file).exists) {
-      println("User selected non-existent file, re-running showFiles().")
-      return showFiles(parentFrame, title, mode, file)
+    if (mode == java.awt.FileDialog.LOAD && !new File(currentDirectory + chosenFile).exists) {
+      println("User selected non-existent chosenFile, re-running showFiles().")
+      return showFiles(parentFrame, title, mode, chosenFile)
     }
-    println(s"FileDialog.showFiles() complete, return file or directory (${currentDirectory}) and file (${file}).")
+    println(s"FileDialog.showFiles() complete, return chosenFile or currentDirectory (${currentDirectory}) and chosenFile (${chosenFile}).")
     if (currentDirectory == null)
-      file
+      chosenFile
     else
-      currentDirectory + file
+      currentDirectory + chosenFile
   }
 
   private def selectedDirectory(chooser: JFileChooser): String = {

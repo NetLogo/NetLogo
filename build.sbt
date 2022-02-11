@@ -30,7 +30,7 @@ lazy val scalaSettings = Seq(
   scalaSource in Test    := baseDirectory.value / "src" / "test",
   crossPaths             := false, // don't cross-build for different Scala versions
   scalacOptions ++=
-    "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.8 -opt:l:method -Xlint -Xfatal-warnings"
+    "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.8 -opt:l:method -Xlint"
       .split(" ").toSeq,
   // we set doc options until https://github.com/scala/bug/issues/10402 is fixed
   scalacOptions in Compile in doc --= "-Xlint -Xfatal-warnings".split(" ").toSeq
@@ -167,7 +167,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       all.dependsOn(
         htmlDocs,
         packageBin in Test,
-        Extensions.extensions,
+        //Extensions.extensions,
         NativeLibs.nativeLibs,
         ModelsLibrary.modelIndex,
         Scaladoc.apiScaladoc).value
@@ -223,7 +223,7 @@ lazy val headless = (project in file ("netlogo-headless")).
       (packageBin in Compile).value,
       (packageBin in Test).value,
       (compile in Test).value,
-      Extensions.extensions
+      //Extensions.extensions
     )}
   )
 
