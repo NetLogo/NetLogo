@@ -11,6 +11,7 @@ import java.util.prefs.Preferences
 class RunOptionsDialog(parent: java.awt.Dialog,
                        dialogFactory: EditDialogFactoryInterface)
 {
+  println("RunOptionsDialog()")
   object Prefs {
     private val prefs = Preferences.userNodeForPackage(RunOptionsDialog.this.getClass)
     def spreadsheet = prefs.getBoolean("spreadsheet", true)
@@ -18,21 +19,29 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     def updateView = prefs.getBoolean("updateView", true)
     def updatePlotsAndMonitors = prefs.getBoolean("updatePlotsAndMonitors", true)
     def updateFrom(runOptions: RunOptions): Unit = {
+      println("Prefs.updateFrom()")
       prefs.putBoolean("spreadsheet", runOptions.spreadsheet)
       prefs.putBoolean("table", runOptions.table)
       prefs.putBoolean("updateView", runOptions.updateView)
       prefs.putBoolean("updatePlotsAndMonitors", runOptions.updatePlotsAndMonitors)
+      println("Prefs.updateFrom() complete.")
     }
   }
   def get = {
+    println("RunOptionsDialog.get()")
     val editable = new EditableRunOptions
-    if(dialogFactory.canceled(parent, editable))
+    if (dialogFactory.canceled(parent, editable)) {
+      println("EditableRunOptions dialog canceled.")
       throw new UserCancelException
+    }
     val runOptions = editable.get
+    println(s"Run options retrieved: ${runOptions}")
     Prefs.updateFrom(runOptions)
+    println(s"RunOptionsDialog.get() complete, double checking runOptions: ${runOptions}.")
     runOptions
   }
   class EditableRunOptions extends Editable {
+    println("EditableRunOptions()")
     var spreadsheet = Prefs.spreadsheet
     var table = Prefs.table
     var updateView = Prefs.updateView
@@ -54,9 +63,14 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     // boilerplate for Editable
     def helpLink = None
     def error(key:Object) = null
-    def error(key:Object, e: Exception){}
+    def error(key:Object, e: Exception) {
+      println(s"EditableRunOptions.error(key: ${key}, e: ${e})")
+      e.printStackTrace
+    }
     def anyErrors = false
     val sourceOffset = 0
     def editFinished = true
+    println("EditableRunOptions() complete.")
   }
+  println("RunOptionsDialog() complete.")
 }

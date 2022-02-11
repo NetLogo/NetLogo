@@ -27,8 +27,10 @@ object FileDialog {
     * the given file will be the default selection.
     */
   @throws[UserCancelException]
-  def showFiles(component: Component, title: String, mode: Int, file: String): String =
+  def showFiles(component: Component, title: String, mode: Int, file: String): String = {
+    println("FileDialog.showFiles(component: Component, title: String, mode: Int, file: String)")
     showFiles(Hierarchy.getFrame(component), title, mode, file)
+  }
 
   def confirmFileOverwrite(owner: Component, path: String) = {
     // The FileDialog checks for overwrite, but we munge extensions after
@@ -52,6 +54,7 @@ object FileDialog {
     */
   @throws[UserCancelException]
   def showFiles(parentFrame: Frame, title: String, mode: Int): String =
+    println("FileDialog.showFiles(parentFrame: Frame, title: String, mode: Int)")
     showFiles(parentFrame, title, mode, null)
 
   @throws[UserCancelException]
@@ -69,20 +72,33 @@ object FileDialog {
 
   @throws[UserCancelException]
   private def showFiles(parentFrame: Frame, title: String, mode: Int, file: String): String = {
+    println(s"FileDialog.showFiles(parentFrame: ${parentFrame}, title: ${title}, mode: ${mode}, file: ${file})")
     val dialog = new java.awt.FileDialog(parentFrame, title, mode)
+    println("java.awt.FileDialog created.")
     dialog.setDirectory(currentDirectory)
-    if (file != null)
+    println(s"Directory set to $currentDirectory.")
+    if (file != null) {
       dialog.setFile(file)
+      println(s"File set to $file.")
+    }
+    println("Showing dialog")
     dialog.setVisible(true)
-    if (dialog.getFile == null)
+    val file = dialog.getFile
+    if (file == null) {
+      println("Dialog did not return a file, assume user cancel.")
       throw new UserCancelException
+    }
+    println("Getting directory.")
     currentDirectory = dialog.getDirectory
-    if (mode == java.awt.FileDialog.LOAD && !new File(currentDirectory + dialog.getFile).exists)
-      return showFiles(parentFrame, title, mode, dialog.getFile)
-    if (dialog.getDirectory == null)
-      dialog.getFile
+    if (mode == java.awt.FileDialog.LOAD && !new File(currentDirectory + file).exists) {
+      println("User selected non-existent file, re-running showFiles().")
+      return showFiles(parentFrame, title, mode, file)
+    }
+    println(s"FileDialog.showFiles() complete, return file or directory (${currentDirectory}) and file (${file}).")
+    if (currentDirectory == null)
+      file
     else
-      dialog.getDirectory + dialog.getFile
+      currentDirectory + file
   }
 
   private def selectedDirectory(chooser: JFileChooser): String = {

@@ -66,24 +66,44 @@ class Supervisor(
   }
 
   override def start() {
+    println("Supervisor.start()")
     EventQueue.mustBeEventDispatchThread()
     workspace.jobManager.haltSecondary()
     workspace.jobManager.haltPrimary()
     try {
+      println("Running test compile")
       worker.compile(workspace) // result discarded. just to make sure compilation succeeds
     } catch {
       case e: CompilerException =>
+        println("Test compile failed")
         failure(e)
         return
     }
+    println("Test compile passed")
     options =
-      try { new RunOptionsDialog(dialog, dialogFactory).get }
-      catch { case ex: UserCancelException => return }
+      try {
+        println("Showing RunOptionsDialog")
+        new RunOptionsDialog(dialog, dialogFactory).get
+      }
+      catch {
+        case ex: UserCancelException =>
+          ex.printStackTrace
+          println("RunOptionsDialog threw UserCancelException")
+          return
+        case e =>
+          println(a"RunOptionsDialog threw something else: ${e}")
+          e.printStackTrace
+          throw e
+          return
+      }
+    println(s"Supervisor got options: ${options}")
     if (options.spreadsheet) {
+      println("Getting spreadsheet file path")
       val fileName = FileDialog.showFiles(
         workspace.getFrame, "Exporting as spreadsheet", JFileDialog.SAVE,
         workspace.guessExportName(worker.protocol.name + "-spreadsheet.csv"))
       try {
+        println(s"Adding SpreadsheetExporter for fileName: ${fileName}")
         addExporter(new SpreadsheetExporter(
           workspace.getModelFileName,
           workspace.world.getDimensions,
@@ -94,12 +114,16 @@ class Supervisor(
           failure(e)
           return
       }
+    } else {
+      println("Spreadsheet not selected")
     }
     if (options.table) {
+      println("Getting table file path")
       val fileName = FileDialog.showFiles(
         workspace.getFrame, "Exporting as table", JFileDialog.SAVE,
         workspace.guessExportName(worker.protocol.name + "-table.csv"))
       try {
+        println(s"Adding TableExporter for fileName: ${fileName}")
         addExporter(new TableExporter(
           workspace.getModelFileName,
           workspace.world.getDimensions,
@@ -110,9 +134,13 @@ class Supervisor(
           failure(e)
           return
       }
+    } else {
+      println("Table not selected")
     }
+    println("Got paths, setting up progress dialog.")
     progressDialog.setUpdateView(options.updateView)
     progressDialog.setPlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
+    println("Queing up workspaces.")
     queue.enqueue(workspace)
     (2 to options.threadCount).foreach{_ =>
       val w = factory.newInstance
@@ -123,7 +151,9 @@ class Supervisor(
     // add this listener last, so it runs last, so the workspace doesn't get re-enqueued
     // too soon - ST 8/18/09
     worker.addListener(listener)
+    println("Starting jobs.")
     super.start()
+    println("Supervisor.start() complete.")
   }
 
   override def run() {
