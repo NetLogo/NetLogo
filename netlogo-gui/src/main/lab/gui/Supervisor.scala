@@ -13,7 +13,7 @@ import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.lab.{ Exporter, SpreadsheetExporter, TableExporter, Worker }
 import org.nlogo.nvm.{ EngineException, Workspace }
 import org.nlogo.nvm.LabInterface.ProgressListener
-import org.nlogo.swing.{ FileDialog, OptionDialog }
+import org.nlogo.swing.{ FileDialog, OptionDialog, LoggingFileDialog }
 import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace }
 import org.nlogo.workspace.{ CurrentModelOpener, WorkspaceFactory }
 
@@ -97,6 +97,15 @@ class Supervisor(
           return
       }
     println(s"Supervisor got options: ${options}")
+
+    if (options.threadCount % 2 == 1) {
+      println("Thread count is odd, mitigation enabled.")
+      LoggingFileDialog.enableMitigation = true
+    } else {
+      println("Thread count is even, no mitigation")
+      LoggingFileDialog.enableMitigation = false
+    }
+
     if (options.spreadsheet) {
       println("Getting spreadsheet file path")
       val fileName = FileDialog.showFiles(
@@ -137,6 +146,9 @@ class Supervisor(
     } else {
       println("Table not selected")
     }
+
+    LoggingFileDialog.enableMitigation = false
+
     println("Got paths, setting up progress dialog.")
     progressDialog.setUpdateView(options.updateView)
     progressDialog.setPlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)

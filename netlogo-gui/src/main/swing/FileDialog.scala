@@ -71,30 +71,6 @@ object FileDialog {
     chooser.getSelectedFile.getAbsolutePath
   }
 
-  private class LoggingFileDialog(w: Frame, t: String, m: Int) extends java.awt.FileDialog(w, t, m) {
-
-    override def show() = {
-      println("FileDialog.show()")
-      super.show()
-      println("FileDialog.show() complete.")
-    }
-
-    override def hide() = {
-      println("FileDialog.hide()")
-      Thread.dumpStack
-      super.hide()
-      println("FileDialog.hide() complete.")
-    }
-
-    override def setVisible(visible: Boolean) = {
-      println(s"FileDialog.setVisible(${visible})")
-      Thread.dumpStack()
-      super.setVisible(visible)
-      println("FileDialog.setVisible() complete.")
-    }
-
-  }
-
   @throws[UserCancelException]
   private def showFiles(parentFrame: Frame, title: String, mode: Int, file: String): String = {
     println(s"FileDialog.showFiles(parentFrame: ${parentFrame}, title: ${title}, mode: ${mode}, file: ${file})")
