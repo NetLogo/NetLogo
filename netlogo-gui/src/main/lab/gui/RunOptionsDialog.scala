@@ -6,6 +6,8 @@ import org.nlogo.api.{Editable, Property}
 import org.nlogo.awt.UserCancelException
 import org.nlogo.window.EditDialogFactoryInterface
 import Supervisor.RunOptions
+
+import java.io.File
 import java.util.prefs.Preferences
 
 class RunOptionsDialog(parent: java.awt.Dialog,
@@ -13,6 +15,11 @@ class RunOptionsDialog(parent: java.awt.Dialog,
                        filePrefix: String)
 {
   println("RunOptionsDialog()")
+
+  val userHome = System.getProperty("user.home")
+  val spreadsheetFile = s"$filePrefix-spreadsheet.csv"
+  val tableFile = s"$filePrefix-table.csv"
+
   object Prefs {
     private val prefs = Preferences.userNodeForPackage(RunOptionsDialog.this.getClass)
     // to match the behavior we had before (just boolean spreadsheet/table), if we had a
@@ -21,23 +28,39 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     // or experiement.  So just use the suggested one and assume that any string value
     // means they want the same output type.
     // -Jeremy B February 2022
-    val emptyVals = Set(null, "", "true", "false")
-    val userHome = System.getProperty("user.home")
-    val filePath = userHome + java.io.File.separator + filePrefix
+    val emptyVals = Set(null, "", "false")
+
+    def append(pathString: String, fileName: String) =
+      (new File(pathString)).toPath.resolve(fileName).toString
+
+    def parentDirectory(pathString: String) =
+      if (pathString == null || pathString.trim == "") {
+        ""
+      } else {
+        (new File(pathString)).toPath.getParent.toString
+      }
+
+    def replaceTrue(v: String) =
+      if (v == "true") { "" } else { v }
+
     def spreadsheet = {
       val ss = prefs.get("spreadsheet", "")
-      if (emptyVals.contains(ss)) { "" } else { s"$filePath-spreadsheet.csv" }
+      if (emptyVals.contains(ss)) { "" } else {
+        append(replaceTrue(ss), spreadsheetFile)
+      }
     }
     def table = {
       val t = prefs.get("table", "")
-      if (emptyVals.contains(t)) { "" } else { s"$filePath-table.csv" }
+      if (emptyVals.contains(t)) { "" } else {
+        append(replaceTrue(t), tableFile)
+      }
     }
     def updateView = prefs.getBoolean("updateView", true)
     def updatePlotsAndMonitors = prefs.getBoolean("updatePlotsAndMonitors", true)
     def updateFrom(runOptions: RunOptions): Unit = {
       println("Prefs.updateFrom()")
-      prefs.put("spreadsheet", runOptions.spreadsheet)
-      prefs.put("table", runOptions.table)
+      prefs.put("spreadsheet", parentDirectory(runOptions.spreadsheet))
+      prefs.put("table", parentDirectory(runOptions.table))
       prefs.putBoolean("updateView", runOptions.updateView)
       prefs.putBoolean("updatePlotsAndMonitors", runOptions.updatePlotsAndMonitors)
       println("Prefs.updateFrom() complete.")
@@ -67,8 +90,8 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     val propertySet = {
       import scala.collection.JavaConverters._
       List(
-        Property("spreadsheet", Property.FilePath(spreadsheet), "Spreadsheet output"),
-        Property("table", Property.FilePath(table), "Table output"),
+        Property("spreadsheet", Property.FilePath(spreadsheetFile), "Spreadsheet output"),
+        Property("table", Property.FilePath(tableFile), "Table output"),
         Property("updateView", Property.Boolean, "Update view"),
         Property("updatePlotsAndMonitors", Property.Boolean, "Update plots and monitors"),
         Property("threadCount", Property.Integer, "Simultaneous runs in parallel",

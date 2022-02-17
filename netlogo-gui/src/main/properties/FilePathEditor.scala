@@ -3,6 +3,7 @@
 package org.nlogo.properties
 
 import java.awt.{ BorderLayout, Component, FileDialog => JFileDialog, GridBagConstraints }
+import java.io.{ File }
 import javax.swing.{ JLabel, JToolBar }
 
 import org.nlogo.awt.{ UserCancelException }
@@ -12,6 +13,13 @@ import org.nlogo.swing.{ FileDialog, RichJButton, TextField }
 abstract class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, suggestedFile: String)
   extends PropertyEditor(accessor)
 {
+  val suggestedFileName = if (suggestedFile != null && suggestedFile.trim() != "") {
+    suggestedFile
+  } else {
+    s"${accessor.displayName}-export.csv"
+  }
+  val homePath = (new File(System.getProperty("user.home"))).toPath.toAbsolutePath
+
   val editor = makeEditor()
   setLayout(new BorderLayout(BORDER_PADDING, 0))
   add(new JLabel(accessor.displayName), BorderLayout.WEST)
@@ -21,15 +29,13 @@ abstract class FilePathEditor(accessor: PropertyAccessor[String], parent: Compon
   toolbar.setFloatable(false)
   val browseButton = RichJButton("Browse...") {
     try {
-      val suggest = if (suggestedFile == null || suggestedFile.trim() == "") {
-        s"${accessor.displayName}-export.csv"
-      } else {
-        suggestedFile
-      }
-      val fileName = FileDialog.showFiles(parent, s"${accessor.displayName} export", JFileDialog.SAVE, suggest)
-      this.set(fileName.trim())
+      val filePath = asPath(editor.getText)
+      FileDialog.setDirectory(filePath.getParent.toString)
+      val outName = FileDialog.showFiles(parent, s"${accessor.displayName} export", JFileDialog.SAVE, filePath.getFileName.toString)
+      this.set(outName.trim())
     } catch {
-      case ex: UserCancelException => println("User canceled file browser.")
+      case ex: UserCancelException =>
+        println(s"User canceled the ${accessor.displayName} file browser.")
     }
   }
   toolbar.add(browseButton)
@@ -39,7 +45,32 @@ abstract class FilePathEditor(accessor: PropertyAccessor[String], parent: Compon
 
   def makeEditor() = new TextField(12)
 
-  override def get = Option(editor.getText)
+  private def asPath(currentText: String) = {
+    val currentFile = new File(currentText)
+    val currentPath = currentFile.toPath
+    val path = if (currentPath.isAbsolute) {
+      currentPath
+    } else {
+      homePath.resolve(currentPath)
+    }
+    if (path.toFile.isDirectory) {
+      val suggestedPath = path.resolve(suggestedFileName)
+      suggestedPath
+    } else {
+      path
+    }
+  }
+
+  override def get = {
+    val currentText = editor.getText
+    val pathString = if (currentText == null || currentText.trim == "") {
+      ""
+    } else {
+      asPath(currentText).toString
+    }
+
+    Option(pathString)
+  }
 
   override def set(value: String) { editor.setText(value) }
 
