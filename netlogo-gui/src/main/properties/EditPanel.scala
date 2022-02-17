@@ -266,6 +266,8 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         new ReporterLineEditor(accessor, colorizer) with Changed
       case Property.String =>
         new StringEditor(accessor) with Changed
+      case Property.FilePath(suggestedFile) =>
+        new FilePathEditor(accessor, this, suggestedFile) with Changed
     }
   }
 
