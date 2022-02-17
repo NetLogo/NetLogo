@@ -4,7 +4,7 @@ package org.nlogo.lab.gui
 
 import collection.mutable.ListBuffer
 
-import java.awt.{ Dialog, FileDialog => JFileDialog }
+import java.awt.{ Dialog }
 import java.io.{ FileWriter, IOException, PrintWriter }
 
 import org.nlogo.api.{ Exceptions, LabProtocol, LogoException }
@@ -13,12 +13,12 @@ import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.lab.{ Exporter, SpreadsheetExporter, TableExporter, Worker }
 import org.nlogo.nvm.{ EngineException, Workspace }
 import org.nlogo.nvm.LabInterface.ProgressListener
-import org.nlogo.swing.{ FileDialog, OptionDialog, LoggingFileDialog }
+import org.nlogo.swing.{ OptionDialog, LoggingFileDialog }
 import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace }
 import org.nlogo.workspace.{ CurrentModelOpener, WorkspaceFactory }
 
 object Supervisor {
-  case class RunOptions(threadCount: Int, table: Boolean, spreadsheet: Boolean, updateView: Boolean, updatePlotsAndMonitors: Boolean)
+  case class RunOptions(threadCount: Int, table: String, spreadsheet: String, updateView: Boolean, updatePlotsAndMonitors: Boolean)
 }
 class Supervisor(
   dialog: Dialog,
@@ -83,7 +83,7 @@ class Supervisor(
     options =
       try {
         println("Showing RunOptionsDialog")
-        new RunOptionsDialog(dialog, dialogFactory).get
+        new RunOptionsDialog(dialog, dialogFactory, workspace.guessExportName(worker.protocol.name)).get
       }
       catch {
         case ex: UserCancelException =>
@@ -106,11 +106,8 @@ class Supervisor(
       LoggingFileDialog.enableMitigation = false
     }
 
-    if (options.spreadsheet) {
-      println("Getting spreadsheet file path")
-      val fileName = FileDialog.showFiles(
-        workspace.getFrame, "Exporting as spreadsheet", JFileDialog.SAVE,
-        workspace.guessExportName(worker.protocol.name + "-spreadsheet.csv"))
+    if (options.spreadsheet != null && options.spreadsheet.trim() != "") {
+      val fileName = options.spreadsheet.trim()
       try {
         println(s"Adding SpreadsheetExporter for fileName: ${fileName}")
         addExporter(new SpreadsheetExporter(
@@ -126,11 +123,8 @@ class Supervisor(
     } else {
       println("Spreadsheet not selected")
     }
-    if (options.table) {
-      println("Getting table file path")
-      val fileName = FileDialog.showFiles(
-        workspace.getFrame, "Exporting as table", JFileDialog.SAVE,
-        workspace.guessExportName(worker.protocol.name + "-table.csv"))
+    if (options.table != null && options.table.trim() != "") {
+      val fileName = options.table.trim()
       try {
         println(s"Adding TableExporter for fileName: ${fileName}")
         addExporter(new TableExporter(

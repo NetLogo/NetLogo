@@ -28,6 +28,7 @@ object Property {
   case object ReporterOrEmpty extends Type
   case object ReporterLine extends Type
   case object String extends Type
+  case class FilePath(suggestedName: String) extends Type
 }
 
 case class Property(accessString: String, tpe: Property.Type, name: String,
