@@ -221,29 +221,63 @@ the "Run" button. A dialog titled "Run options" will appear.
 
 #### Run options: formats
 
-The run options dialog lets you select the formats you would like the data from
-your experiment saved in. Data is collected for each run or step, according to
-the setting of **Measure runs at every step** option. In either case, the
-initial state of the system is recorded, after the setup commands run but before
-the go commands run for the first time.
+The run options dialog lets you type or **Browse...** for the files for the formats you would
+like the data from your experiment saved in (if any).  If you don't wish to use a particlar
+format, you can clear the file text or click the **Disable** button and it'll be cleared for
+you. Data is collected for each run or step, according to the setting of **Measure runs at
+every step** option.  For both formats the initial state of the system is recorded, after the
+**setup** commands run but before the **go** commands run for the first time.
 
-Both **Table output** and **Spreadsheet output** will include a header section that has rows for 1) the NetLogo app version used, 2) the name of the NetLogo model file used, 3) the name of the BehaviorSpace experiment used, 4) the date and time at the start, and 5) the dimensions of the world used at the start.
+Both **Table output** and **Spreadsheet output** will include a header section that has rows for
+1) the NetLogo app version used, 2) the name of the NetLogo model file used, 3) the name of the
+BehaviorSpace experiment used, 4) the date and time at the start, and 5) the dimensions of the
+world used at the start.
 
-The **Table output** format lists each measurement step from each run in its own row, with each metric in a separate column.  The measurement rows will appear in the order they happen in real time.  With the **parallel runs** option the measurements may appear in a mixed order as multiple runs can happen simultaneously.  To help identify which run a row belongs to, there is a column titled `[run number]` along with a column titled `[step]` that indicates the measurement number for that run.  Each row also includes the values used for the variables during initial setup of the run; these values are the same for each of that run's measurement rows.  **Table output** data is written to the file as each run completes.
+The **Table output** format lists each measurement step from each run in its own row, with each
+metric in a separate column.  The measurement rows will appear in the order they happen in real
+time.  With the **parallel runs** option the measurements may appear in a mixed order as
+multiple runs can happen simultaneously.  To help identify which run a row belongs to, there is
+a column titled `[run number]` along with a column titled `[step]` that indicates the measurement
+number for that run.  Each row also includes the values used for the variables during initial
+setup of the run; these values are the same for each of that run's measurement rows.  **Table
+output** data is written to the file as each run completes.
 
-The **Table output** format is good to use when you want to further process the data using another tool, such as importing into a database, a statistics package, or a spreadsheet application for analysis.
+The **Table output** format is good to use when you want to further process the data using another
+tool, such as importing into a database, a statistics package, or a spreadsheet application for
+analysis.
 
-In the below **Table output** sample image the header section is in red, the run number and step columns are in blue, the initial values of the variables for the run are in green, and the measurement metric data is in purple.
+In the below **Table output** sample image the header section is in red, the run number and step
+columns are in blue, the initial values of the variables for the run are in green, and the
+measurement metric data is in purple.
 
 ![[bs-table.png]]
 
-The **Spreadsheet output** format lists each metric for each run in a separate column, with each row corresponding to a measurement step that applies to all runs.  If one run finishes before another due to a **stop condition**, then its measurement steps after that point will be blank.  At the top of the file there is a `[run number]` row that will have the run number repeated for each metric at the top of the file.  After that are rows for the initial values given to each variable for the run.  The spreadsheet output also calculates the min, mean, max, and final values for each metric and lists those after the initial values before the individual run measurements.  Then it lists the actual number of steps a run went through in a `[steps]` row.
+The **Spreadsheet output** format lists each metric for each run in a separate column, with each
+row corresponding to a measurement step that applies to all runs.  If one run finishes before
+another due to a **stop condition**, then its measurement steps after that point will be blank.
+At the top of the file there is a `[run number]` row that will have the run number repeated for
+each metric at the top of the file.  After that are rows for the initial values given to each
+variable for the run.  The spreadsheet output also calculates the min, mean, max, and final values
+for each metric and lists those after the initial values before the individual run measurements.
+Then it lists the actual number of steps a run went through in a `[steps]` row.
 
-The **Spreadsheet output** data makes it easier to quickly compare runs against each other, as they will be aligned vertically when imported into a spreadsheet application.  It can also make generating comparative graphs of results with initial variable changes across runs easy for the same reason.
+The **Spreadsheet output** data makes it easier to quickly compare runs against each other, as they
+will be aligned vertically when imported into a spreadsheet application.  It can also make
+generating comparative graphs of results with initial variable changes across runs easy for the
+same reason.
 
-It is important to note that **Spreadsheet output** data is not written to the results file until the experiment finishes. Since the data is stored in memory until the experiment is done, very large experiments could run out of memory.  You should disable **Spreadsheet output** unless you really want it.  Also, if anything interrupts the experiment no spreadsheet results will be written.  Possible sources of interruptions would be runtime errors in the model, running out of memory, system crashes, or power outages.  For long experiments you may want to also enable **Table output** format as a precaution so that if something happens and you get no **Spreadsheet output** you'll at least get partial data output.
+It is important to note that **Spreadsheet output** data is not written to the results file until
+the experiment finishes. Since the data is stored in memory until the experiment is done, very
+large experiments could run out of memory.  You should disable **Spreadsheet output** unless you
+really want it.  Also, if anything interrupts the experiment no spreadsheet results will be written.
+Possible sources of interruptions would be runtime errors in the model, running out of memory,
+system crashes, or power outages.  For long experiments you may want to also enable **Table output**
+format as a precaution so that if something happens and you get no **Spreadsheet output** you'll
+at least get partial data output.
 
-In the below **Spreadsheet output** sample image the header section is in red, the run number row is in blue, the initial values of the variables for the run are in green, the extra calculated metrics are in orange, and the measurement metric data is in purple.
+In the below **Spreadsheet output** sample image the header section is in red, the run number row
+is in blue, the initial values of the variables for the run are in green, the extra calculated
+metrics are in orange, and the measurement metric data is in purple.
 
 ![[bs-spreadsheet.png]]
 
