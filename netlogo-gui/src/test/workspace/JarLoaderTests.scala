@@ -104,7 +104,7 @@ class JarLoaderTests extends AnyFunSuite with BeforeAndAfter {
     assert(extensionData.prefix == "array")
     assert(extensionData.classManagerName == "org.nlogo.extensions.array.ArrayExtension")
     assert(extensionData.version == Some("6.1"))
-    assert(extensionData.modified == modified)
+    assert(extensionData.modified / 1000 == modified / 1000)
   }
 
   test("extensionData raises an error when the jar manifest doesn't have the required fields") {
