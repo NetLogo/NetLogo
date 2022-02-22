@@ -231,6 +231,7 @@ lazy val headless = (project in file ("netlogo-headless")).
     ),
     (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
     resourceDirectory in Compile := baseDirectory.value / "resources" / "main",
+    unmanagedResourceDirectories in Compile ++= (unmanagedResourceDirectories in Compile in sharedResources).value,
     resourceDirectory in Test    := baseDirectory.value.getParentFile / "test",
     testChecksumsClass in Test   := "org.nlogo.headless.misc.TestChecksums",
     dumpClassName                := "org.nlogo.headless.misc.Dump",
