@@ -3,6 +3,8 @@
 package org.nlogo.headless
 package misc
 
+import java.lang.ref.Cleaner
+
 import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.util.SlowTestTag
 import org.nlogo.{ core, api, agent, nvm }
@@ -23,6 +25,7 @@ class TestHalt extends AnyFunSuite  {
 
   def withWorkspace(body: => Unit) {
     import TestHalt._
+    val cleaner = Cleaner.create()
     finalized = false
     workspace = HeadlessWorkspace.newInstance(classOf[MyWorkspace])
     cleaner.register(workspace, new Runnable() {
