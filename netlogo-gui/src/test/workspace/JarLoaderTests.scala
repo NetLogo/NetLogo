@@ -142,8 +142,8 @@ class JarLoaderTests extends AnyFunSuite with BeforeAndAfter {
     intercept[ExtensionManagerException] { getClassManager("NotAClass") }
   }
 
-  test("extensionClassManager raises an IllegalStateException if the class cannot be instantiated") {
-    intercept[IllegalStateException] { getClassManager("UninstantiableClassManager") }
+  test("extensionClassManager raises an NoSuchMethodException if the class cannot be instantiated") {
+    intercept[NoSuchMethodException] { getClassManager("UninstantiableClassManager") }
   }
 
   test("extensionClassManager raises an ExtensionManagerException if the class isn't a ClassManager") {
