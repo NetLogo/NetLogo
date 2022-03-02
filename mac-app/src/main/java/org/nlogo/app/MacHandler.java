@@ -2,6 +2,19 @@
 
 package org.nlogo.app;
 
+import java.awt.Desktop;
+import java.awt.desktop.AboutEvent;
+import java.awt.desktop.AboutHandler;
+import java.awt.desktop.OpenFilesEvent;
+import java.awt.desktop.OpenFilesHandler;
+import java.awt.desktop.OpenURIEvent;
+import java.awt.desktop.OpenURIHandler;
+import java.awt.desktop.PreferencesEvent;
+import java.awt.desktop.PreferencesHandler;
+import java.awt.desktop.QuitEvent;
+import java.awt.desktop.QuitHandler;
+import java.awt.desktop.QuitResponse;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -9,29 +22,20 @@ import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.apple.eawt.AboutHandler;
-import com.apple.eawt.Application;
-import com.apple.eawt.AppEvent;
-import com.apple.eawt.OpenFilesHandler;
-import com.apple.eawt.OpenURIHandler;
-import com.apple.eawt.PreferencesHandler;
-import com.apple.eawt.QuitHandler;
-import com.apple.eawt.QuitResponse;
-
 public class MacHandler {
-  Application application;
+  Desktop application;
   FileOutputStream output;
   Object app;
   String openMeLater;
 
-  MacHandler(Application application) {
+  MacHandler() {
     log("starting mac application");
-    this.application = application;
-    this.application.setOpenFileHandler(new MyOpenFilesHandler());
-    this.application.setOpenURIHandler(new MyOpenURIHandler());
-    this.application.setPreferencesHandler(new MyPreferencesHandler());
-    this.application.setAboutHandler(new MyAboutHandler());
-    this.application.setQuitHandler(new MyQuitHandler());
+    this.application = Desktop.getDesktop();
+    application.setOpenFileHandler(new MyOpenFilesHandler());
+    application.setOpenURIHandler(new MyOpenURIHandler());
+    application.setPreferencesHandler(new MyPreferencesHandler());
+    application.setAboutHandler(new MyAboutHandler());
+    application.setQuitHandler(new MyQuitHandler());
     log("in directory:");
     log(System.getProperty("user.dir"));
     log(new File(".").getAbsolutePath());
@@ -51,7 +55,7 @@ public class MacHandler {
 
   class MyOpenURIHandler implements OpenURIHandler {
     @Override
-    public void openURI(AppEvent.OpenURIEvent event) {
+    public void openURI(OpenURIEvent event) {
       log("received OpenURI event");
       log(event.getURI().toString());
     }
@@ -59,7 +63,7 @@ public class MacHandler {
 
   class MyOpenFilesHandler implements OpenFilesHandler {
     @Override
-    public void openFiles(AppEvent.OpenFilesEvent event) {
+    public void openFiles(OpenFilesEvent event) {
       log("received OpenFiles event");
       log(event.getFiles().get(0).getAbsolutePath());
       doOpen(event.getFiles().get(0).getAbsolutePath());
@@ -68,7 +72,7 @@ public class MacHandler {
 
   class MyPreferencesHandler implements PreferencesHandler {
     @Override
-    public void handlePreferences(AppEvent.PreferencesEvent event) {
+    public void handlePreferences(PreferencesEvent event) {
       try {
         Class<?> appClass = app.getClass();
         appClass.getDeclaredMethod("handleShowPreferences").invoke(app);
@@ -82,7 +86,7 @@ public class MacHandler {
 
   class MyAboutHandler implements AboutHandler {
     @Override
-    public void handleAbout(AppEvent.AboutEvent event) {
+    public void handleAbout(AboutEvent event) {
       try {
         Class<?> appClass = app.getClass();
         appClass.getDeclaredMethod("handleShowAbout").invoke(app);
@@ -96,7 +100,7 @@ public class MacHandler {
 
   class MyQuitHandler implements QuitHandler {
     @Override
-    public void handleQuitRequestWith(AppEvent.QuitEvent event, QuitResponse response) {
+    public void handleQuitRequestWith(QuitEvent event, QuitResponse response) {
       try {
         Class<?> appClass = app.getClass();
         Method handleQuit = appClass.getDeclaredMethod("handleQuit");
