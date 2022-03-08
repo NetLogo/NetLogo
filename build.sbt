@@ -43,7 +43,7 @@ lazy val jvmSettings = Seq(
   javaSource in Test      := baseDirectory.value / "src" / "test",
   publishArtifact in Test := true,
   javacOptions ++=
-    "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path --release 11"
+    "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 11 -target 11"
     .split(" ").toSeq
 )
 
@@ -272,7 +272,8 @@ lazy val macApp = project.in(file("mac-app")).
       baseDirectory.value / "natives" / "macosx-universal" / "libjcocoa.dylib") ++
       ((baseDirectory in netlogo).value / "natives" / "macosx-universal" * "*.jnilib").get).mkString(":"),
     artifactPath in Compile in packageBin := target.value / "netlogo-mac-app.jar",
-    javacOptions                          ++= Seq("-bootclasspath", System.getProperty("java.home") + "/lib/rt.jar"))
+    javacOptions                          ++= Seq("-bootclasspath", System.getProperty("java.home") + "/lib/rt.jar",
+  "--add-exports", "java.desktop/com.apple.laf=ALL-UNNAMED"))
 
 // this project is all about packaging NetLogo for distribution
 lazy val dist = project.in(file("dist")).
