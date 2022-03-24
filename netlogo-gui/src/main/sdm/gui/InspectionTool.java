@@ -8,7 +8,8 @@ strictfp class InspectionTool
 
   private final AggregateModelEditor editor;
   private Model model;
-  public RateConnectionTool rct;
+  private RateConnectionTool rct;
+  private AggregateConnectionTool link;
 
   InspectionTool(AggregateModelEditor editor, Model model) {
     super(editor);
@@ -35,9 +36,9 @@ strictfp class InspectionTool
       }
     super.mouseDown(e, x, y);
     } else {
-      // TODO: add check to choose between flow and link
-      // new AggregateConnectionTool(model, editor, new BindingConnection())
+      link= new AggregateConnectionTool(model, editor, new BindingConnection());
       rct = new RateConnectionTool(model, editor, new RateConnection());
+      link.mouseDown(e, x, y);
       rct.mouseDown(e, x, y);
     }
   }
@@ -48,17 +49,18 @@ strictfp class InspectionTool
       super.mouseUp(e,x,y);
     }
     else {
+      link.mouseUp(e, x, y);
       rct.mouseUp(e, x, y);
     }
   }
 
-  // TODO: add mouse move event call
   @Override
   public void mouseDrag(java.awt.event.MouseEvent e, int x, int y) {
     if (! e.isMetaDown()){
       super.mouseDrag(e,x,y);
     } 
     else {
+      link.mouseDrag(e, x, y);
       rct.mouseDrag(e, x, y);
     }
   }
