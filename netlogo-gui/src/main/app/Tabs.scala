@@ -104,7 +104,12 @@ class Tabs(workspace:           GUIWorkspace,
       if (tabManager.getMainCodeTab.dirty) {
         // The SwitchedTabsEvent can lead to compilation. AAB 10/2020
          new AppEvents.SwitchedTabsEvent(tabManager.getMainCodeTab, currentTab).raise(getTabs)
-      }
+       } else {
+         // If the user has switched to the Interface Tab, we must compile any dirty TemporaryCodeTab AAB 3/2022
+         if (interfaceTab.equals(currentTab)) {
+           (externalFileTabs.asInstanceOf[mutable.Set[TemporaryCodeTab]]).foreach(_.compileIfDirty())
+         }
+       }
     }
     })
 

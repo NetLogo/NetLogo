@@ -115,6 +115,12 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     }
   }
 
+  def compileIfDirty() : Unit = {
+    if (dirty) {
+      compile()
+    }
+  }
+
   override def handle(e: WindowEvents.CompiledEvent) = {
     def setErrorLabel() = errorLabel.setError(e.error, e.sourceOwner.headerSource.size)
 
