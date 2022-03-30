@@ -53,9 +53,12 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   filename.right foreach { path =>
     try {
       innerSource = FileIO.fileToString(path)(Codec.UTF8).replaceAll("\r\n", "\n")
-      dirty = false
       saveNeeded = false
       externalFileManager.add(this)
+      // This compilation should act as a failsafe in case the file changed on
+      // disk since the model was opened. AAB 03 2022
+      compile()
+      dirty = false
     } catch {
       case _: IOException => innerSource = ""
     }
@@ -101,17 +104,31 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
       filename = Right(userChooseSavePath())
     FileIO.writeFile(filename.right.get, text.getText)
     saveNeeded = false
+    compileIfDirty()
+    dirty = false
     tabs.setDirtyMonitorCodeWindow
     new WindowEvents.ExternalFileSavedEvent(filename.merge).raise(this)
   }
 
   def close() {
+    var compileNeeded = false
     ignoring(classOf[UserCancelException]) {
-      if(dirty && Dialogs.userWantsToSaveFirst(filenameForDisplay, this))
-        save(false)
+      if(saveNeeded) {
+        if (Dialogs.userWantsToSaveFirst(filenameForDisplay, this)) {
+          save(false)
+          compile()
+        } else {
+          // If the user doesn't save the buffer and it was dirty, the file should
+          // be compiled after it is closed AAB 03-2022
+          compileNeeded = true
+        }
+      }
       externalFileManager.remove(this)
       closing = true
       tabs.closeExternalFile(filename)
+      if (compileNeeded) {
+        new WindowEvents.CompileAllEvent().raiseLater(this)
+      }
     }
   }
 
