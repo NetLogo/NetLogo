@@ -29,6 +29,7 @@ object Property {
   case object ReporterLine extends Type
   case object String extends Type
   case class FilePath(suggestedName: String) extends Type
+  case object InputsOptions extends Type
 }
 
 case class Property(accessString: String, tpe: Property.Type, name: String,

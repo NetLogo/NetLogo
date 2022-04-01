@@ -17,6 +17,8 @@ class EvaluatedModelElement(_name: String)
 {
   def this() = this("")
   @BeanProperty var expression = ""
+  @BeanProperty var inputs = (List[String]())
+  @BeanProperty var selected = ""
   override def isComplete = !expression.isEmpty && !name.isEmpty
 }
 object Binding {

@@ -7,10 +7,13 @@ package org.nlogo.sdm.gui
 
 import org.nlogo.api.{Property => P}
 import collection.JavaConverters._
+import org.nlogo.core.I18N
 
 object Properties {
+  implicit val i18nPrefix = I18N.Prefix("edit")
   val converter = Seq(
     P("nameWrapper", P.Identifier, "Name"),
+    P("inputsC", P.InputsOptions, "Inputs" ), // InputsOptions Reporter
     P("expressionWrapper", P.Reporter, "Expression")
   ).asJava
   val stock = Seq(
@@ -22,4 +25,6 @@ object Properties {
     P("nameWrapper", P.Identifier, "Name"),
     P("expressionWrapper", P.Reporter, "Expression")
   ).asJava
+
+
 }

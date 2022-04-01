@@ -2,6 +2,14 @@
 
 package org.nlogo.sdm.gui;
 import org.nlogo.sdm.Model;
+import org.nlogo.sdm.ModelElement;
+
+import org.jhotdraw.framework.FigureEnumeration;
+import org.jhotdraw.framework.Figure;
+
+import java.util.List;
+import java.util.ArrayList;
+import scala.collection.JavaConverters;
 
 strictfp class InspectionTool
     extends org.jhotdraw.standard.SelectionTool {
@@ -21,14 +29,50 @@ strictfp class InspectionTool
     editor.inspectFigure(f);
   }
 
+  public void fillInputs(Figure figure, org.jhotdraw.framework.DrawingView view) {
+    FigureEnumeration figNum = view.getConnectionFigures(figure) ;
+    String currentName="";
+    List<String> lst = new ArrayList<String>();
+    while(figNum.hasNextFigure()){
+      Figure nFig = figNum.nextFigure();
+      if (nFig instanceof BindingConnection){
+        BindingConnection c = ((BindingConnection) nFig);
+        // TODO:  catch exceptions
+	// TODO:  add flow inputs list
+        if ((c.getEndConnector().owner() == figure))  {
+          Figure start = c.getStartConnector().owner();
+          if(start instanceof RateConnection){
+            currentName = ((RateConnection) start).nameWrapper();
+          }
+          else if (start instanceof ConverterFigure){
+            currentName = ((ConverterFigure) start).nameWrapper();
+          }
+          else if (start instanceof StockFigure){
+            currentName = ((StockFigure) start).nameWrapper();
+          }
+          if ((currentName !=null) && (currentName != "")){
+            lst.add(currentName);
+          }
+       }
+     }
+   } // END while
+    if (figure instanceof ConverterFigure){
+      ((ConverterFigure) figure).inputs(JavaConverters.collectionAsScalaIterable(lst).toList());
+    }
+  }
+
   @Override
   public void mouseDown(java.awt.event.MouseEvent e, int x, int y) {
-    setView((org.jhotdraw.framework.DrawingView) e.getSource());
+    org.jhotdraw.framework.DrawingView view = (org.jhotdraw.framework.DrawingView) e.getSource();
+    setView(view);
 
     if (! e.isMetaDown()){
       if (e.getClickCount() == 2) {
         org.jhotdraw.framework.Figure figure =
             drawing().findFigure(e.getX(), e.getY());
+
+	fillInputs(figure, view);
+
         if (figure != null) {
           inspectFigure(figure);
           return;

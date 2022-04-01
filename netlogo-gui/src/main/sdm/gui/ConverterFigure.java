@@ -9,9 +9,11 @@ import org.jhotdraw.standard.HandleEnumerator;
 import org.jhotdraw.standard.NullHandle;
 import org.jhotdraw.standard.RelativeLocator;
 import org.nlogo.api.Property;
-
 import java.util.ArrayList;
-import java.util.List;
+
+import org.nlogo.api.Options;
+import scala.collection.immutable.List;
+import scala.collection.JavaConverters;
 
 public strictfp class ConverterFigure extends DiamondFigure
     implements
@@ -25,6 +27,7 @@ public strictfp class ConverterFigure extends DiamondFigure
         (FigureAttributeConstant.FILL_COLOR,
             org.nlogo.window.InterfaceColors.SLIDER_BACKGROUND);
     converter = new org.nlogo.sdm.Converter();
+    converter.setSelected("Select");
   }
 
   public org.nlogo.sdm.ModelElement getModelElement() {
@@ -82,7 +85,7 @@ public strictfp class ConverterFigure extends DiamondFigure
   // Return no resize handles
   @Override
   public HandleEnumeration handles() {
-    List<NullHandle> handles = new ArrayList<NullHandle>();
+    java.util.List<NullHandle> handles = new ArrayList<NullHandle>();
     handles.add(new NullHandle(this, RelativeLocator.southEast()));
     handles.add(new NullHandle(this, RelativeLocator.southWest()));
     handles.add(new NullHandle(this, RelativeLocator.northEast()));
@@ -108,7 +111,7 @@ public strictfp class ConverterFigure extends DiamondFigure
     return scala.Option.apply(null);
   }
 
-  public List<Property> propertySet() {
+  public java.util.List<Property> propertySet() {
     return Properties.converter();
   }
 
@@ -144,4 +147,34 @@ public strictfp class ConverterFigure extends DiamondFigure
     return converter.getExpression();
   }
 
+  public void inputs(scala.collection.immutable.List<String> ls){
+    converter.setInputs(ls);
+  }
+
+  public Options<String> inputsC(){
+    Options<String> inputs = new Options<String>();
+    scala.collection.Iterator<String> ins = converter.getInputs().iterator();
+    inputs.addOption("Select","null");
+
+    while(ins.hasNext()){
+      inputs.addOption(ins.next(),"A");
+    }
+
+    String name = converter.getSelected() ;
+    if (name == ""){
+      name = inputs.names().head();
+      inputs.selectByName(name);
+      converter.setSelected(name);
+    }
+    else {
+      inputs.selectByName(name);
+    }
+    return inputs;
+  }
+  public void inputsC(Options<String> inList){
+    String name = inList.chosenName();
+    converter.setSelected(name);
+    //TODO: onChange
+   // converter.setExpression( converter.getExpression()+name+" " );
+  }
 }
