@@ -30,15 +30,15 @@ strictfp class InspectionTool
   }
 
   public void fillInputs(Figure figure, org.jhotdraw.framework.DrawingView view) {
-    FigureEnumeration figNum = view.getConnectionFigures(figure) ;
+    FigureEnumeration figNum = view.getConnectionFigures(figure);
+    if (figNum == null) { return ;}
+
     String currentName="";
     List<String> lst = new ArrayList<String>();
     while(figNum.hasNextFigure()){
       Figure nFig = figNum.nextFigure();
       if (nFig instanceof BindingConnection){
         BindingConnection c = ((BindingConnection) nFig);
-        // TODO:  catch exceptions
-	// TODO:  add flow inputs list
         if ((c.getEndConnector().owner() == figure))  {
           Figure start = c.getStartConnector().owner();
           if(start instanceof RateConnection){
@@ -58,6 +58,8 @@ strictfp class InspectionTool
    } // END while
     if (figure instanceof ConverterFigure){
       ((ConverterFigure) figure).inputs(JavaConverters.collectionAsScalaIterable(lst).toList());
+    } else if (figure instanceof RateConnection) {
+      ((RateConnection) figure).inputs(JavaConverters.collectionAsScalaIterable(lst).toList());
     }
   }
 
@@ -68,7 +70,7 @@ strictfp class InspectionTool
 
     if (! e.isMetaDown()){
       if (e.getClickCount() == 2) {
-        org.jhotdraw.framework.Figure figure =
+        Figure figure =
             drawing().findFigure(e.getX(), e.getY());
 
 	fillInputs(figure, view);

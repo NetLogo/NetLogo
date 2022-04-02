@@ -13,7 +13,7 @@ object Properties {
   implicit val i18nPrefix = I18N.Prefix("edit")
   val converter = Seq(
     P("nameWrapper", P.Identifier, "Name"),
-    P("inputsC", P.InputsOptions, "Inputs" ), // InputsOptions Reporter
+    P("inputsC", P.InputsOptions, "Inputs" ),
     P("expressionWrapper", P.Reporter, "Expression")
   ).asJava
   val stock = Seq(
@@ -23,6 +23,7 @@ object Properties {
   ).asJava
   val rate = Seq(
     P("nameWrapper", P.Identifier, "Name"),
+    P("inputsC", P.InputsOptions, "Inputs" ),
     P("expressionWrapper", P.Reporter, "Expression")
   ).asJava
 
