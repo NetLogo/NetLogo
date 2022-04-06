@@ -9,10 +9,10 @@ import org.jhotdraw.standard.HandleEnumerator;
 import org.jhotdraw.standard.NullHandle;
 import org.jhotdraw.standard.RelativeLocator;
 import org.nlogo.api.Property;
+import java.util.List;
 import java.util.ArrayList;
 
 import org.nlogo.api.Options;
-import scala.collection.immutable.List;
 import scala.collection.JavaConverters;
 
 public strictfp class ConverterFigure extends DiamondFigure
@@ -147,21 +147,21 @@ public strictfp class ConverterFigure extends DiamondFigure
     return converter.getExpression();
   }
 
-  public void inputs(scala.collection.immutable.List<String> ls){
+  public void inputs(scala.collection.immutable.List<String> ls) {
     converter.setInputs(ls);
   }
 
-  public Options<String> inputsC(){
+  public Options<String> inputsC() {
     Options<String> inputs = new Options<String>();
     scala.collection.Iterator<String> ins = converter.getInputs().iterator();
-    inputs.addOption("Select","null");
+    inputs.addOption("Select", "null");
 
-    while(ins.hasNext()){
-      inputs.addOption(ins.next(),"A");
+    while (ins.hasNext()) {
+      inputs.addOption(ins.next(), "A");
     }
 
-    String name = converter.getSelected() ;
-    if (name == ""){
+    String name = converter.getSelected();
+    if (name == "") {
       name = inputs.names().head();
       inputs.selectByName(name);
       converter.setSelected(name);
@@ -171,7 +171,7 @@ public strictfp class ConverterFigure extends DiamondFigure
     }
     return inputs;
   }
-  public void inputsC(Options<String> inList){
+  public void inputsC(Options<String> inList) {
     String name = inList.chosenName();
     converter.setSelected(name);
     //TODO: onChange

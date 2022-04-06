@@ -364,19 +364,19 @@ public strictfp class RateConnection
 
   public Options<String> inputsC() {
     Options<String> inputs = new Options<String>();
-    inputs.addOption("Select","null");
-    //String name = rate.getSelected() ; // not needed for our case
+    inputs.addOption("Select", "null");
+    //String name = rate.getSelected(); // not needed for our case
     inputs.selectByName("Select");
 
     scala.collection.Iterator<String> ins = rate.getInputs().iterator();
-    while(ins.hasNext()){
-      inputs.addOption(ins.next(),"A");
+    while (ins.hasNext()) {
+      inputs.addOption(ins.next(), "A");
     }
 
     return inputs;
   }
 
-  public void inputs(scala.collection.immutable.List<String> ls){
+  public void inputs(scala.collection.immutable.List<String> ls) {
     rate.setInputs(ls);
   }
 
