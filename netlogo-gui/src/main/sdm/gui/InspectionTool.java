@@ -105,7 +105,7 @@ strictfp class InspectionTool
   public void mouseDrag(MouseEvent e, int x, int y) {
     if (!e.isMetaDown()) {
       super.mouseDrag(e, x, y);
-    } 
+    }
     else {
       link.mouseDrag(e, x, y);
       rct.mouseDrag(e, x, y);
