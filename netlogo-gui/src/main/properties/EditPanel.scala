@@ -12,6 +12,8 @@ import org.nlogo.editor.Colorizer
 import org.nlogo.swing.OptionDialog
 import org.nlogo.window.WidgetWrapperInterface
 
+import org.nlogo.api.Options
+
 import scala.reflect.ClassTag
 import scala.collection.JavaConverters._
 
@@ -279,6 +281,21 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         if (liveUpdate) {
           apply()
           EditPanel.this.changed()
+
+          if (target.isInstanceOf[org.nlogo.sdm.gui.ConverterFigure]
+              || target.isInstanceOf[org.nlogo.sdm.gui.RateConnection]) {
+            if (accessor.get.isInstanceOf[Options[_]]){
+              val inputChoice = accessor.get.asInstanceOf[Options[_]].chosenName
+              if ( (inputChoice != "Select") ){
+                // should get editor <- propertyEditors => editor.accessor.displayName == "Expression"
+                val exprAcc = propertyEditors.last.accessor
+                if (exprAcc.displayName == "Expression") {
+                  exprAcc.asInstanceOf[PropertyAccessor[String]].set((exprAcc.get ) +" "+ (inputChoice)+" " )
+                  propertyEditors.last.refresh
+                }
+              }
+            }
+          }
         }
         previewChanged(accessor.accessString, get)
       }

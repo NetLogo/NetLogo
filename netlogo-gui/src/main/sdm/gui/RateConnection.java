@@ -30,6 +30,7 @@ public strictfp class RateConnection
     setEndDecoration(null);
     setStartDecoration(null);
     rate = new org.nlogo.sdm.Rate();
+    rate.setSelected("Select");
   }
 
   public final String getName() {
@@ -371,6 +372,11 @@ public strictfp class RateConnection
     scala.collection.Iterator<String> ins = rate.getInputs().iterator();
     while (ins.hasNext()) {
       inputs.addOption(ins.next(), "A");
+    }
+
+    String name = rate.getSelected();
+    if (name != "") {
+      inputs.selectByName(name);
     }
 
     return inputs;
