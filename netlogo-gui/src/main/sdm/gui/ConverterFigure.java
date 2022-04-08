@@ -85,7 +85,7 @@ public strictfp class ConverterFigure extends DiamondFigure
   // Return no resize handles
   @Override
   public HandleEnumeration handles() {
-    java.util.List<NullHandle> handles = new ArrayList<NullHandle>();
+    List<NullHandle> handles = new ArrayList<NullHandle>();
     handles.add(new NullHandle(this, RelativeLocator.southEast()));
     handles.add(new NullHandle(this, RelativeLocator.southWest()));
     handles.add(new NullHandle(this, RelativeLocator.northEast()));
@@ -111,7 +111,7 @@ public strictfp class ConverterFigure extends DiamondFigure
     return scala.Option.apply(null);
   }
 
-  public java.util.List<Property> propertySet() {
+  public List<Property> propertySet() {
     return Properties.converter();
   }
 
