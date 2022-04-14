@@ -6,6 +6,7 @@ import org.nlogo.sdm.ModelElement;
 
 import org.jhotdraw.framework.FigureEnumeration;
 import org.jhotdraw.framework.Figure;
+import org.jhotdraw.framework.DrawingView;
 
 import java.util.List;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ strictfp class InspectionTool
     editor.inspectFigure(f);
   }
 
-  public void fillInputs(Figure figure, org.jhotdraw.framework.DrawingView view) {
+  public void fillInputs(Figure figure, DrawingView view) {
     FigureEnumeration figNum = view.getConnectionFigures(figure);
     if (figNum == null) { return; }
 

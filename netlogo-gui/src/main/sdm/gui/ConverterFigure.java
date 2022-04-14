@@ -157,7 +157,7 @@ public strictfp class ConverterFigure extends DiamondFigure
     inputs.addOption("Select", "null");
 
     while (ins.hasNext()) {
-      inputs.addOption(ins.next(), "A");
+      inputs.addOption(ins.next(), "unused");
     }
 
     String name = converter.getSelected();
@@ -174,7 +174,5 @@ public strictfp class ConverterFigure extends DiamondFigure
   public void inputsC(Options<String> inList) {
     String name = inList.chosenName();
     converter.setSelected(name);
-    //TODO: onChange
-   // converter.setExpression( converter.getExpression()+name+" " );
   }
 }
