@@ -12,9 +12,6 @@ import org.nlogo.editor.Colorizer
 import org.nlogo.swing.OptionDialog
 import org.nlogo.window.WidgetWrapperInterface
 
-import org.nlogo.api.Options
-import org.nlogo.sdm.gui.{ ConverterFigure, RateConnection }
-
 import scala.reflect.ClassTag
 import scala.collection.JavaConverters._
 
@@ -204,7 +201,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       new PropertyAccessor[T](r, name, accessString)
     tpe match {
       case Property.InputsOptions =>
-        new OptionsEditor[String](accessor) with Changed_SDM
+        new InputsEditor[String](accessor, target, propertyEditors)
       case Property.AgentOptions =>
         new OptionsEditor[String](accessor) with Changed
       case Property.BigString =>
@@ -282,33 +279,6 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         if (liveUpdate) {
           apply()
           EditPanel.this.changed()
-        }
-        previewChanged(accessor.accessString, get)
-      }
-    }
-  }
-
-  trait Changed_SDM { self: PropertyEditor[_] =>
-    override def changed() {
-      if (get.isDefined) {
-        if (liveUpdate) {
-          apply()
-          EditPanel.this.changed()
-
-          if (target.isInstanceOf[ConverterFigure]
-              || target.isInstanceOf[RateConnection]) {
-            if (accessor.get.isInstanceOf[Options[_]]) {
-              val inputChoice = accessor.get.asInstanceOf[Options[_]].chosenName
-              if (inputChoice != "Select") {
-                // should get editor <- propertyEditors => editor.accessor.displayName == "Expression"
-                val exprAcc = propertyEditors.last.accessor
-                if (exprAcc.displayName == "Expression") {
-                  exprAcc.asInstanceOf[PropertyAccessor[String]].set(exprAcc.get.asInstanceOf[String].trim + " " + (inputChoice) + " ")
-                  propertyEditors.last.refresh
-                }
-              }
-            }
-          }
         }
         previewChanged(accessor.accessString, get)
       }
