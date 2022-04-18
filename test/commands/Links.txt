@@ -995,3 +995,10 @@ lots-of-link-breeds
   member? nobody [ [ link1 who [ who ] of myself ] of other turtles ] of turtles => false
   member? nobody [ [ link2 who [ who ] of myself ] of other turtles ] of turtles => false
   member? nobody [ [ link3 who [ who ] of myself ] of other turtles ] of turtles => false
+
+OtherBreedInheritance
+  undirected-link-breed [links1 link1]
+  links1-own [var1]
+  O> crt 2 [ create-links-with other turtles ]
+  [var1] of link 0 1           => ERROR LINKS breed does not own variable VAR1
+  O> ask link 0 1 [set var1 3] => ERROR LINKS breed does not own variable VAR1

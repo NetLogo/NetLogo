@@ -259,3 +259,10 @@ SetPosition_2D
   O> ask one-of turtles [ set heading (towards one-of other turtles) ] => ERROR No heading is defined from a point (0,0) to that same point.
   O> ask turtles [ set xcor random 100 ] => ERROR Cannot move turtle beyond the world's edge.
   O> ask turtles [ face one-of other turtles ]
+
+OtherBreedInheritance
+  breed [frogs frog]
+  frogs-own [legs]
+  O> crt 1
+  [legs] of turtle 0           => ERROR TURTLES breed does not own variable LEGS
+  O> ask turtle 0 [set legs 3] => ERROR TURTLES breed does not own variable LEGS
