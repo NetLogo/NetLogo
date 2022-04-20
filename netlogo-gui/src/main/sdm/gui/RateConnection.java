@@ -15,6 +15,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.List;
 
+import org.nlogo.api.Options;
+
 public strictfp class RateConnection
     extends LineConnection
     implements ModelElementFigure,
@@ -28,6 +30,7 @@ public strictfp class RateConnection
     setEndDecoration(null);
     setStartDecoration(null);
     rate = new org.nlogo.sdm.Rate();
+    rate.setSelected("Select");
   }
 
   public final String getName() {
@@ -354,6 +357,39 @@ public strictfp class RateConnection
 
   public boolean bivalentWrapper() {
     return rate.isBivalent();
+  }
+
+  public void inputs(Options<String> newInputs) {
+    String newChoice = newInputs.chosenName();
+    String oldChoice = rate.getSelected();
+    rate.setSelected(newChoice);
+    if (!"Select".equals(newChoice) && !oldChoice.equals(newChoice)) {
+      String oldExpression = rate.getExpression();
+      String newExpression = oldExpression.trim() + " " + newChoice + " ";
+      rate.setExpression(newExpression);
+    }
+  }
+
+  public Options<String> inputs() {
+    Options<String> inputs = new Options<String>();
+    inputs.addOption("Select", "unused");
+    inputs.selectByName("Select");
+
+    scala.collection.Iterator<String> ins = rate.getInputs().iterator();
+    while (ins.hasNext()) {
+      inputs.addOption(ins.next(), "unused");
+    }
+
+    String name = rate.getSelected();
+    if (name != "") {
+      inputs.selectByName(name);
+    }
+
+    return inputs;
+  }
+
+  public void inputs(scala.collection.immutable.List<String> ls) {
+    rate.setInputs(ls);
   }
 
 }

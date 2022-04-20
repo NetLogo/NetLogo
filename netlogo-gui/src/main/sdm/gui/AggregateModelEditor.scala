@@ -71,7 +71,7 @@ class AggregateModelEditor(
 
   getContentPane.add(tabs)
 
-  private val selectionTool = new InspectionTool(this)
+  private val selectionTool = new InspectionTool(this, drawing.getModel)
 
   locally {
     // Build the menu bar. For OS X, we add a bunch of the menus from app

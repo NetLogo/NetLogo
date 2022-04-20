@@ -9,9 +9,11 @@ import org.jhotdraw.standard.HandleEnumerator;
 import org.jhotdraw.standard.NullHandle;
 import org.jhotdraw.standard.RelativeLocator;
 import org.nlogo.api.Property;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
+
+import org.nlogo.api.Options;
+import scala.collection.JavaConverters;
 
 public strictfp class ConverterFigure extends DiamondFigure
     implements
@@ -25,6 +27,7 @@ public strictfp class ConverterFigure extends DiamondFigure
         (FigureAttributeConstant.FILL_COLOR,
             org.nlogo.window.InterfaceColors.SLIDER_BACKGROUND);
     converter = new org.nlogo.sdm.Converter();
+    converter.setSelected("Select");
   }
 
   public org.nlogo.sdm.ModelElement getModelElement() {
@@ -142,6 +145,42 @@ public strictfp class ConverterFigure extends DiamondFigure
 
   public String expressionWrapper() {
     return converter.getExpression();
+  }
+
+  public void inputs(scala.collection.immutable.List<String> ls) {
+    converter.setInputs(ls);
+  }
+
+  public void inputs(Options<String> newInputs) {
+    String oldChoice = newInputs.chosenName();
+    String newChoice = converter.getSelected();
+    converter.setSelected(oldChoice);
+    if (!"Select".equals(oldChoice) && !oldChoice.equals(newChoice)) {
+      String oldExpression = converter.getExpression();
+      String newExpression = oldExpression.trim() + " " + oldChoice + " ";
+      converter.setExpression(newExpression);
+    }
+  }
+
+  public Options<String> inputs() {
+    Options<String> inputs = new Options<String>();
+    scala.collection.Iterator<String> ins = converter.getInputs().iterator();
+    inputs.addOption("Select", "null");
+
+    while (ins.hasNext()) {
+      inputs.addOption(ins.next(), "unused");
+    }
+
+    String name = converter.getSelected();
+    if (name == "") {
+      name = inputs.names().head();
+      inputs.selectByName(name);
+      converter.setSelected(name);
+    }
+    else {
+      inputs.selectByName(name);
+    }
+    return inputs;
   }
 
 }

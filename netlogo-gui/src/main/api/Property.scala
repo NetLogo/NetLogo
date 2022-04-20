@@ -6,7 +6,7 @@ import java.awt.GridBagConstraints
 
 object Property {
   sealed abstract class Type
-  case object AgentOptions extends Type
+  case object StringOptions extends Type
   case object BigString extends Type
   case object Boolean extends Type
   case object Color extends Type
@@ -31,11 +31,16 @@ object Property {
   case class FilePath(suggestedName: String) extends Type
 }
 
-case class Property(accessString: String, tpe: Property.Type, name: String,
-                    notes: String = "",
-                    gridWidth: Int = GridBagConstraints.REMAINDER,
-                    focus: Boolean = false,
-                    setLive: Boolean = false,
-                    enabled: Boolean = true,
-                    collapsible: Boolean = false,
-                    collapseByDefault: Boolean = false )
+case class Property(
+  accessString: String,
+  tpe: Property.Type,
+  name: String,
+  notes: String = "",
+  gridWidth: Int = GridBagConstraints.REMAINDER,
+  focus: Boolean = false,
+  setLive: Boolean = false,
+  enabled: Boolean = true,
+  collapsible: Boolean = false,
+  collapseByDefault: Boolean = false,
+  dependentPropertyNames: Set[String] = Set()
+)

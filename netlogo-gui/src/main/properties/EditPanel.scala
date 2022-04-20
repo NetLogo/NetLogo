@@ -197,10 +197,29 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
 
   private def getEditor(property: Property, r: Editable) = {
     import property._
+
+    // Lets you specify other property editors to refresh when a different property
+    // is changed.  This probably isn't the best place for this functionality to live
+    // but hey.  -Jeremy B April 2022
+    val noOp: () => Unit = () => {}
+    val notifyOnChange: () => Unit =
+      if (property.dependentPropertyNames.isEmpty) {
+        noOp
+      } else {
+        () => {
+          val dependentEditors = propertyEditors.filter( (editor) =>
+            property.dependentPropertyNames.contains(editor.accessor.accessString)
+          )
+          dependentEditors.foreach(_.refresh)
+          //changed()
+        }
+      }
+
     def accessor[T : ClassTag] =
-      new PropertyAccessor[T](r, name, accessString)
+      new PropertyAccessor[T](r, name, accessString, notifyOnChange)
+
     tpe match {
-      case Property.AgentOptions =>
+      case Property.StringOptions =>
         new OptionsEditor[String](accessor) with Changed
       case Property.BigString =>
         new BigStringEditor(accessor) with Changed

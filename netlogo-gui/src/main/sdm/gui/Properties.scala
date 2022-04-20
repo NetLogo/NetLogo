@@ -7,19 +7,27 @@ package org.nlogo.sdm.gui
 
 import org.nlogo.api.{Property => P}
 import collection.JavaConverters._
+import org.nlogo.core.I18N
 
 object Properties {
+  implicit val i18nPrefix = I18N.Prefix("edit")
+
   val converter = Seq(
     P("nameWrapper", P.Identifier, "Name"),
+    P("inputs", P.StringOptions, "Inputs", dependentPropertyNames = Set("expressionWrapper")),
     P("expressionWrapper", P.Reporter, "Expression")
   ).asJava
+
   val stock = Seq(
     P("nameWrapper", P.Identifier, "Name"),
     P("initialValueExpressionWrapper", P.Reporter, "Initial value"),
     P("allowNegative", P.Boolean, "Allow negative values")
   ).asJava
+
   val rate = Seq(
     P("nameWrapper", P.Identifier, "Name"),
+    P("inputs", P.StringOptions, "Inputs", dependentPropertyNames = Set("expressionWrapper")),
     P("expressionWrapper", P.Reporter, "Expression")
   ).asJava
+
 }
