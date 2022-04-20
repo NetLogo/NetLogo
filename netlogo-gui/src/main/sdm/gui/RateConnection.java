@@ -342,6 +342,7 @@ public strictfp class RateConnection
   }
 
   public void expressionWrapper(String expression) {
+    Thread.dumpStack();
     dirty = dirty || !rate.getExpression().equals(expression);
     rate.setExpression(expression);
   }
@@ -359,13 +360,20 @@ public strictfp class RateConnection
     return rate.isBivalent();
   }
 
-  public void inputsC(Options<String> inList) {
-    rate.setSelected(inList.chosenName()); // not needed
+  public void inputs(Options<String> newInputs) {
+    String newChoice = newInputs.chosenName();
+    String oldChoice = rate.getSelected();
+    rate.setSelected(newChoice);
+    if (!"Select".equals(newChoice) && !oldChoice.equals(newChoice)) {
+      String oldExpression = rate.getExpression();
+      String newExpression = oldExpression.trim() + " " + newChoice + " ";
+      rate.setExpression(newExpression);
+    }
   }
 
-  public Options<String> inputsC() {
+  public Options<String> inputs() {
     Options<String> inputs = new Options<String>();
-    inputs.addOption("Select", "null");
+    inputs.addOption("Select", "unused");
     inputs.selectByName("Select");
 
     scala.collection.Iterator<String> ins = rate.getInputs().iterator();

@@ -151,7 +151,18 @@ public strictfp class ConverterFigure extends DiamondFigure
     converter.setInputs(ls);
   }
 
-  public Options<String> inputsC() {
+  public void inputs(Options<String> newInputs) {
+    String oldChoice = newInputs.chosenName();
+    String newChoice = converter.getSelected();
+    converter.setSelected(oldChoice);
+    if (!"Select".equals(oldChoice) && !oldChoice.equals(newChoice)) {
+      String oldExpression = converter.getExpression();
+      String newExpression = oldExpression.trim() + " " + oldChoice + " ";
+      converter.setExpression(newExpression);
+    }
+  }
+
+  public Options<String> inputs() {
     Options<String> inputs = new Options<String>();
     scala.collection.Iterator<String> ins = converter.getInputs().iterator();
     inputs.addOption("Select", "null");
@@ -171,8 +182,5 @@ public strictfp class ConverterFigure extends DiamondFigure
     }
     return inputs;
   }
-  public void inputsC(Options<String> inList) {
-    String name = inList.chosenName();
-    converter.setSelected(name);
-  }
+
 }

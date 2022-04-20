@@ -29,7 +29,7 @@ object Properties {
     P("editPlotPens", P.PlotPens, I18N.gui("plot.pen.plotPens"), gridWidth = REMAINDER)
   )
   val button = javaList(
-    P("agentOptions", P.AgentOptions, I18N.gui("button.agents"), gridWidth = RELATIVE),
+    P("agentOptions", P.StringOptions, I18N.gui("button.agents"), gridWidth = RELATIVE),
     P("forever", P.Boolean, I18N.gui("button.forever")),
     P("goTime", P.Boolean, I18N.gui("button.disable")),
     P("wrapSource", P.Commands, I18N.gui("button.commands"), focus = true),
