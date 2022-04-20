@@ -342,7 +342,6 @@ public strictfp class RateConnection
   }
 
   public void expressionWrapper(String expression) {
-    Thread.dumpStack();
     dirty = dirty || !rate.getExpression().equals(expression);
     rate.setExpression(expression);
   }
