@@ -15,7 +15,7 @@ class _mkdir extends Command {
     val filePath     = argEvalString(c, 0)
     val absolutePath = workspace.fileManager.attachPrefix(filePath)
     val directory    = new java.io.File(absolutePath)
-    directory.mkdir()
+    directory.mkdirs()
     c.ip = next
   }
 }
