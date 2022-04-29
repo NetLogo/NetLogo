@@ -13,7 +13,7 @@ case class SpecifiedJDK(arch: String, version: String, packagerFile: File, javaH
 
 case object PathSpecifiedJDK extends BuildJDK {
   val arch         = "universal"
-  val version      = "1.8"
-  val javapackager = "javapackager"
+  val version      = "17"
+  val javapackager = "jpackage"
   def javaHome     = None
 }

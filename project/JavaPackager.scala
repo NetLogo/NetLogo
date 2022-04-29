@@ -25,7 +25,8 @@ object JavaPackager {
     import java.util.jar.Attributes.Name._
     Package.ManifestAttributes(
       "Permissions"                   -> "sandbox",
-      "JavaFX-Version"                -> "17.0.1", // this is required for javapackager to determine the main jar
+      "JavaFX-Version"                -> "16", // this was required for javapackager to determine the main jar
+                                               // it might not be needed for jpackage AAB April 2022
       "Created-By"                    -> "JavaFX Packager",
       IMPLEMENTATION_VENDOR.toString  -> "org.nlogo",
       IMPLEMENTATION_TITLE.toString   -> "NetLogo",
@@ -45,6 +46,7 @@ object JavaPackager {
 
   // maps from a descriptive string to the javapackager path associated
   // with it
+  // Need to check if jpackage works this way AAB April 2022
   def windowsPackagerOptions: Seq[BuildJDK] = {
     val is64 = System.getenv("PROCESSOR_ARCHITECTURE") == "AMD64"
     val pkgers = windowsJavaPackagers
@@ -70,11 +72,12 @@ object JavaPackager {
        .filter(f => f.exists && f.isDirectory)
        .flatMap(_.listFiles)
        .filter(_.getName.contains("jdk"))
-       .map(_ / "bin" / "javapackager.exe")
+       .map(_ / "bin" / "jpackage.exe")
        .filter(_.exists)
   }
 
   // maps from a descriptive string to the javapackager path associated
+  // Need to check if jpackage works this way AAB April 2022
   // assumes java installations are named with format
   // jdk<version>-<arch> , and installed in the alternatives
   // system, which is accessible via `update-alternatives`.
@@ -83,7 +86,7 @@ object JavaPackager {
   def linuxPackagerOptions: Seq[BuildJDK] = {
     val alternatives =
       try {
-        Process("update-alternatives --list javapackager".split(" ")).!!
+        Process("update-alternatives --list jpackage".split(" ")).!!
       } catch {
         case ex: java.lang.RuntimeException => "" // RHEL bugs out with this command, just use path-specified
       }
@@ -143,16 +146,13 @@ object JavaPackager {
     FileActions.copyFile(mainJar, buildDirectory / mainJar.getName)
 
     val args = Seq[String](packagerJDK.javapackager,
-      "-deploy", "-verbose",
-      "-title",    title,
-      "-name",     title,
-      "-outfile",  title,
-      "-appclass", "org.nlogo.app.App",
-      "-nosign",
-      "-native",   nativeFormat,
-      "-outdir",   outDir.getAbsolutePath,
-      "-srcdir",   srcDir.getAbsolutePath,
-      "-BmainJar=" + mainJar.getName)
+      "--verbose",
+      "--name",       title,
+      "--main-class", "Org.nlogo.app.App",
+      "--type",       "app-image",
+      "--input",      srcDir.getAbsolutePath,
+      "--dest",       outDir.getAbsolutePath,
+      "--main-jar",   mainJar.getName)
 
     val envArgs = packagerJDK.javaHome.map(h => Seq("JAVA_HOME" -> h)).getOrElse(Seq())
 
