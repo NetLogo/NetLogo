@@ -4,7 +4,7 @@
 
 # Allow user to set these variables by exporting them in the environment  - AAB 11/09/2021
 if [ -z "$JAVA_VERSION_NUMBER" ] ; then
- JAVA_VERSION_NUMBER=11
+ JAVA_VERSION_NUMBER=17
 fi
 
 if [ -z "$SBT_LAUNCH_VERSION" ] ; then

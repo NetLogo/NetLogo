@@ -30,7 +30,7 @@ lazy val scalaSettings = Seq(
   scalaSource in Test    := baseDirectory.value / "src" / "test",
   crossPaths             := false, // don't cross-build for different Scala versions
   scalacOptions ++=
-    "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -release 11 -opt:l:method -Xlint -Xfatal-warnings"
+    "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -release 17 -opt:l:method -Xlint -Xfatal-warnings"
       .split(" ").toSeq,
   // we set doc options until https://github.com/scala/bug/issues/10402 is fixed
   scalacOptions in Compile in doc --= "-Xlint -Xfatal-warnings".split(" ").toSeq
@@ -43,7 +43,7 @@ lazy val jvmSettings = Seq(
   javaSource in Test      := baseDirectory.value / "src" / "test",
   publishArtifact in Test := true,
   javacOptions ++=
-    "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 11 -target 11"
+    "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 17 -target 17"
     .split(" ").toSeq
 )
 
