@@ -7,6 +7,7 @@ on:
 
 env:
   LIBERICA_URL: https://download.bell-sw.com/java/17.0.3+7/bellsoft-jdk17.0.3+7-linux-amd64-full.tar.gz
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,7 +25,7 @@ jobs:
       - uses: olafurpg/setup-scala@v13
         id: setup-scala
         with:
-          java-version: liberica@11=tgz+${{ env.LIBERICA_URL }}
+          java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
 
       - name: Clone Git submodules
         run: git submodule update --init
@@ -75,7 +76,7 @@ jobs:
       - uses: olafurpg/setup-scala@v13
         id: setup-scala
         with:
-          java-version: liberica@11=tgz+${{ env.LIBERICA_URL }}
+          java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
 
       - name: Test 2D
         run: ./sbt netlogo/test:fast netlogo/test:medium netlogo/test:slow
@@ -98,7 +99,7 @@ jobs:
       - uses: olafurpg/setup-scala@v13
         id: setup-scala
         with:
-          java-version: liberica@11=tgz+${{ env.LIBERICA_URL }}
+          java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
 
       - name: Test 3D
         run: ./sbt threed netlogo/test:fast netlogo/test:medium netlogo/test:slow
@@ -118,7 +119,7 @@ jobs:
       - uses: olafurpg/setup-scala@v13
         id: setup-scala
         with:
-          java-version: liberica@11=tgz+${{ env.LIBERICA_URL }}
+          java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
 
       - uses: actions/setup-python@v2
         with:
@@ -154,7 +155,7 @@ jobs:
       - uses: olafurpg/setup-scala@v13
         id: setup-scala
         with:
-          java-version: liberica@11=tgz+${{ env.LIBERICA_URL }}
+          java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
 
       - name: Test Headless
         run: ./sbt headless/test:fast headless/test:medium headless/test:slow
