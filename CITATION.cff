@@ -1,18 +1,18 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
 authors:
-- family-names: "Wilensky"
-  given-names: "Uri"
+  - family-names: "Wilensky"
+    given-names: "Uri"
 title: "NetLogo"
-version: 6.2.0
-date-released: 2021-01-27
+version: 6.2.2
+date-released: 2021-12-08
 url: "https://github.com/NetLogo/NetLogo"
 preferred-citation:
   type: article
   authors:
-  - family-names: "Wilensky"
-    given-names: "Uri"
-  url: "https://ccl.northwestern.edu/netlogo/
+    - family-names: "Wilensky"
+      given-names: "Uri"
+  url: "https://ccl.northwestern.edu/netlogo/"
   journal: "Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL."
   title: "NetLogo"
   year: 1999
