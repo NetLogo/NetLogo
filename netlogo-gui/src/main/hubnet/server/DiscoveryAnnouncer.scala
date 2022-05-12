@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.server
 
 import java.io.IOException
-import java.net.{DatagramPacket, InetAddress, MulticastSocket, UnknownHostException}
+import java.net.{DatagramPacket, InetAddress, MulticastSocket, NetworkInterface, UnknownHostException}
 import HubNetUtils._
 import org.nlogo.hubnet.protocol.DiscoveryMessage
 
@@ -39,11 +39,12 @@ class DiscoveryAnnouncer(uniqueId: String, modelName: String, portNumber: Int, a
         dump("Error creating multicast socket to port " + SERVER_DISCOVERY_MULTICAST_PORT, ioe)
         return
     }
+    val netIf = NetworkInterface.getByInetAddress(group)
     while (shouldRun) {
       val messageBytes = message.toByteArray
       try {
         multicastSocket.setTimeToLive(63)
-        multicastSocket.setInterface(address)
+        multicastSocket.setNetworkInterface(netIf)
         multicastSocket.send(new DatagramPacket(messageBytes, messageBytes.length, group, SERVER_DISCOVERY_MULTICAST_PORT))
       }
       catch {case ioe: IOException => dump("Could not transmit multicast announcement.", ioe)}
