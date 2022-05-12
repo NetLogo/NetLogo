@@ -19,7 +19,7 @@ keywords:
   - "ABM"
 
 preferred-citation:
-  type: "misc"
+  type: "software"
   
   authors:
     - family-names: "Wilensky"
