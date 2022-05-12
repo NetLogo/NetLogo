@@ -6,9 +6,10 @@ import
   org.nlogo.core.{ prim, Expression, ReporterApp },
     prim.{ _commandlambda, _reporterlambda }
 
-import org.scalatest.{ FunSuite, Inside }
+import org.scalatest.Inside
+import org.scalatest.funsuite.AnyFunSuite
 
-class AnonymousProcedureSourceTests extends FunSuite with Inside with BaseParserTest {
+class AnonymousProcedureSourceTests extends AnyFunSuite with Inside with BaseParserTest {
   override val PREAMBLE = "to __test __ignore "
 
   def expression(source: String, expIndex: Int = 0, preamble: String = PREAMBLE, postamble: String = POSTAMBLE): Expression =

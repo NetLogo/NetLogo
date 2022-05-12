@@ -6,7 +6,7 @@ import org.nlogo.api.Editable
 import java.lang.reflect.Method
 import scala.reflect.{ classTag, ClassTag }
 
-class PropertyAccessor[T : ClassTag](val target: Editable, val displayName: String, val accessString: String) {
+class PropertyAccessor[T : ClassTag](val target: Editable, val displayName: String, val accessString: String, val notifyOnChange: () => Unit = () => {}) {
 
   // We assume the getter and setter methods have the same name. - ST 3/14/08
 
@@ -22,7 +22,10 @@ class PropertyAccessor[T : ClassTag](val target: Editable, val displayName: Stri
     }
 
   def get: T = getter.invoke(target).asInstanceOf[T]
-  def set(value: T) { setter.invoke(target, value.asInstanceOf[AnyRef]) }
+  def set(value: T) {
+    setter.invoke(target, value.asInstanceOf[AnyRef])
+    notifyOnChange()
+  }
 
   def error: Option[Exception] = {
     val e = target.error(accessString)

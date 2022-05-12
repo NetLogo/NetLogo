@@ -2,11 +2,11 @@
 
 package org.nlogo.app.tools
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import LibrariesTab.addExtsToSource
 
-class LibrariesTabTests extends FunSuite {
+class LibrariesTabTests extends AnyFunSuite {
   test("adds new extensions statement to empty source") {
     val source = ""
     val requiredExts = Set("fetch")

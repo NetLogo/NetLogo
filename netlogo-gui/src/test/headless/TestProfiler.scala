@@ -10,10 +10,11 @@ package org.nlogo.headless
 // This would be nicer looking if it were done using Josh's model testing DSL.  (At the time I made
 // this, the DSL didn't support catching runtime errors, but now it does.) - ST 5/4/10
 
-import org.scalatest.{ FunSuite, BeforeAndAfterEach, OneInstancePerTest }
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.{ BeforeAndAfterEach, OneInstancePerTest }
 import org.nlogo.util.SlowTest
 
-class TestProfiler extends FunSuite with AbstractTestLanguage
+class TestProfiler extends AnyFunSuite with AbstractTestLanguage
 with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   // change to true temporarily to enable timing sensitive tests.  disabled by default

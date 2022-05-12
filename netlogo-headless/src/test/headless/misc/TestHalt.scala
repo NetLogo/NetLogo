@@ -3,7 +3,7 @@
 package org.nlogo.headless
 package misc
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.util.SlowTestTag
 import org.nlogo.{ core, api, agent, nvm }
 
@@ -21,7 +21,7 @@ object TestHalt {
   }
 }
 
-class TestHalt extends FunSuite  {
+class TestHalt extends AnyFunSuite  {
 
   // I've had weird Heisenbug-type problems with the workspace not getting GC'ed if
   // it's a local variable rather than a top-level class member - ST 1/8/13

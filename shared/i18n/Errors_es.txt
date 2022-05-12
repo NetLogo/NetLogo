@@ -77,7 +77,7 @@ org.nlogo.prim.etc._setDefaultShape.notADefinedTurtleShape ="{0}" no esta una fo
 org.nlogo.prim._greaterthan.cannotCompareParameters = Solamente puede usar el operador > sobre dos numeros, dos strings, o dos agentos del mismo tipo, pero no se puede ussar sobre {0} and {1}.
 org.nlogo.prim._max.cantFindMaxOfListWithNoNumbers = No puede esconder el maximo de un listo sin numeros: {0}
 org.nlogo.prim._min.cantFindMinOfListWithNoNumbers = No puede esconder el minimo de un listo sin numeros: {0}
-org.nlogo.prim.etc._mean.cantFindMeanOfListWithNoNumbers = No puede esconder el medio de un listo sin numeros: {0}.
+org.nlogo.prim.etc._mean.cantFindMeanOfListWithNoNumbers = No puede esconder el promedio de un listo sin numeros: {0}.
 
 org.nlogo.prim.etc.$common.emptyList = No hay nada en el listo.
 org.nlogo.prim.etc.$common.emptyString = No hay nada en el string.
@@ -161,6 +161,8 @@ org.nlogo.prim.$common.expectedBooleanValue = {0} expectabla un verdad/falso val
 
 
 org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset = entradas de la lista a {0} sólo debe contener elementos de tortuga o tortuga agentset. La lista {1} contiene un tipo diferente agentset: {2}.
+
+org.nlogo.prim.etc._importdrawing.cantImportDrawingin3D = No se puede importar un dibujo en 3D.
 
 org.nlogo.prim.etc._linkheading.noLinkHeadingWithSameEndpoints = No hay un heading de un link que tiene endpoints en el mismo lugar.
 

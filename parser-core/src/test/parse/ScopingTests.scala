@@ -4,11 +4,11 @@ package org.nlogo.parse
 
 import org.nlogo.core.CompilerException
 
-import org.scalatest.FunSuite
 
 import FrontEndTests.extensionManager
+import org.scalatest.funsuite.AnyFunSuite
 
-class ScopingTests extends FunSuite with BaseParserTest {
+class ScopingTests extends AnyFunSuite with BaseParserTest {
   def duplicateName(s: String, err: String) = {
     val e = intercept[CompilerException] {
       FrontEnd.frontEnd(s, extensionManager = extensionManager)

@@ -50,53 +50,52 @@ class TrailDrawer(world: World, turtleDrawer: TurtleDrawer, linkDrawer: LinkDraw
   @throws(classOf[IOException])
   override def importDrawing(is: InputStream, mimeType: Option[String] = None): Unit = {
 
-    if (drawingImage == null)
+    if (drawingImage == null) {
       setUpDrawingImage()
-    else {
+    }
 
-      val image = javax.imageio.ImageIO.read(is)
+    val image = javax.imageio.ImageIO.read(is)
 
-      if (image == null)
-        throw new javax.imageio.IIOException("Unsupported image format.")
+    if (image == null) {
+      throw new javax.imageio.IIOException("Unsupported image format.")
+    }
 
-      val scalex = getWidth .toFloat / image.getWidth .toFloat
-      val scaley = getHeight.toFloat / image.getHeight.toFloat
-      val scale  = if (scalex < scaley) scalex else scaley
+    val scalex = getWidth .toFloat / image.getWidth .toFloat
+    val scaley = getHeight.toFloat / image.getHeight.toFloat
+    val scale  = if (scalex < scaley) scalex else scaley
 
-      val scaledImage =
-        if (scale == 1)
-          image
-        else {
+    val scaledImage =
+      if (scale == 1) {
+        image
+      } else {
 
-          val trans =
-            new AffineTransformOp( AffineTransform.getScaleInstance(scale, scale)
-                                 , AffineTransformOp.TYPE_BILINEAR)
+        val trans =
+          new AffineTransformOp( AffineTransform.getScaleInstance(scale, scale)
+                                , AffineTransformOp.TYPE_BILINEAR)
 
-          // To workaround a java bug, if our image was read
-          // into a grayscale color space BufferedImage, than we
-          // want to make sure we scale to the same color model
-          // so that the colors don't get brightened.  However,
-          // we can't do this for image buffers with alpha
-          // values, or the scaling gets hosed too.  A curse
-          // upon all "open source" languages with closed source
-          // implementations. -- CLB
-          if ( image.getColorModel().getColorSpace().getType() == ColorSpace.TYPE_GRAY &&
-              !image.getColorModel().hasAlpha()) {
-            val scaled = trans.createCompatibleDestImage(image, image.getColorModel())
-            trans.filter(image, scaled)
-            scaled
-          } else {
-            trans.filter(image, null)
-          }
-
+        // To workaround a java bug, if our image was read
+        // into a grayscale color space BufferedImage, than we
+        // want to make sure we scale to the same color model
+        // so that the colors don't get brightened.  However,
+        // we can't do this for image buffers with alpha
+        // values, or the scaling gets hosed too.  A curse
+        // upon all "open source" languages with closed source
+        // implementations. -- CLB
+        if ( image.getColorModel().getColorSpace().getType() == ColorSpace.TYPE_GRAY &&
+            !image.getColorModel().hasAlpha()) {
+          val scaled = trans.createCompatibleDestImage(image, image.getColorModel())
+          trans.filter(image, scaled)
+          scaled
+        } else {
+          trans.filter(image, null)
         }
 
-      val xOffset = (getWidth  - scaledImage.getWidth ) / 2
-      val yOffset = (getHeight - scaledImage.getHeight) / 2
-      drawingImage.createGraphics.drawImage(scaledImage, xOffset, yOffset, null)
-      markDirty()
+      }
 
-    }
+    val xOffset = (getWidth  - scaledImage.getWidth ) / 2
+    val yOffset = (getHeight - scaledImage.getHeight) / 2
+    drawingImage.createGraphics.drawImage(scaledImage, xOffset, yOffset, null)
+    markDirty()
 
     sendPixels = true
 
@@ -154,8 +153,9 @@ class TrailDrawer(world: World, turtleDrawer: TurtleDrawer, linkDrawer: LinkDraw
   // ev 7/31/06
   def getAndCreateDrawing(dirty: Boolean): BufferedImage = {
 
-    if (drawingImage == null)
+    if (drawingImage == null) {
       setUpDrawingImage()
+    }
 
     if (dirty) {
       drawingBlank = false
@@ -176,25 +176,24 @@ class TrailDrawer(world: World, turtleDrawer: TurtleDrawer, linkDrawer: LinkDraw
   def drawLine( x1: Double, y1: Double, x2: Double, y2: Double
               , penColor: AnyRef, penSize: Double, penMode: String): Unit = {
 
-    if (drawingImage == null)
+    if (drawingImage == null) {
       setUpDrawingImage()
-    else {
-
-      val tg = new Graphics2DWrapper(drawingImage.getGraphics.asInstanceOf[Graphics2D])
-      tg.setPenWidth(penSize)
-
-      if (penMode.equals("erase")) {
-        tg.setComposite(AlphaComposite.Clear)
-        drawWrappedLine(tg, x1, y1, x2, y2, penSize)
-        tg.setComposite(AlphaComposite.SrcOver)
-      } else {
-        tg.antiAliasing(true)
-        tg.setColor(Color.getColor(penColor))
-        drawWrappedLine(tg, x1, y1, x2, y2, penSize)
-        tg.antiAliasing(false)
-      }
-
     }
+
+    val tg = new Graphics2DWrapper(drawingImage.getGraphics.asInstanceOf[Graphics2D])
+    tg.setPenWidth(penSize)
+
+    if (penMode.equals("erase")) {
+      tg.setComposite(AlphaComposite.Clear)
+      drawWrappedLine(tg, x1, y1, x2, y2, penSize)
+      tg.setComposite(AlphaComposite.SrcOver)
+    } else {
+      tg.antiAliasing(true)
+      tg.setColor(Color.getColor(penColor))
+      drawWrappedLine(tg, x1, y1, x2, y2, penSize)
+      tg.antiAliasing(false)
+    }
+
   }
 
   private def setUpDrawingImage(): Unit = {

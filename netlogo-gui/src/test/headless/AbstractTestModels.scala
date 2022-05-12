@@ -3,14 +3,14 @@
 package org.nlogo.headless
 
 import scala.util.DynamicVariable
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.api.{LogoException, Version}
 import org.nlogo.api.ModelCreator
 
 /**
  * A DSL for testing models.
  */
-trait AbstractTestModels extends FunSuite with ModelCreator {
+trait AbstractTestModels extends AnyFunSuite with ModelCreator {
 
   /**
    * test a model created in code

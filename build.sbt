@@ -25,7 +25,7 @@ lazy val commonSettings = Seq(
 // These settings are common to all builds involving scala
 // Any scala-specific settings should change here (and thus for all projects at once)
 lazy val scalaSettings = Seq(
-  scalaVersion           := "2.12.12",
+  scalaVersion           := "2.12.15",
   scalaSource in Compile := baseDirectory.value / "src" / "main",
   scalaSource in Test    := baseDirectory.value / "src" / "test",
   crossPaths             := false, // don't cross-build for different Scala versions
@@ -55,8 +55,8 @@ lazy val scalatestSettings = Seq(
   testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oS"),
   logBuffered in testOnly in Test := false,
   libraryDependencies ++= Seq(
-    "org.scalatest"  %% "scalatest"  % "3.0.1"  % "test",
-    "org.scalacheck" %% "scalacheck" % "1.13.4" % "test"
+    "org.scalatest"     %% "scalatest"       % "3.2.10"   % Test,
+    "org.scalatestplus" %% "scalacheck-1-15" % "3.2.10.0" % Test,
   )
 )
 
@@ -79,7 +79,7 @@ lazy val mockDependencies = Seq(
     "org.jmock" % "jmock-legacy" % "2.8.1" % "test",
     "org.jmock" % "jmock-junit4" % "2.8.1" % "test",
     "org.reflections" % "reflections" % "0.9.10" % "test",
-    "org.slf4j" % "slf4j-nop" % "1.7.12" % "test"
+    "org.slf4j" % "slf4j-nop" % "1.7.32" % "test"
   )
 )
 
@@ -122,7 +122,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
            Depend.dependTask: _*).
   settings(
     name := "NetLogo",
-    version := "6.2.0",
+    version := "6.2.2",
     isSnapshot := true,
     publishTo := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     mainClass in Compile := Some("org.nlogo.app.App"),
@@ -138,12 +138,12 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     nogen  := { System.setProperty("org.nlogo.noGenerator", "true") },
     noopt  := { System.setProperty("org.nlogo.noOptimizer", "true") },
     libraryDependencies ++= Seq(
-      "org.ow2.asm" % "asm-all" % "5.0.4",
-      "org.picocontainer" % "picocontainer" % "2.13.6",
-      "log4j" % "log4j" % "1.2.16",
+      "org.ow2.asm" % "asm-all" % "5.2",
+      "org.picocontainer" % "picocontainer" % "2.15",
+      "log4j" % "log4j" % "1.2.17",
       "javax.media" % "jmf" % "2.1.1e",
-      "commons-codec" % "commons-codec" % "1.10",
-      "org.parboiled" %% "parboiled" % "2.1.3",
+      "commons-codec" % "commons-codec" % "1.15",
+      "org.parboiled" %% "parboiled" % "2.3.0",
       "org.jogamp.jogl" % "jogl-all" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0-rc-20210111/jar/jogl-all.jar",
       "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0-rc-20210111/jar/gluegen-rt.jar",
       "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
@@ -153,9 +153,9 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.apache.httpcomponents" % "httpclient" % "4.2",
       "org.apache.httpcomponents" % "httpmime" % "4.2",
       "com.googlecode.json-simple" % "json-simple" % "1.1.1",
-      "com.fifesoft" % "rsyntaxtextarea" % "2.6.0",
-      "com.typesafe" % "config" % "1.3.1",
-      "net.lingala.zip4j" % "zip4j" % "1.3.2"
+      "com.fifesoft" % "rsyntaxtextarea" % "3.1.3",
+      "com.typesafe" % "config" % "1.4.1",
+      "net.lingala.zip4j" % "zip4j" % "2.9.0"
     ),
     all := {
       IO.copyFile(
@@ -199,7 +199,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(ChecksumsAndPreviews.settings: _*).
   settings(
     name          := "NetLogoHeadless",
-    version       := "6.2.0",
+    version       := "6.2.2",
     isSnapshot    := true,
     publishTo     := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     autogenRoot   := (baseDirectory.value.getParentFile / "autogen").getAbsoluteFile,
@@ -207,11 +207,11 @@ lazy val headless = (project in file ("netlogo-headless")).
     mainClass in Compile         := Some("org.nlogo.headless.Main"),
     nogen                        := { System.setProperty("org.nlogo.noGenerator", "true") },
     libraryDependencies          ++= Seq(
-      "org.ow2.asm" % "asm-all" % "5.0.4",
-      "org.parboiled" %% "parboiled" % "2.1.3",
-      "commons-codec" % "commons-codec" % "1.10",
-      "com.typesafe" % "config" % "1.3.1",
-      "net.lingala.zip4j" % "zip4j" % "1.3.2"
+      "org.ow2.asm" % "asm-all" % "5.2",
+      "org.parboiled" %% "parboiled" % "2.3.0",
+      "commons-codec" % "commons-codec" % "1.15",
+      "com.typesafe" % "config" % "1.4.1",
+      "net.lingala.zip4j" % "zip4j" % "2.9.0"
     ),
     (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
     resourceDirectory in Compile := baseDirectory.value / "resources" / "main",
@@ -303,12 +303,11 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
       resolvers += Resolver.sonatypeRepo("releases"),
       parallelExecution in Test := false,
       libraryDependencies ++= {
-      import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport.toScalaJSGroupID
+      import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
         Seq(
-          "org.scala-lang.modules"   %%% "scala-parser-combinators" % "1.0.5",
-          "org.scalatest"  %%% "scalatest" % "3.0.0" % "test",
-          // scalatest doesn't yet play nice with scalacheck 1.13.0
-          "org.scalacheck" %%% "scalacheck" % "1.13.4" % "test",
+          "org.scala-lang.modules"   %%% "scala-parser-combinators" % "2.1.0",
+          "org.scalatest"     %% "scalatest"       % "3.2.10"   % Test,
+          "org.scalatestplus" %% "scalacheck-1-15" % "3.2.10.0" % Test,
       )}).
   jvmConfigure(_.dependsOn(sharedResources)).
   jvmSettings(jvmSettings: _*).
@@ -316,7 +315,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
   jvmSettings(
       mappings in (Compile, packageBin) ++= mappings.in(sharedResources, Compile, packageBin).value,
       mappings in (Compile, packageSrc) ++= mappings.in(sharedResources, Compile, packageSrc).value,
-      libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.5"
+      libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
     )
 
 lazy val parserJVM = parser.jvm

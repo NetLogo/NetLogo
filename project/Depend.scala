@@ -40,7 +40,7 @@ object Depend {
     val packageDefs = Map(
       "" -> Nil,
       "agent" -> List("api"),
-      "api" -> List("core", "core/model", "util"),
+      "api" -> List("core", "core/model", "core/prim", "util"),
       "app" -> List("app/codetab", "app/common", "app/infotab", "app/interfacetab", "app/tools"),
       "app/codetab" -> List("app/common"),
       "app/infotab" -> List("app/common"),

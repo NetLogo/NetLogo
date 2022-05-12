@@ -2,10 +2,10 @@
 
 package org.nlogo.core
 
-import org.scalatest.FunSuite
 import ConstraintSpecification.ChoiceConstraintSpecification
+import org.scalatest.funsuite.AnyFunSuite
 
-class WidgetTests extends FunSuite {
+class WidgetTests extends AnyFunSuite {
   test("Chooser handles choices with lists") {
     val l = LogoList(Seq(1, 2, 3).map(_.toDouble))
 

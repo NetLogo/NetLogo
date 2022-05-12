@@ -2,7 +2,7 @@
 
 package org.nlogo.compile
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import org.nlogo.api.SimpleJobOwner
 import org.nlogo.compile.api.{ BackEndInterface, Expression, ProcedureDefinition,
@@ -24,7 +24,7 @@ import org.nlogo.prim.{ _call, _callreport, _carefully, _constdouble, _conststri
 //    in some future, we will isolate things so that `nvm`
 //    can be tested without reference to `prim`, until then
 //    this test lives here. RG 1/30/17
-class NvmTests extends FunSuite {
+class NvmTests extends AnyFunSuite {
   def token(s: String): Token = Token(s.toUpperCase, TokenType.Command, null)(SourceLocation(0, 0, ""))
 
   val loc = SourceLocation(0, 0, "")

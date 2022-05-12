@@ -5,9 +5,9 @@ package org.nlogo.compile
 import org.nlogo.core.{ AgentVariables, Dialect, Command, CompilerException,
   Femto, Instruction, Program, Reporter, Syntax,
   TokenMapperInterface => CoreTokenMapperInterface }
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class BackifierTests extends FunSuite {
+class BackifierTests extends AnyFunSuite {
   case class _deadprim() extends Command {
     override def syntax = Syntax.commandSyntax(right = List())
   }

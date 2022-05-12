@@ -2,9 +2,9 @@
 
 package org.nlogo.compile
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class LiteralsTests extends FunSuite {
+class LiteralsTests extends AnyFunSuite {
   class C
   test("makeLiteralReporter not picky about type") {
     assertResult("_const:<C>")(

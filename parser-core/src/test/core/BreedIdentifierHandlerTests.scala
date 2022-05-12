@@ -3,11 +3,11 @@
 package org.nlogo.core
 
 import org.nlogo.core.StructureDeclarations.Identifier
-import org.scalatest.FunSuite
 
 import scala.collection.immutable.ListMap
+import org.scalatest.funsuite.AnyFunSuite
 
-class BreedIdentifierHandlerTests extends FunSuite {
+class BreedIdentifierHandlerTests extends AnyFunSuite {
 
   val tokenizer: TokenizerInterface =
     Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer")

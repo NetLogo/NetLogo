@@ -62,12 +62,10 @@ class Backifier(
         new nvmprim._const(value)
 
       case core.prim._commandlambda(args, closedVariables, source) =>
-        new nvmprim._commandlambda(
-          args.argumentNames, args.argumentTokens,
-          null, closedVariables, source.getOrElse("")) // LambdaLifter will fill in
+        new nvmprim._commandlambda(args, null, closedVariables, source.getOrElse("")) // LambdaLifter will fill in
 
       case core.prim._reporterlambda(args, closedVariables, source) =>
-        new nvmprim._reporterlambda(args.argumentNames, closedVariables, source.getOrElse(""))
+        new nvmprim._reporterlambda(args, closedVariables, source.getOrElse(""))
 
       case core.prim._externreport(_) =>
         new nvmprim._externreport(

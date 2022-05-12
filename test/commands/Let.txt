@@ -176,3 +176,19 @@ LetWithinIfNextToAsk
 LetDoubleSameName
   to-report test ifelse true [ let x 0 ] [ let x 0 ] run "" report 0 end
   test => 0
+
+VariableNamedAsync
+  to test-it let async nobody end
+  O> test-it
+
+VariableNamedAwait
+  to test-it let await nobody end
+  O> test-it
+
+VariableNamedWorkspace
+  to-report test-it let workspace nobody report word "abc" "def" end
+  test-it => "abcdef"
+
+VariableNamedWorld
+  to-report test-it let world nobody report count turtles end
+  test-it => 0

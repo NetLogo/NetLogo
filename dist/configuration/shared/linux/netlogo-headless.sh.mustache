@@ -12,7 +12,7 @@ fi;
 # -Xmx1024m             use up to 1GB RAM (edit to increase)
 # -XX:+UseParallelGC    The parallel collector maximizes throughput
 # -Dfile.encoding=UTF-8 ensure Unicode characters in model files are compatible cross-platform
-JVM_OPTS=(-Xmx1024m -XX:+UseParallelGC -Dfile.encoding=UTF-8)
+JVM_OPTS=(-Xmx1024m -XX:+UseParallelGC -Dfile.encoding=UTF-8 -Dnetlogo.extensions.dir="${BASE_DIR}/app/models" -Dnetlogo.extensions.dir="${BASE_DIR}/app/extensions")
 
 ARGS=()
 
@@ -37,5 +37,7 @@ CLASSPATH=`echo $CLASSPATH | sed 's/://'`
 
 # -classpath ....         specify jars
 # org.nlogo.headless.Main specify we want headless, not GUI
+# org.nlogo.app.App       specify we want GUI, not headless
 # "${ARGS[0]}"            pass along any additional arguments
-"$JAVA" "${JVM_OPTS[@]}" -Dnetlogo.extensions.dir="${BASE_DIR}/app/extensions" -classpath "$CLASSPATH" {{{mainClass}}} "${ARGS[@]}"
+
+"$JAVA" "${JVM_OPTS[@]}" -classpath "$CLASSPATH" {{{mainClass}}} "${ARGS[@]}"

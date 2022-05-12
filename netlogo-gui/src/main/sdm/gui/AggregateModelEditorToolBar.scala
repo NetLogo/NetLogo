@@ -36,7 +36,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
     val flowButton = makeButton("Flow", "/images/rate.gif", new RateConnectionTool(model, editor, new RateConnection()))
     val linkButton = makeButton("Link", "/images/connector.gif", new AggregateConnectionTool(model, editor, new BindingConnection()))
 
-    val toolButtonGroup = new ButtonGroup(){ add(noToolButton) }
+    val toolButtonGroup = new ButtonGroup() { add(noToolButton) }
     for (b <- List(stockButton, variablButton, flowButton, linkButton)) {
       add(b)
       toolButtonGroup.add(b)
@@ -44,7 +44,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
     add(new Separator())
 
     // dt Panel
-    dtLabel = new JLabel("dt = " + model.getDt){ setOpaque(false) }
+    dtLabel = new JLabel("dt = " + model.getDt) { setOpaque(false) }
     add(new JPanel(new java.awt.FlowLayout()) {
       add(dtLabel)
       add(new JButton(changeDTAction))
@@ -95,7 +95,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
 
   /// Actions
   abstract class MyAction(name:String, image:String, enableMe: Boolean)
-          extends AbstractAction(I18N.gui(name.toLowerCase)){
+          extends AbstractAction(I18N.gui(name.toLowerCase)) {
     putValue(Action.SMALL_ICON, icon(image))
     setEnabled(enableMe)
   }

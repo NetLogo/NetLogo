@@ -89,7 +89,7 @@ object ModelsLibraryDialog {
 
     private def translateNameForDisplay(name: String): String =
       if (name.equalsIgnoreCase("UNVERIFIED"))
-        I18N.gui.get("modelsLibrary.unverified")
+        I18N.shared.get("modelsLibrary.unverified")
       else
         removeSuffix(name)
 

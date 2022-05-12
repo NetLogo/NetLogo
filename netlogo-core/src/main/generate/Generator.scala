@@ -28,7 +28,16 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
     if (BytecodeUtils.isRejiggered(instr))
       new InstructionGenerator(instr).generate()
     else {
-      instr.args = instr.args.map(recurse(_))
+      instr match {
+        // as of now a variadic anonymous reporter can only come from the concise
+        // syntax of a built-in reporter, `(map word ["a" "b" "c"]...)` so in that case
+        // do not generate the bytecode for the built-in, as the argument count
+        // will not exist until it is actually run.  -Jeremy B November 2021
+        case rl: org.nlogo.prim._reporterlambda if rl.arguments.isVariadic =>
+
+        case _ =>
+          instr.args = instr.args.map(recurse(_))
+      }
       instr
     }
   private var customClassNumUID = -1

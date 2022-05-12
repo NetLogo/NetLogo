@@ -8,7 +8,7 @@ import org.nlogo.core.model.ModelReader
 import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.fileformat
 import org.nlogo.workspace.ModelsLibrary
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.util.SlowTestTag
 
 import
@@ -60,7 +60,7 @@ object TestCompileAll {
   }
 }
 
-class TestCompileAll extends FunSuite  {
+class TestCompileAll extends AnyFunSuite  {
   for {
     path <- ModelsLibrary.getModelPaths.filterNot(TestCompileAll.badPath)
     text <- TestCompileAll.goodModel(FileIO.fileToString(path))

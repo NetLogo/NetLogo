@@ -2,10 +2,10 @@
 
 package org.nlogo.generate
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.objectweb.asm.ClassReader
 
-class TestStrictFP extends FunSuite {
+class TestStrictFP extends AnyFunSuite {
 
   test("allMethodsStrictFP") {
     // We need to maintain this list of abstract classes - probably we can generate it by running

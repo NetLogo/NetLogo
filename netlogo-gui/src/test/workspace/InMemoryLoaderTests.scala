@@ -6,9 +6,9 @@ import java.net.URL
 
 import ExtensionManager.ExtensionData
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class InMemoryExtensionLoaderTests extends FunSuite {
+class InMemoryExtensionLoaderTests extends AnyFunSuite {
   val dummyClassManager = new DummyClassManager()
   val loader = new InMemoryExtensionLoader("foo", dummyClassManager)
   val extURL = new URL("file:/tmp/extension/foo")

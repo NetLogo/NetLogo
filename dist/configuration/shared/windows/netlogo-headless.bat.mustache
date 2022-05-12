@@ -17,7 +17,7 @@ REM -Dfile.encoding=UTF-8         ensure Unicode characters in model files are c
 REM -XX:+UseParallelGC            The parallel collector maximizes throughput
 REM -Dnetlogo.extensions.dir=...  tell netlogo where to find extensions
 
-SET "JVM_OPTS=-Xmx1024m -XX:+UseParallelGC -Dfile.encoding=UTF-8 -Dnetlogo.extensions.dir=^"%BASE_DIR%app\extensions^""
+SET "JVM_OPTS=-Xmx1024m -XX:+UseParallelGC -Dfile.encoding=UTF-8 -Dnetlogo.models.dir=^"%BASE_DIR%app\models^" -Dnetlogo.extensions.dir=^"%BASE_DIR%app\extensions^""
 
 set ARGS=
 
@@ -43,5 +43,6 @@ SET "ABSOLUTE_CLASSPATH=%BASE_DIR%{{{netlogoJar}}}"
 
 REM -classpath ....               specify jars
 REM org.nlogo.headless.Main       specify we want headless, not GUI
+REM org.nlogo.app.App             specify we want GUI, not headless
 
 "%JAVA%" %JVM_OPTS% -classpath "%ABSOLUTE_CLASSPATH%" {{{mainClass}}} %ARGS%

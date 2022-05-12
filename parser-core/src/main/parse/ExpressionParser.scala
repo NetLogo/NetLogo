@@ -448,8 +448,9 @@ object ExpressionParser {
    *  take at least one input (since otherwise a simple "map f xs" wouldn't evaluate f).
    */
   private def expandConciseReporterLambda(rApp: core.ReporterApp, reporter: core.Reporter, scope: SymbolTable): core.ReporterApp = {
-    val (varNames, varApps) = syntheticVariables(reporter.syntax.totalDefault, reporter.token, scope)
-    val lambda = new core.prim._reporterlambda(Lambda.ConciseArguments(varNames))
+    val argsCount = reporter.syntax.totalMinimum
+    val (varNames, varApps) = syntheticVariables(argsCount, reporter.token, scope)
+    val lambda = new core.prim._reporterlambda(Lambda.ConciseArguments(varNames, reporter.syntax.allArgs))
     lambda.token = reporter.token
     new core.ReporterApp(lambda, Seq(rApp.withArguments(varApps)), reporter.token.sourceLocation)
   }
@@ -467,7 +468,7 @@ object ExpressionParser {
         varApps :+ new core.CommandBlock(new core.Statements(token.filename), token.sourceLocation, synthetic = true)
       else varApps
 
-    val lambda = new core.prim._commandlambda(Lambda.ConciseArguments(varNames))
+    val lambda = new core.prim._commandlambda(Lambda.ConciseArguments(varNames, coreCommand.syntax.allArgs))
     lambda.token = token
 
     val stmt = new core.Statement(coreCommand, stmtArgs, token.sourceLocation)

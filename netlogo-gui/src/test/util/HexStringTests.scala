@@ -2,11 +2,12 @@
 
 package org.nlogo.util
 
-import org.scalatest.{ FunSuite, PropSpec }
-import org.scalatest.prop.PropertyChecks
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatest.propspec.AnyPropSpec
+import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import HexString._
 
-class HexStringTests extends FunSuite {
+class HexStringTests extends AnyFunSuite {
   test("bytes0") {
     assert("" === toHexString(Array[Byte]())) }
   test("bytes1") {
@@ -21,8 +22,7 @@ class HexStringTests extends FunSuite {
 
 // now let's throw ScalaCheck at it.
 
-class HexStringTests2 extends PropSpec with PropertyChecks {
-
+class HexStringTests2 extends AnyPropSpec with ScalaCheckPropertyChecks {
 
   property("8 characters per Int") {
     forAll((ns: Array[Int]) =>

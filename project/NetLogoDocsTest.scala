@@ -26,16 +26,16 @@ object NetLogoDocsTest {
   def apply(docsRoot: File): Map[String, Seq[String]] = {
     val testedLinks = new JHashMap[String, JBoolean]
 
-    val fileToLines = docsRoot.listFiles filter (_.getName.endsWith(".html")) map { file: File =>
+    val fileToLines = docsRoot.listFiles.filter(_.getName.endsWith(".html")).map{ file: File =>
       import scala.collection.JavaConverters._
       file.getName -> Files.readAllLines(file.toPath).asScala
-    } toMap;
+    }.toMap
 
     fileToLines mapValues { lines =>
-      val urls = lines flatMap { line =>
+      val urls = lines.flatMap{ line =>
         (linkRegex.findAllMatchIn(line) ++ imgRegex.findAllMatchIn(line))
           .map(_.group(1)).toSeq
-      } distinct;
+      }.distinct
 
       urls filterNot {
         case hrefRegex(null, null, anchor) =>

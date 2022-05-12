@@ -2,9 +2,9 @@
 
 package org.nlogo.core
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ResourceTests extends FunSuite {
+class ResourceTests extends AnyFunSuite {
   test("asString") {
     val expected = "\nNetLogo author: Uri Wilensky\n"
     val resource = Resource.asString("/system/about.txt")

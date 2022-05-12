@@ -7,12 +7,12 @@ package org.nlogo.headless
 // See https://github.com/NetLogo/NetLogo/commit/9f35a477f071b746bea225b2294813970b04daf0#commitcomment-3793507.
 
 import org.nlogo.agent.{ SimpleChangeEventCounter, TreeAgentSet }
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.GivenWhenThen
 
 import scala.language.implicitConversions
 
-class TreeAgentSetTests extends FunSuite with GivenWhenThen with TestUsingWorkspace {
+class TreeAgentSetTests extends AnyFunSuite with GivenWhenThen with TestUsingWorkspace {
 
   testUsingWorkspace("TreeAgentSet should trigger SimpleChangeEvent") { ws =>
 

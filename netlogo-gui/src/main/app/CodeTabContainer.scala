@@ -13,11 +13,16 @@ object CodeTabContainer {
     val hasRoomToRight = parent.getLocation.x + parent.getWidth + horizontalSpacing + child.getWidth <= availBounds.x + availBounds.width
     val hasRoomToLeft = availBounds.x  <= parent.getLocation.x - horizontalSpacing - child.getWidth
     val yLoc = parentLocation.y + parent.getInsets.top
-    // if there's room to the right of the parent or no room to the left of the parent, put window to the right
-    if (hasRoomToRight || !hasRoomToLeft) {
+    // Detached code tab location priority list:
+    //   1) left edge to the right of the parent
+    //   2) right edge to the left of the parent
+    //   3) right edge to the left of the screen
+    if (hasRoomToRight) {
       return new Point(parentLocation.x + parent.getWidth() + horizontalSpacing, yLoc)
-    } else {
+    } else if (hasRoomToLeft) {
       return new Point(parent.getLocation.x - child.getWidth - horizontalSpacing, yLoc)
+    } else {
+      return new Point(availBounds.x + availBounds.width - child.getWidth - horizontalSpacing, yLoc)
     }
   }
 }

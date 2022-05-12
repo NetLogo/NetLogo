@@ -2,9 +2,9 @@
 
 package org.nlogo.parse
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class TestAllTokens extends FunSuite {
+class TestAllTokens extends AnyFunSuite {
   test("all listed primitives exist") {
     FrontEnd.tokenMapper.checkInstructionMaps()
   }

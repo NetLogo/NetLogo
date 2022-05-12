@@ -4,9 +4,9 @@ package org.nlogo.workspace
 
 import org.nlogo.api.{ ModelType, NetLogoLegacyDialect }
 import org.nlogo.core.Femto
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class ModelTrackerTest extends FunSuite {
+class ModelTrackerTest extends AnyFunSuite {
   class Subject(modelType: ModelType, modelName: String) extends ModelTracker {
     _modelFileName = modelName
     setModelType(modelType)

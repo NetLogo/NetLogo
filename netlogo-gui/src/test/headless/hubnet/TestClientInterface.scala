@@ -12,7 +12,7 @@ import java.nio.file.Paths
 
 import org.nlogo.util.ClassLoaderObjectInputStream
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 class TestClientInterface extends TestUsingWorkspace {
 
@@ -86,7 +86,7 @@ object TestUtils {
 }
 
 // this class tests the utility functions in TestUtils.
-class TestUtilsTests extends FunSuite {
+class TestUtilsTests extends AnyFunSuite {
   import TestUtils._
 
   // fails in sbt unless we use ClassLoaderObjectInputStream instead of a regular ObjectInputStream

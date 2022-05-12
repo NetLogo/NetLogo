@@ -11,8 +11,8 @@ import org.nlogo.core.model.WidgetReader
 
 import org.scalacheck.{ Arbitrary, Gen }
 
-import org.scalatest.FunSuite
-import org.scalatest.prop.GeneratorDrivenPropertyChecks
+import org.scalatest.funsuite.AnyFunSuite
+import org.scalatestplus.scalacheck.ScalaCheckDrivenPropertyChecks
 
 object HubNetGenerators {
   val genPos = Arbitrary.arbTuple4[Int, Int, Int, Int].arbitrary
@@ -141,7 +141,7 @@ object HubNetGenerators {
     Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
 }
 
-class HubNetWidgetReadersTest extends FunSuite with GeneratorDrivenPropertyChecks {
+class HubNetWidgetReadersTest extends AnyFunSuite with ScalaCheckDrivenPropertyChecks {
 
   import HubNetGenerators._
 

@@ -123,6 +123,10 @@ public class MacHandler {
 
   public void ready(Object app) {
     this.app = app;
+    if (this.app instanceof App) {
+      App a = (App)app;
+      MacFullScreenListener.addFullScreenListener(a.getFrame(), a.getMonitorManager());
+    }
     if (openMeLater != null) {
       doOpen(openMeLater);
     }

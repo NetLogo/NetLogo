@@ -161,7 +161,10 @@ object NetLogoPackaging {
       val host = "ccl.northwestern.edu"
       val targetDir = "/usr/local/www/netlogo"
       val generatedSite = generateLocalWebsite.value
-      RunProcess(Seq("rsync", "-av", "--inplace", "--progress", generatedSite.getPath, s"${user}@${host}:${targetDir}"), "rsync")
+      // Use `--ignore-existing` because generally the website is only uploaded once during a release.  If there is a failure
+      // and it needs to be re-uploaded, the directory should be wiped on the server and then this task can be re-run.  If
+      // just the docs need to be updated, see `uploadDocs` below, which will change existing files.  -Jeremy B October 2021
+      RunProcess(Seq("rsync", "-rltv", "--ignore-existing", "--progress", generatedSite.getPath, s"${user}@${host}:${targetDir}"), "rsync")
       RunProcess(Seq("ssh", s"${user}@${host}", "chgrp", "-R", "apache", s"${targetDir}/${marketingVersion.value}"), "ssh - change release group")
       RunProcess(Seq("ssh", s"${user}@${host}", "chmod", "-R", "g+rwX",  s"${targetDir}/${marketingVersion.value}"), "ssh - change release permissions")
     },
@@ -173,8 +176,8 @@ object NetLogoPackaging {
       val manualSource = netLogoRoot.value / "NetLogo User Manual.pdf"
       val manualTarget = s"$targetDir/docs/NetLogo User Manual.pdf"
       (allDocs in netlogo).value
-      RunProcess(Seq("rsync", "-av", "--inplace", "--progress", sourceDir.getPath, s"$user@$host:$targetDir"), "rsync docs")
-      RunProcess(Seq("rsync", "-av", "--inplace", "--progress", manualSource.getPath, s"$user@$host:$manualTarget"), "rsync user manual")
+      RunProcess(Seq("rsync", "-rltv", "--inplace", "--progress", sourceDir.getPath, s"$user@$host:$targetDir"), "rsync docs")
+      RunProcess(Seq("rsync", "-rltv", "--inplace", "--progress", manualSource.getPath, s"$user@$host:$manualTarget"), "rsync user manual")
       RunProcess(Seq("ssh", s"$user@$host", "chgrp", "-R", "apache", targetDir), "ssh - change release group")
       RunProcess(Seq("ssh", s"$user@$host", "chmod", "-R", "g+rwX", targetDir), "ssh - change release permissions")
     },

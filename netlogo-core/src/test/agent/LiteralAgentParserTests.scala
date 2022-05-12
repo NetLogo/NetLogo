@@ -5,9 +5,9 @@ package org.nlogo.agent
 import org.nlogo.util.MockSuite
 import org.nlogo.api.{ Dump, ExtensionManager, World => APIWorld }
 import org.nlogo.core.{ CompilerException, Token, TokenDSL }
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
-class LiteralAgentParserTests extends FunSuite with MockSuite {
+class LiteralAgentParserTests extends AnyFunSuite with MockSuite {
 
   def defaultWorld = {
     val world = new World2D

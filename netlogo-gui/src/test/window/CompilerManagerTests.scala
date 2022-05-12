@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.core.Femto
 import org.nlogo.api.{ JobOwner, MersenneTwisterFast, NetLogoLegacyDialect }
 import org.nlogo.agent.{ CompilationManagement, World }
@@ -10,7 +10,7 @@ import org.nlogo.nvm.PresentationCompilerInterface
 import org.nlogo.workspace.{ AbstractWorkspace, DummyAbstractWorkspace }
 import org.nlogo.window.Events.{ CompiledEvent, CompileMoreSourceEvent, InterfaceGlobalEvent, LoadBeginEvent, LoadEndEvent, WidgetAddedEvent, CompileAllEvent }
 
-class CompilerManagerTests extends FunSuite {
+class CompilerManagerTests extends AnyFunSuite {
   def loadWidgets(ws: Seq[JobOwner],
     source: String = "globals [ a b c ] to foo fd 1 end")(
       cm: CompilerManager): CompilerManager = {

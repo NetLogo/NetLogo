@@ -2,7 +2,7 @@
 
 package org.nlogo.util
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.jmock.{Expectations, Mockery, Sequence}
 import org.jmock.integration.junit4.JUnit4Mockery
 import scala.util.DynamicVariable
@@ -61,7 +61,7 @@ import scala.language.implicitConversions
 //    [info] what happened before this: nothing!
 // - ST 8/16/11
 
-trait MockSuite extends FunSuite {
+trait MockSuite extends AnyFunSuite {
 
   // this is the main test method provided by this trait.
   def mockTest(name: String)(f: => Unit) {

@@ -83,7 +83,7 @@ org.nlogo.prim.etc._setDefaultShape.notADefinedTurtleShape =海龟形状 "{0}" �
 org.nlogo.prim._greaterthan.cannotCompareParameters = > 只能用于两个数字、字符串或同类主体，不能用于 {0} 和 {1}.
 org.nlogo.prim._max.cantFindMaxOfListWithNoNumbers = 不包含数值的列表无法找到最大值: {0}
 org.nlogo.prim._min.cantFindMinOfListWithNoNumbers = 不包含数值的列表无法找到最小值: {0}
-org.nlogo.prim.etc._mean.cantFindMeanOfListWithNoNumbers = 不包含数值的列表无法找到最平均值: {0}.
+org.nlogo.prim.etc._mean.cantFindMeanOfListWithNoNumbers = 不包含数值的列表无法找到最平均值: {0}
 
 org.nlogo.prim.etc.$common.emptyList = 空列表.
 org.nlogo.prim.etc.$common.emptyString = 空字符串.
@@ -150,6 +150,8 @@ org.nlogo.prim.$common.expectedBooleanValue = {0} 期望从 {1} 获得布尔值�
 
 
 org.nlogo.prim.etc._turtleset.listInputsMustBeTurtleOrTurtleAgentset = {0} 的输入列表应只包含海龟、海龟集或列表元素. 列表 {1} 包含了其他类型的主体集: {2}.
+org.nlogo.prim.etc._importdrawing.cantImportDrawingin3D = 3D模式不能导入图片.
+
 
 org.nlogo.prim.etc._linkheading.noLinkHeadingWithSameEndpoints = 两端在一个位置的连接没有方向值.
 
@@ -182,4 +184,4 @@ org.nlogo.prim.etc._randomNormal.secondInputNotNegative = random-normal的第二
 compiler.CarefullyVisitor.badNesting = {0} 不能在 CAREFULLY 外面使用.
 compiler.SetVisitor.notSettable = 不能对其使用set.
 compiler.TaskVisitor.notDefined = 该变量未定义.
-compiler.LetVariable.notDefined = {0} 未定义.
+compiler.LocalsVisitor.notDefined = {0} 未定义.

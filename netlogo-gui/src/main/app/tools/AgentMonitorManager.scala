@@ -7,7 +7,6 @@ import java.awt.Window
 import scala.collection.mutable
 
 import org.nlogo.agent.Agent
-import org.nlogo.awt.EventQueue
 import org.nlogo.core.AgentKind
 import org.nlogo.swing.Tiler
 import org.nlogo.window.{ Event, GUIWorkspace }
@@ -16,39 +15,29 @@ class AgentMonitorManager(val workspace: GUIWorkspace)
 extends Event.LinkChild with Event.LinkParent
 {
 
-  private val monitorWindows = mutable.Map[Agent, AgentMonitorWindow]()
-  private var emptyTurtleMonitorWindow: AgentMonitorWindow = null
-  private var emptyPatchMonitorWindow: AgentMonitorWindow = null
-  private var emptyLinkMonitorWindow: AgentMonitorWindow = null
-  private val monitorList = collection.mutable.Buffer[Agent]()
+  private val monitorWindows      = mutable.Map[Agent, AgentMonitorWindow]()
+  private val emptyMonitorWindows = mutable.Map[AgentKind, AgentMonitorWindow]()
+  private val monitorList         = collection.mutable.Buffer[Agent]()
 
   def closeAll() {
-    for(win <- monitorWindows.values) {
-      win.setVisible(false)
-      win.dispose()
-    }
-    if(emptyTurtleMonitorWindow != null) {
-      emptyTurtleMonitorWindow.setVisible(false)
-      emptyTurtleMonitorWindow.dispose()
-      emptyTurtleMonitorWindow = null
-    }
-    if(emptyPatchMonitorWindow != null) {
-      emptyPatchMonitorWindow.setVisible(false)
-      emptyPatchMonitorWindow.dispose()
-      emptyPatchMonitorWindow = null
-    }
-    if(emptyLinkMonitorWindow != null) {
-      emptyLinkMonitorWindow.setVisible(false)
-      emptyLinkMonitorWindow.dispose()
-      emptyLinkMonitorWindow = null
-    }
+    monitorWindows.values.foreach( (w) => {
+      w.setVisible(false)
+      w.dispose()
+    })
     monitorWindows.clear()
+
+    emptyMonitorWindows.values.foreach( (w) => {
+      w.setVisible(false)
+      w.dispose()
+    })
+    emptyMonitorWindows.clear()
+
     org.nlogo.window.Event.rehash()
     monitorList.clear()
   }
 
   def closeTopMonitor() {
-    for(topMonitor <- monitorList.headOption.map(monitorWindows)) {
+    for (topMonitor <- monitorList.headOption.map(monitorWindows)) {
       topMonitor.setVisible(false)
       topMonitor.dispose()
       remove(topMonitor)
@@ -61,104 +50,75 @@ extends Event.LinkChild with Event.LinkParent
   /// Event.LinkParent -- lets events pass through us to MonitorWindows
   def getLinkChildren = {
     val list = collection.mutable.ListBuffer[AnyRef](monitorWindows.values.toSeq: _*)
-    if(emptyTurtleMonitorWindow != null)
-      list += emptyTurtleMonitorWindow
-    if(emptyPatchMonitorWindow != null)
-      list += emptyPatchMonitorWindow
-    if(emptyLinkMonitorWindow != null)
-      list += emptyLinkMonitorWindow
+    emptyMonitorWindows.values.foreach( (w) => list += w )
     list.toArray
   }
 
   def agentChangeNotify(window: AgentMonitorWindow, oldAgent: Agent) {
-    if(oldAgent != null) {
+    if (oldAgent == null) {
+      if (window.agent != null) {
+        emptyMonitorWindows.remove(window.agent.kind)
+      }
+    } else {
       monitorWindows -= oldAgent
-      monitorList -= oldAgent
+      monitorList    -= oldAgent
     }
-    else if(window.agent != null) {
-      if(window eq emptyTurtleMonitorWindow)
-        emptyTurtleMonitorWindow = null
-      if(window eq emptyPatchMonitorWindow)
-        emptyPatchMonitorWindow = null
-      if(window eq emptyLinkMonitorWindow)
-        emptyLinkMonitorWindow = null
-    }
-    if(window.agent != null) {
+    if (window.agent != null) {
       monitorWindows.put(window.agent, window)
       monitorList.prepend(window.agent)
     }
   }
 
   def remove(window: AgentMonitorWindow) {
-    if(window.agent != null) {
+    if (window.agent != null) {
       monitorWindows -= window.agent
-      monitorList -= window.agent
+      monitorList    -= window.agent
+    } else {
+      emptyMonitorWindows.remove(window.agentKind)
     }
-    if(window eq emptyTurtleMonitorWindow)
-      emptyTurtleMonitorWindow = null
-    if(window eq emptyPatchMonitorWindow)
-      emptyPatchMonitorWindow = null
-    if(window eq emptyLinkMonitorWindow)
-      emptyLinkMonitorWindow = null
+  }
+
+  private def newWindow(agentKind: AgentKind, agent: Agent, radius: Double): AgentMonitorWindow = {
+    val window = new AgentMonitorWindow(agentKind, agent, radius, this, workspace.getFrame)
+
+    val otherWindows = new java.util.ArrayList[Window]()
+    monitorWindows.values.foreach(otherWindows.add(_))
+    emptyMonitorWindows.values.foreach(otherWindows.add(_))
+    window.setLocation(Tiler.findEmptyLocation(otherWindows, window))
+
+    if (agent != null) {
+      monitorWindows.put(agent, window)
+      monitorList.prepend(window.agent)
+    } else {
+      emptyMonitorWindows.put(agentKind, window)
+    }
+
+    window
   }
 
   def inspect(agentKind: AgentKind, a0: Agent, radius: Double) {
-    val frame = workspace.getFrame
-    var window: AgentMonitorWindow = null
-    var agent = a0
-    if(agent == null && (agentKind == AgentKind.Observer))
-      agent = workspace.world.observer
-    if(agent != null)
-      window = monitorWindows.get(agent).orNull
-    else if(agentKind == AgentKind.Turtle)
-      window = emptyTurtleMonitorWindow
-    else if(agentKind == AgentKind.Patch)
-      window = emptyPatchMonitorWindow
-    else if(agentKind == AgentKind.Link)
-      window = emptyLinkMonitorWindow
-    if(window == null) {
-      if(agentKind == AgentKind.Observer)
-        window = new AgentMonitorWindow(AgentKind.Observer, agent, radius, this, frame)
-      else if(agentKind == AgentKind.Turtle) {
-        window = new AgentMonitorWindow(AgentKind.Turtle, agent, radius, this, frame)
-        if(agent == null)
-          emptyTurtleMonitorWindow = window
-      }
-      else if(agentKind == AgentKind.Patch) {
-        window = new AgentMonitorWindow(AgentKind.Patch, agent, radius, this, frame)
-        if(agent == null)
-          emptyPatchMonitorWindow = window
-      }
-      else if(agentKind == AgentKind.Link) {
-        window = new AgentMonitorWindow(AgentKind.Link, agent, radius, this, frame)
-        if(agent == null)
-          emptyLinkMonitorWindow = window
-      }
-      val otherWindows = new java.util.ArrayList[Window]()
-      otherWindows.addAll{
-        import collection.JavaConverters._
-        monitorWindows.values.toList.asJava
-      }
-      if(emptyTurtleMonitorWindow != null)
-        otherWindows.add(emptyTurtleMonitorWindow)
-      if(emptyPatchMonitorWindow != null)
-        otherWindows.add(emptyPatchMonitorWindow)
-      if(emptyLinkMonitorWindow != null)
-        otherWindows.add(emptyLinkMonitorWindow)
-      window.setLocation(Tiler.findEmptyLocation(otherWindows, window))
+    val agent = if (a0 == null && agentKind == AgentKind.Observer) {
+      workspace.world.observer
+    } else {
+      a0
     }
-    else window.radius(radius)
+
+    val window = if (agent != null) {
+      monitorWindows.getOrElse(agent, newWindow(agentKind, agent, radius))
+    } else {
+      emptyMonitorWindows.getOrElse(agentKind, newWindow(agentKind, agent, radius))
+    }
+
+    window.radius(radius)
     window.setVisible(true)
     org.nlogo.window.Event.rehash()
-    if(agent == null && (agentKind != AgentKind.Observer))
+    if (agent == null && agentKind != AgentKind.Observer) {
       window.requestFocus()
-    else
-      EventQueue.invokeLater(
-        new Runnable() { def run() { frame.requestFocus() }})
+    }
   }
 
   def stopInspecting(agent: Agent) {
-    if(agent != null) {
+    if (agent != null) {
       monitorWindows.get(agent).collect {
         case window: AgentMonitorWindow =>
           window.setVisible(false)
@@ -170,8 +130,9 @@ extends Event.LinkChild with Event.LinkParent
 
   def stopInspectingDeadAgents() {
     monitorWindows.keys.foreach { case agent =>
-      if(agent.id == -1)
+      if (agent.id == -1) {
         stopInspecting(agent)
+      }
     }
   }
 
@@ -179,14 +140,12 @@ extends Event.LinkChild with Event.LinkParent
   def hideAll() { showOrHideAll(show = false) }
 
   private def showOrHideAll(show: Boolean) {
-    for(window <- monitorWindows.values)
-      window.setVisible(show)
-    if(emptyPatchMonitorWindow != null)
-      emptyPatchMonitorWindow.setVisible(show)
-    if(emptyTurtleMonitorWindow != null)
-      emptyTurtleMonitorWindow.setVisible(show)
-    if(emptyLinkMonitorWindow != null)
-      emptyLinkMonitorWindow.setVisible(show)
+    monitorWindows.values.foreach(_.setVisible(show))
+    emptyMonitorWindows.values.foreach(_.setVisible(show))
+  }
+
+  def areAnyVisible(): Boolean = {
+    monitorWindows.values.exists(_.isVisible()) || emptyMonitorWindows.values.exists(_.isVisible())
   }
 
   def refresh() {

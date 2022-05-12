@@ -17,6 +17,14 @@ public final strictfp class _tan extends Reporter implements Pure {
   }
 
   public double report_1(Context context, double angle) throws LogoException {
-    return validDouble(StrictMath.tan(StrictMath.toRadians(angle)), context);
+    double mod = Math.abs(angle % 180);
+    if (mod == 90) {
+      validDouble(java.lang.Double.POSITIVE_INFINITY, context);
+    }
+    if (mod == 0) {
+      return 0;
+    } else {
+      return StrictMath.tan(StrictMath.toRadians(angle));
+    }
   }
 }

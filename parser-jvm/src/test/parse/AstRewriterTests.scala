@@ -2,12 +2,12 @@
 
 package org.nlogo.parse
 
-import org.scalatest.FunSuite
 
 import org.nlogo.core.{ CompilationOperand, CompilerException, DummyCompilationEnvironment,
   DummyExtensionManager, DummyLibraryManager, Femto, NetLogoCore, Program, TokenizerInterface }
+import org.scalatest.funsuite.AnyFunSuite
 
-class AstRewriterTests extends FunSuite {
+class AstRewriterTests extends AnyFunSuite {
   // these are basic checks that various AST structures can be rewritten when unaltered
   test("preserves source") {
     assertPreservesSource("""__ignore ifelse-value true [""] [ [] ]""")

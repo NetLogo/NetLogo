@@ -6,11 +6,12 @@ import org.nlogo.api.{ ExtensionManager => APIEM, ExtensionException }
 import org.nlogo.core.TokenType
 import ExtensionManager.ExtensionLoader
 
-import org.scalatest.{ BeforeAndAfter, FunSuite }
+import org.scalatest.BeforeAndAfter
+import org.scalatest.funsuite.AnyFunSuite
 
 import scala.collection.JavaConverters._
 
-class ExtensionManagerTests extends FunSuite with BeforeAndAfter {
+class ExtensionManagerTests extends AnyFunSuite with BeforeAndAfter {
   before {
   }
 

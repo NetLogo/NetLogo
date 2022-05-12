@@ -2,11 +2,11 @@
 
 package org.nlogo.core
 
-import org.scalatest.FunSuite
 
 import VersionUtils._
+import org.scalatest.funsuite.AnyFunSuite
 
-class VersionUtilsTests extends FunSuite {
+class VersionUtilsTests extends AnyFunSuite {
 
   test("numericValue") {
     assert(numericValue("NetLogo (no version)") == 0)

@@ -2,11 +2,11 @@
 
 package org.nlogo.hubnet.mirroring
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 
 import java.io.{ ByteArrayInputStream, ByteArrayOutputStream, DataInputStream, DataOutputStream }
 
-class ClientWorldTests extends FunSuite {
+class ClientWorldTests extends AnyFunSuite {
 
   val BLACK = Double.box(0)
   val WHITE = Double.box(9.9)

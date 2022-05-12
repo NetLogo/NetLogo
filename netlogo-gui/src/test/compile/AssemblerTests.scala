@@ -2,11 +2,11 @@
 
 package org.nlogo.compile
 
-import org.scalatest.FunSuite
+import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.nvm.Procedure
 import org.nlogo.core.Program
 
-class AssemblerTests extends FunSuite {
+class AssemblerTests extends AnyFunSuite {
   def compile(keyword: String, source: String): Procedure = {
     val program = Program.empty()
     val procdefs = TestHelper.compiledProcedures(keyword + " foo " + source + "\nend", program)

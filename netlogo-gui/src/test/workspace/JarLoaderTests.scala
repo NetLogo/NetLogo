@@ -10,9 +10,10 @@ import java.util.zip.ZipEntry
 import org.nlogo.api.ClassManager
 import ExtensionManager.ExtensionData
 
-import org.scalatest.{ BeforeAndAfter, FunSuite }
+import org.scalatest.BeforeAndAfter
+import org.scalatest.funsuite.AnyFunSuite
 
-class JarLoaderTests extends FunSuite with BeforeAndAfter {
+class JarLoaderTests extends AnyFunSuite with BeforeAndAfter {
   val dummyWorkspace = new DummyWorkspace
 
   val jarLoader = new JarLoader(dummyWorkspace)
