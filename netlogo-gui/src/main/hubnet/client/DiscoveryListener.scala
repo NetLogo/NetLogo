@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.client
 
 import java.io.IOException
-import java.net.{DatagramPacket, InetAddress, MulticastSocket, SocketTimeoutException}
+import java.net.{DatagramPacket, InetAddress, InetSocketAddress, MulticastSocket, NetworkInterface, SocketTimeoutException}
 import java.util.Arrays
 import org.nlogo.hubnet.protocol.DiscoveryMessage
 
@@ -75,11 +75,13 @@ class DiscoveryListener(@volatile var interfaceAddress: Option[InetAddress]) ext
         // the -1 should, hopefully, force zero termination upon truncation of large packets...
         val packet = new DatagramPacket(receiptBuffer, receiptBuffer.length - 1)
         val group = InetAddress.getByName(SERVER_DISCOVERY_MULTICAST_GROUP)
+        val socketGroup = new InetSocketAddress(group, SERVER_DISCOVERY_MULTICAST_PORT)
+        val netIf = NetworkInterface.getByInetAddress(group)
         try {
           multicastSocket = new MulticastSocket(SERVER_DISCOVERY_MULTICAST_PORT)
           multicastSocket.setSoTimeout(3000)
-          multicastSocket.setInterface(address)
-          multicastSocket.joinGroup(group)
+          multicastSocket.setNetworkInterface(netIf)
+          multicastSocket.joinGroup(socketGroup,netIf)
           multicastSocket.receive(packet)
           notifyListeners(DiscoveryMessage.deserialize(packet.getAddress.getHostName, packet.getData))
         }
@@ -96,7 +98,7 @@ class DiscoveryListener(@volatile var interfaceAddress: Option[InetAddress]) ext
         }
         finally {
           if (multicastSocket != null) {
-            multicastSocket.leaveGroup(group)
+            multicastSocket.leaveGroup(socketGroup, netIf)
             multicastSocket.close()
           }
         }
