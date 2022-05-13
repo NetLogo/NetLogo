@@ -17,7 +17,7 @@ import java.util.List;
 
 import org.nlogo.api.Options;
 
-public strictfp class RateConnection
+public class RateConnection
     extends LineConnection
     implements ModelElementFigure,
     org.nlogo.api.Editable {

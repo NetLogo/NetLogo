@@ -16,7 +16,7 @@ import org.nlogo.nvm.Reporter;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public final strictfp class _linkset
+public final class _linkset
     extends Reporter {
 
 

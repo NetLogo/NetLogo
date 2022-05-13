@@ -2,7 +2,7 @@
 
 package org.nlogo.mc;
 
-public strictfp class Person {
+public class Person {
 
   private String firstName;
   private String lastName;

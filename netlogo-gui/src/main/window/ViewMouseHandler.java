@@ -5,7 +5,7 @@ package org.nlogo.window;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.ViewSettings;
 
-public strictfp class ViewMouseHandler
+public class ViewMouseHandler
     implements
     java.awt.event.MouseMotionListener,
     java.awt.event.MouseListener {

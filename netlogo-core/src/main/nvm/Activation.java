@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm;
 
-public final strictfp class Activation implements org.nlogo.api.Activation {
+public final class Activation implements org.nlogo.api.Activation {
   private static final Object[] NO_ARGS = new Object[]{};
 
   public final Procedure procedure;

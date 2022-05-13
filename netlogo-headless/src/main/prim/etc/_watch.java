@@ -7,7 +7,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _watch
+public final class _watch
     extends Command {
 
   public _watch() {

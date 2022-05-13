@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _canmove
+public final class _canmove
     extends Reporter {
     @Override
   public Object report(final Context context) {

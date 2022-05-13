@@ -9,7 +9,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _watch
+public final class _watch
     extends Command {
   public _watch() {
     this.switches = true;

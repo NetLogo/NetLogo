@@ -10,7 +10,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 import java.util.HashSet;
 
-public final strictfp class _removeduplicates
+public final class _removeduplicates
     extends Reporter
     implements Pure {
 

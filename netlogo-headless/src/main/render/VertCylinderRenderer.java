@@ -4,7 +4,7 @@ package org.nlogo.render;
 
 import org.nlogo.api.GraphicsInterface;
 
-public strictfp class VertCylinderRenderer extends AbstractTopologyRenderer {
+public class VertCylinderRenderer extends AbstractTopologyRenderer {
   public VertCylinderRenderer(org.nlogo.api.World world) {
     super(world);
   }

@@ -17,7 +17,7 @@ import org.nlogo.api.WorldWithWorldRenderable;
 import java.util.Collection;
 import java.util.Iterator;
 
-public strictfp class Renderer
+public class Renderer
     extends AbstractRenderer {
 
   public Renderer(WorldWithWorldRenderable world) {

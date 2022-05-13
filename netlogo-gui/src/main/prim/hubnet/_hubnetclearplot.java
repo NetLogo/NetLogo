@@ -5,7 +5,7 @@ package org.nlogo.prim.hubnet;
 import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 
-public final strictfp class _hubnetclearplot
+public final class _hubnetclearplot
     extends HubNetCommand {
   @Override
   public void perform(final org.nlogo.nvm.Context context) throws LogoException {

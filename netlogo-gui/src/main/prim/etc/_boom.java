@@ -12,7 +12,7 @@ import org.nlogo.nvm.Reporter;
 // primitive, so don't rejigger it (unless you go find and change
 // those test cases). - ST 2/6/09
 
-public final strictfp class _boom
+public final class _boom
     extends Reporter {
 
 

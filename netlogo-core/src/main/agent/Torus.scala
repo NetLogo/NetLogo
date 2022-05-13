@@ -2,7 +2,6 @@
 
 package org.nlogo.agent
 
-@annotation.strictfp
 class Torus(_world: World)
 extends Topology(_world, xWraps = true, yWraps = true)
 with XWraps with YWraps {

@@ -5,7 +5,7 @@ package org.nlogo.hubnet.mirroring;
 import java.util.ArrayList;
 import java.util.List;
 
-public strictfp class DiffBuffer {
+public class DiffBuffer {
   public static final short EMPTY = 0x0000;
 
   public static final short MINX = 0x0001;

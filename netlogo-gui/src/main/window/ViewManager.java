@@ -4,7 +4,7 @@ package org.nlogo.window;
 
 import org.nlogo.api.ViewInterface;
 
-public strictfp class ViewManager {
+public class ViewManager {
   private final java.util.LinkedList<ViewInterface> views = new java.util.LinkedList<ViewInterface>();
 
   // note that primary views *must* be local views aka not hubnet

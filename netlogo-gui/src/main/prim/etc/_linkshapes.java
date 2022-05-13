@@ -13,7 +13,7 @@ import org.nlogo.nvm.Reporter;
 
 import scala.collection.Iterator;
 
-public final strictfp class _linkshapes
+public final class _linkshapes
     extends Reporter {
 
 

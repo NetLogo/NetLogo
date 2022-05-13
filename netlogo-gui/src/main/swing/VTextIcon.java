@@ -33,7 +33,7 @@ import javax.swing.Icon;
  * drawn vertically and should never be rotated)
  */
 
-public strictfp class VTextIcon implements Icon, PropertyChangeListener {
+public class VTextIcon implements Icon, PropertyChangeListener {
   String fLabel;
   String[] fCharStrings; // for efficiency, break the fLabel into one-char strings to be passed to drawString
   int[] fCharWidths; // Roman characters should be centered when not rotated (Japanese fonts are monospaced)

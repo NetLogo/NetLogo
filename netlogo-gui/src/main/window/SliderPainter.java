@@ -2,7 +2,7 @@
 
 package org.nlogo.window;
 
-public abstract strictfp class SliderPainter {
+public abstract class SliderPainter {
   abstract public java.awt.Dimension getMinimumSize();
 
   abstract public java.awt.Dimension getPreferredSize(java.awt.Font font);

@@ -8,7 +8,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 
-public final strictfp class _jump
+public final class _jump
     extends Command {
   public _jump() {
     this.switches = true;

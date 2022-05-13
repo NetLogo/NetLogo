@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final strictfp class _median
+public final class _median
     extends Reporter
     implements Pure {
   @Override

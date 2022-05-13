@@ -13,7 +13,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _layouttutte
+public final class _layouttutte
     extends Command {
   public _layouttutte() {
     this.switches = true;

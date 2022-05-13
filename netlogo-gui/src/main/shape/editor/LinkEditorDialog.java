@@ -10,7 +10,7 @@ import org.nlogo.shape.LinkShape;
 import java.util.List;
 import java.util.ArrayList;
 
-strictfp class LinkEditorDialog
+class LinkEditorDialog
     extends javax.swing.JDialog
     implements EditorDialog.VectorShapeContainer {
   private final javax.swing.JTextField name = new javax.swing.JTextField(10);

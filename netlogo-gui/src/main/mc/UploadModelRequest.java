@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-public abstract strictfp class UploadModelRequest extends MultiPartPostRequest {
+public abstract class UploadModelRequest extends MultiPartPostRequest {
 
   private JDialog loadingDialog;
   private String invalid;

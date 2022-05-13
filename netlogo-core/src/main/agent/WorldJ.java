@@ -8,7 +8,7 @@ package org.nlogo.agent;
 // I dream of a World which doesn't have a flag totally unrelated
 // to its purpose simply to serve the designs of an engine that
 // it shouldn't know or care about. RG 6/16/17
-strictfp class WorldJ {
+class WorldJ {
   // This is a flag that the engine checks in its tightest innermost loops
   // to see if maybe it should stop running NetLogo code for a moment
   // and do something like halt or update the display.  It doesn't

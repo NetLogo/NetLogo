@@ -7,7 +7,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _randompoisson extends Reporter {
+public final class _randompoisson extends Reporter {
 
 
   @Override

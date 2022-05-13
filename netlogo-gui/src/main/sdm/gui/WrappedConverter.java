@@ -4,7 +4,7 @@ package org.nlogo.sdm.gui;
 
 import org.nlogo.sdm.Converter;
 
-public strictfp class WrappedConverter
+public class WrappedConverter
     implements org.jhotdraw.util.Storable {
   final Converter converter;
 

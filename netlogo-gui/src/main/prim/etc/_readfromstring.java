@@ -9,7 +9,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _readfromstring
+public final class _readfromstring
     extends Reporter {
 
 

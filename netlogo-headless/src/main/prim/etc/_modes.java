@@ -12,7 +12,7 @@ import org.nlogo.nvm.Reporter;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 
-public final strictfp class _modes
+public final class _modes
     extends Reporter
     implements Pure {
   @Override

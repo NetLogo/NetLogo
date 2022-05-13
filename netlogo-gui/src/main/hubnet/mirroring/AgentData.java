@@ -2,7 +2,7 @@
 
 package org.nlogo.hubnet.mirroring;
 
-public abstract strictfp class AgentData
+public abstract class AgentData
     extends Overridable {
   public abstract double xcor();
 

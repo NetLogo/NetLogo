@@ -6,7 +6,7 @@ import org.nlogo.agent.Link;
 import org.nlogo.agent.Turtle;
 import org.nlogo.nvm.Command;
 
-public final strictfp class _die
+public final class _die
     extends Command {
 
   public _die() {

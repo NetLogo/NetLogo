@@ -9,7 +9,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _sublist
+public final class _sublist
     extends Reporter
     implements org.nlogo.core.Pure {
 

@@ -5,7 +5,7 @@ package org.nlogo.editor;
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 
-public strictfp class HighlightView
+public class HighlightView
     extends javax.swing.text.PlainView {
 
   private final javax.swing.JEditorPane pane;

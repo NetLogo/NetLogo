@@ -13,7 +13,7 @@ import org.nlogo.api.Property;
 import java.util.ArrayList;
 import java.util.List;
 
-public strictfp class StockFigure
+public class StockFigure
     extends RectangleFigure
     implements
     ModelElementFigure,

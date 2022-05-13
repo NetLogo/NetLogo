@@ -13,7 +13,7 @@ import org.nlogo.core.TokenType;
  * Highlights a section of code that lies between two matching
  * parentheses or brackets
  */
-strictfp class DoubleClickCaret extends javax.swing.text.DefaultCaret {
+class DoubleClickCaret extends javax.swing.text.DefaultCaret {
 
   private final Colorizer colorizer;
   private final BracketMatcher bracketMatcher;

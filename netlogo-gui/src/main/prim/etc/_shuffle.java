@@ -11,7 +11,7 @@ import org.nlogo.nvm.Reporter;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public final strictfp class _shuffle
+public final class _shuffle
     extends Reporter {
   @Override
   public Object report(final Context context) throws LogoException {

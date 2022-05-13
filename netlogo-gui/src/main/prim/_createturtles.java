@@ -12,7 +12,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.CustomAssembled;
 import org.nlogo.nvm.SelfScoping;
 
-public final strictfp class _createturtles
+public final class _createturtles
     extends Command
     implements CustomAssembled, SelfScoping {
   static final String NO_BREED = "";

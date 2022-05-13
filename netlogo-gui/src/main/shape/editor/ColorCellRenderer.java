@@ -6,7 +6,7 @@ package org.nlogo.shape.editor;
 // ComboBox.  It displays a rectangle filled with the items color,
 // next to text consisting of the name of that color
 
-strictfp class ColorCellRenderer
+class ColorCellRenderer
     extends javax.swing.JPanel
     implements javax.swing.ListCellRenderer<Integer> {
 

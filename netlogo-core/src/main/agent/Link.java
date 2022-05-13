@@ -18,7 +18,7 @@ import org.nlogo.log.LogManager;
 
 import java.util.Iterator;
 
-public strictfp class Link
+public class Link
     extends Agent
     implements org.nlogo.api.Link, AgentColors {
 

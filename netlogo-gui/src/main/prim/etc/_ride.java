@@ -10,7 +10,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _ride
+public final class _ride
     extends Command {
   public _ride() {
     this.switches = true;

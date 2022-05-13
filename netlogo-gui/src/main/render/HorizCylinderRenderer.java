@@ -5,7 +5,7 @@ package org.nlogo.render;
 import org.nlogo.api.Constants;
 import org.nlogo.api.GraphicsInterface;
 
-public strictfp class HorizCylinderRenderer extends AbstractTopologyRenderer {
+public class HorizCylinderRenderer extends AbstractTopologyRenderer {
   public HorizCylinderRenderer(org.nlogo.api.World world) {
     super(world);
   }

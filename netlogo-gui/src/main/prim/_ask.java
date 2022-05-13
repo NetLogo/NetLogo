@@ -15,7 +15,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.SelfScoping;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _ask
+public final class _ask
     extends Command
     implements org.nlogo.nvm.CustomAssembled, SelfScoping {
 

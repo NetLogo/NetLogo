@@ -8,7 +8,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _ride
+public final class _ride
     extends Command {
 
   public _ride() {

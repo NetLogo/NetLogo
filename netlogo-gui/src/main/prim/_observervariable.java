@@ -8,7 +8,7 @@ import org.nlogo.core.Reference;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _observervariable
+public final class _observervariable
     extends Reporter {
   public int vn = 0;
 

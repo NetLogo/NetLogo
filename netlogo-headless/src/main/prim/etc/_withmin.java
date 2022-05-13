@@ -11,7 +11,7 @@ import org.nlogo.nvm.Reporter;
 import java.util.ArrayList;
 import java.util.List;
 
-public final strictfp class _withmin
+public final class _withmin
     extends Reporter {
 
   @Override

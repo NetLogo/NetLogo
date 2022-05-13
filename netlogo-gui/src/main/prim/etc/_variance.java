@@ -14,7 +14,7 @@ import org.nlogo.nvm.Reporter;
 
 import java.util.Iterator;
 
-public final strictfp class _variance extends Reporter implements Pure {
+public final class _variance extends Reporter implements Pure {
 
 
   @Override

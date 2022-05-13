@@ -8,7 +8,7 @@ import org.nlogo.core.Shape;
 import java.util.ArrayList;
 import java.util.List;
 
-public strictfp class ImportDialog   // public for DeltaTick - ST 12/2/11
+public class ImportDialog   // public for DeltaTick - ST 12/2/11
     extends javax.swing.JDialog
     implements javax.swing.event.ListSelectionListener {
 

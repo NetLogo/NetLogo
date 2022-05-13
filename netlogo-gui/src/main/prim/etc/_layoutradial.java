@@ -12,7 +12,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _layoutradial
+public final class _layoutradial
     extends Command {
   public _layoutradial() {
     this.switches = true;

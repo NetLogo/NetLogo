@@ -6,7 +6,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _exportdrawing
+public final class _exportdrawing
     extends org.nlogo.nvm.Command {
   @Override
   public void perform(final org.nlogo.nvm.Context context) throws LogoException {

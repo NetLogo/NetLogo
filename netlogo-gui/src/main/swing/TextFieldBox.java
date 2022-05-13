@@ -19,7 +19,7 @@ import java.util.List;
  * A box for TextFields and their labels that keeps the fields and labels
  * nicely alligned.
  */
-public strictfp class TextFieldBox extends JPanel {
+public class TextFieldBox extends JPanel {
 
   private int labelAlignment;
   private Font labelFont, fieldFont;

@@ -9,7 +9,7 @@ import java.util.List;
 
 import static org.nlogo.swing.Utils.icon;
 
-public strictfp class UserDialog
+public class UserDialog
     extends javax.swing.JDialog {
   int selection = 0;
   static final int DIALOG_WIDTH = 400;

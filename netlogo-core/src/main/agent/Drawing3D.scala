@@ -6,7 +6,6 @@ import org.nlogo.api.AgentException
 import collection.mutable.ArrayBuffer
 import collection.JavaConverters._
 
-@annotation.strictfp
 class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
 
   private val _lines = ArrayBuffer[org.nlogo.api.DrawingLine3D]()

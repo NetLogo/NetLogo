@@ -7,7 +7,7 @@ import org.nlogo.api.AgentFollowingPerspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.Vect;
 
-public final strictfp class Observer3D
+public final class Observer3D
     extends Observer
     implements Agent3D {
   public Observer3D(World world) {

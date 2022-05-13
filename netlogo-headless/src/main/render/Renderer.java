@@ -13,7 +13,7 @@ import org.nlogo.api.Turtle;
 import org.nlogo.api.ViewSettings;
 import org.nlogo.api.World;
 
-public strictfp class Renderer
+public class Renderer
     extends AbstractRenderer {
 
   public Renderer(World world) {

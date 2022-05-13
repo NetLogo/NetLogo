@@ -49,7 +49,7 @@ without expressed or implied warranty.
 
 package org.nlogo.agent;
 
-public final strictfp class Gamma {
+public final class Gamma {
 
   // this class is not instantiable
   private Gamma() {

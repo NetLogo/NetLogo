@@ -6,7 +6,7 @@ import java.text.DateFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
-public strictfp class Month {
+public class Month {
 
   private int monthNum;
   private String monthString;

@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _shadeof
+public final class _shadeof
     extends Reporter
     implements Pure {
   @Override

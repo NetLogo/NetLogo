@@ -12,7 +12,7 @@ import org.nlogo.nvm.MutableDouble;
 
 // note that this and _bkinternal are pretty much carbon copies of each other
 
-public final strictfp class _fdinternal
+public final class _fdinternal
     extends Command {
   private final Let let;
 

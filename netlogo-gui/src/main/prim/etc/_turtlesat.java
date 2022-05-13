@@ -11,7 +11,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _turtlesat
+public final class _turtlesat
     extends Reporter {
 
 

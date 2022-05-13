@@ -7,7 +7,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 
-public final strictfp class _fd1
+public final class _fd1
     extends Command {
   public _fd1() {
     this.switches = true;

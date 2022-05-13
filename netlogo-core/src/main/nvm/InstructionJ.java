@@ -10,7 +10,7 @@ package org.nlogo.nvm;
 import org.nlogo.agent.World;
 import org.nlogo.core.Reference;
 
-public abstract strictfp class InstructionJ {
+public abstract class InstructionJ {
   public Workspace workspace;
   public World world;
   public Reporter[] args = new Reporter[0];

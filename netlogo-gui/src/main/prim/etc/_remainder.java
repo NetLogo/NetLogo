@@ -10,7 +10,7 @@ import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _remainder extends Reporter implements Pure {
+public final class _remainder extends Reporter implements Pure {
 
 
   @Override

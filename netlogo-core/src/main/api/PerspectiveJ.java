@@ -2,7 +2,7 @@
 
 package org.nlogo.api;
 
-public strictfp class PerspectiveJ {
+public class PerspectiveJ {
   static public final int OBSERVE = 0;
   static public final int RIDE    = 1;
   static public final int FOLLOW  = 2;

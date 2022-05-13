@@ -8,7 +8,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _setlinkvariable
+public final class _setlinkvariable
     extends Command {
   int vn = 0;
 

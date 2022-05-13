@@ -10,7 +10,7 @@ package org.nlogo.prim;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _unknownidentifier
+public final class _unknownidentifier
     extends Reporter {
   @Override
   public Object report(final org.nlogo.nvm.Context context) {

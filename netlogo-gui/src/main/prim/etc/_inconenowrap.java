@@ -14,7 +14,7 @@ import org.nlogo.nvm.Reporter;
 
 import java.util.List;
 
-public final strictfp class _inconenowrap
+public final class _inconenowrap
     extends Reporter {
 
 

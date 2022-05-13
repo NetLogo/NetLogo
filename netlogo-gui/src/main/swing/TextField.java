@@ -5,7 +5,7 @@ package org.nlogo.swing;
 // thank you thank you thank you to
 //   http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/uic/uicompiler/uic/widgets/UICTextField.java
 
-public strictfp class TextField
+public class TextField
     extends javax.swing.JTextField {
 
   private boolean mouseEvent = false;

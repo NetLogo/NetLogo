@@ -14,7 +14,7 @@ import org.nlogo.nvm.RuntimePrimitiveException;
  * makes current model be TYPE_NORMAL. useful for CCL users wanting
  * to commit changes to library models.
  */
-public final strictfp class _edit
+public final class _edit
     extends Command {
 
 

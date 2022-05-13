@@ -7,7 +7,7 @@ import org.nlogo.api.Turtle;
 import org.nlogo.shape.VectorShape;
 
 // public because the HubNet client uses it - ST 3/1/05
-public strictfp class TurtleDrawer {
+public class TurtleDrawer {
   private static final double MIN_PATCH_SIZE_FOR_TURTLE_SHAPES = 3.0;
 
   final TurtleShapeManager shapes;

@@ -10,7 +10,7 @@ import org.json.simple.parser.ParseException;
 import javax.swing.JDialog;
 import java.awt.Frame;
 
-public abstract strictfp class UpdateModelRequest extends MultiPartPostRequest {
+public abstract class UpdateModelRequest extends MultiPartPostRequest {
 
   private JDialog loadingDialog;
   private String invalid;

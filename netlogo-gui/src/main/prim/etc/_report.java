@@ -9,7 +9,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.NonLocalExit;
 
-public final strictfp class _report extends Command {
+public final class _report extends Command {
 
   @Override
   public void perform(Context context) throws LogoException {

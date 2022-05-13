@@ -29,7 +29,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
-public strictfp class LoginDialog extends JDialog {
+public class LoginDialog extends JDialog {
 
   //GUI form members
   private JPanel topLevelContainer;

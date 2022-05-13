@@ -4,7 +4,6 @@ package org.nlogo.agent
 
 import org.nlogo.api.Numbers.Infinitesimal
 
-@annotation.strictfp
 /**
  * Cache of sines and cosines of integers 0-359.
  * Speed up various operations on angles that are integers.  Trigonometry is expensive!

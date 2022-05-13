@@ -2,7 +2,7 @@
 
 package org.nlogo.window;
 
-public strictfp class JOGLLoadingException
+public class JOGLLoadingException
     extends Exception {
   private Throwable cause = null;
 

@@ -21,7 +21,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
-public strictfp class FileSelector extends JPanel {
+public class FileSelector extends JPanel {
 
   private static final String NO_FILE_SELECTED = "No file selected";
 

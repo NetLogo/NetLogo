@@ -30,7 +30,7 @@ import org.nlogo.nvm.PresentationCompilerInterface;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
 
-public abstract strictfp class AbstractWorkspace
+public abstract class AbstractWorkspace
     implements Workspace,
     EditorWorkspace,
     ExtendableWorkspace,

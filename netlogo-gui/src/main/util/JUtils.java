@@ -4,7 +4,7 @@ package org.nlogo.util;
 
 // we leave this in Java so we can use @SuppressWarnings
 
-public final strictfp class JUtils {
+public final class JUtils {
 
   // this class is not instantiable
   private JUtils() { throw new IllegalStateException(); }

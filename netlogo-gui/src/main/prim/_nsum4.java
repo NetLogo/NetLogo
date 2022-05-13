@@ -15,7 +15,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _nsum4 extends Reporter {
+public final class _nsum4 extends Reporter {
   public int vn;
 
   public _nsum4(int vn) {

@@ -17,7 +17,7 @@ import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
 import org.nlogo.api.LogoException;
 
-public strictfp class Patch
+public class Patch
     extends Agent
     implements org.nlogo.api.Patch, AgentColors {
 

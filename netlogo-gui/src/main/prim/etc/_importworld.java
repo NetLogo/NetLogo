@@ -6,7 +6,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _importworld
+public final class _importworld
     extends org.nlogo.nvm.Command {
   public _importworld() {
     this.switches = true;

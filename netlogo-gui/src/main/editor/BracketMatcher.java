@@ -20,7 +20,7 @@ import org.nlogo.core.TokenType;
  * also used by DoubleClickCaret.
  */
 
-strictfp class BracketMatcher
+class BracketMatcher
     implements javax.swing.event.CaretListener {
 
   private static final java.awt.Color GOOD_COLOR = java.awt.Color.GRAY;

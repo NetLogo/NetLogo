@@ -4,7 +4,7 @@ package org.nlogo.agent;
 
 import org.nlogo.api.AgentException;
 
-public strictfp class Protractor3D
+public class Protractor3D
     extends Protractor
     implements org.nlogo.api.Protractor3D {
 

@@ -17,7 +17,7 @@ import org.nlogo.nvm.Reporter;
 // CustomGenerator.generateCallReport (as well as _call.perform and
 // CustomGenerator.generateCall). - ST 5/18/10
 
-public final strictfp class _callreport
+public final class _callreport
     extends Reporter
     implements org.nlogo.nvm.CustomGenerated {
   public final Procedure procedure;

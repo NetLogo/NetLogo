@@ -3,15 +3,11 @@
 package org.nlogo.prim
 
 import
-  scala.annotation.strictfp
-
-import
   org.nlogo.{ agent, core, nvm },
     agent.{ Agent, AgentSet },
     core.{ AgentKind, I18N },
     nvm.{ Context, RuntimePrimitiveException, Reporter }
 
-@strictfp
 final class _inradius extends Reporter {
 
   override def report(context: Context) = {

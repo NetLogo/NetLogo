@@ -11,7 +11,7 @@ import org.nlogo.core.LogoList;
 
 import java.util.List;
 
-public final strictfp class Patch3D
+public final class Patch3D
     extends Patch
     implements Agent3D, org.nlogo.api.Patch3D {
   public static final int VAR_PXCOR3D = AgentVariableNumbers.VAR_PXCOR3D;

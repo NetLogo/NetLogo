@@ -10,7 +10,7 @@ import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _butfirst
+public final class _butfirst
     extends Reporter
     implements Pure {
   @Override

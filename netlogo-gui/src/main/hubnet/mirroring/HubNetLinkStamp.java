@@ -2,7 +2,7 @@
 
 package org.nlogo.hubnet.mirroring;
 
-public strictfp class HubNetLinkStamp
+public class HubNetLinkStamp
     extends HubNetDrawingMessage {
   static final long serialVersionUID = 0L;
 

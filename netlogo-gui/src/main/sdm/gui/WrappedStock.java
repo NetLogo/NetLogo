@@ -4,7 +4,7 @@ package org.nlogo.sdm.gui;
 
 import org.nlogo.sdm.Stock;
 
-public strictfp class WrappedStock
+public class WrappedStock
     implements org.jhotdraw.util.Storable {
   final Stock stock;
 
