@@ -7,7 +7,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _hubnetmakeplotnarrowcast
+public final class _hubnetmakeplotnarrowcast
     extends HubNetCommand {
 
 

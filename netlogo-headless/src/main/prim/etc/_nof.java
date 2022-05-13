@@ -14,7 +14,7 @@ import org.nlogo.nvm.Reporter;
 
 import java.util.Iterator;
 
-public final strictfp class _nof
+public final class _nof
     extends Reporter {
   @Override
   public Object report(final Context context) {

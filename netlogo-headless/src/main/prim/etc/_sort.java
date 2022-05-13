@@ -14,7 +14,7 @@ import org.nlogo.nvm.Reporter;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public final strictfp class _sort
+public final class _sort
     extends Reporter
     implements Pure {
 

@@ -8,7 +8,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _otherend
+public final class _otherend
     extends Reporter {
 
   @Override

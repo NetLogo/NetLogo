@@ -8,7 +8,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.core.Let;
 import org.nlogo.api.LogoException;
 
-public final strictfp class Context implements org.nlogo.api.Context {
+public final class Context implements org.nlogo.api.Context {
 
   // these are information about our execution environment
   public final Job job;

@@ -9,7 +9,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _returnreport extends Command {
+public final class _returnreport extends Command {
 
 
   @Override

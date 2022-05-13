@@ -6,7 +6,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.api.JobOwner;
 import org.nlogo.api.LogoException;
 
-public abstract strictfp class Job {
+public abstract class Job {
 
   public static final byte RUNNING = 0;
   public static final byte DONE = 1;

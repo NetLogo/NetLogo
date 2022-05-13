@@ -6,7 +6,7 @@ import org.nlogo.agent.AgentSet;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 
-public final strictfp class _withoutinterruption
+public final class _withoutinterruption
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
 

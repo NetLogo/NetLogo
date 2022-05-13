@@ -4,7 +4,7 @@ package org.nlogo.nvm;
 
 import org.nlogo.api.LogoException;
 
-public abstract strictfp class Command
+public abstract class Command
     extends Instruction {
 
   public boolean callsOtherCode() {

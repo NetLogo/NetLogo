@@ -6,7 +6,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _patchleftandahead
+public final class _patchleftandahead
     extends Reporter {
 
 

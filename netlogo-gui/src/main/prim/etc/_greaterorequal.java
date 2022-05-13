@@ -15,7 +15,7 @@ import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _greaterorequal
+public final class _greaterorequal
     extends Reporter implements Pure {
 
 

@@ -9,7 +9,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _moveto
+public final class _moveto
     extends Command {
 
   public _moveto() {

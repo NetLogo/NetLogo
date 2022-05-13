@@ -7,7 +7,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _setturtlevariable
+public final class _setturtlevariable
     extends Command {
   private final int vn;
 

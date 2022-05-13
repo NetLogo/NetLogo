@@ -18,7 +18,7 @@ import java.util.Set;
 // encapsulated here in this one file in code that has stood the test
 // of time. - ST 3/14/08
 
-public abstract strictfp class Event {
+public abstract class Event {
 
   // individual Event subclasses will also subclass this
   // interface - ST 9/8/04

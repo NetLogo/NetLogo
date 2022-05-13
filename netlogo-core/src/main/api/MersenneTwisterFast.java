@@ -137,7 +137,7 @@ import java.io.Serializable;
 // on the code, I strongly suggest looking at MersenneTwister.java first.
 // -- Sean
 
-public final strictfp class MersenneTwisterFast
+public final class MersenneTwisterFast
     extends java.util.Random
     implements Serializable, Cloneable {
 

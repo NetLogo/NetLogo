@@ -7,7 +7,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.CompilerScoping;
 import org.nlogo.nvm.Context;
 
-public final strictfp class _loop
+public final class _loop
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
   @Override

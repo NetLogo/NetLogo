@@ -4,7 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _importdrawing
+public final class _importdrawing
     extends org.nlogo.nvm.Command {
 
   public _importdrawing() {

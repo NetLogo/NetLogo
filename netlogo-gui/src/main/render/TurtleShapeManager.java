@@ -22,7 +22,7 @@ import java.util.Map;
 // cache an unlimited amount of bitmaps.  So we need to expire old
 // entries, we only cache certain turtle sizes, etc.
 
-public strictfp class TurtleShapeManager {
+public class TurtleShapeManager {
   // only cache this many pixels.  this is arbitrary.  it's a speed
   // vs. memory usage tradeoff.
   private static final int MAX_CACHE_PIXELS = 1024 * 1024 * 2;
@@ -125,7 +125,7 @@ public strictfp class TurtleShapeManager {
   }
 }
 
-strictfp class CachedShape
+class CachedShape
     implements Drawable {
   private final java.awt.image.BufferedImage image;
   private final int imageSize; // in pixels, e.g. 5 if 5x5 (note 5 not 25)

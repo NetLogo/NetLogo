@@ -14,7 +14,7 @@ import org.nlogo.swing.UserAction;
 import org.nlogo.swing.UserAction.KeyBindings$;
 import static org.nlogo.swing.Utils.icon;
 
-public strictfp class FindDialog
+public class FindDialog
     extends JDialog
     implements java.awt.event.ActionListener {
   /// STATIC CODE

@@ -7,7 +7,6 @@ import org.nlogo.api.AgentException
 
 // imagine a cylinder lying on its side
 
-@annotation.strictfp
 class HorizCylinder(world2d: World2D)
 extends Topology(world2d, xWraps = false, yWraps = true)
 with XBlocks with YWraps{

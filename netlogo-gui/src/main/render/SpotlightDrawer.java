@@ -5,7 +5,7 @@ package org.nlogo.render;
 import org.nlogo.api.Graphics2DWrapper;
 import org.nlogo.api.GraphicsInterface;
 
-public strictfp class SpotlightDrawer
+public class SpotlightDrawer
     implements Drawable {
   private java.awt.image.BufferedImage spotlightImage;
 

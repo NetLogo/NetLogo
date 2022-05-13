@@ -7,7 +7,7 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 
-public final strictfp class _die
+public final class _die
     extends Command {
   public _die() {
     this.switches = true;

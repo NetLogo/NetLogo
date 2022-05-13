@@ -16,7 +16,7 @@ import org.nlogo.nvm.Reporter;
 import java.util.ArrayList;
 import java.util.List;
 
-public final strictfp class _with
+public final class _with
     extends Reporter {
 
 

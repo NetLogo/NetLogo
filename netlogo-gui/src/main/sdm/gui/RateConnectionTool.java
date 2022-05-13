@@ -13,7 +13,7 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 
-strictfp class RateConnectionTool
+class RateConnectionTool
     extends AggregateConnectionTool {
   RateConnectionTool
       (Model model,

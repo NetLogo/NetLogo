@@ -11,7 +11,7 @@ import org.nlogo.nvm.MutableDouble;
 
 // note that this and _bk are pretty much carbon copies of each other
 
-public final strictfp class _fd
+public final class _fd
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
 

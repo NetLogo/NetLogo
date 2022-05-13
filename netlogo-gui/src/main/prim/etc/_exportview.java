@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.api.LogoException;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _exportview extends org.nlogo.nvm.Command {
+public final class _exportview extends org.nlogo.nvm.Command {
   @Override
   public void perform(final org.nlogo.nvm.Context context) throws LogoException {
     final String filePath = argEvalString(context, 0);

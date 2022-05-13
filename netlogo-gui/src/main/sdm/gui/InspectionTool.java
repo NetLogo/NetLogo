@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import scala.collection.JavaConverters;
 import java.awt.event.MouseEvent;
 
-strictfp class InspectionTool
+class InspectionTool
     extends org.jhotdraw.standard.SelectionTool {
 
   private final AggregateModelEditor editor;

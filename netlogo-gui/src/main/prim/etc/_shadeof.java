@@ -6,7 +6,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _shadeof
+public final class _shadeof
     extends Reporter
     implements org.nlogo.core.Pure {
   @Override

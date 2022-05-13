@@ -11,7 +11,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _face
+public final class _face
     extends Command {
   public _face() {
     this.switches = true;

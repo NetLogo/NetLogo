@@ -12,7 +12,7 @@ import java.util.Map;
  * A set that keeps track of times and can expire inactive elements.
  * This implementation is synchronized.
  */
-strictfp class TimedSet
+class TimedSet
     extends java.util.AbstractSet<Object> {
 
   /**

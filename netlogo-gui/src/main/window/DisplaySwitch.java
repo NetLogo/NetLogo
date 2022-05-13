@@ -4,7 +4,7 @@ package org.nlogo.window;
 
 import org.nlogo.core.I18N;
 
-public strictfp class DisplaySwitch
+public class DisplaySwitch
     extends javax.swing.JCheckBox
     implements java.awt.event.ActionListener {
   private final GUIWorkspace workspace;

@@ -13,7 +13,7 @@ import javax.swing.undo.UndoableEdit;
 
 // compound edit stuff copied from My World GIS - ER 4/11/08
 
-public strictfp class UndoManager extends javax.swing.undo.UndoManager
+public class UndoManager extends javax.swing.undo.UndoManager
     implements java.awt.event.ActionListener, java.awt.event.FocusListener, java.beans.PropertyChangeListener {
 
   // Edits that happen less than this number of milliseconds
@@ -158,7 +158,7 @@ public strictfp class UndoManager extends javax.swing.undo.UndoManager
     }
   }
 
-  static strictfp class UndoAction extends javax.swing.AbstractAction {
+  static class UndoAction extends javax.swing.AbstractAction {
 
     public UndoAction() {
       super("Undo");
@@ -184,7 +184,7 @@ public strictfp class UndoManager extends javax.swing.undo.UndoManager
     }
   }
 
-  static strictfp class RedoAction extends javax.swing.AbstractAction {
+  static class RedoAction extends javax.swing.AbstractAction {
 
     public RedoAction() {
       super("Redo");

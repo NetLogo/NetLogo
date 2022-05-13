@@ -13,7 +13,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _anyotherwith extends Reporter {
+public final class _anyotherwith extends Reporter {
   @Override
   public Object report(Context context) throws LogoException {
     return report_1

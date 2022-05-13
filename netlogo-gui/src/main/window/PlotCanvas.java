@@ -5,7 +5,7 @@ package org.nlogo.window;
 import org.nlogo.plot.Plot;
 import org.nlogo.plot.PlotPainter;
 
-strictfp class PlotCanvas extends javax.swing.JPanel {
+class PlotCanvas extends javax.swing.JPanel {
 
   final Plot plot;
   private final PlotPainter painter;

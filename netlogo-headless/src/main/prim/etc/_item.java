@@ -11,7 +11,7 @@ import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _item
+public final class _item
     extends Reporter
     implements Pure {
   @Override

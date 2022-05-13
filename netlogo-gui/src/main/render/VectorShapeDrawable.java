@@ -5,7 +5,7 @@ package org.nlogo.render;
 import org.nlogo.api.GraphicsInterface;
 import org.nlogo.shape.VectorShape;
 
-strictfp class VectorShapeDrawable
+class VectorShapeDrawable
     implements Drawable {
   private final VectorShape shape;
   private final int heading;

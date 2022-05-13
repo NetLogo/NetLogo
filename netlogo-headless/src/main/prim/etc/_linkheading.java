@@ -6,7 +6,7 @@ import org.nlogo.agent.Link;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _linkheading extends Reporter {
+public final class _linkheading extends Reporter {
 
   @Override
   public Object report(Context context) {

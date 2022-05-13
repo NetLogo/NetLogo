@@ -9,7 +9,7 @@ import org.nlogo.nvm.ExtensionContext;
 import org.nlogo.nvm.Reporter;
 import org.nlogo.nvm.WrappedExtensionException;
 
-public final strictfp class _externreport
+public final class _externreport
     extends Reporter {
   private final org.nlogo.api.Reporter reporter;
 

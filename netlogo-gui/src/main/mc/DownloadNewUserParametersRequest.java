@@ -13,7 +13,7 @@ import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract strictfp class DownloadNewUserParametersRequest extends PostRequest {
+public abstract class DownloadNewUserParametersRequest extends PostRequest {
 
   private JDialog loadingDialog;
   private Frame frame;

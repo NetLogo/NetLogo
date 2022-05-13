@@ -10,7 +10,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _otherend
+public final class _otherend
     extends Reporter {
 
 

@@ -11,7 +11,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _other
+public final class _other
     extends Reporter {
   // super( "TPL" ) ;
 

@@ -10,7 +10,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.CustomAssembled;
 import org.nlogo.nvm.SelfScoping;
 
-public final strictfp class _withoutinterruption
+public final class _withoutinterruption
     extends Command
     implements CustomAssembled, SelfScoping {
 

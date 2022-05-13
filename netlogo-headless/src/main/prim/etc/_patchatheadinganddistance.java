@@ -6,7 +6,7 @@ import org.nlogo.core.Nobody$;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _patchatheadinganddistance
+public final class _patchatheadinganddistance
     extends Reporter {
 
   @Override

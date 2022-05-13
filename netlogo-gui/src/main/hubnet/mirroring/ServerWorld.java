@@ -32,7 +32,7 @@ import java.util.Map;
  * thread, we check that we are on all methods which act as entry points into
  * an instance of this class.
  */
-public strictfp class ServerWorld {
+public class ServerWorld {
   private final WorldPropertiesInterface settings;
 
   private Map<Double, TurtleData> turtles;

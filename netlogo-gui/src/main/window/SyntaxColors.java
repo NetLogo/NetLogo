@@ -2,7 +2,7 @@
 
 package org.nlogo.window;
 
-public strictfp class SyntaxColors {
+public class SyntaxColors {
   public SyntaxColors() {
     throw new IllegalStateException("This class cannot be instantiated");
   }

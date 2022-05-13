@@ -9,7 +9,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _neighbors
+public final class _neighbors
     extends Reporter {
 
 

@@ -10,7 +10,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.SelfScoping;
 
-public final strictfp class _askconcurrent
+public final class _askconcurrent
     extends Command
     implements org.nlogo.nvm.CustomAssembled, SelfScoping {
   public _askconcurrent() {

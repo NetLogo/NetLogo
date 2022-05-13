@@ -8,7 +8,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _ticks extends Reporter {
+public final class _ticks extends Reporter {
 
 
   @Override

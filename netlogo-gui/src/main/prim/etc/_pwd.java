@@ -10,7 +10,7 @@ import org.nlogo.nvm.Command;
 /**
  * prints the working directory
  */
-public final strictfp class _pwd
+public final class _pwd
     extends Command {
 
 

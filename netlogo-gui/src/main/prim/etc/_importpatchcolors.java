@@ -6,7 +6,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _importpatchcolors
+public final class _importpatchcolors
     extends org.nlogo.nvm.Command {
   public _importpatchcolors() {
     this.switches = true;

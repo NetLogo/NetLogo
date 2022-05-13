@@ -7,7 +7,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _conststring extends Reporter implements Pure {
+public final class _conststring extends Reporter implements Pure {
   final String value;
 
   public _conststring(String value) {

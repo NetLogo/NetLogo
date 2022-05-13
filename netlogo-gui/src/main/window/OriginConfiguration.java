@@ -2,7 +2,7 @@
 
 package org.nlogo.window;
 
-public strictfp class OriginConfiguration {
+public class OriginConfiguration {
   private final String displayName;
   private final boolean[] editorsEnabled;
   private final boolean[] setValue;

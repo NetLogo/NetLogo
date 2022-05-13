@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * Makes an Action enabled only if a set of TextFields are not empty.
  */
-public strictfp class NonemptyTextFieldActionEnabler
+public class NonemptyTextFieldActionEnabler
     implements javax.swing.event.DocumentListener {
 
   private final javax.swing.Action target;

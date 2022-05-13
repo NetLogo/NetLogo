@@ -2,7 +2,7 @@
 
 package org.nlogo.mc;
 
-public strictfp class Model {
+public class Model {
 
   private String name;
   private int id;

@@ -4,7 +4,7 @@ package org.nlogo.window;
 
 import org.nlogo.api.Constants;
 
-public final strictfp class InterfaceColors {
+public final class InterfaceColors {
 
   // this class is not instantiable
   private InterfaceColors() {

@@ -10,7 +10,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _max extends Reporter implements Pure {
+public final class _max extends Reporter implements Pure {
   @Override
   public Object report(Context context) {
     LogoList list = argEvalList(context, 0);

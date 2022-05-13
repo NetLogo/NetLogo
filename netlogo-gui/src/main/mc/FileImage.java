@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public strictfp class FileImage implements Image {
+public class FileImage implements Image {
 
   private String filePath;
 

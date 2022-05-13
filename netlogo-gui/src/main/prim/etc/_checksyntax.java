@@ -15,7 +15,7 @@ import org.nlogo.nvm.Reporter;
  * information, this guarantee only applies if _checksyntax and _run are used
  * in the same block of code.
  */
-public final strictfp class _checksyntax
+public final class _checksyntax
     extends Reporter {
   @Override
   public Object report(final org.nlogo.nvm.Context context) throws LogoException {

@@ -7,7 +7,7 @@ import org.nlogo.core.LogoList;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _rgb
+public final class _rgb
     extends Reporter {
 
   @Override

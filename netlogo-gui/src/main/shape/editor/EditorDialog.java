@@ -20,7 +20,7 @@ import org.nlogo.shape.Rectangle;
 import org.nlogo.shape.VectorShape;
 import static org.nlogo.swing.Utils.icon;
 
-strictfp class EditorDialog
+class EditorDialog
     extends javax.swing.JDialog
     implements PropertyChangeListener {
 
@@ -705,7 +705,7 @@ strictfp class EditorDialog
     nameText.setEnabled(editable);
   }
 
-  private strictfp class ColorAction
+  private class ColorAction
       extends javax.swing.AbstractAction {
     private final java.awt.Color color;
 
@@ -733,7 +733,7 @@ strictfp class EditorDialog
     }
   }
 
-  private strictfp class CreateAction
+  private class CreateAction
       extends javax.swing.AbstractAction {
     private final Class<? extends Element> typeID;
     private final boolean filled;
@@ -764,7 +764,7 @@ strictfp class EditorDialog
 
   // this is used when the user modifies an existing shape, such as
   // by moving it or dragging a handle
-  private strictfp class UndoableModification
+  private class UndoableModification
       extends javax.swing.undo.AbstractUndoableEdit {
     private final Element originalElement;
     private final Element modifiedElement;
@@ -788,7 +788,7 @@ strictfp class EditorDialog
   }
 
   // this is used when the user creates a new element
-  private strictfp class UndoableDraw
+  private class UndoableDraw
       extends javax.swing.undo.AbstractUndoableEdit {
     private final Element newElement;
 
@@ -804,7 +804,7 @@ strictfp class EditorDialog
   }
 
   // this is used when the user deletes an element
-  private strictfp class UndoableDeleteEdit
+  private class UndoableDeleteEdit
       extends javax.swing.undo.AbstractUndoableEdit {
     private final Element deletedElement;
     private final int zOrder;
@@ -825,7 +825,7 @@ strictfp class EditorDialog
 
   // this is used when the user is in the middle of drawing a polygon;
   // if they press undo at that time, we abort the creation of that polygon.
-  private strictfp class UndoableUnfinishedPolygon
+  private class UndoableUnfinishedPolygon
       extends javax.swing.undo.AbstractUndoableEdit {
     @Override
     public void undo() {

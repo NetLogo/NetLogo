@@ -12,7 +12,7 @@ import org.nlogo.nvm.Context;
 // the disassembly for a reporter r by compiling "__ignore r" and
 // we don't want extra stuff in the output. - ST 2/6/09
 
-public final strictfp class _ignore
+public final class _ignore
     extends Command {
 
 

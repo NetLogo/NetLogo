@@ -14,7 +14,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
 
-strictfp class ShapeView
+class ShapeView
     extends javax.swing.JPanel
     implements PropertyChangeListener {
 

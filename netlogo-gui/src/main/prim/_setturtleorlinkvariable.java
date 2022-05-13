@@ -12,7 +12,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _setturtleorlinkvariable
+public final class _setturtleorlinkvariable
     extends Command {
   final String varName;
   final int vnTurtle;

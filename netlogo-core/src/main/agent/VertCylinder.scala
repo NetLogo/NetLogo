@@ -7,7 +7,6 @@ import org.nlogo.api.AgentException
 
 // imagine a cylinder standing on end.
 
-@annotation.strictfp
 class VertCylinder(world2d: World2D)
 extends Topology(world2d, xWraps = true, yWraps = false)
 with XWraps with YBlocks {

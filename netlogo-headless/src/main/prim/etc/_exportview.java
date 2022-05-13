@@ -4,7 +4,7 @@ package org.nlogo.prim.etc;
 
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _exportview
+public final class _exportview
     extends org.nlogo.nvm.Command {
   @Override
   public void perform(final org.nlogo.nvm.Context context) {

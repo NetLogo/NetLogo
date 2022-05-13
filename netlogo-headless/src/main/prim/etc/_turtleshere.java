@@ -8,7 +8,7 @@ import org.nlogo.agent.Turtle;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _turtleshere
+public final class _turtleshere
     extends Reporter {
 
   @Override

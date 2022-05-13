@@ -8,7 +8,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.MutableLong;
 
-public final strictfp class _waitinternal extends Command {
+public final class _waitinternal extends Command {
   private final Let let;
 
   public _waitinternal(Let let) {

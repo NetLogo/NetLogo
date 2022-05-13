@@ -10,7 +10,7 @@ import org.jhotdraw.standard.HandleEnumerator;
 
 import java.util.ArrayList;
 
-public strictfp class ReservoirFigure
+public class ReservoirFigure
     extends EllipseFigure
     implements ModelElementFigure {
   private final org.nlogo.sdm.Reservoir reservoir;

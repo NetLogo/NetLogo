@@ -10,7 +10,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Procedure;
 
-public final strictfp class _stop
+public final class _stop
     extends Command {
 
 

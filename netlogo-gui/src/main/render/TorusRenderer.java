@@ -4,7 +4,7 @@ package org.nlogo.render;
 
 import org.nlogo.api.GraphicsInterface;
 
-public strictfp class TorusRenderer extends AbstractTopologyRenderer {
+public class TorusRenderer extends AbstractTopologyRenderer {
   public TorusRenderer(org.nlogo.api.World world) {
     super(world);
   }

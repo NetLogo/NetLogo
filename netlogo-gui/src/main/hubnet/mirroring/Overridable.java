@@ -5,7 +5,7 @@ package org.nlogo.hubnet.mirroring;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public abstract strictfp class Overridable {
+public abstract class Overridable {
   private final RollbackStack rollbackStack = new RollbackStack();
 
   abstract String getMethodName(int varName);
@@ -53,7 +53,7 @@ public abstract strictfp class Overridable {
     rollbackStack.rollback(this);
   }
 
-  private strictfp class RollbackStack {
+  private class RollbackStack {
     private final java.util.LinkedList<Method> methodStack = new java.util.LinkedList<Method>();
     private final java.util.LinkedList<Object> valueStack = new java.util.LinkedList<Object>();
 

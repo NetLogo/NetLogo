@@ -12,7 +12,7 @@ import org.nlogo.sdm.Stock;
 import java.util.HashMap;
 import java.util.Map;
 
-strictfp final class Wrapper {
+final class Wrapper {
   // private constructor to enforce noninstantiability
   private Wrapper() {
   }

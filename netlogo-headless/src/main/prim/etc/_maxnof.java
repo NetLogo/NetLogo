@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
-public final strictfp class _maxnof
+public final class _maxnof
     extends Reporter {
 
   @Override

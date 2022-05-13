@@ -13,7 +13,7 @@ import java.awt.Frame;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract strictfp class DownloadGroupsRequest extends PostRequest {
+public abstract class DownloadGroupsRequest extends PostRequest {
 
   private Frame frame;
   private JDialog loadingDialog;

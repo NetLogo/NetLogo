@@ -8,7 +8,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 
-public final strictfp class _facexynowrap
+public final class _facexynowrap
     extends Command {
   public _facexynowrap() {
     this.switches = true;

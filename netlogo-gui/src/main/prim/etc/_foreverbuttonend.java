@@ -6,7 +6,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 
-public final strictfp class _foreverbuttonend
+public final class _foreverbuttonend
     extends Command {
   public _foreverbuttonend() {
     this.switches = true;

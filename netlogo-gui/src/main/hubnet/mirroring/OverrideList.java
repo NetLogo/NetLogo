@@ -5,7 +5,7 @@ package org.nlogo.hubnet.mirroring;
 import org.nlogo.core.AgentKind;
 import org.nlogo.hubnet.mirroring.Agent.AgentType;
 
-public strictfp class OverrideList
+public class OverrideList
     implements java.io.Serializable {
   static final long serialVersionUID = 0L;
 

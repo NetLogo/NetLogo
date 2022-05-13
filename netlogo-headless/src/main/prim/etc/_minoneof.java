@@ -12,7 +12,7 @@ import org.nlogo.nvm.Reporter;
 import java.util.ArrayList;
 import java.util.List;
 
-public final strictfp class _minoneof
+public final class _minoneof
     extends Reporter {
 
   @Override

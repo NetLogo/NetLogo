@@ -9,7 +9,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _countother extends Reporter {
+public final class _countother extends Reporter {
 
 
   @Override

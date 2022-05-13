@@ -7,7 +7,7 @@ import org.nlogo.shape.VectorShape;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-strictfp class ShapePreview
+class ShapePreview
     extends javax.swing.JPanel
     implements PropertyChangeListener {
 

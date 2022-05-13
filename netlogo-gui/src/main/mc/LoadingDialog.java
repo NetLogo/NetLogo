@@ -13,7 +13,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Frame;
 
-public strictfp class LoadingDialog extends JDialog {
+public class LoadingDialog extends JDialog {
 
   //GUI form members
   private JPanel topLevelContainer;

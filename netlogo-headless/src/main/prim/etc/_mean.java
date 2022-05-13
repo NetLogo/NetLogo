@@ -11,7 +11,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _mean extends Reporter implements Pure {
+public final class _mean extends Reporter implements Pure {
 
   @Override
   public Object report(Context context) {

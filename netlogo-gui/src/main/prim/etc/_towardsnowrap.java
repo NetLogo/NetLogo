@@ -9,7 +9,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _towardsnowrap extends Reporter {
+public final class _towardsnowrap extends Reporter {
 
 
   @Override

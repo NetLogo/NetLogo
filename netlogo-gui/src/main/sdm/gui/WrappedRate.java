@@ -7,7 +7,7 @@ import org.jhotdraw.util.StorableInput;
 import org.jhotdraw.util.StorableOutput;
 import org.nlogo.sdm.Rate;
 
-public strictfp class WrappedRate
+public class WrappedRate
     implements Storable {
   final Rate rate;
 

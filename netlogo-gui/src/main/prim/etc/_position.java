@@ -11,7 +11,7 @@ import org.nlogo.nvm.Reporter;
 
 import java.util.Iterator;
 
-public final strictfp class _position
+public final class _position
     extends Reporter
     implements org.nlogo.core.Pure {
   @Override

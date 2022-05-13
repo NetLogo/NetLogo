@@ -8,7 +8,7 @@ import org.nlogo.core.Pure;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _sublist
+public final class _sublist
     extends Reporter
     implements Pure {
   @Override
