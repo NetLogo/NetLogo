@@ -192,3 +192,16 @@ VariableNamedWorkspace
 VariableNamedWorld
   to-report test-it let world nobody report count turtles end
   test-it => 0
+
+ProcJSArgNames
+  (run-result [[arguments   a] -> (list arguments   a)] 1 2) => [1 2]
+  (run-result [[caller      a] -> (list caller      a)] 1 2) => [1 2]
+  (run-result [[displayName a] -> (list displayName a)] 1 2) => [1 2]
+  (run-result [[name        a] -> (list name        a)] 1 2) => [1 2]
+
+JSGlobalNames
+  globals [ arguments caller displayName name ]
+  (run-result [-> arguments  ]) => 0
+  (run-result [-> caller     ]) => 0
+  (run-result [-> displayName]) => 0
+  (run-result [-> name       ]) => 0
