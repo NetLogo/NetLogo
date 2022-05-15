@@ -8,7 +8,8 @@ import org.scalatest.exceptions.TestFailedException
 import org.nlogo.api, api.AgentVariableNumbers
 import org.nlogo.core._
 import org.nlogo.mirror._, Mirroring._, Mirrorables._
-import org.nlogo.drawing.DrawingAction.{ ClearDrawing, DrawLine }
+import org.nlogo.drawing.DrawingAction.{ ClearDrawing, DrawLine, StampImage }
+import org.nlogo.drawing.TurtleStamp
 
 class TestMirroring extends FixtureSuite {
 
@@ -201,6 +202,30 @@ class TestMirroring extends FixtureSuite {
     workspace.openModel(Model(widgets = List(View(dimensions = WorldDimensions(0, 0, 0, 0, 12, false, false)))))
     workspace.command("random-seed 0 crt 1 [ set heading 0 pen-down fd 1 ]")
     assertResult(drawingActionBuffer.grab())(Vector(ClearDrawing))
+
+  }
+
+  test("stamps") { implicit fixture =>
+
+    import fixture.workspace
+
+    val drawingActionBuffer = new api.ActionBuffer(workspace.drawingActionBroker)
+    drawingActionBuffer.activate()
+
+    workspace.openModel(Model(widgets = List(View(dimensions = WorldDimensions(0, 0, 0, 0, 12, false, false)))))
+    assertResult(drawingActionBuffer.grab())(Vector(ClearDrawing))
+
+    workspace.command("random-seed 0 crt 1 [ set color [4 7 9] set heading 0 stamp die ]")
+    val expectedLL1    = LogoList.fromVector(Vector[java.lang.Double](4, 7, 9))
+    val expectedStamp1 = TurtleStamp(0, 0, 1, 0, expectedLL1, "default", "normal")
+    val   actualStamp1 = drawingActionBuffer.grab()(0).asInstanceOf[StampImage].stamp
+    assertResult(actualStamp1)(expectedStamp1)
+
+    workspace.command("random-seed 0 crt 1 [ set color [4 7 9 1] set heading 0 stamp die ]")
+    val expectedLL2    = LogoList.fromVector(Vector[java.lang.Double](4, 7, 9, 1))
+    val expectedStamp2 = TurtleStamp(0, 0, 1, 0, expectedLL2, "default", "normal")
+    val   actualStamp2 = drawingActionBuffer.grab()(0).asInstanceOf[StampImage].stamp
+    assertResult(actualStamp2)(expectedStamp2)
 
   }
 
