@@ -320,7 +320,6 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
     // gets them jammed into the jar of the parser for use (as NetLogo does, too).
     // -Jeremy B May 2022
     Compile / unmanagedResourceDirectories ++= (sharedResources / Compile / unmanagedResourceDirectories).value,
-    Compile / resourceGenerators            += I18n.resourceGeneratorTask,
     Compile / resourceGenerators           ++= (sharedResources / Compile / resourceGenerators).value
   )
 

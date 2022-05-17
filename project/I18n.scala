@@ -10,7 +10,7 @@ object I18n {
     Def.task {
       val streamsValue = streams.value
       val resourceManagedValue = resourceManaged.value
-      val i18nDir = baseDirectory.value.getParentFile / "netlogo-gui" / "project" / "autogen" / "i18n"
+      val i18nDir = baseDirectory.value / "project" / "autogen" / "i18n"
       val names: Set[String] =
         IO.listFiles(i18nDir).map(_.getName).filter(_.endsWith(".txt")).map(_.dropRight(4)).toSet
       val cache =
