@@ -296,27 +296,33 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
     unmanagedSourceDirectories in Compile += baseDirectory.value.getParentFile / "parser-core" / "src" / "main",
     unmanagedSourceDirectories in Test    += baseDirectory.value.getParentFile / "parser-core" / "src" / "test").
   jsConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).
-  jsConfigure(_.dependsOn(macros % "compile-internal->compile;test-internal->compile")).
+  jsConfigure(_.dependsOn(         macros % "compile-internal->compile;test-internal->compile")).
   jsSettings(
-      name := "parser-js",
-      scalaModuleInfo := scalaModuleInfo.value map { _.withOverrideScalaVersion(true) },
-      resolvers += Resolver.sonatypeRepo("releases"),
-      parallelExecution in Test := false,
-      libraryDependencies ++= {
-      import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
-        Seq(
-          "org.scala-lang.modules"   %%% "scala-parser-combinators" % "2.1.0",
-          "org.scalatest"     %% "scalatest"       % "3.2.10"   % Test,
-          "org.scalatestplus" %% "scalacheck-1-15" % "3.2.10.0" % Test,
-      )}).
-  jvmConfigure(_.dependsOn(sharedResources)).
+    name := "parser-js",
+    scalaModuleInfo := scalaModuleInfo.value map { _.withOverrideScalaVersion(true) },
+    resolvers += Resolver.sonatypeRepo("releases"),
+    parallelExecution in Test := false,
+    libraryDependencies ++= {
+    import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+      Seq(
+        "org.scala-lang.modules" %%% "scala-parser-combinators" %    "2.1.0"
+      ,          "org.scalatest"  %%                "scalatest" %   "3.2.10" % Test
+      ,      "org.scalatestplus"  %%          "scalacheck-1-15" % "3.2.10.0" % Test
+    )}).
+  jvmConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).
   jvmSettings(jvmSettings: _*).
   jvmSettings(scalatestSettings: _*).
   jvmSettings(
-      mappings in (Compile, packageBin) ++= mappings.in(sharedResources, Compile, packageBin).value,
-      mappings in (Compile, packageSrc) ++= mappings.in(sharedResources, Compile, packageSrc).value,
-      libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.1.2"
-    )
+    libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.0",
+    // you can get these included by just depending on the `sharedResources` project directly
+    // but then when you publish the parser JVM package, the POM file lists sharedResources
+    // as a dependency.  It seems like a weird thing to publish separately, so this just
+    // gets them jammed into the jar of the parser for use (as NetLogo does, too).
+    // -Jeremy B May 2022
+    Compile / unmanagedResourceDirectories ++= (sharedResources / Compile / unmanagedResourceDirectories).value,
+    Compile / resourceGenerators            += I18n.resourceGeneratorTask,
+    Compile / resourceGenerators           ++= (sharedResources / Compile / resourceGenerators).value
+  )
 
 lazy val parserJVM = parser.jvm
 lazy val parserJS  = parser.js
