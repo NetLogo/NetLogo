@@ -19,14 +19,15 @@ keywords:
   - "ABM"
 
 preferred-citation:
-  type: "misc"
+  type: "manual"
   
   authors:
     - family-names: "Wilensky"
       given-names: "Uri"
   
   url: "https://ccl.northwestern.edu/netlogo/"
-  organization: "Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL."
+  organization: "Center for Connected Learning and Computer-Based Modeling"
+  address: "Northwestern University, Evanston, IL."
   title: "NetLogo"
   year: 1999
   
