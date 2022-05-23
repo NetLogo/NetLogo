@@ -5,6 +5,12 @@ ModesTurtles1
   O> ask turtles [ die ]
   modes (list 5 5 5 5 turtle 0 turtle 1 turtle 2 nobody) => [5 nobody]
 
+ForeachFailsGivenReporter
+  globals [a]
+  O> foreach [1 3] [b -> b + 1] => COMPILER ERROR FOREACH expected this input to be an anonymous command, but got an anonymous reporter instead
+  O> set a [b -> b + 1]
+  O> foreach [1 3] a => ERROR FOREACH expected input to be an anonymous command but got the anonymous reporter (anonymous reporter: [ b -> b + 1 ]) instead.
+
 ForeachInsideRecursiveProcedure1
   to-report foo [l] let ret [] foreach l [ x -> ifelse is-list? x [ let nlist foo x set ret lput nlist ret ] [ set ret lput x ret ] ] report ret end
   foo [[1 2] [[3 4] 5]] => [[1 2] [[3 4] 5]]
