@@ -1,0 +1,30 @@
+cff-version: 1.2.0
+message: "If you use NetLogo in a scientific publication, please cite it as below."
+
+authors:
+  - family-names: "Wilensky"
+    given-names: "Uri"
+
+title: "NetLogo"
+version: 6.2.2
+date-released: 2021-12-08
+
+url: "https://ccl.northwestern.edu/netlogo/"
+repository-code: "https://github.com/NetLogo/NetLogo"
+
+type: "software"
+keywords:
+  - "agent-based-modeling"
+  - "individual-based-modeling"
+  - "ABM"
+
+preferred-citation:
+  type: "article"
+  
+  title: "NetLogo"
+  journal: "Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL"
+  year: 1999
+  url: "https://ccl.northwestern.edu/netlogo/"
+  authors:
+    - family-names: "Wilensky"
+      given-names: "Uri"
