@@ -16,3 +16,5 @@ NValuesList1
 NValuesList2
   n-values 4 [[1 2]] => [[1 2] [1 2] [1 2] [1 2]]
 
+NValuesError1
+  n-values 1000 [[_1 _2 _3] -> _1 + _2 + _3] => ERROR anonymous procedure expected 3 inputs, but only got 1
