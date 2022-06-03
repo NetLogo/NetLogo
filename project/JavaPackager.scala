@@ -148,7 +148,7 @@ object JavaPackager {
     val args = Seq[String](packagerJDK.javapackager,
       "--verbose",
       "--name",       title,
-      "--main-class", "Org.nlogo.app.App",
+      "--main-class", "org.nlogo.app.App",
       "--type",       "app-image",
       "--input",      srcDir.getAbsolutePath,
       "--dest",       outDir.getAbsolutePath,
@@ -160,8 +160,7 @@ object JavaPackager {
     val ret = Process(args, buildDirectory, envArgs: _*).!
     if (ret != 0)
       sys.error("packaging failed!")
-
-    (outDir / "bundles").listFiles.head
+      outDir.listFiles.head
   }
 
   /* This function copies the stub application to <specified-directory> / newName.app.

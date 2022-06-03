@@ -282,8 +282,8 @@ object NetLogoPackaging {
     packageMacAggregate := {
       val buildJDK = PathSpecifiedJDK
       val netLogoJar = repackageJar(DummyApp, new MacImagePlatform(macApp), netlogo).value
-      val outDir = target.value / "packaged-mac"
-
+      val outDir = target.value.getParentFile() / "target2" / "packaged-mac"
+      FileActions.remove(outDir)
       val mainJar = packagingMainJar.value
       val macAppMainJar = (packageBin in Compile in macApp).value
       JavaPackager.generateStubApplication(buildJDK, "dummy", "image", target.value, outDir, target.value, mainJar)
