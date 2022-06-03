@@ -21,4 +21,3 @@ NotEqual4
 
 NotEqual5
   3.1 != 3 => true
-

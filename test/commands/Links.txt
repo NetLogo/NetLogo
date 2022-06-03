@@ -626,6 +626,12 @@ LinkEquality
   link 0 1 = link 0 1 => true
   link 0 1 = link 0 2 => false
 
+LinkNonEqualityWithOtherAgent
+  O> create-turtles 10 [ forward 100 ]
+  O> ask turtles [ create-link-with one-of other turtles ]
+  ((one-of turtles) = (one-of links)) => false
+  ((one-of links) = (one-of turtles)) => false
+
 LinkBreedIdentifiers
   directed-link-breed [directed-edges directed-edge]
   undirected-link-breed [undirected-edges undirected-edge]
