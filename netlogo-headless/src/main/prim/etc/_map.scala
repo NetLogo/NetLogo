@@ -17,6 +17,10 @@ class _map extends Reporter {
   override def report(context: Context): LogoList = {
 
     val task = argEvalAnonymousReporter(context, 0)
+    if (args.length == 1) {
+      return LogoList.Empty
+    }
+
     val n = args.length - 1
     if(n < task.syntax.minimum)
       throw new RuntimePrimitiveException(context, this, AnonymousProcedure.missingInputs(task, n))

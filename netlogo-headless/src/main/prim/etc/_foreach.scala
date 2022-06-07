@@ -10,6 +10,12 @@ class _foreach extends Command {
   override def perform(context: Context) {
     var size = 0
     val n = args.length - 1
+    val task = argEvalAnonymousCommand(context, n)
+
+    if (args.length == 1) {
+      return
+    }
+
     val iters = for (i <- 0 until n) yield {
       val list = argEvalList(context, i)
       if (i == 0) size = list.size
@@ -18,7 +24,6 @@ class _foreach extends Command {
           I18N.errors.get("org.nlogo.prim.etc._foreach.listsMustBeSameLength"))
       list.javaIterator
     }
-    val task = argEvalAnonymousCommand(context, n)
     if (n < task.syntax.minimum)
       throw new RuntimePrimitiveException(
         context, this, AnonymousProcedure.missingInputs(task, n))

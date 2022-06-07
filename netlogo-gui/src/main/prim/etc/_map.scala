@@ -2,6 +2,7 @@
 
 package org.nlogo.prim.etc
 
+import org.nlogo.core.LogoList
 import org.nlogo.api.LogoListBuilder
 import org.nlogo.nvm.{ AnonymousProcedure, Context, Reporter, RuntimePrimitiveException }
 
@@ -12,9 +13,13 @@ class _map extends Reporter {
   // Perhaps we should have separate primitives for the variadic and
   // non-variadic cases and only attempt to generate the non-variadic
   // case. - ST 3/20/08
-  override def report(context: Context) = {
+  override def report(context: Context): LogoList = {
 
     val rep = argEvalAnonymousReporter(context, 0)
+    if (args.length == 1) {
+      return LogoList.Empty
+    }
+
     val n = args.length - 1
     if (n < rep.syntax.minimum)
       throw new RuntimePrimitiveException(context, this, AnonymousProcedure.missingInputs(rep, n))

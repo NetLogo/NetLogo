@@ -147,6 +147,16 @@ MapArgTypeErrorInTask
   O> set x 10000
   (map [[a b] -> (word a b)] [1 2 3] x) => ERROR MAP expected input to be a list but got the number 10000 instead.
 
+VariadicPatchSetRuntime
+  globals [p1 p2 p3]
+  O> set p1 n-of 2 patches
+  O> set p2 n-of 2 patches
+  O> set p3 n-of 2 patches
+  word (map patch-set (list p1) (list p2) (list p3)) => "[(agentset, 6 patches)]"
+  (map patch-set) => []
+  O> set p1 0
+  (map patch-set (list p1) (list p2)) => ERROR PATCH-SET expected input to be a patch agentset or patch but got the number 0 instead.
+
 SortBy1
   sort-by < [4 1 3 2] => [1 2 3 4]
 
