@@ -150,8 +150,8 @@ MapArgTypeErrorInTask
 VariadicPatchSetRuntime
   globals [p1 p2 p3]
   O> set p1 n-of 2 patches
-  O> set p2 n-of 2 patches
-  O> set p3 n-of 2 patches
+  O> set p2 n-of 2 (patches with [not (member? self p1)])
+  O> set p3 n-of 2 (patches with [not (member? self p1 or member? self p2)])
   word (map patch-set (list p1) (list p2) (list p3)) => "[(agentset, 6 patches)]"
   (map patch-set) => []
   O> set p1 0
