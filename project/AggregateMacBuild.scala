@@ -33,7 +33,6 @@ object PackageMacAggregate {
   // ├── Product 1.app
   // |   └── Contents
   // |      ├── Info.plist
-  // |      ├── Java
   // |      │   ├── Product 1.cfg (adjusted for new classpath)
   // |      │   ├── natives       (duplicated in each package)
   // |      │   └── lib
