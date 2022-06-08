@@ -1,6 +1,11 @@
 NValues1
   n-values 5 [[x] -> x] => [0 1 2 3 4]
 
+NValues2
+  n-values 0.9 [ i -> i ] => []
+  n-values 0.75 [ -> random 10 ] => []
+  n-values 0.5 [111] => []
+
 NValuesExpr
   n-values 5 [[x] -> x + x] => [0 2 4 6 8]
 
@@ -18,3 +23,6 @@ NValuesList2
 
 NValuesError1
   n-values 1000 [[_1 _2 _3] -> _1 + _2 + _3] => ERROR anonymous procedure expected 3 inputs, but only got 1
+
+NValuesError2
+  n-values -10 [ i -> i ] => ERROR N-VALUES cannot take a negative number.
