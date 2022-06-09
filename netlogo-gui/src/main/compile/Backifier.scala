@@ -135,7 +135,7 @@ class Backifier(program: Program,
             .asInstanceOf[nlogoApi.Command])
       case core.prim._call(proc) =>
         new nvmprim._call(procedures(proc.name))
-      case core.prim._let(Some(let)) =>
+      case core.prim._let(Some(let), _) =>
         new nvmprim._let(let)
       case nlogoApi.NetLogoLegacyDialect._magicopen(name) =>
         new nvmprim._magicopen(name)

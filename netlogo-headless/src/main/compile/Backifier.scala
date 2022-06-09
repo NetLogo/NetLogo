@@ -34,7 +34,7 @@ class Backifier(
             .asInstanceOf[nlogoApi.Command])
       case core.prim._call(proc) =>
         new nvmprim._call(procedures(proc.name))
-      case core.prim._let(Some(let)) =>
+      case core.prim._let(Some(let), _) =>
         new nvmprim._let(let)
       case cc: core.prim._carefully =>
         new nvmprim._carefully(cc.let)

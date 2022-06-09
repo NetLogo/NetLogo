@@ -376,7 +376,7 @@ class NvmTests extends AnyFunSuite {
     def thisBuilder = this
 
     def let(l: Let, value: Expression): StatementsBuilder =
-      statement(_corelet(Some(l)), new _let(l), Seq(value))
+      statement(_corelet(Some(l), None), new _let(l), Seq(value))
 
     def _ignore(app: ReporterApp): StatementsBuilder =
       statementEtc("etc._ignore", Seq(app))

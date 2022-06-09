@@ -136,7 +136,7 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
   }
   test("DoParselet") {
     testParse("let x 5 __ignore x",
-      "_let(Let(X))[_const(5.0)[]] _ignore()[_letvariable(Let(X))[]]")
+      "_let(Let(X),x)[_const(5.0)[]] _ignore()[_letvariable(Let(X))[]]")
   }
   test("DoParseParenthesizedCommand") {
     testParse("(__ignore 5)",

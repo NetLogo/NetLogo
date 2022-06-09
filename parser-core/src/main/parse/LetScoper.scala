@@ -93,19 +93,19 @@ import SymbolType.LocalVariable
 object LetScope {
   def apply(c: Command, nameToken: Option[Token], usedNames: SymbolTable): Option[(Command, SymbolTable)] = {
     c match {
-      case l @ core.prim._let(None) =>
+      case l @ core.prim._let(None, _) =>
         nameToken match {
           case Some(nameToken @ Token(text, TokenType.Reporter, _)) =>
             val name = text.toUpperCase
             val newLet = Let(name)
             for (tpe <- usedNames.get(name))
               exception("There is already a " + SymbolType.typeName(tpe) + " called " + name, nameToken)
-            Some((l.copy(let = newLet), usedNames.addSymbol(name, LocalVariable(newLet))))
+            Some((l.copy(let = newLet, tokenText = Some(text)), usedNames.addSymbol(name, LocalVariable(newLet))))
           case Some(otherToken) =>
             exception("Expected variable name here", otherToken)
           case _ => None
         }
-      case l @ core.prim._let(Some(let)) =>
+      case l @ core.prim._let(Some(let), _) =>
         Some((c, usedNames.addSymbol(let.name.toUpperCase, LocalVariable(let))))
       case _ => None
     }

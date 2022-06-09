@@ -20,6 +20,9 @@
   to foo end
   (word [ -> foo]) => "(anonymous command: [ -> foo ])"
 
+ToStringWithLets
+  word "" [-> let xyz 0] => "(anonymous command: [ -> let xyz 0 ])"
+
 CallTask
   globals [ glob1 ]
   O> run [set glob1 5]

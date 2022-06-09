@@ -226,15 +226,18 @@ case class _lessthan() extends Reporter with Pure {
       ret = Syntax.BooleanType,
       precedence = Syntax.NormalPrecedence - 4)
 }
-case class _let(let: Option[Let]) extends Command {
-  def this() = this(None)
+case class _let(let: Option[Let], tokenText: Option[String]) extends Command {
+  def this() = this(None, None)
   override def syntax =
     Syntax.commandSyntax(right = List(Syntax.WildcardType, Syntax.WildcardType))
 
-  override def toString = "_let(" + let.map(_.toString).getOrElse("") + ")"
+  override def toString = {
+    val vals = Seq(let.map(_.toString).getOrElse("None"), tokenText.getOrElse("None"))
+    s"_let(${vals.mkString(",")})"
+  }
 
-  def copy(let: Let): _let = {
-    val newLet = new _let(Some(let))
+  def copy(let: Let, tokenText: Option[String]): _let = {
+    val newLet = new _let(Some(let), tokenText)
     copyInstruction(newLet)
   }
 }

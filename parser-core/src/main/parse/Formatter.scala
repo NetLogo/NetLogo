@@ -4,7 +4,7 @@ package org.nlogo.parse
 
 import org.nlogo.core.{ AstNode, CommandBlock, Dump, Instruction, LogoList, ProcedureDefinition,
   ReporterApp, ReporterBlock, Statement, prim },
-  prim.{ _commandlambda, _const, _constcodeblock, _lambdavariable, Lambda }
+  prim.{ _commandlambda, _const, _constcodeblock, _lambdavariable, _let, _letname, Lambda }
 
 object Formatter {
 
@@ -18,10 +18,12 @@ object Formatter {
   def instructionString(i: Instruction): String =
     i match {
       case _const(value) if value.isInstanceOf[LogoList] => Dump.logoObject(value, true, false)
-      case r: _const        => r.token.text
-      case r: _commandlambda => ""
-      case v: _lambdavariable if v.synthetic => ""
-      case r                => r.token.text
+      case r: _const                                     => r.token.text
+      case r: _commandlambda                             => ""
+      case v: _lambdavariable if v.synthetic             => ""
+      case l @ _let(_, Some(name))                       => s"${l.token.text} $name"
+      case _: _letname                                   => ""
+      case r                                             => r.token.text
     }
 
   def deletedInstructionToString(i: Instruction): String = ""
@@ -125,6 +127,11 @@ class Formatter extends PositionalAstFolder[AstFormat] {
               else
                 backMargin
             c.appendText(frontPadding + args + arrowSpace + body + backMargin2 + close)
+          // The `_let` handles writing the `_letname` out, so nothing to do here.
+          // The `_letname` gets erased on full compilations (as opposed to rewriting only)
+          // so we can't rely on it.  -Jeremy B June 2022
+          case (false, l: _letname) =>
+            c
           case (false, reporter) =>
             super.visitReporterApp(app, position)(c.appendText(ws + c.instructionToString(reporter)))
               .copy(instructionToString = c.instructionToString)
