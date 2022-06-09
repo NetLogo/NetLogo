@@ -57,7 +57,9 @@ import org.nlogo.nvm.{ ExtensionManager => NvmExtensionManager }
  */
 object ExtensionManager {
 
-  case class ExtensionData(extensionName: String, fileURL: URL, prefix: String, classManagerName: String, version: Option[String], modified: Long)
+  case class ExtensionData(extensionName: String, fileURL: URL, prefix: String, classManagerName: String, version: Option[String], private val modifiedRaw: Long) {
+    val modified = 1000 * Math.round(modifiedRaw / 1000)
+  }
 
   class JarContainer(val jarClassLoader: ClassLoader, data: ExtensionData) {
     val extensionName  = data.extensionName
