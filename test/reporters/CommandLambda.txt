@@ -22,6 +22,7 @@
 
 ToStringWithLets
   word "" [-> let xyz 0] => "(anonymous command: [ -> let xyz 0 ])"
+  word "" [-> if 1 > random 10 [ let x 100 ] ] => "(anonymous command: [ -> if 1 > random 10 [ let x 100 ] ])"
 
 CallTask
   globals [ glob1 ]
