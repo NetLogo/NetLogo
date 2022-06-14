@@ -8,9 +8,7 @@ import javax.swing.{ JLabel, JPanel, JSlider }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 
 import org.nlogo.awt.Fonts.adjustDefaultFont
-import org.nlogo.api.Version
 import org.nlogo.core.I18N
-import org.nlogo.log.Logger
 import org.nlogo.window.Events.LoadBeginEvent
 
 
@@ -78,9 +76,6 @@ class SpeedSliderPanel(workspace: GUIWorkspace) extends JPanel with MouseListene
       else                 0
 
     workspace.speedSliderPosition(adjustedValue / 2);
-
-    if (Version.isLoggingEnabled)
-      Logger.logSpeedSlider(adjustedValue)
 
     enableLabels(adjustedValue)
     workspace.updateManager.nudgeSleeper()

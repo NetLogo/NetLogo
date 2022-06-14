@@ -161,9 +161,6 @@ check org.nlogo.* independentOf com.wolfram.*
 [JHotDraw-free-zone] = org.nlogo.* excluding [sdm.gui]
 check [JHotDraw-free-zone] independentOf org.jhotdraw.*
 
-[Log4J-free-zone] = org.nlogo.* excluding [log] org.nlogo.app.App org.nlogo.lite.InterfaceComponent
-check [Log4J-free-zone] directlyIndependentOf org.apache.log4j.*
-
 [PicoContainer-free-zone] = org.nlogo.* excluding org.nlogo.util.Pico [app] [headless]
 check [PicoContainer-free-zone] independentOf org.picocontainer.*
 

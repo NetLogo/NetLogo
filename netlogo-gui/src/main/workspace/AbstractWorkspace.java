@@ -25,7 +25,6 @@ import org.nlogo.nvm.EditorWorkspace;
 import org.nlogo.nvm.FileManager;
 import org.nlogo.nvm.Job;
 import org.nlogo.nvm.JobManagerInterface;
-import org.nlogo.nvm.LoggingWorkspace;
 import org.nlogo.nvm.MutableLong;
 import org.nlogo.nvm.PresentationCompilerInterface;
 import org.nlogo.nvm.Procedure;
@@ -35,7 +34,6 @@ public abstract strictfp class AbstractWorkspace
     implements Workspace,
     EditorWorkspace,
     ExtendableWorkspace,
-    LoggingWorkspace,
     org.nlogo.api.LogoThunkFactory,
     org.nlogo.api.HubNetWorkspaceInterface {
 

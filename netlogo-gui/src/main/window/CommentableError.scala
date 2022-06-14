@@ -6,10 +6,8 @@ import javax.swing.{ AbstractAction, JButton, JOptionPane, JPanel }
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 
-import org.nlogo.api.Version
 import org.nlogo.core.I18N
 import org.nlogo.editor.AbstractEditorArea
-import org.nlogo.log.Logger
 
 class CommentableError(val editorArea: AbstractEditorArea) {
   private val errorLabel = new EditorAreaErrorLabel(editorArea)
@@ -18,7 +16,7 @@ class CommentableError(val editorArea: AbstractEditorArea) {
       val comment = JOptionPane.showInputDialog(null, I18N.gui.get("tools.loggingMode.errorComment.label"), "",
         JOptionPane.QUESTION_MESSAGE, null, null, "").asInstanceOf[String]
       if (comment != null && !comment.trim().isEmpty()) {
-        Logger.logCustomMessage(comment)
+        println(comment)
       }
     }
   }
@@ -30,13 +28,7 @@ class CommentableError(val editorArea: AbstractEditorArea) {
 
   def setError(compilerError: Exception, offset: Int): Unit = {
     component.setVisible(compilerError != null)
-
-    if (Version.isLoggingEnabled) {
-      component.add(commentButton, BorderLayout.WEST)
-    } else {
-      component.remove(commentButton)
-    }
-
+    component.remove(commentButton)
     errorLabel.setError(compilerError, offset)
   }
 

@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import javax.swing.{ JOptionPane, JMenu, JFrame }
+import javax.swing.{ JOptionPane, JMenu }
 import java.awt.event.ActionEvent
 import java.util.prefs.Preferences
 
@@ -18,7 +18,6 @@ import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat
-import org.nlogo.log.Logger
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
 import org.nlogo.util.{ NullAppHandler, Pico }
@@ -44,13 +43,10 @@ object App {
   private val pico = new Pico()
   // all these guys are assigned in main. yuck
   var app: App = null
-  var logger: Logger = null
   private var commandLineModelIsLaunch = false
   private var commandLineModel: String = null
   private var commandLineMagic: String = null
   private var commandLineURL: String = null
-  private var loggingConfigPath: String = null
-  private var loggingDir: String = null
   private var popOutCodeTab = false
   /**
    * Should be called once at startup to create the application and
@@ -74,7 +70,6 @@ object App {
 
     AbstractWorkspace.isApp(true)
     org.nlogo.window.VMCheck.detectBadJVMs()
-    Logger.beQuiet()
     processCommandLineArguments(args)
     Splash.beginSplash() // also initializes AWT
     pico.add("org.nlogo.compile.Compiler")
@@ -203,8 +198,6 @@ object App {
       else if (token == "--version") printAndExit(Version.version)
       else if (token == "--extension-api-version") printAndExit(APIVersion.version)
       else if (token == "--builddate") printAndExit(Version.buildDate)
-      else if (token == "--logging") loggingConfigPath = nextToken()
-      else if (token == "--log-directory") loggingDir = nextToken()
       else if (token == "--codetab-window") popOutCodeTab = true
       else if (token.startsWith("--")) {
         //TODO: Decide: should we do System.exit() here?
@@ -245,7 +238,7 @@ class App extends
 
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
-  import App.{ pico, logger, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, loggingConfigPath, loggingDir, popOutCodeTab }
+  import App.{ pico, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, popOutCodeTab }
   val frame = new AppFrame
   def getFrame = frame
 
@@ -406,24 +399,6 @@ class App extends
 
     frame.addLinkComponent(new CompilerManager(workspace, world, tabs.mainCodeTab))
     frame.addLinkComponent(listenerManager)
-    if (loggingConfigPath != null || prefs.get("loggingEnabled", "false").toBoolean) {
-      if (loggingConfigPath == null) {
-        val prefsConfigFile = prefs.get("loggingConfigFile", "")
-        loggingConfigPath = if (prefsConfigFile != null && prefsConfigFile.trim() != "") {
-          prefsConfigFile
-        } else {
-          "netlogo_logging.xml"
-        }
-      }
-      startLogging(loggingConfigPath)
-    }
-    if (loggingDir != null) {
-      if (logger != null)
-        logger.changeLogDirectory(loggingDir)
-      else JOptionPane.showConfirmDialog(null,
-        "You need to initialize the logger using the --logging options before specifying a directory.",
-        "NetLogo", JOptionPane.DEFAULT_OPTION)
-    }
 
   }
 
@@ -507,24 +482,6 @@ class App extends
     if (popOutCodeTab) {
       frame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
     }
-  }
-
-  def startLogging(loggingConfigPath: String) {
-    val jf = new JFrame()
-    jf.setAlwaysOnTop(true)
-    if(new java.io.File(loggingConfigPath).exists) {
-      val username =
-        JOptionPane.showInputDialog(jf, I18N.gui.get("tools.loggingMode.enterName"), "",
-          JOptionPane.QUESTION_MESSAGE, null, null, "").asInstanceOf[String]
-      if(username != null){
-        logger = new Logger(username)
-        listenerManager.addListener(logger)
-        Logger.configure(loggingConfigPath)
-        org.nlogo.api.Version.startLogging()
-      }
-    }
-    else JOptionPane.showConfirmDialog(jf, I18N.gui.getN("tools.loggingMode.fileDoesNotExist", loggingConfigPath),
-      "NetLogo", JOptionPane.DEFAULT_OPTION)
   }
 
   // This is for other windows to get their own copy of the menu
@@ -711,20 +668,6 @@ class App extends
     e.`type` match {
       case RELOAD => reload()
       case MAGIC_OPEN => magicOpen(e.args(0).toString)
-      case START_LOGGING =>
-        startLogging(e.args(0).toString)
-        if(logger!=null)
-          logger.modelOpened(workspace.getModelPath)
-      case ZIP_LOG_FILES =>
-        if (logger==null)
-          org.nlogo.log.Files.zipSessionFiles(System.getProperty("java.io.tmpdir"), e.args(0).toString)
-        else
-          logger.zipSessionFiles(e.args(0).toString)
-      case DELETE_LOG_FILES =>
-        if(logger==null)
-          org.nlogo.log.Files.deleteSessionFiles(System.getProperty("java.io.tmpdir"))
-        else
-          logger.deleteSessionFiles()
       case _ =>
     }
   }
@@ -881,7 +824,9 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(e: AboutToQuitEvent) { if(logger != null) logger.close() }
+  def handle(e: AboutToQuitEvent) {
+
+  }
 
   private def frameTitle(filename: String, dirty: Boolean) = {
     val title =

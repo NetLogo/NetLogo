@@ -14,7 +14,6 @@ import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser,
   Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox,
   View => CoreView, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
-import org.nlogo.log.Logger
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.window.{ AbstractWidgetPanel, Events => WindowEvents,
   GUIWorkspace, OutputWidget, Widget, WidgetContainer, WidgetRegistry,
@@ -442,7 +441,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
       newWidget.originalBounds = newWidget.getBounds
       newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
     }
-    Logger.logAddWidget(widget.classDisplayName, widget.displayName)
     wrapper
   }
 
@@ -459,7 +457,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     zoomer.zoomWidget(widgetWrapper, true, false, 1.0, zoomFactor)
     new CompileAllEvent().raise(this)
-    Logger.logAddWidget(widgetWrapper.widget.classDisplayName, widgetWrapper.widget.displayName)
     widgetWrapper
   }
 
@@ -499,7 +496,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
     if (wrapper.widget eq view)
       view = null
     remove(wrapper)
-    Logger.logWidgetRemoved(wrapper.widget.classDisplayName, wrapper.widget.displayName)
   }
 
   def sliderEventOnReleaseOnly(sliderEventOnReleaseOnly: Boolean): Unit = {

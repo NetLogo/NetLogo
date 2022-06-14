@@ -16,7 +16,6 @@ import org.nlogo.agent.{ ImporterJ, World }
 import org.nlogo.api.{ ControlSet, Exceptions, FileIO, ModelReader, ModelSettings }
 import org.nlogo.awt.{ EventQueue, Hierarchy, UserCancelException }
 import org.nlogo.core.I18N
-import org.nlogo.log.Logger
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog }
 import org.nlogo.shape.ShapeConverter
 import org.nlogo.workspace.{ AbstractWorkspaceScala, ExportOutput, HubNetManagerFactory }
@@ -289,6 +288,4 @@ with LoadModelEvent.Handler {
       super.guessExportName(defaultName)
   }
 
-  def logCustomMessage(msg: String) = Logger.logCustomMessage(msg)
-  def logCustomGlobals(nameValuePairs: Seq[(String, String)]) = Logger.logCustomGlobals(nameValuePairs: _*)
 }

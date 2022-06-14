@@ -5,12 +5,8 @@ package org.nlogo.lite
 import java.net.URI
 import java.nio.file.Paths
 
-import org.apache.log4j.xml.DOMConfigurator
-
-import org.nlogo.api.Version
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ CompilerException, Widget => CoreWidget }
-import org.nlogo.log.Logger
 import org.nlogo.window.{ Event, Widget, ButtonWidget, PlotWidget }
 import org.nlogo.swing.BrowserLauncher
 
@@ -33,8 +29,6 @@ extends LitePanel(frame,
                         BrowserLauncher.openURI(frame, new URI("http://ccl.northwestern.edu/netlogo/"))
                       }})
 with Event.LinkChild {
-
-  var logger: Logger = null
 
   addLinkComponent(listenerManager)
 
@@ -105,38 +99,6 @@ with Event.LinkChild {
   def open(path: String) {
     EventQueue.mustBeEventDispatchThread()
     openFromURI(Paths.get(path).toUri)
-  }
-
-  /**
-   * Starts NetLogo logging using the given file and username
-   *
-   * @param properties path to the XML properties file as defined by the log4j dtd
-   * @param username   user defined username, this should be a unique identifier
-   */
-  def startLogging(properties: String, username: String) {
-    createLogger(username)
-    DOMConfigurator.configure(properties)
-    logger.modelOpened(workspace.getModelPath)
-  }
-
-  /**
-   * Starts NetLogo logging using the given file and username
-   *
-   * @param reader   a reader that contains an XML properties file as defined by the log4j dtd
-   * @param username user defined username, this should be a unique identifier
-   */
-  def startLogging(reader: java.io.Reader, username: String) {
-    createLogger(username)
-    logger.configure(reader)
-    logger.modelOpened(workspace.getModelPath)
-  }
-
-  def createLogger(username: String) {
-    if (logger == null) {
-      logger = new Logger(username)
-      listenerManager.addListener(logger)
-    }
-    Version.startLogging()
   }
 
   /**

@@ -2,15 +2,12 @@
 
 package org.nlogo.app.tools
 
-import java.io.File
 import java.util.Locale
 import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ JCheckBox, JComboBox, JPanel, JTextField }
-import java.awt.{ FileDialog, Frame }
+import javax.swing.{ JCheckBox, JComboBox }
 
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.I18N
-import org.nlogo.swing.RichJButton
 
 object Preferences {
   abstract class BooleanPreference(val i18nKey: String, val restartRequired: Boolean, default: Boolean) extends Preference {
@@ -64,42 +61,6 @@ object Preferences {
       prefs.put("line_numbers", component.isSelected.toString)
       tabs.lineNumbersVisible = component.isSelected
     }
-  }
-
-  object IsLoggingEnabled extends BooleanPreference("loggingEnabled", true, false) {}
-
-  class LoggingConfigFile(val frame: Frame) extends Preference {
-    val i18nKey         = "loggingConfigFile"
-    val restartRequired = true
-    val textField       = new JTextField("", 20)
-    val component       = createComponent()
-
-    def load(prefs: JavaPreferences) = {
-      val loggingConfigFile = prefs.get("loggingConfigFile", "")
-      textField.setText(loggingConfigFile)
-    }
-
-    def save(prefs: JavaPreferences) = {
-      prefs.put("loggingConfigFile", textField.getText)
-    }
-
-    def createComponent(): JPanel = {
-      val editPanel = new JPanel
-      editPanel.add(textField)
-      editPanel.add(RichJButton("Browse...") {
-        askForConfigFile(textField.getText).foreach(textField.setText)
-      })
-      editPanel
-    }
-
-    def askForConfigFile(current: String): Option[String] = {
-      val dialog = new FileDialog(frame, "Logging Config File", FileDialog.LOAD)
-      dialog.setDirectory(new File(current).getParent)
-      dialog.setFile(new File(current).getName)
-      dialog.setVisible(true)
-      Option(dialog.getFile).map(Option(dialog.getDirectory).getOrElse("") + _)
-    }
-
   }
 
   object IncludedFilesMenu  extends BooleanPreference("includedFilesMenu", true, false) {}

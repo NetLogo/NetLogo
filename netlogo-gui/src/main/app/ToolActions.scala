@@ -38,8 +38,6 @@ with MenuAction {
     Preferences.Language,
     Preferences.LoadLastOnStartup,
     new Preferences.LineNumbers(tabs),
-    Preferences.IsLoggingEnabled,
-    new Preferences.LoggingConfigFile(frame),
     Preferences.IncludedFilesMenu,
     Preferences.ProceduresMenuSortOrder
   )
