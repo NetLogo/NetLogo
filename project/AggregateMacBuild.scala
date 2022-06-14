@@ -219,9 +219,9 @@ object PackageMacAggregate {
     // when we submit for notarization and these libraries don't change that often.
     // -Jeremy B July 2020
     val jarLibsToSign = Map(
-      ("extensions/.bundled/gogo/hid4java.jar", Seq("darwin/libhidapi.dylib")),
+      ("extensions/.bundled/gogo/hid4java-0.7.0.jar", Seq("darwin/libhidapi.dylib")),
       ("extensions/.bundled/nw/gephi-toolkit-0.8.2-all.jar", Seq("native/Mac/i386/libsqlitejdbc.jnilib", "native/Mac/x86_64/libsqlitejdbc.jnilib")),
-      ("extensions/.bundled/vid/core-video-capture-1.3.10.jar", Seq("org/openimaj/video/capture/nativelib/darwin_universal/libOpenIMAJGrabber.dylib")),
+      ("extensions/.bundled/vid/core-video-capture-1.4-20220209.101851-153.jar", Seq("org/openimaj/video/capture/nativelib/darwin_universal/libOpenIMAJGrabber.dylib")),
       ("Java/java-objc-bridge-1.0.0.jar", Seq("libjcocoa.dylib"))
     )
     jarLibsToSign.foreach { case (jarPath: String, libsToSign: Seq[String]) => signJarLibs(aggregateMacDir / jarPath, appSigningOptions, libsToSign) }
