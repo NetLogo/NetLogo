@@ -1,0 +1,53 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
+package org.nlogo.log
+
+import java.io.{ File, FileWriter, PrintWriter }
+import java.time.LocalDateTime
+
+import collection.JavaConverters._
+
+import org.json.simple.JSONValue
+
+private[log] class JsonFileLogger(private val logFileDirectory: File, private val userName: String) extends FileLogger {
+
+  private val _writer = {
+    val now = LocalDateTime.now
+    val logFileName = s"netlogo_log_${now.format(Logger.fileDateFormat)}.json"
+    val logFilePath = logFileDirectory.toPath().resolve(logFileName)
+    val logFile     = logFilePath.toFile()
+    new PrintWriter(new FileWriter(logFile))
+  }
+  this._writer.write("[\n")
+
+  private var _first = true
+
+  override def log(event: String, eventInfo: Map[String, String]) {
+    if (this._first) {
+      this._first = false
+      this._writer.write("  ")
+    } else {
+      this._writer.write(", ")
+    }
+
+    val timeStamp = LocalDateTime.now
+    val map = Map(
+      "event"     -> event
+    , "timeStamp" -> timeStamp.format(Logger.logDateFormat)
+    )
+    val finalMap = if (!eventInfo.isEmpty) {
+      map + ("eventInfo" -> eventInfo.asJava)
+    } else {
+      map
+    }
+    JSONValue.writeJSONString(finalMap.asJava, this._writer)
+    this._writer.write("\n")
+  }
+
+  override def close() {
+    this._writer.write("]")
+    this._writer.flush()
+    this._writer.close()
+  }
+
+}

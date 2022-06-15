@@ -63,6 +63,8 @@ object Preferences {
     }
   }
 
+  object IsLoggingEnabled extends BooleanPreference("loggingEnabled", true, false) {}
+
   object IncludedFilesMenu  extends BooleanPreference("includedFilesMenu", true, false) {}
 
   object ProceduresMenuSortOrder extends Preference {

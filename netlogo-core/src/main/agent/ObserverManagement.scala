@@ -3,6 +3,7 @@
 package org.nlogo.agent
 
 import org.nlogo.api.{ AgentException, LogoException }
+import org.nlogo.log.Logger
 
 import World.Zero
 
@@ -18,10 +19,13 @@ trait ObserverManagement extends WorldKernel {
   @throws(classOf[LogoException])
   def setObserverVariableByName(varName: String, value: Object): Unit = {
     val index = observer.variableIndex(varName.toUpperCase)
-    if (index != -1)
+    if (index != -1) {
+      val oldValue = observer.getVariable(index)
       observer.setVariable(index, value)
-    else
+      Logger.globalChanged(varName, value, oldValue)
+    } else {
       throw new IllegalArgumentException(s""""${varName}" not found""")
+    }
   }
 
   def getObserverVariableByName(varName: String): AnyRef = {

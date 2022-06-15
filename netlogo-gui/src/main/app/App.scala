@@ -2,12 +2,13 @@
 
 package org.nlogo.app
 
-import javax.swing.{ JOptionPane, JMenu }
+import java.awt.{ Dimension, Frame, Toolkit }
 import java.awt.event.ActionEvent
+import java.io.File
 import java.util.prefs.Preferences
+import javax.swing.{ JOptionPane, JMenu }
 
 import org.nlogo.agent.{ Agent, World2D, World3D }
-import java.awt.{ Dimension, Frame, Toolkit }
 import org.nlogo.api._
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
 import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, FindDialog, SaveModelingCommonsAction }
@@ -18,6 +19,7 @@ import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat
+import org.nlogo.log.Logger
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
 import org.nlogo.util.{ NullAppHandler, Pico }
@@ -399,6 +401,13 @@ class App extends
 
     frame.addLinkComponent(new CompilerManager(workspace, world, tabs.mainCodeTab))
     frame.addLinkComponent(listenerManager)
+
+    if (prefs.get("loggingEnabled", "false").toBoolean) {
+      val logFileDirectory = new File(System.getProperty("user.home"))
+      val events           = Set("global", "slider")
+      val userName         = "unknown"
+      Logger.start(listenerManager, logFileDirectory, events, userName)
+    }
 
   }
 
@@ -825,7 +834,7 @@ class App extends
    * Internal use only.
    */
   def handle(e: AboutToQuitEvent) {
-
+    Logger.stop()
   }
 
   private def frameTitle(filename: String, dirty: Boolean) = {
