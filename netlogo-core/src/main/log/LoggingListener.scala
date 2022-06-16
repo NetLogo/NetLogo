@@ -37,14 +37,14 @@ class LoggingListener(private val events: Set[String], private[log] var logger: 
         Map[String, Any](
           "owner"     -> owner
         , "code"      -> code
-        , "agentType" -> agentType
+        , "agentType" -> agentType.toString
         , "success"   -> true
         )
       } else {
         Map[String, Any](
           "owner"      -> owner
         , "code"       -> code
-        , "agentType"  -> agentType
+        , "agentType"  -> agentType.toString
         , "success"    -> false
         , "error"      -> error.getMessage
         , "errorStart" -> error.start

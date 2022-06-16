@@ -2,47 +2,71 @@
 
 package org.nlogo.log
 
-import java.io.File
+import java.io.{ File, FileOutputStream, IOException }
 import java.net.InetAddress
+import java.nio.file.Paths
+import java.util.zip.{ ZipEntry, ZipOutputStream }
 
 import collection.JavaConverters._
+import scala.io.Codec
 
 import org.nlogo.api.{ Equality, NetLogoAdapter }
+import org.nlogo.api.Exceptions.ignoring
+import org.nlogo.api.FileIO.fileToString
+
+case class LoggerState(
+  addListener:      (NetLogoAdapter) => Unit
+, loggerFactory:    (File) => FileLogger
+, logFileDirectory: File
+, events:           Set[String]
+, studentName:      String
+) {
+}
+
+object LoggerState {
+  def empty() = {
+    LoggerState(
+      (_) => {}
+    , (_) => new NoOpLogger()
+    , new File("")
+    , LogEvents.defaultEvents
+    , "unknown"
+    )
+  }
+}
 
 object LogManager {
-  private var logger: FileLogger = new NoOpLogger()
-  private var events: Set[String] = Set()
+  private var state: LoggerState               = LoggerState.empty()
+  private var logger: FileLogger               = new NoOpLogger()
+  private var modelName: String                = "unset"
+  private var loggingListener: LoggingListener = new LoggingListener(Set(), LogManager.logger)
 
   def start(addListener: (NetLogoAdapter) => Unit, loggerFactory: (File) => FileLogger, logFileDirectory: File, events: Set[String], studentName: String) {
     if (LogManager.isStarted) {
       throw new IllegalStateException("Logging should only be started once.")
     }
-    LogManager.events = events
+    LogManager.state = LoggerState(addListener, loggerFactory, logFileDirectory, events, studentName)
 
-    val loggingListener = new LoggingListener(events, LogManager.logger)
+    LogManager.loggingListener = new LoggingListener(events, LogManager.logger)
     val restartListener = new NetLogoAdapter {
       override def modelOpened(modelName: String) {
-        LogManager.stop()
-
-        LogManager.logger      = loggerFactory(logFileDirectory)
-        loggingListener.logger = LogManager.logger
-
-        LogManager.logStart(studentName, modelName)
+        LogManager.modelName = modelName
+        LogManager.restart()
       }
     }
     addListener(restartListener)
-    addListener(loggingListener)
+    addListener(LogManager.loggingListener)
   }
 
-  private def logStart(studentName: String, modelName: String) {
+  private def logStart(modelName: String) {
     val loginName = System.getProperty("user.name")
-    val ipAddress = getIpAddress
+    val ipAddress = LogManager.getIpAddress
     val startInfo = Map[String, Any](
       "loginName"   -> loginName
-    , "studentName" -> studentName
+    , "studentName" -> LogManager.state.studentName
     , "ipAddress"   -> ipAddress
     , "modelName"   -> modelName
-    , "events"      -> LogManager.events.toList.asJava
+    , "events"      -> LogManager.state.events.toList.asJava
     )
     LogManager.log(LogEvents.Types.start, startInfo)
   }
@@ -51,6 +75,60 @@ object LogManager {
     LogManager.log(LogEvents.Types.stop)
     LogManager.logger.close()
     LogManager.logger = new NoOpLogger()
+  }
+
+  private def restart(thunk: () => Unit = () => {}) {
+    LogManager.stop()
+    thunk()
+    LogManager.logger                 = LogManager.state.loggerFactory(LogManager.state.logFileDirectory)
+    LogManager.loggingListener.logger = LogManager.logger
+    LogManager.logStart(modelName)
+  }
+
+  def zipLogFiles(zipFileName: String) {
+    if (LogManager.isStarted) {
+      val fileNameFilter = LogManager.logger.fileNameFilter
+      LogManager.restart(() => {
+        val zipPath = Paths.get(zipFileName)
+        val zipFile = if (zipPath.isAbsolute) {
+          zipPath.toFile
+        } else {
+          LogManager.state.logFileDirectory.toPath.resolve(zipPath).toFile
+        }
+
+        val logFiles = LogManager.state.logFileDirectory.list(fileNameFilter)
+        if (logFiles.nonEmpty) {
+          val out = new ZipOutputStream(new FileOutputStream(zipFile))
+          logFiles.foreach( (fileName) => {
+            // IOException probably shouldn't ever happen but in case it does just skip the file and
+            // move on. ev 3/14/07
+            ignoring(classOf[IOException]) {
+              out.putNextEntry(new ZipEntry(fileName))
+              val data = fileToString(fileName)(Codec.UTF8).getBytes
+              out.write(data, 0, data.length)
+              out.closeEntry()
+            }
+          })
+          out.flush()
+          out.close()
+        }
+      })
+    }
+  }
+
+  def deleteLogFiles() {
+    if (LogManager.isStarted) {
+      val fileNameFilter = LogManager.logger.fileNameFilter
+      val logFilePath    = LogManager.state.logFileDirectory.toPath
+      LogManager.restart(() => {
+        val logFiles = LogManager.state.logFileDirectory.list(fileNameFilter)
+        logFiles.foreach( (fileName) => {
+          val filePath = Paths.get(fileName)
+          val file     = logFilePath.resolve(filePath).toFile
+          file.delete()
+        })
+      })
+    }
   }
 
   def isStarted: Boolean = {
@@ -66,7 +144,7 @@ object LogManager {
   }
 
   private def isLogging(event: String): Boolean = {
-    LogManager.events.contains(event)
+    LogManager.state.events.contains(event)
   }
 
   private def log(event: String, eventInfo: Map[String, Any] = Map()) {

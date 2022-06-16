@@ -2,7 +2,7 @@
 
 package org.nlogo.log
 
-import java.io.{ File, FileWriter, PrintWriter }
+import java.io.{ File, FilenameFilter, FileWriter, PrintWriter }
 import java.time.LocalDateTime
 
 import collection.JavaConverters._
@@ -10,6 +10,12 @@ import collection.JavaConverters._
 import org.json.simple.JSONValue
 
 class JsonFileLogger(private val logFileDirectory: File) extends FileLogger {
+
+  val fileNameFilter = new FilenameFilter {
+    override def accept(dir: File, name: String) = {
+      name.startsWith("netlogo_log_") && name.endsWith(".json")
+    }
+  }
 
   private val _writer = {
     val now         = LocalDateTime.now
