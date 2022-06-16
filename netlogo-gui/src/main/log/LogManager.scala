@@ -14,7 +14,7 @@ object LogManager {
   private var logger: FileLogger = new NoOpLogger()
   private var events: Set[String] = Set()
 
-  def start(listenerManager: NetLogoListenerManager, logFileDirectory: File, events: Set[String], userName: String) {
+  def start(listenerManager: NetLogoListenerManager, logFileDirectory: File, events: Set[String], studentName: String) {
     if (LogManager.isStarted) {
       throw new IllegalStateException("Logging should only be started once.")
     }
@@ -28,7 +28,7 @@ object LogManager {
         LogManager.logger      = createLogger(logFileDirectory)
         loggingListener.logger = LogManager.logger
 
-        LogManager.logStart(userName, modelName)
+        LogManager.logStart(studentName, modelName)
       }
     }
     listenerManager.addListener(restartListener)
@@ -39,12 +39,12 @@ object LogManager {
     new JsonFileLogger(logFileDirectory)
   }
 
-  private def logStart(userName: String, modelName: String) {
+  private def logStart(studentName: String, modelName: String) {
     val loginName = System.getProperty("user.name")
     val ipAddress = getIpAddress
     val startInfo = Map[String, Any](
       "loginName"   -> loginName
-    , "netLogoName" -> userName
+    , "studentName" -> studentName
     , "ipAddress"   -> ipAddress
     , "modelName"   -> modelName
     , "events"      -> LogManager.events.toList.asJava

@@ -19,7 +19,7 @@ import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat
-import org.nlogo.log.{ LogEvents, LogManager }
+import org.nlogo.log.{ LogEvents, LogManager, NamePrompt }
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
 import org.nlogo.util.{ NullAppHandler, Pico }
@@ -418,8 +418,8 @@ class App extends
       val logFileDirectory = new File(switchOrPref(logDirectory, "logDirectory", System.getProperty("user.home")))
       val eventsString     = switchOrPref(logEvents, "logEvents", "")
       val events           = LogEvents.parseEvents(eventsString)
-      val userName         = "unknown"
-      LogManager.start(listenerManager, logFileDirectory, events, userName)
+      val studentName      = NamePrompt.ask()
+      LogManager.start(listenerManager, logFileDirectory, events, studentName)
     }
 
   }
