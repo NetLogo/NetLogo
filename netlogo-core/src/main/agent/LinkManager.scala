@@ -2,6 +2,7 @@
 
 package org.nlogo.agent
 
+import org.nlogo.log.Logger
 
 // It would be nice to move this to the api package, but it would take a lot of refactoring to make
 // all of the argument types and return types be the api types. - ST 4/11/13
@@ -115,6 +116,7 @@ class LinkManagerImpl[W <: World](world: W, linkFactory: LinkFactory[W]) extends
   def createLink(src: Turtle, dest: Turtle, linkBreed: AgentSet): Link = {
     val link = linkFactory(world, src, dest, linkBreed)
     addLink(link)
+    Logger.linkCreated(link.id, linkBreed.printName, src.id, dest.id)
     link
   }
 

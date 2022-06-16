@@ -404,9 +404,26 @@ class App extends
 
     if (prefs.get("loggingEnabled", "false").toBoolean) {
       val logFileDirectory = new File(System.getProperty("user.home"))
-      val events           = Set("global", "slider")
-      val userName         = "unknown"
-      Logger.start(listenerManager, logFileDirectory, events, userName)
+      val allEvents = Set(
+        "button"
+      , "chooser"
+      , "compile"
+      , "command-center"
+      , "global"
+      , "inputBox"
+      , "link"
+      , "model-open"
+      , "slider"
+      , "speed-slider"
+      , "start"
+      , "switch"
+      , "stop"
+      , "turtle"
+      , "widget-edit"
+      , "tick"
+      )
+      val userName = "unknown"
+      Logger.start(listenerManager, logFileDirectory, allEvents, userName)
     }
 
   }

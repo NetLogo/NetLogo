@@ -9,11 +9,11 @@ import collection.JavaConverters._
 
 import org.json.simple.JSONValue
 
-private[log] class JsonFileLogger(private val logFileDirectory: File, private val userName: String) extends FileLogger {
+private[log] class JsonFileLogger(private val logFileDirectory: File) extends FileLogger {
 
   private val _writer = {
-    val now = LocalDateTime.now
-    val logFileName = s"netlogo_log_${now.format(Logger.fileDateFormat)}.json"
+    val now         = LocalDateTime.now
+    val logFileName = s"netlogo_log_${now.format(DateTimeFormats.file)}.json"
     val logFilePath = logFileDirectory.toPath().resolve(logFileName)
     val logFile     = logFilePath.toFile()
     new PrintWriter(new FileWriter(logFile))
@@ -33,7 +33,7 @@ private[log] class JsonFileLogger(private val logFileDirectory: File, private va
     val timeStamp = LocalDateTime.now
     val map = Map(
       "event"     -> event
-    , "timeStamp" -> timeStamp.format(Logger.logDateFormat)
+    , "timeStamp" -> timeStamp.format(DateTimeFormats.logEntry)
     )
     val finalMap = if (!eventInfo.isEmpty) {
       map + ("eventInfo" -> eventInfo.asJava)
