@@ -8,7 +8,7 @@ import java.util.{Arrays, List => JList, Map => JMap}
 import org.nlogo.agent.ImporterJ.{ErrorHandler => ImporterErrorHandler, StringReader => ImporterStringReader}
 import org.nlogo.api.{AgentException, Color, ImporterUser, MersenneTwisterFast, RandomSeedGenerator, Timer}
 import org.nlogo.core.{AgentKind, Program, WorldDimensions}
-import org.nlogo.log.Logger
+import org.nlogo.log.LogManager
 
 object World {
   val Zero = JDouble.valueOf(0.0)
@@ -222,7 +222,7 @@ class World2D extends World with CompilationManagement {
 
   def createTurtle(breed: AgentSet): Turtle = {
     val baby = new Turtle2D(this, breed, Zero, Zero)
-    Logger.turtleCreated(baby.id, breed.printName)
+    LogManager.turtleCreated(baby.id, breed.printName)
     baby
   }
 
@@ -232,7 +232,7 @@ class World2D extends World with CompilationManagement {
     val baby = new Turtle2D(this, breed, Zero, Zero)
     baby.colorDoubleUnchecked(JDouble.valueOf(5 + 10 * c))
     baby.heading(h)
-    Logger.turtleCreated(baby.id, breed.printName)
+    LogManager.turtleCreated(baby.id, breed.printName)
     baby
   }
 

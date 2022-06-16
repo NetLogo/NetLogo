@@ -5,7 +5,7 @@ package org.nlogo.agent
 import org.nlogo.api.{ AgentException, Color, ImporterUser,
   NetLogoThreeDDialect, WorldDimensionException, WorldDimensions3D }
 import org.nlogo.core.{ AgentKind, Program, WorldDimensions }
-import org.nlogo.log.Logger
+import org.nlogo.log.LogManager
 
 import java.lang.{ Double => JDouble }
 
@@ -329,7 +329,7 @@ class World3D extends World
 
   override def createTurtle(breed: AgentSet): Turtle = {
     val baby = new Turtle3D(this, breed, Zero, Zero, Zero)
-    Logger.turtleCreated(baby.id, breed.printName)
+    LogManager.turtleCreated(baby.id, breed.printName)
     baby
   }
 
@@ -339,7 +339,7 @@ class World3D extends World
     val baby = new Turtle3D(this, breed, Zero, Zero, Zero)
     baby.colorDoubleUnchecked(JDouble.valueOf(5 + 10 * c))
     baby.heading(h)
-    Logger.turtleCreated(baby.id, breed.printName)
+    LogManager.turtleCreated(baby.id, breed.printName)
     baby
   }
 

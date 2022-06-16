@@ -14,7 +14,7 @@ import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
 import org.nlogo.api.LogoException;
-import org.nlogo.log.Logger;
+import org.nlogo.log.LogManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -155,7 +155,7 @@ public abstract strictfp class Turtle
     if (this == observer.targetAgent()) {
       observer.updatePosition();
     }
-    Logger.turtleRemoved(oldId, breed.printName());
+    LogManager.turtleRemoved(oldId, breed.printName());
   }
 
   public double lineThickness() {

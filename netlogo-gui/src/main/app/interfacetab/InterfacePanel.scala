@@ -16,7 +16,7 @@ import org.nlogo.core.{
   Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider,
   TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, UndoManager }
-import org.nlogo.log.Logger
+import org.nlogo.log.LogManager
 import org.nlogo.window.{ ButtonWidget, ChooserWidget, Events => WindowEvents,
   GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, MonitorWidget,
   PlotWidget, SliderWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
@@ -171,7 +171,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     // from the old constraint. yuck.  ev 11/27/07
     new RemoveConstraintEvent(wrapper.widget.displayName).raise(this)
 
-    Logger.widgetRemoved(wrapper.widget.classDisplayName, wrapper.widget.displayName)
+    LogManager.widgetRemoved(wrapper.widget.classDisplayName, wrapper.widget.displayName)
   }
 
   /// loading and saving

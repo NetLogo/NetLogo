@@ -3,7 +3,7 @@
 package org.nlogo.agent
 
 import org.nlogo.api.{ AgentException, LogoException }
-import org.nlogo.log.Logger
+import org.nlogo.log.LogManager
 
 import World.Zero
 
@@ -22,7 +22,7 @@ trait ObserverManagement extends WorldKernel {
     if (index != -1) {
       val oldValue = observer.getVariable(index)
       observer.setVariable(index, value)
-      Logger.globalChanged(varName, value, oldValue)
+      LogManager.globalChanged(varName, value, oldValue)
     } else {
       throw new IllegalArgumentException(s""""${varName}" not found""")
     }

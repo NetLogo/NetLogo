@@ -19,7 +19,7 @@ import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat
-import org.nlogo.log.Logger
+import org.nlogo.log.LogManager
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
 import org.nlogo.util.{ NullAppHandler, Pico }
@@ -423,7 +423,7 @@ class App extends
       , "tick"
       )
       val userName = "unknown"
-      Logger.start(listenerManager, logFileDirectory, allEvents, userName)
+      LogManager.start(listenerManager, logFileDirectory, allEvents, userName)
     }
 
   }
@@ -851,7 +851,7 @@ class App extends
    * Internal use only.
    */
   def handle(e: AboutToQuitEvent) {
-    Logger.stop()
+    LogManager.stop()
   }
 
   private def frameTitle(filename: String, dirty: Boolean) = {

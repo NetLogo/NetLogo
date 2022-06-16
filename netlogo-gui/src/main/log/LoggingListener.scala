@@ -5,7 +5,7 @@ package org.nlogo.log
 import org.nlogo.api.NetLogoAdapter
 import org.nlogo.core.CompilerException
 
-class LoggingListener(private val events: Set[String], private val logger: FileLogger) extends NetLogoAdapter {
+class LoggingListener(private val events: Set[String], private[log] var logger: FileLogger) extends NetLogoAdapter {
 
   def isLogging(event: String) = {
     events.contains(event)
