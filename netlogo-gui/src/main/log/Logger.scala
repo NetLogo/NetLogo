@@ -5,6 +5,8 @@ package org.nlogo.log
 import java.io.File
 import java.net.InetAddress
 
+import collection.JavaConverters._
+
 import org.nlogo.api.Equality
 import org.nlogo.window.NetLogoListenerManager
 
@@ -42,12 +44,12 @@ object Logger {
     val ipAddress = getIpAddress
     val modelName = "modelName"
 
-    val startInfo = Map(
+    val startInfo = Map[String, Any](
       "loginName"   -> loginName
     , "netLogoName" -> userName
     , "ipAddress"   -> ipAddress
     , "modelName"   -> modelName
-    , "events"      -> events.mkString(",")
+    , "events"      -> events.asJava
     )
     Logger.log(LogEventTypes.start, startInfo)
 
@@ -77,16 +79,16 @@ object Logger {
     Logger._events.contains(event)
   }
 
-  private def log(event: String, eventInfo: Map[String, String] = Map()) {
+  private def log(event: String, eventInfo: Map[String, Any] = Map()) {
     Logger._current.log(event, eventInfo)
   }
 
   def globalChanged(globalName: String, newValue: AnyRef, oldValue: AnyRef) {
     if (Logger.isLogging(LogEventTypes.global) && !Equality.equals(newValue, oldValue)) {
-      val eventInfo = Map(
+      val eventInfo = Map[String, Any](
         "globalName" -> globalName
-      , "newValue"   -> Option(newValue).map(_.toString).getOrElse("")
-      , "oldValue"   -> Option(oldValue).map(_.toString).getOrElse("")
+      , "newValue"   -> AnyRefFormat.forJson(newValue)
+      , "oldValue"   -> AnyRefFormat.forJson(oldValue)
       )
       Logger.log(LogEventTypes.global, eventInfo)
     }
@@ -94,12 +96,12 @@ object Logger {
 
   def linkCreated(id: Long, breedName: String, end1: Long, end2: Long) {
     if (Logger.isLogging(LogEventTypes.link)) {
-      val eventInfo = Map(
+      val eventInfo = Map[String, Any](
         "action"    -> "created"
-      , "id"        -> id.toString
+      , "id"        -> id
       , "breedName" -> breedName
-      , "end1"      -> end1.toString
-      , "end2"      -> end2.toString
+      , "end1"      -> end1
+      , "end2"      -> end2
       )
       Logger.log(LogEventTypes.link, eventInfo)
     }
@@ -107,12 +109,12 @@ object Logger {
 
   def linkRemoved(id: Long, breedName: String, end1: Long, end2: Long) {
     if (Logger.isLogging(LogEventTypes.link)) {
-      val eventInfo = Map(
+      val eventInfo = Map[String, Any](
         "action"    -> "removed"
-      , "id"        -> id.toString
+      , "id"        -> id
       , "breedName" -> breedName
-      , "end1"      -> end1.toString
-      , "end2"      -> end2.toString
+      , "end1"      -> end1
+      , "end2"      -> end2
       )
       Logger.log(LogEventTypes.link, eventInfo)
     }
@@ -120,8 +122,8 @@ object Logger {
 
   def speedSliderChanged(newSpeed: Double) {
     if (Logger.isLogging(LogEventTypes.speedSlider)) {
-      val eventInfo = Map(
-        "newSpeed" -> newSpeed.toString
+      val eventInfo = Map[String, Any](
+        "newSpeed" -> newSpeed
       )
       Logger.log(LogEventTypes.speedSlider, eventInfo)
     }
@@ -129,9 +131,9 @@ object Logger {
 
   def turtleCreated(who: Long, breedName: String) {
     if (Logger.isLogging(LogEventTypes.turtle)) {
-      val eventInfo = Map(
+      val eventInfo = Map[String, Any](
         "action"    -> "created"
-      , "who"       -> who.toString
+      , "who"       -> who
       , "breedName" -> breedName
       )
       Logger.log(LogEventTypes.turtle, eventInfo)
@@ -140,9 +142,9 @@ object Logger {
 
   def turtleRemoved(who: Long, breedName: String) {
     if (Logger.isLogging(LogEventTypes.turtle)) {
-      val eventInfo = Map(
+      val eventInfo = Map[String, Any](
         "action"    -> "removed"
-      , "who"       -> who.toString
+      , "who"       -> who
       , "breedName" -> breedName
       )
       Logger.log(LogEventTypes.turtle, eventInfo)
@@ -151,7 +153,7 @@ object Logger {
 
   def widgetAdded(widgetType: String, name: String) {
     if (Logger.isLogging(LogEventTypes.widgetEdit)) {
-      val eventInfo = Map(
+      val eventInfo = Map[String, Any](
         "action"     -> "added"
       , "widgetType" -> widgetType
       , "name"       -> name
@@ -162,7 +164,7 @@ object Logger {
 
   def widgetRemoved(widgetType: String, name: String) {
     if (Logger.isLogging(LogEventTypes.widgetEdit)) {
-      val eventInfo = Map(
+      val eventInfo = Map[String, Any](
         "action"     -> "removed"
       , "widgetType" -> widgetType
       , "name"       -> name

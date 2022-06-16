@@ -4,7 +4,7 @@ package org.nlogo.log
 
 trait FileLogger {
   def close() {}
-  def log(event: String, eventInfo: Map[String, String]) {}
+  def log(event: String, eventInfo: Map[String, Any]) {}
   def zipLogFiles() {}
   def deleteLogFiles() {}
 }

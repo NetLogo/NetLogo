@@ -22,7 +22,7 @@ private[log] class JsonFileLogger(private val logFileDirectory: File) extends Fi
 
   private var _first = true
 
-  override def log(event: String, eventInfo: Map[String, String]) {
+  override def log(event: String, eventInfo: Map[String, Any]) {
     if (this._first) {
       this._first = false
       this._writer.write("  ")
@@ -31,7 +31,8 @@ private[log] class JsonFileLogger(private val logFileDirectory: File) extends Fi
     }
 
     val timeStamp = LocalDateTime.now
-    val map = Map(
+
+    val map = Map[String, Any](
       "event"     -> event
     , "timeStamp" -> timeStamp.format(DateTimeFormats.logEntry)
     )
