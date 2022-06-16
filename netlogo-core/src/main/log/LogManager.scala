@@ -8,13 +8,12 @@ import java.net.InetAddress
 import collection.JavaConverters._
 
 import org.nlogo.api.{ Equality, NetLogoAdapter }
-import org.nlogo.window.NetLogoListenerManager
 
 object LogManager {
   private var logger: FileLogger = new NoOpLogger()
   private var events: Set[String] = Set()
 
-  def start(listenerManager: NetLogoListenerManager, logFileDirectory: File, events: Set[String], studentName: String) {
+  def start(addListener: (NetLogoAdapter) => Unit, loggerFactory: (File) => FileLogger, logFileDirectory: File, events: Set[String], studentName: String) {
     if (LogManager.isStarted) {
       throw new IllegalStateException("Logging should only be started once.")
     }
@@ -25,18 +24,14 @@ object LogManager {
       override def modelOpened(modelName: String) {
         LogManager.stop()
 
-        LogManager.logger      = createLogger(logFileDirectory)
+        LogManager.logger      = loggerFactory(logFileDirectory)
         loggingListener.logger = LogManager.logger
 
         LogManager.logStart(studentName, modelName)
       }
     }
-    listenerManager.addListener(restartListener)
-    listenerManager.addListener(loggingListener)
-  }
-
-  private def createLogger(logFileDirectory: File) = {
-    new JsonFileLogger(logFileDirectory)
+    addListener(restartListener)
+    addListener(loggingListener)
   }
 
   private def logStart(studentName: String, modelName: String) {

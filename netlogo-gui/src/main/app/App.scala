@@ -6,7 +6,7 @@ import java.awt.{ Dimension, Frame, Toolkit }
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.prefs.Preferences
-import javax.swing.{ JOptionPane, JMenu }
+import javax.swing.{ JFrame, JOptionPane, JMenu }
 
 import org.nlogo.agent.{ Agent, World2D, World3D }
 import org.nlogo.api._
@@ -19,7 +19,7 @@ import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat
-import org.nlogo.log.{ LogEvents, LogManager, NamePrompt }
+import org.nlogo.log.{ JsonFileLogger, LogEvents, LogManager }
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
 import org.nlogo.util.{ NullAppHandler, Pico }
@@ -418,8 +418,10 @@ class App extends
       val logFileDirectory = new File(switchOrPref(logDirectory, "logDirectory", System.getProperty("user.home")))
       val eventsString     = switchOrPref(logEvents, "logEvents", "")
       val events           = LogEvents.parseEvents(eventsString)
-      val studentName      = NamePrompt.ask()
-      LogManager.start(listenerManager, logFileDirectory, events, studentName)
+      val studentName      = askForName()
+      val addListener      = (l) => listenerManager.addListener(l)
+      val loggerFactory    = (f: File) => new JsonFileLogger(f)
+      LogManager.start(addListener, loggerFactory, logFileDirectory, events, studentName)
     }
 
   }
@@ -1205,4 +1207,13 @@ class App extends
         tabs.workspace)
     workspace.hubNetManager.map(_ +: sections).getOrElse(sections)
   }
+
+  def askForName() = {
+    val frame = new JFrame()
+    frame.setAlwaysOnTop(true)
+    val prompt = I18N.gui.get("tools.loggingMode.enterName")
+    val name   = JOptionPane.showInputDialog(frame, prompt, "", JOptionPane.QUESTION_MESSAGE, null, null, "")
+    if (name == null) { "unknown" } else { name.toString.trim() }
+  }
+
 }

@@ -9,7 +9,7 @@ import collection.JavaConverters._
 
 import org.json.simple.JSONValue
 
-private[log] class JsonFileLogger(private val logFileDirectory: File) extends FileLogger {
+class JsonFileLogger(private val logFileDirectory: File) extends FileLogger {
 
   private val _writer = {
     val now         = LocalDateTime.now
