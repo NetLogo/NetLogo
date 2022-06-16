@@ -19,7 +19,7 @@ import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat
-import org.nlogo.log.LogManager
+import org.nlogo.log.{ LogEvents, LogManager }
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
 import org.nlogo.util.{ NullAppHandler, Pico }
@@ -49,6 +49,8 @@ object App {
   private var commandLineModel: String = null
   private var commandLineMagic: String = null
   private var commandLineURL: String = null
+  private var logEvents: String = null
+  private var logDirectory: String = null
   private var popOutCodeTab = false
   /**
    * Should be called once at startup to create the application and
@@ -200,6 +202,8 @@ object App {
       else if (token == "--version") printAndExit(Version.version)
       else if (token == "--extension-api-version") printAndExit(APIVersion.version)
       else if (token == "--builddate") printAndExit(Version.buildDate)
+      else if (token == "--log-events") logEvents = nextToken()
+      else if (token == "--log-directory") logDirectory = nextToken()
       else if (token == "--codetab-window") popOutCodeTab = true
       else if (token.startsWith("--")) {
         //TODO: Decide: should we do System.exit() here?
@@ -240,7 +244,7 @@ class App extends
 
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
-  import App.{ pico, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, popOutCodeTab }
+  import App.{ pico, commandLineMagic, commandLineModel, commandLineURL, commandLineModelIsLaunch, logDirectory, logEvents, popOutCodeTab }
   val frame = new AppFrame
   def getFrame = frame
 
@@ -402,28 +406,20 @@ class App extends
     frame.addLinkComponent(new CompilerManager(workspace, world, tabs.mainCodeTab))
     frame.addLinkComponent(listenerManager)
 
-    if (prefs.get("loggingEnabled", "false").toBoolean) {
-      val logFileDirectory = new File(System.getProperty("user.home"))
-      val allEvents = Set(
-        "button"
-      , "chooser"
-      , "compile"
-      , "command-center"
-      , "global"
-      , "inputBox"
-      , "link"
-      , "model-open"
-      , "slider"
-      , "speed-slider"
-      , "start"
-      , "switch"
-      , "stop"
-      , "turtle"
-      , "widget-edit"
-      , "tick"
-      )
-      val userName = "unknown"
-      LogManager.start(listenerManager, logFileDirectory, allEvents, userName)
+    def switchOrPref(switchValue: String, prefName: String, default: String) = {
+      if (switchValue != null && !switchValue.trim().equals("")) {
+        switchValue
+      } else {
+        prefs.get(prefName, default)
+      }
+    }
+
+    if (logDirectory != null || logEvents != null || prefs.get("loggingEnabled", "false").toBoolean) {
+      val logFileDirectory = new File(switchOrPref(logDirectory, "logDirectory", System.getProperty("user.home")))
+      val eventsString     = switchOrPref(logEvents, "logEvents", "")
+      val events           = LogEvents.parseEvents(eventsString)
+      val userName         = "unknown"
+      LogManager.start(listenerManager, logFileDirectory, events, userName)
     }
 
   }

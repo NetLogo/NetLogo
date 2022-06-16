@@ -10,25 +10,6 @@ import collection.JavaConverters._
 import org.nlogo.api.{ Equality, NetLogoAdapter }
 import org.nlogo.window.NetLogoListenerManager
 
-private[log] object LogEventTypes {
-  val button        = "button"
-  val chooser       = "chooser"
-  val compile       = "compile"
-  val commandCenter = "command-center"
-  val global        = "global"
-  val inputBox      = "inputBox"
-  val link          = "link"
-  val modelOpen     = "model-open"
-  val slider        = "slider"
-  val speedSlider   = "speed-slider"
-  val start         = "start"
-  val switch        = "switch"
-  val stop          = "stop"
-  val tick          = "tick"
-  val turtle        = "turtle"
-  val widgetEdit    = "widget-edit"
-}
-
 object LogManager {
   private var logger: FileLogger = new NoOpLogger()
   private var events: Set[String] = Set()
@@ -68,11 +49,11 @@ object LogManager {
     , "modelName"   -> modelName
     , "events"      -> LogManager.events.toList.asJava
     )
-    LogManager.log(LogEventTypes.start, startInfo)
+    LogManager.log(LogEvents.Types.start, startInfo)
   }
 
   def stop() {
-    LogManager.log(LogEventTypes.stop)
+    LogManager.log(LogEvents.Types.stop)
     LogManager.logger.close()
     LogManager.logger = new NoOpLogger()
   }
@@ -98,18 +79,18 @@ object LogManager {
   }
 
   def globalChanged(globalName: String, newValue: AnyRef, oldValue: AnyRef) {
-    if (LogManager.isLogging(LogEventTypes.global) && !Equality.equals(newValue, oldValue)) {
+    if (LogManager.isLogging(LogEvents.Types.global) && !Equality.equals(newValue, oldValue)) {
       val eventInfo = Map[String, Any](
         "globalName" -> globalName
       , "newValue"   -> AnyRefFormat.forJson(newValue)
       , "oldValue"   -> AnyRefFormat.forJson(oldValue)
       )
-      LogManager.log(LogEventTypes.global, eventInfo)
+      LogManager.log(LogEvents.Types.global, eventInfo)
     }
   }
 
   def linkCreated(id: Long, breedName: String, end1: Long, end2: Long) {
-    if (LogManager.isLogging(LogEventTypes.link)) {
+    if (LogManager.isLogging(LogEvents.Types.link)) {
       val eventInfo = Map[String, Any](
         "action"    -> "created"
       , "id"        -> id
@@ -117,12 +98,12 @@ object LogManager {
       , "end1"      -> end1
       , "end2"      -> end2
       )
-      LogManager.log(LogEventTypes.link, eventInfo)
+      LogManager.log(LogEvents.Types.link, eventInfo)
     }
   }
 
   def linkRemoved(id: Long, breedName: String, end1: Long, end2: Long) {
-    if (LogManager.isLogging(LogEventTypes.link)) {
+    if (LogManager.isLogging(LogEvents.Types.link)) {
       val eventInfo = Map[String, Any](
         "action"    -> "removed"
       , "id"        -> id
@@ -130,60 +111,60 @@ object LogManager {
       , "end1"      -> end1
       , "end2"      -> end2
       )
-      LogManager.log(LogEventTypes.link, eventInfo)
+      LogManager.log(LogEvents.Types.link, eventInfo)
     }
   }
 
   def speedSliderChanged(newSpeed: Double) {
-    if (LogManager.isLogging(LogEventTypes.speedSlider)) {
+    if (LogManager.isLogging(LogEvents.Types.speedSlider)) {
       val eventInfo = Map[String, Any](
         "newSpeed" -> newSpeed
       )
-      LogManager.log(LogEventTypes.speedSlider, eventInfo)
+      LogManager.log(LogEvents.Types.speedSlider, eventInfo)
     }
   }
 
   def turtleCreated(who: Long, breedName: String) {
-    if (LogManager.isLogging(LogEventTypes.turtle)) {
+    if (LogManager.isLogging(LogEvents.Types.turtle)) {
       val eventInfo = Map[String, Any](
         "action"    -> "created"
       , "who"       -> who
       , "breedName" -> breedName
       )
-      LogManager.log(LogEventTypes.turtle, eventInfo)
+      LogManager.log(LogEvents.Types.turtle, eventInfo)
     }
   }
 
   def turtleRemoved(who: Long, breedName: String) {
-    if (LogManager.isLogging(LogEventTypes.turtle)) {
+    if (LogManager.isLogging(LogEvents.Types.turtle)) {
       val eventInfo = Map[String, Any](
         "action"    -> "removed"
       , "who"       -> who
       , "breedName" -> breedName
       )
-      LogManager.log(LogEventTypes.turtle, eventInfo)
+      LogManager.log(LogEvents.Types.turtle, eventInfo)
     }
   }
 
   def widgetAdded(widgetType: String, name: String) {
-    if (LogManager.isLogging(LogEventTypes.widgetEdit)) {
+    if (LogManager.isLogging(LogEvents.Types.widgetEdit)) {
       val eventInfo = Map[String, Any](
         "action"     -> "added"
       , "widgetType" -> widgetType
       , "name"       -> name
       )
-      LogManager.log(LogEventTypes.widgetEdit, eventInfo)
+      LogManager.log(LogEvents.Types.widgetEdit, eventInfo)
     }
   }
 
   def widgetRemoved(widgetType: String, name: String) {
-    if (LogManager.isLogging(LogEventTypes.widgetEdit)) {
+    if (LogManager.isLogging(LogEvents.Types.widgetEdit)) {
       val eventInfo = Map[String, Any](
         "action"     -> "removed"
       , "widgetType" -> widgetType
       , "name"       -> name
       )
-      LogManager.log(LogEventTypes.widgetEdit, eventInfo)
+      LogManager.log(LogEvents.Types.widgetEdit, eventInfo)
     }
   }
 

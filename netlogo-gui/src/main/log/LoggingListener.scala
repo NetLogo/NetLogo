@@ -12,7 +12,7 @@ class LoggingListener(private val events: Set[String], private[log] var logger: 
   }
 
   override def codeTabCompiled(code: String, error: CompilerException) {
-    if (isLogging(LogEventTypes.compile)) {
+    if (isLogging(LogEvents.Types.compile)) {
       val eventInfo = if (error == null) {
         Map[String, Any](
           "code"    -> code
@@ -27,12 +27,12 @@ class LoggingListener(private val events: Set[String], private[log] var logger: 
         , "errorEnd"   -> error.end
         )
       }
-      logger.log(LogEventTypes.compile, eventInfo)
+      logger.log(LogEvents.Types.compile, eventInfo)
     }
   }
 
   override def commandEntered(owner: String, code: String, agentType: Char, error: CompilerException) {
-    if (isLogging(LogEventTypes.commandCenter) && !owner.startsWith("Slider")) {
+    if (isLogging(LogEvents.Types.commandCenter) && !owner.startsWith("Slider")) {
       val eventInfo = if (error == null) {
         Map[String, Any](
           "owner"     -> owner
@@ -51,63 +51,63 @@ class LoggingListener(private val events: Set[String], private[log] var logger: 
         , "errorEnd"   -> error.end
         )
       }
-      logger.log(LogEventTypes.commandCenter, eventInfo)
+      logger.log(LogEvents.Types.commandCenter, eventInfo)
     }
   }
 
   override def buttonPressed(buttonName: String) {
-    if (isLogging(LogEventTypes.button)) {
+    if (isLogging(LogEvents.Types.button)) {
       val eventInfo = Map[String, Any](
         "buttonName" -> buttonName
       , "wasStopped" -> false
       )
-      logger.log(LogEventTypes.button, eventInfo)
+      logger.log(LogEvents.Types.button, eventInfo)
     }
   }
 
   override def buttonStopped(buttonName: String) {
-    if (isLogging(LogEventTypes.button)) {
+    if (isLogging(LogEvents.Types.button)) {
       val eventInfo = Map[String, Any](
         "buttonName" -> buttonName
       , "wasStopped" -> true
       )
-      logger.log(LogEventTypes.button, eventInfo)
+      logger.log(LogEvents.Types.button, eventInfo)
     }
   }
 
   override def chooserChanged(globalName: String, newValue: AnyRef, valueChanged: Boolean) {
-    if (isLogging(LogEventTypes.chooser)) {
+    if (isLogging(LogEvents.Types.chooser)) {
       val eventInfo = Map[String, Any](
         "globalName"   -> globalName
       , "newValue"     -> AnyRefFormat.forJson(newValue)
       , "valueChanged" -> valueChanged
       )
-      logger.log(LogEventTypes.chooser, eventInfo)
+      logger.log(LogEvents.Types.chooser, eventInfo)
     }
   }
 
   override def inputBoxChanged(globalName: String, newValue: AnyRef, valueChanged: Boolean) {
-    if (isLogging(LogEventTypes.inputBox)) {
+    if (isLogging(LogEvents.Types.inputBox)) {
       val eventInfo = Map[String, Any](
         "globalName"   -> globalName
       , "newValue"     -> AnyRefFormat.forJson(newValue)
       , "valueChanged" -> valueChanged
       )
-      logger.log(LogEventTypes.inputBox, eventInfo)
+      logger.log(LogEvents.Types.inputBox, eventInfo)
     }
   }
 
   override def modelOpened(name: String) {
-    if (isLogging(LogEventTypes.modelOpen)) {
+    if (isLogging(LogEvents.Types.modelOpen)) {
       val eventInfo = Map[String, Any](
         "name" -> name
       )
-      logger.log(LogEventTypes.modelOpen, eventInfo)
+      logger.log(LogEvents.Types.modelOpen, eventInfo)
     }
   }
 
   override def sliderChanged(globalName: String, newValue: Double, min: Double, inc: Double, max: Double, valueChanged: Boolean, buttonReleased: Boolean) {
-    if (isLogging(LogEventTypes.slider)) {
+    if (isLogging(LogEvents.Types.slider)) {
       val eventInfo = Map[String, Any](
         "globalName"     -> globalName
       , "newValue"       -> newValue
@@ -117,27 +117,27 @@ class LoggingListener(private val events: Set[String], private[log] var logger: 
       , "valueChanged"   -> valueChanged
       , "buttonReleased" -> buttonReleased
       )
-      logger.log(LogEventTypes.slider, eventInfo)
+      logger.log(LogEvents.Types.slider, eventInfo)
     }
   }
 
   override def switchChanged(globalName: String, newValue: Boolean, valueChanged: Boolean) {
-    if (isLogging(LogEventTypes.switch)) {
+    if (isLogging(LogEvents.Types.switch)) {
       val eventInfo = Map[String, Any](
         "globalName"   -> globalName
       , "newValue"     -> newValue
       , "valueChanged" -> valueChanged
       )
-      logger.log(LogEventTypes.switch, eventInfo)
+      logger.log(LogEvents.Types.switch, eventInfo)
     }
   }
 
   override def tickCounterChanged(ticks: Double) {
-    if (isLogging(LogEventTypes.tick)) {
+    if (isLogging(LogEvents.Types.tick)) {
       val eventInfo = Map[String, Any](
         "ticks" -> ticks
       )
-      logger.log(LogEventTypes.tick, eventInfo)
+      logger.log(LogEvents.Types.tick, eventInfo)
     }
   }
 
