@@ -2,12 +2,15 @@
 
 package org.nlogo.app.tools
 
+import java.awt.{ Frame }
+import java.io.File
 import java.util.Locale
 import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ JCheckBox, JComboBox }
+import javax.swing.{ JCheckBox, JComboBox, JFileChooser, JPanel, JTextField }
 
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.I18N
+import org.nlogo.swing.RichJButton
 
 object Preferences {
   abstract class BooleanPreference(val i18nKey: String, val restartRequired: Boolean, default: Boolean) extends Preference {
@@ -20,6 +23,19 @@ object Preferences {
 
     def save(prefs: JavaPreferences) = {
       prefs.put(i18nKey, component.isSelected.toString)
+    }
+  }
+
+  abstract class StringPreference(val i18nKey: String, val restartRequired: Boolean, default: String) extends Preference {
+    val component = new JTextField(default, 20)
+
+    def load(prefs: JavaPreferences) = {
+      val value = prefs.get(i18nKey, default)
+      component.setText(value)
+    }
+
+    def save(prefs: JavaPreferences) = {
+      prefs.put(i18nKey, component.getText)
     }
   }
 
@@ -64,6 +80,48 @@ object Preferences {
   }
 
   object IsLoggingEnabled extends BooleanPreference("loggingEnabled", true, false) {}
+
+  class LogDirectory(val frame: Frame) extends Preference {
+    val i18nKey         = "logDirectory"
+    val restartRequired = true
+    val textField       = new JTextField("", 20)
+    val component       = createComponent()
+
+    def load(prefs: JavaPreferences) = {
+      val logDirectory = prefs.get("logDirectory", "")
+      textField.setText(logDirectory)
+    }
+
+    def save(prefs: JavaPreferences) = {
+      prefs.put("logDirectory", textField.getText)
+    }
+
+    def createComponent(): JPanel = {
+      val editPanel = new JPanel
+      editPanel.add(textField)
+      editPanel.add(RichJButton("Browse...") {
+        askForConfigFile(textField.getText).foreach(textField.setText)
+      })
+      editPanel
+    }
+
+    def askForConfigFile(current: String): Option[String] = {
+      val dialog = new JFileChooser(new File(current))
+      dialog.setDialogTitle("Log Direcetory")
+      dialog.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY)
+      if (dialog.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+        val file = dialog.getSelectedFile
+        val dir  = if (file.isDirectory) { file } else { dialog.getCurrentDirectory }
+        val path = dir.getAbsolutePath
+        Option(path)
+      } else {
+        None
+      }
+    }
+
+  }
+
+  object LogEvents extends StringPreference("logEvents", true, "")
 
   object IncludedFilesMenu  extends BooleanPreference("includedFilesMenu", true, false) {}
 

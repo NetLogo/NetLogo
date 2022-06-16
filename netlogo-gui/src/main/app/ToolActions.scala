@@ -39,6 +39,8 @@ with MenuAction {
     Preferences.LoadLastOnStartup,
     new Preferences.LineNumbers(tabs),
     Preferences.IsLoggingEnabled,
+    new Preferences.LogDirectory(frame),
+    Preferences.LogEvents,
     Preferences.IncludedFilesMenu,
     Preferences.ProceduresMenuSortOrder
   )
