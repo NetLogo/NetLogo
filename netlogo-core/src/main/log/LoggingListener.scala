@@ -7,7 +7,13 @@ import org.nlogo.core.CompilerException
 
 // It may not be obvious, but this class has no dependency on `LogManager`, because
 // `LogManager` depends on it.  That's why it gets its own copy of the `events` to check
-// instead of using the ones LogManager has.  -Jeremy B June 2022
+// instead of using the ones LogManager has.
+
+// Also the `logger` is a `var` because it's easier to swap that out when logging stops
+// and starts for model changes or log file zip/delete than it is to remove the listener
+// from the listener manager and re-add it there.
+
+// -Jeremy B June 2022
 
 class LoggingListener(private val events: LogEvents, private[log] var logger: FileLogger) extends NetLogoAdapter {
 

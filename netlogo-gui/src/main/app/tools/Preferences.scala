@@ -2,7 +2,7 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ Frame }
+import java.awt.Frame
 import java.io.File
 import java.util.Locale
 import java.util.prefs.{ Preferences => JavaPreferences }
@@ -107,7 +107,7 @@ object Preferences {
 
     def askForConfigFile(current: String): Option[String] = {
       val dialog = new JFileChooser(new File(current))
-      dialog.setDialogTitle("Log Direcetory")
+      dialog.setDialogTitle("Log Directory")
       dialog.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY)
       if (dialog.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
         val file = dialog.getSelectedFile

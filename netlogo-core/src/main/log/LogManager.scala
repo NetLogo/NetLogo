@@ -16,7 +16,7 @@ import org.nlogo.api.FileIO.fileToString
 
 // Welcome to Logging.
 
-// This object and it's related pieces replace the log4j-based XML logging system NetLogo
+// This object and its related pieces replace the log4j-based XML logging system NetLogo
 // had been using.  Facing updates to log4j 2 (needed for security reasons), I had the
 // choice of learning way too much about how log4j worked, or switching to something
 // simpler and more cohesive.  So I switched.  On the plus side the full logging config
@@ -29,11 +29,11 @@ import org.nlogo.api.FileIO.fileToString
 
 // 1. The `LogManage.start()` takes in functions for adding a listener and creating the
 //    logger to avoid unwanted dependencies.  For the listener, there is only the
-//    `NetLogoListenerManager` which lives in `netlogo` and has a bunch of GUI event
-//    interfaces attached to it, so we can't move it to `core` to share with `headless`.
+//    `NetLogoListenerManager` which lives in `netlogo-gui` and has a bunch of GUI event
+//    interfaces attached to it, so we can't move it to `netlogo-core` to share with `headless`.
 //    An alternative might've been making a new trait for it, but I think we have enough
 //    traits already, to be honest.  For the logger, it was because the JSON library we
-//    use is not depended on by `headless`, so the it stays in `netlogo` only and is
+//    use is not depended on by `headless`, so it stays in `netlogo` only and is
 //    provided by `App`.
 
 // 2. There is some boilerplate around `LogEvents.eventName` checks and `LogManager.log()`

@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import java.awt.{ Color, Cursor, Dimension, Font, Graphics, Graphics2D, RenderingHints }
-import java.awt.event.{MouseEvent, MouseListener, MouseMotionListener }
+import java.awt.event.{ MouseEvent, MouseListener, MouseMotionListener }
 import java.awt.image.FilteredImageSource
 import javax.swing.ImageIcon
 
