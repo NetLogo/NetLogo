@@ -5,6 +5,10 @@ package org.nlogo.log
 import org.nlogo.api.NetLogoAdapter
 import org.nlogo.core.CompilerException
 
+// It may not be obvious, but this class has no dependency on `LogManager`, because
+// `LogManager` depends on it.  That's why it gets its own copy of the `events` to check
+// instead of using the ones LogManager has.  -Jeremy B June 2022
+
 class LoggingListener(private val events: Set[String], private[log] var logger: FileLogger) extends NetLogoAdapter {
 
   def isLogging(event: String) = {
