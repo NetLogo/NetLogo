@@ -20,8 +20,7 @@ case class LoggerState(
 , logFileDirectory: File
 , events:           Set[String]
 , studentName:      String
-) {
-}
+)
 
 object LoggerState {
   def empty() = {
@@ -38,16 +37,17 @@ object LoggerState {
 object LogManager {
   private var state: LoggerState               = LoggerState.empty()
   private var logger: FileLogger               = new NoOpLogger()
-  private var modelName: String                = "unset"
   private var loggingListener: LoggingListener = new LoggingListener(Set(), LogManager.logger)
+  private var modelName: String                = "unset"
 
   def start(addListener: (NetLogoAdapter) => Unit, loggerFactory: (File) => FileLogger, logFileDirectory: File, events: Set[String], studentName: String) {
     if (LogManager.isStarted) {
       throw new IllegalStateException("Logging should only be started once.")
     }
-    LogManager.state = LoggerState(addListener, loggerFactory, logFileDirectory, events, studentName)
 
+    LogManager.state = LoggerState(addListener, loggerFactory, logFileDirectory, events, studentName)
     LogManager.loggingListener = new LoggingListener(events, LogManager.logger)
+
     val restartListener = new NetLogoAdapter {
       override def modelOpened(modelName: String) {
         LogManager.modelName = modelName
@@ -216,6 +216,15 @@ object LogManager {
       , "breedName" -> breedName
       )
       LogManager.log(LogEvents.Types.turtle, eventInfo)
+    }
+  }
+
+  def userComment(comment: String) {
+    if (LogManager.isLogging(LogEvents.Types.comment)) {
+      val eventInfo = Map[String, Any](
+        "comment" -> comment
+      )
+      LogManager.log(LogEvents.Types.comment, eventInfo)
     }
   }
 

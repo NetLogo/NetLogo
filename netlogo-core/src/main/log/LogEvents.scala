@@ -7,6 +7,7 @@ object LogEvents {
   object Types {
     val button        = "button"
     val chooser       = "chooser"
+    val comment       = "comment"
     val compile       = "compile"
     val commandCenter = "command-center"
     val global        = "global"
@@ -26,6 +27,7 @@ object LogEvents {
   val allEvents = Set(
     "button"
   , "chooser"
+  , "comment"
   , "compile"
   , "command-center"
   , "global"
@@ -45,6 +47,7 @@ object LogEvents {
   val defaultEvents = Set(
     "button"
   , "chooser"
+  , "comment"
   , "compile"
   , "command-center"
   , "input-box"
@@ -59,8 +62,18 @@ object LogEvents {
   )
 
   val eventShortcuts = Map(
-    "all"    -> LogEvents.allEvents
-  , "greens" -> Set("chooser", "input-box", "slider", "switch")
+    "agents"        -> Set("link", "turtle")
+  , "all"           -> LogEvents.allEvents
+  , "buttons"       -> Set("button")
+  , "choosers"      -> Set("chooser")
+  , "comments"      -> Set("comment")
+  , "greens"        -> Set("chooser", "input-box", "slider", "switch")
+  , "input-boxes"   -> Set("input-box")
+  , "sliders"       -> Set("slider")
+  , "switches"      -> Set("switch")
+  , "ticks"         -> Set("tick")
+  , "user-comments" -> Set("comment")
+  , "widgets"       -> Set("widget-edit")
   )
 
   def translateEvent(event: String): Set[String] = {
