@@ -415,13 +415,13 @@ class App extends
     }
 
     if (logDirectory != null || logEvents != null || prefs.get("loggingEnabled", "false").toBoolean) {
-      val logFileDirectory = new File(switchOrPref(logDirectory, "logDirectory", System.getProperty("user.home")))
-      val eventsString     = switchOrPref(logEvents, "logEvents", "")
-      val events           = LogEvents.parseEvents(eventsString)
-      val studentName      = askForName()
-      val addListener      = (l) => listenerManager.addListener(l)
-      val loggerFactory    = (f: File) => new JsonFileLogger(f)
-      LogManager.start(addListener, loggerFactory, logFileDirectory, events, studentName)
+      val finalLogDirectory = new File(switchOrPref(logDirectory, "logDirectory", System.getProperty("user.home")))
+      val eventsString      = switchOrPref(logEvents, "logEvents", "")
+      val events            = LogEvents.parseEvents(eventsString)
+      val studentName       = askForName()
+      val addListener       = (l) => listenerManager.addListener(l)
+      val loggerFactory     = (p) => new JsonFileLogger(p)
+      LogManager.start(addListener, loggerFactory, finalLogDirectory, events, studentName)
     }
 
   }

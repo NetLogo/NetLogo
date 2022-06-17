@@ -4,7 +4,7 @@ package org.nlogo.log
 
 import java.io.{ File, FileOutputStream, IOException }
 import java.net.InetAddress
-import java.nio.file.Paths
+import java.nio.file.{ Path, Paths }
 import java.util.zip.{ ZipEntry, ZipOutputStream }
 
 import collection.JavaConverters._
@@ -15,12 +15,14 @@ import org.nlogo.api.Exceptions.ignoring
 import org.nlogo.api.FileIO.fileToString
 
 case class LoggerState(
-  addListener:      (NetLogoAdapter) => Unit
-, loggerFactory:    (File) => FileLogger
-, logFileDirectory: File
-, events:           Set[String]
-, studentName:      String
-)
+  addListener:   (NetLogoAdapter) => Unit
+, loggerFactory: (Path) => FileLogger
+, logDirectory:  File
+, events:        Set[String]
+, studentName:   String
+) {
+  val logDirectoryPath = this.logDirectory.toPath
+}
 
 object LoggerState {
   def empty() = {
@@ -40,12 +42,12 @@ object LogManager {
   private var loggingListener: LoggingListener = new LoggingListener(Set(), LogManager.logger)
   private var modelName: String                = "unset"
 
-  def start(addListener: (NetLogoAdapter) => Unit, loggerFactory: (File) => FileLogger, logFileDirectory: File, events: Set[String], studentName: String) {
+  def start(addListener: (NetLogoAdapter) => Unit, loggerFactory: (Path) => FileLogger, logDirectory: File, events: Set[String], studentName: String) {
     if (LogManager.isStarted) {
       throw new IllegalStateException("Logging should only be started once.")
     }
 
-    LogManager.state = LoggerState(addListener, loggerFactory, logFileDirectory, events, studentName)
+    LogManager.state = LoggerState(addListener, loggerFactory, logDirectory, events, studentName)
     LogManager.loggingListener = new LoggingListener(events, LogManager.logger)
 
     val restartListener = new NetLogoAdapter {
@@ -80,7 +82,7 @@ object LogManager {
   private def restart(thunk: () => Unit = () => {}) {
     LogManager.stop()
     thunk()
-    LogManager.logger                 = LogManager.state.loggerFactory(LogManager.state.logFileDirectory)
+    LogManager.logger                 = LogManager.state.loggerFactory(LogManager.state.logDirectoryPath)
     LogManager.loggingListener.logger = LogManager.logger
     LogManager.logStart(modelName)
   }
@@ -93,24 +95,24 @@ object LogManager {
         val zipFile = if (zipPath.isAbsolute) {
           zipPath.toFile
         } else {
-          LogManager.state.logFileDirectory.toPath.resolve(zipPath).toFile
+          LogManager.state.logDirectoryPath.resolve(zipPath).toFile
         }
 
-        val logFiles = LogManager.state.logFileDirectory.list(fileNameFilter)
+        val logFiles = LogManager.state.logDirectory.list(fileNameFilter)
         if (logFiles.nonEmpty) {
-          val out = new ZipOutputStream(new FileOutputStream(zipFile))
-          logFiles.foreach( (fileName) => {
+          val zipStream = new ZipOutputStream(new FileOutputStream(zipFile))
+          logFiles.foreach( (logFileName) => {
             // IOException probably shouldn't ever happen but in case it does just skip the file and
             // move on. ev 3/14/07
             ignoring(classOf[IOException]) {
-              out.putNextEntry(new ZipEntry(fileName))
-              val data = fileToString(fileName)(Codec.UTF8).getBytes
-              out.write(data, 0, data.length)
-              out.closeEntry()
+              zipStream.putNextEntry(new ZipEntry(logFileName))
+              val logFileData = fileToString(logFileName)(Codec.UTF8).getBytes
+              zipStream.write(logFileData, 0, logFileData.length)
+              zipStream.closeEntry()
             }
           })
-          out.flush()
-          out.close()
+          zipStream.flush()
+          zipStream.close()
         }
       })
     }
@@ -119,13 +121,12 @@ object LogManager {
   def deleteLogFiles() {
     if (LogManager.isStarted) {
       val fileNameFilter = LogManager.logger.fileNameFilter
-      val logFilePath    = LogManager.state.logFileDirectory.toPath
-      LogManager.restart(() => {
-        val logFiles = LogManager.state.logFileDirectory.list(fileNameFilter)
-        logFiles.foreach( (fileName) => {
-          val filePath = Paths.get(fileName)
-          val file     = logFilePath.resolve(filePath).toFile
-          file.delete()
+      LogManager.restart( () => {
+        val logFiles = LogManager.state.logDirectory.list(fileNameFilter)
+        logFiles.foreach( (logFileName) => {
+          val logFilePath = Paths.get(logFileName)
+          val logFile     = LogManager.state.logDirectoryPath.resolve(logFilePath).toFile
+          logFile.delete()
         })
       })
     }
