@@ -1,16 +1,19 @@
 {{> header.html}}
 
-NetLogo's logging facility allows researchers to record student actions for
-later analysis.
+NetLogo's logging facility allows researchers to record student actions for later
+analysis.
 
-Logging in NetLogo is invisible to the student once initiated. The researcher
-can choose the type of events logged through the NetLogo preferences or by
-using a custom command line switch to start NetLogo.
+Logging in NetLogo is invisible to the student once initiated. The researcher can choose
+the type of events logged through the NetLogo preferences or by using a custom command
+line switch to start NetLogo.
 
+In NetLogo version 6.2.2 and earlier, log4j was the library used and the logging output
+was in XML format.  See [the documentation for that prior version](https://ccl.northwestern.edu/netlogo/6.2.2/docs/)
+if you're not on the latest NetLogo release.
 
 [TOC]
 
-## Starting logging
+## Starting Logging
 
 There is a NetLogo preference to enable logging:
 
@@ -20,240 +23,136 @@ There is a NetLogo preference to enable logging:
 
 The setting will remain in effect until it is unchecked and NetLogo is restarted again.
 
-You can also specify the **Logging configuration file:** to use in the NetLogo **Preferences** as well.  If you leave
-this value blank, then a default configuration file will be used (see below for more information).
+You can also specify the **Directory to store logs:** in the NetLogo **Preferences**.  If
+you leave this value blank with logging enabled the default location of the user's home
+directory will be used.  See below for more information on the default location.
 
-### Starting with the command line
+You can also specify the **Events to log:** in the NetLogo **Preferences**.  This is a
+comma-separate list of the event names or "shortcut" names.  If you leave this value blank
+with logging enabled a set of default events will be logged.  See below for more
+information on the event names and what the defaults are.
 
-You can also enable logging and specify the configuration file to use by using a command line switch on Windows
-and Linux.
+### Command Line Switches
 
-Let's assume you are running on Linux and you have NetLogo installed in a `NetLogo 6.1.1` directory in your
-home folder.  To enable logging, invoke the `NetLogo` executable like so:
+You can also enable logging and set the log directory and log events with command line
+switches.  If you specify either the `--log-directory` or `--log-events` switch, then
+logging will be enabled and the switch values will override any preferences set in the
+NetLogo UI.
 
-    ~/NetLogo\ 6.1.1/NetLogo --logging ~/NetLogo\ 6.1.1/app/netlogo_logging.xml
+Let's assume you are running on Linux and you have NetLogo installed in a `NetLogo 6.2.3`
+directory in your home folder.  To enable logging, invoke the `NetLogo` executable like
+so:
 
-You can replace the path to `netlogo_logging.xml` with any valid log4j XML configuration file (see below for more
-information).
+```sh
+~/NetLogo\ 6.2.3/NetLogo --log-directory ~/NetLogoLogs/ --log-events "default, globals"
+```
 
-## Using logging
+## Using Logging
 
-When NetLogo starts up it will ask for a user name. This name will appear in all
-the logs generated during this session.
+When NetLogo starts up it will ask for a user name. This name will appear in all the logs
+generated during this session.
 
-### Where logs are stored
+### Events
 
-Logs are stored in the OS-specific home directory. On most Unix-like systems
-that is `/home/<username>/`.  On Windows the logs can be found in
-`C:\Users\<username>\`, where `<username>` is the logged in user. On macOS the
-usual location is `/Users/<username>/`.
+Below are all of the events that can be logged with the logging app.  By default all of
+these events are logged *except* "global", "link", and "turtle" since they can cause a
+large number of log entries to be created.
 
-There are two convenience commands that will help you manage the logs.
-`__zip-log-files *filename*` will gather all the logs in the temp
-directory and put them in one zip file, at the location specified. After doing
-`__zip-log-files` the existing logs are **not** deleted, you can do so
-explicitly by using `__delete-log-files`.
+- button - button widget presses
+- chooser - chooser widget changes
+- comment - any user comments, currently only generated for compiler errors
+- compile - when the model code is recompiled
+- command-center - when code is run through the command center
+- global - when a global variable value changes
+- input-box - when an input box widget changes
+- link - when a link agent is created or dies
+- model-open - when a model is opened
+- slider - when a slider widget changes
+- speed-slider - when the speed slider changes
+- start - always the first entry of a log, contains system info
+- switch - when a switch widget changes
+- stop - always the last entry of a log
+- turtle - when a turtle agent is created or dies
+- widget-edit - when a widget is added to or removed from the model
+- tick - when the tick counter is advanced
 
-The following is a chart describing the name of the loggers available, the type
-of events each logs, at what level, and provides a sample output using the
-XMLLayout. All the loggers are found in `org.nlogo.log.Logger`. When referring
-to the loggers in the configuration file you should use the fully qualified
-name. So, for example, the logger `GLOBALS` would actually be
-`org.nlogo.log.Logger.GLOBALS`
+There are also some shortcut names you can use in the preferences to refer to collections
+of events:
 
-<table border>
-  <thead>
-  <tr>
-    <th>Logger
-    <th>Events
-    <th>Level
-    <th>Example
-  <tbody>
-  <tr>
-    <td><code>GLOBALS
-    <td>a global variable changes
-    <td>info, debug
-    <td><pre>
-&lt;event logger="org.nlogo.log.Logger.GLOBALS"
-       timestamp="1177341065988"
-       level="INFO"
-       type="globals"&gt;
-   &lt;name&gt;FOO&lt;/name&gt;
-   &lt;value&gt;51.0&lt;/value&gt;
-&lt;/event&gt;</pre>
-  <tr>
-    <td><code>GREENS</code>
-    <td>sliders, switches, choosers, input boxes are changed through the interface
-    <td>info
-    <td><pre>
-&lt;event logger="org.nlogo.log.Logger.GREENS"
-       timestamp="1177341065988"
-       level="INFO"
-       type="slider"&gt;
-  &lt;action&gt;changed&lt;/action&gt;
-  &lt;name&gt;foo&lt;/name&gt;
-  &lt;value&gt;51.0&lt;/value&gt;
-  &lt;parameters&gt;
-    &lt;min&gt;0.0&lt;/min&gt;
-    &lt;max&gt;100.0&lt;/max&gt;
-    &lt;inc&gt;1.0&lt;/inc&gt;
-  &lt;/parameters&gt;
-&lt;/event&gt;</pre>
-  <tr>
-    <td><code>CODE</code>
-    <td>code is compiled, including: command center, Code tab, slider bounds, and buttons
-    <td>info
-    <td><pre>
-&lt;event logger="org.nlogo.log.Logger.CODE"
-       timestamp="1177341072208"
-       level="INFO"
-       type="command center"&gt;
-  &lt;action&gt;compiled&lt;/action&gt;
-  &lt;code&gt;crt 1&lt;/code&gt;
-  &lt;agentType&gt;O&lt;/agentType&gt;
-   &lt;errorMessage&gt;success&lt;/errorMessage&gt;
-&lt;/event&gt;</pre>
-  <tr>
-    <td><code>WIDGETS</code>
-    <td>a widget is added or removed from the interface
-    <td>info
-    <td><pre>
-&lt;event logger="org.nlogo.log.Logger.WIDGETS"
-       timestamp="1177341058351"
-       level="INFO"
-       type="slider"&gt;
-  &lt;name&gt;&lt;/name&gt;
-  &lt;action&gt;added&lt;/action&gt;
-&lt;/event&gt;</pre>
-  <tr>
-    <td><code>BUTTONS</code>
-    <td>a button is pressed or released
-    <td>info
-    <td><pre>
-&lt;event logger="org.nlogo.log.Logger.BUTTONS"
-        timestamp="1177341053679"
-        level="INFO"
-        type="button"&gt;
-  &lt;name&gt;show 1&lt;/name&gt;
-  &lt;action&gt;released&lt;/action&gt;
-  &lt;releaseType&gt;once&lt;/releaseType&gt;
-&lt;/event&gt;</pre>
-  <tr>
-    <td><code>SPEED</code>
-    <td>the speed slider changes
-    <td>info
-    <td><pre>
-&lt;event logger="org.nlogo.log.Logger.SPEED"
-       timestamp="1177341042202"
-       level="INFO"
-       type="speed"&gt;
-  &lt;value&gt;0.0&lt;/value&gt;
-&lt;/event&gt;</pre>
-  <tr>
-    <td><code>TURTLES</code>
-    <td>turtles die or are born
-    <td>info
-    <td><pre>
-&lt;event logger="org.nlogo.log.Logger.TURTLES"
-       timestamp="1177341094342"
-       level="INFO"
-       type="turtle"&gt;
-  &lt;name&gt;turtle 1&lt;/name&gt;
-  &lt;action&gt;born&lt;/action&gt;
-  &lt;breed&gt;TURTLES&lt;/breed&gt;
-&lt;/event&gt;</pre>
-  <tr>
-    <td><code>LINKS</code>
-    <td>links die or are born
-    <td>info
-    <td><pre>
-&lt;event logger="org.nlogo.log.Logger.LINKS"
-       timestamp="1177341094342"
-       level="INFO"
-       type="link"&gt;
-  &lt;name&gt;link 2 7&lt;/name&gt;
-  &lt;action&gt;born&lt;/action&gt;
-  &lt;breed&gt;LINKS&lt;/breed&gt;
-&lt;/event&gt;</pre>
-</table>
+- all - button, chooser, comment, compile, command-center, global, input-box, link,
+  model-open, slider, speed-slider, start, switch, stop, turtle, widget-edit, tick
+- agents - link, turtle
+- defaults - everything but global, link, and turtle
+- greens - chooser, input-box, slider, switch - the "global variable" widgets
 
-### How to configure the logging output
+Example logging strings you could put in the **Events to log:** setting in preferences
+dialog or use via the `--log-events` command line switch.
 
-The default logging configuration (`netlogo_logging.xml`) looks something like
-this:
+- "button, model-open, widget-edit" - log only button widget presses, model open events,
+  and widget add/remove
+- "defaults, global" - add global variable change events to the defaults list
+- "button, greens, model-open" - log widget use and model open events.
 
-NetLogo defines 8 loggers, all descend directly from the root logger, which
-means unless you explicitly set the properties (appender, layout, and output
-level) in the configuration they will inherit them from the root. In the default
-configuration the root is set to level INFO, the appender is
-`org.nlogo.log.XMLFileAppender` and layout is `org.nlogo.log.XMLLayout`.
-Together these generate a nicely formatted XML file as defined in the
-`netlogo_logging.dtd` which is based on the log4j dtd. If the appender is a
-`FileAppender` (including the `XMLFileAppender`) a new file is start each time
-the user opens a model.
+### JSON Output
 
-    <?xml version="1.0" encoding="UTF-8" ?>
-    <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+The output is in [JSON text format](https://en.wikipedia.org/wiki/JSON).  Below is an
+example log file with some small modifications to content to fit better in this document.
 
-    <log4j:configuration debug="false" xmlns:log4j='http://jakarta.apache.org/log4j/'>
+Each line has an "event" identifying its type along with a "timeStamp" of when it occured.
+Then there is an "eventInfo" entry that contains further information specific to the
+event.  For example, "model-open" event contains the model "name", and the "button" events
+contain the "buttonName" and whether the click stopped a forever button, "wasStopped".
 
-            <appender name="A1" class="org.nlogo.log.XMLFileAppender">
-               <layout class="org.nlogo.log.XMLLayout"/>
-            </appender>
+```json
+[
+  {"event":"start","timeStamp":"2022-06-17 11:29:56.737","eventInfo":{"studentName":"Larry","modelName":"Slime.nlogo","version":"NetLogo 6.#.#","ipAddress":"192.168.1.11","loginName":"cpu_user","events":["input-box","switch",...,"widget-edit"]}}
+, {"event":"model-open","timeStamp":"2022-06-17 11:29:56.738","eventInfo":{"name":"Slime.nlogo"}}
+, {"event":"compile","timeStamp":"2022-06-17 11:29:57.201","eventInfo":{"code":"patches-own [chemical]\n...","success":true}}
+, {"event":"button","timeStamp":"2022-06-17 11:29:58.617","eventInfo":{"buttonName":"setup","wasStopped":false}}
+, {"event":"tick","timeStamp":"2022-06-17 11:29:58.675","eventInfo":{"ticks":0.0}}
+, {"event":"button","timeStamp":"2022-06-17 11:29:58.676","eventInfo":{"buttonName":"setup","wasStopped":true}}
+, {"event":"button","timeStamp":"2022-06-17 11:29:58.961","eventInfo":{"buttonName":"go","wasStopped":false}}
+, {"event":"tick","timeStamp":"2022-06-17 11:29:58.993","eventInfo":{"ticks":1.0}}
+, {"event":"tick","timeStamp":"2022-06-17 11:29:59.030","eventInfo":{"ticks":2.0}}
+, {"event":"tick","timeStamp":"2022-06-17 11:29:59.076","eventInfo":{"ticks":3.0}}
+, {"event":"tick","timeStamp":"2022-06-17 11:29:59.123","eventInfo":{"ticks":4.0}}
+, {"event":"button","timeStamp":"2022-06-17 11:29:59.921","eventInfo":{"buttonName":"go","wasStopped":true}}
+, {"event":"slider","timeStamp":"2022-06-17 11:30:01.681","eventInfo":{"valueChanged":true,"min":1.0,"globalName":"population","max":1500.0,"inc":1.0,"buttonReleased":false,"newValue":399.0}}
+, {"event":"slider","timeStamp":"2022-06-17 11:30:01.698","eventInfo":{"valueChanged":true,"min":1.0,"globalName":"population","max":1500.0,"inc":1.0,"buttonReleased":false,"newValue":391.0}}
+, {"event":"slider","timeStamp":"2022-06-17 11:30:02.317","eventInfo":{"valueChanged":true,"min":1.0,"globalName":"population","max":1500.0,"inc":1.0,"buttonReleased":false,"newValue":179.0}}
+, {"event":"button","timeStamp":"2022-06-17 11:30:02.910","eventInfo":{"buttonName":"setup","wasStopped":false}}
+, {"event":"tick","timeStamp":"2022-06-17 11:30:02.919","eventInfo":{"ticks":-1.0}}
+, {"event":"tick","timeStamp":"2022-06-17 11:30:02.922","eventInfo":{"ticks":0.0}}
+, {"event":"button","timeStamp":"2022-06-17 11:30:02.922","eventInfo":{"buttonName":"setup","wasStopped":true}}
+, {"event":"button","timeStamp":"2022-06-17 11:30:03.254","eventInfo":{"buttonName":"go","wasStopped":false}}
+, {"event":"tick","timeStamp":"2022-06-17 11:30:03.258","eventInfo":{"ticks":1.0}}
+, {"event":"tick","timeStamp":"2022-06-17 11:30:03.293","eventInfo":{"ticks":2.0}}
+, {"event":"button","timeStamp":"2022-06-17 11:30:03.763","eventInfo":{"buttonName":"go","wasStopped":true}}
+, {"event":"command-center","timeStamp":"2022-06-17 11:30:08.489","eventInfo":{"owner":"Command Center","code":"ask turtles [ set color black ]","agentType":"O","success":true}}
+, {"event":"stop","timeStamp":"2022-06-17 11:30:09.703"}
+]
+```
 
-            <category name="org.nlogo.log.Logger.WIDGETS">
-              <priority value="off" />
-            </category>
+JSON is a very common data format so there are numerous ways to use it.  Most scripting
+and programming languages have easy ways to read JSON data in so that it can be processed,
+fed to another system (such as a database), or re-formatted somehow (perhaps to a plot using a plotting library).
 
-            <category name="org.nlogo.log.Logger.TURTLES">
-              <priority value="off" />
-            </category>
+Modern versions of Microsoft Excel can import JSON directly.  Google Sheets does not yet
+support JSON import natively, but there are add-on scripts that can be used.  There are
+also numerous online converters that can turn JSON to a "flattened" CSV or just convert it
+to XML as well.
 
-            <category name="org.nlogo.log.Logger.LINKS">
-              <priority value="off" />
-            </category>
+### Where Logs are Stored
 
-            <root>
-               <priority value ="info" />
-               <appender-ref ref="A1" />
-            </root>
+By default logs are stored in the operating system specific user's home directory.  On
+most Unix-like systems that is `/home/<username>/`.  On Windows the logs can be found in
+`C:\Users\<username>\`, where `<username>` is the logged in user. On macOS the usual
+location is `/Users/<username>/`.
 
-    </log4j:configuration>
+### Managing Log Files
 
-This configuration, first defines an appender named "A1" of type XMLFileAppender
-with an XMLLayout. The appender defines where the logging data goes, in this
-case the data goes into a file. In fact, if NetLogo is given a FileAppender it
-will automatically start a new file every time the user opens a new model. The
-XMLFileAppender also does some formatting and writes the appropriate headers to
-the file. The layout defines how to write each individual message. Unless you
-are an advanced user there is no need change (or worry about) the appender or
-the layout.
-
-At the end of the configuration notice the definition of the root logger. All of
-the other loggers descend from the root logger and, thus, inherit the properties
-of the root unless explicitly set. This case is fairly simple, having set up the
-appender A1 we make that the default appender for the root (and all other
-loggers) and make the default priority "INFO". Messages that are logged at the
-INFO level or higher will be written, messages logged at lower levels will not.
-Note that with only one exception NetLogo always logs at level INFO. Sets to
-globals that don't change the value of the global are logged at level DEBUG.
-Which means that these messages are disabled by default, since debug is lower
-level than info. The rest of the body of the configuration file overrides
-properties of the root logger in a few specific loggers (or categories as they
-are known in the configuration file, the terms can be assumed to be synonymous
-for the proposes of this document). That is it turns off the WIDGET, TURTLES,
-and LINKS loggers, by default. To re-enable them you can changes the priority
-from off to info, like this:
-
-    <category name="org.nlogo.log.Logger.TURTLES">
-      <priority value="info" />
-    </category>
-
-or you can simply remove the entire reference to the category from the
-configuration file, as it is not serving any other purpose.
-
-## Advanced Configuration
-
-This is only a basic introduction to configuration files for logging in NetLogo.
-There are many more configuration options available through the log4j framework.
-See the [log4j documentation](https://logging.apache.org/log4j/1.2/manual.html).
+There are two convenience commands that will help you manage the logs.  `__zip-log-files
+*filename*` will gather all the logs in the temp directory and put them in one zip file,
+at the location specified. After doing `__zip-log-files` the existing logs are **not**
+deleted, you can do so explicitly by using `__delete-log-files`.  Both commands stop the
+current log file (so it can be zipped or deleted) and a new one is started afterwards.
