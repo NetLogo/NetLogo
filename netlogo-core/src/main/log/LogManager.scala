@@ -3,7 +3,7 @@
 package org.nlogo.log
 
 import java.io.{ File, FileOutputStream, IOException }
-import java.net.InetAddress
+import java.net.{ InetAddress, UnknownHostException }
 import java.nio.file.{ Path, Paths }
 import java.util.zip.{ ZipEntry, ZipOutputStream }
 
@@ -48,11 +48,11 @@ import org.nlogo.api.FileIO.fileToString
 // 3. Previously logging entry points were all over the place.  There were custom events,
 //    direct "static" or "global" access, the logging listener, and access via the model
 //    workspace.  All of that required interface methods and made a lot of weird "hot
-//    potato" with the logging messages.  So it's all gone and hopefully simplified now.
-//    We have access via the logging listener and direct static access.  Ideally the rest
-//    of the events that depend on the static access would be turned into events reported
-//    through the `NetLogoAdapter` and handled by the `LoggingListener` at some point in
-//    the future.
+//    potato" with the logging messages and two logging prims.  So it's all gone and
+//    hopefully simplified now.  We have access via the logging listener and direct static
+//    access.  Ideally the rest of the events that depend on the static access would be
+//    turned into events reported through the `NetLogoAdapter` and handled by the
+//    `LoggingListener` at some point in the future.
 
 // -Jeremy B 2022
 
@@ -72,7 +72,7 @@ object LoggerState {
       (_) => {}
     , (_) => new NoOpLogger()
     , new File("")
-    , new LogEvents()
+    , new LogEvents(Set())
     , "unknown"
     )
   }
@@ -84,14 +84,14 @@ object LogManager {
   private var loggingListener: LoggingListener = new LoggingListener(new LogEvents(Set()), LogManager.logger)
   private var modelName: String                = "unset"
 
-  def start(addListener: (NetLogoAdapter) => Unit, loggerFactory: (Path) => FileLogger, logDirectory: File, events: Set[String], studentName: String) {
+  def start(addListener: (NetLogoAdapter) => Unit, loggerFactory: (Path) => FileLogger, logDirectory: File, eventsSet: Set[String], studentName: String) {
     if (LogManager.isStarted) {
       throw new IllegalStateException("Logging should only be started once.")
     }
 
-    val logEvents              = new LogEvents(events)
-    LogManager.state           = LoggerState(addListener, loggerFactory, logDirectory, logEvents, studentName)
-    LogManager.loggingListener = new LoggingListener(logEvents, LogManager.logger)
+    val events                 = new LogEvents(eventsSet)
+    LogManager.state           = LoggerState(addListener, loggerFactory, logDirectory, events, studentName)
+    LogManager.loggingListener = new LoggingListener(events, LogManager.logger)
 
     // We don't actually start logging until a model is opened and `restart()` is called.
     val restartListener = new NetLogoAdapter {
@@ -172,7 +172,7 @@ object LogManager {
     try {
       InetAddress.getLocalHost.getHostAddress
     } catch {
-      case _: java.net.UnknownHostException => "unknown"
+      case _: UnknownHostException => "unknown"
     }
   }
 
