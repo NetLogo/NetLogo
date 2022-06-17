@@ -36,14 +36,14 @@ import org.nlogo.api.FileIO.fileToString
 //    use is not depended on by `headless`, so the it stays in `netlogo` only and is
 //    provided by `App`.
 
-// 2. There is some boilerplate around `LogManager.isLogging()` checks and
-//    `LogManager.log()` calls that could be unified, but I couldn't think of a clean way
-//    to do it that wouldn't cause more memory and processor use in the case that logging
-//    is disabled.  I don't want to make eventInfo Map instances if I don't have to and I
-//    also don't want to make closures that could run later.  The best way might be
-//    something like a dynamic instance with its logging methods filled in at runtime (as
-//    we'd do in JavaScript) but I didn't feel like hacking that in.  I decided to keep it
-//    obvious, clean, and simple.
+// 2. There is some boilerplate around `LogEvents.eventName` checks and `LogManager.log()`
+//    calls that could be unified, but I couldn't think of a clean way to do it that
+//    wouldn't cause more memory and processor use in the case that logging is disabled
+//    (which will be most of the time).  I don't want to make eventInfo Map instances if I
+//    don't have to and I also don't want to make closures that could run later.  The best
+//    way might be something like a dynamic instance with its logging methods filled in at
+//    runtime (as we'd do in JavaScript) but I didn't feel like hacking that in.  I
+//    decided to keep it obvious, clean, and simple.
 
 // 3. Previously logging entry points were all over the place.  There were custom events,
 //    direct "static" or "global" access, the logging listener, and access via the model
