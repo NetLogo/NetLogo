@@ -10,7 +10,7 @@ import java.util.zip.{ ZipEntry, ZipOutputStream }
 import collection.JavaConverters._
 import scala.io.Codec
 
-import org.nlogo.api.{ Equality, NetLogoAdapter }
+import org.nlogo.api.{ Equality, NetLogoAdapter, Version }
 import org.nlogo.api.Exceptions.ignoring
 import org.nlogo.api.FileIO.fileToString
 
@@ -188,6 +188,7 @@ object LogManager {
     , "studentName" -> LogManager.state.studentName
     , "ipAddress"   -> ipAddress
     , "modelName"   -> modelName
+    , "version"     -> Version.version
     , "events"      -> LogManager.state.events.set.toList.asJava
     )
     LogManager.log(LogEvents.Types.start, startInfo)
