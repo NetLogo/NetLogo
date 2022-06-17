@@ -10,6 +10,9 @@ import collection.JavaConverters._
 
 import org.json.simple.JSONValue
 
+// This JSON logger is kept in `netlogo` outside of `core` to avoid `headless` needing the
+// JSON dependency.  -Jeremy B June 2022
+
 class JsonFileLogger(private val logDirectoryPath: Path) extends FileLogger {
 
   val fileNameFilter = new FilenameFilter {
@@ -18,23 +21,23 @@ class JsonFileLogger(private val logDirectoryPath: Path) extends FileLogger {
     }
   }
 
-  private val _writer = {
+  private val writer = {
     val now         = LocalDateTime.now
     val logFileName = s"netlogo_log_${now.format(DateTimeFormats.file)}.json"
     val logFilePath = logDirectoryPath.resolve(logFileName)
     val logFile     = logFilePath.toFile()
     new PrintWriter(new FileWriter(logFile))
   }
-  this._writer.write("[\n")
+  writer.write("[\n")
 
-  private var _first = true
+  private var first = true
 
   override def log(event: String, eventInfo: Map[String, Any]) {
-    if (this._first) {
-      this._first = false
-      this._writer.write("  ")
+    if (first) {
+      first = false
+      writer.write("  ")
     } else {
-      this._writer.write(", ")
+      writer.write(", ")
     }
 
     val timeStamp = LocalDateTime.now
@@ -48,14 +51,14 @@ class JsonFileLogger(private val logDirectoryPath: Path) extends FileLogger {
     } else {
       map
     }
-    JSONValue.writeJSONString(finalMap.asJava, this._writer)
-    this._writer.write("\n")
+    JSONValue.writeJSONString(finalMap.asJava, writer)
+    writer.write("\n")
   }
 
   override def close() {
-    this._writer.write("]")
-    this._writer.flush()
-    this._writer.close()
+    writer.write("]")
+    writer.flush()
+    writer.close()
   }
 
 }

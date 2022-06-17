@@ -21,7 +21,7 @@ case class LoggerState(
 , events:        Set[String]
 , studentName:   String
 ) {
-  val logDirectoryPath = this.logDirectory.toPath
+  val logDirectoryPath = logDirectory.toPath
 }
 
 object LoggerState {
@@ -50,6 +50,7 @@ object LogManager {
     LogManager.state = LoggerState(addListener, loggerFactory, logDirectory, events, studentName)
     LogManager.loggingListener = new LoggingListener(events, LogManager.logger)
 
+    // We don't actually start logging until a model is opened and `restart()` is called.
     val restartListener = new NetLogoAdapter {
       override def modelOpened(modelName: String) {
         LogManager.modelName = modelName
@@ -60,21 +61,8 @@ object LogManager {
     addListener(LogManager.loggingListener)
   }
 
-  private def logStart(modelName: String) {
-    val loginName = System.getProperty("user.name")
-    val ipAddress = LogManager.getIpAddress
-    val startInfo = Map[String, Any](
-      "loginName"   -> loginName
-    , "studentName" -> LogManager.state.studentName
-    , "ipAddress"   -> ipAddress
-    , "modelName"   -> modelName
-    , "events"      -> LogManager.state.events.toList.asJava
-    )
-    LogManager.log(LogEvents.Types.start, startInfo)
-  }
-
   def stop() {
-    LogManager.log(LogEvents.Types.stop)
+    LogManager.logStop()
     LogManager.logger.close()
     LogManager.logger = new NoOpLogger()
   }
@@ -90,7 +78,7 @@ object LogManager {
   def zipLogFiles(zipFileName: String) {
     if (LogManager.isStarted) {
       val fileNameFilter = LogManager.logger.fileNameFilter
-      LogManager.restart(() => {
+      LogManager.restart( () => {
         val zipPath = Paths.get(zipFileName)
         val zipFile = if (zipPath.isAbsolute) {
           zipPath.toFile
@@ -151,6 +139,23 @@ object LogManager {
 
   private def log(event: String, eventInfo: Map[String, Any] = Map()) {
     LogManager.logger.log(event, eventInfo)
+  }
+
+  private def logStart(modelName: String) {
+    val loginName = System.getProperty("user.name")
+    val ipAddress = LogManager.getIpAddress
+    val startInfo = Map[String, Any](
+      "loginName"   -> loginName
+    , "studentName" -> LogManager.state.studentName
+    , "ipAddress"   -> ipAddress
+    , "modelName"   -> modelName
+    , "events"      -> LogManager.state.events.toList.asJava
+    )
+    LogManager.log(LogEvents.Types.start, startInfo)
+  }
+
+  private def logStop() {
+    LogManager.log(LogEvents.Types.stop)
   }
 
   def globalChanged(globalName: String, newValue: AnyRef, oldValue: AnyRef) {
