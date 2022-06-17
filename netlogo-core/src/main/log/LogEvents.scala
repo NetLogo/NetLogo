@@ -67,6 +67,8 @@ object LogEvents {
   , "buttons"       -> Set("button")
   , "choosers"      -> Set("chooser")
   , "comments"      -> Set("comment")
+  , "default"       -> LogEvents.defaultEvents
+  , "defaults"      -> LogEvents.defaultEvents
   , "greens"        -> Set("chooser", "input-box", "slider", "switch")
   , "input-boxes"   -> Set("input-box")
   , "sliders"       -> Set("slider")
