@@ -60,7 +60,7 @@ case class LoggerState(
   addListener:   (NetLogoAdapter) => Unit
 , loggerFactory: (Path) => FileLogger
 , logDirectory:  File
-, events:        Set[String]
+, events:        LogEvents
 , studentName:   String
 ) {
   val logDirectoryPath = logDirectory.toPath
@@ -72,7 +72,7 @@ object LoggerState {
       (_) => {}
     , (_) => new NoOpLogger()
     , new File("")
-    , LogEvents.defaultEvents
+    , new LogEvents()
     , "unknown"
     )
   }
@@ -81,7 +81,7 @@ object LoggerState {
 object LogManager {
   private var state: LoggerState               = LoggerState.empty()
   private var logger: FileLogger               = new NoOpLogger()
-  private var loggingListener: LoggingListener = new LoggingListener(Set(), LogManager.logger)
+  private var loggingListener: LoggingListener = new LoggingListener(new LogEvents(Set()), LogManager.logger)
   private var modelName: String                = "unset"
 
   def start(addListener: (NetLogoAdapter) => Unit, loggerFactory: (Path) => FileLogger, logDirectory: File, events: Set[String], studentName: String) {
@@ -89,8 +89,9 @@ object LogManager {
       throw new IllegalStateException("Logging should only be started once.")
     }
 
-    LogManager.state = LoggerState(addListener, loggerFactory, logDirectory, events, studentName)
-    LogManager.loggingListener = new LoggingListener(events, LogManager.logger)
+    val logEvents              = new LogEvents(events)
+    LogManager.state           = LoggerState(addListener, loggerFactory, logDirectory, logEvents, studentName)
+    LogManager.loggingListener = new LoggingListener(logEvents, LogManager.logger)
 
     // We don't actually start logging until a model is opened and `restart()` is called.
     val restartListener = new NetLogoAdapter {
@@ -175,10 +176,6 @@ object LogManager {
     }
   }
 
-  private def isLogging(event: String): Boolean = {
-    LogManager.state.events.contains(event)
-  }
-
   private def log(event: String, eventInfo: Map[String, Any] = Map()) {
     LogManager.logger.log(event, eventInfo)
   }
@@ -191,7 +188,7 @@ object LogManager {
     , "studentName" -> LogManager.state.studentName
     , "ipAddress"   -> ipAddress
     , "modelName"   -> modelName
-    , "events"      -> LogManager.state.events.toList.asJava
+    , "events"      -> LogManager.state.events.set.toList.asJava
     )
     LogManager.log(LogEvents.Types.start, startInfo)
   }
@@ -201,7 +198,7 @@ object LogManager {
   }
 
   def globalChanged(globalName: String, newValue: AnyRef, oldValue: AnyRef) {
-    if (LogManager.isLogging(LogEvents.Types.global) && !Equality.equals(newValue, oldValue)) {
+    if (LogManager.state.events.global && !Equality.equals(newValue, oldValue)) {
       val eventInfo = Map[String, Any](
         "globalName" -> globalName
       , "newValue"   -> AnyRefFormat.forJson(newValue)
@@ -212,7 +209,7 @@ object LogManager {
   }
 
   def linkCreated(id: Long, breedName: String, end1: Long, end2: Long) {
-    if (LogManager.isLogging(LogEvents.Types.link)) {
+    if (LogManager.state.events.link) {
       val eventInfo = Map[String, Any](
         "action"    -> "created"
       , "id"        -> id
@@ -225,7 +222,7 @@ object LogManager {
   }
 
   def linkRemoved(id: Long, breedName: String, end1: Long, end2: Long) {
-    if (LogManager.isLogging(LogEvents.Types.link)) {
+    if (LogManager.state.events.link) {
       val eventInfo = Map[String, Any](
         "action"    -> "removed"
       , "id"        -> id
@@ -238,7 +235,7 @@ object LogManager {
   }
 
   def speedSliderChanged(newSpeed: Double) {
-    if (LogManager.isLogging(LogEvents.Types.speedSlider)) {
+    if (LogManager.state.events.speedSlider) {
       val eventInfo = Map[String, Any](
         "newSpeed" -> newSpeed
       )
@@ -247,7 +244,7 @@ object LogManager {
   }
 
   def turtleCreated(who: Long, breedName: String) {
-    if (LogManager.isLogging(LogEvents.Types.turtle)) {
+    if (LogManager.state.events.turtle) {
       val eventInfo = Map[String, Any](
         "action"    -> "created"
       , "who"       -> who
@@ -258,7 +255,7 @@ object LogManager {
   }
 
   def turtleRemoved(who: Long, breedName: String) {
-    if (LogManager.isLogging(LogEvents.Types.turtle)) {
+    if (LogManager.state.events.turtle) {
       val eventInfo = Map[String, Any](
         "action"    -> "removed"
       , "who"       -> who
@@ -269,7 +266,7 @@ object LogManager {
   }
 
   def userComment(comment: String) {
-    if (LogManager.isLogging(LogEvents.Types.comment)) {
+    if (LogManager.state.events.comment) {
       val eventInfo = Map[String, Any](
         "comment" -> comment
       )
@@ -278,7 +275,7 @@ object LogManager {
   }
 
   def widgetAdded(widgetType: String, name: String) {
-    if (LogManager.isLogging(LogEvents.Types.widgetEdit)) {
+    if (LogManager.state.events.widgetEdit) {
       val eventInfo = Map[String, Any](
         "action"     -> "added"
       , "widgetType" -> widgetType
@@ -289,7 +286,7 @@ object LogManager {
   }
 
   def widgetRemoved(widgetType: String, name: String) {
-    if (LogManager.isLogging(LogEvents.Types.widgetEdit)) {
+    if (LogManager.state.events.widgetEdit) {
       val eventInfo = Map[String, Any](
         "action"     -> "removed"
       , "widgetType" -> widgetType

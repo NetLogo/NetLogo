@@ -99,3 +99,30 @@ object LogEvents {
   }
 
 }
+
+class LogEvents(val set: Set[String] = LogEvents.defaultEvents) {
+  def isLogging(event: String): Boolean = {
+    set.contains(event)
+  }
+
+  // Yeah it looks weird, but this is our "cache" of values so we don't have to check if
+  // strings are in Sets every time we want to see if we're logging something.
+  val button        = isLogging(LogEvents.Types.button)
+  val chooser       = isLogging(LogEvents.Types.chooser)
+  val comment       = isLogging(LogEvents.Types.comment)
+  val compile       = isLogging(LogEvents.Types.compile)
+  val commandCenter = isLogging(LogEvents.Types.commandCenter)
+  val global        = isLogging(LogEvents.Types.global)
+  val inputBox      = isLogging(LogEvents.Types.inputBox)
+  val link          = isLogging(LogEvents.Types.link)
+  val modelOpen     = isLogging(LogEvents.Types.modelOpen)
+  val slider        = isLogging(LogEvents.Types.slider)
+  val speedSlider   = isLogging(LogEvents.Types.speedSlider)
+  val start         = isLogging(LogEvents.Types.start)
+  val switch        = isLogging(LogEvents.Types.switch)
+  val stop          = isLogging(LogEvents.Types.stop)
+  val tick          = isLogging(LogEvents.Types.tick)
+  val turtle        = isLogging(LogEvents.Types.turtle)
+  val widgetEdit    = isLogging(LogEvents.Types.widgetEdit)
+
+}
