@@ -106,7 +106,8 @@ object LogManager {
             // move on. ev 3/14/07
             ignoring(classOf[IOException]) {
               zipStream.putNextEntry(new ZipEntry(logFileName))
-              val logFileData = fileToString(logFileName)(Codec.UTF8).getBytes
+              val logFilePath = LogManager.state.logDirectoryPath.resolve(logFileName).toAbsolutePath
+              val logFileData = fileToString(logFilePath.toString)(Codec.UTF8).getBytes
               zipStream.write(logFileData, 0, logFileData.length)
               zipStream.closeEntry()
             }
