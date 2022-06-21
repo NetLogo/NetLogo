@@ -44,7 +44,7 @@ directory in your home folder.  To enable logging, invoke the `NetLogo` executab
 so:
 
 ```sh
-~/NetLogo\ 6.2.3/NetLogo --log-directory ~/NetLogoLogs/ --log-events "default, globals"
+~/NetLogo\ 6.2.3/NetLogo --log-directory ~/NetLogoLogs/ --log-events "default, ticks, globals"
 ```
 
 ## Using Logging
@@ -55,7 +55,7 @@ generated during this session.
 ### Events
 
 Below are all of the events that can be logged with the logging app.  By default all of
-these events are logged *except* "global", "link", and "turtle" since they can cause a
+these events are logged *except* "global", "link", "tick", and "turtle" since they can cause a
 large number of log entries to be created.
 
 - button - button widget presses
@@ -82,7 +82,7 @@ of events:
 - all - button, chooser, comment, compile, command-center, global, input-box, link,
   model-open, slider, speed-slider, start, switch, stop, turtle, widget-edit, tick
 - agents - link, turtle
-- defaults - everything but global, link, and turtle
+- defaults - everything but global, link, tick, and turtle
 - greens - chooser, input-box, slider, switch - the "global variable" widgets
 
 Example logging strings you could put in the **Events to log:** setting in preferences

@@ -39,9 +39,9 @@ object LogEvents {
   , "start"
   , "switch"
   , "stop"
+  , "tick"
   , "turtle"
   , "widget-edit"
-  , "tick"
   )
 
   val defaultEvents = Set(
@@ -58,7 +58,6 @@ object LogEvents {
   , "switch"
   , "stop"
   , "widget-edit"
-  , "tick"
   )
 
   val eventShortcuts = Map(
