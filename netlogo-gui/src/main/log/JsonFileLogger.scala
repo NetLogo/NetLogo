@@ -36,8 +36,12 @@ class JsonFileLogger(private val logDirectoryPath: Path) extends FileLogger {
     val logFile     = logFilePath.toFile()
     new PrintWriter(new FileWriter(logFile))
   }
-  writer.write("[\n")
 
+  // The content of the events log is a single array.  But the simple JSON writer we're
+  // using doesn't understand "buffered" logging or whatever, only whole objects/strings.
+  // So we handle writing the open, close, and commas for the array of log objects.
+  // -Jeremy B June 2021
+  writer.write("[\n")
   private var first = true
 
   override def log(event: String, eventInfo: Map[String, Any]) {
