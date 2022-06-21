@@ -67,21 +67,25 @@ case class LoggerState(
 }
 
 object LoggerState {
+  val emptyEvents = new LogEvents(Set())
+  val noOpLogger  = new NoOpLogger()
+
   def empty() = {
     LoggerState(
       (_) => {}
-    , (_) => new NoOpLogger()
+    , (_) => LoggerState.noOpLogger
     , new File("")
-    , new LogEvents(Set())
+    , LoggerState.emptyEvents
     , "unknown"
     )
   }
 }
 
 object LogManager {
+  var isStarted: Boolean                       = false
   private var state: LoggerState               = LoggerState.empty()
-  private var logger: FileLogger               = new NoOpLogger()
-  private var loggingListener: LoggingListener = new LoggingListener(new LogEvents(Set()), LogManager.logger)
+  private var logger: FileLogger               = LoggerState.noOpLogger
+  private var loggingListener: LoggingListener = new LoggingListener(LoggerState.emptyEvents, LogManager.logger)
   private var modelName: String                = "unset"
 
   def start(addListener: (NetLogoAdapter) => Unit, loggerFactory: (Path) => FileLogger, logDirectory: File, eventsSet: Set[String], studentName: String) {
@@ -89,6 +93,7 @@ object LogManager {
       throw new IllegalStateException("Logging should only be started once.")
     }
 
+    LogManager.isStarted       = true
     val events                 = new LogEvents(eventsSet)
     LogManager.state           = LoggerState(addListener, loggerFactory, logDirectory, events, studentName)
     LogManager.loggingListener = new LoggingListener(events, LogManager.logger)
@@ -162,10 +167,6 @@ object LogManager {
         })
       })
     }
-  }
-
-  def isStarted: Boolean = {
-    !LogManager.logger.isInstanceOf[NoOpLogger]
   }
 
   private def getIpAddress() = {
