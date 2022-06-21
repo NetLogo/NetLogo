@@ -171,7 +171,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     // from the old constraint. yuck.  ev 11/27/07
     new RemoveConstraintEvent(wrapper.widget.displayName).raise(this)
 
-    LogManager.widgetRemoved(wrapper.widget.classDisplayName, wrapper.widget.displayName)
+    LogManager.widgetRemoved(true, wrapper.widget.classDisplayName, wrapper.widget.displayName)
   }
 
   /// loading and saving

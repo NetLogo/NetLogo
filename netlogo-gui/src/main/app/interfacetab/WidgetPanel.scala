@@ -442,9 +442,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       newWidget.originalBounds = newWidget.getBounds
       newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
     }
-    if (!loadingWidget) {
-      LogManager.widgetAdded(widget.classDisplayName, widget.displayName)
-    }
+    LogManager.widgetAdded(loadingWidget, widget.classDisplayName, widget.displayName)
     wrapper
   }
 
@@ -461,7 +459,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     zoomer.zoomWidget(widgetWrapper, true, false, 1.0, zoomFactor)
     new CompileAllEvent().raise(this)
-    LogManager.widgetAdded(widgetWrapper.widget.classDisplayName, widgetWrapper.widget.displayName)
+    LogManager.widgetAdded(false, widgetWrapper.widget.classDisplayName, widgetWrapper.widget.displayName)
     widgetWrapper
   }
 
@@ -501,7 +499,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     if (wrapper.widget eq view)
       view = null
     remove(wrapper)
-    LogManager.widgetRemoved(wrapper.widget.classDisplayName, wrapper.widget.displayName)
+    LogManager.widgetRemoved(false, wrapper.widget.classDisplayName, wrapper.widget.displayName)
   }
 
   def sliderEventOnReleaseOnly(sliderEventOnReleaseOnly: Boolean): Unit = {

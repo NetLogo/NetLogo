@@ -275,8 +275,8 @@ object LogManager {
     }
   }
 
-  def widgetAdded(widgetType: String, name: String) {
-    if (LogManager.state.events.widgetEdit) {
+  def widgetAdded(isLoading: Boolean, widgetType: String, name: String) {
+    if (LogManager.state.events.widgetEdit && !isLoading) {
       val eventInfo = Map[String, Any](
         "action"     -> "added"
       , "widgetType" -> widgetType
@@ -286,8 +286,8 @@ object LogManager {
     }
   }
 
-  def widgetRemoved(widgetType: String, name: String) {
-    if (LogManager.state.events.widgetEdit) {
+  def widgetRemoved(isUnloading: Boolean, widgetType: String, name: String) {
+    if (LogManager.state.events.widgetEdit && !isUnloading) {
       val eventInfo = Map[String, Any](
         "action"     -> "removed"
       , "widgetType" -> widgetType
