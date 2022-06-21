@@ -7,7 +7,6 @@ import java.io.{ File, FilenameFilter }
 trait FileLogger {
   def close() {}
   def log(event: String, eventInfo: Map[String, Any]) {}
-
   val fileNameFilter: FilenameFilter
 }
 

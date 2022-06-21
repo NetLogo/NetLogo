@@ -85,7 +85,7 @@ class LoggingListener(private val events: LogEvents, private[log] var logger: Fi
     if (events.chooser) {
       val eventInfo = Map[String, Any](
         "globalName"   -> globalName
-      , "newValue"     -> AnyRefFormat.forJson(newValue)
+      , "newValue"     -> newValue
       , "valueChanged" -> valueChanged
       )
       logger.log(LogEvents.Types.chooser, eventInfo)
@@ -96,7 +96,7 @@ class LoggingListener(private val events: LogEvents, private[log] var logger: Fi
     if (events.inputBox) {
       val eventInfo = Map[String, Any](
         "globalName"   -> globalName
-      , "newValue"     -> AnyRefFormat.forJson(newValue)
+      , "newValue"     -> newValue
       , "valueChanged" -> valueChanged
       )
       logger.log(LogEvents.Types.inputBox, eventInfo)

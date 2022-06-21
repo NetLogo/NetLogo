@@ -202,8 +202,8 @@ object LogManager {
     if (LogManager.state.events.global && !Equality.equals(newValue, oldValue)) {
       val eventInfo = Map[String, Any](
         "globalName" -> globalName
-      , "newValue"   -> AnyRefFormat.forJson(newValue)
-      , "oldValue"   -> AnyRefFormat.forJson(oldValue)
+      , "newValue"   -> newValue
+      , "oldValue"   -> oldValue
       )
       LogManager.log(LogEvents.Types.global, eventInfo)
     }
