@@ -90,7 +90,7 @@ object LogEvents {
   }
 
   def parseEvents(eventsString: String): Set[String] = {
-    if (eventsString.trim().equals("")) {
+    if (eventsString == null || eventsString.trim().equals("")) {
       LogEvents.defaultEvents
     } else {
       val dirtyEvents    = eventsString.split(",").toList.map(_.trim())
