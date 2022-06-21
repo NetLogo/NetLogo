@@ -25,56 +25,56 @@ object LogEvents {
   }
 
   val allEvents = Set(
-    "button"
-  , "chooser"
-  , "comment"
-  , "compile"
-  , "command-center"
-  , "global"
-  , "input-box"
-  , "link"
-  , "model-open"
-  , "slider"
-  , "speed-slider"
-  , "start"
-  , "switch"
-  , "stop"
-  , "tick"
-  , "turtle"
-  , "widget-edit"
+    Types.button
+  , Types.chooser
+  , Types.comment
+  , Types.compile
+  , Types.commandCenter
+  , Types.global
+  , Types.inputBox
+  , Types.link
+  , Types.modelOpen
+  , Types.slider
+  , Types.speedSlider
+  , Types.start
+  , Types.switch
+  , Types.stop
+  , Types.tick
+  , Types.turtle
+  , Types.widgetEdit
   )
 
   val defaultEvents = Set(
-    "button"
-  , "chooser"
-  , "comment"
-  , "compile"
-  , "command-center"
-  , "input-box"
-  , "model-open"
-  , "slider"
-  , "speed-slider"
-  , "start"
-  , "switch"
-  , "stop"
-  , "widget-edit"
+    Types.button
+  , Types.chooser
+  , Types.comment
+  , Types.compile
+  , Types.commandCenter
+  , Types.inputBox
+  , Types.modelOpen
+  , Types.slider
+  , Types.speedSlider
+  , Types.start
+  , Types.switch
+  , Types.stop
+  , Types.widgetEdit
   )
 
   val eventShortcuts = Map(
-    "agents"        -> Set("link", "turtle")
+    "agents"        -> Set(Types.link, Types.turtle)
   , "all"           -> LogEvents.allEvents
-  , "buttons"       -> Set("button")
-  , "choosers"      -> Set("chooser")
-  , "comments"      -> Set("comment")
+  , "buttons"       -> Set(Types.button)
+  , "choosers"      -> Set(Types.chooser)
+  , "comments"      -> Set(Types.comment)
   , "default"       -> LogEvents.defaultEvents
   , "defaults"      -> LogEvents.defaultEvents
-  , "greens"        -> Set("chooser", "input-box", "slider", "switch")
-  , "input-boxes"   -> Set("input-box")
-  , "sliders"       -> Set("slider")
-  , "switches"      -> Set("switch")
-  , "ticks"         -> Set("tick")
-  , "user-comments" -> Set("comment")
-  , "widgets"       -> Set("widget-edit")
+  , "greens"        -> Set(Types.chooser, Types.inputBox, Types.slider, Types.switch)
+  , "input-boxes"   -> Set(Types.inputBox)
+  , "sliders"       -> Set(Types.slider)
+  , "switches"      -> Set(Types.switch)
+  , "ticks"         -> Set(Types.tick)
+  , "user-comments" -> Set(Types.comment)
+  , "widgets"       -> Set(Types.widgetEdit)
   )
 
   def translateEvent(event: String): Set[String] = {
