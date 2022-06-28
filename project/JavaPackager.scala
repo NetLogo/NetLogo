@@ -134,11 +134,14 @@ object JavaPackager {
     IO.delete(tmpDir)
   }
 
+// jpackage, which replaces javapackager for Java 17, packages all files and
+// directories in the jarDir. Formerly it was the same as the inputDir
+// used in NetLogoPackaging.scala.
   def generateStubApplication(
     packagerJDK: BuildJDK,
     title: String,
     nativeFormat: String,
-    srcDir: File,
+    jarDir: File,
     outDir: File,
     buildDirectory: File,
     mainJar: File) = {
@@ -150,17 +153,18 @@ object JavaPackager {
       "--name",       title,
       "--main-class", "org.nlogo.app.App",
       "--type",       "app-image",
-      "--input",      srcDir.getAbsolutePath,
+      "--input",      jarDir.getAbsolutePath,
       "--dest",       outDir.getAbsolutePath,
       "--main-jar",   mainJar.getName)
-
     val envArgs = packagerJDK.javaHome.map(h => Seq("JAVA_HOME" -> h)).getOrElse(Seq())
 
     println("running: " + args.mkString(" "))
+
     val ret = Process(args, buildDirectory, envArgs: _*).!
-    if (ret != 0)
+    if (ret != 0) {
       sys.error("packaging failed!")
-      outDir.listFiles.head
+    }
+    outDir.listFiles.head
   }
 
   /* This function copies the stub application to <specified-directory> / newName.app.

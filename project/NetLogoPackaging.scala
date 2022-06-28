@@ -10,6 +10,7 @@ import NetLogoBuild.{ all, buildDate, marketingVersion, numericMarketingVersion 
 import SbtSubdirectory.runSubdirectoryCommand
 import Running.makeMainTask
 import java.nio.file.Paths
+import java.nio.file.Files
 import scala.sys.process.Process
 
 object NetLogoPackaging {
@@ -282,11 +283,17 @@ object NetLogoPackaging {
     packageMacAggregate := {
       val buildJDK = PathSpecifiedJDK
       val netLogoJar = repackageJar(DummyApp, new MacImagePlatform(macApp), netlogo).value
+      val mainJar = packagingMainJar.value
       val outDir = target.value.getParentFile() / "target2" / "packaged-mac"
       FileActions.remove(outDir)
-      val mainJar = packagingMainJar.value
+      val jarDir = target.value.getParentFile() / "jar-dir" / "packaged-mac"
+      FileActions.remove(jarDir)
+      FileActions.createDirectories(jarDir)
+      val fullJar = jarDir / mainJar.getName
+      FileActions.copyFile(mainJar, fullJar)
+
       val macAppMainJar = (packageBin in Compile in macApp).value
-      JavaPackager.generateStubApplication(buildJDK, "dummy", "image", target.value, outDir, target.value, mainJar)
+      JavaPackager.generateStubApplication(buildJDK, "dummy", "image", jarDir, outDir, target.value, mainJar)
 
       val classPath =
         (packagingClasspath.value ++
