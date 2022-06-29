@@ -135,7 +135,7 @@ object PackageMacAggregate {
     IO.createDirectory(aggregateMacDir / "JRE")
 
     // copy in JRE
-    FileActions.copyDirectory(stubApplicationAndName._1 / "bundles" / (stubApplicationAndName._2 + ".app") / "Contents" / "PlugIns" / "Java.runtime", aggregateMacDir / "JRE" )
+    FileActions.copyDirectory(stubApplicationAndName._1 / (stubApplicationAndName._2 + ".app") / "Contents" / "runtime", aggregateMacDir / "JRE" )
 
     // add java jars
     // this is wrong, may need further adjustment
@@ -219,7 +219,7 @@ object PackageMacAggregate {
     // -Jeremy B July 2020
     val jarLibsToSign = Map(
       ("extensions/.bundled/gogo/hid4java-0.7.0.jar", Seq("darwin/libhidapi.dylib")),
-      ("extensions/.bundled/nw/gephi-toolkit-0.8.2-all.jar", Seq("native/Mac/i386/libsqlitejdbc.jnilib", "native/Mac/x86_64/libsqlitejdbc.jnilib")),
+      // aab ("extensions/.bundled/nw/gephi-toolkit-0.9.3-all.jar", Seq("native/Mac/i386/libsqlitejdbc.jnilib", "native/Mac/x86_64/libsqlitejdbc.jnilib")),
       ("extensions/.bundled/vid/core-video-capture-1.4-20220209.101851-153.jar", Seq("org/openimaj/video/capture/nativelib/darwin_universal/libOpenIMAJGrabber.dylib")),
       ("Java/java-objc-bridge-1.0.0.jar", Seq("libjcocoa.dylib"))
     )
@@ -239,7 +239,7 @@ object PackageMacAggregate {
     val dmgArgs = Seq("hdiutil", "create",
         s"$buildName.dmg",
         "-srcfolder", (aggregateTarget / "NetLogo Bundle").getAbsolutePath,
-        "-size", "750m",
+        "-size", "900m",
         "-fs", "HFS+",
         "-volname", buildName, "-ov")
     RunProcess(dmgArgs, aggregateTarget, "disk image (dmg) packaging")

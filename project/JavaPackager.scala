@@ -165,6 +165,8 @@ object JavaPackager {
       sys.error("packaging failed!")
     }
     outDir.listFiles.head
+    val contentDir = outDir / "dummy.app" / "Contents"
+    FileActions.moveFile(contentDir / "app", contentDir / "Java")
   }
 
   /* This function copies the stub application to <specified-directory> / newName.app.
@@ -177,12 +179,13 @@ object JavaPackager {
     newApplicationDirectory:     File,
     newApplicationDirectoryName: String,
     newApplicationName:          String): Unit = {
-      val macRoot = stubBuildDirectory / "bundles" / (stubApplicationName + ".app")
+
+      val macRoot = stubBuildDirectory / (stubApplicationName + ".app")
       val newRoot = newApplicationDirectory / (newApplicationDirectoryName + ".app")
       FileActions.createDirectories(newRoot)
       FileActions.copyDirectory((macRoot / "Contents").toPath,
         (newRoot / "Contents").toPath,
-        p => !p.toString.contains("Java.runtime"))
+        p => !p.toString.contains("runtime"))
       FileActions.moveFile(
         newRoot / "Contents" / "MacOS" / stubApplicationName,
         newRoot / "Contents" / "MacOS" / newApplicationName)
