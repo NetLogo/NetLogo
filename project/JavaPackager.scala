@@ -150,12 +150,13 @@ object JavaPackager {
 
     val args = Seq[String](packagerJDK.javapackager,
       "--verbose",
-      "--name",       title,
-      "--main-class", "org.nlogo.app.App",
-      "--type",       "app-image",
-      "--input",      jarDir.getAbsolutePath,
-      "--dest",       outDir.getAbsolutePath,
-      "--main-jar",   mainJar.getName)
+      "--name",         title,
+      "--main-class",   "org.nlogo.app.App",
+      "--type",         "app-image",
+      "--input",        jarDir.getAbsolutePath,
+      "--dest",         outDir.getAbsolutePath,
+      "--java-options", "--add-exports java.desktop/com.apple.laf=ALL-UNNAME",
+      "--main-jar",     mainJar.getName)
     val envArgs = packagerJDK.javaHome.map(h => Seq("JAVA_HOME" -> h)).getOrElse(Seq())
 
     println("running: " + args.mkString(" "))

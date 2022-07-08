@@ -2,7 +2,7 @@ import sbt._
 import sbt.io.Using
 
 import java.io.File
-import java.nio.file.{ Files, Path => JPath }
+import java.nio.file.{ Files, Path => JPath, Paths }
 import java.io.IOException
 import java.util.jar.Manifest
 
@@ -236,6 +236,10 @@ object PackageMacAggregate {
 
     runCodeSign(appSigningOptions, orderedFilesToBeSigned.map(_.toString) ++ extraLibsToSign, "app bundles")
 
+    // Remove .dmg file if it exists
+    val dmgPath = Paths.get(s"$buildName.dmg")
+    Files.deleteIfExists(dmgPath)
+
     val dmgArgs = Seq("hdiutil", "create",
         s"$buildName.dmg",
         "-srcfolder", (aggregateTarget / "NetLogo Bundle").getAbsolutePath,
@@ -246,6 +250,7 @@ object PackageMacAggregate {
 
     runCodeSign(Seq(), Seq(dmgName), "disk image (dmg)", Some(aggregateTarget))
 
+    IO.delete(webDirectory)
     FileActions.createDirectory(webDirectory)
     FileActions.moveFile(aggregateTarget / dmgName, webDirectory / dmgName)
 
