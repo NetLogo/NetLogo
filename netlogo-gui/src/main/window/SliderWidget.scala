@@ -168,9 +168,9 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
     super.editFinished
     removeAllErrors()
     setName(name, nameChanged)
-    this.value = StrictMath.min(StrictMath.max(value, minimum), maximum)
     nameChanged = false
     updateConstraints()
+    this.value = StrictMath.min(StrictMath.max(value, minimum), maximum)
     true
   }
 
