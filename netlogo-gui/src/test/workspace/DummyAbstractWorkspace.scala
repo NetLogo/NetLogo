@@ -62,9 +62,6 @@ extends AbstractWorkspaceScala(
   override def breathe(): Unit = unsupported
   override def periodicUpdate(): Unit = unsupported
   override def addJobFromJobThread(job: org.nlogo.nvm.Job) = unsupported
-  override def startLogging(properties: String) = unsupported
-  override def zipLogFiles(filename: String) = unsupported
-  override def deleteLogFiles(): Unit = unsupported
   override def compiler: PresentationCompilerInterface = unsupported
 
   def openModel(model: org.nlogo.core.Model, shouldAutoInstallLibs: Boolean): Unit = unsupported

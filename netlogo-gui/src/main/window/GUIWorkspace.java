@@ -30,7 +30,6 @@ import org.nlogo.api.RendererInterface;
 import org.nlogo.api.ReporterRunnable;
 import org.nlogo.api.SimpleJobOwner;
 import org.nlogo.shape.ShapeConverter;
-import org.nlogo.log.Logger;
 import org.nlogo.nvm.Procedure;
 import org.nlogo.nvm.Workspace;
 
@@ -443,36 +442,6 @@ public abstract strictfp class GUIWorkspace // can't be both abstract and strict
   public void magicOpen(String name) {
     new org.nlogo.window.Events.AppEvent
         (AppEventType.MAGIC_OPEN, new Object[]{name})
-        .raiseLater(this);
-  }
-
-  // called from the job thread
-  public void startLogging(String properties) {
-    try {
-      new org.nlogo.window.Events.AppEvent
-          (AppEventType.START_LOGGING,
-              new Object[]{fileManager().attachPrefix(properties)})
-          .raiseLater(this);
-    } catch (java.net.MalformedURLException ex) {
-      throw new IllegalStateException(ex);
-    }
-  }
-
-  // called from the job thread
-  public void zipLogFiles(String filename) {
-    try {
-      new org.nlogo.window.Events.AppEvent
-          (AppEventType.ZIP_LOG_FILES,
-              new Object[]{fileManager().attachPrefix(filename)})
-          .raiseLater(this);
-    } catch (java.net.MalformedURLException ex) {
-      throw new IllegalStateException(ex);
-    }
-  }
-
-  public void deleteLogFiles() {
-    new org.nlogo.window.Events.AppEvent
-        (AppEventType.DELETE_LOG_FILES, new Object[]{})
         .raiseLater(this);
   }
 

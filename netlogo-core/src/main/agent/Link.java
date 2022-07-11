@@ -14,6 +14,7 @@ import org.nlogo.api.AgentVariables;
 import org.nlogo.api.Color;
 import org.nlogo.api.Dump;
 import org.nlogo.api.LogoException;
+import org.nlogo.log.LogManager;
 
 import java.util.Iterator;
 
@@ -123,7 +124,9 @@ public strictfp class Link
       ((TreeAgentSet) breed).remove(agentKey());
     }
     _world.linkManager().cleanupLink(this);
+    Long oldId = this.id();
     setId(-1);
+    LogManager.linkRemoved(oldId, breed.printName(), end1.id(), end2.id());
   }
 
   ///

@@ -3,11 +3,11 @@
 package org.nlogo.window
 
 import java.awt.{ Color, Cursor, Dimension, Font, Graphics, Graphics2D, RenderingHints }
-import java.awt.event.{MouseEvent, MouseListener, MouseMotionListener}
+import java.awt.event.{ MouseEvent, MouseListener, MouseMotionListener }
 import java.awt.image.FilteredImageSource
 import javax.swing.ImageIcon
 
-import org.nlogo.api.{ Editable, MersenneTwisterFast, Options, Version}
+import org.nlogo.api.{ Editable, MersenneTwisterFast, Options }
 import org.nlogo.awt.{ DarkenImageFilter, Mouse }, Mouse.hasButton1
 import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N }
 import org.nlogo.nvm.Procedure
@@ -300,8 +300,6 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
         // it was just clicked.  it needs to run.
         else {
           new Events.AddJobEvent(this, agents, procedure).raise(this)
-          if(Version.isLoggingEnabled)
-            org.nlogo.log.Logger.logButtonPressed(displayName)
         }
       }
     }
@@ -309,8 +307,6 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   def handle(e: Events.JobRemovedEvent) {
     if (e.owner == this) {
-      if(Version.isLoggingEnabled)
-        org.nlogo.log.Logger.logButtonStopped(displayName, buttonUp, stopping)
       popUpStoppingButton()
     }
   }

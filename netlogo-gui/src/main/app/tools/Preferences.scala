@@ -2,11 +2,11 @@
 
 package org.nlogo.app.tools
 
+import java.awt.Frame
 import java.io.File
 import java.util.Locale
 import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ JCheckBox, JComboBox, JPanel, JTextField }
-import java.awt.{ FileDialog, Frame }
+import javax.swing.{ JCheckBox, JComboBox, JFileChooser, JPanel, JTextField }
 
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.I18N
@@ -23,6 +23,19 @@ object Preferences {
 
     def save(prefs: JavaPreferences) = {
       prefs.put(i18nKey, component.isSelected.toString)
+    }
+  }
+
+  abstract class StringPreference(val i18nKey: String, val restartRequired: Boolean, default: String) extends Preference {
+    val component = new JTextField(default, 20)
+
+    def load(prefs: JavaPreferences) = {
+      val value = prefs.get(i18nKey, default)
+      component.setText(value)
+    }
+
+    def save(prefs: JavaPreferences) = {
+      prefs.put(i18nKey, component.getText)
     }
   }
 
@@ -68,19 +81,19 @@ object Preferences {
 
   object IsLoggingEnabled extends BooleanPreference("loggingEnabled", true, false) {}
 
-  class LoggingConfigFile(val frame: Frame) extends Preference {
-    val i18nKey         = "loggingConfigFile"
+  class LogDirectory(val frame: Frame) extends Preference {
+    val i18nKey         = "logDirectory"
     val restartRequired = true
     val textField       = new JTextField("", 20)
     val component       = createComponent()
 
     def load(prefs: JavaPreferences) = {
-      val loggingConfigFile = prefs.get("loggingConfigFile", "")
-      textField.setText(loggingConfigFile)
+      val logDirectory = prefs.get("logDirectory", "")
+      textField.setText(logDirectory)
     }
 
     def save(prefs: JavaPreferences) = {
-      prefs.put("loggingConfigFile", textField.getText)
+      prefs.put("logDirectory", textField.getText)
     }
 
     def createComponent(): JPanel = {
@@ -93,14 +106,22 @@ object Preferences {
     }
 
     def askForConfigFile(current: String): Option[String] = {
-      val dialog = new FileDialog(frame, "Logging Config File", FileDialog.LOAD)
-      dialog.setDirectory(new File(current).getParent)
-      dialog.setFile(new File(current).getName)
-      dialog.setVisible(true)
-      Option(dialog.getFile).map(Option(dialog.getDirectory).getOrElse("") + _)
+      val dialog = new JFileChooser(new File(current))
+      dialog.setDialogTitle("Log Directory")
+      dialog.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY)
+      if (dialog.showOpenDialog(frame) == JFileChooser.APPROVE_OPTION) {
+        val file = dialog.getSelectedFile
+        val dir  = if (file.isDirectory) { file } else { dialog.getCurrentDirectory }
+        val path = dir.getAbsolutePath
+        Option(path)
+      } else {
+        None
+      }
     }
 
   }
+
+  object LogEvents extends StringPreference("logEvents", true, "")
 
   object IncludedFilesMenu  extends BooleanPreference("includedFilesMenu", true, false) {}
 

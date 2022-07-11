@@ -448,21 +448,6 @@ with org.nlogo.api.ViewSettings {
    */
   override def magicOpen(name: String) = unsupported
 
-  /**
-   * Internal use only.
-   */
-  def startLogging(properties: String) = unsupported
-
-  /**
-   * Internal use only.
-   */
-  def zipLogFiles(filename: String) = unsupported
-
-  /**
-   * Internal use only.
-   */
-  def deleteLogFiles() = unsupported
-
   def logCustomMessage(msg: String): Unit = unsupported
 
   def logCustomGlobals(nameValuePairs: Seq[(String, String)]): Unit = unsupported

@@ -85,9 +85,3 @@ trait EditorWorkspace {
   @throws(classOf[java.io.IOException])
   def convertToNormal(): String
 }
-
-trait LoggingWorkspace {
-  def startLogging(properties: String): Unit
-  def zipLogFiles(filename: String): Unit
-  def deleteLogFiles(): Unit
-}

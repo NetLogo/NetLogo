@@ -14,11 +14,10 @@ Products:
 
 * NetLogo
 * NetLogo 3D
-* NetLogo Logging
 * HubNet Client
 
 Additionally, each platform has an aggregate build which pulls all of the sub applications together.
-This makes it convenient to install 4 different applications (as opposed to installing each of them individually.
+This makes it convenient to install 3 different applications (as opposed to installing each of them individually.
 
 ### Step-by-step
 

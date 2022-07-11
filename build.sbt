@@ -140,7 +140,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     libraryDependencies ++= Seq(
       "org.ow2.asm" % "asm-all" % "5.2",
       "org.picocontainer" % "picocontainer" % "2.15",
-      "log4j" % "log4j" % "1.2.17",
       "javax.media" % "jmf" % "2.1.1e",
       "commons-codec" % "commons-codec" % "1.15",
       "org.parboiled" %% "parboiled" % "2.3.0",
@@ -157,12 +156,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "com.typesafe" % "config" % "1.4.1",
       "net.lingala.zip4j" % "zip4j" % "2.9.0"
     ),
-    all := {
-      IO.copyFile(
-        file(".") / "dist" / "configuration" / "NetLogo Logging" / "netlogo_logging.xml",
-        baseDirectory.value / "netlogo_logging.xml"
-      )
-    },
+    all := {},
     all := {
       all.dependsOn(
         htmlDocs,
