@@ -15,7 +15,7 @@ fi
 MSG_SET_JAVA_HOME="Please set JAVA_HOME to version ${JAVA_VERSION_NUMBER}"
 
 if [[ `uname -s` = Linux && -z $JENKINS_URL ]] ; then
-  HIGHEST_PRIORITY_JAVA=`update-alternatives --display javac | grep priority | grep -E 'java${JAVA_VERSION_NUMBER}|java-${JAVA_VERSION_NUMBER}' | sort -g -k 4 | tail -1 | cut -d\  -f1`
+    HIGHEST_PRIORITY_JAVA=`update-alternatives --display javac | grep priority | grep -E "java${JAVA_VERSION_NUMBER}|java-${JAVA_VERSION_NUMBER}" | sort -g -k 4 | tail -1 | cut -d\  -f1`
   if [ -e "$HIGHEST_PRIORITY_JAVA" ] ; then
     export JAVA_HOME="${HIGHEST_PRIORITY_JAVA%/bin/javac}"
   # Because the version info looks something like 'openjdk version "11.0.11" 2021-04-20 LTS'
