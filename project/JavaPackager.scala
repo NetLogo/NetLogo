@@ -148,6 +148,12 @@ object JavaPackager {
 
     FileActions.copyFile(mainJar, buildDirectory / mainJar.getName)
 
+    val additionalArgs : Option[Seq[String]] =
+    if (System.getProperty("os.name").contains("Mac")) {
+      Some(Seq[String]("--java-options", "--add-exports java.desktop/com.apple.laf=ALL-UNNAME"))
+    } else {
+      None
+    }
     val args = Seq[String](packagerJDK.javapackager,
       "--verbose",
       "--name",         title,
@@ -155,8 +161,9 @@ object JavaPackager {
       "--type",         "app-image",
       "--input",        jarDir.getAbsolutePath,
       "--dest",         outDir.getAbsolutePath,
-      "--java-options", "--add-exports java.desktop/com.apple.laf=ALL-UNNAME",
-      "--main-jar",     mainJar.getName)
+      "--main-jar",     mainJar.getName) ++
+      additionalArgs.toList.flatten
+
     val envArgs = packagerJDK.javaHome.map(h => Seq("JAVA_HOME" -> h)).getOrElse(Seq())
 
     println("running: " + args.mkString(" "))
