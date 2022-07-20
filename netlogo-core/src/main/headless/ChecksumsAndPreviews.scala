@@ -9,7 +9,7 @@ import java.nio.file.{ Files, Paths }
 
 import scala.io.Source
 
-import org.nlogo.api.{ Version } //  FileIO,
+import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.core.CompilerException
 import org.nlogo.headless.ChecksumsAndPreviewsSettings.ChecksumsFilePath
 import org.nlogo.workspace.{ Checksummer, ModelsLibrary, PreviewCommandsRunner }
@@ -96,16 +96,17 @@ object ChecksumsAndPreviews {
     def needsManualPreview(previewCommands: String) =
       previewCommands contains "need-to-manually-make-preview-for-this-model"
 
+    // NW is only included temporarily until extension compiles correctly - AAB 7-2022
     def okPath(path: String) =
       List("HUBNET", "/GOGO/", "/CODE EXAMPLES/SOUND/", "GIS GRADIENT EXAMPLE", "/NW/")
         .forall(!path.toUpperCase.containsSlice(_))
 
     def remake(path: String) {
-      // val previewPath = path.replaceFirst("\\.nlogo$", ".png")
+      val previewPath = path.replaceFirst("\\.nlogo$", ".png")
       try {
-        //val runner = PreviewCommandsRunner.fromModelPath(new WorkspaceFactory, path)
-        //println("making preview for: " + path)
-        //FileIO.writeImageFile(runner.previewImage.get, previewPath, "PNG")
+        val runner = PreviewCommandsRunner.fromModelPath(new WorkspaceFactory, path)
+        println("making preview for: " + path)
+        FileIO.writeImageFile(runner.previewImage.get, previewPath, "PNG")
       } catch {
         case _: PreviewCommandsRunner.NonCompilableCommandsException =>
           println("skipping: " + path + "\n  (non-compilable preview commands)")
