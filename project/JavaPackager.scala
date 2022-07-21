@@ -173,9 +173,6 @@ object JavaPackager {
       sys.error("packaging failed!")
     }
     outDir.listFiles.head
-          sys.error("built it")
-    val contentDir = outDir / "dummy.app" / "Contents"
-    FileActions.moveFile(contentDir / "app", contentDir / "Java")
   }
 
   /* This function copies the stub application to <specified-directory> / newName.app.
@@ -199,8 +196,8 @@ object JavaPackager {
         newRoot / "Contents" / "MacOS" / stubApplicationName,
         newRoot / "Contents" / "MacOS" / newApplicationName)
       FileActions.moveFile(
-        newRoot / "Contents" / "Java" / (stubApplicationName + ".cfg"),
-        newRoot / "Contents" / "Java" / (newApplicationName + ".cfg"))
+        newRoot / "Contents" / "app" / (stubApplicationName + ".cfg"),
+        newRoot / "Contents" / "app" / (newApplicationName + ".cfg"))
   }
 
   def copyWinStubApplications(
