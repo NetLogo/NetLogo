@@ -173,6 +173,7 @@ object JavaPackager {
       sys.error("packaging failed!")
     }
     outDir.listFiles.head
+          sys.error("built it")
     val contentDir = outDir / "dummy.app" / "Contents"
     FileActions.moveFile(contentDir / "app", contentDir / "Java")
   }
