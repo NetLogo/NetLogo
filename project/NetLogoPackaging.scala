@@ -197,6 +197,7 @@ object NetLogoPackaging {
     packageLinuxAggregate := {
       val buildJDK = aggregateJDKParser.parsed
       val outDir = target.value.getParentFile() / "target2" / s"packaged-linux-${buildJDK.arch}-${buildJDK.version}"
+      FileActions.remove(outDir)
       val srcDir = target.value / s"to-package-linux-${buildJDK.arch}-${buildJDK.version}"
       FileActions.createDirectories(srcDir)
 
@@ -241,7 +242,7 @@ object NetLogoPackaging {
       val buildJDK = aggregateJDKParser.parsed
       val netLogoJar = repackageJar(DummyApp, WindowsPlatform, netlogo).value
       val outDir = target.value.getParentFile() / "target2" / s"packaged-win-${buildJDK.arch}-${buildJDK.version}"
-
+      FileActions.remove(outDir)
       val srcDir = target.value / s"to-package-win-${buildJDK.arch}-${buildJDK.version}"
       FileActions.createDirectories(srcDir)
 
