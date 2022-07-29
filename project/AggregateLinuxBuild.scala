@@ -7,12 +7,20 @@ import java.io.File
 object PackageLinuxAggregate {
   // We're given a dummy package with a directory structure like:
   // dummy
-  // ├── dummy (all spaces removed)
-  // ├── app
-  // │   └── dummy.cfg (all spaces removed)
-  // ├── libpackager.so
-  // └── runtime
-  //     └── JRE
+  // └── dummy
+  //     ├── bin
+  //     │   └── dummy
+  //     └── lib
+  //         ├── app
+  //         │   ├── dummy.cfg
+  //         │   └── netlogo-6.2.2.jar
+  //         ├── dummy.png
+  //         ├── libapplauncher.so
+  //         └── runtime
+  //             ├── conf
+  //             ├── legal
+  //             ├── lib
+  //             └── release
   //
   //  The desire is to create each sub-application, and copy in auxilliary files
 
@@ -54,7 +62,6 @@ object PackageLinuxAggregate {
       JavaPackager.copyLinuxStubApplications(
         stubApplicationAndName._1, stubApplicationAndName._2,
         aggregateLinuxDir, subApplications.map(_.name))
-
       val sharedJars = aggregateLinuxDir / "lib" / "app"
       commonConfig.bundledDirs.foreach { d =>
         d.fileMappings.foreach {

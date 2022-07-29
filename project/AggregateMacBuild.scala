@@ -13,18 +13,16 @@ object PackageMacAggregate {
   // Product Name.app (spaces intact)
   // └── Contents
   //     ├── Info.plist
-  //     ├── Java
-  //     │   ├── Product Name.cfg (spaces intact)
-  //     │   ├── NetLogo.jar
-  //     │   └── Other jars on the classpath
   //     ├── MacOS
-  //     │   ├── Product Name (must match name in Info.plist
-  //     │   └── libpackager.dylib
+  //     │   └── dummy
   //     ├── PkgInfo
-  //     ├── PlugIns
-  //     │   └── Java.runtime
-  //     └── Resources
-  //         └── NetLogo.icns
+  //     ├── Resources
+  //     │   └── dummy.icns
+  //     ├── app
+  //     │   ├── dummy.cfg
+  //     │   └── netlogo-6.2.2.jar
+  //     └── runtime
+  //         └── Contents
   //
   // A main jar, common configuration, and several sub-applications.
   //
