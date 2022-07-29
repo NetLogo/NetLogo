@@ -324,6 +324,7 @@ object PackageWinAggregate {
       .foreach(command => RunProcess(command, msiBuildDir, command.head))
 
     FileActions.createDirectory(webDirectory)
+    IO.delete(webDirectory / msiName)
     FileActions.moveFile(msiBuildDir / msiName, webDirectory / msiName)
 
     webDirectory / msiName

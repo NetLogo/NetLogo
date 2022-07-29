@@ -1,6 +1,6 @@
 import sbt._
 import NetLogoPackaging.RunProcess
-import java.nio.file.Files
+import java.nio.file.{ Files, Paths }
 import java.nio.file.attribute.PosixFilePermission
 import java.io.File
 
@@ -23,7 +23,50 @@ object PackageLinuxAggregate {
   //             └── release
   //
   //  The desire is to create each sub-application, and copy in auxilliary files
-
+  // The resulting structure is
+  // └── NetLogo 6.x.x
+  //     ├── Behaviorsearch -> bin/Behaviorsearch
+  //     ├── HubNet Client  -> bin/HubNet Client
+  //     ├── NetLogo        -> bin/NetLogo
+  //     ├── NetLogo 3D     -> bin/NetLogo 3D
+  //     ├── netlogo-gui.sh
+  //     ├── netlogo-headless.sh
+  //     ├── NetLogo User Manual.pdf
+  //     ├── readme.md
+  //     ├── bin
+  //     │   ├── Behaviorsearch
+  //     │   ├── HubNetClient
+  //     │   ├── NetLogo
+  //     │   └── NetLogo3D
+  //     ├── lib
+  //     │   ├── app
+  //     │   │   ├── Behaviorsearch.cfg
+  //     │   │   ├── HubNetClient.cfg
+  //     │   │   ├── NetLogo3D.cfg
+  //     │   │   ├── NetLogo.cfg
+  //     │   │   ├── behaviorsearch
+  //     │   │   ├── docs
+  //     │   │   ├── extensions
+  //     │   │   ├── models
+  //     │   │   ├── natives
+  //     │   │   ├── args4j-2.0.12.jar
+  //                 ...
+  //     │   │   ├── netlogo-6.2.2.jar
+  //                 ...
+  //     │   │   └── zip4j-2.9.0.jar
+  //     │   ├── dummy.png
+  //     │   ├── libapplauncher.so
+  //     │   └── runtime
+  //     │       ├── conf
+  //     │       ├── legal
+  //     │       ├── lib
+  //     │       └── release
+  //     ├── Mathematica Link
+  //     │   ├── mathematica-link.jar
+  //     │   ├── NetLogo.m
+  //     │   ├── NetLogo-Mathematica Tutorial.nb
+  //     └── └── NetLogo-Mathematica Tutorial.pdf
+  //
   // note: this shares a lot of code with the windows aggregate packager.
   // There may be an opportunity for abstraction.
   private def configureSubApplication(sharedAppRoot: File, app: SubApplication, common: CommonConfiguration, variables: Map[String, AnyRef]): Unit = {
@@ -62,6 +105,12 @@ object PackageLinuxAggregate {
       JavaPackager.copyLinuxStubApplications(
         stubApplicationAndName._1, stubApplicationAndName._2,
         aggregateLinuxDir, subApplications.map(_.name))
+      // Create symbolic links in main NetLogo app directory to subApplications
+      // in the 'bin' directory
+      subApplications.foreach { app =>
+      FileActions.createRelativeSoftLink( Paths.get(aggregateLinuxDir.toString, "/", app.name),
+        Paths.get(aggregateLinuxDir.toString, "/", "bin", "/", app.name))
+      }
       val sharedJars = aggregateLinuxDir / "lib" / "app"
       commonConfig.bundledDirs.foreach { d =>
         d.fileMappings.foreach {

@@ -258,7 +258,7 @@ object JavaPackager {
       }
 
       // Remove unneeded files
-      IO.delete(newApplicationDirectory / (stubApplicationName + ".png"))
+      IO.delete(newApplicationDirectory / "lib" / (stubApplicationName + ".png"))
       IO.delete(newApplicationDirectory / "lib" / "app" / (stubApplicationName + ".cfg"))
   }
 }

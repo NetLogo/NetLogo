@@ -174,4 +174,27 @@ object FileActions {
   def remove(f: File): Unit = {
     IO.delete(f)
   }
+
+
+    // Creates a relative soft symbolic link to a specified target.
+    // link - a File for the symbolic link to create
+    // target - a File for the target of the symbolic link
+    // If the link already exists it will be overwritten.
+    def createRelativeSoftLink(link: File, target: File): Unit = {
+      createRelativeSoftLink(link.toPath, target.toPath)
+    }
+
+    // Creates a relative soft symbolic link to a specified target.
+    // link - the absolute path of the symbolic link to create
+    // target - the absolute path of the target of the symbolic link
+    // If the link already exists it will be overwritten
+    def createRelativeSoftLink(link: Path, target: Path): Unit = {
+      val relativeTarget = link.getParent().relativize(target)
+      if (Files.exists(link)) {
+        Files.delete(link)
+      }
+      // create the directory hierarchy if any folder is missing 
+      link.getParent().toFile().mkdirs()
+      Files.createSymbolicLink(link, relativeTarget)
+    }
 }
