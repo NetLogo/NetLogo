@@ -145,7 +145,6 @@ object JavaPackager {
     outDir: File,
     buildDirectory: File,
     mainJar: File) = {
-
     FileActions.copyFile(mainJar, buildDirectory / mainJar.getName)
 
     val additionalArgs : Option[Seq[String]] =
@@ -167,7 +166,6 @@ object JavaPackager {
     val envArgs = packagerJDK.javaHome.map(h => Seq("JAVA_HOME" -> h)).getOrElse(Seq())
 
     println("running: " + args.mkString(" "))
-
     val ret = Process(args, buildDirectory, envArgs: _*).!
     if (ret != 0) {
       sys.error("packaging failed!")
@@ -188,10 +186,14 @@ object JavaPackager {
 
       val macRoot = stubBuildDirectory / (stubApplicationName + ".app")
       val newRoot = newApplicationDirectory / (newApplicationDirectoryName + ".app")
+      IO.delete(newApplicationDirectory)
+
+      // Create the new top level directory structure
       FileActions.createDirectories(newRoot)
       FileActions.copyDirectory((macRoot / "Contents").toPath,
         (newRoot / "Contents").toPath,
         p => !p.toString.contains("runtime"))
+
       FileActions.moveFile(
         newRoot / "Contents" / "MacOS" / stubApplicationName,
         newRoot / "Contents" / "MacOS" / newApplicationName)
@@ -206,18 +208,24 @@ object JavaPackager {
     newApplicationDirectory: File,
     subApplicationNames:     Seq[String]): Unit = {
       val winRoot = stubBuildDirectory / "bundles" / stubApplicationName
+      IO.delete(newApplicationDirectory)
+
+      // Create the new top level directory structure
       FileActions.createDirectories(newApplicationDirectory)
       FileActions.copyDirectory(winRoot, newApplicationDirectory)
+
+      // Copy in each sub application executable and config file
       subApplicationNames.foreach { appName =>
         FileActions.copyFile(winRoot / (stubApplicationName + ".exe"), newApplicationDirectory / (appName + ".exe"))
         FileActions.copyFile(winRoot / (stubApplicationName + ".ico"), newApplicationDirectory / (appName + ".ico"))
         FileActions.copyFile(winRoot / "app" / (stubApplicationName + ".cfg"), newApplicationDirectory / "app" / (appName + ".cfg"))
       }
+
+      // Remove unneeded files
       IO.delete(newApplicationDirectory / (stubApplicationName + ".exe"))
       IO.delete(newApplicationDirectory / (stubApplicationName + ".ico"))
       IO.delete(newApplicationDirectory / "app" / (stubApplicationName + ".cfg"))
   }
-
 
   def copyLinuxStubApplications(
     stubBuildDirectory:      File,
@@ -229,18 +237,28 @@ object JavaPackager {
         import scala.collection.JavaConverters._
         Set(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ, OTHERS_READ).asJava
       }
-      val linuxRoot = stubBuildDirectory / "bundles" / stubApplicationName
-      val libpackagerSO  = linuxRoot / "libpackager.so"
-      Files.setPosixFilePermissions(libpackagerSO.toPath, permissions)
-      FileActions.createDirectories(newApplicationDirectory)
-      FileActions.copyDirectory(linuxRoot, newApplicationDirectory)
+
+      // Create the new top level directory structure
+      IO.delete(newApplicationDirectory)
+      FileActions.createDirectories(newApplicationDirectory / "bin")
+
+      // Prepare and copy files from the stub directory
+      val linuxRoot = stubBuildDirectory / stubApplicationName
+      val libapplauncherSO  = linuxRoot / "lib" / "libapplauncher.so"
+      Files.setPosixFilePermissions(libapplauncherSO.toPath, permissions)
+      FileActions.copyDirectory(linuxRoot / "lib" , newApplicationDirectory / "lib" )
+
+      // Copy in each sub application executable and config file
       subApplicationNames.foreach { appName =>
         val normalizedAppName = appName.replaceAllLiterally(" ", "")
-        FileActions.copyFile(linuxRoot / stubApplicationName, newApplicationDirectory / normalizedAppName)
-        FileActions.copyFile(linuxRoot / "app" / (stubApplicationName + ".cfg"),
-          newApplicationDirectory / "app" / (normalizedAppName + ".cfg"))
+        FileActions.copyFile(linuxRoot / "bin" / stubApplicationName,
+          newApplicationDirectory / "bin" / normalizedAppName)
+        FileActions.copyFile(linuxRoot / "lib" / "app" / (stubApplicationName + ".cfg"),
+          newApplicationDirectory / "lib" / "app" / (normalizedAppName + ".cfg"))
       }
-      IO.delete(newApplicationDirectory / stubApplicationName)
-      IO.delete(newApplicationDirectory / "app" / (stubApplicationName + ".cfg"))
+
+      // Remove unneeded files
+      IO.delete(newApplicationDirectory / (stubApplicationName + ".png"))
+      IO.delete(newApplicationDirectory / "lib" / "app" / (stubApplicationName + ".cfg"))
   }
 }

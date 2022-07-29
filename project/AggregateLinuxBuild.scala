@@ -31,10 +31,10 @@ object PackageLinuxAggregate {
           .mkString(File.pathSeparator))
 
     Mustache(common.configRoot / "shared" / "linux" / "NetLogo.cfg.mustache",
-      sharedAppRoot / "app" / (app.name.replaceAllLiterally(" ", "") + ".cfg"), allVariables)
+      sharedAppRoot / "lib" / "app" / (app.name.replaceAllLiterally(" ", "") + ".cfg"), allVariables)
 
     app.additionalArtifacts(common.configRoot).foreach { f =>
-      FileActions.copyFile(f, sharedAppRoot / "app" / f.getName)
+      FileActions.copyFile(f, sharedAppRoot / "lib" / "app" / f.getName)
     }
 
   }
@@ -49,16 +49,13 @@ object PackageLinuxAggregate {
 
       val version = variables("version")
       val aggregateLinuxDir = aggregateTarget / s"NetLogo $version"
-
       IO.delete(aggregateLinuxDir)
       IO.createDirectory(aggregateLinuxDir)
-
       JavaPackager.copyLinuxStubApplications(
         stubApplicationAndName._1, stubApplicationAndName._2,
         aggregateLinuxDir, subApplications.map(_.name))
 
-      val sharedJars = aggregateLinuxDir / "app"
-
+      val sharedJars = aggregateLinuxDir / "lib" / "app"
       commonConfig.bundledDirs.foreach { d =>
         d.fileMappings.foreach {
           case (f, p) =>
@@ -72,11 +69,9 @@ object PackageLinuxAggregate {
       commonConfig.classpath.foreach { jar =>
         FileActions.copyFile(jar, sharedJars / jar.getName)
       }
-
       commonConfig.rootFiles.foreach { f =>
         FileActions.copyAny(f, aggregateLinuxDir / f.getName)
       }
-
       // configure each sub application
       subApplications.foreach { app =>
         configureSubApplication(aggregateLinuxDir, app, commonConfig, variables)
@@ -85,7 +80,7 @@ object PackageLinuxAggregate {
       val headlessClasspath =
         ("classpathJars"  ->
           commonConfig.classpath
-            .map(jar => "app/" + jar.getName)
+            .map(jar => "lib/app/" + jar.getName)
             .sorted
             .mkString(File.pathSeparator))
 
@@ -109,10 +104,12 @@ object PackageLinuxAggregate {
 
       val archiveName = s"NetLogo-$version-${jdk.arch}.tgz"
       val tarBuildDir = aggregateLinuxDir.getParentFile
-
+      IO.delete(tarBuildDir / archiveName)
       RunProcess(Seq("tar", "-zcf", archiveName, aggregateLinuxDir.getName), tarBuildDir, "tar linux aggregate")
-
       FileActions.createDirectory(webDirectory)
+      val archiveFile = webDirectory / archiveName
+      IO.delete(webDirectory / archiveName)
+
       FileActions.moveFile(tarBuildDir / archiveName, webDirectory / archiveName)
 
       webDirectory / archiveName
