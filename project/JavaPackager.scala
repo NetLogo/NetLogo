@@ -186,7 +186,6 @@ object JavaPackager {
 
       val macRoot = stubBuildDirectory / (stubApplicationName + ".app")
       val newRoot = newApplicationDirectory / (newApplicationDirectoryName + ".app")
-      IO.delete(newApplicationDirectory)
 
       // Create the new top level directory structure
       FileActions.createDirectories(newRoot)
@@ -208,7 +207,6 @@ object JavaPackager {
     newApplicationDirectory: File,
     subApplicationNames:     Seq[String]): Unit = {
       val winRoot = stubBuildDirectory / "bundles" / stubApplicationName
-      IO.delete(newApplicationDirectory)
 
       // Create the new top level directory structure
       FileActions.createDirectories(newApplicationDirectory)
@@ -239,7 +237,6 @@ object JavaPackager {
       }
 
       // Create the new top level directory structure
-      IO.delete(newApplicationDirectory)
       FileActions.createDirectories(newApplicationDirectory / "bin")
 
       // Prepare and copy files from the stub directory
