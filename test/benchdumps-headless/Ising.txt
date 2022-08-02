@@ -313,42 +313,36 @@ procedure SETUP:[INITIAL-MAGNETIZATION]{O---}:
           IFEQ L3
           ALOAD 2
           CHECKCAST java/lang/Double
-          ASTORE 6
+          ASTORE 5
           DLOAD 3
-          ALOAD 6
+          ALOAD 5
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DCMPL
           IFNE L4
           ICONST_1
           GOTO L5
          L4
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_ifelse_1 org/nlogo/nvm/Context java/lang/Object D T java/lang/Double] []
+         FRAME APPEND [java/lang/Object D java/lang/Double]
+          ICONST_0
+          GOTO L5
+         L3
+         FRAME CHOP 1
           ICONST_0
          L5
          FRAME SAME1 I
-          ISTORE 5
-          GOTO L6
-         L3
-         FRAME CHOP 2
-          ICONST_0
-          ISTORE 5
-         L6
-         FRAME APPEND [I]
-          ILOAD 5
-         L7
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L8
+          IFEQ L6
           ICONST_4
-          GOTO L9
-         L8
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_ifelse_1 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context]
+          GOTO L7
+         L6
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_ifelse_1 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context]
           BIPUSH 6
-         L9
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_ifelse_1 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context I]
+         L7
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_ifelse_1 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L10
+         L8
           RETURN
 [4]_asm_proceduresetup_setpatchvariable_2 "set spin one-of [-1 1]" Object => void
       _oneof "one-of [-1 1]" LogoList => Object
@@ -760,7 +754,6 @@ procedure GO:[]{O---}:
          L5
          FRAME SAME
           ALOAD 4
-          ASTORE 3
           GOTO L7
          L4
          FRAME CHOP 1
@@ -799,7 +792,6 @@ procedure GO:[]{O---}:
           GETSTATIC org/nlogo/agent/AgentSet$.MODULE$ : Lorg/nlogo/agent/AgentSet$;
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/AgentSet$.fromAgent (Lorg/nlogo/agent/Agent;)Lorg/nlogo/agent/IndexedAgentSet;
-          ASTORE 3
           GOTO L7
          L8
          FRAME CHOP 2
@@ -817,7 +809,8 @@ procedure GO:[]{O---}:
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L7
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_ask_0 org/nlogo/nvm/Context java/lang/Object org/nlogo/agent/AgentSet] []
+         FRAME SAME1 org/nlogo/agent/AgentSet
+          ASTORE 3
           ALOAD 1
           ALOAD 3
           ICONST_1
@@ -964,7 +957,6 @@ procedure UPDATE:[EDIFF]{-TP-}:
           ALOAD 3
           CHECKCAST org/nlogo/agent/Turtle
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-          ASTORE 2
           GOTO L10
          L9
          FRAME FULL [org/nlogo/prim/_asm_procedureupdate_setprocedurevariable_0 org/nlogo/nvm/Context T org/nlogo/agent/Agent D] [D]
@@ -973,7 +965,6 @@ procedure UPDATE:[EDIFF]{-TP-}:
           IFEQ L11
           ALOAD 3
           CHECKCAST org/nlogo/agent/Patch
-          ASTORE 2
           GOTO L10
          L11
          FRAME SAME1 D
@@ -983,7 +974,8 @@ procedure UPDATE:[EDIFF]{-TP-}:
           INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
           ATHROW
          L10
-         FRAME FULL [org/nlogo/prim/_asm_procedureupdate_setprocedurevariable_0 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent D] [D]
+         FRAME FULL [org/nlogo/prim/_asm_procedureupdate_setprocedurevariable_0 org/nlogo/nvm/Context T org/nlogo/agent/Agent D] [D org/nlogo/agent/Patch]
+          ASTORE 2
           DCONST_0
           DSTORE 4
           ALOAD 2
@@ -1192,10 +1184,7 @@ procedure UPDATE:[EDIFF]{-TP-}:
          L16
          FRAME SAME
           ICONST_0
-         L17
-         FRAME SAME1 I
-          ISTORE 5
-          GOTO L18
+          GOTO L17
          L15
          FRAME SAME
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1225,14 +1214,12 @@ procedure UPDATE:[EDIFF]{-TP-}:
           INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L18
-         FRAME APPEND [I]
-          ILOAD 5
+         L17
+         FRAME SAME1 I
+          IFEQ L18
          L19
-          IFEQ L20
-         L21
           DCONST_1
-         L22
+         L20
           DSTORE 2
           DLOAD 2
           ALOAD 1
@@ -1240,21 +1227,21 @@ procedure UPDATE:[EDIFF]{-TP-}:
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextDouble ()D
           DMUL
-         L23
+         L21
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
           ICONST_0
           AALOAD
-         L24
+         L22
           ASTORE 2
          L0
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-          GOTO L25
+          GOTO L23
          L1
-         FRAME FULL [org/nlogo/prim/_asm_procedureupdate_if_1 org/nlogo/nvm/Context java/lang/Object T T I] [java/lang/ClassCastException]
+         FRAME FULL [org/nlogo/prim/_asm_procedureupdate_if_1 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
           POP
           NEW org/nlogo/nvm/ArgumentTypeException
           DUP
@@ -1265,24 +1252,24 @@ procedure UPDATE:[EDIFF]{-TP-}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L25
-         FRAME FULL [org/nlogo/prim/_asm_procedureupdate_if_1 org/nlogo/nvm/Context java/lang/Object T T I] [D D]
+         L23
+         FRAME FULL [org/nlogo/prim/_asm_procedureupdate_if_1 org/nlogo/nvm/Context java/lang/Object] [D D]
           DSTORE 2
           DLOAD 2
           DNEG
-         L26
+         L24
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedureupdate_if_1.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.observer ()Lorg/nlogo/agent/Observer;
           ICONST_0
           INVOKEVIRTUAL org/nlogo/agent/Observer.getVariable (I)Ljava/lang/Object;
-         L27
+         L25
           ASTORE 2
          L2
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-          GOTO L28
+          GOTO L26
          L3
          FRAME SAME1 java/lang/ClassCastException
           POP
@@ -1295,14 +1282,14 @@ procedure UPDATE:[EDIFF]{-TP-}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L28
-         FRAME FULL [org/nlogo/prim/_asm_procedureupdate_if_1 org/nlogo/nvm/Context java/lang/Object T T I] [D D D]
+         L26
+         FRAME FULL [org/nlogo/prim/_asm_procedureupdate_if_1 org/nlogo/nvm/Context java/lang/Object] [D D D]
           DSTORE 4
           DSTORE 2
           DLOAD 4
           DCONST_0
           DCMPL
-          IFNE L29
+          IFNE L27
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -1312,57 +1299,57 @@ procedure UPDATE:[EDIFF]{-TP-}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L29
+         L27
          FRAME FULL [org/nlogo/prim/_asm_procedureupdate_if_1 org/nlogo/nvm/Context D D] [D]
           DLOAD 2
           DLOAD 4
           DDIV
-         L30
+         L28
           DSTORE 2
           ALOAD 0
           DLOAD 2
           INVOKESTATIC java/lang/StrictMath.exp (D)D
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdate_if_1.validDouble (DLorg/nlogo/nvm/Context;)D
-         L31
+         L29
           DSTORE 4
           DSTORE 2
           DLOAD 2
           DLOAD 4
           DCMPG
-          IFGE L32
+          IFGE L30
           ICONST_1
-          GOTO L33
-         L32
+          GOTO L31
+         L30
          FRAME SAME
           ICONST_0
-         L33
+         L31
          FRAME SAME1 I
-          GOTO L34
-         L20
-         FRAME FULL [org/nlogo/prim/_asm_procedureupdate_if_1 org/nlogo/nvm/Context java/lang/Object D I] []
+          GOTO L32
+         L18
+         FRAME FULL [org/nlogo/prim/_asm_procedureupdate_if_1 org/nlogo/nvm/Context java/lang/Object D] []
           ICONST_0
-         L34
+         L32
          FRAME FULL [org/nlogo/prim/_asm_procedureupdate_if_1 org/nlogo/nvm/Context] [I]
-          GOTO L35
+          GOTO L33
          L11
          FRAME APPEND [java/lang/Object D]
           ICONST_1
-         L35
+         L33
          FRAME FULL [org/nlogo/prim/_asm_procedureupdate_if_1 org/nlogo/nvm/Context] [I]
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L36
+          IFEQ L34
           ICONST_2
-          GOTO L37
-         L36
+          GOTO L35
+         L34
          FRAME FULL [org/nlogo/prim/_asm_procedureupdate_if_1 org/nlogo/nvm/Context I] [org/nlogo/nvm/Context]
           ICONST_3
-         L37
+         L35
          FRAME FULL [org/nlogo/prim/_asm_procedureupdate_if_1 org/nlogo/nvm/Context I] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L38
+         L36
           RETURN
 [2]_asm_procedureupdate_call_2 "flip"
          L0
@@ -1690,42 +1677,36 @@ procedure RECOLOR:[]{-TP-}:
           IFEQ L5
           ALOAD 2
           CHECKCAST java/lang/Double
-          ASTORE 6
+          ASTORE 5
           DLOAD 3
-          ALOAD 6
+          ALOAD 5
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DCMPL
           IFNE L6
           ICONST_1
           GOTO L7
          L6
-         FRAME FULL [org/nlogo/prim/_asm_procedurerecolor_ifelse_0 org/nlogo/nvm/Context java/lang/Object D T java/lang/Double] []
+         FRAME APPEND [java/lang/Object D java/lang/Double]
+          ICONST_0
+          GOTO L7
+         L5
+         FRAME CHOP 1
           ICONST_0
          L7
          FRAME SAME1 I
-          ISTORE 5
-          GOTO L8
-         L5
-         FRAME CHOP 2
-          ICONST_0
-          ISTORE 5
-         L8
-         FRAME APPEND [I]
-          ILOAD 5
-         L9
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L10
+          IFEQ L8
           ICONST_1
-          GOTO L11
-         L10
-         FRAME FULL [org/nlogo/prim/_asm_procedurerecolor_ifelse_0 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context]
+          GOTO L9
+         L8
+         FRAME FULL [org/nlogo/prim/_asm_procedurerecolor_ifelse_0 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context]
           ICONST_3
-         L11
-         FRAME FULL [org/nlogo/prim/_asm_procedurerecolor_ifelse_0 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context I]
+         L9
+         FRAME FULL [org/nlogo/prim/_asm_procedurerecolor_ifelse_0 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L12
+         L10
           RETURN
 [1]_asm_procedurerecolor_setpatchvariable_1 "set pcolor red" Object => void
       _constdouble:15.0 "red" => Double

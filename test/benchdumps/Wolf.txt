@@ -228,7 +228,6 @@ procedure CATCH-SHEEP:[]{-T--}:
           ALOAD 3
           CHECKCAST org/nlogo/agent/Turtle
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-          ASTORE 2
           GOTO L5
          L4
          FRAME APPEND [T org/nlogo/agent/Agent]
@@ -237,7 +236,6 @@ procedure CATCH-SHEEP:[]{-T--}:
           IFEQ L6
           ALOAD 3
           CHECKCAST org/nlogo/agent/Patch
-          ASTORE 2
           GOTO L5
          L6
          FRAME SAME
@@ -247,7 +245,8 @@ procedure CATCH-SHEEP:[]{-T--}:
           INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
           ATHROW
          L5
-         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent] []
+         FRAME SAME1 org/nlogo/agent/Patch
+          ASTORE 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0.world : Lorg/nlogo/agent/World;
           LDC "SHEEP"
@@ -265,7 +264,7 @@ procedure CATCH-SHEEP:[]{-T--}:
           INVOKEINTERFACE java/lang/Iterable.iterator ()Ljava/util/Iterator; (itf)
           ASTORE 6
          L7
-         FRAME APPEND [org/nlogo/agent/TreeAgentSet org/nlogo/agent/AgentSetBuilder java/util/Iterator]
+         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent org/nlogo/agent/TreeAgentSet org/nlogo/agent/AgentSetBuilder java/util/Iterator] []
           ALOAD 6
           INVOKEINTERFACE java/util/Iterator.hasNext ()Z (itf)
           IFEQ L8
