@@ -6,8 +6,8 @@ import org.nlogo.shape.VectorShape
 import org.nlogo.shape.TestHelpers._
 import org.nlogo.api.Perspective
 import MockGraphics._
-import org.nlogo.util.WorldType
-import org.nlogo.util.WorldType._
+import org.nlogo.api.WorldType
+import org.nlogo.api.WorldType._
 
 import scala.language.implicitConversions
 

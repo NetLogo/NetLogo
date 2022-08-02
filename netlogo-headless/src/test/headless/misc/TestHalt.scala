@@ -6,7 +6,7 @@ package misc
 import java.lang.ref.Cleaner
 
 import org.scalatest.funsuite.AnyFunSuite
-import org.nlogo.util.SlowTestTag
+import org.nlogo.util.SlowTest
 import org.nlogo.{ core, api, agent, nvm }
 
 object TestHalt {
@@ -42,18 +42,18 @@ class TestHalt extends AnyFunSuite  {
     assert(finalized)
   }
 
-  test("halt 0", SlowTestTag) {
+  test("halt 0", SlowTest.Tag) {
     withWorkspace { }
   }
 
-  test("halt 1", SlowTestTag) {
+  test("halt 1", SlowTest.Tag) {
     withWorkspace {
       // multiply possible memory leaks
       workspace.compileCommands("")
     }
   }
 
-  test("halt 2", SlowTestTag) {
+  test("halt 2", SlowTest.Tag) {
     var ex: api.LogoException = null
     val thread = new Thread("TestHalt.testHalt") {
       override def run() {

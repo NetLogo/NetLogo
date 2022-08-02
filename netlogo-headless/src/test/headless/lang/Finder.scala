@@ -9,8 +9,7 @@ import org.nlogo.headless.{ LanguageTestTag, test => headlessTest },
 import org.scalactic.source.Position
 import org.scalatest.Tag
 
-import
-  org.nlogo.util.SlowTestTag
+import org.nlogo.util.SlowTest
 
 trait Finder extends TestFinder {
   override def withFixture[T](name: String)(body: AbstractFixture => T): T =
@@ -26,7 +25,7 @@ trait TaggedLanguageTest extends Finder {
 
 trait TaggedSlowTest extends Finder {
   override def test(name: String, otherTags: Tag*)(testFun: => Any)(implicit pos: Position) = {
-    super.test(name, (SlowTestTag +: otherTags):_*)(testFun)
+    super.test(name, (SlowTest.Tag +: otherTags):_*)(testFun)
   }
 }
 

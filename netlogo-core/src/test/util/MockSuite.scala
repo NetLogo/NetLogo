@@ -3,13 +3,13 @@
 package org.nlogo.util
 
 import org.scalatest.funsuite.AnyFunSuite
-import org.jmock.{Expectations, Mockery, Sequence}
-import org.jmock.integration.junit4.JUnit4Mockery
+import org.jmock.{ AbstractExpectations, Expectations, Mockery, Sequence }
+import org.jmock.imposters.ByteBuddyClassImposteriser
+import org.jmock.junit5.JUnit5Mockery
 import scala.util.DynamicVariable
-import org.hamcrest.{Description, BaseMatcher, Matcher}
+import org.hamcrest.{ Description, BaseMatcher, Matcher }
 import org.jmock.api.Action
 import scala.reflect.ClassTag
-import org.jmock.lib.legacy.ClassImposteriser
 
 import scala.language.implicitConversions
 
@@ -49,11 +49,11 @@ import scala.language.implicitConversions
   }
  */
 
-// We use JUnit4Mockery because with a regular Mockery I was getting uninformative
+// We use JUnit5Mockery because with a regular Mockery I was getting uninformative
 // errors like:
 //    [info] - extension literal *** FAILED *** (142 milliseconds)
 //    [info]   org.jmock.api.ExpectationError: unexpected invocation
-// but with JUnit4Mockery we get:
+// but with JUnit5Mockery we get:
 //    [info] - extension literal *** FAILED *** (113 milliseconds)
 //    [info]   java.lang.AssertionError: unexpected invocation: extensionManager.readExtensionObject("foo", "", "bar bazz")
 //    [info] expectations:
@@ -66,7 +66,7 @@ trait MockSuite extends AnyFunSuite {
   // this is the main test method provided by this trait.
   def mockTest(name: String)(f: => Unit) {
     test(name) {
-      _context.withValue(new JUnit4Mockery(){setImposteriser(ClassImposteriser.INSTANCE)}) {
+      _context.withValue(new JUnit5Mockery() { setImposteriser(ByteBuddyClassImposteriser.INSTANCE) }) {
         _expectations.withValue(new Expectations()) {
           f
         }
@@ -121,9 +121,9 @@ trait MockSuite extends AnyFunSuite {
   //  which can be statically imported at the top of the test code.)
 
   //  equal(n): The argument is equal to n.
-  def equal[T](t:T) = Expectations.equal(t)
+  def equal[T](t:T) = AbstractExpectations.equal(t)
   //  same(o): The argument is the same object as o.
-  def same[T](t:T) = Expectations.same(t)
+  def same[T](t:T) = AbstractExpectations.same(t)
 
   // a(Class<T> type) an(Class<T> type) aNonNull(Class<T> type)
   // The argument is an instance of type or a subclass of type and not null.
@@ -132,7 +132,7 @@ trait MockSuite extends AnyFunSuite {
   def an[T : ClassTag]: Matcher[T] = aMatcher
   def aNonNull[T : ClassTag]: Matcher[T] = aMatcher
   private def aMatcher[T: ClassTag]: Matcher[T] = new BaseMatcher[T]() {
-    def describeTo(description:Description){
+    def describeTo(description: Description) {
       description.appendText("<" + erasure[T].toString + ">")
     }
     override def matches(a: Any) = {
@@ -155,7 +155,7 @@ trait MockSuite extends AnyFunSuite {
 
   // aNull(Class<T> type): The argument is null.
   // The type argument is required to force Java to type-check the argument at compile time.
-  def aNull[T : ClassTag]: Matcher[T] = Expectations.aNull(erasure[T])
+  def aNull[T : ClassTag]: Matcher[T] = AbstractExpectations.aNull(erasure[T])
 
   //  not(m): The argument does not match the Matcher m.
   def not[T](m:Matcher[T]) = arg(org.hamcrest.core.IsNot.not(m))
@@ -181,8 +181,8 @@ trait MockSuite extends AnyFunSuite {
   //
 
   def will(a:Action) = expectations.will(a)
-  def returnValue[T](t:T) = Expectations.returnValue(t)
-  def throwException[T <: Throwable](t:T) = Expectations.throwException(t)
+  def returnValue[T](t:T) = AbstractExpectations.returnValue(t)
+  def throwException[T <: Throwable](t:T) = AbstractExpectations.throwException(t)
   def willReturn[T](t:T) = will(returnValue(t))
   def willThrow[T <: Throwable](t:T) = will(throwException(t))
   //  will(doAll(a1, a2, ..., an)): Do all actions a1 to an on every invocation.

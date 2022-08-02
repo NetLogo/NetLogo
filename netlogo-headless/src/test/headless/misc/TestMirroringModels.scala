@@ -5,7 +5,7 @@ package misc
 
 import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.{ api, mirror }
-import org.nlogo.util.SlowTestTag
+import org.nlogo.util.SlowTest
 import mirror._, Mirroring._, Mirrorables._
 import org.nlogo.drawing.DrawingActionRunner
 import org.nlogo.workspace.Checksummer
@@ -82,7 +82,7 @@ class TestMirroringModels extends AnyFunSuite  {
     path <- checksums.values.map(_.path).toSet
     if !exclusions.exists(name => path.endsWith(name + ".nlogo"))
     if !moreExclusions.exists(name => path.containsSlice(name))
-  } test("Mirroring: " + path, SlowTestTag) {
+  } test("Mirroring: " + path, SlowTest.Tag) {
     modelRenderingTest(path)
   }
 

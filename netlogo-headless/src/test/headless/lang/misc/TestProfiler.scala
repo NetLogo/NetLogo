@@ -13,7 +13,7 @@ package misc
 // this, the DSL didn't support catching runtime errors, but now it does.) - ST 5/4/10
 
 import org.nlogo.headless.test.RuntimeError
-import org.nlogo.util.SlowTestTag
+import org.nlogo.util.SlowTest
 import org.nlogo.api
 import org.nlogo.core.Model
 
@@ -25,7 +25,7 @@ class TestProfiler extends FixtureSuite  {
 
   val useGenerator = api.Version.useGenerator
   if(!useGenerator)
-    test("no generator", SlowTestTag) { implicit fixture =>
+    test("no generator", SlowTest.Tag) { implicit fixture =>
       import fixture._
       declare("extensions [profiler]")
       testCommand("profiler:start", result = RuntimeError(
@@ -34,7 +34,7 @@ class TestProfiler extends FixtureSuite  {
           "property."))
     }
   if(useGenerator)
-    test("basics", SlowTestTag) { implicit fixture =>
+    test("basics", SlowTest.Tag) { implicit fixture =>
       import fixture._
       declare(
         "extensions [profiler]\n" +
@@ -54,7 +54,7 @@ class TestProfiler extends FixtureSuite  {
       testReporter("profiler:calls \"somethingelse\"", "52")
     }
   if(useGenerator)
-    test("stop", SlowTestTag) { implicit fixture =>
+    test("stop", SlowTest.Tag) { implicit fixture =>
       import fixture._
       declare(
         "extensions [profiler]\n" +
@@ -69,7 +69,7 @@ class TestProfiler extends FixtureSuite  {
     }
   if(useGenerator && timingSensitiveOK)
     // uses precision primitive to not be too picky about exact times
-    test("wait", SlowTestTag) { implicit fixture =>
+    test("wait", SlowTest.Tag) { implicit fixture =>
       import fixture._
       declare(
         "extensions [profiler]\n" +
@@ -102,7 +102,7 @@ class TestProfiler extends FixtureSuite  {
       testReporter("precision profiler:inclusive-time \"test3\" -1", "10")
     }
   if(useGenerator && timingSensitiveOK)
-    test("ask turtles", SlowTestTag) { implicit fixture =>
+    test("ask turtles", SlowTest.Tag) { implicit fixture =>
       import fixture._
       declare(
         "extensions [profiler]\n" +
@@ -122,7 +122,7 @@ class TestProfiler extends FixtureSuite  {
       testReporter("precision (glob1 - profiler:inclusive-time \"test1\") 8", "0")
     }
   if(useGenerator && timingSensitiveOK)
-    test("nested asks", SlowTestTag) { implicit fixture =>
+    test("nested asks", SlowTest.Tag) { implicit fixture =>
       import fixture._
       declare(
         "extensions [profiler]\n" +
@@ -150,7 +150,7 @@ class TestProfiler extends FixtureSuite  {
       testReporter("precision (glob1 + glob2 + glob3 - profiler:inclusive-time \"go-turtles1\") 13", "0")
     }
   if(useGenerator && timingSensitiveOK)
-    test("reporter procedures", SlowTestTag) { implicit fixture =>
+    test("reporter procedures", SlowTest.Tag) { implicit fixture =>
       import fixture._
       declare(
         "extensions [profiler]\n" +
@@ -170,8 +170,8 @@ class TestProfiler extends FixtureSuite  {
   // doesn't matter which extension, so we use profiler.  ideally we'd have a test scaffold that
   // lets us test extensions stuff without having an actual extension jar in hand.  but we don't,
   // and we don't want anything in test-fast or test-medium to depend on submodules like models and
-  // extensions, so we put it here because it's a SlowTest - ST 1/19/12
-  test("isReporter on extension prims", SlowTestTag) { implicit fixture =>
+  // extensions, so we put it here because it's a SlowTest.Tag - ST 1/19/12
+  test("isReporter on extension prims", SlowTest.Tag) { implicit fixture =>
     import fixture._
     declare(Model(code = "extensions [profiler]"))
     assertResult(false) { workspace.isReporter("profiler:start") }

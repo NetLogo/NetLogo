@@ -9,7 +9,7 @@ import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.fileformat
 import org.nlogo.workspace.ModelsLibrary
 import org.scalatest.funsuite.AnyFunSuite
-import org.nlogo.util.SlowTestTag
+import org.nlogo.util.SlowTest
 
 import
   scala.util.matching.Regex
@@ -65,16 +65,16 @@ class TestCompileAll extends AnyFunSuite  {
     path <- ModelsLibrary.getModelPaths.filterNot(TestCompileAll.badPath)
     text <- TestCompileAll.goodModel(FileIO.fileToString(path))
   }  {
-      test("compile: " + path, SlowTestTag) {
+      test("compile: " + path, SlowTest.Tag) {
         compile(path, text)
       }
-      test("readWriteRead: " + path, SlowTestTag) {
+      test("readWriteRead: " + path, SlowTest.Tag) {
         readWriteRead(path, text)
       }
     }
 
   for(path <- (ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")).filterNot(TestCompileAll.badPath))
-    test("version: " + path, SlowTestTag) {
+    test("version: " + path, SlowTest.Tag) {
       val workspace = HeadlessWorkspace.newInstance
       val version = ModelReader.parseModel(FileIO.fileToString(path), workspace.parser, Map()).version
       assert(Version.compatibleVersion(version))
