@@ -1,3 +1,5 @@
+import org.scalajs.linker.interface.ESVersion
+
 import sbtcrossproject.CrossPlugin.autoImport.{ crossProject, CrossType }
 import sbtcrossproject.Platform
 
@@ -25,7 +27,7 @@ lazy val commonSettings = Seq(
 // These settings are common to all builds involving scala
 // Any scala-specific settings should change here (and thus for all projects at once)
 lazy val scalaSettings = Seq(
-  scalaVersion           := "2.12.15",
+  scalaVersion           := "2.12.16",
   scalaSource in Compile := baseDirectory.value / "src" / "main",
   scalaSource in Test    := baseDirectory.value / "src" / "test",
   crossPaths             := false, // don't cross-build for different Scala versions
@@ -52,12 +54,21 @@ lazy val jvmSettings = Seq(
 lazy val scalatestSettings = Seq(
   // show test failures again at end, after all tests complete.
   // T gives truncated stack traces; change to G if you need full.
-  testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oS"),
-  logBuffered in testOnly in Test := false,
-  libraryDependencies ++= Seq(
-    "org.scalatest"     %% "scalatest"       % "3.2.10"   % Test,
-    "org.scalatestplus" %% "scalacheck-1-15" % "3.2.10.0" % Test,
+  Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oS")
+, Test / testOnly / logBuffered := false
+, libraryDependencies ++= Seq(
+    "org.scalatest"     %% "scalatest"       % "3.2.13"   % Test
+  , "org.scalatestplus" %% "scalacheck-1-16" % "3.2.13.0" % Test
   )
+  // This lets us mock up some Java library classes for testing.
+  // -Jeremy B August 2022
+, Test / javaOptions ++= Seq(
+    "--add-opens", "java.desktop/java.awt=ALL-UNNAMED"
+  , "--add-opens", "java.base/java.io=ALL-UNNAMED"
+  , "-Dapple.awt.graphics.UseQuartz=false"
+  )
+  // Tests must be forked to ge the above `javaOptions`
+, Test / fork := true
 )
 
 lazy val flexmarkDependencies = {
@@ -74,25 +85,20 @@ lazy val flexmarkDependencies = {
 }
 
 lazy val mockDependencies = {
-  val mockVersion = "2.5.1"
+  val mockVersion = "2.12.0"
   Seq(
     libraryDependencies ++= Seq(
-      "org.jmock" % "jmock" % mockVersion % "test",
-      "org.jmock" % "jmock-legacy" % mockVersion % "test",
-      "org.jmock" % "jmock-junit4" % mockVersion % "test",
-    )
-  )
-}
-
-lazy val mockHeadlessDependencies = {
-  val mockHeadlessVersion = "2.8.1"
-  Seq(
-    libraryDependencies ++= Seq(
-      "org.jmock" % "jmock" % mockHeadlessVersion % "test",
-      "org.jmock" % "jmock-legacy" % mockHeadlessVersion % "test",
-      "org.jmock" % "jmock-junit4" % mockHeadlessVersion % "test",
-      "org.reflections" % "reflections" % "0.9.10" % "test",
-      "org.slf4j" % "slf4j-nop" % "1.7.32" % "test"
+      // replace byte-buddy as we get a "No code generation strategy found" with the older
+      // designated version from jmock:  https://github.com/jmock-developers/jmock-library/issues/204
+      // replace hamcrest as it just seems wrong in the jmock POM?
+      // -Jeremy B August 2022
+      "org.jmock"     % "jmock"        % mockVersion % "test"
+        exclude ("net.bytebuddy", "byte-buddy")
+        exclude ("org.hamcrest", "hamcrest")
+    , "org.jmock"     % "jmock-legacy" % mockVersion % "test"
+    , "org.jmock"     % "jmock-junit5" % mockVersion % "test"
+    , "net.bytebuddy" % "byte-buddy"   % "1.12.13"   % "test"
+    , "org.hamcrest"  % "hamcrest"     % "2.2"       % "test"
     )
   )
 }
@@ -101,9 +107,9 @@ lazy val asmDependencies = {
   val asmVersion = "9.1"
   Seq(
     libraryDependencies ++= Seq(
-      "org.ow2.asm" % "asm" % asmVersion,
+      "org.ow2.asm" % "asm"         % asmVersion,
       "org.ow2.asm" % "asm-commons" % asmVersion,
-      "org.ow2.asm" % "asm-util" % asmVersion,
+      "org.ow2.asm" % "asm-util"    % asmVersion,
       )
     )
 }
@@ -188,6 +194,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
         ModelsLibrary.modelIndex,
         Scaladoc.apiScaladoc).value
     }
+  , Test / baseDirectory := baseDirectory.value.getParentFile
   )
 
 lazy val threed = TaskKey[Unit]("threed", "enable NetLogo 3D")
@@ -202,7 +209,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(scalastyleSettings: _*).
   settings(jvmSettings: _*).
   settings(scalatestSettings: _*).
-  settings(mockHeadlessDependencies: _*).
+  settings(mockDependencies: _*).
   settings(asmDependencies).
   settings(Scaladoc.settings: _*).
   settings(Testing.settings: _*).
@@ -227,7 +234,9 @@ lazy val headless = (project in file ("netlogo-headless")).
       "org.parboiled" %% "parboiled" % "2.3.0",
       "commons-codec" % "commons-codec" % "1.15",
       "com.typesafe" % "config" % "1.4.1",
-      "net.lingala.zip4j" % "zip4j" % "2.9.0"
+      "net.lingala.zip4j" % "zip4j" % "2.9.0",
+      "org.reflections" % "reflections" % "0.9.10" % "test",
+      "org.slf4j" % "slf4j-nop" % "1.7.32" % "test"
     ),
     (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
     resourceDirectory in Compile := baseDirectory.value / "resources" / "main",
@@ -235,13 +244,14 @@ lazy val headless = (project in file ("netlogo-headless")).
     resourceDirectory in Test    := baseDirectory.value.getParentFile / "test",
     testChecksumsClass in Test   := "org.nlogo.headless.misc.TestChecksums",
     dumpClassName                := "org.nlogo.headless.misc.Dump",
-    excludedExtensions           := Seq("arduino", "bitmap", "csv", "gis", "gogo", "ls", "nw", "palette", "py", "sound", "vid", "view2.5d"),
+    excludedExtensions           := Seq("arduino", "bitmap", "csv", "gis", "gogo", "ls", "nw", "palette", "py", "sound", "time", "vid", "view2.5d"),
     all := { val _ = (
       (packageBin in Compile).value,
       (packageBin in Test).value,
       (compile in Test).value,
       Extensions.extensions
     )}
+  , Test / baseDirectory := baseDirectory.value.getParentFile
   )
 
  // this project exists as a wrapper for the mac-specific NetLogo components
@@ -320,13 +330,15 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
     scalaModuleInfo := scalaModuleInfo.value map { _.withOverrideScalaVersion(true) },
     resolvers += Resolver.sonatypeRepo("releases"),
     parallelExecution in Test := false,
+    scalaJSLinkerConfig ~= { _.withESFeatures(_.withESVersion(ESVersion.ES2018)) },
     libraryDependencies ++= {
-    import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+      import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
       Seq(
         "org.scala-lang.modules" %%% "scala-parser-combinators" %    "2.1.0"
-      ,          "org.scalatest"  %%                "scalatest" %   "3.2.10" % Test
-      ,      "org.scalatestplus"  %%          "scalacheck-1-15" % "3.2.10.0" % Test
-    )}).
+      ,          "org.scalatest" %%%                "scalatest" %   "3.2.13" % Test
+      ,      "org.scalatestplus" %%%          "scalacheck-1-16" % "3.2.13.0" % Test
+      )
+    }).
   jvmConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).
   jvmSettings(jvmSettings: _*).
   jvmSettings(scalatestSettings: _*).

@@ -125,7 +125,6 @@ jobs:
         with:
           python-version: '3.9'
 
-      # The `update-alternatives` step is not needed to build and test but it avoids some superfluous error messages in the logs.
       # The Python stuff is just for testing the Python extension, it's not part of NetLogo's build process.
       - name: Install Dependencies
         run: |
@@ -135,7 +134,6 @@ jobs:
           curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
           python2 get-pip.py
           pip2 install numpy
-          sudo update-alternatives --install /usr/bin/javapackager javapackager ${{ env.JAVA_HOME }}/bin/javapackager 100 --slave /usr/share/man/man1/javapackager.1 javapackager.1 ${{ env.JAVA_HOME }}/man/man1/javapackager.1
 
       - name: Test Extensions
         run: ./sbt netlogo/test:extensionTests

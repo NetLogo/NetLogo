@@ -162,7 +162,8 @@ class JarLoaderTests extends AnyFunSuite with BeforeAndAfter {
 
   test("resolvePathAsURL resolves extensions relative to the working directory") {
     val expectedURL = new java.io.File("extensions" + java.io.File.separator + "array").toURI.toURL
-    assert(jarLoader.resolvePathAsURL("array").get == expectedURL)
+    val actualURL   = jarLoader.resolvePathAsURL("array").get
+    assert(actualURL == expectedURL)
   }
 
   test("resolvePathAsURL returns None if the file cannot be found") {

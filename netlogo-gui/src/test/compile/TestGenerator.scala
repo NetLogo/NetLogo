@@ -27,12 +27,19 @@ class TestGenerator extends AnyFunSuite {
     compileAll(source, "").code.map(_.disassembly.value).mkString("\n")
   def disassembleCommand(source: String): String =
     condense(compile(source, "").disassembly.value)
-  def disassembleReporter(source: String): String =
-    condense(compile(source, "__ignore ").args.head.disassembly.value)
+  def disassembleReporter(source: String): String = {
+    val compiled    = compile(source, "__ignore ")
+    val args        = compiled.args
+    val head        = args.head
+    val disassembly = head.disassembly
+    val value       = disassembly.value
+    val condensed   = condense(value)
+    condensed
+  }
   def stripLineNumbers(disassembly: String) =
     disassembly.split("\n").filter(!_.matches("L\\d?")).toList
 
-  if(Version.useGenerator)
+  if (Version.useGenerator)
     test("no arg reporter") {
       // the result is being passed to __ignore which expects an Object so we should
       // generate code that retrieves a stored Double
