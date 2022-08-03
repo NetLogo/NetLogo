@@ -5,6 +5,7 @@ package org.nlogo.util
 import org.scalatest.funsuite.AnyFunSuite
 import org.jmock.{ AbstractExpectations, Expectations, Mockery, Sequence }
 import org.jmock.imposters.ByteBuddyClassImposteriser
+import org.jmock.lib.concurrent.Synchroniser
 import org.jmock.junit5.JUnit5Mockery
 import scala.util.DynamicVariable
 import org.hamcrest.{ Description, BaseMatcher, Matcher }
@@ -66,7 +67,11 @@ trait MockSuite extends AnyFunSuite {
   // this is the main test method provided by this trait.
   def mockTest(name: String)(f: => Unit) {
     test(name) {
-      _context.withValue(new JUnit5Mockery() { setImposteriser(ByteBuddyClassImposteriser.INSTANCE) }) {
+      _context.withValue(new JUnit5Mockery() {
+        private val synchroniser = new Synchroniser()
+        setImposteriser(ByteBuddyClassImposteriser.INSTANCE)
+        setThreadingPolicy(synchroniser)
+      }) {
         _expectations.withValue(new Expectations()) {
           f
         }
