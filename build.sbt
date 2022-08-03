@@ -62,13 +62,19 @@ lazy val scalatestSettings = Seq(
   )
   // This lets us mock up some Java library classes for testing.
   // -Jeremy B August 2022
-, Test / javaOptions ++= Seq(
+, Test / javaOptions := { Seq(
     "--add-opens", "java.desktop/java.awt=ALL-UNNAMED"
   , "--add-opens", "java.base/java.io=ALL-UNNAMED"
   , "-Dapple.awt.graphics.UseQuartz=false"
-  )
-  // Tests must be forked to ge the above `javaOptions`
+  , s"-Dorg.nlogo.is3d=${System.getProperty("org.nlogo.is3d", "false")}"
+  , s"-Dorg.nlogo.noGenerator=${System.getProperty("org.nlogo.noGenerator", "false")}"
+  , s"-Dorg.nlogo.noOptimizer=${System.getProperty("org.nlogo.noOptimizer", "false")}"
+  ) }
+  // Tests must be forked to get the above `javaOptions`
 , Test / fork := true
+, threed := { System.setProperty("org.nlogo.is3d", "true") }
+, nogen  := { System.setProperty("org.nlogo.noGenerator", "true") }
+, noopt  := { System.setProperty("org.nlogo.noOptimizer", "true") }
 )
 
 lazy val flexmarkDependencies = {
@@ -166,9 +172,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     testChecksumsClass in Test              := "org.nlogo.headless.TestChecksums",
     resourceDirectory in Compile            := baseDirectory.value / "resources",
     unmanagedResourceDirectories in Compile ++= (unmanagedResourceDirectories in Compile in sharedResources).value,
-    threed := { System.setProperty("org.nlogo.is3d", "true") },
-    nogen  := { System.setProperty("org.nlogo.noGenerator", "true") },
-    noopt  := { System.setProperty("org.nlogo.noOptimizer", "true") },
     libraryDependencies ++= Seq(
       "org.picocontainer" % "picocontainer" % "2.15",
       "javax.media" % "jmf" % "2.1.1e",
@@ -229,7 +232,6 @@ lazy val headless = (project in file ("netlogo-headless")).
     autogenRoot   := (baseDirectory.value.getParentFile / "autogen").getAbsoluteFile,
     extensionRoot := baseDirectory.value.getParentFile / "extensions",
     mainClass in Compile         := Some("org.nlogo.headless.Main"),
-    nogen                        := { System.setProperty("org.nlogo.noGenerator", "true") },
     libraryDependencies          ++= Seq(
       "org.parboiled" %% "parboiled" % "2.3.0",
       "commons-codec" % "commons-codec" % "1.15",
