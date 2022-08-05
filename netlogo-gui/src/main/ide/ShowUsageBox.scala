@@ -63,7 +63,7 @@ class ShowUsageBox(colorizer: Colorizer) {
               val r = editorArea.modelToView2D(token.start)
               val scrollHeight = scrollPane.getExtentSize.height
               val viewHeight   = scrollPane.getViewSize.height
-               val y = (0 max r.getY.toInt - ((scrollHeight - r.getHeight.toInt) / 2)) min (viewHeight - scrollHeight)
+              val y = (0 max r.getY.toInt - ((scrollHeight - r.getHeight.toInt) / 2)) min (viewHeight - scrollHeight)
               scrollPane.setViewPosition(new Point(0, y))
             } catch {
               case ex: BadLocationException => Exceptions.ignore(ex)

@@ -11,8 +11,6 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     if: ${{ 'pull_request' != github.event_name || (github.event.pull_request.head.repo.git_url != github.event.pull_request.base.repo.git_url) }}
     steps:
       - name: Cancel Previous Runs
@@ -43,8 +41,6 @@ jobs:
 
   test-parser:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     needs: build
     steps:
       - uses: actions/cache@v2
@@ -63,8 +59,6 @@ jobs:
 
   test-2D:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     needs: build
     steps:
       - uses: actions/cache@v2
@@ -86,8 +80,6 @@ jobs:
 
   test-3D:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     needs: build
     steps:
       - uses: actions/cache@v2
@@ -106,8 +98,6 @@ jobs:
 
   test-extensions:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     needs: build
     steps:
       - uses: actions/cache@v2
@@ -140,8 +130,6 @@ jobs:
 
   test-headless:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
     needs: build
     steps:
       - uses: actions/cache@v2
