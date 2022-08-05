@@ -206,7 +206,7 @@ object JavaPackager {
     stubApplicationName:     String,
     newApplicationDirectory: File,
     subApplicationNames:     Seq[String]): Unit = {
-      val winRoot = stubBuildDirectory / "bundles" / stubApplicationName
+      val winRoot = stubBuildDirectory / stubApplicationName
 
       // Create the new top level directory structure
       FileActions.createDirectories(newApplicationDirectory)
