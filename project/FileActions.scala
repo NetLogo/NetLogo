@@ -69,13 +69,13 @@ object FileActions {
     })
   }
 
-  // Creates a new directory specified as a file The createDirectories method should be
+  // Creates a new directory specified as a file. The createDirectories method should be
   // used if it is necessaryto create all nonexistent parent directories first.  No error
   // if the directory already exists
   def createDirectory(f: File): Unit =
     createDirectory(f.toPath)
 
-  // Creates a new directory specified as a path The createDirectories method should be
+  // Creates a new directory specified as a path. The createDirectories method should be
   // used if it is necessary to create all nonexistent parent directories first.  No error
   // if the directory already exists
   def createDirectory(p: Path): Unit = {
@@ -104,12 +104,12 @@ object FileActions {
     }
   }
 
-  // Copies a file or directory to a destination If directory copies all contents
+  // Copies a file or directory to a destination. If directory copies all contents
   // overwrites any target files that exist
   def copyAny(src: File, dest: File): Unit =
     copyAny(src.toPath, dest.toPath)
 
-  // Copies a file or directory (as path) to a destination (as path).  If directory copies
+  // Copies a file or directory (as path) to a destination (as path). If directory copies
   // all contents.  Overwrites any target files that exist.
   def copyAny(src: Path, dest: Path): Unit =
     src match {
@@ -122,20 +122,20 @@ object FileActions {
     copyFile(src.toPath, dest.toPath)
   }
 
-  // Copies a path to a destination, overwriting the target path if it exists If file is a
+  // Copies a path to a destination, overwriting the target path if it exists. If file is a
   // directory, does not copy contents.
   def copyFile(src: Path, dest: Path): Unit = {
     Files.copy(src, dest, StandardCopyOption.COPY_ATTRIBUTES, StandardCopyOption.REPLACE_EXISTING)
   }
 
   // Copies a directory (as file) and its contents to a destination, overwriting any
-  // target files that exist
+  // target files that exist.
   def copyDirectory(src: File, dest: File): Unit = {
     copyDirectory(src.toPath, dest.toPath)
   }
 
   // Copies a directory (as path) and its contents to a destination, overwriting any
-  // target files that exists
+  // target files that exist.
   def copyDirectory(src: Path, dest: Path): Unit = {
     Files.walkFileTree(src, new java.util.HashSet(), Int.MaxValue, new CopyVisitor(src, dest))
   }
@@ -146,7 +146,7 @@ object FileActions {
     Files.walkFileTree(src, new java.util.HashSet(), Int.MaxValue, new CopyFilterVisitor(src, dest, filter))
   }
 
-  // Moves the file to the target file, failing if the target file exists Moving a
+  // Moves the file to the target file, failing if the target file exists. Moving a
   // directory will fail if it requires moving sub files.
   def moveFile(src: File, dest: File): Unit = {
     Files.move(src.toPath, dest.toPath)
@@ -158,28 +158,28 @@ object FileActions {
     listVisitor.pathsFound
   }
 
-  // Copies bytes from the URL source to a file destination.  The directories up to
-  // destination will be created if they don't already exist.  The destination will be
+  // Copies bytes from the URL source to a file destination. The directories up to
+  // destination will be created if they don't already exist. The destination will be
   // overwritten if it already exists.
   def download(url: URL, file: File): Unit = {
     FileUtils.copyURLToFile(url, file)
   }
 
-  // Deletes file, recursively if it is a directory.  No error if file does not exist
+  // Deletes file, recursively if it is a directory. No error if file does not exist
   def remove(f: File): Unit = {
     IO.delete(f)
   }
 
-  // Creates a relative soft symbolic link to a specified target.  link - a File for the
-  // symbolic link to create target - a File for the target of the symbolic link If the
+  // Creates a relative soft symbolic link to a specified target. Input: link - a File for the
+  // symbolic link to create, target - a File for the target of the symbolic link. If the
   // link already exists it will be overwritten.
   def createRelativeSoftLink(link: File, target: File): Unit = {
     createRelativeSoftLink(link.toPath, target.toPath)
   }
 
-  // Creates a relative soft symbolic link to a specified target.  link - the absolute
-  // path of the symbolic link to create target - the absolute path of the target of the
-  // symbolic link If the link already exists it will be overwritten
+  // Creates a relative soft symbolic link to a specified target.  Input: link - the absolute
+  // path of the symbolic link to create, target - the absolute path of the target of the
+  // symbolic link. If the link already exists it will be overwritten.
   def createRelativeSoftLink(link: Path, target: Path): Unit = {
     val relativeTarget = link.getParent().relativize(target)
     if (Files.exists(link)) {
