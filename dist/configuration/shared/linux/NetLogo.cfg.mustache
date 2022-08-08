@@ -10,8 +10,13 @@ app.identifier={{{appIdentifier}}}
 
 [JVMOptions]
 -Xmx1024m
--XX:+UseParallelGC
 -Dfile.encoding=UTF-8
+java-options=--add-exports
+java-options=java.base/java.lang=ALL-UNNAMED
+java-options=--add-exports
+java-options=java.desktop/sun.awt=ALL-UNNAMED
+java-options=--add-exports
+java-options=java.desktop/sun.java2d=ALL-UNNAMED
 {{#jvmOptions}}{{{.}}}
 {{/jvmOptions}}
 

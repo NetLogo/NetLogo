@@ -284,7 +284,13 @@ lazy val macApp = project.in(file("mac-app")).
       baseDirectory.value / "natives" / "macosx-universal" / "libjcocoa.dylib") ++
       ((baseDirectory in netlogo).value / "natives" / "macosx-universal" * "*.jnilib").get).mkString(":"),
     artifactPath in Compile in packageBin := target.value / "netlogo-mac-app.jar",
-    javacOptions ++= Seq("-bootclasspath", System.getProperty("java.home") + "/lib/rt.jar", "--add-exports", "java.desktop/com.apple.laf=ALL-UNNAMED"))
+    javacOptions ++= Seq("-bootclasspath", System.getProperty("java.home") + "/lib/rt.jar",
+//  Needed because MacTabbedPaneUI uses com.apple.laf.AquaTabbedPaneContrastUI
+    "--add-exports", "java.desktop/com.apple.laf=ALL-UNNAMED",
+//  These three needed for JOGL
+    "--add-exports", "java.base/java.lang=ALL-UNNAMED",
+    "--add-exports", "java.desktop/sun.awt=ALL-UNNAMED",
+    "--add-exports", "java.desktop/sun.java2d=ALL-UNNAMED"))
 
 // this project is all about packaging NetLogo for distribution
 lazy val dist = project.in(file("dist")).

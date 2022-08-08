@@ -15,9 +15,16 @@ app.identifier=org.nlogo.app
 -Xdock:name={{appShortName}}
 -Dorg.nlogo.mac.appClassName={{{mainClass}}}
 -Xmx{{maxMemory}}
--XX:+UseParallelGC
 -Dfile.encoding=UTF-8
 -Dapple.awt.graphics.UseQuartz=true
+java-options=--add-exports
+java-options=java.desktop/com.apple.laf=ALL-UNNAMED
+java-options=--add-exports
+java-options=java.base/java.lang=ALL-UNNAMED
+java-options=--add-exports
+java-options=java.desktop/sun.awt=ALL-UNNAMED
+java-options=--add-exports
+java-options=java.desktop/sun.java2d=ALL-UNNAMED
 {{#jvmOptions}}{{{.}}}
 
 {{/jvmOptions}}
