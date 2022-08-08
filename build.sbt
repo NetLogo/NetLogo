@@ -46,8 +46,13 @@ lazy val jvmSettings = Seq(
   publishArtifact in Test := true,
   javacOptions ++=
     "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 17 -target 17"
-    .split(" ").toSeq
-)
+    .split(" ").toSeq,
+  javaOptions ++=Seq(
+    //  These add-exports are needed for JOGL
+    "--add-exports", "java.base/java.lang=ALL-UNNAMED",
+    "--add-exports", "java.desktop/sun.awt=ALL-UNNAMED",
+    "--add-exports", "java.desktop/sun.java2d=ALL-UNNAMED")
+  )
 
 // These are scalatest-specific settings
 // Any scalatest-specific settings should change here
@@ -286,11 +291,7 @@ lazy val macApp = project.in(file("mac-app")).
     artifactPath in Compile in packageBin := target.value / "netlogo-mac-app.jar",
     javacOptions ++= Seq("-bootclasspath", System.getProperty("java.home") + "/lib/rt.jar",
 //  Needed because MacTabbedPaneUI uses com.apple.laf.AquaTabbedPaneContrastUI
-    "--add-exports", "java.desktop/com.apple.laf=ALL-UNNAMED",
-//  These three needed for JOGL
-    "--add-exports", "java.base/java.lang=ALL-UNNAMED",
-    "--add-exports", "java.desktop/sun.awt=ALL-UNNAMED",
-    "--add-exports", "java.desktop/sun.java2d=ALL-UNNAMED"))
+    "--add-exports", "java.desktop/com.apple.laf=ALL-UNNAMED"))
 
 // this project is all about packaging NetLogo for distribution
 lazy val dist = project.in(file("dist")).
