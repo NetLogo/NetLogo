@@ -69,8 +69,17 @@ class NativesDir(sourceDir: File, platforms: String*) extends BundledDirectory(s
 
 class DocsDir(sourceDir: File) extends BundledDirectory(sourceDir) {
   val directoryName = "docs"
-  def files: Seq[File] =
-    Path.allSubpaths(sourceDir).map(_._1).filterNot(_.isHidden).toSeq
+  def files: Seq[File] = {
+    val children = sourceDir.listFiles
+    val validChildren = children.filter( (f) => !"scaladoc".equals(f.getName) )
+    validChildren.flatMap( (f) =>
+      if (!f.isDirectory) {
+        Seq(f)
+      } else {
+        Path.allSubpaths(f).map(_._1).filterNot(_.isHidden).toSeq
+      }
+    )
+  }
 }
 
 class BehaviorsearchDir(baseDirectory: File, platformShortName: String) extends BundledDirectory(baseDirectory) {
