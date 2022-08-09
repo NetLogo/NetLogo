@@ -20,6 +20,40 @@ abstract class BundledDirectory(val sourceDir: File) {
   }
 }
 
+object ExtenionDir {
+  def removeVidNativeLibs(platform: String, arch: String, path: File) = {
+    val vidDir = path / "extensions" / ".bundled" / "vid"
+    val allPlatforms = Set("linux-x86", "linux-x86_64", "macosx-arm64", "macosx-x86_64", "windows-x86", "windows-x86_64")
+    val invalidPlatforms = if ("macosx".equals(platform)) {
+      allPlatforms -- Set("macosx-arm64", "macosx-x86_64")
+    } else {
+      if ("32".equals(arch)) {
+        allPlatforms - s"$platform-x86"
+      } else {
+        allPlatforms - s"$platform-x86_64"
+      }
+    }
+    def isInvalidForPlatform(fileP: String): Boolean = {
+      invalidPlatforms.exists( (p) => fileP.endsWith(p) )
+    }
+    def isJavaFX(starter: String): Boolean = {
+      starter.startsWith("javafx-")
+    }
+    val unneededJars = vidDir.listFiles.filter({ f =>
+      val fName = f.getName
+      val splits = fName.split("""\.""")
+      val isUnneeded = (
+        f.isFile &&
+        (splits.length > 1) &&
+        "jar".equals(splits(splits.length - 1)) &&
+        (isInvalidForPlatform(splits(splits.length - 2)) || isJavaFX(splits(0)) )
+      )
+      isUnneeded
+    })
+    unneededJars.foreach(FileActions.remove)
+  }
+}
+
 class ExtensionDir(sourceDir: File) extends BundledDirectory(sourceDir) {
   val directoryName = s"extensions${File.separator}.bundled"
 

@@ -159,6 +159,7 @@ object PackageWinAggregate {
           FileActions.copyFile(f, sharedJars / p)
       }
     }
+    ExtenionDir.removeVidNativeLibs("macosx", commonConfig.jdk.arch, sharedJars)
 
     commonConfig.classpath.foreach { jar =>
       FileActions.copyFile(jar, sharedJars / jar.getName)

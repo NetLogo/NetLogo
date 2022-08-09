@@ -121,6 +121,7 @@ object PackageLinuxAggregate {
             FileActions.copyFile(f, sharedJars / p)
         }
       }
+      ExtenionDir.removeVidNativeLibs("linux", commonConfig.jdk.arch, sharedJars)
 
       commonConfig.classpath.foreach { jar =>
         FileActions.copyFile(jar, sharedJars / jar.getName)
