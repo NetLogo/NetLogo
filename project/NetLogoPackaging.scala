@@ -198,16 +198,18 @@ object NetLogoPackaging {
       val buildJDK = aggregateJDKParser.parsed
       val outDir = target.value.getParentFile() / "target2" / s"packaged-linux-${buildJDK.arch}-${buildJDK.version}"
       FileActions.remove(outDir)
-      val srcDir = target.value / s"to-package-linux-${buildJDK.arch}-${buildJDK.version}"
-      FileActions.createDirectories(srcDir)
+
+      val jarDir = target.value.getParentFile() / s"to-package-linux-${buildJDK.arch}-${buildJDK.version}"
+      FileActions.remove(jarDir)
+      FileActions.createDirectories(jarDir)
 
       // need to consolidate with other platforms
       val mainJar = packagingMainJar.value
-      FileActions.copyFile(mainJar, srcDir / mainJar.getName)
+      FileActions.copyFile(mainJar, jarDir / mainJar.getName)
 
-      JavaPackager.generateStubApplication(buildJDK, "dummy", "image", srcDir, outDir, target.value, mainJar)
-
-      FileActions.remove(srcDir)
+      JavaPackager.generateStubApplication(buildJDK, "dummy", "image", jarDir, outDir, target.value, mainJar)
+      // jarDir has two levels, so want to delete parent recursively
+      FileActions.remove(jarDir.getParentFile())
 
       val bundled = bundledDirs(netlogo, macApp, behaviorsearchProject).value(LinuxPlatform)
 
@@ -242,16 +244,18 @@ object NetLogoPackaging {
       val buildJDK = aggregateJDKParser.parsed
       val netLogoJar = repackageJar(DummyApp, WindowsPlatform, netlogo).value
       val outDir = target.value.getParentFile() / "target2" / s"packaged-win-${buildJDK.arch}-${buildJDK.version}"
-      FileActions.remove(outDir)
-      val srcDir = target.value / s"to-package-win-${buildJDK.arch}-${buildJDK.version}"
-      FileActions.createDirectories(srcDir)
+      // Windows needs the target2 dir removed
+      FileActions.remove(outDir.getParentFile())
 
+      val jarDir = target.value.getParentFile() / s"to-package-win-${buildJDK.arch}-${buildJDK.version}"
+      FileActions.remove(jarDir)
+      FileActions.createDirectories(jarDir)
       val mainJar = packagingMainJar.value
-      FileActions.copyFile(mainJar, srcDir / mainJar.getName)
+      FileActions.copyFile(mainJar, jarDir / mainJar.getName)
 
-      JavaPackager.generateStubApplication(buildJDK, "dummy", "image", srcDir, outDir, target.value, mainJar)
-
-      FileActions.remove(srcDir)
+      JavaPackager.generateStubApplication(buildJDK, "dummy", "image", jarDir, outDir, target.value, mainJar)
+      // jarDir has two levels, so want to delete parent recursively
+      FileActions.remove(jarDir.getParentFile())
 
       val bundled = bundledDirs(netlogo, macApp, behaviorsearchProject).value(WindowsPlatform)
 
@@ -289,11 +293,12 @@ object NetLogoPackaging {
       val jarDir = target.value.getParentFile() / "jar-dir" / "packaged-mac"
       FileActions.remove(jarDir)
       FileActions.createDirectories(jarDir)
-      val fullJar = jarDir / mainJar.getName
-      FileActions.copyFile(mainJar, fullJar)
-
+      FileActions.copyFile(mainJar, jarDir / mainJar.getName)
       val macAppMainJar = (packageBin in Compile in macApp).value
+
       JavaPackager.generateStubApplication(buildJDK, "dummy", "image", jarDir, outDir, target.value, mainJar)
+      // jarDir has two levels, so want to delete parent recursively
+      FileActions.remove(jarDir.getParentFile())
 
       val classPath =
         (packagingClasspath.value ++
@@ -353,6 +358,7 @@ object NetLogoPackaging {
         buildJDK,
         webTarget.value
       )
+
       PackageMacAggregate(
         target.value / "mac-aggregate",
         commonConfig,
@@ -362,7 +368,6 @@ object NetLogoPackaging {
         buildVariables.value)
     }
   )
-
 
   def filterDuplicateDeps(cp: Def.Classpath): Def.Classpath = {
     val modId = AttributeKey[ModuleID]("moduleId")
