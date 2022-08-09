@@ -45,7 +45,7 @@ lazy val jvmSettings = Seq(
   javaSource in Test      := baseDirectory.value / "src" / "test",
   publishArtifact in Test := true,
   javacOptions ++=
-    "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path --release 11"
+    "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 17 -target 17"
     .split(" ").toSeq,
   javaOptions ++=Seq(
     //  These add-exports are needed for JOGL
