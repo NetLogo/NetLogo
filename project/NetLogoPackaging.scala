@@ -199,7 +199,7 @@ object NetLogoPackaging {
       val outDir = target.value.getParentFile() / "target2" / s"packaged-linux-${buildJDK.arch}-${buildJDK.version}"
       FileActions.remove(outDir)
 
-      val jarDir = target.value.getParentFile() / s"to-package-linux-${buildJDK.arch}-${buildJDK.version}"
+      val jarDir = target.value.getParentFile() / "jar-dir" / s"to-package-linux-${buildJDK.arch}-${buildJDK.version}"
       FileActions.remove(jarDir)
       FileActions.createDirectories(jarDir)
 
@@ -247,7 +247,7 @@ object NetLogoPackaging {
       // Windows needs the target2 dir removed
       FileActions.remove(outDir.getParentFile())
 
-      val jarDir = target.value.getParentFile() / s"to-package-win-${buildJDK.arch}-${buildJDK.version}"
+      val jarDir = target.value.getParentFile() / "jar-dir" / s"to-package-win-${buildJDK.arch}-${buildJDK.version}"
       FileActions.remove(jarDir)
       FileActions.createDirectories(jarDir)
       val mainJar = packagingMainJar.value
