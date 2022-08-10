@@ -44,21 +44,24 @@ object JavaPackager {
       linuxPackagerOptions
   }
 
-  // maps from a descriptive string to the javapackager path associated
-  // with it
-  // Need to check if jpackage works this way AAB April 2022
+  // expects folder structures like `C:\Program Files\BellSoft\Liberica-17-Full`
+  // searches 64 and 32 bit program directories on each drive letter
   def windowsPackagerOptions: Seq[BuildJDK] = {
     val is64 = System.getenv("PROCESSOR_ARCHITECTURE") == "AMD64"
-    val pkgers = windowsJavaPackagers
-    pkgers.flatMap { p =>
-      val arch = if (is64 && ! p.getAbsolutePath.contains("(x86)")) "64" else "32"
-      p.getAbsolutePath
-        .split("\\\\") // File.separator doesn't play nice with Regex
-        .find(_.contains("jdk"))
-        .map(_.drop(3))
-        .map(jdkVersion =>
-          SpecifiedJDK(arch, jdkVersion, p, javaHome = Some(p.getParentFile.getParentFile.getAbsolutePath)))
+    val jpackageFiles = windowsJavaPackagers
+    val specificJdks = jpackageFiles.map { jpackageFile =>
+      val jdkRootFile = jpackageFile.getParentFile.getParentFile
+      val arch        = if (is64 && ! jpackageFile.getAbsolutePath.contains("(x86)")) "64" else "32"
+      val jdkVersion  = s"java${jdkRootFile.getName.split("-")(1)}"
+      SpecifiedJDK(arch, jdkVersion, jpackageFile, javaHome = Some(jdkRootFile.getAbsolutePath))
     }
+
+    if (specificJdks.isEmpty) {
+      Seq(PathSpecifiedJDK)
+    } else {
+      specificJdks
+    }
+
   }
 
   def windowsJavaPackagers: Seq[File] = {
@@ -66,42 +69,51 @@ object JavaPackager {
 
     val fs = FileSystems.getDefault
     fs.getRootDirectories.asScala.toSeq.flatMap(r =>
-        Seq(fs.getPath(r.toString, "Program Files", "Java"),
-          fs.getPath(r.toString, "Program Files (x86)", "Java")))
-       .map(_.toFile)
-       .filter(f => f.exists && f.isDirectory)
-       .flatMap(_.listFiles)
-       .filter(_.getName.contains("jdk"))
-       .map(_ / "bin" / "jpackage.exe")
-       .filter(_.exists)
+      Seq(fs.getPath(r.toString, "Program Files", "BellSoft"),
+        fs.getPath(r.toString, "Program Files (x86)", "BellSoft")))
+      .map(_.toFile)
+      .filter(f => f.exists && f.isDirectory)
+      .flatMap(_.listFiles)
+      .filter(_.getName.contains("JDK"))
+      .map(_ / "bin" / "jpackage.exe")
+      .filter(_.exists)
   }
 
-  // maps from a descriptive string to the javapackager path associated
-  // Need to check if jpackage works this way AAB April 2022
-  // assumes java installations are named with format
-  // jdk<version>-<arch> , and installed in the alternatives
-  // system, which is accessible via `update-alternatives`.
-  // Additionally, if the jdk name contains '64', it will be labelled
-  // as a 64-bit build. YMMV.
+  // assumes java installations are named with format bellsoft-java<version>-full-<arch> ,
+  // and installed in the alternatives system, which is accessible via
+  // `update-alternatives`.  Additionally, if the jdk name contains '64', it will be
+  // labelled as a 64-bit build. YMMV.
   def linuxPackagerOptions: Seq[BuildJDK] = {
     val alternatives =
       try {
-        Process("update-alternatives --list jpackage".split(" ")).!!
+        Process("update-alternatives --list javac".split(" ")).!!
       } catch {
         case ex: java.lang.RuntimeException => "" // RHEL bugs out with this command, just use path-specified
       }
-    val options = alternatives.split("\n").filterNot(_ == "")
-    if (options.size < 2)
-      Seq(PathSpecifiedJDK)
-    else
-      for {
-        n       <- options
-        jdkName <- n.split("/").find(_.contains("jdk"))
-      } yield {
-        val jdkSplit = jdkName.split('-')
-        val arch = if (jdkSplit(1).contains("64")) "64" else "32"
-        SpecifiedJDK(arch, jdkSplit(0).drop(3), file(n), javaHome = Some(n.split('/').dropRight(2).mkString("/")))
+
+    val jpackageFiles = alternatives
+      .split("\n")
+      .filterNot(_ == "")
+      .map( (javacPath) => file(javacPath).getParentFile / "jpackage" )
+      .filter(_.exists)
+
+    val specificJdks = jpackageFiles.flatMap( (jpackageFile) => {
+      val jdkRootFile = jpackageFile.getParentFile.getParentFile
+      val jdkName     = jdkRootFile.getName
+      if (jdkName.contains("bellsoft-java")) {
+        val jdkVersion = jdkName.split("-")(1)
+        val arch       = if (jdkName.contains("64")) "64" else "32"
+        Some(SpecifiedJDK(arch, jdkVersion, jpackageFile, javaHome = Some(jdkRootFile.getAbsolutePath.toString)))
+      } else {
+        None
       }
+    })
+
+    if (specificJdks.isEmpty) {
+      Seq(PathSpecifiedJDK)
+    } else {
+      specificJdks
+    }
   }
 
   def repackageJar(app: SubApplication, mainClass: Option[String], sourceJar: File, outDir: File): File =
