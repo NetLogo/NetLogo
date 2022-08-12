@@ -304,6 +304,9 @@ lazy val dist = project.in(file("dist")).
   settings(NetLogoBuild.settings: _*).
   settings(NetLogoPackaging.settings(netlogo, macApp, behaviorsearchProject): _*)
 
+// This is needed for Windows packaging - AAB Aug, 2022
+javaFxAntPath := "alternativ/path/ant-javafx.jar"
+
 lazy val sharedResources = (project in file ("shared")).
   settings(commonSettings: _*).
   settings(scalaSettings: _*).
