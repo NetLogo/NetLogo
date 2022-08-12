@@ -22,7 +22,6 @@ addSbtPlugin("org.scala-js"       %  "sbt-scalajs"                     % "1.8.0"
 addSbtPlugin("org.nlogo"          %  "publish-versioned-plugin"        % "3.0.0")
 addSbtPlugin("org.nlogo"          %  "netlogo-extension-documentation" % "0.8.3")
 addSbtPlugin("com.timushev.sbt"   %  "sbt-updates"                     % "0.6.0")
-addSbtPlugin("com.quadstingray" % "sbt-javafx" % "1.5.2")
 
 libraryDependencies ++= Seq(
   "com.github.spullara.mustache.java" % "compiler"              % "0.9.5"
