@@ -171,14 +171,9 @@ object PackageWinAggregate {
       FileActions.copyAny(f, aggregateWinDir / f.getName)
     }
 
-    // extract IconSwap and download verpatch, used when customizing the executables
+    // download IconSwap and download verpatch, used when customizing the executables
     if (! (aggregateTarget / "IconSwap.exe").exists) {
-      val jfxJar = new java.util.jar.JarFile(file(jdk.javaHome.get) / "lib" / "ant-javafx.jar")
-      val iconSwapEntry = jfxJar.getEntry("com/oracle/tools/packager/windows/IconSwap.exe")
-      val iconSwapStream = jfxJar.getInputStream(iconSwapEntry)
-      IO.transfer(iconSwapStream, aggregateTarget / "IconSwap.exe")
-      iconSwapStream.close()
-      jfxJar.close()
+      FileActions.download(url("https://s3.amazonaws.com/ccl-artifacts/IconSwap.exe"), aggregateTarget / "IconSwap.exe")
     }
 
     if (! (aggregateTarget / "verpatch.exe").exists) {
