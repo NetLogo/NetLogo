@@ -82,7 +82,7 @@ object PackageMacAggregate {
 
     // rewrite configuration file
     Mustache(common.configRoot / "shared" / "macosx" / "NetLogo.cfg.mustache",
-      subApplicationDir / "Contents" / "Java" / (app.name + ".cfg"), allVariables)
+      subApplicationDir / "Contents" / "app" / (app.name + ".cfg"), allVariables)
 
     // rewrite Info.plist
     Mustache(common.configRoot / "shared" / "macosx" / "Info.plist.mustache",
