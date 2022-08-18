@@ -69,26 +69,6 @@ object PackageLinuxAggregate {
   //
   // note: this shares a lot of code with the windows aggregate packager.
   // There may be an opportunity for abstraction.
-  private def configureSubApplication(sharedAppRoot: File, app: SubApplication, common: CommonConfiguration, variables: Map[String, AnyRef]): Unit = {
-    val allVariables =
-      variables ++ app.configurationVariables("linux") +
-      ("mainClass"      -> app.mainClass) +
-      ("mainClassSlash" -> app.mainClass.replaceAllLiterally(".", "/").replaceAllLiterally("$", "")) +
-      ("appIdentifier"  -> app.mainClass.split("\\.").init.mkString(".")) +
-      ("classpathJars"  ->
-        common.classpath
-          .map(_.getName)
-          .sorted
-          .mkString(File.pathSeparator))
-
-    Mustache(common.configRoot / "linux" / "NetLogo.cfg.mustache",
-      sharedAppRoot / "lib" / "app" / (app.name.replaceAllLiterally(" ", "") + ".cfg"), allVariables)
-
-    app.additionalArtifacts(common.configRoot).foreach { f =>
-      FileActions.copyFile(f, sharedAppRoot / "lib" / "app" / f.getName)
-    }
-
-  }
 
   def apply(
     log: sbt.util.Logger
