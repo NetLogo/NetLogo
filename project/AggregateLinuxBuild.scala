@@ -91,84 +91,94 @@ object PackageLinuxAggregate {
   }
 
   def apply(
-    aggregateTarget:        File,
-    commonConfig:           CommonConfiguration,
-    stubApplicationAndName: (File, String),
-    subApplications:        Seq[SubApplication],
-    variables:              Map[String, String]): File = {
-      import commonConfig.{ jdk, webDirectory }
-
-      val version = variables("version")
-      val aggregateLinuxDir = aggregateTarget / s"NetLogo $version"
-      IO.delete(aggregateLinuxDir)
-      IO.createDirectory(aggregateLinuxDir)
-      JavaPackager.copyLinuxStubApplications(
-        stubApplicationAndName._1, stubApplicationAndName._2,
-        aggregateLinuxDir, subApplications.map(_.name))
-      // Create symbolic links in main NetLogo app directory to subApplications
-      // in the 'bin' directory
-      subApplications.foreach { app =>
-      FileActions.createRelativeSoftLink( Paths.get(aggregateLinuxDir.toString, "/", app.name),
-        Paths.get(aggregateLinuxDir.toString, "/", "bin", "/", app.name))
+    log: sbt.util.Logger
+  , version: String
+  , arch: String
+  , configDir: File
+  , appImageDir: File
+  , webDir: File
+  , extraDirs: Seq[BundledDirectory]
+  , launchers: Set[String]
+  , rootFiles: Seq[File]
+  , variables: Map[String, AnyRef]
+  ): File = {
+    log.info("Adding launcher sym links")
+    launchers.foreach( (launcher) => {
+      FileActions.createRelativeSoftLink(
+        appImageDir / s"$launcher $version",
+        appImageDir / "bin" / s"$launcher $version"
+      )
+    })
+    log.info("Copying the extra bundled directories")
+    extraDirs.foreach( (dir) => {
+      dir.fileMappings.foreach {
+        case (f, p) =>
+          val targetFile = appImageDir / "bin" / p
+          if (!targetFile.getParentFile.exists) {
+            FileActions.createDirectories(targetFile.getParentFile)
+          }
+          FileActions.copyFile(f, targetFile)
       }
-      val sharedJars = aggregateLinuxDir / "lib" / "app"
-      commonConfig.bundledDirs.foreach { d =>
-        d.fileMappings.foreach {
-          case (f, p) =>
-            val targetFile = sharedJars / p
-            if (! targetFile.getParentFile.isDirectory)
-              FileActions.createDirectories(targetFile.getParentFile)
-            FileActions.copyFile(f, sharedJars / p)
-        }
-      }
-      ExtenionDir.removeVidNativeLibs("linux", commonConfig.jdk.arch, sharedJars)
+      val dirName = dir.sourceDir.getName
+      FileActions.createRelativeSoftLink(
+        appImageDir / dirName
+      , appImageDir / "bin" / dirName
+      )
+    })
+    ExtenionDir.removeVidNativeLibs("linux", arch, appImageDir / "bin")
 
-      commonConfig.classpath.foreach { jar =>
-        FileActions.copyFile(jar, sharedJars / jar.getName)
-      }
-      commonConfig.rootFiles.foreach { f =>
-        FileActions.copyAny(f, aggregateLinuxDir / f.getName)
-      }
-      // configure each sub application
-      subApplications.foreach { app =>
-        configureSubApplication(aggregateLinuxDir, app, commonConfig, variables)
-      }
+    log.info("Copying the extra root directory files")
+    rootFiles.foreach( (f) => {
+      FileActions.copyAny(f, appImageDir / f.getName)
+    })
 
-      val headlessClasspath =
-        ("classpathJars"  ->
-          commonConfig.classpath
-            .map(jar => "lib/app/" + jar.getName)
-            .sorted
-            .mkString(File.pathSeparator))
+    log.info("Creating GUI/headless run scripts")
+    val appDir = appImageDir / "lib" / "app"
+    val headlessClasspath =
+      ("classpathJars" ->
+        appDir.listFiles
+          .filter( f => f.getName.endsWith(".jar") )
+          .map( jar => Paths.get("lib", "app", jar.getName).toString )
+          .sorted
+          .mkString(File.pathSeparator))
 
-      val permissions = {
-        import PosixFilePermission._
-        import scala.collection.JavaConverters._
-        Set(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ, GROUP_EXECUTE, OTHERS_READ, OTHERS_EXECUTE).asJava
-      }
+    val permissions = {
+      import PosixFilePermission._
+      import scala.collection.JavaConverters._
+      Set(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ, GROUP_EXECUTE, OTHERS_READ, OTHERS_EXECUTE).asJava
+    }
 
-      val headlessFile = aggregateLinuxDir / "netlogo-headless.sh"
-      Mustache(commonConfig.configRoot / "linux" / "netlogo-headless.sh.mustache",
-        headlessFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.headless.Main"))
-      Files.setPosixFilePermissions(headlessFile.toPath, permissions)
-      headlessFile.setExecutable(true)
+    val headlessFile = appImageDir / "netlogo-headless.sh"
+    Mustache(
+      configDir / "netlogo-headless.sh.mustache",
+      headlessFile,
+      variables + headlessClasspath + ("mainClass" -> "org.nlogo.headless.Main")
+    )
+    Files.setPosixFilePermissions(headlessFile.toPath, permissions)
+    headlessFile.setExecutable(true)
 
-      val guiFile = aggregateLinuxDir / "netlogo-gui.sh"
-      Mustache(commonConfig.configRoot / "linux" / "netlogo-headless.sh.mustache",
-        guiFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.app.App"))
-      Files.setPosixFilePermissions(guiFile.toPath, permissions)
-      guiFile.setExecutable(true)
+    val guiFile = appImageDir / "netlogo-gui.sh"
+    Mustache(
+      configDir / "netlogo-headless.sh.mustache",
+      guiFile,
+      variables + headlessClasspath + ("mainClass" -> "org.nlogo.app.App")
+    )
+    Files.setPosixFilePermissions(guiFile.toPath, permissions)
+    guiFile.setExecutable(true)
 
-      val archiveName = s"NetLogo-$version-${jdk.arch}.tgz"
-      val tarBuildDir = aggregateLinuxDir.getParentFile
-      IO.delete(tarBuildDir / archiveName)
-      RunProcess(Seq("tar", "-zcf", archiveName, aggregateLinuxDir.getName), tarBuildDir, "tar linux aggregate")
-      FileActions.createDirectory(webDirectory)
-      val archiveFile = webDirectory / archiveName
-      IO.delete(webDirectory / archiveName)
+    log.info("Creating the compressed archive file")
+    val archiveName  = s"NetLogo-$version-$arch.tgz"
+    val tarBuildDir  = appImageDir.getParentFile
+    val tarBuildFile = tarBuildDir / archiveName
+    val archiveFile  = webDir / archiveName
+    IO.delete(tarBuildFile)
+    IO.delete(archiveFile)
 
-      FileActions.moveFile(tarBuildDir / archiveName, webDirectory / archiveName)
+    RunProcess(Seq("tar", "-zcf", archiveName, appImageDir.getName), tarBuildDir, "tar linux aggregate")
 
-      webDirectory / archiveName
+    FileActions.createDirectory(webDir)
+    FileActions.moveFile(tarBuildFile, archiveFile)
+
+    archiveFile
   }
 }

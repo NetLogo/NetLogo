@@ -84,6 +84,7 @@ object NetLogoPackaging {
     aggregateJDKParser := Def.toSParser(jdkParser),
     subApplications    := Seq(NetLogoCoreApp, NetLogoThreeDApp, HubNetClientApp, BehaviorsearchApp),
     netLogoLongVersion := { if (marketingVersion.value.length == 3) marketingVersion.value + ".0" else marketingVersion.value },
+
     buildNetLogo := {
       (all in netlogo).value
       (allDocs in netlogo).value
@@ -92,16 +93,20 @@ object NetLogoPackaging {
       buildMathematicaLink.value
       (packageBin in Compile in behaviorsearchProject).value
     },
+
     resaveModels := {
       makeMainTask("org.nlogo.tools.ModelResaver",
         classpath = (Keys.fullClasspath in Test in netlogo),
         workingDirectory = baseDirectory(_.getParentFile)).toTask("").value
     },
+
     resaveModels := (resaveModels dependsOn (extensions in netlogo)).value,
+
     buildMathematicaLink := {
       val sbt = if (System.getProperty("os.name").contains("Windows")) "sbt.bat" else "sbt"
       RunProcess(Seq(sbt, "package"), mathematicaRoot.value, "package mathematica link")
     },
+
     packagedMathematicaLink := {
       val mathematicaLinkDir = mathematicaRoot.value
       IO.createDirectory(target.value / "Mathematica Link")
@@ -150,6 +155,7 @@ object NetLogoPackaging {
       Mustache.betweenDirectories(webSource, webTarget.value,
         Map("index" -> "NetLogo {{version}} Downloads"), vars)
     },
+
     generateLocalWebsite := {
       FileActions.copyDirectory(webTarget.value, localSiteTarget.value)
       FileActions.copyDirectory((modelsDirectory in netlogo).value, localSiteTarget.value / "models")
@@ -157,6 +163,7 @@ object NetLogoPackaging {
       FileActions.copyFile(netLogoRoot.value / "NetLogo User Manual.pdf", localSiteTarget.value / "docs" / "NetLogo User Manual.pdf")
       localSiteTarget.value
     },
+
     uploadWebsite := {
       val user = System.getenv("USER")
       val host = "ccl.northwestern.edu"
@@ -169,6 +176,7 @@ object NetLogoPackaging {
       RunProcess(Seq("ssh", s"${user}@${host}", "chgrp", "-R", "apache", s"${targetDir}/${marketingVersion.value}"), "ssh - change release group")
       RunProcess(Seq("ssh", s"${user}@${host}", "chmod", "-R", "g+rwX",  s"${targetDir}/${marketingVersion.value}"), "ssh - change release permissions")
     },
+
     uploadDocs := {
       val user = System.getenv("USER")
       val host = "ccl.northwestern.edu"
@@ -182,6 +190,7 @@ object NetLogoPackaging {
       RunProcess(Seq("ssh", s"$user@$host", "chgrp", "-R", "apache", targetDir), "ssh - change release group")
       RunProcess(Seq("ssh", s"$user@$host", "chmod", "-R", "g+rwX", targetDir), "ssh - change release permissions")
     },
+
     packagingClasspath := {
       val allDeps = (dependencyClasspath in netlogo in Runtime).value ++
         (dependencyClasspath in behaviorsearchProject in Runtime).value
@@ -191,55 +200,60 @@ object NetLogoPackaging {
         .filterNot(jarExcluded)
         .filterNot(_.isDirectory) :+ packagingMainJar.value
     },
+
     packagingMainJar := {
       (packageBin in Compile in netlogo).value
     },
+
     packageLinuxAggregate := {
+      val log = streams.value.log
+
+      val version = marketingVersion.value
+
       val buildJDK = aggregateJDKParser.parsed
-      val outDir = target.value.getParentFile() / "target2" / s"packaged-linux-${buildJDK.arch}-${buildJDK.version}"
-      FileActions.remove(outDir)
+      val buildDir  = target.value
 
-      val jarDir = target.value.getParentFile() / "jar-dir" / s"to-package-linux-${buildJDK.arch}-${buildJDK.version}"
-      FileActions.remove(jarDir)
-      FileActions.createDirectories(jarDir)
+      val inputDir = buildDir / s"input-${buildJDK.version}-${buildJDK.arch}"
+      log.info(s"Setting up jpackage input director: $inputDir")
+      FileActions.remove(inputDir)
+      FileActions.createDirectory(inputDir)
 
-      // need to consolidate with other platforms
-      val mainJar = packagingMainJar.value
-      FileActions.copyFile(mainJar, jarDir / mainJar.getName)
+      val netLogoJar = (netlogo / Compile / packageBin).value
+      FileActions.copyFile(netLogoJar, inputDir / s"netlogo-$version.jar")
+      val netLogoDeps = packagingClasspath.value
+      netLogoDeps.foreach( (jar) => {
+        if (!jar.getName.equals(netLogoJar.getName)) {
+          FileActions.copyFile(jar, inputDir / jar.getName)
+        }
+      })
 
-      JavaPackager.generateStubApplication(buildJDK, "dummy", "image", jarDir, outDir, target.value, mainJar)
-      // jarDir has two levels, so want to delete parent recursively
-      FileActions.remove(jarDir.getParentFile())
+      val configDir = configRoot.value / "linux"
+      val destDir   = buildDir / s"linux-dest-${buildJDK.version}-${buildJDK.arch}"
+      FileActions.remove(destDir)
+      JavaPackager.generateAppImage(log, "linux", version, configDir, buildDir, inputDir, destDir)
 
-      val bundled = bundledDirs(netlogo, macApp, behaviorsearchProject).value(LinuxPlatform)
-
-      val commonConfig = CommonConfiguration(
-        mainJar,
-        "",
-        bundled,
-        packagingClasspath.value,
-        Seq(),
-        Seq(),
-        (aggregateOnlyFiles in packageLinuxAggregate).value,
-        configRoot.value,
-        marketingVersion.value,
-        buildJDK,
-        webTarget.value
-      )
+      val extraDirs = bundledDirs(netlogo, macApp, behaviorsearchProject).value(LinuxPlatform)
 
       PackageLinuxAggregate(
-        target.value / s"linux-aggregate-${buildJDK.arch}",
-        commonConfig,
-        (outDir -> "dummy"),
-        subApplications.value,
-        buildVariables.value
+        log
+      , version
+      , buildJDK.arch
+      , configDir
+      , destDir / s"NetLogo $version"
+      , webTarget.value
+      , extraDirs
+      , Set("NetLogo", "NetLogo 3D", "HubNet Client", "Behaviorsearch")
+      , (packageLinuxAggregate / aggregateOnlyFiles).value
+      , buildVariables.value
       )
     },
+
     iconFiles in packageWinAggregate := {
       ((configRoot.value ** "*.ico") +++
         ((baseDirectory in behaviorsearchProject).value ** "Behaviorsearch.ico") +++
         ((baseDirectory in behaviorsearchProject).value ** "behaviorsearch_model.ico")).get.toSeq
     },
+
     packageWinAggregate := {
       val buildJDK = aggregateJDKParser.parsed
       val netLogoJar = repackageJar(DummyApp, WindowsPlatform, netlogo).value
@@ -280,10 +294,12 @@ object NetLogoPackaging {
         subApplications.value,
         buildVariables.value)
     },
+
     iconFiles in packageMacAggregate := {
       ((configRoot.value ** "*.icns") +++
         ((baseDirectory in behaviorsearchProject).value ** "*.icns")).get.toSeq
     },
+
     packageMacAggregate := {
       val buildJDK = PathSpecifiedJDK
       val netLogoJar = repackageJar(DummyApp, new MacImagePlatform(macApp), netlogo).value
