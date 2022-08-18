@@ -81,15 +81,15 @@ object PackageMacAggregate {
     }
 
     // rewrite configuration file
-    Mustache(common.configRoot / "shared" / "macosx" / "NetLogo.cfg.mustache",
+    Mustache(common.configRoot / "macosx" / "NetLogo.cfg.mustache",
       subApplicationDir / "Contents" / "app" / (app.name + ".cfg"), allVariables)
 
     // rewrite Info.plist
-    Mustache(common.configRoot / "shared" / "macosx" / "Info.plist.mustache",
+    Mustache(common.configRoot / "macosx" / "Info.plist.mustache",
       subApplicationDir / "Contents" / "Info.plist", allVariables)
 
     // add PkgInfo
-    Mustache(common.configRoot / "shared" / "macosx" / "image" / "Contents" / "PkgInfo.mustache",
+    Mustache(common.configRoot / "macosx" / "image" / "Contents" / "PkgInfo.mustache",
       subApplicationDir / "Contents" / "Resources" / "PkgInfo", allVariables)
 
   }
@@ -176,12 +176,12 @@ object PackageMacAggregate {
           .mkString(File.pathSeparator))
 
     val headlessFile = aggregateMacDir / "netlogo-headless.sh"
-    Mustache(commonConfig.configRoot / "shared" / "macosx" / "netlogo-headless.sh.mustache",
+    Mustache(commonConfig.configRoot / "macosx" / "netlogo-headless.sh.mustache",
       headlessFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.headless.Main"))
     headlessFile.setExecutable(true)
 
     val guiFile = aggregateMacDir / "netlogo-gui.sh"
-    Mustache(commonConfig.configRoot / "shared" / "macosx" / "netlogo-headless.sh.mustache",
+    Mustache(commonConfig.configRoot / "macosx" / "netlogo-headless.sh.mustache",
       guiFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.app.App"))
     guiFile.setExecutable(true)
 
@@ -210,7 +210,7 @@ object PackageMacAggregate {
     val dmgName = buildName + ".dmg"
 
     // Apple requires a "hardened" runtime for notarization -Jeremy B July 2020
-    val appSigningOptions = Seq("--options", "runtime", "--entitlements", (commonConfig.configRoot / "shared" / "macosx" / "entitlements.xml").toString)
+    val appSigningOptions = Seq("--options", "runtime", "--entitlements", (commonConfig.configRoot / "macosx" / "entitlements.xml").toString)
 
     // In theory instead of hardcoding these we could search all jars for any libs that
     // aren't signed or are signed incorrectly.  But Apple will do that search for us

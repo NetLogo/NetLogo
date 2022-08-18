@@ -81,7 +81,7 @@ object PackageLinuxAggregate {
           .sorted
           .mkString(File.pathSeparator))
 
-    Mustache(common.configRoot / "shared" / "linux" / "NetLogo.cfg.mustache",
+    Mustache(common.configRoot / "linux" / "NetLogo.cfg.mustache",
       sharedAppRoot / "lib" / "app" / (app.name.replaceAllLiterally(" ", "") + ".cfg"), allVariables)
 
     app.additionalArtifacts(common.configRoot).foreach { f =>
@@ -148,13 +148,13 @@ object PackageLinuxAggregate {
       }
 
       val headlessFile = aggregateLinuxDir / "netlogo-headless.sh"
-      Mustache(commonConfig.configRoot / "shared" / "linux" / "netlogo-headless.sh.mustache",
+      Mustache(commonConfig.configRoot / "linux" / "netlogo-headless.sh.mustache",
         headlessFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.headless.Main"))
       Files.setPosixFilePermissions(headlessFile.toPath, permissions)
       headlessFile.setExecutable(true)
 
       val guiFile = aggregateLinuxDir / "netlogo-gui.sh"
-      Mustache(commonConfig.configRoot / "shared" / "linux" / "netlogo-headless.sh.mustache",
+      Mustache(commonConfig.configRoot / "linux" / "netlogo-headless.sh.mustache",
         guiFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.app.App"))
       Files.setPosixFilePermissions(guiFile.toPath, permissions)
       guiFile.setExecutable(true)

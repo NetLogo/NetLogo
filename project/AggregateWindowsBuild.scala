@@ -108,7 +108,7 @@ object PackageWinAggregate {
           .sorted
           .mkString(File.pathSeparator))
 
-    Mustache(common.configRoot / "shared" / "windows" / "NetLogo.cfg.mustache",
+    Mustache(common.configRoot / "windows" / "NetLogo.cfg.mustache",
       sharedAppRoot / "app" / (app.name + ".cfg"), allVariables)
 
     app.additionalArtifacts(common.configRoot).foreach { f =>
@@ -194,18 +194,18 @@ object PackageWinAggregate {
           .mkString(""))
 
     val headlessFile = aggregateWinDir / "netlogo-headless.bat"
-    Mustache(commonConfig.configRoot / "shared" / "windows" / "netlogo-headless.bat.mustache",
+    Mustache(commonConfig.configRoot / "windows" / "netlogo-headless.bat.mustache",
       headlessFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.headless.Main"))
     headlessFile.setExecutable(true)
 
     val guiFile = aggregateWinDir / "netlogo-gui.bat"
-    Mustache(commonConfig.configRoot / "shared" / "windows" / "netlogo-headless.bat.mustache",
+    Mustache(commonConfig.configRoot / "windows" / "netlogo-headless.bat.mustache",
       guiFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.app.App"))
     guiFile.setExecutable(true)
 
     val uuidArchiveFileName =
       variables("version").replaceAllLiterally("-", "").replaceAllLiterally(".", "") + ".properties"
-    val uuidArchiveFile = commonConfig.configRoot / "aggregate" / "win" /  "archive" / uuidArchiveFileName
+    val uuidArchiveFile = commonConfig.configRoot / "windows" /  "archive" / uuidArchiveFileName
     val uuids =
       if (! uuidArchiveFile.exists) {
         val ids = generateUUIDs
@@ -227,7 +227,7 @@ object PackageWinAggregate {
 
     val msiBuildDir = aggregateWinDir.getParentFile
 
-    val aggregateConfigDir = commonConfig.configRoot / "aggregate" / "win"
+    val aggregateConfigDir = commonConfig.configRoot / "windows"
     val baseComponentVariables =
       Map[String, AnyRef](
           "win64"                 -> winVariables("win64"),
