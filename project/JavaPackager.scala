@@ -271,7 +271,7 @@ object JavaPackager {
       IO.delete(newApplicationDirectory / "lib" / "app" / (stubApplicationName + ".cfg"))
   }
 
-  def generateAppImage(log: sbt.util.Logger, platform: String, version: String, configDir: File, buildDir: File, inputDir: File, destDir: File) = {
+  def generateAppImage(log: sbt.util.Logger, platform: String, version: String, configDir: File, buildDir: File, inputDir: File, destDir: File, extraArgs: Seq[String] = Seq()) = {
     val netLogo3dPropsPath      = (configDir / "netlogo-3d-launcher.properties").getAbsolutePath
     val hubNetPropsPath         = (configDir / "hubnet-client-launcher.properties").getAbsolutePath
     val behaviorsearchPropsPath = (configDir / "behaviorsearch-launcher.properties").getAbsolutePath
@@ -279,22 +279,23 @@ object JavaPackager {
     val args = Seq[String](
       "jpackage"
     , "--verbose"
-    , "--name",       s"NetLogo $version"
-    , "--type",       "app-image"
-    , "--main-jar",   s"netlogo-$version.jar"
-    , "--main-class", "org.nlogo.app.App"
-    , "--input",      inputDir.getAbsolutePath
-    , "--dest",       destDir.getAbsolutePath
+    , "--resource-dir", buildDir.getAbsolutePath
+    , "--name",         s"NetLogo"
+    , "--type",         "app-image"
+    , "--main-jar",     s"netlogo-$version.jar"
+    , "--main-class",   "org.nlogo.app.App"
+    , "--input",        inputDir.getAbsolutePath
+    , "--dest",         destDir.getAbsolutePath
     , "--java-options", "-Xmx1024m"
     , "--java-options", "-XX:+UseParallelGC"
     , "--java-options", "-Dfile.encoding=UTF-8"
     , "--java-options", "--add-exports=java.base/java.lang=ALL-UNNAMED"
     , "--java-options", "--add-exports=java.desktop/sun.awt=ALL-UNNAMED"
     , "--java-options", "--add-exports=java.desktop/sun.java2d=ALL-UNNAMED"
-    , "--add-launcher", s"""NetLogo 3D $version=$netLogo3dPropsPath"""
-    , "--add-launcher", s"""HubNet Client $version=$hubNetPropsPath"""
-    , "--add-launcher", s"""Behaviorsearch $version=$behaviorsearchPropsPath"""
-    )
+    , "--add-launcher", s"""NetLogo 3D=$netLogo3dPropsPath"""
+    , "--add-launcher", s"""HubNet Client=$hubNetPropsPath"""
+    , "--add-launcher", s"""Behaviorsearch=$behaviorsearchPropsPath"""
+    ) ++ extraArgs
 
     log.info(s"running: ${args.mkString(" ")}")
     val returnValue = Process(args, buildDir).!

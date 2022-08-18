@@ -80,7 +80,7 @@ object PackageLinuxAggregate {
   , extraDirs: Seq[BundledDirectory]
   , launchers: Set[String]
   , rootFiles: Seq[File]
-  , variables: Map[String, AnyRef]
+  , variables: Map[String, String]
   ): File = {
     log.info("Adding launcher sym links")
     launchers.foreach( (launcher) => {
@@ -130,7 +130,7 @@ object PackageLinuxAggregate {
 
     val headlessFile = appImageDir / "netlogo-headless.sh"
     Mustache(
-      configDir / "netlogo-headless.sh.mustache",
+      configDir / "linux" / "netlogo-headless.sh.mustache",
       headlessFile,
       variables + headlessClasspath + ("mainClass" -> "org.nlogo.headless.Main")
     )
@@ -139,7 +139,7 @@ object PackageLinuxAggregate {
 
     val guiFile = appImageDir / "netlogo-gui.sh"
     Mustache(
-      configDir / "netlogo-headless.sh.mustache",
+      configDir / "linux" / "netlogo-headless.sh.mustache",
       guiFile,
       variables + headlessClasspath + ("mainClass" -> "org.nlogo.app.App")
     )

@@ -2,7 +2,7 @@ import sbt._
 
 import java.io.{ IOException, File }
 import java.nio.charset.Charset
-import java.nio.file.{ Files, FileSystems, Path }
+import java.nio.file.{ Files, FileSystems, Path, Paths }
 import java.util.Properties
 import java.util.jar.JarFile
 
@@ -127,107 +127,89 @@ object PackageWinAggregate {
   }
 
   def apply(
-    aggregateTarget:        File,
-    commonConfig:           CommonConfiguration,
-    stubApplicationAndName: (File, String),
-    subApplications:        Seq[SubApplication],
-    variables:              Map[String, String]): File = {
-    import commonConfig.{ jdk, webDirectory }
-
-    val version = variables("version")
-
-    val buildName = s"NetLogo-$version"
-
-    val aggregateWinDir = aggregateTarget / s"NetLogo $version"
-    val msiName = s"NetLogo-${version}-${jdk.arch}.msi"
-
-    IO.delete(aggregateWinDir)
-    IO.createDirectory(aggregateWinDir)
-
-    JavaPackager.copyWinStubApplications(
-      stubApplicationAndName._1, stubApplicationAndName._2,
-      aggregateWinDir, subApplications.map(_.name))
-
-    val sharedJars = aggregateWinDir / "app"
-
-    commonConfig.bundledDirs.foreach { d =>
-      d.fileMappings.foreach {
+    log: sbt.util.Logger
+  , version: String
+  , arch: String
+  , configDir: File
+  , appImageDir: File
+  , webDir: File
+  , extraDirs: Seq[BundledDirectory]
+  , launchers: Set[String]
+  , rootFiles: Seq[File]
+  , variables: Map[String, String]
+  ): File = {
+    log.info("Copying the extra bundled directories")
+    extraDirs.foreach( (dir) => {
+      dir.fileMappings.foreach {
         case (f, p) =>
-          val targetFile = sharedJars / p
-          if (! targetFile.getParentFile.isDirectory)
+          val targetFile = appImageDir / p
+          if (!targetFile.getParentFile.exists) {
             FileActions.createDirectories(targetFile.getParentFile)
-          FileActions.copyFile(f, sharedJars / p)
+          }
+          FileActions.copyFile(f, targetFile)
       }
-    }
-    ExtenionDir.removeVidNativeLibs("windows", commonConfig.jdk.arch, sharedJars)
+    })
+    ExtenionDir.removeVidNativeLibs("windows", arch, appImageDir)
 
-    commonConfig.classpath.foreach { jar =>
-      FileActions.copyFile(jar, sharedJars / jar.getName)
-    }
+    log.info("Copying the extra root directory files")
+    rootFiles.foreach( (f) => {
+      FileActions.copyAny(f, appImageDir / f.getName)
+    })
 
-    commonConfig.icons.foreach { icon => FileActions.copyFile(icon, aggregateWinDir / icon.getName) }
-
-    commonConfig.rootFiles.foreach { f =>
-      FileActions.copyAny(f, aggregateWinDir / f.getName)
-    }
-
-    // download IconSwap and download verpatch, used when customizing the executables
-    if (! (aggregateTarget / "IconSwap.exe").exists) {
-      FileActions.download(url("https://s3.amazonaws.com/ccl-artifacts/IconSwap.exe"), aggregateTarget / "IconSwap.exe")
-    }
-
-    if (! (aggregateTarget / "verpatch.exe").exists) {
-      FileActions.download(url("https://s3.amazonaws.com/ccl-artifacts/verpatch.exe"), aggregateTarget / "verpatch.exe")
-    }
-
-    // configure each sub application
-    subApplications.foreach { app =>
-      configureSubApplication(aggregateWinDir, app, commonConfig, variables, aggregateTarget)
-    }
-
+    log.info("Creating GUI/headless run scripts")
+    val appDir = appImageDir / "app"
     val headlessClasspath =
       ("netlogoJar" ->
-        commonConfig.classpath
-          .filter(_.getName.startsWith("netlogo"))
-          .map(jar => "app\\" + jar.getName)
+        appDir.listFiles
+          .filter( f => f.getName.startsWith("netlogo") && f.getName.endsWith(".jar") )
+          .map( jar => Paths.get("app", jar.getName).toString )
           .take(1)
           .mkString(""))
 
-    val headlessFile = aggregateWinDir / "netlogo-headless.bat"
-    Mustache(commonConfig.configRoot / "windows" / "netlogo-headless.bat.mustache",
-      headlessFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.headless.Main"))
+    val platformConfigDir = configDir / "windows"
+
+    val headlessFile = appImageDir / "netlogo-headless.bat"
+    Mustache(
+      platformConfigDir / "netlogo-headless.bat.mustache",
+      headlessFile,
+      variables + headlessClasspath + ("mainClass" -> "org.nlogo.headless.Main")
+    )
     headlessFile.setExecutable(true)
 
-    val guiFile = aggregateWinDir / "netlogo-gui.bat"
-    Mustache(commonConfig.configRoot / "windows" / "netlogo-headless.bat.mustache",
-      guiFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.app.App"))
+    val guiFile = appImageDir / "netlogo-gui.bat"
+    Mustache(
+      platformConfigDir / "netlogo-headless.bat.mustache",
+      guiFile,
+      variables + headlessClasspath + ("mainClass" -> "org.nlogo.app.App")
+    )
     guiFile.setExecutable(true)
 
+    log.info("Generating Windows UUIDs")
     val uuidArchiveFileName =
       variables("version").replaceAllLiterally("-", "").replaceAllLiterally(".", "") + ".properties"
-    val uuidArchiveFile = commonConfig.configRoot / "windows" /  "archive" / uuidArchiveFileName
+    val uuidArchiveFile = platformConfigDir / "archive" / uuidArchiveFileName
     val uuids =
       if (! uuidArchiveFile.exists) {
         val ids = generateUUIDs
         archive(uuidArchiveFile, ids)
         ids
       } else {
-        println("loading UUIDs from: " + uuidArchiveFile.toString)
+        log.info("loading UUIDs from: " + uuidArchiveFile.toString)
         loadUUIDs(uuidArchiveFile)
       }
 
     val archUUIDs = uuids.filter {
-      case (k, _) => (jdk.arch == "64" && k.endsWith("64")) || (jdk.arch != "64" && k.endsWith("32"))
+      case (k, _) => (arch == "64" && k.endsWith("64")) || (arch != "64" && k.endsWith("32"))
     }.map {
       case (k, v) => k.stripSuffix(".64").stripSuffix(".32") -> v
     }
 
     val winVariables: Map[String, String] =
-      variables ++ (if (jdk.arch == "64") vars64 else vars32) ++ archUUIDs
+      variables ++ (if (arch == "64") vars64 else vars32) ++ archUUIDs
 
-    val msiBuildDir = aggregateWinDir.getParentFile
+    val msiBuildDir = appImageDir.getParentFile
 
-    val aggregateConfigDir = commonConfig.configRoot / "windows"
+    log.info("Generating WiX config files")
     val baseComponentVariables =
       Map[String, AnyRef](
           "win64"                 -> winVariables("win64"),
@@ -292,37 +274,41 @@ object PackageWinAggregate {
           "associationDescription" -> "Behaviorsearch Experiment"
         ) ++ baseComponentVariables
       ).map(_.asJava).asJava)
-    Mustache(aggregateConfigDir / "NetLogo.wxs.mustache",
-      msiBuildDir / "NetLogo.wxs", winVariables ++ componentConfig)
+
+    Mustache(platformConfigDir / "NetLogo.wxs.mustache", msiBuildDir / "NetLogo.wxs", winVariables ++ componentConfig)
 
     Seq("NetLogoTranslation.wxl", "NetLogoUI.wxs", "ShortcutDialog.wxs").foreach { wixFile =>
-      FileActions.copyFile(aggregateConfigDir / wixFile, msiBuildDir / wixFile)
+      FileActions.copyFile(platformConfigDir / wixFile, msiBuildDir / wixFile)
     }
 
     val generatedUUIDs =
-      HarvestResources.harvest(aggregateWinDir.toPath, "INSTALLDIR", "NetLogoApp",
+      HarvestResources.harvest(appImageDir.toPath, "INSTALLDIR", "NetLogoApp",
         Seq("NetLogo.exe", "NetLogo 3D.exe", "HubNet Client.exe", "Behaviorsearch.exe"), winVariables,
         (msiBuildDir / "NetLogoApp.wxs").toPath)
 
-    val candleCommand =
-      Seq[String](wixCommand("candle").getPath, "NetLogo.wxs", "NetLogoApp.wxs", "NetLogoUI.wxs", "ShortcutDialog.wxs", "-sw1026")
+    log.info("Running WiX MSI packager")
 
-    val lightCommand =
-      Seq[String](wixCommand("light").getPath,
-        "NetLogo.wixobj", "NetLogoUI.wixobj", "NetLogoApp.wixobj", "ShortcutDialog.wixobj",
-        "-cultures:en-us", "-loc", "NetLogoTranslation.wxl",
-        "-ext", "WixUIExtension",
-        "-sw69", "-sw1076",
-        "-o", msiName,
-        "-b", aggregateWinDir.toString)
+    val msiName = s"NetLogo-$version-$arch.msi"
+    val candleCommand = Seq[String](wixCommand("candle").getPath, "NetLogo.wxs", "NetLogoApp.wxs", "NetLogoUI.wxs", "ShortcutDialog.wxs", "-sw1026")
+    val lightCommand = Seq[String](
+      wixCommand("light").getPath,
+      "NetLogo.wixobj",
+      "NetLogoUI.wixobj",
+      "NetLogoApp.wixobj",
+      "ShortcutDialog.wixobj",
+      "-cultures:en-us", "-loc", "NetLogoTranslation.wxl",
+      "-ext", "WixUIExtension",
+      "-sw69", "-sw1076",
+      "-o", msiName,
+      "-b", appImageDir.toString)
 
     Seq(candleCommand, lightCommand)
       .foreach(command => RunProcess(command, msiBuildDir, command.head))
 
-    FileActions.createDirectory(webDirectory)
-    IO.delete(webDirectory / msiName)
-    FileActions.moveFile(msiBuildDir / msiName, webDirectory / msiName)
+    FileActions.createDirectory(webDir)
+    IO.delete(webDir / msiName)
+    FileActions.moveFile(msiBuildDir / msiName, webDir / msiName)
 
-    webDirectory / msiName
+    webDir / msiName
   }
 }
