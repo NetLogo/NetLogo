@@ -300,6 +300,7 @@ object JavaPackager {
     , "--verbose"
     , "--resource-dir", buildDir.getAbsolutePath
     , "--name",         s"NetLogo"
+    , "--description",  s"NetLogo $version"
     , "--type",         "app-image"
     , "--main-jar",     s"netlogo-$version.jar"
     , "--main-class",   "org.nlogo.app.App"

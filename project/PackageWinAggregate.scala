@@ -96,36 +96,6 @@ object PackageWinAggregate {
     }.toMap
   }
 
-  private def configureSubApplication(sharedAppRoot: File, app: SubApplication, common: CommonConfiguration, variables: Map[String, AnyRef], helperBinDirectory: File): Unit = {
-    val allVariables =
-      variables ++ app.configurationVariables("windows") +
-      ("mainClass"      -> app.mainClass) +
-      ("mainClassSlash" -> app.mainClass.replaceAllLiterally(".", "/").replaceAllLiterally("$", "")) +
-      ("appIdentifier"  -> app.mainClass.split("\\.").init.mkString(".")) +
-      ("classpathJars"  ->
-        common.classpath
-          .map(_.getName)
-          .sorted
-          .mkString(File.pathSeparator))
-
-    Mustache(common.configRoot / "windows" / "NetLogo.cfg.mustache",
-      sharedAppRoot / "app" / (app.name + ".cfg"), allVariables)
-
-    app.additionalArtifacts(common.configRoot).foreach { f =>
-      FileActions.copyFile(f, sharedAppRoot / "app" / f.getName)
-    }
-
-    (sharedAppRoot / (app.name + ".exe")).setWritable(true)
-    RunProcess(Seq((helperBinDirectory / "IconSwap.exe").toString,
-      (sharedAppRoot / (app.iconName + ".ico")).toString, (sharedAppRoot / (app.name + ".exe")).toString),
-      "swapping exe icon")
-    RunProcess(
-      Seq((helperBinDirectory / "verpatch.exe").toString, "/va", (app.name + ".exe"), "/s", "FileDescription", app.name + " " + variables("version")),
-      sharedAppRoot,
-      "Tagging application with versioned description")
-    (sharedAppRoot / (app.name + ".exe")).setWritable(false)
-  }
-
   def apply(
     log: sbt.util.Logger
   , version: String
