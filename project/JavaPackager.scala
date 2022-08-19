@@ -162,7 +162,7 @@ object JavaPackager {
 
     val additionalArgs : Option[Seq[String]] =
     if (System.getProperty("os.name").contains("Mac")) {
-      Some(Seq[String]("--java-options", "--add-exports java.desktop/com.apple.laf=ALL-UNNAME"))
+      Some(Seq[String]("--java-options", "--add-exports java.desktop/com.apple.laf=ALL-UNNAMED"))
     } else {
       None
     }

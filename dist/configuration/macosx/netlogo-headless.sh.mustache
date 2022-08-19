@@ -11,7 +11,7 @@ fi;
 
 # -Xmx1024m             use up to 1GB RAM (edit to increase)
 # -Dfile.encoding=UTF-8 ensure Unicode characters in model files are compatible cross-platform
-JVM_OPTS=(-Xmx1024m -Dfile.encoding=UTF-8 -Dnetlogo.models.dir="${BASE_DIR}/models" -Dnetlogo.extensions.dir="${BASE_DIR}/extensions")
+JVM_OPTS=(-Xmx1024m -Dfile.encoding=UTF-8 -Dnetlogo.models.dir="${BASE_DIR}/models" -Dnetlogo.extensions.dir="${BASE_DIR}/extensions" --add-exports=java.base/java.lang=ALL-UNNAMED --add-exports=java.desktop/sun.awt=ALL-UNNAMED --add-exports=java.desktop/sun.java2d=ALL-UNNAMED --add-exports=java.desktop/com.apple.laf=ALL-UNNAMED)
 
 ARGS=()
 
@@ -39,4 +39,4 @@ CLASSPATH=`echo $CLASSPATH | sed 's/://'`
 # org.nlogo.app.App       specify we want GUI, not headless
 # "${ARGS[0]}"            pass along any additional arguments
 
-"$JAVA" "${JVM_OPTS[@]}" -classpath "$CLASSPATH" --add-exports java.desktop/com.apple.laf=ALL-UNNAMED {{{mainClass}}} "${ARGS[@]}"
+"$JAVA" "${JVM_OPTS[@]}" -classpath "$CLASSPATH" {{{mainClass}}} "${ARGS[@]}"
