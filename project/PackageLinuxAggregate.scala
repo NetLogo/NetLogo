@@ -110,6 +110,10 @@ object PackageLinuxAggregate {
     val guiFile = appImageDir / "netlogo-gui.sh"
     Files.setPosixFilePermissions(guiFile.toPath, permissions)
 
+    log.info("Rename app image directory to include version")
+    val versionedAppImageDir = appImageDir.getParentFile / s"${appImageDir.getName} $version"
+    Files.move(appImageDir.toPath, versionedAppImageDir.toPath)
+
     log.info("Creating the compressed archive file")
     val archiveName  = s"NetLogo-$version-$arch.tgz"
     val tarBuildDir  = appImageDir.getParentFile
@@ -118,7 +122,7 @@ object PackageLinuxAggregate {
     IO.delete(tarBuildFile)
     IO.delete(archiveFile)
 
-    RunProcess(Seq("tar", "-zcf", archiveName, appImageDir.getName), tarBuildDir, "tar linux aggregate")
+    RunProcess(Seq("tar", "-zcf", archiveName, versionedAppImageDir.getName), tarBuildDir, "tar linux aggregate")
 
     FileActions.createDirectory(webDir)
     FileActions.moveFile(tarBuildFile, archiveFile)
