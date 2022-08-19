@@ -138,51 +138,7 @@ object PackageWinAggregate {
   , rootFiles: Seq[File]
   , variables: Map[String, String]
   ): File = {
-    log.info("Copying the extra bundled directories")
-    extraDirs.foreach( (dir) => {
-      dir.fileMappings.foreach {
-        case (f, p) =>
-          val targetFile = appImageDir / p
-          if (!targetFile.getParentFile.exists) {
-            FileActions.createDirectories(targetFile.getParentFile)
-          }
-          FileActions.copyFile(f, targetFile)
-      }
-    })
-    ExtenionDir.removeVidNativeLibs("windows", arch, appImageDir)
-
-    log.info("Copying the extra root directory files")
-    rootFiles.foreach( (f) => {
-      FileActions.copyAny(f, appImageDir / f.getName)
-    })
-
-    log.info("Creating GUI/headless run scripts")
-    val appDir = appImageDir / "app"
-    val headlessClasspath =
-      ("netlogoJar" ->
-        appDir.listFiles
-          .filter( f => f.getName.startsWith("netlogo") && f.getName.endsWith(".jar") )
-          .map( jar => Paths.get("app", jar.getName).toString )
-          .take(1)
-          .mkString(""))
-
     val platformConfigDir = configDir / "windows"
-
-    val headlessFile = appImageDir / "netlogo-headless.bat"
-    Mustache(
-      platformConfigDir / "netlogo-headless.bat.mustache",
-      headlessFile,
-      variables + headlessClasspath + ("mainClass" -> "org.nlogo.headless.Main")
-    )
-    headlessFile.setExecutable(true)
-
-    val guiFile = appImageDir / "netlogo-gui.bat"
-    Mustache(
-      platformConfigDir / "netlogo-headless.bat.mustache",
-      guiFile,
-      variables + headlessClasspath + ("mainClass" -> "org.nlogo.app.App")
-    )
-    guiFile.setExecutable(true)
 
     log.info("Generating Windows UUIDs")
     val uuidArchiveFileName =
@@ -287,7 +243,6 @@ object PackageWinAggregate {
         (msiBuildDir / "NetLogoApp.wxs").toPath)
 
     log.info("Running WiX MSI packager")
-
     val msiName = s"NetLogo-$version-$arch.msi"
     val candleCommand = Seq[String](wixCommand("candle").getPath, "NetLogo.wxs", "NetLogoApp.wxs", "NetLogoUI.wxs", "ShortcutDialog.wxs", "-sw1026")
     val lightCommand = Seq[String](
@@ -302,13 +257,14 @@ object PackageWinAggregate {
       "-o", msiName,
       "-b", appImageDir.toString)
 
+    val archiveFile  = webDir / msiName
     Seq(candleCommand, lightCommand)
       .foreach(command => RunProcess(command, msiBuildDir, command.head))
 
     FileActions.createDirectory(webDir)
-    IO.delete(webDir / msiName)
-    FileActions.moveFile(msiBuildDir / msiName, webDir / msiName)
+    IO.delete(archiveFile)
+    FileActions.moveFile(msiBuildDir / msiName, archiveFile)
 
-    webDir / msiName
+    archiveFile
   }
 }

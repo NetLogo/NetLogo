@@ -1,4 +1,5 @@
 import sbt._
+import sbt.util.Logger
 
 import Keys.{ artifactPath, dependencyClasspath, packageOptions, packageBin }
 import sbt.io.Using
@@ -271,7 +272,25 @@ object JavaPackager {
       IO.delete(newApplicationDirectory / "lib" / "app" / (stubApplicationName + ".cfg"))
   }
 
-  def generateAppImage(log: sbt.util.Logger, platform: String, version: String, configDir: File, buildDir: File, inputDir: File, destDir: File, extraArgs: Seq[String] = Seq()) = {
+  def setupAppImageInput(log: Logger, version: String, buildJDK: BuildJDK, buildDir: File, netLogoJar: File, dependencies: Seq[File]) = {
+    val inputDir = buildDir / s"input-${buildJDK.version}-${buildJDK.arch}"
+    log.info(s"Setting up jpackage input director: $inputDir")
+    FileActions.remove(inputDir)
+    FileActions.createDirectory(inputDir)
+
+    FileActions.copyFile(netLogoJar, inputDir / s"netlogo-$version.jar")
+    val netLogoDeps = dependencies.foreach( (jar) => {
+      if (!jar.getName.equals(netLogoJar.getName)) {
+        FileActions.copyFile(jar, inputDir / jar.getName)
+      }
+    })
+
+    inputDir
+  }
+
+  def generateAppImage(log: Logger, platform: String, version: String, configDir: File, buildDir: File, inputDir: File, destDir: File, extraArgs: Seq[String] = Seq()) = {
+    FileActions.remove(destDir)
+
     val netLogo3dPropsPath      = (configDir / "netlogo-3d-launcher.properties").getAbsolutePath
     val hubNetPropsPath         = (configDir / "hubnet-client-launcher.properties").getAbsolutePath
     val behaviorsearchPropsPath = (configDir / "behaviorsearch-launcher.properties").getAbsolutePath
@@ -304,4 +323,54 @@ object JavaPackager {
     }
     destDir.listFiles.head
   }
+
+  def copyExtraFiles(log: Logger, extraDirs: Seq[BundledDirectory], platform: PlatformBuild, arch: String, appImageDir: File, appDir: File, rootFiles: Seq[File]) = {
+    log.info("Copying the extra bundled directories")
+    extraDirs.foreach( (dir) => {
+      dir.fileMappings.foreach {
+        case (f, p) =>
+          val targetFile = appDir / p
+          if (!targetFile.getParentFile.exists) {
+            FileActions.createDirectories(targetFile.getParentFile)
+          }
+          FileActions.copyFile(f, targetFile)
+      }
+    })
+    ExtenionDir.removeVidNativeLibs(platform.shortName, arch, appDir)
+
+    log.info("Copying the extra root directory files")
+    rootFiles.foreach( (f) => {
+      FileActions.copyAny(f, appImageDir / f.getName)
+    })
+  }
+
+  def createScripts(log: Logger, appImageDir: File, configDir: File, appDir: File, platform: PlatformBuild, headlessScript: String, guiScript: String, variables: Map[String, String]) = {
+    log.info("Creating GUI/headless run scripts")
+    val headlessClasspath =
+      ("netlogoJar" ->
+        appDir.listFiles
+          .filter( f => f.getName.startsWith("netlogo") && f.getName.endsWith(".jar") )
+          .map( jar => appImageDir.toPath.relativize(jar.toPath).toString )
+          .take(1)
+          .mkString(""))
+
+    val platformConfigDir = configDir / platform.shortName
+
+    val headlessFile = appImageDir / headlessScript
+    Mustache(
+      platformConfigDir / s"$headlessScript.mustache",
+      headlessFile,
+      variables + headlessClasspath + ("mainClass" -> "org.nlogo.headless.Main")
+    )
+    headlessFile.setExecutable(true)
+
+    val guiFile = appImageDir / guiScript
+    Mustache(
+      platformConfigDir / s"$headlessScript.mustache",
+      guiFile,
+      variables + headlessClasspath + ("mainClass" -> "org.nlogo.app.App")
+    )
+    guiFile.setExecutable(true)
+  }
+
 }

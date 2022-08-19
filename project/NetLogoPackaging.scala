@@ -206,52 +206,51 @@ object NetLogoPackaging {
     },
 
     packageLinuxAggregate := {
-      val log      = streams.value.log
-      val version  = marketingVersion.value
-      val buildJDK = aggregateJDKParser.parsed
-      val buildDir = target.value
+      val log             = streams.value.log
+      val version         = marketingVersion.value
+      val buildJDK        = aggregateJDKParser.parsed
+      val buildDir        = target.value
+      val platform        = LinuxPlatform
+      val configDir       = configRoot.value
+      val netLogoJar      = (netlogo / Compile / packageBin).value
+      val dependenciesDir = packagingClasspath.value
+      val rootFiles       = (packageLinuxAggregate / aggregateOnlyFiles).value
+      val variables       = buildVariables.value
 
-      val inputDir = buildDir / s"input-${buildJDK.version}-${buildJDK.arch}"
-      log.info(s"Setting up jpackage input director: $inputDir")
-      FileActions.remove(inputDir)
-      FileActions.createDirectory(inputDir)
+      val inputDir    = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependenciesDir)
+      val destDir     = buildDir / s"${platform.shortName}-dest-${buildJDK.version}-${buildJDK.arch}"
+      val appImageDir = JavaPackager.generateAppImage(log, platform.shortName, version, configDir / platform.shortName, buildDir, inputDir, destDir)
 
-      val netLogoJar = (netlogo / Compile / packageBin).value
-      FileActions.copyFile(netLogoJar, inputDir / s"netlogo-$version.jar")
-      val netLogoDeps = packagingClasspath.value
-      netLogoDeps.foreach( (jar) => {
-        if (!jar.getName.equals(netLogoJar.getName)) {
-          FileActions.copyFile(jar, inputDir / jar.getName)
-        }
-      })
-
-      val configDir = configRoot.value
-      val destDir   = buildDir / s"linux-dest-${buildJDK.version}-${buildJDK.arch}"
-      FileActions.remove(destDir)
-      JavaPackager.generateAppImage(log, "linux", version, configDir / "linux", buildDir, inputDir, destDir)
-
-      val extraDirs = bundledDirs(netlogo, macApp, behaviorsearchProject).value(LinuxPlatform)
+      val extraDirs = bundledDirs(netlogo, macApp, behaviorsearchProject).value(platform)
+      JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir / "bin", rootFiles)
+      JavaPackager.createScripts(log, appImageDir, configDir, appImageDir / "lib" / "app", platform, "netlogo-headless.sh", "netlogo-gui.sh", variables)
 
       PackageLinuxAggregate(
         log
       , version
       , buildJDK.arch
       , configDir
-      , destDir / s"NetLogo"
+      , destDir / "NetLogo"
       , webTarget.value
       , extraDirs
       , Set("NetLogo", "NetLogo 3D", "HubNet Client", "Behaviorsearch")
-      , (packageLinuxAggregate / aggregateOnlyFiles).value
-      , buildVariables.value
+      , rootFiles
+      , variables
       )
     },
 
     packageWinAggregate := {
-      val log      = streams.value.log
-      val version  = marketingVersion.value
-      val buildJDK = aggregateJDKParser.parsed
-      val buildDir = target.value
-      val configDir = configRoot.value
+      val log             = streams.value.log
+      val version         = marketingVersion.value
+      val buildJDK        = aggregateJDKParser.parsed
+      val buildDir        = target.value
+      val platform        = WindowsPlatform
+      val configDir       = configRoot.value
+      val netLogoJar      = (netlogo / Compile / packageBin).value
+      val dependenciesDir = packagingClasspath.value
+      val rootFiles       = (packageWinAggregate / aggregateOnlyFiles).value
+      val variables       = buildVariables.value
+
       val icons = Seq(
         (behaviorsearchProject / baseDirectory).value / "resources" / "Behaviorsearch.ico"
       , (behaviorsearchProject / baseDirectory).value / "resources" / "behaviorsearch_model.ico"
@@ -259,46 +258,32 @@ object NetLogoPackaging {
       , configDir / "windows" / "HubNet Client.ico"
       , configDir / "windows" / "model.ico"
       )
+      // this makes the icons available for jpackage
       icons.foreach( (i) => FileActions.copyFile(i, buildDir / i.getName) )
-      val platform = WindowsPlatform
 
-      val inputDir = buildDir / s"input-${buildJDK.version}-${buildJDK.arch}"
-      log.info(s"Setting up jpackage input director: $inputDir")
-      FileActions.remove(inputDir)
-      FileActions.createDirectory(inputDir)
+      val inputDir    = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependenciesDir)
+      val destDir     = buildDir / s"${platform.shortName}-dest-${buildJDK.version}-${buildJDK.arch}"
+      val extraArgs   = Seq("--icon", "NetLogo.ico")
+      val appImageDir = JavaPackager.generateAppImage(log, platform.shortName, version, configDir / platform.shortName, buildDir, inputDir, destDir, extraArgs)
 
-      val netLogoJar = (netlogo / Compile / packageBin).value
-      FileActions.copyFile(netLogoJar, inputDir / s"netlogo-$version.jar")
-      val netLogoDeps = packagingClasspath.value
-      netLogoDeps.foreach( (jar) => {
-        if (!jar.getName.equals(netLogoJar.getName)) {
-          FileActions.copyFile(jar, inputDir / jar.getName)
-        }
-      })
-
-      val extraArgs = Seq(
-        "--icon", "NetLogo.ico"
-      )
-
-      val destDir = buildDir / s"${platform.shortName}-dest-${buildJDK.version}-${buildJDK.arch}"
-      FileActions.remove(destDir)
-      val packageDir = JavaPackager.generateAppImage(log, platform.shortName, version, configDir / platform.shortName, buildDir, inputDir, destDir, extraArgs)
-
-      icons.foreach( (i) => FileActions.copyFile(i, packageDir / i.getName) )
+      // this makes the file association icons available for wix
+      icons.foreach( (i) => FileActions.copyFile(i, appImageDir / i.getName) )
 
       val extraDirs = bundledDirs(netlogo, macApp, behaviorsearchProject).value(platform)
+      JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir, rootFiles)
+      JavaPackager.createScripts(log, appImageDir, configDir, appImageDir / "app", platform, "netlogo-headless.bat", "netlogo-gui.bat", variables)
 
       PackageWinAggregate(
         log
       , version
       , buildJDK.arch
       , configDir
-      , destDir / s"NetLogo"
+      , destDir / "NetLogo"
       , webTarget.value
       , extraDirs
       , Set("NetLogo", "NetLogo 3D", "HubNet Client", "Behaviorsearch")
-      , (packageWinAggregate / aggregateOnlyFiles).value
-      , buildVariables.value
+      , rootFiles
+      , variables
       )
     },
 

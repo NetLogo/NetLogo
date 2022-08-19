@@ -82,69 +82,34 @@ object PackageLinuxAggregate {
   , rootFiles: Seq[File]
   , variables: Map[String, String]
   ): File = {
+
     log.info("Adding launcher sym links")
     launchers.foreach( (launcher) => {
       FileActions.createRelativeSoftLink(
-        appImageDir / s"$launcher $version",
-        appImageDir / "bin" / s"$launcher $version"
+        appImageDir / launcher,
+        appImageDir / "bin" / launcher
       )
     })
-    log.info("Copying the extra bundled directories")
+
+    log.info("Creating bundled directory sym links")
     extraDirs.foreach( (dir) => {
-      dir.fileMappings.foreach {
-        case (f, p) =>
-          val targetFile = appImageDir / "bin" / p
-          if (!targetFile.getParentFile.exists) {
-            FileActions.createDirectories(targetFile.getParentFile)
-          }
-          FileActions.copyFile(f, targetFile)
-      }
       val dirName = dir.sourceDir.getName
       FileActions.createRelativeSoftLink(
         appImageDir / dirName
       , appImageDir / "bin" / dirName
       )
     })
-    ExtenionDir.removeVidNativeLibs("linux", arch, appImageDir / "bin")
 
-    log.info("Copying the extra root directory files")
-    rootFiles.foreach( (f) => {
-      FileActions.copyAny(f, appImageDir / f.getName)
-    })
-
-    log.info("Creating GUI/headless run scripts")
-    val appDir = appImageDir / "lib" / "app"
-    val headlessClasspath =
-      ("classpathJars" ->
-        appDir.listFiles
-          .filter( f => f.getName.endsWith(".jar") )
-          .map( jar => Paths.get("lib", "app", jar.getName).toString )
-          .sorted
-          .mkString(File.pathSeparator))
-
+    log.info("Setting headless/gui script posix permissions")
     val permissions = {
       import PosixFilePermission._
       import scala.collection.JavaConverters._
       Set(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE, GROUP_READ, GROUP_EXECUTE, OTHERS_READ, OTHERS_EXECUTE).asJava
     }
-
     val headlessFile = appImageDir / "netlogo-headless.sh"
-    Mustache(
-      configDir / "linux" / "netlogo-headless.sh.mustache",
-      headlessFile,
-      variables + headlessClasspath + ("mainClass" -> "org.nlogo.headless.Main")
-    )
     Files.setPosixFilePermissions(headlessFile.toPath, permissions)
-    headlessFile.setExecutable(true)
-
     val guiFile = appImageDir / "netlogo-gui.sh"
-    Mustache(
-      configDir / "linux" / "netlogo-headless.sh.mustache",
-      guiFile,
-      variables + headlessClasspath + ("mainClass" -> "org.nlogo.app.App")
-    )
     Files.setPosixFilePermissions(guiFile.toPath, permissions)
-    guiFile.setExecutable(true)
 
     log.info("Creating the compressed archive file")
     val archiveName  = s"NetLogo-$version-$arch.tgz"
