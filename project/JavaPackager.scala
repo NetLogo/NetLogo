@@ -290,12 +290,18 @@ object JavaPackager {
 
   val launchers = Set("NetLogo", "NetLogo 3D", "HubNet Client", "Behaviorsearch")
 
-  def generateAppImage(log: Logger, platform: String, version: String, configDir: File, buildDir: File, inputDir: File, destDir: File, extraArgs: Seq[String] = Seq()) = {
+  def generateAppImage(log: Logger, platform: String, version: String, configDir: File, buildDir: File, inputDir: File, destDir: File, extraJpackageArgs: Seq[String], launcherSettings: Seq[Launcher]) = {
     FileActions.remove(destDir)
 
-    val netLogo3dPropsPath      = (configDir / "netlogo-3d-launcher.properties").getAbsolutePath
-    val hubNetPropsPath         = (configDir / "hubnet-client-launcher.properties").getAbsolutePath
-    val behaviorsearchPropsPath = (configDir / "behaviorsearch-launcher.properties").getAbsolutePath
+    launcherSettings.foreach( (settings) => {
+      val inFile  = configDir / s"${settings.mustachePrefix}.properties.mustache"
+      val outFile = buildDir / s"${settings.mustachePrefix}.properties"
+      Mustache(inFile, outFile, settings.toVariables)
+    })
+
+    val netLogo3dPropsPath      = (buildDir / "netlogo-3d-launcher.properties").getAbsolutePath
+    val hubNetPropsPath         = (buildDir / "hubnet-client-launcher.properties").getAbsolutePath
+    val behaviorsearchPropsPath = (buildDir / "behaviorsearch-launcher.properties").getAbsolutePath
 
     val args = Seq[String](
       "jpackage"
@@ -316,7 +322,7 @@ object JavaPackager {
     , "--add-launcher", s"""NetLogo 3D=$netLogo3dPropsPath"""
     , "--add-launcher", s"""HubNet Client=$hubNetPropsPath"""
     , "--add-launcher", s"""Behaviorsearch=$behaviorsearchPropsPath"""
-    ) ++ extraArgs
+    ) ++ extraJpackageArgs
 
     log.info(s"running: ${args.mkString(" ")}")
     val returnValue = Process(args, buildDir).!

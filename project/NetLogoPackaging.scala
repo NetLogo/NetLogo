@@ -217,9 +217,11 @@ object NetLogoPackaging {
       val rootFiles       = (packageLinuxAggregate / aggregateOnlyFiles).value
       val variables       = buildVariables.value
 
+      val launcherSettings = Seq(new NetLogo3dLauncher(), new HubNetClientLauncher(), new BehaviorsearchLauncher())
+
       val inputDir    = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependenciesDir)
       val destDir     = buildDir / s"${platform.shortName}-dest-${buildJDK.version}-${buildJDK.arch}"
-      val appImageDir = JavaPackager.generateAppImage(log, platform.shortName, version, configDir / platform.shortName, buildDir, inputDir, destDir)
+      val appImageDir = JavaPackager.generateAppImage(log, platform.shortName, version, configDir, buildDir, inputDir, destDir, Seq(), launcherSettings)
 
       val extraDirs = bundledDirs(netlogo, macApp, behaviorsearchProject).value(platform, buildJDK.arch)
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir / "bin", rootFiles)
@@ -260,10 +262,16 @@ object NetLogoPackaging {
       // this makes the icons available for jpackage
       icons.foreach( (i) => FileActions.copyFile(i, buildDir / i.getName) )
 
+      val launcherSettings = Seq(
+        new NetLogo3dLauncher(Seq(), Seq("icon=NetLogo.ico"))
+      , new HubNetClientLauncher(Seq(), Seq("icon=HubNet Client.ico"))
+      , new BehaviorsearchLauncher(Seq(), Seq("icon=Behaviorsearch.ico"))
+      )
+
       val inputDir    = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependenciesDir)
       val destDir     = buildDir / s"${platform.shortName}-dest-${buildJDK.version}-${buildJDK.arch}"
       val extraArgs   = Seq("--icon", "NetLogo.ico")
-      val appImageDir = JavaPackager.generateAppImage(log, platform.shortName, version, configDir / platform.shortName, buildDir, inputDir, destDir, extraArgs)
+      val appImageDir = JavaPackager.generateAppImage(log, platform.shortName, version, configDir, buildDir, inputDir, destDir, extraArgs, launcherSettings)
 
       // this makes the file association icons available for wix
       icons.foreach( (i) => FileActions.copyFile(i, appImageDir / i.getName) )
