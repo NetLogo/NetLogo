@@ -309,7 +309,6 @@ object JavaPackager {
     , "--input",        inputDir.getAbsolutePath
     , "--dest",         destDir.getAbsolutePath
     , "--java-options", "-Xmx1024m"
-    , "--java-options", "-XX:+UseParallelGC"
     , "--java-options", "-Dfile.encoding=UTF-8"
     , "--java-options", "--add-exports=java.base/java.lang=ALL-UNNAMED"
     , "--java-options", "--add-exports=java.desktop/sun.awt=ALL-UNNAMED"
