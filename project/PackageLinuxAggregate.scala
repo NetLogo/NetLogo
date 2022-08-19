@@ -78,13 +78,12 @@ object PackageLinuxAggregate {
   , appImageDir: File
   , webDir: File
   , extraDirs: Seq[BundledDirectory]
-  , launchers: Set[String]
   , rootFiles: Seq[File]
   , variables: Map[String, String]
   ): File = {
 
     log.info("Adding launcher sym links")
-    launchers.foreach( (launcher) => {
+    JavaPackager.launchers.foreach( (launcher) => {
       FileActions.createRelativeSoftLink(
         appImageDir / launcher,
         appImageDir / "bin" / launcher

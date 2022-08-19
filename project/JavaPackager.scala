@@ -288,6 +288,8 @@ object JavaPackager {
     inputDir
   }
 
+  val launchers = Set("NetLogo", "NetLogo 3D", "HubNet Client", "Behaviorsearch")
+
   def generateAppImage(log: Logger, platform: String, version: String, configDir: File, buildDir: File, inputDir: File, destDir: File, extraArgs: Seq[String] = Seq()) = {
     FileActions.remove(destDir)
 

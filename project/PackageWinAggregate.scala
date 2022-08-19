@@ -104,7 +104,6 @@ object PackageWinAggregate {
   , appImageDir: File
   , webDir: File
   , extraDirs: Seq[BundledDirectory]
-  , launchers: Set[String]
   , rootFiles: Seq[File]
   , variables: Map[String, String]
   ): File = {
@@ -207,9 +206,10 @@ object PackageWinAggregate {
       FileActions.copyFile(platformConfigDir / wixFile, msiBuildDir / wixFile)
     }
 
+    val launcherExes = JavaPackager.launchers.map( (launcher) => s"$launcher.exe" ).toSeq
     val generatedUUIDs =
       HarvestResources.harvest(appImageDir.toPath, "INSTALLDIR", "NetLogoApp",
-        Seq("NetLogo.exe", "NetLogo 3D.exe", "HubNet Client.exe", "Behaviorsearch.exe"), winVariables,
+        launcherExes, winVariables,
         (msiBuildDir / "NetLogoApp.wxs").toPath)
 
     log.info("Running WiX MSI packager")

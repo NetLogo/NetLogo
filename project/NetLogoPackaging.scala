@@ -233,7 +233,6 @@ object NetLogoPackaging {
       , destDir / "NetLogo"
       , webTarget.value
       , extraDirs
-      , Set("NetLogo", "NetLogo 3D", "HubNet Client", "Behaviorsearch")
       , rootFiles
       , variables
       )
@@ -281,7 +280,6 @@ object NetLogoPackaging {
       , destDir / "NetLogo"
       , webTarget.value
       , extraDirs
-      , Set("NetLogo", "NetLogo 3D", "HubNet Client", "Behaviorsearch")
       , rootFiles
       , variables
       )
