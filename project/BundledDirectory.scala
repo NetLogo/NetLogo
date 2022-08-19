@@ -20,9 +20,8 @@ abstract class BundledDirectory(val sourceDir: File) {
   }
 }
 
-object ExtenionDir {
-  def removeVidNativeLibs(platform: String, arch: String, path: File) = {
-    val vidDir = path / "extensions" / ".bundled" / "vid"
+object ExtensionDir {
+  def createIsUnneededCheck(platform: String, arch: String) = {
     val allPlatforms = Set("linux-x86", "linux-x86_64", "macosx-arm64", "macosx-x86_64", "windows-x86", "windows-x86_64")
     val invalidPlatforms = if ("macosx".equals(platform)) {
       allPlatforms -- Set("macosx-arm64", "macosx-x86_64")
@@ -39,7 +38,8 @@ object ExtenionDir {
     def isJavaFX(starter: String): Boolean = {
       starter.startsWith("javafx-")
     }
-    val unneededJars = vidDir.listFiles.filter({ f =>
+
+    val isUnneededCheck = (f: File) => {
       val fName = f.getName
       val splits = fName.split("""\.""")
       val isUnneeded = (
@@ -49,23 +49,30 @@ object ExtenionDir {
         (isInvalidForPlatform(splits(splits.length - 2)) || isJavaFX(splits(0)) )
       )
       isUnneeded
-    })
-    unneededJars.foreach(FileActions.remove)
+    }
+
+    isUnneededCheck
   }
 }
 
-class ExtensionDir(sourceDir: File) extends BundledDirectory(sourceDir) {
+class ExtensionDir(sourceDir: File, platform: String, arch: String) extends BundledDirectory(sourceDir) {
   val directoryName = s"extensions${File.separator}.bundled"
 
   override def fileMappings: Seq[(File, String)] = {
+    val isUnneeded = ExtensionDir.createIsUnneededCheck(platform, arch)
+
     sourceDir.listFiles.filter(_.isDirectory)
       .flatMap { anExtensionDir =>
         if ((anExtensionDir / ".bundledFiles").exists) {
           IO.readLines(anExtensionDir / ".bundledFiles")
             .map { line =>
-              val sections = line.split("->")
-              anExtensionDir / sections.last -> (directoryName + File.separator + anExtensionDir.getName + File.separator + sections.last)
+              val sections   = line.split("->")
+              val fileName   = sections.last
+              val sourcePath = anExtensionDir / fileName
+              val targetPath = directoryName + File.separator + anExtensionDir.getName + File.separator + fileName
+              sourcePath -> targetPath
             }
+            .filter { case (sourcePath, _) => !isUnneeded(sourcePath) }
           } else {
             anExtensionDir.listFiles
               .filter(_.getName.endsWith(".jar"))

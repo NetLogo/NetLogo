@@ -41,12 +41,12 @@ object NetLogoPackaging {
   lazy val uploadDocs              = inputKey[Unit]("Upload the web docs pages only to the CCL server")
   lazy val webTarget               = settingKey[File]("location of finished website")
 
-  def bundledDirs(netlogo: Project, macApp: Project, behaviorsearchProject: Project): Def.Initialize[PlatformBuild => Seq[BundledDirectory]] =
+  def bundledDirs(netlogo: Project, macApp: Project, behaviorsearchProject: Project): Def.Initialize[(PlatformBuild, String) => Seq[BundledDirectory]] =
     Def.setting {
-      { (platform: PlatformBuild) =>
+      { (platform: PlatformBuild, arch: String) =>
         val nlDir = (baseDirectory in netlogo).value
         Seq(
-          new ExtensionDir((extensionRoot in netlogo).value),
+          new ExtensionDir((extensionRoot in netlogo).value, platform.shortName, arch),
           new ModelsDir((modelsDirectory in netlogo).value),
           new DocsDir((docsRoot in netlogo).value),
           new BehaviorsearchDir((baseDirectory in behaviorsearchProject).value, platform.shortName)
@@ -221,7 +221,7 @@ object NetLogoPackaging {
       val destDir     = buildDir / s"${platform.shortName}-dest-${buildJDK.version}-${buildJDK.arch}"
       val appImageDir = JavaPackager.generateAppImage(log, platform.shortName, version, configDir / platform.shortName, buildDir, inputDir, destDir)
 
-      val extraDirs = bundledDirs(netlogo, macApp, behaviorsearchProject).value(platform)
+      val extraDirs = bundledDirs(netlogo, macApp, behaviorsearchProject).value(platform, buildJDK.arch)
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir / "bin", rootFiles)
       JavaPackager.createScripts(log, appImageDir, configDir, appImageDir / "lib" / "app", platform, "netlogo-headless.sh", "netlogo-gui.sh", variables)
 
@@ -268,7 +268,7 @@ object NetLogoPackaging {
       // this makes the file association icons available for wix
       icons.foreach( (i) => FileActions.copyFile(i, appImageDir / i.getName) )
 
-      val extraDirs = bundledDirs(netlogo, macApp, behaviorsearchProject).value(platform)
+      val extraDirs = bundledDirs(netlogo, macApp, behaviorsearchProject).value(platform, buildJDK.arch)
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir, rootFiles)
       JavaPackager.createScripts(log, appImageDir, configDir, appImageDir / "app", platform, "netlogo-headless.bat", "netlogo-gui.bat", variables)
 
@@ -350,7 +350,7 @@ object NetLogoPackaging {
       )
 
 
-      val bundled = bundledDirs(netlogo, macApp, behaviorsearchProject).value(new MacImagePlatform(macApp))
+      val bundled = bundledDirs(netlogo, macApp, behaviorsearchProject).value(new MacImagePlatform(macApp), buildJDK.arch)
       val commonConfig = CommonConfiguration(
         macAppMainJar,
         "org.nlogo.app.MacApplication",

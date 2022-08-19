@@ -154,7 +154,6 @@ object PackageMacAggregate {
           FileActions.copyFile(f, aggregateMacDir / p)
       }
     }
-    ExtenionDir.removeVidNativeLibs("macosx", commonConfig.jdk.arch, aggregateMacDir)
 
     commonConfig.rootFiles.foreach { f =>
       FileActions.copyAny(f, aggregateMacDir / f.getName)

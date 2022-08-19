@@ -339,7 +339,6 @@ object JavaPackager {
           FileActions.copyFile(f, targetFile)
       }
     })
-    ExtenionDir.removeVidNativeLibs(platform.shortName, arch, appDir)
 
     log.info("Copying the extra root directory files")
     rootFiles.foreach( (f) => {
