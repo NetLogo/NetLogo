@@ -5,71 +5,6 @@ import java.nio.file.attribute.PosixFilePermission
 import java.io.File
 
 object PackageLinuxAggregate {
-  // We're given a dummy package with a directory structure like:
-  // dummy
-  // └── dummy
-  //     ├── bin
-  //     │   └── dummy
-  //     └── lib
-  //         ├── app
-  //         │   ├── dummy.cfg
-  //         │   └── netlogo-6.2.2.jar
-  //         ├── dummy.png
-  //         ├── libapplauncher.so
-  //         └── runtime
-  //             ├── conf
-  //             ├── legal
-  //             ├── lib
-  //             └── release
-  //
-  //  The desire is to create each sub-application, and copy in auxilliary files
-  // The resulting structure is
-  // └── NetLogo 6.x.x
-  //     ├── Behaviorsearch -> bin/Behaviorsearch
-  //     ├── HubNet Client  -> bin/HubNet Client
-  //     ├── NetLogo        -> bin/NetLogo
-  //     ├── NetLogo 3D     -> bin/NetLogo 3D
-  //     ├── netlogo-gui.sh
-  //     ├── netlogo-headless.sh
-  //     ├── NetLogo User Manual.pdf
-  //     ├── readme.md
-  //     ├── bin
-  //     │   ├── Behaviorsearch
-  //     │   ├── HubNetClient
-  //     │   ├── NetLogo
-  //     │   └── NetLogo3D
-  //     ├── lib
-  //     │   ├── app
-  //     │   │   ├── Behaviorsearch.cfg
-  //     │   │   ├── HubNetClient.cfg
-  //     │   │   ├── NetLogo3D.cfg
-  //     │   │   ├── NetLogo.cfg
-  //     │   │   ├── behaviorsearch
-  //     │   │   ├── docs
-  //     │   │   ├── extensions
-  //     │   │   ├── models
-  //     │   │   ├── natives
-  //     │   │   ├── args4j-2.0.12.jar
-  //                 ...
-  //     │   │   ├── netlogo-6.2.2.jar
-  //                 ...
-  //     │   │   └── zip4j-2.9.0.jar
-  //     │   ├── dummy.png
-  //     │   ├── libapplauncher.so
-  //     │   └── runtime
-  //     │       ├── conf
-  //     │       ├── legal
-  //     │       ├── lib
-  //     │       └── release
-  //     ├── Mathematica Link
-  //     │   ├── mathematica-link.jar
-  //     │   ├── NetLogo.m
-  //     │   ├── NetLogo-Mathematica Tutorial.nb
-  //     └── └── NetLogo-Mathematica Tutorial.pdf
-  //
-  // note: this shares a lot of code with the windows aggregate packager.
-  // There may be an opportunity for abstraction.
-
   def apply(
     log: sbt.util.Logger
   , version: String
@@ -78,15 +13,15 @@ object PackageLinuxAggregate {
   , appImageDir: File
   , webDir: File
   , extraDirs: Seq[BundledDirectory]
-  , rootFiles: Seq[File]
   , variables: Map[String, String]
+  , launchers: Seq[Launcher]
   ): File = {
 
     log.info("Adding launcher sym links")
-    JavaPackager.launchers.foreach( (launcher) => {
+    launchers.foreach( (launcher) => {
       FileActions.createRelativeSoftLink(
-        appImageDir / launcher,
-        appImageDir / "bin" / launcher
+        appImageDir / launcher.name,
+        appImageDir / "bin" / launcher.name
       )
     })
 
@@ -124,6 +59,7 @@ object PackageLinuxAggregate {
 
     RunProcess(Seq("tar", "-zcf", archiveName, versionedAppImageDir.getName), tarBuildDir, "tar linux aggregate")
 
+    log.info("Moving tgz file to final location.")
     FileActions.createDirectory(webDir)
     FileActions.moveFile(tarBuildFile, archiveFile)
 

@@ -1,5 +1,6 @@
 import sbt._
 import sbt.io.Using
+import sbt.util.Logger
 
 import java.io.File
 import java.nio.file.{ Files, Path => JPath, Paths }
@@ -9,90 +10,7 @@ import java.util.jar.Manifest
 import NetLogoPackaging.RunProcess
 
 object PackageMacAggregate {
-  // we're given a dummy package with a directory structure that looks like:
-  // Product Name.app (spaces intact)
-  // └── Contents
-  //     ├── Info.plist
-  //     ├── MacOS
-  //     │   └── dummy
-  //     ├── PkgInfo
-  //     ├── Resources
-  //     │   └── dummy.icns
-  //     ├── app
-  //     │   ├── dummy.cfg
-  //     │   └── netlogo-6.2.2.jar
-  //     └── runtime
-  //         └── Contents
-  //
-  // A main jar, common configuration, and several sub-applications.
-  //
-  // Our goal is to get a directory
-  // mac-full
-  // ├── Product 1.app
-  // |   └── Contents
-  // |      ├── Info.plist
-  // |      │   ├── Product 1.cfg (adjusted for new classpath)
-  // |      │   ├── natives       (duplicated in each package)
-  // |      │   └── lib
-  // |      ├── PkgInfo
-  // |      ├── MacOS
-  // |      │   ├── Product Name (must match name in Info.plist
-  // |      │   └── libpackager.dylib
-  // |      └── Resources
-  // |           └── NetLogo.icns
-  // ├── Product 2.app (same as product 1)
-  // ├── Java
-  // |   └── All dependency jars
-  // └── Java.runtime (contains JRE)
-  val libraryDirs = Seq("natives")
-
   val CodesigningIdentity = "Developer ID Application: Northwestern University (E74ZKF37E6)"
-
-  // assumes subApplicationDir is {<app.name>.app as copied by JavaPackager.copyMacStubApplication
-  private def configureSubApplication(subApplicationDir: File, app: SubApplication, common: CommonConfiguration, variables: Map[String, AnyRef]): Unit = {
-    // add runtimeFiles "natives"
-    common.runtimeFiles.foreach { d =>
-      d.fileMappings.foreach {
-        case (f, p) =>
-          val newPath = subApplicationDir / "Contents" / "Java" / p
-          if (! newPath.getParentFile.isDirectory)
-            FileActions.createDirectories(newPath.getParentFile)
-          FileActions.copyAny(f, newPath)
-      }
-    }
-
-    // add icon, remove dummy icon
-    common.icons
-      .filter(f => app.allIcons.exists(iconName => f.getName.startsWith(iconName)))
-      .foreach { f => FileActions.copyAny(f, subApplicationDir / "Contents" / "Resources" / f.getName) }
-    FileActions.remove(subApplicationDir / "Contents" / "Resources" / "dummy.icns")
-
-    val allVariables =
-      variables ++ app.configurationVariables("macosx") +
-      ("mainClass" -> app.mainClass) +
-      ("classpathJars" ->
-        common.classpath
-          .sortBy(_.getName)
-          .map(f => s"$$APPDIR/../../Java/${f.getName}")
-          .mkString(File.pathSeparator))
-
-    app.additionalArtifacts(common.configRoot).foreach { f =>
-      FileActions.copyFile(f, subApplicationDir / "Contents" / "Java" / f.getName)
-    }
-
-    // rewrite configuration file
-    Mustache(common.configRoot / "macosx" / "NetLogo.cfg.mustache",
-      subApplicationDir / "Contents" / "app" / (app.name + ".cfg"), allVariables)
-
-    // rewrite Info.plist
-    Mustache(common.configRoot / "macosx" / "Info.plist.mustache",
-      subApplicationDir / "Contents" / "Info.plist", allVariables)
-
-    // add PkgInfo
-    Mustache(common.configRoot / "macosx" / "image" / "Contents" / "PkgInfo.mustache",
-      subApplicationDir / "Contents" / "Resources" / "PkgInfo", allVariables)
-
-  }
 
   def signJarLibs(jarFile: File, options: Seq[String], libsToSign: Seq[String]): Unit = {
     val tmpDir = IO.createTemporaryDirectory
@@ -115,144 +33,187 @@ object PackageMacAggregate {
     RunProcess(Seq("codesign", "-v", "--force", "--sign", CodesigningIdentity) ++ options ++ paths, workingDirectory, s"codesign of $taskName")
   }
 
-  def apply(
-    aggregateTarget:        File,
-    commonConfig:           CommonConfiguration,
-    appSpecificConfig:      Map[SubApplication, Map[String, AnyRef]],
-    stubApplicationAndName: (File, String),
-    subApplications:        Seq[SubApplication],
-    variables:              Map[String, String]): File = {
-      import commonConfig.webDirectory
-
-    val version = variables("version")
+  def createBundleDir(log: Logger, version: String, destDir: File, configDir: File, launchers: Seq[Launcher]): File = {
     val buildName = s"NetLogo-$version"
-    // create aggregate directory for this build
-    val aggregateMacDir = aggregateTarget / "NetLogo Bundle" / s"NetLogo $version"
-    IO.delete(aggregateMacDir)
-    IO.createDirectory(aggregateMacDir)
-    IO.createDirectory(aggregateMacDir / "JRE")
 
-    // copy in JRE
-    FileActions.copyDirectory(stubApplicationAndName._1 / (stubApplicationAndName._2 + ".app") / "Contents" / "runtime", aggregateMacDir / "JRE" )
+    val bundleDir     = destDir / s"NetLogo $version"
+    val bundleLibsDir = bundleDir / "app"
+    IO.createDirectory(bundleDir)
+    IO.createDirectory(bundleLibsDir)
 
-    // add java jars
-    // this is wrong, may need further adjustment
-    val sharedJars = aggregateMacDir / "Java"
-    JavaPackager.repackageJar("netlogo-mac-app.jar", Some(commonConfig.launcherClass), commonConfig.mainJar,  sharedJars)
-    commonConfig.classpath.foreach { jar =>
-      FileActions.copyFile(jar, sharedJars / jar.getName)
-    }
+    val plistConfig = Map(
+      "NetLogo" -> Map(
+        "bundleIdentifier"    -> "org.nlogo.NetLogo"
+      , "bundleName"          -> "NetLogo"
+      , "bundleSignature"     -> "nLo1"
+      , "fileAssociation"     -> "nlogo"
+      , "fileAssociationIcon" -> "Model.icns"
+      , "iconFile"            -> "NetLogo.icns"
+      , "packageID"           -> "APPLnLo1"
+      ,  "version"             -> version
+      )
+      , "NetLogo 3D" -> Map(
+        "bundleIdentifier"    -> "org.nlogo.NetLogo3D"
+      , "bundleName"          -> "NetLogo"
+      , "bundleSignature"     -> "nLo1"
+      , "fileAssociation"     -> "nlogo3d"
+      , "fileAssociationIcon" -> "Model.icns"
+      , "iconFile"            -> "NetLogo.icns"
+      , "packageID"           -> "APPLnLo1"
+      , "version"             -> version
+      )
+      , "HubNet Client" -> Map(
+        "bundleIdentifier" -> "org.nlogo.HubNetClient"
+      , "bundleName"       -> "HubNet Client"
+      , "bundleSignature"  -> "????"
+      , "iconFile"         -> "HubNet Client.icns"
+      , "packageID"        -> "APPL????"
+      , "version"          -> version
+      )
+      , "Behaviorsearch" -> Map(
+        "bundleIdentifier"    -> "org.nlogo.Behaviorsearch"
+      , "bundleName"          -> "Behaviorsearch"
+      , "bundleSignature"     -> "????"
+      , "fileAssociation"     -> "bsearch"
+      , "fileAssociationIcon" -> "Behaviorsearch.icns"
+      , "iconFile"            -> "Behaviorsearch.icns"
+      , "packageID"           -> "APPL????"
+      )
+    )
 
-    // add bundled directories
-    commonConfig.bundledDirs.filterNot(d => libraryDirs.contains(d.directoryName)).foreach { d =>
-      d.fileMappings.foreach {
-        case (f, p) =>
-          val targetFile = aggregateMacDir / p
-          if (! targetFile.getParentFile.isDirectory) {
-            FileActions.createDirectories(targetFile.getParentFile)
-          }
-          FileActions.copyFile(f, aggregateMacDir / p)
+    var first = true
+    launchers.foreach( (launcher) => {
+      log.info(s"Cleaning up ${launcher.name}.app")
+      val appDir     = destDir / s"${launcher.name}.app"
+      val runtimeDir = appDir / "Contents" / "runtime"
+      val appLibsDir = appDir / "Contents" / "app"
+      val jars       = appLibsDir.listFiles.filter( (f) => f.getName().endsWith(".jar") )
+      if (first) {
+        log.info("  First app we're cleaning, copying Java runtime and application jars.")
+        FileActions.copyDirectory(runtimeDir, bundleDir / runtimeDir.getName)
+        jars.foreach( (jar) => FileActions.copyFile(jar, bundleLibsDir / jar.getName) )
+        first = false
       }
-    }
+      FileActions.remove(runtimeDir)
+      jars.foreach(FileActions.remove)
 
-    commonConfig.rootFiles.foreach { f =>
-      FileActions.copyAny(f, aggregateMacDir / f.getName)
-    }
+      log.info("  Reworking the config file with the new paths.")
+      val configFile = appLibsDir / s"${launcher.name}.cfg"
+      val config1 = Files.readString(configFile.toPath)
+      val config2 = config1.replace("$APPDIR/", "$APPDIR/../../../app/")
+      val config3 = config2.replace("{{{ROOTDIR}}}", "$APPDIR/../../..")
+      val splitPoint = "[Application]\n".length
+      val config4 = s"${config3.substring(0, splitPoint)}app.runtime=$$APPDIR/../../../runtime/\n${config3.substring(splitPoint)}"
+      Files.writeString(configFile.toPath, config4)
 
-    // copy stub for each application and post-process
-    subApplications.foreach { app =>
-      val appName = s"${app.name} $version"
-      JavaPackager.copyMacStubApplication(stubApplicationAndName._1, stubApplicationAndName._2,
-        aggregateMacDir, appName, app.name)
-      configureSubApplication(aggregateMacDir / (appName + ".app"), app, commonConfig, variables ++ appSpecificConfig(app))
-    }
+      log.info("  Generating Info.plist and PkgInfo files.")
+      val variables = plistConfig.getOrElse(launcher.id, throw new Exception(s"No variables for this launcher? ${launcher.id} : $plistConfig"))
+      Mustache(configDir / "macosx" / "Info.plist.mustache", appDir / "Contents" / "Info.plist",            variables)
+      Mustache(configDir / "macosx" / "PkgInfo.mustache",    appDir / "Contents" / "PkgInfo", variables)
 
-    val headlessClasspath =
-      ("classpathJars" ->
-        commonConfig.classpath
-          .map(jar => "Java/" + jar.getName)
-          .sorted
-          .mkString(File.pathSeparator))
+      log.info("  Move to the bundle directory.")
+      FileActions.copyDirectory(appDir, bundleDir / appDir.getName)
+      FileActions.remove(appDir)
+    })
 
-    val headlessFile = aggregateMacDir / "netlogo-headless.sh"
-    Mustache(commonConfig.configRoot / "macosx" / "netlogo-headless.sh.mustache",
-      headlessFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.headless.Main"))
-    headlessFile.setExecutable(true)
+    bundleDir
+  }
 
-    val guiFile = aggregateMacDir / "netlogo-gui.sh"
-    Mustache(commonConfig.configRoot / "macosx" / "netlogo-headless.sh.mustache",
-      guiFile, variables + headlessClasspath + ("mainClass" -> "org.nlogo.app.App"))
-    guiFile.setExecutable(true)
+  def apply(
+    log: sbt.util.Logger
+  , version: String
+  , destDir: File
+  , bundleDir: File
+  , configDir: File
+  , webDir: File
+  , launchers: Seq[Launcher]
+  ): File = {
+    val buildName = s"NetLogo $version"
+    (bundleDir / "runtime" / "Contents" / "Home" / "lib" / "jspawnhelper").setExecutable(true)
 
-    // build and sign
-    (aggregateMacDir / "JRE" / "Contents" / "Home" / "jre" / "lib" / "jspawnhelper").setExecutable(true)
-
-    val apps = subApplications.map(a => s"${a.name} $version.app")
-      .map(n => aggregateMacDir / n)
+    log.info("Gathering files to sign")
+    val appNames = launchers.map(_.id)
+    val apps     = launchers.map( (l) => (bundleDir / s"${l.name}.app") )
 
     val filesToBeSigned =
-      apps
-        .flatMap(a => FileActions.enumeratePaths(a.toPath).filterNot(p => Files.isDirectory(p)))
+      (apps :+ (bundleDir / "natives")).flatMap( a => FileActions.enumeratePaths(a.toPath).filterNot( p => Files.isDirectory(p) ) )
 
     val filesToMakeExecutable =
-      filesToBeSigned.filter(p => p.getFileName.toString.endsWith(".dylib") || p.getFileName.toString.endsWith(".jnilib"))
+      filesToBeSigned.filter( p => p.getFileName.toString.endsWith(".dylib") || p.getFileName.toString.endsWith(".jnilib") )
 
     filesToMakeExecutable.foreach(_.toFile.setExecutable(true))
 
     // ensure applications are signed *after* their libraries and resources
     val orderedFilesToBeSigned =
       filesToBeSigned.sortBy {
-        case p if subApplications.map(_.name).contains(p.getFileName.toString) => 2
+        case p if appNames.contains(p.getFileName.toString) => 2
         case _ => 1
       }
 
-    val dmgName = buildName + ".dmg"
+    val dmgName = s"netlogo-$version.dmg"
 
     // Apple requires a "hardened" runtime for notarization -Jeremy B July 2020
-    val appSigningOptions = Seq("--options", "runtime", "--entitlements", (commonConfig.configRoot / "macosx" / "entitlements.xml").toString)
+    val appSigningOptions = Seq("--options", "runtime", "--entitlements", (configDir / "macosx" / "entitlements.xml").toString)
 
     // In theory instead of hardcoding these we could search all jars for any libs that
-    // aren't signed or are signed incorrectly.  But Apple will do that search for us
-    // when we submit for notarization and these libraries don't change that often.
-    // -Jeremy B July 2020
+    // aren't signed or are signed incorrectly.  But Apple will do that search for us when
+    // we submit for notarization and these libraries don't change that often.  -Jeremy B
+    // July 2020
+
+    // This map is officially bonkers enough that I'd consider switching to an automated
+    // solution.  Although most of the libs are from the Vid extension and could go away
+    // if we ever get onto a single camera capture library for it.  -Jeremy B August 2022
     val jarLibsToSign = Map(
-      ("extensions/.bundled/gogo/hid4java-0.7.0.jar", Seq("darwin/libhidapi.dylib")),
-      ("extensions/.bundled/vid/core-video-capture-1.4-20220209.101851-153.jar", Seq("org/openimaj/video/capture/nativelib/darwin_universal/libOpenIMAJGrabber.dylib")),
-      ("Java/java-objc-bridge-1.0.0.jar", Seq("libjcocoa.dylib"))
+      ("extensions/.bundled/gogo/hid4java-0.7.0.jar", Seq("darwin/libhidapi.dylib"))
+    , ("extensions/.bundled/vid/core-video-capture-1.4-20220209.101851-153.jar", Seq("org/openimaj/video/capture/nativelib/darwin_universal/libOpenIMAJGrabber.dylib"))
+    , ("extensions/.bundled/vid/javacpp-1.5.7-macosx-arm64.jar", Seq("org/bytedeco/javacpp/macosx-arm64/libjnijavacpp.dylib"))
+    , ("extensions/.bundled/vid/javacpp-1.5.7-macosx-x86_64.jar", Seq("org/bytedeco/javacpp/macosx-x86_64/libjnijavacpp.dylib"))
+    , ("extensions/.bundled/vid/openblas-0.3.19-1.5.7-macosx-arm64.jar", Seq("org/bytedeco/openblas/macosx-arm64/libjniopenblas_nolapack.dylib", "org/bytedeco/openblas/macosx-arm64/libjniopenblas.dylib", "org/bytedeco/openblas/macosx-arm64/libopenblas.0.dylib"))
+    , ("extensions/.bundled/vid/openblas-0.3.19-1.5.7-macosx-x86_64.jar", Seq("org/bytedeco/openblas/macosx-x86_64/libgfortran.dylib", "org/bytedeco/openblas/macosx-x86_64/libjniopenblas_nolapack.dylib", "org/bytedeco/openblas/macosx-x86_64/libjniopenblas.dylib", "org/bytedeco/openblas/macosx-x86_64/libgfortran.4.dylib", "org/bytedeco/openblas/macosx-x86_64/libquadmath.0.dylib", "org/bytedeco/openblas/macosx-x86_64/libgcc_s.1.dylib", "org/bytedeco/openblas/macosx-x86_64/libopenblas.0.dylib"))
+    , ("extensions/.bundled/vid/opencv-4.5.5-1.5.7-macosx-arm64.jar", Seq("org/bytedeco/opencv/macosx-arm64/libopencv_plot.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_face.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_barcode.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_dnn_superres.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_flann.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_intensity_transform.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_img_hash.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_quality.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_optflow.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_videoio.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_imgproc.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_face.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_structured_light.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_aruco.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_videostab.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_optflow.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_tracking.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_quality.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_structured_light.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_xfeatures2d.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_features2d.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_text.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_saliency.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_bioinspired.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_stitching.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_rapid.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_ml.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_rapid.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_core.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_highgui.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_photo.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_phase_unwrapping.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_ml.405.dylib", "org/bytedeco/opencv/macosx-arm64/opencv_interactive-calibration", "org/bytedeco/opencv/macosx-arm64/libopencv_calib3d.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_flann.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_imgcodecs.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_shape.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_aruco.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_ximgproc.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_mcc.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_tracking.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_java.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_xfeatures2d.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_superres.405.dylib", "org/bytedeco/opencv/macosx-arm64/opencv_annotation", "org/bytedeco/opencv/macosx-arm64/libjniopencv_features2d.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_plot.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_superres.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_core.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_video.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_dnn.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_imgcodecs.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_objdetect.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_python3.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_highgui.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_stitching.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_barcode.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_wechat_qrcode.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_ximgproc.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_xphoto.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_videoio.405.dylib", "org/bytedeco/opencv/macosx-arm64/opencv_version", "org/bytedeco/opencv/macosx-arm64/libopencv_videostab.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_bgsegm.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_img_hash.405.dylib", "org/bytedeco/opencv/macosx-arm64/opencv_visualisation", "org/bytedeco/opencv/macosx-arm64/libjniopencv_video.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_photo.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjnicvkernels.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_bioinspired.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_bgsegm.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_objdetect.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_java.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_dnn.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_intensity_transform.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_imgproc.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_dnn_superres.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_shape.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_mcc.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_wechat_qrcode.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_xphoto.405.dylib", "org/bytedeco/opencv/macosx-arm64/libopencv_saliency.405.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_calib3d.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_phase_unwrapping.dylib", "org/bytedeco/opencv/macosx-arm64/libjniopencv_text.dylib"))
+    , ("extensions/.bundled/vid/opencv-4.5.5-1.5.7-macosx-x86_64.jar", Seq("org/bytedeco/opencv/macosx-x86_64/libopencv_plot.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_face.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_barcode.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_dnn_superres.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_flann.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_intensity_transform.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_img_hash.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_quality.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_optflow.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_videoio.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_imgproc.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_face.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_structured_light.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_aruco.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_videostab.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_optflow.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_tracking.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_quality.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_structured_light.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_xfeatures2d.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_features2d.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_text.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_saliency.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_bioinspired.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_stitching.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_rapid.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_ml.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_rapid.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_core.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_highgui.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_photo.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_phase_unwrapping.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_ml.405.dylib", "org/bytedeco/opencv/macosx-x86_64/opencv_interactive-calibration", "org/bytedeco/opencv/macosx-x86_64/libopencv_calib3d.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_flann.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_imgcodecs.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_shape.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_aruco.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_ximgproc.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_mcc.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_tracking.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_java.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_xfeatures2d.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_superres.405.dylib", "org/bytedeco/opencv/macosx-x86_64/opencv_annotation", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_features2d.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_plot.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_superres.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_core.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_video.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_dnn.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_imgcodecs.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_objdetect.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_python3.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_highgui.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_stitching.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_barcode.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_wechat_qrcode.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_ximgproc.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_xphoto.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_videoio.405.dylib", "org/bytedeco/opencv/macosx-x86_64/opencv_version", "org/bytedeco/opencv/macosx-x86_64/libopencv_videostab.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_bgsegm.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_img_hash.405.dylib", "org/bytedeco/opencv/macosx-x86_64/opencv_visualisation", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_video.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_photo.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjnicvkernels.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_bioinspired.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_bgsegm.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_objdetect.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_java.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_dnn.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_intensity_transform.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_imgproc.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_dnn_superres.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_shape.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_mcc.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_wechat_qrcode.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_xphoto.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libopencv_saliency.405.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_calib3d.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_phase_unwrapping.dylib", "org/bytedeco/opencv/macosx-x86_64/libjniopencv_text.dylib", "org/bytedeco/opencv/macosx-x86_64/python/cv2.cpython-310-darwin.so"))
+    , ("app/java-objc-bridge-1.0.0.jar", Seq("libjcocoa.dylib"))
     )
-    jarLibsToSign.foreach { case (jarPath: String, libsToSign: Seq[String]) => signJarLibs(aggregateMacDir / jarPath, appSigningOptions, libsToSign) }
 
-    // It's odd that we have to do this, but it works so I'm not going to worry about it.
-    // We should try to remove it once we're on a more modern JDK version and the package
-    // and notarization tools have better adapted to Apple's requirements.
-    // More info:  https://github.com/AdoptOpenJDK/openjdk-support/issues/97
-    // -Jeremy B July 2020
+    log.info("Signing libs inside jars.")
+    jarLibsToSign.foreach { case (jarPath: String, libsToSign: Seq[String]) => signJarLibs(bundleDir / jarPath, appSigningOptions, libsToSign) }
+
+    // It's odd that we have to sign `libjli.dylib`, but it works so I'm not going to
+    // worry about it.  We should try to remove it once we're on a more modern JDK version
+    // and the package and notarization tools have better adapted to Apple's requirements.
+    // More info:  https://github.com/AdoptOpenJDK/openjdk-support/issues/97 -Jeremy B
+    // July 2020
     val extraLibsToSign = Seq(
-      "JRE/Contents/MacOS/libjli.dylib"
-    ).map((p) => (aggregateMacDir / p).toString)
+      "runtime/Contents/MacOS/libjli.dylib"
+    ).map( (p) => (bundleDir / p).toString )
 
+    log.info("Signing standalone libs in bundles and natives.")
     runCodeSign(appSigningOptions, orderedFilesToBeSigned.map(_.toString) ++ extraLibsToSign, "app bundles")
 
-    // Remove .dmg file if it exists
-    val dmgPath = Paths.get(s"$buildName.dmg")
+    log.info(s"Creating $dmgName")
+    val dmgPath = Paths.get(dmgName)
     Files.deleteIfExists(dmgPath)
 
     val dmgArgs = Seq("hdiutil", "create",
-        s"$buildName.dmg",
-        "-srcfolder", (aggregateTarget / "NetLogo Bundle").getAbsolutePath,
-        "-size", "1200m",
-        "-fs", "HFS+",
-        "-volname", buildName, "-ov")
-    RunProcess(dmgArgs, aggregateTarget, "disk image (dmg) packaging")
+      dmgName,
+      "-srcfolder", bundleDir.getAbsolutePath,
+      "-size", "1200m",
+      "-fs", "HFS+",
+      "-volname", buildName, "-ov"
+    )
+    RunProcess(dmgArgs, destDir, "disk image (dmg) packaging")
 
-    runCodeSign(Seq(), Seq(dmgName), "disk image (dmg)", Some(aggregateTarget))
+    log.info(s"Signing dmg.")
+    runCodeSign(Seq(), Seq(dmgName), "disk image (dmg)", Some(destDir))
 
-    IO.delete(webDirectory)
-    FileActions.createDirectory(webDirectory)
-    FileActions.moveFile(aggregateTarget / dmgName, webDirectory / dmgName)
+    log.info(s"Moving dmg file to final location.")
+    val archiveFile = webDir / dmgName
+    Files.deleteIfExists(archiveFile.toPath)
+    FileActions.createDirectory(webDir)
+    FileActions.moveFile(destDir / dmgName, archiveFile)
 
-    println("\n**Note**: The NetLogo macOS packaging and signing is complete, but you must **notarize** the .dmg file if you intend to distribute it.\n")
+    log.info("\n**Note**: The NetLogo macOS packaging and signing is complete, but you must **notarize** the .dmg file if you intend to distribute it.\n")
 
-    webDirectory / dmgName
+    archiveFile
   }
 }

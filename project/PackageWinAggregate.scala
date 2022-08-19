@@ -11,27 +11,6 @@ import scala.collection.JavaConverters._
 import NetLogoPackaging.RunProcess
 
 object PackageWinAggregate {
-  // we're given a dummy package with a directory structure that look like:
-  // dummy
-  //  ├── dummy.exe (spaces intact)
-  //  ├── dummy.ico (spaces intact)
-  //  ├── app
-  //  │   ├── dummy.cfg (spaces intact)
-  //  │   └── NetLogo.jar
-  //  ├── msvcp120.dll
-  //  ├── msvcr100.dll
-  //  ├── msvcr120.dll
-  //  ├── packager.dll
-  //  └── runtime
-  //      └── JRE, etc.
-  //
-  // The desire is to add and configure all sub applications from the dummy application.
-  // JavaPackager.copyWinStubApplications gives us the raw exe, ico, cfg files, but we will
-  // need to overwrite those with the correct ones.
-  //
-  // Once we've generated a functioning suite of applications, we'll process the applications
-  // into a windows package using WiX packager.
-
   val vars32 = Map[String, String](
     "upgradeCode"                     -> "7DEBD71E-5C9C-44C5-ABBB-B39A797CA851",
     "platformArch"                    -> "x86",
@@ -103,9 +82,8 @@ object PackageWinAggregate {
   , configDir: File
   , appImageDir: File
   , webDir: File
-  , extraDirs: Seq[BundledDirectory]
-  , rootFiles: Seq[File]
   , variables: Map[String, String]
+  , launchers: Seq[Launcher]
   ): File = {
     val platformConfigDir = configDir / "windows"
 
@@ -206,7 +184,7 @@ object PackageWinAggregate {
       FileActions.copyFile(platformConfigDir / wixFile, msiBuildDir / wixFile)
     }
 
-    val launcherExes = JavaPackager.launchers.map( (launcher) => s"$launcher.exe" ).toSeq
+    val launcherExes = launchers.map( (launcher) => s"${launcher.name}.exe" ).toSeq
     val generatedUUIDs =
       HarvestResources.harvest(appImageDir.toPath, "INSTALLDIR", "NetLogoApp",
         launcherExes, winVariables,
@@ -231,6 +209,7 @@ object PackageWinAggregate {
     Seq(candleCommand, lightCommand)
       .foreach(command => RunProcess(command, msiBuildDir, command.head))
 
+    log.info("Moving MSI to final location.")
     FileActions.createDirectory(webDir)
     IO.delete(archiveFile)
     FileActions.moveFile(msiBuildDir / msiName, archiveFile)

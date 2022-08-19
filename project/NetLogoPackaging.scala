@@ -36,7 +36,6 @@ object NetLogoPackaging {
   lazy val packageWinAggregate     = inputKey[File]("package all win apps into a single directory")
   lazy val packagingClasspath      = taskKey[Seq[File]]("Jars to include when packaging")
   lazy val packagingMainJar        = taskKey[File]("Main jar to use when packaging")
-  lazy val subApplications         = settingKey[Seq[SubApplication]]("map of names to sub-application")
   lazy val uploadWebsite           = inputKey[Unit]("upload the web download pages to the ccl server")
   lazy val uploadDocs              = inputKey[Unit]("Upload the web docs pages only to the CCL server")
   lazy val webTarget               = settingKey[File]("location of finished website")
@@ -58,14 +57,6 @@ object NetLogoPackaging {
       }
     }
 
-  def repackageJar(app: SubApplication, platform: PlatformBuild, netlogo: Project): Def.Initialize[Task[File]] =
-    Def.task {
-      val mainClass = if (app.name.contains("HubNet")) Some("org.nlogo.hubnet.client.App") else None
-      val netLogoJar = (packageBin in Compile in netlogo).value
-      val platformBuildDir = target.value / s"${platform.shortName}-build"
-      JavaPackager.repackageJar(app, mainClass, netLogoJar, platformBuildDir)
-    }
-
   private def jarExcluded(f: File): Boolean =
     Seq("scalatest", "scalacheck", "jmock", "junit", "hamcrest")
       .exists(f.getName.contains)
@@ -82,7 +73,6 @@ object NetLogoPackaging {
     configRoot      := baseDirectory.value / "configuration",
     localSiteTarget := target.value / marketingVersion.value,
     aggregateJDKParser := Def.toSParser(jdkParser),
-    subApplications    := Seq(NetLogoCoreApp, NetLogoThreeDApp, HubNetClientApp, BehaviorsearchApp),
     netLogoLongVersion := { if (marketingVersion.value.length == 3) marketingVersion.value + ".0" else marketingVersion.value },
 
     buildNetLogo := {
@@ -206,22 +196,24 @@ object NetLogoPackaging {
     },
 
     packageLinuxAggregate := {
-      val log             = streams.value.log
-      val version         = marketingVersion.value
-      val buildJDK        = aggregateJDKParser.parsed
-      val buildDir        = target.value
-      val platform        = LinuxPlatform
-      val configDir       = configRoot.value
-      val netLogoJar      = (netlogo / Compile / packageBin).value
-      val dependenciesDir = packagingClasspath.value
-      val rootFiles       = (packageLinuxAggregate / aggregateOnlyFiles).value
-      val variables       = buildVariables.value
+      val log          = streams.value.log
+      val version      = marketingVersion.value
+      val buildJDK     = aggregateJDKParser.parsed
+      val buildDir     = target.value
+      val platform     = LinuxPlatform
+      val configDir    = configRoot.value
+      val netLogoJar   = (netlogo / Compile / packageBin).value
+      val dependencies = packagingClasspath.value
+      val rootFiles    = (packageLinuxAggregate / aggregateOnlyFiles).value
+      val variables    = buildVariables.value
 
-      val launcherSettings = Seq(new NetLogo3dLauncher(), new HubNetClientLauncher(), new BehaviorsearchLauncher())
+      val mainLauncher = new NetLogoLauncher(version)
+      val launchers    = Seq(new NetLogo3dLauncher(version), new HubNetClientLauncher(version), new BehaviorsearchLauncher(version))
 
-      val inputDir    = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependenciesDir)
-      val destDir     = buildDir / s"${platform.shortName}-dest-${buildJDK.version}-${buildJDK.arch}"
-      val appImageDir = JavaPackager.generateAppImage(log, platform.shortName, version, configDir, buildDir, inputDir, destDir, Seq(), launcherSettings)
+      val inputDir = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
+      val destDir  = buildDir / s"${platform.shortName}-dest-${buildJDK.version}-${buildJDK.arch}"
+      FileActions.remove(destDir)
+      val appImageDir = JavaPackager.generateAppImage(log, platform.shortName, mainLauncher, configDir, buildDir, inputDir, destDir, Seq(), launchers)
 
       val extraDirs = bundledDirs(netlogo, macApp, behaviorsearchProject).value(platform, buildJDK.arch)
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir / "bin", rootFiles)
@@ -235,22 +227,22 @@ object NetLogoPackaging {
       , destDir / "NetLogo"
       , webTarget.value
       , extraDirs
-      , rootFiles
       , variables
+      , mainLauncher +: launchers
       )
     },
 
     packageWinAggregate := {
-      val log             = streams.value.log
-      val version         = marketingVersion.value
-      val buildJDK        = aggregateJDKParser.parsed
-      val buildDir        = target.value
-      val platform        = WindowsPlatform
-      val configDir       = configRoot.value
-      val netLogoJar      = (netlogo / Compile / packageBin).value
-      val dependenciesDir = packagingClasspath.value
-      val rootFiles       = (packageWinAggregate / aggregateOnlyFiles).value
-      val variables       = buildVariables.value
+      val log          = streams.value.log
+      val version      = marketingVersion.value
+      val buildJDK     = aggregateJDKParser.parsed
+      val buildDir     = target.value
+      val platform     = WindowsPlatform
+      val configDir    = configRoot.value
+      val netLogoJar   = (netlogo / Compile / packageBin).value
+      val dependencies = packagingClasspath.value
+      val rootFiles    = (packageWinAggregate / aggregateOnlyFiles).value
+      val variables    = buildVariables.value
 
       val icons = Seq(
         (behaviorsearchProject / baseDirectory).value / "resources" / "Behaviorsearch.ico"
@@ -259,19 +251,20 @@ object NetLogoPackaging {
       , configDir / "windows" / "HubNet Client.ico"
       , configDir / "windows" / "model.ico"
       )
-      // this makes the icons available for jpackage
       icons.foreach( (i) => FileActions.copyFile(i, buildDir / i.getName) )
 
-      val launcherSettings = Seq(
-        new NetLogo3dLauncher(Seq(), Seq("icon=NetLogo.ico"))
-      , new HubNetClientLauncher(Seq(), Seq("icon=HubNet Client.ico"))
-      , new BehaviorsearchLauncher(Seq(), Seq("icon=Behaviorsearch.ico"))
+      val mainLauncher = new NetLogoLauncher(version, Some("NetLogo.ico"), Seq(), Seq("icon="))
+      val launchers = Seq(
+        new NetLogo3dLauncher(version, Some("NetLogo.ico"))
+      , new HubNetClientLauncher(version, Some("HubNet Client.ico"))
+      , new BehaviorsearchLauncher(version, Some("Behaviorsearch.ico"))
       )
 
-      val inputDir    = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependenciesDir)
+      val inputDir    = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
       val destDir     = buildDir / s"${platform.shortName}-dest-${buildJDK.version}-${buildJDK.arch}"
       val extraArgs   = Seq("--icon", "NetLogo.ico")
-      val appImageDir = JavaPackager.generateAppImage(log, platform.shortName, version, configDir, buildDir, inputDir, destDir, extraArgs, launcherSettings)
+      FileActions.remove(destDir)
+      val appImageDir = JavaPackager.generateAppImage(log, platform.shortName, mainLauncher, configDir, buildDir, inputDir, destDir, extraArgs, launchers)
 
       // this makes the file association icons available for wix
       icons.foreach( (i) => FileActions.copyFile(i, appImageDir / i.getName) )
@@ -287,9 +280,8 @@ object NetLogoPackaging {
       , configDir
       , destDir / "NetLogo"
       , webTarget.value
-      , extraDirs
-      , rootFiles
       , variables
+      , mainLauncher +: launchers
       )
     },
 
@@ -299,87 +291,116 @@ object NetLogoPackaging {
     },
 
     packageMacAggregate := {
-      val buildJDK = PathSpecifiedJDK
-      val netLogoJar = repackageJar(DummyApp, new MacImagePlatform(macApp), netlogo).value
-      val mainJar = packagingMainJar.value
-      val outDir = target.value.getParentFile() / "target2" / "packaged-mac"
-      FileActions.remove(outDir)
-      val jarDir = target.value.getParentFile() / "jar-dir" / "packaged-mac"
-      FileActions.remove(jarDir)
-      FileActions.createDirectories(jarDir)
-      FileActions.copyFile(mainJar, jarDir / mainJar.getName)
-      val macAppMainJar = (packageBin in Compile in macApp).value
+      val log          = streams.value.log
+      val version      = marketingVersion.value
+      val buildJDK     = PathSpecifiedJDK
+      val buildDir     = target.value
+      val platform     = new MacImagePlatform(macApp)
+      val configDir    = configRoot.value
+      val netLogoJar   = (netlogo / Compile / packageBin).value
+      val dependencies = packagingClasspath.value
+      val rootFiles    = (packageLinuxAggregate / aggregateOnlyFiles).value
+      val variables    = buildVariables.value
 
-      JavaPackager.generateStubApplication(buildJDK, "dummy", "image", jarDir, outDir, target.value, mainJar)
-      // jarDir has two levels, so want to delete parent recursively
-      FileActions.remove(jarDir.getParentFile())
-
-      val classPath =
-        (packagingClasspath.value ++
-          (dependencyClasspath in macApp in Runtime).value.files)
-          .filterNot(jarExcluded)
-          .filterNot(_.isDirectory) :+ macAppMainJar
-
-      val nlAppConfig = Map(
-        "bundleIdentifier"    -> "org.nlogo.NetLogo",
-        "bundleName"          -> "NetLogo",
-        "bundleSignature"     -> "nLo1",
-        "fileAssociation"     -> "nlogo",
-        "fileAssociationIcon" -> "Model.icns",
-        "iconFile"            -> "NetLogo.icns",
-        "packageID"           -> "APPLnLo1"
+      val icons = Seq(
+        (behaviorsearchProject / baseDirectory).value / "resources" / "Behaviorsearch.icns"
+      , configDir / "macosx" / "NetLogo.icns"
+      , configDir / "macosx" / "HubNet Client.icns"
+      , configDir / "macosx" / "Model.icns"
       )
-      val appSpecificConfig: Map[SubApplication, Map[String, String]] = Map(
-        NetLogoCoreApp    -> nlAppConfig,
-        NetLogoThreeDApp  -> Map(
-          "fileAssociation"  -> "nlogo3d",
-          "bundleIdentifier" -> "org.nlogo.NetLogo3D",
-          "bundleName"       -> "NetLogo",
-          "bundleSignature"  -> "nLo1",
-          "iconFile"         -> "NetLogo.icns",
-          "packageID"        -> "APPLnLo1"
-        ),
-        HubNetClientApp  -> Map(
-          "bundleIdentifier" -> "org.nlogo.HubNetClient",
-          "bundleName"       -> "HubNet Client",
-          "bundleSignature"  -> "????",
-          "iconFile"         -> "HubNet Client.icns",
-          "packageID"        -> "APPL????"
-        ),
-        BehaviorsearchApp -> Map(
-          "bundleIdentifier"    -> "org.nlogo.Behaviorsearch",
-          "bundleName"          -> "Behaviorsearch",
-          "bundleSignature"     -> "????",
-          "fileAssociation"     -> "bsearch",
-          "fileAssociationIcon" -> "Behaviorsearch.icns",
-          "iconFile"            -> "Behaviorsearch.icns",
-          "packageID"           -> "APPL????"
-        )
+      icons.foreach( (i) => FileActions.copyFile(i, buildDir / i.getName) )
+
+      val macOsJavaOptions = Seq(
+        "-Dapple.awt.graphics.UseQuartz=true"
+      , "--add-exports=java.desktop/com.apple.laf=ALL-UNNAMED"
+      , "-Dnetlogo.extensions.dir={{{ROOTDIR}}}/extensions"
+      , "-Dnetlogo.models.dir={{{ROOTDIR}}}/models"
+      , "-Dnetlogo.docs.dir={{{ROOTDIR}}}/docs"
+      , "-Djava.library.path={{{ROOTDIR}}}/natives/macosx-universal"
+      , "-Djogamp.gluegen.UseTempJarCache=false"
+      )
+      val launchers = Seq(
+        new NetLogoLauncher(
+          version
+        , Some("NetLogo.icns")
+        , macOsJavaOptions :+ "-Xdock:name=NetLogo" :+ "-Dorg.nlogo.mac.appClassName=org.nlogo.app.App$"
+        , Seq()
+        , Some("netlogo-mac-app.jar")
+        , Some("org.nlogo.app.MacApplication")
+        ) {
+          override def name = s"NetLogo $version"
+        }
+      , new NetLogo3dLauncher(
+          version
+        , Some("NetLogo.icns")
+        , macOsJavaOptions :+ "-Xdock:name=NetLogo 3D" :+ "-Dorg.nlogo.mac.appClassName=org.nlogo.app.App$"
+        , Seq()
+        , Some("netlogo-mac-app.jar")
+        , Some("org.nlogo.app.MacApplication")
+        ) {
+          override def name = s"NetLogo 3D $version"
+        }
+      , new HubNetClientLauncher(
+          version
+        , Some("HubNet Client.icns")
+        , macOsJavaOptions ++ Seq(
+            "-Xdock:name=HubNet"
+          , "-Dorg.nlogo.mac.appClassName=org.nlogo.hubnet.client.App$"
+          , "-Dapple.laf.useScreenMenuBar=true"
+         )
+        , Seq()
+        , Some("netlogo-mac-app.jar")
+        , Some("org.nlogo.app.MacApplication")
+        ) {
+          override def name = s"HubNet Client $version"
+        }
+      , new BehaviorsearchLauncher(
+          version
+        , Some("Behaviorsearch.icns")
+        , macOsJavaOptions ++ Seq(
+            "-Xdock:name=Behaviorsearch"
+          , "-Dorg.nlogo.mac.appClassName=bsearch.fx.MainGUI"
+          , "-Dbsearch.appfolder={{{ROOTDIR}}}/behaviorsearch"
+          , "-Dbsearch.startupfolder={{{ROOTDIR}}}"
+          )
+        ) {
+          override def name = s"Behaviorsearch $version"
+        }
       )
 
+      val inputDir = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
 
-      val bundled = bundledDirs(netlogo, macApp, behaviorsearchProject).value(new MacImagePlatform(macApp), buildJDK.arch)
-      val commonConfig = CommonConfiguration(
-        macAppMainJar,
-        "org.nlogo.app.MacApplication",
-        bundled,
-        classPath,
-        bundled.filter(_.directoryName == "natives"),
-        (iconFiles in packageMacAggregate).value,
-        aggregateOnlyFiles.value,
-        configRoot.value,
-        marketingVersion.value,
-        buildJDK,
-        webTarget.value
-      )
+      val macAppMainJar = (macApp / Compile / packageBin).value
+      val macAppDeps = removeJdkLibraries((macApp / Runtime / dependencyClasspath).value).files
+      (macAppDeps :+ macAppMainJar).foreach( (dep) => {
+        FileActions.copyFile(dep, inputDir / dep.getName)
+      })
+
+      val destDir = buildDir / s"${platform.shortName}-dest-${buildJDK.version}-${buildJDK.arch}"
+      FileActions.remove(destDir)
+
+      launchers.foreach( (launcher) => {
+        val jOpts     = launcher.javaOptions.map( (opt) => s""""$opt"""" ).mkString(" ")
+        val extraArgs = Seq("--icon", launcher.icon.getOrElse(""), "--java-options", jOpts)
+        JavaPackager.generateAppImage(log, platform.shortName, launcher, configDir, buildDir, inputDir, destDir, extraArgs, Seq())
+      })
+
+      val appImageDir = destDir / s"NetLogo $version"
+      FileActions.remove(appImageDir)
+      val extraDirs = bundledDirs(netlogo, macApp, behaviorsearchProject).value(platform, buildJDK.arch)
+      JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir, rootFiles)
+      val bundleDir = PackageMacAggregate.createBundleDir(log, version, destDir, configDir, launchers)
+      JavaPackager.createScripts(log, bundleDir, configDir, bundleDir / "app", platform, "netlogo-headless.sh", "netlogo-gui.sh", variables)
 
       PackageMacAggregate(
-        target.value / "mac-aggregate",
-        commonConfig,
-        appSpecificConfig,
-        outDir -> "dummy",
-        subApplications.value,
-        buildVariables.value)
+        log
+      , version
+      , destDir
+      , bundleDir
+      , configDir
+      , webTarget.value
+      , launchers
+      )
     }
   )
 
