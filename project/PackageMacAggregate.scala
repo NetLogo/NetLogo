@@ -43,41 +43,46 @@ object PackageMacAggregate {
 
     val plistConfig = Map(
       "NetLogo" -> Map(
-        "bundleIdentifier"    -> "org.nlogo.NetLogo"
+        "appName"             -> s"NetLogo $version"
+      , "bundleIdentifier"    -> "org.nlogo.NetLogo"
       , "bundleName"          -> "NetLogo"
       , "bundleSignature"     -> "nLo1"
       , "fileAssociation"     -> "nlogo"
       , "fileAssociationIcon" -> "Model.icns"
-      , "iconFile"            -> "NetLogo.icns"
+      , "iconFile"            -> s"NetLogo $version.icns"
       , "packageID"           -> "APPLnLo1"
-      ,  "version"             -> version
-      )
-      , "NetLogo 3D" -> Map(
-        "bundleIdentifier"    -> "org.nlogo.NetLogo3D"
+      , "version"             -> version
+     )
+    , "NetLogo 3D" -> Map(
+        "appName"             -> s"NetLogo 3D $version"
+      , "bundleIdentifier"    -> "org.nlogo.NetLogo3D"
       , "bundleName"          -> "NetLogo"
       , "bundleSignature"     -> "nLo1"
       , "fileAssociation"     -> "nlogo3d"
       , "fileAssociationIcon" -> "Model.icns"
-      , "iconFile"            -> "NetLogo.icns"
+      , "iconFile"            -> s"NetLogo 3D $version.icns"
       , "packageID"           -> "APPLnLo1"
       , "version"             -> version
-      )
-      , "HubNet Client" -> Map(
-        "bundleIdentifier" -> "org.nlogo.HubNetClient"
+     )
+    , "HubNet Client" -> Map(
+        "appName"             -> s"HubNet Client $version"
+      , "bundleIdentifier" -> "org.nlogo.HubNetClient"
       , "bundleName"       -> "HubNet Client"
       , "bundleSignature"  -> "????"
-      , "iconFile"         -> "HubNet Client.icns"
+      , "iconFile"         -> s"HubNet Client $version.icns"
       , "packageID"        -> "APPL????"
       , "version"          -> version
-      )
-      , "Behaviorsearch" -> Map(
-        "bundleIdentifier"    -> "org.nlogo.Behaviorsearch"
+     )
+    , "Behaviorsearch" -> Map(
+        "appName"             -> s"Behaviorsearch $version"
+      , "bundleIdentifier"    -> "org.nlogo.Behaviorsearch"
       , "bundleName"          -> "Behaviorsearch"
       , "bundleSignature"     -> "????"
       , "fileAssociation"     -> "bsearch"
-      , "fileAssociationIcon" -> "Behaviorsearch.icns"
-      , "iconFile"            -> "Behaviorsearch.icns"
+      , "fileAssociationIcon" -> s"Behaviorsearch $version.icns"
+      , "iconFile"            -> s"Behaviorsearch $version.icns"
       , "packageID"           -> "APPL????"
+      , "version"             -> version
       )
     )
 
@@ -212,7 +217,7 @@ object PackageMacAggregate {
     FileActions.createDirectory(webDir)
     FileActions.moveFile(destDir / dmgName, archiveFile)
 
-    log.info("\n**Note**: The NetLogo macOS packaging and signing is complete, but you must **notarize** the .dmg file if you intend to distribute it.\n")
+    log.info("\n**Note**: The NetLogo macOS packaging and signing are complete, but you must **notarize** the .dmg file if you intend to distribute it.\n")
 
     archiveFile
   }

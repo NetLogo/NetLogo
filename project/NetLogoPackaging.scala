@@ -381,7 +381,8 @@ object NetLogoPackaging {
       launchers.foreach( (launcher) => {
         val jOpts     = launcher.javaOptions.map( (opt) => s""""$opt"""" ).mkString(" ")
         val extraArgs = Seq("--icon", launcher.icon.getOrElse(""), "--java-options", jOpts)
-        JavaPackager.generateAppImage(log, platform, launcher, configDir, buildDir, inputDir, destDir, extraArgs, Seq())
+        val appPackage = JavaPackager.generateAppImage(log, platform, launcher, configDir, buildDir, inputDir, destDir, extraArgs, Seq())
+        FileActions.copyFile(configDir / "macosx" / "Model.icns", destDir / s"${launcher.name}.app" / "Contents" / "Resources" / "Model.icns")
       })
 
       val appImageDir = destDir / s"NetLogo $version"
