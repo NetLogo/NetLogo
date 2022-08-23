@@ -314,12 +314,27 @@ Fourth, using all available processor cores may make your computer slow to use
 for other tasks while the experiment is running.
 
 Fifth, doing runs in parallel will multiply the experiment's memory requirements
-accordingly. You may need to increase NetLogo's memory ceiling (see
-[this FAQ entry](faq.html#how-big-can-my-model-be-how-many-turtles-patches-procedures-buttons-and-so-on-can-my-model-contain)).
+accordingly. You may need to increase NetLogo's memory ceiling (see [this FAQ
+entry](faq.html#how-big-can-my-model-be-how-many-turtles-patches-procedures-buttons-and-so-on-can-my-model-contain)).
 
-Sixth, each parallel run will get its own world for the model to run in.  This world is *not* cleared automatically by BehaviorSpace if a parallel run gets re-used for another repitition, which happens quite frequently.  This means, for example, if you do `ask patches [ set pcolor red ]` in one run and do not use `clear-all` or `clear-patches` in the setup commands of the next run, then the patches will all still be red.  In general using `clear-all` before each run would be a best practice, but there are times when you might not want to, such as loading data from a file that doesn't change run-to-run.  Just be careful with whatever data is not cleared out.
+Sixth, each parallel run will get its own world for the model to run in.  This world is
+*not* cleared automatically by BehaviorSpace if a parallel run gets re-used for another
+repitition, which happens quite frequently.  This means, for example, if you do `ask
+patches [ set pcolor red ]` in one run and do not use `clear-all` or `clear-patches` in
+the setup commands of the next run, then the patches will all still be red.  In general
+using `clear-all` before each run would be a best practice, but there are times when you
+might not want to, such as loading data from a file that doesn't change run-to-run.  Just
+be careful with whatever data is not cleared out.
 
-Seventh, there is a very, very small chance that at startup multiple parallel runs could wind up with the same random number generator state if they startup at the eact same moment in time.  This means the runs would produce identical output for all random operations and likely the same results.  This would have a chance to happen when running on very fast processors and with lots of parallel runs at once.  If you need to make sure this doesn't impact your results, you can add `random-seed new-seed` to your setup commands to re-generate a new unique random seed for each run.  In fact, storing the `new-seed` as a global variable so you can output it with the rest of your results would let you re-run a run later on by manually using that value to set the `random-seed`.
+Seventh, there is a very, very small chance that at startup multiple parallel runs could
+wind up with the same random number generator state if they startup at the eact same
+moment in time.  This means the runs would produce identical output for all random
+operations and likely the same results.  This would have a chance to happen when running
+on very fast processors and with lots of parallel runs at once.  If you need to make sure
+this doesn't impact your results, you can add `random-seed new-seed` to your setup
+commands to re-generate a new unique random seed for each run.  In fact, storing the
+`new-seed` as a global variable so you can output it with the rest of your results would
+let you re-run a run later on by manually using that value to set the `random-seed`.
 
 #### Observing runs
 
@@ -393,9 +408,8 @@ folder so the paths to the `netlogo-headless.sh` script and `Wolf Sheep Simple 5
 model are correct.
 
 ```sh
-# on macOS use "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" instead
 ./netlogo-headless.sh \
-  --model "app/models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
+  --model "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
   --experiment "Wolf Sheep Simple model analysis" \
   --table -
 ```
@@ -430,9 +444,8 @@ it a name.)
 Here's another example that shows some additional, optional arguments:
 
 ```sh
-# on macOS use "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" instead
 ./netlogo-headless.sh \
-  --model "app/models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
+  --model "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
   --experiment "Wolf Sheep Simple model analysis" \
   --max-pxcor 5 \
   --min-pxcor -5 \
@@ -454,9 +467,8 @@ file.
 Yet another example:
 
 ```sh
-# on macOS use "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" instead
 ./netlogo-headless.sh \
-  --model "app/models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
+  --model "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
   --experiment "Wolf Sheep Simple model analysis" \
   --table wsp5-table-output.csv \
   --spreadsheet wsp5-spreadsheet-output.csv
@@ -483,9 +495,8 @@ information on the XML file format).  This assumes you've created a
 in your home directory.
 
 ```sh
-# on macOS use "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" instead
 ./netlogo-headless.sh \
-  --model "app/models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
+  --model "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
   --setup-file ~/my-wsp-setups.xml \
   --experiment "My WSP Exploration"
 ```
@@ -497,10 +508,9 @@ In order to run a NetLogo 3D experiment, run headless with the `--3D` argument,
 for example:
 
 ```sh
-# on macOS use "models/3D/Sample Models/GasLab/GasLab Free Gas 3D.nlogo3d" instead
 ./netlogo-headless.sh \
   --3D \
-  --model "app/models/3D/Sample Models/GasLab/GasLab Free Gas 3D.nlogo3d" \
+  --model "models/3D/Sample Models/GasLab/GasLab Free Gas 3D.nlogo3d" \
   --experiment "100 runs" \
   --table -
 ```
