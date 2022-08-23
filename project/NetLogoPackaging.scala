@@ -40,16 +40,16 @@ object NetLogoPackaging {
   lazy val uploadDocs              = inputKey[Unit]("Upload the web docs pages only to the CCL server")
   lazy val webTarget               = settingKey[File]("location of finished website")
 
-  def bundledDirs(netlogo: Project, macApp: Project, behaviorsearchProject: Project): Def.Initialize[(PlatformBuild, String) => Seq[BundledDirectory]] =
+  def bundledDirs(netlogo: Project, macApp: Project, behaviorsearchProject: Project): Def.Initialize[(String, String) => Seq[BundledDirectory]] =
     Def.setting {
-      { (platform: PlatformBuild, arch: String) =>
+      { (platform: String, arch: String) =>
         val nlDir = (baseDirectory in netlogo).value
         Seq(
-          new ExtensionDir((extensionRoot in netlogo).value, platform.shortName, arch),
+          new ExtensionDir((extensionRoot in netlogo).value, platform, arch),
           new ModelsDir((modelsDirectory in netlogo).value),
           new DocsDir((docsRoot in netlogo).value),
-          new BehaviorsearchDir((baseDirectory in behaviorsearchProject).value, platform.shortName)
-        ) ++ (platform.shortName match {
+          new BehaviorsearchDir((baseDirectory in behaviorsearchProject).value, platform)
+        ) ++ (platform match {
           case "windows" => Seq(new NativesDir(nlDir / "natives", "windows-amd64", "windows-i586"))
           case "linux"   => Seq(new NativesDir(nlDir / "natives", "linux-amd64", "linux-i586"))
           case "macosx"  => Seq(new NativesDir(nlDir / "natives", "macosx-universal"))
@@ -200,7 +200,7 @@ object NetLogoPackaging {
       val version      = marketingVersion.value
       val buildJDK     = aggregateJDKParser.parsed
       val buildDir     = target.value
-      val platform     = LinuxPlatform
+      val platform     = "linux"
       val configDir    = configRoot.value
       val netLogoJar   = (netlogo / Compile / packageBin).value
       val dependencies = packagingClasspath.value
@@ -211,9 +211,9 @@ object NetLogoPackaging {
       val launchers    = Seq(new NetLogo3dLauncher(version), new HubNetClientLauncher(version), new BehaviorsearchLauncher(version))
 
       val inputDir = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
-      val destDir  = buildDir / s"${platform.shortName}-dest-${buildJDK.version}-${buildJDK.arch}"
+      val destDir  = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.arch}"
       FileActions.remove(destDir)
-      val appImageDir = JavaPackager.generateAppImage(log, platform.shortName, mainLauncher, configDir, buildDir, inputDir, destDir, Seq(), launchers)
+      val appImageDir = JavaPackager.generateAppImage(log, platform, mainLauncher, configDir, buildDir, inputDir, destDir, Seq(), launchers)
 
       val extraDirs = bundledDirs(netlogo, macApp, behaviorsearchProject).value(platform, buildJDK.arch)
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir / "bin", rootFiles)
@@ -237,7 +237,7 @@ object NetLogoPackaging {
       val version      = marketingVersion.value
       val buildJDK     = aggregateJDKParser.parsed
       val buildDir     = target.value
-      val platform     = WindowsPlatform
+      val platform     = "windows"
       val configDir    = configRoot.value
       val netLogoJar   = (netlogo / Compile / packageBin).value
       val dependencies = packagingClasspath.value
@@ -261,10 +261,10 @@ object NetLogoPackaging {
       )
 
       val inputDir    = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
-      val destDir     = buildDir / s"${platform.shortName}-dest-${buildJDK.version}-${buildJDK.arch}"
+      val destDir     = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.arch}"
       val extraArgs   = Seq("--icon", "NetLogo.ico")
       FileActions.remove(destDir)
-      val appImageDir = JavaPackager.generateAppImage(log, platform.shortName, mainLauncher, configDir, buildDir, inputDir, destDir, extraArgs, launchers)
+      val appImageDir = JavaPackager.generateAppImage(log, platform, mainLauncher, configDir, buildDir, inputDir, destDir, extraArgs, launchers)
 
       // this makes the file association icons available for wix
       icons.foreach( (i) => FileActions.copyFile(i, appImageDir / i.getName) )
@@ -295,7 +295,7 @@ object NetLogoPackaging {
       val version      = marketingVersion.value
       val buildJDK     = PathSpecifiedJDK
       val buildDir     = target.value
-      val platform     = new MacImagePlatform(macApp)
+      val platform     = "macosx"
       val configDir    = configRoot.value
       val netLogoJar   = (netlogo / Compile / packageBin).value
       val dependencies = packagingClasspath.value
@@ -376,13 +376,13 @@ object NetLogoPackaging {
         FileActions.copyFile(dep, inputDir / dep.getName)
       })
 
-      val destDir = buildDir / s"${platform.shortName}-dest-${buildJDK.version}-${buildJDK.arch}"
+      val destDir = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.arch}"
       FileActions.remove(destDir)
 
       launchers.foreach( (launcher) => {
         val jOpts     = launcher.javaOptions.map( (opt) => s""""$opt"""" ).mkString(" ")
         val extraArgs = Seq("--icon", launcher.icon.getOrElse(""), "--java-options", jOpts)
-        JavaPackager.generateAppImage(log, platform.shortName, launcher, configDir, buildDir, inputDir, destDir, extraArgs, Seq())
+        JavaPackager.generateAppImage(log, platform, launcher, configDir, buildDir, inputDir, destDir, extraArgs, Seq())
       })
 
       val appImageDir = destDir / s"NetLogo $version"

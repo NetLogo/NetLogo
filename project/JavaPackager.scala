@@ -163,7 +163,7 @@ object JavaPackager {
     destDir.listFiles.head
   }
 
-  def copyExtraFiles(log: Logger, extraDirs: Seq[BundledDirectory], platform: PlatformBuild, arch: String, appImageDir: File, appDir: File, rootFiles: Seq[File]) = {
+  def copyExtraFiles(log: Logger, extraDirs: Seq[BundledDirectory], platform: String, arch: String, appImageDir: File, appDir: File, rootFiles: Seq[File]) = {
     log.info("Copying the extra bundled directories")
     extraDirs.foreach( (dir) => {
       dir.fileMappings.foreach {
@@ -182,7 +182,7 @@ object JavaPackager {
     })
   }
 
-  def createScripts(log: Logger, appImageDir: File, configDir: File, appDir: File, platform: PlatformBuild, headlessScript: String, guiScript: String, variables: Map[String, String]) = {
+  def createScripts(log: Logger, appImageDir: File, configDir: File, appDir: File, platform: String, headlessScript: String, guiScript: String, variables: Map[String, String]) = {
     log.info("Creating GUI/headless run scripts")
     val headlessClasspath =
       ("netlogoJar" ->
@@ -192,7 +192,7 @@ object JavaPackager {
           .take(1)
           .mkString(""))
 
-    val platformConfigDir = configDir / platform.shortName
+    val platformConfigDir = configDir / platform
 
     val headlessFile = appImageDir / headlessScript
     Mustache(
