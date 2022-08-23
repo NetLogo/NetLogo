@@ -217,7 +217,7 @@ object NetLogoPackaging {
 
       val extraDirs = bundledDirs(netlogo, macApp, behaviorsearchProject).value(platform, buildJDK.arch)
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir / "bin", rootFiles)
-      JavaPackager.createScripts(log, appImageDir, configDir, appImageDir / "lib" / "app", platform, "netlogo-headless.sh", "netlogo-gui.sh", variables)
+      JavaPackager.createScripts(log, appImageDir, appImageDir / "lib" / "app", configDir, "netlogo-headless.sh", "netlogo-gui.sh", variables)
 
       PackageLinuxAggregate(
         log
@@ -227,7 +227,6 @@ object NetLogoPackaging {
       , destDir / "NetLogo"
       , webTarget.value
       , extraDirs
-      , variables
       , mainLauncher +: launchers
       )
     },
@@ -271,7 +270,7 @@ object NetLogoPackaging {
 
       val extraDirs = bundledDirs(netlogo, macApp, behaviorsearchProject).value(platform, buildJDK.arch)
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir, rootFiles)
-      JavaPackager.createScripts(log, appImageDir, configDir, appImageDir / "app", platform, "netlogo-headless.bat", "netlogo-gui.bat", variables)
+      JavaPackager.createScripts(log, appImageDir, appImageDir / "app", configDir / platform, "netlogo-headless.bat", "netlogo-gui.bat", variables)
 
       PackageWinAggregate(
         log
@@ -390,7 +389,7 @@ object NetLogoPackaging {
       val extraDirs = bundledDirs(netlogo, macApp, behaviorsearchProject).value(platform, buildJDK.arch)
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir, rootFiles)
       val bundleDir = PackageMacAggregate.createBundleDir(log, version, destDir, configDir, launchers)
-      JavaPackager.createScripts(log, bundleDir, configDir, bundleDir / "app", platform, "netlogo-headless.sh", "netlogo-gui.sh", variables)
+      JavaPackager.createScripts(log, bundleDir, bundleDir / "app", configDir, "netlogo-headless.sh", "netlogo-gui.sh", variables + ("javaOptions" -> "--add-exports=java.desktop/com.apple.laf=ALL-UNNAMED"))
 
       PackageMacAggregate(
         log

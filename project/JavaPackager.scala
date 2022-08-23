@@ -182,7 +182,7 @@ object JavaPackager {
     })
   }
 
-  def createScripts(log: Logger, appImageDir: File, configDir: File, appDir: File, platform: String, headlessScript: String, guiScript: String, variables: Map[String, String]) = {
+  def createScripts(log: Logger, appImageDir: File, appDir: File, scriptSourceDir: File, headlessScript: String, guiScript: String, variables: Map[String, String]) = {
     log.info("Creating GUI/headless run scripts")
     val headlessClasspath =
       ("netlogoJar" ->
@@ -192,11 +192,11 @@ object JavaPackager {
           .take(1)
           .mkString(""))
 
-    val platformConfigDir = configDir / platform
+    val scriptSource = scriptSourceDir / s"$headlessScript.mustache"
 
     val headlessFile = appImageDir / headlessScript
     Mustache(
-      platformConfigDir / s"$headlessScript.mustache",
+      scriptSource,
       headlessFile,
       variables + headlessClasspath + ("mainClass" -> "org.nlogo.headless.Main")
     )
@@ -204,7 +204,7 @@ object JavaPackager {
 
     val guiFile = appImageDir / guiScript
     Mustache(
-      platformConfigDir / s"$headlessScript.mustache",
+      scriptSource,
       guiFile,
       variables + headlessClasspath + ("mainClass" -> "org.nlogo.app.App")
     )

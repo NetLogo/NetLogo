@@ -13,7 +13,6 @@ object PackageLinuxAggregate {
   , appImageDir: File
   , webDir: File
   , extraDirs: Seq[BundledDirectory]
-  , variables: Map[String, String]
   , launchers: Seq[Launcher]
   ): File = {
 
