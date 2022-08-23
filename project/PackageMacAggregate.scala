@@ -201,7 +201,7 @@ object PackageMacAggregate {
 
     val dmgArgs = Seq("hdiutil", "create",
       dmgName,
-      "-srcfolder", bundleDir.getAbsolutePath,
+      "-srcfolder", destDir.getAbsolutePath,
       "-size", "1200m",
       "-fs", "HFS+",
       "-volname", buildName, "-ov"
