@@ -189,7 +189,7 @@ object JavaPackager {
     inputDir
   }
 
-  def generateAppImage(log: Logger, platform: String, mainLauncher: Launcher, configDir: File, buildDir: File, inputDir: File, destDir: File, extraJpackageArgs: Seq[String], extraLaunchers: Seq[Launcher]) = {
+  def generateAppImage(log: Logger, jpackage: File, platform: String, mainLauncher: Launcher, configDir: File, buildDir: File, inputDir: File, destDir: File, extraJpackageArgs: Seq[String], extraLaunchers: Seq[Launcher]) = {
 
     val extraLauncherArgs = extraLaunchers.flatMap( (settings) => {
       val inFile  = configDir / s"extra-launcher.properties.mustache"
@@ -199,7 +199,7 @@ object JavaPackager {
     })
 
     val args = Seq[String](
-      "jpackage"
+      jpackage.getAbsolutePath
     , "--verbose"
     , "--resource-dir", buildDir.getAbsolutePath
     , "--name",         mainLauncher.name
