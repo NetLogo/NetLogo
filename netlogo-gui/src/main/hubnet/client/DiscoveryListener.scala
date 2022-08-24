@@ -76,7 +76,7 @@ class DiscoveryListener(@volatile var interfaceAddress: Option[InetAddress]) ext
         val packet = new DatagramPacket(receiptBuffer, receiptBuffer.length - 1)
         val group = InetAddress.getByName(SERVER_DISCOVERY_MULTICAST_GROUP)
         val socketGroup = new InetSocketAddress(group, SERVER_DISCOVERY_MULTICAST_PORT)
-        val netIf = NetworkInterface.getByInetAddress(group)
+        val netIf = NetworkInterface.getByInetAddress(address)
         try {
           multicastSocket = new MulticastSocket(SERVER_DISCOVERY_MULTICAST_PORT)
           multicastSocket.setSoTimeout(3000)
