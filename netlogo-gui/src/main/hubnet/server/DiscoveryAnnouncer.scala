@@ -39,7 +39,7 @@ class DiscoveryAnnouncer(uniqueId: String, modelName: String, portNumber: Int, a
         dump("Error creating multicast socket to port " + SERVER_DISCOVERY_MULTICAST_PORT, ioe)
         return
     }
-    val netIf = NetworkInterface.getByInetAddress(group)
+    val netIf = NetworkInterface.getByInetAddress(address)
     while (shouldRun) {
       val messageBytes = message.toByteArray
       try {
