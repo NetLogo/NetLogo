@@ -254,7 +254,11 @@ object NetLogoPackaging {
 
       val mainLauncher = new NetLogoLauncher(version, Some("NetLogo.ico"), Seq(), Seq("icon="))
       val launchers = Seq(
-        new NetLogo3dLauncher(version, Some("NetLogo.ico"))
+        new NetLogoLauncher(version, Some("NetLogo.ico"), Seq(), Seq("win-console=true")) {
+          override def id = "NetLogo_Console"
+          override def mustachePrefix = "win-console-launcher"
+        }
+      , new NetLogo3dLauncher(version, Some("NetLogo.ico"))
       , new HubNetClientLauncher(version, Some("HubNet Client.ico"))
       , new BehaviorsearchLauncher(version, Some("Behaviorsearch.ico"))
       )

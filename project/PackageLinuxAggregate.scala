@@ -33,6 +33,9 @@ object PackageLinuxAggregate {
       )
     })
 
+    log.info("Creating NetLogo_Console sym link")
+    FileActions.createRelativeSoftLink(appImageDir / "NetLogo_Console", appImageDir / "bin" / "NetLogo")
+
     log.info("Setting headless/gui script posix permissions")
     val permissions = {
       import PosixFilePermission._

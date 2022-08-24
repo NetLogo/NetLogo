@@ -370,12 +370,14 @@ experiment setups directly using XML.
 
 #### How to use it
 
-Run NetLogo using the included command line script. This is found in the root
-directory of your NetLogo installation and is named `netlogo-headless.sh` on Mac
-and Linux and `netlogo-headless.bat` on Windows. The netlogo-headless script
-supports the following arguments:
+Run NetLogo using the `NetLogo_Console` app with the `--headless` command line argument.
+This is found in the root directory of your NetLogo installation. The
+`NetLogo_Console` script supports the following arguments:
 
-- `--model <path>`: pathname of model to open (required)
+- `--headless`: Enable headless mode to run a BehaviorSpace experiment (required, will
+open the graphical interface otherwise).
+- `--model <path>`: pathname of model to open
+(required)
 - `--setup-file <path>`: read experiment setups from this file instead of the
   model file
 - `--experiment <name>`: name of experiment to run
@@ -395,36 +397,33 @@ supports the following arguments:
 specify either `--table` or `--spreadsheet`, or both. If you specify any of the
 world dimensions, you must specify all four.
 
-**Note:** The remainder of this guide uses `netlogo-headless.sh` to refer to the
-NetLogo Headless launch script. If you are using Windows, please substitute
-`netlogo-headless.bat` for `netlogo-headless.sh` in each example.
+Note that in prior versions of NetLogo the directions were to use `netlogo-headless.sh`
+(or `netlogo-headless.bat` on Windows) along with a separate installation of Java of the
+system to run BehaviorSpace experiments.  The `netlogo-headless.sh` script is still
+included with NetLogo and can still be used as before, which might be preferrable in
+server environments where the installed Java version is strictly controller.  But the
+recommended method for on a personal computer is to use the `NetLogo_Console
+--headless` app.  Because `NetLogo_Console` uses the Java that comes bundled with NetLogo it
+requires no extra software installation or configuration.
 
 #### Examples
 
 It is easiest if you create your experiment setup ahead of time in the GUI, so
 it is saved as part of the model. To run an experiment setup saved in a model,
 here is an example command line, run from the NetLogo {{version}} installation
-folder so the paths to the `netlogo-headless.sh` script and `Wolf Sheep Simple 5.nlogo`
+folder so the paths to the `NetLogo_Console` app and `Wolf Sheep Simple 5.nlogo`
 model are correct.
 
+The below commands should work as-is in a terminal on macOS and Linux.  On Windows in the
+Command Prompt you can use `^` instead of `\` to break the command across multiple lines,
+or just put the command on a single line.
+
 ```sh
-./netlogo-headless.sh \
+./NetLogo_Console --headless \
   --model "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
   --experiment "Wolf Sheep Simple model analysis" \
   --table -
 ```
-
-For this to work, Java (version 1.8 or later) must be available.
-You can make Java available to headless in either of two ways
-
-1. Set the `JAVA_HOME` environment variable to the path to the Java
-   installation. This is the directory of the Java installation which contains a
-   `bin` directory.
-2. Add the directory containing the Java executable to the `PATH` environment
-   variable
-
-If `JAVA_HOME` is defined, netlogo-headless will run NetLogo using the Java that
-it points to, ignoring the version of Java available on the path.
 
 After the named experiment has run, the results are sent to standard output in
 table format, as CSV. `-` is how you specify standard output instead of output
@@ -444,7 +443,7 @@ it a name.)
 Here's another example that shows some additional, optional arguments:
 
 ```sh
-./netlogo-headless.sh \
+./NetLogo_Console --headless \
   --model "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
   --experiment "Wolf Sheep Simple model analysis" \
   --max-pxcor 5 \
@@ -467,7 +466,7 @@ file.
 Yet another example:
 
 ```sh
-./netlogo-headless.sh \
+./NetLogo_Console --headless \
   --model "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
   --experiment "Wolf Sheep Simple model analysis" \
   --table wsp5-table-output.csv \
@@ -495,7 +494,7 @@ information on the XML file format).  This assumes you've created a
 in your home directory.
 
 ```sh
-./netlogo-headless.sh \
+./NetLogo_Console --headless \
   --model "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
   --setup-file ~/my-wsp-setups.xml \
   --experiment "My WSP Exploration"
@@ -508,7 +507,7 @@ In order to run a NetLogo 3D experiment, run headless with the `--3D` argument,
 for example:
 
 ```sh
-./netlogo-headless.sh \
+./NetLogo_Console --headless \
   --3D \
   --model "models/3D/Sample Models/GasLab/GasLab Free Gas 3D.nlogo3d" \
   --experiment "100 runs" \
