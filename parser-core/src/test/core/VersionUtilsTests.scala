@@ -29,6 +29,7 @@ class VersionUtilsTests extends AnyFunSuite {
   }
 
   test("isNetLogoVersionString") {
+    assert(isNetLogoVersionString("NetLogo 6.3.0-beta1"))
     assert(isNetLogoVersionString("NetLogo 6.2.0-MC1"))
     assert(isNetLogoVersionString("NetLogo 3D 6.2.0-MC1"))
     assert(!isNetLogoVersionString("NetLogo3D6.2.0-MC1"))

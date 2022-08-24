@@ -20,7 +20,7 @@ class OpenModelTests extends AnyFunSuite {
   trait OpenTest {
     val uri: URI = testURI
     def modelChanges: Model => Model = identity
-    def currentVersion = "NetLogo 6.2"
+    def currentVersion = "NetLogo 6.3"
     def autoconverter: ModelConversion = defaultConverter
 
     def userContinuesOpen() = controller.openModel(true)
@@ -62,28 +62,28 @@ class OpenModelTests extends AnyFunSuite {
   } }
 
   test("if the model is 3D, but NetLogo is open in 2D mode, notifies the user") { new OpenTest {
-    override def modelChanges = _.copy(version = "NetLogo 3D 6.2")
+    override def modelChanges = _.copy(version = "NetLogo 3D 6.3")
     userContinuesOpen()
     assert(openedModel.isDefined)
     assert(controller.notifiedModelArity == 3)
-    assert(controller.notifiedModelVersion == "NetLogo 3D 6.2")
+    assert(controller.notifiedModelVersion == "NetLogo 3D 6.3")
     assert(! controller.notifiedVersionUnknown)
   } }
 
   test("doesn't open different-arity model unless the user approves") { new OpenTest {
-    override def modelChanges = _.copy(version = "NetLogo 3D 6.2")
+    override def modelChanges = _.copy(version = "NetLogo 3D 6.3")
     userCancelsOpen()
     assert(openedModel.isEmpty)
     assert(controller.notifiedModelArity   == 3)
-    assert(controller.notifiedModelVersion == "NetLogo 3D 6.2")
+    assert(controller.notifiedModelVersion == "NetLogo 3D 6.3")
   } }
 
   test("if the model is in 2D, but NetLogo is open in 3D, notifies the user") { new OpenTest {
-    override def currentVersion = "NetLogo 3D 6.2"
+    override def currentVersion = "NetLogo 3D 6.3"
     userContinuesOpen()
     assert(openedModel.isDefined)
     assert(controller.notifiedModelArity   == 2)
-    assert(controller.notifiedModelVersion == "NetLogo 6.2")
+    assert(controller.notifiedModelVersion == "NetLogo 6.3")
   } }
 
   test("if the model is not a known version, checks before opening") { new OpenTest {
@@ -131,9 +131,9 @@ class OpenModelTests extends AnyFunSuite {
   } }
 
   test("serializes various version in the model") { new OpenTest {
-    assert(nlogoformat.version.serialize(new Model()) === Array[String]("NetLogo 6.2"))
-    assert(nlogoformat.version.serialize(new Model(version = "NetLogo 3D 6.2")) ===
-      Array[String]("NetLogo 3D 6.2"))
+    assert(nlogoformat.version.serialize(new Model()) === Array[String]("NetLogo 6.3"))
+    assert(nlogoformat.version.serialize(new Model(version = "NetLogo 3D 6.3")) ===
+      Array[String]("NetLogo 3D 6.3"))
   } }
 
   test("serializes various dimensions in the model") { new OpenTest {
