@@ -157,7 +157,7 @@ object JavaPackager {
     val specificJdks = jpackageFiles.flatMap( (jpackageFile) => {
       val jdkRootFile = jpackageFile.getParentFile.getParentFile
       val jdkName     = jdkRootFile.getName
-      if (jdkName.contains("bellsoft-java")) {
+      if (jdkName.startsWith("bellsoft-java") || jdkName.startsWith("zulu")) {
         val jdkVersion = jdkName.split("-")(1)
         val arch       = if (jdkName.contains("64")) "64" else "32"
         Some(SpecifiedJDK(arch, jdkVersion, jpackageFile, javaHome = Some(jdkRootFile.getAbsolutePath.toString)))
