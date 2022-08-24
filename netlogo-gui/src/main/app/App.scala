@@ -64,11 +64,16 @@ object App {
    * @param args Should be empty. (Passing non-empty arguments
    *             is not currently documented.)
    */
-  def main(args:Array[String]){
+  def main(args: Array[String]) {
     mainWithAppHandler(args, NullAppHandler)
   }
 
   def mainWithAppHandler(args: Array[String], appHandler: Object) {
+    if (args.map(_.trim.toLowerCase).contains("--headless")) {
+      org.nlogo.headless.Main.main(args)
+      return
+    }
+
     // this call is reflective to avoid complicating dependencies
     appHandler.getClass.getDeclaredMethod("init").invoke(appHandler)
 
