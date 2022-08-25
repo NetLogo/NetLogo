@@ -5,7 +5,7 @@ package org.nlogo.sdm.gui;
 import org.jhotdraw.framework.Figure;
 import org.jhotdraw.standard.StandardDrawingView;
 
-strictfp class AggregateDrawingView
+class AggregateDrawingView
     extends StandardDrawingView {
   AggregateDrawingView(AggregateModelEditor editor) {
     super(editor);

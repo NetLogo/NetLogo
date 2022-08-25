@@ -30,7 +30,7 @@ object BehaviorSpaceCoordinator {
     val modelWithExtraProtocols =
       settings.externalXMLFile.map { file =>
         val loadableXML = Source.fromFile(file).mkString
-        val additionalProtos = labFormat.load(loadableXML.lines.toArray, None)
+        val additionalProtos = labFormat.load(loadableXML.linesIterator.toArray, None)
         model.withOptionalSection(bsSection, additionalProtos, Seq[LabProtocol]())
       }.getOrElse(model)
 
@@ -66,6 +66,6 @@ object BehaviorSpaceCoordinator {
 
   def externalProtocols(path: String): Option[Seq[LabProtocol]] = {
     val fileSource = Source.fromFile(path).mkString
-    labFormat.load(fileSource.lines.toArray, None)
+    labFormat.load(fileSource.linesIterator.toArray, None)
   }
 }

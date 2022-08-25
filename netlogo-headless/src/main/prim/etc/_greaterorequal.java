@@ -13,7 +13,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _greaterorequal
+public final class _greaterorequal
     extends Reporter implements Pure {
 
   @Override

@@ -8,7 +8,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _setpatchvariable
+public final class _setpatchvariable
     extends Command {
   int vn = 0;
 

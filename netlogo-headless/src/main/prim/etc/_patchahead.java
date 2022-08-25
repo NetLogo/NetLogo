@@ -6,7 +6,7 @@ import org.nlogo.core.Nobody$;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _patchahead
+public final class _patchahead
     extends Reporter {
 
   @Override

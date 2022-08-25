@@ -12,7 +12,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _oneof
+public final class _oneof
     extends Reporter {
   @Override
   public Object report(final Context context) throws LogoException {

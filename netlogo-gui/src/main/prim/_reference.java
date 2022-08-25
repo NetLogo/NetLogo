@@ -7,7 +7,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.core.Reference;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _reference
+public final class _reference
     extends Reporter {
   public final Reference reference;
 

@@ -2,7 +2,7 @@
 
 package org.nlogo.hubnet.mirroring;
 
-public strictfp class HubNetDrawingMessage
+public class HubNetDrawingMessage
     implements java.io.Serializable {
   static final long serialVersionUID = 0L;
   private final Type type;

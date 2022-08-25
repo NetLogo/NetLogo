@@ -334,34 +334,31 @@ procedure SETUP:[]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          ASTORE 3
-          ALOAD 3
+          ASTORE 2
+          ALOAD 2
           INSTANCEOF org/nlogo/agent/Turtle
           IFEQ L1
-          ALOAD 3
+          ALOAD 2
           CHECKCAST org/nlogo/agent/Turtle
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-          ASTORE 2
           GOTO L2
          L1
-         FRAME APPEND [T org/nlogo/agent/Agent]
-          ALOAD 3
+         FRAME APPEND [org/nlogo/agent/Agent]
+          ALOAD 2
           INSTANCEOF org/nlogo/agent/Patch
           IFEQ L3
-          ALOAD 3
+          ALOAD 2
           CHECKCAST org/nlogo/agent/Patch
-          ASTORE 2
           GOTO L2
          L3
          FRAME SAME
           NEW scala/MatchError
           DUP
-          ALOAD 3
+          ALOAD 2
           INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
           ATHROW
          L2
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_if_2 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent] []
-          ALOAD 2
+         FRAME SAME1 org/nlogo/agent/Patch
           ICONST_0
           INVOKEVIRTUAL org/nlogo/agent/Patch.getPatchVariableDouble (I)D
          L4
@@ -437,23 +434,20 @@ procedure SETUP:[]{O---}:
           IFEQ L3
           ALOAD 4
           CHECKCAST java/lang/Double
-          ASTORE 6
+          ASTORE 5
           DLOAD 2
-          ALOAD 6
+          ALOAD 5
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DCMPG
           IFGE L4
           ICONST_1
           GOTO L5
          L4
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_if_3 org/nlogo/nvm/Context D java/lang/Object T java/lang/Double] []
+         FRAME APPEND [D java/lang/Object java/lang/Double]
           ICONST_0
-         L5
-         FRAME SAME1 I
-          ISTORE 5
-          GOTO L6
+          GOTO L5
          L3
-         FRAME CHOP 2
+         FRAME CHOP 1
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -481,23 +475,21 @@ procedure SETUP:[]{O---}:
           INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L6
-         FRAME APPEND [I java/lang/Double]
-          ILOAD 5
-         L7
+         L5
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_if_3 org/nlogo/nvm/Context D java/lang/Object java/lang/Double] [I]
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L8
+          IFEQ L6
           BIPUSH 6
-          GOTO L9
-         L8
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_if_3 org/nlogo/nvm/Context I T java/lang/Object I java/lang/Double] [org/nlogo/nvm/Context]
+          GOTO L7
+         L6
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_if_3 org/nlogo/nvm/Context I T java/lang/Object java/lang/Double] [org/nlogo/nvm/Context]
           BIPUSH 7
-         L9
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_if_3 org/nlogo/nvm/Context I T java/lang/Object I java/lang/Double] [org/nlogo/nvm/Context I]
+         L7
+         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_if_3 org/nlogo/nvm/Context I T java/lang/Object java/lang/Double] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L10
+         L8
           RETURN
 [6]_asm_proceduresetup_setpatchvariable_4 "set pcolor green" Object => void
       _constdouble:55.0 "green" => Double
@@ -556,34 +548,31 @@ procedure SETUP:[]{O---}:
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          ASTORE 3
-          ALOAD 3
+          ASTORE 2
+          ALOAD 2
           INSTANCEOF org/nlogo/agent/Turtle
           IFEQ L1
-          ALOAD 3
+          ALOAD 2
           CHECKCAST org/nlogo/agent/Turtle
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-          ASTORE 2
           GOTO L2
          L1
-         FRAME APPEND [T org/nlogo/agent/Agent]
-          ALOAD 3
+         FRAME APPEND [org/nlogo/agent/Agent]
+          ALOAD 2
           INSTANCEOF org/nlogo/agent/Patch
           IFEQ L3
-          ALOAD 3
+          ALOAD 2
           CHECKCAST org/nlogo/agent/Patch
-          ASTORE 2
           GOTO L2
          L3
          FRAME SAME
           NEW scala/MatchError
           DUP
-          ALOAD 3
+          ALOAD 2
           INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
           ATHROW
          L2
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_if_5 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent] []
-          ALOAD 2
+         FRAME SAME1 org/nlogo/agent/Patch
           ICONST_0
           INVOKEVIRTUAL org/nlogo/agent/Patch.getPatchVariableDouble (I)D
          L4
@@ -750,36 +739,30 @@ procedure SETUP:[]{O---}:
               IFEQ L5
               ALOAD 2
               CHECKCAST java/lang/Double
-              ASTORE 6
+              ASTORE 5
               DLOAD 3
-              ALOAD 6
+              ALOAD 5
               INVOKEVIRTUAL java/lang/Double.doubleValue ()D
               DCMPL
               IFNE L6
               ICONST_1
               GOTO L7
              L6
-             FRAME FULL [org/nlogo/prim/_asm_proceduresetup_equal_10 org/nlogo/nvm/Context java/lang/Object D T java/lang/Double] []
+             FRAME APPEND [java/lang/Object D java/lang/Double]
+              ICONST_0
+              GOTO L7
+             L5
+             FRAME CHOP 1
               ICONST_0
              L7
              FRAME SAME1 I
-              ISTORE 5
-              GOTO L8
-             L5
-             FRAME CHOP 2
-              ICONST_0
-              ISTORE 5
-             L8
-             FRAME APPEND [I]
-              ILOAD 5
-             L9
-              IFEQ L10
+              IFEQ L8
               GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-              GOTO L11
-             L10
+              GOTO L9
+             L8
              FRAME SAME
               GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-             L11
+             L9
              FRAME SAME1 java/lang/Boolean
               ARETURN
           // parameter final  context
@@ -816,10 +799,10 @@ procedure SETUP:[]{O---}:
          L5
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setobservervariable_9 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context I org/nlogo/agent/AgentIterator] []
           ALOAD 6
-          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
+          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z (itf)
           IFEQ L6
           ALOAD 6
-          INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
+          INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent; (itf)
           ASTORE 7
           ALOAD 4
           ALOAD 7
@@ -1022,10 +1005,10 @@ procedure GO:[]{O---}:
          L2
          FRAME FULL [org/nlogo/prim/_asm_procedurego_if_0 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet org/nlogo/nvm/Reporter org/nlogo/nvm/Context org/nlogo/agent/AgentIterator] []
           ALOAD 5
-          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
+          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z (itf)
           IFEQ L3
           ALOAD 5
-          INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
+          INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent; (itf)
           ASTORE 6
           ALOAD 4
           ALOAD 6
@@ -1116,7 +1099,7 @@ procedure GO:[]{O---}:
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           INVOKEVIRTUAL org/nlogo/nvm/Activation.procedure ()Lorg/nlogo/core/FrontEndProcedure;
-          INVOKEINTERFACE org/nlogo/core/FrontEndProcedure.isReporter ()Z
+          INVOKEINTERFACE org/nlogo/core/FrontEndProcedure.isReporter ()Z (itf)
           IFEQ L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -1130,7 +1113,7 @@ procedure GO:[]{O---}:
           ICONST_0
           LDC "STOP"
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -1238,42 +1221,36 @@ procedure GO:[]{O---}:
           IFEQ L5
           ALOAD 2
           CHECKCAST java/lang/Double
-          ASTORE 6
+          ASTORE 5
           DLOAD 3
-          ALOAD 6
+          ALOAD 5
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DCMPL
           IFNE L6
           ICONST_1
           GOTO L7
          L6
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_4 org/nlogo/nvm/Context java/lang/Object D T java/lang/Double] []
+         FRAME APPEND [java/lang/Object D java/lang/Double]
+          ICONST_0
+          GOTO L7
+         L5
+         FRAME CHOP 1
           ICONST_0
          L7
          FRAME SAME1 I
-          ISTORE 5
-          GOTO L8
-         L5
-         FRAME CHOP 2
-          ICONST_0
-          ISTORE 5
-         L8
-         FRAME APPEND [I]
-          ILOAD 5
-         L9
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L10
+          IFEQ L8
           ICONST_4
-          GOTO L11
-         L10
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_4 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context]
+          GOTO L9
+         L8
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_4 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context]
           ICONST_5
-         L11
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_4 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context I]
+         L9
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_4 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L12
+         L10
           RETURN
 [4]_asm_procedurego_setpatchvariable_5 "set counts sum [ fire ] of neighbors4" Object => void
       _nsum4:FIRE "sum [ fire ] of neighbors4" => double
@@ -1291,7 +1268,6 @@ procedure GO:[]{O---}:
           ALOAD 3
           CHECKCAST org/nlogo/agent/Turtle
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-          ASTORE 2
           GOTO L5
          L4
          FRAME APPEND [T org/nlogo/agent/Agent]
@@ -1300,7 +1276,6 @@ procedure GO:[]{O---}:
           IFEQ L6
           ALOAD 3
           CHECKCAST org/nlogo/agent/Patch
-          ASTORE 2
           GOTO L5
          L6
          FRAME SAME
@@ -1310,7 +1285,8 @@ procedure GO:[]{O---}:
           INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
           ATHROW
          L5
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_setpatchvariable_5 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent] []
+         FRAME SAME1 org/nlogo/agent/Patch
+          ASTORE 2
           DCONST_0
           DSTORE 4
           ALOAD 2
@@ -1318,12 +1294,12 @@ procedure GO:[]{O---}:
           INVOKEVIRTUAL org/nlogo/agent/IndexedAgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
           ASTORE 6
          L7
-         FRAME APPEND [D org/nlogo/agent/AgentIterator]
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_setpatchvariable_5 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent D org/nlogo/agent/AgentIterator] []
           ALOAD 6
-          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z
+          INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z (itf)
           IFEQ L8
           ALOAD 6
-          INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent;
+          INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent; (itf)
           CHECKCAST org/nlogo/agent/Patch
           ICONST_5
           INVOKEVIRTUAL org/nlogo/agent/Patch.getPatchVariable (I)Ljava/lang/Object;
@@ -1515,42 +1491,36 @@ procedure GO:[]{O---}:
           IFEQ L5
           ALOAD 2
           CHECKCAST java/lang/Double
-          ASTORE 6
+          ASTORE 5
           DLOAD 3
-          ALOAD 6
+          ALOAD 5
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DCMPL
           IFNE L6
           ICONST_1
           GOTO L7
          L6
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_ifelse_8 org/nlogo/nvm/Context java/lang/Object D T java/lang/Double] []
+         FRAME APPEND [java/lang/Object D java/lang/Double]
+          ICONST_0
+          GOTO L7
+         L5
+         FRAME CHOP 1
           ICONST_0
          L7
          FRAME SAME1 I
-          ISTORE 5
-          GOTO L8
-         L5
-         FRAME CHOP 2
-          ICONST_0
-          ISTORE 5
-         L8
-         FRAME APPEND [I]
-          ILOAD 5
-         L9
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L10
+          IFEQ L8
           BIPUSH 8
-          GOTO L11
-         L10
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_ifelse_8 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context]
+          GOTO L9
+         L8
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_ifelse_8 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context]
           BIPUSH 13
-         L11
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_ifelse_8 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context I]
+         L9
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_ifelse_8 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L12
+         L10
           RETURN
 [8]_asm_procedurego_if_9 "if counts > 0 set fire 1 set pcolor red [ set burned-trees burned-trees + 1 ]" boolean => void
       _greaterthan "counts > 0" Object,double => boolean
@@ -1602,10 +1572,7 @@ procedure GO:[]{O---}:
          L6
          FRAME APPEND [java/lang/Object D]
           ICONST_0
-         L7
-         FRAME SAME1 I
-          ISTORE 5
-          GOTO L8
+          GOTO L7
          L5
          FRAME SAME
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1635,23 +1602,21 @@ procedure GO:[]{O---}:
           INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L8
-         FRAME APPEND [I]
-          ILOAD 5
-         L9
+         L7
+         FRAME SAME1 I
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L10
+          IFEQ L8
           BIPUSH 9
-          GOTO L11
-         L10
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_9 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context]
+          GOTO L9
+         L8
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_9 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context]
           BIPUSH 12
-         L11
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_9 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context I]
+         L9
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_9 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L12
+         L10
           RETURN
 [9]_asm_procedurego_setpatchvariable_10 "set fire 1" Object => void
       _constdouble:1.0 "1" => Double
@@ -2053,10 +2018,7 @@ reporter procedure BURNING?:[]{-TP-}:
          L9
          FRAME APPEND [java/lang/Object D]
           ICONST_0
-         L10
-         FRAME SAME1 I
-          ISTORE 5
-          GOTO L11
+          GOTO L10
          L8
          FRAME SAME
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -2086,18 +2048,16 @@ reporter procedure BURNING?:[]{-TP-}:
           INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L11
-         FRAME APPEND [I]
-          ILOAD 5
-         L12
-          IFEQ L13
+         L10
+         FRAME SAME1 I
+          IFEQ L11
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
           ICONST_2
           INVOKEVIRTUAL org/nlogo/agent/Agent.getPatchVariable (I)Ljava/lang/Object;
          L4
-          GOTO L14
+          GOTO L12
          L5
          FRAME SAME1 org/nlogo/api/AgentException
           ASTORE 2
@@ -2109,31 +2069,28 @@ reporter procedure BURNING?:[]{-TP-}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L14
+         L12
          FRAME SAME1 java/lang/Object
           LDC 16.0
-         L15
+         L13
           DSTORE 3
           ASTORE 2
           ALOAD 2
           INSTANCEOF java/lang/Double
-          IFEQ L16
+          IFEQ L14
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DLOAD 3
           DCMPG
-          IFGE L17
+          IFGE L15
           ICONST_1
-          GOTO L18
-         L17
+          GOTO L16
+         L15
          FRAME SAME
           ICONST_0
-         L18
-         FRAME SAME1 I
-          ISTORE 5
-          GOTO L19
-         L16
+          GOTO L16
+         L14
          FRAME SAME
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -2162,23 +2119,21 @@ reporter procedure BURNING?:[]{-TP-}:
           INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L19
-         FRAME SAME
-          ILOAD 5
-         L20
-          GOTO L21
-         L13
+         L16
+         FRAME SAME1 I
+          GOTO L17
+         L11
          FRAME SAME
           ICONST_0
-         L21
+         L17
          FRAME SAME1 I
-          IFEQ L22
+          IFEQ L18
           GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-          GOTO L23
-         L22
+          GOTO L19
+         L18
          FRAME SAME
           GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-         L23
+         L19
          FRAME SAME1 java/lang/Boolean
           ASTORE 2
           ALOAD 1
@@ -2196,7 +2151,7 @@ reporter procedure BURNING?:[]{-TP-}:
           INVOKEVIRTUAL org/nlogo/nvm/Activation.nonLambdaActivation ()Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isReporter ()Z
-          IFNE L24
+          IFNE L20
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -2209,25 +2164,25 @@ reporter procedure BURNING?:[]{-TP-}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L24
-         FRAME FULL [org/nlogo/prim/_asm_procedureburning_report_0 org/nlogo/nvm/Context java/lang/Boolean D I] []
+         L20
+         FRAME FULL [org/nlogo/prim/_asm_procedureburning_report_0 org/nlogo/nvm/Context java/lang/Boolean D] []
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
           GETFIELD org/nlogo/nvm/Activation.procedure : Lorg/nlogo/nvm/Procedure;
           INVOKEVIRTUAL org/nlogo/nvm/Procedure.isLambda ()Z
-          IFEQ L25
+          IFEQ L21
           NEW org/nlogo/nvm/NonLocalExit
           DUP
           INVOKESPECIAL org/nlogo/nvm/NonLocalExit.<init> ()V
           ATHROW
-         L25
+         L21
          FRAME SAME
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/nvm/Context.atTopActivation ()Z
-          IFNE L26
+          IFNE L22
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
           ALOAD 1
@@ -2240,10 +2195,10 @@ reporter procedure BURNING?:[]{-TP-}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L26
+         L22
          FRAME SAME
           RETURN
 [1]_asm_procedureburning_returnreport_1 => void
@@ -2300,10 +2255,7 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
          L4
          FRAME APPEND [java/lang/Object D]
           ICONST_0
-         L5
-         FRAME SAME1 I
-          ISTORE 5
-          GOTO L6
+          GOTO L5
          L3
          FRAME SAME
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -2333,23 +2285,21 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
           INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L6
-         FRAME APPEND [I]
-          ILOAD 5
-         L7
+         L5
+         FRAME SAME1 I
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L8
+          IFEQ L6
           ICONST_1
-          GOTO L9
-         L8
-         FRAME FULL [org/nlogo/prim/_asm_procedurepercentburned_ifelse_0 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context]
+          GOTO L7
+         L6
+         FRAME FULL [org/nlogo/prim/_asm_procedurepercentburned_ifelse_0 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context]
           ICONST_3
-         L9
-         FRAME FULL [org/nlogo/prim/_asm_procedurepercentburned_ifelse_0 org/nlogo/nvm/Context I D I] [org/nlogo/nvm/Context I]
+         L7
+         FRAME FULL [org/nlogo/prim/_asm_procedurepercentburned_ifelse_0 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L10
+         L8
           RETURN
 [1]_asm_procedurepercentburned_report_1 "report burned-trees / initial-trees * 100" Object => void
       _mult "burned-trees / initial-trees * 100" double,double => double
@@ -2430,7 +2380,7 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
           ALOAD 0
           INVOKESTATIC org/nlogo/core/I18N.errorsJ ()Lorg/nlogo/core/I18NJava;
           LDC "org.nlogo.prim.etc.$common.divByZero"
-          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.get (Ljava/lang/String;)Ljava/lang/String; (itf)
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
@@ -2481,7 +2431,7 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L13
@@ -2512,7 +2462,7 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L15
@@ -2562,7 +2512,7 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L2
@@ -2593,7 +2543,7 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
           ICONST_0
           LDC "REPORT"
           AASTORE
-          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+          INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L4

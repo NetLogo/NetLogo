@@ -12,7 +12,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _item
+public final class _item
     extends Reporter
     implements org.nlogo.core.Pure {
   @Override

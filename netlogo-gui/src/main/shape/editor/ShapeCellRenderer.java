@@ -4,7 +4,7 @@ package org.nlogo.shape.editor;
 
 import org.nlogo.shape.DrawableShape;
 
-public strictfp class ShapeCellRenderer   // public for DeltaTick - ST 12/2/11
+public class ShapeCellRenderer   // public for DeltaTick - ST 12/2/11
     extends javax.swing.JPanel
     implements javax.swing.ListCellRenderer<org.nlogo.core.Shape> {
 

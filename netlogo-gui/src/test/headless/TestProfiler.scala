@@ -163,7 +163,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   // doesn't matter which extension, so we use profiler.  ideally we'd have a test scaffold that
   // lets us test extensions stuff without having an actual extension jar in hand.  but we don't,
   // and we don't want anything in test-fast or test-medium to depend on submodules like models and
-  // extensions, so we put it here because it's a SlowTest - ST 1/19/12
+  // extensions, so we put it here because it's a SlowTest.Tag - ST 1/19/12
   test("isReporter on extension prims", SlowTest.Tag) {
     workspace.initForTesting(5, "extensions [profiler]")
     assertResult(false) { workspace.isReporter("profiler:start") }

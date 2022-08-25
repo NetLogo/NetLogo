@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public strictfp class Zoomer {
+public class Zoomer {
 
   private final java.awt.Container container;
 

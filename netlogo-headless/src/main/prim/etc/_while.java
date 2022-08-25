@@ -7,7 +7,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.CompilerScoping;
 import org.nlogo.nvm.CustomAssembled;
 
-public final strictfp class _while
+public final class _while
     extends Command
     implements CustomAssembled, CompilerScoping {
 

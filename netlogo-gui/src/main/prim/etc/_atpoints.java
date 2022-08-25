@@ -24,7 +24,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public final strictfp class _atpoints
+public final class _atpoints
     extends Reporter {
   @Override
   public Object report(final Context context) throws LogoException {

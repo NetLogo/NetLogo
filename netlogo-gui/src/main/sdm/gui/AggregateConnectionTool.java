@@ -8,7 +8,7 @@ import org.jhotdraw.framework.DrawingEditor;
 import org.jhotdraw.framework.Figure;
 import org.jhotdraw.standard.ConnectionTool;
 
-public strictfp class AggregateConnectionTool
+public class AggregateConnectionTool
     extends ConnectionTool {
 
   private Model model;

@@ -5,7 +5,7 @@ package org.nlogo.swing;
 import java.util.ArrayList;
 import java.util.List;
 
-public final strictfp class PrinterManager {
+public final class PrinterManager {
   /**
    * the filename for this print job. Placed at the bottom of each text page
    * (so this will only be used if printText() is used).

@@ -14,7 +14,7 @@ import org.nlogo.window.Events.JobRemovedEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-public strictfp class NetLogoListenerManager
+public class NetLogoListenerManager
     implements
     AddJobEvent.Handler,
     InterfaceGlobalEvent.Handler,

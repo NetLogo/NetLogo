@@ -28,7 +28,7 @@ import java.util.Set;
 // methods like distance() and towards() take a boolean argument "wrap";
 // it's true for the normal prims, false for the nowrap prims. - ST 5/24/06
 
-public abstract strictfp class Turtle
+public abstract class Turtle
     extends Agent
     implements org.nlogo.api.Turtle, AgentColors {
 

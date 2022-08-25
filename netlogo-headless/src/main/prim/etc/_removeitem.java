@@ -11,7 +11,7 @@ import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _removeitem
+public final class _removeitem
     extends Reporter
     implements Pure {
   @Override

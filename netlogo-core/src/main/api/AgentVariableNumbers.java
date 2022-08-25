@@ -8,7 +8,7 @@ package org.nlogo.api;
 // are constants, which (as far as I know anyway) means they must be
 // defined in Java. - ST 4/26/13
 
-public final strictfp class AgentVariableNumbers {
+public final class AgentVariableNumbers {
 
   // this class is not instantiable
   private AgentVariableNumbers() { throw new IllegalStateException(); }

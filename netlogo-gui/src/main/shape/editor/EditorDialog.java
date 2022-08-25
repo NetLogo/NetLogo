@@ -3,9 +3,10 @@
 package org.nlogo.shape.editor;
 
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
@@ -19,11 +20,9 @@ import org.nlogo.shape.Rectangle;
 import org.nlogo.shape.VectorShape;
 import static org.nlogo.swing.Utils.icon;
 
-strictfp class EditorDialog
+class EditorDialog
     extends javax.swing.JDialog
-    implements java.util.Observer
-
-{
+    implements PropertyChangeListener {
 
   private final VectorShape originalShape;
   private final VectorShape shape;
@@ -32,7 +31,6 @@ strictfp class EditorDialog
 
   private Class<? extends Element> elementType = null;
   private java.awt.Color elementColor;
-  //private boolean shapeChanged = false ;
   private boolean editingElements = false;
 
   private final ShapePreview[] previews;
@@ -66,9 +64,9 @@ strictfp class EditorDialog
 
     // edit a copy, not the original
     shape = originalShape.clone();
-    shape.addObserver(this);
+    shape.addPropertyChangeListener(this);
     shapeView = new ShapeView(this, shape);
-    shape.addObserver(shapeView);
+    shape.addPropertyChangeListener(shapeView);
     setResizable(false);
     AbstractAction closingAction = new AbstractAction() {
       public void actionPerformed(ActionEvent e) {
@@ -450,7 +448,7 @@ strictfp class EditorDialog
     previews[4] = new ShapePreview(shape, 50, 1);
 
     for (int i = 0; i < previews.length; i++) {
-      shape.addObserver(previews[i]);
+      shape.addPropertyChangeListener(previews[i]);
     }
 
     // LAYOUT
@@ -605,9 +603,7 @@ strictfp class EditorDialog
     undoButton.setEnabled(undoableEdit.canUndo());
   }
 
-  // Handle changes to current model
-  public void update(Observable o, Object obj) {
-    //shapeChanged = true ;
+  public void propertyChange(PropertyChangeEvent evt) {
     deleteSelected.setEnabled(shapeView.hasSelectedElement());
     duplicateSelected.setEnabled(shapeView.hasSelectedElement());
     bringToFront.setEnabled(shapeView.hasSelectedElement());
@@ -709,7 +705,7 @@ strictfp class EditorDialog
     nameText.setEnabled(editable);
   }
 
-  private strictfp class ColorAction
+  private class ColorAction
       extends javax.swing.AbstractAction {
     private final java.awt.Color color;
 
@@ -737,7 +733,7 @@ strictfp class EditorDialog
     }
   }
 
-  private strictfp class CreateAction
+  private class CreateAction
       extends javax.swing.AbstractAction {
     private final Class<? extends Element> typeID;
     private final boolean filled;
@@ -768,7 +764,7 @@ strictfp class EditorDialog
 
   // this is used when the user modifies an existing shape, such as
   // by moving it or dragging a handle
-  private strictfp class UndoableModification
+  private class UndoableModification
       extends javax.swing.undo.AbstractUndoableEdit {
     private final Element originalElement;
     private final Element modifiedElement;
@@ -792,7 +788,7 @@ strictfp class EditorDialog
   }
 
   // this is used when the user creates a new element
-  private strictfp class UndoableDraw
+  private class UndoableDraw
       extends javax.swing.undo.AbstractUndoableEdit {
     private final Element newElement;
 
@@ -808,7 +804,7 @@ strictfp class EditorDialog
   }
 
   // this is used when the user deletes an element
-  private strictfp class UndoableDeleteEdit
+  private class UndoableDeleteEdit
       extends javax.swing.undo.AbstractUndoableEdit {
     private final Element deletedElement;
     private final int zOrder;
@@ -829,7 +825,7 @@ strictfp class EditorDialog
 
   // this is used when the user is in the middle of drawing a polygon;
   // if they press undo at that time, we abort the creation of that polygon.
-  private strictfp class UndoableUnfinishedPolygon
+  private class UndoableUnfinishedPolygon
       extends javax.swing.undo.AbstractUndoableEdit {
     @Override
     public void undo() {

@@ -8,7 +8,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _setxy
+public final class _setxy
     extends Command {
 
   public _setxy() {

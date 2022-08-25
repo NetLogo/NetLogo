@@ -5,7 +5,7 @@ package org.nlogo.render;
 import org.nlogo.api.GraphicsInterface;
 import org.nlogo.api.ViewSettings;
 
-public abstract strictfp class AbstractTopologyRenderer implements TopologyRenderer {
+public abstract class AbstractTopologyRenderer implements TopologyRenderer {
   final org.nlogo.api.World world;
 
   public AbstractTopologyRenderer(org.nlogo.api.World world) {

@@ -6,7 +6,6 @@ import org.nlogo.api.Dump
 import org.nlogo.core.{ LogoList, Pure }
 import org.nlogo.nvm.{ Context, Reporter }
 
-@scala.annotation.strictfp
 class _constlist(value: LogoList) extends Reporter with Pure {
   override def toString =
     super.toString + ":" + Dump.logoObject(value)

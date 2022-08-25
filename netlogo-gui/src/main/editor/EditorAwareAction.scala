@@ -2,10 +2,10 @@
 
 package org.nlogo.editor
 
-import java.awt.Point
-import java.awt.event.{ MouseEvent, MouseListener }
+import java.awt.{ event, Point },
+  event.{ MouseEvent, MouseListener }
 
-import javax.swing.text.JTextComponent
+import javax.swing.text.{ Position, JTextComponent }
 
 trait EditorAwareAction extends InstallableAction with MouseListener {
   val EditorKey         = "Editor"
@@ -47,8 +47,9 @@ trait EditorAwareAction extends InstallableAction with MouseListener {
   private def updateMouseValues(me: MouseEvent): Unit = {
     val mouseLocation = me.getComponent.getLocationOnScreen
     mouseLocation.translate(me.getX, me.getY)
+    val returnBias = new Array[Position.Bias](1)
     val docOffset = me.getSource match {
-      case tc: JTextComponent => tc.getUI.viewToModel(tc, me.getPoint)
+      case tc: JTextComponent => tc.getUI.viewToModel2D(tc, me.getPoint, returnBias)
       case _                  => editor.getSelectionEnd
     }
     putValue(LocationKey,       mouseLocation)

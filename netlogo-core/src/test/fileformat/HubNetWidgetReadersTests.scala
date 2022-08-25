@@ -160,8 +160,8 @@ class HubNetWidgetReadersTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
       Chooser(None,-2147483648,-185212488,2147483647,859780949,None,List(ChooseableBoolean(true), ChooseableBoolean(true), ChooseableBoolean(false), ChooseableDouble(8.502858506075463E-83)), 10)
     val reader = HubNetChooserReader
     val serialized = reader.format(chooser)
-    assert(reader.validate(serialized.lines.toList), "serialized wiget should be valid")
-    val deserialized = reader.parse(serialized.lines.toList, litParser)
+    assert(reader.validate(serialized.linesIterator.toList), "serialized wiget should be valid")
+    val deserialized = reader.parse(serialized.linesIterator.toList, litParser)
     assert(chooser == deserialized, "round-trip must not change widget, written as:\n" + serialized)
   }
 }
@@ -182,9 +182,9 @@ class ClassyReader(val reader: WidgetReader) {
     reader.classTag.unapply(w).map(reader.format).get
 
   def validate(s: String): Boolean =
-    reader.validate(s.lines.toList)
+    reader.validate(s.linesIterator.toList)
 
   def parse(s: String): Widget = {
-    reader.parse(s.lines.toList, litParser)
+    reader.parse(s.linesIterator.toList, litParser)
   }
 }

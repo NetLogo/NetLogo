@@ -13,7 +13,7 @@ import java.util.Iterator;
 
 import static scala.collection.JavaConversions.asScalaBuffer;
 
-public final strictfp class _hubnetsendclearoutput
+public final class _hubnetsendclearoutput
     extends HubNetCommand {
   @Override
   public void perform(final org.nlogo.nvm.Context context) throws LogoException {

@@ -19,7 +19,7 @@ import javax.swing.JPopupMenu;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public strictfp class View
+public class View
     extends javax.swing.JComponent
     implements
     org.nlogo.window.Events.LoadBeginEvent.Handler,

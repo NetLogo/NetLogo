@@ -7,7 +7,6 @@ import org.nlogo.api.AgentException
 import org.nlogo.core.Nobody
 import org.nlogo.nvm.{ Context, Reporter }
 
-@annotation.strictfp
 class _patchrightandahead extends Reporter {
 
   override def report(context: Context): AnyRef =

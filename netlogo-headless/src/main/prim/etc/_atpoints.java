@@ -17,7 +17,7 @@ import org.nlogo.nvm.Reporter;
 
 import java.util.*;
 
-public final strictfp class _atpoints
+public final class _atpoints
     extends Reporter {
   @Override
   public Object report(final Context context) {

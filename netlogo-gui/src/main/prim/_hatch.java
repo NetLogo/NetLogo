@@ -13,7 +13,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.CustomAssembled;
 import org.nlogo.nvm.SelfScoping;
 
-public final strictfp class _hatch
+public final class _hatch
     extends Command
     implements CustomAssembled, SelfScoping {
   static final String NO_BREED = "";

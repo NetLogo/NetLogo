@@ -2,7 +2,7 @@
 
 package org.nlogo.app.interfacetab;
 
-strictfp class WidgetWrapperEdge
+class WidgetWrapperEdge
     extends javax.swing.JPanel
     // not JComponent otherwise paintComponent() doesn't paint the
     // background color for reasons I can't fathom - ST 8/9/03

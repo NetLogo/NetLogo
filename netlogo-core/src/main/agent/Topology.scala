@@ -5,7 +5,6 @@ package org.nlogo.agent
 import org.nlogo.api, api.AgentException
 import java.util.ArrayList
 
-@annotation.strictfp
 object Topology {
 
   // factory method

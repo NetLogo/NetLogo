@@ -5,7 +5,6 @@ package org.nlogo.agent
 import org.nlogo.api.AgentException
 import org.nlogo.core.I18N
 
-@annotation.strictfp
 class Box(world2d: World2D)
 extends Topology(world2d, xWraps = false, yWraps = false)
 with XBlocks with YBlocks {

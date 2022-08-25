@@ -171,7 +171,7 @@ class InterfaceComponentTest extends NLogoFormatTest[Seq[Widget]] {
   def attachComponent(widgets: Seq[Widget]): Model = Model(widgets = widgets)
 
   def sampleWidgetSection(filename: String): Array[String] =
-    scala.io.Source.fromFile(s"test/fileformat/$filename").mkString.lines.toArray
+    scala.io.Source.fromFile(s"test/fileformat/$filename").mkString.linesIterator.toArray
 
   testErrorsOnDeserialization("empty widgets section", Array[String](), "Every model must have at least a view...")
   testRoundTripsObjectForm("default view", Seq(View()))

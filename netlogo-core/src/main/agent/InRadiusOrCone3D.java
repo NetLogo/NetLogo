@@ -9,7 +9,7 @@ import org.nlogo.core.AgentKindJ;
 import java.util.ArrayList;
 import java.util.List;
 
-public strictfp class InRadiusOrCone3D
+public class InRadiusOrCone3D
   implements World.InRadiusOrCone {
   private final World3D world;
 

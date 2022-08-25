@@ -5,7 +5,7 @@ package org.nlogo.agent;
 import org.nlogo.core.I18N;
 import org.nlogo.api.AgentException;
 
-public strictfp class Turtle2D
+public class Turtle2D
   extends Turtle {
 
   public Turtle2D(World world, AgentSet breed, Double xcor, Double ycor) {

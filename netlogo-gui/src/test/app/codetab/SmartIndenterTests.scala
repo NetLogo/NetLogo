@@ -142,7 +142,7 @@ class SmartIndenterTests extends AnyFunSuite {
     }
 
     test("indent a single line in " + name) {
-      val lineCount = out.lines.length
+      val lineCount = out.linesIterator.length
       for {
         lineNumber <- (0 until lineCount)
       } {
@@ -151,12 +151,12 @@ class SmartIndenterTests extends AnyFunSuite {
         code.setSelectionStart(code.lineToStartOffset(lineNumber))
         code.setSelectionEnd(code.lineToEndOffset(lineNumber) - 1)
         indenter.handleTab()
-        assert(out.lines.toSeq(lineNumber) === code.lines(lineNumber))
+        assert(out.linesIterator.toSeq(lineNumber) === code.lines(lineNumber))
         if (lineNumber > 0) {
-          assert(in.lines.toSeq(lineNumber - 1) === code.lines(lineNumber - 1))
+          assert(in.linesIterator.toSeq(lineNumber - 1) === code.lines(lineNumber - 1))
         }
         if (lineNumber < lineCount - 2) {
-          assert(in.lines.toSeq(lineNumber + 1) === code.lines(lineNumber + 1))
+          assert(in.linesIterator.toSeq(lineNumber + 1) === code.lines(lineNumber + 1))
         }
       }
     }
@@ -166,13 +166,13 @@ class SmartIndenterTests extends AnyFunSuite {
       for {
         (newLine, i) <- (newline.findAllMatchIn(in).toSeq.zipWithIndex)
       } {
-        if (i < out.lines.length) {
+        if (i < out.linesIterator.length) {
           val code = new Scaffold(in)
           val indenter = new SmartIndenter(code, compiler)
           code.setSelectionStart(newLine.start)
           code.setSelectionEnd(newLine.end)
           indenter.handleEnter()
-          assert(out.lines.toSeq(i + 1) === code.lines(i + 1))
+          assert(out.linesIterator.toSeq(i + 1) === code.lines(i + 1))
         }
       }
     }

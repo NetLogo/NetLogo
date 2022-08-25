@@ -31,6 +31,7 @@ tmp/
 /netlogo-gui/docs/
 /netlogo-gui/NetLogo User Manual.pdf
 /netlogo-gui/netlogo_logging.xml
+/dist/target2/
 
 # Eclipse
 /.classpath

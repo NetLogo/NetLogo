@@ -222,7 +222,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   locally {
     setResizable(true)
     val findKeyStroke =
-       KeyStroke.getKeyStroke(KeyEvent.VK_F, Toolkit.getDefaultToolkit.getMenuShortcutKeyMask)
+       KeyStroke.getKeyStroke(KeyEvent.VK_F, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx())
     getRootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(findKeyStroke, "focus-search-box");
     getRootPane.getActionMap.put("focus-search-box", focusSearchBoxAction)
     openAction.setEnabled(false)

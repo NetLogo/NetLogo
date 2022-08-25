@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public abstract strictfp class ImporterJ
+public abstract class ImporterJ
     implements org.nlogo.api.ImportErrorHandler {
   final ImporterUser importerUser;
   final ErrorHandler errorHandler;
@@ -1159,7 +1159,7 @@ public abstract strictfp class ImporterJ
     UNKNOWN_ERROR
   }
 
-  strictfp class ImportException extends RuntimeException {
+  class ImportException extends RuntimeException {
     public ImportError type;
     public String message;
     public String action;
@@ -1268,7 +1268,7 @@ public abstract strictfp class ImporterJ
         throws StringReaderException;
   }
 
-  public static strictfp class StringReaderException
+  public static class StringReaderException
       extends Exception {
     public StringReaderException(String message) {
       super(message);
@@ -1294,7 +1294,7 @@ public abstract strictfp class ImporterJ
   }
 
   // default access for unit testing
-  static strictfp class Junk {
+  static class Junk {
   }
 
   ///

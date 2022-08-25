@@ -16,7 +16,7 @@ import org.nlogo.nvm.Reporter;
 import java.util.ArrayList;
 import java.util.List;
 
-public final strictfp class _turtleson
+public final class _turtleson
     extends Reporter {
 
   @Override

@@ -8,10 +8,10 @@ import org.nlogo.headless.test.{ Parser, LanguageTest, Open, Declaration, Comman
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.Tag
 import org.scalatest.exceptions.TestFailedException
-import org.nlogo.api.{SimpleJobOwner, Version, WorldDimensions3D}
+import org.nlogo.api.{ SimpleJobOwner, Version, WorldDimensions3D }
 import org.nlogo.api.FileIO.fileToString
 import java.io.File
-import org.nlogo.util.{Utils, SlowTest}
+import org.nlogo.util.{ Utils, SlowTest }
 
 object LanguageTestTag extends Tag("org.nlogo.headless.LanguageTestTag")
 

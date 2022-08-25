@@ -7,7 +7,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _constdouble
+public final class _constdouble
     extends Reporter implements Pure {
   final Double value;
   public final double primitiveValue;

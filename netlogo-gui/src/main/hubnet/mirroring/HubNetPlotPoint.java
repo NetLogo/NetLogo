@@ -2,7 +2,7 @@
 
 package org.nlogo.hubnet.mirroring;
 
-public strictfp class HubNetPlotPoint
+public class HubNetPlotPoint
     implements java.io.Serializable {
   static final long serialVersionUID = 0L;
 

@@ -4,7 +4,7 @@ package org.nlogo.sdm.gui;
 
 import scala.Option;
 
-strictfp class AggregateUndoableTool
+class AggregateUndoableTool
     extends org.jhotdraw.util.UndoableTool
     implements org.nlogo.window.Event.LinkChild {
   private final java.awt.Component linkParent;

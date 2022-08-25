@@ -6,7 +6,7 @@ import org.nlogo.core.I18N;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _stop
+public final class _stop
     extends Command {
 
   @Override

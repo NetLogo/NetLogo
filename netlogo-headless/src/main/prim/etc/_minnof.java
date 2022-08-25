@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.TreeMap;
 
-public final strictfp class _minnof
+public final class _minnof
     extends Reporter {
 
   @Override

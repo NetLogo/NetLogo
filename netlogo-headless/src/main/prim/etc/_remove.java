@@ -10,7 +10,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _remove
+public final class _remove
     extends Reporter
     implements Pure {
   @Override

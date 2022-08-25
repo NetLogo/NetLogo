@@ -3,7 +3,7 @@
 package org.nlogo.headless
 package misc
 
-import org.nlogo.util.SlowTestTag
+import org.nlogo.util.SlowTest
 import org.nlogo.workspace.Checksummer
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.{ Args, Status, SucceededStatus }
@@ -31,7 +31,7 @@ class TestChecksums extends AnyFunSuite  {
   var versionMismatchCount = 0
 
   for(entry <- entries)
-    test(entry.key, SlowTestTag) {
+    test(entry.key, SlowTest.Tag) {
       val tester = new ChecksumTester(info(_), () => versionMismatchCount += 1)
       tester.testChecksum(entry.path, entry.variant, entry.worldSum, entry.graphicsSum, entry.revision)
       val failures = tester.failures.toString
@@ -39,7 +39,7 @@ class TestChecksums extends AnyFunSuite  {
         fail(failures)
     }
 
-  test("not too many version mismatches", SlowTestTag) {
+  test("not too many version mismatches", SlowTest.Tag) {
     assert(versionMismatchCount.toDouble / entries.size <= 0.02,
       s"${versionMismatchCount} models have version mismatches (more than 2%)")
   }

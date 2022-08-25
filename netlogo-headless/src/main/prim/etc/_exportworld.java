@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _exportworld
+public final class _exportworld
     extends org.nlogo.nvm.Command {
 
   @Override

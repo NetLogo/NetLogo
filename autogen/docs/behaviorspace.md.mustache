@@ -314,12 +314,27 @@ Fourth, using all available processor cores may make your computer slow to use
 for other tasks while the experiment is running.
 
 Fifth, doing runs in parallel will multiply the experiment's memory requirements
-accordingly. You may need to increase NetLogo's memory ceiling (see
-[this FAQ entry](faq.html#how-big-can-my-model-be-how-many-turtles-patches-procedures-buttons-and-so-on-can-my-model-contain)).
+accordingly. You may need to increase NetLogo's memory ceiling (see [this FAQ
+entry](faq.html#how-big-can-my-model-be-how-many-turtles-patches-procedures-buttons-and-so-on-can-my-model-contain)).
 
-Sixth, each parallel run will get its own world for the model to run in.  This world is *not* cleared automatically by BehaviorSpace if a parallel run gets re-used for another repitition, which happens quite frequently.  This means, for example, if you do `ask patches [ set pcolor red ]` in one run and do not use `clear-all` or `clear-patches` in the setup commands of the next run, then the patches will all still be red.  In general using `clear-all` before each run would be a best practice, but there are times when you might not want to, such as loading data from a file that doesn't change run-to-run.  Just be careful with whatever data is not cleared out.
+Sixth, each parallel run will get its own world for the model to run in.  This world is
+*not* cleared automatically by BehaviorSpace if a parallel run gets re-used for another
+repitition, which happens quite frequently.  This means, for example, if you do `ask
+patches [ set pcolor red ]` in one run and do not use `clear-all` or `clear-patches` in
+the setup commands of the next run, then the patches will all still be red.  In general
+using `clear-all` before each run would be a best practice, but there are times when you
+might not want to, such as loading data from a file that doesn't change run-to-run.  Just
+be careful with whatever data is not cleared out.
 
-Seventh, there is a very, very small chance that at startup multiple parallel runs could wind up with the same random number generator state if they startup at the eact same moment in time.  This means the runs would produce identical output for all random operations and likely the same results.  This would have a chance to happen when running on very fast processors and with lots of parallel runs at once.  If you need to make sure this doesn't impact your results, you can add `random-seed new-seed` to your setup commands to re-generate a new unique random seed for each run.  In fact, storing the `new-seed` as a global variable so you can output it with the rest of your results would let you re-run a run later on by manually using that value to set the `random-seed`.
+Seventh, there is a very, very small chance that at startup multiple parallel runs could
+wind up with the same random number generator state if they startup at the eact same
+moment in time.  This means the runs would produce identical output for all random
+operations and likely the same results.  This would have a chance to happen when running
+on very fast processors and with lots of parallel runs at once.  If you need to make sure
+this doesn't impact your results, you can add `random-seed new-seed` to your setup
+commands to re-generate a new unique random seed for each run.  In fact, storing the
+`new-seed` as a global variable so you can output it with the rest of your results would
+let you re-run a run later on by manually using that value to set the `random-seed`.
 
 #### Observing runs
 
@@ -355,12 +370,14 @@ experiment setups directly using XML.
 
 #### How to use it
 
-Run NetLogo using the included command line script. This is found in the root
-directory of your NetLogo installation and is named `netlogo-headless.sh` on Mac
-and Linux and `netlogo-headless.bat` on Windows. The netlogo-headless script
-supports the following arguments:
+Run NetLogo using the `NetLogo_Console` app with the `--headless` command line argument.
+This is found in the root directory of your NetLogo installation. The
+`NetLogo_Console` script supports the following arguments:
 
-- `--model <path>`: pathname of model to open (required)
+- `--headless`: Enable headless mode to run a BehaviorSpace experiment (required, will
+open the graphical interface otherwise).
+- `--model <path>`: pathname of model to open
+(required)
 - `--setup-file <path>`: read experiment setups from this file instead of the
   model file
 - `--experiment <name>`: name of experiment to run
@@ -380,37 +397,33 @@ supports the following arguments:
 specify either `--table` or `--spreadsheet`, or both. If you specify any of the
 world dimensions, you must specify all four.
 
-**Note:** The remainder of this guide uses `netlogo-headless.sh` to refer to the
-NetLogo Headless launch script. If you are using Windows, please substitute
-`netlogo-headless.bat` for `netlogo-headless.sh` in each example.
+Note that in prior versions of NetLogo the directions were to use `netlogo-headless.sh`
+(or `netlogo-headless.bat` on Windows) along with a separate installation of Java of the
+system to run BehaviorSpace experiments.  The `netlogo-headless.sh` script is still
+included with NetLogo and can still be used as before, which might be preferrable in
+server environments where the installed Java version is strictly controller.  But the
+recommended method for on a personal computer is to use the `NetLogo_Console
+--headless` app.  Because `NetLogo_Console` uses the Java that comes bundled with NetLogo it
+requires no extra software installation or configuration.
 
 #### Examples
 
 It is easiest if you create your experiment setup ahead of time in the GUI, so
 it is saved as part of the model. To run an experiment setup saved in a model,
 here is an example command line, run from the NetLogo {{version}} installation
-folder so the paths to the `netlogo-headless.sh` script and `Wolf Sheep Simple 5.nlogo`
+folder so the paths to the `NetLogo_Console` app and `Wolf Sheep Simple 5.nlogo`
 model are correct.
 
+The below commands should work as-is in a terminal on macOS and Linux.  On Windows in the
+Command Prompt you can use `^` instead of `\` to break the command across multiple lines,
+or just put the command on a single line.
+
 ```sh
-# on macOS use "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" instead
-./netlogo-headless.sh \
-  --model "app/models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
+./NetLogo_Console --headless \
+  --model "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
   --experiment "Wolf Sheep Simple model analysis" \
   --table -
 ```
-
-For this to work, Java (version 1.8 or later) must be available.
-You can make Java available to headless in either of two ways
-
-1. Set the `JAVA_HOME` environment variable to the path to the Java
-   installation. This is the directory of the Java installation which contains a
-   `bin` directory.
-2. Add the directory containing the Java executable to the `PATH` environment
-   variable
-
-If `JAVA_HOME` is defined, netlogo-headless will run NetLogo using the Java that
-it points to, ignoring the version of Java available on the path.
 
 After the named experiment has run, the results are sent to standard output in
 table format, as CSV. `-` is how you specify standard output instead of output
@@ -430,9 +443,8 @@ it a name.)
 Here's another example that shows some additional, optional arguments:
 
 ```sh
-# on macOS use "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" instead
-./netlogo-headless.sh \
-  --model "app/models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
+./NetLogo_Console --headless \
+  --model "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
   --experiment "Wolf Sheep Simple model analysis" \
   --max-pxcor 5 \
   --min-pxcor -5 \
@@ -454,9 +466,8 @@ file.
 Yet another example:
 
 ```sh
-# on macOS use "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" instead
-./netlogo-headless.sh \
-  --model "app/models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
+./NetLogo_Console --headless \
+  --model "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
   --experiment "Wolf Sheep Simple model analysis" \
   --table wsp5-table-output.csv \
   --spreadsheet wsp5-spreadsheet-output.csv
@@ -483,9 +494,8 @@ information on the XML file format).  This assumes you've created a
 in your home directory.
 
 ```sh
-# on macOS use "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" instead
-./netlogo-headless.sh \
-  --model "app/models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
+./NetLogo_Console --headless \
+  --model "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
   --setup-file ~/my-wsp-setups.xml \
   --experiment "My WSP Exploration"
 ```
@@ -497,10 +507,9 @@ In order to run a NetLogo 3D experiment, run headless with the `--3D` argument,
 for example:
 
 ```sh
-# on macOS use "models/3D/Sample Models/GasLab/GasLab Free Gas 3D.nlogo3d" instead
-./netlogo-headless.sh \
+./NetLogo_Console --headless \
   --3D \
-  --model "app/models/3D/Sample Models/GasLab/GasLab Free Gas 3D.nlogo3d" \
+  --model "models/3D/Sample Models/GasLab/GasLab Free Gas 3D.nlogo3d" \
   --experiment "100 runs" \
   --table -
 ```

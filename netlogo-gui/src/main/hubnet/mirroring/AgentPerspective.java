@@ -5,7 +5,7 @@ package org.nlogo.hubnet.mirroring;
 import org.nlogo.core.AgentKind;
 import org.nlogo.api.Perspective;
 
-public strictfp class AgentPerspective {
+public class AgentPerspective {
   static final long serialVersionUID = 0L;
 
   final Agent agent;

@@ -2,11 +2,8 @@
 
 package org.nlogo.api
 
-import annotation.strictfp
-
 object Approximate {
 
-  @strictfp
   def approximate(n: Double, places: Int): Double =
     // the 17 here was not arrived at through any deep understanding of IEEE 754 or anything like
     // that, but just by entering different expressions into NetLogo and noting that I couldn't seem
@@ -25,7 +22,6 @@ object Approximate {
         StrictMath.round(result)
     }
 
-  @strictfp
   def approximateCeiling(n: Double, places: Int): Double =
     if (places >= 17)
       n
@@ -38,7 +34,6 @@ object Approximate {
         StrictMath.round(result)
     }
 
-  @strictfp
   def approximateFloor(n: Double, places: Int) =
     if (places >= 17)
       n

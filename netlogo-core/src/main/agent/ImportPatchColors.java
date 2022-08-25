@@ -16,7 +16,7 @@ import java.awt.image.SampleModel;
 import java.util.HashMap;
 import java.util.Map;
 
-public strictfp class ImportPatchColors {
+public class ImportPatchColors {
   public static void importPatchColors(File imageFile, World world,
                                        boolean asNetLogoColors)
       throws java.io.IOException {

@@ -14,7 +14,7 @@ import java.awt.Frame;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
-public strictfp class ModelingCommons implements ModelingCommonsInterface {
+public class ModelingCommons implements ModelingCommonsInterface {
 
   public static final String HOST = "http://modelingcommons.org";
   private static HttpClient http = new DefaultHttpClient();

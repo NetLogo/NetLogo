@@ -8,7 +8,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _list
+public final class _list
     extends Reporter
     implements org.nlogo.core.Pure, org.nlogo.nvm.CustomGenerated {
 

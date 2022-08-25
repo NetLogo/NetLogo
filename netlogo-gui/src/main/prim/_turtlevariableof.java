@@ -14,7 +14,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _turtlevariableof
+public final class _turtlevariableof
     extends Reporter {
   public int vn = 0;
 

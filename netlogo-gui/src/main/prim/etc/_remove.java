@@ -12,7 +12,7 @@ import org.nlogo.nvm.Reporter;
 
 import java.util.Iterator;
 
-public final strictfp class _remove
+public final class _remove
     extends Reporter
     implements org.nlogo.core.Pure {
   @Override

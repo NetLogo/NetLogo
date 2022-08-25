@@ -7,7 +7,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _resizeworld
+public final class _resizeworld
     extends Command {
 
   public _resizeworld() {

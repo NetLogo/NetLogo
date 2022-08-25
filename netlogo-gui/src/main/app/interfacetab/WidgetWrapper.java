@@ -10,7 +10,7 @@ import scala.Option;
 import java.awt.Dimension;
 
 // public for widget extension - ST 6/12/08
-public strictfp class WidgetWrapper
+public class WidgetWrapper
     extends javax.swing.JLayeredPane
     implements
     org.nlogo.window.WidgetWrapperInterface,

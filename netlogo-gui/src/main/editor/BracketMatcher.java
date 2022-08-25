@@ -5,6 +5,7 @@ package org.nlogo.editor;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Highlighter;
 import javax.swing.text.JTextComponent;
+import javax.swing.text.Position;
 import java.util.List;
 
 import org.nlogo.core.TokenType;
@@ -19,7 +20,7 @@ import org.nlogo.core.TokenType;
  * also used by DoubleClickCaret.
  */
 
-strictfp class BracketMatcher
+class BracketMatcher
     implements javax.swing.event.CaretListener {
 
   private static final java.awt.Color GOOD_COLOR = java.awt.Color.GRAY;
@@ -229,12 +230,12 @@ strictfp class BracketMatcher
                       java.awt.Shape bounds, JTextComponent c) {
       try {
         g.setColor(color);
-        java.awt.Rectangle rect =
-            c.getUI().modelToView(c, p0)
-                .union
-                    (c.getUI().modelToView(c, p1));
-        g.drawRect(rect.x, rect.y,
-            rect.width - 1, rect.height - 1);
+        java.awt.geom.Rectangle2D rect =
+            c.getUI().modelToView2D(c, p0, Position.Bias.Forward)
+                .createUnion
+                    (c.getUI().modelToView2D(c, p1, Position.Bias.Forward));
+        g.drawRect((int) rect.getX(), (int)rect.getY(),
+            (int) rect.getWidth() - 1, (int) rect.getHeight() - 1);
       } catch (javax.swing.text.BadLocationException ex) {
         throw new IllegalStateException(ex);
       }

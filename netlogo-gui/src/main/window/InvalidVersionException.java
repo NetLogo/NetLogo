@@ -2,6 +2,6 @@
 
 package org.nlogo.window;
 
-public strictfp class InvalidVersionException
+public class InvalidVersionException
     extends Exception {
 }

@@ -104,7 +104,7 @@ class JarLoaderTests extends AnyFunSuite with BeforeAndAfter {
     assert(extensionData.prefix == "array")
     assert(extensionData.classManagerName == "org.nlogo.extensions.array.ArrayExtension")
     assert(extensionData.version == Some("6.1"))
-    assert(extensionData.modified == modified)
+    assert(extensionData.modified / 1000 == modified / 1000)
   }
 
   test("extensionData raises an error when the jar manifest doesn't have the required fields") {
@@ -142,8 +142,8 @@ class JarLoaderTests extends AnyFunSuite with BeforeAndAfter {
     intercept[ExtensionManagerException] { getClassManager("NotAClass") }
   }
 
-  test("extensionClassManager raises an IllegalStateException if the class cannot be instantiated") {
-    intercept[IllegalStateException] { getClassManager("UninstantiableClassManager") }
+  test("extensionClassManager raises an NoSuchMethodException if the class cannot be instantiated") {
+    intercept[NoSuchMethodException] { getClassManager("UninstantiableClassManager") }
   }
 
   test("extensionClassManager raises an ExtensionManagerException if the class isn't a ClassManager") {
@@ -162,7 +162,8 @@ class JarLoaderTests extends AnyFunSuite with BeforeAndAfter {
 
   test("resolvePathAsURL resolves extensions relative to the working directory") {
     val expectedURL = new java.io.File("extensions" + java.io.File.separator + "array").toURI.toURL
-    assert(jarLoader.resolvePathAsURL("array").get == expectedURL)
+    val actualURL   = jarLoader.resolvePathAsURL("array").get
+    assert(actualURL == expectedURL)
   }
 
   test("resolvePathAsURL returns None if the file cannot be found") {

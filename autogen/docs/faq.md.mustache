@@ -330,9 +330,9 @@ the path of your preferred Java Runtime.
 
 ### How come NetLogo won't start up on my Linux machine?
 
-We bundle Oracle's Java runtime when using NetLogo on Linux. If you would like
+We bundle Bellsoft's OpenJDK-based Java runtime when using NetLogo on Linux. If you would like
 to change the version of linux used, you can modify the .cfg files to point to a
-different version of java (see
+different version of Java (see
 [How big can my model be?](#how-big-can-my-model-be-how-many-turtles-patches-procedures-buttons-and-so-on-can-my-model-contain)
 for more information).
 
@@ -571,7 +571,7 @@ file for each sub-application (NetLogo, NetLogo 3D, HubNet Client, etc.)
 Although the file location varies by platform, the process for changing it is
 the same. Locate the section of the file that looks like the following:
 
-    [JVMOptions]
+    [JavaOptions]
     # there may be one or more lines, leave them unchanged
     -Xmx1024m
     # there may be one or more lines, leave them unchanged
@@ -584,7 +584,7 @@ follow:
   unless you are running 32 bit NetLogo on a 64 bit Windows, then it will be
   in `C:\Program Files (x86)\NetLogo {{version}}\app`.
 - **Mac OS X:** The file for NetLogo will be located at:
-  `/Applications/NetLogo {{version}}/NetLogo {{version}}.app/Contents/Java/NetLogo.cfg` For
+  `/Applications/NetLogo {{version}}/NetLogo {{version}}.app/Contents/app/NetLogo {{version}}.cfg` For
   NetLogo 3D and the other applications, you will find the file in the
   corresponding location for each application package. You can reach the cfg
   file by control-clicking the application in the Finder and choosing "Show
@@ -595,7 +595,7 @@ follow:
     [this page](https://support.apple.com/en-us/HT202491) to temporarily allow
     apps from "Anywhere", run NetLogo once, then restore the setting to "Mac App
     Store and Identified Developers".
-- **Other:** The cfg files will be located in the `netlogo-{{version}}/app`
+- **Linux:** The cfg files will be located in the `NetLogo {{version}}/lib/app`
   folder after untarring.
 
 By default, Mac builds of NetLogo bundle a 64-bit JVM, which should be able to

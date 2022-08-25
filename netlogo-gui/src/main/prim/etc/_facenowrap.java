@@ -9,7 +9,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _facenowrap
+public final class _facenowrap
     extends Command {
   public _facenowrap() {
     this.switches = true;

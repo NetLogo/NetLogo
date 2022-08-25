@@ -4,7 +4,7 @@ package org.nlogo.render;
 
 import org.nlogo.api.Graphics2DWrapper;
 
-public strictfp abstract class TrailDrawerJ
+public abstract class TrailDrawerJ
     implements org.nlogo.api.TrailDrawerInterface,
     org.nlogo.api.ViewSettings {
   private final org.nlogo.api.World world;

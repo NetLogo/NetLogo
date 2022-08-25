@@ -47,8 +47,10 @@ object ChecksumsAndPreviewsSettings {
     )
 
     , Some("it uses the ls extension, not setup for headless") -> List(
+      "/Curricular Models/GenEvo/GenEvo 4 Competition.nlogo",
       "/SAMPLE MODELS/CHEMISTRY & PHYSICS/KICKED ROTATORS.NLOGO",
-      "/CODE EXAMPLES/EXTENSIONS EXAMPLES/LS/"
+      "/CODE EXAMPLES/EXTENSIONS EXAMPLES/LS/",
+      "Sample Models/Biology/CRISPR/CRISPR Ecosystem LevelSpace.nlogo"
     )
 
     , Some("it involves the system dynamics modeler") -> List(
@@ -66,6 +68,10 @@ object ChecksumsAndPreviewsSettings {
 
     , Some("it uses the nw extension") -> List(
       "/CODE EXAMPLES/EXTENSIONS EXAMPLES/NW/"
+    )
+
+    , Some("it uses the time extension") -> List(
+      "/Code Examples/Extensions Examples/time/",
     )
 
     , Some("it uses the vid extension") -> List(

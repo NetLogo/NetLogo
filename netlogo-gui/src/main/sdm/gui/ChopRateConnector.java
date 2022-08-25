@@ -5,7 +5,7 @@ package org.nlogo.sdm.gui;
 import org.jhotdraw.framework.Figure;
 import org.jhotdraw.standard.ChopBoxConnector;
 
-public strictfp class ChopRateConnector
+public class ChopRateConnector
     extends ChopBoxConnector {
   public ChopRateConnector() {
     // only used for Storable implementation

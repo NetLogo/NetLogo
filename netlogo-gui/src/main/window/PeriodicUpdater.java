@@ -5,7 +5,7 @@ package org.nlogo.window;
 import org.nlogo.api.PeriodicUpdateDelay;
 import org.nlogo.nvm.JobManagerInterface;
 
-public strictfp class PeriodicUpdater
+public class PeriodicUpdater
     extends javax.swing.Timer
     implements java.awt.event.ActionListener {
 

@@ -17,7 +17,7 @@ import java.util.TreeMap;
 import static scala.collection.JavaConversions.seqAsJavaList;
 import static scala.collection.JavaConversions.setAsJavaSet;
 
-public strictfp class ClientWorld
+public class ClientWorld
     implements org.nlogo.api.World {
 
   /**

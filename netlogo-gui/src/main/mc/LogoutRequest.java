@@ -10,7 +10,7 @@ import org.json.simple.parser.ParseException;
 import javax.swing.JDialog;
 import java.awt.Frame;
 
-public abstract strictfp class LogoutRequest extends PostRequest {
+public abstract class LogoutRequest extends PostRequest {
 
   private JDialog loadingDialog;
   private Frame frame;

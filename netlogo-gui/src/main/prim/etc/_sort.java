@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 
-public final strictfp class _sort
+public final class _sort
     extends Reporter
     implements Pure {
 

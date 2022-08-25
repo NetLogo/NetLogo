@@ -55,7 +55,7 @@ import org.nlogo.core.ShapeListTracker;
 import org.nlogo.api.TrailDrawerInterface;
 import org.nlogo.api.ViewSettings;
 
-public abstract strictfp class AbstractRenderer
+public abstract class AbstractRenderer
     implements org.nlogo.api.RendererInterface {
 
   public final org.nlogo.api.World world;

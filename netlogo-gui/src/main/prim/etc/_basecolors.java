@@ -8,7 +8,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _basecolors
+public final class _basecolors
     extends Reporter {
   private static final LogoList colors = cache();
 

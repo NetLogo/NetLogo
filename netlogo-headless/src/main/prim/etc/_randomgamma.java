@@ -7,7 +7,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _randomgamma extends Reporter {
+public final class _randomgamma extends Reporter {
 
   @Override
   public Object report(Context context) {

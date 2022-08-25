@@ -12,7 +12,7 @@ import org.nlogo.nvm.Reporter;
 import java.util.ArrayList;
 import java.util.List;
 
-public final strictfp class _maxoneof
+public final class _maxoneof
     extends Reporter {
 
 

@@ -16,7 +16,7 @@ object I18NBundle {
     // It can be made more robust, but we need some way to feed in
     // the current locale that doesn't rely on java.util.Locale
     import scala.collection.JavaConverters._
-    val bundle = ResourceBundle.getBundle("Errors", Locale.US)
+    val bundle = ResourceBundle.getBundle("i18n.Errors", Locale.US)
     val localizedStringMap = bundle
       .keySet
       .asScala

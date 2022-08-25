@@ -10,7 +10,7 @@ import org.nlogo.api.LogoListBuilder;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _extractrgb
+public final class _extractrgb
     extends Reporter {
 
   @Override

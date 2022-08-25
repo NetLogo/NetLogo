@@ -2,6 +2,7 @@
 
 package org.nlogo.app;
 
+import java.awt.Desktop;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -9,8 +10,6 @@ import java.lang.reflect.Method;
 
 import ca.weblite.objc.Client;
 import ca.weblite.objc.Proxy;
-
-import com.apple.eawt.Application;
 
 // for those of you wondering why this song and dance is necessary
 // * We must compile most of NetLogo against JRE 1.5/6 (with a specified bootclasspath)
@@ -21,10 +20,10 @@ import com.apple.eawt.Application;
 //   once we're running against the same JRE we use for packaging (JRE 8, btw).
 public class MacApplication {
 
-  Application application;
+  Desktop application;
 
   public static void main(String[] args) {
-    MacHandler handler = new MacHandler(Application.getApplication());
+    MacHandler handler = new MacHandler();
 
     // on Mac OS X 10.5, we have to explicitly ask for the Quartz
     // renderer. perhaps we should eventually switch to the Sun

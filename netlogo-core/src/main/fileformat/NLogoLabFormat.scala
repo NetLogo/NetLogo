@@ -21,7 +21,7 @@ trait LabFormat[A <: ModelFormat[Array[String], A]]
 
   def serialize(m: Model): Array[String] = {
     m.optionalSectionValue[Seq[LabProtocol]](componentName)
-      .map(ps => if (ps.isEmpty) Array[String]() else LabSaver.save(ps).lines.toArray)
+      .map(ps => if (ps.isEmpty) Array[String]() else LabSaver.save(ps).linesIterator.toArray)
       .getOrElse(Array[String]())
   }
 
@@ -42,4 +42,3 @@ class NLogoLabFormat(val literalParser: LiteralParser)
 
 class NLogoThreeDLabFormat(val literalParser: LiteralParser)
   extends LabFormat[NLogoThreeDFormat]
-

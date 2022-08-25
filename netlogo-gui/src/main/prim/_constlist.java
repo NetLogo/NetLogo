@@ -8,7 +8,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _constlist
+public final class _constlist
     extends Reporter implements Pure {
   final LogoList value;
 

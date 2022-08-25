@@ -36,7 +36,7 @@ import java.awt.event.WindowEvent;
 import java.util.Arrays;
 import java.util.Calendar;
 
-public strictfp class NewUserDialog extends JDialog {
+public class NewUserDialog extends JDialog {
 
   //GUI form members
   private JButton loginButton;

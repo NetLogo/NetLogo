@@ -8,7 +8,7 @@ import org.nlogo.sdm.Binding;
 import org.nlogo.sdm.ModelElement;
 import org.nlogo.sdm.Reservoir;
 
-public strictfp class BindingConnection extends LineConnection {
+public class BindingConnection extends LineConnection {
   public BindingConnection() {
     setEndDecoration(null);
     setStartDecoration(null);

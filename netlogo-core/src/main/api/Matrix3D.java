@@ -36,7 +36,7 @@ package org.nlogo.api;
  * A fairly conventional 3D matrix object that can transform sets of
  * 3D points and perform a variety of manipulations on the transform
  */
-public strictfp class Matrix3D {
+public class Matrix3D {
   double xx, xy, xz, xo;
   double yx, yy, yz, yo;
   double zx, zy, zz, zo;

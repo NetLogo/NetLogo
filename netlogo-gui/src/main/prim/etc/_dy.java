@@ -8,7 +8,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _dy extends Reporter {
+public final class _dy extends Reporter {
 
 
   @Override

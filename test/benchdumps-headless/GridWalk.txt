@@ -272,34 +272,31 @@ procedure SETUP:[]{O---}:
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          ASTORE 3
-          ALOAD 3
+          ASTORE 2
+          ALOAD 2
           INSTANCEOF org/nlogo/agent/Turtle
           IFEQ L3
-          ALOAD 3
+          ALOAD 2
           CHECKCAST org/nlogo/agent/Turtle
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-          ASTORE 2
           GOTO L4
          L3
-         FRAME APPEND [T org/nlogo/agent/Agent]
-          ALOAD 3
+         FRAME APPEND [org/nlogo/agent/Agent]
+          ALOAD 2
           INSTANCEOF org/nlogo/agent/Patch
           IFEQ L5
-          ALOAD 3
+          ALOAD 2
           CHECKCAST org/nlogo/agent/Patch
-          ASTORE 2
           GOTO L4
          L5
          FRAME SAME
           NEW scala/MatchError
           DUP
-          ALOAD 3
+          ALOAD 2
           INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
           ATHROW
          L4
-         FRAME FULL [org/nlogo/prim/_asm_proceduresetup_face_2 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent] []
-          ALOAD 2
+         FRAME SAME1 org/nlogo/agent/Patch
           INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors4 ()Lorg/nlogo/agent/IndexedAgentSet;
          L6
           ASTORE 2
@@ -485,34 +482,31 @@ procedure GO:[]{O---}:
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
-          ASTORE 3
-          ALOAD 3
+          ASTORE 2
+          ALOAD 2
           INSTANCEOF org/nlogo/agent/Turtle
           IFEQ L3
-          ALOAD 3
+          ALOAD 2
           CHECKCAST org/nlogo/agent/Turtle
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
-          ASTORE 2
           GOTO L4
          L3
-         FRAME APPEND [T org/nlogo/agent/Agent]
-          ALOAD 3
+         FRAME APPEND [org/nlogo/agent/Agent]
+          ALOAD 2
           INSTANCEOF org/nlogo/agent/Patch
           IFEQ L5
-          ALOAD 3
+          ALOAD 2
           CHECKCAST org/nlogo/agent/Patch
-          ASTORE 2
           GOTO L4
          L5
          FRAME SAME
           NEW scala/MatchError
           DUP
-          ALOAD 3
+          ALOAD 2
           INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
           ATHROW
          L4
-         FRAME FULL [org/nlogo/prim/_asm_procedurego_face_1 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent] []
-          ALOAD 2
+         FRAME SAME1 org/nlogo/agent/Patch
           INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors4 ()Lorg/nlogo/agent/IndexedAgentSet;
          L6
           ASTORE 2

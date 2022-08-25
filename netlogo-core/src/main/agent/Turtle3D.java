@@ -13,7 +13,7 @@ import org.nlogo.api.Vect;
 
 import java.util.List;
 
-public final strictfp class Turtle3D
+public final class Turtle3D
     extends Turtle
     implements Agent3D, org.nlogo.api.Turtle3D {
   public static final int VAR_WHO3D = AgentVariableNumbers.VAR_WHO3D;

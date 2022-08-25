@@ -10,7 +10,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _length extends Reporter implements Pure {
+public final class _length extends Reporter implements Pure {
 
 
   @Override

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public final strictfp class _median extends Reporter implements org.nlogo.core.Pure {
+public final class _median extends Reporter implements org.nlogo.core.Pure {
   @Override
   public Object report(final Context context) throws LogoException {
     LogoList list = argEvalList(context, 0);

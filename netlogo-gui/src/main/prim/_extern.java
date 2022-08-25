@@ -9,7 +9,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.ExtensionContext;
 import org.nlogo.nvm.WrappedExtensionException;
 
-public final strictfp class _extern
+public final class _extern
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
   private final org.nlogo.api.Command command;

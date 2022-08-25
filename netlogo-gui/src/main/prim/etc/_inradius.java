@@ -15,7 +15,7 @@ import org.nlogo.nvm.Reporter;
 
 import java.util.List;
 
-public final strictfp class _inradius extends Reporter {
+public final class _inradius extends Reporter {
   @Override
   public Object report(final Context context) throws LogoException {
     return report_1(context, argEvalAgentSet(context, 0),

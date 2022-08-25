@@ -7,7 +7,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _importpcolorsrgb
+public final class _importpcolorsrgb
     extends org.nlogo.nvm.Command {
   public _importpcolorsrgb() {
     this.switches = true;

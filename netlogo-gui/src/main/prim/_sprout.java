@@ -11,7 +11,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.CustomAssembled;
 import org.nlogo.nvm.SelfScoping;
 
-public final strictfp class _sprout
+public final class _sprout
     extends Command
     implements CustomAssembled, SelfScoping {
   static final String NO_BREED = "";

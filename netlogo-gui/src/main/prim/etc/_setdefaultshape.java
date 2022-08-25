@@ -10,7 +10,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _setdefaultshape
+public final class _setdefaultshape
     extends Command {
 
 

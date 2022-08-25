@@ -7,7 +7,7 @@ import org.nlogo.api.PerspectiveJ;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _subject
+public final class _subject
     extends Reporter {
   @Override
   public Object report(final org.nlogo.nvm.Context context) {

@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public final strictfp class _turtleset
+public final class _turtleset
     extends Reporter {
 
 

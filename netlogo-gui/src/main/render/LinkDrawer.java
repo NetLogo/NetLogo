@@ -5,7 +5,7 @@ package org.nlogo.render;
 import org.nlogo.api.GraphicsInterface;
 import org.nlogo.shape.LinkShape;
 
-public strictfp class LinkDrawer {
+public class LinkDrawer {
   final org.nlogo.core.ShapeListTracker linkShapeTracker;
 
   public LinkDrawer(org.nlogo.core.ShapeListTracker linkShapeTracker) {

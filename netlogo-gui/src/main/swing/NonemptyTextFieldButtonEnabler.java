@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * Makes a JButton enabled only if a set of TextFields are not empty.
  */
-public strictfp class NonemptyTextFieldButtonEnabler
+public class NonemptyTextFieldButtonEnabler
     implements javax.swing.event.DocumentListener {
 
   private final JButton target;

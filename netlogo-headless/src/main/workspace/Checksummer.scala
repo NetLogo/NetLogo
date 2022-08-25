@@ -4,7 +4,7 @@ package org.nlogo.workspace
 
 import java.io.PrintWriter
 import org.nlogo.api.{ PreviewCommands, Workspace }
-import org.nlogo.api.HexString
+import org.nlogo.util.HexString
 
 object Checksummer {
 

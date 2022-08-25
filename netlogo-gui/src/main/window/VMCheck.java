@@ -4,7 +4,7 @@ package org.nlogo.window;
 
 import org.nlogo.core.I18N;
 
-public strictfp final class VMCheck {
+public final class VMCheck {
 
   // not instantiable
   private VMCheck() {

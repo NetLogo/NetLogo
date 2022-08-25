@@ -7,7 +7,7 @@ import org.nlogo.core.AgentKindJ;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 
-public final strictfp class _layoutspring
+public final class _layoutspring
     extends Command {
 
   public _layoutspring() {

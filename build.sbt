@@ -1,3 +1,5 @@
+import org.scalajs.linker.interface.ESVersion
+
 import sbtcrossproject.CrossPlugin.autoImport.{ crossProject, CrossType }
 import sbtcrossproject.Platform
 
@@ -25,12 +27,12 @@ lazy val commonSettings = Seq(
 // These settings are common to all builds involving scala
 // Any scala-specific settings should change here (and thus for all projects at once)
 lazy val scalaSettings = Seq(
-  scalaVersion           := "2.12.15",
+  scalaVersion           := "2.12.16",
   scalaSource in Compile := baseDirectory.value / "src" / "main",
   scalaSource in Test    := baseDirectory.value / "src" / "test",
   crossPaths             := false, // don't cross-build for different Scala versions
   scalacOptions ++=
-    "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -target:jvm-1.8 -opt:l:method -Xlint -Xfatal-warnings"
+    "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -release 11 -opt:l:method -Xlint -Xfatal-warnings"
       .split(" ").toSeq,
   // we set doc options until https://github.com/scala/bug/issues/10402 is fixed
   scalacOptions in Compile in doc --= "-Xlint -Xfatal-warnings".split(" ").toSeq
@@ -43,21 +45,41 @@ lazy val jvmSettings = Seq(
   javaSource in Test      := baseDirectory.value / "src" / "test",
   publishArtifact in Test := true,
   javacOptions ++=
-    "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path -source 1.8 -target 1.8"
-    .split(" ").toSeq
-)
+    "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path"
+    .split(" ").toSeq,
+  javaOptions ++=Seq(
+    //  These add-exports are needed for JOGL
+    "--add-exports", "java.base/java.lang=ALL-UNNAMED",
+    "--add-exports", "java.desktop/sun.awt=ALL-UNNAMED",
+    "--add-exports", "java.desktop/sun.java2d=ALL-UNNAMED")
+  )
 
 // These are scalatest-specific settings
 // Any scalatest-specific settings should change here
 lazy val scalatestSettings = Seq(
   // show test failures again at end, after all tests complete.
   // T gives truncated stack traces; change to G if you need full.
-  testOptions in Test += Tests.Argument(TestFrameworks.ScalaTest, "-oS"),
-  logBuffered in testOnly in Test := false,
-  libraryDependencies ++= Seq(
-    "org.scalatest"     %% "scalatest"       % "3.2.10"   % Test,
-    "org.scalatestplus" %% "scalacheck-1-15" % "3.2.10.0" % Test,
+  Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oS")
+, Test / testOnly / logBuffered := false
+, libraryDependencies ++= Seq(
+    "org.scalatest"     %% "scalatest"       % "3.2.13"   % Test
+  , "org.scalatestplus" %% "scalacheck-1-16" % "3.2.13.0" % Test
   )
+  // This lets us mock up some Java library classes for testing.
+  // -Jeremy B August 2022
+, Test / javaOptions := { Seq(
+    "--add-opens", "java.desktop/java.awt=ALL-UNNAMED"
+  , "--add-opens", "java.base/java.io=ALL-UNNAMED"
+  , "-Dapple.awt.graphics.UseQuartz=false"
+  , s"-Dorg.nlogo.is3d=${System.getProperty("org.nlogo.is3d", "false")}"
+  , s"-Dorg.nlogo.noGenerator=${System.getProperty("org.nlogo.noGenerator", "false")}"
+  , s"-Dorg.nlogo.noOptimizer=${System.getProperty("org.nlogo.noOptimizer", "false")}"
+  ) }
+  // Tests must be forked to get the above `javaOptions`
+, Test / fork := true
+, threed := { System.setProperty("org.nlogo.is3d", "true") }
+, nogen  := { System.setProperty("org.nlogo.noGenerator", "true") }
+, noopt  := { System.setProperty("org.nlogo.noOptimizer", "true") }
 )
 
 lazy val flexmarkDependencies = {
@@ -73,15 +95,35 @@ lazy val flexmarkDependencies = {
     )
 }
 
-lazy val mockDependencies = Seq(
-  libraryDependencies ++= Seq(
-    "org.jmock" % "jmock" % "2.8.1" % "test",
-    "org.jmock" % "jmock-legacy" % "2.8.1" % "test",
-    "org.jmock" % "jmock-junit4" % "2.8.1" % "test",
-    "org.reflections" % "reflections" % "0.9.10" % "test",
-    "org.slf4j" % "slf4j-nop" % "1.7.32" % "test"
+lazy val mockDependencies = {
+  val mockVersion = "2.12.0"
+  Seq(
+    libraryDependencies ++= Seq(
+      // replace byte-buddy as we get a "No code generation strategy found" with the older
+      // designated version from jmock:  https://github.com/jmock-developers/jmock-library/issues/204
+      // replace hamcrest as it just seems wrong in the jmock POM?
+      // -Jeremy B August 2022
+      "org.jmock"     % "jmock"        % mockVersion % "test"
+        exclude ("net.bytebuddy", "byte-buddy")
+        exclude ("org.hamcrest", "hamcrest")
+    , "org.jmock"     % "jmock-legacy" % mockVersion % "test"
+    , "org.jmock"     % "jmock-junit5" % mockVersion % "test"
+    , "net.bytebuddy" % "byte-buddy"   % "1.12.13"   % "test"
+    , "org.hamcrest"  % "hamcrest"     % "2.2"       % "test"
+    )
   )
-)
+}
+
+lazy val asmDependencies = {
+  val asmVersion = "9.1"
+  Seq(
+    libraryDependencies ++= Seq(
+      "org.ow2.asm" % "asm"         % asmVersion,
+      "org.ow2.asm" % "asm-commons" % asmVersion,
+      "org.ow2.asm" % "asm-util"    % asmVersion,
+      )
+    )
+}
 
 lazy val scalastyleSettings = Seq(
   scalastyleTarget in Compile := {
@@ -105,6 +147,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
   settings(EventsGenerator.settings: _*).
   settings(Docs.settings: _*).
   settings(flexmarkDependencies).
+  settings(mockDependencies: _*).
+  settings(asmDependencies).
   settings(Defaults.coreDefaultSettings ++
            Testing.settings ++
            Testing.useLanguageTestPrefix("org.nlogo.headless.Test") ++
@@ -122,10 +166,11 @@ lazy val netlogo = project.in(file("netlogo-gui")).
            Depend.dependTask: _*).
   settings(
     name := "NetLogo",
-    version := "6.2.2",
+    version := "6.3.0-beta1",
     isSnapshot := true,
     publishTo := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     mainClass in Compile := Some("org.nlogo.app.App"),
+    javacOptions   ++= Seq("--release", "11"),
     modelsDirectory := baseDirectory.value.getParentFile / "models",
     extensionRoot   := (baseDirectory.value.getParentFile / "extensions").getAbsoluteFile,
     autogenRoot     := baseDirectory.value.getParentFile / "autogen",
@@ -133,12 +178,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     testChecksumsClass in Test              := "org.nlogo.headless.TestChecksums",
     resourceDirectory in Compile            := baseDirectory.value / "resources",
     unmanagedResourceDirectories in Compile ++= (unmanagedResourceDirectories in Compile in sharedResources).value,
-    resourceGenerators in Compile += I18n.resourceGeneratorTask.taskValue,
-    threed := { System.setProperty("org.nlogo.is3d", "true") },
-    nogen  := { System.setProperty("org.nlogo.noGenerator", "true") },
-    noopt  := { System.setProperty("org.nlogo.noOptimizer", "true") },
     libraryDependencies ++= Seq(
-      "org.ow2.asm" % "asm-all" % "5.2",
       "org.picocontainer" % "picocontainer" % "2.15",
       "javax.media" % "jmf" % "2.1.1e",
       "commons-codec" % "commons-codec" % "1.15",
@@ -146,9 +186,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.jogamp.jogl" % "jogl-all" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0-rc-20210111/jar/jogl-all.jar",
       "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0-rc-20210111/jar/gluegen-rt.jar",
       "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
-      "org.jmock" % "jmock" % "2.5.1" % "test",
-      "org.jmock" % "jmock-legacy" % "2.5.1" % "test",
-      "org.jmock" % "jmock-junit4" % "2.5.1" % "test",
       "org.apache.httpcomponents" % "httpclient" % "4.2",
       "org.apache.httpcomponents" % "httpmime" % "4.2",
       "com.googlecode.json-simple" % "json-simple" % "1.1.1",
@@ -166,6 +203,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
         ModelsLibrary.modelIndex,
         Scaladoc.apiScaladoc).value
     }
+  , Test / baseDirectory := baseDirectory.value.getParentFile
   )
 
 lazy val threed = TaskKey[Unit]("threed", "enable NetLogo 3D")
@@ -181,6 +219,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(jvmSettings: _*).
   settings(scalatestSettings: _*).
   settings(mockDependencies: _*).
+  settings(asmDependencies).
   settings(Scaladoc.settings: _*).
   settings(Testing.settings: _*).
   settings(Testing.useLanguageTestPrefix("org.nlogo.headless.lang.Test"): _*).
@@ -193,32 +232,35 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(ChecksumsAndPreviews.settings: _*).
   settings(
     name          := "NetLogoHeadless",
-    version       := "6.2.2",
+    version       := "6.3.0-beta1",
     isSnapshot    := true,
     publishTo     := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     autogenRoot   := (baseDirectory.value.getParentFile / "autogen").getAbsoluteFile,
     extensionRoot := baseDirectory.value.getParentFile / "extensions",
+    javacOptions ++= Seq("--release", "11"),
     mainClass in Compile         := Some("org.nlogo.headless.Main"),
-    nogen                        := { System.setProperty("org.nlogo.noGenerator", "true") },
     libraryDependencies          ++= Seq(
-      "org.ow2.asm" % "asm-all" % "5.2",
       "org.parboiled" %% "parboiled" % "2.3.0",
       "commons-codec" % "commons-codec" % "1.15",
       "com.typesafe" % "config" % "1.4.1",
-      "net.lingala.zip4j" % "zip4j" % "2.9.0"
+      "net.lingala.zip4j" % "zip4j" % "2.9.0",
+      "org.reflections" % "reflections" % "0.9.10" % "test",
+      "org.slf4j" % "slf4j-nop" % "1.7.32" % "test"
     ),
     (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
     resourceDirectory in Compile := baseDirectory.value / "resources" / "main",
+    unmanagedResourceDirectories in Compile ++= (unmanagedResourceDirectories in Compile in sharedResources).value,
     resourceDirectory in Test    := baseDirectory.value.getParentFile / "test",
     testChecksumsClass in Test   := "org.nlogo.headless.misc.TestChecksums",
     dumpClassName                := "org.nlogo.headless.misc.Dump",
-    excludedExtensions           := Seq("arduino", "bitmap", "csv", "gis", "gogo", "ls", "nw", "palette", "py", "sound", "vid", "view2.5d"),
+    excludedExtensions           := Seq("arduino", "bitmap", "csv", "gis", "gogo", "ls", "nw", "palette", "py", "sound", "time", "vid", "view2.5d"),
     all := { val _ = (
       (packageBin in Compile).value,
       (packageBin in Test).value,
       (compile in Test).value,
       Extensions.extensions
     )}
+  , Test / baseDirectory := baseDirectory.value.getParentFile
   )
 
  // this project exists as a wrapper for the mac-specific NetLogo components
@@ -231,6 +273,10 @@ lazy val macApp = project.in(file("mac-app")).
   settings(Running.settings).
   settings(
     mainClass in Compile in run           := Some("org.nlogo.app.MacApplication"),
+    // all other projects can use `--release 11`, but since this one uses `--add-exports`
+    // for a system library it is incompatible.  So we let it target 17, as it will only
+    // use the bundled Java.  -Jeremy B August 2022
+    javacOptions ++= Seq("-source", "17", "-target", "17"),
     fork in run                           := true,
     name                                  := "NetLogo-Mac-App",
     compile in Compile                    := {
@@ -249,7 +295,9 @@ lazy val macApp = project.in(file("mac-app")).
       baseDirectory.value / "natives" / "macosx-universal" / "libjcocoa.dylib") ++
       ((baseDirectory in netlogo).value / "natives" / "macosx-universal" * "*.jnilib").get).mkString(":"),
     artifactPath in Compile in packageBin := target.value / "netlogo-mac-app.jar",
-    javacOptions                          ++= Seq("-bootclasspath", System.getProperty("java.home") + "/lib/rt.jar"))
+    javacOptions ++= Seq("-bootclasspath", System.getProperty("java.home") + "/lib/rt.jar",
+//  Needed because MacTabbedPaneUI uses com.apple.laf.AquaTabbedPaneContrastUI
+    "--add-exports", "java.desktop/com.apple.laf=ALL-UNNAMED"))
 
 // this project is all about packaging NetLogo for distribution
 lazy val dist = project.in(file("dist")).
@@ -296,17 +344,20 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
     scalaModuleInfo := scalaModuleInfo.value map { _.withOverrideScalaVersion(true) },
     resolvers += Resolver.sonatypeRepo("releases"),
     parallelExecution in Test := false,
+    scalaJSLinkerConfig ~= { _.withESFeatures(_.withESVersion(ESVersion.ES2018)) },
     libraryDependencies ++= {
-    import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
+      import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
       Seq(
         "org.scala-lang.modules" %%% "scala-parser-combinators" %    "2.1.0"
-      ,          "org.scalatest"  %%                "scalatest" %   "3.2.10" % Test
-      ,      "org.scalatestplus"  %%          "scalacheck-1-15" % "3.2.10.0" % Test
-    )}).
+      ,          "org.scalatest" %%%                "scalatest" %   "3.2.13" % Test
+      ,      "org.scalatestplus" %%%          "scalacheck-1-16" % "3.2.13.0" % Test
+      )
+    }).
   jvmConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).
   jvmSettings(jvmSettings: _*).
   jvmSettings(scalatestSettings: _*).
   jvmSettings(
+    javacOptions ++= Seq("--release", "11"),
     libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.0",
     // you can get these included by just depending on the `sharedResources` project directly
     // but then when you publish the parser JVM package, the POM file lists sharedResources

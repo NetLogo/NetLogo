@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * Describes a link.
  */
-public strictfp class LinkData
+public class LinkData
     extends AgentData
     implements org.nlogo.api.Link {
 

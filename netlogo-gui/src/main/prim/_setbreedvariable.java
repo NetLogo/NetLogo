@@ -8,7 +8,7 @@ import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 
-public final strictfp class _setbreedvariable
+public final class _setbreedvariable
     extends Command {
   private final String name;
 

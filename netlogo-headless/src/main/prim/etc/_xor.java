@@ -5,7 +5,7 @@ package org.nlogo.prim.etc;
 import org.nlogo.core.Pure;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _xor
+public final class _xor
     extends Reporter
     implements Pure {
   @Override

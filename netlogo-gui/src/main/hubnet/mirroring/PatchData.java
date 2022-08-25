@@ -12,7 +12,7 @@ import java.io.IOException;
 /**
  * Describes a single patch.
  */
-public final strictfp class PatchData
+public final class PatchData
     extends AgentData {
 
   /**

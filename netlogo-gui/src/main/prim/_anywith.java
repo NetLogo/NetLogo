@@ -13,7 +13,7 @@ import org.nlogo.nvm.Context;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _anywith
+public final class _anywith
     extends Reporter {
 
 

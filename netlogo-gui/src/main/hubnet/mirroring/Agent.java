@@ -5,7 +5,7 @@ package org.nlogo.hubnet.mirroring;
 import org.nlogo.core.AgentKind;
 import org.nlogo.core.AgentKindJ;
 
-public strictfp class Agent {
+public class Agent {
   static final long serialVersionUID = 0L;
   final long id;
   final AgentType type;

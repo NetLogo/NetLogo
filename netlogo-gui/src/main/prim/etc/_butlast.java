@@ -10,7 +10,7 @@ import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.RuntimePrimitiveException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _butlast
+public final class _butlast
     extends Reporter
     implements org.nlogo.core.Pure {
 

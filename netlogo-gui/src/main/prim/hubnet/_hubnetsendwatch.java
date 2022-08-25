@@ -8,7 +8,7 @@ import org.nlogo.api.PerspectiveJ;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 
-public strictfp class _hubnetsendwatch
+public class _hubnetsendwatch
     extends HubNetCommand {
 
 

@@ -6,7 +6,7 @@ import org.nlogo.api.LogoException;
 import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 
-public final strictfp class _setobservervariable
+public final class _setobservervariable
     extends Command {
   int vn = 0;
 

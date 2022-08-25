@@ -60,10 +60,10 @@ class ShowUsageBox(colorizer: Colorizer) {
           val token = usageTable.getValueAt(usageTable.getSelectedRow, 0).asInstanceOf[Token]
           editorArea.containingViewport.foreach { scrollPane =>
             try {
-              val r = editorArea.modelToView(token.start)
+              val r = editorArea.modelToView2D(token.start)
               val scrollHeight = scrollPane.getExtentSize.height
               val viewHeight   = scrollPane.getViewSize.height
-              val y = (0 max r.y - ((scrollHeight - r.height) / 2)) min (viewHeight - scrollHeight)
+              val y = (0 max r.getY.toInt - ((scrollHeight - r.getHeight.toInt) / 2)) min (viewHeight - scrollHeight)
               scrollPane.setViewPosition(new Point(0, y))
             } catch {
               case ex: BadLocationException => Exceptions.ignore(ex)
@@ -188,7 +188,7 @@ class ShowUsageBox(colorizer: Colorizer) {
         }
       }
 
-      override def drawText(g: java.awt.Graphics, x: Int, y: Int, p0: Int, p1: Int, isSelected: Boolean): Int = {
+      override def drawText(g: java.awt.Graphics2D, x: Float, y: Float, p0: Int, p1: Int, isSelected: Boolean): Float = {
         g match {
           case g2d: java.awt.Graphics2D =>
             g2d.setRenderingHint(

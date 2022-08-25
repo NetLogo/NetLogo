@@ -14,7 +14,7 @@ import org.nlogo.nvm.Reporter;
  *
  * @see _carefully
  */
-public final strictfp class _errormessage
+public final class _errormessage
     extends Reporter {
   public Let let = null;  // compiler will fill this in
 

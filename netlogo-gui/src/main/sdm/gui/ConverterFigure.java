@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import org.nlogo.api.Options;
 import scala.collection.JavaConverters;
 
-public strictfp class ConverterFigure extends DiamondFigure
+public class ConverterFigure extends DiamondFigure
     implements
     ModelElementFigure,
     org.jhotdraw.util.Storable,

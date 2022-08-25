@@ -3,34 +3,36 @@
 package org.nlogo.headless
 package misc
 
+import java.lang.ref.Cleaner
+
 import org.scalatest.funsuite.AnyFunSuite
-import org.nlogo.util.SlowTestTag
+import org.nlogo.util.SlowTest
 import org.nlogo.{ core, api, agent, nvm }
 
 object TestHalt {
   // This is ugly, but since we use reflection to instantiate HeadlessWorkspace it's hard to
   // subclass.  Oh well, this is only test code. - ST 3/4/09
-  var finalized = false
   class MyWorkspace(world: agent.World, compiler: nvm.CompilerInterface,
     renderer: api.RendererInterface)
-  extends HeadlessWorkspace(world, compiler, renderer) {
-    override def finalize() {
-      finalized = true
-      super.finalize()
-    }
-  }
+  extends HeadlessWorkspace(world, compiler, renderer)
 }
 
 class TestHalt extends AnyFunSuite  {
-
+  @volatile var finalized = false
   // I've had weird Heisenbug-type problems with the workspace not getting GC'ed if
   // it's a local variable rather than a top-level class member - ST 1/8/13
   var workspace: HeadlessWorkspace = null
 
   def withWorkspace(body: => Unit) {
     import TestHalt._
+    val cleaner = Cleaner.create()
     finalized = false
     workspace = HeadlessWorkspace.newInstance(classOf[MyWorkspace])
+    cleaner.register(workspace, new Runnable() {
+      override def run(): Unit = {
+        finalized = true
+      }
+    })
     body
     workspace.halt()
     workspace.dispose()
@@ -40,18 +42,18 @@ class TestHalt extends AnyFunSuite  {
     assert(finalized)
   }
 
-  test("halt 0", SlowTestTag) {
+  test("halt 0", SlowTest.Tag) {
     withWorkspace { }
   }
 
-  test("halt 1", SlowTestTag) {
+  test("halt 1", SlowTest.Tag) {
     withWorkspace {
       // multiply possible memory leaks
       workspace.compileCommands("")
     }
   }
 
-  test("halt 2", SlowTestTag) {
+  test("halt 2", SlowTest.Tag) {
     var ex: api.LogoException = null
     val thread = new Thread("TestHalt.testHalt") {
       override def run() {

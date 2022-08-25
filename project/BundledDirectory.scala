@@ -20,18 +20,59 @@ abstract class BundledDirectory(val sourceDir: File) {
   }
 }
 
-class ExtensionDir(sourceDir: File) extends BundledDirectory(sourceDir) {
+object ExtensionDir {
+  def createIsUnneededCheck(platform: String, arch: String) = {
+    val allPlatforms = Set("linux-x86", "linux-x86_64", "macosx-arm64", "macosx-x86_64", "windows-x86", "windows-x86_64")
+    val invalidPlatforms = if ("macosx".equals(platform)) {
+      allPlatforms -- Set("macosx-arm64", "macosx-x86_64")
+    } else {
+      if ("32".equals(arch)) {
+        allPlatforms - s"$platform-x86"
+      } else {
+        allPlatforms - s"$platform-x86_64"
+      }
+    }
+    def isInvalidForPlatform(fileP: String): Boolean = {
+      invalidPlatforms.exists( (p) => fileP.endsWith(p) )
+    }
+    def isJavaFX(starter: String): Boolean = {
+      starter.startsWith("javafx-")
+    }
+
+    val isUnneededCheck = (f: File) => {
+      val fName = f.getName
+      val splits = fName.split("""\.""")
+      val isUnneeded = (
+        f.isFile &&
+        (splits.length > 1) &&
+        "jar".equals(splits(splits.length - 1)) &&
+        (isInvalidForPlatform(splits(splits.length - 2)) || isJavaFX(splits(0)) )
+      )
+      isUnneeded
+    }
+
+    isUnneededCheck
+  }
+}
+
+class ExtensionDir(sourceDir: File, platform: String, arch: String) extends BundledDirectory(sourceDir) {
   val directoryName = s"extensions${File.separator}.bundled"
 
   override def fileMappings: Seq[(File, String)] = {
+    val isUnneeded = ExtensionDir.createIsUnneededCheck(platform, arch)
+
     sourceDir.listFiles.filter(_.isDirectory)
       .flatMap { anExtensionDir =>
         if ((anExtensionDir / ".bundledFiles").exists) {
           IO.readLines(anExtensionDir / ".bundledFiles")
             .map { line =>
-              val sections = line.split("->")
-              anExtensionDir / sections.last -> (directoryName + File.separator + anExtensionDir.getName + File.separator + sections.last)
+              val sections   = line.split("->")
+              val fileName   = sections.last
+              val sourcePath = anExtensionDir / fileName
+              val targetPath = directoryName + File.separator + anExtensionDir.getName + File.separator + fileName
+              sourcePath -> targetPath
             }
+            .filter { case (sourcePath, _) => !isUnneeded(sourcePath) }
           } else {
             anExtensionDir.listFiles
               .filter(_.getName.endsWith(".jar"))
@@ -69,8 +110,17 @@ class NativesDir(sourceDir: File, platforms: String*) extends BundledDirectory(s
 
 class DocsDir(sourceDir: File) extends BundledDirectory(sourceDir) {
   val directoryName = "docs"
-  def files: Seq[File] =
-    Path.allSubpaths(sourceDir).map(_._1).filterNot(_.isHidden).toSeq
+  def files: Seq[File] = {
+    val children = sourceDir.listFiles
+    val validChildren = children.filter( (f) => !"scaladoc".equals(f.getName) )
+    validChildren.flatMap( (f) =>
+      if (!f.isDirectory) {
+        Seq(f)
+      } else {
+        Path.allSubpaths(f).map(_._1).filterNot(_.isHidden).toSeq
+      }
+    )
+  }
 }
 
 class BehaviorsearchDir(baseDirectory: File, platformShortName: String) extends BundledDirectory(baseDirectory) {

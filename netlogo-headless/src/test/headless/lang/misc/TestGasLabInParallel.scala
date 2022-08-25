@@ -4,7 +4,7 @@ package org.nlogo.headless
 package lang
 package misc
 
-import org.nlogo.util.SlowTestTag
+import org.nlogo.util.SlowTest
 
 /**
  * An example of using TestParallelModels
@@ -14,7 +14,7 @@ class TestGasLabInParallel extends ParallelSuite  {
 
   val path = "models/Sample Models/Chemistry & Physics/GasLab/GasLab Gas in a Box.nlogo"
 
-  test("gas lab in parallel", SlowTestTag) {
+  test("gas lab in parallel", SlowTest.Tag) {
     openParallel(path){implicit fixture =>
       fixture.testCommand("random-seed 571  setup  repeat 50 [ go ]")
       fixture.testReporter("avg-speed", "9.760082324073991")

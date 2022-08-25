@@ -7,7 +7,7 @@ import org.jhotdraw.framework.FigureEnumeration;
 import org.jhotdraw.standard.StandardDrawing;
 import org.nlogo.sdm.Model;
 
-public strictfp class AggregateDrawing
+public class AggregateDrawing
     extends StandardDrawing {
 
   private final Model model = new Model("default", 1);

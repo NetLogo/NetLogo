@@ -17,7 +17,7 @@ import java.util.Set;
 // have already been checked that they are turtle sets, not
 // patch sets. - ST 3/10/06
 
-public final strictfp class Layouts {
+public final class Layouts {
 
   // this class is not instantiable
   private Layouts() {
@@ -585,7 +585,7 @@ public final strictfp class Layouts {
     }
   }
 
-  private static strictfp class TreeNode {
+  private static class TreeNode {
     public Turtle val;
     public TreeNode parent;
     public List<TreeNode> children = new ArrayList<TreeNode>(10);

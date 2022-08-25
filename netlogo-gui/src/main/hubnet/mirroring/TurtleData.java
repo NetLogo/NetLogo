@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * Describes a turtle.
  */
-public strictfp class TurtleData
+public class TurtleData
     extends AgentData
     implements org.nlogo.api.Turtle {
 

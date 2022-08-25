@@ -4,16 +4,14 @@ trait BuildJDK {
   def arch: String
   def version: String
   def javaHome: Option[String]
-  def javapackager: String
+  def jpackage: File
 }
 
-case class SpecifiedJDK(arch: String, version: String, packagerFile: File, javaHome: Option[String] = None) extends BuildJDK {
-  def javapackager = packagerFile.getAbsolutePath
-}
+case class SpecifiedJDK(arch: String, version: String, val jpackage: File, javaHome: Option[String] = None) extends BuildJDK {}
 
 case object PathSpecifiedJDK extends BuildJDK {
-  val arch         = "universal"
-  val version      = "1.8"
-  val javapackager = "javapackager"
-  def javaHome     = None
+  val arch     = "universal"
+  val version  = "17"
+  val jpackage = new File("jpackage")
+  def javaHome = None
 }

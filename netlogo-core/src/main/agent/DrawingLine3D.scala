@@ -2,8 +2,6 @@
 
 package org.nlogo.agent
 
-
-@annotation.strictfp
 case class DrawingLine3D(x0: Double, y0: Double, z0: Double,
                          x1: Double, y1: Double, z1: Double,
                          heading: Double, pitch: Double,

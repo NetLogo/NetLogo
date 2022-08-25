@@ -4,7 +4,7 @@ package org.nlogo.sdm.gui;
 
 import org.nlogo.sdm.Reservoir;
 
-public strictfp class WrappedReservoir
+public class WrappedReservoir
     implements org.jhotdraw.util.Storable {
   final Reservoir reservoir;
 

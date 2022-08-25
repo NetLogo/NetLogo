@@ -11,7 +11,7 @@ import org.apache.http.util.EntityUtils;
 import javax.swing.SwingUtilities;
 import java.io.IOException;
 
-public abstract strictfp class Request {
+public abstract class Request {
 
   protected HttpPost request;
   private HttpClient http;

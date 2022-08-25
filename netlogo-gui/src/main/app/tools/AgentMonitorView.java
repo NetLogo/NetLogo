@@ -12,7 +12,7 @@ import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.window.GUIWorkspace;
 
-public strictfp class AgentMonitorView
+public class AgentMonitorView
     extends org.nlogo.window.View {
   public AgentMonitorView(GUIWorkspace workspace) {
     super(workspace);

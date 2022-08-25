@@ -5,7 +5,7 @@ package org.nlogo.window;
 import org.nlogo.core.AgentKind;
 import org.nlogo.core.AgentKindJ;
 
-public strictfp class ExternalFileInterface
+public class ExternalFileInterface
     implements org.nlogo.api.SourceOwner {
 
   private final String fileName;

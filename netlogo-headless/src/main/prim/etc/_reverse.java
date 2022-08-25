@@ -8,7 +8,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.ArgumentTypeException;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _reverse
+public final class _reverse
     extends Reporter
     implements Pure {
   @Override

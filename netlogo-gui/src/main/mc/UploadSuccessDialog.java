@@ -24,7 +24,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.URI;
 
-public strictfp class UploadSuccessDialog extends JDialog {
+public class UploadSuccessDialog extends JDialog {
 
   //GUI form members
   private JPanel topLevelContainer;

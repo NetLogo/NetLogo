@@ -41,7 +41,7 @@ object Depend {
       "" -> Nil,
       "agent" -> List("api", "log"),
       "api" -> List("core", "core/model", "core/prim", "util"),
-      "app" -> List("app/codetab", "app/common", "app/infotab", "app/interfacetab", "app/tools", "log"),
+      "app" -> List("app/codetab", "app/common", "app/infotab", "app/interfacetab", "app/tools", "headless", "log"),
       "app/codetab" -> List("app/common"),
       "app/infotab" -> List("app/common"),
       "app/interfacetab" -> List("app/common", "app/tools", "log"),

@@ -2,7 +2,7 @@
 
 package org.nlogo.swing;
 
-strictfp class WindowCloseBox
+class WindowCloseBox
     extends javax.swing.JButton
     implements java.awt.event.ActionListener {
 

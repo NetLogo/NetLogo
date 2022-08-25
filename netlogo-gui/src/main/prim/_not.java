@@ -7,7 +7,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Context;
 import org.nlogo.nvm.Reporter;
 
-public final strictfp class _not
+public final class _not
     extends Reporter
     implements org.nlogo.core.Pure {
 

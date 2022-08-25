@@ -7,7 +7,7 @@ import org.nlogo.core.Syntax;
 import org.nlogo.nvm.Command;
 import org.nlogo.nvm.Context;
 
-public final strictfp class _if
+public final class _if
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
   @Override

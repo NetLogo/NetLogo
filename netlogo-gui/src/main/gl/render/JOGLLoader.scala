@@ -9,7 +9,7 @@ object JOGLLoader {
     val className = "GL"
     try {
       classLoader.loadClass(pkgName + "." + className)
-      Option(Package.getPackage(pkgName))
+      Option(getClass.getClassLoader.getDefinedPackage(pkgName))
         .map(_.getImplementationVersion)
         .getOrElse("not available")
     }

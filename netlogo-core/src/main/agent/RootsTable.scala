@@ -7,7 +7,6 @@ package org.nlogo.agent
 // StrictMath.sqrt is expensive, so doing a table lookup instead
 // speeds up distance calculations between patch centers greatly
 
-@annotation.strictfp
 class RootsTable(worldWidth: Int, worldHeight: Int) {
   private val rootsTable =
     Array.tabulate(worldWidth * worldWidth + worldHeight * worldHeight)(

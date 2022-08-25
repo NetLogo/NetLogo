@@ -96,8 +96,9 @@ object ChecksumsAndPreviews {
     def needsManualPreview(previewCommands: String) =
       previewCommands contains "need-to-manually-make-preview-for-this-model"
 
+    // NW is only included temporarily until extension compiles correctly - AAB 7-2022
     def okPath(path: String) =
-      List("HUBNET", "/GOGO/", "/CODE EXAMPLES/SOUND/", "GIS GRADIENT EXAMPLE")
+      List("HUBNET", "/GOGO/", "/CODE EXAMPLES/SOUND/", "GIS GRADIENT EXAMPLE", "/NW/")
         .forall(!path.toUpperCase.containsSlice(_))
 
     def remake(path: String) {

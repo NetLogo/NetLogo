@@ -9,17 +9,17 @@ class VersionTests extends AnyFunSuite {
   /// update this section every time the version changes -- ev 11/7/07
   if (!is3D) test("currentVersion2D") {
     // these differ from the current version in suffix only
-    assert(compatibleVersion("NetLogo 6.2"))
-    assert(compatibleVersion("NetLogo 6.2RC1"))
-    assert(compatibleVersion("NetLogo 6.2beta1"))
-    assert(compatibleVersion("NetLogo 6.2pre1"))
-    assert(compatibleVersion("NetLogo 6.2alpha1"))
-    assert(compatibleVersion("NetLogo 6.2.1"))
-    assert(compatibleVersion("NetLogo 6.2.1weirdversion"))
-    assert(compatibleVersion("NetLogo 6.2weirdversion"))
+    assert(compatibleVersion("NetLogo 6.3"))
+    assert(compatibleVersion("NetLogo 6.3RC1"))
+    assert(compatibleVersion("NetLogo 6.3beta1"))
+    assert(compatibleVersion("NetLogo 6.3pre1"))
+    assert(compatibleVersion("NetLogo 6.3alpha1"))
+    assert(compatibleVersion("NetLogo 6.3.1"))
+    assert(compatibleVersion("NetLogo 6.3.1weirdversion"))
+    assert(compatibleVersion("NetLogo 6.3weirdversion"))
   }
   else test("currentVersion3D") {
-    assert(compatibleVersion("NetLogo 3D 6.2"))
+    assert(compatibleVersion("NetLogo 3D 6.3"))
     assert(!compatibleVersion("NetLogo 3D 5.0"))
     assert(!compatibleVersion("NetLogo 3D Preview 5"))
     assert(!compatibleVersion("NetLogo 3D Preview 4"))

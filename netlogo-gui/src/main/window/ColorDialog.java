@@ -45,7 +45,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Enumeration;
 
-public strictfp class ColorDialog extends JDialog implements ActionListener,
+public class ColorDialog extends JDialog implements ActionListener,
     ItemListener,
     MouseListener,
     ClipboardOwner,

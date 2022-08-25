@@ -11,7 +11,7 @@ import org.apache.http.entity.mime.content.StringBody;
 
 import java.io.UnsupportedEncodingException;
 
-public abstract strictfp class MultiPartPostRequest extends Request {
+public abstract class MultiPartPostRequest extends Request {
 
   private MultipartEntity entity;
 

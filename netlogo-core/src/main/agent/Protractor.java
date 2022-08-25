@@ -6,7 +6,7 @@ import org.nlogo.api.AgentException;
 import org.nlogo.api.Numbers;
 import org.nlogo.core.I18N;
 
-public strictfp class Protractor
+public class Protractor
     implements org.nlogo.api.Protractor {
 
   private final World world;
