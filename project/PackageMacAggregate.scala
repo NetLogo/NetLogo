@@ -158,7 +158,7 @@ object PackageMacAggregate {
         case _ => 1
       }
 
-    val dmgName = s"netlogo-$version.dmg"
+    val dmgName = s"NetLogo-$version.dmg"
 
     // Apple requires a "hardened" runtime for notarization -Jeremy B July 2020
     val appSigningOptions = Seq("--options", "runtime", "--entitlements", (configDir / "macosx" / "entitlements.xml").toString)
