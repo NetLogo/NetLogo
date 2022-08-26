@@ -213,7 +213,7 @@ object NetLogoPackaging {
       val inputDir = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
       val destDir  = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.arch}"
       FileActions.remove(destDir)
-      val appImageDir = JavaPackager.generateAppImage(log, buildJDK.jpackage, platform, mainLauncher, configDir, buildDir, inputDir, destDir, Seq(), launchers)
+      val appImageDir = JavaPackager.generateAppImage(log, buildJDK.jpackage.getAbsolutePath, platform, mainLauncher, configDir, buildDir, inputDir, destDir, Seq(), launchers)
 
       val extraDirs = bundledDirs(netlogo, macApp, behaviorsearchProject).value(platform, buildJDK.arch)
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir / "bin", rootFiles)
@@ -267,7 +267,7 @@ object NetLogoPackaging {
       val destDir     = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.arch}"
       val extraArgs   = Seq("--icon", "NetLogo.ico")
       FileActions.remove(destDir)
-      val appImageDir = JavaPackager.generateAppImage(log, buildJDK.jpackage, platform, mainLauncher, configDir, buildDir, inputDir, destDir, extraArgs, launchers)
+      val appImageDir = JavaPackager.generateAppImage(log, buildJDK.jpackage.getAbsolutePath, platform, mainLauncher, configDir, buildDir, inputDir, destDir, extraArgs, launchers)
 
       // this makes the file association icons available for wix
       icons.foreach( (i) => FileActions.copyFile(i, appImageDir / i.getName) )
@@ -385,7 +385,7 @@ object NetLogoPackaging {
       launchers.foreach( (launcher) => {
         val jOpts     = launcher.javaOptions.map( (opt) => s""""$opt"""" ).mkString(" ")
         val extraArgs = Seq("--icon", launcher.icon.getOrElse(""), "--java-options", jOpts)
-        val appPackage = JavaPackager.generateAppImage(log, buildJDK.jpackage, platform, launcher, configDir, buildDir, inputDir, destDir, extraArgs, Seq())
+        val appPackage = JavaPackager.generateAppImage(log, "jpackage", platform, launcher, configDir, buildDir, inputDir, destDir, extraArgs, Seq())
         FileActions.copyFile(configDir / "macosx" / "Model.icns", destDir / s"${launcher.name}.app" / "Contents" / "Resources" / "Model.icns")
       })
 
