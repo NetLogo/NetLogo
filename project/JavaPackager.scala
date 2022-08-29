@@ -198,6 +198,10 @@ object JavaPackager {
       Seq("--add-launcher", s"${settings.name}=${outFile.getAbsolutePath}")
     })
 
+    val javaOptions = mainLauncher.javaOptions.flatMap( (option) => {
+      Seq("--java-options", option)
+    })
+
     val args = Seq[String](
       jpackage
     , "--verbose"
@@ -209,7 +213,7 @@ object JavaPackager {
     , "--main-class",   mainLauncher.mainClass
     , "--input",        inputDir.getAbsolutePath
     , "--dest",         destDir.getAbsolutePath
-    ) ++ extraLauncherArgs ++ extraJpackageArgs
+    ) ++ javaOptions ++ extraLauncherArgs ++ extraJpackageArgs
 
     log.info(s"running: ${args.mkString(" ")}")
     val returnValue = Process(args, buildDir).!
