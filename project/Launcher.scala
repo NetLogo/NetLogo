@@ -99,7 +99,10 @@ class BehaviorsearchLauncher(
   def id: String = "Behaviorsearch"
   def mustachePrefix: String = "behaviorsearch-launcher"
   def javaOptions: Seq[String] = Seq(
-    "-Xmx1536m"
+    "-Xmx1024m"
+    // Behaviorsearch has issues with the post Java 8 GCs, particularly on 32-bit systems.
+    // -Jeremy B September 2022
+  , "-XX:+UseParallelGC"
   , "-Dfile.encoding=UTF-8"
   ) ++ extraJavaOptions
   def mainJar: String = customMainJar.getOrElse(s"behaviorsearch.jar")
