@@ -184,7 +184,7 @@ object PackageWinAggregate {
       FileActions.copyFile(platformConfigDir / wixFile, msiBuildDir / wixFile)
     }
 
-    val launcherExes = launchers.map( (launcher) => s"${launcher.name}.exe" ).toSeq
+    val launcherExes = launchers.map( (launcher) => s"${launcher.name}.exe" ).toSet - "NetLogo_Console.exe"
     val generatedUUIDs =
       HarvestResources.harvest(appImageDir.toPath, "INSTALLDIR", "NetLogoApp",
         launcherExes, winVariables,

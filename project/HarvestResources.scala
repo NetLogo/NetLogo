@@ -21,7 +21,7 @@ import scala.util.matching.Regex
 object HarvestResources {
   val WiXNamespace = "http://schemas.microsoft.com/wix/2006/wi"
 
-  class AuthoringVisitor(root: Path, doc: Document, directoryRefName: String, wixNode: Node, excludedFiles: Seq[String], variables: Map[String, String]) extends FileVisitor[Path] {
+  class AuthoringVisitor(root: Path, doc: Document, directoryRefName: String, wixNode: Node, excludedFiles: Set[String], variables: Map[String, String]) extends FileVisitor[Path] {
     var directoryNodes: List[Element] = Nil
     var componentNodes: List[Element] = Nil
     var generatedUUIDs: Map[String, String] = Map()
@@ -115,7 +115,7 @@ object HarvestResources {
 
   }
 
-  def harvest(dir: Path, directoryRefName: String, componentGroupName: String, excludedFiles: Seq[String], variables: Map[String, String], outputFile: Path): Map[String, String] = {
+  def harvest(dir: Path, directoryRefName: String, componentGroupName: String, excludedFiles: Set[String], variables: Map[String, String], outputFile: Path): Map[String, String] = {
     val docBuilderFactory = DocumentBuilderFactory.newInstance
     docBuilderFactory.setNamespaceAware(true)
     val document = docBuilderFactory.newDocumentBuilder.newDocument
