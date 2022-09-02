@@ -552,11 +552,12 @@ the import items on the File menu or the `import-*` primitives.
 
 ### How big can my model be? How many turtles, patches, procedures, buttons, and so on can my model contain?
 
-We have tested NetLogo with models that use hundreds of megabytes of RAM and
-they work fine. We haven't tested models that use gigabytes of RAM, though.
-Theoretically it should work, but you might hit some limits that are inherent in
-the underlying Java VM and/or operating system (either designed-in limits, or
-bugs).
+We have tested NetLogo with models that use hundreds of megabytes of RAM and they work
+fine. We have reports from NetLogo users that they have run models that required up to 50
+gigabytes of RAM to use millions of patches and tens of thousands of agents, and they
+worked as desired (with the proper Java settings). Theoretically the only limit is the RAM
+available on your system, but you might hit some limits that are inherent in the
+underlying Java runtime or the operating system (either designed-in limits, or bugs).
 
 The NetLogo engine has no fixed limits on size. By default, though, NetLogo
 ships with a one-gigabyte ceiling on how much total RAM it can use. If your
@@ -565,11 +566,12 @@ model exceeds that limit, you'll get an OutOfMemoryError dialog.
 If you are using BehaviorSpace, note that doing runs in parallel will multiply
 your RAM usage accordingly.
 
-<a id="where-is-cfg-file"></a>
-Each platform contains ".cfg" files containing JVM settings. There is one cfg
-file for each sub-application (NetLogo, NetLogo 3D, HubNet Client, etc.)
-Although the file location varies by platform, the process for changing it is
-the same. Locate the section of the file that looks like the following:
+<a id="where-is-cfg-file"></a> Each platform contains ".cfg" files containing JVM
+settings. There is one cfg file for each sub-application (NetLogo, NetLogo 3D, HubNet
+Client, etc.).  Windows also has a cfg file for the NetLogo_Console app; on macOS and
+Linux the cfg file for NetLogo_Console is just the NetLogo.cfg file.  Although the file
+location varies by platform, the process for changing it is the same. Locate the section
+of the file that looks like the following:
 
     [JavaOptions]
     # there may be one or more lines, leave them unchanged
