@@ -45,7 +45,11 @@ final object Utils {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName)
       } else if (System.getProperty("swing.defaultlaf") == null) {
         try {
-          UIManager.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel")
+          // On Linux (the likely system for this switch), or at least on Gnome, when dark
+          // mode is enabled, NetLogo looks very wonky as it's not setup to properly
+          // handle it with all its custom UI elements.  So we need to fall back to good
+          // ol' Nimbus.  -Jeremy B September 2022 SEO: dark mode, dark theme
+          UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
         } catch {
           case _: Exception => UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName)
         }
