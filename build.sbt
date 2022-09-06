@@ -334,7 +334,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
     isSnapshot := true,
     name := "parser",
     publishTo := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
-    version := "0.3.0",
+    version := "0.4.0",
     unmanagedSourceDirectories in Compile += baseDirectory.value.getParentFile / "parser-core" / "src" / "main",
     unmanagedSourceDirectories in Test    += baseDirectory.value.getParentFile / "parser-core" / "src" / "test").
   jsConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).
