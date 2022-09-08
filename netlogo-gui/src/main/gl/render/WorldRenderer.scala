@@ -133,7 +133,7 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
   def renderWorldWireFrame(gl: GL2) {
     val coords = getWorldDimensions(world)
     // white lines only please
-    gl.glPolygonMode(GL.GL_FRONT, GL2GL3.GL_LINE)
+    gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE)
     gl.glDisable(GL_LIGHTING)
     gl.glColor3f(1.0f, 1.0f, 1.0f)
     gl.glPushMatrix()
@@ -141,7 +141,7 @@ private class WorldRenderer(world: World, patchRenderer: PatchRenderer,
     gl.glCallList(shapeManager.getShape("@@@WIREFRAME@@@").displayListIndex)
     gl.glPopMatrix()
     // restore state
-    gl.glPolygonMode(GL.GL_FRONT, GL2GL3.GL_FILL)
+    gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_FILL)
     gl.glEnable(GL_LIGHTING)
   }
 
