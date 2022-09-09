@@ -521,3 +521,21 @@ NeighborsCacheRetained_2D
   count patches with [pcolor = 123] => 81
   O> setup
   count patches with [pcolor = 123] => 81
+
+Neighbors6_1_3D
+  breed [bugs bug]
+  globals [n1 n2]
+  O> random-seed 0
+  O> set n1 [[(list pxcor pycor pzcor)] of neighbors6] of patch 0 0 0
+  O> random-seed 0
+  O> set n2 [[(list pxcor pycor pzcor)] of neighbors6] of patch 0 0 0
+  n1 => [[0 0 1] [0 0 -1] [0 1 0] [-1 0 0] [1 0 0] [0 -1 0]]
+  n2 => [[0 0 1] [0 0 -1] [0 1 0] [-1 0 0] [1 0 0] [0 -1 0]]
+
+Neighbors6_2_3D
+  breed [bugs bug]
+  globals [zero-bug]
+  O> random-seed 0
+  O> ask patch 0 0 0 [ sprout-bugs 1 [ ask neighbors6 [ sprout-bugs 1 ]]]
+  [[who] of bugs-at 0 0 1] of bug 0 => [3]
+  [[who] of bugs-at 0 0 -1] of bug 0 => [6]

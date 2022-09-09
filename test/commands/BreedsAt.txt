@@ -26,3 +26,13 @@ PatchAt_2D
   [patch-at -1  0] of (patch 2 3) = (patch 1 3) => true
   [patch-at  0  1] of (patch 2 3) = (patch 2 4) => true
   [patch-at  0 -1] of (patch 2 3) = (patch 2 2) => true
+
+BreedsAt_3D
+  breed [bugs bug]
+  globals [zero-bug]
+  O> random-seed 0
+  O> ask patch 0 0 0 [ sprout-bugs 1 ]
+  O> set zero-bug one-of bugs
+  O> ask patches [ sprout-bugs 1 ]
+  [[who] of bugs-at 0 0 1] of zero-bug => [1083]
+  [[who] of bugs-at 0 0 -1] of zero-bug => [494]

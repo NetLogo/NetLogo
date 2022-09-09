@@ -8,6 +8,9 @@ trait Dialect extends LowPriorityDialect {
   def is3D:           Boolean
   def agentVariables: AgentVariableSet
   def tokenMapper:    TokenMapperInterface
+  def breedPrimMapper(primName: String): String = {
+    primName
+  }
 }
 
 object Dialect extends LowPriorityDialect

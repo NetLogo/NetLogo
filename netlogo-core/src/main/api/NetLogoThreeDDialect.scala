@@ -15,6 +15,14 @@ object NetLogoThreeDDialect extends Dialect {
     val implicitLinkVariableTypeMap: ListMap[String, Int]     = AgentVariables.implicitLinkVariableTypeMap
   }
   val tokenMapper = ThreeDTokenMapper
+
+  override def breedPrimMapper(primName: String): String = {
+    if ("etc._breedat".equals(primName)) {
+      "threed._breedat"
+    } else {
+      primName
+    }
+  }
 }
 
 object ThreeDTokenMapper extends DelegatingMapper {
@@ -28,7 +36,8 @@ object ThreeDTokenMapper extends DelegatingMapper {
           Some(Instantiator.newInstance[Instruction](
             Class.forName("org.nlogo.compile.prim.threed._breedat"), breedName))
         } catch {
-          case e: ClassNotFoundException => None
+          case e: ClassNotFoundException =>
+            None
         }
       case _ => None
     }

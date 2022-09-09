@@ -61,16 +61,16 @@ class Backifier(program: Program,
     "org.nlogo.prim.etc._plotxmin"        -> "org.nlogo.prim.plot._plotxmin",
     "org.nlogo.prim.etc._plotxmax"        -> "org.nlogo.prim.plot._plotxmax",
     "org.nlogo.prim.etc._setplotxrange"   -> "org.nlogo.prim.plot._setplotxrange",
-    "org.nlogo.prim.etc._setplotpencolor"   -> "org.nlogo.prim.plot._setplotpencolor",
-    "org.nlogo.prim.etc._setplotpenmode"   -> "org.nlogo.prim.plot._setplotpenmode",
-    "org.nlogo.prim.etc._setplotpeninterval"   -> "org.nlogo.prim.plot._setplotpeninterval",
+    "org.nlogo.prim.etc._setplotpencolor" -> "org.nlogo.prim.plot._setplotpencolor",
+    "org.nlogo.prim.etc._setplotpenmode"  -> "org.nlogo.prim.plot._setplotpenmode",
+    "org.nlogo.prim.etc._setplotpeninterval" -> "org.nlogo.prim.plot._setplotpeninterval",
     "org.nlogo.prim.etc._plotxy"          -> "org.nlogo.prim.plot._plotxy",
     "org.nlogo.prim.etc._setcurrentplotpen" -> "org.nlogo.prim.plot._setcurrentplotpen",
     "org.nlogo.prim.etc._setplotyrange"   -> "org.nlogo.prim.plot._setplotyrange",
     "org.nlogo.prim.etc._clearallplots"   -> "org.nlogo.prim.plot._clearallplots",
-    "org.nlogo.prim.etc._clearplot"   -> "org.nlogo.prim.plot._clearplot",
-    "org.nlogo.prim.etc._autoplotoff"   -> "org.nlogo.prim.plot._autoplotoff",
-    "org.nlogo.prim.etc._autoploton"   -> "org.nlogo.prim.plot._autoploton",
+    "org.nlogo.prim.etc._clearplot"       -> "org.nlogo.prim.plot._clearplot",
+    "org.nlogo.prim.etc._autoplotoff"     -> "org.nlogo.prim.plot._autoplotoff",
+    "org.nlogo.prim.etc._autoploton"      -> "org.nlogo.prim.plot._autoploton",
     "org.nlogo.prim.etc._updateplots"     -> "org.nlogo.prim.plot._updateplots",
     "org.nlogo.prim.etc._plot"            -> "org.nlogo.prim.plot._plot",
     "org.nlogo.prim.etc._setupplots"      -> "org.nlogo.prim.plot._setupplots",
@@ -98,10 +98,11 @@ class Backifier(program: Program,
 
   private def backifyName(name: String): String = {
       val alteredName = name.replaceFirst("\\.core\\.", ".").replaceFirst("\\.compile\\.", ".")
-      if (replacements.contains(alteredName))
+      if (replacements.contains(alteredName)) {
         replacements(alteredName)
-      else
+      } else {
         alteredName
+      }
   }
 
   private def fallback[T1 <: core.Instruction, T2 <: nvm.Instruction](i: T1): T2 = {
@@ -120,10 +121,9 @@ class Backifier(program: Program,
             }
         }
       case Some((className, breedName, _)) =>
-        val name = "org.nlogo.prim." + className
-        val primName = if (replacements.contains(name)) replacements(name) else name
-        Instantiator.newInstance[T2](
-          Class.forName(primName), breedName)
+        val name = s"org.nlogo.prim.${program.dialect.breedPrimMapper(className)}"
+        val primName = if (replacements.contains(name)) { replacements(name) } else { name }
+        Instantiator.newInstance[T2](Class.forName(primName), breedName)
     }
   }
 
