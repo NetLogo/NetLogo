@@ -207,8 +207,19 @@ object NetLogoPackaging {
       val rootFiles    = (packageLinuxAggregate / aggregateOnlyFiles).value
       val variables    = buildVariables.value
 
-      val mainLauncher = new NetLogoLauncher(version)
-      val launchers    = Seq(new NetLogo3dLauncher(version), new HubNetClientLauncher(version), new BehaviorsearchLauncher(version))
+      // $APPDIR is `./lib/app`, so move two levels up for the extra dirs
+      val extraJavaOptions = Seq(
+        "-Dnetlogo.extensions.dir=$APPDIR/../../extensions"
+      , "-Dnetlogo.models.dir=$APPDIR/../../models"
+      , "-Dnetlogo.docs.dir=$APPDIR/../../docs"
+      , s"-Djava.library.path=$$APPDIR/../../natives/linux-${buildJDK.nativesArch}"
+      )
+      val mainLauncher = new NetLogoLauncher(version, None, extraJavaOptions)
+      val launchers    = Seq(
+        new NetLogo3dLauncher(version, None, extraJavaOptions)
+      , new HubNetClientLauncher(version, None, extraJavaOptions)
+      , new BehaviorsearchLauncher(version, None, extraJavaOptions)
+      )
 
       val inputDir = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
       val destDir  = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.arch}"
@@ -216,7 +227,7 @@ object NetLogoPackaging {
       val appImageDir = JavaPackager.generateAppImage(log, buildJDK.jpackage.getAbsolutePath, platform, mainLauncher, configDir, buildDir, inputDir, destDir, Seq(), launchers)
 
       val extraDirs = bundledDirs(netlogo, macApp, behaviorsearchProject).value(platform, buildJDK.arch)
-      JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir / "bin", rootFiles)
+      JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir, rootFiles)
       JavaPackager.createScripts(log, appImageDir, appImageDir / "lib" / "app", configDir, "netlogo-headless.sh", "netlogo-gui.sh", variables)
 
       PackageLinuxAggregate(
@@ -252,20 +263,27 @@ object NetLogoPackaging {
       )
       icons.foreach( (i) => FileActions.copyFile(i, buildDir / i.getName) )
 
-      val mainLauncher = new NetLogoLauncher(version, Some("NetLogo.ico"), Seq(), Seq("icon="))
+      // $APPDIR is `./app`, so move one levels up for the extra dirs
+      val extraJavaOptions = Seq(
+        "-Dnetlogo.extensions.dir=$APPDIR/../extensions"
+      , "-Dnetlogo.models.dir=$APPDIR/../models"
+      , "-Dnetlogo.docs.dir=$APPDIR/../docs"
+      , s"-Djava.library.path=$$APPDIR/../natives/windows-${buildJDK.nativesArch}"
+      )
+      val mainLauncher = new NetLogoLauncher(version, Some("NetLogo.ico"), extraJavaOptions, Seq("icon="))
       val launchers = Seq(
-        new NetLogoLauncher(version, Some("NetLogo.ico"), Seq(), Seq("win-console=true")) {
+        new NetLogoLauncher(version, Some("NetLogo.ico"), extraJavaOptions, Seq("win-console=true")) {
           override def id = "NetLogo_Console"
           override def mustachePrefix = "win-console-launcher"
         }
-      , new NetLogo3dLauncher(version, Some("NetLogo.ico"))
-      , new HubNetClientLauncher(version, Some("HubNet Client.ico"))
-      , new BehaviorsearchLauncher(version, Some("Behaviorsearch.ico"))
+      , new NetLogo3dLauncher(version, Some("NetLogo.ico"), extraJavaOptions)
+      , new HubNetClientLauncher(version, Some("HubNet Client.ico"), extraJavaOptions)
+      , new BehaviorsearchLauncher(version, Some("Behaviorsearch.ico"), extraJavaOptions)
       )
 
-      val inputDir    = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
-      val destDir     = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.arch}"
-      val extraArgs   = Seq("--icon", "NetLogo.ico")
+      val inputDir  = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
+      val destDir   = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.arch}"
+      val extraArgs = Seq("--icon", "NetLogo.ico")
       FileActions.remove(destDir)
       val appImageDir = JavaPackager.generateAppImage(log, buildJDK.jpackage.getAbsolutePath, platform, mainLauncher, configDir, buildDir, inputDir, destDir, extraArgs, launchers)
 
@@ -313,7 +331,7 @@ object NetLogoPackaging {
       )
       icons.foreach( (i) => FileActions.copyFile(i, buildDir / i.getName) )
 
-      val macOsJavaOptions = Seq(
+      val extraJavaOptions = Seq(
         "-Dapple.awt.graphics.UseQuartz=true"
       , "--add-exports=java.desktop/com.apple.laf=ALL-UNNAMED"
       , "-Dnetlogo.extensions.dir={{{ROOTDIR}}}/extensions"
@@ -326,7 +344,10 @@ object NetLogoPackaging {
         new NetLogoLauncher(
           version
         , Some("NetLogo.icns")
-        , macOsJavaOptions :+ "-Xdock:name=NetLogo" :+ "-Dorg.nlogo.mac.appClassName=org.nlogo.app.App$"
+        , extraJavaOptions ++ Seq(
+            "-Xdock:name=NetLogo"
+          , "-Dorg.nlogo.mac.appClassName=org.nlogo.app.App$"
+          )
         , Seq()
         , Some("netlogo-mac-app.jar")
         , Some("org.nlogo.app.MacApplication")
@@ -336,7 +357,10 @@ object NetLogoPackaging {
       , new NetLogo3dLauncher(
           version
         , Some("NetLogo.icns")
-        , macOsJavaOptions :+ "-Xdock:name=NetLogo 3D" :+ "-Dorg.nlogo.mac.appClassName=org.nlogo.app.App$"
+        , extraJavaOptions ++ Seq(
+            "\"-Xdock:name=NetLogo 3D\""
+          , "-Dorg.nlogo.mac.appClassName=org.nlogo.app.App$"
+          )
         , Seq()
         , Some("netlogo-mac-app.jar")
         , Some("org.nlogo.app.MacApplication")
@@ -346,7 +370,7 @@ object NetLogoPackaging {
       , new HubNetClientLauncher(
           version
         , Some("HubNet Client.icns")
-        , macOsJavaOptions ++ Seq(
+        , extraJavaOptions ++ Seq(
             "-Xdock:name=HubNet"
           , "-Dorg.nlogo.mac.appClassName=org.nlogo.hubnet.client.App$"
           , "-Dapple.laf.useScreenMenuBar=true"
@@ -360,7 +384,7 @@ object NetLogoPackaging {
       , new BehaviorsearchLauncher(
           version
         , Some("Behaviorsearch.icns")
-        , macOsJavaOptions ++ Seq(
+        , extraJavaOptions ++ Seq(
             "-Xdock:name=Behaviorsearch"
           , "-Dorg.nlogo.mac.appClassName=bsearch.fx.MainGUI"
           , "-Dbsearch.appfolder={{{ROOTDIR}}}/behaviorsearch"

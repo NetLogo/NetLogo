@@ -23,19 +23,24 @@ object BrowserLauncher {
   }
 
   def openURI(comp: Component, uri: URI): Unit = {
+    val normalUri = uri.normalize()
     try {
       val opened =
-        desktop.map(d => {d.browse(uri); true}).getOrElse(false)
-      if (! opened)
-        osSpecificBrowserRunner.getOrElse(browserNotFound()).apply(uri.toString)
+        desktop.map( d => { d.browse(normalUri); true } ).getOrElse(false)
+      if (!opened)
+        osSpecificBrowserRunner.getOrElse(browserNotFound()).apply(normalUri.toString)
     } catch {
       case ex: UnsupportedOperationException =>
         JOptionPane.showMessageDialog(comp, unableToOpenBrowserError)
       case ex: BrowserNotFoundException =>
         JOptionPane.showMessageDialog(comp, ex.getLocalizedMessage)
       case ex: IOException =>
-        JOptionPane.showMessageDialog(comp, s"Unable to open a browser to: ${uri.toString}\n" +
-          "Please report to bugs@ccl.northwestern.edu")
+        JOptionPane.showMessageDialog(comp,
+          s"""Unable to open a browser to: ${normalUri.toString}
+          ${if (normalUri.toString != uri.toString) { s"with original URI: ${uri.toString}" } else { "" }}
+          Please report to bugs@ccl.northwestern.edu
+          """
+        )
     }
   }
 

@@ -24,15 +24,6 @@ object PackageLinuxAggregate {
       )
     })
 
-    log.info("Creating bundled directory sym links")
-    extraDirs.foreach( (dir) => {
-      val dirName = dir.sourceDir.getName
-      FileActions.createRelativeSoftLink(
-        appImageDir / dirName
-      , appImageDir / "bin" / dirName
-      )
-    })
-
     log.info("Creating NetLogo_Console sym link")
     FileActions.createRelativeSoftLink(appImageDir / "NetLogo_Console", appImageDir / "bin" / "NetLogo")
 
