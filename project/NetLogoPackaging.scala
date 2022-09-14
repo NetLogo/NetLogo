@@ -216,8 +216,8 @@ object NetLogoPackaging {
       )
       val mainLauncher = new NetLogoLauncher(version, None, extraJavaOptions)
       val launchers    = Seq(
-        new NetLogo3dLauncher(version, None, extraJavaOptions)
-      , new HubNetClientLauncher(version, None, extraJavaOptions)
+        new NetLogo3dLauncher(version, None, extraJavaOptions) { override def id: String = "NetLogo3D" }
+      , new HubNetClientLauncher(version, None, extraJavaOptions) { override def id: String = "HubNetClient" }
       , new BehaviorsearchLauncher(version, None, extraJavaOptions)
       )
 
