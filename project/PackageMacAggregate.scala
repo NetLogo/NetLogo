@@ -102,6 +102,11 @@ object PackageMacAggregate {
       FileActions.remove(runtimeDir)
       jars.foreach(FileActions.remove)
 
+      // Each app has its own `$APPDIR` that we have to replace with the relative path to get to the root of the NetLogo
+      // installation folder do they can share the needed jars.  But we also want to be able to specify the plain old
+      // "root directory" without `app/` appended on for the extra bundled directories, so that's why we also use the
+      // `{{{ROOTDIR}}}` placeholder.
+      // -Jeremy B September 2022
       log.info("  Reworking the config file with the new paths.")
       val configFile = appLibsDir / s"${launcher.name}.cfg"
       val config1 = Files.readString(configFile.toPath)
@@ -113,7 +118,7 @@ object PackageMacAggregate {
 
       log.info("  Generating Info.plist and PkgInfo files.")
       val variables = plistConfig.getOrElse(launcher.id, throw new Exception(s"No variables for this launcher? ${launcher.id} : $plistConfig"))
-      Mustache(configDir / "macosx" / "Info.plist.mustache", appDir / "Contents" / "Info.plist",            variables)
+      Mustache(configDir / "macosx" / "Info.plist.mustache", appDir / "Contents" / "Info.plist", variables)
       Mustache(configDir / "macosx" / "PkgInfo.mustache",    appDir / "Contents" / "PkgInfo", variables)
 
       log.info("  Move to the bundle directory.")

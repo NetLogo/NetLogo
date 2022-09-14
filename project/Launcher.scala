@@ -43,6 +43,9 @@ object Launcher {
   )
 }
 
+// Technically Windows and Linux don't create a NetLogo "launcher" because it's the primary output of the `jpackage`
+// call, but for convenience we use it to bundle all the info in one spot so it's easier to share with macOS.  -Jeremy B
+// September 2022
 class NetLogoLauncher(
   val version: String
 , val icon: Option[String] = None

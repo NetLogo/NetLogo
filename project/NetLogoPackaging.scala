@@ -207,7 +207,7 @@ object NetLogoPackaging {
       val rootFiles    = (packageLinuxAggregate / aggregateOnlyFiles).value
       val variables    = buildVariables.value
 
-      // $APPDIR is `./lib/app`, so move two levels up for the extra dirs
+      // $APPDIR on Linux is `./lib/app`, so move two levels up for the extra dirs
       val extraJavaOptions = Seq(
         "-Dnetlogo.extensions.dir=$APPDIR/../../extensions"
       , "-Dnetlogo.models.dir=$APPDIR/../../models"
@@ -216,6 +216,8 @@ object NetLogoPackaging {
       )
       val mainLauncher = new NetLogoLauncher(version, None, extraJavaOptions)
       val launchers    = Seq(
+        // Linux apps usually avoid spaces in directories and binary names, so we follow along.  -Jeremy B September
+        // 2022
         new NetLogo3dLauncher(version, None, extraJavaOptions) { override def id: String = "NetLogo3D" }
       , new HubNetClientLauncher(version, None, extraJavaOptions) { override def id: String = "HubNetClient" }
       , new BehaviorsearchLauncher(version, None, extraJavaOptions)
@@ -263,7 +265,7 @@ object NetLogoPackaging {
       )
       icons.foreach( (i) => FileActions.copyFile(i, buildDir / i.getName) )
 
-      // $APPDIR is `./app`, so move one levels up for the extra dirs
+      // $APPDIR on Windows is `./app`, so move one levels up for the extra dirs
       val extraJavaOptions = Seq(
         "-Dnetlogo.extensions.dir=$APPDIR/../extensions"
       , "-Dnetlogo.models.dir=$APPDIR/../models"
@@ -334,6 +336,8 @@ object NetLogoPackaging {
       val extraJavaOptions = Seq(
         "-Dapple.awt.graphics.UseQuartz=true"
       , "--add-exports=java.desktop/com.apple.laf=ALL-UNNAMED"
+      // See comment in `PackageMacAggregate` for more info on the `{{{ROOTDIR}}}` placeholder.  -Jeremy B September
+      // 2022
       , "-Dnetlogo.extensions.dir={{{ROOTDIR}}}/extensions"
       , "-Dnetlogo.models.dir={{{ROOTDIR}}}/models"
       , "-Dnetlogo.docs.dir={{{ROOTDIR}}}/docs"

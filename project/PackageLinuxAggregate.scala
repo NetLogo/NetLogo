@@ -26,9 +26,8 @@ object PackageLinuxAggregate {
     // The `jpackage`-produced executables are detected as `ELF 64-bit LSB shared object` libraries (which is correct
     // according to the specs), but file reports them as non-executable libraries, so they cannot be launched from the
     // GUIs that use that info to determine file associations, like Nautilus.  So we have to do this, which at least
-    // lets users get the things running, albeit possibly with a warning.  With javapackager the bins produced were `LSB
-    // executables` so didn't have this issue. The shell scripts at least allow the user to launch NetLogo's apps from
-    // the GUI, although it may warn them about running a text file.
+    // lets users get the things running from the GUI, albeit possibly with a warning or question about running a text
+    // file.  With javapackager the bins produced were `LSB executables` so didn't have this issue.
     // https://bugs.launchpad.net/ubuntu/+source/file/+bug/1747711 -Jeremy B September 2022
     log.info("Adding launcher shell scripts")
     launchers.foreach( (launcher) => {
