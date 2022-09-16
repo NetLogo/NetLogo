@@ -2,6 +2,7 @@
 package org.nlogo.shape
 
 import java.awt.Color
+
 import java.beans.{ PropertyChangeListener, PropertyChangeSupport }
 
 import org.nlogo.{ core, api },
@@ -142,7 +143,7 @@ class VectorShape
   }
 
   def notifyObservers(): Unit = {
-    propertyChangeSupport.firePropertyChange("shape", this, this)
+    propertyChangeSupport.firePropertyChange("shapeChanged", null, null)
   }
 
   def remove(element: Element) =

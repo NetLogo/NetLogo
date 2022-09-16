@@ -126,6 +126,8 @@ class ShapeView
     return new java.awt.Dimension(300, 300);
   }
 
+  // When a VectorShape has changed a PropertyChangeEvent is fired and handled here.
+  // The corresponding instance of ShapeView is added as PropertyChangeListener in EditorDialog. AAB 9-22
   public void propertyChange(PropertyChangeEvent evt) {
     repaint();
   }

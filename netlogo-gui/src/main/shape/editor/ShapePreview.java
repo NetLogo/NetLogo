@@ -60,7 +60,8 @@ class ShapePreview
     return new java.awt.Dimension(60, 78);
   }
 
-  // Method called by VectorShape when it has changed
+  // When a VectorShape has changed a PropertyChangeEvent is fired and handled here.
+  // The corresponding instance of ShapePreview is added as PropertyChangeListener in EditorDialog. AAB 9-22
   public void propertyChange(PropertyChangeEvent evt) {
     repaint();
   }
