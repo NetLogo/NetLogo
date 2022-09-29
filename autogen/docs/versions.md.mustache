@@ -5,30 +5,29 @@ For help running models made in old versions, see the
 
 [TOC]
 
-## Version 6.3.0-beta1 (August 2022)
+## Version 6.3.0 (September 2022)
 
 ### Bug Fixes and Changes
 
-- NetLogo 6.3-beta1 updates the bundled Java runtime version to Java 17 from Java 8
 - The models library will correctly display when NetLogo is set to a language other than English.
-- The log4j library has been removed from NetLogo.  Logging is now configured from the preferences of NetLogo and it outputs to a JSON text file format.  See the docs for more information.
-- BehaviorSpace experiments can be run using the `NetLogo_Console` app with a `--headless` flag using NetLogo's bundled Java.  See the BehaviorSpace documentation for more informaiton and examples.  This avoids the need to install and configure a separate Java runtime to use the `netlogo-headless.sh` script, which remains bundled for those who require it.
-- BehaviorSpace output files are chosen directly during run setup.  This resolved a bug where the runs would not occur on macOS.
+- The log4j library has been removed from NetLogo. Logging is now configured from the NetLogo preferences dialog.  The output is in JSON text file format. See the Logging docs for more information.
+- BehaviorSpace experiments can now also be run from a terminal or command console using the `NetLogo_Console` app with NetLogo's bundled Java by using the `--headless` flag.  See the BehaviorSpace documentation for more information and examples.  This avoids the need to install and configure a separate Java runtime to use the `netlogo-headless.sh` script, which remains bundled for those who require it.
+- BehaviorSpace output files are now chosen directly during run setup instead of separate prompts at the run start.  This simplifies the setup process and resolves a bug where the runs would not occur on macOS.
 - The System Dynamics Modeler UI has some small improvements.
 - Fixed a bug where slider widgets would allow initial values outside of their range when changing the limits.
-- Better handle asymoptotic values for `tan` with a proper error message
-- NetLogo will not error when no lists are given to `map` or `foreach`
-- Anonmymous tasks with `let` variables will now include those names when the tasks are displayed as strings.
-- Reporters used in concise task syntax could give the wrong result when used with fewer arguments than their default.
+- Better handle asymptotic values for tan with a proper error message.
+- NetLogo will now correctly handle running `map` or `foreach` when no lists are given.
+- When an anonymous task that uses `let` variables is displayed as a string it will now include those variable names.
+- Reporters used in concise task syntax no longer give the wrong result when used with fewer arguments than their default.
 - The models library location will be correctly set when using GUI scripts.
-- Behaviorsearch now sets a flag to alert extensions that they are being run without a UI to try to avoid errors.
+- Behaviorsearch now sets a flag to alert extensions that they are being run without a UI so that extension code can adjust appropriately.
 
 ### Extension Updates
 
-- GoGo: Improve newer GoGo board compatibility and made various changes to improve the stability of the extension.
-- LevelSpace: Better detect when run without a UI via the controlling API to avoid crashes.
+- GoGo: Improve newer GoGo board compatibility and improve the stability of the extension.
+- LevelSpace: Eliminate crashes when the controlling API is used to run NetLogo without a UI.
 - Profiler: The `profiler:data` results are now given in milliseconds instead of nanoseconds, matching the other primitives in the extension.
-- Python: Improvements on how the extension searches for the Python binaries when they aren't specified via the configuration menu.
+- Python: Improvements in how the extension searches for the Python binaries when they aren't specified via the configuration menu.
 - Vid: Update backing libraries to try to improve stability and usability on macOS and Windows.
 
 ### Documentation Updates
@@ -43,8 +42,11 @@ For help running models made in old versions, see the
 - Slime Mold Network
 - Virus Using Discrete Event Simulator (cross-listed in code examples for time extension)
 - Distribution Center Discrete Event Simulator (cross-listed in code examples for time extension)
+- Hydrogen Gas Production
+- CA 1D-Squaring
+- Molecular Dynamics Lennard-Jones
 
-#### New Curricula Models:
+#### New Curricular Models:
 - CT-STEM:
   - Habitat Preference
 
@@ -53,19 +55,20 @@ For help running models made in old versions, see the
 - `time`: Discrete Event Whack-a-Mole
 
 #### Sample Model Changes
-- PNoM 4 Virtual Syringe Force Graph: fixed a bug that was causing an error
-- Taxi Cabs: Fixed Dongping Zhang's name in the credits
-- Turbulence: Cross list under CS/CA.
-- Tree Simple: Changed `init-x slider` min/max to -100/100. Before the range was -125 to 125, but this caused an error
-- Traffic Basic: Changed  `speed-limit` and `speed-min` from agent variables to be globals.
-- Urban Suite - Cells: Changed the name of the  `go * 80`  button to `go * 40`  which is the actual number of times it had the model go.
-- CA 1D Rule 30 - Improved the info tab to note that Rule 30 has been used as random number generator and how that is done.
+- Taxi Cabs: Fixed Dongping Zhang's name in the credits.
+- Turbulence: Cross-listed under CS/CA.
+- Tree Simple: Changed `init-x slider` min/max to -100/100. Before the range was -125/125, which caused an error.
+- Traffic Basic: Changed  `speed-limit` and `speed-min` from agent variables to be globals.
+- Urban Suite - Cells: Renamed the  `go * 80`  button to `go * 40`, reflecting its actual effect.
+- CA 1D Rule 30 - Improved the info tab to explain how Rule 30 has been used as random number generator.
 
-#### Curricula Models Changes:
-- Kidney Reabsorption: Some improvements to the info ta
+#### Curricular Models Changes:
+- PNoM 4 Virtual Syringe Force Graph: fixed a bug that produced an error message.
+- Kidney Reabsorption: Some improvements to the info tab.
+
 
 #### Newly Verified Models
-- The suite of prisoner's dilemma models have been in the model's library for a long time but were previously "unverified." They have been reviewed/verified and moved into the main Social Science folder.
+- The suite of prisoner's dilemma models have been in the models library for a long time but were previously "unverified." They have been reviewed/verified and moved into the main Social Science folder.
 
 ## Version 6.2.2 (December 2021)
 
