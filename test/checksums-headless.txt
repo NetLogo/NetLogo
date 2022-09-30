@@ -237,6 +237,7 @@ models/Sample Models/Chemistry & Physics/GasLab/Unverified/GasLab Heat Box.nlogo
 models/Sample Models/Chemistry & Physics/GasLab/Unverified/GasLab Moving Piston.nlogo *  * 802357AF820913BE388FEE1810D3F300143EC96E * 7BB4109518A3A798FD3C299036CC5D4B0CDCCC3F * 5694fa6a97
 models/Sample Models/Chemistry & Physics/GasLab/Unverified/GasLab Pressure Box.nlogo *  * BCF7C9955B06747FBCEEC779FE079EB8B6EC0376 * 86E44C4FCEA6519C24F001474D3B45D9C45C8732 * 5694fa6a97
 models/Sample Models/Chemistry & Physics/GasLab/Unverified/GasLab Second Law.nlogo *  * D7B00FE939209E4F041AE3D03FC1C5D60B168301 * 8E6801A130FB8B6DB58FAAE7CB5C15C656A84923 * 5694fa6a97
+models/Sample Models/Chemistry & Physics/Hydrogen Gas Production.nlogo *  * D1269EFE7410EFDF8DA35F35F221A9942A7B27D4 * 34ED6A86C4449CB7FB3FBC160F47A67B879A04FA * ebbb72a39f
 models/Sample Models/Chemistry & Physics/Ising.nlogo *  * E4D0BD3A9886ED4E400A2761CE01EE0E89FD613E * 52250D1526781C7EE2FB18A85C8D44CD8678E620 * 5694fa6a97
 models/Sample Models/Chemistry & Physics/Kicked Rotator.nlogo *  * B7ADB3A272A20209D5B348C03234F6C4B1C4ED07 * 0AE5447F549BF1967650C8C89C3865991CD3C59A * 5694fa6a97
 models/Sample Models/Chemistry & Physics/Materials Science/Crystallization/Crystallization Basic.nlogo *  * 9DA5EA3ECEC1EB4EEB20D6929B8D5AE7ABA9F67B * C5EFBA4439C916B4CAAA62C47AA9EEE5CFBCBBEB * 5694fa6a97
@@ -244,7 +245,8 @@ models/Sample Models/Chemistry & Physics/Materials Science/Crystallization/Cryst
 models/Sample Models/Chemistry & Physics/Materials Science/Crystallization/Crystallization Moving.nlogo *  * BEA0A377573E1F7738B3F166CB34AD73FBB4D2BA * 80CAF05AAB6D6BF28275B056567578EAB9887906 * 5694fa6a97
 models/Sample Models/Chemistry & Physics/Materials Science/Dislocation Motion and Deformation.nlogo *  * 06804B88827C5667033D11647AC63190DA138453 * 07FA14ACB4A137E9554C0E4D917219A43C86590C * 5694fa6a97
 models/Sample Models/Chemistry & Physics/Materials Science/Heat Diffusion.nlogo *  * F1D39378E7C29648D524FF977EFF9C8639F7AE90 * 34A7B7B2A643AFCFE12D7CE49289C41B6D910023 * 5694fa6a97
-models/Sample Models/Chemistry & Physics/Materials Science/Lennard-Jones.nlogo *  * C6AE3CDEF334E7438AC085DE81E9C0B979AB06FC * E70DA3B85B0794204F7C4EA1AFEC235AB5A877DE * 5694fa6a97
+models/Sample Models/Chemistry & Physics/Materials Science/Molecular Dynamics Lennard-Jones.nlogo *  * 0077A2B16E9484BA6320BF4A2A74A8657A443901 * 9D6A8541B9CEEBCB876CF27BD0C743BCF2B46C4F * ebbb72a39f
+models/Sample Models/Chemistry & Physics/Materials Science/Monte Carlo Lennard-Jones.nlogo *  * C6AE3CDEF334E7438AC085DE81E9C0B979AB06FC * E70DA3B85B0794204F7C4EA1AFEC235AB5A877DE * ebbb72a39f
 models/Sample Models/Chemistry & Physics/Materials Science/Polymer Dynamics.nlogo *  * 580D70B258F8894F8614044B0013B0A62A36204F * B9EE00CAEBB38B14817E98E408B044B25B07B614 * 5694fa6a97
 models/Sample Models/Chemistry & Physics/Materials Science/Solid Diffusion.nlogo *  * 29E2628A7D62650067E59B5DD74FCAF3D1992B08 * 34460ABCED1E000D105B987D502474CE4258B9FC * 5694fa6a97
 models/Sample Models/Chemistry & Physics/Mechanics/Random Balls.nlogo *  * 4279C89D10DC035034DEED343D1180CFFB496789 * B0F88E9236272803E3A83110F5A68B34CB36E662 * 5694fa6a97
@@ -275,6 +277,7 @@ models/Sample Models/Computer Science/Cellular Automata/CA 1D Simple Examples/CA
 models/Sample Models/Computer Science/Cellular Automata/CA 1D Simple Examples/CA 1D Rule 30 Turtle.nlogo *  * 83F4AEAAE311453C0D76AA4CEF82DACC68C790A8 * E0DF3FD1477FD33B07265BC51538B66D4ADD6126 * 5694fa6a97
 models/Sample Models/Computer Science/Cellular Automata/CA 1D Simple Examples/CA 1D Rule 90.nlogo *  * E7DB5819E64C5CE11A22E87B44668A8F8BE61B56 * 2F66151136A991BD60D83EF632E25387F5D2399C * 5694fa6a97
 models/Sample Models/Computer Science/Cellular Automata/CA 1D Totalistic.nlogo *  * 26AD27D460E4B0761B7868F09735D21FEC024D4F * D4E860883177F610BC53D9E5F38AD9FEB404EBC1 * 5694fa6a97
+models/Sample Models/Computer Science/Cellular Automata/CA 1D-Squaring.nlogo *  * BAB3DC1CA3E536906EA4BB7A4D00C717863FC1C1 * 793BE1B5AFB36719630466D53304266E7D978B15 * 3c61d51d1d
 models/Sample Models/Computer Science/Cellular Automata/CA Continuous.nlogo *  * 23CB4932DE022938794D47DA8B33A29EE6709DDD * 55E3E994BDF4CA7C2E37A28F75AD00370CBC29BF * 5694fa6a97
 models/Sample Models/Computer Science/Cellular Automata/CA Stochastic.nlogo *  * 955D11042B981147703B395A217EDC8154ED48F1 * 7C2F246502F6A4C513B858B53A106BC0678F65CC * 5694fa6a97
 models/Sample Models/Computer Science/Cellular Automata/Life.nlogo *  * 1861C83653841F8905463B82B971FFD9FDA344C3 * 11D4CBAF6C4E70E2E7AA9B4C924FB05878F6C1FD * 5694fa6a97
