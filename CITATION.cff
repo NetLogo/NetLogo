@@ -6,8 +6,8 @@ authors:
     given-names: "Uri"
 
 title: "NetLogo"
-version: 6.2.2
-date-released: 2021-12-08
+version: 6.3.0
+date-released: 2022-09-29
 
 url: "https://ccl.northwestern.edu/netlogo/"
 repository-code: "https://github.com/NetLogo/NetLogo"
@@ -20,7 +20,7 @@ keywords:
 
 preferred-citation:
   type: "article"
-  
+
   title: "NetLogo"
   journal: "Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL"
   year: 1999
