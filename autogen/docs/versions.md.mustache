@@ -9,6 +9,7 @@ For help running models made in old versions, see the
 
 ### Bug Fixes and Changes
 
+- The major change in this release is the upgrade of the bundled Java from version 8 to 17. Java 17 is the current long-term-support release of the Java runtime.
 - The models library will correctly display when NetLogo is set to a language other than English.
 - The log4j library has been removed from NetLogo. Logging is now configured from the NetLogo preferences dialog.  The output is in JSON text file format. See the Logging docs for more information.
 - BehaviorSpace experiments can now also be run from a terminal or command console using the `NetLogo_Console` app with NetLogo's bundled Java by using the `--headless` flag.  See the BehaviorSpace documentation for more information and examples.  This avoids the need to install and configure a separate Java runtime to use the `netlogo-headless.sh` script, which remains bundled for those who require it.
@@ -42,8 +43,8 @@ For help running models made in old versions, see the
 - Slime Mold Network
 - Virus Using Discrete Event Simulator (cross-listed in code examples for time extension)
 - Distribution Center Discrete Event Simulator (cross-listed in code examples for time extension)
-- Hydrogen Gas Production
 - CA 1D-Squaring
+- Hydrogen Gas Production
 - Molecular Dynamics Lennard-Jones
 
 #### New Curricular Models:
