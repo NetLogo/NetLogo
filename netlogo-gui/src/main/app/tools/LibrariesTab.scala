@@ -14,7 +14,7 @@ import java.util.Collections
 
 import scala.collection.mutable.Buffer
 
-import org.nlogo.api.{ LibraryManager, Version }
+import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus }
 import org.nlogo.swing.{ BrowserLauncher, EmptyIcon, FilterableListModel, RichAction, SwingWorker }
@@ -199,13 +199,13 @@ class LibrariesTab( category:           String
 
         override def intervalAdded(e: ListDataEvent): Unit =
           if (canUpdateInRange(listModel, e.getIndex0, e.getIndex1))
-            updateAllAction.setEnabled(LibraryManager.enabled && true)
+            updateAllAction.setEnabled(LibraryInfoDownloader.enabled && true)
 
         override def intervalRemoved(e: ListDataEvent): Unit =
-          updateAllAction.setEnabled(LibraryManager.enabled && canUpdate(listModel))
+          updateAllAction.setEnabled(LibraryInfoDownloader.enabled && canUpdate(listModel))
 
         override def contentsChanged(e: ListDataEvent): Unit =
-          updateAllAction.setEnabled(LibraryManager.enabled && canUpdate(listModel))
+          updateAllAction.setEnabled(LibraryInfoDownloader.enabled && canUpdate(listModel))
 
       }
     )
@@ -225,7 +225,7 @@ class LibrariesTab( category:           String
 
     homepageButton.addActionListener(_ => BrowserLauncher.openURI(this, selectedValue.homepage.toURI))
 
-    updateAllAction.setEnabled(LibraryManager.enabled && canUpdate(listModel))
+    updateAllAction.setEnabled(LibraryInfoDownloader.enabled && canUpdate(listModel))
 
     updateSidebar()
 
@@ -273,9 +273,9 @@ class LibrariesTab( category:           String
       addToCodeTabButton.setEnabled(selectedValues.forall(_.status != LibraryStatus.CanInstall))
 
       installButton.setText(installButtonText)
-      installButton.setEnabled(LibraryManager.enabled && actionableLibraries.length > 0)
+      installButton.setEnabled(LibraryInfoDownloader.enabled && actionableLibraries.length > 0)
 
-      uninstallButton.setEnabled(LibraryManager.enabled && selectedValues.filter(_.status != LibraryStatus.CanInstall).exists(!_.bundled))
+      uninstallButton.setEnabled(LibraryInfoDownloader.enabled && selectedValues.filter(_.status != LibraryStatus.CanInstall).exists(!_.bundled))
       homepageButton.setEnabled(numSelected == 1)
 
       val installToolTip = if (numSelected == 1) selectedValue.downloadURL.toString else null

@@ -3,7 +3,6 @@
 package org.nlogo.api
 
 import java.io.File
-import java.lang.Boolean
 import java.net.URL
 import java.nio.file.{ Files, FileAlreadyExistsException, Path, Paths }
 
@@ -14,8 +13,6 @@ import org.nlogo.core.{ LibraryManager => CoreLibraryManager }
 
 object LibraryManager {
 
-  def enabled: Boolean = !Boolean.getBoolean("netlogo.libraries.disabled")
-
   private val libsLocationSite = "https://ccl.northwestern.edu/netlogo/config"
   private val libsLocation     = "libraries-location.conf"
   private val allLibsName      = "libraries.conf"
@@ -23,7 +20,7 @@ object LibraryManager {
   private val metadataURL      = getMetadataURL()
 
   private def getMetadataURL(): URL = {
-    if (enabled) {
+    if (LibraryInfoDownloader.enabled) {
       val locationURL    = new URL(s"$libsLocationSite/$libsLocation")
       LibraryInfoDownloader(locationURL)
       val locationPath   = FileIO.perUserFile(libsLocation)
@@ -46,7 +43,7 @@ object LibraryManager {
     // If not first load (user clicked a button) or metadata not loaded once, load it!
     // This is an attempt to avoid multiple redundant remote fetches during test runs.
     // -JeremyB April 2019
-    if (enabled && (!isFirstLoad || !loadedOnce)) {
+    if (!isFirstLoad || !loadedOnce) {
       LibraryInfoDownloader.invalidateCache(metadataURL)
       LibraryInfoDownloader(metadataURL)
       loadedOnce = true
@@ -86,14 +83,14 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
     libraries.find(ext => ext.codeName == name)
 
   override def installExtension(ext: LibraryInfo): Unit = {
-    if (LibraryManager.enabled) {
+    if (LibraryInfoDownloader.enabled) {
       extInstaller.install(ext)
       updateInstalledVersion("extensions", ext)
     }
   }
 
   def uninstallExtension(ext: LibraryInfo): Unit = {
-    if (LibraryManager.enabled) {
+    if (LibraryInfoDownloader.enabled) {
       extInstaller.uninstall(ext)
       updateInstalledVersion("extensions", ext, uninstall = true)
     }
