@@ -111,7 +111,7 @@ jobs:
         with:
           java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
 
-      - uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
           python-version: '3.9'
 
