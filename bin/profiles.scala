@@ -21,7 +21,7 @@ val classpath =
   Seq("../netlogo-gui/target/classes",
       "../shared/target/classes",
       "../netlogo-gui/resources",
-      home + "/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.12.15.jar",
+      home + "/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.12.17.jar",
       home + "/.ivy2/cache/org.ow2.asm/asm-all/jars/asm-all-5.2.jar",
       home + "/.ivy2/cache/org.picocontainer/picocontainer/jars/picocontainer-2.15.jar",
       home + "/.ivy2/cache/commons-codec/commons-codec/jars/commons-codec-1.15.jar",
