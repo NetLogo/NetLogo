@@ -17,7 +17,7 @@ resolvers ++= Seq(
 )
 
 addSbtPlugin("org.scalastyle"     %% "scalastyle-sbt-plugin"           % "1.0.0")
-addSbtPlugin("org.portable-scala" %  "sbt-scalajs-crossproject"        % "1.1.0")
+addSbtPlugin("org.portable-scala" %  "sbt-scalajs-crossproject"        % "1.2.0")
 addSbtPlugin("org.scala-js"       %  "sbt-scalajs"                     % "1.11.0")
 addSbtPlugin("org.nlogo"          %  "publish-versioned-plugin"        % "3.0.0")
 addSbtPlugin("org.nlogo"          %  "netlogo-extension-documentation" % "0.8.3")
