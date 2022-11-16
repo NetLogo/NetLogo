@@ -17,11 +17,11 @@ resolvers ++= Seq(
 )
 
 addSbtPlugin("org.scalastyle"     %% "scalastyle-sbt-plugin"           % "1.0.0")
-addSbtPlugin("org.portable-scala" %  "sbt-scalajs-crossproject"        % "1.1.0")
-addSbtPlugin("org.scala-js"       %  "sbt-scalajs"                     % "1.8.0")
+addSbtPlugin("org.portable-scala" %  "sbt-scalajs-crossproject"        % "1.2.0")
+addSbtPlugin("org.scala-js"       %  "sbt-scalajs"                     % "1.11.0")
 addSbtPlugin("org.nlogo"          %  "publish-versioned-plugin"        % "3.0.0")
 addSbtPlugin("org.nlogo"          %  "netlogo-extension-documentation" % "0.8.3")
-addSbtPlugin("com.timushev.sbt"   %  "sbt-updates"                     % "0.6.0")
+addSbtPlugin("com.timushev.sbt"   %  "sbt-updates"                     % "0.6.4")
 
 libraryDependencies ++= Seq(
   "com.github.spullara.mustache.java" % "compiler"              % "0.9.5"
@@ -29,11 +29,11 @@ libraryDependencies ++= Seq(
 , "classycle"                         % "classycle"             % "1.4.2" from
   "https://s3.amazonaws.com/ccl-artifacts/classycle-1.4.2.jar"
 , "com.github.spullara.mustache.java" % "scala-extensions-2.10" % "0.9.5"
-, "org.jsoup"                         % "jsoup"                 % "1.14.3"
+, "org.jsoup"                         % "jsoup"                 % "1.15.3"
 , "org.apache.commons"                % "commons-lang3"         % "3.12.0"
 , "commons-io"                        % "commons-io"            % "2.11.0"
 // prevents noise from bintray stuff
-, "org.slf4j"                         % "slf4j-nop"             % "1.7.32"
+, "org.slf4j"                         % "slf4j-nop"             % "1.7.36"
 )
 
 {

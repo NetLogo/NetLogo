@@ -62,8 +62,8 @@ lazy val scalatestSettings = Seq(
   Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oS")
 , Test / testOnly / logBuffered := false
 , libraryDependencies ++= Seq(
-    "org.scalatest"     %% "scalatest"       % "3.2.13"   % Test
-  , "org.scalatestplus" %% "scalacheck-1-16" % "3.2.13.0" % Test
+    "org.scalatest"     %% "scalatest"       % "3.2.14"   % Test
+  , "org.scalatestplus" %% "scalacheck-1-16" % "3.2.14.0" % Test
   )
   // This lets us mock up some Java library classes for testing.
   // -Jeremy B August 2022
@@ -108,14 +108,14 @@ lazy val mockDependencies = {
         exclude ("org.hamcrest", "hamcrest")
     , "org.jmock"     % "jmock-legacy" % mockVersion % "test"
     , "org.jmock"     % "jmock-junit5" % mockVersion % "test"
-    , "net.bytebuddy" % "byte-buddy"   % "1.12.13"   % "test"
+    , "net.bytebuddy" % "byte-buddy"   % "1.12.18"   % "test"
     , "org.hamcrest"  % "hamcrest"     % "2.2"       % "test"
     )
   )
 }
 
 lazy val asmDependencies = {
-  val asmVersion = "9.1"
+  val asmVersion = "9.4"
   Seq(
     libraryDependencies ++= Seq(
       "org.ow2.asm" % "asm"         % asmVersion,
@@ -182,16 +182,16 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.picocontainer" % "picocontainer" % "2.15",
       "javax.media" % "jmf" % "2.1.1e",
       "commons-codec" % "commons-codec" % "1.15",
-      "org.parboiled" %% "parboiled" % "2.3.0",
+      "org.parboiled" %% "parboiled" % "2.4.1",
       "org.jogamp.jogl" % "jogl-all" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0-rc-20210111/jar/jogl-all.jar",
       "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0-rc-20210111/jar/gluegen-rt.jar",
       "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
       "org.apache.httpcomponents" % "httpclient" % "4.2",
       "org.apache.httpcomponents" % "httpmime" % "4.2",
       "com.googlecode.json-simple" % "json-simple" % "1.1.1",
-      "com.fifesoft" % "rsyntaxtextarea" % "3.1.3",
-      "com.typesafe" % "config" % "1.4.1",
-      "net.lingala.zip4j" % "zip4j" % "2.9.0"
+      "com.fifesoft" % "rsyntaxtextarea" % "3.3.0",
+      "com.typesafe" % "config" % "1.4.2",
+      "net.lingala.zip4j" % "zip4j" % "2.9.1"
     ),
     all := {},
     all := {
@@ -240,12 +240,12 @@ lazy val headless = (project in file ("netlogo-headless")).
     javacOptions ++= Seq("--release", "11"),
     mainClass in Compile         := Some("org.nlogo.headless.Main"),
     libraryDependencies          ++= Seq(
-      "org.parboiled" %% "parboiled" % "2.3.0",
+      "org.parboiled" %% "parboiled" % "2.4.1",
       "commons-codec" % "commons-codec" % "1.15",
-      "com.typesafe" % "config" % "1.4.1",
-      "net.lingala.zip4j" % "zip4j" % "2.9.0",
+      "com.typesafe" % "config" % "1.4.2",
+      "net.lingala.zip4j" % "zip4j" % "2.9.1",
       "org.reflections" % "reflections" % "0.9.10" % "test",
-      "org.slf4j" % "slf4j-nop" % "1.7.32" % "test"
+      "org.slf4j" % "slf4j-nop" % "1.7.36" % "test"
     ),
     (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
     resourceDirectory in Compile := baseDirectory.value / "resources" / "main",
@@ -348,9 +348,9 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
     libraryDependencies ++= {
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
       Seq(
-        "org.scala-lang.modules" %%% "scala-parser-combinators" %    "2.1.0"
-      ,          "org.scalatest" %%%                "scalatest" %   "3.2.13" % Test
-      ,      "org.scalatestplus" %%%          "scalacheck-1-16" % "3.2.13.0" % Test
+        "org.scala-lang.modules" %%% "scala-parser-combinators" %    "2.1.1"
+      ,          "org.scalatest" %%%                "scalatest" %   "3.2.14" % Test
+      ,      "org.scalatestplus" %%%          "scalacheck-1-16" % "3.2.14.0" % Test
       )
     }).
   jvmConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).
@@ -358,7 +358,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
   jvmSettings(scalatestSettings: _*).
   jvmSettings(
     javacOptions ++= Seq("--release", "11"),
-    libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.0",
+    libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.1",
     // you can get these included by just depending on the `sharedResources` project directly
     // but then when you publish the parser JVM package, the POM file lists sharedResources
     // as a dependency.  It seems like a weird thing to publish separately, so this just
