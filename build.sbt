@@ -245,7 +245,7 @@ lazy val headless = (project in file ("netlogo-headless")).
       "com.typesafe" % "config" % "1.4.2",
       "net.lingala.zip4j" % "zip4j" % "2.9.1",
       "org.reflections" % "reflections" % "0.9.10" % "test",
-      "org.slf4j" % "slf4j-nop" % "1.7.36" % "test"
+      "org.slf4j" % "slf4j-nop" % "2.0.3" % "test"
     ),
     (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
     resourceDirectory in Compile := baseDirectory.value / "resources" / "main",
