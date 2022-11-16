@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  LIBERICA_URL: https://download.bell-sw.com/java/17.0.5+8/bellsoft-jdk17.0.5+8-linux-amd64.tar.gz
+  LIBERICA_URL: https://download.bell-sw.com/java/17.0.5+8/bellsoft-jdk17.0.5+8-linux-amd64-full.tar.gz
 
 jobs:
   build:
