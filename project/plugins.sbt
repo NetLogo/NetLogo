@@ -29,7 +29,7 @@ libraryDependencies ++= Seq(
 , "classycle"                         % "classycle"             % "1.4.2" from
   "https://s3.amazonaws.com/ccl-artifacts/classycle-1.4.2.jar"
 , "com.github.spullara.mustache.java" % "scala-extensions-2.10" % "0.9.5"
-, "org.jsoup"                         % "jsoup"                 % "1.14.3"
+, "org.jsoup"                         % "jsoup"                 % "1.15.3"
 , "org.apache.commons"                % "commons-lang3"         % "3.12.0"
 , "commons-io"                        % "commons-io"            % "2.11.0"
 // prevents noise from bintray stuff
