@@ -191,7 +191,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "com.googlecode.json-simple" % "json-simple" % "1.1.1",
       "com.fifesoft" % "rsyntaxtextarea" % "3.1.6",
       "com.typesafe" % "config" % "1.4.2",
-      "net.lingala.zip4j" % "zip4j" % "2.9.0"
+      "net.lingala.zip4j" % "zip4j" % "2.9.1"
     ),
     all := {},
     all := {
@@ -243,7 +243,7 @@ lazy val headless = (project in file ("netlogo-headless")).
       "org.parboiled" %% "parboiled" % "2.4.1",
       "commons-codec" % "commons-codec" % "1.15",
       "com.typesafe" % "config" % "1.4.2",
-      "net.lingala.zip4j" % "zip4j" % "2.9.0",
+      "net.lingala.zip4j" % "zip4j" % "2.9.1",
       "org.reflections" % "reflections" % "0.9.10" % "test",
       "org.slf4j" % "slf4j-nop" % "1.7.36" % "test"
     ),
