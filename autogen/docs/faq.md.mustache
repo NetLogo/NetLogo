@@ -552,35 +552,34 @@ the import items on the File menu or the `import-*` primitives.
 
 ### How big can my model be? How many turtles, patches, procedures, buttons, and so on can my model contain?
 
-We have tested NetLogo with models that use hundreds of megabytes of RAM and they work
-fine. We have reports from NetLogo users that they have run models that required up to 50
-gigabytes of RAM to use millions of patches and tens of thousands of agents, and they
-worked as desired (with the proper Java settings). Theoretically the only limit is the RAM
-available on your system, but you might hit some limits that are inherent in the
-underlying Java runtime or the operating system (either designed-in limits, or bugs).
+We have tested NetLogo with models that use hundreds of megabytes of RAM and they work fine. We have reports from
+NetLogo users that they have run models that required up to 50 gigabytes of RAM to use millions of patches and tens of
+thousands of agents, and they worked as desired with the proper Java settings. Theoretically the only limit is the RAM
+available on your system, but you might hit some limits that are inherent in the underlying Java runtime or the
+operating system (either designed-in limits, or bugs).
 
-The NetLogo engine has no fixed limits on size. By default, though, NetLogo
-ships with a one-gigabyte ceiling on how much total RAM it can use. If your
-model exceeds that limit, you'll get an OutOfMemoryError dialog.
+The NetLogo engine has no fixed limits on model size.  By default NetLogo sets Java  to use up to half of your available
+system memory.  If your model exceeds that memory limit, you'll get an `OutOfMemoryError` dialog.
 
-If you are using BehaviorSpace, note that doing runs in parallel will multiply
-your RAM usage accordingly.
+If you are using BehaviorSpace, note that doing runs in parallel will multiply your RAM usage accordingly.  Similarly,
+using LevelSpace with many child models increases RAM usage greatly.
 
-<a id="where-is-cfg-file"></a> Each platform contains ".cfg" files containing JVM
-settings. There is one cfg file for each sub-application (NetLogo, NetLogo 3D, HubNet
-Client, etc.).  Windows also has a cfg file for the NetLogo_Console app; on macOS and
-Linux the cfg file for NetLogo_Console is just the NetLogo.cfg file.  Although the file
-location varies by platform, the process for changing it is the same. Locate the section
-of the file that looks like the following:
+If you want to increase the memory limit Java uses, you can do so using the NetLogo app configuration files.
+
+<a id="where-is-cfg-file"></a>Each platform contains ".cfg" files containing JVM settings. There is one cfg file for
+each sub-application (NetLogo, NetLogo 3D, HubNet Client, etc.).  Windows also has a cfg file for the NetLogo_Console
+app; on macOS and Linux the cfg file for NetLogo_Console is just the NetLogo.cfg file.  Although the file location
+varies by platform, the process for changing it is the same. Locate the section of the file that looks like the
+following:
 
     [JavaOptions]
     # there may be one or more lines, leave them unchanged
-    -Xmx1024m
+    java-options=-XX:MaxRAMPercentage=50
     # there may be one or more lines, leave them unchanged
 
-Modify the value immediately following `-Xmx`, changing it to the amount of
-space you need, save the file, and restart NetLogo. Platform specific notes
-follow:
+You can change the percentage number from 50 to whatever you want.  Save the file and restart NetLogo for the setting to take effect.  If you need to set an exact amount of memory (as opposed to a percentage), you can also comment out the `java-options=-XX:MaxRAMPercentage=50` line with a `#` at the start and add a new line with `java-options=-Xmx####m`.  Replace the `####m` with whatever amount of memory you like; using `4096m` would limit NetLogo to 4096 megabytes of memory, or 4 gigabytes.
+
+Platform specific notes follow:
 
 - **Windows:** The file will typically be in `C:\Program Files\NetLogo {{version}}\app`,
   unless you are running 32 bit NetLogo on a 64 bit Windows, then it will be
@@ -600,11 +599,9 @@ follow:
 - **Linux:** The cfg files will be located in the `NetLogo {{version}}/lib/app`
   folder after untarring.
 
-By default, Mac builds of NetLogo bundle a 64-bit JVM, which should be able to
-make use of as much memory as the lesser of available system memory and the
-value following `-Xmx`. Windows and Linux will bundle a 32-bit or 64-bit JVM,
-depending on which version you have downloaded. It is recommended that you
-install 64-bit NetLogo on all 64-bit operating systems for best performance.
+By default, Mac builds of NetLogo bundle a 64-bit JVM.  Windows and Linux will bundle a 32-bit or 64-bit JVM, depending
+on which version you have downloaded. It is recommended that you install 64-bit NetLogo on all 64-bit operating systems
+for best performance.
 
 ### Can I use GIS data in NetLogo?
 
