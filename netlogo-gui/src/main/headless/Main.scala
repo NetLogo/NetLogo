@@ -80,7 +80,7 @@ object Main {
       }
 
     while (it.hasNext) {
-      val arg = it.next()
+      val arg = it.next().toLowerCase
 
       def requireHasNext() {
         if (!it.hasNext)
@@ -105,6 +105,8 @@ object Main {
       } else if (arg == "--fullversion") {
         println(Version.fullVersion)
         return None
+      } else if (arg == "--3d") {
+        System.setProperty("org.nlogo.is3d", "true")
 
       } else if (arg == "--model") {
         requireHasNext()
