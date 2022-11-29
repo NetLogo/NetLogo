@@ -320,7 +320,7 @@ entry](faq.html#how-big-can-my-model-be-how-many-turtles-patches-procedures-butt
 By default NetLogo will not exceed 50% of your system's memory.
 
 Sixth, each parallel run will get its own world for the model to run in.  This world is *not* cleared automatically by
-BehaviorSpace if a parallel run gets re-used for another repitition, which happens quite frequently.  This means, for
+BehaviorSpace if a parallel run gets re-used for another repetition, which happens quite frequently.  This means, for
 example, if you do `ask patches [ set pcolor red ]` in one run and do not use `clear-all` or `clear-patches` in the
 setup commands of the next run, then the patches will all still be red.  In general using `clear-all` before each run
 would be a best practice, but there are times when you might not want to, such as loading data from a file that doesn't
@@ -596,10 +596,9 @@ launch java when running NetLogo Headless. You can adjust various JVM parameters
 in this script. You may also pass in Java properties starting with `-D` to the
 launcher.
 
-With Java 17 memory should be dynamically allocated for your model as it is
-needed and available on your system.  If you want to set a maximum amount of
-memory for BehaviorSpace to use you can use [the `-Xmx` setting to specify a
-particular heap size](faq.html#how-big-can-my-model-be-how-many-turtles-patches-procedures-buttons-and-so-on-can-my-model-contain).
+NetLogo allocates a maximum of half your total system memory for running your model as it is needed.  If you want to set
+a maximum amount of memory for BehaviorSpace to use you can use [the `-Xmx` setting to specify a particular heap
+size](faq.html#how-big-can-my-model-be-how-many-turtles-patches-procedures-buttons-and-so-on-can-my-model-contain).
 
 Note the use of `-Dfile.encoding=UTF-8`. This forces all file I/O to use UTF-8
 encoding. Doing so ensures that NetLogo can load all models consistently, and
