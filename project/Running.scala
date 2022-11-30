@@ -10,7 +10,7 @@ object Running {
     fork in run := true,
     javaOptions in run ++= Seq(
       "-XX:-OmitStackTraceInFastThrow",  // issue #104
-      "-Xmx1024m",
+      "-XX:MaxRAMPercentage=50",
       "-Dfile.encoding=UTF-8",
       "-Dapple.awt.graphics.UseQuartz=true") ++
     (if(System.getProperty("os.name").startsWith("Mac"))

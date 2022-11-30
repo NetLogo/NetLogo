@@ -12,11 +12,10 @@ if defined JAVA_HOME (
   set "JAVA=java.exe"
 )
 
-REM -Xmx1024m                     use up to 1GB RAM (edit to increase)
 REM -Dfile.encoding=UTF-8         ensure Unicode characters in model files are compatible cross-platform
 REM -Dnetlogo.extensions.dir=...  tell netlogo where to find extensions
 
-SET "JVM_OPTS=-Xmx1024m -Dfile.encoding=UTF-8 -Dnetlogo.models.dir=^"%BASE_DIR%\models^" -Dnetlogo.extensions.dir=^"%BASE_DIR%\extensions^" --add-exports=java.base/java.lang=ALL-UNNAMED --add-exports=java.desktop/sun.awt=ALL-UNNAMED --add-exports=java.desktop/sun.java2d=ALL-UNNAMED"
+SET "JVM_OPTS=-XX:MaxRAMPercentage=50 -Dfile.encoding=UTF-8 -Dnetlogo.models.dir=^"%BASE_DIR%\models^" -Dnetlogo.extensions.dir=^"%BASE_DIR%\extensions^" --add-exports=java.base/java.lang=ALL-UNNAMED --add-exports=java.desktop/sun.awt=ALL-UNNAMED --add-exports=java.desktop/sun.java2d=ALL-UNNAMED"
 
 set ARGS=
 

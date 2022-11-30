@@ -41,7 +41,7 @@ JAVA=$JAVA_HOME/bin/java
 
 # Most of these settings are fine for everyone
 XSS=-Xss10m
-XMX=-Xmx2048m
+XMRP=-XX:MaxRAMPercentage=50
 ENCODING=-Dfile.encoding=UTF-8
 HEADLESS=-Djava.awt.headless=true
 USE_QUARTZ=-Dapple.awt.graphics.UseQuartz=false
@@ -65,7 +65,7 @@ fi
 
 # UseQuartz=false so that we get pixel for pixel identical drawings between OS's, so TestChecksums works - ST 6/9/10
 "$JAVA" \
-    $XSS $XMX $XX \
+    $XSS $XMRP $XX \
     $ENCODING \
     $JAVA_OPTS \
     $HEADLESS \

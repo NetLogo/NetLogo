@@ -290,51 +290,49 @@ spreadsheet and database programs.
 
 #### Run options: parallel runs
 
-The run options dialog also lets you select whether you want multiple model runs
-to happen in parallel, and if so, how many are allowed to be simultaneously
-active. This number will default to the number of processor cores in your
+The run options dialog also lets you select whether you want multiple model runs to happen in parallel, and if so, how
+many are allowed to be simultaneously active. This number will default to the number of processor cores in your
 computer.
 
 There are a few cautions associated with parallel runs.
 
-First, if multiple runs are active, only one of them will be in the "foreground"
-and cause the view and plots to update. The other runs will happen invisibly in
-the background.
+First, if multiple runs are active, only one of them will be in the "foreground" and cause the view and plots to update.
+The other runs will happen invisibly in the background.
 
-Second, invisible background runs can't use primitives that only work in the
-GUI. For example, a background run can't make a movie.
+Second, invisible background runs can't use primitives that only work in the GUI. For example, a background run can't
+make a movie.
 
-Third, since parallel runs progress independently of each other, table format
-output may contain interleaved, out-of-order results. When you analyze your
-table data, you may wish to sort it by run number first. (Spreadsheet format
-output is not affected by this issue, since it is not written until the
-experiment completes or is aborted.)
+Third, since parallel runs progress independently of each other, table format output may contain interleaved,
+out-of-order results. When you analyze your table data, you may wish to sort it by run number first. (Spreadsheet format
+output is not affected by this issue, since it is not written until the experiment completes or is aborted.)
 
-Fourth, using all available processor cores may make your computer slow to use
-for other tasks while the experiment is running.
+Fourth, using all available processor cores may make your computer slow to use for other tasks while the experiment is
+running or slow to complete runs as contention will build for memory between the runs themselves.  The number of threads
+used by NetLogo if the `--threads` parameter is omitted will be the total number of processors on your system.  If your
+model uses a large amount of memory, you may find that passing in a smaller value of `--threads` will enable the runs to
+complete in less time overall since work will be done by the system keeping the memory for each run available.  A good
+rule of thumb might be to start with a `--threads` value at half the number of logical cores your system has, and bump
+up or down from there to see where your "sweet spot" is for least time to complete all runs.
 
-Fifth, doing runs in parallel will multiply the experiment's memory requirements
-accordingly. You may need to increase NetLogo's memory ceiling (see [this FAQ
+Fifth, doing runs in parallel will multiply the experiment's memory requirements accordingly. You may need to increase
+NetLogo's memory ceiling (see [this FAQ
 entry](faq.html#how-big-can-my-model-be-how-many-turtles-patches-procedures-buttons-and-so-on-can-my-model-contain)).
+By default NetLogo will not exceed 50% of your system's memory.
 
-Sixth, each parallel run will get its own world for the model to run in.  This world is
-*not* cleared automatically by BehaviorSpace if a parallel run gets re-used for another
-repitition, which happens quite frequently.  This means, for example, if you do `ask
-patches [ set pcolor red ]` in one run and do not use `clear-all` or `clear-patches` in
-the setup commands of the next run, then the patches will all still be red.  In general
-using `clear-all` before each run would be a best practice, but there are times when you
-might not want to, such as loading data from a file that doesn't change run-to-run.  Just
-be careful with whatever data is not cleared out.
+Sixth, each parallel run will get its own world for the model to run in.  This world is *not* cleared automatically by
+BehaviorSpace if a parallel run gets re-used for another repetition, which happens quite frequently.  This means, for
+example, if you do `ask patches [ set pcolor red ]` in one run and do not use `clear-all` or `clear-patches` in the
+setup commands of the next run, then the patches will all still be red.  In general using `clear-all` before each run
+would be a best practice, but there are times when you might not want to, such as loading data from a file that doesn't
+change run-to-run.  Just be careful with whatever data is not cleared out.
 
-Seventh, there is a very, very small chance that at startup multiple parallel runs could
-wind up with the same random number generator state if they startup at the eact same
-moment in time.  This means the runs would produce identical output for all random
-operations and likely the same results.  This would have a chance to happen when running
-on very fast processors and with lots of parallel runs at once.  If you need to make sure
-this doesn't impact your results, you can add `random-seed new-seed` to your setup
-commands to re-generate a new unique random seed for each run.  In fact, storing the
-`new-seed` as a global variable so you can output it with the rest of your results would
-let you re-run a run later on by manually using that value to set the `random-seed`.
+Seventh, there is a very, very small chance that at startup multiple parallel runs could wind up with the same random
+number generator state if they startup at the eact same moment in time.  This means the runs would produce identical
+output for all random operations and likely the same results.  This would have a chance to happen when running on very
+fast processors and with lots of parallel runs at once.  If you need to make sure this doesn't impact your results, you
+can add `random-seed new-seed` to your setup commands to re-generate a new unique random seed for each run.  In fact,
+storing the `new-seed` as a global variable so you can output it with the rest of your results would let you re-run a
+run later on by manually using that value to set the `random-seed`.
 
 #### Observing runs
 
@@ -598,11 +596,9 @@ launch java when running NetLogo Headless. You can adjust various JVM parameters
 in this script. You may also pass in Java properties starting with `-D` to the
 launcher.
 
-Note the use of `-Xmx` to specify a maximum heap size of one gigabyte. If you
-don't specify a maximum heap size, you will get your VM's default size, which
-may be unusably small. (One gigabyte is an arbitrary size which should be more
-than large enough for most models; you can specify a different limit if you
-want.)
+NetLogo allocates a maximum of half your total system memory for running your model as it is needed.  If you want to set
+a maximum amount of memory for BehaviorSpace to use you can use [the `-Xmx` setting to specify a particular heap
+size](faq.html#how-big-can-my-model-be-how-many-turtles-patches-procedures-buttons-and-so-on-can-my-model-contain).
 
 Note the use of `-Dfile.encoding=UTF-8`. This forces all file I/O to use UTF-8
 encoding. Doing so ensures that NetLogo can load all models consistently, and
