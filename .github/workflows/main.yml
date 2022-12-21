@@ -27,14 +27,14 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'liberica' 
-          java-version: '17'
+          java-version: '17.0.5+8'
           cache: 'sbt'
 
       - name: Build NetLogo
         shell: bash
         run: |
-          sbt update all headless/compile parserJS/compile
-          sbt depend headless/depend
+          ./sbt update all headless/compile parserJS/compile
+          ./sbt depend headless/depend
 
       - uses: actions/cache@v3
         if: matrix.os == 'ubuntu-latest'
