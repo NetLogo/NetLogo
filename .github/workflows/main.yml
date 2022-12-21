@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  LIBERICA_URL: https://download.bell-sw.com/java/17.0.5+8/bellsoft-jdk17.0.5+8-linux-amd64-full.tar.gz
+  liberica-version: '17.0.5+8'
 
 jobs:
   build:
@@ -19,14 +19,14 @@ jobs:
           access_token: ${{ github.token }}
 
       - uses: actions/checkout@v3
-
-      - uses: olafurpg/setup-scala@v13
-        id: setup-scala
         with:
-          java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
+          submodules: true
 
-      - name: Clone Git submodules
-        run: git submodule update --init
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'liberica'
+          java-version: ${{ env.liberica-version }}
+          cache: 'sbt'
 
       - name: Build NetLogo
         run: |
@@ -49,10 +49,11 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
 
-      - uses: olafurpg/setup-scala@v13
-        id: setup-scala
+      - uses: actions/setup-java@v3
         with:
-          java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
+          distribution: 'liberica'
+          java-version: ${{ env.liberica-version }}
+          cache: 'sbt'
 
       - name: Test Parser
         run: ./sbt parserJS/test parserJVM/test
@@ -67,10 +68,11 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
 
-      - uses: olafurpg/setup-scala@v13
-        id: setup-scala
+      - uses: actions/setup-java@v3
         with:
-          java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
+          distribution: 'liberica'
+          java-version: ${{ env.liberica-version }}
+          cache: 'sbt'
 
       - name: Test 2D
         run: ./sbt netlogo/test:fast netlogo/test:medium netlogo/test:slow
@@ -88,10 +90,11 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
 
-      - uses: olafurpg/setup-scala@v13
-        id: setup-scala
+      - uses: actions/setup-java@v3
         with:
-          java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
+          distribution: 'liberica'
+          java-version: ${{ env.liberica-version }}
+          cache: 'sbt'
 
       - name: Test 3D
         run: ./sbt threed netlogo/test:fast netlogo/test:medium netlogo/test:slow
@@ -106,10 +109,11 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
 
-      - uses: olafurpg/setup-scala@v13
-        id: setup-scala
+      - uses: actions/setup-java@v3
         with:
-          java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
+          distribution: 'liberica'
+          java-version: ${{ env.liberica-version }}
+          cache: 'sbt'
 
       - uses: actions/setup-python@v4
         with:
@@ -138,10 +142,11 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
 
-      - uses: olafurpg/setup-scala@v13
-        id: setup-scala
+      - uses: actions/setup-java@v3
         with:
-          java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
+          distribution: 'liberica'
+          java-version: ${{ env.liberica-version }}
+          cache: 'sbt'
 
       - name: Test Headless
         run: ./sbt headless/test:fast headless/test:medium headless/test:slow
