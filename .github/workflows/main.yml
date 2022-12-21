@@ -5,13 +5,15 @@ on:
   pull_request:
   workflow_dispatch:
 
-env:
-  LIBERICA_URL: https://download.bell-sw.com/java/17.0.5+8/bellsoft-jdk17.0.5+8-linux-amd64-full.tar.gz
-
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     if: ${{ 'pull_request' != github.event_name || (github.event.pull_request.head.repo.git_url != github.event.pull_request.base.repo.git_url) }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
     steps:
       - name: Cancel Previous Runs
         uses: styfle/cancel-workflow-action@0.11.0
@@ -19,21 +21,23 @@ jobs:
           access_token: ${{ github.token }}
 
       - uses: actions/checkout@v3
-
-      - uses: olafurpg/setup-scala@v13
-        id: setup-scala
         with:
-          java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
+          submodules: true
 
-      - name: Clone Git submodules
-        run: git submodule update --init
+      - uses: actions/setup-java@v3
+        with:
+          distribution: 'liberica' 
+          java-version: '17'
+          cache: 'sbt'
 
       - name: Build NetLogo
+        shell: bash
         run: |
-          ./sbt update all headless/compile parserJS/compile
-          ./sbt depend headless/depend
+          sbt update all headless/compile parserJS/compile
+          sbt depend headless/depend
 
       - uses: actions/cache@v3
+        if: matrix.os == 'ubuntu-latest'
         id: restore-build
         with:
           path: ./*
