@@ -53,10 +53,11 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
 
-      - uses: olafurpg/setup-scala@v13
-        id: setup-scala
+      - uses: actions/setup-java@v3
         with:
-          java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
+          distribution: 'liberica' 
+          java-version: '17'
+          cache: 'sbt'
 
       - name: Test Parser
         run: ./sbt parserJS/test parserJVM/test
@@ -71,10 +72,11 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
 
-      - uses: olafurpg/setup-scala@v13
-        id: setup-scala
+      - uses: actions/setup-java@v3
         with:
-          java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
+          distribution: 'liberica' 
+          java-version: '17'
+          cache: 'sbt'
 
       - name: Test 2D
         run: ./sbt netlogo/test:fast netlogo/test:medium netlogo/test:slow
@@ -92,10 +94,11 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
 
-      - uses: olafurpg/setup-scala@v13
-        id: setup-scala
+      - uses: actions/setup-java@v3
         with:
-          java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
+          distribution: 'liberica' 
+          java-version: '17'
+          cache: 'sbt'
 
       - name: Test 3D
         run: ./sbt threed netlogo/test:fast netlogo/test:medium netlogo/test:slow
@@ -110,10 +113,11 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
 
-      - uses: olafurpg/setup-scala@v13
-        id: setup-scala
+      - uses: actions/setup-java@v3
         with:
-          java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
+          distribution: 'liberica' 
+          java-version: '17'
+          cache: 'sbt'
 
       - uses: actions/setup-python@v4
         with:
@@ -142,10 +146,11 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
 
-      - uses: olafurpg/setup-scala@v13
-        id: setup-scala
+      - uses: actions/setup-java@v3
         with:
-          java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
+          distribution: 'liberica' 
+          java-version: '17'
+          cache: 'sbt'
 
       - name: Test Headless
         run: ./sbt headless/test:fast headless/test:medium headless/test:slow
