@@ -56,7 +56,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'liberica' 
-          java-version: '17'
+          java-version: '17.0.5+8'
           cache: 'sbt'
 
       - name: Test Parser
@@ -75,7 +75,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'liberica' 
-          java-version: '17'
+          java-version: '17.0.5+8'
           cache: 'sbt'
 
       - name: Test 2D
@@ -97,7 +97,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'liberica' 
-          java-version: '17'
+          java-version: '17.0.5+8'
           cache: 'sbt'
 
       - name: Test 3D
@@ -116,7 +116,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'liberica' 
-          java-version: '17'
+          java-version: '17.0.5+8'
           cache: 'sbt'
 
       - uses: actions/setup-python@v4
@@ -149,7 +149,7 @@ jobs:
       - uses: actions/setup-java@v3
         with:
           distribution: 'liberica' 
-          java-version: '17'
+          java-version: '17.0.5+8'
           cache: 'sbt'
 
       - name: Test Headless
