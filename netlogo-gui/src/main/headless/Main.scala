@@ -9,6 +9,35 @@ import org.nlogo.api.{ APIVersion, Version }
 import org.nlogo.nvm.LabInterface.Settings
 
 object Main {
+
+  // *TODO*: Get this I18N'd and also a way to keep it in sync with the BehaviorSpace docs.
+  private val HELP_STRING = """
+Run NetLogo using the NetLogo_Console app with the --headless command line argument.  The NetLogo_Console script supports the following arguments:
+
+* --headless: Enable headless mode to run a BehaviorSpace experiment (required, will open the graphical interface otherwise).
+* --model <path>: pathname of model to open (required)
+* --setup-file <path>: read experiment setups from this file instead of the model file
+* --experiment <name>: name of experiment to run
+* --table <path>: pathname to send table output to (or - for standard output)
+* --spreadsheet <path>: pathname to send table output to (or - for standard output)
+* --threads <number>: use this many threads to do model runs in parallel, or 1 to disable parallel runs. defaults to one thread per processor.
+* --min-pxcor <number>: override world size setting in model file
+* --max-pxcor <number>: override world size setting in model file
+* --min-pycor <number>: override world size setting in model file
+* --max-pycor <number>: override world size setting in model file
+
+The --model flag is required. If you don't specify --experiment, you must specify --setup-file. By default no results are generated, so you'll usually want to specify either --table or --spreadsheet, or both. If you specify any of the world dimensions, you must specify all four.
+
+Here is an example of running an experiment already defined and saved within a model (path seperators and line-continue slashes are for macOS or Linux, Windows would be different):
+
+./NetLogo_Console --headless \
+  --model "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
+  --experiment "Wolf Sheep Simple model analysis" \
+  --table -
+
+See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo User Manual for more information and examples.
+"""
+
   def main(args: Array[String]) {
     setHeadlessProperty()
     parseArgs(args).foreach(runExperiment)
@@ -90,6 +119,10 @@ object Main {
       if (arg == "--headless") {
         // noop to avoid tripping unknown argument error
 
+      } else if (arg == "--help") {
+        println(Main.HELP_STRING)
+        return None
+
       } else if (arg == "--version") {
         println(Version.version)
         return None
@@ -105,6 +138,7 @@ object Main {
       } else if (arg == "--fullversion") {
         println(Version.fullVersion)
         return None
+
       } else if (arg == "--3d") {
         System.setProperty("org.nlogo.is3d", "true")
 
@@ -157,16 +191,16 @@ object Main {
     }
 
     if (model == None) {
-      die("you must specify --model")
+      die("You must specify --model.  Try --help for more information.")
     }
 
     if (setupFile == None && experiment == None) {
-      die("you must specify either --setup-file or --experiment (or both)")
+      die("You must specify either --setup-file or --experiment (or both).  Try --help for more information.")
     }
 
     val dimStrings = List(minPxcor, maxPxcor, minPycor, maxPycor)
     if (dimStrings.exists(_.isDefined) && dimStrings.exists(!_.isDefined)) {
-      die("if any of min/max-px/ycor are specified, all four must be specified")
+      die("If any of min/max-px/ycor are specified, all four must be specified.  Try --help for more information.")
     }
 
     val dims = if (dimStrings.forall(!_.isDefined)) {

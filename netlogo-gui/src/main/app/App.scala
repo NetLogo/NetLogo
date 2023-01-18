@@ -69,7 +69,8 @@ object App {
   }
 
   def mainWithAppHandler(args: Array[String], appHandler: Object) {
-    if (args.map(_.trim.toLowerCase).contains("--headless")) {
+    val lowerArgs = args.map(_.trim.toLowerCase)
+    if (lowerArgs.contains("--headless") || lowerArgs.contains("--help")) {
       org.nlogo.headless.Main.main(args)
       return
     }
