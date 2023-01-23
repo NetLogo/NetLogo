@@ -41,7 +41,7 @@ JAVA=$JAVA_HOME/bin/java
 
 # Most of these settings are fine for everyone
 XSS=-Xss10m
-XMRP=-XX:MaxRAMPercentage=50
+XMRP=-XX:MaxRAMPercentage=70
 ENCODING=-Dfile.encoding=UTF-8
 HEADLESS=-Djava.awt.headless=true
 USE_QUARTZ=-Dapple.awt.graphics.UseQuartz=false

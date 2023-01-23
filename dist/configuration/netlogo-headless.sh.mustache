@@ -11,7 +11,7 @@ fi;
 
 # -Dfile.encoding=UTF-8 ensure Unicode characters in model files are compatible cross-platform
 
-JVM_OPTS=(-XX:MaxRAMPercentage=50 -Dfile.encoding=UTF-8 -Dnetlogo.extensions.dir="${BASE_DIR}/extensions" -Dnetlogo.models.dir="${BASE_DIR}/models" --add-exports=java.base/java.lang=ALL-UNNAMED --add-exports=java.desktop/sun.awt=ALL-UNNAMED --add-exports=java.desktop/sun.java2d=ALL-UNNAMED  {{{javaOptions}}})
+JVM_OPTS=(-XX:MaxRAMPercentage=70 -Dfile.encoding=UTF-8 -Dnetlogo.extensions.dir="${BASE_DIR}/extensions" -Dnetlogo.models.dir="${BASE_DIR}/models" --add-exports=java.base/java.lang=ALL-UNNAMED --add-exports=java.desktop/sun.awt=ALL-UNNAMED --add-exports=java.desktop/sun.java2d=ALL-UNNAMED  {{{javaOptions}}})
 ARGS=()
 
 for arg in "$@"; do

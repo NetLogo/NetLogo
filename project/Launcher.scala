@@ -35,7 +35,7 @@ trait Launcher {
 
 object Launcher {
   val defaultJavaOptions: Seq[String] = Seq(
-    "-XX:MaxRAMPercentage=50"
+    "-XX:MaxRAMPercentage=70"
   , "-Dfile.encoding=UTF-8"
   , "--add-exports=java.base/java.lang=ALL-UNNAMED"
   , "--add-exports=java.desktop/sun.awt=ALL-UNNAMED"
@@ -104,7 +104,7 @@ class BehaviorsearchLauncher(
   def javaOptions: Seq[String] = Seq(
     // Behaviorsearch has issues with the post Java 8 GCs, particularly on 32-bit systems.
     // -Jeremy B September 2022
-    "-XX:MaxRAMPercentage=50"
+    "-XX:MaxRAMPercentage=70"
   , "-XX:+UseParallelGC"
   , "-Dfile.encoding=UTF-8"
   ) ++ extraJavaOptions
