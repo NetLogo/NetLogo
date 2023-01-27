@@ -125,3 +125,7 @@ StopInRunString
   globals [b]
   to foo run "stop set b 10" set b 5 end
   b => 0
+
+CheckSyntax
+  __check-syntax "plotxy ticks 3" => ""
+  __check-syntax "show x" => "Nothing named X has been defined."
