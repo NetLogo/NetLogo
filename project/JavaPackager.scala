@@ -145,7 +145,9 @@ object JavaPackager {
       try {
         Process("update-alternatives --list javac".split(" ")).!!
       } catch {
-        case ex: java.lang.RuntimeException => "" // RHEL bugs out with this command, just use path-specified
+        // This command may not work on all distros, just use path-specified
+        case ex: java.lang.RuntimeException => ""
+        case ex: java.io.IOException => ""
       }
 
     val jpackageFiles = alternatives
