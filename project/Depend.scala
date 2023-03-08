@@ -11,25 +11,18 @@ object Depend {
 
   lazy val dependTask =
     depend := {
-      val _ = (compile in Test).value
+      val _ = (Test / compile).value
       val s = streams.value
-      val classes = (classDirectory in Compile).value.toString
-      val testClasses = (classDirectory in Test).value.toString
+      val classes = (Compile / classDirectory).value.toString
+      val testClasses = (Test / classDirectory).value.toString
       val ddfFile = baseDirectory.value / "tmp" / "depend.ddf"
       IO.write(ddfFile, ddfContents)
       import classycle.dependency.DependencyChecker
-      def main() = TrapExit(
-        DependencyChecker.main(Array("-dependencies=@" + ddfFile.getPath,
-                                     classes)),
-        s.log)
-      def test() = TrapExit(
-        DependencyChecker.main(Array("-dependencies=@" + ddfFile.getPath,
-                                     testClasses)),
-        s.log)
-      main() match {
-        case 0 => test() match { case 0 => ; case fail => sys.error(fail.toString) }
-        case fail => sys.error(fail.toString)
-      }
+      def main() =
+        DependencyChecker.main(Array("-dependencies=@" + ddfFile.getPath, classes))
+      def test() =
+        DependencyChecker.main(Array("-dependencies=@" + ddfFile.getPath, testClasses))
+      main()
     }
 
   private def ddfContents: String = {

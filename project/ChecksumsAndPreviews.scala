@@ -29,6 +29,6 @@ object ChecksumsAndPreviews {
       "org.nlogo.headless.ChecksumsAndPreviews",
       Seq(flag),
       workingDirectory = baseDirectory(_.getParentFile))
-        .dependsOn(compile in Compile, extensions)
+        .dependsOn(Compile / compile, extensions)
 
 }

@@ -3,7 +3,7 @@ import Keys._
 
 object GUISettings {
   lazy val settings = Seq(
-    javaOptions in run ++= (
+    run / javaOptions ++= (
       if (System.getProperty("os.name").contains("Mac"))
         Seq(
           "-Dapple.awt.graphics.UseQuartz=true",

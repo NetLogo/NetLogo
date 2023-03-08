@@ -24,7 +24,7 @@ object PackageMacAggregate {
       new Manifest(is)
     }
     IO.delete(tmpDir / "META-INF")
-    IO.jar(Path.allSubpaths(tmpDir), jarFile, manifest)
+    IO.jar(Path.allSubpaths(tmpDir), jarFile, manifest, None)
 
     IO.delete(tmpDir)
   }

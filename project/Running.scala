@@ -7,8 +7,8 @@ object Running {
 
   // the NetLogo app cannot be cleanly shut down, so we need a fresh JVM
   val settings = Seq(
-    fork in run := true,
-    javaOptions in run ++= Seq(
+    run / fork := true,
+    run / javaOptions ++= Seq(
       "-XX:-OmitStackTraceInFastThrow",  // issue #104
       "-XX:MaxRAMPercentage=50",
       "-Dfile.encoding=UTF-8",
@@ -34,7 +34,7 @@ object Running {
   def makeMainTask(
     mainClass: String,
     prefixArgs: Seq[String] = Seq.empty[String],
-    classpath: Def.Initialize[Task[Seq[Attributed[File]]]] = (fullClasspath in Compile).toTask,
+    classpath: Def.Initialize[Task[Seq[Attributed[File]]]] = (Compile / fullClasspath).toTask,
     workingDirectory: Def.Initialize[File] = baseDirectory,
     options: String = ""): Def.Initialize[InputTask[Try[Unit]]] = {
       import Def.spaceDelimited

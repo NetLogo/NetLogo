@@ -42,12 +42,12 @@ object NetLogoPackaging {
   def bundledDirs(netlogo: Project, behaviorsearchProject: Project): Def.Initialize[(String, String) => Seq[BundledDirectory]] =
     Def.setting {
       { (platform: String, arch: String) =>
-        val nlDir = (baseDirectory in netlogo).value
+        val nlDir = (netlogo / baseDirectory).value
         Seq(
-          new ExtensionDir((extensionRoot in netlogo).value, platform, arch),
-          new ModelsDir((modelsDirectory in netlogo).value),
-          new DocsDir((docsRoot in netlogo).value),
-          new BehaviorsearchDir((baseDirectory in behaviorsearchProject).value, platform)
+          new ExtensionDir((netlogo / extensionRoot).value, platform, arch),
+          new ModelsDir((netlogo / modelsDirectory).value),
+          new DocsDir((netlogo / docsRoot).value),
+          new BehaviorsearchDir((behaviorsearchProject / baseDirectory).value, platform)
         ) ++ (platform match {
           case "windows" => Seq(new NativesDir(nlDir / "natives", "windows-amd64", "windows-i586"))
           case "linux"   => Seq(new NativesDir(nlDir / "natives", "linux-amd64", "linux-i586"))
@@ -66,7 +66,7 @@ object NetLogoPackaging {
       .getOrElse(Parser.success(PathSpecifiedJDK)))
 
   def settings(netlogo: Project, macApp: Project, behaviorsearchProject: Project): Seq[Setting[_]] = Seq(
-    netLogoRoot     := (baseDirectory in netlogo).value,
+    netLogoRoot     := (netlogo / baseDirectory).value,
     behaviorsearchRoot := netLogoRoot.value.getParentFile / "behaviorsearch",
     mathematicaRoot := netLogoRoot.value.getParentFile / "Mathematica-Link",
     configRoot      := baseDirectory.value / "configuration",
@@ -75,21 +75,21 @@ object NetLogoPackaging {
     netLogoLongVersion := { if (marketingVersion.value.length == 3) marketingVersion.value + ".0" else marketingVersion.value },
 
     buildNetLogo := {
-      (all in netlogo).value
-      (allDocs in netlogo).value
-      (allPreviews in netlogo).toTask("").value
+      (netlogo / all).value
+      (netlogo / allDocs).value
+      (netlogo / allPreviews).toTask("").value
       resaveModels.value
       buildMathematicaLink.value
-      (packageBin in Compile in behaviorsearchProject).value
+      (behaviorsearchProject / Compile / packageBin).value
     },
 
     resaveModels := {
       makeMainTask("org.nlogo.tools.ModelResaver",
-        classpath = (Keys.fullClasspath in Test in netlogo),
+        classpath = (netlogo / Test / Keys.fullClasspath),
         workingDirectory = baseDirectory(_.getParentFile)).toTask("").value
     },
 
-    resaveModels := (resaveModels dependsOn (extensions in netlogo)).value,
+    resaveModels := (resaveModels dependsOn (netlogo / extensions)).value,
 
     buildMathematicaLink := {
       val sbt = if (System.getProperty("os.name").contains("Windows")) "sbt.bat" else "sbt"
@@ -147,7 +147,7 @@ object NetLogoPackaging {
 
     generateLocalWebsite := {
       FileActions.copyDirectory(webTarget.value, localSiteTarget.value)
-      FileActions.copyDirectory((modelsDirectory in netlogo).value, localSiteTarget.value / "models")
+      FileActions.copyDirectory((netlogo / modelsDirectory).value, localSiteTarget.value / "models")
       FileActions.copyDirectory(netLogoRoot.value / "docs", localSiteTarget.value / "docs")
       FileActions.copyFile(netLogoRoot.value / "NetLogo User Manual.pdf", localSiteTarget.value / "docs" / "NetLogo User Manual.pdf")
       localSiteTarget.value
@@ -173,7 +173,7 @@ object NetLogoPackaging {
       val targetDir = s"/usr/local/www/netlogo/${netLogoLongVersion.value}"
       val manualSource = netLogoRoot.value / "NetLogo User Manual.pdf"
       val manualTarget = s"$targetDir/docs/NetLogo User Manual.pdf"
-      (allDocs in netlogo).value
+      (netlogo / allDocs).value
       RunProcess(Seq("rsync", "-rltv", "--inplace", "--progress", sourceDir.getPath, s"$user@$host:$targetDir"), "rsync docs")
       RunProcess(Seq("rsync", "-rltv", "--inplace", "--progress", manualSource.getPath, s"$user@$host:$manualTarget"), "rsync user manual")
       RunProcess(Seq("ssh", s"$user@$host", "chgrp", "-R", "apache", targetDir), "ssh - change release group")
@@ -181,17 +181,17 @@ object NetLogoPackaging {
     },
 
     packagingClasspath := {
-      val allDeps = (dependencyClasspath in netlogo in Runtime).value ++
-        (dependencyClasspath in behaviorsearchProject in Runtime).value
+      val allDeps = (netlogo / Runtime / dependencyClasspath).value ++
+        (behaviorsearchProject / Runtime / dependencyClasspath).value
 
       (removeJdkLibraries(filterDuplicateDeps(allDeps)).files :+
-        (packageBin in Compile in behaviorsearchProject).value)
+        (behaviorsearchProject / Compile / packageBin).value)
         .filterNot(jarExcluded)
         .filterNot(_.isDirectory) :+ packagingMainJar.value
     },
 
     packagingMainJar := {
-      (packageBin in Compile in netlogo).value
+      (netlogo / Compile / packageBin).value
     },
 
     packageLinuxAggregate := {
@@ -307,9 +307,9 @@ object NetLogoPackaging {
       )
     },
 
-    iconFiles in packageMacAggregate := {
+    packageMacAggregate / iconFiles := {
       ((configRoot.value ** "*.icns") +++
-        ((baseDirectory in behaviorsearchProject).value ** "*.icns")).get.toSeq
+        ((behaviorsearchProject / baseDirectory).value ** "*.icns")).get.toSeq
     },
 
     packageMacAggregate := {

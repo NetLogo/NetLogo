@@ -26,7 +26,7 @@ object NetLogoWebExport {
     taskKey[Unit]("update netlogo web export file")
 
   lazy val settings = Seq(
-    nlwExportFile := (resourceDirectory in Compile).value / "system" / "net-logo-web.html",
+    nlwExportFile := (Compile / resourceDirectory).value / "system" / "net-logo-web.html",
     nlwUpdateExportFile := { apply(nlwExportFile.value) }
   )
 }

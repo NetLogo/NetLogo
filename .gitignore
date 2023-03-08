@@ -1,4 +1,5 @@
 # common directory names
+.bsp/
 javadoc/
 scaladoc/
 classes/

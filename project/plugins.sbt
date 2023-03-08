@@ -1,7 +1,7 @@
 scalacOptions += "-deprecation"
 
 // so we can use native2ascii on Linux.
-unmanagedJars in Compile += {
+Compile / unmanagedJars += {
   // prefer JAVA_HOME to java.home
   val home =
     (javaHome.value orElse

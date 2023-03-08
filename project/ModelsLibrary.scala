@@ -49,12 +49,12 @@ object ModelsLibrary {
     javaOptions += "-Dnetlogo.models.dir=" + modelsDirectory.value.getAbsolutePath.toString,
     resaveModels := {
       makeMainTask("org.nlogo.tools.ModelResaver",
-        classpath = (fullClasspath in Test),
+        classpath = (Test / fullClasspath),
         workingDirectory = baseDirectory(_.getParentFile)).toTask("").value
     },
     resaveModel := {
       makeMainTask("org.nlogo.tools.ModelResaver",
-        classpath = (fullClasspath in Test),
+        classpath = (Test / fullClasspath),
         workingDirectory = baseDirectory(_.getParentFile))
     }
   )

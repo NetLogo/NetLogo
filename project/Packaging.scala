@@ -5,10 +5,10 @@ import java.io.File
 object Packaging {
 
   val settings = Seq(
-    publishArtifact in Test := true,
+    Test / publishArtifact := true,
     packageOptions += {
       Package.ManifestAttributes((
-        "Class-Path", (dependencyClasspath in Runtime).value.files
+        "Class-Path", (Runtime / dependencyClasspath).value.files
           .map(f => f.getName)
           .filter(_.endsWith(".jar"))
           .mkString(" ")))

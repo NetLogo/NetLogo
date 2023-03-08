@@ -6,7 +6,7 @@ import NetLogoBuild.autogenRoot
 
 object JFlexRunner {
 
-  lazy val settings = Seq(sourceGenerators in Compile += task.taskValue)
+  lazy val settings = Seq(Compile / sourceGenerators += task.taskValue)
 
   lazy val task =
     Def.task {
@@ -16,7 +16,7 @@ object JFlexRunner {
         (in: Set[File]) =>
           Set(("agent", "ImportLexer")).map {
             case (pkg, kind) =>
-              flex(streamsValue.log.info(_), autogenRootValue, streamsValue.cacheDirectory, (sourceManaged in Compile).value, pkg, kind)
+              flex(streamsValue.log.info(_), autogenRootValue, streamsValue.cacheDirectory, (Compile / sourceManaged).value, pkg, kind)
         }
       }
       cachedLexers(Set(

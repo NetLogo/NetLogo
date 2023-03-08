@@ -6,13 +6,13 @@ import NetLogoBuild.autogenRoot
 
 object EventsGenerator {
 
-  lazy val settings = Seq(sourceGenerators in Compile += task.taskValue)
+  lazy val settings = Seq(Compile / sourceGenerators += task.taskValue)
 
   lazy val task =
     Def.task {
       val streamsValue = streams.value
       val autogenRootValue = autogenRoot.value
-      val sourceManagedValue = (sourceManaged in Compile).value
+      val sourceManagedValue = (Compile / sourceManaged).value
       val cachedEvents = FileFunction.cached(streams.value.cacheDirectory / "events", inStyle = FilesInfo.hash, outStyle = FilesInfo.hash) {
         (in: Set[File]) =>
           Set("window", "app.common").map { pkg =>

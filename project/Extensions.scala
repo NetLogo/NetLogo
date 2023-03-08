@@ -47,8 +47,8 @@ object Extensions {
 
   lazy val settings = Seq(
     extensionNetLogoJar := {
-      (packageBin in Test).value
-      (packageBin in Compile).value
+      (Test / packageBin).value
+      (Compile / packageBin).value
     },
     forExtension := {
       val (extensionDir, command) = extensionAndCommandParser.parsed

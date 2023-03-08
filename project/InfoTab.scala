@@ -10,7 +10,7 @@ object InfoTab {
   val infoTabTask =
     infoTab := {
       val streamsValue = streams.value
-      val testCpValue = (fullClasspath in Test).value
+      val testCpValue = (Test / fullClasspath).value
       val baseDirectoryValue = baseDirectory.value
       val runnerValue = runner.value
       val cache =

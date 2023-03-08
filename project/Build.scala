@@ -26,7 +26,7 @@ object NetLogoBuild {
       dateFormat.format(new java.util.Date())
     },
     netlogoVersion := {
-      val loader = (testLoader in Test).value
+      val loader = (Test / testLoader).value
       val klass = loader.loadClass("org.nlogo.api.Version$")
       val version = klass.getField("MODULE$").get(klass)
       klass.getMethod("version")
@@ -35,11 +35,11 @@ object NetLogoBuild {
     })
 
   def includeInPackaging(project: Project): Seq[Setting[_]] =
-    Seq(sources in Compile ++= (sources in (project, Compile)).value) ++
+    Seq(Compile / sources ++= (project / Compile / sources).value) ++
     Seq(packageBin, packageSrc, packageDoc).flatMap(task => inTask(task)(
-      mappings in Compile ++= {
-        val existingMappings = (mappings in Compile).value.map(_._2)
-        val newMappings = (mappings in Compile in project).value
+      Compile / mappings ++= {
+        val existingMappings = (Compile / mappings).value.map(_._2)
+        val newMappings = (project / Compile / mappings).value
         newMappings.filterNot(n => existingMappings.contains(n._2))
       })) ++ Seq(
         ivyModule := {
@@ -47,7 +47,7 @@ object NetLogoBuild {
           val newMs =
             moduleSettings.value match {
               case i: ModuleDescriptorConfiguration =>
-                val excludedModule = (projectID in project).value
+                val excludedModule = (project / projectID).value
                 val newDeps =
                   i.dependencies
                     .filterNot(m => m.name == excludedModule.name && m.organization == excludedModule.organization)
@@ -56,16 +56,16 @@ object NetLogoBuild {
             }
           new is.Module(newMs)
         },
-        libraryDependencies ++= (libraryDependencies in project).value)
+        libraryDependencies ++= (project / libraryDependencies).value)
 
 
   def shareSourceDirectory(path: String): Seq[Setting[_]] = {
     Seq(
-      unmanagedSourceDirectories in Compile += baseDirectory.value.getParentFile / path / "src" / "main",
-      unmanagedSourceDirectories in Test    += baseDirectory.value.getParentFile / path / "src" / "test"
+      Compile / unmanagedSourceDirectories += baseDirectory.value.getParentFile / path / "src" / "main",
+      Test / unmanagedSourceDirectories    += baseDirectory.value.getParentFile / path / "src" / "test"
       ) ++ Seq(Compile, Test).map(config =>
-        excludeFilter in unmanagedSources in config := {
-          (excludeFilter in unmanagedSources in config).value ||
+        config / unmanagedSources / excludeFilter := {
+          (config / unmanagedSources / excludeFilter).value ||
           new SimpleFileFilter({ f =>
             ! f.isDirectory &&
             Path.rebase(baseDirectory.value.getParentFile / path, baseDirectory.value)(f).map(_.exists).getOrElse(false)

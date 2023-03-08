@@ -18,7 +18,7 @@ object Dump {
     dumpClassName := "org.nlogo.headless.Dump",
     dump := {
       val args   = spaceDelimited("").parsed
-      val loader = (testLoader in Test).value
+      val loader = (Test / testLoader).value
       // oh god, I hope this doesn't break something. it doesn't work without it, the bytecode
       // generator can't load classes - ST 6/29/12
       Thread.currentThread.setContextClassLoader(loader)

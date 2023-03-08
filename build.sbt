@@ -16,34 +16,32 @@ import Testing.{ testTempDirectory, testChecksumsClass }
 lazy val commonSettings = Seq(
   organization          := "org.nlogo",
   licenses              += ("GPL-2.0", url("http://opensource.org/licenses/GPL-2.0")),
-  javaSource in Compile := baseDirectory.value / "src" / "main",
-  javaSource in Test    := baseDirectory.value / "src" / "test",
+  Compile / javaSource  := baseDirectory.value / "src" / "main",
+  Test / javaSource     := baseDirectory.value / "src" / "test",
   onLoadMessage         := "",
   testTempDirectory     := (baseDirectory.value.getParentFile / "tmp").getAbsoluteFile,
   ivyLoggingLevel       := UpdateLogging.Quiet,
-  scalacOptions in Compile in console := scalacOptions.value.filterNot(_ == "-Xlint")
+  Compile / console / scalacOptions := scalacOptions.value.filterNot(_ == "-Xlint")
 )
 
 // These settings are common to all builds involving scala
 // Any scala-specific settings should change here (and thus for all projects at once)
 lazy val scalaSettings = Seq(
-  scalaVersion           := "2.12.17",
-  scalaSource in Compile := baseDirectory.value / "src" / "main",
-  scalaSource in Test    := baseDirectory.value / "src" / "test",
-  crossPaths             := false, // don't cross-build for different Scala versions
+  scalaVersion          := "2.12.17",
+  Compile / scalaSource := baseDirectory.value / "src" / "main",
+  Test / scalaSource    := baseDirectory.value / "src" / "test",
+  crossPaths            := false, // don't cross-build for different Scala versions
   scalacOptions ++=
     "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -release 11 -opt:l:method -Xlint -Xfatal-warnings"
-      .split(" ").toSeq,
-  // we set doc options until https://github.com/scala/bug/issues/10402 is fixed
-  scalacOptions in Compile in doc --= "-Xlint -Xfatal-warnings".split(" ").toSeq
+      .split(" ").toSeq
 )
 
 // These settings are common to all builds that compile against Java
 // Any java-specific settings should change here (and thus for all java projects at once)
 lazy val jvmSettings = Seq(
-  javaSource in Compile   := baseDirectory.value / "src" / "main",
-  javaSource in Test      := baseDirectory.value / "src" / "test",
-  publishArtifact in Test := true,
+  Compile / javaSource   := baseDirectory.value / "src" / "main",
+  Test / javaSource      := baseDirectory.value / "src" / "test",
+  Test / publishArtifact := true,
   javacOptions ++=
     "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path"
     .split(" ").toSeq,
@@ -126,13 +124,13 @@ lazy val asmDependencies = {
 }
 
 lazy val scalastyleSettings = Seq(
-  scalastyleTarget in Compile := {
+  Compile / scalastyleTarget := {
     baseDirectory.value.getParentFile / "target" / s"scalastyle-result-${name.value}.xml"
   })
 
 lazy val root =
-   project.in(file(".")).
-   aggregate(netlogo, parserJVM)
+  project.in(file(".")).
+  aggregate(netlogo, parserJVM)
 
 lazy val netlogo = project.in(file("netlogo-gui")).
   dependsOn(parserJVM % "test->test;compile->compile").
@@ -150,34 +148,34 @@ lazy val netlogo = project.in(file("netlogo-gui")).
   settings(mockDependencies: _*).
   settings(asmDependencies).
   settings(Defaults.coreDefaultSettings ++
-           Testing.settings ++
-           Testing.useLanguageTestPrefix("org.nlogo.headless.Test") ++
-           Packaging.settings ++
-           Running.settings ++
-           Dump.settings ++
-           Scaladoc.settings ++
-           ChecksumsAndPreviews.settings ++
-           Extensions.settings ++
-           InfoTab.infoTabTask ++
-           ModelsLibrary.settings ++
-           NativeLibs.nativeLibsTask ++
-           NetLogoWebExport.settings ++
-           GUISettings.settings ++
-           Depend.dependTask: _*).
+          Testing.settings ++
+          Testing.useLanguageTestPrefix("org.nlogo.headless.Test") ++
+          Packaging.settings ++
+          Running.settings ++
+          Dump.settings ++
+          //Scaladoc.settings ++
+          ChecksumsAndPreviews.settings ++
+          Extensions.settings ++
+          InfoTab.infoTabTask ++
+          ModelsLibrary.settings ++
+          NativeLibs.nativeLibsTask ++
+          NetLogoWebExport.settings ++
+          GUISettings.settings ++
+          Depend.dependTask: _*).
   settings(
     name := "NetLogo",
     version := "6.3.0",
     isSnapshot := false,
     publishTo := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
-    mainClass in Compile := Some("org.nlogo.app.App"),
+    Compile / mainClass := Some("org.nlogo.app.App"),
     javacOptions   ++= Seq("--release", "11"),
     modelsDirectory := baseDirectory.value.getParentFile / "models",
     extensionRoot   := (baseDirectory.value.getParentFile / "extensions").getAbsoluteFile,
     autogenRoot     := baseDirectory.value.getParentFile / "autogen",
-    unmanagedSourceDirectories in Test      += baseDirectory.value / "src" / "tools",
-    testChecksumsClass in Test              := "org.nlogo.headless.TestChecksums",
-    resourceDirectory in Compile            := baseDirectory.value / "resources",
-    unmanagedResourceDirectories in Compile ++= (unmanagedResourceDirectories in Compile in sharedResources).value,
+    Test / unmanagedSourceDirectories      += baseDirectory.value / "src" / "tools",
+    Test / testChecksumsClass              := "org.nlogo.headless.TestChecksums",
+    Compile / resourceDirectory            := baseDirectory.value / "resources",
+    Compile / unmanagedResourceDirectories ++= (sharedResources / Compile / unmanagedResourceDirectories).value,
     libraryDependencies ++= Seq(
       "org.picocontainer" % "picocontainer" % "2.15",
       "javax.media" % "jmf" % "2.1.1e",
@@ -197,11 +195,12 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     all := {
       all.dependsOn(
         htmlDocs,
-        packageBin in Test,
+        Test / packageBin,
         Extensions.extensions,
         NativeLibs.nativeLibs,
         ModelsLibrary.modelIndex,
-        Scaladoc.apiScaladoc).value
+        //Scaladoc.apiScaladoc
+      ).value
     }
   , Test / baseDirectory := baseDirectory.value.getParentFile
   )
@@ -220,7 +219,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(scalatestSettings: _*).
   settings(mockDependencies: _*).
   settings(asmDependencies).
-  settings(Scaladoc.settings: _*).
+  //settings(Scaladoc.settings: _*).
   settings(Testing.settings: _*).
   settings(Testing.useLanguageTestPrefix("org.nlogo.headless.lang.Test"): _*).
   settings(Depend.dependTask: _*).
@@ -238,8 +237,8 @@ lazy val headless = (project in file ("netlogo-headless")).
     autogenRoot   := (baseDirectory.value.getParentFile / "autogen").getAbsoluteFile,
     extensionRoot := baseDirectory.value.getParentFile / "extensions",
     javacOptions ++= Seq("--release", "11"),
-    mainClass in Compile         := Some("org.nlogo.headless.Main"),
-    libraryDependencies          ++= Seq(
+    Compile / mainClass         := Some("org.nlogo.headless.Main"),
+    libraryDependencies        ++= Seq(
       "org.parboiled" %% "parboiled" % "2.4.1",
       "commons-codec" % "commons-codec" % "1.15",
       "com.typesafe" % "config" % "1.4.2",
@@ -247,17 +246,17 @@ lazy val headless = (project in file ("netlogo-headless")).
       "org.reflections" % "reflections" % "0.9.10" % "test",
       "org.slf4j" % "slf4j-nop" % "1.7.36" % "test"
     ),
-    (fullClasspath in Runtime)   ++= (fullClasspath in Runtime in parserJVM).value,
-    resourceDirectory in Compile := baseDirectory.value / "resources" / "main",
-    unmanagedResourceDirectories in Compile ++= (unmanagedResourceDirectories in Compile in sharedResources).value,
-    resourceDirectory in Test    := baseDirectory.value.getParentFile / "test",
-    testChecksumsClass in Test   := "org.nlogo.headless.misc.TestChecksums",
-    dumpClassName                := "org.nlogo.headless.misc.Dump",
-    excludedExtensions           := Seq("arduino", "bitmap", "csv", "gis", "gogo", "ls", "nw", "palette", "py", "sound", "time", "vid", "view2.5d"),
+    (Runtime / fullClasspath)  ++= (parserJVM / Runtime / fullClasspath).value,
+    Compile / resourceDirectory := baseDirectory.value / "resources" / "main",
+    Compile / unmanagedResourceDirectories ++= (sharedResources / Compile / unmanagedResourceDirectories).value,
+    Test / resourceDirectory    := baseDirectory.value.getParentFile / "test",
+    Test / testChecksumsClass   := "org.nlogo.headless.misc.TestChecksums",
+    dumpClassName               := "org.nlogo.headless.misc.Dump",
+    excludedExtensions          := Seq("arduino", "bitmap", "csv", "gis", "gogo", "ls", "nw", "palette", "py", "sound", "time", "vid", "view2.5d"),
     all := { val _ = (
-      (packageBin in Compile).value,
-      (packageBin in Test).value,
-      (compile in Test).value,
+      (Compile / packageBin).value,
+      (Test / packageBin).value,
+      (Test / compile).value,
       Extensions.extensions
     )}
   , Test / baseDirectory := baseDirectory.value.getParentFile
@@ -272,29 +271,29 @@ lazy val macApp = project.in(file("mac-app")).
   settings(NativeLibs.cocoaLibsTask).
   settings(Running.settings).
   settings(
-    mainClass in Compile in run           := Some("org.nlogo.app.MacApplication"),
+    Compile / run / mainClass           := Some("org.nlogo.app.MacApplication"),
     // all other projects can use `--release 11`, but since this one uses `--add-exports`
     // for a system library it is incompatible.  So we let it target 17, as it will only
     // use the bundled Java.  -Jeremy B August 2022
     javacOptions ++= Seq("-source", "17", "-target", "17"),
-    fork in run                           := true,
-    name                                  := "NetLogo-Mac-App",
-    compile in Compile                    := {
-      ((compile in Compile) dependsOn (packageBin in Compile in netlogo)).value
+    run / fork                          := true,
+    name                                := "NetLogo-Mac-App",
+    Compile / compile                   := {
+      ((Compile / compile) dependsOn (netlogo / Compile / packageBin)).value
     },
-    unmanagedJars in Compile              += (packageBin in Compile in netlogo).value,
-    libraryDependencies                   ++= Seq(
+    Compile / unmanagedJars             += (netlogo / Compile / packageBin).value,
+    libraryDependencies                ++= Seq(
       "net.java.dev.jna" % "jna" % "4.2.2",
       "ca.weblite" % "java-objc-bridge" % "1.0.0"),
-    libraryDependencies                   ++= (libraryDependencies in netlogo).value,
-    libraryDependencies                   ++= (libraryDependencies in parserJVM).value,
-    run in Compile                        := {
-      ((run in Compile) dependsOn NativeLibs.cocoaLibs).evaluated
+    libraryDependencies                ++= (netlogo / libraryDependencies).value,
+    libraryDependencies                ++= (parserJVM/ libraryDependencies).value,
+    Compile / run                       := {
+      ((Compile / run) dependsOn NativeLibs.cocoaLibs).evaluated
     },
-    javaOptions in run                    += "-Djava.library.path=" + (Seq(
+    run / javaOptions                   += "-Djava.library.path=" + (Seq(
       baseDirectory.value / "natives" / "macosx-universal" / "libjcocoa.dylib") ++
-      ((baseDirectory in netlogo).value / "natives" / "macosx-universal" * "*.jnilib").get).mkString(":"),
-    artifactPath in Compile in packageBin := target.value / "netlogo-mac-app.jar",
+      ((netlogo / baseDirectory).value / "natives" / "macosx-universal" * "*.jnilib").get).mkString(":"),
+    Compile / packageBin / artifactPath := target.value / "netlogo-mac-app.jar",
     javacOptions ++= Seq("-bootclasspath", System.getProperty("java.home") + "/lib/rt.jar",
 //  Needed because MacTabbedPaneUI uses com.apple.laf.AquaTabbedPaneContrastUI
     "--add-exports", "java.desktop/com.apple.laf=ALL-UNNAMED"))
@@ -308,7 +307,7 @@ lazy val sharedResources = (project in file ("shared")).
   settings(commonSettings: _*).
   settings(scalaSettings: _*).
   settings(scalastyleSettings: _*).
-  settings(unmanagedResourceDirectories in Compile += baseDirectory.value / "resources" / "main")
+  settings(Compile / unmanagedResourceDirectories += baseDirectory.value / "resources" / "main")
 
 lazy val macros = (project in file("macros")).
   dependsOn(sharedResources).
@@ -335,15 +334,15 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
     name := "parser",
     publishTo := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     version := "0.4.0",
-    unmanagedSourceDirectories in Compile += baseDirectory.value.getParentFile / "parser-core" / "src" / "main",
-    unmanagedSourceDirectories in Test    += baseDirectory.value.getParentFile / "parser-core" / "src" / "test").
+    Compile / unmanagedSourceDirectories += baseDirectory.value.getParentFile / "parser-core" / "src" / "main",
+    Test / unmanagedSourceDirectories    += baseDirectory.value.getParentFile / "parser-core" / "src" / "test").
   jsConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).
   jsConfigure(_.dependsOn(         macros % "compile-internal->compile;test-internal->compile")).
   jsSettings(
     name := "parser-js",
     scalaModuleInfo := scalaModuleInfo.value map { _.withOverrideScalaVersion(true) },
-    resolvers += Resolver.sonatypeRepo("releases"),
-    parallelExecution in Test := false,
+    resolvers ++= Resolver.sonatypeOssRepos("releases"),
+    Test / parallelExecution := false,
     scalaJSLinkerConfig ~= { _.withESFeatures(_.withESVersion(ESVersion.ES2018)) },
     libraryDependencies ++= {
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
@@ -374,12 +373,12 @@ lazy val parserJS  = parser.js
 // only exists for scalastyling
 lazy val parserCore = (project in file("parser-core")).
   settings(scalastyleSettings: _*).
-  settings(skip in (Compile, compile) := true)
+  settings(Compile / compile / skip := true)
 
 // only exists for scalastyling
 lazy val netlogoCore = (project in file("netlogo-core")).
   settings(scalastyleSettings: _*).
-  settings(skip in (Compile, compile) := true)
+  settings(Compile / compile / skip := true)
 
 // only exists for packaging
 lazy val behaviorsearchProject: Project =

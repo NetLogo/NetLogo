@@ -69,13 +69,13 @@ usually after the `createScripts()` to finalize the package.
 object JavaPackager {
   def mainArtifactSettings: Seq[Setting[_]] =
     Seq(
-      packageOptions in (Compile, packageBin) += {
+      Compile / packageBin / packageOptions += {
         Package.ManifestAttributes(CLASS_PATH.toString ->
-          ((dependencyClasspath in Runtime).value.files :+
-            (artifactPath in Compile in packageBin).value)
+          ((Runtime / dependencyClasspath).value.files :+
+            (Compile / packageBin / artifactPath).value)
           .map(_.getName).filter(_.endsWith("jar")).mkString(" "))
       },
-      packageOptions in (Compile, packageBin) += jarAttributes
+      (Compile / packageBin / packageOptions) += jarAttributes
     )
 
   def jarAttributes: Package.ManifestAttributes = {
