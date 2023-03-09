@@ -119,11 +119,7 @@ jobs:
       - name: Install Dependencies
         run: |
           pip3 install numpy
-          pip3 install sklearn
-          sudo apt-get install python2
-          curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
-          python2 get-pip.py
-          pip2 install numpy
+          pip3 install scikit-learn
 
       - name: Test Extensions
         run: ./sbt netlogo/test:extensionTests
