@@ -199,10 +199,27 @@ lazy val netlogo = project.in(file("netlogo-gui")).
         Extensions.extensions,
         NativeLibs.nativeLibs,
         ModelsLibrary.modelIndex,
-        //Scaladoc.apiScaladoc
+        Compile / doc
       ).value
     }
   , Test / baseDirectory := baseDirectory.value.getParentFile
+  // I don't think this `apiMappings` setup works anymore for the JDK.  I'm not going to worry about it because it
+  // hasn't worked in the last few releases, no one has noticed, and the JDK docs are easy enough to lookup outside of
+  // NetLogo's docs.  There is a `-jdk-api-doc-base` option in Scala 2.13+, and a more generalized/powerful
+  // `-external-mappings` in 3+.  We can attempt to get this working again once one of those updates is completed.
+  // -Jeremy B March 2023
+  , apiMappings += (file(System.getenv("JAVA_HOME") + "/jre/lib/rt.jar") -> url("https://docs.oracle.com/javase/17/docs/api"))
+  , autoAPIMappings := true
+  , Compile / doc / target := baseDirectory.value / "docs" / "scaladoc"
+  , Compile / doc / scalacOptions :=
+    Seq(
+      "-no-link-warnings"
+    , "-encoding", "us-ascii"
+    , "-sourcepath", baseDirectory.value.getParentFile.getAbsolutePath
+    , "-doc-title", "NetLogo"
+    , "-doc-version", netlogoVersion.value
+    , "-skip-packages", Scaladoc.excludedPackages.mkString(":")
+    )
   )
 
 lazy val threed = TaskKey[Unit]("threed", "enable NetLogo 3D")

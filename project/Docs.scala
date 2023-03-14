@@ -3,7 +3,6 @@ import Keys._
 import NetLogoBuild.{ buildDate, marketingVersion, numericMarketingVersion, autogenRoot }
 import ModelsLibrary.modelsDirectory
 import Extensions.extensionRoot
-//import Scaladoc.apiScaladoc
 import NetLogoPackaging.{ netLogoRoot, buildVariables }
 
 object Docs {
@@ -36,7 +35,7 @@ object Docs {
         extensionDocsGen.value)
     },
     allDocs := {
-      htmlDocs.value :+ manualPDF.value// :+ apiScaladoc.value
+      htmlDocs.value :+ manualPDF.value :+ (Compile / doc).value
     },
     htmlDocs := {
       netLogoDocs.value.generateHTML(buildVariables.value, documentedExtensions.value)
