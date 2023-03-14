@@ -125,7 +125,7 @@ class ProtocolEditable(protocol: LabProtocol,
         } }
       catch{ case ex: CompilerException =>  return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.compiler.parser")) }
     var totalCombinations = 1
-    list.toList.foreach{
+    list.toList.foreach {
       case element =>
         element.asInstanceOf[LogoList].toList match {
           case List() => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.field"))
@@ -139,17 +139,17 @@ class ProtocolEditable(protocol: LabProtocol,
                   val multiplier: Int = ((last - first) / step + 1).toInt
                   totalCombinations = totalCombinations * (if(multiplier == 0) 1 else multiplier)
                 } else
-                  return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.increment",s"[ $first $step $last ]"))
+                  return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.increment", variableName, s"[ $first $step $last ]"))
               case _ =>
-                return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.incrementinvalid"))
+                return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.incrementinvalid", variableName))
             }
          case List(variableName: String, more@_*) =>
             if(more.isEmpty){
-              return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.field",s"$variableName"))
+              return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.field", variableName))
             }
             if( Int.MaxValue / totalCombinations > more.toList.size )
               totalCombinations = totalCombinations * more.toList.size
-            else return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.variablelist"))
+            else return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.variablelist", variableName))
           case _ => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.unexpected"))
         }
     }
