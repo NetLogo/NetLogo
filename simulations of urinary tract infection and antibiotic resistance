@@ -1,0 +1,293 @@
+Hello everyone, this is my first time posting a question on this site. 
+I'm hoping to get some assistance with my code. 
+I'm simulating the spread of urinary tract infection in humans
+and want to study the evolution of antibiotic resistance strains for bacteria inside the body,
+so I created two breeds [humans a-human] and breed[bacteria a-bacterium], 
+so I'm thinking about these two submodels for bacteria and humans. 
+Once the humans are infected and begin treatment, I assume they will begin taking antibiotics,
+at which point I must invoke the bacteria submodel to determine whether the antibiotic
+will kill the bacteria or if the bacteria will develop resistance to that antibiotic.
+ My issue is that every time I call the bacteria sub model, I have to use the variables as
+ globals (or else it gives me an error), and when I do, the bacteria begins to take human 
+ instructions and turns yellow instead of green. I'm not sure how to link the bacteria 
+ submodel to the humans submodel  without having this problem. I would be grateful if anyone
+ could assist me. I've attached the code for your convenience.
+ here is the code:
+ globals [
+
+trt-days
+
+
+  ;num-infected-untreated
+trt
+     start-trt?
+   self-trt
+  %num-infected-humans
+    %num-uti-humans
+  human-uti?
+  %infected-bacteria
+  abx
+  res1
+  res2
+  res3
+  %resall
+%MDR
+
+
+  ]
+breed [ bacteria a-bacterium ]
+breed [ humans a-human]
+
+humans-own [
+  infected-humans?
+  exposed?
+  pain-threshold
+  turtleold?
+  turtlefemale?
+  turtlehygiene?
+  poplivestock
+  turtlelivestock?
+  %-self-medicate
+    self-medicate?
+  links-to-bacteria
+  ;start-trt? ;-1, indicating that treatment has failed.
+  first-line-trt? ;1=individual has received first-line treatment or 0=individual hasnt received first-line treatment
+
+ ; human-uti?
+ ; self-medicate? ; 0=the individual did not self-medicate
+;abx
+
+  ; trt-days
+  ;trt ; trt (trt + 1 ) to track the total number of individuals who have received treatment
+  treatment-start-time
+;yellow humans represented people infected but not uti
+ ]
+bacteria-own [
+MIC_1
+MIC_2
+MIC_3
+MIC-level ; counter   set MIC-level (MIC-level + 0.1)
+infected-bacteria?
+  infected-bacteria  ; counter infected-bacteria (infected-bacteria + 1)
+bacteria-resistant1
+   bacteria-resistant2
+   bacteria-resistant3
+  links-to-human
+
+ ]
+to setup
+  clear-all
+  reset-ticks
+
+  ;; set up the human patient population
+  create-humans population1 [
+    setxy random-xcor random-ycor
+    set shape "person"
+    set color blue
+    set infected-humans? false
+     set human-uti? false
+    set pain-threshold 50 ; for example
+    ifelse random 100 < popfemale [set turtlefemale? true][set turtlefemale? false ]
+    ifelse random 100 < popold [set turtleold? true ] [set turtleold? false ]
+    ifelse random 100 < pophygiene [ set turtlehygiene? true ] [set turtlehygiene? false ]
+    ifelse random 100 < poplivestock [ set turtlelivestock? true ] [ set turtlelivestock? false ]
+
+  set treatment-start-time random-float 14 ; any number between 0 to 14
+  ;set num-infected-untreated count humans with [infected-humans? = true and human-uti? = true and (start-trt? = 0 or (ticks - treatment-start-time) <= 14)]
+    ; define the list of first-line antibiotics as one on the three choices ["antibiotic_1" "antibiotic_2" "antibiotic_3"]
+  ;set first-line-trt ["antibiotic_1"]
+
+]
+
+  ;; set up the bacteria population
+  create-bacteria population2 [
+    setxy random-xcor random-ycor
+    set shape "dot"
+    set color blue
+  set MIC_1 random-gamma 0.5 0.1 ; using gamma distribution for MIC levels
+  set MIC_2 random-gamma 0.5 0.1
+    set MIC_3 random-gamma 0.5 0.1
+    set MIC-level random-gamma 0.5 0.1
+    set infected-bacteria? false
+
+   ask one-of bacteria [
+   set infected-bacteria? true
+
+    set color green]
+    set MIC_1 random-gamma 0.5 0.5 ; using gamma distribution for MIC levels
+    set MIC_2 random-gamma 0.5 0.5
+    set MIC_3 random-gamma 0.5 0.5]
+
+   ;; infect one random bacteria and set uti variable
+  ;if random 100 < 60 [
+     ; set uti? true
+    ;  set color red
+   ; ]
+
+
+end
+
+
+to  check-humans-infection
+  ask humans with [ infected-humans? = false]
+  [
+    let bacteria-infection-probability 0.5
+    let bacteria-on-turtle count other turtles-here with [breed = bacteria]
+    let bacteria-exposure-probability bacteria-on-turtle / 100
+    if random-float 1.0 < bacteria-infection-probability * bacteria-exposure-probability
+    [
+      set infected-humans? true
+      set color yellow
+
+ set %num-infected-humans ( count humans with [color = yellow ]/ count humans) * 100
+       if random 100 < 60 [
+          set human-uti? true
+          set color red
+        set %num-uti-humans ( count humans with [color = red ]/ count humans) * 100
+       ]
+    ]
+  ]
+end
+to seek-care
+  print "yes"
+  ;all that have (UTI), but have not yet started treatment or have started treatment within the last 14 ticks
+ask humans with [ infected-humans? = true and   human-uti? = true and ( start-trt? = 0 or ( ticks - treatment-start-time) <= 14) ] [
+  ifelse random-float 1 < %care-seeking-rate [
+    set start-trt? 1
+    set first-line-trt? 1
+    set    trt (trt + 1 )
+    set treatment-start-time ticks
+    set self-medicate? 0
+  ] [
+    ifelse random-float 1 <= %-self-medicate [
+      set start-trt? 1
+      set first-line-trt? 1
+      set self-trt (self-trt + 1)
+      set treatment-start-time ticks
+      set self-medicate? 1
+    ] [
+      set start-trt? -1
+      set infected-bacteria (infected-bacteria + 1)
+      set MIC-level (MIC-level + 0.1)
+    ]
+  ]
+]
+end
+  to follow-trt-abx
+  ; (a) For those who seek care at formal facilities
+  ask humans with [ start-trt? = 1 and self-medicate? = 0 and trt-days = 0] [
+    ; (a-1) assign patients with uti to receive either amoxicillin, penicillin, or ceftriaxone
+    if   human-uti? = true [
+      let abx-choice random-float 1
+      ifelse abx-choice <= antibiotic_1 [
+        set abx "antibiotic-1"
+      ] [
+        ifelse abx-choice <= (antibiotic_1 + antibiotic_2) [
+          set abx "antibiotic-2"
+        ] [
+          set abx "antibiotic-3"
+        ]
+      ]
+    ]
+  ]
+end
+
+to follow-bacteria-submodel
+ ; print"hey"
+;    ;; select a random bacterium and infect it
+;  let random-bacterium one-of bacteria
+;  ask random-bacterium [
+;    set infected-bacteria? true
+;    set color green
+;  ]
+   let fitness-cost ( 0.01 * count bacteria)
+  ask bacteria with [ MIC_1 < antibiotic_1] [die]
+  ask bacteria with [ MIC_2 < antibiotic_2] [die]
+  ask bacteria with [ MIC_3 < antibiotic_3] [die]
+  ask bacteria [ if random 100 < fitness_cost [die]]
+  ask bacteria [ if random 100 < %mutation [ if not  bacteria-resistant1 [ set res1 res1 + 1        set  bacteria-resistant1 true        set color red        set MIC_1 random-gamma 0.5 0.5      ]
+      if not bacteria-resistant2 [ set res2 res2 + 1        set  bacteria-resistant2 true        set color red        set MIC_1 random-gamma 0.5 0.5      ]
+      if not bacteria-resistant3 [ set res3 res3 + 1        set  bacteria-resistant3 true        set color red        set MIC_1 random-gamma 0.5 0.5      ]
+  ]]
+  if random 100 < %reproduction_rate [ hatch 1 [    set shape "dot"    setxy random-xcor random-ycor    set color [color] of myself
+
+    set  bacteria-resistant1 [ bacteria-resistant1] of myself
+    set  bacteria-resistant2 [ bacteria-resistant2] of myself
+    set  bacteria-resistant3 [ bacteria-resistant3] of myself
+
+    if [ bacteria-resistant1 = true  ] of myself [  set MIC_1 random-gamma 0.5 0.5 ]
+    if [ bacteria-resistant2 = true  ] of myself [ set MIC_2 random-gamma 0.5 0.5 ]
+    if [ bacteria-resistant3 = true ] of myself [set MIC_3 random-gamma 0.5 0.5 ]
+  ]]
+
+
+;  ;; transmission dynamics
+;  ask bacteria with [infected-bacteria? = true] [
+;    ask one-of bacteria with [not infected-bacteria?] [
+;      set exposed? true
+;    ]
+;
+;
+;  ask bacteria with [exposed? = true and not infected-bacteria? = true] [
+;    if random 100 < %infectiousness [
+;      set infected-bacteria? true
+;      set color green
+;    ]
+
+  set res1 (count bacteria with [ bacteria-resistant1 = true])
+  set res2 (count bacteria with [ bacteria-resistant2 = true])
+  set res3 (count bacteria with [ bacteria-resistant3 = true])
+
+
+      if count bacteria > 0
+  [set %MDR (count bacteria with [ bacteria-resistant1 = true and  bacteria-resistant2 = true and  bacteria-resistant3 = true] / count bacteria) * 100]
+  if %MDR = 100 [stop]
+  ;]]
+
+
+
+  ;; update ticks and display changes
+
+ end
+
+to go
+ tick
+  ;ask bacteria [
+   ; check-bacteria-spread
+ ;]
+
+ask bacteria [rt random 100 lt random 100 fd 1]
+ask bacteria with [color = green] [
+  ask other bacteria-here [
+    if random 100 < %infectiousness [ set color green]]
+    set %infected-bacteria (count bacteria with [color = green] / count bacteria) * 100
+    ;set num-infected-untreated count humans with [infected-humans? = true and human-uti? = true and (start-trt? = 0 or (ticks - treatment-start-time) <= 14)]
+   ; set first-line-trt ["antibiotic_1"]
+
+  ]
+     ;; patient dynamics
+
+  ask humans [
+    check-humans-infection
+  ]
+
+  ask humans with [infected-humans? = true and human-uti? = true][ seek-care  follow-trt-abx ]
+  set self-trt (self-trt + 1)
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
