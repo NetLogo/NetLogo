@@ -219,6 +219,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     , "-doc-title", "NetLogo"
     , "-doc-version", netlogoVersion.value
     , "-skip-packages", Scaladoc.excludedPackages.mkString(":")
+    , "-doc-source-url", s"https://github.com/NetLogo/NetLogo/blob/${netlogoVersion.value}€{FILE_PATH_EXT}"
     )
   )
 
