@@ -32,8 +32,6 @@ libraryDependencies ++= Seq(
 , "org.jsoup"                         % "jsoup"                 % "1.15.3"
 , "org.apache.commons"                % "commons-lang3"         % "3.12.0"
 , "commons-io"                        % "commons-io"            % "2.11.0"
-// prevents noise from bintray stuff
-, "org.slf4j"                         % "slf4j-nop"             % "1.7.36"
 )
 
 {

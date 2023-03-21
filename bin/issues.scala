@@ -13,8 +13,8 @@ scalacOptions ++= Seq(
   "-deprecation", "-unchecked", "-feature", "-Xfatal-warnings")
 libraryDependencies ++= Seq(
   "net.databinder.dispatch" %% "dispatch-core" % "0.12.0",
-  "net.databinder.dispatch" %% "dispatch-json4s-native" % "0.12.0",
-  "org.slf4j" % "slf4j-nop" % "1.7.36")
+  "net.databinder.dispatch" %% "dispatch-json4s-native" % "0.12.0"
+)
 */
 
 import dispatch._, Defaults._
