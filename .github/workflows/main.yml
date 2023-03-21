@@ -73,10 +73,10 @@ jobs:
           java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
 
       - name: Test 2D
-        run: ./sbt netlogo/test:fast netlogo/test:medium netlogo/test:slow
+        run: ./sbt netlogo/Test/fast netlogo/Test/medium netlogo/Test/slow
 
       - name: Test 2D NoGen
-        run: ./sbt nogen netlogo/test:fast netlogo/test:medium
+        run: ./sbt nogen netlogo/Test/fast netlogo/Test/medium
 
   test-3D:
     runs-on: ubuntu-latest
@@ -94,7 +94,7 @@ jobs:
           java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
 
       - name: Test 3D
-        run: ./sbt threed netlogo/test:fast netlogo/test:medium netlogo/test:slow
+        run: ./sbt threed netlogo/Test/fast netlogo/Test/medium netlogo/Test/slow
 
   test-extensions:
     runs-on: ubuntu-latest
@@ -122,7 +122,7 @@ jobs:
           pip3 install scikit-learn
 
       - name: Test Extensions
-        run: ./sbt netlogo/test:extensionTests
+        run: ./sbt netlogo/Test/extensionTests
 
   test-headless:
     runs-on: ubuntu-latest
@@ -140,7 +140,7 @@ jobs:
           java-version: liberica@17=tgz+${{ env.LIBERICA_URL }}
 
       - name: Test Headless
-        run: ./sbt headless/test:fast headless/test:medium headless/test:slow
+        run: ./sbt headless/Test/fast headless/Test/medium headless/Test/slow
 
       - name: Test Headless NoGen
-        run: ./sbt nogen headless/test:fast headless/test:medium
+        run: ./sbt nogen headless/Test/fast headless/Test/medium
