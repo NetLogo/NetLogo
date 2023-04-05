@@ -75,99 +75,111 @@ object App {
       return
     }
 
-    // this call is reflective to avoid complicating dependencies
-    appHandler.getClass.getDeclaredMethod("init").invoke(appHandler)
+    try {
+      // this call is reflective to avoid complicating dependencies
+      appHandler.getClass.getDeclaredMethod("init").invoke(appHandler)
 
-    AbstractWorkspace.isApp(true)
-    org.nlogo.window.VMCheck.detectBadJVMs()
-    processCommandLineArguments(args)
-    Splash.beginSplash() // also initializes AWT
-    pico.add("org.nlogo.compile.Compiler")
-    if (Version.is3D)
-      pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
-    else
-      pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
+      AbstractWorkspace.isApp(true)
+      org.nlogo.window.VMCheck.detectBadJVMs()
+      processCommandLineArguments(args)
+      Splash.beginSplash() // also initializes AWT
+      pico.add("org.nlogo.compile.Compiler")
+      if (Version.is3D)
+        pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
+      else
+        pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
 
-    if (Version.systemDynamicsAvailable) {
-      pico.add("org.nlogo.sdm.gui.NLogoGuiSDMFormat")
-      pico.add("org.nlogo.sdm.gui.NLogoThreeDGuiSDMFormat")
-    }
-    pico.addScalaObject("org.nlogo.sdm.gui.SDMGuiAutoConvertable")
-
-    pico.addAdapter(new Adapters.ModelLoaderComponent())
-
-    pico.addAdapter(new Adapters.ModelConverterComponent())
-
-    pico.addComponent(classOf[CodeToHtml])
-    pico.addComponent(classOf[App])
-    pico.addComponent(classOf[ModelSaver])
-    pico.add("org.nlogo.gl.view.ViewManager")
-    // Anything that needs a parent Frame, we need to use ComponentParameter
-    // and specify classOf[AppFrame], otherwise PicoContainer won't know which
-    // Frame to use - ST 6/16/09
-    pico.add(classOf[TurtleShapesManagerInterface],
-          "org.nlogo.shape.editor.TurtleShapeManagerDialog",
-          Array[Parameter] (
-            new ComponentParameter(classOf[AppFrame]),
-            new ComponentParameter(), new ComponentParameter()))
-    pico.add(classOf[LinkShapesManagerInterface],
-          "org.nlogo.shape.editor.LinkShapeManagerDialog",
-          Array[Parameter] (
-            new ComponentParameter(classOf[AppFrame]),
-            new ComponentParameter(), new ComponentParameter()))
-    pico.add(classOf[AggregateManagerInterface],
-          "org.nlogo.sdm.gui.GUIAggregateManager",
-          Array[Parameter] (
-            new ComponentParameter(classOf[AppFrame]),
-            new ComponentParameter(), new ComponentParameter(),
-            new ComponentParameter(), new ComponentParameter()))
-    pico.add("org.nlogo.lab.gui.LabManager")
-    pico.add("org.nlogo.properties.EditDialogFactory")
-    // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
-    // HeadlessWorkspace uses picocontainer too, but it could get confusing
-    // to use the same container in both places, so I'm going to keep the
-    // containers separate and just use Plain Old Java Reflection to
-    // call HeadlessWorkspace's newInstance() method. - ST 3/11/09
-    // And we'll conveniently reuse it for the preview commands editor! - NP 2015-11-18
-    val factory = new WorkspaceFactory() with CurrentModelOpener {
-      def newInstance: AbstractWorkspaceScala =
-        Class.forName("org.nlogo.headless.HeadlessWorkspace")
-          .getMethod("newInstance").invoke(null).asInstanceOf[AbstractWorkspaceScala]
-      def openCurrentModelIn(w: Workspace): Unit = {
-        w.setModelPath(app.workspace.getModelPath)
-        w.openModel(pico.getComponent(classOf[ModelSaver]).currentModelInCurrentVersion)
+      if (Version.systemDynamicsAvailable) {
+        pico.add("org.nlogo.sdm.gui.NLogoGuiSDMFormat")
+        pico.add("org.nlogo.sdm.gui.NLogoThreeDGuiSDMFormat")
       }
+      pico.addScalaObject("org.nlogo.sdm.gui.SDMGuiAutoConvertable")
+
+      pico.addAdapter(new Adapters.ModelLoaderComponent())
+
+      pico.addAdapter(new Adapters.ModelConverterComponent())
+
+      pico.addComponent(classOf[CodeToHtml])
+      pico.addComponent(classOf[App])
+      pico.addComponent(classOf[ModelSaver])
+      pico.add("org.nlogo.gl.view.ViewManager")
+      // Anything that needs a parent Frame, we need to use ComponentParameter
+      // and specify classOf[AppFrame], otherwise PicoContainer won't know which
+      // Frame to use - ST 6/16/09
+      pico.add(classOf[TurtleShapesManagerInterface],
+            "org.nlogo.shape.editor.TurtleShapeManagerDialog",
+            Array[Parameter] (
+              new ComponentParameter(classOf[AppFrame]),
+              new ComponentParameter(), new ComponentParameter()))
+      pico.add(classOf[LinkShapesManagerInterface],
+            "org.nlogo.shape.editor.LinkShapeManagerDialog",
+            Array[Parameter] (
+              new ComponentParameter(classOf[AppFrame]),
+              new ComponentParameter(), new ComponentParameter()))
+      pico.add(classOf[AggregateManagerInterface],
+            "org.nlogo.sdm.gui.GUIAggregateManager",
+            Array[Parameter] (
+              new ComponentParameter(classOf[AppFrame]),
+              new ComponentParameter(), new ComponentParameter(),
+              new ComponentParameter(), new ComponentParameter()))
+      pico.add("org.nlogo.lab.gui.LabManager")
+      pico.add("org.nlogo.properties.EditDialogFactory")
+      // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
+      // HeadlessWorkspace uses picocontainer too, but it could get confusing
+      // to use the same container in both places, so I'm going to keep the
+      // containers separate and just use Plain Old Java Reflection to
+      // call HeadlessWorkspace's newInstance() method. - ST 3/11/09
+      // And we'll conveniently reuse it for the preview commands editor! - NP 2015-11-18
+      val factory = new WorkspaceFactory() with CurrentModelOpener {
+        def newInstance: AbstractWorkspaceScala =
+          Class.forName("org.nlogo.headless.HeadlessWorkspace")
+            .getMethod("newInstance").invoke(null).asInstanceOf[AbstractWorkspaceScala]
+        def openCurrentModelIn(w: Workspace): Unit = {
+          w.setModelPath(app.workspace.getModelPath)
+          w.openModel(pico.getComponent(classOf[ModelSaver]).currentModelInCurrentVersion)
+        }
+      }
+
+      pico.addComponent(classOf[WorkspaceFactory], factory)
+      pico.addComponent(classOf[GraphicsPreview])
+      pico.addComponent(classOf[ExternalFileManager])
+      pico.add(
+        classOf[PreviewCommandsEditorInterface],
+        "org.nlogo.app.tools.PreviewCommandsEditor",
+        new ComponentParameter(classOf[AppFrame]),
+        new ComponentParameter(), new ComponentParameter())
+      pico.add(classOf[MenuBar], "org.nlogo.app.MenuBar",
+        new ConstantParameter(AbstractWorkspace.isApp))
+      pico.add("org.nlogo.app.interfacetab.CommandCenter")
+      pico.add("org.nlogo.app.interfacetab.InterfaceTab")
+      pico.addComponent(classOf[Tabs])
+      pico.addComponent(classOf[AgentMonitorManager])
+      app = pico.getComponent(classOf[App])
+      // It's pretty silly, but in order for the splash screen to show up
+      // for more than a fraction of a second, we want to initialize as
+      // much stuff as we can from main() before handing off to the event
+      // thread.  So what happens in the App constructor and what happens
+      // in finishStartup() is pretty arbitrary -- it's whatever makes
+      // the splash screen come up early without getting a bunch of Java
+      // exceptions because we're doing too much on the main thread.
+          // Hey, it's important to make a good first impression.
+      //   - ST 8/19/03
+      org.nlogo.awt.EventQueue.invokeAndWait(() => app.finishStartup(appHandler))
+    }
+    catch {
+      case ex: java.lang.Throwable =>
+        StartupError.report(ex)
+        return
     }
 
-    pico.addComponent(classOf[WorkspaceFactory], factory)
-    pico.addComponent(classOf[GraphicsPreview])
-    pico.addComponent(classOf[ExternalFileManager])
-    pico.add(
-      classOf[PreviewCommandsEditorInterface],
-      "org.nlogo.app.tools.PreviewCommandsEditor",
-      new ComponentParameter(classOf[AppFrame]),
-      new ComponentParameter(), new ComponentParameter())
-    pico.add(classOf[MenuBar], "org.nlogo.app.MenuBar",
-      new ConstantParameter(AbstractWorkspace.isApp))
-    pico.add("org.nlogo.app.interfacetab.CommandCenter")
-    pico.add("org.nlogo.app.interfacetab.InterfaceTab")
-    pico.addComponent(classOf[Tabs])
-    pico.addComponent(classOf[AgentMonitorManager])
-    app = pico.getComponent(classOf[App])
-    // It's pretty silly, but in order for the splash screen to show up
-    // for more than a fraction of a second, we want to initialize as
-    // much stuff as we can from main() before handing off to the event
-    // thread.  So what happens in the App constructor and what happens
-    // in finishStartup() is pretty arbitrary -- it's whatever makes
-    // the splash screen come up early without getting a bunch of Java
-    // exceptions because we're doing too much on the main thread.
-        // Hey, it's important to make a good first impression.
-    //   - ST 8/19/03
-    org.nlogo.awt.EventQueue.invokeAndWait(() => app.finishStartup(appHandler))
   }
 
   private def processCommandLineArguments(args: Array[String]) {
-    def printAndExit(s:String){ println(s); sys.exit(0) }
+    def printAndExit(s: String) {
+      println(s)
+      sys.exit(0)
+    }
+
     // note: this method is static so that it can be called from main()
     // before App is instantiated, which means we can use the --version
     // flags without the AWT ever being initialized, which is handy when
@@ -433,85 +445,93 @@ class App extends
   }
 
   private def finishStartup(appHandler: Object) {
-    val app = pico.getComponent(classOf[App])
-    val currentModelAsString = {() =>
-      val modelSaver = pico.getComponent(classOf[ModelSaver])
-      modelSaver.modelAsString(modelSaver.currentModel, ModelReader.modelSuffix)
+    try {
+      val app = pico.getComponent(classOf[App])
+      val currentModelAsString = {() =>
+        val modelSaver = pico.getComponent(classOf[ModelSaver])
+        modelSaver.modelAsString(modelSaver.currentModel, ModelReader.modelSuffix)
+      }
+
+      pico.add(classOf[ModelingCommonsInterface],
+            "org.nlogo.mc.ModelingCommons",
+            Array[Parameter] (
+              new ConstantParameter(currentModelAsString),
+              new ComponentParameter(classOf[AppFrame]),
+              new ConstantParameter(() => workspace.exportView),
+              new ConstantParameter(() => Boolean.box(
+                workspace.procedures.get("SETUP") != null &&
+                  workspace.procedures.get("GO") != null)),
+              new ComponentParameter()))
+      aggregateManager = pico.getComponent(classOf[AggregateManagerInterface])
+      frame.addLinkComponent(aggregateManager)
+
+      labManager = pico.getComponent(classOf[LabManagerInterface])
+      frame.addLinkComponent(labManager)
+
+      val titler = (file: Option[String]) => { file map externalFileTitle getOrElse modelTitle() }
+      pico.add(classOf[DirtyMonitor], "org.nlogo.app.DirtyMonitor",
+        new ComponentParameter, new ComponentParameter, new ComponentParameter, new ComponentParameter,
+        new ConstantParameter(titler))
+      dirtyMonitor = pico.getComponent(classOf[DirtyMonitor])
+      frame.addLinkComponent(dirtyMonitor)
+
+      val menuBar = pico.getComponent(classOf[MenuBar])
+
+      pico.add(classOf[FileManager],
+        "org.nlogo.app.FileManager",
+        new ComponentParameter(), new ComponentParameter(), new ComponentParameter(),
+        new ComponentParameter(), new ComponentParameter(),
+        new ConstantParameter(menuBar), new ConstantParameter(menuBar))
+      setFileManager(pico.getComponent(classOf[FileManager]))
+
+      val viewManager = pico.getComponent(classOf[GLViewManagerInterface])
+      workspace.init(viewManager)
+      frame.addLinkComponent(viewManager)
+
+      tabs.init(fileManager, dirtyMonitor)
+
+      if (popOutCodeTab) {
+        codeTabsPanel.init(fileManager, dirtyMonitor)
+      }
+
+      app.setMenuBar(menuBar)
+      frame.setJMenuBar(menuBar)
+
+      // OK, this is a little kludgy.  First we pack so everything
+      // is realized, and all addNotify() methods are called.  But
+      // the actual size we get won't be right yet, because the
+      // default model hasn't been loaded.  So load it, then pack
+      // again.  The first pack is needed because until everything
+      // has been realized, the NetLogo event system won't work.
+      //  - ST 8/16/03
+      frame.pack()
+
+      loadDefaultModel()
+      // smartPack respects the command center's current size, rather
+      // than its preferred size, so we have to explicitly set the
+      // command center to the size we want - ST 1/7/05
+      tabs.interfaceTab.commandCenter.setSize(tabs.interfaceTab.commandCenter.getPreferredSize)
+      smartPack(frame.getPreferredSize, true)
+
+      if (! isMac) { org.nlogo.awt.Positioning.center(frame, null) }
+
+      org.nlogo.app.common.FindDialog.init(frame)
+
+      Splash.endSplash()
+      frame.setVisible(true)
+      if (isMac) {
+        appHandler.getClass.getDeclaredMethod("ready", classOf[AnyRef]).invoke(appHandler, this)
+      }
+      if (popOutCodeTab) {
+        frame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
+      }
+    }
+    catch {
+      case ex: java.lang.Throwable =>
+        StartupError.report(ex)
+        return
     }
 
-    pico.add(classOf[ModelingCommonsInterface],
-          "org.nlogo.mc.ModelingCommons",
-          Array[Parameter] (
-            new ConstantParameter(currentModelAsString),
-            new ComponentParameter(classOf[AppFrame]),
-            new ConstantParameter(() => workspace.exportView),
-            new ConstantParameter(() => Boolean.box(
-              workspace.procedures.get("SETUP") != null &&
-                workspace.procedures.get("GO") != null)),
-            new ComponentParameter()))
-    aggregateManager = pico.getComponent(classOf[AggregateManagerInterface])
-    frame.addLinkComponent(aggregateManager)
-
-    labManager = pico.getComponent(classOf[LabManagerInterface])
-    frame.addLinkComponent(labManager)
-
-    val titler = (file: Option[String]) => { file map externalFileTitle getOrElse modelTitle() }
-    pico.add(classOf[DirtyMonitor], "org.nlogo.app.DirtyMonitor",
-      new ComponentParameter, new ComponentParameter, new ComponentParameter, new ComponentParameter,
-      new ConstantParameter(titler))
-    dirtyMonitor = pico.getComponent(classOf[DirtyMonitor])
-    frame.addLinkComponent(dirtyMonitor)
-
-    val menuBar = pico.getComponent(classOf[MenuBar])
-
-    pico.add(classOf[FileManager],
-      "org.nlogo.app.FileManager",
-      new ComponentParameter(), new ComponentParameter(), new ComponentParameter(),
-      new ComponentParameter(), new ComponentParameter(),
-      new ConstantParameter(menuBar), new ConstantParameter(menuBar))
-    setFileManager(pico.getComponent(classOf[FileManager]))
-
-    val viewManager = pico.getComponent(classOf[GLViewManagerInterface])
-    workspace.init(viewManager)
-    frame.addLinkComponent(viewManager)
-
-    tabs.init(fileManager, dirtyMonitor)
-
-    if (popOutCodeTab) {
-      codeTabsPanel.init(fileManager, dirtyMonitor)
-    }
-
-    app.setMenuBar(menuBar)
-    frame.setJMenuBar(menuBar)
-
-    // OK, this is a little kludgy.  First we pack so everything
-    // is realized, and all addNotify() methods are called.  But
-    // the actual size we get won't be right yet, because the
-    // default model hasn't been loaded.  So load it, then pack
-    // again.  The first pack is needed because until everything
-    // has been realized, the NetLogo event system won't work.
-    //  - ST 8/16/03
-    frame.pack()
-
-    loadDefaultModel()
-    // smartPack respects the command center's current size, rather
-    // than its preferred size, so we have to explicitly set the
-    // command center to the size we want - ST 1/7/05
-    tabs.interfaceTab.commandCenter.setSize(tabs.interfaceTab.commandCenter.getPreferredSize)
-    smartPack(frame.getPreferredSize, true)
-
-    if (! isMac) { org.nlogo.awt.Positioning.center(frame, null) }
-
-    org.nlogo.app.common.FindDialog.init(frame)
-
-    Splash.endSplash()
-    frame.setVisible(true)
-    if (isMac) {
-      appHandler.getClass.getDeclaredMethod("ready", classOf[AnyRef]).invoke(appHandler, this)
-    }
-    if (popOutCodeTab) {
-      frame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
-    }
   }
 
   // This is for other windows to get their own copy of the menu
