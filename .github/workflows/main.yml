@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 env:
-  liberica-version: '17.0.5+8'
+  liberica-version: '17.0'
 
 jobs:
   build:
@@ -26,6 +26,7 @@ jobs:
         with:
           distribution: 'liberica'
           java-version: ${{ env.liberica-version }}
+          java-package: jdk+fx
           cache: 'sbt'
 
       - name: Build NetLogo
@@ -53,6 +54,7 @@ jobs:
         with:
           distribution: 'liberica'
           java-version: ${{ env.liberica-version }}
+          java-package: jdk+fx
           cache: 'sbt'
 
       - name: Test Parser
@@ -72,6 +74,7 @@ jobs:
         with:
           distribution: 'liberica'
           java-version: ${{ env.liberica-version }}
+          java-package: jdk+fx
           cache: 'sbt'
 
       - name: Test 2D
@@ -94,6 +97,7 @@ jobs:
         with:
           distribution: 'liberica'
           java-version: ${{ env.liberica-version }}
+          java-package: jdk+fx
           cache: 'sbt'
 
       - name: Test 3D
@@ -113,6 +117,7 @@ jobs:
         with:
           distribution: 'liberica'
           java-version: ${{ env.liberica-version }}
+          java-package: jdk+fx
           cache: 'sbt'
 
       - uses: actions/setup-python@v4
@@ -142,6 +147,7 @@ jobs:
         with:
           distribution: 'liberica'
           java-version: ${{ env.liberica-version }}
+          java-package: jdk+fx
           cache: 'sbt'
 
       - name: Test Headless
