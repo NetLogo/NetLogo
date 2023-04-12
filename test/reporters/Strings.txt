@@ -148,3 +148,11 @@ AgentSetStringRepresentations
   (word wolves)              => "wolves"
   (word woLVes)              => "wolves"
   (word Wolves)              => "wolves"
+
+# I suppose if we add tests making sure that all string arguments are not treated # as regular expressions things might
+# get out of control, but we did run into this in NetLogo Web so...
+RemoveIsNotRegEx
+  remove "." "" => ""
+  remove "r*" "testr*catr*dog" => "testcatdog"
+  remove "*" "test*cat*dog" => "testcatdog"
+  remove "[abc]" "testacatbdogcgiraffe[abc]bear" => "testacatbdogcgiraffebear"
