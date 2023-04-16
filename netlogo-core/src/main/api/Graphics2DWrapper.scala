@@ -41,14 +41,15 @@ class Graphics2DWrapper(g: Graphics2D, renderLabelsAsRectangles: Boolean = false
     }
     else {
       val fm = g.getFontMetrics
-      g.translate(x - fm.stringWidth(label), 0)
+      val lines = label.split("\n")
+      g.translate(x - fm.stringWidth(lines(0)), 0)
       if (patchSize >= (fm.getMaxAscent + fm.getMaxDescent))
         g.translate(0, y - fm.getMaxDescent)
       else { // maxAscent is centered on the patch
         val centerAdjustment = 0.0 min ((patchSize / 4) - (fm.getMaxAscent / 4))
         g.translate(0, y - centerAdjustment)
       }
-      g.drawString(label, 0, 0)
+      lines.zipWithIndex.foreach{case (line, i) => g.drawString(line, 0.0f, 1 * fm.getHeight * i)}
     }
   }
   def fillCircle(x: Double, y: Double, xDiameter: Double, yDiameter: Double, scale: Double, angle: Double) {
