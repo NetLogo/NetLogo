@@ -27,6 +27,8 @@ class Supervisor(
   factory: WorkspaceFactory with CurrentModelOpener,
   dialogFactory: EditDialogFactoryInterface
 ) extends Thread("BehaviorSpace Supervisor") {
+  val errors = workspace.plotManager.compileAllPlots()
+  for (error <- errors) Console.println("* " + error)
   var options: Supervisor.RunOptions = null
   val worker = new Worker(protocol)
   val headlessWorkspaces = new ListBuffer[Workspace]

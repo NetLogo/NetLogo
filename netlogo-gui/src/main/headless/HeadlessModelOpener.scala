@@ -87,8 +87,8 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
   private def finish(constraints: Map[String, ConstraintSpecification], program: Program, interfaceGlobalCommands: String) {
     ws.world.realloc()
 
-    val errors = ws.plotManager.compileAllPlots()
-    if(errors.nonEmpty) throw errors(0)
+    ws.plotManager.compileAllPlots()
+    // Plot errors can be ignored
 
     import ConstraintSpecification._
     for ((vname, spec) <- constraints) {
