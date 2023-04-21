@@ -27,6 +27,8 @@ class Supervisor(
   factory: WorkspaceFactory with CurrentModelOpener,
   dialogFactory: EditDialogFactoryInterface
 ) extends Thread("BehaviorSpace Supervisor") {
+  // Print any plot compilation errors just once, before threads are created.
+  // BehaviorSpace runs ignore such errors.
   val errors = workspace.plotManager.compileAllPlots()
   for (error <- errors) Console.println("* " + error)
   var options: Supervisor.RunOptions = null

@@ -17,11 +17,19 @@ object Main {
       case e: CancelException => // ignore
     }
   }
-
   def runExperiment(settings: Settings) {
+
+    var printErrors = true
     def newWorkspace = {
       val w = HeadlessWorkspace.newInstance
       w.open(settings.modelPath)
+      // When the first workspace is created print any plot compilation errors.
+      // BehaviorSpace runs ignore such errors.
+      if (printErrors) {
+        val errors = w.plotManager.compileAllPlots()
+        errors.foreach  { Console.println }
+        printErrors = false
+      }
       w
     }
     val openWs = newWorkspace

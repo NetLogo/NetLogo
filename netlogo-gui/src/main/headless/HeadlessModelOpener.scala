@@ -87,8 +87,10 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
   private def finish(constraints: Map[String, ConstraintSpecification], program: Program, interfaceGlobalCommands: String) {
     ws.world.realloc()
 
+    // Plot compilation errors do not affect BehaviorSpace runs, and are ignored here.
+    // They are printed to the console at an earlier point. See Supervisor, 
+    // netlogo-gui/src/main/headless/Main.scala, netlogo-gui/src/main/headless/Main.scala.
     ws.plotManager.compileAllPlots()
-    // Plot errors can be ignored
 
     import ConstraintSpecification._
     for ((vname, spec) <- constraints) {

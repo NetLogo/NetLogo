@@ -86,8 +86,10 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
   private def finish(constraints: Map[String, ConstraintSpecification], program: Program, interfaceGlobalCommands: String) {
     ws.world.realloc()
 
-    val errors = ws.plotManager.compileAllPlots()
-    if(errors.nonEmpty) throw errors(0)
+    // Plot compilation errors do not affect BehaviorSpace runs, and are ignored here.
+    // They are printed to the console at an earlier point. See Supervisor, 
+    // runExperiment in netlogo-gui/src/main/headless/Main.scala, netlogo-gui/src/main/headless/Main.scala.
+    ws.plotManager.compileAllPlots()
 
     for ((vname, spec) <- constraints) {
       val con: ValueConstraint = spec match {

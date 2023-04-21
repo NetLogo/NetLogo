@@ -44,9 +44,15 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
   }
 
   def runExperiment(settings: Settings) {
+    var printErrors = true
     def newWorkspace = {
       val w = HeadlessWorkspace.newInstance
       w.open(settings.modelPath)
+      if (printErrors) {
+        val errors = w.plotManager.compileAllPlots()
+        errors.foreach  { Console.println }
+        printErrors = false
+      }
       w
     }
 
