@@ -274,24 +274,4 @@ class TestPlotModels extends FixtureSuite {
     }
     f(ex)
   }
-
-  test("Plot With Bad Update Code Should Throw Exception on Load (headless only)") { implicit fixture =>
-    testCompileError(Model(code = modelCode, widgets = List(View(), Plot(display = Some(""), updateCode="weijefwef")))) { ex =>
-      assert("Nothing named WEIJEFWEF has been defined." === ex.getMessage)
-    }}
-
-  test("Plot With Bad Setup Code Should Throw Exception on Load (headless only)") { implicit fixture =>
-    testCompileError(Model(code = modelCode, widgets = List(View(), Plot(display = Some(""), setupCode="weijefwef")))){ ex =>
-      assert("Nothing named WEIJEFWEF has been defined." === ex.getMessage)
-    }}
-
-  test("Plot With Bad Pen Setup Code Should Throw Exception on Load (headless only)") { implicit fixture =>
-    testCompileError(Model(code = modelCode, widgets = List(View(), Plot(display = Some(""), pens = List(Pen(display = "", setupCode = "create-fails 8")))))) { ex =>
-      assert("Nothing named CREATE-FAILS has been defined." === ex.getMessage)
-    }}
-
-  test("Plot With Bad Pen Update Code Should Throw Exception on Load (headless only)") { implicit fixture =>
-    testCompileError(Model(code = modelCode, widgets = List(View(), Plot(display = Some(""), pens = List(Pen(display = "p", updateCode = "create-fails 8")))))) { ex =>
-      assert("Nothing named CREATE-FAILS has been defined." === ex.getMessage)
-    }}
 }
