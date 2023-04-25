@@ -29,7 +29,8 @@ abstract class FilePathEditor(accessor: PropertyAccessor[String], parent: Compon
   toolbar.setFloatable(false)
   val browseButton = RichJButton("Browse...") {
     try {
-      val filePath = asPath(editor.getText)
+      val currentText = getCurrentText()
+      val filePath    = asPath(currentText)
       FileDialog.setDirectory(filePath.getParent.toString)
       val outName = FileDialog.showFiles(parent, s"${accessor.displayName} export", JFileDialog.SAVE, filePath.getFileName.toString)
       this.set(outName.trim())
@@ -61,15 +62,21 @@ abstract class FilePathEditor(accessor: PropertyAccessor[String], parent: Compon
     }
   }
 
-  override def get = {
-    val currentText = editor.getText
-    val pathString = if (currentText == null || currentText.trim == "") {
-      ""
-    } else {
-      asPath(currentText).toString
-    }
+  private def getCurrentText() = {
+    val currentTextMaybe = editor.getText
+    val currentText      = if (currentTextMaybe == null) { "" } else { currentTextMaybe.trim }
+    currentText
+  }
 
-    Option(pathString)
+  override def get = {
+    val currentText = getCurrentText()
+    if (currentText == "") {
+      Option(currentText)
+    } else {
+      val filePath   = asPath(currentText)
+      val pathString = filePath.toString
+      Option(pathString)
+    }
   }
 
   override def set(value: String) { editor.setText(value) }
