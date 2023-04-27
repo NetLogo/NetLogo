@@ -436,6 +436,7 @@ R user-new-file etc._usernewfile
 R user-one-of etc._useroneof
 R user-yes-or-no? etc._useryesorno
 R variance etc._variance
+R who-are-not _whoarenot
 R with _with
 R with-max etc._withmax
 R with-min etc._withmin

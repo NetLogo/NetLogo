@@ -278,6 +278,7 @@ class TestAllSyntaxes extends AnyFunSuite {
                      |_useroneof anything/list,anything,OTPL,None,10,2,2
                      |_useryesorno anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_variance list,number,OTPL,None,10,1,1
+                     |_whoarenot agentset,agent or agentset,agentset,OTPL,None,12,1,1
                      |_with agentset,TRUE/FALSE block,agentset,OTPL,Some(?),12,1,1
                      |_withmax agentset,number block,agentset,OTPL,Some(?),12,1,1
                      |_withmin agentset,number block,agentset,OTPL,Some(?),12,1,1

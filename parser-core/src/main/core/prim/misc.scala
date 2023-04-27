@@ -492,6 +492,17 @@ case class _unknownidentifier() extends Reporter {
     Syntax.reporterSyntax(ret = Syntax.WildcardType)
 }
 case class _unknowncommand(val syntax: Syntax) extends Command
+case class _whoarenot() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      left = Syntax.AgentsetType,
+      right = List(Syntax.AgentType | Syntax.AgentsetType),
+      ret = Syntax.AgentsetType,
+      precedence = Syntax.NormalPrecedence + 2,
+      isRightAssociative = false,
+      agentClassString = "OTPL"
+    )
+}
 case class _with() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(

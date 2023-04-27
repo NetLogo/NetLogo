@@ -317,6 +317,7 @@
       <a href="#turtles-here">turtles-here</a>
       <a href="#turtles-on">turtles-on</a>
       <a href="#up-to-n-of">up-to-n-of</a>
+      <a href="#who-are-not">who-are-not</a>
       <a href="#with">with</a>
       <a href="#with-max">with-max</a>
       <a href="#with-min">with-min</a>
@@ -9849,6 +9850,41 @@ ask turtles [ print who ]
           <code>mouse 0</code>, because the who number 0 was already taken by the
           frog.
         </p>
+      </div>
+      <div class="dict_entry" id="who-are-not">
+        <h3>
+          <a>who-are-not<span class="since">6.3.1</span></a>
+        </h3>
+        <h4>
+          <span class="prim_example"><i>agentset</i> who-are-not <i>agentset</i></span>
+          <span class="prim_example"><i>agentset</i> who-are-not <i>agent</i></span>
+        </h4>
+        <p>
+          Takes an agentset on the left and an agentset or an agent on the right.  Reports
+          a new agentset containing all agents from the left-hand agentset that are not in
+          the right-hand agentset (or are not the right-hand agent).
+        </p>
+        <pre>
+breed [frogs frog]
+breed [mice mouse]
+
+create-frogs 10
+create-mice 10
+create-turtles 10
+
+; contains all the turtles who are not frogs
+ask turtles who-are-not frogs [
+  forward 1
+]</pre>
+        <p>Another example:<p>
+        <pre>
+ask turtles [
+  ; contains all the turtles this turtle is not linked to
+  let targets (other turtles who-are-not link-neighbors)
+  if count targets > 0 [
+    create-link-with one-of targets
+  ]
+]</pre>
       </div>
       <div class="dict_entry" id="with">
         <h3>

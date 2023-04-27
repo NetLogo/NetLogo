@@ -1,0 +1,28 @@
+WhoAreNot_Agentsets
+  breed [mice mouse]
+  breed [frogs frog]
+  O> create-frogs 10
+  O> create-mice 10
+  O> create-turtles 10
+  all? (turtles who-are-not frogs) [breed != frogs] => true
+  all? (turtles who-are-not mice) [breed != mice] => true
+  (turtles who-are-not patches) = turtles => true
+  count (mice who-are-not turtles) => 0
+
+WhoAreNot_Agents
+  globals [ t ts ]
+  breed [mice mouse]
+  breed [frogs frog]
+  O> create-frogs 10
+  O> create-mice 10
+  O> create-turtles 10
+  O> set t one-of mice
+  O> set ts mice who-are-not t
+  count ts => 9
+  member? t ts => false
+  all? ts [breed = mice] => true
+  O> set t one-of frogs
+  O> set ts ts who-are-not t
+  count ts => 9
+  member? t ts => false
+  all? ts [breed = mice] => true
