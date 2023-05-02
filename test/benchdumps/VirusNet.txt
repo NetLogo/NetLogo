@@ -2877,34 +2877,25 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
                 ALOAD 3
                 ALOAD 2
                 ALOAD 4
-                INVOKEINTERFACE org/nlogo/agent/LinkManager.linksWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)[Lorg/nlogo/agent/Link; (itf)
-                ARRAYLENGTH
-                ICONST_0
-                IF_ICMPLE L9
-                ICONST_1
-                GOTO L10
+                INVOKEINTERFACE org/nlogo/agent/LinkManager.isLinkedWith (Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/Turtle;Lorg/nlogo/agent/AgentSet;)Z (itf)
                L9
-               FRAME APPEND [org/nlogo/agent/AgentSet]
-                ICONST_0
-               L10
-               FRAME SAME1 I
                 ISTORE 2
                 ILOAD 2
-                IFNE L11
+                IFNE L10
                 ICONST_1
-                GOTO L12
-               L11
+                GOTO L11
+               L10
                FRAME FULL [org/nlogo/prim/_asm_proceduresetupspatiallyclusterednetwork_not_5 org/nlogo/nvm/Context I org/nlogo/agent/Turtle org/nlogo/agent/AgentSet] []
                 ICONST_0
-               L12
+               L11
                FRAME SAME1 I
-                IFEQ L13
+                IFEQ L12
                 GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-                GOTO L14
-               L13
+                GOTO L13
+               L12
                FRAME SAME
                 GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-               L14
+               L13
                FRAME SAME1 java/lang/Boolean
                 ARETURN
               // parameter final  context

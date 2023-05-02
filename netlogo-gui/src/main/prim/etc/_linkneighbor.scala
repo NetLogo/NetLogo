@@ -15,6 +15,6 @@ class _linkneighbor(breedName: String) extends Reporter {
   def report_1(context: Context, target: Turtle): Boolean = {
     val parent = context.agent.asInstanceOf[Turtle]
     val breed = if (breedName == null) world.links else world.getLinkBreed(breedName)
-    world.linkManager.linksWith(parent, target, breed).length > 0
+    world.linkManager.isLinkedWith(parent, target, breed)
   }
 }

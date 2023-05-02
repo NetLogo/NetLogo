@@ -1113,6 +1113,44 @@ public abstract class Turtle
 
   private List<Link> links = null;
 
+  public boolean isLinkedWith(Turtle dest, AgentSet linkSet) {
+    if (links == null || links.isEmpty()) {
+      return false;
+    }
+
+    boolean checkAllBreeds = linkSet == _world.links();
+    boolean isBreedSet    = !linkSet.isBreedSet();
+
+    for (Link link : links) {
+      if (checkAllBreeds || (isBreedSet && linkSet == link.getBreed()) || linkSet.contains(link)) {
+        if (link.end1 == dest || link.end2 == dest) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  public boolean isLinkedTo(Turtle dest, AgentSet linkSet) {
+    if (links == null || links.isEmpty()) {
+      return false;
+    }
+
+    boolean checkAllBreeds = linkSet == _world.links();
+    boolean isBreedSet    = !linkSet.isBreedSet();
+
+    for (Link link : links) {
+      if (checkAllBreeds || (isBreedSet && linkSet == link.getBreed()) || linkSet.contains(link)) {
+        if (link.end2 == dest || (!link.isDirectedLink() && link.end1 == dest)) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
   public void addLink(Link link) {
     if (links == null) {
       links = new ArrayList<>(1);

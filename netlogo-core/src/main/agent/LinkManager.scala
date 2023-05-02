@@ -63,6 +63,11 @@ trait LinkManager {
     */
   def linksTo(src: Turtle, dest: Turtle, linkBreed: AgentSet): Array[Link]
 
+  // These exist as "optimizations" for the `link-neighbor?`, `in-link-neighbor?`, and `out-link-neighbor?` and
+  // associated breed-specific prims.  -Jeremy B May 2023
+  def isLinkedWith(src: Turtle, dest: Turtle, linkBreed: AgentSet): Boolean
+  def isLinkedTo(src: Turtle, dest: Turtle, linkBreed: AgentSet): Boolean
+
   def outNeighbors(src: Turtle, linkBreed: AgentSet): Array[Turtle]
   def inNeighbors(target: Turtle, linkBreed: AgentSet): Array[Turtle]
   def neighbors(target: Turtle, linkSet: AgentSet): Array[Turtle]
@@ -167,8 +172,15 @@ class LinkManagerImpl[W <: World](world: W, linkFactory: LinkFactory[W]) extends
     Option(link).asInstanceOf[Option[Link]]
   }
 
+  def isLinkedWith(src: Turtle, dest: Turtle, linkBreed: AgentSet): Boolean =
+    src.isLinkedWith(dest, linkBreed)
+
+  def isLinkedTo(src: Turtle, dest: Turtle, linkBreed: AgentSet): Boolean =
+    src.isLinkedTo(dest, linkBreed)
+
   def linksWith(src: Turtle, dest: Turtle, linkBreed: AgentSet): Array[Link] =
     links(src, linkBreed).filter(_.otherEnd(src) == dest)
+
   def linksTo(src: Turtle, dest: Turtle, linkBreed: AgentSet): Array[Link] =
     outLinks(src, linkBreed).filter(_.otherEnd(src) == dest)
 
