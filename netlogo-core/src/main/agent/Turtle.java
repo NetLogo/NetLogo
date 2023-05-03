@@ -1122,7 +1122,7 @@ public abstract class Turtle
     boolean isBreedSet    = !linkSet.isBreedSet();
 
     for (Link link : links) {
-      if (checkAllBreeds || (isBreedSet && linkSet == link.getBreed()) || linkSet.contains(link)) {
+      if (checkAllBreeds || (isBreedSet ? linkSet == link.getBreed() : linkSet.contains(link))) {
         if (link.end1 == dest || link.end2 == dest) {
           return true;
         }
@@ -1141,7 +1141,7 @@ public abstract class Turtle
     boolean isBreedSet    = !linkSet.isBreedSet();
 
     for (Link link : links) {
-      if (checkAllBreeds || (isBreedSet && linkSet == link.getBreed()) || linkSet.contains(link)) {
+      if (checkAllBreeds || (isBreedSet ? linkSet == link.getBreed() : linkSet.contains(link))) {
         if (link.end2 == dest || (!link.isDirectedLink() && link.end1 == dest)) {
           return true;
         }
