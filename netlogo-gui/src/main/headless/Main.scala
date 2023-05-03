@@ -48,6 +48,8 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     def newWorkspace = {
       val w = HeadlessWorkspace.newInstance
       w.open(settings.modelPath)
+      // When the first workspace is created print any plot compilation errors.
+      // BehaviorSpace runs ignore such errors.
       if (printErrors) {
         val errors = w.plotManager.compileAllPlots()
         errors.foreach  { Console.println }
