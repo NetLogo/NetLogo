@@ -169,7 +169,7 @@ object ModelsLibrary {
   }
 
   private def scanDirectory(directory: Path, exclusive: Boolean, nameOverride: Option[String] = None): Option[Node] = {
-    if (!Files.isDirectory(directory) || Files.isSymbolicLink(directory)) {
+    if (!Files.isDirectory(directory)) {
       None
     } else {
 
