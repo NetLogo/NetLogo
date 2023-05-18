@@ -226,6 +226,20 @@ case class _lessthan() extends Reporter with Pure {
       ret = Syntax.BooleanType,
       precedence = Syntax.NormalPrecedence - 4)
 }
+case class _multilet(lets: Seq[(Token, Let)]) extends Command {
+  override def syntax =
+    Syntax.commandSyntax(
+      right = List(Syntax.WildcardType)
+    , defaultOption = Some(1)
+    )
+}
+case class _multiletitem(index: Int, total: Int) extends Reporter {
+  override def syntax =
+  Syntax.commandSyntax(
+    right = List(Syntax.ListType)
+  , defaultOption = Some(1)
+  )
+}
 case class _let(let: Option[Let], tokenText: Option[String]) extends Command {
   def this() = this(None, None)
   override def syntax =

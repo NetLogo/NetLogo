@@ -39,9 +39,51 @@ object ExpressionParser {
     val b = Buffer[core.Statement]()
     var activeScope = scope
     while (tokens.head.tpe != terminator) {
-      val (stmt, s) = f(tokens, activeScope)
-      activeScope = s
-      b += stmt
+      f(tokens, activeScope) match {
+        case (stmt, s) if stmt.command.isInstanceOf[core.prim._multilet] =>
+          val multilet = stmt.command.asInstanceOf[core.prim._multilet]
+
+          // This creates a preamble `let MULTILET-VAR-1 (EXPRESSION)` statement to store the list needed for the
+          // multi-let for access by plain ol' let statements.  This allows existing scoping for let variables to work
+          // as is.  -Jeremy B May 2023
+
+          val dummyName      = "MULTILET-VAR-1"
+          val dummyLet       = core.Let(dummyName)
+          val newScope       = s.addSymbol(dummyName, SymbolType.LocalVariable(dummyLet))
+          val dummyCommand   = new core.prim._let(Some(dummyLet), Some("multilet-var-1"))
+          // the `_letname()` here does absolutely nothing, but it allows future steps to run as though this is a normal `let`.
+          val dummyLetName   = new core.ReporterApp(new core.prim._letname(), multilet.token.sourceLocation)
+          val dummyArgs      = Seq(dummyLetName) ++ stmt.args
+          dummyCommand.token = multilet.token
+          val dummyStatement = new core.Statement(dummyCommand, dummyArgs, multilet.token.sourceLocation)
+          b += dummyStatement
+
+          val dummyVariable = core.prim._letvariable(dummyLet)
+          val dummyReporter = new core.ReporterApp(dummyVariable, multilet.token.sourceLocation)
+
+          // This creates synthetic `let v1 (item i MULTILET-VAR-1)` statements, again to allow the rest of compilation
+          // to proceed as normal.
+          val total         = multilet.lets.size
+          val letStatements = multilet.lets.zipWithIndex.map({ case ((token, let), i) =>
+            val splitLet     = new core.prim._let(Some(let), Some(token.text))
+            splitLet.token   = token
+            val item         = new core.prim._multiletitem(i, total)
+            item.token       = token
+            val expression   = new core.ReporterApp(item, Seq(dummyReporter), token.sourceLocation)
+            val letName      = new core.ReporterApp(new core.prim._letname(), token.sourceLocation)
+            val letArgs      = Seq(letName, expression)
+            val letStatement = new core.Statement(splitLet, letArgs, token.sourceLocation)
+            letStatement
+          })
+
+          activeScope = newScope
+          b ++= letStatements
+
+        case (stmt, s) =>
+          activeScope = s
+          b += stmt
+
+      }
     }
     b.toSeq
   }
@@ -57,17 +99,19 @@ object ExpressionParser {
       case TokenType.OpenParen =>
         val ((stmt, newScope), loc) = parseParenthesized(tokens, parseStatement(_, true, scope), token.filename)
         (stmt.changeLocation(loc), newScope)
+
       case TokenType.Command =>
         tokens.next()
         val coreCommand = token.value.asInstanceOf[core.Command]
         val nameToken = if (tokens.head.tpe != TokenType.Eof) Some(tokens.head) else None
         val (stmt, newScope) =
-          LetScope(coreCommand, nameToken, scope).map {
+          LetScope(coreCommand, nameToken, tokens, scope).map {
             case (letCommand, newScope) =>
               (new core.Statement(letCommand, token.sourceLocation), newScope)
           }.getOrElse((new core.Statement(coreCommand, token.sourceLocation), scope))
-        val arguments = parsePotentiallyVariadicArgumentList(coreCommand.syntax, variadic, stmt, tokens, newScope)
+        val arguments = parsePotentiallyVariadicArgumentList(stmt.instruction.syntax, variadic, stmt, tokens, newScope)
         (stmt.withArguments(arguments), newScope)
+
       case _ =>
         token.value match {
           case (_: core.prim._symbol | _: core.prim._unknownidentifier) if ! scope.contains(token.text.toUpperCase) =>
@@ -163,7 +207,8 @@ object ExpressionParser {
     val args = Buffer[core.Expression]()
 
     for (i <- 0 until syntax.rightDefault) {
-      args += parseArgExpression(syntax, tokens, sourceLocation, displayName, right(i min (right.size - 1)), scope) } // null = app
+      args += parseArgExpression(syntax, tokens, sourceLocation, displayName, right(i min (right.size - 1)), scope)
+    } // null = app
 
     if (takesOptionalCommandBlock) {
       val newExp =

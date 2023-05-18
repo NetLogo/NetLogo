@@ -222,6 +222,9 @@ class Backifier(program: Program,
       case s: core.prim._symbol =>
         new nvmprim._constsymbol(s.token)
 
+      case core.prim._multiletitem(index, total) =>
+        new nvmprim._multiletitem(index, total)
+
       case _ =>
         fallback[core.Reporter, nvm.Reporter](r)
 
