@@ -1,0 +1,82 @@
+LetWithLists
+  globals [g1 g2 l]
+
+  to set-globals [v1 v2] /
+    (set g1 v1) /
+    (set g2 v2) /
+  end
+
+  to-report report-nums /
+    (report [70 80]) /
+  end
+
+  O> let [v1 v2] [10 20] (set-globals v1 v2)
+  g1 => 10
+  g2 => 20
+
+  O> let [v3 v4] [30 40 50] (set-globals v3 v4)
+  g1 => 30
+  g2 => 40
+
+  O> set l [50 60]
+  O> let [v5 v6] l (set-globals v5 v6)
+  g1 => 50
+  g2 => 60
+
+  O> let [v7 v8] report-nums (set-globals v7 v8)
+  g1 => 70
+  g2 => 80
+
+  O> let [] [0] => COMPILER ERROR The list of variables names given to LET must contain at least one item.
+  O> let [v1 g1] [0 1] => COMPILER ERROR There is already a global variable called G1
+  O> let [v9 v10] [0] => ERROR The list of values for LET must be at least as long as the list of names.  We need 2 value(s) but only got 1 from the list [0].
+
+# TaskDisplayPreservesMultis
+#   globals [t g1 g2]
+#   O> set t [ [x] -> [ let [v1 v2] (list x 100) ]]
+#   word t => [ [x] -> [ let [v1 v2] (list x 100) ]]
+#   O> set t [ [x y] -> [ set [g1 g2] (list x y 300) ]]
+#   word t => [ [x y] -> [ set [g1 g2] (list x y 300) ]]
+#   # once we have task args destructuring...
+#   # O> set t [ [[x y]] -> [ set [g1 g2] (list x y 300 ) ]]
+#   # word t => [ [[x y]] -> [ set [g1 g2] (list x y 300 ) ]]
+#
+# SetWithLists
+#   globals [g1 g2 l]
+#
+#   to set-globals [v1 v2] /
+#     (set g1 v1) /
+#     (set g2 v2) /
+#   end
+#
+#   to-report report-nums /
+#     (report [70 80]) /
+#   end
+#
+#   O> set [g1 g2] [10 20]
+#   g1 => 10
+#   g2 => 20
+#
+#   O> set [g1 g2] [30 40 50]
+#   g1 => 30
+#   g2 => 40
+#
+#   O> set l [50 60]
+#   O> set [g1 g2] l
+#   g1 => 50
+#   g2 => 60
+#
+#   O> set [g1 g2] report-nums
+#   g1 => 70
+#   g2 => 80
+#
+#   set [] [0] => COMPILER ERROR It shoud've been you Gordo (must have at least 1 name for a multi-set).
+#   set [g1 g2] [0] => ERROR It should've been you Gordo (not enough elements).
+#   set [g1 g3] [0 1] => ERROR It should've been you Gordo (g3 doesn't exist).
+#
+# ArgsProc
+#   true => true
+#
+# ArgsAnonProc
+#   true => true
+#

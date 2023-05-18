@@ -250,6 +250,16 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
     val noNameProcedure = FrontEnd.findProcedurePositions("""to show "foo" end""", None)
     assert(noNameProcedure.isEmpty)
   }
+
+  test("regular old multi-let") {
+    testParse("let multilet-var-1 [1 2 3] let v1 (item 0 multilet-var-1) let v2 (item 1 multilet-var-1)",
+      "_let(Let(MULTILET-VAR-1),multilet-var-1)[_const([1, 2, 3])[]] _let(Let(V1),v1)[_item()[_const(0)[], _letvariable(Let(MULTILET-VAR-1))[]]] _let(Let(V2),v2)[_item()[_const(1)[], _letvariable(Let(MULTILET-VAR-1))[]]]")
+  }
+
+  test("fancy new multi-let") {
+    testParse("let [v1 v2] [1 2 3]",
+      "_let(Let(MULTILET-VAR-1),multilet-var-1)[_const([1, 2, 3])[]] _let(Let(V1),v1)[_multiletitem(0,2)[_letvariable(Let(MULTILET-VAR-1))[]]] _let(Let(V2),v2)[_multiletitem(1,2)[_letvariable(Let(MULTILET-VAR-1))[]]]")
+  }
 }
 
 object FrontEndTests {

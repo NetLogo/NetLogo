@@ -26,9 +26,10 @@ trait FrontEndMain extends NetLogoParser {
     val (rawProcDefs, structureResults) = basicParse(compilationOperand)
 
     val topLevelDefs = transformers(compilationOperand).foldLeft(rawProcDefs) {
-      case (defs, transform) => defs.map(transform.visitProcedureDefinition)
+      case (defs, transform) =>
+        val newDefs = defs.map(transform.visitProcedureDefinition)
+        newDefs
     }
-
 
     val letVerifier = new LetVerifier
     topLevelDefs.foreach(letVerifier.visitProcedureDefinition)

@@ -107,6 +107,9 @@ class Backifier(
       case s: core.prim._symbol =>
         new nvmprim._constsymbol(s.token)
 
+      case core.prim._multiletitem(index, total) =>
+        new nvmprim._multiletitem(index, total)
+
       // diabolical special case: if we have e.g. `breed [fish]` with no singular,
       // then the singular defaults to `turtle`, which will cause BreedIdentifierHandler
       // to interpret "turtle" as _breedsingular - ST 4/12/14
