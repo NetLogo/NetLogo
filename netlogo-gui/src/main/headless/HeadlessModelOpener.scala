@@ -13,6 +13,7 @@ import org.nlogo.shape.{LinkShape, VectorShape}
 import org.nlogo.api.PreviewCommands
 
 import org.nlogo.shape.{ShapeConverter, LinkShape, VectorShape}
+import org.nlogo.api.PlotCompilationErrorAction
 
 // this class is an abomination
 // everything works off of side effects, asking the workspace to update something
@@ -71,7 +72,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
         model.widgets.collect { case b: Button => b },
         model.widgets.collect { case m: Monitor => m })
     else
-      finish(model.constraints, results.program, model.interfaceGlobalCommands.mkString("\n"))
+      finish(model.constraints, results.program, model.interfaceGlobalCommands.mkString("\n"), ws.getPlotCompilationErrorAction)
   }
 
   private def attachWorldShapes(turtleShapes: Seq[CoreVectorShape], linkShapes: Seq[CoreLinkShape]) = {
@@ -84,11 +85,21 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       ws.world.linkShapes.add(LinkShape.getDefaultLinkShape)
   }
 
-  private def finish(constraints: Map[String, ConstraintSpecification], program: Program, interfaceGlobalCommands: String) {
+/**
+ *  @param plotCompilationErrorAction  action to take if a plot compilation error occurs
+ */
+private def finish(constraints: Map[String, ConstraintSpecification], program: Program,
+                      interfaceGlobalCommands: String, plotCompilationErrorAction: PlotCompilationErrorAction) {
     ws.world.realloc()
 
     val errors = ws.plotManager.compileAllPlots()
-    if(errors.nonEmpty) throw errors(0)
+    if (errors.nonEmpty) {
+      plotCompilationErrorAction match {
+        case PlotCompilationErrorAction.Throw => throw errors(0)
+        case PlotCompilationErrorAction.Output => errors.foreach { println }
+        case PlotCompilationErrorAction.Ignore =>
+      }
+    }
 
     import ConstraintSpecification._
     for ((vname, spec) <- constraints) {

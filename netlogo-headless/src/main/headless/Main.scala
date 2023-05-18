@@ -5,6 +5,7 @@ package org.nlogo.headless
 import org.nlogo.core.WorldDimensions
 import org.nlogo.api.{ APIVersion, Version }
 import org.nlogo.nvm.LabInterface.Settings
+import org.nlogo.api.PlotCompilationErrorAction
 
 object Main {
   class CancelException extends RuntimeException
@@ -19,11 +20,15 @@ object Main {
   }
 
   def runExperiment(settings: Settings) {
+    var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
     def newWorkspace = {
       val w = HeadlessWorkspace.newInstance
+      w.setPlotCompilationErrorAction(plotCompilationErrorAction)
       w.open(settings.modelPath)
+      plotCompilationErrorAction = PlotCompilationErrorAction.Ignore
       w
     }
+
     val openWs = newWorkspace
     val proto = try {
       BehaviorSpaceCoordinator.selectProtocol(settings, openWs)
