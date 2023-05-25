@@ -228,17 +228,11 @@ case class _lessthan() extends Reporter with Pure {
 }
 case class _multilet(lets: Seq[(Token, Let)]) extends Command {
   override def syntax =
-    Syntax.commandSyntax(
-      right = List(Syntax.WildcardType)
-    , defaultOption = Some(1)
-    )
+    Syntax.commandSyntax(right = List(Syntax.ListType))
 }
-case class _multiletitem(index: Int, total: Int) extends Reporter {
+case class _multiletitem(index: Int) extends Reporter {
   override def syntax =
-  Syntax.commandSyntax(
-    right = List(Syntax.ListType)
-  , defaultOption = Some(1)
-  )
+    Syntax.reporterSyntax(ret = Syntax.WildcardType, right = List(Syntax.ListType))
 }
 case class _let(let: Option[Let], tokenText: Option[String]) extends Command {
   def this() = this(None, None)

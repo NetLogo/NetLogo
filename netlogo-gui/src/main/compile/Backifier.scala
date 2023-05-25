@@ -133,20 +133,31 @@ class Backifier(program: Program,
         new nvmprim._extern(
           extensionManager.replaceIdentifier(c.token.text.toUpperCase)
             .asInstanceOf[nlogoApi.Command])
+
       case core.prim._call(proc) =>
         new nvmprim._call(procedures(proc.name))
+
       case core.prim._let(Some(let), _) =>
         new nvmprim._let(let)
+
+      case core.prim._multilet(lets) =>
+        new nvmprim._multilet(lets.size)
+
       case nlogoApi.NetLogoLegacyDialect._magicopen(name) =>
         new nvmprim._magicopen(name)
+
       case cc: core.prim._carefully =>
         new nvmprim._carefully(cc.let)
+
       case bk: core.prim._bk =>
         new nvmprim._bk(c.token)
+
       case fd: core.prim._fd =>
         new nvmprim._fd(c.token)
+
       case rep: core.prim._repeat =>
         new nvmprim._repeat(c.token)
+
       case _ =>
         fallback[core.Command, nvm.Command](c)
     }
@@ -222,8 +233,8 @@ class Backifier(program: Program,
       case s: core.prim._symbol =>
         new nvmprim._constsymbol(s.token)
 
-      case core.prim._multiletitem(index, total) =>
-        new nvmprim._multiletitem(index, total)
+      case core.prim._multiletitem(index) =>
+        new nvmprim._multiletitem(index)
 
       case _ =>
         fallback[core.Reporter, nvm.Reporter](r)
