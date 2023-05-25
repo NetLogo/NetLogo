@@ -2,11 +2,13 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core,
-  core.{ prim, FrontEndProcedure, Fail, I18N, SourceLocation, Syntax, Token, TokenType },
-    prim.Lambda,
-    Fail.{ cAssert, exception },
-    Syntax.compatible
+import SymbolType.LocalVariable
+
+import org.nlogo.core
+import org.nlogo.core.{ FrontEndProcedure, I18N, SourceLocation, Syntax, Token, TokenType }
+import org.nlogo.core.Fail.{ cAssert, exception }
+import org.nlogo.core.Syntax.compatible
+import org.nlogo.core.prim.Lambda
 
 import scala.annotation.tailrec
 import collection.mutable.Buffer
@@ -44,13 +46,12 @@ object ExpressionParser {
           // The `_multilet` has the job of storing the list value and checking it at runtime to make sure it's long
           // enough for all the given variable names.
           val multilet      = stmt.command.asInstanceOf[core.prim._multilet]
-          // This creates synthetic `let v1 _multiletitem(index)` statements, again to allow the rest of compilation to
-          // proceed as normal.  The `_multiletitem(index)` gets the value from the list stored by the opening
-          // `_multilet`.
+          // This creates synthetic `let v1 _multiletitem` statements, again to allow the rest of compilation to proceed
+          // as normal.  The `_multiletitem` gets the value from the list stored by the opening `_multilet`.
           val letStatements = multilet.lets.zipWithIndex.map({ case ((token, let), i) =>
             val splitLet     = new core.prim._let(Some(let), Some(token.text))
             splitLet.token   = token
-            val item         = new core.prim._multiletitem(i)
+            val item         = new core.prim._multiletitem()
             item.token       = token
             val expression   = new core.ReporterApp(item, Seq(), token.sourceLocation)
             // the `_letname()` here does absolutely nothing, but it allows future steps to run as though this is a normal `let`.
@@ -63,6 +64,46 @@ object ExpressionParser {
           activeScope = s
           b += stmt
           b ++= letStatements
+
+        case (stmt, s) if stmt.command.isInstanceOf[core.prim._multiset] =>
+          val multiset = stmt.command.asInstanceOf[core.prim._multiset]
+          val setStatements = multiset.sets.zipWithIndex.map({ case (token, i) =>
+            val splitSet   = new core.prim._set()
+            splitSet.token = token
+            val setVar = token.value match {
+              case uv: core.prim._unknownidentifier =>
+                val varName = token.text.toUpperCase
+                val tpe = s.get(varName).getOrElse(exception(s"There is no variable called ${varName}.", token.sourceLocation))
+                val variable = tpe match {
+                  // normally this happens in `LetVariableScope` but that time has passed I guess?
+                  case LocalVariable(let) =>
+                    val v = new core.prim._letvariable(let)
+                    v.token = token
+                    v
+
+                  case _ =>
+                    uv
+                }
+                new core.ReporterApp(variable, Seq(), token.sourceLocation)
+
+              case r: core.Reporter =>
+                new core.ReporterApp(r, Seq(), token.sourceLocation)
+
+              case _ =>
+                exception(s"Command found in multi-set where a variable name was expected: ${token.text.toUpperCase}.", token.sourceLocation)
+
+            }
+            val item         = new core.prim._multiletitem
+            item.token       = token
+            val expression   = new core.ReporterApp(item, Seq(), token.sourceLocation)
+            val setArgs      = Seq(setVar, expression)
+            val setStatement = new core.Statement(splitSet, setArgs, token.sourceLocation)
+            setStatement
+          })
+
+          activeScope = s
+          b += stmt
+          b ++= setStatements
 
         case (stmt, s) =>
           activeScope = s
@@ -80,6 +121,7 @@ object ExpressionParser {
    */
   private def parseStatement(tokens: BufferedIterator[Token], variadic: Boolean, scope: SymbolTable): (core.Statement, SymbolTable) = {
     val token = tokens.head
+
     token.tpe match {
       case TokenType.OpenParen =>
         val ((stmt, newScope), loc) = parseParenthesized(tokens, parseStatement(_, true, scope), token.filename)
@@ -88,12 +130,18 @@ object ExpressionParser {
       case TokenType.Command =>
         tokens.next()
         val coreCommand = token.value.asInstanceOf[core.Command]
-        val nameToken = if (tokens.head.tpe != TokenType.Eof) Some(tokens.head) else None
-        val (stmt, newScope) =
-          LetScope(coreCommand, nameToken, tokens, scope).map {
-            case (letCommand, newScope) =>
-              (new core.Statement(letCommand, token.sourceLocation), newScope)
-          }.getOrElse((new core.Statement(coreCommand, token.sourceLocation), scope))
+        val (command, newScope) = coreCommand match {
+          case l: core.prim._let =>
+            LetScope(l, tokens, scope)
+
+          case s: core.prim._set =>
+            (SplitSet(s, tokens), scope)
+
+          case _ =>
+            (coreCommand, scope)
+
+        }
+        val stmt = new core.Statement(command, token.sourceLocation)
         val arguments = parsePotentiallyVariadicArgumentList(stmt.instruction.syntax, variadic, stmt, tokens, newScope)
         (stmt.withArguments(arguments), newScope)
 
@@ -101,6 +149,7 @@ object ExpressionParser {
         token.value match {
           case (_: core.prim._symbol | _: core.prim._unknownidentifier) if ! scope.contains(token.text.toUpperCase) =>
             exception(I18N.errors.getN("compiler.LetVariable.notDefined", token.text.toUpperCase), token)
+
           case _ => exception(ExpectedCommand, token)
         }
     }

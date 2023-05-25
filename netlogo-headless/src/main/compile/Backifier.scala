@@ -40,7 +40,10 @@ class Backifier(
         new nvmprim._let(let)
 
       case core.prim._multilet(lets) =>
-        new nvmprim._multilet(lets.size)
+        new nvmprim._multilet("LET", lets.size)
+
+      case core.prim._multiset(sets) =>
+        new nvmprim._multilet("SET", sets.size)
 
       case cc: core.prim._carefully =>
         new nvmprim._carefully(cc.let)
@@ -116,9 +119,6 @@ class Backifier(
 
       case s: core.prim._symbol =>
         new nvmprim._constsymbol(s.token)
-
-      case core.prim._multiletitem(index) =>
-        new nvmprim._multiletitem(index)
 
       // diabolical special case: if we have e.g. `breed [fish]` with no singular,
       // then the singular defaults to `turtle`, which will cause BreedIdentifierHandler

@@ -230,7 +230,7 @@ case class _multilet(lets: Seq[(Token, Let)]) extends Command {
   override def syntax =
     Syntax.commandSyntax(right = List(Syntax.ListType))
 }
-case class _multiletitem(index: Int) extends Reporter {
+case class _multiletitem() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(ret = Syntax.WildcardType, right = List(Syntax.ListType))
 }
@@ -441,6 +441,14 @@ case class _sentence() extends Reporter with Pure {
       ret = Syntax.ListType,
       defaultOption = Some(2),
       minimumOption = Some(0))
+}
+case class _multiset(sets: Seq[Token]) extends Command {
+  override def syntax =
+    Syntax.commandSyntax(right = List(Syntax.ListType))
+}
+case class _multisetitem() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(ret = Syntax.WildcardType, right = List(Syntax.ListType))
 }
 case class _set() extends Command {
   override def syntax =
