@@ -4,6 +4,7 @@ package org.nlogo.headless
 
 import org.nlogo.plot.{PlotPoint, PlotPen}
 import org.nlogo.core.I18N
+import org.nlogo.api.PlotCompilationErrorAction
 
 class TestPlotModels extends AbstractTestModels {
 
@@ -209,6 +210,16 @@ class TestPlotModels extends AbstractTestModels {
   testModelCompileError("Plot With Bad Pen Setup Code Should Throw Exception on Load (headless only)",
     Model(modelCode, Plot(pens = Pens(Pen(setupCode = "create-fails 8"))))){ ex =>
     assert(I18N.errors.getN("compiler.LocalsVisitor.notDefined", "CREATE-FAILS") === ex.getMessage)
+  }
+
+  testModelSetPlotCompilationErrorAction("Plot With Bad Pen Setup Code Should Output Exception on Load (headless only, Output option)",
+    Model(modelCode, Plot(pens = Pens(Pen(setupCode = "create-fails 8")))),
+    PlotCompilationErrorAction.Output){
+  }
+
+  testModelSetPlotCompilationErrorAction("Plot With Bad Pen Setup Code Should Ignore Exception on Load (headless only, Ignore Option)",
+    Model(modelCode, Plot(pens = Pens(Pen(setupCode = "create-fails 8")))),
+    PlotCompilationErrorAction.Ignore){
   }
 
   testModelCompileError("Plot With Bad Pen Update Code Should Throw Exception on Load (headless only)",
