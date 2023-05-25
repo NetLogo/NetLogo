@@ -41,42 +41,27 @@ object ExpressionParser {
     while (tokens.head.tpe != terminator) {
       f(tokens, activeScope) match {
         case (stmt, s) if stmt.command.isInstanceOf[core.prim._multilet] =>
-          val multilet = stmt.command.asInstanceOf[core.prim._multilet]
-
-          // This creates a preamble `let MULTILET-VAR-1 (EXPRESSION)` statement to store the list needed for the
-          // multi-let for access by plain ol' let statements.  This allows existing scoping for let variables to work
-          // as is.  -Jeremy B May 2023
-
-          val dummyName      = "MULTILET-VAR-1"
-          val dummyLet       = core.Let(dummyName)
-          val newScope       = s.addSymbol(dummyName, SymbolType.LocalVariable(dummyLet))
-          val dummyCommand   = new core.prim._let(Some(dummyLet), Some("multilet-var-1"))
-          // the `_letname()` here does absolutely nothing, but it allows future steps to run as though this is a normal `let`.
-          val dummyLetName   = new core.ReporterApp(new core.prim._letname(), multilet.token.sourceLocation)
-          val dummyArgs      = Seq(dummyLetName) ++ stmt.args
-          dummyCommand.token = multilet.token
-          val dummyStatement = new core.Statement(dummyCommand, dummyArgs, multilet.token.sourceLocation)
-          b += dummyStatement
-
-          val dummyVariable = core.prim._letvariable(dummyLet)
-          val dummyReporter = new core.ReporterApp(dummyVariable, multilet.token.sourceLocation)
-
-          // This creates synthetic `let v1 (item i MULTILET-VAR-1)` statements, again to allow the rest of compilation
-          // to proceed as normal.
-          val total         = multilet.lets.size
+          // The `_multilet` has the job of storing the list value and checking it at runtime to make sure it's long
+          // enough for all the given variable names.
+          val multilet      = stmt.command.asInstanceOf[core.prim._multilet]
+          // This creates synthetic `let v1 _multiletitem(index)` statements, again to allow the rest of compilation to
+          // proceed as normal.  The `_multiletitem(index)` gets the value from the list stored by the opening
+          // `_multilet`.
           val letStatements = multilet.lets.zipWithIndex.map({ case ((token, let), i) =>
             val splitLet     = new core.prim._let(Some(let), Some(token.text))
             splitLet.token   = token
-            val item         = new core.prim._multiletitem(i, total)
+            val item         = new core.prim._multiletitem(i)
             item.token       = token
-            val expression   = new core.ReporterApp(item, Seq(dummyReporter), token.sourceLocation)
+            val expression   = new core.ReporterApp(item, Seq(), token.sourceLocation)
+            // the `_letname()` here does absolutely nothing, but it allows future steps to run as though this is a normal `let`.
             val letName      = new core.ReporterApp(new core.prim._letname(), token.sourceLocation)
             val letArgs      = Seq(letName, expression)
             val letStatement = new core.Statement(splitLet, letArgs, token.sourceLocation)
             letStatement
           })
 
-          activeScope = newScope
+          activeScope = s
+          b += stmt
           b ++= letStatements
 
         case (stmt, s) =>
