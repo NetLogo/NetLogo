@@ -3,7 +3,7 @@
 package org.nlogo.api
 
 /**
- * Action to take if PlotManager.compileAllPlotsplot returns error(s)
+ * Action to take if PlotManager.compileAllPlot returns error(s)
  * during a call to open in HeadlessWorkspace.
  *
  * Throw  - Throw the first error

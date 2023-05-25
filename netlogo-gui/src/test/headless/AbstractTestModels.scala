@@ -22,7 +22,8 @@ trait AbstractTestModels extends AnyFunSuite with ModelCreator {
   }
 
 /**
-   * test a model created in code setting a specified PlotCompilationErrorAction
+   * Set the PlotCompilationErrorAction and then test a model created in code.
+   * See netlogo-core/src/main/api/Controllable.scala for information on PlotCompilationErrorAction.
    */
   def testModelSetPlotCompilationErrorAction(testName: String, model: Model, plotCompilationErrorAction: PlotCompilationErrorAction)(f: => Unit) = {
     test(testName){ runModelSetPlotCompilationErrorAction(model, plotCompilationErrorAction){ f } }
@@ -77,7 +78,7 @@ trait AbstractTestModels extends AnyFunSuite with ModelCreator {
     run(ws => ws.openModel(model)){ f }
   }
 
-  // runs the given model in a new workspace setting a specified PlotCompilationErrorAction
+ // Set the PlotCompilationErrorAction and run the given model in a new workspace.
   def runModelSetPlotCompilationErrorAction(model:Model, plotCompilationErrorAction: PlotCompilationErrorAction)(f: => Unit) = {
     run(ws => {ws.setPlotCompilationErrorAction(plotCompilationErrorAction)
     ws.openModel(model)}){ f }

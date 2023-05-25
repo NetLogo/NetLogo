@@ -28,7 +28,7 @@ trait Controllable {
   def evaluateReporter(owner: JobOwner, source: String): AnyRef
 
 /**
- * Action to take if PlotManager.compileAllPlotsplot returns error(s)
+ * Action to take if PlotManager.compileAllPlots returns error(s)
  * during a call to open in HeadlessWorkspace.
  * For the controlling API the default is to throw an exception.
  * For Behaviorspace we will set _plotCompilationErrorAction so that the errors are
