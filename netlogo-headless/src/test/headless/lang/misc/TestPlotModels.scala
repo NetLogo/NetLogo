@@ -6,6 +6,7 @@ package misc
 
 import org.nlogo.plot.PlotPen
 import org.nlogo.core._
+import org.nlogo.api.PlotCompilationErrorAction
 
 class TestPlotModels extends FixtureSuite {
 
@@ -294,4 +295,16 @@ class TestPlotModels extends FixtureSuite {
     testCompileError(Model(code = modelCode, widgets = List(View(), Plot(display = Some(""), pens = List(Pen(display = "p", updateCode = "create-fails 8")))))) { ex =>
       assert("Nothing named CREATE-FAILS has been defined." === ex.getMessage)
     }}
+
+  test("Plot With Bad Pen Update Code Should Output Exception on Load (headless only, Output Option)") { implicit fixture =>
+    import fixture._
+    setPlotCompilationErrorAction(PlotCompilationErrorAction.Output)
+    openModel(Model(code = modelCode, widgets = List(View(), Plot(display = Some(""), pens = List(Pen(display = "p", updateCode = "create-fails 8"))))))
+  }
+
+  test("Plot With Bad Pen Update Code Should Ignore Exception on Load (headless only, Ignore Option)") { implicit fixture =>
+    import fixture._
+    setPlotCompilationErrorAction(PlotCompilationErrorAction.Ignore)
+    openModel(Model(code = modelCode, widgets = List(View(), Plot(display = Some(""), pens = List(Pen(display = "p", updateCode = "create-fails 8"))))))
+  }
 }

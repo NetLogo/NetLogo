@@ -9,13 +9,13 @@ import java.util.Base64
 
 import scala.collection.mutable.WeakHashMap
 import scala.util.Try
-
 import org.nlogo.agent.{ World, Agent, OutputObject }
 import org.nlogo.api.{ Dump, ExtensionManager => APIEM, FileIO, HubNetInterface, LibraryManager,
   LogoException, OutputDestination, PreviewCommands, Workspace => APIWorkspace, WorldDimensions3D }
 import org.nlogo.core.{ CompilerException, Model, View, Widget => CoreWidget, WorldDimensions }
 import org.nlogo.nvm.{ Activation, Instruction, Command, Context, Job, MutableLong, Procedure, Tracer }
 import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.api.PlotCompilationErrorAction
 
 import AbstractWorkspaceTraits._
 
@@ -102,6 +102,23 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   @throws(classOf[IOException])
   @throws(classOf[LogoException])
   def open(path: String, shouldAutoInstallLibs: Boolean): Unit
+
+/**
+ * getPlotCompilationErrorAction and setPlotCompilationErrorAction should
+ * be inherited from org.nlogo.api.Controllable, but are not because of a
+ * scala bug that involves inheritance when java classes such as AbstractWorkspace
+ * are in a hierarchy.
+ * If the bug is fixed or AbstractWorkspace is converted to scala remove
+ * these 3 lines of code involving PlotCompilationErrorAction and the import of
+ * org.nlogo.api.Controllable
+ * The bug: https://github.com/scala/bug/issues/12224
+ *   AbstractMethodError when overriding java method with default implementation
+ *   implementation is "muted" in inherited interface Issue Issue #12224 scala/bug
+ */
+  private[this] var _plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Throw
+
+  override def getPlotCompilationErrorAction = _plotCompilationErrorAction
+  override def setPlotCompilationErrorAction(plotCompilationErrorAction: PlotCompilationErrorAction): Unit = { _plotCompilationErrorAction = plotCompilationErrorAction }
 
   @throws(classOf[IOException])
   def getSource(filename: String): String = {

@@ -26,4 +26,29 @@ trait Controllable {
 
   @throws(classOf[CompilerException])
   def evaluateReporter(owner: JobOwner, source: String): AnyRef
+
+/**
+ * Action to take if PlotManager.compileAllPlots returns error(s)
+ * during a call to open in HeadlessWorkspace.
+ * For the controlling API the default is to throw an exception.
+ * For Behaviorspace we will set _plotCompilationErrorAction so that the errors are
+ * are output for the first thread and ignored in subsequent threads.
+ */
+  private[this] var _plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Throw
+
+/**
+ * @return  plotCompilationErrorAction  action to take if a plot compilation error occurs
+*/
+  def getPlotCompilationErrorAction(): PlotCompilationErrorAction = { _plotCompilationErrorAction }
+
+/**
+ *  @param plotCompilationErrorAction  action to take if a plot compilation error occurs
+ *                                     Throw  - Throw the first error
+ *                                     Output - Output all errors
+ *                                     Ignore - Do nothing
+*/
+  def setPlotCompilationErrorAction(plotCompilationErrorAction: PlotCompilationErrorAction): Unit = { _plotCompilationErrorAction = plotCompilationErrorAction }
+
+
+
 }

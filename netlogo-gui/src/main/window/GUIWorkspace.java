@@ -36,7 +36,7 @@ import org.nlogo.nvm.Workspace;
 import java.util.HashMap;
 import java.util.ArrayList;
 
-public abstract class GUIWorkspace // can't be both abstract and strictfp
+public abstract class GUIWorkspace
     extends GUIWorkspaceScala
     implements
     org.nlogo.window.Event.LinkChild,

@@ -7,7 +7,7 @@ import collection.mutable.ListBuffer
 import java.awt.{ Dialog }
 import java.io.{ FileWriter, IOException, PrintWriter }
 
-import org.nlogo.api.{ Exceptions, LabProtocol, LogoException }
+import org.nlogo.api.{ Exceptions, LabProtocol, LogoException, PlotCompilationErrorAction }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.lab.{ Exporter, SpreadsheetExporter, TableExporter, Worker }
@@ -50,6 +50,7 @@ class Supervisor(
         }
         Exceptions.handle(e)
       }}
+
   def nextWorkspace = queue.synchronized { queue.dequeue() }
   val runnable = new Runnable { override def run() {
     worker.run(workspace, nextWorkspace _, options.threadCount)
@@ -113,8 +114,15 @@ class Supervisor(
     progressDialog.setUpdateView(options.updateView)
     progressDialog.setPlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
     queue.enqueue(workspace)
-    (2 to options.threadCount).foreach{_ =>
+    (2 to options.threadCount).foreach{num =>
       val w = factory.newInstance
+      // We want to print any plot compilation errors for just one of
+      // the headless workspaces.
+      if (num == 2) {
+        w.setPlotCompilationErrorAction(PlotCompilationErrorAction.Output)
+      } else {
+        w.setPlotCompilationErrorAction(PlotCompilationErrorAction.Ignore)
+      }
       factory.openCurrentModelIn(w)
       headlessWorkspaces += w
       queue.enqueue(w)
