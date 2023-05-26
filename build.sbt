@@ -9,7 +9,7 @@ import NetLogoBuild.{ all, autogenRoot, cclArtifacts, includeInPackaging,
   marketingVersion, numericMarketingVersion, netlogoVersion, shareSourceDirectory }
 import Docs.htmlDocs
 import Dump.dumpClassName
-import Testing.{ testTempDirectory, testChecksumsClass }
+import Testing.testTempDirectory
 
 // these settings are common to ALL BUILDS
 // if it doesn't belong in every build, it can't go in here
@@ -173,7 +173,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     extensionRoot   := (baseDirectory.value.getParentFile / "extensions").getAbsoluteFile,
     autogenRoot     := baseDirectory.value.getParentFile / "autogen",
     Test / unmanagedSourceDirectories      += baseDirectory.value / "src" / "tools",
-    Test / testChecksumsClass              := "org.nlogo.headless.TestChecksums",
     Compile / resourceDirectory            := baseDirectory.value / "resources",
     Compile / unmanagedResourceDirectories ++= (sharedResources / Compile / unmanagedResourceDirectories).value,
     libraryDependencies ++= Seq(
@@ -267,7 +266,6 @@ lazy val headless = (project in file ("netlogo-headless")).
     Compile / resourceDirectory := baseDirectory.value / "resources" / "main",
     Compile / unmanagedResourceDirectories ++= (sharedResources / Compile / unmanagedResourceDirectories).value,
     Test / resourceDirectory    := baseDirectory.value.getParentFile / "test",
-    Test / testChecksumsClass   := "org.nlogo.headless.misc.TestChecksums",
     dumpClassName               := "org.nlogo.headless.misc.Dump",
     excludedExtensions          := Seq("arduino", "bitmap", "csv", "gis", "gogo", "ls", "nw", "palette", "py", "sound", "time", "vid", "view2.5d"),
     all := { val _ = (

@@ -16,12 +16,10 @@ object NetLogoPackaging {
 
   lazy val aggregateJDKParser      = settingKey[State => Parser[BuildJDK]]("parser for packageApp settings")
   lazy val aggregateOnlyFiles      = taskKey[Seq[File]]("Files to be included in the aggregate root")
-  lazy val behaviorsearchRoot      = settingKey[File]("root of behaviorsearch directory")
   lazy val buildNetLogo            = taskKey[Unit]("build NetLogo")
   lazy val buildVariables          = taskKey[Map[String, String]]("NetLogo template variables")
   lazy val buildDownloadPages      = taskKey[Seq[File]]("package the web download pages")
   lazy val configRoot              = settingKey[File]("configuration directory")
-  lazy val iconFiles               = settingKey[Seq[File]]("icon files to make available")
   lazy val resaveModels            = taskKey[Unit]("prep models library for packaging")
   lazy val buildMathematicaLink    = taskKey[Unit]("build and package Mathematica Link submodule")
   lazy val generateLocalWebsite    = taskKey[File]("package the web download pages")
@@ -67,7 +65,6 @@ object NetLogoPackaging {
 
   def settings(netlogo: Project, macApp: Project, behaviorsearchProject: Project): Seq[Setting[_]] = Seq(
     netLogoRoot     := (netlogo / baseDirectory).value,
-    behaviorsearchRoot := netLogoRoot.value.getParentFile / "behaviorsearch",
     mathematicaRoot := netLogoRoot.value.getParentFile / "Mathematica-Link",
     configRoot      := baseDirectory.value / "configuration",
     localSiteTarget := target.value / marketingVersion.value,
@@ -305,11 +302,6 @@ object NetLogoPackaging {
       , variables
       , mainLauncher +: launchers
       )
-    },
-
-    packageMacAggregate / iconFiles := {
-      ((configRoot.value ** "*.icns") +++
-        ((behaviorsearchProject / baseDirectory).value ** "*.icns")).get.toSeq
     },
 
     packageMacAggregate := {

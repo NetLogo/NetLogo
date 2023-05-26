@@ -14,7 +14,6 @@ object Testing {
   lazy val testCommandsClass   = settingKey[String]("class used to run command tests")
   lazy val testExtensionsClass = settingKey[String]("class used to run extensions tests")
   lazy val testModelsClass     = settingKey[String]("class used to run model tests")
-  lazy val testChecksumsClass  = settingKey[String]("class used to run checksum tests")
 
   lazy val tr = inputKey[Unit]("run reporter tests")
   lazy val tc = inputKey[Unit]("run command tests")
@@ -22,7 +21,7 @@ object Testing {
   lazy val tm = inputKey[Unit]("run model tests")
   lazy val ts = inputKey[Unit]("run checksum tests")
 
-  lazy val testTempDirectory = settingKey[File]("Temp directory for tests to write files to")
+  lazy val testTempDirectory = settingKey[File]("Temp directory for tests to write files to").withRank(KeyRanks.Invisible)
 
   private val testKeys = Seq(tr, tc, te, tm, ts)
 
