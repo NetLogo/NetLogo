@@ -59,6 +59,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
       // disk since the model was opened. AAB 03 2022
       compile()
       dirty = false
+      println("  TemporaryCodeTab initialize dirty false")
     } catch {
       case _: IOException => innerSource = ""
     }
@@ -100,10 +101,13 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   def filenameForDisplay = (filename.right map TemporaryCodeTab.stripPath).merge
 
   def save(saveAs: Boolean) = {
+    println(s"saveAs: $saveAs in TemporaryCodeTab")
+    println(s"filename.isLeft: ${filename.isLeft} in TemporaryCodeTab")
     if (saveAs || filename.isLeft)
       filename = Right(userChooseSavePath())
     FileIO.writeFile(filename.right.get, text.getText)
     saveNeeded = false
+    println("   set saveNeeded false in save")
     compileIfDirty()
     dirty = false
     tabs.setDirtyMonitorCodeWindow

@@ -78,6 +78,7 @@ with SaveModel.Controller
       return
     try {
       lastTimeAutoSaved = System.currentTimeMillis()
+      println("doAutoSave in DirtyMonitor")
       SaveModel(modelSaver.currentModel, modelLoader, this, TempFileModelTracker, Version).foreach { f =>
         f().foreach { savedUri =>
           if (System.getProperty("os.name").startsWith("Windows")) {

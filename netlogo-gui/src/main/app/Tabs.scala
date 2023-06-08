@@ -101,14 +101,21 @@ class Tabs(workspace:           GUIWorkspace,
   jframe.addWindowFocusListener(new WindowAdapter() {
     override def windowGainedFocus(e: WindowEvent) {
       val currentTab = getTabs.getSelectedComponent
+      println("windowGainedFocus in Tabs")
       if (tabManager.getMainCodeTab.dirty) {
         // The SwitchedTabsEvent can lead to compilation. AAB 10/2020
+        println("   MainCodeTab is dirty do SwitchedTabsEvent")
          new AppEvents.SwitchedTabsEvent(tabManager.getMainCodeTab, currentTab).raise(getTabs)
        } else {
-         // If the user has switched to the Interface Tab, we must compile any dirty TemporaryCodeTab AAB 3/2022
-         if (interfaceTab.equals(currentTab)) {
-           (externalFileTabs.asInstanceOf[mutable.Set[TemporaryCodeTab]]).foreach(_.compileIfDirty())
+        println("   MainCodeTab not dirty .What to do?")
+         for(tab <- externalFileTabs.asInstanceOf[mutable.Set[TemporaryCodeTab]]) {
+          if (tab.dirty) {println(s"dirty tab: ${tab}")}
          }
+
+         // Compile any dirty TemporaryCodeTab AAB 6/2023
+         //  (externalFileTabs.asInstanceOf[mutable.Set[TemporaryCodeTab]]).foreach(
+         //   new AppEvents.SwitchedTabsEvent(_, currentTab).raise(getTabs))
+        // raise switched tabs event for any dirty TemporaryCodeTab 
        }
     }
     })
