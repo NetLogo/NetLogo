@@ -229,6 +229,10 @@ case class _lessthan() extends Reporter with Pure {
 case class _multilet(lets: Seq[(Token, Let)]) extends Command {
   override def syntax =
     Syntax.commandSyntax(right = List(Syntax.ListType))
+
+  def letList: String =
+    lets.map(_._1.text).mkString("[", " ", "]")
+
 }
 case class _multiletitem() extends Reporter {
   override def syntax =
@@ -445,6 +449,10 @@ case class _sentence() extends Reporter with Pure {
 case class _multiset(sets: Seq[Token]) extends Command {
   override def syntax =
     Syntax.commandSyntax(right = List(Syntax.ListType))
+
+  def setList: String =
+    sets.map(_.text).mkString("[", " ", "]")
+
 }
 case class _multisetitem() extends Reporter {
   override def syntax =
