@@ -4,7 +4,7 @@ package org.nlogo.parse
 
 import org.nlogo.core.{ AstNode, CommandBlock, Dump, Instruction, LogoList, ProcedureDefinition,
   ReporterApp, ReporterBlock, Statement, prim },
-  prim.{ _commandlambda, _const, _constcodeblock, _lambdavariable, _let, _letname, Lambda }
+  prim.{ _commandlambda, _const, _constcodeblock, _lambdavariable, _let, _letname, _multilet, _multiletitem, _multiset, _multisetitem, _set, Lambda }
 
 object Formatter {
 
@@ -15,15 +15,22 @@ object Formatter {
     wsMap:               FormattingWhitespace  = WhitespaceMap.empty): AstFormat =
       AstFormat(text, operations, instructionString, wsMap)
 
+  private var skipNext: Boolean = false
+
   def instructionString(i: Instruction): String =
     i match {
       case _const(value) if value.isInstanceOf[LogoList] => Dump.logoObject(value, true, false)
       case r: _const                                     => r.token.text
       case r: _commandlambda                             => ""
       case v: _lambdavariable if v.synthetic             => ""
-      case l @ _let(_, Some(name))                       => s"${l.token.text} $name"
+      case l @ _let(_, Some(name))                       => if (l.token.text != name) { s"${l.token.text} $name" } else { "" }
       case _: _letname                                   => ""
-      case r                                             => r.token.text
+      case s: _set if s.token.text.toUpperCase != "SET"  => { skipNext = true; "" }
+      case m: _multilet                                  => s"let ${m.letList}"
+      case _: _multiletitem                              => ""
+      case s: _multiset                                  => s"set ${s.setList}"
+      case _: _multisetitem                              => ""
+      case r                                             => if (skipNext) { skipNext = false; "" } else { r.token.text }
     }
 
   def deletedInstructionToString(i: Instruction): String = ""
@@ -98,12 +105,15 @@ class Formatter extends PositionalAstFolder[AstFormat] {
             app.args.zipWithIndex.tail.foldLeft(c2.appendText(ws + c.instructionToString(i))) {
               case (ctx, (arg, i)) => visitExpression(arg, position, i)(ctx)
             }
+
           case (_, b: _constcodeblock) =>
             super.visitReporterApp(app, position)(
               c.appendText(leadingWhitespace(position) + c.wsMap.content(position)))
+
           case (false, con: _const) =>
             super.visitReporterApp(app, position)(
               c.appendText(leadingWhitespace(position) + c.wsMap.content(position)))
+
           case (false, l: Lambda) =>
             val frontPadding = if (c.text.lastOption.forall(_ == ' ')) "" else " "
             val body =
@@ -121,17 +131,21 @@ class Formatter extends PositionalAstFolder[AstFormat] {
               case Lambda.ConciseArguments(_, _) => ""
               case _                             => "]"
             }
-            val backMargin2 =
-              if (body.lastOption.contains(' ') && backMargin.headOption.contains(' '))
-                backMargin.drop(1)
-              else
-                backMargin
-            c.appendText(frontPadding + args + arrowSpace + body + backMargin2 + close)
+            val (body2, backMargin2) = if (body.lastOption.contains(' ')) {
+              val b2  = s"${body.stripTrailing} "
+              val bm2 = if (backMargin.headOption.contains(' ')) { backMargin.drop(1) } else { backMargin }
+              (b2, bm2)
+            } else {
+              (body, backMargin)
+            }
+            c.appendText(frontPadding + args + arrowSpace + body2 + backMargin2 + close)
+
           // The `_let` handles writing the `_letname` out, so nothing to do here.
           // The `_letname` gets erased on full compilations (as opposed to rewriting only)
           // so we can't rely on it.  -Jeremy B June 2022
           case (false, l: _letname) =>
             c
+
           case (false, reporter) =>
             super.visitReporterApp(app, position)(c.appendText(ws + c.instructionToString(reporter)))
               .copy(instructionToString = c.instructionToString)
