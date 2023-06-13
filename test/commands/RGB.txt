@@ -16,11 +16,12 @@ PatchesRGBColor_2D
   [pcolor] of glob1 => 0
   O> ask glob1 [ set pcolor [0 0 0] ]
   [pcolor] of glob1 => [0 0 0]
-  O> ask glob1 [ set pcolor [0 0 0 0] ] => ERROR An rgb list must contain 3 numbers 0-255
-  O> ask glob1 [ set pcolor [0 0 [0]] ] => ERROR An rgb list must contain 3 numbers 0-255
+  O> ask glob1 [ set pcolor [10 10 10 0] ]
+  [pcolor] of glob1 => [10 10 10 0]
+  O> ask glob1 [ set pcolor [0 0 [0]] ] => ERROR An rgb list must contain 3 or 4 numbers 0-255
   O> ask glob1 [ set pcolor [500 0 0] ] => ERROR RGB values must be 0-255
   O> ask glob1 [ set pcolor [-1 0 0] ] => ERROR RGB values must be 0-255
-  [pcolor] of glob1 => [0 0 0]
+  [pcolor] of glob1 => [10 10 10 0]
   O> ask glob1 [ set pcolor red ]
   [pcolor] of glob1 => 15
   O> ask glob1 [ set pcolor [0 0 0] ]
@@ -122,7 +123,7 @@ ClearPatchRGBColor_3D
   O> ask patch 0 0 0 [set pcolor [0 0 0]]
   O> clear-all
   count patches with [pcolor = [0 0 0]] => 0
-  
+
 ClearPatchRGBAColor_3D
   O> ask patch 0 0 0 [set pcolor [0 0 0 0]]
   O> clear-all

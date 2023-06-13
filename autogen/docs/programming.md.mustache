@@ -353,9 +353,10 @@ can set the color of patch 0 0 to pure red using the following code:
 
     set pcolor [255 0 0]
 
-Turtles, links, and labels can all contain RGBA lists as their color variables,
-however, patches can only have RGBA `pcolors` in NetLogo 3D. You can set the color of a turtle to
-be approximately half transparent pure red with the following code:
+Turtles, links, and labels can all contain RGBA lists as their color variables.
+Patches only use the alpha value of an RGBA `pcolors` in NetLogo 3D, it's
+ignored in 2D NetLogo. You can set the color of a turtle to be approximately
+half transparent pure red with the following code:
 
     set color [255 0 0 125]
 

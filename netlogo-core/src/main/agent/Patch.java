@@ -246,7 +246,7 @@ public class Patch
           if (value instanceof Double) {
             pcolor((Double) value);
           } else if (value instanceof LogoList) {
-            pcolor((LogoList) value, VAR_PCOLOR, false);
+            pcolor((LogoList) value, VAR_PCOLOR, true);
           } else {
             wrongTypeForVariable(AgentVariables.getImplicitPatchVariables(false)[vn],
                 Double.class, value);
