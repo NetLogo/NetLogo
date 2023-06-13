@@ -38,6 +38,6 @@
     <orderEntry type="library" name="parboiled_2.12-2.3.0" level="project" />
     <orderEntry type="library" name="shapeless_2.12-2.3.2" level="project" />
     <orderEntry type="library" name="scalactic_2.12-3.0.9" level="project" />
-    <orderEntry type="library" name="scala-sdk-2.12.17" level="application" />
+    <orderEntry type="library" name="scala-sdk-2.12.18" level="application" />
   </component>
 </module>

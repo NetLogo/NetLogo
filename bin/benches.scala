@@ -24,7 +24,7 @@ val classpath =
       "../parser-jvm/target/classes",
       "../shared/target/classes",
       "../netlogo-gui/resources",
-      home + "/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.12.17.jar",
+      home + "/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.12.18.jar",
       home + "/.ivy2/cache/org.typelevel/cats-core_2.12/jars/cats-core_2.12-1.0.0-MF.jar",
       home + "/.ivy2/local/org.nlogo/xml-lib_2.12/0.0.1/jars/xml-lib_2.12.jar",
       home + "/.ivy2/cache/com.typesafe/config/bundles/config-1.4.1.jar",
