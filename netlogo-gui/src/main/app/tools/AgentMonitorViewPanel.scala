@@ -18,7 +18,7 @@ class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel(new BorderLa
 
   locally {
     add(view, BorderLayout.CENTER)
-    view.setSize(workspace.world.worldWidth, workspace.world.worldHeight, 255 / workspace.world.worldWidth)
+    view.setSize(workspace.world.worldWidth, workspace.world.worldHeight, 255.toDouble / workspace.world.worldWidth)
     view.applyNewFontSize(workspace.view.fontSize, 0)
     watchButton.setFocusable(false)
     val controls = new JPanel

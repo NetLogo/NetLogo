@@ -268,7 +268,7 @@ with org.nlogo.api.ViewSettings {
   override def getMinimumWidth = 0
   override def insetWidth = 0
   override def computePatchSize(width: Int, numPatches: Int): Double =
-    width / numPatches
+    width.toDouble / numPatches
   override def calculateHeight(worldHeight: Int, patchSize: Double) =
     (worldHeight * patchSize).toInt
   def calculateWidth(worldWidth: Int, patchSize: Double): Int =
