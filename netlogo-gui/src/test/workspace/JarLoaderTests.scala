@@ -98,7 +98,7 @@ class JarLoaderTests extends AnyFunSuite with BeforeAndAfter {
   test("extensionData returns ExtensionData when it succeeds in connecting to a jar") {
     val extensionData = jarLoader.extensionData("array", arrayJarURL)
     val origMod       = new File(arrayJarURL.toURI).lastModified()
-    val modified      = 1000 * Math.round(origMod / 1000)
+    val modified      = 1000 * Math.round(origMod.toFloat / 1000)
     assert(extensionData.extensionName == "array")
     assert(extensionData.fileURL == arrayJarURL)
     assert(extensionData.prefix == "array")

@@ -147,7 +147,7 @@ class ExtensionManagerTests extends AnyFunSuite with BeforeAndAfter {
   test("dumpExtensions prints a table with all loaded extensions") {
     new WithLoadedArrayExtension {
       val arrayJar = new java.io.File("extensions/array/array.jar")
-      val modified = 1000 * Math.round(arrayJar.lastModified() / 1000)
+      val modified = 1000 * Math.round(arrayJar.lastModified().toFloat / 1000)
       val path = arrayJar.toURI.toURL.toString
       assert(loadedManager.dumpExtensions ==
         s"""|EXTENSION${tab}LOADED${tab}MODIFIED${tab}JARPATH
