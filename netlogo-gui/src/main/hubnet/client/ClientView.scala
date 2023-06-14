@@ -100,8 +100,8 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
     world.setWorldSize(
       view.dimensions.minPxcor, view.dimensions.maxPxcor,
       view.dimensions.minPycor, view.dimensions.maxPycor)
-    if (getWidth > getHeight) world.patchSize(getWidth / world.worldWidth)
-    else world.patchSize(getHeight / world.worldHeight)
+    if (getWidth > getHeight) world.patchSize(getWidth.toDouble / world.worldWidth)
+    else world.patchSize(getHeight.toDouble / world.worldHeight)
     this
   }
 

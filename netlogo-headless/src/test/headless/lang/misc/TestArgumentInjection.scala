@@ -113,7 +113,7 @@ class TestArgumentInjection extends FixtureSuite {
     val caller = makeCommandCaller(workspace, "make-network")
     def check(n: Int) {
       runCommandCaller(owner(), caller, Double.box(n))
-      assertResult(Double.box(n * (n - 1) / 2))(
+      assertResult(Double.box(n * (n - 1).toDouble / 2))(
         workspace.report("count links"))
     }
     check(5)

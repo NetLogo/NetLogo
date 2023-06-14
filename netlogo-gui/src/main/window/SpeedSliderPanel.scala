@@ -75,7 +75,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace) extends JPanel with MouseListene
       else if (value > 10) value - 10
       else                 0
 
-    workspace.speedSliderPosition(adjustedValue / 2);
+    workspace.speedSliderPosition(adjustedValue.toDouble / 2);
 
     LogManager.speedSliderChanged(adjustedValue)
     enableLabels(adjustedValue)

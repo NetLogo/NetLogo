@@ -7,7 +7,7 @@
 // don't panic; it may take a few minutes to download dependencies
 
 /***
-scalaVersion := "2.12.17"
+scalaVersion := "2.12.18"
 onLoadMessage := ""
 scalacOptions ++= Seq(
   "-deprecation", "-unchecked", "-feature", "-Xfatal-warnings")

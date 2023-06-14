@@ -217,7 +217,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: Mod
     val queueSizes = connectionManager.clientSendQueueSizes
     val totalClients = queueSizes.size
     val totalQueueSize = queueSizes.sum
-    if (totalClients == 0) 0 else (totalQueueSize / totalClients)
+    if (totalClients == 0) 0 else (totalQueueSize.toDouble / totalClients)
   }
 
   @throws(classOf[HubNetException])

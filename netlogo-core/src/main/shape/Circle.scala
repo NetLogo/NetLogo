@@ -37,7 +37,7 @@ class Circle(color: Color) extends Element(color) with BaseCircle with Cloneable
   }
 
   def origin: Point =
-    new Point(x + round(xDiameter / 2), y + round(yDiameter / 2))
+    new Point(x + round(xDiameter.toFloat / 2), y + round(yDiameter.toFloat / 2))
 
   def bounds: AwtRectangle =
     new AwtRectangle(x, y, xDiameter, yDiameter)
