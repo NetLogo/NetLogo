@@ -505,9 +505,9 @@ object AbstractWorkspaceTraits {
       runCache.clear()
     }
     def compileForRun(source: String, context: Context, reporter: Boolean): Procedure = {
+      val taskType = if (reporter) { "reporter" } else { "command" }
       val key =
-        source + "@" + context.activation.procedure.args.size +
-          "@" + context.agentBit
+        s"$source@${context.activation.procedure.args.size}@${context.agentBit}-$taskType"
       Option(runCache.get(key)).getOrElse{
         val proc = evaluator.compileForRun(source, context, reporter)
         runCache.put(key, proc)

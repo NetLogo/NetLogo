@@ -175,7 +175,7 @@ public abstract class AbstractWorkspace
                                  boolean reporter)
       throws CompilerException {
     String key = source + "@" + context.activation.procedure().args().size() +
-        "@" + context.agentBit;
+        "@" + context.agentBit + (reporter ? "-reporter" : "-command");
     scala.Option<Procedure> storedProc = codeBits.get(key);
     if (storedProc.isEmpty()) {
       Procedure proc = evaluator.compileForRun(source, context, reporter);

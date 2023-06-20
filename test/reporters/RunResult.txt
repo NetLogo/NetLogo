@@ -19,3 +19,10 @@ RunResult5
 
 RunResultWithComment
   runresult "1; + 2" => 1
+
+# Demonstrates a possible error if compiled code is cached without regard for
+# reporter versus command.  -Jeremy B June 2023
+RunResultPrintConflict
+  O> show runresult "print 0" => ERROR Expected reporter.
+  O> run "print 0"
+  O> show runresult "print 0" => ERROR Expected reporter.
