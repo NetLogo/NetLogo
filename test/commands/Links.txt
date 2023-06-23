@@ -1008,3 +1008,14 @@ OtherBreedInheritance
   O> crt 2 [ create-links-with other turtles ]
   [var1] of link 0 1           => ERROR LINKS breed does not own variable VAR1
   O> ask link 0 1 [set var1 3] => ERROR LINKS breed does not own variable VAR1
+
+RadiusMyselfLinkNeighbor_2D
+  O> random-seed 222
+  O> ask patch 0 0 [ sprout 3 ]
+  O> ask turtle 0 [ create-link-with turtle 2 ]
+  [(list who (count turtles in-radius 2 with [not (link-neighbor? myself)]))] of turtles => [[1 3] [2 2] [0 2]]
+  O> clear-links
+  O> ask turtle 0 [ create-link-to turtle 1 ]
+  [(list who (count turtles in-radius 2 with [not (link-neighbor? myself)]))] of turtles => [[2 3] [0 2] [1 2]]
+  [(list who (count turtles in-radius 2 with [not (out-link-neighbor? myself)]))] of turtles => [[2 3] [0 3] [1 2]]
+  [(list who (count turtles in-radius 2 with [not (in-link-neighbor? myself)]))] of turtles => [[1 3] [0 2] [2 3]]

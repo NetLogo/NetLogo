@@ -1119,11 +1119,12 @@ public abstract class Turtle
     }
 
     boolean checkAllBreeds = linkSet == _world.links();
-    boolean isBreedSet    = !linkSet.isBreedSet();
+    boolean isBreedSet     = !linkSet.isBreedSet();
 
     for (Link link : links) {
       if (checkAllBreeds || (isBreedSet ? linkSet == link.getBreed() : linkSet.contains(link))) {
-        if (link.end1 == dest || link.end2 == dest) {
+        Agent otherEnd = (link.end1 == this) ? link.end2 : link.end1;
+        if (otherEnd == dest) {
           return true;
         }
       }
@@ -1138,12 +1139,19 @@ public abstract class Turtle
     }
 
     boolean checkAllBreeds = linkSet == _world.links();
-    boolean isBreedSet    = !linkSet.isBreedSet();
+    boolean isBreedSet     = !linkSet.isBreedSet();
 
     for (Link link : links) {
       if (checkAllBreeds || (isBreedSet ? linkSet == link.getBreed() : linkSet.contains(link))) {
-        if (link.end2 == dest || (!link.isDirectedLink() && link.end1 == dest)) {
-          return true;
+        if (link.isDirectedLink()) {
+          if (link.end1 == this && link.end2 == dest) {
+            return true;
+          }
+        } else {
+          Agent otherEnd = (link.end1 == this) ? link.end2 : link.end1;
+          if (otherEnd == dest) {
+            return true;
+          }
         }
       }
     }
