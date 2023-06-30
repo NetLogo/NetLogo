@@ -347,7 +347,7 @@ object NetLogoPackaging {
         , Some("netlogo-mac-app.jar")
         , Some("org.nlogo.app.MacApplication")
         ) {
-          override def name = s"NetLogo $version"
+          override def name = s"NetLogo ${this.version}"
         }
       , new NetLogo3dLauncher(
           version
@@ -360,7 +360,7 @@ object NetLogoPackaging {
         , Some("netlogo-mac-app.jar")
         , Some("org.nlogo.app.MacApplication")
         ) {
-          override def name = s"NetLogo 3D $version"
+          override def name = s"NetLogo 3D ${this.version}"
         }
       , new HubNetClientLauncher(
           version
@@ -374,7 +374,7 @@ object NetLogoPackaging {
         , Some("netlogo-mac-app.jar")
         , Some("org.nlogo.app.MacApplication")
         ) {
-          override def name = s"HubNet Client $version"
+          override def name = s"HubNet Client ${this.version}"
         }
       , new BehaviorsearchLauncher(
           version
@@ -386,7 +386,7 @@ object NetLogoPackaging {
           , "-Dbsearch.startupfolder={{{ROOTDIR}}}"
           )
         ) {
-          override def name = s"Behaviorsearch $version"
+          override def name = s"Behaviorsearch ${this.version}"
         }
       )
 
@@ -407,7 +407,7 @@ object NetLogoPackaging {
         FileActions.copyFile(configDir / "macosx" / "Model.icns", destDir / s"${launcher.name}.app" / "Contents" / "Resources" / "Model.icns")
       })
 
-      val appImageDir = destDir / s"NetLogo $version"
+      val appImageDir = destDir / s"NetLogo ${version}"
       FileActions.remove(appImageDir)
       val extraDirs = bundledDirs(netlogo, behaviorsearchProject).value(platform, buildJDK.arch)
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir, rootFiles)
