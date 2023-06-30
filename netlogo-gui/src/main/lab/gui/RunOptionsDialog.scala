@@ -55,11 +55,13 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     }
     def updateView = prefs.getBoolean("updateView", true)
     def updatePlotsAndMonitors = prefs.getBoolean("updatePlotsAndMonitors", true)
+    def updateThreadCount = prefs.getInt("threadCount", Runtime.getRuntime.availableProcessors)
     def updateFrom(runOptions: RunOptions): Unit = {
       prefs.put("spreadsheet", parentDirectory(runOptions.spreadsheet))
       prefs.put("table", parentDirectory(runOptions.table))
       prefs.putBoolean("updateView", runOptions.updateView)
       prefs.putBoolean("updatePlotsAndMonitors", runOptions.updatePlotsAndMonitors)
+      prefs.putInt("threadCount", runOptions.threadCount)
     }
   }
   def get = {
@@ -75,7 +77,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     var table = Prefs.table
     var updateView = Prefs.updateView
     var updatePlotsAndMonitors = Prefs.updatePlotsAndMonitors
-    var threadCount = Runtime.getRuntime.availableProcessors
+    var threadCount = Prefs.updateThreadCount
     val classDisplayName = "Run options"
     val propertySet = {
       import scala.collection.JavaConverters._
