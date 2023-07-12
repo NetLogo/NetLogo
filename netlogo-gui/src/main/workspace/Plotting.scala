@@ -2,13 +2,13 @@
 
 package org.nlogo.workspace
 
-import org.nlogo.api.{ MersenneTwisterFast, PlotInterface }
+import org.nlogo.api.PlotInterface
 import org.nlogo.plot.PlotManager
 import org.nlogo.nvm.Context
 
 trait Plotting { this: AbstractWorkspace =>
 
-  val plotRNG = new MersenneTwisterFast()
+  val plotRNG = this.world.mainRNG.clone
 
   val realPlotManager = new PlotManager(this, plotRNG)
   val plotManager     = realPlotManager

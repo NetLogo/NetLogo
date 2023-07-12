@@ -22,7 +22,7 @@ object RandomSeedGenerator {
   // get suspicious if the seeds we give them don't appear random from invocation to invocation.  So
   // we'll fool them by running the seed itself through the Mersenne Twister. - ST 5/31/06
   private def next =
-    (new MersenneTwisterFast).nextInt
+    (new MersenneTwisterFast()).nextInt
 
   def generateSeed(): Double = synchronized {
     while(true) {

@@ -104,6 +104,7 @@ class DummyWorkspace extends Workspace {
   override def tick(c:Context, i:Instruction) = unsupported
   override def resetTicks(c:Context) = unsupported
   override def clearTicks = unsupported
+  override def plotRNG = unsupported
   override def setupPlots(c:Context) = unsupported
   override def updatePlots(c:Context) = unsupported
 

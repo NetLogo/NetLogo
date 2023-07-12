@@ -116,6 +116,7 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
   def seedRNGs(seed: Int): Unit = {
     mainRNG.setSeed(seed)
     auxRNG.setSeed(seed)
+    plotRNG.setSeed(seed)
   }
 
   def openString(modelContents: String)
@@ -188,7 +189,9 @@ object AbstractWorkspaceTraits {
 
   trait Plotting { this: AbstractWorkspace with Evaluating =>
 
-    val realPlotManager = new PlotManager(this)
+    val plotRNG = this.world.mainRNG.clone
+
+    val realPlotManager = new PlotManager(this, plotRNG)
     val plotManager     = realPlotManager
 
     // methods used when importing plots

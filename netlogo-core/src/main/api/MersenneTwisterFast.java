@@ -148,7 +148,6 @@ public final class MersenneTwisterFast
   private static final int UPPER_MASK = 0x80000000; // most significant w-r bits
   private static final int LOWER_MASK = 0x7fffffff; // least significant r bits
 
-
   // Tempering parameters
   private static final int TEMPERING_MASK_B = 0x9d2c5680;
   private static final int TEMPERING_MASK_C = 0xefc60000;
@@ -775,6 +774,7 @@ public final class MersenneTwisterFast
       bits = (((((long) y) << 32) + z) >>> 1);
       val = bits % n;
     } while (bits - val + (n - 1) < 0);
+
     return val;
   }
 
@@ -1090,6 +1090,7 @@ public final class MersenneTwisterFast
       bits = (y >>> 1);
       val = bits % n;
     } while (bits - val + (n - 1) < 0);
+
     return val;
   }
 

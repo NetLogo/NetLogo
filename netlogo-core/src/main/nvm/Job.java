@@ -23,7 +23,7 @@ public abstract class Job {
   public final AgentSet agentset;
   public final Context parentContext;
   public final Procedure topLevelProcedure;
-  protected final Workspace workspace;
+  public final Workspace workspace;
 
   public org.nlogo.api.MersenneTwisterFast random;
 

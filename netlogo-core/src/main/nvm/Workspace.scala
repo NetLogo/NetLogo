@@ -3,7 +3,7 @@
 package org.nlogo.nvm
 
 import org.nlogo.core.{ AgentKind, CompilerException }
-import org.nlogo.api.{ Agent => ApiAgent, JobOwner, Workspace => ApiWorkspace }
+import org.nlogo.api.{ Agent => ApiAgent, JobOwner, Workspace => ApiWorkspace, MersenneTwisterFast }
 
 import org.nlogo.agent.{ Agent, AgentSet, World }
 
@@ -63,6 +63,7 @@ trait Workspace extends ApiWorkspace with JobManagerOwner {
   def profilingTracer: Tracer
 
   /* plots */
+  def plotRNG: MersenneTwisterFast
   def setupPlots(c: Context): Unit
   def updatePlots(c: Context): Unit
 

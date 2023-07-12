@@ -7,8 +7,6 @@ import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 
 class _randomseed extends Command {
 
-
-
   override def perform(context: Context) {
     perform_1(context, argEvalDoubleValue(context, 0))
   }
@@ -19,7 +17,11 @@ class _randomseed extends Command {
       throw new RuntimePrimitiveException(
         context, this,
         Dump.number(arg0) + " is not in the allowable range for random seeds (-2147483648 to 2147483647)")
-    context.job.random.setSeed(l.toInt)
+    val seed = l.toInt
+    context.job.random.setSeed(seed)
+    if (context.job.workspace != null && context.job.random == context.job.workspace.world.mainRNG) {
+      context.job.workspace.plotRNG.setSeed(seed)
+    }
     context.ip = next
   }
 

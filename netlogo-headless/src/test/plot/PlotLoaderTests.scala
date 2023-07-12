@@ -3,9 +3,9 @@
 package org.nlogo.plot
 
 import org.scalatest.funsuite.AnyFunSuite
-import org.nlogo.api.DummyLogoThunkFactory
+import org.nlogo.api.{ DummyLogoThunkFactory, MersenneTwisterFast }
 import org.nlogo.core.{ Pen, Femto, LiteralParser }
-import org.nlogo.core.model.{PlotReader, PenReader}
+import org.nlogo.core.model.{ PlotReader, PenReader }
 
 class PlotLoaderTests extends TestPlotLoaderHelper{
 
@@ -345,7 +345,7 @@ trait TestPlotLoaderHelper extends AnyFunSuite {
   }
 
   def load(lines:String): Plot = {
-    val plot = new PlotManager(new DummyLogoThunkFactory).newPlot("test")
+    val plot = new PlotManager(new DummyLogoThunkFactory, new MersenneTwisterFast()).newPlot("test")
     assert(PlotReader.validate(lines.trim.split("\n").toList))
     PlotLoader.loadPlot(PlotReader.parse(lines.trim.split("\n").toList, literalParser), plot)
     plot
