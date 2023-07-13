@@ -14,11 +14,14 @@ class PropertyAccessor[T : ClassTag](val target: Editable, val displayName: Stri
   def erasure = classTag[T].runtimeClass
 
   val setter: Method =
-    try target.getClass.getMethod(accessString, erasure)
+    try  {
+      target.getClass.getMethod(accessString, erasure)
+    }
     catch {
-      case ex: NoSuchMethodException =>
+      case ex: NoSuchMethodException => {
         // didn't find Java setter, look for Scala setter
         target.getClass.getMethod(accessString + "_$eq", erasure)
+      }
     }
 
   def get: T = getter.invoke(target).asInstanceOf[T]

@@ -58,7 +58,8 @@ object LabSaver {
                     attributes(("name", protocol.name),
                                ("repetitions", protocol.repetitions.toString),
                                ("sequentialRunOrder", protocol.sequentialRunOrder.toString),
-                               ("runMetricsEveryStep", protocol.runMetricsEveryStep.toString)))
+                               ("runMetricsEveryStep", protocol.runMetricsEveryStep.toString),
+                               ("runMetricsEveryNSteps", protocol.runMetricsEveryNSteps.toString)))
     if(protocol.setupCommands.trim != "")
       element("setup", protocol.setupCommands)
     if(protocol.goCommands.trim != "")

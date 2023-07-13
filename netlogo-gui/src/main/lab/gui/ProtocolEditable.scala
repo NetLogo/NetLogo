@@ -39,6 +39,8 @@ class ProtocolEditable(protocol: LabProtocol,
                   "<html>"+I18N.gui("metrics.info")+"</html>"),
          Property("runMetricsEveryStep", Property.Boolean, I18N.gui("runMetricsEveryStep"),
                   "<html>"+I18N.gui("runMetricsEveryStep.info")+"</html>"),
+         Property("runMetricsEveryNSteps", Property.Integer, "Run measure interval", 
+                  "<html>Measure every Nth run</html>"),
          Property("setupCommands", Property.Commands, I18N.gui("setupCommands"),
                   gridWidth = GridBagConstraints.RELATIVE),
          Property("goCommands", Property.Commands, I18N.gui("goCommands")),
@@ -59,6 +61,7 @@ class ProtocolEditable(protocol: LabProtocol,
   var repetitions = protocol.repetitions
   var sequentialRunOrder = protocol.sequentialRunOrder
   var runMetricsEveryStep = protocol.runMetricsEveryStep
+  var runMetricsEveryNSteps = protocol.runMetricsEveryNSteps
   var timeLimit = protocol.timeLimit
   var exitCondition = protocol.exitCondition
   var metrics = protocol.metrics.mkString("\n")
@@ -86,7 +89,7 @@ class ProtocolEditable(protocol: LabProtocol,
     }
     Some(new LabProtocol(
       name.trim, setupCommands.trim, goCommands.trim,
-      finalCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep,
+      finalCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep, runMetricsEveryNSteps,
       timeLimit, exitCondition.trim,
       metrics.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
       {
