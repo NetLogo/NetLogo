@@ -89,7 +89,9 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     super.dirty_=(d)
     if (d) {
       saveNeeded = true
+      // This call lets the DirtyMonitor know if there is a separated code window
       tabs.setDirtyMonitorCodeWindow
+
       new WindowEvents.DirtyEvent(Some(filename.merge)).raise(this)
     }
   }
@@ -101,17 +103,42 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
       filename = Right(userChooseSavePath())
     FileIO.writeFile(filename.right.get, text.getText)
     saveNeeded = false
+    compileIfDirty()
+    dirty = false
+    // This call lets the DirtyMonitor know if there is a separated code window
     tabs.setDirtyMonitorCodeWindow
+
     new WindowEvents.ExternalFileSavedEvent(filename.merge).raise(this)
   }
 
   def close() {
+    var compileNeeded = false
     ignoring(classOf[UserCancelException]) {
-      if(dirty && Dialogs.userWantsToSaveFirst(filenameForDisplay, this))
-        save(false)
+      if(saveNeeded) {
+        if (Dialogs.userWantsToSaveFirst(filenameForDisplay, this)) {
+          // The user is saving the file with its current name
+          save(false)
+          compile()
+        } else {
+          // If the user doesn't save the buffer and it was dirty, the file should
+          // be compiled after it is closed AAB 07-2023
+          compileNeeded = true
+        }
+      }
+      // Remove the file from the map from file names to TemporaryCodeTabs
       externalFileManager.remove(this)
       closing = true
+      // Remove from the set of TemporaryCodeTabs in Tabs and remove the tab from the JTabbedPane
       tabs.closeExternalFile(filename)
+      if (compileNeeded) {
+        new WindowEvents.CompileAllEvent().raiseLater(this)
+      }
+    }
+  }
+
+  def compileIfDirty() : Unit = {
+    if (dirty) {
+      compile()
     }
   }
 
