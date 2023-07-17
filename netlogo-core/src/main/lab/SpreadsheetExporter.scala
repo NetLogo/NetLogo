@@ -122,7 +122,7 @@ class SpreadsheetExporter(modelFileName: String,
     // advance how many rows to generate
     val mostMeasurements =
       if(protocol.runMetricsEveryStep)
-        runs.values.map(_.steps).max / protocol.runMetricsN
+        (runs.values.map(_.steps).max.toFloat / protocol.runMetricsN).ceil.toInt
       else 0
     // now actually generate the rows
     for(i <- 0 to mostMeasurements) {
