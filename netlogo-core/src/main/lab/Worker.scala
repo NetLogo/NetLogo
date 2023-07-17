@@ -188,7 +188,7 @@ class Worker(val protocol: LabProtocol)
         ws.updateDisplay(false)
         if(aborted) return
       }
-      if(steps % protocol.runMetricsN != 0 && listeners.nonEmpty) {
+      if((!protocol.runMetricsEveryStep || (protocol.runMetricsEveryStep && steps % protocol.runMetricsN != 0)) && listeners.nonEmpty) {
         val m = takeMeasurements()
         eachListener(_.measurementsTaken(ws, runNumber, steps, m))
         checkForRuntimeError()
