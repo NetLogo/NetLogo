@@ -5,7 +5,6 @@ package org.nlogo.lab
 import org.nlogo.api.LabProtocol
 import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.Workspace
-import math.ceil
 
 // Currently this class contains two kinds of code: code for remembering run data in memory using
 // Run objects, and code for generating spreadsheet data from those Run objects.  Both kinds of code
@@ -124,13 +123,13 @@ class SpreadsheetExporter(modelFileName: String,
     val mostMeasurements =
       if(protocol.runMetricsEveryStep)
         (runs.values.map(_.steps).max.toFloat / protocol.runMetricsN).ceil.toInt
-      else 0
+      else 1
     // now actually generate the rows
     for(i <- 0 to mostMeasurements) {
       out.print(",")
       foreachRun((run,metricNumber) =>
         if(protocol.runMetricsEveryStep && i > run.steps) None
-        else Some(run.getMeasurement(i + 1,metricNumber)))
+        else Some(run.getMeasurement(i,metricNumber)))
     }
   }
   ///
