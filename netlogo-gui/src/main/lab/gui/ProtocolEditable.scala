@@ -155,7 +155,9 @@ class ProtocolEditable(protocol: LabProtocol,
           case _ => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.unexpected"))
         }
     }
-    if( Int.MaxValue / repetitions >= totalCombinations )
+    if (runMetricsN < 1)
+      Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.metrics.invalidN"))
+    else if( repetitions > 0 && Int.MaxValue / repetitions >= totalCombinations )
       Seq.empty[(String,String)]
     else
       Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.repetition.totalrun"))
