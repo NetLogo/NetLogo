@@ -28,7 +28,7 @@ with Zoomable
 with NlogoPrintable
 with MenuTab {
 
-  private var _dirty = false
+  private var _dirty = false // Has the buffer changed since it was compiled?
   def dirty = _dirty
 
   protected def dirty_=(b: Boolean) = {

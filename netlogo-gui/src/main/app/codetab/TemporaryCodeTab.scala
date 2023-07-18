@@ -36,7 +36,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   with AppEvents.IndenterChangedEvent.Handler {
 
   var closing = false
-  var saveNeeded = false
+  var saveNeeded = false // Has the buffer changed since the file was saved?
 
   def filename: Either[String, String] = _filename
 
@@ -53,7 +53,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   filename.right foreach { path =>
     try {
       innerSource = FileIO.fileToString(path)(Codec.UTF8).replaceAll("\r\n", "\n")
-      dirty = false
+      dirty = false // Has the buffer changed since it was compiled?
       saveNeeded = false
       externalFileManager.add(this)
     } catch {
@@ -89,7 +89,9 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     super.dirty_=(d)
     if (d) {
       saveNeeded = true
+      // This call lets the DirtyMonitor know if there is a separated code window
       tabs.setDirtyMonitorCodeWindow
+
       new WindowEvents.DirtyEvent(Some(filename.merge)).raise(this)
     }
   }
@@ -101,17 +103,34 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
       filename = Right(userChooseSavePath())
     FileIO.writeFile(filename.right.get, text.getText)
     saveNeeded = false
+    compileIfDirty()
+    dirty = false
+    // This call lets the DirtyMonitor know if there is a separated code window
     tabs.setDirtyMonitorCodeWindow
+
     new WindowEvents.ExternalFileSavedEvent(filename.merge).raise(this)
   }
 
   def close() {
     ignoring(classOf[UserCancelException]) {
-      if(dirty && Dialogs.userWantsToSaveFirst(filenameForDisplay, this))
-        save(false)
+      if (saveNeeded) {
+        if (Dialogs.userWantsToSaveFirst(filenameForDisplay, this)) {
+          // The user is saving the file with its current name
+          save(false)
+          compile()
+        }
+      }
+      // Remove the file from the map from file names to TemporaryCodeTabs
       externalFileManager.remove(this)
       closing = true
+      // Remove from the set of TemporaryCodeTabs in Tabs and remove the tab from the JTabbedPane
       tabs.closeExternalFile(filename)
+    }
+  }
+
+  def compileIfDirty() : Unit = {
+    if (dirty) {
+      compile()
     }
   }
 
