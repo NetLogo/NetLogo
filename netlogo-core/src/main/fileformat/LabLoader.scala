@@ -89,6 +89,7 @@ class LabLoader(literalParser: LiteralParser) {
       },
       element.getAttribute("runMetricsEveryStep") == "true",
       element.getAttribute("runMetricsN").toInt,
+      readAll("runMetricsCondition"),
       if(!exists("timeLimit")) 0 else readOneAttribute("timeLimit","steps").toInt,
       if(!exists("exitCondition")) "" else readOptional("exitCondition"),
       readAll("metric"),

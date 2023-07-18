@@ -40,7 +40,8 @@ class ProtocolEditable(protocol: LabProtocol,
          Property("runMetricsEveryStep", Property.Boolean, I18N.gui("runMetricsEveryStep"),
                   "<html>"+I18N.gui("runMetricsEveryStep.info")+"</html>"),
          Property("runMetricsN", Property.Integer, I18N.gui("runMetricsN")),
-         Property("setupCommands", Property.Commands, I18N.gui("setupCommands"),
+         Property("runMetricsConditions", Property.Commands, "Run metrics when..."),
+         Property("setupCommands", Property.ReporterOrEmpty, I18N.gui("setupCommands"),
                   gridWidth = GridBagConstraints.RELATIVE),
          Property("goCommands", Property.Commands, I18N.gui("goCommands")),
          Property("exitCondition", Property.ReporterOrEmpty, I18N.gui("exitCondition"),
@@ -61,6 +62,7 @@ class ProtocolEditable(protocol: LabProtocol,
   var sequentialRunOrder = protocol.sequentialRunOrder
   var runMetricsEveryStep = protocol.runMetricsEveryStep
   var runMetricsN = protocol.runMetricsN
+  var runMetricsConditions = protocol.runMetricsConditions.mkString("\n")
   var timeLimit = protocol.timeLimit
   var exitCondition = protocol.exitCondition
   var metrics = protocol.metrics.mkString("\n")
@@ -88,7 +90,7 @@ class ProtocolEditable(protocol: LabProtocol,
     }
     Some(new LabProtocol(
       name.trim, setupCommands.trim, goCommands.trim,
-      finalCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep, runMetricsN,
+      finalCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep, runMetricsN, runMetricsConditions.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
       timeLimit, exitCondition.trim,
       metrics.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
       {
