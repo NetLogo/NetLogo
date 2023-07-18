@@ -36,7 +36,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   with AppEvents.IndenterChangedEvent.Handler {
 
   var closing = false
-  var saveNeeded = false
+  var saveNeeded = false // Has the buffer changed since the file was saved?
 
   def filename: Either[String, String] = _filename
 
@@ -53,7 +53,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   filename.right foreach { path =>
     try {
       innerSource = FileIO.fileToString(path)(Codec.UTF8).replaceAll("\r\n", "\n")
-      dirty = false
+      dirty = false // Has the buffer changed since it was compiled?
       saveNeeded = false
       externalFileManager.add(this)
     } catch {
@@ -112,17 +112,12 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   }
 
   def close() {
-    var compileNeeded = false
     ignoring(classOf[UserCancelException]) {
-      if(saveNeeded) {
+      if (saveNeeded) {
         if (Dialogs.userWantsToSaveFirst(filenameForDisplay, this)) {
           // The user is saving the file with its current name
           save(false)
           compile()
-        } else {
-          // If the user doesn't save the buffer and it was dirty, the file should
-          // be compiled after it is closed AAB 07-2023
-          compileNeeded = true
         }
       }
       // Remove the file from the map from file names to TemporaryCodeTabs
@@ -130,9 +125,6 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
       closing = true
       // Remove from the set of TemporaryCodeTabs in Tabs and remove the tab from the JTabbedPane
       tabs.closeExternalFile(filename)
-      if (compileNeeded) {
-        new WindowEvents.CompileAllEvent().raiseLater(this)
-      }
     }
   }
 
