@@ -120,15 +120,20 @@ class SpreadsheetExporter(modelFileName: String,
     if(runs.isEmpty) return
     // first figure out how long the longest run is, so we know in
     // advance how many rows to generate
+
     val mostMeasurements =
       if(protocol.runMetricsEveryStep)
-        (runs.values.map(_.steps).max.toFloat / protocol.runMetricsN).ceil.toInt
+        runs.values.map(_.steps).max
+      else if (protocol.runMetricsConditions.length > 0)
+        runs.values.map(_.numMeasurements).max
       else 1
+    
     // now actually generate the rows
     for(i <- 0 to mostMeasurements) {
       out.print(",")
       foreachRun((run,metricNumber) =>
         if(protocol.runMetricsEveryStep && i > run.steps) None
+        else if (protocol.runMetricsConditions.length > 0 && i > run.numMeasurements - 1) None // Subtract one for now, since we run the initial metrics and final metrics
         else Some(run.getMeasurement(i,metricNumber)))
     }
   }
@@ -136,11 +141,15 @@ class SpreadsheetExporter(modelFileName: String,
   class Run(val settings: List[(String,Any)]) {
     var done = false
     var steps = 0
+    var numMeasurements = 0
     // values for the metrics at each time step; the values are often Doubles, but not necessarily.
     // we use Array instead of List because List has a lot of memory overhead (one object per
     // cons cell) and for a big experiment we can have a ton of measurements.
     val measurements = new collection.mutable.ArrayBuffer[Array[AnyRef]]
-    def addMeasurements(values: List[AnyRef]) { measurements += values.toArray }
+    def addMeasurements(values: List[AnyRef]) { 
+      measurements += values.toArray
+      numMeasurements += 1
+    }
     // careful here... normally measurement number means step number, but if runMetricsEveryStep is
     // false, then we'll only have two measurements, regardless of the number of steps - ST 12/19/04
     def getMeasurement(measurementNumber: Int, metricNumber: Int): AnyRef =
