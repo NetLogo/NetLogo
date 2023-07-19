@@ -87,9 +87,9 @@ class LabLoader(literalParser: LiteralParser) {
       { val defaultOrder = element.getAttribute("sequentialRunOrder").toString
         if(defaultOrder == "") true else defaultOrder == "true"  
       },
-      element.getAttribute("runMetricsEveryStep") == "true",
-      element.getAttribute("runMetricsN").toInt,
+      element.getAttribute("runMetricsWithReporters") == "true",
       readAll("runMetricsCondition"),
+      element.getAttribute("runMetricsCombine") == "true",
       if(!exists("timeLimit")) 0 else readOneAttribute("timeLimit","steps").toInt,
       if(!exists("exitCondition")) "" else readOptional("exitCondition"),
       readAll("metric"),
@@ -103,7 +103,7 @@ class LabLoader(literalParser: LiteralParser) {
       .toList
 
   private def ticksToSteps(str: String) =
-    str.replaceAll("runMetricsEveryTick=\"", "runMetricsEveryStep=\"")
+    str.replaceAll("runMetricsEveryTick=\"", "runMetricsWithReporters=\"")
        .replaceAll("<timeLimit ticks=\"", "<timeLimit steps=\"")
 
 }

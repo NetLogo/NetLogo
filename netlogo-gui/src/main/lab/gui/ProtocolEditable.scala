@@ -37,10 +37,11 @@ class ProtocolEditable(protocol: LabProtocol,
          Property("metrics", Property.ReporterOrEmpty,
                   I18N.gui("metrics"),
                   "<html>"+I18N.gui("metrics.info")+"</html>"),
-         Property("runMetricsEveryStep", Property.Boolean, I18N.gui("runMetricsEveryStep"),
-                  "<html>"+I18N.gui("runMetricsEveryStep.info")+"</html>"),
-         Property("runMetricsN", Property.Integer, I18N.gui("runMetricsN")),
-         Property("runMetricsConditions", Property.Commands, "Run metrics when..."),
+         Property("runMetricsWithReporters", Property.Boolean, I18N.gui("runMetricsWithReporters"),
+                  "<html>"+I18N.gui("runMetricsWithReporters.info")+"</html>"),
+         Property("runMetricsConditions", Property.Commands, I18N.gui("runMetricsConditions")),
+         Property("runMetricsCombine", Property.Boolean, I18N.gui("runMetricsCombine"),
+                  "<html>"+I18N.gui("runMetricsCombine.info")+"</html>"),
          Property("setupCommands", Property.ReporterOrEmpty, I18N.gui("setupCommands"),
                   gridWidth = GridBagConstraints.RELATIVE),
          Property("goCommands", Property.Commands, I18N.gui("goCommands")),
@@ -60,9 +61,9 @@ class ProtocolEditable(protocol: LabProtocol,
   var finalCommands = protocol.finalCommands
   var repetitions = protocol.repetitions
   var sequentialRunOrder = protocol.sequentialRunOrder
-  var runMetricsEveryStep = protocol.runMetricsEveryStep
-  var runMetricsN = protocol.runMetricsN
+  var runMetricsWithReporters = protocol.runMetricsWithReporters
   var runMetricsConditions = protocol.runMetricsConditions.mkString("\n")
+  var runMetricsCombine = protocol.runMetricsCombine
   var timeLimit = protocol.timeLimit
   var exitCondition = protocol.exitCondition
   var metrics = protocol.metrics.mkString("\n")
@@ -90,8 +91,8 @@ class ProtocolEditable(protocol: LabProtocol,
     }
     Some(new LabProtocol(
       name.trim, setupCommands.trim, goCommands.trim,
-      finalCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep, runMetricsN, runMetricsConditions.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
-      timeLimit, exitCondition.trim,
+      finalCommands.trim, repetitions, sequentialRunOrder, runMetricsWithReporters, runMetricsConditions.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
+      runMetricsCombine, timeLimit, exitCondition.trim,
       metrics.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
       {
         val list =
@@ -157,9 +158,7 @@ class ProtocolEditable(protocol: LabProtocol,
           case _ => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.unexpected"))
         }
     }
-    if (runMetricsN < 1)
-      Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.metrics.invalidN"))
-    else if( repetitions > 0 && Int.MaxValue / repetitions >= totalCombinations )
+    if( repetitions > 0 && Int.MaxValue / repetitions >= totalCombinations )
       Seq.empty[(String,String)]
     else
       Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.repetition.totalrun"))
