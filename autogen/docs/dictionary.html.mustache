@@ -5575,8 +5575,11 @@ show modes [pxcor] of turtles
           <span class="prim_example">mouse-inside?</span>
         </h4>
         <p>
-          Reports true if the mouse pointer is inside the current view,
-          false otherwise.
+          Reports true if the mouse pointer is inside the world boundaries
+          inside the current view, false otherwise.  In the case of an
+          unwrapped world and using <code>follow</code> on an agent, It's possible
+          for the mouse pointer to be inside the view but not inside the
+          world boundaries.
         </p>
       </div>
       <div class="dict_entry" id="mouse-cor">
