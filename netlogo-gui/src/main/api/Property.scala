@@ -9,6 +9,7 @@ object Property {
   case object StringOptions extends Type
   case object BigString extends Type
   case object Boolean extends Type
+  case object MetricsBoolean extends Type
   case object Color extends Type
   case object Commands extends Type
   case object Double extends Type
