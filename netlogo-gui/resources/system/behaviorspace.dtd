@@ -12,6 +12,7 @@ section of a NetLogo model file.
   name CDATA ""
   repetitions CDATA "1"
   sequentialRunOrder (true|false) "true"
+  runMetricsEveryStep (true|false) "true"
   runMetricsCombine (true|false) "false">
 
 <!ELEMENT setup (#PCDATA)>
@@ -24,7 +25,7 @@ section of a NetLogo model file.
 <!ELEMENT exitCondition (#PCDATA)>
 
 <!ELEMENT metric (#PCDATA)>
-<!ELEMENT runMetricsCondition (#PCDATA)*>
+<!ELEMENT runMetricsCondition (#PCDATA)>
 
 <!ELEMENT steppedValueSet EMPTY>
 <!ATTLIST steppedValueSet

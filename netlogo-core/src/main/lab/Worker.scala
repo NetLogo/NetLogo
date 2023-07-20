@@ -185,7 +185,7 @@ class Worker(val protocol: LabProtocol)
       ws.runCompiledCommands(owner(ws.world.mainRNG), setupProcedure)
       checkForRuntimeError()
 
-      if(protocol.runMetricsConditions.isEmpty && listeners.nonEmpty) {
+      if((!protocol.runMetricsEveryStep || protocol.runMetricsConditions.isEmpty) && listeners.nonEmpty) {
         val m = takeMeasurements()
         eachListener(_.measurementsTaken(ws, runNumber, 0, m))
         checkForRuntimeError()
@@ -197,7 +197,7 @@ class Worker(val protocol: LabProtocol)
         checkForRuntimeError()
         steps += 1
         eachListener(_.stepCompleted(ws, steps))
-        if(!protocol.runMetricsConditions.isEmpty && shouldTakeMeasurements() && listeners.nonEmpty) {
+        if((protocol.runMetricsEveryStep || (!protocol.runMetricsConditions.isEmpty && shouldTakeMeasurements())) && listeners.nonEmpty) {
           val m = takeMeasurements()
           eachListener(_.measurementsTaken(ws, runNumber, steps, m))
           checkForRuntimeError()
@@ -205,7 +205,7 @@ class Worker(val protocol: LabProtocol)
         ws.updateDisplay(false)
         if(aborted) return
       }
-      if(protocol.runMetricsConditions.isEmpty && listeners.nonEmpty) {
+      if((!protocol.runMetricsEveryStep || protocol.runMetricsConditions.isEmpty) && listeners.nonEmpty) {
         val m = takeMeasurements()
         eachListener(_.measurementsTaken(ws, runNumber, steps, m))
         checkForRuntimeError()

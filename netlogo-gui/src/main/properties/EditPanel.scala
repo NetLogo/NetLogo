@@ -2,7 +2,7 @@
 
 package org.nlogo.properties
 
-import java.awt.{Component, Insets, GridBagConstraints, Dimension, GridBagLayout, BorderLayout}
+import java.awt.{Component, Insets, GridBagConstraints, Dimension, GridBagLayout, BorderLayout, Container}
 
 import javax.swing.{JPanel, JLabel}
 
@@ -66,7 +66,16 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       editorPanel.add(panel)
       propertyEditors += editor
       editor.refresh()
-      editor.setEnabled(property.enabled)
+
+      def setEnabledRecursive(component: Container, state: Boolean): Unit = {
+        component.getComponents().foreach(c => {
+          c.setEnabled(state)
+          setEnabledRecursive(c.asInstanceOf[Container], state)
+        })
+      }
+
+      setEnabledRecursive(editor, property.enabled)
+
       if (property.focus) {
         assert(claimsFirstFocus == null)
         claimsFirstFocus = editor
@@ -225,6 +234,8 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         new BigStringEditor(accessor) with Changed
       case Property.Boolean =>
         new BooleanEditor(accessor) with Changed
+      case Property.MetricsBoolean =>
+        new MetricsBooleanEditor(accessor, propertyEditors)
       case Property.Color =>
         new ColorEditor(accessor, frame) with Changed
       case Property.Commands =>
