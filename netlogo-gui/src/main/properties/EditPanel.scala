@@ -225,8 +225,6 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         new BigStringEditor(accessor) with Changed
       case Property.Boolean =>
         new BooleanEditor(accessor) with Changed
-      case Property.MetricsBoolean =>
-        new MetricsBooleanEditor(accessor, propertyEditors)
       case Property.Color =>
         new ColorEditor(accessor, frame) with Changed
       case Property.Commands =>

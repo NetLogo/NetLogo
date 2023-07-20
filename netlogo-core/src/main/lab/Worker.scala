@@ -157,7 +157,6 @@ class Worker(val protocol: LabProtocol)
             throw new FailedException(
               "Reporter for measuring runs failed to report a result:\n" + result)
           result }
-        println(res)
         if (res.length == 0) false
         else if (protocol.runMetricsCombine) !res.exists(_ == false)
         else res.exists(_ == true)
@@ -186,7 +185,7 @@ class Worker(val protocol: LabProtocol)
       ws.runCompiledCommands(owner(ws.world.mainRNG), setupProcedure)
       checkForRuntimeError()
 
-      if(!protocol.runMetricsWithReporters && listeners.nonEmpty) {
+      if(protocol.runMetricsConditions.isEmpty && listeners.nonEmpty) {
         val m = takeMeasurements()
         eachListener(_.measurementsTaken(ws, runNumber, 0, m))
         checkForRuntimeError()
@@ -198,7 +197,7 @@ class Worker(val protocol: LabProtocol)
         checkForRuntimeError()
         steps += 1
         eachListener(_.stepCompleted(ws, steps))
-        if(protocol.runMetricsWithReporters && shouldTakeMeasurements() && listeners.nonEmpty) {
+        if(!protocol.runMetricsConditions.isEmpty && shouldTakeMeasurements() && listeners.nonEmpty) {
           val m = takeMeasurements()
           eachListener(_.measurementsTaken(ws, runNumber, steps, m))
           checkForRuntimeError()
@@ -206,7 +205,7 @@ class Worker(val protocol: LabProtocol)
         ws.updateDisplay(false)
         if(aborted) return
       }
-      if(!protocol.runMetricsWithReporters && listeners.nonEmpty) {
+      if(protocol.runMetricsConditions.isEmpty && listeners.nonEmpty) {
         val m = takeMeasurements()
         eachListener(_.measurementsTaken(ws, runNumber, steps, m))
         checkForRuntimeError()
