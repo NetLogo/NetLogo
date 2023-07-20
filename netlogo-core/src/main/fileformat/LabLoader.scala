@@ -87,7 +87,6 @@ class LabLoader(literalParser: LiteralParser) {
       { val defaultOrder = element.getAttribute("sequentialRunOrder").toString
         if(defaultOrder == "") true else defaultOrder == "true"  
       },
-      element.getAttribute("runMetricsWithReporters") == "true",
       readAll("runMetricsCondition"),
       element.getAttribute("runMetricsCombine") == "true",
       if(!exists("timeLimit")) 0 else readOneAttribute("timeLimit","steps").toInt,

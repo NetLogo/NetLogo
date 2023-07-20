@@ -10,8 +10,7 @@ section of a NetLogo model file.
 <!ELEMENT experiment (setup?,go?,final?,timeLimit?,exitCondition?,metric*,(steppedValueSet|enumeratedValueSet)*)>
 <!ATTLIST experiment
   name CDATA ""
-  repetitions CDATA "1"
-  runMetricsWithReporters (true|false) "true">
+  repetitions CDATA "1">
 
 <!ELEMENT setup (#PCDATA)>
 <!ELEMENT go (#PCDATA)>

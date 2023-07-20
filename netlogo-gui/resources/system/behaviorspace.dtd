@@ -12,7 +12,6 @@ section of a NetLogo model file.
   name CDATA ""
   repetitions CDATA "1"
   sequentialRunOrder (true|false) "true"
-  runMetricsWithReporters (true|false) "true"
   runMetricsCombine (true|false) "false">
 
 <!ELEMENT setup (#PCDATA)>

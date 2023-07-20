@@ -37,9 +37,8 @@ class ProtocolEditable(protocol: LabProtocol,
          Property("metrics", Property.ReporterOrEmpty,
                   I18N.gui("metrics"),
                   "<html>"+I18N.gui("metrics.info")+"</html>"),
-         Property("runMetricsWithReporters", Property.MetricsBoolean, I18N.gui("runMetricsWithReporters"),
-                  "<html>"+I18N.gui("runMetricsWithReporters.info")+"</html>"),
-         Property("runMetricsConditions", Property.Commands, I18N.gui("runMetricsConditions")),
+         Property("runMetricsConditions", Property.Commands, I18N.gui("runMetricsConditions"),
+                  "<html>"+I18N.gui("runMetricsConditions.info")+"</html>"),
          Property("runMetricsCombine", Property.Boolean, I18N.gui("runMetricsCombine"),
                   "<html>"+I18N.gui("runMetricsCombine.info")+"</html>"),
          Property("setupCommands", Property.ReporterOrEmpty, I18N.gui("setupCommands"),
@@ -61,7 +60,6 @@ class ProtocolEditable(protocol: LabProtocol,
   var finalCommands = protocol.finalCommands
   var repetitions = protocol.repetitions
   var sequentialRunOrder = protocol.sequentialRunOrder
-  var runMetricsWithReporters = protocol.runMetricsWithReporters
   var runMetricsConditions = protocol.runMetricsConditions.mkString("\n")
   var runMetricsCombine = protocol.runMetricsCombine
   var timeLimit = protocol.timeLimit
@@ -91,7 +89,7 @@ class ProtocolEditable(protocol: LabProtocol,
     }
     Some(new LabProtocol(
       name.trim, setupCommands.trim, goCommands.trim,
-      finalCommands.trim, repetitions, sequentialRunOrder, runMetricsWithReporters, runMetricsConditions.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
+      finalCommands.trim, repetitions, sequentialRunOrder, runMetricsConditions.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
       runMetricsCombine, timeLimit, exitCondition.trim,
       metrics.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
       {
