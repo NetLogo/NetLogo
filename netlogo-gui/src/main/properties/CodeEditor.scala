@@ -16,6 +16,7 @@ import javax.swing.{SwingConstants, JLabel, JPanel, JScrollPane}
 import org.nlogo.api.DummyEditable
 
 import scala.language.reflectiveCalls
+import java.awt.Container
 
 object CodeEditor {
   def apply(displayName: String, colorizer: Colorizer,
@@ -103,5 +104,17 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     c.weightx = 1.0
     c.weighty = if (collapsible) 0.0 else 1.0
     c
+  }
+  override def setEnabled(state: Boolean): Unit = {
+    def setEnabledRecursive(component: Container, state: Boolean): Unit = {
+        component.getComponents().foreach(c => {
+            c.setEnabled(state)
+            if (c.isInstanceOf[Container]) {
+              setEnabledRecursive(c.asInstanceOf[Container], state)
+            }
+        })
+    }
+    super.setEnabled(state)
+    setEnabledRecursive(this, state)
   }
 }
