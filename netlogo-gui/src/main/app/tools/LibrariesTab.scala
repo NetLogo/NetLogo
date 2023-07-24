@@ -215,8 +215,12 @@ class LibrariesTab( category:           String
 
     filterField.getDocument.addDocumentListener(() => listModel.filter(filterField.getText))
 
-    installButton.addActionListener(_ => perform("installing", wrappedInstall,
-      lib => lib.isVersionRequirementMet(Version.version) && lib.status != LibraryStatus.UpToDate))
+    installButton.addActionListener(_ => {
+      val installCheck = (lib: LibraryInfo) => lib.isVersionRequirementMet(Version.version) && lib.status != LibraryStatus.UpToDate
+      val uninstallCheck = (lib: LibraryInfo) => installCheck(lib) && lib.canUninstall
+      perform("uninstalling", uninstall, uninstallCheck)
+      perform("installing", wrappedInstall, installCheck)
+    })
 
     addToCodeTabButton.addActionListener(_ => {
       updateSource(addExtsToSource(_, selectedValues.map(_.codeName).toSet))
