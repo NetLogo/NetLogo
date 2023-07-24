@@ -58,8 +58,7 @@ object LabSaver {
                     attributes(("name", protocol.name),
                                ("repetitions", protocol.repetitions.toString),
                                ("sequentialRunOrder", protocol.sequentialRunOrder.toString),
-                               ("runMetricsEveryStep", protocol.runMetricsEveryStep.toString),
-                               ("runMetricsCombine", protocol.runMetricsCombine.toString)))
+                               ("runMetricsEveryStep", protocol.runMetricsEveryStep.toString)))
     if(protocol.setupCommands.trim != "")
       element("setup", protocol.setupCommands)
     if(protocol.goCommands.trim != "")
@@ -73,8 +72,7 @@ object LabSaver {
       element("exitCondition", protocol.exitCondition)
     for(metric <- protocol.metrics)
       element("metric", metric)
-    for (runMetricsCondition <- protocol.runMetricsConditions)
-      element("runMetricsCondition", runMetricsCondition)
+    element("runMetricsCondition", protocol.runMetricsCondition)
     for(valueSet <- protocol.valueSets)
       valueSet match {
         case steppedValueSet:SteppedValueSet =>

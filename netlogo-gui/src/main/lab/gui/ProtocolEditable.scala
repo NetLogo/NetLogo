@@ -38,10 +38,9 @@ class ProtocolEditable(protocol: LabProtocol,
                   I18N.gui("metrics"),
                   "<html>"+I18N.gui("metrics.info")+"</html>"),
          Property("runMetricsEveryStep", Property.MetricsBoolean, I18N.gui("runMetricsEveryStep")),
-         Property("runMetricsConditions", Property.Commands, I18N.gui("runMetricsConditions"),
-                  "<html>"+I18N.gui("runMetricsConditions.info")+"</html>", enabled = !protocol.runMetricsEveryStep),
-         Property("runMetricsCombine", Property.Boolean, I18N.gui("runMetricsCombine"),
-                  "<html>"+I18N.gui("runMetricsCombine.info")+"</html>", enabled = !protocol.runMetricsEveryStep),
+         Property("runMetricsCondition", Property.ReporterOrEmpty, I18N.gui("runMetricsCondition"),
+                  "<html>"+I18N.gui("runMetricsCondition.info")+"</html>", enabled = !protocol.runMetricsEveryStep,
+                  collapsible = true, collapseByDefault = true),
          Property("setupCommands", Property.ReporterOrEmpty, I18N.gui("setupCommands"),
                   gridWidth = GridBagConstraints.RELATIVE),
          Property("goCommands", Property.Commands, I18N.gui("goCommands")),
@@ -62,8 +61,7 @@ class ProtocolEditable(protocol: LabProtocol,
   var repetitions = protocol.repetitions
   var sequentialRunOrder = protocol.sequentialRunOrder
   var runMetricsEveryStep = protocol.runMetricsEveryStep
-  var runMetricsConditions = protocol.runMetricsConditions.mkString("\n")
-  var runMetricsCombine = protocol.runMetricsCombine
+  var runMetricsCondition = protocol.runMetricsCondition
   var timeLimit = protocol.timeLimit
   var exitCondition = protocol.exitCondition
   var metrics = protocol.metrics.mkString("\n")
@@ -91,8 +89,8 @@ class ProtocolEditable(protocol: LabProtocol,
     }
     Some(new LabProtocol(
       name.trim, setupCommands.trim, goCommands.trim,
-      finalCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep, runMetricsConditions.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
-      runMetricsCombine, timeLimit, exitCondition.trim,
+      finalCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep, runMetricsCondition.trim,
+      timeLimit, exitCondition.trim,
       metrics.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
       {
         val list =

@@ -12,7 +12,7 @@ class MetricsBooleanEditor(accessor: PropertyAccessor[Boolean], properties: Arra
             case None =>
         }
 
-        properties.find(_.accessor.accessString == "runMetricsConditions") match
+        properties.find(_.accessor.accessString == "runMetricsCondition") match
         {
             case Some(p) => p.setEnabled(!get.getOrElse(true))
             case None =>

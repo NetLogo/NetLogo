@@ -81,7 +81,7 @@ class SpreadsheetExporter(modelFileName: String,
     // "[max]","534.0","845.0","704.0"
     // "[mean]","341.57142857142856","360.8095238095238","381.8095238095238"
     // "[steps]","20","20","20"
-    if((protocol.runMetricsEveryStep || !protocol.runMetricsConditions.isEmpty) && !protocol.metrics.isEmpty) {
+    if((protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) && !protocol.metrics.isEmpty) {
       out.print(csv.header("[reporter]"))
       for(_ <- runs; metric <- protocol.metrics)
         out.print("," + csv.header(metric))
@@ -112,7 +112,7 @@ class SpreadsheetExporter(modelFileName: String,
     // ,"403.0","425.0","466.0"
     // ,"399.0","423.0","439.0"
     out.println()
-    out.print(csv.header(if(protocol.runMetricsEveryStep || !protocol.runMetricsConditions.isEmpty) "[all run data]"
+    out.print(csv.header(if(protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) "[all run data]"
                               else "[initial & final values]"))
     for(_ <- runs; metric <- protocol.metrics)
       out.print(',' + csv.header(metric))
@@ -122,9 +122,9 @@ class SpreadsheetExporter(modelFileName: String,
     // advance how many rows to generate
 
     val mostMeasurements =
-      if(protocol.runMetricsEveryStep || !protocol.runMetricsConditions.isEmpty)
+      if(protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty)
         runs.values.map(_.steps).max
-      else if (protocol.runMetricsConditions.length > 0)
+      else if (protocol.runMetricsCondition.length > 0)
         runs.values.map(_.numMeasurements).max
       else 1
     
@@ -132,8 +132,8 @@ class SpreadsheetExporter(modelFileName: String,
     for(i <- 0 to mostMeasurements) {
       out.print(",")
       foreachRun((run,metricNumber) =>
-        if((protocol.runMetricsEveryStep || !protocol.runMetricsConditions.isEmpty) && i > run.steps) None
-        else if (protocol.runMetricsConditions.length > 0 && i > run.numMeasurements - 1) None // Subtract one for now, since we run the initial metrics and final metrics
+        if((protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) && i > run.steps) None
+        else if (protocol.runMetricsCondition.length > 0 && i > run.numMeasurements - 1) None // Subtract one for now, since we run the initial metrics and final metrics
         else Some(run.getMeasurement(i,metricNumber)))
     }
   }
