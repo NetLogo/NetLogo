@@ -31,7 +31,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   private var steps = 0
 
   private val plotWidgetOption: Option[PlotWidget] = {
-    if ((protocol.runMetricsEveryStep || !protocol.runMetricsConditions.isEmpty) && protocol.metrics.length > 0) {
+    if ((protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) && protocol.metrics.length > 0) {
       // don't use the real plot manager here, use a dummy one.
       // fixes http://trac.assembla.com/nlogo/ticket/1259
       // the reason for this is that plots normally get added to the plot manager

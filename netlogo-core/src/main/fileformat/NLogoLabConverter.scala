@@ -24,7 +24,7 @@ object NLogoLabConverter extends AutoConvertable {
       converter.convertStatement(setupCommands),
       converter.convertStatement(goCommands),
       converter.convertStatement(finalCommands),
-      repetitions, sequentialRunOrder, runMetricsEveryStep, metrics.map(converter.convertReporterExpression), runMetricsCombine, timeLimit,
+      repetitions, sequentialRunOrder, runMetricsEveryStep, converter.convertStatement(runMetricsCondition), timeLimit,
       if (exitCondition == "") "" else converter.convertReporterExpression(exitCondition),
       metrics.map(converter.convertReporterExpression),
       valueSets)
