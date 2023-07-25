@@ -11,11 +11,11 @@ import org.nlogo.api.{ FileIO, LibraryInfoDownloader, LibraryManager }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ ProgressListener, SwingWorker }
 
-class LibrariesDialog( parent:             Frame
-                     , manager:            LibraryManager
-                     , recompile:          () => Unit
-                     , updateSource:       ((String) => String) => Unit
-                     , getExtPathMappings: () => Map[String, Path]
+class LibrariesDialog( parent:          Frame
+                     , manager:         LibraryManager
+                     , recompile:       () => Unit
+                     , updateSource:    ((String) => String) => Unit
+                     , extPathMappings: Map[String, Path]
                      ) extends ToolDialog(parent, "libraries") {
 
   private lazy val bottomPanelBorder =
@@ -35,7 +35,7 @@ class LibrariesDialog( parent:             Frame
   private lazy val buttonPanel     = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0))
   private lazy val libPathsButton  = new JButton(I18N.gui("showLibPaths"))
   private lazy val updateAllButton = new JButton
-  private lazy val tab             = new LibrariesTab("extensions", manager, status.setText, recompile, updateSource, getExtPathMappings)
+  private lazy val tab             = new LibrariesTab("extensions", manager, status.setText, recompile, updateSource, extPathMappings)
 
   protected override def initGUI(): Unit = {
 
@@ -47,7 +47,7 @@ class LibrariesDialog( parent:             Frame
 
     libPathsButton.addActionListener {
       _ =>
-        val mappingsStr = getExtPathMappings().map { case (k, v) => s"  * $k: $v" }.toSeq.sorted.mkString("\n")
+        val mappingsStr = extPathMappings.map { case (k, v) => s"  * $k: $v" }.toSeq.sorted.mkString("\n")
         val msg = s"""${I18N.gui("libPathsExplanation")}
                      |
                      |$mappingsStr""".stripMargin
@@ -98,7 +98,7 @@ class LibrariesDialog( parent:             Frame
 
       buttonPanel.getComponents.foreach(c => buttonPanel.remove(c))
 
-      if (!getExtPathMappings().isEmpty)
+      if (!extPathMappings.isEmpty)
         buttonPanel.add(libPathsButton)
       buttonPanel.add(updateAllButton)
 

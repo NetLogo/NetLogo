@@ -47,12 +47,12 @@ object LibrariesTab {
 
 }
 
-class LibrariesTab( category:           String
-                  , manager:            LibraryManager
-                  , updateStatus:       String => Unit
-                  , recompile:          () => Unit
-                  , updateSource:       ((String) => String) => Unit
-                  , getExtPathMappings: () => Map[String, Path]
+class LibrariesTab( category:        String
+                  , manager:         LibraryManager
+                  , updateStatus:    String => Unit
+                  , recompile:       () => Unit
+                  , updateSource:    ((String) => String) => Unit
+                  , extPathMappings: Map[String, Path]
                   ) extends JPanel(new BorderLayout) {
 
   import LibrariesTab._
@@ -61,7 +61,6 @@ class LibrariesTab( category:           String
   private val install         = manager.installExtension _
   private val uninstall       = manager.uninstallExtension _
   private val updateLists     = () => manager.reloadMetadata()
-  private val extPathMappings = getExtPathMappings()
 
   implicit val i18nPrefix = I18N.Prefix("tools.libraries")
 

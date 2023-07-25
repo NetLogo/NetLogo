@@ -56,7 +56,7 @@ class OpenLibrariesDialog( frame:              Frame
   category = ToolsCategory
   group    = ToolsSettingsGroup
 
-  def createDialog() = new LibrariesDialog(frame, libManager, recompile, updateSource, getExtPathMappings)
+  def createDialog() = new LibrariesDialog(frame, libManager, recompile, updateSource, getExtPathMappings())
 
 }
 
