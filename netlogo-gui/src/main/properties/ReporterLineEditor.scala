@@ -18,6 +18,6 @@ abstract class ReporterLineEditor(accessor: PropertyAccessor[String],
     editor,
     ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-  override def get = super.get.map(_.trim).filter(_.nonEmpty)
+  override def get = super.get.map(_.trim)
   override def getMinimumSize = new Dimension(500, 500)
 }
