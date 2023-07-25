@@ -339,12 +339,16 @@ object AbstractWorkspaceTraits {
   }
 
   trait Extensions { self: AbstractWorkspaceScala =>
-    def getExtensionPathMappings(): Map[String, Path] =
-      (for (path <- Option(getModelPath).toSeq.map(mp => Paths.get(mp).getParent) ++ Seq(APIEM.extensionsPath);
-            dir  <- path.toFile.listFiles.filter(_.isDirectory);
-            jar  <- dir.listFiles.find(_.getName == s"${dir.getName}.jar").toSeq)
-       yield (dir.getName, Paths.get(jar.getCanonicalFile.toURI))
-      ).toMap
+    def getExtensionPathMappings(): Map[String, Path] = {
+      val searchPaths = Option(getModelPath).toSeq.map(mp => Paths.get(mp).getParent) ++ Seq(APIEM.extensionsPath)
+      val subDirs = searchPaths.flatMap( (path) => path.toFile.listFiles.filter(_.isDirectory) )
+      subDirs.flatMap( (subDir) => {
+        val maybeFiles = subDir.listFiles
+        val files      = if (maybeFiles == null) { new Array(0) } else { maybeFiles }
+        val jars       = files.find(_.getName == s"${subDir.getName}.jar").toSeq
+        jars.map( (jar) => (subDir.getName, Paths.get(jar.getCanonicalFile.toURI)))
+      }).toMap
+    }
   }
 
 }

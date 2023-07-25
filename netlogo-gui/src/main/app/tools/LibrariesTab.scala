@@ -57,10 +57,11 @@ class LibrariesTab( category:           String
 
   import LibrariesTab._
 
-  private val libraries   = manager.getExtensionInfos
-  private val install     = manager.installExtension _
-  private val uninstall   = manager.uninstallExtension _
-  private val updateLists = () => manager.reloadMetadata()
+  private val libraries       = manager.getExtensionInfos
+  private val install         = manager.installExtension _
+  private val uninstall       = manager.uninstallExtension _
+  private val updateLists     = () => manager.reloadMetadata()
+  private val extPathMappings = getExtPathMappings()
 
   implicit val i18nPrefix = I18N.Prefix("tools.libraries")
 
@@ -392,7 +393,7 @@ class LibrariesTab( category:           String
     }
 
     private def statusIcon(status: LibraryStatus, extName: String) =
-      if (!getExtPathMappings().contains(extName))
+      if (!extPathMappings.contains(extName))
         status match {
           case LibraryStatus.UpToDate   => upToDateIcon
           case LibraryStatus.CanUpdate  => canUpdateIcon
