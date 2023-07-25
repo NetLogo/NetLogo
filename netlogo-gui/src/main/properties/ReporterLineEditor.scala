@@ -20,6 +20,7 @@ abstract class ReporterLineEditor(accessor: PropertyAccessor[String],
     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
   override def get = super.get.map(_.trim)
   override def getConstraints = {
+    setMinimumSize(new Dimension(0, 35));
     val c = new GridBagConstraints
     c.fill = GridBagConstraints.HORIZONTAL;
     c
