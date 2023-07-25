@@ -21,7 +21,6 @@ abstract class ReporterLineEditor(accessor: PropertyAccessor[String],
   override def get = super.get.map(_.trim)
   override def getMinimumSize = new Dimension(500, 500)
   override def getConstraints = {
-    setMinimumSize(new Dimension(0, 35));
     val c = new GridBagConstraints
     c.fill = GridBagConstraints.HORIZONTAL;
     c
