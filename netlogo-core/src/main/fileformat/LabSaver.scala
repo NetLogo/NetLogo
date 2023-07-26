@@ -72,7 +72,8 @@ object LabSaver {
       element("exitCondition", protocol.exitCondition)
     for(metric <- protocol.metrics)
       element("metric", metric)
-    element("runMetricsCondition", protocol.runMetricsCondition)
+    if (!protocol.runMetricsCondition.isEmpty)
+      element("runMetricsCondition", protocol.runMetricsCondition)
     for(valueSet <- protocol.valueSets)
       valueSet match {
         case steppedValueSet:SteppedValueSet =>
