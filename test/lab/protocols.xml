@@ -247,4 +247,30 @@
     <metric>ticks</metric>
     <runMetricsCondition>ticks mod 5 = 0</runMetricsCondition>
   </experiment>
+  <experiment name="Run metrics every step" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="100"/>
+    <metric>count turtles with [color = red]</metric>
+    <metric>count turtles with [color = white]</metric>
+    <runMetricsCondition>count turtles with [color = red] &gt; count turtles with [color = white]</runMetricsCondition>
+    <steppedValueSet variable="num-turtles" first="1" step="1" last="20"/>
+  </experiment>
+  <experiment name="Run metrics when count red &gt; count white" repetitions="1" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="100"/>
+    <metric>count turtles with [color = red]</metric>
+    <metric>count turtles with [color = white]</metric>
+    <runMetricsCondition>count turtles with [color = red] &gt; count turtles with [color = white]</runMetricsCondition>
+    <steppedValueSet variable="num-turtles" first="1" step="1" last="20"/>
+  </experiment>
+  <experiment name="Run metrics when reporter box is empty" repetitions="1" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <timeLimit steps="100"/>
+    <metric>count turtles with [color = red]</metric>
+    <metric>count turtles with [color = white]</metric>
+    <steppedValueSet variable="num-turtles" first="1" step="1" last="20"/>
+  </experiment>
 </experiments>
