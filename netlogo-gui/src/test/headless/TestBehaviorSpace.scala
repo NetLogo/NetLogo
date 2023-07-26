@@ -186,6 +186,9 @@ with OneInstancePerTest with BeforeAndAfterEach {
     test("ModelWithIncludedExperiments", SlowTest.Tag) {
       runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test1", "models/test/lab/FireWithExperiments1")
       runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test2", "models/test/lab/FireWithExperiments2")
+      runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test3", "models/test/lab/FireWithExperiments3")
+      runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test4", "models/test/lab/FireWithExperiments4")
+      runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test5", "models/test/lab/FireWithExperiments5")
     }
   if(!Version.is3D)
     test("ResizingWorld3", SlowTest.Tag) {
