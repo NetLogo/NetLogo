@@ -240,4 +240,11 @@
     <timeLimit steps="2"/>
     <metric>behaviorspace-run-number</metric>
   </experiment>
+  <experiment name="basicRunCondition" repetitions="1" runMetricsEveryStep="false">
+    <setup>reset-ticks</setup>
+    <go>tick</go>
+    <timeLimit steps="50"/>
+    <metric>ticks</metric>
+    <runMetricsCondition>ticks mod 5 = 0</runMetricsCondition>
+  </experiment>
 </experiments>
