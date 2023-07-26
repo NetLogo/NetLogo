@@ -97,18 +97,22 @@ object StructureConverter {
         result
       }
       // if we had lenses this wouldn't need to be so repetitious - ST 7/15/12
-      if (program.linkBreeds.isDefinedAt(breedName))
+      if (program.linkBreeds.isDefinedAt(breedName)) {
+        val breed = program.linkBreeds(breedName)
         program.copy(linkBreeds =
           orderPreservingUpdate(
             program.linkBreeds,
-            program.linkBreeds(breedName).copy(owns = newOwns)))
-      else
+            breed.copy(owns = breed.owns ++ newOwns)))
+      } else {
+        val breed = program.breeds(breedName)
         program.copy(breeds =
           orderPreservingUpdate(
             program.breeds,
-            program.breeds(breedName).copy(owns = newOwns)))
-    } else
+            breed.copy(owns = breed.owns ++ newOwns)))
+      }
+    } else {
       throw new CompilerException(
         I18N.errors.getN("compiler.StructureConverter.noBreed", breedName), tok.start, tok.end, tok.filename)
+    }
   }
 }
