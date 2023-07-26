@@ -122,18 +122,18 @@ class SpreadsheetExporter(modelFileName: String,
     // advance how many rows to generate
 
     val mostMeasurements =
-      if(protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty)
+      if(protocol.runMetricsEveryStep)
         runs.values.map(_.steps).max
-      else if (protocol.runMetricsCondition.length > 0)
+      else if(!protocol.runMetricsCondition.isEmpty)
         runs.values.map(_.numMeasurements).max
-      else 1
-    
+      else 0
+
     // now actually generate the rows
     for(i <- 0 to mostMeasurements) {
       out.print(",")
       foreachRun((run,metricNumber) =>
-        if((protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) && i > run.steps) None
-        else if (protocol.runMetricsCondition.length > 0 && i > run.numMeasurements - 1) None // Subtract one for now, since we run the initial metrics and final metrics
+        if(protocol.runMetricsEveryStep && i > run.steps) None
+        else if(!protocol.runMetricsCondition.isEmpty && i > run.numMeasurements - 1) None // Subtract one for now, since we run the final metrics
         else Some(run.getMeasurement(i,metricNumber)))
     }
   }
