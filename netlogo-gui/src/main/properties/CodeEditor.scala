@@ -59,7 +59,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     if (collapseWhenEmpty) setVisible(false)
   }
   private def collapsed = !collapso.isVisible()
-  private def arrowDirection = if(collapsed) SwingConstants.EAST else SwingConstants.SOUTH
+  private def arrowDirection = if (collapsed) SwingConstants.EAST else SwingConstants.SOUTH
   private val arrow = new BasicArrowButton(arrowDirection) { self =>
     addActionListener(new ActionListener() {
       def actionPerformed(e: ActionEvent) { setVisibility(collapsed) }
@@ -80,13 +80,13 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
   private def setVisibility(newVisibility: Boolean) {
     if (collapsible && collapseWhenEmpty) {
       collapso setVisible newVisibility
-      if(newVisibility)
+      if (newVisibility)
         add(collapso, BorderLayout.CENTER)
       else
         remove(collapso)
       arrow.updateDirection()
       org.nlogo.awt.Hierarchy.getWindow(this).pack()
-      if(!collapsed) editor.requestFocus()
+      if (!collapsed) editor.requestFocus()
     }
   }
   override def get = Option(editor.getText)

@@ -123,7 +123,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   }
   lazy val periodicUpdateAction = RichAction("update elapsed time") { _ =>
     updateProgressArea(false)
-    plotWidgetOption.foreach{ plotWidget => if(updatePlots) plotWidget.handle(null) }
+    plotWidgetOption.foreach{ plotWidget => if (updatePlots) plotWidget.handle(null) }
   }
   lazy val displaySwitchAction = RichAction("Update view") { e =>
     workspace.displaySwitchOn(e.getSource.asInstanceOf[JCheckBox].isSelected)
@@ -149,7 +149,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   def plotsAndMonitorsSwitch(check: Boolean): Unit = {
     plotsAndMonitorsSwitch.setSelected(check)
     workspace.setPeriodicUpdatesEnabled(check)
-    if(!check) {
+    if (!check) {
       workspace.jobManager.finishSecondaryJobs(null)
     }
   }
@@ -182,10 +182,10 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     }
   }
   override def stepCompleted(w: Workspace, steps: Int) {
-    if(!w.isHeadless) this.steps = steps
+    if (!w.isHeadless) this.steps = steps
   }
   override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]) {
-    if(!w.isHeadless) plotNextPoint(values)
+    if (!w.isHeadless) plotNextPoint(values)
   }
 
   private def invokeAndWait(f: => Unit) =
