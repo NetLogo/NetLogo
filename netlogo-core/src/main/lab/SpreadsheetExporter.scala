@@ -150,7 +150,7 @@ class SpreadsheetExporter(modelFileName: String,
       measurements += values.toArray
       numMeasurements += 1
     }
-    // careful here... normally measurement number means step number, but if runMetricsWithReporters is
+    // careful here... normally measurement number means step number, but if runMetricsEveryStep is
     // false, then we'll only have two measurements, regardless of the number of steps - ST 12/19/04
     def getMeasurement(measurementNumber: Int, metricNumber: Int): AnyRef =
       measurements(measurementNumber)(metricNumber)

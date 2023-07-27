@@ -102,7 +102,7 @@ class LabLoader(literalParser: LiteralParser) {
       .toList
 
   private def ticksToSteps(str: String) =
-    str.replaceAll("runMetricsEveryTick=\"", "runMetricsWithReporters=\"")
+    str.replaceAll("runMetricsEveryTick=\"", "runMetricsEveryStep=\"")
        .replaceAll("<timeLimit ticks=\"", "<timeLimit steps=\"")
 
 }
