@@ -18,7 +18,8 @@ abstract class ReporterLineEditor(accessor: PropertyAccessor[String],
     editor,
     ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-  override def get = super.get.map(_.trim).filter(_.nonEmpty)
+  // get can't have .filter(_.nonEmpty). That would cause an error to be thrown when the metric condition reporter box is empty
+  override def get = super.get.map(_.trim)
   override def getConstraints = {
     setMinimumSize(new Dimension(0, 35));
     val c = new GridBagConstraints
