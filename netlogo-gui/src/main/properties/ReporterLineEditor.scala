@@ -4,9 +4,9 @@ package org.nlogo
 package properties
 
 import org.nlogo.awt.Fonts.platformMonospacedFont
+import java.awt.{Dimension, Font, GridBagConstraints}
 import javax.swing.{JScrollPane, ScrollPaneConstants}
 import editor.{EditorField, Colorizer}
-import java.awt.{Dimension, Font, GridBagConstraints}
 
 abstract class ReporterLineEditor(accessor: PropertyAccessor[String],
                                   colorizer: Colorizer)
@@ -18,7 +18,7 @@ abstract class ReporterLineEditor(accessor: PropertyAccessor[String],
     editor,
     ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-  override def get = super.get.map(_.trim)
+  override def get = super.get.map(_.trim).filter(_.nonEmpty)
   override def getConstraints = {
     setMinimumSize(new Dimension(0, 35));
     val c = new GridBagConstraints

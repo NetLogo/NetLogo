@@ -120,7 +120,6 @@ class SpreadsheetExporter(modelFileName: String,
     if (runs.isEmpty) return
     // first figure out how long the longest run is, so we know in
     // advance how many rows to generate
-
     val mostMeasurements =
       if (protocol.runMetricsEveryStep)
         runs.values.map(_.steps).max
