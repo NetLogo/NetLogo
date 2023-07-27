@@ -1,7 +1,5 @@
 # NetLogo
 
-## Behaviorspace branch
-
 This page is for open source developers interested in the source code for NetLogo.
 
 Other users should visit the [NetLogo home page](http://ccl.northwestern.edu/netlogo/) at Northwestern and the [NetLogo users group](http://groups.google.com/d/forum/netlogo-users) on Google.
