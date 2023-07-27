@@ -81,7 +81,7 @@ class ProtocolEditable(protocol: LabProtocol,
   def editFinished: Boolean = get.isDefined
   def get: Option[LabProtocol] = {
     def complain(message: String) {
-      if(!java.awt.GraphicsEnvironment.isHeadless)
+      if (!java.awt.GraphicsEnvironment.isHeadless)
         javax.swing.JOptionPane.showMessageDialog(
           window, "Invalid spec for varying variables. Error:\n" + message,
          "Invalid", javax.swing.JOptionPane.ERROR_MESSAGE)
@@ -112,7 +112,7 @@ class ProtocolEditable(protocol: LabProtocol,
                   complain("Expected three numbers here: " + Dump.list(more)); return None
               }
             case List(variableName: String, more@_*) =>
-              if(more.isEmpty) {complain(s"Expected a value for variable $variableName"); return None}
+              if (more.isEmpty) {complain(s"Expected a value for variable $variableName"); return None}
               new RefEnumeratedValueSet(variableName, more.toList)
             case _ =>
               complain("Invalid format"); return None
@@ -137,25 +137,25 @@ class ProtocolEditable(protocol: LabProtocol,
                         step: java.lang.Double,
                         last: java.lang.Double)
                   if last > first && step > 0  =>
-                if(Int.MaxValue / totalCombinations > ((last - first) / step + 1)){
+                if (Int.MaxValue / totalCombinations > ((last - first) / step + 1)){
                   val multiplier: Int = ((last - first) / step + 1).toInt
-                  totalCombinations = totalCombinations * (if(multiplier == 0) 1 else multiplier)
+                  totalCombinations = totalCombinations * (if (multiplier == 0) 1 else multiplier)
                 } else
                   return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.increment", variableName, s"[ $first $step $last ]"))
               case _ =>
                 return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.incrementinvalid", variableName))
             }
          case List(variableName: String, more@_*) =>
-            if(more.isEmpty){
+            if (more.isEmpty){
               return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.field", variableName))
             }
-            if( Int.MaxValue / totalCombinations > more.toList.size )
+            if ( Int.MaxValue / totalCombinations > more.toList.size )
               totalCombinations = totalCombinations * more.toList.size
             else return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.variablelist", variableName))
           case _ => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.unexpected"))
         }
     }
-    if( repetitions > 0 && Int.MaxValue / repetitions >= totalCombinations )
+    if ( repetitions > 0 && Int.MaxValue / repetitions >= totalCombinations )
       Seq.empty[(String,String)]
     else
       Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.repetition.totalrun"))

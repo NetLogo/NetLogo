@@ -31,11 +31,11 @@ class SpreadsheetExporter(modelFileName: String,
   }
   def finish() {
     for(runNumber <- runs.keySet)
-      if(!runs(runNumber).done)
+      if (!runs(runNumber).done)
         runs -= runNumber
     writeExportHeader()
     writeSummary()
-    if(!protocol.metrics.isEmpty)
+    if (!protocol.metrics.isEmpty)
       writeRunData()
     out.close()
   }
@@ -70,7 +70,7 @@ class SpreadsheetExporter(modelFileName: String,
     for(v <- protocol.valueSets.map(_.variableName)) {
       out.print(csv.header(v) + ",")
       foreachRun((run,metricNumber) =>
-        if(metricNumber == 0)
+        if (metricNumber == 0)
           Some(run.settings.find(_._1 == v).get._2)
         else None)
     }
@@ -81,7 +81,7 @@ class SpreadsheetExporter(modelFileName: String,
     // "[max]","534.0","845.0","704.0"
     // "[mean]","341.57142857142856","360.8095238095238","381.8095238095238"
     // "[steps]","20","20","20"
-    if((protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) && !protocol.metrics.isEmpty) {
+    if ((protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) && !protocol.metrics.isEmpty) {
       out.print(csv.header("[reporter]"))
       for(_ <- runs; metric <- protocol.metrics)
         out.print("," + csv.header(metric))
@@ -112,19 +112,18 @@ class SpreadsheetExporter(modelFileName: String,
     // ,"403.0","425.0","466.0"
     // ,"399.0","423.0","439.0"
     out.println()
-    out.print(csv.header(if(protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) "[all run data]"
+    out.print(csv.header(if (protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) "[all run data]"
                               else "[initial & final values]"))
     for(_ <- runs; metric <- protocol.metrics)
       out.print(',' + csv.header(metric))
     out.println()
-    if(runs.isEmpty) return
+    if (runs.isEmpty) return
     // first figure out how long the longest run is, so we know in
     // advance how many rows to generate
-
     val mostMeasurements =
-      if(protocol.runMetricsEveryStep)
+      if (protocol.runMetricsEveryStep)
         runs.values.map(_.steps).max
-      else if(!protocol.runMetricsCondition.isEmpty)
+      else if (!protocol.runMetricsCondition.isEmpty)
         runs.values.map(_.numMeasurements).max
       else 0
 
@@ -132,8 +131,8 @@ class SpreadsheetExporter(modelFileName: String,
     for(i <- 0 to mostMeasurements) {
       out.print(",")
       foreachRun((run,metricNumber) =>
-        if(protocol.runMetricsEveryStep && i > run.steps) None
-        else if(!protocol.runMetricsCondition.isEmpty && i > run.numMeasurements - 1) None // Subtract one for now, since we run the final metrics
+        if (protocol.runMetricsEveryStep && i > run.steps) None
+        else if (!protocol.runMetricsCondition.isEmpty && i > run.numMeasurements - 1) None // Subtract one for now, since we run the final metrics
         else Some(run.getMeasurement(i,metricNumber)))
     }
   }
@@ -150,7 +149,7 @@ class SpreadsheetExporter(modelFileName: String,
       measurements += values.toArray
       numMeasurements += 1
     }
-    // careful here... normally measurement number means step number, but if runMetricsWithReporters is
+    // careful here... normally measurement number means step number, but if runMetricsEveryStep is
     // false, then we'll only have two measurements, regardless of the number of steps - ST 12/19/04
     def getMeasurement(measurementNumber: Int, metricNumber: Int): AnyRef =
       measurements(measurementNumber)(metricNumber)

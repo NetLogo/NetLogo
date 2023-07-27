@@ -54,7 +54,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       val panel = new JPanel{
         setLayout(new BorderLayout)
         add(editor, BorderLayout.CENTER)
-        if(property.notes != null)
+        if (property.notes != null)
           add(new JLabel(property.notes){ setFont(getFont.deriveFont(9.0f)) }, BorderLayout.SOUTH)
       }
 
@@ -84,7 +84,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
     case _ => None
   }
   override def requestFocus() {
-    if(getsFirstFocus != null)
+    if (getsFirstFocus != null)
       getsFirstFocus.requestFocus()
   }
   def previewChanged(field: String, value: Option[Any]) { }  // overridden in WorldEditPanel
@@ -102,25 +102,25 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       val prefSize = wrapper.getPreferredSize
       // Some widgets have no max size, so we use an very large one
       val maxSize = Option(wrapper.getMaximumSize).getOrElse(new Dimension(10000, 10000))
-      if(wrapper.isNew) {
+      if (wrapper.isNew) {
         val currentSize = wrapper.getSize
         val gridSnap = wrapper.gridSnap
-        if(prefSize.width != currentSize.width)
+        if (prefSize.width != currentSize.width)
           prefSize.width = (prefSize.width / gridSnap) * gridSnap
-        if(prefSize.height != currentSize.height)
+        if (prefSize.height != currentSize.height)
           prefSize.height = (prefSize.height / gridSnap) * gridSnap
         wrapper.setSize(prefSize)
       }
-      else if(originalPreferredSize != prefSize) {
+      else if (originalPreferredSize != prefSize) {
         var width = maxSize.width min (prefSize.width max originalSize.width)
-        var height = maxSize.height min (if(wrapper.verticallyResizable)
+        var height = maxSize.height min (if (wrapper.verticallyResizable)
                                            prefSize.height max originalSize.height
                                          else prefSize.height)
         val currentSize = wrapper.getSize
         val gridSnap = wrapper.gridSnap
-        if(width != currentSize.width)
+        if (width != currentSize.width)
           width = (width / gridSnap) * gridSnap
-        if(prefSize.height != currentSize.height)
+        if (prefSize.height != currentSize.height)
           height = (height / gridSnap) * gridSnap
         wrapper.setSize(width, height)
         originalPreferredSize = wrapper.getPreferredSize
@@ -137,7 +137,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       // so do not inline the call to editor.get. it will cause
       // the error to pop up twice. - JC 4/9/10
       val value = editor.get
-      if(!value.isDefined && !editor.handlesOwnErrors)
+      if (!value.isDefined && !editor.handlesOwnErrors)
         OptionDialog.showMessage(this,
           I18N.gui.get("edit.general.invalidSettings"),
           I18N.gui.getN("edit.general.invalidValue", editor.accessor.displayName),

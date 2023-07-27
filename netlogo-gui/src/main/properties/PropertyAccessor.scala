@@ -32,7 +32,7 @@ class PropertyAccessor[T : ClassTag](val target: Editable, val displayName: Stri
 
   def error: Option[Exception] = {
     val e = target.error(accessString)
-    if( e == null ) None else Some(e)
+    if ( e == null ) None else Some(e)
   }
 
 }

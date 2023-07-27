@@ -175,14 +175,14 @@ with OneInstancePerTest with BeforeAndAfterEach {
       workspace.report("behaviorspace-experiment-name"))
   }
   // test export-graphics in headless mode
-  if(!Version.is3D)
+  if (!Version.is3D)
     test("ExportGraphics", SlowTest.Tag) {
       val workspace = newWorkspace()
       workspace.open("models/test/lab/FireWithExperiments.nlogo")
       newWorker("testExportGraphics")
         .run(workspace, () => workspace, 1)
     }
-  if(!Version.is3D)
+  if (!Version.is3D)
     test("ModelWithIncludedExperiments", SlowTest.Tag) {
       runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test1", "models/test/lab/FireWithExperiments1")
       runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test2", "models/test/lab/FireWithExperiments2")
@@ -190,7 +190,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
       runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test4", "models/test/lab/FireWithExperiments4")
       runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test5", "models/test/lab/FireWithExperiments5")
     }
-  if(!Version.is3D)
+  if (!Version.is3D)
     test("ResizingWorld3", SlowTest.Tag) {
       run2DExperiment(0, 1, 0, 1, "", "testResizingWorld3")
     }
@@ -224,7 +224,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   // metricGoBoom2 is for bug #114.  before any fix, it passed if run through runParallelExperiment
   // but failed through runExperimentFromModel.  that's because the bug was in the workspace-reusing
   // logic in lab.Lab, which run() here bypasses by using lab.Worker directly - ST 4/6/12
-  if(!Version.is3D) {
+  if (!Version.is3D) {
     val goBoom2Declarations =
       "to setup clear-all create-turtles 1 reset-ticks end\n" +
       "to go if not any? turtles [ stop ] if ticks = 10 [ ask turtles [ die ] ] tick end"
@@ -256,11 +256,11 @@ with OneInstancePerTest with BeforeAndAfterEach {
       """to-report s1 report "x" end to-report s2 report "\"x\"" end""",
       "stringMetrics")
   }
-  if(Version.is3D)
+  if (Version.is3D)
     test("ResizingWorld13d", SlowTest.Tag) {
       run3DExperiment("testResizingWorld13d")
     }
-  if(Version.is3D)
+  if (Version.is3D)
     test("ResizingWorld23d", SlowTest.Tag) {
       run3DExperiment("testResizingWorld23d")
     }

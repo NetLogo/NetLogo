@@ -42,7 +42,7 @@ private class ManagerDialog(manager:       LabManager,
     // Listen for double-clicks, and edit the selected protocol
     jlist.addMouseListener(new javax.swing.event.MouseInputAdapter {
       override def mouseClicked(e: java.awt.event.MouseEvent) {
-        if(e.getClickCount > 1 && jlist.getSelectedIndices.length > 0) {
+        if (e.getClickCount > 1 && jlist.getSelectedIndices.length > 0) {
           edit()
         }
       } })
@@ -120,9 +120,9 @@ private class ManagerDialog(manager:       LabManager,
   private def editProtocol(protocol: LabProtocol, isNew: Boolean) {
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
                                         manager.workspace, manager.workspace.world)
-    if(!dialogFactory.canceled(this, editable)) {
+    if (!dialogFactory.canceled(this, editable)) {
       val newProtocol = editable.get.get
-      if(isNew) manager.protocols += newProtocol
+      if (isNew) manager.protocols += newProtocol
       else manager.protocols(selectedIndex) = newProtocol
       update()
       select(newProtocol)
@@ -132,15 +132,15 @@ private class ManagerDialog(manager:       LabManager,
   private def delete() {
     val selected = jlist.getSelectedIndices
     val message = "Are you sure you want to delete " +
-      (if(selected.length > 1) "these " + selected.length + " experiments?"
+      (if (selected.length > 1) "these " + selected.length + " experiments?"
        else "\"" + listModel.getElementAt(selected(0)).asInstanceOf[LabProtocol].name + "\"?")
-    if(JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(this, message, "Delete", JOptionPane.YES_NO_OPTION)) {
+    if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(this, message, "Delete", JOptionPane.YES_NO_OPTION)) {
       for(i <- 0 until selected.length)
         manager.protocols -= listModel.getElementAt(selected(i)).asInstanceOf[LabProtocol]
       update()
       // it's annoying if nothing is left selected, so select something
       val newSize = manager.protocols.size
-      if(newSize > 0) select(if(selected(0) >= newSize) (selected(0) - 1) min (newSize - 1)
+      if (newSize > 0) select(if (selected(0) >= newSize) (selected(0) - 1) min (newSize - 1)
                              else selected(0))
       manager.dirty()
     }
@@ -150,7 +150,7 @@ private class ManagerDialog(manager:       LabManager,
     listModel.clear
     manager.protocols.foreach(listModel.addElement(_))
     valueChanged(null)
-    if(manager.protocols.size > 0) jlist.setSelectedIndices(Array(0))
+    if (manager.protocols.size > 0) jlist.setSelectedIndices(Array(0))
   }
   private def select(index: Int) {
     jlist.setSelectedIndices(Array(index))
@@ -171,7 +171,7 @@ private class ManagerDialog(manager:       LabManager,
       proto: LabProtocol, index: Int,
       isSelected: Boolean, cellHasFocus: Boolean): Component = {
         val text =
-          s"${proto.name} (${proto.countRuns} run${(if(proto.countRuns != 1) "s" else "")})"
+          s"${proto.name} (${proto.countRuns} run${(if (proto.countRuns != 1) "s" else "")})"
         setText(text)
         if (isSelected) {
           setOpaque(true)

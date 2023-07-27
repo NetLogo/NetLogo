@@ -4,9 +4,9 @@ package org.nlogo.lab.gui
 
 import org.nlogo.api.{Editable, Property}
 import org.nlogo.awt.UserCancelException
+import org.nlogo.core.{ I18N }
 import org.nlogo.window.EditDialogFactoryInterface
 import Supervisor.RunOptions
-import org.nlogo.core.{ I18N }
 
 import java.io.File
 import java.util.prefs.Preferences
@@ -67,7 +67,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
   }
   def get = {
     val editable = new EditableRunOptions
-    if(dialogFactory.canceled(parent, editable))
+    if (dialogFactory.canceled(parent, editable))
       throw new UserCancelException
     val runOptions = editable.get
     Prefs.updateFrom(runOptions)
