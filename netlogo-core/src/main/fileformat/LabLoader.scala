@@ -80,6 +80,9 @@ class LabLoader(literalParser: LiteralParser, existingNames: Set[String] = Set[S
       yield valueSet
     }
     var name = element.getAttribute("name")
+    if (name.isEmpty) {
+      name = "experiment"
+    }
     if (existingNames.contains(name))
     {
       var n = 1
