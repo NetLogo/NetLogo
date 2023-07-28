@@ -65,8 +65,8 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       layout.setConstraints(panel, c)
       editorPanel.add(panel)
       propertyEditors += editor
-      editor.setEnabled(property.enabled)
       editor.refresh()
+      editor.setEnabled(property.enabled)
 
       if (property.focus) {
         assert(claimsFirstFocus == null)
