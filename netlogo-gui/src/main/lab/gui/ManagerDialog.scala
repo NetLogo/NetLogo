@@ -128,7 +128,8 @@ private class ManagerDialog(manager:       LabManager,
   private def edit() { editProtocol(selectedProtocol, false) }
   private def editProtocol(protocol: LabProtocol, isNew: Boolean) {
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
-                                        manager.workspace, manager.workspace.world)
+                                        manager.workspace, manager.workspace.world,
+                                        manager.protocols.map(_.name))
     if (!dialogFactory.canceled(this, editable)) {
       val newProtocol = editable.get.get
       if (isNew) manager.protocols += newProtocol
@@ -174,7 +175,7 @@ private class ManagerDialog(manager:       LabManager,
       for (file <- dialog.getFiles)
       {
         try {
-          for (protocol <- new LabLoader(manager.workspace.compiler.utilities)(scala.io.Source.fromFile(file).mkString))
+          for (protocol <- new LabLoader(manager.workspace.compiler.utilities, manager.protocols.map(_.name).to[collection.mutable.Set])(scala.io.Source.fromFile(file).mkString))
           {
             manager.addProtocol(protocol)
           }

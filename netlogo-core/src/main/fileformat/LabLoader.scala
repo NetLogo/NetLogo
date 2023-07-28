@@ -7,6 +7,7 @@ import org.nlogo.core.LiteralParser
 import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol, SteppedValueSet }
 import org.w3c.dom
 import org.xml.sax
+import scala.collection.mutable.Set
 import scala.language.implicitConversions
 
 object LabLoader {
@@ -15,7 +16,7 @@ object LabLoader {
 
 import LabLoader._
 
-class LabLoader(literalParser: LiteralParser) {
+class LabLoader(literalParser: LiteralParser, existingNames: Set[String] = Set[String]()) {
   if (literalParser == null)
     throw new Exception("Invalid lab loader!")
   def apply(xml: String): Seq[LabProtocol] = {
@@ -78,8 +79,16 @@ class LabLoader(literalParser: LiteralParser) {
       case _ => None } }
       yield valueSet
     }
+    var name = element.getAttribute("name")
+    if (existingNames.contains(name))
+    {
+      var n = 1
+      while (existingNames.contains(s"$name-$n")) n += 1
+      name = s"$name-$n"
+    }
+    existingNames += name
     new LabProtocol(
-      element.getAttribute("name"),
+      name,
       readOptional("setup"),
       readOptional("go"),
       readOptional("final"),
