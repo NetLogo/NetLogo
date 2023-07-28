@@ -2,7 +2,7 @@
 
 package org.nlogo.properties
 
-import java.awt.{Component, Insets, GridBagConstraints, Dimension, GridBagLayout, BorderLayout }
+import java.awt.{Component, Insets, GridBagConstraints, Dimension, GridBagLayout, BorderLayout}
 
 import javax.swing.{JPanel, JLabel}
 
