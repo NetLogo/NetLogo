@@ -81,7 +81,7 @@ class LabLoader(literalParser: LiteralParser, existingNames: Set[String] = Set[S
     }
     var name = element.getAttribute("name")
     if (name.isEmpty) {
-      name = "experiment"
+      name = "no-name"
     }
     if (existingNames.contains(name))
     {
