@@ -131,18 +131,23 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
 
   def valid() = {
     def valid(editor: PropertyEditor[_]) = {
+      // Exclude runMetricsCondition from checking if the box is empty because an empty input is valid
+      if (editor.accessor.accessString != "runMetricsCondition") {
       // plot editor handles its errors when you press the ok button.
       // that calls into editor.get. if there is an error, plot editor
       // pops up an error message. therefore, we cannot call get twice here.
       // so do not inline the call to editor.get. it will cause
       // the error to pop up twice. - JC 4/9/10
-      val value = editor.get
-      if (!value.isDefined && !editor.handlesOwnErrors)
-        OptionDialog.showMessage(this,
-          I18N.gui.get("edit.general.invalidSettings"),
-          I18N.gui.getN("edit.general.invalidValue", editor.accessor.displayName),
-          Array(I18N.gui.get("common.buttons.ok")))
-      value.isDefined
+        val value = editor.get
+        if (!value.isDefined && !editor.handlesOwnErrors)
+          OptionDialog.showMessage(this,
+            I18N.gui.get("edit.general.invalidSettings"),
+            I18N.gui.getN("edit.general.invalidValue", editor.accessor.displayName),
+            Array(I18N.gui.get("common.buttons.ok")))
+        value.isDefined
+      } else {
+        true
+      }
     }
     propertyEditors.forall(valid) && targetValid()
   }
