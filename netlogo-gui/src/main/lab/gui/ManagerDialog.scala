@@ -129,7 +129,7 @@ private class ManagerDialog(manager:       LabManager,
   private def editProtocol(protocol: LabProtocol, isNew: Boolean) {
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
                                         manager.workspace, manager.workspace.world,
-                                        manager.protocols.map(_.name))
+                                        manager.protocols.map(_.name).filter(isNew || _ != protocol.name))
     if (!dialogFactory.canceled(this, editable)) {
       val newProtocol = editable.get.get
       if (isNew) manager.protocols += newProtocol
