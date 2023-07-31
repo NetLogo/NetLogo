@@ -16,7 +16,7 @@ object LabLoader {
 
 import LabLoader._
 
-class LabLoader(literalParser: LiteralParser, existingNames: Set[String] = Set[String]()) {
+class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existingNames: Set[String] = Set[String]()) {
   if (literalParser == null)
     throw new Exception("Invalid lab loader!")
   def apply(xml: String): Seq[LabProtocol] = {
@@ -80,16 +80,18 @@ class LabLoader(literalParser: LiteralParser, existingNames: Set[String] = Set[S
       yield valueSet
     }
     var name = element.getAttribute("name")
-    if (name.isEmpty) {
-      name = "no-name"
+    if (editNames) {
+      if (name.isEmpty) {
+        name = "no-name"
+      }
+      if (existingNames.contains(name))
+      {
+        var n = 1
+        while (existingNames.contains(s"$name-$n")) n += 1
+        name = s"$name-$n"
+      }
+      existingNames += name
     }
-    if (existingNames.contains(name))
-    {
-      var n = 1
-      while (existingNames.contains(s"$name-$n")) n += 1
-      name = s"$name-$n"
-    }
-    existingNames += name
     new LabProtocol(
       name,
       readOptional("setup"),
