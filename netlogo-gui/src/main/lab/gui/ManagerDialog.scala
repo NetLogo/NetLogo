@@ -103,7 +103,7 @@ private class ManagerDialog(manager:       LabManager,
     duplicateAction.setEnabled(count == 1)
     runAction.setEnabled(count == 1)
     deleteAction.setEnabled(count > 0)
-    exportAction.setEnabled(count == 1)
+    exportAction.setEnabled(count > 0)
   }
   /// action implementations
   private def run(): Unit = {
