@@ -200,8 +200,10 @@ private class ManagerDialog(manager:       LabManager,
       var path = FileDialog.showFiles(manager.workspace.getFrame, I18N.gui("export.dialog"), java.awt.FileDialog.SAVE, 
                   if (indices.length == 1)
                     selectedProtocol.name + "-experiment.xml"
+                  else if (manager.workspace.getModelFileName == null)
+                    "experiments.xml"
                   else
-                    "tempmodelname-experiments.xml")
+                    manager.workspace.getModelFileName.split('.')(0) + "-experiments.xml")
 
       if (!path.endsWith(".xml")) {
         path += ".xml"
