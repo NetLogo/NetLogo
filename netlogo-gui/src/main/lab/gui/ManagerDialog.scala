@@ -197,11 +197,11 @@ private class ManagerDialog(manager:       LabManager,
     try {
       val indices = jlist.getSelectedIndices
 
-      var path =
-        if (indices.length == 1)
-          FileDialog.showFiles(manager.workspace.getFrame, I18N.gui("export.dialog"), java.awt.FileDialog.SAVE, selectedProtocol.name + ".xml")
-        else
-          
+      var path = FileDialog.showFiles(manager.workspace.getFrame, I18N.gui("export.dialog"), java.awt.FileDialog.SAVE, 
+                  if (indices.length == 1)
+                    selectedProtocol.name + "-experiment.xml"
+                  else
+                    "tempmodelname-experiments.xml")
 
       if (!path.endsWith(".xml")) {
         path += ".xml"
@@ -210,7 +210,7 @@ private class ManagerDialog(manager:       LabManager,
       val out = new java.io.PrintWriter(path)
 
       out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE experiments SYSTEM \"behaviorspace.dtd\">\n")
-      out.write(LabSaver.save(Iterable(selectedProtocol)))
+      out.write(LabSaver.save(indices.map(manager.protocols(_))))
 
       out.close()
     } catch {
