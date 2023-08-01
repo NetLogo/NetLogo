@@ -10,7 +10,7 @@ import org.nlogo.window.{ PlotWidget, SpeedSliderPanel }
 import javax.swing.ScrollPaneConstants._
 import javax.swing._
 import java.awt.Dimension
-import org.nlogo.api.{PeriodicUpdateDelay, Dump}
+import org.nlogo.api.{PeriodicUpdateDelay, Dump, ValueList, TupleList}
 import org.nlogo.plot.DummyPlotManager
 
 private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervisor,
