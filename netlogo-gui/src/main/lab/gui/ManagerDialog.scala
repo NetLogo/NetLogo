@@ -197,11 +197,8 @@ private class ManagerDialog(manager:       LabManager,
     try {
       var path = FileDialog.showFiles(manager.workspace.getFrame, I18N.gui("export.dialog"), java.awt.FileDialog.SAVE, selectedProtocol.name + ".xml")
 
-      if (path.lastIndexOf('.') == -1) {
+      if (!path.endsWith(".xml")) {
         path += ".xml"
-      }
-      else if (path.splitAt(path.lastIndexOf('.'))._2 != "xml") {
-        path = path.splitAt(path.lastIndexOf('.'))._1 + ".xml"
       }
 
       val out = new java.io.PrintWriter(path)
