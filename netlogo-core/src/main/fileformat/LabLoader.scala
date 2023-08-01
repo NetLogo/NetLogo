@@ -4,7 +4,7 @@ package org.nlogo.fileformat
 
 import java.io.ByteArrayInputStream
 import org.nlogo.core.LiteralParser
-import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol, SteppedValueSet }
+import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol, SteppedValueSet, TupleSet, RefValueSet, ValueList, TupleList }
 import org.w3c.dom
 import org.xml.sax
 import scala.collection.mutable.Set
@@ -55,7 +55,7 @@ class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existi
       readAll(name) match { case List(x) => x ; case Nil => "" }
     def exists(name: String) =
       !element.getElementsByTagName(name).isEmpty
-    def valueSets = {
+    def parameterSets = {
       def readSteppedValueSetElement(e: dom.Element) = {
         def parse(name: String) = BigDecimal(e.getAttribute(name))
         new SteppedValueSet(e.getAttribute("variable"),parse("first"),
@@ -72,12 +72,33 @@ class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existi
         }
         new RefEnumeratedValueSet(e.getAttribute("variable"), values.toList)
       }
-      for{e <- element.getChildNodes
-        valueSet <- e.getNodeName match {
-          case "steppedValueSet" => Some(readSteppedValueSetElement(e))
-          case "enumeratedValueSet" => Some(readEnumeratedValueSetElement(e))
-      case _ => None } }
-      yield valueSet
+      def readTupleSetElement(e: dom.Element) = {
+        val tupleElems = e.getElementsByTagName("tuple")
+        val tuples = for {
+          i <- 0 to tupleElems.getLength
+          elem = tupleElems.item(i) if elem != null
+        } yield {
+          (elem.getAttributes.getNamedItem("variable").getNodeValue,
+           literalParser.readFromString(elem.getAttributes.getNamedItem("value").getNodeValue))
+        }
+        new TupleSet(tuples.toList)
+      }
+      val set =
+        for{e <- element.getChildNodes
+          parameterSet <- e.getNodeName match {
+            case "steppedValueSet" => Some(readSteppedValueSetElement(e))
+            case "enumeratedValueSet" => Some(readEnumeratedValueSetElement(e))
+            case "tupleSet" => Some(readTupleSetElement(e))
+        case _ => None } }
+        yield parameterSet
+      set match {
+        case Nil => ValueList(Nil)
+        case head :: next =>
+          head match {
+            case _: RefValueSet => ValueList(set.asInstanceOf[List[RefValueSet]])
+            case _: TupleSet => TupleList(set.asInstanceOf[List[TupleSet]])
+          }
+      }
     }
     var name = element.getAttribute("name")
     if (editNames) {
@@ -106,7 +127,7 @@ class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existi
       if (!exists("timeLimit")) 0 else readOneAttribute("timeLimit","steps").toInt,
       if (!exists("exitCondition")) "" else readOptional("exitCondition"),
       readAll("metric"),
-      valueSets)
+      parameterSets)
   }
   // implicits to keep the code from getting too verbose
   implicit def nodes2list(nodes: dom.NodeList): List[dom.Element] =

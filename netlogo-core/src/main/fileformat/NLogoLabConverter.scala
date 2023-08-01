@@ -27,7 +27,7 @@ object NLogoLabConverter extends AutoConvertable {
       repetitions, sequentialRunOrder, runMetricsEveryStep, converter.convertStatement(runMetricsCondition), timeLimit,
       if (exitCondition == "") "" else converter.convertReporterExpression(exitCondition),
       metrics.map(converter.convertReporterExpression),
-      valueSets)
+      parameterSets)
   }
 
   override def requiresAutoConversion(model: Model, needsConversion: String => Boolean): Boolean =

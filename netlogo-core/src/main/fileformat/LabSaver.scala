@@ -2,7 +2,7 @@
 
 package org.nlogo.fileformat
 
-import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, RefEnumeratedValueSet, SteppedValueSet }
+import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, RefEnumeratedValueSet, SteppedValueSet, ValueList, TupleList }
 import javax.xml.transform
 import transform.{OutputKeys,TransformerFactory}
 import transform.sax.{SAXTransformerFactory,TransformerHandler}
@@ -74,31 +74,42 @@ object LabSaver {
       element("metric", metric)
     if (!protocol.runMetricsCondition.isEmpty)
       element("runMetricsCondition", protocol.runMetricsCondition)
-    for(valueSet <- protocol.valueSets)
-      valueSet match {
-        case steppedValueSet:SteppedValueSet =>
-          elementWithAttributes(
-            "steppedValueSet",
-            attributes(("variable", valueSet.variableName),
-                       ("first", Dump.number(steppedValueSet.firstValue.toDouble)),
-                       ("step", Dump.number(steppedValueSet.step.toDouble)),
-                       ("last", Dump.number(steppedValueSet.lastValue.toDouble))))
-        case enumeratedValueSet: EnumeratedValueSet =>
-          hd.startElement("", "", "enumeratedValueSet",
-                          attributes(("variable", valueSet.variableName)))
-          for(value <- enumeratedValueSet)
-            elementWithAttributes("value",
-                                  attributes(("value", Dump.logoObject(
-                                    value.asInstanceOf[AnyRef],true,false))))
-          hd.endElement("", "", "enumeratedValueSet")
-        case enumeratedValueSet: RefEnumeratedValueSet =>
-          hd.startElement("", "", "enumeratedValueSet",
-            attributes(("variable", valueSet.variableName)))
-          for (value <- enumeratedValueSet)
-            elementWithAttributes("value",
-              attributes(("value", Dump.logoObject(value, true, false))))
-          hd.endElement("", "", "enumeratedValueSet")
-      }
+    protocol.parameterSets match {
+      case ValueList(list) =>
+        for (valueSet <- list)
+          valueSet match {
+            case steppedValueSet:SteppedValueSet =>
+              elementWithAttributes(
+                "steppedValueSet",
+                attributes(("variable", valueSet.variableName),
+                          ("first", Dump.number(steppedValueSet.firstValue.toDouble)),
+                          ("step", Dump.number(steppedValueSet.step.toDouble)),
+                          ("last", Dump.number(steppedValueSet.lastValue.toDouble))))
+            case enumeratedValueSet: EnumeratedValueSet =>
+              hd.startElement("", "", "enumeratedValueSet",
+                              attributes(("variable", valueSet.variableName)))
+              for(value <- enumeratedValueSet)
+                elementWithAttributes("value",
+                                      attributes(("value", Dump.logoObject(
+                                        value.asInstanceOf[AnyRef],true,false))))
+              hd.endElement("", "", "enumeratedValueSet")
+            case enumeratedValueSet: RefEnumeratedValueSet =>
+              hd.startElement("", "", "enumeratedValueSet",
+                attributes(("variable", valueSet.variableName)))
+              for (value <- enumeratedValueSet)
+                elementWithAttributes("value",
+                  attributes(("value", Dump.logoObject(value, true, false))))
+              hd.endElement("", "", "enumeratedValueSet")
+          }
+      case TupleList(list) =>
+        for (tupleSet <- list) {
+          hd.startElement("", "", "tupleSet", attributes())
+          for (value <- tupleSet.values)
+            elementWithAttributes("tuple", attributes(("variable", value._1), 
+                                                      ("value", Dump.logoObject(value._2.asInstanceOf[AnyRef], true, false))))
+          hd.endElement("", "", "tupleSet")
+        }
+    }
     hd.endElement("", "", "experiment")
   }
 }

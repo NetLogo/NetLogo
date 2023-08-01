@@ -13,9 +13,13 @@ case class LabProtocol(name: String,
                     timeLimit: Int,
                     exitCondition: String,
                     metrics: List[String],
-                    valueSets: List[RefValueSet])
+                    parameterSets: ParameterList)
 {
-  def countRuns = repetitions * valueSets.map(_.length.toInt).product
+  def countRuns =
+    parameterSets match {
+      case ValueList(list) => repetitions * list.map(_.length.toInt).product
+      case TupleList(list) => repetitions * list.length
+    }
 
   // Generate all the possible combinations of values from the ValueSets, in order.  (I'm using
   // Iterator here so that each combination we generate can be garbage collected when we're done
@@ -30,20 +34,35 @@ case class LabProtocol(name: String,
   type AnyRefSettingsIterator = Iterator[List[(String, AnyRef)]]
 
   def refElements: AnyRefSettingsIterator = {
-    def combinations(sets: List[RefValueSet]): AnyRefSettingsIterator =
-      sets match {
+    def valueCombinations(list: List[RefValueSet]): AnyRefSettingsIterator =
+      list match {
         case Nil => Iterator(Nil)
         case set::sets =>
           set.iterator.flatMap(v =>
-            combinations(sets).map(m =>
+            valueCombinations(sets).map(m =>
               if (sequentialRunOrder) (set.variableName,v) :: m
               else m :+ set.variableName -> v))
       }
-    if (sequentialRunOrder) combinations(valueSets)
-      .flatMap(Iterator.fill(repetitions)(_))
-    else {
-      val runners = combinations(valueSets.reverse).toList
-      (for(i <- 1 to repetitions) yield runners).flatten.toIterator
+    def tupleCombinations(list: List[TupleSet]): AnyRefSettingsIterator =
+      list match {
+        case Nil => Iterator(Nil)
+        case set::sets => Iterator(Nil)
+      }
+    parameterSets match {
+      case ValueList(list) =>
+        if (sequentialRunOrder) valueCombinations(list)
+          .flatMap(Iterator.fill(repetitions)(_))
+        else {
+          val runners = valueCombinations(list.reverse).toList
+          (for(i <- 1 to repetitions) yield runners).flatten.toIterator
+        }
+      case TupleList(list) =>
+        if (sequentialRunOrder) tupleCombinations(list)
+          .flatMap(Iterator.fill(repetitions)(_))
+        else {
+          val runners = tupleCombinations(list.reverse).toList
+          (for(i <- 1 to repetitions) yield runners).flatten.toIterator
+        }
     }
   }
 }

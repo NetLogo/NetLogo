@@ -9,7 +9,7 @@ import org.nlogo.window.{ PlotWidget, SpeedSliderPanel }
 import javax.swing.ScrollPaneConstants._
 import javax.swing._
 import java.awt.Dimension
-import org.nlogo.api.{PeriodicUpdateDelay, Dump}
+import org.nlogo.api.{PeriodicUpdateDelay, Dump, ValueList, TupleList}
 import org.nlogo.plot.DummyPlotManager
 
 
@@ -19,7 +19,10 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   val protocol = supervisor.worker.protocol
   val workspace = supervisor.workspace
   private val totalRuns = protocol.countRuns
-  private val progressArea = new JTextArea(10 min (protocol.valueSets.size + 3), 0)
+  private val progressArea = new JTextArea(10 min ((protocol.parameterSets match {
+    case ValueList(list) => list.size
+    case TupleList(list) => list.size
+  }) + 3), 0)
   private val timer = new Timer(PeriodicUpdateDelay.DelayInMilliseconds, periodicUpdateAction)
   private val displaySwitch = new JCheckBox(displaySwitchAction)
   private val plotsAndMonitorsSwitch = new JCheckBox(plotsAndMonitorsSwitchAction)

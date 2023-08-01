@@ -2,7 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.LabProtocol
+import org.nlogo.api.{ LabProtocol, ValueList, TupleList }
 import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.Workspace
 
@@ -67,12 +67,16 @@ class SpreadsheetExporter(modelFileName: String,
     // "initial-density","0.3","0.5","0.4"
     // "fgcolor","133.0","133.0","133.0"
     // "bgcolor","79.0","79.0","79.0"
-    for(v <- protocol.valueSets.map(_.variableName)) {
-      out.print(csv.header(v) + ",")
-      foreachRun((run,metricNumber) =>
-        if (metricNumber == 0)
-          Some(run.settings.find(_._1 == v).get._2)
-        else None)
+    protocol.parameterSets match {
+      case ValueList(list) =>
+        for(v <- list.map(_.variableName)) {
+          out.print(csv.header(v) + ",")
+          foreachRun((run,metricNumber) =>
+            if (metricNumber == 0)
+              Some(run.settings.find(_._1 == v).get._2)
+            else None)
+        }
+      case TupleList(list) => println("fix me!")
     }
     // now output summary information, like this:
     // "[reporter]","metric","metric","metric"
