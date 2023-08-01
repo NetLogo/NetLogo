@@ -167,7 +167,7 @@ class ProtocolEditable(protocol: LabProtocol,
           case List() => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.field"))
           case List(variableName: String, more: LogoList) =>
             if (!parameterType.isEmpty && parameterType != "value")
-              return Seq("Variable" -> I18N.gui.get("edit.behaviorSpace.list.mixedTypes"))
+              return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.mixedTypes", "[ " + element.asInstanceOf[LogoList].mkString(" ") + " ]"))
             parameterType = "value"
             more.toList match {
               case List(first: java.lang.Double,
@@ -184,7 +184,7 @@ class ProtocolEditable(protocol: LabProtocol,
             }
           case List(variableName: String, more@_*) =>
             if (!parameterType.isEmpty && parameterType != "value")
-              return Seq("Variable" -> I18N.gui.get("edit.behaviorSpace.list.mixedTypes"))
+              return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.mixedTypes", "[ " + element.asInstanceOf[LogoList].mkString(" ") + " ]"))
             parameterType = "value"
             if (more.isEmpty){
               return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.field", variableName))
@@ -194,7 +194,7 @@ class ProtocolEditable(protocol: LabProtocol,
             else return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.variablelist", variableName))
           case List(tuple: LogoList, more@_*) =>
             if (!parameterType.isEmpty && parameterType != "tuple")
-              return Seq("Variable" -> I18N.gui.get("edit.behaviorSpace.list.mixedTypes"))
+              return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.mixedTypes", "[ " + element.asInstanceOf[LogoList].mkString(" ") + " ]"))
             parameterType = "tuple"
           case _ => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.unexpected"))
         }
