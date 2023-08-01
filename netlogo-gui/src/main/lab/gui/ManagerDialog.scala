@@ -103,7 +103,7 @@ private class ManagerDialog(manager:       LabManager,
     duplicateAction.setEnabled(count == 1)
     runAction.setEnabled(count == 1)
     deleteAction.setEnabled(count > 0)
-    exportAction.setEnabled(count > 0)
+    exportAction.setEnabled(count == 1)
   }
   /// action implementations
   private def run(): Unit = {
@@ -195,18 +195,14 @@ private class ManagerDialog(manager:       LabManager,
   }
   private def export() {
     try {
-      val base = FileDialog.showDirectories(manager.workspace.getFrame, I18N.gui("export.dialog"))
+      val path = FileDialog.showFiles(manager.workspace.getFrame, I18N.gui("export.dialog"), java.awt.FileDialog.SAVE, selectedProtocol.name + ".xml")
 
-      jlist.getSelectedIndices().foreach({ i =>
-        val protocol = manager.protocols(i)
+      val out = new java.io.PrintWriter(path)
 
-        val out = new java.io.PrintWriter(s"$base/${protocol.name}.xml")
+      out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE experiments SYSTEM \"behaviorspace.dtd\">\n")
+      out.write(LabSaver.save(Iterable(selectedProtocol)))
 
-        out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE experiments SYSTEM \"behaviorspace.dtd\">\n")
-        out.write(LabSaver.save(Iterable(protocol)))
-
-        out.close()
-      })
+      out.close()
     } catch {
       case e: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(e)
     }
