@@ -195,7 +195,13 @@ private class ManagerDialog(manager:       LabManager,
   }
   private def export() {
     try {
-      var path = FileDialog.showFiles(manager.workspace.getFrame, I18N.gui("export.dialog"), java.awt.FileDialog.SAVE, selectedProtocol.name + ".xml")
+      val indices = jlist.getSelectedIndices
+
+      var path =
+        if (indices.length == 1)
+          FileDialog.showFiles(manager.workspace.getFrame, I18N.gui("export.dialog"), java.awt.FileDialog.SAVE, selectedProtocol.name + ".xml")
+        else
+          
 
       if (!path.endsWith(".xml")) {
         path += ".xml"
