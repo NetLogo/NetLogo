@@ -154,15 +154,32 @@ class Worker(val protocol: LabProtocol)
       // Runs runMetricsCondition if it exists, and returns false if it doesn't
       def shouldTakeMeasurements(): Boolean = {
         runMetricsConditionProcedure match {
-          case Some(proc) => {
-            val result = ws.runCompiledReporter(owner(ws.world.mainRNG.clone), proc)
-            if (result == null)
-              throw new FailedException("Reporter for measuring runs failed to report a result:\n" + result)
-            result.asInstanceOf[Boolean]
-          }
           case None => false
+          case Some(procedure) => 
+            ws.runCompiledReporter(owner(ws.world.mainRNG.clone), procedure) match {
+              case t: Throwable => {
+                val ex = new FailedException("Metrics condition reporter encountered an error: " + t)
+                // println("RECEIVED THROWABLE " + ws.getClass.getSimpleName)
+                // val ex = new FailedException("Metrics condition reporter encountered an error: " + t)
+
+                ws.clearLastLogoException()
+                eachListener(_.runtimeError(ws, runNumber, ex))
+                // throw t
+                throw ex
+              }
+              case b: java.lang.Boolean =>
+                b.booleanValue
+              case null =>
+                throw new FailedException(
+                  "Metrics condition reporter failed to report a result:\n" +
+                  protocol.runMetricsCondition)
+              case result: AnyRef =>
+                throw new FailedException(
+                  "Metrics condition should report true or false, but instead reported the " +
+                  Dump.typeName(result) + " " + Dump.logoObject(result))
+            }
+          }
         }
-      }
 
       def takeMeasurements(): List[AnyRef] = {
         metricProcedures.map{proc =>
