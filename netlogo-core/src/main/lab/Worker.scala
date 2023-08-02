@@ -158,14 +158,7 @@ class Worker(val protocol: LabProtocol)
           case Some(procedure) => 
             ws.runCompiledReporter(owner(ws.world.mainRNG.clone), procedure) match {
               case t: Throwable => {
-                val ex = new FailedException("Metrics condition reporter encountered an error: " + t)
-                // println("RECEIVED THROWABLE " + ws.getClass.getSimpleName)
-                // val ex = new FailedException("Metrics condition reporter encountered an error: " + t)
-
-                ws.clearLastLogoException()
-                eachListener(_.runtimeError(ws, runNumber, ex))
-                // throw t
-                throw ex
+                throw new FailedException("Metrics condition reporter encountered an error: " + t)
               }
               case b: java.lang.Boolean =>
                 b.booleanValue
