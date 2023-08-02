@@ -2,7 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.LabProtocol
+import org.nlogo.api.{ LabProtocol, ValueList, TupleList }
 import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.Workspace
 
@@ -40,8 +40,14 @@ class TableExporter(modelFileName: String,
   def writeExperimentHeader() {
     // sample header: "[run number]","var1","var2","[step]","metric1","metric2"
     val headers =
-      "[run number]" :: protocol.valueSets(0).map(_.variableName) :::
-      "[step]" :: protocol.metrics
+      protocol.parameterSets match {
+        case ValueList(list) =>
+          "[run number]" :: list.map(_.variableName) :::
+          "[step]" :: protocol.metrics
+        case TupleList(list) =>
+          "[run number]" :: list(0).values.map(_._1) :::
+          "[step]" :: protocol.metrics
+      }
     out.println(headers.map(csv.header).mkString(","))
   }
   def writeTableRow(runNumber: Int, step: Int, values: List[AnyRef]) {

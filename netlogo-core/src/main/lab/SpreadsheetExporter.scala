@@ -2,7 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.LabProtocol
+import org.nlogo.api.{ LabProtocol, ValueList, TupleList }
 import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.Workspace
 
@@ -18,17 +18,12 @@ class SpreadsheetExporter(modelFileName: String,
                           out: java.io.PrintWriter)
   extends Exporter(modelFileName, initialDims, protocol, out)
 {
-  val shouldIncludeSteps = !protocol.runMetricsEveryStep && !protocol.runMetricsCondition.isEmpty
   val runs = new collection.mutable.HashMap[Int,Run]
   override def runStarted(w: Workspace, runNumber: Int, settings: List[(String,Any)]) {
     runs(runNumber) = new Run(settings)
   }
   override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]) {
-    if (shouldIncludeSteps)
-      runs(runNumber).addMeasurements(step, values)
-    else {
-      runs(runNumber).addMeasurements(values)
-    }
+    runs(runNumber).addMeasurements(values)
   }
   override def runCompleted(w: Workspace, runNumber: Int, steps: Int) {
     runs(runNumber).done = true
@@ -50,16 +45,12 @@ class SpreadsheetExporter(modelFileName: String,
   def foreachRun(fn: (Run, Int) => Option[Any]) {
     // if the experiment was aborted, the completed run numbers might not be
     // consecutive, so we have to be careful - ST 3/31/09
-    val includeStepsOffset = {
-      if (shouldIncludeSteps) 1
-      else 0
-    }
     val outputs =
       for {
         runNumber <- runNumbers
         // even if there are no metrics, in this context we pretend there is one, otherwise we'd output
         // nothing at all - ST 12/17/04, 5/6/08
-        j <- 0 until (1 max protocol.metrics.length) + includeStepsOffset
+        j <- 0 until (1 max protocol.metrics.length)
         output = fn(runs(runNumber), j).map(csv.data).getOrElse("")
       } yield output
     out.println(outputs.mkString(","))
@@ -76,12 +67,23 @@ class SpreadsheetExporter(modelFileName: String,
     // "initial-density","0.3","0.5","0.4"
     // "fgcolor","133.0","133.0","133.0"
     // "bgcolor","79.0","79.0","79.0"
-    for(v <- protocol.valueSets(0).map(_.variableName)) {
-      out.print(csv.header(v) + ",")
-      foreachRun((run,metricNumber) =>
-        if (metricNumber == 0)
-          Some(run.settings.find(_._1 == v).get._2)
-        else None)
+    protocol.parameterSets match {
+      case ValueList(list) =>
+        for(v <- list.map(_.variableName)) {
+          out.print(csv.header(v) + ",")
+          foreachRun((run,metricNumber) =>
+            if (metricNumber == 0)
+              Some(run.settings.find(_._1 == v).get._2)
+            else None)
+        }
+      case TupleList(list) =>
+        for (v <- list(0).values.map(_._1)) {
+          out.print(csv.header(v) + ",")
+          foreachRun((run, metricNumber) =>
+            if (metricNumber == 0)
+              Some(run.settings.find(_._1 == v).get._2)
+            else None)
+        }
     }
     // now output summary information, like this:
     // "[reporter]","metric","metric","metric"
@@ -123,13 +125,8 @@ class SpreadsheetExporter(modelFileName: String,
     out.println()
     out.print(csv.header(if (protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) "[all run data]"
                               else "[initial & final values]"))
-    for(_ <- runs) {
-      if (shouldIncludeSteps)
-        out.print(',' + csv.header("step"))
-      for (metric <- protocol.metrics) {
-        out.print(',' + csv.header(metric))
-      }
-    }
+    for(_ <- runs; metric <- protocol.metrics)
+      out.print(',' + csv.header(metric))
     out.println()
     if (runs.isEmpty) return
     // first figure out how long the longest run is, so we know in
@@ -159,12 +156,8 @@ class SpreadsheetExporter(modelFileName: String,
     // we use Array instead of List because List has a lot of memory overhead (one object per
     // cons cell) and for a big experiment we can have a ton of measurements.
     val measurements = new collection.mutable.ArrayBuffer[Array[AnyRef]]
-    def addMeasurements(values: List[AnyRef]) {
+    def addMeasurements(values: List[AnyRef]) { 
       measurements += values.toArray
-      numMeasurements += 1
-    }
-    def addMeasurements(step: Int, values: List[AnyRef]) {
-      measurements += (step.toString :: values).toArray
       numMeasurements += 1
     }
     // careful here... normally measurement number means step number, but if runMetricsEveryStep is
