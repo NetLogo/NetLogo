@@ -194,6 +194,7 @@ class ProtocolEditable(protocol: LabProtocol,
       catch{ case ex: CompilerException =>  return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.compiler.parser")) }
     var totalCombinations = 1
     var parameterType = ""
+    var tupleVars: List[AnyRef] = Nil
     list.toList.foreach {
       case element =>
         element.asInstanceOf[LogoList].toList match {
@@ -229,6 +230,12 @@ class ProtocolEditable(protocol: LabProtocol,
             if (!parameterType.isEmpty && parameterType != "tuple")
               return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.mixedTypes", "[ " + element.asInstanceOf[LogoList].mkString(" ") + " ]"))
             parameterType = "tuple"
+            if (tupleVars != Nil && tupleVars != element.asInstanceOf[LogoList].toList.map(_.asInstanceOf[LogoList](0))) {
+              return Seq("Variable" -> I18N.gui.get("edit.behaviorSpace.list.mismatchedTuples"))
+            }
+            tupleVars = element.asInstanceOf[LogoList].toList.map(_.asInstanceOf[LogoList](0))
+            if (tupleVars != tupleVars.distinct)
+              return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.duplicateVariable", "[ " + element.asInstanceOf[LogoList].mkString(" ") + " ]"))
           case _ => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.unexpected"))
         }
     }
