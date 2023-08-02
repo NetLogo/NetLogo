@@ -76,7 +76,14 @@ class SpreadsheetExporter(modelFileName: String,
               Some(run.settings.find(_._1 == v).get._2)
             else None)
         }
-      case TupleList(list) => println("fix me!")
+      case TupleList(list) =>
+        for (v <- list(0).values.map(_._1)) {
+          out.print(csv.header(v) + ",")
+          foreachRun((run, metricNumber) =>
+            if (metricNumber == 0)
+              Some(run.settings.find(_._1 == v).get._2)
+            else None)
+        }
     }
     // now output summary information, like this:
     // "[reporter]","metric","metric","metric"

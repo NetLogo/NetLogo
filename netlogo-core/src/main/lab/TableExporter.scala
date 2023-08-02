@@ -44,7 +44,9 @@ class TableExporter(modelFileName: String,
         case ValueList(list) =>
           "[run number]" :: list.map(_.variableName) :::
           "[step]" :: protocol.metrics
-        case TupleList(list) => Nil
+        case TupleList(list) =>
+          "[run number]" :: list(0).values.map(_._1) :::
+          "[step]" :: protocol.metrics
       }
     out.println(headers.map(csv.header).mkString(","))
   }

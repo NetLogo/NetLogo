@@ -46,7 +46,7 @@ case class LabProtocol(name: String,
     def tupleCombinations(list: List[TupleSet]): AnyRefSettingsIterator =
       list match {
         case Nil => Iterator(Nil)
-        case set::sets => Iterator(Nil)
+        case set::sets => list.map(_.values).toIterator
       }
     parameterSets match {
       case ValueList(list) =>
