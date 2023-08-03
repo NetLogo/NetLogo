@@ -6,12 +6,6 @@ class MetricsBooleanEditor(accessor: PropertyAccessor[Boolean], properties: Arra
 {
     override def changed(): Unit =
     {
-        properties.find(_.accessor.accessString == "runMetricsCombine") match
-        {
-            case Some(p) => p.setEnabled(!get.getOrElse(true))
-            case None =>
-        }
-
         properties.find(_.accessor.accessString == "runMetricsCondition") match
         {
             case Some(p) => p.setEnabled(!get.getOrElse(true))
