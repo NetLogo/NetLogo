@@ -23,7 +23,7 @@ class SpreadsheetExporter(modelFileName: String,
     runs(runNumber) = new Run(settings)
   }
   override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]) {
-    runs(runNumber).addMeasurements(values)
+    runs(runNumber).addMeasurements(step, values)
   }
   override def runCompleted(w: Workspace, runNumber: Int, steps: Int) {
     runs(runNumber).done = true
@@ -50,7 +50,7 @@ class SpreadsheetExporter(modelFileName: String,
         runNumber <- runNumbers
         // even if there are no metrics, in this context we pretend there is one, otherwise we'd output
         // nothing at all - ST 12/17/04, 5/6/08
-        j <- 0 until (1 max protocol.metrics.length)
+        j <- 0 to (1 max protocol.metrics.length) // Use "to" instead of "until" to include the automatic tick measurement
         output = fn(runs(runNumber), j).map(csv.data).getOrElse("")
       } yield output
     out.println(outputs.mkString(","))
@@ -114,8 +114,12 @@ class SpreadsheetExporter(modelFileName: String,
     out.println()
     out.print(csv.header(if (protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) "[all run data]"
                               else "[initial & final values]"))
-    for(_ <- runs; metric <- protocol.metrics)
-      out.print(',' + csv.header(metric))
+    for(_ <- runs) {
+      out.print(',' + csv.header("tick"))
+      for (metric <- protocol.metrics) {
+        out.print(',' + csv.header(metric))
+      }
+    }
     out.println()
     if (runs.isEmpty) return
     // first figure out how long the longest run is, so we know in
@@ -145,8 +149,8 @@ class SpreadsheetExporter(modelFileName: String,
     // we use Array instead of List because List has a lot of memory overhead (one object per
     // cons cell) and for a big experiment we can have a ton of measurements.
     val measurements = new collection.mutable.ArrayBuffer[Array[AnyRef]]
-    def addMeasurements(values: List[AnyRef]) { 
-      measurements += values.toArray
+    def addMeasurements(step: Int, values: List[AnyRef]) { 
+      measurements += (step.toString :: values).toArray
       numMeasurements += 1
     }
     // careful here... normally measurement number means step number, but if runMetricsEveryStep is
