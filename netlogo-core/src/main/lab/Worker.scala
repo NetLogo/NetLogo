@@ -28,6 +28,11 @@ class Worker(val protocol: LabProtocol)
   // (should use a Scala collection not a Java one, but oh well, too lazy today - ST 8/13/09)
   val proceduresMap = new java.util.WeakHashMap[Workspace, Procedures]
   def run(initialWorkspace: Workspace, fn: ()=>Workspace, threads: Int) {
+    val globals = initialWorkspace.world.program.globals
+    val initialState = globals.map(g => {
+      val index = initialWorkspace.world.observer.variableIndex(g)
+      initialWorkspace.world.observer.getVariable(index)
+    })
     val executor = Executors.newFixedThreadPool(threads)
     try {
       listeners.foreach(_.experimentStarted())
@@ -53,6 +58,10 @@ class Worker(val protocol: LabProtocol)
       // threads (ticket #1185). - ST 2/11/11
       executor.shutdown()
       runners = null
+      for ((g, i) <- initialState.zipWithIndex) {
+        initialWorkspace.world.observer.setVariable(i, g)
+      }
+      // globals.foreach(g => initialWorkspace.world.observer.setVariable(initialWorkspace.world.observer.variableIndex(g), globalVals(g)))
     }
   }
   // result discarded -- we just want to see if compilation succeeds.
