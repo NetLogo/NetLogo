@@ -16,8 +16,6 @@ tmp/
 *~
 .#*
 \#*
-.metals/*
-.vscode/*
 
 # no jars, except these small ones
 *.jar
