@@ -68,7 +68,7 @@ and run experiment setups. Experiments are listed by name and how many model
 runs the experiment will consist of.
 
 Experiment setups are considered part of a NetLogo model and are saved as part
-of the model.
+of the model, but can be saved as individual files (see "Importing and exporting").
 
 To create a new experiment setup, press the "New" button.
 
@@ -80,7 +80,7 @@ or left with their default values, depending on your needs.
 
 **Experiment name:** Experiments in the same model must have different names. If
 you open a model that contains experiments with duplicate names, the conflicting
-names will be altered.
+names will be altered to ensure that all experiment names remain unique.
 
 **Vary variables as follows:** This is where you specify which settings you want
 varied, and what values you want them to take. Variables can include sliders,
@@ -212,6 +212,23 @@ the run in some other way.
 **Time limit:** This lets you set a fixed maximum length for each run. If you
 don't want to set any maximum, but want the length of the runs to be controlled
 by the stop condition instead, enter 0.
+
+### Importing and exporting
+
+Although experiments are tied to a model and are usually saved along with a
+model, they can also be imported and exported individually. This allows you to
+easily transfer experiments between models, and also prepares experiments to be
+run headlessly.
+
+The **Import** button allows you to import experiments from an xml file. The
+selected files may contain any number of experiments, but any experiments that
+are formatted incorrectly will not be loaded. If you load an experiment that has
+the same name as an existing experiment, the name of the loaded experiment will
+be slightly altered to ensure that experiment names remain unique.
+
+The **Export** button allows you to export experiments to an xml file. Any number
+of experiments may be selected for export at once, but they will all be combined
+into a single output file.
 
 ### Special primitives for BehaviorSpace experiments
 
