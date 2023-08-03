@@ -17,6 +17,14 @@ private class ManagerDialog(manager:       LabManager,
   extends JDialog(manager.workspace.getFrame)
   with javax.swing.event.ListSelectionListener
 {
+  def createSupervisor(protocol: LabProtocol, options: Supervisor.RunOptions = null): Supervisor = new Supervisor(this, manager.workspace, protocol, manager.workspaceFactory, dialogFactory, progressDialog, options)
+  def savePartial(protocol: LabProtocol): Unit = {
+    manager.protocols(selectedIndex) = protocol
+    update()
+    select(protocol)
+    manager.dirty()
+  }
+  private val progressDialog = new ProgressDialog(this, createSupervisor, savePartial)
   private val jlist = new JList[LabProtocol]
   private val listModel = new javax.swing.DefaultListModel[LabProtocol]
   private implicit val i18NPrefix = I18N.Prefix("tools.behaviorSpace")
@@ -109,7 +117,8 @@ private class ManagerDialog(manager:       LabManager,
   private def run(): Unit = {
     try {
       manager.prepareForRun()
-      new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory).start()
+      
+      progressDialog.newSupervisor(selectedProtocol)
     }
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(ex) }
   }
@@ -258,7 +267,10 @@ private class ManagerDialog(manager:       LabManager,
       proto: LabProtocol, index: Int,
       isSelected: Boolean, cellHasFocus: Boolean): Component = {
         val text =
-          s"${proto.name} (${proto.countRuns} run${(if (proto.countRuns != 1) "s" else "")})"
+          if (proto.runsCompleted != 0)
+            s"** In Progress ** ${proto.name} (${proto.countRuns} run${(if (proto.countRuns != 1) "s" else "")})"
+          else
+            s"${proto.name} (${proto.countRuns} run${(if (proto.countRuns != 1) "s" else "")})"
         setText(text)
         if (isSelected) {
           setOpaque(true)

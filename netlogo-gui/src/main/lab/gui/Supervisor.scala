@@ -17,6 +17,8 @@ import org.nlogo.swing.{ OptionDialog }
 import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace }
 import org.nlogo.workspace.{ CurrentModelOpener, WorkspaceFactory }
 
+import scala.collection.mutable.Set
+
 object Supervisor {
   case class RunOptions(threadCount: Int, table: String, spreadsheet: String, updateView: Boolean, updatePlotsAndMonitors: Boolean)
 }
@@ -25,16 +27,24 @@ class Supervisor(
   val workspace: GUIWorkspace,
   protocol: LabProtocol,
   factory: WorkspaceFactory with CurrentModelOpener,
-  dialogFactory: EditDialogFactoryInterface
+  dialogFactory: EditDialogFactoryInterface,
+  progressDialog: ProgressDialog,
+  previousOptions: Supervisor.RunOptions = null
 ) extends Thread("BehaviorSpace Supervisor") {
-  var options: Supervisor.RunOptions = null
-  val worker = new Worker(protocol)
+  var options: Supervisor.RunOptions = previousOptions
   val headlessWorkspaces = new ListBuffer[Workspace]
   val queue = new collection.mutable.Queue[Workspace]
+  val completed = Set[Int]()
+  var highestCompleted = 0 max protocol.runsCompleted
+  val worker = new Worker(protocol)
   val listener =
     new ProgressListener {
       override def runCompleted(w: Workspace, runNumber: Int, step: Int) {
-        queue.synchronized { queue.enqueue(w) } }
+        completed += runNumber
+        while (completed.contains(highestCompleted + 1))
+          highestCompleted += 1
+        queue.synchronized { queue.enqueue(w) }
+      }
       override def runtimeError(w: Workspace, runNumber: Int, e: Throwable) {
         e match {
           case ee: EngineException =>
@@ -50,13 +60,15 @@ class Supervisor(
         }
         Exceptions.handle(e)
       }}
+  var paused = false
+
+  progressDialog.connectSupervisor(this)
 
   def nextWorkspace = queue.synchronized { queue.dequeue() }
   val runnable = new Runnable { override def run() {
     worker.run(workspace, nextWorkspace _, options.threadCount)
   } }
-  private val workerThread  = new Thread(runnable, "BehaviorSpace Worker")
-  private val progressDialog = new ProgressDialog(dialog,  this)
+  private val workerThread = new Thread(runnable, "BehaviorSpace Worker")
   private val exporters = new ListBuffer[Exporter]
   worker.addListener(progressDialog)
   def addExporter(exporter: Exporter) {
@@ -77,11 +89,14 @@ class Supervisor(
         failure(e)
         return
     }
-    options =
-      try {
-        new RunOptionsDialog(dialog, dialogFactory, workspace.guessExportName(worker.protocol.name)).get
-      }
-      catch { case ex: UserCancelException => return }
+
+    if (options == null) {
+      options =
+        try {
+          new RunOptionsDialog(dialog, dialogFactory, workspace.guessExportName(worker.protocol.name)).get
+        }
+        catch { case ex: UserCancelException => return }
+    }
 
     if (options.spreadsheet != null && options.spreadsheet.trim() != "") {
       val fileName = options.spreadsheet.trim()
@@ -90,7 +105,7 @@ class Supervisor(
           workspace.getModelFileName,
           workspace.world.getDimensions,
           worker.protocol,
-          new PrintWriter(new FileWriter(fileName))))
+          new PrintWriter(new FileWriter(fileName, highestCompleted > 0))))
 	    } catch {
 		    case e: IOException =>
           failure(e)
@@ -104,7 +119,7 @@ class Supervisor(
           workspace.getModelFileName,
           workspace.world.getDimensions,
           worker.protocol,
-          new PrintWriter(new FileWriter(fileName))))
+          new PrintWriter(new FileWriter(fileName, highestCompleted > 0))))
 	    } catch {
 		    case e: IOException =>
           failure(e)
@@ -147,15 +162,17 @@ class Supervisor(
         progressDialog.setVisible(true)
       }})
       workerThread.join()
-      EventQueue.invokeLater(new Runnable { def run() {
-        progressDialog.close()
-      }})
     }
     catch {
       case e: InterruptedException => // ignore
       case e: Throwable            => Exceptions.handle(e)
     }
     finally { bailOut() }
+  }
+
+  def pause() {
+    paused = true
+    interrupt()
   }
 
   private def bailOut() {
@@ -175,7 +192,10 @@ class Supervisor(
         workspace.jobManager.haltSecondary()
         workspace.behaviorSpaceRunNumber(0)
         workspace.behaviorSpaceExperimentName("")
-        progressDialog.close()
+        if (paused)
+          progressDialog.disconnectSupervisor()
+        else
+          progressDialog.close()
       } } )
     headlessWorkspaces.foreach(_.dispose())
   }
