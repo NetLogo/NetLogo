@@ -4,6 +4,7 @@ package org.nlogo.lab.gui
 
 import org.nlogo.api.{Editable, Property}
 import org.nlogo.awt.UserCancelException
+import org.nlogo.core.{ I18N }
 import org.nlogo.window.EditDialogFactoryInterface
 import Supervisor.RunOptions
 
@@ -66,7 +67,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
   }
   def get = {
     val editable = new EditableRunOptions
-    if(dialogFactory.canceled(parent, editable))
+    if (dialogFactory.canceled(parent, editable))
       throw new UserCancelException
     val runOptions = editable.get
     Prefs.updateFrom(runOptions)
@@ -79,16 +80,17 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     var updatePlotsAndMonitors = Prefs.updatePlotsAndMonitors
     var threadCount = Prefs.updateThreadCount
     val classDisplayName = "Run options"
+
+    private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace.runoptions")
     val propertySet = {
       import scala.collection.JavaConverters._
       List(
-        Property("spreadsheet", Property.FilePath(spreadsheetFile), "Spreadsheet output"),
-        Property("table", Property.FilePath(tableFile), "Table output"),
-        Property("updateView", Property.Boolean, "Update view"),
-        Property("updatePlotsAndMonitors", Property.Boolean, "Update plots and monitors"),
-        Property("threadCount", Property.Integer, "Simultaneous runs in parallel",
-                 "<html>If more than one, some runs happen invisibly in the background." +
-                 "<br>Defaults to one per processor core.</html>")).asJava
+        Property("spreadsheet", Property.FilePath(spreadsheetFile), I18N.gui("spreadsheet")),
+        Property("table", Property.FilePath(tableFile), I18N.gui("table")),
+        Property("updateView", Property.Boolean, I18N.gui("updateview")),
+        Property("updatePlotsAndMonitors", Property.Boolean, I18N.gui("updateplotsandmonitors")),
+        Property("threadCount", Property.Integer, I18N.gui("simultaneousruns"),
+                 "<html>" + I18N.gui("simultaneousruns.info") + "</html>")).asJava
     }
     def get = RunOptions(threadCount, table, spreadsheet, updateView, updatePlotsAndMonitors)
     // boilerplate for Editable

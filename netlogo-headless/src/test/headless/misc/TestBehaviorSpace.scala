@@ -172,8 +172,11 @@ class TestBehaviorSpace extends AnyFunSuite
       .run(workspace, () => workspace, 1)
   }
   test("ModelWithIncludedExperiments", SlowTest.Tag) {
-    runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test1", "models/test/lab/FireWithExperiments1")
-    runExperimentFromModel("models/test/lab/FireWithExperiments.nlogo", "test2", "models/test/lab/FireWithExperiments2")
+    runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "test1", "test/lab/FireWithExperiments1")
+    runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "test2", "test/lab/FireWithExperiments2")
+    runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "test3", "test/lab/FireWithExperiments3")
+    runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "test4", "test/lab/FireWithExperiments4")
+    runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "test5", "test/lab/FireWithExperiments5")
   }
   test("ResizingWorld3", SlowTest.Tag) {
     runExperiment(View(dimensions = WorldDimensions(minPycor = 0, minPxcor = 0, maxPycor = 1, maxPxcor = 1)), "", "testResizingWorld3")

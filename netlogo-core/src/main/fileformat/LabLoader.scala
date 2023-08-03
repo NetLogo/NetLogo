@@ -85,11 +85,12 @@ class LabLoader(literalParser: LiteralParser) {
       readOptional("final"),
       element.getAttribute("repetitions").toInt,
       { val defaultOrder = element.getAttribute("sequentialRunOrder").toString
-        if(defaultOrder == "") true else defaultOrder == "true"  
+        if (defaultOrder == "") true else defaultOrder == "true"  
       },
       element.getAttribute("runMetricsEveryStep") == "true",
-      if(!exists("timeLimit")) 0 else readOneAttribute("timeLimit","steps").toInt,
-      if(!exists("exitCondition")) "" else readOptional("exitCondition"),
+      readOptional("runMetricsCondition"),
+      if (!exists("timeLimit")) 0 else readOneAttribute("timeLimit","steps").toInt,
+      if (!exists("exitCondition")) "" else readOptional("exitCondition"),
       readAll("metric"),
       valueSets)
   }

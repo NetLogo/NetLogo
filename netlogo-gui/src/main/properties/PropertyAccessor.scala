@@ -14,11 +14,14 @@ class PropertyAccessor[T : ClassTag](val target: Editable, val displayName: Stri
   def erasure = classTag[T].runtimeClass
 
   val setter: Method =
-    try target.getClass.getMethod(accessString, erasure)
+    try  {
+      target.getClass.getMethod(accessString, erasure)
+    }
     catch {
-      case ex: NoSuchMethodException =>
+      case ex: NoSuchMethodException => {
         // didn't find Java setter, look for Scala setter
         target.getClass.getMethod(accessString + "_$eq", erasure)
+      }
     }
 
   def get: T = getter.invoke(target).asInstanceOf[T]
@@ -29,7 +32,7 @@ class PropertyAccessor[T : ClassTag](val target: Editable, val displayName: Stri
 
   def error: Option[Exception] = {
     val e = target.error(accessString)
-    if( e == null ) None else Some(e)
+    if ( e == null ) None else Some(e)
   }
 
 }

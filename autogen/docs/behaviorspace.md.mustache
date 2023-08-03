@@ -166,10 +166,16 @@ If you don't enter any reporters, the runs will still take place. This is useful
 if you want to record the results yourself your own way, such as with the
 [[export-world|export-cmds]] command.
 
-**Measure runs at every step:** Normally NetLogo will measure model runs at
+**Run metrics every step:** Normally NetLogo will measure model runs at
 every step, using the reporters you entered in the previous box. If you're doing
 very long model runs, you might not want all that data. Uncheck this box if you
-only want to measure each run after it ends.
+want to either only measure model runs at the end of the run or 
+if you want to specify certain conditions when measurements should be taken.
+
+**Run metrics when:** This reporter will be used to determine when measurements
+should be recorded if they are not being recorded at every step. If no reporter
+is provided but runs are not measured at every step, measurements will be taken at
+the end of each model run.
 
 **Setup commands:** These commands will be used to begin each model run.
 Typically, you will enter the name of a procedure that sets up the model,
@@ -339,9 +345,8 @@ run later on by manually using that value to set the `random-seed`.
 After you complete the run options dialog, another dialog will appear, titled
 "Running Experiment". In this dialog, you'll see a progress report of how many
 runs have been completed so far and how much time has passed. If you entered any
-reporters for measuring the runs, and if you left the "Measure runs at every
-step" box checked, then you'll see a plot of how they vary over the course of
-each run.
+reporters for measuring the runs, and if you left the "Run metrics every step"
+box checked, then you'll see a plot of how they vary over the course of each run.
 
 You can also watch the runs in the main NetLogo window. (If the "Running
 Experiment" dialog is in the way, just move it to a different place on the

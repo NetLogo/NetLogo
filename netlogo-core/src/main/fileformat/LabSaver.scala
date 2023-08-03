@@ -59,19 +59,21 @@ object LabSaver {
                                ("repetitions", protocol.repetitions.toString),
                                ("sequentialRunOrder", protocol.sequentialRunOrder.toString),
                                ("runMetricsEveryStep", protocol.runMetricsEveryStep.toString)))
-    if(protocol.setupCommands.trim != "")
+    if (protocol.setupCommands.trim != "")
       element("setup", protocol.setupCommands)
-    if(protocol.goCommands.trim != "")
+    if (protocol.goCommands.trim != "")
       element("go", protocol.goCommands)
-    if(protocol.finalCommands.trim != "")
+    if (protocol.finalCommands.trim != "")
       element("final", protocol.finalCommands)
-    if(protocol.timeLimit != 0)
+    if (protocol.timeLimit != 0)
       elementWithAttributes("timeLimit",
                             attributes(("steps",protocol.timeLimit.toString)))
-    if(protocol.exitCondition != "")
+    if (protocol.exitCondition != "")
       element("exitCondition", protocol.exitCondition)
     for(metric <- protocol.metrics)
       element("metric", metric)
+    if (!protocol.runMetricsCondition.isEmpty)
+      element("runMetricsCondition", protocol.runMetricsCondition)
     for(valueSet <- protocol.valueSets)
       valueSet match {
         case steppedValueSet:SteppedValueSet =>

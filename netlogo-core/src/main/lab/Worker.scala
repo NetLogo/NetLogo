@@ -59,7 +59,7 @@ class Worker(val protocol: LabProtocol)
   // used in TestCompileAll, also used before the start of the
   // experiment in the GUI so if something doesn't compile we can fail early.
   def compile(w: Workspace) { new Procedures(w) }
-  def abort() { if(runners != null) runners.foreach(_.aborted = true) }
+  def abort() { if (runners != null) runners.foreach(_.aborted = true) }
   class Procedures(workspace: Workspace) {
     val setupProcedure = workspace.compileCommands(protocol.setupCommands)
     val goProcedure = workspace.compileCommands(protocol.goCommands
@@ -67,9 +67,13 @@ class Worker(val protocol: LabProtocol)
                                                 + "__experimentstepend")
     val finalProcedure = workspace.compileCommands(protocol.finalCommands)
     val exitProcedure =
-      if(protocol.exitCondition.trim == "") None
+      if (protocol.exitCondition.trim == "") None
       else Some(workspace.compileReporter(protocol.exitCondition))
     val metricProcedures = protocol.metrics.map(workspace.compileReporter(_))
+    val runMetricsConditionProcedure = {
+      if (protocol.runMetricsCondition.isEmpty) None
+      else Some(workspace.compileReporter(protocol.runMetricsCondition))
+    }
   }
   class Runner(runNumber: Int, settings: List[(String, AnyRef)], fn: ()=>Workspace)
     extends Callable[Unit]
@@ -86,16 +90,16 @@ class Worker(val protocol: LabProtocol)
     def call() {
       // not clear why this check would be necessary, but perhaps it will
       // keep bug #1203 from happening - ST 2/16/11
-      if(!aborted) {
+      if (!aborted) {
         val workspace = fn.apply
         try callHelper(workspace)
         catch { case t: Throwable =>
-          if(!aborted) eachListener(_.runtimeError(workspace, runNumber, t)) }
+          if (!aborted) eachListener(_.runtimeError(workspace, runNumber, t)) }
       }
     }
     def callHelper(ws: Workspace) {
       val procedures =
-        if(proceduresMap.containsKey(ws))
+        if (proceduresMap.containsKey(ws))
           proceduresMap.get(ws)
         else {
           val newProcedures = new Procedures(ws)
@@ -107,7 +111,7 @@ class Worker(val protocol: LabProtocol)
         val world = ws.world
         var d = world.getDimensions
         for((name, value) <- settings) {
-          if(world.isDimensionVariable(name)) {
+          if (world.isDimensionVariable(name)) {
             val v = value.asInstanceOf[java.lang.Double].intValue
             try { d = world.setDimensionVariable(name, v, d) }
             catch {
@@ -115,14 +119,14 @@ class Worker(val protocol: LabProtocol)
                 throw new FailedException("You cannot set " + name + " to " + v)
             }
           }
-          else if(name.equalsIgnoreCase("RANDOM-SEED"))
+          else if (name.equalsIgnoreCase("RANDOM-SEED"))
             ws.world.mainRNG.setSeed(value.asInstanceOf[java.lang.Double].longValue)
         }
-        if(!world.equalDimensions(d)) ws.setDimensions(d)
+        if (!world.equalDimensions(d)) ws.setDimensions(d)
         for((name, value) <- settings)
-          if(!world.isDimensionVariable(name) && !name.equalsIgnoreCase("RANDOM-SEED"))
+          if (!world.isDimensionVariable(name) && !name.equalsIgnoreCase("RANDOM-SEED"))
             ws.world.synchronized {
-              if(ws.world.observerOwnsIndexOf(name.toUpperCase) == -1)
+              if (ws.world.observerOwnsIndexOf(name.toUpperCase) == -1)
                 throw new FailedException(
                   "Global variable does not exist:\n" + name)
               ws.world.setObserverVariableByName(name, value)
@@ -147,18 +151,42 @@ class Worker(val protocol: LabProtocol)
                   Dump.typeName(result) + " " + Dump.logoObject(result))
             }
         }
-      def takeMeasurements(): List[AnyRef] =
+      // Runs runMetricsCondition if it exists, and returns false if it doesn't
+      def shouldTakeMeasurements(): Boolean = {
+        runMetricsConditionProcedure match {
+          case None => false
+          case Some(procedure) => 
+            ws.runCompiledReporter(owner(ws.world.mainRNG.clone), procedure) match {
+              case t: Throwable => {
+                throw new FailedException("Metrics condition reporter encountered an error: " + t)
+              }
+              case b: java.lang.Boolean =>
+                b.booleanValue
+              case null =>
+                throw new FailedException(
+                  "Metrics condition reporter failed to report a result:\n" +
+                  protocol.runMetricsCondition)
+              case result: AnyRef =>
+                throw new FailedException(
+                  "Metrics condition should report true or false, but instead reported the " +
+                  Dump.typeName(result) + " " + Dump.logoObject(result))
+            }
+          }
+        }
+
+      def takeMeasurements(): List[AnyRef] = {
         metricProcedures.map{proc =>
           val result = ws.runCompiledReporter(owner(ws.world.mainRNG.clone), proc)
-          if(result == null)
+          if (result == null)
             throw new FailedException(
               "Reporter for measuring runs failed to report a result:\n" + result)
           result }
+        }
       def checkForRuntimeError() {
-        if(ws.lastLogoException != null) {
+        if (ws.lastLogoException != null) {
           val ex = ws.lastLogoException
           ws.clearLastLogoException()
-          if(!aborted)
+          if (!aborted)
             eachListener(_.runtimeError(ws, runNumber, ex))
         }
       }
@@ -168,7 +196,8 @@ class Worker(val protocol: LabProtocol)
       eachListener(_.runStarted(ws, runNumber, settings))
       ws.runCompiledCommands(owner(ws.world.mainRNG), setupProcedure)
       checkForRuntimeError()
-      if(protocol.runMetricsEveryStep && listeners.nonEmpty) {
+
+      if (protocol.runMetricsEveryStep && listeners.nonEmpty) {
         val m = takeMeasurements()
         eachListener(_.measurementsTaken(ws, runNumber, 0, m))
         checkForRuntimeError()
@@ -180,15 +209,15 @@ class Worker(val protocol: LabProtocol)
         checkForRuntimeError()
         steps += 1
         eachListener(_.stepCompleted(ws, steps))
-        if(protocol.runMetricsEveryStep && listeners.nonEmpty) {
+        if ((protocol.runMetricsEveryStep || shouldTakeMeasurements()) && listeners.nonEmpty) {
           val m = takeMeasurements()
           eachListener(_.measurementsTaken(ws, runNumber, steps, m))
           checkForRuntimeError()
         }
         ws.updateDisplay(false)
-        if(aborted) return
+        if (aborted) return
       }
-      if(!protocol.runMetricsEveryStep && listeners.nonEmpty) {
+      if (!protocol.runMetricsEveryStep && protocol.runMetricsCondition.isEmpty && listeners.nonEmpty) {
         val m = takeMeasurements()
         eachListener(_.measurementsTaken(ws, runNumber, steps, m))
         checkForRuntimeError()
