@@ -49,7 +49,13 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog,
   // initialization code above.  Two cheers for Scala. - ST 11/12/08
 
   lazy val pauseAction = RichAction("Pause") { _ =>
-    supervisor.pause()
+    if (!supervisor.paused)
+      supervisor.pause()
+      pause()
+  }
+  def pause(): Unit = {
+    pauseAction.setEnabled(false)
+    abortAction.setEnabled(false)
   }
   lazy val resumeAction = RichAction("Resume") { _ =>
     newSupervisor(protocol, options)
@@ -174,6 +180,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog,
     pauseAction.setEnabled(true)
     resumeAction.setEnabled(false)
     saveAction.setEnabled(false)
+    abortAction.setEnabled(true)
   }
 
   def disconnectSupervisor(): Unit = {
@@ -182,7 +189,6 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog,
     supervisor = null
     previousTime += System.currentTimeMillis - started
     timer.stop()
-    pauseAction.setEnabled(false)
     resumeAction.setEnabled(true)
     saveAction.setEnabled(true)
   }
