@@ -27,12 +27,7 @@ class Worker(val protocol: LabProtocol)
   // we only want to compile stuff once per workspace, so use this
   // (should use a Scala collection not a Java one, but oh well, too lazy today - ST 8/13/09)
   val proceduresMap = new java.util.WeakHashMap[Workspace, Procedures]
-  def run(initialWorkspace: Workspace, fn: ()=>Workspace, threads: Int) {
-    val globals = initialWorkspace.world.program.interfaceGlobals
-    val initialState = collection.mutable.Map[String, AnyRef]()
-    for (g <- globals) {
-      initialState(g) = initialWorkspace.world.getObserverVariableByName(g)
-    }
+  def run(initialWorkspace: Workspace, fn: ()=>Option[Workspace], threads: Int) {
     val executor = Executors.newFixedThreadPool(threads)
     try {
       listeners.foreach(_.experimentStarted())
@@ -83,7 +78,7 @@ class Worker(val protocol: LabProtocol)
       else Some(workspace.compileReporter(protocol.runMetricsCondition))
     }
   }
-  class Runner(runNumber: Int, settings: List[(String, AnyRef)], fn: ()=>Workspace)
+  class Runner(runNumber: Int, settings: List[(String, AnyRef)], fn: ()=>Option[Workspace])
     extends Callable[Unit]
   {
     class FailedException(message: String) extends LogoException(message)
@@ -100,9 +95,11 @@ class Worker(val protocol: LabProtocol)
       // keep bug #1203 from happening - ST 2/16/11
       if (!aborted) {
         val workspace = fn.apply
-        try callHelper(workspace)
-        catch { case t: Throwable =>
-          if (!aborted) eachListener(_.runtimeError(workspace, runNumber, t)) }
+        if (workspace.isDefined) {
+          try callHelper(workspace.get)
+          catch { case t: Throwable =>
+            if (!aborted) eachListener(_.runtimeError(workspace.get, runNumber, t)) }
+        }
       }
     }
     def callHelper(ws: Workspace) {

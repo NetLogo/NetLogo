@@ -43,7 +43,7 @@ class Supervisor(
         completed += runNumber
         while (completed.contains(highestCompleted + 1))
           highestCompleted += 1
-        queue.synchronized { queue.enqueue(w) }
+        queue.synchronized { if (!paused) queue.enqueue(w) }
       }
       override def runtimeError(w: Workspace, runNumber: Int, e: Throwable) {
         e match {
@@ -61,10 +61,11 @@ class Supervisor(
         Exceptions.handle(e)
       }}
   var paused = false
+  var aborted = false
 
   progressDialog.connectSupervisor(this)
 
-  def nextWorkspace = queue.synchronized { queue.dequeue() }
+  def nextWorkspace = queue.synchronized { if (queue.isEmpty) None else Some(queue.dequeue()) }
   val runnable = new Runnable { override def run() {
     worker.run(workspace, nextWorkspace _, options.threadCount)
   } }
@@ -172,6 +173,10 @@ class Supervisor(
 
   def pause() {
     paused = true
+  }
+
+  def abort() {
+    aborted = true
     interrupt()
   }
 
@@ -192,10 +197,13 @@ class Supervisor(
         workspace.jobManager.haltSecondary()
         workspace.behaviorSpaceRunNumber(0)
         workspace.behaviorSpaceExperimentName("")
-        if (paused)
-          progressDialog.disconnectSupervisor()
-        else
+        progressDialog.disconnectSupervisor()
+        if (aborted) {
+          progressDialog.promptSave()
+        }
+        else if (!paused) {
           progressDialog.close()
+        }
       } } )
     headlessWorkspaces.foreach(_.dispose())
   }

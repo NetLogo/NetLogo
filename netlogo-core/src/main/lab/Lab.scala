@@ -11,12 +11,12 @@ import org.nlogo.nvm.{EngineException,LabInterface,Workspace}
 class Lab extends LabInterface {
   def newWorker(protocol: LabProtocol) =
     new Worker(protocol)
-  def run(settings: LabInterface.Settings, protocol: LabProtocol, fn: ()=>Workspace) {
+  def run(settings: LabInterface.Settings, protocol: LabProtocol, fn: ()=>Option[Workspace]) {
     import settings._
     // pool of workspaces, same size as thread pool
     val workspaces = (1 to threads).map(_ => fn.apply).toList
     val queue = new collection.mutable.Queue[Workspace]
-    workspaces.foreach(queue.enqueue(_))
+    workspaces.foreach(x => queue.enqueue(x.get))
     try {
       queue.foreach(w => dims.foreach(w.setDimensions _))
       def modelDims = queue.head.world.getDimensions
@@ -45,9 +45,9 @@ class Lab extends LabInterface {
                   t.printStackTrace(System.err)
               }
           } } )
-      def nextWorkspace = queue.synchronized { queue.dequeue() }
-      worker.run(workspaces.head, nextWorkspace _, threads)
+      def nextWorkspace = queue.synchronized { Some(queue.dequeue()) }
+      worker.run(workspaces.head.get, nextWorkspace _, threads)
     }
-    finally { workspaces.foreach(_.dispose()) }
+    finally { workspaces.foreach(_.get.dispose()) }
   }
 }

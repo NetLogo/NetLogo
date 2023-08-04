@@ -3,7 +3,7 @@
 package org.nlogo.lab.gui
 
 import org.nlogo.api.LabProtocol
-import org.nlogo.swing.RichAction
+import org.nlogo.swing.{ RichAction, OptionDialog }
 import org.nlogo.nvm.Workspace
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.window.{ PlotWidget, SpeedSliderPanel, GUIWorkspace }
@@ -15,7 +15,7 @@ import org.nlogo.plot.DummyPlotManager
 
 private [gui] class ProgressDialog(dialog: java.awt.Dialog,
                                    createSupervisor: (LabProtocol, Supervisor.RunOptions) => Supervisor,
-                                   savePartial: (LabProtocol) => Unit)
+                                   savePartial: (LabProtocol, Supervisor.RunOptions) => Unit)
               extends JDialog(dialog, true) with ProgressListener{
   var supervisor: Supervisor = null
   var protocol: LabProtocol = null
@@ -55,11 +55,10 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog,
     newSupervisor(protocol, options)
   }
   lazy val saveAction = RichAction("Save Progress") { _ =>
-    close()
+    promptSave()
   }
   lazy val abortAction = RichAction("Abort") { _ =>
-    supervisor.interrupt()
-    close()
+    supervisor.abort()
   }
   lazy val periodicUpdateAction = RichAction("update elapsed time") { _ =>
     updateProgressArea(false)
@@ -188,6 +187,14 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog,
     saveAction.setEnabled(true)
   }
 
+  def promptSave(): Unit = {
+    OptionDialog.showMessage(this, "Save Progress", "Would you like to save this experiment's progress?", Array[String]("Save", "Discard" )) match {
+      case 0 => savePartial(protocol, options)
+      case _ => savePartial(protocol.copy(runsCompleted = 0), null)
+    }
+    close()
+  }
+
   def updateView(check: Boolean): Unit = {
     displaySwitch.setSelected(check)
     workspace.displaySwitchOn(check)
@@ -211,10 +218,6 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog,
   }
 
   def close() {
-    if (protocol.runsCompleted >= protocol.countRuns)
-      savePartial(protocol.copy(runsCompleted = 0))
-    else
-      savePartial(protocol)
     timer.stop()
     setVisible(false)
     dispose()
