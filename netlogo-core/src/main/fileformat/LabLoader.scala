@@ -108,14 +108,6 @@ class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existi
       }
       existingNames += name
     }
-    var name = element.getAttribute("name")
-    if (existingNames.contains(name))
-    {
-      var n = 1
-      while (existingNames.contains(s"$name-$n")) n += 1
-      name = s"$name-$n"
-    }
-    existingNames += name
     new LabProtocol(
       name,
       readOptional("setup"),
