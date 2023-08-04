@@ -10,7 +10,7 @@ import java.io.{ FileWriter, IOException, PrintWriter }
 import org.nlogo.api.{ Exceptions, LabProtocol, LogoException, PlotCompilationErrorAction }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ CompilerException, I18N }
-import org.nlogo.lab.{ Exporter, SpreadsheetExporter, TableExporter, Worker }
+import org.nlogo.lab.{ Exporter, PartialData, SpreadsheetExporter, TableExporter, Worker }
 import org.nlogo.nvm.{ EngineException, Workspace }
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.swing.{ OptionDialog }
@@ -35,7 +35,7 @@ class Supervisor(
   val headlessWorkspaces = new ListBuffer[Workspace]
   val queue = new collection.mutable.Queue[Workspace]
   val completed = Set[Int]()
-  var highestCompleted = 0 max protocol.runsCompleted
+  var highestCompleted = protocol.runsCompleted
   val worker = new Worker(protocol)
   val listener =
     new ProgressListener {
@@ -102,11 +102,42 @@ class Supervisor(
     if (options.spreadsheet != null && options.spreadsheet.trim() != "") {
       val fileName = options.spreadsheet.trim()
       try {
+        val partialData = new PartialData
+        if (highestCompleted > 0) {
+          var data = scala.io.Source.fromFile(fileName).getLines().drop(6).toList
+          partialData.runNumbers = ',' + data.head.split(",", 2)(1)
+          data = data.tail
+          while (!data.head.contains("[")) {
+            partialData.variables = partialData.variables :+ ',' + data.head.split(",", 2)(1)
+            data = data.tail
+          }
+          if (data.head.contains("[reporter]")) {
+            partialData.reporters = ',' + data.head.split(",", 2)(1)
+            data = data.tail
+            partialData.finals =  ',' + data.head.split(",", 2)(1)
+            data = data.tail
+            partialData.mins = ',' + data.head.split(",", 2)(1)
+            data = data.tail
+            partialData.maxes = ',' + data.head.split(",", 2)(1)
+            data = data.tail
+            partialData.means = ',' + data.head.split(",", 2)(1)
+            data = data.tail
+          }
+          partialData.steps = ',' + data.head.split(",", 2)(1)
+          data = data.tail.tail
+          partialData.dataHeaders = ',' + data.head.split(",", 2)(1)
+          data = data.tail
+          while (data != Nil) {
+            partialData.data = partialData.data :+ data.head
+            data = data.tail
+          }
+        }
         addExporter(new SpreadsheetExporter(
           workspace.getModelFileName,
           workspace.world.getDimensions,
           worker.protocol,
-          new PrintWriter(new FileWriter(fileName, highestCompleted > 0))))
+          new PrintWriter(new FileWriter(fileName)),
+          partialData))
 	    } catch {
 		    case e: IOException =>
           failure(e)
@@ -120,7 +151,7 @@ class Supervisor(
           workspace.getModelFileName,
           workspace.world.getDimensions,
           worker.protocol,
-          new PrintWriter(new FileWriter(fileName, highestCompleted > 0))))
+          new PrintWriter(new FileWriter(fileName))))
 	    } catch {
 		    case e: IOException =>
           failure(e)

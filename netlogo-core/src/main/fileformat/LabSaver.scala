@@ -107,7 +107,7 @@ object LabSaver {
       hd.endElement("", "", "subExperiment")
     }
     if (protocol.runsCompleted != 0)
-      hd.element("runsCompleted", protocol.runsCompleted)
+      element("runsCompleted", protocol.runsCompleted.toString)
     hd.endElement("", "", "experiment")
   }
 }

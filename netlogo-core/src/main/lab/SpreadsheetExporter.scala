@@ -6,6 +6,8 @@ import org.nlogo.api.{ LabProtocol, ValueList, TupleList }
 import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.Workspace
 
+import scala.collection.mutable.Seq
+
 // Currently this class contains two kinds of code: code for remembering run data in memory using
 // Run objects, and code for generating spreadsheet data from those Run objects.  Both kinds of code
 // are here because currently we only have one output format that needs to store run data.  If we
@@ -15,7 +17,8 @@ import org.nlogo.nvm.Workspace
 class SpreadsheetExporter(modelFileName: String,
                           initialDims: WorldDimensions,
                           protocol: LabProtocol,
-                          out: java.io.PrintWriter)
+                          out: java.io.PrintWriter,
+                          partialData: PartialData = new PartialData)
   extends Exporter(modelFileName, initialDims, protocol, out)
 {
   val runs = new collection.mutable.HashMap[Int,Run]
@@ -59,6 +62,7 @@ class SpreadsheetExporter(modelFileName: String,
     // first output run numbers, like this:
     // "[run number]","1","2","3"
     out.print(csv.header("[run number]"))
+    out.print(partialData.runNumbers)
     for(runNumber <- runNumbers)
       out.print(List.fill(1 max protocol.metrics.length)(csv.number(runNumber))
                     .mkString(",", ",", ""))
@@ -69,20 +73,24 @@ class SpreadsheetExporter(modelFileName: String,
     // "bgcolor","79.0","79.0","79.0"
     protocol.parameterSets match {
       case ValueList(list) =>
+        var i = 0
         for(v <- list.map(_.variableName)) {
-          out.print(csv.header(v) + ",")
+          out.print(csv.header(v) + partialData.variables(i) + ",")
           foreachRun((run,metricNumber) =>
             if (metricNumber == 0)
               Some(run.settings.find(_._1 == v).get._2)
             else None)
+          i += 1
         }
       case TupleList(list) =>
+        var i = 0
         for (v <- list(0).values.map(_._1)) {
-          out.print(csv.header(v) + ",")
+          out.print(csv.header(v) + partialData.variables(i) + ",")
           foreachRun((run, metricNumber) =>
             if (metricNumber == 0)
               Some(run.settings.find(_._1 == v).get._2)
             else None)
+          i += 1
         }
     }
     // now output summary information, like this:
@@ -94,23 +102,29 @@ class SpreadsheetExporter(modelFileName: String,
     // "[steps]","20","20","20"
     if ((protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) && !protocol.metrics.isEmpty) {
       out.print(csv.header("[reporter]"))
+      out.print(partialData.reporters)
       for(_ <- runs; metric <- protocol.metrics)
         out.print("," + csv.header(metric))
       out.println()
-      out.print(csv.header("[final]") + ",")
+      out.print(csv.header("[final]"))
+      out.print(partialData.finals + ',')
       foreachRun((run, metricNumber) =>
         Some(run.lastMeasurement(metricNumber)))
-      out.print(csv.header("[min]") + ",")
+      out.print(csv.header("[min]"))
+      out.print(partialData.mins + ',')
       foreachRun((run, metricNumber) =>
         run.minMeasurement(metricNumber))
-      out.print(csv.header("[max]") + ",")
+      out.print(csv.header("[max]"))
+      out.print(partialData.maxes + ',')
       foreachRun((run, metricNumber) =>
         run.maxMeasurement(metricNumber))
-      out.print(csv.header("[mean]") + ",")
+      out.print(csv.header("[mean]"))
+      out.print(partialData.means + ',')
       foreachRun((run, metricNumber) =>
         run.meanMeasurement(metricNumber))
     }
-    out.print(csv.header("[steps]") + ",")
+    out.print(csv.header("[steps]"))
+    out.print(partialData.steps + ',')
     foreachRun((run,metricNumber) =>
       Some(Int.box(run.steps)))
   }
@@ -125,6 +139,7 @@ class SpreadsheetExporter(modelFileName: String,
     out.println()
     out.print(csv.header(if (protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) "[all run data]"
                               else "[initial & final values]"))
+    out.print(partialData.dataHeaders)
     for(_ <- runs; metric <- protocol.metrics)
       out.print(',' + csv.header(metric))
     out.println()
@@ -140,6 +155,8 @@ class SpreadsheetExporter(modelFileName: String,
 
     // now actually generate the rows
     for(i <- 0 to mostMeasurements) {
+      if (!partialData.data.isEmpty)
+        out.print(partialData.data(i))
       out.print(",")
       foreachRun((run,metricNumber) =>
         if (protocol.runMetricsEveryStep && i > run.steps) None
@@ -183,4 +200,17 @@ class SpreadsheetExporter(modelFileName: String,
         .filter(_.size == measurements.size)
         .map(_.sum / measurements.size)
   }
+}
+
+class PartialData {
+  var runNumbers: String = ""
+  var variables: Seq[String] = Seq[String]()
+  var reporters: String = ""
+  var finals: String = ""
+  var mins: String = ""
+  var maxes: String = ""
+  var means: String = ""
+  var steps: String = ""
+  var dataHeaders: String = ""
+  var data: Seq[String] = Seq[String]()
 }
