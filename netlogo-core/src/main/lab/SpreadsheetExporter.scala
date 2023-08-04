@@ -6,6 +6,8 @@ import org.nlogo.api.{ LabProtocol, ValueList, TupleList }
 import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.Workspace
 
+import scala.collection.mutable.Seq
+
 // Currently this class contains two kinds of code: code for remembering run data in memory using
 // Run objects, and code for generating spreadsheet data from those Run objects.  Both kinds of code
 // are here because currently we only have one output format that needs to store run data.  If we
@@ -142,7 +144,7 @@ class SpreadsheetExporter(modelFileName: String,
 
     // now actually generate the rows
     for(i <- 0 to mostMeasurements) {
-      if (partialData.data.length > 0)
+      if (!partialData.data.isEmpty)
         out.print(partialData.data(i))
       out.print(",")
       foreachRun((run,metricNumber) =>
