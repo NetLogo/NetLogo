@@ -75,7 +75,7 @@ class SpreadsheetExporter(modelFileName: String,
       case ValueList(list) =>
         var i = 0
         for(v <- list.map(_.variableName)) {
-          out.print(csv.header(v) + partialData.variables(i) + ",")
+          out.print(csv.header(v) + (if (partialData.variables.isEmpty) "" else partialData.variables(i)) + ",")
           foreachRun((run,metricNumber) =>
             if (metricNumber == 0)
               Some(run.settings.find(_._1 == v).get._2)
@@ -85,7 +85,7 @@ class SpreadsheetExporter(modelFileName: String,
       case TupleList(list) =>
         var i = 0
         for (v <- list(0).values.map(_._1)) {
-          out.print(csv.header(v) + partialData.variables(i) + ",")
+          out.print(csv.header(v) + (if (partialData.variables.isEmpty) "" else partialData.variables(i)) + ",")
           foreachRun((run, metricNumber) =>
             if (metricNumber == 0)
               Some(run.settings.find(_._1 == v).get._2)
