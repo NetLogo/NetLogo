@@ -3,7 +3,7 @@
 package org.nlogo.lab.gui
 
 import org.nlogo.api.LabProtocol
-import org.nlogo.swing.RichAction
+import org.nlogo.swing.{ RichAction, OptionDialog }
 import org.nlogo.nvm.Workspace
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.window.{ PlotWidget, SpeedSliderPanel, GUIWorkspace }
@@ -143,6 +143,14 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     saveProtocol(protocol.copy(runsCompleted = 0, runOptions = null))
   }
 
+  def promptSave(): Unit = {
+    OptionDialog.showMessage(this, "Save Progress", "Would you like to save this experiment's progress?", Array[String]("Save", "Discard" )) match {
+      case 0 => savePartial(protocol, options)
+      case _ => savePartial(protocol.copy(runsCompleted = 0), null)
+    }
+    close()
+  }
+
   def updateView(check: Boolean): Unit = {
     displaySwitch.setSelected(check)
     workspace.displaySwitchOn(check)
@@ -166,10 +174,6 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   }
 
   def close() {
-    if (protocol.runsCompleted >= protocol.countRuns)
-      savePartial(protocol.copy(runsCompleted = 0))
-    else
-      savePartial(protocol)
     timer.stop()
     setVisible(false)
     dispose()

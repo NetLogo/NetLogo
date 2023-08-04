@@ -10,7 +10,7 @@ object LabInterface {
     def addListener(l: ProgressListener)
     def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter)
     def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter)
-    def run(testWorkspace: Workspace, fn: ()=>Workspace, threads: Int)
+    def run(testWorkspace: Workspace, fn: ()=>Option[Workspace], threads: Int)
     def compile(w: Workspace) // only for testing purposes
   }
   trait ProgressListener {
@@ -35,5 +35,5 @@ object LabInterface {
 trait LabInterface {
   import LabInterface._
   def newWorker(protocol: LabProtocol): Worker
-  def run(settings: Settings, protocol: LabProtocol, fn: ()=>Workspace)
+  def run(settings: Settings, protocol: LabProtocol, fn: ()=>Option[Workspace])
 }
