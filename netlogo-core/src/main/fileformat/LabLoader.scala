@@ -11,6 +11,7 @@ import scala.collection.mutable.Set
 import scala.language.implicitConversions
 
 object LabLoader {
+  val XMLVER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
   val DOCTYPE = "<!DOCTYPE experiments SYSTEM \"behaviorspace.dtd\">"
 }
 

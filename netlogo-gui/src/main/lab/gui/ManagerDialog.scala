@@ -211,7 +211,7 @@ private class ManagerDialog(manager:       LabManager,
 
       val out = new java.io.PrintWriter(path)
 
-      out.write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE experiments SYSTEM \"behaviorspace.dtd\">\n")
+      out.write(s"${LabLoader.XMLVER}\n${LabLoader.DOCTYPE}\n")
       out.write(LabSaver.save(indices.map(manager.protocols(_))))
 
       out.close()
