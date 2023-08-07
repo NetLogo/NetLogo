@@ -3,7 +3,7 @@
 package org.nlogo.lab.gui
 
 import org.nlogo.api.LabProtocol
-import org.nlogo.swing.{ RichAction, OptionDialog }
+import org.nlogo.swing.RichAction
 import org.nlogo.nvm.Workspace
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.window.{ PlotWidget, SpeedSliderPanel, GUIWorkspace }
@@ -12,9 +12,9 @@ import javax.swing._
 import java.awt.Dimension
 import org.nlogo.api.{PeriodicUpdateDelay, Dump, ValueList, TupleList}
 import org.nlogo.plot.DummyPlotManager
+import java.awt.GridBagConstraints
 
 private [gui] class ProgressDialog(dialog: java.awt.Dialog,
-                                   createSupervisor: (LabProtocol, Supervisor.RunOptions) => Supervisor,
                                    savePartial: (LabProtocol, Supervisor.RunOptions) => Unit)
               extends JDialog(dialog, true) with ProgressListener{
   var supervisor: Supervisor = null
@@ -54,14 +54,16 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog,
       pause()
   }
   def pause(): Unit = {
-    pauseAction.setEnabled(false)
-    abortAction.setEnabled(false)
-  }
-  lazy val resumeAction = RichAction("Resume") { _ =>
-    newSupervisor(protocol, options)
-  }
-  lazy val saveAction = RichAction("Save Progress") { _ =>
-    promptSave()
+    val dialog = new JDialog(this, "Pausing", true)
+    dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
+    val layout = new java.awt.GridBagLayout()
+    dialog.getContentPane().setLayout(layout)
+    val c = new GridBagConstraints()
+    c.insets = new java.awt.Insets(20, 20, 20, 20)
+    dialog.getContentPane().add(new JLabel("Waiting for current runs to finish...", SwingConstants.CENTER), c)
+    dialog.pack()
+    org.nlogo.awt.Positioning.center(dialog, this)
+    dialog.setVisible(true)
   }
   lazy val abortAction = RichAction("Abort") { _ =>
     supervisor.abort()
@@ -80,12 +82,6 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog,
       workspace.setPeriodicUpdatesEnabled(false)
       workspace.jobManager.finishSecondaryJobs(null)
     }
-  }
-
-  def newSupervisor(protocol: LabProtocol, options: Supervisor.RunOptions = null): Unit = {
-    connectSupervisor(createSupervisor(protocol, options))
-
-    supervisor.start()
   }
 
   def connectSupervisor(supervisor: Supervisor): Unit = {
@@ -162,8 +158,6 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog,
     val buttonPanel = new JPanel
 
     buttonPanel.add(new JButton(pauseAction))
-    buttonPanel.add(new JButton(resumeAction))
-    buttonPanel.add(new JButton(saveAction))
     buttonPanel.add(new JButton(abortAction))
 
     c.fill = java.awt.GridBagConstraints.NONE
@@ -178,27 +172,21 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog,
     org.nlogo.awt.Positioning.center(this, dialog)
 
     pauseAction.setEnabled(true)
-    resumeAction.setEnabled(false)
-    saveAction.setEnabled(false)
     abortAction.setEnabled(true)
   }
 
   def disconnectSupervisor(): Unit = {
-    protocol = protocol.copy(runsCompleted = supervisor.highestCompleted)
-    options = supervisor.options
     supervisor = null
     previousTime += System.currentTimeMillis - started
     timer.stop()
-    resumeAction.setEnabled(true)
-    saveAction.setEnabled(true)
   }
 
-  def promptSave(): Unit = {
-    OptionDialog.showMessage(this, "Save Progress", "Would you like to save this experiment's progress?", Array[String]("Save", "Discard" )) match {
-      case 0 => savePartial(protocol, options)
-      case _ => savePartial(protocol.copy(runsCompleted = 0), null)
-    }
-    close()
+  def saveProtocol(): Unit = {
+    savePartial(protocol.copy(runsCompleted = supervisor.highestCompleted), supervisor.options)
+  }
+
+  def resetProtocol(): Unit = {
+    savePartial(protocol.copy(runsCompleted = 0), null)
   }
 
   def updateView(check: Boolean): Unit = {

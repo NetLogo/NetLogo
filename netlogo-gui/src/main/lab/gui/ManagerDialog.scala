@@ -18,7 +18,6 @@ private class ManagerDialog(manager:       LabManager,
   with javax.swing.event.ListSelectionListener
 {
   private var runOptions: Supervisor.RunOptions = null
-  def createSupervisor(protocol: LabProtocol, options: Supervisor.RunOptions = null): Supervisor = new Supervisor(this, manager.workspace, protocol, manager.workspaceFactory, dialogFactory, progressDialog, options)
   def savePartial(protocol: LabProtocol, options: Supervisor.RunOptions): Unit = {
     manager.protocols(selectedIndex) = protocol
     update()
@@ -26,7 +25,6 @@ private class ManagerDialog(manager:       LabManager,
     manager.dirty()
     runOptions = options
   }
-  private val progressDialog = new ProgressDialog(this, createSupervisor, savePartial)
   private val jlist = new JList[LabProtocol]
   private val listModel = new javax.swing.DefaultListModel[LabProtocol]
   private implicit val i18NPrefix = I18N.Prefix("tools.behaviorSpace")
@@ -119,8 +117,8 @@ private class ManagerDialog(manager:       LabManager,
   private def run(): Unit = {
     try {
       manager.prepareForRun()
-      
-      progressDialog.newSupervisor(selectedProtocol, runOptions)
+
+      new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory, new ProgressDialog(this, savePartial), runOptions).start()
     }
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(ex) }
   }

@@ -228,13 +228,12 @@ class Supervisor(
         workspace.jobManager.haltSecondary()
         workspace.behaviorSpaceRunNumber(0)
         workspace.behaviorSpaceExperimentName("")
+        if (paused)
+          progressDialog.saveProtocol()
+        else
+          progressDialog.resetProtocol()
         progressDialog.disconnectSupervisor()
-        if (aborted) {
-          progressDialog.promptSave()
-        }
-        else if (!paused) {
-          progressDialog.close()
-        }
+        progressDialog.close()
       } } )
     headlessWorkspaces.foreach(_.dispose())
   }
