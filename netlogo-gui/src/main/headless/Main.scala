@@ -51,6 +51,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       w.setPlotCompilationErrorAction(plotCompilationErrorAction)
       w.open(settings.modelPath)
       plotCompilationErrorAction = PlotCompilationErrorAction.Ignore
+      w.shouldUpdatePlots = settings.updatePlots
       w
     }
 
@@ -95,6 +96,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var spreadsheetWriter: Option[PrintWriter] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
+    var updatePlots = false
     val it = args.iterator
 
     def die(msg: String) {
@@ -189,6 +191,8 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       } else if (arg == "--suppress-errors") {
         suppressErrors = true
 
+      } else if (arg == "--update-plots") {
+        updatePlots = true
       } else {
         die("unknown argument: " + arg)
       }
@@ -227,6 +231,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     , dims
     , threads
     , suppressErrors
+    , updatePlots
     ))
   }
 }

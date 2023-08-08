@@ -49,6 +49,8 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
 
   override def getLibraryManager = libraryManager
 
+  var shouldUpdatePlots = false
+
   // the original instruction here is _tick or a ScalaInstruction (currently still experimental)
   // it is only ever used if we need to generate an EngineException
   // the version of EngineException that takes an instruction is to be *very strongly* preferred.
@@ -60,7 +62,7 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
       throw new RuntimePrimitiveException(context, originalInstruction,
         "The tick counter has not been started yet. Use RESET-TICKS.")
     world.tickCounter.tick()
-    if (!isHeadless) updatePlots(context)
+    if (shouldUpdatePlots) updatePlots(context)
     requestDisplayUpdate(true)
   }
 
