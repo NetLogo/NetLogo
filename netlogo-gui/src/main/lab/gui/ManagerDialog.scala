@@ -197,7 +197,7 @@ private class ManagerDialog(manager:       LabManager,
     try {
       val indices = jlist.getSelectedIndices
 
-      var path = FileDialog.showFiles(manager.workspace.getFrame, I18N.gui("export.dialog"), java.awt.FileDialog.SAVE, 
+      var path = FileDialog.showFiles(manager.workspace.getFrame, I18N.gui("export.dialog"), java.awt.FileDialog.SAVE,
                   if (indices.length == 1)
                     selectedProtocol.name + "-experiment.xml"
                   else if (manager.workspace.getModelFileName == null)
