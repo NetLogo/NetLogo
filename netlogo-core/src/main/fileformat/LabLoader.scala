@@ -45,6 +45,7 @@ class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existi
     builder.parse(inputSource)
       .getElementsByTagName("experiment")
       .map(readProtocolElement)
+      .map(fixEmptyNames)
   }
 
   def readProtocolElement(element: dom.Element): LabProtocol = {
@@ -81,15 +82,12 @@ class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existi
       yield valueSet
     }
     var name = element.getAttribute("name")
-    if (editNames) {
-      if (name.isEmpty) {
-        name = "no-name"
-      }
+    if (editNames && !name.isEmpty) {
       if (existingNames.contains(name))
       {
         var n = 1
-        while (existingNames.contains(s"$name-$n")) n += 1
-        name = s"$name-$n"
+        while (existingNames.contains(s"$name ($n)")) n += 1
+        name = s"$name ($n)"
       }
       existingNames += name
     }
@@ -109,6 +107,17 @@ class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existi
       readAll("metric"),
       valueSets)
   }
+
+  def fixEmptyNames(protocol: LabProtocol): LabProtocol = {
+    if (editNames && protocol.name.isEmpty && existingNames.contains("no name")) {
+      var n = 1
+      while (existingNames.contains(s"no name ($n)")) n += 1
+      existingNames += s"no name ($n)"
+      return protocol.copy(name = s"no name ($n)")
+    }
+    protocol
+  }
+
   // implicits to keep the code from getting too verbose
   implicit def nodes2list(nodes: dom.NodeList): List[dom.Element] =
     (0 until nodes.getLength)
