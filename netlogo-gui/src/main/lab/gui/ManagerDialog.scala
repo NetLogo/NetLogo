@@ -175,14 +175,20 @@ private class ManagerDialog(manager:       LabManager,
       for (file <- dialog.getFiles)
       {
         try {
-          for (protocol <- new LabLoader(manager.workspace.compiler.utilities, true, manager.protocols.map(_.name).to[collection.mutable.Set])(scala.io.Source.fromFile(file).mkString))
+          for (protocol <- new LabLoader(manager.workspace.compiler.utilities,
+                                         true,
+                                         manager.protocols.map(_.name).to[collection.mutable.Set])
+                                         (scala.io.Source.fromFile(file).mkString))
           {
             manager.addProtocol(protocol)
           }
         } catch {
           case e: org.xml.sax.SAXParseException => {
             if (!java.awt.GraphicsEnvironment.isHeadless) {
-              javax.swing.JOptionPane.showMessageDialog(manager.workspace.getFrame, s"""Invalid format in "${file.getName}".""", "Invalid", javax.swing.JOptionPane.ERROR_MESSAGE)
+              javax.swing.JOptionPane.showMessageDialog(manager.workspace.getFrame,
+                                                        s"""Invalid format in "${file.getName}".""",
+                                                        "Invalid",
+                                                        javax.swing.JOptionPane.ERROR_MESSAGE)
             }
           }
         }
@@ -197,13 +203,17 @@ private class ManagerDialog(manager:       LabManager,
     try {
       val indices = jlist.getSelectedIndices
 
+      val modelName =
+        if manager.workspace.getModelFileName == null
+          ""
+        else
+          manager.workspace.getModelFileName.split('.')(0) + '-'
+
       var path = FileDialog.showFiles(manager.workspace.getFrame, I18N.gui("export.dialog"), java.awt.FileDialog.SAVE,
                   if (indices.length == 1)
-                    selectedProtocol.name + "-experiment.xml"
-                  else if (manager.workspace.getModelFileName == null)
-                    "experiments.xml"
+                    modelName + selectedProtocol.name + "-experiment.xml"
                   else
-                    manager.workspace.getModelFileName.split('.')(0) + "-experiments.xml")
+                    modelName + "experiments.xml")
 
       if (!path.endsWith(".xml")) {
         path += ".xml"
