@@ -126,7 +126,7 @@ class ProtocolEditable(protocol: LabProtocol,
       return Seq("Variable" -> I18N.gui.get("edit.behaviorSpace.name.empty"))
     }
     if (experimentNames.contains(name.trim)) {
-      return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.name.duplicate", exp))
+      return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.name.duplicate", name.trim))
     }
     val list =
         try { worldLock.synchronized {

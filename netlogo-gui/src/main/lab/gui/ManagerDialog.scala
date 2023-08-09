@@ -204,7 +204,7 @@ private class ManagerDialog(manager:       LabManager,
       val indices = jlist.getSelectedIndices
 
       val modelName =
-        if manager.workspace.getModelFileName == null
+        if (manager.workspace.getModelFileName == null)
           ""
         else
           manager.workspace.getModelFileName.split('.')(0) + '-'
