@@ -13,7 +13,8 @@ import org.nlogo.api.{ Dump, CompilerServices, Editable, Property }
 class ProtocolEditable(protocol: LabProtocol,
                        window: Window,
                        compiler: CompilerServices,
-                       worldLock: AnyRef)
+                       worldLock: AnyRef,
+                       experimentNames: Seq[String] = Seq[String]())
   extends Editable {
   // these are for Editable
   def helpLink = None
@@ -121,6 +122,12 @@ class ProtocolEditable(protocol: LabProtocol,
   }
 
   override def invalidSettings: Seq[(String,String)] = {
+    if (name.trim.isEmpty) {
+      return Seq("Variable" -> I18N.gui.get("edit.behaviorSpace.name.empty"))
+    }
+    if (experimentNames.contains(name.trim)) {
+      return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.name.duplicate", name.trim))
+    }
     val list =
         try { worldLock.synchronized {
           compiler.readFromString("[" + valueSets + "]").asInstanceOf[LogoList]
