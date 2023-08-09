@@ -7,15 +7,17 @@ import org.nlogo.core.LiteralParser
 import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol, SteppedValueSet }
 import org.w3c.dom
 import org.xml.sax
+import scala.collection.mutable.Set
 import scala.language.implicitConversions
 
 object LabLoader {
+  val XMLVER = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
   val DOCTYPE = "<!DOCTYPE experiments SYSTEM \"behaviorspace.dtd\">"
 }
 
 import LabLoader._
 
-class LabLoader(literalParser: LiteralParser) {
+class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existingNames: Set[String] = Set[String]()) {
   if (literalParser == null)
     throw new Exception("Invalid lab loader!")
   def apply(xml: String): Seq[LabProtocol] = {
@@ -43,6 +45,7 @@ class LabLoader(literalParser: LiteralParser) {
     builder.parse(inputSource)
       .getElementsByTagName("experiment")
       .map(readProtocolElement)
+      .map(fixEmptyNames)
   }
 
   def readProtocolElement(element: dom.Element): LabProtocol = {
@@ -78,8 +81,18 @@ class LabLoader(literalParser: LiteralParser) {
       case _ => None } }
       yield valueSet
     }
+    var name = element.getAttribute("name")
+    if (editNames && !name.isEmpty) {
+      if (existingNames.contains(name))
+      {
+        var n = 1
+        while (existingNames.contains(s"$name ($n)")) n += 1
+        name = s"$name ($n)"
+      }
+      existingNames += name
+    }
     new LabProtocol(
-      element.getAttribute("name"),
+      name,
       readOptional("setup"),
       readOptional("go"),
       readOptional("final"),
@@ -94,6 +107,17 @@ class LabLoader(literalParser: LiteralParser) {
       readAll("metric"),
       valueSets)
   }
+
+  def fixEmptyNames(protocol: LabProtocol): LabProtocol = {
+    if (editNames && protocol.name.isEmpty && existingNames.contains("no name")) {
+      var n = 1
+      while (existingNames.contains(s"no name ($n)")) n += 1
+      existingNames += s"no name ($n)"
+      return protocol.copy(name = s"no name ($n)")
+    }
+    protocol
+  }
+
   // implicits to keep the code from getting too verbose
   implicit def nodes2list(nodes: dom.NodeList): List[dom.Element] =
     (0 until nodes.getLength)
