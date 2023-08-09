@@ -125,7 +125,7 @@ class SpreadsheetExporter(modelFileName: String,
                               else "[initial & final values]"))
     for(_ <- runs) {
       if (shouldIncludeSteps)
-        out.print(',' + csv.header("tick"))
+        out.print(',' + csv.header("step"))
       for (metric <- protocol.metrics) {
         out.print(',' + csv.header(metric))
       }
