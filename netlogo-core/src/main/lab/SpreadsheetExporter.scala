@@ -159,11 +159,11 @@ class SpreadsheetExporter(modelFileName: String,
     // we use Array instead of List because List has a lot of memory overhead (one object per
     // cons cell) and for a big experiment we can have a ton of measurements.
     val measurements = new collection.mutable.ArrayBuffer[Array[AnyRef]]
-    def addMeasurements(values: List[AnyRef]) { 
+    def addMeasurements(values: List[AnyRef]) {
       measurements += values.toArray
       numMeasurements += 1
     }
-    def addMeasurements(step: Int, values: List[AnyRef]) { 
+    def addMeasurements(step: Int, values: List[AnyRef]) {
       measurements += (step.toString :: values).toArray
       numMeasurements += 1
     }
