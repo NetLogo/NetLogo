@@ -6,7 +6,7 @@
 "[mean]",,"923.8518518518518"
 "[steps]","50","50"
 
-"[all run data]","tick","burned-trees"
+"[all run data]","step","burned-trees"
 ,"1","112"
 ,"2","192"
 ,"3","272"
