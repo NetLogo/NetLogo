@@ -65,7 +65,7 @@ class ProtocolEditable(protocol: LabProtocol,
   var timeLimit = protocol.timeLimit
   var exitCondition = protocol.exitCondition
   var metrics = protocol.metrics.mkString("\n")
-  var valueSets =  {
+  var valueSets = {
     def setString(valueSet: RefValueSet) =
       "[\"" + valueSet.variableName + "\" " +
       (valueSet match {
@@ -76,7 +76,7 @@ class ProtocolEditable(protocol: LabProtocol,
          case svs: SteppedValueSet =>
            List(svs.firstValue, svs.step, svs.lastValue).map(_.toString).mkString("[", " ", "]")
        }) + "]\n"
-    protocol.valueSets.map(setString).mkString
+    protocol.constants.map(setString).mkString("\n") + "\n" + protocol.subExperiments.map(_.map(setString).mkString).mkString("\n")
   }
   // make a new LabProtocol based on what user entered
   def editFinished: Boolean = get.isDefined
@@ -87,38 +87,38 @@ class ProtocolEditable(protocol: LabProtocol,
           window, "Invalid spec for varying variables. Error:\n" + message,
          "Invalid", javax.swing.JOptionPane.ERROR_MESSAGE)
     }
+    val list =
+      try { worldLock.synchronized {
+        compiler.readFromString("[" + valueSets + "]").asInstanceOf[LogoList]
+      } }
+    catch{ case ex: CompilerException => complain(ex.getMessage); return None }
+    val consts = for (o <- list.toList) yield {
+      o.asInstanceOf[LogoList].toList match {
+        case List(variableName: String, more: LogoList) =>
+          more.toList match {
+            case List(first: java.lang.Double,
+                      step: java.lang.Double,
+                      last: java.lang.Double) =>
+              new SteppedValueSet(variableName,
+                                  BigDecimal(Dump.number(first)),
+                                  BigDecimal(Dump.number(step)),
+                                  BigDecimal(Dump.number(last)))
+            case _ =>
+              complain("Expected three numbers here: " + Dump.list(more)); return None
+          }
+        case List(variableName: String, more@_*) =>
+          if (more.isEmpty) {complain(s"Expected a value for variable $variableName"); return None}
+          new RefEnumeratedValueSet(variableName, more.toList)
+        case _ =>
+          complain("Invalid format"); return None
+      }
+    }
     Some(new LabProtocol(
       name.trim, setupCommands.trim, goCommands.trim,
       finalCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep, runMetricsCondition.trim,
       timeLimit, exitCondition.trim,
       metrics.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
-      {
-        val list =
-          try { worldLock.synchronized {
-            compiler.readFromString("[" + valueSets + "]").asInstanceOf[LogoList]
-          } }
-        catch{ case ex: CompilerException => complain(ex.getMessage); return None }
-        for (o <- list.toList) yield {
-          o.asInstanceOf[LogoList].toList match {
-            case List(variableName: String, more: LogoList) =>
-              more.toList match {
-                case List(first: java.lang.Double,
-                          step: java.lang.Double,
-                          last: java.lang.Double) =>
-                  new SteppedValueSet(variableName,
-                                      BigDecimal(Dump.number(first)),
-                                      BigDecimal(Dump.number(step)),
-                                      BigDecimal(Dump.number(last)))
-                case _ =>
-                  complain("Expected three numbers here: " + Dump.list(more)); return None
-              }
-            case List(variableName: String, more@_*) =>
-              if (more.isEmpty) {complain(s"Expected a value for variable $variableName"); return None}
-              new RefEnumeratedValueSet(variableName, more.toList)
-            case _ =>
-              complain("Invalid format"); return None
-          }}
-      }))
+      consts))
   }
 
   override def invalidSettings: Seq[(String,String)] = {

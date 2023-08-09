@@ -13,9 +13,12 @@ case class LabProtocol(name: String,
                     timeLimit: Int,
                     exitCondition: String,
                     metrics: List[String],
-                    valueSets: List[RefValueSet])
+                    constants: List[RefValueSet],
+                    subExperiments: List[List[RefValueSet]] = Nil)
 {
-  def countRuns = repetitions * valueSets.map(_.length.toInt).product
+  val valueSets = List(constants)
+
+  def countRuns = repetitions * valueSets.map(_.map(_.length.toInt).product).sum
 
   // Generate all the possible combinations of values from the ValueSets, in order.  (I'm using
   // Iterator here so that each combination we generate can be garbage collected when we're done
@@ -39,11 +42,12 @@ case class LabProtocol(name: String,
               if (sequentialRunOrder) (set.variableName,v) :: m
               else m :+ set.variableName -> v))
       }
-    if (sequentialRunOrder) combinations(valueSets)
-      .flatMap(Iterator.fill(repetitions)(_))
-    else {
-      val runners = combinations(valueSets.reverse).toList
-      (for(i <- 1 to repetitions) yield runners).flatten.toIterator
-    }
+    valueSets.map(set =>
+      if (sequentialRunOrder) combinations(set)
+        .flatMap(Iterator.fill(repetitions)(_))
+      else {
+        val runners = combinations(set.reverse).toList
+        (for(i <- 1 to repetitions) yield runners).flatten.toIterator
+      }).flatten.toIterator
   }
 }
