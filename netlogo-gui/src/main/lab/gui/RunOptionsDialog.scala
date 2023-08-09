@@ -55,13 +55,15 @@ class RunOptionsDialog(parent: java.awt.Dialog,
       }
     }
     def updateView = prefs.getBoolean("updateView", true)
-    def updatePlotsAndMonitors = prefs.getBoolean("updatePlotsAndMonitors", true)
+    def updatePlotsAndMonitorsGUI = prefs.getBoolean("updatePlotsAndMonitorsGUI", true)
+    def updatePlotsAndMonitorsHeadless = prefs.getBoolean("updatePlotsAndMonitorsHeadless", false)
     def updateThreadCount = prefs.getInt("threadCount", Runtime.getRuntime.availableProcessors)
     def updateFrom(runOptions: RunOptions): Unit = {
       prefs.put("spreadsheet", parentDirectory(runOptions.spreadsheet))
       prefs.put("table", parentDirectory(runOptions.table))
       prefs.putBoolean("updateView", runOptions.updateView)
-      prefs.putBoolean("updatePlotsAndMonitors", runOptions.updatePlotsAndMonitors)
+      prefs.putBoolean("updatePlotsAndMonitorsGUI", runOptions.updatePlotsAndMonitorsGUI)
+      prefs.putBoolean("updatePlotsAndMonitorsHeadless", runOptions.updatePlotsAndMonitorsHeadless)
       prefs.putInt("threadCount", runOptions.threadCount)
     }
   }
@@ -77,7 +79,8 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     var spreadsheet = Prefs.spreadsheet
     var table = Prefs.table
     var updateView = Prefs.updateView
-    var updatePlotsAndMonitors = Prefs.updatePlotsAndMonitors
+    var updatePlotsAndMonitorsGUI = Prefs.updatePlotsAndMonitorsGUI
+    var updatePlotsAndMonitorsHeadless = Prefs.updatePlotsAndMonitorsHeadless
     var threadCount = Prefs.updateThreadCount
     val classDisplayName = "Run options"
 
@@ -88,11 +91,12 @@ class RunOptionsDialog(parent: java.awt.Dialog,
         Property("spreadsheet", Property.FilePath(spreadsheetFile), I18N.gui("spreadsheet")),
         Property("table", Property.FilePath(tableFile), I18N.gui("table")),
         Property("updateView", Property.Boolean, I18N.gui("updateview")),
-        Property("updatePlotsAndMonitors", Property.Boolean, I18N.gui("updateplotsandmonitors")),
+        Property("updatePlotsAndMonitorsGUI", Property.Boolean, I18N.gui("updateplotsandmonitorsgui")),
+        Property("updatePlotsAndMonitorsHeadless", Property.Boolean, I18N.gui("updateplotsandmonitorsheadless")),
         Property("threadCount", Property.Integer, I18N.gui("simultaneousruns"),
                  "<html>" + I18N.gui("simultaneousruns.info") + "</html>")).asJava
     }
-    def get = RunOptions(threadCount, table, spreadsheet, updateView, updatePlotsAndMonitors)
+    def get = RunOptions(threadCount, table, spreadsheet, updateView, updatePlotsAndMonitorsGUI, updatePlotsAndMonitorsHeadless)
     // boilerplate for Editable
     def helpLink = None
     def error(key:Object) = null

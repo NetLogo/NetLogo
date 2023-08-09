@@ -18,7 +18,7 @@ import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace }
 import org.nlogo.workspace.{ CurrentModelOpener, WorkspaceFactory }
 
 object Supervisor {
-  case class RunOptions(threadCount: Int, table: String, spreadsheet: String, updateView: Boolean, updatePlotsAndMonitors: Boolean)
+  case class RunOptions(threadCount: Int, table: String, spreadsheet: String, updateView: Boolean, updatePlotsAndMonitorsGUI: Boolean, updatePlotsAndMonitorsHeadless: Boolean)
 }
 class Supervisor(
   dialog: Dialog,
@@ -112,7 +112,8 @@ class Supervisor(
       }
     }
     progressDialog.setUpdateView(options.updateView)
-    progressDialog.setPlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
+    progressDialog.setPlotsAndMonitorsSwitch(options.updatePlotsAndMonitorsGUI)
+    workspace.shouldUpdatePlots = options.updatePlotsAndMonitorsGUI
     queue.enqueue(workspace)
     (2 to options.threadCount).foreach{num =>
       val w = factory.newInstance
