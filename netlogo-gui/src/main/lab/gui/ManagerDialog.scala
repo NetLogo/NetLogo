@@ -8,6 +8,8 @@ import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 import java.awt.{ Component, Dimension }
 import javax.swing.{ JButton, JDialog, JLabel, JList, JMenuBar, JOptionPane, JPanel, JScrollPane, ListCellRenderer }
 import org.nlogo.core.I18N
+import org.nlogo.fileformat.{ LabSaver, LabLoader }
+import org.nlogo.swing.FileDialog
 
 private class ManagerDialog(manager:       LabManager,
                             dialogFactory: EditDialogFactoryInterface,
@@ -26,6 +28,8 @@ private class ManagerDialog(manager:       LabManager,
   private val newAction = action(I18N.gui("new"), { () => makeNew() })
   private val deleteAction = action(I18N.gui("delete"), { () => delete() })
   private val duplicateAction = action(I18N.gui("duplicate"), { () => duplicate() })
+  private val importAction = action(I18N.gui("import"), { () => importnl() })
+  private val exportAction = action(I18N.gui("export"), { () => export() })
   private val closeAction = action(I18N.gui("close"), { () => manager.close() })
   private val runAction = action(I18N.gui("run"), { () => run() })
   /// initialization
@@ -61,6 +65,10 @@ private class ManagerDialog(manager:       LabManager,
     buttonPanel.add(javax.swing.Box.createHorizontalStrut(5))
     buttonPanel.add(new JButton(deleteAction))
     buttonPanel.add(javax.swing.Box.createHorizontalStrut(5))
+    buttonPanel.add(new JButton(importAction))
+    buttonPanel.add(javax.swing.Box.createHorizontalStrut(5))
+    buttonPanel.add(new JButton(exportAction))
+    buttonPanel.add(javax.swing.Box.createHorizontalStrut(5))
     buttonPanel.add(runButton)
     buttonPanel.add(javax.swing.Box.createHorizontalStrut(20))
     buttonPanel.add(javax.swing.Box.createHorizontalGlue)
@@ -95,6 +103,7 @@ private class ManagerDialog(manager:       LabManager,
     duplicateAction.setEnabled(count == 1)
     runAction.setEnabled(count == 1)
     deleteAction.setEnabled(count > 0)
+    exportAction.setEnabled(count > 0)
   }
   /// action implementations
   private def run(): Unit = {
@@ -119,7 +128,8 @@ private class ManagerDialog(manager:       LabManager,
   private def edit() { editProtocol(selectedProtocol, false) }
   private def editProtocol(protocol: LabProtocol, isNew: Boolean) {
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
-                                        manager.workspace, manager.workspace.world)
+                                        manager.workspace, manager.workspace.world,
+                                        manager.protocols.map(_.name).filter(isNew || _ != protocol.name))
     if (!dialogFactory.canceled(this, editable)) {
       val newProtocol = editable.get.get
       if (isNew) manager.protocols += newProtocol
@@ -143,6 +153,80 @@ private class ManagerDialog(manager:       LabManager,
       if (newSize > 0) select(if (selected(0) >= newSize) (selected(0) - 1) min (newSize - 1)
                              else selected(0))
       manager.dirty()
+    }
+  }
+  private def importnl() {
+    try {
+      class XMLFilter extends java.io.FilenameFilter {
+        def accept(dir: java.io.File, name: String): Boolean = {
+          val split = name.split('.')
+
+          split.length == 2 && split(1) == "xml"
+        }
+      }
+
+      val dialog = new java.awt.FileDialog(manager.workspace.getFrame, I18N.gui("import.dialog"))
+
+      dialog.setDirectory(System.getProperty("user.home"))
+      dialog.setFilenameFilter(new XMLFilter)
+      dialog.setMultipleMode(true)
+      dialog.setVisible(true)
+
+      for (file <- dialog.getFiles)
+      {
+        try {
+          for (protocol <- new LabLoader(manager.workspace.compiler.utilities,
+                                         true,
+                                         manager.protocols.map(_.name).to[collection.mutable.Set])
+                                         (scala.io.Source.fromFile(file).mkString))
+          {
+            manager.addProtocol(protocol)
+          }
+        } catch {
+          case e: org.xml.sax.SAXParseException => {
+            if (!java.awt.GraphicsEnvironment.isHeadless) {
+              javax.swing.JOptionPane.showMessageDialog(manager.workspace.getFrame,
+                                                        s"""Invalid format in "${file.getName}".""",
+                                                        "Invalid",
+                                                        javax.swing.JOptionPane.ERROR_MESSAGE)
+            }
+          }
+        }
+      }
+
+      update
+    } catch {
+      case e: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(e)
+    }
+  }
+  private def export() {
+    try {
+      val indices = jlist.getSelectedIndices
+
+      val modelName =
+        if (manager.workspace.getModelFileName == null)
+          ""
+        else
+          manager.workspace.getModelFileName.split('.')(0) + '-'
+
+      var path = FileDialog.showFiles(manager.workspace.getFrame, I18N.gui("export.dialog"), java.awt.FileDialog.SAVE,
+                  if (indices.length == 1)
+                    modelName + selectedProtocol.name + "-experiment.xml"
+                  else
+                    modelName + "experiments.xml")
+
+      if (!path.endsWith(".xml")) {
+        path += ".xml"
+      }
+
+      val out = new java.io.PrintWriter(path)
+
+      out.write(s"${LabLoader.XMLVER}\n${LabLoader.DOCTYPE}\n")
+      out.write(LabSaver.save(indices.map(manager.protocols(_))))
+
+      out.close()
+    } catch {
+      case e: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(e)
     }
   }
   /// helpers

@@ -84,11 +84,7 @@ names will be altered to ensure that all experiment names remain unique.
 
 **Vary variables as follows:** This is where you specify which settings you want
 varied, and what values you want them to take. Variables can include sliders,
-switches, choosers, and any global variables in your model. You may notice that
-the view and plots do not correspond to the values in the widgets once the experiment is completed.
-This is because the globals that are controlled by widgets are reset to their initial state at
-the end of the experiment. To synchronize your view and plots with the widgets, run your procedure
-that initializes the view.
+switches, choosers, and any global variables in your model.
 
 Variables can also include [[max-pxcor|max-pcor]], [[min-pxcor|min-pcor]],
 [[max-pycor|max-pcor]] and [[min-pycor|min-pcor]], [[world-width|world-dim]],
@@ -220,9 +216,10 @@ by the stop condition instead, enter 0.
 ### Importing and exporting
 
 Although experiments are tied to a model and are usually saved along with a
-model, they can also be imported and exported individually. This allows you to
-easily transfer experiments between models, and also prepares experiments to be
-run headlessly.
+model, they can also be imported and exported individually to xml files. This
+allows you to easily transfer experiments between models, and also prepares
+experiments to be run headlessly. After an experiment is exported to an xml file,
+it can be edited by hand or by another script, not just within NetLogo.
 
 The **Import** button allows you to import experiments from an xml file. The
 selected files may contain any number of experiments, but any experiments that
@@ -281,8 +278,9 @@ measurement metric data is in purple.
 ![[bs-table.png]]
 
 The **Spreadsheet output** format lists each metric for each run in a separate column, with each
-row corresponding to a measurement step that applies to all runs.  If one run finishes before
-another due to a **stop condition**, then its measurement steps after that point will be blank.
+row corresponding to a measurement step that applies to all runs. When custom conditions
+for running metrics are provided, the step number corresponding to each row is automatically included.
+If one run finishes before another due to a **stop condition**, then its measurement steps after that point will be blank.
 At the top of the file there is a `[run number]` row that will have the run number repeated for
 each metric at the top of the file.  After that are rows for the initial values given to each
 variable for the run.  The spreadsheet output also calculates the min, mean, max, and final values
