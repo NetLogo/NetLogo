@@ -30,7 +30,9 @@ object LabInterface {
     spreadsheetWriter: Option[java.io.PrintWriter],
     dims: Option[WorldDimensions],
     threads: Int,
-    suppressErrors: Boolean)
+    suppressErrors: Boolean,
+    updatePlots: Boolean
+    )
 }
 trait LabInterface {
   import LabInterface._
