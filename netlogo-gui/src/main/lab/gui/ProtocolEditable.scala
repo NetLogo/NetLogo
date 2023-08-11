@@ -75,8 +75,8 @@ class ProtocolEditable(protocol: LabProtocol,
            evs.map(x => Dump.logoObject(x.asInstanceOf[AnyRef], true, false)).mkString(" ")
          case svs: SteppedValueSet =>
            List(svs.firstValue, svs.step, svs.lastValue).map(_.toString).mkString("[", " ", "]")
-       }) + "]\n"
-    protocol.constants.map(setString).mkString("\n") + "\n" + protocol.subExperiments.map(_.map(setString).mkString).mkString("\n")
+       }) + "]"
+    (protocol.constants.map(setString) ::: protocol.subExperiments.map("[" + _.map(setString).mkString + "]")).mkString("\n")
   }
   // make a new LabProtocol based on what user entered
   def editFinished: Boolean = get.isDefined
@@ -92,23 +92,47 @@ class ProtocolEditable(protocol: LabProtocol,
         compiler.readFromString("[" + valueSets + "]").asInstanceOf[LogoList]
       } }
     catch{ case ex: CompilerException => complain(ex.getMessage); return None }
-    val consts = for (o <- list.toList) yield {
+    var constants = List[RefValueSet]()
+    var subExperiments = List[List[RefValueSet]]()
+    for (o <- list.toList) {
       o.asInstanceOf[LogoList].toList match {
         case List(variableName: String, more: LogoList) =>
           more.toList match {
             case List(first: java.lang.Double,
                       step: java.lang.Double,
                       last: java.lang.Double) =>
-              new SteppedValueSet(variableName,
-                                  BigDecimal(Dump.number(first)),
-                                  BigDecimal(Dump.number(step)),
-                                  BigDecimal(Dump.number(last)))
+              constants = constants :+ new SteppedValueSet(variableName,
+                                                           BigDecimal(Dump.number(first)),
+                                                           BigDecimal(Dump.number(step)),
+                                                           BigDecimal(Dump.number(last)))
             case _ =>
               complain("Expected three numbers here: " + Dump.list(more)); return None
           }
         case List(variableName: String, more@_*) =>
           if (more.isEmpty) {complain(s"Expected a value for variable $variableName"); return None}
-          new RefEnumeratedValueSet(variableName, more.toList)
+          constants = constants :+ new RefEnumeratedValueSet(variableName, more.toList)
+        case List(first: LogoList, more@_*) =>
+          var subExperiment = List[RefValueSet]()
+          (List(first) ++ more).foreach(_.asInstanceOf[LogoList].toList match {
+            case List(variableName: String, more: LogoList) =>
+              more.toList match {
+                case List(first: java.lang.Double,
+                          step: java.lang.Double,
+                          last: java.lang.Double) =>
+                  subExperiment = subExperiment :+ new SteppedValueSet(variableName,
+                                                                       BigDecimal(Dump.number(first)),
+                                                                       BigDecimal(Dump.number(step)),
+                                                                       BigDecimal(Dump.number(last)))
+                case _ =>
+                  complain("Expected three numbers here: " + Dump.list(more)); return None
+              }
+            case List(variableName: String, more@_*) =>
+              if (more.isEmpty) {complain(s"Expected a value for variable $variableName"); return None}
+              subExperiment = subExperiment :+ new RefEnumeratedValueSet(variableName, more.toList)
+            case _ =>
+              complain("Invalid format" + (List(first.toList) ++ more)); return None
+          })
+          subExperiments = subExperiments :+ subExperiment
         case _ =>
           complain("Invalid format"); return None
       }
@@ -118,7 +142,7 @@ class ProtocolEditable(protocol: LabProtocol,
       finalCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep, runMetricsCondition.trim,
       timeLimit, exitCondition.trim,
       metrics.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
-      consts))
+      constants, subExperiments))
   }
 
   override def invalidSettings: Seq[(String,String)] = {
@@ -152,13 +176,14 @@ class ProtocolEditable(protocol: LabProtocol,
               case _ =>
                 return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.incrementinvalid", variableName))
             }
-         case List(variableName: String, more@_*) =>
+          case List(variableName: String, more@_*) =>
             if (more.isEmpty){
               return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.field", variableName))
             }
             if ( Int.MaxValue / totalCombinations > more.toList.size )
               totalCombinations = totalCombinations * more.toList.size
             else return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.variablelist", variableName))
+          case List(first: LogoList, more@_*) =>
           case _ => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.unexpected"))
         }
     }

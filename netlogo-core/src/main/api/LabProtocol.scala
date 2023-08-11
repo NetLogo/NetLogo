@@ -16,7 +16,21 @@ case class LabProtocol(name: String,
                     constants: List[RefValueSet],
                     subExperiments: List[List[RefValueSet]] = Nil)
 {
-  val valueSets = List(constants)
+  val valueSets =
+    if (subExperiments.isEmpty)
+      List(constants)
+    else {
+      val variables = subExperiments.flatten.map(_.variableName).distinct
+      for (subExperiment <- subExperiments) yield {
+        var filled = List[RefValueSet]()
+        for (variable <- variables) {
+          filled = filled :+ subExperiment.find(_.variableName == variable)
+                                          .getOrElse(constants.find(_.variableName == variable)
+                                          .getOrElse(new RefEnumeratedValueSet(variable, List(null).asInstanceOf[List[AnyRef]])))
+        }
+        filled
+      }
+    }
 
   def countRuns = repetitions * valueSets.map(_.map(_.length.toInt).product).sum
 

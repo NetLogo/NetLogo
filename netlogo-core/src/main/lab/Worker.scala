@@ -38,7 +38,10 @@ class Worker(val protocol: LabProtocol)
       listeners.foreach(_.experimentStarted())
       runners =
         (for((settings, runNumber) <- protocol.refElements zip Stream.from(1).iterator)
-         yield new Runner(runNumber, settings, fn)).toSeq
+         yield new Runner(runNumber, settings.map(x =>
+          if (x._2 == null) (x._1, initialWorkspace.world.getObserverVariableByName(x._1))
+          else x
+         ), fn)).toSeq
       val futures = {
         import collection.JavaConverters._
         // The explicit use of JavaConversions here with a type parameter, instead of just plain

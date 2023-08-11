@@ -40,7 +40,7 @@ class TableExporter(modelFileName: String,
   def writeExperimentHeader() {
     // sample header: "[run number]","var1","var2","[step]","metric1","metric2"
     val headers =
-      "[run number]" :: protocol.constants.map(_.variableName) :::
+      "[run number]" :: protocol.valueSets(0).map(_.variableName) :::
       "[step]" :: protocol.metrics
     out.println(headers.map(csv.header).mkString(","))
   }

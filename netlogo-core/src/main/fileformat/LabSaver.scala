@@ -100,14 +100,15 @@ object LabSaver {
       element("metric", metric)
     if (!protocol.runMetricsCondition.isEmpty)
       element("runMetricsCondition", protocol.runMetricsCondition)
-    hd.startElement("", "", "constants", attributes())
     protocol.constants.foreach(matchValueSet _)
-    hd.endElement("", "", "constants")
-    hd.startElement("", "", "subExperiments", attributes())
-    for (subExperiment <- protocol.subExperiments) {
-      hd.startElement("", "", "subExperiment", attributes())
-      subExperiment.foreach(matchValueSet _)
-      hd.endElement("", "", "subExperiment")
+    if (!protocol.subExperiments.isEmpty) {
+      hd.startElement("", "", "subExperiments", attributes())
+      for (subExperiment <- protocol.subExperiments) {
+        hd.startElement("", "", "subExperiment", attributes())
+        subExperiment.foreach(matchValueSet _)
+        hd.endElement("", "", "subExperiment")
+      }
+      hd.endElement("", "", "subExperiments")
     }
     hd.endElement("", "", "experiment")
   }

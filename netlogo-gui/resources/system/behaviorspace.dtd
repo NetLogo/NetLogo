@@ -7,7 +7,7 @@ section of a NetLogo model file.
 
 <!ELEMENT experiments (experiment*)>
 
-<!ELEMENT experiment (setup?,go?,final?,timeLimit?,exitCondition?,metric*,runMetricsCondition?,constants?,subExperiments?)>
+<!ELEMENT experiment (setup?,go?,final?,timeLimit?,exitCondition?,metric*,runMetricsCondition?,(steppedValueSet|enumeratedValueSet)*,subExperiments?)>
 <!ATTLIST experiment
   name CDATA ""
   repetitions CDATA "1"
@@ -26,10 +26,9 @@ section of a NetLogo model file.
 <!ELEMENT metric (#PCDATA)>
 <!ELEMENT runMetricsCondition (#PCDATA)>
 
-<!ELEMENT constants (steppedValueSet|enumeratedValueSet)*>
-<!ELEMENT subExperiments subExperiment*>
+<!ELEMENT subExperiments (subExperiment+)>
 
-<!ELEMENT subExperiment (steppedValueSet|enumeratedValueSet)*>
+<!ELEMENT subExperiment (steppedValueSet|enumeratedValueSet)+>
 
 <!ELEMENT steppedValueSet EMPTY>
 <!ATTLIST steppedValueSet

@@ -57,29 +57,35 @@ class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existi
       readAll(name) match { case List(x) => x ; case Nil => "" }
     def exists(name: String) =
       !element.getElementsByTagName(name).isEmpty
-    def valueSets = {
-      def readSteppedValueSetElement(e: dom.Element) = {
-        def parse(name: String) = BigDecimal(e.getAttribute(name))
-        new SteppedValueSet(e.getAttribute("variable"),parse("first"),
-          parse("step"),parse("last"))
+    def readSteppedValueSetElement(e: dom.Element) = {
+      def parse(name: String) = BigDecimal(e.getAttribute(name))
+      new SteppedValueSet(e.getAttribute("variable"),parse("first"),
+        parse("step"),parse("last"))
+    }
+    def readEnumeratedValueSetElement(e: dom.Element) = {
+      val valueElems = e.getElementsByTagName("value")
+      val values = for {
+        i <- 0 to valueElems.getLength
+        elem = valueElems.item(i) if elem != null
+      } yield {
+        literalParser.readFromString(
+          elem.getAttributes.getNamedItem("value").getNodeValue)
       }
-      def readEnumeratedValueSetElement(e: dom.Element) = {
-        val valueElems = e.getElementsByTagName("value")
-        val values = for {
-          i <- 0 to valueElems.getLength
-          elem = valueElems.item(i) if elem != null
-        } yield {
-          literalParser.readFromString(
-            elem.getAttributes.getNamedItem("value").getNodeValue)
-        }
-        new RefEnumeratedValueSet(e.getAttribute("variable"), values.toList)
-      }
+      new RefEnumeratedValueSet(e.getAttribute("variable"), values.toList)
+    }
+    def constants = {
       for{e <- element.getChildNodes
         valueSet <- e.getNodeName match {
           case "steppedValueSet" => Some(readSteppedValueSetElement(e))
           case "enumeratedValueSet" => Some(readEnumeratedValueSetElement(e))
       case _ => None } }
       yield valueSet
+    }
+    def subExperiments = {
+      element.getElementsByTagName("subExperiment").map(_.getChildNodes.map(e => e.getNodeName match {
+        case "steppedValueSet" => readSteppedValueSetElement(e)
+        case "enumeratedValueSet" => readEnumeratedValueSetElement(e)
+      }))
     }
     var name = element.getAttribute("name")
     if (editNames && !name.isEmpty) {
@@ -105,7 +111,8 @@ class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existi
       if (!exists("timeLimit")) 0 else readOneAttribute("timeLimit","steps").toInt,
       if (!exists("exitCondition")) "" else readOptional("exitCondition"),
       readAll("metric"),
-      valueSets)
+      constants,
+      subExperiments)
   }
 
   def fixEmptyNames(protocol: LabProtocol): LabProtocol = {
