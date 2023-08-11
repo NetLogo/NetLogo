@@ -8,7 +8,7 @@ import java.util.Arrays
 
 import org.scalatest.funsuite.AnyFunSuite
 
-import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelLoader, ModelSettings, Version, ValueList }
+import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelLoader, ModelSettings, Version }
 import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Model, Shape, Widget },
   Shape.{ LinkShape, VectorShape }
 
@@ -100,7 +100,7 @@ class NLogoFormatConversionTest extends AnyFunSuite with ConversionHelper {
 
     test("carries out conversions on behaviorspace operations") {
       import org.nlogo.api.LabProtocol
-      val protocol = new LabProtocol("foo", "", "movie-grab-view", "", 0, true, false, "", 0, "", List(), ValueList(List()))
+      val protocol = new LabProtocol("foo", "", "movie-grab-view", "", 0, true, false, "", 0, "", List(), List())
       val m = Model(code = "to foo end", version = "NetLogo 5.2.1")
         .withOptionalSection("org.nlogo.modelsection.behaviorspace", Some(Seq(protocol)), Seq())
 

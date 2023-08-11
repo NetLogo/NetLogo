@@ -34,6 +34,8 @@ case class LabProtocol(name: String,
       }
     }
 
+  def countRuns = repetitions * valueSets.map(_.map(_.length.toInt).product).sum
+
   // Generate all the possible combinations of values from the ValueSets, in order.  (I'm using
   // Iterator here so that each combination we generate can be garbage collected when we're done
   // with it, instead of them all being held in memory until the end of the experiment.
@@ -47,12 +49,12 @@ case class LabProtocol(name: String,
   type AnyRefSettingsIterator = Iterator[List[(String, AnyRef)]]
 
   def refElements: AnyRefSettingsIterator = {
-    def valueCombinations(list: List[RefValueSet]): AnyRefSettingsIterator =
-      list match {
+    def combinations(sets: List[RefValueSet]): AnyRefSettingsIterator =
+      sets match {
         case Nil => Iterator(Nil)
         case set::sets =>
           set.iterator.flatMap(v =>
-            valueCombinations(sets).map(m =>
+            combinations(sets).map(m =>
               if (sequentialRunOrder) (set.variableName,v) :: m
               else m :+ set.variableName -> v))
       }

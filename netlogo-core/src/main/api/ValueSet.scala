@@ -41,10 +41,3 @@ case class SteppedValueSet(variableName: String,
       .takeWhile(_ <= lastValue)
       .map(i => Double.box(i.toDouble))
 }
-
-case class TupleSet(values: List[(String, AnyRef)])
-
-sealed trait ParameterList
-
-case class ValueList(list: List[RefValueSet]) extends ParameterList
-case class TupleList(list: List[TupleSet]) extends ParameterList
