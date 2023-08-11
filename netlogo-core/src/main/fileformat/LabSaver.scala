@@ -106,8 +106,6 @@ object LabSaver {
       subExperiment.foreach(matchValueSet _)
       hd.endElement("", "", "subExperiment")
     }
-    if (protocol.runsCompleted != 0)
-      element("runsCompleted", protocol.runsCompleted.toString)
     hd.endElement("", "", "experiment")
   }
 }

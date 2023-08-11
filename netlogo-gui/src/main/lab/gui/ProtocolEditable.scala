@@ -4,7 +4,7 @@ package org.nlogo.lab.gui
 
 import org.nlogo.api.LabProtocol
 import org.nlogo.core.{ CompilerException, I18N, LogoList }
-import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, RefEnumeratedValueSet, SteppedValueSet, RefValueSet, ValueList, TupleList, TupleSet }
+import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, RefEnumeratedValueSet, SteppedValueSet, RefValueSet }
 import java.awt.{ GridBagConstraints, Window }
 import org.nlogo.api.{ Dump, CompilerServices, Editable, Property }
 
@@ -29,7 +29,7 @@ class ProtocolEditable(protocol: LabProtocol,
   val propertySet = {
     import scala.collection.JavaConverters._
     List(Property("name", Property.String, I18N.gui("experimentName")),
-         Property("parameterSets", Property.ReporterOrEmpty,
+         Property("valueSets", Property.ReporterOrEmpty,
                   I18N.gui("vary"), "<html>"+I18N.gui("vary.info")+"</html>"),
          Property("repetitions", Property.Integer, I18N.gui("repetitions"),
                   "<html>"+I18N.gui("repetitions.info")+"</html>"),
@@ -65,8 +65,8 @@ class ProtocolEditable(protocol: LabProtocol,
   var timeLimit = protocol.timeLimit
   var exitCondition = protocol.exitCondition
   var metrics = protocol.metrics.mkString("\n")
-  var parameterSets =  {
-    def valueSetString(valueSet: RefValueSet) =
+  var valueSets = {
+    def setString(valueSet: RefValueSet) =
       "[\"" + valueSet.variableName + "\" " +
       (valueSet match {
          case evs: EnumeratedValueSet =>
@@ -174,79 +174,27 @@ class ProtocolEditable(protocol: LabProtocol,
       finalCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep, runMetricsCondition.trim,
       timeLimit, exitCondition.trim,
       metrics.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
-      {
-        val list =
-          try { worldLock.synchronized {
-            compiler.readFromString("[" + parameterSets + "]").asInstanceOf[LogoList]
-          } }
-        catch{ case ex: CompilerException => complain(ex.getMessage); return None }
-        val ret =
-          for (o <- list.toList) yield {
-            o.asInstanceOf[LogoList].toList match {
-              case List(variableName: String, more: LogoList) =>
-                more.toList match {
-                  case List(first: java.lang.Double,
-                            step: java.lang.Double,
-                            last: java.lang.Double) =>
-                    new SteppedValueSet(variableName,
-                                        BigDecimal(Dump.number(first)),
-                                        BigDecimal(Dump.number(step)),
-                                        BigDecimal(Dump.number(last)))
-                  case _ =>
-                    complain("Expected three numbers here: " + Dump.list(more)); return None
-                }
-              case List(variableName: String, more@_*) =>
-                if (more.isEmpty) {complain(s"Expected a value for variable $variableName"); return None}
-                new RefEnumeratedValueSet(variableName, more.toList)
-              case List(tuple: LogoList, more@_*) =>
-                new TupleSet((tuple(0).toString, tuple(1)) :: more.toList.map(tuple => tuple match {
-                  case x: LogoList =>
-                    (x(0).toString, x(1))
-                  case _ =>
-                    complain("Expected tuple, received \"" + tuple + "\"")
-                    return None
-                }))
-              case _ =>
-                complain("Invalid format"); return None
-            }
-          }
-        ret match {
-          case Nil => ValueList(Nil)
-          case head :: next => {
-            head match {
-              case _: RefValueSet => ValueList(ret.asInstanceOf[List[RefValueSet]])
-              case _: TupleSet => TupleList(ret.asInstanceOf[List[TupleSet]])
-            }
-          }
-        }
-      }))
+      constants, subExperiments))
   }
 
   override def invalidSettings: Seq[(String,String)] = {
     if (name.trim.isEmpty) {
       return Seq("Variable" -> I18N.gui.get("edit.behaviorSpace.name.empty"))
     }
-    for (exp <- experimentNames) {
-      if (exp == name.trim) {
-        return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.name.duplicate", exp))
-      }
+    if (experimentNames.contains(name.trim)) {
+      return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.name.duplicate", name.trim))
     }
     val list =
         try { worldLock.synchronized {
-          compiler.readFromString("[" + parameterSets + "]").asInstanceOf[LogoList]
+          compiler.readFromString("[" + valueSets + "]").asInstanceOf[LogoList]
         } }
       catch{ case ex: CompilerException =>  return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.compiler.parser")) }
     var totalCombinations = 1
-    var parameterType = ""
-    var tupleVars: List[AnyRef] = Nil
     list.toList.foreach {
       case element =>
         element.asInstanceOf[LogoList].toList match {
           case List() => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.field"))
           case List(variableName: String, more: LogoList) =>
-            if (!parameterType.isEmpty && parameterType != "value")
-              return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.mixedTypes", "[ " + element.asInstanceOf[LogoList].mkString(" ") + " ]"))
-            parameterType = "value"
             more.toList match {
               case List(first: java.lang.Double,
                         step: java.lang.Double,
@@ -261,25 +209,13 @@ class ProtocolEditable(protocol: LabProtocol,
                 return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.incrementinvalid", variableName))
             }
           case List(variableName: String, more@_*) =>
-            if (!parameterType.isEmpty && parameterType != "value")
-              return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.mixedTypes", "[ " + element.asInstanceOf[LogoList].mkString(" ") + " ]"))
-            parameterType = "value"
             if (more.isEmpty){
               return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.field", variableName))
             }
             if ( Int.MaxValue / totalCombinations > more.toList.size )
               totalCombinations = totalCombinations * more.toList.size
             else return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.variablelist", variableName))
-          case List(tuple: LogoList, more@_*) =>
-            if (!parameterType.isEmpty && parameterType != "tuple")
-              return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.mixedTypes", "[ " + element.asInstanceOf[LogoList].mkString(" ") + " ]"))
-            parameterType = "tuple"
-            if (tupleVars != Nil && tupleVars != element.asInstanceOf[LogoList].toList.map(_.asInstanceOf[LogoList](0))) {
-              return Seq("Variable" -> I18N.gui.get("edit.behaviorSpace.list.mismatchedTuples"))
-            }
-            tupleVars = element.asInstanceOf[LogoList].toList.map(_.asInstanceOf[LogoList](0))
-            if (tupleVars != tupleVars.distinct)
-              return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.duplicateVariable", "[ " + element.asInstanceOf[LogoList].mkString(" ") + " ]"))
+          case List(first: LogoList, more@_*) =>
           case _ => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.unexpected"))
         }
     }
