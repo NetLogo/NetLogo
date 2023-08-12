@@ -76,7 +76,8 @@ class ProtocolEditable(protocol: LabProtocol,
          case svs: SteppedValueSet =>
            List(svs.firstValue, svs.step, svs.lastValue).map(_.toString).mkString("[", " ", "]")
        }) + "]"
-    (protocol.constants.map(setString) ::: protocol.subExperiments.map("[" + _.map(setString).mkString + "]")).mkString("\n")
+    (protocol.constants.map(setString) :::
+     protocol.subExperiments.map("[" + _.map(setString).mkString + "]")).mkString("\n")
   }
   // make a new LabProtocol based on what user entered
   def editFinished: Boolean = get.isDefined
@@ -101,16 +102,30 @@ class ProtocolEditable(protocol: LabProtocol,
             case List(first: java.lang.Double,
                       step: java.lang.Double,
                       last: java.lang.Double) =>
-              constants = constants :+ new SteppedValueSet(variableName,
-                                                           BigDecimal(Dump.number(first)),
-                                                           BigDecimal(Dump.number(step)),
-                                                           BigDecimal(Dump.number(last)))
+              val constant = new SteppedValueSet(variableName,
+                                                 BigDecimal(Dump.number(first)),
+                                                 BigDecimal(Dump.number(step)),
+                                                 BigDecimal(Dump.number(last)))
+              if (constants.contains(constant)) {
+                complain(s"Constant ${variableName} defined twice"); return None
+              }
+              if (!subExperiments.isEmpty) {
+                complain(s"Constant ${variableName} defined after subexperiment"); return None
+              }
+              constants = constants :+ constant
             case _ =>
               complain("Expected three numbers here: " + Dump.list(more)); return None
           }
         case List(variableName: String, more@_*) =>
           if (more.isEmpty) {complain(s"Expected a value for variable $variableName"); return None}
-          constants = constants :+ new RefEnumeratedValueSet(variableName, more.toList)
+          val constant = new RefEnumeratedValueSet(variableName, more.toList)
+          if (constants.contains(constant)) {
+            complain(s"Constant ${variableName} defined twice"); return None
+          }
+          if (!subExperiments.isEmpty) {
+            complain(s"Constant ${variableName} defined after subexperiment"); return None
+          }
+          constants = constants :+ constant
         case List(first: LogoList, more@_*) =>
           var subExperiment = List[RefValueSet]()
           (List(first) ++ more).foreach(_.asInstanceOf[LogoList].toList match {
@@ -119,22 +134,39 @@ class ProtocolEditable(protocol: LabProtocol,
                 case List(first: java.lang.Double,
                           step: java.lang.Double,
                           last: java.lang.Double) =>
-                  subExperiment = subExperiment :+ new SteppedValueSet(variableName,
-                                                                       BigDecimal(Dump.number(first)),
-                                                                       BigDecimal(Dump.number(step)),
-                                                                       BigDecimal(Dump.number(last)))
+                  val exp = new SteppedValueSet(variableName,
+                                                BigDecimal(Dump.number(first)),
+                                                BigDecimal(Dump.number(step)),
+                                                BigDecimal(Dump.number(last)))
+                  if (subExperiment.contains(exp)) {
+                    complain(s"Variable ${variableName} defined twice in one subexperiment"); return None
+                  }
+                  subExperiment = subExperiment :+ exp
                 case _ =>
                   complain("Expected three numbers here: " + Dump.list(more)); return None
               }
             case List(variableName: String, more@_*) =>
               if (more.isEmpty) {complain(s"Expected a value for variable $variableName"); return None}
-              subExperiment = subExperiment :+ new RefEnumeratedValueSet(variableName, more.toList)
+              val exp = new RefEnumeratedValueSet(variableName, more.toList)
+              if (subExperiment.contains(exp)) {
+                complain(s"Variable ${variableName} defined twice in one subexperiment"); return None
+              }
+              subExperiment = subExperiment :+ exp
             case _ =>
               complain("Invalid format" + (List(first.toList) ++ more)); return None
           })
           subExperiments = subExperiments :+ subExperiment
         case _ =>
           complain("Invalid format"); return None
+      }
+    }
+    for (experiment <- subExperiments) {
+      for (valueSet <- experiment) {
+        if (!constants.exists(_.variableName == valueSet.variableName) &&
+            subExperiments.exists(!_.exists(_.variableName == valueSet.variableName))) {
+          complain(s"Variable ${valueSet.variableName} must be defined as a constant" +
+                    " if not defined for all subexperiments"); return None
+        }
       }
     }
     Some(new LabProtocol(
