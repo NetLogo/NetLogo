@@ -332,6 +332,35 @@
       </subExperiment>
     </subExperiments>
   </experiment>
+  <experiment name="testMultipleConstantReplace" repetitions="1" runMetricsEveryStep="false">
+    <timeLimit steps="1"/>
+    <enumeratedValueSet variable="a">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="b">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="c">
+      <value value="1"/>
+    </enumeratedValueSet>
+    <subExperiments>
+      <subExperiment>
+        <enumeratedValueSet variable="a">
+          <value value="2"/>
+        </enumeratedValueSet>
+      </subExperiment>
+      <subExperiment>
+        <enumeratedValueSet variable="b">
+          <value value="2"/>
+        </enumeratedValueSet>
+      </subExperiment>
+      <subExperiment>
+        <enumeratedValueSet variable="c">
+          <value value="2"/>
+        </enumeratedValueSet>
+      </subExperiment>
+    </subExperiments>
+  </experiment>
   <experiment name="testSubExperimentRepetitions" repetitions="2" sequentialRunOrder="false" runMetricsEveryStep="false">
     <timeLimit steps="1"/>
     <subExperiments>

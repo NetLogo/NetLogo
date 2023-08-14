@@ -305,6 +305,9 @@ with OneInstancePerTest with BeforeAndAfterEach {
   test("ConstantReplace", SlowTest.Tag) {
     runExperiment(0, "globals [a b]", "testConstantReplace")
   }
+  test("MultipleConstantReplace", SlowTest.Tag) {
+    runExperiment(0, "globals [a b c]", "testMultipleConstantReplace")
+  }
   test("SubExperimentRepetitions", SlowTest.Tag) {
     runExperiment(0, "globals [a b]", "testSubExperimentRepetitions")
   }
