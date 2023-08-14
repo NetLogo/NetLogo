@@ -56,12 +56,11 @@ case class LabProtocol(name: String,
               if (sequentialRunOrder) (set.variableName,v) :: m
               else m :+ set.variableName -> v))
       }
-    valueSets.map(set =>
-      if (sequentialRunOrder) combinations(set)
-        .flatMap(Iterator.fill(repetitions)(_))
-      else {
-        val runners = combinations(set.reverse).toList
-        (for(i <- 1 to repetitions) yield runners).flatten.toIterator
-      }).flatten.toIterator
+    if (sequentialRunOrder) {
+      valueSets.map(combinations(_).flatMap(x => Iterator.fill(repetitions)(x))).flatten.toIterator
+    }
+    else {
+      Iterator.fill(repetitions)(valueSets.map(x => combinations(x.reverse)).flatten).flatten
+    }
   }
 }
