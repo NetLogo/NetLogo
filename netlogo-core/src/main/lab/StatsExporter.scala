@@ -39,6 +39,10 @@ class StatsExporter(modelFileName: String,
     val writeData = ArrayBuffer[List[AnyRef]]()
     data(runNumber).foreach(metricValues => {
       val mean = metricValues.sum / metricValues.size
+      val std = {
+        if (metricValues.size > 1) sqrt(metricValues.map(v => (v - mean)*(v - mean)).sum / step)
+        else "None"
+      }
     })
     if(!values.isEmpty)
       writeTableRow(runNumber,step,values)
