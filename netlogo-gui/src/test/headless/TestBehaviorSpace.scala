@@ -293,4 +293,22 @@ with OneInstancePerTest with BeforeAndAfterEach {
     assertResult(Double.box(2))(
       workspace.report("ticks"))
   }
+  test("BasicSubExperiment", SlowTest.Tag) {
+    runExperiment(0, "globals [a b]", "testBasicSubExperiment")
+  }
+  test("MultipleSubExperiments", SlowTest.Tag) {
+    runExperiment(0, "globals [a b]", "testMultipleSubExperiments")
+  }
+  test("ConstantOverride", SlowTest.Tag) {
+    runExperiment(0, "globals [a]", "testConstantOverride")
+  }
+  test("ConstantReplace", SlowTest.Tag) {
+    runExperiment(0, "globals [a b]", "testConstantReplace")
+  }
+  test("SubExperimentRepetitions", SlowTest.Tag) {
+    runExperiment(0, "globals [a b]", "testSubExperimentRepetitions")
+  }
+  test("SubExperimentRepetitionsSequential", SlowTest.Tag) {
+    runExperiment(0, "globals [a b]", "testSubExperimentRepetitionsSequential")
+  }
 }
