@@ -20,7 +20,7 @@ case class LabProtocol(name: String,
     if (subExperiments.isEmpty)
       List(constants)
     else {
-      val variables = subExperiments.flatten.map(_.variableName).distinct
+      val variables = (constants.map(_.variableName) ::: subExperiments.flatten.map(_.variableName)).distinct
       for (subExperiment <- subExperiments) yield {
         var filled = List[RefValueSet]()
         for (variable <- variables) {
