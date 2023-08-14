@@ -364,6 +364,13 @@ indicates the file is a Comma Separated Values (CSV) file. This is a plain-text
 data format that is readable by any text editor as well as by most popular
 spreadsheet and database programs.
 
+#### Run options: update plots and monitors
+
+The run options dialog lets you choose whether to update plots and monitors or not.
+Unchecking the box will result in better performance. Note that if you begin
+the experiment with the box unchecked, then you will not be able to toggle
+between enabling and disabling the update plots checkbox in the "Running Experiments" dialog.
+
 #### Run options: parallel runs
 
 The run options dialog also lets you select whether you want multiple model runs to happen in parallel, and if so, how
@@ -420,9 +427,10 @@ box checked, then you'll see a plot of how they vary over the course of each run
 
 You can also watch the runs in the main NetLogo window. (If the "Running
 Experiment" dialog is in the way, just move it to a different place on the
-screen.) The view and plots will update as the model runs. If you don't need to
-see them update, then use the checkboxes in the "Running Experiment" dialog to
+screen.) If you don't need to see the plots update, then use the checkboxes in the "Running Experiment" dialog to
 turn the updating off. This will make the experiment go faster.
+If you disabled updating plots and monitors in the run options, you will
+not be able to toggle between enabling and disabling the plots in the "Running Experiment" dialog.
 
 If you want to stop your experiment before it's finished, press the "Abort"
 button. Any results generated so far will still be saved.
