@@ -48,6 +48,7 @@ public abstract class AbstractWorkspace
 
   public abstract WeakHashMap<Job, WeakHashMap<Agent, WeakHashMap<Command, MutableLong>>> lastRunTimes();
 
+  public boolean shouldUpdatePlots = false;
   //public final WorldLoader worldLoader ;
 
   // We're moving `previewCommands` here from `AbstractWorkspaceScala` so that
