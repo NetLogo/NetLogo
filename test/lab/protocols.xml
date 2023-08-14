@@ -277,60 +277,52 @@
     <timeLimit steps="1"/>
     <metric>a</metric>
     <metric>b</metric>
-    <subExperiments>
-      <subExperiment>
-        <steppedValueSet variable="a" first="1" step="1" last="5"/>
-        <enumeratedValueSet variable="b">
-          <value value="23"/>
-          <value value="77"/>
-        </enumeratedValueSet>
-      </subExperiment>
-    </subExperiments>
+    <subExperiment>
+      <steppedValueSet variable="a" first="1" step="1" last="5"/>
+      <enumeratedValueSet variable="b">
+        <value value="23"/>
+        <value value="77"/>
+      </enumeratedValueSet>
+    </subExperiment>
   </experiment>
   <experiment name="testMultipleSubExperiments" repetitions="1" runMetricsEveryStep="false">
     <timeLimit steps="1"/>
     <metric>a</metric>
     <metric>b</metric>
-    <subExperiments>
-      <subExperiment>
-        <steppedValueSet variable="a" first="1" step="1" last="3"/>
-        <steppedValueSet variable="b" first="4" step="1" last="6"/>
-      </subExperiment>
-      <subExperiment>
-        <steppedValueSet variable="a" first="7" step="1" last="9"/>
-        <steppedValueSet variable="b" first="10" step="1" last="12"/>
-      </subExperiment>
-    </subExperiments>
+    <subExperiment>
+      <steppedValueSet variable="a" first="1" step="1" last="3"/>
+      <steppedValueSet variable="b" first="4" step="1" last="6"/>
+    </subExperiment>
+    <subExperiment>
+      <steppedValueSet variable="a" first="7" step="1" last="9"/>
+      <steppedValueSet variable="b" first="10" step="1" last="12"/>
+    </subExperiment>
   </experiment>
   <experiment name="testConstantOverride" repetitions="1" runMetricsEveryStep="false">
     <timeLimit steps="1"/>
     <steppedValueSet variable="a" first="1" step="1" last="5"/>
-    <subExperiments>
-      <subExperiment>
-        <steppedValueSet variable="a" first="6" step="1" last="10"/>
-      </subExperiment>
-    </subExperiments>
+    <subExperiment>
+      <steppedValueSet variable="a" first="6" step="1" last="10"/>
+    </subExperiment>
   </experiment>
   <experiment name="testConstantReplace" repetitions="1" runMetricsEveryStep="false">
     <timeLimit steps="1"/>
     <enumeratedValueSet variable="a">
       <value value="6"/>
     </enumeratedValueSet>
-    <subExperiments>
-      <subExperiment>
-        <enumeratedValueSet variable="a">
-          <value value="5"/>
-        </enumeratedValueSet>
-        <enumeratedValueSet variable="b">
-          <value value="1"/>
-        </enumeratedValueSet>
-      </subExperiment>
-      <subExperiment>
-        <enumeratedValueSet variable="b">
-          <value value="2"/>
-        </enumeratedValueSet>
-      </subExperiment>
-    </subExperiments>
+    <subExperiment>
+      <enumeratedValueSet variable="a">
+        <value value="5"/>
+      </enumeratedValueSet>
+      <enumeratedValueSet variable="b">
+        <value value="1"/>
+      </enumeratedValueSet>
+    </subExperiment>
+    <subExperiment>
+      <enumeratedValueSet variable="b">
+        <value value="2"/>
+      </enumeratedValueSet>
+    </subExperiment>
   </experiment>
   <experiment name="testMultipleConstantReplace" repetitions="1" runMetricsEveryStep="false">
     <timeLimit steps="1"/>
@@ -343,68 +335,62 @@
     <enumeratedValueSet variable="c">
       <value value="1"/>
     </enumeratedValueSet>
-    <subExperiments>
-      <subExperiment>
-        <enumeratedValueSet variable="a">
-          <value value="2"/>
-        </enumeratedValueSet>
-      </subExperiment>
-      <subExperiment>
-        <enumeratedValueSet variable="b">
-          <value value="2"/>
-        </enumeratedValueSet>
-      </subExperiment>
-      <subExperiment>
-        <enumeratedValueSet variable="c">
-          <value value="2"/>
-        </enumeratedValueSet>
-      </subExperiment>
-    </subExperiments>
+    <subExperiment>
+      <enumeratedValueSet variable="a">
+        <value value="2"/>
+      </enumeratedValueSet>
+    </subExperiment>
+    <subExperiment>
+      <enumeratedValueSet variable="b">
+        <value value="2"/>
+      </enumeratedValueSet>
+    </subExperiment>
+    <subExperiment>
+      <enumeratedValueSet variable="c">
+        <value value="2"/>
+      </enumeratedValueSet>
+    </subExperiment>
   </experiment>
   <experiment name="testSubExperimentRepetitions" repetitions="2" sequentialRunOrder="false" runMetricsEveryStep="false">
     <timeLimit steps="1"/>
-    <subExperiments>
-      <subExperiment>
-        <enumeratedValueSet variable="a">
-          <value value="1"/>
-          <value value="2"/>
-        </enumeratedValueSet>
-        <enumeratedValueSet variable="b">
-          <value value="3"/>
-        </enumeratedValueSet>
-      </subExperiment>
-      <subExperiment>
-        <enumeratedValueSet variable="a">
-          <value value="3"/>
-          <value value="4"/>
-        </enumeratedValueSet>
-        <enumeratedValueSet variable="b">
-          <value value="5"/>
-        </enumeratedValueSet>
-      </subExperiment>
-    </subExperiments>
+    <subExperiment>
+      <enumeratedValueSet variable="a">
+        <value value="1"/>
+        <value value="2"/>
+      </enumeratedValueSet>
+      <enumeratedValueSet variable="b">
+        <value value="3"/>
+      </enumeratedValueSet>
+    </subExperiment>
+    <subExperiment>
+      <enumeratedValueSet variable="a">
+        <value value="3"/>
+        <value value="4"/>
+      </enumeratedValueSet>
+      <enumeratedValueSet variable="b">
+        <value value="5"/>
+      </enumeratedValueSet>
+    </subExperiment>
   </experiment>
   <experiment name="testSubExperimentRepetitionsSequential" repetitions="2" runMetricsEveryStep="false">
     <timeLimit steps="1"/>
-    <subExperiments>
-      <subExperiment>
-        <enumeratedValueSet variable="a">
-          <value value="1"/>
-          <value value="2"/>
-        </enumeratedValueSet>
-        <enumeratedValueSet variable="b">
-          <value value="3"/>
-        </enumeratedValueSet>
-      </subExperiment>
-      <subExperiment>
-        <enumeratedValueSet variable="a">
-          <value value="3"/>
-          <value value="4"/>
-        </enumeratedValueSet>
-        <enumeratedValueSet variable="b">
-          <value value="5"/>
-        </enumeratedValueSet>
-      </subExperiment>
-    </subExperiments>
+    <subExperiment>
+      <enumeratedValueSet variable="a">
+        <value value="1"/>
+        <value value="2"/>
+      </enumeratedValueSet>
+      <enumeratedValueSet variable="b">
+        <value value="3"/>
+      </enumeratedValueSet>
+    </subExperiment>
+    <subExperiment>
+      <enumeratedValueSet variable="a">
+        <value value="3"/>
+        <value value="4"/>
+      </enumeratedValueSet>
+      <enumeratedValueSet variable="b">
+        <value value="5"/>
+      </enumeratedValueSet>
+    </subExperiment>
   </experiment>
 </experiments>
