@@ -14,9 +14,6 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
 
   @throws(classOf[IOException])
   def exportWorld(filename: String) {
-    if (!shouldUpdatePlots) {
-      warningMessage("You are trying to export world, but plot updates are disabled.")
-    }
     new AbstractExporter(filename) {
       def export(writer: PrintWriter): Unit = {
         exportWorldNoMeta(writer)
@@ -26,9 +23,6 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
 
   @throws(classOf[IOException])
   def exportWorld(writer: PrintWriter): Unit = {
-    if (!shouldUpdatePlots) {
-      warningMessage("You are trying to export world, but plot updates are disabled.")
-    }
     AbstractExporter.exportWithHeader(writer, "world", modelFileName, "")(exportWorldNoMeta _)
   }
 
@@ -41,9 +35,6 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
   }
 
   def exportPlotsToCSV(writer: PrintWriter) = {
-    if (!shouldUpdatePlots) {
-      warningMessage("You are trying to export world, but plot updates are disabled.")
-    }
     writer.println(Dump.csv.encode("PLOTS"))
     writer.println(
       Dump.csv.encode(
@@ -61,9 +52,6 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
 
   @throws(classOf[IOException])
   def exportPlot(plotName: String, filename: String) {
-    if (!shouldUpdatePlots) {
-      warningMessage("You are trying to export world, but plot updates are disabled.")
-    }
     new AbstractExporter(filename) {
       override def export(writer: PrintWriter) {
         exportInterfaceGlobals(writer)
@@ -88,9 +76,6 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
 
   @throws(classOf[IOException])
   def exportAllPlots(filename: String) {
-    if (!shouldUpdatePlots) {
-      warningMessage("You are trying to export world, but plot updates are disabled.")
-    }
     new AbstractExporter(filename) {
       override def export(writer: PrintWriter) {
         exportInterfaceGlobals(writer)

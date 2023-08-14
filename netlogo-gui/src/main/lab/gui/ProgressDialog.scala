@@ -22,8 +22,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   private val progressArea = new JTextArea(10 min (protocol.valueSets.size + 3), 0)
   private val timer = new Timer(PeriodicUpdateDelay.DelayInMilliseconds, periodicUpdateAction)
   private val displaySwitch = new JCheckBox(displaySwitchAction)
-  private val plotsAndMonitorsSwitchGUI = new JCheckBox(plotsAndMonitorsSwitchActionGUI)
-  private val plotsAndMonitorsSwitchHeadless = new JCheckBox(plotsAndMonitorsSwitchActionHeadless)
+  private val plotsAndMonitorsSwitch = new JCheckBox(plotsAndMonitorsSwitchAction)
 
 
   private var updatePlots = false
@@ -100,10 +99,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     getContentPane.add(displaySwitch, c)
 
     c.insets = new java.awt.Insets(0, 6, 0, 6)
-    getContentPane.add(plotsAndMonitorsSwitchGUI, c)
-
-    c.insets = new java.awt.Insets(0, 6, 0, 6)
-    getContentPane.add(plotsAndMonitorsSwitchHeadless, c)
+    getContentPane.add(plotsAndMonitorsSwitch, c)
 
     val abortButton = new JButton(abortAction)
     c.fill = java.awt.GridBagConstraints.NONE
@@ -134,20 +130,13 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   lazy val displaySwitchAction = RichAction("Update view") { e =>
     workspace.displaySwitchOn(e.getSource.asInstanceOf[JCheckBox].isSelected)
   }
-  lazy val plotsAndMonitorsSwitchActionGUI = RichAction("Update plots and monitors (GUI)") { e =>
+  lazy val plotsAndMonitorsSwitchAction = RichAction("Update plots and monitors") { e =>
     updatePlots = e.getSource.asInstanceOf[JCheckBox].isSelected
-    workspace.shouldUpdatePlots = updatePlots
     if (updatePlots) workspace.setPeriodicUpdatesEnabled(true)
     else {
       workspace.setPeriodicUpdatesEnabled(false)
       workspace.jobManager.finishSecondaryJobs(null)
     }
-  }
-  lazy val plotsAndMonitorsSwitchActionHeadless = RichAction("Update plots and monitors (Headless)") { e =>
-    val updatePlotsHeadless = e.getSource.asInstanceOf[JCheckBox].isSelected
-    supervisor.headlessWorkspaces.foreach(ws => {
-      ws.shouldUpdatePlots = updatePlotsHeadless
-    })
   }
 
   def updateView(check: Boolean): Unit = {
@@ -159,25 +148,21 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     updateView(status)
   }
 
-  def plotsAndMonitorsSwitchGUI(check: Boolean): Unit = {
-    plotsAndMonitorsSwitchGUI.setSelected(check)
+  def plotsAndMonitorsSwitch(check: Boolean): Unit = {
+    plotsAndMonitorsSwitch.setSelected(check)
     workspace.setPeriodicUpdatesEnabled(check)
     if (!check) {
       workspace.jobManager.finishSecondaryJobs(null)
     }
   }
 
-  def setPlotsAndMonitorsSwitchGUI(status: Boolean): Unit = {
-    plotsAndMonitorsSwitchGUI(status)
+  def setPlotsAndMonitorsSwitch(status: Boolean): Unit = {
+    plotsAndMonitorsSwitch(status)
     updatePlots = status
   }
 
-  def plotsAndMonitorsSwitchHeadless(check: Boolean): Unit = {
-    plotsAndMonitorsSwitchHeadless.setSelected(check)
-  }
-
-  def setPlotsAndMonitorsSwitchHeadless(status: Boolean): Unit = {
-    plotsAndMonitorsSwitchHeadless(status)
+  def enablePlotsAndMonitorsSwitch(enabled: Boolean): Unit = {
+    plotsAndMonitorsSwitch.setEnabled(enabled)
   }
 
   def close() {

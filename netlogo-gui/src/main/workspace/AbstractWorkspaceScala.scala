@@ -60,7 +60,6 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
       throw new RuntimePrimitiveException(context, originalInstruction,
         "The tick counter has not been started yet. Use RESET-TICKS.")
     world.tickCounter.tick()
-    println(f"${world.tickCounter.ticks} Headless: ${isHeadless} | Update Plots:${shouldUpdatePlots}")
     if (shouldUpdatePlots) updatePlots(context)
     requestDisplayUpdate(true)
   }
