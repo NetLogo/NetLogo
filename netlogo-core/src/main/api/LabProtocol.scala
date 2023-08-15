@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.lab.gui.Supervisor.RunOptions
+
 case class LabProtocol(name: String,
                     setupCommands: String,
                     goCommands: String,
@@ -15,7 +17,8 @@ case class LabProtocol(name: String,
                     metrics: List[String],
                     constants: List[RefValueSet],
                     subExperiments: List[List[RefValueSet]] = Nil,
-                    runsCompleted: Int = 0)
+                    runsCompleted: Int = 0,
+                    runOptions: RunOptions = null)
 {
   val valueSets =
     if (subExperiments.isEmpty)

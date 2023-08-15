@@ -28,10 +28,9 @@ class Supervisor(
   protocol: LabProtocol,
   factory: WorkspaceFactory with CurrentModelOpener,
   dialogFactory: EditDialogFactoryInterface,
-  saveProtocol: (LabProtocol, Supervisor.RunOptions) => Unit,
-  previousOptions: Supervisor.RunOptions = null
+  saveProtocol: (LabProtocol) => Unit,
 ) extends Thread("BehaviorSpace Supervisor") {
-  var options = previousOptions
+  var options = protocol.runOptions
   val worker = new Worker(protocol)
   val headlessWorkspaces = new ListBuffer[Workspace]
   val queue = new collection.mutable.Queue[Workspace]

@@ -14,7 +14,7 @@ import org.nlogo.api.{PeriodicUpdateDelay, Dump}
 import org.nlogo.plot.DummyPlotManager
 
 private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervisor,
-                                   saveProtocol: (LabProtocol, Supervisor.RunOptions) => Unit)
+                                   saveProtocol: (LabProtocol) => Unit)
               extends JDialog(dialog, true) with ProgressListener{
   val protocol = supervisor.worker.protocol
   val workspace = supervisor.workspace
@@ -160,11 +160,11 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   }
 
   def saveProtocolP(): Unit = {
-    saveProtocol(protocol.copy(runsCompleted = supervisor.highestCompleted), supervisor.options)
+    saveProtocol(protocol.copy(runsCompleted = supervisor.highestCompleted, runOptions = supervisor.options))
   }
 
   def resetProtocol(): Unit = {
-    saveProtocol(protocol.copy(runsCompleted = 0), null)
+    saveProtocol(protocol.copy(runsCompleted = 0, runOptions = null))
   }
 
   def updateView(check: Boolean): Unit = {

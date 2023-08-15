@@ -17,13 +17,11 @@ private class ManagerDialog(manager:       LabManager,
   extends JDialog(manager.workspace.getFrame)
   with javax.swing.event.ListSelectionListener
 {
-  private var runOptions: Supervisor.RunOptions = null
-  def saveProtocol(protocol: LabProtocol, options: Supervisor.RunOptions): Unit = {
+  def saveProtocol(protocol: LabProtocol): Unit = {
     manager.protocols(selectedIndex) = protocol
     update()
     select(protocol)
     manager.dirty()
-    runOptions = options
   }
   private val jlist = new JList[LabProtocol]
   private val listModel = new javax.swing.DefaultListModel[LabProtocol]
@@ -118,7 +116,7 @@ private class ManagerDialog(manager:       LabManager,
     try {
       manager.prepareForRun()
 
-      new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory, saveProtocol, runOptions).start()
+      new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory, saveProtocol).start()
     }
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(ex) }
   }
