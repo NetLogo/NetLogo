@@ -314,4 +314,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   test("SubExperimentRepetitionsSequential", SlowTest.Tag) {
     runExperiment(0, "globals [a b]", "testSubExperimentRepetitionsSequential")
   }
+  test("ComplexSubExperiments", SlowTest.Tag) {
+    runExperiment(0, "globals [a b c]", "testComplexSubExperiments")
+  }
 }

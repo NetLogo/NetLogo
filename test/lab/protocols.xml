@@ -393,4 +393,28 @@
       </enumeratedValueSet>
     </subExperiment>
   </experiment>
+  <experiment name="testComplexSubExperiments" repetitions="1" runMetricsEveryStep="false">
+    <timeLimit steps="1"/>
+    <steppedValueSet variable="a" first="1" step="1" last="10"/>
+    <steppedValueSet variable="b" first="5" step="3" last="26"/>
+    <enumeratedValueSet variable="c">
+      <value value="15"/>
+      <value value="16"/>
+    </enumeratedValueSet>
+    <subExperiment>
+      <enumeratedValueSet variable="a">
+        <value value="2"/>
+      </enumeratedValueSet>
+    </subExperiment>
+    <subExperiment>
+      <steppedValueSet variable="a" first="1" step="1" last="15"/>
+    </subExperiment>
+    <subExperiment>
+      <steppedValueSet variable="c" first="15" step="1" last="18"/>
+    </subExperiment>
+    <subExperiment>
+      <steppedValueSet variable="b" first="50" step="2" last="60"/>
+      <steppedValueSet variable="c" first="50" step="2" last="60"/>
+    </subExperiment>
+  </experiment>
 </experiments>
