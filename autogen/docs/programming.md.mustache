@@ -2859,14 +2859,22 @@ block as input.
 
 Operator precedences are as follows, high to low:
 
-- [[with]], [[at-points]], [[in-radius]], [[in-cone]]
-- (all other primitives and user-defined procedures)
+- [[with]], [[with-min]], [[with-max]], [[at-points]], [[in-radius]], [[in-cone]], [[who-are-not]]
+- [[of]]
+- All other primitives and user-defined procedures, including [[not]]
 - `^`
 - `*`, `/`, `mod`
 - `+`, `-`
 - `<`, `>`, `<=`, `>=`
 - `=`, `!=`
 - [[and]], [[or]], [[xor]]
+- [[ifelse-value]]
+
+When an expression contains multiple operators with the same precedence, they are read in code order left-to-right.
+Example:  `true or false and false` is read as `(true or false) and false` and so results in `(true) and false`, which
+is `false`.  This is different than many other programming languages where `or` has a lower precedence than `and`, so
+the above statement would be read as `true or (false and false)`, `true or (false)`, so `true`.  You can surround
+expressions in parentheses to ensure you get your desired order of operations.
 
 ### Compared to other Logos
 
