@@ -45,69 +45,8 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
 
-  test-parser:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/cache@v3
-        id: restore-build
-        with:
-          path: ./*
-          key: ${{ github.sha }}
-
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'liberica'
-          java-version: ${{ env.liberica-version }}
-          java-package: jdk+fx
-          cache: 'sbt'
-
-      - name: Test Parser
-        run: ./sbt parserJS/test parserJVM/test
-
-  test-2D:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/cache@v3
-        id: restore-build
-        with:
-          path: ./*
-          key: ${{ github.sha }}
-
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'liberica'
-          java-version: ${{ env.liberica-version }}
-          java-package: jdk+fx
-          cache: 'sbt'
-
-      - name: Test 2D
-        run: ./sbt netlogo/Test/fast netlogo/Test/medium netlogo/Test/slow
-
-      - name: Test 2D NoGen
-        run: ./sbt nogen netlogo/Test/fast netlogo/Test/medium
-
-  test-3D:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - uses: actions/cache@v3
-        id: restore-build
-        with:
-          path: ./*
-          key: ${{ github.sha }}
-
-      - uses: actions/setup-java@v3
-        with:
-          distribution: 'liberica'
-          java-version: ${{ env.liberica-version }}
-          java-package: jdk+fx
-          cache: 'sbt'
-
-      - name: Test 3D
-        run: ./sbt threed netlogo/Test/fast netlogo/Test/medium netlogo/Test/slow
-
+  # Kept separate from the test matrix just to avoid installing the python stuff.
+  # There might be a better/cleverer way to handle it, but this is fine for now.
   test-extensions:
     runs-on: ubuntu-latest
     needs: build
@@ -138,9 +77,29 @@ jobs:
       - name: Test Extensions
         run: ./sbt netlogo/Test/extensionTests
 
-  test-headless:
+  test:
     runs-on: ubuntu-latest
     needs: build
+    strategy:
+      fail-fast: false
+      matrix:
+        test: [
+          "parserJS/test; parserJVM/test"
+        , "netlogo/Test/fast"
+        , "netlogo/Test/medium"
+        , "netlogo/Test/slow"
+        , "nogen; netlogo/Test/fast"
+        , "nogen; netlogo/Test/medium"
+        , "threed; netlogo/Test/fast"
+        , "threed; netlogo/Test/medium"
+        , "threed; netlogo/Test/slow"
+        , "headless/Test/fast"
+        , "headless/Test/medium"
+        , "headless/Test/slow"
+        , "nogen; headless/Test/fast"
+        , "nogen; headless/Test/medium"
+        ]
+
     steps:
       - uses: actions/cache@v3
         id: restore-build
@@ -155,8 +114,5 @@ jobs:
           java-package: jdk+fx
           cache: 'sbt'
 
-      - name: Test Headless
-        run: ./sbt headless/Test/fast headless/Test/medium headless/Test/slow
-
-      - name: Test Headless NoGen
-        run: ./sbt nogen headless/Test/fast headless/Test/medium
+      - name: ${{ matrix.test }}
+        run: ./sbt "${{ matrix.test }}"
