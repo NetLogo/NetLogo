@@ -15,7 +15,8 @@ import org.nlogo.nvm.Workspace
 class SpreadsheetExporter(modelFileName: String,
                           initialDims: WorldDimensions,
                           protocol: LabProtocol,
-                          out: java.io.PrintWriter)
+                          out: java.io.PrintWriter,
+                          partialData: PartialData = new PartialData)
   extends Exporter(modelFileName, initialDims, protocol, out)
 {
   val shouldIncludeSteps = !protocol.runMetricsEveryStep && !protocol.runMetricsCondition.isEmpty
@@ -68,6 +69,7 @@ class SpreadsheetExporter(modelFileName: String,
     // first output run numbers, like this:
     // "[run number]","1","2","3"
     out.print(csv.header("[run number]"))
+    out.print(partialData.runNumbers)
     for(runNumber <- runNumbers)
       out.print(List.fill(1 max protocol.metrics.length)(csv.number(runNumber))
                     .mkString(",", ",", ""))
@@ -96,6 +98,7 @@ class SpreadsheetExporter(modelFileName: String,
     // "[steps]","20","20","20"
     if ((protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) && !protocol.metrics.isEmpty) {
       out.print(csv.header("[reporter]"))
+      out.print(partialData.reporters)
       for(_ <- runs; metric <- protocol.metrics)
         out.print("," + csv.header(metric))
       out.println()
@@ -148,6 +151,8 @@ class SpreadsheetExporter(modelFileName: String,
 
     // now actually generate the rows
     for(i <- 0 to mostMeasurements) {
+      if (partialData.data.length > 0)
+        out.print(partialData.data(i))
       out.print(",")
       foreachRun((run,metricNumber) =>
         if (protocol.runMetricsEveryStep && i > run.steps) None

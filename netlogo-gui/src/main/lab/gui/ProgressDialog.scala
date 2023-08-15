@@ -6,13 +6,12 @@ import org.nlogo.api.LabProtocol
 import org.nlogo.swing.RichAction
 import org.nlogo.nvm.Workspace
 import org.nlogo.nvm.LabInterface.ProgressListener
-import org.nlogo.window.{ PlotWidget, SpeedSliderPanel, GUIWorkspace }
+import org.nlogo.window.{ PlotWidget, SpeedSliderPanel }
 import javax.swing.ScrollPaneConstants._
 import javax.swing._
 import java.awt.Dimension
-import org.nlogo.api.{PeriodicUpdateDelay, Dump, ValueList, TupleList}
+import org.nlogo.api.{PeriodicUpdateDelay, Dump}
 import org.nlogo.plot.DummyPlotManager
-import java.awt.GridBagConstraints
 
 private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervisor,
                                    saveProtocol: (LabProtocol) => Unit)
@@ -26,7 +25,6 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   private val plotsAndMonitorsSwitch = new JCheckBox(plotsAndMonitorsSwitchAction)
   private var updatePlots = false
   private var started = 0L
-  private var previousTime = 0L
   private var runCount = 0
   private var elapsed = "0:00:00"
   private var settingsString = ""
@@ -144,12 +142,12 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     saveProtocol(protocol.copy(runsCompleted = 0, runOptions = null))
   }
 
-  def saveProtocol(): Unit = {
-    savePartial(protocol.copy(runsCompleted = supervisor.highestCompleted), supervisor.options)
+  def saveProtocolP(): Unit = {
+    saveProtocol(protocol.copy(runsCompleted = supervisor.highestCompleted), supervisor.options)
   }
 
   def resetProtocol(): Unit = {
-    savePartial(protocol.copy(runsCompleted = 0), null)
+    saveProtocol(protocol.copy(runsCompleted = 0), null)
   }
 
   def updateView(check: Boolean): Unit = {
@@ -248,7 +246,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
 
   private def updateProgressArea(force: Boolean) {
     def pad(s: String) = if (s.length == 1) ("0" + s) else s
-    val elapsedMillis: Int = ((previousTime + System.currentTimeMillis - started) / 1000).toInt
+    val elapsedMillis: Int = ((System.currentTimeMillis - started) / 1000).toInt
     val hours = (elapsedMillis / 3600).toString
     val minutes = pad(((elapsedMillis % 3600) / 60).toString)
     val seconds = pad((elapsedMillis % 60).toString)

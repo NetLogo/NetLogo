@@ -3,7 +3,7 @@
 package org.nlogo.lab.gui
 
 import org.nlogo.api.LabProtocol
-import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol, ValueList }
+import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol }
 import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 import java.awt.{ Component, Dimension }
 import javax.swing.{ JButton, JDialog, JLabel, JList, JMenuBar, JOptionPane, JPanel, JScrollPane, ListCellRenderer }
@@ -125,12 +125,11 @@ private class ManagerDialog(manager:       LabManager,
     editProtocol(
       new LabProtocol(
         "experiment", "setup", "go", "", 1, true, true, "", 0, "", List("count turtles"),
-        ValueList(
-          manager.workspace.world.synchronized {
-            manager.workspace.world.program.interfaceGlobals.toList
-            .map{case variableName: String =>
-              new RefEnumeratedValueSet(
-                variableName, List(manager.workspace.world.getObserverVariableByName(variableName)))}})),
+        manager.workspace.world.synchronized {
+          manager.workspace.world.program.interfaceGlobals.toList
+          .map{case variableName: String =>
+            new RefEnumeratedValueSet(
+              variableName, List(manager.workspace.world.getObserverVariableByName(variableName)))}}),
       true)
   }
   private def duplicate() { editProtocol(selectedProtocol.copy(runsCompleted = 0), true) }
