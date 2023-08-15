@@ -51,14 +51,14 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       w.setPlotCompilationErrorAction(plotCompilationErrorAction)
       w.open(settings.modelPath)
       plotCompilationErrorAction = PlotCompilationErrorAction.Ignore
-      Some(w)
+      w
     }
 
     val openWs = newWorkspace
     val proto = try {
-      BehaviorSpaceCoordinator.selectProtocol(settings, openWs.get)
+      BehaviorSpaceCoordinator.selectProtocol(settings, openWs)
     } finally {
-      openWs.get.dispose()
+      openWs.dispose()
     }
 
     proto match {

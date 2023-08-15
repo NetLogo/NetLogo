@@ -62,7 +62,7 @@ class Supervisor(
   var paused = false
   var aborted = false
 
-  def nextWorkspace = queue.synchronized { if (queue.isEmpty) None else Some(queue.dequeue()) }
+  def nextWorkspace = queue.synchronized { if (queue.isEmpty) null else queue.dequeue() }
   val runnable = new Runnable { override def run() {
     worker.run(workspace, nextWorkspace _, options.threadCount)
   } }
