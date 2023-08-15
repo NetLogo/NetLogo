@@ -28,11 +28,16 @@ class Worker(val protocol: LabProtocol)
   // (should use a Scala collection not a Java one, but oh well, too lazy today - ST 8/13/09)
   val proceduresMap = new java.util.WeakHashMap[Workspace, Procedures]
   def run(initialWorkspace: Workspace, fn: ()=>Option[Workspace], threads: Int) {
+    val globals = initialWorkspace.world.program.interfaceGlobals
+    val initialState = collection.mutable.Map[String, AnyRef]()
+    for (g <- globals) {
+      initialState(g) = initialWorkspace.world.getObserverVariableByName(g)
+    }
     val executor = Executors.newFixedThreadPool(threads)
     try {
       listeners.foreach(_.experimentStarted())
       runners =
-        (for((settings, runNumber) <- protocol.refElements zip Stream.from(1).iterator)
+        (for((settings, runNumber) <- (protocol.refElements zip Stream.from(1).iterator).drop(protocol.runsCompleted))
          yield new Runner(runNumber, settings, fn)).toSeq
       val futures = {
         import collection.JavaConverters._

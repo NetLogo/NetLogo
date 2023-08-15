@@ -3,7 +3,7 @@
 package org.nlogo.lab.gui
 
 import org.nlogo.api.LabProtocol
-import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol, ValueList }
+import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol }
 import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 import java.awt.{ Component, Dimension }
 import javax.swing.{ JButton, JDialog, JLabel, JList, JMenuBar, JOptionPane, JPanel, JScrollPane, ListCellRenderer }
@@ -18,7 +18,7 @@ private class ManagerDialog(manager:       LabManager,
   with javax.swing.event.ListSelectionListener
 {
   private var runOptions: Supervisor.RunOptions = null
-  def savePartial(protocol: LabProtocol, options: Supervisor.RunOptions): Unit = {
+  def saveProtocol(protocol: LabProtocol, options: Supervisor.RunOptions): Unit = {
     manager.protocols(selectedIndex) = protocol
     update()
     select(protocol)
@@ -118,7 +118,7 @@ private class ManagerDialog(manager:       LabManager,
     try {
       manager.prepareForRun()
 
-      new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory, new ProgressDialog(this, savePartial), runOptions).start()
+      new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory, saveProtocol, runOptions).start()
     }
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(ex) }
   }
@@ -126,15 +126,14 @@ private class ManagerDialog(manager:       LabManager,
     editProtocol(
       new LabProtocol(
         "experiment", "setup", "go", "", 1, true, true, "", 0, "", List("count turtles"),
-        ValueList(
-          manager.workspace.world.synchronized {
-            manager.workspace.world.program.interfaceGlobals.toList
-            .map{case variableName: String =>
-              new RefEnumeratedValueSet(
-                variableName, List(manager.workspace.world.getObserverVariableByName(variableName)))}})),
+        manager.workspace.world.synchronized {
+          manager.workspace.world.program.interfaceGlobals.toList
+          .map{case variableName: String =>
+            new RefEnumeratedValueSet(
+              variableName, List(manager.workspace.world.getObserverVariableByName(variableName)))}}),
       true)
   }
-  private def duplicate() { editProtocol(selectedProtocol, true) }
+  private def duplicate() { editProtocol(selectedProtocol.copy(runsCompleted = 0), true) }
   private def edit() { editProtocol(selectedProtocol, false) }
   private def editProtocol(protocol: LabProtocol, isNew: Boolean) {
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,

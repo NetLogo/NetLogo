@@ -14,7 +14,8 @@ case class LabProtocol(name: String,
                     exitCondition: String,
                     metrics: List[String],
                     constants: List[RefValueSet],
-                    subExperiments: List[List[RefValueSet]] = Nil)
+                    subExperiments: List[List[RefValueSet]] = Nil,
+                    runsCompleted: Int = 0)
 {
   val valueSets =
     if (subExperiments.isEmpty)

@@ -28,15 +28,15 @@ class Supervisor(
   protocol: LabProtocol,
   factory: WorkspaceFactory with CurrentModelOpener,
   dialogFactory: EditDialogFactoryInterface,
-  progressDialog: ProgressDialog,
+  saveProtocol: (LabProtocol, Supervisor.RunOptions) => Unit,
   previousOptions: Supervisor.RunOptions = null
 ) extends Thread("BehaviorSpace Supervisor") {
-  var options: Supervisor.RunOptions = previousOptions
+  var options = previousOptions
+  val worker = new Worker(protocol)
   val headlessWorkspaces = new ListBuffer[Workspace]
   val queue = new collection.mutable.Queue[Workspace]
   val completed = Set[Int]()
   var highestCompleted = protocol.runsCompleted
-  val worker = new Worker(protocol)
   val listener =
     new ProgressListener {
       override def runCompleted(w: Workspace, runNumber: Int, step: Int) {
@@ -63,13 +63,12 @@ class Supervisor(
   var paused = false
   var aborted = false
 
-  progressDialog.connectSupervisor(this)
-
   def nextWorkspace = queue.synchronized { if (queue.isEmpty) None else Some(queue.dequeue()) }
   val runnable = new Runnable { override def run() {
     worker.run(workspace, nextWorkspace _, options.threadCount)
   } }
   private val workerThread = new Thread(runnable, "BehaviorSpace Worker")
+  private val progressDialog = new ProgressDialog(dialog, this, saveProtocol)
   private val exporters = new ListBuffer[Exporter]
   worker.addListener(progressDialog)
   def addExporter(exporter: Exporter) {
@@ -151,7 +150,7 @@ class Supervisor(
           workspace.getModelFileName,
           workspace.world.getDimensions,
           worker.protocol,
-          new PrintWriter(new FileWriter(fileName))))
+          new PrintWriter(new FileWriter(fileName, protocol.runsCompleted > 0))))
 	    } catch {
 		    case e: IOException =>
           failure(e)
@@ -229,10 +228,9 @@ class Supervisor(
         workspace.behaviorSpaceRunNumber(0)
         workspace.behaviorSpaceExperimentName("")
         if (paused)
-          progressDialog.saveProtocol()
+          progressDialog.saveProtocolP()
         else
           progressDialog.resetProtocol()
-        progressDialog.disconnectSupervisor()
         progressDialog.close()
       } } )
     headlessWorkspaces.foreach(_.dispose())
