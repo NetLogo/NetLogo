@@ -39,7 +39,7 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
 
   def exportPlotsToCSV(writer: PrintWriter) = {
     if (!shouldUpdatePlots) {
-      warningMessage("You are trying to export world, but plot updates are disabled.")
+      warningMessage("You are trying to export plots, but plot updates are disabled.")
     }
     writer.println(Dump.csv.encode("PLOTS"))
     writer.println(
@@ -59,7 +59,7 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
   @throws(classOf[IOException])
   def exportPlot(plotName: String, filename: String) {
     if (!shouldUpdatePlots) {
-      warningMessage("You are trying to export world, but plot updates are disabled.")
+      warningMessage("You are trying to export a plot, but plot updates are disabled.")
     }
     new AbstractExporter(filename) {
       override def export(writer: PrintWriter) {
@@ -86,7 +86,7 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
   @throws(classOf[IOException])
   def exportAllPlots(filename: String) {
     if (!shouldUpdatePlots) {
-      warningMessage("You are trying to export world, but plot updates are disabled.")
+      warningMessage("You are trying to export all plots, but plot updates are disabled.")
     }
     new AbstractExporter(filename) {
       override def export(writer: PrintWriter) {

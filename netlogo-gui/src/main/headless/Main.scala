@@ -51,7 +51,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       w.setPlotCompilationErrorAction(plotCompilationErrorAction)
       w.open(settings.modelPath)
       plotCompilationErrorAction = PlotCompilationErrorAction.Ignore
-      w.shouldUpdatePlots = settings.updatePlots
+      w.setShouldUpdatePlots(settings.updatePlots)
       w
     }
 

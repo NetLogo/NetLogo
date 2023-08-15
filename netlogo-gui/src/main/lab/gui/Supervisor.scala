@@ -114,7 +114,7 @@ class Supervisor(
     progressDialog.setUpdateView(options.updateView)
     progressDialog.setPlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
     progressDialog.enablePlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
-    workspace.shouldUpdatePlots = options.updatePlotsAndMonitors
+    workspace.setShouldUpdatePlots(options.updatePlotsAndMonitors)
     queue.enqueue(workspace)
     (2 to options.threadCount).foreach{num =>
       val w = factory.newInstance
@@ -126,7 +126,7 @@ class Supervisor(
         w.setPlotCompilationErrorAction(PlotCompilationErrorAction.Ignore)
       }
       factory.openCurrentModelIn(w)
-      w.shouldUpdatePlots = options.updatePlotsAndMonitors
+      w.setShouldUpdatePlots(options.updatePlotsAndMonitors)
       headlessWorkspaces += w
       queue.enqueue(w)
     }
