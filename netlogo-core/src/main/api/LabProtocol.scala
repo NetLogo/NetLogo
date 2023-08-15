@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.lab.gui.Supervisor.RunOptions
+
 case class LabProtocol(name: String,
                     setupCommands: String,
                     goCommands: String,

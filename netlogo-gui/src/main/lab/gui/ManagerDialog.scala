@@ -22,7 +22,6 @@ private class ManagerDialog(manager:       LabManager,
     update()
     select(protocol)
     manager.dirty()
-    runOptions = options
   }
   private val jlist = new JList[LabProtocol]
   private val listModel = new javax.swing.DefaultListModel[LabProtocol]

@@ -147,7 +147,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   }
 
   def resetProtocol(): Unit = {
-    saveProtocol(protocol.copy(runsCompleted = 0), null)
+    saveProtocol(protocol.copy(runsCompleted = 0, runOptions = null))
   }
 
   def updateView(check: Boolean): Unit = {
