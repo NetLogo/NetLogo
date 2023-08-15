@@ -27,7 +27,7 @@ class Worker(val protocol: LabProtocol)
   // we only want to compile stuff once per workspace, so use this
   // (should use a Scala collection not a Java one, but oh well, too lazy today - ST 8/13/09)
   val proceduresMap = new java.util.WeakHashMap[Workspace, Procedures]
-  def run(initialWorkspace: Workspace, fn: ()=>Option[Workspace], threads: Int) {
+  def run(initialWorkspace: Workspace, fn: ()=>Workspace, threads: Int) {
     val globals = initialWorkspace.world.program.interfaceGlobals
     val initialState = collection.mutable.Map[String, AnyRef]()
     for (g <- globals) {
@@ -83,7 +83,7 @@ class Worker(val protocol: LabProtocol)
       else Some(workspace.compileReporter(protocol.runMetricsCondition))
     }
   }
-  class Runner(runNumber: Int, settings: List[(String, AnyRef)], fn: ()=>Option[Workspace])
+  class Runner(runNumber: Int, settings: List[(String, AnyRef)], fn: ()=>Workspace)
     extends Callable[Unit]
   {
     class FailedException(message: String) extends LogoException(message)
