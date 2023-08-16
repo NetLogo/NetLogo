@@ -66,7 +66,7 @@ with RunCache with Jobs with Warning with OutputArea with Importing
 with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant {
   val fileManager: FileManager = new DefaultFileManager(this)
 
-  private var _shouldUpdatePlots: Boolean = false
+  private var _shouldUpdatePlots: Boolean = true
   def shouldUpdatePlots: Boolean = this._shouldUpdatePlots
   def setShouldUpdatePlots(update: Boolean) = {
     this._shouldUpdatePlots = update

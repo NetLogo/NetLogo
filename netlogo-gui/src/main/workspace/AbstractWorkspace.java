@@ -48,7 +48,7 @@ public abstract class AbstractWorkspace
 
   public abstract WeakHashMap<Job, WeakHashMap<Agent, WeakHashMap<Command, MutableLong>>> lastRunTimes();
 
-  private boolean _shouldUpdatePlots = false;
+  private boolean _shouldUpdatePlots = true;
   public boolean shouldUpdatePlots() {
     return this._shouldUpdatePlots;
   }
