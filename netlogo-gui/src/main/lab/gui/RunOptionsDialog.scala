@@ -5,6 +5,7 @@ package org.nlogo.lab.gui
 import org.nlogo.api.{Editable, Property, RunOptions}
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N }
+import org.nlogo.lab.RunOptions
 import org.nlogo.window.EditDialogFactoryInterface
 
 import java.io.File
