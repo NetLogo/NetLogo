@@ -66,6 +66,12 @@ with RunCache with Jobs with Warning with OutputArea with Importing
 with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant {
   val fileManager: FileManager = new DefaultFileManager(this)
 
+  private var _shouldUpdatePlots: Boolean = false
+  def shouldUpdatePlots: Boolean = this._shouldUpdatePlots
+  def setShouldUpdatePlots(update: Boolean) = {
+    this._shouldUpdatePlots = update
+  }
+
   private var _previewCommands: PreviewCommands = PreviewCommands.Default
   /**
    * previewCommands used by make-preview and model test
@@ -90,7 +96,9 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
       throw new RuntimePrimitiveException(context, originalInstruction,
         "The tick counter has not been started yet. Use RESET-TICKS.")
     world.tickCounter.tick()
-    updatePlots(context)
+    if (this._shouldUpdatePlots) {
+      updatePlots(context)
+    }
     requestDisplayUpdate(true)
   }
 
