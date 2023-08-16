@@ -19,9 +19,6 @@ import org.nlogo.workspace.{ CurrentModelOpener, WorkspaceFactory }
 
 import scala.collection.mutable.Set
 
-object Supervisor {
-  case class RunOptions(threadCount: Int, table: String, spreadsheet: String, updateView: Boolean, updatePlotsAndMonitors: Boolean)
-}
 class Supervisor(
   dialog: Dialog,
   val workspace: GUIWorkspace,
