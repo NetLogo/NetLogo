@@ -16,7 +16,7 @@ case class LabProtocol(name: String,
                     constants: List[RefValueSet],
                     subExperiments: List[List[RefValueSet]] = Nil,
                     runsCompleted: Int = 0,
-                    runOptions: org.nlogo.lab.RunOptions = null)
+                    runOptions: org.nlogo.api.RunOptions = null)
 {
   val valueSets =
     if (subExperiments.isEmpty)
