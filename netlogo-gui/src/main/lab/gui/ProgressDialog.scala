@@ -129,6 +129,8 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
       pause()
   }
   def pause(): Unit = {
+    setUpdateView(false)
+    setPlotsAndMonitorsSwitch(false)
     val dialog = new JDialog(this, "Pausing", true)
     dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
     val layout = new java.awt.GridBagLayout()
