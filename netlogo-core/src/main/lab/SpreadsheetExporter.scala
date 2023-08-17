@@ -159,6 +159,28 @@ class SpreadsheetExporter(modelFileName: String,
         else if (!protocol.runMetricsCondition.isEmpty && i > run.numMeasurements - 1) None // Subtract one for now, since we run the final metrics
         else Some(run.getMeasurement(i,metricNumber)))
     }
+
+    var header = true
+
+    // output expanded list reporters below run data
+    for (runNumber <- runNumbers) {
+      for (i <- 0 until protocol.metrics.length) {
+        for ((measurement, j) <- runs(runNumber).measurements.zipWithIndex) {
+          measurement(i) match {
+            case list: org.nlogo.core.LogoList => {
+              if (header) {
+                out.println()
+                out.print("[list reporter],[run number],[step],[data]")
+                out.println()
+                header = false
+              }
+              out.print(protocol.metrics(i) + "," + runNumber + "," + j + "," + list.mkString(","))
+              out.println()
+            }
+          }
+        }
+      }
+    }
   }
   ///
   class Run(val settings: List[(String,Any)]) {
