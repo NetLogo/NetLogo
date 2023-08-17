@@ -61,6 +61,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   }
 
   locally {
+    setModal(false)
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
     addWindowListener(new java.awt.event.WindowAdapter {
       override def windowClosing(e: java.awt.event.WindowEvent) { abortAction.actionPerformed(null) }
