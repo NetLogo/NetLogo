@@ -240,9 +240,7 @@ with LoadModelEvent.Handler {
 
   @throws(classOf[IOException])
   def exportInterface(filename: String): Unit = {
-    if (!shouldUpdatePlots) {
-      warningMessage("You are trying to export interface, but plot updates are disabled.")
-    }
+    checkPlotUpdates
     if (jobManager.onJobThread) {
       // we treat the job thread differently because it will be holding the world lock
       FileIO.writeImageFile(awaitFutureFromJobThread(controlSet.userInterface), filename, "png")

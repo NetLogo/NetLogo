@@ -13,7 +13,7 @@ class _exportinterface extends Command {
         val filePath = argEvalString(context, 0)
         try workspace.exportInterface(workspace.fileManager.attachPrefix(filePath))
         catch {
-          case e: java.io.IOException =>
+          case e: Exception =>
             throw new RuntimePrimitiveException(
               context, _exportinterface.this, token.text + ": " + e.getMessage)
         }

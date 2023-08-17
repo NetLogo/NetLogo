@@ -55,6 +55,14 @@ public abstract class AbstractWorkspace
   public void setShouldUpdatePlots(boolean update) {
     this._shouldUpdatePlots = update;
   }
+
+  private ExportPlotWarningAction _exportPlotWarningAction = ExportPlotWarningActionJ$.MODULE$.THROW();
+  public ExportPlotWarningAction exportPlotWarningAction() {
+    return this._exportPlotWarningAction;
+  }
+  public void setExportPlotWarningAction(ExportPlotWarningAction action) {
+    this._exportPlotWarningAction = action;
+  }
   //public final WorldLoader worldLoader ;
 
   // We're moving `previewCommands` here from `AbstractWorkspaceScala` so that

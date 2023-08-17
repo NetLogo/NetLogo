@@ -216,7 +216,7 @@ class _exportplot extends PlotCommand {
       def run() {
         try workspace.exportPlot(name, workspace.fileManager.attachPrefix(path))
         catch {
-          case ex: java.io.IOException =>
+          case ex: Exception =>
             throw new RuntimePrimitiveException(context, _exportplot.this, token.text + ": " + ex.getMessage)
         }
       }
@@ -236,7 +236,7 @@ class _exportplots extends PlotCommand {
       def run() {
         try workspace.exportAllPlots(workspace.fileManager.attachPrefix(path))
         catch {
-          case ex: java.io.IOException =>
+          case ex: Exception =>
             throw new RuntimePrimitiveException(context, _exportplots.this,
               token.text + ": " + ex.getMessage)
         }
