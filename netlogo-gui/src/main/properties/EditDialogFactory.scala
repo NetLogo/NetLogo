@@ -10,8 +10,12 @@ import org.nlogo.editor.Colorizer
 class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
   extends org.nlogo.window.EditDialogFactoryInterface
 {
-  def canceled(frame: java.awt.Frame, _target: Editable) =
-    (new javax.swing.JDialog(frame, _target.classDisplayName, true) // true = modal
+  /*
+  @param modal true if dialog is modal (blocking)
+               false if dialog is not modal (non-blocking)
+  */
+  def canceled(frame: java.awt.Frame, _target: Editable, modal: Boolean) =
+    (new javax.swing.JDialog(frame, _target.classDisplayName, modal)
        with EditDialog {
          override def window = frame
          override def target = _target
@@ -19,8 +23,8 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
          override def colorizer = _colorizer
          override def getPreferredSize = limit(super.getPreferredSize)
        }).canceled
-  def canceled(dialog: java.awt.Dialog, _target: Editable) =
-    (new javax.swing.JDialog(dialog, _target.classDisplayName, true) // true = modal
+  def canceled(dialog: java.awt.Dialog, _target: Editable, modal: Boolean) =
+    (new javax.swing.JDialog(dialog, _target.classDisplayName, modal)
        with EditDialog {
          override def window = dialog
          override def target = _target

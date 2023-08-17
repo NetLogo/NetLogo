@@ -130,7 +130,8 @@ private class ManagerDialog(manager:       LabManager,
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
                                         manager.workspace, manager.workspace.world,
                                         manager.protocols.map(_.name).filter(isNew || _ != protocol.name))
-    if (!dialogFactory.canceled(this, editable)) {
+    // "false" argument makes a non-modal dialog - IOB 8/16/23
+    if (!dialogFactory.canceled(this, editable, false)) {
       val newProtocol = editable.get.get
       if (isNew) manager.protocols += newProtocol
       else manager.protocols(selectedIndex) = newProtocol

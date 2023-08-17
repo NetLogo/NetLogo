@@ -17,7 +17,10 @@ import org.nlogo.api.Editable;
 // two different constructors for the two different possible parent types. - ST 2/24/10
 
 public interface EditDialogFactoryInterface {
-  boolean canceled(java.awt.Frame frame, Editable target);
-
-  boolean canceled(java.awt.Dialog dialog, Editable target);
+  /*
+  @param modal true if dialog is modal (blocking)
+               false if dialog is not modal (non-blocking)
+  */
+  boolean canceled(java.awt.Frame frame, Editable target, boolean modal);
+  boolean canceled(java.awt.Dialog dialog, Editable target, boolean modal);
 }

@@ -91,7 +91,8 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       }
       suppress(true)
       editButton.setSelected(true)
-      wPanel.editWidgetFinished(target, dialogFactory.canceled(frame, target))
+      // "true" argument makes a modal dialog - IOB 8/16/23
+      wPanel.editWidgetFinished(target, dialogFactory.canceled(frame, target, true))
       editButton.setSelected(false)
       suppress(false)
     }

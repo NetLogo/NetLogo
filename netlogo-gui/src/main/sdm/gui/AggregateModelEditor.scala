@@ -138,8 +138,8 @@ class AggregateModelEditor(
   def inspectFigure(f: Figure): Unit = {
     f match {
       case target: Editable =>
-        // makes a dialog and returns a boolean result. we ignore the result - ST 3/2/09
-        dialogFactory.canceled(this, target)
+        // makes a modal dialog and returns a boolean result. we ignore the result - ST 3/2/09, IOB 8/16/23
+        dialogFactory.canceled(this, target, true)
 
         f match {
           case mef: ModelElementFigure if mef.dirty =>
