@@ -170,16 +170,18 @@ class SpreadsheetExporter(modelFileName: String,
             case list: org.nlogo.core.LogoList => {
               if (header) {
                 out.println()
-                out.print("[list reporter],[run number],[step],[data]")
+                out.print("[run number],[step]," + protocol.metrics(i))
                 out.println()
                 header = false
               }
-              out.print(protocol.metrics(i) + "," + runNumber + "," + j + "," + list.mkString(","))
+              out.print(runNumber + "," + j + "," + list.mkString(","))
               out.println()
             }
             case _ =>
           }
         }
+
+        header = true
       }
     }
   }
