@@ -161,6 +161,7 @@ class SpreadsheetExporter(modelFileName: String,
     }
 
     var header = true
+    var first = true
 
     // output expanded list reporters below run data
     for (runNumber <- runNumbers) {
@@ -169,7 +170,10 @@ class SpreadsheetExporter(modelFileName: String,
           measurement(i) match {
             case list: org.nlogo.core.LogoList => {
               if (header) {
-                out.println()
+                if (first) {
+                  out.println()
+                  first = false
+                }
                 out.print("[run number],[step]," + protocol.metrics(i))
                 out.println()
                 header = false
