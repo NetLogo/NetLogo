@@ -106,6 +106,15 @@ object LabSaver {
       subExperiment.foreach(matchValueSet _)
       hd.endElement("", "", "subExperiment")
     }
+    if (protocol.runsCompleted > 0)
+      elementWithAttributes("runOptions",
+                            attributes(("runsCompleted", protocol.runsCompleted.toString),
+                                       ("threadCount", protocol.runOptions.threadCount.toString),
+                                       ("table", protocol.runOptions.table),
+                                       ("spreadsheet", protocol.runOptions.spreadsheet),
+                                       ("updateView", if (protocol.runOptions.updateView) "true" else "false"),
+                                       ("updatePlotsAndMonitors",
+                                          if (protocol.runOptions.updatePlotsAndMonitors) "true" else "false")))
     hd.endElement("", "", "experiment")
   }
 }
