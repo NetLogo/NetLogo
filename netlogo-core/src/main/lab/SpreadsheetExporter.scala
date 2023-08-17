@@ -76,7 +76,7 @@ class SpreadsheetExporter(modelFileName: String,
     // "initial-density","0.3","0.5","0.4"
     // "fgcolor","133.0","133.0","133.0"
     // "bgcolor","79.0","79.0","79.0"
-    for(v <- protocol.valueSets.map(_.variableName)) {
+    for(v <- protocol.valueSets(0).map(_.variableName)) {
       out.print(csv.header(v) + ",")
       foreachRun((run,metricNumber) =>
         if (metricNumber == 0)

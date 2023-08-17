@@ -13,9 +13,26 @@ case class LabProtocol(name: String,
                     timeLimit: Int,
                     exitCondition: String,
                     metrics: List[String],
-                    valueSets: List[RefValueSet])
+                    constants: List[RefValueSet],
+                    subExperiments: List[List[RefValueSet]] = Nil)
 {
-  def countRuns = repetitions * valueSets.map(_.length.toInt).product
+  val valueSets =
+    if (subExperiments.isEmpty)
+      List(constants)
+    else {
+      val variables = (constants.map(_.variableName) ::: subExperiments.flatten.map(_.variableName)).distinct
+      for (subExperiment <- subExperiments) yield {
+        var filled = List[RefValueSet]()
+        for (variable <- variables) {
+          filled = filled :+ subExperiment.find(_.variableName == variable)
+                                          .getOrElse(constants.find(_.variableName == variable)
+                                          .getOrElse(new RefEnumeratedValueSet(variable, List(null).asInstanceOf[List[AnyRef]])))
+        }
+        filled
+      }
+    }
+
+  def countRuns = repetitions * valueSets.map(_.map(_.length.toInt).product).sum
 
   // Generate all the possible combinations of values from the ValueSets, in order.  (I'm using
   // Iterator here so that each combination we generate can be garbage collected when we're done
@@ -39,11 +56,11 @@ case class LabProtocol(name: String,
               if (sequentialRunOrder) (set.variableName,v) :: m
               else m :+ set.variableName -> v))
       }
-    if (sequentialRunOrder) combinations(valueSets)
-      .flatMap(Iterator.fill(repetitions)(_))
+    if (sequentialRunOrder) {
+      valueSets.map(combinations(_).flatMap(x => Iterator.fill(repetitions)(x))).flatten.toIterator
+    }
     else {
-      val runners = combinations(valueSets.reverse).toList
-      (for(i <- 1 to repetitions) yield runners).flatten.toIterator
+      Iterator.fill(repetitions)(valueSets.map(x => combinations(x.reverse)).flatten).flatten
     }
   }
 }

@@ -138,6 +138,52 @@ a range.
 
 Also note that the double quotes around the variable names are required.
 
+**Subexperiment syntax:**For more advanced users, there is a third available syntax
+for varying parameters, the subexperiment syntax. This syntax allows you to define
+parameter combinations that are run separately, as opposed to being merged
+combinatorically. For example, if you wanted to try two values for a variable `a`
+with one value of a variable `b` but a different two values of `a` for a second value
+of `b`, you could write it as follows:
+
+> `[["a" 1 2]["b" 1]]`
+> `[["a" 3 4]["b" 2]]`
+
+Note the use of doubly nested square brackets to separate each variable within a
+subexperiment. This would create four runs, organized as follows:
+
+> `a`: 1, `b`: 1
+> `a`: 2, `b`: 1
+> `a`: 3, `b`: 2
+> `a`: 4, `b`: 2
+
+The subexperiment syntax also allows you to define constants using the standard
+syntax, which will be applied to each subexperiment where they are not overwritten.
+To add to the example above, if you wanted to try those combinations of `a` and `b`
+all with one specific value of a third variable `c`, you could write it as follows:
+
+> `["c" 5]`
+> `[["a" 1 2]["b" 1]]`
+> `[["a" 3 4]["b" 2]]`
+
+This would set `c` to 5 for all 4 subexperiments, resulting in the following runs:
+
+> `a`: 1, `b`: 1, `c`: 5
+> `a`: 2, `b`: 1, `c`: 5
+> `a`: 3, `b`: 2, `c`: 5
+> `a`: 4, `b`: 2, `c`: 5
+
+You can also override a constant in a subexperiment, like the following example:
+
+> `["a" 1]`
+> `["b" 2]`
+> `[["a" 2]]`
+
+This would produce one run with the following combination:
+
+> `a`: 2, `b`: 2
+
+Note that all constants must be defined before any subexperiments.
+
 You can vary as many settings as you want, including just one, or none at all.
 Any settings that you do not vary will retain their current values. Not varying
 any settings is useful if you just want to do many runs with the current

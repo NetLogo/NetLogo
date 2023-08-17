@@ -65,7 +65,7 @@ class ProtocolEditable(protocol: LabProtocol,
   var timeLimit = protocol.timeLimit
   var exitCondition = protocol.exitCondition
   var metrics = protocol.metrics.mkString("\n")
-  var valueSets =  {
+  var valueSets = {
     def setString(valueSet: RefValueSet) =
       "[\"" + valueSet.variableName + "\" " +
       (valueSet match {
@@ -75,8 +75,9 @@ class ProtocolEditable(protocol: LabProtocol,
            evs.map(x => Dump.logoObject(x.asInstanceOf[AnyRef], true, false)).mkString(" ")
          case svs: SteppedValueSet =>
            List(svs.firstValue, svs.step, svs.lastValue).map(_.toString).mkString("[", " ", "]")
-       }) + "]\n"
-    protocol.valueSets.map(setString).mkString
+       }) + "]"
+    (protocol.constants.map(setString) :::
+     protocol.subExperiments.map("[" + _.map(setString).mkString + "]")).mkString("\n")
   }
   // make a new LabProtocol based on what user entered
   def editFinished: Boolean = get.isDefined
@@ -87,38 +88,93 @@ class ProtocolEditable(protocol: LabProtocol,
           window, "Invalid spec for varying variables. Error:\n" + message,
          "Invalid", javax.swing.JOptionPane.ERROR_MESSAGE)
     }
-    Some(new LabProtocol(
-      name.trim, setupCommands.trim, goCommands.trim,
-      finalCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep, runMetricsCondition.trim,
-      timeLimit, exitCondition.trim,
-      metrics.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
-      {
-        val list =
-          try { worldLock.synchronized {
-            compiler.readFromString("[" + valueSets + "]").asInstanceOf[LogoList]
-          } }
-        catch{ case ex: CompilerException => complain(ex.getMessage); return None }
-        for (o <- list.toList) yield {
-          o.asInstanceOf[LogoList].toList match {
+    val list =
+      try { worldLock.synchronized {
+        compiler.readFromString("[" + valueSets + "]").asInstanceOf[LogoList]
+      } }
+    catch{ case ex: CompilerException => complain(ex.getMessage); return None }
+    var constants = List[RefValueSet]()
+    var subExperiments = List[List[RefValueSet]]()
+    for (o <- list.toList) {
+      o.asInstanceOf[LogoList].toList match {
+        case List(variableName: String, more: LogoList) =>
+          more.toList match {
+            case List(first: java.lang.Double,
+                      step: java.lang.Double,
+                      last: java.lang.Double) =>
+              val constant = new SteppedValueSet(variableName,
+                                                 BigDecimal(Dump.number(first)),
+                                                 BigDecimal(Dump.number(step)),
+                                                 BigDecimal(Dump.number(last)))
+              if (constants.contains(constant)) {
+                complain(s"Constant ${variableName} defined twice"); return None
+              }
+              if (!subExperiments.isEmpty) {
+                complain(s"Constant ${variableName} defined after subexperiment"); return None
+              }
+              constants = constants :+ constant
+            case _ =>
+              complain("Expected three numbers here: " + Dump.list(more)); return None
+          }
+        case List(variableName: String, more@_*) =>
+          if (more.isEmpty) {complain(s"Expected a value for variable $variableName"); return None}
+          val constant = new RefEnumeratedValueSet(variableName, more.toList)
+          if (constants.contains(constant)) {
+            complain(s"Constant ${variableName} defined twice"); return None
+          }
+          if (!subExperiments.isEmpty) {
+            complain(s"Constant ${variableName} defined after subexperiment"); return None
+          }
+          constants = constants :+ constant
+        case List(first: LogoList, more@_*) =>
+          var subExperiment = List[RefValueSet]()
+          (List(first) ++ more).foreach(_.asInstanceOf[LogoList].toList match {
             case List(variableName: String, more: LogoList) =>
               more.toList match {
                 case List(first: java.lang.Double,
                           step: java.lang.Double,
                           last: java.lang.Double) =>
-                  new SteppedValueSet(variableName,
-                                      BigDecimal(Dump.number(first)),
-                                      BigDecimal(Dump.number(step)),
-                                      BigDecimal(Dump.number(last)))
+                  val exp = new SteppedValueSet(variableName,
+                                                BigDecimal(Dump.number(first)),
+                                                BigDecimal(Dump.number(step)),
+                                                BigDecimal(Dump.number(last)))
+                  if (subExperiment.contains(exp)) {
+                    complain(s"Variable ${variableName} defined twice in one subexperiment"); return None
+                  }
+                  subExperiment = subExperiment :+ exp
                 case _ =>
                   complain("Expected three numbers here: " + Dump.list(more)); return None
               }
             case List(variableName: String, more@_*) =>
               if (more.isEmpty) {complain(s"Expected a value for variable $variableName"); return None}
-              new RefEnumeratedValueSet(variableName, more.toList)
+              val exp = new RefEnumeratedValueSet(variableName, more.toList)
+              if (subExperiment.contains(exp)) {
+                complain(s"Variable ${variableName} defined twice in one subexperiment"); return None
+              }
+              subExperiment = subExperiment :+ exp
             case _ =>
-              complain("Invalid format"); return None
-          }}
-      }))
+              complain("Invalid format" + (List(first.toList) ++ more)); return None
+          })
+          subExperiments = subExperiments :+ subExperiment
+        case _ =>
+          complain("Invalid format"); return None
+      }
+    }
+    for (experiment <- subExperiments) {
+      for (valueSet <- experiment) {
+        if (!constants.exists(_.variableName == valueSet.variableName) &&
+            subExperiments.exists(!_.exists(_.variableName == valueSet.variableName))) {
+          complain(s"Variable ${valueSet.variableName} must be defined as a constant" +
+                    " if not defined for all subexperiments"); return None
+        }
+      }
+    }
+    Some(new LabProtocol(
+      name.trim, setupCommands.trim, goCommands.trim,
+      finalCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep, runMetricsCondition.trim,
+      timeLimit, exitCondition.trim,
+      metrics.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
+      constants, subExperiments))
   }
 
   override def invalidSettings: Seq[(String,String)] = {
@@ -152,13 +208,14 @@ class ProtocolEditable(protocol: LabProtocol,
               case _ =>
                 return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.incrementinvalid", variableName))
             }
-         case List(variableName: String, more@_*) =>
+          case List(variableName: String, more@_*) =>
             if (more.isEmpty){
               return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.field", variableName))
             }
             if ( Int.MaxValue / totalCombinations > more.toList.size )
               totalCombinations = totalCombinations * more.toList.size
             else return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.variablelist", variableName))
+          case List(first: LogoList, more@_*) =>
           case _ => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.unexpected"))
         }
     }
