@@ -265,7 +265,7 @@ private class ManagerDialog(manager:       LabManager,
       isSelected: Boolean, cellHasFocus: Boolean): Component = {
         val text =
           if (proto.runsCompleted != 0)
-            s"** In Progress ** ${proto.name} (${proto.countRuns} run${(if (proto.countRuns != 1) "s" else "")})"
+            s"** In Progress ** ${proto.name} (${proto.runsCompleted}/${proto.countRuns} runs completed)"
           else
             s"${proto.name} (${proto.countRuns} run${(if (proto.countRuns != 1) "s" else "")})"
         setText(text)
