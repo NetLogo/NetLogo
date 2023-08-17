@@ -177,6 +177,7 @@ class SpreadsheetExporter(modelFileName: String,
               out.print(protocol.metrics(i) + "," + runNumber + "," + j + "," + list.mkString(","))
               out.println()
             }
+            case _ =>
           }
         }
       }
