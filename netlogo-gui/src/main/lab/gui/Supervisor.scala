@@ -15,7 +15,7 @@ import org.nlogo.nvm.{ EngineException, Workspace }
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.swing.{ OptionDialog }
 import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace }
-import org.nlogo.workspace.{ CurrentModelOpener, WorkspaceFactory, AbstractWorkspace }
+import org.nlogo.workspace.{ AbstractWorkspace, CurrentModelOpener, WorkspaceFactory }
 
 object Supervisor {
   case class RunOptions(threadCount: Int, table: String, spreadsheet: String, updateView: Boolean, updatePlotsAndMonitors: Boolean)

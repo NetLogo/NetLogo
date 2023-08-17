@@ -24,7 +24,6 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   private val displaySwitch = new JCheckBox(displaySwitchAction)
   private val plotsAndMonitorsSwitch = new JCheckBox(plotsAndMonitorsSwitchAction)
 
-
   private var updatePlots = false
   private var started = 0L
   private var runCount = 0
