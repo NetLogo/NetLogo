@@ -138,6 +138,7 @@ class AggregateModelEditor(
   def inspectFigure(f: Figure): Unit = {
     f match {
       case target: Editable =>
+        // makes a dialog and returns a boolean result. we ignore the result - ST 3/2/09
         dialogFactory.canceled(this, target)
 
         f match {
