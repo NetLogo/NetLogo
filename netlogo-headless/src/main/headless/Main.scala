@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ APIVersion, Version }
+import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, Version }
 import org.nlogo.nvm.LabInterface.Settings
 import org.nlogo.api.PlotCompilationErrorAction
 
@@ -21,11 +21,17 @@ object Main {
 
   def runExperiment(settings: Settings) {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
+    var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
+    var createdProto = false
     def newWorkspace = {
       val w = HeadlessWorkspace.newInstance
       w.setPlotCompilationErrorAction(plotCompilationErrorAction)
+      w.setExportPlotWarningAction(exportPlotWarningAction)
       w.open(settings.modelPath)
       plotCompilationErrorAction = PlotCompilationErrorAction.Ignore
+      if (createdProto) {
+        exportPlotWarningAction = ExportPlotWarningAction.Ignore
+      }
       w.setShouldUpdatePlots(settings.updatePlots)
       w
     }
@@ -36,6 +42,7 @@ object Main {
     } finally {
       openWs.dispose()
     }
+    createdProto = true
     proto match {
       case Some(protocol) =>
         val lab = HeadlessWorkspace.newLab

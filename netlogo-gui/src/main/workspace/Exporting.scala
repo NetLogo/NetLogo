@@ -18,11 +18,11 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
       exportPlotWarningAction match {
         case Throw => {
           setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
-          throw new Exception("Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface.")
+          throw new Exception("Enable plot updating in Run Options to use export-plot, export-all-plots, export-world, or export-interface.")
         }
         case Output => {
           setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
-          println("Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface.")
+          println("Enable plot updating in Run Options to use export-plot, export-all-plots, export-world, or export-interface.")
         }
         case Ignore =>
       }

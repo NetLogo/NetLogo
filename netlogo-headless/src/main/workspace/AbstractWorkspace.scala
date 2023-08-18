@@ -14,7 +14,7 @@ import scala.collection.mutable.WeakHashMap
 import
   org.nlogo.{ agent, api, core, nvm, plot },
   agent.{ AbstractExporter, Agent, AgentSet, World },
-  api.{PlotInterface, CommandLogoThunk, Dump, Exceptions, ExtensionManager => APIEM, JobOwner,
+  api.{PlotInterface, CommandLogoThunk, Dump, Exceptions, ExtensionManager => APIEM, ExportPlotWarningAction, JobOwner,
     LibraryManager, LogoException, MersenneTwisterFast, ModelType, PreviewCommands, ReporterLogoThunk, SimpleJobOwner},
   core.{ CompilationEnvironment, AgentKind, CompilerException, Femto, File, FileMode, LiteralParser},
   nvm.{ Activation, Command, Context, FileManager, ImportHandler,
@@ -70,6 +70,12 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
   def shouldUpdatePlots: Boolean = this._shouldUpdatePlots
   def setShouldUpdatePlots(update: Boolean) = {
     this._shouldUpdatePlots = update
+  }
+
+  private var _exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
+  def exportPlotWarningAction(): ExportPlotWarningAction = this._exportPlotWarningAction
+  def setExportPlotWarningAction(action: ExportPlotWarningAction) = {
+    this._exportPlotWarningAction = action
   }
 
   private var _previewCommands: PreviewCommands = PreviewCommands.Default
@@ -229,8 +235,26 @@ object AbstractWorkspaceTraits {
     def exportDrawingToCSV(writer:PrintWriter)
     def exportOutputAreaToCSV(writer:PrintWriter)
 
+    def checkPlotUpdates() {
+      if (!shouldUpdatePlots) {
+        import ExportPlotWarningAction._
+        exportPlotWarningAction match {
+          case Throw => {
+            setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
+            throw new Exception("Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface.")
+          }
+          case Output => {
+            setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
+            println("Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface.")
+          }
+          case Ignore =>
+        }
+      }
+    }
+
     @throws(classOf[IOException])
     def exportWorld(filename: String) {
+      checkPlotUpdates
       new AbstractExporter(filename) {
         def export(writer: PrintWriter): Unit = {
           exportWorldNoMeta(writer)
@@ -240,6 +264,7 @@ object AbstractWorkspaceTraits {
 
     @throws(classOf[IOException])
     def exportWorld(writer: PrintWriter): Unit = {
+      checkPlotUpdates
       AbstractExporter.exportWithHeader(writer, "world", getModelFileName, "")(exportWorldNoMeta _)
     }
 
@@ -252,6 +277,7 @@ object AbstractWorkspaceTraits {
     }
 
     def exportPlotsToCSV(writer: PrintWriter) {
+      checkPlotUpdates
       writer.println(Dump.csv.encode("PLOTS"))
       writer.println(
         Dump.csv.encode(
@@ -264,6 +290,7 @@ object AbstractWorkspaceTraits {
 
     @throws(classOf[IOException])
     def exportPlot(plotName: String,filename: String) {
+      checkPlotUpdates
       new AbstractExporter(filename) {
         override def export(writer: PrintWriter) {
           exportInterfaceGlobals(writer)
@@ -274,6 +301,7 @@ object AbstractWorkspaceTraits {
 
     @throws(classOf[IOException])
     def exportAllPlots(filename: String) {
+      checkPlotUpdates
       new AbstractExporter(filename) {
         override def export(writer: PrintWriter) {
           exportInterfaceGlobals(writer)
