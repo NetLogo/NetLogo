@@ -67,8 +67,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
   }
   def get = {
     val editable = new EditableRunOptions
-    // "true" argument makes a modal dialog - IOB 8/16/23
-    if (dialogFactory.canceled(parent, editable, true))
+    if (dialogFactory.canceled(parent, editable))
       throw new UserCancelException
     val runOptions = editable.get
     Prefs.updateFrom(runOptions)

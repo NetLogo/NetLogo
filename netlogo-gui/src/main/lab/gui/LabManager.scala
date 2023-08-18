@@ -42,7 +42,10 @@ class LabManager(val workspace:        GUIWorkspace,
     dialog.update()
     dialog.setVisible(true)
   }
-  def close() { dialog.setVisible(false) }
+  def close() {
+    dialogFactory.clearDialog()
+    dialog.setVisible(false)
+  }
   def dirty() { new DirtyEvent(None).raise(this) }
   /// Event.LinkChild -- lets us get events out to rest of app
   val getLinkParent = workspace

@@ -10,12 +10,10 @@ import org.nlogo.editor.Colorizer
 class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
   extends org.nlogo.window.EditDialogFactoryInterface
 {
-  /*
-  @param modal true if dialog is modal (blocking)
-               false if dialog is not modal (non-blocking)
-  */
-  def canceled(frame: java.awt.Frame, _target: Editable, modal: Boolean) =
-    (new javax.swing.JDialog(frame, _target.classDisplayName, modal)
+  var dialog: EditDialog = null
+
+  def canceled(frame: java.awt.Frame, _target: Editable) = {
+    (new javax.swing.JDialog(frame, _target.classDisplayName, true)
        with EditDialog {
          override def window = frame
          override def target = _target
@@ -23,8 +21,9 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
          override def colorizer = _colorizer
          override def getPreferredSize = limit(super.getPreferredSize)
        }).canceled
-  def canceled(dialog: java.awt.Dialog, _target: Editable, modal: Boolean) =
-    (new javax.swing.JDialog(dialog, _target.classDisplayName, modal)
+  }
+  def canceled(dialog: java.awt.Dialog, _target: Editable) = {
+    (new javax.swing.JDialog(dialog, _target.classDisplayName, true)
        with EditDialog {
          override def window = dialog
          override def target = _target
@@ -32,4 +31,46 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
          override def colorizer = _colorizer
          override def getPreferredSize = limit(super.getPreferredSize)
        }).canceled
+  }
+
+  def create(frame: java.awt.Frame, _target: Editable, finish: Runnable) = {
+    dialog = new javax.swing.JDialog(frame, _target.classDisplayName, false)
+               with EditDialog {
+                 override def window = frame
+                 override def target = _target
+                 override def compiler = _compiler
+                 override def colorizer = _colorizer
+                 override def getPreferredSize = limit(super.getPreferredSize)
+               }
+    dialog.addWindowListener(new java.awt.event.WindowAdapter {
+      override def windowClosing(e: java.awt.event.WindowEvent) {
+        finish.run()
+      }
+    })
+  }
+
+  def create(dialog: java.awt.Dialog, _target: Editable, finish: Runnable) = {
+    this.dialog = new javax.swing.JDialog(dialog, _target.classDisplayName, false)
+                    with EditDialog {
+                      override def window = dialog
+                      override def target = _target
+                      override def compiler = _compiler
+                      override def colorizer = _colorizer
+                      override def getPreferredSize = limit(super.getPreferredSize)
+                    }
+    this.dialog.addWindowListener(new java.awt.event.WindowAdapter {
+      override def windowClosing(e: java.awt.event.WindowEvent) {
+        finish.run()
+      }
+    })
+  }
+  
+  def getDialog() = dialog
+  def clearDialog() = {
+    if (dialog != null)
+    {
+      dialog.abort()
+      dialog = null
+    }
+  }
 }

@@ -115,6 +115,10 @@ trait EditDialog extends javax.swing.JDialog {
   setResizable(editPanel.isResizable)
   setVisible(true)
 
+  def abort() {
+    cancel(target)
+  }
+
   private def cancel(target: org.nlogo.api.Editable) {
     editPanel.revert()
     if(!sendEditFinishedOnCancel || target.editFinished) {
