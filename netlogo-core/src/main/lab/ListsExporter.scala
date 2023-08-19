@@ -4,7 +4,6 @@ package org.nlogo.lab
 
 import org.nlogo.api.LabProtocol
 import org.nlogo.core.WorldDimensions
-import scala.collection.immutable.{ ListMap, SortedMap }
 import scala.collection.mutable.Seq
 
 object ListsExporter {
@@ -59,35 +58,39 @@ class ListsExporter(modelFileName: String,
         val header = lines.next.split(",")
         val runIndex = header.indexWhere(_.contains("[run number]"))
         val stepIndex = header.indexWhere(_.contains("[step]"))
-        var map = SortedMap[Int, ListMap[String, SortedMap[Int, String]]]()
+        val parameterIndices = runIndex + 1 until stepIndex
+        var sortedLines = Seq[(String, Int, String, Int, String)]()
         for (line <- lines) {
           val els = line.split(",")
           for (i <- 0 until els.length) {
             if (els(i).contains("[")) {
-              val runKey = els(runIndex).replaceAll("\\D", "").toInt
-              val stepKey = els(stepIndex).replaceAll("\\D", "").toInt
-              if (!map.contains(runKey))
-                map = map.updated(runKey, ListMap[String, SortedMap[Int, String]]())
-              if (!map(runKey).contains(header(i)))
-                map = map.updated(runKey, map(runKey).updated(header(i), SortedMap[Int, String]()))
-              map = map.updated(runKey, map(runKey)
-                       .updated(header(i), map(runKey)(header(i))
-                       .updated(stepKey, els(i).replaceAll("[\"\\[\\]]", "").replace(" ", ","))))
+              sortedLines = sortedLines :+ ((header(i),
+                                             els(runIndex).replaceAll("\\D", "").toInt,
+                                             parameterIndices.map(els(_)).mkString(","),
+                                             els(stepIndex).replaceAll("\\D", "").toInt,
+                                             els(i).replaceAll("[\"\\[\\]]", "").replace(" ", ",")))
             }
           }
         }
-        out.print("[reporter],[run number],[step]")
-        for (i <- 0 until map.map(_._2.map(_._2.map(_._2.split(",").length)).flatten).flatten.max) {
+        sortedLines = sortedLines.sortWith((a, b) =>
+          if (a._2 == b._2) {
+            if (a._1 == b._1) {
+              a._4 < b._4
+            } else header.indexWhere(_ == a._1) < header.indexWhere(_ == b._1)
+          } else a._2 < b._2
+        )
+        out.print("[reporter],[run number]")
+        for (i <- parameterIndices)
+          out.print("," + header(i))
+        out.print(",[step]")
+        for (i <- 0 until sortedLines.map(_._5.split(",").length).max) {
           out.print(s",[$i]")
         }
         out.println()
-        for (run <- map) {
-          for (name <- run._2) {
-            for (step <- name._2) {
-              out.print(name._1 + "," + run._1 + "," + step._1 + "," + step._2)
-              out.println()
-            }
-          }
+        for (line <- sortedLines)
+        {
+          out.print(line._1 + "," + line._2 + "," + line._3 + "," + line._4 + "," + line._5)
+          out.println()
         }
       }
     }
