@@ -187,6 +187,25 @@ class Supervisor(
           return
       }
     }
+    if (options.lists != null && options.lists.trim() != "") {
+      val fileName = options.lists.trim()
+      try {
+        addExporter(new ListsExporter(
+          workspace.getModelFileName,
+          workspace.world.getDimensions,
+          worker.protocol,
+          new PrintWriter(new FileWriter(fileName)),
+          if (options.table != null && options.table.trim() != "") {
+            ListsExporter.TableFormat(options.table.trim())
+          } else {
+            ListsExporter.SpreadsheetFormat(options.spreadsheet.trim())
+          }))
+      } catch {
+        case e: IOException =>
+          failure(e)
+          return
+      }
+    }
     progressDialog.setUpdateView(options.updateView)
     progressDialog.setPlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
     queue.enqueue(workspace)
