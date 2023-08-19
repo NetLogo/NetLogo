@@ -2,7 +2,7 @@
 
 package org.nlogo.lab.gui
 
-import collection.mutable.ListBuffer
+import collection.mutable.{ HashMap, ListBuffer }
 
 import java.awt.{ Dialog }
 import java.io.{ FileWriter, IOException, PrintWriter }
@@ -10,7 +10,7 @@ import java.io.{ FileWriter, IOException, PrintWriter }
 import org.nlogo.api.{ Exceptions, LabProtocol, LogoException, PlotCompilationErrorAction }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ CompilerException, I18N }
-import org.nlogo.lab.{ Exporter, SpreadsheetExporter, TableExporter, Worker }
+import org.nlogo.lab.{ Exporter, PostProcessor, SpreadsheetExporter, StatsProcessor, TableExporter, Worker }
 import org.nlogo.nvm.{ EngineException, Workspace }
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.swing.{ OptionDialog }
@@ -18,7 +18,7 @@ import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace }
 import org.nlogo.workspace.{ CurrentModelOpener, WorkspaceFactory }
 
 object Supervisor {
-  case class RunOptions(threadCount: Int, table: String, spreadsheet: String, updateView: Boolean, updatePlotsAndMonitors: Boolean)
+  case class RunOptions(threadCount: Int, table: String, spreadsheet: String, stats: String, updateView: Boolean, updatePlotsAndMonitors: Boolean)
 }
 class Supervisor(
   dialog: Dialog,
@@ -58,12 +58,20 @@ class Supervisor(
   private val workerThread  = new Thread(runnable, "BehaviorSpace Worker")
   private val progressDialog = new ProgressDialog(dialog,  this)
   private val exporters = new ListBuffer[Exporter]
+  private val exporterFileNames = new HashMap[Exporter, String]
+  private var spreadsheetExporter: SpreadsheetExporter = null
+  private var tableExporter: TableExporter = null
+  private val postProcessors = new ListBuffer[PostProcessor]
   worker.addListener(progressDialog)
   def addExporter(exporter: Exporter) {
     if (!exporters.contains(exporter)) {
       exporters += exporter
       worker.addListener(exporter)
     }
+  }
+
+  def addPostProcessor(postProcessor: PostProcessor) {
+    postProcessors += postProcessor
   }
 
   override def start() {
@@ -86,11 +94,13 @@ class Supervisor(
     if (options.spreadsheet != null && options.spreadsheet.trim() != "") {
       val fileName = options.spreadsheet.trim()
       try {
-        addExporter(new SpreadsheetExporter(
+        spreadsheetExporter = new SpreadsheetExporter(
           workspace.getModelFileName,
           workspace.world.getDimensions,
           worker.protocol,
-          new PrintWriter(new FileWriter(fileName))))
+          new PrintWriter(new FileWriter(fileName)))
+        addExporter(spreadsheetExporter)
+        exporterFileNames(spreadsheetExporter) = fileName
 	    } catch {
 		    case e: IOException =>
           failure(e)
@@ -100,10 +110,30 @@ class Supervisor(
     if (options.table != null && options.table.trim() != "") {
       val fileName = options.table.trim()
       try {
-        addExporter(new TableExporter(
+        tableExporter = new TableExporter(
           workspace.getModelFileName,
           workspace.world.getDimensions,
           worker.protocol,
+          new PrintWriter(new FileWriter(fileName)))
+        addExporter(tableExporter)
+        exporterFileNames(tableExporter) = fileName
+	    } catch {
+		    case e: IOException =>
+          failure(e)
+          return
+      }
+    }
+
+    if (options.table != null && options.table.trim() != "") {
+      val fileName = options.stats.trim()
+      try {
+        addPostProcessor(new StatsProcessor(
+          workspace.getModelFileName,
+          workspace.world.getDimensions,
+          worker.protocol,
+          tableExporter,
+          spreadsheetExporter,
+          exporterFileNames,
           new PrintWriter(new FileWriter(fileName))))
 	    } catch {
 		    case e: IOException =>
@@ -178,6 +208,7 @@ class Supervisor(
         progressDialog.close()
       } } )
     headlessWorkspaces.foreach(_.dispose())
+    postProcessors.foreach(_.process())
   }
 
   private def failure(t: Throwable) {

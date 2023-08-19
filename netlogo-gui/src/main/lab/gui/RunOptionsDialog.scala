@@ -18,6 +18,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
   val userHome = System.getProperty("user.home")
   val spreadsheetFile = s"$filePrefix-spreadsheet.csv"
   val tableFile = s"$filePrefix-table.csv"
+  val statsFile = s"$filePrefix-stats.csv"
 
   object Prefs {
     private val prefs = Preferences.userNodeForPackage(RunOptionsDialog.this.getClass)
@@ -54,12 +55,19 @@ class RunOptionsDialog(parent: java.awt.Dialog,
         append(replaceTrue(t), tableFile)
       }
     }
+    def stats = {
+      val t = prefs.get("stats", "")
+      if (emptyVals.contains(t)) { "" } else {
+        append(replaceTrue(t), statsFile)
+      }
+    }
     def updateView = prefs.getBoolean("updateView", true)
     def updatePlotsAndMonitors = prefs.getBoolean("updatePlotsAndMonitors", true)
     def updateThreadCount = prefs.getInt("threadCount", Runtime.getRuntime.availableProcessors)
     def updateFrom(runOptions: RunOptions): Unit = {
       prefs.put("spreadsheet", parentDirectory(runOptions.spreadsheet))
       prefs.put("table", parentDirectory(runOptions.table))
+      prefs.put("stats", parentDirectory(runOptions.stats))
       prefs.putBoolean("updateView", runOptions.updateView)
       prefs.putBoolean("updatePlotsAndMonitors", runOptions.updatePlotsAndMonitors)
       prefs.putInt("threadCount", runOptions.threadCount)
@@ -76,6 +84,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
   class EditableRunOptions extends Editable {
     var spreadsheet = Prefs.spreadsheet
     var table = Prefs.table
+    var stats = Prefs.stats
     var updateView = Prefs.updateView
     var updatePlotsAndMonitors = Prefs.updatePlotsAndMonitors
     var threadCount = Prefs.updateThreadCount
@@ -87,12 +96,13 @@ class RunOptionsDialog(parent: java.awt.Dialog,
       List(
         Property("spreadsheet", Property.FilePath(spreadsheetFile), I18N.gui("spreadsheet")),
         Property("table", Property.FilePath(tableFile), I18N.gui("table")),
+        Property("stats", Property.FilePath(statsFile), "Stats"),
         Property("updateView", Property.Boolean, I18N.gui("updateview")),
         Property("updatePlotsAndMonitors", Property.Boolean, I18N.gui("updateplotsandmonitors")),
         Property("threadCount", Property.Integer, I18N.gui("simultaneousruns"),
                  "<html>" + I18N.gui("simultaneousruns.info") + "</html>")).asJava
     }
-    def get = RunOptions(threadCount, table, spreadsheet, updateView, updatePlotsAndMonitors)
+    def get = RunOptions(threadCount, table, spreadsheet, stats, updateView, updatePlotsAndMonitors)
     // boilerplate for Editable
     def helpLink = None
     def error(key:Object) = null
