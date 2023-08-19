@@ -2,15 +2,16 @@
 
 package org.nlogo.lab.gui
 
-import org.nlogo.swing.RichAction
+import org.nlogo.swing.{ RichAction, OptionDialog }
 import org.nlogo.nvm.Workspace
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.window.{ PlotWidget, SpeedSliderPanel }
 import javax.swing.ScrollPaneConstants._
 import javax.swing._
 import java.awt.Dimension
-import org.nlogo.api.{PeriodicUpdateDelay, Dump}
+import org.nlogo.api.{ Dump, ExportPlotWarningAction, PeriodicUpdateDelay }
 import org.nlogo.plot.DummyPlotManager
+import org.nlogo.core.I18N
 
 
 private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervisor)
@@ -61,7 +62,6 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   }
 
   locally {
-    setModal(false)
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
     addWindowListener(new java.awt.event.WindowAdapter {
       override def windowClosing(e: java.awt.event.WindowEvent) { abortAction.actionPerformed(null) }
@@ -126,6 +126,19 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   lazy val periodicUpdateAction = RichAction("update elapsed time") { _ =>
     updateProgressArea(false)
     plotWidgetOption.foreach{ plotWidget => if (updatePlots) plotWidget.handle(null) }
+    if (workspace.triedToExportPlot) {
+      workspace.exportPlotWarningAction match {
+        case ExportPlotWarningAction.Throw => {
+          workspace.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
+          OptionDialog.showMessage(
+            workspace.getFrame, "Updating Plots Warning",
+            "Warning: enable plot updating in Run Options if you want to collect plot data using export-plot, export-all-plots, export-world, or export-interface.",
+            Array(I18N.gui.get("common.buttons.continue"))
+          )
+        }
+        case _ =>
+      }
+    }
   }
   lazy val displaySwitchAction = RichAction("Update view") { e =>
     workspace.displaySwitchOn(e.getSource.asInstanceOf[JCheckBox].isSelected)

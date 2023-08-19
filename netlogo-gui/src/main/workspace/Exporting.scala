@@ -5,7 +5,9 @@ package org.nlogo.workspace
 import org.nlogo.agent.AbstractExporter
 import org.nlogo.api.{ Dump, ExportPlotWarningAction }
 import org.nlogo.plot.CorePlotExporter
-import java.io.{IOException,PrintWriter}
+// import org.nlogo.swing.{ OptionDialog }
+// import org.nlogo.core.I18N
+import java.io.{ IOException,PrintWriter }
 
 trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
 
@@ -15,16 +17,13 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
   def checkPlotUpdates() {
     if (!shouldUpdatePlots) {
       import ExportPlotWarningAction._
+      setTriedToExportPlot(true)
       exportPlotWarningAction match {
-        case Throw => {
-          setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
-          throw new Exception("Enable plot updating in Run Options to use export-plot, export-all-plots, export-world, or export-interface.")
-        }
         case Output => {
           setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
           println("Enable plot updating in Run Options to use export-plot, export-all-plots, export-world, or export-interface.")
         }
-        case Ignore =>
+        case _ =>
       }
     }
   }

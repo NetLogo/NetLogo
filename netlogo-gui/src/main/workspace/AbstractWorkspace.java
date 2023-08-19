@@ -56,6 +56,14 @@ public abstract class AbstractWorkspace
     this._shouldUpdatePlots = update;
   }
 
+  private boolean _triedToExportPlot = false;
+  public boolean triedToExportPlot() {
+    return this._triedToExportPlot;
+  }
+  public void setTriedToExportPlot(boolean triedToExport) {
+    this._triedToExportPlot = triedToExport;
+  }
+
   private ExportPlotWarningAction _exportPlotWarningAction = ExportPlotWarningActionJ$.MODULE$.THROW();
   public ExportPlotWarningAction exportPlotWarningAction() {
     return this._exportPlotWarningAction;

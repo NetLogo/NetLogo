@@ -116,6 +116,7 @@ class Supervisor(
     progressDialog.enablePlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
     workspace.setShouldUpdatePlots(options.updatePlotsAndMonitors)
     workspace.setExportPlotWarningAction(ExportPlotWarningAction.Throw)
+    workspace.setTriedToExportPlot(false)
     queue.enqueue(workspace)
     (2 to options.threadCount).foreach{num =>
       val w = factory.newInstance
