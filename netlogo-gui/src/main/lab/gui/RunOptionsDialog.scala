@@ -17,6 +17,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
   val userHome = System.getProperty("user.home")
   val spreadsheetFile = s"$filePrefix-spreadsheet.csv"
   val tableFile = s"$filePrefix-table.csv"
+  val listsFile = s"$filePrefix-lists.csv"
 
   object Prefs {
     private val prefs = Preferences.userNodeForPackage(RunOptionsDialog.this.getClass)
@@ -53,12 +54,19 @@ class RunOptionsDialog(parent: java.awt.Dialog,
         append(replaceTrue(t), tableFile)
       }
     }
+    def lists = {
+      val l = prefs.get("lists", "")
+      if (emptyVals.contains(l)) { "" } else {
+        append(replaceTrue(l), listsFile)
+      }
+    }
     def updateView = prefs.getBoolean("updateView", true)
     def updatePlotsAndMonitors = prefs.getBoolean("updatePlotsAndMonitors", true)
     def updateThreadCount = prefs.getInt("threadCount", Runtime.getRuntime.availableProcessors)
     def updateFrom(runOptions: LabRunOptions): Unit = {
       prefs.put("spreadsheet", parentDirectory(runOptions.spreadsheet))
       prefs.put("table", parentDirectory(runOptions.table))
+      prefs.put("lists", parentDirectory(runOptions.lists))
       prefs.putBoolean("updateView", runOptions.updateView)
       prefs.putBoolean("updatePlotsAndMonitors", runOptions.updatePlotsAndMonitors)
       prefs.putInt("threadCount", runOptions.threadCount)
@@ -75,6 +83,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
   class EditableRunOptions extends Editable {
     var spreadsheet = Prefs.spreadsheet
     var table = Prefs.table
+    var lists = Prefs.lists
     var updateView = Prefs.updateView
     var updatePlotsAndMonitors = Prefs.updatePlotsAndMonitors
     var threadCount = Prefs.updateThreadCount
@@ -86,6 +95,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
       List(
         Property("spreadsheet", Property.FilePath(spreadsheetFile), I18N.gui("spreadsheet")),
         Property("table", Property.FilePath(tableFile), I18N.gui("table")),
+        Property("lists", Property.FilePath(listsFile), I18N.gui("lists")),
         Property("updateView", Property.Boolean, I18N.gui("updateview")),
         Property("updatePlotsAndMonitors", Property.Boolean, I18N.gui("updateplotsandmonitors")),
         Property("threadCount", Property.Integer, I18N.gui("simultaneousruns"),
