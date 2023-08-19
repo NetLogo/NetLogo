@@ -39,9 +39,10 @@ class ListsExporter(modelFileName: String,
               if (!map.contains(runKey))
                 map = map.updated(runKey, ListMap[String, SortedMap[Int, String]]())
               if (!map(runKey).contains(header(i)))
-                map(runKey) = map(runKey).updated(header(i), SortedMap[Int, String]())
-              map(runKey)(header(i)) = map(runKey)(header(i))
-                                         .updated(stepKey, els(i).replaceAll("[\"\\[\\]]", "").replace(" ", ","))
+                map = map.updated(runKey, map(runKey).updated(header(i), SortedMap[Int, String]()))
+              map = map.updated(runKey, map(runKey)
+                       .updated(header(i), map(runKey)(header(i))
+                       .updated(stepKey, els(i).replaceAll("[\"\\[\\]]", "").replace(" ", ","))))
             }
           }
         }
@@ -51,7 +52,7 @@ class ListsExporter(modelFileName: String,
         }
         out.println()
         for (run <- map) {
-          for (name <- run._2.toSeq.reverse) {
+          for (name <- run._2) {
             for (step <- name._2) {
               out.print(name._1 + "," + run._1 + "," + step._1 + "," + step._2)
               out.println()
