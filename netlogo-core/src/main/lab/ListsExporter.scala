@@ -5,6 +5,7 @@ package org.nlogo.lab
 import org.nlogo.api.LabProtocol
 import org.nlogo.core.WorldDimensions
 import scala.collection.immutable.{ ListMap, SortedMap }
+import scala.collection.mutable.Seq
 
 object ListsExporter {
   trait Format
@@ -22,7 +23,36 @@ class ListsExporter(modelFileName: String,
     writeExportHeader()
     in match {
       case ListsExporter.SpreadsheetFormat(fileName) => {
-        // scala.io.Source.fromFile(fileName).getLines
+        val lines = scala.io.Source.fromFile(fileName).getLines.drop(6)
+        val runNumbers = lines.next.split(",").tail
+        var names = lines.next.split(",")
+        while (lines.hasNext && !names.head.contains("[all run data]") &&
+               !names.head.contains("[initial & final values]"))
+          names = lines.next.split(",")
+        if (!lines.hasNext) return
+        names = names.tail
+        var data = Seq[Seq[String]]()
+        for (_ <- runNumbers)
+          data = data :+ Seq[String]()
+        while (lines.hasNext) {
+          val line = lines.next.split(",").tail
+          for (i <- 0 until line.length)
+            data(i) = data(i) :+ line(i)
+        }
+        out.print("[reporter],[run number],[step]")
+        for (i <- 0 until data.map(_.map(_.split(" ").length)).flatten.max) {
+          out.print(s",[$i]")
+        }
+        out.println()
+        for (i <- 0 until runNumbers.length) {
+          for (j <- 0 until data(i).length) {
+            if (data(i)(j).contains("[")) {
+              out.print(names(i) + "," + runNumbers(i) + "," + j + "," +
+                data(i)(j).replaceAll("[\"\\[\\]]", "").replace(" ", ","))
+              out.println()
+            }
+          }
+        }
       }
       case ListsExporter.TableFormat(fileName) => {
         val lines = scala.io.Source.fromFile(fileName).getLines.drop(6)
