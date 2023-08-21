@@ -18,7 +18,7 @@ private class ManagerDialog(manager:       LabManager,
   with javax.swing.event.ListSelectionListener
 {
   def saveProtocol(protocol: LabProtocol): Unit = {
-    manager.protocols += protocol
+    manager.protocols(selectedIndex) = protocol
     update()
     select(protocol)
     manager.dirty()
