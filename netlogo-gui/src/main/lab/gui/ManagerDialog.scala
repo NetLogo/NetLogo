@@ -37,6 +37,7 @@ private class ManagerDialog(manager:       LabManager,
   private val importAction = action(I18N.gui("import"), { () => importnl() })
   private val exportAction = action(I18N.gui("export"), { () => export() })
   private val closeAction = action(I18N.gui("close"), { () => manager.close() })
+  private val abortAction = action(I18N.gui("abort"), { () => abort() })
   private val runAction = action(I18N.gui("run"), { () => run() })
   /// initialization
   init()
@@ -60,25 +61,37 @@ private class ManagerDialog(manager:       LabManager,
     jlist.setCellRenderer(new ProtocolRenderer())
     // Setup the first row of buttons
     val buttonPanel = new JPanel
+    buttonPanel.setLayout(new javax.swing.BoxLayout(buttonPanel, javax.swing.BoxLayout.Y_AXIS))
     val runButton = new JButton(runAction)
-    buttonPanel.setLayout(new javax.swing.BoxLayout(buttonPanel, javax.swing.BoxLayout.X_AXIS))
-    buttonPanel.add(javax.swing.Box.createHorizontalGlue)
-    buttonPanel.add(javax.swing.Box.createHorizontalStrut(20))
-    buttonPanel.add(new JButton(newAction))
-    buttonPanel.add(javax.swing.Box.createHorizontalStrut(5))
-    buttonPanel.add(new JButton(editAction))
-    buttonPanel.add(javax.swing.Box.createHorizontalStrut(5))
-    buttonPanel.add(new JButton(duplicateAction))
-    buttonPanel.add(javax.swing.Box.createHorizontalStrut(5))
-    buttonPanel.add(new JButton(deleteAction))
-    buttonPanel.add(javax.swing.Box.createHorizontalStrut(5))
-    buttonPanel.add(new JButton(importAction))
-    buttonPanel.add(javax.swing.Box.createHorizontalStrut(5))
-    buttonPanel.add(new JButton(exportAction))
-    buttonPanel.add(javax.swing.Box.createHorizontalStrut(5))
-    buttonPanel.add(runButton)
-    buttonPanel.add(javax.swing.Box.createHorizontalStrut(20))
-    buttonPanel.add(javax.swing.Box.createHorizontalGlue)
+    val buttonRow1 = new JPanel
+    buttonRow1.setLayout(new javax.swing.BoxLayout(buttonRow1, javax.swing.BoxLayout.X_AXIS))
+    buttonRow1.add(javax.swing.Box.createHorizontalGlue)
+    buttonRow1.add(javax.swing.Box.createHorizontalStrut(20))
+    buttonRow1.add(new JButton(newAction))
+    buttonRow1.add(javax.swing.Box.createHorizontalStrut(5))
+    buttonRow1.add(new JButton(editAction))
+    buttonRow1.add(javax.swing.Box.createHorizontalStrut(5))
+    buttonRow1.add(new JButton(duplicateAction))
+    buttonRow1.add(javax.swing.Box.createHorizontalStrut(5))
+    buttonRow1.add(new JButton(deleteAction))
+    buttonRow1.add(javax.swing.Box.createHorizontalStrut(20))
+    buttonRow1.add(javax.swing.Box.createHorizontalGlue)
+    buttonPanel.add(buttonRow1)
+    buttonPanel.add(javax.swing.Box.createVerticalStrut(5))
+    val buttonRow2 = new JPanel
+    buttonRow2.setLayout(new javax.swing.BoxLayout(buttonRow2, javax.swing.BoxLayout.X_AXIS))
+    buttonRow2.add(javax.swing.Box.createHorizontalGlue)
+    buttonRow2.add(javax.swing.Box.createHorizontalStrut(20))
+    buttonRow2.add(new JButton(importAction))
+    buttonRow2.add(javax.swing.Box.createHorizontalStrut(5))
+    buttonRow2.add(new JButton(exportAction))
+    buttonRow2.add(javax.swing.Box.createHorizontalStrut(5))
+    buttonRow2.add(new JButton(abortAction))
+    buttonRow2.add(javax.swing.Box.createHorizontalStrut(5))
+    buttonRow2.add(runButton)
+    buttonRow2.add(javax.swing.Box.createHorizontalStrut(20))
+    buttonRow2.add(javax.swing.Box.createHorizontalGlue)
+    buttonPanel.add(buttonRow2)
     val listLabel = new JLabel(I18N.gui("experiments"))
     // layout
     buttonPanel.setBorder(new javax.swing.border.EmptyBorder(8, 0, 8, 0))
@@ -111,6 +124,7 @@ private class ManagerDialog(manager:       LabManager,
     runAction.setEnabled(count == 1)
     deleteAction.setEnabled(count > 0)
     exportAction.setEnabled(count > 0)
+    abortAction.setEnabled(count == 1 && selectedProtocol.runsCompleted != 0)
   }
   /// action implementations
   private def run(): Unit = {
@@ -238,6 +252,9 @@ private class ManagerDialog(manager:       LabManager,
     } catch {
       case e: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(e)
     }
+  }
+  private def abort() {
+    saveProtocol(selectedProtocol.copy(runsCompleted = 0, runOptions = null))
   }
   /// helpers
   def update() {
