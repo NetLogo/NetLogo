@@ -130,14 +130,16 @@ private class ManagerDialog(manager:       LabManager,
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
                                         manager.workspace, manager.workspace.world,
                                         manager.protocols.map(_.name).filter(isNew || _ != protocol.name))
-    if (!dialogFactory.canceled(this, editable)) {
-      val newProtocol = editable.get.get
-      if (isNew) manager.protocols += newProtocol
-      else manager.protocols(selectedIndex) = newProtocol
-      update()
-      select(newProtocol)
-      manager.dirty()
-    }
+    dialogFactory.create(this, editable, new Runnable {
+      def run() {
+        val newProtocol = editable.get.get
+        if (isNew) manager.protocols += newProtocol
+        else manager.protocols(selectedIndex) = newProtocol
+        update()
+        select(newProtocol)
+        manager.dirty()
+      }
+    })
   }
   private def delete() {
     val selected = jlist.getSelectedIndices
