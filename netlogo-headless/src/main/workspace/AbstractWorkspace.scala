@@ -102,7 +102,7 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
       throw new RuntimePrimitiveException(context, originalInstruction,
         "The tick counter has not been started yet. Use RESET-TICKS.")
     world.tickCounter.tick()
-    if (this._shouldUpdatePlots) {
+    if (shouldUpdatePlots) {
       updatePlots(context)
     }
     requestDisplayUpdate(true)
@@ -236,25 +236,25 @@ object AbstractWorkspaceTraits {
     def exportOutputAreaToCSV(writer:PrintWriter)
 
     def checkPlotUpdates() {
-      if (!shouldUpdatePlots) {
-        import ExportPlotWarningAction._
-        exportPlotWarningAction match {
-          case Throw => {
-            setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
-            throw new Exception("Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface.")
-          }
-          case Output => {
-            setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
-            println("Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface.")
-          }
-          case Ignore =>
+      import ExportPlotWarningAction._
+      exportPlotWarningAction match {
+        case Throw => {
+          setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
+          throw new Exception("Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface.")
         }
+        case Output => {
+          setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
+          println("Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface.")
+        }
+        case Ignore =>
       }
     }
 
     @throws(classOf[IOException])
     def exportWorld(filename: String) {
-      checkPlotUpdates
+      if (!shouldUpdatePlots) {
+        checkPlotUpdates
+      }
       new AbstractExporter(filename) {
         def export(writer: PrintWriter): Unit = {
           exportWorldNoMeta(writer)
@@ -264,7 +264,9 @@ object AbstractWorkspaceTraits {
 
     @throws(classOf[IOException])
     def exportWorld(writer: PrintWriter): Unit = {
-      checkPlotUpdates
+      if (!shouldUpdatePlots) {
+        checkPlotUpdates
+      }
       AbstractExporter.exportWithHeader(writer, "world", getModelFileName, "")(exportWorldNoMeta _)
     }
 
@@ -277,7 +279,9 @@ object AbstractWorkspaceTraits {
     }
 
     def exportPlotsToCSV(writer: PrintWriter) {
-      checkPlotUpdates
+      if (!shouldUpdatePlots) {
+        checkPlotUpdates
+      }
       writer.println(Dump.csv.encode("PLOTS"))
       writer.println(
         Dump.csv.encode(
@@ -290,7 +294,9 @@ object AbstractWorkspaceTraits {
 
     @throws(classOf[IOException])
     def exportPlot(plotName: String,filename: String) {
-      checkPlotUpdates
+      if (!shouldUpdatePlots) {
+        checkPlotUpdates
+      }
       new AbstractExporter(filename) {
         override def export(writer: PrintWriter) {
           exportInterfaceGlobals(writer)
@@ -301,7 +307,9 @@ object AbstractWorkspaceTraits {
 
     @throws(classOf[IOException])
     def exportAllPlots(filename: String) {
-      checkPlotUpdates
+      if (!shouldUpdatePlots) {
+        checkPlotUpdates
+      }
       new AbstractExporter(filename) {
         override def export(writer: PrintWriter) {
           exportInterfaceGlobals(writer)
