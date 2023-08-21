@@ -52,7 +52,8 @@ private class ManagerDialog(manager:       LabManager,
     // Listen for double-clicks, and edit the selected protocol
     jlist.addMouseListener(new javax.swing.event.MouseInputAdapter {
       override def mouseClicked(e: java.awt.event.MouseEvent) {
-        if (e.getClickCount > 1 && jlist.getSelectedIndices.length > 0) {
+        if (e.getClickCount > 1 && jlist.getSelectedIndices.length == 1
+            && selectedProtocol.runsCompleted == 0) {
           edit()
         }
       } })
@@ -105,7 +106,7 @@ private class ManagerDialog(manager:       LabManager,
   /// implement ListSelectionListener
   def valueChanged(e: javax.swing.event.ListSelectionEvent) {
     val count = jlist.getSelectedIndices.length
-    editAction.setEnabled(count == 1)
+    editAction.setEnabled(count == 1 && selectedProtocol.runsCompleted == 0)
     duplicateAction.setEnabled(count == 1)
     runAction.setEnabled(count == 1)
     deleteAction.setEnabled(count > 0)
