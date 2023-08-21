@@ -43,24 +43,26 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
                  override def getPreferredSize = limit(super.getPreferredSize)
                }
     dialog.addWindowListener(new java.awt.event.WindowAdapter {
-      override def windowClosing(e: java.awt.event.WindowEvent) {
-        finish.run()
+      override def windowClosed(e: java.awt.event.WindowEvent) {
+        if (!dialog.canceled)
+          finish.run()
       }
     })
   }
 
-  def create(dialog: java.awt.Dialog, _target: Editable, finish: Runnable) = {
-    this.dialog = new javax.swing.JDialog(dialog, _target.classDisplayName, false)
+  def create(_dialog: java.awt.Dialog, _target: Editable, finish: Runnable) = {
+    dialog = new javax.swing.JDialog(_dialog, _target.classDisplayName, false)
                     with EditDialog {
-                      override def window = dialog
+                      override def window = _dialog
                       override def target = _target
                       override def compiler = _compiler
                       override def colorizer = _colorizer
                       override def getPreferredSize = limit(super.getPreferredSize)
                     }
-    this.dialog.addWindowListener(new java.awt.event.WindowAdapter {
-      override def windowClosing(e: java.awt.event.WindowEvent) {
-        finish.run()
+    dialog.addWindowListener(new java.awt.event.WindowAdapter {
+      override def windowClosed(e: java.awt.event.WindowEvent) {
+        if (!dialog.canceled)
+          finish.run()
       }
     })
   }
