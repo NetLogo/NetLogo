@@ -240,8 +240,10 @@ with LoadModelEvent.Handler {
 
   @throws(classOf[IOException])
   def exportInterface(filename: String): Unit = {
-    checkPlotUpdates
-    if (jobManager.onJobThread) {
+    if (!shouldUpdatePlots) {
+      checkPlotUpdates
+    }
+    else if (jobManager.onJobThread) {
       // we treat the job thread differently because it will be holding the world lock
       FileIO.writeImageFile(awaitFutureFromJobThread(controlSet.userInterface), filename, "png")
     } else {
