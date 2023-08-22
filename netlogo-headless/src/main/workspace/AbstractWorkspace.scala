@@ -238,7 +238,7 @@ object AbstractWorkspaceTraits {
     def checkPlotUpdates() {
       import ExportPlotWarningAction._
       exportPlotWarningAction match {
-        case Throw => {
+        case Warn => {
           setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
           throw new Exception("Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface.")
         }
