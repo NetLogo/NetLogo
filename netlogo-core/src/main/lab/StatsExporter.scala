@@ -14,14 +14,20 @@ class StatsProcessor(modelFileName: String,
                           spreadsheetExporter: SpreadsheetExporter,
                           exporterFileNames: HashMap[Exporter, String],
                           out: java.io.PrintWriter)
-  extends TableExporter(modelFileName, initialDims, protocol, out) with PostProcessor
+  extends TableExporter(modelFileName, initialDims, protocol, out)
+  with PostProcessor
 {
   type Measurements = ListBuffer[List[Double]]
   type DataPerStep = HashMap[Int, Measurements]
   type Data = HashMap[List[Any], DataPerStep]
 
   override def writeExperimentHeader() {
-    val headers = protocol.valueSets(0).map(_.variableName) ::: "[step]" :: protocol.metrics.map(m => m + "-mean")
+    val metrics = ListBuffer[String]()
+    for (m <- protocol.metrics) {
+      metrics += (m + "-mean")
+      metrics += (m + "-std")
+    }
+    val headers = protocol.valueSets(0).map(_.variableName) ::: "[step]" :: metrics.toList
     out.println(headers.map(csv.header).mkString(","))
     out.flush()
   }
@@ -36,27 +42,20 @@ class StatsProcessor(modelFileName: String,
     val data = extractData()
     data match {
       case Some(d) => {
+        writeExportHeader()
         writeExperimentHeader()
-        val averages = new HashMap[List[Any], HashMap[Int, List[Double]]]()
         for ((params, runData) <- d) {
-          // println(params)
           for ((step, values) <- runData) {
-            // println(f"${step}: ${values}")
-            if (!averages.contains(params)) {
-              averages(params) = new HashMap[Int, List[Double]]()
-            }
-            val stepAverages = new ListBuffer[Double]()
             val numMetrics = values(0).length
+            val writeData = ListBuffer[Double]()
             for (i <- 0 until numMetrics) {
-              var currentTotal = 0.0
-              for (value <- values) {
-                currentTotal += value(i)
-                // println(f"${value} ${i}, ${value(i)}")
-              }
-              stepAverages += currentTotal.toDouble / values.length
+              val metricValues = values.map(_(i)).toList
+              val mean = StatsCalculator.mean(metricValues)
+              val std = StatsCalculator.std(metricValues)
+              writeData += mean
+              writeData += std
             }
-            averages(params)(step) = stepAverages.toList
-            writeTableRow(params, averages(params)(step), step)
+            writeTableRow(params, writeData.toList, step)
           }
         }
       }
