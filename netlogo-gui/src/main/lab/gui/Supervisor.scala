@@ -124,7 +124,7 @@ class Supervisor(
       }
     }
 
-    if (options.table != null && options.table.trim() != "") {
+    if (options.stats != null && options.stats.trim() != "") {
       val fileName = options.stats.trim()
       try {
         addPostProcessor(new StatsProcessor(
