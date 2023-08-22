@@ -30,22 +30,20 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
   def exportWorld(filename: String) {
     if (!shouldUpdatePlots) {
       checkPlotUpdates
-    } else {
-      new AbstractExporter(filename) {
-        def export(writer: PrintWriter): Unit = {
-          exportWorldNoMeta(writer)
-        }
-      }.export("world", modelFileName, "")
     }
+    new AbstractExporter(filename) {
+      def export(writer: PrintWriter): Unit = {
+        exportWorldNoMeta(writer)
+      }
+    }.export("world", modelFileName, "")
   }
 
   @throws(classOf[IOException])
   def exportWorld(writer: PrintWriter): Unit = {
     if (!shouldUpdatePlots) {
       checkPlotUpdates
-    } else {
-      AbstractExporter.exportWithHeader(writer, "world", modelFileName, "")(exportWorldNoMeta _)
     }
+    AbstractExporter.exportWithHeader(writer, "world", modelFileName, "")(exportWorldNoMeta _)
   }
 
   private def exportWorldNoMeta(writer: PrintWriter): Unit = {
@@ -59,20 +57,19 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
   def exportPlotsToCSV(writer: PrintWriter) = {
     if (!shouldUpdatePlots) {
       checkPlotUpdates
-    } else {
-      writer.println(Dump.csv.encode("PLOTS"))
-      writer.println(
-        Dump.csv.encode(
-          plotManager.currentPlot.map(_.name).getOrElse("")))
-      plotManager.getPlotNames.foreach { name =>
-        new CorePlotExporter(
-          plotManager
-            .maybeGetPlot(name)
-            .getOrElse(throw new Exception("plot manager gave a name for a plot that doesn't exist?"))
-        , Dump.csv
-        ).export(writer)
-        writer.println()
-      }
+    }
+    writer.println(Dump.csv.encode("PLOTS"))
+    writer.println(
+      Dump.csv.encode(
+        plotManager.currentPlot.map(_.name).getOrElse("")))
+    plotManager.getPlotNames.foreach { name =>
+      new CorePlotExporter(
+        plotManager
+          .maybeGetPlot(name)
+          .getOrElse(throw new Exception("plot manager gave a name for a plot that doesn't exist?"))
+      , Dump.csv
+      ).export(writer)
+      writer.println()
     }
   }
 
@@ -80,19 +77,18 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
   def exportPlot(plotName: String, filename: String) {
     if (!shouldUpdatePlots) {
       checkPlotUpdates
-    } else {
-      new AbstractExporter(filename) {
-        override def export(writer: PrintWriter) {
-          exportInterfaceGlobals(writer)
-          new CorePlotExporter(
-            plotManager
-              .maybeGetPlot(plotName)
-              .getOrElse(throw new Exception("plot with given name not found..."))
-          , Dump.csv
-          ).export(writer)
-        }
-      }.export("plot",modelFileName,"")
     }
+    new AbstractExporter(filename) {
+      override def export(writer: PrintWriter) {
+        exportInterfaceGlobals(writer)
+        new CorePlotExporter(
+          plotManager
+            .maybeGetPlot(plotName)
+            .getOrElse(throw new Exception("plot with given name not found..."))
+        , Dump.csv
+        ).export(writer)
+      }
+    }.export("plot",modelFileName,"")
   }
 
   def exportInterfaceGlobals(writer: PrintWriter): Unit = {
@@ -108,21 +104,20 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
   def exportAllPlots(filename: String) {
     if (!shouldUpdatePlots) {
       checkPlotUpdates
-    } else {
-        new AbstractExporter(filename) {
-        override def export(writer: PrintWriter) {
-          exportInterfaceGlobals(writer)
-
-          plotManager.getPlotNames.foreach { name =>
-            new CorePlotExporter(
-              plotManager
-                .maybeGetPlot(name)
-                .getOrElse(throw new Exception("plot manager gave a name for a plot that doesn't exist?"))
-            , Dump.csv
-            ).export(writer)
-          }
-        }
-      }.export("plots",modelFileName,"")
     }
+    new AbstractExporter(filename) {
+    override def export(writer: PrintWriter) {
+      exportInterfaceGlobals(writer)
+
+      plotManager.getPlotNames.foreach { name =>
+        new CorePlotExporter(
+          plotManager
+            .maybeGetPlot(name)
+            .getOrElse(throw new Exception("plot manager gave a name for a plot that doesn't exist?"))
+        , Dump.csv
+        ).export(writer)
+      }
+    }
+  }.export("plots",modelFileName,"")
   }
 }
