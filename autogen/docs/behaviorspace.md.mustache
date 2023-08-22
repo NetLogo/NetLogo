@@ -426,17 +426,23 @@ turn the updating off. This will make the experiment go faster.
 
 If you want to stop your experiment before it's finished, you have two options.
 To stop the experiment after the current runs have completed and save your progress
-for later, press the "Pause" button. The experiment will appear in the BehaviorSpace
-window marked with "In Progress", and you can press the "Run" button to resume the
-experiment where you paused it. To stop the experiment immediately without waiting
-for the current runs to complete, press the "Abort" button. Any results generated
-so far will still be saved, but pressing "Abort" can lead to fragmented data, so
-aborted experiments cannot be resumed.
+for later, press the "Pause" button. To stop the experiment immediately without
+waiting for the current runs to complete, press the "Abort" button. Any output
+generated so far will still be saved, but pressing "Abort" can lead to fragmented
+data, so aborted experiments cannot be resumed.
 
 When all the runs have finished, the experiment is complete.
 
+#### Paused experiments
+
+Paused experiments will appear in the BehaviorSpace window marked with "In Progress".
+To resume an experiment where you paused it, select it and press the "Run" button.
+To reset a paused experiment to its initial state, select it and press the "Abort"
+button.
+
 Note that moving or deleting output files before resuming a paused experiment will
-cause an error.
+cause an error. Outputting new experiment data to a file associated with an existing
+paused experiment may also ause an error when that experiment is resumed.
 
 ## Advanced Usage
 
