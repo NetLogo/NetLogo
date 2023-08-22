@@ -115,7 +115,7 @@ class Supervisor(
     progressDialog.setPlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
     progressDialog.enablePlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
     workspace.setShouldUpdatePlots(options.updatePlotsAndMonitors)
-    workspace.setExportPlotWarningAction(ExportPlotWarningAction.Throw)
+    workspace.setExportPlotWarningAction(ExportPlotWarningAction.Warn)
     workspace.setTriedToExportPlot(false)
     queue.enqueue(workspace)
     (2 to options.threadCount).foreach{num =>

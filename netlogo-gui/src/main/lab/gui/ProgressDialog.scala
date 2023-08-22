@@ -128,7 +128,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     plotWidgetOption.foreach{ plotWidget => if (updatePlots) plotWidget.handle(null) }
     if (workspace.triedToExportPlot) {
       workspace.exportPlotWarningAction match {
-        case ExportPlotWarningAction.Throw => {
+        case ExportPlotWarningAction.Warn => {
           workspace.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
           OptionDialog.showMessage(
             workspace.getFrame, "Updating Plots Warning",

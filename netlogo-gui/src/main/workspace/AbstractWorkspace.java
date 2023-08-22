@@ -64,7 +64,7 @@ public abstract class AbstractWorkspace
     this._triedToExportPlot = triedToExport;
   }
 
-  private ExportPlotWarningAction _exportPlotWarningAction = ExportPlotWarningActionJ$.MODULE$.THROW();
+  private ExportPlotWarningAction _exportPlotWarningAction = ExportPlotWarningActionJ$.MODULE$.WARN();
   public ExportPlotWarningAction exportPlotWarningAction() {
     return this._exportPlotWarningAction;
   }
