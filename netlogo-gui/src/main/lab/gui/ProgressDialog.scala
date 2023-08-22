@@ -30,7 +30,34 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   private var settingsString = ""
   private var steps = 0
 
-  private var plotWidgetOption: Option[PlotWidget] = None
+  private val plotWidgetOption: Option[PlotWidget] = {
+    if ((protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) && protocol.metrics.length > 0) {
+      // don't use the real plot manager here, use a dummy one.
+      // fixes http://trac.assembla.com/nlogo/ticket/1259
+      // the reason for this is that plots normally get added to the plot manager
+      // then when clear-all is called (and other things) on the plots
+      // in the model, things (such as clearing, which removes temporary pens)
+      // would happen to this plot too. but we don't want that.
+      // this plot only has temporary pens, in fact.
+      // anyway, the point is that things happening in the model should not
+      // cause anything to happen to this plot.
+      // except of course, for the measurements that this plot is displaying.
+      // JC - 4/4/11
+      val plotWidget = PlotWidget("Behavior Plot", new DummyPlotManager)
+      plotWidget.plot.defaultXMin = 0
+      plotWidget.plot.defaultYMin = 0
+      plotWidget.plot.defaultXMax = 1
+      plotWidget.plot.defaultYMax = 1
+      plotWidget.plot.defaultAutoPlotOn = true
+      plotWidget.xLabel("Time")
+      plotWidget.yLabel("Behavior")
+      plotWidget.clear()
+      plotWidget.plot.pens=Nil // make sure to start with no pens. plotWidget adds one by default.
+      plotWidget.togglePenList()
+      Some(plotWidget)
+    }
+    else None
+  }
 
   locally {
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
@@ -87,7 +114,6 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
 
     pack()
     org.nlogo.awt.Positioning.center(this, dialog)
-
   }
 
   override def getMinimumSize = getPreferredSize
@@ -136,14 +162,6 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
 
   def saveProtocolP(): Unit = {
     saveProtocol(protocol.copy(runsCompleted = supervisor.highestCompleted, runOptions = supervisor.options))
-  }
-
-  def resetProtocol(): Unit = {
-    saveProtocol(protocol.copy(runsCompleted = 0, runOptions = null))
-  }
-
-  def saveProtocolP(): Unit = {
-    saveProtocol(protocol.copy(runsCompleted = supervisor.highestCompleted), supervisor.options)
   }
 
   def resetProtocol(): Unit = {
