@@ -87,7 +87,13 @@ class StatsProcessor(modelFileName: String,
         }
       }
       if (row > 6) {
-        val parsed = line.split(",").map(_.split("\"")(1).toDouble).toList
+        val parsed = line.split(",").map(entry => {
+          try {
+            entry.split("\"")(1).toDouble
+          } catch {
+            case _: java.lang.NumberFormatException => 0
+          }
+        }).toList
         val params = parsed.slice(1,numVary).toList
         val step = parsed(numVary).toInt
         if (!data.contains(params)) {
