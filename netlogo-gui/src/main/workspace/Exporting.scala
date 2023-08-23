@@ -3,7 +3,7 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.AbstractExporter
-import org.nlogo.api.{ Dump, ExportPlotWarningAction }
+import org.nlogo.api.{ Dump }
 import org.nlogo.plot.CorePlotExporter
 // import org.nlogo.swing.{ OptionDialog }
 // import org.nlogo.core.I18N
@@ -14,23 +14,8 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
   def exportDrawingToCSV(writer:PrintWriter)
   def exportOutputAreaToCSV(writer:PrintWriter)
 
-  def checkPlotUpdates() {
-    import ExportPlotWarningAction._
-    setTriedToExportPlot(true)
-    exportPlotWarningAction match {
-      case Output => {
-        setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
-        println("Enable plot updating in Run Options to use export-plot, export-all-plots, export-world, or export-interface.")
-      }
-      case _ =>
-    }
-  }
-
   @throws(classOf[IOException])
   def exportWorld(filename: String) {
-    if (!shouldUpdatePlots) {
-      checkPlotUpdates
-    }
     new AbstractExporter(filename) {
       def export(writer: PrintWriter): Unit = {
         exportWorldNoMeta(writer)
@@ -40,9 +25,6 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
 
   @throws(classOf[IOException])
   def exportWorld(writer: PrintWriter): Unit = {
-    if (!shouldUpdatePlots) {
-      checkPlotUpdates
-    }
     AbstractExporter.exportWithHeader(writer, "world", modelFileName, "")(exportWorldNoMeta _)
   }
 
@@ -55,9 +37,6 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
   }
 
   def exportPlotsToCSV(writer: PrintWriter) = {
-    if (!shouldUpdatePlots) {
-      checkPlotUpdates
-    }
     writer.println(Dump.csv.encode("PLOTS"))
     writer.println(
       Dump.csv.encode(
@@ -75,9 +54,6 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
 
   @throws(classOf[IOException])
   def exportPlot(plotName: String, filename: String) {
-    if (!shouldUpdatePlots) {
-      checkPlotUpdates
-    }
     new AbstractExporter(filename) {
       override def export(writer: PrintWriter) {
         exportInterfaceGlobals(writer)
@@ -102,9 +78,6 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
 
   @throws(classOf[IOException])
   def exportAllPlots(filename: String) {
-    if (!shouldUpdatePlots) {
-      checkPlotUpdates
-    }
     new AbstractExporter(filename) {
     override def export(writer: PrintWriter) {
       exportInterfaceGlobals(writer)

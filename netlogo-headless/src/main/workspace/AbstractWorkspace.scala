@@ -72,6 +72,9 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
     this._shouldUpdatePlots = update
   }
 
+  def triedToExportPlot: Boolean = false
+  def setTriedToExportPlot(triedToExport: Boolean) = Unit
+
   private var _exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
   def exportPlotWarningAction(): ExportPlotWarningAction = this._exportPlotWarningAction
   def setExportPlotWarningAction(action: ExportPlotWarningAction) = {
@@ -252,9 +255,6 @@ object AbstractWorkspaceTraits {
 
     @throws(classOf[IOException])
     def exportWorld(filename: String) {
-      if (!shouldUpdatePlots) {
-        checkPlotUpdates
-      }
       new AbstractExporter(filename) {
         def export(writer: PrintWriter): Unit = {
           exportWorldNoMeta(writer)
@@ -264,9 +264,6 @@ object AbstractWorkspaceTraits {
 
     @throws(classOf[IOException])
     def exportWorld(writer: PrintWriter): Unit = {
-      if (!shouldUpdatePlots) {
-        checkPlotUpdates
-      }
       AbstractExporter.exportWithHeader(writer, "world", getModelFileName, "")(exportWorldNoMeta _)
     }
 
@@ -279,9 +276,6 @@ object AbstractWorkspaceTraits {
     }
 
     def exportPlotsToCSV(writer: PrintWriter) {
-      if (!shouldUpdatePlots) {
-        checkPlotUpdates
-      }
       writer.println(Dump.csv.encode("PLOTS"))
       writer.println(
         Dump.csv.encode(
@@ -294,9 +288,6 @@ object AbstractWorkspaceTraits {
 
     @throws(classOf[IOException])
     def exportPlot(plotName: String,filename: String) {
-      if (!shouldUpdatePlots) {
-        checkPlotUpdates
-      }
       new AbstractExporter(filename) {
         override def export(writer: PrintWriter) {
           exportInterfaceGlobals(writer)
@@ -307,9 +298,6 @@ object AbstractWorkspaceTraits {
 
     @throws(classOf[IOException])
     def exportAllPlots(filename: String) {
-      if (!shouldUpdatePlots) {
-        checkPlotUpdates
-      }
       new AbstractExporter(filename) {
         override def export(writer: PrintWriter) {
           exportInterfaceGlobals(writer)

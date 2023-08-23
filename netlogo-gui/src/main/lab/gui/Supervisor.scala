@@ -15,7 +15,7 @@ import org.nlogo.nvm.{ EngineException, Workspace }
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.swing.{ OptionDialog }
 import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace }
-import org.nlogo.workspace.{ AbstractWorkspace, CurrentModelOpener, WorkspaceFactory }
+import org.nlogo.workspace.{ CurrentModelOpener, WorkspaceFactory }
 
 object Supervisor {
   case class RunOptions(threadCount: Int, table: String, spreadsheet: String, updateView: Boolean, updatePlotsAndMonitors: Boolean)
@@ -29,7 +29,7 @@ class Supervisor(
 ) extends Thread("BehaviorSpace Supervisor") {
   var options: Supervisor.RunOptions = null
   val worker = new Worker(protocol)
-  val headlessWorkspaces = new ListBuffer[AbstractWorkspace]
+  val headlessWorkspaces = new ListBuffer[Workspace]
   val queue = new collection.mutable.Queue[Workspace]
   val listener =
     new ProgressListener {
