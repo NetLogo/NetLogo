@@ -187,7 +187,9 @@ class Supervisor(
           return
       }
     }
-    if (options.lists != null && options.lists.trim() != "") {
+    if (options.lists != null && options.lists.trim() != "" &&
+        (options.table != null && options.table.trim() != "" ||
+         options.spreadsheet != null && options.spreadsheet.trim() != "")) {
       val fileName = options.lists.trim()
       try {
         addExporter(new ListsExporter(
