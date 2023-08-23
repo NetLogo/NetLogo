@@ -25,7 +25,8 @@ class ListsExporter(modelFileName: String,
       case ListsExporter.SpreadsheetFormat(fileName) => {
         var lines = scala.io.Source.fromFile(fileName).getLines.drop(6)
         val runNumbers = lines.next.split(",").tail.toList
-        val parameters = lines.takeWhile(!_.split(",")(0).contains("[reporter]"))
+        val parameters = lines.takeWhile(x => !x.split(",")(0).contains("[reporter]") &&
+                                              !x.split(",")(0).contains("[step]"))
                               .map(_.split(",").filter(!_.isEmpty).toList).toList
         val runWidth = runNumbers.length / parameters(0).tail.length
         lines = lines.dropWhile(x => !x.split(",")(0).contains("[all run data]") &&
@@ -62,7 +63,6 @@ class ListsExporter(modelFileName: String,
         for (line <- lines) {
           val els = line.split(",")
           for (i <- stepIndex + 1 until els.length) {
-            // only add line if reporter returned a list
             if (els(i).contains("[")) {
               sortedLines = sortedLines :+ ((header(i),
                                               els(0).replaceAll("\\D", "").toInt,
