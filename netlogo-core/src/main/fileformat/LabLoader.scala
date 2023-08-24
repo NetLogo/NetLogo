@@ -4,7 +4,7 @@ package org.nlogo.fileformat
 
 import java.io.ByteArrayInputStream
 import org.nlogo.core.LiteralParser
-import org.nlogo.api.{ LabProtocol, RefEnumeratedValueSet, SteppedValueSet }
+import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol, SteppedValueSet }
 import org.w3c.dom
 import org.xml.sax
 import scala.collection.mutable.Set

@@ -106,5 +106,6 @@ object LabSaver {
       subExperiment.foreach(matchValueSet _)
       hd.endElement("", "", "subExperiment")
     }
+    hd.endElement("", "", "experiment")
   }
 }
