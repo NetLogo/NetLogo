@@ -135,11 +135,12 @@ class Supervisor(
             new PrintWriter(new FileWriter(fileName)),
             partialData))
         } catch {
-          OptionDialog.showMessage(
-            workspace.getFrame, "Error During Experiment",
-            "Unable to read existing spreadsheet output, data is not intact.",
-            Array(I18N.gui.get("common.buttons.ok")))
-          return
+          case _: Throwable =>
+            OptionDialog.showMessage(
+              workspace.getFrame, "Error During Experiment",
+              "Unable to read existing spreadsheet output, data is not intact.",
+              Array(I18N.gui.get("common.buttons.ok")))
+            return
         }
       }
       else {
