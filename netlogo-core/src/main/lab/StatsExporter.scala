@@ -64,10 +64,12 @@ class StatsProcessor(modelFileName: String,
   }
 
   def extractData(): Option[Data] = {
-    if (tableExporter != null) {
+    // if (tableExporter != null) {
+    if (false) {
       Some(extractFromTable(exporterFileNames(tableExporter)))
-    } else if (spreadsheetExporter != null) {
-      Some(extractFromSpreadsheet(exporterFileNames(spreadsheetExporter)))
+    }
+    if (spreadsheetExporter != null) {
+      Some(extractFromSpreadsheet(spreadsheetExporter))
     } else {
       None
     }
@@ -110,8 +112,28 @@ class StatsProcessor(modelFileName: String,
     data
   }
 
-  private def extractFromSpreadsheet(file: String): Data = {
+  private def extractFromSpreadsheet(spreadsheet: SpreadsheetExporter): Data = {
     val data = new HashMap[List[Any], DataPerStep]()
+    val spreadsheetData = spreadsheet.runs
+    for ((runNumber, run) <- spreadsheetData) {
+      val params = run.settings.map(_._2)
+      if (!data.contains(params)) {
+        data(params) = new HashMap[Int, Measurements]()
+      }
+      for (measurement <- run.measurements) {
+        val step = measurement(0).toString.toInt
+        if (!data(params).contains(step)) {
+          data(params)(step) = new ListBuffer[List[Double]]()
+        }
+        data(params)(step) += measurement.map(entry => {
+          try {
+            entry.toString.toDouble
+          } catch {
+            case _: java.lang.NumberFormatException => 0
+          }
+        }).toList.takeRight(measurement.length - 1)
+      }
+    }
     data
   }
 }
