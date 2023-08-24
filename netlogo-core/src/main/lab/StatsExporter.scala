@@ -64,11 +64,9 @@ class StatsProcessor(modelFileName: String,
   }
 
   def extractData(): Option[Data] = {
-    // if (tableExporter != null) {
-    if (false) {
+    if (tableExporter != null) {
       Some(extractFromTable(exporterFileNames(tableExporter)))
-    }
-    if (spreadsheetExporter != null) {
+    } else if (spreadsheetExporter != null) {
       Some(extractFromSpreadsheet(spreadsheetExporter))
     } else {
       None
