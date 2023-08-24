@@ -4,7 +4,7 @@ package org.nlogo.fileformat
 
 import java.io.ByteArrayInputStream
 import org.nlogo.core.LiteralParser
-import org.nlogo.api.{ LabProtocol, RefEnumeratedValueSet, LabRunOptions, SteppedValueSet }
+import org.nlogo.api.{ LabProtocol, RefEnumeratedValueSet, SteppedValueSet }
 import org.w3c.dom
 import org.xml.sax
 import scala.collection.mutable.Set
@@ -87,17 +87,6 @@ class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existi
         case "enumeratedValueSet" => readEnumeratedValueSetElement(e)
       }))
     }
-    def runsCompleted = {
-      element.getElementsByTagName("runOptions")(0).getAttribute("runsCompleted").toInt
-    }
-    def runOptions = {
-      val e = element.getElementsByTagName("runOptions")(0)
-      LabRunOptions(e.getAttribute("threadCount").toInt,
-                 e.getAttribute("table"),
-                 e.getAttribute("spreadsheet"),
-                 if (e.getAttribute("updateView") == "true") true else false,
-                 if (e.getAttribute("updatePlotsAndMonitors") == "true") true else false)
-    }
     var name = element.getAttribute("name")
     if (editNames && !name.isEmpty) {
       if (existingNames.contains(name))
@@ -123,9 +112,7 @@ class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existi
       if (!exists("exitCondition")) "" else readOptional("exitCondition"),
       readAll("metric"),
       constants,
-      subExperiments,
-      if (exists("runOptions")) runsCompleted else 0,
-      if (exists("runOptions")) runOptions else null)
+      subExperiments)
   }
 
   def fixEmptyNames(protocol: LabProtocol): LabProtocol = {

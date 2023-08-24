@@ -7,7 +7,7 @@ section of a NetLogo model file.
 
 <!ELEMENT experiments (experiment*)>
 
-<!ELEMENT experiment (setup?,go?,final?,timeLimit?,exitCondition?,metric*,runMetricsCondition?,(steppedValueSet|enumeratedValueSet)*,subExperiment*,runOptions?)>
+<!ELEMENT experiment (setup?,go?,final?,timeLimit?,exitCondition?,metric*,runMetricsCondition?,(steppedValueSet|enumeratedValueSet)*,subExperiment*)>
 <!ATTLIST experiment
   name CDATA ""
   repetitions CDATA "1"
@@ -40,12 +40,3 @@ section of a NetLogo model file.
 
 <!ELEMENT value EMPTY>
 <!ATTLIST value value CDATA #REQUIRED>
-
-<!ELEMENT runOptions EMPTY>
-<!ATTLIST runOptions
-  runsCompleted CDATA "0"
-  threadCount CDATA "1"
-  table CDATA ""
-  spreadsheet CDATA ""
-  updateView (true|false) "true"
-  updatePlotsAndMonitors (true|false) "true">
