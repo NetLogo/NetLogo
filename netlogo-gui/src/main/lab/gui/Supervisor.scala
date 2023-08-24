@@ -96,61 +96,75 @@ class Supervisor(
 
     if (options.spreadsheet != null && options.spreadsheet.trim() != "") {
       val fileName = options.spreadsheet.trim()
-      try {
-        val partialData = new PartialData
-        if (highestCompleted > 0) {
-          var data = scala.io.Source.fromFile(fileName).getLines().drop(6).toList
-          partialData.runNumbers = ',' + data.head.split(",", 2)(1)
-          data = data.tail
-          while (!data.head.contains("[")) {
-            partialData.variables = partialData.variables :+ ',' + data.head.split(",", 2)(1)
+      if (protocol.runsCompleted == 0 || new java.io.File(fileName).exists) {
+        try {
+          val partialData = new PartialData
+          if (protocol.runsCompleted > 0) {
+            var data = scala.io.Source.fromFile(fileName).getLines().drop(6).toList
+            partialData.runNumbers = ',' + data.head.split(",", 2)(1)
             data = data.tail
+            while (!data.head.contains("[")) {
+              partialData.variables = partialData.variables :+ ',' + data.head.split(",", 2)(1)
+              data = data.tail
+            }
+            if (data.head.contains("[reporter]")) {
+              partialData.reporters = ',' + data.head.split(",", 2)(1)
+              data = data.tail
+              partialData.finals =  ',' + data.head.split(",", 2)(1)
+              data = data.tail
+              partialData.mins = ',' + data.head.split(",", 2)(1)
+              data = data.tail
+              partialData.maxes = ',' + data.head.split(",", 2)(1)
+              data = data.tail
+              partialData.means = ',' + data.head.split(",", 2)(1)
+              data = data.tail
+            }
+            partialData.steps = ',' + data.head.split(",", 2)(1)
+            data = data.tail.tail
+            partialData.dataHeaders = ',' + data.head.split(",", 2)(1)
+            data = data.tail
+            while (data != Nil) {
+              partialData.data = partialData.data :+ data.head
+              data = data.tail
+            }
           }
-          if (data.head.contains("[reporter]")) {
-            partialData.reporters = ',' + data.head.split(",", 2)(1)
-            data = data.tail
-            partialData.finals =  ',' + data.head.split(",", 2)(1)
-            data = data.tail
-            partialData.mins = ',' + data.head.split(",", 2)(1)
-            data = data.tail
-            partialData.maxes = ',' + data.head.split(",", 2)(1)
-            data = data.tail
-            partialData.means = ',' + data.head.split(",", 2)(1)
-            data = data.tail
-          }
-          partialData.steps = ',' + data.head.split(",", 2)(1)
-          data = data.tail.tail
-          partialData.dataHeaders = ',' + data.head.split(",", 2)(1)
-          data = data.tail
-          while (data != Nil) {
-            partialData.data = partialData.data :+ data.head
-            data = data.tail
-          }
-        }
-        addExporter(new SpreadsheetExporter(
-          workspace.getModelFileName,
-          workspace.world.getDimensions,
-          worker.protocol,
-          new PrintWriter(new FileWriter(fileName)),
-          partialData))
-	    } catch {
-		    case e: IOException =>
-          failure(e)
+          addExporter(new SpreadsheetExporter(
+            workspace.getModelFileName,
+            workspace.world.getDimensions,
+            worker.protocol,
+            new PrintWriter(new FileWriter(fileName)),
+            partialData))
+        } catch {
+          OptionDialog.showMessage(
+            workspace.getFrame, "Error During Experiment",
+            "Unable to read existing spreadsheet output, data is not intact.",
+            Array(I18N.gui.get("common.buttons.ok")))
           return
+        }
+      }
+      else {
+        OptionDialog.showMessage(
+          workspace.getFrame, "Error During Experiment",
+          "Spreadsheet output file has been moved or deleted.",
+          Array(I18N.gui.get("common.buttons.ok")))
+        return
       }
     }
     if (options.table != null && options.table.trim() != "") {
       val fileName = options.table.trim()
-      try {
+      if (protocol.runsCompleted == 0 || new java.io.File(fileName).exists) {
         addExporter(new TableExporter(
           workspace.getModelFileName,
           workspace.world.getDimensions,
           worker.protocol,
           new PrintWriter(new FileWriter(fileName, protocol.runsCompleted > 0))))
-	    } catch {
-		    case e: IOException =>
-          failure(e)
-          return
+      }
+      else {
+        OptionDialog.showMessage(
+          workspace.getFrame, "Error During Experiment",
+          "Table output file has been moved or deleted.",
+          Array(I18N.gui.get("common.buttons.ok")))
+        return
       }
     }
     progressDialog.setUpdateView(options.updateView)
