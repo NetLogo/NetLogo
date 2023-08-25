@@ -15,7 +15,8 @@ import org.nlogo.nvm.Workspace
 class SpreadsheetExporter(modelFileName: String,
                           initialDims: WorldDimensions,
                           protocol: LabProtocol,
-                          out: java.io.PrintWriter)
+                          out: java.io.PrintWriter,
+                          partialData: PartialData = new PartialData)
   extends Exporter(modelFileName, initialDims, protocol, out)
 {
   val shouldIncludeSteps = !protocol.runMetricsEveryStep && !protocol.runMetricsCondition.isEmpty
@@ -68,6 +69,7 @@ class SpreadsheetExporter(modelFileName: String,
     // first output run numbers, like this:
     // "[run number]","1","2","3"
     out.print(csv.header("[run number]"))
+    out.print(partialData.runNumbers)
     for(runNumber <- runNumbers)
       out.print(List.fill(1 max protocol.metrics.length)(csv.number(runNumber))
                     .mkString(",", ",", ""))
@@ -76,8 +78,12 @@ class SpreadsheetExporter(modelFileName: String,
     // "initial-density","0.3","0.5","0.4"
     // "fgcolor","133.0","133.0","133.0"
     // "bgcolor","79.0","79.0","79.0"
+    var i = 0
     for(v <- protocol.valueSets(0).map(_.variableName)) {
       out.print(csv.header(v) + ",")
+      if (partialData.variables.length > 0)
+        out.print(partialData.variables(i))
+      i += 1
       foreachRun((run,metricNumber) =>
         if (metricNumber == 0)
           Some(run.settings.find(_._1 == v).get._2)
@@ -92,23 +98,24 @@ class SpreadsheetExporter(modelFileName: String,
     // "[steps]","20","20","20"
     if ((protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) && !protocol.metrics.isEmpty) {
       out.print(csv.header("[reporter]"))
+      out.print(partialData.reporters)
       for(_ <- runs; metric <- protocol.metrics)
         out.print("," + csv.header(metric))
       out.println()
-      out.print(csv.header("[final]") + ",")
+      out.print(csv.header("[final]") + partialData.finals + ",")
       foreachRun((run, metricNumber) =>
         Some(run.lastMeasurement(metricNumber)))
-      out.print(csv.header("[min]") + ",")
+      out.print(csv.header("[min]") + partialData.mins + ",")
       foreachRun((run, metricNumber) =>
         run.minMeasurement(metricNumber))
-      out.print(csv.header("[max]") + ",")
+      out.print(csv.header("[max]") + partialData.maxes + ",")
       foreachRun((run, metricNumber) =>
         run.maxMeasurement(metricNumber))
-      out.print(csv.header("[mean]") + ",")
+      out.print(csv.header("[mean]") + partialData.means + ",")
       foreachRun((run, metricNumber) =>
         run.meanMeasurement(metricNumber))
     }
-    out.print(csv.header("[steps]") + ",")
+    out.print(csv.header("[steps]") + partialData.steps + ",")
     foreachRun((run,metricNumber) =>
       Some(Int.box(run.steps)))
   }
@@ -123,6 +130,7 @@ class SpreadsheetExporter(modelFileName: String,
     out.println()
     out.print(csv.header(if (protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) "[all run data]"
                               else "[initial & final values]"))
+    out.print(partialData.dataHeaders)
     for(_ <- runs) {
       if (shouldIncludeSteps)
         out.print(',' + csv.header("step"))
@@ -143,6 +151,8 @@ class SpreadsheetExporter(modelFileName: String,
 
     // now actually generate the rows
     for(i <- 0 to mostMeasurements) {
+      if (partialData.data.length > 0)
+        out.print(partialData.data(i))
       out.print(",")
       foreachRun((run,metricNumber) =>
         if (protocol.runMetricsEveryStep && i > run.steps) None
@@ -190,4 +200,18 @@ class SpreadsheetExporter(modelFileName: String,
         .filter(_.size == measurements.size)
         .map(_.sum / measurements.size)
   }
+}
+
+class PartialData
+{
+  var runNumbers: String = ""
+  var variables: Seq[String] = Seq[String]()
+  var reporters: String = ""
+  var finals: String = ""
+  var mins: String = ""
+  var maxes: String = ""
+  var means: String = ""
+  var steps: String = ""
+  var dataHeaders: String = ""
+  var data: Seq[String] = Seq[String]()
 }

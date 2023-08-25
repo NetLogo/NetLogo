@@ -17,6 +17,11 @@ private class ManagerDialog(manager:       LabManager,
   extends JDialog(manager.workspace.getFrame)
   with javax.swing.event.ListSelectionListener
 {
+  def saveProtocol(protocol: LabProtocol): Unit = {
+    manager.protocols(selectedIndex) = protocol
+    update()
+    select(protocol)
+  }
   private val jlist = new JList[LabProtocol]
   private val listModel = new javax.swing.DefaultListModel[LabProtocol]
   private implicit val i18NPrefix = I18N.Prefix("tools.behaviorSpace")
@@ -31,6 +36,7 @@ private class ManagerDialog(manager:       LabManager,
   private val importAction = action(I18N.gui("import"), { () => importnl() })
   private val exportAction = action(I18N.gui("export"), { () => export() })
   private val closeAction = action(I18N.gui("close"), { () => manager.close() })
+  private val abortAction = action(I18N.gui("abort"), { () => abort() })
   private val runAction = action(I18N.gui("run"), { () => run() })
   /// initialization
   init()
@@ -46,32 +52,45 @@ private class ManagerDialog(manager:       LabManager,
     // Listen for double-clicks, and edit the selected protocol
     jlist.addMouseListener(new javax.swing.event.MouseInputAdapter {
       override def mouseClicked(e: java.awt.event.MouseEvent) {
-        if (e.getClickCount > 1 && jlist.getSelectedIndices.length > 0) {
+        if (e.getClickCount > 1 && jlist.getSelectedIndices.length == 1
+            && selectedProtocol.runsCompleted == 0) {
           edit()
         }
       } })
     jlist.setCellRenderer(new ProtocolRenderer())
     // Setup the first row of buttons
     val buttonPanel = new JPanel
+    buttonPanel.setLayout(new javax.swing.BoxLayout(buttonPanel, javax.swing.BoxLayout.Y_AXIS))
     val runButton = new JButton(runAction)
-    buttonPanel.setLayout(new javax.swing.BoxLayout(buttonPanel, javax.swing.BoxLayout.X_AXIS))
-    buttonPanel.add(javax.swing.Box.createHorizontalGlue)
-    buttonPanel.add(javax.swing.Box.createHorizontalStrut(20))
-    buttonPanel.add(new JButton(newAction))
-    buttonPanel.add(javax.swing.Box.createHorizontalStrut(5))
-    buttonPanel.add(new JButton(editAction))
-    buttonPanel.add(javax.swing.Box.createHorizontalStrut(5))
-    buttonPanel.add(new JButton(duplicateAction))
-    buttonPanel.add(javax.swing.Box.createHorizontalStrut(5))
-    buttonPanel.add(new JButton(deleteAction))
-    buttonPanel.add(javax.swing.Box.createHorizontalStrut(5))
-    buttonPanel.add(new JButton(importAction))
-    buttonPanel.add(javax.swing.Box.createHorizontalStrut(5))
-    buttonPanel.add(new JButton(exportAction))
-    buttonPanel.add(javax.swing.Box.createHorizontalStrut(5))
-    buttonPanel.add(runButton)
-    buttonPanel.add(javax.swing.Box.createHorizontalStrut(20))
-    buttonPanel.add(javax.swing.Box.createHorizontalGlue)
+    val buttonRow1 = new JPanel
+    buttonRow1.setLayout(new javax.swing.BoxLayout(buttonRow1, javax.swing.BoxLayout.X_AXIS))
+    buttonRow1.add(javax.swing.Box.createHorizontalGlue)
+    buttonRow1.add(javax.swing.Box.createHorizontalStrut(20))
+    buttonRow1.add(new JButton(newAction))
+    buttonRow1.add(javax.swing.Box.createHorizontalStrut(5))
+    buttonRow1.add(new JButton(editAction))
+    buttonRow1.add(javax.swing.Box.createHorizontalStrut(5))
+    buttonRow1.add(new JButton(duplicateAction))
+    buttonRow1.add(javax.swing.Box.createHorizontalStrut(5))
+    buttonRow1.add(new JButton(deleteAction))
+    buttonRow1.add(javax.swing.Box.createHorizontalStrut(20))
+    buttonRow1.add(javax.swing.Box.createHorizontalGlue)
+    buttonPanel.add(buttonRow1)
+    buttonPanel.add(javax.swing.Box.createVerticalStrut(5))
+    val buttonRow2 = new JPanel
+    buttonRow2.setLayout(new javax.swing.BoxLayout(buttonRow2, javax.swing.BoxLayout.X_AXIS))
+    buttonRow2.add(javax.swing.Box.createHorizontalGlue)
+    buttonRow2.add(javax.swing.Box.createHorizontalStrut(20))
+    buttonRow2.add(new JButton(importAction))
+    buttonRow2.add(javax.swing.Box.createHorizontalStrut(5))
+    buttonRow2.add(new JButton(exportAction))
+    buttonRow2.add(javax.swing.Box.createHorizontalStrut(5))
+    buttonRow2.add(new JButton(abortAction))
+    buttonRow2.add(javax.swing.Box.createHorizontalStrut(5))
+    buttonRow2.add(runButton)
+    buttonRow2.add(javax.swing.Box.createHorizontalStrut(20))
+    buttonRow2.add(javax.swing.Box.createHorizontalGlue)
+    buttonPanel.add(buttonRow2)
     val listLabel = new JLabel(I18N.gui("experiments"))
     // layout
     buttonPanel.setBorder(new javax.swing.border.EmptyBorder(8, 0, 8, 0))
@@ -99,17 +118,19 @@ private class ManagerDialog(manager:       LabManager,
   /// implement ListSelectionListener
   def valueChanged(e: javax.swing.event.ListSelectionEvent) {
     val count = jlist.getSelectedIndices.length
-    editAction.setEnabled(count == 1)
+    editAction.setEnabled(count == 1 && selectedProtocol.runsCompleted == 0)
     duplicateAction.setEnabled(count == 1)
     runAction.setEnabled(count == 1)
     deleteAction.setEnabled(count > 0)
     exportAction.setEnabled(count > 0)
+    abortAction.setEnabled(count == 1 && selectedProtocol.runsCompleted != 0)
   }
   /// action implementations
   private def run(): Unit = {
     try {
       manager.prepareForRun()
-      new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory).start()
+
+      new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory, saveProtocol).start()
     }
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(ex) }
   }
@@ -124,7 +145,7 @@ private class ManagerDialog(manager:       LabManager,
               variableName, List(manager.workspace.world.getObserverVariableByName(variableName)))}}),
       true)
   }
-  private def duplicate() { editProtocol(selectedProtocol, true) }
+  private def duplicate() { editProtocol(selectedProtocol.copy(runsCompleted = 0), true) }
   private def edit() { editProtocol(selectedProtocol, false) }
   private def editProtocol(protocol: LabProtocol, isNew: Boolean) {
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
@@ -231,6 +252,9 @@ private class ManagerDialog(manager:       LabManager,
       case e: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(e)
     }
   }
+  private def abort() {
+    saveProtocol(selectedProtocol.copy(runsCompleted = 0, runOptions = null))
+  }
   /// helpers
   def update() {
     listModel.clear
@@ -257,7 +281,10 @@ private class ManagerDialog(manager:       LabManager,
       proto: LabProtocol, index: Int,
       isSelected: Boolean, cellHasFocus: Boolean): Component = {
         val text =
-          s"${proto.name} (${proto.countRuns} run${(if (proto.countRuns != 1) "s" else "")})"
+          if (proto.runsCompleted != 0)
+            s"** In Progress ** ${proto.name} (${proto.runsCompleted}/${proto.countRuns} runs)"
+          else
+            s"${proto.name} (${proto.countRuns} run${(if (proto.countRuns != 1) "s" else "")})"
         setText(text)
         if (isSelected) {
           setOpaque(true)

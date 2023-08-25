@@ -14,8 +14,10 @@ class TableExporter(modelFileName: String,
 {
   val settings = new collection.mutable.HashMap[Int,List[(String,Any)]]
   override def experimentStarted() {
-    writeExportHeader()
-    writeExperimentHeader()
+    if (protocol.runsCompleted == 0) {
+      writeExportHeader()
+      writeExperimentHeader()
+    }
     out.flush()
   }
   override def runStarted(w: Workspace, runNumber: Int,runSettings: List[(String,Any)]) {
