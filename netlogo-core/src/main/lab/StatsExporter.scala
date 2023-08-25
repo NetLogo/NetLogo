@@ -3,6 +3,7 @@ package org.nlogo.lab
 import org.nlogo.api.LabProtocol
 import org.nlogo.core.WorldDimensions
 import scala.collection.mutable.{ HashMap, ListBuffer }
+import scala.collection.immutable.{ Set }
 import java.io.{ BufferedReader, FileReader }
 
 // import scala.math.sqrt
@@ -21,11 +22,27 @@ class StatsProcessor(modelFileName: String,
   type DataPerStep = HashMap[Int, Measurements]
   type Data = HashMap[List[Any], DataPerStep]
 
+  private var seen = Set[List[Any]]()
+  val paramCombinations = ListBuffer[List[Any]]()
+  for (param <- protocol.refElements.map(_.map(_._2))) {
+    if (!seen(param)) {
+      paramCombinations += param
+      seen += param
+    }
+  }
+  val countParams = {
+    if (protocol.refElements.length > 0) {
+      protocol.refElements.toList(0).length
+    } else {
+      0
+    }
+  }
+
   override def writeExperimentHeader() {
     val metrics = ListBuffer[String]()
     for (m <- protocol.metrics) {
-      metrics += (m + "-mean")
-      metrics += (m + "-std")
+      metrics += (f"[${m}]-mean")
+      metrics += (f"[${m}]-std")
     }
     val headers = protocol.valueSets(0).map(_.variableName) ::: "[step]" :: metrics.toList
     out.println(headers.map(csv.header).mkString(","))
@@ -44,8 +61,11 @@ class StatsProcessor(modelFileName: String,
       case Some(d) => {
         writeExportHeader()
         writeExperimentHeader()
-        for ((params, runData) <- d) {
-          for ((step, values) <- runData) {
+        for (params <- paramCombinations) {
+          val runData = d(params)
+          val sortedSteps = runData.keys.toList.sorted
+          for (step <- sortedSteps) {
+            val values = runData(step)
             val numMetrics = values(0).length
             val writeData = ListBuffer[Double]()
             for (i <- 0 until numMetrics) {
@@ -67,9 +87,11 @@ class StatsProcessor(modelFileName: String,
     if (tableExporter != null) {
       Some(extractFromTable(exporterFileNames(tableExporter)))
     } else if (spreadsheetExporter != null) {
-      Some(extractFromSpreadsheet(spreadsheetExporter))
+      // Some(extractFromSpreadsheet(spreadsheetExporter))
+      Some(extractFromSpreadsheet(exporterFileNames(spreadsheetExporter)))
     } else {
-      None
+      Some(extractFromSpreadsheet(spreadsheetExporter))
+      // None
     }
   }
 
@@ -77,15 +99,8 @@ class StatsProcessor(modelFileName: String,
     val bufferedReader: BufferedReader = new BufferedReader(new FileReader(fileName))
     var line = ""
     var row = 0
-    var numVary = 0 // start at -1 since runNumber is always the leftmost column
     val data = new HashMap[List[Any], DataPerStep]() // use a hashmap because we don't know how many runs there are
     while ({line = bufferedReader.readLine; line} != null) {
-      if (row == 6) {
-        val parsed = line.split(",")
-        while (!parsed(numVary).contains("[step]")) {
-          numVary += 1
-        }
-      }
       if (row > 6) {
         val parsed = line.split(",").map(entry => {
           try {
@@ -94,19 +109,69 @@ class StatsProcessor(modelFileName: String,
             case _: java.lang.NumberFormatException => 0
           }
         }).toList
-        val params = parsed.slice(1,numVary).toList
-        val step = parsed(numVary).toInt
+        val params = parsed.slice(1,countParams+1).toList
+        val step = parsed(countParams+1).toInt
         if (!data.contains(params)) {
           data(params) = new HashMap[Int, Measurements]()
         }
         if (!data(params).contains(step)) {
           data(params)(step) = new ListBuffer[List[Double]]()
         }
-        data(params)(step) += parsed.takeRight(parsed.length - (1 + numVary))
+        data(params)(step) += parsed.takeRight(parsed.length - (1 + countParams))
       }
       row += 1
     }
     bufferedReader.close()
+    data
+  }
+
+  private def extractFromSpreadsheet(fileName: String): Data = {
+    val bufferedReader: BufferedReader = new BufferedReader(new FileReader(fileName))
+    var line = ""
+    val data = new HashMap[List[Any], DataPerStep]() // use a hashmap because we don't know how many runs there are
+    var reachedRunData = false
+    while ({line = bufferedReader.readLine; line} != null) {
+      val split = line.split("[,\n]")
+      if (reachedRunData) {
+        // parsed.foreach(p => print(f"${p},"))
+        // println
+        var runNumber = 1
+        for (i <- 1 to split.length - 1 by protocol.metrics.length + 1) {
+          // println(f"${runNumber} ${split}")
+          val parsed = split.map(entry => {
+            try {
+              if (entry.length > 1) {
+                entry.split("\"")(1).toDouble
+              } else {
+                0
+              }
+            } catch {
+              case _: java.lang.NumberFormatException => 0
+            }
+          }).toList
+          val step = parsed(i).toInt
+          val metrics = parsed.slice(i+1, i+protocol.metrics.length+1)
+          val params = {
+            if (protocol.sequentialRunOrder) {
+              // println(f"${runNumber} ${(runNumber - 1) / protocol.repetitions} ${i}")
+              paramCombinations((runNumber - 1) / protocol.repetitions)
+            } else {
+              paramCombinations((runNumber - 1) % protocol.repetitions)
+            }
+          }
+          if (!data.contains(params)) {
+            data(params) = new HashMap[Int, Measurements]()
+          }
+          if (!data(params).contains(step)) {
+            data(params)(step) = new ListBuffer[List[Double]]()
+          }
+          data(params)(step) += metrics
+          runNumber += 1
+        }
+      } else if (split.length > 0  && (split(0) equals "\"[all run data]\"")) {
+        reachedRunData = true
+      }
+    }
     data
   }
 
