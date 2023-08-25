@@ -69,7 +69,7 @@ class SpreadsheetExporter(modelFileName: String,
     // "[run number]","1","2","3"
     out.print(csv.header("[run number]"))
     for(runNumber <- runNumbers)
-      out.print(List.fill(1 max protocol.metrics.length)(csv.number(runNumber))
+      out.print(List.fill(1 max protocol.metrics.length+1)(csv.number(runNumber))
                     .mkString(",", ",", ""))
     out.println()
     // now output one row per variable, like this:
