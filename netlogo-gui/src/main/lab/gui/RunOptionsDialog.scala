@@ -101,7 +101,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
         Property("threadCount", Property.Integer, I18N.gui("simultaneousruns"),
                  "<html>" + I18N.gui("simultaneousruns.info") + "</html>")).asJava
     }
-    def get = LabRunOptions(threadCount, table, spreadsheet, updateView, updatePlotsAndMonitors)
+    def get = LabRunOptions(threadCount, table, spreadsheet, lists, updateView, updatePlotsAndMonitors)
     // boilerplate for Editable
     def helpLink = None
     def error(key:Object) = null

@@ -72,22 +72,24 @@ class ListsExporter(modelFileName: String,
             }
           }
         }
-        // sort lines by run, then by reporter, then by step
-        sortedLines = sortedLines.sortWith((a, b) =>
-          if (a._2 == b._2) {
-            if (a._1 == b._1) {
-              a._4 < b._4
-            } else header.indexOf(a._1) < header.indexOf(b._1)
-          } else a._2 < b._2
-        )
-        out.print("[reporter],[run number]")
-        parameterIndices.foreach(i => out.print("," + header(i)))
-        out.print(",[step]")
-        for (i <- 0 until sortedLines.map(_._5.split(",").length).max) {
-          out.print(s",[$i]")
+        if (sortedLines.length > 0) {
+          // sort lines by run, then by reporter, then by step
+          sortedLines = sortedLines.sortWith((a, b) =>
+            if (a._2 == b._2) {
+              if (a._1 == b._1) {
+                a._4 < b._4
+              } else header.indexOf(a._1) < header.indexOf(b._1)
+            } else a._2 < b._2
+          )
+          out.print("[reporter],[run number]")
+          parameterIndices.foreach(i => out.print("," + header(i)))
+          out.print(",[step]")
+          for (i <- 0 until sortedLines.map(_._5.split(",").length).max) {
+            out.print(s",[$i]")
+          }
+          out.println()
+          sortedLines.foreach(line => out.println(line.productIterator.mkString(",")))
         }
-        out.println()
-        sortedLines.foreach(line => out.println(line.productIterator.mkString(",")))
       }
     }
     out.close()
