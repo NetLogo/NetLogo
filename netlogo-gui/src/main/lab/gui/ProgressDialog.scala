@@ -107,8 +107,6 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     c.insets = new java.awt.Insets(6, 6, 6, 6)
     getContentPane.add(abortButton, c)
 
-    timer.start()
-
     pack()
     org.nlogo.awt.Positioning.center(this, dialog)
   }
@@ -126,20 +124,6 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   lazy val periodicUpdateAction = RichAction("update elapsed time") { _ =>
     updateProgressArea(false)
     plotWidgetOption.foreach{ plotWidget => if (updatePlots) plotWidget.handle(null) }
-    if (workspace.triedToExportPlot) {
-      workspace.exportPlotWarningAction match {
-        case ExportPlotWarningAction.Warn => {
-          workspace.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
-          org.nlogo.awt.EventQueue.mustBeEventDispatchThread()
-          OptionDialog.showMessage(
-            workspace.getFrame, "Updating Plots Warning",
-            "Warning: enable plot updating in Run Options if you want to collect plot data using export-plot, export-all-plots, export-world, or export-interface.",
-            Array(I18N.gui.get("common.buttons.continue"))
-          )
-        }
-        case _ =>
-      }
-    }
   }
   lazy val displaySwitchAction = RichAction("Update view") { e =>
     workspace.displaySwitchOn(e.getSource.asInstanceOf[JCheckBox].isSelected)
@@ -189,7 +173,10 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
 
   /// ProgressListener implementation
 
-  override def experimentStarted() {started = System.currentTimeMillis}
+  override def experimentStarted() {
+    started = System.currentTimeMillis
+    timer.start()
+  }
   override def runStarted(w: Workspace, runNumber: Int, settings: List[(String, Any)]) {
     if (!w.isHeadless) {
       runCount = runNumber
@@ -202,7 +189,26 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     }
   }
   override def stepCompleted(w: Workspace, steps: Int) {
-    if (!w.isHeadless) this.steps = steps
+    if (!w.isHeadless) {
+      this.steps = steps
+      if (workspace.triedToExportPlot) {
+        workspace.exportPlotWarningAction match {
+          case ExportPlotWarningAction.Warn => {
+            workspace.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
+            org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
+              def run() {
+                OptionDialog.showMessage(
+                  workspace.getFrame, "Updating Plots Warning",
+                  "Warning: enable plot updating in Run Options if you want to collect plot data using export-plot, export-all-plots, export-world, or export-interface.",
+                  Array(I18N.gui.get("common.buttons.continue"))
+                )
+              }
+            })
+          }
+          case _ =>
+        }
+      }
+    }
   }
   override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]) {
     if (!w.isHeadless) plotNextPoint(values)
