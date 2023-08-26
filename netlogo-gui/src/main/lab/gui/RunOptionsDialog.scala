@@ -2,11 +2,10 @@
 
 package org.nlogo.lab.gui
 
-import org.nlogo.api.{Editable, Property}
+import org.nlogo.api.{Editable, Property, LabRunOptions}
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N }
 import org.nlogo.window.EditDialogFactoryInterface
-import Supervisor.RunOptions
 
 import java.io.File
 import java.util.prefs.Preferences
@@ -64,7 +63,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     def updateView = prefs.getBoolean("updateView", true)
     def updatePlotsAndMonitors = prefs.getBoolean("updatePlotsAndMonitors", true)
     def updateThreadCount = prefs.getInt("threadCount", Runtime.getRuntime.availableProcessors)
-    def updateFrom(runOptions: RunOptions): Unit = {
+    def updateFrom(runOptions: LabRunOptions): Unit = {
       prefs.put("spreadsheet", parentDirectory(runOptions.spreadsheet))
       prefs.put("table", parentDirectory(runOptions.table))
       prefs.put("stats", parentDirectory(runOptions.stats))
@@ -102,7 +101,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
         Property("threadCount", Property.Integer, I18N.gui("simultaneousruns"),
                  "<html>" + I18N.gui("simultaneousruns.info") + "</html>")).asJava
     }
-    def get = RunOptions(threadCount, table, spreadsheet, stats, updateView, updatePlotsAndMonitors)
+    def get = LabRunOptions(threadCount, table, spreadsheet, stats, updateView, updatePlotsAndMonitors)
     // boilerplate for Editable
     def helpLink = None
     def error(key:Object) = null

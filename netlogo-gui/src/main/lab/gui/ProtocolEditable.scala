@@ -79,6 +79,7 @@ class ProtocolEditable(protocol: LabProtocol,
     (protocol.constants.map(setString) :::
      protocol.subExperiments.map("[" + _.map(setString).mkString + "]")).mkString("\n")
   }
+  val runsCompleted = protocol.runsCompleted
   // make a new LabProtocol based on what user entered
   def editFinished: Boolean = get.isDefined
   def get: Option[LabProtocol] = {
@@ -174,7 +175,7 @@ class ProtocolEditable(protocol: LabProtocol,
       finalCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep, runMetricsCondition.trim,
       timeLimit, exitCondition.trim,
       metrics.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
-      constants, subExperiments))
+      constants, subExperiments, runsCompleted))
   }
 
   override def invalidSettings: Seq[(String,String)] = {
