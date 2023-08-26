@@ -112,6 +112,8 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
 
     getContentPane.add(buttonPanel, c)
 
+    timer.start()
+
     pack()
     org.nlogo.awt.Positioning.center(this, dialog)
   }
@@ -204,10 +206,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
 
   /// ProgressListener implementation
 
-  override def experimentStarted() {
-    started = System.currentTimeMillis
-    timer.start()
-  }
+  override def experimentStarted() {started = System.currentTimeMillis}
   override def runStarted(w: Workspace, runNumber: Int, settings: List[(String, Any)]) {
     if (!w.isHeadless) {
       runCount = runNumber
