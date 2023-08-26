@@ -37,7 +37,7 @@ class Worker(val protocol: LabProtocol)
     try {
       listeners.foreach(_.experimentStarted())
       runners =
-        (for((settings, runNumber) <- protocol.refElements zip Stream.from(1).iterator)
+        (for((settings, runNumber) <- (protocol.refElements zip Stream.from(1).iterator).drop(protocol.runsCompleted))
          yield new Runner(runNumber, settings, fn)).toSeq
       val futures = {
         import collection.JavaConverters._
@@ -100,9 +100,11 @@ class Worker(val protocol: LabProtocol)
       // keep bug #1203 from happening - ST 2/16/11
       if (!aborted) {
         val workspace = fn.apply
-        try callHelper(workspace)
-        catch { case t: Throwable =>
-          if (!aborted) eachListener(_.runtimeError(workspace, runNumber, t)) }
+        if (workspace != null) {
+          try callHelper(workspace)
+          catch { case t: Throwable =>
+            if (!aborted) eachListener(_.runtimeError(workspace, runNumber, t)) }
+        }
       }
     }
     def callHelper(ws: Workspace) {

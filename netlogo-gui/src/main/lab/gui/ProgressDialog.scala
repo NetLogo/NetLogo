@@ -3,6 +3,7 @@
 package org.nlogo.lab.gui
 
 import org.nlogo.swing.{ RichAction, OptionDialog }
+import org.nlogo.api.LabProtocol
 import org.nlogo.nvm.Workspace
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.window.{ PlotWidget, SpeedSliderPanel }
@@ -13,14 +14,13 @@ import org.nlogo.api.{ Dump, ExportPlotWarningAction, PeriodicUpdateDelay }
 import org.nlogo.plot.DummyPlotManager
 import org.nlogo.core.I18N
 
-
-private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervisor)
+private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervisor,
+                                   saveProtocol: (LabProtocol) => Unit)
               extends JDialog(dialog, true) with ProgressListener{
-
   val protocol = supervisor.worker.protocol
   val workspace = supervisor.workspace
   private val totalRuns = protocol.countRuns
-  private val progressArea = new JTextArea(10 min (protocol.valueSets.size + 3), 0)
+  private val progressArea = new JTextArea(10 min (protocol.valueSets(0).size + 3), 0)
   private val timer = new Timer(PeriodicUpdateDelay.DelayInMilliseconds, periodicUpdateAction)
   private val displaySwitch = new JCheckBox(displaySwitchAction)
   private val plotsAndMonitorsSwitch = new JCheckBox(plotsAndMonitorsSwitchAction)
@@ -101,11 +101,16 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     c.insets = new java.awt.Insets(0, 6, 0, 6)
     getContentPane.add(plotsAndMonitorsSwitch, c)
 
-    val abortButton = new JButton(abortAction)
+    val buttonPanel = new JPanel
+
+    buttonPanel.add(new JButton(pauseAction))
+    buttonPanel.add(new JButton(abortAction))
+
     c.fill = java.awt.GridBagConstraints.NONE
     c.anchor = java.awt.GridBagConstraints.EAST
     c.insets = new java.awt.Insets(6, 6, 6, 6)
-    getContentPane.add(abortButton, c)
+
+    getContentPane.add(buttonPanel, c)
 
     pack()
     org.nlogo.awt.Positioning.center(this, dialog)
@@ -117,9 +122,27 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   // The following actions are declared lazy so we can use them in the
   // initialization code above.  Two cheers for Scala. - ST 11/12/08
 
+  lazy val pauseAction = RichAction("Pause") { _ =>
+    if (!supervisor.paused)
+      supervisor.pause()
+      pause()
+  }
+  def pause(): Unit = {
+    setUpdateView(false)
+    setPlotsAndMonitorsSwitch(false)
+    val dialog = new JDialog(this, "Pausing", true)
+    dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
+    val layout = new java.awt.GridBagLayout()
+    dialog.getContentPane().setLayout(layout)
+    val c = new java.awt.GridBagConstraints()
+    c.insets = new java.awt.Insets(20, 20, 20, 20)
+    dialog.getContentPane().add(new JLabel("Waiting for current runs to finish...", SwingConstants.CENTER), c)
+    dialog.pack()
+    org.nlogo.awt.Positioning.center(dialog, this)
+    dialog.setVisible(true)
+  }
   lazy val abortAction = RichAction("Abort") { _ =>
-    supervisor.interrupt()
-    close()
+    supervisor.abort()
   }
   lazy val periodicUpdateAction = RichAction("update elapsed time") { _ =>
     updateProgressArea(false)
@@ -135,6 +158,14 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
       workspace.setPeriodicUpdatesEnabled(false)
       workspace.jobManager.finishSecondaryJobs(null)
     }
+  }
+
+  def saveProtocolP(): Unit = {
+    saveProtocol(protocol.copy(runsCompleted = supervisor.highestCompleted, runOptions = supervisor.options))
+  }
+
+  def resetProtocol(): Unit = {
+    saveProtocol(protocol.copy(runsCompleted = 0, runOptions = null))
   }
 
   def updateView(check: Boolean): Unit = {
