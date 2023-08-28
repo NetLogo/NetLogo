@@ -3,11 +3,9 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.AbstractExporter
-import org.nlogo.api.{ Dump }
+import org.nlogo.api.Dump
 import org.nlogo.plot.CorePlotExporter
-// import org.nlogo.swing.{ OptionDialog }
-// import org.nlogo.core.I18N
-import java.io.{ IOException,PrintWriter }
+import java.io.{IOException,PrintWriter}
 
 trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
 
@@ -79,18 +77,18 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
   @throws(classOf[IOException])
   def exportAllPlots(filename: String) {
     new AbstractExporter(filename) {
-    override def export(writer: PrintWriter) {
-      exportInterfaceGlobals(writer)
+      override def export(writer: PrintWriter) {
+        exportInterfaceGlobals(writer)
 
-      plotManager.getPlotNames.foreach { name =>
-        new CorePlotExporter(
-          plotManager
-            .maybeGetPlot(name)
-            .getOrElse(throw new Exception("plot manager gave a name for a plot that doesn't exist?"))
-        , Dump.csv
-        ).export(writer)
+        plotManager.getPlotNames.foreach { name =>
+          new CorePlotExporter(
+            plotManager
+              .maybeGetPlot(name)
+              .getOrElse(throw new Exception("plot manager gave a name for a plot that doesn't exist?"))
+          , Dump.csv
+          ).export(writer)
+        }
       }
-    }
-  }.export("plots",modelFileName,"")
+    }.export("plots",modelFileName,"")
   }
 }

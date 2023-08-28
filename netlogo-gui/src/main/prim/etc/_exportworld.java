@@ -41,11 +41,6 @@ public final class _exportworld
                     (context, _exportworld.this,
                         token().text() +
                             ": " + ex.getMessage());
-            } catch (Exception ex) {
-              throw new RuntimePrimitiveException
-                  (context, _exportworld.this,
-                      token().text() +
-                          ": " + ex.getMessage());
             }
           }
         });
