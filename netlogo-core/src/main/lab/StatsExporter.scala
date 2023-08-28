@@ -168,7 +168,7 @@ class StatsProcessor(modelFileName: String,
           data(params)(step) += metrics
           runNumber += 1
         }
-      } else if (split.length > 0  && (split(0) equals "\"[all run data]\"")) {
+      } else if (split.length > 0  && ((split(0) equals "\"[all run data]\"") || (split(0) equals "\"[initial & final values]\""))) {
         reachedRunData = true
       }
     }
