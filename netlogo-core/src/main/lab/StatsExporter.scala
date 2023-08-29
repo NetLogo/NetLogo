@@ -37,19 +37,25 @@ class StatsProcessor(modelFileName: String,
       0
     }
   }
+  val numericMetrics = HashMap[String, Boolean]();
+  for (m <- protocol.metrics) {
+    numericMetrics(m) = true
+  }
 
   override def writeExperimentHeader() {
     val metrics = ListBuffer[String]()
     for (m <- protocol.metrics) {
-      metrics += (f"[${m}]-mean")
-      metrics += (f"[${m}]-std")
+      if (numericMetrics(m)) {
+        metrics += (f"[${m}]-mean")
+        metrics += (f"[${m}]-std")
+      }
     }
     val headers = protocol.valueSets(0).map(_.variableName) ::: "[step]" :: metrics.toList
     out.println(headers.map(csv.header).mkString(","))
     out.flush()
   }
 
-  def writeTableRow(params: List[Any], stats: List[Double], step: Int) {
+  def writeTableRow(params: List[Any], stats: List[Any], step: Int) {
     val writeValues = (params :+ step) ::: stats
     out.println(writeValues.map(csv.data).mkString(","))
     out.flush()
@@ -67,13 +73,23 @@ class StatsProcessor(modelFileName: String,
           for (step <- sortedSteps) {
             val values = runData(step)
             val numMetrics = values(0).length
-            val writeData = ListBuffer[Double]()
+            val writeData = ListBuffer[Any]()
             for (i <- 0 until numMetrics) {
-              val metricValues = values.map(_(i)).toList
-              val mean = StatsCalculator.mean(metricValues)
-              val std = StatsCalculator.std(metricValues)
-              writeData += mean
-              writeData += std
+              val metric = protocol.metrics(i)
+              if (numericMetrics(metric)) {
+                val metricValues = values.map(_(i)).toList
+                val mean = StatsCalculator.mean(metricValues)
+                writeData += mean
+
+                val std = StatsCalculator.std(metricValues)
+                writeData += {
+                  if (std.isNaN) {
+                    "N/A"
+                  } else {
+                    std
+                  }
+                }
+              }
             }
             writeTableRow(params, writeData.toList, step)
           }
@@ -87,11 +103,12 @@ class StatsProcessor(modelFileName: String,
     if (tableExporter != null) {
       Some(extractFromTable(exporterFileNames(tableExporter)))
     } else if (spreadsheetExporter != null) {
+      Some(extractFromSpreadsheet(spreadsheetExporter))
+      // Some(extractFromSpreadsheet(exporterFileNames(spreadsheetExporter)))
+    } else {
       // Some(extractFromSpreadsheet(spreadsheetExporter))
       Some(extractFromSpreadsheet(exporterFileNames(spreadsheetExporter)))
-    } else {
-      Some(extractFromSpreadsheet(spreadsheetExporter))
-      // None
+
     }
   }
 
@@ -101,23 +118,39 @@ class StatsProcessor(modelFileName: String,
     var row = 0
     val data = new HashMap[List[Any], DataPerStep]() // use a hashmap because we don't know how many runs there are
     while ({line = bufferedReader.readLine; line} != null) {
+      val params = ListBuffer[Any]()
+      val measurements = ListBuffer[Double]()
       if (row > 6) {
-        val parsed = line.split(",").map(entry => {
-          try {
-            entry.split("\"")(1).toDouble
-          } catch {
-            case _: java.lang.NumberFormatException => 0
+        line.split(",").zipWithIndex.foreach{case (entry, col) => {
+          val noQuotes = entry.split("\"")(1)
+          if (col > countParams) {
+            try {
+              measurements += noQuotes.toDouble
+            } catch {
+              case _: java.lang.NumberFormatException => {
+                numericMetrics(protocol.metrics(col - (countParams + 2))) = false // +2 to account for the runNumber col and step col
+                measurements += Double.NaN
+              }
+            }
+          } else {
+            try {
+              params += noQuotes.toDouble
+            } catch {
+              case _: java.lang.NumberFormatException => {
+                params += noQuotes
+              }
+            }
           }
-        }).toList
-        val params = parsed.slice(1,countParams+1).toList
-        val step = parsed(countParams+1).toInt
-        if (!data.contains(params)) {
-          data(params) = new HashMap[Int, Measurements]()
+        }}
+        val step = measurements(0).toInt
+        val paramsList = params.drop(1).toList
+        if (!data.contains(paramsList)) {
+          data(paramsList) = new HashMap[Int, Measurements]()
         }
-        if (!data(params).contains(step)) {
-          data(params)(step) = new ListBuffer[List[Double]]()
+        if (!data(paramsList).contains(step)) {
+          data(paramsList)(step) = new ListBuffer[List[Double]]()
         }
-        data(params)(step) += parsed.takeRight(parsed.length - (1 + countParams))
+        data(paramsList)(step) += measurements.drop(1).toList
       }
       row += 1
     }
@@ -133,39 +166,36 @@ class StatsProcessor(modelFileName: String,
     while ({line = bufferedReader.readLine; line} != null) {
       val split = line.split("[,\n]")
       if (reachedRunData) {
-        // parsed.foreach(p => print(f"${p},"))
-        // println
         var runNumber = 1
         for (i <- 1 to split.length - 1 by protocol.metrics.length + 1) {
-          // println(f"${runNumber} ${split}")
-          val parsed = split.map(entry => {
-            try {
-              if (entry.length > 1) {
-                entry.split("\"")(1).toDouble
-              } else {
-                0
-              }
-            } catch {
-              case _: java.lang.NumberFormatException => 0
-            }
-          }).toList
-          val step = parsed(i).toInt
-          val metrics = parsed.slice(i+1, i+protocol.metrics.length+1)
           val params = {
             if (protocol.sequentialRunOrder) {
-              // println(f"${runNumber} ${(runNumber - 1) / protocol.repetitions} ${i}")
               paramCombinations((runNumber - 1) / protocol.repetitions)
             } else {
               paramCombinations((runNumber - 1) % protocol.repetitions)
             }
           }
+          val step = split(i).split("\"")(1).toInt
+          val measurements = split.slice(i+1, protocol.metrics.length + i + 1).zipWithIndex.map{case (entry, col) => {
+            try {
+              val noQuotes = entry.split("\"")
+              noQuotes(1).toDouble
+            } catch {
+              case _: java.lang.NumberFormatException => {
+                numericMetrics(protocol.metrics(col)) = false
+                Double.NaN
+              }
+            }
+          }}.toList
+          // val measurements = parsed.slice(i+1, i+protocol.metrics.length+1)
+
           if (!data.contains(params)) {
             data(params) = new HashMap[Int, Measurements]()
           }
           if (!data(params).contains(step)) {
             data(params)(step) = new ListBuffer[List[Double]]()
           }
-          data(params)(step) += metrics
+          data(params)(step) += measurements
           runNumber += 1
         }
       } else if (split.length > 0  && ((split(0) equals "\"[all run data]\"") || (split(0) equals "\"[initial & final values]\""))) {
@@ -183,18 +213,23 @@ class StatsProcessor(modelFileName: String,
       if (!data.contains(params)) {
         data(params) = new HashMap[Int, Measurements]()
       }
-      for (measurement <- run.measurements) {
-        val step = measurement(0).toString.toInt
+      for (runData <- run.measurements) {
+        val step = runData(0).toString.toInt
+        val measurements = runData.drop(1)
+
         if (!data(params).contains(step)) {
           data(params)(step) = new ListBuffer[List[Double]]()
         }
-        data(params)(step) += measurement.map(entry => {
+        data(params)(step) += measurements.zipWithIndex.map{case (entry, col) => {
           try {
             entry.toString.toDouble
           } catch {
-            case _: java.lang.NumberFormatException => 0
+            case _: java.lang.NumberFormatException => {
+              numericMetrics(protocol.metrics(col)) = false
+              Double.NaN
+            }
           }
-        }).toList.takeRight(measurement.length - 1)
+        }}.toList.drop(1)
       }
     }
     data
