@@ -6,8 +6,6 @@ import scala.collection.mutable.{ HashMap, ListBuffer }
 import scala.collection.immutable.{ Set }
 import java.io.{ BufferedReader, FileReader }
 
-// import scala.math.sqrt
-
 class StatsProcessor(modelFileName: String,
                           initialDims: WorldDimensions,
                           protocol: LabProtocol,
@@ -67,15 +65,19 @@ class StatsProcessor(modelFileName: String,
       case Some(d) => {
         writeExportHeader()
         writeExperimentHeader()
+
         for (params <- paramCombinations) {
           val runData = d(params)
           val sortedSteps = runData.keys.toList.sorted
+
           for (step <- sortedSteps) {
             val values = runData(step)
             val numMetrics = values(0).length
             val writeData = ListBuffer[Any]()
+
             for (i <- 0 until numMetrics) {
               val metric = protocol.metrics(i)
+
               if (numericMetrics(metric)) {
                 val metricValues = values.map(_(i)).toList
                 val mean = StatsCalculator.mean(metricValues)
@@ -103,12 +105,22 @@ class StatsProcessor(modelFileName: String,
     if (tableExporter != null) {
       Some(extractFromTable(exporterFileNames(tableExporter)))
     } else if (spreadsheetExporter != null) {
-      Some(extractFromSpreadsheet(spreadsheetExporter))
-      // Some(extractFromSpreadsheet(exporterFileNames(spreadsheetExporter)))
-    } else {
-      // Some(extractFromSpreadsheet(spreadsheetExporter))
       Some(extractFromSpreadsheet(exporterFileNames(spreadsheetExporter)))
+    } else {
+      Some(extractFromSpreadsheet(spreadsheetExporter))
+    }
+  }
 
+  private def handleNonNumeric(entry: String, metricIndex: Int): Double = {
+    try {
+      entry.toDouble
+    } catch {
+      case _: java.lang.NumberFormatException => {
+        if (metricIndex >= 0) {
+          numericMetrics(protocol.metrics(metricIndex)) = false
+        }
+        Double.NaN
+      }
     }
   }
 
@@ -120,26 +132,18 @@ class StatsProcessor(modelFileName: String,
     while ({line = bufferedReader.readLine; line} != null) {
       val params = ListBuffer[Any]()
       val measurements = ListBuffer[Double]()
+      // The first 6 contain file data, and the 7th row is the header names
       if (row > 6) {
         line.split(",").zipWithIndex.foreach{case (entry, col) => {
           val noQuotes = entry.split("\"")(1)
+
+          // Allow parameters to have string values, but convert non-numeric measurement values to NaN
           if (col > countParams) {
-            try {
-              measurements += noQuotes.toDouble
-            } catch {
-              case _: java.lang.NumberFormatException => {
-                numericMetrics(protocol.metrics(col - (countParams + 2))) = false // +2 to account for the runNumber col and step col
-                measurements += Double.NaN
-              }
-            }
+            measurements += handleNonNumeric(noQuotes, col - (countParams + 2))// +2 to account for the runNumber col and step col
           } else {
-            try {
-              params += noQuotes.toDouble
-            } catch {
-              case _: java.lang.NumberFormatException => {
-                params += noQuotes
-              }
-            }
+            val n = handleNonNumeric(noQuotes, -1)
+            if (n.isNaN) params += noQuotes
+            else params += n
           }
         }}
         val step = measurements(0).toInt
@@ -164,10 +168,15 @@ class StatsProcessor(modelFileName: String,
     val data = new HashMap[List[Any], DataPerStep]() // use a hashmap because we don't know how many runs there are
     var reachedRunData = false
     while ({line = bufferedReader.readLine; line} != null) {
-      val split = line.split("[,\n]")
+      val rowElements = line.split("[,\n]")
+
+      // Read lines until the line that contains "[all run data]" or "[initial & final values]" is reached
       if (reachedRunData) {
         var runNumber = 1
-        for (i <- 1 to split.length - 1 by protocol.metrics.length + 1) {
+
+        // Data is stored along the row, so increment our current position by the number of metrics (+1 to account for the steps column)
+        // to access each run
+        for (i <- 1 to rowElements.length - 1 by protocol.metrics.length + 1) {
           val params = {
             if (protocol.sequentialRunOrder) {
               paramCombinations((runNumber - 1) / protocol.repetitions)
@@ -175,19 +184,11 @@ class StatsProcessor(modelFileName: String,
               paramCombinations((runNumber - 1) % protocol.repetitions)
             }
           }
-          val step = split(i).split("\"")(1).toInt
-          val measurements = split.slice(i+1, protocol.metrics.length + i + 1).zipWithIndex.map{case (entry, col) => {
-            try {
-              val noQuotes = entry.split("\"")
-              noQuotes(1).toDouble
-            } catch {
-              case _: java.lang.NumberFormatException => {
-                numericMetrics(protocol.metrics(col)) = false
-                Double.NaN
-              }
-            }
+          val step = rowElements(i).split("\"")(1).toInt
+          val measurements = rowElements.slice(i+1, protocol.metrics.length + i + 1).zipWithIndex.map{case (entry, col) => {
+            val noQuotes = entry.split("\"")(1)
+            handleNonNumeric(noQuotes, col)
           }}.toList
-          // val measurements = parsed.slice(i+1, i+protocol.metrics.length+1)
 
           if (!data.contains(params)) {
             data(params) = new HashMap[Int, Measurements]()
@@ -198,7 +199,7 @@ class StatsProcessor(modelFileName: String,
           data(params)(step) += measurements
           runNumber += 1
         }
-      } else if (split.length > 0  && ((split(0) equals "\"[all run data]\"") || (split(0) equals "\"[initial & final values]\""))) {
+      } else if (rowElements.length > 0  && ((rowElements(0) equals "\"[all run data]\"") || (rowElements(0) equals "\"[initial & final values]\""))) {
         reachedRunData = true
       }
     }
@@ -221,15 +222,8 @@ class StatsProcessor(modelFileName: String,
           data(params)(step) = new ListBuffer[List[Double]]()
         }
         data(params)(step) += measurements.zipWithIndex.map{case (entry, col) => {
-          try {
-            entry.toString.toDouble
-          } catch {
-            case _: java.lang.NumberFormatException => {
-              numericMetrics(protocol.metrics(col)) = false
-              Double.NaN
-            }
-          }
-        }}.toList.drop(1)
+          handleNonNumeric(entry.toString, col)
+        }}.toList
       }
     }
     data
