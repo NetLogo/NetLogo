@@ -4,8 +4,7 @@ package org.nlogo.headless
 
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.{ OneInstancePerTest, BeforeAndAfterEach }
-import org.nlogo.api.{ FileIO, Version }
-import org.nlogo.lab.ListsExporter
+import org.nlogo.api.{ LabListsExporterFormat, FileIO, Version }
 import org.nlogo.nvm.{ LabInterface, Workspace }
 import org.nlogo.util.SlowTest
 
@@ -119,12 +118,12 @@ with OneInstancePerTest with BeforeAndAfterEach {
     def lists(worker: LabInterface.Worker, writer: java.io.StringWriter) {
       if (wantTable) {
         worker.addListsWriter(filename, dims, new java.io.PrintWriter(writer),
-                              ListsExporter.TableFormat(filename + "-table.csv"))
+                              LabListsExporterFormat.TableFormat(filename + "-table.csv"))
       }
       else if (wantSpreadsheet)
       {
         worker.addListsWriter(filename, dims, new java.io.PrintWriter(writer),
-                              ListsExporter.SpreadsheetFormat(filename + "-spreadsheet.csv"))
+                              LabListsExporterFormat.SpreadsheetFormat(filename + "-spreadsheet.csv"))
       }
     }
     runHelper(List(("-table.csv", table _), ("-spreadsheet.csv", spreadsheet _), ("-lists.csv", lists _))
