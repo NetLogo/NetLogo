@@ -179,7 +179,7 @@ class Supervisor(
         return
       }
     }
-    if (options.stats != null && options.stats.trim() != "") {
+    if ((tableExporter != null || spreadsheetExporter != null) && (options.stats != null && options.stats.trim() != "")) {
       val fileName = options.stats.trim()
       try {
         addPostProcessor(new StatsProcessor(
