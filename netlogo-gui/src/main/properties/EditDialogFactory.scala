@@ -44,7 +44,7 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
                }
     dialog.addWindowListener(new java.awt.event.WindowAdapter {
       override def windowClosed(e: java.awt.event.WindowEvent) {
-        if (!dialog.canceled)
+        if (dialog != null && !dialog.canceled)
           finish.run()
       }
     })
@@ -61,7 +61,7 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
                     }
     dialog.addWindowListener(new java.awt.event.WindowAdapter {
       override def windowClosed(e: java.awt.event.WindowEvent) {
-        if (!dialog.canceled)
+        if (dialog != null && !dialog.canceled)
           finish.run()
       }
     })
