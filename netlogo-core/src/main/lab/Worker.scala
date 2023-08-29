@@ -4,7 +4,7 @@ package org.nlogo.lab
 
 import org.nlogo.api.LabProtocol
 import java.util.concurrent.{Callable, Executors, TimeUnit}
-import org.nlogo.core.{ AgentKind, WorldDimensions }
+import org.nlogo.core.{ AgentKind, I18N, WorldDimensions }
 import org.nlogo.api.{Dump, ExportPlotWarningAction, LogoException, WorldDimensionException, SimpleJobOwner}
 import org.nlogo.nvm.{Command,LabInterface, Workspace}
 import org.nlogo.api.MersenneTwisterFast
@@ -218,7 +218,7 @@ class Worker(val protocol: LabProtocol)
             ws.exportPlotWarningAction match {
               case Output => {
                 ws.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
-                println("Enable plot updating in Run Options to use export-plot, export-all-plots, export-world, or export-interface.")
+                println(I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"))
               }
               case _ =>
             }

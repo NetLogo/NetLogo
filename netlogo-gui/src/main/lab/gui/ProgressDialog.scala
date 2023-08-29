@@ -221,22 +221,17 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   override def stepCompleted(w: Workspace, steps: Int) {
     if (!w.isHeadless) {
       this.steps = steps
-      if (workspace.triedToExportPlot) {
-        workspace.exportPlotWarningAction match {
-          case ExportPlotWarningAction.Warn => {
-            workspace.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
-            org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
-              def run() {
-                OptionDialog.showMessage(
-                  workspace.getFrame, "Updating Plots Warning",
-                  "Warning: enable plot updating in Run Options if you want to collect plot data using export-plot, export-all-plots, export-world, or export-interface.",
-                  Array(I18N.gui.get("common.buttons.continue"))
-                )
-              }
-            })
+      if (workspace.triedToExportPlot && workspace.exportPlotWarningAction == ExportPlotWarningAction.Warn) {
+        workspace.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
+        org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
+          def run() {
+            OptionDialog.showMessage(
+              workspace.getFrame, "Updating Plots Warning",
+              I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
+              Array(I18N.gui.get("common.buttons.continue"))
+            )
           }
-          case _ =>
-        }
+        })
       }
     }
   }

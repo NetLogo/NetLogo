@@ -16,7 +16,7 @@ import
   agent.{ AbstractExporter, Agent, AgentSet, World },
   api.{PlotInterface, CommandLogoThunk, Dump, Exceptions, ExtensionManager => APIEM, ExportPlotWarningAction, JobOwner,
     LibraryManager, LogoException, MersenneTwisterFast, ModelType, PreviewCommands, ReporterLogoThunk, SimpleJobOwner},
-  core.{ CompilationEnvironment, AgentKind, CompilerException, Femto, File, FileMode, LiteralParser},
+  core.{ CompilationEnvironment, AgentKind, CompilerException, Femto, File, FileMode, I18N, LiteralParser},
   nvm.{ Activation, Command, Context, FileManager, ImportHandler,
     Instruction, Job, MutableLong, Procedure, RuntimePrimitiveException, Workspace },
     Procedure.{ NoProcedures, ProceduresMap },
@@ -243,11 +243,11 @@ object AbstractWorkspaceTraits {
       exportPlotWarningAction match {
         case Warn => {
           setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
-          throw new Exception("Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface.")
+          throw new Exception(I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"))
         }
         case Output => {
           setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
-          println("Enable plot updating to use export-plot, export-all-plots, export-world, or export-interface.")
+          println(I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"))
         }
         case Ignore =>
       }
