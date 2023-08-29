@@ -2,7 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.LabProtocol
+import org.nlogo.api.{ LabListsExporterFormat, LabProtocol }
 import java.util.concurrent.{Callable, Executors, TimeUnit}
 import org.nlogo.core.{ AgentKind, WorldDimensions }
 import org.nlogo.api.{Dump,LogoException, WorldDimensionException, SimpleJobOwner}
@@ -24,7 +24,7 @@ class Worker(val protocol: LabProtocol)
     addListener(new TableExporter(modelFileName, initialDims, protocol, w))
   }
   def addListsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter,
-                     in: ListsExporter.Format) {
+                     in: LabListsExporterFormat.Format) {
     addListener(new ListsExporter(modelFileName, initialDims, protocol, w, in))
   }
   var runners: Seq[Runner] = null
