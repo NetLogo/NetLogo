@@ -54,8 +54,15 @@ class ListsExporter(modelFileName: String,
         }
       }
       case ListsExporter.TableFormat(fileName) => {
-        val lines = scala.io.Source.fromFile(fileName).getLines.drop(6)
-        val header = lines.next.split(",")
+        var lines = scala.io.Source.fromFile(fileName).getLines
+        var header: Array[String] = null
+        val first = lines.next
+        if (first.contains("BehaviorSpace results")) {
+          lines = lines.drop(5)
+          header = lines.next.split(",")
+        }
+        else
+          header = first.split(",")
         val stepIndex = header.indexWhere(_.contains("[step]"))
         val parameterIndices = 1 until stepIndex
         // (reporter, run, parameters, step, data)

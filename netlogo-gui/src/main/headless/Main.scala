@@ -20,7 +20,8 @@ Run NetLogo using the NetLogo_Console app with the --headless command line argum
 * --setup-file <path>: read experiment setups from this file instead of the model file
 * --experiment <name>: name of experiment to run
 * --table <path>: pathname to send table output to (or - for standard output)
-* --spreadsheet <path>: pathname to send table output to (or - for standard output)
+* --spreadsheet <path>: pathname to send spreadsheet output to (or - for standard output)
+* --lists <path>: pathname to send lists output to (or - for standard output), cannot be used without --table or --spreadsheet
 * --threads <number>: use this many threads to do model runs in parallel, or 1 to disable parallel runs. defaults to one thread per processor.
 * --min-pxcor <number>: override world size setting in model file
 * --max-pxcor <number>: override world size setting in model file
@@ -93,6 +94,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var experiment: Option[String] = None
     var tableWriter: Option[PrintWriter] = None
     var spreadsheetWriter: Option[PrintWriter] = None
+    var listsWriter: Option[PrintWriter] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
     val it = args.iterator
@@ -182,6 +184,10 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
         requireHasNext()
         spreadsheetWriter = Some(path2writer(it.next()))
 
+      } else if (arg == "--lists") {
+        requireHasNext()
+        listsWriter = Some(path2writer(it.next))
+
       } else if (arg == "--threads") {
         requireHasNext()
         threads = it.next().toInt
@@ -200,6 +206,10 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
     if (setupFile == None && experiment == None) {
       die("You must specify either --setup-file or --experiment (or both).  Try --help for more information.")
+    }
+
+    if (listsWriter != None && tableWriter == None && spreadsheetWriter == None) {
+      die("You cannot specify --lists without also specifying --table or --spreadsheet. Try --help for more information.")
     }
 
     val dimStrings = List(minPxcor, maxPxcor, minPycor, maxPycor)
@@ -224,6 +234,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     , setupFile
     , tableWriter
     , spreadsheetWriter
+    , listsWriter
     , dims
     , threads
     , suppressErrors

@@ -23,6 +23,10 @@ class Worker(val protocol: LabProtocol)
   def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter) {
     addListener(new TableExporter(modelFileName, initialDims, protocol, w))
   }
+  def addListsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter,
+                     in: ListsExporter.Format) {
+    addListener(new ListsExporter(modelFileName, initialDims, protocol, w, in))
+  }
   var runners: Seq[Runner] = null
   // we only want to compile stuff once per workspace, so use this
   // (should use a Scala collection not a Java one, but oh well, too lazy today - ST 8/13/09)

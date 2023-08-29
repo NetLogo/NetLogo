@@ -4,12 +4,14 @@ package org.nlogo.nvm
 
 import org.nlogo.api.LabProtocol
 import org.nlogo.core.WorldDimensions
+import org.nlogo.lab.ListsExporter
 
 object LabInterface {
   trait Worker {
     def addListener(l: ProgressListener)
     def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter)
     def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter)
+    def addListsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter, in: ListsExporter.Format)
     def run(testWorkspace: Workspace, fn: ()=>Workspace, threads: Int)
     def compile(w: Workspace) // only for testing purposes
   }
@@ -28,6 +30,7 @@ object LabInterface {
     externalXMLFile: Option[java.io.File],
     tableWriter: Option[java.io.PrintWriter],
     spreadsheetWriter: Option[java.io.PrintWriter],
+    listsWriter: Option[java.io.PrintWriter],
     dims: Option[WorldDimensions],
     threads: Int,
     suppressErrors: Boolean)
