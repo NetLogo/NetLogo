@@ -179,21 +179,39 @@ class Supervisor(
         return
       }
     }
-    if ((tableExporter != null || spreadsheetExporter != null) && (options.stats != null && options.stats.trim() != "")) {
-      val fileName = options.stats.trim()
-      try {
-        addPostProcessor(new StatsProcessor(
-          workspace.getModelFileName,
-          workspace.world.getDimensions,
-          worker.protocol,
-          tableExporter,
-          spreadsheetExporter,
-          exporterFileNames,
-          new PrintWriter(new FileWriter(fileName))))
-	    } catch {
-		    case e: IOException =>
-          failure(e)
-          return
+    if (options.stats != null && options.stats.trim() != "") {
+      if (tableExporter != null || spreadsheetExporter != null) {
+        val fileName = options.stats.trim()
+        try {
+          addPostProcessor(new StatsProcessor(
+            workspace.getModelFileName,
+            workspace.world.getDimensions,
+            worker.protocol,
+            tableExporter,
+            spreadsheetExporter,
+            exporterFileNames,
+            new PrintWriter(new FileWriter(fileName))))
+        } catch {
+          case e: IOException =>
+            failure(e)
+            return
+        }
+      } else {
+        // EventQueue.invokeLater(new Runnable() {
+        //   def run() {
+        //     OptionDialog.showMessage(
+        //       workspace.getFrame, "Warning: Statistics Exporter",
+        //       "A table or spreadsheet must be enabled to use the statistics exporter",
+        //       Array(I18N.gui.get("common.buttons.continue"))
+        //     )
+        //   }
+        // })
+        EventQueue.mustBeEventDispatchThread()
+        OptionDialog.showMessage(
+          workspace.getFrame, "Warning: Statistics Exporter",
+          "A table or spreadsheet must be enabled to use the statistics exporter",
+          Array(I18N.gui.get("common.buttons.continue"))
+        )
       }
     }
     progressDialog.setUpdateView(options.updateView)
