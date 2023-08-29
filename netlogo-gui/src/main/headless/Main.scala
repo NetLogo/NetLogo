@@ -22,6 +22,7 @@ Run NetLogo using the NetLogo_Console app with the --headless command line argum
 * --table <path>: pathname to send table output to (or - for standard output)
 * --spreadsheet <path>: pathname to send table output to (or - for standard output)
 * --threads <number>: use this many threads to do model runs in parallel, or 1 to disable parallel runs. defaults to one thread per processor.
+* --update-plots: enable plot updates. Include this if you want to export plot data, or exclude it for better performance.
 * --min-pxcor <number>: override world size setting in model file
 * --max-pxcor <number>: override world size setting in model file
 * --min-pycor <number>: override world size setting in model file
