@@ -48,6 +48,29 @@ public abstract class AbstractWorkspace
 
   public abstract WeakHashMap<Job, WeakHashMap<Agent, WeakHashMap<Command, MutableLong>>> lastRunTimes();
 
+  private boolean _shouldUpdatePlots = true;
+  public boolean shouldUpdatePlots() {
+    return this._shouldUpdatePlots;
+  }
+  public void setShouldUpdatePlots(boolean update) {
+    this._shouldUpdatePlots = update;
+  }
+
+  private boolean _triedToExportPlot = false;
+  public boolean triedToExportPlot() {
+    return this._triedToExportPlot;
+  }
+  public void setTriedToExportPlot(boolean triedToExport) {
+    this._triedToExportPlot = triedToExport;
+  }
+
+  private ExportPlotWarningAction _exportPlotWarningAction = ExportPlotWarningActionJ$.MODULE$.WARN();
+  public ExportPlotWarningAction exportPlotWarningAction() {
+    return this._exportPlotWarningAction;
+  }
+  public void setExportPlotWarningAction(ExportPlotWarningAction action) {
+    this._exportPlotWarningAction = action;
+  }
   //public final WorldLoader worldLoader ;
 
   // We're moving `previewCommands` here from `AbstractWorkspaceScala` so that
