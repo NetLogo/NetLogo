@@ -10,7 +10,7 @@ import java.io.{ FileWriter, IOException, PrintWriter }
 import org.nlogo.api.{ Exceptions, LabProtocol, LogoException, PlotCompilationErrorAction }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ CompilerException, I18N }
-import org.nlogo.lab.{ Exporter, PartialData, PostProcessor, SpreadsheetExporter, StatsProcessor, TableExporter, Worker }
+import org.nlogo.lab.{ Exporter, PartialData, SpreadsheetExporter, StatsExporter, TableExporter, Worker }
 import org.nlogo.nvm.{ EngineException, Workspace }
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.swing.{ OptionDialog }
@@ -68,17 +68,13 @@ class Supervisor(
   private val exporterFileNames = new HashMap[Exporter, String]
   private var spreadsheetExporter: SpreadsheetExporter = null
   private var tableExporter: TableExporter = null
-  private val postProcessors = new ListBuffer[PostProcessor]
+  private var statsExporter: StatsExporter = null
   worker.addListener(progressDialog)
   def addExporter(exporter: Exporter) {
     if (!exporters.contains(exporter)) {
       exporters += exporter
       worker.addListener(exporter)
     }
-  }
-
-  def addPostProcessor(postProcessor: PostProcessor) {
-    postProcessors += postProcessor
   }
 
   override def start() {
@@ -183,29 +179,21 @@ class Supervisor(
       if (tableExporter != null || spreadsheetExporter != null) {
         val fileName = options.stats.trim()
         try {
-          addPostProcessor(new StatsProcessor(
+          statsExporter = new StatsExporter(
             workspace.getModelFileName,
             workspace.world.getDimensions,
             worker.protocol,
             tableExporter,
             spreadsheetExporter,
             exporterFileNames,
-            new PrintWriter(new FileWriter(fileName))))
+            new PrintWriter(new FileWriter(fileName)))
+          addExporter(statsExporter)
         } catch {
           case e: IOException =>
             failure(e)
             return
         }
       } else {
-        // EventQueue.invokeLater(new Runnable() {
-        //   def run() {
-        //     OptionDialog.showMessage(
-        //       workspace.getFrame, "Warning: Statistics Exporter",
-        //       "A table or spreadsheet must be enabled to use the statistics exporter",
-        //       Array(I18N.gui.get("common.buttons.continue"))
-        //     )
-        //   }
-        // })
         EventQueue.mustBeEventDispatchThread()
         OptionDialog.showMessage(
           workspace.getFrame, "Warning: Statistics Exporter",
@@ -291,7 +279,6 @@ class Supervisor(
         progressDialog.close()
       } } )
     headlessWorkspaces.foreach(_.dispose())
-    postProcessors.foreach(_.process())
   }
 
   private def failure(t: Throwable) {

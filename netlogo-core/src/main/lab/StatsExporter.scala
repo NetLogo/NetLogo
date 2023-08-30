@@ -6,15 +6,14 @@ import scala.collection.mutable.{ HashMap, ListBuffer }
 import scala.collection.immutable.{ Set }
 import java.io.{ BufferedReader, FileReader }
 
-class StatsProcessor(modelFileName: String,
+class StatsExporter(modelFileName: String,
                           initialDims: WorldDimensions,
                           protocol: LabProtocol,
                           tableExporter: TableExporter,
                           spreadsheetExporter: SpreadsheetExporter,
                           exporterFileNames: HashMap[Exporter, String],
                           out: java.io.PrintWriter)
-  extends TableExporter(modelFileName, initialDims, protocol, out)
-  with PostProcessor
+  extends Exporter(modelFileName, initialDims, protocol, out)
 {
   type Measurements = ListBuffer[List[Double]]
   type DataPerStep = HashMap[Int, Measurements]
@@ -40,7 +39,7 @@ class StatsProcessor(modelFileName: String,
     numericMetrics(m) = true
   }
 
-  override def writeExperimentHeader() {
+  def writeExperimentHeader() {
     val metrics = ListBuffer[String]()
     for (m <- protocol.metrics) {
       if (numericMetrics(m)) {
@@ -59,7 +58,7 @@ class StatsProcessor(modelFileName: String,
     out.flush()
   }
 
-  def process: Unit = {
+  def process() {
     val data = extractData()
     data match {
       case Some(d) => {
@@ -228,4 +227,7 @@ class StatsProcessor(modelFileName: String,
     }
     data
   }
+
+  override def experimentCompleted() { process() }
+  override def experimentAborted() { process() }
 }

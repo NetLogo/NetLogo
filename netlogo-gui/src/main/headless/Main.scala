@@ -21,6 +21,7 @@ Run NetLogo using the NetLogo_Console app with the --headless command line argum
 * --experiment <name>: name of experiment to run
 * --table <path>: pathname to send table output to (or - for standard output)
 * --spreadsheet <path>: pathname to send table output to (or - for standard output)
+* --stats <path>: pathname to send statistics output to (or - for standard output)
 * --threads <number>: use this many threads to do model runs in parallel, or 1 to disable parallel runs. defaults to one thread per processor.
 * --min-pxcor <number>: override world size setting in model file
 * --max-pxcor <number>: override world size setting in model file
@@ -93,6 +94,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var experiment: Option[String] = None
     var tableWriter: Option[PrintWriter] = None
     var spreadsheetWriter: Option[PrintWriter] = None
+    var statsExporter: Option[PrintWriter] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
     val it = args.iterator
@@ -182,7 +184,12 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
         requireHasNext()
         spreadsheetWriter = Some(path2writer(it.next()))
 
-      } else if (arg == "--threads") {
+      } else if (arg == "--stats") {
+        requireHasNext()
+        statsExporter = Some(path2writer(it.next()))
+      }
+
+      else if (arg == "--threads") {
         requireHasNext()
         threads = it.next().toInt
 
@@ -207,6 +214,10 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       die("If any of min/max-px/ycor are specified, all four must be specified.  Try --help for more information.")
     }
 
+    if (statsExporter != None && (tableWriter == None && spreadsheetWriter == None)) {
+      die("You cannot specify --stats without also specifying --table or --spreadsheet. Try --help for more information.")
+    }
+
     val dims = if (dimStrings.forall(!_.isDefined)) {
       None
     } else {
@@ -224,6 +235,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     , setupFile
     , tableWriter
     , spreadsheetWriter
+    , statsExporter
     , dims
     , threads
     , suppressErrors

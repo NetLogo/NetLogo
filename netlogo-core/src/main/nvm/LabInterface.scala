@@ -28,6 +28,7 @@ object LabInterface {
     externalXMLFile: Option[java.io.File],
     tableWriter: Option[java.io.PrintWriter],
     spreadsheetWriter: Option[java.io.PrintWriter],
+    statsExporter: Option[java.io.PrintWriter],
     dims: Option[WorldDimensions],
     threads: Int,
     suppressErrors: Boolean)
