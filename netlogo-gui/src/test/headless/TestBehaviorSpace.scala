@@ -134,6 +134,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
               suffix == "-lists.csv" && wantLists
       })
   }
+
   test("BehaviorSpace1", SlowTest.Tag) {
     runExperiment(0, "globals [param1 param2 counter]",
       "testBehaviorSpace1")
