@@ -94,7 +94,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var experiment: Option[String] = None
     var tableWriter: Option[PrintWriter] = None
     var spreadsheetWriter: Option[PrintWriter] = None
-    var listsWriter: Option[PrintWriter] = None
+    var listsWriter: Option[(PrintWriter, String)] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
     val it = args.iterator
@@ -113,6 +113,8 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       } else {
         new PrintWriter(new FileWriter(path.trim))
       }
+
+    var outputPath = ""
 
     while (it.hasNext) {
       val arg = it.next().toLowerCase
@@ -178,15 +180,19 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
       } else if (arg == "--table") {
         requireHasNext()
-        tableWriter = Some(path2writer(it.next()))
+        outputPath = it.next()
+        tableWriter = Some(path2writer(outputPath))
 
       } else if (arg == "--spreadsheet") {
         requireHasNext()
-        spreadsheetWriter = Some(path2writer(it.next()))
+        val localOut = it.next()
+        if (outputPath.isEmpty)
+          outputPath = localOut
+        spreadsheetWriter = Some(path2writer(localOut))
 
       } else if (arg == "--lists") {
         requireHasNext()
-        listsWriter = Some(path2writer(it.next))
+        listsWriter = Some((path2writer(it.next), outputPath))
 
       } else if (arg == "--threads") {
         requireHasNext()

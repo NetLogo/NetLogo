@@ -61,7 +61,7 @@ object Main {
     var setupFile: Option[java.io.File] = None
     var experiment: Option[String] = None
     var tableWriter: Option[java.io.PrintWriter] = None
-    var spreadsheetWriter: Option[java.io.PrintWriter] = None
+    var spreadsheetWriter: Option[(java.io.PrintWriter, String)] = None
     var listsWriter: Option[java.io.PrintWriter] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
@@ -74,6 +74,7 @@ object Main {
           override def close() { } }
       else
         new java.io.PrintWriter(new java.io.FileWriter(path.trim))
+    var outputPath = ""
     while(it.hasNext) {
       val arg = it.next()
       def requireHasNext() {
@@ -102,12 +103,20 @@ object Main {
         { requireHasNext(); setupFile = Some(new java.io.File(it.next())) }
       else if(arg == "--experiment")
         { requireHasNext(); experiment = Some(it.next()) }
-      else if(arg == "--table")
-        { requireHasNext(); tableWriter = Some(path2writer(it.next())) }
-      else if(arg == "--spreadsheet")
-        { requireHasNext(); spreadsheetWriter = Some(path2writer(it.next())) }
+      else if(arg == "--table") {
+        requireHasNext()
+        outputPath = it.next()
+        tableWriter = Some(path2writer(outputPath))
+      }
+      else if(arg == "--spreadsheet") {
+        requireHasNext()
+        val localOut = it.next()
+        if (outputPath.isEmpty)
+          outputPath = localOut
+        spreadsheetWriter = Some(path2writer(localOut))
+      }
       else if(arg == "--lists")
-        { requireHasNext(); listsWriter = Some(path2writer(it.next())) }
+        { requireHasNext(); listsWriter = Some((path2writer(it.next()), outputPath)) }
       else if(arg == "--threads")
         { requireHasNext(); threads = it.next().toInt }
       else if(arg == "--suppress-errors")
