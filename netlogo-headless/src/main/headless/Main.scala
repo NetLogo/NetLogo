@@ -69,8 +69,8 @@ object Main {
     var setupFile: Option[java.io.File] = None
     var experiment: Option[String] = None
     var tableWriter: Option[java.io.PrintWriter] = None
-    var spreadsheetWriter: Option[(java.io.PrintWriter, String)] = None
-    var listsWriter: Option[java.io.PrintWriter] = None
+    var spreadsheetWriter: Option[java.io.PrintWriter] = None
+    var listsWriter: Option[(java.io.PrintWriter, String)] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
     var updatePlots = false
