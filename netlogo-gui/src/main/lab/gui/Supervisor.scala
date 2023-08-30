@@ -7,7 +7,7 @@ import collection.mutable.ListBuffer
 import java.awt.{ Dialog }
 import java.io.{ FileWriter, IOException, PrintWriter }
 
-import org.nlogo.api.{ Exceptions, LabListsExporterFormat, LabProtocol, LogoException, PlotCompilationErrorAction }
+import org.nlogo.api.{ Exceptions, ExportPlotWarningAction, LabListsExporterFormat, LabProtocol, LogoException, PlotCompilationErrorAction }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.lab.{ Exporter, ListsExporter, PartialData, SpreadsheetExporter, TableExporter, Worker }
@@ -195,6 +195,10 @@ class Supervisor(
     }
     progressDialog.setUpdateView(options.updateView)
     progressDialog.setPlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
+    progressDialog.enablePlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
+    workspace.setShouldUpdatePlots(options.updatePlotsAndMonitors)
+    workspace.setExportPlotWarningAction(ExportPlotWarningAction.Warn)
+    workspace.setTriedToExportPlot(false)
     queue.enqueue(workspace)
     (2 to options.threadCount).foreach{num =>
       val w = factory.newInstance
@@ -202,10 +206,13 @@ class Supervisor(
       // the headless workspaces.
       if (num == 2) {
         w.setPlotCompilationErrorAction(PlotCompilationErrorAction.Output)
+        w.setExportPlotWarningAction(ExportPlotWarningAction.Output)
       } else {
         w.setPlotCompilationErrorAction(PlotCompilationErrorAction.Ignore)
+        w.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
       }
       factory.openCurrentModelIn(w)
+      w.setShouldUpdatePlots(options.updatePlotsAndMonitors)
       headlessWorkspaces += w
       queue.enqueue(w)
     }
