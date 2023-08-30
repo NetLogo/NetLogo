@@ -4,9 +4,9 @@ package org.nlogo.lab
 
 import org.nlogo.api.{ LabListsExporterFormat, LabProtocol }
 import java.util.concurrent.{Callable, Executors, TimeUnit}
-import org.nlogo.core.{ AgentKind, WorldDimensions }
-import org.nlogo.api.{Dump,LogoException, WorldDimensionException, SimpleJobOwner}
-import org.nlogo.nvm.{LabInterface, Workspace}
+import org.nlogo.core.{ AgentKind, I18N, WorldDimensions }
+import org.nlogo.api.{Dump, ExportPlotWarningAction, LogoException, WorldDimensionException, SimpleJobOwner}
+import org.nlogo.nvm.{Command,LabInterface, Workspace}
 import org.nlogo.api.MersenneTwisterFast
 import LabInterface.ProgressListener
 
@@ -196,6 +196,39 @@ class Worker(val protocol: LabProtocol)
               "Reporter for measuring runs failed to report a result:\n" + result)
           result }
         }
+
+      def checkForPlotExportCommand(code: Array[Command]): Boolean = {
+        var exportCommandFound = false
+        for (c <- code) {
+          c.getClass.getSimpleName match {
+            case "_exportplots" | "_exportplot" | "_exportworld" | "_exportinterface" => {
+              exportCommandFound = true
+            }
+            case _ =>
+          }
+        }
+        exportCommandFound
+      }
+
+      def checkForPlotExport() {
+        if (!ws.shouldUpdatePlots) {
+          var exportCommandFound = checkForPlotExportCommand(finalProcedure.code)
+          if (!exportCommandFound) exportCommandFound = checkForPlotExportCommand(goProcedure.code)
+          if (!exportCommandFound) exportCommandFound = checkForPlotExportCommand(setupProcedure.code)
+
+          if (exportCommandFound) {
+            import ExportPlotWarningAction._
+            ws.setTriedToExportPlot(true)
+            ws.exportPlotWarningAction match {
+              case Output => {
+                ws.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
+                println(I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"))
+              }
+              case _ =>
+            }
+          }
+        }
+      }
       def checkForRuntimeError() {
         if (ws.lastLogoException != null) {
           val ex = ws.lastLogoException
@@ -208,6 +241,8 @@ class Worker(val protocol: LabProtocol)
       ws.behaviorSpaceExperimentName(protocol.name)
       setVariables(settings)
       eachListener(_.runStarted(ws, runNumber, settings))
+
+      checkForPlotExport()
       ws.runCompiledCommands(owner(ws.world.mainRNG), setupProcedure)
       checkForRuntimeError()
 

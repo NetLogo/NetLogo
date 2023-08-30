@@ -33,7 +33,9 @@ object LabInterface {
     listsWriter: Option[(java.io.PrintWriter, String)],
     dims: Option[WorldDimensions],
     threads: Int,
-    suppressErrors: Boolean)
+    suppressErrors: Boolean,
+    updatePlots: Boolean
+    )
 }
 trait LabInterface {
   import LabInterface._

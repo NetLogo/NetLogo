@@ -5,7 +5,7 @@ package org.nlogo.headless
 import java.io.{ File, FileWriter, PrintWriter }
 
 import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ APIVersion, Version }
+import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, Version }
 import org.nlogo.nvm.LabInterface.Settings
  import org.nlogo.api.PlotCompilationErrorAction
 
@@ -23,6 +23,7 @@ Run NetLogo using the NetLogo_Console app with the --headless command line argum
 * --spreadsheet <path>: pathname to send spreadsheet output to (or - for standard output)
 * --lists <path>: pathname to send lists output to (or - for standard output), cannot be used without --table or --spreadsheet
 * --threads <number>: use this many threads to do model runs in parallel, or 1 to disable parallel runs. defaults to one thread per processor.
+* --update-plots: enable plot updates. Include this if you want to export plot data, or exclude it for better performance.
 * --min-pxcor <number>: override world size setting in model file
 * --max-pxcor <number>: override world size setting in model file
 * --min-pycor <number>: override world size setting in model file
@@ -47,11 +48,18 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
   def runExperiment(settings: Settings) {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
+    var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
+    var createdProto = false
     def newWorkspace = {
       val w = HeadlessWorkspace.newInstance
       w.setPlotCompilationErrorAction(plotCompilationErrorAction)
+      w.setExportPlotWarningAction(exportPlotWarningAction)
       w.open(settings.modelPath)
       plotCompilationErrorAction = PlotCompilationErrorAction.Ignore
+      if (createdProto) {
+        exportPlotWarningAction = ExportPlotWarningAction.Ignore
+      }
+      w.setShouldUpdatePlots(settings.updatePlots)
       w
     }
 
@@ -61,7 +69,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     } finally {
       openWs.dispose()
     }
-
+    createdProto = true
     proto match {
       case Some(protocol) =>
         val lab = HeadlessWorkspace.newLab
@@ -97,6 +105,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var listsWriter: Option[(PrintWriter, String)] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
+    var updatePlots = false
     val it = args.iterator
 
     def die(msg: String) {
@@ -201,6 +210,8 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       } else if (arg == "--suppress-errors") {
         suppressErrors = true
 
+      } else if (arg == "--update-plots") {
+        updatePlots = true
       } else {
         die("unknown argument: " + arg)
       }
@@ -244,6 +255,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     , dims
     , threads
     , suppressErrors
+    , updatePlots
     ))
   }
 }

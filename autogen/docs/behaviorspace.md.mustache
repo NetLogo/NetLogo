@@ -384,6 +384,15 @@ indicates the file is a Comma Separated Values (CSV) file. This is a plain-text
 data format that is readable by any text editor as well as by most popular
 spreadsheet and database programs.
 
+#### Run options: update plots and monitors
+
+The run options dialog lets you choose whether to update plots and monitors or not.
+Unchecking the box will result in better performance. Note that if you begin
+the experiment with the box unchecked, then you will not be able to toggle
+between enabling and disabling the update plots checkbox in the "Running Experiments" dialog.
+Check the box if you you want to export plot data using primitives such as [[export-interface|export-cmds]],
+[[export-plot|export-cmds]], [[export-all-plots|export-cmds]], and [[export-world|export-cmds]].
+
 #### Run options: parallel runs
 
 The "Run Options" dialog also lets you select whether you want multiple model runs to happen in parallel, and if so, how
@@ -440,9 +449,9 @@ box checked, then you'll see a plot of how they vary over the course of each run
 
 You can also watch the runs in the main NetLogo window. (If the "Running
 Experiment" dialog is in the way, just move it to a different place on the
-screen.) The view and plots will update as the model runs. If you don't need to
-see them update, then use the checkboxes in the "Running Experiment" dialog to
+screen.) If you don't need to see the plots update, then use the checkboxes in the "Running Experiment" dialog to
 turn the updating off. This will make the experiment go faster.
+However, if you already disabled updating plots and monitors in the run options, this checkbox will be disabled.
 
 If you want to stop your experiment before it's finished, you have two options.
 To stop the experiment after the current runs have completed and save your progress
@@ -495,6 +504,8 @@ open the graphical interface otherwise).
   output)
 - `--threads <number>`: use this many threads to do model runs in parallel, or 1
   to disable parallel runs. defaults to one thread per processor.
+- `--update-plots`: enable plot updates. Include this if you want to export plot data,
+  or exclude it for better performance.
 - `--min-pxcor <number>`: override world size setting in model file
 - `--max-pxcor <number>`: override world size setting in model file
 - `--min-pycor <number>`: override world size setting in model file

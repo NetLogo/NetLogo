@@ -97,7 +97,8 @@ class RunOptionsDialog(parent: java.awt.Dialog,
         Property("table", Property.FilePath(tableFile), I18N.gui("table")),
         Property("lists", Property.FilePath(listsFile), I18N.gui("lists")),
         Property("updateView", Property.Boolean, I18N.gui("updateview")),
-        Property("updatePlotsAndMonitors", Property.Boolean, I18N.gui("updateplotsandmonitors")),
+        Property("updatePlotsAndMonitors", Property.Boolean, I18N.gui("updateplotsandmonitors"),
+                 "<html>" + I18N.gui("updateplotsandmonitors.info") + "</html>"),
         Property("threadCount", Property.Integer, I18N.gui("simultaneousruns"),
                  "<html>" + I18N.gui("simultaneousruns.info") + "</html>")).asJava
     }
