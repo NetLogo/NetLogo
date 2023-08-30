@@ -62,6 +62,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       c.anchor = GridBagConstraints.WEST
       c.insets = new Insets(3, 3, 3, 3)
       c.gridwidth = property.gridWidth
+      if (editor.isInstanceOf[BooleanEditor]) c.fill = GridBagConstraints.HORIZONTAL
       layout.setConstraints(panel, c)
       editorPanel.add(panel)
       propertyEditors += editor
