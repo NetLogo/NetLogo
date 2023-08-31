@@ -61,7 +61,10 @@ object Main {
     var setupFile: Option[java.io.File] = None
     var experiment: Option[String] = None
     var tableWriter: Option[java.io.PrintWriter] = None
+    var tableFileName: String = null
     var spreadsheetWriter: Option[java.io.PrintWriter] = None
+    var spreadsheetFileName: String = null
+    var statsWriter: Option[java.io.PrintWriter] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
     val it = args.iterator
@@ -101,10 +104,20 @@ object Main {
         { requireHasNext(); setupFile = Some(new java.io.File(it.next())) }
       else if(arg == "--experiment")
         { requireHasNext(); experiment = Some(it.next()) }
-      else if(arg == "--table")
-        { requireHasNext(); tableWriter = Some(path2writer(it.next())) }
-      else if(arg == "--spreadsheet")
-        { requireHasNext(); spreadsheetWriter = Some(path2writer(it.next())) }
+      else if(arg == "--table") {
+        requireHasNext()
+        tableFileName = it.next()
+        tableWriter = Some(path2writer(tableFileName))
+      }
+      else if(arg == "--spreadsheet") {
+        requireHasNext()
+        spreadsheetFileName = it.next()
+        spreadsheetWriter = Some(path2writer(spreadsheetFileName))
+      }
+      else if(arg == "--stats") {
+        requireHasNext()
+        statsWriter = Some(path2writer(it.next()))
+      }
       else if(arg == "--threads")
         { requireHasNext(); threads = it.next().toInt }
       else if(arg == "--suppress-errors")
@@ -119,13 +132,16 @@ object Main {
     val dimStrings = List(minPxcor, maxPxcor, minPycor, maxPycor)
     if(dimStrings.exists(_.isDefined) && dimStrings.exists(!_.isDefined))
       die("if any of min/max-px/ycor are specified, all four must be specified")
+    if (statsWriter != None && (tableWriter == None && spreadsheetWriter == None)) {
+      die("You cannot specify --stats without also specifying --table or --spreadsheet. Try --help for more information.")
+    }
     val dims =
       if(dimStrings.forall(!_.isDefined))
         None
       else
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
-    Some(new Settings(model.get, experiment, setupFile, tableWriter,
-                      spreadsheetWriter, dims, threads, suppressErrors))
+    Some(new Settings(model.get, experiment, setupFile, tableWriter, tableFileName,
+                      spreadsheetWriter, spreadsheetFileName, statsWriter, dims, threads, suppressErrors))
   }
 }
