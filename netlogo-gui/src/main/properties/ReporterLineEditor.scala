@@ -9,7 +9,9 @@ import javax.swing.{JScrollPane, ScrollPaneConstants}
 import editor.{EditorField, Colorizer}
 
 abstract class ReporterLineEditor(accessor: PropertyAccessor[String],
-                                  colorizer: Colorizer)
+                                  colorizer: Colorizer,
+                                  optional: Boolean
+                                  )
          extends CodeEditor(accessor, colorizer, false, false){
 
   override lazy val editor = new EditorField(
@@ -18,7 +20,11 @@ abstract class ReporterLineEditor(accessor: PropertyAccessor[String],
     editor,
     ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-  override def get = super.get.map(_.trim).filter(_.nonEmpty)
+  override def get = {
+    val trimmed = super.get.map(_.trim)
+    if (optional) trimmed
+    else trimmed.filter(_.nonEmpty)
+  }
   override def getConstraints = {
     setMinimumSize(new Dimension(0, 35));
     val c = new GridBagConstraints
