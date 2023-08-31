@@ -2,16 +2,17 @@
 
 package org.nlogo.lab.gui
 
+import org.nlogo.swing.{ RichAction, OptionDialog }
 import org.nlogo.api.LabProtocol
-import org.nlogo.swing.RichAction
 import org.nlogo.nvm.Workspace
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.window.{ PlotWidget, SpeedSliderPanel }
 import javax.swing.ScrollPaneConstants._
 import javax.swing._
 import java.awt.Dimension
-import org.nlogo.api.{PeriodicUpdateDelay, Dump}
+import org.nlogo.api.{ Dump, ExportPlotWarningAction, PeriodicUpdateDelay }
 import org.nlogo.plot.DummyPlotManager
+import org.nlogo.core.I18N
 
 private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervisor,
                                    saveProtocol: (LabProtocol) => Unit)
@@ -23,6 +24,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   private val timer = new Timer(PeriodicUpdateDelay.DelayInMilliseconds, periodicUpdateAction)
   private val displaySwitch = new JCheckBox(displaySwitchAction)
   private val plotsAndMonitorsSwitch = new JCheckBox(plotsAndMonitorsSwitchAction)
+
   private var updatePlots = false
   private var started = 0L
   private var runCount = 0
@@ -190,6 +192,10 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     updatePlots = status
   }
 
+  def enablePlotsAndMonitorsSwitch(enabled: Boolean): Unit = {
+    plotsAndMonitorsSwitch.setEnabled(enabled)
+  }
+
   def close() {
     timer.stop()
     setVisible(false)
@@ -213,7 +219,21 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     }
   }
   override def stepCompleted(w: Workspace, steps: Int) {
-    if (!w.isHeadless) this.steps = steps
+    if (!w.isHeadless) {
+      this.steps = steps
+      if (workspace.triedToExportPlot && workspace.exportPlotWarningAction == ExportPlotWarningAction.Warn) {
+        workspace.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
+        org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
+          def run() {
+            OptionDialog.showMessage(
+              workspace.getFrame, "Updating Plots Warning",
+              I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
+              Array(I18N.gui.get("common.buttons.continue"))
+            )
+          }
+        })
+      }
+    }
   }
   override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]) {
     if (!w.isHeadless) plotNextPoint(values)

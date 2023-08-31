@@ -14,9 +14,9 @@ import scala.collection.mutable.WeakHashMap
 import
   org.nlogo.{ agent, api, core, nvm, plot },
   agent.{ AbstractExporter, Agent, AgentSet, World },
-  api.{PlotInterface, CommandLogoThunk, Dump, Exceptions, ExtensionManager => APIEM, JobOwner,
+  api.{PlotInterface, CommandLogoThunk, Dump, Exceptions, ExtensionManager => APIEM, ExportPlotWarningAction, JobOwner,
     LibraryManager, LogoException, MersenneTwisterFast, ModelType, PreviewCommands, ReporterLogoThunk, SimpleJobOwner},
-  core.{ CompilationEnvironment, AgentKind, CompilerException, Femto, File, FileMode, LiteralParser},
+  core.{ CompilationEnvironment, AgentKind, CompilerException, Femto, File, FileMode, I18N, LiteralParser},
   nvm.{ Activation, Command, Context, FileManager, ImportHandler,
     Instruction, Job, MutableLong, Procedure, RuntimePrimitiveException, Workspace },
     Procedure.{ NoProcedures, ProceduresMap },
@@ -66,6 +66,21 @@ with RunCache with Jobs with Warning with OutputArea with Importing
 with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant {
   val fileManager: FileManager = new DefaultFileManager(this)
 
+  private var _shouldUpdatePlots: Boolean = true
+  def shouldUpdatePlots: Boolean = this._shouldUpdatePlots
+  def setShouldUpdatePlots(update: Boolean) = {
+    this._shouldUpdatePlots = update
+  }
+
+  def triedToExportPlot: Boolean = false
+  def setTriedToExportPlot(triedToExport: Boolean) = Unit
+
+  private var _exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
+  def exportPlotWarningAction(): ExportPlotWarningAction = this._exportPlotWarningAction
+  def setExportPlotWarningAction(action: ExportPlotWarningAction) = {
+    this._exportPlotWarningAction = action
+  }
+
   private var _previewCommands: PreviewCommands = PreviewCommands.Default
   /**
    * previewCommands used by make-preview and model test
@@ -90,7 +105,9 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
       throw new RuntimePrimitiveException(context, originalInstruction,
         "The tick counter has not been started yet. Use RESET-TICKS.")
     world.tickCounter.tick()
-    updatePlots(context)
+    if (shouldUpdatePlots) {
+      updatePlots(context)
+    }
     requestDisplayUpdate(true)
   }
 
@@ -220,6 +237,21 @@ object AbstractWorkspaceTraits {
 
     def exportDrawingToCSV(writer:PrintWriter)
     def exportOutputAreaToCSV(writer:PrintWriter)
+
+    def checkPlotUpdates() {
+      import ExportPlotWarningAction._
+      exportPlotWarningAction match {
+        case Warn => {
+          setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
+          throw new Exception(I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"))
+        }
+        case Output => {
+          setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
+          println(I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"))
+        }
+        case Ignore =>
+      }
+    }
 
     @throws(classOf[IOException])
     def exportWorld(filename: String) {

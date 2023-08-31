@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ APIVersion, Version }
+import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, Version }
 import org.nlogo.nvm.LabInterface.Settings
 import org.nlogo.api.PlotCompilationErrorAction
 
@@ -21,11 +21,18 @@ object Main {
 
   def runExperiment(settings: Settings) {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
+    var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
+    var createdProto = false
     def newWorkspace = {
       val w = HeadlessWorkspace.newInstance
       w.setPlotCompilationErrorAction(plotCompilationErrorAction)
+      w.setExportPlotWarningAction(exportPlotWarningAction)
       w.open(settings.modelPath)
       plotCompilationErrorAction = PlotCompilationErrorAction.Ignore
+      if (createdProto) {
+        exportPlotWarningAction = ExportPlotWarningAction.Ignore
+      }
+      w.setShouldUpdatePlots(settings.updatePlots)
       w
     }
 
@@ -35,6 +42,7 @@ object Main {
     } finally {
       openWs.dispose()
     }
+    createdProto = true
     proto match {
       case Some(protocol) =>
         val lab = HeadlessWorkspace.newLab
@@ -64,6 +72,7 @@ object Main {
     var spreadsheetWriter: Option[java.io.PrintWriter] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
+    var updatePlots = false
     val it = args.iterator
     def die(msg: String) { Console.err.println(msg); throw new CancelException }
     def path2writer(path: String) =
@@ -109,6 +118,8 @@ object Main {
         { requireHasNext(); threads = it.next().toInt }
       else if(arg == "--suppress-errors")
         { suppressErrors = true }
+      else if (arg == "--update-plots")
+        { updatePlots = true }
       else
         die("unknown argument: " + arg)
     }
@@ -126,6 +137,6 @@ object Main {
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
     Some(new Settings(model.get, experiment, setupFile, tableWriter,
-                      spreadsheetWriter, dims, threads, suppressErrors))
+                      spreadsheetWriter, dims, threads, suppressErrors, updatePlots))
   }
 }
