@@ -1,5 +1,5 @@
-"[run number]","1"
-"[steps]","5"
+"[run number]","1","1"
+"[total steps]","5","5"
 
-"[initial & final values]","bad-divide"
-,"1"
+"[final value]","step","bad-divide"
+,"5","1"

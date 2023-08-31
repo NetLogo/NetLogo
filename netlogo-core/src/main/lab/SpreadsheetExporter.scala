@@ -91,7 +91,7 @@ class SpreadsheetExporter(modelFileName: String,
       out.print(csv.header("[reporter]"))
       out.print(partialData.reporters)
       for (_ <- runs) {
-        out.print(",step")
+        out.print("," + csv.header("step"))
         for (metric <- protocol.metrics)
           out.print("," + csv.header(metric))
       }

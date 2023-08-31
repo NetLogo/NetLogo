@@ -1,6 +1,6 @@
-"[run number]","1","2","3","4"
-"world-width","2","3","4","5"
-"[steps]","0","0","0","0"
+"[run number]","1","1","2","2","3","3","4","4"
+"world-width","2",,"3",,"4",,"5",
+"[total steps]","0","0","0","0","0","0","0","0"
 
-"[initial & final values]","count patches","count patches","count patches","count patches"
-,"4","6","8","10"
+"[final value]","step","count patches","step","count patches","step","count patches","step","count patches"
+,"0","4","0","6","0","8","0","10"
