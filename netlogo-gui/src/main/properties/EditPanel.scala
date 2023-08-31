@@ -290,7 +290,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       case Property.ReporterOrEmpty =>
         new CodeEditor(accessor, colorizer, collapsible, collapseByDefault) with Changed
       case Property.ReporterLine =>
-        new ReporterLineEditor(accessor, colorizer) with Changed
+        new ReporterLineEditor(accessor, colorizer, property.optional) with Changed
       case Property.String =>
         new StringEditor(accessor) with Changed
       case Property.FilePath(suggestedFile) =>
