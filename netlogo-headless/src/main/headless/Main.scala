@@ -64,7 +64,7 @@ object Main {
     var tableFileName: String = null
     var spreadsheetWriter: Option[java.io.PrintWriter] = None
     var spreadsheetFileName: String = null
-    var statsWriter: Option[java.io.PrintWriter] = None
+    var statsWriter: Option[(java.io.PrintWriter, String)] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
     val it = args.iterator
@@ -116,7 +116,8 @@ object Main {
       }
       else if(arg == "--stats") {
         requireHasNext()
-        statsWriter = Some(path2writer(it.next()))
+        if (tableFileName != null) statsWriter = Some((path2writer(it.next()), tableFileName))
+        else statsWriter = Some((path2writer(it.next()), spreadsheetFileName))
       }
       else if(arg == "--threads")
         { requireHasNext(); threads = it.next().toInt }
@@ -141,7 +142,7 @@ object Main {
       else
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
-    Some(new Settings(model.get, experiment, setupFile, tableWriter, tableFileName,
-                      spreadsheetWriter, spreadsheetFileName, statsWriter, dims, threads, suppressErrors))
+    Some(new Settings(model.get, experiment, setupFile, tableWriter,
+                      spreadsheetWriter, statsWriter, dims, threads, suppressErrors))
   }
 }

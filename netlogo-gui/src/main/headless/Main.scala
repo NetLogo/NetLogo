@@ -96,7 +96,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var tableFileName: String = null
     var spreadsheetWriter: Option[PrintWriter] = None
     var spreadsheetFileName: String = null
-    var statsWriter: Option[PrintWriter] = None
+    var statsWriter: Option[(PrintWriter, String)] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
     val it = args.iterator
@@ -190,7 +190,8 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
       } else if (arg == "--stats") {
         requireHasNext()
-        statsWriter = Some(path2writer(it.next()))
+        if (tableFileName != null) statsWriter = Some((path2writer(it.next()), tableFileName))
+        else statsWriter = Some((path2writer(it.next()), spreadsheetFileName))
       }
 
       else if (arg == "--threads") {
@@ -238,9 +239,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     , experiment
     , setupFile
     , tableWriter
-    , tableFileName
     , spreadsheetWriter
-    , spreadsheetFileName
     , statsWriter
     , dims
     , threads

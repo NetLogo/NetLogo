@@ -7,7 +7,7 @@ import collection.mutable.{ ListBuffer }
 import java.awt.{ Dialog }
 import java.io.{ FileWriter, IOException, PrintWriter }
 
-import org.nlogo.api.{ Exceptions, LabProtocol, LogoException, PlotCompilationErrorAction }
+import org.nlogo.api.{ Exceptions, LabProtocol, LogoException, PlotCompilationErrorAction, PostProcessorInputFormat }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.lab.{ Exporter, PartialData, SpreadsheetExporter, StatsExporter, TableExporter, Worker }
@@ -185,15 +185,11 @@ class Supervisor(
             workspace.getModelFileName,
             workspace.world.getDimensions,
             worker.protocol,
+            new PrintWriter(new FileWriter(fileName)),
             {
-              if (tableExporter != null) tableExporter
-              else spreadsheetExporter
-            },
-            {
-              if (tableExporter != null) tableFileName
-              else spreadsheetFileName
-            },
-            new PrintWriter(new FileWriter(fileName)))
+              if (tableExporter != null) PostProcessorInputFormat.Table(tableFileName)
+              else PostProcessorInputFormat.Spreadsheet(spreadsheetFileName)
+            })
           addExporter(statsExporter)
         } catch {
           case e: IOException =>

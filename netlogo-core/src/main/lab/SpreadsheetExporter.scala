@@ -25,11 +25,12 @@ class SpreadsheetExporter(modelFileName: String,
     runs(runNumber) = new Run(settings)
   }
   override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]) {
-    if (shouldIncludeSteps)
-      runs(runNumber).addMeasurements(step, values)
-    else {
-      runs(runNumber).addMeasurements(values)
-    }
+    // if (shouldIncludeSteps)
+    //   runs(runNumber).addMeasurements(step, values)
+    // else {
+    //   runs(runNumber).addMeasurements(values)
+    // }
+    runs(runNumber).addMeasurements(step, values)
   }
   override def runCompleted(w: Workspace, runNumber: Int, steps: Int) {
     runs(runNumber).done = true
@@ -51,16 +52,16 @@ class SpreadsheetExporter(modelFileName: String,
   def foreachRun(fn: (Run, Int) => Option[Any]) {
     // if the experiment was aborted, the completed run numbers might not be
     // consecutive, so we have to be careful - ST 3/31/09
-    val includeStepsOffset = {
-      if (shouldIncludeSteps) 1
-      else 0
-    }
+    // val includeStepsOffset = {
+    //   if (shouldIncludeSteps) 1
+    //   else 0
+    // }
     val outputs =
       for {
         runNumber <- runNumbers
         // even if there are no metrics, in this context we pretend there is one, otherwise we'd output
         // nothing at all - ST 12/17/04, 5/6/08
-        j <- 0 until (1 max protocol.metrics.length) + includeStepsOffset
+        j <- 0 until (1 max protocol.metrics.length) + 1
         output = fn(runs(runNumber), j).map(csv.data).getOrElse("")
       } yield output
     out.println(outputs.mkString(","))
@@ -132,8 +133,7 @@ class SpreadsheetExporter(modelFileName: String,
                               else "[initial & final values]"))
     out.print(partialData.dataHeaders)
     for(_ <- runs) {
-      if (shouldIncludeSteps)
-        out.print(',' + csv.header("step"))
+      out.print(',' + csv.header("step"))
       for (metric <- protocol.metrics) {
         out.print(',' + csv.header(metric))
       }

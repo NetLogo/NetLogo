@@ -1,6 +1,6 @@
 package org.nlogo.lab
 
-import org.nlogo.api.LabProtocol
+import org.nlogo.api.{LabProtocol, PostProcessorInputFormat}
 import org.nlogo.core.WorldDimensions
 import scala.collection.mutable.{ HashMap, ListBuffer }
 import scala.collection.immutable.{ Set }
@@ -9,12 +9,8 @@ import java.io.{ BufferedReader, FileReader }
 class StatsExporter(modelFileName: String,
                           initialDims: WorldDimensions,
                           protocol: LabProtocol,
-                          in: Exporter,
-                          inFileName: String,
-                          // tableExporter: TableExporter = null,
-                          // spreadsheetExporter: SpreadsheetExporter = null,
-                          // exporterFileNames: HashMap[Exporter, String],
-                          out: java.io.PrintWriter)
+                          out: java.io.PrintWriter,
+                          in: PostProcessorInputFormat.Format)
   extends Exporter(modelFileName, initialDims, protocol, out)
 {
   type Measurements = ListBuffer[List[Double]]
@@ -62,8 +58,8 @@ class StatsExporter(modelFileName: String,
 
   def extractData(): Option[Data] = {
     in match {
-      case _: TableExporter => Some(extractFromTable(inFileName))
-      case _: SpreadsheetExporter => Some(extractFromSpreadsheet(inFileName))
+      case t: PostProcessorInputFormat.Table => Some(extractFromTable(t.fileName))
+      case s: PostProcessorInputFormat.Spreadsheet => Some(extractFromSpreadsheet(s.fileName))
       case _ => None
       }
     // if (tableExporter != null) {

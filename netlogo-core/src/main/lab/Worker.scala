@@ -5,7 +5,7 @@ package org.nlogo.lab
 import org.nlogo.api.LabProtocol
 import java.util.concurrent.{Callable, Executors, TimeUnit}
 import org.nlogo.core.{ AgentKind, WorldDimensions }
-import org.nlogo.api.{Dump,LogoException, WorldDimensionException, SimpleJobOwner}
+import org.nlogo.api.{Dump,LogoException, PostProcessorInputFormat, WorldDimensionException, SimpleJobOwner}
 import org.nlogo.nvm.{LabInterface, Workspace}
 import org.nlogo.api.MersenneTwisterFast
 import LabInterface.ProgressListener
@@ -23,8 +23,8 @@ class Worker(val protocol: LabProtocol)
   def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter) {
     addListener(new TableExporter(modelFileName, initialDims, protocol, w))
   }
-  def addStatsWriter(modelFileName: String, initialDims: WorldDimensions, in: Exporter, inFileName: String, w: java.io.PrintWriter) {
-    addListener(new StatsExporter(modelFileName, initialDims, protocol, in, inFileName, w))
+  def addStatsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter, in: PostProcessorInputFormat.Format) {
+    addListener(new StatsExporter(modelFileName, initialDims, protocol, w, in))
   }
   var runners: Seq[Runner] = null
   // we only want to compile stuff once per workspace, so use this
