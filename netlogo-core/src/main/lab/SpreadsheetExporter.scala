@@ -91,7 +91,7 @@ class SpreadsheetExporter(modelFileName: String,
       out.print(csv.header("[reporter]"))
       out.print(partialData.reporters)
       for (_ <- runs) {
-        out.print(",")
+        out.print(",step")
         for (metric <- protocol.metrics)
           out.print("," + csv.header(metric))
       }
@@ -111,10 +111,7 @@ class SpreadsheetExporter(modelFileName: String,
     }
     out.print(csv.header("[steps]") + partialData.steps + ",")
     foreachRun((run,metricNumber) =>
-      if (metricNumber == 0)
-        None
-      else
-        Some(Int.box(run.steps)))
+      Some(Int.box(run.steps)))
   }
   def writeRunData() {
     // output the raw run data, like this:
@@ -166,7 +163,7 @@ class SpreadsheetExporter(modelFileName: String,
     // cons cell) and for a big experiment we can have a ton of measurements.
     val measurements = new collection.mutable.ArrayBuffer[Array[AnyRef]]
     def addMeasurements(step: Int, values: List[AnyRef]) {
-      measurements += (step.toString :: values).toArray
+      measurements += (step.toDouble.asInstanceOf[java.lang.Double] :: values).toArray
       numMeasurements += 1
     }
     // careful here... normally measurement number means step number, but if runMetricsEveryStep is
@@ -174,35 +171,23 @@ class SpreadsheetExporter(modelFileName: String,
     def getMeasurement(measurementNumber: Int, metricNumber: Int): AnyRef =
         measurements(measurementNumber)(metricNumber)
     def lastMeasurement(metricNumber: Int): Option[AnyRef] =
-      if (metricNumber == 0)
-        None
-      else
-        Some(measurements.last(metricNumber - 1))
+        Some(measurements.last(metricNumber))
     def doubles(metricNumber: Int): Seq[Double] =
       measurements.map(_(metricNumber)).collect{
         case d: java.lang.Double => d.doubleValue}
     def minMeasurement(metricNumber: Int): Option[Double] =
-      if (metricNumber == 0)
-        None
-      else
-        Some(doubles(metricNumber))
-          .filter(_.nonEmpty)
-          .map(_.min)
+      Some(doubles(metricNumber))
+        .filter(_.nonEmpty)
+        .map(_.min)
     def maxMeasurement(metricNumber: Int): Option[Double] =
-      if (metricNumber == 0)
-        None
-      else
-        Some(doubles(metricNumber))
-          .filter(_.nonEmpty)
-          .map(_.max)
+      Some(doubles(metricNumber))
+        .filter(_.nonEmpty)
+        .map(_.max)
     // includes initial measurement
     def meanMeasurement(metricNumber: Int): Option[Double] =
-      if (metricNumber == 0)
-        None
-      else
-        Some(doubles(metricNumber))
-          .filter(_.size == measurements.size)
-          .map(_.sum / measurements.size)
+      Some(doubles(metricNumber))
+        .filter(_.size == measurements.size)
+        .map(_.sum / measurements.size)
   }
 }
 
