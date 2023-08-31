@@ -86,7 +86,7 @@ class SpreadsheetExporter(modelFileName: String,
     // "[min]","225.0","196.0","243.0"
     // "[max]","534.0","845.0","704.0"
     // "[mean]","341.57142857142856","360.8095238095238","381.8095238095238"
-    // "[steps]","20","20","20"
+    // "[total steps]","20","20","20"
     if ((protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) && !protocol.metrics.isEmpty) {
       out.print(csv.header("[reporter]"))
       out.print(partialData.reporters)
@@ -109,7 +109,7 @@ class SpreadsheetExporter(modelFileName: String,
       foreachRun((run, metricNumber) =>
         run.meanMeasurement(metricNumber))
     }
-    out.print(csv.header("[steps]") + partialData.steps + ",")
+    out.print(csv.header("[total steps]") + partialData.steps + ",")
     foreachRun((run,metricNumber) =>
       Some(Int.box(run.steps)))
   }
@@ -123,7 +123,7 @@ class SpreadsheetExporter(modelFileName: String,
     // ,"399.0","423.0","439.0"
     out.println()
     out.print(csv.header(if (protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) "[all run data]"
-                              else "[initial & final values]"))
+                              else "[final value]"))
     out.print(partialData.dataHeaders)
     for(_ <- runs) {
       out.print(',' + csv.header("step"))
