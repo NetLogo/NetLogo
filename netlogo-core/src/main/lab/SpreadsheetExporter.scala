@@ -19,17 +19,12 @@ class SpreadsheetExporter(modelFileName: String,
                           partialData: PartialData = new PartialData)
   extends Exporter(modelFileName, initialDims, protocol, out)
 {
-  val shouldIncludeSteps = !protocol.runMetricsEveryStep && !protocol.runMetricsCondition.isEmpty
   val runs = new collection.mutable.HashMap[Int,Run]
   override def runStarted(w: Workspace, runNumber: Int, settings: List[(String,Any)]) {
     runs(runNumber) = new Run(settings)
   }
   override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]) {
-    if (shouldIncludeSteps)
-      runs(runNumber).addMeasurements(step, values)
-    else {
-      runs(runNumber).addMeasurements(values)
-    }
+    runs(runNumber).addMeasurements(step, values)
   }
   override def runCompleted(w: Workspace, runNumber: Int, steps: Int) {
     runs(runNumber).done = true
@@ -51,16 +46,12 @@ class SpreadsheetExporter(modelFileName: String,
   def foreachRun(fn: (Run, Int) => Option[Any]) {
     // if the experiment was aborted, the completed run numbers might not be
     // consecutive, so we have to be careful - ST 3/31/09
-    val includeStepsOffset = {
-      if (shouldIncludeSteps) 1
-      else 0
-    }
     val outputs =
       for {
         runNumber <- runNumbers
         // even if there are no metrics, in this context we pretend there is one, otherwise we'd output
         // nothing at all - ST 12/17/04, 5/6/08
-        j <- 0 until (1 max protocol.metrics.length) + includeStepsOffset
+        j <- 0 until (protocol.metrics.length + 1)
         output = fn(runs(runNumber), j).map(csv.data).getOrElse("")
       } yield output
     out.println(outputs.mkString(","))
@@ -71,7 +62,7 @@ class SpreadsheetExporter(modelFileName: String,
     out.print(csv.header("[run number]"))
     out.print(partialData.runNumbers)
     for(runNumber <- runNumbers)
-      out.print(List.fill(1 max protocol.metrics.length)(csv.number(runNumber))
+      out.print(List.fill(protocol.metrics.length + 1)(csv.number(runNumber))
                     .mkString(",", ",", ""))
     out.println()
     // now output one row per variable, like this:
@@ -99,12 +90,15 @@ class SpreadsheetExporter(modelFileName: String,
     if ((protocol.runMetricsEveryStep || !protocol.runMetricsCondition.isEmpty) && !protocol.metrics.isEmpty) {
       out.print(csv.header("[reporter]"))
       out.print(partialData.reporters)
-      for(_ <- runs; metric <- protocol.metrics)
-        out.print("," + csv.header(metric))
+      for (_ <- runs) {
+        out.print(",")
+        for (metric <- protocol.metrics)
+          out.print("," + csv.header(metric))
+      }
       out.println()
       out.print(csv.header("[final]") + partialData.finals + ",")
       foreachRun((run, metricNumber) =>
-        Some(run.lastMeasurement(metricNumber)))
+        run.lastMeasurement(metricNumber))
       out.print(csv.header("[min]") + partialData.mins + ",")
       foreachRun((run, metricNumber) =>
         run.minMeasurement(metricNumber))
@@ -117,7 +111,10 @@ class SpreadsheetExporter(modelFileName: String,
     }
     out.print(csv.header("[steps]") + partialData.steps + ",")
     foreachRun((run,metricNumber) =>
-      Some(Int.box(run.steps)))
+      if (metricNumber == 0)
+        None
+      else
+        Some(Int.box(run.steps)))
   }
   def writeRunData() {
     // output the raw run data, like this:
@@ -132,8 +129,7 @@ class SpreadsheetExporter(modelFileName: String,
                               else "[initial & final values]"))
     out.print(partialData.dataHeaders)
     for(_ <- runs) {
-      if (shouldIncludeSteps)
-        out.print(',' + csv.header("step"))
+      out.print(',' + csv.header("step"))
       for (metric <- protocol.metrics) {
         out.print(',' + csv.header(metric))
       }
@@ -169,10 +165,6 @@ class SpreadsheetExporter(modelFileName: String,
     // we use Array instead of List because List has a lot of memory overhead (one object per
     // cons cell) and for a big experiment we can have a ton of measurements.
     val measurements = new collection.mutable.ArrayBuffer[Array[AnyRef]]
-    def addMeasurements(values: List[AnyRef]) {
-      measurements += values.toArray
-      numMeasurements += 1
-    }
     def addMeasurements(step: Int, values: List[AnyRef]) {
       measurements += (step.toString :: values).toArray
       numMeasurements += 1
@@ -180,25 +172,37 @@ class SpreadsheetExporter(modelFileName: String,
     // careful here... normally measurement number means step number, but if runMetricsEveryStep is
     // false, then we'll only have two measurements, regardless of the number of steps - ST 12/19/04
     def getMeasurement(measurementNumber: Int, metricNumber: Int): AnyRef =
-      measurements(measurementNumber)(metricNumber)
-    def lastMeasurement(metricNumber: Int): AnyRef =
-      measurements.last(metricNumber)
+        measurements(measurementNumber)(metricNumber)
+    def lastMeasurement(metricNumber: Int): Option[AnyRef] =
+      if (metricNumber == 0)
+        None
+      else
+        Some(measurements.last(metricNumber - 1))
     def doubles(metricNumber: Int): Seq[Double] =
       measurements.map(_(metricNumber)).collect{
         case d: java.lang.Double => d.doubleValue}
     def minMeasurement(metricNumber: Int): Option[Double] =
-      Some(doubles(metricNumber))
-        .filter(_.nonEmpty)
-        .map(_.min)
+      if (metricNumber == 0)
+        None
+      else
+        Some(doubles(metricNumber))
+          .filter(_.nonEmpty)
+          .map(_.min)
     def maxMeasurement(metricNumber: Int): Option[Double] =
-      Some(doubles(metricNumber))
-        .filter(_.nonEmpty)
-        .map(_.max)
+      if (metricNumber == 0)
+        None
+      else
+        Some(doubles(metricNumber))
+          .filter(_.nonEmpty)
+          .map(_.max)
     // includes initial measurement
     def meanMeasurement(metricNumber: Int): Option[Double] =
-      Some(doubles(metricNumber))
-        .filter(_.size == measurements.size)
-        .map(_.sum / measurements.size)
+      if (metricNumber == 0)
+        None
+      else
+        Some(doubles(metricNumber))
+          .filter(_.size == measurements.size)
+          .map(_.sum / measurements.size)
   }
 }
 
