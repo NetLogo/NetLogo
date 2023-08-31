@@ -327,15 +327,15 @@ measurement metric data is in purple.
 
 ![[bs-table.png]]
 
-The **Spreadsheet output** format lists each metric for each run in a separate column, with each
-row corresponding to a measurement step that applies to all runs. When custom conditions
-for running metrics are provided, the step number corresponding to each row is automatically included.
-If one run finishes before another due to a **stop condition**, then its measurement steps after that point will be blank.
-At the top of the file there is a `[run number]` row that will have the run number repeated for
-each metric at the top of the file.  After that are rows for the initial values given to each
-variable for the run.  The spreadsheet output also calculates the min, mean, max, and final values
-for each metric and lists those after the initial values before the individual run measurements.
-Then it lists the actual number of steps a run went through in a `[total steps]` row.
+The **Spreadsheet output** format lists the step numbers as well as each metric for each run in a
+separate column, with each row corresponding to a measurement step that applies to all runs. If one
+run finishes before another due to a **stop condition**, then its step numbers after that
+point will be blank. At the top of the file there is a `[run number]` row that will have the run
+number repeated for each metric at the top of the file.  After that are rows for the initial values
+given to each variable for the run.  The spreadsheet output also calculates the min, mean, max, and
+final values for the step numbers as well as each metric and lists those after the initial values
+before the individual run measurements. Then it lists the actual number of steps a run went through
+in a `[total steps]` row.
 
 The **Spreadsheet output** data makes it easier to quickly compare runs against each other, as they
 will be aligned vertically when imported into a spreadsheet application.  It can also make
