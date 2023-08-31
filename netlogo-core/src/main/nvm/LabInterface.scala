@@ -27,8 +27,10 @@ object LabInterface {
     protocolName: Option[String],
     externalXMLFile: Option[java.io.File],
     tableWriter: Option[java.io.PrintWriter],
+    tableFileName: String,
     spreadsheetWriter: Option[java.io.PrintWriter],
-    statsExporter: Option[java.io.PrintWriter],
+    spreadsheetFileName: String,
+    statsWriter: Option[java.io.PrintWriter],
     dims: Option[WorldDimensions],
     threads: Int,
     suppressErrors: Boolean)

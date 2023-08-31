@@ -9,9 +9,11 @@ import java.io.{ BufferedReader, FileReader }
 class StatsExporter(modelFileName: String,
                           initialDims: WorldDimensions,
                           protocol: LabProtocol,
-                          tableExporter: TableExporter,
-                          spreadsheetExporter: SpreadsheetExporter,
-                          exporterFileNames: HashMap[Exporter, String],
+                          in: Exporter,
+                          inFileName: String,
+                          // tableExporter: TableExporter = null,
+                          // spreadsheetExporter: SpreadsheetExporter = null,
+                          // exporterFileNames: HashMap[Exporter, String],
                           out: java.io.PrintWriter)
   extends Exporter(modelFileName, initialDims, protocol, out)
 {
@@ -58,6 +60,21 @@ class StatsExporter(modelFileName: String,
     out.flush()
   }
 
+  def extractData(): Option[Data] = {
+    in match {
+      case _: TableExporter => Some(extractFromTable(inFileName))
+      case _: SpreadsheetExporter => Some(extractFromSpreadsheet(inFileName))
+      case _ => None
+      }
+    // if (tableExporter != null) {
+    //   Some(extractFromTable(exporterFileNames(tableExporter)))
+    // } else if (spreadsheetExporter != null) {
+    //   Some(extractFromSpreadsheet(exporterFileNames(spreadsheetExporter)))
+    // } else {
+    //   Some(extractFromSpreadsheet(spreadsheetExporter))
+    // }
+  }
+
   def process() {
     val data = extractData()
     data match {
@@ -97,16 +114,6 @@ class StatsExporter(modelFileName: String,
         }
       }
       case None =>
-    }
-  }
-
-  def extractData(): Option[Data] = {
-    if (tableExporter != null) {
-      Some(extractFromTable(exporterFileNames(tableExporter)))
-    } else if (spreadsheetExporter != null) {
-      Some(extractFromSpreadsheet(exporterFileNames(spreadsheetExporter)))
-    } else {
-      Some(extractFromSpreadsheet(spreadsheetExporter))
     }
   }
 
@@ -205,28 +212,28 @@ class StatsExporter(modelFileName: String,
     data
   }
 
-  private def extractFromSpreadsheet(spreadsheet: SpreadsheetExporter): Data = {
-    val data = new HashMap[List[Any], DataPerStep]()
-    val spreadsheetData = spreadsheet.runs
-    for ((runNumber, run) <- spreadsheetData) {
-      val params = run.settings.map(_._2)
-      if (!data.contains(params)) {
-        data(params) = new HashMap[Int, Measurements]()
-      }
-      for (runData <- run.measurements) {
-        val step = runData(0).toString.toInt
-        val measurements = runData.drop(1)
+  // private def extractFromSpreadsheet(spreadsheet: SpreadsheetExporter): Data = {
+  //   val data = new HashMap[List[Any], DataPerStep]()
+  //   val spreadsheetData = spreadsheet.runs
+  //   for ((runNumber, run) <- spreadsheetData) {
+  //     val params = run.settings.map(_._2)
+  //     if (!data.contains(params)) {
+  //       data(params) = new HashMap[Int, Measurements]()
+  //     }
+  //     for (runData <- run.measurements) {
+  //       val step = runData(0).toString.toInt
+  //       val measurements = runData.drop(1)
 
-        if (!data(params).contains(step)) {
-          data(params)(step) = new ListBuffer[List[Double]]()
-        }
-        data(params)(step) += measurements.zipWithIndex.map{case (entry, col) => {
-          handleNonNumeric(entry.toString, col)
-        }}.toList
-      }
-    }
-    data
-  }
+  //       if (!data(params).contains(step)) {
+  //         data(params)(step) = new ListBuffer[List[Double]]()
+  //       }
+  //       data(params)(step) += measurements.zipWithIndex.map{case (entry, col) => {
+  //         handleNonNumeric(entry.toString, col)
+  //       }}.toList
+  //     }
+  //   }
+  //   data
+  // }
 
   override def experimentCompleted() { process() }
   override def experimentAborted() { process() }

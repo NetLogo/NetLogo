@@ -2,7 +2,7 @@
 
 package org.nlogo.lab.gui
 
-import collection.mutable.{ HashMap, ListBuffer }
+import collection.mutable.{ ListBuffer }
 
 import java.awt.{ Dialog }
 import java.io.{ FileWriter, IOException, PrintWriter }
@@ -65,9 +65,11 @@ class Supervisor(
   private val workerThread = new Thread(runnable, "BehaviorSpace Worker")
   private val progressDialog = new ProgressDialog(dialog, this, saveProtocol)
   private val exporters = new ListBuffer[Exporter]
-  private val exporterFileNames = new HashMap[Exporter, String]
+  // private val exporterFileNames = new HashMap[Exporter, String]
   private var spreadsheetExporter: SpreadsheetExporter = null
+  private var spreadsheetFileName: String = null
   private var tableExporter: TableExporter = null
+  private var tableFileName: String = null
   private var statsExporter: StatsExporter = null
   worker.addListener(progressDialog)
   def addExporter(exporter: Exporter) {
@@ -137,7 +139,7 @@ class Supervisor(
             worker.protocol,
             new PrintWriter(new FileWriter(fileName)),
             partialData)
-          exporterFileNames(spreadsheetExporter) = fileName
+          spreadsheetFileName = fileName
           addExporter(spreadsheetExporter)
         } catch {
           case _: Throwable =>
@@ -164,7 +166,7 @@ class Supervisor(
           workspace.world.getDimensions,
           worker.protocol,
           new PrintWriter(new FileWriter(fileName, protocol.runsCompleted > 0)))
-        exporterFileNames(tableExporter) = fileName
+        tableFileName = fileName
         addExporter(tableExporter)
       }
       else {
@@ -176,16 +178,21 @@ class Supervisor(
       }
     }
     if (options.stats != null && options.stats.trim() != "") {
-      if (tableExporter != null || spreadsheetExporter != null) {
+      if (tableFileName != null || spreadsheetFileName != null) {
         val fileName = options.stats.trim()
         try {
           statsExporter = new StatsExporter(
             workspace.getModelFileName,
             workspace.world.getDimensions,
             worker.protocol,
-            tableExporter,
-            spreadsheetExporter,
-            exporterFileNames,
+            {
+              if (tableExporter != null) tableExporter
+              else spreadsheetExporter
+            },
+            {
+              if (tableExporter != null) tableFileName
+              else spreadsheetFileName
+            },
             new PrintWriter(new FileWriter(fileName)))
           addExporter(statsExporter)
         } catch {

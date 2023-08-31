@@ -21,10 +21,37 @@ class Lab extends LabInterface {
       queue.foreach(w => dims.foreach(w.setDimensions _))
       def modelDims = queue.head.world.getDimensions
       val worker = newWorker(protocol)
+      val tableExporter =
+        {
+          tableWriter match {
+            case Some(w) => new TableExporter(modelPath, dims.getOrElse(modelDims), protocol, w)
+            case None => None
+          }
+        }
+      val spreadsheetExporter =
+        {
+          tableWriter match {
+            case Some(w) => new SpreadsheetExporter(modelPath, dims.getOrElse(modelDims), protocol, w)
+            case None => None
+          }
+        }
       tableWriter.foreach(
         worker.addTableWriter(modelPath, dims.getOrElse(modelDims), _))
       spreadsheetWriter.foreach(
         worker.addSpreadsheetWriter(modelPath, dims.getOrElse(modelDims), _))
+      statsWriter.foreach(
+        worker.addStatsWriter(modelPath, dims.getOrElse(modelDims),
+          {
+            if (tableExporter != None) tableExporter.asInstanceOf[TableExporter]
+            else spreadsheetExporter.asInstanceOf[SpreadsheetExporter]
+          },
+          {
+            if (tableExporter != None) tableFileName
+            else spreadsheetFileName
+          },
+          _
+        )
+      )
       worker.addListener(
         new LabInterface.ProgressListener {
           override def runCompleted(w: Workspace, runNumber: Int, step: Int) {

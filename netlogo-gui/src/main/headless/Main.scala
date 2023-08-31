@@ -93,8 +93,10 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var setupFile: Option[File] = None
     var experiment: Option[String] = None
     var tableWriter: Option[PrintWriter] = None
+    var tableFileName: String = null
     var spreadsheetWriter: Option[PrintWriter] = None
-    var statsExporter: Option[PrintWriter] = None
+    var spreadsheetFileName: String = null
+    var statsWriter: Option[PrintWriter] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
     val it = args.iterator
@@ -178,15 +180,17 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
       } else if (arg == "--table") {
         requireHasNext()
-        tableWriter = Some(path2writer(it.next()))
+        tableFileName = it.next()
+        tableWriter = Some(path2writer(tableFileName))
 
       } else if (arg == "--spreadsheet") {
         requireHasNext()
-        spreadsheetWriter = Some(path2writer(it.next()))
+        spreadsheetFileName = it.next()
+        spreadsheetWriter = Some(path2writer(spreadsheetFileName))
 
       } else if (arg == "--stats") {
         requireHasNext()
-        statsExporter = Some(path2writer(it.next()))
+        statsWriter = Some(path2writer(it.next()))
       }
 
       else if (arg == "--threads") {
@@ -214,7 +218,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       die("If any of min/max-px/ycor are specified, all four must be specified.  Try --help for more information.")
     }
 
-    if (statsExporter != None && (tableWriter == None && spreadsheetWriter == None)) {
+    if (statsWriter != None && (tableWriter == None && spreadsheetWriter == None)) {
       die("You cannot specify --stats without also specifying --table or --spreadsheet. Try --help for more information.")
     }
 
@@ -234,8 +238,10 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     , experiment
     , setupFile
     , tableWriter
+    , tableFileName
     , spreadsheetWriter
-    , statsExporter
+    , spreadsheetFileName
+    , statsWriter
     , dims
     , threads
     , suppressErrors
