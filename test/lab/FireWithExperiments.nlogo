@@ -451,6 +451,18 @@ repeat 180 [ go ]
       <value value="57"/>
     </enumeratedValueSet>
   </experiment>
+  <experiment name="basic-stats" repetitions="3" runMetricsEveryStep="true">
+    <setup>random-seed 473 setup</setup>
+    <go>go</go>
+    <timeLimit steps="50"/>
+    <metric>burned-trees</metric>
+  </experiment>
+  <experiment name="no-std-stats" repetitions="2" runMetricsEveryStep="true">
+    <setup>random-seed 473 setup</setup>
+    <go>go</go>
+    <timeLimit steps="50"/>
+    <metric>burned-trees</metric>
+  </experiment>
 </experiments>
 @#$#@#$#@
 @#$#@#$#@
