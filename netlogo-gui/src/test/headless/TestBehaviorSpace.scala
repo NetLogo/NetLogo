@@ -4,7 +4,7 @@ package org.nlogo.headless
 
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.{ OneInstancePerTest, BeforeAndAfterEach }
-import org.nlogo.api.{ FileIO, Version }
+import org.nlogo.api.{ FileIO, PostProcessorInputFormat, Version }
 import org.nlogo.nvm.{ LabInterface, Workspace }
 import org.nlogo.util.SlowTest
 
@@ -67,26 +67,32 @@ with OneInstancePerTest with BeforeAndAfterEach {
         threads = Runtime.getRuntime.availableProcessors)(
         workspace _, () => newWorker(name))
   }
-  def runExperimentFromModel(modelPath: String, experimentName: String, filename: String, threads: Int = 1, wantSpreadsheet: Boolean = true, wantTable: Boolean = true) {
+  def runExperimentFromModel(modelPath: String, experimentName: String, filename: String, threads: Int = 1,
+  wantSpreadsheet: Boolean = true, wantTable: Boolean = true, wantStats: Boolean = false) {
     val time = System.nanoTime
     new java.io.File("tmp").mkdir()
     new java.io.File("tmp/TestBehaviorSpace").mkdir()
     val tablePath = "tmp/TestBehaviorSpace/" + time + "-table.csv"
     val spreadsheetPath = "tmp/TestBehaviorSpace/" + time + "-spreadsheet.csv"
+    val statsPath = "tmp/TestBehaviorSpace/" + time + "-stats.csv"
     // let's go through headless.Main here so that code gets some testing - ST 3/9/09
     Main.main(Array("--model", modelPath, "--experiment", experimentName,
                     "--table", tablePath, "--spreadsheet", spreadsheetPath,
+                    "--stats", statsPath,
                     "--threads", threads.toString, "--suppress-errors"))
-    if (wantTable)
+    if (!wantStats && wantTable)
       assertResult(slurp(filename + "-table.csv"))(
         withoutFirst6Lines(slurp(tablePath)))
-    if (wantSpreadsheet)
+    if (!wantStats && wantSpreadsheet)
       assertResult(slurp(filename + "-spreadsheet.csv"))(
         withoutFirst6Lines(slurp(spreadsheetPath)))
+    if (wantStats)
+      assertResult(slurp(filename + "-stats.csv"))(
+        withoutFirst6Lines(slurp(statsPath)))
   }
   // sorry this has gotten so baroque with all the closures and tuples and
   // whatnot. it should be redone - ST 8/19/09
-  def run(filename: String, threads: Int = 1, wantTable: Boolean = true, wantSpreadsheet: Boolean = true)
+  def run(filename: String, threads: Int = 1, wantTable: Boolean = true, wantSpreadsheet: Boolean = true, wantStats: Boolean = false)
          (fn: () => Workspace, fn2: () => LabInterface.Worker) {
     val dims = fn.apply.world.getDimensions
     def runHelper(fns: List[(String, (LabInterface.Worker, java.io.StringWriter) => Unit)]) {
@@ -109,11 +115,20 @@ with OneInstancePerTest with BeforeAndAfterEach {
     def spreadsheet(worker: LabInterface.Worker, writer: java.io.StringWriter) {
       worker.addSpreadsheetWriter(filename, dims, new java.io.PrintWriter(writer))
     }
-    runHelper(List(("-table.csv", table _), ("-spreadsheet.csv", spreadsheet _))
+    def stats(worker: LabInterface.Worker, writer: java.io.StringWriter) {
+      if (wantTable || wantSpreadsheet) {
+        worker.addStatsWriter(filename, dims, new java.io.PrintWriter(writer), {
+          if (wantTable) PostProcessorInputFormat.Table(filename + "-table.csv")
+          else PostProcessorInputFormat.Spreadsheet(filename + "-spreadsheet.csv")
+        })
+      }
+    }
+    runHelper(List(("-table.csv", table _), ("-spreadsheet.csv", spreadsheet _), ("-stats.csv", stats _))
       .filter {
         case (suffix, _) =>
           suffix == "-table.csv" && wantTable ||
-            suffix == "-spreadsheet.csv" && wantSpreadsheet
+            suffix == "-spreadsheet.csv" && wantSpreadsheet ||
+            suffix == "-stats.csv" && wantStats
       })
   }
 
@@ -316,5 +331,20 @@ with OneInstancePerTest with BeforeAndAfterEach {
   }
   test("ComplexSubExperiments", SlowTest.Tag) {
     runExperiment(0, "globals [a b c]", "testComplexSubExperiments")
+  }
+  test("Stats from table", SlowTest.Tag) {
+    runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "basic-stats",
+      "test/lab/FireWithExperimentsBasicStats", wantStats=true, wantSpreadsheet = false,
+      threads = Runtime.getRuntime.availableProcessors)
+  }
+  test("Stats from spreadsheet", SlowTest.Tag) {
+    runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "basic-stats",
+      "test/lab/FireWithExperimentsBasicStats", wantStats=true, wantTable=false,
+      threads = Runtime.getRuntime.availableProcessors)
+  }
+  test("Stats no std", SlowTest.Tag) {
+    runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "no-std-stats",
+      "test/lab/FireWithExperimentsNoStdStats", wantStats=true, wantSpreadsheet = false,
+      threads = Runtime.getRuntime.availableProcessors)
   }
 }
