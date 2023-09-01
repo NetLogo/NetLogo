@@ -2,7 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.LabProtocol
+import org.nlogo.api.{ LabListsExporterFormat, LabProtocol }
 import org.nlogo.api.LogoException
 import org.nlogo.nvm.{EngineException,LabInterface,Workspace}
 
@@ -25,6 +25,16 @@ class Lab extends LabInterface {
         worker.addTableWriter(modelPath, dims.getOrElse(modelDims), _))
       spreadsheetWriter.foreach(
         worker.addSpreadsheetWriter(modelPath, dims.getOrElse(modelDims), _))
+      if (tableWriter.isDefined) {
+        listsWriter.foreach(x =>
+          worker.addListsWriter(modelPath, dims.getOrElse(modelDims), x._1,
+          LabListsExporterFormat.TableFormat(x._2)))
+      }
+      else {
+        listsWriter.foreach(x =>
+          worker.addListsWriter(modelPath, dims.getOrElse(modelDims), x._1,
+          LabListsExporterFormat.SpreadsheetFormat(x._2)))
+      }
       worker.addListener(
         new LabInterface.ProgressListener {
           override def runCompleted(w: Workspace, runNumber: Int, step: Int) {

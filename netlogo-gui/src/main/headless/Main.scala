@@ -20,7 +20,8 @@ Run NetLogo using the NetLogo_Console app with the --headless command line argum
 * --setup-file <path>: read experiment setups from this file instead of the model file
 * --experiment <name>: name of experiment to run
 * --table <path>: pathname to send table output to (or - for standard output)
-* --spreadsheet <path>: pathname to send table output to (or - for standard output)
+* --spreadsheet <path>: pathname to send spreadsheet output to (or - for standard output)
+* --lists <path>: pathname to send lists output to (or - for standard output), cannot be used without --table or --spreadsheet
 * --threads <number>: use this many threads to do model runs in parallel, or 1 to disable parallel runs. defaults to one thread per processor.
 * --update-plots: enable plot updates. Include this if you want to export plot data, or exclude it for better performance.
 * --min-pxcor <number>: override world size setting in model file
@@ -101,6 +102,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var experiment: Option[String] = None
     var tableWriter: Option[PrintWriter] = None
     var spreadsheetWriter: Option[PrintWriter] = None
+    var listsWriter: Option[(PrintWriter, String)] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
     var updatePlots = false
@@ -120,6 +122,8 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       } else {
         new PrintWriter(new FileWriter(path.trim))
       }
+
+    var outputPath = ""
 
     while (it.hasNext) {
       val arg = it.next().toLowerCase
@@ -185,11 +189,19 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
       } else if (arg == "--table") {
         requireHasNext()
-        tableWriter = Some(path2writer(it.next()))
+        outputPath = it.next()
+        tableWriter = Some(path2writer(outputPath))
 
       } else if (arg == "--spreadsheet") {
         requireHasNext()
-        spreadsheetWriter = Some(path2writer(it.next()))
+        val localOut = it.next()
+        if (outputPath.isEmpty)
+          outputPath = localOut
+        spreadsheetWriter = Some(path2writer(localOut))
+
+      } else if (arg == "--lists") {
+        requireHasNext()
+        listsWriter = Some((path2writer(it.next), outputPath))
 
       } else if (arg == "--threads") {
         requireHasNext()
@@ -211,6 +223,10 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
     if (setupFile == None && experiment == None) {
       die("You must specify either --setup-file or --experiment (or both).  Try --help for more information.")
+    }
+
+    if (listsWriter != None && tableWriter == None && spreadsheetWriter == None) {
+      die("You cannot specify --lists without also specifying --table or --spreadsheet. Try --help for more information.")
     }
 
     val dimStrings = List(minPxcor, maxPxcor, minPycor, maxPycor)
@@ -235,6 +251,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     , setupFile
     , tableWriter
     , spreadsheetWriter
+    , listsWriter
     , dims
     , threads
     , suppressErrors

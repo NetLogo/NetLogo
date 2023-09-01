@@ -417,4 +417,14 @@
       <steppedValueSet variable="c" first="50" step="2" last="60"/>
     </subExperiment>
   </experiment>
+  <experiment name="testSimpleLists" repetitions="1" runMetricsEveryStep="true">
+    <setup>clear-turtles reset-ticks create-turtles n [setxy n n]</setup>
+    <timeLimit steps="2"/>
+    <metric>[xcor] of turtles</metric>
+    <metric>[ycor] of turtles</metric>
+    <enumeratedValueSet variable="n">
+      <value value="2"/>
+      <value value="4"/>
+    </enumeratedValueSet>
+  </experiment>
 </experiments>

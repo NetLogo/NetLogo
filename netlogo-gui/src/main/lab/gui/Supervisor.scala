@@ -7,10 +7,10 @@ import collection.mutable.ListBuffer
 import java.awt.{ Dialog }
 import java.io.{ FileWriter, IOException, PrintWriter }
 
-import org.nlogo.api.{ Exceptions, ExportPlotWarningAction, LabProtocol, LogoException, PlotCompilationErrorAction }
+import org.nlogo.api.{ Exceptions, ExportPlotWarningAction, LabListsExporterFormat, LabProtocol, LogoException, PlotCompilationErrorAction }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ CompilerException, I18N }
-import org.nlogo.lab.{ Exporter, PartialData, SpreadsheetExporter, TableExporter, Worker }
+import org.nlogo.lab.{ Exporter, ListsExporter, PartialData, SpreadsheetExporter, TableExporter, Worker }
 import org.nlogo.nvm.{ EngineException, Workspace }
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.swing.{ OptionDialog }
@@ -166,6 +166,31 @@ class Supervisor(
           "Table output file has been moved or deleted.",
           Array(I18N.gui.get("common.buttons.ok")))
         return
+      }
+    }
+    if (options.lists != null && options.lists.trim() != "") {
+      val fileName = options.lists.trim()
+      try {
+        addExporter(new ListsExporter(
+          workspace.getModelFileName,
+          workspace.world.getDimensions,
+          worker.protocol,
+          new PrintWriter(new FileWriter(fileName)),
+          if (options.table != null && options.table.trim() != "") {
+            LabListsExporterFormat.TableFormat(options.table.trim())
+          } else if (options.spreadsheet != null && options.spreadsheet.trim() != "") {
+            LabListsExporterFormat.SpreadsheetFormat(options.spreadsheet.trim())
+          } else {
+            OptionDialog.showMessage(
+              workspace.getFrame, "Error During Experiment",
+              "Lists output selected with no spreadsheet or table output.",
+              Array(I18N.gui.get("common.buttons.ok")))
+            return
+          }))
+      } catch {
+        case e: IOException =>
+          failure(e)
+          return
       }
     }
     progressDialog.setUpdateView(options.updateView)

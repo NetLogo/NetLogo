@@ -70,6 +70,7 @@ object Main {
     var experiment: Option[String] = None
     var tableWriter: Option[java.io.PrintWriter] = None
     var spreadsheetWriter: Option[java.io.PrintWriter] = None
+    var listsWriter: Option[(java.io.PrintWriter, String)] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
     var updatePlots = false
@@ -82,6 +83,7 @@ object Main {
           override def close() { } }
       else
         new java.io.PrintWriter(new java.io.FileWriter(path.trim))
+    var outputPath = ""
     while(it.hasNext) {
       val arg = it.next()
       def requireHasNext() {
@@ -110,10 +112,20 @@ object Main {
         { requireHasNext(); setupFile = Some(new java.io.File(it.next())) }
       else if(arg == "--experiment")
         { requireHasNext(); experiment = Some(it.next()) }
-      else if(arg == "--table")
-        { requireHasNext(); tableWriter = Some(path2writer(it.next())) }
-      else if(arg == "--spreadsheet")
-        { requireHasNext(); spreadsheetWriter = Some(path2writer(it.next())) }
+      else if(arg == "--table") {
+        requireHasNext()
+        outputPath = it.next()
+        tableWriter = Some(path2writer(outputPath))
+      }
+      else if(arg == "--spreadsheet") {
+        requireHasNext()
+        val localOut = it.next()
+        if (outputPath.isEmpty)
+          outputPath = localOut
+        spreadsheetWriter = Some(path2writer(localOut))
+      }
+      else if(arg == "--lists")
+        { requireHasNext(); listsWriter = Some((path2writer(it.next()), outputPath)) }
       else if(arg == "--threads")
         { requireHasNext(); threads = it.next().toInt }
       else if(arg == "--suppress-errors")
@@ -127,6 +139,8 @@ object Main {
       die("you must specify --model")
     if(setupFile == None && experiment == None)
       die("you must specify either --setup-file or --experiment (or both)")
+    if(listsWriter != None && tableWriter == None && spreadsheetWriter == None)
+      die("you cannot specify --lists without also specifying --table or --spreadsheet")
     val dimStrings = List(minPxcor, maxPxcor, minPycor, maxPycor)
     if(dimStrings.exists(_.isDefined) && dimStrings.exists(!_.isDefined))
       die("if any of min/max-px/ycor are specified, all four must be specified")
@@ -137,6 +151,6 @@ object Main {
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
     Some(new Settings(model.get, experiment, setupFile, tableWriter,
-                      spreadsheetWriter, dims, threads, suppressErrors, updatePlots))
+                      spreadsheetWriter, listsWriter, dims, threads, suppressErrors, updatePlots))
   }
 }
