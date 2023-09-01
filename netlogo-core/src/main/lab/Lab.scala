@@ -2,8 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.LabProtocol
-import org.nlogo.api.{LogoException, PostProcessorInputFormat}
+import org.nlogo.api.{LogoException, LabListsExporterFormat, LabProtocol, PostProcessorInputFormat}
 import org.nlogo.nvm.{EngineException,LabInterface,Workspace}
 
 // This is used when running headless. - ST 3/3/09
@@ -33,6 +32,16 @@ class Lab extends LabInterface {
           }
         )
       )
+      if (tableWriter.isDefined) {
+        listsWriter.foreach(x =>
+          worker.addListsWriter(modelPath, dims.getOrElse(modelDims), x._1,
+          LabListsExporterFormat.TableFormat(x._2)))
+      }
+      else {
+        listsWriter.foreach(x =>
+          worker.addListsWriter(modelPath, dims.getOrElse(modelDims), x._1,
+          LabListsExporterFormat.SpreadsheetFormat(x._2)))
+      }
       worker.addListener(
         new LabInterface.ProgressListener {
           override def runCompleted(w: Workspace, runNumber: Int, step: Int) {

@@ -4,7 +4,7 @@ package org.nlogo.headless
 
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.{ OneInstancePerTest, BeforeAndAfterEach }
-import org.nlogo.api.{ FileIO, PostProcessorInputFormat, Version }
+import org.nlogo.api.{ FileIO, LabListsExporterFormat, PostProcessorInputFormat, Version }
 import org.nlogo.nvm.{ LabInterface, Workspace }
 import org.nlogo.util.SlowTest
 
@@ -45,10 +45,10 @@ with OneInstancePerTest with BeforeAndAfterEach {
     run("test/lab/" + name)(() => workspace, () => newWorker(name))
     workspace
   }
-  def runExperiment(worldSize: Int, declarations: String, name: String) = {
+  def runExperiment(worldSize: Int, declarations: String, name: String, wantLists: Boolean = false) = {
     val workspace = newWorkspace()
     workspace.initForTesting(worldSize, declarations)
-    run("test/lab/" + name)(() => workspace, () => newWorker(name))
+    run("test/lab/" + name, wantLists = wantLists)(() => workspace, () => newWorker(name))
     workspace
   }
   def run3DExperiment(name: String) {
@@ -68,17 +68,17 @@ with OneInstancePerTest with BeforeAndAfterEach {
         workspace _, () => newWorker(name))
   }
   def runExperimentFromModel(modelPath: String, experimentName: String, filename: String, threads: Int = 1,
-  wantSpreadsheet: Boolean = true, wantTable: Boolean = true, wantStats: Boolean = false) {
+  wantSpreadsheet: Boolean = true, wantTable: Boolean = true, wantStats: Boolean = false, wantLists: Boolean = false) {
     val time = System.nanoTime
     new java.io.File("tmp").mkdir()
     new java.io.File("tmp/TestBehaviorSpace").mkdir()
     val tablePath = "tmp/TestBehaviorSpace/" + time + "-table.csv"
     val spreadsheetPath = "tmp/TestBehaviorSpace/" + time + "-spreadsheet.csv"
     val statsPath = "tmp/TestBehaviorSpace/" + time + "-stats.csv"
+    val listsPath = "tmp/TestBehaviorSpace/" + time + "-lists.csv"
     // let's go through headless.Main here so that code gets some testing - ST 3/9/09
     Main.main(Array("--model", modelPath, "--experiment", experimentName,
-                    "--table", tablePath, "--spreadsheet", spreadsheetPath,
-                    "--stats", statsPath,
+                    "--table", tablePath, "--spreadsheet", spreadsheetPath, "--stats", statsPath, "--lists", listsPath,
                     "--threads", threads.toString, "--suppress-errors"))
     if (!wantStats && wantTable)
       assertResult(slurp(filename + "-table.csv"))(
@@ -89,11 +89,15 @@ with OneInstancePerTest with BeforeAndAfterEach {
     if (wantStats)
       assertResult(slurp(filename + "-stats.csv"))(
         withoutFirst6Lines(slurp(statsPath)))
+    if (wantLists)
+      assertResult(slurp(filename + "-lists.csv"))(
+        withoutFirst6Lines(slurp(listsPath)))
   }
   // sorry this has gotten so baroque with all the closures and tuples and
   // whatnot. it should be redone - ST 8/19/09
-  def run(filename: String, threads: Int = 1, wantTable: Boolean = true, wantSpreadsheet: Boolean = true, wantStats: Boolean = false)
-         (fn: () => Workspace, fn2: () => LabInterface.Worker) {
+  def run(filename: String, threads: Int = 1, wantTable: Boolean = true, wantSpreadsheet: Boolean = true,
+          wantStats: Boolean = false, wantLists: Boolean = false)
+          (fn: () => Workspace, fn2: () => LabInterface.Worker) {
     val dims = fn.apply.world.getDimensions
     def runHelper(fns: List[(String, (LabInterface.Worker, java.io.StringWriter) => Unit)]) {
       val worker = fn2.apply
@@ -123,12 +127,24 @@ with OneInstancePerTest with BeforeAndAfterEach {
         })
       }
     }
-    runHelper(List(("-table.csv", table _), ("-spreadsheet.csv", spreadsheet _), ("-stats.csv", stats _))
+    def lists(worker: LabInterface.Worker, writer: java.io.StringWriter) {
+      if (wantTable) {
+        worker.addListsWriter(filename, dims, new java.io.PrintWriter(writer),
+                              LabListsExporterFormat.TableFormat(filename + "-table.csv"))
+      }
+      else if (wantSpreadsheet)
+      {
+        worker.addListsWriter(filename, dims, new java.io.PrintWriter(writer),
+                              LabListsExporterFormat.SpreadsheetFormat(filename + "-spreadsheet.csv"))
+      }
+    }
+    runHelper(List(("-table.csv", table _), ("-spreadsheet.csv", spreadsheet _), ("-stats.csv", stats _), ("-lists.csv", lists _))
       .filter {
         case (suffix, _) =>
           suffix == "-table.csv" && wantTable ||
             suffix == "-spreadsheet.csv" && wantSpreadsheet ||
             suffix == "-stats.csv" && wantStats
+              suffix == "-lists.csv" && wantLists
       })
   }
 
@@ -346,5 +362,8 @@ with OneInstancePerTest with BeforeAndAfterEach {
     runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "no-std-stats",
       "test/lab/FireWithExperimentsNoStdStats", wantStats=true, wantSpreadsheet = false,
       threads = Runtime.getRuntime.availableProcessors)
+  }
+  test("SimpleLists", SlowTest.Tag) {
+    runExperiment(4, "globals [n]", "testSimpleLists", true)
   }
 }

@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ APIVersion, Version }
+import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, Version }
 import org.nlogo.nvm.LabInterface.Settings
 import org.nlogo.api.PlotCompilationErrorAction
 
@@ -21,11 +21,18 @@ object Main {
 
   def runExperiment(settings: Settings) {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
+    var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
+    var createdProto = false
     def newWorkspace = {
       val w = HeadlessWorkspace.newInstance
       w.setPlotCompilationErrorAction(plotCompilationErrorAction)
+      w.setExportPlotWarningAction(exportPlotWarningAction)
       w.open(settings.modelPath)
       plotCompilationErrorAction = PlotCompilationErrorAction.Ignore
+      if (createdProto) {
+        exportPlotWarningAction = ExportPlotWarningAction.Ignore
+      }
+      w.setShouldUpdatePlots(settings.updatePlots)
       w
     }
 
@@ -35,6 +42,7 @@ object Main {
     } finally {
       openWs.dispose()
     }
+    createdProto = true
     proto match {
       case Some(protocol) =>
         val lab = HeadlessWorkspace.newLab
@@ -61,12 +69,12 @@ object Main {
     var setupFile: Option[java.io.File] = None
     var experiment: Option[String] = None
     var tableWriter: Option[java.io.PrintWriter] = None
-    var tableFileName: String = null
     var spreadsheetWriter: Option[java.io.PrintWriter] = None
-    var spreadsheetFileName: String = null
     var statsWriter: Option[(java.io.PrintWriter, String)] = None
+    var listsWriter: Option[(java.io.PrintWriter, String)] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
+    var updatePlots = false
     val it = args.iterator
     def die(msg: String) { Console.err.println(msg); throw new CancelException }
     def path2writer(path: String) =
@@ -76,6 +84,7 @@ object Main {
           override def close() { } }
       else
         new java.io.PrintWriter(new java.io.FileWriter(path.trim))
+    var outputPath = ""
     while(it.hasNext) {
       val arg = it.next()
       def requireHasNext() {
@@ -106,23 +115,26 @@ object Main {
         { requireHasNext(); experiment = Some(it.next()) }
       else if(arg == "--table") {
         requireHasNext()
-        tableFileName = it.next()
-        tableWriter = Some(path2writer(tableFileName))
+        outputPath = it.next()
+        tableWriter = Some(path2writer(outputPath))
       }
       else if(arg == "--spreadsheet") {
         requireHasNext()
-        spreadsheetFileName = it.next()
-        spreadsheetWriter = Some(path2writer(spreadsheetFileName))
+        val localOut = it.next()
+        if (outputPath.isEmpty)
+          outputPath = localOut
+        spreadsheetWriter = Some(path2writer(localOut))
       }
-      else if(arg == "--stats") {
-        requireHasNext()
-        if (tableFileName != null) statsWriter = Some((path2writer(it.next()), tableFileName))
-        else statsWriter = Some((path2writer(it.next()), spreadsheetFileName))
-      }
+      else if(arg == "--stats")
+        { requireHasNext(); statsWriter = Some((path2writer(it.next()), outputPath)) }
+      else if(arg == "--lists")
+        { requireHasNext(); listsWriter = Some((path2writer(it.next()), outputPath)) }
       else if(arg == "--threads")
         { requireHasNext(); threads = it.next().toInt }
       else if(arg == "--suppress-errors")
         { suppressErrors = true }
+      else if (arg == "--update-plots")
+        { updatePlots = true }
       else
         die("unknown argument: " + arg)
     }
@@ -130,6 +142,8 @@ object Main {
       die("you must specify --model")
     if(setupFile == None && experiment == None)
       die("you must specify either --setup-file or --experiment (or both)")
+    if(listsWriter != None && tableWriter == None && spreadsheetWriter == None)
+      die("you cannot specify --lists without also specifying --table or --spreadsheet")
     val dimStrings = List(minPxcor, maxPxcor, minPycor, maxPycor)
     if(dimStrings.exists(_.isDefined) && dimStrings.exists(!_.isDefined))
       die("if any of min/max-px/ycor are specified, all four must be specified")
@@ -143,6 +157,6 @@ object Main {
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
     Some(new Settings(model.get, experiment, setupFile, tableWriter,
-                      spreadsheetWriter, statsWriter, dims, threads, suppressErrors))
+                      spreadsheetWriter, statsWriter, listsWriter, dims, threads, suppressErrors, updatePlots))
   }
 }

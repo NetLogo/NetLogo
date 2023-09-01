@@ -2,6 +2,8 @@
 
 package org.nlogo.properties
 
+import java.awt.{ GridBagConstraints }
+
 abstract class BooleanEditor(accessor: PropertyAccessor[Boolean])
   extends PropertyEditor(accessor)
 {
@@ -16,5 +18,10 @@ abstract class BooleanEditor(accessor: PropertyAccessor[Boolean])
   override def setEnabled(enabled: Boolean) {
     super.setEnabled(enabled)
     checkbox.setEnabled(enabled)
+  }
+  override def getConstraints = {
+    val c = super.getConstraints
+    c.fill = GridBagConstraints.HORIZONTAL
+    c
   }
 }

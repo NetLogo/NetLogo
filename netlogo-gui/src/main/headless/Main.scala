@@ -5,7 +5,7 @@ package org.nlogo.headless
 import java.io.{ File, FileWriter, PrintWriter }
 
 import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ APIVersion, Version }
+import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, Version }
 import org.nlogo.nvm.LabInterface.Settings
  import org.nlogo.api.PlotCompilationErrorAction
 
@@ -20,9 +20,11 @@ Run NetLogo using the NetLogo_Console app with the --headless command line argum
 * --setup-file <path>: read experiment setups from this file instead of the model file
 * --experiment <name>: name of experiment to run
 * --table <path>: pathname to send table output to (or - for standard output)
-* --spreadsheet <path>: pathname to send table output to (or - for standard output)
+* --spreadsheet <path>: pathname to send spreadsheet output to (or - for standard output)
+* --lists <path>: pathname to send lists output to (or - for standard output), cannot be used without --table or --spreadsheet
 * --stats <path>: pathname to send statistics output to (or - for standard output)
 * --threads <number>: use this many threads to do model runs in parallel, or 1 to disable parallel runs. defaults to one thread per processor.
+* --update-plots: enable plot updates. Include this if you want to export plot data, or exclude it for better performance.
 * --min-pxcor <number>: override world size setting in model file
 * --max-pxcor <number>: override world size setting in model file
 * --min-pycor <number>: override world size setting in model file
@@ -47,11 +49,18 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
   def runExperiment(settings: Settings) {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
+    var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
+    var createdProto = false
     def newWorkspace = {
       val w = HeadlessWorkspace.newInstance
       w.setPlotCompilationErrorAction(plotCompilationErrorAction)
+      w.setExportPlotWarningAction(exportPlotWarningAction)
       w.open(settings.modelPath)
       plotCompilationErrorAction = PlotCompilationErrorAction.Ignore
+      if (createdProto) {
+        exportPlotWarningAction = ExportPlotWarningAction.Ignore
+      }
+      w.setShouldUpdatePlots(settings.updatePlots)
       w
     }
 
@@ -61,7 +70,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     } finally {
       openWs.dispose()
     }
-
+    createdProto = true
     proto match {
       case Some(protocol) =>
         val lab = HeadlessWorkspace.newLab
@@ -93,12 +102,12 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var setupFile: Option[File] = None
     var experiment: Option[String] = None
     var tableWriter: Option[PrintWriter] = None
-    var tableFileName: String = null
     var spreadsheetWriter: Option[PrintWriter] = None
-    var spreadsheetFileName: String = null
     var statsWriter: Option[(PrintWriter, String)] = None
+    var listsWriter: Option[(PrintWriter, String)] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
+    var updatePlots = false
     val it = args.iterator
 
     def die(msg: String) {
@@ -115,6 +124,8 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       } else {
         new PrintWriter(new FileWriter(path.trim))
       }
+
+    var outputPath = ""
 
     while (it.hasNext) {
       val arg = it.next().toLowerCase
@@ -180,18 +191,23 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
       } else if (arg == "--table") {
         requireHasNext()
-        tableFileName = it.next()
-        tableWriter = Some(path2writer(tableFileName))
+        outputPath = it.next()
+        tableWriter = Some(path2writer(outputPath))
 
       } else if (arg == "--spreadsheet") {
         requireHasNext()
-        spreadsheetFileName = it.next()
-        spreadsheetWriter = Some(path2writer(spreadsheetFileName))
+        val localOut = it.next()
+        if (outputPath.isEmpty)
+          outputPath = localOut
+        spreadsheetWriter = Some(path2writer(localOut))
+
+      } else if (arg == "--lists") {
+        requireHasNext()
+        listsWriter = Some((path2writer(it.next), outputPath))
 
       } else if (arg == "--stats") {
         requireHasNext()
-        if (tableFileName != null) statsWriter = Some((path2writer(it.next()), tableFileName))
-        else statsWriter = Some((path2writer(it.next()), spreadsheetFileName))
+        statsWriter = Some((path2writer(it.next()), outputPath))
       }
 
       else if (arg == "--threads") {
@@ -201,6 +217,8 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       } else if (arg == "--suppress-errors") {
         suppressErrors = true
 
+      } else if (arg == "--update-plots") {
+        updatePlots = true
       } else {
         die("unknown argument: " + arg)
       }
@@ -212,6 +230,10 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
     if (setupFile == None && experiment == None) {
       die("You must specify either --setup-file or --experiment (or both).  Try --help for more information.")
+    }
+
+    if (listsWriter != None && tableWriter == None && spreadsheetWriter == None) {
+      die("You cannot specify --lists without also specifying --table or --spreadsheet. Try --help for more information.")
     }
 
     val dimStrings = List(minPxcor, maxPxcor, minPycor, maxPycor)
@@ -241,9 +263,11 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     , tableWriter
     , spreadsheetWriter
     , statsWriter
+    , listsWriter
     , dims
     , threads
     , suppressErrors
+    , updatePlots
     ))
   }
 }

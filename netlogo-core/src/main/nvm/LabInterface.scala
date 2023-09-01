@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api.{LabProtocol, PostProcessorInputFormat}
+import org.nlogo.api.{LabProtocol, LabListsExporterFormat, PostProcessorInputFormat}
 import org.nlogo.core.WorldDimensions
 
 object LabInterface {
@@ -11,6 +11,8 @@ object LabInterface {
     def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter)
     def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter)
     def addStatsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter, in: PostProcessorInputFormat.Format)
+    def addListsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter,
+                       in: LabListsExporterFormat.Format)
     def run(testWorkspace: Workspace, fn: ()=>Workspace, threads: Int)
     def compile(w: Workspace) // only for testing purposes
   }
@@ -30,9 +32,12 @@ object LabInterface {
     tableWriter: Option[java.io.PrintWriter],
     spreadsheetWriter: Option[java.io.PrintWriter],
     statsWriter: Option[(java.io.PrintWriter, String)],
+    listsWriter: Option[(java.io.PrintWriter, String)],
     dims: Option[WorldDimensions],
     threads: Int,
-    suppressErrors: Boolean)
+    suppressErrors: Boolean,
+    updatePlots: Boolean
+    )
 }
 trait LabInterface {
   import LabInterface._

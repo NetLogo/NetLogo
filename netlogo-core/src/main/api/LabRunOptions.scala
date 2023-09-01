@@ -3,4 +3,4 @@
 package org.nlogo.api
 
 // moved out of netlogo-gui into netlogo-core to fix headless compiler error - IOB 8/16/23
-case class LabRunOptions(threadCount: Int, table: String, spreadsheet: String, stats: String, updateView: Boolean, updatePlotsAndMonitors: Boolean)
+case class LabRunOptions(threadCount: Int, table: String, spreadsheet: String, stats: String, lists: String, updateView: Boolean, updatePlotsAndMonitors: Boolean)

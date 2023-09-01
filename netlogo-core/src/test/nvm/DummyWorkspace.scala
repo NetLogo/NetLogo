@@ -4,8 +4,7 @@ package org.nlogo.nvm
 
 import org.nlogo.core.{ AgentKind, DummyCompilationEnvironment }
 import org.nlogo.agent.{Agent, AgentSet, World2D}
-import org.nlogo.api.{ JobOwner, CommandRunnable,
-  ReporterRunnable, ImportErrorHandler, OutputDestination}
+import org.nlogo.api.{ CommandRunnable, ExportPlotWarningAction, ImportErrorHandler, JobOwner, OutputDestination, ReporterRunnable }
 import org.nlogo.core.WorldDimensions
 import scala.collection.immutable.ListMap
 
@@ -107,6 +106,12 @@ class DummyWorkspace extends Workspace {
   override def plotRNG = unsupported
   override def setupPlots(c:Context) = unsupported
   override def updatePlots(c:Context) = unsupported
+  override def shouldUpdatePlots(): Boolean = unsupported
+  override def setShouldUpdatePlots(shouldUpdatePlots: Boolean): Unit = unsupported
+  override def triedToExportPlot(): Boolean = unsupported
+  override def setTriedToExportPlot(triedToExport: Boolean): Unit = unsupported
+  override def exportPlotWarningAction(): ExportPlotWarningAction = unsupported
+  override def setExportPlotWarningAction(action: ExportPlotWarningAction): Unit = unsupported
 
   // Members declared in org.nlogo.api.Controllable
   def command(source: String): Unit = unsupported
