@@ -20,11 +20,11 @@ class ListsExporter(modelFileName: String,
         var lines = scala.io.Source.fromFile(fileName).getLines.drop(6)
         val runNumbers = lines.next.split(",").tail.toList
         val parameters = lines.takeWhile(x => !x.split(",")(0).contains("[reporter]") &&
-                                              !x.split(",")(0).contains("[step]"))
+                                              !x.split(",")(0).contains("[total steps]"))
                               .map(_.split(",").filter(!_.isEmpty).toList).toList
-        val runWidth = runNumbers.length / parameters(0).tail.length
+        val runWidth = runNumbers.length / runNumbers.distinct.length
         lines = lines.dropWhile(x => !x.split(",")(0).contains("[all run data]") &&
-                                     !x.split(",")(0).contains("[initial & final values]"))
+                                     !x.split(",")(0).contains("[final value]"))
         val reporters = lines.next.split(",").tail.toList
         val data = lines.map(_.split(",").tail.toList).toList
         out.print("[reporter],[run number]")
@@ -32,16 +32,21 @@ class ListsExporter(modelFileName: String,
           out.print("," + parameter(0))
         }
         out.print(",[step]")
-        for (i <- 0 until data.map(_.map(_.split(" ").length)).flatten.max) {
-          out.print(s",[$i]")
+        val count = data.map(_.filter(_.contains("[")).map(_.split(" ").length)).flatten
+        if (count.length > 0) {
+          for (i <- 0 until count.max) {
+            out.print(s",[$i]")
+          }
         }
         out.println()
         for (i <- 0 until runNumbers.length by runWidth) {
-          for (j <- 0 until runWidth) {
+          for (j <- 1 until runWidth) {
             if (data(0)(i + j).contains("[")) {
               for (k <- 0 until data.length) {
-                out.println(s"${reporters(i + j)},${runNumbers(i)},${parameters.map(_(i / runWidth + 1)).mkString(",")}" +
-                s",$k,${data(k)(i + j).replaceAll("[\"\\[\\]]", "").split(" ").mkString(",")}")
+                out.print(s"${reporters(i + j)},${runNumbers(i)},")
+                if (parameters.length > 0)
+                  out.print(parameters.map(_(i / runWidth + 1)).mkString(",") + ",")
+                out.println(s"${data(k)(i)},${data(k)(i + j).replaceAll("[\"\\[\\]]", "").split(" ").mkString(",")}")
               }
             }
           }
