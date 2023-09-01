@@ -4,7 +4,7 @@ package org.nlogo.headless
 
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.{ OneInstancePerTest, BeforeAndAfterEach }
-import org.nlogo.api.{ FileIO, LabListsExporterFormat, PostProcessorInputFormat, Version }
+import org.nlogo.api.{ FileIO, PostProcessorInputFormat, Version }
 import org.nlogo.nvm.{ LabInterface, Workspace }
 import org.nlogo.util.SlowTest
 
@@ -130,12 +130,12 @@ with OneInstancePerTest with BeforeAndAfterEach {
     def lists(worker: LabInterface.Worker, writer: java.io.StringWriter) {
       if (wantTable) {
         worker.addListsWriter(filename, dims, new java.io.PrintWriter(writer),
-                              LabListsExporterFormat.TableFormat(filename + "-table.csv"))
+                              PostProcessorInputFormat.Table(filename + "-table.csv"))
       }
       else if (wantSpreadsheet)
       {
         worker.addListsWriter(filename, dims, new java.io.PrintWriter(writer),
-                              LabListsExporterFormat.SpreadsheetFormat(filename + "-spreadsheet.csv"))
+                              PostProcessorInputFormat.Spreadsheet(filename + "-spreadsheet.csv"))
       }
     }
     runHelper(List(("-table.csv", table _), ("-spreadsheet.csv", spreadsheet _), ("-stats.csv", stats _), ("-lists.csv", lists _))
@@ -360,7 +360,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   }
   test("Stats no std", SlowTest.Tag) {
     runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "no-std-stats",
-      "test/lab/FireWithExperimentsNoStdStats", wantStats=true, wantSpreadsheet = false,
+      "test/lab/FireWithExperimentsNoStdStats", wantStats=true, wantSpreadsheet=false,
       threads = Runtime.getRuntime.availableProcessors)
   }
   test("SimpleLists", SlowTest.Tag) {

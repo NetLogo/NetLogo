@@ -7,7 +7,7 @@ import collection.mutable.{ ListBuffer }
 import java.awt.{ Dialog }
 import java.io.{ FileWriter, IOException, PrintWriter }
 
-import org.nlogo.api.{ Exceptions, ExportPlotWarningAction, LabListsExporterFormat, LabProtocol,
+import org.nlogo.api.{ Exceptions, ExportPlotWarningAction, LabProtocol,
   LogoException, PlotCompilationErrorAction, PostProcessorInputFormat }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ CompilerException, I18N }
@@ -215,9 +215,9 @@ class Supervisor(
           worker.protocol,
           new PrintWriter(new FileWriter(fileName)),
           if (options.table != null && options.table.trim() != "") {
-            LabListsExporterFormat.TableFormat(options.table.trim())
+            PostProcessorInputFormat.Table(options.table.trim())
           } else if (options.spreadsheet != null && options.spreadsheet.trim() != "") {
-            LabListsExporterFormat.SpreadsheetFormat(options.spreadsheet.trim())
+            PostProcessorInputFormat.Spreadsheet(options.spreadsheet.trim())
           } else {
             OptionDialog.showMessage(
               workspace.getFrame, "Error During Experiment",
