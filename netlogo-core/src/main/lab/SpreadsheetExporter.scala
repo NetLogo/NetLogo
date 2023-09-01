@@ -169,9 +169,9 @@ class SpreadsheetExporter(modelFileName: String,
     // careful here... normally measurement number means step number, but if runMetricsEveryStep is
     // false, then we'll only have two measurements, regardless of the number of steps - ST 12/19/04
     def getMeasurement(measurementNumber: Int, metricNumber: Int): AnyRef =
-        measurements(measurementNumber)(metricNumber)
+      measurements(measurementNumber)(metricNumber)
     def lastMeasurement(metricNumber: Int): Option[AnyRef] =
-        Some(measurements.last(metricNumber))
+      Some(measurements.last(metricNumber))
     def doubles(metricNumber: Int): Seq[Double] =
       measurements.map(_(metricNumber)).collect{
         case d: java.lang.Double => d.doubleValue}
