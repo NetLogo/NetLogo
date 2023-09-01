@@ -45,10 +45,11 @@ with OneInstancePerTest with BeforeAndAfterEach {
     run("test/lab/" + name)(() => workspace, () => newWorker(name))
     workspace
   }
-  def runExperiment(worldSize: Int, declarations: String, name: String, wantLists: Boolean = false) = {
+  def runExperiment(worldSize: Int, declarations: String, name: String,
+                    wantTable: Boolean = true, wantLists: Boolean = false) = {
     val workspace = newWorkspace()
     workspace.initForTesting(worldSize, declarations)
-    run("test/lab/" + name, wantLists = wantLists)(() => workspace, () => newWorker(name))
+    run("test/lab/" + name, wantTable = wantTable, wantLists = wantLists)(() => workspace, () => newWorker(name))
     workspace
   }
   def run3DExperiment(name: String) {
@@ -335,10 +336,13 @@ with OneInstancePerTest with BeforeAndAfterEach {
   test("ComplexSubExperiments", SlowTest.Tag) {
     runExperiment(0, "globals [a b c]", "testComplexSubExperiments")
   }
-  test("SimpleLists", SlowTest.Tag) {
-    runExperiment(4, "globals [n]", "testSimpleLists", true)
+  test("SimpleListsWithTable", SlowTest.Tag) {
+    runExperiment(4, "globals [n]", "testSimpleLists", true, true)
+  }
+  test("SimpleListsWithSpreadsheet", SlowTest.Tag) {
+    runExperiment(4, "globals [n]", "testSimpleLists", false, true)
   }
   test("ListsEmptyExperiment", SlowTest.Tag) {
-    runExperiment(0, "", "testListsEmptyExperiment", true)
+    runExperiment(0, "", "testListsEmptyExperiment", true, true)
   }
 }

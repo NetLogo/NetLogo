@@ -17,8 +17,15 @@ class ListsExporter(modelFileName: String,
     writeExportHeader()
     in match {
       case LabListsExporterFormat.SpreadsheetFormat(fileName) => {
-        var lines = scala.io.Source.fromFile(fileName).getLines.drop(6)
-        val runNumbers = lines.next.split(",").tail.toList
+        var lines = scala.io.Source.fromFile(fileName).getLines
+        var runNumbers: List[String] = null
+        val first = lines.next
+        if (first.contains("BehaviorSpace results")) {
+          lines = lines.drop(5)
+          runNumbers = lines.next.split(",").tail.toList
+        }
+        else
+          runNumbers = first.split(",").tail.toList
         val parameters = lines.takeWhile(x => !x.split(",")(0).contains("[reporter]") &&
                                               !x.split(",")(0).contains("[total steps]"))
                               .map(_.split(",").filter(!_.isEmpty).toList).toList
@@ -51,7 +58,8 @@ class ListsExporter(modelFileName: String,
                 out.print(s"${reporters(i + j)},${runNumbers(i)},")
                 if (parameters.length > 0)
                   out.print(parameters.map(_(i / runWidth + 1)).mkString(",") + ",")
-                out.println(s"${data(k)(i)},${data(k)(i + j).replaceAll("[\"\\[\\]]", "").split(" ").mkString(",")}")
+                out.println(s"${data(k)(i)},${data(k)(i + j).replaceAll("[\"\\[\\]]", "").split(" ").map(csv.header _)
+                            .mkString(",")}")
               }
             }
           }
@@ -79,7 +87,8 @@ class ListsExporter(modelFileName: String,
                                              els(0).replaceAll("\\D", "").toInt,
                                              parameterIndices.map(els(_)).mkString(","),
                                              els(stepIndex).replaceAll("\\D", "").toInt,
-                                             els(i).replaceAll("[\"\\[\\]]", "").replace(" ", ",")))
+                                             els(i).replaceAll("[\"\\[\\]]", "").split(" ")
+                                             .map(csv.header _).mkString(",")))
             }
           }
         }
@@ -102,7 +111,9 @@ class ListsExporter(modelFileName: String,
             }
           }
           out.println()
-          sortedLines.foreach(line => out.println(line.productIterator.mkString(",")))
+          sortedLines.foreach(line => {
+            out.println(s"${line._1},${csv.header(line._2.toString)},${line._3},${csv.header(line._4.toString)},${line._5}")
+          })
         }
         else {
           out.println()
