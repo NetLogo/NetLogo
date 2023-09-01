@@ -338,4 +338,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   test("SimpleLists", SlowTest.Tag) {
     runExperiment(4, "globals [n]", "testSimpleLists", true)
   }
+  test("ListsEmptyExperiment", SlowTest.Tag) {
+    runExperiment(0, "", "testListsEmptyExperiment", true)
+  }
 }
