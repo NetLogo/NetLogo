@@ -14,7 +14,7 @@ trait LabFormat[A <: ModelFormat[Array[String], A]]
 
   def componentName = "org.nlogo.modelsection.behaviorspace"
 
-  val loader = new LabLoader(literalParser)
+  val loader = new LabLoader(literalParser, true)
 
   override def addDefault = { (m: Model) =>
     m.withOptionalSection(componentName, None, Seq[LabProtocol]()) }
