@@ -62,13 +62,6 @@ class StatsExporter(modelFileName: String,
       case s: PostProcessorInputFormat.Spreadsheet => Some(extractFromSpreadsheet(s.fileName))
       case _ => None
       }
-    // if (tableExporter != null) {
-    //   Some(extractFromTable(exporterFileNames(tableExporter)))
-    // } else if (spreadsheetExporter != null) {
-    //   Some(extractFromSpreadsheet(exporterFileNames(spreadsheetExporter)))
-    // } else {
-    //   Some(extractFromSpreadsheet(spreadsheetExporter))
-    // }
   }
 
   def process() {
@@ -126,7 +119,7 @@ class StatsExporter(modelFileName: String,
     }
   }
 
-  private def extractFromTable(fileName: String): Data = {
+  def extractFromTable(fileName: String): Data = {
     val bufferedReader: BufferedReader = new BufferedReader(new FileReader(fileName))
     var line = ""
     var row = 0
@@ -164,7 +157,7 @@ class StatsExporter(modelFileName: String,
     data
   }
 
-  private def extractFromSpreadsheet(fileName: String): Data = {
+  def extractFromSpreadsheet(fileName: String): Data = {
     val bufferedReader: BufferedReader = new BufferedReader(new FileReader(fileName))
     var line = ""
     val data = new HashMap[List[Any], DataPerStep]() // use a hashmap because we don't know how many runs there are
@@ -208,28 +201,28 @@ class StatsExporter(modelFileName: String,
     data
   }
 
-  // private def extractFromSpreadsheet(spreadsheet: SpreadsheetExporter): Data = {
-  //   val data = new HashMap[List[Any], DataPerStep]()
-  //   val spreadsheetData = spreadsheet.runs
-  //   for ((runNumber, run) <- spreadsheetData) {
-  //     val params = run.settings.map(_._2)
-  //     if (!data.contains(params)) {
-  //       data(params) = new HashMap[Int, Measurements]()
-  //     }
-  //     for (runData <- run.measurements) {
-  //       val step = runData(0).toString.toInt
-  //       val measurements = runData.drop(1)
+  def extractFromSpreadsheet(spreadsheet: SpreadsheetExporter): Data = {
+    val data = new HashMap[List[Any], DataPerStep]()
+    val spreadsheetData = spreadsheet.runs
+    for ((runNumber, run) <- spreadsheetData) {
+      val params = run.settings.map(_._2)
+      if (!data.contains(params)) {
+        data(params) = new HashMap[Int, Measurements]()
+      }
+      for (runData <- run.measurements) {
+        val step = runData(0).toString.toInt
+        val measurements = runData.drop(1)
 
-  //       if (!data(params).contains(step)) {
-  //         data(params)(step) = new ListBuffer[List[Double]]()
-  //       }
-  //       data(params)(step) += measurements.zipWithIndex.map{case (entry, col) => {
-  //         handleNonNumeric(entry.toString, col)
-  //       }}.toList
-  //     }
-  //   }
-  //   data
-  // }
+        if (!data(params).contains(step)) {
+          data(params)(step) = new ListBuffer[List[Double]]()
+        }
+        data(params)(step) += measurements.zipWithIndex.map{case (entry, col) => {
+          handleNonNumeric(entry.toString, col)
+        }}.toList
+      }
+    }
+    data
+  }
 
   override def experimentCompleted() { process() }
   override def experimentAborted() { process() }
