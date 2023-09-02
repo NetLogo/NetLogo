@@ -10,7 +10,8 @@ class StatsExporter(modelFileName: String,
                           initialDims: WorldDimensions,
                           protocol: LabProtocol,
                           out: java.io.PrintWriter,
-                          in: PostProcessorInputFormat.Format)
+                          in: PostProcessorInputFormat.Format,
+                          testing: Boolean = false)
   extends Exporter(modelFileName, initialDims, protocol, out)
 {
   type Measurements = ListBuffer[List[Double]]
@@ -86,15 +87,16 @@ class StatsExporter(modelFileName: String,
               if (numericMetrics(metric)) {
                 val metricValues = values.map(_(i)).toList
                 val mean = StatsCalculator.mean(metricValues)
-                writeData += mean
+                writeData += {
+                  if (testing) { (mean * 100).round.toDouble / 100 }
+                  else mean
+                }
 
                 val std = StatsCalculator.std(metricValues)
                 writeData += {
-                  if (std.isNaN) {
-                    "N/A"
-                  } else {
-                    std
-                  }
+                  if (std.isNaN) "N/A"
+                  else if (testing) { (std * 100).round.toDouble / 100}
+                  else std
                 }
               }
             }

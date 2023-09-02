@@ -452,7 +452,8 @@ repeat 180 [ go ]
     </enumeratedValueSet>
   </experiment>
   <experiment name="basic-stats" repetitions="3" runMetricsEveryStep="true">
-    <setup>random-seed 473 setup</setup>
+    <setup>random-seed 400 + behaviorspace-run-number 
+setup</setup>
     <go>go</go>
     <timeLimit steps="50"/>
     <metric>burned-trees</metric>

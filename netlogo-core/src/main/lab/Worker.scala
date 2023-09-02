@@ -22,8 +22,9 @@ class Worker(val protocol: LabProtocol)
   def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter) {
     addListener(new TableExporter(modelFileName, initialDims, protocol, w))
   }
-  def addStatsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter, in: PostProcessorInputFormat.Format) {
-    addListener(new StatsExporter(modelFileName, initialDims, protocol, w, in))
+  def addStatsWriter(modelFileName: String, initialDims: WorldDimensions,
+                      w: java.io.PrintWriter, in: PostProcessorInputFormat.Format, testing: Boolean = false ) {
+    addListener(new StatsExporter(modelFileName, initialDims, protocol, w, in, testing))
   }
   def addListsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter,
                      in: PostProcessorInputFormat.Format) {

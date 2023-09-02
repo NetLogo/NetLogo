@@ -77,9 +77,25 @@ with OneInstancePerTest with BeforeAndAfterEach {
     val statsPath = "tmp/TestBehaviorSpace/" + time + "-stats.csv"
     val listsPath = "tmp/TestBehaviorSpace/" + time + "-lists.csv"
     // let's go through headless.Main here so that code gets some testing - ST 3/9/09
-    Main.main(Array("--model", modelPath, "--experiment", experimentName,
-                    "--table", tablePath, "--spreadsheet", spreadsheetPath, "--stats", statsPath, "--lists", listsPath,
-                    "--threads", threads.toString, "--suppress-errors"))
+    if (wantStats) {
+      if (wantTable && wantSpreadsheet) {
+        Main.main(Array("--model", modelPath, "--experiment", experimentName,
+                "--table", tablePath, "--spreadsheet", spreadsheetPath, "--stats", statsPath, "--lists", listsPath,
+                "--threads", threads.toString, "--suppress-errors"), testing=true)
+      } else if (wantTable) {
+        Main.main(Array("--model", modelPath, "--experiment", experimentName,
+                "--table", tablePath, "--stats", statsPath, "--lists", listsPath,
+                "--threads", threads.toString, "--suppress-errors"), testing=true)
+      } else if (wantSpreadsheet) {
+        Main.main(Array("--model", modelPath, "--experiment", experimentName,
+                "--spreadsheet", spreadsheetPath, "--stats", statsPath, "--lists", listsPath,
+                "--threads", threads.toString, "--suppress-errors"), testing=true)
+      }
+    } else {
+        Main.main(Array("--model", modelPath, "--experiment", experimentName,
+                  "--table", tablePath, "--spreadsheet", spreadsheetPath, "--stats", statsPath, "--lists", listsPath,
+                  "--threads", threads.toString, "--suppress-errors"), testing=true)
+    }
     if (!wantStats && wantTable)
       assertResult(slurp(filename + "-table.csv"))(
         withoutFirst6Lines(slurp(tablePath)))
@@ -124,7 +140,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
         worker.addStatsWriter(filename, dims, new java.io.PrintWriter(writer), {
           if (wantTable) PostProcessorInputFormat.Table(filename + "-table.csv")
           else PostProcessorInputFormat.Spreadsheet(filename + "-spreadsheet.csv")
-        })
+        }, testing=true)
       }
     }
     def lists(worker: LabInterface.Worker, writer: java.io.StringWriter) {
