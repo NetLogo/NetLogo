@@ -1,10 +1,11 @@
 package org.nlogo.lab
 
 import org.nlogo.api.{LabProtocol, PostProcessorInputFormat}
-import org.nlogo.core.WorldDimensions
-import scala.collection.mutable.{ HashMap, ListBuffer }
+import org.nlogo.core.{LogoList, WorldDimensions}
+import scala.collection.mutable.{ HashMap, HashSet, ListBuffer }
 import scala.collection.immutable.{ Set }
 import java.io.{ BufferedReader, FileReader }
+import scala.math.{ max }
 
 class StatsExporter(modelFileName: String,
                           initialDims: WorldDimensions,
@@ -14,7 +15,7 @@ class StatsExporter(modelFileName: String,
                           testing: Boolean = false)
   extends Exporter(modelFileName, initialDims, protocol, out)
 {
-  type Measurements = ListBuffer[List[Double]]
+  type Measurements = ListBuffer[List[Any]]
   type DataPerStep = HashMap[Int, Measurements]
   type Data = HashMap[List[Any], DataPerStep]
 
@@ -33,15 +34,14 @@ class StatsExporter(modelFileName: String,
       0
     }
   }
-  val numericMetrics = HashMap[String, Boolean]();
-  for (m <- protocol.metrics) {
-    numericMetrics(m) = true
-  }
+  val numericMetrics = HashSet[String]()
+  val listMetrics = HashSet[String]()
+  val invalidMetrics = HashSet[String]()
 
   def writeExperimentHeader() {
     val metrics = ListBuffer[String]()
     for (m <- protocol.metrics) {
-      if (numericMetrics(m)) {
+      if (!(invalidMetrics contains m) && ((numericMetrics contains m) || (listMetrics contains m))) {
         metrics += (f"[${m}]-mean")
         metrics += (f"[${m}]-std")
       }
@@ -66,14 +66,14 @@ class StatsExporter(modelFileName: String,
   }
 
   def process() {
-    val data = extractData()
-    data match {
-      case Some(d) => {
+    val d = extractData()
+    d match {
+      case Some(data) => {
         writeExportHeader()
         writeExperimentHeader()
 
         for (params <- paramCombinations) {
-          val runData = d(params)
+          val runData = data(params)
           val sortedSteps = runData.keys.toList.sorted
 
           for (step <- sortedSteps) {
@@ -84,19 +84,52 @@ class StatsExporter(modelFileName: String,
             for (i <- 0 until numMetrics) {
               val metric = protocol.metrics(i)
 
-              if (numericMetrics(metric)) {
-                val metricValues = values.map(_(i)).toList
-                val mean = StatsCalculator.mean(metricValues)
-                writeData += {
-                  if (testing) { (mean * 100).round.toDouble / 100 }
-                  else mean
-                }
+              if (!(invalidMetrics contains metric)) {
+                if (numericMetrics contains metric) {
+                  val metricValues = values.map(_(i)).toList.asInstanceOf[List[Double]]
+                  val mean = StatsCalculator.mean(metricValues)
+                  writeData += {
+                    if (testing) { (mean * 100).round.toDouble / 100 }
+                    else mean
+                  }
 
-                val std = StatsCalculator.std(metricValues)
-                writeData += {
-                  if (std.isNaN) "N/A"
-                  else if (testing) { (std * 100).round.toDouble / 100}
-                  else std
+                  val std = StatsCalculator.std(metricValues)
+                  writeData += {
+                    if (std.isNaN) "N/A"
+                    else if (testing) { (std * 100).round.toDouble / 100}
+                    else std
+                  }
+                } else if (listMetrics contains metric) {
+                  val metricValues = values.map(_(i)).toList.asInstanceOf[List[List[Double]]]
+                  var maxLength = 0
+                  for (list <- metricValues) {
+                    maxLength = max(maxLength, list.length)
+                  }
+
+                  val means = ListBuffer[Double]()
+                  val stds = ListBuffer[Any]()
+                  for (j <- 0 until maxLength) {
+                    val elementWiseValues = ListBuffer[Double]()
+                    for (list <- metricValues) {
+                      println(list)
+                      if (j < list.length) {
+                        elementWiseValues += list(j)
+                      }
+                    }
+                    val mean = StatsCalculator.mean(elementWiseValues.toList)
+                    means += {
+                      if (testing) { (mean * 100).round.toDouble / 100 }
+                      else mean
+                    }
+                    val std = StatsCalculator.std(elementWiseValues.toList)
+                    stds += {
+                      if (std.isNaN) "N/A"
+                      else if (testing) { (std * 100).round.toDouble / 100}
+                      else std
+                    }
+                  }
+                  writeData += f"[${means.mkString(" ")}]"
+                  writeData += f"[${stds.mkString(" ")}]"
                 }
               }
             }
@@ -110,13 +143,36 @@ class StatsExporter(modelFileName: String,
 
   private def handleNonNumeric(entry: String, metricIndex: Int): Double = {
     try {
-      entry.toDouble
+      val converted = entry.toDouble
+      if (metricIndex >= 0) {
+        val metric = protocol.metrics(metricIndex)
+        // Ignore metrics that produce lists and numbers
+        if (listMetrics contains metric) invalidMetrics += metric
+        else numericMetrics += metric
+      }
+      converted
     } catch {
       case _: java.lang.NumberFormatException => {
-        if (metricIndex >= 0) {
-          numericMetrics(protocol.metrics(metricIndex)) = false
-        }
         Double.NaN
+      }
+    }
+  }
+
+  private def handleList(entry: String, metricIndex: Int): List[Double] = {
+    val noBrackets = entry.replaceAll("[\\[\\]]", "")
+    if (noBrackets.length == 0) return List[Double]()
+    try {
+      val converted = noBrackets.split(" ").toList.map(_.toDouble)
+      if (metricIndex >= 0) {
+        val metric = protocol.metrics(metricIndex)
+        // Ignore metrics that produce lists and numbers
+        if (numericMetrics contains metric) invalidMetrics += metric
+        else listMetrics += metric
+      }
+      converted
+    } catch {
+      case _: java.lang.NumberFormatException => {
+        List(Double.NaN)
       }
     }
   }
@@ -128,7 +184,7 @@ class StatsExporter(modelFileName: String,
     val data = new HashMap[List[Any], DataPerStep]() // use a hashmap because we don't know how many runs there are
     while ({line = bufferedReader.readLine; line} != null) {
       val params = ListBuffer[Any]()
-      val measurements = ListBuffer[Double]()
+      val measurements = ListBuffer[Any]()
       // The first 6 contain file data, and the 7th row is the header names
       if (row > 6) {
         line.split(",").zipWithIndex.foreach{case (entry, col) => {
@@ -136,20 +192,22 @@ class StatsExporter(modelFileName: String,
 
           // Allow parameters to have string values, but convert non-numeric measurement values to NaN
           if (col > countParams) {
-            measurements += handleNonNumeric(noQuotes, col - (countParams + 2))// +2 to account for the runNumber col and step col
+            val metricIndex = col - (countParams + 2)
+            if (noQuotes contains "[") measurements += handleList(noQuotes, metricIndex)
+            else measurements += handleNonNumeric(noQuotes, metricIndex)// +2 to account for the runNumber col and step col
           } else {
             val n = handleNonNumeric(noQuotes, -1)
             if (n.isNaN) params += noQuotes
             else params += n
           }
         }}
-        val step = measurements(0).toInt
+        val step = measurements(0).toString.toDouble.toInt
         val paramsList = params.drop(1).toList
         if (!data.contains(paramsList)) {
           data(paramsList) = new HashMap[Int, Measurements]()
         }
         if (!data(paramsList).contains(step)) {
-          data(paramsList)(step) = new ListBuffer[List[Double]]()
+          data(paramsList)(step) = new ListBuffer[List[Any]]()
         }
         data(paramsList)(step) += measurements.drop(1).toList
       }
@@ -184,14 +242,15 @@ class StatsExporter(modelFileName: String,
           val step = rowElements(i).split("\"")(1).toInt
           val measurements = rowElements.slice(i+1, protocol.metrics.length + i + 1).zipWithIndex.map{case (entry, col) => {
             val noQuotes = entry.split("\"")(1)
-            handleNonNumeric(noQuotes, col)
+            if (noQuotes contains "[") handleList(noQuotes, col)
+            else handleNonNumeric(noQuotes, col)
           }}.toList
 
           if (!data.contains(params)) {
             data(params) = new HashMap[Int, Measurements]()
           }
           if (!data(params).contains(step)) {
-            data(params)(step) = new ListBuffer[List[Double]]()
+            data(params)(step) = new ListBuffer[List[Any]]()
           }
           data(params)(step) += measurements
           runNumber += 1
@@ -216,10 +275,14 @@ class StatsExporter(modelFileName: String,
         val measurements = runData.drop(1)
 
         if (!data(params).contains(step)) {
-          data(params)(step) = new ListBuffer[List[Double]]()
+          data(params)(step) = new ListBuffer[List[Any]]()
         }
         data(params)(step) += measurements.zipWithIndex.map{case (entry, col) => {
-          handleNonNumeric(entry.toString, col)
+          if (entry.isInstanceOf[LogoList]) {
+            listMetrics += protocol.metrics(col)
+            entry.asInstanceOf[LogoList].toList
+          }
+          else handleNonNumeric(entry.toString, col)
         }}.toList
       }
     }
