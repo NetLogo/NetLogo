@@ -43,7 +43,7 @@ class ListsExporter(modelFileName: String,
           return
         }
         val reporters = lines.next.split(",").tail.toList
-        val data = lines.map(_.split(",").tail.toList).toList
+        val data = lines.filter(!_.replace(",", "").isEmpty).map(_.split(",").tail.toList).toList
         val count = data.map(_.filter(_.contains("[")).map(_.split(" ").length)).flatten
         if (count.length > 0) {
           for (i <- 0 until count.max) {
