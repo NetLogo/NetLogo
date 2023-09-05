@@ -1,13 +1,13 @@
 "[run number]","1","1","1","2","2","2"
 "n","2",,,"4",,
-"[reporter]","step","[xcor] of turtles","[ycor] of turtles","step","[xcor] of turtles","[ycor] of turtles"
+"[reporter]","[step]","[xcor] of turtles","[ycor] of turtles","[step]","[xcor] of turtles","[ycor] of turtles"
 "[final]","2","[2 2]","[2 2]","2","[4 4 4 4]","[4 4 4 4]"
 "[min]","0",,,"0",,
 "[max]","2",,,"2",,
 "[mean]","1",,,"1",,
 "[total steps]","2","2","2","2","2","2"
 
-"[all run data]","step","[xcor] of turtles","[ycor] of turtles","step","[xcor] of turtles","[ycor] of turtles"
+"[all run data]","[step]","[xcor] of turtles","[ycor] of turtles","[step]","[xcor] of turtles","[ycor] of turtles"
 ,"0","[2 2]","[2 2]","0","[4 4 4 4]","[4 4 4 4]"
 ,"1","[2 2]","[2 2]","1","[4 4 4 4]","[4 4 4 4]"
 ,"2","[2 2]","[2 2]","2","[4 4 4 4]","[4 4 4 4]"
