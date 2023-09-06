@@ -364,9 +364,13 @@ If the **Statistics output** is enabled, data in either the specified **Table ou
 **Spreadsheet output** is used to calculate the mean and standard deviation of each numeric
 metric across repetitions for each step. These calculations are done at the end of the experiment.
 The statistics are then saved in the specified file. It is important to note that metrics
-that may produce non-numeric measurements like strings and lists are not included in the statistics.
-Furthermore, the standard deviation may be "N/A", which means that there were two or fewer collected
-measurements for that step and parameter combination, producing a result that is not well-defined.
+that may produce non-numeric measurements like strings are not included in the statistics. If
+the metrics produce lists, the statistics are calculated across elements with the same index for each list.
+Statistics are not calculated for metrics that produce lists that contain non-numeric elements. Also, the type of
+the measurement must remain constant. For example, statistics are not calculated if a metric
+produces measurements that can be both lists and numbers. Furthermore, the standard deviation may be "N/A",
+which means that there were two or fewer collected measurements for that step and parameter combination,
+producing a result that is not well-defined.
 
 In the below **Statistics output** sample image, the header section is in red, the parameter
 combinations are in green, the steps are in blue, and the statistics are in purple.
