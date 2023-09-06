@@ -1,11 +1,11 @@
-"[run number]","1","1"
-"[reporter]","s1","s2"
-"[final]","x","""x"""
-"[min]",,
-"[max]",,
-"[mean]",,
-"[steps]","1","1"
+"[run number]","1","1","1"
+"[reporter]","[step]","s1","s2"
+"[final]","1","x","""x"""
+"[min]","0",,
+"[max]","1",,
+"[mean]","0.5",,
+"[total steps]","1","1","1"
 
-"[all run data]","s1","s2"
-,"x","""x"""
-,"x","""x"""
+"[all run data]","[step]","s1","s2"
+,"0","x","""x"""
+,"1","x","""x"""

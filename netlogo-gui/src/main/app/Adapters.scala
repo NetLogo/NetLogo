@@ -24,7 +24,7 @@ object Adapters {
       val compilerServices = new DefaultCompilerServices(compiler)
 
       val loader =
-        fileformat.standardLoader(compilerServices)
+        fileformat.standardLoader(compilerServices, true)
       val additionalComponents =
         container.getComponents(classOf[AddableComponent]).asScala
       if (additionalComponents.nonEmpty) {

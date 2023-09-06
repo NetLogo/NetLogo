@@ -1,12 +1,12 @@
-"[run number]","1","2"
-"[reporter]","__boom","__boom"
-"[final]","<RuntimePrimitiveException>","<RuntimePrimitiveException>"
-"[min]",,
-"[max]",,
-"[mean]",,
-"[steps]","2","2"
+"[run number]","1","1","2","2"
+"[reporter]","[step]","__boom","[step]","__boom"
+"[final]","2","<RuntimePrimitiveException>","2","<RuntimePrimitiveException>"
+"[min]","0",,"0",
+"[max]","2",,"2",
+"[mean]","1",,"1",
+"[total steps]","2","2","2","2"
 
-"[all run data]","__boom","__boom"
-,"<RuntimePrimitiveException>","<RuntimePrimitiveException>"
-,"<RuntimePrimitiveException>","<RuntimePrimitiveException>"
-,"<RuntimePrimitiveException>","<RuntimePrimitiveException>"
+"[all run data]","[step]","__boom","[step]","__boom"
+,"0","<RuntimePrimitiveException>","0","<RuntimePrimitiveException>"
+,"1","<RuntimePrimitiveException>","1","<RuntimePrimitiveException>"
+,"2","<RuntimePrimitiveException>","2","<RuntimePrimitiveException>"

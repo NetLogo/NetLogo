@@ -21,7 +21,7 @@ class ModelLoaderComponent extends AbstractAdapter[ModelLoader](classOf[ModelLoa
     val compiler =
       container.getComponent(classOf[PresentationCompilerInterface])
     val compilerServices = new DefaultCompilerServices(compiler)
-    val loader = fileformat.standardLoader(compilerServices)
+    val loader = fileformat.standardLoader(compilerServices, true)
     val additionalComponents =
       container.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]]).asScala
     if (additionalComponents.nonEmpty)

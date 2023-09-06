@@ -427,4 +427,7 @@
       <value value="4"/>
     </enumeratedValueSet>
   </experiment>
+  <experiment name="testListsEmptyExperiment" repetitions="1" runMetricsEveryStep="true">
+    <timeLimit steps="1"/>
+  </experiment>
 </experiments>
