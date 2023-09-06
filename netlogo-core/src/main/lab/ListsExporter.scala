@@ -17,31 +17,49 @@ class ListsExporter(modelFileName: String,
     writeExportHeader()
     in match {
       case LabListsExporterFormat.SpreadsheetFormat(fileName) => {
-        var lines = scala.io.Source.fromFile(fileName).getLines.drop(6)
-        val runNumbers = lines.next.split(",").tail.toList
+        var lines = scala.io.Source.fromFile(fileName).getLines
+        var runNumbers: List[String] = null
+        val first = lines.next
+        if (first.contains("BehaviorSpace results")) {
+          lines = lines.drop(5)
+          runNumbers = lines.next.split(",").tail.toList
+        }
+        else
+          runNumbers = first.split(",").tail.toList
         val parameters = lines.takeWhile(x => !x.split(",")(0).contains("[reporter]") &&
-                                              !x.split(",")(0).contains("[step]"))
+                                              !x.split(",")(0).contains("[total steps]"))
                               .map(_.split(",").filter(!_.isEmpty).toList).toList
-        val runWidth = runNumbers.length / parameters(0).tail.length
+        val runWidth = runNumbers.length / runNumbers.distinct.length
         lines = lines.dropWhile(x => !x.split(",")(0).contains("[all run data]") &&
-                                     !x.split(",")(0).contains("[initial & final values]"))
-        val reporters = lines.next.split(",").tail.toList
-        val data = lines.map(_.split(",").tail.toList).toList
-        out.print("[reporter],[run number]")
+                                     !x.split(",")(0).contains("[final value]"))
+        out.print(csv.header("[reporter]") + "," + csv.header("[run number]"))
         for (parameter <- parameters) {
           out.print("," + parameter(0))
         }
-        out.print(",[step]")
-        for (i <- 0 until data.map(_.map(_.split(" ").length)).flatten.max) {
-          out.print(s",[$i]")
+        out.print("," + csv.header("[step]"))
+        if (!lines.hasNext) {
+          out.println()
+          out.close()
+          return
+        }
+        val reporters = lines.next.split(",").tail.toList
+        val data = lines.filter(!_.replace(",", "").isEmpty).map(_.split(",").tail.toList).toList
+        val count = data.map(_.filter(_.contains("[")).map(_.split(" ").length)).flatten
+        if (count.length > 0) {
+          for (i <- 0 until count.max) {
+            out.print("," + csv.header(s"[$i]"))
+          }
         }
         out.println()
         for (i <- 0 until runNumbers.length by runWidth) {
-          for (j <- 0 until runWidth) {
+          for (j <- 1 until runWidth) {
             if (data(0)(i + j).contains("[")) {
               for (k <- 0 until data.length) {
-                out.println(s"${reporters(i + j)},${runNumbers(i)},${parameters.map(_(i / runWidth + 1)).mkString(",")}" +
-                s",$k,${data(k)(i + j).replaceAll("[\"\\[\\]]", "").split(" ").mkString(",")}")
+                out.print(s"${reporters(i + j)},${runNumbers(i)},")
+                if (parameters.length > 0)
+                  out.print(parameters.map(_(i / runWidth + 1)).mkString(",") + ",")
+                out.println(s"${data(k)(i)},${data(k)(i + j).replaceAll("[\"\\[\\]]", "").split(" ").map(csv.header _)
+                            .mkString(",")}")
               }
             }
           }
@@ -66,13 +84,17 @@ class ListsExporter(modelFileName: String,
           for (i <- stepIndex + 1 until els.length) {
             if (els(i).contains("[")) {
               sortedLines = sortedLines :+ ((header(i),
-                                              els(0).replaceAll("\\D", "").toInt,
-                                              parameterIndices.map(els(_)).mkString(","),
-                                              els(stepIndex).replaceAll("\\D", "").toInt,
-                                              els(i).replaceAll("[\"\\[\\]]", "").replace(" ", ",")))
+                                             els(0).replaceAll("\\D", "").toInt,
+                                             parameterIndices.map(els(_)).mkString(","),
+                                             els(stepIndex).replaceAll("\\D", "").toInt,
+                                             els(i).replaceAll("[\"\\[\\]]", "").split(" ")
+                                             .map(csv.header _).mkString(",")))
             }
           }
         }
+        out.print(csv.header("[reporter]") + "," + csv.header("[run number]"))
+        parameterIndices.foreach(i => out.print("," + header(i)))
+        out.print("," + csv.header("[step]"))
         if (sortedLines.length > 0) {
           // sort lines by run, then by reporter, then by step
           sortedLines = sortedLines.sortWith((a, b) =>
@@ -82,14 +104,19 @@ class ListsExporter(modelFileName: String,
               } else header.indexOf(a._1) < header.indexOf(b._1)
             } else a._2 < b._2
           )
-          out.print("[reporter],[run number]")
-          parameterIndices.foreach(i => out.print("," + header(i)))
-          out.print(",[step]")
-          for (i <- 0 until sortedLines.map(_._5.split(",").length).max) {
-            out.print(s",[$i]")
+          val count = sortedLines.filter(_._5.contains(",")).map(_._5.split(",").length)
+          if (count.length > 0) {
+            for (i <- 0 until sortedLines.map(_._5.split(",").length).max) {
+              out.print("," + csv.header(s"[$i]"))
+            }
           }
           out.println()
-          sortedLines.foreach(line => out.println(line.productIterator.mkString(",")))
+          sortedLines.foreach(line => {
+            out.println(s"${line._1},${csv.header(line._2.toString)},${line._3},${csv.header(line._4.toString)},${line._5}")
+          })
+        }
+        else {
+          out.println()
         }
       }
     }

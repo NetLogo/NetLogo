@@ -10,11 +10,13 @@ import scala.util.Try
 trait LabFormat[A <: ModelFormat[Array[String], A]]
   extends ComponentSerialization[Array[String], A] {
 
+  val editNames: Boolean
+
   def literalParser: LiteralParser
 
   def componentName = "org.nlogo.modelsection.behaviorspace"
 
-  val loader = new LabLoader(literalParser)
+  val loader = new LabLoader(literalParser, editNames)
 
   override def addDefault = { (m: Model) =>
     m.withOptionalSection(componentName, None, Seq[LabProtocol]()) }
@@ -37,8 +39,8 @@ trait LabFormat[A <: ModelFormat[Array[String], A]]
     else Some(loader(s.mkString("\n")))
 }
 
-class NLogoLabFormat(val literalParser: LiteralParser)
+class NLogoLabFormat(val literalParser: LiteralParser, val editNames: Boolean = false)
   extends LabFormat[NLogoFormat]
 
-class NLogoThreeDLabFormat(val literalParser: LiteralParser)
+class NLogoThreeDLabFormat(val literalParser: LiteralParser, val editNames: Boolean = false)
   extends LabFormat[NLogoThreeDFormat]

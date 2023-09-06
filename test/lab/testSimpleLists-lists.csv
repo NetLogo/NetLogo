@@ -1,13 +1,13 @@
-[reporter],[run number],"n",[step],[0],[1],[2],[3]
-"[xcor] of turtles",1,"2",0,2,2
-"[xcor] of turtles",1,"2",1,2,2
-"[xcor] of turtles",1,"2",2,2,2
-"[ycor] of turtles",1,"2",0,2,2
-"[ycor] of turtles",1,"2",1,2,2
-"[ycor] of turtles",1,"2",2,2,2
-"[xcor] of turtles",2,"4",0,4,4,4,4
-"[xcor] of turtles",2,"4",1,4,4,4,4
-"[xcor] of turtles",2,"4",2,4,4,4,4
-"[ycor] of turtles",2,"4",0,4,4,4,4
-"[ycor] of turtles",2,"4",1,4,4,4,4
-"[ycor] of turtles",2,"4",2,4,4,4,4
+"[reporter]","[run number]","n","[step]","[0]","[1]","[2]","[3]"
+"[xcor] of turtles","1","2","0","2","2"
+"[xcor] of turtles","1","2","1","2","2"
+"[xcor] of turtles","1","2","2","2","2"
+"[ycor] of turtles","1","2","0","2","2"
+"[ycor] of turtles","1","2","1","2","2"
+"[ycor] of turtles","1","2","2","2","2"
+"[xcor] of turtles","2","4","0","4","4","4","4"
+"[xcor] of turtles","2","4","1","4","4","4","4"
+"[xcor] of turtles","2","4","2","4","4","4","4"
+"[ycor] of turtles","2","4","0","4","4","4","4"
+"[ycor] of turtles","2","4","1","4","4","4","4"
+"[ycor] of turtles","2","4","2","4","4","4","4"
