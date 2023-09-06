@@ -370,13 +370,13 @@ with OneInstancePerTest with BeforeAndAfterEach {
     runExperiment(4, "globals [n]", "testSimpleLists", true)
   }
   test("SimpleListsWithTable", SlowTest.Tag) {
-    runExperiment(4, "globals [n]", "testSimpleLists", true, true)
+    runExperiment(4, "globals [n]", "testSimpleLists", true, wantLists=true)
   }
   test("SimpleListsWithSpreadsheet", SlowTest.Tag) {
-    runExperiment(4, "globals [n]", "testSimpleLists", false, true)
+    runExperiment(4, "globals [n]", "testSimpleLists", false, wantLists=true)
   }
   test("ListsEmptyExperiment", SlowTest.Tag) {
-    runExperiment(0, "", "testListsEmptyExperiment", true, true)
+    runExperiment(0, "", "testListsEmptyExperiment", true, wantLists=true)
   }
   test("Stats", SlowTest.Tag) {
     runExperiment(4, "", "testStats", true)
@@ -386,5 +386,11 @@ with OneInstancePerTest with BeforeAndAfterEach {
   }
   test("StatsWithSpreadsheet", SlowTest.Tag) {
     runExperiment(4, "", "testStats", false, true)
+  }
+  test("ExcludeStatsMetricsTable", SlowTest.Tag) {
+    runExperiment(4, "globals [string-test list-test]", "testStatsExcludeMetrics", wantStats=true)
+  }
+  test("ExcludeStatsMetricsSpreadsheet", SlowTest.Tag) {
+    runExperiment(4, "globals [string-test list-test]", "testStatsExcludeMetrics", wantTable=false, wantStats=true)
   }
 }

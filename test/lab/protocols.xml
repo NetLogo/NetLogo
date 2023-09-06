@@ -437,4 +437,11 @@
     <metric>count turtles</metric>
     <metric>[ pxcor ] of turtles</metric>
   </experiment>
+  <experiment name="testStatsExcludeMetrics" repetitions="3" runMetricsEveryStep="true">
+    <setup>ca reset-ticks set string-test "a"</setup>
+    <go>ifelse ticks mod 2 = 0 [ set list-test (list 1 2) ] [ set list-test 3 ] tick</go>
+    <timeLimit steps="2"/>
+    <metric>string-test</metric>
+    <metric>list-test</metric>
+  </experiment>
 </experiments>
