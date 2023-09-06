@@ -265,7 +265,7 @@ class StatsExporter(modelFileName: String,
         }
       } else if (rowElements.length > 0  &&
                 ((rowElements(0) equals "\"[all run data]\"")
-                  || (rowElements(0) equals "\"[initial & final values]\""))) {
+                  || (rowElements(0) equals "\"[final value]\""))) {
         reachedRunData = true
       }
     }
