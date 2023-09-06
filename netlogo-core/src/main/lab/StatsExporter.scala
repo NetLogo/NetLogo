@@ -150,8 +150,7 @@ class StatsExporter(modelFileName: String,
       if (metricIndex >= 0) {
         val metric = protocol.metrics(metricIndex)
         // Ignore metrics that produce lists and numbers
-        if (listMetrics contains metric) invalidMetrics += metric
-        else numericMetrics += metric
+        numericMetrics += metric
       }
       converted
     } catch {
@@ -169,7 +168,8 @@ class StatsExporter(modelFileName: String,
       if (metricIndex >= 0) {
         val metric = protocol.metrics(metricIndex)
         // Ignore metrics that produce lists and numbers
-        if (numericMetrics contains metric) invalidMetrics += metric
+        if (noBrackets.length == entry.length
+          || (numericMetrics contains metric)) invalidMetrics += metric
         else listMetrics += metric
       }
       converted
