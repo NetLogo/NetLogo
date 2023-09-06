@@ -2,7 +2,7 @@
 
 package org.nlogo.lab.gui
 
-import collection.mutable.{ ListBuffer }
+import collection.mutable.ListBuffer
 
 import java.awt.{ Dialog }
 import java.io.{ FileWriter, IOException, PrintWriter }
@@ -66,7 +66,6 @@ class Supervisor(
   private val workerThread = new Thread(runnable, "BehaviorSpace Worker")
   private val progressDialog = new ProgressDialog(dialog, this, saveProtocol)
   private val exporters = new ListBuffer[Exporter]
-  // private val exporterFileNames = new HashMap[Exporter, String]
   private var spreadsheetExporter: SpreadsheetExporter = null
   private var spreadsheetFileName: String = null
   private var tableExporter: TableExporter = null
