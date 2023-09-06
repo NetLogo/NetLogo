@@ -191,7 +191,7 @@ class StatsExporter(modelFileName: String,
       val params = ListBuffer[Any]()
       val measurements = ListBuffer[Any]()
       // The first 6 contain file data, and the 7th row is the header names
-      if (row > 6) {
+      if (row > Exporter.NUM_HEADER_ROWS) {
         line.split(",").zipWithIndex.foreach{case (entry, col) => {
           val noQuotes = entry.split("\"")(1)
 
