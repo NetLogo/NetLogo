@@ -46,10 +46,11 @@ with OneInstancePerTest with BeforeAndAfterEach {
     workspace
   }
   def runExperiment(worldSize: Int, declarations: String, name: String,
-                    wantTable: Boolean = true, wantLists: Boolean = false) = {
+                    wantTable: Boolean = true, wantStats: Boolean = false, wantLists: Boolean = false) = {
     val workspace = newWorkspace()
     workspace.initForTesting(worldSize, declarations)
-    run("test/lab/" + name, wantTable = wantTable, wantLists = wantLists)(() => workspace, () => newWorker(name))
+    run("test/lab/" + name, wantTable = wantTable,
+      wantStats = wantStats, wantLists = wantLists)(() => workspace, () => newWorker(name))
     workspace
   }
   def run3DExperiment(name: String) {
@@ -365,21 +366,6 @@ with OneInstancePerTest with BeforeAndAfterEach {
   test("ComplexSubExperiments", SlowTest.Tag) {
     runExperiment(0, "globals [a b c]", "testComplexSubExperiments")
   }
-  test("Stats from table", SlowTest.Tag) {
-    runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "basic-stats",
-      "test/lab/FireWithExperimentsBasicStats", wantStats=true, wantSpreadsheet = false,
-      threads = Runtime.getRuntime.availableProcessors)
-  }
-  test("Stats from spreadsheet", SlowTest.Tag) {
-    runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "basic-stats",
-      "test/lab/FireWithExperimentsBasicStats", wantStats=true, wantTable=false,
-      threads = Runtime.getRuntime.availableProcessors)
-  }
-  test("Stats no std", SlowTest.Tag) {
-    runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "no-std-stats",
-      "test/lab/FireWithExperimentsNoStdStats", wantStats=true, wantSpreadsheet=false,
-      threads = Runtime.getRuntime.availableProcessors)
-  }
   test("SimpleLists", SlowTest.Tag) {
     runExperiment(4, "globals [n]", "testSimpleLists", true)
   }
@@ -391,5 +377,14 @@ with OneInstancePerTest with BeforeAndAfterEach {
   }
   test("ListsEmptyExperiment", SlowTest.Tag) {
     runExperiment(0, "", "testListsEmptyExperiment", true, true)
+  }
+  test("Stats", SlowTest.Tag) {
+    runExperiment(4, "", "testStats", true)
+  }
+  test("StatsWithTable", SlowTest.Tag) {
+    runExperiment(4, "", "testStats", true, true)
+  }
+  test("StatsWithSpreadsheet", SlowTest.Tag) {
+    runExperiment(4, "", "testStats", false, true)
   }
 }
