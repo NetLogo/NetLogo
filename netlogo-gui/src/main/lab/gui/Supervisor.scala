@@ -199,10 +199,11 @@ class Supervisor(
       } else {
         EventQueue.mustBeEventDispatchThread()
         OptionDialog.showMessage(
-          workspace.getFrame, "Warning: Statistics Exporter",
-          "A table or spreadsheet must be enabled to use the statistics exporter",
+          workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
+          I18N.gui.get("tools.behaviorSpace.error.stats"),
           Array(I18N.gui.get("common.buttons.continue"))
         )
+        return
       }
     }
     if (options.lists != null && options.lists.trim() != "") {
@@ -219,8 +220,8 @@ class Supervisor(
             PostProcessorInputFormat.Spreadsheet(options.spreadsheet.trim())
           } else {
             OptionDialog.showMessage(
-              workspace.getFrame, "Error During Experiment",
-              "Lists output selected with no spreadsheet or table output.",
+              workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
+              I18N.gui.get("tools.behaviorSpace.error.lists"),
               Array(I18N.gui.get("common.buttons.ok")))
             return
           }))
@@ -321,20 +322,20 @@ class Supervisor(
     t match {
       case ex: CompilerException =>
         OptionDialog.showMessage(
-          workspace.getFrame, "Error During Experiment",
-          "Experiment aborted due to syntax error:\n" + ex.getMessage,
+          workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
+          I18N.gui.get("tools.behaviorSpace.error.compilation") + "\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok"))
         )
       case ex: LogoException =>
         OptionDialog.showMessage(
-          workspace.getFrame, "Error During Experiment",
-          "Experiment aborted due to runtime error:\n" + ex.getMessage,
+          workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
+          I18N.gui.get("tools.behaviorSpace.error.runtime") + "\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok"))
         )
       case ex: IOException =>
         OptionDialog.showMessage(
-          workspace.getFrame, "Error During Experiment",
-          "Experiment aborted due to file input or output (I/O) error:\n" + ex.getMessage,
+          workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
+          I18N.gui.get("tools.behaviorSpace.error.io") + "\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok"))
         )
       case _ => Exceptions.handle(t)
