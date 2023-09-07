@@ -42,8 +42,8 @@ class StatsExporter(modelFileName: String,
     val metrics = ListBuffer[String]()
     for (m <- protocol.metrics) {
       if (!(invalidMetrics contains m) && ((numericMetrics contains m) || (listMetrics contains m))) {
-        metrics += (f"[${m}]-mean")
-        metrics += (f"[${m}]-std")
+        metrics += (f"(mean) ${m}")
+        metrics += (f"(std) ${m}")
       }
     }
     val headers = protocol.valueSets(0).map(_.variableName) ::: "[step]" :: metrics.toList
