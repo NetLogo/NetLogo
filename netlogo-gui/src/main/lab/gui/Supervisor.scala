@@ -137,17 +137,19 @@ class Supervisor(
         } catch {
           case _: Throwable =>
             OptionDialog.showMessage(
-              workspace.getFrame, "Error During Experiment",
-              "Unable to read existing spreadsheet output, data is not intact.",
-              Array(I18N.gui.get("common.buttons.ok")))
+              workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
+              I18N.gui.get("tools.behaviorSpace.error.invalidSpreadsheetData"),
+              Array(I18N.gui.get("common.buttons.continue"))
+            )
             return
         }
       }
       else {
         OptionDialog.showMessage(
-          workspace.getFrame, "Error During Experiment",
-          "Spreadsheet output file has been moved or deleted.",
-          Array(I18N.gui.get("common.buttons.ok")))
+          workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
+          I18N.gui.get("tools.behaviorSpace.error.missing.spreadsheet"),
+          Array(I18N.gui.get("common.buttons.continue"))
+        )
         return
       }
     }
@@ -162,9 +164,10 @@ class Supervisor(
       }
       else {
         OptionDialog.showMessage(
-          workspace.getFrame, "Error During Experiment",
-          "Table output file has been moved or deleted.",
-          Array(I18N.gui.get("common.buttons.ok")))
+          workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
+          I18N.gui.get("tools.behaviorSpace.error.missing.table"),
+          Array(I18N.gui.get("common.buttons.continue"))
+        )
         return
       }
     }
@@ -182,9 +185,10 @@ class Supervisor(
             LabListsExporterFormat.SpreadsheetFormat(options.spreadsheet.trim())
           } else {
             OptionDialog.showMessage(
-              workspace.getFrame, "Error During Experiment",
-              "Lists output selected with no spreadsheet or table output.",
-              Array(I18N.gui.get("common.buttons.ok")))
+              workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
+              I18N.gui.get("tools.behaviorSpace.error.lists"),
+              Array(I18N.gui.get("common.buttons.continue"))
+            )
             return
           }))
       } catch {
