@@ -2,7 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.LabProtocol
+import org.nlogo.api.{LabExporterType, LabProtocol}
 import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.Workspace
 
@@ -17,7 +17,7 @@ class SpreadsheetExporter(modelFileName: String,
                           protocol: LabProtocol,
                           out: java.io.PrintWriter,
                           partialData: PartialData = new PartialData)
-  extends Exporter(modelFileName, initialDims, protocol, out)
+  extends Exporter(modelFileName, initialDims, protocol, out, exporterType=LabExporterType.SPREADSHEET)
 {
   val runs = new collection.mutable.HashMap[Int,Run]
   override def runStarted(w: Workspace, runNumber: Int, settings: List[(String,Any)]) {

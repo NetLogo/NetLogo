@@ -2,7 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.{ LabListsExporterFormat, LabProtocol }
+import org.nlogo.api.{ LabListsExporterFormat, LabExporterType, LabProtocol }
 import org.nlogo.core.WorldDimensions
 import scala.collection.mutable.Seq
 
@@ -11,7 +11,7 @@ class ListsExporter(modelFileName: String,
                     protocol: LabProtocol,
                     out: java.io.PrintWriter,
                     in: LabListsExporterFormat.Format)
-  extends Exporter(modelFileName, initialDims, protocol, out)
+  extends Exporter(modelFileName, initialDims, protocol, out, exporterType=LabExporterType.LISTS)
 {
   def finish() {
     writeExportHeader()
