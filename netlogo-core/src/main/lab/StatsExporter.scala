@@ -281,16 +281,26 @@ class StatsExporter(modelFileName: String,
         data(params) = new HashMap[Int, Measurements]()
       }
       for (runData <- run.measurements) {
-        val step = runData(0).toString.toInt
+        val step = runData(0).toString.toDouble.toInt
         val measurements = runData.drop(1)
 
         if (!data(params).contains(step)) {
           data(params)(step) = new ListBuffer[List[Any]]()
         }
         data(params)(step) += measurements.zipWithIndex.map{case (entry, col) => {
+          val currentMetric = protocol.metrics(col)
           if (entry.isInstanceOf[LogoList]) {
-            listMetrics += protocol.metrics(col)
-            entry.asInstanceOf[LogoList].toList
+            if (numericMetrics contains currentMetric) {
+              invalidMetrics += currentMetric
+              List(Double.NaN)
+            } else {
+              listMetrics += currentMetric
+              entry.asInstanceOf[LogoList].toList
+            }
+          }
+          else if (listMetrics contains currentMetric) {
+            invalidMetrics += currentMetric
+            List(Double.NaN)
           }
           else handleNonNumeric(entry.toString, col)
         }}.toList
