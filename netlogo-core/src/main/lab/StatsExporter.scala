@@ -41,7 +41,7 @@ class StatsExporter(modelFileName: String,
   def writeExperimentHeader() {
     val metrics = ListBuffer[String]()
     for (m <- protocol.metrics) {
-      if (!(invalidMetrics contains m) && ((numericMetrics contains m) || (listMetrics contains m))) {
+      if (!(invalidMetrics contains m)) {
         metrics += (f"(mean) ${m}")
         metrics += (f"(std) ${m}")
       }
@@ -155,6 +155,10 @@ class StatsExporter(modelFileName: String,
       converted
     } catch {
       case _: java.lang.NumberFormatException => {
+        if (metricIndex >= 0) {
+          val metric = protocol.metrics(metricIndex)
+          invalidMetrics += metric
+        }
         Double.NaN
       }
     }
