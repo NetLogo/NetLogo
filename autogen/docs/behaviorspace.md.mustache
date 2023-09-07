@@ -370,7 +370,8 @@ Statistics are not calculated for metrics that produce lists that contain non-nu
 the measurement must remain constant. For example, statistics are not calculated if a metric
 produces measurements that can be both lists and numbers. Furthermore, the standard deviation may be "N/A",
 which means that there were two or fewer collected measurements for that step and parameter combination,
-producing a result that is not well-defined.
+producing a result that is not well-defined. The experiment must use a repetitions setting of 3 or more
+to produce standard deviation values.
 
 In the below **Statistics output** sample image, the header section is in red, the parameter
 combinations are in green, the steps are in blue, and the statistics are in purple.
