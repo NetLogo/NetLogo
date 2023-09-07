@@ -104,7 +104,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
       List(
         Property("spreadsheet", Property.FilePath(spreadsheetFile), I18N.gui("spreadsheet")),
         Property("table", Property.FilePath(tableFile), I18N.gui("table")),
-        Property("stats", Property.FilePath(statsFile), "Stats"),
+        Property("stats", Property.FilePath(statsFile), I18N.gui("stats")),
         Property("lists", Property.FilePath(listsFile), I18N.gui("lists")),
         Property("updateView", Property.Boolean, I18N.gui("updateview")),
         Property("updatePlotsAndMonitors", Property.Boolean, I18N.gui("updateplotsandmonitors"),
