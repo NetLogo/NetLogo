@@ -2,7 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.{ PostProcessorInputFormat, LabProtocol }
+import org.nlogo.api.{ LabPostProcessorInputFormat, LabProtocol }
 import org.nlogo.core.WorldDimensions
 import scala.collection.mutable.Seq
 
@@ -10,13 +10,13 @@ class ListsExporter(modelFileName: String,
                     initialDims: WorldDimensions,
                     protocol: LabProtocol,
                     out: java.io.PrintWriter,
-                    in: PostProcessorInputFormat.Format)
+                    in: LabPostProcessorInputFormat.Format)
   extends Exporter(modelFileName, initialDims, protocol, out)
 {
   def finish() {
     writeExportHeader()
     in match {
-      case PostProcessorInputFormat.Spreadsheet(fileName) => {
+      case LabPostProcessorInputFormat.Spreadsheet(fileName) => {
         var lines = scala.io.Source.fromFile(fileName).getLines
         var runNumbers: List[String] = null
         val first = lines.next
@@ -65,7 +65,7 @@ class ListsExporter(modelFileName: String,
           }
         }
       }
-      case PostProcessorInputFormat.Table(fileName) => {
+      case LabPostProcessorInputFormat.Table(fileName) => {
         var lines = scala.io.Source.fromFile(fileName).getLines
         var header: Array[String] = null
         val first = lines.next

@@ -1,6 +1,6 @@
 package org.nlogo.lab
 
-import org.nlogo.api.{LabProtocol, PostProcessorInputFormat}
+import org.nlogo.api.{LabProtocol, LabPostProcessorInputFormat}
 import org.nlogo.core.{LogoList, WorldDimensions}
 import scala.collection.mutable.{ HashMap, HashSet, ListBuffer }
 import scala.collection.immutable.{ Set }
@@ -11,7 +11,7 @@ class StatsExporter(modelFileName: String,
                           initialDims: WorldDimensions,
                           protocol: LabProtocol,
                           out: java.io.PrintWriter,
-                          in: PostProcessorInputFormat.Format,
+                          in: LabPostProcessorInputFormat.Format,
                           testing: Boolean = false)
   extends Exporter(modelFileName, initialDims, protocol, out)
 {
@@ -59,8 +59,8 @@ class StatsExporter(modelFileName: String,
 
   def extractData(): Option[Data] = {
     in match {
-      case t: PostProcessorInputFormat.Table => Some(extractFromTable(t.fileName))
-      case s: PostProcessorInputFormat.Spreadsheet => Some(extractFromSpreadsheet(s.fileName))
+      case t: LabPostProcessorInputFormat.Table => Some(extractFromTable(t.fileName))
+      case s: LabPostProcessorInputFormat.Spreadsheet => Some(extractFromSpreadsheet(s.fileName))
       case _ => None
       }
   }

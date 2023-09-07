@@ -4,7 +4,7 @@ package org.nlogo.headless
 
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.{ OneInstancePerTest, BeforeAndAfterEach }
-import org.nlogo.api.{ FileIO, PostProcessorInputFormat, Version }
+import org.nlogo.api.{ FileIO, LabPostProcessorInputFormat, Version }
 import org.nlogo.nvm.{ LabInterface, Workspace }
 import org.nlogo.util.SlowTest
 
@@ -140,20 +140,20 @@ with OneInstancePerTest with BeforeAndAfterEach {
     def stats(worker: LabInterface.Worker, writer: java.io.StringWriter) {
       if (wantTable || wantSpreadsheet) {
         worker.addStatsWriter(filename, dims, new java.io.PrintWriter(writer), {
-          if (wantTable) PostProcessorInputFormat.Table(filename + "-table.csv")
-          else PostProcessorInputFormat.Spreadsheet(filename + "-spreadsheet.csv")
+          if (wantTable) LabPostProcessorInputFormat.Table(filename + "-table.csv")
+          else LabPostProcessorInputFormat.Spreadsheet(filename + "-spreadsheet.csv")
         }, testing=true)
       }
     }
     def lists(worker: LabInterface.Worker, writer: java.io.StringWriter) {
       if (wantTable) {
         worker.addListsWriter(filename, dims, new java.io.PrintWriter(writer),
-                              PostProcessorInputFormat.Table(filename + "-table.csv"))
+                              LabPostProcessorInputFormat.Table(filename + "-table.csv"))
       }
       else if (wantSpreadsheet)
       {
         worker.addListsWriter(filename, dims, new java.io.PrintWriter(writer),
-                              PostProcessorInputFormat.Spreadsheet(filename + "-spreadsheet.csv"))
+                              LabPostProcessorInputFormat.Spreadsheet(filename + "-spreadsheet.csv"))
       }
     }
     runHelper(List(("-table.csv", table _), ("-spreadsheet.csv", spreadsheet _), ("-stats.csv", stats _), ("-lists.csv", lists _))

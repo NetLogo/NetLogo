@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api.{LabProtocol, PostProcessorInputFormat}
+import org.nlogo.api.{LabProtocol, LabPostProcessorInputFormat}
 import org.nlogo.core.WorldDimensions
 
 object LabInterface {
@@ -10,9 +10,9 @@ object LabInterface {
     def addListener(l: ProgressListener)
     def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter)
     def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter)
-    def addStatsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter, in: PostProcessorInputFormat.Format, testing: Boolean)
+    def addStatsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter, in: LabPostProcessorInputFormat.Format, testing: Boolean)
     def addListsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter,
-                       in: PostProcessorInputFormat.Format)
+                       in: LabPostProcessorInputFormat.Format)
     def run(testWorkspace: Workspace, fn: ()=>Workspace, threads: Int)
     def compile(w: Workspace) // only for testing purposes
   }

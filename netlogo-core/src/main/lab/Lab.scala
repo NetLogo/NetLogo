@@ -2,7 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.{LogoException, LabProtocol, PostProcessorInputFormat}
+import org.nlogo.api.{LogoException, LabProtocol, LabPostProcessorInputFormat}
 import org.nlogo.nvm.{EngineException,LabInterface,Workspace}
 
 // This is used when running headless. - ST 3/3/09
@@ -27,8 +27,8 @@ class Lab extends LabInterface {
       statsWriter.foreach(x =>
         worker.addStatsWriter(modelPath, dims.getOrElse(modelDims), x._1,
           {
-            if (tableWriter != None) PostProcessorInputFormat.Table(x._2)
-            else PostProcessorInputFormat.Spreadsheet(x._2)
+            if (tableWriter != None) LabPostProcessorInputFormat.Table(x._2)
+            else LabPostProcessorInputFormat.Spreadsheet(x._2)
           },
           testing
         )
@@ -36,12 +36,12 @@ class Lab extends LabInterface {
       if (tableWriter.isDefined) {
         listsWriter.foreach(x =>
           worker.addListsWriter(modelPath, dims.getOrElse(modelDims), x._1,
-          PostProcessorInputFormat.Table(x._2)))
+          LabPostProcessorInputFormat.Table(x._2)))
       }
       else {
         listsWriter.foreach(x =>
           worker.addListsWriter(modelPath, dims.getOrElse(modelDims), x._1,
-          PostProcessorInputFormat.Spreadsheet(x._2)))
+          LabPostProcessorInputFormat.Spreadsheet(x._2)))
       }
       worker.addListener(
         new LabInterface.ProgressListener {

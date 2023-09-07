@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-object PostProcessorInputFormat {
+object LabPostProcessorInputFormat {
   trait Format
   case class Spreadsheet(fileName: String) extends Format
   case class Table(fileName: String) extends Format

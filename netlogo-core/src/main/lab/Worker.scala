@@ -5,7 +5,7 @@ package org.nlogo.lab
 import java.util.concurrent.{Callable, Executors, TimeUnit}
 import org.nlogo.core.{ AgentKind, I18N, WorldDimensions }
 import org.nlogo.api.{Dump, ExportPlotWarningAction, LabProtocol,
-  LogoException, MersenneTwisterFast, PostProcessorInputFormat, WorldDimensionException, SimpleJobOwner}
+  LogoException, MersenneTwisterFast, LabPostProcessorInputFormat, WorldDimensionException, SimpleJobOwner}
 import org.nlogo.nvm.{Command, LabInterface, Workspace}
 import LabInterface.ProgressListener
 
@@ -23,11 +23,11 @@ class Worker(val protocol: LabProtocol)
     addListener(new TableExporter(modelFileName, initialDims, protocol, w))
   }
   def addStatsWriter(modelFileName: String, initialDims: WorldDimensions,
-                      w: java.io.PrintWriter, in: PostProcessorInputFormat.Format, testing: Boolean = false ) {
+                      w: java.io.PrintWriter, in: LabPostProcessorInputFormat.Format, testing: Boolean = false ) {
     addListener(new StatsExporter(modelFileName, initialDims, protocol, w, in, testing))
   }
   def addListsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter,
-                     in: PostProcessorInputFormat.Format) {
+                     in: LabPostProcessorInputFormat.Format) {
     addListener(new ListsExporter(modelFileName, initialDims, protocol, w, in))
   }
   var runners: Seq[Runner] = null

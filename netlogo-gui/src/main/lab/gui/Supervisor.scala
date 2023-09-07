@@ -8,7 +8,7 @@ import java.awt.{ Dialog }
 import java.io.{ FileWriter, IOException, PrintWriter }
 
 import org.nlogo.api.{ Exceptions, ExportPlotWarningAction, LabProtocol,
-  LogoException, PlotCompilationErrorAction, PostProcessorInputFormat }
+  LogoException, PlotCompilationErrorAction, LabPostProcessorInputFormat }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.lab.{ Exporter, ListsExporter, PartialData, SpreadsheetExporter, StatsExporter, TableExporter, Worker }
@@ -187,8 +187,8 @@ class Supervisor(
             worker.protocol,
             new PrintWriter(new FileWriter(fileName)),
             {
-              if (tableExporter != null) PostProcessorInputFormat.Table(tableFileName)
-              else PostProcessorInputFormat.Spreadsheet(spreadsheetFileName)
+              if (tableExporter != null) LabPostProcessorInputFormat.Table(tableFileName)
+              else LabPostProcessorInputFormat.Spreadsheet(spreadsheetFileName)
             })
           addExporter(statsExporter)
         } catch {
@@ -215,9 +215,9 @@ class Supervisor(
           worker.protocol,
           new PrintWriter(new FileWriter(fileName)),
           if (options.table != null && options.table.trim() != "") {
-            PostProcessorInputFormat.Table(options.table.trim())
+            LabPostProcessorInputFormat.Table(options.table.trim())
           } else if (options.spreadsheet != null && options.spreadsheet.trim() != "") {
-            PostProcessorInputFormat.Spreadsheet(options.spreadsheet.trim())
+            LabPostProcessorInputFormat.Spreadsheet(options.spreadsheet.trim())
           } else {
             OptionDialog.showMessage(
               workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
