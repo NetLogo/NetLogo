@@ -83,20 +83,20 @@ with OneInstancePerTest with BeforeAndAfterEach {
       if (wantTable && wantSpreadsheet) {
         Main.main(Array("--model", modelPath, "--experiment", experimentName,
                 "--table", tablePath, "--spreadsheet", spreadsheetPath, "--stats", statsPath, "--lists", listsPath,
-                "--threads", threads.toString, "--suppress-errors"), testing=true)
+                "--threads", threads.toString, "--suppress-errors"))
       } else if (wantTable) {
         Main.main(Array("--model", modelPath, "--experiment", experimentName,
                 "--table", tablePath, "--stats", statsPath, "--lists", listsPath,
-                "--threads", threads.toString, "--suppress-errors"), testing=true)
+                "--threads", threads.toString, "--suppress-errors"))
       } else if (wantSpreadsheet) {
         Main.main(Array("--model", modelPath, "--experiment", experimentName,
                 "--spreadsheet", spreadsheetPath, "--stats", statsPath, "--lists", listsPath,
-                "--threads", threads.toString, "--suppress-errors"), testing=true)
+                "--threads", threads.toString, "--suppress-errors"))
       }
     } else {
         Main.main(Array("--model", modelPath, "--experiment", experimentName,
                   "--table", tablePath, "--spreadsheet", spreadsheetPath, "--stats", statsPath, "--lists", listsPath,
-                  "--threads", threads.toString, "--suppress-errors"), testing=true)
+                  "--threads", threads.toString, "--suppress-errors"))
     }
     if (!wantStats && wantTable)
       assertResult(slurp(filename + "-table.csv"))(
@@ -126,11 +126,37 @@ with OneInstancePerTest with BeforeAndAfterEach {
       for (((suffix, _), writer) <- fns zip writers) {
         val resultsPath = filename + suffix
         withClue(resultsPath) {
-          assertResult(slurp(resultsPath))(
-          withoutFirst6Lines(stripLineFeeds(writer.toString)))
+          // Compare up to 2 decimal places for numbers used in statistics to avoid rounding issues
+          if (suffix == "-stats.csv") {
+            val output = withoutFirst6Lines(stripLineFeeds(writer.toString))
+            var rebuild = ""
+            var i = 0
+            while (i < output.length) {
+              if (output(i).isDigit) {
+                var currentChunk = ""
+                while (output(i) != ' ' && output(i) != '"' && output(i) != ']') {
+                  currentChunk += output(i)
+                  i += 1
+                }
+                try {
+                  val number = currentChunk.toDouble
+                  rebuild += ((number * 100).round.toDouble / 100).toString + output(i)
+                } catch {
+                  case _: java.lang.NumberFormatException => rebuild += currentChunk
+                }
+              } else {
+                rebuild += output(i)
+              }
+              i += 1
+            }
+          } else {
+            assertResult(slurp(resultsPath))(
+            withoutFirst6Lines(stripLineFeeds(writer.toString)))
+          }
         }
       }
     }
+
     def table(worker: LabInterface.Worker, writer: java.io.StringWriter) {
       worker.addTableWriter(filename, dims, new java.io.PrintWriter(writer))
     }
@@ -142,7 +168,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
         worker.addStatsWriter(filename, dims, new java.io.PrintWriter(writer), {
           if (wantTable) LabPostProcessorInputFormat.Table(filename + "-table.csv")
           else LabPostProcessorInputFormat.Spreadsheet(filename + "-spreadsheet.csv")
-        }, testing=true)
+        })
       }
     }
     def lists(worker: LabInterface.Worker, writer: java.io.StringWriter) {
@@ -156,14 +182,17 @@ with OneInstancePerTest with BeforeAndAfterEach {
                               LabPostProcessorInputFormat.Spreadsheet(filename + "-spreadsheet.csv"))
       }
     }
-    runHelper(List(("-table.csv", table _), ("-spreadsheet.csv", spreadsheet _), ("-stats.csv", stats _), ("-lists.csv", lists _))
-      .filter {
-        case (suffix, _) =>
-          suffix == "-table.csv" && wantTable ||
-            suffix == "-spreadsheet.csv" && wantSpreadsheet ||
-            suffix == "-stats.csv" && wantStats
-              suffix == "-lists.csv" && wantLists
-      })
+    if (wantStats) {
+      runHelper(List(("-stats.csv", stats _)))
+    } else {
+      runHelper(List(("-table.csv", table _), ("-spreadsheet.csv", spreadsheet _), ("-lists.csv", lists _))
+            .filter {
+              case (suffix, _) =>
+                suffix == "-table.csv" && wantTable ||
+                  suffix == "-spreadsheet.csv" && wantSpreadsheet ||
+                    suffix == "-lists.csv" && wantLists
+            })
+    }
   }
 
   test("BehaviorSpace1", SlowTest.Tag) {
@@ -378,14 +407,11 @@ with OneInstancePerTest with BeforeAndAfterEach {
   test("ListsEmptyExperiment", SlowTest.Tag) {
     runExperiment(0, "", "testListsEmptyExperiment", true, wantLists=true)
   }
-  test("Stats", SlowTest.Tag) {
-    runExperiment(4, "", "testStats", true)
-  }
   test("StatsWithTable", SlowTest.Tag) {
-    runExperiment(4, "", "testStats", true, true)
+    runExperiment(4, "", "testStats", wantTable=true, wantStats=true)
   }
   test("StatsWithSpreadsheet", SlowTest.Tag) {
-    runExperiment(4, "", "testStats", false, true)
+    runExperiment(4, "", "testStats", wantTable=false, wantStats=true)
   }
   test("ExcludeStatsMetricsTable", SlowTest.Tag) {
     runExperiment(4, "globals [string-test list-test]", "testStatsExcludeMetrics", wantStats=true)

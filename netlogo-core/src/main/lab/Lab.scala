@@ -29,8 +29,7 @@ class Lab extends LabInterface {
           {
             if (tableWriter != None) LabPostProcessorInputFormat.Table(x._2)
             else LabPostProcessorInputFormat.Spreadsheet(x._2)
-          },
-          testing
+          }
         )
       )
       if (tableWriter.isDefined) {

@@ -42,9 +42,9 @@ Here is an example of running an experiment already defined and saved within a m
 See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo User Manual for more information and examples.
 """
 
-  def main(args: Array[String], testing: Boolean = false) {
+  def main(args: Array[String]) {
     setHeadlessProperty()
-    parseArgs(args, testing).foreach(runExperiment)
+    parseArgs(args).foreach(runExperiment)
   }
 
   def runExperiment(settings: Settings) {
@@ -93,7 +93,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     System.setProperty("org.nlogo.preferHeadless", "true")
   }
 
-  private def parseArgs(args: Array[String], testing: Boolean): Option[Settings] = {
+  private def parseArgs(args: Array[String]): Option[Settings] = {
     var model: Option[String] = None
     var minPxcor: Option[String] = None
     var maxPxcor: Option[String] = None
@@ -268,7 +268,6 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     , threads
     , suppressErrors
     , updatePlots
-    , testing
     ))
   }
 }

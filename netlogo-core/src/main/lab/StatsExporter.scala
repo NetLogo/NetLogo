@@ -11,8 +11,7 @@ class StatsExporter(modelFileName: String,
                           initialDims: WorldDimensions,
                           protocol: LabProtocol,
                           out: java.io.PrintWriter,
-                          in: LabPostProcessorInputFormat.Format,
-                          testing: Boolean = false)
+                          in: LabPostProcessorInputFormat.Format)
   extends Exporter(modelFileName, initialDims, protocol, out)
 {
   type Measurements = ListBuffer[List[Any]]
@@ -90,15 +89,11 @@ class StatsExporter(modelFileName: String,
                     if (numericMetrics contains metric) {
                       val metricValues = values.map(_(i)).toList.asInstanceOf[List[Double]]
                       val mean = StatsCalculator.mean(metricValues)
-                      writeData += {
-                        if (testing) { (mean * 100).round.toDouble / 100 }
-                        else mean
-                      }
+                      writeData += mean
 
                       val std = StatsCalculator.std(metricValues)
                       writeData += {
                         if (std.isNaN) "N/A"
-                        else if (testing) { (std * 100).round.toDouble / 100}
                         else std
                       }
                     } else if (listMetrics contains metric) {
@@ -118,14 +113,11 @@ class StatsExporter(modelFileName: String,
                           }
                         }
                         val mean = StatsCalculator.mean(elementWiseValues.toList)
-                        means += {
-                          if (testing) { (mean * 100).round.toDouble / 100 }
-                          else mean
-                        }
+                        means += mean
+
                         val std = StatsCalculator.std(elementWiseValues.toList)
                         stds += {
                           if (std.isNaN) "N/A"
-                          else if (testing) { (std * 100).round.toDouble / 100}
                           else std
                         }
                       }

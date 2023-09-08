@@ -10,7 +10,7 @@ object LabInterface {
     def addListener(l: ProgressListener)
     def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter)
     def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter)
-    def addStatsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter, in: LabPostProcessorInputFormat.Format, testing: Boolean)
+    def addStatsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter, in: LabPostProcessorInputFormat.Format)
     def addListsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter,
                        in: LabPostProcessorInputFormat.Format)
     def run(testWorkspace: Workspace, fn: ()=>Workspace, threads: Int)
@@ -37,7 +37,6 @@ object LabInterface {
     threads: Int,
     suppressErrors: Boolean,
     updatePlots: Boolean,
-    testing: Boolean = false
     )
 }
 trait LabInterface {
