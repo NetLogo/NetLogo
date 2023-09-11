@@ -61,12 +61,15 @@ possible values, respectively. That means there are 2000 * 100 * 10 * 3 =
 time is hardly an efficient way to learn which one will evoke the speediest
 synchronization.
 
-BehaviorSpace offers you a much better way to solve this problem. If you specify
-a subset of values from the ranges of each slider, it will run the model with
-each possible combination of those values and, during each model run, record the
-results. (Since NetLogo 6.4 it is possible to specify a non-exhaustive set of combinations of values.) In doing so, it samples the model's parameter space -- not
-exhaustively, but enough so that you will be able to see relationships form
-between different sliders and the behavior of the system. After all the runs are
+BehaviorSpace offers you a much better way to solve this problem by sampling the
+model's parameter space -- not exhaustively, but enough so that you will be able
+to see relationships form between different slider values and the behavior of the
+system. One way to do this is to specify a subset of values from the ranges of each
+slider. See [**Combinatorial syntaxes**](#combinatorial-syntaxes). BehaviorSpace
+will run the model with each possible combination of those values and, during each
+model run, record the results. Since NetLogo 6.4 it has been possible to specify
+ non-combinatorial sets of slider values. See
+  [**Subexperiment syntax**](#subexperiment-syntax). After all the runs are
 over, a dataset is generated which you can open in a different tool, such as a
 spreadsheet, database, or scientific visualization application, and explore.
 
@@ -165,10 +168,16 @@ All combinations of the specified values will be run. For example, if you have t
 
 This would create six runs, organized as follows:
 > `a`: 1, `b`: 2
+> `a`: 1, `b`: 2
+> `a`: 1, `b`: 6
 > `a`: 1, `b`: 6
 > `a`: 1, `b`: 10
+> `a`: 1, `b`: 10
+> `a`: 2, `b`: 2
 > `a`: 2, `b`: 2
 > `a`: 2, `b`: 6
+> `a`: 2, `b`: 6
+> `a`: 2, `b`: 10
 > `a`: 2, `b`: 10
 
 **Run combinations in sequential order checkbox** This box is checked by default, 
