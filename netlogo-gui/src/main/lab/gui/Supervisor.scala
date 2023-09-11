@@ -7,16 +7,16 @@ import collection.mutable.ListBuffer
 import java.awt.{ Dialog }
 import java.io.{ FileWriter, IOException, PrintWriter }
 
-import org.nlogo.api.{ Exceptions, ExportPlotWarningAction, LabListsExporterFormat, LabProtocol, LogoException, PlotCompilationErrorAction }
+import org.nlogo.api.{ Exceptions, ExportPlotWarningAction, LabProtocol,
+  LogoException, PlotCompilationErrorAction, LabPostProcessorInputFormat }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ CompilerException, I18N }
-import org.nlogo.lab.{ Exporter, ListsExporter, PartialData, SpreadsheetExporter, TableExporter, Worker }
+import org.nlogo.lab.{ Exporter, ListsExporter, PartialData, SpreadsheetExporter, StatsExporter, TableExporter, Worker }
 import org.nlogo.nvm.{ EngineException, Workspace }
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.swing.{ OptionDialog }
 import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace }
 import org.nlogo.workspace.{ CurrentModelOpener, WorkspaceFactory }
-
 import scala.collection.mutable.Set
 
 class Supervisor(
@@ -27,6 +27,7 @@ class Supervisor(
   dialogFactory: EditDialogFactoryInterface,
   saveProtocol: (LabProtocol) => Unit,
 ) extends Thread("BehaviorSpace Supervisor") {
+  private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace")
   var options = protocol.runOptions
   val worker = new Worker(protocol)
   val headlessWorkspaces = new ListBuffer[Workspace]
@@ -45,13 +46,16 @@ class Supervisor(
         e match {
           case ee: EngineException =>
             val msg = ee.runtimeErrorMessage
-            System.err.println("Run #" + runNumber + ", RUNTIME ERROR: " + msg)
+            System.err.println(I18N.gui("error.print.runNumber") +
+              runNumber + ", " + I18N.gui("error.print.runtime") + ": " + msg)
             ee.printStackTrace(System.err)
           case le: LogoException =>
-            System.err.println("Run #" + runNumber + ", RUNTIME ERROR: " + le.getMessage)
+            System.err.println(I18N.gui("error.print.runNumber") +
+              runNumber + ", " + I18N.gui("error.print.runtime") + ": " + le.getMessage)
             le.printStackTrace(System.err)
           case _ =>
-            System.err.println("Run #" + runNumber + ", JAVA EXCEPTION: " + e.getMessage)
+            System.err.println(I18N.gui("error.print.runNumber") +
+              runNumber + ", " + I18N.gui("error.print.javaException") + ": " + e.getMessage)
             e.printStackTrace(System.err)
         }
         Exceptions.handle(e)
@@ -66,6 +70,11 @@ class Supervisor(
   private val workerThread = new Thread(runnable, "BehaviorSpace Worker")
   private val progressDialog = new ProgressDialog(dialog, this, saveProtocol)
   private val exporters = new ListBuffer[Exporter]
+  private var spreadsheetExporter: SpreadsheetExporter = null
+  private var spreadsheetFileName: String = null
+  private var tableExporter: TableExporter = null
+  private var tableFileName: String = null
+  private var statsExporter: StatsExporter = null
   worker.addListener(progressDialog)
   def addExporter(exporter: Exporter) {
     if (!exporters.contains(exporter)) {
@@ -128,25 +137,27 @@ class Supervisor(
               data = data.tail
             }
           }
-          addExporter(new SpreadsheetExporter(
+          spreadsheetExporter = new SpreadsheetExporter(
             workspace.getModelFileName,
             workspace.world.getDimensions,
             worker.protocol,
             new PrintWriter(new FileWriter(fileName)),
-            partialData))
+            partialData)
+          spreadsheetFileName = fileName
+          addExporter(spreadsheetExporter)
         } catch {
           case _: Throwable =>
             OptionDialog.showMessage(
-              workspace.getFrame, "Error During Experiment",
-              "Unable to read existing spreadsheet output, data is not intact.",
+              workspace.getFrame, I18N.gui("error.title"),
+              I18N.gui("error.pause.invalidSpreadsheet"),
               Array(I18N.gui.get("common.buttons.ok")))
             return
         }
       }
       else {
         OptionDialog.showMessage(
-          workspace.getFrame, "Error During Experiment",
-          "Spreadsheet output file has been moved or deleted.",
+          workspace.getFrame, I18N.gui("error.title"),
+          I18N.gui("error.pause.spreadsheet"),
           Array(I18N.gui.get("common.buttons.ok")))
         return
       }
@@ -154,17 +165,48 @@ class Supervisor(
     if (options.table != null && options.table.trim() != "") {
       val fileName = options.table.trim()
       if (protocol.runsCompleted == 0 || new java.io.File(fileName).exists) {
-        addExporter(new TableExporter(
+        tableExporter = new TableExporter(
           workspace.getModelFileName,
           workspace.world.getDimensions,
           worker.protocol,
-          new PrintWriter(new FileWriter(fileName, protocol.runsCompleted > 0))))
+          new PrintWriter(new FileWriter(fileName, protocol.runsCompleted > 0)))
+        tableFileName = fileName
+        addExporter(tableExporter)
       }
       else {
         OptionDialog.showMessage(
-          workspace.getFrame, "Error During Experiment",
-          "Table output file has been moved or deleted.",
+          workspace.getFrame, I18N.gui("error.title"),
+          I18N.gui("error.pause.table"),
           Array(I18N.gui.get("common.buttons.ok")))
+        return
+      }
+    }
+    if (options.stats != null && options.stats.trim() != "") {
+      if (tableFileName != null || spreadsheetFileName != null) {
+        val fileName = options.stats.trim()
+        try {
+          statsExporter = new StatsExporter(
+            workspace.getModelFileName,
+            workspace.world.getDimensions,
+            worker.protocol,
+            new PrintWriter(new FileWriter(fileName)),
+            {
+              if (tableExporter != null) LabPostProcessorInputFormat.Table(tableFileName)
+              else LabPostProcessorInputFormat.Spreadsheet(spreadsheetFileName)
+            })
+          addExporter(statsExporter)
+        } catch {
+          case e: IOException =>
+            failure(e)
+            return
+        }
+      } else {
+        EventQueue.mustBeEventDispatchThread()
+        OptionDialog.showMessage(
+          workspace.getFrame, I18N.gui("error.title"),
+          I18N.gui("error.stats"),
+          Array(I18N.gui.get("common.buttons.ok"))
+        )
         return
       }
     }
@@ -177,13 +219,13 @@ class Supervisor(
           worker.protocol,
           new PrintWriter(new FileWriter(fileName)),
           if (options.table != null && options.table.trim() != "") {
-            LabListsExporterFormat.TableFormat(options.table.trim())
+            LabPostProcessorInputFormat.Table(options.table.trim())
           } else if (options.spreadsheet != null && options.spreadsheet.trim() != "") {
-            LabListsExporterFormat.SpreadsheetFormat(options.spreadsheet.trim())
+            LabPostProcessorInputFormat.Spreadsheet(options.spreadsheet.trim())
           } else {
             OptionDialog.showMessage(
-              workspace.getFrame, "Error During Experiment",
-              "Lists output selected with no spreadsheet or table output.",
+              workspace.getFrame, I18N.gui("error.title"),
+              I18N.gui("error.lists"),
               Array(I18N.gui.get("common.buttons.ok")))
             return
           }))
@@ -284,20 +326,20 @@ class Supervisor(
     t match {
       case ex: CompilerException =>
         OptionDialog.showMessage(
-          workspace.getFrame, "Error During Experiment",
-          "Experiment aborted due to syntax error:\n" + ex.getMessage,
+          workspace.getFrame, I18N.gui("error.title"),
+          I18N.gui("error.compilation") + "\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok"))
         )
       case ex: LogoException =>
         OptionDialog.showMessage(
-          workspace.getFrame, "Error During Experiment",
-          "Experiment aborted due to runtime error:\n" + ex.getMessage,
+          workspace.getFrame, I18N.gui("error.title"),
+          I18N.gui("error.runtime") + "\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok"))
         )
       case ex: IOException =>
         OptionDialog.showMessage(
-          workspace.getFrame, "Error During Experiment",
-          "Experiment aborted due to file input or output (I/O) error:\n" + ex.getMessage,
+          workspace.getFrame, I18N.gui("error.title"),
+          I18N.gui("error.io") + "\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok"))
         )
       case _ => Exceptions.handle(t)

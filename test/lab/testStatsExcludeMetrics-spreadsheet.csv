@@ -1,0 +1,12 @@
+"[run number]","1","1","1","2","2","2","3","3","3"
+"[reporter]","[step]","string-test","list-test","[step]","string-test","list-test","[step]","string-test","list-test"
+"[final]","2","a","3","2","a","3","2","a","3"
+"[min]","0",,"0","0",,"0","0",,"0"
+"[max]","2",,"3","2",,"3","2",,"3"
+"[mean]","1",,,"1",,,"1",,
+"[total steps]","2","2","2","2","2","2","2","2","2"
+
+"[all run data]","[step]","string-test","list-test","[step]","string-test","list-test","[step]","string-test","list-test"
+,"0","a","0","0","a","0","0","a","0"
+,"1","a","[1 2]","1","a","[1 2]","1","a","[1 2]"
+,"2","a","3","2","a","3","2","a","3"

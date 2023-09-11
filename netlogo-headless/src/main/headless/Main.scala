@@ -70,6 +70,7 @@ object Main {
     var experiment: Option[String] = None
     var tableWriter: Option[java.io.PrintWriter] = None
     var spreadsheetWriter: Option[java.io.PrintWriter] = None
+    var statsWriter: Option[(java.io.PrintWriter, String)] = None
     var listsWriter: Option[(java.io.PrintWriter, String)] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
@@ -124,6 +125,8 @@ object Main {
           outputPath = localOut
         spreadsheetWriter = Some(path2writer(localOut))
       }
+      else if(arg == "--stats")
+        { requireHasNext(); statsWriter = Some((path2writer(it.next()), outputPath)) }
       else if(arg == "--lists")
         { requireHasNext(); listsWriter = Some((path2writer(it.next()), outputPath)) }
       else if(arg == "--threads")
@@ -144,6 +147,9 @@ object Main {
     val dimStrings = List(minPxcor, maxPxcor, minPycor, maxPycor)
     if(dimStrings.exists(_.isDefined) && dimStrings.exists(!_.isDefined))
       die("if any of min/max-px/ycor are specified, all four must be specified")
+    if (statsWriter != None && (tableWriter == None && spreadsheetWriter == None)) {
+      die("You cannot specify --stats without also specifying --table or --spreadsheet. Try --help for more information.")
+    }
     val dims =
       if(dimStrings.forall(!_.isDefined))
         None
@@ -151,6 +157,6 @@ object Main {
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
     Some(new Settings(model.get, experiment, setupFile, tableWriter,
-                      spreadsheetWriter, listsWriter, dims, threads, suppressErrors, updatePlots))
+                      spreadsheetWriter, statsWriter, listsWriter, dims, threads, suppressErrors, updatePlots))
   }
 }

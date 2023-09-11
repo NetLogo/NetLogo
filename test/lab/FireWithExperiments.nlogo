@@ -443,14 +443,6 @@ repeat 180 [ go ]
     <metric>burned-trees</metric>
     <runMetricsCondition>burned-trees mod 2 = 0</runMetricsCondition>
   </experiment>
-  <experiment name="experiment" repetitions="1" runMetricsEveryStep="true">
-    <setup>setup</setup>
-    <go>go</go>
-    <metric>count turtles</metric>
-    <enumeratedValueSet variable="density">
-      <value value="57"/>
-    </enumeratedValueSet>
-  </experiment>
 </experiments>
 @#$#@#$#@
 @#$#@#$#@
