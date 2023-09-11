@@ -27,6 +27,7 @@ class Supervisor(
   dialogFactory: EditDialogFactoryInterface,
   saveProtocol: (LabProtocol) => Unit,
 ) extends Thread("BehaviorSpace Supervisor") {
+  private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace")
   var options = protocol.runOptions
   val worker = new Worker(protocol)
   val headlessWorkspaces = new ListBuffer[Workspace]
@@ -45,13 +46,16 @@ class Supervisor(
         e match {
           case ee: EngineException =>
             val msg = ee.runtimeErrorMessage
-            System.err.println("Run #" + runNumber + ", RUNTIME ERROR: " + msg)
+            System.err.println(I18N.gui("error.print.runNumber") +
+              runNumber + ", " + I18N.gui("error.print.runtime") + ": " + msg)
             ee.printStackTrace(System.err)
           case le: LogoException =>
-            System.err.println("Run #" + runNumber + ", RUNTIME ERROR: " + le.getMessage)
+            System.err.println(I18N.gui("error.print.runNumber") +
+              runNumber + ", " + I18N.gui("error.print.runtime") + ": " + le.getMessage)
             le.printStackTrace(System.err)
           case _ =>
-            System.err.println("Run #" + runNumber + ", JAVA EXCEPTION: " + e.getMessage)
+            System.err.println(I18N.gui("error.print.runNumber") +
+              runNumber + ", " + I18N.gui("error.print.javaException") + ": " + e.getMessage)
             e.printStackTrace(System.err)
         }
         Exceptions.handle(e)
@@ -144,16 +148,16 @@ class Supervisor(
         } catch {
           case _: Throwable =>
             OptionDialog.showMessage(
-              workspace.getFrame, "Error During Experiment",
-              "Unable to read existing spreadsheet output, data is not intact.",
+              workspace.getFrame, I18N.gui("error.title"),
+              I18N.gui("error.pause.invalidSpreadsheet"),
               Array(I18N.gui.get("common.buttons.ok")))
             return
         }
       }
       else {
         OptionDialog.showMessage(
-          workspace.getFrame, "Error During Experiment",
-          "Spreadsheet output file has been moved or deleted.",
+          workspace.getFrame, I18N.gui("error.title"),
+          I18N.gui("error.pause.spreadsheet"),
           Array(I18N.gui.get("common.buttons.ok")))
         return
       }
@@ -171,8 +175,8 @@ class Supervisor(
       }
       else {
         OptionDialog.showMessage(
-          workspace.getFrame, "Error During Experiment",
-          "Table output file has been moved or deleted.",
+          workspace.getFrame, I18N.gui("error.title"),
+          I18N.gui("error.pause.table"),
           Array(I18N.gui.get("common.buttons.ok")))
         return
       }
@@ -199,9 +203,9 @@ class Supervisor(
       } else {
         EventQueue.mustBeEventDispatchThread()
         OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
-          I18N.gui.get("tools.behaviorSpace.error.stats"),
-          Array(I18N.gui.get("common.buttons.continue"))
+          workspace.getFrame, I18N.gui("error.title"),
+          I18N.gui("error.stats"),
+          Array(I18N.gui.get("common.buttons.ok"))
         )
         return
       }
@@ -220,8 +224,8 @@ class Supervisor(
             LabPostProcessorInputFormat.Spreadsheet(options.spreadsheet.trim())
           } else {
             OptionDialog.showMessage(
-              workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
-              I18N.gui.get("tools.behaviorSpace.error.lists"),
+              workspace.getFrame, I18N.gui("error.title"),
+              I18N.gui("error.lists"),
               Array(I18N.gui.get("common.buttons.ok")))
             return
           }))
@@ -322,20 +326,20 @@ class Supervisor(
     t match {
       case ex: CompilerException =>
         OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
-          I18N.gui.get("tools.behaviorSpace.error.compilation") + "\n" + ex.getMessage,
+          workspace.getFrame, I18N.gui("error.title"),
+          I18N.gui("error.compilation") + "\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok"))
         )
       case ex: LogoException =>
         OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
-          I18N.gui.get("tools.behaviorSpace.error.runtime") + "\n" + ex.getMessage,
+          workspace.getFrame, I18N.gui("error.title"),
+          I18N.gui("error.runtime") + "\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok"))
         )
       case ex: IOException =>
         OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
-          I18N.gui.get("tools.behaviorSpace.error.io") + "\n" + ex.getMessage,
+          workspace.getFrame, I18N.gui("error.title"),
+          I18N.gui("error.io") + "\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok"))
         )
       case _ => Exceptions.handle(t)
