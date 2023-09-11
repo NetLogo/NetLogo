@@ -254,10 +254,13 @@ which [[stop]] is used is considered to have been aborted, so no results will be
 recorded for that step. Therefore, the stopping test should be at the beginning
 of the go commands or procedure, not at the end.
 
-**Final commands:** These are any extra commands that you want run once, when
-the run ends. Usually this is left blank, but you might use it to call the
+**Post run commands:** These are any extra commands that you want run when
+each run ends. Usually this is left blank, but you might use it to call the
 [[export-world|export-cmds]] command or record the results of
 the run in some other way.
+
+**Post experiment commands:** These are any commands that you want to run at
+the end of the experiment, after all runs have completed.
 
 **Time limit:** This lets you set a fixed maximum length for each run. If you
 don't want to set any maximum, but want the length of the runs to be controlled
