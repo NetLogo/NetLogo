@@ -164,33 +164,34 @@ All combinations of the specified values will be run. For example, if you have t
  values for a variable `a` and three values of a variable `b` six runs will result.
 
 > `[["a" 1 2]`
+
 > `["b" [2 4 10]]`
 
 This would create six runs, organized as follows:
-> `a`: 1, `b`: 2
-> `a`: 1, `b`: 2
-> `a`: 1, `b`: 6
-> `a`: 1, `b`: 6
-> `a`: 1, `b`: 10
-> `a`: 1, `b`: 10
-> `a`: 2, `b`: 2
-> `a`: 2, `b`: 2
-> `a`: 2, `b`: 6
-> `a`: 2, `b`: 6
-> `a`: 2, `b`: 10
-> `a`: 2, `b`: 10
+
+| a   | b   |
+| ---: | ---: |
+| 1   |  2  |
+| 1   |  6  |
+| 1   | 10  |
+| 2   |  2  |
+| 2   |  6  |
+| 2   | 10  |
 
 **Run combinations in sequential order checkbox** This box is checked by default, 
 and causes variables specified later to vary more quickly than those specified earlier. 
 When the box is unchecked, non-sequential order results, with variables specified earlier
  varying more quickly than those specified later.
 The non-sequential order for the variable specification above is:
-> `a`: 1, `b`: 2
-> `a`: 2, `b`: 2
-> `a`: 1, `b`: 6
-> `a`: 2, `b`: 6
-> `a`: 1, `b`: 10
-> `a`: 2, `b`: 10
+
+| a   | b   |
+| ---: | ---: |
+| 1   |  2  |
+| 2   |  2  |
+| 1   |  6  |
+| 2   |  6  |
+| 1   | 10  |
+| 2   | 10  |
 
 #### Subexperiment syntax
 *(Since 6.4)*
@@ -201,15 +202,18 @@ with one value of a variable `b` but a different two values of `a` for a second 
 of `b`, you could write it as follows:
 
 > `[["a" 1 2]["b" 1]]`
+
 > `[["a" 3 4]["b" 2]]`
 
 Note the use of doubly nested square brackets to separate each variable within a
 subexperiment. This would create four runs, organized as follows:
 
-> `a`: 1, `b`: 1
-> `a`: 2, `b`: 1
-> `a`: 3, `b`: 2
-> `a`: 4, `b`: 2
+| a   | b   |
+| ---: | ---: |
+| 1   |  1  |
+| 2   |  1  |
+| 3   |  2  |
+| 4   |  2  |
 
 The subexperiment syntax also allows you to define constants using the standard
 syntax, which will be applied to each subexperiment where they are not overwritten.
@@ -217,25 +221,33 @@ To add to the example above, if you wanted to try those combinations of `a` and 
 all with one specific value of a third variable `c`, you could write it as follows:
 
 > `["c" 5]`
+
 > `[["a" 1 2]["b" 1]]`
+
 > `[["a" 3 4]["b" 2]]`
 
 This would set `c` to 5 for all 4 subexperiments, resulting in the following runs:
 
-> `a`: 1, `b`: 1, `c`: 5
-> `a`: 2, `b`: 1, `c`: 5
-> `a`: 3, `b`: 2, `c`: 5
-> `a`: 4, `b`: 2, `c`: 5
+| a   | b     | c    |
+| ---: | ---: | ---: |
+| 1   |  1    |  5   |
+| 2   |  1    |  5   |
+| 3   |  2    |  5   |
+| 4   |  2    |  5   |
 
 You can also override a constant in a subexperiment, like the following example:
 
 > `["a" 1]`
+
 > `["b" 2]`
+
 > `[["a" 2]]`
 
 This would produce one run with the following combination:
 
-> `a`: 2, `b`: 2
+| a    | b    |
+| ---: | ---: |
+| 2    |  2   |
 
 Note that all constants must be defined before any subexperiments.
 
@@ -255,32 +267,38 @@ run even if the settings don't change, if the model uses random numbers. If you
 want to run the model more than once at each combination of settings, enter a
 higher number.
 With sequential ordering repetitions occur in sequential runs:
-> `a`: 1, `b`: 2
-> `a`: 1, `b`: 2
-> `a`: 1, `b`: 6
-> `a`: 1, `b`: 6
-> `a`: 1, `b`: 10
-> `a`: 1, `b`: 10
-> `a`: 2, `b`: 2
-> `a`: 2, `b`: 2
-> `a`: 2, `b`: 6
-> `a`: 2, `b`: 6
-> `a`: 2, `b`: 10
-> `a`: 2, `b`: 10
+
+| a   | b   |
+| ---: | ---: |
+| 1   |  2  |
+| 1   |  2  |
+| 2   |  2  |
+| 2   |  2  |
+| 1   |  6  |
+| 1   |  6  |
+| 2   |  6  |
+| 2   |  6  |
+| 1   | 10  |
+| 1   | 10  |
+| 2   | 10  |
+| 2   | 10  |
 
 With non-sequential ordering repetitions occur as a second group of runs:
-> `a`: 1, `b`: 2
-> `a`: 2, `b`: 2
-> `a`: 1, `b`: 6
-> `a`: 2, `b`: 6
-> `a`: 1, `b`: 10
-> `a`: 2, `b`: 10
-> `a`: 1, `b`: 2
-> `a`: 2, `b`: 2
-> `a`: 1, `b`: 6
-> `a`: 2, `b`: 6
-> `a`: 1, `b`: 10
-> `a`: 2, `b`: 10
+
+| a   | b   |
+| ---: | ---: |
+| 1   |  2  |
+| 2   |  2  |
+| 1   |  6  |
+| 2   |  6  |
+| 1   | 10  |
+| 2   | 10  |
+| 1   |  2  |
+| 2   |  2  |
+| 1   |  6  |
+| 2   |  6  |
+| 1   | 10  |
+| 2   | 10  |
 
 **Measure runs using these reporters:** This is where you specify what data you
 want to collect from each run. For example, if you wanted to record how the
