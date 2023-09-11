@@ -28,7 +28,7 @@ class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existi
       if (xml.contains("DOCTYPE experiments")) xml
       else DOCTYPE + "\n" + xml
     val inputSource = new sax.InputSource(new ByteArrayInputStream(
-      ticksToSteps(taggedXml).getBytes))
+      finalToPost(ticksToSteps(taggedXml)).getBytes))
     apply(inputSource)
   }
 
@@ -101,7 +101,8 @@ class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existi
       name,
       readOptional("setup"),
       readOptional("go"),
-      readOptional("final"),
+      readOptional("postRun"),
+      readOptional("postExperiment"),
       element.getAttribute("repetitions").toInt,
       { val defaultOrder = element.getAttribute("sequentialRunOrder").toString
         if (defaultOrder == "") true else defaultOrder == "true"  
@@ -135,5 +136,9 @@ class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existi
   private def ticksToSteps(str: String) =
     str.replaceAll("runMetricsEveryTick=\"", "runMetricsEveryStep=\"")
        .replaceAll("<timeLimit ticks=\"", "<timeLimit steps=\"")
+
+  private def finalToPost(str: String) =
+    str.replaceAll("<final>", "<postRun>")
+       .replaceAll("</final>", "</postRun>")
 
 }

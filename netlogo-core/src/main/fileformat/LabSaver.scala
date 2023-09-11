@@ -89,8 +89,10 @@ object LabSaver {
       element("setup", protocol.setupCommands)
     if (protocol.goCommands.trim != "")
       element("go", protocol.goCommands)
-    if (protocol.finalCommands.trim != "")
-      element("final", protocol.finalCommands)
+    if (protocol.postRunCommands.trim != "")
+      element("postRun", protocol.postRunCommands)
+    if (protocol.postExperimentCommands.trim != "")
+      element("postExperiment", protocol.postExperimentCommands)
     if (protocol.timeLimit != 0)
       elementWithAttributes("timeLimit",
                             attributes(("steps",protocol.timeLimit.toString)))
