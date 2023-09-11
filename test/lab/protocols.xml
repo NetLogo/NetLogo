@@ -63,7 +63,7 @@
   </experiment>
   <experiment name="testImmediateExit" repetitions="1" runMetricsEveryStep="true">
     <setup>set foo 0</setup>
-    <final>set foo 99</final>
+    <postRun>set foo 99</postRun>
     <timeLimit steps="4"/>
     <exitCondition>true</exitCondition>
     <metric>5</metric>
@@ -76,7 +76,7 @@
   <experiment name="experiment1" repetitions="5" runMetricsEveryStep="true">
     <setup>setup-random</setup>
     <go>go</go>
-    <final>show timer</final>
+    <postRun>show timer</postRun>
     <timeLimit steps="50"/>
     <exitCondition>"foo&amp;bar!"
 
@@ -137,7 +137,7 @@
   </experiment>
   <experiment name="testExportGraphics" repetitions="1" runMetricsEveryStep="false">
     <setup>ask patches [ set pcolor black ] crt 10 [ set size 10 fd random 40 ]</setup>
-    <final>export-view "tmp/testExportGraphics.png"</final>
+    <postRun>export-view "tmp/testExportGraphics.png"</postRun>
     <timeLimit steps="20"/>
     <metric>random 1000</metric>
   </experiment>
