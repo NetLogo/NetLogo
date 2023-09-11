@@ -2,7 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.LabProtocol
+import org.nlogo.api.{LabExporterVersion, LabProtocol}
 import org.nlogo.api.{ CSV, Dump, Version }
 import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.LabInterface.ProgressListener
@@ -29,7 +29,7 @@ abstract class Exporter(modelFileName: String,
   def writeExportHeader() {
     out.println(
       csv.headerRow(
-        Array("BehaviorSpace results (" + Version.version + ")", exporterType + " version 2.0")))
+        Array("BehaviorSpace results (" + Version.version + ")", exporterType + " version " + LabExporterVersion.version)))
     out.println(
       csv.header(modelFileName))
     out.println(
