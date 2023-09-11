@@ -4,7 +4,7 @@ package org.nlogo.headless
 
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.{ OneInstancePerTest, BeforeAndAfterEach }
-import org.nlogo.api.{ LabListsExporterFormat, FileIO, Version }
+import org.nlogo.api.{ FileIO, LabPostProcessorInputFormat, Version }
 import org.nlogo.nvm.{ LabInterface, Workspace }
 import org.nlogo.util.SlowTest
 
@@ -46,10 +46,11 @@ with OneInstancePerTest with BeforeAndAfterEach {
     workspace
   }
   def runExperiment(worldSize: Int, declarations: String, name: String,
-                    wantTable: Boolean = true, wantLists: Boolean = false) = {
+                    wantTable: Boolean = true, wantStats: Boolean = false, wantLists: Boolean = false) = {
     val workspace = newWorkspace()
     workspace.initForTesting(worldSize, declarations)
-    run("test/lab/" + name, wantTable = wantTable, wantLists = wantLists)(() => workspace, () => newWorker(name))
+    run("test/lab/" + name, wantTable = wantTable,
+      wantStats = wantStats, wantLists = wantLists)(() => workspace, () => newWorker(name))
     workspace
   }
   def run3DExperiment(name: String) {
@@ -69,23 +70,43 @@ with OneInstancePerTest with BeforeAndAfterEach {
         workspace _, () => newWorker(name))
   }
   def runExperimentFromModel(modelPath: String, experimentName: String, filename: String, threads: Int = 1,
-                             wantSpreadsheet: Boolean = true, wantTable: Boolean = true, wantLists: Boolean = false) {
+  wantSpreadsheet: Boolean = true, wantTable: Boolean = true, wantStats: Boolean = false, wantLists: Boolean = false) {
     val time = System.nanoTime
     new java.io.File("tmp").mkdir()
     new java.io.File("tmp/TestBehaviorSpace").mkdir()
     val tablePath = "tmp/TestBehaviorSpace/" + time + "-table.csv"
     val spreadsheetPath = "tmp/TestBehaviorSpace/" + time + "-spreadsheet.csv"
+    val statsPath = "tmp/TestBehaviorSpace/" + time + "-stats.csv"
     val listsPath = "tmp/TestBehaviorSpace/" + time + "-lists.csv"
     // let's go through headless.Main here so that code gets some testing - ST 3/9/09
-    Main.main(Array("--model", modelPath, "--experiment", experimentName,
-                    "--table", tablePath, "--spreadsheet", spreadsheetPath, "--lists", listsPath,
-                    "--threads", threads.toString, "--suppress-errors"))
-    if (wantTable)
+    if (wantStats) {
+      if (wantTable && wantSpreadsheet) {
+        Main.main(Array("--model", modelPath, "--experiment", experimentName,
+                "--table", tablePath, "--spreadsheet", spreadsheetPath, "--stats", statsPath, "--lists", listsPath,
+                "--threads", threads.toString, "--suppress-errors"))
+      } else if (wantTable) {
+        Main.main(Array("--model", modelPath, "--experiment", experimentName,
+                "--table", tablePath, "--stats", statsPath, "--lists", listsPath,
+                "--threads", threads.toString, "--suppress-errors"))
+      } else if (wantSpreadsheet) {
+        Main.main(Array("--model", modelPath, "--experiment", experimentName,
+                "--spreadsheet", spreadsheetPath, "--stats", statsPath, "--lists", listsPath,
+                "--threads", threads.toString, "--suppress-errors"))
+      }
+    } else {
+        Main.main(Array("--model", modelPath, "--experiment", experimentName,
+                  "--table", tablePath, "--spreadsheet", spreadsheetPath, "--stats", statsPath, "--lists", listsPath,
+                  "--threads", threads.toString, "--suppress-errors"))
+    }
+    if (!wantStats && wantTable)
       assertResult(slurp(filename + "-table.csv"))(
         withoutFirst6Lines(slurp(tablePath)))
-    if (wantSpreadsheet)
+    if (!wantStats && wantSpreadsheet)
       assertResult(slurp(filename + "-spreadsheet.csv"))(
         withoutFirst6Lines(slurp(spreadsheetPath)))
+    if (wantStats)
+      assertResult(slurp(filename + "-stats.csv"))(
+        withoutFirst6Lines(slurp(statsPath)))
     if (wantLists)
       assertResult(slurp(filename + "-lists.csv"))(
         withoutFirst6Lines(slurp(listsPath)))
@@ -93,8 +114,8 @@ with OneInstancePerTest with BeforeAndAfterEach {
   // sorry this has gotten so baroque with all the closures and tuples and
   // whatnot. it should be redone - ST 8/19/09
   def run(filename: String, threads: Int = 1, wantTable: Boolean = true, wantSpreadsheet: Boolean = true,
-          wantLists: Boolean = false)
-         (fn: () => Workspace, fn2: () => LabInterface.Worker) {
+          wantStats: Boolean = false, wantLists: Boolean = false)
+          (fn: () => Workspace, fn2: () => LabInterface.Worker) {
     val dims = fn.apply.world.getDimensions
     def runHelper(fns: List[(String, (LabInterface.Worker, java.io.StringWriter) => Unit)]) {
       val worker = fn2.apply
@@ -105,35 +126,73 @@ with OneInstancePerTest with BeforeAndAfterEach {
       for (((suffix, _), writer) <- fns zip writers) {
         val resultsPath = filename + suffix
         withClue(resultsPath) {
-          assertResult(slurp(resultsPath))(
-          withoutFirst6Lines(stripLineFeeds(writer.toString)))
+          // Compare up to 2 decimal places for numbers used in statistics to avoid rounding issues
+          if (suffix == "-stats.csv") {
+            val output = withoutFirst6Lines(stripLineFeeds(writer.toString))
+            var rebuild = ""
+            var i = 0
+            while (i < output.length) {
+              if (output(i).isDigit) {
+                var currentChunk = ""
+                while (output(i) != ' ' && output(i) != '"' && output(i) != ']') {
+                  currentChunk += output(i)
+                  i += 1
+                }
+                try {
+                  val number = currentChunk.toDouble
+                  rebuild += ((number * 100).round.toDouble / 100).toString + output(i)
+                } catch {
+                  case _: java.lang.NumberFormatException => rebuild += currentChunk
+                }
+              } else {
+                rebuild += output(i)
+              }
+              i += 1
+            }
+          } else {
+            assertResult(slurp(resultsPath))(
+            withoutFirst6Lines(stripLineFeeds(writer.toString)))
+          }
         }
       }
     }
+
     def table(worker: LabInterface.Worker, writer: java.io.StringWriter) {
       worker.addTableWriter(filename, dims, new java.io.PrintWriter(writer))
     }
     def spreadsheet(worker: LabInterface.Worker, writer: java.io.StringWriter) {
       worker.addSpreadsheetWriter(filename, dims, new java.io.PrintWriter(writer))
     }
+    def stats(worker: LabInterface.Worker, writer: java.io.StringWriter) {
+      if (wantTable || wantSpreadsheet) {
+        worker.addStatsWriter(filename, dims, new java.io.PrintWriter(writer), {
+          if (wantTable) LabPostProcessorInputFormat.Table(filename + "-table.csv")
+          else LabPostProcessorInputFormat.Spreadsheet(filename + "-spreadsheet.csv")
+        })
+      }
+    }
     def lists(worker: LabInterface.Worker, writer: java.io.StringWriter) {
       if (wantTable) {
         worker.addListsWriter(filename, dims, new java.io.PrintWriter(writer),
-                              LabListsExporterFormat.TableFormat(filename + "-table.csv"))
+                              LabPostProcessorInputFormat.Table(filename + "-table.csv"))
       }
       else if (wantSpreadsheet)
       {
         worker.addListsWriter(filename, dims, new java.io.PrintWriter(writer),
-                              LabListsExporterFormat.SpreadsheetFormat(filename + "-spreadsheet.csv"))
+                              LabPostProcessorInputFormat.Spreadsheet(filename + "-spreadsheet.csv"))
       }
     }
-    runHelper(List(("-table.csv", table _), ("-spreadsheet.csv", spreadsheet _), ("-lists.csv", lists _))
-      .filter {
-        case (suffix, _) =>
-          suffix == "-table.csv" && wantTable ||
-            suffix == "-spreadsheet.csv" && wantSpreadsheet ||
-              suffix == "-lists.csv" && wantLists
-      })
+    if (wantStats) {
+      runHelper(List(("-stats.csv", stats _)))
+    } else {
+      runHelper(List(("-table.csv", table _), ("-spreadsheet.csv", spreadsheet _), ("-lists.csv", lists _))
+            .filter {
+              case (suffix, _) =>
+                suffix == "-table.csv" && wantTable ||
+                  suffix == "-spreadsheet.csv" && wantSpreadsheet ||
+                    suffix == "-lists.csv" && wantLists
+            })
+    }
   }
 
   test("BehaviorSpace1", SlowTest.Tag) {
@@ -336,13 +395,28 @@ with OneInstancePerTest with BeforeAndAfterEach {
   test("ComplexSubExperiments", SlowTest.Tag) {
     runExperiment(0, "globals [a b c]", "testComplexSubExperiments")
   }
+  test("SimpleLists", SlowTest.Tag) {
+    runExperiment(4, "globals [n]", "testSimpleLists", true)
+  }
   test("SimpleListsWithTable", SlowTest.Tag) {
-    runExperiment(4, "globals [n]", "testSimpleLists", true, true)
+    runExperiment(4, "globals [n]", "testSimpleLists", true, wantLists=true)
   }
   test("SimpleListsWithSpreadsheet", SlowTest.Tag) {
-    runExperiment(4, "globals [n]", "testSimpleLists", false, true)
+    runExperiment(4, "globals [n]", "testSimpleLists", false, wantLists=true)
   }
   test("ListsEmptyExperiment", SlowTest.Tag) {
-    runExperiment(0, "", "testListsEmptyExperiment", true, true)
+    runExperiment(0, "", "testListsEmptyExperiment", true, wantLists=true)
+  }
+  test("StatsWithTable", SlowTest.Tag) {
+    runExperiment(4, "", "testStats", wantTable=true, wantStats=true)
+  }
+  test("StatsWithSpreadsheet", SlowTest.Tag) {
+    runExperiment(4, "", "testStats", wantTable=false, wantStats=true)
+  }
+  test("ExcludeStatsMetricsTable", SlowTest.Tag) {
+    runExperiment(4, "globals [string-test list-test]", "testStatsExcludeMetrics", wantStats=true)
+  }
+  test("ExcludeStatsMetricsSpreadsheet", SlowTest.Tag) {
+    runExperiment(4, "globals [string-test list-test]", "testStatsExcludeMetrics", wantTable=false, wantStats=true)
   }
 }
