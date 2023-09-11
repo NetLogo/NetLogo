@@ -9,6 +9,23 @@ This guide has three parts:
 - [**Advanced Usage**](#advanced-usage): How to use BehaviorSpace from the command
   line, or from your own Java code.
 
+A number of new features were introduce in NetLogo 6.4:
+
+- [**Subexperiment syntax**](#subexperiment-syntax): A syntax for allowing parameter
+ combinations to be run separately, rather than being expanded combinatorically.
+- [**Run metrics when**](#run-metrics-when): Measurements can now be conditionally recorded,
+ controlled by a reporter.
+- [**Importing and exporting**](#importing-and-exporting): Experiments can now be exported to 
+an XML file that can be used when running headlessly. Experiments can also be imported into a
+ model.
+- [**Statistics output**](#statistics-output): The mean and standard deviation
+of data from repetitions can be saved in an output file.
+- [**Lists output**](#lists-output): List data can be output in a file with one list
+ element per cell.
+- [**Paused experiments**](#paused-experiments): Experiments can now be paused and resumed.
+
+Additional minor changes can be found by searching this page for *(Since 6.4)* 
+
 ## What is BehaviorSpace?
 
 BehaviorSpace is a software tool integrated with NetLogo that allows you to
@@ -44,12 +61,15 @@ possible values, respectively. That means there are 2000 * 100 * 10 * 3 =
 time is hardly an efficient way to learn which one will evoke the speediest
 synchronization.
 
-BehaviorSpace offers you a much better way to solve this problem. If you specify
-a subset of values from the ranges of each slider, it will run the model with
-each possible combination of those values and, during each model run, record the
-results. In doing so, it samples the model's parameter space -- not
-exhaustively, but enough so that you will be able to see relationships form
-between different sliders and the behavior of the system. After all the runs are
+BehaviorSpace offers you a much better way to solve this problem by sampling the
+model's parameter space -- not exhaustively, but enough so that you will be able
+to see relationships form between different slider values and the behavior of the
+system. One way to do this is to specify a subset of values from the ranges of each
+slider. See [**Combinatorial syntaxes**](#combinatorial-syntaxes). BehaviorSpace
+will run the model with each possible combination of those values and, during each
+model run, record the results. Since NetLogo 6.4 it has been possible to specify
+ non-combinatorial sets of slider values. See
+  [**Subexperiment syntax**](#subexperiment-syntax). After all the runs are
 over, a dataset is generated which you can open in a different tool, such as a
 spreadsheet, database, or scientific visualization application, and explore.
 
@@ -68,7 +88,8 @@ and run experiment setups. Experiments are listed by name and how many model
 runs the experiment will consist of.
 
 Experiment setups are considered part of a NetLogo model and are saved as part
-of the model, but can be saved as individual files (see "Importing and exporting").
+of the model, but can be also be exported as individual files. See 
+[**Importing and exporting**](#importing-and-exporting) (*Since 6.4*).
 
 To create a new experiment setup, press the "New" button.
 
@@ -80,7 +101,7 @@ or left with their default values, depending on your needs.
 
 **Experiment name:** Experiments in the same model must have different names. If
 you open a model that contains experiments with duplicate names, the conflicting
-names will be altered to ensure that all experiment names remain unique.
+names will be altered to ensure that all experiment names remain unique. *(Since 6.4)*
 
 **Vary variables as follows:** This is where you specify which settings you want
 varied, and what values you want them to take. Variables can include sliders,
@@ -120,6 +141,7 @@ information on random seeds, see the
 [Random Numbers](programming.html#random-numbers) section of the Programming
 Guide.
 
+#### Combinatorial syntaxes
 You may specify values either by listing the values you want used, or by
 specifying that you want to try every value within a given range. For example,
 to give a slider named `number` every value from 100 to 1000 in increments of
@@ -138,23 +160,60 @@ a range.
 
 Also note that the double quotes around the variable names are required.
 
-**Subexperiment syntax:**For more advanced users, there is a third available syntax
-for varying parameters, the subexperiment syntax. This syntax allows you to define
-parameter combinations that are run separately, as opposed to being merged
-combinatorically. For example, if you wanted to try two values for a variable `a`
+All combinations of the specified values will be run. For example, if you have two
+ values for a variable `a` and three values of a variable `b` six runs will result.
+
+> `[["a" 1 2]`
+
+> `["b" [2 4 10]]`
+
+This would create six runs, organized as follows:
+
+| a   | b   |
+| ---: | ---: |
+| 1   |  2  |
+| 1   |  6  |
+| 1   | 10  |
+| 2   |  2  |
+| 2   |  6  |
+| 2   | 10  |
+
+**Run combinations in sequential order checkbox** This box is checked by default, 
+and causes variables specified later to vary more quickly than those specified earlier. 
+When the box is unchecked, non-sequential order results, with variables specified earlier
+ varying more quickly than those specified later.
+The non-sequential order for the variable specification above is:
+
+| a   | b   |
+| ---: | ---: |
+| 1   |  2  |
+| 2   |  2  |
+| 1   |  6  |
+| 2   |  6  |
+| 1   | 10  |
+| 2   | 10  |
+
+#### Subexperiment syntax
+*(Since 6.4)*
+
+For more advanced users, there is a third available syntax
+for varying parameters, the subexperiment syntax.  For example, if you wanted to try two values for a variable `a`
 with one value of a variable `b` but a different two values of `a` for a second value
 of `b`, you could write it as follows:
 
 > `[["a" 1 2]["b" 1]]`
+
 > `[["a" 3 4]["b" 2]]`
 
 Note the use of doubly nested square brackets to separate each variable within a
 subexperiment. This would create four runs, organized as follows:
 
-> `a`: 1, `b`: 1
-> `a`: 2, `b`: 1
-> `a`: 3, `b`: 2
-> `a`: 4, `b`: 2
+| a   | b   |
+| ---: | ---: |
+| 1   |  1  |
+| 2   |  1  |
+| 3   |  2  |
+| 4   |  2  |
 
 The subexperiment syntax also allows you to define constants using the standard
 syntax, which will be applied to each subexperiment where they are not overwritten.
@@ -162,25 +221,33 @@ To add to the example above, if you wanted to try those combinations of `a` and 
 all with one specific value of a third variable `c`, you could write it as follows:
 
 > `["c" 5]`
+
 > `[["a" 1 2]["b" 1]]`
+
 > `[["a" 3 4]["b" 2]]`
 
 This would set `c` to 5 for all 4 subexperiments, resulting in the following runs:
 
-> `a`: 1, `b`: 1, `c`: 5
-> `a`: 2, `b`: 1, `c`: 5
-> `a`: 3, `b`: 2, `c`: 5
-> `a`: 4, `b`: 2, `c`: 5
+| a   | b     | c    |
+| ---: | ---: | ---: |
+| 1   |  1    |  5   |
+| 2   |  1    |  5   |
+| 3   |  2    |  5   |
+| 4   |  2    |  5   |
 
 You can also override a constant in a subexperiment, like the following example:
 
 > `["a" 1]`
+
 > `["b" 2]`
+
 > `[["a" 2]]`
 
 This would produce one run with the following combination:
 
-> `a`: 2, `b`: 2
+| a    | b    |
+| ---: | ---: |
+| 2    |  2   |
 
 Note that all constants must be defined before any subexperiments.
 
@@ -199,6 +266,39 @@ x=1 y=2, x=1 y=3, x=2 y=1, and so on.
 run even if the settings don't change, if the model uses random numbers. If you
 want to run the model more than once at each combination of settings, enter a
 higher number.
+With sequential ordering repetitions occur in sequential runs:
+
+| a   | b   |
+| ---: | ---: |
+| 1   |  2  |
+| 1   |  2  |
+| 2   |  2  |
+| 2   |  2  |
+| 1   |  6  |
+| 1   |  6  |
+| 2   |  6  |
+| 2   |  6  |
+| 1   | 10  |
+| 1   | 10  |
+| 2   | 10  |
+| 2   | 10  |
+
+With non-sequential ordering repetitions occur as a second group of runs:
+
+| a   | b   |
+| ---: | ---: |
+| 1   |  2  |
+| 2   |  2  |
+| 1   |  6  |
+| 2   |  6  |
+| 1   | 10  |
+| 2   | 10  |
+| 1   |  2  |
+| 2   |  2  |
+| 1   |  6  |
+| 2   |  6  |
+| 1   | 10  |
+| 2   | 10  |
 
 **Measure runs using these reporters:** This is where you specify what data you
 want to collect from each run. For example, if you wanted to record how the
@@ -215,7 +315,10 @@ each reporter must be on a line by itself, for example:
 
 If you don't enter any reporters, the runs will still take place. This is useful
 if you want to record the results yourself your own way, such as with the
-[[export-world|export-cmds]] command.
+[[export-world|export-cmds]] command. You can use reporters you have
+ defined in the Code tab. Reporters appear as column headers. If you prefer compact
+ headers you could replace `count patches with [ pcolor = red ]` with a reporter `red-patches`
+ defined in the Code tab.
 
 **Run metrics every step:** Normally NetLogo will measure model runs at
 every step, using the reporters you entered in the previous box. If you're doing
@@ -223,14 +326,24 @@ very long model runs, you might not want all that data. Uncheck this box if you
 want to either only measure model runs at the end of the run or
 if you want to specify certain conditions when measurements should be taken.
 
-**Run metrics when:** This reporter will be used to determine when measurements
-should be recorded if they are not being recorded at every step. If no reporter
-is provided but runs are not measured at every step, measurements will be taken at
-the end of each model run.
+#### Run metrics when
+*(Since 6.4)*
+
+This reporter will be used to determine when measurements
+should be recorded if they are not being recorded at every step. Measurements 
+will be always be taken at the end of each model run, even if this text box is
+ empty as was previously the case when the *Measure runs at every step* 
+ (now *Run metrics every step*) was unchecked.  For example *ticks mod 10 = 0*
+  would record every tenth tick, as well as the last tick. Multiple reporters
+   can be combined using *and* and *or*.
 
 **Setup commands:** These commands will be used to begin each model run.
 Typically, you will enter the name of a procedure that sets up the model,
 typically `setup`. But it is also possible to include other commands as well.
+ If you want the same 
+results each time you run an experiment, you could use something like 
+`random-seed 473 setup` or to have different results for repetitions 
+`random-seed (474 + behaviorspace-run-number) setup`
 
 **Go commands:** These commands will be run over and over again to advance to
 the model to the next "step". Typically, this will be the name of a procedure,
@@ -264,6 +377,7 @@ don't want to set any maximum, but want the length of the runs to be controlled
 by the stop condition instead, enter 0.
 
 ### Importing and exporting
+*(Since 6.4)*
 
 Although experiments are tied to a model and are usually saved along with a
 model, they can also be imported and exported individually to xml files. This
@@ -296,7 +410,7 @@ the "Run" button. A dialog titled "Run Options" will appear.
 
 #### Run options: formats
 
-The "Run Options" dialog lets you choose to create data output files in two formats, **Table
+The "Run Options" dialog lets you choose to create data output files in two primary formats, **Table
 output** and **Spreadsheet output**. If one or both of these formats is selected, you can
 also select the supplementary **Lists output** and **Statistics output**. Each file path can be entered in its
 corresponding text box, or using the **Browse...* button to select a file path using the system
@@ -311,7 +425,8 @@ version used, 2) the name of the NetLogo model file used, 3) the name of the Beh
 experiment used, 4) the date and time at the start, and 5) the dimensions of the world used at
 the start.
 
-The **Table output** format lists each measurement step from each run in its own row, with each
+#### Table output
+This format lists each measurement step from each run in its own row, with each
 metric in a separate column.  The measurement rows will appear in the order they happen in real
 time.  With the **parallel runs** option the measurements may appear in a mixed order as
 multiple runs can happen simultaneously.  To help identify which run a row belongs to, there is
@@ -330,7 +445,8 @@ measurement metric data is in purple.
 
 ![[bs-table.png]]
 
-The **Spreadsheet output** format lists the step numbers as well as each metric for each run in a
+#### Spreadsheet output
+This format lists the step numbers as well as each metric for each run in a
 separate column, with each row corresponding to a measurement step that applies to all runs. If one
 run finishes before another due to a **stop condition**, then its step numbers after that
 point will be blank. At the top of the file there is a `[run number]` row that will have the run
@@ -360,6 +476,9 @@ metrics are in orange, and the measurement metric data is in purple.
 
 ![[bs-spreadsheet.png]]
 
+#### Statistics output
+*(Since 6.4)*
+
 If the **Statistics output** is enabled, data in either the specified **Table output** or
 **Spreadsheet output** is used to calculate the mean and standard deviation of each numeric
 metric across repetitions for each step. These calculations are done at the end of the experiment.
@@ -378,7 +497,10 @@ combinations are in green, the steps are in blue, and the statistics are in purp
 
 ![[bs-stats.png]]
 
-The **Lists output** format is a supplement to the other two formats, as opposed to a complete data
+#### Lists output
+*(Since 6.4)*
+
+This format is a supplement to the other two primary formats, as opposed to a complete data
 collection format. If you have any reporters that return a list, you can use the **Lists output**
 format to get properly formatted output for those reporters. In both **Spreadsheet output** and
 **Table output** formats, lists returned by reporters will be condensed into a single cell, rather
@@ -407,7 +529,8 @@ spreadsheet and database programs.
 The run options dialog lets you choose whether to update plots and monitors or not.
 Unchecking the box will result in better performance. Note that if you begin
 the experiment with the box unchecked, then you will not be able to toggle
-between enabling and disabling the update plots checkbox in the "Running Experiments" dialog.
+between enabling and disabling the update plots checkbox in the "Running Experiments" dialog 
+*(Since 6.4)*.
 Check the box if you you want to export plot data using primitives such as [[export-interface|export-cmds]],
 [[export-plot|export-cmds]], [[export-all-plots|export-cmds]], and [[export-world|export-cmds]].
 
@@ -467,29 +590,43 @@ box checked, then you'll see a plot of how they vary over the course of each run
 
 You can also watch the runs in the main NetLogo window. (If the "Running
 Experiment" dialog is in the way, just move it to a different place on the
-screen.) If you don't need to see the plots update, then use the checkboxes in the "Running Experiment" dialog to
-turn the updating off. This will make the experiment go faster.
-However, if you already disabled updating plots and monitors in the run options, this checkbox will be disabled.
+screen.) If you don't need to see the plots update, then use the checkboxes in 
+the "Running Experiment" dialog to turn the updating off. This will make the
+ experiment go faster. However, if you already disabled updating plots and monitors
+  in the run options, this checkbox will be disabled *(Since 6.4)*.
 
 If you want to stop your experiment before it's finished, you have two options.
 To stop the experiment after the current runs have completed and save your progress
-for later, press the "Pause" button. To stop the experiment immediately without
+for later, press the "Pause" button *(Since 6.4)*. To stop the experiment immediately without
 waiting for the current runs to complete, press the "Abort" button. Any output
 generated so far will still be saved, but pressing "Abort" can lead to fragmented
 data, so aborted experiments cannot be resumed.
 
-When all the runs have finished, the experiment is complete.
+When all the runs have finished, the experiment is complete. Spreadsheet, Lists and Stats
+ output are created at this point.
 
 #### Paused experiments
+*(Since 6.4)*
 
 Paused experiments will appear in the BehaviorSpace window marked with "In Progress".
 To resume an experiment where you paused it, select it and press the "Run" button.
 To reset a paused experiment to its initial state, select it and press the "Abort"
 button.
 
+If you are using Spreadsheet output a file containing the data up until the experiment is
+ paused will be written. This data will be used as part of the creation of a complete 
+ Spreadsheet file. Note that if your experiment is writing to its own external file you
+  may need to make some changes in order for pausing to work correctly. For example you 
+  should use `file-flush` or `file-close` at the end of each run to ensure all the data
+   is written to the file, and should do `file-open` before doing any writing during a
+   run. When opening a file in writing mode, all new data will be appended to the end
+    of the original file, which is probably the behavior you want.
+
 Note that moving or deleting output files before resuming a paused experiment will
 cause an error. Outputting new experiment data to a file associated with an existing
 paused experiment may also ause an error when that experiment is resumed.
+
+
 
 ## Advanced Usage
 
@@ -520,6 +657,10 @@ open the graphical interface otherwise).
   output)
 - `--spreadsheet <path>`: pathname to send table output to (or `-` for standard
   output)
+- `--lists <path>`: pathname to send lists output to (or - for standard output),
+  cannot be used without `--table` or `--spreadsheet`
+- --stats <path>: pathname to send statistics output to (or - for standard output)
+ cannot be used without `--table` or `--spreadsheet`
 - `--threads <number>`: use this many threads to do model runs in parallel, or 1
   to disable parallel runs. defaults to one thread per processor.
 - `--update-plots`: enable plot updates. Include this if you want to export plot data,
@@ -534,11 +675,11 @@ open the graphical interface otherwise).
 specify either `--table` or `--spreadsheet`, or both. If you specify any of the
 world dimensions, you must specify all four.
 
-Note that in prior versions of NetLogo the directions were to use `netlogo-headless.sh`
+Note that prior to NetLogo 6.3.0 the directions were to use `netlogo-headless.sh`
 (or `netlogo-headless.bat` on Windows) along with a separate installation of Java of the
 system to run BehaviorSpace experiments.  The `netlogo-headless.sh` script is still
 included with NetLogo and can still be used as before, which might be preferrable in
-server environments where the installed Java version is strictly controller.  But the
+server environments where the installed Java version is strictly controlled.  But the
 recommended method for on a personal computer is to use the `NetLogo_Console
 --headless` app.  Because `NetLogo_Console` uses the Java that comes bundled with NetLogo it
 requires no extra software installation or configuration.
@@ -566,7 +707,7 @@ After the named experiment has run, the results are sent to standard output in
 table format, as CSV. `-` is how you specify standard output instead of output
 to a file.
 
-When running netlogo headless, it forces the system property `java.awt.headless`
+When running NetLogo headless, it forces the system property `java.awt.headless`
 to be true. This tells Java to run in headless mode, allowing NetLogo to run on
 machines when a graphical display is not available.
 
@@ -607,7 +748,9 @@ Yet another example:
   --model "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
   --experiment "Wolf Sheep Simple model analysis" \
   --table wsp5-table-output.csv \
-  --spreadsheet wsp5-spreadsheet-output.csv
+  --spreadsheet wsp5-spreadsheet-output.csv \
+  --lists wsp5-lists-output.csv \
+  --stats wsp5-stats-output.csv
 ```
 
 The optional `--table <filename>` argument specifies that output should be
@@ -615,20 +758,35 @@ generated in a table format and written to the given file as CSV data. If `-` is
 specified as the filename, than the output is sent to the standard system output
 stream. Table data is written as it is generated, with each complete run.
 
-The optional `--spreadsheet <filename>` argument specified that spreadsheet
+The optional `--spreadsheet <filename>` argument specifies that spreadsheet
 output should be generated and written to the given file as CSV data. If `-` is
 specified as the filename, than the output is sent to the standard system output
 stream. Spreadsheet data is not written out until all runs in the experiment are
 finished.
 
+The optional `--lists <filename>` argument specifies that lists
+output should be generated and written to the given file as CSV data. If `-` is
+specified as the filename, than the output is sent to the standard system output
+stream. Lists data is not written out until all runs in the experiment are
+finished.
+
+The optional `--stats <filename>` argument specifies that stats
+output should be generated and written to the given file as CSV data. If `-` is
+specified as the filename, than the output is sent to the standard system output
+stream. Stats data is not written out until all runs in the experiment are
+finished.
+
 Note that it is legal to specify both `--table` and `--spreadsheet`, and if you
-do, both kinds of output file will be generated.
+do, both kinds of output file will be generated. If you use `--lists` or `--stats`
+ at least one of the `--table` or `--spreadsheet`  options must be used.
 
 Here is an example that shows how to run an experiment setup which is
 stored in a separate XML file, instead of in the model file (see below for more
 information on the XML file format).  This assumes you've created a
 `my-wsp-setups.xml` file with a `My WSP Exploration" experiment and placed it
-in your home directory.
+in your home directory. The most straight-forward way to create a setup file 
+is to create an experiment using BehaviorSpace in the NetLogo GUI and use the
+ **Export ** option.
 
 ```sh
 ./NetLogo_Console --headless \
@@ -670,9 +828,9 @@ the DTD from the JAR using Java's "jar" utility or with any program that
 understands zip format.)
 
 The easiest way to learn what setups look like in XML, though, is to author a
-few of them in BehaviorSpace's GUI, save the model, and then examine the
-resulting .nlogo file in a text editor. The experiment setups are stored towards
-the end of the .nlogo file, in a section that begins and ends with a
+few of them in BehaviorSpace's GUI, save the model, export them *(Since 6.4)* and then examine the
+resulting .xml file(s) in a text editor. The experiment setups can also be found
+ towards the end of the .nlogo file, in a section that begins and ends with a
 `experiments` tag. Example:
 
 ```xml
@@ -714,9 +872,11 @@ will hopefully be apparent how to use the tags to specify different kind of
 experiments. The DTD specifies which tags are required and which are optional,
 which may be repeated and which may not, and so forth.
 
-When XML for experiment setups is included in a model file, it does not begin
-with any XML headers, because not the whole file is XML, only part of it. If you
-keep experiment setups in their own file, separate from the model file, then the
+If you want to create a setup file for NetLogo 6.3.0 and earlier versions for 
+which **Export** is not available you need to know that in a model file the XML for
+ experiment setups does not begin with any XML headers, because the not whole file
+ is XML, only part of it.
+Therefore if you manually create a separate file for experiment setups, the
 extension on the file should be .xml not .nlogo, and you'll need to begin the
 file with proper XML headers, as follows:
 
