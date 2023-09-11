@@ -137,19 +137,17 @@ class Supervisor(
         } catch {
           case _: Throwable =>
             OptionDialog.showMessage(
-              workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
-              I18N.gui.get("tools.behaviorSpace.error.invalidSpreadsheetData"),
-              Array(I18N.gui.get("common.buttons.continue"))
-            )
+              workspace.getFrame, "Error During Experiment",
+              "Unable to read existing spreadsheet output, data is not intact.",
+              Array(I18N.gui.get("common.buttons.ok")))
             return
         }
       }
       else {
         OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
-          I18N.gui.get("tools.behaviorSpace.error.missing.spreadsheet"),
-          Array(I18N.gui.get("common.buttons.continue"))
-        )
+          workspace.getFrame, "Error During Experiment",
+          "Spreadsheet output file has been moved or deleted.",
+          Array(I18N.gui.get("common.buttons.ok")))
         return
       }
     }
@@ -164,10 +162,9 @@ class Supervisor(
       }
       else {
         OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
-          I18N.gui.get("tools.behaviorSpace.error.missing.table"),
-          Array(I18N.gui.get("common.buttons.continue"))
-        )
+          workspace.getFrame, "Error During Experiment",
+          "Table output file has been moved or deleted.",
+          Array(I18N.gui.get("common.buttons.ok")))
         return
       }
     }
@@ -185,10 +182,9 @@ class Supervisor(
             LabListsExporterFormat.SpreadsheetFormat(options.spreadsheet.trim())
           } else {
             OptionDialog.showMessage(
-              workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
-              I18N.gui.get("tools.behaviorSpace.error.lists"),
-              Array(I18N.gui.get("common.buttons.continue"))
-            )
+              workspace.getFrame, "Error During Experiment",
+              "Lists output selected with no spreadsheet or table output.",
+              Array(I18N.gui.get("common.buttons.ok")))
             return
           }))
       } catch {
@@ -288,20 +284,20 @@ class Supervisor(
     t match {
       case ex: CompilerException =>
         OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
-          I18N.gui.get("tools.behaviorSpace.error.compilation") + "\n" + ex.getMessage,
+          workspace.getFrame, "Error During Experiment",
+          "Experiment aborted due to syntax error:\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok"))
         )
       case ex: LogoException =>
         OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
-          I18N.gui.get("tools.behaviorSpace.error.runtime") + "\n" + ex.getMessage,
+          workspace.getFrame, "Error During Experiment",
+          "Experiment aborted due to runtime error:\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok"))
         )
       case ex: IOException =>
         OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui.get("tools.behaviorSpace.error.title"),
-          I18N.gui.get("tools.behaviorSpace.error.io") + "\n" + ex.getMessage,
+          workspace.getFrame, "Error During Experiment",
+          "Experiment aborted due to file input or output (I/O) error:\n" + ex.getMessage,
           Array(I18N.gui.get("common.buttons.ok"))
         )
       case _ => Exceptions.handle(t)

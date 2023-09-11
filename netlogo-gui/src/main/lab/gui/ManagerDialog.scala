@@ -164,9 +164,10 @@ private class ManagerDialog(manager:       LabManager,
   }
   private def delete() {
     val selected = jlist.getSelectedIndices
-    val message = I18N.gui("delete.confirm") + " " +
-      (if (selected.length > 1) "these " + selected.length + " experiments?"
-       else "\"" + listModel.getElementAt(selected(0)).asInstanceOf[LabProtocol].name + "\"?")
+    val message = {
+      if (selected.length > 1) I18N.gui("delete.confirm.multiple", selected.length.toString)
+      else I18N.gui("delete.confirm.one", listModel.getElementAt(selected(0)).asInstanceOf[LabProtocol].name)
+    }
     if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(this, message, I18N.gui("delete"), JOptionPane.YES_NO_OPTION)) {
       for(i <- 0 until selected.length)
         manager.protocols -= listModel.getElementAt(selected(i)).asInstanceOf[LabProtocol]
@@ -282,7 +283,7 @@ private class ManagerDialog(manager:       LabManager,
       isSelected: Boolean, cellHasFocus: Boolean): Component = {
         val text =
           if (proto.runsCompleted != 0)
-            s"** In Progress ** ${proto.name} (${proto.runsCompleted}/${proto.countRuns} runs)"
+            I18N.gui("inProgress", proto.name, proto.runsCompleted.toString, proto.countRuns.toString)
           else
             s"${proto.name} (${proto.countRuns} run${(if (proto.countRuns != 1) "s" else "")})"
         setText(text)
