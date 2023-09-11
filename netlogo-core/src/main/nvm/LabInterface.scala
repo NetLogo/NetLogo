@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api.{ LabListsExporterFormat, LabProtocol }
+import org.nlogo.api.{LabProtocol, LabPostProcessorInputFormat}
 import org.nlogo.core.WorldDimensions
 
 object LabInterface {
@@ -10,8 +10,9 @@ object LabInterface {
     def addListener(l: ProgressListener)
     def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter)
     def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter)
+    def addStatsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter, in: LabPostProcessorInputFormat.Format)
     def addListsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter,
-                       in: LabListsExporterFormat.Format)
+                       in: LabPostProcessorInputFormat.Format)
     def run(testWorkspace: Workspace, fn: ()=>Workspace, threads: Int)
     def compile(w: Workspace) // only for testing purposes
   }
@@ -30,11 +31,12 @@ object LabInterface {
     externalXMLFile: Option[java.io.File],
     tableWriter: Option[java.io.PrintWriter],
     spreadsheetWriter: Option[java.io.PrintWriter],
+    statsWriter: Option[(java.io.PrintWriter, String)],
     listsWriter: Option[(java.io.PrintWriter, String)],
     dims: Option[WorldDimensions],
     threads: Int,
     suppressErrors: Boolean,
-    updatePlots: Boolean
+    updatePlots: Boolean,
     )
 }
 trait LabInterface {

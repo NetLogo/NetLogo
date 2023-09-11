@@ -298,7 +298,7 @@ the "Run" button. A dialog titled "Run Options" will appear.
 
 The "Run Options" dialog lets you choose to create data output files in two formats, **Table
 output** and **Spreadsheet output**. If one or both of these formats is selected, you can
-also select the supplementary **Lists output**. Each file path can be entered in its
+also select the supplementary **Lists output** and **Statistics output**. Each file path can be entered in its
 corresponding text box, or using the **Browse...* button to select a file path using the system
 file dialog. If you don't wish to use a particular format, you can clear the file text or click
 the **Disable** button and it'll be cleared for you. Data is collected for each run or step,
@@ -306,7 +306,7 @@ according to the setting of **Run metrics every step** option. For **Table outpu
 **Spreadsheet output** formats, the initial state of the system is recorded, after the **setup**
 commands run but before the **go** commands run for the first time.
 
-All three output formats will include a header section that has rows for 1) the NetLogo app
+All four output formats will include a header section that has rows for 1) the NetLogo app
 version used, 2) the name of the NetLogo model file used, 3) the name of the BehaviorSpace
 experiment used, 4) the date and time at the start, and 5) the dimensions of the world used at
 the start.
@@ -359,6 +359,24 @@ is in blue, the initial values of the variables for the run are in green, the ex
 metrics are in orange, and the measurement metric data is in purple.
 
 ![[bs-spreadsheet.png]]
+
+If the **Statistics output** is enabled, data in either the specified **Table output** or
+**Spreadsheet output** is used to calculate the mean and standard deviation of each numeric
+metric across repetitions for each step. These calculations are done at the end of the experiment.
+The statistics are then saved in the specified file. It is important to note that metrics
+that may produce non-numeric measurements like strings are not included in the statistics. If
+the metrics produce lists, the statistics are calculated across elements with the same index for each list.
+Statistics are not calculated for metrics that produce lists that contain non-numeric elements. Also, the type of
+the measurement must remain constant. For example, statistics are not calculated if a metric
+produces measurements that can be both lists and numbers. Furthermore, the standard deviation may be "N/A",
+which means that there were two or fewer collected measurements for that step and parameter combination,
+producing a result that is not well-defined. The experiment must use a repetitions setting of 3 or more
+to produce standard deviation values.
+
+In the below **Statistics output** sample image, the header section is in red, the parameter
+combinations are in green, the steps are in blue, and the statistics are in purple.
+
+![[bs-stats.png]]
 
 The **Lists output** format is a supplement to the other two formats, as opposed to a complete data
 collection format. If you have any reporters that return a list, you can use the **Lists output**
