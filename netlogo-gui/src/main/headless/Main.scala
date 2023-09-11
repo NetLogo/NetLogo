@@ -22,6 +22,7 @@ Run NetLogo using the NetLogo_Console app with the --headless command line argum
 * --table <path>: pathname to send table output to (or - for standard output)
 * --spreadsheet <path>: pathname to send spreadsheet output to (or - for standard output)
 * --lists <path>: pathname to send lists output to (or - for standard output), cannot be used without --table or --spreadsheet
+* --stats <path>: pathname to send statistics output to (or - for standard output)
 * --threads <number>: use this many threads to do model runs in parallel, or 1 to disable parallel runs. defaults to one thread per processor.
 * --update-plots: enable plot updates. Include this if you want to export plot data, or exclude it for better performance.
 * --min-pxcor <number>: override world size setting in model file
@@ -102,6 +103,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var experiment: Option[String] = None
     var tableWriter: Option[PrintWriter] = None
     var spreadsheetWriter: Option[PrintWriter] = None
+    var statsWriter: Option[(PrintWriter, String)] = None
     var listsWriter: Option[(PrintWriter, String)] = None
     var threads = Runtime.getRuntime.availableProcessors
     var suppressErrors = false
@@ -203,7 +205,12 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
         requireHasNext()
         listsWriter = Some((path2writer(it.next), outputPath))
 
-      } else if (arg == "--threads") {
+      } else if (arg == "--stats") {
+        requireHasNext()
+        statsWriter = Some((path2writer(it.next()), outputPath))
+      }
+
+      else if (arg == "--threads") {
         requireHasNext()
         threads = it.next().toInt
 
@@ -234,6 +241,10 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       die("If any of min/max-px/ycor are specified, all four must be specified.  Try --help for more information.")
     }
 
+    if (statsWriter != None && (tableWriter == None && spreadsheetWriter == None)) {
+      die("You cannot specify --stats without also specifying --table or --spreadsheet. Try --help for more information.")
+    }
+
     val dims = if (dimStrings.forall(!_.isDefined)) {
       None
     } else {
@@ -251,6 +262,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     , setupFile
     , tableWriter
     , spreadsheetWriter
+    , statsWriter
     , listsWriter
     , dims
     , threads
