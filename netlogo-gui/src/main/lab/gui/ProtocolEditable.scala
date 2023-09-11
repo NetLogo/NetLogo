@@ -86,8 +86,8 @@ class ProtocolEditable(protocol: LabProtocol,
     def complain(message: String) {
       if (!java.awt.GraphicsEnvironment.isHeadless)
         javax.swing.JOptionPane.showMessageDialog(
-          window, "Invalid spec for varying variables. Error:\n" + message,
-         "Invalid", javax.swing.JOptionPane.ERROR_MESSAGE)
+          window, I18N.gui.get("edit.behaviorSpace.invalidVarySpec") + message,
+         I18N.gui("invalid"), javax.swing.JOptionPane.ERROR_MESSAGE)
     }
     val list =
       try { worldLock.synchronized {
@@ -108,23 +108,23 @@ class ProtocolEditable(protocol: LabProtocol,
                                                  BigDecimal(Dump.number(step)),
                                                  BigDecimal(Dump.number(last)))
               if (constants.contains(constant)) {
-                complain(s"Constant ${variableName} defined twice"); return None
+                complain(I18N.gui.getN("edit.behaviorSpace.constantDefinedTwice", variableName)); return None
               }
               if (!subExperiments.isEmpty) {
-                complain(s"Constant ${variableName} defined after subexperiment"); return None
+                complain(I18N.gui.getN("edit.behaviorSpace.constantDefinedSubexperiment", variableName)); return None
               }
               constants = constants :+ constant
             case _ =>
-              complain("Expected three numbers here: " + Dump.list(more)); return None
+              complain(I18N.gui.get("edit.behaviorSpace.expectedThreeNumbers") + " " + Dump.list(more)); return None
           }
         case List(variableName: String, more@_*) =>
-          if (more.isEmpty) {complain(s"Expected a value for variable $variableName"); return None}
+          if (more.isEmpty) {complain(I18N.gui.getN("edit.behaviorSpace.expectedValue", variableName)); return None}
           val constant = new RefEnumeratedValueSet(variableName, more.toList)
           if (constants.contains(constant)) {
-            complain(s"Constant ${variableName} defined twice"); return None
+            complain(I18N.gui.getN("edit.behaviorSpace.constantDefinedTwice", variableName)); return None
           }
           if (!subExperiments.isEmpty) {
-            complain(s"Constant ${variableName} defined after subexperiment"); return None
+            complain(I18N.gui.getN("edit.behaviorSpace.constantDefinedSubexperiment", variableName)); return None
           }
           constants = constants :+ constant
         case List(first: LogoList, more@_*) =>
@@ -140,33 +140,33 @@ class ProtocolEditable(protocol: LabProtocol,
                                                 BigDecimal(Dump.number(step)),
                                                 BigDecimal(Dump.number(last)))
                   if (subExperiment.contains(exp)) {
-                    complain(s"Variable ${variableName} defined twice in one subexperiment"); return None
+                    complain(I18N.gui.getN("edit.behaviorSpace.variableDefinedTwiceSubexperiment",
+                      variableName)); return None
                   }
                   subExperiment = subExperiment :+ exp
                 case _ =>
-                  complain("Expected three numbers here: " + Dump.list(more)); return None
+                  complain(I18N.gui.get("edit.behaviorSpace.expectedThreeNumbers") + " " + Dump.list(more)); return None
               }
             case List(variableName: String, more@_*) =>
-              if (more.isEmpty) {complain(s"Expected a value for variable $variableName"); return None}
+              if (more.isEmpty) {complain(I18N.gui.getN("edit.behaviorSpace.expectedValue", variableName)); return None}
               val exp = new RefEnumeratedValueSet(variableName, more.toList)
               if (subExperiment.contains(exp)) {
-                complain(s"Variable ${variableName} defined twice in one subexperiment"); return None
+                complain(I18N.gui.getN("edit.behaviorSpace.variableDefinedTwiceSubexperiment", variableName)); return None
               }
               subExperiment = subExperiment :+ exp
             case _ =>
-              complain("Invalid format" + (List(first.toList) ++ more)); return None
+              complain(I18N.gui.get("edit.behaviorSpace.invalidFormat") + (List(first.toList) ++ more)); return None
           })
           subExperiments = subExperiments :+ subExperiment
         case _ =>
-          complain("Invalid format"); return None
+          complain(I18N.gui.get("edit.behaviorSpace.invalidFormat")); return None
       }
     }
     for (experiment <- subExperiments) {
       for (valueSet <- experiment) {
         if (!constants.exists(_.variableName == valueSet.variableName) &&
             subExperiments.exists(!_.exists(_.variableName == valueSet.variableName))) {
-          complain(s"Variable ${valueSet.variableName} must be defined as a constant" +
-                    " if not defined for all subexperiments"); return None
+          complain(I18N.gui.getN("edit.behaviorSpace.constantDefinedSubexperiment", valueSet.variableName)); return None
         }
       }
     }
