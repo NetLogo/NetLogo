@@ -7,6 +7,10 @@ import org.nlogo.api.{ CSV, Dump, Version }
 import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.LabInterface.ProgressListener
 
+object Exporter {
+  val NUM_HEADER_ROWS = 6
+}
+
 // abstract superclass of SpreadsheetExporter and TableExporter.
 // subclasses must implement ProgressListener's methods.
 
