@@ -95,10 +95,15 @@ trait EditDialog extends javax.swing.JDialog {
   addWindowListener(
     new java.awt.event.WindowAdapter() {
       override def windowClosing(e: java.awt.event.WindowEvent) {
-        if(editPanel.valid) {
-          editPanel.apply()
-          if(target.editFinished) bye()
-        }}})
+        if (sendEditFinishedOnCancel) {
+          if(editPanel.valid) {
+            editPanel.apply()
+            if(target.editFinished) bye()
+          }
+        } else {
+          abort()
+        }
+        }})
 
   org.nlogo.swing.Utils.addEscKeyAction(this, () => cancel(target))
 
@@ -120,7 +125,6 @@ trait EditDialog extends javax.swing.JDialog {
   }
 
   private def cancel(target: org.nlogo.api.Editable) {
-    editPanel.revert()
     if(!sendEditFinishedOnCancel || target.editFinished) {
       canceled = true
       bye()
