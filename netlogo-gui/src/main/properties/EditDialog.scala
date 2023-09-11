@@ -125,6 +125,7 @@ trait EditDialog extends javax.swing.JDialog {
   }
 
   private def cancel(target: org.nlogo.api.Editable) {
+    editPanel.revert()
     if(!sendEditFinishedOnCancel || target.editFinished) {
       canceled = true
       bye()
