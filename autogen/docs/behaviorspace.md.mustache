@@ -9,12 +9,12 @@ This guide has three parts:
 - [**Advanced Usage**](#advanced-usage): How to use BehaviorSpace from the command
   line, or from your own Java code.
 
-A number of new features were introduce in NetLogo 6.4.0:
+A number of new features were introduce in NetLogo 6.4:
 
 - [**Subexperiment syntax**](#subexperiment-syntax): A syntax for allowing parameter
  combinations to be run separately, rather than being expanded combinatorically.
-- [**Run metrics when**](#run-metrics-when): The recording of measurements can now 
-be controlled by a reporter.
+- [**Run metrics when**](#run-metrics-when): Measurements can now be conditionally recorded,
+ controlled by a reporter.
 - [**Importing and exporting**](#importing-and-exporting): Experiments can now be exported to 
 an XML file that can be used when running headlessly. Experiments can also be imported into a
  model.
@@ -85,7 +85,7 @@ and run experiment setups. Experiments are listed by name and how many model
 runs the experiment will consist of.
 
 Experiment setups are considered part of a NetLogo model and are saved as part
-of the model, but can be also be exported as individual files see 
+of the model, but can be also be exported as individual files. See 
 [**Importing and exporting**](#importing-and-exporting) (*Since 6.4*).
 
 To create a new experiment setup, press the "New" button.
@@ -847,7 +847,8 @@ which may be repeated and which may not, and so forth.
 
 If you want to create a setup file for NetLogo 6.3.0 and earlier versions for 
 which **Export** is not available you need to know that in a model file the XML for
- experiment setups does not begin with any XML headers, because the whole file is XML.
+ experiment setups does not begin with any XML headers, because the not whole file
+ is XML, only part of it.
 Therefore if you manually create a separate file for experiment setups, the
 extension on the file should be .xml not .nlogo, and you'll need to begin the
 file with proper XML headers, as follows:
