@@ -164,10 +164,11 @@ private class ManagerDialog(manager:       LabManager,
   }
   private def delete() {
     val selected = jlist.getSelectedIndices
-    val message = "Are you sure you want to delete " +
-      (if (selected.length > 1) "these " + selected.length + " experiments?"
-       else "\"" + listModel.getElementAt(selected(0)).asInstanceOf[LabProtocol].name + "\"?")
-    if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(this, message, "Delete", JOptionPane.YES_NO_OPTION)) {
+    val message = {
+      if (selected.length > 1) I18N.gui("delete.confirm.multiple", selected.length.toString)
+      else I18N.gui("delete.confirm.one", listModel.getElementAt(selected(0)).asInstanceOf[LabProtocol].name)
+    }
+    if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(this, message, I18N.gui("delete"), JOptionPane.YES_NO_OPTION)) {
       for(i <- 0 until selected.length)
         manager.protocols -= listModel.getElementAt(selected(i)).asInstanceOf[LabProtocol]
       update()
@@ -209,8 +210,8 @@ private class ManagerDialog(manager:       LabManager,
           case e: org.xml.sax.SAXParseException => {
             if (!java.awt.GraphicsEnvironment.isHeadless) {
               javax.swing.JOptionPane.showMessageDialog(manager.workspace.getFrame,
-                                                        s"""Invalid format in "${file.getName}".""",
-                                                        "Invalid",
+                                                        I18N.gui("error.import", file.getName),
+                                                        I18N.gui("invalid"),
                                                         javax.swing.JOptionPane.ERROR_MESSAGE)
             }
           }
@@ -282,7 +283,7 @@ private class ManagerDialog(manager:       LabManager,
       isSelected: Boolean, cellHasFocus: Boolean): Component = {
         val text =
           if (proto.runsCompleted != 0)
-            s"** In Progress ** ${proto.name} (${proto.runsCompleted}/${proto.countRuns} runs)"
+            I18N.gui("inProgress", proto.name, proto.runsCompleted.toString, proto.countRuns.toString)
           else
             s"${proto.name} (${proto.countRuns} run${(if (proto.countRuns != 1) "s" else "")})"
         setText(text)
