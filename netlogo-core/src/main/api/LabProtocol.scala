@@ -3,6 +3,7 @@
 package org.nlogo.api
 
 case class LabProtocol(name: String,
+                    preExperimentCommands: String,
                     setupCommands: String,
                     goCommands: String,
                     postRunCommands: String,

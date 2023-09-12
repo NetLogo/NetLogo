@@ -43,6 +43,10 @@ class Worker(val protocol: LabProtocol)
     val executor = Executors.newFixedThreadPool(threads)
     try {
       listeners.foreach(_.experimentStarted())
+      initialWorkspace.runCompiledCommands(new SimpleJobOwner("BehaviorSpace",
+                                                              initialWorkspace.world.mainRNG,
+                                                              AgentKind.Observer),
+                                           new Procedures(initialWorkspace).preExperimentProcedure)
       runners =
         (for((settings, runNumber) <- (protocol.refElements zip Stream.from(1).iterator).drop(protocol.runsCompleted))
          yield new Runner(runNumber, settings, fn)).toSeq
@@ -80,6 +84,7 @@ class Worker(val protocol: LabProtocol)
   def compile(w: Workspace) { new Procedures(w) }
   def abort() { if (runners != null) runners.foreach(_.aborted = true) }
   class Procedures(workspace: Workspace) {
+    val preExperimentProcedure = workspace.compileCommands(protocol.preExperimentCommands)
     val setupProcedure = workspace.compileCommands(protocol.setupCommands)
     val goProcedure = workspace.compileCommands(protocol.goCommands
                                                 + "\n" // protect against comments
@@ -220,10 +225,11 @@ class Worker(val protocol: LabProtocol)
 
       def checkForPlotExport() {
         if (!ws.shouldUpdatePlots &&
-            (checkForPlotExportCommand(postRunProcedure.code) ||
-              checkForPlotExportCommand(goProcedure.code) ||
-              checkForPlotExportCommand(setupProcedure.code) ||
-              checkForPlotExportCommand(postExperimentProcedure.code))) {
+            (checkForPlotExportCommand(preExperimentProcedure.code) ||
+             checkForPlotExportCommand(postRunProcedure.code) ||
+             checkForPlotExportCommand(goProcedure.code) ||
+             checkForPlotExportCommand(setupProcedure.code) ||
+             checkForPlotExportCommand(postExperimentProcedure.code))) {
           import ExportPlotWarningAction._
           ws.setTriedToExportPlot(true)
           ws.exportPlotWarningAction match {

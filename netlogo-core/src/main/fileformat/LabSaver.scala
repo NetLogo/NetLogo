@@ -85,6 +85,8 @@ object LabSaver {
                                ("repetitions", protocol.repetitions.toString),
                                ("sequentialRunOrder", protocol.sequentialRunOrder.toString),
                                ("runMetricsEveryStep", protocol.runMetricsEveryStep.toString)))
+    if (protocol.preExperimentCommands.trim != "")
+      element("preExperiment", protocol.preExperimentCommands)
     if (protocol.setupCommands.trim != "")
       element("setup", protocol.setupCommands)
     if (protocol.goCommands.trim != "")

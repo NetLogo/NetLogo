@@ -99,6 +99,7 @@ class LabLoader(literalParser: LiteralParser) {
     }
     new LabProtocol(
       name,
+      readOptional("preExperiment"),
       readOptional("setup"),
       readOptional("go"),
       readOptional("postRun"),

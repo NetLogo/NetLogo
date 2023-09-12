@@ -41,6 +41,9 @@ class ProtocolEditable(protocol: LabProtocol,
          Property("runMetricsEveryStep", Property.MetricsBoolean, I18N.gui("runMetricsEveryStep")),
          Property("runMetricsCondition", Property.ReporterLine, I18N.gui("runMetricsCondition"),
                   "<html>"+I18N.gui("runMetricsCondition.info")+"</html>", optional = true, enabled = !protocol.runMetricsEveryStep),
+         Property("preExperimentCommands", Property.Commands, I18N.gui("preExperimentCommands"),
+                  "<html>"+I18N.gui("preExperimentCommands.info")+"</html>",
+                  collapsible=true, collapseByDefault=true),
          Property("setupCommands", Property.ReporterOrEmpty, I18N.gui("setupCommands"),
                   gridWidth = GridBagConstraints.RELATIVE),
          Property("goCommands", Property.Commands, I18N.gui("goCommands")),
@@ -58,6 +61,7 @@ class ProtocolEditable(protocol: LabProtocol,
   // These are the actual vars the user edits.  Before editing they are copied out of the
   // original LabProtocol; after editing a new LabProtocol is created.
   var name = protocol.name
+  var preExperimentCommands = protocol.preExperimentCommands
   var setupCommands = protocol.setupCommands
   var goCommands = protocol.goCommands
   var postRunCommands = protocol.postRunCommands
@@ -175,7 +179,7 @@ class ProtocolEditable(protocol: LabProtocol,
       }
     }
     Some(new LabProtocol(
-      name.trim, setupCommands.trim, goCommands.trim,
+      name.trim, preExperimentCommands.trim, setupCommands.trim, goCommands.trim,
       postRunCommands.trim, postExperimentCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep,
       runMetricsCondition.trim, timeLimit, exitCondition.trim,
       metrics.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
