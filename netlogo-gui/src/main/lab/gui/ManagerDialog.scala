@@ -199,10 +199,10 @@ private class ManagerDialog(manager:       LabManager,
       for (file <- dialog.getFiles)
       {
         try {
-          for (protocol <- new LabLoader(manager.workspace.compiler.utilities,
-                                         true,
-                                         manager.protocols.map(_.name).to[collection.mutable.Set])
-                                         (scala.io.Source.fromFile(file).mkString))
+          for (protocol <- new LabLoader(manager.workspace.compiler.utilities)
+                                         (scala.io.Source.fromFile(file).mkString,
+                                          true,
+                                          manager.protocols.map(_.name).to[collection.mutable.Set]))
           {
             manager.addProtocol(protocol)
           }
