@@ -199,13 +199,13 @@ class ProtocolEditable(protocol: LabProtocol,
             more.toList match {
               case List(first: java.lang.Double,
                         step: java.lang.Double,
-                        last: java.lang.Double)
-                  if last > first && step > 0  =>
-                if (Int.MaxValue / totalCombinations > ((last - first) / step + 1)){
+                        last: java.lang.Double) =>
+                if (((last > first && step > 0) || (last < first && step < 0)) &&
+                    Int.MaxValue / totalCombinations > ((last - first) / step + 1)){
                   val multiplier: Int = ((last - first) / step + 1).toInt
                   totalCombinations = totalCombinations * (if (multiplier == 0) 1 else multiplier)
                 } else
-                  return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.increment", variableName, s"[ $first $step $last ]"))
+                  return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.increment", s"[ $variableName [ $first $step $last ] ]"))
               case _ =>
                 return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.incrementinvalid", variableName))
             }
@@ -217,6 +217,30 @@ class ProtocolEditable(protocol: LabProtocol,
               totalCombinations = totalCombinations * more.toList.size
             else return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.variablelist", variableName))
           case List(first: LogoList, more@_*) =>
+            (List(first) ++ more).foreach(_.asInstanceOf[LogoList].toList match {
+              case List() => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.field"))
+              case List(variableName: String, more: LogoList) =>
+                more.toList match {
+                  case List(first: java.lang.Double,
+                            step: java.lang.Double,
+                            last: java.lang.Double) =>
+                    if (((last > first && step > 0) || (last < first && step < 0)) &&
+                        Int.MaxValue / totalCombinations > ((last - first) / step + 1)){
+                      val multiplier: Int = ((last - first) / step + 1).toInt
+                      totalCombinations = totalCombinations * (if (multiplier == 0) 1 else multiplier)
+                    } else
+                      return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.increment", s"[ $variableName [ $first $step $last ] ]"))
+                  case _ =>
+                    return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.incrementinvalid", variableName))
+                }
+              case List(variableName: String, more@_*) =>
+                if (more.isEmpty){
+                  return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.field", variableName))
+                }
+                if ( Int.MaxValue / totalCombinations > more.toList.size )
+                  totalCombinations = totalCombinations * more.toList.size
+                else return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.variablelist", variableName))
+                })
           case _ => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.unexpected"))
         }
     }
