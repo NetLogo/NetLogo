@@ -2,7 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.LabProtocol
+import org.nlogo.api.{LabExporterVersion, LabProtocol}
 import org.nlogo.api.{ CSV, Dump, Version }
 import org.nlogo.core.WorldDimensions
 import org.nlogo.nvm.LabInterface.ProgressListener
@@ -17,7 +17,8 @@ object Exporter {
 abstract class Exporter(modelFileName: String,
                         initialDims: WorldDimensions,
                         protocol: LabProtocol,
-                        out: java.io.PrintWriter)
+                        out: java.io.PrintWriter,
+                        exporterType: String)
   extends ProgressListener
 {
   val csv = new CSV({
@@ -27,8 +28,8 @@ abstract class Exporter(modelFileName: String,
   })
   def writeExportHeader() {
     out.println(
-      csv.header(
-        "BehaviorSpace results (" + Version.version + ")"))
+      csv.headerRow(
+        Array("BehaviorSpace results (" + Version.version + ")", exporterType + " version " + LabExporterVersion.version)))
     out.println(
       csv.header(modelFileName))
     out.println(
