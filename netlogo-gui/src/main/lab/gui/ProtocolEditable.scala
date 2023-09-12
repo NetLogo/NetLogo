@@ -180,21 +180,25 @@ class ProtocolEditable(protocol: LabProtocol,
 
   override def invalidSettings: Seq[(String,String)] = {
     if (name.trim.isEmpty) {
-      return Seq("Variable" -> I18N.gui.get("edit.behaviorSpace.name.empty"))
+      return Seq(I18N.gui.get("edit.behaviorSpace.variable")
+        -> I18N.gui.get("edit.behaviorSpace.name.empty"))
     }
     if (experimentNames.contains(name.trim)) {
-      return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.name.duplicate", name.trim))
+      return Seq(I18N.gui.get("edit.behaviorSpace.variable")
+        -> I18N.gui.getN("edit.behaviorSpace.name.duplicate", name.trim))
     }
     val list =
         try { worldLock.synchronized {
           compiler.readFromString("[" + valueSets + "]").asInstanceOf[LogoList]
         } }
-      catch{ case ex: CompilerException =>  return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.compiler.parser")) }
+      catch{ case ex: CompilerException =>  return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
+        I18N.gui.getN("edit.behaviorSpace.compiler.parser")) }
     var totalCombinations = 1
     list.toList.foreach {
       case element =>
         element.asInstanceOf[LogoList].toList match {
-          case List() => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.field"))
+          case List() => return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
+            I18N.gui.getN("edit.behaviorSpace.list.field"))
           case List(variableName: String, more: LogoList) =>
             more.toList match {
               case List(first: java.lang.Double,
@@ -205,24 +209,30 @@ class ProtocolEditable(protocol: LabProtocol,
                   val multiplier: Int = ((last - first) / step + 1).toInt
                   totalCombinations = totalCombinations * (if (multiplier == 0) 1 else multiplier)
                 } else
-                  return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.increment", variableName, s"[ $first $step $last ]"))
+                  return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
+                    I18N.gui.getN("edit.behaviorSpace.list.increment", variableName, s"[ $first $step $last ]"))
               case _ =>
-                return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.incrementinvalid", variableName))
+                return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
+                  I18N.gui.getN("edit.behaviorSpace.list.incrementinvalid", variableName))
             }
           case List(variableName: String, more@_*) =>
             if (more.isEmpty){
-              return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.field", variableName))
+              return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
+                I18N.gui.getN("edit.behaviorSpace.list.field", variableName))
             }
             if ( Int.MaxValue / totalCombinations > more.toList.size )
               totalCombinations = totalCombinations * more.toList.size
-            else return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.variablelist", variableName))
+            else return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
+              I18N.gui.getN("edit.behaviorSpace.list.variablelist", variableName))
           case List(first: LogoList, more@_*) =>
-          case _ => return Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.list.unexpected"))
+          case _ => return Seq(I18N.gui.get("edit.behaviorSpace.variable")
+            -> I18N.gui.getN("edit.behaviorSpace.list.unexpected"))
         }
     }
     if ( repetitions > 0 && Int.MaxValue / repetitions >= totalCombinations )
       Seq.empty[(String,String)]
     else
-      Seq("Variable" -> I18N.gui.getN("edit.behaviorSpace.repetition.totalrun"))
+      Seq(I18N.gui.get("edit.behaviorSpace.variable")
+        -> I18N.gui.getN("edit.behaviorSpace.repetition.totalrun"))
   }
 }
