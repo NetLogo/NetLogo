@@ -210,7 +210,7 @@ private class ManagerDialog(manager:       LabManager,
           case e: org.xml.sax.SAXParseException => {
             if (!java.awt.GraphicsEnvironment.isHeadless) {
               javax.swing.JOptionPane.showMessageDialog(manager.workspace.getFrame,
-                                                        I18N.gui("error.import") + " " + file.getName,
+                                                        I18N.gui("error.import", file.getName),
                                                         I18N.gui("invalid"),
                                                         javax.swing.JOptionPane.ERROR_MESSAGE)
             }

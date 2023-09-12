@@ -86,7 +86,7 @@ class ProtocolEditable(protocol: LabProtocol,
     def complain(message: String) {
       if (!java.awt.GraphicsEnvironment.isHeadless)
         javax.swing.JOptionPane.showMessageDialog(
-          window, I18N.gui.get("edit.behaviorSpace.invalidVarySpec") + message,
+          window, I18N.gui.getN("edit.behaviorSpace.invalidVarySpec", message),
          I18N.gui("invalid"), javax.swing.JOptionPane.ERROR_MESSAGE)
     }
     val list =
@@ -115,7 +115,7 @@ class ProtocolEditable(protocol: LabProtocol,
               }
               constants = constants :+ constant
             case _ =>
-              complain(I18N.gui.get("edit.behaviorSpace.expectedThreeNumbers") + " " + Dump.list(more)); return None
+              complain(I18N.gui.getN("edit.behaviorSpace.expectedThreeNumbers", Dump.list(more))); return None
           }
         case List(variableName: String, more@_*) =>
           if (more.isEmpty) {complain(I18N.gui.getN("edit.behaviorSpace.expectedValue", variableName)); return None}
@@ -145,7 +145,7 @@ class ProtocolEditable(protocol: LabProtocol,
                   }
                   subExperiment = subExperiment :+ exp
                 case _ =>
-                  complain(I18N.gui.get("edit.behaviorSpace.expectedThreeNumbers") + " " + Dump.list(more)); return None
+                  complain(I18N.gui.getN("edit.behaviorSpace.expectedThreeNumbers", Dump.list(more))); return None
               }
             case List(variableName: String, more@_*) =>
               if (more.isEmpty) {complain(I18N.gui.getN("edit.behaviorSpace.expectedValue", variableName)); return None}
