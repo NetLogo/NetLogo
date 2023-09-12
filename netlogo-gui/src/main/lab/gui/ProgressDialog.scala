@@ -19,6 +19,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
               extends JDialog(dialog, true) with ProgressListener{
   val protocol = supervisor.worker.protocol
   val workspace = supervisor.workspace
+  private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace.progressDialog")
   private val totalRuns = protocol.countRuns
   private val progressArea = new JTextArea(10 min (protocol.valueSets(0).size + 3), 0)
   private val timer = new Timer(PeriodicUpdateDelay.DelayInMilliseconds, periodicUpdateAction)
@@ -45,14 +46,14 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
       // cause anything to happen to this plot.
       // except of course, for the measurements that this plot is displaying.
       // JC - 4/4/11
-      val plotWidget = PlotWidget("Behavior Plot", new DummyPlotManager)
+      val plotWidget = PlotWidget(I18N.gui("plot.title"), new DummyPlotManager)
       plotWidget.plot.defaultXMin = 0
       plotWidget.plot.defaultYMin = 0
       plotWidget.plot.defaultXMax = 1
       plotWidget.plot.defaultYMax = 1
       plotWidget.plot.defaultAutoPlotOn = true
-      plotWidget.xLabel("Time")
-      plotWidget.yLabel("Behavior")
+      plotWidget.xLabel(I18N.gui("plot.time"))
+      plotWidget.yLabel(I18N.gui("plot.behavior"))
       plotWidget.clear()
       plotWidget.plot.pens=Nil // make sure to start with no pens. plotWidget adds one by default.
       plotWidget.togglePenList()
@@ -66,7 +67,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     addWindowListener(new java.awt.event.WindowAdapter {
       override def windowClosing(e: java.awt.event.WindowEvent) { abortAction.actionPerformed(null) }
     })
-    setTitle("Running Experiment: " + protocol.name)
+    setTitle(I18N.gui("title", protocol.name))
     setResizable(true)
     val layout = new java.awt.GridBagLayout
     getContentPane.setLayout(layout)
@@ -124,7 +125,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   // The following actions are declared lazy so we can use them in the
   // initialization code above.  Two cheers for Scala. - ST 11/12/08
 
-  lazy val pauseAction = RichAction("Pause") { _ =>
+  lazy val pauseAction = RichAction(I18N.gui("pause")) { _ =>
     if (!supervisor.paused)
       supervisor.pause()
       pause()
@@ -132,28 +133,28 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
   def pause(): Unit = {
     setUpdateView(false)
     setPlotsAndMonitorsSwitch(false)
-    val dialog = new JDialog(this, "Pausing", true)
+    val dialog = new JDialog(this, I18N.gui("pausing"), true)
     dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
     val layout = new java.awt.GridBagLayout()
     dialog.getContentPane().setLayout(layout)
     val c = new java.awt.GridBagConstraints()
     c.insets = new java.awt.Insets(20, 20, 20, 20)
-    dialog.getContentPane().add(new JLabel("Waiting for current runs to finish...", SwingConstants.CENTER), c)
+    dialog.getContentPane().add(new JLabel(I18N.gui("waiting"), SwingConstants.CENTER), c)
     dialog.pack()
     org.nlogo.awt.Positioning.center(dialog, this)
     dialog.setVisible(true)
   }
-  lazy val abortAction = RichAction("Abort") { _ =>
+  lazy val abortAction = RichAction(I18N.gui.get("tools.behaviorSpace.abort")) { _ =>
     supervisor.abort()
   }
-  lazy val periodicUpdateAction = RichAction("update elapsed time") { _ =>
+  lazy val periodicUpdateAction = RichAction(I18N.gui("updateTime")) { _ =>
     updateProgressArea(false)
     plotWidgetOption.foreach{ plotWidget => if (updatePlots) plotWidget.handle(null) }
   }
-  lazy val displaySwitchAction = RichAction("Update view") { e =>
+  lazy val displaySwitchAction = RichAction(I18N.gui("updateView")) { e =>
     workspace.displaySwitchOn(e.getSource.asInstanceOf[JCheckBox].isSelected)
   }
-  lazy val plotsAndMonitorsSwitchAction = RichAction("Update plots and monitors") { e =>
+  lazy val plotsAndMonitorsSwitchAction = RichAction(I18N.gui("updatePlotsAndMonitors")) { e =>
     updatePlots = e.getSource.asInstanceOf[JCheckBox].isSelected
     if (updatePlots) workspace.setPeriodicUpdatesEnabled(true)
     else {
@@ -226,7 +227,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
         org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
           def run() {
             OptionDialog.showMessage(
-              workspace.getFrame, "Updating Plots Warning",
+              workspace.getFrame, I18N.gui("updatingPlotsWarningTitle"),
               I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
               Array(I18N.gui.get("common.buttons.continue"))
             )
@@ -293,9 +294,8 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
       elapsed = newElapsed
       org.nlogo.awt.EventQueue.invokeLater(new Runnable {
         def run() {
-          progressArea.setText("Run #" + runCount + " of " + totalRuns + ", " +
-                  "step #" + steps + "\n" +
-                  "Total elapsed time: " + elapsed + "\n" + settingsString)
+          progressArea.setText(I18N.gui("progressArea", runCount.toString,
+            totalRuns.toString, steps.toString, elapsed, settingsString))
           progressArea.setCaretPosition(0)
         }
       })

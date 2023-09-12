@@ -17,10 +17,10 @@ object LabLoader {
 
 import LabLoader._
 
-class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existingNames: Set[String] = Set[String]()) {
+class LabLoader(literalParser: LiteralParser) {
   if (literalParser == null)
     throw new Exception("Invalid lab loader!")
-  def apply(xml: String): Seq[LabProtocol] = {
+  def apply(xml: String, editNames: Boolean, existingNames: Set[String]): Seq[LabProtocol] = {
     // what about character encodings?  String.getBytes() will use the platform's default encoding;
     // presumably sax.InputSource will also then use that same encoding?  I'm not really sure...  it
     // doesn't seem worth stressing about - ST 12/21/04
@@ -29,10 +29,10 @@ class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existi
       else DOCTYPE + "\n" + xml
     val inputSource = new sax.InputSource(new ByteArrayInputStream(
       finalToPost(ticksToSteps(taggedXml)).getBytes))
-    apply(inputSource)
+    apply(inputSource, editNames, existingNames)
   }
 
-  def apply(inputSource: sax.InputSource): Seq[LabProtocol] = {
+  def apply(inputSource: sax.InputSource, editNames: Boolean, existingNames: Set[String]): Seq[LabProtocol] = {
     inputSource.setSystemId(getClass.getResource("/system/").toString)
     val factory = javax.xml.parsers.DocumentBuilderFactory.newInstance
     factory.setValidating(true)
@@ -44,11 +44,11 @@ class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existi
     })
     builder.parse(inputSource)
       .getElementsByTagName("experiment")
-      .map(readProtocolElement)
-      .map(fixEmptyNames)
+      .map(x => fixEmptyNames(readProtocolElement(x, editNames, existingNames),
+                              editNames, existingNames))
   }
 
-  def readProtocolElement(element: dom.Element): LabProtocol = {
+  def readProtocolElement(element: dom.Element, editNames: Boolean, existingNames: Set[String]): LabProtocol = {
     def readOneAttribute(name: String, attr: String) =
       element.getElementsByTagName(name).head.getAttribute(attr)
     def readAll(name: String) =
@@ -116,14 +116,14 @@ class LabLoader(literalParser: LiteralParser, editNames: Boolean = false, existi
       subExperiments)
   }
 
-  def fixEmptyNames(protocol: LabProtocol): LabProtocol = {
+  def fixEmptyNames(protocol: LabProtocol, editNames: Boolean, existingNames: Set[String]): LabProtocol = {
     if (editNames && protocol.name.isEmpty && existingNames.contains("no name")) {
       var n = 1
       while (existingNames.contains(s"no name ($n)")) n += 1
       existingNames += s"no name ($n)"
-      return protocol.copy(name = s"no name ($n)")
+      protocol.copy(name = s"no name ($n)")
     }
-    protocol
+    else protocol
   }
 
   // implicits to keep the code from getting too verbose
