@@ -211,7 +211,7 @@ class ProtocolEditable(protocol: LabProtocol,
                 } else
                   return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
                              I18N.gui.getN("edit.behaviorSpace.list.increment",
-                                           s"[ $variableName [ $first $step $last ] ]"))
+                                           s"[ ${'"' + variableName + '"'} [ $first $step $last ] ]"))
               case _ =>
                 return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
                   I18N.gui.getN("edit.behaviorSpace.list.incrementinvalid", variableName))
@@ -241,7 +241,7 @@ class ProtocolEditable(protocol: LabProtocol,
                     } else
                       return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
                                  I18N.gui.getN("edit.behaviorSpace.list.increment",
-                                               s"[ $variableName [ $first $step $last ] ]"))
+                                               s"[ ${'"' + variableName + '"'} [ $first $step $last ] ]"))
                   case _ =>
                     return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
                                I18N.gui.getN("edit.behaviorSpace.list.incrementinvalid", variableName))
