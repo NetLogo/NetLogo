@@ -112,7 +112,8 @@ class ListsExporter(modelFileName: String,
           }
           out.println()
           sortedLines.foreach(line => {
-            out.println(s"${line._1},${csv.header(line._2.toString)},${line._3},${csv.header(line._4.toString)},${line._5}")
+            out.println(s"${line._1},${csv.header(line._2.toString)}," +
+                        s"${if (!line._3.isEmpty) line._3 + "," else ""}${csv.header(line._4.toString)},${line._5}")
           })
         }
         else {
