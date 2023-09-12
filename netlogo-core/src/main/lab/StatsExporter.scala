@@ -1,6 +1,6 @@
 package org.nlogo.lab
 
-import org.nlogo.api.{LabProtocol, LabPostProcessorInputFormat}
+import org.nlogo.api.{LabProtocol, LabPostProcessorInputFormat, LabExporterType}
 import org.nlogo.core.{LogoList, WorldDimensions}
 import scala.collection.mutable.{ HashMap, HashSet, ListBuffer }
 import scala.collection.immutable.{ Set }
@@ -12,7 +12,7 @@ class StatsExporter(modelFileName: String,
                           protocol: LabProtocol,
                           out: java.io.PrintWriter,
                           in: LabPostProcessorInputFormat.Format)
-  extends Exporter(modelFileName, initialDims, protocol, out)
+  extends Exporter(modelFileName, initialDims, protocol, out, exporterType=LabExporterType.STATS)
 {
   type Measurements = ListBuffer[List[Any]]
   type DataPerStep = HashMap[Int, Measurements]

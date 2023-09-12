@@ -2,7 +2,7 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.{ LabPostProcessorInputFormat, LabProtocol }
+import org.nlogo.api.{ LabPostProcessorInputFormat, LabExporterType, LabProtocol }
 import org.nlogo.core.WorldDimensions
 import scala.collection.mutable.Seq
 
@@ -11,7 +11,7 @@ class ListsExporter(modelFileName: String,
                     protocol: LabProtocol,
                     out: java.io.PrintWriter,
                     in: LabPostProcessorInputFormat.Format)
-  extends Exporter(modelFileName, initialDims, protocol, out)
+  extends Exporter(modelFileName, initialDims, protocol, out, exporterType=LabExporterType.LISTS)
 {
   def finish() {
     writeExportHeader()
@@ -112,7 +112,8 @@ class ListsExporter(modelFileName: String,
           }
           out.println()
           sortedLines.foreach(line => {
-            out.println(s"${line._1},${csv.header(line._2.toString)},${line._3},${csv.header(line._4.toString)},${line._5}")
+            out.println(s"${line._1},${csv.header(line._2.toString)}," +
+                        s"${if (!line._3.isEmpty) line._3 + "," else ""}${csv.header(line._4.toString)},${line._5}")
           })
         }
         else {
