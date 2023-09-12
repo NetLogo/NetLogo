@@ -6,6 +6,7 @@ import org.nlogo.core.WorldDimensions
 import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, Version }
 import org.nlogo.nvm.LabInterface.Settings
 import org.nlogo.api.PlotCompilationErrorAction
+import scala.math.ceil
 
 object Main {
   class CancelException extends RuntimeException
@@ -72,7 +73,7 @@ object Main {
     var spreadsheetWriter: Option[java.io.PrintWriter] = None
     var statsWriter: Option[(java.io.PrintWriter, String)] = None
     var listsWriter: Option[(java.io.PrintWriter, String)] = None
-    var threads = Runtime.getRuntime.availableProcessors
+    var threads = ceil(Runtime.getRuntime.availableProcessors / 2.0).toInt
     var suppressErrors = false
     var updatePlots = false
     val it = args.iterator

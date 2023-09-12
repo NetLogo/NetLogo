@@ -15,7 +15,7 @@ A number of new features were introduce in NetLogo 6.4:
  combinations to be run separately, rather than being expanded combinatorically.
 - [**Run metrics when**](#run-metrics-when): Measurements can now be conditionally recorded,
  controlled by a reporter.
-- [**Importing and exporting**](#importing-and-exporting): Experiments can now be exported to 
+- [**Importing and exporting**](#importing-and-exporting): Experiments can now be exported to
 an XML file that can be used when running headlessly. Experiments can also be imported into a
  model.
 - [**Statistics output**](#statistics-output): The mean and standard deviation
@@ -24,7 +24,7 @@ of data from repetitions can be saved in an output file.
  element per cell.
 - [**Paused experiments**](#paused-experiments): Experiments can now be paused and resumed.
 
-Additional minor changes can be found by searching this page for *(Since 6.4)* 
+Additional minor changes can be found by searching this page for *(Since 6.4)*
 
 ## What is BehaviorSpace?
 
@@ -38,7 +38,7 @@ behaviors and determine which combinations of settings cause the behaviors of
 interest.
 
 If your computer has multiple processor cores, then by default, model runs will
-happen in parallel, one per core.
+happen in parallel, one per every two cores.
 
 ### Why BehaviorSpace?
 
@@ -526,10 +526,10 @@ spreadsheet and database programs.
 
 #### Run options: update plots and monitors
 
-The run options dialog lets you choose whether to update plots and monitors or not.
+The "Run Options" dialog lets you choose whether to update plots and monitors or not.
 Unchecking the box will result in better performance. Note that if you begin
 the experiment with the box unchecked, then you will not be able to toggle
-between enabling and disabling the update plots checkbox in the "Running Experiments" dialog 
+between enabling and disabling the update plots checkbox in the "Running Experiments" dialog
 *(Since 6.4)*.
 Check the box if you you want to export plot data using primitives such as [[export-interface|export-cmds]],
 [[export-plot|export-cmds]], [[export-all-plots|export-cmds]], and [[export-world|export-cmds]].
@@ -537,8 +537,8 @@ Check the box if you you want to export plot data using primitives such as [[exp
 #### Run options: parallel runs
 
 The "Run Options" dialog also lets you select whether you want multiple model runs to happen in parallel, and if so, how
-many are allowed to be simultaneously active. This number will default to the number of processor cores in your
-computer.
+many are allowed to be simultaneously active. This number will default to half the number of processor cores in your
+computer (rounded up).
 
 There are a few cautions associated with parallel runs.
 

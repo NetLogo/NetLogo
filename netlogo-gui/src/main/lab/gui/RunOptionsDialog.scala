@@ -9,6 +9,7 @@ import org.nlogo.window.EditDialogFactoryInterface
 
 import java.io.File
 import java.util.prefs.Preferences
+import scala.math.ceil
 
 class RunOptionsDialog(parent: java.awt.Dialog,
                        dialogFactory: EditDialogFactoryInterface,
@@ -69,7 +70,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     }
     def updateView = prefs.getBoolean("updateView", true)
     def updatePlotsAndMonitors = prefs.getBoolean("updatePlotsAndMonitors", true)
-    def updateThreadCount = prefs.getInt("threadCount", Runtime.getRuntime.availableProcessors)
+    def updateThreadCount = prefs.getInt("threadCount", ceil(Runtime.getRuntime.availableProcessors / 2.0).toInt)
     def updateFrom(runOptions: LabRunOptions): Unit = {
       prefs.put("spreadsheet", parentDirectory(runOptions.spreadsheet))
       prefs.put("table", parentDirectory(runOptions.table))

@@ -7,7 +7,8 @@ import java.io.{ File, FileWriter, PrintWriter }
 import org.nlogo.core.WorldDimensions
 import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, Version }
 import org.nlogo.nvm.LabInterface.Settings
- import org.nlogo.api.PlotCompilationErrorAction
+import org.nlogo.api.PlotCompilationErrorAction
+import scala.math.ceil
 
 object Main {
 
@@ -105,7 +106,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var spreadsheetWriter: Option[PrintWriter] = None
     var statsWriter: Option[(PrintWriter, String)] = None
     var listsWriter: Option[(PrintWriter, String)] = None
-    var threads = Runtime.getRuntime.availableProcessors
+    var threads = ceil(Runtime.getRuntime.availableProcessors / 2.0).toInt
     var suppressErrors = false
     var updatePlots = false
     val it = args.iterator
