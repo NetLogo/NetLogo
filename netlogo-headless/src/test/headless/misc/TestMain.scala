@@ -77,7 +77,7 @@ class TestMain extends AnyFunSuite {
         "--table", "-"))   // stdout
     }
     val expected =
-      """|"BehaviorSpace results (VERSION)"
+      """|"BehaviorSpace results (VERSION)","Table version EXPORTER_VERSION"
          |"models/test/lab/FireWithExperiments.nlogo"
          |"runNumber"
          |"min-pxcor","max-pxcor","min-pycor","max-pycor"
@@ -95,7 +95,8 @@ class TestMain extends AnyFunSuite {
          |""".stripMargin
     assertResult("")(err)
     // version number varies, date and time varies, compare carefully!
-    assertResult(expected.replaceFirst("VERSION", api.Version.version))(
+    assertResult(expected.replaceFirst("VERSION", api.Version.version)
+                          .replaceFirst("EXPORTER_VERSION", api.LabExporterVersion.version))(
       out.replaceAll(
         """"\d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d:\d\d\d .\d\d\d\d"\n""",
         ""))

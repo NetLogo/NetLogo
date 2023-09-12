@@ -89,6 +89,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     runOptions
   }
   class EditableRunOptions extends Editable {
+    private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace.runoptions")
     var spreadsheet = Prefs.spreadsheet
     var table = Prefs.table
     var stats = Prefs.stats
@@ -96,9 +97,8 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     var updateView = Prefs.updateView
     var updatePlotsAndMonitors = Prefs.updatePlotsAndMonitors
     var threadCount = Prefs.updateThreadCount
-    val classDisplayName = "Run options"
+    val classDisplayName = I18N.gui("title")
 
-    private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace.runoptions")
     val propertySet = {
       import scala.collection.JavaConverters._
       List(
