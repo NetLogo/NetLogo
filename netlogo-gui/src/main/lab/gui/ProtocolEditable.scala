@@ -107,7 +107,7 @@ class ProtocolEditable(protocol: LabProtocol,
                                                  BigDecimal(Dump.number(first)),
                                                  BigDecimal(Dump.number(step)),
                                                  BigDecimal(Dump.number(last)))
-              if (constants.contains(constant)) {
+              if (constants.exists(_.variableName == variableName)) {
                 complain(I18N.gui.getN("edit.behaviorSpace.constantDefinedTwice", variableName)); return None
               }
               if (!subExperiments.isEmpty) {
@@ -120,7 +120,7 @@ class ProtocolEditable(protocol: LabProtocol,
         case List(variableName: String, more@_*) =>
           if (more.isEmpty) {complain(I18N.gui.getN("edit.behaviorSpace.expectedValue", variableName)); return None}
           val constant = new RefEnumeratedValueSet(variableName, more.toList)
-          if (constants.contains(constant)) {
+          if (constants.exists(_.variableName == variableName)) {
             complain(I18N.gui.getN("edit.behaviorSpace.constantDefinedTwice", variableName)); return None
           }
           if (!subExperiments.isEmpty) {
@@ -139,7 +139,7 @@ class ProtocolEditable(protocol: LabProtocol,
                                                 BigDecimal(Dump.number(first)),
                                                 BigDecimal(Dump.number(step)),
                                                 BigDecimal(Dump.number(last)))
-                  if (subExperiment.contains(exp)) {
+                  if (subExperiment.exists(_.variableName == variableName)) {
                     complain(I18N.gui.getN("edit.behaviorSpace.variableDefinedTwiceSubexperiment",
                       variableName)); return None
                   }
@@ -150,12 +150,12 @@ class ProtocolEditable(protocol: LabProtocol,
             case List(variableName: String, more@_*) =>
               if (more.isEmpty) {complain(I18N.gui.getN("edit.behaviorSpace.expectedValue", variableName)); return None}
               val exp = new RefEnumeratedValueSet(variableName, more.toList)
-              if (subExperiment.contains(exp)) {
+              if (subExperiment.exists(_.variableName == variableName)) {
                 complain(I18N.gui.getN("edit.behaviorSpace.variableDefinedTwiceSubexperiment", variableName)); return None
               }
               subExperiment = subExperiment :+ exp
             case _ =>
-              complain(I18N.gui.get("edit.behaviorSpace.invalidFormat") + (List(first.toList) ++ more)); return None
+              complain(I18N.gui.get("edit.behaviorSpace.invalidFormat")); return None
           })
           subExperiments = subExperiments :+ subExperiment
         case _ =>
@@ -203,14 +203,15 @@ class ProtocolEditable(protocol: LabProtocol,
             more.toList match {
               case List(first: java.lang.Double,
                         step: java.lang.Double,
-                        last: java.lang.Double)
-                  if last > first && step > 0  =>
-                if (Int.MaxValue / totalCombinations > ((last - first) / step + 1)){
+                        last: java.lang.Double) =>
+                if (((last > first && step > 0) || (last < first && step < 0)) &&
+                    Int.MaxValue / totalCombinations > ((last - first) / step + 1)){
                   val multiplier: Int = ((last - first) / step + 1).toInt
                   totalCombinations = totalCombinations * (if (multiplier == 0) 1 else multiplier)
                 } else
                   return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
-                    I18N.gui.getN("edit.behaviorSpace.list.increment", variableName, s"[ $first $step $last ]"))
+                             I18N.gui.getN("edit.behaviorSpace.list.increment",
+                                           s"[ ${'"' + variableName + '"'} [ $first $step $last ] ]"))
               case _ =>
                 return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
                   I18N.gui.getN("edit.behaviorSpace.list.incrementinvalid", variableName))
@@ -225,8 +226,38 @@ class ProtocolEditable(protocol: LabProtocol,
             else return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
               I18N.gui.getN("edit.behaviorSpace.list.variablelist", variableName))
           case List(first: LogoList, more@_*) =>
-          case _ => return Seq(I18N.gui.get("edit.behaviorSpace.variable")
-            -> I18N.gui.getN("edit.behaviorSpace.list.unexpected"))
+            (List(first) ++ more).foreach(_.asInstanceOf[LogoList].toList match {
+              case List() => return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
+                                        I18N.gui.getN("edit.behaviorSpace.list.field"))
+              case List(variableName: String, more: LogoList) =>
+                more.toList match {
+                  case List(first: java.lang.Double,
+                            step: java.lang.Double,
+                            last: java.lang.Double) =>
+                    if (((last > first && step > 0) || (last < first && step < 0)) &&
+                        Int.MaxValue / totalCombinations > ((last - first) / step + 1)){
+                      val multiplier: Int = ((last - first) / step + 1).toInt
+                      totalCombinations = totalCombinations * (if (multiplier == 0) 1 else multiplier)
+                    } else
+                      return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
+                                 I18N.gui.getN("edit.behaviorSpace.list.increment",
+                                               s"[ ${'"' + variableName + '"'} [ $first $step $last ] ]"))
+                  case _ =>
+                    return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
+                               I18N.gui.getN("edit.behaviorSpace.list.incrementinvalid", variableName))
+                }
+              case List(variableName: String, more@_*) =>
+                if (more.isEmpty){
+                  return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
+                             I18N.gui.getN("edit.behaviorSpace.list.field", variableName))
+                }
+                if ( Int.MaxValue / totalCombinations > more.toList.size )
+                  totalCombinations = totalCombinations * more.toList.size
+                else return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
+                                I18N.gui.getN("edit.behaviorSpace.list.variablelist", variableName))
+                })
+          case _ => return Seq(I18N.gui.get("edit.behaviorSpace.variable") ->
+                               I18N.gui.getN("edit.behaviorSpace.list.unexpected"))
         }
     }
     if ( repetitions > 0 && Int.MaxValue / repetitions >= totalCombinations )
