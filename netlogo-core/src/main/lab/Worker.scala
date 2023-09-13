@@ -47,6 +47,11 @@ class Worker(val protocol: LabProtocol)
                                                               initialWorkspace.world.mainRNG,
                                                               AgentKind.Observer),
                                            new Procedures(initialWorkspace).preExperimentProcedure)
+      if (initialWorkspace.lastLogoException != null) {
+        val ex = initialWorkspace.lastLogoException
+        initialWorkspace.clearLastLogoException()
+        listeners.foreach(_.runtimeError(initialWorkspace, 0, ex))
+      }
       runners =
         (for((settings, runNumber) <- (protocol.refElements zip Stream.from(1).iterator).drop(protocol.runsCompleted))
          yield new Runner(runNumber, settings, fn)).toSeq
@@ -60,6 +65,11 @@ class Worker(val protocol: LabProtocol)
                                                               initialWorkspace.world.mainRNG,
                                                               AgentKind.Observer),
                                            new Procedures(initialWorkspace).postExperimentProcedure)
+      if (initialWorkspace.lastLogoException != null) {
+        val ex = initialWorkspace.lastLogoException
+        initialWorkspace.clearLastLogoException()
+        listeners.foreach(_.runtimeError(initialWorkspace, protocol.countRuns, ex))
+      }
       executor.shutdown()
       executor.awaitTermination(java.lang.Integer.MAX_VALUE, TimeUnit.SECONDS)
       listeners.foreach(_.experimentCompleted())
