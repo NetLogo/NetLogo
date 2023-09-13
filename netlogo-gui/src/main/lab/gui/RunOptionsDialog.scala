@@ -20,6 +20,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
   val tableFile = s"$filePrefix-table.csv"
   val statsFile = s"$filePrefix-stats.csv"
   val listsFile = s"$filePrefix-lists.csv"
+  val totalProcessors = Runtime.getRuntime.availableProcessors
 
   object Prefs {
     private val prefs = Preferences.userNodeForPackage(RunOptionsDialog.this.getClass)
@@ -71,7 +72,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     def updateView = prefs.getBoolean("updateView", true)
     def updatePlotsAndMonitors = prefs.getBoolean("updatePlotsAndMonitors", true)
     def updateThreadCount = prefs.getInt("threadCount",
-      floor(Runtime.getRuntime.availableProcessors * LabDefaultThreadsPerCore.RATIO).toInt)
+      floor(totalProcessors * LabDefaultThreadsPerCore.RATIO).toInt)
     def updateFrom(runOptions: LabRunOptions): Unit = {
       prefs.put("spreadsheet", parentDirectory(runOptions.spreadsheet))
       prefs.put("table", parentDirectory(runOptions.table))
@@ -112,7 +113,10 @@ class RunOptionsDialog(parent: java.awt.Dialog,
         Property("updatePlotsAndMonitors", Property.Boolean, I18N.gui("updateplotsandmonitors"),
                  "<html>" + I18N.gui("updateplotsandmonitors.info") + "</html>"),
         Property("threadCount", Property.Integer, I18N.gui("simultaneousruns"),
-                 "<html>" + I18N.gui("simultaneousruns.info", LabDefaultThreadsPerCore.RATIO.toString) + "</html>")).asJava
+                 "<html>" + I18N.gui("simultaneousruns.info",
+                                (totalProcessors * LabDefaultThreadsPerCore.RATIO).toInt.toString,
+                                (totalProcessors.toString))
+                + "</html>")).asJava
     }
     def get = LabRunOptions(threadCount, table, spreadsheet, stats, lists, updateView, updatePlotsAndMonitors)
     // boilerplate for Editable
