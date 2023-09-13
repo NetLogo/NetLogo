@@ -38,6 +38,10 @@ case class SteppedValueSet(variableName: String,
   def iterator =
     Iterator.from(0)
       .map(firstValue + step * _)
-      .takeWhile(_ <= lastValue)
+      .takeWhile(x =>
+        if (firstValue < lastValue)
+          x <= lastValue
+        else
+          x >= lastValue)
       .map(i => Double.box(i.toDouble))
 }
