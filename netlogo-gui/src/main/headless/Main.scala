@@ -5,10 +5,10 @@ package org.nlogo.headless
 import java.io.{ File, FileWriter, PrintWriter }
 
 import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, Version }
+import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultThreadsPerCore, Version }
 import org.nlogo.nvm.LabInterface.Settings
 import org.nlogo.api.PlotCompilationErrorAction
-import scala.math.ceil
+import scala.math.floor
 
 object Main {
 
@@ -106,7 +106,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var spreadsheetWriter: Option[PrintWriter] = None
     var statsWriter: Option[(PrintWriter, String)] = None
     var listsWriter: Option[(PrintWriter, String)] = None
-    var threads = ceil(Runtime.getRuntime.availableProcessors / 2.0).toInt
+    var threads = floor(Runtime.getRuntime.availableProcessors * LabDefaultThreadsPerCore.RATIO).toInt
     var suppressErrors = false
     var updatePlots = false
     val it = args.iterator

@@ -2,14 +2,14 @@
 
 package org.nlogo.lab.gui
 
-import org.nlogo.api.{Editable, Property, LabRunOptions}
+import org.nlogo.api.{Editable, Property, LabDefaultThreadsPerCore, LabRunOptions}
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N }
 import org.nlogo.window.EditDialogFactoryInterface
 
 import java.io.File
 import java.util.prefs.Preferences
-import scala.math.ceil
+import scala.math.floor
 
 class RunOptionsDialog(parent: java.awt.Dialog,
                        dialogFactory: EditDialogFactoryInterface,
@@ -70,7 +70,8 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     }
     def updateView = prefs.getBoolean("updateView", true)
     def updatePlotsAndMonitors = prefs.getBoolean("updatePlotsAndMonitors", true)
-    def updateThreadCount = prefs.getInt("threadCount", ceil(Runtime.getRuntime.availableProcessors / 2.0).toInt)
+    def updateThreadCount = prefs.getInt("threadCount",
+      floor(Runtime.getRuntime.availableProcessors * LabDefaultThreadsPerCore.RATIO).toInt)
     def updateFrom(runOptions: LabRunOptions): Unit = {
       prefs.put("spreadsheet", parentDirectory(runOptions.spreadsheet))
       prefs.put("table", parentDirectory(runOptions.table))
@@ -111,7 +112,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
         Property("updatePlotsAndMonitors", Property.Boolean, I18N.gui("updateplotsandmonitors"),
                  "<html>" + I18N.gui("updateplotsandmonitors.info") + "</html>"),
         Property("threadCount", Property.Integer, I18N.gui("simultaneousruns"),
-                 "<html>" + I18N.gui("simultaneousruns.info") + "</html>")).asJava
+                 "<html>" + I18N.gui("simultaneousruns.info", LabDefaultThreadsPerCore.RATIO.toString) + "</html>")).asJava
     }
     def get = LabRunOptions(threadCount, table, spreadsheet, stats, lists, updateView, updatePlotsAndMonitors)
     // boilerplate for Editable

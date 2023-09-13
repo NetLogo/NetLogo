@@ -538,8 +538,9 @@ Check the box if you you want to export plot data using primitives such as [[exp
 #### Run options: parallel runs
 
 The "Run Options" dialog also lets you select whether you want multiple model runs to happen in parallel, and if so, how
-many are allowed to be simultaneously active. This number will default to half the number of processor cores in your
-computer (rounded up).
+many are allowed to be simultaneously active. By default, this number will be calculated using the formula
+floor(0.75 * <number of cores>). You can bump up or down from there to see where your "sweet spot" is for the
+least time to complete all runs. Note that this number of parallel runs is remembered between experiments.
 
 There are a few cautions associated with parallel runs.
 
@@ -557,9 +558,7 @@ Fourth, using all available processor cores may make your computer slow to use f
 running or slow to complete runs as contention will build for memory between the runs themselves.  The number of threads
 used by NetLogo if the `--threads` parameter is omitted will be the total number of processors on your system.  If your
 model uses a large amount of memory, you may find that passing in a smaller value of `--threads` will enable the runs to
-complete in less time overall since work will be done by the system keeping the memory for each run available.  A good
-rule of thumb might be to start with a `--threads` value at half the number of logical cores your system has, and bump
-up or down from there to see where your "sweet spot" is for least time to complete all runs.
+complete in less time overall since work will be done by the system keeping the memory for each run available.
 
 Fifth, doing runs in parallel will multiply the experiment's memory requirements accordingly. You may need to increase
 NetLogo's memory ceiling (see [this FAQ
@@ -663,7 +662,7 @@ open the graphical interface otherwise).
 - --stats <path>: pathname to send statistics output to (or - for standard output)
  cannot be used without `--table` or `--spreadsheet`
 - `--threads <number>`: use this many threads to do model runs in parallel, or 1
-  to disable parallel runs. defaults to one thread per processor.
+  to disable parallel runs. defaults to floor(0.75 * <number of cores>).
 - `--update-plots`: enable plot updates. Include this if you want to export plot data,
   or exclude it for better performance.
 - `--min-pxcor <number>`: override world size setting in model file
