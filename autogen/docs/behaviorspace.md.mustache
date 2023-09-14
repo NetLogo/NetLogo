@@ -9,19 +9,22 @@ This guide has three parts:
 - [**Advanced Usage**](#advanced-usage): How to use BehaviorSpace from the command
   line, or from your own Java code.
 
-A number of new features were introduce in NetLogo 6.4:
+A number of new features were introduced in NetLogo 6.4:
 
 - [**Subexperiment syntax**](#subexperiment-syntax): A syntax for allowing parameter
  combinations to be run separately, rather than being expanded combinatorically.
-- [**Run metrics when**](#run-metrics-when): Measurements can now be conditionally recorded,
- controlled by a reporter.
-- [**Importing and exporting**](#importing-and-exporting): Experiments can now be exported to
-an XML file that can be used when running headlessly. Experiments can also be imported into a
- model.
+- [**Run metrics when**](#run-metrics-when): A reporter can be used to conditionally record
+measurements.
+- [**Pre experiment commands**](#pre-experiment-commands): Commands can be run before the experiment begins.
+- [**Post experiment commands**](#post-experiment-commands): Commands can be run after the experiment ends.
 - [**Statistics output**](#statistics-output): The mean and standard deviation
 of data from repetitions can be saved in an output file.
 - [**Lists output**](#lists-output): List data can be output in a file with one list
  element per cell.
+- [**Run options: update plots and monitors**](#run-options-update-plots-and-monitors): Greater performance improvement when box is unchecked.
+- [**Importing and exporting**](#importing-and-exporting): Experiments can now be exported to
+an XML file that can be used when running headlessly. Experiments can also be imported into a
+ model.
 - [**Paused experiments**](#paused-experiments): Experiments can now be paused and resumed.
 
 For information on format changes to output files see [**Output File Changes**](#output-file-changes)
@@ -86,8 +89,8 @@ item on NetLogo's Tools menu.
 ### Managing experiment setups
 
 The dialog that opens lets you create, edit, duplicate, delete, import, export,
-and run experiment setups. Experiments are listed by name and how many model
-runs the experiment will consist of.
+and run experiment setups. Experiments are listed by name and total number of model
+runs.
 
 Experiment setups are considered part of a NetLogo model and are saved as part
 of the model, but can be also be exported as individual files. See
@@ -237,7 +240,7 @@ This would set `c` to 5 for all 4 subexperiments, resulting in the following run
 | 3   |  2    |  5   |
 | 4   |  2    |  5   |
 
-You can also override a constant in a subexperiment, like the following example:
+You can also override a constant in a subexperiment, as in the following example:
 
 > `["a" 1]`
 
@@ -258,8 +261,8 @@ Any settings that you do not vary will retain their current values. Not varying
 any settings is useful if you just want to do many runs with the current
 settings.
 
-What order you list the variables in determines what order the runs will be done
-in. All values for a later variable will be tried before moving to the next
+The order in which you list the variables determines the run order. All values 
+for a later variable will be tried before moving to the next
 value for an earlier variable. So for example if you vary both x and y from 1 to
 3, and x is listed first, then the order of model runs will be: x=1 y=1,
 x=1 y=2, x=1 y=3, x=2 y=1, and so on.
@@ -339,8 +342,8 @@ will be always be taken at the end of each model run, even if this text box is
   would record every tenth tick, as well as the last tick. Multiple reporters
    can be combined using *and* and *or*.
 
-**Pre experiment commands:** These commands will be run once, before the
-experiment begins.
+##### Pre experiment commands
+These commands will be run once, before the experiment begins.
 
 **Setup commands:** These commands will be used to begin each model run.
 Typically, you will enter the name of a procedure that sets up the model,
@@ -377,7 +380,8 @@ each run ends. Usually this is left blank, but you might use it to call the
 [[export-world|export-cmds]] command or record the results of
 the run in some other way.
 
-**Post experiment commands:** These are any commands that you want to run at
+##### Post experiment commands
+These are any commands that you want to run at
 the end of the experiment, after all runs have completed.
 
 **Time limit:** This lets you set a fixed maximum length for each run. If you
@@ -551,13 +555,13 @@ are in green, and the expanded list data is in purple.
 #### Run options: update plots and monitors
 
 The "Run Options" dialog lets you choose whether to update plots and monitors or not.
-Unchecking the box will result in better performance. Note that if you begin
-the experiment with the box unchecked, then you will not be able to toggle
-between enabling and disabling the update plots checkbox in the "Running Experiments" dialog
-*(Since 6.4)*.
-Check the box if you you want to export plot data using primitives such as [[export-interface|export-cmds]],
+Performance is better when the box is unchecked.
+Note that *(Since 6.4)* if you begin the experiment with the box unchecked, you will
+not be able to toggle between enabling and disabling the update plots checkbox in the
+"Running Experiments" dialog. This gives you an even greater performance improvement
+than was obtained before NetLogo 6.4, when such toggling was possible.
+Check the box if you you need to export plot data using primitives such as [[export-interface|export-cmds]],
 [[export-plot|export-cmds]], [[export-all-plots|export-cmds]], and [[export-world|export-cmds]].
-
 #### Run options: parallel runs
 
 The "Run Options" dialog also lets you select whether you want multiple model runs to happen in parallel, and if so, how
