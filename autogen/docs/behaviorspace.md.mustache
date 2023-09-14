@@ -24,6 +24,8 @@ of data from repetitions can be saved in an output file.
  element per cell.
 - [**Paused experiments**](#paused-experiments): Experiments can now be paused and resumed.
 
+For information on format changes to output files see [**Output File Changes**](#output-file-changes)
+
 Additional minor changes can be found by searching this page for *(Since 6.4)*
 
 ## What is BehaviorSpace?
@@ -433,6 +435,13 @@ according to the setting of **Run metrics every step** option. For **Table outpu
 **Spreadsheet output** formats, the initial state of the system is recorded, after the **setup**
 commands run but before the **go** commands run for the first time.
 
+After selecting your output formats, BehaviorSpace will prompt you for the name
+of a file to save the results to. The default name ends in ".csv". You can
+change it to any name you want, but don't leave off the ".csv" part; that
+indicates the file is a Comma Separated Values (CSV) file. This is a plain-text
+data format that is readable by any text editor as well as by most popular
+spreadsheet and database programs.
+
 All four output formats will include a header section that has rows for 1) the NetLogo app
 version used, 2) the name of the NetLogo model file used, 3) the name of the BehaviorSpace
 experiment used, 4) the date and time at the start, and 5) the dimensions of the world used at
@@ -530,12 +539,14 @@ are in green, and the expanded list data is in purple.
 
 ![[bs-lists.png]]
 
-After selecting your output formats, BehaviorSpace will prompt you for the name
-of a file to save the results to. The default name ends in ".csv". You can
-change it to any name you want, but don't leave off the ".csv" part; that
-indicates the file is a Comma Separated Values (CSV) file. This is a plain-text
-data format that is readable by any text editor as well as by most popular
-spreadsheet and database programs.
+#### Output File Changes
+*(Since 6.4)*
+
+- Output files have version numbers.
+- Spreadsheet output always includes step information.
+- Spreadsheet output column header `[initial & final values]` was changed to the more accurate `[final value]`.
+- [**Statistics output**](#statistics-output) was added.
+- [**Lists output**](#lists-output) was added.
 
 #### Run options: update plots and monitors
 
