@@ -15,7 +15,7 @@ A number of new features were introduce in NetLogo 6.4:
  combinations to be run separately, rather than being expanded combinatorically.
 - [**Run metrics when**](#run-metrics-when): Measurements can now be conditionally recorded,
  controlled by a reporter.
-- [**Importing and exporting**](#importing-and-exporting): Experiments can now be exported to 
+- [**Importing and exporting**](#importing-and-exporting): Experiments can now be exported to
 an XML file that can be used when running headlessly. Experiments can also be imported into a
  model.
 - [**Statistics output**](#statistics-output): The mean and standard deviation
@@ -24,7 +24,7 @@ of data from repetitions can be saved in an output file.
  element per cell.
 - [**Paused experiments**](#paused-experiments): Experiments can now be paused and resumed.
 
-Additional minor changes can be found by searching this page for *(Since 6.4)* 
+Additional minor changes can be found by searching this page for *(Since 6.4)*
 
 ## What is BehaviorSpace?
 
@@ -88,7 +88,7 @@ and run experiment setups. Experiments are listed by name and how many model
 runs the experiment will consist of.
 
 Experiment setups are considered part of a NetLogo model and are saved as part
-of the model, but can be also be exported as individual files. See 
+of the model, but can be also be exported as individual files. See
 [**Importing and exporting**](#importing-and-exporting) (*Since 6.4*).
 
 To create a new experiment setup, press the "New" button.
@@ -178,8 +178,8 @@ This would create six runs, organized as follows:
 | 2   |  6  |
 | 2   | 10  |
 
-**Run combinations in sequential order checkbox** This box is checked by default, 
-and causes variables specified later to vary more quickly than those specified earlier. 
+**Run combinations in sequential order checkbox** This box is checked by default,
+and causes variables specified later to vary more quickly than those specified earlier.
 When the box is unchecked, non-sequential order results, with variables specified earlier
  varying more quickly than those specified later.
 The non-sequential order for the variable specification above is:
@@ -330,9 +330,9 @@ if you want to specify certain conditions when measurements should be taken.
 *(Since 6.4)*
 
 This reporter will be used to determine when measurements
-should be recorded if they are not being recorded at every step. Measurements 
+should be recorded if they are not being recorded at every step. Measurements
 will be always be taken at the end of each model run, even if this text box is
- empty as was previously the case when the *Measure runs at every step* 
+ empty as was previously the case when the *Measure runs at every step*
  (now *Run metrics every step*) was unchecked.  For example *ticks mod 10 = 0*
   would record every tenth tick, as well as the last tick. Multiple reporters
    can be combined using *and* and *or*.
@@ -343,9 +343,9 @@ experiment begins.
 **Setup commands:** These commands will be used to begin each model run.
 Typically, you will enter the name of a procedure that sets up the model,
 typically `setup`. But it is also possible to include other commands as well.
- If you want the same 
-results each time you run an experiment, you could use something like 
-`random-seed 473 setup` or to have different results for repetitions 
+ If you want the same
+results each time you run an experiment, you could use something like
+`random-seed 473 setup` or to have different results for repetitions
 `random-seed (474 + behaviorspace-run-number) setup`
 
 **Go commands:** These commands will be run over and over again to advance to
@@ -539,10 +539,10 @@ spreadsheet and database programs.
 
 #### Run options: update plots and monitors
 
-The run options dialog lets you choose whether to update plots and monitors or not.
+The "Run Options" dialog lets you choose whether to update plots and monitors or not.
 Unchecking the box will result in better performance. Note that if you begin
 the experiment with the box unchecked, then you will not be able to toggle
-between enabling and disabling the update plots checkbox in the "Running Experiments" dialog 
+between enabling and disabling the update plots checkbox in the "Running Experiments" dialog
 *(Since 6.4)*.
 Check the box if you you want to export plot data using primitives such as [[export-interface|export-cmds]],
 [[export-plot|export-cmds]], [[export-all-plots|export-cmds]], and [[export-world|export-cmds]].
@@ -602,10 +602,10 @@ box checked, then you'll see a plot of how they vary over the course of each run
 
 You can also watch the runs in the main NetLogo window. (If the "Running
 Experiment" dialog is in the way, just move it to a different place on the
-screen.) If you don't need to see the plots update, then use the checkboxes in 
+screen.) If you don't need to see the plots update, then use the checkboxes in
 the "Running Experiment" dialog to turn the updating off. This will make the
  experiment go faster. However, if you already disabled updating plots and monitors
-  in the run options, this checkbox will be disabled *(Since 6.4)*.
+  in the "Run Options" dialog, this checkbox will be disabled *(Since 6.4)*.
 
 If you want to stop your experiment before it's finished, you have two options.
 To stop the experiment after the current runs have completed and save your progress
@@ -626,9 +626,9 @@ To reset a paused experiment to its initial state, select it and press the "Abor
 button.
 
 If you are using Spreadsheet output a file containing the data up until the experiment is
- paused will be written. This data will be used as part of the creation of a complete 
+ paused will be written. This data will be used as part of the creation of a complete
  Spreadsheet file. Note that if your experiment is writing to its own external file you
-  may need to make some changes in order for pausing to work correctly. For example you 
+  may need to make some changes in order for pausing to work correctly. For example you
   should use `file-flush` or `file-close` at the end of each run to ensure all the data
    is written to the file, and should do `file-open` before doing any writing during a
    run. When opening a file in writing mode, all new data will be appended to the end
@@ -796,7 +796,7 @@ Here is an example that shows how to run an experiment setup which is
 stored in a separate XML file, instead of in the model file (see below for more
 information on the XML file format).  This assumes you've created a
 `my-wsp-setups.xml` file with a `My WSP Exploration" experiment and placed it
-in your home directory. The most straight-forward way to create a setup file 
+in your home directory. The most straight-forward way to create a setup file
 is to create an experiment using BehaviorSpace in the NetLogo GUI and use the
  **Export ** option.
 
@@ -884,7 +884,7 @@ will hopefully be apparent how to use the tags to specify different kind of
 experiments. The DTD specifies which tags are required and which are optional,
 which may be repeated and which may not, and so forth.
 
-If you want to create a setup file for NetLogo 6.3.0 and earlier versions for 
+If you want to create a setup file for NetLogo 6.3.0 and earlier versions for
 which **Export** is not available you need to know that in a model file the XML for
  experiment setups does not begin with any XML headers, because the not whole file
  is XML, only part of it.
