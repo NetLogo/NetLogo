@@ -29,7 +29,7 @@ class Supervisor(
 ) extends Thread("BehaviorSpace Supervisor") {
   private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace")
   var options = protocol.runOptions
-  val worker = new Worker(protocol)
+  val worker = new Worker(protocol, this)
   val headlessWorkspaces = new ListBuffer[Workspace]
   val queue = new collection.mutable.Queue[Workspace]
   val completed = Set[Int]()
@@ -293,6 +293,10 @@ class Supervisor(
   def abort() {
     aborted = true
     interrupt()
+  }
+
+  def writing() {
+    progressDialog.writing()
   }
 
   private def bailOut() {

@@ -131,18 +131,10 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
       pause()
   }
   def pause(): Unit = {
-    setUpdateView(false)
-    setPlotsAndMonitorsSwitch(false)
-    val dialog = new JDialog(this, I18N.gui("pausing"), true)
-    dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
-    val layout = new java.awt.GridBagLayout()
-    dialog.getContentPane().setLayout(layout)
-    val c = new java.awt.GridBagConstraints()
-    c.insets = new java.awt.Insets(20, 20, 20, 20)
-    dialog.getContentPane().add(new JLabel(I18N.gui("waiting"), SwingConstants.CENTER), c)
-    dialog.pack()
-    org.nlogo.awt.Positioning.center(dialog, this)
-    dialog.setVisible(true)
+    timer.stop()
+    pauseAction.setEnabled(false)
+    abortAction.setEnabled(false)
+    progressArea.setText(I18N.gui("waiting"))
   }
   lazy val abortAction = RichAction(I18N.gui.get("tools.behaviorSpace.abort")) { _ =>
     supervisor.abort()
@@ -203,6 +195,11 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     dispose()
     workspace.displaySwitchOn(true)
     workspace.setPeriodicUpdatesEnabled(true)
+  }
+
+  def writing() {
+    timer.stop()
+    progressArea.setText(I18N.gui("writing"))
   }
 
   /// ProgressListener implementation
