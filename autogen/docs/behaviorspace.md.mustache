@@ -96,13 +96,17 @@ Experiment setups are considered part of a NetLogo model and are saved as part
 of the model, but can be also be exported as individual files. See
 [**Importing and exporting**](#importing-and-exporting) (*Since 6.4*).
 
-To create a new experiment setup, press the "New" button.
+To create a new experiment setup, press the "New" button. To edit an existing
+experiment setup, press the "Edit" button. The same dialog is used in both cases,
+what differs is the information that is already filled in. The dialog is
+non-blocking, which is useful if you want to copy something from the Code Tab,
+or view sliders in the Interface Tab (*Since 6.4*).
 
 ### Creating an experiment setup
 
-In the new dialog that appears, you can specify the following information. Note
-that you don't always need to specify everything; some parts can be left blank,
-or left with their default values, depending on your needs.
+The information that can be included in the Experiment dialog is detailed below.
+Note that it is not necessary to specify everything; some parts can be left blank
+or with their default values.
 
 **Experiment name:** Experiments in the same model must have different names. If
 you open a model that contains experiments with duplicate names, the conflicting
@@ -567,7 +571,8 @@ Check the box if you you need to export plot data using primitives such as [[exp
 
 The "Run Options" dialog also lets you select whether you want multiple model runs to happen in parallel, and if so, how
 many are allowed to be simultaneously active. The default and recommended maximum number of parallel runs are shown
-below the text box.
+below the text box *(Since 6.4)*. Your choice of number of parallel runs
+is remembered from experiment to experiment *(Since 6.4)*.
 
 There are a few cautions associated with parallel runs.
 
