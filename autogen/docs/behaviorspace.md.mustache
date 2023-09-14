@@ -37,8 +37,8 @@ called "parameter sweeping". It lets you explore the model's "space" of possible
 behaviors and determine which combinations of settings cause the behaviors of
 interest.
 
-If your computer has multiple processor cores, then by default, model runs will
-happen in parallel, one per core.
+If your computer has multiple processor cores, you can specify how many model runs will
+happen in parallel.
 
 ### Why BehaviorSpace?
 
@@ -550,8 +550,8 @@ Check the box if you you want to export plot data using primitives such as [[exp
 #### Run options: parallel runs
 
 The "Run Options" dialog also lets you select whether you want multiple model runs to happen in parallel, and if so, how
-many are allowed to be simultaneously active. This number will default to the number of processor cores in your
-computer.
+many are allowed to be simultaneously active. The default and recommended maximum number of parallel runs are shown
+below the text box.
 
 There are a few cautions associated with parallel runs.
 
@@ -566,11 +566,10 @@ out-of-order results. When you analyze your table data, you may wish to sort it 
 output is not affected by this issue, since it is not written until the experiment completes or is aborted.)
 
 Fourth, using all available processor cores may make your computer slow to use for other tasks while the experiment is
-running or slow to complete runs as contention will build for memory between the runs themselves.  The number of threads
-used by NetLogo if the `--threads` parameter is omitted will be the total number of processors on your system.  If your
-model uses a large amount of memory, you may find that passing in a smaller value of `--threads` will enable the runs to
-complete in less time overall since work will be done by the system keeping the memory for each run available.  A good
-rule of thumb might be to start with a `--threads` value at half the number of logical cores your system has, and bump
+running or slow to complete runs as contention will build for memory between the runs themselves. If your
+model uses a large amount of memory, you may find that reducing the number of runs will enable the runs to
+complete in less time overall since work will be done by the system keeping the memory for each run available. A good
+rule of thumb might be to start with the default value shown in the "Run Options", and bump
 up or down from there to see where your "sweet spot" is for least time to complete all runs.
 
 Fifth, doing runs in parallel will multiply the experiment's memory requirements accordingly. You may need to increase
@@ -675,7 +674,7 @@ open the graphical interface otherwise).
 - --stats <path>: pathname to send statistics output to (or - for standard output)
  cannot be used without `--table` or `--spreadsheet`
 - `--threads <number>`: use this many threads to do model runs in parallel, or 1
-  to disable parallel runs. defaults to one thread per processor.
+  to disable parallel runs. defaults to `floor(0.75 * <number of processors>)`.
 - `--update-plots`: enable plot updates. Include this if you want to export plot data,
   or exclude it for better performance.
 - `--min-pxcor <number>`: override world size setting in model file
