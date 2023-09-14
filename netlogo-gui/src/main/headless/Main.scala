@@ -5,7 +5,7 @@ package org.nlogo.headless
 import java.io.{ File, FileWriter, PrintWriter }
 
 import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, Version }
+import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultThreads, Version }
 import org.nlogo.nvm.LabInterface.Settings
  import org.nlogo.api.PlotCompilationErrorAction
 
@@ -23,7 +23,7 @@ Run NetLogo using the NetLogo_Console app with the --headless command line argum
 * --spreadsheet <path>: pathname to send spreadsheet output to (or - for standard output)
 * --lists <path>: pathname to send lists output to (or - for standard output), cannot be used without --table or --spreadsheet
 * --stats <path>: pathname to send statistics output to (or - for standard output)
-* --threads <number>: use this many threads to do model runs in parallel, or 1 to disable parallel runs. defaults to one thread per processor.
+* --threads <number>: use this many threads to do model runs in parallel, or 1 to disable parallel runs. defaults to floor( .75 * number of processors).
 * --update-plots: enable plot updates. Include this if you want to export plot data, or exclude it for better performance.
 * --min-pxcor <number>: override world size setting in model file
 * --max-pxcor <number>: override world size setting in model file
@@ -32,7 +32,7 @@ Run NetLogo using the NetLogo_Console app with the --headless command line argum
 
 The --model flag is required. If you don't specify --experiment, you must specify --setup-file. By default no results are generated, so you'll usually want to specify either --table or --spreadsheet, or both. If you specify any of the world dimensions, you must specify all four.
 
-Here is an example of running an experiment already defined and saved within a model (path seperators and line-continue slashes are for macOS or Linux, Windows would be different):
+Here is an example of running an experiment already defined and saved within a model (path separators and line-continue slashes are for macOS or Linux, Windows would be different):
 
 ./NetLogo_Console --headless \
   --model "models/IABM Textbook/chapter 4/Wolf Sheep Simple 5.nlogo" \
@@ -105,7 +105,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var spreadsheetWriter: Option[PrintWriter] = None
     var statsWriter: Option[(PrintWriter, String)] = None
     var listsWriter: Option[(PrintWriter, String)] = None
-    var threads = Runtime.getRuntime.availableProcessors
+    var threads =  LabDefaultThreads.getLabDefaultThreads
     var suppressErrors = false
     var updatePlots = false
     val it = args.iterator
