@@ -43,6 +43,15 @@ class Worker(val protocol: LabProtocol)
     val executor = Executors.newFixedThreadPool(threads)
     try {
       listeners.foreach(_.experimentStarted())
+      initialWorkspace.runCompiledCommands(new SimpleJobOwner("BehaviorSpace",
+                                                              initialWorkspace.world.mainRNG,
+                                                              AgentKind.Observer),
+                                           new Procedures(initialWorkspace).preExperimentProcedure)
+      if (initialWorkspace.lastLogoException != null) {
+        val ex = initialWorkspace.lastLogoException
+        initialWorkspace.clearLastLogoException()
+        listeners.foreach(_.runtimeError(initialWorkspace, 0, ex))
+      }
       runners =
         (for((settings, runNumber) <- (protocol.refElements zip Stream.from(1).iterator).drop(protocol.runsCompleted))
          yield new Runner(runNumber, settings, fn)).toSeq
@@ -51,6 +60,15 @@ class Worker(val protocol: LabProtocol)
         // The explicit use of JavaConversions here with a type parameter, instead of just plain
         // "asJava", is required to compile against Java 5 - ST 8/17/11
         executor.invokeAll(runners.asJava).asScala
+      }
+      initialWorkspace.runCompiledCommands(new SimpleJobOwner("BehaviorSpace",
+                                                              initialWorkspace.world.mainRNG,
+                                                              AgentKind.Observer),
+                                           new Procedures(initialWorkspace).postExperimentProcedure)
+      if (initialWorkspace.lastLogoException != null) {
+        val ex = initialWorkspace.lastLogoException
+        initialWorkspace.clearLastLogoException()
+        listeners.foreach(_.runtimeError(initialWorkspace, protocol.countRuns, ex))
       }
       executor.shutdown()
       executor.awaitTermination(java.lang.Integer.MAX_VALUE, TimeUnit.SECONDS)
@@ -76,11 +94,13 @@ class Worker(val protocol: LabProtocol)
   def compile(w: Workspace) { new Procedures(w) }
   def abort() { if (runners != null) runners.foreach(_.aborted = true) }
   class Procedures(workspace: Workspace) {
+    val preExperimentProcedure = workspace.compileCommands(protocol.preExperimentCommands)
     val setupProcedure = workspace.compileCommands(protocol.setupCommands)
     val goProcedure = workspace.compileCommands(protocol.goCommands
                                                 + "\n" // protect against comments
                                                 + "__experimentstepend")
-    val finalProcedure = workspace.compileCommands(protocol.finalCommands)
+    val postRunProcedure = workspace.compileCommands(protocol.postRunCommands)
+    val postExperimentProcedure = workspace.compileCommands(protocol.postExperimentCommands)
     val exitProcedure =
       if (protocol.exitCondition.trim == "") None
       else Some(workspace.compileReporter(protocol.exitCondition))
@@ -214,21 +234,20 @@ class Worker(val protocol: LabProtocol)
       }
 
       def checkForPlotExport() {
-        if (!ws.shouldUpdatePlots) {
-          var exportCommandFound = checkForPlotExportCommand(finalProcedure.code)
-          if (!exportCommandFound) exportCommandFound = checkForPlotExportCommand(goProcedure.code)
-          if (!exportCommandFound) exportCommandFound = checkForPlotExportCommand(setupProcedure.code)
-
-          if (exportCommandFound) {
-            import ExportPlotWarningAction._
-            ws.setTriedToExportPlot(true)
-            ws.exportPlotWarningAction match {
-              case Output => {
-                ws.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
-                println(I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"))
-              }
-              case _ =>
+        if (!ws.shouldUpdatePlots &&
+            (checkForPlotExportCommand(preExperimentProcedure.code) ||
+             checkForPlotExportCommand(postRunProcedure.code) ||
+             checkForPlotExportCommand(goProcedure.code) ||
+             checkForPlotExportCommand(setupProcedure.code) ||
+             checkForPlotExportCommand(postExperimentProcedure.code))) {
+          import ExportPlotWarningAction._
+          ws.setTriedToExportPlot(true)
+          ws.exportPlotWarningAction match {
+            case Output => {
+              ws.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
+              println(I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"))
             }
+            case _ =>
           }
         }
       }
@@ -274,7 +293,7 @@ class Worker(val protocol: LabProtocol)
         eachListener(_.measurementsTaken(ws, runNumber, steps, m))
         checkForRuntimeError()
       }
-      ws.runCompiledCommands(owner(ws.world.mainRNG), finalProcedure)
+      ws.runCompiledCommands(owner(ws.world.mainRNG), postRunProcedure)
       checkForRuntimeError()
       eachListener(_.runCompleted(ws, runNumber, steps))
     }
