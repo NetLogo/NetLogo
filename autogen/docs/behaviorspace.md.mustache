@@ -382,6 +382,13 @@ the end of the experiment, after all runs have completed.
 don't want to set any maximum, but want the length of the runs to be controlled
 by the stop condition instead, enter 0.
 
+**Note on pre and post experiment commands:** These commands execute outside of
+the actual runs, so they cannot affect the global variables or agents in the
+model (use the Setup commands and Post run commands for that). If you use
+primitives like file-open or the CSV extension in the pre or post experiment
+commands, their internal state will not carry over into the runs and errors will
+likely occur if used there.
+
 ### Importing and exporting
 *(Since 6.4)*
 
