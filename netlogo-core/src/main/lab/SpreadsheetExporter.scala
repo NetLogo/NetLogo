@@ -144,8 +144,10 @@ class SpreadsheetExporter(modelFileName: String,
 
     // now actually generate the rows
     for(i <- 0 to mostMeasurements) {
-      if (partialData.data.length > 0)
-        out.print(partialData.data(i))
+      if (!partialData.data.isEmpty) {
+        out.print(partialData.data.head)
+        partialData.data = partialData.data.tail
+      }
       out.print(",")
       foreachRun((run,metricNumber) =>
         if (protocol.runMetricsEveryStep && i > run.steps) None
