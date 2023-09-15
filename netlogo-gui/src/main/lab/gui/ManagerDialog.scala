@@ -53,7 +53,7 @@ private class ManagerDialog(manager:       LabManager,
     jlist.addMouseListener(new javax.swing.event.MouseInputAdapter {
       override def mouseClicked(e: java.awt.event.MouseEvent) {
         if (e.getClickCount > 1 && jlist.getSelectedIndices.length == 1
-            && selectedProtocol.runsCompleted == 0) {
+            && selectedProtocol.runsCompleted == 0 && editAction.isEnabled) {
           edit()
         }
       } })
@@ -118,6 +118,7 @@ private class ManagerDialog(manager:       LabManager,
   /// implement ListSelectionListener
   def valueChanged(e: javax.swing.event.ListSelectionEvent) {
     val count = jlist.getSelectedIndices.length
+    newAction.setEnabled(true)
     editAction.setEnabled(count == 1 && selectedProtocol.runsCompleted == 0)
     duplicateAction.setEnabled(count == 1)
     runAction.setEnabled(count == 1)
@@ -148,17 +149,27 @@ private class ManagerDialog(manager:       LabManager,
   private def duplicate() { editProtocol(selectedProtocol.copy(runsCompleted = 0), true) }
   private def edit() { editProtocol(selectedProtocol, false) }
   private def editProtocol(protocol: LabProtocol, isNew: Boolean) {
+    newAction.setEnabled(false)
+    editAction.setEnabled(false)
+    duplicateAction.setEnabled(false)
+    deleteAction.setEnabled(false)
+    runAction.setEnabled(false)
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
                                         manager.workspace, manager.workspace.world,
                                         manager.protocols.map(_.name).filter(isNew || _ != protocol.name))
-    dialogFactory.create(this, editable, new Runnable {
-      def run() {
-        val newProtocol = editable.get.get
-        if (isNew) manager.protocols += newProtocol
-        else manager.protocols(selectedIndex) = newProtocol
-        update()
-        select(newProtocol)
-        manager.dirty()
+    dialogFactory.create(this, editable, new java.util.function.Consumer[java.lang.Boolean] {
+      def accept(success: java.lang.Boolean) {
+        if (success) {
+          val newProtocol = editable.get.get
+          if (isNew) manager.protocols += newProtocol
+          else manager.protocols(selectedIndex) = newProtocol
+          update()
+          select(newProtocol)
+          manager.dirty()
+        }
+        else {
+          update()
+        }
       }
     })
   }
