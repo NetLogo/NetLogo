@@ -131,11 +131,7 @@ class Supervisor(
             partialData.steps = ',' + data.head.split(",", 2)(1)
             data = data.tail.tail
             partialData.dataHeaders = ',' + data.head.split(",", 2)(1)
-            data = data.tail
-            while (data != Nil) {
-              partialData.data = partialData.data :+ data.head
-              data = data.tail
-            }
+            partialData.data = data.tail
           }
           spreadsheetExporter = new SpreadsheetExporter(
             workspace.getModelFileName,
