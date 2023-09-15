@@ -2,6 +2,7 @@
 
 package org.nlogo.window;
 
+import java.util.function.Consumer;
 import org.nlogo.api.Editable;
 
 // This is used so that other packages don't depend on the properties package.  It gets instantiated
@@ -22,8 +23,8 @@ public interface EditDialogFactoryInterface {
   boolean canceled(java.awt.Dialog dialog, Editable target);
   
   //used for non-modal dialog
-  void create(java.awt.Frame frame, Editable target, Runnable finish);
-  void create(java.awt.Dialog dialog, Editable target, Runnable finish);
+  void create(java.awt.Frame frame, Editable target, Consumer<Boolean> finish);
+  void create(java.awt.Dialog dialog, Editable target, Consumer<Boolean> finish);
 
   javax.swing.JDialog getDialog();
   void clearDialog();

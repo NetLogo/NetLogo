@@ -2,6 +2,7 @@
 
 package org.nlogo.properties
 
+import java.util.function.Consumer
 import org.nlogo.api.{ CompilerServices, Editable }
 import org.nlogo.editor.Colorizer
 
@@ -33,7 +34,7 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
        }).canceled
   }
 
-  def create(frame: java.awt.Frame, _target: Editable, finish: Runnable) = {
+  def create(frame: java.awt.Frame, _target: Editable, finish: Consumer[java.lang.Boolean]) = {
     dialog = new javax.swing.JDialog(frame, _target.classDisplayName, false)
                with EditDialog {
                  override def window = frame
@@ -44,13 +45,12 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
                }
     dialog.addWindowListener(new java.awt.event.WindowAdapter {
       override def windowClosed(e: java.awt.event.WindowEvent) {
-        if (dialog != null && !dialog.canceled)
-          finish.run()
+        finish.accept(dialog != null && !dialog.canceled)
       }
     })
   }
 
-  def create(_dialog: java.awt.Dialog, _target: Editable, finish: Runnable) = {
+  def create(_dialog: java.awt.Dialog, _target: Editable, finish: Consumer[java.lang.Boolean]) = {
     dialog = new javax.swing.JDialog(_dialog, _target.classDisplayName, false)
                     with EditDialog {
                       override def window = _dialog
@@ -61,8 +61,7 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
                     }
     dialog.addWindowListener(new java.awt.event.WindowAdapter {
       override def windowClosed(e: java.awt.event.WindowEvent) {
-        if (dialog != null && !dialog.canceled)
-          finish.run()
+        finish.accept(dialog != null && !dialog.canceled)
       }
     })
   }
