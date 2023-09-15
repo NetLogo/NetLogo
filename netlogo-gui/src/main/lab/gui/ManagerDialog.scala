@@ -38,6 +38,7 @@ private class ManagerDialog(manager:       LabManager,
   private val closeAction = action(I18N.gui("close"), { () => manager.close() })
   private val abortAction = action(I18N.gui("abort"), { () => abort() })
   private val runAction = action(I18N.gui("run"), { () => run() })
+  private var blockActions = false
   /// initialization
   init()
   private def init() {
@@ -53,7 +54,7 @@ private class ManagerDialog(manager:       LabManager,
     jlist.addMouseListener(new javax.swing.event.MouseInputAdapter {
       override def mouseClicked(e: java.awt.event.MouseEvent) {
         if (e.getClickCount > 1 && jlist.getSelectedIndices.length == 1
-            && selectedProtocol.runsCompleted == 0 && editAction.isEnabled) {
+            && selectedProtocol.runsCompleted == 0 && !blockActions) {
           edit()
         }
       } })
@@ -117,14 +118,29 @@ private class ManagerDialog(manager:       LabManager,
   }
   /// implement ListSelectionListener
   def valueChanged(e: javax.swing.event.ListSelectionEvent) {
-    val count = jlist.getSelectedIndices.length
-    newAction.setEnabled(true)
-    editAction.setEnabled(count == 1 && selectedProtocol.runsCompleted == 0)
-    duplicateAction.setEnabled(count == 1)
-    runAction.setEnabled(count == 1)
-    deleteAction.setEnabled(count > 0)
-    exportAction.setEnabled(count > 0)
-    abortAction.setEnabled(count == 1 && selectedProtocol.runsCompleted != 0)
+    if (blockActions) {
+      editAction.setEnabled(false)
+      newAction.setEnabled(false)
+      deleteAction.setEnabled(false)
+      duplicateAction.setEnabled(false)
+      importAction.setEnabled(false)
+      exportAction.setEnabled(false)
+      closeAction.setEnabled(false)
+      abortAction.setEnabled(false)
+      runAction.setEnabled(false)
+    }
+    else {
+      val count = jlist.getSelectedIndices.length
+      editAction.setEnabled(count == 1 && selectedProtocol.runsCompleted == 0)
+      newAction.setEnabled(true)
+      deleteAction.setEnabled(count > 0)
+      duplicateAction.setEnabled(count == 1)
+      importAction.setEnabled(true)
+      exportAction.setEnabled(count > 0)
+      closeAction.setEnabled(true)
+      abortAction.setEnabled(count == 1 && selectedProtocol.runsCompleted != 0)
+      runAction.setEnabled(count == 1)
+    }
   }
   /// action implementations
   private def run(): Unit = {
@@ -149,16 +165,14 @@ private class ManagerDialog(manager:       LabManager,
   private def duplicate() { editProtocol(selectedProtocol.copy(runsCompleted = 0), true) }
   private def edit() { editProtocol(selectedProtocol, false) }
   private def editProtocol(protocol: LabProtocol, isNew: Boolean) {
-    newAction.setEnabled(false)
-    editAction.setEnabled(false)
-    duplicateAction.setEnabled(false)
-    deleteAction.setEnabled(false)
-    runAction.setEnabled(false)
+    blockActions = true
+    update()
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
                                         manager.workspace, manager.workspace.world,
                                         manager.protocols.map(_.name).filter(isNew || _ != protocol.name))
     dialogFactory.create(this, editable, new java.util.function.Consumer[java.lang.Boolean] {
       def accept(success: java.lang.Boolean) {
+        blockActions = false
         if (success) {
           val newProtocol = editable.get.get
           if (isNew) manager.protocols += newProtocol
