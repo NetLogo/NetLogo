@@ -29,7 +29,7 @@ class Supervisor(
 ) extends Thread("BehaviorSpace Supervisor") {
   private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace")
   var options = protocol.runOptions
-  val worker = new Worker(protocol)
+  val worker = new Worker(protocol, writing)
   val headlessWorkspaces = new ListBuffer[Workspace]
   val queue = new collection.mutable.Queue[Workspace]
   val completed = Set[Int]()
@@ -131,11 +131,7 @@ class Supervisor(
             partialData.steps = ',' + data.head.split(",", 2)(1)
             data = data.tail.tail
             partialData.dataHeaders = ',' + data.head.split(",", 2)(1)
-            data = data.tail
-            while (data != Nil) {
-              partialData.data = partialData.data :+ data.head
-              data = data.tail
-            }
+            partialData.data = data.tail
           }
           spreadsheetExporter = new SpreadsheetExporter(
             workspace.getModelFileName,
@@ -293,6 +289,10 @@ class Supervisor(
   def abort() {
     aborted = true
     interrupt()
+  }
+
+  def writing() {
+    progressDialog.writing()
   }
 
   private def bailOut() {

@@ -9,7 +9,7 @@ import org.nlogo.api.{Dump, ExportPlotWarningAction, LabProtocol,
 import org.nlogo.nvm.{Command, LabInterface, Workspace}
 import LabInterface.ProgressListener
 
-class Worker(val protocol: LabProtocol)
+class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () => {})
   extends LabInterface.Worker
 {
   val listeners = new collection.mutable.ListBuffer[ProgressListener]
@@ -72,6 +72,7 @@ class Worker(val protocol: LabProtocol)
       }
       executor.shutdown()
       executor.awaitTermination(java.lang.Integer.MAX_VALUE, TimeUnit.SECONDS)
+      supervisorWriting()
       listeners.foreach(_.experimentCompleted())
       // this will cause the first ExecutionException we got to be thrown - ST 3/10/09
       futures.foreach(_.get)
@@ -92,7 +93,10 @@ class Worker(val protocol: LabProtocol)
   // used in TestCompileAll, also used before the start of the
   // experiment in the GUI so if something doesn't compile we can fail early.
   def compile(w: Workspace) { new Procedures(w) }
-  def abort() { if (runners != null) runners.foreach(_.aborted = true) }
+  def abort() {
+    if (runners != null) runners.foreach(_.aborted = true)
+    supervisorWriting()
+  }
   class Procedures(workspace: Workspace) {
     val preExperimentProcedure = workspace.compileCommands(protocol.preExperimentCommands)
     val setupProcedure = workspace.compileCommands(protocol.setupCommands)
