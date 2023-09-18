@@ -4,7 +4,7 @@ package org.nlogo.properties
 
 import java.awt.{Component, Insets, GridBagConstraints, Dimension, GridBagLayout, BorderLayout}
 
-import javax.swing.{JPanel, JLabel}
+import javax.swing.JPanel
 
 import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody }
 import org.nlogo.api.{ CompilerServices, Editable, Property }
@@ -55,7 +55,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         setLayout(new BorderLayout)
         add(editor, BorderLayout.CENTER)
         if (property.notes != null)
-          add(new JLabel(property.notes){ setFont(getFont.deriveFont(9.0f)) }, BorderLayout.SOUTH)
+          setToolTipText(property.notes)
       }
 
       val c = editor.getConstraints
