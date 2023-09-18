@@ -4,7 +4,7 @@ package org.nlogo.properties
 
 import java.awt.{Component, Insets, GridBagConstraints, Dimension, GridBagLayout, BorderLayout}
 
-import javax.swing.{JPanel, ToolTipManager}
+import javax.swing.{JLabel, JPanel, ToolTipManager}
 
 import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody }
 import org.nlogo.api.{ CompilerServices, Editable, Property }
@@ -16,10 +16,12 @@ import scala.reflect.ClassTag
 import scala.collection.JavaConverters._
 
 // This is the contents of an EditDialog, except for the buttons at the bottom (OK/Apply/Cancel).
-class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer: Colorizer)
+class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer: Colorizer, useTooltips: Boolean = false)
   extends JPanel {
 
   val oldDelay = ToolTipManager.sharedInstance.getDismissDelay()
+  ToolTipManager.sharedInstance.setDismissDelay(30000)
+
   val liveUpdate =
     // OK, it's a big hack that we're hardcoding these next checks, but it doesn't seem worth the
     // effort for now to do it the right way - ST 12/16/01, 11/29/07
@@ -38,7 +40,6 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
     case None => (null, null)
   }
   def init(): PropertyEditor[_] = {
-    ToolTipManager.sharedInstance.setDismissDelay(30000)
     val properties = target.propertySet
     val layout = new GridBagLayout()
     setLayout(layout)
@@ -57,7 +58,10 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         setLayout(new BorderLayout)
         add(editor, BorderLayout.CENTER)
         if (property.notes != null)
-          setToolTipText(property.notes)
+          if (useTooltips)
+            setToolTipText(property.notes)
+          else
+            add(new JLabel(property.notes){ setFont(getFont.deriveFont(9.0f)) }, BorderLayout.SOUTH)
       }
 
       val c = editor.getConstraints

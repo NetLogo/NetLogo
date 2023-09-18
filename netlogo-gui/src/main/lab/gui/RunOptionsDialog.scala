@@ -84,7 +84,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
   }
   def get = {
     val editable = new EditableRunOptions
-    if (dialogFactory.canceled(parent, editable))
+    if (dialogFactory.canceled(parent, editable, false))
       throw new UserCancelException
     val runOptions = editable.get
     Prefs.updateFrom(runOptions)
