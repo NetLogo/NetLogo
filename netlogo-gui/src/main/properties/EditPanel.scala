@@ -4,7 +4,7 @@ package org.nlogo.properties
 
 import java.awt.{Component, Insets, GridBagConstraints, Dimension, GridBagLayout, BorderLayout}
 
-import javax.swing.JPanel
+import javax.swing.{JPanel, ToolTipManager}
 
 import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody }
 import org.nlogo.api.{ CompilerServices, Editable, Property }
