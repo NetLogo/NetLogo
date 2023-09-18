@@ -84,30 +84,65 @@ package org.nlogo.parse
 //    LetScoper, but it would result in having to change the syntax of the _let primitive,
 //    seems awkward and confusing.
 
-import org.nlogo.core,
-  core.{ Command, Reporter, Token, TokenType, Let },
-  core.Fail._
+import org.nlogo.core.{ Command, Reporter, Token, TokenType, Let }
+import org.nlogo.core.Fail._
+
+import org.nlogo.core
 
 import SymbolType.LocalVariable
 
 object LetScope {
-  def apply(c: Command, nameToken: Option[Token], usedNames: SymbolTable): Option[(Command, SymbolTable)] = {
-    c match {
-      case l @ core.prim._let(None, _) =>
-        nameToken match {
-          case Some(nameToken @ Token(text, TokenType.Reporter, _)) =>
+  def apply(l: core.prim._let, tokens: BufferedIterator[Token], usedNames: SymbolTable): (Command, SymbolTable) = {
+    l match {
+      case core.prim._let(None, _) =>
+        tokens.head match {
+          case nameToken @ Token(text, TokenType.Reporter, _) =>
             val name = text.toUpperCase
             val newLet = Let(name)
             for (tpe <- usedNames.get(name))
               exception("There is already a " + SymbolType.typeName(tpe) + " called " + name, nameToken)
-            Some((l.copy(let = newLet, tokenText = Some(text)), usedNames.addSymbol(name, LocalVariable(newLet))))
-          case Some(otherToken) =>
+            (l.copy(let = newLet, tokenText = Some(text)), usedNames.addSymbol(name, LocalVariable(newLet)))
+
+          case _ @ Token(_, TokenType.OpenBracket, _) =>
+            var multiUsedNames = usedNames
+            var lets: Seq[(Token, Let)] = Seq()
+            tokens.next()
+            while (tokens.hasNext && tokens.head.tpe != TokenType.CloseBracket) {
+              val token    = tokens.head
+              val name     = token.text.toUpperCase
+              val newLet   = Let(name)
+              val tokenLet = (tokens.head, newLet)
+              lets         = lets :+ tokenLet
+              for (tpe <- multiUsedNames.get(name))
+                exception("There is already a " + SymbolType.typeName(tpe) + " called " + name, token)
+              multiUsedNames = multiUsedNames.addSymbol(name, LocalVariable(newLet))
+              tokens.next()
+            }
+            // pop the close bracket...
+            if (tokens.hasNext) {
+              tokens.next()
+            }
+
+            if (lets.length == 0) {
+              exception("The list of variables names given to LET must contain at least one item.", l.token)
+            }
+
+            val multi = core.prim._multilet(lets)
+            l.token.refine(multi, text = "_multilet")
+            (multi, multiUsedNames)
+
+          case _ @ Token(_, TokenType.Eof, _) =>
+            // expression parser will generate the error
+            (l, usedNames)
+
+          case otherToken =>
             exception("Expected variable name here", otherToken)
-          case _ => None
+
         }
-      case l @ core.prim._let(Some(let), _) =>
-        Some((c, usedNames.addSymbol(let.name.toUpperCase, LocalVariable(let))))
-      case _ => None
+
+      case core.prim._let(Some(let), _) =>
+        (l, usedNames.addSymbol(let.name.toUpperCase, LocalVariable(let)))
+
     }
   }
 }

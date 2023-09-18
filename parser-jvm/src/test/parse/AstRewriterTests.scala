@@ -135,7 +135,7 @@ class AstRewriterTests extends AnyFunSuite {
   testLambda("show is-list? [ [] -> tick ]", "show is-list? task [tick]")
   testLambda("let a-value 1 let a-task [ [] -> a-value ]", "let a-value 1 let a-task task [a-value]")
   testLambda("baz ([ [] ->  fd 1 ]) ([ [?1 ?2] -> bk ?2 ])", "baz (task [ fd 1 ]) (task [ bk ?2 ])", preamble = "TO baz [a b] END TO FOO ")
-  testLambda("show reduce [ [x y] -> x + y] [1 2 3]", "show reduce [[x y] -> x + y] [1 2 3]")
+  testLambda("show reduce [ [x y] -> x + y ] [1 2 3]", "show reduce [[x y] -> x + y ] [1 2 3]")
   testLambda("foreach [1 2 3] [ [x] -> show x ]", "foreach [1 2 3] [ [x] -> show x ]")
   testLambda("foreach [1 2 3] [ x -> show x ]", "foreach [1 2 3] [ x -> show x ]")
   testLambda("foreach [1 2 3] [ -> show 4 ]", "foreach [1 2 3] [ -> show 4 ]")

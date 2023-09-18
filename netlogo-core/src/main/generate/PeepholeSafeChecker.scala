@@ -38,8 +38,9 @@ class PeepholeSafeChecker(profilingEnabled: Boolean = false) {
   // we have to synchronize because we could be compiling stuff on multiple threads
   def isSafe(m: Method): Boolean = synchronized {
     val hashKey = getHashKey(m)
-    if (!methodSafeTable.contains(hashKey))
+    if (!methodSafeTable.contains(hashKey)) {
       processClass(m.getDeclaringClass)
+    }
     methodSafeTable(hashKey)
   }
   private val methodSafeTable = new collection.mutable.HashMap[String, Boolean]
@@ -47,8 +48,9 @@ class PeepholeSafeChecker(profilingEnabled: Boolean = false) {
     m.getDeclaringClass.getName + "." + m.getName
   private def processClass(c: Class[_]) {
     val reader = PrimitiveCache.getClassReader(c)
-    for (m <- BytecodeUtils.getMethods(c, profilingEnabled))
+    for (m <- BytecodeUtils.getMethods(c, profilingEnabled)) {
       reader.accept(new MethodExtractorClassAdapter(m), ClassReader.SKIP_DEBUG)
+    }
   }
   private class MethodExtractorClassAdapter(method: Method) extends EmptyClassVisitor {
     override def visitMethod(arg0: Int, name: String, descriptor: String, signature: String, exceptions: Array[String]): MethodVisitor =

@@ -84,21 +84,26 @@ trait AbstractTestLanguage extends Assertions {
                                        mode: TestMode) {
     try {
       testReporter(reporter, expectedError, mode)
-      fail("failed to cause runtime error: \"" + reporter + "\"")
+      fail(s"failed to cause runtime error: `$reporter")
+
     } catch {
       // PureConstantOptimizer throws would-be runtime errors at compile-time, so we check those
       case ex: CompilerException
         if (ex.getMessage.startsWith(CompilerException.RuntimeErrorAtCompileTimePrefix)) =>
           assertResult(CompilerException.RuntimeErrorAtCompileTimePrefix + expectedError)(ex.getMessage)
+
       case ex: CompilerException =>
-        fail("expected runtime error, got compile error: " + ex.getMessage)
+        fail(s"expected runtime error, got compile error: ${ex.getMessage}")
+
       case ex: Throwable =>
         withClue(mode + ": reporter: " + reporter) {
           if (actualError.isEmpty)
-            fail("expected to find an error, but none found")
+            fail(s"expected to find an error, but none found for `$reporter`")
+
           else
             assertResult(expectedError)(actualError.get)
         }
+
     }
   }
   def testReporterError(reporter: String, error: String, mode: TestMode) {
@@ -123,7 +128,7 @@ trait AbstractTestLanguage extends Assertions {
                        mode: TestMode = NormalMode) {
     try {
       testCommand(command, agentClass, mode)
-      fail("failed to cause runtime error: \"" + command + "\"")
+      fail(s"failed to cause runtime error: `$command`")
     }
     catch {
       case ex: LogoException =>
@@ -137,7 +142,7 @@ trait AbstractTestLanguage extends Assertions {
                        mode: TestMode = NormalMode) {
     try {
       testCommand(command, agentClass, mode)
-      fail("failed to cause runtime error: \"" + command + "\"")
+      fail(s"failed to cause runtime error: `$command`")
     }
     catch {
       case ex: LogoException =>
@@ -152,7 +157,7 @@ trait AbstractTestLanguage extends Assertions {
   {
     try {
       workspace.compileCommands(command, agentClass)
-      fail("no CompilerException occurred")
+      fail(s"no CompilerException occurred for `$command`")
     }
     catch {
       case ex: CompilerException =>

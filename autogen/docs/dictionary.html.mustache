@@ -4910,10 +4910,21 @@ end
       <p>
         Example:
       </p>
-      <pre>
+<pre>
 let prey one-of sheep-here
 if prey != nobody
   [ ask prey [ die ] ]
+</pre>
+      <p>
+        You can also create multiple local variables if you put the variable names in a list format.  The values for the new variables will be taken from the list given as the second argument.  This can be particular useful when you want to calculate multiple values in a reporter procedure, as you can easily create multiple variables with the results.  A runtime error will occur if you do not give a list of values or the list you provide doesn't have enough values for all the variables.
+      </p>
+<pre>
+let [x y z] [10 15 20]
+show x ; prints 10
+show y ; prints 15
+show z ; prints 20
+
+let [a b c] [10] ; causes a runtime error as we need at least 3 values in the list
 </pre>
     </div>
     <div class="dict_entry" id="link">
@@ -7853,6 +7864,27 @@ show (sentence [1 2] 3 [4 5] (3 + 3) 7)
           <li>A local variable created by the <a href="#let">let</a> command.</li>
           <li>An input to the current procedure.</li>
         </ul>
+        <p>Example:</p>
+<pre>
+ask turtles [
+  set color red
+  set size 2
+  set shape "arrow"
+]
+</pre>
+        <p>
+          You can also give a list of variable names as the first argument for <code>set</code> and they will be assigned the values from a list given as the second argument.  This can be particular useful when you want to calculate multiple values in a reporter procedure, as you can easily set multiple variables with the results.  A runtime error will occur if the second argument is not a list value or if there are not enough values in the list for all the variables specified.
+        </p>
+<pre>
+ask turtles [
+  set [color size shape] [red 2 "arrow"]
+  show color ; prints 15
+  show size ; prints 2
+  show shape ; prints "arrow"
+]
+ask turtles [
+  set [color size shape] [red] ; causes a runtime error as we need at least 3 values in the list
+]
       </div>
       <div class="dict_entry" id="set-current-directory">
         <h3>

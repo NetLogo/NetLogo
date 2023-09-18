@@ -250,6 +250,27 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
     val noNameProcedure = FrontEnd.findProcedurePositions("""to show "foo" end""", None)
     assert(noNameProcedure.isEmpty)
   }
+
+  test("regular old multi-let") {
+    testParse("let multilet-var-1 [1 2 3] let v1 (item 0 multilet-var-1) let v2 (item 1 multilet-var-1)",
+      "_let(Let(MULTILET-VAR-1),multilet-var-1)[_const([1, 2, 3])[]] _let(Let(V1),v1)[_item()[_const(0)[], _letvariable(Let(MULTILET-VAR-1))[]]] _let(Let(V2),v2)[_item()[_const(1)[], _letvariable(Let(MULTILET-VAR-1))[]]]")
+  }
+
+  test("fancy new multi-let") {
+    testParse("let [v1 v2] [1 2 3]",
+      "_multilet(List((Token(v1,Reporter,_unknownidentifier()),Let(V1)), (Token(v2,Reporter,_unknownidentifier()),Let(V2))))[_const([1, 2, 3])[]] _let(Let(V1),v1)[_multiletitem()[]] _let(Let(V2),v2)[_multiletitem()[]]")
+  }
+
+  test("regular old multi-set") {
+    testParse("let v1 0 let v2 0 let multiset-var-1 [1 2 3] set v1 (item 0 multiset-var-1) set v2 (item 1 multiset-var-1)",
+      "_let(Let(V1),v1)[_const(0)[]] _let(Let(V2),v2)[_const(0)[]] _let(Let(MULTISET-VAR-1),multiset-var-1)[_const([1, 2, 3])[]] _set()[_letvariable(Let(V1))[], _item()[_const(0)[], _letvariable(Let(MULTISET-VAR-1))[]]] _set()[_letvariable(Let(V2))[], _item()[_const(1)[], _letvariable(Let(MULTISET-VAR-1))[]]]")
+  }
+
+  test("fancy new multi-set") {
+    testParse("let v1 0 let v2 0 set [v1 v2] [1 2 3]",
+      "_let(Let(V1),v1)[_const(0)[]] _let(Let(V2),v2)[_const(0)[]] _multiset(List(Token(v1,Reporter,_unknownidentifier()), Token(v2,Reporter,_unknownidentifier())))[_const([1, 2, 3])[]] _set()[_letvariable(Let(V1))[], _multiletitem()[]] _set()[_letvariable(Let(V2))[], _multiletitem()[]]")
+  }
+
 }
 
 object FrontEndTests {

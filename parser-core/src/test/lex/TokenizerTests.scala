@@ -110,7 +110,7 @@ class TokenizerTests extends AnyFunSuite {
   testLexFailure("\"\\b\"",      0, 4,  "Illegal character after backslash")
   testLexFailure("\"\\\"",       0, 3,  "Closing double quote is missing")
   testLexFailure(""""abc""",     0, 4,  "Closing double quote is missing")
-   // check that parser errors when string contains newline
+  // check that parser errors when string contains newline
   testLexFailure("\"abc\n\"",    0, 4,  "Closing double quote is missing")
   testLexFailure("1.2.3",        0, 5,  "Illegal number format")
   testLexFailure("{{array: 1: ", 0, 12, "End of file reached unexpectedly")
