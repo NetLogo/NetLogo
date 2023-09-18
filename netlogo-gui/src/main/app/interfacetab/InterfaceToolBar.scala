@@ -91,7 +91,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       }
       suppress(true)
       editButton.setSelected(true)
-      wPanel.editWidgetFinished(target, dialogFactory.canceled(frame, target))
+      wPanel.editWidgetFinished(target, dialogFactory.canceled(frame, target, false))
       editButton.setSelected(false)
       suppress(false)
     }

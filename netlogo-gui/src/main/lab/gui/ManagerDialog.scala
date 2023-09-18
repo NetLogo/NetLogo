@@ -185,7 +185,7 @@ private class ManagerDialog(manager:       LabManager,
           update()
         }
       }
-    })
+    }, true)
   }
   private def delete() {
     val selected = jlist.getSelectedIndices
