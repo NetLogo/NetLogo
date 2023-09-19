@@ -4,12 +4,14 @@ package org.nlogo.properties
 
 import org.nlogo.swing.Implicits._
 
-abstract class StringEditor(accessor: PropertyAccessor[String])
-  extends PropertyEditor(accessor)
+abstract class StringEditor(accessor: PropertyAccessor[String], useTooltip: Boolean)
+  extends PropertyEditor(accessor, useTooltip)
 {
   val editor = makeEditor()
   setLayout(new java.awt.BorderLayout(BORDER_PADDING, 0))
-  add(new javax.swing.JLabel(accessor.displayName), java.awt.BorderLayout.WEST)
+  val label = new javax.swing.JLabel(accessor.displayName)
+  tooltipFont(label)
+  add(label, java.awt.BorderLayout.WEST)
   editor.getDocument().addDocumentListener({ () => changed() })
   add(editor, java.awt.BorderLayout.CENTER)
   def makeEditor() = new org.nlogo.swing.TextField(12)

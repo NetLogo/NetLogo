@@ -4,12 +4,14 @@ package org.nlogo.properties
 
 import org.nlogo.swing.Implicits._
 
-abstract class KeyEditor(accessor: PropertyAccessor[Char])
-  extends PropertyEditor(accessor)
+abstract class KeyEditor(accessor: PropertyAccessor[Char], useTooltip: Boolean)
+  extends PropertyEditor(accessor, useTooltip)
 {
   val editor = makeEditor()
   setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.X_AXIS))
-  add(new javax.swing.JLabel(accessor.displayName))
+  val label = new javax.swing.JLabel(accessor.displayName)
+  tooltipFont(label)
+  add(label)
   add(javax.swing.Box.createHorizontalStrut(5))
   editor.getDocument.addDocumentListener({ () => changed() })
   add(editor, java.awt.BorderLayout.CENTER)

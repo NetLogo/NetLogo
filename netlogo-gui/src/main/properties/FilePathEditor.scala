@@ -10,8 +10,9 @@ import org.nlogo.awt.{ UserCancelException }
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ FileDialog, RichJButton, TextField }
 
-abstract class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, suggestedFile: String)
-  extends PropertyEditor(accessor)
+abstract class FilePathEditor(accessor: PropertyAccessor[String], useTooltip: Boolean, parent: Component,
+                              suggestedFile: String)
+  extends PropertyEditor(accessor, useTooltip)
 {
   val suggestedFileName = if (suggestedFile != null && suggestedFile.trim() != "") {
     suggestedFile
@@ -22,7 +23,9 @@ abstract class FilePathEditor(accessor: PropertyAccessor[String], parent: Compon
 
   val editor = makeEditor()
   setLayout(new BorderLayout(BORDER_PADDING, 0))
-  add(new JLabel(accessor.displayName), BorderLayout.WEST)
+  val label = new JLabel(accessor.displayName)
+  tooltipFont(label)
+  add(label, BorderLayout.WEST)
   editor.getDocument().addDocumentListener({ () => changed() })
   add(editor, BorderLayout.CENTER)
   val toolbar = new JToolBar()

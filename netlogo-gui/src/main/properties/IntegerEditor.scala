@@ -5,12 +5,13 @@ package org.nlogo.properties
 import util.control.Exception.catching
 import org.nlogo.swing.Implicits._
 
-abstract class IntegerEditor(accessor: PropertyAccessor[Int])
-  extends PropertyEditor(accessor)
+abstract class IntegerEditor(accessor: PropertyAccessor[Int], useTooltip: Boolean)
+  extends PropertyEditor(accessor, useTooltip)
 {
   val editor = new org.nlogo.swing.TextField(8)
   setLayout(new java.awt.BorderLayout(BORDER_PADDING, 0))
   private val label = new javax.swing.JLabel(accessor.displayName)
+  tooltipFont(label)
   add(label, java.awt.BorderLayout.WEST)
   editor.getDocument().addDocumentListener({ () => changed() })
   add(editor, java.awt.BorderLayout.CENTER)

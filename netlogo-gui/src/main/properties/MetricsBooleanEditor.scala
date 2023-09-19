@@ -2,7 +2,8 @@ package org.nlogo.properties
 
 import scala.collection.mutable.ArrayBuffer
 
-class MetricsBooleanEditor(accessor: PropertyAccessor[Boolean], properties: ArrayBuffer[PropertyEditor[_]]) extends BooleanEditor(accessor)
+class MetricsBooleanEditor(accessor: PropertyAccessor[Boolean], useTooltip: Boolean,
+                           properties: ArrayBuffer[PropertyEditor[_]]) extends BooleanEditor(accessor, useTooltip)
 {
     override def changed(): Unit =
     {

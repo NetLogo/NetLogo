@@ -13,7 +13,7 @@ import org.nlogo.editor.Colorizer
 import org.nlogo.plot.PlotManagerInterface
 import org.nlogo.swing.OptionDialog
 
-class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, plotManager: PlotManagerInterface) extends JPanel {
+class PlotPenEditorAdvanced(useTooltip: Boolean, inputPen: PlotPensEditor.Pen, colorizer: Colorizer, plotManager: PlotManagerInterface) extends JPanel {
   private implicit val i18nPrefix = I18N.Prefix("edit.plot.pen")
 
   def getPlotPenModeNames = PlotPenModes.toArray
@@ -27,8 +27,8 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, 
   private val intervalField = new org.nlogo.swing.TextField("", 8)
   private val penModes = new JComboBox(getPlotPenModeNames.asInstanceOf[Array[Object]])
   private val showPenInLegend = new JCheckBox(I18N.gui("showInLegend"), true)
-  val setupCode = CodeEditor(I18N.gui("setupCommands"), colorizer, columns = 65, err=inputPen.setupError)
-  val updateCode = CodeEditor(I18N.gui("updateCommands"), colorizer, columns = 65, err=inputPen.updateError)
+  val setupCode = CodeEditor(I18N.gui("setupCommands"), useTooltip, colorizer, columns = 65, err=inputPen.setupError)
+  val updateCode = CodeEditor(I18N.gui("updateCommands"), useTooltip, colorizer, columns = 65, err=inputPen.updateError)
 
   val runtimeErrorPanel =
     inputPen.runtimeError.map(
