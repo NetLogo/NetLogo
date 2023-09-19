@@ -98,11 +98,19 @@ class Tabs(workspace:           GUIWorkspace,
     tabManager.setAppCodeTabBindings
   }
 
+    // When there is a separate code tab window, there will be a selected tab in
+    // both windows. This means that the selected tab in the non-active window will
+    // not be selectable. A WindowFocusListener is used to detect when the user
+    // changes focus to the main GUI window from the Code Tab window, so that
+    // a dirty code tab will be compiled.
   jframe.addWindowFocusListener(new WindowAdapter() {
     override def windowGainedFocus(e: WindowEvent) {
       val currentTab = getTabs.getSelectedComponent
-      if (tabManager.getMainCodeTab.dirty) {
-        // The SwitchedTabsEvent can lead to compilation. AAB 10/2020
+      // The main GUI window can gain focus if you click outside of the NetLogo application
+      // and then click main GUI window. This should never lead to compilation if there
+      // is no separate code tab because a state change event will take care of things.
+      // The SwitchedTabsEvent can lead to compilation. AAB 10/2020
+      if (tabManager.isCodeTabSeparate && tabManager.getMainCodeTab.dirty) {        
          new AppEvents.SwitchedTabsEvent(tabManager.getMainCodeTab, currentTab).raise(getTabs)
       }
     }
