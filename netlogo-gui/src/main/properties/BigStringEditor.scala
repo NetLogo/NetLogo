@@ -4,11 +4,12 @@ package org.nlogo.properties
 
 import org.nlogo.swing.Implicits._
 
-abstract class BigStringEditor(accessor: PropertyAccessor[String])
-  extends PropertyEditor(accessor)
+abstract class BigStringEditor(accessor: PropertyAccessor[String], useTooltip: Boolean)
+  extends PropertyEditor(accessor, useTooltip)
 {
   setLayout(new java.awt.BorderLayout(BORDER_PADDING, 0))
   val label = new javax.swing.JLabel(accessor.displayName)
+  tooltipFont(label)
   label.setVerticalAlignment(javax.swing.SwingConstants.TOP)
   add(label, java.awt.BorderLayout.NORTH)
   private val editor = new javax.swing.JTextArea(6, 30)

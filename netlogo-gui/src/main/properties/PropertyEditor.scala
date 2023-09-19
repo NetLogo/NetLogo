@@ -2,7 +2,10 @@
 
 package org.nlogo.properties
 
+import java.awt.font.TextAttribute
+
 abstract class PropertyEditor[T](val accessor: PropertyAccessor[T],
+                                 val useTooltip: Boolean,
                                  val handlesOwnErrors: Boolean = false)
          extends javax.swing.JPanel
 {
@@ -26,4 +29,9 @@ abstract class PropertyEditor[T](val accessor: PropertyAccessor[T],
     c.insets = new java.awt.Insets(3, 3, 3, 3)
     c
   }
+
+  def tooltipFont(component: java.awt.Component) =
+    if (useTooltip)
+      component.setFont(component.getFont.deriveFont(
+                        java.util.Collections.singletonMap(TextAttribute.UNDERLINE, TextAttribute.UNDERLINE_ON)))
 }
