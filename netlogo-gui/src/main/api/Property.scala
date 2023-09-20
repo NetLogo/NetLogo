@@ -38,6 +38,7 @@ case class Property(
   name: String,
   notes: String = "",
   gridWidth: Int = GridBagConstraints.REMAINDER,
+  editable: Boolean = true,
   optional: Boolean = false,
   focus: Boolean = false,
   setLive: Boolean = false,

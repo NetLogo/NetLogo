@@ -50,7 +50,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
                     layout: GridBagLayout) = {
     var claimsFirstFocus: PropertyEditor[_] = null
     for(property <- properties) {
-      val editor = getEditor(property, target)
+      val editor = getPanel(property, target)
       val panel = new JPanel{
         setLayout(new BorderLayout)
         add(editor, BorderLayout.CENTER)
@@ -64,10 +64,11 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       c.gridwidth = property.gridWidth
       layout.setConstraints(panel, c)
       editorPanel.add(panel)
-      propertyEditors += editor
-      editor.refresh()
-      editor.setEnabled(property.enabled)
-
+      if (property.editable) {
+        propertyEditors += editor
+        editor.refresh()
+        editor.setEnabled(property.enabled)
+      }
       if (property.focus) {
         assert(claimsFirstFocus == null)
         claimsFirstFocus = editor
@@ -201,7 +202,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
 
   ////
 
-  private def getEditor(property: Property, r: Editable) = {
+  private def getPanel(property: Property, r: Editable) = {
     import property._
 
     // Lets you specify other property editors to refresh when a different property
