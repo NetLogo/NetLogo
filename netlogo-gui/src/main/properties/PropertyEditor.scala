@@ -2,12 +2,10 @@
 
 package org.nlogo.properties
 
-import java.awt.font.TextAttribute
-
 abstract class PropertyEditor[T](val accessor: PropertyAccessor[T],
                                  val useTooltip: Boolean,
                                  val handlesOwnErrors: Boolean = false)
-         extends PropertyPanel
+         extends PropertyPanel(useTooltip)
 {
   def changed() // abstract
 

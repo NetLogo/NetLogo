@@ -70,14 +70,17 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       c.gridwidth = property.gridWidth
       layout.setConstraints(panel, c)
       editorPanel.add(panel)
-      if (property.editable) {
-        propertyEditors += editor
-        editor.refresh()
-        editor.setEnabled(property.enabled)
-      }
-      if (property.focus) {
-        assert(claimsFirstFocus == null)
-        claimsFirstFocus = editor
+
+      editor match {
+        case editor: PropertyEditor[_] =>
+          propertyEditors += editor
+          editor.refresh()
+          editor.setEnabled(property.enabled)
+          if (property.focus) {
+            assert(claimsFirstFocus == null)
+            claimsFirstFocus = editor
+          }
+        case _ =>
       }
     }
     claimsFirstFocus
@@ -305,7 +308,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       case Property.FilePath(suggestedFile) =>
         new FilePathEditor(accessor, useTooltips, this, suggestedFile) with Changed
       case Property.Label =>
-        new Label(accessor, useTooltips) with Changed
+        new Label(name, useTooltips)
     }
   }
 

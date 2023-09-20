@@ -2,7 +2,9 @@
 
 package org.nlogo.properties
 
-abstract class PropertyPanel extends javax.swing.JPanel
+import java.awt.font.TextAttribute
+
+abstract class PropertyPanel(useTooltip: Boolean) extends javax.swing.JPanel
 {
   val BORDER_PADDING = 5
 

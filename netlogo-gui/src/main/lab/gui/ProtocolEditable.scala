@@ -64,7 +64,6 @@ class ProtocolEditable(protocol: LabProtocol,
   }
   // These are the actual vars the user edits.  Before editing they are copied out of the
   // original LabProtocol; after editing a new LabProtocol is created.
-  var hint = ""
   var name = protocol.name
   var preExperimentCommands = protocol.preExperimentCommands
   var setupCommands = protocol.setupCommands

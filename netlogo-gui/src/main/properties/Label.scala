@@ -2,14 +2,12 @@
 
 package org.nlogo.properties
 
-abstract class Label(accessor: PropertyAccessor[String], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip)
+class Label(text: String, useTooltip: Boolean)
+  extends PropertyPanel(useTooltip)
 {
   setLayout(new java.awt.BorderLayout(BORDER_PADDING, 0))
-  val label = new javax.swing.JLabel(accessor.displayName)
+  val label = new javax.swing.JLabel(text)
   tooltipFont(label)
   label.setFont(label.getFont.deriveFont(java.awt.Font.BOLD))
   add(label, java.awt.BorderLayout.CENTER)
-  override def get: Option[String] = Some("")
-  override def set(value: String) { }
 }
