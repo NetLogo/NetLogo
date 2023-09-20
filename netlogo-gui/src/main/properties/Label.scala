@@ -10,5 +10,6 @@ abstract class Label(accessor: PropertyAccessor[String], useTooltip: Boolean)
   tooltipFont(label)
   label.setFont(label.getFont.deriveFont(java.awt.Font.BOLD))
   add(label, java.awt.BorderLayout.CENTER)
+  override def get: Option[String] = None
   override def set(value: String) { }
 }
