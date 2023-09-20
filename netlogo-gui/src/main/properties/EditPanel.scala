@@ -303,6 +303,8 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         new StringEditor(accessor, useTooltips) with Changed
       case Property.FilePath(suggestedFile) =>
         new FilePathEditor(accessor, useTooltips, this, suggestedFile) with Changed
+      case Property.Label =>
+        new Label(accessor, useTooltips) with Changed
     }
   }
 

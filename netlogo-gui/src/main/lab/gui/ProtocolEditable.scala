@@ -28,7 +28,8 @@ class ProtocolEditable(protocol: LabProtocol,
 
   val propertySet = {
     import scala.collection.JavaConverters._
-    List(Property("name", Property.String, I18N.gui("experimentName")),
+    List(Property("hint", Property.Label, I18N.gui("hint")),
+         Property("name", Property.String, I18N.gui("experimentName")),
          Property("valueSets", Property.ReporterOrEmpty,
                   I18N.gui("vary"), "<html>"+I18N.gui("vary.info")+"</html>"),
          Property("repetitions", Property.Integer, I18N.gui("repetitions"),
@@ -60,6 +61,7 @@ class ProtocolEditable(protocol: LabProtocol,
   }
   // These are the actual vars the user edits.  Before editing they are copied out of the
   // original LabProtocol; after editing a new LabProtocol is created.
+  var hint = ""
   var name = protocol.name
   var preExperimentCommands = protocol.preExperimentCommands
   var setupCommands = protocol.setupCommands
