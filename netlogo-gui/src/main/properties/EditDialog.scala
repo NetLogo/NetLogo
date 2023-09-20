@@ -31,6 +31,7 @@ trait EditDialog extends javax.swing.JDialog {
   def target: org.nlogo.api.Editable
   def compiler: CompilerServices
   def colorizer: Colorizer
+  def useTooltips: Boolean
   var canceled = false
 
   getContentPane.setBackground(java.awt.Color.LIGHT_GRAY)
@@ -45,7 +46,7 @@ trait EditDialog extends javax.swing.JDialog {
   private val editPanel =
     if(target.isInstanceOf[org.nlogo.window.WorldViewSettings])
       new WorldEditPanel(target, compiler, colorizer)
-    else new EditPanel(target, compiler, colorizer)
+    else new EditPanel(target, compiler, colorizer, useTooltips)
 
   val okButton = new javax.swing.JButton(I18N.gui.get("common.buttons.ok"))
   okButton.addActionListener { _ =>

@@ -13,7 +13,7 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
 {
   var dialog: EditDialog = null
 
-  def canceled(frame: java.awt.Frame, _target: Editable) = {
+  def canceled(frame: java.awt.Frame, _target: Editable, _useTooltips: Boolean) = {
     (new javax.swing.JDialog(frame, _target.classDisplayName, true)
        with EditDialog {
          override def window = frame
@@ -21,9 +21,10 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
          override def compiler = _compiler
          override def colorizer = _colorizer
          override def getPreferredSize = limit(super.getPreferredSize)
+         override def useTooltips = _useTooltips
        }).canceled
   }
-  def canceled(dialog: java.awt.Dialog, _target: Editable) = {
+  def canceled(dialog: java.awt.Dialog, _target: Editable, _useTooltips: Boolean) = {
     (new javax.swing.JDialog(dialog, _target.classDisplayName, true)
        with EditDialog {
          override def window = dialog
@@ -31,10 +32,11 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
          override def compiler = _compiler
          override def colorizer = _colorizer
          override def getPreferredSize = limit(super.getPreferredSize)
+         override def useTooltips = _useTooltips
        }).canceled
   }
 
-  def create(frame: java.awt.Frame, _target: Editable, finish: Consumer[java.lang.Boolean]) = {
+  def create(frame: java.awt.Frame, _target: Editable, finish: Consumer[java.lang.Boolean], _useTooltips: Boolean) = {
     dialog = new javax.swing.JDialog(frame, _target.classDisplayName, false)
                with EditDialog {
                  override def window = frame
@@ -42,6 +44,7 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
                  override def compiler = _compiler
                  override def colorizer = _colorizer
                  override def getPreferredSize = limit(super.getPreferredSize)
+                 override def useTooltips = _useTooltips
                }
     dialog.addWindowListener(new java.awt.event.WindowAdapter {
       override def windowClosed(e: java.awt.event.WindowEvent) {
@@ -50,7 +53,7 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
     })
   }
 
-  def create(_dialog: java.awt.Dialog, _target: Editable, finish: Consumer[java.lang.Boolean]) = {
+  def create(_dialog: java.awt.Dialog, _target: Editable, finish: Consumer[java.lang.Boolean], _useTooltips: Boolean) = {
     dialog = new javax.swing.JDialog(_dialog, _target.classDisplayName, false)
                     with EditDialog {
                       override def window = _dialog
@@ -58,6 +61,7 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
                       override def compiler = _compiler
                       override def colorizer = _colorizer
                       override def getPreferredSize = limit(super.getPreferredSize)
+                      override def useTooltips = _useTooltips
                     }
     dialog.addWindowListener(new java.awt.event.WindowAdapter {
       override def windowClosed(e: java.awt.event.WindowEvent) {

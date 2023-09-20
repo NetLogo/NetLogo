@@ -7,12 +7,14 @@ import javax.swing.{ JComboBox, JLabel }
 
 import org.nlogo.api.Options
 
-abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]])
-  extends PropertyEditor(accessor)
+abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]], useTooltip: Boolean)
+  extends PropertyEditor(accessor, useTooltip)
 {
   private val combo = new JComboBox[String]
   setLayout(new FlowLayout(FlowLayout.LEFT))
-  add(new JLabel(accessor.displayName))
+  val label = new JLabel(accessor.displayName)
+  tooltipFont(label)
+  add(label)
   add(combo)
   private val options: Options[T] = accessor.get
   for(optionName <- options.names)

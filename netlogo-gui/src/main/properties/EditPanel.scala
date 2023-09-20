@@ -4,7 +4,7 @@ package org.nlogo.properties
 
 import java.awt.{Component, Insets, GridBagConstraints, Dimension, GridBagLayout, BorderLayout}
 
-import javax.swing.{JPanel, JLabel}
+import javax.swing.{JLabel, JPanel, ToolTipManager}
 
 import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody }
 import org.nlogo.api.{ CompilerServices, Editable, Property }
@@ -16,8 +16,11 @@ import scala.reflect.ClassTag
 import scala.collection.JavaConverters._
 
 // This is the contents of an EditDialog, except for the buttons at the bottom (OK/Apply/Cancel).
-class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer: Colorizer)
+class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer: Colorizer, useTooltips: Boolean = false)
   extends JPanel {
+
+  val oldDelay = ToolTipManager.sharedInstance.getDismissDelay()
+  ToolTipManager.sharedInstance.setDismissDelay(30000)
 
   val liveUpdate =
     // OK, it's a big hack that we're hardcoding these next checks, but it doesn't seem worth the
@@ -50,12 +53,15 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
                     layout: GridBagLayout) = {
     var claimsFirstFocus: PropertyEditor[_] = null
     for(property <- properties) {
-      val editor = getPanel(property, target)
+      val editor = getPanel(property, target, useTooltips && property.notes != null && property.notes.trim != "")
       val panel = new JPanel{
         setLayout(new BorderLayout)
         add(editor, BorderLayout.CENTER)
-        if (property.notes != null)
-          add(new JLabel(property.notes){ setFont(getFont.deriveFont(9.0f)) }, BorderLayout.SOUTH)
+        if (property.notes != null && property.notes.trim != "")
+          if (useTooltips)
+            editor.setTooltip(property.notes)
+          else
+            add(new JLabel(property.notes){ setFont(getFont.deriveFont(9.0f)) }, BorderLayout.SOUTH)
       }
 
       val c = editor.getConstraints
@@ -156,12 +162,14 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
   def apply() {
     applyProperties()
     changed()
+    ToolTipManager.sharedInstance.setDismissDelay(oldDelay)
   }
 
   def revert() {
     revertProperties()
     for(wrapper <- wrapperOption)
       wrapper.setSize(originalSize)
+    ToolTipManager.sharedInstance.setDismissDelay(oldDelay)
   }
 
   private def applyProperties(): Unit = {
@@ -202,7 +210,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
 
   ////
 
-  private def getPanel(property: Property, r: Editable) = {
+  private def getPanel(property: Property, r: Editable, useTooltips: Boolean) = {
     import property._
 
     // Lets you specify other property editors to refresh when a different property
@@ -227,35 +235,35 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
 
     tpe match {
       case Property.StringOptions =>
-        new OptionsEditor[String](accessor) with Changed
+        new OptionsEditor[String](accessor, useTooltips) with Changed
       case Property.BigString =>
-        new BigStringEditor(accessor) with Changed
+        new BigStringEditor(accessor, useTooltips) with Changed
       case Property.Boolean =>
-        new BooleanEditor(accessor) with Changed
+        new BooleanEditor(accessor, useTooltips) with Changed
       case Property.MetricsBoolean =>
-        new MetricsBooleanEditor(accessor, propertyEditors)
+        new MetricsBooleanEditor(accessor, useTooltips, propertyEditors)
       case Property.Color =>
-        new ColorEditor(accessor, frame) with Changed
+        new ColorEditor(accessor, useTooltips, frame) with Changed
       case Property.Commands =>
-        new CodeEditor(accessor, colorizer, collapsible, collapseByDefault) with Changed
+        new CodeEditor(accessor, useTooltips, colorizer, collapsible, collapseByDefault) with Changed
       case Property.Double =>
-        new DoubleEditor(accessor) with Changed
+        new DoubleEditor(accessor, useTooltips) with Changed
       case Property.Error =>
-        new RuntimeErrorDisplay(accessor) with Changed
+        new RuntimeErrorDisplay(accessor, useTooltips) with Changed
       case Property.StrictlyPositiveDouble =>
-        new DoubleEditor(accessor) with Changed
+        new DoubleEditor(accessor, useTooltips) with Changed
         { override def get = super.get.filter(_ > 0) }
       case Property.Identifier =>
-        new StringEditor(accessor) with Changed
+        new StringEditor(accessor, useTooltips) with Changed
         { override def get = super.get.map(_.trim).filter(compiler.isValidIdentifier) }
       case Property.InputBoxOptions =>
-        new InputBoxEditor(accessor) with Changed
+        new InputBoxEditor(accessor, useTooltips) with Changed
       case Property.Integer =>
-        new IntegerEditor(accessor) with Changed
+        new IntegerEditor(accessor, useTooltips) with Changed
       case Property.Key =>
-        new KeyEditor(accessor) with Changed
+        new KeyEditor(accessor, useTooltips) with Changed
       case Property.LogoListString =>
-        new CodeEditor(accessor, colorizer, false, false) with Changed {
+        new CodeEditor(accessor, useTooltips, colorizer, false, false) with Changed {
           private def nobodyFree(a: AnyRef): Boolean = {
             a match {
               case Nobody       => false
@@ -272,30 +280,32 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
             catch { case _: CompilerException => false }
         }}
       case Property.NegativeInteger =>
-        new IntegerEditor(accessor) with Changed
+        new IntegerEditor(accessor, useTooltips) with Changed
         { override def get = super.get.filter(_ <= 0) }
       case Property.NonEmptyString =>
-        new StringEditor(accessor) with Changed
+        new StringEditor(accessor, useTooltips) with Changed
         { override def get = super.get.filter(_.nonEmpty) }
       case Property.PlotOptions =>
-        new OptionsEditor[org.nlogo.plot.Plot](accessor) with Changed
+        new OptionsEditor[org.nlogo.plot.Plot](accessor, useTooltips) with Changed
       case Property.PlotPens =>
         new PlotPensEditor(
-          new PropertyAccessor[List[org.nlogo.plot.PlotPen]](r, property.name, property.accessString), colorizer)
+          new PropertyAccessor[List[org.nlogo.plot.PlotPen]](r, property.name, property.accessString), useTooltips, colorizer)
       case Property.PositiveInteger =>
-        new IntegerEditor(accessor) with Changed
+        new IntegerEditor(accessor, useTooltips) with Changed
         { override def get = super.get.filter(_ >= 0) }
       case Property.Reporter =>
-        new CodeEditor(accessor, colorizer, collapsible, collapseByDefault) with Changed
+        new CodeEditor(accessor, useTooltips, colorizer, collapsible, collapseByDefault) with Changed
         { override def get = super.get.map(_.trim).filter(_.nonEmpty) }
       case Property.ReporterOrEmpty =>
-        new CodeEditor(accessor, colorizer, collapsible, collapseByDefault) with Changed
+        new CodeEditor(accessor, useTooltips, colorizer, collapsible, collapseByDefault) with Changed
       case Property.ReporterLine =>
-        new ReporterLineEditor(accessor, colorizer, property.optional) with Changed
+        new ReporterLineEditor(accessor, useTooltips, colorizer, property.optional) with Changed
       case Property.String =>
-        new StringEditor(accessor) with Changed
+        new StringEditor(accessor, useTooltips) with Changed
       case Property.FilePath(suggestedFile) =>
-        new FilePathEditor(accessor, this, suggestedFile) with Changed
+        new FilePathEditor(accessor, useTooltips, this, suggestedFile) with Changed
+      case Property.Label =>
+        new Label(accessor, useTooltips) with Changed
     }
   }
 

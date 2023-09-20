@@ -6,12 +6,13 @@ import org.nlogo.api.Dump
 import util.control.Exception.catching
 import org.nlogo.swing.Implicits._
 
-abstract class DoubleEditor(accessor: PropertyAccessor[Double])
-  extends PropertyEditor(accessor)
+abstract class DoubleEditor(accessor: PropertyAccessor[Double], useTooltip: Boolean)
+  extends PropertyEditor(accessor, useTooltip)
 {
   private val editor = new org.nlogo.swing.TextField(8)
   setLayout(new java.awt.BorderLayout(BORDER_PADDING, 0))
   private val label = new javax.swing.JLabel(accessor.displayName)
+  tooltipFont(label)
   add(label, java.awt.BorderLayout.WEST)
   editor.getDocument().addDocumentListener({ () => changed() })
   add(editor, java.awt.BorderLayout.CENTER)

@@ -9,15 +9,17 @@ import java.awt.event.{ActionEvent, ActionListener}
 import java.awt.{Graphics, Component, Color}
 import javax.swing.{Icon, JPanel, JButton}
 
-abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: java.awt.Frame)
-  extends PropertyEditor(accessor)
+abstract class ColorEditor(accessor: PropertyAccessor[Color], useTooltip: Boolean, frame: java.awt.Frame)
+  extends PropertyEditor(accessor, useTooltip)
 {
 
   private val colorIcon = new ColorIcon
   private val colorButton = new JButton("0 (black)", colorIcon)
   private val originalColor: Color = accessor.get
 
-  add(new javax.swing.JLabel(accessor.displayName))
+  val label = new javax.swing.JLabel(accessor.displayName)
+  tooltipFont(label)
+  add(label)
   add(colorButton)
   colorButton.addActionListener(new SelectColorActionListener())
   setColor(originalColor)

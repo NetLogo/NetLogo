@@ -17,7 +17,7 @@ class ProtocolEditable(protocol: LabProtocol,
                        experimentNames: Seq[String] = Seq[String]())
   extends Editable {
   // these are for Editable
-  def helpLink = None
+  def helpLink = Some("behaviorspace.html#creating-an-experiment-setup")
   val classDisplayName = "Experiment"
   def error(key:Object) = null
   def error(key:Object, e: Exception){}
@@ -28,7 +28,9 @@ class ProtocolEditable(protocol: LabProtocol,
 
   val propertySet = {
     import scala.collection.JavaConverters._
-    List(Property("name", Property.String, I18N.gui("experimentName")),
+    List(Property("hint", Property.Label, I18N.gui("hint")),
+         Property("name", Property.String, I18N.gui("experimentName"),
+                  "<html>"+I18N.gui("experimentName.info")+"</html>"),
          Property("valueSets", Property.ReporterOrEmpty,
                   I18N.gui("vary"), "<html>"+I18N.gui("vary.info")+"</html>"),
          Property("repetitions", Property.Integer, I18N.gui("repetitions"),
@@ -45,8 +47,10 @@ class ProtocolEditable(protocol: LabProtocol,
                   "<html>"+I18N.gui("preExperimentCommands.info")+"</html>",
                   collapsible=true, collapseByDefault=true),
          Property("setupCommands", Property.ReporterOrEmpty, I18N.gui("setupCommands"),
+                  "<html>"+I18N.gui("setupCommands.info")+"</html>",
                   gridWidth = GridBagConstraints.RELATIVE),
-         Property("goCommands", Property.Commands, I18N.gui("goCommands")),
+         Property("goCommands", Property.Commands, I18N.gui("goCommands"),
+                  "<html>"+I18N.gui("goCommands.info")+"</html>"),
          Property("exitCondition", Property.ReporterOrEmpty, I18N.gui("exitCondition"),
                   "<html>"+I18N.gui("exitCondition.info")+"</html>",
                   gridWidth = GridBagConstraints.RELATIVE, collapsible=true, collapseByDefault=true),
@@ -60,6 +64,7 @@ class ProtocolEditable(protocol: LabProtocol,
   }
   // These are the actual vars the user edits.  Before editing they are copied out of the
   // original LabProtocol; after editing a new LabProtocol is created.
+  var hint = ""
   var name = protocol.name
   var preExperimentCommands = protocol.preExperimentCommands
   var setupCommands = protocol.setupCommands

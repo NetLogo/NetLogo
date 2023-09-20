@@ -4,10 +4,11 @@ package org.nlogo.properties
 
 import java.awt.{ GridBagConstraints }
 
-abstract class BooleanEditor(accessor: PropertyAccessor[Boolean])
-  extends PropertyEditor(accessor)
+abstract class BooleanEditor(accessor: PropertyAccessor[Boolean], useTooltip: Boolean)
+  extends PropertyEditor(accessor, useTooltip)
 {
   private val checkbox = new javax.swing.JCheckBox
+  tooltipFont(checkbox)
   checkbox.setText(accessor.displayName)
   checkbox.addItemListener(_ => changed())
   setLayout(new java.awt.BorderLayout)
@@ -24,4 +25,5 @@ abstract class BooleanEditor(accessor: PropertyAccessor[Boolean])
     c.fill = GridBagConstraints.HORIZONTAL
     c
   }
+  override def setTooltip(text: String) = checkbox.setToolTipText(text)
 }

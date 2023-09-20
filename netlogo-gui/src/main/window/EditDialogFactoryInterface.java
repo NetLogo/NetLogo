@@ -19,12 +19,12 @@ import org.nlogo.api.Editable;
 
 public interface EditDialogFactoryInterface {
   // used for modal dialog
-  boolean canceled(java.awt.Frame frame, Editable target);
-  boolean canceled(java.awt.Dialog dialog, Editable target);
+  boolean canceled(java.awt.Frame frame, Editable target, boolean useTooltips);
+  boolean canceled(java.awt.Dialog dialog, Editable target, boolean useTooltips);
   
   //used for non-modal dialog
-  void create(java.awt.Frame frame, Editable target, Consumer<Boolean> finish);
-  void create(java.awt.Dialog dialog, Editable target, Consumer<Boolean> finish);
+  void create(java.awt.Frame frame, Editable target, Consumer<Boolean> finish, boolean useTooltips);
+  void create(java.awt.Dialog dialog, Editable target, Consumer<Boolean> finish, boolean useTooltips);
 
   javax.swing.JDialog getDialog();
   void clearDialog();

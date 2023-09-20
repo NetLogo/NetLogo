@@ -8,8 +8,8 @@ import org.nlogo.window.InputBox
 import java.awt.FlowLayout
 import javax.swing.{ JCheckBox, JComboBox, JLabel }
 
-abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputType]])
-  extends PropertyEditor(accessor)
+abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputType]], useTooltip: Boolean)
+  extends PropertyEditor(accessor, useTooltip)
 {
 
   private val typeCombo: JComboBox[InputBox#InputType] = new JComboBox[InputBox#InputType]
@@ -19,7 +19,9 @@ abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputT
   private val originalMultiline: Boolean = accessor.get.chosenValue.multiline
 
   setLayout(new FlowLayout(FlowLayout.LEFT))
-  add(new JLabel(accessor.displayName))
+  val label = new JLabel(accessor.displayName)
+  tooltipFont(label)
+  add(label)
   add(typeCombo)
 
   for (t <- options.values)

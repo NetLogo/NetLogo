@@ -77,8 +77,8 @@ object PlotPensEditor {
   }
 }
 
-class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Colorizer)
-        extends PropertyEditor(accessor, handlesOwnErrors = true) {
+class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], useTooltip: Boolean, colorizer: Colorizer)
+        extends PropertyEditor(accessor, useTooltip, handlesOwnErrors = true) {
 
   import PlotPensEditor._
   private implicit val i18nPrefix = I18N.Prefix("edit.plot.pen")
@@ -266,7 +266,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     }
 
     def openAdvancedPenEditor(editingPen: Pen) {
-      showEditorPopup(editingPen, new PlotPenEditorAdvanced(editingPen, colorizer, plotManager))
+      showEditorPopup(editingPen, new PlotPenEditorAdvanced(useTooltip, editingPen, colorizer, plotManager))
     }
 
     // renders the delete and edit buttons for each column

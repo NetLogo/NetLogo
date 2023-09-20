@@ -19,7 +19,7 @@ import scala.language.reflectiveCalls
 import java.awt.Container
 
 object CodeEditor {
-  def apply(displayName: String, colorizer: Colorizer,
+  def apply(displayName: String, useTooltip: Boolean, colorizer: Colorizer,
             collapsible: Boolean = false,
             collapseWhenEmpty: Boolean = false,
             rows: Int = 5, columns: Int = 30,
@@ -30,7 +30,7 @@ object CodeEditor {
     val accessor = new PropertyAccessor[String](new Dummy, displayName, "dummy"){
       override def error = err
     }
-    new CodeEditor(accessor, colorizer, rows=rows, columns=columns,
+    new CodeEditor(accessor, useTooltip, colorizer, rows=rows, columns=columns,
       collapsible=collapsible, collapseWhenEmpty=collapseWhenEmpty){
       def changed{ changedFunc }
     }
@@ -38,11 +38,12 @@ object CodeEditor {
 }
 
 abstract class CodeEditor(accessor: PropertyAccessor[String],
+                              useTooltip: Boolean,
                               colorizer: Colorizer,
                               collapsible: Boolean = false,
                               collapseWhenEmpty: Boolean = false,
                               rows: Int = 5, columns: Int = 30)
-  extends PropertyEditor(accessor){
+  extends PropertyEditor(accessor, useTooltip){
 
   val editorConfig =
     EditorConfiguration.default(rows, columns, colorizer)
@@ -72,7 +73,9 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     // add the panel containing the button that forces the collapse, and a label.
     add(new JPanel(rowLayout(2)) {
       if (collapsible) add(arrow)
-      add(new JLabel(accessor.displayName))
+      val label = new JLabel(accessor.displayName)
+      tooltipFont(label)
+      add(label)
     }, BorderLayout.NORTH)
     add(collapso, BorderLayout.CENTER)
   }
