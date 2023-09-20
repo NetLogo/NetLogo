@@ -2,7 +2,7 @@
 
 package org.nlogo.properties
 
-import java.awt.{Component, Insets, GridBagConstraints, Dimension, GridBagLayout, BorderLayout}
+import java.awt.{Component, Dimension, GridBagLayout, BorderLayout}
 
 import javax.swing.{JLabel, JPanel, ToolTipManager}
 
@@ -65,8 +65,6 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       }
 
       val c = editor.getConstraints
-      c.anchor = GridBagConstraints.WEST
-      c.insets = new Insets(3, 3, 3, 3)
       c.gridwidth = property.gridWidth
       layout.setConstraints(panel, c)
       editorPanel.add(panel)
