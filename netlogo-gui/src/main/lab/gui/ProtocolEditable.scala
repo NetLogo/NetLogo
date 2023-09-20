@@ -17,7 +17,7 @@ class ProtocolEditable(protocol: LabProtocol,
                        experimentNames: Seq[String] = Seq[String]())
   extends Editable {
   // these are for Editable
-  def helpLink = None
+  def helpLink = Some("behaviorspace.html#creating-an-experiment-setup")
   val classDisplayName = "Experiment"
   def error(key:Object) = null
   def error(key:Object, e: Exception){}
