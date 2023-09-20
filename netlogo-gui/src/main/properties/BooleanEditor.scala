@@ -25,4 +25,5 @@ abstract class BooleanEditor(accessor: PropertyAccessor[Boolean], useTooltip: Bo
     c.fill = GridBagConstraints.HORIZONTAL
     c
   }
+  override def setTooltip(text: String) = checkbox.setToolTipText(text)
 }

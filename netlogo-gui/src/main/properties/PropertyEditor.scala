@@ -30,6 +30,7 @@ abstract class PropertyEditor[T](val accessor: PropertyAccessor[T],
     c
   }
 
+  def setTooltip(text: String) = setToolTipText(text)
   def tooltipFont(component: java.awt.Component) =
     if (useTooltip)
       component.setFont(component.getFont.deriveFont(
