@@ -59,7 +59,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         add(editor, BorderLayout.CENTER)
         if (property.notes != null && property.notes.trim != "")
           if (useTooltips)
-            setToolTipText(property.notes)
+            editor.setTooltip(property.notes)
           else
             add(new JLabel(property.notes){ setFont(getFont.deriveFont(9.0f)) }, BorderLayout.SOUTH)
       }
