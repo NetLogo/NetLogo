@@ -110,7 +110,7 @@ class Tabs(workspace:           GUIWorkspace,
       // and then click main GUI window. This should never lead to compilation if there
       // is no separate code tab because a state change event will take care of things.
       // The SwitchedTabsEvent can lead to compilation. AAB 10/2020
-      if (tabManager.isCodeTabSeparate && tabManager.getMainCodeTab.dirty) {        
+      if (tabManager.isCodeTabSeparate && tabManager.getMainCodeTab.dirty) {
          new AppEvents.SwitchedTabsEvent(tabManager.getMainCodeTab, currentTab).raise(getTabs)
       }
     }
