@@ -76,34 +76,7 @@ A new reporter primitive has been added, `who-are-not`.  It takes an agentset as
 #### Sample Model Changes
 - Fixed a minor issue in the Monte Carlo Lennard-Jones model.
 - Renamed Prisoner's Dilemma models from "PD" to "Prisoner's Dilemma" and clarified that "confess" means "defect" in the info tab.
-- Polymer dynamics model info tab was edited to indicate that this is not strictly speaking a cellular automaton. 
-
-
-### Other Known Issues
-
-We encourage our users to report any bugs they find with NetLogo 6 to [our bugs mailing list](mailto:bugs@ccl.northwestern.edu), and other feedback to [our feedback mailing list](mailto:feedback@ccl.northwestern.edu). We encourage users who encounter a bug to consult [this wiki page](https://github.com/NetLogo/NetLogo/wiki/Known-Issues) which lists current problems as users report them to us and offers advice on how to alleviate or work around them.
-
-This list below contains several issues known to us at the time of the release of 6.4-beta1:
-
-- Some Users continue to have problems initially launching NetLogo 6 in Mac OS Sierra, High Sierra, Catalina, Big Sur and Monterey. More information (including a partial workaround for the problem) is available [here](https://github.com/NetLogo/NetLogo/wiki/Known-Issues#netlogo-wont-start-on-mac-os-sierra).
-- The `arduino` extension doesn't work properly in Windows 10 under 64-bit NetLogo. It *does*  work properly running under 32-bit NetLogo. We recommend that windows users who want to work with the `arduino` extension install the 32-bit version of NetLogo.
-- When using the "Import HubNet Client Interface..." feature, widgets cannot be edited until the client is saved, closed, and re-opened.  More information is available on [our issue tracker](https://github.com/NetLogo/NetLogo/issues/1145).
-- On macOS when the focus is in the pop-out code tab the File, Edit, Options, Buffers, Tools, Text and Help menus are not visible. Edit commands are available by right clicking. Hotkeys for menu items are also available.
-- Text being searched in a pop-out code tab on MacOS (cmd-F) may be obscured when the code tab overlaps the interface window and appears behind it. When the search box is exited, the interface window is selected and typing goes to the Command Center.
-- Repeated zooming out can cause drawn lines to vanish from the view.
-
-The issues below are particular to the `vid` extension:
-
-- If the extension crashes while the code tab is popped out, the code tab will not be usable again until NetLogo is restarted.
-- The extension will crash NetLogo if you use `vid:camera-open` or `vid:camera-select` and then start a different program (like Zoom) and use the same camera.  If you start the other program first and then start NetLogo things work better, but there are still many reports of problems on macOS.  We're investigating the issues.
-- On macOS the extension produces videos that don't play properly in Windows (the same video plays correctly on a Mac, however). It appears to play videos created by other sources properly.
-
-### Credits
-
-NetLogo was designed and authored by Uri Wilensky, project leader and director of the CCL. The current core development team includes Jeremy Baker, Jason Bertsche, Aaron Brandes, and Bryan Head. Seth Tisue, Esther Verreau, Robert Grider, and Nicolas Payette have made major contributions in the past. Many others have contributed greatly. HubNet was jointly designed by Uri Wilensky and Walter Stroup.
-
-The CCL gratefully acknowledges two and a half decades of support for our NetLogo work. The original support came from the National Science Foundation -- grant numbers REC-9814682 and REC-0126227. Further support has come from REC-0003285, REC-0115699, DRL-0196044, CCF-ITR-0326542, DRL-REC/ROLE-0440113, SBE-0624318, EEC-0648316, IIS-0713619, DRL-RED-9552950, DRL-REC-9632612, and DRL-DRK12-1020101, IIS-1441552, CNS-1441016, CNS-1441041, CNS-1138461, IIS-1438813, IIS-1147621, DRL-REC-1343873, IIS-1438813, IIS-1441552, CNS-1441041, IIS-1546120, DRL-1546122, DRL-ITEST-1614745, DRL-1640201, NSF STEMC-1745938. NSF STEMC-1842374 and NSF STEMC-1842375. Additional support came from the Spencer Foundation, Texas Instruments, the Brady Fund, the Murphy fund, the SESP Venture Research fund, and the Northwestern Institute on Complex Systems.
-
+- Polymer dynamics model info tab was edited to indicate that this is not strictly speaking a cellular automaton.
 
 ## Version 6.3.0 (September 2022)
 
