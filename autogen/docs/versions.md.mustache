@@ -5,6 +5,106 @@ For help running models made in old versions, see the
 
 [TOC]
 
+## Version 6.4.0-beta1 (September 2023)
+
+A major change in this release the introduction of new features in [BehaviorSpace](https://ccl.northwestern.edu/netlogo/docs/behaviorspace.html)
+### BehaviorSpace New Features
+- A new syntax that allows parameter combinations to be run separately,
+rather than being expanded combinatorically.
+- Measurements can be conditionally recorded when a boolean reporter is true.
+- Commands can be run before the experiment begins.
+- Commands can be run after the experiment ends.
+- The mean and standard deviation of data from repetitions can be output to a file.
+- List data can be output to a file with one list element per cell.
+- Experiments can now be paused and resumed.
+- Experiments can now be exported to an XML file that can be used when running headlessly.
+- Experiments in an XML file can now be imported into a model.
+- Experiments run much faster when *Update plots and monitors* is unchecked in the *Run options dialog*.
+
+### Language Changes
+
+The `let` and `set` primitives now support taking a list of variable names as the first argument and will assign values to those variables from a list of values given as the second argument.  This is useful in many situations, but especially when you want to have a reporter procedure calculate and report multiple values to be used elsewhere.
+
+A new reporter primitive has been added, `who-are-not`.  It takes an agentset as a lefthand side argument and an agent or another agentset as a righthand side argument and reports all agents in the former who are not in the latter.  For example:  `let strangers turtles who-are-not link-neighbors`.
+
+### Bug Fixes and Changes
+
+- The save dialog will no longer appear when clicking the close button on an already-saved includes file code tab.
+- When an includes code file is edited, compiled, and closed without saving, the model will correctly re-compile without the unsaved change.
+- When extensions are updated through the extensions manager, existing files and libraries for them will be removed so conflicts between versions cannot occur.
+- An error will no longer occur when opening a NetLogo model stored in the user's home directory due to the extension locating code trying to search restricted folders.
+- Plotting now uses its own RNG that is cloned from the main RNG and updated when the main RNG changes.  This means if plotting is enabled, it will be reproducible from the main RNG, but if plotting is disabled the behavior of the model will not change when using the same main RNG seed.
+- A failed compile of a string as a command with `run` could cause the same string to fail to run as a reporter using `runresult` later.
+- Patch colors can now be set to RGBA values with an alpha channel, the alpha channel is just ignored as there is nothing "behind" patches.  Previously this would cause an error to occur.
+- Users can add symbolic links to their models library folders to point to other directories to have those models available for loading in the app.  This had worked in a prior version of NetLogo, but was accidentally disabled with other bugfixes.
+- The `link-neighbor?` boolean reporter has had some small optimizations done to improve performance.
+- Agent labels now support linebreaks.
+- Errors that happen when NetLogo is starting but before the full interface appears should now be caught and displayed in a simple dialog.  Previously to see such errors NetLogo would have to be started from a command line console.
+- The default maximum memory usage for NetLogo is now set to 50% of system memory instead of a static limit of 1 gigabyte.  For systems with greater than 2 gigabytes of memory this should give improved performance and reduce the chance of getting out of memory errors during model runs.
+- When the extension manager is disabled via the Java environment property, no data will be fetched over the network.  Previously the current extension listing would be fetched even though using the list in the manager was disabled.
+- The `<breed>-at` primitive now works properly in 3D.  Previously it would function as the 2D version, only getting agents with z-coordinate of 0.
+
+#### BehaviorSpace Bug fixes and changes
+- 3D BehaviorSpace runs are now allowed.
+- BehaviorSpace no longer exits when there is a plot compilation error. 
+- Error messages for BehaviorSpace variable errors have been improved.
+- BehaviorSpace output files no longer contain trailing spaces.
+- Headless console mode now has a `--help` flag.
+- The *Experiment dialog* makes use of tooltips and has a cleaner look.
+- Changes will not be saved if the close/X button of the *Experiment dialog* is hit.
+- The number of threads in the *Run options dialog* is now saved.
+- Experiments will not run if the close/X button of the *Run options dialog* is hit.
+
+### Extension Updates
+
+- The Bitmap extension now supports reading images from base64-encoded strings and writing images out to base64-encoded strings.
+- The GIS extension has a couple of bug fixes: 1) its string-based search of features could include too many items, and 2) the code for creating turtles inside a polygon was executed for existing turtles outside that polygon.
+
+### Documentation Updates
+
+- The logical operator precedence for `and` and `or` is clarified in the docs as not exactly matching how other programming languages function.
+- Clarify that `mouse-inside?` only works when the mouse is in the world, not only in the view, which can happen with unwrapped worlds and use of the `follow` primitive.
+- Removed the `->` variable, a leftover from the switch from the old anonymous task syntax.
+- Clarify that an extension must be installed for the extensions keyword to take effect.
+
+### Models Library Changes
+
+#### New Sample Models
+- Current in a Semiconductor
+
+
+#### Sample Model Changes
+- Fixed a minor issue in the Monte Carlo Lennard-Jones model.
+- Renamed Prisoner's Dilemma models from "PD" to "Prisoner's Dilemma" and clarified that "confess" means "defect" in the info tab.
+- Polymer dynamics model info tab was edited to indicate that this is not strictly speaking a cellular automaton. 
+
+
+### Other Known Issues
+
+We encourage our users to report any bugs they find with NetLogo 6 to [our bugs mailing list](mailto:bugs@ccl.northwestern.edu), and other feedback to [our feedback mailing list](mailto:feedback@ccl.northwestern.edu). We encourage users who encounter a bug to consult [this wiki page](https://github.com/NetLogo/NetLogo/wiki/Known-Issues) which lists current problems as users report them to us and offers advice on how to alleviate or work around them.
+
+This list below contains several issues known to us at the time of the release of 6.4-beta1:
+
+- Some Users continue to have problems initially launching NetLogo 6 in Mac OS Sierra, High Sierra, Catalina, Big Sur and Monterey. More information (including a partial workaround for the problem) is available [here](https://github.com/NetLogo/NetLogo/wiki/Known-Issues#netlogo-wont-start-on-mac-os-sierra).
+- The `arduino` extension doesn't work properly in Windows 10 under 64-bit NetLogo. It *does*  work properly running under 32-bit NetLogo. We recommend that windows users who want to work with the `arduino` extension install the 32-bit version of NetLogo.
+- When using the "Import HubNet Client Interface..." feature, widgets cannot be edited until the client is saved, closed, and re-opened.  More information is available on [our issue tracker](https://github.com/NetLogo/NetLogo/issues/1145).
+- On macOS when the focus is in the pop-out code tab the File, Edit, Options, Buffers, Tools, Text and Help menus are not visible. Edit commands are available by right clicking. Hotkeys for menu items are also available.
+- Text being searched in a pop-out code tab on MacOS (cmd-F) may be obscured when the code tab overlaps the interface window and appears behind it. When the search box is exited, the interface window is selected and typing goes to the Command Center.
+- Repeated zooming out can cause drawn lines to vanish from the view.
+
+The issues below are particular to the `vid` extension:
+
+- If the extension crashes while the code tab is popped out, the code tab will not be usable again until NetLogo is restarted.
+- The extension will crash NetLogo if you use `vid:camera-open` or `vid:camera-select` and then start a different program (like Zoom) and use the same camera.  If you start the other program first and then start NetLogo things work better, but there are still many reports of problems on macOS.  We're investigating the issues.
+- On macOS the extension produces videos that don't play properly in Windows (the same video plays correctly on a Mac, however). It appears to play videos created by other sources properly.
+
+### Credits
+
+NetLogo was designed and authored by Uri Wilensky, project leader and director of the CCL. The current core development team includes Jeremy Baker, Jason Bertsche, Aaron Brandes, and Bryan Head. Seth Tisue, Esther Verreau, Robert Grider, and Nicolas Payette have made major contributions in the past. Many others have contributed greatly. HubNet was jointly designed by Uri Wilensky and Walter Stroup.
+
+The CCL gratefully acknowledges two and a half decades of support for our NetLogo work. The original support came from the National Science Foundation -- grant numbers REC-9814682 and REC-0126227. Further support has come from REC-0003285, REC-0115699, DRL-0196044, CCF-ITR-0326542, DRL-REC/ROLE-0440113, SBE-0624318, EEC-0648316, IIS-0713619, DRL-RED-9552950, DRL-REC-9632612, and DRL-DRK12-1020101, IIS-1441552, CNS-1441016, CNS-1441041, CNS-1138461, IIS-1438813, IIS-1147621, DRL-REC-1343873, IIS-1438813, IIS-1441552, CNS-1441041, IIS-1546120, DRL-1546122, DRL-ITEST-1614745, DRL-1640201, NSF STEMC-1745938. NSF STEMC-1842374 and NSF STEMC-1842375. Additional support came from the Spencer Foundation, Texas Instruments, the Brady Fund, the Murphy fund, the SESP Venture Research fund, and the Northwestern Institute on Complex Systems.
+
+
 ## Version 6.3.0 (September 2022)
 
 ### Bug Fixes and Changes
