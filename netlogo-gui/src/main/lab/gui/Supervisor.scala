@@ -312,6 +312,7 @@ class Supervisor(
         workspace.jobManager.haltSecondary()
         workspace.behaviorSpaceRunNumber(0)
         workspace.behaviorSpaceExperimentName("")
+        workspace.setShouldUpdatePlots(true)
         if (paused)
           progressDialog.saveProtocolP()
         else
