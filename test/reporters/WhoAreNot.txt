@@ -26,3 +26,12 @@ WhoAreNot_Agents
   count ts => 9
   member? t ts => false
   all? ts [breed = mice] => true
+
+Precedence_2D
+  breed [mice mouse]
+  count patches who-are-not patches with [pxcor = 0] => 110
+  O> create-turtles 10 [ set color black ]
+  O> create-mice 5 [ set color red ]
+  [color] of turtles who-are-not mice => [0 0 0 0 0 0 0 0 0 0]
+  [color] of mice who-are-not turtles => []
+  O> ask turtles who-are-not mice [ fd 1 ]
