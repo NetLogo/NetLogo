@@ -146,6 +146,8 @@ private class ManagerDialog(manager:       LabManager,
   /// action implementations
   private def run(): Unit = {
     try {
+      editIndex = selectedIndex
+
       manager.prepareForRun()
 
       new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory, saveProtocol).start()
