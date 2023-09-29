@@ -193,7 +193,7 @@ case class _inradius() extends Reporter {
       left = Syntax.TurtlesetType | Syntax.PatchsetType,
       right = List(Syntax.NumberType),
       ret = Syntax.TurtlesetType | Syntax.PatchsetType,
-      precedence = Syntax.NormalPrecedence + 2,
+      precedence = Syntax.NormalPrecedence + 3,
       agentClassString = "-TP-")
 }
 case class _jump() extends Command {
@@ -533,7 +533,7 @@ case class _with() extends Reporter {
       left = Syntax.AgentsetType,
       right = List(Syntax.BooleanBlockType),
       ret = Syntax.AgentsetType,
-      precedence = Syntax.NormalPrecedence + 2,
+      precedence = Syntax.NormalPrecedence + 3,
       isRightAssociative = false,
       agentClassString = "OTPL",
       blockAgentClassString = Option("?"))

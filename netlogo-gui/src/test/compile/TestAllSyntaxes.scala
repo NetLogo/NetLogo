@@ -38,7 +38,7 @@ class TestAllSyntaxes extends AnyFunSuite {
                      |_approximatergb number/number/number,number,OTPL,None,10,3,3
                      |_asin number,number,OTPL,None,10,1,1
                      |_atan number/number,number,OTPL,None,10,2,2
-                     |_atpoints turtle agentset or patch agentset,list,agentset,OTPL,None,12,1,1
+                     |_atpoints turtle agentset or patch agentset,list,agentset,OTPL,None,13,1,1
                      |_autoplot ,TRUE/FALSE,OTPL,None,10,0,0
                      |_basecolors ,list,OTPL,None,10,0,0
                      |_behaviorspaceexperimentname ,string,OTPL,None,10,0,0
@@ -96,12 +96,12 @@ class TestAllSyntaxes extends AnyFunSuite {
                      |_hubnetmessagewaiting ,TRUE/FALSE,OTPL,None,10,0,0
                      |_hubnetoutqsize ,number,OTPL,None,10,0,0
                      |_ifelsevalue TRUE/FALSE/reporter block/TRUE/FALSE or reporter block,anything,OTPL,None,3,3,3
-                     |_incone turtle agentset or patch agentset,number/number,turtle agentset or patch agentset,-T--,None,12,2,2
+                     |_incone turtle agentset or patch agentset,number/number,turtle agentset or patch agentset,-T--,None,13,2,2
                      |_inconenowrap agentset,number/number,agentset,-T--,None,12,2,2
                      |_inlinkfrom agent,agent,-T--,None,10,1,1
                      |_inlinkneighbor agent,TRUE/FALSE,-T--,None,10,1,1
                      |_inlinkneighbors ,agentset,-T--,None,10,0,0
-                     |_inradius turtle agentset or patch agentset,number,turtle agentset or patch agentset,-TP-,None,12,1,1
+                     |_inradius turtle agentset or patch agentset,number,turtle agentset or patch agentset,-TP-,None,13,1,1
                      |_inradiusnowrap agentset,number,agentset,-TP-,None,12,1,1
                      |_insertitem number/string or list/anything,string or list,OTPL,None,10,3,3
                      |_int number,number,OTPL,None,10,1,1
@@ -279,9 +279,9 @@ class TestAllSyntaxes extends AnyFunSuite {
                      |_useryesorno anything,TRUE/FALSE,OTPL,None,10,1,1
                      |_variance list,number,OTPL,None,10,1,1
                      |_whoarenot agentset,agent or agentset,agentset,OTPL,None,12,1,1
-                     |_with agentset,TRUE/FALSE block,agentset,OTPL,Some(?),12,1,1
-                     |_withmax agentset,number block,agentset,OTPL,Some(?),12,1,1
-                     |_withmin agentset,number block,agentset,OTPL,Some(?),12,1,1
+                     |_with agentset,TRUE/FALSE block,agentset,OTPL,Some(?),13,1,1
+                     |_withmax agentset,number block,agentset,OTPL,Some(?),13,1,1
+                     |_withmin agentset,number block,agentset,OTPL,Some(?),13,1,1
                      |_word anything,string,OTPL,None,10,2,0
                      |_worldheight ,number,OTPL,None,10,0,0
                      |_worldwidth ,number,OTPL,None,10,0,0

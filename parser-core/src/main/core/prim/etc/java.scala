@@ -32,7 +32,7 @@ case class _atpoints() extends Reporter {
       left = Syntax.TurtlesetType | Syntax.PatchsetType,
       right = List(Syntax.ListType),
       ret = Syntax.AgentsetType,
-      precedence = Syntax.NormalPrecedence + 2)
+      precedence = Syntax.NormalPrecedence + 3)
 }
 case class _butfirst() extends Reporter {
   override def syntax =
@@ -173,7 +173,7 @@ case class _incone() extends Reporter {
       left = Syntax.TurtlesetType | Syntax.PatchsetType,
       right = List(Syntax.NumberType, Syntax.NumberType),
       ret = Syntax.TurtlesetType | Syntax.PatchsetType,
-      precedence = Syntax.NormalPrecedence + 2,
+      precedence = Syntax.NormalPrecedence + 3,
       agentClassString = "-T--")
 }
 case class _item() extends Reporter {
@@ -580,7 +580,7 @@ case class _withmax() extends Reporter {
       left = Syntax.AgentsetType,
       right = List(Syntax.NumberBlockType),
       ret = Syntax.AgentsetType,
-      precedence = Syntax.NormalPrecedence + 2,
+      precedence = Syntax.NormalPrecedence + 3,
       agentClassString = "OTPL",
       blockAgentClassString = Option("?"))
 }
@@ -590,7 +590,7 @@ case class _withmin() extends Reporter {
       left = Syntax.AgentsetType,
       right = List(Syntax.NumberBlockType),
       ret = Syntax.AgentsetType,
-      precedence = Syntax.NormalPrecedence + 2,
+      precedence = Syntax.NormalPrecedence + 3,
       agentClassString = "OTPL",
       blockAgentClassString = Option("?"))
 }

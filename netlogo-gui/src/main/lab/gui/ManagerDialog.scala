@@ -18,7 +18,7 @@ private class ManagerDialog(manager:       LabManager,
   with javax.swing.event.ListSelectionListener
 {
   def saveProtocol(protocol: LabProtocol): Unit = {
-    manager.protocols(selectedIndex) = protocol
+    manager.protocols(editIndex) = protocol
     update()
     select(protocol)
   }
@@ -39,6 +39,7 @@ private class ManagerDialog(manager:       LabManager,
   private val abortAction = action(I18N.gui("abort"), { () => abort() })
   private val runAction = action(I18N.gui("run"), { () => run() })
   private var blockActions = false
+  private var editIndex = 0
   /// initialization
   init()
   private def init() {
@@ -145,6 +146,8 @@ private class ManagerDialog(manager:       LabManager,
   /// action implementations
   private def run(): Unit = {
     try {
+      editIndex = selectedIndex
+
       manager.prepareForRun()
 
       new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory, saveProtocol).start()
@@ -162,10 +165,12 @@ private class ManagerDialog(manager:       LabManager,
               variableName, List(manager.workspace.world.getObserverVariableByName(variableName)))}}),
       true)
   }
-  private def duplicate() { editProtocol(selectedProtocol.copy(runsCompleted = 0), true) }
+  private def duplicate() { editProtocol(selectedProtocol.copy(name = selectedProtocol.name + " (copy)",
+                                                               runsCompleted = 0), true) }
   private def edit() { editProtocol(selectedProtocol, false) }
   private def editProtocol(protocol: LabProtocol, isNew: Boolean) {
     blockActions = true
+    if (!isNew) editIndex = selectedIndex
     update()
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
                                         manager.workspace, manager.workspace.world,
@@ -176,7 +181,7 @@ private class ManagerDialog(manager:       LabManager,
         if (success) {
           val newProtocol = editable.get.get
           if (isNew) manager.protocols += newProtocol
-          else manager.protocols(selectedIndex) = newProtocol
+          else manager.protocols(editIndex) = newProtocol
           update()
           select(newProtocol)
           manager.dirty()
