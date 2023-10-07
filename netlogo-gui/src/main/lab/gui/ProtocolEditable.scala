@@ -28,7 +28,9 @@ class ProtocolEditable(protocol: LabProtocol,
 
   val propertySet = {
     import scala.collection.JavaConverters._
-    List(Property("hint", Property.Label, I18N.gui("hint")),
+    List(Property("hint", Property.Label, "<html>"+I18N.gui("hint")+"</html>",
+                  backgroundColor = new java.awt.Color(128, 200, 128, 64),
+                  border = new javax.swing.border.EmptyBorder(6, 6, 6, 6)),
          Property("name", Property.String, I18N.gui("experimentName"),
                   "<html>"+I18N.gui("experimentName.info")+"</html>"),
          Property("valueSets", Property.ReporterOrEmpty,

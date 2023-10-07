@@ -73,6 +73,8 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       propertyEditors += editor
       editor.refresh()
       editor.setEnabled(property.enabled)
+      editor.setBackground(property.backgroundColor)
+      editor.setBorder(property.border)
 
       if (property.focus) {
         assert(claimsFirstFocus == null)

@@ -8,7 +8,6 @@ abstract class Label(accessor: PropertyAccessor[String], useTooltip: Boolean)
   setLayout(new java.awt.BorderLayout(BORDER_PADDING, 0))
   val label = new javax.swing.JLabel(accessor.displayName)
   tooltipFont(label)
-  label.setFont(label.getFont.deriveFont(java.awt.Font.BOLD))
   add(label, java.awt.BorderLayout.CENTER)
   override def get: Option[String] = Some("")
   override def set(value: String) { }
