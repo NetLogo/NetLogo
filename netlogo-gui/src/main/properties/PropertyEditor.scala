@@ -32,6 +32,6 @@ abstract class PropertyEditor[T](val accessor: PropertyAccessor[T],
   def tooltipFont(component: java.awt.Component) =
     if (useTooltip) {
       component.setFont(component.getFont.deriveFont(java.awt.Font.BOLD))
-      component.setForeground(new java.awt.Color(75, 125, 75))
+      component.setForeground(java.awt.Color.black)
     }
 }

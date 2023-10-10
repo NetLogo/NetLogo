@@ -11,4 +11,9 @@ abstract class Label(accessor: PropertyAccessor[String], useTooltip: Boolean)
   add(label, java.awt.BorderLayout.CENTER)
   override def get: Option[String] = Some("")
   override def set(value: String) { }
+  override def getConstraints = {
+    val c = super.getConstraints
+    c.fill = java.awt.GridBagConstraints.HORIZONTAL
+    c
+  }
 }
