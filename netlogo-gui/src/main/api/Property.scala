@@ -47,5 +47,5 @@ case class Property(
   collapseByDefault: Boolean = false,
   dependentPropertyNames: Set[String] = Set(),
   backgroundColor: java.awt.Color = null,
-  border: javax.swing.border.AbstractBorder = null
+  borderSize: Int = 0
 )

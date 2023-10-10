@@ -74,7 +74,8 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       editor.refresh()
       editor.setEnabled(property.enabled)
       editor.setBackground(property.backgroundColor)
-      editor.setBorder(property.border)
+      editor.setBorder(new javax.swing.border.EmptyBorder(property.borderSize, property.borderSize,
+                                                          property.borderSize, property.borderSize))
 
       if (property.focus) {
         assert(claimsFirstFocus == null)
