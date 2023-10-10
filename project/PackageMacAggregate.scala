@@ -149,7 +149,7 @@ object PackageMacAggregate {
     val apps     = launchers.map( (l) => (bundleDir / s"${l.name}.app") )
 
     val filesToBeSigned =
-      (apps :+ (bundleDir / "natives")).flatMap( a => FileActions.enumeratePaths(a.toPath).filterNot( p => Files.isDirectory(p) ) )
+      (apps :+ (bundleDir / "natives") :+ (bundleDir / "runtime" / "Contents" / "Home" / "lib")).flatMap( a => FileActions.enumeratePaths(a.toPath).filterNot( p => Files.isDirectory(p) ) )
 
     val filesToMakeExecutable =
       filesToBeSigned.filter( p => p.getFileName.toString.endsWith(".dylib") || p.getFileName.toString.endsWith(".jnilib") )

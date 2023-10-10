@@ -2,8 +2,7 @@
 
 package org.nlogo.workspace
 
-import java.io.ByteArrayInputStream
-import java.io.IOException
+import java.io.{ ByteArrayInputStream, File, IOException }
 import java.nio.file.{ Path, Paths }
 import java.util.Base64
 
@@ -341,12 +340,20 @@ object AbstractWorkspaceTraits {
   trait Extensions { self: AbstractWorkspaceScala =>
     def getExtensionPathMappings(): Map[String, Path] = {
       val searchPaths = Option(getModelPath).toSeq.map(mp => Paths.get(mp).getParent) ++ Seq(APIEM.extensionsPath)
-      val subDirs = searchPaths.flatMap( (path) => path.toFile.listFiles.filter(_.isDirectory) )
+      val subDirs = searchPaths.flatMap( (path) => path.toFile.listFiles().filter(_.isDirectory) )
       subDirs.flatMap( (subDir) => {
-        val maybeFiles = subDir.listFiles
-        val files      = if (maybeFiles == null) { new Array(0) } else { maybeFiles }
-        val jars       = files.find(_.getName == s"${subDir.getName}.jar").toSeq
-        jars.map( (jar) => (subDir.getName, Paths.get(jar.getCanonicalFile.toURI)))
+        try {
+          val maybeFiles = subDir.listFiles()
+          val files      = if (maybeFiles == null) { new Array[File](0) } else { maybeFiles }
+          val jars       = files.find(_.getName == s"${subDir.getName}.jar").toSeq
+          jars.map( (jar) => (subDir.getName, Paths.get(jar.getCanonicalFile.toURI)))
+        } catch {
+          case ex: Exception =>
+            System.err.println(s"Error loading subfolder contents of ${subDir} while looking for extensions.")
+            System.err.println(ex.getMessage)
+            System.err.println(ex.getStackTrace.mkString("\n"))
+            Seq()
+        }
       }).toMap
     }
   }

@@ -9,14 +9,14 @@ class VersionTests extends AnyFunSuite {
   /// update this section every time the version changes -- ev 11/7/07
   test("currentVersion") {
     // these differ from the current version in suffix only
-    assert(compatibleVersion("NetLogo 6.2"))
-    assert(compatibleVersion("NetLogo 6.2RC1"))
-    assert(compatibleVersion("NetLogo 6.2beta1"))
-    assert(compatibleVersion("NetLogo 6.2pre1"))
-    assert(compatibleVersion("NetLogo 6.2alpha1"))
-    assert(compatibleVersion("NetLogo 6.2.1"))
-    assert(compatibleVersion("NetLogo 6.2.1weirdversion"))
-    assert(compatibleVersion("NetLogo 6.2weirdversion"))
+    assert(compatibleVersion("NetLogo 6.4"))
+    assert(compatibleVersion("NetLogo 6.4RC1"))
+    assert(compatibleVersion("NetLogo 6.4beta1"))
+    assert(compatibleVersion("NetLogo 6.4pre1"))
+    assert(compatibleVersion("NetLogo 6.4alpha1"))
+    assert(compatibleVersion("NetLogo 6.4.1"))
+    assert(compatibleVersion("NetLogo 6.4.1weirdversion"))
+    assert(compatibleVersion("NetLogo 6.4weirdversion"))
   }
   test("futureMinor") {
     // these differ from the current version by minor version only
