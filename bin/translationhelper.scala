@@ -135,7 +135,7 @@ object Main
                 return println("Error: incorrect arguments provided for mode 'generate'.")
 
             val properties = getOrderedProperties(previous_translated)
-            val new_properties = scala.io.Source.fromFile(current_translated).getLines
+            val new_properties = scala.io.Source.fromFile(current_translated).getLines()
 
             while (new_properties.hasNext)
             {
@@ -212,7 +212,7 @@ object Main
     {
         val r = "(([\\w.]+)\\s*[=:]\\s*([^\n]+))|([^\n]+)".r
 
-        LinkedHashMap(r.findAllMatchIn(scala.io.Source.fromFile(path).getLines.mkString("\n").replaceAll("\\\\s*\n", "\\\\"))
+        LinkedHashMap(r.findAllMatchIn(scala.io.Source.fromFile(path).getLines().mkString("\n").replaceAll("\\\\s*\n", "\\\\"))
                        .map(x =>
                        {
                            if (x.group(2) == null) x.group(4).trim -> ""
@@ -227,8 +227,8 @@ object Main
     {
         var next = ""
 
-        while (iterator.hasNext && next == "") next = iterator.next.trim
-        while (iterator.hasNext && next(next.length - 1) == '\\') next += iterator.next.trim
+        while (iterator.hasNext && next == "") next = iterator.next().trim
+        while (iterator.hasNext && next(next.length - 1) == '\\') next += iterator.next().trim
 
         next
     }
