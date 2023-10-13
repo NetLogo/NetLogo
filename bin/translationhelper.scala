@@ -2,7 +2,7 @@
 exec scala -deprecation -classpath bin -Dfile.encoding=UTF-8 "$0" "$@"
 !#
 
-import scala.collection.mutable.Map
+import scala.collection.mutable.LinkedHashMap
 
 object Main
 {
@@ -134,7 +134,7 @@ object Main
             if (current == "" || current_translated == "" || previous_translated == "" || output == "")
                 return println("Error: incorrect arguments provided for mode 'generate'.")
 
-            val properties = getAllProperties(previous_translated)
+            val properties = getOrderedProperties(previous_translated)
             val new_properties = scala.io.Source.fromFile(current_translated).getLines
 
             while (new_properties.hasNext)
@@ -208,23 +208,20 @@ object Main
         println("-o <path>   output file")
     }
 
-    def getAllProperties(path: String): Map[String, String] =
-        Map(getOrderedProperties(path): _*)
-
-    def getOrderedProperties(path: String): List[(String, String)] =
+    def getOrderedProperties(path: String): LinkedHashMap[String, String] =
     {
         val r = "(([\\w.]+)\\s*[=:]\\s*([^\n]+))|([^\n]+)".r
 
-        r.findAllMatchIn(scala.io.Source.fromFile(path).getLines.mkString("\n").replaceAll("\\\\s*\n", "\\\\"))
-         .map(x =>
-         {
-            if (x.group(2) == null) x.group(4).trim -> ""
-            else x.group(2).trim -> x.group(3).trim
-         }).toList
+        LinkedHashMap(r.findAllMatchIn(scala.io.Source.fromFile(path).getLines.mkString("\n").replaceAll("\\\\s*\n", "\\\\"))
+                       .map(x =>
+                       {
+                           if (x.group(2) == null) x.group(4).trim -> ""
+                           else x.group(2).trim -> x.group(3).trim
+                       }).toList: _*)
     }
 
-    def selectLines(path: String, specifier: String): Map[String, String] =
-        getAllProperties(path).filter(x => !x._2.isEmpty && specifier.r.findFirstIn(x._1).isDefined)
+    def selectLines(path: String, specifier: String): LinkedHashMap[String, String] =
+        getOrderedProperties(path).filter(x => !x._2.isEmpty && specifier.r.findFirstIn(x._1).isDefined)
 
     def getNextLine(iterator: Iterator[String]): String =
     {
