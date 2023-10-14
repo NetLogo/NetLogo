@@ -40,6 +40,9 @@
 [submodule "gogo-hid"]
 	path = extensions/gogo
 	url = https://github.com/NetLogo/GoGo-HID-Extension
+[submodule "gogo6-hid"]
+	path = extensions/gogo6
+	url = https://github.com/kgmt0/GoGo6-HID-Extension
 [submodule "extensions/palette"]
 	path = extensions/palette
 	url = https://github.com/NetLogo/Palette-Extension
