@@ -28,7 +28,9 @@ class ProtocolEditable(protocol: LabProtocol,
 
   val propertySet = {
     import scala.collection.JavaConverters._
-    List(Property("hint", Property.Label, I18N.gui("hint")),
+    List(Property("hint", Property.Label, "<html>"+I18N.gui("hint")+"</html>",
+                  backgroundColor = new java.awt.Color(128, 200, 128, 64), // de york green (light yellow-ish green)
+                  borderSize = 6),
          Property("name", Property.String, I18N.gui("experimentName"),
                   "<html>"+I18N.gui("experimentName.info")+"</html>"),
          Property("valueSets", Property.ReporterOrEmpty,
@@ -40,7 +42,8 @@ class ProtocolEditable(protocol: LabProtocol,
          Property("metrics", Property.ReporterOrEmpty,
                   I18N.gui("metrics"),
                   "<html>"+I18N.gui("metrics.info")+"</html>"),
-         Property("runMetricsEveryStep", Property.MetricsBoolean, I18N.gui("runMetricsEveryStep")),
+         Property("runMetricsEveryStep", Property.MetricsBoolean, I18N.gui("runMetricsEveryStep"),
+                  "<html>"+I18N.gui("runMetricsEveryStep.info")+"</html>"),
          Property("runMetricsCondition", Property.ReporterLine, I18N.gui("runMetricsCondition"),
                   "<html>"+I18N.gui("runMetricsCondition.info")+"</html>", optional = true, enabled = !protocol.runMetricsEveryStep),
          Property("preExperimentCommands", Property.Commands, I18N.gui("preExperimentCommands"),

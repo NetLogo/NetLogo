@@ -45,5 +45,7 @@ case class Property(
   enabled: Boolean = true,
   collapsible: Boolean = false,
   collapseByDefault: Boolean = false,
-  dependentPropertyNames: Set[String] = Set()
+  dependentPropertyNames: Set[String] = Set(),
+  backgroundColor: java.awt.Color = null,
+  borderSize: Int = 0
 )
