@@ -90,51 +90,56 @@ object Main
 
         if (mode == "-g")
         {
-            if (current == "" || previous == "" || previous_translated == "" || output == "")
+            if (current.isEmpty || previous.isEmpty || output.isEmpty)
                 return println("Error: incorrect arguments provided for mode 'generate'.")
 
             val properties = selectLines(previous, filter)
-            val properties_translated = selectLines(previous_translated, filter)
+            val properties_translated =
+                if (previous_translated.isEmpty) LinkedHashMap[String, String]()
+                else selectLines(previous_translated, filter)
 
             val writer = new java.io.FileWriter(new java.io.File(output))
             val ref_writer =
-                if (reference == "") null
+                if (reference.isEmpty) null
                 else new java.io.FileWriter(new java.io.File(reference))
 
-            for (p <- selectLines(current, filter))
+            for ((p, v) <- selectLines(current, filter))
             {
-                if (!properties_translated.contains(p._1) || properties(p._1) != p._2)
+                if (!properties_translated.contains(p) || properties(p) != v)
                 {
-                    writer.write(s"Property: ${p._1}\n")
+                    writer.write(s"Property: ${p}\n")
 
-                    if (properties_translated.contains(p._1))
+                    if (properties_translated.contains(p))
                     {
-                        writer.write(s"Previous English: ${addBreaks(properties(p._1))}\n")
-                        writer.write(s"Previous Translation: ${addBreaks(properties_translated(p._1))}\n")
+                        writer.write(s"Previous English: ${addBreaks(properties(p))}\n")
+                        writer.write(s"Previous Translation: ${addBreaks(properties_translated(p))}\n")
                     }
 
-                    writer.write(s"English: ${addBreaks(p._2)}\n")
+                    writer.write(s"English: ${addBreaks(v)}\n")
                     writer.write("Translation: \n\n")
                 }
 
-                else if (ref_writer != null && properties_translated.contains(p._1))
+                else if (ref_writer != null && properties_translated.contains(p))
                 {
-                    ref_writer.write(s"Property: ${p._1}\n")
-                    ref_writer.write(s"English: ${addBreaks(p._2)}\n")
-                    ref_writer.write(s"Translation: ${addBreaks(properties_translated(p._1))}\n\n")
+                    ref_writer.write(s"Property: ${p}\n")
+                    ref_writer.write(s"English: ${addBreaks(v)}\n")
+                    ref_writer.write(s"Translation: ${addBreaks(properties_translated(p))}\n\n")
                 }
             }
 
             writer.close()
-            ref_writer.close()
+
+            if (ref_writer != null) ref_writer.close()
         }
 
         else if (mode == "-m")
         {
-            if (current == "" || current_translated == "" || previous_translated == "" || output == "")
-                return println("Error: incorrect arguments provided for mode 'generate'.")
+            if (current.isEmpty || current_translated.isEmpty || output.isEmpty)
+                return println("Error: incorrect arguments provided for mode 'merge'.")
 
-            val properties = getOrderedProperties(previous_translated)
+            val properties =
+                if (previous_translated.isEmpty) LinkedHashMap[String, String]()
+                else getOrderedProperties(previous_translated)
             val new_properties = scala.io.Source.fromFile(current_translated).getLines()
 
             while (new_properties.hasNext)
@@ -160,7 +165,7 @@ object Main
                 {
                     val parts = next.split(" = ", 2)
 
-                    if (parts.length > 2)
+                    if (parts.length >= 2)
                     {
                         if (parts(1).trim.isEmpty) properties.remove(parts(0).trim)
                         else properties(parts(0).trim) = parts(1).trim
@@ -172,7 +177,10 @@ object Main
 
             for ((p, v) <- getOrderedProperties(current))
                 if (properties.contains(p))
-                    writer.write(s"$p = ${addBreaks(properties(p))}\n")
+                {
+                    if (p.startsWith("#")) writer.write(p + "\n")
+                    else writer.write(s"$p = ${addBreaks(properties(p))}\n")
+                }
 
             writer.close()
         }
@@ -210,24 +218,24 @@ object Main
 
     def getOrderedProperties(path: String): LinkedHashMap[String, String] =
     {
-        val r = "(([\\w.]+)\\s*[=:]\\s*([^\n]+))|([^\n]+)".r
+        val r = "(([\\w.]+)\\s*[=:]\\s*([^\n]+))|(#[^\n]+)".r
 
         LinkedHashMap(r.findAllMatchIn(scala.io.Source.fromFile(path).getLines().mkString("\n").replaceAll("\\\\s*\n", "\\\\"))
                        .map(x =>
                        {
-                           if (x.group(2) == null) x.group(4).trim -> ""
-                           else x.group(2).trim -> x.group(3).trim
+                            if (x.group(1) == null) x.group(4).trim -> ""
+                            else x.group(2).trim -> x.group(3).trim
                        }).toList: _*)
     }
 
     def selectLines(path: String, specifier: String): LinkedHashMap[String, String] =
-        getOrderedProperties(path).filter(x => !x._2.isEmpty && specifier.r.findFirstIn(x._1).isDefined)
+        getOrderedProperties(path).filter((p, v) => !p.startsWith("#") && specifier.r.findFirstIn(p).isDefined)
 
     def getNextLine(iterator: Iterator[String]): String =
     {
         var next = ""
 
-        while (iterator.hasNext && next == "") next = iterator.next().trim
+        while (iterator.hasNext && next.isEmpty) next = iterator.next().trim
         while (iterator.hasNext && next(next.length - 1) == '\\') next += iterator.next().trim
 
         next
