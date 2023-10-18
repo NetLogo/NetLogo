@@ -1,0 +1,12 @@
+Property: property1
+English: test
+Translation:
+
+Property: property2
+English: another test
+Translation:
+
+Property: property3
+English: yet another test
+Translation:
+
