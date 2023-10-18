@@ -17,38 +17,52 @@ object Main
         passed = 0
         total = 0
 
-        test("simpletest")
-        test("comments")
-        test("multiline")
+        test("simpletest", old = false, translated = false)
+        test("comments", old = false, changes = false)
+        test("multiline", old = false, translated = false)
+        test("nonew", merge = false, old = false, changes = false)
+        test("filter", merge = false, old = false, translated = false, filter = "crazy")
 
         if (passed == total) println("All tests passed!")
         else println(s"$passed out of $total tests passed.")
     }
 
-    def test(name: String, filter: String = ""): Unit =
+    def test(name: String,
+             generate: Boolean = true,
+             merge: Boolean = true,
+             old: Boolean = true,
+             translated: Boolean = true,
+             changes: Boolean = true,
+             filter: String = ""): Unit =
     {
-        Process(Array(
-            "sh ../../translationhelper.scala",
-            "-g",
-            "-c current.properties",
-            "-d old.properties",
-            "-t translated.properties",
-            s"-f \"$filter\"",
-            "-o temp.txt"
-        ).mkString(" "), new File(name)).!
+        if (generate)
+        {
+            Process(Array(
+                "sh ../../translationhelper.scala",
+                "-g",
+                "-c current.properties",
+                if (old) "-d old.properties" else "",
+                if (translated) "-t translated.properties" else "",
+                s"-f \"$filter\"",
+                "-o temp.txt"
+            ).mkString(" "), new File(name)).!
 
-        compareLines(name + " generate", s"$name/gen.txt", s"$name/temp.txt")
+            compareLines(name + " generate", s"$name/gen.txt", s"$name/temp.txt")
+        }
 
-        Process(Array(
-            "sh ../../translationhelper.scala",
-            "-m",
-            "-c current.properties",
-            "-t translated.properties",
-            "-n changes.txt",
-            "-o temp.txt"
-        ).mkString(" "), new File(name)).!
+        if (merge)
+        {
+            Process(Array(
+                "sh ../../translationhelper.scala",
+                "-m",
+                "-c current.properties",
+                if (translated) "-t translated.properties" else "",
+                if (changes) "-n changes.txt" else "",
+                "-o temp.txt"
+            ).mkString(" "), new File(name)).!
 
-        compareLines(name + " merge", s"$name/merge.properties", s"$name/temp.txt")
+            compareLines(name + " merge", s"$name/merge.properties", s"$name/temp.txt")
+        }
 
         Process("rm -f temp.txt", new File(name).getCanonicalFile).!
     }
@@ -81,6 +95,8 @@ object Main
         catch case e: java.io.FileNotFoundException => return printError(name, e.toString)
 
         passed += 1
+
+        println(s"Test '$name' passed.")
     }
 
     def printError(name: String, message: String): Unit =

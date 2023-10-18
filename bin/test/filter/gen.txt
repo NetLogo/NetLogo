@@ -1,0 +1,8 @@
+Property: crazy.cool.property
+English: very neat
+Translation:
+
+Property: crazy.lame.property
+English: not very neat
+Translation:
+

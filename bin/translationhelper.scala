@@ -90,10 +90,12 @@ object Main
 
         if (mode == "-g")
         {
-            if (current.isEmpty || previous.isEmpty || output.isEmpty)
+            if (current.isEmpty || output.isEmpty)
                 return println("Error: incorrect arguments provided for mode 'generate'.")
 
-            val properties = selectLines(previous, filter)
+            val properties =
+                if (previous.isEmpty) LinkedHashMap[String, String]()
+                else selectLines(previous, filter)
             val properties_translated =
                 if (previous_translated.isEmpty) LinkedHashMap[String, String]()
                 else selectLines(previous_translated, filter)
@@ -105,7 +107,7 @@ object Main
 
             for ((p, v) <- selectLines(current, filter))
             {
-                if (!properties_translated.contains(p) || properties(p) != v)
+                if (!properties_translated.contains(p) || (properties.contains(p) && properties(p) != v))
                 {
                     writer.write(s"Property: ${p}\n")
 
@@ -134,13 +136,15 @@ object Main
 
         else if (mode == "-m")
         {
-            if (current.isEmpty || current_translated.isEmpty || output.isEmpty)
+            if (current.isEmpty || output.isEmpty)
                 return println("Error: incorrect arguments provided for mode 'merge'.")
 
             val properties =
                 if (previous_translated.isEmpty) LinkedHashMap[String, String]()
                 else getOrderedProperties(previous_translated)
-            val new_properties = scala.io.Source.fromFile(current_translated).getLines()
+            val new_properties =
+                if (current_translated.isEmpty) Iterator[String]()
+                else scala.io.Source.fromFile(current_translated).getLines()
 
             while (new_properties.hasNext)
             {
