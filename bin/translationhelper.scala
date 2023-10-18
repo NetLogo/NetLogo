@@ -177,10 +177,8 @@ object Main
 
             for ((p, v) <- getOrderedProperties(current))
                 if (properties.contains(p))
-                {
                     if (p.startsWith("#")) writer.write(p + "\n")
                     else writer.write(s"$p = ${addBreaks(properties(p))}\n")
-                }
 
             writer.close()
         }
