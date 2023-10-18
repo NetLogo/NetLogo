@@ -18,6 +18,8 @@ object Main
         total = 0
 
         test("simpletest")
+        test("comments")
+        test("multiline")
 
         if (passed == total) println("All tests passed!")
         else println(s"$passed out of $total tests passed.")
@@ -60,14 +62,14 @@ object Main
             val expected = Source.fromFile(one).getLines
             val actual = Source.fromFile(two).getLines
 
-            var i = 0
+            var i = 1
 
             while (expected.hasNext && actual.hasNext)
             {
                 val s1 = expected.next.trim
                 val s2 = actual.next.trim
 
-                if (s1 != s2)return printIncorrectOutput(name, i, s1, s2)
+                if (s1 != s2) return printIncorrectOutput(name, i, s1, s2)
 
                 i += 1
             }
@@ -82,12 +84,8 @@ object Main
     }
 
     def printError(name: String, message: String): Unit =
-    {
         println(s"Test '$name' failed with error: $message")
-    }
 
     def printIncorrectOutput(name: String, index: Int, expected: String, actual: String): Unit =
-    {
         println(s"Test '$name' failed at line $index.\nExpected:\n$expected\nActual:\n$actual\n")
-    }
 }

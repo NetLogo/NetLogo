@@ -1,0 +1,15 @@
+Property: property1
+English: testing
+Translation:
+
+Property: property2
+English: one\
+two\
+three
+
+Translation:
+
+Property: property3
+English: tested
+Translation:
+
