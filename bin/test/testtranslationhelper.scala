@@ -26,27 +26,29 @@ object Main
     def test(name: String, filter: String = ""): Unit =
     {
         Process(Array(
-            "sh ../translationhelper.scala",
+            "sh ../../translationhelper.scala",
             "-g",
-            s"-c $name.properties",
-            s"-d ${name}_old.properties",
-            s"-t ${name}_translated_old.properties",
+            "-c current.properties",
+            "-d old.properties",
+            "-t translated.properties",
             s"-f \"$filter\"",
-            s"-o ${name}_temp.txt"
-        ).mkString(" "), new File("").getCanonicalFile).!
+            "-o temp.txt"
+        ).mkString(" "), new File(name)).!
 
-        compareLines(name + " generate", s"${name}_gen.txt", s"${name}_temp.txt")
+        compareLines(name + " generate", s"$name/gen.txt", s"$name/temp.txt")
 
         Process(Array(
-            "sh ../translationhelper.scala",
+            "sh ../../translationhelper.scala",
             "-m",
-            s"-c $name.properties",
-            s"-t ${name}_translated_old.properties",
-            s"-n ${name}_translated.txt",
-            s"-o ${name}_temp.txt"
-        ).mkString(" "), new File("").getCanonicalFile).!
+            "-c current.properties",
+            "-t translated.properties",
+            "-n changes.txt",
+            "-o temp.txt"
+        ).mkString(" "), new File(name)).!
 
-        compareLines(name + " merge", s"${name}_merge.properties", s"${name}_temp.txt")
+        compareLines(name + " merge", s"$name/merge.properties", s"$name/temp.txt")
+
+        Process("rm -f temp.txt", new File(name).getCanonicalFile).!
     }
 
     def compareLines(name: String, one: String, two: String): Unit =

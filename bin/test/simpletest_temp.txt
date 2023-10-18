@@ -1,2 +1,0 @@
-property2 = this property has been changed
-property3 = this one changed as well
