@@ -178,7 +178,7 @@ object Main
             for ((p, v) <- getOrderedProperties(current))
                 if (properties.contains(p))
                     if (p.startsWith("#")) writer.write(p + "\n")
-                    else writer.write(s"$p = ${addBreaks(properties(p))}\n")
+                    else writer.write(s"$p = ${addBreaks(properties(p), false)}\n")
 
             writer.close()
         }
@@ -239,10 +239,10 @@ object Main
         next
     }
 
-    def addBreaks(s: String): String =
+    def addBreaks(s: String, newLine: Boolean = true): String =
     {
         val r = s.replaceAll("\\\\(?!n)", "\\\\\n")
         
-        if (r.contains("\n")) r + "\n" else r
+        if (newLine && r.contains("\n")) r + "\n" else r
     }
 }
