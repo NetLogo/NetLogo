@@ -73,26 +73,29 @@ object Main
 
         try
         {
-            val expected = Source.fromFile(one).getLines
-            val actual = Source.fromFile(two).getLines
+            val expected = Source.fromFile(one).getLines()
+            val actual = Source.fromFile(two).getLines()
 
             var i = 1
 
             while (expected.hasNext && actual.hasNext)
             {
-                val s1 = expected.next.trim
-                val s2 = actual.next.trim
+                val s1 = expected.next().trim
+                val s2 = actual.next().trim
 
                 if (s1 != s2) return printIncorrectOutput(name, i, s1, s2)
 
                 i += 1
             }
 
-            if (expected.hasNext) return printIncorrectOutput(name, i, expected.next, "")
-            if (actual.hasNext) return printIncorrectOutput(name, i, "", actual.next)
+            if (expected.hasNext) return printIncorrectOutput(name, i, expected.next(), "")
+            if (actual.hasNext) return printIncorrectOutput(name, i, "", actual.next())
         }
 
-        catch case e: java.io.FileNotFoundException => return printError(name, e.toString)
+        catch
+        {
+            case e: java.io.FileNotFoundException => return printError(name, e.toString)
+        }
 
         passed += 1
 

@@ -231,7 +231,7 @@ object Main
     }
 
     def selectLines(path: String, specifier: String): LinkedHashMap[String, String] =
-        getOrderedProperties(path).filter((p, v) => !p.startsWith("#") && specifier.r.findFirstIn(p).isDefined)
+        getOrderedProperties(path).filter({ case (p, v) => !p.startsWith("#") && specifier.r.findFirstIn(p).isDefined })
 
     def getNextLine(iterator: Iterator[String]): String =
     {
