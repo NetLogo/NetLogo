@@ -16,6 +16,8 @@ object Main
         var output = ""
         var reference = ""
         var filter = ""
+        var start_range = 0
+        var range_length = -1
 
         var i = 0
 
@@ -80,6 +82,20 @@ object Main
                 filter = args(i)
             }
 
+            else if (args(i) == "-s")
+            {
+                i += 1
+
+                start_range = args(i).toInt
+            }
+
+            else if (args(i) == "-l")
+            {
+                i += 1
+
+                range_length = args(i).toInt
+            }
+
             else
             {
                 return println(s"Error: invalid flag '${args(i)}'.")
@@ -105,7 +121,11 @@ object Main
                 if (reference.isEmpty) null
                 else new java.io.FileWriter(new java.io.File(reference))
 
-            for ((p, v) <- selectLines(current, filter))
+            var current_lines = selectLines(current, filter).drop(start_range)
+
+            if (range_length != -1) current_lines = current_lines.take(range_length)
+
+            for ((p, v) <- current_lines)
             {
                 if (!properties_translated.contains(p) || (properties.contains(p) && properties(p) != v))
                 {
@@ -209,6 +229,8 @@ object Main
         println("-f <string>   property name filter (regex)")
         println("-o <path>   output file")
         println("-r <path>   reference output file (includes previously translated properties)")
+        println("-s <int>   number of filtered properties to skip before starting output")
+        println("-l <int>   number of properties to include in output")
         println()
         println("merge mode")
         println()
