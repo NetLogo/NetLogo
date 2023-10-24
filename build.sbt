@@ -178,7 +178,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     libraryDependencies ++= Seq(
       "org.picocontainer" % "picocontainer" % "2.15",
       "javax.media" % "jmf" % "2.1.1e",
-      "commons-codec" % "commons-codec" % "1.15",
+      "commons-codec" % "commons-codec" % "1.16.0",
       "org.parboiled" %% "parboiled" % "2.4.1",
       "org.jogamp.jogl" % "jogl-all" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0/jar/jogl-all.jar",
       "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0/jar/gluegen-rt.jar",
@@ -257,7 +257,7 @@ lazy val headless = (project in file ("netlogo-headless")).
     Compile / mainClass         := Some("org.nlogo.headless.Main"),
     libraryDependencies        ++= Seq(
       "org.parboiled" %% "parboiled" % "2.4.1",
-      "commons-codec" % "commons-codec" % "1.15",
+      "commons-codec" % "commons-codec" % "1.16.0",
       "com.typesafe" % "config" % "1.4.3",
       "net.lingala.zip4j" % "zip4j" % "2.9.1",
       "org.reflections" % "reflections" % "0.9.10" % "test",
