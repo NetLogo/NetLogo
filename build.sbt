@@ -187,7 +187,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.apache.httpcomponents" % "httpmime" % "4.2",
       "com.googlecode.json-simple" % "json-simple" % "1.1.1",
       "com.fifesoft" % "rsyntaxtextarea" % "3.3.4",
-      "com.typesafe" % "config" % "1.4.2",
+      "com.typesafe" % "config" % "1.4.3",
       "net.lingala.zip4j" % "zip4j" % "2.9.1"
     ),
     all := {},
@@ -258,7 +258,7 @@ lazy val headless = (project in file ("netlogo-headless")).
     libraryDependencies        ++= Seq(
       "org.parboiled" %% "parboiled" % "2.4.1",
       "commons-codec" % "commons-codec" % "1.15",
-      "com.typesafe" % "config" % "1.4.2",
+      "com.typesafe" % "config" % "1.4.3",
       "net.lingala.zip4j" % "zip4j" % "2.9.1",
       "org.reflections" % "reflections" % "0.9.10" % "test",
     ),
