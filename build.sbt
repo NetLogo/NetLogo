@@ -113,7 +113,7 @@ lazy val mockDependencies = {
 }
 
 lazy val asmDependencies = {
-  val asmVersion = "9.4"
+  val asmVersion = "9.6"
   Seq(
     libraryDependencies ++= Seq(
       "org.ow2.asm" % "asm"         % asmVersion,
