@@ -81,7 +81,7 @@ lazy val scalatestSettings = Seq(
 )
 
 lazy val flexmarkDependencies = {
-  val flexmarkVersion = "0.20.0"
+  val flexmarkVersion = "0.20.2"
   Seq(
     libraryDependencies ++= Seq(
       "com.vladsch.flexmark" % "flexmark" % flexmarkVersion,

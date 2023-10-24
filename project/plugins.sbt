@@ -35,7 +35,7 @@ libraryDependencies ++= Seq(
 )
 
 {
-  val flexmarkVersion = "0.20.0"
+  val flexmarkVersion = "0.20.2"
   libraryDependencies ++= Seq(
     "com.vladsch.flexmark" % "flexmark" % flexmarkVersion,
     "com.vladsch.flexmark" % "flexmark-ext-anchorlink" % flexmarkVersion,
