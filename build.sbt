@@ -60,7 +60,7 @@ lazy val scalatestSettings = Seq(
   Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oS")
 , Test / testOnly / logBuffered := false
 , libraryDependencies ++= Seq(
-    "org.scalatest"     %% "scalatest"       % "3.2.14"   % Test
+    "org.scalatest"     %% "scalatest"       % "3.2.17"   % Test
   , "org.scalatestplus" %% "scalacheck-1-16" % "3.2.14.0" % Test
   )
   // This lets us mock up some Java library classes for testing.
@@ -363,7 +363,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
       Seq(
         "org.scala-lang.modules" %%% "scala-parser-combinators" %    "2.1.1"
-      ,          "org.scalatest" %%%                "scalatest" %   "3.2.14" % Test
+      ,          "org.scalatest" %%%                "scalatest" %   "3.2.17" % Test
       ,      "org.scalatestplus" %%%          "scalacheck-1-16" % "3.2.14.0" % Test
       )
     }).
