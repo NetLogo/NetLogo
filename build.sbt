@@ -106,7 +106,7 @@ lazy val mockDependencies = {
         exclude ("org.hamcrest", "hamcrest")
     , "org.jmock"     % "jmock-legacy" % mockVersion % "test"
     , "org.jmock"     % "jmock-junit5" % mockVersion % "test"
-    , "net.bytebuddy" % "byte-buddy"   % "1.12.18"   % "test"
+    , "net.bytebuddy" % "byte-buddy"   % "1.12.23"   % "test"
     , "org.hamcrest"  % "hamcrest"     % "2.2"       % "test"
     )
   )
