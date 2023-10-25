@@ -2,14 +2,16 @@
 exec scala -deprecation -classpath bin -Dfile.encoding=UTF-8 "$0" "$@"
 !#
 
-import sys.process.Process
-
 object Main
 {
-    var path1 = ""
-    var path2 = ""
+    var oldPath = ""
+    var newPath = ""
     var model = ""
     var experiment = ""
+    var spreadsheet = ""
+    var table = ""
+    var lists = ""
+    var stats = ""
     var trials = 1
 
     def main(args: Array[String]): Unit =
@@ -20,19 +22,23 @@ object Main
         {
             argsIterator.next.trim match
             {
-                case "-a" => path1 = argsIterator.next.trim
-                case "-b" => path2 = argsIterator.next.trim
-                case "-m" => model = argsIterator.next.trim
-                case "-e" => experiment = argsIterator.next.trim
-                case "-t" => trials = argsIterator.next.trim.toInt
-                case _ => return println("invalid argument")
+                case "--old" => oldPath = argsIterator.next.trim
+                case "--new" => newPath = argsIterator.next.trim
+                case "--model" => model = argsIterator.next.trim
+                case "--experiment" => experiment = argsIterator.next.trim
+                case "--spreadsheet" => spreadsheet = argsIterator.next.trim
+                case "--table" => table = argsIterator.next.trim
+                case "--lists" => lists = argsIterator.next.trim
+                case "--stats" => stats = argsIterator.next.trim
+                case "--trials" => trials = argsIterator.next.trim.toInt
+                case _ => return printHelp()
             }
         }
 
-        if (path1.isEmpty || path2.isEmpty) return println("not enough arguments")
+        if (oldPath.isEmpty || newPath.isEmpty || model.isEmpty || experiment.isEmpty) return printHelp()
 
-        time(path1)
-        time(path2)
+        time(oldPath)
+        time(newPath)
     }
 
     def time(path: String): Unit =
@@ -43,9 +49,16 @@ object Main
 
         for (i <- 0 until trials)
         {
+            var command = s"./NetLogo_Console --headless --model '${model}' --experiment '${experiment}'"
+
+            if (!spreadsheet.isEmpty) command += s" --spreadsheet '${spreadsheet}'"
+            if (!table.isEmpty) command += s" --table '${table}'"
+            if (!lists.isEmpty) command += s" --lists '${lists}'"
+            if (!stats.isEmpty) command += s" --stats '${stats}'"
+
             val start = System.nanoTime
 
-            Process(s"./NetLogo_Console --headless --model '${model}' --experiment '${experiment}'", new java.io.File(path1)).!!
+            sys.process.Process(command, new java.io.File(path)).!!
 
             average += System.nanoTime - start
 
@@ -63,10 +76,14 @@ object Main
         println()
         println("options")
         println()
-        println("-a <path>   path to directory containing old NetLogo_Console")
-        println("-b <path>   path to directory containing new NetLogo_Console")
-        println("-m <path>   path to model")
-        println("-e <string>   experiment name")
-        println("-t <number>   number of identical trials to execute")
+        println("--old <path>   path to directory containing old NetLogo_Console")
+        println("--new <path>   path to directory containing new NetLogo_Console")
+        println("--model <path>   path to model")
+        println("--experiment <string>   experiment name")
+        println("--spreadsheet <path>   path to desired spreadsheet output")
+        println("--table <path>   path to desired table output")
+        println("--lists <path>   path to desired lists output")
+        println("--stats <path>   path to desired stats output")
+        println("--trials <number>   number of identical trials to execute")
     }
 }
