@@ -91,11 +91,14 @@ object Main
         println("--old <path>   path to directory containing old NetLogo_Console")
         println("--new <path>   path to directory containing new NetLogo_Console")
         println("--model <path>   path to model")
-        println("--experiment <string>   experiment name")
+        println("--experiment <string>   experiment name (must be specified with model)")
+        println("--setup-file <path>   path to setup file (alternative to model + experiment)")
         println("--spreadsheet <path>   path to desired spreadsheet output")
         println("--table <path>   path to desired table output")
         println("--lists <path>   path to desired lists output")
         println("--stats <path>   path to desired stats output")
+        println("--threads <number>   number of threads to use")
+        println("--update-plots <true|false>   whether plots should be updated")
         println("--trials <number>   number of identical trials to execute")
     }
 }
