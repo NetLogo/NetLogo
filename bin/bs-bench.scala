@@ -73,7 +73,7 @@ object Main
         {
             val output = new java.io.PrintWriter(new java.io.File(outputFile))
 
-            output.write("Name")
+            output.write("Name,Update Plots")
 
             for (i <- 1 to trials) output.write(s",Trial $i")
 
@@ -92,6 +92,7 @@ object Main
         println(s"Testing $path...")
 
         data = data :+ path
+        data = data :+ updatePlots.toString
 
         var average = 0f
 
@@ -109,7 +110,7 @@ object Main
 
             command += s" --threads $threads"
             
-            if (updatePlots) command += s" --update-plots $updatePlots"
+            if (updatePlots) command += s" --update-plots true"
 
             val start = System.nanoTime
 
