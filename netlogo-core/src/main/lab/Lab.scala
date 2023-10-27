@@ -19,7 +19,9 @@ class Lab extends LabInterface {
     try {
       queue.foreach(w => dims.foreach(w.setDimensions _))
       def modelDims = queue.head.world.getDimensions
-      val worker = newWorker(protocol)
+      val worker =
+        if (repetitions.isDefined) newWorker(protocol.copy(repetitions = repetitions.get))
+        else newWorker(protocol)
       tableWriter.foreach(
         worker.addTableWriter(modelPath, dims.getOrElse(modelDims), _))
       spreadsheetWriter.foreach(

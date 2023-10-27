@@ -16,6 +16,7 @@ object Main
     var threads = 1
     var updatePlots = false
     var varyPlots = false
+    var repetitions: Option[Int] = None
     var trials = 1
     var outputFile = ""
 
@@ -39,6 +40,7 @@ object Main
                 case "--threads" => threads = argsIterator.next().trim.toInt
                 case "--update-plots" => updatePlots = if (argsIterator.next().trim == "true") true else false
                 case "--vary-plots" => varyPlots = if (argsIterator.next().trim == "true") true else false
+                case "--repetitions" => repetitions = Some(argsIterator.next().trim.toInt)
                 case "--trials" => trials = argsIterator.next().trim.toInt
                 case "--output" => outputFile = argsIterator.next().trim
                 case _ => return printHelp()
@@ -112,6 +114,8 @@ object Main
             
             if (updatePlots) command += s" --update-plots true"
 
+            if (repetitions.isDefined) command += s" --repetitions ${repetitions.get}"
+
             val start = System.nanoTime
 
             sys.process.Process(command, new java.io.File(path)).!!
@@ -152,6 +156,7 @@ object Main
         println("--threads <number>   number of threads to use")
         println("--update-plots <true|false>   whether plots should be updated (default false)")
         println("--vary-plots <true|false>   whether to test with both values of update-plots (default false)")
+        println("--repetitions <number>   override number of repetitions for each experiment")
         println("--trials <number>   number of identical trials to execute (default 1)")
         println("--output <path>   path to desired output file")
     }
