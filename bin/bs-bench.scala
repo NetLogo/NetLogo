@@ -20,17 +20,17 @@ object Main
 
         while (argsIterator.hasNext)
         {
-            argsIterator.next.trim match
+            argsIterator.next().trim match
             {
-                case "--old" => oldPath = argsIterator.next.trim
-                case "--new" => newPath = argsIterator.next.trim
-                case "--model" => model = argsIterator.next.trim
-                case "--experiment" => experiment = argsIterator.next.trim
-                case "--spreadsheet" => spreadsheet = argsIterator.next.trim
-                case "--table" => table = argsIterator.next.trim
-                case "--lists" => lists = argsIterator.next.trim
-                case "--stats" => stats = argsIterator.next.trim
-                case "--trials" => trials = argsIterator.next.trim.toInt
+                case "--old" => oldPath = argsIterator.next().trim
+                case "--new" => newPath = argsIterator.next().trim
+                case "--model" => model = argsIterator.next().trim
+                case "--experiment" => experiment = argsIterator.next().trim
+                case "--spreadsheet" => spreadsheet = argsIterator.next().trim
+                case "--table" => table = argsIterator.next().trim
+                case "--lists" => lists = argsIterator.next().trim
+                case "--stats" => stats = argsIterator.next().trim
+                case "--trials" => trials = argsIterator.next().trim.toInt
                 case _ => return printHelp()
             }
         }
