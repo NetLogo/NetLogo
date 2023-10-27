@@ -48,29 +48,50 @@ object Main
         if (newPath.isEmpty) return printHelp()
         if (setupFile.isEmpty && (model.isEmpty || experiment.isEmpty)) return printHelp()
 
+        var data = List[List[String]]()
+
         if (!oldPath.isEmpty)
         {
             if (varyPlots)
             {
-                time(oldPath, true)
-                time(oldPath, false)
+                data = data :+ time(oldPath, true)
+                data = data :+ time(oldPath, false)
             }
 
-            else time(oldPath, updatePlots)
+            else data = data :+ time(oldPath, updatePlots)
         }
 
         if (varyPlots)
         {
-            time(newPath, true)
-            time(newPath, false)
+            data = data :+ time(newPath, true)
+            data = data :+ time(newPath, false)
         }
 
-        else time(newPath, updatePlots)
+        else data = data :+ time(newPath, updatePlots)
+
+        if (!outputFile.isEmpty)
+        {
+            val output = new java.io.PrintWriter(new java.io.File(outputFile))
+
+            output.write("Name")
+
+            for (i <- 1 to trials) output.write(s",Trial $i")
+
+            output.write(",Average\n")
+
+            for (line <- data) output.write(line.mkString(",") + "\n")
+
+            output.close()
+        }
     }
 
-    def time(path: String, updatePlots: Boolean): Unit =
+    def time(path: String, updatePlots: Boolean): List[String] =
     {
+        var data = List[String]()
+
         println(s"Testing $path...")
+
+        data = data :+ path
 
         var average = 0f
 
@@ -98,10 +119,16 @@ object Main
 
             average += end
 
+            data = data :+ end.toString
+
             println(s"Trial ${i + 1} of $trials completed in $end minutes.")
         }
 
+        data = data :+ average.toString
+
         println(s"Average time: ${average / trials} minutes.")
+
+        return data
     }
 
     def printHelp(): Unit =
@@ -122,9 +149,9 @@ object Main
         println("--lists <path>   path to desired lists output")
         println("--stats <path>   path to desired stats output")
         println("--threads <number>   number of threads to use")
-        println("--update-plots <true|false>   whether plots should be updated")
-        println("--vary-plots <true|false>   whether to test with both values of update-plots")
-        println("--trials <number>   number of identical trials to execute")
+        println("--update-plots <true|false>   whether plots should be updated (default false)")
+        println("--vary-plots <true|false>   whether to test with both values of update-plots (default false)")
+        println("--trials <number>   number of identical trials to execute (default 1)")
         println("--output <path>   path to desired output file")
     }
 }
