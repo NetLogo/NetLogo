@@ -75,6 +75,7 @@ object Main {
     var threads = LabDefaultThreads.getLabDefaultThreads
     var suppressErrors = false
     var updatePlots = false
+    var repetitions: Option[Int] = None
     val it = args.iterator
     def die(msg: String) { Console.err.println(msg); throw new CancelException }
     def path2writer(path: String) =
@@ -135,6 +136,8 @@ object Main {
         { suppressErrors = true }
       else if (arg == "--update-plots")
         { updatePlots = true }
+      else if (arg == "--repetitions")
+        { requireHasNext(); repetitions = Some(it.next().toInt) }
       else
         die("unknown argument: " + arg)
     }
@@ -157,6 +160,6 @@ object Main {
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
     Some(new Settings(model.get, experiment, setupFile, tableWriter,
-                      spreadsheetWriter, statsWriter, listsWriter, dims, threads, suppressErrors, updatePlots))
+                      spreadsheetWriter, statsWriter, listsWriter, dims, threads, suppressErrors, updatePlots, repetitions))
   }
 }

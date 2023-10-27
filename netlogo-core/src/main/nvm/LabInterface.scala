@@ -37,6 +37,7 @@ object LabInterface {
     threads: Int,
     suppressErrors: Boolean,
     updatePlots: Boolean,
+    repetitions: Option[Int]
     )
 }
 trait LabInterface {
