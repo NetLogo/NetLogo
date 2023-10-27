@@ -14,8 +14,10 @@ object Main
     var lists = ""
     var stats = ""
     var threads = 1
-    var updatePlots = "false"
+    var updatePlots = false
+    var varyPlots = false
     var trials = 1
+    var outputFile = ""
 
     def main(args: Array[String]): Unit =
     {
@@ -35,20 +37,38 @@ object Main
                 case "--lists" => lists = argsIterator.next().trim
                 case "--stats" => stats = argsIterator.next().trim
                 case "--threads" => threads = argsIterator.next().trim.toInt
-                case "--update-plots" => updatePlots = argsIterator.next().trim
+                case "--update-plots" => updatePlots = if (argsIterator.next().trim == "true") true else false
+                case "--vary-plots" => varyPlots = if (argsIterator.next().trim == "true") true else false
                 case "--trials" => trials = argsIterator.next().trim.toInt
+                case "--output" => outputFile = argsIterator.next().trim
                 case _ => return printHelp()
             }
         }
 
-        if (oldPath.isEmpty || newPath.isEmpty) return printHelp()
+        if (newPath.isEmpty) return printHelp()
         if (setupFile.isEmpty && (model.isEmpty || experiment.isEmpty)) return printHelp()
 
-        time(oldPath)
-        time(newPath)
+        if (!oldPath.isEmpty)
+        {
+            if (varyPlots)
+            {
+                time(oldPath, true)
+                time(oldPath, false)
+            }
+
+            else time(oldPath, updatePlots)
+        }
+
+        if (varyPlots)
+        {
+            time(newPath, true)
+            time(newPath, false)
+        }
+
+        else time(newPath, updatePlots)
     }
 
-    def time(path: String): Unit =
+    def time(path: String, updatePlots: Boolean): Unit =
     {
         println(s"Testing $path...")
 
@@ -58,26 +78,30 @@ object Main
         {
             var command = s"./NetLogo_Console --headless"
 
-            if (model.isEmpty) command += s" --setup-file '${setupFile}'"
-            else command += s" --model '${model}' --experiment '${experiment}'"
+            if (model.isEmpty) command += s" --setup-file '$setupFile'"
+            else command += s" --model '$model' --experiment '$experiment'"
 
-            if (!spreadsheet.isEmpty) command += s" --spreadsheet '${spreadsheet}'"
-            if (!table.isEmpty) command += s" --table '${table}'"
-            if (!lists.isEmpty) command += s" --lists '${lists}'"
-            if (!stats.isEmpty) command += s" --stats '${stats}'"
+            if (!spreadsheet.isEmpty) command += s" --spreadsheet '$spreadsheet'"
+            if (!table.isEmpty) command += s" --table '$table'"
+            if (!lists.isEmpty) command += s" --lists '$lists'"
+            if (!stats.isEmpty) command += s" --stats '$stats'"
 
-            command += s" --threads $threads --update-plots $updatePlots"
+            command += s" --threads $threads"
+            
+            if (updatePlots) command += s" --update-plots $updatePlots"
 
             val start = System.nanoTime
 
             sys.process.Process(command, new java.io.File(path)).!!
 
-            average += System.nanoTime - start
+            val end = (System.nanoTime - start).toFloat / 60e9f
 
-            println(s"Trial ${i + 1} of $trials completed.")
+            average += end
+
+            println(s"Trial ${i + 1} of $trials completed in $end minutes.")
         }
 
-        println(s"Average time: ${(average / trials) / 60e9} minutes.")
+        println(s"Average time: ${average / trials} minutes.")
     }
 
     def printHelp(): Unit =
@@ -99,6 +123,8 @@ object Main
         println("--stats <path>   path to desired stats output")
         println("--threads <number>   number of threads to use")
         println("--update-plots <true|false>   whether plots should be updated")
+        println("--vary-plots <true|false>   whether to test with both values of update-plots")
         println("--trials <number>   number of identical trials to execute")
+        println("--output <path>   path to desired output file")
     }
 }
