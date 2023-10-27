@@ -8,10 +8,13 @@ object Main
     var newPath = ""
     var model = ""
     var experiment = ""
+    var setupFile = ""
     var spreadsheet = ""
     var table = ""
     var lists = ""
     var stats = ""
+    var threads = 1
+    var updatePlots = "false"
     var trials = 1
 
     def main(args: Array[String]): Unit =
@@ -26,16 +29,20 @@ object Main
                 case "--new" => newPath = argsIterator.next().trim
                 case "--model" => model = argsIterator.next().trim
                 case "--experiment" => experiment = argsIterator.next().trim
+                case "--setup-file" => setupFile = argsIterator.next().trim
                 case "--spreadsheet" => spreadsheet = argsIterator.next().trim
                 case "--table" => table = argsIterator.next().trim
                 case "--lists" => lists = argsIterator.next().trim
                 case "--stats" => stats = argsIterator.next().trim
+                case "--threads" => threads = argsIterator.next().trim.toInt
+                case "--update-plots" => updatePlots = argsIterator.next().trim
                 case "--trials" => trials = argsIterator.next().trim.toInt
                 case _ => return printHelp()
             }
         }
 
-        if (oldPath.isEmpty || newPath.isEmpty || model.isEmpty || experiment.isEmpty) return printHelp()
+        if (oldPath.isEmpty || newPath.isEmpty) return printHelp()
+        if (setupFile.isEmpty && (model.isEmpty || experiment.isEmpty)) return printHelp()
 
         time(oldPath)
         time(newPath)
@@ -49,12 +56,17 @@ object Main
 
         for (i <- 0 until trials)
         {
-            var command = s"./NetLogo_Console --headless --model '${model}' --experiment '${experiment}'"
+            var command = s"./NetLogo_Console --headless"
+
+            if (model.isEmpty) command += s" --setup-file '${setupFile}'"
+            else command += s" --model '${model}' --experiment '${experiment}'"
 
             if (!spreadsheet.isEmpty) command += s" --spreadsheet '${spreadsheet}'"
             if (!table.isEmpty) command += s" --table '${table}'"
             if (!lists.isEmpty) command += s" --lists '${lists}'"
             if (!stats.isEmpty) command += s" --stats '${stats}'"
+
+            command += s" --threads $threads --update-plots $updatePlots"
 
             val start = System.nanoTime
 
