@@ -38,8 +38,8 @@ object Main
                 case "--lists" => lists = argsIterator.next().trim
                 case "--stats" => stats = argsIterator.next().trim
                 case "--threads" => threads = argsIterator.next().trim.toInt
-                case "--update-plots" => updatePlots = if (argsIterator.next().trim == "true") true else false
-                case "--vary-plots" => varyPlots = if (argsIterator.next().trim == "true") true else false
+                case "--update-plots" => updatePlots = true
+                case "--vary-plots" => varyPlots = true
                 case "--repetitions" => repetitions = Some(argsIterator.next().trim.toInt)
                 case "--trials" => trials = argsIterator.next().trim.toInt
                 case "--output" => outputFile = argsIterator.next().trim
@@ -47,8 +47,8 @@ object Main
             }
         }
 
-        if (newPath.isEmpty) return printHelp()
-        if (setupFile.isEmpty && (model.isEmpty || experiment.isEmpty)) return printHelp()
+        if (newPath.isEmpty || model.isEmpty) return printHelp()
+        if (setupFile.isEmpty && experiment.isEmpty) return printHelp()
 
         var data = List[List[String]]()
 
@@ -56,7 +56,10 @@ object Main
         {
             if (varyPlots)
             {
-                data = data :+ time(oldPath, true)
+                // As long as oldPath is 6.3 we can't use --update-plots
+                // so at some point we could test the version number
+                // to see if it is < 6.4  aab 10-29-2023
+                // data = data :+ time(oldPath, true)
                 data = data :+ time(oldPath, false)
             }
 
@@ -111,8 +114,8 @@ object Main
             if (!stats.isEmpty) command += s" --stats '$stats'"
 
             command += s" --threads $threads"
-            
-            if (updatePlots) command += s" --update-plots true"
+
+            if (updatePlots) command += s" --update-plots"
 
             if (repetitions.isDefined) command += s" --repetitions ${repetitions.get}"
 
@@ -138,26 +141,33 @@ object Main
 
     def printHelp(): Unit =
     {
-        println("general")
-        println()
         println("-h   display help information")
         println()
-        println("options")
+        println("required testing specifications")
         println()
-        println("--old <path>   path to directory containing old NetLogo_Console")
-        println("--new <path>   path to directory containing new NetLogo_Console")
-        println("--model <path>   path to model")
-        println("--experiment <string>   experiment name (must be specified with model)")
-        println("--setup-file <path>   path to setup file (alternative to model + experiment)")
-        println("--spreadsheet <path>   path to desired spreadsheet output")
-        println("--table <path>   path to desired table output")
-        println("--lists <path>   path to desired lists output")
-        println("--stats <path>   path to desired stats output")
-        println("--threads <number>   number of threads to use")
-        println("--update-plots <true|false>   whether plots should be updated (default false)")
-        println("--vary-plots <true|false>   whether to test with both values of update-plots (default false)")
-        println("--repetitions <number>   override number of repetitions for each experiment")
-        println("--trials <number>   number of identical trials to execute (default 1)")
-        println("--output <path>   path to desired output file")
+        println("--new <path>             path to directory containing new NetLogo_Console")
+        println("--model <path>           path to model")
+        println("--experiment <string>    experiment name (must be specified with model)")
+        println()
+        println("optional testing specifications")
+        println()
+        println("--old <path>             path to directory containing old NetLogo_Console")
+        println("--setup-file <path>      path to setup file (alternative way to specify an experiment)")
+        println("--threads <number>       number of threads to use (default 1)")
+        println("--repetitions <number>   number of repetitions for each experiment - overrides value in experiment")
+        println("--trials <number>        number of identical trials to execute (default 1)")
+        println("--update-plots           allows plots to be updated (default is plots are not updated)")
+        println("--vary-plots             testing will be done both with and without update-plots")
+
+        println()
+        println("optional output files")
+        println()
+        println("--output <path>          path to desired timing output file")
+        println("--spreadsheet <path>     path to desired spreadsheet output")
+        println("--table <path>           path to desired table output")
+        println("--lists <path>           path to desired lists output")
+        println("--stats <path>           path to desired stats output")
+
+
     }
 }
