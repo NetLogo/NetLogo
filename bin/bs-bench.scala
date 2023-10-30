@@ -87,11 +87,14 @@ object Main
 
     def time(path: String, updatePlots: Boolean): List[String] =
     {
+        val seps = path.split("/")
+        val name = if (seps.length == 1) seps(0) else seps(seps.length - 1)
+
         var data = List[String]()
 
-        println(s"Testing $path...")
+        println(s"Testing $name...")
 
-        data = data :+ path
+        data = data :+ name
         data = data :+ updatePlots.toString
 
         var average = 0f
