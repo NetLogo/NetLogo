@@ -138,13 +138,15 @@ object Main
 
             for (i <- 0 until trials) average = average + data(i + 2).toFloat
 
+            average = average / trials
+
             data = data :+ average.toString
 
             var std = 0f
 
             for (i <- 0 until trials) std = std + math.pow(data(i + 2).toFloat - average, 2).toFloat
 
-            data = data :+ (std / trials).toString
+            data = data :+ math.sqrt(std / trials).toString
         }
 
         return data
