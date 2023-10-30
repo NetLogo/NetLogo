@@ -162,7 +162,5 @@ object Main
         println("--table <path>           path to desired table output")
         println("--lists <path>           path to desired lists output")
         println("--stats <path>           path to desired stats output")
-
-
     }
 }
