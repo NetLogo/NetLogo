@@ -78,7 +78,7 @@ object Main
 
             output.write("Name,Update Plots")
 
-            for (i <- 1 to trials) output.write(s",Trial $i")
+            if (trials > 1) for (i <- 1 to trials) output.write(s",Trial $i")
 
             output.write(",Average\n")
 
@@ -128,7 +128,7 @@ object Main
             println(s"Trial ${i + 1} of $trials completed in $end minutes.")
         }
 
-        data = data :+ average.toString
+        if (trials > 1) data = data :+ average.toString
 
         println(s"Average time: ${average / trials} minutes.")
 
