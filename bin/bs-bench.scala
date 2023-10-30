@@ -54,23 +54,20 @@ object Main
         {
             if (varyPlots)
             {
-                // As long as oldPath is 6.3 we can't use --update-plots
-                // so at some point we could test the version number
-                // to see if it is < 6.4  aab 10-29-2023
-                // data = data :+ time(oldPath, true)
-                data = data :+ time(oldPath, false)
+                try data = data :+ time(newPath, true) catch case _ => {}
+                try data = data :+ time(newPath, false) catch case _ => {}
             }
 
-            else data = data :+ time(oldPath, updatePlots)
+            else try data = data :+ time(oldPath, updatePlots) catch case _ => {}
         }
 
         if (varyPlots)
         {
-            data = data :+ time(newPath, true)
-            data = data :+ time(newPath, false)
+            try data = data :+ time(newPath, true) catch case _ => {}
+            try data = data :+ time(newPath, false) catch case _ => {}
         }
 
-        else data = data :+ time(newPath, updatePlots)
+        else try data = data :+ time(newPath, updatePlots) catch case _ => {}
 
         if (!outputFile.isEmpty)
         {
