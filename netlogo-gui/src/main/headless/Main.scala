@@ -29,7 +29,6 @@ Run NetLogo using the NetLogo_Console app with the --headless command line argum
 * --max-pxcor <number>: override world size setting in model file
 * --min-pycor <number>: override world size setting in model file
 * --max-pycor <number>: override world size setting in model file
-* --repetitions <number>: override repetitions for experiment
 
 The --model flag is required. If you don't specify --experiment, you must specify --setup-file. By default no results are generated, so you'll usually want to specify either --table or --spreadsheet, or both. If you specify any of the world dimensions, you must specify all four.
 
@@ -109,7 +108,6 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var threads =  LabDefaultThreads.getLabDefaultThreads
     var suppressErrors = false
     var updatePlots = false
-    var repetitions: Option[Int] = None
     val it = args.iterator
 
     def die(msg: String) {
@@ -221,9 +219,6 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
       } else if (arg == "--update-plots") {
         updatePlots = true
-      } else if (arg == "--repetitions") {
-        requireHasNext()
-        repetitions = Some(it.next().toInt)
       } else {
         die("unknown argument: " + arg)
       }
@@ -273,7 +268,6 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     , threads
     , suppressErrors
     , updatePlots
-    , repetitions
     ))
   }
 }

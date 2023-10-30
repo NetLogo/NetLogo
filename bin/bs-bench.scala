@@ -16,7 +16,6 @@ object Main
     var threads = 1
     var updatePlots = false
     var varyPlots = false
-    var repetitions: Option[Int] = None
     var trials = 1
     var outputFile = ""
 
@@ -40,7 +39,6 @@ object Main
                 case "--threads" => threads = argsIterator.next().trim.toInt
                 case "--update-plots" => updatePlots = true
                 case "--vary-plots" => varyPlots = true
-                case "--repetitions" => repetitions = Some(argsIterator.next().trim.toInt)
                 case "--trials" => trials = argsIterator.next().trim.toInt
                 case "--output" => outputFile = argsIterator.next().trim
                 case _ => return printHelp()
@@ -117,8 +115,6 @@ object Main
 
             if (updatePlots) command += s" --update-plots"
 
-            if (repetitions.isDefined) command += s" --repetitions ${repetitions.get}"
-
             val start = System.nanoTime
 
             sys.process.Process(command, new java.io.File(path)).!!
@@ -154,7 +150,6 @@ object Main
         println("--old <path>             path to directory containing old NetLogo_Console")
         println("--setup-file <path>      path to setup file (alternative way to specify an experiment)")
         println("--threads <number>       number of threads to use (default 1)")
-        println("--repetitions <number>   number of repetitions for each experiment - overrides value in experiment")
         println("--trials <number>        number of identical trials to execute (default 1)")
         println("--update-plots           allows plots to be updated (default is plots are not updated)")
         println("--vary-plots             testing will be done both with and without update-plots")
