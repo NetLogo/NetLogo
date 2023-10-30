@@ -75,9 +75,17 @@ object Main
 
             output.write("Name,Update Plots")
 
-            if (trials > 1) for (i <- 1 to trials) output.write(s",Trial $i")
+            if (trials > 1)
+            {
+                for (i <- 1 to trials) output.write(s",Trial $i")
 
-            output.write(",Average\n")
+                output.write(",Average,Standard Deviation\n")
+            }
+
+            else
+            {
+                output.write(",Time\n")
+            }
 
             for (line <- data) output.write(line.mkString(",") + "\n")
 
@@ -96,8 +104,6 @@ object Main
 
         data = data :+ name
         data = data :+ updatePlots.toString
-
-        var average = 0f
 
         for (i <- 0 until trials)
         {
@@ -121,16 +127,25 @@ object Main
 
             val end = (System.nanoTime - start).toFloat / 60e9f
 
-            average += end
-
             data = data :+ end.toString
 
             println(s"Trial ${i + 1} of $trials completed in $end minutes.")
         }
 
-        if (trials > 1) data = data :+ average.toString
+        if (trials > 1)
+        {
+            var average = 0f
 
-        println(s"Average time: ${average / trials} minutes.")
+            for (i <- 0 until trials) average = average + data(i + 2).toFloat
+
+            data = data :+ average.toString
+
+            var std = 0f
+
+            for (i <- 0 until trials) std = std + math.pow(data(i + 2).toFloat - average, 2).toFloat
+
+            data = data :+ (std / trials).toString
+        }
 
         return data
     }
