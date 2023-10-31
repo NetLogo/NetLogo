@@ -78,11 +78,11 @@ object Main
 
             if (trials > 1)
             {
-                for (i <- 1 to trials) output.write(s",Trial $i")
-
                 output.write(",Average")
 
                 if (trials > 2) output.write(",Standard Deviation")
+
+                for (i <- 1 to trials) output.write(s",Trial $i")
             }
 
             else output.write(",Time")
