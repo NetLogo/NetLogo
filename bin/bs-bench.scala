@@ -55,20 +55,54 @@ object Main
         {
             if (varyPlots)
             {
-                try { data = data :+ time(oldPath, true) } catch { case _ : Throwable => {} }
-                try { data = data :+ time(oldPath, false) } catch { case _ : Throwable => {} }
+                try
+                {
+                    data = data :+ time(oldPath, true)
+                }
+                
+                catch
+                {
+                    case _: Throwable => println(s"$oldPath is out of date, update-plots cannot be changed.")
+                }
+                
+                data = data :+ time(oldPath, false)
             }
 
-            else try { data = data :+ time(oldPath, updatePlots) } catch { case _ : Throwable => {} }
+            else try
+            {
+                data = data :+ time(oldPath, updatePlots)
+            }
+            
+            catch
+            {
+                case _: Throwable => println(s"$oldPath is out of date, update-plots cannot be changed.")
+            }
         }
 
         if (varyPlots)
         {
-            try { data = data :+ time(newPath, true) } catch { case _ : Throwable=> {} }
-            try { data = data :+ time(newPath, false) } catch { case _ : Throwable=> {} }
+            try
+            {
+                data = data :+ time(newPath, true)
+            }
+            
+            catch
+            {
+                case _: Throwable => println(s"$newPath is out of date, update-plots cannot be changed.")
+            }
+            
+            data = data :+ time(newPath, false)
         }
 
-        else try { data = data :+ time(newPath, updatePlots) } catch { case _: Throwable => {} }
+        else try
+        {
+            data = data :+ time(newPath, updatePlots)
+        }
+        
+        catch
+        {
+            case _: Throwable => println(s"$newPath is out of date, update-plots cannot be changed.")
+        }
 
         if (!outputFile.isEmpty)
         {
