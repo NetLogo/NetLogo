@@ -155,7 +155,7 @@ object Main
 
             val start = System.nanoTime
 
-            sys.process.Process(command, new java.io.File(path)).!!
+            sys.process.Process(command, new java.io.File(path)).!!(sys.process.ProcessLogger(_ => ()))
 
             val end = (System.nanoTime - start).toFloat / 60e9f
 
