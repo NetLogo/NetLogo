@@ -13,7 +13,7 @@ object Main
     var table = ""
     var lists = ""
     var stats = ""
-    var threads = 1
+    var threads = 0
     var updatePlots = false
     var varyPlots = false
     var trials = 1
@@ -47,6 +47,7 @@ object Main
 
         if (newPath.isEmpty || model.isEmpty) return printHelp()
         if (setupFile.isEmpty && experiment.isEmpty) return printHelp()
+        if (threads == 0) return printHelp()
 
         var data = List[List[String]]()
 
@@ -54,38 +55,39 @@ object Main
         {
             if (varyPlots)
             {
-                try data = data :+ time(newPath, true) catch case _ => {}
-                try data = data :+ time(newPath, false) catch case _ => {}
+                try data = data :+ time(oldPath, true) catch case _: Throwable => {}
+                try data = data :+ time(oldPath, false) catch case _: Throwable => {}
             }
 
-            else try data = data :+ time(oldPath, updatePlots) catch case _ => {}
+            else try data = data :+ time(oldPath, updatePlots) catch case _: Throwable => {}
         }
 
         if (varyPlots)
         {
-            try data = data :+ time(newPath, true) catch case _ => {}
-            try data = data :+ time(newPath, false) catch case _ => {}
+            try data = data :+ time(newPath, true) catch case _: Throwable => {}
+            try data = data :+ time(newPath, false) catch case _: Throwable => {}
         }
 
-        else try data = data :+ time(newPath, updatePlots) catch case _ => {}
+        else try data = data :+ time(newPath, updatePlots) catch case _: Throwable => {}
 
         if (!outputFile.isEmpty)
         {
             val output = new java.io.PrintWriter(new java.io.File(outputFile))
 
-            output.write("Name,Update Plots")
+            output.write("Name,Update Plots,Threads")
 
             if (trials > 1)
             {
                 for (i <- 1 to trials) output.write(s",Trial $i")
 
-                output.write(",Average,Standard Deviation\n")
+                output.write(",Average")
+
+                if (trials > 2) output.write(",Standard Deviation")
             }
 
-            else
-            {
-                output.write(",Time\n")
-            }
+            else output.write(",Time")
+
+            output.write("\n")
 
             for (line <- data) output.write(line.mkString(",") + "\n")
 
@@ -102,15 +104,14 @@ object Main
 
         println(s"Testing $name...")
 
-        data = data :+ name
-        data = data :+ updatePlots.toString
-
         for (i <- 0 until trials)
         {
             var command = s"./NetLogo_Console --headless"
 
-            if (model.isEmpty) command += s" --setup-file '$setupFile'"
-            else command += s" --model '$model' --experiment '$experiment'"
+            command += s" --model '$model'"
+
+            if (experiment.isEmpty) command += s" --setup-file '$setupFile'"
+            else command += s" --experiment '$experiment'"
 
             if (!spreadsheet.isEmpty) command += s" --spreadsheet '$spreadsheet'"
             if (!table.isEmpty) command += s" --table '$table'"
@@ -129,27 +130,31 @@ object Main
 
             data = data :+ end.toString
 
-            println(s"Trial ${i + 1} of $trials completed in $end minutes.")
+            if (trials == 1) println(s"Experiment completed in $end minutes.")
+            else println(s"Trial ${i + 1} of $trials completed in $end minutes.")
         }
 
         if (trials > 1)
         {
             var average = 0f
 
-            for (i <- 0 until trials) average = average + data(i + 2).toFloat
+            for (i <- data) average = average + i.toFloat
 
             average = average / trials
 
-            data = data :+ average.toString
+            if (trials > 2)
+            {
+                var std = 0f
 
-            var std = 0f
+                for (i <- data) std = std + math.pow(i.toFloat - average, 2).toFloat
 
-            for (i <- 0 until trials) std = std + math.pow(data(i + 2).toFloat - average, 2).toFloat
+                data = average.toString +: math.sqrt(std / trials).toString.toString +: data
+            }
 
-            data = data :+ math.sqrt(std / trials).toString
+            else data = average.toString +: data
         }
 
-        return data
+        return name +: updatePlots.toString +: threads.toString +: data
     }
 
     def printHelp(): Unit =
@@ -161,12 +166,12 @@ object Main
         println("--new <path>             path to directory containing new NetLogo_Console")
         println("--model <path>           path to model")
         println("--experiment <string>    experiment name (must be specified with model)")
+        println("--threads <number>       number of threads to use")
         println()
         println("optional testing specifications")
         println()
         println("--old <path>             path to directory containing old NetLogo_Console")
         println("--setup-file <path>      path to setup file (alternative way to specify an experiment)")
-        println("--threads <number>       number of threads to use (default 1)")
         println("--trials <number>        number of identical trials to execute (default 1)")
         println("--update-plots           allows plots to be updated (default is plots are not updated)")
         println("--vary-plots             testing will be done both with and without update-plots")
