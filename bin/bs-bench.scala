@@ -55,20 +55,20 @@ object Main
         {
             if (varyPlots)
             {
-                try data = data :+ time(oldPath, true) catch case _: Throwable => {}
-                try data = data :+ time(oldPath, false) catch case _: Throwable => {}
+                try { data = data :+ time(oldPath, true) } catch { case _ : Throwable => {} }
+                try { data = data :+ time(oldPath, false) } catch { case _ : Throwable => {} }
             }
 
-            else try data = data :+ time(oldPath, updatePlots) catch case _: Throwable => {}
+            else try { data = data :+ time(oldPath, updatePlots) } catch { case _ : Throwable => {} }
         }
 
         if (varyPlots)
         {
-            try data = data :+ time(newPath, true) catch case _: Throwable => {}
-            try data = data :+ time(newPath, false) catch case _: Throwable => {}
+            try { data = data :+ time(newPath, true) } catch { case _ : Throwable=> {} }
+            try { data = data :+ time(newPath, false) } catch { case _ : Throwable=> {} }
         }
 
-        else try data = data :+ time(newPath, updatePlots) catch case _: Throwable => {}
+        else try { data = data :+ time(newPath, updatePlots) } catch { case _: Throwable => {} }
 
         if (!outputFile.isEmpty)
         {
@@ -106,21 +106,53 @@ object Main
 
         for (i <- 0 until trials)
         {
-            var command = s"./NetLogo_Console --headless"
+            var command = new scala.collection.mutable.ArrayBuffer[String]()
+            
+            command += "./NetLogo_Console"
+            command += "--headless"
+            command += "--model"
+            command += model
 
-            command += s" --model '$model'"
+            if (experiment.isEmpty)
+            {
+                command += "--setup-file"
+                command += setupFile
+            }
+            
+            else
+            {
+                command += "--experiment"
+                command += experiment
+            }
 
-            if (experiment.isEmpty) command += s" --setup-file '$setupFile'"
-            else command += s" --experiment '$experiment'"
+            if (!spreadsheet.isEmpty)
+            {
+                command += "--spreadsheet"
+                command += spreadsheet
+            }
 
-            if (!spreadsheet.isEmpty) command += s" --spreadsheet '$spreadsheet'"
-            if (!table.isEmpty) command += s" --table '$table'"
-            if (!lists.isEmpty) command += s" --lists '$lists'"
-            if (!stats.isEmpty) command += s" --stats '$stats'"
+            if (!table.isEmpty)
+            {
+                command += "--table"
+                command += table
+            }
 
-            command += s" --threads $threads"
+            if (!lists.isEmpty)
+            {
+                command += "--lists"
+                command += lists
+            }
 
-            if (updatePlots) command += s" --update-plots"
+            if (!stats.isEmpty)
+            {
+                command += "--stats"
+                command += stats
+            }
+
+            command += "--threads"
+            command += threads.toString
+
+            if (updatePlots) command += "--update-plots"
 
             val start = System.nanoTime
 
