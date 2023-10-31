@@ -97,8 +97,7 @@ object Main
 
     def time(path: String, updatePlots: Boolean): List[String] =
     {
-        val seps = path.split("/")
-        val name = if (seps.length == 1) seps(0) else seps(seps.length - 1)
+        val name = path.split("/").last
 
         var data = List[String]()
 
