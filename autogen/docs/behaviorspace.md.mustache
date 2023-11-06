@@ -21,7 +21,7 @@ measurements.
 of data from repetitions can be saved in an output file.
 - [**Lists output**](#lists-output): List data can be output in a file with one list
  element per cell.
-- [**Run options: update plots and monitors**](#run-options-update-plots-and-monitors): Greater performance improvement when box is unchecked.
+- [**Run options: update plots and monitors**](#run-options-update-plots-and-monitors): Fewer computations when box is unchecked.
 - [**Importing and exporting**](#importing-and-exporting): Experiments can now be exported to
 an XML file that can be used when running headlessly. Experiments can also be imported into a
  model.
@@ -131,25 +131,24 @@ that initializes the view.
 
 Variables can also include [[max-pxcor|max-pcor]], [[min-pxcor|min-pcor]],
 [[max-pycor|max-pcor]] and [[min-pycor|min-pcor]], [[world-width|world-dim]],
-[[world-height|world-dim]] and [[random-seed]]. These are not, strictly
-speaking, variables, but BehaviorSpace lets you vary them as if they were.
+[[world-height|world-dim]] and [[random-seed]]. These are not variables, strictly
+speaking, but BehaviorSpace lets you vary them as if they were.
 Varying the world dimensions lets you explore the effect of world size upon your
-model. Since setting [[world-width|world-dim]] and [[world-height|world-dim]]
-does not necessarily define the bounds of the world how they are varied depends
-on the location of the origin. If the origin is centered, BehaviorSpace will
-keep it centered so the values [[world-width|world-dim]] or
-[[world-height|world-dim]] must be odd. If one of the bounds is at zero that
-bound will be kept at zero and the other bound will move, for example if you
-start with a world with `min-pxcor = 0` `max-pxcor = 10` and you vary
+model. Setting  [[world-width|world-dim]] and [[world-height|world-dim]] is
+valid under two circumstances. 1) If the origin is centered in width or height
+BehaviorSpace will keep it centered in that dimension. This requires that the
+corresponding value(s) [[world-width|world-dim]] and/or [[world-height|world-dim]]
+must be odd. 2) If one of
+the bounds is zero it will remain zero and the other bound will move. For example,
+if you start with a world with `min-pxcor = 0`, `max-pxcor = 10` and you vary
 `world-width` like this:
 
 > `["world-width" [11 1 14]]`
 
-[[min-pxcor|min-pcor]] will stay at zero and [[max-pxcor|max-pcor]] will set to
-11, 12, and 13 for each of the runs. If neither of these conditions are true,
-the origin is not centered, nor at the edge of the world you cannot vary
-[[world-height|world-dim]] or [[world-width|world-dim]] directly but you should
-vary [[max-pxcor|max-pcor]], [[max-pycor|max-pcor]], [[min-pxcor|min-pcor]]
+[[min-pxcor|min-pcor]] will remain zero and [[max-pxcor|max-pcor]] will be set to 11,
+12, and 13 for successive runs. If neither of these conditions is true you cannot 
+you cannot vary [[world-height|world-dim]] or [[world-width|world-dim]] directly but
+must vary [[max-pxcor|max-pcor]], [[max-pycor|max-pcor]], [[min-pxcor|min-pcor]]
 and [[min-pycor|min-pcor]] instead.
 
 Varying [[random-seed]] lets you repeat runs by using a known seed for the
