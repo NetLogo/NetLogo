@@ -248,12 +248,29 @@ object Main
     {
         val r = "(([\\w.]+)\\s*[=:]\\s*([^\n]+))|(#[^\n]+)".r
 
-        LinkedHashMap(r.findAllMatchIn(scala.io.Source.fromFile(path).getLines().mkString("\n").replaceAll("\\\\s*\n", "\\\\"))
-                       .map(x =>
-                       {
-                            if (x.group(1) == null) x.group(4).trim -> ""
-                            else x.group(2).trim -> x.group(3).trim
-                       }).toList: _*)
+        val items = r.findAllMatchIn(scala.io.Source.fromFile(path).getLines().mkString("\n").replaceAll("\\\\s*\n", "\\\\"))
+                   .map(x =>
+                   {
+                        if (x.group(1) == null) x.group(4).trim -> ""
+                        else x.group(2).trim -> x.group(3).trim
+                   }).toList
+
+        var map = LinkedHashMap[String, String]()
+        var dups = Set[String]()
+
+        for (item <- items)
+        {
+            if (!item._2.isEmpty && map.exists(_._1 == item._1) && !dups.contains(item._1))
+            {
+                dups += item._1
+
+                println(s"Warning: duplicate property '${item._1}'.")
+            }
+
+            map += item
+        }
+
+        map
     }
 
     def selectLines(path: String, specifier: String): LinkedHashMap[String, String] =
