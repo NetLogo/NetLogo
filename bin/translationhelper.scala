@@ -176,7 +176,11 @@ object Main
 
                     if (!name.isEmpty)
                     {
-                        if (getNextLine(new_properties).startsWith("Previous:")) getNextLine(new_properties)
+                        if (getNextLine(new_properties).startsWith("Previous English:"))
+                        {
+                            getNextLine(new_properties)
+                            getNextLine(new_properties)
+                        }
 
                         val translated = getNextLine(new_properties).replace("Translation:", "").trim
 
