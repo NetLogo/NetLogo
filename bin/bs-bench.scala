@@ -32,10 +32,10 @@ object Main
                 case "--model" => model = argsIterator.next().trim
                 case "--experiment" => experiment = argsIterator.next().trim
                 case "--setup-file" => setupFile = argsIterator.next().trim
-                case "--spreadsheet" => spreadsheet = argsIterator.next().trim
-                case "--table" => table = argsIterator.next().trim
-                case "--lists" => lists = argsIterator.next().trim
-                case "--stats" => stats = argsIterator.next().trim
+                case "--spreadsheet" => spreadsheet = new java.io.File(argsIterator.next().trim).getCanonicalPath
+                case "--table" => table = new java.io.File(argsIterator.next().trim).getCanonicalPath
+                case "--lists" => lists = new java.io.File(argsIterator.next().trim).getCanonicalPath
+                case "--stats" => stats = new java.io.File(argsIterator.next().trim).getCanonicalPath
                 case "--threads" => threads = argsIterator.next().trim.toInt
                 case "--update-plots" => updatePlots = true
                 case "--vary-plots" => varyPlots = true
