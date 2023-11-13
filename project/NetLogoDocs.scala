@@ -29,6 +29,7 @@ class NetLogoDocs(
     "extension-manager"   -> "Extension Manager Guide",
     "shapes"              -> "Shapes Editor Guide",
     "behaviorspace"       -> "BehaviorSpace Guide",
+    "behaviorspace-spanish" -> "BehaviorSpace Guide en Español",
     "systemdynamics"      -> "System Dynamics Guide",
     "hubnet"              -> "HubNet Guide",
     "hubnet-authoring"    -> "HubNet Authoring Guide",
