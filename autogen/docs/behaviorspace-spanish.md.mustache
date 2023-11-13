@@ -2,7 +2,7 @@
 
 Esta guía consta de tres partes:
 
-- - [**¿Qué es Espacio-Conductual?**](#que-es-espacio-conductual): Describe la herramienta en términos generales,
+- [**¿Qué es Espacio-Conductual?**](#qué-es-espacio-conductual): Describe la herramienta en términos generales,
   incluyendo las ideas y principios que la sustentan.
 - [**Cómo funciona**](#cómo-funciona): Te guía en el uso de la herramienta y destaca
   sus funciones más utilizadas.
@@ -15,25 +15,29 @@ Se añadieron varias funciones nuevas en NetLogo 6.4:
   de parámetros por separado, en lugar de expandirlos de forma combinatoria.
 - [**Ejecutar indicadores cuando**](#ejecutar-indicadores-cuando): Permite el uso de un reportero para
   registrar mediciones de manera condicional.
-- [**Comandos pre-experimento**](#comandos-pre--experimento): Se ejecutan antes del inicio del experimento.
-- [**Comandos post-experimento**](#comandos-post--experimento): Se ejecutan cuando finaliza el experimento.
+- [**Comandos pre-experimento**](#comandos-pre-experimento): Se ejecutan antes del inicio del experimento.
+- [**Comandos post-experimento**](#comandos-post-experimento): Se ejecutan cuando finaliza el experimento.
 - [**Resultados estadísticos**](#resultados-estadísticos): La media y la desviación estándar
 de los datos de simulaciones pueden guardarse en un archivo de resultados.
 - [**Resultados en lista**](#resultados-en-lista): Los datos se pueden guardar en listas en un archivo,
   con un elemento de lista por celda.
 - [**Importar y exportar**](#importar-y-exportar): Los experimentos ahora pueden exportarse a
-un archivo XML que puede utilizarse al ejecutar en modo sin interfaz (headlessly). También es posible importar experimentos en un
+un archivo XML que puede utilizarse al ejecutar en modo sin interfaz (headlessly). También es posible importar
+experimentos en un
 modelo.
 - [**Experimentos pausados**](#experimentos-pausados): Ahora es posible pausar y reanudar los experimentos.
-- [**Opciones de ejecución: actualizar gráficos y monitores**](#opciones-de-ejecución:-actualizar-gráficos-y-monitores): Mejora el rendimiento en mayor medida si no se selecciona.
+- [**Opciones de ejecución: actualizar gráficos y monitores**](#opciones-de-ejecución-actualizar-gráficos-y-monitores):
+Mejora el rendimiento en mayor medida si no se selecciona.
 
 Más acerca de las modificaciones en Espacio-Conductual en NetLogo 6.4:
 
 - Los experimentos creados en versiones anteriores a la 6.4 aún se pueden abrir, pero
 los creados con las nuevas funciones no son compatibles con versiones anteriores.
-- Para información sobre cambios en archivos de resultados, consulta [**Cambios en Archivos de Resultados**](#cambios-en-archivos-de-resultados).
-- El cuadro de diálogo del experimento ahora usa mensajes emergentes debajo de cada elemento de entrada, en lugar de texto; consulta
-[**Crear el entorno del experimento**](#crear-el-entorno-del-experimento).
+- Para información sobre cambios en archivos de resultados, consult
+ [**Cambios en Archivos de Resultados**](#cambios-en-archivos-de-resultados).
+- El cuadro de diálogo del experimento ahora usa mensajes emergentes debajo de cada elemento de entrada, en lugar de
+texto; consulta
+[**Creación de una configuración de experimentos**](#creación-de-una-configuración-de-experimentos).
 - Experimentos que utilizan las nuevas funciones pueden encontrarse en el modelo
 Sample Models=>Biology=>Wolf Sheep Predation, con notas adicionales en la pestaña de información.
 - Modificaciones menores adicionales pueden encontrarse en esta página, buscando *(Desde 6.4)*.
@@ -503,7 +507,8 @@ variables iniciales en diferentes ejecuciones.
 
 Es importante destacar que los datos no se escriben en los **Resultados en hoja de cálculo** hasta que
 finaliza el experimento. Dado que estos datos se almacenan en la memoria hasta que se completa el experimento,
-es posible que experimentos muy extensos agoten la memoria disponible. Se recomienda desactivar **Resultados en hoja de cálculo**
+es posible que experimentos muy extensos agoten la memoria disponible. Se recomienda desactivar **Resultados en hoja de
+cálculo**
 a menos que sea absolutamente necesario. Además, si el experimento se interrumpe por cualquier motivo, no se
 registrará ningún resultado. Las posibles fuentes de interrupciones pueden incluir: errores en tiempo de ejecución en
 el modelo, agotamiento de recursos de memoria, fallos del sistema o cortes de energía. Para experimentos prolongados,
@@ -511,8 +516,10 @@ se recomienda habilitar el formato **Resultados tabulados** como medida de preca
 y no se obtengan **Resultados en hoja de cálculo**; así al menos se conservarán los datos parciales.
 
 En la siguiente imagen de muestra de **Resultados en hoja de cálculo**, la sección de encabezado está resaltada en rojo,
-las columnas de número de ejecución (`[run number]`) se resaltan en azul, los valores iniciales de las variables se muestran en verde,
-los indicadores adicionales calculados se muestran en anaranjado, y los datos de medición de indicadores se encuentran en morado.
+las columnas de número de ejecución (`[run number]`) se resaltan en azul, los valores iniciales de las variables se
+muestran en verde,
+los indicadores adicionales calculados se muestran en anaranjado, y los datos de medición de indicadores se encuentran
+en morado.
 
 ![[bs-spreadsheet.png]]
 
@@ -533,40 +540,48 @@ un resultado no bien definido. El experimento debe utilizar una configuración d
 valores de desviación estándar.
 
 En la siguiente imagen de muestra de **Resultados estadísticos**, la sección de encabezado está resaltada en rojo,
-las combinaciones de parámetros en verde, las columnas de número de paso (`[step]`) en azul, y los datos estadísticos en morado.
+las combinaciones de parámetros en verde, las columnas de número de paso (`[step]`) en azul, y los datos estadísticos
+morado.
 
 ![[bs-stats.png]]
 
 #### Resultados en lista
 *(Desde 6.4)*
 
-Este formato es un complemento de los otros dos formatos principales, en lugar de ser un formato completo de recopilación
-de datos. Si existen reporteros que retornan una lista, el formato **Resultados en lista** puede ser empleado para obtener
+Este formato es un complemento de los otros dos formatos principales, en lugar de ser un formato completo de
+recopilación
+de datos. Si existen reporteros que retornan una lista, el formato **Resultados en lista** puede ser empleado para
+obtener
 resultados con formato adecuado para esos reporteros. Tanto en los formatos **Resultados en hoja de cálculo** como en
-**Resultados tabulados**, las listas generadas por los reporteros serán comprimidas en una sola celda, en lugar de desplegar
-sus elementos en celdas separadas con un valor por celda. Si los valores de la lista se requieren en celdas individuales,
+**Resultados tabulados**, las listas generadas por los reporteros serán comprimidas en una sola celda, en lugar de
+desplegar
+sus elementos en celdas separadas con un valor por celda. Si los valores de la lista se requieren en celdas 
+ndividuales,
 se selecciona el formato  **Resultados en lista** junto con uno o ambos de los otros formatos.
 
-Es importante destacar que el formato **Resultados en lista**, al igual que el formato **Resultados en hoja de cálculo**,
-no contendrá datos hasta que el experimento esté completo. También es importante tener en cuenta que el formato
+Es importante destacar que el formato **Resultados en lista**, al igual que el formato **Resultados en hoja de
+cálculo**, no contendrá datos hasta que el experimento esté completo. También es importante tener en cuenta que el
+formato
 **Resultados en lista** debe utilizarse en conjunto con otro formato, no puede usarse de manera independiente.
 
 En la siguiente imagen de muestra de **Resultados en lista**, la sección de encabezado está resaltada en rojo,
-el nombre del reportero en anaranjado, las columnas de número de ejecución (`[run number]`) y de número de paso (`[step]`)
+el nombre del reportero en anaranjado, las columnas de número de ejecución (`[run number]`) y de número de paso
+(`[step]`)
 en azul, los valores iniciales de las variables en verde, y la lista expandida de datos en morado.
 
 ![[bs-lists.png]]
 
-#### Cambios en los archivos de resultados
+#### Cambios en archivos de resultados
 *(Desde 6.4)*
 
 - Los archivos de resultados tienen números de versión.
 - Los resultados en hoja de cálculo siempre incluyen información sobre los pasos.
-- El encabezado de columna `[initial & final values]` en los resultados en hoja de cálculo se cambió por el más preciso `[final value]`.
+- El encabezado de columna `[initial & final values]` en los resultados en hoja de cálculo se cambió por el más preciso
+`[final value]`.
 - Se añadió [**Resultados estadísticos**](#resultados-estadísticos).
 - Se añadió [**Resultados en lista**](#resultados-en-lista).
 
-#### Opciones de ejecución: actualización de gráficos y monitores
+#### Opciones de ejecución: actualizar gráficos y monitores
 
 El cuadro de diálogo "Opciones de ejecución" ofrece la opción de actualizar o no los gráficos y monitores. El
 rendimiento mejora si se deja en blanco. Es importante destacar que *(Desde 6.4)*, si se comienza el experimento
@@ -591,15 +606,17 @@ actualización de la vista y los gráficos. Las demás ejecuciones ocurrirán en
 Segunda: las ejecuciones en segundo plano invisibles no pueden utilizar primitivas que solo funcionan en la
 interfaz gráfica (GUI). Por ejemplo, una ejecución en segundo plano no puede crear una película.
 
-Tercera: dado que las ejecuciones en paralelo avanzan de forma independiente, el formato `Resultados tabulados` puede contener datos
-entrelazados y fuera de orden. Al analizar los datos de la tabla, se recomienda ordenarlos por número de ejecución. (El formato
-`Resultados en hoja de cálculo` no se ve afectado por esto, puesto que se escribe hasta que el experimento se completa o se interrumpe).
+Tercera: dado que las ejecuciones en paralelo avanzan de forma independiente, el formato `Resultados tabulados` puede
+contener datos entrelazados y fuera de orden. Al analizar los datos de la tabla, se recomienda ordenarlos por número de
+ejecución. (El formato `Resultados en hoja de cálculo` no se ve afectado por esto, puesto que se escribe hasta que el
+experimento se completa o se interrumpe).
 
-Cuarta: el uso de todos los núcleos del procesador disponibles puede hacer que la computadora sea lenta para otras tareas mientras
-se ejecuta el experimento, o que las ejecuciones sean lentas ya que se produce una competencia por la memoria entre las propias 
-ejecuciones. Si el modelo utiliza una gran cantidad de memoria, es posible que reducir el número de ejecuciones permita que estas
-se completen en menos tiempo, ya que el sistema puede mantener disponible la memoria para cada ejecución. Un buen punto de partida
-podría ser el valor predeterminado que se muestra en "Opciones de ejecución", y a partir de ahí, ajustar hacia arriba o hacia abajo
+Cuarta: el uso de todos los núcleos del procesador disponibles puede hacer que la computadora sea lenta para otras
+tareas mientras se ejecuta el experimento, o que las ejecuciones sean lentas ya que se produce una competencia por la
+memoria entre las propias ejecuciones. Si el modelo utiliza una gran cantidad de memoria, es posible que reducir el
+número de ejecuciones permita que estas se completen en menos tiempo, ya que el sistema puede mantener disponible la
+memoria para cada ejecución. Un buen punto de partida podría ser el valor predeterminado que se muestra en "Opciones de
+ejecución", y a partir de ahí, ajustar hacia arriba o hacia abajo
 para encontrar el punto óptimo en términos de tiempo, para completar todas las ejecuciones.
 
 Quinta: realizar ejecuciones en paralelo aumentará significativamente los requerimientos de memoria del experimento. Puede ser
