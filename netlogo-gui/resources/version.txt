@@ -1,5 +1,6 @@
-NetLogo 6.4.0-beta1
-September 22, 2023
+
+NetLogo 6.4.0
+November 14, 2023
 NetLogo 6.3.0
 NetLogo 6.2.2
 NetLogo 6.2.1

@@ -5,7 +5,7 @@ For help running models made in old versions, see the
 
 [TOC]
 
-## Version 6.4.0-beta1 (September 2023)
+## Version 6.4.0 (November 2023)
 
 A major change in this release the introduction of new features in [BehaviorSpace](https://ccl.northwestern.edu/netlogo/docs/behaviorspace.html)
 ### BehaviorSpace New Features
@@ -19,7 +19,7 @@ rather than being expanded combinatorically.
 - Experiments can now be paused and resumed.
 - Experiments can now be exported to an XML file that can be used when running headlessly.
 - Experiments in an XML file can now be imported into a model.
-- Experiments run much faster when *Update plots and monitors* is unchecked in the *Run options dialog*.
+- There is a reduction in memory usage for experiments containing plots when *Update plots and monitors* is unchecked in the *Run options dialog*.
 
 ### Language Changes
 
@@ -46,7 +46,7 @@ A new reporter primitive has been added, `who-are-not`.  It takes an agentset as
 
 #### BehaviorSpace Bug fixes and changes
 - 3D BehaviorSpace runs are now allowed.
-- BehaviorSpace no longer exits when there is a plot compilation error. 
+- BehaviorSpace no longer exits when there is a plot compilation error.
 - Error messages for BehaviorSpace variable errors have been improved.
 - BehaviorSpace output files no longer contain trailing spaces.
 - Headless console mode now has a `--help` flag.
@@ -69,14 +69,19 @@ A new reporter primitive has been added, `who-are-not`.  It takes an agentset as
 
 ### Models Library Changes
 
-#### New Sample Models
+#### New Sample Models:
+- Food Reward Learning
 - Current in a Semiconductor
-
+- Radical Polymerization with Chains
+- Food Reward Learning
+- Baldwin Effect
 
 #### Sample Model Changes
 - Fixed a minor issue in the Monte Carlo Lennard-Jones model.
 - Renamed Prisoner's Dilemma models from "PD" to "Prisoner's Dilemma" and clarified that "confess" means "defect" in the info tab.
-- Polymer dynamics model info tab was edited to indicate that this is not strictly speaking a cellular automaton.
+- Polymer dynamics model info tab was edited to indicate that this is not strictly speaking a cellular automata.
+- Wolf Sheep Predation was updated to include BehaviorSpace experiments that use the new BehaviorSpace features.
+- Anisogomy model was updated and improved.
 
 ## Version 6.3.0 (September 2022)
 
