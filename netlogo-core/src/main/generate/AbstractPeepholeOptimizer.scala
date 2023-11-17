@@ -40,7 +40,7 @@ abstract class AbstractPeepholeOptimizer(mv: MethodVisitor) extends MethodVisito
     restartMatch()
     mv.visitFieldInsn(opcode, owner, name, desc)
   }
-  @Deprecated
+  @deprecated
   override def visitMethodInsn(opcode: Int, owner: String, name: String, desc: String) {
      restartMatch()
      mv.visitMethodInsn(opcode, owner, name, desc, opcode == INVOKEINTERFACE)
