@@ -20,7 +20,7 @@ import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.fileformat.{ FailedConversionResult, ModelConversion, SuccessfulConversion }
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog, UserAction }, UserAction.MenuAction
 import org.nlogo.window.{ BackgroundFileController, Events, FileController, ReconfigureWorkspaceUI },
-  Events.{AboutToCloseFilesEvent, AboutToQuitEvent, LoadModelEvent, ModelSavedEvent, OpenModelEvent }
+  Events.{AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent, LoadModelEvent, ModelSavedEvent, OpenModelEvent }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI, OpenModelFromSource, SaveModel, SaveModelAs }
 
 object FileManager {
@@ -381,6 +381,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
     var result = Option.empty[Try[URI]]
 
     def run(): Unit = {
+      new AboutToSaveModelEvent().raise(eventRaiser)
       val r = thunk()
       r.foreach { uri =>
         val path = Paths.get(uri).toString
