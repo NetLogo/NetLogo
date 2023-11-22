@@ -8,6 +8,7 @@ import javax.swing.{ BorderFactory, JDialog, JLabel, JPanel, JProgressBar, Swing
 import org.nlogo.awt.Positioning.center
 
 class ModalProgressDialog(parent: Frame, message: String) extends JDialog(parent, true) {
+  setFocusableWindowState(false)
   setResizable(false)
   setUndecorated(true)
 
