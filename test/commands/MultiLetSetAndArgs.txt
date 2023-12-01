@@ -76,6 +76,23 @@ SetOnLets
   g1 => 10
   g2 => 20
 
+SetOnMultipleVariableTypes
+  globals [g1 g2 l]
+  breed [toads toad]
+  turtles-own [energy]
+  toads-own [warts]
+
+  to set-globals [v1 v2] /
+    (set g1 v1) /
+    (set g2 v2) /
+  end
+
+  O> create-toads 10 [ set energy 111 set warts 222 ]
+  O> let z 10 ask one-of toads [ set [z g1 g2 energy warts] [20 30 40 50 60] set-globals energy warts set [energy warts] [7 8] ]
+
+  g1 => 50
+  g2 => 60
+
 # ArgsProc
 #   true => true
 #
