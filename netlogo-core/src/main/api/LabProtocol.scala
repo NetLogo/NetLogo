@@ -2,6 +2,105 @@
 
 package org.nlogo.api
 
+import java.awt.Window
+
+import org.nlogo.core.{ CompilerException, I18N, LogoList }
+
+object LabProtocol {
+  private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace")
+
+  def parseVariables(variables: String, window: Window, worldLock: AnyRef, compiler: CompilerServices): Option[(List[RefValueSet], List[List[RefValueSet]])] = {
+    def complain(message: String) {
+      if (!java.awt.GraphicsEnvironment.isHeadless)
+        javax.swing.JOptionPane.showMessageDialog(
+          window, I18N.gui.getN("edit.behaviorSpace.invalidVarySpec", message),
+         I18N.gui("invalid"), javax.swing.JOptionPane.ERROR_MESSAGE)
+    }
+    val list =
+      try { worldLock.synchronized {
+        compiler.readFromString("[" + variables + "]").asInstanceOf[LogoList]
+      } }
+    catch{ case ex: CompilerException => complain(ex.getMessage); return None }
+    var constants = List[RefValueSet]()
+    var subExperiments = List[List[RefValueSet]]()
+    for (o <- list.toList) {
+      o.asInstanceOf[LogoList].toList match {
+        case List(variableName: String, more: LogoList) =>
+          more.toList match {
+            case List(first: java.lang.Double,
+                      step: java.lang.Double,
+                      last: java.lang.Double) =>
+              val constant = new SteppedValueSet(variableName,
+                                                 BigDecimal(Dump.number(first)),
+                                                 BigDecimal(Dump.number(step)),
+                                                 BigDecimal(Dump.number(last)))
+              if (constants.exists(_.variableName == variableName)) {
+                complain(I18N.gui.getN("edit.behaviorSpace.constantDefinedTwice", variableName)); return None
+              }
+              if (!subExperiments.isEmpty) {
+                complain(I18N.gui.getN("edit.behaviorSpace.constantDefinedSubexperiment", variableName)); return None
+              }
+              constants = constants :+ constant
+            case _ =>
+              complain(I18N.gui.getN("edit.behaviorSpace.expectedThreeNumbers", Dump.list(more))); return None
+          }
+        case List(variableName: String, more@_*) =>
+          if (more.isEmpty) {complain(I18N.gui.getN("edit.behaviorSpace.expectedValue", variableName)); return None}
+          val constant = new RefEnumeratedValueSet(variableName, more.toList)
+          if (constants.exists(_.variableName == variableName)) {
+            complain(I18N.gui.getN("edit.behaviorSpace.constantDefinedTwice", variableName)); return None
+          }
+          if (!subExperiments.isEmpty) {
+            complain(I18N.gui.getN("edit.behaviorSpace.constantDefinedSubexperiment", variableName)); return None
+          }
+          constants = constants :+ constant
+        case List(first: LogoList, more@_*) =>
+          var subExperiment = List[RefValueSet]()
+          (List(first) ++ more).foreach(_.asInstanceOf[LogoList].toList match {
+            case List(variableName: String, more: LogoList) =>
+              more.toList match {
+                case List(first: java.lang.Double,
+                          step: java.lang.Double,
+                          last: java.lang.Double) =>
+                  val exp = new SteppedValueSet(variableName,
+                                                BigDecimal(Dump.number(first)),
+                                                BigDecimal(Dump.number(step)),
+                                                BigDecimal(Dump.number(last)))
+                  if (subExperiment.exists(_.variableName == variableName)) {
+                    complain(I18N.gui.getN("edit.behaviorSpace.variableDefinedTwiceSubexperiment",
+                      variableName)); return None
+                  }
+                  subExperiment = subExperiment :+ exp
+                case _ =>
+                  complain(I18N.gui.getN("edit.behaviorSpace.expectedThreeNumbers", Dump.list(more))); return None
+              }
+            case List(variableName: String, more@_*) =>
+              if (more.isEmpty) {complain(I18N.gui.getN("edit.behaviorSpace.expectedValue", variableName)); return None}
+              val exp = new RefEnumeratedValueSet(variableName, more.toList)
+              if (subExperiment.exists(_.variableName == variableName)) {
+                complain(I18N.gui.getN("edit.behaviorSpace.variableDefinedTwiceSubexperiment", variableName)); return None
+              }
+              subExperiment = subExperiment :+ exp
+            case _ =>
+              complain(I18N.gui.get("edit.behaviorSpace.invalidFormat")); return None
+          })
+          subExperiments = subExperiments :+ subExperiment
+        case _ =>
+          complain(I18N.gui.get("edit.behaviorSpace.invalidFormat")); return None
+      }
+    }
+    for (experiment <- subExperiments) {
+      for (valueSet <- experiment) {
+        if (!constants.exists(_.variableName == valueSet.variableName) &&
+            subExperiments.exists(!_.exists(_.variableName == valueSet.variableName))) {
+          complain(I18N.gui.getN("edit.behaviorSpace.constantDefinedSubexperiment", valueSet.variableName)); return None
+        }
+      }
+    }
+    return Some((constants, subExperiments))
+  }
+}
+
 case class LabProtocol(name: String,
                     preExperimentCommands: String,
                     setupCommands: String,

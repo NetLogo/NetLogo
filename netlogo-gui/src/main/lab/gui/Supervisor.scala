@@ -19,6 +19,12 @@ import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace }
 import org.nlogo.workspace.{ CurrentModelOpener, WorkspaceFactory }
 import scala.collection.mutable.Set
 
+object Supervisor {
+  def runFromExtension(protocol: LabProtocol, workspace: GUIWorkspace) {
+    new Supervisor(null, workspace, protocol, null, null, (_) => {}, false).start()
+  }
+}
+
 class Supervisor(
   dialog: Dialog,
   val workspace: GUIWorkspace,
@@ -26,6 +32,7 @@ class Supervisor(
   factory: WorkspaceFactory with CurrentModelOpener,
   dialogFactory: EditDialogFactoryInterface,
   saveProtocol: (LabProtocol) => Unit,
+  useGUI: Boolean = true
 ) extends Thread("BehaviorSpace Supervisor") {
   private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace")
   var options = protocol.runOptions
@@ -68,14 +75,16 @@ class Supervisor(
     worker.run(workspace, nextWorkspace _, options.threadCount)
   } }
   private val workerThread = new Thread(runnable, "BehaviorSpace Worker")
-  private val progressDialog = new ProgressDialog(dialog, this, saveProtocol)
+  private val progressDialog =
+    if (useGUI) new ProgressDialog(dialog, this, saveProtocol)
+    else null
   private val exporters = new ListBuffer[Exporter]
   private var spreadsheetExporter: SpreadsheetExporter = null
   private var spreadsheetFileName: String = null
   private var tableExporter: TableExporter = null
   private var tableFileName: String = null
   private var statsExporter: StatsExporter = null
-  worker.addListener(progressDialog)
+  if (useGUI) worker.addListener(progressDialog)
   def addExporter(exporter: Exporter) {
     if (!exporters.contains(exporter)) {
       exporters += exporter
@@ -95,7 +104,7 @@ class Supervisor(
         return
     }
 
-    if (options == null) {
+    if (useGUI && options == null) {
       options =
         try {
           new RunOptionsDialog(dialog, dialogFactory, workspace.guessExportName(worker.protocol.name)).get
@@ -231,9 +240,11 @@ class Supervisor(
           return
       }
     }
-    progressDialog.setUpdateView(options.updateView)
-    progressDialog.setPlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
-    progressDialog.enablePlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
+    if (useGUI) {
+      progressDialog.setUpdateView(options.updateView)
+      progressDialog.setPlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
+      progressDialog.enablePlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
+    }
     workspace.setShouldUpdatePlots(options.updatePlotsAndMonitors)
     workspace.setExportPlotWarningAction(ExportPlotWarningAction.Warn)
     workspace.setTriedToExportPlot(false)
@@ -270,9 +281,11 @@ class Supervisor(
         }
       )
       workerThread.start()
-      EventQueue.invokeLater(new Runnable() { def run() {
-        progressDialog.setVisible(true)
-      }})
+      if (useGUI) {
+        EventQueue.invokeLater(new Runnable() { def run() {
+          progressDialog.setVisible(true)
+        }})
+      }
       workerThread.join()
     }
     catch {
@@ -292,7 +305,7 @@ class Supervisor(
   }
 
   def writing() {
-    progressDialog.writing()
+    if (useGUI) progressDialog.writing()
   }
 
   private def bailOut() {
@@ -313,11 +326,13 @@ class Supervisor(
         workspace.behaviorSpaceRunNumber(0)
         workspace.behaviorSpaceExperimentName("")
         workspace.setShouldUpdatePlots(true)
-        if (paused)
-          progressDialog.saveProtocolP()
-        else
-          progressDialog.resetProtocol()
-        progressDialog.close()
+        if (useGUI) {
+          if (paused)
+            progressDialog.saveProtocolP()
+          else
+            progressDialog.resetProtocol()
+          progressDialog.close()
+        }
       } } )
     headlessWorkspaces.foreach(_.dispose())
   }
