@@ -2,20 +2,10 @@
 
 package org.nlogo.api
 
-import java.awt.Window
-
 import org.nlogo.core.{ CompilerException, I18N, LogoList }
 
 object LabProtocol {
-  private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace")
-
-  def parseVariables(variables: String, window: Window, worldLock: AnyRef, compiler: CompilerServices): Option[(List[RefValueSet], List[List[RefValueSet]])] = {
-    def complain(message: String) {
-      if (!java.awt.GraphicsEnvironment.isHeadless)
-        javax.swing.JOptionPane.showMessageDialog(
-          window, I18N.gui.getN("edit.behaviorSpace.invalidVarySpec", message),
-         I18N.gui("invalid"), javax.swing.JOptionPane.ERROR_MESSAGE)
-    }
+  def parseVariables(variables: String, worldLock: AnyRef, compiler: CompilerServices, complain: (String) => Unit = (_) => {}): Option[(List[RefValueSet], List[List[RefValueSet]])] = {
     val list =
       try { worldLock.synchronized {
         compiler.readFromString("[" + variables + "]").asInstanceOf[LogoList]

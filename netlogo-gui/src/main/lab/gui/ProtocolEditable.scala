@@ -99,7 +99,13 @@ class ProtocolEditable(protocol: LabProtocol,
   // make a new LabProtocol based on what user entered
   def editFinished: Boolean = get.isDefined
   def get: Option[LabProtocol] = {
-    val result = LabProtocol.parseVariables(valueSets, window, worldLock, compiler)
+    def complain(message: String) {
+      if (!java.awt.GraphicsEnvironment.isHeadless)
+        javax.swing.JOptionPane.showMessageDialog(
+          window, I18N.gui.getN("edit.behaviorSpace.invalidVarySpec", message),
+         I18N.gui("invalid"), javax.swing.JOptionPane.ERROR_MESSAGE)
+    }
+    val result = LabProtocol.parseVariables(valueSets, worldLock, compiler, complain)
     if (!result.isDefined) return None
     Some(new LabProtocol(
       name.trim, preExperimentCommands.trim, setupCommands.trim, goCommands.trim,

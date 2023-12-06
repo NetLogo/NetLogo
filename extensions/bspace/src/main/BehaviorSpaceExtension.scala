@@ -83,7 +83,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
 
       val ws = context.workspace.asInstanceOf[GUIWorkspace]
 
-      val parsed = api.LabProtocol.parseVariables(data.variables, ws.getFrame, context.world, ws)
+      val parsed = api.LabProtocol.parseVariables(data.variables, context.world, ws)
 
       if (!parsed.isDefined)
         return println("Invalid variable definition.")
