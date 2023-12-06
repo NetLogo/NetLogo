@@ -4,9 +4,8 @@ import org.nlogo.api
 import org.nlogo.core.I18N
 import org.nlogo.core.Syntax._
 import org.nlogo.lab.gui.Supervisor
+import org.nlogo.swing.OptionDialog
 import org.nlogo.window.GUIWorkspace
-
-import javax.swing.JOptionPane
 
 import scala.collection.mutable.Map
 
@@ -97,10 +96,9 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
   }
 
   def nameError(message: String, context: api.Context) {
-    JOptionPane.showMessageDialog(context.workspace.asInstanceOf[GUIWorkspace].getFrame,
-                                  message,
-                                  I18N.gui("invalid"),
-                                  JOptionPane.ERROR_MESSAGE)
+    OptionDialog.showMessage(context.workspace.asInstanceOf[GUIWorkspace].getFrame,
+                             I18N.gui("invalid"),
+                             message)
   }
 
   object CreateExperiment extends api.Command {
