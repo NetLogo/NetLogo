@@ -100,6 +100,12 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
   class Procedures(workspace: Workspace) {
     val preExperimentProcedure = workspace.compileCommands(protocol.preExperimentCommands)
     val setupProcedure = workspace.compileCommands(protocol.setupCommands)
+    for (command <- setupProcedure.code) {
+      if (command.displayName.toLowerCase == "bspace:run-experiment" &&
+          command.argEvalString(null, 0) == protocol.name) {
+        throw new Exception("Cannot run an experiment from its own commands.")
+      }
+    }
     val goProcedure = workspace.compileCommands(protocol.goCommands
                                                 + "\n" // protect against comments
                                                 + "__experimentstepend")
