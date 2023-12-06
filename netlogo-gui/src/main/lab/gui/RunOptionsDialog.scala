@@ -90,6 +90,9 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     Prefs.updateFrom(runOptions)
     runOptions
   }
+  def default = {
+    (new EditableRunOptions).get
+  }
   class EditableRunOptions extends Editable {
     private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace.runoptions")
     var spreadsheet = Prefs.spreadsheet
@@ -126,4 +129,8 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     val sourceOffset = 0
     def editFinished = true
   }
+}
+
+object RunOptionsDialog {
+  def default = new RunOptionsDialog(null, null, null).default
 }

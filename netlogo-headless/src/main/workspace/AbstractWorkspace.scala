@@ -443,9 +443,14 @@ object AbstractWorkspaceTraits {
 
   trait BehaviorSpace { this: api.Workspace =>
     private var _behaviorSpaceRunNumber = 0
+    private var _behaviorSpaceExperiments = List[LabProtocol]()
     override def behaviorSpaceRunNumber = _behaviorSpaceRunNumber
     override def behaviorSpaceRunNumber(n: Int) {
       _behaviorSpaceRunNumber = n
+    }
+    override def getBehaviorSpaceExperiments = _behaviorSpaceExperiments
+    override def setBehaviorSpaceExperiments(experiments: List[LabProtocol]) {
+      _behaviorSpaceExperiments = experiments
     }
   }
 

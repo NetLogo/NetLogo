@@ -104,12 +104,16 @@ class Supervisor(
         return
     }
 
-    if (useGUI && options == null) {
+    if (options == null) {
       options =
-        try {
-          new RunOptionsDialog(dialog, dialogFactory, workspace.guessExportName(worker.protocol.name)).get
+        if (useGUI) {
+          try {
+            new RunOptionsDialog(dialog, dialogFactory, workspace.guessExportName(worker.protocol.name)).get
+          }
+          catch { case ex: UserCancelException => return }
+        } else {
+          RunOptionsDialog.default
         }
-        catch { case ex: UserCancelException => return }
     }
 
     if (options.spreadsheet != null && options.spreadsheet.trim() != "") {

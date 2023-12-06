@@ -1,9 +1,12 @@
 package org.nlogo.extensions.bspace
 
 import org.nlogo.api
+import org.nlogo.core.I18N
 import org.nlogo.core.Syntax._
 import org.nlogo.lab.gui.Supervisor
 import org.nlogo.window.GUIWorkspace
+
+import javax.swing.JOptionPane
 
 import scala.collection.mutable.Map
 
@@ -21,7 +24,8 @@ class ExperimentData {
   var timeLimit = 0
   var exitCondition = ""
   var metrics: List[String] = Nil
-  var variables = ""
+  var constants = List[api.RefValueSet]()
+  var subExperiments = List[List[api.RefValueSet]]()
   var threadCount = 1
   var table = ""
   var spreadsheet = ""
@@ -32,6 +36,8 @@ class ExperimentData {
 }
 
 class BehaviorSpaceExtension extends api.DefaultClassManager {
+  private implicit val i18NPrefix = I18N.Prefix("tools.behaviorSpace.extension")
+
   val experiments = Map[String, ExperimentData]()
 
   def load(manager: api.PrimitiveManager) {
@@ -60,12 +66,52 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     manager.addPrimitive("set-update-plots", SetUpdatePlots)
   }
 
+  override def clearAll() {
+    experiments.clear()
+  }
+
+  object ExperimentType extends Enumeration {
+    type ExperimentType = Value
+    val GUI, Code, None = Value
+  }
+
+  def experimentType(name: String, context: api.Context): ExperimentType.ExperimentType = {
+    if (context.workspace.getBehaviorSpaceExperiments.find(x => x.name == name).isDefined)
+      ExperimentType.GUI
+    else if (experiments.contains(name))
+      ExperimentType.Code
+    else
+      ExperimentType.None
+  }
+
+  def validateForEditing(name: String, context: api.Context): Boolean = {
+    return experimentType(name, context) match {
+      case ExperimentType.None =>
+        nameError(I18N.gui("noExperiment", name), context)
+        false
+      case ExperimentType.GUI =>
+        nameError(I18N.gui("guiExperiment", name), context)
+        false
+      case ExperimentType.Code => true
+    }
+  }
+
+  def nameError(message: String, context: api.Context) {
+    JOptionPane.showMessageDialog(context.workspace.asInstanceOf[GUIWorkspace].getFrame,
+                                  message,
+                                  I18N.gui("invalid"),
+                                  JOptionPane.ERROR_MESSAGE)
+  }
+
   object CreateExperiment extends api.Command {
     override def getSyntax = {
       commandSyntax(right = List(StringType))
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
+      if (experimentType(args(0).getString, context) != ExperimentType.None)
+        return nameError(I18N.gui("alreadyExists", args(0).getString), context)
+
       experiments += ((args(0).getString, new ExperimentData()))
     }
   }
@@ -76,25 +122,23 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
-
-      val data = experiments(args(0).getString)
-
       val ws = context.workspace.asInstanceOf[GUIWorkspace]
 
-      val parsed = api.LabProtocol.parseVariables(data.variables, context.world, ws)
+      val protocol = experimentType(args(0).getString, context) match {
+        case ExperimentType.GUI =>
+          context.workspace.getBehaviorSpaceExperiments.find(x => x.name == args(0).getString).get
+        case ExperimentType.Code =>
+          val data = experiments(args(0).getString)
 
-      if (!parsed.isDefined)
-        return println("Invalid variable definition.")
-
-      val protocol = new api.LabProtocol(data.name, data.preExperimentCommands, data.setupCommands, data.goCommands,
+          new api.LabProtocol(data.name, data.preExperimentCommands, data.setupCommands, data.goCommands,
                                          data.postRunCommands, data.postExperimentCommands, data.repetitions,
                                          data.sequentialRunOrder, data.runMetricsEveryStep, data.runMetricsCondition,
-                                         data.timeLimit, data.exitCondition, data.metrics, parsed.get._1, parsed.get._2,
+                                         data.timeLimit, data.exitCondition, data.metrics, data.constants, data.subExperiments,
                                          runOptions = new api.LabRunOptions(data.threadCount, data.table,
                                                                             data.spreadsheet, data.stats, data.lists,
                                                                             data.updateView, data.updatePlotsAndMonitors))
+        case _ => return nameError(I18N.gui("noExperiment", args(0).getString), context)
+      }
 
       javax.swing.SwingUtilities.invokeLater(() => {
         Supervisor.runFromExtension(protocol, context.workspace.asInstanceOf[GUIWorkspace])
@@ -108,8 +152,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       val data = experiments(args(0).getString)
 
@@ -126,8 +169,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).preExperimentCommands = args(1).getString
     }
@@ -139,8 +181,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).setupCommands = args(1).getString
     }
@@ -152,8 +193,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).goCommands = args(1).getString
     }
@@ -165,8 +205,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).postRunCommands = args(1).getString
     }
@@ -178,8 +217,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).postExperimentCommands = args(1).getString
     }
@@ -191,8 +229,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).repetitions = args(1).getIntValue
     }
@@ -204,8 +241,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).sequentialRunOrder = args(1).getBooleanValue
     }
@@ -217,8 +253,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).runMetricsEveryStep = args(1).getBooleanValue
     }
@@ -230,8 +265,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).runMetricsCondition = args(1).getString
     }
@@ -243,8 +277,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).timeLimit = args(1).getIntValue
     }
@@ -256,8 +289,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).exitCondition = args(1).getString
     }
@@ -269,8 +301,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).metrics = args(1).getList.toList.map(_.toString)
     }
@@ -282,10 +313,15 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
-      experiments(args(0).getString).variables = args(1).getString
+      val parsed = api.LabProtocol.parseVariables(args(1).getString, context.workspace.world,
+                                                  context.workspace.asInstanceOf[GUIWorkspace], message => {
+        nameError(I18N.gui.getN("edit.behaviorSpace.invalidVarySpec", message), context)
+      })
+
+      experiments(args(0).getString).constants = parsed.get._1
+      experiments(args(0).getString).subExperiments = parsed.get._2
     }
   }
 
@@ -295,8 +331,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).threadCount = args(1).getIntValue
     }
@@ -308,8 +343,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).table = args(1).getString
     }
@@ -321,8 +355,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).spreadsheet = args(1).getString
     }
@@ -334,8 +367,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).stats = args(1).getString
     }
@@ -347,8 +379,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).lists = args(1).getString
     }
@@ -360,8 +391,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).updateView = args(1).getBooleanValue
     }
@@ -373,8 +403,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
 
     def perform(args: Array[api.Argument], context: api.Context) {
-      if (!experiments.contains(args(0).getString))
-        return println("No experiment exists with that name.")
+      if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).updatePlotsAndMonitors = args(1).getBooleanValue
     }
