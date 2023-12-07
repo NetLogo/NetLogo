@@ -153,6 +153,8 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
 
     def perform(args: Array[api.Argument], context: api.Context) {
       if (!validateForEditing(args(0).getString, context)) return
+      if (experimentType(args(1).getString) != ExperimentType.None)
+        return nameError(I18N.gui("alreadyExists", args(1).getString), context)
 
       val data = experiments(args(0).getString)
 
