@@ -165,7 +165,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
   settings(
     name := "NetLogo",
     version := "6.4.0",
-    isSnapshot := false,
+    isSnapshot := true,
     publishTo := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     Compile / mainClass := Some("org.nlogo.app.App"),
     javacOptions   ++= Seq("--release", "11"),
@@ -249,7 +249,7 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(
     name          := "NetLogoHeadless",
     version       := "6.4.0",
-    isSnapshot := false,
+    isSnapshot := true,
     publishTo     := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     autogenRoot   := (baseDirectory.value.getParentFile / "autogen").getAbsoluteFile,
     extensionRoot := baseDirectory.value.getParentFile / "extensions",
