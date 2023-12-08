@@ -32,6 +32,8 @@ class Supervisor(
   factory: WorkspaceFactory with CurrentModelOpener,
   dialogFactory: EditDialogFactoryInterface,
   saveProtocol: (LabProtocol) => Unit,
+  // useGUI determines what instantiated Supervisor, either ManagerDialog (true) or the bspace extension (false)
+  // this is to make sure Supervisor runs headlessly from the bspace extension but the code can be reused in both
   useGUI: Boolean = true
 ) extends Thread("BehaviorSpace Supervisor") {
   private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace")
