@@ -5,7 +5,7 @@ package org.nlogo.headless
 import java.io.{ File, FileWriter, PrintWriter }
 
 import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultThreads, Version }
+import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultValues, Version }
 import org.nlogo.nvm.LabInterface.Settings
  import org.nlogo.api.PlotCompilationErrorAction
 
@@ -105,7 +105,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var spreadsheetWriter: Option[PrintWriter] = None
     var statsWriter: Option[(PrintWriter, String)] = None
     var listsWriter: Option[(PrintWriter, String)] = None
-    var threads =  LabDefaultThreads.getLabDefaultThreads
+    var threads =  LabDefaultValues.getDefaultThreads
     var suppressErrors = false
     var updatePlots = false
     val it = args.iterator

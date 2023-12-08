@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultThreads, Version }
+import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultValues, Version }
 import org.nlogo.nvm.LabInterface.Settings
 import org.nlogo.api.PlotCompilationErrorAction
 
@@ -72,7 +72,7 @@ object Main {
     var spreadsheetWriter: Option[java.io.PrintWriter] = None
     var statsWriter: Option[(java.io.PrintWriter, String)] = None
     var listsWriter: Option[(java.io.PrintWriter, String)] = None
-    var threads = LabDefaultThreads.getLabDefaultThreads
+    var threads = LabDefaultValues.getDefaultThreads
     var suppressErrors = false
     var updatePlots = false
     val it = args.iterator

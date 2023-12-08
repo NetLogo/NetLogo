@@ -156,13 +156,12 @@ private class ManagerDialog(manager:       LabManager,
   }
   private def makeNew(): Unit = {
     editProtocol(
-      new LabProtocol(
-        "experiment", "", "setup", "go", "", "", 1, true, true, "", 0, "", List("count turtles"),
-        manager.workspace.world.synchronized {
-          manager.workspace.world.program.interfaceGlobals.toList
-          .map{case variableName: String =>
-            new RefEnumeratedValueSet(
-              variableName, List(manager.workspace.world.getObserverVariableByName(variableName)))}}),
+      new LabProtocol(constants = manager.workspace.world.synchronized {
+                                    manager.workspace.world.program.interfaceGlobals.toList
+                                    .map{case variableName: String =>
+                                      new RefEnumeratedValueSet(
+                                        variableName,
+                                        List(manager.workspace.world.getObserverVariableByName(variableName)))}}),
       true)
   }
   private def duplicate() { editProtocol(selectedProtocol.copy(name = selectedProtocol.name + " (copy)",

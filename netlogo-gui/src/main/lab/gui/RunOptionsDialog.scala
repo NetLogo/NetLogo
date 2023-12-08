@@ -2,7 +2,7 @@
 
 package org.nlogo.lab.gui
 
-import org.nlogo.api.{Editable, Property, LabDefaultThreads, LabRunOptions}
+import org.nlogo.api.{Editable, Property, LabDefaultValues, LabRunOptions}
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N }
 import org.nlogo.window.EditDialogFactoryInterface
@@ -20,7 +20,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
   val statsFile = s"$filePrefix-stats.csv"
   val listsFile = s"$filePrefix-lists.csv"
   val totalProcessors = Runtime.getRuntime.availableProcessors
-  val defaultProcessors = LabDefaultThreads.getLabDefaultThreads
+  val defaultProcessors = LabDefaultValues.getDefaultThreads
 
   object Prefs {
     private val prefs = Preferences.userNodeForPackage(RunOptionsDialog.this.getClass)
@@ -90,9 +90,6 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     Prefs.updateFrom(runOptions)
     runOptions
   }
-  def default = {
-    (new EditableRunOptions).get
-  }
   class EditableRunOptions extends Editable {
     private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace.runoptions")
     var spreadsheet = Prefs.spreadsheet
@@ -120,7 +117,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
                                 (totalProcessors.toString))
                 + "</html>")).asJava
     }
-    def get = LabRunOptions(threadCount, table, spreadsheet, stats, lists, updateView, updatePlotsAndMonitors)
+    def get = LabRunOptions(threadCount, table, spreadsheet, stats, lists, updateView, updatePlotsAndMonitors, false)
     // boilerplate for Editable
     def helpLink = None
     def error(key:Object) = null
@@ -129,8 +126,4 @@ class RunOptionsDialog(parent: java.awt.Dialog,
     val sourceOffset = 0
     def editFinished = true
   }
-}
-
-object RunOptionsDialog {
-  def default = new RunOptionsDialog(null, null, null).default
 }
