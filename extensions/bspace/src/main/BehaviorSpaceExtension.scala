@@ -11,32 +11,32 @@ import javax.swing.JOptionPane
 
 import scala.collection.mutable.Map
 
-class ExperimentData {
-  var name = api.LabDefaultValues.getDefaultName
-  var preExperimentCommands = api.LabDefaultValues.getDefaultPreExperimentCommands
-  var setupCommands = api.LabDefaultValues.getDefaultSetupCommands
-  var goCommands = api.LabDefaultValues.getDefaultGoCommands
-  var postRunCommands = api.LabDefaultValues.getDefaultPostRunCommands
-  var postExperimentCommands = api.LabDefaultValues.getDefaultPostExperimentCommands
-  var repetitions = api.LabDefaultValues.getDefaultRepetitions
-  var sequentialRunOrder = api.LabDefaultValues.getDefaultSequentialRunOrder
-  var runMetricsEveryStep = api.LabDefaultValues.getDefaultRunMetricsEveryStep
-  var runMetricsCondition = api.LabDefaultValues.getDefaultRunMetricsCondition
-  var timeLimit = api.LabDefaultValues.getDefaultTimeLimit
-  var exitCondition = api.LabDefaultValues.getDefaultExitCondition
-  var metrics: List[String] = api.LabDefaultValues.getDefaultMetrics
-  var constants = api.LabDefaultValues.getDefaultConstants
-  var subExperiments = api.LabDefaultValues.getDefaultSubExperiments
-  var threadCount = api.LabDefaultValues.getDefaultThreads
-  var table = api.LabDefaultValues.getDefaultTable
-  var spreadsheet = api.LabDefaultValues.getDefaultSpreadsheet
-  var stats = api.LabDefaultValues.getDefaultStats
-  var lists = api.LabDefaultValues.getDefaultLists
-  var updateView = api.LabDefaultValues.getDefaultUpdateView
-  var updatePlotsAndMonitors = api.LabDefaultValues.getDefaultUpdatePlotsAndMonitors
-}
-
 class BehaviorSpaceExtension extends api.DefaultClassManager {
+  class ExperimentData {
+    var name = api.LabDefaultValues.getDefaultName
+    var preExperimentCommands = api.LabDefaultValues.getDefaultPreExperimentCommands
+    var setupCommands = api.LabDefaultValues.getDefaultSetupCommands
+    var goCommands = api.LabDefaultValues.getDefaultGoCommands
+    var postRunCommands = api.LabDefaultValues.getDefaultPostRunCommands
+    var postExperimentCommands = api.LabDefaultValues.getDefaultPostExperimentCommands
+    var repetitions = api.LabDefaultValues.getDefaultRepetitions
+    var sequentialRunOrder = api.LabDefaultValues.getDefaultSequentialRunOrder
+    var runMetricsEveryStep = api.LabDefaultValues.getDefaultRunMetricsEveryStep
+    var runMetricsCondition = api.LabDefaultValues.getDefaultRunMetricsCondition
+    var timeLimit = api.LabDefaultValues.getDefaultTimeLimit
+    var exitCondition = api.LabDefaultValues.getDefaultExitCondition
+    var metrics: List[String] = api.LabDefaultValues.getDefaultMetrics
+    var constants = api.LabDefaultValues.getDefaultConstants
+    var subExperiments = api.LabDefaultValues.getDefaultSubExperiments
+    var threadCount = api.LabDefaultValues.getDefaultThreads
+    var table = api.LabDefaultValues.getDefaultTable
+    var spreadsheet = api.LabDefaultValues.getDefaultSpreadsheet
+    var stats = api.LabDefaultValues.getDefaultStats
+    var lists = api.LabDefaultValues.getDefaultLists
+    var updateView = api.LabDefaultValues.getDefaultUpdateView
+    var updatePlotsAndMonitors = api.LabDefaultValues.getDefaultUpdatePlotsAndMonitors
+  }
+
   private implicit val i18NPrefix = I18N.Prefix("tools.behaviorSpace.extension")
 
   val experiments = Map[String, ExperimentData]()
