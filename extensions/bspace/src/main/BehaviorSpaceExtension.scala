@@ -43,7 +43,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
   def load(manager: api.PrimitiveManager) {
     manager.addPrimitive("create-experiment", CreateExperiment)
     manager.addPrimitive("run-experiment", RunExperiment)
-    manager.addPrimitive("set-name", SetName)
+    manager.addPrimitive("rename-experiment", RenameExperiment)
     manager.addPrimitive("set-pre-experiment-commands", SetPreExperimentCommands)
     manager.addPrimitive("set-setup-commands", SetSetupCommands)
     manager.addPrimitive("set-go-commands", SetGoCommands)
@@ -54,10 +54,10 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     manager.addPrimitive("set-run-metrics-every-step", SetRunMetricsEveryStep)
     manager.addPrimitive("set-run-metrics-condition", SetRunMetricsCondition)
     manager.addPrimitive("set-time-limit", SetTimeLimit)
-    manager.addPrimitive("set-exit-condition", SetExitCondition)
+    manager.addPrimitive("set-stop-condition", SetStopCondition)
     manager.addPrimitive("set-metrics", SetMetrics)
     manager.addPrimitive("set-variables", SetVariables)
-    manager.addPrimitive("set-thread-count", SetThreadCount)
+    manager.addPrimitive("set-parallel-runs", SetParallelRuns)
     manager.addPrimitive("set-table", SetTable)
     manager.addPrimitive("set-spreadsheet", SetSpreadsheet)
     manager.addPrimitive("set-stats", SetStats)
@@ -146,7 +146,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
   }
 
-  object SetName extends api.Command {
+  object RenameExperiment extends api.Command {
     override def getSyntax = {
       commandSyntax(right = List(StringType, StringType))
     }
@@ -285,7 +285,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
   }
 
-  object SetExitCondition extends api.Command {
+  object SetStopCondition extends api.Command {
     override def getSyntax = {
       commandSyntax(right = List(StringType, StringType))
     }
@@ -327,7 +327,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
   }
 
-  object SetThreadCount extends api.Command {
+  object SetParallelRuns extends api.Command {
     override def getSyntax = {
       commandSyntax(right = List(StringType, NumberType))
     }
