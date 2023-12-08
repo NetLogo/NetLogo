@@ -2,7 +2,7 @@ import org.nlogo.build.NetLogoExtension
 
 enablePlugins(NetLogoExtension)
 
-version    := "1.1.1"
+version    := "1.0.0"
 isSnapshot := true
 
 scalaVersion          := "2.12.12"
@@ -12,4 +12,4 @@ scalacOptions        ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings", "
 
 netLogoExtName      := "bspace"
 netLogoClassManager := "org.nlogo.extensions.bspace.BehaviorSpaceExtension"
-netLogoVersion      := "6.3.0"
+netLogoVersion      := "6.4.0-beta1"
