@@ -4,6 +4,7 @@ import org.nlogo.api
 import org.nlogo.core.I18N
 import org.nlogo.core.Syntax._
 import org.nlogo.lab.gui.Supervisor
+import org.nlogo.swing.BrowserLauncher
 import org.nlogo.window.GUIWorkspace
 
 import javax.swing.JOptionPane
@@ -41,8 +42,12 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
   val experiments = Map[String, ExperimentData]()
 
   def load(manager: api.PrimitiveManager) {
+    manager.addPrimitive("goto-behaviorspace-documentation", GotoBehaviorspaceDocumentation)
+    manager.addPrimitive("goto-bspace-extension-documentation", GotoBspaceExtensionDocumentation)
+
     manager.addPrimitive("create-experiment", CreateExperiment)
     manager.addPrimitive("run-experiment", RunExperiment)
+
     manager.addPrimitive("rename-experiment", RenameExperiment)
     manager.addPrimitive("set-pre-experiment-commands", SetPreExperimentCommands)
     manager.addPrimitive("set-setup-commands", SetSetupCommands)
@@ -64,6 +69,9 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     manager.addPrimitive("set-lists", SetLists)
     manager.addPrimitive("set-update-view", SetUpdateView)
     manager.addPrimitive("set-update-plots", SetUpdatePlots)
+
+    manager.addPrimitive("get-default-parallel-runs", GetDefaultParallelRuns)
+    manager.addPrimitive("get-recommended-max-parallel-runs", GetRecommendedMaxParallelRuns)
   }
 
   override def clearAll() {
@@ -101,6 +109,26 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
                                   message,
                                   I18N.gui("invalid"),
                                   JOptionPane.ERROR_MESSAGE)
+  }
+
+  object GotoBehaviorspaceDocumentation extends api.Command {
+    override def getSyntax = {
+      commandSyntax()
+    }
+
+    def perform(args: Array[api.Argument], context: api.Context) {
+      BrowserLauncher.openPath(BrowserLauncher.docPath("behaviorspace.html"), "")
+    }
+  }
+
+  object GotoBspaceExtensionDocumentation extends api.Command {
+    override def getSyntax = {
+      commandSyntax()
+    }
+
+    def perform(args: Array[api.Argument], context: api.Context) {
+      // will fill in once i know the link
+    }
   }
 
   object CreateExperiment extends api.Command {
@@ -408,6 +436,26 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
       if (!validateForEditing(args(0).getString, context)) return
 
       experiments(args(0).getString).updatePlotsAndMonitors = args(1).getBooleanValue
+    }
+  }
+
+  object GetDefaultParallelRuns extends api.Command {
+    override def getSyntax = {
+      reporterSyntax(ret = NumberType)
+    }
+
+    def perform(args: Array[api.Argument], context: api.Context) {
+      // will fill out once defaults class is made
+    }
+  }
+
+  object GetRecommendedMaxParallelRuns extends api.Command {
+    override def getSyntax = {
+      reporterSyntax(ret = NumberType)
+    }
+
+    def perform(args: Array[api.Argument], context: api.Context) {
+      // will fill out once defaults class is made
     }
   }
 }
