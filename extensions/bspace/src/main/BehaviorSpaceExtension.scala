@@ -46,6 +46,7 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     manager.addPrimitive("goto-bspace-extension-documentation", GotoBspaceExtensionDocumentation)
 
     manager.addPrimitive("create-experiment", CreateExperiment)
+    manager.addPrimitive("delete-experiment", DeleteExperiment)
     manager.addPrimitive("run-experiment", RunExperiment)
 
     manager.addPrimitive("rename-experiment", RenameExperiment)
@@ -141,6 +142,18 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
         return nameError(I18N.gui("alreadyExists", args(0).getString), context)
 
       experiments += ((args(0).getString, new ExperimentData()))
+    }
+  }
+
+  object DeleteExperiment extends api.Command {
+    override def getSyntax = {
+      commandSyntax(right = List(StringType))
+    }
+
+    def perform(args: Array[api.Argument], context: api.Context) {
+      if (!validateForEditing(args(0).getString, context)) return
+
+      experiments -= args(0).getString
     }
   }
 
