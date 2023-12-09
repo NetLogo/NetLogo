@@ -452,25 +452,23 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
     }
   }
 
-  object GetDefaultParallelRuns extends api.Command {
+  object GetDefaultParallelRuns extends api.Reporter {
     override def getSyntax = {
       reporterSyntax(ret = NumberType)
     }
 
-    def perform(args: Array[api.Argument], context: api.Context) {
-      // how to return???
-      // api.LabDefaultValues.getDefaultThreads
+    override def report(args: Array[api.Argument], context: api.Context): java.lang.Double = {
+      api.LabDefaultValues.getDefaultThreads
     }
   }
 
-  object GetRecommendedMaxParallelRuns extends api.Command {
+  object GetRecommendedMaxParallelRuns extends api.Reporter {
     override def getSyntax = {
       reporterSyntax(ret = NumberType)
     }
 
-    def perform(args: Array[api.Argument], context: api.Context) {
-      // how to return???
-      // api.LabDefaultValues.getRecommendedMaxThreads
+    override def report(args: Array[api.Argument], context: api.Context): java.lang.Double = {
+      api.LabDefaultValues.getRecommendedMaxThreads
     }
   }
 }
