@@ -282,6 +282,8 @@ class App extends
   def getMonitorManager = monitorManager
   var aggregateManager: AggregateManagerInterface = null
   var dirtyMonitor: DirtyMonitor = null
+  val workspaceFactory: WorkspaceFactory with CurrentModelOpener =
+    pico.getComponent(classOf[WorkspaceFactory]).asInstanceOf[WorkspaceFactory with CurrentModelOpener]
   var labManager: LabManagerInterface = null
   var recentFilesMenu: RecentFilesMenu = null
   private var errorDialogManager: ErrorDialogManager = null

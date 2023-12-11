@@ -174,15 +174,18 @@ class BehaviorSpaceExtension extends api.DefaultClassManager {
           new api.LabProtocol(data.name, data.preExperimentCommands, data.setupCommands, data.goCommands,
                                          data.postRunCommands, data.postExperimentCommands, data.repetitions,
                                          data.sequentialRunOrder, data.runMetricsEveryStep, data.runMetricsCondition,
-                                         data.timeLimit, data.exitCondition, data.metrics, data.constants, data.subExperiments,
+                                         data.timeLimit, data.exitCondition, data.metrics, data.constants,
+                                         data.subExperiments,
                                          runOptions = new api.LabRunOptions(data.threadCount, data.table,
                                                                             data.spreadsheet, data.stats, data.lists,
-                                                                            data.updateView, data.updatePlotsAndMonitors))
+                                                                            data.updateView,
+                                                                            data.updatePlotsAndMonitors))
         case _ => return nameError(I18N.gui("noExperiment", args(0).getString), context)
       }
 
       javax.swing.SwingUtilities.invokeLater(() => {
-        Supervisor.runFromExtension(protocol, context.workspace.asInstanceOf[GUIWorkspace])
+        Supervisor.runFromExtension(protocol, context.workspace.asInstanceOf[GUIWorkspace],
+                                    org.nlogo.app.App.app.workspaceFactory)
       })
     }
   }
