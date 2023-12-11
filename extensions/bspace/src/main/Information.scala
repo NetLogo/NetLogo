@@ -1,3 +1,5 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.extensions.bspace
 
 import org.nlogo.api.{ Argument, Command, Context, LabDefaultValues, Reporter }
