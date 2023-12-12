@@ -37,6 +37,7 @@ Once the extension is loaded, you can use it to run experiments from anywhere in
 [`bspace:set-post-run-commands`](#bspaceset-post-run-commands)
 [`bspace:set-post-experiment-commands`](#bspaceset-post-experiment-commands)
 [`bspace:set-time-limit`](#bspaceset-time-limit)
+[`bspace:set-return-reporter`](#bspaceset-return-reporter)
 
 ### Experiment Run Conditions
 
@@ -50,10 +51,11 @@ Once the extension is loaded, you can use it to run experiments from anywhere in
 
 ### Experiment Information
 
-[`goto-behaviorspace-documentation`](#bspacegoto-behaviorspace-documentation)
-[`goto-bspace-extension-documentation`](#bspacegoto-bspace-extension-documentation)
-[`get-default-parallel-runs`](#bspaceget-default-parallel-runs)
-[`get-recommended-max-parallel-runs`](#bspaceget-recommended-max-parallel-runs)
+[`bspace:goto-behaviorspace-documentation`](#bspacegoto-behaviorspace-documentation)
+[`bspace:goto-bspace-extension-documentation`](#bspacegoto-bspace-extension-documentation)
+[`bspace:get-default-parallel-runs`](#bspaceget-default-parallel-runs)
+[`bspace:get-recommended-max-parallel-runs`](#bspaceget-recommended-max-parallel-runs)
+[`bspace:get-return-value`](#bspaceget-return-value)
 
 ### `bspace:create-experiment`
 
@@ -206,6 +208,15 @@ bspace:set-time-limit *name* *ticks*
 Set the time limit in ticks for the specified experiment. An error will be thrown if an experiment does not exist with
 the provided name.
 
+### `bspace:set-return-reporter`
+
+```NetLogo
+bspace:set-return-reporter *experiment-name* *value-name* *reporter*
+```
+
+Set a named return value for the specified experiment. An error will be thrown if an experiment does not exist with the
+provided name.
+
 ### `bspace:set-spreadsheet`
 
 ```NetLogo
@@ -300,4 +311,13 @@ bspace:get-recommended-max-parallel-runs
 ```
 
 Returns the recommended maximum number of parallel runs for the current device.
+
+### `bspace:get-return-value`
+
+```NetLogo
+bspace:get-return-value *value-name*
+```
+
+Gets the return value with the specified name. Will throw an error if no return value has been set with the specified
+name.
 
