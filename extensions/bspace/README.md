@@ -65,207 +65,387 @@ should be a string.
 [`bspace:get-recommended-max-parallel-runs`](#bspaceget-recommended-max-parallel-runs)
 [`bspace:get-return-value`](#bspaceget-return-value)
 
-### `bspace:create-experiment`
+### bspace:create-experiment
 
 #### bspace:create-experiment *name*
 
 Create a new experiment with the specified name. An error will be thrown if an experiment already exists with the
 provided name.
 
-### `bspace:delete-experiment`
+Example:
+
+```
+bspace:create-experiment "my-experiment"
+```
+
+### bspace:delete-experiment
 
 #### bspace:delete-experiment *name*
 
 Delete the experiment with the specified name. An error will be thrown if no experiment exists with the provided name.
 
-### `bspace:run-experiment`
+Example:
+
+```
+bspace:delete-experiment "my-experiment"
+```
+
+### bspace:run-experiment
 
 #### bspace:run-experiment *name*
 
 Run the experiment with the specified name. An error will be thrown if an experiment does not exist with the provided
 name.
 
-### `bspace:rename-experiment`
+Example:
+
+```
+bspace:run-experiment "my-experiment"
+```
+
+### bspace:rename-experiment
 
 #### bspace:rename-experiment *old-name* *new-name*
 
 Rename the specified experiment. An error will be thrown if an experiment does not exist with the provided name.
 
-### `bspace:set-variables`
+Example:
+
+```
+bspace:rename-experiment "my-experiment" "another-experiment"
+```
+
+### bspace:set-variables
 
 #### bspace:set-variables *name* *variables*
 
 Set the variables to vary for the specified experiment. An error will be thrown if an experiment does not exist with
 the provided name.
 
-### `bspace:set-repetitions`
+Example:
+
+```
+bspace:set-variables "my-experiment" "[ 'var1' 0 5 20 ]"
+```
+
+### bspace:set-repetitions
 
 #### bspace:set-repetitions *name* *repetitions*
 
 Set the repetitions for the specified experiment. An error will be thrown if an experiment does not exist
 with the provided name.
 
-### `bspace:set-sequential-run-order`
+Example:
+
+```
+bspace:set-repetitions "my-experiment" 3
+```
+
+### bspace:set-sequential-run-order
 
 #### bspace:set-sequential-run-order *name* *boolean*
 
 Set whether the specified experiment uses sequential run order. An error will be thrown if an experiment does not exist
 with the provided name.
 
-### `bspace:set-metrics`
+Example:
+
+```
+bspace:set-sequential-run-order "my-experiment" true
+```
+
+### bspace:set-metrics
 
 #### bspace:set-metrics *name* *commands-list*
 
 Set the metrics commands for the specified experiment. An error will be thrown if an experiment does not exist with the
 provided name. This command accepts a list of string commands.
 
-### `bspace:set-run-metrics-every-step`
+Example:
+
+```
+bspace:set-metrics "my-experiment" [ "count turtles", "count patches" ]
+```
+
+### bspace:set-run-metrics-every-step
 
 #### bspace:set-run-metrics-every-step *name* *boolean*
 
 Set whether the specified experiment runs metrics every step. An error will be thrown if an experiment does not exist
 with the provided name.
 
-### `bspace:set-run-metrics-condition`
+Example:
+
+```
+bspace:set-run-metrics-every-step "my-experiment" false
+```
+
+### bspace:set-run-metrics-condition
 
 #### bspace:set-run-metrics-condition *name* *condition*
 
 Set the run metrics condition for the specified experiment. An error will be thrown if an experiment does not exist
 with the provided name.
 
-### `bspace:set-pre-experiment-commands`
+Example:
+
+```
+bspace:set-run-metrics-condition "my-experiment" "count turtles < 5"
+```
+
+### bspace:set-pre-experiment-commands
 
 #### bspace:set-pre-experiment-commands *name* *commands*
 
 Set the pre-experiment commands for the specified experiment. An error will be thrown if an experiment does not exist
 with the provided name.
 
-### `bspace:set-setup-commands`
+Example:
+
+```
+bspace:set-pre-experiment-commands "my-experiment" "clear-all"
+```
+
+### bspace:set-setup-commands
 
 #### bspace:set-setup-commands *name* *setup*
 
 Set the setup commands for the specified experiment. An error will be thrown if an experiment does not exist
 with the provided name.
 
-### `bspace:set-go-commands`
+Example:
+
+```
+bspace:set-setup-commands "my-experiment" "clear-all create-turtles 50"
+```
+
+### bspace:set-go-commands
 
 #### bspace:set-go-commands *name* *commands*
 
 Set the go commands for the specified experiment. An error will be thrown if an experiment does not exist
 with the provided name.
 
-### `bspace:set-stop-condition`
+Example:
+
+```
+bspace:set-go-commands "my-experiment" "myFunction"
+```
+
+### bspace:set-stop-condition
 
 #### bspace:set-stop-condition *name* *condition*
 
 Set the stop condition for the specified experiment. An error will be thrown if an experiment does not exist with the
 provided name.
 
-### `bspace:set-post-run-commands`
+Example:
+
+```
+bspace:set-stop-condition "my-experiment" "ticks > 1000"
+```
+
+### bspace:set-post-run-commands
 
 #### bspace:set-post-run-commands *name* *commands*
 
 Set the post-run commands for the specified experiment. An error will be thrown if an experiment does not exist
 with the provided name.
 
-### `bspace:set-post-experiment-commands`
+Example:
+
+```
+bspace:set-post-run-commands "my-experiment" "print count turtles"
+```
+
+### bspace:set-post-experiment-commands
 
 #### bspace:set-post-experiment-commands *name* *commands*
 
 Set the post-experiment commands for the specified experiment. An error will be thrown if an experiment does not exist
 with the provided name.
 
-### `bspace:set-time-limit`
+Example:
+
+```
+bspace:set-post-experiment-commands "my-experiment" "ask turtles [ setxy 0 0 ]"
+```
+
+### bspace:set-time-limit
 
 #### bspace:set-time-limit *name* *ticks*
 
 Set the time limit in ticks for the specified experiment. An error will be thrown if an experiment does not exist with
 the provided name.
 
-### `bspace:set-return-reporter`
+Example:
+
+```
+bspace:set-time-limit "my-experiment" 1500
+```
+
+### bspace:set-return-reporter
 
 #### bspace:set-return-reporter *experiment-name* *value-name* *reporter*
 
 Set a named return value for the specified experiment. An error will be thrown if an experiment does not exist with the
 provided name.
 
-### `bspace:set-spreadsheet`
+Example:
+
+```
+bspace:set-return-reporter "my-experiment" "numTurtles" "count turtles"
+```
+
+### bspace:set-spreadsheet
 
 #### bspace:set-spreadsheet *name* *path*
 
 Set the path for the spreadsheet file for the specified experiment. An error will be thrown if an experiment does not
 exist with the provided name.
 
-### `bspace:set-table`
+Example:
+
+```
+bspace:set-spreadsheet "my-experiment" "/Users/johndoe/Documents/exp-sheet.csv"
+```
+
+### bspace:set-table
 
 #### bspace:set-table *name* *path*
 
 Set the path for the table file for the specified experiment. An error will be thrown if an experiment does not exist
 with the provided name.
 
-### `bspace:set-stats`
+Example:
+
+```
+bspace:set-table "my-experiment" "/Users/johndoe/Documents/exp-table.csv"
+```
+
+### bspace:set-stats
 
 #### bspace:set-stats *name* *path*
 
 Set the path for the stats file for the specified experiment. An error will be thrown if an experiment does not exist
 with the provided name.
 
-### `bspace:set-lists`
+Example:
+
+```
+bspace:set-stats "my-experiment" "/Users/johndoe/Documents/exp-stats.csv"
+```
+
+### bspace:set-lists
 
 #### bspace:set-lists *name* *path*
 
 Set the path for the lists file for the specified experiment. An error will be thrown if an experiment does not exist
 with the provided name.
 
-### `bspace:set-update-view`
+Example:
+
+```
+bspace:set-lists "my-experiment" "/Users/johndoe/Documents/exp-lists.csv"
+```
+
+### bspace:set-update-view
 
 #### bspace:set-update-view *name* *boolean*
 
 Set whether the specified experiment should update the view. An error will be thrown if an experiment does not exist
 with the provided name.
 
-### `bspace:set-update-plots`
+Example:
+
+```
+bspace:set-update-view "my-experiment" true
+```
+
+### bspace:set-update-plots
 
 #### bspace:set-update-view *name* *boolean*
 
 Set whether the specified experiment should update the plots. An error will be thrown if an experiment does not exist
 with the provided name.
 
-### `bspace:set-parallel-runs`
+Example:
+
+```
+bspace:set-update-view "my-experiment" false
+```
+
+### bspace:set-parallel-runs
 
 #### bspace:set-parallel-runs *name* *threads*
 
 Set the number of parallel runs for the specified experiment. An error will be thrown if an experiment does not exist
 with the provided name.
 
-### `bspace:goto-behaviorspace-documentation`
+Example:
+
+```
+bspace:set-parallel-runs "my-experiment" 3
+```
+
+### bspace:goto-behaviorspace-documentation
 
 #### bspace:goto-behaviorspace-documentation
 
 Open the BehaviorSpace documentation page in a browser window.
 
-### `bspace:goto-bspace-extension-documentation`
+Example:
+
+```
+bspace:goto-behaviorspace-documentation
+```
+
+### bspace:goto-bspace-extension-documentation
 
 #### bspace:goto-bspace-extension-documentation
 
 Open the bspace extension documentation page in a browser window.
 
-### `bspace:get-default-parallel-runs`
+Example:
+
+```
+bspace:goto-bspace-extension-documentation
+```
+
+### bspace:get-default-parallel-runs
 
 #### bspace:get-default-parallel-runs
 
 Returns the default number of parallel runs for the current device.
 
-### `bspace:get-recommended-max-parallel-runs`
+Example:
+
+```
+print bspace:get-default-parallel-runs
+```
+
+### bspace:get-recommended-max-parallel-runs
 
 #### bspace:get-recommended-max-parallel-runs
 
 Returns the recommended maximum number of parallel runs for the current device.
 
-### `bspace:get-return-value`
+Example:
+
+```
+print bspace:get-recommended-max-parallel-runs
+```
+
+### bspace:get-return-value
 
 #### bspace:get-return-value *value-name*
 
 Gets the return value with the specified name. Will throw an error if no return value has been set with the specified
 name.
+
+Example:
+
+```
+print bspace:get-return-value "numTurtles"
+```
 
