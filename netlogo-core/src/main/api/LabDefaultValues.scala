@@ -19,6 +19,7 @@ object LabDefaultValues {
   def getDefaultMetrics: List[String] = List("count turtles")
   def getDefaultConstants: List[RefValueSet] = Nil
   def getDefaultSubExperiments: List[List[RefValueSet]] = Nil
+  def getDefaultReturnCommands: String = ""
   val RATIO = 0.75
   // Determines the number of threads in BehaviorSpace if the user has not specified a value
   def getDefaultThreads: Int = { floor(Runtime.getRuntime.availableProcessors * RATIO).toInt }

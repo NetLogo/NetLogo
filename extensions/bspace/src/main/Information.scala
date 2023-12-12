@@ -6,6 +6,7 @@ import org.nlogo.api.{ Argument, Command, Context, LabDefaultValues, Reporter }
 import org.nlogo.core.I18N
 import org.nlogo.core.Syntax._
 import org.nlogo.swing.BrowserLauncher
+import org.nlogo.window.GUIWorkspace
 
 object GotoBehaviorspaceDocumentation extends Command {
   override def getSyntax = {
@@ -44,5 +45,15 @@ object GetRecommendedMaxParallelRuns extends Reporter {
 
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
     LabDefaultValues.getRecommendedMaxThreads
+  }
+}
+
+object GetReturnValue extends Reporter {
+  override def getSyntax = {
+    reporterSyntax(ret = WildcardType)
+  }
+
+  override def report(args: Array[Argument], context: Context): AnyRef = {
+    context.workspace.asInstanceOf[GUIWorkspace].getBehaviorSpaceReturnValue
   }
 }

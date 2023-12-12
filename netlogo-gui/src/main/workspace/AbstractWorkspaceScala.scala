@@ -280,6 +280,8 @@ object AbstractWorkspaceTraits {
 
     var _behaviorSpaceExperiments = List[LabProtocol]()
 
+    var _behaviorSpaceReturnValue: AnyRef = null
+
     def behaviorSpaceRunNumber: Int =
       _behaviorSpaceRunNumber
 
@@ -288,6 +290,9 @@ object AbstractWorkspaceTraits {
 
     def getBehaviorSpaceExperiments: List[LabProtocol] =
       _behaviorSpaceExperiments
+
+    def getBehaviorSpaceReturnValue: AnyRef =
+      _behaviorSpaceReturnValue
 
     def behaviorSpaceRunNumber(n: Int): Unit = {
       _behaviorSpaceRunNumber = n
@@ -299,6 +304,10 @@ object AbstractWorkspaceTraits {
 
     def setBehaviorSpaceExperiments(experiments: List[LabProtocol]): Unit = {
       _behaviorSpaceExperiments = experiments
+    }
+
+    def setBehaviorSpaceReturnValue(value: AnyRef): Unit = {
+      _behaviorSpaceReturnValue = value
     }
   }
 

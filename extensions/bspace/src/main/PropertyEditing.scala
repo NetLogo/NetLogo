@@ -172,6 +172,18 @@ object SetVariables extends Command {
   }
 }
 
+object SetReturnCommands extends Command {
+  override def getSyntax = {
+    commandSyntax(right = List(StringType, StringType))
+  }
+
+  def perform(args: Array[Argument], context: Context) {
+    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+
+    BehaviorSpaceExtension.experiments(args(0).getString).returnCommands = args(1).getString
+  }
+}
+
 object SetParallelRuns extends Command {
   override def getSyntax = {
     commandSyntax(right = List(StringType, NumberType))

@@ -119,6 +119,9 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
       if (protocol.runMetricsCondition.isEmpty) None
       else Some(workspace.compileReporter(protocol.runMetricsCondition))
     }
+    val returnProcedure =
+      if (protocol.returnCommands.trim == "") None
+      else Some(workspace.compileReporter(protocol.returnCommands))
   }
   class Runner(runNumber: Int, settings: List[(String, AnyRef)], fn: ()=>Workspace)
     extends Callable[Unit]
@@ -305,6 +308,12 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
       }
       ws.runCompiledCommands(owner(ws.world.mainRNG), postRunProcedure)
       checkForRuntimeError()
+      if (returnProcedure.isDefined) {
+        val result = ws.runCompiledReporter(owner(ws.world.mainRNG.clone), returnProcedure.get)
+        if (result == null) throw new FailedException("Return value reporter failed to report a result:\n" + result)
+        checkForRuntimeError()
+        ws.setBehaviorSpaceReturnValue(result)
+      }
       eachListener(_.runCompleted(ws, runNumber, steps))
     }
   }

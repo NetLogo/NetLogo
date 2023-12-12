@@ -2,7 +2,8 @@
 
 package org.nlogo.extensions.bspace
 
-import org.nlogo.api.{ Argument, Command, Context, DefaultClassManager, LabDefaultValues, PrimitiveManager }
+import org.nlogo.api.{ Argument, Command, Context, DefaultClassManager, LabDefaultValues, PrimitiveManager,
+                       RefValueSet }
 import org.nlogo.core.I18N
 import org.nlogo.window.GUIWorkspace
 
@@ -11,26 +12,27 @@ import javax.swing.JOptionPane
 import scala.collection.mutable.Map
 
 class ExperimentData {
-  var name = LabDefaultValues.getDefaultName
-  var preExperimentCommands = LabDefaultValues.getDefaultPreExperimentCommands
-  var setupCommands = LabDefaultValues.getDefaultSetupCommands
-  var goCommands = LabDefaultValues.getDefaultGoCommands
-  var postRunCommands = LabDefaultValues.getDefaultPostRunCommands
-  var postExperimentCommands = LabDefaultValues.getDefaultPostExperimentCommands
+  var name = ""
+  var preExperimentCommands = ""
+  var setupCommands = ""
+  var goCommands = ""
+  var postRunCommands = ""
+  var postExperimentCommands = ""
   var repetitions = LabDefaultValues.getDefaultRepetitions
   var sequentialRunOrder = LabDefaultValues.getDefaultSequentialRunOrder
   var runMetricsEveryStep = LabDefaultValues.getDefaultRunMetricsEveryStep
-  var runMetricsCondition = LabDefaultValues.getDefaultRunMetricsCondition
+  var runMetricsCondition = ""
   var timeLimit = LabDefaultValues.getDefaultTimeLimit
-  var exitCondition = LabDefaultValues.getDefaultExitCondition
-  var metrics: List[String] = LabDefaultValues.getDefaultMetrics
-  var constants = LabDefaultValues.getDefaultConstants
-  var subExperiments = LabDefaultValues.getDefaultSubExperiments
+  var exitCondition = ""
+  var metrics: List[String] = Nil
+  var constants: List[RefValueSet] = Nil
+  var subExperiments: List[List[RefValueSet]] = Nil
+  var returnCommands = ""
   var threadCount = LabDefaultValues.getDefaultThreads
-  var table = LabDefaultValues.getDefaultTable
-  var spreadsheet = LabDefaultValues.getDefaultSpreadsheet
-  var stats = LabDefaultValues.getDefaultStats
-  var lists = LabDefaultValues.getDefaultLists
+  var table = ""
+  var spreadsheet = ""
+  var stats = ""
+  var lists = ""
   var updateView = LabDefaultValues.getDefaultUpdateView
   var updatePlotsAndMonitors = LabDefaultValues.getDefaultUpdatePlotsAndMonitors
 }
@@ -92,6 +94,7 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("set-stop-condition", SetStopCondition)
     manager.addPrimitive("set-metrics", SetMetrics)
     manager.addPrimitive("set-variables", SetVariables)
+    manager.addPrimitive("set-return-commands", SetReturnCommands)
     manager.addPrimitive("set-parallel-runs", SetParallelRuns)
     manager.addPrimitive("set-table", SetTable)
     manager.addPrimitive("set-spreadsheet", SetSpreadsheet)
@@ -104,6 +107,7 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("goto-bspace-extension-documentation", GotoBspaceExtensionDocumentation)
     manager.addPrimitive("get-default-parallel-runs", GetDefaultParallelRuns)
     manager.addPrimitive("get-recommended-max-parallel-runs", GetRecommendedMaxParallelRuns)
+    manager.addPrimitive("get-return-value", GetReturnValue)
   }
 
   override def clearAll() {

@@ -16,10 +16,11 @@ object CreateExperiment extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.experimentType(args(0).getString, context) != ExperimentType.None)
       return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.alreadyExists", args(0).getString), context)
-    if (args(1).getString.isEmpty)
+    if (args(0).getString.isEmpty)
       return BehaviorSpaceExtension.nameError(I18N.gui.get("edit.behaviorSpace.name.empty"), context)
 
     BehaviorSpaceExtension.experiments += ((args(0).getString, new ExperimentData()))
+    BehaviorSpaceExtension.experiments(args(0).getString).name = args(0).getString
   }
 }
 
@@ -53,7 +54,7 @@ object RunExperiment extends Command {
                                         data.postRunCommands, data.postExperimentCommands, data.repetitions,
                                         data.sequentialRunOrder, data.runMetricsEveryStep, data.runMetricsCondition,
                                         data.timeLimit, data.exitCondition, data.metrics, data.constants,
-                                        data.subExperiments,
+                                        data.subExperiments, data.returnCommands,
                                         runOptions = new LabRunOptions(data.threadCount, data.table,
                                                                           data.spreadsheet, data.stats, data.lists,
                                                                           data.updateView,
