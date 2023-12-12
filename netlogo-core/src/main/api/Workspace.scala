@@ -85,8 +85,8 @@ with ViewSettings with Controllable {
   def behaviorSpaceRunNumber(n: Int)
   def getBehaviorSpaceExperiments: List[LabProtocol]
   def setBehaviorSpaceExperiments(experiments: List[LabProtocol])
-  def getBehaviorSpaceReturnValue: AnyRef
-  def setBehaviorSpaceReturnValue(value: AnyRef)
+  def getBehaviorSpaceReturnValues: Map[String, AnyRef]
+  def setBehaviorSpaceReturnValues(values: Map[String, AnyRef])
   // for now this only works in HeadlessWorkspace, returns null in GUIWorkspace.  error handling
   // stuff is a mess, should be redone - ST 3/10/09, 1/22/12
   def lastLogoException: LogoException

@@ -95,7 +95,7 @@ class ProtocolEditable(protocol: LabProtocol,
     (protocol.constants.map(setString) :::
      protocol.subExperiments.map("[" + _.map(setString).mkString + "]")).mkString("\n")
   }
-  var returnCommands = protocol.returnCommands
+  var returnReporters = protocol.returnReporters
   val runsCompleted = protocol.runsCompleted
   // make a new LabProtocol based on what user entered
   def editFinished: Boolean = get.isDefined
@@ -113,7 +113,7 @@ class ProtocolEditable(protocol: LabProtocol,
           postRunCommands.trim, postExperimentCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep,
           runMetricsCondition.trim, timeLimit, exitCondition.trim,
           metrics.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
-          constants, subExperiments, returnCommands, runsCompleted))
+          constants, subExperiments, returnReporters, runsCompleted))
       case (None, message: String) =>
         complain(message)
         None

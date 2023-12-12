@@ -172,15 +172,18 @@ object SetVariables extends Command {
   }
 }
 
-object SetReturnCommands extends Command {
+object SetReturnReporter extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, StringType))
+    commandSyntax(right = List(StringType, StringType, StringType))
   }
 
   def perform(args: Array[Argument], context: Context) {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).returnCommands = args(1).getString
+    if (BehaviorSpaceExtension.experiments(args(0).getString).returnReporters.contains(args(1).getString))
+      BehaviorSpaceExtension.experiments(args(0).getString).returnReporters(args(1).getString) = args(2).getString
+    else
+      BehaviorSpaceExtension.experiments(args(0).getString).returnReporters += ((args(1).getString, args(2).getString))
   }
 }
 

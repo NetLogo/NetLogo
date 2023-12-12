@@ -27,7 +27,7 @@ class ExperimentData {
   var metrics: List[String] = Nil
   var constants: List[RefValueSet] = Nil
   var subExperiments: List[List[RefValueSet]] = Nil
-  var returnCommands = ""
+  var returnReporters = Map[String, String]()
   var threadCount = LabDefaultValues.getDefaultThreads
   var table = ""
   var spreadsheet = ""
@@ -94,7 +94,7 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("set-stop-condition", SetStopCondition)
     manager.addPrimitive("set-metrics", SetMetrics)
     manager.addPrimitive("set-variables", SetVariables)
-    manager.addPrimitive("set-return-commands", SetReturnCommands)
+    manager.addPrimitive("set-return-reporter", SetReturnReporter)
     manager.addPrimitive("set-parallel-runs", SetParallelRuns)
     manager.addPrimitive("set-table", SetTable)
     manager.addPrimitive("set-spreadsheet", SetSpreadsheet)

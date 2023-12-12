@@ -54,7 +54,7 @@ object RunExperiment extends Command {
                                         data.postRunCommands, data.postExperimentCommands, data.repetitions,
                                         data.sequentialRunOrder, data.runMetricsEveryStep, data.runMetricsCondition,
                                         data.timeLimit, data.exitCondition, data.metrics, data.constants,
-                                        data.subExperiments, data.returnCommands,
+                                        data.subExperiments, data.returnReporters.toMap,
                                         runOptions = new LabRunOptions(data.threadCount, data.table,
                                                                           data.spreadsheet, data.stats, data.lists,
                                                                           data.updateView,
