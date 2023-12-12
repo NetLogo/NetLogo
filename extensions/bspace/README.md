@@ -18,11 +18,12 @@ Once the extension is loaded, you can use it to run experiments from anywhere in
 ### Experiment Management
 
 [`bspace:create-experiment`](#bspacecreate-experiment)
+[`bspace:delete-experiment`](#bspacedelete-experiment)
 [`bspace:run-experiment`](#bspacerun-experiment)
+[`bspace:rename-experiment`](#bspacerename-experiment)
 
-### Experiment Modification
+### Experiment Parameters
 
-[`bspace:set-name`](#bspaceset-name)
 [`bspace:set-pre-experiment-commands`](#bspaceset-pre-experiment-commands)
 [`bspace:set-setup-commands`](#bspaceset-setup-commands)
 [`bspace:set-go-commands`](#bspaceset-go-commands)
@@ -33,16 +34,26 @@ Once the extension is loaded, you can use it to run experiments from anywhere in
 [`bspace:set-run-metrics-every-step`](#bspaceset-run-metrics-every-step)
 [`bspace:set-run-metrics-condition`](#bspaceset-run-metrics-condition)
 [`bspace:set-time-limit`](#bspaceset-time-limit)
-[`bspace:set-exit-condition`](#bspaceset-exit-condition)
+[`bspace:set-stop-condition`](#bspaceset-stop-condition)
 [`bspace:set-metrics`](#bspaceset-metrics)
 [`bspace:set-variables`](#bspaceset-variables)
-[`bspace:set-thread-count`](#bspaceset-thread-count)
+
+### Experiment Run Conditions
+
+[`bspace:set-parallel-runs`](#bspaceset-parallel-runs)
 [`bspace:set-table`](#bspaceset-table)
 [`bspace:set-spreadsheet`](#bspaceset-spreadsheet)
 [`bspace:set-stats`](#bspaceset-stats)
 [`bspace:set-lists`](#bspaceset-list)
 [`bspace:set-update-view`](#bspaceset-update-view)
 [`bspace:set-update-plots`](#bspaceset-update-plots)
+
+### Experiment Information
+
+[`goto-behaviorspace-documentation`](#bspacegoto-behaviorspace-documentation)
+[`goto-bspace-extension-documentation`](#bspacegoto-bspace-extension-documentation)
+[`get-default-parallel-runs`](#bspaceget-default-parallel-runs)
+[`get-recommended-max-parallel-runs`](#bspaceget-recommended-max-parallel-runs)
 
 ### `bspace:create-experiment`
 
@@ -53,6 +64,14 @@ bspace:create-experiment *name*
 Create a new experiment with the specified name. An error will be thrown if an experiment already exists with the
 provided name.
 
+### `bspace:delete-experiment`
+
+```NetLogo
+bspace:delete-experiment *name*
+```
+
+Delete the experiment with the specified name. An error will be thrown if no experiment exists with the provided name.
+
 ### `bspace:run-experiment`
 
 ```NetLogo
@@ -62,10 +81,10 @@ bspace:run-experiment *name*
 Run the experiment with the specified name. An error will be thrown if an experiment does not exist with the provided
 name.
 
-### `bspace:set-name`
+### `bspace:rename-experiment`
 
 ```NetLogo
-bspace:set-name *old-name* *new-name*
+bspace:rename-experiment *old-name* *new-name*
 ```
 
 Rename the specified experiment. An error will be thrown if an experiment does not exist with the provided name.
@@ -82,7 +101,7 @@ with the provided name.
 ### `bspace:set-setup-commands`
 
 ```NetLogo
-bspace:set-setup-commands *name* *commands*
+bspace:set-setup-commands *name* *setup*
 ```
 
 Set the setup commands for the specified experiment. An error will be thrown if an experiment does not exist
@@ -160,13 +179,13 @@ bspace:set-time-limit *name* *ticks*
 Set the time limit in ticks for the specified experiment. An error will be thrown if an experiment does not exist with
 the provided name.
 
-### `bspace:set-exit-condition`
+### `bspace:set-stop-condition`
 
 ```NetLogo
-bspace:set-exit-condition *name* *condition*
+bspace:set-stop-condition *name* *condition*
 ```
 
-Set the exit condition for the specified experiment. An error will be thrown if an experiment does not exist with the
+Set the stop condition for the specified experiment. An error will be thrown if an experiment does not exist with the
 provided name.
 
 ### `bspace:set-metrics`
@@ -187,14 +206,14 @@ bspace:set-variables *name* *variables*
 Set the variables to vary for the specified experiment. An error will be thrown if an experiment does not exist with
 the provided name.
 
-### `bspace:set-thread-count`
+### `bspace:set-parallel-runs`
 
 ```NetLogo
-bspace:set-thread-count *name* *threads*
+bspace:set-parallel-runs *name* *threads*
 ```
 
-Set the thread count for the specified experiment. An error will be thrown if an experiment does not exist with the
-provided name.
+Set the number of parallel runs for the specified experiment. An error will be thrown if an experiment does not exist
+with the provided name.
 
 ### `bspace:set-table`
 
@@ -249,4 +268,36 @@ bspace:set-update-view *name* *boolean*
 
 Set whether the specified experiment should update the plots. An error will be thrown if an experiment does not exist
 with the provided name.
+
+### `bspace:goto-behaviorspace-documentation`
+
+```NetLogo
+bspace:goto-behaviorspace-documentation
+```
+
+Open the BehaviorSpace documentation page in a browser window.
+
+### `bspace:goto-bspace-extension-documentation`
+
+```NetLogo
+bspace:goto-bspace-extension-documentation
+```
+
+Open the bspace extension documentation page in a browser window.
+
+### `bspace:get-default-parallel-runs`
+
+```NetLogo
+bspace:get-default-parallel-runs
+```
+
+Returns the default number of parallel runs for the current device.
+
+### `bspace:get-recommended-max-parallel-runs`
+
+```NetLogo
+bspace:get-recommended-max-parallel-runs
+```
+
+Returns the recommended maximum number of parallel runs for the current device.
 
