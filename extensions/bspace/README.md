@@ -24,29 +24,29 @@ Once the extension is loaded, you can use it to run experiments from anywhere in
 
 ### Experiment Parameters
 
+[`bspace:set-variables`](#bspaceset-variables)
+[`bspace:set-repetitions`](#bspaceset-repetitions)
+[`bspace:set-sequential-run-order`](#bspaceset-sequential-run-order)
+[`bspace:set-metrics`](#bspaceset-metrics)
+[`bspace:set-run-metrics-every-step`](#bspaceset-run-metrics-every-step)
+[`bspace:set-run-metrics-condition`](#bspaceset-run-metrics-condition)
 [`bspace:set-pre-experiment-commands`](#bspaceset-pre-experiment-commands)
 [`bspace:set-setup-commands`](#bspaceset-setup-commands)
 [`bspace:set-go-commands`](#bspaceset-go-commands)
+[`bspace:set-stop-condition`](#bspaceset-stop-condition)
 [`bspace:set-post-run-commands`](#bspaceset-post-run-commands)
 [`bspace:set-post-experiment-commands`](#bspaceset-post-experiment-commands)
-[`bspace:set-repetitions`](#bspaceset-repetitions)
-[`bspace:set-sequential-run-order`](#bspaceset-sequential-run-order)
-[`bspace:set-run-metrics-every-step`](#bspaceset-run-metrics-every-step)
-[`bspace:set-run-metrics-condition`](#bspaceset-run-metrics-condition)
 [`bspace:set-time-limit`](#bspaceset-time-limit)
-[`bspace:set-stop-condition`](#bspaceset-stop-condition)
-[`bspace:set-metrics`](#bspaceset-metrics)
-[`bspace:set-variables`](#bspaceset-variables)
 
 ### Experiment Run Conditions
 
-[`bspace:set-parallel-runs`](#bspaceset-parallel-runs)
-[`bspace:set-table`](#bspaceset-table)
 [`bspace:set-spreadsheet`](#bspaceset-spreadsheet)
+[`bspace:set-table`](#bspaceset-table)
 [`bspace:set-stats`](#bspaceset-stats)
 [`bspace:set-lists`](#bspaceset-list)
 [`bspace:set-update-view`](#bspaceset-update-view)
 [`bspace:set-update-plots`](#bspaceset-update-plots)
+[`bspace:set-parallel-runs`](#bspaceset-parallel-runs)
 
 ### Experiment Information
 
@@ -89,6 +89,60 @@ bspace:rename-experiment *old-name* *new-name*
 
 Rename the specified experiment. An error will be thrown if an experiment does not exist with the provided name.
 
+### `bspace:set-variables`
+
+```NetLogo
+bspace:set-variables *name* *variables*
+```
+
+Set the variables to vary for the specified experiment. An error will be thrown if an experiment does not exist with
+the provided name.
+
+### `bspace:set-repetitions`
+
+```NetLogo
+bspace:set-repetitions *name* *repetitions*
+```
+
+Set the repetitions for the specified experiment. An error will be thrown if an experiment does not exist
+with the provided name.
+
+### `bspace:set-sequential-run-order`
+
+```NetLogo
+bspace:set-sequential-run-order *name* *boolean*
+```
+
+Set whether the specified experiment uses sequential run order. An error will be thrown if an experiment does not exist
+with the provided name.
+
+### `bspace:set-metrics`
+
+```NetLogo
+bspace:set-metrics *name* *commands*
+```
+
+Set the metrics commands for the specified experiment. An error will be thrown if an experiment does not exist with the
+provided name.
+
+### `bspace:set-run-metrics-every-step`
+
+```NetLogo
+bspace:set-run-metrics-every-step *name* *boolean*
+```
+
+Set whether the specified experiment runs metrics every step. An error will be thrown if an experiment does not exist
+with the provided name.
+
+### `bspace:set-run-metrics-condition`
+
+```NetLogo
+bspace:set-run-metrics-condition *name* *condition*
+```
+
+Set the run metrics condition for the specified experiment. An error will be thrown if an experiment does not exist
+with the provided name.
+
 ### `bspace:set-pre-experiment-commands`
 
 ```NetLogo
@@ -116,6 +170,15 @@ bspace:set-go-commands *name* *commands*
 Set the go commands for the specified experiment. An error will be thrown if an experiment does not exist
 with the provided name.
 
+### `bspace:set-stop-condition`
+
+```NetLogo
+bspace:set-stop-condition *name* *condition*
+```
+
+Set the stop condition for the specified experiment. An error will be thrown if an experiment does not exist with the
+provided name.
+
 ### `bspace:set-post-run-commands`
 
 ```NetLogo
@@ -134,42 +197,6 @@ bspace:set-post-experiment-commands *name* *commands*
 Set the post-experiment commands for the specified experiment. An error will be thrown if an experiment does not exist
 with the provided name.
 
-### `bspace:set-repetitions`
-
-```NetLogo
-bspace:set-repetitions *name* *repetitions*
-```
-
-Set the repetitions for the specified experiment. An error will be thrown if an experiment does not exist
-with the provided name.
-
-### `bspace:set-sequential-run-order`
-
-```NetLogo
-bspace:set-sequential-run-order *name* *boolean*
-```
-
-Set whether the specified experiment uses sequential run order. An error will be thrown if an experiment does not exist
-with the provided name.
-
-### `bspace:set-run-metrics-every-step`
-
-```NetLogo
-bspace:set-run-metrics-every-step *name* *boolean*
-```
-
-Set whether the specified experiment runs metrics every step. An error will be thrown if an experiment does not exist
-with the provided name.
-
-### `bspace:set-run-metrics-condition`
-
-```NetLogo
-bspace:set-run-metrics-condition *name* *condition*
-```
-
-Set the run metrics condition for the specified experiment. An error will be thrown if an experiment does not exist
-with the provided name.
-
 ### `bspace:set-time-limit`
 
 ```NetLogo
@@ -179,41 +206,14 @@ bspace:set-time-limit *name* *ticks*
 Set the time limit in ticks for the specified experiment. An error will be thrown if an experiment does not exist with
 the provided name.
 
-### `bspace:set-stop-condition`
+### `bspace:set-spreadsheet`
 
 ```NetLogo
-bspace:set-stop-condition *name* *condition*
+bspace:set-spreadsheet *name* *path*
 ```
 
-Set the stop condition for the specified experiment. An error will be thrown if an experiment does not exist with the
-provided name.
-
-### `bspace:set-metrics`
-
-```NetLogo
-bspace:set-metrics *name* *commands*
-```
-
-Set the metrics commands for the specified experiment. An error will be thrown if an experiment does not exist with the
-provided name.
-
-### `bspace:set-variables`
-
-```NetLogo
-bspace:set-variables *name* *variables*
-```
-
-Set the variables to vary for the specified experiment. An error will be thrown if an experiment does not exist with
-the provided name.
-
-### `bspace:set-parallel-runs`
-
-```NetLogo
-bspace:set-parallel-runs *name* *threads*
-```
-
-Set the number of parallel runs for the specified experiment. An error will be thrown if an experiment does not exist
-with the provided name.
+Set the path for the spreadsheet file for the specified experiment. An error will be thrown if an experiment does not
+exist with the provided name.
 
 ### `bspace:set-table`
 
@@ -223,15 +223,6 @@ bspace:set-table *name* *path*
 
 Set the path for the table file for the specified experiment. An error will be thrown if an experiment does not exist
 with the provided name.
-
-### `bspace:set-spreadsheet`
-
-```NetLogo
-bspace:set-spreadsheet *name* *path*
-```
-
-Set the path for the spreadsheet file for the specified experiment. An error will be thrown if an experiment does not
-exist with the provided name.
 
 ### `bspace:set-stats`
 
@@ -267,6 +258,15 @@ bspace:set-update-view *name* *boolean*
 ```
 
 Set whether the specified experiment should update the plots. An error will be thrown if an experiment does not exist
+with the provided name.
+
+### `bspace:set-parallel-runs`
+
+```NetLogo
+bspace:set-parallel-runs *name* *threads*
+```
+
+Set the number of parallel runs for the specified experiment. An error will be thrown if an experiment does not exist
 with the provided name.
 
 ### `bspace:goto-behaviorspace-documentation`
