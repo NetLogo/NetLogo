@@ -7,8 +7,13 @@ with the extension.
 
 ## Using the BehaviorSpace Extension
 
-To use the BehaviorSpace extension in a model, include the line ```extensions [bspace]``` at the top of the code. If
-you are already using another extension, you can add ```bspace``` to the list inside the square brackets.
+To use the BehaviorSpace extension in a model, include the following line at the top of your code:
+
+```
+extensions [bspace]
+```
+
+If you are already using another extension, you can just add `bspace` to the list inside the square brackets.
 
 Once the extension is loaded, you can use it to run experiments from anywhere in the code. Note that you must call
 ```clear-all``` to clear the experiments stored in the code, otherwise they will persist between runs of the model.
@@ -62,16 +67,14 @@ should be a string.
 
 ### `bspace:create-experiment`
 
-```NetLogo
-bspace:create-experiment *name*
-```
+#### bspace:create-experiment *name*
 
 Create a new experiment with the specified name. An error will be thrown if an experiment already exists with the
 provided name.
 
 ### `bspace:delete-experiment`
 
-```NetLogo
+```
 bspace:delete-experiment *name*
 ```
 
@@ -79,7 +82,7 @@ Delete the experiment with the specified name. An error will be thrown if no exp
 
 ### `bspace:run-experiment`
 
-```NetLogo
+```
 bspace:run-experiment *name*
 ```
 
@@ -88,7 +91,7 @@ name.
 
 ### `bspace:rename-experiment`
 
-```NetLogo
+```
 bspace:rename-experiment *old-name* *new-name*
 ```
 
@@ -96,7 +99,7 @@ Rename the specified experiment. An error will be thrown if an experiment does n
 
 ### `bspace:set-variables`
 
-```NetLogo
+```
 bspace:set-variables *name* *variables*
 ```
 
@@ -105,7 +108,7 @@ the provided name.
 
 ### `bspace:set-repetitions`
 
-```NetLogo
+```
 bspace:set-repetitions *name* *repetitions*
 ```
 
@@ -114,7 +117,7 @@ with the provided name.
 
 ### `bspace:set-sequential-run-order`
 
-```NetLogo
+```
 bspace:set-sequential-run-order *name* *boolean*
 ```
 
@@ -123,7 +126,7 @@ with the provided name.
 
 ### `bspace:set-metrics`
 
-```NetLogo
+```
 bspace:set-metrics *name* *commands-list*
 ```
 
@@ -132,7 +135,7 @@ provided name. This command accepts a list of string commands.
 
 ### `bspace:set-run-metrics-every-step`
 
-```NetLogo
+```
 bspace:set-run-metrics-every-step *name* *boolean*
 ```
 
@@ -141,7 +144,7 @@ with the provided name.
 
 ### `bspace:set-run-metrics-condition`
 
-```NetLogo
+```
 bspace:set-run-metrics-condition *name* *condition*
 ```
 
@@ -150,7 +153,7 @@ with the provided name.
 
 ### `bspace:set-pre-experiment-commands`
 
-```NetLogo
+```
 bspace:set-pre-experiment-commands *name* *commands*
 ```
 
@@ -159,7 +162,7 @@ with the provided name.
 
 ### `bspace:set-setup-commands`
 
-```NetLogo
+```
 bspace:set-setup-commands *name* *setup*
 ```
 
@@ -168,7 +171,7 @@ with the provided name.
 
 ### `bspace:set-go-commands`
 
-```NetLogo
+```
 bspace:set-go-commands *name* *commands*
 ```
 
@@ -177,7 +180,7 @@ with the provided name.
 
 ### `bspace:set-stop-condition`
 
-```NetLogo
+```
 bspace:set-stop-condition *name* *condition*
 ```
 
@@ -186,7 +189,7 @@ provided name.
 
 ### `bspace:set-post-run-commands`
 
-```NetLogo
+```
 bspace:set-post-run-commands *name* *commands*
 ```
 
@@ -195,7 +198,7 @@ with the provided name.
 
 ### `bspace:set-post-experiment-commands`
 
-```NetLogo
+```
 bspace:set-post-experiment-commands *name* *commands*
 ```
 
@@ -204,7 +207,7 @@ with the provided name.
 
 ### `bspace:set-time-limit`
 
-```NetLogo
+```
 bspace:set-time-limit *name* *ticks*
 ```
 
@@ -213,7 +216,7 @@ the provided name.
 
 ### `bspace:set-return-reporter`
 
-```NetLogo
+```
 bspace:set-return-reporter *experiment-name* *value-name* *reporter*
 ```
 
@@ -222,7 +225,7 @@ provided name.
 
 ### `bspace:set-spreadsheet`
 
-```NetLogo
+```
 bspace:set-spreadsheet *name* *path*
 ```
 
@@ -231,7 +234,7 @@ exist with the provided name.
 
 ### `bspace:set-table`
 
-```NetLogo
+```
 bspace:set-table *name* *path*
 ```
 
@@ -240,7 +243,7 @@ with the provided name.
 
 ### `bspace:set-stats`
 
-```NetLogo
+```
 bspace:set-stats *name* *path*
 ```
 
@@ -249,7 +252,7 @@ with the provided name.
 
 ### `bspace:set-lists`
 
-```NetLogo
+```
 bspace:set-lists *name* *path*
 ```
 
@@ -258,7 +261,7 @@ with the provided name.
 
 ### `bspace:set-update-view`
 
-```NetLogo
+```
 bspace:set-update-view *name* *boolean*
 ```
 
@@ -267,7 +270,7 @@ with the provided name.
 
 ### `bspace:set-update-plots`
 
-```NetLogo
+```
 bspace:set-update-view *name* *boolean*
 ```
 
@@ -276,7 +279,7 @@ with the provided name.
 
 ### `bspace:set-parallel-runs`
 
-```NetLogo
+```
 bspace:set-parallel-runs *name* *threads*
 ```
 
@@ -285,7 +288,7 @@ with the provided name.
 
 ### `bspace:goto-behaviorspace-documentation`
 
-```NetLogo
+```
 bspace:goto-behaviorspace-documentation
 ```
 
@@ -293,7 +296,7 @@ Open the BehaviorSpace documentation page in a browser window.
 
 ### `bspace:goto-bspace-extension-documentation`
 
-```NetLogo
+```
 bspace:goto-bspace-extension-documentation
 ```
 
@@ -301,7 +304,7 @@ Open the bspace extension documentation page in a browser window.
 
 ### `bspace:get-default-parallel-runs`
 
-```NetLogo
+```
 bspace:get-default-parallel-runs
 ```
 
@@ -309,7 +312,7 @@ Returns the default number of parallel runs for the current device.
 
 ### `bspace:get-recommended-max-parallel-runs`
 
-```NetLogo
+```
 bspace:get-recommended-max-parallel-runs
 ```
 
@@ -317,7 +320,7 @@ Returns the recommended maximum number of parallel runs for the current device.
 
 ### `bspace:get-return-value`
 
-```NetLogo
+```
 bspace:get-return-value *value-name*
 ```
 
