@@ -4,7 +4,7 @@ package org.nlogo.lab.gui
 
 import collection.mutable.ListBuffer
 
-import java.awt.{ Dialog }
+import java.awt.Window
 import java.io.{ FileWriter, IOException, PrintWriter }
 
 import org.nlogo.api.{ Exceptions, ExportPlotWarningAction, LabProtocol,
@@ -21,19 +21,19 @@ import scala.collection.mutable.Set
 
 object Supervisor {
   def runFromExtension(protocol: LabProtocol, workspace: GUIWorkspace, factory: WorkspaceFactory with CurrentModelOpener) {
-    new Supervisor(null, workspace, protocol, factory, null, (_) => {}, false).start()
+    new Supervisor(workspace.getFrame, workspace, protocol, factory, null, (_) => {}, false).start()
   }
 }
 
 class Supervisor(
-  dialog: Dialog,
+  parent: Window,
   val workspace: GUIWorkspace,
   protocol: LabProtocol,
   factory: WorkspaceFactory with CurrentModelOpener,
   dialogFactory: EditDialogFactoryInterface,
   saveProtocol: (LabProtocol) => Unit,
   // useGUI determines what instantiated Supervisor, either ManagerDialog (true) or the bspace extension (false)
-  // this is to make sure Supervisor runs headlessly from the bspace extension but the code can be reused in both
+  // this is to make sure Supervisor runs differently in the bspace extension but the code can be reused in both
   useGUI: Boolean = true
 ) extends Thread("BehaviorSpace Supervisor") {
   private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace")
@@ -77,16 +77,14 @@ class Supervisor(
     worker.run(workspace, nextWorkspace _, options.threadCount)
   } }
   private val workerThread = new Thread(runnable, "BehaviorSpace Worker")
-  private val progressDialog =
-    if (useGUI) new ProgressDialog(dialog, this, saveProtocol)
-    else null
+  private val progressDialog = new ProgressDialog(parent, this, saveProtocol)
   private val exporters = new ListBuffer[Exporter]
   private var spreadsheetExporter: SpreadsheetExporter = null
   private var spreadsheetFileName: String = null
   private var tableExporter: TableExporter = null
   private var tableFileName: String = null
   private var statsExporter: StatsExporter = null
-  if (useGUI) worker.addListener(progressDialog)
+  worker.addListener(progressDialog)
   def addExporter(exporter: Exporter) {
     if (!exporters.contains(exporter)) {
       exporters += exporter
@@ -109,7 +107,7 @@ class Supervisor(
     if (useGUI && options.firstRun) {
       options =
         try {
-          new RunOptionsDialog(dialog, dialogFactory, workspace.guessExportName(worker.protocol.name)).get
+          new RunOptionsDialog(parent, dialogFactory, workspace.guessExportName(worker.protocol.name)).get
         }
         catch { case ex: UserCancelException => return }
     }
@@ -242,11 +240,9 @@ class Supervisor(
           return
       }
     }
-    if (useGUI) {
-      progressDialog.setUpdateView(options.updateView)
-      progressDialog.setPlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
-      progressDialog.enablePlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
-    }
+    progressDialog.setUpdateView(options.updateView)
+    progressDialog.setPlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
+    progressDialog.enablePlotsAndMonitorsSwitch(options.updatePlotsAndMonitors)
     workspace.setShouldUpdatePlots(options.updatePlotsAndMonitors)
     workspace.setExportPlotWarningAction(ExportPlotWarningAction.Warn)
     workspace.setTriedToExportPlot(false)
@@ -283,11 +279,9 @@ class Supervisor(
         }
       )
       workerThread.start()
-      if (useGUI) {
-        EventQueue.invokeLater(new Runnable() { def run() {
-          progressDialog.setVisible(true)
-        }})
-      }
+      EventQueue.invokeLater(new Runnable() { def run() {
+        progressDialog.setVisible(true)
+      }})
       workerThread.join()
     }
     catch {
@@ -307,7 +301,7 @@ class Supervisor(
   }
 
   def writing() {
-    if (useGUI) progressDialog.writing()
+    progressDialog.writing()
   }
 
   private def bailOut() {
@@ -328,13 +322,11 @@ class Supervisor(
         workspace.behaviorSpaceRunNumber(0)
         workspace.behaviorSpaceExperimentName("")
         workspace.setShouldUpdatePlots(true)
-        if (useGUI) {
-          if (paused)
-            progressDialog.saveProtocolP()
-          else
-            progressDialog.resetProtocol()
-          progressDialog.close()
-        }
+        if (paused)
+          progressDialog.saveProtocolP()
+        else
+          progressDialog.resetProtocol()
+        progressDialog.close()
       } } )
     headlessWorkspaces.foreach(_.dispose())
   }

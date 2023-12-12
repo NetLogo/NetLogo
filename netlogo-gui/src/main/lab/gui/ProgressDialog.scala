@@ -14,9 +14,9 @@ import org.nlogo.api.{ Dump, ExportPlotWarningAction, PeriodicUpdateDelay }
 import org.nlogo.plot.DummyPlotManager
 import org.nlogo.core.I18N
 
-private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervisor,
+private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervisor,
                                    saveProtocol: (LabProtocol) => Unit)
-              extends JDialog(dialog, true) with ProgressListener{
+              extends JDialog(parent, java.awt.Dialog.DEFAULT_MODALITY_TYPE) with ProgressListener {
   val protocol = supervisor.worker.protocol
   val workspace = supervisor.workspace
   private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace.progressDialog")
@@ -116,7 +116,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     timer.start()
 
     pack()
-    org.nlogo.awt.Positioning.center(this, dialog)
+    org.nlogo.awt.Positioning.center(this, parent)
   }
 
   override def getMinimumSize = getPreferredSize

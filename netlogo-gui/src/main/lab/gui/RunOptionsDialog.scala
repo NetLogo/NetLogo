@@ -10,7 +10,7 @@ import org.nlogo.window.EditDialogFactoryInterface
 import java.io.File
 import java.util.prefs.Preferences
 
-class RunOptionsDialog(parent: java.awt.Dialog,
+class RunOptionsDialog(parent: java.awt.Window,
                        dialogFactory: EditDialogFactoryInterface,
                        filePrefix: String)
 {
@@ -84,8 +84,10 @@ class RunOptionsDialog(parent: java.awt.Dialog,
   }
   def get = {
     val editable = new EditableRunOptions
-    if (dialogFactory.canceled(parent, editable, false))
-      throw new UserCancelException
+    if (parent match {
+      case dialog: java.awt.Dialog => dialogFactory.canceled(dialog, editable, false)
+      case frame: java.awt.Frame => dialogFactory.canceled(frame, editable, false)
+    }) throw new UserCancelException
     val runOptions = editable.get
     Prefs.updateFrom(runOptions)
     runOptions
