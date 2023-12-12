@@ -15,6 +15,9 @@ Once the extension is loaded, you can use it to run experiments from anywhere in
 
 ## Primitives
 
+Note: unless otherwise specified, any commands or reporters used as input for a BehaviorSpace extension primitive
+should be a string.
+
 ### Experiment Management
 
 [`bspace:create-experiment`](#bspacecreate-experiment)
@@ -121,11 +124,11 @@ with the provided name.
 ### `bspace:set-metrics`
 
 ```NetLogo
-bspace:set-metrics *name* *commands*
+bspace:set-metrics *name* *commands-list*
 ```
 
 Set the metrics commands for the specified experiment. An error will be thrown if an experiment does not exist with the
-provided name.
+provided name. This command accepts a list of string commands.
 
 ### `bspace:set-run-metrics-every-step`
 
