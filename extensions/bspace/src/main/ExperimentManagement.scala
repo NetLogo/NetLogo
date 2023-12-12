@@ -16,6 +16,8 @@ object CreateExperiment extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.experimentType(args(0).getString, context) != ExperimentType.None)
       return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.alreadyExists", args(0).getString), context)
+    if (args(1).getString.isEmpty)
+      return BehaviorSpaceExtension.nameError(I18N.gui.get("edit.behaviorSpace.name.empty"), context)
 
     BehaviorSpaceExtension.experiments += ((args(0).getString, new ExperimentData()))
   }
@@ -75,6 +77,8 @@ object RenameExperiment extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
     if (BehaviorSpaceExtension.experimentType(args(1).getString, context) != ExperimentType.None)
       return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.alreadyExists", args(1).getString), context)
+    if (args(1).getString.isEmpty)
+      return BehaviorSpaceExtension.nameError(I18N.gui.get("edit.behaviorSpace.name.empty"), context)
 
     val data = BehaviorSpaceExtension.experiments(args(0).getString)
 

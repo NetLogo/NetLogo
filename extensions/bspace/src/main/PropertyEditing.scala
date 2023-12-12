@@ -2,7 +2,7 @@
 
 package org.nlogo.extensions.bspace
 
-import org.nlogo.api.{ Argument, Command, Context, LabProtocol }
+import org.nlogo.api.{ Argument, Command, Context, LabProtocol, LabVariableParser, RefValueSet }
 import org.nlogo.core.I18N
 import org.nlogo.core.Syntax._
 import org.nlogo.window.GUIWorkspace
@@ -159,13 +159,16 @@ object SetVariables extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
-    val parsed = LabProtocol.parseVariables(args(1).getString, context.workspace.world,
-                                                context.workspace.asInstanceOf[GUIWorkspace], message => {
-      BehaviorSpaceExtension.nameError(I18N.gui.getN("edit.behaviorSpace.invalidVarySpec", message), context)
-    })
-
-    BehaviorSpaceExtension.experiments(args(0).getString).constants = parsed.get._1
-    BehaviorSpaceExtension.experiments(args(0).getString).subExperiments = parsed.get._2
+    LabVariableParser.parseVariables(args(1).getString,
+                                     BehaviorSpaceExtension.experiments(args(0).getString).repetitions,
+                                     context.workspace.world,
+                                     context.workspace.asInstanceOf[GUIWorkspace]) match {
+      case (Some((constants: List[RefValueSet], subExperiments: List[List[RefValueSet]])), _) =>
+        BehaviorSpaceExtension.experiments(args(0).getString).constants = constants
+        BehaviorSpaceExtension.experiments(args(0).getString).subExperiments = subExperiments
+      case (None, message: String) =>
+        BehaviorSpaceExtension.nameError(message, context)
+    }
   }
 }
 
