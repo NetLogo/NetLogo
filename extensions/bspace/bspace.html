@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<title>NetLogo 6.4.0 User Manual: BehaviorSpace Extension</title>
+<link rel="stylesheet" href="netlogo.css" type="text/css">
+<style type="text/css">
+    p { margin-left: 1.5em ; }
+    h3 { font-size: 115% ; }
+    h4 { font-size: 100% ; margin-left: 1.5em ; background: white ; }
+</style>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<h1 id="behaviorspace-extension-for-netlogo">BehaviorSpace Extension for
+NetLogo</h1>
+<p>The BehaviorSpace extension allows you to create and run
+BehaviorSpace experiments from NetLogo code. You can use the extension
+alone or in combination with the GUI BehaviorSpace tool, and you can run
+experiments created in the GUI tool with the extension.</p>
+<h2 id="using-the-behaviorspace-extension">Using the BehaviorSpace
+Extension</h2>
+<p>To use the BehaviorSpace extension in a model, include the following
+line at the top of your code:</p>
+<pre><code>extensions [bspace]</code></pre>
+<p>If you are already using another extension, you can just add
+<code>bspace</code> to the list inside the square brackets.</p>
+<p>Once the extension is loaded, you can use it to run experiments from
+anywhere in the code. Note that you must call <code>clear-all</code> to
+clear the experiments stored in the code, otherwise they will persist
+between runs of the model.</p>
+<h2 id="primitives">Primitives</h2>
+<p>Note: unless otherwise specified, any commands or reporters used as
+input for a BehaviorSpace extension primitive should be a string.</p>
+<h3 id="experiment-management">Experiment Management</h3>
+<p><a
+href="#bspacecreate-experiment"><code>bspace:create-experiment</code></a>
+<a
+href="#bspacedelete-experiment"><code>bspace:delete-experiment</code></a>
+<a href="#bspacerun-experiment"><code>bspace:run-experiment</code></a>
+<a
+href="#bspacerename-experiment"><code>bspace:rename-experiment</code></a></p>
+<h3 id="experiment-parameters">Experiment Parameters</h3>
+<p><a href="#bspaceset-variables"><code>bspace:set-variables</code></a>
+<a href="#bspaceset-repetitions"><code>bspace:set-repetitions</code></a>
+<a
+href="#bspaceset-sequential-run-order"><code>bspace:set-sequential-run-order</code></a>
+<a href="#bspaceset-metrics"><code>bspace:set-metrics</code></a> <a
+href="#bspaceset-run-metrics-every-step"><code>bspace:set-run-metrics-every-step</code></a>
+<a
+href="#bspaceset-run-metrics-condition"><code>bspace:set-run-metrics-condition</code></a>
+<a
+href="#bspaceset-pre-experiment-commands"><code>bspace:set-pre-experiment-commands</code></a>
+<a
+href="#bspaceset-setup-commands"><code>bspace:set-setup-commands</code></a>
+<a href="#bspaceset-go-commands"><code>bspace:set-go-commands</code></a>
+<a
+href="#bspaceset-stop-condition"><code>bspace:set-stop-condition</code></a>
+<a
+href="#bspaceset-post-run-commands"><code>bspace:set-post-run-commands</code></a>
+<a
+href="#bspaceset-post-experiment-commands"><code>bspace:set-post-experiment-commands</code></a>
+<a href="#bspaceset-time-limit"><code>bspace:set-time-limit</code></a>
+<a
+href="#bspaceset-return-reporter"><code>bspace:set-return-reporter</code></a></p>
+<h3 id="experiment-run-conditions">Experiment Run Conditions</h3>
+<p><a
+href="#bspaceset-spreadsheet"><code>bspace:set-spreadsheet</code></a> <a
+href="#bspaceset-table"><code>bspace:set-table</code></a> <a
+href="#bspaceset-stats"><code>bspace:set-stats</code></a> <a
+href="#bspaceset-list"><code>bspace:set-lists</code></a> <a
+href="#bspaceset-update-view"><code>bspace:set-update-view</code></a> <a
+href="#bspaceset-update-plots"><code>bspace:set-update-plots</code></a>
+<a
+href="#bspaceset-parallel-runs"><code>bspace:set-parallel-runs</code></a></p>
+<h3 id="experiment-information">Experiment Information</h3>
+<p><a
+href="#bspacegoto-behaviorspace-documentation"><code>bspace:goto-behaviorspace-documentation</code></a>
+<a
+href="#bspacegoto-bspace-extension-documentation"><code>bspace:goto-bspace-extension-documentation</code></a>
+<a
+href="#bspaceget-default-parallel-runs"><code>bspace:get-default-parallel-runs</code></a>
+<a
+href="#bspaceget-recommended-max-parallel-runs"><code>bspace:get-recommended-max-parallel-runs</code></a>
+<a
+href="#bspaceget-return-value"><code>bspace:get-return-value</code></a></p>
+<h3 id="bspacecreate-experiment">bspace:create-experiment</h3>
+<h4 id="bspacecreate-experiment-name">bspace:create-experiment
+<em>name</em></h4>
+<p>Create a new experiment with the specified name. An error will be
+thrown if an experiment already exists with the provided name.</p>
+<p>Example:</p>
+<pre><code>bspace:create-experiment &quot;my-experiment&quot;</code></pre>
+<h3 id="bspacedelete-experiment">bspace:delete-experiment</h3>
+<h4 id="bspacedelete-experiment-name">bspace:delete-experiment
+<em>name</em></h4>
+<p>Delete the experiment with the specified name. An error will be
+thrown if no experiment exists with the provided name.</p>
+<p>Example:</p>
+<pre><code>bspace:delete-experiment &quot;my-experiment&quot;</code></pre>
+<h3 id="bspacerun-experiment">bspace:run-experiment</h3>
+<h4 id="bspacerun-experiment-name">bspace:run-experiment
+<em>name</em></h4>
+<p>Run the experiment with the specified name. An error will be thrown
+if an experiment does not exist with the provided name.</p>
+<p>Example:</p>
+<pre><code>bspace:run-experiment &quot;my-experiment&quot;</code></pre>
+<h3 id="bspacerename-experiment">bspace:rename-experiment</h3>
+<h4
+id="bspacerename-experiment-old-name-new-name">bspace:rename-experiment
+<em>old-name</em> <em>new-name</em></h4>
+<p>Rename the specified experiment. An error will be thrown if an
+experiment does not exist with the provided name.</p>
+<p>Example:</p>
+<pre><code>bspace:rename-experiment &quot;my-experiment&quot; &quot;another-experiment&quot;</code></pre>
+<h3 id="bspaceset-variables">bspace:set-variables</h3>
+<h4 id="bspaceset-variables-name-variables">bspace:set-variables
+<em>name</em> <em>variables</em></h4>
+<p>Set the variables to vary for the specified experiment. An error will
+be thrown if an experiment does not exist with the provided name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-variables &quot;my-experiment&quot; &quot;[ &#39;var1&#39; 0 5 20 ]&quot;</code></pre>
+<h3 id="bspaceset-repetitions">bspace:set-repetitions</h3>
+<h4 id="bspaceset-repetitions-name-repetitions">bspace:set-repetitions
+<em>name</em> <em>repetitions</em></h4>
+<p>Set the repetitions for the specified experiment. An error will be
+thrown if an experiment does not exist with the provided name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-repetitions &quot;my-experiment&quot; 3</code></pre>
+<h3
+id="bspaceset-sequential-run-order">bspace:set-sequential-run-order</h3>
+<h4
+id="bspaceset-sequential-run-order-name-boolean">bspace:set-sequential-run-order
+<em>name</em> <em>boolean</em></h4>
+<p>Set whether the specified experiment uses sequential run order. An
+error will be thrown if an experiment does not exist with the provided
+name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-sequential-run-order &quot;my-experiment&quot; true</code></pre>
+<h3 id="bspaceset-metrics">bspace:set-metrics</h3>
+<h4 id="bspaceset-metrics-name-commands-list">bspace:set-metrics
+<em>name</em> <em>commands-list</em></h4>
+<p>Set the metrics commands for the specified experiment. An error will
+be thrown if an experiment does not exist with the provided name. This
+command accepts a list of string commands.</p>
+<p>Example:</p>
+<pre><code>bspace:set-metrics &quot;my-experiment&quot; [ &quot;count turtles&quot;, &quot;count patches&quot; ]</code></pre>
+<h3
+id="bspaceset-run-metrics-every-step">bspace:set-run-metrics-every-step</h3>
+<h4
+id="bspaceset-run-metrics-every-step-name-boolean">bspace:set-run-metrics-every-step
+<em>name</em> <em>boolean</em></h4>
+<p>Set whether the specified experiment runs metrics every step. An
+error will be thrown if an experiment does not exist with the provided
+name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-run-metrics-every-step &quot;my-experiment&quot; false</code></pre>
+<h3
+id="bspaceset-run-metrics-condition">bspace:set-run-metrics-condition</h3>
+<h4
+id="bspaceset-run-metrics-condition-name-condition">bspace:set-run-metrics-condition
+<em>name</em> <em>condition</em></h4>
+<p>Set the run metrics condition for the specified experiment. An error
+will be thrown if an experiment does not exist with the provided
+name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-run-metrics-condition &quot;my-experiment&quot; &quot;count turtles &lt; 5&quot;</code></pre>
+<h3
+id="bspaceset-pre-experiment-commands">bspace:set-pre-experiment-commands</h3>
+<h4
+id="bspaceset-pre-experiment-commands-name-commands">bspace:set-pre-experiment-commands
+<em>name</em> <em>commands</em></h4>
+<p>Set the pre-experiment commands for the specified experiment. An
+error will be thrown if an experiment does not exist with the provided
+name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-pre-experiment-commands &quot;my-experiment&quot; &quot;clear-all&quot;</code></pre>
+<h3 id="bspaceset-setup-commands">bspace:set-setup-commands</h3>
+<h4 id="bspaceset-setup-commands-name-setup">bspace:set-setup-commands
+<em>name</em> <em>setup</em></h4>
+<p>Set the setup commands for the specified experiment. An error will be
+thrown if an experiment does not exist with the provided name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-setup-commands &quot;my-experiment&quot; &quot;clear-all create-turtles 50&quot;</code></pre>
+<h3 id="bspaceset-go-commands">bspace:set-go-commands</h3>
+<h4 id="bspaceset-go-commands-name-commands">bspace:set-go-commands
+<em>name</em> <em>commands</em></h4>
+<p>Set the go commands for the specified experiment. An error will be
+thrown if an experiment does not exist with the provided name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-go-commands &quot;my-experiment&quot; &quot;myFunction&quot;</code></pre>
+<h3 id="bspaceset-stop-condition">bspace:set-stop-condition</h3>
+<h4
+id="bspaceset-stop-condition-name-condition">bspace:set-stop-condition
+<em>name</em> <em>condition</em></h4>
+<p>Set the stop condition for the specified experiment. An error will be
+thrown if an experiment does not exist with the provided name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-stop-condition &quot;my-experiment&quot; &quot;ticks &gt; 1000&quot;</code></pre>
+<h3 id="bspaceset-post-run-commands">bspace:set-post-run-commands</h3>
+<h4
+id="bspaceset-post-run-commands-name-commands">bspace:set-post-run-commands
+<em>name</em> <em>commands</em></h4>
+<p>Set the post-run commands for the specified experiment. An error will
+be thrown if an experiment does not exist with the provided name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-post-run-commands &quot;my-experiment&quot; &quot;print count turtles&quot;</code></pre>
+<h3
+id="bspaceset-post-experiment-commands">bspace:set-post-experiment-commands</h3>
+<h4
+id="bspaceset-post-experiment-commands-name-commands">bspace:set-post-experiment-commands
+<em>name</em> <em>commands</em></h4>
+<p>Set the post-experiment commands for the specified experiment. An
+error will be thrown if an experiment does not exist with the provided
+name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-post-experiment-commands &quot;my-experiment&quot; &quot;ask turtles [ setxy 0 0 ]&quot;</code></pre>
+<h3 id="bspaceset-time-limit">bspace:set-time-limit</h3>
+<h4 id="bspaceset-time-limit-name-ticks">bspace:set-time-limit
+<em>name</em> <em>ticks</em></h4>
+<p>Set the time limit in ticks for the specified experiment. An error
+will be thrown if an experiment does not exist with the provided
+name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-time-limit &quot;my-experiment&quot; 1500</code></pre>
+<h3 id="bspaceset-return-reporter">bspace:set-return-reporter</h3>
+<h4
+id="bspaceset-return-reporter-experiment-name-value-name-reporter">bspace:set-return-reporter
+<em>experiment-name</em> <em>value-name</em> <em>reporter</em></h4>
+<p>Set a named return value for the specified experiment. An error will
+be thrown if an experiment does not exist with the provided name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-return-reporter &quot;my-experiment&quot; &quot;numTurtles&quot; &quot;count turtles&quot;</code></pre>
+<h3 id="bspaceset-spreadsheet">bspace:set-spreadsheet</h3>
+<h4 id="bspaceset-spreadsheet-name-path">bspace:set-spreadsheet
+<em>name</em> <em>path</em></h4>
+<p>Set the path for the spreadsheet file for the specified experiment.
+An error will be thrown if an experiment does not exist with the
+provided name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-spreadsheet &quot;my-experiment&quot; &quot;/Users/johndoe/Documents/exp-sheet.csv&quot;</code></pre>
+<h3 id="bspaceset-table">bspace:set-table</h3>
+<h4 id="bspaceset-table-name-path">bspace:set-table <em>name</em>
+<em>path</em></h4>
+<p>Set the path for the table file for the specified experiment. An
+error will be thrown if an experiment does not exist with the provided
+name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-table &quot;my-experiment&quot; &quot;/Users/johndoe/Documents/exp-table.csv&quot;</code></pre>
+<h3 id="bspaceset-stats">bspace:set-stats</h3>
+<h4 id="bspaceset-stats-name-path">bspace:set-stats <em>name</em>
+<em>path</em></h4>
+<p>Set the path for the stats file for the specified experiment. An
+error will be thrown if an experiment does not exist with the provided
+name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-stats &quot;my-experiment&quot; &quot;/Users/johndoe/Documents/exp-stats.csv&quot;</code></pre>
+<h3 id="bspaceset-lists">bspace:set-lists</h3>
+<h4 id="bspaceset-lists-name-path">bspace:set-lists <em>name</em>
+<em>path</em></h4>
+<p>Set the path for the lists file for the specified experiment. An
+error will be thrown if an experiment does not exist with the provided
+name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-lists &quot;my-experiment&quot; &quot;/Users/johndoe/Documents/exp-lists.csv&quot;</code></pre>
+<h3 id="bspaceset-update-view">bspace:set-update-view</h3>
+<h4 id="bspaceset-update-view-name-boolean">bspace:set-update-view
+<em>name</em> <em>boolean</em></h4>
+<p>Set whether the specified experiment should update the view. An error
+will be thrown if an experiment does not exist with the provided
+name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-update-view &quot;my-experiment&quot; true</code></pre>
+<h3 id="bspaceset-update-plots">bspace:set-update-plots</h3>
+<h4 id="bspaceset-update-view-name-boolean-1">bspace:set-update-view
+<em>name</em> <em>boolean</em></h4>
+<p>Set whether the specified experiment should update the plots. An
+error will be thrown if an experiment does not exist with the provided
+name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-update-view &quot;my-experiment&quot; false</code></pre>
+<h3 id="bspaceset-parallel-runs">bspace:set-parallel-runs</h3>
+<h4 id="bspaceset-parallel-runs-name-threads">bspace:set-parallel-runs
+<em>name</em> <em>threads</em></h4>
+<p>Set the number of parallel runs for the specified experiment. An
+error will be thrown if an experiment does not exist with the provided
+name.</p>
+<p>Example:</p>
+<pre><code>bspace:set-parallel-runs &quot;my-experiment&quot; 3</code></pre>
+<h3
+id="bspacegoto-behaviorspace-documentation">bspace:goto-behaviorspace-documentation</h3>
+<h4
+id="bspacegoto-behaviorspace-documentation-1">bspace:goto-behaviorspace-documentation</h4>
+<p>Open the BehaviorSpace documentation page in a browser window.</p>
+<p>Example:</p>
+<pre><code>bspace:goto-behaviorspace-documentation</code></pre>
+<h3
+id="bspacegoto-bspace-extension-documentation">bspace:goto-bspace-extension-documentation</h3>
+<h4
+id="bspacegoto-bspace-extension-documentation-1">bspace:goto-bspace-extension-documentation</h4>
+<p>Open the bspace extension documentation page in a browser window.</p>
+<p>Example:</p>
+<pre><code>bspace:goto-bspace-extension-documentation</code></pre>
+<h3
+id="bspaceget-default-parallel-runs">bspace:get-default-parallel-runs</h3>
+<h4
+id="bspaceget-default-parallel-runs-1">bspace:get-default-parallel-runs</h4>
+<p>Returns the default number of parallel runs for the current
+device.</p>
+<p>Example:</p>
+<pre><code>print bspace:get-default-parallel-runs</code></pre>
+<h3
+id="bspaceget-recommended-max-parallel-runs">bspace:get-recommended-max-parallel-runs</h3>
+<h4
+id="bspaceget-recommended-max-parallel-runs-1">bspace:get-recommended-max-parallel-runs</h4>
+<p>Returns the recommended maximum number of parallel runs for the
+current device.</p>
+<p>Example:</p>
+<pre><code>print bspace:get-recommended-max-parallel-runs</code></pre>
+<h3 id="bspaceget-return-value">bspace:get-return-value</h3>
+<h4 id="bspaceget-return-value-value-name">bspace:get-return-value
+<em>value-name</em></h4>
+<p>Gets the return value with the specified name. Will throw an error if
+no return value has been set with the specified name.</p>
+<p>Example:</p>
+<pre><code>print bspace:get-return-value &quot;numTurtles&quot;</code></pre>
