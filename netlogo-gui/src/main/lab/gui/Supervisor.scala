@@ -20,8 +20,9 @@ import org.nlogo.workspace.{ CurrentModelOpener, WorkspaceFactory }
 import scala.collection.mutable.Set
 
 object Supervisor {
-  def runFromExtension(protocol: LabProtocol, workspace: GUIWorkspace, factory: WorkspaceFactory with CurrentModelOpener) {
-    new Supervisor(workspace.getFrame, workspace, protocol, factory, null, (_) => {}, false).start()
+  def runFromExtension(protocol: LabProtocol, workspace: GUIWorkspace,
+                       factory: WorkspaceFactory with CurrentModelOpener, saveProtocol: (LabProtocol) => Unit) {
+    new Supervisor(workspace.getFrame, workspace, protocol, factory, null, saveProtocol, false).start()
   }
 }
 

@@ -48,23 +48,36 @@ object RunExperiment extends Command {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == args(0).getString).get
       case ExperimentType.Code =>
-        val data = BehaviorSpaceExtension.experiments(args(0).getString)
+        if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+          BehaviorSpaceExtension.savedExperiments(args(0).getString)
+        else {
+          val data = BehaviorSpaceExtension.experiments(args(0).getString)
 
-        new LabProtocol(data.name, data.preExperimentCommands, data.setupCommands, data.goCommands,
-                                        data.postRunCommands, data.postExperimentCommands, data.repetitions,
-                                        data.sequentialRunOrder, data.runMetricsEveryStep, data.runMetricsCondition,
-                                        data.timeLimit, data.exitCondition, data.metrics, data.constants,
-                                        data.subExperiments, data.returnReporters.toMap,
-                                        runOptions = new LabRunOptions(data.threadCount, data.table,
-                                                                          data.spreadsheet, data.stats, data.lists,
-                                                                          data.updateView,
-                                                                          data.updatePlotsAndMonitors))
+          new LabProtocol(data.name, data.preExperimentCommands, data.setupCommands, data.goCommands,
+                                          data.postRunCommands, data.postExperimentCommands, data.repetitions,
+                                          data.sequentialRunOrder, data.runMetricsEveryStep, data.runMetricsCondition,
+                                          data.timeLimit, data.exitCondition, data.metrics, data.constants,
+                                          data.subExperiments, data.returnReporters.toMap,
+                                          runOptions = new LabRunOptions(data.threadCount, data.table,
+                                                                            data.spreadsheet, data.stats, data.lists,
+                                                                            data.updateView,
+                                                                            data.updatePlotsAndMonitors))
+        }
       case _ => return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment", args(0).getString), context)
     }
 
     javax.swing.SwingUtilities.invokeLater(() => {
       Supervisor.runFromExtension(protocol, context.workspace.asInstanceOf[GUIWorkspace],
-                                  org.nlogo.app.App.app.workspaceFactory)
+                                  org.nlogo.app.App.app.workspaceFactory, (protocol) => {
+        if (BehaviorSpaceExtension.savedExperiments.contains(protocol.name)) {
+          if (protocol.runsCompleted == 0)
+            BehaviorSpaceExtension.savedExperiments -= protocol.name
+          else
+            BehaviorSpaceExtension.savedExperiments(protocol.name) = protocol
+        }
+        else if (protocol.runsCompleted != 0)
+          BehaviorSpaceExtension.savedExperiments += ((protocol.name, protocol))
+      })
     })
   }
 }

@@ -2,8 +2,8 @@
 
 package org.nlogo.extensions.bspace
 
-import org.nlogo.api.{ Argument, Command, Context, DefaultClassManager, LabDefaultValues, PrimitiveManager,
-                       RefValueSet }
+import org.nlogo.api.{ Argument, Command, Context, DefaultClassManager, LabDefaultValues, LabProtocol,
+                       PrimitiveManager, RefValueSet }
 import org.nlogo.core.I18N
 import org.nlogo.window.GUIWorkspace
 
@@ -44,6 +44,7 @@ object ExperimentType extends Enumeration {
 
 object BehaviorSpaceExtension {
   val experiments = Map[String, ExperimentData]()
+  val savedExperiments = Map[String, LabProtocol]()
 
   def experimentType(name: String, context: Context): ExperimentType.ExperimentType = {
     if (context.workspace.getBehaviorSpaceExperiments.find(x => x.name == name).isDefined)
@@ -112,5 +113,6 @@ class BehaviorSpaceExtension extends DefaultClassManager {
 
   override def clearAll() {
     BehaviorSpaceExtension.experiments.clear()
+    BehaviorSpaceExtension.savedExperiments.clear()
   }
 }
