@@ -105,7 +105,7 @@ class Supervisor(
         return
     }
 
-    if (useGUI && options.firstRun) {
+    if (useGUI && (options == null || options.firstRun)) {
       options =
         try {
           new RunOptionsDialog(parent, dialogFactory, workspace.guessExportName(worker.protocol.name)).get
