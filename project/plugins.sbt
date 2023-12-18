@@ -17,25 +17,25 @@ resolvers ++= Seq(
 )
 
 addSbtPlugin("org.scalastyle"     %% "scalastyle-sbt-plugin"           % "1.0.0")
-addSbtPlugin("org.portable-scala" %  "sbt-scalajs-crossproject"        % "1.2.0")
-addSbtPlugin("org.scala-js"       %  "sbt-scalajs"                     % "1.11.0")
+addSbtPlugin("org.portable-scala" %  "sbt-scalajs-crossproject"        % "1.3.2")
+addSbtPlugin("org.scala-js"       %  "sbt-scalajs"                     % "1.14.0")
 addSbtPlugin("org.nlogo"          %  "publish-versioned-plugin"        % "3.0.0")
 addSbtPlugin("org.nlogo"          %  "netlogo-extension-documentation" % "0.8.3")
 addSbtPlugin("com.timushev.sbt"   %  "sbt-updates"                     % "0.6.4")
 
 libraryDependencies ++= Seq(
   "com.github.spullara.mustache.java" % "compiler"              % "0.9.5"
-, "de.jflex"                          % "jflex"                 % "1.8.2"
+, "de.jflex"                          % "jflex"                 % "1.9.1"
 , "classycle"                         % "classycle"             % "1.4.2" from
   "https://s3.amazonaws.com/ccl-artifacts/classycle-1.4.2.jar"
 , "com.github.spullara.mustache.java" % "scala-extensions-2.10" % "0.9.5"
-, "org.jsoup"                         % "jsoup"                 % "1.15.3"
-, "org.apache.commons"                % "commons-lang3"         % "3.12.0"
-, "commons-io"                        % "commons-io"            % "2.11.0"
+, "org.jsoup"                         % "jsoup"                 % "1.15.4"
+, "org.apache.commons"                % "commons-lang3"         % "3.13.0"
+, "commons-io"                        % "commons-io"            % "2.14.0"
 )
 
 {
-  val flexmarkVersion = "0.20.0"
+  val flexmarkVersion = "0.20.2"
   libraryDependencies ++= Seq(
     "com.vladsch.flexmark" % "flexmark" % flexmarkVersion,
     "com.vladsch.flexmark" % "flexmark-ext-anchorlink" % flexmarkVersion,

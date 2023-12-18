@@ -14,11 +14,11 @@ jobs:
     if: ${{ 'pull_request' != github.event_name || (github.event.pull_request.head.repo.git_url != github.event.pull_request.base.repo.git_url) }}
     steps:
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.11.0
+        uses: styfle/cancel-workflow-action@0.12.0
         with:
           access_token: ${{ github.token }}
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         # This setting can be re-added and the `Clone Git submoudles` step removed when this bug is fixed and released:
         # https://github.com/actions/checkout/issues/994 -Jeremy B April 2023
         # with:
@@ -27,7 +27,7 @@ jobs:
       - name: Clone Git submodules
         run: git submodule update --init
 
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           distribution: 'liberica'
           java-version: ${{ env.liberica-version }}
@@ -57,14 +57,14 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
 
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           distribution: 'liberica'
           java-version: ${{ env.liberica-version }}
           java-package: jdk+fx
           cache: 'sbt'
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.9'
 
@@ -107,7 +107,7 @@ jobs:
           path: ./*
           key: ${{ github.sha }}
 
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           distribution: 'liberica'
           java-version: ${{ env.liberica-version }}
