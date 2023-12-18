@@ -91,6 +91,8 @@ with org.nlogo.workspace.WorldLoaderInterface {
   private[this] var _openModel = Option.empty[Model]
   def setOpenModel(model: Model) { _openModel = Some(model) }
 
+  def getCurrentModel = if (modelOpened) _openModel.get else null
+
   val outputAreaBuffer = new StringBuilder
 
   /**
