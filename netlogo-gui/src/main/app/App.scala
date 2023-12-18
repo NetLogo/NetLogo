@@ -282,9 +282,8 @@ class App extends
   def getMonitorManager = monitorManager
   var aggregateManager: AggregateManagerInterface = null
   var dirtyMonitor: DirtyMonitor = null
-  val workspaceFactory: WorkspaceFactory with CurrentModelOpener =
-    pico.getComponent(classOf[WorkspaceFactory]).asInstanceOf[WorkspaceFactory with CurrentModelOpener]
   var labManager: LabManagerInterface = null
+  var modelSaver: ModelSaver = null
   var recentFilesMenu: RecentFilesMenu = null
   private var errorDialogManager: ErrorDialogManager = null
   private val listenerManager = new NetLogoListenerManager
@@ -469,6 +468,8 @@ class App extends
 
       labManager = pico.getComponent(classOf[LabManagerInterface])
       frame.addLinkComponent(labManager)
+
+      modelSaver = pico.getComponent(classOf[ModelSaver])
 
       val titler = (file: Option[String]) => { file map externalFileTitle getOrElse modelTitle() }
       pico.add(classOf[DirtyMonitor], "org.nlogo.app.DirtyMonitor",

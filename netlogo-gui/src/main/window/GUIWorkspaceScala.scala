@@ -14,6 +14,7 @@ import scala.util.{ Failure, Success }
 
 import org.nlogo.agent.{ ImporterJ, World }
 import org.nlogo.api.{ ControlSet, Exceptions, FileIO, ModelReader, ModelSettings }
+import org.nlogo.app.App
 import org.nlogo.awt.{ EventQueue, Hierarchy, UserCancelException }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog }
@@ -287,5 +288,7 @@ with LoadModelEvent.Handler {
     else
       super.guessExportName(defaultName)
   }
+
+  def getCurrentModel = App.app.modelSaver.currentModelInCurrentVersion
 
 }

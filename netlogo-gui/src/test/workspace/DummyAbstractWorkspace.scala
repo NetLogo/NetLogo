@@ -33,6 +33,7 @@ extends AbstractWorkspaceScala(
   override def open(path: String, shouldAutoInstallLibs: Boolean = false) = unsupported
   override def openString(modelContents: String) = unsupported
   override def magicOpen(name: String) = unsupported
+  override def getCurrentModel = unsupported
   override def clearOutput(): Unit = unsupported
   override def sendOutput(oo: org.nlogo.agent.OutputObject, toOutputArea: Boolean): Unit = unsupported
   override def importerErrorHandler: org.nlogo.agent.ImporterJ.ErrorHandler = unsupported

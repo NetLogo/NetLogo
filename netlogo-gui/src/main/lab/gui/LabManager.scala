@@ -9,7 +9,6 @@ import org.nlogo.api.LabProtocol
 import org.nlogo.awt.Positioning
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.window.{ GUIWorkspace, EditDialogFactoryInterface, LabManagerInterface, MenuBarFactory }
-import org.nlogo.workspace.{CurrentModelOpener, WorkspaceFactory}
 import org.nlogo.window.Events._
 import org.nlogo.swing.UserAction.{ ToolsCategory, ToolsDialogsGroup, KeyBindings, MenuAction }
 
@@ -17,8 +16,7 @@ import scala.collection.mutable.ListBuffer
 
 class LabManager(val workspace:        GUIWorkspace,
                  dialogFactory:        EditDialogFactoryInterface,
-                 menuFactory:          MenuBarFactory,
-                 val workspaceFactory: WorkspaceFactory with CurrentModelOpener)
+                 menuFactory:          MenuBarFactory)
   extends LabManagerInterface
   with CompiledEvent.Handler
   with LoadBeginEvent.Handler

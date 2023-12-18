@@ -130,6 +130,8 @@ with org.nlogo.api.ViewSettings {
   private[this] var _openModel = Option.empty[Model]
   def setOpenModel(model: Model): Unit = { _openModel = Some(model) }
 
+  def getCurrentModel = if (modelOpened) _openModel.get else null
+
   val outputAreaBuffer = new StringBuilder
 
   /**

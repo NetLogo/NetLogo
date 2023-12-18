@@ -11,31 +11,37 @@ import org.nlogo.api.{ Exceptions, ExportPlotWarningAction, LabProtocol,
   LogoException, PlotCompilationErrorAction, LabPostProcessorInputFormat }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ CompilerException, I18N }
+import org.nlogo.headless.HeadlessWorkspace
 import org.nlogo.lab.{ Exporter, ListsExporter, PartialData, SpreadsheetExporter, StatsExporter, TableExporter, Worker }
 import org.nlogo.nvm.{ EngineException, Workspace }
 import org.nlogo.nvm.LabInterface.ProgressListener
-import org.nlogo.swing.{ OptionDialog }
+import org.nlogo.swing.OptionDialog
 import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace }
-import org.nlogo.workspace.{ CurrentModelOpener, WorkspaceFactory }
+import org.nlogo.workspace.AbstractWorkspace
+
 import scala.collection.mutable.Set
 
 object Supervisor {
-  def runFromExtension(protocol: LabProtocol, workspace: GUIWorkspace,
-                       factory: WorkspaceFactory with CurrentModelOpener, saveProtocol: (LabProtocol) => Unit) {
-    new Supervisor(workspace.getFrame, workspace, protocol, factory, null, saveProtocol, false).start()
+  // RunMode determines what context Supervisor is running in, to ensure the code can be correctly reused
+  sealed abstract class RunMode
+  case object GUI extends RunMode
+  case object Extension extends RunMode
+  case object Headless extends RunMode
+
+  def runFromExtension(protocol: LabProtocol, workspace: AbstractWorkspace, saveProtocol: (LabProtocol) => Unit,
+                       runMode: RunMode) {
+    new Supervisor(if (runMode == Extension) workspace.asInstanceOf[GUIWorkspace].getFrame else null, workspace,
+                   protocol, null, saveProtocol, runMode).start()
   }
 }
 
 class Supervisor(
   parent: Window,
-  val workspace: GUIWorkspace,
+  val workspace: AbstractWorkspace,
   protocol: LabProtocol,
-  factory: WorkspaceFactory with CurrentModelOpener,
   dialogFactory: EditDialogFactoryInterface,
   saveProtocol: (LabProtocol) => Unit,
-  // useGUI determines what instantiated Supervisor, either ManagerDialog (true) or the bspace extension (false)
-  // this is to make sure Supervisor runs differently in the bspace extension but the code can be reused in both
-  useGUI: Boolean = true
+  runMode: Supervisor.RunMode
 ) extends Thread("BehaviorSpace Supervisor") {
   private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace")
   var options = protocol.runOptions
@@ -105,7 +111,7 @@ class Supervisor(
         return
     }
 
-    if (useGUI && (options == null || options.firstRun)) {
+    if (runMode == Supervisor.GUI && (options == null || options.firstRun)) {
       options =
         try {
           new RunOptionsDialog(parent, dialogFactory, workspace.guessExportName(worker.protocol.name)).get
@@ -152,21 +158,10 @@ class Supervisor(
           spreadsheetFileName = fileName
           addExporter(spreadsheetExporter)
         } catch {
-          case _: Throwable =>
-            OptionDialog.showMessage(
-              workspace.getFrame, I18N.gui("error.title"),
-              I18N.gui("error.pause.invalidSpreadsheet"),
-              Array(I18N.gui.get("common.buttons.ok")))
-            return
+          case _: Throwable => return guiError(I18N.gui("error.pause.invalidSpreadsheet"))
         }
       }
-      else {
-        OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui("error.title"),
-          I18N.gui("error.pause.spreadsheet"),
-          Array(I18N.gui.get("common.buttons.ok")))
-        return
-      }
+      else return guiError(I18N.gui("error.pause.spreadsheet"))
     }
     if (options.table != null && options.table.trim() != "") {
       val fileName = options.table.trim()
@@ -179,13 +174,7 @@ class Supervisor(
         tableFileName = fileName
         addExporter(tableExporter)
       }
-      else {
-        OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui("error.title"),
-          I18N.gui("error.pause.table"),
-          Array(I18N.gui.get("common.buttons.ok")))
-        return
-      }
+      else return guiError(I18N.gui("error.pause.table"))
     }
     if (options.stats != null && options.stats.trim() != "") {
       if (tableFileName != null || spreadsheetFileName != null) {
@@ -206,15 +195,7 @@ class Supervisor(
             failure(e)
             return
         }
-      } else {
-        EventQueue.mustBeEventDispatchThread()
-        OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui("error.title"),
-          I18N.gui("error.stats"),
-          Array(I18N.gui.get("common.buttons.ok"))
-        )
-        return
-      }
+      } else return guiError(I18N.gui("error.stats"))
     }
     if (options.lists != null && options.lists.trim() != "") {
       val fileName = options.lists.trim()
@@ -228,13 +209,7 @@ class Supervisor(
             LabPostProcessorInputFormat.Table(options.table.trim())
           } else if (options.spreadsheet != null && options.spreadsheet.trim() != "") {
             LabPostProcessorInputFormat.Spreadsheet(options.spreadsheet.trim())
-          } else {
-            OptionDialog.showMessage(
-              workspace.getFrame, I18N.gui("error.title"),
-              I18N.gui("error.lists"),
-              Array(I18N.gui.get("common.buttons.ok")))
-            return
-          }))
+          } else return guiError(I18N.gui("error.lists"))))
       } catch {
         case e: IOException =>
           failure(e)
@@ -249,7 +224,7 @@ class Supervisor(
     workspace.setTriedToExportPlot(false)
     queue.enqueue(workspace)
     (2 to options.threadCount).foreach{num =>
-      val w = factory.newInstance
+      val w = HeadlessWorkspace.newInstance
       // We want to print any plot compilation errors for just one of
       // the headless workspaces.
       if (num == 2) {
@@ -259,7 +234,7 @@ class Supervisor(
         w.setPlotCompilationErrorAction(PlotCompilationErrorAction.Ignore)
         w.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
       }
-      factory.openCurrentModelIn(w)
+      w.openModel(workspace.getCurrentModel)
       w.setShouldUpdatePlots(options.updatePlotsAndMonitors)
       headlessWorkspaces += w
       queue.enqueue(w)
@@ -335,25 +310,17 @@ class Supervisor(
   private def failure(t: Throwable) {
     EventQueue.mustBeEventDispatchThread()
     t match {
-      case ex: CompilerException =>
-        OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui("error.title"),
-          I18N.gui("error.compilation") + "\n" + ex.getMessage,
-          Array(I18N.gui.get("common.buttons.ok"))
-        )
-      case ex: LogoException =>
-        OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui("error.title"),
-          I18N.gui("error.runtime") + "\n" + ex.getMessage,
-          Array(I18N.gui.get("common.buttons.ok"))
-        )
-      case ex: IOException =>
-        OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui("error.title"),
-          I18N.gui("error.io") + "\n" + ex.getMessage,
-          Array(I18N.gui.get("common.buttons.ok"))
-        )
+      case ex: CompilerException => guiError(I18N.gui("error.compilation") + "\n" + ex.getMessage)
+      case ex: LogoException => guiError(I18N.gui("error.runtime") + "\n" + ex.getMessage)
+      case ex: IOException => guiError(I18N.gui("error.io") + "\n" + ex.getMessage)
       case _ => Exceptions.handle(t)
+    }
+  }
+
+  private def guiError(message: String) {
+    if (runMode == Supervisor.GUI) {
+      OptionDialog.showMessage(workspace.asInstanceOf[GUIWorkspace].getFrame, I18N.gui("error.title"), message,
+                               Array(I18N.gui.get("common.buttons.ok")))
     }
   }
 }
