@@ -47,7 +47,7 @@ with ViewSettings with Controllable {
   def setModelPath(path: String)
   def getModelDir: String
   def getModelFileName: String
-  def getCurrentModel: Model
+  def getCurrentModel: Model = null
   @deprecated("Use `realPlotManager`", "6.1.2")
   def plotManager: AnyRef
   // Annoyingly this will still likely have to be cast with `asInstanceOf` in GUI and headless because the
