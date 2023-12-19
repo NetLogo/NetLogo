@@ -4,9 +4,9 @@ package org.nlogo.lab.gui
 
 import org.nlogo.api.{ LabProtocol, LabVariableParser }
 import org.nlogo.core.I18N
-import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, RefEnumeratedValueSet, SteppedValueSet, RefValueSet }
+import org.nlogo.api.{ LabProtocol, RefValueSet }
 import java.awt.{ GridBagConstraints, Window }
-import org.nlogo.api.{ Dump, CompilerServices, Editable, Property }
+import org.nlogo.api.{ CompilerServices, Editable, Property }
 
 // normally we'd be package-private but the org.nlogo.properties stuff requires we be public - ST 2/25/09
 
@@ -81,20 +81,7 @@ class ProtocolEditable(protocol: LabProtocol,
   var timeLimit = protocol.timeLimit
   var exitCondition = protocol.exitCondition
   var metrics = protocol.metrics.mkString("\n")
-  var valueSets = {
-    def setString(valueSet: RefValueSet) =
-      "[\"" + valueSet.variableName + "\" " +
-      (valueSet match {
-         case evs: EnumeratedValueSet =>
-           evs.map(x => Dump.logoObject(x.asInstanceOf[AnyRef], true, false)).mkString(" ")
-         case evs: RefEnumeratedValueSet =>
-           evs.map(x => Dump.logoObject(x.asInstanceOf[AnyRef], true, false)).mkString(" ")
-         case svs: SteppedValueSet =>
-           List(svs.firstValue, svs.step, svs.lastValue).map(_.toString).mkString("[", " ", "]")
-       }) + "]"
-    (protocol.constants.map(setString) :::
-     protocol.subExperiments.map("[" + _.map(setString).mkString + "]")).mkString("\n")
-  }
+  var valueSets = LabVariableParser.combineVariables(protocol.constants, protocol.subExperiments)
   var returnReporters = protocol.returnReporters
   val runsCompleted = protocol.runsCompleted
   // make a new LabProtocol based on what user entered

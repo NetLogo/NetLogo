@@ -120,4 +120,19 @@ object LabVariableParser
       return (None, I18N.gui.getN("edit.behaviorSpace.repetition.totalrun"))
     return (Some((constants, subExperiments)), "")
   }
+
+  def combineVariables(constants: List[RefValueSet], subExperiments: List[List[RefValueSet]]): String = {
+    def setString(valueSet: RefValueSet) =
+      "[\"" + valueSet.variableName + "\" " +
+      (valueSet match {
+         case evs: EnumeratedValueSet =>
+           evs.map(x => Dump.logoObject(x.asInstanceOf[AnyRef], true, false)).mkString(" ")
+         case evs: RefEnumeratedValueSet =>
+           evs.map(x => Dump.logoObject(x.asInstanceOf[AnyRef], true, false)).mkString(" ")
+         case svs: SteppedValueSet =>
+           List(svs.firstValue, svs.step, svs.lastValue).map(_.toString).mkString("[", " ", "]")
+       }) + "]"
+    (constants.map(setString) :::
+     subExperiments.map("[" + _.map(setString).mkString + "]")).mkString("\n")
+  }
 }
