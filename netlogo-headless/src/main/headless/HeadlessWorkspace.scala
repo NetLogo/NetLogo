@@ -15,7 +15,7 @@ import
     drawing.DrawingActionBroker,
     fileformat.{ NLogoFormat, NLogoPreviewCommandsFormat },
     nvm.{ CompilerInterface, Context, LabInterface, Workspace },
-    workspace.{ AbstractWorkspaceScala, CurrentModelOpener }
+    workspace.{ AbstractWorkspace, CurrentModelOpener }
 
 import java.io.InputStream
 import java.nio.file.Paths
