@@ -44,7 +44,6 @@ class DummyWorkspace extends Workspace {
   override def setModelPath(path: String) = unsupported
   override def getModelDir = unsupported
   override def getModelFileName = unsupported
-  override def getCurrentModel = unsupported
   override def fileManager = unsupported
   override def plotManager = unsupported
   override def realPlotManager = unsupported

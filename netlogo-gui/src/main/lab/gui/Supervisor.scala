@@ -11,7 +11,6 @@ import org.nlogo.api.{ Exceptions, ExportPlotWarningAction, LabProtocol,
   LogoException, PlotCompilationErrorAction, LabPostProcessorInputFormat }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ CompilerException, I18N }
-import org.nlogo.headless.HeadlessWorkspace
 import org.nlogo.lab.{ Exporter, ListsExporter, PartialData, SpreadsheetExporter, StatsExporter, TableExporter, Worker }
 import org.nlogo.nvm.{ EngineException, Workspace }
 import org.nlogo.nvm.LabInterface.ProgressListener
@@ -224,7 +223,7 @@ class Supervisor(
     workspace.setTriedToExportPlot(false)
     queue.enqueue(workspace)
     (2 to options.threadCount).foreach{num =>
-      val w = HeadlessWorkspace.newInstance
+      val w = workspace.workspaceFactory.newInstance
       // We want to print any plot compilation errors for just one of
       // the headless workspaces.
       if (num == 2) {
@@ -234,7 +233,7 @@ class Supervisor(
         w.setPlotCompilationErrorAction(PlotCompilationErrorAction.Ignore)
         w.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
       }
-      w.openModel(workspace.getCurrentModel)
+      workspace.workspaceFactory.openCurrentModelIn(w)
       w.setShouldUpdatePlots(options.updatePlotsAndMonitors)
       headlessWorkspaces += w
       queue.enqueue(w)

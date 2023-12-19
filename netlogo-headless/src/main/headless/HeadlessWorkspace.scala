@@ -14,8 +14,8 @@ import
     core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, Output, UpdateMode, WorldDimensions },
     drawing.DrawingActionBroker,
     fileformat.{ NLogoFormat, NLogoPreviewCommandsFormat },
-    nvm.{ CompilerInterface, Context, LabInterface },
-    workspace.AbstractWorkspace
+    nvm.{ CompilerInterface, Context, LabInterface, Workspace },
+    workspace.{ AbstractWorkspaceScala, CurrentModelOpener }
 
 import java.io.InputStream
 import java.nio.file.Paths
@@ -91,7 +91,13 @@ with org.nlogo.workspace.WorldLoaderInterface {
   private[this] var _openModel = Option.empty[Model]
   def setOpenModel(model: Model) { _openModel = Some(model) }
 
-  override def getCurrentModel = if (modelOpened) _openModel.get else null
+  override def workspaceFactory =
+    new WorkspaceFactory() with CurrentModelOpener {
+      def openCurrentModelIn(w: Workspace): Unit = {
+        w.setModelPath(getModelPath)
+        w.openModel(_openModel.get.copy())
+      }
+    }
 
   val outputAreaBuffer = new StringBuilder
 

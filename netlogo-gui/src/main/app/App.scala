@@ -381,7 +381,8 @@ class App extends
       def updateModel(model: Model): Model = {
         model.withOptionalSection("org.nlogo.modelsection.modelsettings", Some(ModelSettings(snapOn)), Some(ModelSettings(false)))
       }
-      override def getCurrentModel = pico.getComponent(classOf[ModelSaver]).currentModelInCurrentVersion
+      override def workspaceFactory = pico.getComponent(classOf[WorkspaceFactory])
+                                          .asInstanceOf[WorkspaceFactory with CurrentModelOpener]
     }
 
     ShapeChangeListener.listen(_workspace, world)
