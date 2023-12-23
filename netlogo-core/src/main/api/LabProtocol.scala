@@ -17,7 +17,6 @@ case class LabProtocol(name: String = LabDefaultValues.getDefaultName,
                     metrics: List[String] = LabDefaultValues.getDefaultMetrics,
                     constants: List[RefValueSet] = LabDefaultValues.getDefaultConstants,
                     subExperiments: List[List[RefValueSet]] = LabDefaultValues.getDefaultSubExperiments,
-                    returnReporters: Map[String, String] = LabDefaultValues.getDefaultReturnReporters,
                     runsCompleted: Int = 0,
                     runOptions: LabRunOptions = new LabRunOptions)
 {
