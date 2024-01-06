@@ -25,12 +25,10 @@ object Supervisor {
   sealed abstract class RunMode
   case object GUI extends RunMode
   case object Extension extends RunMode
-  case object Headless extends RunMode
 
-  def runFromExtension(protocol: LabProtocol, workspace: AbstractWorkspace, saveProtocol: (LabProtocol) => Unit,
-                       runMode: RunMode) {
-    new Supervisor(if (runMode == Extension) workspace.asInstanceOf[GUIWorkspace].getFrame else null, workspace,
-                   protocol, null, null, saveProtocol, runMode).start()
+  def runFromExtension(protocol: LabProtocol, workspace: AbstractWorkspace, saveProtocol: (LabProtocol) => Unit) {
+    new Supervisor(workspace.asInstanceOf[GUIWorkspace].getFrame, workspace, protocol, null, null, saveProtocol,
+                   Extension).start()
   }
 }
 
