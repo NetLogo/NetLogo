@@ -16,7 +16,7 @@ import org.nlogo.nvm.{ EngineException, Workspace }
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.swing.OptionDialog
 import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace }
-import org.nlogo.workspace.AbstractWorkspace
+import org.nlogo.workspace.{ AbstractWorkspace, CurrentModelOpener, WorkspaceFactory }
 
 import scala.collection.mutable.Set
 
@@ -30,7 +30,7 @@ object Supervisor {
   def runFromExtension(protocol: LabProtocol, workspace: AbstractWorkspace, saveProtocol: (LabProtocol) => Unit,
                        runMode: RunMode) {
     new Supervisor(if (runMode == Extension) workspace.asInstanceOf[GUIWorkspace].getFrame else null, workspace,
-                   protocol, null, saveProtocol, runMode).start()
+                   protocol, null, null, saveProtocol, runMode).start()
   }
 }
 
@@ -38,6 +38,7 @@ class Supervisor(
   parent: Window,
   val workspace: AbstractWorkspace,
   protocol: LabProtocol,
+  factory: WorkspaceFactory with CurrentModelOpener,
   dialogFactory: EditDialogFactoryInterface,
   saveProtocol: (LabProtocol) => Unit,
   runMode: Supervisor.RunMode
@@ -223,7 +224,7 @@ class Supervisor(
     workspace.setTriedToExportPlot(false)
     queue.enqueue(workspace)
     (2 to options.threadCount).foreach{num =>
-      val w = workspace.workspaceFactory.newInstance
+      val w = factory.newInstance
       // We want to print any plot compilation errors for just one of
       // the headless workspaces.
       if (num == 2) {
@@ -233,7 +234,7 @@ class Supervisor(
         w.setPlotCompilationErrorAction(PlotCompilationErrorAction.Ignore)
         w.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
       }
-      workspace.workspaceFactory.openCurrentModelIn(w)
+      factory.openCurrentModelIn(w)
       w.setShouldUpdatePlots(options.updatePlotsAndMonitors)
       headlessWorkspaces += w
       queue.enqueue(w)

@@ -14,8 +14,8 @@ import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface,
   NetLogoThreeDDialect, CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
 import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions }
 import org.nlogo.agent.{ CompilationManagement, World, World2D, World3D }
-import org.nlogo.nvm.{ LabInterface, DefaultCompilerServices, PresentationCompilerInterface, Workspace }
-import org.nlogo.workspace.{ AbstractWorkspaceScala, CurrentModelOpener, HubNetManagerFactory }
+import org.nlogo.nvm.{ LabInterface, DefaultCompilerServices, PresentationCompilerInterface }
+import org.nlogo.workspace.{ AbstractWorkspaceScala, HubNetManagerFactory }
 import org.nlogo.fileformat, fileformat.{ NLogoFormat, NLogoThreeDFormat }
 import org.nlogo.util.Pico
 
@@ -129,14 +129,6 @@ with org.nlogo.api.ViewSettings {
 
   private[this] var _openModel = Option.empty[Model]
   def setOpenModel(model: Model): Unit = { _openModel = Some(model) }
-
-  override def workspaceFactory =
-    new WorkspaceFactory() with CurrentModelOpener {
-      def openCurrentModelIn(w: Workspace): Unit = {
-        w.setModelPath(getModelPath)
-        w.openModel(_openModel.get.copy())
-      }
-    }
 
   val outputAreaBuffer = new StringBuilder
 

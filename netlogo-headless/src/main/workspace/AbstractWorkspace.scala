@@ -14,9 +14,9 @@ import scala.collection.mutable.WeakHashMap
 import
   org.nlogo.{ agent, api, core, nvm, plot },
   agent.{ AbstractExporter, Agent, AgentSet, World },
-  api.{PlotInterface, CommandLogoThunk, Dump, Exceptions, ExtensionManager => APIEM, ExportPlotWarningAction, JobOwner,
-    LabProtocol, LibraryManager, LogoException, MersenneTwisterFast, ModelType, PreviewCommands, ReporterLogoThunk,
-    SimpleJobOwner},
+  api.{ PlotInterface, CommandLogoThunk, Dump, Exceptions, ExtensionManager => APIEM, ExportPlotWarningAction,
+    JobOwner, LabProtocol, LibraryManager, LogoException, MersenneTwisterFast, ModelType, PreviewCommands,
+    ReporterLogoThunk, SimpleJobOwner },
   core.{ CompilationEnvironment, AgentKind, CompilerException, Femto, File, FileMode, I18N, LiteralParser},
   nvm.{ Activation, Command, Context, FileManager, ImportHandler,
     Instruction, Job, MutableLong, Procedure, RuntimePrimitiveException, Workspace },

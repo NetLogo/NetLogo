@@ -283,7 +283,6 @@ class App extends
   var aggregateManager: AggregateManagerInterface = null
   var dirtyMonitor: DirtyMonitor = null
   var labManager: LabManagerInterface = null
-  var modelSaver: ModelSaver = null
   var recentFilesMenu: RecentFilesMenu = null
   private var errorDialogManager: ErrorDialogManager = null
   private val listenerManager = new NetLogoListenerManager
@@ -381,8 +380,6 @@ class App extends
       def updateModel(model: Model): Model = {
         model.withOptionalSection("org.nlogo.modelsection.modelsettings", Some(ModelSettings(snapOn)), Some(ModelSettings(false)))
       }
-      override def workspaceFactory = pico.getComponent(classOf[WorkspaceFactory])
-                                          .asInstanceOf[WorkspaceFactory with CurrentModelOpener]
     }
 
     ShapeChangeListener.listen(_workspace, world)
@@ -470,8 +467,6 @@ class App extends
 
       labManager = pico.getComponent(classOf[LabManagerInterface])
       frame.addLinkComponent(labManager)
-
-      modelSaver = pico.getComponent(classOf[ModelSaver])
 
       val titler = (file: Option[String]) => { file map externalFileTitle getOrElse modelTitle() }
       pico.add(classOf[DirtyMonitor], "org.nlogo.app.DirtyMonitor",

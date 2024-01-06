@@ -3,7 +3,6 @@
 package org.nlogo.api
 
 import org.nlogo.core.{ CompilationEnvironment, CompilerException, Model, LiteralParser, LogoList }
-import org.nlogo.workspace.{ CurrentModelOpener, WorkspaceFactory }
 
 import java.io.IOException
 
@@ -96,5 +95,4 @@ with ViewSettings with Controllable {
   def renderer: RendererInterface
   def compilerTestingMode: Boolean
   def warningMessage(message: String): Boolean
-  def workspaceFactory: WorkspaceFactory with CurrentModelOpener = null
 }
