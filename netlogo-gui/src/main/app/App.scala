@@ -140,6 +140,8 @@ object App {
         }
       }
 
+      LabUtilities.workspaceFactory = factory
+
       pico.addComponent(classOf[WorkspaceFactory], factory)
       pico.addComponent(classOf[GraphicsPreview])
       pico.addComponent(classOf[ExternalFileManager])
