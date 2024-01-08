@@ -7,7 +7,7 @@ import collection.mutable.ListBuffer
 import java.awt.Window
 import java.io.{ FileWriter, IOException, PrintWriter }
 
-import org.nlogo.api.{ Exceptions, ExportPlotWarningAction, LabProtocol, LabUtilities, LogoException,
+import org.nlogo.api.{ Exceptions, ExportPlotWarningAction, LabProtocol, LogoException,
                        PlotCompilationErrorAction, LabPostProcessorInputFormat }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ CompilerException, I18N }
@@ -27,7 +27,7 @@ object Supervisor {
   case object Extension extends RunMode
 
   def runFromExtension(protocol: LabProtocol, workspace: AbstractWorkspace, saveProtocol: (LabProtocol) => Unit) {
-    new Supervisor(workspace.asInstanceOf[GUIWorkspace].getFrame, workspace, protocol, LabUtilities.workspaceFactory, null, saveProtocol,
+    new Supervisor(workspace.asInstanceOf[GUIWorkspace].getFrame, workspace, protocol, null, null, saveProtocol,
                    Extension).start()
   }
 }
