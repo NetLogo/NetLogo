@@ -44,10 +44,10 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
   def main(args: Array[String]) {
     setHeadlessProperty()
-    parseArgs(args).foreach(runExperiment)
+    parseArgs(args).foreach(runExperiment(_))
   }
 
-  def runExperiment(settings: Settings) {
+  def runExperiment(settings: Settings, finish: () => Unit = () => {}) {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
     var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
     var createdProto = false
@@ -74,7 +74,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     proto match {
       case Some(protocol) =>
         val lab = HeadlessWorkspace.newLab
-        lab.run(settings, protocol, newWorkspace _)
+        lab.run(settings, protocol, newWorkspace _, finish)
 
       case None =>
         throw new IllegalArgumentException("Invalid run, specify experiment name or setup file")

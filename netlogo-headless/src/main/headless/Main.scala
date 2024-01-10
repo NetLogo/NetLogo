@@ -13,13 +13,13 @@ object Main {
   def main(args: Array[String]) {
     try {
       setHeadlessProperty()
-      parseArgs(args).foreach(runExperiment)
+      parseArgs(args).foreach(runExperiment(_))
     } catch {
       case e: CancelException => // ignore
     }
   }
 
-  def runExperiment(settings: Settings) {
+  def runExperiment(settings: Settings, finish: () => Unit = () => {}) {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
     var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
     var createdProto = false
@@ -46,7 +46,7 @@ object Main {
     proto match {
       case Some(protocol) =>
         val lab = HeadlessWorkspace.newLab
-        lab.run(settings, protocol, newWorkspace _)
+        lab.run(settings, protocol, newWorkspace _, finish)
       case None =>
         throw new IllegalArgumentException("Invalid run, specify experiment name or setup file")
     }
