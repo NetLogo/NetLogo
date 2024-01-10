@@ -42,5 +42,5 @@ object LabInterface {
 trait LabInterface {
   import LabInterface._
   def newWorker(protocol: LabProtocol): Worker
-  def run(settings: Settings, protocol: LabProtocol, fn: ()=>Workspace, finish: () => Unit)
+  def run(settings: Settings, protocol: LabProtocol, fn: ()=>Workspace, finish: () => Unit = () => {})
 }
