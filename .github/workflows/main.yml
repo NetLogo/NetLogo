@@ -37,7 +37,6 @@ jobs:
       - name: Build NetLogo
         run: |
           ./sbt update all headless/compile parserJS/compile
-          ./sbt depend headless/depend
 
       - uses: actions/cache@v3
         id: restore-build
@@ -85,6 +84,8 @@ jobs:
       matrix:
         test: [
           "parserJS/test; parserJVM/test"
+        , "depend"
+        , "headless/depend"
         , "netlogo/Test/fast"
         , "netlogo/Test/medium"
         , "netlogo/Test/slow"
