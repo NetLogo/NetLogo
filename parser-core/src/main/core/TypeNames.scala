@@ -96,6 +96,9 @@ object TypeNames {
       } else if (compatible(SymbolType)) {
         subtract(SymbolType)
         "variable"
+      } else if (compatible(DelayedCommandBlockType)) {
+        subtract(DelayedCommandBlockType)
+        "command block"
       } else
         "(none)"
     remainingMask match {

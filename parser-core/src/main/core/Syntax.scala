@@ -324,6 +324,14 @@ object Syntax {
    */
   val SymbolType = 2097152
 
+  /**
+   * Type constant for command blocks to be run later.
+   * Semantically equivalent to <code>CommandBlockType</code>, but
+   * allows the command block to be compiled and checked now but
+   * stored for later compilation
+   */
+  val DelayedCommandBlockType = 4194304
+
   val CommandPrecedence = 0
   val NormalPrecedence = 10
 

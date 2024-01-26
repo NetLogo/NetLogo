@@ -557,9 +557,9 @@ object ExpressionParser {
     new core.ReporterApp(lambda, Seq(commandBlock), token.sourceLocation)
   }
 
-  private def commandBlockWithStatements(sourceLocation: SourceLocation, stmts: Seq[core.Statement], synthetic: Boolean = false) = {
+  private def commandBlockWithStatements(sourceLocation: SourceLocation, stmts: Seq[core.Statement], synthetic: Boolean = false, delayed: Boolean = false) = {
     val statements = new core.Statements(sourceLocation.filename, stmts)
-    new core.CommandBlock(statements, sourceLocation, synthetic)
+    new core.CommandBlock(statements, sourceLocation, synthetic, delayed)
   }
 
   /**
@@ -709,6 +709,10 @@ object ExpressionParser {
       tmp.token = new Token("", TokenType.Literal, null)(
         SourceLocation(block.openBracket.start, closeBracket.end, closeBracket.filename))
       new core.ReporterApp(tmp, SourceLocation(block.openBracket.start, closeBracket.end, closeBracket.filename))
+    }
+    else if (compatible(goalType, Syntax.DelayedCommandBlockType)) {
+      val (stmtList, lastToken) = statementList(tokens, scope)
+      commandBlockWithStatements(lastToken.sourceLocation.copy(start = block.openBracket.start), stmtList, delayed = true)
     }
     // we weren't actually expecting a block at all!
     else

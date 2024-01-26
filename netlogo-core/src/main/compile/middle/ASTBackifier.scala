@@ -34,7 +34,7 @@ class ASTBackifier(backifier: ApiBackifier, procedures: ListMap[String, Procedur
     new Statement(stmt.command, backifier(procedures, stmt.command), stmt.args.map(backify), stmt.sourceLocation)
 
   def backify(cb: core.CommandBlock): CommandBlock =
-    new CommandBlock(backify(cb.statements), cb.sourceLocation)
+    new CommandBlock(backify(cb.statements), cb.sourceLocation, delayed = cb.delayed)
 
   def backify(rb: core.ReporterBlock): ReporterBlock =
     new ReporterBlock(backify(rb.app), rb.sourceLocation)

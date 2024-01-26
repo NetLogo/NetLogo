@@ -131,15 +131,15 @@ class Statement(var command: Command, val args: Seq[Expression], val sourceLocat
  * jargon. Note that this is an Expression, and as such can be an argument
  * to commands and reporters, etc.
  */
-class CommandBlock(val statements: Statements, val sourceLocation: SourceLocation, val synthetic: Boolean = false) extends Expression {
-  def reportedType() = Syntax.CommandBlockType
+class CommandBlock(val statements: Statements, val sourceLocation: SourceLocation, val synthetic: Boolean = false, val delayed: Boolean = false) extends Expression {
+  def reportedType() = if (delayed) Syntax.DelayedCommandBlockType else Syntax.CommandBlockType
   override def toString = "[" + statements.toString + "]"
 
   def changeLocation(newLocation: SourceLocation): CommandBlock = copy(location = newLocation)
 
   def copy(statements: Statements     = statements,
            location:   SourceLocation = sourceLocation): CommandBlock = {
-    new CommandBlock(statements, sourceLocation, synthetic)
+    new CommandBlock(statements, sourceLocation, synthetic, delayed)
   }
 }
 

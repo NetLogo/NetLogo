@@ -115,13 +115,20 @@ class Statement(
  * jargon. Note that this is an Expression, and as such can be an argument
  * to commands and reporters, etc.
  */
-class CommandBlock(val statements: Statements, val sourceLocation: SourceLocation) extends Expression {
-  def reportedType() = core.Syntax.CommandBlockType
+class CommandBlock(val statements: Statements, val sourceLocation: SourceLocation, val delayed: Boolean = false) extends Expression {
+  def reportedType() = if (delayed) core.Syntax.DelayedCommandBlockType else core.Syntax.CommandBlockType
   override def toString = "[" + statements.toString + "]"
   def accept(v: AstVisitor) { v.visitCommandBlock(this) }
 
   def copy(statements: Statements = statements, sourceLocation: SourceLocation = sourceLocation): CommandBlock =
-    new CommandBlock(statements, sourceLocation)
+    new CommandBlock(statements, sourceLocation, delayed)
+
+  class CommandBlockReporter(val procedure: String) extends nvm.Reporter {
+    override def report(context: nvm.Context): String = procedure
+  }
+  def reporter: CommandBlockReporter = {
+    new CommandBlockReporter(statements.body.map(s => s.command.fullSource).mkString("\n"))
+  }
 }
 
 /**
