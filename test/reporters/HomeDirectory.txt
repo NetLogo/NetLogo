@@ -1,2 +1,2 @@
-is-string? home-directory => true
-home-directory "foo" => ERROR Expected command.
+HomDirIsString
+  is-string? home-directory => true
