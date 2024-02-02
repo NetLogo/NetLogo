@@ -22,7 +22,7 @@ private[compile] class ArgumentStuffer extends DefaultAstVisitor {
   private def gatherArgs(expressions: Seq[Expression]): Array[nvm.Reporter] =
     expressions.flatMap{
       case app: ReporterApp => Some(app.reporter)
-      case block: ReporterBlock => Some(block.app.reporter)
+      case block: ReporterBlock => if (block.delayed) Some(block.reporter) else Some(block.app.reporter)
       case block: CommandBlock if block.delayed => Some(block.reporter)
       case _ => None
     }.toArray

@@ -155,7 +155,7 @@ object ReporterBlock {
  * to commands and reporters, etc. However, it is a different expression from
  * the expression it contains... Its "blockness" is significant.
  */
-class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation) extends Expression {
+class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation, val delayed: Boolean = false) extends Expression {
   override def toString = "[" + app.toString() + "]"
 
   /**
@@ -164,6 +164,7 @@ class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation) ex
    * code from the old parser.
    */
   def reportedType(): Int = {
+    if (delayed) return Syntax.DelayedReporterBlockType
     val appType = app.reportedType
     import Syntax._
     appType match {
@@ -180,7 +181,7 @@ class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation) ex
   def changeLocation(newLocation: SourceLocation): ReporterBlock = copy(location = newLocation)
 
   def copy(app: ReporterApp = app, location: SourceLocation = sourceLocation): ReporterBlock = {
-    new ReporterBlock(app, location)
+    new ReporterBlock(app, location, delayed)
   }
 }
 

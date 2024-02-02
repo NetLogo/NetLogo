@@ -148,7 +148,7 @@ class CodeBlock(val code: String, val sourceLocation: SourceLocation) extends Ex
  * to commands and reporters, etc. However, it is a different expression from
  * the expression it contains... Its "blockness" is significant.
  */
-class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation) extends Expression {
+class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation, val delayed: Boolean = false) extends Expression {
   override def toString = "[" + app.toString() + "]"
   def accept(v: AstVisitor) { v.visitReporterBlock(this) }
   /**
@@ -157,6 +157,7 @@ class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation) ex
    * code from the old parser.
    */
   def reportedType(): Int = {
+    if (delayed) return core.Syntax.DelayedReporterBlockType
     val appType = app.reportedType
     import core.Syntax._
     appType match {
@@ -171,7 +172,13 @@ class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation) ex
   }
 
   def copy(app: ReporterApp = app, sourceLocation: SourceLocation = sourceLocation): ReporterBlock =
-    new ReporterBlock(app, sourceLocation)
+    new ReporterBlock(app, sourceLocation, delayed)
+  
+  class ReporterBlockReporter(val reporter: String) extends nvm.Reporter {
+    override def report(context: nvm.Context): String = reporter
+  }
+  def reporter: ReporterBlockReporter =
+    new ReporterBlockReporter(app.reporter.fullSource)
 }
 
 /**

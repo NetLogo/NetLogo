@@ -328,9 +328,17 @@ object Syntax {
    * Type constant for command blocks to be run later.
    * Semantically equivalent to <code>CommandBlockType</code>, but
    * allows the command block to be compiled and checked now but
-   * stored for later compilation
+   * stored for later recompilation.
    */
   val DelayedCommandBlockType = 4194304
+
+  /**
+   * Type constant for reporter blocks to be run later.
+   * Semantically equivalent to <code>ReporterBlockType</code>, but
+   * allows the reporter block to be compiled and checked now but
+   * stored for later recompilation.
+   */
+  val DelayedReporterBlockType = 8388608
 
   val CommandPrecedence = 0
   val NormalPrecedence = 10

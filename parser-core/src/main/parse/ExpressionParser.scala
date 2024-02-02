@@ -714,6 +714,10 @@ object ExpressionParser {
       val (stmtList, lastToken) = statementList(tokens, scope)
       commandBlockWithStatements(lastToken.sourceLocation.copy(start = block.openBracket.start), stmtList, delayed = true)
     }
+    else if (compatible(goalType, Syntax.DelayedReporterBlockType)) {
+      val (expr, lastToken) = reporterApp(tokens, goalType, scope)
+      new core.ReporterBlock(expr, SourceLocation(block.openBracket.start, lastToken.end, lastToken.filename), true)
+    }
     // we weren't actually expecting a block at all!
     else
       exception(
