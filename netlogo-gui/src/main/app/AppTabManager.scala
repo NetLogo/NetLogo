@@ -277,12 +277,12 @@ class AppTabManager(val appTabsPanel:          Tabs,
       codeTabsPanelOption = Some(codeTabsPanel)
       codeTabsPanel.setTabManager(this)
 
-      // If the Selected Component in the App Tabs Panel was the CodeTab
-      // set it to be the Interface Tab, otherwise moving the CodeTab will
-      // cause swing to make the Info Tab the Selected Component
-      if (appTabsPanel.getSelectedComponent == appTabsPanel.mainCodeTab) {
-        appTabsPanel.setSelectedComponent(appTabsPanel.interfaceTab)
-      }
+
+      // The Selected Component in the App Tabs Panel will later need to be set
+      // to the Interface Tab if the the CodeTab is currently the Selected Component
+      // because Swing will make the Info Tab the Selected Componen after the Code Tab
+      // moves (since it will have the highest index).
+      val selectInterfaceTab = if (appTabsPanel.getSelectedComponent == appTabsPanel.mainCodeTab)  true else false
 
       // Move tabs from appTabsPanel to codeTabsPanel.
       // Iterate starting at last tab so that indexing remains valid when
@@ -301,7 +301,9 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
       appTabsPanel.mainCodeTab.getPoppingCheckBox.setSelected(true)
       codeTabsPanel.setSelectedComponent(appTabsPanel.mainCodeTab)
-      appTabsPanel.setSelectedComponent(appTabsPanel.interfaceTab)
+      if (selectInterfaceTab) {
+        appTabsPanel.setSelectedComponent(appTabsPanel.interfaceTab)
+      }
       appTabsPanel.getAppFrame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
       createCodeTabAccelerators()
       Event.rehash()
