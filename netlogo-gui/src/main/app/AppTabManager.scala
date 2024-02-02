@@ -282,7 +282,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
       // to the Interface Tab if the the CodeTab is currently the Selected Component
       // because Swing will make the Info Tab the Selected Componen after the Code Tab
       // moves (since it will have the highest index).
-      val selectInterfaceTab = if (appTabsPanel.getSelectedComponent == appTabsPanel.mainCodeTab)  true else false
+      val selectInterfaceTab = appTabsPanel.getSelectedComponent == appTabsPanel.mainCodeTab
 
       // Move tabs from appTabsPanel to codeTabsPanel.
       // Iterate starting at last tab so that indexing remains valid when
