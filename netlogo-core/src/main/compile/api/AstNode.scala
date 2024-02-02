@@ -126,9 +126,8 @@ class CommandBlock(val statements: Statements, val sourceLocation: SourceLocatio
   class CommandBlockReporter(val procedure: String) extends nvm.Reporter {
     override def report(context: nvm.Context): String = procedure
   }
-  def reporter: CommandBlockReporter = {
+  def reporter: CommandBlockReporter =
     new CommandBlockReporter(statements.body.map(s => s.command.fullSource).mkString("\n"))
-  }
 }
 
 /**
