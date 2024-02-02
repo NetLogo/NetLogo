@@ -187,6 +187,13 @@ case class _hatch(breedName: String) extends Command {
       agentClassString = "-T--",
       blockAgentClassString = Option("-T--"))
 }
+case class _homedirectory() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      ret = Syntax.StringType,
+      defaultOption = Some(0),
+      minimumOption = Some(0))
+}
 case class _inradius() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(

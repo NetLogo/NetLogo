@@ -84,6 +84,7 @@ class TestAllSyntaxes extends AnyFunSuite {
                      |_fput anything/list,list,OTPL,None,10,2,2
                      |_greaterorequal agent or number or string,agent or number or string,TRUE/FALSE,OTPL,None,6,1,1
                      |_greaterthan agent or number or string,agent or number or string,TRUE/FALSE,OTPL,None,6,1,1
+                     |_homedirectory ,string,OTPL,None,10,0,0
                      |_hsb number/number/number,list,OTPL,None,10,3,3
                      |_hsbold number/number/number,list,OTPL,None,10,3,3
                      |_hubnetclientslist ,list,OTPL,None,10,0,0

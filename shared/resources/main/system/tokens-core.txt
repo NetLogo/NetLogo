@@ -266,6 +266,7 @@ R filter etc._filter
 R first etc._first
 R floor etc._floor
 R fput etc._fput
+R home-directory _homedirectory
 R hsb etc._hsb
 R hubnet-clients-list hubnet._hubnetclientslist
 R hubnet-enter-message? hubnet._hubnetentermessage
