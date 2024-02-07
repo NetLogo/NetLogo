@@ -50,16 +50,28 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     }
   }
 
-  filename.right foreach { path =>
-    try {
-      innerSource = FileIO.fileToString(path)(Codec.UTF8).replaceAll("\r\n", "\n")
-      dirty = false // Has the buffer changed since it was compiled?
-      saveNeeded = false
-      externalFileManager.add(this)
-    } catch {
-      case _: IOException => innerSource = ""
+  def reload: Boolean = {
+    var loaded: Boolean = false
+
+    filename.right foreach { path =>
+      try {
+        innerSource = FileIO.fileToString(path)(Codec.UTF8).replaceAll("\r\n", "\n")
+        dirty = false // Has the buffer changed since it was compiled?
+        saveNeeded = false
+        loaded = true
+      } catch {
+        case _: IOException => innerSource = ""
+      }
     }
+
+    loaded
   }
+
+  // We're actually loading _filename for the first time here.
+  if (reload) {
+    externalFileManager.add(this)
+  }
+
   setIndenter(smartIndent)
   lineNumbersVisible = tabs.lineNumbersVisible
 

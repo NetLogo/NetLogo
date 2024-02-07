@@ -63,6 +63,21 @@ object Preferences {
 
   object LoadLastOnStartup extends BooleanPreference("loadLastOnStartup", false, false) {}
 
+  class ReloadOnExternalChanges(tabs: TabsInterface) extends Preference {
+    val i18nKey = "reloadOnExternalChanges"
+    val component = new JCheckBox
+    val restartRequired = false
+
+    def load(prefs: JavaPreferences) = {
+      val enabled = prefs.get("reloadOnExternalChanges", "false").toBoolean
+      component.setSelected(enabled)
+    }
+
+    def save(prefs: JavaPreferences) = {
+      prefs.put("reloadOnExternalChanges", component.isSelected.toString)
+    }
+  }
+
   class LineNumbers(tabs: TabsInterface) extends Preference {
     val i18nKey = "editorLineNumbers"
     val component = new JCheckBox
