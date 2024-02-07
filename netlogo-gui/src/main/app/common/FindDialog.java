@@ -4,6 +4,7 @@ package org.nlogo.app.common;
 
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
+import java.awt.Window;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -13,12 +14,19 @@ import java.awt.Component;
 import java.awt.Container;
 import javax.swing.Action;
 import javax.swing.JDialog;
+import javax.swing.SwingUtilities;
 
+import org.nlogo.app.AbstractTabsPanel;
+import org.nlogo.app.App;
+import org.nlogo.app.AppTabManager;
+import org.nlogo.app.CodeTabContainer;
+import org.nlogo.app.CodeTabsPanel;
 import org.nlogo.core.I18N;
 import org.nlogo.swing.NonemptyTextFieldActionEnabler;
 import org.nlogo.swing.NonemptyTextFieldButtonEnabler;
 import org.nlogo.swing.UserAction;
 import org.nlogo.swing.UserAction.KeyBindings$;
+
 import static org.nlogo.swing.Utils.icon;
 
 public class FindDialog
@@ -39,14 +47,6 @@ public class FindDialog
     return instance;
   }
 
-  private Component _previousFocus = null;
-  private void setPreviousFocus(Component previousFocus) {
-    _previousFocus = previousFocus;
-  }
-  private Component getPreviousFocus() {
-    return _previousFocus;
-  }
-
   public static void watch(javax.swing.text.JTextComponent target) {
     FIND_ACTION.setEnabled(true);
     FindDialog findInstance = getInstance();
@@ -61,22 +61,21 @@ public class FindDialog
     FIND_ACTION.setEnabled(false);
   }
 
-
+// Find the component that had the focus before the FindDialog was opened
 public static Component findPrevFocus() {
-///  import java.awt.FocusTraversalPolicy;
-//  import java.awt.KeyboardFocusManager;
   Component c = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-  if  (null == c) { return null; }
+  if  (null == c) return null;
   Container root = c.getFocusCycleRootAncestor();
-  if  (null == root) { return null; }
+  if  (null == root) return null;
   FocusTraversalPolicy policy = root.getFocusTraversalPolicy();
-  if  (null == policy) { return null; }
+  if  (null == policy) return null;
   Component prevFocus = policy.getComponentBefore(root, c);
   if (prevFocus == null) {
     prevFocus = policy.getDefaultComponent(root);
   }
   return prevFocus;
 }
+
   /// ACTIONS
 
   public static final Action FIND_ACTION = new FindAction();
@@ -111,13 +110,22 @@ public static Component findPrevFocus() {
               instance.owner.getLocation().y + instance.owner.getHeight() / 2
                   - instance.getPreferredSize().height / 2);
       FindDialog.getInstance().notFoundLabel.setVisible(false);
-      FindDialog.getInstance().setDefaultCloseOperation(
-    JDialog.DO_NOTHING_ON_CLOSE);
     FindDialog.getInstance().addWindowListener(new WindowAdapter() {
     public void windowClosing(WindowEvent we) {
-      boolean result = FindDialog.getInstance().getPreviousFocus().getParent().requestFocusInWindow();
-      System.out.println("set focus result " + result);
-        FindDialog.getInstance().setVisible(false);
+      FindDialog.getInstance().setVisible(false);
+
+      // There is only one FindDialog and its parent is the GUI AppFrame.
+      // If the FindDialog is opened from a separate code tab, focus goes from the CodeTabContainer
+      // to the GUI AppFrame. The following code restores focus to the CodeTabContainer when appropriate.
+      AppTabManager tabManager = App.app().tabManager();
+      if (tabManager.isCodeTabSeparate()) {
+        CodeTabsPanel codeTabsPanel = (CodeTabsPanel) tabManager.getCodeTabsOwner();
+        boolean resetFocus = SwingUtilities.isDescendingFrom(FindDialog.getInstance().getPreviousFocus(), codeTabsPanel);
+        if (resetFocus) {
+          CodeTabContainer codeTabContainer = codeTabsPanel.getCodeTabContainer();
+          codeTabContainer.toFront();
+        }
+      }
     }
 });
     }
@@ -146,10 +154,18 @@ public static Component findPrevFocus() {
 
   /// INSTANCE CODE
 
+  private Component _previousFocus = null;
+  private void setPreviousFocus(Component previousFocus) {
+    _previousFocus = previousFocus;
+  }
+  private Component getPreviousFocus() {
+    return _previousFocus;
+  }
+
   //     the text component to search
   protected javax.swing.text.JTextComponent target;
 
-  // gui compoenents
+  // gui components
   private final javax.swing.JButton nextButton, prevButton;
   NonemptyTextFieldButtonEnabler nextEnabler, prevEnabler;
   private final javax.swing.JButton replaceButton, replaceAndFindButton, replaceAllButton;
@@ -423,20 +439,6 @@ public static Component findPrevFocus() {
     replaceLabel.setEnabled(enabled);
   }
 
-  static String getComponentName(Component c) {
-    if (null == c) {
-      return "null component";
-    }
-    String source =  c.toString();
-    String myName = source.substring(0, source.indexOf('0') - 2);
-    return myName;
-  }
-
-  static String getSourceName(java.awt.event.FocusEvent fe) {
-    String source =  fe.getSource().toString();
-    String myName = source.substring(0, source.indexOf('0') -2 );
-    return myName;
-  }
   static class FocusListener implements java.awt.event.FocusListener {
     @Override
     public void focusGained(java.awt.event.FocusEvent fe) {
