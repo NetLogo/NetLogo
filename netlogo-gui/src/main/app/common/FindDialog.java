@@ -4,6 +4,13 @@ package org.nlogo.app.common;
 
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.awt.FocusTraversalPolicy;
+import java.awt.KeyboardFocusManager;
+import java.awt.Component;
+import java.awt.Container;
 import javax.swing.Action;
 import javax.swing.JDialog;
 
@@ -32,10 +39,19 @@ public class FindDialog
     return instance;
   }
 
+  private Component _previousFocus = null;
+  private void setPreviousFocus(Component previousFocus) {
+    _previousFocus = previousFocus;
+  }
+  private Component getPreviousFocus() {
+    return _previousFocus;
+  }
+
   public static void watch(javax.swing.text.JTextComponent target) {
     FIND_ACTION.setEnabled(true);
     FindDialog findInstance = getInstance();
     findInstance.target = target;
+    findInstance.setPreviousFocus((Component) target);
     findInstance.setReplaceEnabled(target.isEditable());
   }
 
@@ -45,6 +61,22 @@ public class FindDialog
     FIND_ACTION.setEnabled(false);
   }
 
+
+public static Component findPrevFocus() {
+///  import java.awt.FocusTraversalPolicy;
+//  import java.awt.KeyboardFocusManager;
+  Component c = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+  if  (null == c) { return null; }
+  Container root = c.getFocusCycleRootAncestor();
+  if  (null == root) { return null; }
+  FocusTraversalPolicy policy = root.getFocusTraversalPolicy();
+  if  (null == policy) { return null; }
+  Component prevFocus = policy.getComponentBefore(root, c);
+  if (prevFocus == null) {
+    prevFocus = policy.getDefaultComponent(root);
+  }
+  return prevFocus;
+}
   /// ACTIONS
 
   public static final Action FIND_ACTION = new FindAction();
@@ -66,6 +98,7 @@ public class FindDialog
       FindDialog.getInstance().setVisible(true);
       FindDialog.getInstance().findBox.requestFocus();
       FindDialog.getInstance().findBox.selectAll();
+      FindDialog.getInstance().setPreviousFocus(findPrevFocus());
       // Setting find field by default to selected text
       FindDialog findDialog = getInstance();
       String selectedText = findDialog.target.getSelectedText();
@@ -78,6 +111,15 @@ public class FindDialog
               instance.owner.getLocation().y + instance.owner.getHeight() / 2
                   - instance.getPreferredSize().height / 2);
       FindDialog.getInstance().notFoundLabel.setVisible(false);
+      FindDialog.getInstance().setDefaultCloseOperation(
+    JDialog.DO_NOTHING_ON_CLOSE);
+    FindDialog.getInstance().addWindowListener(new WindowAdapter() {
+    public void windowClosing(WindowEvent we) {
+      boolean result = FindDialog.getInstance().getPreviousFocus().getParent().requestFocusInWindow();
+      System.out.println("set focus result " + result);
+        FindDialog.getInstance().setVisible(false);
+    }
+});
     }
   }
 
@@ -381,6 +423,20 @@ public class FindDialog
     replaceLabel.setEnabled(enabled);
   }
 
+  static String getComponentName(Component c) {
+    if (null == c) {
+      return "null component";
+    }
+    String source =  c.toString();
+    String myName = source.substring(0, source.indexOf('0') - 2);
+    return myName;
+  }
+
+  static String getSourceName(java.awt.event.FocusEvent fe) {
+    String source =  fe.getSource().toString();
+    String myName = source.substring(0, source.indexOf('0') -2 );
+    return myName;
+  }
   static class FocusListener implements java.awt.event.FocusListener {
     @Override
     public void focusGained(java.awt.event.FocusEvent fe) {
