@@ -86,6 +86,8 @@ class Tabs(workspace:           GUIWorkspace,
     setWatchingFiles(value)
   }
 
+  def getAutoReload = prefs.get("reloadOnExternalChanges", "false").toBoolean
+
   def reload() {
     if (!reloading) {
       reloading = true
@@ -491,9 +493,10 @@ class Tabs(workspace:           GUIWorkspace,
   def handle(e: LoadModelEvent) {
     // We need to restart the watcher thread every load because the list of
     // included files may have changed.
+
     stopWatcherThread()
 
-    if(prefs.get("reloadOnExternalChanges", "false").toBoolean) {
+    if(getAutoReload) {
       startWatcherThread()
 
       externalFileTabs foreach { tab =>
@@ -511,9 +514,8 @@ class Tabs(workspace:           GUIWorkspace,
   }
 
   def handle(e: ModelSavedEvent) {
-    val autoReload = prefs.get("reloadOnExternalChanges", "false").toBoolean
-    setWatchingFiles(autoReload, e.modelPath)
+    setWatchingFiles(getAutoReload, e.modelPath)
   }
 
-  watchingFiles = prefs.get("reloadOnExternalChanges", "false").toBoolean
+  watchingFiles = getAutoReload
 }
