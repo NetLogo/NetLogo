@@ -74,7 +74,9 @@ object Preferences {
     }
 
     def save(prefs: JavaPreferences) = {
-      prefs.put("reloadOnExternalChanges", component.isSelected.toString)
+      val enabled = component.isSelected
+      prefs.put("reloadOnExternalChanges", enabled.toString)
+      tabs.watchingFiles = enabled
     }
   }
 
