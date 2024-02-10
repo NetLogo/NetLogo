@@ -492,10 +492,13 @@ class Tabs(workspace:           GUIWorkspace,
     // We need to restart the watcher thread every load because the list of
     // included files may have changed.
     stopWatcherThread()
-    startWatcherThread()
 
-    externalFileTabs foreach { tab =>
-      tab.reload
+    if(prefs.get("reloadOnExternalChanges", "false").toBoolean) {
+      startWatcherThread()
+
+      externalFileTabs foreach { tab =>
+        tab.reload
+      }
     }
 
     reloading = false
