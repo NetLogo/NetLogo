@@ -943,5 +943,45 @@ class AppTabManager(val appTabsPanel:          Tabs,
     println("    Hide count: " + __countMenuItembyNameAndMenuName("Tools", "Hide Command Center"))
     println("    Undo count: " + __countMenuItembyNameAndMenuName("Edit", "Undo"))
   }
+
+  // Print some Events with their state variables
+
+  def __printCompiledEvent(e: org.nlogo.window.Events.CompiledEvent, msg: String = ""): Unit = {
+    println(msg + "CompiledEvent ")
+    println(s"  sourceOwner = ${e.sourceOwner}")
+    println(s"  program = ${e.program}")
+    println(s"  procedure = ${e.procedure}")
+    println(s"  error = ${e.error}")
+  }
+
+  def __printCompileMoreSourceEvent(e: org.nlogo.window.Events.CompileMoreSourceEvent, msg: String = ""): Unit = {
+    println(msg + "CompileMoreSourceEvent:")
+    println(s"  owner = ${e.owner}")
+  }
+
+  def __printDirtyEvent(e: org.nlogo.window.Events.DirtyEvent, msg: String = ""): Unit = {
+    println(msg + "DirtyEvent:")
+    println(s"  path = ${e.path}")
+  }
+
+  def __printExternalFileSavedEvent(e: org.nlogo.window.Events.ExternalFileSavedEvent, msg: String = ""): Unit = {
+    println(msg + "ExternalFileSavedEvent:")
+    println(s"  path = ${e.path}")
+  }
+
+  def __printRuntimeErrorEvent(e: org.nlogo.window.Events.RuntimeErrorEvent, msg: String = ""): Unit = {
+    println(msg + "RuntimeErrorEvent:")
+    println(s"  jobOwner = ${e.jobOwner}")
+    println(s"  sourceOwner = ${e.sourceOwner}")
+    println(s"  pos = ${e.pos}")
+    println(s"  length = ${e.length}")
+  }
+
+  def __printSwitchedTabsEvent(e: org.nlogo.app.common.Events.SwitchedTabsEvent, msg: String = ""): Unit = {
+    println(msg + "SwitchedTabsEvent:")
+    println(s"  oldTab = ${e.oldTab}")
+    println(s"  newTab = ${e.newTab}")
+  }
+
   // *** End debugging tools AAB 10/2020.
 }
