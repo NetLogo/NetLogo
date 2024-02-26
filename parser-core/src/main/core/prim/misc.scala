@@ -241,7 +241,7 @@ case class _multilet(lets: Seq[(Token, Let)]) extends Command {
     lets.map(_._1.text).mkString("[", " ", "]")
 
 }
-case class _multiletitem() extends Reporter {
+case class _multiassignitem() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(ret = Syntax.WildcardType, right = List(Syntax.ListType))
 }
