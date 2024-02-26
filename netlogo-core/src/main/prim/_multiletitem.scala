@@ -10,7 +10,7 @@ class _multiletitem() extends Reporter {
   }
 
   def report_1(context: Context): AnyRef = {
-    MultiLet.next()
+    MultiLet.next(context.workspace())
   }
 
 }

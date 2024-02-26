@@ -2,25 +2,32 @@
 
 package org.nlogo.prim
 
+import scala.collection.mutable.Map
+
 import org.nlogo.api.Dump
 import org.nlogo.core.LogoList
-import org.nlogo.nvm.{ Context, Command, RuntimePrimitiveException }
+import org.nlogo.nvm.{ Context, Command, RuntimePrimitiveException, Workspace }
 
 object MultiLet {
-  private var currentList: Option[LogoList] = None
-  private var nextIndex: Int = -1
+  // While there can only ever be a single multi-assignment happening at a time, because of BehaviorSpace we can have
+  // multiple across workspaces so we track them this way.  -Jeremy B February 2024
+  private val currentLists: Map[Workspace, () => AnyRef] = Map()
 
-  def setCurrentList(list: LogoList) {
-    MultiLet.currentList = Some(list)
-    MultiLet.nextIndex   = 0
+  def setCurrentList(workspace: Workspace, list: LogoList) {
+    var nextIndex = 0
+    val iter: () => AnyRef = () => {
+      val value = list.get(nextIndex)
+      nextIndex = nextIndex + 1
+      value
+    }
+    MultiLet.currentLists.put(workspace, iter)
   }
 
-  def next(): AnyRef = {
-    val value = MultiLet.currentList.getOrElse(
+  def next(workspace: Workspace): AnyRef = {
+    val iter = MultiLet.currentLists.getOrElse(workspace,
       throw new IllegalStateException("We're trying to get a list value for a multi-bind (let or set), but the list hasn't been set?")
-    ).get(nextIndex)
-    nextIndex = nextIndex + 1
-    value
+    )
+    iter()
   }
 }
 
@@ -35,7 +42,7 @@ class _multilet(private[this] val name: String, private[this] val totalNeeded: I
       val message = s"The list of values for $name must be at least as long as the list of names.  We need $totalNeeded value(s) but only got ${list.size} from the list ${Dump.logoObject(list)}."
       throw new RuntimePrimitiveException(context, this, message)
     }
-    MultiLet.setCurrentList(list)
+    MultiLet.setCurrentList(context.workspace(), list)
     context.ip = next
   }
 
