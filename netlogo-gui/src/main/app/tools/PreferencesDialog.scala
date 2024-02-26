@@ -26,6 +26,7 @@ class PreferencesDialog(parent: Frame & ThemeSync, tabManager: TabsInterface, wi
     Preferences.Language,
     Preferences.LoadLastOnStartup,
     new Preferences.ReloadOnExternalChanges(tabManager),
+    Preferences.EnableRemoteCommands(tabManager),
     new Preferences.BoldWidgetText(widgetPanel),
     new Preferences.JumpOnClick(tabManager),
     Preferences.SendAnalytics
