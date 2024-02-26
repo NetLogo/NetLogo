@@ -137,17 +137,22 @@ class CommandLine(commandCenter: CommandCenterInterface,
     executeCurrentBuffer()
   }
 
-  private def executeCurrentBuffer(): Unit = {
-    var inner = getText
-    if (inner.trim.equals("")) {
-      setText("")
-      return
+  private def preprocess(code: String): String = {
+    if (code.trim.equals("")) {
+      ""
+    } else if (workspace.isReporter(code)) {
+      "show " + code
+    } else {
+      code
     }
-    if (workspace.isReporter(inner)) {
-      inner = "show " + inner
-      setText(inner)
-    }
+  }
+
+  def execute(_kind: AgentKind, code: String, shouldPreprocess: Boolean): Unit = {
     var header = "to __commandline [] "
+    val oldKind = kind
+
+    agentKind(_kind)
+
     if (kind == AgentKind.Observer) {
       header += "__observercode "
     } else if (kind == AgentKind.Turtle) {
@@ -157,8 +162,16 @@ class CommandLine(commandCenter: CommandCenterInterface,
     } else if (kind == AgentKind.Link) {
       header += "__linkcode "
     }
-    val footer = "\n__done end" // the \n is to protect against comments in inner
-    source(header, inner, footer)
+
+    val footer = "\n__done end" // the \n is to protect against comments in code
+    source(header, if (shouldPreprocess) preprocess(code) else code, footer)
+    agentKind(oldKind)
+  }
+
+  private def executeCurrentBuffer(): Unit = {
+    val inner = preprocess(getText)
+    setText(inner)
+    execute(kind, inner, false)
   }
 
   override def handle(e: WindowEvents.CompiledEvent): Unit = {
