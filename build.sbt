@@ -264,6 +264,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.scala-lang" %% "scala3-compiler" % "3.7.0",
       "it.unimi.dsi" % "fastutil" % "8.5.16",
       "net.java.dev.jna" % "jna-platform" % "5.17.0",
+      "com.kohlschutter.junixsocket" % "junixsocket-core" % "2.10.1",
       "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf",
       "com.softwaremill.sttp.client4" %% "core" % "4.0.15",
       "com.softwaremill.sttp.client4" %% "upickle" % "4.0.15",
