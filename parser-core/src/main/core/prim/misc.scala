@@ -461,10 +461,6 @@ case class _multiset(sets: Seq[Token]) extends Command {
     sets.map(_.text).mkString("[", " ", "]")
 
 }
-case class _multisetitem() extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(ret = Syntax.WildcardType, right = List(Syntax.ListType))
-}
 case class _set() extends Command {
   override def syntax =
     Syntax.commandSyntax(
