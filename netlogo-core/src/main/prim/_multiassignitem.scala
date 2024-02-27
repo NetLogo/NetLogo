@@ -10,7 +10,7 @@ class _multiassignitem() extends Reporter {
   }
 
   def report_1(context: Context): AnyRef = {
-    MultiAssign.next(context.workspace())
+    MultiAssign.next(context.job.workspace)
   }
 
 }

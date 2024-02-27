@@ -8,26 +8,39 @@ import org.nlogo.api.Dump
 import org.nlogo.core.LogoList
 import org.nlogo.nvm.{ Context, Command, RuntimePrimitiveException, Workspace }
 
+private class SimpleListIter(private var list: LogoList) {
+  private var nextIndex = 0
+  def next(): AnyRef = {
+    val value = list.get(nextIndex)
+    nextIndex = nextIndex + 1
+    value
+  }
+
+  def reset(l: LogoList) = {
+    list = l
+    nextIndex = 0
+  }
+}
+
 object MultiAssign {
   // While there can only ever be a single multi-assignment happening at a time, because of BehaviorSpace we can have
   // multiple across workspaces so we track them this way.  -Jeremy B February 2024
-  private val currentLists: Map[Workspace, () => AnyRef] = Map()
+  private val currentLists: Map[Workspace, SimpleListIter] = Map()
 
   def setCurrentList(workspace: Workspace, list: LogoList) {
-    var nextIndex = 0
-    val iter: () => AnyRef = () => {
-      val value = list.get(nextIndex)
-      nextIndex = nextIndex + 1
-      value
+    if (MultiAssign.currentLists.contains(workspace)) {
+      val iter = MultiAssign.currentLists.getOrElse(workspace, throw new IllegalStateException("No list for multi-assign?"))
+      iter.reset(list)
+    } else {
+      MultiAssign.currentLists.put(workspace, new SimpleListIter(list))
     }
-    MultiAssign.currentLists.put(workspace, iter)
   }
 
   def next(workspace: Workspace): AnyRef = {
     val iter = MultiAssign.currentLists.getOrElse(workspace,
       throw new IllegalStateException("We're trying to get a list value for a multi-assign (let or set), but the list hasn't been set?")
     )
-    iter()
+    iter.next()
   }
 }
 
@@ -42,7 +55,7 @@ class _multiassign(private[this] val name: String, private[this] val totalNeeded
       val message = s"The list of values for $name must be at least as long as the list of names.  We need $totalNeeded value(s) but only got ${list.size} from the list ${Dump.logoObject(list)}."
       throw new RuntimePrimitiveException(context, this, message)
     }
-    MultiAssign.setCurrentList(context.workspace(), list)
+    MultiAssign.setCurrentList(context.job.workspace, list)
     context.ip = next
   }
 
