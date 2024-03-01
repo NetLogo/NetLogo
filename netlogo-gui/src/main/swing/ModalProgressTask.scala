@@ -18,6 +18,7 @@ object ModalProgressTask {
     EventQueue.invokeLater { () => perform(dialog) }
 
     dialog.setVisible(true)
+    dialog.setFocusableWindowState(false)
   }
 
   def onUIThread(parent: Frame, message: String, r: Runnable): Unit = {
@@ -54,6 +55,7 @@ object ModalProgressTask {
 
     dialog.setVisible(true)
 
+    dialog.setFocusableWindowState(false)
     // if this is being run, it means that the dialog should have been hidden
     // and therefore the promise completed.
     Await.result(completionPromise.future, Duration(10, MILLISECONDS))
