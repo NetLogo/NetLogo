@@ -24,7 +24,7 @@ object Optimizations {
     optList(Reporter,
       Seq("AnyOther", "AnyOtherWith",
         "AnyWith1", "AnyWith2", "AnyWith3", "AnyWith4", "AnyWith5",
-        "CountOther", "CountOtherWith", "CountWith",
+        "AnyTurtlesOn", "CountOther", "CountOtherWith", "CountWith",
         "OneOfWith", "OtherWith", "WithOther"))
 
   val miscellaneousOptimizations: OptimizationList =

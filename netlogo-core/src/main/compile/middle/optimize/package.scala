@@ -7,6 +7,7 @@ import org.nlogo.prim._
 import org.nlogo.{ api => nlogoApi }
 import org.nlogo.agent.Patch
 import org.nlogo.prim._
+import org.nlogo.prim.etc._
 import org.nlogo.compile.api.{ Match, ReporterApp,
   RewritingCommandMunger, RewritingReporterMunger }
 
@@ -198,6 +199,16 @@ package optimize {
       root.graftArg(arg.matchArg(0))
       root.graftArg(arg.matchArg(1))
       root.reporter.token = arg.reporter.token
+    }
+  }
+  // _any(_turtleson(*)) => _anyturtleson(*)
+  object AnyTurtlesOn extends RewritingReporterMunger {
+    val clazz = classOf[_any]
+    def munge(root: Match) {
+      val arg = root.matchArg(0, classOf[_turtleson])
+      root.strip()
+      root.replace(classOf[_anyturtleson])
+      root.graftArg(arg.matchArg(0))
     }
   }
   // _count(_other(*)) => _countother(*)
