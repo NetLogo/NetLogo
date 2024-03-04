@@ -2945,34 +2945,32 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           RETURN
 [1]_asm_procedurebugmove_if_1 "if not any? turtles-on target move-to target [ stop ]" boolean => void
       _not "not any? turtles-on target" boolean => boolean
-        _any "any? turtles-on target" AgentSet => boolean
-          _turtleson "turtles-on target"
-            _asm_procedurebugmove_procedurevariable_2 "target" => Object
-                  // parameter final  context
-                 L0
-                  ALOAD 1
-                  GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-                  GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
-                  ICONST_0
-                  AALOAD
-                 L1
-                  ARETURN
-          // parameter final  context
-          // parameter final  arg0
+        _anyturtleson "any? turtles-on target"
+          _asm_procedurebugmove_procedurevariable_2 "target" => Object
+                // parameter final  context
+               L0
+                ALOAD 1
+                GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+                GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
+                ICONST_0
+                AALOAD
+               L1
+                ARETURN
           // parameter final  context
           // parameter final  arg0
           // parameter final  context
           // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebugmove_if_1.keptinstr4 : Lorg/nlogo/prim/etc/_turtleson;
+          GETFIELD org/nlogo/prim/_asm_procedurebugmove_if_1.keptinstr3 : Lorg/nlogo/prim/etc/_anyturtleson;
           ALOAD 1
-          INVOKEVIRTUAL org/nlogo/prim/etc/_turtleson.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
+          INVOKEVIRTUAL org/nlogo/prim/etc/_anyturtleson.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
          L2
           ASTORE 2
          L0
           ALOAD 2
-          CHECKCAST org/nlogo/agent/AgentSet
+          CHECKCAST java/lang/Boolean
+          INVOKEVIRTUAL java/lang/Boolean.booleanValue ()Z
           GOTO L3
          L1
          FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_1 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
@@ -2982,46 +2980,35 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           ALOAD 1
           ALOAD 0
           BIPUSH 0
-          LDC 112
+          LDC 2
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L3
-         FRAME SAME1 org/nlogo/agent/AgentSet
-          ASTORE 2
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.isEmpty ()Z
+         FRAME SAME1 I
+          ISTORE 2
+          ILOAD 2
           IFNE L4
           ICONST_1
           GOTO L5
          L4
-         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_1 org/nlogo/nvm/Context org/nlogo/agent/AgentSet] []
+         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_1 org/nlogo/nvm/Context I] []
           ICONST_0
          L5
          FRAME SAME1 I
           ISTORE 2
-          ILOAD 2
-          IFNE L6
-          ICONST_1
-          GOTO L7
-         L6
-         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_1 org/nlogo/nvm/Context I] []
-          ICONST_0
-         L7
-         FRAME SAME1 I
-          ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L8
+          IFEQ L6
           ICONST_2
-          GOTO L9
-         L8
+          GOTO L7
+         L6
          FRAME SAME1 org/nlogo/nvm/Context
           ICONST_4
-         L9
+         L7
          FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_1 org/nlogo/nvm/Context I] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L10
+         L8
           RETURN
 [2]_moveto "move-to target"
       _asm_procedurebugmove_procedurevariable_3 "target" => Object
@@ -3217,34 +3204,32 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           RETURN
 [7]_asm_procedurebugmove_if_8 "if not any? turtles-on target move-to target [ stop ]" boolean => void
       _not "not any? turtles-on target" boolean => boolean
-        _any "any? turtles-on target" AgentSet => boolean
-          _turtleson "turtles-on target"
-            _asm_procedurebugmove_procedurevariable_9 "target" => Object
-                  // parameter final  context
-                 L0
-                  ALOAD 1
-                  GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
-                  GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
-                  ICONST_0
-                  AALOAD
-                 L1
-                  ARETURN
-          // parameter final  context
-          // parameter final  arg0
+        _anyturtleson "any? turtles-on target"
+          _asm_procedurebugmove_procedurevariable_9 "target" => Object
+                // parameter final  context
+               L0
+                ALOAD 1
+                GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
+                GETFIELD org/nlogo/nvm/Activation.args : [Ljava/lang/Object;
+                ICONST_0
+                AALOAD
+               L1
+                ARETURN
           // parameter final  context
           // parameter final  arg0
           // parameter final  context
           // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           ALOAD 0
-          GETFIELD org/nlogo/prim/_asm_procedurebugmove_if_8.keptinstr4 : Lorg/nlogo/prim/etc/_turtleson;
+          GETFIELD org/nlogo/prim/_asm_procedurebugmove_if_8.keptinstr3 : Lorg/nlogo/prim/etc/_anyturtleson;
           ALOAD 1
-          INVOKEVIRTUAL org/nlogo/prim/etc/_turtleson.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
+          INVOKEVIRTUAL org/nlogo/prim/etc/_anyturtleson.report (Lorg/nlogo/nvm/Context;)Ljava/lang/Object;
          L2
           ASTORE 2
          L0
           ALOAD 2
-          CHECKCAST org/nlogo/agent/AgentSet
+          CHECKCAST java/lang/Boolean
+          INVOKEVIRTUAL java/lang/Boolean.booleanValue ()Z
           GOTO L3
          L1
          FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_8 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
@@ -3254,46 +3239,35 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           ALOAD 1
           ALOAD 0
           BIPUSH 0
-          LDC 112
+          LDC 2
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
          L3
-         FRAME SAME1 org/nlogo/agent/AgentSet
-          ASTORE 2
-          ALOAD 2
-          INVOKEVIRTUAL org/nlogo/agent/AgentSet.isEmpty ()Z
+         FRAME SAME1 I
+          ISTORE 2
+          ILOAD 2
           IFNE L4
           ICONST_1
           GOTO L5
          L4
-         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_8 org/nlogo/nvm/Context org/nlogo/agent/AgentSet] []
+         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_8 org/nlogo/nvm/Context I] []
           ICONST_0
          L5
          FRAME SAME1 I
           ISTORE 2
-          ILOAD 2
-          IFNE L6
-          ICONST_1
-          GOTO L7
-         L6
-         FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_8 org/nlogo/nvm/Context I] []
-          ICONST_0
-         L7
-         FRAME SAME1 I
-          ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L8
+          IFEQ L6
           BIPUSH 8
-          GOTO L9
-         L8
+          GOTO L7
+         L6
          FRAME SAME1 org/nlogo/nvm/Context
           BIPUSH 10
-         L9
+         L7
          FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_8 org/nlogo/nvm/Context I] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L10
+         L8
           RETURN
 [8]_moveto "move-to target"
       _asm_procedurebugmove_procedurevariable_10 "target" => Object
