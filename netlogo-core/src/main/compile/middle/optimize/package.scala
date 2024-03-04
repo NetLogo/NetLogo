@@ -7,7 +7,6 @@ import org.nlogo.prim._
 import org.nlogo.{ api => nlogoApi }
 import org.nlogo.agent.Patch
 import org.nlogo.prim._
-import org.nlogo.prim.etc._
 import org.nlogo.compile.api.{ Match, ReporterApp,
   RewritingCommandMunger, RewritingReporterMunger }
 
