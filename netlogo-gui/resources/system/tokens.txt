@@ -502,7 +502,7 @@ R turtles _turtles
 R turtles-at etc._turtlesat
 R turtles-at threed._turtlesat
 R turtles-here etc._turtleshere
-R turtles-on etc._turtleson
+R turtles-on _turtleson
 R user-directory gui._userdirectory
 R user-file gui._userfile
 R user-input gui._userinput
