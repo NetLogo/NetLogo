@@ -219,11 +219,6 @@ class AppTabManager(val appTabsPanel:          Tabs,
     tabOwner.requestFocus
   }
 
-  def getIndexOfCodeTab(tab: CodeTab): Int = {
-    val index = getCodeTabsOwner.indexOfComponent(tab)
-    index + getAppTabsOwner.getTabCount
-  }
-
   // Actions are created for use by the TabsMenu, and by accelerator keys AAB 10/2020
   object RejoinCodeTabsAction extends AbstractAction("PopCodeTabIn") {
     def actionPerformed(e: ActionEvent) {
@@ -904,14 +899,14 @@ class AppTabManager(val appTabsPanel:          Tabs,
     }
   }
 
-  def __PrintWindowEventInfo(e: java.awt.event.WindowEvent): Unit = {
+  def __printWindowEventInfo(e: java.awt.event.WindowEvent): Unit = {
     println("    " + "ID: " + e.getID)
     println("    " + "source: " + __getSimpleName(e.getSource))
     println("    " + "window: " + __getSimpleName(e.getWindow))
     println("    " + "opposite window: " + __getSimpleName(e.getOppositeWindow))
   }
 
-  def __PrintStateInfo(previousTab: Component, currentTab: Component): Unit = {
+  def __printStateInfo(previousTab: Component, currentTab: Component): Unit = {
     println("    Previous Tab: " + __getSimpleName(previousTab))
     println("    Current Tab: " + __getSimpleName(currentTab))
     val owner = getCodeTabsOwner
@@ -944,9 +939,49 @@ class AppTabManager(val appTabsPanel:          Tabs,
     }
   }
 
-  def __PrintHideUndoMenuCounts(): Unit = {
+  def __printHideUndoMenuCounts(): Unit = {
     println("    Hide count: " + __countMenuItembyNameAndMenuName("Tools", "Hide Command Center"))
     println("    Undo count: " + __countMenuItembyNameAndMenuName("Edit", "Undo"))
   }
+
+  // Print some Events with their state variables
+
+  def __printCompiledEvent(e: org.nlogo.window.Events.CompiledEvent, msg: String = ""): Unit = {
+    println(msg + "CompiledEvent ")
+    println(s"  sourceOwner = ${e.sourceOwner}")
+    println(s"  program = ${e.program}")
+    println(s"  procedure = ${e.procedure}")
+    println(s"  error = ${e.error}")
+  }
+
+  def __printCompileMoreSourceEvent(e: org.nlogo.window.Events.CompileMoreSourceEvent, msg: String = ""): Unit = {
+    println(msg + "CompileMoreSourceEvent:")
+    println(s"  owner = ${e.owner}")
+  }
+
+  def __printDirtyEvent(e: org.nlogo.window.Events.DirtyEvent, msg: String = ""): Unit = {
+    println(msg + "DirtyEvent:")
+    println(s"  path = ${e.path}")
+  }
+
+  def __printExternalFileSavedEvent(e: org.nlogo.window.Events.ExternalFileSavedEvent, msg: String = ""): Unit = {
+    println(msg + "ExternalFileSavedEvent:")
+    println(s"  path = ${e.path}")
+  }
+
+  def __printRuntimeErrorEvent(e: org.nlogo.window.Events.RuntimeErrorEvent, msg: String = ""): Unit = {
+    println(msg + "RuntimeErrorEvent:")
+    println(s"  jobOwner = ${e.jobOwner}")
+    println(s"  sourceOwner = ${e.sourceOwner}")
+    println(s"  pos = ${e.pos}")
+    println(s"  length = ${e.length}")
+  }
+
+  def __printSwitchedTabsEvent(e: org.nlogo.app.common.Events.SwitchedTabsEvent, msg: String = ""): Unit = {
+    println(msg + "SwitchedTabsEvent:")
+    println(s"  oldTab = ${e.oldTab}")
+    println(s"  newTab = ${e.newTab}")
+  }
+
   // *** End debugging tools AAB 10/2020.
 }
