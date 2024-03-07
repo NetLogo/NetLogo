@@ -4,6 +4,12 @@ package org.nlogo.core
 package prim
 
 //scalastyle:off number.of.types
+case class _turtleson() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      right = List(Syntax.AgentType | Syntax.AgentsetType),
+      ret = Syntax.TurtlesetType)
+}
 case class _and() extends Reporter with Pure {
   override def syntax =
     Syntax.reporterSyntax(
