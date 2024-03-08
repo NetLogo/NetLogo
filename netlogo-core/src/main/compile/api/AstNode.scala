@@ -115,19 +115,13 @@ class Statement(
  * jargon. Note that this is an Expression, and as such can be an argument
  * to commands and reporters, etc.
  */
-class CommandBlock(val statements: Statements, val sourceLocation: SourceLocation, val delayed: Boolean = false) extends Expression {
-  def reportedType() = if (delayed) core.Syntax.DelayedCommandBlockType else core.Syntax.CommandBlockType
+class CommandBlock(val statements: Statements, val sourceLocation: SourceLocation) extends Expression {
+  def reportedType() = core.Syntax.CommandBlockType
   override def toString = "[" + statements.toString + "]"
   def accept(v: AstVisitor) { v.visitCommandBlock(this) }
 
   def copy(statements: Statements = statements, sourceLocation: SourceLocation = sourceLocation): CommandBlock =
-    new CommandBlock(statements, sourceLocation, delayed)
-
-  class CommandBlockReporter(val procedure: String) extends nvm.Reporter {
-    override def report(context: nvm.Context): String = procedure
-  }
-  def reporter: CommandBlockReporter =
-    new CommandBlockReporter(statements.body.map(s => s.command.fullSource).mkString("\n"))
+    new CommandBlock(statements, sourceLocation)
 }
 
 /**
@@ -148,7 +142,7 @@ class CodeBlock(val code: String, val sourceLocation: SourceLocation) extends Ex
  * to commands and reporters, etc. However, it is a different expression from
  * the expression it contains... Its "blockness" is significant.
  */
-class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation, val delayed: Boolean = false) extends Expression {
+class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation) extends Expression {
   override def toString = "[" + app.toString() + "]"
   def accept(v: AstVisitor) { v.visitReporterBlock(this) }
   /**
@@ -157,7 +151,6 @@ class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation, va
    * code from the old parser.
    */
   def reportedType(): Int = {
-    if (delayed) return core.Syntax.DelayedReporterBlockType
     val appType = app.reportedType
     import core.Syntax._
     appType match {
@@ -172,13 +165,7 @@ class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation, va
   }
 
   def copy(app: ReporterApp = app, sourceLocation: SourceLocation = sourceLocation): ReporterBlock =
-    new ReporterBlock(app, sourceLocation, delayed)
-  
-  class ReporterBlockReporter(val reporter: String) extends nvm.Reporter {
-    override def report(context: nvm.Context): String = reporter
-  }
-  def reporter: ReporterBlockReporter =
-    new ReporterBlockReporter(app.reporter.fullSource)
+    new ReporterBlock(app, sourceLocation)
 }
 
 /**

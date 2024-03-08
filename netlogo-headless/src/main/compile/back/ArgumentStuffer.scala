@@ -4,7 +4,7 @@ package org.nlogo.compile
 package back
 
 import org.nlogo.nvm
-import org.nlogo.compile.api.{ DefaultAstVisitor, CommandBlock, Expression, ReporterBlock, ReporterApp, Statement }
+import org.nlogo.compile.api.{ DefaultAstVisitor, Expression, ReporterBlock, ReporterApp, Statement }
 
 /**
  * Fills the args arrays, in all of the Instructions anywhere in
@@ -22,8 +22,7 @@ private[compile] class ArgumentStuffer extends DefaultAstVisitor {
   private def gatherArgs(expressions: Seq[Expression]): Array[nvm.Reporter] =
     expressions.flatMap{
       case app: ReporterApp => Some(app.reporter)
-      case block: ReporterBlock => if (block.delayed) Some(block.reporter) else Some(block.app.reporter)
-      case block: CommandBlock if block.delayed => Some(block.reporter)
+      case block: ReporterBlock => Some(block.app.reporter)
       case _ => None
     }.toArray
 }

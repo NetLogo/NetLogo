@@ -6,7 +6,7 @@ package org.nlogo.compile
  * the Procedure, with Reporters.
  */
 import org.nlogo.nvm.Reporter
-import org.nlogo.compile.api.{ DefaultAstVisitor, CommandBlock, Expression, Statement, ReporterApp, ReporterBlock }
+import org.nlogo.compile.api.{ DefaultAstVisitor, Expression, Statement, ReporterApp, ReporterBlock }
 
 private class ArgumentStuffer extends DefaultAstVisitor {
   override def visitStatement(stmt:Statement) {
@@ -20,8 +20,7 @@ private class ArgumentStuffer extends DefaultAstVisitor {
   private def gatherArgs(expressions:Seq[Expression]):Array[Reporter] =
     expressions.flatMap{
       case app:   ReporterApp   => Some(app.reporter)
-      case block: ReporterBlock => if (block.delayed) Some(block.reporter) else Some(block.app.reporter)
-      case block: CommandBlock if block.delayed => Some(block.reporter)
+      case block: ReporterBlock => Some(block.app.reporter)
       case _ => None
     }.toArray
 }

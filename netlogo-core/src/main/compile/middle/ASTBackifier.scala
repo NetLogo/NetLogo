@@ -34,10 +34,10 @@ class ASTBackifier(backifier: ApiBackifier, procedures: ListMap[String, Procedur
     new Statement(stmt.command, backifier(procedures, stmt.command), stmt.args.map(backify), stmt.sourceLocation)
 
   def backify(cb: core.CommandBlock): CommandBlock =
-    new CommandBlock(backify(cb.statements), cb.sourceLocation, delayed = cb.delayed)
+    new CommandBlock(backify(cb.statements), cb.sourceLocation)
 
   def backify(rb: core.ReporterBlock): ReporterBlock =
-    new ReporterBlock(backify(rb.app), rb.sourceLocation, rb.delayed)
+    new ReporterBlock(backify(rb.app), rb.sourceLocation)
 
   def backify(ra: core.ReporterApp): ReporterApp = {
     val result =

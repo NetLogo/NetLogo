@@ -131,15 +131,15 @@ class Statement(var command: Command, val args: Seq[Expression], val sourceLocat
  * jargon. Note that this is an Expression, and as such can be an argument
  * to commands and reporters, etc.
  */
-class CommandBlock(val statements: Statements, val sourceLocation: SourceLocation, val synthetic: Boolean = false, val delayed: Boolean = false) extends Expression {
-  def reportedType() = if (delayed) Syntax.DelayedCommandBlockType else Syntax.CommandBlockType
+class CommandBlock(val statements: Statements, val sourceLocation: SourceLocation, val synthetic: Boolean = false) extends Expression {
+  def reportedType() = Syntax.CommandBlockType
   override def toString = "[" + statements.toString + "]"
 
   def changeLocation(newLocation: SourceLocation): CommandBlock = copy(location = newLocation)
 
   def copy(statements: Statements     = statements,
            location:   SourceLocation = sourceLocation): CommandBlock = {
-    new CommandBlock(statements, sourceLocation, synthetic, delayed)
+    new CommandBlock(statements, sourceLocation, synthetic)
   }
 }
 
@@ -155,7 +155,7 @@ object ReporterBlock {
  * to commands and reporters, etc. However, it is a different expression from
  * the expression it contains... Its "blockness" is significant.
  */
-class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation, val delayed: Boolean = false) extends Expression {
+class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation) extends Expression {
   override def toString = "[" + app.toString() + "]"
 
   /**
@@ -164,7 +164,6 @@ class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation, va
    * code from the old parser.
    */
   def reportedType(): Int = {
-    if (delayed) return Syntax.DelayedReporterBlockType
     val appType = app.reportedType
     import Syntax._
     appType match {
@@ -181,7 +180,7 @@ class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation, va
   def changeLocation(newLocation: SourceLocation): ReporterBlock = copy(location = newLocation)
 
   def copy(app: ReporterApp = app, location: SourceLocation = sourceLocation): ReporterBlock = {
-    new ReporterBlock(app, location, delayed)
+    new ReporterBlock(app, location)
   }
 }
 
