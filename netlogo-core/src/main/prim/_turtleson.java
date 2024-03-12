@@ -54,7 +54,8 @@ public final class _turtleson
 
   private void addAll(List<Turtle> turtles, Iterable<Turtle> moreTurtles) {
     for (Turtle t : moreTurtles) {
-      turtles.add(t);
+      if(!turtles.contains(t))
+        turtles.add(t);
     }
   }
 }
