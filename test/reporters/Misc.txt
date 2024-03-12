@@ -12,6 +12,8 @@ TurtlesOn_2D
   any? turtles-on patch 1 0 => false
   O> crt 3 [ setxy 2 3 ]
   count turtles-on one-of turtles-on patch 2 3 => 3
+  any? turtles-on n-of 2 turtles-on patch 2 3 => true
+  count turtles-on n-of 2 turtles-on patch 2 3 => 3
 
 TurtlesOn_3D
   O> crt 10
@@ -21,3 +23,5 @@ TurtlesOn_3D
   any? turtles-on patch 1 0 1 => false
   O> crt 3 [ setxyz 2 3 3 ]
   count turtles-on one-of turtles-on patch 2 3 3 => 3
+  any? turtles-on n-of 2 turtles-on patch 2 3 3 => true
+  count turtles-on n-of 2 turtles-on patch 2 3 3 => 3
