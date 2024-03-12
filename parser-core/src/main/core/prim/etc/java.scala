@@ -538,12 +538,6 @@ case class _turtleshere() extends Reporter {
       ret = Syntax.TurtlesetType,
       agentClassString = "-TP-")
 }
-case class _turtleson() extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(
-      right = List(Syntax.AgentType | Syntax.AgentsetType),
-      ret = Syntax.TurtlesetType)
-}
 case class _uptonof() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(

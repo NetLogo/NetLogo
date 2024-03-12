@@ -200,6 +200,16 @@ package optimize {
       root.reporter.token = arg.reporter.token
     }
   }
+  // _any(_turtleson(*)) => _anyturtleson(*)
+  object AnyTurtlesOn extends RewritingReporterMunger {
+    val clazz = classOf[_any]
+    def munge(root: Match) {
+      val arg = root.matchArg(0, classOf[_turtleson])
+      root.strip()
+      root.replace(classOf[_anyturtleson])
+      root.graftArg(arg.matchArg(0))
+    }
+  }
   // _count(_other(*)) => _countother(*)
   object CountOther extends RewritingReporterMunger {
     val clazz = classOf[_count]

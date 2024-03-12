@@ -41,8 +41,11 @@ class _breedon(breedName: String) extends Reporter {
             val turtleItr =
               sourceSetItr.next().asInstanceOf[Turtle].getPatchHere.turtlesHere.iterator
             while (turtleItr.hasNext) { val t = turtleItr.next()
-              if (t.getBreed eq breed)
-                agentSetBuilder.add(t)
+              if (t.getBreed eq breed) {
+                if (!agentSetBuilder.contains(t)) {
+                    agentSetBuilder.add(t)
+                }
+              }
             }
           }
         } else if (sourceSet.kind == AgentKind.Patch) {
@@ -51,8 +54,11 @@ class _breedon(breedName: String) extends Reporter {
             val patchItr = sourceSetItr.next().asInstanceOf[Patch].turtlesHere.iterator
             while (patchItr.hasNext) {
               val t = patchItr.next()
-              if (t.getBreed eq breed)
-                agentSetBuilder.add(t)
+              if (t.getBreed eq breed) {
+                if (!agentSetBuilder.contains(t)) {
+                    agentSetBuilder.add(t)
+                }
+              }
             }
           }
         }
