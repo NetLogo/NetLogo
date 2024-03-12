@@ -8,7 +8,7 @@ import org.nlogo.nvm.{ ArgumentTypeException, Context, Reporter, RuntimePrimitiv
 
 class _anyturtleson extends Reporter {
   override def report(context: Context): java.lang.Boolean =
-    Boolean.box(report_1(context, argEvalAgentSet(context, 0)))
+    Boolean.box(report_1(context, args(0).report(context)))
 
   def report_1(context: Context, agentOrSet: AnyRef): Boolean = {
     agentOrSet match {
