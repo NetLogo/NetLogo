@@ -13,7 +13,7 @@ object LabInterface {
     def addStatsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter, in: LabPostProcessorInputFormat.Format)
     def addListsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter,
                        in: LabPostProcessorInputFormat.Format)
-    def run(testWorkspace: Workspace, fn: ()=>Workspace, threads: Int)
+    def run(testWorkspace: Workspace, fn: ()=>Workspace, threads: Int, finish: () => Unit = () => {})
     def compile(w: Workspace) // only for testing purposes
   }
   trait ProgressListener {
@@ -42,5 +42,5 @@ object LabInterface {
 trait LabInterface {
   import LabInterface._
   def newWorker(protocol: LabProtocol): Worker
-  def run(settings: Settings, protocol: LabProtocol, fn: ()=>Workspace)
+  def run(settings: Settings, protocol: LabProtocol, fn: ()=>Workspace, finish: () => Unit = () => {})
 }

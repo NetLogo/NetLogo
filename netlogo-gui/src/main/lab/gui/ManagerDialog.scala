@@ -150,19 +150,18 @@ private class ManagerDialog(manager:       LabManager,
 
       manager.prepareForRun()
 
-      new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory, saveProtocol).start()
+      new Supervisor(this, manager.workspace, selectedProtocol, manager.workspaceFactory, dialogFactory, saveProtocol, Supervisor.GUI).start()
     }
     catch { case ex: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(ex) }
   }
   private def makeNew(): Unit = {
     editProtocol(
-      new LabProtocol(
-        "experiment", "", "setup", "go", "", "", 1, true, true, "", 0, "", List("count turtles"),
-        manager.workspace.world.synchronized {
-          manager.workspace.world.program.interfaceGlobals.toList
-          .map{case variableName: String =>
-            new RefEnumeratedValueSet(
-              variableName, List(manager.workspace.world.getObserverVariableByName(variableName)))}}),
+      new LabProtocol(constants = manager.workspace.world.synchronized {
+                                    manager.workspace.world.program.interfaceGlobals.toList
+                                    .map{case variableName: String =>
+                                      new RefEnumeratedValueSet(
+                                        variableName,
+                                        List(manager.workspace.world.getObserverVariableByName(variableName)))}}),
       true)
   }
   private def duplicate() { editProtocol(selectedProtocol.copy(name = selectedProtocol.name + " (copy)",
@@ -248,7 +247,7 @@ private class ManagerDialog(manager:       LabManager,
         }
       }
 
-      update
+      update()
     } catch {
       case e: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(e)
     }
@@ -290,6 +289,7 @@ private class ManagerDialog(manager:       LabManager,
   def update() {
     listModel.clear
     manager.protocols.foreach(listModel.addElement(_))
+    manager.workspace.setBehaviorSpaceExperiments(manager.protocols.toList)
     valueChanged(null)
     if (manager.protocols.size > 0) jlist.setSelectedIndices(Array(0))
   }

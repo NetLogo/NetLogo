@@ -6,7 +6,7 @@ import org.nlogo.swing.{ RichAction, OptionDialog }
 import org.nlogo.api.LabProtocol
 import org.nlogo.nvm.Workspace
 import org.nlogo.nvm.LabInterface.ProgressListener
-import org.nlogo.window.{ PlotWidget, SpeedSliderPanel }
+import org.nlogo.window.{ GUIWorkspace, PlotWidget, SpeedSliderPanel }
 import javax.swing.ScrollPaneConstants._
 import javax.swing._
 import java.awt.Dimension
@@ -14,11 +14,11 @@ import org.nlogo.api.{ Dump, ExportPlotWarningAction, PeriodicUpdateDelay }
 import org.nlogo.plot.DummyPlotManager
 import org.nlogo.core.I18N
 
-private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervisor,
+private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervisor,
                                    saveProtocol: (LabProtocol) => Unit)
-              extends JDialog(dialog, true) with ProgressListener{
+              extends JDialog(parent, java.awt.Dialog.DEFAULT_MODALITY_TYPE) with ProgressListener {
   val protocol = supervisor.worker.protocol
-  val workspace = supervisor.workspace
+  val workspace = supervisor.workspace.asInstanceOf[GUIWorkspace]
   private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace.progressDialog")
   private val totalRuns = protocol.countRuns
   private val progressArea = new JTextArea(10 min (protocol.valueSets(0).size + 3), 0)
@@ -116,7 +116,7 @@ private [gui] class ProgressDialog(dialog: java.awt.Dialog, supervisor: Supervis
     timer.start()
 
     pack()
-    org.nlogo.awt.Positioning.center(this, dialog)
+    org.nlogo.awt.Positioning.center(this, parent)
   }
 
   override def getMinimumSize = getPreferredSize

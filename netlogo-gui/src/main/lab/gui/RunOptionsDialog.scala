@@ -2,7 +2,7 @@
 
 package org.nlogo.lab.gui
 
-import org.nlogo.api.{Editable, Property, LabDefaultThreads, LabRunOptions}
+import org.nlogo.api.{Editable, Property, LabDefaultValues, LabRunOptions}
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N }
 import org.nlogo.window.EditDialogFactoryInterface
@@ -10,7 +10,7 @@ import org.nlogo.window.EditDialogFactoryInterface
 import java.io.File
 import java.util.prefs.Preferences
 
-class RunOptionsDialog(parent: java.awt.Dialog,
+class RunOptionsDialog(parent: java.awt.Window,
                        dialogFactory: EditDialogFactoryInterface,
                        filePrefix: String)
 {
@@ -20,7 +20,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
   val statsFile = s"$filePrefix-stats.csv"
   val listsFile = s"$filePrefix-lists.csv"
   val totalProcessors = Runtime.getRuntime.availableProcessors
-  val defaultProcessors = LabDefaultThreads.getLabDefaultThreads
+  val defaultProcessors = LabDefaultValues.getDefaultThreads
 
   object Prefs {
     private val prefs = Preferences.userNodeForPackage(RunOptionsDialog.this.getClass)
@@ -84,8 +84,10 @@ class RunOptionsDialog(parent: java.awt.Dialog,
   }
   def get = {
     val editable = new EditableRunOptions
-    if (dialogFactory.canceled(parent, editable, false))
-      throw new UserCancelException
+    if (parent match {
+      case dialog: java.awt.Dialog => dialogFactory.canceled(dialog, editable, false)
+      case frame: java.awt.Frame => dialogFactory.canceled(frame, editable, false)
+    }) throw new UserCancelException
     val runOptions = editable.get
     Prefs.updateFrom(runOptions)
     runOptions
@@ -117,7 +119,7 @@ class RunOptionsDialog(parent: java.awt.Dialog,
                                 (totalProcessors.toString))
                 + "</html>")).asJava
     }
-    def get = LabRunOptions(threadCount, table, spreadsheet, stats, lists, updateView, updatePlotsAndMonitors)
+    def get = LabRunOptions(threadCount, table, spreadsheet, stats, lists, updateView, updatePlotsAndMonitors, false)
     // boilerplate for Editable
     def helpLink = None
     def error(key:Object) = null
