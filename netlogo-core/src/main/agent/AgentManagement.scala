@@ -97,7 +97,7 @@ trait AgentManagement
         end2.asInstanceOf[Turtle].agentKey, breed))
 
     linkOption.getOrElse(
-      linkManager.dummyLink(end1.asInstanceOf[Turtle], end2.asInstanceOf[Turtle], breed))
+      linkManager.dummyLink(end1, end2, breed) )
   }
 
   def indexOfVariable(agent: Agent, name: String): Int = {

@@ -75,8 +75,9 @@ trait LinkManager {
   def outLinks(src: Turtle, linkBreed: AgentSet): Array[Link]
   def inLinks(target: Turtle, linkBreed: AgentSet): Array[Link]
   def links(target: Turtle, linkSet: AgentSet): Array[Link]
-
-  def dummyLink(end1: Turtle, end2: Turtle, breed: AgentSet): DummyLink
+  // The ends of the dummyLink are AnyRef because they can be a Turtle or null.
+  // null is used when only one end of a link has been specified in a Link Inspector (Monitor)
+  def dummyLink(end1: AnyRef, end2: AnyRef, breed: AgentSet): DummyLink
 }
 
 //
@@ -206,7 +207,7 @@ class LinkManagerImpl[W <: World](world: W, linkFactory: LinkFactory[W]) extends
     if ((linkBreed eq world.links) && (world.linkBreeds.size > 1)) result.distinct else result
   }
 
-  def dummyLink(end1: Turtle, end2: Turtle, breed: AgentSet): DummyLink = {
+  def dummyLink(end1: AnyRef, end2: AnyRef, breed: AgentSet): DummyLink = {
     new DummyLink(world, end1, end2, breed)
   }
 }
