@@ -308,7 +308,7 @@ with WindowEvents.JobRemovedEvent.Handler
   }
 
   private def get =
-    if(agent == null || agent.id == -1)
+    if(agent == null || agent.id == -1  || agent.getVariable(index) == null)
       ""
     else workspace.world.synchronized{
       Dump.logoObject(agent.getVariable(index), true, false)
