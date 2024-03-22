@@ -60,7 +60,7 @@ lazy val scalatestSettings = Seq(
   Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oS")
 , Test / testOnly / logBuffered := false
 , libraryDependencies ++= Seq(
-    "org.scalatest"     %% "scalatest"       % "3.2.14"   % Test
+    "org.scalatest"     %% "scalatest"       % "3.2.17"   % Test
   , "org.scalatestplus" %% "scalacheck-1-16" % "3.2.14.0" % Test
   )
   // This lets us mock up some Java library classes for testing.
@@ -81,7 +81,7 @@ lazy val scalatestSettings = Seq(
 )
 
 lazy val flexmarkDependencies = {
-  val flexmarkVersion = "0.20.0"
+  val flexmarkVersion = "0.20.2"
   Seq(
     libraryDependencies ++= Seq(
       "com.vladsch.flexmark" % "flexmark" % flexmarkVersion,
@@ -106,14 +106,14 @@ lazy val mockDependencies = {
         exclude ("org.hamcrest", "hamcrest")
     , "org.jmock"     % "jmock-legacy" % mockVersion % "test"
     , "org.jmock"     % "jmock-junit5" % mockVersion % "test"
-    , "net.bytebuddy" % "byte-buddy"   % "1.12.18"   % "test"
+    , "net.bytebuddy" % "byte-buddy"   % "1.12.23"   % "test"
     , "org.hamcrest"  % "hamcrest"     % "2.2"       % "test"
     )
   )
 }
 
 lazy val asmDependencies = {
-  val asmVersion = "9.4"
+  val asmVersion = "9.6"
   Seq(
     libraryDependencies ++= Seq(
       "org.ow2.asm" % "asm"         % asmVersion,
@@ -165,7 +165,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
   settings(
     name := "NetLogo",
     version := "6.4.0",
-    isSnapshot := false,
+    isSnapshot := true,
     publishTo := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     Compile / mainClass := Some("org.nlogo.app.App"),
     javacOptions   ++= Seq("--release", "11"),
@@ -178,8 +178,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     libraryDependencies ++= Seq(
       "org.picocontainer" % "picocontainer" % "2.15",
       "javax.media" % "jmf" % "2.1.1e",
-      "commons-codec" % "commons-codec" % "1.15",
-      "org.parboiled" %% "parboiled" % "2.4.1",
+      "commons-codec" % "commons-codec" % "1.16.0",
+      "org.parboiled" %% "parboiled" % "2.5.0",
       "org.jogamp.jogl" % "jogl-all" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0/jar/jogl-all.jar",
       "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0/jar/gluegen-rt.jar",
       "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
@@ -187,8 +187,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "org.apache.httpcomponents" % "httpmime" % "4.2",
       "com.googlecode.json-simple" % "json-simple" % "1.1.1",
       "com.fifesoft" % "rsyntaxtextarea" % "3.3.0",
-      "com.typesafe" % "config" % "1.4.2",
-      "net.lingala.zip4j" % "zip4j" % "2.9.1"
+      "com.typesafe" % "config" % "1.4.3",
+      "net.lingala.zip4j" % "zip4j" % "2.11.5"
     ),
     all := {},
     all := {
@@ -249,17 +249,17 @@ lazy val headless = (project in file ("netlogo-headless")).
   settings(
     name          := "NetLogoHeadless",
     version       := "6.4.0",
-    isSnapshot := false,
+    isSnapshot := true,
     publishTo     := { Some("Cloudsmith API" at "https://maven.cloudsmith.io/netlogo/netlogo/") },
     autogenRoot   := (baseDirectory.value.getParentFile / "autogen").getAbsoluteFile,
     extensionRoot := baseDirectory.value.getParentFile / "extensions",
     javacOptions ++= Seq("--release", "11"),
     Compile / mainClass         := Some("org.nlogo.headless.Main"),
     libraryDependencies        ++= Seq(
-      "org.parboiled" %% "parboiled" % "2.4.1",
-      "commons-codec" % "commons-codec" % "1.15",
-      "com.typesafe" % "config" % "1.4.2",
-      "net.lingala.zip4j" % "zip4j" % "2.9.1",
+      "org.parboiled" %% "parboiled" % "2.5.0",
+      "commons-codec" % "commons-codec" % "1.16.0",
+      "com.typesafe" % "config" % "1.4.3",
+      "net.lingala.zip4j" % "zip4j" % "2.11.5",
       "org.reflections" % "reflections" % "0.9.10" % "test",
     ),
     (Runtime / fullClasspath)  ++= (parserJVM / Runtime / fullClasspath).value,
@@ -363,7 +363,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
       Seq(
         "org.scala-lang.modules" %%% "scala-parser-combinators" %    "2.1.1"
-      ,          "org.scalatest" %%%                "scalatest" %   "3.2.14" % Test
+      ,          "org.scalatest" %%%                "scalatest" %   "3.2.17" % Test
       ,      "org.scalatestplus" %%%          "scalacheck-1-16" % "3.2.14.0" % Test
       )
     }).

@@ -8,6 +8,7 @@ app.common.OpenLibrariesDialog
 # org.nlogo.window package
 
 window.AboutToCloseFiles
+window.AboutToSaveModel
 window.AboutToQuit
 window.AddBooleanConstraint - String varname - Boolean defaultValue
 window.AddChooserConstraint - String varname - org.nlogo.agent.ChooserConstraint constraint

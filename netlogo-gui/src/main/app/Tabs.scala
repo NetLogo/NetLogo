@@ -5,6 +5,8 @@ package org.nlogo.app
 import java.awt.{ Color, Component }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
 import java.awt.print.PrinterAbortException
+import java.nio.file.{ Path, Paths }
+import java.util.prefs.Preferences
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.{ AbstractAction, Action, JTabbedPane }
 
@@ -40,9 +42,86 @@ class Tabs(workspace:           GUIWorkspace,
   with RuntimeErrorEvent.Handler
   with CompiledEvent.Handler
   with AfterLoadEvent.Handler
+  with LoadModelEvent.Handler
+  with AboutToSaveModelEvent.Handler
+  with ModelSavedEvent.Handler
   with ExternalFileSavedEvent.Handler {
 
   addChangeListener(this)
+
+  private var watcherThread: FileWatcherThread = null
+  private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
+
+  def stopWatcherThread() {
+    if (watcherThread != null) {
+      watcherThread.interrupt
+      watcherThread = null
+    }
+  }
+
+  def startWatcherThread(modelPath: String = workspace.getModelPath) {
+    // Stop the current thread if there's one. This ensures that there can be
+    // at most one thread.
+    stopWatcherThread()
+
+    if (modelPath != null) {
+      def f(x: Map[String, String]): List[Path] = x.values.map(Paths.get(_)).toList
+      val includes: List[Path] = mainCodeTab.getIncludesTable.map(f).getOrElse(List.empty)
+
+      watcherThread = new FileWatcherThread(Paths.get(modelPath) :: includes, handleFileChange)
+      watcherThread.start
+    }
+  }
+
+  def setWatchingFiles(value: Boolean, modelPath: String = workspace.getModelPath) {
+    if (value) {
+      startWatcherThread(modelPath)
+    } else {
+      stopWatcherThread()
+    }
+  }
+
+  def watchingFiles = watcherThread != null
+  def watchingFiles_=(value: Boolean) {
+    setWatchingFiles(value)
+  }
+
+  def getAutoReload = prefs.get("reloadOnExternalChanges", "false").toBoolean
+
+  def reload() {
+    if (!reloading) {
+      reloading = true
+      workspace.reload
+    }
+  }
+
+  private def handleFileChange(): Boolean = {
+    // We stop the file watcher thread after the dialog is shown, so we need to
+    // start it back up in these callbacks.
+
+    def cancelCallback() {
+      startWatcherThread()
+    }
+
+    def okCallback() {
+      reload()
+      startWatcherThread()
+    }
+
+    val dirty = tabManager.getDirtyMonitor.modelDirty
+
+    val dirtyDialog = new DirtyNotificationDialog(workspace.getFrame, okCallback, cancelCallback)
+
+    if (dirty) {
+      dirtyDialog.setVisible(true)
+    } else {
+      reload()
+    }
+
+    // Return 'dirty' to stop the file watcher thread if file is dirty. This is
+    // to prevent the file dirty dialog from being shown back-to-back.
+    dirty
+  }
 
   def getTabs = { this }
 
@@ -162,11 +241,15 @@ class Tabs(workspace:           GUIWorkspace,
     filter (_.saveNeeded) , this)
   }
 
+  var reloading: Boolean = false
+
   def handle(e: LoadBeginEvent) = {
-    setSelectedComponent(interfaceTab)
-    externalFileTabs foreach { tab =>
-      externalFileManager.remove(tab)
-      closeExternalFile(tab.filename)
+    if (!reloading) {
+      setSelectedComponent(interfaceTab)
+      externalFileTabs foreach { tab =>
+        externalFileManager.remove(tab)
+        closeExternalFile(tab.filename)
+      }
     }
   }
 
@@ -406,4 +489,33 @@ class Tabs(workspace:           GUIWorkspace,
   def switchToSpecifiedCodeWindowState(state: Boolean): Unit = {
     getTabManager.switchToSpecifiedCodeWindowState(state)
   }
+
+  def handle(e: LoadModelEvent) {
+    // We need to restart the watcher thread every load because the list of
+    // included files may have changed.
+
+    stopWatcherThread()
+
+    if(getAutoReload) {
+      startWatcherThread()
+
+      externalFileTabs foreach { tab =>
+        tab.reload
+      }
+    }
+
+    reloading = false
+  }
+
+  def handle(e: AboutToSaveModelEvent) {
+    // Stop watching here so that the watcher thread doesn't detect our own
+    // write.
+    stopWatcherThread()
+  }
+
+  def handle(e: ModelSavedEvent) {
+    setWatchingFiles(getAutoReload, e.modelPath)
+  }
+
+  watchingFiles = getAutoReload
 }

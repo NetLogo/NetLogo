@@ -7,16 +7,25 @@ end
 to go
   if not any? turtles [ stop ]
   if ticks = 10 [ ask turtles [ die ] ]
+  ; this is just here to test out multi-assign with BehaviorSpace
+  use-fake-metric
   tick
+end
+
+to use-fake-metric
+  let [a b] [10 20]
+  let [c d f g] ["A" "B" "C" "D"]
+  let [h i j k l m] [true false false true false false ]
+  ask turtles with [color = blue] [ fd (a + b) ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
 210
 10
-649
-470
-16
-16
+647
+448
+-1
+-1
 13.0
 1
 10
@@ -343,9 +352,8 @@ false
 0
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
-
 @#$#@#$#@
-NetLogo 6.0-PREVIEW-12-15
+NetLogo 6.4.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
@@ -369,7 +377,6 @@ true
 0
 Line -7500403 true 150 150 90 180
 Line -7500403 true 150 150 210 180
-
 @#$#@#$#@
 0
 @#$#@#$#@

@@ -326,6 +326,7 @@ R filter etc._filter
 R first etc._first
 R floor etc._floor
 R fput etc._fput
+R home-directory _homedirectory
 R hsb etc._hsb
 R __hsb-old etc._hsbold
 R ifelse-value etc._ifelsevalue
@@ -501,7 +502,7 @@ R turtles _turtles
 R turtles-at etc._turtlesat
 R turtles-at threed._turtlesat
 R turtles-here etc._turtleshere
-R turtles-on etc._turtleson
+R turtles-on _turtleson
 R user-directory gui._userdirectory
 R user-file gui._userfile
 R user-input gui._userinput

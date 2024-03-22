@@ -266,6 +266,7 @@ R filter etc._filter
 R first etc._first
 R floor etc._floor
 R fput etc._fput
+R home-directory _homedirectory
 R hsb etc._hsb
 R hubnet-clients-list hubnet._hubnetclientslist
 R hubnet-enter-message? hubnet._hubnetentermessage
@@ -427,7 +428,7 @@ R turtle-set etc._turtleset
 R turtles _turtles
 R turtles-at etc._turtlesat
 R turtles-here etc._turtleshere
-R turtles-on etc._turtleson
+R turtles-on _turtleson
 R up-to-n-of etc._uptonof
 R user-directory etc._userdirectory
 R user-file etc._userfile

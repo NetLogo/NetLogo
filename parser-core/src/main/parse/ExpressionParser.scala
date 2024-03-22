@@ -46,12 +46,12 @@ object ExpressionParser {
           // The `_multilet` has the job of storing the list value and checking it at runtime to make sure it's long
           // enough for all the given variable names.
           val multilet      = stmt.command.asInstanceOf[core.prim._multilet]
-          // This creates synthetic `let v1 _multiletitem` statements, again to allow the rest of compilation to proceed
-          // as normal.  The `_multiletitem` gets the value from the list stored by the opening `_multilet`.
+          // This creates synthetic `let v1 _multiassignitem` statements, again to allow the rest of compilation to proceed
+          // as normal.  The `_multiassignitem` gets the value from the list stored by the opening `_multilet`.
           val letStatements = multilet.lets.zipWithIndex.map({ case ((token, let), i) =>
             val splitLet     = new core.prim._let(Some(let), Some(token.text))
             splitLet.token   = token
-            val item         = new core.prim._multiletitem()
+            val item         = new core.prim._multiassignitem()
             item.token       = token
             val expression   = new core.ReporterApp(item, Seq(), token.sourceLocation)
             // the `_letname()` here does absolutely nothing, but it allows future steps to run as though this is a normal `let`.
@@ -93,7 +93,7 @@ object ExpressionParser {
                 exception(s"Command found in multi-set where a variable name was expected: ${token.text.toUpperCase}.", token.sourceLocation)
 
             }
-            val item         = new core.prim._multiletitem
+            val item         = new core.prim._multiassignitem()
             item.token       = token
             val expression   = new core.ReporterApp(item, Seq(), token.sourceLocation)
             val setArgs      = Seq(setVar, expression)

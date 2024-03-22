@@ -1,5 +1,5 @@
 Let
-  globals [g1 g2 l]
+  globals [g1 g2 l t]
 
   to set-globals [v1 v2] /
     (set g1 v1) /
@@ -26,6 +26,11 @@ Let
   O> let [v7 v8] report-nums (set-globals v7 v8)
   g1 => 70
   g2 => 80
+
+  O> set t [ [x] -> let [v11 v12] (list x 100) (set-globals v11 v12) ]
+  O> (run t 22)
+  g1 => 22
+  g2 => 100
 
   O> let [] [0] => COMPILER ERROR The list of variables names given to LET must contain at least one item.
   O> let [v1 g1] [0 1] => COMPILER ERROR There is already a global variable called G1
@@ -70,6 +75,23 @@ SetOnLets
   O> let v1 0 let v2 0 set [v1 v2] [10 20] (set-globals v1 v2)
   g1 => 10
   g2 => 20
+
+SetOnMultipleVariableTypes
+  globals [g1 g2 l]
+  breed [toads toad]
+  turtles-own [energy]
+  toads-own [warts]
+
+  to set-globals [v1 v2] /
+    (set g1 v1) /
+    (set g2 v2) /
+  end
+
+  O> create-toads 10 [ set energy 111 set warts 222 ]
+  O> let z 10 ask one-of toads [ set [z g1 g2 energy warts] [20 30 40 50 60] set-globals energy warts set [energy warts] [7 8] ]
+
+  g1 => 50
+  g2 => 60
 
 # ArgsProc
 #   true => true

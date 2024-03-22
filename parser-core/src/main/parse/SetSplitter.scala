@@ -14,7 +14,7 @@ object SplitSet {
         tokens.next()
         while (tokens.hasNext && tokens.head.tpe != TokenType.CloseBracket) {
           val token = tokens.head
-          if (token.text != "set" && token.text != "_multisetitem") {
+          if (token.text != "set") {
             sets = sets :+ token
           }
           tokens.next()

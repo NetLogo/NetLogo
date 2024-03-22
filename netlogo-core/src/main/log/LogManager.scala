@@ -11,7 +11,7 @@ import collection.JavaConverters._
 import scala.io.Codec
 
 import org.nlogo.api.{ Equality, NetLogoAdapter, Version }
-import org.nlogo.api.Exceptions.ignoring
+import org.nlogo.api.Exceptions.{ ignoring, warning }
 import org.nlogo.api.FileIO.fileToString
 
 // Welcome to Logging.
@@ -111,15 +111,22 @@ object LogManager {
 
   def stop() {
     LogManager.logStop()
-    LogManager.logger.close()
+    warning(classOf[Exception]) {
+      LogManager.logger.close()
+    }
     LogManager.logger = new NoOpLogger()
+    LogManager.loggingListener.logger = LogManager.logger
   }
 
   private def restart(thunk: () => Unit = () => {}) {
     LogManager.stop()
     thunk()
-    LogManager.logger                 = LogManager.state.loggerFactory(LogManager.state.logDirectoryPath)
-    LogManager.loggingListener.logger = LogManager.logger
+    // If the logger blows up for any reason (security, disk full, etc), just ignore it and output to the error stream
+    // so NetLogo can at least continune running with the NoOpLogger -Jeremy B February 2024
+    warning(classOf[Exception]) {
+      LogManager.logger                 = LogManager.state.loggerFactory(LogManager.state.logDirectoryPath)
+      LogManager.loggingListener.logger = LogManager.logger
+    }
     LogManager.logStart(modelName)
   }
 
@@ -178,6 +185,9 @@ object LogManager {
   }
 
   private def log(event: String, eventInfo: Map[String, Any] = Map()) {
+    // We do not check for any IO exceptions from the logger here, we expect it to handle those internally.  That
+    // prevents us from running a try/catch for events that won't be logged when it is not enabled, which is most of the
+    // time.  -Jeremy B February 2024
     LogManager.logger.log(event, eventInfo)
   }
 

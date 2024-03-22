@@ -619,7 +619,7 @@ would be a best practice, but there are times when you might not want to, such a
 change run-to-run.  Just be careful with whatever data is not cleared out.
 
 Seventh, there is a very, very small chance that at startup multiple parallel runs could wind up with the same random
-number generator state if they startup at the eact same moment in time.  This means the runs would produce identical
+number generator state if they startup at the exact same moment in time.  This means the runs would produce identical
 output for all random operations and likely the same results.  This would have a chance to happen when running on very
 fast processors and with lots of parallel runs at once.  If you need to make sure this doesn't impact your results, you
 can add `random-seed new-seed` to your setup commands to re-generate a new unique random seed for each run.  In fact,

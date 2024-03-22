@@ -141,10 +141,10 @@ class Backifier(program: Program,
         new nvmprim._let(let)
 
       case core.prim._multilet(lets) =>
-        new nvmprim._multilet("LET", lets.size)
+        new nvmprim._multiassign("LET", lets.size)
 
       case core.prim._multiset(sets) =>
-        new nvmprim._multilet("SET", sets.size)
+        new nvmprim._multiassign("SET", sets.size)
 
       case nlogoApi.NetLogoLegacyDialect._magicopen(name) =>
         new nvmprim._magicopen(name)

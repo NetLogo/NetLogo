@@ -147,6 +147,7 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
           proceduresMap.put(ws, newProcedures)
           newProcedures
         }
+      var lastMeasuredStep = -1
       import procedures._
       def setVariables(settings: List[(String, AnyRef)]) {
         val world = ws.world
@@ -276,6 +277,7 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
         val m = takeMeasurements()
         eachListener(_.measurementsTaken(ws, runNumber, 0, m))
         checkForRuntimeError()
+        lastMeasuredStep = 0
       }
       var steps = 0
       while((protocol.timeLimit == 0 || steps < protocol.timeLimit) &&
@@ -288,11 +290,12 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
           val m = takeMeasurements()
           eachListener(_.measurementsTaken(ws, runNumber, steps, m))
           checkForRuntimeError()
+          lastMeasuredStep = steps
         }
         ws.updateDisplay(false)
         if (aborted) return
       }
-      if (!protocol.runMetricsEveryStep && protocol.runMetricsCondition.isEmpty && listeners.nonEmpty) {
+      if (!protocol.runMetricsEveryStep && steps != lastMeasuredStep && listeners.nonEmpty) {
         val m = takeMeasurements()
         eachListener(_.measurementsTaken(ws, runNumber, steps, m))
         checkForRuntimeError()

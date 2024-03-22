@@ -4,7 +4,7 @@ package org.nlogo.parse
 
 import org.nlogo.core.{ AstNode, CommandBlock, Dump, Instruction, LogoList, ProcedureDefinition,
   ReporterApp, ReporterBlock, Statement, prim },
-  prim.{ _commandlambda, _const, _constcodeblock, _lambdavariable, _let, _letname, _multilet, _multiletitem, _multiset, _multisetitem, _set, Lambda }
+  prim.{ _commandlambda, _const, _constcodeblock, _lambdavariable, _let, _letname, _multilet, _multiassignitem, _multiset, _set, Lambda }
 
 object Formatter {
 
@@ -27,9 +27,8 @@ object Formatter {
       case _: _letname                                   => ""
       case s: _set if s.token.text.toUpperCase != "SET"  => { skipNext = true; "" }
       case m: _multilet                                  => s"let ${m.letList}"
-      case _: _multiletitem                              => ""
+      case _: _multiassignitem                           => ""
       case s: _multiset                                  => s"set ${s.setList}"
-      case _: _multisetitem                              => ""
       case r                                             => if (skipNext) { skipNext = false; "" } else { r.token.text }
     }
 
