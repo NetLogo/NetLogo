@@ -306,7 +306,7 @@ class App extends
     frame.addLinkComponent(this)
     pico.addComponent(frame)
 
-    org.nlogo.swing.Utils.setSystemLookAndFeel()
+    org.nlogo.swing.SetSystemLookAndFeel.setSystemLookAndFeel()
 
     errorDialogManager = new ErrorDialogManager(frame,
       Map(classOf[MetadataLoadingException] -> new LibraryManagerErrorDialog(frame)))

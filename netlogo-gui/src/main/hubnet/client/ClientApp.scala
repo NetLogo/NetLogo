@@ -21,7 +21,7 @@ object ClientApp {
   def mainHelper(args: Array[String], workspace: CompilerServices) {
     try {
       val app = new ClientApp()
-      org.nlogo.swing.Utils.setSystemLookAndFeel()
+      org.nlogo.swing.SetSystemLookAndFeel.setSystemLookAndFeel()
 
       var isRoboClient = false
       var waitTime = 500
