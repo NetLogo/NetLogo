@@ -13,7 +13,8 @@ final object SetSystemLookAndFeel {
 
  /// Swing look & feel
 
-  def setSystemLookAndFeel(LaFInfo: String = "", lightTheme: Boolean = true): Unit = {
+  def setSystemLookAndFeel(lookAndFeelInfo: String = "", lightTheme: Boolean = true): Unit = {
+    println(s"laf: $lookAndFeelInfo, is light $lightTheme")
     try {
       // this slider thing is a workaround for Java bug parade bug #6465237 - ST 1/20/09
       UIManager.put("Slider.paintValue", false)
