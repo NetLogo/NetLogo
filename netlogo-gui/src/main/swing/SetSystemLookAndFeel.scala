@@ -64,12 +64,11 @@ final object SetSystemLookAndFeel {
   }
 
   def setFlatLafLookAndFeel(lookAndFeelInfo: String = "", lightTheme: Boolean = true): Unit = {
-    println(s"setFlatLafLookAndFeel: lookAndFeelInfo-$lookAndFeelInfo-, lightTheme $lightTheme" )
     // this slider thing is a workaround for Java bug parade bug #6465237 - ST 1/20/09
     UIManager.put("Slider.paintValue", false)
     // Hopefully we won't need this MacOS specific code
     // if we do turn it into a method to share with set classic laf
-    if (System.getProperty("os.name").startsWith("Mac")) {
+    if (System.getProperty("os.name").startsWith("Mac"))  {
       UIManager.getDefaults.put("TabbedPane.foreground", new Color(0, 0, 0))
       UIManager.getDefaults.put("TabbedPane.selectedTabPadInsets", new Insets(0,0,-2,0))
       UIManager.getDefaults.put("TabbedPane.contentBorderInsets", new Insets(0,-10,-13,-9))        // The java defaults specify this as black on my system,
