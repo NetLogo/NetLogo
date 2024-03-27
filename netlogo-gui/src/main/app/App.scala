@@ -84,7 +84,6 @@ object App {
       AbstractWorkspace.isApp(true)
       org.nlogo.window.VMCheck.detectBadJVMs()
       processCommandLineArguments(args)
-          println(s"laf: $lookAndFeelInfo, is light $lightTheme")
       Splash.beginSplash() // also initializes AWT
       pico.add("org.nlogo.compile.Compiler")
       if (Version.is3D)
@@ -311,8 +310,7 @@ class App extends
     frame.addLinkComponent(this)
     pico.addComponent(frame)
 
-    org.nlogo.swing.SetSystemLookAndFeel.setSystemLookAndFeel()
-    //org.nlogo.swing.SetSystemLookAndFeel.setSystemLookAndFeel(lookAndFeelInfo, lightTheme)
+    org.nlogo.swing.SetSystemLookAndFeel.setSystemLookAndFeel(App.lookAndFeelInfo, App.lightTheme)
 
     errorDialogManager = new ErrorDialogManager(frame,
       Map(classOf[MetadataLoadingException] -> new LibraryManagerErrorDialog(frame)))

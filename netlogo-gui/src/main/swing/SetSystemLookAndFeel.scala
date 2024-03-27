@@ -4,19 +4,31 @@ package org.nlogo.swing
 
 // Frame
 import java.awt.{ Color, Insets }
-
 import javax.swing.{ UIManager, UnsupportedLookAndFeelException }
-//import javax.swing.{ Action, BorderFactory, ImageIcon, InputMap, JComponent, JDialog,
-//  JWindow, KeyStroke, UIManager, UnsupportedLookAndFeelException }
+import com.formdev.flatlaf.FlatDarkLaf
+import com.formdev.flatlaf.FlatLightLaf
 
 final object SetSystemLookAndFeel {
 
  /// Swing look & feel
 
   def setSystemLookAndFeel(lookAndFeelInfo: String = "", lightTheme: Boolean = true): Unit = {
-    println(s"laf: $lookAndFeelInfo, is light $lightTheme")
+    if (lookAndFeelInfo.isEmpty) {
+      setClassicNetLogoSystemLookAndFeel()
+    } else {
+      try{
+        setFlatLafLookAndFeel(lookAndFeelInfo, lightTheme)
+      } catch {
+        case  e: Throwable => setClassicNetLogoSystemLookAndFeel()
+      }
+    }
+  }
+
+  def setClassicNetLogoSystemLookAndFeel(): Unit = {
     try {
       // this slider thing is a workaround for Java bug parade bug #6465237 - ST 1/20/09
+      // Note: https://bugs.java.com/bugdatabase/view_bug?bug_id=6465237 says Closing as "not a defect".
+      // so this is a permanent workaround - AAB 2/27/2024
       UIManager.put("Slider.paintValue", false)
       if (System.getProperty("os.name").startsWith("Mac")) {
         val lookAndFeel = System.getProperty("netlogo.swing.laf", UIManager.getSystemLookAndFeelClassName)
@@ -48,6 +60,30 @@ final object SetSystemLookAndFeel {
       case ex @ (_:UnsupportedLookAndFeelException | _:IllegalAccessException |
                  _:ClassNotFoundException | _:InstantiationException) =>
         throw new IllegalStateException(ex)
+    }
+  }
+
+  def setFlatLafLookAndFeel(lookAndFeelInfo: String = "", lightTheme: Boolean = true): Unit = {
+    println(s"setFlatLafLookAndFeel: lookAndFeelInfo-$lookAndFeelInfo-, lightTheme $lightTheme" )
+    // this slider thing is a workaround for Java bug parade bug #6465237 - ST 1/20/09
+    UIManager.put("Slider.paintValue", false)
+    // Hopefully we won't need this MacOS specific code
+    // if we do turn it into a method to share with set classic laf
+    if (System.getProperty("os.name").startsWith("Mac")) {
+      UIManager.getDefaults.put("TabbedPane.foreground", new Color(0, 0, 0))
+      UIManager.getDefaults.put("TabbedPane.selectedTabPadInsets", new Insets(0,0,-2,0))
+      UIManager.getDefaults.put("TabbedPane.contentBorderInsets", new Insets(0,-10,-13,-9))        // The java defaults specify this as black on my system,
+      // which was distractingly bad for the name field of the "PlotPen" JTable when
+      // that field was clicked, moved off and then released - RG 7/1/16
+      UIManager.getDefaults.put("Table.focusCellBackground", new Color(202, 202, 202))
+    }
+
+  // might want to take some ideas from
+  //FlatLaf/flatlaf-demo/src/main/java/com/formdev/flatlaf/demo/DemoPrefs.java
+    if (lightTheme) {
+      FlatLightLaf.setup();
+    } else {
+      FlatDarkLaf.setup();
     }
   }
 }
