@@ -25,7 +25,7 @@ object BreedIdentifierHandler {
     TurtlePrimitive("<BREEDS>"      , Reporter,  "_breed"             ),
     TurtlePrimitive("<BREEDS>-AT"   , Reporter,  "etc._breedat"       ),
     TurtlePrimitive("<BREEDS>-HERE" , Reporter,  "etc._breedhere"     ),
-    TurtlePrimitive("<BREEDS>-ON"   , Reporter,  "etc._breedon"       ),
+    TurtlePrimitive("<BREEDS>-ON"   , Reporter,  "_breedon"       ),
     TurtlePrimitive("<BREED>"       , Reporter,  "etc._breedsingular" ),
     TurtlePrimitive("IS-<BREED>?"   , Reporter,  "etc._isbreed"       ),
 
