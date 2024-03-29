@@ -6,16 +6,17 @@ import org.nlogo.agent.{ Agent, AgentSet, AgentSetBuilder, Patch, Turtle }
 import org.nlogo.core.{ AgentKind, I18N, Syntax }
 import org.nlogo.nvm.{ ArgumentTypeException, Context, Reporter, RuntimePrimitiveException }
 
-class _breedon(breedName: String) extends Reporter {
+class _breedon(private[this] val _breedName: String) extends Reporter {
 
+  def breedName = _breedName
 
-  override def toString: String = s"${super.toString}:$breedName"
+  override def toString: String = s"${super.toString}:${_breedName}"
 
   override def report(context: Context) = report_1(context, args(0).report(context))
 
   def report_1(context: Context, agentOrSet: AnyRef): AgentSet = {
     val agentSetBuilder = new AgentSetBuilder(AgentKind.Turtle)
-    val breed = world.getBreed(breedName)
+    val breed = world.getBreed(_breedName)
     agentOrSet match {
       case turtle: Turtle =>
         if (turtle.id == -1)
@@ -74,7 +75,7 @@ class _breedon(breedName: String) extends Reporter {
 
   def report_2(context: Context, sourceSet: AgentSet): AgentSet = {
     val agentSetBuilder = new AgentSetBuilder(AgentKind.Turtle)
-    val breed = world.getBreed(breedName)
+    val breed = world.getBreed(_breedName)
     if (sourceSet.kind == AgentKind.Turtle) {
       val sourceSetItr = sourceSet.iterator
       while (sourceSetItr.hasNext) {
@@ -108,7 +109,7 @@ class _breedon(breedName: String) extends Reporter {
 
   def report_3(context: Context, agent: Agent): AgentSet = {
     val agentSetBuilder = new AgentSetBuilder(AgentKind.Turtle)
-    val breed = world.getBreed(breedName)
+    val breed = world.getBreed(_breedName)
     agent match {
       case turtle: Turtle =>
         if (turtle.id == -1)
@@ -139,7 +140,7 @@ class _breedon(breedName: String) extends Reporter {
 
   def report_4(context: Context, turtle: Turtle): AgentSet = {
     val agentSetBuilder = new AgentSetBuilder(AgentKind.Turtle)
-    val breed = world.getBreed(breedName)
+    val breed = world.getBreed(_breedName)
     if (turtle.id == -1)
       throw new RuntimePrimitiveException(context, this,
         I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName))
@@ -154,7 +155,7 @@ class _breedon(breedName: String) extends Reporter {
 
   def report_5(context: Context, patch: Patch): AgentSet = {
     val agentSetBuilder = new AgentSetBuilder(AgentKind.Turtle)
-    val breed = world.getBreed(breedName)
+    val breed = world.getBreed(_breedName)
     val itr = patch.turtlesHere.iterator
     while (itr.hasNext) {
       val t = itr.next()

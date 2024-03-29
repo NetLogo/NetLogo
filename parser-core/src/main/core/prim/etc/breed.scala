@@ -16,12 +16,6 @@ case class _breedhere(breedName: String) extends Reporter {
       ret = Syntax.TurtlesetType,
       agentClassString = "-TP-")
 }
-case class _breedon(breedName: String) extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(
-      right = List(Syntax.TurtleType | Syntax.PatchType | Syntax.TurtlesetType | Syntax.PatchsetType),
-      ret = Syntax.TurtlesetType)
-}
 case class _breedsingular(breedName: String) extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
