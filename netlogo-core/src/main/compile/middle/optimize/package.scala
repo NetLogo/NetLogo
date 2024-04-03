@@ -210,6 +210,16 @@ package optimize {
       root.graftArg(arg.matchArg(0))
     }
   }
+  // _any(_breedon(*)) => _anybreedon(*)
+  object AnyBreedOn extends RewritingReporterMunger {
+    val clazz = classOf[_any]
+    def munge(root: Match) {
+      val arg = root.matchArg(0, classOf[_breedon])
+      root.strip()
+      root.replace(classOf[_anybreedon], (arg.reporter.asInstanceOf[_breedon]).breedName)
+      root.graftArg(arg.matchArg(0))
+    }
+  }
   // _count(_other(*)) => _countother(*)
   object CountOther extends RewritingReporterMunger {
     val clazz = classOf[_count]

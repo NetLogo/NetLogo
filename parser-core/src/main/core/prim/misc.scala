@@ -4,12 +4,6 @@ package org.nlogo.core
 package prim
 
 //scalastyle:off number.of.types
-case class _turtleson() extends Reporter {
-  override def syntax =
-    Syntax.reporterSyntax(
-      right = List(Syntax.AgentType | Syntax.AgentsetType),
-      ret = Syntax.TurtlesetType)
-}
 case class _and() extends Reporter with Pure {
   override def syntax =
     Syntax.reporterSyntax(
@@ -47,6 +41,12 @@ case class _bk() extends Command {
 case class _breed(breedName: String) extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
+      ret = Syntax.TurtlesetType)
+}
+case class _breedon(breedName: String) extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      right = List(Syntax.TurtleType | Syntax.PatchType | Syntax.TurtlesetType | Syntax.PatchsetType),
       ret = Syntax.TurtlesetType)
 }
 case class _breedvariable(name: String) extends Reporter {
@@ -502,6 +502,12 @@ case class _turtle() extends Reporter {
 case class _turtles() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
+      ret = Syntax.TurtlesetType)
+}
+case class _turtleson() extends Reporter {
+  override def syntax =
+    Syntax.reporterSyntax(
+      right = List(Syntax.AgentType | Syntax.AgentsetType),
       ret = Syntax.TurtlesetType)
 }
 case class _turtleorlinkvariable(varName: String, returnType: Int = Syntax.WildcardType) extends Reporter {
