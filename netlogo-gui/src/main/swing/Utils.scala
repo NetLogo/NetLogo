@@ -1,7 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.swing
-import com.formdev.flatlaf.FlatDarkLaf  //FlatDarkLaf
+import com.formdev.flatlaf.FlatLightLaf
 import java.awt.{ Color, Frame, Insets }
 import java.awt.event.KeyEvent
 
@@ -42,8 +42,8 @@ final object Utils {
         UIManager.getDefaults.put("Table.focusCellBackground", new Color(202, 202, 202))
         //UIManager.setLookAndFeel(lookAndFeel)
 
-       // UIManager.setLookAndFeel(new FlatDarkLaf())
-       FlatDarkLaf.setup();
+       // UIManager.setLookAndFeel(new FlatLightLaf())
+       FlatLightLaf.setup();
 
       } else if (System.getProperty("os.name").startsWith("Windows")) {
         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName)
@@ -53,7 +53,7 @@ final object Utils {
           // mode is enabled, NetLogo looks very wonky as it's not setup to properly
           // handle it with all its custom UI elements.  So we need to fall back to good
           // ol' Nimbus.  -Jeremy B September 2022 SEO: dark mode, dark theme
-          UIManager.setLookAndFeel(new FlatDarkLaf())
+          UIManager.setLookAndFeel(new FlatLightLaf())
         } catch {
           case _: Exception => UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName)
         }
@@ -70,13 +70,8 @@ final object Utils {
 
   /// borders
 
-  private val WidgetBorder = BorderFactory.createCompoundBorder(
-    BorderFactory.createMatteBorder(1, 1, 0, 0, Color.GRAY),
-    BorderFactory.createRaisedBevelBorder)
-
-  private val WidgetPressedBorder = BorderFactory.createCompoundBorder(
-    BorderFactory.createMatteBorder(1, 1, 0, 0, java.awt.Color.GRAY),
-    BorderFactory.createLoweredBevelBorder)
+  private val WidgetBorder = BorderFactory.createLineBorder(new Color(128, 128, 128), 1);
+  private val WidgetPressedBorder = BorderFactory.createLineBorder(new Color(128, 128, 128), 1);
 
   def createWidgetBorder() = WidgetBorder
   def createWidgetPressedBorder() = WidgetPressedBorder
