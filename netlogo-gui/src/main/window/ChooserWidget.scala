@@ -71,6 +71,7 @@ class ChooserWidget(val compiler: CompilerServices)
   def setChoices(list: LogoList): Unit = {
     val oldValue: Object = value
     constraint.acceptedValues(list)
+    populate()
     val newIndex: Int = constraint.indexForValue(oldValue)
     if (newIndex == -1) index(0) else index(newIndex)
   }
