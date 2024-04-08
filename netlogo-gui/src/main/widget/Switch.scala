@@ -54,6 +54,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   def name_=(name: String) {
     this._name = name
     displayName(name)
+    checkBox.setText(displayName)
     repaint()
   }
 
@@ -70,18 +71,6 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
   override def getMinimumSize = new Dimension(MINWIDTH, MINHEIGHT)
   override def getMaximumSize = new Dimension(10000, MINHEIGHT)
-
-  override def paintComponent(g: Graphics) {
-    super.paintComponent(g)
-
-    val shortString = org.nlogo.awt.Fonts.shortenStringToFit(
-      displayName, getWidth - 3 * BORDERX - checkBox.getBounds().width + 2 * BORDERX,
-      checkBox.getFontMetrics(checkBox.getFont()))
-
-    checkBox.setText(shortString)
-
-    setToolTipText(if (shortString != displayName) displayName else null)
-  }
 
   def mouseWheelMoved(e: MouseWheelEvent) { isOn = ! (e.getWheelRotation >= 1) }
 
