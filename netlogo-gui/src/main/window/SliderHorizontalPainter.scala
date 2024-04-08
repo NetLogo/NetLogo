@@ -11,18 +11,18 @@ object SliderHorizontalPainter {
   // visual parameters
   val LEFT_MARGIN = 1
   val RIGHT_MARGIN = 2
-  val MIN_HEIGHT = 33
+  val MIN_HEIGHT = 39
   val MIN_WIDTH = 92
   val MIN_PREFERRED_WIDTH = 150
   val PADDING = 23
-  val CHANNEL_HEIGHT = 12
+  val CHANNEL_HEIGHT = 18
   val CHANNEL_Y_POS = 3
-  val HANDLE_Y_POS = 2
-  val HANDLE_WIDTH = 8
+  val HANDLE_Y_POS = 5
+  val HANDLE_WIDTH = 14
   val HANDLE_HEIGHT = 14
 
-  val CHANNEL_LEFT_MARGIN = 6
-  val CHANNEL_RIGHT_MARGIN = 6
+  val CHANNEL_LEFT_MARGIN = 12
+  val CHANNEL_RIGHT_MARGIN = 12
 }
 
 class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends SliderPainter with MouseWheelListener  {
@@ -143,7 +143,6 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
   }
 
   class Channel extends JComponent {
-    setOpaque(false)
     setBackground(org.nlogo.awt.Colors.mixColors(InterfaceColors.SLIDER_BACKGROUND, Color.BLACK, 0.5))
     addMouseListener(new MouseAdapter() {
       override def mousePressed(e: MouseEvent) {
@@ -164,21 +163,15 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
     }
 
     override def paintComponent(g: Graphics) {
-      val x = CHANNEL_LEFT_MARGIN
-      val y = 0
-      val width = getWidth - CHANNEL_LEFT_MARGIN - CHANNEL_RIGHT_MARGIN
-      val height = getHeight
+      val innerHeight = 4
       g.setColor(getBackground)
-      g.fillRect(x, y, width, height)
-      org.nlogo.swing.Utils.createWidgetBorder().paintBorder(this, g, x, y, width, height)
+      g.fillRoundRect(CHANNEL_LEFT_MARGIN, getHeight / 2 - innerHeight / 2,
+                      getWidth - CHANNEL_LEFT_MARGIN - CHANNEL_RIGHT_MARGIN, innerHeight, innerHeight, innerHeight)
     }
   }
 
   ///
   class Handle extends JPanel {
-    setBackground(InterfaceColors.SLIDER_HANDLE)
-    setBorder(org.nlogo.swing.Utils.createWidgetBorder())
-    setOpaque(true)
     addMouseListener(new MouseAdapter() {
       override def mousePressed(e: MouseEvent) {new Events.InputBoxLoseFocusEvent().raise(Handle.this)}
       override def mouseReleased(e: MouseEvent) {changed(e.getX, true)}
@@ -186,6 +179,11 @@ class SliderHorizontalPainter(private val slider:AbstractSliderWidget) extends S
     addMouseMotionListener(new MouseMotionAdapter() {
       override def mouseDragged(e: MouseEvent) {changed(e.getX, false)}
     })
+
+    override def paintComponent(g: Graphics) {
+      g.setColor(Color.white)
+      g.fillOval(0, 0, getHeight, getHeight);
+    }
 
     // make tooltips appear in the same location onscreen as they do
     // for the parent Slider
