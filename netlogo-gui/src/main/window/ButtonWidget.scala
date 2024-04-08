@@ -413,8 +413,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
       val availableWidth = getSize().width - 8
       val shortString = org.nlogo.awt.Fonts.shortenStringToFit(displayName, availableWidth, g.getFontMetrics)
       val nx = if (stringWidth > availableWidth) 4 else (getSize().width / 2) - (stringWidth / 2)
-      val labelHeight = g.getFontMetrics.getMaxDescent + g.getFontMetrics.getMaxAscent
-      val ny = (getSize().height / 2) + (labelHeight / 2)
+      val ny = (getSize().height - g.getFontMetrics.getHeight) / 2 + g.getFontMetrics.getMaxAscent
       g.drawString(shortString, nx, ny)  //if (disabledWaitingForSetup) Color.GRAY
       setToolTipText(if (displayName != shortString) displayName else null)
     }
