@@ -221,11 +221,12 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   private class SelectColorActionListener extends ActionListener {
     def actionPerformed(e: ActionEvent) {
       val colorDialog = new ColorDialog(org.nlogo.awt.Hierarchy.getFrame(InputBox.this), true)
-      valueObject(colorDialog.showInputBoxDialog(
+      val colorNumber =
         if (value.exists(_.isInstanceOf[Double]))
           org.nlogo.api.Color.modulateDouble(value.get.asInstanceOf[Double])
         else 0d
-       ).asInstanceOf[AnyRef], true)
+      valueObject(colorDialog.showInputBoxDialog(org.nlogo.api.Color.getColor(colorNumber: java.lang.Double)).
+        asInstanceOf[AnyRef], true)
     }
   }
 
