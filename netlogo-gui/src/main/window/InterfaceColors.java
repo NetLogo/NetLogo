@@ -30,20 +30,25 @@ public final class InterfaceColors {
   private static final java.awt.Color MEDIUM_RED = hsb(0.0, 0.57, 0.784);
   private static final java.awt.Color MEDIUM_BLUE = hsb(0.667, 0.565, 0.902);
 
+
+  // flatlaf colors
+  private static final java.awt.Color LIGHT_GRAY = new java.awt.Color(240, 240, 240);
+  private static final java.awt.Color DARK_GRAY = new java.awt.Color(200, 200, 200);
+
   public static final java.awt.Color TEXT_BOX_BACKGROUND = java.awt.Color.WHITE;
   public static final java.awt.Color TRANSPARENT = new java.awt.Color(0, 0, 0, 0);
   public static final java.awt.Color COMMAND_CENTER_BACKGROUND = LIGHT_BLUE;
-  public static final java.awt.Color BUTTON_BACKGROUND = LIGHT_BLUE;
-  public static final java.awt.Color SLIDER_BACKGROUND = LIGHT_TURQUOISE;
-  public static final java.awt.Color SLIDER_HANDLE = MEDIUM_RED;
-  public static final java.awt.Color SWITCH_BACKGROUND = LIGHT_TURQUOISE;
-  public static final java.awt.Color SWITCH_HANDLE = MEDIUM_RED;
+  public static final java.awt.Color BUTTON_BACKGROUND = LIGHT_GRAY;
+  public static final java.awt.Color SLIDER_BACKGROUND = LIGHT_GRAY;
+  public static final java.awt.Color SLIDER_HANDLE = java.awt.Color.WHITE;
+  public static final java.awt.Color SWITCH_BACKGROUND = LIGHT_GRAY;
+  public static final java.awt.Color SWITCH_HANDLE = java.awt.Color.WHITE;
   public static final java.awt.Color GRAPHICS_BACKGROUND = Constants.ViewBackground();
   public static final java.awt.Color GRAPHICS_HANDLE = MEDIUM_BLUE;
-  public static final java.awt.Color MONITOR_BACKGROUND = STRAW;
-  public static final java.awt.Color PLOT_BACKGROUND = STRAW;
-  public static final java.awt.Color AGENT_EDITOR_BACKGROUND = LIGHT_TURQUOISE;
-  public static final java.awt.Color AGENT_COMMANDER_BACKGROUND = LIGHT_BLUE;
+  public static final java.awt.Color MONITOR_BACKGROUND = LIGHT_GRAY;
+  public static final java.awt.Color PLOT_BACKGROUND = LIGHT_GRAY;
+  public static final java.awt.Color AGENT_EDITOR_BACKGROUND = LIGHT_GRAY;
+  public static final java.awt.Color AGENT_COMMANDER_BACKGROUND = LIGHT_GRAY;
 
   private static java.awt.Color hsb(double h, double s, double b) {
     return java.awt.Color.getHSBColor
