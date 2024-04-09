@@ -43,6 +43,7 @@ class Tabs(workspace:           GUIWorkspace,
   with CompiledEvent.Handler
   with AfterLoadEvent.Handler
   with LoadModelEvent.Handler
+  with LoadErrorEvent.Handler
   with AboutToSaveModelEvent.Handler
   with ModelSavedEvent.Handler
   with ExternalFileSavedEvent.Handler {
@@ -504,6 +505,10 @@ class Tabs(workspace:           GUIWorkspace,
       }
     }
 
+    reloading = false
+  }
+
+  def handle(e: LoadErrorEvent) {
     reloading = false
   }
 

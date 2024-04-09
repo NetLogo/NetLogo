@@ -20,7 +20,7 @@ import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.fileformat.{ FailedConversionResult, ModelConversion, SuccessfulConversion }
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog, UserAction }, UserAction.MenuAction
 import org.nlogo.window.{ BackgroundFileController, Events, FileController, ReconfigureWorkspaceUI },
-  Events.{AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent, LoadModelEvent, ModelSavedEvent, OpenModelEvent }
+  Events.{AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent, LoadModelEvent, LoadErrorEvent, ModelSavedEvent, OpenModelEvent }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI, OpenModelFromSource, SaveModel, SaveModelAs }
 
 object FileManager {
@@ -304,7 +304,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   private def loadModel(uri: URI, openModel: (OpenModel.Controller) => Option[Model]): Option[Model] = {
-    ModalProgressTask.runForResultOnBackgroundThread(
+    val result = ModalProgressTask.runForResultOnBackgroundThread(
       Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"),
       (dialog) => new BackgroundFileController(dialog, controller),
       (fileController: BackgroundFileController) =>
@@ -314,6 +314,10 @@ class FileManager(workspace: AbstractWorkspaceScala,
           case e: Exception => println("Exception in FileMenu.loadModel: " + e)
           None
         })
+    if (result.isEmpty) {
+      new LoadErrorEvent().raise(eventRaiser)
+    }
+    result
   }
 
   @throws(classOf[UserCancelException])
