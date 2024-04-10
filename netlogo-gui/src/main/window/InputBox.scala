@@ -8,7 +8,7 @@ import org.nlogo.agent.InputBoxConstraint
 import org.nlogo.editor.AbstractEditorArea
 import org.nlogo.api.Exceptions
 import org.nlogo.api.Approximate.approximate
-import org.nlogo.api.Color.{getColor, getColorNameByIndex, modulateDouble}
+import org.nlogo.api.Color.{ getClosestColorNumberByARGB, getColor, getColorNameByIndex, modulateDouble }
 import org.nlogo.swing.ButtonPanel
 import org.nlogo.awt.Fonts.{adjustDefaultFont, platformFont, platformMonospacedFont}
 import org.nlogo.api.{Options, ValueConstraint, LogoException, CompilerServices, Dump, Editable}
@@ -223,10 +223,10 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       val colorDialog = new ColorDialog(org.nlogo.awt.Hierarchy.getFrame(InputBox.this), true)
       val colorNumber =
         if (value.exists(_.isInstanceOf[Double]))
-          org.nlogo.api.Color.modulateDouble(value.get.asInstanceOf[Double])
+          modulateDouble(value.get.asInstanceOf[Double])
         else 0d
-      valueObject(colorDialog.showInputBoxDialog(org.nlogo.api.Color.getColor(colorNumber: java.lang.Double)).
-        asInstanceOf[AnyRef], true)
+      valueObject(getClosestColorNumberByARGB(colorDialog.showInputBoxDialog(
+                  getColor(colorNumber: java.lang.Double)).getRGB), true)
     }
   }
 

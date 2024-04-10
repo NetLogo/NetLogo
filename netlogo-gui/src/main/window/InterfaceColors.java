@@ -31,14 +31,14 @@ public final class InterfaceColors {
   private static final java.awt.Color MEDIUM_BLUE = hsb(0.667, 0.565, 0.902);
 
 
-  // flatlaf colors
+  // new flatlaf colors
   private static final java.awt.Color LIGHT_GRAY = new java.awt.Color(240, 240, 240);
   private static final java.awt.Color DARK_GRAY = new java.awt.Color(200, 200, 200);
 
   public static final java.awt.Color TEXT_BOX_BACKGROUND = java.awt.Color.WHITE;
   public static final java.awt.Color TRANSPARENT = new java.awt.Color(0, 0, 0, 0);
-  public static final java.awt.Color COMMAND_CENTER_BACKGROUND = LIGHT_BLUE;
-  public static final java.awt.Color BUTTON_BACKGROUND = LIGHT_GRAY;
+  public static final java.awt.Color COMMAND_CENTER_BACKGROUND = LIGHT_GRAY;
+  public static final java.awt.Color BUTTON_BACKGROUND = LIGHT_BLUE;
   public static final java.awt.Color SLIDER_BACKGROUND = LIGHT_GRAY;
   public static final java.awt.Color SLIDER_HANDLE = java.awt.Color.WHITE;
   public static final java.awt.Color SWITCH_BACKGROUND = LIGHT_GRAY;
