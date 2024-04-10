@@ -6,7 +6,9 @@ import org.nlogo.core.I18N;
 import org.nlogo.swing.DialogForegrounder$;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
@@ -41,6 +43,33 @@ public class ColorDialog extends JDialog implements ActionListener,
   private int okCancelFlag = 0;
   private boolean plotPenMode = false;
 
+  private enum ColorMode {
+    RGB, HSB
+  }
+
+  private ColorMode mode = ColorMode.RGB;
+
+  private class ModeSelect extends JPanel {
+    public ModeSelect() {
+      super();
+
+      add(new JLabel("Mode:"));
+
+      JComboBox<ColorMode> combo = new JComboBox<ColorMode>(new ColorMode[] { ColorMode.RGB, ColorMode.HSB });
+
+      add(combo);
+
+      combo.addActionListener(new ActionListener() {
+        public void actionPerformed(ActionEvent e) {
+          switchMode((ColorMode)combo.getSelectedItem());
+          updateColors();
+        }
+      });
+    }
+  }
+
+  private ModeSelect modeSelect = new ModeSelect();
+
   private JButton copyButton = new JButton(I18N.guiJ().get("tools.colorswatch.copy"));
   private JButton okButton = new JButton(I18N.guiJ().get("common.buttons.ok"));
   private JButton cancelButton = new JButton(I18N.guiJ().get("common.buttons.cancel"));
@@ -49,6 +78,7 @@ public class ColorDialog extends JDialog implements ActionListener,
 
   private class ColorSliderUI extends BasicSliderUI {
     private Color[] colorBounds = new Color[] { Color.black, Color.white };
+    private float[] fracs = new float[] { 0, 1 };
 
     public ColorSliderUI(JSlider slider) {
       super(slider);
@@ -62,14 +92,28 @@ public class ColorDialog extends JDialog implements ActionListener,
     public void paintTrack(Graphics g) {
       Graphics2D g2d = (Graphics2D)g;
 
-      g2d.setPaint(new LinearGradientPaint(trackRect.x, trackRect.y, trackRect.width, trackRect.height,
-                                           new float[] { 0, 1 }, colorBounds));
+      g2d.setPaint(new LinearGradientPaint(trackRect.x, trackRect.y, trackRect.width, trackRect.height, fracs,
+                                           colorBounds));
       g2d.fillRect(trackRect.x - thumbRect.width / 2, trackRect.y, trackRect.width + thumbRect.width,
                    trackRect.height);
     }
 
     public void setColorBounds(Color start, Color end) {
       colorBounds = new Color[] { start, end };
+      fracs = new float[] { 0, 1 };
+    }
+
+    public void setColorBoundsHue(float s, float b) {
+      colorBounds = new Color[] {
+        Color.getHSBColor(0, s, b),
+        Color.getHSBColor(0.2f, s, b),
+        Color.getHSBColor(0.4f, s, b),
+        Color.getHSBColor(0.6f, s, b),
+        Color.getHSBColor(0.8f, s, b),
+        Color.getHSBColor(1, s, b)
+      };
+
+      fracs = new float[] { 0, 0.2f, 0.4f, 0.6f, 0.8f, 1 };
     }
   }
 
@@ -89,6 +133,12 @@ public class ColorDialog extends JDialog implements ActionListener,
 
       repaint();
     }
+
+    public void setColorBoundsHue(float s, float b) {
+      sliderUI.setColorBoundsHue(s, b);
+
+      repaint();
+    }
   }
 
   private class ColorPreview extends JPanel {
@@ -97,9 +147,9 @@ public class ColorDialog extends JDialog implements ActionListener,
     }
   }
 
-  private ColorSlider redSlider = new ColorSlider();
-  private ColorSlider greenSlider = new ColorSlider();
-  private ColorSlider blueSlider = new ColorSlider();
+  private ColorSlider slider1 = new ColorSlider();
+  private ColorSlider slider2 = new ColorSlider();
+  private ColorSlider slider3 = new ColorSlider();
 
   private ColorPreview colorPreview = new ColorPreview();
 
@@ -122,28 +172,36 @@ public class ColorDialog extends JDialog implements ActionListener,
 
     c.gridx = 0;
     c.gridy = 0;
+    c.anchor = GridBagConstraints.WEST;
+    c.insets = new Insets(margin, margin, 0, 0);
+
+    pane.add(modeSelect, c);
+
+    c.gridx = 0;
+    c.gridy = 1;
+    c.anchor = GridBagConstraints.CENTER;
     c.gridwidth = 2;
     c.fill = GridBagConstraints.HORIZONTAL;
     c.insets = new Insets(margin, margin, 0, 0);
 
-    pane.add(redSlider, c);
-
-    c.gridy = 1;
-    c.insets = new Insets(margin, margin, margin, 0);
-
-    pane.add(greenSlider, c);
+    pane.add(slider1, c);
 
     c.gridy = 2;
+    c.insets = new Insets(margin, margin, margin, 0);
+
+    pane.add(slider2, c);
+
+    c.gridy = 3;
     c.insets = new Insets(0, margin, margin, 0);
 
-    pane.add(blueSlider, c);
+    pane.add(slider3, c);
 
-    redSlider.addChangeListener(this);
-    greenSlider.addChangeListener(this);
-    blueSlider.addChangeListener(this);
+    slider1.addChangeListener(this);
+    slider2.addChangeListener(this);
+    slider3.addChangeListener(this);
 
     c.gridx = 2;
-    c.gridy = 0;
+    c.gridy = 1;
     c.gridheight = 3;
     c.fill = GridBagConstraints.VERTICAL;
     c.insets = new Insets(margin, margin, margin, margin);
@@ -151,7 +209,7 @@ public class ColorDialog extends JDialog implements ActionListener,
     pane.add(colorPreview, c);
 
     c.gridx = 0;
-    c.gridy = 3;
+    c.gridy = 4;
     c.gridwidth = 1;
     c.gridheight = 1;
     c.fill = GridBagConstraints.HORIZONTAL;
@@ -191,18 +249,60 @@ public class ColorDialog extends JDialog implements ActionListener,
     updateColors();
   }
 
-  private void updateColors() {
-    int red = redSlider.getValue();
-    int green = greenSlider.getValue();
-    int blue = blueSlider.getValue();
+  private void switchMode(ColorMode newMode) {
+    Color color;
 
-    selectedColor = new Color(red, green, blue);
+    if (mode == ColorMode.RGB) {
+      color = new Color(slider1.getValue(), slider2.getValue(), slider3.getValue());
+    }
+
+    else {
+      color = Color.getHSBColor(slider1.getValue() / 255f, slider2.getValue() / 255f, slider3.getValue() / 255f);
+    }
+
+    if (newMode == ColorMode.RGB) {
+      slider1.setValue(color.getRed());
+      slider2.setValue(color.getGreen());
+      slider3.setValue(color.getBlue());
+    }
+
+    else {
+      float[] hsb = Color.RGBtoHSB(color.getRed(), color.getGreen(), color.getBlue(), null);
+
+      slider1.setValue((int)(hsb[0] * 255));
+      slider2.setValue((int)(hsb[1] * 255));
+      slider3.setValue((int)(hsb[2] * 255));
+    }
+
+    mode = newMode;
+  }
+
+  private void updateColors() {
+    int one = slider1.getValue();
+    int two = slider2.getValue();
+    int three = slider3.getValue();
+
+    if (mode == ColorMode.RGB) {
+      selectedColor = new Color(one, two, three);
+
+      slider1.setColorBounds(new Color(0, two, three), new Color(255, two, three));
+      slider2.setColorBounds(new Color(one, 0, three), new Color(one, 255, three));
+      slider3.setColorBounds(new Color(one, two, 0), new Color(one, two, 255));
+    }
+    
+    else {
+      float onef = (float)one / 255;
+      float twof = (float)two / 255;
+      float threef = (float)three / 255;
+
+      selectedColor = Color.getHSBColor(onef, twof, threef);
+
+      slider1.setColorBoundsHue(twof, threef);
+      slider2.setColorBounds(Color.getHSBColor(onef, 0, threef), Color.getHSBColor(onef, 1, threef));
+      slider3.setColorBounds(Color.getHSBColor(onef, twof, 0), Color.getHSBColor(onef, twof, 1));
+    }
 
     colorPreview.setBackground(selectedColor);
-
-    redSlider.setColorBounds(new Color(0, green, blue), new Color(255, green, blue));
-    greenSlider.setColorBounds(new Color(red, 0, blue), new Color(red, 255, blue));
-    blueSlider.setColorBounds(new Color(red, green, 0), new Color(red, green, 255));
   }
 
   public void showDialog() {
@@ -215,9 +315,9 @@ public class ColorDialog extends JDialog implements ActionListener,
   public Color showPlotPenDialog(Color initialColor) {
     plotPenMode = true;
 
-    redSlider.setValue(initialColor.getRed());
-    greenSlider.setValue(initialColor.getGreen());
-    blueSlider.setValue(initialColor.getBlue());
+    slider1.setValue(initialColor.getRed());
+    slider2.setValue(initialColor.getGreen());
+    slider3.setValue(initialColor.getBlue());
 
     updateColors();
     setVisible(true);
@@ -232,9 +332,9 @@ public class ColorDialog extends JDialog implements ActionListener,
   public Color showInputBoxDialog(Color initialColor) {
     plotPenMode = true;
 
-    redSlider.setValue(initialColor.getRed());
-    greenSlider.setValue(initialColor.getGreen());
-    blueSlider.setValue(initialColor.getBlue());
+    slider1.setValue(initialColor.getRed());
+    slider2.setValue(initialColor.getGreen());
+    slider3.setValue(initialColor.getBlue());
 
     updateColors();
     setVisible(true);
