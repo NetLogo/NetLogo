@@ -9,7 +9,8 @@ import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicU
 import org.nlogo.api.{ Dump, Editable }
 import org.nlogo.core.I18N
 import org.nlogo.agent.SliderConstraint
-import java.awt.{Graphics, Font}
+import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
+import javax.swing.{ JLabel, JSlider, SwingConstants }
 
 trait AbstractSliderWidget extends MultiErrorWidget {
 
@@ -18,17 +19,56 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   private var _vertical = false
   private val sliderData = new SliderData(this)
 
-  // The painter is used to draw the slider and handle interactions.
-  // It comes in two flavors, horizontal and vertical.
-  var painter:SliderPainter = new SliderHorizontalPainter(this)
+  var slider: JSlider = null
+  val nameComponent = new JLabel()
+  val valueComponent = new JLabel()
 
   locally {
-    setOpaque(true)
-    setLayout(null)
+    slider = new JSlider(0, ((maximum - minimum) / increment).asInstanceOf[Int], 0)
+
     setBackground(InterfaceColors.SLIDER_BACKGROUND)
-    org.nlogo.awt.Fonts.adjustDefaultFont(this)
-    doLayout()
     setBorder(widgetBorder)
+    setLayout(new GridBagLayout())
+
+    val margin = 6
+
+    val c = new GridBagConstraints()
+
+    c.gridx = 0
+    c.gridy = 0
+    c.anchor = GridBagConstraints.NORTHWEST
+    c.gridwidth = 2
+    c.weightx = 1
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.insets = new Insets(margin, margin, 0, margin)
+
+    add(slider, c)
+
+    c.gridy = 1
+    c.anchor = GridBagConstraints.SOUTHWEST
+    c.gridwidth = 1
+    c.fill = GridBagConstraints.NONE
+    c.insets = new Insets(0, margin, margin, margin)
+
+    add(nameComponent, c)
+
+    c.gridx = 1
+    c.anchor = GridBagConstraints.SOUTHEAST
+    c.insets = new Insets(0, 0, margin, margin)
+
+    add(valueComponent, c)
+
+    slider.addChangeListener(new javax.swing.event.ChangeListener() {
+      override def stateChanged(e: javax.swing.event.ChangeEvent): Unit = {
+        if (slider.hasFocus) {
+          value = slider.getValue
+        }
+      }
+    })
+
+    nameComponent.setFont(nameComponent.getFont.deriveFont(11f))
+    valueComponent.setFont(valueComponent.getFont.deriveFont(11f))
+
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
         new InputBoxLoseFocusEvent().raise(AbstractSliderWidget.this)
@@ -37,7 +77,11 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   }
 
   def constraint = sliderData.constraint
-  def setSliderConstraint(con: SliderConstraint) = sliderData.setSliderConstraint(con)
+  def setSliderConstraint(con: SliderConstraint) = {
+    slider.setMinimum(0)
+    slider.setMaximum(((maximum - minimum) / increment).asInstanceOf[Int])
+    sliderData.setSliderConstraint(con)
+  }
   def name = _name
   def name_=(name:String) { _name = name; repaint() }
   def minimum = sliderData.minimum
@@ -45,17 +89,18 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   def effectiveMaximum = sliderData.effectiveMaximum
   def increment = sliderData.increment
   def value = sliderData.value
-  def value_=(d:Double){
-    sliderData.value = d;
-    revalidate();
-    repaint()
+  def value_=(d: Double) {
+    sliderData.value = minimum + d * increment
+    valueComponent.setText(value.toString)
   }
-  def value_=(d:Double, buttonRelease:Boolean){
-    sliderData.value_=(d, buttonRelease);
-    revalidate();
-    repaint()
+  def value_=(d: Double, buttonRelease: Boolean) {
+    sliderData.value_=(minimum + d * increment, buttonRelease)
+    valueComponent.setText(value.toString)
   }
-  def coerceValue(value: Double): Double = sliderData.coerceValue(value)
+  def coerceValue(value: Double): Double = {
+    slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
+    sliderData.coerceValue(value)
+  }
 
   def units = _units
   def units_=(units:String){ _units = units; repaint() }
@@ -70,14 +115,15 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   }
 
   def vertical: Boolean = _vertical
-  def vertical_=(vert:Boolean): Unit = {
-    if(vert != vertical){
+  def vertical_=(vert: Boolean): Unit = {
+    if (vert != vertical) {
       _vertical = vert
       resetZoomInfo()
       resetSizeInfo()
-      painter.dettach()
-      painter = if (vert) new SliderVerticalPainter(this) else new SliderHorizontalPainter(this)
-      validate()
+      if (vert)
+        slider.setOrientation(SwingConstants.VERTICAL)
+      else
+        slider.setOrientation(SwingConstants.HORIZONTAL)
     }
   }
 
@@ -95,13 +141,6 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     }
     if (units=="") numString else numString + " " + units
   }
-
-  /// size calculations
-  override def getMinimumSize = painter.getMinimumSize()
-  override def getPreferredSize(font:Font) =painter.getPreferredSize(font)
-  override def getMaximumSize = painter.getMaximumSize
-  override def doLayout { super.doLayout(); painter.doLayout() }
-  override def paintComponent(g:Graphics) = { super.paintComponent(g); painter.paintComponent(g) }
 }
 
 
@@ -160,6 +199,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
   private def setName(name: String, sendEvent: Boolean) {
     this._name=name
     displayName(name)
+    nameComponent.setText(displayName)
     if (sendEvent) new InterfaceGlobalEvent(this, true, false, false, false).raise(this)
   }
 
