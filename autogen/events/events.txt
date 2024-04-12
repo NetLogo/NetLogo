@@ -36,6 +36,7 @@ window.JobStopping - org.nlogo.api.JobOwner owner
 window.Load3DShapes - String filename
 window.LoadBegin
 window.LoadEnd
+window.LoadError
 window.LoadModel - org.nlogo.core.Model model - boolean shouldAutoInstallLibs
 window.LoadSection - String version - Object section - String[] lines - String text
 window.LoadWidgets - scala.collection.Seq<org.nlogo.core.Widget> widgets

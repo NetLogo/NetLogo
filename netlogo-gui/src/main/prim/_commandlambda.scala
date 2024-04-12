@@ -19,6 +19,7 @@ class _commandlambda(
   def argTokens     = arguments.argumentTokens
 
   override def report(c: Context): AnyRef = {
+    proc.owner = c.activation.procedure.owner
     AnonymousCommand(
       procedure = proc,
       formals   = proc.lambdaFormalsArray,
