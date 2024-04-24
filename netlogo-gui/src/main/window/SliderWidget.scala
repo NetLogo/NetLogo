@@ -61,7 +61,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     slider.addChangeListener(new javax.swing.event.ChangeListener() {
       override def stateChanged(e: javax.swing.event.ChangeEvent): Unit = {
         if (slider.hasFocus) {
-          value = slider.getValue
+          value = minimum + slider.getValue * increment
         }
       }
     })
@@ -90,15 +90,15 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   def increment = sliderData.increment
   def value = sliderData.value
   def value_=(d: Double) {
-    sliderData.value = minimum + d * increment
+    sliderData.value = d
     valueComponent.setText(value.toString)
   }
   def value_=(d: Double, buttonRelease: Boolean) {
-    sliderData.value_=(minimum + d * increment, buttonRelease)
+    sliderData.value_=(d, buttonRelease)
     valueComponent.setText(value.toString)
   }
   def coerceValue(value: Double): Double = {
-    slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
+    slider.setValue(value.asInstanceOf[Int])
     sliderData.coerceValue(value)
   }
 
