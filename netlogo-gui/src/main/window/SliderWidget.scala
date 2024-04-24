@@ -92,14 +92,18 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   def value_=(d: Double) {
     sliderData.value = d
     valueComponent.setText(value.toString)
+    slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
   }
   def value_=(d: Double, buttonRelease: Boolean) {
     sliderData.value_=(d, buttonRelease)
     valueComponent.setText(value.toString)
+    slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
   }
   def coerceValue(value: Double): Double = {
-    slider.setValue(value.asInstanceOf[Int])
-    sliderData.coerceValue(value)
+    val ret = sliderData.coerceValue(value)
+    valueComponent.setText(value.toString)
+    slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
+    ret
   }
 
   def units = _units
