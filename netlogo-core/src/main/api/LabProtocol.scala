@@ -2,23 +2,23 @@
 
 package org.nlogo.api
 
-case class LabProtocol(name: String,
-                    preExperimentCommands: String,
-                    setupCommands: String,
-                    goCommands: String,
-                    postRunCommands: String,
-                    postExperimentCommands: String,
-                    repetitions: Int,
-                    sequentialRunOrder: Boolean,
-                    runMetricsEveryStep: Boolean,
-                    runMetricsCondition: String,
-                    timeLimit: Int,
-                    exitCondition: String,
-                    metrics: List[String],
-                    constants: List[RefValueSet],
-                    subExperiments: List[List[RefValueSet]] = Nil,
+case class LabProtocol(name: String = LabDefaultValues.getDefaultName,
+                    preExperimentCommands: String = LabDefaultValues.getDefaultPreExperimentCommands,
+                    setupCommands: String = LabDefaultValues.getDefaultSetupCommands,
+                    goCommands: String = LabDefaultValues.getDefaultGoCommands,
+                    postRunCommands: String = LabDefaultValues.getDefaultPostRunCommands,
+                    postExperimentCommands: String = LabDefaultValues.getDefaultPostExperimentCommands,
+                    repetitions: Int = LabDefaultValues.getDefaultRepetitions,
+                    sequentialRunOrder: Boolean = LabDefaultValues.getDefaultSequentialRunOrder,
+                    runMetricsEveryStep: Boolean = LabDefaultValues.getDefaultRunMetricsEveryStep,
+                    runMetricsCondition: String = LabDefaultValues.getDefaultRunMetricsCondition,
+                    timeLimit: Int = LabDefaultValues.getDefaultTimeLimit,
+                    exitCondition: String = LabDefaultValues.getDefaultExitCondition,
+                    metrics: List[String] = LabDefaultValues.getDefaultMetrics,
+                    constants: List[RefValueSet] = LabDefaultValues.getDefaultConstants,
+                    subExperiments: List[List[RefValueSet]] = LabDefaultValues.getDefaultSubExperiments,
                     runsCompleted: Int = 0,
-                    runOptions: LabRunOptions = null)
+                    runOptions: LabRunOptions = new LabRunOptions)
 {
   val valueSets =
     if (subExperiments.isEmpty)

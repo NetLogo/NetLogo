@@ -3,7 +3,7 @@
 package org.nlogo.headless
 
 import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultThreads, Version }
+import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultValues, LabProtocol, Version }
 import org.nlogo.nvm.LabInterface.Settings
 import org.nlogo.api.PlotCompilationErrorAction
 
@@ -13,44 +13,57 @@ object Main {
   def main(args: Array[String]) {
     try {
       setHeadlessProperty()
-      parseArgs(args).foreach(runExperiment)
+      parseArgs(args).foreach(runExperiment(_))
     } catch {
       case e: CancelException => // ignore
     }
   }
 
-  def runExperiment(settings: Settings) {
+  def runExperiment(settings: Settings, finish: () => Unit = () => {}) {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
     var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
-    var createdProto = false
     def newWorkspace = {
       val w = HeadlessWorkspace.newInstance
       w.setPlotCompilationErrorAction(plotCompilationErrorAction)
       w.setExportPlotWarningAction(exportPlotWarningAction)
       w.open(settings.modelPath)
       plotCompilationErrorAction = PlotCompilationErrorAction.Ignore
-      if (createdProto) {
-        exportPlotWarningAction = ExportPlotWarningAction.Ignore
-      }
+      exportPlotWarningAction = ExportPlotWarningAction.Ignore
       w.setShouldUpdatePlots(settings.updatePlots)
       w
     }
-
     val openWs = newWorkspace
     val proto = try {
       BehaviorSpaceCoordinator.selectProtocol(settings, openWs)
     } finally {
       openWs.dispose()
     }
-    createdProto = true
     proto match {
       case Some(protocol) =>
-        val lab = HeadlessWorkspace.newLab
-        lab.run(settings, protocol, newWorkspace _)
+        runExperimentWithProtocol(settings, protocol, finish)
+
       case None =>
         throw new IllegalArgumentException("Invalid run, specify experiment name or setup file")
     }
   }
+
+  def runExperimentWithProtocol(settings: Settings, protocol: LabProtocol, finish: () => Unit = () => {}) {
+    var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
+    var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
+    def newWorkspace = {
+      val w = HeadlessWorkspace.newInstance
+      w.setPlotCompilationErrorAction(plotCompilationErrorAction)
+      w.setExportPlotWarningAction(exportPlotWarningAction)
+      w.open(settings.modelPath)
+      plotCompilationErrorAction = PlotCompilationErrorAction.Ignore
+      exportPlotWarningAction = ExportPlotWarningAction.Ignore
+      w.setShouldUpdatePlots(settings.updatePlots)
+      w
+    }
+    val lab = HeadlessWorkspace.newLab
+    lab.run(settings, protocol, newWorkspace _, finish)
+  }
+
   def setHeadlessProperty() {
     // force headless mode if it is not set.  This is necessary for the headless workspace to run
     // on most platforms when a display is not available. --CLB
@@ -72,7 +85,7 @@ object Main {
     var spreadsheetWriter: Option[java.io.PrintWriter] = None
     var statsWriter: Option[(java.io.PrintWriter, String)] = None
     var listsWriter: Option[(java.io.PrintWriter, String)] = None
-    var threads = LabDefaultThreads.getLabDefaultThreads
+    var threads = LabDefaultValues.getDefaultThreads
     var suppressErrors = false
     var updatePlots = false
     val it = args.iterator

@@ -18,6 +18,8 @@ object LogoList {
     new LogoList(it.toVector)
   def fromVector(v: Vector[AnyRef]) =
     new LogoList(v)
+  def fromList(l: List[AnyRef]) =
+    new LogoList(Vector[AnyRef]() ++ l)
   implicit def toIterator(ll:LogoList): Iterator[AnyRef] = ll.scalaIterator
 }
 
