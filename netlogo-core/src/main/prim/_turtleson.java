@@ -18,8 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class _turtleson
-    extends Reporter {
-
+  extends Reporter {
 
   @Override
   public Object report(final org.nlogo.nvm.Context context) throws LogoException {
@@ -32,8 +31,10 @@ public final class _turtleson
           I18N.errorsJ().getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName()));
       }
       addAll(resultList, turtle.getPatchHere().turtlesHere());
+
     } else if (agentOrSet instanceof Patch) {
       addAll(resultList, ((Patch) agentOrSet).turtlesHere());
+
     } else if (agentOrSet instanceof AgentSet) {
       AgentSet sourceSet = (AgentSet) agentOrSet;
       if (sourceSet.kind() == AgentKindJ.Turtle()) {
@@ -45,10 +46,12 @@ public final class _turtleson
           addAll(resultList, ((Patch) iter.next()).turtlesHere());
         }
       }
+
     } else {
       throw new ArgumentTypeException
           (context, this, 0, Syntax.AgentType() | Syntax.AgentsetType(), agentOrSet);
     }
+
     return AgentSet.fromArray(AgentKindJ.Turtle(), resultList.toArray(new Turtle[resultList.size()]));
   }
 

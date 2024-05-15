@@ -13,33 +13,41 @@ class _anyturtleson extends Reporter {
   def report_1(context: Context, agentOrSet: AnyRef): Boolean = {
     agentOrSet match {
       case turtle: Turtle =>
-        if(turtle.id == -1)
-          throw new RuntimePrimitiveException(context, this, 
+        if (turtle.id == -1)
+          throw new RuntimePrimitiveException(context, this,
             I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName))
         return true
+
       case patch: Patch =>
         val itr = patch.turtlesHere.iterator
         return itr.hasNext
+
       case sourceSet: AgentSet =>
-        if(sourceSet.kind == AgentKind.Turtle) {
+        if (sourceSet.kind == AgentKind.Turtle) {
           val sourceSetItr = sourceSet.iterator
           return sourceSetItr.hasNext
+
         } else if(sourceSet.kind == AgentKind.Patch) {
           val sourceSetItr = sourceSet.iterator
           while (sourceSetItr.hasNext) {
             val patchItr = sourceSetItr.next().asInstanceOf[Patch].turtlesHere.iterator
             if(patchItr.hasNext)
               return true
+
           }
+
           false
         }
+
         false
+
       case _ =>
         throw new ArgumentTypeException(
           context, this, 0,
           Syntax.TurtleType | Syntax.PatchType |
           Syntax.TurtlesetType | Syntax.PatchsetType,
           agentOrSet)
+
     }
   }
 }

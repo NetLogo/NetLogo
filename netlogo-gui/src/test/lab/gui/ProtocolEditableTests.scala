@@ -31,17 +31,4 @@ class ProtocolEditableTests extends AnyFunSuite {
       assert(protocol == editedProtocol)
     }
   }
-
-  test("protocol error on overflow") {
-    val workspace = new DummyCompilerServices {
-      override def readFromString(s: String): AnyRef =
-        compiler.readFromString(s)
-    }
-    val protocolLines = FileIO.fileToString("test/lab/protocolsFailure.xml").linesIterator.toArray
-    val protocols = new NLogoLabFormat(literalParser).load(protocolLines, None).get
-    protocols.foreach { protocol =>
-      val validSetting = new ProtocolEditable(protocol, null, workspace, new AnyRef).invalidSettings
-      assert(List(("Variable","Increment list \"[ \"bgcolor\" [ 0.0 1.0 100.0 ] ]\" is unbounded, reverse sign of step value")) == validSetting)
-    }
-  }
 }

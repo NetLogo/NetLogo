@@ -507,7 +507,7 @@ case class _turtles() extends Reporter {
 case class _turtleson() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
-      right = List(Syntax.AgentType | Syntax.AgentsetType),
+      right = List(Syntax.TurtleType | Syntax.PatchType | Syntax.TurtlesetType | Syntax.PatchsetType),
       ret = Syntax.TurtlesetType)
 }
 case class _turtleorlinkvariable(varName: String, returnType: Int = Syntax.WildcardType) extends Reporter {

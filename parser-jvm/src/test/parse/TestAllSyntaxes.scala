@@ -252,7 +252,7 @@ class TestAllSyntaxes extends AnyFunSuite {
                      |_turtlesat number/number,turtle agentset,-TP-,None,10,2,2
                      |_turtleset list or turtle agentset or turtle,turtle agentset,OTPL,None,10,1,0
                      |_turtleshere ,turtle agentset,-TP-,None,10,0,0
-                     |_turtleson agent or agentset,turtle agentset,OTPL,None,10,1,1
+                     |_turtleson turtle agentset or patch agentset or turtle or patch,turtle agentset,OTPL,None,10,1,1
                      |_uptonof number/list or agentset,list or agentset,OTPL,None,10,2,2
                      |_userdirectory ,TRUE/FALSE or string,OTPL,None,10,0,0
                      |_userfile ,TRUE/FALSE or string,OTPL,None,10,0,0
