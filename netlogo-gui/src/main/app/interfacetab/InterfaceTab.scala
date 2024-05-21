@@ -13,7 +13,7 @@ import javax.swing.{ AbstractAction, Action, BorderFactory, JComponent,
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, ToolBar, UserAction, Utils },
+import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, UserAction, Utils },
   Implicits.thunk2action,
   UserAction.{ MenuAction, ToolsCategory },
   Utils.icon
@@ -93,8 +93,6 @@ class InterfaceTab(workspace: GUIWorkspace,
     val buttons = List(button, slider, switch, chooser, input, monitor, plot, output, note)
     add(new InterfaceToolBar(iP, workspace, buttons, workspace.getFrame, dialogFactory) {
       override def addControls() {
-        super.addControls()
-        add(new ToolBar.Separator)
         viewUpdatePanel = new ViewUpdatePanel(workspace, workspace.viewWidget.displaySwitch, workspace.viewWidget.tickCounter)
         add(viewUpdatePanel)
       }
