@@ -23,30 +23,31 @@ public final class InterfaceColors {
   // private static final java.awt.Color LIGHT_ORANGE = new java.awt.Color( 235 , 194 /*183*/ , 139 ) ;
   // private static final java.awt.Color LIGHT_GRAY = new java.awt.Color( 230 , 230 , 230 ) ;
   // private static final java.awt.Color ICE = new java.awt.Color( 200 , 200 , 230 ) ;
-
-  private static final java.awt.Color LIGHT_BLUE = hsb(0.667, 0.217, 0.902);
-  private static final java.awt.Color LIGHT_TURQUOISE = hsb(0.485, 0.362, 0.737);
-  private static final java.awt.Color STRAW = hsb(0.167, 0.222, 0.882);
-  private static final java.awt.Color MEDIUM_RED = hsb(0.0, 0.57, 0.784);
-  private static final java.awt.Color MEDIUM_BLUE = hsb(0.667, 0.565, 0.902);
+  // private static final java.awt.Color LIGHT_BLUE = hsb(0.667, 0.217, 0.902);
+  // private static final java.awt.Color LIGHT_TURQUOISE = hsb(0.485, 0.362, 0.737);
+  // private static final java.awt.Color STRAW = hsb(0.167, 0.222, 0.882);
+  // private static final java.awt.Color MEDIUM_RED = hsb(0.0, 0.57, 0.784);
+  // private static final java.awt.Color MEDIUM_BLUE = hsb(0.667, 0.565, 0.902);
 
 
   // new flatlaf colors
   private static final java.awt.Color LIGHT_GRAY = new java.awt.Color(240, 240, 240);
   private static final java.awt.Color DARK_GRAY = new java.awt.Color(200, 200, 200);
+  private static final java.awt.Color INPUT_BACKGROUND = new java.awt.Color(160, 240, 200);
+  private static final java.awt.Color OUTPUT_BACKGROUND = new java.awt.Color(180, 240, 240);
 
   public static final java.awt.Color TEXT_BOX_BACKGROUND = java.awt.Color.WHITE;
   public static final java.awt.Color TRANSPARENT = new java.awt.Color(0, 0, 0, 0);
   public static final java.awt.Color COMMAND_CENTER_BACKGROUND = LIGHT_GRAY;
-  public static final java.awt.Color BUTTON_BACKGROUND = LIGHT_BLUE;
-  public static final java.awt.Color SLIDER_BACKGROUND = LIGHT_GRAY;
-  public static final java.awt.Color SLIDER_HANDLE = java.awt.Color.WHITE;
-  public static final java.awt.Color SWITCH_BACKGROUND = LIGHT_GRAY;
-  public static final java.awt.Color SWITCH_HANDLE = java.awt.Color.WHITE;
+  public static final java.awt.Color BUTTON_BACKGROUND = new java.awt.Color(180, 240, 160);
+  public static final java.awt.Color SLIDER_BACKGROUND = INPUT_BACKGROUND;
+  public static final java.awt.Color SLIDER_HANDLE = LIGHT_GRAY;
+  public static final java.awt.Color SWITCH_BACKGROUND = INPUT_BACKGROUND;
+  public static final java.awt.Color SWITCH_HANDLE = LIGHT_GRAY;
   public static final java.awt.Color GRAPHICS_BACKGROUND = Constants.ViewBackground();
-  public static final java.awt.Color GRAPHICS_HANDLE = MEDIUM_BLUE;
-  public static final java.awt.Color MONITOR_BACKGROUND = LIGHT_GRAY;
-  public static final java.awt.Color PLOT_BACKGROUND = LIGHT_GRAY;
+  public static final java.awt.Color GRAPHICS_HANDLE = DARK_GRAY;
+  public static final java.awt.Color MONITOR_BACKGROUND = OUTPUT_BACKGROUND;
+  public static final java.awt.Color PLOT_BACKGROUND = OUTPUT_BACKGROUND;
   public static final java.awt.Color AGENT_EDITOR_BACKGROUND = LIGHT_GRAY;
   public static final java.awt.Color AGENT_COMMANDER_BACKGROUND = LIGHT_GRAY;
 
