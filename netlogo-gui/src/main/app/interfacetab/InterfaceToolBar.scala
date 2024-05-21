@@ -2,7 +2,7 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Frame, SystemColor }
+import java.awt.Frame
 import java.awt.event.{ ActionEvent, ActionListener, MouseAdapter, MouseEvent }
 import java.util.{ HashSet => JHashSet }
 import javax.swing.{ JMenuItem, JPopupMenu, ButtonGroup, JToggleButton,
@@ -16,7 +16,7 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ ToolBar, ToolBarActionButton, ToolBarToggleButton, Utils },
   Utils.icon
 import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents,
-  GUIWorkspace, JobWidget, Widget, WidgetInfo }
+  GUIWorkspace, InterfaceColors, JobWidget, Widget, WidgetInfo }
 
 class InterfaceToolBar(wPanel: WidgetPanel,
                        workspace: GUIWorkspace,
@@ -47,7 +47,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   // on Macs we want the window background but not on other systems
   if(System.getProperty("os.name").startsWith("Mac")) {
     setOpaque(true)
-    setBackground(SystemColor.window)
+    setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
   }
 
   editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
