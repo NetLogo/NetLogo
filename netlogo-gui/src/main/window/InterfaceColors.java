@@ -50,6 +50,7 @@ public final class InterfaceColors {
   public static final java.awt.Color PLOT_BACKGROUND = OUTPUT_BACKGROUND;
   public static final java.awt.Color AGENT_EDITOR_BACKGROUND = LIGHT_GRAY;
   public static final java.awt.Color AGENT_COMMANDER_BACKGROUND = LIGHT_GRAY;
+  public static final java.awt.Color TOOLBAR_BACKGROUND = LIGHT_GRAY;
 
   private static java.awt.Color hsb(double h, double s, double b) {
     return java.awt.Color.getHSBColor

@@ -28,6 +28,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
   add(speedSlider)
   add(tickCounter)
   setOpaque(true)
+  setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
   override def addNotify(): Unit = {
     super.addNotify()
