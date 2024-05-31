@@ -12,15 +12,11 @@ final object SetSystemLookAndFeel {
 
  /// Swing look & feel
 
-  def setSystemLookAndFeel(lookAndFeelInfo: String = "", lightTheme: Boolean = true): Unit = {
-    if (lookAndFeelInfo.isEmpty) {
-      setClassicNetLogoSystemLookAndFeel()
-    } else {
-      try{
-        setFlatLafLookAndFeel(lookAndFeelInfo, lightTheme)
-      } catch {
-        case  e: Throwable => setClassicNetLogoSystemLookAndFeel()
-      }
+  def setSystemLookAndFeel(darkTheme: Boolean = true): Unit = {
+    try{
+      setFlatLafLookAndFeel(darkTheme)
+    } catch {
+      case  e: Throwable => setClassicNetLogoSystemLookAndFeel()
     }
   }
 
@@ -63,7 +59,7 @@ final object SetSystemLookAndFeel {
     }
   }
 
-  def setFlatLafLookAndFeel(lookAndFeelInfo: String = "", lightTheme: Boolean = true): Unit = {
+  def setFlatLafLookAndFeel(darkTheme: Boolean = true): Unit = {
     // this slider thing is a workaround for Java bug parade bug #6465237 - ST 1/20/09
     UIManager.put("Slider.paintValue", false)
     // Hopefully we won't need this MacOS specific code
@@ -79,10 +75,10 @@ final object SetSystemLookAndFeel {
 
   // might want to take some ideas from
   //FlatLaf/flatlaf-demo/src/main/java/com/formdev/flatlaf/demo/DemoPrefs.java
-    if (lightTheme) {
-      FlatLightLaf.setup();
+    if (darkTheme) {
+      FlatDarkLaf.setup()
     } else {
-      FlatDarkLaf.setup();
+      FlatLightLaf.setup()
     }
   }
 }

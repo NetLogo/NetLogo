@@ -52,8 +52,7 @@ object App {
   private var logEvents: String = null
   private var logDirectory: String = null
   private var popOutCodeTab = false
-  private var lookAndFeelInfo = ""
-  private var lightTheme = true
+  private var darkTheme = false
   /**
    * Should be called once at startup to create the application and
    * start it running.  May not be called more than once.  Once
@@ -225,8 +224,7 @@ object App {
       else if (token == "--log-events") logEvents = nextToken()
       else if (token == "--log-directory") logDirectory = nextToken()
       else if (token == "--codetab-window") popOutCodeTab = true
-      else if (token == "--look-and-feel") lookAndFeelInfo = nextToken()
-      else if (token == "--dark-theme") lightTheme = false
+      else if (token == "--dark-theme") darkTheme = true
       else if (token.startsWith("--")) {
         //TODO: Decide: should we do System.exit() here?
         // Previously we've just ignored unknown parameters, but that seems wrong to me.  ~Forrest (2/12/2009)
@@ -310,7 +308,7 @@ class App extends
     frame.addLinkComponent(this)
     pico.addComponent(frame)
 
-    org.nlogo.swing.SetSystemLookAndFeel.setSystemLookAndFeel(App.lookAndFeelInfo, App.lightTheme)
+    org.nlogo.swing.SetSystemLookAndFeel.setSystemLookAndFeel(App.darkTheme)
 
     errorDialogManager = new ErrorDialogManager(frame,
       Map(classOf[MetadataLoadingException] -> new LibraryManagerErrorDialog(frame)))
