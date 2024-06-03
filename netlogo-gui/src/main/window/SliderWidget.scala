@@ -9,7 +9,7 @@ import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicU
 import org.nlogo.api.{ Dump, Editable }
 import org.nlogo.core.I18N
 import org.nlogo.agent.SliderConstraint
-import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Dimension, GridBagConstraints, GridBagLayout, Insets }
 import javax.swing.{ JLabel, JSlider, SwingConstants }
 
 trait AbstractSliderWidget extends MultiErrorWidget {
@@ -20,13 +20,11 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   private val sliderData = new SliderData(this)
 
   var slider: JSlider = null
-  val nameComponent = new JLabel()
+  val nameComponent = new JLabel(" ")
   val valueComponent = new JLabel()
 
   locally {
     slider = new JSlider(0, ((maximum - minimum) / increment).asInstanceOf[Int], 0)
-
-    slider.setPreferredSize(new java.awt.Dimension(slider.getPreferredSize().width, 18))
 
     setBackground(InterfaceColors.SLIDER_BACKGROUND)
     setBorder(widgetBorder)
@@ -50,13 +48,13 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     c.anchor = GridBagConstraints.SOUTHWEST
     c.gridwidth = 1
     c.fill = GridBagConstraints.NONE
-    c.insets = new Insets(0, margin, -margin, margin)
+    c.insets = new Insets(0, margin, 0, margin)
 
     add(nameComponent, c)
 
     c.gridx = 1
     c.anchor = GridBagConstraints.SOUTHEAST
-    c.insets = new Insets(0, 0, -margin, margin)
+    c.insets = new Insets(0, 0, 0, margin)
 
     add(valueComponent, c)
 
@@ -152,6 +150,9 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     }
     if (units=="") numString else numString + " " + units
   }
+
+  override def getMinimumSize = new Dimension(92, 33)
+  override def getPreferredSize = new Dimension(150, 33)
 }
 
 
