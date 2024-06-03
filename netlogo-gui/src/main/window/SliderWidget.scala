@@ -42,7 +42,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     c.gridwidth = 2
     c.weightx = 1
     c.fill = GridBagConstraints.HORIZONTAL
-    c.insets = new Insets(0, margin, 0, margin)
+    c.insets = new Insets(-margin, margin, 0, margin)
 
     add(slider, c)
 
@@ -50,13 +50,13 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     c.anchor = GridBagConstraints.SOUTHWEST
     c.gridwidth = 1
     c.fill = GridBagConstraints.NONE
-    c.insets = new Insets(-margin, margin, margin, margin)
+    c.insets = new Insets(0, margin, -margin, margin)
 
     add(nameComponent, c)
 
     c.gridx = 1
     c.anchor = GridBagConstraints.SOUTHEAST
-    c.insets = new Insets(0, 0, margin, margin)
+    c.insets = new Insets(0, 0, -margin, margin)
 
     add(valueComponent, c)
 
