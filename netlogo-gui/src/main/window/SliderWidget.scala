@@ -96,6 +96,11 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     valueComponent.setText(value.toString)
     slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
   }
+  def value_=(d: Double, inc: Double) {
+    sliderData.value = d
+    valueComponent.setText(value.toString)
+    slider.setValue(((value - minimum) / inc).asInstanceOf[Int])
+  }
   def value_=(d: Double, buttonRelease: Boolean) {
     sliderData.value_=(d, buttonRelease)
     valueComponent.setText(value.toString)
@@ -270,7 +275,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
     // it needs to be tested more and maybe we can get rid of it. JC - 9/23/10
     minimumCode = min
     incrementCode = inc
-    value = v
+    value_=(v, inc.toDouble)
     defaultValue = v
     setSize(model.right - model.left, model.bottom - model.top)
     this
