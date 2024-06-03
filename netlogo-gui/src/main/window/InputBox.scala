@@ -51,7 +51,8 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     setBorder(widgetBorder)
     addActionListener(new SelectColorActionListener())
     // on winXP if we don't set this the color in the button doesn't show up ev 2/15/08
-    setContentAreaFilled(false)
+    // after UI redesign this made color no longer appear on any platform (IB 6/3/24)
+    // setContentAreaFilled(false)
     setOpaque(true)
   }
 
