@@ -49,3 +49,16 @@ ClearAll_2D
   count mice => 0
   count frogs => 0
   count patches with [ apples != 0 or plabel = "test" or pcolor = 139 ] => 0
+
+ClearAllAndResetTicks
+  globals [ glob1 ]
+  O> create-turtles 100
+  O> set glob1 count turtles
+  O> reset-ticks
+  O> tick
+  glob1 => 100
+  ticks => 1
+  O> __clear-all-and-reset-ticks
+  count turtles => 0
+  glob1 => 0
+  ticks => 0

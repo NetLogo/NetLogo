@@ -281,6 +281,7 @@ class TestAllSyntaxes extends AnyFunSuite {
                     |_carefully command block/command block,OTPL,None,0,2,2
                     |_changetopology TRUE/FALSE/TRUE/FALSE,OTPL,None,0,2,2
                     |_clearall ,O---,None,0,0,0
+                    |_clearallandresetticks ,O---,None,0,0,0
                     |_clearallplots ,OTPL,None,0,0,0
                     |_cleardrawing ,O---,None,0,0,0
                     |_clearglobals ,O---,None,0,0,0
