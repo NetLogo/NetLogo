@@ -502,6 +502,26 @@ class WidgetPanel(val workspace: GUIWorkspace)
     LogManager.widgetRemoved(false, wrapper.widget.classDisplayName, wrapper.widget.displayName)
   }
 
+  protected def multiSelected(): Boolean = {
+    selectedWrappers.length > 1
+  }
+
+  protected def alignHorizontal(wrapper: WidgetWrapper): Unit = {
+    selectedWrappers.foreach(w => w.setLocation(wrapper.getLocation().x, w.getLocation().y))
+  }
+
+  protected def alignVertical(wrapper: WidgetWrapper): Unit = {
+    selectedWrappers.foreach(w => w.setLocation(w.getLocation().x, wrapper.getLocation().y))
+  }
+
+  protected def matchWidth(wrapper: WidgetWrapper): Unit = {
+    selectedWrappers.foreach(w => w.setSize(wrapper.getSize().width, w.getSize().height))
+  }
+
+  protected def matchHeight(wrapper: WidgetWrapper): Unit = {
+    selectedWrappers.foreach(w => w.setSize(w.getSize().width, wrapper.getSize().height))
+  }
+
   def sliderEventOnReleaseOnly(sliderEventOnReleaseOnly: Boolean): Unit = {
     this.sliderEventOnReleaseOnly = sliderEventOnReleaseOnly
   }
