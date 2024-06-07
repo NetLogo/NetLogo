@@ -915,18 +915,43 @@ public class WidgetWrapper
       menu.add(unselectItem);
       if (interfacePanel().multiSelected()) {
         menu.add(new javax.swing.JPopupMenu.Separator());
-        javax.swing.JMenuItem alignHorizontal =
-            new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.alignHorizontal"));
-        alignHorizontal.addActionListener((java.awt.event.ActionEvent e) -> {
-          interfacePanel().alignHorizontal(WidgetWrapper.this);
+        javax.swing.JMenuItem alignLeft =
+            new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.alignLeft"));
+        alignLeft.addActionListener((java.awt.event.ActionEvent e) -> {
+          interfacePanel().alignLeft(WidgetWrapper.this);
         });
-        menu.add(alignHorizontal);
-        javax.swing.JMenuItem alignVertical =
-            new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.alignVertical"));
-        alignVertical.addActionListener((java.awt.event.ActionEvent e) -> {
-          interfacePanel().alignVertical(WidgetWrapper.this);
+        menu.add(alignLeft);
+        javax.swing.JMenuItem alignCenterHorizontal =
+            new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.alignCenterHorizontal"));
+        alignCenterHorizontal.addActionListener((java.awt.event.ActionEvent e) -> {
+          interfacePanel().alignCenterHorizontal(WidgetWrapper.this);
         });
-        menu.add(alignVertical);
+        menu.add(alignCenterHorizontal);
+        javax.swing.JMenuItem alignRight =
+            new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.alignRight"));
+        alignRight.addActionListener((java.awt.event.ActionEvent e) -> {
+          interfacePanel().alignRight(WidgetWrapper.this);
+        });
+        menu.add(alignRight);
+        javax.swing.JMenuItem alignTop =
+            new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.alignTop"));
+        alignTop.addActionListener((java.awt.event.ActionEvent e) -> {
+          interfacePanel().alignTop(WidgetWrapper.this);
+        });
+        menu.add(alignTop);
+        javax.swing.JMenuItem alignCenterVertical =
+            new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.alignCenterVertical"));
+        alignCenterVertical.addActionListener((java.awt.event.ActionEvent e) -> {
+          interfacePanel().alignCenterVertical(WidgetWrapper.this);
+        });
+        menu.add(alignCenterVertical);
+        javax.swing.JMenuItem alignBottom =
+            new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.alignBottom"));
+        alignBottom.addActionListener((java.awt.event.ActionEvent e) -> {
+          interfacePanel().alignBottom(WidgetWrapper.this);
+        });
+        menu.add(alignBottom);
+        menu.add(new javax.swing.JPopupMenu.Separator());
         javax.swing.JMenuItem matchWidth =
             new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.matchWidth"));
         matchWidth.addActionListener((java.awt.event.ActionEvent e) -> {
