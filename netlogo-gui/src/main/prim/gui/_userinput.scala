@@ -22,7 +22,7 @@ class _userinput extends Reporter {
               gw.view.mouseDown(false)
               new org.nlogo.swing.InputDialog(
                 gw.getFrame, "User Input", Dump.logoObject(inputMessage),
-                I18N.gui.fn).showInputDialog()
+                I18N.gui.fn, args(1).report(context).toString).showInputDialog()
             }})
         Option(result).getOrElse(
           throw new org.nlogo.nvm.HaltException(true))

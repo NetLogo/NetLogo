@@ -1092,7 +1092,7 @@ case class _userfile() extends Reporter {
 case class _userinput() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
-      right = List(Syntax.WildcardType),
+      right = List(Syntax.WildcardType, Syntax.StringType | Syntax.RepeatableType),
       ret = Syntax.StringType)
 }
 case class _usermessage() extends Command {
