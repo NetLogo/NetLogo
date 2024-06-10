@@ -1093,7 +1093,8 @@ case class _userinput() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
       right = List(Syntax.WildcardType, Syntax.StringType | Syntax.RepeatableType),
-      ret = Syntax.StringType)
+      ret = Syntax.StringType,
+      defaultOption = Some(1))
 }
 case class _usermessage() extends Command {
   override def syntax =
