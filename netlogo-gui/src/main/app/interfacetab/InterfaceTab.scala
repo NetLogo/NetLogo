@@ -93,6 +93,7 @@ class InterfaceTab(workspace: GUIWorkspace,
     val buttons = List(button, slider, switch, chooser, input, monitor, plot, output, note)
     add(new InterfaceToolBar(iP, workspace, buttons, workspace.getFrame, dialogFactory) {
       override def addControls() {
+        super.addControls()
         viewUpdatePanel = new ViewUpdatePanel(workspace, workspace.viewWidget.displaySwitch, workspace.viewWidget.tickCounter)
         add(viewUpdatePanel)
       }
