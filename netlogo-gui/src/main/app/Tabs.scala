@@ -343,8 +343,8 @@ class Tabs(workspace:           GUIWorkspace,
           tab = getTabWithFilename(Right(filename))
           tab.get.handle(e) // it was late to the party, let it handle the event too
         }
-        if (e.error != null) {
-          if (focusOnError) tabManager.setPanelsSelectedComponent(tab.get)
+        if (e.error != null && focusOnError) {
+          tabManager.setPanelsSelectedComponent(tab.get)
         }
         recolorTab(tab.get, e.error != null)
         requestFocus()
