@@ -43,7 +43,8 @@ with MenuAction {
     new Preferences.LogDirectory(frame),
     Preferences.LogEvents,
     Preferences.IncludedFilesMenu,
-    Preferences.ProceduresMenuSortOrder
+    Preferences.ProceduresMenuSortOrder,
+    Preferences.FocusOnError
   )
 }
 
