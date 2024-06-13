@@ -10,13 +10,33 @@ package org.nlogo.parse
 
 import
   org.nlogo.core,
-    core.{ BreedIdentifierHandler, StructureDeclarations, Token },
+    core.{ BreedIdentifierHandler, StructureDeclarations, Token, TokenType },
       StructureDeclarations.{ Breed, Declaration, Extensions, Identifier, Includes, Procedure, Variables },
     core.Fail._
 
 import SymbolType._
 
 object StructureChecker {
+
+  def rejectMisplacedConstants(declarations: Seq[Declaration]) {
+    for (declaration <- declarations) {
+      declaration match {
+        case Variables(_, names) =>
+          for (name <- names) {
+            if (name.token.tpe == TokenType.Literal) {
+              exception("Variable name conflicts with a constant.", name.token)
+            }
+          }
+        case Procedure(_, _, inputs, _) =>
+          for (input <- inputs) {
+            if (input.token.tpe == TokenType.Literal) {
+              exception("Input name conflicts with a constant.", input.token)
+            }
+          }
+        case _ =>
+      }
+    }
+  }
 
   def rejectDuplicateDeclarations(declarations: Seq[Declaration]) {
 

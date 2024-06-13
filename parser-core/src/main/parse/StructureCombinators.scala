@@ -150,9 +150,9 @@ extends scala.util.parsing.combinator.Parsers {
     tokenType("closing bracket", TokenType.CloseBracket)
 
   def identifier: Parser[Identifier] =
-    tokenType("identifier", TokenType.Ident) ^^ {
+    (tokenType("identifier", TokenType.Ident) | tokenType("literal", TokenType.Literal)) ^^ {
       token =>
-        Identifier(token.value.asInstanceOf[String], token)}
+        Identifier(token.value.toString, token) }
 
   def identifierList: Parser[Seq[Identifier]] =
     openBracket ~> commit(rep(identifier) <~ closeBracket)
