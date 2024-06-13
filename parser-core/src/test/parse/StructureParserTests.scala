@@ -166,25 +166,25 @@ class StructureParserTests extends AnyFunSuite {
       "closing bracket expected") }
   test("constant in globals") {
     expectError("globals [d e f]",
-      "Variable name conflicts with a constant") }
+      "Variable name conflicts with a constant.") }
   test("constant in extensions") {
     expectError("extensions [d e f]",
       "Can't find extension: d") }
   test("constant in turtles-own") {
     expectError("turtles-own [d e f]",
-      "Variable name conflicts with a constant") }
+      "Variable name conflicts with a constant.") }
   test("constant in patches-own") {
     expectError("patches-own [d e f]",
-      "Variable name conflicts with a constant") }
+      "Variable name conflicts with a constant.") }
   test("constant in links-own") {
     expectError("links-own [d e f]",
-      "Variable name conflicts with a constant") }
+      "Variable name conflicts with a constant.") }
   test("constant in breed-own") {
     expectError("breed [tests test] tests-own [d e f]",
-      "Variable name conflicts with a constant") }
+      "Variable name conflicts with a constant.") }
   test("constant in procedure input") {
-    expectError("to test [d e f]",
-      "Input name conflicts with a constant") }
+    expectError("to test [d e f] end",
+      "Input name conflicts with a constant.") }
   test("missing breed singular") {
     expectError("breed [xs]",
       "Breed declarations must have plural and singular. BREED [XS] has only one name.") }
