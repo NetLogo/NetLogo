@@ -177,7 +177,7 @@ object PackageMacAggregate {
     // solution.  Although most of the libs are from the Vid extension and could go away
     // if we ever get onto a single camera capture library for it.  -Jeremy B August 2022
     val jarLibsToSign = Map(
-      ("extensions/.bundled/gogo/hid4java-0.7.0.jar", Seq("darwin/libhidapi.dylib"))
+    ("extensions/.bundled/gogo/hid4java-develop-SNAPSHOT.jar", Seq("darwin-x86-64/libhidapi.dylib", "darwin-x86-64/libhidapi.dylib"))
     , ("extensions/.bundled/vid/core-video-capture-1.4-20220209.101851-153.jar", Seq("org/openimaj/video/capture/nativelib/darwin_universal/libOpenIMAJGrabber.dylib"))
     , ("extensions/.bundled/vid/javacpp-1.5.7-macosx-arm64.jar", Seq("org/bytedeco/javacpp/macosx-arm64/libjnijavacpp.dylib"))
     , ("extensions/.bundled/vid/javacpp-1.5.7-macosx-x86_64.jar", Seq("org/bytedeco/javacpp/macosx-x86_64/libjnijavacpp.dylib"))
