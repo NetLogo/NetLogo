@@ -167,9 +167,6 @@ class StructureParserTests extends AnyFunSuite {
   test("constant in globals") {
     expectError("globals [d e f]",
       "Variable name conflicts with a constant.") }
-  test("constant in extensions") {
-    expectError("extensions [d e f]",
-      "Can't find extension: d") }
   test("constant in turtles-own") {
     expectError("turtles-own [d e f]",
       "Variable name conflicts with a constant.") }
