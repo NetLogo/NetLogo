@@ -152,10 +152,15 @@ extends scala.util.parsing.combinator.Parsers {
   def identifier: Parser[Identifier] =
     tokenType("identifier", TokenType.Ident) ^^ {
       token =>
-        Identifier(token.value.asInstanceOf[String], token)}
+        Identifier(token.value.asInstanceOf[String], token) }
+
+  def literal: Parser[Identifier] =
+    tokenType("literal", TokenType.Literal) ^^ {
+      token =>
+        Identifier(token.value.toString, token) }
 
   def identifierList: Parser[Seq[Identifier]] =
-    openBracket ~> commit(rep(identifier) <~ closeBracket)
+    openBracket ~> commit(rep(identifier | literal) <~ closeBracket)
 
   def stringList: Parser[Seq[Token]] =
     openBracket ~> commit(rep(string) <~ closeBracket)
