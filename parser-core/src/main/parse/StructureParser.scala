@@ -174,6 +174,7 @@ class StructureParser(
   def parse(tokens: Iterator[Token], oldResults: StructureResults): StructureResults =
     StructureCombinators.parse(tokens) match {
       case Right(declarations) =>
+        StructureChecker.rejectMisplacedConstants(declarations)
         StructureChecker.rejectDuplicateDeclarations(declarations)
         StructureChecker.rejectDuplicateNames(declarations,
           StructureParser.usedNames(
