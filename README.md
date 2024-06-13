@@ -33,7 +33,7 @@ This list is private and your model *will not* be shared publicly.
 
 We're excited that you're learning NetLogo!
 NetLogo comes with a [tutorial](https://ccl.northwestern.edu/netlogo/docs/tutorial1.html) which introduces the basic concepts and can help you get started.
-If you're looking for a textbook which explains the concepts underlying NetLogo you might look at [Introduction to Agent-Based Modeling](https://mitpress.mit.edu/books/introduction-agent-based-modeling) available as a paper book and/or ebook from MIT Press.
+If you're looking for a textbook which explains the concepts underlying NetLogo you might look at [An Introduction to Agent-Based Modeling](https://mitpress.mit.edu/9780262731898/an-introduction-to-agent-based-modeling/) available as a paper book and/or ebook from MIT Press.
 The archives of an intro courses on NetLogo titled "Introduction to Agent-Based Modeling" are available on [Complexity Explorer](https://www.complexityexplorer.org/courses/23-introduction-to-agent-based-modeling).
 
 ### Help With Modeling

@@ -2,13 +2,11 @@
 
 package org.nlogo.prim.etc
 
-// true here because resetTicks calls other code
 import org.nlogo.nvm.{ Command, Context }
 
 class _clearallandresetticks extends Command {
-
-
   switches = true
+  // true here because resetTicks calls other code
   override def callsOtherCode = true
   override def perform(context: Context) {
     workspace.clearAll()
