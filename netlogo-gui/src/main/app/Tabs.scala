@@ -53,6 +53,8 @@ class Tabs(workspace:           GUIWorkspace,
   private var watcherThread: FileWatcherThread = null
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
+  def focusOnError = prefs.getBoolean("focusOnError", true)
+
   def stopWatcherThread() {
     if (watcherThread != null) {
       watcherThread.interrupt
@@ -313,7 +315,7 @@ class Tabs(workspace:           GUIWorkspace,
     }
 
     def recolorInterfaceTab(): Unit = {
-      if (e.error != null) setSelectedIndex(0)
+      if (e.error != null && focusOnError) setSelectedIndex(0)
       recolorTab(interfaceTab, e.error != null)
     }
 
@@ -325,7 +327,7 @@ class Tabs(workspace:           GUIWorkspace,
           clearErrors()
         }
         else {
-          tabManager.setSelectedCodeTab(mainCodeTab)
+          if (focusOnError) tabManager.setSelectedCodeTab(mainCodeTab)
           recolorTab(mainCodeTab, true)
         }
         // I don't really know why this is necessary when you delete a slider (by using the menu
@@ -342,7 +344,7 @@ class Tabs(workspace:           GUIWorkspace,
           tab.get.handle(e) // it was late to the party, let it handle the event too
         }
         if (e.error != null) {
-          tabManager.setPanelsSelectedComponent(tab.get)
+          if (focusOnError) tabManager.setPanelsSelectedComponent(tab.get)
         }
         recolorTab(tab.get, e.error != null)
         requestFocus()
