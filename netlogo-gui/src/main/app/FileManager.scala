@@ -150,8 +150,19 @@ object FileManager {
         AWTFileDialog.SAVE, suggestedFileName)
 
       val exportFile = new File(exportPath)
-      val saver = NetLogoWebSaver(exportPath, workspace)
-      saver.save(modelToSave, exportFile.getName, parent)
+      val saver = NetLogoWebSaver(exportPath)
+
+      val modelString = modelToSave
+      val includes = collectIncludes(modelString)
+
+      if (includes.nonEmpty &&
+        OptionDialog.showMessage(parent, I18N.gui.get("common.messages.warning"),
+                                          I18N.gui.get("menu.file.nlw.prompt.includesWarning"),
+                                          Array[Object](I18N.gui.get("common.buttons.ok"),
+                                                        I18N.gui.get("common.buttons.cancel"))) == 1)
+        throw new UserCancelException()
+
+      saver.save(modelString, exportFile.getName, includes)
     }
 
     @throws(classOf[UserCancelException])
@@ -196,6 +207,23 @@ object FileManager {
     // report if UI values (sliders, etc.) have been changed - RG 9/10/15
     private def doesNotMatchWorkingCopy: Boolean = {
       modelSaver.priorModel != modelSaver.currentModel
+    }
+
+    @throws(classOf[IOException])
+    private def collectIncludes(str: String): List[(String, String)] = {
+      val includes = workspace.compiler.findIncludes(workspace.getModelPath, str, workspace.getCompilationEnvironment)
+
+      if (includes.isEmpty)
+        return Nil
+      
+      includes.get.flatMap({ case (name, path) =>
+        val file = scala.io.Source.fromFile(path)
+        val source = file.mkString
+
+        file.close()
+
+        (name, source) :: collectIncludes(source)
+      }).toList
     }
   }
 
