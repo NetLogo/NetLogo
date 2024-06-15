@@ -150,8 +150,8 @@ object FileManager {
         AWTFileDialog.SAVE, suggestedFileName)
 
       val exportFile = new File(exportPath)
-      val saver = NetLogoWebSaver(exportPath)
-      saver.save(modelToSave, exportFile.getName)
+      val saver = NetLogoWebSaver(exportPath, workspace)
+      saver.save(modelToSave, exportFile.getName, parent)
     }
 
     @throws(classOf[UserCancelException])
