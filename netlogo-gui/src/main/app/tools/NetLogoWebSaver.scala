@@ -2,14 +2,7 @@
 
 package org.nlogo.app.tools
 
-import java.awt.Component
-import java.io.IOException
-
 import org.nlogo.api.FileIO
-import org.nlogo.awt.UserCancelException
-import org.nlogo.core.I18N
-import org.nlogo.swing.OptionDialog
-import org.nlogo.workspace.AbstractWorkspaceScala
 
 import scala.util.matching.Regex
 
@@ -26,39 +19,11 @@ class JarTemplateLoader(resourceName: String) extends NLWTemplateLoader {
   }
 }
 
-class NetLogoWebSaver(loader: NLWTemplateLoader, saveFunction: String => Unit, workspace: AbstractWorkspaceScala) {
+class NetLogoWebSaver(loader: NLWTemplateLoader, saveFunction: String => Unit) {
   val ModelContents = "<NetLogoModel />"
   val ModelName     = "<NetLogoModelName />"
 
-  @throws(classOf[IOException])
-  private def collectIncludes(str: String): List[(String, String)] = {
-    val includes = workspace.compiler.findIncludes(workspace.getModelPath, str, workspace.getCompilationEnvironment)
-
-    if (includes.isEmpty)
-      return Nil
-    
-    includes.get.flatMap({ case (name, path) =>
-      val file = scala.io.Source.fromFile(path)
-      val source = file.mkString
-
-      file.close()
-
-      (name, source) :: collectIncludes(source)
-    }).toList
-  }
-
-  @throws(classOf[UserCancelException])
-  @throws(classOf[IOException])
-  def save(modelString: String, modelName: String, parent: Component) = {
-    val includes = collectIncludes(modelString)
-
-    if (includes.nonEmpty &&
-        OptionDialog.showMessage(parent, I18N.gui.get("common.messages.warning"),
-                                          I18N.gui.get("menu.file.nlw.prompt.includesWarning"),
-                                          Array[Object](I18N.gui.get("common.buttons.ok"),
-                                                        I18N.gui.get("common.buttons.cancel"))) == 1)
-      throw new UserCancelException()
-
+  def save(modelString: String, modelName: String, includes: List[(String, String)] = Nil) = {
     var stringMut = modelString
 
     if (includes.nonEmpty) {
@@ -88,6 +53,6 @@ object NetLogoWebSaver {
   val TemplateFileName = "/system/net-logo-web.html"
   val loader    = new JarTemplateLoader(TemplateFileName)
 
-  def apply(filePath: String, workspace: AbstractWorkspaceScala): NetLogoWebSaver =
-    new NetLogoWebSaver(loader, (s) => FileIO.writeFile(filePath, s), workspace)
+  def apply(filePath: String): NetLogoWebSaver =
+    new NetLogoWebSaver(loader, (s) => FileIO.writeFile(filePath, s))
 }
