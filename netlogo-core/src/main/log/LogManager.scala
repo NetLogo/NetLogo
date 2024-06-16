@@ -2,6 +2,7 @@
 
 package org.nlogo.log
 
+import java.awt.Component
 import java.io.{ File, FileOutputStream, IOException }
 import java.net.{ InetAddress, UnknownHostException }
 import java.nio.file.{ Path, Paths }
@@ -13,6 +14,8 @@ import scala.io.Codec
 import org.nlogo.api.{ Equality, NetLogoAdapter, Version }
 import org.nlogo.api.Exceptions.{ ignoring, warning }
 import org.nlogo.api.FileIO.fileToString
+import org.nlogo.core.I18N
+import org.nlogo.swing.OptionDialog
 
 // Welcome to Logging.
 
@@ -87,8 +90,10 @@ object LogManager {
   private var logger: FileLogger               = LoggerState.noOpLogger
   private var loggingListener: LoggingListener = new LoggingListener(LoggerState.emptyEvents, LogManager.logger)
   private var modelName: String                = "unset"
+  private var dialogFrame: Component           = null
 
-  def start(addListener: (NetLogoAdapter) => Unit, loggerFactory: (Path) => FileLogger, logDirectory: File, eventsSet: Set[String], studentName: String) {
+  def start(addListener: (NetLogoAdapter) => Unit, loggerFactory: (Path) => FileLogger, logDirectory: File,
+            eventsSet: Set[String], studentName: String, dialogFrame: Component) {
     if (LogManager.isStarted) {
       throw new IllegalStateException("Logging should only be started once.")
     }
@@ -97,6 +102,7 @@ object LogManager {
     val events                 = new LogEvents(eventsSet)
     LogManager.state           = LoggerState(addListener, loggerFactory, logDirectory, events, studentName)
     LogManager.loggingListener = new LoggingListener(events, LogManager.logger)
+    LogManager.dialogFrame = dialogFrame
 
     // We don't actually start logging until a model is opened and `restart()` is called.
     val restartListener = new NetLogoAdapter {
@@ -123,9 +129,14 @@ object LogManager {
     thunk()
     // If the logger blows up for any reason (security, disk full, etc), just ignore it and output to the error stream
     // so NetLogo can at least continune running with the NoOpLogger -Jeremy B February 2024
-    warning(classOf[Exception]) {
+    try {
       LogManager.logger                 = LogManager.state.loggerFactory(LogManager.state.logDirectoryPath)
       LogManager.loggingListener.logger = LogManager.logger
+    } catch {
+      case _: Throwable =>
+        OptionDialog.showMessage(dialogFrame, I18N.gui.get("common.messages.warning"),
+                                I18N.gui.get("error.dialog.logDirectory"),
+                                Array[Object](I18N.gui.get("common.buttons.ok")))
     }
     LogManager.logStart(modelName)
   }

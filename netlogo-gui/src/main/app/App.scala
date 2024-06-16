@@ -439,7 +439,7 @@ class App extends
       val studentName       = askForName()
       val addListener       = (l) => listenerManager.addListener(l)
       val loggerFactory     = (p) => new JsonFileLogger(p)
-      LogManager.start(addListener, loggerFactory, finalLogDirectory, events, studentName)
+      LogManager.start(addListener, loggerFactory, finalLogDirectory, events, studentName, frame)
     }
 
   }
