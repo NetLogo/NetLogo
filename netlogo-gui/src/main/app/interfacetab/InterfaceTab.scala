@@ -127,6 +127,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   def handle(e: LoadBeginEvent) {
     scrollPane.getHorizontalScrollBar.setValue(0)
     scrollPane.getVerticalScrollBar.setValue(0)
+    commandCenterToggleAction.putValue(Action.NAME, I18N.gui.get("menu.tools.hideCommandCenter"))
   }
 
   /// output
