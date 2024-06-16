@@ -42,9 +42,11 @@ class InterfaceTab(workspace: GUIWorkspace,
   commandCenter.locationToggleAction = new CommandCenterLocationToggleAction
   val iP = new InterfacePanel(workspace.viewWidget, workspace)
 
+  val commandCenterToggleAction = new CommandCenterToggleAction()
+
   override val activeMenuActions =
     WorkspaceActions.interfaceActions(workspace) ++
-    Seq(iP.undoAction, iP.redoAction, new CommandCenterToggleAction(), new JumpToCommandCenterAction())
+    Seq(iP.undoAction, iP.redoAction, commandCenterToggleAction, new JumpToCommandCenterAction())
 
   var lastFocusedComponent: JComponent = commandCenter
   setLayout(new BorderLayout)
@@ -217,6 +219,7 @@ class InterfaceTab(workspace: GUIWorkspace,
       if (! commandCenter.getDefaultComponentForFocus.isFocusOwner) {
         showCommandCenter()
         commandCenter.requestFocusInWindow()
+        commandCenterToggleAction.putValue(Action.NAME, I18N.gui.get("menu.tools.hideCommandCenter"))
       }
     }
   }
