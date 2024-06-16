@@ -2,7 +2,6 @@
 
 package org.nlogo.log
 
-import java.awt.Component
 import java.io.{ File, FileOutputStream, IOException }
 import java.net.{ InetAddress, UnknownHostException }
 import java.nio.file.{ Path, Paths }
@@ -14,8 +13,6 @@ import scala.io.Codec
 import org.nlogo.api.{ Equality, NetLogoAdapter, Version }
 import org.nlogo.api.Exceptions.{ ignoring, warning }
 import org.nlogo.api.FileIO.fileToString
-import org.nlogo.core.I18N
-import org.nlogo.swing.OptionDialog
 
 // Welcome to Logging.
 
@@ -90,19 +87,19 @@ object LogManager {
   private var logger: FileLogger               = LoggerState.noOpLogger
   private var loggingListener: LoggingListener = new LoggingListener(LoggerState.emptyEvents, LogManager.logger)
   private var modelName: String                = "unset"
-  private var dialogFrame: Component           = null
+  private var directoryWarning: () => Unit     = () => {}
 
   def start(addListener: (NetLogoAdapter) => Unit, loggerFactory: (Path) => FileLogger, logDirectory: File,
-            eventsSet: Set[String], studentName: String, dialogFrame: Component) {
+            eventsSet: Set[String], studentName: String, directoryWarning: () => Unit) {
     if (LogManager.isStarted) {
       throw new IllegalStateException("Logging should only be started once.")
     }
 
-    LogManager.isStarted       = true
-    val events                 = new LogEvents(eventsSet)
-    LogManager.state           = LoggerState(addListener, loggerFactory, logDirectory, events, studentName)
-    LogManager.loggingListener = new LoggingListener(events, LogManager.logger)
-    LogManager.dialogFrame = dialogFrame
+    LogManager.isStarted        = true
+    val events                  = new LogEvents(eventsSet)
+    LogManager.state            = LoggerState(addListener, loggerFactory, logDirectory, events, studentName)
+    LogManager.loggingListener  = new LoggingListener(events, LogManager.logger)
+    LogManager.directoryWarning = directoryWarning
 
     // We don't actually start logging until a model is opened and `restart()` is called.
     val restartListener = new NetLogoAdapter {
@@ -133,10 +130,7 @@ object LogManager {
       LogManager.logger                 = LogManager.state.loggerFactory(LogManager.state.logDirectoryPath)
       LogManager.loggingListener.logger = LogManager.logger
     } catch {
-      case _: Throwable =>
-        OptionDialog.showMessage(dialogFrame, I18N.gui.get("common.messages.warning"),
-                                I18N.gui.get("error.dialog.logDirectory"),
-                                Array[Object](I18N.gui.get("common.buttons.ok")))
+      case _: Throwable => directoryWarning()
     }
     LogManager.logStart(modelName)
   }
