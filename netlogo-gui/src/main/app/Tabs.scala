@@ -53,10 +53,6 @@ class Tabs(workspace:           GUIWorkspace,
   private var watcherThread: FileWatcherThread = null
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
-  def codeTabsSwitched() {
-    fireStateChanged
-  }
-
   def stopWatcherThread() {
     if (watcherThread != null) {
       watcherThread.interrupt

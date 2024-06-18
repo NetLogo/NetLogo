@@ -249,8 +249,8 @@ class AppTabManager(val appTabsPanel:          Tabs,
     codeTabsPanelOption match {
       case None                => // nothing to do
       case Some(codeTabsPanel) => {
-        setCodeTabsPanelOption(None)
         switchingCodeTabs = true
+        setCodeTabsPanelOption(None)
         // Move the tabs to the AppTabsPanel (Tabs), retaining order. AAB 10/2020
         for (_ <- 0 until codeTabsPanel.getTabCount) {
           appTabsPanel.add(codeTabsPanel.getTitleAt(0), codeTabsPanel.getComponentAt(0))
@@ -260,7 +260,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
         appTabsPanel.mainCodeTab.requestFocus
         appTabsPanel.getAppFrame.removeLinkComponent(codeTabsPanel.getCodeTabContainer)
         switchingCodeTabs = false
-        appTabsPanel.codeTabsSwitched
+        appTabsPanel.updateState
         Event.rehash()
       } // end case where work was done. AAB 10/2020
     }
@@ -269,6 +269,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
   // Does the work needed to go back to the separate code window state
   def switchToSeparateCodeWindow(): Unit = {
     if (!isCodeTabSeparate) {
+      switchingCodeTabs = true
       val codeTabsPanel = new CodeTabsPanel(appTabsPanel.workspace,
         appTabsPanel.interfaceTab,
         appTabsPanel.externalFileManager,
@@ -306,6 +307,8 @@ class AppTabManager(val appTabsPanel:          Tabs,
       }
       appTabsPanel.getAppFrame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
       createCodeTabAccelerators()
+      switchingCodeTabs = true
+      codeTabsPanel.updateState
       Event.rehash()
       codeTabsPanel.mainCodeTab.requestFocus
     }

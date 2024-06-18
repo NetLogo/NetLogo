@@ -58,6 +58,10 @@ abstract class AbstractTabsPanel(val workspace:           GUIWorkspace,
     assert(fileManager != null && dirtyMonitor != null)
   }
 
+  def updateState() {
+    fireStateChanged
+  }
+
   override def processMouseMotionEvent(e: MouseEvent) {
     // do nothing.  mouse moves are for some reason causing doLayout to be called in the tabbed
     // components on windows and linux (but not Mac) in java 6 it never did this before and I don't
