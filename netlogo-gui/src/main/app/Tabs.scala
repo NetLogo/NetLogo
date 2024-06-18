@@ -207,8 +207,6 @@ class Tabs(workspace:           GUIWorkspace,
     // In that case do nothing. The correct action will happen when
     // the selected index is reset. AAB 10/2020
     if (!tabManager.switchingCodeTabs && tabManager.getSelectedAppTabIndex != -1) {
-      println("switch")
-
       val previousTab = currentTab
       currentTab = getSelectedComponent
 
