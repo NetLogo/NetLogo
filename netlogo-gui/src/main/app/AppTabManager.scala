@@ -307,7 +307,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
       }
       appTabsPanel.getAppFrame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
       createCodeTabAccelerators()
-      switchingCodeTabs = true
+      switchingCodeTabs = false
       codeTabsPanel.updateState
       Event.rehash()
       codeTabsPanel.mainCodeTab.requestFocus

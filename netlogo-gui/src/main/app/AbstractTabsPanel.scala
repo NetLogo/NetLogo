@@ -9,7 +9,7 @@ import javax.swing.plaf.ComponentUI
 import org.nlogo.app.codetab.{ ExternalFileManager, MainCodeTab }
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.window.GUIWorkspace
-import org.nlogo.window.LinkRoot
+import org.nlogo.window.{ Events => WindowEvents, LinkRoot }
 
 // AbstractTabsPanel contains functionality common to Tabs and CodeTabsPanel. AAB 10/2020
 
@@ -59,7 +59,7 @@ abstract class AbstractTabsPanel(val workspace:           GUIWorkspace,
   }
 
   def updateState() {
-    fireStateChanged
+    new WindowEvents.CompileAllEvent().raise(this)
   }
 
   override def processMouseMotionEvent(e: MouseEvent) {
