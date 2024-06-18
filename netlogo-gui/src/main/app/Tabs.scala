@@ -53,6 +53,10 @@ class Tabs(workspace:           GUIWorkspace,
   private var watcherThread: FileWatcherThread = null
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
+  def codeTabsSwitched() {
+    fireStateChanged
+  }
+
   def stopWatcherThread() {
     if (watcherThread != null) {
       watcherThread.interrupt
@@ -202,7 +206,9 @@ class Tabs(workspace:           GUIWorkspace,
     // tab index of the parent JTabbedPane to -1
     // In that case do nothing. The correct action will happen when
     // the selected index is reset. AAB 10/2020
-    if (tabManager.getSelectedAppTabIndex != -1) {
+    if (!tabManager.switchingCodeTabs && tabManager.getSelectedAppTabIndex != -1) {
+      println("switch")
+
       val previousTab = currentTab
       currentTab = getSelectedComponent
 

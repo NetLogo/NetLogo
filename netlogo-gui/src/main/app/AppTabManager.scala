@@ -50,6 +50,8 @@ class AppTabManager(val appTabsPanel:          Tabs,
 
   var dirtyMonitor: DirtyMonitor = null
 
+  var switchingCodeTabs = false
+
   // The appTabsPanel and the main code tab are unique unchanging entities
   // of class Tabs and MainCodeTab respectively. AAB 10/2020
   def getAppTabsPanel = { appTabsPanel }
@@ -248,6 +250,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
       case None                => // nothing to do
       case Some(codeTabsPanel) => {
         setCodeTabsPanelOption(None)
+        switchingCodeTabs = true
         // Move the tabs to the AppTabsPanel (Tabs), retaining order. AAB 10/2020
         for (_ <- 0 until codeTabsPanel.getTabCount) {
           appTabsPanel.add(codeTabsPanel.getTitleAt(0), codeTabsPanel.getComponentAt(0))
@@ -256,6 +259,8 @@ class AppTabManager(val appTabsPanel:          Tabs,
         appTabsPanel.mainCodeTab.getPoppingCheckBox.setSelected(false)
         appTabsPanel.mainCodeTab.requestFocus
         appTabsPanel.getAppFrame.removeLinkComponent(codeTabsPanel.getCodeTabContainer)
+        switchingCodeTabs = false
+        appTabsPanel.codeTabsSwitched
         Event.rehash()
       } // end case where work was done. AAB 10/2020
     }
