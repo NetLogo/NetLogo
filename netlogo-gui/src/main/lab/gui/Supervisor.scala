@@ -5,7 +5,7 @@ package org.nlogo.lab.gui
 import collection.mutable.ListBuffer
 
 import java.awt.Window
-import java.io.{ FileWriter, IOException, PrintWriter }
+import java.io.{ File, FileNotFoundException, FileWriter, IOException, PrintWriter }
 
 import org.nlogo.api.{ Exceptions, ExportPlotWarningAction, LabProtocol, LogoException,
                        PlotCompilationErrorAction, LabPostProcessorInputFormat }
@@ -119,7 +119,7 @@ class Supervisor(
 
     if (options.spreadsheet != null && options.spreadsheet.trim() != "") {
       val fileName = options.spreadsheet.trim()
-      if (protocol.runsCompleted == 0 || new java.io.File(fileName).exists) {
+      if (protocol.runsCompleted == 0 || new File(fileName).exists) {
         try {
           val partialData = new PartialData
           if (protocol.runsCompleted > 0) {
@@ -156,6 +156,7 @@ class Supervisor(
           spreadsheetFileName = fileName
           addExporter(spreadsheetExporter)
         } catch {
+          case e: FileNotFoundException => return guiError(I18N.gui("error.pause.alreadyOpen"))
           case _: Throwable => return guiError(I18N.gui("error.pause.invalidSpreadsheet"))
         }
       }
@@ -163,14 +164,18 @@ class Supervisor(
     }
     if (options.table != null && options.table.trim() != "") {
       val fileName = options.table.trim()
-      if (protocol.runsCompleted == 0 || new java.io.File(fileName).exists) {
-        tableExporter = new TableExporter(
-          workspace.getModelFileName,
-          workspace.world.getDimensions,
-          worker.protocol,
-          new PrintWriter(new FileWriter(fileName, protocol.runsCompleted > 0)))
-        tableFileName = fileName
-        addExporter(tableExporter)
+      if (protocol.runsCompleted == 0 || new File(fileName).exists) {
+        try {
+          tableExporter = new TableExporter(
+            workspace.getModelFileName,
+            workspace.world.getDimensions,
+            worker.protocol,
+            new PrintWriter(new FileWriter(fileName, protocol.runsCompleted > 0)))
+          tableFileName = fileName
+          addExporter(tableExporter)
+        } catch {
+          case e: FileNotFoundException => return guiError(I18N.gui("error.pause.alreadyOpen"))
+        }
       }
       else return guiError(I18N.gui("error.pause.table"))
     }
@@ -189,6 +194,7 @@ class Supervisor(
             })
           addExporter(statsExporter)
         } catch {
+          case e: FileNotFoundException => return guiError(I18N.gui("error.pause.alreadyOpen"))
           case e: IOException =>
             failure(e)
             return
@@ -209,6 +215,7 @@ class Supervisor(
             LabPostProcessorInputFormat.Spreadsheet(options.spreadsheet.trim())
           } else return guiError(I18N.gui("error.lists"))))
       } catch {
+        case e: FileNotFoundException => return guiError(I18N.gui("error.pause.alreadyOpen"))
         case e: IOException =>
           failure(e)
           return
