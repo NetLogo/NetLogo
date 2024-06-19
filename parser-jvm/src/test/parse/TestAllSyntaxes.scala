@@ -256,7 +256,7 @@ class TestAllSyntaxes extends AnyFunSuite {
                      |_uptonof number/list or agentset,list or agentset,OTPL,None,10,2,2
                      |_userdirectory ,TRUE/FALSE or string,OTPL,None,10,0,0
                      |_userfile ,TRUE/FALSE or string,OTPL,None,10,0,0
-                     |_userinput anything,string,OTPL,None,10,1,1
+                     |_userinput anything/string,string,OTPL,None,10,1,1
                      |_usernewfile ,TRUE/FALSE or string,OTPL,None,10,0,0
                      |_useroneof anything/list,anything,OTPL,None,10,2,2
                      |_useryesorno anything,TRUE/FALSE,OTPL,None,10,1,1

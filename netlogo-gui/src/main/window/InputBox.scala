@@ -192,9 +192,6 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
             try inputText(inputType.readValue(InputBox.this.textArea.getText))
             catch {
               case ex@(_:LogoException|_:CompilerException|_:ValueConstraint.Violation) =>
-                org.nlogo.awt.EventQueue.invokeLater { () =>
-                  InputBox.this.textArea.requestFocus()
-                }
             }
             editing = false
           }
