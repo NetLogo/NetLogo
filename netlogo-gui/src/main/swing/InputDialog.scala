@@ -4,9 +4,9 @@ package org.nlogo.swing
 
 import java.awt.Frame
 
-class InputDialog(owner: Frame, title: String, message: String, i18n: String => String)
+class InputDialog(owner: Frame, title: String, message: String, i18n: String => String, defaultInput: String = "")
 extends UserDialog(owner, title, i18n) {
-  private val field = new javax.swing.JTextField
+  private val field = new javax.swing.JTextField(defaultInput)
   addComponents(field, message)
   def showInputDialog(): String = {
     val r = getOwner.getBounds
