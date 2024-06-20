@@ -425,8 +425,6 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
         @throws(classOf[UserCancelException])
         override def action(): Unit = {
-          println(tabManager.getSelectedComponent.getClass.getName)
-
           tabManager.getSelectedComponent match {
             case tempTab: TemporaryCodeTab => tempTab.save(saveAs)
             case _ => saveModel(saveAs)
