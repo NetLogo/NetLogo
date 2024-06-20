@@ -176,6 +176,8 @@ class Tabs(workspace:           GUIWorkspace,
 
     // Set hotkey to create a separate code window. AAB 12/2020
     tabManager.setAppCodeTabBindings
+
+    manager.setTabManager(tabManager)
   }
 
     // When there is a separate code tab window, there will be a selected tab in
@@ -214,12 +216,7 @@ class Tabs(workspace:           GUIWorkspace,
         case mt: MenuTab => mt.activeMenuActions foreach menu.offerAction
         case _ =>
       }
-
-      (previousTab.isInstanceOf[TemporaryCodeTab], currentTab.isInstanceOf[TemporaryCodeTab]) match {
-        case (true, false) => saveModelActions foreach menu.offerAction
-        case (false, true) => saveModelActions foreach menu.revokeAction
-        case _             =>
-      }
+      
       new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
     }
   }

@@ -96,11 +96,6 @@ class CodeTabsPanel(workspace:            GUIWorkspace,
       if (currentTab == null) {
         currentTab = mainCodeTab
       }
-      (previousTab.isInstanceOf[TemporaryCodeTab], currentTab.isInstanceOf[TemporaryCodeTab]) match {
-        case (true, false) => tabManager.appTabsPanel.saveModelActions foreach tabManager.menuBar.offerAction
-        case (false, true) => tabManager.appTabsPanel.saveModelActions foreach tabManager.menuBar.revokeAction
-        case _             =>
-      }
       // The SwitchedTabsEvent will cause compilation when the user leaves an edited CodeTab. AAB 10/2020
       new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
     }

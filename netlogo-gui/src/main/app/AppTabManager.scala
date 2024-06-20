@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.Component
+import java.awt.{ Component, KeyboardFocusManager }
 import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent, JMenu, JMenuItem, JTabbedPane, KeyStroke }
 
@@ -49,6 +49,8 @@ class AppTabManager(val appTabsPanel:          Tabs,
   var menuBar: MenuBar = null
 
   var dirtyMonitor: DirtyMonitor = null
+
+  val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager()
 
   var switchingCodeTabs = false
 
@@ -585,6 +587,18 @@ class AppTabManager(val appTabsPanel:          Tabs,
     require(tab != null)
     val (tabOwner, tabIndex) = ownerAndIndexOfTab(tab)
     setPanelsSelectedIndexHelper(tabOwner, tabIndex)
+  }
+
+  /**
+   * Gets selected tab, regardless of type or whether a separate code window exists.
+   */
+  def getSelectedComponent(): Component = {
+    codeTabsPanelOption match {
+      case Some(codeTabsPanel) if (codeTabsPanel.isAncestorOf(focusManager.getFocusOwner())) =>
+        codeTabsPanel.getComponentAt(codeTabsPanel.getSelectedIndex)
+      case _ =>
+        appTabsPanel.getComponentAt(appTabsPanel.getSelectedIndex)
+    }
   }
 
   /**
