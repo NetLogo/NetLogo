@@ -8,13 +8,11 @@ import java.io.{ File, IOException }
 import javax.swing.{ Action, AbstractAction }
 
 import org.nlogo.api.FileIO
-import org.nlogo.app.common.{ Dialogs, Events => AppEvents, TabsInterface }//,
-  // Actions.Ellipsis
+import org.nlogo.app.common.{ Dialogs, Events => AppEvents, TabsInterface }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
 import org.nlogo.ide.FocusedOnlyAction
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, ToolBarActionButton }//,
-  // UserAction.MenuAction
+import org.nlogo.swing.{ FileDialog => SwingFileDialog, ToolBarActionButton }
 import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, ModelTracker }
 
