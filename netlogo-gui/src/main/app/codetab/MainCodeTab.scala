@@ -4,6 +4,7 @@ package org.nlogo.app.codetab
 
 import java.awt.Component
 import java.awt.event.ActionEvent
+import java.util.prefs.Preferences
 import javax.swing.{ AbstractAction, Action, JCheckBox }
 
 import org.nlogo.app.common.{ Events => AppEvents, TabsInterface }
@@ -18,6 +19,7 @@ class MainCodeTab(workspace: GUIWorkspace, tabs: TabsInterface, editorMenu: Edit
 extends CodeTab(workspace, tabs)
 with WindowEvents.LoadModelEvent.Handler
 {
+  val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
   val mainCodeTab = this
   var tabbing: JCheckBox = null
   val smartTabAction: Action = new SmartTabAction
@@ -25,6 +27,7 @@ with WindowEvents.LoadModelEvent.Handler
   private class SmartTabAction extends AbstractAction(I18N.gui.get("tabs.code.indentAutomatically")) {
     def actionPerformed(e: ActionEvent) {
       setIndenter(tabbing.isSelected)
+      prefs.putBoolean("indentAutomatically", tabbing.isSelected)
       new AppEvents.IndenterChangedEvent(tabbing.isSelected)
         .raise(MainCodeTab.this)
     }
@@ -47,8 +50,7 @@ with WindowEvents.LoadModelEvent.Handler
 
   override def getAdditionalToolBarComponents: Seq[Component] = {
     tabbing = new JCheckBox(smartTabAction)
-    // turning it on by default (for now, anyway ~Forrest)
-    tabbing.setSelected(true)
+    tabbing.setSelected(prefs.getBoolean("indentAutomatically", true))
     // hack, to get it to realize it's really checked. ~Forrest (10/23/2007)
     smartTabAction.actionPerformed(null)
     // The state of the check box is set in Tabs.handle(e: AfterLoadEvent). AAB 10/2020
