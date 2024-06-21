@@ -2,8 +2,9 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Frame }
+import java.awt.{ Component, FileDialog => AWTFileDialog, Frame }
 import java.io.File
+import javax.swing.filechooser.FileFilter
 import javax.swing.JFileChooser
 
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
@@ -27,8 +28,8 @@ object FileDialog {
     * the given file will be the default selection.
     */
   @throws[UserCancelException]
-  def showFiles(component: Component, title: String, mode: Int, file: String): String =
-    showFiles(Hierarchy.getFrame(component), title, mode, file)
+  def showFiles(component: Component, title: String, mode: Int, file: String, allowed: List[String] = Nil): String =
+    showFiles(Hierarchy.getFrame(component), title, mode, file, allowed)
 
   def confirmFileOverwrite(owner: Component, path: String) = {
     // The FileDialog checks for overwrite, but we munge extensions after
@@ -52,7 +53,7 @@ object FileDialog {
     */
   @throws[UserCancelException]
   def showFiles(parentFrame: Frame, title: String, mode: Int): String =
-    showFiles(parentFrame, title, mode, null)
+    showFiles(parentFrame, title, mode, null, Nil)
 
   @throws[UserCancelException]
   def showDirectories(parentFrame: Frame, title: String): String = {
@@ -68,21 +69,37 @@ object FileDialog {
   }
 
   @throws[UserCancelException]
-  private def showFiles(parentFrame: Frame, title: String, mode: Int, file: String): String = {
-    val dialog = new java.awt.FileDialog(parentFrame, title, mode)
-    dialog.setDirectory(currentDirectory)
+  private def showFiles(parentFrame: Frame, title: String, mode: Int, file: String, allowed: List[String]): String = {
+    val chooser = new JFileChooser(currentDirectory)
+    chooser.setDialogTitle(title)
+    chooser.setFileSelectionMode(JFileChooser.FILES_ONLY)
     if (file != null)
-      dialog.setFile(file)
-    dialog.setVisible(true)
-    if (dialog.getFile == null)
+      chooser.setSelectedFile(new File(file))
+    if (!allowed.isEmpty) {
+      chooser.setAcceptAllFileFilterUsed(false)
+      chooser.setFileFilter(new FileFilter {
+        def accept(file: File): Boolean =
+          file.isDirectory || allowed.exists(x => file.getName.endsWith("." + x))
+        def getDescription(): String =
+          allowed.map(x => "*." + x).mkString(", ")
+      })
+    }
+    var result = 0
+    if (mode == AWTFileDialog.SAVE) {
+      chooser.setDialogType(JFileChooser.SAVE_DIALOG)
+      result = chooser.showSaveDialog(parentFrame)
+    }
+    else {
+      chooser.setDialogType(JFileChooser.OPEN_DIALOG)
+      result = chooser.showOpenDialog(parentFrame)
+    }
+    if (result != JFileChooser.APPROVE_OPTION || chooser.getSelectedFile == null)
       throw new UserCancelException
-    currentDirectory = dialog.getDirectory
-    if (mode == java.awt.FileDialog.LOAD && !new File(currentDirectory + dialog.getFile).exists)
-      return showFiles(parentFrame, title, mode, dialog.getFile)
-    if (dialog.getDirectory == null)
-      dialog.getFile
+    currentDirectory = selectedDirectory(chooser)
+    if (chooser.getSelectedFile.exists)
+      chooser.getSelectedFile.getCanonicalPath
     else
-      dialog.getDirectory + dialog.getFile
+      showFiles(parentFrame, title, mode, file, allowed)
   }
 
   private def selectedDirectory(chooser: JFileChooser): String = {
