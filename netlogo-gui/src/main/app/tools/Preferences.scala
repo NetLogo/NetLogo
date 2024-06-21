@@ -163,4 +163,6 @@ object Preferences {
       prefs.put("proceduresMenuSortOrder", chosenSortOrder)
     }
   }
+
+  object FocusOnError extends BooleanPreference("focusOnError", false, true) {}
 }
