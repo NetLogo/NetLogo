@@ -96,10 +96,10 @@ object FileDialog {
     if (result != JFileChooser.APPROVE_OPTION || chooser.getSelectedFile == null)
       throw new UserCancelException
     currentDirectory = selectedDirectory(chooser)
-    if (chooser.getSelectedFile.exists)
-      chooser.getSelectedFile.getCanonicalPath
-    else
+    if (mode == AWTFileDialog.LOAD && !chooser.getSelectedFile.exists)
       showFiles(parentFrame, title, mode, file, allowed)
+    else
+      chooser.getSelectedFile.getCanonicalPath
   }
 
   private def selectedDirectory(chooser: JFileChooser): String = {
