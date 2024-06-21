@@ -621,7 +621,7 @@ class App extends
       // if recent list is empty we need the new model, or if loading the recent model
       // fails then we'll fall back on it.  -Jeremy B June 2021
       fileManager.newModel()
-      val recentFiles = (new RecentFiles).models.filter(x => Version.is3D == x.path.endsWith(".nlogo3d"))
+      val recentFiles = (new RecentFiles).models
       if (!recentFiles.isEmpty) {
         val modelEntry = recentFiles.head
         fileManager.openFromPath(modelEntry.path, modelEntry.modelType)
