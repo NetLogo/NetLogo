@@ -19,6 +19,12 @@ object PlotAction {
 
   case class AutoPlot(plotName: String, on: Boolean)
     extends PlotAction
+  
+  case class AutoPlotX(plotName: String, on: Boolean)
+    extends PlotAction
+
+  case class AutoPlotY(plotName: String, on: Boolean)
+    extends PlotAction
 
   case class SetRange(plotName: String, isX: Boolean, min: Double, max: Double)
     extends PlotAction
