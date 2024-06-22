@@ -409,6 +409,7 @@ class WidgetTest extends AnyFunSuite {
                   |100.0
                   |true
                   |true
+                  |true
                   |"" ""
                   |PENS
                   |"sheep" 1.0 0 -13345367 true "" "plot count sheep"

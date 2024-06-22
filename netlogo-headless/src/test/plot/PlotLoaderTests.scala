@@ -104,6 +104,7 @@ Number
 0.0
 100.0
 true
+true
 false""".replaceAll("\r\n", "\n")
     val plot = load(plotLines)
     assertResult(0)(plot.pens.size) // no default pen anymore.
@@ -127,6 +128,7 @@ number
 0.0
 5.0
 true
+true
 false
 "" "histogram [item 0 extract-hsb approximate-rgb (item 0 color) (item 1 color) (item 2 color)] of bugs\nset max-number-of-hue plot-y-max"
 PENS
@@ -145,6 +147,7 @@ number
 255.0
 0.0
 5.0
+true
 true
 false
 "" ""
@@ -165,6 +168,7 @@ number
 0.0
 5.0
 true
+true
 false
 "" "histogram [item 1 extract-hsb approximate-rgb (item 0 color) (item 1 color) (item 2 color)] of bugs\nset max-number-of-saturation plot-y-max"
 PENS
@@ -183,6 +187,7 @@ number
 255.0
 0.0
 5.0
+true
 true
 false
 "histogram [item 0 extract-hsb  approximate-rgb (item 0 color) (item 1 color) (item 2 color)] of bugs" "if max-number-of-hue > 5 [set-plot-y-range 0 max-number-of-hue]"
@@ -203,6 +208,7 @@ number
 0.0
 5.0
 true
+true
 false
 "histogram [item 1 extract-hsb approximate-rgb (item 0 color) (item 1 color) (item 2 color)] of bugs" "if max-number-of-saturation > 5 [set-plot-y-range 0 max-number-of-saturation]"
 PENS
@@ -222,6 +228,7 @@ Initial Brightnesses
 0.0
 5.0
 true
+true
 false
 "histogram [item 2 extract-hsb approximate-rgb (item 0 color) (item 1 color) (item 2 color)] of bugs" "if max-number-of-brightness > 5 [set-plot-y-range 0 max-number-of-brightness]"
 PENS
@@ -240,6 +247,7 @@ value
 10.0
 0.0
 255.0
+true
 true
 true
 "" ""
@@ -262,6 +270,7 @@ vector diff
 0.0
 10.0
 true
+true
 false
 "" ""
 PENS
@@ -281,6 +290,7 @@ pressure
 20.0
 0.0
 100.0
+true
 true
 false
 "" ""
@@ -302,6 +312,7 @@ energy
 40000.0
 true
 true
+true
 "set-plot-y-range 0 max list 1 (tot-particle-energy * 2)" ""
 PENS
 "Total" 1.0 0 -16777216 true "" "plotxy ticks total-energy"
@@ -321,6 +332,7 @@ height
 50.0
 0.0
 70.0
+true
 true
 false
 "set-plot-y-range 0 (2 * raw-height)" ""
