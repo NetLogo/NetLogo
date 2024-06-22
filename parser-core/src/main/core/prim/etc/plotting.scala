@@ -59,6 +59,8 @@ abstract class PlotReporter(returnType: Int, args: Int*) extends Reporter {
 }
 
 case class _autoplot() extends PlotReporter(Syntax.BooleanType)
+case class _autoplotx() extends PlotReporter(Syntax.BooleanType)
+case class _autoploty() extends PlotReporter(Syntax.BooleanType)
 case class _plotname() extends PlotReporter(Syntax.StringType)
 case class _plotxmin() extends PlotReporter(Syntax.NumberType)
 case class _plotxmax() extends PlotReporter(Syntax.NumberType)
