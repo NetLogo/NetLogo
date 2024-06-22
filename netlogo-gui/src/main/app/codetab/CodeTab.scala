@@ -11,7 +11,7 @@ import javax.swing.{AbstractAction, Action, JComponent, JPanel}
 
 import org.nlogo.agent.Observer
 import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, TabsInterface, Events => AppEvents}
-import org.nlogo.core.{AgentKind, I18N}
+import org.nlogo.core.{ AgentKind, CompilerException, I18N }
 import org.nlogo.editor.DumbIndenter
 import org.nlogo.ide.FocusedOnlyAction
 import org.nlogo.swing.Utils.icon
@@ -134,7 +134,11 @@ with MenuTab {
           return None
       }
     }
-    workspace.compiler.findIncludes(path, getText, workspace.getCompilationEnvironment)
+    try {
+      workspace.compiler.findIncludes(path, getText, workspace.getCompilationEnvironment)
+    } catch {
+      case e: CompilerException => None
+    }
   }
 
   def agentClass = classOf[Observer]
