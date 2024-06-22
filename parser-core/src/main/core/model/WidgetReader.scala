@@ -116,17 +116,28 @@ object WidgetReader {
       "TEXTBOX"         -> TextBoxReader,
       "INPUTBOX"        -> InputBoxReader
     )
+  
+  // helper for converting old models to new plot widget format, but can be
+  // extended for any such conversion - IB 6/21/24
+  def upgradeWidgetFormat(widget: List[String]): List[String] = {
+    if (widget(0) == "PLOT" && widget.indexOf("PENS") == 15)
+      // insert duplicate of autoplot to sync autoplotx and autoploty in new format
+      widget.take(13) ++ (widget(12) :: widget.drop(13))
+    else
+      widget
+  }
 
   def read(lines: List[String], parser: LiteralParser,
     additionalReaders: Map[String, WidgetReader] = Map(),
     conversion: String => String = identity): Widget = {
+    val upgradedLines = upgradeWidgetFormat(lines)
     val readers = (defaultReaders ++ additionalReaders).values
-    readers.find(_.validate(lines)) match {
-      case Some(reader) => reader.parse(lines, parser).convertSource(conversion)
+    readers.find(_.validate(upgradedLines)) match {
+      case Some(reader) => reader.parse(upgradedLines, parser).convertSource(conversion)
       case None =>
         throw new RuntimeException(
           s"Dimensions provided don't match the NetLogo file reader\n" +
-          s"Couldn't find corresponding reader for ${lines.head}")
+          s"Couldn't find corresponding reader for ${upgradedLines.head}")
     }
   }
 
