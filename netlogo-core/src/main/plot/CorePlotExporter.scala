@@ -19,7 +19,7 @@ class CorePlotExporter(private val plot: PlotInterface, private val csv: CSV) {
     writer.println(csv.data(plot.name))
     writer.println(csv.headerRow(Array(
       "x min", "x max", "y min", "y max",
-      "autoplot?", "current pen",
+      "autoplot x?", "autoplot y?", "current pen",
       "legend open?",
       "number of pens")))
     writer.println(csv.dataRow(Array(
