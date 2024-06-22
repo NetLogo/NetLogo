@@ -47,6 +47,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
       constraint.defaultValue = on
       updateConstraints()
       doLayout()
+      new Events.WidgetEditedEvent(this).raise(this)
     }
   }
 

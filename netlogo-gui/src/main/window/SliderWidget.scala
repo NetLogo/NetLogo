@@ -49,11 +49,13 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     sliderData.value = d;
     revalidate();
     repaint()
+    new Events.WidgetEditedEvent(this).raise(this)
   }
   def value_=(d:Double, buttonRelease:Boolean){
     sliderData.value_=(d, buttonRelease);
     revalidate();
     repaint()
+    new Events.WidgetEditedEvent(this).raise(this)
   }
   def coerceValue(value: Double): Double = sliderData.coerceValue(value)
 
