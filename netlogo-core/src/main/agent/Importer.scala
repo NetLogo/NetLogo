@@ -107,15 +107,31 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
       (0, None)
     else {
       val line = nextLine()
-      plot.state = PlotState(
-        xMin = readNumber(line(0)),
-        xMax = readNumber(line(1)),
-        yMin = readNumber(line(2)),
-        yMax = readNumber(line(3)),
-        autoPlotX = readBoolean(line(4)),
-        autoPlotY = readBoolean(line(5)))
-      plot.legendIsOpen_=(readBoolean(line(7)))
-      (readNumber(line(8)).toInt, Option(readString(line(6))))
+      for (str <- line) {
+        println(str)
+      }
+      if (line.length == 8) {
+        plot.state = PlotState(
+          xMin = readNumber(line(0)),
+          xMax = readNumber(line(1)),
+          yMin = readNumber(line(2)),
+          yMax = readNumber(line(3)),
+          autoPlotX = readBoolean(line(4)),
+          autoPlotY = readBoolean(line(4)))
+        plot.legendIsOpen_=(readBoolean(line(6)))
+        (readNumber(line(7)).toInt, Option(readString(line(5))))
+      }
+      else {
+        plot.state = PlotState(
+          xMin = readNumber(line(0)),
+          xMax = readNumber(line(1)),
+          yMin = readNumber(line(2)),
+          yMax = readNumber(line(3)),
+          autoPlotX = readBoolean(line(4)),
+          autoPlotY = readBoolean(line(5)))
+        plot.legendIsOpen_=(readBoolean(line(7)))
+        (readNumber(line(8)).toInt, Option(readString(line(6))))
+      }
     }
 
   def importPens(plot: PlotInterface, numPens: Int) {
