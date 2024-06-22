@@ -51,7 +51,8 @@ private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervis
       plotWidget.plot.defaultYMin = 0
       plotWidget.plot.defaultXMax = 1
       plotWidget.plot.defaultYMax = 1
-      plotWidget.plot.defaultAutoPlotOn = true
+      plotWidget.plot.defaultAutoPlotX = true
+      plotWidget.plot.defaultAutoPlotY = true
       plotWidget.xLabel(I18N.gui("plot.time"))
       plotWidget.yLabel(I18N.gui("plot.behavior"))
       plotWidget.clear()

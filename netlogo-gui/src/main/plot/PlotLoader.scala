@@ -14,7 +14,8 @@ object PlotLoader {
     plot.defaultXMax = corePlot.xmax
     plot.defaultYMax = corePlot.ymax
     plot.defaultYMin = corePlot.ymin
-    plot.defaultAutoPlotOn = corePlot.autoPlotOn
+    plot.defaultAutoPlotX = corePlot.autoPlotX
+    plot.defaultAutoPlotY = corePlot.autoPlotY
     plot.setupCode = corePlot.setupCode
     plot.updateCode = corePlot.updateCode
     plot.pens = corePlot.pens.map(loadPen(plot))
@@ -45,7 +46,8 @@ object PlotLoader {
       plot.defaultYMax = plotLines(11).toDouble
     }
     if (12 < plotLines.length)
-      plot.defaultAutoPlotOn = plotLines(12).toBoolean
+      plot.defaultAutoPlotX = plotLines(12).toBoolean // FIX FIX FIX LATER LATER LATER
+      plot.defaultAutoPlotY = plotLines(12).toBoolean
     if (14 < plotLines.length) {
       parseStringLiterals(plotLines(14)) match {
         case Nil => // old style model, no new plot code. this is ok.

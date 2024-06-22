@@ -27,7 +27,8 @@ class CorePlotExporter(private val plot: PlotInterface, private val csv: CSV) {
       Double.box(plot.state.xMax),
       Double.box(plot.state.yMin),
       Double.box(plot.state.yMax),
-      Boolean.box(plot.state.autoPlotOn),
+      Boolean.box(plot.state.autoPlotX),
+      Boolean.box(plot.state.autoPlotY),
       plot.currentPen.map(_.name).getOrElse(""),
       Boolean.box(plot.legendIsOpen),
       Int.box(plot.pens.size))))

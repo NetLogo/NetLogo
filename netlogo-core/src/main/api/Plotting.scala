@@ -17,7 +17,8 @@ trait PlotManagerInterface {
 }
 
 case class PlotState(
-  autoPlotOn: Boolean = true,
+  autoPlotX: Boolean = true,
+  autoPlotY: Boolean = true,
   xMin: Double = 0,
   xMax: Double = 10,
   yMin: Double = 0,

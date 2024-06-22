@@ -57,6 +57,10 @@ C ask _ask
 C ask-concurrent _askconcurrent
 C auto-plot-off plot._autoplotoff
 C auto-plot-on plot._autoploton
+C auto-plot-x-off plot._autoplotxoff
+C auto-plot-x-on plot._autoplotxon
+C auto-plot-y-off plot._autoplotyoff
+C auto-plot-y-on plot._autoplotyon
 C back _bk
 C beep gui._beep
 C bk _bk

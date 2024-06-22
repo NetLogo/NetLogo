@@ -210,10 +210,20 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
         widgets.toList
     }
 
+    // helper for converting old models to new plot widget format, but can be
+    // extended for any such conversion - IB 6/21/24
+    private def upgradeWidgetFormat(widget: List[String]): List[String] = {
+      if (widget(0) == "PLOT" && widget.indexOf("PENS") == 15)
+        // insert duplicate of autoplot to sync autoplotx and autoploty in new format
+        widget.take(13) ++ (widget(12) :: widget.drop(13))
+      else
+        widget
+    }
+
     override def deserialize(s: Array[String]) = {(m: Model) =>
       Try {
         val widgets = parseWidgets(s)
-        m.copy(widgets = widgets.map(w => WidgetReader.read(w.toList, literalParser, additionalReaders)))
+        m.copy(widgets = widgets.map(w => WidgetReader.read(upgradeWidgetFormat(w.toList), literalParser, additionalReaders)))
       }
     }
   }

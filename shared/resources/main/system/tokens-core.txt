@@ -25,6 +25,10 @@ C ask _ask
 C ask-concurrent _askconcurrent
 C auto-plot-off etc._autoplotoff
 C auto-plot-on etc._autoploton
+C auto-plot-x-off etc._autoplotxoff
+C auto-plot-x-on etc._autoplotxon
+C auto-plot-y-off etc._autoplotyoff
+C auto-plot-y-on etc._autoplotyon
 C back _bk
 C beep etc._beep
 C bk _bk

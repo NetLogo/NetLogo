@@ -282,20 +282,21 @@ object PlotReader extends BaseWidgetReader {
                         DoubleLine(),   // xmax
                         DoubleLine(),   // ymin
                         DoubleLine(),   // ymax
-                        StringBooleanLine(), // autoploton
+                        StringBooleanLine(), // autoplotx
+                        StringBooleanLine(), // autoploty
                         StringBooleanLine(), // legend on
                         StringLine(Some(""""" """""))   // Double code lines, parse later
                       )
   def asList(plot: Plot) = List((), plot.left, plot.top, plot.right, plot.bottom, plot.display,
                                     plot.xAxis, plot.yAxis, plot.xmin, plot.xmax, plot.ymin, plot.ymax,
-                                    plot.autoPlotOn, plot.legendOn,
+                                    plot.autoPlotX, plot.autoPlotY, plot.legendOn,
                                     "\"" + escapeString(plot.setupCode) + "\" \"" + escapeString(plot.updateCode) + "\"")
   def asWidget(vals: List[Any], literalParser: LiteralParser): Plot = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, display: Option[String] @unchecked,
       xAxis: Option[String] @unchecked, yAxis: Option[String] @unchecked, xmin: Double, xmax: Double, ymin: Double, ymax: Double,
-      autoPlotOn: Boolean, legendOn: Boolean, code: String, pens: List[Pen] @unchecked) = vals
+      autoPlotX: Boolean, autoPlotY: Boolean, legendOn: Boolean, code: String, pens: List[Pen] @unchecked) = vals
     val List(setupCode: String, updateCode: String) = PenReader.parseStringLiterals(code)
-    Plot(display, left, top, right, bottom, xAxis, yAxis, xmin, xmax, ymin, ymax, autoPlotOn, legendOn,
+    Plot(display, left, top, right, bottom, xAxis, yAxis, xmin, xmax, ymin, ymax, autoPlotX, autoPlotY, legendOn,
          unescapeString(setupCode), unescapeString(updateCode), pens)
   }
 
