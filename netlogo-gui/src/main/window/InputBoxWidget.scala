@@ -32,6 +32,7 @@ class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEdito
       if (!text.equals(textArea.getText())) textArea.setText(text)
       if (raiseEvent) new org.nlogo.window.Events.InterfaceGlobalEvent(this, false, false, true, false).raise(this)
       inputType.colorPanel(colorSwatch)
+      new Events.WidgetEditedEvent(this).raise(this)
     }
   }
 }
