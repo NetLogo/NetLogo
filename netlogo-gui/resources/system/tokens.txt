@@ -289,6 +289,8 @@ R asin etc._asin
 R at-points etc._atpoints
 R atan etc._atan
 R autoplot? plot._autoplot
+R autoplotx? plot._autoplotx
+R autoploty? plot._autoploty
 R base-colors etc._basecolors
 R behaviorspace-experiment-name etc._behaviorspaceexperimentname
 R behaviorspace-run-number etc._behaviorspacerunnumber
