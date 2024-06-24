@@ -36,8 +36,6 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   locally {
     displayName = plot.name
 
-    setBorder(widgetBorder)
-    setOpaque(true)
     // this is needed because the PlotLegend is going to use us to
     // get a font - ST 9/2/04
     // since the PlotLegend is added and removed from the widget
@@ -46,7 +44,8 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     // PlotLegend - ST 2/22/06
     org.nlogo.awt.Fonts.adjustDefaultFont(this)
 
-    setBackground(InterfaceColors.PLOT_BACKGROUND)
+    backgroundColor = InterfaceColors.PLOT_BACKGROUND
+
     plot.clear() // set current values to defaults
 
     val gridbag = new java.awt.GridBagLayout()

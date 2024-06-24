@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import java.awt.{ Component, Dimension, Font, Point, Rectangle }
-import javax.swing.{ JPopupMenu, BorderFactory }
+import javax.swing.JPopupMenu
 
 import org.nlogo.api.{ Approximate, Version }
 import org.nlogo.awt.{ Fonts => NlogoFonts }
@@ -37,10 +37,8 @@ class ViewWidget(workspace: GUIWorkspace)
 
   NlogoFonts.adjustDefaultFont(tickCounter)
 
-  setBackground(InterfaceColors.GRAPHICS_BACKGROUND)
-  setBorder(BorderFactory.createCompoundBorder(
-        widgetBorder,
-        BorderFactory.createMatteBorder(1, 1, 2, 2, InterfaceColors.GRAPHICS_BACKGROUND)))
+  backgroundColor = InterfaceColors.GRAPHICS_BACKGROUND
+
   setLayout(null)
   add(view)
   val settings: WorldViewSettings =

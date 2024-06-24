@@ -19,8 +19,6 @@ class ChooserWidget(val compiler: CompilerServices)
 
   def name: String = _name
 
-  setBorder(widgetBorder)
-
   override def propertySet = Properties.chooser
   override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.chooser")
   // don't send an event unless the name of the variable

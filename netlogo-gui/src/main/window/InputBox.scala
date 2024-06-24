@@ -48,12 +48,10 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   }
   protected val colorSwatch: JButton = new JButton("black"){
     setFont(javax.swing.UIManager.getFont("Label.font").deriveFont(9.0f))
-    setBorder(widgetBorder)
     addActionListener(new SelectColorActionListener())
     // on winXP if we don't set this the color in the button doesn't show up ev 2/15/08
     // after UI redesign this made color no longer appear on any platform (IB 6/3/24)
     // setContentAreaFilled(false)
-    setOpaque(true)
   }
 
   private val scroller: JScrollPane = new JScrollPane(textArea,
@@ -141,9 +139,8 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
 
     multiline(multiline)
 
-    setBackground(InterfaceColors.SLIDER_BACKGROUND)
-    setBorder(widgetBorder)
-    setOpaque(true)
+    backgroundColor = InterfaceColors.INPUT_BACKGROUND
+
     org.nlogo.awt.Fonts.adjustDefaultFont(this)
 
     val layout = new java.awt.GridBagLayout()
@@ -365,11 +362,10 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   override def getMaximumSize = null
 
   protected class NLButton(title:String) extends JButton(title) {
+    backgroundColor = InterfaceColors.GRAPHICS_BACKGROUND
+
     setFont(new Font(platformFont,Font.PLAIN, 10))
-    setBackground(InterfaceColors.GRAPHICS_BACKGROUND)
-    setBorder(org.nlogo.swing.Utils.createWidgetBorder)
     setFocusable(false)
-    setOpaque(false)
     setFont(new Font(platformFont, Font.PLAIN, 10))
     // without this it looks funny on Windows - ST 9/18/03
     override def updateUI() { setUI(new BasicButtonUI()) }

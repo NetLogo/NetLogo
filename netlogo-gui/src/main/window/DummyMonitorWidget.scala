@@ -34,9 +34,8 @@ class DummyMonitorWidget
   def innerSource = ""
   def fontSize = DefaultFontSize
 
-  setOpaque(true)
-  setBackground(InterfaceColors.MONITOR_BACKGROUND)
-  setBorder(widgetBorder)
+  backgroundColor = InterfaceColors.MONITOR_BACKGROUND
+
   org.nlogo.awt.Fonts.adjustDefaultFont(this)
 
   def name: String = _name

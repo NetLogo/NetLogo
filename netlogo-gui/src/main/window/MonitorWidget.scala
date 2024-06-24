@@ -70,10 +70,10 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   private var _fontSize = DefaultFontSize
 
-  setOpaque(true)
   addMouseListener(this)
-  setBackground(InterfaceColors.MONITOR_BACKGROUND)
-  setBorder(widgetBorder)
+
+  backgroundColor = InterfaceColors.MONITOR_BACKGROUND
+
   NlogoFonts.adjustDefaultFont(this)
 
   def name(name: String): Unit = {

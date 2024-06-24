@@ -34,8 +34,8 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   private val control = new ComboBox
 
   locally {
-    setOpaque(true);
-    setBackground(InterfaceColors.SLIDER_BACKGROUND)
+    backgroundColor = InterfaceColors.CHOOSER_BACKGROUND
+
     setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS))
     add(control)
     doLayout()
