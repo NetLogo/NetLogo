@@ -62,11 +62,13 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   // however, for numbers there will be a Double rather than
   // a String in the value field.  ev 8/13/06
   protected var text = ""
+  protected var oldText = ""
   protected var value: Option[AnyRef] = Option.empty[AnyRef]
   def valueText = text
   def valueObject = value.orNull
   def valueObject(value: AnyRef) {valueObject(value, false)}
   def valueObject(value: Any, raiseEvent: Boolean) {
+    oldText = text
     text = Dump.logoObject(toAnyRef(value))
     this.value = Option(toAnyRef(value))
     if (text != textArea.getText) textArea.setText(text)
@@ -192,6 +194,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
             try inputText(inputType.readValue(InputBox.this.textArea.getText))
             catch {
               case ex@(_:LogoException|_:CompilerException|_:ValueConstraint.Violation) =>
+                inputText(oldText)
             }
             editing = false
           }
