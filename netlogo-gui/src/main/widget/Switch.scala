@@ -26,9 +26,8 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   protected var nameChanged = false
   protected var _name = ""
 
-  setBackground(InterfaceColors.SWITCH_BACKGROUND)
-  setBorder(widgetBorder)
-  setOpaque(true)
+  backgroundColor = InterfaceColors.SWITCH_BACKGROUND
+
   org.nlogo.awt.Fonts.adjustDefaultFont(this)
   setLayout(new FlowLayout(FlowLayout.LEFT))
   add(checkBox)

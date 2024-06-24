@@ -24,8 +24,8 @@ class DummyButtonWidget
 
   import DummyButtonWidget._
 
-  setBackground(InterfaceColors.BUTTON_BACKGROUND)
-  setBorder(widgetBorder)
+  backgroundColor = InterfaceColors.BUTTON_BACKGROUND
+
   org.nlogo.awt.Fonts.adjustDefaultFont(this)
 
   private var _actionKey: Char = '\u0000'
@@ -88,8 +88,7 @@ class DummyButtonWidget
   /// painting
 
   override def paintComponent(g: Graphics): Unit = {
-    g.setColor(getBackground)
-    g.fillRect(0, 0, getWidth, getHeight)
+    super.paintComponent(g)
     val size = getSize()
     val fontMetrics = g.getFontMetrics
     val labelHeight =

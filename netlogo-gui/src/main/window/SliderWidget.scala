@@ -26,8 +26,8 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   locally {
     slider = new JSlider(0, ((maximum - minimum) / increment).asInstanceOf[Int], 0)
 
-    setBackground(InterfaceColors.SLIDER_BACKGROUND)
-    setBorder(widgetBorder)
+    backgroundColor = InterfaceColors.SLIDER_BACKGROUND
+
     setLayout(new GridBagLayout())
 
     val margin = 6

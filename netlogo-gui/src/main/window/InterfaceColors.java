@@ -31,10 +31,10 @@ public final class InterfaceColors {
 
 
   // new flatlaf colors
-  private static final java.awt.Color LIGHT_GRAY = new java.awt.Color(240, 240, 240);
-  private static final java.awt.Color DARK_GRAY = new java.awt.Color(200, 200, 200);
-  private static final java.awt.Color INPUT_BACKGROUND = new java.awt.Color(160, 240, 200);
-  private static final java.awt.Color OUTPUT_BACKGROUND = new java.awt.Color(180, 240, 240);
+  public static final java.awt.Color LIGHT_GRAY = new java.awt.Color(240, 240, 240);
+  public static final java.awt.Color DARK_GRAY = new java.awt.Color(200, 200, 200);
+  public static final java.awt.Color INPUT_BACKGROUND = new java.awt.Color(160, 240, 200);
+  public static final java.awt.Color OUTPUT_BACKGROUND = new java.awt.Color(180, 240, 240);
 
   public static final java.awt.Color TEXT_BOX_BACKGROUND = java.awt.Color.WHITE;
   public static final java.awt.Color TRANSPARENT = new java.awt.Color(0, 0, 0, 0);
@@ -44,6 +44,7 @@ public final class InterfaceColors {
   public static final java.awt.Color SLIDER_HANDLE = LIGHT_GRAY;
   public static final java.awt.Color SWITCH_BACKGROUND = INPUT_BACKGROUND;
   public static final java.awt.Color SWITCH_HANDLE = LIGHT_GRAY;
+  public static final java.awt.Color CHOOSER_BACKGROUND = INPUT_BACKGROUND;
   public static final java.awt.Color GRAPHICS_BACKGROUND = Constants.ViewBackground();
   public static final java.awt.Color GRAPHICS_HANDLE = DARK_GRAY;
   public static final java.awt.Color MONITOR_BACKGROUND = OUTPUT_BACKGROUND;

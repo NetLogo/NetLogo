@@ -82,8 +82,9 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   locally {
     addMouseListener(this)
     addMouseMotionListener(this)
-    setBackground(InterfaceColors.BUTTON_BACKGROUND)
-    setBorder(widgetBorder)
+
+    backgroundColor = InterfaceColors.BUTTON_BACKGROUND
+
     org.nlogo.awt.Fonts.adjustDefaultFont(this)
   }
 
@@ -110,9 +111,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   def buttonUp_=(newButtonUp:Boolean){
     if(newButtonUp) foreverOn = false
     _buttonUp = newButtonUp
-    if(buttonUp) setBorder(widgetBorder)
-    else{
-      setBorder(widgetPressedBorder)
+    if (!buttonUp) {
       // this is an attempt to get the button to invert for at least
       // a fraction of a second when a keyboard shortcut is used on
       // a once button - ST 8/6/04
@@ -375,10 +374,9 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     val g2d = g.asInstanceOf[Graphics2D]
     g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     def drawAsUp = buttonUp && !running
-    def getPaintColor = if (drawAsUp) getBackground else getForeground
     def paintButtonRectangle(g: Graphics) {
-      g.setColor(getPaintColor)
-      g.fillRect(0, 0, getWidth(), getHeight())
+      backgroundColor = if (drawAsUp) InterfaceColors.BUTTON_BACKGROUND else getForeground
+      super.paintComponent(g)
       def renderImages(g: Graphics, dark: Boolean) {
         def maybePaintForeverImage() {
           if (forever) {

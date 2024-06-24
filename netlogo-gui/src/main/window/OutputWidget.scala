@@ -10,9 +10,9 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   org.nlogo.window.Events.ExportWorldEvent.Handler with Editable {
   type WidgetModel = CoreOutput
 
+  backgroundColor = InterfaceColors.OUTPUT_BACKGROUND
+
   setLayout(new java.awt.BorderLayout())
-  setBorder(widgetBorder)
-  setBackground(InterfaceColors.MONITOR_BACKGROUND)
   displayName(I18N.gui.get("tabs.run.widgets.output"))
   val outputArea = new OutputArea()
   add(new javax.swing.JPanel() {

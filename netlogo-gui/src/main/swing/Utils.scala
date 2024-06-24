@@ -2,11 +2,10 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Color, Frame }
+import java.awt.Frame
 import java.awt.event.KeyEvent
 
-import javax.swing.{ Action, BorderFactory, ImageIcon, InputMap, JComponent, JDialog,
-  JWindow, KeyStroke }
+import javax.swing.{ Action, ImageIcon, InputMap, JComponent, JDialog, JWindow, KeyStroke }
 
 final object Utils {
   val utilsClass = getClass
@@ -24,14 +23,6 @@ final object Utils {
     bogusFrame.pack() // otherwise OptionDialog will fail to get font metrics
     OptionDialog.showMessage(bogusFrame, title, s"$message\n\n$details", Array(continueText))
   }
-
-  /// borders
-
-  private val WidgetBorder = BorderFactory.createLineBorder(new Color(128, 128, 128), 1);
-  private val WidgetPressedBorder = BorderFactory.createLineBorder(new Color(128, 128, 128), 1);
-
-  def createWidgetBorder() = WidgetBorder
-  def createWidgetPressedBorder() = WidgetPressedBorder
 
   /// Esc key handling in dialogs
 
