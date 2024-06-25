@@ -10,7 +10,7 @@ class RecentFilesTests extends AnyFunSuite {
   val models = (1 to rf.maxEntries).map(makePath).map(ModelEntry(_, api.ModelType.Normal)).toList ++
                (9 to rf.maxEntries).map(makePath).map(ModelEntry(_, api.ModelType.Library)).toList
   val extraModel = ModelEntry(makePath(rf.maxEntries + 1), api.ModelType.Normal)
-  def makePath(n: Int) = "/" + n + ".nlogo"
+  def makePath(n: Int) = "/" + n + (if (api.Version.is3D) ".nlogo3d" else ".nlogo")
 
   def putAndLoad(models: List[ModelEntry]) {
     rf.prefs.put(rf.key, models.mkString("\n"))

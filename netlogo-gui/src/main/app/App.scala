@@ -22,6 +22,7 @@ import org.nlogo.fileformat
 import org.nlogo.log.{ JsonFileLogger, LogEvents, LogManager }
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
+import org.nlogo.swing.OptionDialog
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
@@ -439,7 +440,10 @@ class App extends
       val studentName       = askForName()
       val addListener       = (l) => listenerManager.addListener(l)
       val loggerFactory     = (p) => new JsonFileLogger(p)
-      LogManager.start(addListener, loggerFactory, finalLogDirectory, events, studentName)
+      LogManager.start(addListener, loggerFactory, finalLogDirectory, events, studentName, () =>
+        OptionDialog.showMessage(frame, I18N.gui.get("common.messages.warning"),
+                                 I18N.gui.get("error.dialog.logDirectory"),
+                                 Array[Object](I18N.gui.get("common.buttons.ok"))))
     }
 
   }
@@ -621,7 +625,7 @@ class App extends
       // if recent list is empty we need the new model, or if loading the recent model
       // fails then we'll fall back on it.  -Jeremy B June 2021
       fileManager.newModel()
-      val recentFiles = (new RecentFiles).models.filter(x => Version.is3D == x.path.endsWith(".nlogo3d"))
+      val recentFiles = (new RecentFiles).models
       if (!recentFiles.isEmpty) {
         val modelEntry = recentFiles.head
         fileManager.openFromPath(modelEntry.path, modelEntry.modelType)
