@@ -36,8 +36,7 @@ class JsonFileLogger(private val logDirectoryPath: Path) extends FileLogger {
     val logFileName = s"netlogo_log_${now.format(DateTimeFormats.file)}.json"
     val logFilePath = logDirectoryPath.resolve(logFileName)
     val logFile     = logFilePath.toFile()
-    // There can be exceptions thrown here, but we let them go as they'll signal to the log manager that we're unable to
-    // start and it should fall back to a different logger.  -Jeremy B February 2024
+    logFile.getParentFile.mkdirs
     new PrintWriter(new FileWriter(logFile))
   }
 
