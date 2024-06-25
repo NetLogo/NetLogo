@@ -6,6 +6,7 @@ import java.awt.{ BorderLayout, Component, Container,
   ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.{ PageFormat, Printable }
+import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
 import javax.swing.{ AbstractAction, Action, BorderFactory, JComponent,
   JPanel, JScrollPane, JSplitPane, ScrollPaneConstants }
 
@@ -42,9 +43,11 @@ class InterfaceTab(workspace: GUIWorkspace,
   commandCenter.locationToggleAction = new CommandCenterLocationToggleAction
   val iP = new InterfacePanel(workspace.viewWidget, workspace)
 
+  val commandCenterToggleAction = new CommandCenterToggleAction()
+
   override val activeMenuActions =
     WorkspaceActions.interfaceActions(workspace) ++
-    Seq(iP.undoAction, iP.redoAction, new CommandCenterToggleAction(), new JumpToCommandCenterAction())
+    Seq(iP.undoAction, iP.redoAction, commandCenterToggleAction, new JumpToCommandCenterAction())
 
   var lastFocusedComponent: JComponent = commandCenter
   setLayout(new BorderLayout)
@@ -68,6 +71,13 @@ class InterfaceTab(workspace: GUIWorkspace,
     scrollPane, commandCenter)
   splitPane.setOneTouchExpandable(true)
   splitPane.setResizeWeight(1) // give the InterfacePanel all
+  splitPane.addPropertyChangeListener("dividerLocation", new PropertyChangeListener {
+    def propertyChange(e: PropertyChangeEvent) {
+      commandCenterToggleAction.putValue(Action.NAME,
+        if (e.getNewValue.asInstanceOf[Int] < maxDividerLocation) I18N.gui.get("menu.tools.hideCommandCenter")
+        else I18N.gui.get("menu.tools.showCommandCenter"))
+    }
+  })
   add(splitPane, BorderLayout.CENTER)
 
   object TrackingFocusListener extends FocusListener {
@@ -199,9 +209,6 @@ class InterfaceTab(workspace: GUIWorkspace,
         showCommandCenter()
         commandCenter.requestFocus()
       }
-      putValue(Action.NAME,
-        if (splitPane.getDividerLocation < maxDividerLocation) I18N.gui.get("menu.tools.hideCommandCenter")
-        else I18N.gui.get("menu.tools.showCommandCenter"))
     }
   }
 
