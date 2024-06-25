@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent
 import java.util.prefs.Preferences
 import javax.swing.{AbstractAction, Action, JOptionPane}
 
-import org.nlogo.api.ModelType
+import org.nlogo.api.{ ModelType, Version }
 import org.nlogo.core.I18N
 import org.nlogo.swing.UserAction, UserAction.{ Menu => ActionMenu, MenuAction }
 import org.nlogo.window.Events._
@@ -81,7 +81,7 @@ class OpenRecentFileAction(modelEntry: ModelEntry, fileManager: FileManager, ind
 
 class RecentFiles {
   val prefs = Preferences.userNodeForPackage(getClass)
-  val key = "recent_files"
+  val key = if (Version.is3D) "recent_files_3d" else "recent_files"
   val maxEntries = 8
 
   loadFromPrefs()
@@ -92,6 +92,7 @@ class RecentFiles {
     _models = newModels
       .flatMap(ensureCanonicalPath)
       .distinct
+      .filter(x => Version.is3D == x.path.endsWith(".nlogo3d"))
       .take(maxEntries)
     prefs.put(key, _models.mkString("\n"))
   }
