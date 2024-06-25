@@ -3,11 +3,12 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Frame }
+import java.io.File
 import java.util.prefs.{ Preferences => JavaPreferences }
 import javax.swing.{ BorderFactory, Box, BoxLayout, JButton, SwingConstants }
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ RichAction, TextFieldBox }
+import org.nlogo.swing.{ OptionDialog, RichAction, TextFieldBox }
 
 class PreferencesDialog(parent: Frame, preferences: Preference*)
 extends ToolDialog(parent, "preferences") {
@@ -15,16 +16,37 @@ extends ToolDialog(parent, "preferences") {
 
   private def reset() = {
     preferences foreach (_.load(netLogoPrefs))
-    apply()
   }
   private def ok() = {
-    apply()
-    setVisible(false)
+    if (apply()) setVisible(false)
   }
-  private def apply() = preferences foreach (_.save(netLogoPrefs))
+  private def apply(): Boolean = {
+    if (validatePrefs()) {
+      preferences foreach (_.save(netLogoPrefs))
+      return true
+    }
+    false
+  }
   private def cancel() = {
     reset()
     setVisible(false)
+  }
+  private def validatePrefs(): Boolean = {
+    if (preferences.find(x => x.i18nKey == "loggingEnabled").get.
+        asInstanceOf[Preferences.BooleanPreference].component.isSelected) {
+      val path = preferences.find(x => x.i18nKey == "logDirectory").get.
+                 asInstanceOf[Preferences.LogDirectory].textField.getText
+      val file = new File(path)
+      if (path.nonEmpty && !file.exists) {
+        if (OptionDialog.showMessage(this, I18N.gui.get("common.messages.warning"),
+                                              I18N.gui.get("tools.preferences.missingDirectory"),
+                                              Array[Object](I18N.gui.get("common.buttons.ok"),
+                                                            I18N.gui.get("common.buttons.cancel"))) == 1)
+          return false
+        file.mkdirs
+      }
+    }
+    true
   }
 
   override def initGUI() = {
