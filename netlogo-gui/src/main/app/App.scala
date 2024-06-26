@@ -755,6 +755,26 @@ class App extends
 
   ///
 
+  private def setWindowTitles() {
+    tabManager.codeTabsPanelOption match {
+      case None =>
+        frame.setTitle(
+          tabManager.getSelectedComponent match {
+            case tempTab: TemporaryCodeTab => externalFileTitle(tempTab.filename.merge)
+            case _ => modelTitle()
+          }
+        )
+      case Some(thePanel) =>
+        frame.setTitle(modelTitle())
+        thePanel.codeTabContainer.setTitle(
+          thePanel.currentTab match {
+            case tempTab: TemporaryCodeTab => externalFileTitle(tempTab.filename.merge)
+            case _ => modelTitle(allowDirtyMarker = false)
+          }
+        )
+    }
+  }
+
   /**
    * Internal use only.
    */
@@ -765,23 +785,7 @@ class App extends
     } else if (e.oldTab == tabs.interfaceTab) {
       monitorManager.hideAll()
     }
-    tabManager.codeTabsPanelOption match {
-      case None           => {
-        val appWindowTitle = e.newTab match {
-          case tab: TemporaryCodeTab => externalFileTitle(tab.filename.merge)
-          case _                     => modelTitle()
-        }
-        frame.setTitle(appWindowTitle)
-      }
-      case Some(thePanel) =>  {
-        val codeWindowTitle = e.newTab match {
-          case tab: TemporaryCodeTab => externalFileTitle(tab.filename.merge)
-          case _                     => modelTitle(allowDirtyMarker = false)
-        }
-        thePanel.codeTabContainer.setTitle(codeWindowTitle)
-        frame.setTitle(modelTitle())
-      }
-    }
+    setWindowTitles()
   }
 
   /**
@@ -797,11 +801,6 @@ class App extends
     workspace.modelSaved(e.modelPath)
     errorDialogManager.setModelName(workspace.modelNameForDisplay)
     if (AbstractWorkspace.isApp) {
-      frame.setTitle(modelTitle())
-      tabManager.codeTabsPanelOption match {
-        case None           =>
-        case Some(thePanel) => thePanel.codeTabContainer.setTitle(modelTitle(allowDirtyMarker = false))
-      }
       workspace.hubNetManager.foreach { manager =>
         manager.setTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType)
       }
