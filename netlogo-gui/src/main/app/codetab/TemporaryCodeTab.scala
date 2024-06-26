@@ -113,7 +113,6 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
         if (Dialogs.userWantsToSaveFirst(filenameForDisplay, this)) {
           // The user is saving the file with its current name
           save(false)
-          compile()
         }
       }
       // Remove the file from the map from file names to TemporaryCodeTabs
@@ -121,6 +120,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
       closing = true
       // Remove from the set of TemporaryCodeTabs in Tabs and remove the tab from the JTabbedPane
       tabs.closeExternalFile(filename)
+      compile()
     }
   }
 
