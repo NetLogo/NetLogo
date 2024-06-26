@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.Component
+import java.awt.{ Component, KeyboardFocusManager }
 import java.awt.event.{ ActionEvent, KeyEvent }
 import javax.swing.{ Action, AbstractAction, ActionMap, InputMap, JComponent, JMenu, JMenuItem, JTabbedPane, KeyStroke }
 
@@ -49,6 +49,10 @@ class AppTabManager(val appTabsPanel:          Tabs,
   var menuBar: MenuBar = null
 
   var dirtyMonitor: DirtyMonitor = null
+
+  val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager()
+
+  var switchingCodeTabs = false
 
   // The appTabsPanel and the main code tab are unique unchanging entities
   // of class Tabs and MainCodeTab respectively. AAB 10/2020
@@ -247,6 +251,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
     codeTabsPanelOption match {
       case None                => // nothing to do
       case Some(codeTabsPanel) => {
+        switchingCodeTabs = true
         setCodeTabsPanelOption(None)
         // Move the tabs to the AppTabsPanel (Tabs), retaining order. AAB 10/2020
         for (_ <- 0 until codeTabsPanel.getTabCount) {
@@ -256,6 +261,8 @@ class AppTabManager(val appTabsPanel:          Tabs,
         appTabsPanel.mainCodeTab.getPoppingCheckBox.setSelected(false)
         appTabsPanel.mainCodeTab.requestFocus
         appTabsPanel.getAppFrame.removeLinkComponent(codeTabsPanel.getCodeTabContainer)
+        switchingCodeTabs = false
+        appTabsPanel.updateState
         Event.rehash()
       } // end case where work was done. AAB 10/2020
     }
@@ -264,6 +271,7 @@ class AppTabManager(val appTabsPanel:          Tabs,
   // Does the work needed to go back to the separate code window state
   def switchToSeparateCodeWindow(): Unit = {
     if (!isCodeTabSeparate) {
+      switchingCodeTabs = true
       val codeTabsPanel = new CodeTabsPanel(appTabsPanel.workspace,
         appTabsPanel.interfaceTab,
         appTabsPanel.externalFileManager,
@@ -301,6 +309,8 @@ class AppTabManager(val appTabsPanel:          Tabs,
       }
       appTabsPanel.getAppFrame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
       createCodeTabAccelerators()
+      switchingCodeTabs = false
+      codeTabsPanel.updateState
       Event.rehash()
       codeTabsPanel.mainCodeTab.requestFocus
     }
@@ -577,6 +587,18 @@ class AppTabManager(val appTabsPanel:          Tabs,
     require(tab != null)
     val (tabOwner, tabIndex) = ownerAndIndexOfTab(tab)
     setPanelsSelectedIndexHelper(tabOwner, tabIndex)
+  }
+
+  /**
+   * Gets selected tab, regardless of type or whether a separate code window exists.
+   */
+  def getSelectedComponent(): Component = {
+    codeTabsPanelOption match {
+      case Some(codeTabsPanel) if (codeTabsPanel.isAncestorOf(focusManager.getFocusOwner())) =>
+        codeTabsPanel.getComponentAt(codeTabsPanel.getSelectedIndex)
+      case _ =>
+        appTabsPanel.getComponentAt(appTabsPanel.getSelectedIndex)
+    }
   }
 
   /**

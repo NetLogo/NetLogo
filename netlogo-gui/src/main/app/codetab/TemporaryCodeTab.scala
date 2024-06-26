@@ -8,13 +8,11 @@ import java.io.{ File, IOException }
 import javax.swing.{ Action, AbstractAction }
 
 import org.nlogo.api.FileIO
-import org.nlogo.app.common.{ Actions, Dialogs, Events => AppEvents, ExceptionCatchingAction, TabsInterface },
-  Actions.Ellipsis
+import org.nlogo.app.common.{ Dialogs, Events => AppEvents, TabsInterface }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
 import org.nlogo.ide.FocusedOnlyAction
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, ToolBarActionButton, UserAction },
-  UserAction.MenuAction
+import org.nlogo.swing.{ FileDialog => SwingFileDialog, ToolBarActionButton }
 import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, ModelTracker }
 
@@ -76,21 +74,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   lineNumbersVisible = tabs.lineNumbersVisible
 
   override val activeMenuActions = {
-    def saveAction(saveAs: Boolean) = {
-      new ExceptionCatchingAction(if (saveAs) I18N.gui.get("menu.file.saveAs") + Ellipsis else I18N.gui.get("menu.file.save"), TemporaryCodeTab.this)
-      with MenuAction {
-        category    = UserAction.FileCategory
-        group       = UserAction.FileSaveGroup
-        accelerator = UserAction.KeyBindings.keystroke('S', withMenu = true, withShift = saveAs)
-        rank = 0
-
-        @throws(classOf[UserCancelException])
-        override def action(): Unit = {
-          save(saveAs)
-        }
-      }
-    }
-    Seq(saveAction(false), saveAction(true), undoAction, redoAction) ++
+    Seq(undoAction, redoAction) ++
       editorConfiguration.contextActions.filter(_.isInstanceOf[FocusedOnlyAction]) ++
       filename.fold(_ => Seq(), name => Seq(conversionAction(this)))
   }

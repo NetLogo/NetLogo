@@ -89,17 +89,12 @@ class CodeTabsPanel(workspace:            GUIWorkspace,
 
   def stateChanged(e: ChangeEvent) = {
     // for explanation of index -1, see comment in Tabs.stateChanged. AAB 10/2020
-    if (tabManager.getSelectedAppTabIndex != -1) {
+    if (!tabManager.switchingCodeTabs && tabManager.getSelectedAppTabIndex != -1) {
       val previousTab = getCurrentTab
       currentTab = getSelectedComponent
       // currentTab could be null in the case where the CodeTabPanel has only the MainCodeTab. AAB 10/2020
       if (currentTab == null) {
         currentTab = mainCodeTab
-      }
-      (previousTab.isInstanceOf[TemporaryCodeTab], currentTab.isInstanceOf[TemporaryCodeTab]) match {
-        case (true, false) => tabManager.appTabsPanel.saveModelActions foreach tabManager.menuBar.offerAction
-        case (false, true) => tabManager.appTabsPanel.saveModelActions foreach tabManager.menuBar.revokeAction
-        case _             =>
       }
       // The SwitchedTabsEvent will cause compilation when the user leaves an edited CodeTab. AAB 10/2020
       new AppEvents.SwitchedTabsEvent(previousTab, currentTab).raise(this)
