@@ -38,8 +38,8 @@ with SaveModel.Controller
   private var loading = true
   private var _modelDirty = false
   private var priorTempFile = Option.empty[Path]
-  private var _codeWindow : Option[JFrame] = None
-  def setCodeWindow(codeWindow: Option[JFrame]): Unit = {
+  private var _codeWindow : JFrame = null
+  def setCodeWindow(codeWindow: JFrame): Unit = {
     _codeWindow = codeWindow
   }
 
@@ -53,12 +53,11 @@ with SaveModel.Controller
       if (System.getProperty("os.name").startsWith("Mac"))
         frame.getRootPane.putClientProperty("Window.documentModified", dirty)
     }
-    _codeWindow match {
-      case None           => frame.setTitle(title(path))
-      case Some(window) => {
-        window.setTitle(title(path))
-        _codeWindow = None
-      }
+    if (_codeWindow != null) {
+      if (_codeWindow.isVisible)
+        _codeWindow.setTitle(title(path))
+      else
+        frame.setTitle(title(path))
     }
 
   }

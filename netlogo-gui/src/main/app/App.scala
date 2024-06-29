@@ -12,7 +12,7 @@ import org.nlogo.agent.{ Agent, World2D, World3D }
 import org.nlogo.api._
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
 import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, FindDialog, SaveModelingCommonsAction }
-import org.nlogo.app.interfacetab.{ InterfaceToolBar, WidgetPanel }
+import org.nlogo.app.interfacetab.{ InterfaceTab, InterfaceToolBar, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManagerErrorDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model,
@@ -153,7 +153,6 @@ object App {
         new ConstantParameter(AbstractWorkspace.isApp))
       pico.add("org.nlogo.app.interfacetab.CommandCenter")
       pico.add("org.nlogo.app.interfacetab.InterfaceTab")
-      pico.addComponent(classOf[Tabs])
       pico.addComponent(classOf[AgentMonitorManager])
       app = pico.getComponent(classOf[App])
       // It's pretty silly, but in order for the splash screen to show up
@@ -271,11 +270,7 @@ class App extends
   private var _workspace: GUIWorkspace = null
   def workspace = _workspace
   lazy val owner = new SimpleJobOwner("App", workspace.world.mainRNG, AgentKind.Observer)
-  private var _tabs: Tabs = null
-  private var _codeTabsPanel: CodeTabsPanel = null
-  private var _tabManager : AppTabManager= null
-  def tabs = _tabs
-  def codeTabsPanel = _codeTabsPanel
+  private var _tabManager: TabManager = null
   def tabManager = _tabManager
   var menuBar: MenuBar = null
   var _fileManager: FileManager = null
@@ -402,27 +397,16 @@ class App extends
     monitorManager = pico.getComponent(classOf[AgentMonitorManager])
     frame.addLinkComponent(monitorManager)
 
-    _tabs = pico.getComponent(classOf[Tabs])
-    controlSet.tabs = Some(_tabs)
-    if (popOutCodeTab) {
-      _codeTabsPanel = new CodeTabsPanel(workspace,
-                        tabs.interfaceTab,
-                        tabs.externalFileManager,
-                        tabs.mainCodeTab,
-                        tabs.externalFileTabs)
+    _tabManager = new TabManager(workspace, pico.getComponent(classOf[InterfaceTab]), pico.getComponent(classOf[ExternalFileManager]))
 
-      _tabManager = new AppTabManager(_tabs, Some(_codeTabsPanel))
-      _codeTabsPanel.setTabManager(_tabManager)
-    } else {
-      _tabManager = new AppTabManager(_tabs, None)
-    }
+    frame.addLinkComponent(_tabManager)
 
-    _tabs.setTabManager(_tabManager)
+    controlSet.interfaceTab = Some(_tabManager.interfaceTab)
 
-    pico.addComponent(tabs.interfaceTab.getInterfacePanel)
-    frame.getContentPane.add(tabs, java.awt.BorderLayout.CENTER)
+    pico.addComponent(_tabManager.interfaceTab.getInterfacePanel)
+    frame.getContentPane.add(_tabManager.mainTabs, java.awt.BorderLayout.CENTER)
 
-    frame.addLinkComponent(new CompilerManager(workspace, world, tabs.mainCodeTab))
+    frame.addLinkComponent(new CompilerManager(workspace, world, _tabManager.mainCodeTab))
     frame.addLinkComponent(listenerManager)
 
     def switchOrPref(switchValue: String, prefName: String, default: String) = {
@@ -492,11 +476,7 @@ class App extends
       workspace.init(viewManager)
       frame.addLinkComponent(viewManager)
 
-      tabs.init(fileManager, dirtyMonitor)
-
-      if (popOutCodeTab) {
-        codeTabsPanel.init(fileManager, dirtyMonitor)
-      }
+      _tabManager.init(fileManager, dirtyMonitor, menuBar)
 
       app.setMenuBar(menuBar)
       frame.setJMenuBar(menuBar)
@@ -514,7 +494,7 @@ class App extends
       // smartPack respects the command center's current size, rather
       // than its preferred size, so we have to explicitly set the
       // command center to the size we want - ST 1/7/05
-      tabs.interfaceTab.commandCenter.setSize(tabs.interfaceTab.commandCenter.getPreferredSize)
+      _tabManager.interfaceTab.commandCenter.setSize(_tabManager.interfaceTab.commandCenter.getPreferredSize)
       smartPack(frame.getPreferredSize, true)
 
       if (! isMac) { org.nlogo.awt.Positioning.center(frame, null) }
@@ -526,8 +506,11 @@ class App extends
       if (isMac) {
         appHandler.getClass.getDeclaredMethod("ready", classOf[AnyRef]).invoke(appHandler, this)
       }
+
+      frame.addLinkComponent(_tabManager.separateTabsWindow)
+
       if (popOutCodeTab) {
-        frame.addLinkComponent(codeTabsPanel.getCodeTabContainer)
+        _tabManager.switchWindow(true)
       }
     }
     catch {
@@ -543,7 +526,7 @@ class App extends
   // doesn't get shared across windows.  -- AZS 6/17/2005
   private class MenuBarFactory extends org.nlogo.window.MenuBarFactory {
     import org.nlogo.swing.UserAction, UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, ToolsCategory }
-    def actions = allActions ++ tabs.permanentMenuActions
+    def actions = allActions ++ _tabManager.permanentMenuActions
 
     def createMenu(newMenu: org.nlogo.swing.Menu, category: String): JMenu = {
       actions.filter(_.getValue(ActionCategoryKey) == category).foreach(newMenu.offerAction)
@@ -645,7 +628,7 @@ class App extends
     new ZoomedEvent(0).raise(this)
   }
 
-  lazy val openPreferencesDialog = new ShowPreferencesDialog(frame, tabs)
+  lazy val openPreferencesDialog = new ShowPreferencesDialog(frame, _tabManager)
 
   lazy val openAboutDialog = new ShowAboutWindow(frame)
 
@@ -654,7 +637,7 @@ class App extends
   lazy val openLibrariesDialog = {
     val updateSource =
       (transform: (String) => String) =>
-        tabs.mainCodeTab.innerSource = transform(tabs.mainCodeTab.innerSource)
+        _tabManager.mainCodeTab.innerSource = transform(_tabManager.mainCodeTab.innerSource)
     new OpenLibrariesDialog( frame, workspace.getLibraryManager, () => compile()
                            , updateSource, () => workspace.getExtensionPathMappings())
   }
@@ -695,8 +678,6 @@ class App extends
   def setMenuBar(menuBar: MenuBar): Unit = {
     if (menuBar != this.menuBar) {
       this.menuBar = menuBar
-      tabs.setMenu(menuBar)
-      _tabManager.setAppMenuBar(menuBar)
       allActions.foreach(menuBar.offerAction)
       Option(recentFilesMenu).foreach(_.setMenu(menuBar))
     }
@@ -759,28 +740,26 @@ class App extends
    * Internal use only.
    */
   final def handle(e: AppEvents.SwitchedTabsEvent): Unit = {
-    if (e.newTab == tabs.interfaceTab) {
+    if (e.newTab == _tabManager.interfaceTab) {
       monitorManager.showAll()
       frame.toFront()
-    } else if (e.oldTab == tabs.interfaceTab) {
+    } else if (e.oldTab == _tabManager.interfaceTab) {
       monitorManager.hideAll()
     }
-    tabManager.codeTabsPanelOption match {
-      case None           => {
-        val appWindowTitle = e.newTab match {
-          case tab: TemporaryCodeTab => externalFileTitle(tab.filename.merge)
-          case _                     => modelTitle()
-        }
-        frame.setTitle(appWindowTitle)
+    if (_tabManager.separateTabsWindow.isVisible) {
+      val appWindowTitle = e.newTab match {
+        case tab: TemporaryCodeTab => externalFileTitle(tab.filename.merge)
+        case _                     => modelTitle()
       }
-      case Some(thePanel) =>  {
-        val codeWindowTitle = e.newTab match {
-          case tab: TemporaryCodeTab => externalFileTitle(tab.filename.merge)
-          case _                     => modelTitle(allowDirtyMarker = false)
-        }
-        thePanel.codeTabContainer.setTitle(codeWindowTitle)
-        frame.setTitle(modelTitle())
+      frame.setTitle(appWindowTitle)
+    }
+    else {
+      val codeWindowTitle = e.newTab match {
+        case tab: TemporaryCodeTab => externalFileTitle(tab.filename.merge)
+        case _                     => modelTitle(allowDirtyMarker = false)
       }
+      _tabManager.separateTabsWindow.setTitle(codeWindowTitle)
+      frame.setTitle(modelTitle())
     }
   }
 
@@ -798,9 +777,8 @@ class App extends
     errorDialogManager.setModelName(workspace.modelNameForDisplay)
     if (AbstractWorkspace.isApp) {
       frame.setTitle(modelTitle())
-      tabManager.codeTabsPanelOption match {
-        case None           =>
-        case Some(thePanel) => thePanel.codeTabContainer.setTitle(modelTitle(allowDirtyMarker = false))
+      if (_tabManager.separateTabsWindow.isVisible) {
+        _tabManager.separateTabsWindow.setTitle(modelTitle(allowDirtyMarker = false))
       }
       workspace.hubNetManager.foreach { manager =>
         manager.setTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType)
@@ -816,9 +794,8 @@ class App extends
     errorDialogManager.setModelName(modelName)
     if (AbstractWorkspace.isApp) {
       frame.setTitle(modelTitle())
-      tabManager.codeTabsPanelOption match {
-        case None           =>
-        case Some(thePanel) => thePanel.codeTabContainer.setTitle(modelTitle(allowDirtyMarker = false))
+      if (_tabManager.separateTabsWindow.isVisible) {
+        _tabManager.separateTabsWindow.setTitle(modelTitle(allowDirtyMarker = false))
       }
     }
     workspace.hubNetManager.foreach(_.closeClientEditor())
@@ -858,7 +835,7 @@ class App extends
     if(AbstractWorkspace.isApp){
       // if we don't call revalidate() here we don't get up-to-date
       // preferred size information - ST 11/4/03
-      tabs.interfaceTab.getInterfacePanel.revalidate()
+      _tabManager.interfaceTab.getInterfacePanel.revalidate()
       if(wasAtPreferredSizeBeforeLoadBegan) smartPack(frame.getPreferredSize, true)
       else{
         val currentSize = frame.getSize
@@ -872,7 +849,7 @@ class App extends
       preferredSizeAtLoadEndTime = frame.getPreferredSize()
     }
     frame.toFront()
-    tabs.interfaceTab.requestFocus()
+    _tabManager.interfaceTab.requestFocus()
   }
 
   /**
@@ -904,7 +881,7 @@ class App extends
 
   private def externalFileTitle(path: String) = {
     val filename = TemporaryCodeTab.stripPath(path)
-    (tabs.getTabWithFilename(Right(path)) orElse tabs.getTabWithFilename(Left(path))).
+    (_tabManager.getTabWithFilename(Right(path)) orElse _tabManager.getTabWithFilename(Left(path))).
       map (tab => frameTitle(filename, tab.saveNeeded)).
       getOrElse(frameTitle(filename, false))
   }
@@ -1075,7 +1052,7 @@ class App extends
    * Returns the contents of the Code tab.
    * @return contents of Code tab
    */
-  def getProcedures: String = dispatchThreadOrBust(tabs.mainCodeTab.innerSource)
+  def getProcedures: String = dispatchThreadOrBust(_tabManager.mainCodeTab.innerSource)
 
   /**
    * Replaces the contents of the Code tab.
@@ -1083,7 +1060,7 @@ class App extends
    * @param source new contents
    * @see #compile
    */
-  def setProcedures(source:String) { dispatchThreadOrBust(tabs.mainCodeTab.innerSource = source) }
+  def setProcedures(source:String) { dispatchThreadOrBust(_tabManager.mainCodeTab.innerSource = source) }
 
   /**
    * Recompiles the model.  Useful after calling
@@ -1136,13 +1113,13 @@ class App extends
    */
   def makeWidget(text:String) {
     dispatchThreadOrBust(
-      tabs.interfaceTab.getInterfacePanel.loadWidget(WidgetReader.read(text.linesIterator.toList, workspace, fileformat.nlogoReaders(Version.is3D))))
+      _tabManager.interfaceTab.getInterfacePanel.loadWidget(WidgetReader.read(text.linesIterator.toList, workspace, fileformat.nlogoReaders(Version.is3D))))
   }
 
   /// helpers for controlling methods
 
   private def findButton(name:String): ButtonWidget =
-    tabs.interfaceTab.getInterfacePanel.getComponents
+    _tabManager.interfaceTab.getInterfacePanel.getComponents
       .collect{case bw: ButtonWidget => bw}
       .find(_.displayName == name)
       .getOrElse{throw new IllegalArgumentException(
@@ -1159,7 +1136,7 @@ class App extends
     val maxX = maxBoundsX + maxWidth
     val maxY = maxBoundsY + maxHeight
 
-    tabs.interfaceTab.adjustTargetSize(targetSize)
+    _tabManager.interfaceTab.adjustTargetSize(targetSize)
 
     import StrictMath.{ max, min }
 
@@ -1190,7 +1167,7 @@ class App extends
     frame.validate()
 
     // not sure why this is sometimes necessary - ST 11/24/03
-    tabs.requestFocus()
+    _tabManager.mainTabs.requestFocus()
   }
 
   /**
@@ -1219,22 +1196,22 @@ class App extends
   }
 
   def procedureSource:  String =
-    tabs.mainCodeTab.innerSource
+    _tabManager.mainCodeTab.innerSource
   def widgets:          Seq[CoreWidget] = {
-    tabs.interfaceTab.iP.getWidgetsForSaving
+    _tabManager.interfaceTab.iP.getWidgetsForSaving
   }
   def info:             String =
-    tabs.infoTab.info
+    _tabManager.infoTab.info
   def turtleShapes:     Seq[VectorShape] =
-    tabs.workspace.world.turtleShapeList.shapes.collect { case s: VectorShape => s }
+    workspace.world.turtleShapeList.shapes.collect { case s: VectorShape => s }
   def linkShapes:       Seq[LinkShape] =
-    tabs.workspace.world.linkShapeList.shapes.collect { case s: LinkShape => s }
+    workspace.world.linkShapeList.shapes.collect { case s: LinkShape => s }
   def additionalSections: Seq[ModelSections.ModelSaveable] = {
     val sections =
-      Seq[ModelSections.ModelSaveable](tabs.workspace.previewCommands,
+      Seq[ModelSections.ModelSaveable](workspace.previewCommands,
         labManager,
         aggregateManager,
-        tabs.workspace)
+        workspace)
     workspace.hubNetManager.map(_ +: sections).getOrElse(sections)
   }
 
