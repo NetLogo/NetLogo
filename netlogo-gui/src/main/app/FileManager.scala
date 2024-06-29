@@ -274,9 +274,9 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
   val controller = new FileController(parent, workspace)
 
-  private var tabManager: AppTabManager = null
+  private var tabManager: TabManager = null
 
-  def setTabManager(tabManager: AppTabManager) {
+  def setTabManager(tabManager: TabManager) {
     this.tabManager = tabManager
   }
 
@@ -453,7 +453,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
         @throws(classOf[UserCancelException])
         override def action(): Unit = {
-          tabManager.getSelectedComponent match {
+          tabManager.getSelectedTab match {
             case tempTab: TemporaryCodeTab => tempTab.save(saveAs)
             case _ => saveModel(saveAs)
           }

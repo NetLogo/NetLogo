@@ -85,8 +85,6 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     super.dirty_=(d)
     if (d) {
       saveNeeded = true
-      // This call lets the DirtyMonitor know if there is a separated code window
-      tabs.setDirtyMonitorCodeWindow
 
       new WindowEvents.DirtyEvent(Some(filename.merge)).raise(this)
     }
@@ -101,8 +99,6 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     saveNeeded = false
     compileIfDirty()
     dirty = false
-    // This call lets the DirtyMonitor know if there is a separated code window
-    tabs.setDirtyMonitorCodeWindow
 
     new WindowEvents.ExternalFileSavedEvent(filename.merge).raise(this)
   }
@@ -120,7 +116,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
       externalFileManager.remove(this)
       closing = true
       // Remove from the set of TemporaryCodeTabs in Tabs and remove the tab from the JTabbedPane
-      tabs.closeExternalFile(filename)
+      tabs.closeExternalFile(this)
     }
   }
 

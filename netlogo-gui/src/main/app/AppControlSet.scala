@@ -6,23 +6,24 @@ import java.awt.EventQueue.isDispatchThread
 import java.awt.image.BufferedImage
 
 import org.nlogo.api.ControlSet
+import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.awt.EventQueue
 
 import scala.concurrent.{ Future, Promise }
 import scala.util.Try
 
 class AppControlSet extends ControlSet {
-  var tabs = Option.empty[Tabs]
+  var interfaceTab = Option.empty[InterfaceTab]
 
   def userInterface: Future[BufferedImage] =
-    tabs
-      .map({ ts =>
+    interfaceTab
+      .map({ tab =>
         if (isDispatchThread)
-          Promise.fromTry(Try(ts.interfaceTab.iP.interfaceImage))
+          Promise.fromTry(Try(tab.iP.interfaceImage))
         else {
           val promise = Promise[BufferedImage]()
           EventQueue.invokeLater { () =>
-            promise.complete(Try(ts.interfaceTab.iP.interfaceImage))
+            promise.complete(Try(tab.iP.interfaceImage))
             ()
           }
           promise
@@ -32,17 +33,17 @@ class AppControlSet extends ControlSet {
       .getOrElse(Future.failed(new IllegalStateException("AppControlSet has not been initialized")))
 
   def userOutput: Future[String] = {
-    def getOutput(ts: Tabs): String =
-      ts.interfaceTab.getOutputArea.valueText
+    def getOutput(interfaceTab: InterfaceTab): String =
+      interfaceTab.getOutputArea.valueText
 
-    tabs
-      .map({ts =>
+    interfaceTab
+      .map({tab =>
         if (isDispatchThread)
-          Promise.fromTry(Try(getOutput(ts)))
+          Promise.fromTry(Try(getOutput(tab)))
         else {
           val promise = Promise[String]()
           EventQueue.invokeLater { () =>
-            promise.complete(Try(getOutput(ts)))
+            promise.complete(Try(getOutput(tab)))
             ()
           }
           promise

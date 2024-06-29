@@ -2,7 +2,9 @@
 
 package org.nlogo.app.common
 
-import java.awt.Component
+import org.nlogo.app.codetab.{ MainCodeTab, TemporaryCodeTab }
+import org.nlogo.app.infotab.InfoTab
+import org.nlogo.app.interfacetab.InterfaceTab
 
 object TabsInterface {
   /**
@@ -13,11 +15,9 @@ object TabsInterface {
 }
 
 trait TabsInterface {
-  import TabsInterface.Filename
-
-  val interfaceTab: Component
-  val infoTab: Component
-  val mainCodeTab: Component
+  val interfaceTab: InterfaceTab
+  val infoTab: InfoTab
+  val mainCodeTab: MainCodeTab
 
   def lineNumbersVisible: Boolean
   def lineNumbersVisible_=(b: Boolean): Unit
@@ -27,8 +27,7 @@ trait TabsInterface {
 
   def newExternalFile(): Unit
   def openExternalFile(filename: String): Unit
-  def closeExternalFile(filename: Filename): Unit
+  def closeExternalFile(tab: TemporaryCodeTab): Unit
 
-  def setDirtyMonitorCodeWindow(): Unit
-  def switchToSpecifiedCodeWindowState(state: Boolean): Unit
+  def switchWindow(separate: Boolean): Unit
 }
