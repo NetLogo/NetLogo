@@ -499,7 +499,7 @@ class App extends
 
       if (! isMac) { org.nlogo.awt.Positioning.center(frame, null) }
 
-      org.nlogo.app.common.FindDialog.init(frame)
+      org.nlogo.app.common.FindDialog.init(_tabManager.separateTabsWindow)
 
       Splash.endSplash()
       frame.setVisible(true)

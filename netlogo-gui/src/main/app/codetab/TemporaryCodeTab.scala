@@ -112,11 +112,9 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
           compile()
         }
       }
-      // Remove the file from the map from file names to TemporaryCodeTabs
-      externalFileManager.remove(this)
       closing = true
       // Remove from the set of TemporaryCodeTabs in Tabs and remove the tab from the JTabbedPane
-      tabs.closeExternalFile(this)
+      tabs.closeExternalFile(_filename)
     }
   }
 
