@@ -7,27 +7,28 @@ import javax.xml.stream.XMLStreamWriter
 import Shape.{ Circle => CoreCircle, Element, Line => CoreLine, LinkLine => CoreLinkLine, LinkShape => CoreLinkShape,
                Polygon => CorePolygon, Rectangle => CoreRectangle, RgbColor, VectorShape => CoreVectorShape }
 
-case class Circle(color: RgbColor, filled: Boolean, marked: Boolean, x: Int, y: Int, diameter: Int) extends CoreCircle
-
-case class Line(color: RgbColor, marked: Boolean, startPoint: (Int, Int), endPoint: (Int, Int))
-  extends CoreLine {
-    override def filled = false
-  }
-
-case class Polygon(color: RgbColor, filled: Boolean, marked: Boolean, points: List[(Int, Int)]) extends CorePolygon
-
-case class Rectangle(color: RgbColor, filled: Boolean, marked: Boolean, upperLeftCorner: (Int, Int),
-                     lowerRightCorner: (Int, Int)) extends CoreRectangle
-
-case class VectorShape(var name: String, rotatable: Boolean, editableColorIndex: Int, elements: List[Element])
-  extends CoreVectorShape
-
-case class LinkLine(xcor: Double, isVisible: Boolean, dashChoices: List[Float]) extends CoreLinkLine
-
-case class LinkShape(var name: String, curviness: Double, linkLines: List[LinkLine], indicator: VectorShape)
-  extends CoreLinkShape
-
 object ShapeXMLLoader {
+  case class Circle(color: RgbColor, filled: Boolean, marked: Boolean, x: Int, y: Int, diameter: Int)
+    extends CoreCircle
+
+  case class Line(color: RgbColor, marked: Boolean, startPoint: (Int, Int), endPoint: (Int, Int))
+    extends CoreLine {
+      override def filled = false
+    }
+
+  case class Polygon(color: RgbColor, filled: Boolean, marked: Boolean, points: List[(Int, Int)]) extends CorePolygon
+
+  case class Rectangle(color: RgbColor, filled: Boolean, marked: Boolean, upperLeftCorner: (Int, Int),
+                      lowerRightCorner: (Int, Int)) extends CoreRectangle
+
+  case class VectorShape(var name: String, rotatable: Boolean, editableColorIndex: Int, elements: List[Element])
+    extends CoreVectorShape
+
+  case class LinkLine(xcor: Double, isVisible: Boolean, dashChoices: List[Float]) extends CoreLinkLine
+
+  case class LinkShape(var name: String, curviness: Double, linkLines: List[LinkLine], indicator: VectorShape)
+    extends CoreLinkShape
+
   def readShape(element: XMLElement): VectorShape = {
     def colorFromString(string: String) = {
       val int = string.toInt
