@@ -17,7 +17,7 @@ class ModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[G
     val compiler         = container.getComponent(classOf[PresentationCompilerInterface])
     val compilerServices = new DefaultCompilerServices(compiler)
 
-    fileformat.standardLoader(compilerServices, true)
+    fileformat.standardAnyLoader(compilerServices, true)
   }
 }
 
@@ -34,7 +34,7 @@ class LegacyModelLoaderComponent extends AbstractAdapter[GenericModelLoader](cla
     val compiler =
       container.getComponent(classOf[PresentationCompilerInterface])
     val compilerServices = new DefaultCompilerServices(compiler)
-    val loader = fileformat.standardLoader(compilerServices, true)
+    val loader = fileformat.standardAnyLoader(compilerServices, true)
     val additionalComponents =
       container.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]]).asScala
     if (additionalComponents.nonEmpty)

@@ -61,7 +61,7 @@ object ModelResaver {
         fileformat.converter(ws.getExtensionManager, ws.getLibraryManager, ws.getCompilationEnvironment,
           literalParser, fileformat.defaultAutoConvertables :+ SDMAutoConvertable) _
       val modelLoader =
-        fileformat.standardLoader(ws.compiler.utilities)
+        fileformat.standardAnyLoader(ws.compiler.utilities)
           .addSerializer[Array[String], NLogoFormat](new NLogoSDMFormat())
       val controller = new ResaveController(modelPath.toUri)
       val dialect =
