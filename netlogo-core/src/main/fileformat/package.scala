@@ -4,7 +4,7 @@ package org.nlogo
 
 import java.nio.file.Path
 
-import org.nlogo.api.{ AutoConvertable, ConfigurableModelLoader, NLogoXMLLoader }
+import org.nlogo.api.{ AutoConvertable, ConfigurableModelLoader, NLogoAnyLoader, NLogoXMLLoader }
 import org.nlogo.core.{ CompilationEnvironment, Dialect, ExtensionManager, LibraryManager, LiteralParser, Model }
 import org.nlogo.core.model.WidgetReader
 
@@ -58,8 +58,10 @@ package object fileformat {
       .addSerializer[Array[String], NLogoThreeDFormat](NLogoThreeDPreviewCommandsFormat)
   }
 
-  def standardXMLLoader(literalParser: LiteralParser, editNames: Boolean = false) = {
-    new NLogoXMLLoader
-  }
+  def standardXMLLoader(editNames: Boolean = false) =
+    new NLogoXMLLoader(editNames)
+
+  def standardAnyLoader(literalParser: LiteralParser, editNames: Boolean = false) =
+    new NLogoAnyLoader(standardXMLLoader(editNames), standardLoader(literalParser, editNames))
 
 }
