@@ -316,6 +316,18 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     addExternalFile(Left(I18N.gui.get("tabs.external.new")))
   }
 
+  def addTab(tab: Component, name: String) {
+    if (separateTabsWindow.isVisible) {
+      separateTabs.addTab(name, tab)
+      separateTabs.setSelectedComponent(tab)
+    }
+
+    else {
+      mainTabs.addTab(name, tab)
+      mainTabs.setSelectedComponent(tab)
+    }
+  }
+
   def openExternalFile(filename: String) {
     getTabWithFilename(Right(filename)) match {
       case Some(tab) =>
@@ -325,6 +337,15 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
           mainTabs.setSelectedComponent(tab)
       case _ => addExternalFile(Right(filename))
     }
+  }
+
+  def replaceTab(oldTab: Component, newTab: Component) {
+    val index = mainTabs.indexOfComponent(oldTab)
+
+    if (index == -1)
+      separateTabs.setComponentAt(separateTabs.indexOfComponent(oldTab), newTab)
+    else
+      mainTabs.setComponentAt(index, newTab)
   }
 
   def closeExternalFile(filename: Filename) {
@@ -348,6 +369,13 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       revokeAction(SaveAllAction)
     
     updateTabActions()
+  }
+
+  def removeTab(tab: Component) {
+    if (mainTabs.indexOfComponent(tab) == -1)
+      separateTabs.remove(tab)
+    else
+      mainTabs.remove(tab)
   }
 
   def switchWindow(separate: Boolean) {
