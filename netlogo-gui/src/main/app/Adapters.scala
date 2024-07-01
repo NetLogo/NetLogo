@@ -5,8 +5,8 @@ package org.nlogo.app
 import java.lang.reflect.{ Type => JType }
 
 import org.nlogo.core.Dialect
-import org.nlogo.api.{ AddableComponent, AutoConvertable, ConfigurableModelLoader, GenericModelLoader, NLogoXMLLoader,
-                       Workspace => ApiWorkspace }
+import org.nlogo.api.{ AddableComponent, AutoConvertable, ConfigurableModelLoader, NLogoAnyLoader, GenericModelLoader,
+                       NLogoXMLLoader, Workspace => ApiWorkspace }
 import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter }
 import org.nlogo.nvm.{ DefaultCompilerServices, PresentationCompilerInterface }
 
@@ -16,16 +16,24 @@ import org.picocontainer.adapters.AbstractAdapter
 import scala.collection.JavaConverters._
 
 object Adapters {
+  class AnyModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[GenericModelLoader], classOf[NLogoAnyLoader]) {
+    def getDescriptor(): String = "XMLModelLoaderComponent"
+    def verify(p: PicoContainer): Unit = {}
+
+    def getComponentInstance(container: PicoContainer, into: JType) = {
+      val compiler = container.getComponent(classOf[PresentationCompilerInterface])
+      val compilerServices = new DefaultCompilerServices(compiler)
+
+      fileformat.standardAnyLoader(compilerServices, true)
+    }
+  }
+
   class XMLModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[GenericModelLoader], classOf[NLogoXMLLoader]) {
     def getDescriptor(): String = "XMLModelLoaderComponent"
     def verify(p: PicoContainer): Unit = {}
 
-    def getComponentInstance(container: org.picocontainer.PicoContainer, into: JType) = {
-      val compiler         = container.getComponent(classOf[PresentationCompilerInterface])
-      val compilerServices = new DefaultCompilerServices(compiler)
-
-      fileformat.standardXMLLoader(compilerServices, true)
-    }
+    def getComponentInstance(container: PicoContainer, into: JType) =
+      fileformat.standardXMLLoader(true)
   }
 
   class ModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[GenericModelLoader], classOf[ConfigurableModelLoader]) {

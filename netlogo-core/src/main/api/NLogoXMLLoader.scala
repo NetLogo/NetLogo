@@ -15,21 +15,25 @@ import org.nlogo.core.Shape.{ LinkShape, VectorShape }
 import scala.io.Source
 import scala.util.{ Failure, Try }
 
-class NLogoXMLLoader extends GenericModelLoader {
+// figure out where to use editNames based on LabLoader
+class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
   private val defaultInfo: String = FileIO.url2String("/system/empty-info.md")
 
-  private def getExtension(uri: URI) =
-    uri.getPath.substring(uri.getPath.lastIndexOf('.') + 1)
-
-  private def isCompatible(extension: String) =
+  private def isCompatible(extension: String): Boolean =
     extension == "nlogo" || extension == "nlogo3d"
+
+  private def isCompatible(uri: URI): Boolean = {
+    val extension = GenericModelLoader.getURIExtension(uri)
+
+    extension.isDefined && isCompatible(extension.get)
+  }
 
   def readModel(uri: URI): Try[Model] = {
     readModel(if (uri.getScheme == "jar") {
                 Source.fromInputStream(uri.toURL.openStream).mkString
               } else {
                 Source.fromURI(uri).mkString
-              }, getExtension(uri))
+              }, GenericModelLoader.getURIExtension(uri).getOrElse(""))
   }
   
   def readModel(source: String, extension: String): Try[Model] = {
@@ -807,14 +811,14 @@ class NLogoXMLLoader extends GenericModelLoader {
   }
 
   def save(model: Model, uri: URI): Try[URI] = {
-    if (isCompatible(getExtension(uri))) {
+    if (isCompatible(uri)) {
       saveToWriter(model, new PrintWriter(new File(uri)))
 
       Try(uri)
     }
 
     else
-      Failure(new Exception("Unable to save model with format \"" + getExtension(uri) + "\"."))
+      Failure(new Exception("Unable to save model with format \"" + GenericModelLoader.getURIExtension(uri) + "\"."))
   }
 
   def sourceString(model: Model, extension: String): Try[String] = {

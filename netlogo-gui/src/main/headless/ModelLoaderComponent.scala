@@ -17,7 +17,7 @@ class ModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[G
     val compiler         = container.getComponent(classOf[PresentationCompilerInterface])
     val compilerServices = new DefaultCompilerServices(compiler)
 
-    fileformat.standardLoader(compilerServices, true)
+    fileformat.standardAnyLoader(compilerServices, true)
   }
 }
 
