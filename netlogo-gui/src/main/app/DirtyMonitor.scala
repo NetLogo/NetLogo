@@ -7,7 +7,7 @@ import java.io.IOException
 import java.nio.file.{ Files, Path, Paths }
 import javax.swing.JFrame
 
-import org.nlogo.api.{ Exceptions, ModelLoader, ModelReader, ModelType, Version }
+import org.nlogo.api.{ Exceptions, GenericModelLoader, ModelReader, ModelType, Version }
 import org.nlogo.window.Events._
 import org.nlogo.workspace.{ ModelTracker, SaveModel }
 
@@ -23,7 +23,7 @@ object DirtyMonitor {
   }
 }
 
-class DirtyMonitor(frame: JFrame, modelSaver: ModelSaver, modelLoader: ModelLoader, modelTracker: ModelTracker, title: Option[String] => String)
+class DirtyMonitor(frame: JFrame, modelSaver: ModelSaver, modelLoader: GenericModelLoader, modelTracker: ModelTracker, title: Option[String] => String)
 extends BeforeLoadEvent.Handler
 with AfterLoadEvent.Handler
 with WidgetAddedEvent.Handler

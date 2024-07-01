@@ -2,10 +2,10 @@
 
 package org.nlogo.app
 
-import org.nlogo.api.{ ModelLoader, ModelSections, Version}
+import org.nlogo.api.{ GenericModelLoader, ModelSections, Version}
 import org.nlogo.core.Model
 
-class ModelSaver(model: ModelSections, loader: ModelLoader) {
+class ModelSaver(model: ModelSections, loader: GenericModelLoader) {
 
   private var _currentModel: Model = Model()
 

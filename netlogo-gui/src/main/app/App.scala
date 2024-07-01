@@ -96,7 +96,7 @@ object App {
       }
       pico.addScalaObject("org.nlogo.sdm.gui.SDMGuiAutoConvertable")
 
-      pico.addAdapter(new Adapters.ModelLoaderComponent())
+      pico.addAdapter(new Adapters.XMLModelLoaderComponent())
 
       pico.addAdapter(new Adapters.ModelConverterComponent())
 

@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.server
 
 import org.nlogo.core.{ AgentKind, Model, Widget => CoreWidget }
-import org.nlogo.api.{ HubNetInterface, ModelLoader, Version }, HubNetInterface.ClientInterface
+import org.nlogo.api.{ HubNetInterface, GenericModelLoader, Version }, HubNetInterface.ClientInterface
 import org.nlogo.hubnet.mirroring
 import org.nlogo.hubnet.mirroring.{ HubNetLinkStamp, HubNetDrawingMessage, HubNetTurtleStamp, HubNetLine }
 import org.nlogo.hubnet.connection.{ HubNetException, ConnectionInterface }
@@ -19,7 +19,7 @@ import java.net.URI
 import java.io.{ Serializable => JSerializable }
 import java.util.concurrent.LinkedBlockingQueue
 
-abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: ModelLoader, modelConverter: ModelConversion)
+abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: GenericModelLoader, modelConverter: ModelConversion)
   extends HubNetInterface
   with ConnectionInterface {
 

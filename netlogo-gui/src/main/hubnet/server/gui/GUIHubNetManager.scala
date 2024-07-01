@@ -2,7 +2,7 @@
 
 package org.nlogo.hubnet.server.gui
 
-import org.nlogo.api.{ ModelLoader, ModelType, ViewInterface }
+import org.nlogo.api.{ GenericModelLoader, ModelType, ViewInterface }
 import org.nlogo.api.HubNetInterface.ClientInterface
 import org.nlogo.core.{ Femto, Model, Widget => CoreWidget }
 import org.nlogo.hubnet.protocol.ComputerInterface
@@ -21,7 +21,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
                        linkParent: Component,
                        ifactory: InterfaceFactory,
                        menuFactory: MenuBarFactory,
-                       loader: ModelLoader,
+                       loader: GenericModelLoader,
                        modelConverter: ModelConversion)
   extends HubNetManager(workspace, loader, modelConverter) with ViewInterface {
 
