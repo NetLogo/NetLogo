@@ -92,9 +92,6 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     this.dirtyMonitor = dirtyMonitor
     this.menuBar = menuBar
 
-    fileManager.setTabManager(this)
-    dirtyMonitor.setCodeWindow(separateTabsWindow)
-
     actions.foreach(separateTabsWindow.menuBar.offerAction)
     permanentMenuActions.foreach(offerAction)
 

@@ -267,18 +267,13 @@ class FileManager(workspace: AbstractWorkspaceScala,
   dirtyMonitor: DirtyMonitor,
   modelSaver: ModelSaver,
   eventRaiser: AnyRef,
-  parent: Container)
+  parent: Container,
+  tabManager: TabManager)
     extends OpenModelEvent.Handler
     with LoadModelEvent.Handler {
   private var firstLoad: Boolean = true
 
   val controller = new FileController(parent, workspace)
-
-  private var tabManager: TabManager = null
-
-  def setTabManager(tabManager: TabManager) {
-    this.tabManager = tabManager
-  }
 
   def handle(e: OpenModelEvent): Unit = {
     openFromPath(e.path, ModelType.Library, e.shouldAutoInstallLibs)

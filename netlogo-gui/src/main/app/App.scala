@@ -460,7 +460,7 @@ class App extends
       val titler = (file: Option[String]) => { file map externalFileTitle getOrElse modelTitle() }
       pico.add(classOf[DirtyMonitor], "org.nlogo.app.DirtyMonitor",
         new ComponentParameter, new ComponentParameter, new ComponentParameter, new ComponentParameter,
-        new ConstantParameter(titler))
+        new ConstantParameter(titler), new ConstantParameter(_tabManager.separateTabsWindow))
       dirtyMonitor = pico.getComponent(classOf[DirtyMonitor])
       frame.addLinkComponent(dirtyMonitor)
 
@@ -470,7 +470,7 @@ class App extends
         "org.nlogo.app.FileManager",
         new ComponentParameter(), new ComponentParameter(), new ComponentParameter(),
         new ComponentParameter(), new ComponentParameter(),
-        new ConstantParameter(menuBar), new ConstantParameter(menuBar))
+        new ConstantParameter(menuBar), new ConstantParameter(menuBar), new ConstantParameter(_tabManager))
       setFileManager(pico.getComponent(classOf[FileManager]))
 
       val viewManager = pico.getComponent(classOf[GLViewManagerInterface])

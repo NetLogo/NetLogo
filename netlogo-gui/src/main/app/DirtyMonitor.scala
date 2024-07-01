@@ -23,7 +23,8 @@ object DirtyMonitor {
   }
 }
 
-class DirtyMonitor(frame: JFrame, modelSaver: ModelSaver, modelLoader: ModelLoader, modelTracker: ModelTracker, title: Option[String] => String)
+class DirtyMonitor(frame: JFrame, modelSaver: ModelSaver, modelLoader: ModelLoader, modelTracker: ModelTracker,
+                   title: Option[String] => String, codeWindow: JFrame)
 extends BeforeLoadEvent.Handler
 with AfterLoadEvent.Handler
 with WidgetAddedEvent.Handler
@@ -38,10 +39,6 @@ with SaveModel.Controller
   private var loading = true
   private var _modelDirty = false
   private var priorTempFile = Option.empty[Path]
-  private var _codeWindow : JFrame = null
-  def setCodeWindow(codeWindow: JFrame): Unit = {
-    _codeWindow = codeWindow
-  }
 
   def modelDirty = _modelDirty && !loading
   private def setDirty(dirty: Boolean, path: Option[String] = None): Unit = {
@@ -53,13 +50,10 @@ with SaveModel.Controller
       if (System.getProperty("os.name").startsWith("Mac"))
         frame.getRootPane.putClientProperty("Window.documentModified", dirty)
     }
-    if (_codeWindow != null) {
-      if (_codeWindow.isVisible)
-        _codeWindow.setTitle(title(path))
-      else
-        frame.setTitle(title(path))
-    }
-
+    if (codeWindow.isVisible)
+      codeWindow.setTitle(title(path))
+    else
+      frame.setTitle(title(path))
   }
 
   def handle(e: AboutToQuitEvent) {
