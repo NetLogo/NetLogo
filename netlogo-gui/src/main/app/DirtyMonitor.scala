@@ -7,7 +7,7 @@ import java.io.IOException
 import java.nio.file.{ Files, Path, Paths }
 import javax.swing.JFrame
 
-import org.nlogo.api.{ Exceptions, ModelLoader, ModelReader, ModelType, Version }
+import org.nlogo.api.{ Exceptions, GenericModelLoader, ModelReader, ModelType, Version }
 import org.nlogo.window.Events._
 import org.nlogo.workspace.{ ModelTracker, SaveModel }
 

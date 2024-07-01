@@ -2,16 +2,29 @@
 
 package org.nlogo.headless
 
-import org.nlogo.api.{ ModelLoader, ComponentSerialization, ConfigurableModelLoader }
+import org.nlogo.api.{ GenericModelLoader, ComponentSerialization, ConfigurableModelLoader, NLogoXMLLoader }
+import org.nlogo.fileformat
 import org.nlogo.nvm.{ DefaultCompilerServices, PresentationCompilerInterface }
 
 import org.picocontainer.PicoContainer
 import org.picocontainer.adapters.AbstractAdapter
 
-class ModelLoaderComponent extends AbstractAdapter[ModelLoader](classOf[ModelLoader], classOf[ConfigurableModelLoader]) {
-  import org.nlogo.fileformat, fileformat.NLogoFormat
-
+class ModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[GenericModelLoader], classOf[NLogoXMLLoader]) {
   def getDescriptor(): String = "ModelLoaderComponent"
+  def verify(x$1: PicoContainer): Unit = {}
+
+  def getComponentInstance(container: PicoContainer, into: java.lang.reflect.Type) = {
+    val compiler         = container.getComponent(classOf[PresentationCompilerInterface])
+    val compilerServices = new DefaultCompilerServices(compiler)
+
+    fileformat.standardLoader(compilerServices, true)
+  }
+}
+
+class LegacyModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[GenericModelLoader], classOf[ConfigurableModelLoader]) {
+  import fileformat.NLogoFormat
+
+  def getDescriptor(): String = "LegacyModelLoaderComponent"
 
   def verify(x$1: PicoContainer): Unit = {}
 
