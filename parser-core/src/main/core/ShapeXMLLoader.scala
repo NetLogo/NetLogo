@@ -2,31 +2,32 @@
 
 package org.nlogo.core
 
+import javax.xml.stream.XMLStreamWriter
+
 import Shape.{ Circle => CoreCircle, Element, Line => CoreLine, LinkLine => CoreLinkLine, LinkShape => CoreLinkShape,
                Polygon => CorePolygon, Rectangle => CoreRectangle, RgbColor, VectorShape => CoreVectorShape }
 
+case class Circle(color: RgbColor, filled: Boolean, marked: Boolean, x: Int, y: Int, diameter: Int) extends CoreCircle
+
+case class Line(color: RgbColor, marked: Boolean, startPoint: (Int, Int), endPoint: (Int, Int))
+  extends CoreLine {
+    override def filled = false
+  }
+
+case class Polygon(color: RgbColor, filled: Boolean, marked: Boolean, points: List[(Int, Int)]) extends CorePolygon
+
+case class Rectangle(color: RgbColor, filled: Boolean, marked: Boolean, upperLeftCorner: (Int, Int),
+                     lowerRightCorner: (Int, Int)) extends CoreRectangle
+
+case class VectorShape(var name: String, rotatable: Boolean, editableColorIndex: Int, elements: List[Element])
+  extends CoreVectorShape
+
+case class LinkLine(xcor: Double, isVisible: Boolean, dashChoices: List[Float]) extends CoreLinkLine
+
+case class LinkShape(var name: String, curviness: Double, linkLines: List[LinkLine], indicator: VectorShape)
+  extends CoreLinkShape
+
 object ShapeXMLLoader {
-  case class Circle(color: RgbColor, filled: Boolean, marked: Boolean, x: Int, y: Int, diameter: Int)
-    extends CoreCircle
-
-  case class Line(color: RgbColor, marked: Boolean, startPoint: (Int, Int), endPoint: (Int, Int))
-    extends CoreLine {
-      override def filled = false
-    }
-
-  case class Polygon(color: RgbColor, filled: Boolean, marked: Boolean, points: List[(Int, Int)]) extends CorePolygon
-
-  case class Rectangle(color: RgbColor, filled: Boolean, marked: Boolean, upperLeftCorner: (Int, Int),
-                      lowerRightCorner: (Int, Int)) extends CoreRectangle
-
-  case class VectorShape(var name: String, rotatable: Boolean, editableColorIndex: Int, elements: List[Element])
-    extends CoreVectorShape
-
-  case class LinkLine(xcor: Double, isVisible: Boolean, dashChoices: List[Float]) extends CoreLinkLine
-
-  case class LinkShape(var name: String, curviness: Double, linkLines: List[LinkLine], indicator: VectorShape)
-    extends CoreLinkShape
-
   def readShape(element: XMLElement): VectorShape = {
     def colorFromString(string: String) = {
       val int = string.toInt
@@ -48,17 +49,18 @@ object ShapeXMLLoader {
                  (element.attributes("endX").toInt, element.attributes("endY").toInt))
 
           case "polygon" =>
-            Polygon(colorFromString(element.attributes("color")), element.attributes("filled").toBoolean,
-                    element.attributes("marked").toBoolean,
-                    for (element <- element.children if element.name == "point")
-                      yield (element.attributes("x").toInt, element.attributes("y").toInt))
+            Polygon(colorFromString(element.attributes("color")),
+                        element.attributes("filled").toBoolean, element.attributes("marked").toBoolean,
+                        for (element <- element.children if element.name == "point")
+                          yield (element.attributes("x").toInt, element.attributes("y").toInt))
 
           case "rectangle" =>
-            Rectangle(colorFromString(element.attributes("color")), element.attributes("filled").toBoolean,
-                      element.attributes("marked").toBoolean,
-                      (element.attributes("startX").toInt, element.attributes("startY").toInt),
-                      (element.attributes("endX").toInt, element.attributes("endY").toInt))
-
+            Rectangle(colorFromString(element.attributes("color")),
+                          element.attributes("filled").toBoolean, element.attributes("marked").toBoolean,
+                          (element.attributes("startX").toInt, element.attributes("startY").toInt),
+                          (element.attributes("endX").toInt, element.attributes("endY").toInt))
+          
+          case _ => null
         }
       }
 
@@ -66,79 +68,78 @@ object ShapeXMLLoader {
                 element.attributes("editableColorIndex").toInt, elements)
   }
 
-  def writeShape(shape: CoreVectorShape): XMLElement = {
+  def writeShape(writer: XMLStreamWriter, shape: CoreVectorShape) {
     def colorToString(color: RgbColor) =
       (color.red << 24 | color.green << 16 | color.blue << 8 | color.alpha).toString
 
-    val attributes = Map[String, String](
-      ("name", shape.name),
-      ("rotatable", shape.rotatable.toString),
-      ("editableColorIndex", shape.editableColorIndex.toString)
-    )
+    writer.writeStartElement("shape")
+
+    writer.writeAttribute("name", shape.name)
+    writer.writeAttribute("rotatable", shape.rotatable.toString)
+    writer.writeAttribute("editableColorIndex", shape.editableColorIndex.toString)
     
-    val children: List[XMLElement] =
-      for (element <- shape.elements.toList) yield {
-        element match {
-          case circle: CoreCircle =>
-            val attributes = Map[String, String](
-              ("color", colorToString(circle.color)),
-              ("filled", circle.filled.toString),
-              ("marked", circle.marked.toString),
-              ("x", circle.x.toString),
-              ("y", circle.y.toString),
-              ("diameter", circle.diameter.toString)
-            )
+    for (element <- shape.elements) {
+      element match {
+        case circle: CoreCircle =>
+          writer.writeStartElement("circle")
 
-            XMLElement("circle", attributes, "", Nil)
+          writer.writeAttribute("color", colorToString(circle.color))
+          writer.writeAttribute("filled", circle.filled.toString)
+          writer.writeAttribute("marked", circle.marked.toString)
+          writer.writeAttribute("x", circle.x.toString)
+          writer.writeAttribute("y", circle.y.toString)
+          writer.writeAttribute("diameter", circle.diameter.toString)
 
-          case line: CoreLine =>
-            val attributes = Map[String, String](
-              ("color", colorToString(line.color)),
-              ("marked", line.marked.toString),
-              ("startX", line.startPoint._1.toString),
-              ("startY", line.startPoint._2.toString),
-              ("endX", line.endPoint._1.toString),
-              ("endY", line.endPoint._2.toString)
-            )
+          writer.writeEndElement
 
-            XMLElement("line", attributes, "", Nil)
-          
-          case polygon: CorePolygon =>
-            val attributes = Map[String, String](
-              ("color", colorToString(polygon.color)),
-              ("filled", polygon.filled.toString),
-              ("marked", polygon.marked.toString)
-            )
+        case line: CoreLine =>
+          writer.writeStartElement("line")
 
-            val children =
-              for (point <- polygon.points.toList) yield {
-                val attributes = Map[String, String](
-                  ("x", point._1.toString),
-                  ("y", point._2.toString)
-                )
+          writer.writeAttribute("color", colorToString(line.color))
+          writer.writeAttribute("marked", line.marked.toString)
+          writer.writeAttribute("startX", line.startPoint._1.toString)
+          writer.writeAttribute("startY", line.startPoint._2.toString)
+          writer.writeAttribute("endX", line.endPoint._1.toString)
+          writer.writeAttribute("endY", line.endPoint._2.toString)
 
-                XMLElement("point", attributes, "", Nil)
-              }
+          writer.writeEndElement
+        
+        case polygon: CorePolygon =>
+          writer.writeStartElement("polygon")
 
-            XMLElement("polygon", attributes, "", children)
+          writer.writeAttribute("color", colorToString(polygon.color))
+          writer.writeAttribute("filled", polygon.filled.toString)
+          writer.writeAttribute("marked", polygon.marked.toString)
 
-          case rectangle: CoreRectangle =>
-            val attributes = Map[String, String](
-              ("color", colorToString(rectangle.color)),
-              ("filled", rectangle.filled.toString),
-              ("marked", rectangle.marked.toString),
-              ("startX", rectangle.upperLeftCorner._1.toString),
-              ("startY", rectangle.upperLeftCorner._2.toString),
-              ("endX", rectangle.lowerRightCorner._1.toString),
-              ("endY", rectangle.lowerRightCorner._2.toString)
-            )
+          for (point <- polygon.points) {
+            writer.writeStartElement("point")
 
-            XMLElement("rectangle", attributes, "", Nil)
+            writer.writeAttribute("x", point._1.toString)
+            writer.writeAttribute("y", point._2.toString)
 
-        }
+            writer.writeEndElement
+          }
+
+          writer.writeEndElement
+
+        case rectangle: CoreRectangle =>
+          writer.writeStartElement("rectangle")
+
+          writer.writeAttribute("color", colorToString(rectangle.color))
+          writer.writeAttribute("filled", rectangle.filled.toString)
+          writer.writeAttribute("marked", rectangle.marked.toString)
+          writer.writeAttribute("startX", rectangle.upperLeftCorner._1.toString)
+          writer.writeAttribute("startY", rectangle.upperLeftCorner._2.toString)
+          writer.writeAttribute("endX", rectangle.lowerRightCorner._1.toString)
+          writer.writeAttribute("endY", rectangle.lowerRightCorner._2.toString)
+
+          writer.writeEndElement
+        
+        case _ =>
       }
+    }
 
-    XMLElement("shape", attributes, "", children)
+    writer.writeEndElement
   }
 
   def readLinkShape(element: XMLElement): LinkShape = {
@@ -164,32 +165,37 @@ object ShapeXMLLoader {
     LinkShape(element.attributes("name"), element.attributes("curviness").toDouble, lines, indicator)
   }
 
-  def writeLinkShape(shape: CoreLinkShape): XMLElement = {
-    val attributes = Map[String, String](
-      ("name", shape.name),
-      ("curviness", shape.curviness.toString)
-    )
+  def writeLinkShape(writer: XMLStreamWriter, shape: CoreLinkShape) = {
+    writer.writeStartElement("shape")
 
-    val lines =
-      for (line <- shape.linkLines.toList) yield {
-        val attributes = Map[String, String](
-          ("x", line.xcor.toString),
-          ("visible", line.isVisible.toString)
-        )
-
-        val children =
-          for (dash <- line.dashChoices.toList) yield {
-            XMLElement("dash", Map[String, String](("value", dash.toString)), "", Nil)
-          }
-
-        XMLElement("line", attributes, "", children)
-      }
+    writer.writeAttribute("name", shape.name)
+    writer.writeAttribute("curviness", shape.curviness.toString)
     
-    val children = List[XMLElement](
-      XMLElement("lines", Map(), "", lines),
-      XMLElement("indicator", Map(), "", List(writeShape(shape.indicator)))
-    )
+    writer.writeStartElement("lines")
 
-    XMLElement("shape", attributes, "", children)
+    for (line <- shape.linkLines) {
+      writer.writeStartElement("line")
+
+      writer.writeAttribute("x", line.xcor.toString)
+      writer.writeAttribute("visible", line.isVisible.toString)
+
+      for (dash <- line.dashChoices) {
+        writer.writeStartElement("dash")
+        writer.writeAttribute("value", dash.toString)
+        writer.writeEndElement
+      }
+
+      writer.writeEndElement
+    }
+
+    writer.writeEndElement
+
+    writer.writeStartElement("indicator")
+
+    writeShape(writer, shape.indicator)
+
+    writer.writeEndElement
+
+    writer.writeEndElement
   }
 }

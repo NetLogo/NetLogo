@@ -23,8 +23,7 @@ object DirtyMonitor {
   }
 }
 
-class DirtyMonitor(frame: JFrame, modelSaver: ModelSaver, modelLoader: ModelLoader, modelTracker: ModelTracker,
-                   title: Option[String] => String, codeWindow: JFrame)
+class DirtyMonitor(frame: JFrame, modelSaver: ModelSaver, modelLoader: GenericModelLoader, modelTracker: ModelTracker, title: Option[String] => String)
 extends BeforeLoadEvent.Handler
 with AfterLoadEvent.Handler
 with WidgetAddedEvent.Handler
