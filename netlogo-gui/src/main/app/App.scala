@@ -397,7 +397,8 @@ class App extends
     monitorManager = pico.getComponent(classOf[AgentMonitorManager])
     frame.addLinkComponent(monitorManager)
 
-    _tabManager = new TabManager(workspace, pico.getComponent(classOf[InterfaceTab]), pico.getComponent(classOf[ExternalFileManager]))
+    _tabManager = new TabManager(workspace, pico.getComponent(classOf[InterfaceTab]),
+                                 pico.getComponent(classOf[ExternalFileManager]))
 
     frame.addLinkComponent(_tabManager)
 
@@ -476,10 +477,10 @@ class App extends
       workspace.init(viewManager)
       frame.addLinkComponent(viewManager)
 
-      _tabManager.init(fileManager, dirtyMonitor, menuBar)
-
       app.setMenuBar(menuBar)
       frame.setJMenuBar(menuBar)
+
+      _tabManager.init(fileManager, dirtyMonitor, menuBar, allActions)
 
       // OK, this is a little kludgy.  First we pack so everything
       // is realized, and all addNotify() methods are called.  But
