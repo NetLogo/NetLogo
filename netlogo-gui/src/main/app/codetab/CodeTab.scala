@@ -2,7 +2,7 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.event.{ActionEvent, TextEvent, TextListener}
+import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, TextEvent, TextListener}
 import java.awt.print.PageFormat
 import java.awt.{BorderLayout, Component, Dimension, Graphics, Insets}
 import java.io.IOException
@@ -50,6 +50,12 @@ with MenuTab {
   val text = {
     val editor = editorFactory.newEditor(editorConfiguration, true)
     editor.setMargin(new Insets(4, 7, 4, 7))
+
+    editor.addFocusListener(new FocusListener {
+      def focusGained(fe: FocusEvent) { FindDialog.watchCode(editor) }
+      def focusLost(fe: FocusEvent) { if (!fe.isTemporary) { FindDialog.dontWatchCode(editor) } }
+    })
+
     editor
   }
 
@@ -97,7 +103,7 @@ with MenuTab {
           .put(UserAction.KeyBindings.keystroke('G', withMenu = true), "procmenu")
         this.getActionMap.put("procmenu", proceduresMenu.getAction)
 
-        add(new ToolBarActionButton(FindDialog.FIND_ACTION))
+        add(new ToolBarActionButton(FindDialog.FIND_ACTION_CODE))
         add(new ToolBarActionButton(CompileAction))
         add(new ToolBar.Separator)
         add(proceduresMenu)
