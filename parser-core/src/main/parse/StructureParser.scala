@@ -164,8 +164,12 @@ object StructureParser {
     }
   }
 
-  def resolveIncludePath(path: String) =
-    path.replaceFirst("^~", System.getProperty("user.home").replace("\\", "/"))
+  def resolveIncludePath(path: String) = {
+    if (System.getProperty("os.name").startsWith("Windows"))
+      path
+    else
+      path.replaceFirst("^~", System.getProperty("user.home"))
+  }
 
 }
 /// for each source file. knits stages together. throws CompilerException
