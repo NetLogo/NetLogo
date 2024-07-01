@@ -44,7 +44,8 @@ with MenuAction {
     Preferences.LogEvents,
     Preferences.IncludedFilesMenu,
     Preferences.ProceduresMenuSortOrder,
-    Preferences.FocusOnError
+    Preferences.FocusOnError,
+    Preferences.StartSeparateCodeTab
   )
 }
 

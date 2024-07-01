@@ -165,4 +165,6 @@ object Preferences {
   }
 
   object FocusOnError extends BooleanPreference("focusOnError", false, true) {}
+
+  object StartSeparateCodeTab extends BooleanPreference("startSeparateCodeTab", false, false) {}
 }

@@ -510,7 +510,7 @@ class App extends
 
       frame.addLinkComponent(_tabManager.separateTabsWindow)
 
-      if (popOutCodeTab) {
+      if (popOutCodeTab || prefs.getBoolean("startSeparateCodeTab", false)) {
         _tabManager.switchWindow(true)
       }
     }
