@@ -36,6 +36,12 @@ class Circle(color: Color) extends Element(color) with BaseCircle with Cloneable
     yDiameter = xDiameter
   }
 
+  def this(color: Color, filled: Boolean, marked: Boolean, x: Int, y: Int, diameter: Int) {
+    this(x, y, diameter, color)
+    this.filled = filled
+    this.marked = marked
+  }
+
   def origin: Point =
     new Point(x + round(xDiameter.toFloat / 2), y + round(yDiameter.toFloat / 2))
 

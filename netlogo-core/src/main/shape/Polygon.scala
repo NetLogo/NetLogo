@@ -28,6 +28,13 @@ class Polygon(color: Color) extends Curve(color) with BasePolygon with Cloneable
     modifiedPointIndex += 2
   }
 
+  def this(color: Color, filled: Boolean, marked: Boolean, points: List[Point]) {
+    this(color)
+    this.filled = filled
+    this.marked = marked
+    points.foreach(addNewPoint)
+  }
+
   override def clone: AnyRef = {
     val newPoly: Polygon = super.clone.asInstanceOf[Polygon]
     newPoly.xcoords = Array(newPoly.xcoords: _*)

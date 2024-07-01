@@ -46,7 +46,7 @@ object HeadlessWorkspace {
     pico.add("org.nlogo.sdm.AggregateManagerLite")
     pico.add("org.nlogo.render.Renderer")
     pico.addComponent(subclass)
-    pico.addAdapter(new ModelLoaderComponent())
+    pico.addAdapter(new LegacyModelLoaderComponent())
     pico.add(classOf[HubNetManagerFactory], "org.nlogo.hubnet.server.HeadlessHubNetManagerFactory")
     val hw = pico.getComponent(subclass)
     hw.set3d(is3d)

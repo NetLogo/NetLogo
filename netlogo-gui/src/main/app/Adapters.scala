@@ -5,7 +5,8 @@ package org.nlogo.app
 import java.lang.reflect.{ Type => JType }
 
 import org.nlogo.core.Dialect
-import org.nlogo.api.{ AddableComponent, AutoConvertable, ConfigurableModelLoader, ModelLoader, Workspace => ApiWorkspace }
+import org.nlogo.api.{ AddableComponent, AutoConvertable, ConfigurableModelLoader, GenericModelLoader, NLogoXMLLoader,
+                       Workspace => ApiWorkspace }
 import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter }
 import org.nlogo.nvm.{ DefaultCompilerServices, PresentationCompilerInterface }
 
@@ -15,7 +16,19 @@ import org.picocontainer.adapters.AbstractAdapter
 import scala.collection.JavaConverters._
 
 object Adapters {
-  class ModelLoaderComponent extends AbstractAdapter[ModelLoader](classOf[ModelLoader], classOf[ConfigurableModelLoader]) {
+  class XMLModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[GenericModelLoader], classOf[NLogoXMLLoader]) {
+    def getDescriptor(): String = "XMLModelLoaderComponent"
+    def verify(p: PicoContainer): Unit = {}
+
+    def getComponentInstance(container: org.picocontainer.PicoContainer, into: JType) = {
+      val compiler         = container.getComponent(classOf[PresentationCompilerInterface])
+      val compilerServices = new DefaultCompilerServices(compiler)
+
+      fileformat.standardXMLLoader(compilerServices, true)
+    }
+  }
+
+  class ModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[GenericModelLoader], classOf[ConfigurableModelLoader]) {
     def getDescriptor(): String = "ModelLoaderComponent"
     def verify(p: PicoContainer): Unit = {}
 

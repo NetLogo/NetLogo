@@ -1,3 +1,4 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.api
 
@@ -9,6 +10,23 @@ import org.nlogo.core.{ I18N, Model }
 
 import scala.util.{ Failure, Try }
 import scala.reflect.ClassTag
+
+trait GenericModelLoader {
+  def readModel(uri: URI): Try[Model]
+  def readModel(source: String, extension: String): Try[Model]
+  def save(model: Model, uri: URI): Try[URI]
+  def sourceString(model: Model, extension: String): Try[String]
+  def emptyModel(extension: String): Model
+}
+
+object GenericModelLoader {
+  def getURIExtension(uri: URI): Option[String] = {
+    if (uri.getScheme == "jar")
+      uri.getSchemeSpecificPart.split("\\.").lastOption
+    else
+      uri.getPath.split("\\.").lastOption
+  }
+}
 
 class FormatterPair[A, B <: ModelFormat[A, B]](
   val modelFormat: B,
@@ -44,16 +62,7 @@ class FormatterPair[A, B <: ModelFormat[A, B]](
       modelFormat.emptyModel(serializers)
   }
 
-object ModelLoader {
-  def getURIExtension(uri: URI): Option[String] = {
-    if (uri.getScheme == "jar")
-      uri.getSchemeSpecificPart.split("\\.").lastOption
-    else
-      uri.getPath.split("\\.").lastOption
-  }
-}
-
-trait ModelLoader {
+trait ModelLoader extends GenericModelLoader {
   def formats: Seq[FormatterPair[_, _]]
 
   def uriCompatible(uri: URI): Option[FormatterPair[_, _]] =
