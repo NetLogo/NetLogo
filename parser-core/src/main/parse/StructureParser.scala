@@ -165,7 +165,9 @@ object StructureParser {
   }
 
   def resolveIncludePath(path: String) = {
-    if (System.getProperty("os.name").startsWith("Windows"))
+    val name = System.getProperty("os.name")
+
+    if (name == null || name.startsWith("Windows"))
       path
     else
       path.replaceFirst("^~", System.getProperty("user.home"))
