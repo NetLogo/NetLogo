@@ -17,7 +17,7 @@ import scala.util.{ Failure, Try }
 
 // figure out where to use editNames based on LabLoader
 class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
-  private val defaultInfo: String = FileIO.url2String("/system/empty-info.md")
+  lazy private val defaultInfo: String = FileIO.url2String("/system/empty-info.md")
 
   private def isCompatible(extension: String): Boolean =
     extension == "nlogo" || extension == "nlogo3d"
