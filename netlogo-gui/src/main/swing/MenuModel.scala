@@ -29,7 +29,9 @@ class MenuModel[A, B](var groupOrder: Seq[String] = Seq())(implicit leafOrdering
 
   def insertLeaf(leafValue: A, groupName: String = ""): Unit = {
     addGroup(groupName)
-    children = (children :+ Leaf(leafValue, groupName)).sorted
+    val leaf = Leaf(leafValue, groupName)
+    if (!children.contains(leaf))
+      children = (children :+ leaf).sorted
   }
 
   def createBranch(branchValue: B, groupName: String = ""): MenuModel[A, B] = {

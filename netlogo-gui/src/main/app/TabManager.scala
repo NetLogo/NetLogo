@@ -25,16 +25,11 @@ import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, 
 import org.nlogo.window.{ ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget }
 
 class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
-                 val externalFileManager: ExternalFileManager) extends TabsInterface
-                                                               with AboutToCloseFilesEvent.Handler
-                                                               with AboutToSaveModelEvent.Handler
-                                                               with CompiledEvent.Handler
-                                                               with ExternalFileSavedEvent.Handler
-                                                               with LoadBeginEvent.Handler
-                                                               with LoadErrorEvent.Handler
-                                                               with LoadModelEvent.Handler
-                                                               with ModelSavedEvent.Handler
-                                                               with RuntimeErrorEvent.Handler {
+                 val externalFileManager: ExternalFileManager)
+  extends TabsInterface with AboutToCloseFilesEvent.Handler with AboutToSaveModelEvent.Handler
+  with CompiledEvent.Handler with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler
+  with LoadErrorEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler {
+
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
   private val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager
@@ -66,6 +61,16 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   movingTabs = false
 
+  workspace.getFrame.addWindowFocusListener(new WindowFocusListener {
+    def windowGainedFocus(e: WindowEvent) {
+      if (separateTabs.getSelectedComponent != null) {
+        setMenuActions(separateTabs.getSelectedComponent, mainTabs.getSelectedComponent)
+      }
+    }
+    
+    def windowLostFocus(e: WindowEvent) {}
+  })
+
   separateTabsWindow.addWindowListener(new WindowAdapter {
     override def windowClosing(e: WindowEvent) {
       switchWindow(false)
@@ -74,13 +79,15 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   separateTabsWindow.addWindowFocusListener(new WindowFocusListener {
     def windowGainedFocus(e: WindowEvent) {
-      separateTabs.getSelectedComponent.requestFocus
+      separateTabs.focusSelected
+
+      setMenuActions(mainTabs.getSelectedComponent, separateTabs.getSelectedComponent)
     }
     
     def windowLostFocus(e: WindowEvent) {}
   })
 
-  def init(fileManager: FileManager, dirtyMonitor: DirtyMonitor, menuBar: MenuBar) {
+  def init(fileManager: FileManager, dirtyMonitor: DirtyMonitor, menuBar: MenuBar, actions: Seq[Action]) {
     this.fileManager = fileManager
     this.dirtyMonitor = dirtyMonitor
     this.menuBar = menuBar
@@ -88,8 +95,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     fileManager.setTabManager(this)
     dirtyMonitor.setCodeWindow(separateTabsWindow)
 
-    permanentMenuActions.foreach(menuBar.offerAction)
-    
+    actions.foreach(separateTabsWindow.menuBar.offerAction)
+    permanentMenuActions.foreach(offerAction)
+
     updateTabActions()
   }
 
@@ -183,20 +191,30 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def setMenuActions(oldTab: Component, newTab: Component) {
     oldTab match {
-      case mt: MenuTab => mt.activeMenuActions.foreach(menuBar.revokeAction)
+      case mt: MenuTab => mt.activeMenuActions.foreach(revokeAction)
     }
 
     newTab match {
-      case mt: MenuTab => mt.activeMenuActions.foreach(menuBar.offerAction)
+      case mt: MenuTab => mt.activeMenuActions.foreach(offerAction)
     }
   }
 
   def updateTabActions() {
-    tabActions.foreach(menuBar.revokeAction)
+    tabActions.foreach(revokeAction)
 
     tabActions = TabsMenu.tabActions(this)
 
-    tabActions.foreach(menuBar.offerAction)
+    tabActions.foreach(offerAction)
+  }
+
+  def offerAction(action: Action) {
+    menuBar.offerAction(action)
+    separateTabsWindow.menuBar.offerAction(action)
+  }
+
+  def revokeAction(action: Action) {
+    menuBar.revokeAction(action)
+    separateTabsWindow.menuBar.revokeAction(action)
   }
 
   def lineNumbersVisible = mainCodeTab.lineNumbersVisible
@@ -280,7 +298,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   private def addExternalFile(name: Filename) {
     if (getExternalFileTabs.isEmpty)
-      menuBar.offerAction(SaveAllAction)
+      offerAction(SaveAllAction)
 
     val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, fileManager.convertTabAction(_), mainCodeTab.smartTabbingEnabled)
 
@@ -330,7 +348,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     externalFileManager.remove(tab)
 
     if (getExternalFileTabs.isEmpty)
-      menuBar.revokeAction(SaveAllAction)
+      revokeAction(SaveAllAction)
     
     updateTabActions()
   }
@@ -475,10 +493,6 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
           tab.get.handle(e) // it was late to the party, let it handle the event too
         }
         recolorTab(tab.get, e.error != null)
-
-        // should be no longer necessary, confirm
-
-        // requestFocus()
       }
       case null => // i'm assuming this is only true when we've deleted that last widget. not a great sol'n - AZS 5/16/05
         recolorTab(interfaceTab, e.error != null)

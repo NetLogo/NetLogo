@@ -3,11 +3,15 @@
 package org.nlogo.app
 
 import java.awt.{ Dimension, Frame, GraphicsEnvironment, Point }
-import javax.swing.{ JFrame, JTabbedPane, WindowConstants }
+import javax.swing.{ JFrame, WindowConstants }
 
 import org.nlogo.window.Event.LinkChild
 
-class CodeTabsWindow(parent: Frame, tabs: JTabbedPane) extends JFrame with LinkChild {
+class CodeTabsWindow(parent: Frame, tabs: TabsPanel) extends JFrame with LinkChild {
+  val menuBar: MenuBar = new MenuBar(false)
+
+  setJMenuBar(menuBar)
+
   setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE)
   setSize(new Dimension(600, 400))
   setVisible(false)
