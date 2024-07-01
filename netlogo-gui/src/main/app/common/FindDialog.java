@@ -6,6 +6,7 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import javax.swing.Action;
 import javax.swing.JDialog;
+import javax.swing.text.JTextComponent;
 
 import org.nlogo.core.I18N;
 import org.nlogo.swing.NonemptyTextFieldActionEnabler;
@@ -20,9 +21,11 @@ public class FindDialog
   /// STATIC CODE
 
   private static FindDialog instance;
+  private static FindDialog instanceCode;
 
-  public static void init(java.awt.Frame frame) {
+  public static void init(Frame frame, Frame frameCode) {
     instance = new FindDialog(frame);
+    instanceCode = new FindDialog(frameCode);
   }
 
   public static FindDialog getInstance() {
@@ -32,23 +35,46 @@ public class FindDialog
     return instance;
   }
 
-  public static void watch(javax.swing.text.JTextComponent target) {
+  public static FindDialog getInstanceCode() {
+    if (instanceCode == null) {
+      throw new IllegalStateException("FindDialog was never initialized");
+    }
+    return instanceCode;
+  }
+
+  public static void watch(JTextComponent target) {
     FIND_ACTION.setEnabled(true);
     FindDialog findInstance = getInstance();
     findInstance.target = target;
     findInstance.setReplaceEnabled(target.isEditable());
   }
 
-  public static void dontWatch(javax.swing.text.JTextComponent target) {
+  public static void dontWatch(JTextComponent target) {
     FindDialog findInstance = getInstance();
     findInstance.setVisible(false);
     FIND_ACTION.setEnabled(false);
+  }
+
+  public static void watchCode(JTextComponent target) {
+    FIND_ACTION_CODE.setEnabled(true);
+    FindDialog findInstance = getInstanceCode();
+    findInstance.target = target;
+    findInstance.setReplaceEnabled(target.isEditable());
+  }
+
+  public static void dontWatchCode(JTextComponent target) {
+    FindDialog findInstance = getInstanceCode();
+    findInstance.setVisible(false);
+    FIND_ACTION_CODE.setEnabled(false);
   }
 
   /// ACTIONS
 
   public static final Action FIND_ACTION = new FindAction();
   public static final Action FIND_NEXT_ACTION = new FindNextAction();
+
+  public static final Action FIND_ACTION_CODE = new FindActionCode();
+  public static final Action FIND_NEXT_ACTION_CODE = new FindNextActionCode();
 
   public static class FindAction
       extends javax.swing.text.TextAction {
@@ -96,6 +122,57 @@ public class FindDialog
     public void actionPerformed(java.awt.event.ActionEvent e) {
       String search = getInstance().findBox.getText();
       if (!getInstance().next(search, getInstance().ignoreCaseCheckBox.isSelected(), getInstance().wrapAroundCheckBox.isSelected())) {
+        java.awt.Toolkit.getDefaultToolkit().beep();
+      }
+    }
+  }
+
+  public static class FindActionCode
+      extends javax.swing.text.TextAction {
+    FindActionCode() {
+      super(I18N.guiJ().get("menu.edit.find"));
+      putValue(Action.SMALL_ICON, icon("/images/magnify.gif"));
+      putValue(UserAction.ActionCategoryKey(), UserAction.EditCategory());
+      putValue(UserAction.ActionGroupKey(),    UserAction.EditFindGroup());
+      putValue(Action.ACCELERATOR_KEY,
+          UserAction.KeyBindings$.MODULE$.keystroke('F', true, false, false));
+      setEnabled(false);
+    }
+
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+      FindDialog.getInstanceCode().setVisible(true);
+      FindDialog.getInstanceCode().findBox.requestFocus();
+      FindDialog.getInstanceCode().findBox.selectAll();
+      // Setting find field by default to selected text
+      FindDialog findDialog = getInstanceCode();
+      String selectedText = findDialog.target.getSelectedText();
+      if(selectedText != null){
+        FindDialog.getInstanceCode().findBox.setText(selectedText);
+      }
+      FindDialog.getInstanceCode().setLocation
+          (instance.owner.getLocation().x + instance.owner.getWidth()
+              - instance.getPreferredSize().width,
+              instance.owner.getLocation().y + instance.owner.getHeight() / 2
+                  - instance.getPreferredSize().height / 2);
+      FindDialog.getInstanceCode().notFoundLabel.setVisible(false);
+    }
+  }
+
+  public static class FindNextActionCode
+      extends javax.swing.text.TextAction {
+    FindNextActionCode() {
+      super(I18N.guiJ().get("menu.edit.findNext"));
+      putValue(Action.SMALL_ICON, icon("/images/magnify.gif"));
+      putValue(UserAction.ActionCategoryKey(), UserAction.EditCategory());
+      putValue(UserAction.ActionGroupKey(),    UserAction.EditFindGroup());
+      putValue(Action.ACCELERATOR_KEY,
+          UserAction.KeyBindings$.MODULE$.keystroke('G', true, false, false));
+      setEnabled(false);
+    }
+
+    public void actionPerformed(java.awt.event.ActionEvent e) {
+      String search = getInstanceCode().findBox.getText();
+      if (!getInstanceCode().next(search, getInstanceCode().ignoreCaseCheckBox.isSelected(), getInstanceCode().wrapAroundCheckBox.isSelected())) {
         java.awt.Toolkit.getDefaultToolkit().beep();
       }
     }
