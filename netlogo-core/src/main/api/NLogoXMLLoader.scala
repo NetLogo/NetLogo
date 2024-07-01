@@ -7,9 +7,10 @@ import java.net.URI
 import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants }
 
 import org.nlogo.core.{ AgentKind, Button, ChooseableBoolean, ChooseableDouble, ChooseableList, ChooseableString,
-                        Chooser, Horizontal, InputBox, LinkShape, LogoList, Model, Monitor, NumericInput,
-                        OptionalSection, Output, Pen, Plot, ShapeXMLLoader, Slider, StringInput, Switch, UpdateMode,
-                        VectorShape, Vertical, View, Widget, WorldDimensions, XMLElement }
+                        Chooser, Horizontal, InputBox, LogoList, Model, Monitor, NumericInput, OptionalSection, Output,
+                        Pen, Plot, ShapeXMLLoader, Slider, StringInput, Switch, UpdateMode, Vertical, View, Widget,
+                        WorldDimensions, XMLElement }
+import org.nlogo.core.Shape.{ LinkShape, VectorShape }
 
 import scala.io.Source
 import scala.util.{ Failure, Try }
