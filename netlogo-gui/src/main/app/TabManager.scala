@@ -225,9 +225,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       mainTabs.getTitleAt(index)
   }
 
-  def getTabWithFilename(filename: Filename): Option[TemporaryCodeTab] = {
+  def getTabWithFilename(filename: Filename): Option[TemporaryCodeTab] =
     getExternalFileTabs.find(_.filename == filename)
-  }
 
   def getSelectedTab: Component = {
     if (separateTabsWindow.isAncestorOf(focusManager.getFocusOwner))
@@ -313,7 +312,16 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
-  def closeExternalFile(tab: TemporaryCodeTab) {
+  def closeExternalFile(filename: Filename) {
+    getTabWithFilename(filename) match {
+      case Some(tab) =>
+        closeExternalTab(tab)
+
+      case _ =>
+    }
+  }
+
+  def closeExternalTab(tab: TemporaryCodeTab) {
     if (separateTabsWindow.isVisible)
       separateTabs.remove(tab)
     else
@@ -369,7 +377,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def handle(e: LoadBeginEvent) {
     if (!reloading) {
-      getExternalFileTabs.foreach(closeExternalFile)
+      getExternalFileTabs.foreach(closeExternalTab)
       mainTabs.setSelectedComponent(interfaceTab)
     }
   }
