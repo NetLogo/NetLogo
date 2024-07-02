@@ -62,6 +62,6 @@ package object fileformat {
     new NLogoXMLLoader(editNames)
 
   def standardAnyLoader(literalParser: LiteralParser, editNames: Boolean = false) =
-    new NLogoAnyLoader(standardXMLLoader(editNames), standardLoader(literalParser, editNames))
+    new NLogoAnyLoader(List(standardXMLLoader(editNames), standardLoader(literalParser, editNames)))
 
 }
