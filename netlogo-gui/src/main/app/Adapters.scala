@@ -17,14 +17,24 @@ import scala.collection.JavaConverters._
 
 object Adapters {
   class AnyModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[GenericModelLoader], classOf[NLogoAnyLoader]) {
-    def getDescriptor(): String = "XMLModelLoaderComponent"
+    def getDescriptor(): String = "AnyModelLoaderComponent"
     def verify(p: PicoContainer): Unit = {}
 
     def getComponentInstance(container: PicoContainer, into: JType) = {
       val compiler = container.getComponent(classOf[PresentationCompilerInterface])
       val compilerServices = new DefaultCompilerServices(compiler)
 
-      fileformat.standardAnyLoader(compilerServices, true)
+      val loader: ConfigurableModelLoader = fileformat.standardAnyLoader(compilerServices, true)
+
+      val components = container.getComponents(classOf[AddableComponent]).asScala
+
+      if (components.nonEmpty) {
+        components.foldLeft(loader) {
+          case (loader, component) => component.addToLoader(loader)
+        }
+      }
+
+      else loader
     }
   }
 
