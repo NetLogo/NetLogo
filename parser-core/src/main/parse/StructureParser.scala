@@ -41,7 +41,7 @@ object StructureParser {
           firstResults
         else {
           Iterator.iterate(firstResults) { results =>
-            val suppliedPath = results.includes.head.value.asInstanceOf[String]
+            val suppliedPath = resolveIncludePath(results.includes.head.value.asInstanceOf[String])
             cAssert(suppliedPath.endsWith(".nls"), IncludeFilesEndInNLS, results.includes.head)
             includeFile(compilationEnvironment, suppliedPath) match {
               case Some((path, fileContents)) =>
@@ -159,9 +159,18 @@ object StructureParser {
           .filter(_.tpe == TokenType.Literal)
           .map(_.value)
           .collect {
-            case s: String => s
+            case s: String => resolveIncludePath(s)
           }.toSeq
     }
+  }
+
+  def resolveIncludePath(path: String) = {
+    val name = System.getProperty("os.name")
+
+    if (name == null || name.startsWith("Windows"))
+      path
+    else
+      path.replaceFirst("^~", System.getProperty("user.home"))
   }
 
 }
