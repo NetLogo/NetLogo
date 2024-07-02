@@ -335,7 +335,10 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
           separateTabs.setSelectedComponent(tab)
         else
           mainTabs.setSelectedComponent(tab)
-      case _ => addExternalFile(Right(filename))
+      case _ =>
+        addExternalFile(Right(filename))
+
+        new CompileAllEvent().raise(mainCodeTab)
     }
   }
 
