@@ -54,7 +54,7 @@
 	url = https://github.com/NetLogo/View2.5D.git
 [submodule "extensions/ls"]
 	path = extensions/ls
-	url = https://github.com/ERSUCC/NetLogo-LevelSpace
+	url = https://github.com/NetLogo/LevelSpace.git
 [submodule "extensions/r"]
 	path = extensions/r
 	url = https://github.com/NetLogo/R-Extension.git
