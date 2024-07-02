@@ -2,15 +2,20 @@
 
 package org.nlogo.api
 
+import java.awt.Point
 import java.io.{ File, PrintWriter, StringReader, StringWriter, Writer }
 import java.net.URI
 import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants }
+
+import org.jhotdraw.framework.Figure
 
 import org.nlogo.core.{ AgentKind, Button, ChooseableBoolean, ChooseableDouble, ChooseableList, ChooseableString,
                         Chooser, Horizontal, InputBox, LogoList, Model, Monitor, NumericInput, OptionalSection, Output,
                         Pen, Plot, ShapeXMLLoader, Slider, StringInput, Switch, UpdateMode, Vertical, View, Widget,
                         WorldDimensions, XMLElement }
 import org.nlogo.core.Shape.{ LinkShape, VectorShape }
+import org.nlogo.sdm.gui.{ AggregateDrawing, BindingConnection, ConverterFigure, StockFigure, RateConnection,
+                           ReservoirFigure }
 
 import scala.io.Source
 import scala.util.{ Failure, Success, Try }
@@ -207,7 +212,7 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
       var linkShapes: Option[List[LinkShape]] = None
       var optionalSections = List[OptionalSection[_]]()
 
-      reader.next
+      while (reader.hasNext && reader.next != XMLStreamConstants.START_ELEMENT) {}
 
       val element = readXMLElement
 
@@ -241,7 +246,105 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
                                                        PreviewCommands.Default)
 
               case "systemDynamics" =>
-                throw new Exception("NetLogo XML does not yet support System Dynamics.")
+                val drawing = new AggregateDrawing
+
+                drawing.getModel.setDt(element.attributes("dt").toDouble)
+
+                var refs = Map[Int, Figure]()
+                
+                for (element <- element.children) {
+                  element.name match {
+                    case "stock" =>
+                      val stock = new StockFigure
+
+                      stock.nameWrapper(element.attributes("name"))
+                      stock.initialValueExpressionWrapper(element.attributes("initialValue"))
+                      stock.allowNegative(element.attributes("allowNegative").toBoolean)
+
+                      stock.displayBox(new Point(element.attributes("centerX").toInt,
+                                                 element.attributes("centerY").toInt),
+                                       new Point(element.attributes("startX").toInt,
+                                                 element.attributes("startY").toInt))
+
+                      drawing.add(stock)
+
+                      refs += ((refs.size, stock))
+
+                    case "converter" =>
+                      val converter = new ConverterFigure
+
+                      converter.nameWrapper(element.attributes("name"))
+                      converter.expressionWrapper(element.attributes("expression"))
+
+                      converter.displayBox(new Point(element.attributes("centerX").toInt,
+                                                     element.attributes("centerY").toInt),
+                                           new Point(element.attributes("startX").toInt,
+                                                     element.attributes("startY").toInt))
+
+                      drawing.add(converter)
+
+                      refs += ((refs.size, converter))
+                    
+                    case "reservoir" =>
+                      val reservoir = new ReservoirFigure
+
+                      reservoir.displayBox(new Point(element.attributes("centerX").toInt,
+                                                     element.attributes("centerY").toInt),
+                                           new Point(element.attributes("startX").toInt,
+                                                     element.attributes("startY").toInt))
+
+                      drawing.add(reservoir)
+
+                      refs += ((refs.size, reservoir))
+
+                    case "binding" =>
+                      val binding = new BindingConnection
+
+                      binding.displayBox(new Point(element.attributes("centerX").toInt,
+                                                   element.attributes("centerY").toInt),
+                                         new Point(element.attributes("startX").toInt,
+                                                   element.attributes("startY").toInt))
+
+                      val start = refs(element.attributes("startFigure").toInt)
+                      val end = refs(element.attributes("endFigure").toInt)
+
+                      binding.connectStart(start.connectorAt(start.center.x, start.center.y))
+                      binding.connectEnd(end.connectorAt(end.center.x, end.center.y))
+                      
+                      drawing.add(binding)
+
+                      refs += ((refs.size, binding))
+
+                    case "rate" =>
+                      val rate = new RateConnection
+
+                      rate.nameWrapper(element.attributes("name"))
+                      rate.expressionWrapper(element.attributes("expression"))
+                      rate.bivalentWrapper(element.attributes("bivalent").toBoolean)
+
+                      rate.startPoint(element.attributes("startX").toInt, element.attributes("startY").toInt)
+
+                      if (element.attributes.contains("middleX"))
+                        rate.insertPointAt(new Point(element.attributes("middleX").toInt, element.attributes("middleY").toInt), 1)
+
+                      rate.endPoint(element.attributes("endX").toInt, element.attributes("endY").toInt)
+
+                      val start = refs(element.attributes("startFigure").toInt)
+                      val end = refs(element.attributes("endFigure").toInt)
+
+                      rate.connectStart(start.connectorAt(start.center.x, start.center.y))
+                      rate.connectEnd(end.connectorAt(end.center.x, end.center.y))
+
+                      drawing.add(rate)
+
+                      refs += ((refs.size, rate))
+
+                  }
+                }
+
+                optionalSections = optionalSections :+
+                  new OptionalSection[AggregateDrawing]("org.nlogo.modelsection.systemdynamics.gui", Some(drawing),
+                                                        new AggregateDrawing)
 
               case "experiments" =>
                 val experiments =
@@ -627,7 +730,7 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
       }
     }
 
-    writer.writeStartDocument
+    writer.writeStartDocument("utf-8", "1.0")
 
     writer.writeStartElement("model")
 
@@ -681,8 +784,110 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
           }
 
         case "org.nlogo.modelsection.systemdynamics.gui" =>
-          throw new Exception("NetLogo XML does not yet support System Dynamics.")
-        
+          val drawing = section.get.get.asInstanceOf[AggregateDrawing]
+
+          writer.writeStartElement("systemDynamics")
+
+          writer.writeAttribute("dt", drawing.getModel.dt.toString)
+
+          var refs = Map[Figure, Int]()
+
+          val figures = drawing.figures
+
+          while (figures.hasNextFigure) {
+            figures.nextFigure match {
+              case stock: StockFigure =>
+                writer.writeStartElement("stock")
+
+                writer.writeAttribute("name", stock.nameWrapper)
+                writer.writeAttribute("initialValue", stock.initialValueExpressionWrapper)
+                writer.writeAttribute("allowNegative", stock.allowNegative.toString)
+
+                writer.writeAttribute("centerX", stock.center.x.toString)
+                writer.writeAttribute("centerY", stock.center.y.toString)
+
+                writer.writeAttribute("startX", stock.displayBox.x.toString)
+                writer.writeAttribute("startY", stock.displayBox.y.toString)
+
+                writer.writeEndElement
+
+                refs += ((stock, refs.size))
+              
+              case converter: ConverterFigure =>
+                writer.writeStartElement("converter")
+
+                writer.writeAttribute("name", converter.nameWrapper)
+                writer.writeAttribute("expression", converter.expressionWrapper)
+
+                writer.writeAttribute("centerX", converter.center.x.toString)
+                writer.writeAttribute("centerY", converter.center.y.toString)
+
+                writer.writeAttribute("startX", converter.displayBox.x.toString)
+                writer.writeAttribute("startY", converter.displayBox.y.toString)
+
+                writer.writeEndElement
+
+                refs += ((converter, refs.size))
+              
+              case reservoir: ReservoirFigure =>
+                writer.writeStartElement("reservoir")
+
+                writer.writeAttribute("centerX", reservoir.center.x.toString)
+                writer.writeAttribute("centerY", reservoir.center.y.toString)
+
+                writer.writeAttribute("startX", reservoir.displayBox.x.toString)
+                writer.writeAttribute("startY", reservoir.displayBox.y.toString)
+
+                writer.writeEndElement
+
+                refs += ((reservoir, refs.size))
+              
+              case binding: BindingConnection =>
+                writer.writeStartElement("binding")
+
+                writer.writeAttribute("startX", binding.startPoint.x.toString)
+                writer.writeAttribute("startY", binding.startPoint.y.toString)
+                writer.writeAttribute("endX", binding.endPoint.x.toString)
+                writer.writeAttribute("endY", binding.endPoint.y.toString)
+
+                writer.writeAttribute("startFigure", refs(binding.startFigure).toString)
+                writer.writeAttribute("endFigure", refs(binding.endFigure).toString)
+
+                writer.writeEndElement
+
+                refs += ((binding, refs.size))
+
+              case rate: RateConnection =>
+                writer.writeStartElement("rate")
+
+                writer.writeAttribute("name", rate.nameWrapper)
+                writer.writeAttribute("expression", rate.expressionWrapper)
+                writer.writeAttribute("bivalent", rate.bivalentWrapper.toString)
+
+                writer.writeAttribute("startX", rate.startPoint.x.toString)
+                writer.writeAttribute("startY", rate.startPoint.y.toString)
+
+                if (rate.pointCount == 3) {
+                  writer.writeAttribute("middleX", rate.pointAt(1).x.toString)
+                  writer.writeAttribute("middleY", rate.pointAt(2).y.toString)
+                }
+
+                writer.writeAttribute("endX", rate.endPoint.x.toString)
+                writer.writeAttribute("endY", rate.endPoint.y.toString)
+
+                writer.writeAttribute("startFigure", refs(rate.startFigure).toString)
+                writer.writeAttribute("endFigure", refs(rate.endFigure).toString)
+
+                writer.writeEndElement
+
+                refs += ((rate, refs.size))
+
+              case _ =>
+            }
+          }
+
+          writer.writeEndElement
+
         case "org.nlogo.modelsection.systemdynamics" =>
           // ignore, duplicate of previous case
 
