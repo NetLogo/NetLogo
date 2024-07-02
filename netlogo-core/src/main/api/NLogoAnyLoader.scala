@@ -32,6 +32,12 @@ class NLogoAnyLoader(loaders: List[GenericModelLoader]) extends ConfigurableMode
   }
 
   override def save(model: Model, uri: URI): Try[URI] = {
+    for (loader <- loaders) {
+      Try {
+        return loader.save(model, uri)
+      }
+    }
+
     Failure(new Exception("Unable to save model with format \"" +
                           GenericModelLoader.getURIExtension(uri).getOrElse("") + "\"."))
   }
