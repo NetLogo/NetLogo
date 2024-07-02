@@ -13,7 +13,7 @@ import org.nlogo.core.{ AgentKind, Button, ChooseableBoolean, ChooseableDouble, 
 import org.nlogo.core.Shape.{ LinkShape, VectorShape }
 
 import scala.io.Source
-import scala.util.{ Failure, Try }
+import scala.util.{ Failure, Success, Try }
 
 // figure out where to use editNames based on LabLoader
 class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
@@ -240,8 +240,8 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
                                                        Some(PreviewCommands.Custom(element.text)),
                                                        PreviewCommands.Default)
 
-              case "drawing" =>
-                // fill out later
+              case "systemDynamics" =>
+                throw new Exception("NetLogo XML does not yet support System Dynamics.")
 
               case "experiments" =>
                 val experiments =
@@ -326,9 +326,9 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
 
       reader.close
 
-      Try(Model(code.getOrElse(Model.defaultCode), widgets, info.getOrElse(defaultInfo), version,
-                turtleShapes.getOrElse(Model.defaultShapes), linkShapes.getOrElse(Model.defaultLinkShapes),
-                optionalSections))
+      Success(Model(code.getOrElse(Model.defaultCode), widgets, info.getOrElse(defaultInfo), version,
+                    turtleShapes.getOrElse(Model.defaultShapes), linkShapes.getOrElse(Model.defaultLinkShapes),
+                    optionalSections))
     }
 
     else
@@ -681,7 +681,10 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
           }
 
         case "org.nlogo.modelsection.systemdynamics.gui" =>
-          // fill out later
+          throw new Exception("NetLogo XML does not yet support System Dynamics.")
+        
+        case "org.nlogo.modelsection.systemdynamics" =>
+          // ignore, duplicate of previous case
 
         case "org.nlogo.modelsection.behaviorspace" =>
           val experiments = section.get.get.asInstanceOf[Seq[LabProtocol]]
@@ -814,7 +817,7 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
     if (isCompatible(uri)) {
       saveToWriter(model, new PrintWriter(new File(uri)))
 
-      Try(uri)
+      Success(uri)
     }
 
     else
@@ -827,7 +830,7 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
 
       saveToWriter(model, writer)
 
-      Try(writer.toString)
+      Success(writer.toString)
     }
 
     else
