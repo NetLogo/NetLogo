@@ -3,11 +3,11 @@
 package org.nlogo.app
 
 import java.awt.{ Color, Component, KeyboardFocusManager }
-import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent, WindowFocusListener }
+import java.awt.event.{ ActionEvent, KeyEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent, WindowFocusListener }
 import java.awt.print.PrinterAbortException
 import java.nio.file.{ Path, Paths }
 import java.util.prefs.Preferences
-import javax.swing.{ AbstractAction, Action }
+import javax.swing.{ AbstractAction, Action, JComponent, JFrame }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
@@ -61,6 +61,13 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   movingTabs = false
 
+  separateTabs.addMouseListener(new MouseAdapter {
+    override def mouseClicked(e: MouseEvent) {
+      if (e.getClickCount == 1 && e.isControlDown)
+        switchWindow(false)
+    }
+  })
+
   workspace.getFrame.addWindowFocusListener(new WindowFocusListener {
     def windowGainedFocus(e: WindowEvent) {
       if (separateTabs.getSelectedComponent != null) {
@@ -69,6 +76,16 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
     
     def windowLostFocus(e: WindowEvent) {}
+  })
+
+  val appComponent = workspace.getFrame.asInstanceOf[JFrame].getContentPane.asInstanceOf[JComponent]
+
+  appComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_W, withMenu = true, withShift = true), "openSeparateCodeTab")
+  appComponent.getActionMap.put("openSeparateCodeTab", new AbstractAction("OpenSeparateCodeTab") {
+    def actionPerformed(e: ActionEvent) {
+      switchWindow(true)
+    }
   })
 
   separateTabsWindow.addWindowListener(new WindowAdapter {
@@ -85,6 +102,16 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
     
     def windowLostFocus(e: WindowEvent) {}
+  })
+
+  val separateComponent = separateTabsWindow.getContentPane.asInstanceOf[JComponent]
+
+  separateComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_W, withMenu = true), "closeSeparateCodeTab")
+  separateComponent.getActionMap.put("closeSeparateCodeTab", new AbstractAction("CloseSeparateCodeTab") {
+    def actionPerformed(e: ActionEvent) {
+      switchWindow(false)
+    }
   })
 
   def init(fileManager: FileManager, dirtyMonitor: DirtyMonitor, menuBar: MenuBar, actions: Seq[Action]) {
