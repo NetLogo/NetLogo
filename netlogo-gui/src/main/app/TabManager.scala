@@ -435,8 +435,6 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
       mainCodeTab.setSeparate(true)
       getExternalFileTabs.foreach(_.setSeparate(true))
-
-      mainCodeTab.requestFocus
     }
 
     else {
@@ -449,13 +447,15 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       mainTabs.setSelectedIndex(2)
       mainCodeTab.setSeparate(false)
       getExternalFileTabs.foreach(_.setSeparate(false))
-
-      mainCodeTab.requestFocus
     }
+
+    mainCodeTab.requestFocus
 
     movingTabs = false
 
     new CompileAllEvent().raise(mainCodeTab)
+
+    App.app.setWindowTitles
   }
 
   def reload() {

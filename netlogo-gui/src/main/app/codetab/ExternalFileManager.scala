@@ -14,7 +14,9 @@ class ExternalFileManager extends WindowExternalFileManager {
   }
 
   def remove(codeTab: TemporaryCodeTab): Unit = {
-    externalTabs = externalTabs.filter(_._2 eq codeTab)
+    codeTab.filename.right.foreach { name =>
+      externalTabs -= name
+    }
   }
 
   def nameChanged(oldName: String, newName: String): Unit = {

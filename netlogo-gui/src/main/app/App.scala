@@ -737,6 +737,27 @@ class App extends
 
   ///
 
+  def setWindowTitles() {
+    if (tabManager.separateTabsWindow.isVisible) {
+      frame.setTitle(modelTitle())
+      tabManager.separateTabsWindow.setTitle(
+        tabManager.separateTabs.getSelectedComponent match {
+          case tempTab: TemporaryCodeTab => externalFileTitle(tempTab.filename.merge)
+          case _ => modelTitle(allowDirtyMarker = false)
+        }
+      )
+    }
+
+    else {
+      frame.setTitle(
+        tabManager.mainTabs.getSelectedComponent match {
+          case tempTab: TemporaryCodeTab => externalFileTitle(tempTab.filename.merge)
+          case _ => modelTitle()
+        }
+      )
+    }
+  }
+
   /**
    * Internal use only.
    */
@@ -747,21 +768,7 @@ class App extends
     } else if (e.oldTab == _tabManager.interfaceTab) {
       monitorManager.hideAll()
     }
-    if (_tabManager.separateTabsWindow.isVisible) {
-      val appWindowTitle = e.newTab match {
-        case tab: TemporaryCodeTab => externalFileTitle(tab.filename.merge)
-        case _                     => modelTitle()
-      }
-      frame.setTitle(appWindowTitle)
-    }
-    else {
-      val codeWindowTitle = e.newTab match {
-        case tab: TemporaryCodeTab => externalFileTitle(tab.filename.merge)
-        case _                     => modelTitle(allowDirtyMarker = false)
-      }
-      _tabManager.separateTabsWindow.setTitle(codeWindowTitle)
-      frame.setTitle(modelTitle())
-    }
+    setWindowTitles
   }
 
   /**
@@ -777,10 +784,7 @@ class App extends
     workspace.modelSaved(e.modelPath)
     errorDialogManager.setModelName(workspace.modelNameForDisplay)
     if (AbstractWorkspace.isApp) {
-      frame.setTitle(modelTitle())
-      if (_tabManager.separateTabsWindow.isVisible) {
-        _tabManager.separateTabsWindow.setTitle(modelTitle(allowDirtyMarker = false))
-      }
+      setWindowTitles
       workspace.hubNetManager.foreach { manager =>
         manager.setTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType)
       }
@@ -793,12 +797,8 @@ class App extends
   def handle(e: LoadBeginEvent): Unit = {
     val modelName = workspace.modelNameForDisplay
     errorDialogManager.setModelName(modelName)
-    if (AbstractWorkspace.isApp) {
-      frame.setTitle(modelTitle())
-      if (_tabManager.separateTabsWindow.isVisible) {
-        _tabManager.separateTabsWindow.setTitle(modelTitle(allowDirtyMarker = false))
-      }
-    }
+    if (AbstractWorkspace.isApp)
+      setWindowTitles
     workspace.hubNetManager.foreach(_.closeClientEditor())
   }
 
