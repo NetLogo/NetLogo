@@ -48,6 +48,10 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   var dirtyMonitor: DirtyMonitor = null
   var menuBar: MenuBar = null
 
+  private var smartTabbing = true
+
+  smartTabbingEnabled = prefs.getBoolean("indentAutomatically", true)
+
   private var watcherThread: FileWatcherThread = null
 
   private var tabActions: Seq[Action] = TabsMenu.tabActions(this)
@@ -78,7 +82,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     def windowLostFocus(e: WindowEvent) {}
   })
 
-  val appComponent = workspace.getFrame.asInstanceOf[JFrame].getContentPane.asInstanceOf[JComponent]
+  private val appComponent = workspace.getFrame.asInstanceOf[JFrame].getContentPane.asInstanceOf[JComponent]
 
   appComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_W, withMenu = true, withShift = true), "openSeparateCodeTab")
@@ -104,7 +108,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     def windowLostFocus(e: WindowEvent) {}
   })
 
-  val separateComponent = separateTabsWindow.getContentPane.asInstanceOf[JComponent]
+  private val separateComponent = separateTabsWindow.getContentPane.asInstanceOf[JComponent]
 
   separateComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_W, withMenu = true), "closeSeparateCodeTab")
@@ -241,10 +245,18 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     separateTabsWindow.menuBar.revokeAction(action)
   }
 
+  def smartTabbingEnabled = smartTabbing
+  def smartTabbingEnabled_=(enabled: Boolean) = {
+    smartTabbing = enabled
+    prefs.putBoolean("indentAutomatically", enabled)
+
+    mainCodeTab.setIndenter(enabled)
+    getExternalFileTabs.foreach(_.setIndenter(enabled))
+  }
+
   def lineNumbersVisible = mainCodeTab.lineNumbersVisible
   def lineNumbersVisible_=(visible: Boolean) = {
     mainCodeTab.lineNumbersVisible = visible
-
     getExternalFileTabs.foreach(_.lineNumbersVisible = visible)
   }
 
@@ -324,7 +336,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     if (getExternalFileTabs.isEmpty)
       offerAction(SaveAllAction)
 
-    val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, fileManager.convertTabAction(_), mainCodeTab.smartTabbingEnabled)
+    val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, fileManager.convertTabAction(_),
+                                   smartTabbing, separateTabsWindow.isVisible)
 
     if (separateTabsWindow.isVisible) {
       separateTabs.addTab(tab.filenameForDisplay, tab)
@@ -420,7 +433,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
       separateTabsWindow.open()
 
-      mainCodeTab.getPoppingCheckBox.setSelected(true)
+      mainCodeTab.setSeparate(true)
+      getExternalFileTabs.foreach(_.setSeparate(true))
+
       mainCodeTab.requestFocus
     }
 
@@ -432,7 +447,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       separateTabsWindow.setVisible(false)
 
       mainTabs.setSelectedIndex(2)
-      mainCodeTab.getPoppingCheckBox.setSelected(false)
+      mainCodeTab.setSeparate(false)
+      getExternalFileTabs.foreach(_.setSeparate(false))
+
       mainCodeTab.requestFocus
     }
 

@@ -29,9 +29,9 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   private var _filename:          TabsInterface.Filename,
   externalFileManager:            ExternalFileManager,
   conversionAction:               TemporaryCodeTab => Action,
-  smartIndent:                    Boolean)
-  extends CodeTab(workspace, tabs)
-  with AppEvents.IndenterChangedEvent.Handler {
+  smartIndent:                    Boolean,
+  separateCodeWindow:             Boolean)
+  extends CodeTab(workspace, tabs) {
 
   var closing = false
   var saveNeeded = false // Has the buffer changed since the file was saved?
@@ -71,6 +71,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   }
 
   setIndenter(smartIndent)
+  setSeparate(separateCodeWindow)
   lineNumbersVisible = tabs.lineNumbersVisible
 
   override val activeMenuActions = {
@@ -137,8 +138,6 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   }
 
   override def handle(e: AppEvents.SwitchedTabsEvent) = if (!closing) super.handle(e)
-
-  final def handle(e: AppEvents.IndenterChangedEvent) = setIndenter(e.isSmart)
 
   private def userChooseSavePath(): String = {
     def appendIfNecessary(str: String, suffix: String) = if (str.endsWith(suffix)) str else str + suffix

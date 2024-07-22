@@ -7,7 +7,8 @@ import java.awt.print.PageFormat
 import java.awt.{BorderLayout, Component, Dimension, Graphics, Insets}
 import java.io.IOException
 import java.net.MalformedURLException
-import javax.swing.{AbstractAction, Action, JComponent, JPanel}
+import java.util.prefs.Preferences
+import javax.swing.{ AbstractAction, Action, JCheckBox, JComponent, JPanel }
 
 import org.nlogo.agent.Observer
 import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, TabsInterface, Events => AppEvents}
@@ -27,6 +28,22 @@ with WindowEvents.CompiledEvent.Handler
 with Zoomable
 with NlogoPrintable
 with MenuTab {
+  protected val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
+
+  private val tabbing: JCheckBox = new JCheckBox(
+    new AbstractAction(I18N.gui.get("tabs.code.indentAutomatically")) {
+      def actionPerformed(e: ActionEvent) {
+        tabs.smartTabbingEnabled = tabbing.isSelected
+      }
+    })
+  
+  private val separate: JCheckBox = new JCheckBox(
+    new AbstractAction(I18N.gui.get("tabs.code.separateCodeWindow")) {
+      def actionPerformed(e: ActionEvent) {
+        tabs.switchWindow(separate.isSelected)
+      }
+    }
+  )
 
   private var _dirty = false // Has the buffer changed since it was compiled?
   def dirty = _dirty
@@ -82,7 +99,6 @@ with MenuTab {
   def program = workspace.world.program
 
   locally {
-    setIndenter(false)
     setLayout(new BorderLayout)
     add(toolBar, BorderLayout.NORTH)
     val codePanel = new JPanel(new BorderLayout) {
@@ -108,7 +124,7 @@ with MenuTab {
         add(new ToolBar.Separator)
         add(proceduresMenu)
         add(new IncludedFilesMenu(getIncludesTable, tabs))
-        val additionalComps = getAdditionalToolBarComponents
+        val additionalComps = Seq(tabbing, separate) ++ getAdditionalToolBarComponents
         if (additionalComps.nonEmpty) {
           add(new ToolBar.Separator)
           additionalComps foreach add
@@ -196,7 +212,11 @@ with MenuTab {
   def setIndenter(isSmart: Boolean): Unit = {
     if(isSmart) text.setIndenter(new SmartIndenter(new EditorAreaWrapper(text), workspace))
     else text.setIndenter(new DumbIndenter(text))
+    tabbing.setSelected(isSmart)
   }
+
+  def setSeparate(selected: Boolean): Unit =
+    separate.setSelected(selected)
 
   def lineNumbersVisible = scrollableEditor.lineNumbersEnabled
   def lineNumbersVisible_=(visible: Boolean) = scrollableEditor.setLineNumbersEnabled(visible)

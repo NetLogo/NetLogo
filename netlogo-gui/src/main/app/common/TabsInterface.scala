@@ -19,6 +19,9 @@ trait TabsInterface {
   val infoTab: Component
   val mainCodeTab: Component
 
+  def smartTabbingEnabled: Boolean
+  def smartTabbingEnabled_=(enabled: Boolean): Unit
+
   def lineNumbersVisible: Boolean
   def lineNumbersVisible_=(b: Boolean): Unit
 
