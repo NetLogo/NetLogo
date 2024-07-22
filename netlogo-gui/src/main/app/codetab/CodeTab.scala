@@ -2,7 +2,7 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, TextEvent, TextListener}
+import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, TextEvent, TextListener }
 import java.awt.print.PageFormat
 import java.awt.{BorderLayout, Component, Dimension, Graphics, Insets}
 import java.io.IOException

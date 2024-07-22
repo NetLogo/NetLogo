@@ -3,7 +3,7 @@
 package org.nlogo.app
 
 import java.awt.{ Color, Component, KeyboardFocusManager }
-import java.awt.event.{ ActionEvent, KeyEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent, WindowFocusListener }
+import java.awt.event.{ ActionEvent, KeyEvent, WindowAdapter, WindowEvent, WindowFocusListener }
 import java.awt.print.PrinterAbortException
 import java.nio.file.{ Path, Paths }
 import java.util.prefs.Preferences
@@ -64,13 +64,6 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   mainTabs.addTab(I18N.gui.get("tabs.code"), mainCodeTab)
 
   movingTabs = false
-
-  separateTabs.addMouseListener(new MouseAdapter {
-    override def mouseClicked(e: MouseEvent) {
-      if (e.getClickCount == 1 && e.isControlDown)
-        switchWindow(false)
-    }
-  })
 
   workspace.getFrame.addWindowFocusListener(new WindowFocusListener {
     def windowGainedFocus(e: WindowEvent) {
