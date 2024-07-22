@@ -50,10 +50,7 @@ with SaveModel.Controller
       if (System.getProperty("os.name").startsWith("Mac"))
         frame.getRootPane.putClientProperty("Window.documentModified", dirty)
     }
-    if (codeWindow.isVisible)
-      codeWindow.setTitle(title(path))
-    else
-      frame.setTitle(title(path))
+    App.app.setWindowTitles
   }
 
   def handle(e: AboutToQuitEvent) {
