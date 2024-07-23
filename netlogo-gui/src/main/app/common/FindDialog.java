@@ -89,21 +89,28 @@ public class FindDialog
     }
 
     public void actionPerformed(java.awt.event.ActionEvent e) {
-      FindDialog.getInstance().setVisible(true);
-      FindDialog.getInstance().findBox.requestFocus();
-      FindDialog.getInstance().findBox.selectAll();
-      // Setting find field by default to selected text
-      FindDialog findDialog = getInstance();
-      String selectedText = findDialog.target.getSelectedText();
-      if(selectedText != null){
-        FindDialog.getInstance().findBox.setText(selectedText);
+      FindDialog instanceCode = FindDialog.getInstanceCode();
+      if (instanceCode.isVisible()) {
+        instanceCode.setVisible(false);
       }
-      FindDialog.getInstance().setLocation
+      FindDialog findDialog = getInstance();
+      findDialog.setVisible(true);
+      findDialog.findBox.requestFocus();
+      findDialog.findBox.selectAll();
+      // Setting find field by default to selected text
+      String selectedText = findDialog.target.getSelectedText();
+      if (selectedText == null) {
+        findDialog.findBox.setText(instanceCode.findBox.getText());
+      }
+      else {
+        findDialog.findBox.setText(selectedText);
+      }
+      findDialog.setLocation
           (instance.owner.getLocation().x + instance.owner.getWidth()
               - instance.getPreferredSize().width,
               instance.owner.getLocation().y + instance.owner.getHeight() / 2
                   - instance.getPreferredSize().height / 2);
-      FindDialog.getInstance().notFoundLabel.setVisible(false);
+      findDialog.notFoundLabel.setVisible(false);
     }
   }
 
@@ -140,21 +147,28 @@ public class FindDialog
     }
 
     public void actionPerformed(java.awt.event.ActionEvent e) {
-      FindDialog.getInstanceCode().setVisible(true);
-      FindDialog.getInstanceCode().findBox.requestFocus();
-      FindDialog.getInstanceCode().findBox.selectAll();
-      // Setting find field by default to selected text
-      FindDialog findDialog = getInstanceCode();
-      String selectedText = findDialog.target.getSelectedText();
-      if(selectedText != null){
-        FindDialog.getInstanceCode().findBox.setText(selectedText);
+      FindDialog instance = FindDialog.getInstance();
+      if (instance.isVisible()) {
+        instance.setVisible(false);
       }
-      FindDialog.getInstanceCode().setLocation
+      FindDialog findDialog = getInstanceCode();
+      findDialog.setVisible(true);
+      findDialog.findBox.requestFocus();
+      findDialog.findBox.selectAll();
+      // Setting find field by default to selected text
+      String selectedText = findDialog.target.getSelectedText();
+      if (selectedText == null) {
+        findDialog.findBox.setText(instance.findBox.getText());
+      }
+      else {
+        findDialog.findBox.setText(selectedText);
+      }
+      findDialog.setLocation
           (instance.owner.getLocation().x + instance.owner.getWidth()
               - instance.getPreferredSize().width,
               instance.owner.getLocation().y + instance.owner.getHeight() / 2
                   - instance.getPreferredSize().height / 2);
-      FindDialog.getInstanceCode().notFoundLabel.setVisible(false);
+      findDialog.notFoundLabel.setVisible(false);
     }
   }
 
