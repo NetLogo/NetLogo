@@ -40,7 +40,7 @@ with MenuTab {
   private val separate: JCheckBox = new JCheckBox(
     new AbstractAction(I18N.gui.get("tabs.code.separateCodeWindow")) {
       def actionPerformed(e: ActionEvent) {
-        tabs.switchWindow(separate.isSelected)
+        tabs.switchWindow(separate.isSelected, true)
       }
     }
   )
