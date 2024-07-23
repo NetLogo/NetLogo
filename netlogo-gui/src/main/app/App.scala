@@ -743,7 +743,7 @@ class App extends
       tabManager.separateTabsWindow.setTitle(
         tabManager.separateTabs.getSelectedComponent match {
           case tempTab: TemporaryCodeTab => externalFileTitle(tempTab.filename.merge)
-          case _ => modelTitle(allowDirtyMarker = false)
+          case _ => modelTitle()
         }
       )
     }
