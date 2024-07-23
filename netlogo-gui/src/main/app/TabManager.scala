@@ -69,6 +69,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     def windowGainedFocus(e: WindowEvent) {
       if (separateTabs.getSelectedComponent != null) {
         setMenuActions(separateTabs.getSelectedComponent, mainTabs.getSelectedComponent)
+
+        new CompileAllEvent().raise(separateTabs.getSelectedComponent)
       }
     }
     
@@ -414,10 +416,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       mainTabs.remove(tab)
   }
 
-  def switchWindow(separate: Boolean) {
+  def switchWindow(separate: Boolean, preserveSelected: Boolean = false) {
     movingTabs = true
 
     if (separate) {
+      val selected = mainTabs.getSelectedComponent
+
       while (mainTabs.getTabCount > 2) {
         separateTabs.addTab(mainTabs.getTitleAt(2), mainTabs.getComponentAt(2))
       }
@@ -428,21 +432,27 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
       mainCodeTab.setSeparate(true)
       getExternalFileTabs.foreach(_.setSeparate(true))
+
+      selected.requestFocus
     }
 
     else {
+      val selected = separateTabs.getSelectedComponent
+
       while (separateTabs.getTabCount > 0) {
         mainTabs.addTab(separateTabs.getTitleAt(0), separateTabs.getComponentAt(0))
       }
 
       separateTabsWindow.setVisible(false)
 
-      mainTabs.setSelectedIndex(2)
       mainCodeTab.setSeparate(false)
       getExternalFileTabs.foreach(_.setSeparate(false))
-    }
 
-    mainCodeTab.requestFocus
+      if (preserveSelected)
+        mainTabs.setSelectedComponent(selected)
+
+      mainTabs.getSelectedComponent.requestFocus
+    }
 
     movingTabs = false
 

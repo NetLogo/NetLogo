@@ -17,7 +17,7 @@ class TabsPanel(val tabManager: TabManager) extends JTabbedPane with ChangeListe
     override def mouseClicked(e: MouseEvent) {
       if (e.getClickCount == 1 && e.isControlDown && tabManager.getSelectedTab.isInstanceOf[CodeTab]) {
         if (tabManager.separateTabsWindow.isAncestorOf(tabManager.getSelectedTab))
-          tabManager.switchWindow(false)
+          tabManager.switchWindow(false, true)
         else
           tabManager.switchWindow(true)
       }

@@ -32,5 +32,5 @@ trait TabsInterface {
   def openExternalFile(filename: String): Unit
   def closeExternalFile(filename: Filename): Unit
 
-  def switchWindow(separate: Boolean): Unit
+  def switchWindow(separate: Boolean, preserveSelected: Boolean): Unit
 }
