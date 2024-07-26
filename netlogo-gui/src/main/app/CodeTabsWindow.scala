@@ -32,17 +32,17 @@ class CodeTabsWindow(parent: Frame, tabs: TabsPanel) extends JFrame with LinkChi
     val parentLocation = parent.getLocationOnScreen
     val hasRoomToRight = parent.getLocation.x + parent.getWidth + horizontalSpacing + getWidth <= availBounds.x + availBounds.width
     val hasRoomToLeft = availBounds.x  <= parent.getLocation.x - horizontalSpacing - getWidth
-    val yLoc = parentLocation.y + parent.getInsets.top
     // Detached code tab location priority list:
     //   1) left edge to the right of the parent
     //   2) right edge to the left of the parent
     //   3) right edge to the left of the screen
-    if (hasRoomToRight) {
-      return new Point(parentLocation.x + parent.getWidth() + horizontalSpacing, yLoc)
-    } else if (hasRoomToLeft) {
-      return new Point(parent.getLocation.x - getWidth - horizontalSpacing, yLoc)
-    } else {
-      return new Point(availBounds.x + availBounds.width - getWidth - horizontalSpacing, yLoc)
-    }
+    val xLoc =
+      if (hasRoomToRight)
+        parentLocation.x + parent.getWidth() + horizontalSpacing
+      else if (hasRoomToLeft)
+        parent.getLocation.x - getWidth - horizontalSpacing
+      else
+        availBounds.x + availBounds.width - getWidth - horizontalSpacing
+    new Point(xLoc, parentLocation.y + parent.getInsets.top)
   }
 }

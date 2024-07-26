@@ -459,7 +459,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
     new CompileAllEvent().raise(mainCodeTab)
 
-    App.app.setWindowTitles
+    App.app.setWindowTitles()
   }
 
   def reload() {
