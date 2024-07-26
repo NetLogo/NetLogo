@@ -97,8 +97,13 @@ class InspectionTool
       super.mouseUp(e, x, y);
     }
     else {
-      link.mouseUp(e, x, y);
-      rct.mouseUp(e, x, y);
+      if (link != null) {
+        link.mouseUp(e, x, y);
+      }
+
+      if (rct != null) {
+        rct.mouseUp(e, x, y);
+      }
     }
   }
 
