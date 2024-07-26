@@ -14,7 +14,7 @@ object TabsInterface {
 
 trait TabsInterface {
   import TabsInterface.Filename
-  
+
   val interfaceTab: Component
   val infoTab: Component
   val mainCodeTab: Component

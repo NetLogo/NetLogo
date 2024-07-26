@@ -746,9 +746,7 @@ class App extends
           case _ => modelTitle()
         }
       )
-    }
-
-    else {
+    } else {
       frame.setTitle(
         tabManager.mainTabs.getSelectedComponent match {
           case tempTab: TemporaryCodeTab => externalFileTitle(tempTab.filename.merge)
@@ -768,7 +766,7 @@ class App extends
     } else if (e.oldTab == _tabManager.interfaceTab) {
       monitorManager.hideAll()
     }
-    setWindowTitles
+    setWindowTitles()
   }
 
   /**
@@ -784,7 +782,7 @@ class App extends
     workspace.modelSaved(e.modelPath)
     errorDialogManager.setModelName(workspace.modelNameForDisplay)
     if (AbstractWorkspace.isApp) {
-      setWindowTitles
+      setWindowTitles()
       workspace.hubNetManager.foreach { manager =>
         manager.setTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType)
       }
@@ -798,7 +796,7 @@ class App extends
     val modelName = workspace.modelNameForDisplay
     errorDialogManager.setModelName(modelName)
     if (AbstractWorkspace.isApp)
-      setWindowTitles
+      setWindowTitles()
     workspace.hubNetManager.foreach(_.closeClientEditor())
   }
 

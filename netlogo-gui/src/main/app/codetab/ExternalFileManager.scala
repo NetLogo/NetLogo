@@ -8,15 +8,15 @@ class ExternalFileManager extends WindowExternalFileManager {
   private var externalTabs = Map.empty[String, TemporaryCodeTab]
 
   def add(codeTab: TemporaryCodeTab): Unit = {
-    codeTab.filename.right.foreach { name =>
-      externalTabs += (name -> codeTab)
-    }
+    codeTab.filename.fold(
+      name => externalTabs += (name -> codeTab),
+      name => externalTabs += (name -> codeTab))
   }
 
   def remove(codeTab: TemporaryCodeTab): Unit = {
-    codeTab.filename.right.foreach { name =>
-      externalTabs -= name
-    }
+    codeTab.filename.fold(
+      externalTabs -= _,
+      externalTabs -= _)
   }
 
   def nameChanged(oldName: String, newName: String): Unit = {

@@ -97,7 +97,6 @@ public class FindDialog
       findDialog.setVisible(true);
       findDialog.findBox.requestFocus();
       findDialog.findBox.selectAll();
-      // Setting find field by default to selected text
       String selectedText = findDialog.target.getSelectedText();
       if (selectedText == null) {
         findDialog.findBox.setText(instanceCode.findBox.getText());
@@ -155,7 +154,6 @@ public class FindDialog
       findDialog.setVisible(true);
       findDialog.findBox.requestFocus();
       findDialog.findBox.selectAll();
-      // Setting find field by default to selected text
       String selectedText = findDialog.target.getSelectedText();
       if (selectedText == null) {
         findDialog.findBox.setText(instance.findBox.getText());
