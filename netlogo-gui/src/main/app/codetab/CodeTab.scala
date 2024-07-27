@@ -69,8 +69,8 @@ with MenuTab {
     editor.setMargin(new Insets(4, 7, 4, 7))
 
     editor.addFocusListener(new FocusListener {
-      def focusGained(fe: FocusEvent) { FindDialog.watchCode(editor) }
-      def focusLost(fe: FocusEvent) { if (!fe.isTemporary) { FindDialog.dontWatchCode(editor) } }
+      def focusGained(fe: FocusEvent) { FindDialog.watch(editor, true) }
+      def focusLost(fe: FocusEvent) { if (!fe.isTemporary) { FindDialog.dontWatch(editor, true) } }
     })
 
     editor
