@@ -190,7 +190,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
       "com.typesafe" % "config" % "1.4.3",
       "net.lingala.zip4j" % "zip4j" % "2.11.5"
     ),
-    excludedExtensions := Seq("ls"),
     all := {},
     all := {
       all.dependsOn(
