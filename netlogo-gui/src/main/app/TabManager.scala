@@ -426,15 +426,22 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         separateTabs.addTab(mainTabs.getTitleAt(2), mainTabs.getComponentAt(2))
       }
 
-      mainTabs.setSelectedIndex(0)
-
       separateTabsWindow.open()
 
       mainCodeTab.setSeparate(true)
       getExternalFileTabs.foreach(_.setSeparate(true))
 
-      separateTabs.setSelectedComponent(selected)
-      selected.requestFocus
+      if (selected.isInstanceOf[CodeTab]) {
+        mainTabs.setSelectedIndex(0)
+        separateTabs.setSelectedComponent(selected)
+        selected.requestFocus
+      }
+
+      else {
+        mainTabs.setSelectedComponent(selected)
+        separateTabs.setSelectedIndex(0)
+        mainCodeTab.requestFocus
+      }
     }
 
     else {
