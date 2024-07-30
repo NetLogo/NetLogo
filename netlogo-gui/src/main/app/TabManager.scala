@@ -320,7 +320,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   }
 
   def switchedTabs(tab: Component) {
-    if (!movingTabs) {
+    if (!movingTabs && tab != previousTab) {
       tab.requestFocus
 
       new SwitchedTabsEvent(previousTab, tab).raise(workspace.getFrame)
