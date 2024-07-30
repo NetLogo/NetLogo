@@ -13,7 +13,7 @@ import javax.swing.event.{ DocumentListener, HyperlinkListener, DocumentEvent, H
 import javax.swing.text.JTextComponent
 import javax.swing.text.html.HTMLDocument
 
-import org.nlogo.app.common.{ FindDialog, MenuTab, UndoRedoActions }
+import org.nlogo.app.common.{ Events => AppEvents, FindDialog, MenuTab, UndoRedoActions }
 import org.nlogo.awt.{ Fonts, Hierarchy }
 import org.nlogo.core.I18N
 import org.nlogo.editor.UndoManager
@@ -30,6 +30,7 @@ class InfoTab(attachModelDir: String => String)
   with Printable
   with HyperlinkListener
   with UndoRedoActions
+  with AppEvents.SwitchedTabsEvent.Handler
   with WindowEvents.LoadModelEvent.Handler
   with WindowEvents.ZoomedEvent.Handler
   with Zoomable {
@@ -146,6 +147,11 @@ class InfoTab(attachModelDir: String => String)
       editableButton.setSelected(false)
     }
     updateEditorPane()
+  }
+
+  def handle(e: AppEvents.SwitchedTabsEvent) {
+    if (e.newTab != this)
+      FindDialog.dontWatch(editorPane)
   }
 
   def handle(e: org.nlogo.window.Events.LoadModelEvent) {

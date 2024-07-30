@@ -70,7 +70,7 @@ with MenuTab {
 
     editor.addFocusListener(new FocusListener {
       def focusGained(fe: FocusEvent) { FindDialog.watch(editor, true) }
-      def focusLost(fe: FocusEvent) { if (!fe.isTemporary) { FindDialog.dontWatch(editor, true) } }
+      def focusLost(fe: FocusEvent) {}
     })
 
     editor
@@ -167,7 +167,13 @@ with MenuTab {
 
   def kind = AgentKind.Observer
 
-  def handle(e: AppEvents.SwitchedTabsEvent) = if (dirty && e.oldTab == this) compile()
+  def handle(e: AppEvents.SwitchedTabsEvent) {
+    if (e.oldTab == this && dirty)
+      compile()
+
+    if (!e.newTab.isInstanceOf[CodeTab])
+      FindDialog.dontWatch(text, true)
+  }
 
   private var originalFontSize = -1
   override def handle(e: WindowEvents.ZoomedEvent) {
