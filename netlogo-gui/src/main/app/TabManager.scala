@@ -56,6 +56,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   private var tabActions: Seq[Action] = TabsMenu.tabActions(this)
 
+  private var newFileNumber = 1
+
   private var reloading = false
   private var movingTabs = true
 
@@ -352,7 +354,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   }
 
   def newExternalFile {
-    addExternalFile(Left(I18N.gui.get("tabs.external.new")))
+    addExternalFile(Left(I18N.gui.getN("tabs.external.new", newFileNumber: Integer)))
+
+    newFileNumber += 1
   }
 
   def addTab(tab: Component, name: String) {
