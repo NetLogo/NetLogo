@@ -4,7 +4,6 @@ package org.nlogo.window
 
 import java.awt.{ Component, Container, Dimension, Font, Graphics, Graphics2D, Point, Rectangle, event },
   event.{MouseAdapter, MouseEvent, MouseListener}
-import javax.swing.border.Border
 import javax.swing.{JPanel, JMenuItem, JPopupMenu}
 
 import org.nlogo.api.{ MultiErrorHandler, SingleErrorHandler }
@@ -31,8 +30,10 @@ abstract class Widget extends JPanel {
   var originalFont: Font = null
   var displayName: String = ""
   var deleteable: Boolean = true
-  val widgetBorder: Border = org.nlogo.swing.Utils.createWidgetBorder
-  val widgetPressedBorder: Border = org.nlogo.swing.Utils.createWidgetPressedBorder
+
+  protected var backgroundColor = InterfaceColors.LIGHT_GRAY
+
+  setBackground(InterfaceColors.TRANSPARENT)
 
   override def getPreferredSize: Dimension = getPreferredSize(getFont)
   def getPreferredSize(font: Font): Dimension = super.getPreferredSize
@@ -110,9 +111,10 @@ abstract class Widget extends JPanel {
   }
 
   override def paintComponent(g: Graphics): Unit = {
-    val g2d: Graphics2D = g.asInstanceOf[Graphics2D]
+    val g2d = g.asInstanceOf[Graphics2D]
     g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
-    super.paintComponent(g)
+    g2d.setColor(backgroundColor)
+    g2d.fillRoundRect(0, 0, getWidth, getHeight, 12, 12)
   }
 
   override def toString: String = {

@@ -2,10 +2,10 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Frame, SystemColor }
+import java.awt.{ Frame, Insets }
 import java.awt.event.{ ActionEvent, ActionListener, MouseAdapter, MouseEvent }
 import java.util.{ HashSet => JHashSet }
-import javax.swing.{ JMenuItem, JPopupMenu, ButtonGroup, JToggleButton,
+import javax.swing.{ ButtonGroup, JMenuItem, JToggleButton,
   AbstractAction, Action }
 
 import scala.collection.mutable
@@ -16,7 +16,7 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ ToolBar, ToolBarActionButton, ToolBarToggleButton, Utils },
   Utils.icon
 import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents,
-  GUIWorkspace, JobWidget, Widget, WidgetInfo }
+  GUIWorkspace, InterfaceColors, JobWidget, Widget, WidgetInfo }
 
 class InterfaceToolBar(wPanel: WidgetPanel,
                        workspace: GUIWorkspace,
@@ -47,7 +47,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   // on Macs we want the window background but not on other systems
   if(System.getProperty("os.name").startsWith("Mac")) {
     setOpaque(true)
-    setBackground(SystemColor.window)
+    setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
   }
 
   editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
@@ -117,7 +117,8 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   }
 
   override def addControls() {
-    Seq(editButton, deleteButton, addButton, widgetMenu).foreach(add)
+    setMargin(new Insets(0, 6, 0, 0))
+    Seq(widgetMenu, editButton, deleteButton).foreach(add)
     group.add(noneButton)
     group.add(addButton)
     noneButton.setSelected(true)
@@ -127,7 +128,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     editAction.setEnabled(false)
     deleteAction.setEnabled(false)
     noneButton.setSelected(true)
-    widgetMenu.setSelectedString(I18N.gui.get("tabs.run.widgets.button"))
   }
 
   def handle(e: WindowEvents.WidgetRemovedEvent) {
@@ -144,8 +144,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   }
 
   def handle(e: WindowEvents.WidgetAddedEvent) {
-    for(i <- widgetMenu.items) i.setEnabled(wPanel.canAddWidget(i.getText))
-    widgetMenu.updateSelected()
+    widgetMenu.updateList(wPanel.canAddWidget)
   }
 
   private val deleteableObjects = new JHashSet[Widget]
@@ -177,13 +176,14 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   def getItems: Array[JMenuItem] = WidgetInfos.map(spec => new JMenuItem(spec.displayName, spec.icon)).toArray
   class WidgetMenu extends org.nlogo.swing.ToolBarComboBox(getItems) {
     def getSelectedWidget =
-      WidgetInfos.find(_.displayName == getSelectedItem.getText).get.coreWidget
-    override def populate(menu: JPopupMenu) {
-      super.populate(menu)
-      for(i <- items) {
-        i.setEnabled(wPanel.canAddWidget(i.getText))
-        i.addActionListener(InterfaceToolBar.this)
+      WidgetInfos.find(_.displayName == chosenItem.getText).get.coreWidget
+    addActionListener(InterfaceToolBar.this)
+    addPopupMenuListener(new javax.swing.event.PopupMenuListener {
+      def popupMenuCanceled(e: javax.swing.event.PopupMenuEvent) {}
+      def popupMenuWillBecomeInvisible(e: javax.swing.event.PopupMenuEvent) {}
+      def popupMenuWillBecomeVisible(e: javax.swing.event.PopupMenuEvent) {
+        widgetMenu.updateList(wPanel.canAddWidget)
       }
-    }
+    })
   }
 }

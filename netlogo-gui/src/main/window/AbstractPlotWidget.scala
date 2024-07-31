@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import javax.swing.JLabel
+import javax.swing.{ JLabel, SwingConstants }
 import java.awt.{ Dimension, Font, Graphics, Insets, GridBagConstraints, GridBagLayout }
 
 import org.nlogo.api.Editable
@@ -29,110 +29,106 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   plot.dirtyListener = Some(this)
   val canvas = new PlotCanvas(plot)
   private val legend = new PlotLegend(plot, this)
-  private val nameLabel = new JLabel("", javax.swing.SwingConstants.CENTER)
+  private val nameLabel = new JLabel
   private val xAxis = new XAxisLabels()
   private val yAxis = new YAxisLabels()
+
+  nameLabel.setForeground(InterfaceColors.WIDGET_TEXT)
 
   locally {
     displayName = plot.name
 
-    setBorder(widgetBorder)
-    setOpaque(true)
     // this is needed because the PlotLegend is going to use us to
     // get a font - ST 9/2/04
     // since the PlotLegend is added and removed from the widget
     // when it is shown or hidden, the usual way of just letting Zoomer
     // zoom the font size won't work, hence the fontSource stuff in
     // PlotLegend - ST 2/22/06
-    org.nlogo.awt.Fonts.adjustDefaultFont(this)
+    backgroundColor = InterfaceColors.PLOT_BACKGROUND
 
-    setBackground(InterfaceColors.PLOT_BACKGROUND)
     plot.clear() // set current values to defaults
 
-    val gridbag = new java.awt.GridBagLayout()
-    setLayout(gridbag)
+    setLayout(new GridBagLayout)
 
-    val c = new java.awt.GridBagConstraints()
+    val c = new GridBagConstraints
+
     c.gridwidth = 1
     c.gridheight = 1
     c.weightx = 0.0
     c.weighty = 0.0
-    c.fill = java.awt.GridBagConstraints.NONE
+    c.fill = GridBagConstraints.NONE
 
     //ROW1
     //-----------------------------------------
-    c.insets = new java.awt.Insets(0, 1, 1, 1)
+    c.insets = new Insets(6, 6, 6, 6)
 
     c.gridx = 1
     c.gridy = 0
     c.gridwidth = 1
-    c.anchor = java.awt.GridBagConstraints.CENTER
-    c.fill = java.awt.GridBagConstraints.HORIZONTAL
-    gridbag.setConstraints(nameLabel, c)
-    add(nameLabel)
-    org.nlogo.awt.Fonts.adjustDefaultFont(nameLabel)
-    nameLabel.setFont(nameLabel.getFont().deriveFont(java.awt.Font.BOLD))
+    c.anchor = GridBagConstraints.NORTHWEST
+    c.fill = GridBagConstraints.HORIZONTAL
+
+    add(nameLabel, c)
+
     nameLabel.setText(plot.name)
 
     //ROW2
     //-----------------------------------------
-    c.insets = new java.awt.Insets(0, 1, 0, 1)
+    c.insets = new Insets(0, 1, 0, 1)
 
-    c.gridx = java.awt.GridBagConstraints.RELATIVE
+    c.gridx = GridBagConstraints.RELATIVE
     c.gridy = 1
     c.gridwidth = 1
-    c.gridheight = java.awt.GridBagConstraints.RELATIVE
+    c.gridheight = GridBagConstraints.RELATIVE
     c.weighty = 3.0
-    c.anchor = java.awt.GridBagConstraints.WEST
-    c.fill = java.awt.GridBagConstraints.VERTICAL
-    gridbag.setConstraints(yAxis, c)
-    add(yAxis);
+    c.anchor = GridBagConstraints.WEST
+    c.fill = GridBagConstraints.VERTICAL
 
-    c.gridwidth = java.awt.GridBagConstraints.RELATIVE
+    add(yAxis, c)
+
+    c.gridwidth = GridBagConstraints.RELATIVE
     c.weightx = 3.0
-    c.anchor = java.awt.GridBagConstraints.CENTER
-    c.fill = java.awt.GridBagConstraints.BOTH
-    gridbag.setConstraints(canvas, c)
-    add(canvas)
+    c.anchor = GridBagConstraints.CENTER
+    c.fill = GridBagConstraints.BOTH
+
+    add(canvas, c)
 
     c.gridwidth = REMAINDER
     c.weightx = 0.0
-    c.anchor = java.awt.GridBagConstraints.NORTH
-    c.fill = java.awt.GridBagConstraints.NONE
-    c.insets = new java.awt.Insets(0, 3, 0, 1)
-    gridbag.setConstraints(legend, c)
-    add(legend)
+    c.anchor = GridBagConstraints.NORTH
+    c.fill = GridBagConstraints.NONE
+    c.insets = new Insets(0, 3, 0, 1)
+    
+    add(legend, c)
 
     //ROW3
     //-----------------------------------------
-    c.insets = new java.awt.Insets(0, 0, 0, 0)
+    c.insets = new Insets(0, 0, 0, 0)
     c.gridy = 2
 
-    val filler2 = new javax.swing.JLabel()
     c.weightx = 0.0
     c.weighty = 0.0
     c.gridwidth = 1
     c.gridheight = 1
-    c.anchor = java.awt.GridBagConstraints.WEST
-    c.fill = java.awt.GridBagConstraints.NONE
-    gridbag.setConstraints(filler2, c)
-    add(filler2)
+    c.anchor = GridBagConstraints.WEST
+    c.fill = GridBagConstraints.NONE
 
-    c.gridwidth = java.awt.GridBagConstraints.RELATIVE
-    c.anchor = java.awt.GridBagConstraints.CENTER
-    c.fill = java.awt.GridBagConstraints.HORIZONTAL
-    gridbag.setConstraints(xAxis, c)
-    add(xAxis)
+    add(new JLabel, c)
 
-    val filler3 = new javax.swing.JLabel()
+    c.gridwidth = GridBagConstraints.RELATIVE
+    c.anchor = GridBagConstraints.CENTER
+    c.fill = GridBagConstraints.HORIZONTAL
+
+    add(xAxis, c)
+
     c.weightx = 0.0
     c.weighty = 0.0
     c.gridwidth = 1
     c.gridheight = 1
-    c.anchor = java.awt.GridBagConstraints.EAST
-    c.fill = java.awt.GridBagConstraints.NONE
-    gridbag.setConstraints(filler3, c)
-    add(filler3)
+    c.anchor = GridBagConstraints.EAST
+    c.fill = GridBagConstraints.NONE
+
+    add(new JLabel, c)
 
     // make sure to update the gui components in case
     // something changed underneath ev 8/26/08
@@ -285,7 +281,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   }
 
   protected def recolor() {
-    nameLabel.setForeground(if(anyErrors) java.awt.Color.RED else java.awt.Color.BLACK)
+    nameLabel.setForeground(if(anyErrors) java.awt.Color.RED else InterfaceColors.WIDGET_TEXT)
   }
 
   def handle(e: AfterLoadEvent){
@@ -342,7 +338,7 @@ object AbstractPlotWidget {
 
   class XAxisLabels extends javax.swing.JPanel {
     private val min: JLabel = new JLabel()
-    private val label: JLabel = new JLabel("", javax.swing.SwingConstants.CENTER)
+    private val label: JLabel = new JLabel("", SwingConstants.CENTER)
     private val max: JLabel = new JLabel()
 
     setBackground(InterfaceColors.PLOT_BACKGROUND)

@@ -176,6 +176,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     Compile / resourceDirectory            := baseDirectory.value / "resources",
     Compile / unmanagedResourceDirectories ++= (sharedResources / Compile / unmanagedResourceDirectories).value,
     libraryDependencies ++= Seq(
+      "com.formdev" % "flatlaf" % "3.4",
       "org.picocontainer" % "picocontainer" % "2.15",
       "javax.media" % "jmf" % "2.1.1e",
       "commons-codec" % "commons-codec" % "1.16.0",

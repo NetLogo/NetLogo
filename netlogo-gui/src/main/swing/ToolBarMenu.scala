@@ -5,7 +5,6 @@ import java.awt.{Dimension, Graphics, Graphics2D}
 import javax.swing.{AbstractAction, JButton, JPopupMenu}
 
 abstract class ToolBarMenu(name: String) extends JButton(name) {
-  setBorder(Utils.createWidgetBorder())
   setMinimumSize(new Dimension(11,20))
   if (System.getProperty("os.name").startsWith("Mac")) setBackground(java.awt.Color.WHITE)
   setAction(new AbstractAction(name) {

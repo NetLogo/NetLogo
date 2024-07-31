@@ -502,6 +502,42 @@ class WidgetPanel(val workspace: GUIWorkspace)
     LogManager.widgetRemoved(false, wrapper.widget.classDisplayName, wrapper.widget.displayName)
   }
 
+  protected def multiSelected(): Boolean = {
+    selectedWrappers.length > 1
+  }
+
+  protected def alignLeft(wrapper: WidgetWrapper): Unit = {
+    selectedWrappers.foreach(w => w.setLocation(wrapper.getLocation().x, w.getLocation().y))
+  }
+
+  protected def alignCenterHorizontal(wrapper: WidgetWrapper): Unit = {
+    selectedWrappers.foreach(w => w.setLocation(wrapper.getLocation().x + wrapper.getSize().width / 2 - w.getSize().width / 2, w.getLocation().y))
+  }
+
+  protected def alignRight(wrapper: WidgetWrapper): Unit = {
+    selectedWrappers.foreach(w => w.setLocation(wrapper.getLocation().x + wrapper.getSize().width - w.getSize().width, w.getLocation().y))
+  }
+
+  protected def alignTop(wrapper: WidgetWrapper): Unit = {
+    selectedWrappers.foreach(w => w.setLocation(w.getLocation().x, wrapper.getLocation().y))
+  }
+
+  protected def alignCenterVertical(wrapper: WidgetWrapper): Unit = {
+    selectedWrappers.foreach(w => w.setLocation(w.getLocation().x, wrapper.getLocation().y + wrapper.getSize().height / 2 - w.getSize().height / 2))
+  }
+
+  protected def alignBottom(wrapper: WidgetWrapper): Unit = {
+    selectedWrappers.foreach(w => w.setLocation(w.getLocation().x, wrapper.getLocation().y + wrapper.getSize().height - w.getSize().height))
+  }
+
+  protected def matchWidth(wrapper: WidgetWrapper): Unit = {
+    selectedWrappers.foreach(w => w.setSize(wrapper.getSize().width, w.getSize().height))
+  }
+
+  protected def matchHeight(wrapper: WidgetWrapper): Unit = {
+    selectedWrappers.foreach(w => w.setSize(w.getSize().width, wrapper.getSize().height))
+  }
+
   def sliderEventOnReleaseOnly(sliderEventOnReleaseOnly: Boolean): Unit = {
     this.sliderEventOnReleaseOnly = sliderEventOnReleaseOnly
   }
