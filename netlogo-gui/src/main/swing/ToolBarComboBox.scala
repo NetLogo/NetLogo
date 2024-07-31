@@ -5,8 +5,6 @@ package org.nlogo.swing
 import javax.swing.{ JComboBox, JList, JMenuItem, ListCellRenderer }
 import java.awt.{ Color, Component, Graphics, Insets }
 
-import org.nlogo.window.InterfaceColors
-
 class ToolBarComboBoxRenderer extends JMenuItem with ListCellRenderer[JMenuItem] {
   var separator = false
 
@@ -16,7 +14,7 @@ class ToolBarComboBoxRenderer extends JMenuItem with ListCellRenderer[JMenuItem]
     super.paintComponent(g)
 
     if (separator) {
-      g.setColor(InterfaceColors.DROPDOWN_SEPARATOR)
+      g.setColor(new Color(171, 178, 186))
       g.fillRect(6, getHeight - 1, getWidth - 12, 1)
     }
   }
@@ -25,7 +23,7 @@ class ToolBarComboBoxRenderer extends JMenuItem with ListCellRenderer[JMenuItem]
     separator = index < list.getModel.getSize - 1
 
     if (isSelected) {
-      setBackground(InterfaceColors.LIGHT_GRAY)
+      setBackground(new Color(240, 240, 240))
     }
 
     else {
@@ -38,7 +36,7 @@ class ToolBarComboBoxRenderer extends JMenuItem with ListCellRenderer[JMenuItem]
     }
 
     else {
-      setForeground(Color.gray)
+      setForeground(Color.GRAY)
       setIcon(item.getDisabledIcon)
     }
 
