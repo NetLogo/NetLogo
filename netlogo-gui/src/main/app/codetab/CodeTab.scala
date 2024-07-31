@@ -174,7 +174,6 @@ with MenuTab {
   def handle(e: AppEvents.SwitchedTabsEvent) {
     if (e.oldTab == this && dirty)
       compile()
-    
     if (!e.newTab.isInstanceOf[CodeTab])
       FindDialog.dontWatch(text, true)
   }
