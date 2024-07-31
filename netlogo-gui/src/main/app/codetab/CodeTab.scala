@@ -113,13 +113,17 @@ with MenuTab {
       // Only want to add toolbar items once
       // This method gets called when the code tab pops in or pops out
       // because org.nlogo.swing.ToolBar overrides addNotify. AAB 10/2020
-      if (this.getActionMap.get("procmenu") == null) {
+      if (getActionMap.get("procmenu") == null) {
         val proceduresMenu = new ProceduresMenu(CodeTab.this)
-        this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
-          .put(UserAction.KeyBindings.keystroke('G', withMenu = true), "procmenu")
-        this.getActionMap.put("procmenu", proceduresMenu.getAction)
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(UserAction.KeyBindings.keystroke('G', withMenu = true),
+                                                           "procmenu")
+        getActionMap.put("procmenu", proceduresMenu.getAction)
 
         add(new ToolBarActionButton(FindDialog.FIND_ACTION_CODE))
+
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(UserAction.KeyBindings.keystroke('F', withMenu = true), "find")
+        getActionMap.put("find", FindDialog.FIND_ACTION_CODE)
+
         add(new ToolBarActionButton(CompileAction))
         add(new ToolBar.Separator)
         add(proceduresMenu)
@@ -170,7 +174,7 @@ with MenuTab {
   def handle(e: AppEvents.SwitchedTabsEvent) {
     if (e.oldTab == this && dirty)
       compile()
-
+    
     if (!e.newTab.isInstanceOf[CodeTab])
       FindDialog.dontWatch(text, true)
   }

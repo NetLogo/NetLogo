@@ -67,7 +67,6 @@ object FindDialog {
     putValue(Action.SMALL_ICON, Utils.icon("/images/magnify.gif"))
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
-    putValue(Action.ACCELERATOR_KEY, UserAction.KeyBindings.keystroke('F', withMenu = true))
 
     setEnabled(false)
 
