@@ -20,13 +20,18 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   private val sliderData = new SliderData(this)
 
   var slider: JSlider = null
-  val nameComponent = new JLabel(" ")
-  val valueComponent = new JLabel()
+  val nameComponent = new JLabel
+  val valueComponent = new JLabel
+
+  nameComponent.setForeground(InterfaceColors.WIDGET_TEXT)
+  valueComponent.setForeground(InterfaceColors.WIDGET_TEXT)
+
+  backgroundColor = InterfaceColors.SLIDER_BACKGROUND
 
   locally {
     slider = new JSlider(0, ((maximum - minimum) / increment).asInstanceOf[Int], 0)
 
-    backgroundColor = InterfaceColors.SLIDER_BACKGROUND
+    slider.setBackground(InterfaceColors.SLIDER_BAR_BACKGROUND)
 
     setLayout(new GridBagLayout())
 
@@ -37,26 +42,27 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     c.gridx = 0
     c.gridy = 0
     c.anchor = GridBagConstraints.NORTHWEST
-    c.gridwidth = 2
-    c.weightx = 1
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.insets = new Insets(-margin, margin, 0, margin)
-
-    add(slider, c)
-
-    c.gridy = 1
-    c.anchor = GridBagConstraints.SOUTHWEST
     c.gridwidth = 1
+    c.weightx = 1
     c.fill = GridBagConstraints.NONE
-    c.insets = new Insets(0, margin, 0, margin)
+    c.insets = new Insets(-margin, margin, 0, margin)
 
     add(nameComponent, c)
 
     c.gridx = 1
-    c.anchor = GridBagConstraints.SOUTHEAST
-    c.insets = new Insets(0, 0, 0, margin)
+    c.anchor = GridBagConstraints.NORTHEAST
+    c.insets = new Insets(-margin, 0, 0, margin)
 
     add(valueComponent, c)
+
+    c.gridx = 0
+    c.gridy = 1
+    c.anchor = GridBagConstraints.SOUTHWEST
+    c.gridwidth = 2
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.insets = new Insets(0, 0, -margin, 0)
+
+    add(slider, c)
 
     slider.addChangeListener(new javax.swing.event.ChangeListener() {
       override def stateChanged(e: javax.swing.event.ChangeEvent): Unit = {

@@ -2,13 +2,30 @@
 
 package org.nlogo.swing
 
-import javax.swing.{JComboBox, JList, JMenuItem, ListCellRenderer}
-import java.awt.{Color, Component}
+import javax.swing.{ JComboBox, JList, JMenuItem, ListCellRenderer }
+import java.awt.{ Color, Component, Graphics, Insets }
+
+import org.nlogo.window.InterfaceColors
 
 class ToolBarComboBoxRenderer extends JMenuItem with ListCellRenderer[JMenuItem] {
+  var separator = false
+
+  setMargin(new Insets(6, 0, 6, 0))
+
+  override def paintComponent(g: Graphics) {
+    super.paintComponent(g)
+
+    if (separator) {
+      g.setColor(InterfaceColors.DROPDOWN_SEPARATOR)
+      g.fillRect(6, getHeight - 1, getWidth - 12, 1)
+    }
+  }
+
   def getListCellRendererComponent(list: JList[_ <: JMenuItem], item: JMenuItem, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component = {
+    separator = index < list.getModel.getSize - 1
+
     if (isSelected) {
-      setBackground(list.getSelectionBackground)
+      setBackground(InterfaceColors.LIGHT_GRAY)
     }
 
     else {
