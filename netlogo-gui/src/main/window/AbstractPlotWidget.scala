@@ -2,13 +2,14 @@
 
 package org.nlogo.window
 
-import javax.swing.{ JLabel, SwingConstants }
-import java.awt.{ Dimension, Font, Graphics, Insets, GridBagConstraints, GridBagLayout }
+import javax.swing.{ JLabel, JPanel, SwingConstants }
+import java.awt.{ BasicStroke, Color, Dimension, Font, Graphics, Graphics2D, GridBagConstraints, GridBagLayout,
+                  Insets }
 
 import org.nlogo.api.Editable
 import org.nlogo.core.I18N
 import org.nlogo.core.{ Pen => CorePen, Plot => CorePlot }
-import org.nlogo.plot.{PlotManagerInterface, PlotLoader, PlotPen, Plot}
+import org.nlogo.plot.{ PlotManagerInterface, PlotLoader, PlotPen, Plot }
 import org.nlogo.swing.VTextIcon
 
 import java.awt.GridBagConstraints.REMAINDER
@@ -25,6 +26,35 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   import AbstractPlotWidget._
 
+  private class CanvasPanel(canvas: PlotCanvas) extends JPanel {
+    setBackground(InterfaceColors.TRANSPARENT)
+    setLayout(new GridBagLayout)
+
+    locally {
+      val c = new GridBagConstraints
+
+      c.weightx = 1
+      c.weighty = 1
+      c.fill = GridBagConstraints.BOTH
+      c.insets = new Insets(3, 3, 3, 3)
+
+      add(canvas, c)
+    }
+
+    override def paintComponent(g: Graphics) {
+      val g2d = g.asInstanceOf[Graphics2D]
+      g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
+      g2d.setColor(Color.WHITE)
+      g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
+      val stroke = g2d.getStroke
+      g2d.setStroke(new BasicStroke(1))
+      g2d.setColor(InterfaceColors.PLOT_BORDER)
+      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+      g2d.setStroke(stroke)
+      super.paintComponent(g)
+    }
+  }
+
   private var fullyConstructed = false
   plot.dirtyListener = Some(this)
   val canvas = new PlotCanvas(plot)
@@ -34,6 +64,8 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   private val yAxis = new YAxisLabels()
 
   nameLabel.setForeground(InterfaceColors.WIDGET_TEXT)
+  xAxis.setForeground(InterfaceColors.WIDGET_TEXT)
+  yAxis.setForeground(InterfaceColors.WIDGET_TEXT)
 
   locally {
     displayName = plot.name
@@ -60,11 +92,11 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
     //ROW1
     //-----------------------------------------
-    c.insets = new Insets(6, 6, 6, 6)
+    c.insets = new Insets(3, 6, 6, 6)
 
-    c.gridx = 1
+    c.gridx = 0
     c.gridy = 0
-    c.gridwidth = 1
+    c.gridwidth = 2
     c.anchor = GridBagConstraints.NORTHWEST
     c.fill = GridBagConstraints.HORIZONTAL
 
@@ -74,7 +106,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
     //ROW2
     //-----------------------------------------
-    c.insets = new Insets(0, 1, 0, 1)
+    c.insets = new Insets(0, 3, 3, 3)
 
     c.gridx = GridBagConstraints.RELATIVE
     c.gridy = 1
@@ -91,19 +123,19 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     c.anchor = GridBagConstraints.CENTER
     c.fill = GridBagConstraints.BOTH
 
-    add(canvas, c)
+    add(new CanvasPanel(canvas), c)
 
     c.gridwidth = REMAINDER
     c.weightx = 0.0
     c.anchor = GridBagConstraints.NORTH
     c.fill = GridBagConstraints.NONE
-    c.insets = new Insets(0, 3, 0, 1)
+    c.insets = new Insets(0, 3, 0, 3)
     
     add(legend, c)
 
     //ROW3
     //-----------------------------------------
-    c.insets = new Insets(0, 0, 0, 0)
+    c.insets = new Insets(0, 3, 3, 3)
     c.gridy = 2
 
     c.weightx = 0.0

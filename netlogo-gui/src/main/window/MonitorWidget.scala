@@ -96,7 +96,7 @@ class MonitorWidget(random: MersenneTwisterFast)
   private val nameLabel = new JLabel
   private val valueLabel = new JLabel
 
-  valueLabel.setForeground(InterfaceColors.WIDGET_TEXT)
+  nameLabel.setForeground(InterfaceColors.WIDGET_TEXT)
 
   addMouseListener(this)
 
@@ -110,7 +110,7 @@ class MonitorWidget(random: MersenneTwisterFast)
     c.gridx = 0
     c.weightx = 1
     c.anchor = GridBagConstraints.NORTHWEST
-    c.insets = new Insets(3, 6, 6, 6)
+    c.insets = new Insets(3, 6, 0, 6)
 
     add(nameLabel, c)
 
@@ -124,7 +124,6 @@ class MonitorWidget(random: MersenneTwisterFast)
   def name(name: String): Unit = {
     _name = name
     chooseDisplayName()
-    nameLabel.setText(displayName)
     repaint()
   }
 
@@ -197,11 +196,14 @@ class MonitorWidget(random: MersenneTwisterFast)
   def propertySet: JList[Property] =
     Properties.monitor
 
-  def chooseDisplayName(): Unit =
+  def chooseDisplayName() {
     if (name == null || name == "")
       displayName(getSourceName)
     else
       displayName(name)
+    
+    nameLabel.setText(displayName)
+  }
 
   // behold the mighty regular expression
   private def getSourceName: String =

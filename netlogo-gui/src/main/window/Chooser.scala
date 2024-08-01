@@ -46,7 +46,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     c.gridwidth = 1
     c.weightx = 1
     c.anchor = GridBagConstraints.NORTHWEST
-    c.insets = new Insets(4, 6, 0, 6)
+    c.insets = new Insets(3, 6, 0, 6)
 
     add(label, c)
 

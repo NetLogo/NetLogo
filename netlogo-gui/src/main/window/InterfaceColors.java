@@ -47,7 +47,10 @@ public final class InterfaceColors {
   public static final Color BUTTON_BACKGROUND_HOVER = new Color(62, 150, 253);
   public static final Color BUTTON_BACKGROUND_PRESSED = new Color(0, 49, 106);
   public static final Color BUTTON_BACKGROUND_PRESSED_HOVER = new Color(9, 89, 183);
+  public static final Color BUTTON_BACKGROUND_DISABLED = new Color(213, 213, 213);
   public static final Color BUTTON_TEXT = Color.WHITE;
+  public static final Color BUTTON_TEXT_DISABLED = new Color(154, 154, 154);
+  public static final Color BUTTON_TEXT_ERROR = Color.RED;
   public static final Color SLIDER_BACKGROUND = INPUT_BACKGROUND;
   public static final Color SLIDER_BAR_BACKGROUND = DARK_GRAY;
   public static final Color SWITCH_BACKGROUND = INPUT_BACKGROUND;
@@ -62,10 +65,11 @@ public final class InterfaceColors {
   public static final Color MONITOR_BACKGROUND = OUTPUT_BACKGROUND;
   public static final Color MONITOR_BORDER = DARK_GRAY;
   public static final Color PLOT_BACKGROUND = OUTPUT_BACKGROUND;
+  public static final Color PLOT_BORDER = DARK_GRAY;
+  public static final Color OUTPUT_BORDER = DARK_GRAY;
   public static final Color AGENT_EDITOR_BACKGROUND = LIGHT_GRAY;
   public static final Color AGENT_COMMANDER_BACKGROUND = LIGHT_GRAY;
   public static final Color TOOLBAR_BACKGROUND = LIGHT_GRAY;
-  public static final Color DROPDOWN_SEPARATOR = DARK_GRAY;
 
   private static Color hsb(double h, double s, double b) {
     return Color.getHSBColor

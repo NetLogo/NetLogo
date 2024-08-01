@@ -2,10 +2,10 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Cursor, Dimension, Font, Graphics, Graphics2D, RenderingHints }
+import java.awt.{ Cursor, Dimension, Font, Graphics, GridBagLayout, GridBagConstraints, Insets }
 import java.awt.event.{ MouseEvent, MouseListener, MouseMotionListener }
 import java.awt.image.FilteredImageSource
-import javax.swing.ImageIcon
+import javax.swing.{ ImageIcon, JLabel }
 
 import org.nlogo.api.{ Editable, MersenneTwisterFast, Options }
 import org.nlogo.awt.{ DarkenImageFilter, Mouse }, Mouse.hasButton1
@@ -16,6 +16,7 @@ import org.nlogo.swing.Utils.icon
 object ButtonWidget {
 
   val FOREVER_GRAPHIC: ImageIcon = icon("/images/forever.png")
+  val FOREVER_GRAPHIC_DISABLED: ImageIcon = icon("/images/forever-disabled.png")
 
   object ButtonType {
 
@@ -78,12 +79,49 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   private var buttonType: ButtonType = ButtonType.ObserverButton
 
-  locally {
-    addMouseListener(this)
-    addMouseMotionListener(this)
+  val keyLabel = new JLabel
+  val nameLabel = new JLabel
+  val foreverLabel = new JLabel(FOREVER_GRAPHIC)
 
-    backgroundColor = InterfaceColors.BUTTON_BACKGROUND
+  keyLabel.setForeground(InterfaceColors.BUTTON_TEXT)
+  keyLabel.setFont(keyLabel.getFont.deriveFont(10.0f))
+  keyLabel.addMouseListener(this)
+
+  nameLabel.setForeground(InterfaceColors.BUTTON_TEXT)
+  nameLabel.addMouseListener(this)
+
+  foreverLabel.addMouseListener(this)
+
+  setLayout(new GridBagLayout)
+
+  locally {
+    val c = new GridBagConstraints
+
+    c.gridy = 0
+    c.gridheight = 2
+    c.weightx = 1
+    c.insets = new Insets(3, 3, 3, 3)
+
+    add(nameLabel, c)
+    
+    c.gridheight = 1
+    c.weightx = 0
+    c.anchor = GridBagConstraints.NORTH
+    c.insets = new Insets(3, 0, 0, 3)
+
+    add(keyLabel, c)
+
+    c.gridy = 1
+    c.anchor = GridBagConstraints.SOUTH
+    c.insets = new Insets(0, 0, 3, 3)
+
+    add(foreverLabel, c)
   }
+
+  addMouseListener(this)
+  addMouseMotionListener(this)
+
+  backgroundColor = InterfaceColors.BUTTON_BACKGROUND
 
   // buttonType now controls the agentKind. no one should ever be setting
   // agentKind from outside of this class anyway.
@@ -135,8 +173,10 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
       case 0 => None
       case _ => Some(newActionKey)
     }
+    keyLabel.setText(_actionKey.map(_.toString).getOrElse(""))
+    keyLabel.setVisible(keyLabel.getText.nonEmpty)
+    repaint()
   }
-  private def actionKeyString = _actionKey.map(_.toString).getOrElse("")
 
   private var _keyEnabled = false
   def keyEnabled = _keyEnabled
@@ -212,13 +252,11 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   def mouseEntered(e: MouseEvent) {
     hover = true
-
     repaint()
   }
 
   def mouseExited(e: MouseEvent) {
     hover = false
-
     repaint()
   }
 
@@ -338,6 +376,8 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
       displayName(getSourceName)
     else
       displayName(name)
+    nameLabel.setText(displayName)
+    repaint()
   }
 
   // behold the mighty regular expression
@@ -380,66 +420,45 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   /// painting
   override def paintComponent(g: Graphics) {
-    val g2d = g.asInstanceOf[Graphics2D]
-    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
     val drawAsUp = buttonUp && !running
-    def paintButtonRectangle(g: Graphics) {
-      backgroundColor =
-        if (drawAsUp) {
-          if (hover)
-            InterfaceColors.BUTTON_BACKGROUND_HOVER
-          else
-            InterfaceColors.BUTTON_BACKGROUND
-        }
 
-        else {
-          if (hover)
-            InterfaceColors.BUTTON_BACKGROUND_PRESSED_HOVER
-          else
-            InterfaceColors.BUTTON_BACKGROUND_PRESSED
-        }
-      super.paintComponent(g)
-      def renderImages(g: Graphics, dark: Boolean) {
-        def maybePaintForeverImage() {
-          if (forever)
-            FOREVER_GRAPHIC.paintIcon(this, g, getWidth - FOREVER_GRAPHIC.getIconWidth - 4,
-                                      getHeight - FOREVER_GRAPHIC.getIconHeight - 4)
-        }
-        def maybePaintAgentImage() {
-          buttonType.img(dark).map(_.paintIcon(this, g, 3, 3))
-        }
-        maybePaintForeverImage()
-        maybePaintAgentImage()
-      }
-      renderImages(g, !drawAsUp)
+    keyLabel.setForeground(InterfaceColors.BUTTON_TEXT)
+    nameLabel.setForeground(InterfaceColors.BUTTON_TEXT)
+    foreverLabel.setIcon(FOREVER_GRAPHIC)
+
+    if (disabledWaitingForSetup) {
+      backgroundColor = InterfaceColors.BUTTON_BACKGROUND_DISABLED
+      keyLabel.setForeground(InterfaceColors.BUTTON_TEXT_DISABLED)
+      nameLabel.setForeground(InterfaceColors.BUTTON_TEXT_DISABLED)
+      foreverLabel.setIcon(FOREVER_GRAPHIC_DISABLED)
     }
-    def paintKeyboardShortcut(g: Graphics) {
-      if (actionKeyString != "") {
-        val ax = getSize().width - 4 - g.getFontMetrics.stringWidth(actionKeyString)
-        val ay = g.getFontMetrics.getMaxAscent + 2
-        if (drawAsUp) g.setColor(if (keyEnabled) Color.BLACK else Color.GRAY)
-        else g.setColor(if (keyEnabled && forever) getBackground else Color.BLACK)
-        g.drawString(actionKeyString, ax - 1, ay)
-      }
-    }
-    def paintButtonText(g: Graphics) {
-      val stringWidth = g.getFontMetrics.stringWidth(displayName)
-      g.setColor(
-        if (error == null && disabledWaitingForSetup)
-          Color.GRAY
+
+    else if (drawAsUp) {
+      backgroundColor =
+        if (hover)
+          InterfaceColors.BUTTON_BACKGROUND_HOVER
         else
-          InterfaceColors.BUTTON_TEXT
-      )
-      val availableWidth = getSize().width - 8
-      val shortString = org.nlogo.awt.Fonts.shortenStringToFit(displayName, availableWidth, g.getFontMetrics)
-      val nx = if (stringWidth > availableWidth) 4 else (getSize().width / 2) - (stringWidth / 2)
-      val ny = (getSize().height - g.getFontMetrics.getHeight) / 2 + g.getFontMetrics.getMaxAscent
-      g.drawString(shortString, nx, ny)  //if (disabledWaitingForSetup) Color.GRAY
-      setToolTipText(if (displayName != shortString) displayName else null)
+          InterfaceColors.BUTTON_BACKGROUND
     }
-    paintButtonRectangle(g)
-    paintButtonText(g)
-    paintKeyboardShortcut(g)
+
+    else {
+      backgroundColor =
+        if (hover)
+          InterfaceColors.BUTTON_BACKGROUND_PRESSED_HOVER
+        else
+          InterfaceColors.BUTTON_BACKGROUND_PRESSED
+    }
+    
+    foreverLabel.setVisible(forever)
+
+    super.paintComponent(g)
+
+    // val availableWidth = getSize().width - 8
+    // val shortString = org.nlogo.awt.Fonts.shortenStringToFit(displayName, availableWidth, g.getFontMetrics)
+    // val nx = if (stringWidth > availableWidth) 4 else (getSize().width / 2) - (stringWidth / 2)
+    // val ny = (getSize().height - g.getFontMetrics.getHeight) / 2 + g.getFontMetrics.getMaxAscent
+    // g.drawString(shortString, nx, ny)  //if (disabledWaitingForSetup) Color.GRAY
+    // setToolTipText(if (displayName != shortString) displayName else null)
   }
 
   // saving and loading
