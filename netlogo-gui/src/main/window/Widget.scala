@@ -115,6 +115,7 @@ abstract class Widget extends JPanel {
     g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
     g2d.setColor(backgroundColor)
     g2d.fillRoundRect(0, 0, getWidth, getHeight, 12, 12)
+    super.paintComponent(g)
   }
 
   override def toString: String = {
