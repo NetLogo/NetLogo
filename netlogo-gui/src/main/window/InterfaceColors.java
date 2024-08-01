@@ -7,32 +7,6 @@ import java.awt.Color;
 import org.nlogo.api.Constants;
 
 public final class InterfaceColors {
-
-  // this class is not instantiable
-  private InterfaceColors() {
-    throw new IllegalStateException();
-  }
-
-  // now that we've toned down the graphics window colors, I think
-  // maybe we need to tone down the colors in the rest of the Interface
-  // tab a bit, to keep the same feeling of distinctness of the 2D View
-  // from the rest of the Interface tab - ST 4/28/05
-  private static final double SATURATION_ADJUSTMENT = 0.85;
-
-  // color graveyard
-  // private static final Color LIGHT_GREEN = new Color( 180 , 230 , 180 ) ;
-  // private static final Color DUSTY_ADOBE_ROSE = new Color( 221 , 162, 153 ) ;
-  // private static final Color LIGHT_ORANGE = new Color( 235 , 194 /*183*/ , 139 ) ;
-  // private static final Color LIGHT_GRAY = new Color( 230 , 230 , 230 ) ;
-  // private static final Color ICE = new Color( 200 , 200 , 230 ) ;
-  // private static final Color LIGHT_BLUE = hsb(0.667, 0.217, 0.902);
-  // private static final Color LIGHT_TURQUOISE = hsb(0.485, 0.362, 0.737);
-  // private static final Color STRAW = hsb(0.167, 0.222, 0.882);
-  // private static final Color MEDIUM_RED = hsb(0.0, 0.57, 0.784);
-  // private static final Color MEDIUM_BLUE = hsb(0.667, 0.565, 0.902);
-
-
-  // new flatlaf colors
   public static final Color LIGHT_GRAY = new Color(240, 240, 240);
   public static final Color DARK_GRAY = new Color(171, 178, 186);
   public static final Color INPUT_BACKGROUND = new Color(207, 229, 255);
@@ -70,12 +44,4 @@ public final class InterfaceColors {
   public static final Color AGENT_EDITOR_BACKGROUND = LIGHT_GRAY;
   public static final Color AGENT_COMMANDER_BACKGROUND = LIGHT_GRAY;
   public static final Color TOOLBAR_BACKGROUND = LIGHT_GRAY;
-
-  private static Color hsb(double h, double s, double b) {
-    return Color.getHSBColor
-        ((float) h,
-            (float) (SATURATION_ADJUSTMENT * s),
-            (float) b);
-  }
-
 }
