@@ -2,42 +2,107 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.MersenneTwisterFast
-import org.nlogo.core.{ Horizontal, Slider => CoreSlider, Vertical }
-import java.awt.event.{ MouseAdapter, MouseEvent }
-import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent, InputBoxLoseFocusEvent }
-import org.nlogo.api.{ Dump, Editable }
-import org.nlogo.core.I18N
-import org.nlogo.agent.SliderConstraint
-import java.awt.{ Dimension, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets, RadialGradientPaint }
+import java.awt.event.{ MouseAdapter, MouseEvent, MouseMotionAdapter }
 import javax.swing.{ JLabel, JSlider, SwingConstants }
+import javax.swing.plaf.basic.BasicSliderUI
+
+import org.nlogo.agent.SliderConstraint
+import org.nlogo.api.{ Dump, Editable, MersenneTwisterFast }
+import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical }
+import org.nlogo.swing.Utils
+import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent,
+                                 InputBoxLoseFocusEvent }
 
 trait AbstractSliderWidget extends MultiErrorWidget {
+  private class SliderUI(slider: JSlider) extends BasicSliderUI(slider) {
+    private var hover = false
+
+    slider.setOpaque(false)
+
+    slider.addMouseListener(new MouseAdapter {
+      override def mouseReleased(e: MouseEvent) {
+        if (!thumbRect.contains(e.getPoint))
+          hover = false
+      }
+    })
+
+    slider.addMouseMotionListener(new MouseMotionAdapter {
+      override def mouseMoved(e: MouseEvent) {
+        hover = thumbRect.contains(e.getPoint)
+      }
+    })
+
+    override def paintTrack(g: Graphics) {
+      val g2d = Utils.initGraphics2D(g)
+      val startY = trackRect.y + trackRect.height / 2 - 3
+      g2d.setColor(InterfaceColors.SLIDER_BAR_BACKGROUND_FILLED)
+      g2d.fillRoundRect(trackRect.x, startY, thumbRect.x, 6, 6, 6)
+      g2d.setColor(InterfaceColors.SLIDER_BAR_BACKGROUND)
+      g2d.fillRoundRect(thumbRect.x, startY, trackRect.width - thumbRect.x, 6, 6, 6)
+    }
+
+    override def paintThumb(g: Graphics) {
+      val g2d = Utils.initGraphics2D(g)
+      if (hover) {
+        g2d.setPaint(new RadialGradientPaint(thumbRect.getCenterX.toInt, thumbRect.getCenterY.toInt,
+                                             getThumbSize.width, Array[Float](0, 1),
+                                             Array(InterfaceColors.SLIDER_SHADOW, InterfaceColors.TRANSPARENT)))
+        g2d.fillOval(thumbRect.x + getThumbSize.width / 2 - getThumbSize.height / 2, thumbRect.y, getThumbSize.height,
+                    getThumbSize.height)
+      }
+      val startY = getThumbSize.height / 2 - getThumbSize.width / 2
+      g2d.setColor(InterfaceColors.SLIDER_THUMB_BORDER)
+      g2d.fillOval(thumbRect.x, startY, getThumbSize.width, getThumbSize.width)
+      if (isDragging)
+        g2d.setColor(InterfaceColors.SLIDER_THUMB_BACKGROUND_PRESSED)
+      else
+        g2d.setColor(InterfaceColors.SLIDER_THUMB_BACKGROUND)
+      g2d.fillOval(thumbRect.x + 1, startY + 1, getThumbSize.width - 2, getThumbSize.width - 2)
+      repaint()
+    }
+
+    override def paintFocus(g: Graphics) {
+      // no focus
+    }
+
+    override def scrollDueToClickInTrack(dir: Int) {
+      // implemented in track listener
+    }
+
+    override def createTrackListener(slider: JSlider): TrackListener =
+      new TrackListener {
+        override def mousePressed(e: MouseEvent) {
+          if (thumbRect.contains(e.getPoint))
+            super.mousePressed(e)
+          else if (e.getButton == MouseEvent.BUTTON1)
+            slider.setValue(valueForXPosition(e.getPoint.x))
+        }
+      }
+  }
 
   protected var _name = ""
   private var _units = ""
   private var _vertical = false
   private val sliderData = new SliderData(this)
 
-  var slider: JSlider = null
   val nameComponent = new JLabel
   val valueComponent = new JLabel
+  var slider = new JSlider(0, ((maximum - minimum) / increment).asInstanceOf[Int], 0)
 
   nameComponent.setForeground(InterfaceColors.WIDGET_TEXT)
   valueComponent.setForeground(InterfaceColors.WIDGET_TEXT)
 
+  slider.setUI(new SliderUI(slider))
+
   backgroundColor = InterfaceColors.SLIDER_BACKGROUND
 
+  setLayout(new GridBagLayout)
+
   locally {
-    slider = new JSlider(0, ((maximum - minimum) / increment).asInstanceOf[Int], 0)
-
-    slider.setBackground(InterfaceColors.SLIDER_BAR_BACKGROUND)
-
-    setLayout(new GridBagLayout())
-
     val margin = 6
 
-    val c = new GridBagConstraints()
+    val c = new GridBagConstraints
 
     c.gridx = 0
     c.gridy = 0

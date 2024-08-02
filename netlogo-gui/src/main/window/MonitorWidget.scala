@@ -2,18 +2,18 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.{ AgentKind, AgentKindJ, I18N, Monitor => CoreMonitor }
-import org.nlogo.api.{ Dump, Editable, MersenneTwisterFast, Property }
-import org.nlogo.nvm.Procedure
-import org.nlogo.window.Events.{ AddJobEvent, EditWidgetEvent,
-  RuntimeErrorEvent, PeriodicUpdateEvent, JobRemovedEvent, RemoveJobEvent }
-
 import java.awt.event.MouseEvent
-import java.awt.{ BasicStroke, Component, EventQueue, Font, Graphics, Graphics2D, GridBagConstraints, GridBagLayout,
-                  Insets, Dimension, Color => AwtColor }
+import java.awt.{ BasicStroke, Component, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets,
+                  Dimension, Color => AwtColor }
 import java.util.{ List => JList }
 import javax.swing.{ JLabel, JPanel }
 
+import org.nlogo.core.{ AgentKind, AgentKindJ, I18N, Monitor => CoreMonitor }
+import org.nlogo.api.{ Dump, Editable, MersenneTwisterFast, Property }
+import org.nlogo.nvm.Procedure
+import org.nlogo.swing.Utils
+import org.nlogo.window.Events.{ AddJobEvent, EditWidgetEvent,
+  RuntimeErrorEvent, PeriodicUpdateEvent, JobRemovedEvent, RemoveJobEvent }
 
 object MonitorWidget {
   private val MinWidth = 50
@@ -67,8 +67,7 @@ class MonitorWidget(random: MersenneTwisterFast)
     add(label, c)
 
     override def paintComponent(g: Graphics) {
-      val g2d = g.asInstanceOf[Graphics2D]
-      g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
+      val g2d = Utils.initGraphics2D(g)
       g2d.setColor(AwtColor.WHITE)
       g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
       val stroke = g2d.getStroke

@@ -1,8 +1,9 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 package org.nlogo.swing
-import java.awt.event.{ActionEvent, MouseAdapter, MouseEvent}
-import java.awt.{Dimension, Graphics, Graphics2D}
-import javax.swing.{AbstractAction, JButton, JPopupMenu}
+
+import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
+import java.awt.{ Dimension, Graphics }
+import javax.swing.{ AbstractAction, JButton, JPopupMenu }
 
 abstract class ToolBarMenu(name: String) extends JButton(name) {
   setMinimumSize(new Dimension(11,20))
@@ -39,8 +40,6 @@ abstract class ToolBarMenu(name: String) extends JButton(name) {
   }
 
   override def paintComponent(g: Graphics): Unit = {
-    val g2d = g.asInstanceOf[Graphics2D]
-    g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
     g.setColor(getBackground)
     g.fillRect(0, 0, getWidth, getHeight)
     // Draw Label

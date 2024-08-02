@@ -3,7 +3,9 @@
 package org.nlogo.widget
 
 import org.nlogo.agent.BooleanConstraint
+import org.nlogo.swing.Utils
 import org.nlogo.window.{ Events, InterfaceColors, MultiErrorWidget }
+
 import java.awt._
 import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
 import event.{ MouseWheelEvent, MouseEvent, MouseAdapter, MouseWheelListener }
@@ -92,8 +94,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     })
 
     override def paintComponent(g: Graphics) {
-      val g2d = g.asInstanceOf[Graphics2D]
-      g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
+      val g2d = Utils.initGraphics2D(g)
       if (isOn)
         g2d.setColor(InterfaceColors.SWITCH_TOGGLE_BACKGROUND_ON)
       else

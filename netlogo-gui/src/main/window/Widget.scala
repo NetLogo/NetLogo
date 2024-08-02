@@ -2,12 +2,13 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, Container, Dimension, Font, Graphics, Graphics2D, Point, Rectangle, event },
-  event.{MouseAdapter, MouseEvent, MouseListener}
-import javax.swing.{JPanel, JMenuItem, JPopupMenu}
+import java.awt.{ Component, Container, Dimension, Font, Graphics, Point, Rectangle, event },
+                  event.{ MouseAdapter, MouseEvent, MouseListener }
+import javax.swing.{ JPanel, JMenuItem, JPopupMenu }
 
 import org.nlogo.api.{ MultiErrorHandler, SingleErrorHandler }
 import org.nlogo.core.{ Widget => CoreWidget }
+import org.nlogo.swing.Utils
 import org.nlogo.window.Events.{ WidgetAddedEvent, WidgetEditedEvent, WidgetRemovedEvent }
 
 object Widget {
@@ -33,7 +34,7 @@ abstract class Widget extends JPanel {
 
   protected var backgroundColor = InterfaceColors.LIGHT_GRAY
 
-  setBackground(InterfaceColors.TRANSPARENT)
+  setOpaque(false)
 
   override def getPreferredSize: Dimension = getPreferredSize(getFont)
   def getPreferredSize(font: Font): Dimension = super.getPreferredSize
@@ -111,8 +112,7 @@ abstract class Widget extends JPanel {
   }
 
   override def paintComponent(g: Graphics): Unit = {
-    val g2d = g.asInstanceOf[Graphics2D]
-    g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
+    val g2d = Utils.initGraphics2D(g)
     g2d.setColor(backgroundColor)
     g2d.fillRoundRect(0, 0, getWidth, getHeight, 12, 12)
     super.paintComponent(g)

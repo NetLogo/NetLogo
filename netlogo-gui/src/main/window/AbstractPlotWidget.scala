@@ -3,17 +3,13 @@
 package org.nlogo.window
 
 import javax.swing.{ JLabel, JPanel, SwingConstants }
-import java.awt.{ BasicStroke, Color, Dimension, Font, Graphics, Graphics2D, GridBagConstraints, GridBagLayout,
-                  Insets }
+import java.awt.{ BasicStroke, Color, Dimension, Font, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.image.BufferedImage
 
 import org.nlogo.api.Editable
-import org.nlogo.core.I18N
-import org.nlogo.core.{ Pen => CorePen, Plot => CorePlot }
+import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot }
 import org.nlogo.plot.{ PlotManagerInterface, PlotLoader, PlotPen, Plot }
-import org.nlogo.swing.VTextIcon
-
-import java.awt.GridBagConstraints.REMAINDER
-import java.awt.image.BufferedImage
+import org.nlogo.swing.{ Utils, VTextIcon }
 import org.nlogo.window.Events.{WidgetRemovedEvent, AfterLoadEvent}
 
 abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInterface)
@@ -42,8 +38,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     }
 
     override def paintComponent(g: Graphics) {
-      val g2d = g.asInstanceOf[Graphics2D]
-      g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
+      val g2d = Utils.initGraphics2D(g)
       g2d.setColor(Color.WHITE)
       g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
       val stroke = g2d.getStroke
@@ -125,7 +120,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
     add(new CanvasPanel(canvas), c)
 
-    c.gridwidth = REMAINDER
+    c.gridwidth = GridBagConstraints.REMAINDER
     c.weightx = 0.0
     c.anchor = GridBagConstraints.NORTH
     c.fill = GridBagConstraints.NONE
@@ -392,7 +387,7 @@ object AbstractPlotWidget {
     c.fill = java.awt.GridBagConstraints.HORIZONTAL
     gridbag.setConstraints(label, c)
     add(label)
-    c.gridwidth = REMAINDER
+    c.gridwidth = GridBagConstraints.REMAINDER
     c.weightx = 0.0
     c.anchor = java.awt.GridBagConstraints.EAST
     c.fill = java.awt.GridBagConstraints.NONE
@@ -427,7 +422,7 @@ object AbstractPlotWidget {
     setLayout(gridbag)
     val c: GridBagConstraints = new GridBagConstraints
     c.insets = new Insets(3, 0, 0, 0)
-    c.gridwidth = REMAINDER
+    c.gridwidth = GridBagConstraints.REMAINDER
     c.gridheight = 1
     c.weightx = 1.0
     c.weighty = 0.0
@@ -439,7 +434,7 @@ object AbstractPlotWidget {
     c.fill = java.awt.GridBagConstraints.VERTICAL
     gridbag.setConstraints(label, c)
     add(label)
-    c.gridheight = REMAINDER
+    c.gridheight = GridBagConstraints.REMAINDER
     c.weighty = 0.0
     c.fill = java.awt.GridBagConstraints.NONE
     gridbag.setConstraints(min, c)

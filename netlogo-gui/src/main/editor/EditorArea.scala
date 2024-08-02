@@ -8,7 +8,7 @@
 
 package org.nlogo.editor
 
-import java.awt.{ Component, Dimension, Graphics, Graphics2D, Point, RenderingHints, Toolkit }
+import java.awt.{ Component, Dimension, Point, Toolkit }
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.{ FocusListener, KeyEvent, MouseEvent }
 import javax.swing.{ Action, JMenuItem, JEditorPane, JPopupMenu }
@@ -60,12 +60,6 @@ class EditorArea(val configuration: EditorConfiguration)
     getKeymap.addActionForKeyStroke(keystroke(KeyEvent.VK_Y, mask), UndoManager.redoAction())
 
     configuration.configureEditorArea(this)
-  }
-
-  override def paintComponent(g: Graphics): Unit = {
-    val g2d = g.asInstanceOf[Graphics2D]
-    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    super.paintComponent(g)
   }
 
   private var bracketMatcherEnabled: Boolean = true
