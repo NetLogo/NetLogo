@@ -27,6 +27,11 @@ public final class InterfaceColors {
   public static final Color BUTTON_TEXT_ERROR = Color.RED;
   public static final Color SLIDER_BACKGROUND = INPUT_BACKGROUND;
   public static final Color SLIDER_BAR_BACKGROUND = DARK_GRAY;
+  public static final Color SLIDER_BAR_BACKGROUND_FILLED = MEDIUM_BLUE;
+  public static final Color SLIDER_THUMB_BORDER = MEDIUM_BLUE;
+  public static final Color SLIDER_THUMB_BACKGROUND = Color.WHITE;
+  public static final Color SLIDER_THUMB_BACKGROUND_PRESSED = MEDIUM_BLUE;
+  public static final Color SLIDER_SHADOW = new Color(50, 50, 50);
   public static final Color SWITCH_BACKGROUND = INPUT_BACKGROUND;
   public static final Color SWITCH_TOGGLE = Color.WHITE;
   public static final Color SWITCH_TOGGLE_BACKGROUND_ON = MEDIUM_BLUE;

@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.Frame
+import java.awt.{ Frame, Graphics, Graphics2D, RenderingHints }
 import java.awt.event.KeyEvent
 
 import javax.swing.{ Action, ImageIcon, InputMap, JComponent, JDialog, JWindow, KeyStroke }
@@ -38,5 +38,11 @@ final object Utils {
   def addEscKeyAction(component: JComponent, inputMap: InputMap, action: Action): Unit = {
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false), "ESC_ACTION")
     component.getActionMap.put("ESC_ACTION", action)
+  }
+
+  def initGraphics2D(g: Graphics): Graphics2D = {
+    val g2d = g.asInstanceOf[Graphics2D]
+    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2d
   }
 }

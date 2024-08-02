@@ -2,24 +2,22 @@
 
 package org.nlogo.window
 
-import java.awt.{ BasicStroke, Color, Component, Dimension, Font, Frame, Graphics, Graphics2D, GridBagConstraints,
-                  GridBagLayout, Insets }
+import java.awt.{ BasicStroke, Color, Component, Dimension, Font, Frame, Graphics, GridBagConstraints, GridBagLayout,
+                  Insets }
 import java.awt.event.{ ActionListener, WindowEvent, WindowAdapter, FocusListener, FocusEvent, ActionEvent, KeyEvent }
-import javax.swing.text.EditorKit
-import javax.swing.KeyStroke.getKeyStroke
 import javax.swing.{ AbstractAction, JButton, JDialog, JLabel, JPanel, JScrollPane, ScrollPaneConstants }
+import javax.swing.KeyStroke.getKeyStroke
 import javax.swing.plaf.basic.BasicButtonUI
+import javax.swing.text.EditorKit
 
-import org.nlogo.core.{ BoxedValue, CompilerException, I18N,
-  InputBox => CoreInputBox, NumericInput, StringInput }
-import org.nlogo.agent.InputBoxConstraint
-import org.nlogo.editor.AbstractEditorArea
-import org.nlogo.api.Exceptions
+import org.nlogo.api.{ CompilerServices, Dump, Editable, Exceptions, LogoException, Options, ValueConstraint }
 import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.Color.{ getClosestColorNumberByARGB, getColor, getColorNameByIndex, modulateDouble }
-import org.nlogo.swing.ButtonPanel
+import org.nlogo.agent.InputBoxConstraint
 import org.nlogo.awt.Fonts.{ platformFont, platformMonospacedFont }
-import org.nlogo.api.{ Options, ValueConstraint, LogoException, CompilerServices, Dump, Editable }
+import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, NumericInput, StringInput }
+import org.nlogo.editor.AbstractEditorArea
+import org.nlogo.swing.{ ButtonPanel, Utils }
 
 object InputBox {
   val MinWidth  = 50
@@ -32,6 +30,9 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   type WidgetModel = CoreInputBox
 
   import InputBox._
+
+  // this overrides the widget default but it doesn't display color without it (IB 8/1/24)
+  setBackground(InterfaceColors.TRANSPARENT)
 
   protected class ColorButton extends JButton {
     var color = Color.black
@@ -47,8 +48,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     // setContentAreaFilled(false)
 
     override def paintComponent(g: Graphics) {
-      val g2d = g.asInstanceOf[Graphics2D]
-      g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
+      val g2d = Utils.initGraphics2D(g)
       g2d.setColor(color)
       g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
       val stroke = g2d.getStroke
@@ -80,8 +80,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     add(scrollPane, c)
 
     override def paintComponent(g: Graphics) {
-      val g2d = g.asInstanceOf[Graphics2D]
-      g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
+      val g2d = Utils.initGraphics2D(g)
       g2d.setColor(Color.WHITE)
       g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
       val stroke = g2d.getStroke

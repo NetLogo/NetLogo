@@ -2,12 +2,13 @@
 
 package org.nlogo.window
 
-import java.awt.{ BasicStroke, Color, Component, Dimension, EventQueue, Font, Graphics, Graphics2D, GridBagConstraints,
+import java.awt.{ BasicStroke, Color, Component, Dimension, EventQueue, Font, Graphics, GridBagConstraints,
                   GridBagLayout, Insets }
 import javax.swing.{ JPanel, JScrollPane, JTextArea, ScrollPaneConstants }
 
 import org.nlogo.awt.{ Fonts => NLogoFonts, LineBreaker }
 import org.nlogo.agent.OutputObject
+import org.nlogo.swing.Utils
 
 object OutputArea {
   private val PreferredWidth = 200
@@ -91,8 +92,7 @@ class OutputArea(val text: JTextArea) extends JPanel {
   override def isFocusable: Boolean = false
 
   override def paintComponent(g: Graphics) {
-    val g2d = g.asInstanceOf[Graphics2D]
-    g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
+    val g2d = Utils.initGraphics2D(g)
     g2d.setColor(Color.WHITE)
     g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
     val stroke = g2d.getStroke
