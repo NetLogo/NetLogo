@@ -2,9 +2,10 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets, RadialGradientPaint }
-import java.awt.event.{ MouseAdapter, MouseEvent, MouseMotionAdapter }
-import javax.swing.{ JLabel, JSlider, SwingConstants }
+import java.awt.{ Color, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets, RadialGradientPaint }
+import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, MouseAdapter, MouseEvent,
+                        MouseMotionAdapter }
+import javax.swing.{ BorderFactory, JLabel, JSlider, JTextField, SwingConstants }
 import javax.swing.plaf.basic.BasicSliderUI
 
 import org.nlogo.agent.SliderConstraint
@@ -81,13 +82,47 @@ trait AbstractSliderWidget extends MultiErrorWidget {
       }
   }
 
+  protected class TextField extends JTextField {
+    setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0))
+    setBackground(InterfaceColors.TRANSPARENT)
+
+    addActionListener(new ActionListener {
+      def actionPerformed(e: ActionEvent) {
+        try {
+          value = getText.toDouble
+        }
+
+        catch {
+          case e: NumberFormatException =>
+        }
+
+        setText(value.toString)
+      }
+    })
+
+    addFocusListener(new FocusAdapter {
+      override def focusLost(e: FocusEvent) {
+        fireActionPerformed()
+      }
+    })
+
+    override def paintComponent(g: Graphics) {
+      val g2d = Utils.initGraphics2D(g)
+      g2d.setColor(InterfaceColors.INPUT_BORDER)
+      g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
+      g2d.setColor(Color.WHITE)
+      g2d.fillRoundRect(1, 1, getWidth - 2, getHeight - 2, 6, 6)
+      super.paintComponent(g)
+    }
+  }
+
   protected var _name = ""
   private var _units = ""
   private var _vertical = false
   private val sliderData = new SliderData(this)
 
   val nameComponent = new JLabel
-  val valueComponent = new JLabel
+  val valueComponent = new TextField
   var slider = new JSlider(0, ((maximum - minimum) / increment).asInstanceOf[Int], 0)
 
   nameComponent.setForeground(InterfaceColors.WIDGET_TEXT)
