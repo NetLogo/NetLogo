@@ -18,19 +18,32 @@ import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicU
 trait AbstractSliderWidget extends MultiErrorWidget {
   private class SliderUI(slider: JSlider) extends BasicSliderUI(slider) {
     private var hover = false
+    private var pressed = false
 
     slider.setOpaque(false)
 
     slider.addMouseListener(new MouseAdapter {
-      override def mouseReleased(e: MouseEvent) {
-        if (!thumbRect.contains(e.getPoint))
+      override def mousePressed(e: MouseEvent) {
+        if (thumbRect.contains(e.getPoint)) {
           hover = false
+          pressed = true
+        }
+      }
+
+      override def mouseReleased(e: MouseEvent) {
+        hover = thumbRect.contains(e.getPoint)
+        pressed = false
+      }
+
+      override def mouseExited(e: MouseEvent) {
+        hover = false
+        pressed = false
       }
     })
 
     slider.addMouseMotionListener(new MouseMotionAdapter {
       override def mouseMoved(e: MouseEvent) {
-        hover = thumbRect.contains(e.getPoint)
+        hover = thumbRect.contains(e.getPoint) && !pressed
       }
     })
 
@@ -55,7 +68,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
       val startY = getThumbSize.height / 2 - getThumbSize.width / 2
       g2d.setColor(InterfaceColors.SLIDER_THUMB_BORDER)
       g2d.fillOval(thumbRect.x, startY, getThumbSize.width, getThumbSize.width)
-      if (isDragging)
+      if (pressed)
         g2d.setColor(InterfaceColors.SLIDER_THUMB_BACKGROUND_PRESSED)
       else
         g2d.setColor(InterfaceColors.SLIDER_THUMB_BACKGROUND)
