@@ -2,19 +2,31 @@
 
 package org.nlogo.widget
 
+import java.awt.{ Color, Dimension, FlowLayout, Font, Rectangle }
+import javax.swing.JLabel
+import javax.swing.border.EmptyBorder
+
 import org.nlogo.api.{ Color => NlogoColor, Editable }
+import org.nlogo.awt.LineBreaker
 import org.nlogo.core.{ TextBox => CoreTextBox }
 import org.nlogo.core.I18N
 import org.nlogo.window.{ InterfaceColors, SingleErrorWidget }
-import java.awt.{Font, Color, FontMetrics, Graphics, Dimension, Rectangle}
+
+import scala.collection.JavaConverters._
 
 class NoteWidget extends SingleErrorWidget with Editable {
 
   type WidgetModel = CoreTextBox
 
   setBackground(InterfaceColors.TRANSPARENT)
-  setOpaque(false)
-  org.nlogo.awt.Fonts.adjustDefaultFont(this)
+
+  setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0))
+
+  val textLabel = new JLabel
+
+  textLabel.setBorder(new EmptyBorder(0, 4, 0, 4))
+
+  add(textLabel)
 
   val MIN_WIDTH = 15
   val DEFAULT_WIDTH = 150
@@ -22,69 +34,70 @@ class NoteWidget extends SingleErrorWidget with Editable {
 
   private var _width: Int = DEFAULT_WIDTH
   private var _text: String = ""
-  private var _fontSize: Int = getFont.getSize
-  var color: Color = java.awt.Color.black
+  private var _fontSize: Int = textLabel.getFont.getSize
+  var color: Color = Color.black
 
   override def propertySet = Properties.text
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.note")
   override def isNote = true
   override def widgetWrapperOpaque = ! transparency
 
-  def text = _text
-  def text_=(newText: String) {
-    this._text = newText
-    this.displayName = newText
+  private def wrapText() {
+    textLabel.setText("<html>" + LineBreaker.breakLines(_text, getFontMetrics(textLabel.getFont), _width - 8).asScala
+                                            .mkString("<br>") + "</html>")
     repaint()
   }
 
-  def transparency = getBackground eq InterfaceColors.TRANSPARENT
+  def text = _text
+  def text_=(newText: String) {
+    _text = newText
+    displayName = newText
+    wrapText()
+  }
+
+  def transparency = backgroundColor eq InterfaceColors.TRANSPARENT
   def transparency(trans: Boolean) {
-    setBackground(if (trans) InterfaceColors.TRANSPARENT else InterfaceColors.TEXT_BOX_BACKGROUND)
-    setOpaque(!trans)
+    backgroundColor =
+      if (trans)
+        InterfaceColors.TRANSPARENT
+      else
+        InterfaceColors.TEXT_BOX_BACKGROUND
   }
 
   def fontSize = _fontSize
   def fontSize_=(size: Int) {
-    this._fontSize = size
+    _fontSize = size
     if (isZoomed && originalFont != null) {
       val zoomDiff: Int = getFont.getSize - originalFont.getSize
-      setFont(getFont.deriveFont((size + zoomDiff).toFloat))
+      textLabel.setFont(textLabel.getFont.deriveFont((size + zoomDiff).toFloat))
     }
-    else setFont(getFont.deriveFont(size.toFloat))
+    else textLabel.setFont(textLabel.getFont.deriveFont(size.toFloat))
     if (originalFont != null) originalFont = (originalFont.deriveFont(size.toFloat))
     resetZoomInfo()
     resetSizeInfo()
+    wrapText()
   }
 
   override def setBounds(r: Rectangle) {
     if (r.width > 0) _width = r.width
     super.setBounds(r)
+    wrapText()
   }
   override def setBounds(x: Int, y: Int, width: Int, height: Int) {
-    if (width > 0) this._width = width
+    if (width > 0) _width = width
     super.setBounds(x, y, width, height)
+    wrapText()
+  }
+
+  override def editFinished(): Boolean = {
+    textLabel.setForeground(color)
+    super.editFinished()
   }
 
   override def getMinimumSize = new Dimension(MIN_WIDTH, MIN_HEIGHT)
-  override def getPreferredSize(font: Font): Dimension = {
-    val metrics = getFontMetrics(font)
-    val height: Int = org.nlogo.awt.LineBreaker.breakLines(_text, metrics, _width).size * (metrics.getMaxDescent + metrics.getMaxAscent)
-    new Dimension(StrictMath.max(MIN_WIDTH, _width), StrictMath.max(MIN_HEIGHT, height))
-  }
+  override def getPreferredSize(font: Font): Dimension =
+    new Dimension(StrictMath.max(MIN_WIDTH, _width), StrictMath.max(MIN_HEIGHT, textLabel.getHeight + 8))
   override def needsPreferredWidthFudgeFactor = false
-
-  override def paintComponent(g: Graphics) {
-    super.paintComponent(g)
-    g.setFont(getFont)
-    val metrics: FontMetrics = g.getFontMetrics
-    val stringHeight: Int = metrics.getMaxDescent + metrics.getMaxAscent
-    val stringAscent: Int = metrics.getMaxAscent
-    val lines = org.nlogo.awt.LineBreaker.breakLines(_text, metrics, _width)
-    g.setColor(color)
-    import collection.JavaConverters._
-    for((line, i) <- lines.asScala.zipWithIndex)
-      g.drawString(line, 0, i * stringHeight + stringAscent)
-  }
 
   override def model: WidgetModel = {
     val b = getBoundsTuple
@@ -100,6 +113,7 @@ class NoteWidget extends SingleErrorWidget with Editable {
     text = model.display.getOrElse("")
     fontSize = model.fontSize
     color = NlogoColor.getColor(Double.box(model.color))
+    textLabel.setForeground(color)
     transparency(model.transparent)
     setSize(model.right - model.left, model.bottom - model.top)
     this
