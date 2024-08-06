@@ -2,13 +2,14 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, Font, GridBagConstraints, GridBagLayout, Insets }
-import java.awt.event.{ MouseWheelEvent, MouseWheelListener }
-import javax.swing.JLabel
+import java.awt.{ Color, Dimension, Font, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.event.{ ItemEvent, ItemListener, MouseWheelEvent, MouseWheelListener }
+import javax.swing.{ JComboBox, JLabel, JPanel }
 
 import org.nlogo.agent.ChooserConstraint
 import org.nlogo.api.{ CompilerServices, Dump }
 import org.nlogo.core.LogoList
+import org.nlogo.swing.Utils
 
 object Chooser {
   // visual parameters
@@ -30,15 +31,15 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
 
   // sub-elements of Switch
   protected val label = new JLabel
-  private val control = new ComboBox
+  private val control = new JComboBox[AnyRef]
 
   label.setForeground(InterfaceColors.WIDGET_TEXT)
 
+  backgroundColor = InterfaceColors.CHOOSER_BACKGROUND
+
+  setLayout(new GridBagLayout)
+
   locally {
-    backgroundColor = InterfaceColors.CHOOSER_BACKGROUND
-
-    setLayout(new GridBagLayout)
-
     val c = new GridBagConstraints
 
     c.gridx = 0
@@ -46,18 +47,26 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     c.gridwidth = 1
     c.weightx = 1
     c.anchor = GridBagConstraints.NORTHWEST
-    c.insets = new Insets(3, 6, 0, 6)
+    c.insets =
+      if (preserveWidgetSizes)
+        new Insets(3, 6, 0, 6)
+      else
+        new Insets(6, 12, 6, 6)
 
     add(label, c)
 
     c.gridy = 1
     c.fill = GridBagConstraints.BOTH
-    c.insets = new Insets(0, 6, 6, 6)
+    c.insets =
+      if (preserveWidgetSizes)
+        new Insets(0, 6, 6, 6)
+      else
+        new Insets(0, 12, 6, 12)
 
-    add(control, c)
-
-    addMouseWheelListener(this)
+    add(new ComboBoxPanel(control), c)
   }
+
+  addMouseWheelListener(this)
 
   /// attributes
 
@@ -94,25 +103,59 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   /// size calculations
 
   override def getMinimumSize: Dimension =
-    new Dimension(MinWidth, ChooserHeight)
+    if (preserveWidgetSizes)
+      new Dimension(MinWidth, ChooserHeight)
+    else
+      new Dimension(100, 60)
 
   override def getMaximumSize: Dimension =
-    new Dimension(10000, ChooserHeight)
+    if (preserveWidgetSizes)
+      new Dimension(10000, ChooserHeight)
+    else
+      new Dimension(10000, 60)
 
-  override def getPreferredSize(font: Font): Dimension = {
-    new Dimension(MinPreferredWidth, ChooserHeight)
-  }
+  override def getPreferredSize(font: Font): Dimension =
+    if (preserveWidgetSizes)
+      new Dimension(MinPreferredWidth, ChooserHeight)
+    else
+      new Dimension(250, 60)
 
   ///
 
-  class ComboBox extends javax.swing.JComboBox[AnyRef] {
-    addItemListener(new java.awt.event.ItemListener() {
-      override def itemStateChanged(e: java.awt.event.ItemEvent): Unit = {
-        if (hasFocus) {
-          index(getSelectedIndex)
-        }
+  class ComboBoxPanel(comboBox: JComboBox[AnyRef]) extends JPanel {
+    setBackground(InterfaceColors.TRANSPARENT)
+
+    comboBox.setBorder(null)
+    comboBox.setBackground(InterfaceColors.TRANSPARENT)
+    
+    setLayout(new GridBagLayout)
+
+    locally {
+      val c = new GridBagConstraints
+
+      c.weightx = 1
+      c.weighty = 1
+      c.fill = GridBagConstraints.BOTH
+      c.insets = new Insets(3, 3, 3, 3)
+
+      add(comboBox, c)
+    }
+
+    comboBox.addItemListener(new ItemListener {
+      override def itemStateChanged(e: ItemEvent) {
+        if (hasFocus)
+          index(comboBox.getSelectedIndex)
       }
     })
+
+    override def paintComponent(g: Graphics) {
+      val g2d = Utils.initGraphics2D(g)
+      g2d.setColor(Color.WHITE)
+      g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
+      g2d.setColor(InterfaceColors.CHOOSER_BORDER)
+      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+      super.paintComponent(g)
+    }
   }
 
   def mouseWheelMoved(e: MouseWheelEvent): Unit = {

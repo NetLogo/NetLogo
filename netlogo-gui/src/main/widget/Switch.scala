@@ -34,12 +34,29 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
   backgroundColor = InterfaceColors.SWITCH_BACKGROUND
 
-  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  if (preserveWidgetSizes) {
+    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
-  add(Box.createHorizontalStrut(6))
-  add(label)
-  add(Box.createHorizontalStrut(6))
-  add(toggle)
+    add(Box.createHorizontalStrut(6))
+    add(label)
+    add(Box.createHorizontalStrut(6))
+    add(toggle)
+  }
+
+  else {
+    setLayout(new GridBagLayout)
+
+    val c = new GridBagConstraints
+
+    c.gridy = 0
+    c.insets = new Insets(6, 12, 6, 12)
+
+    add(label, c)
+
+    c.insets = new Insets(6, 0, 6, 12)
+
+    add(toggle, c)
+  }
 
   addMouseWheelListener(this)
   addMouseListener(new MouseAdapter {
@@ -70,20 +87,38 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     if (_name.length > 0) { new Events.AddBooleanConstraintEvent(_name, isOn).raise(this) }
   }
 
-  override def getPreferredSize(font: Font): Dimension = {
-    val height: Int = toggle.getHeight + 12
-    val width: Int = label.getWidth + toggle.getWidth + 18
-    new Dimension(StrictMath.max(MINWIDTH, width), StrictMath.max(MINHEIGHT, height))
-  }
+  override def getPreferredSize(font: Font): Dimension =
+    if (preserveWidgetSizes)
+      new Dimension(StrictMath.max(MINWIDTH, label.getWidth + toggle.getWidth + 18),
+                    StrictMath.max(MINHEIGHT, toggle.getHeight + 12))
+    else
+      super.getPreferredSize(font)
 
-  override def getMinimumSize = new Dimension(MINWIDTH, MINHEIGHT)
-  override def getMaximumSize = new Dimension(10000, MINHEIGHT)
+  override def getMinimumSize =
+    if (preserveWidgetSizes)
+      new Dimension(MINWIDTH, MINHEIGHT)
+    else
+      new Dimension(MINWIDTH, 37)
+  override def getMaximumSize =
+    if (preserveWidgetSizes)
+      new Dimension(10000, MINHEIGHT)
+    else
+      new Dimension(10000, 37)
 
   def mouseWheelMoved(e: MouseWheelEvent) { isOn = ! (e.getWheelRotation >= 1) }
 
   protected class Toggle extends JPanel {
-    setPreferredSize(new Dimension(10, 20))
-    setMaximumSize(new Dimension(10, 20))
+    locally {
+      val size =
+        if (preserveWidgetSizes)
+          new Dimension(10, 20)
+        else
+          new Dimension(10, 25)
+
+      setPreferredSize(size)
+      setMinimumSize(size)
+      setMaximumSize(size)
+    }
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent) {

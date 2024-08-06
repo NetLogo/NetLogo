@@ -62,21 +62,21 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   xAxis.setForeground(InterfaceColors.WIDGET_TEXT)
   yAxis.setForeground(InterfaceColors.WIDGET_TEXT)
 
+  displayName = plot.name
+
+  // this is needed because the PlotLegend is going to use us to
+  // get a font - ST 9/2/04
+  // since the PlotLegend is added and removed from the widget
+  // when it is shown or hidden, the usual way of just letting Zoomer
+  // zoom the font size won't work, hence the fontSource stuff in
+  // PlotLegend - ST 2/22/06
+  backgroundColor = InterfaceColors.PLOT_BACKGROUND
+
+  plot.clear() // set current values to defaults
+
+  setLayout(new GridBagLayout)
+
   locally {
-    displayName = plot.name
-
-    // this is needed because the PlotLegend is going to use us to
-    // get a font - ST 9/2/04
-    // since the PlotLegend is added and removed from the widget
-    // when it is shown or hidden, the usual way of just letting Zoomer
-    // zoom the font size won't work, hence the fontSource stuff in
-    // PlotLegend - ST 2/22/06
-    backgroundColor = InterfaceColors.PLOT_BACKGROUND
-
-    plot.clear() // set current values to defaults
-
-    setLayout(new GridBagLayout)
-
     val c = new GridBagConstraints
 
     c.gridwidth = 1
@@ -87,7 +87,11 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
     //ROW1
     //-----------------------------------------
-    c.insets = new Insets(3, 6, 6, 6)
+    c.insets =
+      if (preserveWidgetSizes)
+        new Insets(3, 6, 6, 6)
+      else
+        new Insets(6, 12, 6, 12)
 
     c.gridx = 0
     c.gridy = 0

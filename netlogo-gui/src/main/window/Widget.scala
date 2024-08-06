@@ -4,6 +4,7 @@ package org.nlogo.window
 
 import java.awt.{ Component, Container, Dimension, Font, Graphics, Point, Rectangle, event },
                   event.{ MouseAdapter, MouseEvent, MouseListener }
+import java.util.prefs.Preferences
 import javax.swing.{ JPanel, JMenuItem, JPopupMenu }
 
 import org.nlogo.api.{ MultiErrorHandler, SingleErrorHandler }
@@ -35,6 +36,9 @@ abstract class Widget extends JPanel {
   protected var backgroundColor = InterfaceColors.LIGHT_GRAY
 
   setOpaque(false)
+
+  protected val preserveWidgetSizes = Preferences.userRoot.node("/org/nlogo/NetLogo")
+                                                 .getBoolean("preserveWidgetSizes", true)
 
   override def getPreferredSize: Dimension = getPreferredSize(getFont)
   def getPreferredSize(font: Font): Dimension = super.getPreferredSize
