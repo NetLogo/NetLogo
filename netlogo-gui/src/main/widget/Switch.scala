@@ -91,7 +91,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   override def getPreferredSize(font: Font): Dimension =
     if (preserveWidgetSizes)
       new Dimension(StrictMath.max(MINWIDTH, label.getWidth + toggle.getWidth + 18),
-                    StrictMath.max(MINHEIGHT, toggle.getHeight + 12))
+                    StrictMath.max(MINHEIGHT, 37))
     else
       super.getPreferredSize(font)
 
@@ -99,7 +99,8 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     if (preserveWidgetSizes)
       new Dimension(MINWIDTH, MINHEIGHT)
     else
-      new Dimension(MINWIDTH, 37)
+      new Dimension(50, 37)
+
   override def getMaximumSize =
     if (preserveWidgetSizes)
       new Dimension(10000, MINHEIGHT)
