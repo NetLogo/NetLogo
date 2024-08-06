@@ -22,9 +22,9 @@ object ButtonWidget {
 
     // the 4 possible button types
     val ObserverButton = ButtonType("observer", AgentKind.Observer, img = None, darkImg = None)
-    val TurtleButton = ButtonType("turtle", AgentKind.Turtle, "/images/turtle.gif")
-    val LinkButton = ButtonType("link", AgentKind.Link, "/images/link.gif")
-    val PatchButton = ButtonType("patch", AgentKind.Patch, "/images/patch.gif")
+    val TurtleButton = ButtonType("turtle", AgentKind.Turtle, "/images/turtle.png")
+    val LinkButton = ButtonType("link", AgentKind.Link, "/images/link.png")
+    val PatchButton = ButtonType("patch", AgentKind.Patch, "/images/patch.png")
 
     val buttonTypes = List(ObserverButton, TurtleButton, LinkButton, PatchButton)
 
@@ -77,11 +77,12 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   type WidgetModel = CoreButton
 
-  private var buttonType: ButtonType = ButtonType.ObserverButton
+  private var _buttonType: ButtonType = ButtonType.ObserverButton
 
   val keyLabel = new JLabel
   val nameLabel = new JLabel
   val foreverLabel = new JLabel(FOREVER_GRAPHIC)
+  val agentLabel = new JLabel
 
   keyLabel.setForeground(InterfaceColors.BUTTON_TEXT)
   keyLabel.setFont(keyLabel.getFont.deriveFont(10.0f))
@@ -92,6 +93,8 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   foreverLabel.addMouseListener(this)
 
+  agentLabel.addMouseListener(this)
+
   setLayout(new GridBagLayout)
 
   locally {
@@ -99,8 +102,12 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
     c.gridy = 0
     c.gridheight = 2
+    c.insets = new Insets(3, 6, 3, 0)
+
+    add(agentLabel, c)
+
     c.weightx = 1
-    c.insets = new Insets(3, 3, 3, 3)
+    c.insets = new Insets(3, 0, 3, 3)
 
     add(nameLabel, c)
     
@@ -123,6 +130,14 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   backgroundColor = InterfaceColors.BUTTON_BACKGROUND
 
+  def buttonType_=(bt: ButtonType) {
+    _buttonType = bt
+    agentLabel.setIcon(_buttonType.img(false).getOrElse(null))
+    repaint()
+  }
+
+  def buttonType: ButtonType = _buttonType
+
   // buttonType now controls the agentKind. no one should ever be setting
   // agentKind from outside of this class anyway.
   // the ui edits work through agent options, which now just set the button type
@@ -131,7 +146,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   def agentOptions = buttonType.toAgentOptions
   def agentOptions(newAgentOptions:Options[String]){
     if (newAgentOptions.chosenValue != this.agentOptions.chosenValue){
-      this.buttonType = ButtonType(newAgentOptions.chosenValue)
+      buttonType = ButtonType(newAgentOptions.chosenValue)
       recompile()
       repaint()
     }
@@ -452,13 +467,6 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     foreverLabel.setVisible(forever)
 
     super.paintComponent(g)
-
-    // val availableWidth = getSize().width - 8
-    // val shortString = org.nlogo.awt.Fonts.shortenStringToFit(displayName, availableWidth, g.getFontMetrics)
-    // val nx = if (stringWidth > availableWidth) 4 else (getSize().width / 2) - (stringWidth / 2)
-    // val ny = (getSize().height - g.getFontMetrics.getHeight) / 2 + g.getFontMetrics.getMaxAscent
-    // g.drawString(shortString, nx, ny)  //if (disabledWaitingForSetup) Color.GRAY
-    // setToolTipText(if (displayName != shortString) displayName else null)
   }
 
   // saving and loading
