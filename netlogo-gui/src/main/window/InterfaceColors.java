@@ -31,7 +31,7 @@ public final class InterfaceColors {
   public static final Color SLIDER_THUMB_BORDER = MEDIUM_BLUE;
   public static final Color SLIDER_THUMB_BACKGROUND = Color.WHITE;
   public static final Color SLIDER_THUMB_BACKGROUND_PRESSED = MEDIUM_BLUE;
-  public static final Color SLIDER_SHADOW = new Color(50, 50, 50);
+  public static final Color SLIDER_SHADOW = new Color(100, 100, 100);
   public static final Color SWITCH_BACKGROUND = INPUT_BACKGROUND;
   public static final Color SWITCH_TOGGLE = Color.WHITE;
   public static final Color SWITCH_TOGGLE_BACKGROUND_ON = MEDIUM_BLUE;

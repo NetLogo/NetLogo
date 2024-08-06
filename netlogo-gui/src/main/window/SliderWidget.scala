@@ -59,11 +59,11 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     override def paintThumb(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
       if (hover) {
-        g2d.setPaint(new RadialGradientPaint(thumbRect.getCenterX.toInt, thumbRect.getCenterY.toInt,
-                                             getThumbSize.width, Array[Float](0, 1),
+        g2d.setPaint(new RadialGradientPaint(thumbRect.getCenterX.toInt, thumbRect.getCenterY.toInt + 3,
+                                             getThumbSize.width / 2f, Array[Float](0, 1),
                                              Array(InterfaceColors.SLIDER_SHADOW, InterfaceColors.TRANSPARENT)))
-        g2d.fillOval(thumbRect.x + getThumbSize.width / 2 - getThumbSize.height / 2, thumbRect.y, getThumbSize.height,
-                    getThumbSize.height)
+        g2d.fillOval(thumbRect.x, thumbRect.y + getThumbSize.height / 2 - getThumbSize.width / 2 + 3,
+                     getThumbSize.width, getThumbSize.width)
       }
       val startY = getThumbSize.height / 2 - getThumbSize.width / 2
       g2d.setColor(InterfaceColors.SLIDER_THUMB_BORDER)
