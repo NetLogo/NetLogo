@@ -148,8 +148,6 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   setLayout(new GridBagLayout)
 
   locally {
-    val margin = 6
-
     val c = new GridBagConstraints
 
     c.gridx = 0
@@ -158,13 +156,21 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     c.gridwidth = 1
     c.weightx = 1
     c.fill = GridBagConstraints.NONE
-    c.insets = new Insets(-margin, margin, 0, margin)
+    c.insets =
+      if (preserveWidgetSizes)
+        new Insets(-6, 6, 0, 6)
+      else
+        new Insets(6, 12, 6, 12)
 
     add(nameComponent, c)
 
     c.gridx = 1
     c.anchor = GridBagConstraints.NORTHEAST
-    c.insets = new Insets(-margin, 0, 0, margin)
+    c.insets =
+      if (preserveWidgetSizes)
+        new Insets(-6, 0, 0, 6)
+      else
+        new Insets(6, 12, 6, 12)
 
     add(valueComponent, c)
 
@@ -173,7 +179,11 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     c.anchor = GridBagConstraints.SOUTHWEST
     c.gridwidth = 2
     c.fill = GridBagConstraints.HORIZONTAL
-    c.insets = new Insets(0, 0, -margin, 0)
+    c.insets =
+      if (preserveWidgetSizes)
+        new Insets(0, 0, -6, 0)
+      else
+        new Insets(0, 6, 6, 6)
 
     add(slider, c)
 
@@ -273,8 +283,16 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     if (units=="") numString else numString + " " + units
   }
 
-  override def getMinimumSize = new Dimension(92, 33)
-  override def getPreferredSize = new Dimension(150, 33)
+  override def getMinimumSize =
+    if (preserveWidgetSizes)
+      new Dimension(92, 33)
+    else
+      new Dimension(150, 53)
+  override def getPreferredSize =
+    if (preserveWidgetSizes)
+      new Dimension(150, 33)
+    else
+      new Dimension(250, 53)
 }
 
 

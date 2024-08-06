@@ -183,34 +183,43 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     nextComponent.requestFocus()
   }
 
+  InputType.addTypeOptions(typeOptions)
+  typeOptions.selectValue(inputType)
+  textArea.setEditorKit(inputType.getEditorKit)
+  textArea.setFont(inputType.getFont)
+  textArea.enableBracketMatcher(inputType.enableBracketMatcher)
+
+  multiline(multiline)
+
+  widgetLabel.setForeground(InterfaceColors.WIDGET_TEXT)
+
+  backgroundColor = InterfaceColors.INPUT_BACKGROUND
+
+  setLayout(new GridBagLayout)
+
   locally {
-    InputType.addTypeOptions(typeOptions)
-    typeOptions.selectValue(inputType)
-    textArea.setEditorKit(inputType.getEditorKit)
-    textArea.setFont(inputType.getFont)
-    textArea.enableBracketMatcher(inputType.enableBracketMatcher)
-
-    multiline(multiline)
-
-    widgetLabel.setForeground(InterfaceColors.WIDGET_TEXT)
-
-    backgroundColor = InterfaceColors.INPUT_BACKGROUND
-
-    setLayout(new GridBagLayout)
-
     val c = new GridBagConstraints
 
     c.gridx = 0
     c.gridy = 0
     c.weightx = 1
     c.anchor = GridBagConstraints.NORTHWEST
-    c.insets = new Insets(3, 6, 6, 6)
+    c.insets =
+      if (preserveWidgetSizes)
+        new Insets(3, 6, 6, 6)
+      else
+        new Insets(6, 12, 6, 12)
 
     add(widgetLabel, c)
 
     c.gridx = 1
     c.weightx = 0
     c.anchor = GridBagConstraints.EAST
+    c.insets =
+      if (preserveWidgetSizes)
+        new Insets(3, 0, 6, 6)
+      else
+        new Insets(6, 0, 6, 12)
     
     add(changeButton, c)
 
@@ -221,33 +230,37 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     c.gridwidth = GridBagConstraints.REMAINDER
     c.fill = GridBagConstraints.BOTH
     c.anchor = GridBagConstraints.WEST
-    c.insets = new Insets(0, 6, 6, 6)
+    c.insets =
+      if (preserveWidgetSizes)
+        new Insets(0, 6, 6, 6)
+      else
+        new Insets(0, 12, 6, 12)
 
     add(scroller, c)
     add(colorSwatch, c)
-
-    colorSwatch.setVisible(false)
-
-    // focus listener for in place editing
-    textArea.addFocusListener(
-      new FocusListener() {
-        def focusGained(e: FocusEvent) {
-          _hasFocus = true
-          editing = true
-        }
-        def focusLost(e: FocusEvent) {
-          _hasFocus = false
-          if (editing) {
-            try inputText(inputType.readValue(InputBox.this.textArea.getText))
-            catch {
-              case ex@(_:LogoException|_:CompilerException|_:ValueConstraint.Violation) =>
-                inputText(oldText)
-            }
-            editing = false
-          }
-        }
-      })
   }
+
+  colorSwatch.setVisible(false)
+
+  // focus listener for in place editing
+  textArea.addFocusListener(
+    new FocusListener() {
+      def focusGained(e: FocusEvent) {
+        _hasFocus = true
+        editing = true
+      }
+      def focusLost(e: FocusEvent) {
+        _hasFocus = false
+        if (editing) {
+          try inputText(inputType.readValue(InputBox.this.textArea.getText))
+          catch {
+            case ex@(_:LogoException|_:CompilerException|_:ValueConstraint.Violation) =>
+              inputText(oldText)
+          }
+          editing = false
+        }
+      }
+    })
 
   override def paintComponent(g: Graphics) = {
     super.paintComponent(g)
@@ -350,16 +363,25 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
   }
 
-  override def getMinimumSize = new Dimension(MinWidth, MinHeight)
+  override def getMinimumSize =
+    if (preserveWidgetSizes)
+      new Dimension(MinWidth, MinHeight)
+    else
+      new Dimension(100, 60)
   override def getPreferredSize(font: Font) = {
-    val result = super.getPreferredSize(font)
-    val insets = getInsets
-    // add 4 because apparently we need a few extra pixels to make sure
-    // that we don't get a horizontal scroll bar at the default size. ev 9/28/06
-    result.width =
-            textArea.getPreferredSize.width + insets.left + insets.right +
-            textArea.getInsets.right + textArea.getInsets.left + 4
-    new Dimension(StrictMath.max(MinWidth, result.width), StrictMath.max(MinHeight, result.height))
+    if (preserveWidgetSizes) {
+      val result = super.getPreferredSize(font)
+      val insets = getInsets
+      // add 4 because apparently we need a few extra pixels to make sure
+      // that we don't get a horizontal scroll bar at the default size. ev 9/28/06
+      result.width =
+              textArea.getPreferredSize.width + insets.left + insets.right +
+              textArea.getInsets.right + textArea.getInsets.left + 4
+      new Dimension(StrictMath.max(MinWidth, result.width), StrictMath.max(MinHeight, result.height))
+    }
+
+    else
+      new Dimension(250, 60)
   }
 
   override def load(model: WidgetModel): AnyRef = {

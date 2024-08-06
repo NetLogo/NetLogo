@@ -3,8 +3,7 @@
 package org.nlogo.window
 
 import java.awt.event.MouseEvent
-import java.awt.{ BasicStroke, Component, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets,
-                  Dimension, Color => AwtColor }
+import java.awt.{ Color, Component, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets, Dimension }
 import java.util.{ List => JList }
 import javax.swing.{ JLabel, JPanel }
 
@@ -58,23 +57,22 @@ class MonitorWidget(random: MersenneTwisterFast)
 
     setLayout(new GridBagLayout)
 
-    val c = new GridBagConstraints
+    locally {
+      val c = new GridBagConstraints
 
-    c.weightx = 1
-    c.anchor = GridBagConstraints.WEST
-    c.insets = new Insets(0, 6, 0, 6)
+      c.weightx = 1
+      c.anchor = GridBagConstraints.WEST
+      c.insets = new Insets(0, 6, 0, 6)
 
-    add(label, c)
+      add(label, c)
+    }
 
     override def paintComponent(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
-      g2d.setColor(AwtColor.WHITE)
+      g2d.setColor(Color.WHITE)
       g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
-      val stroke = g2d.getStroke
-      g2d.setStroke(new BasicStroke(1))
       g2d.setColor(InterfaceColors.MONITOR_BORDER)
       g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
-      g2d.setStroke(stroke)
       super.paintComponent(g)
     }
   }
@@ -101,21 +99,29 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   backgroundColor = InterfaceColors.MONITOR_BACKGROUND
 
-  locally {
-    setLayout(new GridBagLayout)
+  setLayout(new GridBagLayout)
 
+  locally {
     val c = new GridBagConstraints
 
     c.gridx = 0
     c.weightx = 1
     c.anchor = GridBagConstraints.NORTHWEST
-    c.insets = new Insets(3, 6, 0, 6)
+    c.insets =
+      if (preserveWidgetSizes)
+        new Insets(3, 6, 0, 6)
+      else
+        new Insets(6, 12, 6, 12)
 
     add(nameLabel, c)
 
     c.weighty = 1
-    c.insets = new Insets(0, 6, 6, 6)
     c.fill = GridBagConstraints.BOTH
+    c.insets =
+      if (preserveWidgetSizes)
+        new Insets(0, 6, 6, 6)
+      else
+        new Insets(0, 12, 6, 12)
 
     add(new ValuePanel(valueLabel), c)
   }
@@ -170,7 +176,7 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   override def procedure_=(procedure: Procedure): Unit = {
     super.procedure = procedure
-    setForeground(if (procedure == null) AwtColor.RED else null)
+    setForeground(if (procedure == null) Color.RED else null)
     halt()
     if (procedure != null) {
       hasError = false
@@ -227,21 +233,28 @@ class MonitorWidget(random: MersenneTwisterFast)
     super.suppressRecompiles(suppressRecompiles)
   }
 
-  override def getMinimumSize: Dimension = {
-    val h = (fontSize * 4) + 1
-    new Dimension(MinWidth, h)
-  }
+  override def getMinimumSize: Dimension =
+    if (preserveWidgetSizes)
+      new Dimension(MinWidth, (fontSize * 4) + 1)
+    else
+      new Dimension(100, 60)
 
-  override def getMaximumSize: Dimension = {
-    val h = (fontSize * 4) + 1
-    new Dimension(10000, h)
-  }
+  override def getMaximumSize: Dimension =
+    if (preserveWidgetSizes)
+      new Dimension(10000, (fontSize * 4) + 1)
+    else
+      new Dimension(10000, 60)
 
   override def getPreferredSize(font: Font): Dimension = {
-    val size = getMinimumSize
-    val fontMetrics = getFontMetrics(font)
-    size.width = StrictMath.max(size.width, fontMetrics.stringWidth(displayName) + PreferredSizePad)
-    size
+    if (preserveWidgetSizes) {
+      val size = getMinimumSize
+      val fontMetrics = getFontMetrics(font)
+      size.width = StrictMath.max(size.width, fontMetrics.stringWidth(displayName) + PreferredSizePad)
+      size
+    }
+
+    else
+      new Dimension(100, 60)
   }
 
   def decimalPlaces: Int = _decimalPlaces
