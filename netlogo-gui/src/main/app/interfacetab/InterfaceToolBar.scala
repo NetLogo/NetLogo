@@ -44,11 +44,8 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   private val widgetMenu = new WidgetMenu
 
   wPanel.setWidgetCreator(this)
-  // on Macs we want the window background but not on other systems
-  if(System.getProperty("os.name").startsWith("Mac")) {
-    setOpaque(true)
-    setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
-  }
+
+  setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
   editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
   addButton.setToolTipText(I18N.gui.get("tabs.run.addButton.tooltip"))

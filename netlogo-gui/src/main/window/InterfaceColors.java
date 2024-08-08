@@ -7,8 +7,8 @@ import java.awt.Color;
 import org.nlogo.api.Constants;
 
 public final class InterfaceColors {
-  public static final Color LIGHT_GRAY = new Color(240, 240, 240);
-  public static final Color DARK_GRAY = new Color(171, 178, 186);
+  public static final Color LIGHT_GRAY = new Color(238, 238, 238);
+  public static final Color DARK_GRAY = new Color(175, 175, 175);
   public static final Color INPUT_BACKGROUND = new Color(207, 229, 255);
   public static final Color OUTPUT_BACKGROUND = new Color(231, 231, 237);
   public static final Color MEDIUM_BLUE = new Color(6, 112, 237);
@@ -46,10 +46,10 @@ public final class InterfaceColors {
   public static final Color PLOT_BACKGROUND = OUTPUT_BACKGROUND;
   public static final Color PLOT_BORDER = DARK_GRAY;
   public static final Color OUTPUT_BORDER = DARK_GRAY;
+
   public static final Color AGENT_EDITOR_BACKGROUND = LIGHT_GRAY;
   public static final Color AGENT_COMMANDER_BACKGROUND = LIGHT_GRAY;
   public static final Color TOOLBAR_BACKGROUND = LIGHT_GRAY;
-
   public static final Color TAB_BACKGROUND = LIGHT_GRAY;
   public static final Color TAB_BACKGROUND_SELECTED = new Color(251, 96, 85);
   public static final Color TAB_BORDER = DARK_GRAY;
