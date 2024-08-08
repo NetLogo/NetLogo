@@ -2,12 +2,13 @@
 
 package org.nlogo.app
 
-import java.awt.{ Color, Component, KeyboardFocusManager }
-import java.awt.event.{ ActionEvent, KeyEvent, WindowAdapter, WindowEvent, WindowFocusListener }
+import java.awt.{ Color, Component, Graphics, Image, KeyboardFocusManager }
+import java.awt.event.{ ActionEvent, KeyEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent,
+                        WindowFocusListener }
 import java.awt.print.PrinterAbortException
 import java.nio.file.{ Path, Paths }
 import java.util.prefs.Preferences
-import javax.swing.{ AbstractAction, Action, JComponent, JFrame }
+import javax.swing.{ AbstractAction, Action, Box, BoxLayout, ImageIcon, JComponent, JFrame, JLabel, JPanel, SwingConstants }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
@@ -18,7 +19,7 @@ import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Printable, PrinterManager, UserAction }
+import org.nlogo.swing.{ Printable, PrinterManager, UserAction, Utils }
 import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, CompileAllEvent, CompiledEvent,
                                  ExternalFileSavedEvent, LoadBeginEvent, LoadErrorEvent, LoadModelEvent,
                                  ModelSavedEvent, RuntimeErrorEvent }
@@ -29,6 +30,58 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   extends TabsInterface with AboutToCloseFilesEvent.Handler with AboutToSaveModelEvent.Handler
   with CompiledEvent.Handler with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler
   with LoadErrorEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler {
+  
+  private val closeIconLight = new ImageIcon(Utils.icon("/images/close-light.png")
+                                                  .getImage.getScaledInstance(8, 8, Image.SCALE_SMOOTH))
+  private val closeIconDark = new ImageIcon(Utils.icon("/images/close-dark.png")
+                                                 .getImage.getScaledInstance(8, 8, Image.SCALE_SMOOTH))
+  
+  private class TabLabel(text: String, tab: Component) extends JPanel {
+    val textLabel = new JLabel(text)
+    var closeLabel: JLabel = null
+
+    setOpaque(false)
+
+    setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS))
+    
+    add(textLabel)
+    
+    if (tab.isInstanceOf[TemporaryCodeTab]) {
+      closeLabel = new JLabel(closeIconLight)
+
+      closeLabel.setVerticalAlignment(SwingConstants.CENTER)
+
+      closeLabel.addMouseListener(new MouseAdapter {
+        override def mouseClicked(e: MouseEvent) {
+          if (e.getButton == MouseEvent.BUTTON1)
+            closeExternalTab(tab.asInstanceOf[TemporaryCodeTab])
+        }
+      })
+
+      add(Box.createHorizontalStrut(8))
+      add(closeLabel)
+    }
+
+    textLabel.setVerticalAlignment(SwingConstants.CENTER)
+
+    override def paintComponent(g: Graphics) {
+      if (tab == mainTabs.getSelectedComponent || tab == separateTabs.getSelectedComponent) {
+        textLabel.setForeground(Color.WHITE)
+
+        if (closeLabel != null)
+          closeLabel.setIcon(closeIconLight)
+      }
+
+      else {
+        textLabel.setForeground(Color.BLACK)
+
+        if (closeLabel != null)
+          closeLabel.setIcon(closeIconDark)
+      }
+
+      super.paintComponent(g)
+    }
+  }
 
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
@@ -61,9 +114,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   private var reloading = false
   private var movingTabs = true
 
-  mainTabs.addTab(I18N.gui.get("tabs.run"), interfaceTab)
-  mainTabs.addTab(I18N.gui.get("tabs.info"), infoTab)
-  mainTabs.addTab(I18N.gui.get("tabs.code"), mainCodeTab)
+  addTabWithLabel(mainTabs, I18N.gui.get("tabs.run"), interfaceTab)
+  addTabWithLabel(mainTabs, I18N.gui.get("tabs.info"), infoTab)
+  addTabWithLabel(mainTabs, I18N.gui.get("tabs.code"), mainCodeTab)
 
   movingTabs = false
 
@@ -297,6 +350,11 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       for (i <- 3 until mainTabs.getTabCount) yield mainTabs.getComponentAt(i).asInstanceOf[TemporaryCodeTab]
   }
 
+  private def addTabWithLabel(tabsPanel: TabsPanel, title: String, tab: Component) {
+    tabsPanel.addTab(null, tab)
+    tabsPanel.setTabComponentAt(tabsPanel.getTabCount - 1, new TabLabel(title, tab))
+  }
+
   def setSelectedIndex(index: Int) {
     if (index >= mainTabs.getTabCount) {
       separateTabs.setSelectedIndex(index - mainTabs.getTabCount)
@@ -341,12 +399,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
                                    smartTabbing, separateTabsWindow.isVisible)
 
     if (separateTabsWindow.isVisible) {
-      separateTabs.addTab(tab.filenameForDisplay, tab)
+      addTabWithLabel(separateTabs, tab.filenameForDisplay, tab)
       separateTabs.setSelectedComponent(tab)
     }
 
     else {
-      mainTabs.addTab(tab.filenameForDisplay, tab)
+      addTabWithLabel(mainTabs, tab.filenameForDisplay, tab)
       mainTabs.setSelectedComponent(tab)
     }
 
@@ -361,12 +419,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def addTab(tab: Component, name: String) {
     if (separateTabsWindow.isVisible) {
-      separateTabs.addTab(name, tab)
+      addTabWithLabel(separateTabs, name, tab)
       separateTabs.setSelectedComponent(tab)
     }
 
     else {
-      mainTabs.addTab(name, tab)
+      addTabWithLabel(mainTabs, name, tab)
       mainTabs.setSelectedComponent(tab)
     }
   }
@@ -431,7 +489,10 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       val selected = mainTabs.getSelectedComponent
 
       while (mainTabs.getTabCount > 2) {
+        val tabLabel = mainTabs.getTabComponentAt(2)
+
         separateTabs.addTab(mainTabs.getTitleAt(2), mainTabs.getComponentAt(2))
+        separateTabs.setTabComponentAt(separateTabs.getTabCount() - 1, tabLabel)
       }
 
       separateTabsWindow.open()
@@ -456,7 +517,10 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       val selected = separateTabs.getSelectedComponent
 
       while (separateTabs.getTabCount > 0) {
+        val tabLabel = separateTabs.getTabComponentAt(0)
+
         mainTabs.addTab(separateTabs.getTitleAt(0), separateTabs.getComponentAt(0))
+        mainTabs.setTabComponentAt(mainTabs.getTabCount() - 1, tabLabel)
       }
 
       separateTabsWindow.setVisible(false)

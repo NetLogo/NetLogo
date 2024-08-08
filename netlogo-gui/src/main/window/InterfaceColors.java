@@ -49,4 +49,9 @@ public final class InterfaceColors {
   public static final Color AGENT_EDITOR_BACKGROUND = LIGHT_GRAY;
   public static final Color AGENT_COMMANDER_BACKGROUND = LIGHT_GRAY;
   public static final Color TOOLBAR_BACKGROUND = LIGHT_GRAY;
+
+  public static final Color TAB_BACKGROUND = LIGHT_GRAY;
+  public static final Color TAB_BACKGROUND_SELECTED = new Color(251, 96, 85);
+  public static final Color TAB_BORDER = DARK_GRAY;
+  public static final Color TAB_SEPARATOR = DARK_GRAY;
 }
