@@ -80,6 +80,8 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     add(scrollPane, c)
 
     override def paintComponent(g: Graphics) {
+      // this mostly fixes some weird horizontal scrollbar issues (IB 8/7/24)
+      textArea.setSize(scrollPane.getWidth - 10, scrollPane.getHeight)
       val g2d = Utils.initGraphics2D(g)
       g2d.setColor(Color.WHITE)
       g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
