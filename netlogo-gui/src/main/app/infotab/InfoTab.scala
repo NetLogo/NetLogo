@@ -200,8 +200,8 @@ class InfoTab(attachModelDir: String => String)
     printer.printText(g, pageFormat, pageIndex, textArea.getText)
   }
 
-  private class EditableAction(label: String) extends AbstractAction(label) {
-    putValue(Action.SMALL_ICON, icon("/images/edit.gif"))
+  private class EditableAction(label: String) extends AbstractAction {
+    putValue(Action.SMALL_ICON, icon("/images/edit.png"))
     def actionPerformed(e: ActionEvent) {
       val scrollBar = scrollPane.getVerticalScrollBar
       val (min, max) = (scrollBar.getMinimum, scrollBar.getMaximum)

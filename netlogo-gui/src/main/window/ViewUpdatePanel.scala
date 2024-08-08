@@ -2,10 +2,11 @@
 
 package org.nlogo.window
 
+import java.awt.Component
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
 import javax.swing.{ AbstractAction, Action, JButton, JCheckBox, JPanel }
 
-import org.nlogo.awt.{ Fonts => NLogoFonts }
+import org.nlogo.awt.ColumnLayout
 import org.nlogo.core.I18N, I18N.Prefix
 import org.nlogo.window.Events.LoadEndEvent
 
@@ -22,13 +23,21 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
 
   updateModeChooser.refreshSelection()
 
-  add(settingsButton)
-  add(displaySwitch)
-  add(updateModeChooser)
-  add(speedSlider)
-  add(tickCounter)
-  setOpaque(true)
   setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
+
+  add(speedSlider)
+
+  locally {
+    val panel = new JPanel(new ColumnLayout(0, Component.CENTER_ALIGNMENT, Component.CENTER_ALIGNMENT))
+
+    panel.add(displaySwitch)
+    panel.add(updateModeChooser)
+
+    add(panel)
+  }
+
+  add(tickCounter)
+  add(settingsButton)
 
   override def addNotify(): Unit = {
     super.addNotify()
@@ -58,7 +67,6 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
   }
 
   private class SettingsButton(action: Action) extends JButton(action) {
-    NLogoFonts.adjustDefaultFont(this)
     setFocusable(false)
   }
 
