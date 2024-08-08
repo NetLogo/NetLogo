@@ -271,9 +271,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], useTooltip: Bool
 
     // renders the delete and edit buttons for each column
     class ButtonCellEditor extends AbstractCellEditor with TableCellRenderer with TableCellEditor {
-      val EditIcon   = icon("/images/edit.gif")
+      val EditIcon   = icon("/images/edit.png")
       val AlertIcon  = icon("/images/alert.gif")
-      val DeleteIcon = icon("/images/delete.gif")
+      val DeleteIcon = icon("/images/delete.png")
 
       val editButton = RichJButton(EditIcon) {
         openAdvancedPenEditor(model.pens(getSelectedRow))
