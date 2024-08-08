@@ -328,6 +328,11 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
     }
   }
 
+  def forceValue(v: Double) {
+    super.value = v
+    new InterfaceGlobalEvent(this, false, false, true, false).raise(this)
+  }
+
   def valueObject(v: Object) {
     if (v.isInstanceOf[Double]) { value_=(v.asInstanceOf[Double], true) }
   }
@@ -359,7 +364,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
     setName(name, nameChanged)
     nameChanged = false
     updateConstraints()
-    this.value = StrictMath.min(StrictMath.max(value, minimum), maximum)
+    forceValue(StrictMath.min(StrictMath.max(value, minimum), maximum))
     true
   }
 
