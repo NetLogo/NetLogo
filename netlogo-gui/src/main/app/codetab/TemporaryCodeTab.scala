@@ -2,17 +2,16 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.{ Component, FileDialog }
-import java.awt.event.ActionEvent
+import java.awt.FileDialog
 import java.io.{ File, IOException }
-import javax.swing.{ Action, AbstractAction }
+import javax.swing.Action
 
 import org.nlogo.api.FileIO
 import org.nlogo.app.common.{ Dialogs, Events => AppEvents, TabsInterface }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
 import org.nlogo.ide.FocusedOnlyAction
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, ToolBarActionButton }
+import org.nlogo.swing.{ FileDialog => SwingFileDialog }
 import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, ModelTracker }
 
@@ -32,6 +31,8 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   smartIndent:                    Boolean,
   separateCodeWindow:             Boolean)
   extends CodeTab(workspace, tabs) {
+
+  putClientProperty("JTabbedPane.tabClosable", true)
 
   var closing = false
   var saveNeeded = false // Has the buffer changed since the file was saved?
@@ -80,8 +81,6 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
       filename.fold(_ => Seq(), name => Seq(conversionAction(this)))
   }
 
-  override def getAdditionalToolBarComponents: Seq[Component] = Seq(new ToolBarActionButton(CloseAction))
-
   override def dirty_=(d: Boolean) = {
     super.dirty_=(d)
     if (d) {
@@ -104,7 +103,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     new WindowEvents.ExternalFileSavedEvent(filename.merge).raise(this)
   }
 
-  def close() {
+  def prepareForClose() {
     ignoring(classOf[UserCancelException]) {
       if (saveNeeded) {
         if (Dialogs.userWantsToSaveFirst(filenameForDisplay, this)) {
@@ -113,9 +112,6 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
         }
       }
       closing = true
-      // Remove from the set of TemporaryCodeTabs in Tabs and remove the tab from the JTabbedPane
-      tabs.closeExternalFile(_filename)
-      compile()
     }
   }
 
@@ -145,9 +141,5 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     val newFileName = appendIfNecessary(filenameForDisplay, ".nls")
     val path = SwingFileDialog.showFiles(this, I18N.gui.get("file.save.external"), FileDialog.SAVE, newFileName)
     appendIfNecessary(path, ".nls")
-  }
-
-  private object CloseAction extends AbstractAction(I18N.gui.get("tabs.external.close")) {
-    override def actionPerformed(e: ActionEvent) = close()
   }
 }
