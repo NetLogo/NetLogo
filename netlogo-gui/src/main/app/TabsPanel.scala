@@ -26,7 +26,7 @@ class TabsPanelUI(tabCount: () => Int, panelWidth: () => Int) extends BasicTabbe
     for (i <- 0 until tabCount())
       x -= calculateTabWidth(tabPlacement, i, getFontMetrics) / 2
     
-    new Insets(5, x, 5, 0)
+    new Insets(10, x, 0, 0)
   }
   
   override def paintTabArea(g: Graphics, tabPlacement: Int, selectedIndex: Int) {

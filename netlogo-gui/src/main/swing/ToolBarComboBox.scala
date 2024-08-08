@@ -49,10 +49,15 @@ class ToolBarComboBoxRenderer extends JMenuItem with ListCellRenderer[JMenuItem]
 class ToolBarComboBox(val items: Array[JMenuItem]) extends JComboBox[JMenuItem](items) {
   var chosenItem: JMenuItem = items(0)
 
-  locally {
-    org.nlogo.awt.Fonts.adjustDefaultFont(this)
+  setRenderer(new ToolBarComboBoxRenderer())
 
-    setRenderer(new ToolBarComboBoxRenderer())
+  override def paintComponent(g: Graphics) {
+    super.paintComponent(g)
+
+    val g2d = Utils.initGraphics2D(g)
+
+    g2d.setColor(Color.WHITE)
+    g2d.fillRect(0, getHeight - 2, getWidth, 2)
   }
 
   override def setSelectedItem(o: Object) {
