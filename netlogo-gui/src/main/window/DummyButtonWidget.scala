@@ -26,8 +26,6 @@ class DummyButtonWidget
 
   backgroundColor = InterfaceColors.BUTTON_BACKGROUND
 
-  org.nlogo.awt.Fonts.adjustDefaultFont(this)
-
   private var _actionKey: Char = '\u0000'
   private var _keyEnabled: Boolean = false
   private var _name: String = ""

@@ -4,7 +4,7 @@ package org.nlogo.app.codetab
 
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, TextEvent, TextListener }
 import java.awt.print.PageFormat
-import java.awt.{BorderLayout, Component, Dimension, Graphics, Insets}
+import java.awt.{ BorderLayout, Dimension, Graphics, Insets }
 import java.io.IOException
 import java.net.MalformedURLException
 import java.util.prefs.Preferences
@@ -98,6 +98,8 @@ with MenuTab {
   def compiler = workspace
   def program = workspace.world.program
 
+  scrollableEditor.setBorder(null)
+
   locally {
     setLayout(new BorderLayout)
     add(toolBar, BorderLayout.NORTH)
@@ -125,19 +127,13 @@ with MenuTab {
         getActionMap.put("find", FindDialog.FIND_ACTION_CODE)
 
         add(new ToolBarActionButton(CompileAction))
-        add(new ToolBar.Separator)
         add(proceduresMenu)
         add(new IncludedFilesMenu(getIncludesTable, tabs))
-        val additionalComps = Seq(tabbing, separate) ++ getAdditionalToolBarComponents
-        if (additionalComps.nonEmpty) {
-          add(new ToolBar.Separator)
-          additionalComps foreach add
-        }
+        add(tabbing)
+        add(separate)
       }
     }
   }
-
-  protected def getAdditionalToolBarComponents: Seq[Component] = Seq.empty[Component]
 
   override val permanentMenuActions =
     Seq(new CodeToHtml.Action(workspace, this, () => getText)) ++ editorConfiguration.permanentActions

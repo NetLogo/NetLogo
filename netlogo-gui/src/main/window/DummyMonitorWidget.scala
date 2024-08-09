@@ -36,8 +36,6 @@ class DummyMonitorWidget
 
   backgroundColor = InterfaceColors.MONITOR_BACKGROUND
 
-  org.nlogo.awt.Fonts.adjustDefaultFont(this)
-
   def name: String = _name
 
   def name(name: String): Unit = {

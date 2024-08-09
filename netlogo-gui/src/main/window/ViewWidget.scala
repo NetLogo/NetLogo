@@ -6,7 +6,6 @@ import java.awt.{ Component, Dimension, Font, Point, Rectangle }
 import javax.swing.JPopupMenu
 
 import org.nlogo.api.{ Approximate, Version }
-import org.nlogo.awt.{ Fonts => NlogoFonts }
 import org.nlogo.core.{ View => CoreView }
 import org.nlogo.window.Events.ResizeViewEvent
 import org.nlogo.window.MouseMode._
@@ -34,8 +33,6 @@ class ViewWidget(workspace: GUIWorkspace)
   val view = new View(workspace)
   val tickCounter = new TickCounterLabel(workspace.world)
   val displaySwitch = new DisplaySwitch(workspace)
-
-  NlogoFonts.adjustDefaultFont(tickCounter)
 
   backgroundColor = InterfaceColors.GRAPHICS_BACKGROUND
 

@@ -95,8 +95,9 @@ class InfoTab(attachModelDir: String => String)
         this.addAll(new ToolBarActionButton(FindDialog.FIND_ACTION), editableButton, helpButton)
       }
     }, BorderLayout.NORTH)
+    scrollPane.setBorder(null)
     scrollPane.getVerticalScrollBar.setUnitIncrement(16)
-    add(scrollPane,BorderLayout.CENTER)
+    add(scrollPane, BorderLayout.CENTER)
   }
 
   private def resetBorders() {
