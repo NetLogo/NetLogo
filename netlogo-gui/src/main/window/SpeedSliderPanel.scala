@@ -7,7 +7,6 @@ import java.awt.event.{ ComponentEvent, ComponentListener, MouseEvent, MouseList
 import javax.swing.{ JLabel, JPanel, JSlider }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 
-import org.nlogo.awt.Fonts.adjustDefaultFont
 import org.nlogo.core.I18N
 import org.nlogo.log.LogManager
 import org.nlogo.window.Events.LoadBeginEvent
@@ -26,7 +25,6 @@ class SpeedSliderPanel(workspace: GUIWorkspace) extends JPanel with MouseListene
 
   private val speedLabel = {
     val label = new SpeedLabel(I18N.gui("normalspeed"), (i: Int) => (i / 2, i / 2))
-    adjustDefaultFont(label)
     label.resizeWithComponent(speedSlider)
     label
   }

@@ -73,7 +73,6 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
     northPanel.setOpaque(false)
     northPanel.add(titleLabel)
     northPanel.add(Box.createGlue)
-    Fonts.adjustDefaultFont(titleLabel)
     titleLabel.setFont(titleLabel.getFont.deriveFont(Font.BOLD))
     northPanel.add(locationToggleButton)
     northPanel.add(clearButton)

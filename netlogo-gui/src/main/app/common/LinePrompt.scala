@@ -6,7 +6,6 @@ import java.awt.{ Color, Dimension, Graphics, Graphics2D, RenderingHints }
 import java.awt.event.{ MouseEvent, MouseListener }
 import javax.swing.{ JComponent, JMenuItem, JPopupMenu }
 
-import org.nlogo.awt.Fonts
 import org.nlogo.core.{ AgentKind, I18N }
 
 class LinePrompt(commandLine: CommandLine) extends JComponent with MouseListener {
@@ -14,7 +13,6 @@ class LinePrompt(commandLine: CommandLine) extends JComponent with MouseListener
   locally {
     setOpaque(false)
     addMouseListener(this)
-    Fonts.adjustDefaultFont(this)
   }
 
   private[this] var enabled = true

@@ -397,9 +397,6 @@ object AbstractPlotWidget {
     c.fill = java.awt.GridBagConstraints.NONE
     gridbag.setConstraints(max, c)
     add(max)
-    org.nlogo.awt.Fonts.adjustDefaultFont(min)
-    org.nlogo.awt.Fonts.adjustDefaultFont(label)
-    org.nlogo.awt.Fonts.adjustDefaultFont(max)
 
     override def paintComponent(g: Graphics) = {
       super.paintComponent(g)
@@ -443,9 +440,6 @@ object AbstractPlotWidget {
     c.fill = java.awt.GridBagConstraints.NONE
     gridbag.setConstraints(min, c)
     add(min)
-    org.nlogo.awt.Fonts.adjustDefaultFont(min)
-    org.nlogo.awt.Fonts.adjustDefaultFont(label)
-    org.nlogo.awt.Fonts.adjustDefaultFont(max)
 
     override def paintComponent(g: Graphics) = {
       super.paintComponent(g)

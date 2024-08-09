@@ -7,7 +7,6 @@ import javax.swing.{ AbstractAction, JButton, JPopupMenu }
 
 abstract class ToolBarMenu(name: String) extends JButton(name) {
   setMinimumSize(new Dimension(11,20))
-  if (System.getProperty("os.name").startsWith("Mac")) setBackground(java.awt.Color.WHITE)
   setAction(new AbstractAction(name) {
     override def actionPerformed(e: ActionEvent): Unit = popup()
   })
@@ -16,7 +15,6 @@ abstract class ToolBarMenu(name: String) extends JButton(name) {
   addMouseListener(new MouseAdapter() {
     override def mousePressed(e: MouseEvent): Unit = doClick()
   })
-  org.nlogo.awt.Fonts.adjustDefaultFont(this)
 
   def popup(): Unit = {
     val menu = new WrappingPopupMenu
