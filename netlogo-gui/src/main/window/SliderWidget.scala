@@ -6,6 +6,7 @@ import java.awt.{ Color, Dimension, Graphics, Point, RadialGradientPaint }
 import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, MouseAdapter, MouseEvent,
                         MouseMotionAdapter }
 import javax.swing.{ BorderFactory, JLabel, JSlider, JTextField, SwingConstants }
+import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.plaf.basic.BasicSliderUI
 
 import org.nlogo.agent.SliderConstraint
@@ -122,6 +123,8 @@ trait AbstractSliderWidget extends MultiErrorWidget {
           if (thumbRect.contains(e.getPoint))
             super.mousePressed(e)
           else if (e.getButton == MouseEvent.BUTTON1) {
+            slider.requestFocus()
+
             if (vertical)
               slider.setValue(valueForYPosition(e.getPoint.y))
             else
@@ -157,6 +160,8 @@ trait AbstractSliderWidget extends MultiErrorWidget {
         }
 
         setText(value.toString)
+
+        getParent.requestFocus()
       }
     })
 
@@ -226,11 +231,9 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   add(valueComponent)
   add(slider)
 
-  slider.addChangeListener(new javax.swing.event.ChangeListener() {
-    override def stateChanged(e: javax.swing.event.ChangeEvent): Unit = {
-      if (slider.hasFocus) {
-        value = minimum + slider.getValue * increment
-      }
+  slider.addChangeListener(new ChangeListener {
+    override def stateChanged(e: ChangeEvent): Unit = {
+      value = minimum + slider.getValue * increment
     }
   })
 
@@ -239,6 +242,8 @@ trait AbstractSliderWidget extends MultiErrorWidget {
 
   addMouseListener(new MouseAdapter {
     override def mousePressed(e: MouseEvent) {
+      requestFocus()
+
       new InputBoxLoseFocusEvent().raise(AbstractSliderWidget.this)
     }
   })
