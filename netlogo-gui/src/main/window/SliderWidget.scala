@@ -149,6 +149,8 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0))
     setBackground(InterfaceColors.TRANSPARENT)
 
+    setFont(getFont.deriveFont(11f))
+
     addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
         try {
