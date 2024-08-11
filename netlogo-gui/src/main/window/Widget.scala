@@ -53,7 +53,7 @@ abstract class Widget extends JPanel {
   def load(widget: WidgetModel): Object
   def sourceOffset = 0
   def hasContextMenuInApplet = false
-  def getUnzoomedPreferredSize: Dimension = getPreferredSize(originalFont)
+  def getUnzoomedPreferredSize: Dimension = getPreferredSize
   def needsPreferredWidthFudgeFactor = true
   def isButton = false
   def isTurtleForeverButton = false
