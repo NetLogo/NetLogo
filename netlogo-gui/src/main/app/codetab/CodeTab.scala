@@ -135,6 +135,8 @@ with MenuTab {
     }
   }
 
+  protected def getAdditionalToolBarComponents: Seq[Component] = Seq.empty[Component]
+
   override val permanentMenuActions =
     Seq(new CodeToHtml.Action(workspace, this, () => getText)) ++ editorConfiguration.permanentActions
 
