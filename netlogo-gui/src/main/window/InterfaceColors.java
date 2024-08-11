@@ -13,6 +13,7 @@ public final class InterfaceColors {
   public static final Color OUTPUT_BACKGROUND = new Color(231, 231, 237);
   public static final Color MEDIUM_BLUE = new Color(6, 112, 237);
 
+  public static final Color WIDGET_HOVER_SHADOW = new Color(100, 100, 100);
   public static final Color TEXT_BOX_BACKGROUND = Color.WHITE;
   public static final Color TRANSPARENT = new Color(0, 0, 0, 0);
   public static final Color WIDGET_TEXT = new Color(85, 87, 112);
@@ -31,7 +32,6 @@ public final class InterfaceColors {
   public static final Color SLIDER_THUMB_BORDER = MEDIUM_BLUE;
   public static final Color SLIDER_THUMB_BACKGROUND = Color.WHITE;
   public static final Color SLIDER_THUMB_BACKGROUND_PRESSED = MEDIUM_BLUE;
-  public static final Color SLIDER_SHADOW = new Color(100, 100, 100);
   public static final Color SWITCH_BACKGROUND = INPUT_BACKGROUND;
   public static final Color SWITCH_TOGGLE = Color.WHITE;
   public static final Color SWITCH_TOGGLE_BACKGROUND_ON = MEDIUM_BLUE;
