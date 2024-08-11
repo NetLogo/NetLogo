@@ -2,13 +2,12 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ BorderLayout, Component, Container,
-  ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D }
+import java.awt.{ BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Graphics,
+                  Graphics2D }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.{ PageFormat, Printable }
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
-import javax.swing.{ AbstractAction, Action, BorderFactory, JComponent,
-  JPanel, JScrollPane, JSplitPane, ScrollPaneConstants }
+import javax.swing.{ AbstractAction, Action, JComponent, JPanel, JScrollPane, JSplitPane, ScrollPaneConstants }
 
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
@@ -18,9 +17,9 @@ import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable,
   UserAction.{ MenuAction, ToolsCategory },
   Utils.icon
 import org.nlogo.swing.{ Utils => SwingUtils }
-import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace,
-  InterfaceColors, ViewUpdatePanel, WidgetInfo, Events => WindowEvents, WorkspaceActions },
-    WindowEvents.{ Enable2DEvent, LoadBeginEvent, OutputEvent }
+import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace, ViewUpdatePanel, WidgetInfo,
+                          Events => WindowEvents, WorkspaceActions },
+                        WindowEvents.{ Enable2DEvent, LoadBeginEvent, OutputEvent }
 
 object InterfaceTab {
   val MenuGroup = "org.nlogo.app.InterfaceTab"
@@ -59,8 +58,6 @@ class InterfaceTab(workspace: GUIWorkspace,
     // way so that only a vertical scrollbar is really needed - ST 7/13/04
     ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
-  scrollPane.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, InterfaceColors.GRAPHICS_BACKGROUND))
-  commandCenter.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, InterfaceColors.GRAPHICS_BACKGROUND))
   commandCenter.setMinimumSize(new Dimension(0, 0))
 
   private var viewUpdatePanel: ViewUpdatePanel = null
