@@ -74,14 +74,14 @@ trait AbstractSliderWidget extends MultiErrorWidget {
         if (vertical) {
           g2d.setPaint(new RadialGradientPaint(thumbRect.getCenterX.toInt, thumbRect.getCenterY.toInt + 3,
                                               getThumbSize.height / 2f, Array[Float](0, 1),
-                                              Array(InterfaceColors.SLIDER_SHADOW, InterfaceColors.TRANSPARENT)))
+                                              Array(InterfaceColors.WIDGET_HOVER_SHADOW, InterfaceColors.TRANSPARENT)))
           g2d.fillOval(thumbRect.x, thumbRect.y + getThumbSize.width / 2 - getThumbSize.height / 2 + 3,
                       getThumbSize.height, getThumbSize.height)
         }
         else {
           g2d.setPaint(new RadialGradientPaint(thumbRect.getCenterX.toInt, thumbRect.getCenterY.toInt + 3,
                                               getThumbSize.width / 2f, Array[Float](0, 1),
-                                              Array(InterfaceColors.SLIDER_SHADOW, InterfaceColors.TRANSPARENT)))
+                                              Array(InterfaceColors.WIDGET_HOVER_SHADOW, InterfaceColors.TRANSPARENT)))
           g2d.fillOval(thumbRect.x, thumbRect.y + getThumbSize.height / 2 - getThumbSize.width / 2 + 3,
                       getThumbSize.width, getThumbSize.width)
         }
@@ -236,9 +236,6 @@ trait AbstractSliderWidget extends MultiErrorWidget {
       value = minimum + slider.getValue * increment
     }
   })
-
-  nameComponent.setFont(nameComponent.getFont.deriveFont(11f))
-  valueComponent.setFont(valueComponent.getFont.deriveFont(11f))
 
   addMouseListener(new MouseAdapter {
     override def mousePressed(e: MouseEvent) {
