@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets, RadialGradientPaint }
+import java.awt.{ Color, Dimension, Graphics, Point, RadialGradientPaint }
 import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, MouseAdapter, MouseEvent,
                         MouseMotionAdapter }
 import javax.swing.{ BorderFactory, JLabel, JSlider, JTextField, SwingConstants }
@@ -14,6 +14,8 @@ import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical }
 import org.nlogo.swing.Utils
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent,
                                  InputBoxLoseFocusEvent }
+
+import scala.math.Pi
 
 trait AbstractSliderWidget extends MultiErrorWidget {
   private class SliderUI(slider: JSlider) extends BasicSliderUI(slider) {
@@ -49,30 +51,60 @@ trait AbstractSliderWidget extends MultiErrorWidget {
 
     override def paintTrack(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
-      val startY = trackRect.y + trackRect.height / 2 - 3
-      g2d.setColor(InterfaceColors.SLIDER_BAR_BACKGROUND_FILLED)
-      g2d.fillRoundRect(trackRect.x, startY, thumbRect.x, 6, 6, 6)
-      g2d.setColor(InterfaceColors.SLIDER_BAR_BACKGROUND)
-      g2d.fillRoundRect(thumbRect.x, startY, trackRect.width - thumbRect.x, 6, 6, 6)
+      if (vertical) {
+        val startX = trackRect.x + trackRect.width / 2 - 3
+        g2d.setColor(InterfaceColors.SLIDER_BAR_BACKGROUND_FILLED)
+        g2d.fillRoundRect(startX, thumbRect.y, 6, trackRect.height - thumbRect.y, 6, 6)
+        g2d.setColor(InterfaceColors.SLIDER_BAR_BACKGROUND)
+        g2d.fillRoundRect(startX, trackRect.y, 6, thumbRect.y, 6, 6)
+      }
+      else {
+        val startY = trackRect.y + trackRect.height / 2 - 3
+        g2d.setColor(InterfaceColors.SLIDER_BAR_BACKGROUND_FILLED)
+        g2d.fillRoundRect(trackRect.x, startY, thumbRect.x, 6, 6, 6)
+        g2d.setColor(InterfaceColors.SLIDER_BAR_BACKGROUND)
+        g2d.fillRoundRect(thumbRect.x, startY, trackRect.width - thumbRect.x, 6, 6, 6)
+      }
     }
 
     override def paintThumb(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
       if (hover) {
-        g2d.setPaint(new RadialGradientPaint(thumbRect.getCenterX.toInt, thumbRect.getCenterY.toInt + 3,
-                                             getThumbSize.width / 2f, Array[Float](0, 1),
-                                             Array(InterfaceColors.SLIDER_SHADOW, InterfaceColors.TRANSPARENT)))
-        g2d.fillOval(thumbRect.x, thumbRect.y + getThumbSize.height / 2 - getThumbSize.width / 2 + 3,
-                     getThumbSize.width, getThumbSize.width)
+        if (vertical) {
+          g2d.setPaint(new RadialGradientPaint(thumbRect.getCenterX.toInt, thumbRect.getCenterY.toInt + 3,
+                                              getThumbSize.height / 2f, Array[Float](0, 1),
+                                              Array(InterfaceColors.SLIDER_SHADOW, InterfaceColors.TRANSPARENT)))
+          g2d.fillOval(thumbRect.x, thumbRect.y + getThumbSize.width / 2 - getThumbSize.height / 2 + 3,
+                      getThumbSize.height, getThumbSize.height)
+        }
+        else {
+          g2d.setPaint(new RadialGradientPaint(thumbRect.getCenterX.toInt, thumbRect.getCenterY.toInt + 3,
+                                              getThumbSize.width / 2f, Array[Float](0, 1),
+                                              Array(InterfaceColors.SLIDER_SHADOW, InterfaceColors.TRANSPARENT)))
+          g2d.fillOval(thumbRect.x, thumbRect.y + getThumbSize.height / 2 - getThumbSize.width / 2 + 3,
+                      getThumbSize.width, getThumbSize.width)
+        }
       }
-      val startY = getThumbSize.height / 2 - getThumbSize.width / 2
-      g2d.setColor(InterfaceColors.SLIDER_THUMB_BORDER)
-      g2d.fillOval(thumbRect.x, startY, getThumbSize.width, getThumbSize.width)
-      if (pressed)
-        g2d.setColor(InterfaceColors.SLIDER_THUMB_BACKGROUND_PRESSED)
-      else
-        g2d.setColor(InterfaceColors.SLIDER_THUMB_BACKGROUND)
-      g2d.fillOval(thumbRect.x + 1, startY + 1, getThumbSize.width - 2, getThumbSize.width - 2)
+      if (vertical) {
+        val startX = getThumbSize.width / 2 - getThumbSize.height / 2
+        g2d.setColor(InterfaceColors.SLIDER_THUMB_BORDER)
+        g2d.fillOval(startX, thumbRect.y, getThumbSize.height, getThumbSize.height)
+        if (pressed)
+          g2d.setColor(InterfaceColors.SLIDER_THUMB_BACKGROUND_PRESSED)
+        else
+          g2d.setColor(InterfaceColors.SLIDER_THUMB_BACKGROUND)
+        g2d.fillOval(startX + 1, thumbRect.y + 1, getThumbSize.height - 2, getThumbSize.height - 2)
+      }
+      else {
+        val startY = getThumbSize.height / 2 - getThumbSize.width / 2
+        g2d.setColor(InterfaceColors.SLIDER_THUMB_BORDER)
+        g2d.fillOval(thumbRect.x, startY, getThumbSize.width, getThumbSize.width)
+        if (pressed)
+          g2d.setColor(InterfaceColors.SLIDER_THUMB_BACKGROUND_PRESSED)
+        else
+          g2d.setColor(InterfaceColors.SLIDER_THUMB_BACKGROUND)
+        g2d.fillOval(thumbRect.x + 1, startY + 1, getThumbSize.width - 2, getThumbSize.width - 2)
+      }
       repaint()
     }
 
@@ -89,10 +121,25 @@ trait AbstractSliderWidget extends MultiErrorWidget {
         override def mousePressed(e: MouseEvent) {
           if (thumbRect.contains(e.getPoint))
             super.mousePressed(e)
-          else if (e.getButton == MouseEvent.BUTTON1)
-            slider.setValue(valueForXPosition(e.getPoint.x))
+          else if (e.getButton == MouseEvent.BUTTON1) {
+            if (vertical)
+              slider.setValue(valueForYPosition(e.getPoint.y))
+            else
+              slider.setValue(valueForXPosition(e.getPoint.x))
+          }
         }
       }
+  }
+
+  protected class Label extends JLabel {
+    override def paintComponent(g: Graphics) {
+      val g2d = Utils.initGraphics2D(g)
+      if (vertical) {
+        g2d.setClip(null) // this does not feel right but it's the only thing that works for now (IB 8/11/24)
+        g2d.rotate(-Pi / 2)
+      }
+      super.paintComponent(g)
+    }
   }
 
   protected class TextField extends JTextField {
@@ -119,8 +166,36 @@ trait AbstractSliderWidget extends MultiErrorWidget {
       }
     })
 
+    override def contains(x: Int, y: Int): Boolean = {
+      if (vertical)
+        -y > 0 && x > 0 && -y < getWidth && x < getHeight
+      else
+        super.contains(x, y)
+    }
+    
+    override def contains(point: Point): Boolean = {
+      if (vertical)
+        -point.y > 0 && point.x > 0 && -point.y < getWidth && point.x < getHeight
+      else
+        super.contains(point)
+    }
+
+    override def processMouseEvent(e: MouseEvent) {
+      e.translatePoint(-e.getPoint.y - e.getPoint.x, e.getPoint.x - e.getPoint.y)
+      super.processMouseEvent(e)
+    }
+
+    override def processMouseMotionEvent(e: MouseEvent) {
+      e.translatePoint(-e.getPoint.y - e.getPoint.x, e.getPoint.x - e.getPoint.y)
+      super.processMouseMotionEvent(e)
+    }
+
     override def paintComponent(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
+      if (vertical) {
+        g2d.setClip(null) // this does not feel right but it's the only thing that works for now (IB 8/11/24)
+        g2d.rotate(-Pi / 2)
+      }
       g2d.setColor(InterfaceColors.INPUT_BORDER)
       g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
       g2d.setColor(Color.WHITE)
@@ -134,7 +209,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   private var _vertical = false
   private val sliderData = new SliderData(this)
 
-  val nameComponent = new JLabel
+  val nameComponent = new Label
   val valueComponent = new TextField
   var slider = new JSlider(0, ((maximum - minimum) / increment).asInstanceOf[Int], 0)
 
@@ -145,65 +220,28 @@ trait AbstractSliderWidget extends MultiErrorWidget {
 
   backgroundColor = InterfaceColors.SLIDER_BACKGROUND
 
-  setLayout(new GridBagLayout)
+  setLayout(null)
 
-  locally {
-    val c = new GridBagConstraints
+  add(nameComponent)
+  add(valueComponent)
+  add(slider)
 
-    c.gridx = 0
-    c.gridy = 0
-    c.anchor = GridBagConstraints.NORTHWEST
-    c.gridwidth = 1
-    c.weightx = 1
-    c.fill = GridBagConstraints.NONE
-    c.insets =
-      if (preserveWidgetSizes)
-        new Insets(-6, 6, 0, 6)
-      else
-        new Insets(6, 12, 6, 12)
-
-    add(nameComponent, c)
-
-    c.gridx = 1
-    c.anchor = GridBagConstraints.NORTHEAST
-    c.insets =
-      if (preserveWidgetSizes)
-        new Insets(-6, 0, 0, 6)
-      else
-        new Insets(6, 12, 6, 12)
-
-    add(valueComponent, c)
-
-    c.gridx = 0
-    c.gridy = 1
-    c.anchor = GridBagConstraints.SOUTHWEST
-    c.gridwidth = 2
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.insets =
-      if (preserveWidgetSizes)
-        new Insets(0, 0, -6, 0)
-      else
-        new Insets(0, 6, 6, 6)
-
-    add(slider, c)
-
-    slider.addChangeListener(new javax.swing.event.ChangeListener() {
-      override def stateChanged(e: javax.swing.event.ChangeEvent): Unit = {
-        if (slider.hasFocus) {
-          value = minimum + slider.getValue * increment
-        }
+  slider.addChangeListener(new javax.swing.event.ChangeListener() {
+    override def stateChanged(e: javax.swing.event.ChangeEvent): Unit = {
+      if (slider.hasFocus) {
+        value = minimum + slider.getValue * increment
       }
-    })
+    }
+  })
 
-    nameComponent.setFont(nameComponent.getFont.deriveFont(11f))
-    valueComponent.setFont(valueComponent.getFont.deriveFont(11f))
+  nameComponent.setFont(nameComponent.getFont.deriveFont(11f))
+  valueComponent.setFont(valueComponent.getFont.deriveFont(11f))
 
-    addMouseListener(new MouseAdapter {
-      override def mousePressed(e: MouseEvent): Unit = {
-        new InputBoxLoseFocusEvent().raise(AbstractSliderWidget.this)
-      }
-    })
-  }
+  addMouseListener(new MouseAdapter {
+    override def mousePressed(e: MouseEvent) {
+      new InputBoxLoseFocusEvent().raise(AbstractSliderWidget.this)
+    }
+  })
 
   def constraint = sliderData.constraint
   def setSliderConstraint(con: SliderConstraint) = {
@@ -283,16 +321,79 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     if (units=="") numString else numString + " " + units
   }
 
-  override def getMinimumSize =
-    if (preserveWidgetSizes)
-      new Dimension(92, 33)
-    else
-      new Dimension(150, 53)
-  override def getPreferredSize =
-    if (preserveWidgetSizes)
-      new Dimension(150, 33)
-    else
-      new Dimension(250, 53)
+  override def doLayout() {
+    if (preserveWidgetSizes) {
+      if (vertical) {
+        nameComponent.setBounds(0, getHeight - 6, nameComponent.getPreferredSize.width.min(
+                                                    getHeight - valueComponent.getPreferredSize.width - 12),
+                                nameComponent.getPreferredSize.height)
+        valueComponent.setBounds(0, valueComponent.getPreferredSize.width + 6, valueComponent.getPreferredSize.width,
+                                 valueComponent.getPreferredSize.height)
+        slider.setBounds(getWidth - slider.getPreferredSize.width, 0, slider.getPreferredSize.width, getHeight)
+      }
+
+      else {
+        nameComponent.setBounds(6, 0, nameComponent.getPreferredSize.width.min(
+                                        getWidth - valueComponent.getPreferredSize.width - 12),
+                                nameComponent.getPreferredSize.height)
+        valueComponent.setBounds(getWidth - valueComponent.getPreferredSize.width - 6, 0,
+                                 valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
+        slider.setBounds(0, getHeight - slider.getPreferredSize.height, getWidth, slider.getPreferredSize.height)
+      }
+    }
+
+    else {
+      if (vertical) {
+        nameComponent.setBounds(6, getHeight - 12, nameComponent.getPreferredSize.width.min(
+                                                     getWidth - valueComponent.getPreferredSize.width - 24),
+                                nameComponent.getPreferredSize.height)
+        valueComponent.setBounds(6, valueComponent.getPreferredSize.width + 12, valueComponent.getPreferredSize.width,
+                                 valueComponent.getPreferredSize.height)
+        slider.setBounds(getWidth - slider.getPreferredSize.width - 6, 0, slider.getPreferredSize.width, getHeight)
+      }
+
+      else {
+        nameComponent.setBounds(12, 6, nameComponent.getPreferredSize.width.min(
+                                        getWidth - valueComponent.getPreferredSize.width - 24),
+                                nameComponent.getPreferredSize.height)
+        valueComponent.setBounds(getWidth - valueComponent.getPreferredSize.width - 12, 6,
+                                valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
+        slider.setBounds(0, getHeight - slider.getPreferredSize.height - 6, getWidth, slider.getPreferredSize.height)
+      }
+    }
+  }
+
+  override def getMinimumSize = {
+    if (preserveWidgetSizes) {
+      if (vertical)
+        new Dimension(33, 92)
+      else
+        new Dimension(92, 33)
+    }
+
+    else {
+      if (vertical)
+        new Dimension(53, 150)
+      else
+        new Dimension(150, 53)
+    }
+  }
+
+  override def getPreferredSize = {
+    if (preserveWidgetSizes) {
+      if (vertical)
+        new Dimension(33, 150)
+      else
+        new Dimension(150, 33)
+    }
+
+    else {
+      if (vertical)
+        new Dimension(53, 250)
+      else
+        new Dimension(250, 53)
+    }
+  }
 }
 
 
