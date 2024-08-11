@@ -2,9 +2,9 @@
 
 package org.nlogo.app.codetab
 
+import java.awt.{ BorderLayout, Component, Dimension, Graphics, Insets }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, TextEvent, TextListener }
 import java.awt.print.PageFormat
-import java.awt.{ BorderLayout, Dimension, Graphics, Insets }
 import java.io.IOException
 import java.net.MalformedURLException
 import java.util.prefs.Preferences
@@ -131,6 +131,7 @@ with MenuTab {
         add(new IncludedFilesMenu(getIncludesTable, tabs))
         add(tabbing)
         add(separate)
+        getAdditionalToolBarComponents.foreach(add)
       }
     }
   }
