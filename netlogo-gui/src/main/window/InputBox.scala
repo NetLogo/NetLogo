@@ -3,8 +3,9 @@
 package org.nlogo.window
 
 import java.awt.{ BasicStroke, Color, Component, Dimension, Font, Frame, Graphics, GridBagConstraints, GridBagLayout,
-                  Insets }
-import java.awt.event.{ ActionListener, WindowEvent, WindowAdapter, FocusListener, FocusEvent, ActionEvent, KeyEvent }
+                  Insets, LinearGradientPaint }
+import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, MouseEvent, MouseAdapter,
+                        WindowAdapter, WindowEvent }
 import javax.swing.{ AbstractAction, JButton, JDialog, JLabel, JPanel, JScrollPane, ScrollPaneConstants }
 import javax.swing.KeyStroke.getKeyStroke
 import javax.swing.plaf.basic.BasicButtonUI
@@ -31,8 +32,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
   import InputBox._
 
-  // this overrides the widget default but it doesn't display color without it (IB 8/1/24)
-  setBackground(InterfaceColors.TRANSPARENT)
+  private var hover = false
 
   protected class ColorButton extends JButton {
     var color = Color.black
@@ -43,6 +43,24 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
     addActionListener(new SelectColorActionListener)
 
+    addMouseListener(new MouseAdapter {
+      override def mouseEntered(e: MouseEvent) {
+        if (isVisible) {
+          hover = true
+
+          getParent.repaint()
+        }
+      }
+
+      override def mouseExited(e: MouseEvent) {
+        if (isVisible && !contains(e.getPoint)) {
+          hover = false
+
+          getParent.repaint()
+        }
+      }
+    })
+
     // on winXP if we don't set this the color in the button doesn't show up ev 2/15/08
     // after UI redesign this made color no longer appear on any platform (IB 6/3/24)
     // setContentAreaFilled(false)
@@ -51,11 +69,8 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       val g2d = Utils.initGraphics2D(g)
       g2d.setColor(color)
       g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
-      val stroke = g2d.getStroke
-      g2d.setStroke(new BasicStroke(1))
       g2d.setColor(InterfaceColors.INPUT_BORDER)
       g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
-      g2d.setStroke(stroke)
       super.paintComponent(g)
     }
   }
@@ -78,6 +93,24 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     c.insets = new Insets(3, 3, 3, 3)
 
     add(scrollPane, c)
+
+    addMouseListener(new MouseAdapter {
+      override def mouseEntered(e: MouseEvent) {
+        if (isVisible) {
+          hover = true
+
+          getParent.repaint()
+        }
+      }
+
+      override def mouseExited(e: MouseEvent) {
+        if (isVisible && !contains(e.getPoint)) {
+          hover = false
+
+          getParent.repaint()
+        }
+      }
+    })
 
     override def paintComponent(g: Graphics) {
       // this mostly fixes some weird horizontal scrollbar issues (IB 8/7/24)
@@ -268,6 +301,24 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     super.paintComponent(g)
     widgetLabel.setToolTipText(
       if (widgetLabel.getPreferredSize.width > widgetLabel.getSize().width) name else null)
+
+    if (hover) {
+      val g2d = Utils.initGraphics2D(g)
+
+      if (colorSwatch.isVisible) {
+        g2d.setPaint(new LinearGradientPaint(colorSwatch.getX.toFloat, colorSwatch.getY + 3, colorSwatch.getX.toFloat,
+                                            colorSwatch.getY + colorSwatch.getHeight + 3, Array(0f, 1f),
+                                            Array(InterfaceColors.WIDGET_HOVER_SHADOW, InterfaceColors.TRANSPARENT)))
+        g2d.fillRoundRect(colorSwatch.getX, colorSwatch.getY + 3, colorSwatch.getWidth, colorSwatch.getHeight, 6, 6)
+      }
+
+      else {
+        g2d.setPaint(new LinearGradientPaint(scroller.getX.toFloat, scroller.getY + 3, scroller.getX.toFloat,
+                                            scroller.getY + scroller.getHeight + 3, Array(0f, 1f),
+                                            Array(InterfaceColors.WIDGET_HOVER_SHADOW, InterfaceColors.TRANSPARENT)))
+        g2d.fillRoundRect(scroller.getX, scroller.getY + 3, scroller.getWidth, scroller.getHeight, 6, 6)
+      }
+    }
   }
 
   private class EditActionListener extends ActionListener {
@@ -648,7 +699,6 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     override def colorPanel(panel: ColorButton) {
       panel.setVisible(true)
       scroller.setVisible(false)
-      panel.setOpaque(true)
 
       val (colorval, c) =
         if (value.exists(_.isInstanceOf[Double])) {
