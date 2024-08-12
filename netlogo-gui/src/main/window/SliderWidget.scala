@@ -350,7 +350,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
                                 nameComponent.getPreferredSize.height)
         valueComponent.setBounds(6, valueComponent.getPreferredSize.width + 12, valueComponent.getPreferredSize.width,
                                  valueComponent.getPreferredSize.height)
-        slider.setBounds(getWidth - slider.getPreferredSize.width - 6, 0, slider.getPreferredSize.width, getHeight)
+        slider.setBounds(getWidth - slider.getPreferredSize.width - 6, 6, slider.getPreferredSize.width, getHeight - 6)
       }
 
       else {
@@ -359,7 +359,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
                                 nameComponent.getPreferredSize.height)
         valueComponent.setBounds(getWidth - valueComponent.getPreferredSize.width - 12, 6,
                                 valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
-        slider.setBounds(0, getHeight - slider.getPreferredSize.height - 6, getWidth, slider.getPreferredSize.height)
+        slider.setBounds(6, getHeight - slider.getPreferredSize.height - 6, getWidth - 6, slider.getPreferredSize.height)
       }
     }
   }
