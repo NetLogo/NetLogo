@@ -13,7 +13,7 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.RichJButton
 
 object Preferences {
-  abstract class BooleanPreference(val i18nKey: String, val restartRequired: Boolean, default: Boolean) extends Preference {
+  abstract class BooleanPreference(val i18nKey: String, val requirement: String, default: Boolean) extends Preference {
     val component = new JCheckBox
 
     def load(prefs: JavaPreferences) = {
@@ -26,7 +26,7 @@ object Preferences {
     }
   }
 
-  abstract class StringPreference(val i18nKey: String, val restartRequired: Boolean, default: String) extends Preference {
+  abstract class StringPreference(val i18nKey: String, val requirement: String, default: String) extends Preference {
     val component = new JTextField(default, 20)
 
     def load(prefs: JavaPreferences) = {
@@ -48,7 +48,7 @@ object Preferences {
 
     val i18nKey = "uiLanguage"
     val component = new JComboBox(languages)
-    val restartRequired = true
+    val requirement = "restartRequired"
 
     def load(prefs: JavaPreferences) = {
       val locale = I18N.localeFromPreferences.getOrElse(I18N.gui.defaultLocale)
@@ -61,12 +61,12 @@ object Preferences {
     }
   }
 
-  object LoadLastOnStartup extends BooleanPreference("loadLastOnStartup", false, false) {}
+  object LoadLastOnStartup extends BooleanPreference("loadLastOnStartup", "", false) {}
 
   class ReloadOnExternalChanges(tabs: TabsInterface) extends Preference {
     val i18nKey = "reloadOnExternalChanges"
     val component = new JCheckBox
-    val restartRequired = false
+    val requirement = ""
 
     def load(prefs: JavaPreferences) = {
       val enabled = prefs.get("reloadOnExternalChanges", "false").toBoolean
@@ -83,7 +83,7 @@ object Preferences {
   class LineNumbers(tabs: TabsInterface) extends Preference {
     val i18nKey = "editorLineNumbers"
     val component = new JCheckBox
-    val restartRequired = false
+    val requirement = ""
 
     def load(prefs: JavaPreferences) = {
       val lineNumsEnabled = prefs.get("line_numbers", "false").toBoolean
@@ -96,11 +96,11 @@ object Preferences {
     }
   }
 
-  object IsLoggingEnabled extends BooleanPreference("loggingEnabled", true, false) {}
+  object IsLoggingEnabled extends BooleanPreference("loggingEnabled", "restartRequired", false) {}
 
   class LogDirectory(val frame: Frame) extends Preference {
     val i18nKey         = "logDirectory"
-    val restartRequired = true
+    val requirement = "restartRequired"
     val textField       = new JTextField("", 20)
     val component       = createComponent()
 
@@ -138,9 +138,9 @@ object Preferences {
 
   }
 
-  object LogEvents extends StringPreference("logEvents", true, "")
+  object LogEvents extends StringPreference("logEvents", "restartRequired", "")
 
-  object IncludedFilesMenu  extends BooleanPreference("includedFilesMenu", true, false) {}
+  object IncludedFilesMenu  extends BooleanPreference("includedFilesMenu", "restartRequired", false) {}
 
   object ProceduresMenuSortOrder extends Preference {
     val i18nKey = "proceduresMenuSortOrder"
@@ -151,7 +151,7 @@ object Preferences {
     )
 
     val component = new JComboBox(options)
-    val restartRequired = false
+    val requirement = ""
 
     def load(prefs: JavaPreferences) = {
       val sortOrder = prefs.get("proceduresMenuSortOrder", options(0))
@@ -164,9 +164,9 @@ object Preferences {
     }
   }
 
-  object FocusOnError extends BooleanPreference("focusOnError", false, true) {}
+  object FocusOnError extends BooleanPreference("focusOnError", "", true) {}
 
-  object StartSeparateCodeTab extends BooleanPreference("startSeparateCodeTab", false, false) {}
+  object StartSeparateCodeTab extends BooleanPreference("startSeparateCodeTab", "", false) {}
 
-  object PreserveWidgetSizes extends BooleanPreference("preserveWidgetSizes", true, true) {}
+  object PreserveWidgetSizes extends BooleanPreference("preserveWidgetSizes", "reloadRequired", true) {}
 }

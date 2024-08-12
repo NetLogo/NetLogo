@@ -8,7 +8,7 @@ import javax.swing. JComponent
 trait Preference {
   val i18nKey: String
   val component: JComponent
-  val restartRequired: Boolean
+  val requirement: String
   def load(prefs: JavaPreferences): Unit
   def save(prefs: JavaPreferences): Unit
 }
