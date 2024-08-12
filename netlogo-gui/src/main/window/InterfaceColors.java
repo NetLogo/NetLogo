@@ -13,7 +13,7 @@ public final class InterfaceColors {
   public static final Color OUTPUT_BACKGROUND = new Color(231, 231, 237);
   public static final Color MEDIUM_BLUE = new Color(6, 112, 237);
 
-  public static final Color WIDGET_HOVER_SHADOW = new Color(100, 100, 100);
+  public static final Color WIDGET_HOVER_SHADOW = new Color(75, 75, 75);
   public static final Color TEXT_BOX_BACKGROUND = Color.WHITE;
   public static final Color TRANSPARENT = new Color(0, 0, 0, 0);
   public static final Color WIDGET_TEXT = new Color(85, 87, 112);

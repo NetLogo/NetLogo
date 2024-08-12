@@ -34,9 +34,9 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
   backgroundColor = InterfaceColors.SWITCH_BACKGROUND
 
-  if (preserveWidgetSizes) {
-    setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
+  if (preserveWidgetSizes) {
     add(Box.createHorizontalStrut(6))
     add(label)
     add(Box.createHorizontalStrut(6))
@@ -44,18 +44,11 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   }
 
   else {
-    setLayout(new GridBagLayout)
-
-    val c = new GridBagConstraints
-
-    c.gridy = 0
-    c.insets = new Insets(6, 12, 6, 12)
-
-    add(label, c)
-
-    c.insets = new Insets(6, 0, 6, 12)
-
-    add(toggle, c)
+    add(Box.createHorizontalStrut(12))
+    add(label)
+    add(Box.createHorizontalStrut(12))
+    add(toggle)
+    add(Box.createHorizontalStrut(12))
   }
 
   addMouseWheelListener(this)
@@ -93,7 +86,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
       new Dimension(StrictMath.max(MINWIDTH, label.getWidth + toggle.getWidth + 18),
                     StrictMath.max(MINHEIGHT, 37))
     else
-      super.getPreferredSize(font)
+      super.getPreferredSize()
 
   override def getMinimumSize =
     if (preserveWidgetSizes)
@@ -110,6 +103,8 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   def mouseWheelMoved(e: MouseWheelEvent) { isOn = ! (e.getWheelRotation >= 1) }
 
   protected class Toggle extends JPanel {
+    private var hover = false
+
     locally {
       val size =
         if (preserveWidgetSizes)
@@ -122,7 +117,21 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
       setMaximumSize(size)
     }
 
+    setOpaque(false)
+
     addMouseListener(new MouseAdapter {
+      override def mouseEntered(e: MouseEvent) {
+        hover = true
+
+        repaint()
+      }
+
+      override def mouseExited(e: MouseEvent) {
+        hover = false
+
+        repaint()
+      }
+
       override def mousePressed(e: MouseEvent) {
         new Events.InputBoxLoseFocusEvent().raise(Toggle.this)
         isOn = !isOn
@@ -137,6 +146,13 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
         g2d.setColor(InterfaceColors.SWITCH_TOGGLE_BACKGROUND_OFF)
       g2d.fillRoundRect(0, 0, getWidth, getHeight, getWidth, getWidth)
       val y = if (isOn) 0 else getHeight - getWidth
+      val d = if (isOn) 3 else -3
+      if (hover) {
+        g2d.setPaint(new RadialGradientPaint(getWidth / 2f, y + getWidth / 2f + d, getWidth / 2f, Array(0f, 1f),
+                                             Array(InterfaceColors.WIDGET_HOVER_SHADOW,
+                                                   InterfaceColors.TRANSPARENT)))
+        g2d.fillOval(0, y + d, getWidth, getWidth)
+      }
       g2d.setColor(InterfaceColors.SWITCH_TOGGLE_BACKGROUND_ON)
       g2d.fillOval(0, y, getWidth, getWidth)
       g2d.setColor(InterfaceColors.SWITCH_TOGGLE)
