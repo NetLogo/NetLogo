@@ -7,10 +7,9 @@ import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, ButtonGroup, JButton, JPanel, JRadioButton }
 
 import org.nlogo.core.I18N
+import org.nlogo.window.InterfaceColors
 
 class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") {
-  lazy val themeButtons = new ButtonGroup
-
   override def initGUI() {
     setResizable(false)
 
@@ -24,33 +23,47 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") {
     c.anchor = GridBagConstraints.WEST
     c.insets = new Insets(6, 6, 6, 6)
 
-    val classicButton = new JRadioButton(I18N.gui("classic"))
+    val classicButton = new JRadioButton(new AbstractAction(I18N.gui("classic")) {
+      def actionPerformed(e: ActionEvent) {
+        InterfaceColors.setTheme(InterfaceColors.ClassicTheme)
+      }
+    })
 
-    themeButtons.add(classicButton)
     panel.add(classicButton, c)
 
     c.insets = new Insets(0, 6, 6, 6)
 
-    val lightButton = new JRadioButton(I18N.gui("light"))
+    val lightButton = new JRadioButton(new AbstractAction(I18N.gui("light")) {
+      def actionPerformed(e: ActionEvent) {
+        InterfaceColors.setTheme(InterfaceColors.LightTheme)
+      }
+    })
 
-    themeButtons.add(lightButton)
     panel.add(lightButton, c)
 
-    lightButton.setSelected(true)
+    val startTheme = InterfaceColors.getTheme
+
+    startTheme match {
+      case InterfaceColors.ClassicTheme => classicButton.setSelected(true)
+      case InterfaceColors.LightTheme => lightButton.setSelected(true)
+    }
+
+    val themeButtons = new ButtonGroup
+
+    themeButtons.add(classicButton)
+    themeButtons.add(lightButton)
 
     val buttonPanel = new JPanel
 
     buttonPanel.add(new JButton(new AbstractAction(I18N.gui.get("common.buttons.ok")) {
       def actionPerformed(e: ActionEvent) {
-        // confirm changes
-
         setVisible(false)
       }
     }))
 
     buttonPanel.add(new JButton(new AbstractAction(I18N.gui.get("common.buttons.cancel")) {
       def actionPerformed(e: ActionEvent) {
-        // revert changes
+        InterfaceColors.setTheme(startTheme)
 
         setVisible(false)
       }

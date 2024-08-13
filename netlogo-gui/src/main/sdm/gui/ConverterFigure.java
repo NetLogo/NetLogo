@@ -25,7 +25,7 @@ public class ConverterFigure extends DiamondFigure
   public ConverterFigure() {
     setAttribute
         (FigureAttributeConstant.FILL_COLOR,
-            org.nlogo.window.InterfaceColors.SLIDER_BACKGROUND);
+            org.nlogo.window.InterfaceColors.SLIDER_BACKGROUND());
     converter = new org.nlogo.sdm.Converter();
     converter.setSelected("Select");
   }
