@@ -80,12 +80,11 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     if (_name.length > 0) { new Events.AddBooleanConstraintEvent(_name, isOn).raise(this) }
   }
 
-  override def getPreferredSize(font: Font): Dimension =
+  override def getPreferredSize: Dimension =
     if (preserveWidgetSizes)
-      new Dimension(StrictMath.max(MINWIDTH, label.getWidth + toggle.getWidth + 18),
-                    StrictMath.max(MINHEIGHT, 37))
+      new Dimension(MINWIDTH.max(label.getWidth + toggle.getWidth + 18), MINHEIGHT.max(37))
     else
-      super.getPreferredSize()
+      super.getPreferredSize
 
   override def getMinimumSize =
     if (preserveWidgetSizes)

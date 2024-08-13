@@ -5,7 +5,7 @@ package org.nlogo.window
 import org.nlogo.api.{ Editable, Property }
 import org.nlogo.core.{ I18N, Monitor => CoreMonitor }
 
-import java.awt.{ Color, Dimension, Graphics, Font }
+import java.awt.{ Color, Dimension, Graphics }
 import java.util.{ List => JList }
 
 object DummyMonitorWidget {
@@ -55,9 +55,9 @@ class DummyMonitorWidget
   override def getMaximumSize: Dimension =
     new Dimension(10000, MaxHeight)
 
-  override def getPreferredSize(font: Font): Dimension = {
+  override def getPreferredSize: Dimension = {
     val size = getMinimumSize
-    val fontMetrics = getFontMetrics(font)
+    val fontMetrics = getFontMetrics(getFont)
     size.width = StrictMath.max(size.width, fontMetrics.stringWidth(displayName) + FontPadding)
     size.height = StrictMath.max(size.height, fontMetrics.getMaxDescent + fontMetrics.getMaxAscent + FontPadding)
     size

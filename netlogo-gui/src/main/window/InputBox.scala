@@ -424,16 +424,16 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       new Dimension(MinWidth, MinHeight)
     else
       new Dimension(100, 60)
-  override def getPreferredSize(font: Font) = {
+  override def getPreferredSize = {
     if (preserveWidgetSizes) {
-      val result = super.getPreferredSize(font)
+      val result = super.getPreferredSize
       val insets = getInsets
       // add 4 because apparently we need a few extra pixels to make sure
       // that we don't get a horizontal scroll bar at the default size. ev 9/28/06
       result.width =
               textArea.getPreferredSize.width + insets.left + insets.right +
               textArea.getInsets.right + textArea.getInsets.left + 4
-      new Dimension(StrictMath.max(MinWidth, result.width), StrictMath.max(MinHeight, result.height))
+      new Dimension(MinWidth.max(result.width), MinHeight.max(result.height))
     }
 
     else

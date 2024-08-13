@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import javax.swing.{ JLabel, JPanel, SwingConstants }
-import java.awt.{ BasicStroke, Color, Dimension, Font, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ BasicStroke, Color, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.image.BufferedImage
 
 import org.nlogo.api.Editable
@@ -258,7 +258,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   /// sizing
   override def getMinimumSize = AbstractPlotWidget.MIN_SIZE
-  override def getPreferredSize(font: Font) = AbstractPlotWidget.PREF_SIZE
+  override def getPreferredSize = AbstractPlotWidget.PREF_SIZE
   override def getMaximumSize: Dimension = null
 
   def savePens(s: StringBuilder){

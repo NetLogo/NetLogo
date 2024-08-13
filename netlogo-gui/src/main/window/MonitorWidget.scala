@@ -254,17 +254,11 @@ class MonitorWidget(random: MersenneTwisterFast)
     else
       new Dimension(10000, 60)
 
-  override def getPreferredSize(font: Font): Dimension = {
-    if (preserveWidgetSizes) {
-      val size = getMinimumSize
-      val fontMetrics = getFontMetrics(font)
-      size.width = StrictMath.max(size.width, fontMetrics.stringWidth(displayName) + PreferredSizePad)
-      size
-    }
-
+  override def getPreferredSize: Dimension =
+    if (preserveWidgetSizes)
+      new Dimension(getMinimumSize.width.max(nameLabel.getWidth + PreferredSizePad), getMinimumSize.height)
     else
       new Dimension(100, 60)
-  }
 
   def decimalPlaces: Int = _decimalPlaces
 

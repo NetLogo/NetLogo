@@ -40,8 +40,6 @@ abstract class Widget extends JPanel {
   protected val preserveWidgetSizes = Preferences.userRoot.node("/org/nlogo/NetLogo")
                                                  .getBoolean("preserveWidgetSizes", true)
 
-  override def getPreferredSize: Dimension = getPreferredSize(getFont)
-  def getPreferredSize(font: Font): Dimension = super.getPreferredSize
   def widgetWrapperOpaque = true
   def getEditable: Object = this
   def copyable = true // only OutputWidget and ViewWidget are not copyable

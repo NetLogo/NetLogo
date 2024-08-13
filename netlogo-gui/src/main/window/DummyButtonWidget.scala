@@ -4,16 +4,14 @@ package org.nlogo.window
 
 import org.nlogo.api.{ Editable, Property }
 import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton }
-import org.nlogo.awt.{ Fonts => NlogoFonts }
+import org.nlogo.awt.Fonts
 
-import java.awt.{ Color, Dimension, Font, Graphics }
+import java.awt.{ Color, Dimension, Graphics }
 import java.util.{ List => JList }
 
 object DummyButtonWidget {
   private val MinimumWidth = 55
   private val MinimumHeight = 33
-  private val PreferredTextHorizontalPadding = 28
-  private val PreferredTextVertialPadding = 12
 }
 
 class DummyButtonWidget
@@ -70,18 +68,8 @@ class DummyButtonWidget
   override def getMinimumSize: Dimension =
     new Dimension(MinimumWidth, MinimumHeight)
 
-  override def getPreferredSize(font: Font): Dimension = {
-    val size = getMinimumSize
-    val fontMetrics = getFontMetrics(font)
-    size.width = StrictMath.max(size.width,
-      fontMetrics.stringWidth(displayName) +
-      PreferredTextHorizontalPadding)
-    size.height = StrictMath.max(size.height,
-      fontMetrics.getMaxDescent +
-      fontMetrics.getMaxAscent +
-      PreferredTextVertialPadding)
-    size
-  }
+  override def getPreferredSize: Dimension =
+    new Dimension(MinimumWidth.max(super.getPreferredSize.width), MinimumHeight.max(super.getPreferredSize.height))
 
   /// painting
 
@@ -96,7 +84,7 @@ class DummyButtonWidget
     g.setColor(getForeground)
 
     val shortString =
-      NlogoFonts.shortenStringToFit(displayName, availableWidth, fontMetrics)
+      Fonts.shortenStringToFit(displayName, availableWidth, fontMetrics)
 
     val nx =
       if (stringWidth > availableWidth) 4
