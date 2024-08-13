@@ -25,7 +25,7 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") {
 
     val classicButton = new JRadioButton(new AbstractAction(I18N.gui("classic")) {
       def actionPerformed(e: ActionEvent) {
-        InterfaceColors.setTheme(InterfaceColors.ClassicTheme)
+        InterfaceColors.setTheme("classic")
       }
     })
 
@@ -35,7 +35,7 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") {
 
     val lightButton = new JRadioButton(new AbstractAction(I18N.gui("light")) {
       def actionPerformed(e: ActionEvent) {
-        InterfaceColors.setTheme(InterfaceColors.LightTheme)
+        InterfaceColors.setTheme("light")
       }
     })
 
@@ -44,8 +44,8 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") {
     val startTheme = InterfaceColors.getTheme
 
     startTheme match {
-      case InterfaceColors.ClassicTheme => classicButton.setSelected(true)
-      case InterfaceColors.LightTheme => lightButton.setSelected(true)
+      case "classic" => classicButton.setSelected(true)
+      case "light" => lightButton.setSelected(true)
     }
 
     val themeButtons = new ButtonGroup

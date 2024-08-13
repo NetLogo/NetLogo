@@ -8,28 +8,15 @@ import java.util.prefs.Preferences
 import org.nlogo.api.Constants;
 
 object InterfaceColors {
-  class ColorTheme
-  case object ClassicTheme extends ColorTheme
-  case object LightTheme extends ColorTheme
-
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
-  private var theme: ColorTheme =
-    prefs.get("colorTheme", "light") match {
-      case "classic" => ClassicTheme
-      case "light" => LightTheme
-    }
+  private var theme = prefs.get("colorTheme", "light")
   
-  def setTheme(theme: ColorTheme) {
+  def setTheme(theme: String) {
     this.theme = theme
-
-    prefs.put("colorTheme", theme match {
-      case ClassicTheme => "classic"
-      case LightTheme => "light"
-    })
   }
 
-  def getTheme: ColorTheme = theme
+  def getTheme = theme
 
   def LIGHT_GRAY = new Color(238, 238, 238)
   def DARK_GRAY = new Color(175, 175, 175)
