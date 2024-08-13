@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, Dimension, Font, Point, Rectangle }
+import java.awt.{ Component, Dimension, Point, Rectangle }
 import javax.swing.JPopupMenu
 
 import org.nlogo.api.{ Approximate, Version }
@@ -87,7 +87,7 @@ class ViewWidget(workspace: GUIWorkspace)
 
   // just returning zeros prevents the "smart" preferred-size
   // code in EditView from getting confused - ST 6/6/02
-  override def getPreferredSize(font: Font): Dimension =
+  override def getPreferredSize: Dimension =
     new Dimension(0, 0)
 
   override def needsPreferredWidthFudgeFactor: Boolean = false

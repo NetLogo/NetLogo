@@ -2,7 +2,7 @@
 
 package org.nlogo.widget
 
-import java.awt.{ Color, Dimension, FlowLayout, Font, Rectangle }
+import java.awt.{ Color, Dimension, FlowLayout, Rectangle }
 import javax.swing.JLabel
 import javax.swing.border.EmptyBorder
 
@@ -95,8 +95,8 @@ class NoteWidget extends SingleErrorWidget with Editable {
   }
 
   override def getMinimumSize = new Dimension(MIN_WIDTH, MIN_HEIGHT)
-  override def getPreferredSize(font: Font): Dimension =
-    new Dimension(StrictMath.max(MIN_WIDTH, _width), StrictMath.max(MIN_HEIGHT, textLabel.getHeight + 8))
+  override def getPreferredSize: Dimension =
+    new Dimension(MIN_WIDTH.max(_width), MIN_HEIGHT.max(textLabel.getHeight + 8))
   override def needsPreferredWidthFudgeFactor = false
 
   override def model: WidgetModel = {

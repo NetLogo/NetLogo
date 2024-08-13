@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, Font, Graphics, GridBagConstraints, GridBagLayout, Insets, LinearGradientPaint }
+import java.awt.{ Color, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets, LinearGradientPaint }
 import java.awt.event.{ ItemEvent, ItemListener, MouseAdapter, MouseEvent, MouseWheelEvent, MouseWheelListener }
 import javax.swing.{ JComboBox, JLabel, JPanel }
 
@@ -117,7 +117,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     else
       new Dimension(10000, 60)
 
-  override def getPreferredSize(font: Font): Dimension =
+  override def getPreferredSize: Dimension =
     if (preserveWidgetSizes)
       new Dimension(MinPreferredWidth, ChooserHeight)
     else
