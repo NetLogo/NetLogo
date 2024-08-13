@@ -633,6 +633,8 @@ class App extends
 
   lazy val openPreferencesDialog = new ShowPreferencesDialog(frame, _tabManager)
 
+  lazy val showThemesDialog = new ShowThemesDialog(frame)
+
   lazy val openAboutDialog = new ShowAboutWindow(frame)
 
   lazy val openColorDialog = new OpenColorDialog(frame)
@@ -654,6 +656,7 @@ class App extends
     val workspaceActions = org.nlogo.window.WorkspaceActions(workspace)
 
     val generalActions = Seq[javax.swing.Action](
+      showThemesDialog,
       openLibrariesDialog,
       openColorDialog,
       new ShowShapeManager("turtleShapesEditor", turtleShapesManager),
