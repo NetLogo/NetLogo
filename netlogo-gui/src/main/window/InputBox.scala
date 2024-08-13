@@ -299,8 +299,11 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
   override def paintComponent(g: Graphics) = {
     super.paintComponent(g)
-    widgetLabel.setToolTipText(
-      if (widgetLabel.getPreferredSize.width > widgetLabel.getSize().width) name else null)
+
+    if (widgetLabel.getPreferredSize.width > widgetLabel.getWidth)
+      widgetLabel.setToolTipText(widgetLabel.getText)
+    else
+      widgetLabel.setToolTipText(null)
 
     if (hover) {
       val g2d = Utils.initGraphics2D(g)

@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Cursor, Dimension, Font, Graphics, GridBagLayout, GridBagConstraints, Insets }
+import java.awt.{ Cursor, Dimension, Graphics, GridBagLayout, GridBagConstraints, Insets }
 import java.awt.event.{ MouseEvent, MouseListener, MouseMotionListener }
 import java.awt.image.FilteredImageSource
 import javax.swing.{ ImageIcon, JLabel }
@@ -424,14 +424,12 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   }
 
   /// sizing
-  override def getMinimumSize = new Dimension(55, 33)
-  override def getPreferredSize(font: Font) = {
-    val size = getMinimumSize
-    size.width = StrictMath.max(size.width, getFontMetrics(font).stringWidth(displayName) + 28)
-    size.height = StrictMath.max(size.height,
-      getFontMetrics(font).getMaxDescent() + getFontMetrics(font).getMaxAscent() + 12)
-    size
-  }
+  override def getMinimumSize =
+    new Dimension(55, 33)
+  
+  override def getPreferredSize =
+    new Dimension(getMinimumSize.width.max(super.getPreferredSize.width),
+                  getMinimumSize.height.max(super.getPreferredSize.height))
 
   /// painting
   override def paintComponent(g: Graphics) {
@@ -465,6 +463,11 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     }
     
     foreverLabel.setVisible(forever)
+
+    if (nameLabel.getPreferredSize.width > nameLabel.getWidth)
+      nameLabel.setToolTipText(nameLabel.getText)
+    else
+      nameLabel.setToolTipText(null)
 
     super.paintComponent(g)
   }

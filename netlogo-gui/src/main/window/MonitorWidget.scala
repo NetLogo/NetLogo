@@ -233,6 +233,15 @@ class MonitorWidget(random: MersenneTwisterFast)
     super.suppressRecompiles(suppressRecompiles)
   }
 
+  override def paintComponent(g: Graphics) {
+    if (nameLabel.getPreferredSize.width > nameLabel.getWidth)
+      nameLabel.setToolTipText(nameLabel.getText)
+    else
+      nameLabel.setToolTipText(null)
+
+    super.paintComponent(g)
+  }
+
   override def getMinimumSize: Dimension =
     if (preserveWidgetSizes)
       new Dimension(MinWidth, (fontSize * 4) + 1)
