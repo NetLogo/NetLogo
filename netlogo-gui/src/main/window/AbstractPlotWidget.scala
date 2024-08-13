@@ -442,9 +442,12 @@ object AbstractPlotWidget {
     add(min)
 
     override def paintComponent(g: Graphics) = {
+      if (label.getPreferredSize.width > label.getWidth)
+        label.setToolTipText(label.getText)
+      else
+        label.setToolTipText(null)
+      
       super.paintComponent(g)
-      label.setToolTipText(
-        if (label.getPreferredSize.height > label.getSize().height) getLabel else null)
     }
 
     def setMin(text: String) {min.setText(text)}

@@ -200,5 +200,10 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
                                            Array(InterfaceColors.WIDGET_HOVER_SHADOW, InterfaceColors.TRANSPARENT)))
       g2d.fillRoundRect(controlPanel.getX, controlPanel.getY + 3, controlPanel.getWidth, controlPanel.getHeight, 6, 6)
     }
+
+    if (label.getPreferredSize.width > label.getWidth)
+      label.setToolTipText(label.getText)
+    else
+      label.setToolTipText(null)
   }
 }

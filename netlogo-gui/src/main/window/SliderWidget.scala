@@ -362,6 +362,11 @@ trait AbstractSliderWidget extends MultiErrorWidget {
         slider.setBounds(6, getHeight - slider.getPreferredSize.height - 6, getWidth - 6, slider.getPreferredSize.height)
       }
     }
+
+    if (nameComponent.getPreferredSize.width > nameComponent.getWidth)
+      nameComponent.setToolTipText(nameComponent.getText)
+    else
+      nameComponent.setToolTipText(null)
   }
 
   override def getMinimumSize = {
