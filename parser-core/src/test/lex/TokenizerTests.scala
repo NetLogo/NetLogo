@@ -106,6 +106,12 @@ class TokenizerTests extends AnyFunSuite {
     assertResult(expected)(tokens.mkString)
   }
 
+  test("ArrayOfStringsWithCurlyBraces") {
+    val tokens = tokenize("{{array: 0: \"}}\" \"{{\"}}")
+    assertResult(1)(tokens.size)
+    assertResult("Token({{array: 0: \"}}\" \"{{\"}},Extension,{{array: 0: \"}}\" \"{{\"}})")(tokens.mkString)
+  }
+
   testLexFailure("\"",           0, 1,  "Closing double quote is missing")
   testLexFailure("\"\\b\"",      0, 4,  "Illegal character after backslash")
   testLexFailure("\"\\\"",       0, 3,  "Closing double quote is missing")
