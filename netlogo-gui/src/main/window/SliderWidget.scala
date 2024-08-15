@@ -385,6 +385,22 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     }
   }
 
+  override def getMaximumSize = {
+    if (preserveWidgetSizes) {
+      if (vertical)
+        new Dimension(33, 10000)
+      else
+        new Dimension(10000, 33)
+    }
+
+    else {
+      if (vertical)
+        new Dimension(53, 10000)
+      else
+        new Dimension(10000, 53)
+    }
+  }
+
   override def getPreferredSize = {
     if (preserveWidgetSizes) {
       if (vertical)
