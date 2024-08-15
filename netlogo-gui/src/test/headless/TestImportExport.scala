@@ -426,6 +426,10 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     testReporter("table:to-list t2", "[[1 2] [3 4]]")
   }
 
+  test("testImportingArrayContainingStringsWithCurlyBraces") {
+    roundTripHelper("set a array:from-list [\"}}\" \"{{\"]", "extensions [array] globals [a]")
+  }
+
   /// other tests (that don't use roundTripHelper)
 
   if(!Version.is3D)
