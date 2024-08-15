@@ -1,12 +1,17 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.swing
 
+import java.awt.{ Color, Dimension, Graphics }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import java.awt.{ Dimension, Graphics }
-import javax.swing.{ AbstractAction, JButton, JPopupMenu }
+import javax.swing.{ AbstractAction, JButton, JPopupMenu, SwingConstants }
+
+import org.nlogo.window.InterfaceColors
 
 abstract class ToolBarMenu(name: String) extends JButton(name) {
-  setMinimumSize(new Dimension(11,20))
+  setHorizontalAlignment(SwingConstants.LEFT)
+  setBackground(Color.WHITE)
+  setRolloverEnabled(false)
   setAction(new AbstractAction(name) {
     override def actionPerformed(e: ActionEvent): Unit = popup()
   })
@@ -27,26 +32,20 @@ abstract class ToolBarMenu(name: String) extends JButton(name) {
 
   protected def populate(menu: JPopupMenu): Unit
 
-  override def getPreferredSize: Dimension = {
-    val size = getMinimumSize
-    val xpad = 5
-    val ypad = 2
-    val fontMetrics = getFontMetrics(getFont)
-    size.width = StrictMath.max(size.width, fontMetrics.stringWidth(name) + 2 * xpad + 11)
-    size.height = StrictMath.max(size.height, fontMetrics.getMaxDescent + fontMetrics.getMaxAscent + 2 * ypad)
-    size
+  override def getPreferredSize: Dimension =
+    new Dimension(super.getPreferredSize.width + 15, super.getPreferredSize.height)
+  
+  override def paintBorder(g: Graphics) {
+    val g2d = Utils.initGraphics2D(g)
+    g2d.setColor(InterfaceColors.DARK_GRAY)
+    g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 4, 4)
   }
 
   override def paintComponent(g: Graphics): Unit = {
-    g.setColor(getBackground)
-    g.fillRect(0, 0, getWidth, getHeight)
-    // Draw Label
-    g.setColor(getForeground)
-    val fontMetrics = g.getFontMetrics
-    g.drawString(name, 5, fontMetrics.getMaxAscent + 2)
-    // Draw Arrow
-    val xpnts = Array[Int](getWidth - 13, getWidth - 9, getWidth - 5)
-    val ypnts = Array[Int]((getHeight / 2) - 2, (getHeight / 2) + 2, (getHeight / 2) - 2)
-    g.fillPolygon(xpnts, ypnts, 3)
+    super.paintComponent(g)
+    val g2d = Utils.initGraphics2D(g)
+    g2d.setColor(new Color(100, 100, 100))
+    g2d.drawLine(getWidth - 13, getHeight / 2 - 2, getWidth - 9, getHeight / 2 + 2)
+    g2d.drawLine(getWidth - 9, getHeight / 2 + 2, getWidth - 5, getHeight / 2 - 2)
   }
 }

@@ -64,8 +64,7 @@ final object SetSystemLookAndFeel {
     UIManager.put("Slider.paintValue", false)
     // Hopefully we won't need this MacOS specific code
     // if we do turn it into a method to share with set classic laf
-    if (System.getProperty("os.name").startsWith("Mac"))  {
-      UIManager.getDefaults.put("TabbedPane.foreground", new Color(0, 0, 0))
+    if (System.getProperty("os.name").startsWith("Mac")) {
       // The java defaults specify this as black on my system,
       // which was distractingly bad for the name field of the "PlotPen" JTable when
       // that field was clicked, moved off and then released - RG 7/1/16
@@ -74,12 +73,9 @@ final object SetSystemLookAndFeel {
 
     FlatLaf.registerCustomDefaultsSource("themes")
 
-    // might want to take some ideas from
-    //FlatLaf/flatlaf-demo/src/main/java/com/formdev/flatlaf/demo/DemoPrefs.java
-    if (darkTheme) {
+    if (darkTheme)
       FlatDarkLaf.setup()
-    } else {
+    else
       FlatLightLaf.setup()
-    }
   }
 }
