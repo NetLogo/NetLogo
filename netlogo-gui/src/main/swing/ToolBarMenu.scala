@@ -6,8 +6,6 @@ import java.awt.{ Color, Dimension, Graphics }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, JButton, JPopupMenu, SwingConstants }
 
-import org.nlogo.window.InterfaceColors
-
 abstract class ToolBarMenu(name: String) extends JButton(name) {
   setHorizontalAlignment(SwingConstants.LEFT)
   setBackground(Color.WHITE)
@@ -37,7 +35,7 @@ abstract class ToolBarMenu(name: String) extends JButton(name) {
   
   override def paintBorder(g: Graphics) {
     val g2d = Utils.initGraphics2D(g)
-    g2d.setColor(InterfaceColors.DARK_GRAY)
+    g2d.setColor(new Color(150, 150, 150))
     g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 4, 4)
   }
 
