@@ -10,7 +10,7 @@ import org.nlogo.api.{ FileIO, GenericModelLoader, LabProtocol, LabXMLLoader, Mo
 import org.nlogo.core.{ Model, OptionalSection, ShapeXMLLoader, UpdateMode, View, Widget, WidgetXMLLoader,
                         WorldDimensions, XMLElement }
 import org.nlogo.core.Shape.{ LinkShape, VectorShape }
-import org.nlogo.sdm.gui.SDMXMLLoader
+// import org.nlogo.sdm.gui.SDMXMLLoader
 
 import scala.collection.mutable.Set
 import scala.io.Source
@@ -107,10 +107,10 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
                   new OptionalSection("org.nlogo.modelsection.previewcommands",
                                       Some(PreviewCommands.Custom(element.text)), PreviewCommands.Default)
 
-              case "systemDynamics" =>
-                optionalSections = optionalSections :+
-                  new OptionalSection("org.nlogo.modelsection.systemdynamics.gui",
-                                       Some(SDMXMLLoader.readDrawing(element)), SDMXMLLoader.defaultDrawing)
+              // case "systemDynamics" =>
+              //   optionalSections = optionalSections :+
+              //     new OptionalSection("org.nlogo.modelsection.systemdynamics.gui",
+              //                          Some(SDMXMLLoader.readDrawing(element)), SDMXMLLoader.defaultDrawing)
 
               case "experiments" =>
                 optionalSections = optionalSections :+
@@ -133,6 +133,7 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
               case "deltaTick" =>
                 // not sure what this is
 
+              case _ =>
             }
           }
 
@@ -193,8 +194,8 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
           writer.writeCData(section.get.get.asInstanceOf[PreviewCommands].source)
           writer.writeEndElement
 
-        case "org.nlogo.modelsection.systemdynamics.gui" =>
-          writeXMLElement(SDMXMLLoader.writeDrawing(section.get.get.asInstanceOf[AnyRef]))
+        // case "org.nlogo.modelsection.systemdynamics.gui" =>
+        //   writeXMLElement(SDMXMLLoader.writeDrawing(section.get.get.asInstanceOf[AnyRef]))
 
         case "org.nlogo.modelsection.systemdynamics" =>
           // ignore, duplicate of previous case
@@ -222,7 +223,8 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
 
         case "org.nlogo.modelsection.deltatick" =>
           // not sure what this is
-
+        
+        case _ =>
       }
     }
 
