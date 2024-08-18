@@ -11,6 +11,7 @@ import org.nlogo.core.{ Model, OptionalSection, ShapeXMLLoader, UpdateMode, View
 import org.nlogo.core.Shape.{ LinkShape, VectorShape }
 import org.nlogo.sdm.gui.SDMXMLLoader
 
+import scala.collection.mutable.Set
 import scala.io.Source
 import scala.util.{ Failure, Success, Try }
 
@@ -114,7 +115,8 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
                 optionalSections = optionalSections :+
                   new OptionalSection("org.nlogo.modelsection.behaviorspace",
                                       Some(for (element <- element.children if element.name == "experiment") yield
-                                             LabXMLLoader.readExperiment(element)), Seq[LabProtocol]())
+                                             LabXMLLoader.readExperiment(element, editNames, Set())),
+                                      Seq[LabProtocol]())
 
               case "hubNetClient" =>
                 optionalSections = optionalSections :+
