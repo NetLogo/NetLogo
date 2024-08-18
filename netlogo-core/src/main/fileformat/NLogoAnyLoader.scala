@@ -2,12 +2,14 @@
 
 package org.nlogo.fileformat
 
+import java.io.Writer
 import java.net.URI
 
 import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, FormatterPair, GenericModelLoader,
-                       ModelFormat }
+                       LabProtocol, ModelFormat }
 import org.nlogo.core.Model
 
+import scala.collection.mutable.Set
 import scala.reflect.ClassTag
 import scala.util.{ Failure, Try }
 
@@ -62,6 +64,27 @@ class NLogoAnyLoader(loaders: List[GenericModelLoader]) extends ConfigurableMode
     }
 
     throw new Exception("Unable to create empty model for format \"" + extension + "\".")
+  }
+
+  override def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]):
+    Try[Seq[LabProtocol]] = {
+    for (loader <- loaders) {
+      Try {
+        return loader.readExperiments(source, editNames, existingNames)
+      }
+    }
+
+    Failure(new Exception("Unable to read experiments."))
+  }
+
+  override def writeExperiments(experiments: Seq[LabProtocol], writer: Writer) {
+    for (loader <- loaders) {
+      Try {
+        return loader.writeExperiments(experiments, writer)
+      }
+    }
+
+    throw new Exception("Unable to write experiments.")
   }
 
   override def addSerializers[A, B <: ModelFormat[A, B]](ss: Seq[ComponentSerialization[A, B]])

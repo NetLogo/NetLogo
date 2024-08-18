@@ -4,7 +4,7 @@ package org.nlogo.fileformat
 
 import java.io.{ File, PrintWriter, StringReader, StringWriter, Writer }
 import java.net.URI
-import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants }
+import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants, XMLStreamReader, XMLStreamWriter }
 
 import org.nlogo.api.{ FileIO, GenericModelLoader, LabProtocol, LabXMLLoader, ModelSettings, PreviewCommands }
 import org.nlogo.core.{ Model, OptionalSection, ShapeXMLLoader, UpdateMode, View, Widget, WidgetXMLLoader,
@@ -18,6 +18,47 @@ import scala.util.{ Failure, Success, Try }
 
 class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
   lazy private val defaultInfo: String = FileIO.url2String("/system/empty-info.md")
+
+  private def readXMLElement(reader: XMLStreamReader): XMLElement = {
+    val name = reader.getLocalName
+    val attributes = (for (i <- 0 until reader.getAttributeCount) yield
+                        ((reader.getAttributeLocalName(i), reader.getAttributeValue(i)))).toMap
+    var text = ""
+    var children = List[XMLElement]()
+
+    var end = false
+
+    while (reader.hasNext && !end) {
+      reader.next match {
+        case XMLStreamConstants.START_ELEMENT =>
+          children = children :+ readXMLElement(reader)
+
+        case XMLStreamConstants.END_ELEMENT =>
+          end = true
+        
+        case XMLStreamConstants.CHARACTERS =>
+          text = reader.getText
+        
+        case _ =>
+      }
+    }
+
+    XMLElement(name, attributes, text, children)
+  }
+
+  private def writeXMLElement(element: XMLElement, writer: XMLStreamWriter) {
+    writer.writeStartElement(element.name)
+
+    for ((key, value) <- element.attributes)
+      writer.writeAttribute(key, value)
+    
+    if (element.text.isEmpty)
+      element.children.foreach(writeXMLElement(_, writer))
+    else
+      writer.writeCData(element.text)
+
+    writer.writeEndElement()
+  }
 
   private def isCompatible(extension: String): Boolean =
     extension == "nlogo" || extension == "nlogo3d"
@@ -40,33 +81,6 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
     if (isCompatible(extension)) {
       val reader = XMLInputFactory.newFactory.createXMLStreamReader(new StringReader(source))
 
-      def readXMLElement(): XMLElement = {
-        val name = reader.getLocalName
-        val attributes = (for (i <- 0 until reader.getAttributeCount) yield
-                            ((reader.getAttributeLocalName(i), reader.getAttributeValue(i)))).toMap
-        var text = ""
-        var children = List[XMLElement]()
-
-        var end = false
-
-        while (reader.hasNext && !end) {
-          reader.next match {
-            case XMLStreamConstants.START_ELEMENT =>
-              children = children :+ readXMLElement
-
-            case XMLStreamConstants.END_ELEMENT =>
-              end = true
-            
-            case XMLStreamConstants.CHARACTERS =>
-              text = reader.getText
-            
-            case _ =>
-          }
-        }
-
-        XMLElement(name, attributes, text, children)
-      }
-
       var code: Option[String] = None
       var widgets = List[Widget]()
       var info: Option[String] = None
@@ -77,7 +91,7 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
 
       while (reader.hasNext && reader.next != XMLStreamConstants.START_ELEMENT) {}
 
-      val element = readXMLElement
+      val element = readXMLElement(reader)
 
       element.name match {
         case "model" =>
@@ -115,8 +129,7 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
               case "experiments" =>
                 optionalSections = optionalSections :+
                   new OptionalSection("org.nlogo.modelsection.behaviorspace",
-                                      Some(for (element <- element.children if element.name == "experiment") yield
-                                             LabXMLLoader.readExperiment(element, editNames, Set())),
+                                      Some(element.children.map(LabXMLLoader.readExperiment(_, editNames, Set()))),
                                       Seq[LabProtocol]())
 
               case "hubNetClient" =>
@@ -150,23 +163,8 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
       Failure(new Exception("Unable to open model with format \"" + extension + "\"."))
   }
 
-
   def saveToWriter(model: Model, destWriter: Writer) {
     val writer = XMLOutputFactory.newFactory.createXMLStreamWriter(destWriter)
-
-    def writeXMLElement(element: XMLElement) {
-      writer.writeStartElement(element.name)
-
-      for ((key, value) <- element.attributes)
-        writer.writeAttribute(key, value)
-      
-      if (element.text.isEmpty)
-        element.children.foreach(writeXMLElement)
-      else
-        writer.writeCData(element.text)
-
-      writer.writeEndElement()
-    }
 
     writer.writeStartDocument("utf-8", "1.0")
 
@@ -174,7 +172,7 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
 
     writer.writeAttribute("version", model.version)
 
-    writeXMLElement(XMLElement("widgets", Map(), "", model.widgets.map(WidgetXMLLoader.writeWidget).toList))
+    writeXMLElement(XMLElement("widgets", Map(), "", model.widgets.map(WidgetXMLLoader.writeWidget).toList), writer)
 
     writer.writeStartElement("info")
     writer.writeCData(model.info)
@@ -184,8 +182,10 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
     writer.writeCData(model.code)
     writer.writeEndElement
 
-    writeXMLElement(XMLElement("turtleShapes", Map(), "", model.turtleShapes.map(ShapeXMLLoader.writeShape).toList))
-    writeXMLElement(XMLElement("linkShapes", Map(), "", model.linkShapes.map(ShapeXMLLoader.writeLinkShape).toList))
+    writeXMLElement(XMLElement("turtleShapes", Map(), "", model.turtleShapes.map(ShapeXMLLoader.writeShape).toList),
+                    writer)
+    writeXMLElement(XMLElement("linkShapes", Map(), "", model.linkShapes.map(ShapeXMLLoader.writeLinkShape).toList),
+                    writer)
 
     for (section <- model.optionalSections) {
       section.key match {
@@ -204,13 +204,14 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
           val experiments = section.get.get.asInstanceOf[Seq[LabProtocol]]
 
           if (experiments.nonEmpty)
-            writeXMLElement(XMLElement("experiments", Map(), "", experiments.map(LabXMLLoader.writeExperiment).toList))
+            writeXMLElement(XMLElement("experiments", Map(), "", experiments.map(LabXMLLoader.writeExperiment).toList),
+                            writer)
 
         case "org.nlogo.modelsection.hubnetclient" =>
           val widgets = section.get.get.asInstanceOf[Seq[Widget]]
 
           if (widgets.nonEmpty)
-            writeXMLElement(XMLElement("hubNetClient", Map(), "", widgets.map(WidgetXMLLoader.writeWidget).toList))
+            writeXMLElement(XMLElement("hubNetClient", Map(), "", widgets.map(WidgetXMLLoader.writeWidget).toList), writer)
 
         case "org.nlogo.modelsection.modelsettings" =>
           val settings = section.get.get.asInstanceOf[ModelSettings]
@@ -269,5 +270,26 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
 
     else
       throw new Exception("Unable to create empty model with format \"" + extension + "\".")
+  }
+
+  def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[Seq[LabProtocol]] = {
+    val reader = XMLInputFactory.newFactory.createXMLStreamReader(new StringReader(source))
+
+    Try {
+      return Success(readXMLElement(reader).children.map(LabXMLLoader.readExperiment(_, editNames, existingNames)))
+    }
+
+    Failure(new Exception("Unable to read experiments."))
+  }
+
+  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer) {
+    val xmlWriter = XMLOutputFactory.newFactory.createXMLStreamWriter(writer)
+
+    Try {
+      return writeXMLElement(XMLElement("experiments", Map(), "",
+                                        experiments.map(LabXMLLoader.writeExperiment).toList), xmlWriter)
+    }
+
+    throw new Exception("Unable to write experiments.")
   }
 }

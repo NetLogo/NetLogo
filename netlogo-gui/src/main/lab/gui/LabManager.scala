@@ -5,7 +5,7 @@ package org.nlogo.lab.gui
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 
-import org.nlogo.api.LabProtocol
+import org.nlogo.api.{ GenericModelLoader, LabProtocol }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.window.{ GUIWorkspace, EditDialogFactoryInterface, LabManagerInterface, MenuBarFactory }
@@ -18,7 +18,8 @@ import scala.collection.mutable.ListBuffer
 class LabManager(val workspace:        GUIWorkspace,
                  dialogFactory:        EditDialogFactoryInterface,
                  menuFactory:          MenuBarFactory,
-                 val workspaceFactory: WorkspaceFactory with CurrentModelOpener)
+                 val workspaceFactory: WorkspaceFactory with CurrentModelOpener,
+                 val modelLoader:      GenericModelLoader)
   extends LabManagerInterface
   with CompiledEvent.Handler
   with LoadBeginEvent.Handler
