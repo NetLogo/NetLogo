@@ -2,15 +2,18 @@
 
 package org.nlogo.fileformat
 
+import java.io.Writer
 import java.net.URI
 import java.nio.file.{ Files, Paths }
 
+import org.nlogo.api.{ ComponentSerialization, FileIO, LabProtocol, ModelFormat, Version, VersionHistory }
 import org.nlogo.core.{ Femto, I18N, LiteralParser, Model, ShapeParser,
   UpdateMode, View, Widget, WorldDimensions }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.api.{ ComponentSerialization, FileIO, ModelFormat, Version, VersionHistory }
-import scala.util.{ Failure, Success, Try }
+
+import scala.collection.mutable.Set
 import scala.io.{ Codec, Source }, Codec.UTF8
+import scala.util.{ Failure, Success, Try }
 
 // THIS format is the 2D format, for changes that affect both 2D and 3D, change AbstractNLogoFormat
 class NLogoFormat
@@ -127,6 +130,16 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
     }
     catch {
       case ex: Exception => Failure(ex)
+    }
+  }
+
+  def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[Seq[LabProtocol]] =
+    Failure(new Exception) // fix after compile
+
+  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
+    Try {
+      writer.write(s"${LabLoader.XMLVER}\n${LabLoader.DOCTYPE}\n")
+      writer.write(LabSaver.save(experiments))
     }
   }
 

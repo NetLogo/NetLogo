@@ -77,14 +77,14 @@ class NLogoAnyLoader(loaders: List[GenericModelLoader]) extends ConfigurableMode
     Failure(new Exception("Unable to read experiments."))
   }
 
-  override def writeExperiments(experiments: Seq[LabProtocol], writer: Writer) {
+  override def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
     for (loader <- loaders) {
       Try {
         return loader.writeExperiments(experiments, writer)
       }
     }
 
-    throw new Exception("Unable to write experiments.")
+    Failure(new Exception("Unable to write experiments."))
   }
 
   override def addSerializers[A, B <: ModelFormat[A, B]](ss: Seq[ComponentSerialization[A, B]])
