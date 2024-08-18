@@ -4,7 +4,7 @@ package org.nlogo
 
 import java.nio.file.Path
 
-import org.nlogo.api.{ AutoConvertable, ConfigurableModelLoader, NLogoAnyLoader, NLogoXMLLoader }
+import org.nlogo.api.{ AutoConvertable, ConfigurableModelLoader }
 import org.nlogo.core.{ CompilationEnvironment, Dialect, ExtensionManager, LibraryManager, LiteralParser, Model }
 import org.nlogo.core.model.WidgetReader
 

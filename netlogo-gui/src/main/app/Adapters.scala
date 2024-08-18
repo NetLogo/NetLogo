@@ -5,9 +5,9 @@ package org.nlogo.app
 import java.lang.reflect.{ Type => JType }
 
 import org.nlogo.core.Dialect
-import org.nlogo.api.{ AddableComponent, AutoConvertable, ConfigurableModelLoader, NLogoAnyLoader, GenericModelLoader,
-                       NLogoXMLLoader, Workspace => ApiWorkspace }
-import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter }
+import org.nlogo.api.{ AddableComponent, AutoConvertable, ConfigurableModelLoader, GenericModelLoader,
+                       Workspace => ApiWorkspace }
+import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, NLogoXMLLoader }
 import org.nlogo.nvm.{ DefaultCompilerServices, PresentationCompilerInterface }
 
 import org.picocontainer.PicoContainer
@@ -16,7 +16,7 @@ import org.picocontainer.adapters.AbstractAdapter
 import scala.collection.JavaConverters._
 
 object Adapters {
-  class AnyModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[GenericModelLoader], classOf[NLogoAnyLoader]) {
+  class AnyModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[GenericModelLoader], classOf[fileformat.NLogoAnyLoader]) {
     def getDescriptor(): String = "AnyModelLoaderComponent"
     def verify(p: PicoContainer): Unit = {}
 
