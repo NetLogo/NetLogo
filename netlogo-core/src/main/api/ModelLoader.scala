@@ -2,14 +2,16 @@
 
 package org.nlogo.api
 
-import java.io.FileNotFoundException
+import java.io.{ FileNotFoundException, Writer }
 import java.net.URI
 import java.nio.file.{ Files, Paths }
 
 import org.nlogo.core.{ I18N, Model }
+import org.nlogo.fileformat.{ LabFormat, LabLoader, LabSaver }
 
-import scala.util.{ Failure, Try }
+import scala.collection.mutable.Set
 import scala.reflect.ClassTag
+import scala.util.{ Failure, Try }
 
 trait GenericModelLoader {
   def readModel(uri: URI): Try[Model]
@@ -17,6 +19,9 @@ trait GenericModelLoader {
   def save(model: Model, uri: URI): Try[URI]
   def sourceString(model: Model, extension: String): Try[String]
   def emptyModel(extension: String): Model
+  // these next two allow ManagerDialog to use the correct format for experiment loading/saving (IB 8/17/24)
+  def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[Seq[LabProtocol]]
+  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer)
 }
 
 object GenericModelLoader {
@@ -60,6 +65,24 @@ class FormatterPair[A, B <: ModelFormat[A, B]](
 
     def emptyModel: Model =
       modelFormat.emptyModel(serializers)
+    
+    def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[Seq[LabProtocol]] = {
+      serializers.find(_.isInstanceOf[LabFormat[_]]) match {
+        case Some(serializer) => Try(serializer.asInstanceOf[LabFormat[_]].loader(source, editNames, existingNames))
+        case None => Failure(new Exception("Unable to read experiments"))
+      }
+    }
+
+    def writeExperiments(experiments: Seq[LabProtocol], writer: Writer) {
+      Try {
+        writer.write(s"${LabLoader.XMLVER}\n${LabLoader.DOCTYPE}\n")
+        writer.write(LabSaver.save(experiments))
+
+        return
+      }
+
+      throw new Exception("Unable to write experiments.")
+    }
   }
 
 trait ModelLoader extends GenericModelLoader {
@@ -111,6 +134,26 @@ trait ModelLoader extends GenericModelLoader {
     val format = formats.find(_.name == extension)
       .getOrElse(throw new Exception("Unable to create empty NetLogo model for format: " + extension))
     format.emptyModel
+  }
+
+  def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[Seq[LabProtocol]] = {
+    for (format <- formats) {
+      Try {
+        return format.readExperiments(source, editNames, existingNames)
+      }
+    }
+
+    Failure(new Exception("Unable to read experiments."))
+  }
+
+  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer) {
+    for (format <- formats) {
+      Try {
+        return format.writeExperiments(experiments, writer)
+      }
+    }
+    
+    throw new Exception("Unable to write experiments.")
   }
 }
 
