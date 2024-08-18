@@ -1,11 +1,12 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.api
+package org.nlogo.fileformat
 
 import java.io.{ File, PrintWriter, StringReader, StringWriter, Writer }
 import java.net.URI
 import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants }
 
+import org.nlogo.api.{ FileIO, GenericModelLoader, LabProtocol, LabXMLLoader, ModelSettings, PreviewCommands }
 import org.nlogo.core.{ Model, OptionalSection, ShapeXMLLoader, UpdateMode, View, Widget, WidgetXMLLoader,
                         WorldDimensions, XMLElement }
 import org.nlogo.core.Shape.{ LinkShape, VectorShape }

@@ -1,9 +1,11 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.api
+package org.nlogo.fileformat
 
 import java.net.URI
 
+import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, FormatterPair, GenericModelLoader,
+                       ModelFormat }
 import org.nlogo.core.Model
 
 import scala.reflect.ClassTag
