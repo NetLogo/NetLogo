@@ -4,10 +4,8 @@ package org.nlogo.api
 
 import org.nlogo.core.XMLElement
 
-import scala.collection.mutable.Set
-
 object LabXMLLoader {
-  def readExperiment(element: XMLElement, editNames: Boolean, existingNames: Set[String]): LabProtocol = {
+  def readExperiment(element: XMLElement): LabProtocol = {
     def readValueSet(element: XMLElement): RefValueSet = {
       element.name match {
         case "steppedValueSet" =>
@@ -70,36 +68,8 @@ object LabXMLLoader {
       }
     }
 
-    var name = element.attributes("name")
-
-    if (editNames) {
-      if (name.nonEmpty) {
-        if (existingNames.contains(name)) {
-          var n = 1
-
-          while (existingNames.contains(s"$name ($n)")) n += 1
-
-          name = s"$name ($n)"
-        }
-      }
-
-      else if (existingNames.contains("no name")) {
-        var n = 1
-
-        while (existingNames.contains(s"no name ($n)")) n += 1
-
-        name = s"no name ($n)"
-      }
-
-      else {
-        name = "no name"
-      }
-
-      existingNames += name
-    }
-
-    LabProtocol(name, preExperiment, setup, go, postRun, postExperiment, element.attributes("repetitions").toInt,
-                element.attributes("sequentialRunOrder").toBoolean,
+    LabProtocol(element.attributes("name"), preExperiment, setup, go, postRun, postExperiment,
+                element.attributes("repetitions").toInt, element.attributes("sequentialRunOrder").toBoolean,
                 element.attributes("runMetricsEveryStep").toBoolean, runMetricsCondition,
                 element.attributes.getOrElse("timeLimit", "0").toInt, exitCondition, metrics, constants,
                 subExperiments)
