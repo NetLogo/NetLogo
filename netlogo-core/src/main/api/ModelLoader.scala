@@ -7,7 +7,6 @@ import java.net.URI
 import java.nio.file.{ Files, Paths }
 
 import org.nlogo.core.{ I18N, Model }
-import org.nlogo.fileformat.{ LabFormat, LabLoader, LabSaver }
 
 import scala.collection.mutable.Set
 import scala.reflect.ClassTag
@@ -21,7 +20,7 @@ trait GenericModelLoader {
   def emptyModel(extension: String): Model
   // these next two allow ManagerDialog to use the correct format for experiment loading/saving (IB 8/17/24)
   def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[Seq[LabProtocol]]
-  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer)
+  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit]
 }
 
 object GenericModelLoader {
@@ -66,23 +65,12 @@ class FormatterPair[A, B <: ModelFormat[A, B]](
     def emptyModel: Model =
       modelFormat.emptyModel(serializers)
     
-    def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[Seq[LabProtocol]] = {
-      serializers.find(_.isInstanceOf[LabFormat[_]]) match {
-        case Some(serializer) => Try(serializer.asInstanceOf[LabFormat[_]].loader(source, editNames, existingNames))
-        case None => Failure(new Exception("Unable to read experiments"))
-      }
-    }
+    def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[Seq[LabProtocol]] =
+      modelFormat.readExperiments(source, editNames, existingNames)
 
-    def writeExperiments(experiments: Seq[LabProtocol], writer: Writer) {
-      Try {
-        writer.write(s"${LabLoader.XMLVER}\n${LabLoader.DOCTYPE}\n")
-        writer.write(LabSaver.save(experiments))
+    def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] =
+      modelFormat.writeExperiments(experiments, writer)
 
-        return
-      }
-
-      throw new Exception("Unable to write experiments.")
-    }
   }
 
 trait ModelLoader extends GenericModelLoader {
@@ -146,14 +134,14 @@ trait ModelLoader extends GenericModelLoader {
     Failure(new Exception("Unable to read experiments."))
   }
 
-  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer) {
+  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
     for (format <- formats) {
       Try {
         return format.writeExperiments(experiments, writer)
       }
     }
     
-    throw new Exception("Unable to write experiments.")
+    Failure(new Exception("Unable to write experiments."))
   }
 }
 

@@ -275,21 +275,13 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
   def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[Seq[LabProtocol]] = {
     val reader = XMLInputFactory.newFactory.createXMLStreamReader(new StringReader(source))
 
-    Try {
-      return Success(readXMLElement(reader).children.map(LabXMLLoader.readExperiment(_, editNames, existingNames)))
-    }
-
-    Failure(new Exception("Unable to read experiments."))
+    Try(readXMLElement(reader).children.map(LabXMLLoader.readExperiment(_, editNames, existingNames)))
   }
 
-  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer) {
+  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
     val xmlWriter = XMLOutputFactory.newFactory.createXMLStreamWriter(writer)
 
-    Try {
-      return writeXMLElement(XMLElement("experiments", Map(), "",
-                                        experiments.map(LabXMLLoader.writeExperiment).toList), xmlWriter)
-    }
-
-    throw new Exception("Unable to write experiments.")
+    Try(writeXMLElement(XMLElement("experiments", Map(), "", experiments.map(LabXMLLoader.writeExperiment).toList),
+                        xmlWriter))
   }
 }
