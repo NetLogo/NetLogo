@@ -26,7 +26,7 @@ object ToolBar {
 
 abstract class ToolBar extends JToolBar {
   setFloatable(false)
-  setLayout(new RowLayout(5,Component.LEFT_ALIGNMENT,Component.CENTER_ALIGNMENT))
+  setLayout(new RowLayout(10, Component.LEFT_ALIGNMENT, Component.CENTER_ALIGNMENT))
 
   def addControls(): Unit
 

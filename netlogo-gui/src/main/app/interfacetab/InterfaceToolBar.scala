@@ -184,9 +184,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       c.insets = new Insets(6, 6, 6, 6)
 
       add(new JLabel("Add Widget"), c)
-
-      c.insets = new Insets(6, 0, 6, 6)
-
       add(new DropdownArrow, c)
     }
 
@@ -241,12 +238,9 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     locally {
       val c = new GridBagConstraints
 
-      c.insets = new Insets(0, 6, 0, 6)
+      c.insets = new Insets(6, 6, 6, 6)
 
-      add(new JLabel(Utils.icon("/images/align.png")), c)
-
-      c.insets = new Insets(0, 0, 0, 6)
-
+      add(new JLabel("Align Widgets"), c)
       add(new DropdownArrow, c)
     }
 
