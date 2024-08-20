@@ -952,18 +952,18 @@ public class WidgetWrapper
         });
         menu.add(alignBottom);
         menu.add(new javax.swing.JPopupMenu.Separator());
-        javax.swing.JMenuItem matchWidth =
-            new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.matchWidth"));
-        matchWidth.addActionListener((java.awt.event.ActionEvent e) -> {
-          interfacePanel().matchWidth(WidgetWrapper.this);
+        javax.swing.JMenuItem distributeHorizontal =
+            new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.distributeHorizontal"));
+        distributeHorizontal.addActionListener((java.awt.event.ActionEvent e) -> {
+          interfacePanel().distributeHorizontal();
         });
-        menu.add(matchWidth);
-        javax.swing.JMenuItem matchHeight =
-            new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.matchHeight"));
-        matchHeight.addActionListener((java.awt.event.ActionEvent e) -> {
-          interfacePanel().matchHeight(WidgetWrapper.this);
+        menu.add(distributeHorizontal);
+        javax.swing.JMenuItem distributeVertical =
+            new javax.swing.JMenuItem(I18N.guiJ().get("tabs.run.widget.distributeVertical"));
+        distributeVertical.addActionListener((java.awt.event.ActionEvent e) -> {
+          interfacePanel().distributeVertical();
         });
-        menu.add(matchHeight);
+        menu.add(distributeVertical);
       }
     } else {
       javax.swing.JMenuItem selectItem =
