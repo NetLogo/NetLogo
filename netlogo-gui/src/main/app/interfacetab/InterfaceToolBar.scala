@@ -2,15 +2,15 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Color, Dimension, Frame, Graphics, GridBagConstraints, GridBagLayout, Insets }
-import java.awt.event.{ ActionEvent, ActionListener, MouseAdapter, MouseEvent }
+import java.awt.{ Color, Frame, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import java.util.{ HashSet => JHashSet }
-import javax.swing.{ Action, AbstractAction, ButtonGroup, JLabel, JMenuItem, JPanel, JPopupMenu, JToggleButton }
+import javax.swing.{ Action, AbstractAction, JLabel, JMenuItem, JPanel, JPopupMenu }
 
 import org.nlogo.api.Editable
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ DropdownArrow, ToolBar, ToolBarActionButton, ToolBarToggleButton, Utils }
+import org.nlogo.swing.{ DropdownArrow, ToolBar, ToolBarActionButton, Utils }
 import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents, GUIWorkspace, InterfaceColors, JobWidget,
                           Widget, WidgetInfo }
 
@@ -31,28 +31,20 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   private val selectedObjects = new HashSet[Widget]
   private val editAction = new EditAction
   private val editButton = new ToolBarActionButton(editAction)
-  private val addAction = new AddAction
-  private val addButton = new AddButton
-  private val group = new ButtonGroup
-  private val noneButton = new JToggleButton
   private val deleteAction = new DeleteAction
   private val deleteButton = new ToolBarActionButton(deleteAction)
   private val widgetMenu = new WidgetMenu
   private val alignmentMenu = new AlignmentMenu
+
+  private var adding = false
 
   wPanel.setWidgetCreator(this)
 
   setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
   editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
-  addButton.setToolTipText(I18N.gui.get("tabs.run.addButton.tooltip"))
   deleteButton.setToolTipText(I18N.gui.get("tabs.run.deleteButton.tooltip"))
   widgetMenu.setToolTipText(I18N.gui.get("tabs.run.widgets.tooltip"))
-
-  class AddAction extends AbstractAction {
-    putValue(Action.SMALL_ICON, Utils.icon("/images/add.gif"))
-    def actionPerformed(e: ActionEvent) { }
-  }
 
   class EditAction extends AbstractAction {
     putValue(Action.SMALL_ICON, Utils.icon("/images/edit.png"))
@@ -68,12 +60,17 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     }
   }
 
-  def getWidget =
-    if(noneButton.isSelected) null
-    else {
-      noneButton.setSelected(true)
+  def getWidget: Widget = {
+    if (adding) {
+      adding = false
+
       wPanel.makeWidget(widgetMenu.getSelectedWidget)
     }
+
+    else {
+      null
+    }
+  }
 
   var editTarget: Option[Editable] = None
 
@@ -92,36 +89,23 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       }
       suppress(true)
       editButton.setSelected(true)
+      adding = false
       wPanel.editWidgetFinished(target, dialogFactory.canceled(frame, target, false))
       editButton.setSelected(false)
       suppress(false)
     }
   }
 
-  private class AddButton extends ToolBarToggleButton(addAction) {
-    // normally ToggleButtons when pressed again stay pressed, but we want it to pop back up if
-    // pressed again; this variable is used to produce that behavior - ST 7/30/03, 2/22/07
-    private var wasSelectedWhenMousePressed = false
-    addMouseListener(new MouseAdapter {
-      override def mousePressed(e: MouseEvent) { wasSelectedWhenMousePressed = isSelected }
-    })
-    addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) { if (wasSelectedWhenMousePressed) noneButton.setSelected(true) }
-    })
-  }
-
   override def addControls() {
     setMargin(new Insets(0, 6, 0, 0))
     Seq(widgetMenu, alignmentMenu, editButton, deleteButton).foreach(add)
-    group.add(noneButton)
-    group.add(addButton)
-    noneButton.setSelected(true)
   }
 
   def handle(e: WindowEvents.LoadBeginEvent) {
     editAction.setEnabled(false)
     deleteAction.setEnabled(false)
-    noneButton.setSelected(true)
+
+    adding = false
   }
 
   def handle(e: WindowEvents.WidgetRemovedEvent) {
@@ -168,7 +152,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       def actionPerformed(e: ActionEvent) {
         chosenItem = item
 
-        addButton.setSelected(true)
+        adding = true
       }
 
       def getText = item.getText
