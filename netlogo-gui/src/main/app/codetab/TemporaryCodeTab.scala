@@ -8,7 +8,6 @@ import javax.swing.Action
 
 import org.nlogo.api.FileIO
 import org.nlogo.app.common.{ Dialogs, Events => AppEvents, TabsInterface }
-import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
 import org.nlogo.ide.FocusedOnlyAction
 import org.nlogo.swing.{ FileDialog => SwingFileDialog }
@@ -16,7 +15,6 @@ import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, ModelTracker }
 
 import scala.io.Codec
-import scala.util.control.Exception.ignoring
 import scala.util.matching.Regex
 
 object TemporaryCodeTab {
@@ -31,8 +29,6 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   smartIndent:                    Boolean,
   separateCodeWindow:             Boolean)
   extends CodeTab(workspace, tabs) {
-
-  putClientProperty("JTabbedPane.tabClosable", true)
 
   var closing = false
   var saveNeeded = false // Has the buffer changed since the file was saved?
@@ -104,21 +100,18 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   }
 
   def prepareForClose() {
-    ignoring(classOf[UserCancelException]) {
-      if (saveNeeded) {
-        if (Dialogs.userWantsToSaveFirst(filenameForDisplay, this)) {
-          // The user is saving the file with its current name
-          save(false)
-        }
+    if (saveNeeded) {
+      if (Dialogs.userWantsToSaveFirst(filenameForDisplay, this)) {
+        // The user is saving the file with its current name
+        save(false)
       }
-      closing = true
     }
+    closing = true
   }
 
-  def compileIfDirty() : Unit = {
-    if (dirty) {
+  def compileIfDirty() {
+    if (dirty)
       compile()
-    }
   }
 
   override def handle(e: WindowEvents.CompiledEvent) = {

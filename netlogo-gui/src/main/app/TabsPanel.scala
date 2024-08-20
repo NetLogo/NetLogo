@@ -4,12 +4,11 @@ package org.nlogo.app
 
 import java.awt.{ Graphics, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent }
-import java.util.function.IntConsumer
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.JTabbedPane
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
-import org.nlogo.app.codetab.{ CodeTab, TemporaryCodeTab }
+import org.nlogo.app.codetab.CodeTab
 import org.nlogo.swing.Utils
 import org.nlogo.window.InterfaceColors
 
@@ -112,15 +111,6 @@ class TabsPanelUI(tabCount: () => Int, panelWidth: () => Int) extends BasicTabbe
 }
 
 class TabsPanel(val tabManager: TabManager) extends JTabbedPane with ChangeListener {
-  putClientProperty("JTabbedPane.tabCloseCallback", new IntConsumer {
-    def accept(index: Int) {
-      val tab = getComponentAt(index).asInstanceOf[TemporaryCodeTab]
-
-      tab.prepareForClose()
-      tabManager.closeExternalTab(tab)
-    }
-  })
-
   setUI(new TabsPanelUI(() => getTabCount, () => getWidth))
   setFocusable(false)
 
