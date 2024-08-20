@@ -2,8 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ BasicStroke, Color, Component, Dimension, EventQueue, Font, Graphics, GridBagConstraints,
-                  GridBagLayout, Insets }
+import java.awt.{ Color, Component, Dimension, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import javax.swing.{ JPanel, JScrollPane, JTextArea, ScrollPaneConstants }
 
 import org.nlogo.awt.{ Fonts => NLogoFonts, LineBreaker }
@@ -29,16 +28,15 @@ object OutputArea {
 import OutputArea._
 
 class OutputArea(val text: JTextArea) extends JPanel {
-  setBackground(InterfaceColors.TRANSPARENT)
+  setOpaque(false)
 
   private val scrollPane: JScrollPane =
     new JScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   
   scrollPane.setBorder(null)
-  scrollPane.setBackground(InterfaceColors.TRANSPARENT)
 
-  text.setBackground(InterfaceColors.TRANSPARENT)
+  text.setBackground(Color.WHITE)
 
   // when someone prints something that
   // ends in a carriage return, we don't want to print it immediately,
@@ -95,11 +93,8 @@ class OutputArea(val text: JTextArea) extends JPanel {
     val g2d = Utils.initGraphics2D(g)
     g2d.setColor(Color.WHITE)
     g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
-    val stroke = g2d.getStroke
-    g2d.setStroke(new BasicStroke(1))
     g2d.setColor(InterfaceColors.OUTPUT_BORDER)
     g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
-    g2d.setStroke(stroke)
     super.paintComponent(g)
   }
 
