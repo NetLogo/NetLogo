@@ -6,12 +6,11 @@ import java.awt.{ Color, Dimension, Frame, Graphics, GridBagConstraints, GridBag
 import java.awt.event.{ ActionEvent, ActionListener, MouseAdapter, MouseEvent }
 import java.util.{ HashSet => JHashSet }
 import javax.swing.{ Action, AbstractAction, ButtonGroup, JLabel, JMenuItem, JPanel, JPopupMenu, JToggleButton }
-import javax.swing.event.{ PopupMenuEvent, PopupMenuListener }
 
 import org.nlogo.api.Editable
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ DropdownArrow, ToolBar, ToolBarActionButton, ToolBarComboBox, ToolBarToggleButton, Utils }
+import org.nlogo.swing.{ DropdownArrow, ToolBar, ToolBarActionButton, ToolBarToggleButton, Utils }
 import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents, GUIWorkspace, InterfaceColors, JobWidget,
                           Widget, WidgetInfo }
 
@@ -25,11 +24,9 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   with WidgetCreator
   with WindowEvents.WidgetForegroundedEvent.Handler
   with WindowEvents.WidgetRemovedEvent.Handler
-  with WindowEvents.WidgetAddedEvent.Handler
   with AppEvents.WidgetSelectedEvent.Handler
   with WindowEvents.LoadBeginEvent.Handler
-  with WindowEvents.EditWidgetEvent.Handler
-  with ActionListener {
+  with WindowEvents.EditWidgetEvent.Handler {
 
   private val selectedObjects = new HashSet[Widget]
   private val editAction = new EditAction
@@ -140,10 +137,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     }
   }
 
-  def handle(e: WindowEvents.WidgetAddedEvent) {
-    widgetMenu.updateList(wPanel.canAddWidget)
-  }
-
   private val deleteableObjects = new JHashSet[Widget]
 
   final def handle(e: AppEvents.WidgetSelectedEvent) {
@@ -168,21 +161,75 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     editAction.setEnabled(editTarget.isDefined)
   }
 
-  def actionPerformed(e: ActionEvent) { addButton.setSelected(true) }
-
   def getItems: Array[JMenuItem] = WidgetInfos.map(spec => new JMenuItem(spec.displayName, spec.icon)).toArray
 
-  class WidgetMenu extends ToolBarComboBox(getItems) {
-    def getSelectedWidget =
-      WidgetInfos.find(_.displayName == chosenItem.getText).get.coreWidget
-    addActionListener(InterfaceToolBar.this)
-    addPopupMenuListener(new PopupMenuListener {
-      def popupMenuCanceled(e: PopupMenuEvent) {}
-      def popupMenuWillBecomeInvisible(e: PopupMenuEvent) {}
-      def popupMenuWillBecomeVisible(e: PopupMenuEvent) {
-        widgetMenu.updateList(wPanel.canAddWidget)
+  class WidgetMenu extends JPanel(new GridBagLayout) {
+    private class WidgetAction(item: JMenuItem) extends AbstractAction(item.getText, item.getIcon) {
+      def actionPerformed(e: ActionEvent) {
+        chosenItem = item
+
+        addButton.setSelected(true)
+      }
+
+      def getText = item.getText
+    }
+
+    setOpaque(false)
+    setBackground(InterfaceColors.TRANSPARENT)
+    setBorder(null)
+
+    locally {
+      val c = new GridBagConstraints
+
+      c.insets = new Insets(6, 6, 6, 6)
+
+      add(new JLabel("Add Widget"), c)
+
+      c.insets = new Insets(6, 0, 6, 6)
+
+      add(new DropdownArrow, c)
+    }
+
+    private val actions = getItems.map(new WidgetAction(_))
+
+    private var chosenItem: JMenuItem = null
+
+    val popup = new JPopupMenu
+
+    popup.add(actions(0))
+    popup.addSeparator()
+    popup.add(actions(1))
+    popup.add(actions(2))
+    popup.add(actions(3))
+    popup.add(actions(4))
+    popup.addSeparator()
+    popup.add(actions(5))
+    popup.add(actions(6))
+    popup.add(actions(7))
+    popup.addSeparator()
+    popup.add(actions(8))
+
+    addMouseListener(new MouseAdapter {
+      override def mousePressed(e: MouseEvent) {
+        actions.foreach(action => action.setEnabled(wPanel.canAddWidget(action.getText)))
+
+        popup.show(WidgetMenu.this, 0, getHeight)
       }
     })
+
+    def getSelectedWidget =
+      WidgetInfos.find(_.displayName == chosenItem.getText).get.coreWidget
+    
+    override def paintComponent(g: Graphics) {
+      val g2d = Utils.initGraphics2D(g)
+
+      g2d.setColor(Color.WHITE)
+      g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
+      g2d.setColor(InterfaceColors.DARK_GRAY)
+      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+
+      super.paintComponent(g)
+    }
   }
 
   class AlignmentMenu extends JPanel {
