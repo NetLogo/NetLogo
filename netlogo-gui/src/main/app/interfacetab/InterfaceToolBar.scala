@@ -176,7 +176,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
     setOpaque(false)
     setBackground(InterfaceColors.TRANSPARENT)
-    setBorder(null)
 
     locally {
       val c = new GridBagConstraints
@@ -229,11 +228,9 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     }
   }
 
-  class AlignmentMenu extends JPanel {
+  class AlignmentMenu extends JPanel(new GridBagLayout) {
     setOpaque(false)
     setBackground(InterfaceColors.TRANSPARENT)
-
-    setLayout(new GridBagLayout)
 
     locally {
       val c = new GridBagConstraints
@@ -243,8 +240,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       add(new JLabel("Align Widgets"), c)
       add(new DropdownArrow, c)
     }
-
-    setPreferredSize(new Dimension(getPreferredSize.width, widgetMenu.getPreferredSize.height))
 
     private val leftAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft")) {
       def actionPerformed(e: ActionEvent) {
