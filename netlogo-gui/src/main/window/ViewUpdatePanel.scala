@@ -15,7 +15,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
   implicit val prefix = Prefix("tabs.run")
 
   private val updateModeChooser = new UpdateModeChooser(workspace)
-  private val speedSlider       = new SpeedSliderPanel(workspace)
+  private val speedSlider       = new SpeedSliderPanel(workspace, tickCounter)
 
   private val settingsButton = new SettingsButton(new EditSettings(workspace.viewWidget.settings))
 
@@ -36,7 +36,6 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
     add(panel)
   }
 
-  add(tickCounter)
   add(settingsButton)
 
   override def addNotify(): Unit = {

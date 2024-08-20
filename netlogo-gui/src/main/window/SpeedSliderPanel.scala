@@ -3,7 +3,8 @@
 package org.nlogo.window
 
 import java.awt.{ Color, Component, Dimension, Graphics, GridBagConstraints, GridBagLayout }
-import java.awt.event.{ ComponentEvent, ComponentListener, MouseEvent, MouseListener, MouseWheelEvent, MouseWheelListener }
+import java.awt.event.{ ComponentEvent, ComponentListener, MouseEvent, MouseListener, MouseWheelEvent,
+                        MouseWheelListener }
 import javax.swing.{ JLabel, JPanel, JSlider }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 
@@ -11,7 +12,10 @@ import org.nlogo.core.I18N
 import org.nlogo.log.LogManager
 import org.nlogo.window.Events.LoadBeginEvent
 
-class SpeedSliderPanel(workspace: GUIWorkspace) extends JPanel with MouseListener with ChangeListener with LoadBeginEvent.Handler {
+class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) extends JPanel
+                                                                              with MouseListener
+                                                                              with ChangeListener
+                                                                              with LoadBeginEvent.Handler {
   implicit val prefix = I18N.Prefix("tabs.run.speedslider")
 
   val speedSlider = {
@@ -29,26 +33,30 @@ class SpeedSliderPanel(workspace: GUIWorkspace) extends JPanel with MouseListene
     label
   }
 
+  setOpaque(false)
+  setLayout(new GridBagLayout)
+
   locally {
-    val gridbag = new GridBagLayout()
-    val c = new GridBagConstraints()
-    setOpaque(false)
-    setLayout(gridbag)
+    val c = new GridBagConstraints
 
     c.fill = GridBagConstraints.VERTICAL
     c.gridwidth = 1
     c.gridheight = 1
-    c.gridy = 0
+    c.gridx = 0
     c.anchor = GridBagConstraints.PAGE_START
+
     add(speedLabel, c)
 
-    c.fill = GridBagConstraints.VERTICAL
     c.anchor = GridBagConstraints.CENTER
-    c.gridwidth = 1
-    c.gridheight = 1
     c.weighty = 0.25
-    c.gridy = 1
+
     add(speedSlider, c)
+
+    if (ticksLabel != null) {
+      c.weighty = 0
+
+      add(ticksLabel, c)
+    }
 
     enableLabels(0)
   }
