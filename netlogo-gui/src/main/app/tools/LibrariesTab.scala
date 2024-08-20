@@ -183,7 +183,7 @@ class LibrariesTab( category:        String
     sidebar.add(new Box.Filler(d, d, d))
     sidebar.add(infoScroll)
 
-    val magIcon  = new JLabel(icon("/images/magnify.gif", 20, 32))
+    val magIcon  = new JLabel(icon("/images/search.png", 20, 32))
     val topPanel = new JPanel(new BorderLayout)
     topPanel.add(filterField, BorderLayout.CENTER)
     topPanel.add(    magIcon, BorderLayout.WEST)

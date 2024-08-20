@@ -67,9 +67,8 @@ class InfoTab(attachModelDir: String => String)
     addHyperlinkListener(InfoTab.this)
   }
   private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit")))
-  private val helpButton = new ToolBarButton(I18N.gui.get("tabs.info.help"),
-    BrowserLauncher.openPath(this, baseDocPath, "information"))
-  helpButton.setIcon(icon("/images/questionmark.gif"))
+  private val helpButton = new ToolBarButton(BrowserLauncher.openPath(this, baseDocPath, "information"))
+  helpButton.setIcon(icon("/images/help.png"))
   helpButton.setVisible(false)
   private def toggleHelpButton(){ helpButton.setVisible(view == textArea) }
 

@@ -22,7 +22,7 @@ class ToolBarActionButton(action: Action) extends JButton(action) with ToolBarBu
   override def getBorder: Border = null
 }
 
-class ToolBarButton(name: String, f: => Unit) extends JButton(name) with ToolBarButtonUI {
+class ToolBarButton(f: => Unit) extends JButton with ToolBarButtonUI {
   addActionListener(new ActionListener {
     def actionPerformed(e: ActionEvent) { f }
   })

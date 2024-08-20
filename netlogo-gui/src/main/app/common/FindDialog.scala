@@ -7,15 +7,15 @@ import java.awt.event.{ ActionEvent, ActionListener, FocusEvent }
 import javax.swing.{ AbstractAction, Action, Box, BoxLayout, JButton, JCheckBox, JComponent, JDialog, JEditorPane,
                      JLabel, JPanel, SwingConstants }
 import javax.swing.border.EmptyBorder
-import javax.swing.text.{ BadLocationException, JTextComponent, TextAction }
+import javax.swing.text.{ BadLocationException, JTextComponent }
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ ButtonPanel, NonemptyTextFieldActionEnabler, NonemptyTextFieldButtonEnabler, TextField,
                          TextFieldBox, UserAction, Utils }
 
 object FindDialog {
-  class FindAction extends TextAction(I18N.gui.get("menu.edit.find")) {
-    putValue(Action.SMALL_ICON, Utils.icon("/images/magnify.gif"))
+  class FindAction extends AbstractAction {
+    putValue(Action.SMALL_ICON, Utils.icon("/images/search.png"))
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
     putValue(Action.ACCELERATOR_KEY, UserAction.KeyBindings.keystroke('F', withMenu = true))
@@ -48,8 +48,8 @@ object FindDialog {
     }
   }
 
-  class FindNextAction extends TextAction(I18N.gui.get("menu.edit.findNext")) {
-    putValue(Action.SMALL_ICON, Utils.icon("/images/magnify.gif"))
+  class FindNextAction extends AbstractAction {
+    putValue(Action.SMALL_ICON, Utils.icon("/images/search.png"))
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
     putValue(Action.ACCELERATOR_KEY, UserAction.KeyBindings.keystroke('G', withMenu = true))
@@ -63,8 +63,8 @@ object FindDialog {
     }
   }
 
-  class FindActionCode extends TextAction(I18N.gui.get("menu.edit.find")) {
-    putValue(Action.SMALL_ICON, Utils.icon("/images/magnify.gif"))
+  class FindActionCode extends AbstractAction {
+    putValue(Action.SMALL_ICON, Utils.icon("/images/search.png"))
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
 
@@ -96,8 +96,8 @@ object FindDialog {
     }
   }
 
-  class FindNextActionCode extends TextAction(I18N.gui.get("menu.edit.findNext")) {
-    putValue(Action.SMALL_ICON, Utils.icon("/images/magnify.gif"))
+  class FindNextActionCode extends AbstractAction {
+    putValue(Action.SMALL_ICON, Utils.icon("/images/search.png"))
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
     putValue(Action.ACCELERATOR_KEY, UserAction.KeyBindings.keystroke('G', withMenu = true))
