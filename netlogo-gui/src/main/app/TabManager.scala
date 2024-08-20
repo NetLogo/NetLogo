@@ -2,18 +2,18 @@
 
 package org.nlogo.app
 
-import java.awt.{ Color, Component, Graphics, Image, KeyboardFocusManager }
+import java.awt.{ Color, Component, FlowLayout, Graphics, Image, KeyboardFocusManager }
 import java.awt.event.{ ActionEvent, KeyEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent,
                         WindowFocusListener }
 import java.awt.print.PrinterAbortException
 import java.nio.file.{ Path, Paths }
 import java.util.prefs.Preferences
-import javax.swing.{ AbstractAction, Action, Box, BoxLayout, ImageIcon, JComponent, JFrame, JLabel, JPanel, SwingConstants }
+import javax.swing.{ AbstractAction, Action, Box, ImageIcon, JComponent, JFrame, JLabel, JPanel }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
-import org.nlogo.app.common.Events.SwitchedTabsEvent
 import org.nlogo.app.common.{ ExceptionCatchingAction, MenuTab, TabsInterface }
+import org.nlogo.app.common.Events.SwitchedTabsEvent
 import org.nlogo.app.common.TabsInterface.Filename
 import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
@@ -36,34 +36,39 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   private val closeIconDark = new ImageIcon(Utils.icon("/images/close-dark.png")
                                                  .getImage.getScaledInstance(8, 8, Image.SCALE_SMOOTH))
   
-  private class TabLabel(text: String, tab: Component) extends JPanel {
+  private class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
     val textLabel = new JLabel(text)
     var closeLabel: JLabel = null
 
     setOpaque(false)
 
-    setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS))
-    
     add(textLabel)
-    
-    if (tab.isInstanceOf[TemporaryCodeTab]) {
-      closeLabel = new JLabel(closeIconLight)
 
-      closeLabel.setVerticalAlignment(SwingConstants.CENTER)
+    tab match {
+      case tempTab: TemporaryCodeTab =>
+        closeLabel = new JLabel(closeIconLight)
 
-      closeLabel.addMouseListener(new MouseAdapter {
-        override def mouseClicked(e: MouseEvent) {
-          if (e.getButton == MouseEvent.BUTTON1)
-            closeExternalTab(tab.asInstanceOf[TemporaryCodeTab])
-        }
-      })
+        closeLabel.addMouseListener(new MouseAdapter {
+          override def mouseClicked(e: MouseEvent) {
+            if (e.getButton == MouseEvent.BUTTON1) {
+              try {
+                tempTab.prepareForClose()
+                closeExternalTab(tempTab)
+              }
 
-      add(Box.createHorizontalStrut(8))
-      add(closeLabel)
+              catch {
+                case e: UserCancelException =>
+              }
+            }
+          }
+        })
+
+        add(Box.createHorizontalStrut(10))
+        add(closeLabel)
+      
+      case _ =>
     }
-
-    textLabel.setVerticalAlignment(SwingConstants.CENTER)
-
+    
     override def paintComponent(g: Graphics) {
       if (tab == mainTabs.getSelectedComponent || tab == separateTabs.getSelectedComponent) {
         textLabel.setForeground(Color.WHITE)
