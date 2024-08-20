@@ -506,36 +506,50 @@ class WidgetPanel(val workspace: GUIWorkspace)
     selectedWrappers.length > 1
   }
 
-  protected def alignLeft(wrapper: WidgetWrapper): Unit = {
+  def alignLeft(wrapper: WidgetWrapper) {
     selectedWrappers.foreach(w => w.setLocation(wrapper.getLocation().x, w.getLocation().y))
   }
 
-  protected def alignCenterHorizontal(wrapper: WidgetWrapper): Unit = {
-    selectedWrappers.foreach(w => w.setLocation(wrapper.getLocation().x + wrapper.getSize().width / 2 - w.getSize().width / 2, w.getLocation().y))
+  def alignCenterHorizontal(wrapper: WidgetWrapper) {
+    selectedWrappers.foreach(w => w.setLocation(wrapper.getLocation().x + wrapper.getSize().width / 2 -
+                                                w.getSize().width / 2, w.getLocation().y))
   }
 
-  protected def alignRight(wrapper: WidgetWrapper): Unit = {
-    selectedWrappers.foreach(w => w.setLocation(wrapper.getLocation().x + wrapper.getSize().width - w.getSize().width, w.getLocation().y))
+  def alignRight(wrapper: WidgetWrapper) {
+    selectedWrappers.foreach(w => w.setLocation(wrapper.getLocation().x + wrapper.getSize().width - w.getSize().width,
+                                                w.getLocation().y))
   }
 
-  protected def alignTop(wrapper: WidgetWrapper): Unit = {
+  def alignTop(wrapper: WidgetWrapper) {
     selectedWrappers.foreach(w => w.setLocation(w.getLocation().x, wrapper.getLocation().y))
   }
 
-  protected def alignCenterVertical(wrapper: WidgetWrapper): Unit = {
-    selectedWrappers.foreach(w => w.setLocation(w.getLocation().x, wrapper.getLocation().y + wrapper.getSize().height / 2 - w.getSize().height / 2))
+  def alignCenterVertical(wrapper: WidgetWrapper) {
+    selectedWrappers.foreach(w => w.setLocation(w.getLocation().x, wrapper.getLocation().y +
+                                                wrapper.getSize().height / 2 - w.getSize().height / 2))
   }
 
-  protected def alignBottom(wrapper: WidgetWrapper): Unit = {
-    selectedWrappers.foreach(w => w.setLocation(w.getLocation().x, wrapper.getLocation().y + wrapper.getSize().height - w.getSize().height))
+  def alignBottom(wrapper: WidgetWrapper) {
+    selectedWrappers.foreach(w => w.setLocation(w.getLocation().x, wrapper.getLocation().y + wrapper.getSize().height -
+                                                w.getSize().height))
   }
 
-  protected def matchWidth(wrapper: WidgetWrapper): Unit = {
-    selectedWrappers.foreach(w => w.setSize(wrapper.getSize().width, w.getSize().height))
+  def distributeHorizontal() {
+    val ordered = selectedWrappers.sortWith(_.getLocation().x < _.getLocation().x)
+
+    for (i <- 0 until ordered.size) {
+      ordered(i).setLocation(ordered(0).getLocation().x + i * (ordered.last.getLocation().x -
+                             ordered(0).getLocation().x) / (ordered.size - 1), ordered(i).getLocation().y)
+    }
   }
 
-  protected def matchHeight(wrapper: WidgetWrapper): Unit = {
-    selectedWrappers.foreach(w => w.setSize(w.getSize().width, wrapper.getSize().height))
+  def distributeVertical() {
+    val ordered = selectedWrappers.sortWith(_.getLocation().y < _.getLocation().y)
+
+    for (i <- 0 until ordered.size) {
+      ordered(i).setLocation(ordered(i).getLocation().x, ordered(0).getLocation().y +
+                             i * (ordered.last.getLocation().y - ordered(0).getLocation().y) / (ordered.size - 1))
+    }
   }
 
   def sliderEventOnReleaseOnly(sliderEventOnReleaseOnly: Boolean): Unit = {
