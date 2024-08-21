@@ -231,7 +231,7 @@ with MenuTab {
 
   def isTextSelected: Boolean = text.getSelectedText != null && !text.getSelectedText.isEmpty
 
-  private object CompileAction extends AbstractAction {
+  private object CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
     putValue(Action.SMALL_ICON, icon("/images/check-gray.gif"))
     def actionPerformed(e: ActionEvent) = compile()
     def setDirty(isDirty: Boolean) = {
