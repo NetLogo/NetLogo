@@ -7,14 +7,14 @@ import java.awt.event.{ ActionEvent, ActionListener, FocusEvent }
 import javax.swing.{ AbstractAction, Action, Box, BoxLayout, JButton, JCheckBox, JComponent, JDialog, JEditorPane,
                      JLabel, JPanel, SwingConstants }
 import javax.swing.border.EmptyBorder
-import javax.swing.text.{ BadLocationException, JTextComponent }
+import javax.swing.text.{ BadLocationException, JTextComponent, TextAction }
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ ButtonPanel, NonemptyTextFieldActionEnabler, NonemptyTextFieldButtonEnabler, TextField,
                          TextFieldBox, UserAction, Utils }
 
 object FindDialog {
-  class FindAction extends AbstractAction {
+  class FindAction extends TextAction(I18N.gui.get("menu.edit.find")) {
     putValue(Action.SMALL_ICON, Utils.icon("/images/search.png"))
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
@@ -48,7 +48,7 @@ object FindDialog {
     }
   }
 
-  class FindNextAction extends AbstractAction {
+  class FindNextAction extends TextAction(I18N.gui.get("menu.edit.findNext")) {
     putValue(Action.SMALL_ICON, Utils.icon("/images/search.png"))
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
@@ -63,7 +63,7 @@ object FindDialog {
     }
   }
 
-  class FindActionCode extends AbstractAction {
+  class FindActionCode extends TextAction(I18N.gui.get("menu.edit.find")) {
     putValue(Action.SMALL_ICON, Utils.icon("/images/search.png"))
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
@@ -96,7 +96,7 @@ object FindDialog {
     }
   }
 
-  class FindNextActionCode extends AbstractAction {
+  class FindNextActionCode extends TextAction(I18N.gui.get("menu.edit.findNext")) {
     putValue(Action.SMALL_ICON, Utils.icon("/images/search.png"))
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)

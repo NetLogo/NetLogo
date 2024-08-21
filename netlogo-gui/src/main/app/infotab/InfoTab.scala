@@ -67,7 +67,8 @@ class InfoTab(attachModelDir: String => String)
     addHyperlinkListener(InfoTab.this)
   }
   private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit")))
-  private val helpButton = new ToolBarButton(BrowserLauncher.openPath(this, baseDocPath, "information"))
+  private val helpButton = new ToolBarButton(I18N.gui.get("tabs.info.help"),
+                                             BrowserLauncher.openPath(this, baseDocPath, "information"))
   helpButton.setIcon(icon("/images/help.png"))
   helpButton.setVisible(false)
   private def toggleHelpButton(){ helpButton.setVisible(view == textArea) }
@@ -200,7 +201,7 @@ class InfoTab(attachModelDir: String => String)
     printer.printText(g, pageFormat, pageIndex, textArea.getText)
   }
 
-  private class EditableAction(label: String) extends AbstractAction {
+  private class EditableAction(label: String) extends AbstractAction(label) {
     putValue(Action.SMALL_ICON, icon("/images/edit.png"))
     def actionPerformed(e: ActionEvent) {
       val scrollBar = scrollPane.getVerticalScrollBar
