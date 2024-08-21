@@ -3,7 +3,7 @@
 package org.nlogo.app.interfacetab
 
 import java.awt.{ BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Graphics,
-                  Graphics2D }
+                  Graphics2D, GridBagConstraints }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.{ PageFormat, Printable }
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
@@ -92,7 +92,10 @@ class InterfaceTab(workspace: GUIWorkspace,
       override def addControls() {
         super.addControls()
         viewUpdatePanel = new ViewUpdatePanel(workspace, workspace.viewWidget.displaySwitch, workspace.viewWidget.tickCounter)
-        add(viewUpdatePanel)
+        val c = new GridBagConstraints
+        c.gridy = 0
+        c.gridheight = 2
+        add(viewUpdatePanel, c)
       }
     }, BorderLayout.NORTH)
     iP.addFocusListener(TrackingFocusListener)

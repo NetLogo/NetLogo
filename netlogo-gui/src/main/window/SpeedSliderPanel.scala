@@ -35,9 +35,13 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
     c.gridx = 0
     c.gridy = 0
     c.weightx = 1
-    c.anchor = GridBagConstraints.WEST
+    c.anchor = GridBagConstraints.SOUTHWEST
 
-    add(new JLabel(I18N.gui("slower")), c)
+    val slower = new JLabel(I18N.gui("slower"))
+
+    slower.setFont(slower.getFont.deriveFont(10f))
+
+    add(slower, c)
 
     c.gridx = 1
     c.anchor = GridBagConstraints.CENTER
@@ -45,9 +49,13 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
     add(new JLabel(I18N.gui("modelSpeed"), SwingConstants.CENTER), c)
 
     c.gridx = 2
-    c.anchor = GridBagConstraints.EAST
+    c.anchor = GridBagConstraints.SOUTHEAST
 
-    add(new JLabel(I18N.gui("faster"), SwingConstants.RIGHT), c)
+    val faster = new JLabel(I18N.gui("faster"), SwingConstants.RIGHT)
+
+    faster.setFont(slower.getFont.deriveFont(10f))
+
+    add(faster, c)
 
     c.gridx = 0
     c.gridy = 1

@@ -2,10 +2,10 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Color, Frame, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Color, Dimension, Frame, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import java.util.{ HashSet => JHashSet }
-import javax.swing.{ Action, AbstractAction, JLabel, JMenuItem, JPanel, JPopupMenu }
+import javax.swing.{ Action, AbstractAction, JLabel, JMenuItem, JPanel, JPopupMenu, SwingConstants }
 
 import org.nlogo.api.Editable
 import org.nlogo.app.common.{ Events => AppEvents }
@@ -97,8 +97,32 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   }
 
   override def addControls() {
-    setMargin(new Insets(0, 6, 0, 0))
-    Seq(widgetMenu, alignmentMenu, editButton, deleteButton).foreach(add)
+    setLayout(new GridBagLayout)
+
+    val c = new GridBagConstraints
+
+    c.gridy = 0
+    c.anchor = GridBagConstraints.SOUTHWEST
+    c.weighty = 1
+    c.insets = new Insets(6, 6, 3, 12)
+
+    add(new JLabel("Add Widget"), c)
+
+    c.insets = new Insets(6, 0, 3, 12)
+
+    add(new JLabel("Align Widgets"), c)
+
+    c.gridy = 1
+    c.weighty = 0
+    c.insets = new Insets(0, 6, 6, 12)
+
+    add(widgetMenu, c)
+
+    c.insets = new Insets(0, 0, 6, 6)
+
+    add(alignmentMenu, c)
+    add(editButton, c)
+    add(deleteButton, c)
   }
 
   def handle(e: WindowEvents.LoadBeginEvent) {
@@ -166,7 +190,11 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
       c.insets = new Insets(6, 6, 6, 6)
 
-      add(new JLabel("Add Widget"), c)
+      val label = new JLabel("Button", WidgetInfos.find(_.displayName == "Button").get.icon, SwingConstants.LEFT)
+
+      label.setIconTextGap(12)
+
+      add(label, c)
       add(new DropdownArrow, c)
     }
 
@@ -221,53 +249,63 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
       c.insets = new Insets(6, 6, 6, 6)
 
-      add(new JLabel("Align Widgets"), c)
+      add(new JLabel(Utils.icon("/images/align-left.png")), c)
       add(new DropdownArrow, c)
     }
 
-    private val leftAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft")) {
+    setPreferredSize(new Dimension(getPreferredSize.width, widgetMenu.getPreferredSize.height))
+
+    private val leftAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft"),
+                                                Utils.icon("/images/align-left.png")) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignLeft(wPanel.getWrapper(selectedObjects.head))
       }
     }
 
-    private val centerHorizontalAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterHorizontal")) {
+    private val centerHorizontalAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterHorizontal"),
+                                                            Utils.icon("/images/align-horizontal-center.png")) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignCenterHorizontal(wPanel.getWrapper(selectedObjects.head))
       }
     }
 
-    private val rightAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight")) {
+    private val rightAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight"),
+                                                 Utils.icon("/images/align-right.png")) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignRight(wPanel.getWrapper(selectedObjects.head))
       }
     }
 
-    private val topAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop")) {
+    private val topAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop"),
+                                               Utils.icon("/images/align-top.png")) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignTop(wPanel.getWrapper(selectedObjects.head))
       }
     }
 
-    private val centerVerticalAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterVertical")) {
+    private val centerVerticalAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterVertical"),
+                                                          Utils.icon("/images/align-vertical-center.png")) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignCenterVertical(wPanel.getWrapper(selectedObjects.head))
       }
     }
 
-    private val bottomAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom")) {
+    private val bottomAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom"),
+                                                  Utils.icon("/images/align-bottom.png")) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignBottom(wPanel.getWrapper(selectedObjects.head))
       }
     }
 
-    private val distributeHorizontalAction = new AbstractAction(I18N.gui.get("tabs.run.widget.distributeHorizontal")) {
+    private val distributeHorizontalAction = new AbstractAction(I18N.gui.get("tabs.run.widget.distributeHorizontal"),
+                                                                Utils.icon("/images/distribute-horizontal.png")) {
       def actionPerformed(e: ActionEvent) {
         wPanel.distributeHorizontal()
       }
     }
 
-    private val distributeVerticalAction = new AbstractAction(I18N.gui.get("tabs.run.widget.distributeVertical")) {
+    private val distributeVerticalAction = new AbstractAction(I18N.gui.get("tabs.run.widget.distributeVertical"),
+                                                              Utils.icon("/images/distribute-vertical.png")) {
       def actionPerformed(e: ActionEvent) {
         wPanel.distributeVertical()
       }
@@ -275,6 +313,10 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
     private val popup = new JPopupMenu
 
+    popup.add(new JLabel("Arrange selected widgets") {
+      setBorder(new javax.swing.border.EmptyBorder(0, 6, 0, 0))
+    }).setEnabled(false)
+    popup.addSeparator()
     popup.add(leftAction)
     popup.add(centerHorizontalAction)
     popup.add(rightAction)
