@@ -2,16 +2,15 @@
 
 package org.nlogo.window
 
-import java.awt.Component
+import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
 import javax.swing.{ AbstractAction, Action, JButton, JCheckBox, JPanel }
 
-import org.nlogo.awt.ColumnLayout
 import org.nlogo.core.I18N, I18N.Prefix
 import org.nlogo.window.Events.LoadEndEvent
 
 class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCounter: TickCounterLabel)
-    extends JPanel with LoadEndEvent.Handler {
+    extends JPanel(new GridBagLayout) with LoadEndEvent.Handler {
   implicit val prefix = Prefix("tabs.run")
 
   private val updateModeChooser = new UpdateModeChooser(workspace)
@@ -25,18 +24,29 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
 
   setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
-  add(speedSlider)
-
   locally {
-    val panel = new JPanel(new ColumnLayout(0, Component.CENTER_ALIGNMENT, Component.CENTER_ALIGNMENT))
+    val c = new GridBagConstraints
 
-    panel.add(displaySwitch)
-    panel.add(updateModeChooser)
+    c.gridy = 0
+    c.gridheight = 2
+    c.insets = new Insets(6, 24, 6, 24)
 
-    add(panel)
+    add(speedSlider, c)
+
+    c.gridheight = 1
+    c.insets = new Insets(6, 0, 3, 12)
+
+    add(displaySwitch, c)
+
+    c.gridy = 1
+    c.insets = new Insets(0, 0, 6, 12)
+
+    add(updateModeChooser, c)
+
+    c.insets = new Insets(0, 0, 6, 6)
+
+    add(settingsButton, c)
   }
-
-  add(settingsButton)
 
   override def addNotify(): Unit = {
     super.addNotify()
