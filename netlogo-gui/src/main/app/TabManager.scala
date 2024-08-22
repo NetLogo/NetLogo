@@ -2,13 +2,13 @@
 
 package org.nlogo.app
 
-import java.awt.{ Color, Component, FlowLayout, Graphics, Image, KeyboardFocusManager }
+import java.awt.{ Color, Component, FlowLayout, Graphics, KeyboardFocusManager }
 import java.awt.event.{ ActionEvent, KeyEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent,
                         WindowFocusListener }
 import java.awt.print.PrinterAbortException
 import java.nio.file.{ Path, Paths }
 import java.util.prefs.Preferences
-import javax.swing.{ AbstractAction, Action, Box, ImageIcon, JComponent, JFrame, JLabel, JPanel }
+import javax.swing.{ AbstractAction, Action, Box, JComponent, JFrame, JLabel, JPanel }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
@@ -31,10 +31,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   with CompiledEvent.Handler with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler
   with LoadErrorEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler {
   
-  private val closeIconLight = new ImageIcon(Utils.icon("/images/close-light.png")
-                                                  .getImage.getScaledInstance(8, 8, Image.SCALE_SMOOTH))
-  private val closeIconDark = new ImageIcon(Utils.icon("/images/close-dark.png")
-                                                 .getImage.getScaledInstance(8, 8, Image.SCALE_SMOOTH))
+  private val closeIconLight = Utils.iconScaled("/images/close-light.png", 8, 8)
+  private val closeIconDark = Utils.iconScaled("/images/close-dark.png", 8, 8)
   
   private class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
     val textLabel = new JLabel(text)

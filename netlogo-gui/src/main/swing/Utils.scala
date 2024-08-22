@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Frame, Graphics, Graphics2D, RenderingHints }
+import java.awt.{ Frame, Graphics, Graphics2D, Image, RenderingHints }
 import java.awt.event.KeyEvent
 
 import javax.swing.{ Action, ImageIcon, InputMap, JComponent, JDialog, JWindow, KeyStroke }
@@ -11,6 +11,9 @@ final object Utils {
   val utilsClass = getClass
   def icon(path: String): ImageIcon = new ImageIcon(utilsClass.getResource(path))
   def icon(path: String, w: Int, h: Int): ImageIcon = new CenteredImageIcon(icon(path), w, h)
+
+  def iconScaled(path: String, width: Int, height: Int) =
+    new ImageIcon(icon(path).getImage.getScaledInstance(width, height, Image.SCALE_SMOOTH))
 
   def alert(message: String, continueText: String): Unit = {
     val bogusFrame = new Frame

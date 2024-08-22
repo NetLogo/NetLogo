@@ -192,7 +192,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
       val label = new JLabel("Button", WidgetInfos.find(_.displayName == "Button").get.icon, SwingConstants.LEFT)
 
-      label.setIconTextGap(12)
+      label.setIconTextGap(6)
 
       add(label, c)
       add(new DropdownArrow, c)
@@ -249,63 +249,67 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
       c.insets = new Insets(6, 6, 6, 6)
 
-      add(new JLabel(Utils.icon("/images/align-left.png")), c)
+      add(new JLabel(Utils.iconScaled("/images/align-left.png", 16, 16)), c)
       add(new DropdownArrow, c)
     }
 
     setPreferredSize(new Dimension(getPreferredSize.width, widgetMenu.getPreferredSize.height))
 
     private val leftAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft"),
-                                                Utils.icon("/images/align-left.png")) {
+                                                Utils.iconScaled("/images/align-left.png", 16, 16)) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignLeft(wPanel.getWrapper(selectedObjects.head))
       }
     }
 
     private val centerHorizontalAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterHorizontal"),
-                                                            Utils.icon("/images/align-horizontal-center.png")) {
+                                                            Utils.iconScaled("/images/align-horizontal-center.png",
+                                                                             16, 16)) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignCenterHorizontal(wPanel.getWrapper(selectedObjects.head))
       }
     }
 
     private val rightAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight"),
-                                                 Utils.icon("/images/align-right.png")) {
+                                                 Utils.iconScaled("/images/align-right.png", 16, 16)) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignRight(wPanel.getWrapper(selectedObjects.head))
       }
     }
 
     private val topAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop"),
-                                               Utils.icon("/images/align-top.png")) {
+                                               Utils.iconScaled("/images/align-top.png", 16, 16)) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignTop(wPanel.getWrapper(selectedObjects.head))
       }
     }
 
     private val centerVerticalAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterVertical"),
-                                                          Utils.icon("/images/align-vertical-center.png")) {
+                                                          Utils.iconScaled("/images/align-vertical-center.png",
+                                                                           16, 16)) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignCenterVertical(wPanel.getWrapper(selectedObjects.head))
       }
     }
 
     private val bottomAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom"),
-                                                  Utils.icon("/images/align-bottom.png")) {
+                                                  Utils.iconScaled("/images/align-bottom.png", 16, 16)) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignBottom(wPanel.getWrapper(selectedObjects.head))
       }
     }
 
     private val distributeHorizontalAction = new AbstractAction(I18N.gui.get("tabs.run.widget.distributeHorizontal"),
-                                                                Utils.icon("/images/distribute-horizontal.png")) {
+                                                                Utils.iconScaled("/images/distribute-horizontal.png",
+                                                                                 16, 16)) {
       def actionPerformed(e: ActionEvent) {
         wPanel.distributeHorizontal()
       }
     }
 
     private val distributeVerticalAction = new AbstractAction(I18N.gui.get("tabs.run.widget.distributeVertical"),
-                                                              Utils.icon("/images/distribute-vertical.png")) {
+                                                              Utils.iconScaled("/images/distribute-vertical.png",
+                                                                               16, 16)) {
       def actionPerformed(e: ActionEvent) {
         wPanel.distributeVertical()
       }
