@@ -2,6 +2,14 @@
 
 package org.nlogo.window
 
+import java.awt.{ BasicStroke, Color, Component, Dimension, Font, Frame, Graphics, Graphics2D, GridBagConstraints,
+                  GridBagLayout, Insets }
+import java.awt.event.{ ActionListener, WindowEvent, WindowAdapter, FocusListener, FocusEvent, ActionEvent, KeyEvent }
+import javax.swing.text.EditorKit
+import javax.swing.KeyStroke.getKeyStroke
+import javax.swing.{ AbstractAction, JButton, JDialog, JLabel, JPanel, JScrollPane, ScrollPaneConstants }
+import javax.swing.plaf.basic.BasicButtonUI
+
 import org.nlogo.core.{ BoxedValue, CompilerException, I18N,
   InputBox => CoreInputBox, NumericInput, StringInput }
 import org.nlogo.agent.InputBoxConstraint
@@ -10,31 +18,84 @@ import org.nlogo.api.Exceptions
 import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.Color.{ getClosestColorNumberByARGB, getColor, getColorNameByIndex, modulateDouble }
 import org.nlogo.swing.ButtonPanel
-import org.nlogo.awt.Fonts.{adjustDefaultFont, platformFont, platformMonospacedFont}
-import org.nlogo.api.{Options, ValueConstraint, LogoException, CompilerServices, Dump, Editable}
-import java.awt.{Color, Component, Dimension, Font, Frame, Graphics}
-import java.awt.event.{ActionListener, WindowEvent, WindowAdapter, FocusListener, FocusEvent, ActionEvent, KeyEvent}
-import javax.swing.text.EditorKit
-import javax.swing.KeyStroke.getKeyStroke
-import javax.swing.{JDialog, AbstractAction, ScrollPaneConstants, JScrollPane, JButton, JLabel}
-import javax.swing.plaf.basic.BasicButtonUI
+import org.nlogo.awt.Fonts.{ platformFont, platformMonospacedFont }
+import org.nlogo.api.{ Options, ValueConstraint, LogoException, CompilerServices, Dump, Editable }
 
 object InputBox {
   val MinWidth  = 50
   val MinHeight = 60
 }
 
-abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:AbstractEditorArea,
-            compiler:CompilerServices, nextComponent:Component)
+abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: AbstractEditorArea,
+                        compiler: CompilerServices, nextComponent: Component)
   extends SingleErrorWidget with Editable with Events.InputBoxLoseFocusEvent.Handler {
   type WidgetModel = CoreInputBox
 
   import InputBox._
 
+  protected class ColorButton extends JButton {
+    var color = Color.black
+
+    setBorder(null)
+    setBackground(InterfaceColors.TRANSPARENT)
+    setFont(getFont.deriveFont(9.0f))
+
+    addActionListener(new SelectColorActionListener)
+
+    // on winXP if we don't set this the color in the button doesn't show up ev 2/15/08
+    // after UI redesign this made color no longer appear on any platform (IB 6/3/24)
+    // setContentAreaFilled(false)
+
+    override def paintComponent(g: Graphics) {
+      val g2d = g.asInstanceOf[Graphics2D]
+      g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
+      g2d.setColor(color)
+      g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
+      val stroke = g2d.getStroke
+      g2d.setStroke(new BasicStroke(1))
+      g2d.setColor(InterfaceColors.INPUT_BORDER)
+      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+      g2d.setStroke(stroke)
+      super.paintComponent(g)
+    }
+  }
+
+  protected class InputScrollPane(textArea: AbstractEditorArea) extends JPanel {
+    val scrollPane = new JScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+    
+    scrollPane.setBorder(null)
+
+    setBackground(InterfaceColors.TRANSPARENT)
+
+    setLayout(new GridBagLayout)
+
+    val c = new GridBagConstraints
+
+    c.weightx = 1
+    c.weighty = 1
+    c.fill = GridBagConstraints.BOTH
+    c.insets = new Insets(3, 3, 3, 3)
+
+    add(scrollPane, c)
+
+    override def paintComponent(g: Graphics) {
+      val g2d = g.asInstanceOf[Graphics2D]
+      g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
+      g2d.setColor(Color.WHITE)
+      g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
+      val stroke = g2d.getStroke
+      g2d.setStroke(new BasicStroke(1))
+      g2d.setColor(InterfaceColors.INPUT_BORDER)
+      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+      g2d.setStroke(stroke)
+      super.paintComponent(g)
+    }
+  }
 
   /// be editable
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.input")
-  protected val widgetLabel = new JLabel()
+  protected val widgetLabel = new JLabel
   protected var dialog: InputDialog = null
   private var _hasFocus = false
   // grab the current editor kit from the editor area
@@ -46,16 +107,9 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
   protected val changeButton: JButton = new NLButton("Change") {
     addActionListener(new EditActionListener())
   }
-  protected val colorSwatch: JButton = new JButton("black"){
-    setFont(javax.swing.UIManager.getFont("Label.font").deriveFont(9.0f))
-    addActionListener(new SelectColorActionListener())
-    // on winXP if we don't set this the color in the button doesn't show up ev 2/15/08
-    // after UI redesign this made color no longer appear on any platform (IB 6/3/24)
-    // setContentAreaFilled(false)
-  }
+  protected val colorSwatch = new ColorButton
 
-  private val scroller: JScrollPane = new JScrollPane(textArea,
-    ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+  private val scroller = new InputScrollPane(textArea)
 
   // most of the time text and value will be exactly the same
   // however, for numbers there will be a Double rather than
@@ -139,44 +193,40 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
 
     multiline(multiline)
 
+    widgetLabel.setForeground(InterfaceColors.WIDGET_TEXT)
+
     backgroundColor = InterfaceColors.INPUT_BACKGROUND
 
-    org.nlogo.awt.Fonts.adjustDefaultFont(this)
+    setLayout(new GridBagLayout)
 
-    val layout = new java.awt.GridBagLayout()
-    setLayout(layout)
-    val c = new java.awt.GridBagConstraints()
+    val c = new GridBagConstraints
 
     c.gridx = 0
     c.gridy = 0
     c.weightx = 1
-    c.anchor = java.awt.GridBagConstraints.WEST
-    c.insets = new java.awt.Insets(3, 3, 3, 3)
+    c.anchor = GridBagConstraints.NORTHWEST
+    c.insets = new Insets(3, 6, 6, 6)
 
-    layout.setConstraints(widgetLabel, c)
-    add(widgetLabel)
-
-    adjustDefaultFont(widgetLabel)
+    add(widgetLabel, c)
 
     c.gridx = 1
     c.weightx = 0
-    c.anchor = java.awt.GridBagConstraints.EAST
-    layout.setConstraints(changeButton, c)
+    c.anchor = GridBagConstraints.EAST
+    
     add(changeButton, c)
 
     c.gridx = 0
     c.gridy += 1
     c.weighty = 1
     c.weightx = 1
-    c.gridwidth = java.awt.GridBagConstraints.REMAINDER
-    c.fill = java.awt.GridBagConstraints.BOTH
-    c.anchor = java.awt.GridBagConstraints.WEST
+    c.gridwidth = GridBagConstraints.REMAINDER
+    c.fill = GridBagConstraints.BOTH
+    c.anchor = GridBagConstraints.WEST
+    c.insets = new Insets(0, 6, 6, 6)
 
-    layout.setConstraints(scroller, c)
-    add(scroller)
-
-    layout.setConstraints(colorSwatch, c)
+    add(scroller, c)
     add(colorSwatch, c)
+
     colorSwatch.setVisible(false)
 
     // focus listener for in place editing
@@ -291,7 +341,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       changeButton.setVisible(inputType.changeVisible)
       inputType.colorPanel(colorSwatch)
     }
-    scroller.setHorizontalScrollBarPolicy(
+    scroller.scrollPane.setHorizontalScrollBarPolicy(
       if (inputType.multiline) ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
       else ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
     multiline(inputType.multiline)
@@ -414,28 +464,29 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       textArea.setFont(inputType.getFont)
       textArea.enableBracketMatcher(inputType.enableBracketMatcher)
 
-      val layout = new java.awt.GridBagLayout()
-      getContentPane.setLayout(layout)
-      val c = new java.awt.GridBagConstraints()
-      c.insets = new java.awt.Insets(3, 3, 3, 3)
-      c.gridwidth = java.awt.GridBagConstraints.REMAINDER
-      c.anchor = java.awt.GridBagConstraints.WEST
-      val label = new JLabel(inputType.toString)
-      layout.setConstraints(label, c)
-      getContentPane.add(label)
+      getContentPane.setLayout(new GridBagLayout)
+
+      val c = new GridBagConstraints
+
+      c.insets = new Insets(3, 3, 3, 3)
+      c.gridwidth = GridBagConstraints.REMAINDER
+      c.anchor = GridBagConstraints.WEST
+
+      getContentPane.add(new JLabel(inputType.toString), c)
+
       c.weightx = 1
       c.weighty = 1
-      c.fill = java.awt.GridBagConstraints.BOTH
-      val scroller = new JScrollPane(textArea)
-      layout.setConstraints(scroller, c)
-      getContentPane.add(scroller)
-      val buttonPanel = new ButtonPanel(Array(new JButton(okAction), new JButton(applyAction), new JButton(cancelAction)))
+      c.fill = GridBagConstraints.BOTH
+
+      getContentPane.add(new InputScrollPane(textArea), c)
+
       c.gridy = 2
-      c.anchor = java.awt.GridBagConstraints.EAST
+      c.anchor = GridBagConstraints.EAST
       c.weightx = 0
       c.weighty = 0
-      layout.setConstraints(buttonPanel, c)
-      getContentPane.add(buttonPanel)
+
+      getContentPane.add(new ButtonPanel(Array(new JButton(okAction), new JButton(applyAction),
+                                               new JButton(cancelAction))), c)
 
       org.nlogo.swing.Utils.addEscKeyAction(this, cancelAction)
 
@@ -487,7 +538,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
     def displayName = I18N.gui.get("edit.input.type." + i18nKey)
     def getEditorKit = editorKit
     def getFont = font
-    def colorPanel(panel: JButton) {
+    def colorPanel(panel: ColorButton) {
       panel.setVisible(false)
       scroller.setVisible(true)
     }
@@ -571,7 +622,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
       NumericInput(num.doubleValue, NumericInput.ColorLabel)
     }
 
-    override def colorPanel(panel: JButton) {
+    override def colorPanel(panel: ColorButton) {
       panel.setVisible(true)
       scroller.setVisible(false)
       panel.setOpaque(true)
@@ -583,7 +634,7 @@ abstract class InputBox(textArea:AbstractEditorArea, editDialogTextArea:Abstract
         }
         else (0d: java.lang.Double, Color.BLACK)
 
-      panel.setBackground(c)
+      panel.color = c
       panel.setForeground(if ((colorval % 10) > 5) Color.BLACK else Color.WHITE)
       panel.setText(colorval match {
         // this logic is duplicated in ColorEditor; black and white are special cases

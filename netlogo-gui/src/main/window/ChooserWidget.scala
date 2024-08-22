@@ -38,6 +38,7 @@ class ChooserWidget(val compiler: CompilerServices)
 
   private def name(newName: String, sendEvent: Boolean): Unit = {
     _name = newName
+    label.setText(_name)
     repaint()
     // I don't think anyone ever uses the display name, but let's keep it in sync
     // with the real name, just in case - ST 6/3/02

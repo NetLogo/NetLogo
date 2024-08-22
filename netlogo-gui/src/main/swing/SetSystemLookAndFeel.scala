@@ -2,11 +2,11 @@
 
 package org.nlogo.swing
 
+import com.formdev.flatlaf.{ FlatDarkLaf, FlatLaf, FlatLightLaf }
+
 // Frame
 import java.awt.{ Color, Insets }
 import javax.swing.{ UIManager, UnsupportedLookAndFeelException }
-import com.formdev.flatlaf.FlatDarkLaf
-import com.formdev.flatlaf.FlatLightLaf
 
 final object SetSystemLookAndFeel {
 
@@ -73,8 +73,10 @@ final object SetSystemLookAndFeel {
       UIManager.getDefaults.put("Table.focusCellBackground", new Color(202, 202, 202))
     }
 
-  // might want to take some ideas from
-  //FlatLaf/flatlaf-demo/src/main/java/com/formdev/flatlaf/demo/DemoPrefs.java
+    FlatLaf.registerCustomDefaultsSource("themes")
+
+    // might want to take some ideas from
+    //FlatLaf/flatlaf-demo/src/main/java/com/formdev/flatlaf/demo/DemoPrefs.java
     if (darkTheme) {
       FlatDarkLaf.setup()
     } else {

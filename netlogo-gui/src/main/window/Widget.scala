@@ -32,7 +32,6 @@ abstract class Widget extends JPanel {
   var deleteable: Boolean = true
 
   protected var backgroundColor = InterfaceColors.LIGHT_GRAY
-  protected var borderColor = java.awt.Color.black
 
   setBackground(InterfaceColors.TRANSPARENT)
 
@@ -112,13 +111,10 @@ abstract class Widget extends JPanel {
   }
 
   override def paintComponent(g: Graphics): Unit = {
-    val g2d: Graphics2D = g.asInstanceOf[Graphics2D]
+    val g2d = g.asInstanceOf[Graphics2D]
     g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
     g2d.setColor(backgroundColor)
-    g2d.fillRoundRect(0, 0, getWidth, getHeight, 5, 5)
-    g2d.setColor(borderColor)
-    g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 5, 5)
-    super.paintComponent(g)
+    g2d.fillRoundRect(0, 0, getWidth, getHeight, 12, 12)
   }
 
   override def toString: String = {

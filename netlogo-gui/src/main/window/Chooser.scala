@@ -2,12 +2,12 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, Font, Graphics }
+import java.awt.{ Dimension, Font, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ MouseWheelEvent, MouseWheelListener }
+import javax.swing.JLabel
 
 import org.nlogo.agent.ChooserConstraint
 import org.nlogo.api.{ CompilerServices, Dump }
-import org.nlogo.awt.{ Fonts => NLogoFonts }
 import org.nlogo.core.LogoList
 
 object Chooser {
@@ -15,8 +15,6 @@ object Chooser {
   private val MinWidth = 92
   private val MinPreferredWidth = 120
   private val ChooserHeight = 45
-  private val Margin = 4
-  private val Padding = 14
 }
 
 import Chooser._
@@ -30,16 +28,34 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   // index too (the selected value in the chooser). -- CLB
   protected var constraint = new ChooserConstraint()
 
-  // sub-element of Switch
+  // sub-elements of Switch
+  protected val label = new JLabel
   private val control = new ComboBox
+
+  label.setForeground(InterfaceColors.WIDGET_TEXT)
 
   locally {
     backgroundColor = InterfaceColors.CHOOSER_BACKGROUND
 
-    setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.Y_AXIS))
-    add(control)
-    doLayout()
-    NLogoFonts.adjustDefaultFont(this)
+    setLayout(new GridBagLayout)
+
+    val c = new GridBagConstraints
+
+    c.gridx = 0
+    c.gridy = 0
+    c.gridwidth = 1
+    c.weightx = 1
+    c.anchor = GridBagConstraints.NORTHWEST
+    c.insets = new Insets(4, 6, 0, 6)
+
+    add(label, c)
+
+    c.gridy = 1
+    c.fill = GridBagConstraints.BOTH
+    c.insets = new Insets(0, 6, 6, 6)
+
+    add(control, c)
+
     addMouseWheelListener(this)
   }
 
@@ -75,13 +91,6 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     }
   }
 
-
-  override def doLayout(): Unit = {
-    val controlHeight = getHeight / 2
-    control.setBounds(Margin, getHeight - Margin - controlHeight,
-      getWidth - 2 * Margin, controlHeight)
-  }
-
   /// size calculations
 
   override def getMinimumSize: Dimension =
@@ -91,30 +100,10 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     new Dimension(10000, ChooserHeight)
 
   override def getPreferredSize(font: Font): Dimension = {
-    new Dimension(StrictMath.max(MinPreferredWidth, getFontMetrics(font).stringWidth(name) + 2 * Margin + Padding),
-                  ChooserHeight)
+    new Dimension(MinPreferredWidth, ChooserHeight)
   }
 
   ///
-
-  override def paintComponent(g: Graphics): Unit = {
-    super.paintComponent(g)
-
-    val size = getSize()
-    val cb = control.getBounds()
-
-    g.setColor(getForeground)
-
-    val metrics = g.getFontMetrics
-    val fontAscent = metrics.getMaxAscent
-    val fontHeight = fontAscent + metrics.getMaxDescent
-
-    val shortenedName =
-        NLogoFonts.shortenStringToFit(name, size.width - 2 * Margin, metrics)
-
-    g.drawString(shortenedName, Margin,
-      Margin + (cb.y - Margin - fontHeight) / 2 + fontAscent)
-  }
 
   class ComboBox extends javax.swing.JComboBox[AnyRef] {
     addItemListener(new java.awt.event.ItemListener() {

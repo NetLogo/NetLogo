@@ -2,6 +2,8 @@
 
 package org.nlogo.window
 
+import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
+
 import org.nlogo.swing.RichJMenuItem
 import org.nlogo.api.Editable
 import org.nlogo.core.{ I18N, Output => CoreOutput }
@@ -12,15 +14,20 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
 
   backgroundColor = InterfaceColors.OUTPUT_BACKGROUND
 
-  setLayout(new java.awt.BorderLayout())
   displayName(I18N.gui.get("tabs.run.widgets.output"))
+
   val outputArea = new OutputArea()
-  add(new javax.swing.JPanel() {
-    setLayout(new java.awt.BorderLayout())
-    setBackground(InterfaceColors.MONITOR_BACKGROUND)
-    setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2))
-    add(outputArea, java.awt.BorderLayout.CENTER)
-  }, java.awt.BorderLayout.CENTER)
+
+  setLayout(new GridBagLayout)
+
+  val c = new GridBagConstraints
+
+  c.weightx = 1
+  c.weighty = 1
+  c.fill = GridBagConstraints.BOTH
+  c.insets = new Insets(6, 6, 6, 6)
+
+  add(outputArea, c)
 
   def propertySet = Properties.output
 

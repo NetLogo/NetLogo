@@ -5,6 +5,7 @@ package org.nlogo.widget
 import org.nlogo.agent.BooleanConstraint
 import org.nlogo.window.{ Events, InterfaceColors, MultiErrorWidget }
 import java.awt._
+import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
 import event.{ MouseWheelEvent, MouseEvent, MouseAdapter, MouseWheelListener }
 
 object Switch {
@@ -22,15 +23,22 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   import Switch._
 
   protected var constraint = new BooleanConstraint
-  protected val checkBox = new CheckBox
+  protected val label = new JLabel
+  protected val toggle = new Toggle
   protected var nameChanged = false
   protected var _name = ""
 
+  label.setForeground(InterfaceColors.WIDGET_TEXT)
+
   backgroundColor = InterfaceColors.SWITCH_BACKGROUND
 
-  org.nlogo.awt.Fonts.adjustDefaultFont(this)
-  setLayout(new FlowLayout(FlowLayout.LEFT))
-  add(checkBox)
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+
+  add(Box.createHorizontalStrut(6))
+  add(label)
+  add(Box.createHorizontalStrut(6))
+  add(toggle)
+
   addMouseWheelListener(this)
   addMouseListener(new MouseAdapter {
     override def mousePressed(e: MouseEvent) {
@@ -44,8 +52,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     if (isOn != on) {
       constraint.defaultValue = on
       updateConstraints()
-      doLayout()
-      new Events.WidgetEditedEvent(this).raise(this)
+      repaint()
     }
   }
 
@@ -53,7 +60,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   def name_=(name: String) {
     this._name = name
     displayName(name)
-    checkBox.setText(displayName)
+    label.setText(displayName)
     repaint()
   }
 
@@ -62,9 +69,8 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   }
 
   override def getPreferredSize(font: Font): Dimension = {
-    val fontMetrics: FontMetrics = getFontMetrics(font)
-    val height: Int = (fontMetrics.getMaxDescent + fontMetrics.getMaxAscent) + 2 * BORDERY
-    val width: Int = 6 * BORDERX + checkBox.getWidth
+    val height: Int = toggle.getHeight + 12
+    val width: Int = label.getWidth + toggle.getWidth + 18
     new Dimension(StrictMath.max(MINWIDTH, width), StrictMath.max(MINHEIGHT, height))
   }
 
@@ -73,13 +79,30 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
   def mouseWheelMoved(e: MouseWheelEvent) { isOn = ! (e.getWheelRotation >= 1) }
 
-  protected class CheckBox extends javax.swing.JCheckBox {
-    setFont(getFont.deriveFont(12f))
+  protected class Toggle extends JPanel {
+    setPreferredSize(new Dimension(10, 20))
+    setMaximumSize(new Dimension(10, 20))
+
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent) {
-        new Events.InputBoxLoseFocusEvent().raise(CheckBox.this)
+        new Events.InputBoxLoseFocusEvent().raise(Toggle.this)
         isOn = !isOn
       }
     })
+
+    override def paintComponent(g: Graphics) {
+      val g2d = g.asInstanceOf[Graphics2D]
+      g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
+      if (isOn)
+        g2d.setColor(InterfaceColors.SWITCH_TOGGLE_BACKGROUND_ON)
+      else
+        g2d.setColor(InterfaceColors.SWITCH_TOGGLE_BACKGROUND_OFF)
+      g2d.fillRoundRect(0, 0, getWidth, getHeight, getWidth, getWidth)
+      val y = if (isOn) 0 else getHeight - getWidth
+      g2d.setColor(InterfaceColors.SWITCH_TOGGLE_BACKGROUND_ON)
+      g2d.fillOval(0, y, getWidth, getWidth)
+      g2d.setColor(InterfaceColors.SWITCH_TOGGLE)
+      g2d.fillOval(1, y + 1, getWidth - 2, getWidth - 2)
+    }
   }
 }
