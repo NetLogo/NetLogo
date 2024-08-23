@@ -2,22 +2,20 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Graphics,
-                  Graphics2D, GridBagConstraints }
-import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
+import java.awt.{ BorderLayout, Color, Component, Container, ContainerOrderFocusTraversalPolicy, Cursor, Dimension,
+                  Graphics, Graphics2D, GridBagConstraints, Point }
+import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, MouseAdapter, MouseEvent, MouseMotionAdapter }
 import java.awt.print.{ PageFormat, Printable }
-import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
-import javax.swing.{ AbstractAction, Action, JComponent, JPanel, JScrollPane, JSplitPane, ScrollPaneConstants }
+import javax.swing.{ AbstractAction, Action, JButton, JComponent, JLayeredPane, JPanel, JScrollPane, JSplitPane,
+                     ScrollPaneConstants }
 
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, UserAction, Utils },
-  Implicits.thunk2action,
-  UserAction.{ MenuAction, ToolsCategory },
-  Utils.icon
+                       Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
 import org.nlogo.swing.{ Utils => SwingUtils }
-import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace, ViewUpdatePanel, WidgetInfo,
+import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace, InterfaceColors, ViewUpdatePanel, WidgetInfo,
                           Events => WindowEvents, WorkspaceActions },
                         WindowEvents.{ Enable2DEvent, LoadBeginEvent, OutputEvent }
 
@@ -37,6 +35,199 @@ class InterfaceTab(workspace: GUIWorkspace,
   with SwitchedTabsEvent.Handler
   with NlogoPrintable
   with MenuTab {
+
+  private class SizeButton(expand: Boolean, splitPane: SplitPane) extends JButton {
+    setBorder(null)
+    setBackground(InterfaceColors.TRANSPARENT)
+
+    if (expand) {
+      setAction(new AbstractAction {
+        def actionPerformed(e: ActionEvent) {
+          if (splitPane.getDividerLocation >= maxDividerLocation) {
+            splitPane.resetToPreferredSizes()
+          }
+
+          else if (splitPane.getDividerLocation > 0) {
+            splitPane.setDividerLocation(0)
+          }
+        }
+      })
+    }
+
+    else {
+      setAction(new AbstractAction {
+        def actionPerformed(e: ActionEvent) {
+          if (splitPane.getDividerLocation <= 0) {
+            splitPane.resetToPreferredSizes()
+          }
+
+          else if (splitPane.getDividerLocation < maxDividerLocation) {
+            splitPane.setDividerLocation(maxDividerLocation)
+          }
+        }
+      })
+    }
+
+    override def paintComponent(g: Graphics) {
+      super.paintComponent(g)
+
+      val g2d = Utils.initGraphics2D(g)
+
+      g2d.setColor(Color.BLACK)
+
+      splitPane.getOrientation match {
+        case JSplitPane.HORIZONTAL_SPLIT =>
+          if (expand)
+            g2d.fillPolygon(Array(getWidth / 2, getWidth / 2 + 5, getWidth / 2 - 5),
+                            Array(getHeight / 2 - 2, getHeight / 2 + 2, getHeight / 2 + 2), 3)
+          else
+            g2d.fillPolygon(Array(getWidth / 2, getWidth / 2 + 5, getWidth / 2 - 5),
+                            Array(getHeight / 2 + 2, getHeight / 2 - 2, getHeight / 2 - 2), 3)
+        case JSplitPane.VERTICAL_SPLIT =>
+          if (expand)
+            g2d.fillPolygon(Array(getWidth / 2 - 2, getWidth / 2 + 2, getWidth / 2 + 2),
+                            Array(getHeight / 2, getHeight / 2 - 5, getHeight / 2 + 5), 3)
+          else
+            g2d.fillPolygon(Array(getWidth / 2 + 2, getWidth / 2 - 2, getWidth / 2 - 2),
+                            Array(getHeight / 2, getHeight / 2 - 5, getHeight / 2 + 5), 3)
+      }
+    }
+  }
+
+  private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) {
+    private val expandButton = new SizeButton(true, splitPane)
+    private val contractButton = new SizeButton(false, splitPane)
+
+    add(expandButton)
+    add(contractButton)
+    
+    setBackground(InterfaceColors.DARK_GRAY)
+
+    private val dragRadius = 3
+
+    private var offset = new Point(0, 0)
+
+    addMouseListener(new MouseAdapter {
+      override def mouseEntered(e: MouseEvent) {
+        splitPane.getOrientation match {
+          case JSplitPane.HORIZONTAL_SPLIT => setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR))
+          case JSplitPane.VERTICAL_SPLIT => setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR))
+        }
+      }
+
+      override def mouseExited(e: MouseEvent) {
+        setCursor(Cursor.getDefaultCursor)
+      }
+
+      override def mousePressed(e: MouseEvent) {
+        offset = e.getPoint
+      }
+    })
+
+    addMouseMotionListener(new MouseMotionAdapter {
+      override def mouseDragged(e: MouseEvent) {
+        e.translatePoint(getX, getY)
+
+        splitPane.getOrientation match {
+          case JSplitPane.HORIZONTAL_SPLIT => splitPane.setDividerLocation(e.getY - offset.y)
+          case JSplitPane.VERTICAL_SPLIT => splitPane.setDividerLocation(e.getX - offset.x)
+        }
+      }
+    })
+
+    override def doLayout() {
+      val size = splitPane.getDividerSize
+
+      splitPane.getOrientation match {
+        case JSplitPane.HORIZONTAL_SPLIT =>
+          expandButton.setBounds(0, 0, size, size)
+          contractButton.setBounds(size, 0, size, size)
+        case JSplitPane.VERTICAL_SPLIT =>
+          expandButton.setBounds(0, 0, size, size)
+          contractButton.setBounds(0, size, size, size)
+      }
+    }
+
+    override def paintComponent(g: Graphics) {
+      super.paintComponent(g)
+
+      val g2d = Utils.initGraphics2D(g)
+
+      g2d.setColor(Color.WHITE)
+      g2d.fillOval(getWidth / 2 - dragRadius, getHeight / 2 - dragRadius, dragRadius * 2, dragRadius * 2)
+    }
+  }
+  
+  private class SplitPane(mainComponent: Component, topComponent: Component) extends JLayeredPane {
+    private val divider = new SplitPaneDivider(this)
+
+    add(mainComponent, JLayeredPane.DEFAULT_LAYER)
+    add(topComponent, JLayeredPane.PALETTE_LAYER)
+    add(divider, JLayeredPane.PALETTE_LAYER)
+
+    private var orientation = JSplitPane.HORIZONTAL_SPLIT
+    private var dividerLocation = 0
+    private val dividerSize = 18
+
+    def getOrientation: Int = orientation
+
+    def setOrientation(orientation: Int) {
+      this.orientation = orientation
+
+      revalidate()
+      dividerChanged()
+    }
+
+    def getDividerLocation: Int = dividerLocation
+
+    def setDividerLocation(location: Int) {
+      dividerLocation = location.max(0).min(maxDividerLocation)
+
+      revalidate()
+      dividerChanged()
+    }
+
+    private def dividerChanged() {
+      commandCenterToggleAction.putValue(Action.NAME,
+        if (dividerLocation < maxDividerLocation) I18N.gui.get("menu.tools.hideCommandCenter")
+        else I18N.gui.get("menu.tools.showCommandCenter"))
+    }
+
+    def getDividerSize: Int = dividerSize
+
+    def resetToPreferredSizes() {
+      orientation match {
+        case JSplitPane.HORIZONTAL_SPLIT =>
+          setDividerLocation(getHeight - topComponent.getPreferredSize.height - dividerSize)
+        case JSplitPane.VERTICAL_SPLIT =>
+          setDividerLocation(getWidth - topComponent.getPreferredSize.width - dividerSize)
+      }
+    }
+
+    override def doLayout() {
+      orientation match {
+        case JSplitPane.HORIZONTAL_SPLIT =>
+          mainComponent.setBounds(0, 0, getWidth, dividerLocation)
+        case JSplitPane.VERTICAL_SPLIT =>
+          mainComponent.setBounds(0, 0, dividerLocation, getHeight)
+      }
+
+      if (dividerLocation > maxDividerLocation)
+        dividerLocation = maxDividerLocation
+      
+      orientation match {
+        case JSplitPane.HORIZONTAL_SPLIT =>
+          topComponent.setBounds(0, dividerLocation + dividerSize, getWidth, getHeight - dividerLocation - dividerSize)
+          divider.setBounds(0, dividerLocation, getWidth, dividerSize)
+        case JSplitPane.VERTICAL_SPLIT =>
+          topComponent.setBounds(dividerLocation + dividerSize, 0, getWidth - dividerLocation - dividerSize, getHeight)
+          divider.setBounds(dividerLocation, 0, dividerSize, getHeight)
+      }
+
+      dividerChanged()
+    }
+  }
+
   setFocusCycleRoot(true)
   setFocusTraversalPolicy(new InterfaceTabFocusTraversalPolicy)
   commandCenter.locationToggleAction = new CommandCenterLocationToggleAction
@@ -62,19 +253,8 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   private var viewUpdatePanel: ViewUpdatePanel = null
 
-  private val splitPane = new JSplitPane(
-    JSplitPane.VERTICAL_SPLIT,
-    true, // continuous layout as the user drags
-    scrollPane, commandCenter)
-  splitPane.setOneTouchExpandable(true)
-  splitPane.setResizeWeight(1) // give the InterfacePanel all
-  splitPane.addPropertyChangeListener("dividerLocation", new PropertyChangeListener {
-    def propertyChange(e: PropertyChangeEvent) {
-      commandCenterToggleAction.putValue(Action.NAME,
-        if (e.getNewValue.asInstanceOf[Int] < maxDividerLocation) I18N.gui.get("menu.tools.hideCommandCenter")
-        else I18N.gui.get("menu.tools.showCommandCenter"))
-    }
-  })
+  private val splitPane = new SplitPane(scrollPane, commandCenter)
+
   add(splitPane, BorderLayout.CENTER)
 
   object TrackingFocusListener extends FocusListener {
@@ -168,31 +348,26 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   /// command center stuff
 
-  private class CommandCenterLocationToggleAction extends AbstractAction("Toggle") {
-    putValue(Action.SMALL_ICON, icon("/images/toggle.gif"))
+  private class CommandCenterLocationToggleAction extends AbstractAction {
+    putValue(Action.SMALL_ICON, Utils.iconScaled("/images/shift-right.png", 10, 10))
+
     override def actionPerformed(e: ActionEvent) {
       splitPane.getOrientation match {
         case JSplitPane.VERTICAL_SPLIT =>
           splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT)
-          // dunno why, but resetToPreferredSizes() doesn't do the right thing here - ST 11/12/04
-          splitPane.setDividerLocation(0.5)
-        case _ => // horizontal
+          putValue(Action.SMALL_ICON, Utils.iconScaled("/images/shift-right.png", 10, 10))
+        case JSplitPane.HORIZONTAL_SPLIT =>
           splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT)
-          splitPane.resetToPreferredSizes()
+          putValue(Action.SMALL_ICON, Utils.iconScaled("/images/shift-bottom.png", 10, 10))
       }
+
+      splitPane.resetToPreferredSizes()
     }
   }
 
   private def showCommandCenter(): Unit = {
-    if (splitPane.getLastDividerLocation < maxDividerLocation)
-      splitPane.setDividerLocation(splitPane.getLastDividerLocation)
-    else // the window must have been resized.  oh well, hope for the best... - ST 11/12/04
-      splitPane.getOrientation match {
-        case JSplitPane.VERTICAL_SPLIT => splitPane.resetToPreferredSizes()
-        case _ => // horizontal
-          // dunno why, but resetToPreferredSizes() doesn't work - ST 11/12/04
-          splitPane.setDividerLocation(0.5)
-      }
+    if (splitPane.getDividerLocation >= maxDividerLocation)
+      splitPane.resetToPreferredSizes()
   }
 
   class CommandCenterToggleAction extends AbstractAction(I18N.gui.get("menu.tools.hideCommandCenter"))
@@ -212,7 +387,6 @@ class InterfaceTab(workspace: GUIWorkspace,
     }
   }
 
-
   class JumpToCommandCenterAction extends AbstractAction(I18N.gui.get("menu.tools.jumpToCommandCenter"))
   with MenuAction {
     category    = ToolsCategory
@@ -227,15 +401,25 @@ class InterfaceTab(workspace: GUIWorkspace,
     }
   }
 
-  private def maxDividerLocation =
-    if(splitPane.getOrientation == JSplitPane.VERTICAL_SPLIT)
-      splitPane.getHeight - splitPane.getDividerSize - splitPane.getInsets.top
-    else splitPane.getWidth - splitPane.getDividerSize - splitPane.getInsets.left
+  private def maxDividerLocation: Int = {
+    splitPane.getOrientation match {
+      case JSplitPane.HORIZONTAL_SPLIT => splitPane.getHeight - splitPane.getDividerSize
+      case JSplitPane.VERTICAL_SPLIT => splitPane.getWidth - splitPane.getDividerSize
+    }
+  }
 
-  // respect the size of the command center when loading and normalizing
-  def adjustTargetSize(targetSize: Dimension) {
-    if(splitPane.getOrientation == JSplitPane.HORIZONTAL_SPLIT)
-      targetSize.width += commandCenter.getSize().width - commandCenter.getPreferredSize.width
-    else targetSize.height += commandCenter.getSize().height - commandCenter.getPreferredSize.height
+  def packSplitPane() {
+    splitPane.setPreferredSize(
+      splitPane.getOrientation match {
+        case JSplitPane.HORIZONTAL_SPLIT =>
+          new Dimension(scrollPane.getPreferredSize.width, scrollPane.getPreferredSize.height + splitPane.getDividerSize
+                        + commandCenter.getPreferredSize.height)
+        case JSplitPane.VERTICAL_SPLIT =>
+          new Dimension(scrollPane.getPreferredSize.width + splitPane.getDividerSize +
+                        commandCenter.getPreferredSize.width, scrollPane.getPreferredSize.height)
+      })
+
+    splitPane.revalidate()
+    splitPane.resetToPreferredSizes()
   }
 }

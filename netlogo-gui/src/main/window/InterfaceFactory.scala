@@ -2,10 +2,6 @@
 
 package org.nlogo.window
 
-import java.awt.Image
-import javax.swing.ImageIcon
-
-import org.nlogo.core.I18N
 import org.nlogo.core.{ I18N, View => CoreView, Widget => CoreWidget,
   Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
   Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider,
@@ -31,7 +27,7 @@ object WidgetInfo {
 }
 
 case class WidgetInfo(displayName: String, widgetThunk: () => CoreWidget, imageName: String) {
-  def icon = new ImageIcon(Utils.icon("/images/" + imageName).getImage.getScaledInstance(25, 15, Image.SCALE_SMOOTH))
+  def icon = Utils.iconScaled("/images/" + imageName, 25, 15)
   def coreWidget = widgetThunk()
 }
 

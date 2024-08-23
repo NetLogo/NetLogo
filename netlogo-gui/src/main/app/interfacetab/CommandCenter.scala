@@ -2,14 +2,13 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ BorderLayout, Component, Dimension, FileDialog, Font, Insets }
+import java.awt.{ BorderLayout, Component, Dimension, FileDialog, Font, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent }
-import javax.swing.{ Action, Box, BoxLayout, JButton, JLabel, JMenuItem, JPanel,
-  JPopupMenu }
+import javax.swing.{ Action, Box, JButton, JLabel, JMenuItem, JPanel, JPopupMenu }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
-import org.nlogo.awt.{ Fonts, Hierarchy, UserCancelException }
+import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.{ FileDialog => SwingFileDialog, ModalProgressTask, RichAction }
 import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents,
@@ -24,7 +23,7 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
   // true = echo commands to output
   val commandLine = new CommandLine(this, true, 12, workspace)
   private val prompt = new LinePrompt(commandLine)
-  private val northPanel = new JPanel
+  private val northPanel = new JPanel(new GridBagLayout)
   private val southPanel = new JPanel
   val output = OutputArea.withNextFocus(commandLine)
   output.text.addMouseListener(new MouseAdapter {
@@ -32,15 +31,9 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
     override def mouseReleased(e: MouseEvent) { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
   })
 
-  private val locationToggleButton =
-    new JButton() {
-      setText("")
-      setFocusable(false)
-      setVisible(false)
-      // this is very ad hoc. we want to save vertical screen real estate and also keep the
-      // button from being too wide on Windows and Linux - ST 7/13/04, 11/24/04
-      override def getInsets = new Insets(2, 4, 3, 4)
-    }
+  private val locationToggleButton = new JButton {
+    setFocusable(false)
+  }
 
   locally {
     setOpaque(true)  // so background color shows up - ST 10/4/05
@@ -51,31 +44,35 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
     //-----------------------------------------
     val titleLabel = new JLabel(I18N.gui.get("tabs.run.commandcenter"))
 
-    val clearButton = new JButton(RichAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) { _ => output.clear() }) {
+    titleLabel.setFont(titleLabel.getFont.deriveFont(Font.BOLD))
+    titleLabel.setForeground(InterfaceColors.WIDGET_TEXT)
+
+    val clearButton = new JButton(RichAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) {
+      _ => output.clear()
+    }) {
       setFocusable(false)
-      setFont(new Font(Fonts.platformFont, Font.PLAIN, 9))
-
-      override def getPreferredSize: Dimension = {
-        val ps = super.getPreferredSize
-        val ms = super.getMinimumSize
-        new Dimension(ps.getWidth.toInt, (ms.getHeight * 0.8).toInt)
-      }
-
-      override def getInsets = {
-        val insets = super.getInsets()
-        // this is very ad hoc. we want to save vertical screen real estate - ST 7/13/04
-        new Insets(0, insets.left, 2, insets.right)
-      }
     }
 
     add(northPanel, BorderLayout.NORTH)
-    northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.X_AXIS))
+
     northPanel.setOpaque(false)
-    northPanel.add(titleLabel)
-    northPanel.add(Box.createGlue)
-    titleLabel.setFont(titleLabel.getFont.deriveFont(Font.BOLD))
-    northPanel.add(locationToggleButton)
-    northPanel.add(clearButton)
+
+    val c = new GridBagConstraints
+
+    c.anchor = GridBagConstraints.WEST
+    c.weightx = 1
+    c.fill = GridBagConstraints.VERTICAL
+    c.insets = new Insets(6, 6, 6, 6)
+
+    northPanel.add(titleLabel, c)
+
+    c.anchor = GridBagConstraints.EAST
+    c.weightx = 0
+    c.insets = new Insets(6, 0, 6, 6)
+
+    northPanel.add(locationToggleButton, c)
+    northPanel.add(clearButton, c)
+
     resizeNorthPanel()
 
     //CENTER
@@ -98,11 +95,8 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
     add(southPanel, BorderLayout.SOUTH)
   }
 
-  private[interfacetab] def locationToggleAction_=(a: Action): Unit = {
+  private[interfacetab] def locationToggleAction_=(a: Action) =
     locationToggleButton.setAction(a)
-    locationToggleButton.setText("")
-    locationToggleButton.setVisible(a != null)
-  }
 
   private[interfacetab] def locationToggleAction: Action =
     locationToggleButton.getAction

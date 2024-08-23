@@ -494,10 +494,9 @@ class App extends
       frame.pack()
 
       loadDefaultModel()
-      // smartPack respects the command center's current size, rather
-      // than its preferred size, so we have to explicitly set the
-      // command center to the size we want - ST 1/7/05
-      _tabManager.interfaceTab.commandCenter.setSize(_tabManager.interfaceTab.commandCenter.getPreferredSize)
+
+      _tabManager.interfaceTab.packSplitPane()
+
       smartPack(frame.getPreferredSize, true)
 
       if (! isMac) { org.nlogo.awt.Positioning.center(frame, null) }
@@ -839,7 +838,7 @@ class App extends
     if(AbstractWorkspace.isApp){
       // if we don't call revalidate() here we don't get up-to-date
       // preferred size information - ST 11/4/03
-      _tabManager.interfaceTab.getInterfacePanel.revalidate()
+      _tabManager.interfaceTab.packSplitPane()
       if(wasAtPreferredSizeBeforeLoadBegan) smartPack(frame.getPreferredSize, true)
       else{
         val currentSize = frame.getSize
@@ -1139,8 +1138,6 @@ class App extends
     val maxBoundsY = maxBounds.y + insets.top
     val maxX = maxBoundsX + maxWidth
     val maxY = maxBoundsY + maxHeight
-
-    _tabManager.interfaceTab.adjustTargetSize(targetSize)
 
     import StrictMath.{ max, min }
 
