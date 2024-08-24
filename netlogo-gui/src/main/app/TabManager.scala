@@ -34,7 +34,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   private val closeIconLight = Utils.iconScaled("/images/close-light.png", 8, 8)
   private val closeIconDark = Utils.iconScaled("/images/close-dark.png", 8, 8)
   
-  private class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
+  private class TabLabel(val text: String, tab: Component) extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
     val textLabel = new JLabel(text)
     var closeLabel: JLabel = null
 
@@ -331,9 +331,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def getTabTitle(index: Int): String = {
     if (index >= mainTabs.getTabCount)
-      separateTabs.getTitleAt(index - mainTabs.getTabCount)
+      separateTabs.getTabComponentAt(index - mainTabs.getTabCount).asInstanceOf[TabLabel].text
     else
-      mainTabs.getTitleAt(index)
+      mainTabs.getTabComponentAt(index).asInstanceOf[TabLabel].text
   }
 
   def getTabWithFilename(filename: Filename): Option[TemporaryCodeTab] =
