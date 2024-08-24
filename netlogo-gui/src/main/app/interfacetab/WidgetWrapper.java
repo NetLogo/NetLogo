@@ -598,7 +598,7 @@ public class WidgetWrapper
       return;
     } else if (org.nlogo.awt.Mouse.hasButton1(e)) {
       if (mouseMode() == MouseMode.DRAG) {
-        WidgetActions.moveWidgets(interfacePanel);
+        WidgetActions.moveSelectedWidgets(interfacePanel);
       } else if (mouseMode() == MouseMode.NE || mouseMode() == MouseMode.NW
           || mouseMode() == MouseMode.SE || mouseMode() == MouseMode.SW
           || mouseMode() == MouseMode.S || mouseMode() == MouseMode.W

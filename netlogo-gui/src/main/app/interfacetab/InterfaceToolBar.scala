@@ -258,7 +258,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     private val leftAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft"),
                                                 Utils.iconScaled("/images/align-left.png", 16, 16)) {
       def actionPerformed(e: ActionEvent) {
-        wPanel.alignLeft(wPanel.getWrapper(selectedObjects.head))
+        wPanel.alignLeft(wPanel.getWrapper(selectedObjects.minBy(_.getParent.getX)))
       }
     }
 
@@ -273,14 +273,14 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     private val rightAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight"),
                                                  Utils.iconScaled("/images/align-right.png", 16, 16)) {
       def actionPerformed(e: ActionEvent) {
-        wPanel.alignRight(wPanel.getWrapper(selectedObjects.head))
+        wPanel.alignRight(wPanel.getWrapper(selectedObjects.maxBy(_.getParent.getX)))
       }
     }
 
     private val topAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop"),
                                                Utils.iconScaled("/images/align-top.png", 16, 16)) {
       def actionPerformed(e: ActionEvent) {
-        wPanel.alignTop(wPanel.getWrapper(selectedObjects.head))
+        wPanel.alignTop(wPanel.getWrapper(selectedObjects.minBy(_.getParent.getY)))
       }
     }
 
@@ -295,7 +295,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     private val bottomAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom"),
                                                   Utils.iconScaled("/images/align-bottom.png", 16, 16)) {
       def actionPerformed(e: ActionEvent) {
-        wPanel.alignBottom(wPanel.getWrapper(selectedObjects.head))
+        wPanel.alignBottom(wPanel.getWrapper(selectedObjects.maxBy(_.getParent.getY)))
       }
     }
 
