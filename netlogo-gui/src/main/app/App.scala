@@ -499,6 +499,8 @@ class App extends
 
       smartPack(frame.getPreferredSize, true)
 
+      _tabManager.interfaceTab.resetSplitPane()
+
       if (! isMac) { org.nlogo.awt.Positioning.center(frame, null) }
 
       org.nlogo.app.common.FindDialog.init(frame, _tabManager.separateTabsWindow)
@@ -849,6 +851,7 @@ class App extends
         if(preferredSize.height > newHeight) newHeight = preferredSize.height
         if(newWidth != currentSize.width || newHeight != currentSize.height) smartPack(new Dimension(newWidth, newHeight), true)
       }
+      _tabManager.interfaceTab.resetSplitPane()
       preferredSizeAtLoadEndTime = frame.getPreferredSize()
     }
     frame.toFront()

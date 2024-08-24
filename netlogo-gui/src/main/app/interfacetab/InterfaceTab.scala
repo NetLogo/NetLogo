@@ -420,6 +420,9 @@ class InterfaceTab(workspace: GUIWorkspace,
       })
 
     splitPane.revalidate()
+  }
+
+  def resetSplitPane() {
     splitPane.resetToPreferredSizes()
   }
 }
