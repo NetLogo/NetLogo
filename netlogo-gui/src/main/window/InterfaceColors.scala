@@ -18,44 +18,192 @@ object InterfaceColors {
 
   def getTheme = theme
 
-  def LIGHT_GRAY = new Color(238, 238, 238)
+  private val CLASSIC_LAVENDER = new Color(188, 188, 230)
+  private val CLASSIC_LIGHT_GREEN = new Color(130, 188, 183)
+  private val CLASSIC_DARK_GREEN = new Color(65, 94, 91)
+  private val CLASSIC_ORANGE = new Color(200, 103, 103)
+  private val CLASSIC_BEIGE = new Color(225, 225, 182)
+
+  private val LIGHT_BLUE = new Color(207, 229, 255)
+  private val DARK_BLUE = new Color(6, 112, 237)
+  private val LIGHT_GRAY = new Color(238, 238, 238)
+
+  val TRANSPARENT = new Color(0, 0, 0, 0)
+
   def DARK_GRAY = new Color(175, 175, 175)
-  def INPUT_BACKGROUND = new Color(207, 229, 255)
-  def OUTPUT_BACKGROUND = new Color(231, 231, 237)
-  def MEDIUM_BLUE = new Color(6, 112, 237)
+
+  def WIDGET_TEXT =
+    theme match {
+      case "classic" => Color.BLACK
+      case "light" => new Color(85, 87, 112)
+    }
 
   def WIDGET_HOVER_SHADOW = new Color(75, 75, 75)
+
   def TEXT_BOX_BACKGROUND = Color.WHITE
-  def TRANSPARENT = new Color(0, 0, 0, 0)
-  def WIDGET_TEXT = new Color(85, 87, 112)
+
   def COMMAND_CENTER_BACKGROUND = LIGHT_GRAY
-  def BUTTON_BACKGROUND = MEDIUM_BLUE
-  def BUTTON_BACKGROUND_HOVER = new Color(62, 150, 253)
-  def BUTTON_BACKGROUND_PRESSED = new Color(0, 49, 106)
-  def BUTTON_BACKGROUND_PRESSED_HOVER = new Color(9, 89, 183)
-  def BUTTON_BACKGROUND_DISABLED = new Color(213, 213, 213)
-  def BUTTON_TEXT = Color.WHITE
-  def BUTTON_TEXT_DISABLED = new Color(154, 154, 154)
+
+  def BUTTON_BACKGROUND =
+    theme match {
+      case "classic" => CLASSIC_LAVENDER
+      case "light" => DARK_BLUE
+    }
+
+  def BUTTON_BACKGROUND_HOVER =
+    theme match {
+      case "classic" => CLASSIC_LAVENDER
+      case "light" => new Color(62, 150, 253)
+    }
+
+  def BUTTON_BACKGROUND_PRESSED =
+    theme match {
+      case "classic" => Color.BLACK
+      case "light" => new Color(0, 49, 106)
+    }
+
+  def BUTTON_BACKGROUND_PRESSED_HOVER =
+    theme match {
+      case "classic" => Color.BLACK
+      case "light" => new Color(9, 89, 183)
+    }
+
+  def BUTTON_BACKGROUND_DISABLED =
+    theme match {
+      case "classic" => CLASSIC_LAVENDER
+      case "light" => new Color(213, 213, 213)
+    }
+
+  def BUTTON_TEXT =
+    theme match {
+      case "classic" => Color.BLACK
+      case "light" => Color.WHITE
+    }
+
+  def BUTTON_TEXT_PRESSED =
+    theme match {
+      case "classic" => CLASSIC_LAVENDER
+      case "light" => Color.WHITE
+    }
+
+  def BUTTON_TEXT_DISABLED =
+    theme match {
+      case "classic" => Color.BLACK
+      case "light" => new Color(154, 154, 154)
+    }
+
   def BUTTON_TEXT_ERROR = Color.RED
-  def SLIDER_BACKGROUND = INPUT_BACKGROUND
-  def SLIDER_BAR_BACKGROUND = DARK_GRAY
-  def SLIDER_BAR_BACKGROUND_FILLED = MEDIUM_BLUE
-  def SLIDER_THUMB_BORDER = MEDIUM_BLUE
-  def SLIDER_THUMB_BACKGROUND = Color.WHITE
-  def SLIDER_THUMB_BACKGROUND_PRESSED = MEDIUM_BLUE
-  def SWITCH_BACKGROUND = INPUT_BACKGROUND
-  def SWITCH_TOGGLE = Color.WHITE
-  def SWITCH_TOGGLE_BACKGROUND_ON = MEDIUM_BLUE
-  def SWITCH_TOGGLE_BACKGROUND_OFF = DARK_GRAY
-  def CHOOSER_BACKGROUND = INPUT_BACKGROUND
-  def CHOOSER_BORDER = MEDIUM_BLUE
-  def INPUT_BORDER = MEDIUM_BLUE
+
+  def SLIDER_BACKGROUND =
+    theme match {
+      case "classic" => CLASSIC_LIGHT_GREEN
+      case "light" => LIGHT_BLUE
+    }
+
+  def SLIDER_BAR_BACKGROUND =
+    theme match {
+      case "classic" => CLASSIC_DARK_GREEN
+      case "light" => DARK_GRAY
+    }
+
+  def SLIDER_BAR_BACKGROUND_FILLED =
+    theme match {
+      case "classic" => CLASSIC_DARK_GREEN
+      case "light" => DARK_BLUE
+    }
+
+  def SLIDER_THUMB_BORDER =
+    theme match {
+      case "classic" => CLASSIC_ORANGE
+      case "light" => DARK_BLUE
+    }
+
+  def SLIDER_THUMB_BACKGROUND =
+    theme match {
+      case "classic" => CLASSIC_ORANGE
+      case "light" => Color.WHITE
+    }
+
+  def SLIDER_THUMB_BACKGROUND_PRESSED =
+    theme match {
+      case "classic" => CLASSIC_ORANGE
+      case "light" => DARK_BLUE
+    }
+
+  def SWITCH_BACKGROUND =
+    theme match {
+      case "classic" => CLASSIC_LIGHT_GREEN
+      case "light" => LIGHT_BLUE
+    }
+
+  def SWITCH_TOGGLE =
+    theme match {
+      case "classic" => CLASSIC_ORANGE
+      case "light" => Color.WHITE
+    }
+    
+  def SWITCH_TOGGLE_BACKGROUND_ON =
+    theme match {
+      case "classic" => CLASSIC_DARK_GREEN
+      case "light" => DARK_BLUE
+    }
+
+  def SWITCH_TOGGLE_BACKGROUND_OFF =
+    theme match {
+      case "classic" => CLASSIC_DARK_GREEN
+      case "light" => DARK_GRAY
+    }
+
+  def CHOOSER_BACKGROUND =
+    theme match {
+      case "classic" => CLASSIC_LIGHT_GREEN
+      case "light" => LIGHT_BLUE
+    }
+
+  def CHOOSER_BORDER =
+    theme match {
+      case "classic" => CLASSIC_DARK_GREEN
+      case "light" => DARK_BLUE
+    }
+
+  def INPUT_BACKGROUND =
+    theme match {
+      case "classic" => CLASSIC_LIGHT_GREEN
+      case "light" => LIGHT_BLUE
+    }
+
+  def INPUT_BORDER =
+    theme match {
+      case "classic" => CLASSIC_DARK_GREEN
+      case "light" => DARK_BLUE
+    }
+
   def GRAPHICS_BACKGROUND = Constants.ViewBackground
+
   def GRAPHICS_HANDLE = DARK_GRAY
-  def MONITOR_BACKGROUND = OUTPUT_BACKGROUND
+
+  def MONITOR_BACKGROUND =
+    theme match {
+      case "classic" => CLASSIC_BEIGE
+      case "light" => LIGHT_GRAY
+    }
+
   def MONITOR_BORDER = DARK_GRAY
-  def PLOT_BACKGROUND = OUTPUT_BACKGROUND
+
+  def PLOT_BACKGROUND =
+    theme match {
+      case "classic" => CLASSIC_BEIGE
+      case "light" => LIGHT_GRAY
+    }
+
   def PLOT_BORDER = DARK_GRAY
+
+  def OUTPUT_BACKGROUND =
+    theme match {
+      case "classic" => CLASSIC_BEIGE
+      case "light" => LIGHT_GRAY
+    }
+
   def OUTPUT_BORDER = DARK_GRAY
 
   def AGENT_EDITOR_BACKGROUND = LIGHT_GRAY

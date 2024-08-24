@@ -58,19 +58,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   private val xAxis = new XAxisLabels()
   private val yAxis = new YAxisLabels()
 
-  nameLabel.setForeground(InterfaceColors.WIDGET_TEXT)
-  xAxis.setForeground(InterfaceColors.WIDGET_TEXT)
-  yAxis.setForeground(InterfaceColors.WIDGET_TEXT)
-
   displayName = plot.name
-
-  // this is needed because the PlotLegend is going to use us to
-  // get a font - ST 9/2/04
-  // since the PlotLegend is added and removed from the widget
-  // when it is shown or hidden, the usual way of just letting Zoomer
-  // zoom the font size won't work, hence the fontSource stuff in
-  // PlotLegend - ST 2/22/06
-  backgroundColor = InterfaceColors.PLOT_BACKGROUND
 
   plot.clear() // set current values to defaults
 
@@ -167,6 +155,10 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   }
 
   override def paintComponent(g: Graphics) = {
+    backgroundColor = InterfaceColors.PLOT_BACKGROUND
+
+    recolor()
+
     super.paintComponent(g)
     nameLabel.setToolTipText(
       if (nameLabel.getPreferredSize.width > nameLabel.getSize().width) plotName else null)
@@ -372,7 +364,6 @@ object AbstractPlotWidget {
     private val label: JLabel = new JLabel("", SwingConstants.CENTER)
     private val max: JLabel = new JLabel()
 
-    setBackground(InterfaceColors.PLOT_BACKGROUND)
     val gridbag: GridBagLayout = new GridBagLayout
     setLayout(gridbag)
     val c: GridBagConstraints = new GridBagConstraints
@@ -399,9 +390,16 @@ object AbstractPlotWidget {
     add(max)
 
     override def paintComponent(g: Graphics) = {
-      super.paintComponent(g)
+      setBackground(InterfaceColors.PLOT_BACKGROUND)
+
+      min.setForeground(InterfaceColors.WIDGET_TEXT)
+      label.setForeground(InterfaceColors.WIDGET_TEXT)
+      max.setForeground(InterfaceColors.WIDGET_TEXT)
+
       label.setToolTipText(
         if (label.getPreferredSize.width > label.getSize().width) getLabel else null)
+      
+      super.paintComponent(g)
     }
 
     def setLabel(text: String) = label.setText(text)
@@ -417,7 +415,6 @@ object AbstractPlotWidget {
     private val labelIcon: VTextIcon = new VTextIcon(label, "", org.nlogo.swing.VTextIcon.ROTATE_LEFT)
     private val min: JLabel = new JLabel()
 
-    setBackground(InterfaceColors.PLOT_BACKGROUND)
     label.setIcon(labelIcon)
     val gridbag: GridBagLayout = new GridBagLayout
     setLayout(gridbag)
@@ -442,6 +439,12 @@ object AbstractPlotWidget {
     add(min)
 
     override def paintComponent(g: Graphics) = {
+      setBackground(InterfaceColors.PLOT_BACKGROUND)
+
+      min.setForeground(InterfaceColors.WIDGET_TEXT)
+      label.setForeground(InterfaceColors.WIDGET_TEXT)
+      max.setForeground(InterfaceColors.WIDGET_TEXT)
+
       if (label.getPreferredSize.width > label.getWidth)
         label.setToolTipText(label.getText)
       else

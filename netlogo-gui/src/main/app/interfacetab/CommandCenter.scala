@@ -2,7 +2,8 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ BorderLayout, Component, Dimension, FileDialog, Font, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ BorderLayout, Component, Dimension, FileDialog, Font, Graphics, GridBagConstraints, GridBagLayout,
+                  Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.{ Action, Box, JButton, JLabel, JMenuItem, JPanel, JPopupMenu }
 
@@ -35,6 +36,10 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
     setFocusable(false)
   }
 
+  private val titleLabel = new JLabel(I18N.gui.get("tabs.run.commandcenter"))
+
+  titleLabel.setFont(titleLabel.getFont.deriveFont(Font.BOLD))
+
   locally {
     setOpaque(true)  // so background color shows up - ST 10/4/05
     setBackground(InterfaceColors.COMMAND_CENTER_BACKGROUND)
@@ -42,10 +47,6 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
 
     //NORTH
     //-----------------------------------------
-    val titleLabel = new JLabel(I18N.gui.get("tabs.run.commandcenter"))
-
-    titleLabel.setFont(titleLabel.getFont.deriveFont(Font.BOLD))
-    titleLabel.setForeground(InterfaceColors.WIDGET_TEXT)
 
     val clearButton = new JButton(RichAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) {
       _ => output.clear()
@@ -131,6 +132,12 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
         }
       })
     }.show(this, e.getX, e.getY)
+  }
+
+  override def paintComponent(g: Graphics) {
+    titleLabel.setForeground(InterfaceColors.WIDGET_TEXT)
+
+    super.paintComponent(g)
   }
 
   /// event handlers

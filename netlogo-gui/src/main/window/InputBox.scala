@@ -226,10 +226,6 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
   multiline(multiline)
 
-  widgetLabel.setForeground(InterfaceColors.WIDGET_TEXT)
-
-  backgroundColor = InterfaceColors.INPUT_BACKGROUND
-
   setLayout(new GridBagLayout)
 
   locally {
@@ -298,6 +294,10 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     })
 
   override def paintComponent(g: Graphics) = {
+    backgroundColor = InterfaceColors.INPUT_BACKGROUND
+
+    widgetLabel.setForeground(InterfaceColors.WIDGET_TEXT)
+
     super.paintComponent(g)
 
     if (widgetLabel.getPreferredSize.width > widgetLabel.getWidth)

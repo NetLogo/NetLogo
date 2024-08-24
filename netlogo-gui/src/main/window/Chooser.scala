@@ -36,10 +36,6 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   private val control = new JComboBox[AnyRef]
   private val controlPanel = new ComboBoxPanel(control)
 
-  label.setForeground(InterfaceColors.WIDGET_TEXT)
-
-  backgroundColor = InterfaceColors.CHOOSER_BACKGROUND
-
   setLayout(new GridBagLayout)
 
   locally {
@@ -190,6 +186,10 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   }
 
   override def paintComponent(g: Graphics) {
+    backgroundColor = InterfaceColors.CHOOSER_BACKGROUND
+
+    label.setForeground(InterfaceColors.WIDGET_TEXT)
+
     super.paintComponent(g)
 
     if (hover) {

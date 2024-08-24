@@ -2,8 +2,8 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, Container, Dimension, Font, Graphics, Point, Rectangle, event },
-                  event.{ MouseAdapter, MouseEvent, MouseListener }
+import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, Point, Rectangle, event },
+                event.{ MouseAdapter, MouseEvent, MouseListener }
 import java.util.prefs.Preferences
 import javax.swing.{ JPanel, JMenuItem, JPopupMenu }
 
@@ -33,7 +33,7 @@ abstract class Widget extends JPanel {
   var displayName: String = ""
   var deleteable: Boolean = true
 
-  protected var backgroundColor = InterfaceColors.LIGHT_GRAY
+  protected var backgroundColor = Color.WHITE
 
   setOpaque(false)
 

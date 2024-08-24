@@ -128,8 +128,6 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   addMouseListener(this)
   addMouseMotionListener(this)
 
-  backgroundColor = InterfaceColors.BUTTON_BACKGROUND
-
   def buttonType_=(bt: ButtonType) {
     _buttonType = bt
     agentLabel.setIcon(_buttonType.img(false).getOrElse(null))
@@ -467,6 +465,9 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
           InterfaceColors.BUTTON_BACKGROUND_PRESSED_HOVER
         else
           InterfaceColors.BUTTON_BACKGROUND_PRESSED
+      keyLabel.setForeground(InterfaceColors.BUTTON_TEXT_PRESSED)
+      if (error == null)
+        nameLabel.setForeground(InterfaceColors.BUTTON_TEXT_PRESSED)
     }
     
     foreverLabel.setVisible(forever)

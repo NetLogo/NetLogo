@@ -220,12 +220,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   val valueComponent = new TextField
   var slider = new JSlider(0, ((maximum - minimum) / increment).asInstanceOf[Int], 0)
 
-  nameComponent.setForeground(InterfaceColors.WIDGET_TEXT)
-  valueComponent.setForeground(InterfaceColors.WIDGET_TEXT)
-
   slider.setUI(new SliderUI(slider))
-
-  backgroundColor = InterfaceColors.SLIDER_BACKGROUND
 
   setLayout(null)
 
@@ -418,6 +413,15 @@ trait AbstractSliderWidget extends MultiErrorWidget {
       else
         new Dimension(250, 53)
     }
+  }
+
+  override def paintComponent(g: Graphics) {
+    backgroundColor = InterfaceColors.SLIDER_BACKGROUND
+
+    nameComponent.setForeground(InterfaceColors.WIDGET_TEXT)
+    valueComponent.setForeground(InterfaceColors.WIDGET_TEXT)
+
+    super.paintComponent(g)
   }
 }
 

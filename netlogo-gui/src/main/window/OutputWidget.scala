@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Graphics, GridBagConstraints, GridBagLayout, Insets }
 
 import org.nlogo.swing.RichJMenuItem
 import org.nlogo.api.Editable
@@ -11,8 +11,6 @@ import org.nlogo.core.{ I18N, Output => CoreOutput }
 class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   org.nlogo.window.Events.ExportWorldEvent.Handler with Editable {
   type WidgetModel = CoreOutput
-
-  backgroundColor = InterfaceColors.OUTPUT_BACKGROUND
 
   displayName(I18N.gui.get("tabs.run.widgets.output"))
 
@@ -58,6 +56,12 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
     val copyItem = RichJMenuItem(I18N.gui.get("tabs.run.widget.copyselectedtext")){ outputArea.text.copy }
     menu.add(copyItem)
     p
+  }
+
+  override def paintComponent(g: Graphics) {
+    backgroundColor = InterfaceColors.OUTPUT_BACKGROUND
+
+    super.paintComponent(g)
   }
 
   // these are copied from the TrailDrawer, as is this code for breaking up

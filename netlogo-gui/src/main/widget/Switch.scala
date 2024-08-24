@@ -30,10 +30,6 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   protected var nameChanged = false
   protected var _name = ""
 
-  label.setForeground(InterfaceColors.WIDGET_TEXT)
-
-  backgroundColor = InterfaceColors.SWITCH_BACKGROUND
-
   setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
   if (preserveWidgetSizes) {
@@ -100,6 +96,14 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
       new Dimension(10000, 37)
 
   def mouseWheelMoved(e: MouseWheelEvent) { isOn = ! (e.getWheelRotation >= 1) }
+
+  override def paintComponent(g: Graphics) {
+    backgroundColor = InterfaceColors.SWITCH_BACKGROUND
+
+    label.setForeground(InterfaceColors.WIDGET_TEXT)
+
+    super.paintComponent(g)
+  }
 
   protected class Toggle extends JPanel {
     private var hover = false
