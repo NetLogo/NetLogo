@@ -10,6 +10,20 @@ import org.nlogo.core.I18N
 import org.nlogo.window.InterfaceColors
 
 class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") {
+  private lazy val classicButton = new JRadioButton(new AbstractAction(I18N.gui("classic")) {
+    def actionPerformed(e: ActionEvent) {
+      setTheme("classic")
+    }
+  })
+
+  private lazy val lightButton = new JRadioButton(new AbstractAction(I18N.gui("light")) {
+    def actionPerformed(e: ActionEvent) {
+      setTheme("light")
+    }
+  })
+
+  private var startTheme = ""
+
   override def initGUI() {
     setResizable(false)
 
@@ -23,30 +37,11 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") {
     c.anchor = GridBagConstraints.WEST
     c.insets = new Insets(6, 6, 6, 6)
 
-    val classicButton = new JRadioButton(new AbstractAction(I18N.gui("classic")) {
-      def actionPerformed(e: ActionEvent) {
-        InterfaceColors.setTheme("classic")
-      }
-    })
-
     panel.add(classicButton, c)
 
     c.insets = new Insets(0, 6, 6, 6)
 
-    val lightButton = new JRadioButton(new AbstractAction(I18N.gui("light")) {
-      def actionPerformed(e: ActionEvent) {
-        InterfaceColors.setTheme("light")
-      }
-    })
-
     panel.add(lightButton, c)
-
-    val startTheme = InterfaceColors.getTheme
-
-    startTheme match {
-      case "classic" => classicButton.setSelected(true)
-      case "light" => lightButton.setSelected(true)
-    }
 
     val themeButtons = new ButtonGroup
 
@@ -63,7 +58,8 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") {
 
     buttonPanel.add(new JButton(new AbstractAction(I18N.gui.get("common.buttons.cancel")) {
       def actionPerformed(e: ActionEvent) {
-        InterfaceColors.setTheme(startTheme)
+        setTheme(startTheme)
+        setSelected(startTheme)
 
         setVisible(false)
       }
@@ -74,5 +70,28 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") {
     add(panel)
 
     pack()
+  }
+
+  override def setVisible(visible: Boolean) {
+    if (visible) {
+      startTheme = InterfaceColors.getTheme
+
+      setSelected(startTheme)
+    }
+
+    super.setVisible(visible)
+  }
+
+  private def setTheme(theme: String) {
+    InterfaceColors.setTheme(theme)
+
+    frame.repaint()
+  }
+
+  private def setSelected(theme: String) {
+    theme match {
+      case "classic" => classicButton.setSelected(true)
+      case "light" => lightButton.setSelected(true)
+    }
   }
 }
