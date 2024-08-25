@@ -7,7 +7,7 @@ import javax.swing.{WindowConstants, JFrame}
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.window.{ ClientAppInterface, DefaultEditorFactory }
-import org.nlogo.swing.{ Implicits, ModalProgressTask, OptionDialog }, Implicits._
+import org.nlogo.swing.{ Implicits, ModalProgressTask, OptionDialog, SetSystemLookAndFeel }, Implicits._
 import org.nlogo.awt.{ Hierarchy, Images, Positioning, EventQueue }
 import org.nlogo.hubnet.connection.Ports
 
@@ -21,7 +21,7 @@ object ClientApp {
   def mainHelper(args: Array[String], workspace: CompilerServices) {
     try {
       val app = new ClientApp()
-      org.nlogo.swing.SetSystemLookAndFeel.setSystemLookAndFeel()
+      SetSystemLookAndFeel.setSystemLookAndFeel()
 
       var isRoboClient = false
       var waitTime = 500
