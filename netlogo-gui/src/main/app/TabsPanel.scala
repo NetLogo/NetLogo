@@ -5,14 +5,14 @@ package org.nlogo.app
 import java.awt.{ Graphics, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
-import javax.swing.JTabbedPane
+import javax.swing.{ JTabbedPane, SwingConstants }
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
 import org.nlogo.app.codetab.CodeTab
 import org.nlogo.swing.Utils
 import org.nlogo.window.InterfaceColors
 
-class TabsPanelUI(tabCount: () => Int, panelWidth: () => Int) extends BasicTabbedPaneUI {
+class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
   override def calculateTabHeight(tabPlacement: Int, tabIndex: Int, fontHeight: Int): Int =
     fontHeight + 5
   
@@ -20,14 +20,14 @@ class TabsPanelUI(tabCount: () => Int, panelWidth: () => Int) extends BasicTabbe
     super.getTabLabelShiftY(tabPlacement, tabIndex, true)
 
   override def getTabAreaInsets(tabPlacement: Int): Insets = {
-    var x = panelWidth() / 2
+    var x = tabsPanel.getWidth / 2
 
-    for (i <- 0 until tabCount())
+    for (i <- 0 until tabsPanel.getTabCount)
       x -= calculateTabWidth(tabPlacement, i, getFontMetrics) / 2
     
     new Insets(10, x, 0, 0)
   }
-  
+
   override def paintTabArea(g: Graphics, tabPlacement: Int, selectedIndex: Int) {
     super.paintTabArea(g, tabPlacement, selectedIndex)
 
@@ -39,7 +39,7 @@ class TabsPanelUI(tabCount: () => Int, panelWidth: () => Int) extends BasicTabbe
 
     g2d.setColor(InterfaceColors.TAB_SEPARATOR)
 
-    for (i <- 1 until tabCount()) {
+    for (i <- 1 until tabsPanel.getTabCount) {
       if (i != selectedIndex && i != selectedIndex + 1)
         g2d.drawLine(x, y + 5, x, y + height - 5)
 
@@ -56,7 +56,7 @@ class TabsPanelUI(tabCount: () => Int, panelWidth: () => Int) extends BasicTabbe
     else
       g2d.setColor(InterfaceColors.TAB_BACKGROUND)
 
-    if (tabCount() == 1) {
+    if (tabsPanel.getTabCount == 1) {
       g2d.fillRoundRect(x, y, w, h, 10, 10)
     }
 
@@ -65,7 +65,7 @@ class TabsPanelUI(tabCount: () => Int, panelWidth: () => Int) extends BasicTabbe
       g2d.fillRect(x + w - 20, y, 20, h)
     }
 
-    else if (tabIndex == tabCount() - 1) {
+    else if (tabIndex == tabsPanel.getTabCount - 1) {
       g2d.fillRoundRect(x + 10, y, w - 10, h, 10, 10)
       g2d.fillRect(x, y, 20, h)
     }
@@ -90,7 +90,7 @@ class TabsPanelUI(tabCount: () => Int, panelWidth: () => Int) extends BasicTabbe
         g2d.drawLine(x + 5, y + h - 1, x + w, y + h - 1)
       }
 
-      else if (tabIndex == tabCount() - 1) {
+      else if (tabIndex == tabsPanel.getTabCount - 1) {
         g2d.drawArc(x + w - 10, y, 10, 10, 0, 90)
         g2d.drawArc(x + w - 10, y + h - 11, 10, 10, 270, 90)
         g2d.drawLine(x + w, y + 5, x + w, y + h - 5)
@@ -110,8 +110,9 @@ class TabsPanelUI(tabCount: () => Int, panelWidth: () => Int) extends BasicTabbe
   }
 }
 
-class TabsPanel(val tabManager: TabManager) extends JTabbedPane with ChangeListener {
-  setUI(new TabsPanelUI(() => getTabCount, () => getWidth))
+class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
+                                            with ChangeListener {
+  setUI(new TabsPanelUI(this))
   setFocusable(false)
 
   addChangeListener(this)
