@@ -4,12 +4,15 @@ package org.nlogo.app.tools
 
 import java.awt.{ Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.ActionEvent
+import java.util.prefs.{ Preferences => JavaPreferences }
 import javax.swing.{ AbstractAction, ButtonGroup, JButton, JPanel, JRadioButton }
 
 import org.nlogo.core.I18N
 import org.nlogo.window.InterfaceColors
 
 class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") {
+  private lazy val prefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
+
   private lazy val classicButton = new JRadioButton(new AbstractAction(I18N.gui("classic")) {
     def actionPerformed(e: ActionEvent) {
       setTheme("classic")
@@ -84,6 +87,8 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") {
 
   private def setTheme(theme: String) {
     InterfaceColors.setTheme(theme)
+
+    prefs.put("colorTheme", theme)
 
     frame.repaint()
   }

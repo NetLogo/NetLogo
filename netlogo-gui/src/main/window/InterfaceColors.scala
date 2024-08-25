@@ -1,16 +1,13 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window;
+package org.nlogo.window
 
-import java.awt.Color;
-import java.util.prefs.Preferences
+import java.awt.Color
 
-import org.nlogo.api.Constants;
+import org.nlogo.api.Constants
 
 object InterfaceColors {
-  private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
-
-  private var theme = prefs.get("colorTheme", "light")
+  private var theme: String = null
   
   def setTheme(theme: String) {
     this.theme = theme

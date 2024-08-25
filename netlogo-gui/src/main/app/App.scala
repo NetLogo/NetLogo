@@ -22,7 +22,7 @@ import org.nlogo.fileformat
 import org.nlogo.log.{ JsonFileLogger, LogEvents, LogManager }
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
-import org.nlogo.swing.OptionDialog
+import org.nlogo.swing.{ OptionDialog, SetSystemLookAndFeel }
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
@@ -53,7 +53,7 @@ object App {
   private var logEvents: String = null
   private var logDirectory: String = null
   private var popOutCodeTab = false
-  private var darkTheme = false
+  private var colorTheme: String = null
   /**
    * Should be called once at startup to create the application and
    * start it running.  May not be called more than once.  Once
@@ -218,13 +218,21 @@ object App {
                 commandLineURL == null)
         commandLineURL = nextToken()
       }
+      else if (token == "--color-theme") {
+        colorTheme = nextToken()
+
+        colorTheme match {
+          case "classic" =>
+          case "light" =>
+          case _ => throw new IllegalArgumentException(I18N.errors.getN("themes.unknown", colorTheme))
+        }
+      }
       else if (token == "--version") printAndExit(Version.version)
       else if (token == "--extension-api-version") printAndExit(APIVersion.version)
       else if (token == "--builddate") printAndExit(Version.buildDate)
       else if (token == "--log-events") logEvents = nextToken()
       else if (token == "--log-directory") logDirectory = nextToken()
       else if (token == "--codetab-window") popOutCodeTab = true
-      else if (token == "--dark-theme") darkTheme = true
       else if (token.startsWith("--")) {
         //TODO: Decide: should we do System.exit() here?
         // Previously we've just ignored unknown parameters, but that seems wrong to me.  ~Forrest (2/12/2009)
@@ -304,7 +312,12 @@ class App extends
     frame.addLinkComponent(this)
     pico.addComponent(frame)
 
-    org.nlogo.swing.SetSystemLookAndFeel.setSystemLookAndFeel(App.darkTheme)
+    if (App.colorTheme == null)
+      App.colorTheme = prefs.get("colorTheme", "light")
+
+    SetSystemLookAndFeel.setSystemLookAndFeel()
+
+    InterfaceColors.setTheme(App.colorTheme)
 
     errorDialogManager = new ErrorDialogManager(frame,
       Map(classOf[MetadataLoadingException] -> new LibraryManagerErrorDialog(frame)))

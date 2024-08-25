@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import com.formdev.flatlaf.{ FlatDarkLaf, FlatLaf, FlatLightLaf }
+import com.formdev.flatlaf.{ FlatLaf, FlatLightLaf }
 
 // Frame
 import java.awt.{ Color, Insets }
@@ -10,13 +10,13 @@ import javax.swing.{ UIManager, UnsupportedLookAndFeelException }
 
 final object SetSystemLookAndFeel {
 
- /// Swing look & feel
+  /// Swing look & feel
 
-  def setSystemLookAndFeel(darkTheme: Boolean = true): Unit = {
+  def setSystemLookAndFeel(): Unit = {
     try{
-      setFlatLafLookAndFeel(darkTheme)
+      setFlatLafLookAndFeel()
     } catch {
-      case  e: Throwable => setClassicNetLogoSystemLookAndFeel()
+      case e: Throwable => setClassicNetLogoSystemLookAndFeel()
     }
   }
 
@@ -59,7 +59,7 @@ final object SetSystemLookAndFeel {
     }
   }
 
-  def setFlatLafLookAndFeel(darkTheme: Boolean = true): Unit = {
+  def setFlatLafLookAndFeel(): Unit = {
     // this slider thing is a workaround for Java bug parade bug #6465237 - ST 1/20/09
     UIManager.put("Slider.paintValue", false)
     // Hopefully we won't need this MacOS specific code
@@ -73,9 +73,6 @@ final object SetSystemLookAndFeel {
 
     FlatLaf.registerCustomDefaultsSource("themes")
 
-    if (darkTheme)
-      FlatDarkLaf.setup()
-    else
-      FlatLightLaf.setup()
+    FlatLightLaf.setup()
   }
 }
