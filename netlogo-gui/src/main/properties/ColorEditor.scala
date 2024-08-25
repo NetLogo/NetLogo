@@ -57,7 +57,8 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], useTooltip: Boolea
    private class SelectColorActionListener extends ActionListener{
      def actionPerformed(e: ActionEvent){
        val colorDialog = new org.nlogo.window.ColorDialog(frame, true)
-       setColor(colorDialog.showInputBoxDialog(colorIcon.getColor))
+       val c = colorDialog.showInputBoxDialog(getClosestColorNumberByARGB(colorIcon.getColor.getRGB))
+       setColor(org.nlogo.api.Color.getColor(c: java.lang.Double))
      }
    }
 
