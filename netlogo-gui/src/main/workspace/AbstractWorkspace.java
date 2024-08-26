@@ -249,8 +249,10 @@ public abstract class AbstractWorkspace
   
   private AbstractWorkspace mainWorkspace = null;
 
-  public void setMainWorkspace(AbstractWorkspace workspace) {
-    mainWorkspace = workspace;
+  public void setMainWorkspace(Workspace workspace) {
+    if (workspace instanceof AbstractWorkspace) {
+      mainWorkspace = (AbstractWorkspace)workspace;
+    }
   }
 
   // used by HeadlessWorkspace to send output to the workspace on the main thread

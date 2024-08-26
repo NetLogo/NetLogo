@@ -170,6 +170,7 @@ object Main {
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
     Some(new Settings(model.get, experiment, setupFile, tableWriter,
-                      spreadsheetWriter, statsWriter, listsWriter, dims, threads, suppressErrors, updatePlots))
+                      spreadsheetWriter, statsWriter, listsWriter, dims, threads, suppressErrors, updatePlots,
+                      None)) // mainWorkspace
   }
 }

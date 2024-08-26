@@ -279,6 +279,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     , threads
     , suppressErrors
     , updatePlots
+    , None // mainWorkspace
     ))
   }
 }

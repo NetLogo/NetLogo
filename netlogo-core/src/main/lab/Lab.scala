@@ -15,7 +15,10 @@ class Lab extends LabInterface {
     // pool of workspaces, same size as thread pool
     val workspaces = (1 to threads).map(_ => fn.apply).toList
     val queue = new collection.mutable.Queue[Workspace]
-    workspaces.foreach(queue.enqueue(_))
+    workspaces.foreach(w => {
+      settings.mainWorkspace.map(w.setMainWorkspace(_))
+      queue.enqueue(w)
+    })
     try {
       queue.foreach(w => dims.foreach(w.setDimensions _))
       def modelDims = queue.head.world.getDimensions
