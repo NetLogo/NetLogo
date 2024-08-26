@@ -246,6 +246,19 @@ public abstract class AbstractWorkspace
   protected abstract void sendOutput(org.nlogo.agent.OutputObject oo,
                                      boolean toOutputArea)
       throws LogoException;
+  
+  private AbstractWorkspace mainWorkspace = null;
+
+  public void setMainWorkspace(AbstractWorkspace workspace) {
+    mainWorkspace = workspace;
+  }
+
+  // used by HeadlessWorkspace to send output to the workspace on the main thread
+  public void forwardOutput(org.nlogo.agent.OutputObject oo) {
+    if (mainWorkspace != null) {
+      mainWorkspace.sendOutput(oo, false);
+    }
+  }
 
   /// importing
 

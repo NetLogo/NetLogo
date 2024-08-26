@@ -21,6 +21,7 @@ class RunOptionsDialog(parent: java.awt.Window,
   val listsFile = s"$filePrefix-lists.csv"
   val totalProcessors = Runtime.getRuntime.availableProcessors
   val defaultProcessors = LabDefaultValues.getDefaultThreads
+  val mirrorHeadlessOutput = LabDefaultValues.getDefaultMirrorHeadlessOutput
 
   object Prefs {
     private val prefs = Preferences.userNodeForPackage(RunOptionsDialog.this.getClass)
@@ -72,6 +73,7 @@ class RunOptionsDialog(parent: java.awt.Window,
     def updateView = prefs.getBoolean("updateView", true)
     def updatePlotsAndMonitors = prefs.getBoolean("updatePlotsAndMonitors", true)
     def updateThreadCount = prefs.getInt("threadCount", defaultProcessors)
+    def mirrorHeadlessOutput = prefs.getBoolean("mirrorHeadlessOutput", false)
     def updateFrom(runOptions: LabRunOptions): Unit = {
       prefs.put("spreadsheet", parentDirectory(runOptions.spreadsheet))
       prefs.put("table", parentDirectory(runOptions.table))
@@ -80,6 +82,7 @@ class RunOptionsDialog(parent: java.awt.Window,
       prefs.putBoolean("updateView", runOptions.updateView)
       prefs.putBoolean("updatePlotsAndMonitors", runOptions.updatePlotsAndMonitors)
       prefs.putInt("threadCount", runOptions.threadCount)
+      prefs.putBoolean("mirrorHeadlessOutput", runOptions.mirrorHeadlessOutput)
     }
   }
   def get = {
@@ -101,6 +104,7 @@ class RunOptionsDialog(parent: java.awt.Window,
     var updateView = Prefs.updateView
     var updatePlotsAndMonitors = Prefs.updatePlotsAndMonitors
     var threadCount = Prefs.updateThreadCount
+    var mirrorHeadlessOutput = Prefs.mirrorHeadlessOutput
     val classDisplayName = I18N.gui("title")
 
     val propertySet = {
@@ -117,9 +121,11 @@ class RunOptionsDialog(parent: java.awt.Window,
                  "<html>" + I18N.gui("simultaneousruns.info",
                                 defaultProcessors.toString,
                                 (totalProcessors.toString))
-                + "</html>")).asJava
+                + "</html>"),
+        Property("mirrorHeadlessOutput", Property.Boolean, I18N.gui("mirrorHeadlessOutput"))).asJava
     }
-    def get = LabRunOptions(threadCount, table, spreadsheet, stats, lists, updateView, updatePlotsAndMonitors, false)
+    def get = LabRunOptions(threadCount, table, spreadsheet, stats, lists, updateView, updatePlotsAndMonitors,
+                            mirrorHeadlessOutput, false)
     // boilerplate for Editable
     def helpLink = None
     def error(key:Object) = null
