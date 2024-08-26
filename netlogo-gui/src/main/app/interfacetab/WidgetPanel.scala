@@ -146,14 +146,14 @@ class WidgetPanel(val workspace: GUIWorkspace)
       case w: WidgetWrapper if w.selected => w
     }
 
-  protected def aboutToDragSelectedWidgets(startPressX: Int, startPressY: Int): Unit = {
+  private[interfacetab] def aboutToDragSelectedWidgets(startPressX: Int, startPressY: Int): Unit = {
     widgetsBeingDragged = selectedWrappers
     widgetsBeingDragged.foreach { w =>
       w.aboutToDrag(startPressX, startPressY)
     }
   }
 
-  protected def dragSelectedWidgets(x: Int, y: Int): Unit = {
+  private[interfacetab] def dragSelectedWidgets(x: Int, y: Int): Unit = {
     if (widgetsBeingDragged.nonEmpty) {
       val p = new Point(x, y)
       val restrictedPoint = widgetsBeingDragged.foldLeft(p) {
@@ -385,7 +385,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       }
     }
 
-  protected def setForegroundWrapper(): Unit =
+  private[interfacetab] def setForegroundWrapper(): Unit =
     getComponents.collect {
       case w: WidgetWrapper if w.selected => w
     }.foreach(_.foreground())
@@ -420,7 +420,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     moveToFront(wrapper)
 
     if (select || ! loadingWidget)
-      wrapper.setSize(wrapper.getPreferredSize())
+      wrapper.setSize(wrapper.getPreferredSize)
     else
       wrapper.setSize(size)
 
@@ -502,9 +502,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
     LogManager.widgetRemoved(false, wrapper.widget.classDisplayName, wrapper.widget.displayName)
   }
 
-  protected def multiSelected(): Boolean = {
+  private[interfacetab] def multiSelected: Boolean =
     selectedWrappers.length > 1
-  }
 
   def alignLeft(wrapper: WidgetWrapper) {
     WidgetActions.moveWidgets(selectedWrappers.filter(_ != wrapper).map(w => (w, wrapper.getX, w.getY)))
