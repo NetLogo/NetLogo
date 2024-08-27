@@ -920,7 +920,17 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       })
     }
 
-    if (widget.deleteable) {
+    if (interfacePanel.selectedWrappers.size > 1) {
+      menu.add(new JPopupMenu.Separator)
+
+      menu.add(new AbstractAction(I18N.gui.get("tabs.run.widget.deleteSelected")) {
+        def actionPerformed(e: ActionEvent) {
+          interfacePanel.deleteSelectedWidgets()
+        }
+      })
+    }
+
+    else if (widget.deleteable) {
       menu.add(new JPopupMenu.Separator)
 
       menu.add(new AbstractAction(I18N.gui.get("tabs.run.widget.delete")) {
