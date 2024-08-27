@@ -9,8 +9,7 @@ import javax.swing.{ BorderFactory, DefaultComboBoxModel, JButton,
 
 import org.nlogo.api.PreviewCommands, PreviewCommands.{ Compilable, Custom, Default, Manual }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
-import org.nlogo.swing.{ HasPropertyChangeSupport, Utils},
-  Utils.icon
+import org.nlogo.swing.{ HasPropertyChangeSupport, Utils }
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.window.{ EditorAreaErrorLabel, EditorColorizer }
 
@@ -19,7 +18,7 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel {
   setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
 
   val comboBox = new ComboBox
-  val compileButton = new JButton(icon("/images/check.gif"))
+  val compileButton = new JButton(Utils.icon("/images/check-filled.png"))
 
   private var dirty = false
   val textListener = new TextListener with HasPropertyChangeSupport {

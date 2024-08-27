@@ -15,8 +15,8 @@ import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, Tab
 import org.nlogo.core.{ AgentKind, CompilerException, I18N }
 import org.nlogo.editor.DumbIndenter
 import org.nlogo.ide.FocusedOnlyAction
-import org.nlogo.swing.Utils.icon
-import org.nlogo.swing.{PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction, Printable => NlogoPrintable}
+import org.nlogo.swing.{ PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction,
+                         Printable => NlogoPrintable, Utils }
 import org.nlogo.window.{CommentableError, ProceduresInterface, Zoomable, Events => WindowEvents}
 import org.nlogo.workspace.AbstractWorkspace
 
@@ -232,13 +232,13 @@ with MenuTab {
   def isTextSelected: Boolean = text.getSelectedText != null && !text.getSelectedText.isEmpty
 
   private object CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
-    putValue(Action.SMALL_ICON, icon("/images/check-gray.gif"))
+    putValue(Action.SMALL_ICON, Utils.icon("/images/check.png"))
     def actionPerformed(e: ActionEvent) = compile()
     def setDirty(isDirty: Boolean) = {
       val iconPath =
-        if (isDirty) "/images/check.gif"
-        else         "/images/check-gray.gif"
-      putValue(Action.SMALL_ICON, icon(iconPath))
+        if (isDirty) "/images/check-filled.png"
+        else         "/images/check.png"
+      putValue(Action.SMALL_ICON, Utils.icon(iconPath))
     }
   }
 }

@@ -99,7 +99,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
     putValue(Action.SMALL_ICON, icon(image))
     setEnabled(enableMe)
   }
-  val compileAction = new MyAction("Check", "/images/check.gif", enableMe = true) {
+  val compileAction = new MyAction("Check", "/images/check-filled.png", enableMe = true) {
     def actionPerformed(e: ActionEvent) {new org.nlogo.window.Events.CompileAllEvent().raise(editor)}
   }
   val editAction = new MyAction("Edit", "/images/edit.png", enableMe = false) {

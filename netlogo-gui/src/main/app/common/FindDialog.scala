@@ -15,7 +15,7 @@ import org.nlogo.swing.{ ButtonPanel, NonemptyTextFieldActionEnabler, NonemptyTe
 
 object FindDialog {
   class FindAction extends TextAction(I18N.gui.get("menu.edit.find")) {
-    putValue(Action.SMALL_ICON, Utils.icon("/images/search.png"))
+    putValue(Action.SMALL_ICON, Utils.icon("/images/find.png"))
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
     putValue(Action.ACCELERATOR_KEY, UserAction.KeyBindings.keystroke('F', withMenu = true))
@@ -49,7 +49,7 @@ object FindDialog {
   }
 
   class FindNextAction extends TextAction(I18N.gui.get("menu.edit.findNext")) {
-    putValue(Action.SMALL_ICON, Utils.icon("/images/search.png"))
+    putValue(Action.SMALL_ICON, Utils.icon("/images/find.png"))
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
     putValue(Action.ACCELERATOR_KEY, UserAction.KeyBindings.keystroke('G', withMenu = true))
@@ -64,7 +64,7 @@ object FindDialog {
   }
 
   class FindActionCode extends TextAction(I18N.gui.get("menu.edit.find")) {
-    putValue(Action.SMALL_ICON, Utils.icon("/images/search.png"))
+    putValue(Action.SMALL_ICON, Utils.icon("/images/find.png"))
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
 
@@ -97,7 +97,7 @@ object FindDialog {
   }
 
   class FindNextActionCode extends TextAction(I18N.gui.get("menu.edit.findNext")) {
-    putValue(Action.SMALL_ICON, Utils.icon("/images/search.png"))
+    putValue(Action.SMALL_ICON, Utils.icon("/images/find.png"))
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
     putValue(Action.ACCELERATOR_KEY, UserAction.KeyBindings.keystroke('G', withMenu = true))
