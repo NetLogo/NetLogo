@@ -2,6 +2,7 @@
 
 package org.nlogo.editor
 
+import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.{ Action, JMenu, JPopupMenu }
 import javax.swing.text.EditorKit
 
@@ -20,6 +21,8 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   val theme =
     Theme.load(getClass.getResourceAsStream("/system/netlogo-editor-style.xml"))
   theme.apply(this)
+
+  private val defaultSelectionColor = getSelectionColor
 
   configuration.configureAdvancedEditorArea(this)
 
@@ -68,6 +71,18 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   // this needs to be implemented if we ever allow tab-based focus traversal
   // with this editor area
   def setSelection(s: Boolean): Unit = { }
+
+  override def select(start: Int, end: Int) {
+    setSelectionColor(AbstractEditorArea.ERROR_HIGHLIGHT)
+
+    super.select(start, end)
+  }
+
+  addMouseListener(new MouseAdapter {
+    override def mousePressed(e: MouseEvent) {
+      setSelectionColor(defaultSelectionColor)
+    }
+  })
 
   def undoAction = RTextArea.getAction(RTextArea.UNDO_ACTION)
   def redoAction = RTextArea.getAction(RTextArea.REDO_ACTION)

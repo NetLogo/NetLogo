@@ -599,12 +599,6 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   def highlightRuntimeError(tab: CodeTab, e: RuntimeErrorEvent) {
     setSelectedTab(tab)
 
-    // should be no longer necessary, confirm
-
-    // // the use of invokeLater here is a desperate attempt to work around the Mac bug where sometimes
-    // // the selection happens and sometime it doesn't - ST 8/28/04
-    // EventQueue.invokeLater(() => tab.select(e.pos, e.pos + e.length))
-
     tab.select(e.pos, e.pos + e.length)
   }
 

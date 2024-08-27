@@ -10,7 +10,7 @@ package org.nlogo.editor
 
 import java.awt.{ Component, Dimension, Point, Toolkit }
 import java.awt.datatransfer.DataFlavor
-import java.awt.event.{ FocusListener, KeyEvent, MouseEvent }
+import java.awt.event.{ FocusListener, KeyEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ Action, JMenuItem, JEditorPane, JPopupMenu }
 import javax.swing.text.{ Document, TextAction, PlainDocument, BadLocationException }
 
@@ -39,6 +39,8 @@ class EditorArea(val configuration: EditorConfiguration)
   private val undoManager: UndoManager = new UndoManager()
 
   private val caret = new DoubleClickCaret(colorizer, bracketMatcher)
+
+  private val defaultSelectionColor = getSelectionColor
 
   locally {
     enableEvents(java.awt.AWTEvent.MOUSE_EVENT_MASK)
@@ -142,6 +144,18 @@ class EditorArea(val configuration: EditorConfiguration)
   def setSelection(s: Boolean): Unit = {
     _selectionActive = s
   }
+
+  override def select(start: Int, end: Int) {
+    setSelectionColor(AbstractEditorArea.ERROR_HIGHLIGHT)
+
+    super.select(start, end)
+  }
+
+  addMouseListener(new MouseAdapter {
+    override def mousePressed(e: MouseEvent) {
+      setSelectionColor(defaultSelectionColor)
+    }
+  })
 
   def focusGained(fe: java.awt.event.FocusEvent): Unit = { }
 
