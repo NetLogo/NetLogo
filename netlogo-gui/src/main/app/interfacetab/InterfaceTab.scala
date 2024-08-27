@@ -56,6 +56,9 @@ class InterfaceTab(workspace: GUIWorkspace,
     // way so that only a vertical scrollbar is really needed - ST 7/13/04
     ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+
+  scrollPane.setBorder(null)
+
   commandCenter.setMinimumSize(new Dimension(0, 0))
 
   private var viewUpdatePanel: ViewUpdatePanel = null

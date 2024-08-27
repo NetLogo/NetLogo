@@ -24,6 +24,7 @@ object InterfaceColors {
   private val LIGHT_BLUE = new Color(207, 229, 255)
   private val DARK_BLUE = new Color(6, 112, 237)
   private val LIGHT_GRAY = new Color(238, 238, 238)
+  private val LIGHT_RED = new Color(251, 96, 85)
 
   val TRANSPARENT = new Color(0, 0, 0, 0)
 
@@ -204,10 +205,18 @@ object InterfaceColors {
   def OUTPUT_BORDER = DARK_GRAY
 
   def AGENT_EDITOR_BACKGROUND = LIGHT_GRAY
+
   def AGENT_COMMANDER_BACKGROUND = LIGHT_GRAY
+
   def TOOLBAR_BACKGROUND = LIGHT_GRAY
+
   def TAB_BACKGROUND = LIGHT_GRAY
-  def TAB_BACKGROUND_SELECTED = new Color(251, 96, 85)
+
+  def TAB_BACKGROUND_SELECTED = LIGHT_RED
+
   def TAB_BORDER = DARK_GRAY
+
   def TAB_SEPARATOR = DARK_GRAY
+
+  def ERROR_LABEL_BACKGROUND = LIGHT_RED
 }

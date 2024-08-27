@@ -8,7 +8,7 @@ import java.awt.{ Color, Dimension, GridBagConstraints }
 import java.awt.event.{ ActionEvent, ActionListener }
 import javax.swing.{ JButton, JLabel, JPanel }
 
-import org.nlogo.swing.Utils.icon
+import org.nlogo.swing.Utils
 
 abstract class RuntimeErrorDisplay(accessor: PropertyAccessor[Option[Exception]], useTooltip: Boolean)
   extends PropertyEditor(accessor, useTooltip, handlesOwnErrors = true) with RuntimeErrorDisplayer {
@@ -68,7 +68,7 @@ trait RuntimeErrorDisplayer extends JPanel with ActionListener {
   lazy val errorLabel = {
     implicit val i18nPrefix = I18N.Prefix("edit.plot.error")
     val label = new JLabel(I18N.gui("runtimeError"))
-    label.setIcon(icon("/images/stop.gif"))
+    label.setIcon(Utils.icon("/images/error.png"))
     label
   }
 

@@ -2,11 +2,11 @@
 
 package org.nlogo.window
 
-import java.awt.Color.{ WHITE, YELLOW }
-import javax.swing.{ BorderFactory, JLabel, UIManager }
-import javax.swing.border.{ EmptyBorder, LineBorder }
+import java.awt.Color
+import javax.swing.JLabel
+import javax.swing.border.EmptyBorder
 
-import org.nlogo.swing.Utils.icon
+import org.nlogo.swing.Utils
 
 class ErrorLabel extends JLabel {
 
@@ -14,14 +14,10 @@ class ErrorLabel extends JLabel {
 
   locally {
     setOpaque(true)
-    setFont(UIManager.getFont("Label.font"))
-    setForeground(UIManager.getColor("Label.foreground"))
-    setBackground(YELLOW)
-    setIcon(icon("/images/stop.gif"))
-    setBorder(BorderFactory.createCompoundBorder(
-      new LineBorder(WHITE, 4) ,
-      new EmptyBorder(4, 24, 4, 4)
-    ))
+    setForeground(Color.WHITE)
+    setBackground(InterfaceColors.ERROR_LABEL_BACKGROUND)
+    setIcon(Utils.icon("/images/error.png"))
+    setBorder(new EmptyBorder(6, 6, 6, 6))
     setVisible(compilerError.isDefined)
   }
 
@@ -37,8 +33,7 @@ class ErrorLabel extends JLabel {
   def zoom(zoomFactor: Double) {
     if(originalFontSize == -1)
       originalFontSize = getFont.getSize
-    setFont(getFont.deriveFont(
-      StrictMath.ceil(originalFontSize * zoomFactor).toFloat))
+    setFont(getFont.deriveFont((originalFontSize * zoomFactor).ceil.toFloat))
     repaint()
     revalidate()
   }

@@ -13,6 +13,9 @@ import org.nlogo.swing.Utils
 import org.nlogo.window.InterfaceColors
 
 class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
+  override def getContentBorderInsets(tabPlacement: Int) =
+    new Insets(0, 0, 0, 0)
+
   override def calculateTabHeight(tabPlacement: Int, tabIndex: Int, fontHeight: Int): Int =
     fontHeight + 5
   
