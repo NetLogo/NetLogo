@@ -637,7 +637,8 @@ object AbstractWorkspaceTraits {
     }
 
     def forwardOutput(oo: agent.OutputObject) {
-      mainWorkspace.sendOutput(oo, false)
+      if (mainWorkspace != null)
+        mainWorkspace.sendOutput(oo, false)
     }
 
   }
