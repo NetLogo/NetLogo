@@ -838,7 +838,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   }
 
   private def populateContextMenu(menu: JPopupMenu, p: Point, source: Component): Point = {
-    if (widget.getEditable.isInstanceOf[Editable]) {
+    if (widget.getEditable.isInstanceOf[Editable] && !interfacePanel.multiSelected) {
       menu.add(new AbstractAction(I18N.gui.get("tabs.run.widget.edit")) {
         def actionPerformed(e: ActionEvent) {
           selected(true)

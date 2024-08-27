@@ -157,7 +157,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       selectedObjects.remove(w)
       deleteableObjects.remove(w)
     }
-    if(selectedObjects.isEmpty) {
+    if(selectedObjects.size != 1) {
       editTarget = None
       editAction.setEnabled(false)
     }
@@ -166,7 +166,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
   def handle(e: WindowEvents.WidgetForegroundedEvent) {
     editTarget = Some(e.widget.getEditable).collect{case editable: Editable => editable}
-    editAction.setEnabled(editTarget.isDefined)
+    editAction.setEnabled(editTarget.isDefined && selectedObjects.size == 1)
   }
 
   def getItems: Array[JMenuItem] = WidgetInfos.map(spec => new JMenuItem(spec.displayName, spec.icon)).toArray
