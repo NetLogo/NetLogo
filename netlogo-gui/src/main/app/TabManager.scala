@@ -141,9 +141,25 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   appComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_W, withMenu = true, withShift = true), "openSeparateCodeTab")
-  appComponent.getActionMap.put("openSeparateCodeTab", new AbstractAction("OpenSeparateCodeTab") {
+  appComponent.getActionMap.put("openSeparateCodeTab", new AbstractAction {
     def actionPerformed(e: ActionEvent) {
       switchWindow(true)
+    }
+  })
+
+  appComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_OPEN_BRACKET, withMenu = true, withShift = true), "previousTab")
+  appComponent.getActionMap.put("previousTab", new AbstractAction {
+    def actionPerformed(e: ActionEvent) {
+      previousTab(mainTabs)
+    }
+  })
+
+  appComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_CLOSE_BRACKET, withMenu = true, withShift = true), "nextTab")
+  appComponent.getActionMap.put("nextTab", new AbstractAction {
+    def actionPerformed(e: ActionEvent) {
+      nextTab(mainTabs)
     }
   })
 
@@ -169,9 +185,25 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   separateComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_W, withMenu = true), "closeSeparateCodeTab")
-  separateComponent.getActionMap.put("closeSeparateCodeTab", new AbstractAction("CloseSeparateCodeTab") {
+  separateComponent.getActionMap.put("closeSeparateCodeTab", new AbstractAction {
     def actionPerformed(e: ActionEvent) {
       switchWindow(false)
+    }
+  })
+
+  separateComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_OPEN_BRACKET, withMenu = true, withShift = true), "previousTab")
+  separateComponent.getActionMap.put("previousTab", new AbstractAction {
+    def actionPerformed(e: ActionEvent) {
+      previousTab(separateTabs)
+    }
+  })
+
+  separateComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_CLOSE_BRACKET, withMenu = true, withShift = true), "nextTab")
+  separateComponent.getActionMap.put("nextTab", new AbstractAction {
+    def actionPerformed(e: ActionEvent) {
+      nextTab(separateTabs)
     }
   })
 
@@ -380,6 +412,16 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       mainTabs.setSelectedComponent(tab)
       mainTabs.focusSelected
     }
+  }
+
+  def previousTab(tabsPanel: TabsPanel) {
+    if (tabsPanel.getSelectedIndex > 0)
+      tabsPanel.setSelectedIndex(tabsPanel.getSelectedIndex - 1)
+  }
+
+  def nextTab(tabsPanel: TabsPanel) {
+    if (tabsPanel.getSelectedIndex < tabsPanel.getTabCount - 1)
+      tabsPanel.setSelectedIndex(tabsPanel.getSelectedIndex + 1)
   }
 
   def switchedTabs(tab: Component) {
