@@ -2,7 +2,7 @@
 
 package org.nlogo.nvm
 
-import org.nlogo.api.{LabProtocol, LabPostProcessorInputFormat}
+import org.nlogo.api.{ LabProtocol, LabPostProcessorInputFormat }
 import org.nlogo.core.WorldDimensions
 
 object LabInterface {
@@ -43,5 +43,5 @@ object LabInterface {
 trait LabInterface {
   import LabInterface._
   def newWorker(protocol: LabProtocol): Worker
-  def run(settings: Settings, protocol: LabProtocol, fn: ()=>Workspace, finish: () => Unit = () => {})
+  def run(settings: Settings, worker: Worker, fn: () => Workspace, finish: () => Unit = () => {})
 }

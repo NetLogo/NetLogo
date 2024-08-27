@@ -2,15 +2,15 @@
 
 package org.nlogo.lab
 
-import org.nlogo.api.{LogoException, LabProtocol, LabPostProcessorInputFormat}
-import org.nlogo.nvm.{EngineException,LabInterface,Workspace}
+import org.nlogo.api.{ LogoException, LabProtocol, LabPostProcessorInputFormat }
+import org.nlogo.nvm.{ EngineException, LabInterface, Workspace }
 
 // This is used when running headless. - ST 3/3/09
 
 class Lab extends LabInterface {
   def newWorker(protocol: LabProtocol) =
     new Worker(protocol)
-  def run(settings: LabInterface.Settings, protocol: LabProtocol, fn: ()=>Workspace, finish: () => Unit = () => {}) {
+  def run(settings: LabInterface.Settings, worker: LabInterface.Worker, fn: () => Workspace, finish: () => Unit = () => {}) {
     import settings._
     // pool of workspaces, same size as thread pool
     val workspaces = (1 to threads).map(_ => fn.apply).toList
@@ -22,7 +22,6 @@ class Lab extends LabInterface {
     try {
       queue.foreach(w => dims.foreach(w.setDimensions _))
       def modelDims = queue.head.world.getDimensions
-      val worker = newWorker(protocol)
       tableWriter.foreach(
         worker.addTableWriter(modelPath, dims.getOrElse(modelDims), _))
       spreadsheetWriter.foreach(

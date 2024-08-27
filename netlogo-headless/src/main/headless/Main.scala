@@ -2,10 +2,10 @@
 
 package org.nlogo.headless
 
+import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultValues, LabProtocol, PlotCompilationErrorAction,
+                       Version }
 import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultValues, LabProtocol, Version }
-import org.nlogo.nvm.LabInterface.Settings
-import org.nlogo.api.PlotCompilationErrorAction
+import org.nlogo.nvm.LabInterface.{ Settings, Worker }
 
 object Main {
   class CancelException extends RuntimeException
@@ -40,14 +40,16 @@ object Main {
     }
     proto match {
       case Some(protocol) =>
-        runExperimentWithProtocol(settings, protocol, finish)
+        runExperimentWithProtocol(settings, protocol, (_) => {}, finish)
 
       case None =>
         throw new IllegalArgumentException("Invalid run, specify experiment name or setup file")
     }
   }
 
-  def runExperimentWithProtocol(settings: Settings, protocol: LabProtocol, finish: () => Unit = () => {}) {
+  // used in bspace extension
+  def runExperimentWithProtocol(settings: Settings, protocol: LabProtocol, assignWorker: (Worker) => Unit,
+                                finish: () => Unit = () => {}) {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
     var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
     def newWorkspace = {
@@ -61,7 +63,9 @@ object Main {
       w
     }
     val lab = HeadlessWorkspace.newLab
-    lab.run(settings, protocol, newWorkspace _, finish)
+    val worker = lab.newWorker(protocol)
+    assignWorker(worker)
+    lab.run(settings, worker, newWorkspace _, finish)
   }
 
   def setHeadlessProperty() {
