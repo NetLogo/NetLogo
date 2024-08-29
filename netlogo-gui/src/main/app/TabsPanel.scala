@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ Color, Component, Dimension, FlowLayout, Graphics, Insets }
+import java.awt.{ Color, Component, Dimension, FlowLayout, Font, Graphics, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.{ Box, JLabel, JPanel, JTabbedPane, SwingConstants }
@@ -137,6 +137,8 @@ class TabLabel(val text: String, tab: Component, tabsPanel: TabsPanel) extends J
   private val textLabel = new JLabel(text)
   private var closeButton: CloseButton = null
 
+  private val startFont = textLabel.getFont
+
   var error = false
 
   setOpaque(false)
@@ -171,6 +173,7 @@ class TabLabel(val text: String, tab: Component, tabsPanel: TabsPanel) extends J
   override def paintComponent(g: Graphics) {
     if (tab == tabsPanel.getSelectedComponent) {
       textLabel.setForeground(Color.WHITE)
+      textLabel.setFont(startFont.deriveFont(Font.BOLD))
 
       if (closeButton != null)
         closeButton.setForeground(Color.WHITE)
@@ -178,6 +181,7 @@ class TabLabel(val text: String, tab: Component, tabsPanel: TabsPanel) extends J
 
     else if (tabsPanel.getError(tabsPanel.indexOfComponent(tab))) {
       textLabel.setForeground(InterfaceColors.TAB_TEXT_ERROR)
+      textLabel.setFont(startFont.deriveFont(Font.BOLD))
 
       if (closeButton != null)
         closeButton.setForeground(InterfaceColors.TAB_TEXT_ERROR)
@@ -185,6 +189,7 @@ class TabLabel(val text: String, tab: Component, tabsPanel: TabsPanel) extends J
 
     else {
       textLabel.setForeground(Color.BLACK)
+      textLabel.setFont(startFont.deriveFont(Font.PLAIN))
 
       if (closeButton != null)
         closeButton.setForeground(Color.BLACK)
