@@ -2,13 +2,12 @@
 
 package org.nlogo.app
 
-import java.awt.{ Color, Component, FlowLayout, Graphics, KeyboardFocusManager }
-import java.awt.event.{ ActionEvent, KeyEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent,
-                        WindowFocusListener }
+import java.awt.{ Component, KeyboardFocusManager }
+import java.awt.event.{ ActionEvent, KeyEvent, WindowAdapter, WindowEvent, WindowFocusListener }
 import java.awt.print.PrinterAbortException
 import java.nio.file.{ Path, Paths }
 import java.util.prefs.Preferences
-import javax.swing.{ AbstractAction, Action, Box, JComponent, JFrame, JLabel, JPanel }
+import javax.swing.{ AbstractAction, Action, JComponent, JFrame }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
@@ -19,7 +18,7 @@ import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Printable, PrinterManager, UserAction, Utils }
+import org.nlogo.swing.{ Printable, PrinterManager, UserAction }
 import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, CompileAllEvent, CompiledEvent,
                                  ExternalFileSavedEvent, LoadBeginEvent, LoadErrorEvent, LoadModelEvent,
                                  ModelSavedEvent, RuntimeErrorEvent }
@@ -30,61 +29,6 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   extends TabsInterface with AboutToCloseFilesEvent.Handler with AboutToSaveModelEvent.Handler
   with CompiledEvent.Handler with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler
   with LoadErrorEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler {
-  
-  private val closeIconLight = Utils.iconScaled("/images/close-light.png", 8, 8)
-  private val closeIconDark = Utils.iconScaled("/images/close-dark.png", 8, 8)
-  
-  private class TabLabel(val text: String, tab: Component) extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
-    val textLabel = new JLabel(text)
-    var closeLabel: JLabel = null
-
-    setOpaque(false)
-
-    add(textLabel)
-
-    tab match {
-      case tempTab: TemporaryCodeTab =>
-        closeLabel = new JLabel(closeIconLight)
-
-        closeLabel.addMouseListener(new MouseAdapter {
-          override def mouseClicked(e: MouseEvent) {
-            if (e.getButton == MouseEvent.BUTTON1) {
-              try {
-                tempTab.prepareForClose()
-                closeExternalTab(tempTab)
-              }
-
-              catch {
-                case e: UserCancelException =>
-              }
-            }
-          }
-        })
-
-        add(Box.createHorizontalStrut(10))
-        add(closeLabel)
-      
-      case _ =>
-    }
-    
-    override def paintComponent(g: Graphics) {
-      if (tab == mainTabs.getSelectedComponent || tab == separateTabs.getSelectedComponent) {
-        textLabel.setForeground(Color.WHITE)
-
-        if (closeLabel != null)
-          closeLabel.setIcon(closeIconLight)
-      }
-
-      else {
-        textLabel.setForeground(Color.BLACK)
-
-        if (closeLabel != null)
-          closeLabel.setIcon(closeIconDark)
-      }
-
-      super.paintComponent(g)
-    }
-  }
 
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
@@ -387,7 +331,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   private def addTabWithLabel(tabsPanel: TabsPanel, title: String, tab: Component) {
     tabsPanel.addTab(null, tab)
-    tabsPanel.setTabComponentAt(tabsPanel.getTabCount - 1, new TabLabel(title, tab))
+    tabsPanel.setTabComponentAt(tabsPanel.getTabCount - 1, new TabLabel(title, tab, tabsPanel))
   }
 
   def setSelectedIndex(index: Int) {
@@ -648,26 +592,23 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     def clearErrors() {
       if (separateTabsWindow.isVisible) {
         for (i <- 0 until separateTabs.getTabCount)
-          separateTabs.setForegroundAt(i, null)
+          separateTabs.setError(i, false)
       }
 
       else {
-        for (i <- 2 until mainTabs.getTabCount)
-          mainTabs.setForegroundAt(i, null)
+        for (i <- 0 until mainTabs.getTabCount)
+          mainTabs.setError(i, false)
       }
     }
 
     def recolorTab(tab: Component, hasError: Boolean): Unit = {
-      val color = if (hasError) Color.red else null
-
       if (separateTabsWindow.isVisible && tab.isInstanceOf[CodeTab])
-        separateTabs.setForegroundAt(separateTabs.indexOfComponent(tab), color)
+        separateTabs.setError(separateTabs.indexOfComponent(tab), hasError)
       else
-        mainTabs.setForegroundAt(mainTabs.indexOfComponent(tab), color)
+        mainTabs.setError(mainTabs.indexOfComponent(tab), hasError)
       
-      if (hasError && focusOnError) {
+      if (hasError && focusOnError)
         setSelectedTab(tab)
-      }
     }
 
     e.sourceOwner match {
@@ -694,6 +635,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         recolorTab(interfaceTab, e.error != null)
       case _ =>
     }
+
+    mainTabs.repaint()
+    separateTabs.repaint()
   }
 
   def handle(e: AboutToSaveModelEvent) {

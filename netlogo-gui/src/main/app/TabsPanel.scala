@@ -2,17 +2,18 @@
 
 package org.nlogo.app
 
-import java.awt.{ Graphics, Insets }
+import java.awt.{ Color, Component, Dimension, FlowLayout, Graphics, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
-import javax.swing.{ JTabbedPane, SwingConstants }
+import javax.swing.{ Box, JLabel, JPanel, JTabbedPane, SwingConstants }
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
-import org.nlogo.app.codetab.CodeTab
+import org.nlogo.app.codetab.{ CodeTab, TemporaryCodeTab }
+import org.nlogo.awt.UserCancelException
 import org.nlogo.swing.Utils
 import org.nlogo.window.InterfaceColors
 
-class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
+private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
   override def getContentBorderInsets(tabPlacement: Int) =
     new Insets(0, 0, 0, 0)
 
@@ -54,8 +55,13 @@ class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
                                   isSelected: Boolean) {
     val g2d = Utils.initGraphics2D(g)
 
-    if (isSelected)
-      g2d.setColor(InterfaceColors.TAB_BACKGROUND_SELECTED)
+    if (isSelected) {
+      if (tabsPanel.getError(tabIndex))
+        g2d.setColor(InterfaceColors.TAB_BACKGROUND_ERROR)
+      else
+        g2d.setColor(InterfaceColors.TAB_BACKGROUND_SELECTED)
+    }
+
     else
       g2d.setColor(InterfaceColors.TAB_BACKGROUND)
 
@@ -80,9 +86,9 @@ class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
 
   override def paintTabBorder(g: Graphics, tabPlacement: Int, tabIndex: Int, x: Int, y: Int, w: Int, h: Int,
                               isSelected: Boolean) {
-    val g2d = Utils.initGraphics2D(g)
-
     if (!isSelected) {
+      val g2d = Utils.initGraphics2D(g)
+
       g2d.setColor(InterfaceColors.TAB_BORDER)
 
       if (tabIndex == 0) {
@@ -113,6 +119,81 @@ class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
   }
 }
 
+class TabLabel(val text: String, tab: Component, tabsPanel: TabsPanel) extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
+  private class CloseButton extends JPanel {
+    setBackground(InterfaceColors.TRANSPARENT)
+    setOpaque(false)
+    setSize(new Dimension(8, 8))
+
+    override def paintComponent(g: Graphics) {
+      val g2d = Utils.initGraphics2D(g)
+
+      g2d.setColor(getForeground)
+      g2d.drawLine(0, 0, getWidth - 1, getHeight - 1)
+      g2d.drawLine(getWidth - 1, 0, 0, getHeight - 1)
+    }
+  }
+
+  private val textLabel = new JLabel(text)
+  private var closeButton: CloseButton = null
+
+  var error = false
+
+  setOpaque(false)
+
+  add(textLabel)
+
+  tab match {
+    case tempTab: TemporaryCodeTab =>
+      closeButton = new CloseButton
+
+      closeButton.addMouseListener(new MouseAdapter {
+        override def mouseClicked(e: MouseEvent) {
+          if (e.getButton == MouseEvent.BUTTON1) {
+            try {
+              tempTab.prepareForClose()
+              tabsPanel.tabManager.closeExternalTab(tempTab)
+            }
+
+            catch {
+              case e: UserCancelException =>
+            }
+          }
+        }
+      })
+
+      add(Box.createHorizontalStrut(10))
+      add(closeButton)
+    
+    case _ =>
+  }
+  
+  override def paintComponent(g: Graphics) {
+    if (tab == tabsPanel.getSelectedComponent) {
+      textLabel.setForeground(Color.WHITE)
+
+      if (closeButton != null)
+        closeButton.setForeground(Color.WHITE)
+    }
+
+    else if (tabsPanel.getError(tabsPanel.indexOfComponent(tab))) {
+      textLabel.setForeground(InterfaceColors.TAB_TEXT_ERROR)
+
+      if (closeButton != null)
+        closeButton.setForeground(InterfaceColors.TAB_TEXT_ERROR)
+    }
+
+    else {
+      textLabel.setForeground(Color.BLACK)
+
+      if (closeButton != null)
+        closeButton.setForeground(Color.BLACK)
+    }
+
+    super.paintComponent(g)
+  }
+}
+
 class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
                                             with ChangeListener {
   setUI(new TabsPanelUI(this))
@@ -136,4 +217,11 @@ class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.T
   
   def focusSelected() =
     getSelectedComponent.requestFocus
+  
+  def getError(index: Int): Boolean =
+    getTabComponentAt(index).asInstanceOf[TabLabel].error
+  
+  def setError(index: Int, error: Boolean) {
+    getTabComponentAt(index).asInstanceOf[TabLabel].error = error
+  }
 }
