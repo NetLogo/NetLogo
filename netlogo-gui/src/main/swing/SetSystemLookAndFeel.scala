@@ -5,7 +5,7 @@ package org.nlogo.swing
 import com.formdev.flatlaf.{ FlatLaf, FlatLightLaf }
 
 // Frame
-import java.awt.{ Color, Insets }
+import java.awt.{ Color, GraphicsEnvironment, Insets }
 import javax.swing.{ UIManager, UnsupportedLookAndFeelException }
 
 final object SetSystemLookAndFeel {
@@ -70,6 +70,8 @@ final object SetSystemLookAndFeel {
       // that field was clicked, moved off and then released - RG 7/1/16
       UIManager.getDefaults.put("Table.focusCellBackground", new Color(202, 202, 202))
     }
+
+    GraphicsEnvironment.getLocalGraphicsEnvironment.registerFont(Utils.font("/fonts/Inter.ttf"))
 
     FlatLaf.registerCustomDefaultsSource("themes")
 
