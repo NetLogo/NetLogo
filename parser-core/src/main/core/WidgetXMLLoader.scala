@@ -7,113 +7,92 @@ object WidgetXMLLoader {
                  WorldDimensions): Widget = {
     element.name match {
       case "button" =>
-        Button(element.getOptionalChild("source").map(_.text), element.attributes("left").toInt,
-               element.attributes("top").toInt, element.attributes("right").toInt,
-               element.attributes("bottom").toInt, element.attributes.get("display"),
-               element.attributes("forever").toBoolean, element.attributes("kind") match {
-                                                          case "Observer" => AgentKind.Observer
-                                                          case "Patch" => AgentKind.Patch
-                                                          case "Turtle" => AgentKind.Turtle
-                                                          case "Link" => AgentKind.Link
-                                                        },
-               element.attributes.get("actionKey").map(x => x(0)),
-               element.attributes("disableUntilTicks").toBoolean)
+        Button(element.getOptionalChild("source").map(_.text), element("left").toInt, element("top").toInt,
+               element("right").toInt, element("bottom").toInt, element.get("display"), element("forever").toBoolean,
+               element("kind") match {
+                 case "Observer" => AgentKind.Observer
+                 case "Patch" => AgentKind.Patch
+                 case "Turtle" => AgentKind.Turtle
+                 case "Link" => AgentKind.Link
+               }, element.get("actionKey").map(x => x(0)), element("disableUntilTicks").toBoolean)
 
       case "slider" =>
-        Slider(element.attributes.get("variable"), element.attributes("left").toInt,
-               element.attributes("top").toInt, element.attributes("right").toInt,
-               element.attributes("bottom").toInt, element.attributes.get("display"),
-               element.attributes("min"), element.attributes("max"),
-               element.attributes("default").toDouble, element.attributes("step"),
-               element.attributes.get("units"), element.attributes("direction") match {
-                                                  case "Horizontal" => Horizontal
-                                                  case "Vertical" => Vertical
-                                                })
+        Slider(element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt,
+               element("bottom").toInt, element.get("display"), element("min"), element("max"),
+               element("default").toDouble, element("step"), element.get("units"),
+               element("direction") match {
+                 case "Horizontal" => Horizontal
+                 case "Vertical" => Vertical
+               })
 
       case "view" =>
-        View(element.attributes("left").toInt, element.attributes("top").toInt,
-             element.attributes("right").toInt, element.attributes("bottom").toInt,
-             new WorldDimensions(element.attributes("minPxcor").toInt, element.attributes("maxPxcor").toInt,
-                                 element.attributes("minPycor").toInt, element.attributes("maxPycor").toInt,
-                                 element.attributes("patchSize").toDouble,
-                                 element.attributes("wrappingAllowedX").toBoolean,
-                                 element.attributes("wrappingAllowedY").toBoolean),
-             element.attributes("fontSize").toInt, UpdateMode.load(element.attributes("updateMode").toInt),
-             element.attributes("showTickCounter").toBoolean, element.attributes.get("tickCounterLabel"),
-             element.attributes("frameRate").toDouble)
+        View(element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt,
+             new WorldDimensions(element("minPxcor").toInt, element("maxPxcor").toInt, element("minPycor").toInt,
+                                 element("maxPycor").toInt, element("patchSize").toDouble,
+                                 element("wrappingAllowedX").toBoolean, element("wrappingAllowedY").toBoolean),
+             element("fontSize").toInt, UpdateMode.load(element("updateMode").toInt),
+             element("showTickCounter").toBoolean, element.get("tickCounterLabel"), element("frameRate").toDouble)
       
       case "view3d" =>
-        View(element.attributes("left").toInt, element.attributes("top").toInt,
-             element.attributes("right").toInt, element.attributes("bottom").toInt,
-             makeDimensions3D(new WorldDimensions(element.attributes("minPxcor").toInt,
-                                                  element.attributes("maxPxcor").toInt,
-                                                  element.attributes("minPycor").toInt,
-                                                  element.attributes("maxPycor").toInt,
-                                                  element.attributes("patchSize").toDouble,
-                                                  element.attributes("wrappingAllowedX").toBoolean,
-                                                  element.attributes("wrappingAllowedY").toBoolean),
-                              element.attributes("minPzcor").toInt, element.attributes("maxPzcor").toInt,
-                              element.attributes("wrappingAllowedZ").toBoolean),
-             element.attributes("fontSize").toInt, UpdateMode.load(element.attributes("updateMode").toInt),
-             element.attributes("showTickCounter").toBoolean, element.attributes.get("tickCounterLabel"),
-             element.attributes("frameRate").toDouble)
+        View(element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt,
+             makeDimensions3D(new WorldDimensions(element("minPxcor").toInt, element("maxPxcor").toInt,
+                                                  element("minPycor").toInt, element("maxPycor").toInt,
+                                                  element("patchSize").toDouble, element("wrappingAllowedX").toBoolean,
+                                                  element("wrappingAllowedY").toBoolean),
+                              element("minPzcor").toInt, element("maxPzcor").toInt,
+                              element("wrappingAllowedZ").toBoolean),
+             element("fontSize").toInt, UpdateMode.load(element("updateMode").toInt),
+             element("showTickCounter").toBoolean, element.get("tickCounterLabel"), element("frameRate").toDouble)
 
       case "monitor" =>
-        Monitor(element.getOptionalChild("source").map(_.text), element.attributes("left").toInt,
-                element.attributes("top").toInt, element.attributes("right").toInt,
-                element.attributes("bottom").toInt, element.attributes.get("display"),
-                element.attributes("precision").toInt, element.attributes("fontSize").toInt)
+        Monitor(element.getOptionalChild("source").map(_.text), element("left").toInt, element("top").toInt,
+                element("right").toInt, element("bottom").toInt, element.get("display"), element("precision").toInt,
+                element("fontSize").toInt)
 
       case "switch" =>
-        Switch(element.attributes.get("variable"), element.attributes("left").toInt,
-               element.attributes("top").toInt, element.attributes("right").toInt,
-               element.attributes("bottom").toInt, element.attributes.get("display"),
-               element.attributes("on").toBoolean)
+        Switch(element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt,
+               element("bottom").toInt, element.get("display"), element("on").toBoolean)
 
       case "plot" =>
-        Plot(element.attributes.get("display"), element.attributes("left").toInt, element.attributes("top").toInt,
-             element.attributes("right").toInt, element.attributes("bottom").toInt, element.attributes.get("xAxis"),
-             element.attributes.get("yAxis"), element.attributes("xMin").toDouble,
-             element.attributes("xMax").toDouble, element.attributes("yMin").toDouble,
-             element.attributes("yMax").toDouble, element.attributes("autoplot").toBoolean,
-             element.attributes("legend").toBoolean, element.getChild("setup").text, element.getChild("update").text,
+        Plot(element.get("display"), element("left").toInt, element("top").toInt, element("right").toInt,
+             element("bottom").toInt, element.get("xAxis"), element.get("yAxis"), element("xMin").toDouble,
+             element("xMax").toDouble, element("yMin").toDouble, element("yMax").toDouble,
+             element("autoplot").toBoolean, element("legend").toBoolean, element.getChild("setup").text,
+             element.getChild("update").text,
              for (element <- element.children if element.name == "pen")
-               yield Pen(element.attributes("display"), element.attributes("interval").toDouble,
-                         element.attributes("mode").toInt, element.attributes("color").toInt,
-                         element.attributes("legend").toBoolean, element.getChild("setup").text,
+               yield Pen(element("display"), element("interval").toDouble, element("mode").toInt,
+                         element("color").toInt, element("legend").toBoolean, element.getChild("setup").text,
                          element.getChild("update").text))
 
       case "chooser" =>
-        Chooser(element.attributes.get("variable"), element.attributes("left").toInt,
-                element.attributes("top").toInt, element.attributes("right").toInt,
-                element.attributes("bottom").toInt, element.attributes.get("display"),
+        Chooser(element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt,
+                element("bottom").toInt, element.get("display"),
                 for (element <- element.children if element.name == "choice") yield {
-                  element.attributes("type") match {
+                  element("type") match {
                     case "string" =>
-                      ChooseableString(element.attributes("value"))
+                      ChooseableString(element("value"))
                     
                     case "double" =>
-                      ChooseableDouble(element.attributes("value").toDouble)
+                      ChooseableDouble(element("value").toDouble)
                     
                     case "boolean" =>
-                      ChooseableBoolean(element.attributes("value").toBoolean)
+                      ChooseableBoolean(element("value").toBoolean)
                     
                     case "list" =>
                       ChooseableList(LogoList.fromList(for (element <- element.children if element.name == "value")
-                                                         yield element.attributes("value")))
+                                                         yield element("value")))
 
                   }
-                }, element.attributes("current").toInt)
+                }, element("current").toInt)
 
       case "output" =>
-        Output(element.attributes("left").toInt, element.attributes("top").toInt, element.attributes("right").toInt,
-               element.attributes("bottom").toInt, element.attributes("fontSize").toInt)
+        Output(element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt,
+               element("fontSize").toInt)
       
       case "input" =>
-        InputBox(element.attributes.get("variable"), element.attributes("left").toInt,
-                 element.attributes("top").toInt, element.attributes("right").toInt,
-                 element.attributes("bottom").toInt,
-                 element.attributes("type") match {
+        InputBox(element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt,
+                 element("bottom").toInt,
+                 element("type") match {
                    case "number" =>
                      NumericInput(element.getChild("value").text.toDouble, NumericInput.NumberLabel)
                   
@@ -122,15 +101,15 @@ object WidgetXMLLoader {
                   
                    case "string" =>
                      StringInput(element.getChild("value").text, StringInput.StringLabel,
-                                 element.attributes("multiline").toBoolean)
+                                 element("multiline").toBoolean)
                   
                    case "reporter" =>
                      StringInput(element.getChild("value").text, StringInput.ReporterLabel,
-                                 element.attributes("multiline").toBoolean)
+                                 element("multiline").toBoolean)
                   
                    case "command" =>
                      StringInput(element.getChild("value").text, StringInput.CommandLabel,
-                                 element.attributes("multiline").toBoolean)
+                                 element("multiline").toBoolean)
 
                  })
 

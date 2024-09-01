@@ -38,32 +38,27 @@ object ShapeXMLLoader {
       for (element <- element.children) yield {
         element.name match {
           case "circle" =>
-            Circle(colorFromString(element.attributes("color")), element.attributes("filled").toBoolean,
-                   element.attributes("marked").toBoolean, element.attributes("x").toInt,
-                   element.attributes("y").toInt, element.attributes("diameter").toInt)
+            Circle(colorFromString(element("color")), element("filled").toBoolean, element("marked").toBoolean,
+                   element("x").toInt, element("y").toInt, element("diameter").toInt)
 
           case "line" =>
-            Line(colorFromString(element.attributes("color")), element.attributes("marked").toBoolean,
-                 (element.attributes("startX").toInt, element.attributes("startY").toInt),
-                 (element.attributes("endX").toInt, element.attributes("endY").toInt))
+            Line(colorFromString(element("color")), element("marked").toBoolean,
+                 (element("startX").toInt, element("startY").toInt), (element("endX").toInt, element("endY").toInt))
 
           case "polygon" =>
-            Polygon(colorFromString(element.attributes("color")), element.attributes("filled").toBoolean,
-                    element.attributes("marked").toBoolean,
+            Polygon(colorFromString(element("color")), element("filled").toBoolean, element("marked").toBoolean,
                     for (element <- element.children if element.name == "point")
-                      yield (element.attributes("x").toInt, element.attributes("y").toInt))
+                      yield (element("x").toInt, element("y").toInt))
 
           case "rectangle" =>
-            Rectangle(colorFromString(element.attributes("color")), element.attributes("filled").toBoolean,
-                      element.attributes("marked").toBoolean,
-                      (element.attributes("startX").toInt, element.attributes("startY").toInt),
-                      (element.attributes("endX").toInt, element.attributes("endY").toInt))
+            Rectangle(colorFromString(element("color")), element("filled").toBoolean, element("marked").toBoolean,
+                      (element("startX").toInt, element("startY").toInt),
+                      (element("endX").toInt, element("endY").toInt))
 
         }
       }
 
-    VectorShape(element.attributes("name"), element.attributes("rotatable").toBoolean,
-                element.attributes("editableColorIndex").toInt, elements)
+    VectorShape(element("name"), element("rotatable").toBoolean, element("editableColorIndex").toInt, elements)
   }
 
   def writeShape(shape: CoreVectorShape): XMLElement = {
@@ -149,19 +144,19 @@ object ShapeXMLLoader {
       element.name match {
         case "lines" =>
           for (element <- element.children if element.name == "line") {
-            lines = lines :+ new LinkLine(element.attributes("x").toDouble, element.attributes("visible").toBoolean,
+            lines = lines :+ new LinkLine(element("x").toDouble, element("visible").toBoolean,
                                           for (element <- element.children if element.name == "dash")
-                                            yield element.attributes("value").toFloat)
+                                            yield element("value").toFloat)
           }
         
         case "indicator" =>
-          indicator = readShape(element.children(0))
+          indicator = readShape(element.getChild("shape"))
         
         case _ =>
       }
     }
 
-    LinkShape(element.attributes("name"), element.attributes("curviness").toDouble, lines, indicator)
+    LinkShape(element("name"), element("curviness").toDouble, lines, indicator)
   }
 
   def writeLinkShape(shape: CoreLinkShape): XMLElement = {

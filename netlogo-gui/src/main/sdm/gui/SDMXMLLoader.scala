@@ -12,7 +12,7 @@ object SDMXMLLoader {
   def readDrawing(element: XMLElement): AggregateDrawing = {
     val drawing = new AggregateDrawing
 
-    drawing.getModel.setDt(element.attributes("dt").toDouble)
+    drawing.getModel.setDt(element("dt").toDouble)
 
     var refs = Map[Int, Figure]()
     
@@ -21,12 +21,12 @@ object SDMXMLLoader {
         case "stock" =>
           val stock = new StockFigure
 
-          stock.nameWrapper(element.attributes("name"))
-          stock.initialValueExpressionWrapper(element.attributes("initialValue"))
-          stock.allowNegative(element.attributes("allowNegative").toBoolean)
+          stock.nameWrapper(element("name"))
+          stock.initialValueExpressionWrapper(element("initialValue"))
+          stock.allowNegative(element("allowNegative").toBoolean)
 
-          stock.displayBox(new Point(element.attributes("centerX").toInt, element.attributes("centerY").toInt),
-                           new Point(element.attributes("startX").toInt, element.attributes("startY").toInt))
+          stock.displayBox(new Point(element("centerX").toInt, element("centerY").toInt),
+                           new Point(element("startX").toInt, element("startY").toInt))
 
           drawing.add(stock)
 
@@ -35,11 +35,11 @@ object SDMXMLLoader {
         case "converter" =>
           val converter = new ConverterFigure
 
-          converter.nameWrapper(element.attributes("name"))
-          converter.expressionWrapper(element.attributes("expression"))
+          converter.nameWrapper(element("name"))
+          converter.expressionWrapper(element("expression"))
 
-          converter.displayBox(new Point(element.attributes("centerX").toInt, element.attributes("centerY").toInt),
-                               new Point(element.attributes("startX").toInt, element.attributes("startY").toInt))
+          converter.displayBox(new Point(element("centerX").toInt, element("centerY").toInt),
+                               new Point(element("startX").toInt, element("startY").toInt))
 
           drawing.add(converter)
 
@@ -48,8 +48,8 @@ object SDMXMLLoader {
         case "reservoir" =>
           val reservoir = new ReservoirFigure
 
-          reservoir.displayBox(new Point(element.attributes("centerX").toInt, element.attributes("centerY").toInt),
-                               new Point(element.attributes("startX").toInt, element.attributes("startY").toInt))
+          reservoir.displayBox(new Point(element("centerX").toInt, element("centerY").toInt),
+                               new Point(element("startX").toInt, element("startY").toInt))
 
           drawing.add(reservoir)
 
@@ -58,11 +58,11 @@ object SDMXMLLoader {
         case "binding" =>
           val binding = new BindingConnection
 
-          binding.displayBox(new Point(element.attributes("centerX").toInt, element.attributes("centerY").toInt),
-                             new Point(element.attributes("startX").toInt, element.attributes("startY").toInt))
+          binding.displayBox(new Point(element("centerX").toInt, element("centerY").toInt),
+                             new Point(element("startX").toInt, element("startY").toInt))
 
-          val start = refs(element.attributes("startFigure").toInt)
-          val end = refs(element.attributes("endFigure").toInt)
+          val start = refs(element("startFigure").toInt)
+          val end = refs(element("endFigure").toInt)
 
           binding.connectStart(start.connectorAt(start.center.x, start.center.y))
           binding.connectEnd(end.connectorAt(end.center.x, end.center.y))
@@ -74,19 +74,19 @@ object SDMXMLLoader {
         case "rate" =>
           val rate = new RateConnection
 
-          rate.nameWrapper(element.attributes("name"))
-          rate.expressionWrapper(element.attributes("expression"))
-          rate.bivalentWrapper(element.attributes("bivalent").toBoolean)
+          rate.nameWrapper(element("name"))
+          rate.expressionWrapper(element("expression"))
+          rate.bivalentWrapper(element("bivalent").toBoolean)
 
-          rate.startPoint(element.attributes("startX").toInt, element.attributes("startY").toInt)
+          rate.startPoint(element("startX").toInt, element("startY").toInt)
 
           if (element.attributes.contains("middleX"))
-            rate.insertPointAt(new Point(element.attributes("middleX").toInt, element.attributes("middleY").toInt), 1)
+            rate.insertPointAt(new Point(element("middleX").toInt, element("middleY").toInt), 1)
 
-          rate.endPoint(element.attributes("endX").toInt, element.attributes("endY").toInt)
+          rate.endPoint(element("endX").toInt, element("endY").toInt)
 
-          val start = refs(element.attributes("startFigure").toInt)
-          val end = refs(element.attributes("endFigure").toInt)
+          val start = refs(element("startFigure").toInt)
+          val end = refs(element("endFigure").toInt)
 
           rate.connectStart(start.connectorAt(start.center.x, start.center.y))
           rate.connectEnd(end.connectorAt(end.center.x, end.center.y))
