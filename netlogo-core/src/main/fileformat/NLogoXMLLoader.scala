@@ -105,7 +105,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
 
       element.name match {
         case "model" =>
-          version = element.attributes("version")
+          version = element("version")
 
           for (element <- element.children) {
             element.name match {
@@ -152,8 +152,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
               case "settings" =>
                 optionalSections = optionalSections :+
                   new OptionalSection("org.nlogo.modelsection.modelsettings",
-                                      Some(ModelSettings(element.attributes("snapToGrid").toBoolean)),
-                                      ModelSettings(false))
+                                      Some(ModelSettings(element("snapToGrid").toBoolean)), ModelSettings(false))
 
               case "deltaTick" =>
                 // not sure what this is

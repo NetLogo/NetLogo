@@ -12,13 +12,12 @@ object LabXMLLoader {
     def readValueSet(element: XMLElement): RefValueSet = {
       element.name match {
         case "steppedValueSet" =>
-          SteppedValueSet(element.attributes("variable"), element.attributes("first").toDouble,
-                          element.attributes("step").toDouble, element.attributes("last").toDouble)
+          SteppedValueSet(element("variable"), element("first").toDouble, element("step").toDouble,
+                          element("last").toDouble)
 
         case "enumeratedValueSet" =>
-          RefEnumeratedValueSet(element.attributes("variable"),
-                                for (element <- element.children if element.name == "value")
-                                  yield literalParser.readFromString(element.attributes("value")))
+          RefEnumeratedValueSet(element("variable"), for (element <- element.children if element.name == "value")
+                                                       yield literalParser.readFromString(element("value")))
 
       }
     }
@@ -70,7 +69,7 @@ object LabXMLLoader {
       }
     }
 
-    var name = element.attributes("name")
+    var name = element("name")
 
     if (editNames) {
       if (name.nonEmpty) {
@@ -98,11 +97,9 @@ object LabXMLLoader {
       existingNames += name
     }
 
-    LabProtocol(name, preExperiment, setup, go, postRun, postExperiment, element.attributes("repetitions").toInt,
-                element.attributes("sequentialRunOrder").toBoolean,
-                element.attributes("runMetricsEveryStep").toBoolean, runMetricsCondition,
-                element.attributes.getOrElse("timeLimit", "0").toInt, exitCondition, metrics, constants,
-                subExperiments)
+    LabProtocol(name, preExperiment, setup, go, postRun, postExperiment, element("repetitions").toInt,
+                element("sequentialRunOrder").toBoolean, element("runMetricsEveryStep").toBoolean, runMetricsCondition,
+                element("timeLimit", "0").toInt, exitCondition, metrics, constants, subExperiments)
   }
 
   def writeExperiment(experiment: LabProtocol): XMLElement = {
