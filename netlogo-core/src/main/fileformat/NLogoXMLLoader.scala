@@ -8,8 +8,8 @@ import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants,
 
 import org.nlogo.api.{ FileIO, GenericModelLoader, LabProtocol, LabXMLLoader, ModelSettings, PreviewCommands, Version,
                        WorldDimensions3D }
-import org.nlogo.core.{ Model, OptionalSection, ShapeXMLLoader, UpdateMode, View, Widget, WidgetXMLLoader,
-                        WorldDimensions, XMLElement }
+import org.nlogo.core.{ LiteralParser, Model, OptionalSection, ShapeXMLLoader, UpdateMode, View, Widget,
+                        WidgetXMLLoader, WorldDimensions, XMLElement }
 import org.nlogo.core.Shape.{ LinkShape, VectorShape }
 // import org.nlogo.sdm.gui.SDMXMLLoader
 
@@ -17,7 +17,7 @@ import scala.collection.mutable.Set
 import scala.io.Source
 import scala.util.{ Failure, Success, Try }
 
-class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
+class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends GenericModelLoader {
   lazy private val defaultInfo: String = FileIO.url2String("/system/empty-info.md")
 
   private def readXMLElement(reader: XMLStreamReader): XMLElement = {
@@ -139,7 +139,8 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
               case "experiments" =>
                 optionalSections = optionalSections :+
                   new OptionalSection("org.nlogo.modelsection.behaviorspace",
-                                      Some(element.children.map(LabXMLLoader.readExperiment(_, editNames, Set()))),
+                                      Some(element.children.map(LabXMLLoader.readExperiment(_, literalParser,
+                                                                                            editNames, Set()))),
                                       Seq[LabProtocol]())
 
               case "hubNetClient" =>
@@ -295,7 +296,7 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
   def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[Seq[LabProtocol]] = {
     val reader = XMLInputFactory.newFactory.createXMLStreamReader(new StringReader(source))
 
-    Try(readXMLElement(reader).children.map(LabXMLLoader.readExperiment(_, editNames, existingNames)))
+    Try(readXMLElement(reader).children.map(LabXMLLoader.readExperiment(_, literalParser, editNames, existingNames)))
   }
 
   def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {

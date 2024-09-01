@@ -58,10 +58,10 @@ package object fileformat {
       .addSerializer[Array[String], NLogoThreeDFormat](NLogoThreeDPreviewCommandsFormat)
   }
 
-  def standardXMLLoader(editNames: Boolean = false) =
-    new NLogoXMLLoader(editNames)
+  def standardXMLLoader(literalParser: LiteralParser, editNames: Boolean = false) =
+    new NLogoXMLLoader(literalParser: LiteralParser, editNames)
 
   def standardAnyLoader(literalParser: LiteralParser, editNames: Boolean = false) =
-    new NLogoAnyLoader(List(standardXMLLoader(editNames), standardLoader(literalParser, editNames)))
+    new NLogoAnyLoader(List(standardXMLLoader(literalParser, editNames), standardLoader(literalParser, editNames)))
 
 }

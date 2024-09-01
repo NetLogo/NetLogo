@@ -2,12 +2,13 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.XMLElement
+import org.nlogo.core.{ LiteralParser, XMLElement }
 
 import scala.collection.mutable.Set
 
 object LabXMLLoader {
-  def readExperiment(element: XMLElement, editNames: Boolean, existingNames: Set[String]): LabProtocol = {
+  def readExperiment(element: XMLElement, literalParser: LiteralParser, editNames: Boolean,
+                     existingNames: Set[String]): LabProtocol = {
     def readValueSet(element: XMLElement): RefValueSet = {
       element.name match {
         case "steppedValueSet" =>
@@ -15,10 +16,9 @@ object LabXMLLoader {
                           element.attributes("step").toDouble, element.attributes("last").toDouble)
 
         case "enumeratedValueSet" =>
-          RefEnumeratedValueSet(element.attributes("variable"), for (element <- element.children
-                                                                      if element.name == "value")
-                                                                  yield element.attributes("value").
-                                                                        toDouble.asInstanceOf[AnyRef])
+          RefEnumeratedValueSet(element.attributes("variable"),
+                                for (element <- element.children if element.name == "value")
+                                  yield literalParser.readFromString(element.attributes("value")))
 
       }
     }
@@ -124,9 +124,8 @@ object LabXMLLoader {
           )
 
           val children =
-            for (value <- enumerated.toList) yield {
-              XMLElement("value", Map(("value", value.toString)), "", Nil)
-            }
+            for (value <- enumerated.toList)
+              yield XMLElement("value", Map(("value", Dump.logoObject(value, true, false))), "", Nil)
 
           XMLElement("enumeratedValueSet", attributes, "", children)
         
