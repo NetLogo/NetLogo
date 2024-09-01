@@ -81,6 +81,12 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
     if (isCompatible(extension)) {
       val reader = XMLInputFactory.newFactory.createXMLStreamReader(new StringReader(source))
 
+      while (reader.hasNext && reader.next != XMLStreamConstants.START_ELEMENT) {}
+
+      val element = readXMLElement(reader)
+
+      reader.close
+
       var code: Option[String] = None
       var widgets = List[Widget]()
       var info: Option[String] = None
@@ -88,10 +94,6 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
       var turtleShapes: Option[List[VectorShape]] = None
       var linkShapes: Option[List[LinkShape]] = None
       var optionalSections = List[OptionalSection[_]]()
-
-      while (reader.hasNext && reader.next != XMLStreamConstants.START_ELEMENT) {}
-
-      val element = readXMLElement(reader)
 
       element.name match {
         case "model" =>
@@ -151,8 +153,6 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
           }
 
       }
-
-      reader.close
 
       Success(Model(code.getOrElse(Model.defaultCode), widgets, info.getOrElse(defaultInfo), version,
                     turtleShapes.getOrElse(Model.defaultShapes), linkShapes.getOrElse(Model.defaultLinkShapes),
