@@ -7,7 +7,7 @@ object WidgetXMLLoader {
                  WorldDimensions): Widget = {
     element.name match {
       case "button" =>
-        Button(element.attributes.get("source"), element.attributes("left").toInt,
+        Button(element.getOptionalChild("source").map(_.text), element.attributes("left").toInt,
                element.attributes("top").toInt, element.attributes("right").toInt,
                element.attributes("bottom").toInt, element.attributes.get("display"),
                element.attributes("forever").toBoolean, element.attributes("kind") match {
@@ -59,7 +59,7 @@ object WidgetXMLLoader {
              element.attributes("frameRate").toDouble)
 
       case "monitor" =>
-        Monitor(element.attributes.get("source"), element.attributes("left").toInt,
+        Monitor(element.getOptionalChild("source").map(_.text), element.attributes("left").toInt,
                 element.attributes("top").toInt, element.attributes("right").toInt,
                 element.attributes("bottom").toInt, element.attributes.get("display"),
                 element.attributes("precision").toInt, element.attributes("fontSize").toInt)
@@ -80,8 +80,8 @@ object WidgetXMLLoader {
              for (element <- element.children if element.name == "pen")
                yield Pen(element.attributes("display"), element.attributes("interval").toDouble,
                          element.attributes("mode").toInt, element.attributes("color").toInt,
-                         element.attributes("legend").toBoolean, element.attributes("setup"),
-                         element.attributes("update")))
+                         element.attributes("legend").toBoolean, element.getChild("setup").text,
+                         element.getChild("update").text))
 
       case "chooser" =>
         Chooser(element.attributes.get("variable"), element.attributes("left").toInt,
@@ -115,21 +115,21 @@ object WidgetXMLLoader {
                  element.attributes("bottom").toInt,
                  element.attributes("type") match {
                    case "number" =>
-                     NumericInput(element.attributes("value").toDouble, NumericInput.NumberLabel)
+                     NumericInput(element.getChild("value").text.toDouble, NumericInput.NumberLabel)
                   
                    case "color" =>
-                     NumericInput(element.attributes("value").toDouble, NumericInput.ColorLabel)
+                     NumericInput(element.getChild("value").text.toDouble, NumericInput.ColorLabel)
                   
                    case "string" =>
-                     StringInput(element.attributes("value"), StringInput.StringLabel,
+                     StringInput(element.getChild("value").text, StringInput.StringLabel,
                                  element.attributes("multiline").toBoolean)
                   
                    case "reporter" =>
-                     StringInput(element.attributes("value"), StringInput.ReporterLabel,
+                     StringInput(element.getChild("value").text, StringInput.ReporterLabel,
                                  element.attributes("multiline").toBoolean)
                   
                    case "command" =>
-                     StringInput(element.attributes("value"), StringInput.CommandLabel,
+                     StringInput(element.getChild("value").text, StringInput.CommandLabel,
                                  element.attributes("multiline").toBoolean)
 
                  })
@@ -153,13 +153,16 @@ object WidgetXMLLoader {
         if (button.display.isDefined)
           attributes += (("display", button.display.get))
         
-        if (button.source.isDefined)
-          attributes += (("source", button.source.get))
-        
         if (button.actionKey.isDefined)
           attributes += (("actionKey", button.actionKey.get.toString))
+        
+        val children =
+          if (button.source.isDefined)
+            List(XMLElement("source", Map(), button.source.get, Nil))
+          else
+            Nil
 
-        XMLElement("button", attributes, "", Nil)
+        XMLElement("button", attributes, "", children)
       
       case slider: Slider =>
         var attributes = Map[String, String](
@@ -252,10 +255,13 @@ object WidgetXMLLoader {
         if (monitor.display.isDefined)
           attributes += (("display", monitor.display.get))
         
-        if (monitor.source.isDefined)
-          attributes += (("source", monitor.source.get))
+        val children =
+          if (monitor.source.isDefined)
+            List(XMLElement("source", Map(), monitor.source.get, Nil))
+          else
+            Nil
 
-        XMLElement("monitor", attributes, "", Nil)
+        XMLElement("monitor", attributes, "", children)
       
       case switch: Switch =>
         var attributes = Map[String, String](
@@ -309,12 +315,15 @@ object WidgetXMLLoader {
             ("interval", pen.interval.toString),
             ("mode", pen.mode.toString),
             ("color", pen.color.toString),
-            ("legend", pen.inLegend.toString),
-            ("setup", pen.setupCode),
-            ("update", pen.updateCode)
+            ("legend", pen.inLegend.toString)
           )
 
-          children = children :+ XMLElement("pen", attributes, "", Nil)
+          val penChildren = List(
+            XMLElement("setup", Map(), pen.setupCode, Nil),
+            XMLElement("update", Map(), pen.updateCode, Nil)
+          )
+
+          children = children :+ XMLElement("pen", attributes, "", penChildren)
         }
 
         XMLElement("plot", attributes, "", children)
@@ -399,8 +408,7 @@ object WidgetXMLLoader {
           ("top", input.top.toString),
           ("right", input.right.toString),
           ("bottom", input.bottom.toString),
-          ("multiline", input.multiline.toString),
-          ("value", input.boxedValue.asString)
+          ("multiline", input.multiline.toString)
         )
 
         if (input.variable.isDefined)
@@ -432,7 +440,9 @@ object WidgetXMLLoader {
 
         }
 
-        XMLElement("input", attributes, "", Nil)
+        val children = List(XMLElement("value", Map(), input.boxedValue.asString, Nil))
+
+        XMLElement("input", attributes, "", children)
 
     }
   }
