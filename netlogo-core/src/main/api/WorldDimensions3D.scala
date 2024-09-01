@@ -45,4 +45,7 @@ extends WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor, patchSize, wrapp
   override def toString: String = {
     s"WorldDimensions3D($minPxcor, $maxPxcor, $minPycor, $maxPycor, $minPzcor, $maxPzcor, $patchSize, $wrappingAllowedInX, $wrappingAllowedInY, $wrappingAllowedInZ)"
   }
+
+  override def get3D: Option[(Int, Int, Boolean)] =
+    Some((minPzcor, maxPzcor, wrappingAllowedInZ))
 }
