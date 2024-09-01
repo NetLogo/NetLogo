@@ -42,8 +42,12 @@ object Adapters {
     def getDescriptor(): String = "XMLModelLoaderComponent"
     def verify(p: PicoContainer): Unit = {}
 
-    def getComponentInstance(container: PicoContainer, into: JType) =
-      fileformat.standardXMLLoader(true)
+    def getComponentInstance(container: PicoContainer, into: JType) = {
+      val compiler = container.getComponent(classOf[PresentationCompilerInterface])
+      val compilerServices = new DefaultCompilerServices(compiler)
+
+      fileformat.standardXMLLoader(compilerServices, true)
+    }
   }
 
   class ModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[GenericModelLoader], classOf[ConfigurableModelLoader]) {
