@@ -6,4 +6,7 @@ case class XMLElement(val name: String, val attributes: Map[String, String], val
                       val children: List[XMLElement]) {
   def getChild(name: String): XMLElement =
     children.find(_.name == name).get
+  
+  def getOptionalChild(name: String): Option[XMLElement] =
+    children.find(_.name == name)
 }
