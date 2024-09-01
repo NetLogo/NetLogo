@@ -149,13 +149,13 @@ object ShapeXMLLoader {
       element.name match {
         case "lines" =>
           for (element <- element.children if element.name == "line") {
-            lines = lines :+ new LinkLine(element.attributes("x").toInt, element.attributes("visible").toBoolean,
+            lines = lines :+ new LinkLine(element.attributes("x").toDouble, element.attributes("visible").toBoolean,
                                           for (element <- element.children if element.name == "dash")
                                             yield element.attributes("value").toFloat)
           }
         
         case "indicator" =>
-          indicator = readShape(element)
+          indicator = readShape(element.children(0))
         
         case _ =>
       }

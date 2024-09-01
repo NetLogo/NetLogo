@@ -61,7 +61,7 @@ object WidgetXMLLoader {
              element.attributes("yMax").toDouble, element.attributes("autoplot").toBoolean,
              element.attributes("legend").toBoolean, element.attributes("setup"), element.attributes("update"),
              for (element <- element.children if element.name == "pen")
-               yield Pen(element.attributes("display"), element.attributes("interval").toInt,
+               yield Pen(element.attributes("display"), element.attributes("interval").toDouble,
                          element.attributes("mode").toInt, element.attributes("color").toInt,
                          element.attributes("legend").toBoolean, element.attributes("setup"),
                          element.attributes("update")))
