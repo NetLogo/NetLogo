@@ -76,7 +76,7 @@ object WidgetXMLLoader {
              element.attributes.get("yAxis"), element.attributes("xMin").toDouble,
              element.attributes("xMax").toDouble, element.attributes("yMin").toDouble,
              element.attributes("yMax").toDouble, element.attributes("autoplot").toBoolean,
-             element.attributes("legend").toBoolean, element.attributes("setup"), element.attributes("update"),
+             element.attributes("legend").toBoolean, element.getChild("setup").text, element.getChild("update").text,
              for (element <- element.children if element.name == "pen")
                yield Pen(element.attributes("display"), element.attributes("interval").toDouble,
                          element.attributes("mode").toInt, element.attributes("color").toInt,
@@ -285,9 +285,7 @@ object WidgetXMLLoader {
           ("yMin", plot.ymin.toString),
           ("yMax", plot.ymax.toString),
           ("autoplot", plot.autoPlotOn.toString),
-          ("legend", plot.legendOn.toString),
-          ("setup", plot.setupCode),
-          ("update", plot.updateCode)
+          ("legend", plot.legendOn.toString)
         )
 
         if (plot.display.isDefined)
@@ -299,20 +297,25 @@ object WidgetXMLLoader {
         if (plot.yAxis.isDefined)
           attributes += (("yAxis", plot.yAxis.get))
         
-        val children =
-          for (pen <- plot.pens) yield {
-            val attributes = Map[String, String](
-              ("display", pen.display),
-              ("interval", pen.interval.toString),
-              ("mode", pen.mode.toString),
-              ("color", pen.color.toString),
-              ("legend", pen.inLegend.toString),
-              ("setup", pen.setupCode),
-              ("update", pen.updateCode)
-            )
+        
+        var children = List(
+          XMLElement("setup", Map(), plot.setupCode, Nil),
+          XMLElement("update", Map(), plot.updateCode, Nil)
+        )
 
-            XMLElement("pen", attributes, "", Nil)
-          }
+        for (pen <- plot.pens) {
+          val attributes = Map[String, String](
+            ("display", pen.display),
+            ("interval", pen.interval.toString),
+            ("mode", pen.mode.toString),
+            ("color", pen.color.toString),
+            ("legend", pen.inLegend.toString),
+            ("setup", pen.setupCode),
+            ("update", pen.updateCode)
+          )
+
+          children = children :+ XMLElement("pen", attributes, "", Nil)
+        }
 
         XMLElement("plot", attributes, "", children)
 
@@ -321,7 +324,7 @@ object WidgetXMLLoader {
           ("left", chooser.left.toString),
           ("top", chooser.top.toString),
           ("right", chooser.right.toString),
-          ("bottom", chooser.right.toString),
+          ("bottom", chooser.bottom.toString),
           ("current", chooser.currentChoice.toString)
         )
 
