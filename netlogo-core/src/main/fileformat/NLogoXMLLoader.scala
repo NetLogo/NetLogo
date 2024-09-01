@@ -62,7 +62,7 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
   }
 
   private def isCompatible(extension: String): Boolean =
-    extension == "nlogo" || extension == "nlogo3d"
+    (Version.is3D && extension == "nlogo3d") || (!Version.is3D && extension == "nlogo")
 
   private def isCompatible(uri: URI): Boolean = {
     val extension = GenericModelLoader.getURIExtension(uri)
