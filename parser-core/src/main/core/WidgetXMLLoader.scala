@@ -3,7 +3,8 @@
 package org.nlogo.core
 
 object WidgetXMLLoader {
-  def readWidget(element: XMLElement): Widget = {
+  def readWidget(element: XMLElement, makeDimensions3D: (WorldDimensions, Int, Int, Boolean) =>
+                 WorldDimensions): Widget = {
     element.name match {
       case "button" =>
         Button(element.attributes.get("source"), element.attributes("left").toInt,
@@ -37,6 +38,22 @@ object WidgetXMLLoader {
                                  element.attributes("patchSize").toDouble,
                                  element.attributes("wrappingAllowedX").toBoolean,
                                  element.attributes("wrappingAllowedY").toBoolean),
+             element.attributes("fontSize").toInt, UpdateMode.load(element.attributes("updateMode").toInt),
+             element.attributes("showTickCounter").toBoolean, element.attributes.get("tickCounterLabel"),
+             element.attributes("frameRate").toDouble)
+      
+      case "view3d" =>
+        View(element.attributes("left").toInt, element.attributes("top").toInt,
+             element.attributes("right").toInt, element.attributes("bottom").toInt,
+             makeDimensions3D(new WorldDimensions(element.attributes("minPxcor").toInt,
+                                                  element.attributes("maxPxcor").toInt,
+                                                  element.attributes("minPycor").toInt,
+                                                  element.attributes("maxPycor").toInt,
+                                                  element.attributes("patchSize").toDouble,
+                                                  element.attributes("wrappingAllowedX").toBoolean,
+                                                  element.attributes("wrappingAllowedY").toBoolean),
+                              element.attributes("minPzcor").toInt, element.attributes("maxPzcor").toInt,
+                              element.attributes("wrappingAllowedZ").toBoolean),
              element.attributes("fontSize").toInt, UpdateMode.load(element.attributes("updateMode").toInt),
              element.attributes("showTickCounter").toBoolean, element.attributes.get("tickCounterLabel"),
              element.attributes("frameRate").toDouble)
@@ -169,28 +186,58 @@ object WidgetXMLLoader {
         XMLElement("slider", attributes, "", Nil)
 
       case view: View =>
-        var attributes = Map[String, String](
-          ("left", view.left.toString),
-          ("top", view.top.toString),
-          ("right", view.right.toString),
-          ("bottom", view.bottom.toString),
-          ("minPxcor", view.dimensions.minPxcor.toString),
-          ("maxPxcor", view.dimensions.maxPxcor.toString),
-          ("minPycor", view.dimensions.minPycor.toString),
-          ("maxPycor", view.dimensions.maxPycor.toString),
-          ("patchSize", view.dimensions.patchSize.toString),
-          ("wrappingAllowedX", view.dimensions.wrappingAllowedInX.toString),
-          ("wrappingAllowedY", view.dimensions.wrappingAllowedInY.toString),
-          ("fontSize", view.fontSize.toString),
-          ("updateMode", view.updateMode.save.toString),
-          ("showTickCounter", view.showTickCounter.toString),
-          ("frameRate", view.frameRate.toString)
-        )
+        view.dimensions.get3D match {
+          case Some((minPzcor, maxPzcor, wrappingAllowedInZ)) =>
+            var attributes = Map[String, String](
+              ("left", view.left.toString),
+              ("top", view.top.toString),
+              ("right", view.right.toString),
+              ("bottom", view.bottom.toString),
+              ("minPxcor", view.dimensions.minPxcor.toString),
+              ("maxPxcor", view.dimensions.maxPxcor.toString),
+              ("minPycor", view.dimensions.minPycor.toString),
+              ("maxPycor", view.dimensions.maxPycor.toString),
+              ("minPzcor", minPzcor.toString),
+              ("maxPzcor", maxPzcor.toString),
+              ("patchSize", view.dimensions.patchSize.toString),
+              ("wrappingAllowedX", view.dimensions.wrappingAllowedInX.toString),
+              ("wrappingAllowedY", view.dimensions.wrappingAllowedInY.toString),
+              ("wrappingAllowedZ", wrappingAllowedInZ.toString),
+              ("fontSize", view.fontSize.toString),
+              ("updateMode", view.updateMode.save.toString),
+              ("showTickCounter", view.showTickCounter.toString),
+              ("frameRate", view.frameRate.toString)
+            )
 
-        if (view.tickCounterLabel.isDefined)
-          attributes += (("tickCounterLabel", view.tickCounterLabel.get))
+            if (view.tickCounterLabel.isDefined)
+              attributes += (("tickCounterLabel", view.tickCounterLabel.get))
 
-        XMLElement("view", attributes, "", Nil)
+            XMLElement("view3d", attributes, "", Nil)
+          
+          case None =>
+            var attributes = Map[String, String](
+              ("left", view.left.toString),
+              ("top", view.top.toString),
+              ("right", view.right.toString),
+              ("bottom", view.bottom.toString),
+              ("minPxcor", view.dimensions.minPxcor.toString),
+              ("maxPxcor", view.dimensions.maxPxcor.toString),
+              ("minPycor", view.dimensions.minPycor.toString),
+              ("maxPycor", view.dimensions.maxPycor.toString),
+              ("patchSize", view.dimensions.patchSize.toString),
+              ("wrappingAllowedX", view.dimensions.wrappingAllowedInX.toString),
+              ("wrappingAllowedY", view.dimensions.wrappingAllowedInY.toString),
+              ("fontSize", view.fontSize.toString),
+              ("updateMode", view.updateMode.save.toString),
+              ("showTickCounter", view.showTickCounter.toString),
+              ("frameRate", view.frameRate.toString)
+            )
+
+            if (view.tickCounterLabel.isDefined)
+              attributes += (("tickCounterLabel", view.tickCounterLabel.get))
+
+            XMLElement("view", attributes, "", Nil)
+        }
 
       case monitor: Monitor =>
         var attributes = Map[String, String](

@@ -6,7 +6,8 @@ import java.io.{ File, PrintWriter, StringReader, StringWriter, Writer }
 import java.net.URI
 import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants, XMLStreamReader, XMLStreamWriter }
 
-import org.nlogo.api.{ FileIO, GenericModelLoader, LabProtocol, LabXMLLoader, ModelSettings, PreviewCommands }
+import org.nlogo.api.{ FileIO, GenericModelLoader, LabProtocol, LabXMLLoader, ModelSettings, PreviewCommands, Version,
+                       WorldDimensions3D }
 import org.nlogo.core.{ Model, OptionalSection, ShapeXMLLoader, UpdateMode, View, Widget, WidgetXMLLoader,
                         WorldDimensions, XMLElement }
 import org.nlogo.core.Shape.{ LinkShape, VectorShape }
@@ -69,6 +70,13 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
     extension.isDefined && isCompatible(extension.get)
   }
 
+  private def makeDimensions3D(dimensions: WorldDimensions, minPzcor: Int, maxPzcor: Int,
+                               wrappingAllowedInZ: Boolean): WorldDimensions = {
+    new WorldDimensions3D(dimensions.minPxcor, dimensions.maxPxcor, dimensions.minPycor, dimensions.maxPycor,
+                          minPzcor, maxPzcor, dimensions.patchSize, dimensions.wrappingAllowedInX,
+                          dimensions.wrappingAllowedInY, wrappingAllowedInZ)
+  }
+
   def readModel(uri: URI): Try[Model] = {
     readModel(if (uri.getScheme == "jar") {
                 Source.fromInputStream(uri.toURL.openStream).mkString
@@ -102,7 +110,7 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
           for (element <- element.children) {
             element.name match {
               case "widgets" =>
-                widgets = element.children.map(WidgetXMLLoader.readWidget)
+                widgets = element.children.map(WidgetXMLLoader.readWidget(_, makeDimensions3D))
               
               case "info" =>
                 info = Some(element.text)
@@ -137,7 +145,8 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
               case "hubNetClient" =>
                 optionalSections = optionalSections :+
                   new OptionalSection("org.nlogo.modelsection.hubnetclient",
-                                      Some(element.children.map(WidgetXMLLoader.readWidget)), Seq[Widget]())
+                                      Some(element.children.map(WidgetXMLLoader.readWidget(_, makeDimensions3D))),
+                                      Seq[Widget]())
 
               case "settings" =>
                 optionalSections = optionalSections :+
@@ -262,10 +271,21 @@ class NLogoXMLLoader(editNames: Boolean) extends GenericModelLoader {
 
   def emptyModel(extension: String): Model = {
     if (isCompatible(extension)) {
-      Model(Model.defaultCode, List(View(left = 210, top = 10, right = 649, bottom = 470,
-                                   dimensions = WorldDimensions(-16, 16, -16, 16, 13.0), fontSize = 10,
-                                   updateMode = UpdateMode.Continuous, showTickCounter = true, frameRate = 30)),
-            defaultInfo, "NetLogo 6.4.0", Model.defaultShapes, Model.defaultLinkShapes)
+      if (Version.is3D) {
+        Model(Model.defaultCode, List(View(left = 210, top = 10, right = 649, bottom = 470,
+                                           dimensions = new WorldDimensions3D(-16, 16, -16, 16, -16, 16, 13.0),
+                                           fontSize = 10, updateMode = UpdateMode.Continuous,
+                                           showTickCounter = true, frameRate = 30)),
+              defaultInfo, "NetLogo 3D 6.4.0", Model.defaultShapes, Model.defaultLinkShapes)
+      }
+
+      else {
+        Model(Model.defaultCode, List(View(left = 210, top = 10, right = 649, bottom = 470,
+                                           dimensions = WorldDimensions(-16, 16, -16, 16, 13.0), fontSize = 10,
+                                           updateMode = UpdateMode.Continuous, showTickCounter = true,
+                                           frameRate = 30)),
+              defaultInfo, "NetLogo 6.4.0", Model.defaultShapes, Model.defaultLinkShapes)
+      }
     }
 
     else
