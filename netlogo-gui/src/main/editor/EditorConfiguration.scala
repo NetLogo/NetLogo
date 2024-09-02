@@ -3,12 +3,12 @@
 package org.nlogo.editor
 
 import java.awt.event.InputEvent.{ALT_DOWN_MASK => AltKey, CTRL_DOWN_MASK => CtrlKey, SHIFT_DOWN_MASK => ShiftKey}
-import java.awt.event.{KeyEvent, TextEvent, TextListener}
+import java.awt.event.{ ActionEvent, KeyEvent, TextEvent, TextListener }
 import java.awt.{Font, GraphicsEnvironment}
 import javax.swing.text.{DefaultEditorKit, TextAction}
 import javax.swing.{Action, KeyStroke}
 
-import org.fife.ui.rtextarea.RTextAreaEditorKit
+import org.fife.ui.rtextarea.{ RecordableTextAction, RTextArea, RTextAreaEditorKit }
 import org.nlogo.editor.KeyBinding._
 
 object EditorConfiguration {
@@ -38,6 +38,11 @@ object EditorConfiguration {
 
   def default(rows: Int, columns: Int, colorizer: Colorizer) =
     EditorConfiguration(rows, columns, defaultFont, emptyListener, colorizer, Map(), defaultContextActions(colorizer), Seq(), false, false, false, false, emptyMenu)
+
+  def defaultWithActions(rows: Int, columns: Int, colorizer: Colorizer, actions: Map[KeyStroke, TextAction]) =
+    EditorConfiguration(rows, columns, defaultFont, emptyListener, colorizer, actions,
+                        defaultContextActions(colorizer), Seq(), false, false, false, false, emptyMenu)
+
 }
 
 case class EditorConfiguration(
@@ -147,6 +152,28 @@ case class EditorConfiguration(
         (KeyEvent.VK_E,          CtrlKey) -> DefaultEditorKit.endLineAction,
         (KeyEvent.VK_K,          CtrlKey) -> RTextAreaEditorKit.rtaDeleteRestOfLineAction
       ).foreach { case ((key, mod), action) => editor.getInputMap().put(KeyStroke.getKeyStroke(key, mod), action)}
+    }
+
+    else if (EditorConfiguration.os("Windows")) {
+      editor.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, CtrlKey),
+        new RecordableTextAction("Delete Next Word") {
+          override def actionPerformedImpl(e: ActionEvent, textArea: RTextArea) {
+            while (textArea.getCaretPosition < textArea.getText.size &&
+                   textArea.getText(textArea.getCaretPosition, 1)(0).isWhitespace)
+              textArea.setCaretPosition(textArea.getCaretPosition + 1)
+            
+            if (textArea.getCaretPosition < textArea.getText.size) {
+              while (textArea.getCaretPosition < textArea.getText.size &&
+                     !textArea.getText(textArea.getCaretPosition, 1)(0).isWhitespace)
+                textArea.setCaretPosition(textArea.getCaretPosition + 1)
+
+              new RTextAreaEditorKit.DeletePrevWordAction().actionPerformed(e)
+            }
+          }
+
+          override def getMacroID: String =
+            "Delete Next Word"
+        })
     }
   }
 
