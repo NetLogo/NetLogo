@@ -2,6 +2,10 @@
 
 package org.nlogo.core
 
+object XMLElement {
+  val CDATA_ESCAPE: String = 0xe000.asInstanceOf[Char].toString
+}
+
 case class XMLElement(val name: String, val attributes: Map[String, String], val text: String,
                       val children: List[XMLElement]) {
   def apply(attribute: String): String =

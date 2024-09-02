@@ -16,6 +16,7 @@ import org.nlogo.core.Shape.{ LinkShape, VectorShape }
 import scala.collection.mutable.Set
 import scala.io.Source
 import scala.util.{ Failure, Success, Try }
+import scala.util.matching.Regex
 
 class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends GenericModelLoader {
   lazy private val defaultInfo: String = FileIO.url2String("/system/empty-info.md")
@@ -38,7 +39,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
           end = true
         
         case XMLStreamConstants.CHARACTERS =>
-          text = reader.getText
+          text = new Regex("]]" + XMLElement.CDATA_ESCAPE + ">").replaceAllIn(reader.getText, "]]>")
         
         case _ =>
       }
@@ -56,9 +57,13 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
     if (element.text.isEmpty)
       element.children.foreach(writeXMLElement(_, writer))
     else
-      writer.writeCData(element.text)
+      writeCDataEscaped(element.text, writer)
 
     writer.writeEndElement()
+  }
+
+  private def writeCDataEscaped(text: String, writer: XMLStreamWriter) {
+    writer.writeCData(new Regex("]]>").replaceAllIn(text, "]]" + XMLElement.CDATA_ESCAPE + ">"))
   }
 
   private def isCompatible(extension: String): Boolean =
@@ -182,11 +187,11 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
     writeXMLElement(XMLElement("widgets", Map(), "", model.widgets.map(WidgetXMLLoader.writeWidget).toList), writer)
 
     writer.writeStartElement("info")
-    writer.writeCData(model.info)
+    writeCDataEscaped(model.info, writer)
     writer.writeEndElement
 
     writer.writeStartElement("code")
-    writer.writeCData(model.code)
+    writeCDataEscaped(model.code, writer)
     writer.writeEndElement
 
     writeXMLElement(XMLElement("turtleShapes", Map(), "", model.turtleShapes.map(ShapeXMLLoader.writeShape).toList),
@@ -198,7 +203,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
       section.key match {
         case "org.nlogo.modelsection.previewcommands" =>
           writer.writeStartElement("previewCommands")
-          writer.writeCData(section.get.get.asInstanceOf[PreviewCommands].source)
+          writeCDataEscaped(section.get.get.asInstanceOf[PreviewCommands].source, writer)
           writer.writeEndElement
 
         // case "org.nlogo.modelsection.systemdynamics.gui" =>
