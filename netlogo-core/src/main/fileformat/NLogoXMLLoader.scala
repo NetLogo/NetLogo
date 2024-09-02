@@ -8,7 +8,7 @@ import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants,
 
 import org.nlogo.api.{ FileIO, GenericModelLoader, LabProtocol, LabXMLLoader, ModelSettings, PreviewCommands, Version,
                        WorldDimensions3D }
-import org.nlogo.core.{ LiteralParser, Model, OptionalSection, ShapeXMLLoader, UpdateMode, View, Widget,
+import org.nlogo.core.{ LiteralParser, Model, OptionalSection, Section, ShapeXMLLoader, UpdateMode, View, Widget,
                         WidgetXMLLoader, WorldDimensions, XMLElement }
 import org.nlogo.core.Shape.{ LinkShape, VectorShape }
 // import org.nlogo.sdm.gui.SDMXMLLoader
@@ -131,34 +131,25 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
               
               case "previewCommands" =>
                 optionalSections = optionalSections :+
-                  new OptionalSection("org.nlogo.modelsection.previewcommands",
-                                      Some(PreviewCommands.Custom(element.text)), PreviewCommands.Default)
+                  new Section("org.nlogo.modelsection.previewcommands", PreviewCommands.Custom(element.text))
 
               // case "systemDynamics" =>
               //   optionalSections = optionalSections :+
-              //     new OptionalSection("org.nlogo.modelsection.systemdynamics.gui",
-              //                          Some(SDMXMLLoader.readDrawing(element)), SDMXMLLoader.defaultDrawing)
+              //     new Section("org.nlogo.modelsection.systemdynamics.gui", SDMXMLLoader.readDrawing(element))
 
               case "experiments" =>
                 optionalSections = optionalSections :+
-                  new OptionalSection("org.nlogo.modelsection.behaviorspace",
-                                      Some(element.children.map(LabXMLLoader.readExperiment(_, literalParser,
-                                                                                            editNames, Set()))),
-                                      Seq[LabProtocol]())
+                  new Section("org.nlogo.modelsection.behaviorspace",
+                              element.children.map(LabXMLLoader.readExperiment(_, literalParser, editNames, Set())))
 
               case "hubNetClient" =>
                 optionalSections = optionalSections :+
-                  new OptionalSection("org.nlogo.modelsection.hubnetclient",
-                                      Some(element.children.map(WidgetXMLLoader.readWidget(_, makeDimensions3D))),
-                                      Seq[Widget]())
+                  new Section("org.nlogo.modelsection.hubnetclient",
+                              element.children.map(WidgetXMLLoader.readWidget(_, makeDimensions3D)))
 
               case "settings" =>
                 optionalSections = optionalSections :+
-                  new OptionalSection("org.nlogo.modelsection.modelsettings",
-                                      Some(ModelSettings(element("snapToGrid").toBoolean)), ModelSettings(false))
-
-              case "deltaTick" =>
-                // not sure what this is
+                  new Section("org.nlogo.modelsection.modelsettings", ModelSettings(element("snapToGrid").toBoolean))
 
               case _ =>
             }
@@ -209,9 +200,6 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
         // case "org.nlogo.modelsection.systemdynamics.gui" =>
         //   writeXMLElement(SDMXMLLoader.writeDrawing(section.get.get.asInstanceOf[AnyRef]))
 
-        case "org.nlogo.modelsection.systemdynamics" =>
-          // ignore, duplicate of previous case
-
         case "org.nlogo.modelsection.behaviorspace" =>
           val experiments = section.get.get.asInstanceOf[Seq[LabProtocol]]
 
@@ -223,7 +211,8 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
           val widgets = section.get.get.asInstanceOf[Seq[Widget]]
 
           if (widgets.nonEmpty)
-            writeXMLElement(XMLElement("hubNetClient", Map(), "", widgets.map(WidgetXMLLoader.writeWidget).toList), writer)
+            writeXMLElement(XMLElement("hubNetClient", Map(), "", widgets.map(WidgetXMLLoader.writeWidget).toList),
+                            writer)
 
         case "org.nlogo.modelsection.modelsettings" =>
           val settings = section.get.get.asInstanceOf[ModelSettings]
@@ -234,9 +223,6 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
             writer.writeEndElement
           }
 
-        case "org.nlogo.modelsection.deltatick" =>
-          // not sure what this is
-        
         case _ =>
       }
     }

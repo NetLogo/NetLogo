@@ -54,3 +54,5 @@ object Model {
 class OptionalSection[A <: AnyRef](val key: String, value: Option[A], val default: A) {
   def get: Option[A] = value
 }
+
+class Section[A <: AnyRef](key: String, value: A) extends OptionalSection[A](key, Some(value), value) {}
