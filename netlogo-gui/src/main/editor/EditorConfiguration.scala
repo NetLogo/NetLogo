@@ -155,7 +155,7 @@ case class EditorConfiguration(
     }
 
     else if (EditorConfiguration.os("Windows")) {
-      editor.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, CtrlKey),
+      editor.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, CtrlKey),
         new RecordableTextAction("Delete Next Word") {
           override def actionPerformedImpl(e: ActionEvent, textArea: RTextArea) {
             while (textArea.getCaretPosition < textArea.getText.size &&
