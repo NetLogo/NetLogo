@@ -39,10 +39,6 @@ object EditorConfiguration {
   def default(rows: Int, columns: Int, colorizer: Colorizer) =
     EditorConfiguration(rows, columns, defaultFont, emptyListener, colorizer, Map(), defaultContextActions(colorizer), Seq(), false, false, false, false, emptyMenu)
 
-  def defaultWithActions(rows: Int, columns: Int, colorizer: Colorizer, actions: Map[KeyStroke, TextAction]) =
-    EditorConfiguration(rows, columns, defaultFont, emptyListener, colorizer, actions,
-                        defaultContextActions(colorizer), Seq(), false, false, false, false, emptyMenu)
-
 }
 
 case class EditorConfiguration(
