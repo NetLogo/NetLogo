@@ -38,7 +38,6 @@ object EditorConfiguration {
 
   def default(rows: Int, columns: Int, colorizer: Colorizer) =
     EditorConfiguration(rows, columns, defaultFont, emptyListener, colorizer, Map(), defaultContextActions(colorizer), Seq(), false, false, false, false, emptyMenu)
-
 }
 
 case class EditorConfiguration(
