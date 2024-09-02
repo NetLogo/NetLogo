@@ -47,8 +47,7 @@ object ShapeXMLLoader {
 
           case "polygon" =>
             Polygon(colorFromString(element("color")), element("filled").toBoolean, element("marked").toBoolean,
-                    for (element <- element.children if element.name == "point")
-                      yield (element("x").toInt, element("y").toInt))
+                    element.getChildren("point").map(element => (element("x").toInt, element("y").toInt)))
 
           case "rectangle" =>
             Rectangle(colorFromString(element("color")), element("filled").toBoolean, element("marked").toBoolean,
@@ -143,11 +142,10 @@ object ShapeXMLLoader {
     for (element <- element.children) {
       element.name match {
         case "lines" =>
-          for (element <- element.children if element.name == "line") {
+          element.getChildren("line").foreach(element => {
             lines = lines :+ new LinkLine(element("x").toDouble, element("visible").toBoolean,
-                                          for (element <- element.children if element.name == "dash")
-                                            yield element("value").toFloat)
-          }
+                                          element.getChildren("dash").map(element => element("value").toFloat))
+          })
         
         case "indicator" =>
           indicator = readShape(element.getChild("shape"))

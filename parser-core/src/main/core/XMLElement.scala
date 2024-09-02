@@ -18,4 +18,7 @@ case class XMLElement(val name: String, val attributes: Map[String, String], val
   
   def getOptionalChild(name: String): Option[XMLElement] =
     children.find(_.name == name)
+  
+  def getChildren(name: String): List[XMLElement] =
+    children.filter(_.name == name)
 }

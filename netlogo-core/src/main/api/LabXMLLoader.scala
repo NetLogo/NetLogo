@@ -16,8 +16,8 @@ object LabXMLLoader {
                           element("last").toDouble)
 
         case "enumeratedValueSet" =>
-          RefEnumeratedValueSet(element("variable"), for (element <- element.children if element.name == "value")
-                                                       yield literalParser.readFromString(element("value")))
+          RefEnumeratedValueSet(element("variable"), element.getChildren("value").map(element =>
+                                                       literalParser.readFromString(element("value"))))
 
       }
     }
@@ -57,14 +57,13 @@ object LabXMLLoader {
           exitCondition = element.text
         
         case "metrics" =>
-          metrics = for (element <- element.children if element.name == "metric") yield element.text
+          metrics = element.getChildren("metric").map(_.text)
         
         case "constants" =>
           constants = element.children.map(readValueSet)
         
         case "subExperiments" =>
-          subExperiments = for (element <- element.children if element.name == "subExperiment")
-                              yield element.children.map(readValueSet)
+          subExperiments = element.getChildren("subExperiment").map(_.children.map(readValueSet))
 
       }
     }

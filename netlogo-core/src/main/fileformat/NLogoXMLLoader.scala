@@ -119,12 +119,10 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
                 code = Some(element.text)
               
               case "turtleShapes" =>
-                turtleShapes = Some(for (element <- element.children if element.name == "shape")
-                                      yield ShapeXMLLoader.readShape(element))
+                turtleShapes = Some(element.getChildren("shape").map(ShapeXMLLoader.readShape))
               
               case "linkShapes" =>
-                linkShapes = Some(for (element <- element.children if element.name == "shape")
-                                    yield ShapeXMLLoader.readLinkShape(element))
+                linkShapes = Some(element.getChildren("shape").map(ShapeXMLLoader.readLinkShape))
               
               case "previewCommands" =>
                 optionalSections = optionalSections :+

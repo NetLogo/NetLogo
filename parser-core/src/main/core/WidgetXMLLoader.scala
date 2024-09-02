@@ -59,15 +59,14 @@ object WidgetXMLLoader {
              element("xMax").toDouble, element("yMin").toDouble, element("yMax").toDouble,
              element("autoplot").toBoolean, element("legend").toBoolean, element.getChild("setup").text,
              element.getChild("update").text,
-             for (element <- element.children if element.name == "pen")
-               yield Pen(element("display"), element("interval").toDouble, element("mode").toInt,
-                         element("color").toInt, element("legend").toBoolean, element.getChild("setup").text,
-                         element.getChild("update").text))
+             element.getChildren("pen").map(element =>
+               Pen(element("display"), element("interval").toDouble, element("mode").toInt, element("color").toInt,
+                   element("legend").toBoolean, element.getChild("setup").text, element.getChild("update").text)))
 
       case "chooser" =>
         Chooser(element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt,
                 element("bottom").toInt, element.get("display"),
-                for (element <- element.children if element.name == "choice") yield {
+                element.getChildren("choice").map(element => {
                   element("type") match {
                     case "string" =>
                       ChooseableString(element("value"))
@@ -79,11 +78,10 @@ object WidgetXMLLoader {
                       ChooseableBoolean(element("value").toBoolean)
                     
                     case "list" =>
-                      ChooseableList(LogoList.fromList(for (element <- element.children if element.name == "value")
-                                                         yield element("value")))
+                      ChooseableList(LogoList.fromList(element.getChildren("value").map(element => element("value"))))
 
                   }
-                }, element("current").toInt)
+                }), element("current").toInt)
 
       case "output" =>
         Output(element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt,
