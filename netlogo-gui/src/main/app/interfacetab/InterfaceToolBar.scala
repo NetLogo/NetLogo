@@ -2,7 +2,7 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Color, Dimension, Frame, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Color, Frame, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import java.util.{ HashSet => JHashSet }
 import javax.swing.{ Action, AbstractAction, JLabel, JMenuItem, JPanel, JPopupMenu, SwingConstants }
@@ -252,8 +252,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       add(new JLabel(Utils.iconScaled("/images/align-left.png", 16, 16)), c)
       add(new DropdownArrow, c)
     }
-
-    setPreferredSize(new Dimension(getPreferredSize.width, widgetMenu.getPreferredSize.height))
 
     private val leftAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft"),
                                                 Utils.iconScaled("/images/align-left.png", 16, 16)) {

@@ -27,7 +27,7 @@ object WidgetInfo {
 }
 
 case class WidgetInfo(displayName: String, widgetThunk: () => CoreWidget, imageName: String) {
-  def icon = Utils.iconScaled("/images/" + imageName, 25, 15)
+  def icon = Utils.iconScaled("/images/" + imageName, 27, 16)
   def coreWidget = widgetThunk()
 }
 
