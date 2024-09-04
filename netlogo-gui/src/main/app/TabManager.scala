@@ -20,14 +20,14 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ Printable, PrinterManager, UserAction }
 import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, CompileAllEvent, CompiledEvent,
-                                 ExternalFileSavedEvent, LoadBeginEvent, LoadErrorEvent, LoadModelEvent,
+                                 ExternalFileSavedEvent, LoadBeginEvent, LoadEndEvent, LoadErrorEvent, LoadModelEvent,
                                  ModelSavedEvent, RuntimeErrorEvent }
 import org.nlogo.window.{ ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget }
 
 class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
                  val externalFileManager: ExternalFileManager)
   extends TabsInterface with AboutToCloseFilesEvent.Handler with AboutToSaveModelEvent.Handler
-  with CompiledEvent.Handler with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler
+  with CompiledEvent.Handler with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler with LoadEndEvent.Handler
   with LoadErrorEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler {
 
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
@@ -508,6 +508,10 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def handle(e: LoadErrorEvent) {
     reloading = false
+  }
+
+  def handle(e: LoadEndEvent) {
+    fileManager.openTempFiles.foreach(openExternalFile)
   }
   
   def handle(e: RuntimeErrorEvent) {

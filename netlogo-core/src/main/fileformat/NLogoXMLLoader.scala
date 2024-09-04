@@ -107,6 +107,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
       var turtleShapes: Option[List[VectorShape]] = None
       var linkShapes: Option[List[LinkShape]] = None
       var optionalSections = List[OptionalSection[_]]()
+      var openTempFiles = Seq[String]()
 
       element.name match {
         case "model" =>
@@ -151,6 +152,9 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
                 optionalSections = optionalSections :+
                   new Section("org.nlogo.modelsection.modelsettings", ModelSettings(element("snapToGrid").toBoolean))
 
+              case "openTempFiles" =>
+                openTempFiles = element.getChildren("file").map(element => element("path"))
+
               case _ =>
             }
           }
@@ -159,7 +163,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
 
       Success(Model(code.getOrElse(Model.defaultCode), widgets, info.getOrElse(defaultInfo), version,
                     turtleShapes.getOrElse(Model.defaultShapes), linkShapes.getOrElse(Model.defaultLinkShapes),
-                    optionalSections))
+                    optionalSections, openTempFiles))
     }
 
     else
@@ -225,6 +229,20 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
 
         case _ =>
       }
+    }
+
+    if (model.openTempFiles.nonEmpty) {
+      writer.writeStartElement("openTempFiles")
+
+      for (file <- model.openTempFiles) {
+        writer.writeStartElement("file")
+
+        writer.writeAttribute("path", file)
+
+        writer.writeEndElement
+      }
+
+      writer.writeEndElement
     }
 
     writer.writeEndElement

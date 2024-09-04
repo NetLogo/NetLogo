@@ -10,10 +10,11 @@ import scala.reflect.ClassTag
 case class Model(code: String = "",
   widgets: Seq[Widget] = List(View()),
   info: String = "",
-  version: String = "NetLogo 6.3",
+  version: String = "NetLogo 6.4.0",
   turtleShapes: Seq[VectorShape] = Model.defaultShapes,
   linkShapes: Seq[LinkShape] = Model.defaultLinkShapes,
-  optionalSections: Seq[OptionalSection[_]] = Seq()) {
+  optionalSections: Seq[OptionalSection[_]] = Seq(),
+  openTempFiles: Seq[String] = Nil) {
 
   def interfaceGlobals: Seq[String] = widgets.collect{case x:DeclaresGlobal => x}.map(_.varName)
   def constraints: Map[String, ConstraintSpecification] = widgets.collect{case x:DeclaresConstraint => (x.varName, x.constraint)}.toMap

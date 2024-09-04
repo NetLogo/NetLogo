@@ -275,6 +275,9 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
   val controller = new FileController(parent, workspace)
 
+  def openTempFiles: Seq[String] =
+    modelSaver.currentModel.openTempFiles
+
   def handle(e: OpenModelEvent): Unit = {
     openFromPath(e.path, ModelType.Library, e.shouldAutoInstallLibs)
   }
@@ -364,7 +367,9 @@ class FileManager(workspace: AbstractWorkspaceScala,
   private[app] def saveModel(saveAs: Boolean): Unit = {
     val saveThunk = {
       val saveModel = if (saveAs) SaveModelAs else SaveModel
-      saveModel(currentModel, modelLoader, controller, workspace, Version)
+      saveModel(currentModel.copy(
+        openTempFiles = tabManager.getExternalFileTabs.filter(_.filename.isRight).map(_.filename.toOption.get)
+      ), modelLoader, controller, workspace, Version)
     }
 
     // if there's no thunk, the user canceled the save
