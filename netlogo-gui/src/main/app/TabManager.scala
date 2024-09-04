@@ -307,9 +307,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def getTabTitle(index: Int): String = {
     if (index >= mainTabs.getTabCount)
-      separateTabs.getTabComponentAt(index - mainTabs.getTabCount).asInstanceOf[TabLabel].text
+      separateTabs.getTabComponentAt(index - mainTabs.getTabCount).asInstanceOf[TabLabel].getText
     else
-      mainTabs.getTabComponentAt(index).asInstanceOf[TabLabel].text
+      mainTabs.getTabComponentAt(index).asInstanceOf[TabLabel].getText
   }
 
   def getTabWithFilename(filename: Filename): Option[TemporaryCodeTab] =
@@ -335,7 +335,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     val tabLabel = new TabLabel(title, tab)
 
     tabLabel.setTabsPanel(tabsPanel)
-    
+
     tabsPanel.setTabComponentAt(tabsPanel.getTabCount - 1, tabLabel)
   }
 
@@ -660,10 +660,15 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def handle(e: ExternalFileSavedEvent) = {
     getTabWithFilename(Right(e.path)).foreach(tab => {
-      if (separateTabsWindow.isVisible)
-        separateTabs.setTitleAt(separateTabs.indexOfComponent(tab), tab.filenameForDisplay)
-      else
-        mainTabs.setTitleAt(mainTabs.indexOfComponent(tab), tab.filenameForDisplay)
+      if (separateTabsWindow.isVisible) {
+        separateTabs.getTabComponentAt(separateTabs.indexOfComponent(tab)).asInstanceOf[TabLabel]
+          .setText(tab.filenameForDisplay)
+      }
+
+      else {
+        mainTabs.getTabComponentAt(mainTabs.indexOfComponent(tab)).asInstanceOf[TabLabel]
+          .setText(tab.filenameForDisplay)
+      }
     })
   }
 

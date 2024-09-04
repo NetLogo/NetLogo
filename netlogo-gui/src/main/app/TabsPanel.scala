@@ -119,7 +119,7 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
   }
 }
 
-class TabLabel(val text: String, tab: Component) extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
+class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
   private class CloseButton extends JPanel {
     setBackground(InterfaceColors.TRANSPARENT)
     setOpaque(false)
@@ -141,6 +141,14 @@ class TabLabel(val text: String, tab: Component) extends JPanel(new FlowLayout(F
   }
 
   private val textLabel = new JLabel(text)
+
+  def setText(text: String) {
+    textLabel.setText(text)
+  }
+
+  def getText: String =
+    textLabel.getText
+
   private var closeButton: CloseButton = null
 
   private val startFont = textLabel.getFont
