@@ -13,11 +13,12 @@ class ModelSaver(model: ModelSections, loader: GenericModelLoader) {
 
   def currentModel = {
     val m = _currentModel.copy(
-      code         = model.procedureSource,
-      widgets      = model.widgets,
-      info         = model.info,
-      turtleShapes = model.turtleShapes,
-      linkShapes   = model.linkShapes)
+      code          = model.procedureSource,
+      widgets       = model.widgets,
+      info          = model.info,
+      turtleShapes  = model.turtleShapes,
+      linkShapes    = model.linkShapes,
+      openTempFiles = model.openTempFiles)
     if (model.additionalSections.isEmpty)
       m
     else
