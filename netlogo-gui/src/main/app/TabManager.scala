@@ -485,8 +485,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       while (mainTabs.getTabCount > 2) {
         val tabLabel = mainTabs.getTabComponentAt(2)
 
-        separateTabs.addTab(mainTabs.getTitleAt(2), mainTabs.getComponentAt(2))
-        separateTabs.setTabComponentAt(separateTabs.getTabCount() - 1, tabLabel)
+        separateTabs.addTab(null, mainTabs.getComponentAt(2))
+        separateTabs.setTabComponentAt(separateTabs.getTabCount - 1, tabLabel)
 
         tabLabel.asInstanceOf[TabLabel].setTabsPanel(separateTabs)
       }
@@ -515,8 +515,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       while (separateTabs.getTabCount > 0) {
         val tabLabel = separateTabs.getTabComponentAt(0)
 
-        mainTabs.addTab(separateTabs.getTitleAt(0), separateTabs.getComponentAt(0))
-        mainTabs.setTabComponentAt(mainTabs.getTabCount() - 1, tabLabel)
+        mainTabs.addTab(null, separateTabs.getComponentAt(0))
+        mainTabs.setTabComponentAt(mainTabs.getTabCount - 1, tabLabel)
 
         tabLabel.asInstanceOf[TabLabel].setTabsPanel(mainTabs)
       }
