@@ -385,7 +385,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
-  private def addExternalFile(name: Filename) {
+  private def addExternalFile(name: Filename, focus: Boolean) {
     if (getExternalFileTabs.isEmpty)
       offerAction(SaveAllAction)
 
@@ -394,19 +394,23 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
     if (separateTabsWindow.isVisible) {
       addTabWithLabel(separateTabs, tab.filenameForDisplay, tab)
-      separateTabs.setSelectedComponent(tab)
+
+      if (focus)
+        separateTabs.setSelectedComponent(tab)
     }
 
     else {
       addTabWithLabel(mainTabs, tab.filenameForDisplay, tab)
-      mainTabs.setSelectedComponent(tab)
+
+      if (focus)
+        mainTabs.setSelectedComponent(tab)
     }
 
     updateTabActions()
   }
 
   def newExternalFile {
-    addExternalFile(Left(I18N.gui.getN("tabs.external.new", newFileNumber: Integer)))
+    addExternalFile(Left(I18N.gui.getN("tabs.external.new", newFileNumber: Integer)), true)
 
     newFileNumber += 1
   }
@@ -423,7 +427,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
-  def openExternalFile(filename: String) {
+  def openExternalFile(filename: String, focus: Boolean = true) {
     getTabWithFilename(Right(filename)) match {
       case Some(tab) =>
         if (separateTabsWindow.isVisible)
@@ -431,7 +435,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         else
           mainTabs.setSelectedComponent(tab)
       case _ =>
-        addExternalFile(Right(filename))
+        addExternalFile(Right(filename), focus)
 
         new CompileAllEvent().raise(mainCodeTab)
     }
@@ -632,7 +636,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         val filename = file.getFileName
         var tab = getTabWithFilename(Right(filename))
         if (!tab.isDefined && e.error != null) {
-          openExternalFile(filename)
+          openExternalFile(filename, focusOnError)
           tab = getTabWithFilename(Right(filename))
           tab.get.handle(e) // it was late to the party, let it handle the event too
         }
