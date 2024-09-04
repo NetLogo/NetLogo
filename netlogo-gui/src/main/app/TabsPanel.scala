@@ -119,7 +119,7 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
   }
 }
 
-class TabLabel(val text: String, tab: Component, tabsPanel: TabsPanel) extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
+class TabLabel(val text: String, tab: Component) extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
   private class CloseButton extends JPanel {
     setBackground(InterfaceColors.TRANSPARENT)
     setOpaque(false)
@@ -132,6 +132,12 @@ class TabLabel(val text: String, tab: Component, tabsPanel: TabsPanel) extends J
       g2d.drawLine(0, 0, getWidth - 1, getHeight - 1)
       g2d.drawLine(getWidth - 1, 0, 0, getHeight - 1)
     }
+  }
+
+  private var tabsPanel: TabsPanel = null
+
+  def setTabsPanel(tabsPanel: TabsPanel) {
+    this.tabsPanel = tabsPanel
   }
 
   private val textLabel = new JLabel(text)

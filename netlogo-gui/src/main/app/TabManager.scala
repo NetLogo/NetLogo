@@ -331,7 +331,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   private def addTabWithLabel(tabsPanel: TabsPanel, title: String, tab: Component) {
     tabsPanel.addTab(null, tab)
-    tabsPanel.setTabComponentAt(tabsPanel.getTabCount - 1, new TabLabel(title, tab, tabsPanel))
+
+    val tabLabel = new TabLabel(title, tab)
+
+    tabLabel.setTabsPanel(tabsPanel)
+    
+    tabsPanel.setTabComponentAt(tabsPanel.getTabCount - 1, tabLabel)
   }
 
   def setSelectedIndex(index: Int) {
@@ -482,6 +487,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
         separateTabs.addTab(mainTabs.getTitleAt(2), mainTabs.getComponentAt(2))
         separateTabs.setTabComponentAt(separateTabs.getTabCount() - 1, tabLabel)
+
+        tabLabel.asInstanceOf[TabLabel].setTabsPanel(separateTabs)
       }
 
       separateTabsWindow.open()
@@ -510,6 +517,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
         mainTabs.addTab(separateTabs.getTitleAt(0), separateTabs.getComponentAt(0))
         mainTabs.setTabComponentAt(mainTabs.getTabCount() - 1, tabLabel)
+
+        tabLabel.asInstanceOf[TabLabel].setTabsPanel(mainTabs)
       }
 
       separateTabsWindow.setVisible(false)
