@@ -238,9 +238,12 @@ class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.T
     getSelectedComponent.requestFocus
   
   def getError(index: Int): Boolean =
-    getTabComponentAt(index).asInstanceOf[TabLabel].error
+    getTabLabelAt(index).error
   
   def setError(index: Int, error: Boolean) {
-    getTabComponentAt(index).asInstanceOf[TabLabel].error = error
+    getTabLabelAt(index).error = error
   }
+
+  def getTabLabelAt(index: Int): TabLabel =
+    getTabComponentAt(index).asInstanceOf[TabLabel]
 }

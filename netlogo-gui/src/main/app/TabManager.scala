@@ -307,9 +307,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def getTabTitle(index: Int): String = {
     if (index >= mainTabs.getTabCount)
-      separateTabs.getTabComponentAt(index - mainTabs.getTabCount).asInstanceOf[TabLabel].getText
+      separateTabs.getTabLabelAt(index - mainTabs.getTabCount).getText
     else
-      mainTabs.getTabComponentAt(index).asInstanceOf[TabLabel].getText
+      mainTabs.getTabLabelAt(index).getText
   }
 
   def getTabWithFilename(filename: Filename): Option[TemporaryCodeTab] =
@@ -483,12 +483,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       val selected = mainTabs.getSelectedComponent
 
       while (mainTabs.getTabCount > 2) {
-        val tabLabel = mainTabs.getTabComponentAt(2)
+        val tabLabel = mainTabs.getTabLabelAt(2)
 
         separateTabs.addTab(null, mainTabs.getComponentAt(2))
         separateTabs.setTabComponentAt(separateTabs.getTabCount - 1, tabLabel)
 
-        tabLabel.asInstanceOf[TabLabel].setTabsPanel(separateTabs)
+        tabLabel.setTabsPanel(separateTabs)
       }
 
       separateTabsWindow.open()
@@ -513,12 +513,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       val selected = separateTabs.getSelectedComponent
 
       while (separateTabs.getTabCount > 0) {
-        val tabLabel = separateTabs.getTabComponentAt(0)
+        val tabLabel = separateTabs.getTabLabelAt(0)
 
         mainTabs.addTab(null, separateTabs.getComponentAt(0))
         mainTabs.setTabComponentAt(mainTabs.getTabCount - 1, tabLabel)
 
-        tabLabel.asInstanceOf[TabLabel].setTabsPanel(mainTabs)
+        tabLabel.setTabsPanel(mainTabs)
       }
 
       separateTabsWindow.setVisible(false)
@@ -660,15 +660,10 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def handle(e: ExternalFileSavedEvent) = {
     getTabWithFilename(Right(e.path)).foreach(tab => {
-      if (separateTabsWindow.isVisible) {
-        separateTabs.getTabComponentAt(separateTabs.indexOfComponent(tab)).asInstanceOf[TabLabel]
-          .setText(tab.filenameForDisplay)
-      }
-
-      else {
-        mainTabs.getTabComponentAt(mainTabs.indexOfComponent(tab)).asInstanceOf[TabLabel]
-          .setText(tab.filenameForDisplay)
-      }
+      if (separateTabsWindow.isVisible)
+        separateTabs.getTabLabelAt(separateTabs.indexOfComponent(tab)).setText(tab.filenameForDisplay)
+      else
+        mainTabs.getTabLabelAt(mainTabs.indexOfComponent(tab)).setText(tab.filenameForDisplay)
     })
   }
 
