@@ -20,14 +20,14 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ Printable, PrinterManager, UserAction }
 import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, CompileAllEvent, CompiledEvent,
-                                 ExternalFileSavedEvent, LoadBeginEvent, LoadEndEvent, LoadErrorEvent, LoadModelEvent,
+                                 ExternalFileSavedEvent, LoadBeginEvent, LoadErrorEvent, LoadModelEvent,
                                  ModelSavedEvent, RuntimeErrorEvent }
 import org.nlogo.window.{ ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget }
 
 class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
                  val externalFileManager: ExternalFileManager)
   extends TabsInterface with AboutToCloseFilesEvent.Handler with AboutToSaveModelEvent.Handler
-  with CompiledEvent.Handler with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler with LoadEndEvent.Handler
+  with CompiledEvent.Handler with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler
   with LoadErrorEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler {
 
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
@@ -297,6 +297,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       for (i <- 3 until mainTabs.getTabCount) yield mainTabs.getComponentAt(i).asInstanceOf[TemporaryCodeTab]
   }
 
+  def openTempFiles: Seq[String] =
+    getExternalFileTabs.filter(_.filename.isRight).map(_.filename.toOption.get)
+
   def setSelectedIndex(index: Int) {
     if (index >= mainTabs.getTabCount) {
       separateTabs.setSelectedIndex(index - mainTabs.getTabCount)
@@ -492,6 +495,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   }
 
   def handle(e: LoadModelEvent) {
+    e.model.openTempFiles.foreach(openExternalFile)
+
     // We need to restart the watcher thread every load because the list of
     // included files may have changed.
 
@@ -510,10 +515,6 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     reloading = false
   }
 
-  def handle(e: LoadEndEvent) {
-    fileManager.openTempFiles.foreach(openExternalFile)
-  }
-  
   def handle(e: RuntimeErrorEvent) {
     if (!e.jobOwner.isInstanceOf[MonitorWidget]) {
       e.sourceOwner match {

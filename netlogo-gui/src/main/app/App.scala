@@ -1213,6 +1213,8 @@ class App extends
         workspace)
     workspace.hubNetManager.map(_ +: sections).getOrElse(sections)
   }
+  def openTempFiles:    Seq[String] =
+    _tabManager.openTempFiles
 
   def askForName() = {
     val frame = new JFrame()
