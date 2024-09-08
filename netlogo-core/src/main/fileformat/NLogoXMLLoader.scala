@@ -8,8 +8,8 @@ import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants,
 
 import org.nlogo.api.{ FileIO, GenericModelLoader, LabProtocol, LabXMLLoader, ModelSettings, PreviewCommands, Version,
                        WorldDimensions3D }
-import org.nlogo.core.{ LiteralParser, Model, OptionalSection, Section, ShapeXMLLoader, UpdateMode, View, Widget,
-                        WidgetXMLLoader, WorldDimensions, XMLElement }
+import org.nlogo.core.{ ExternalResource, LiteralParser, Model, OptionalSection, Section, ShapeXMLLoader, UpdateMode,
+                        View, Widget, WidgetXMLLoader, WorldDimensions, XMLElement }
 import org.nlogo.core.Shape.{ LinkShape, VectorShape }
 // import org.nlogo.sdm.gui.SDMXMLLoader
 
@@ -48,21 +48,21 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
     XMLElement(name, attributes, text, children)
   }
 
-  private def writeXMLElement(element: XMLElement, writer: XMLStreamWriter) {
+  private def writeXMLElement(writer: XMLStreamWriter, element: XMLElement) {
     writer.writeStartElement(element.name)
 
     for ((key, value) <- element.attributes)
       writer.writeAttribute(key, value)
     
     if (element.text.isEmpty)
-      element.children.foreach(writeXMLElement(_, writer))
+      element.children.foreach(writeXMLElement(writer, _))
     else
-      writeCDataEscaped(element.text, writer)
+      writeCDataEscaped(writer, element.text)
 
     writer.writeEndElement()
   }
 
-  private def writeCDataEscaped(text: String, writer: XMLStreamWriter) {
+  private def writeCDataEscaped(writer: XMLStreamWriter, text: String) {
     writer.writeCData(new Regex("]]>").replaceAllIn(text, "]]" + XMLElement.CDATA_ESCAPE + ">"))
   }
 
@@ -108,6 +108,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
       var linkShapes: Option[List[LinkShape]] = None
       var optionalSections = List[OptionalSection[_]]()
       var openTempFiles = Seq[String]()
+      var resources = Seq[ExternalResource]()
 
       element.name match {
         case "model" =>
@@ -154,6 +155,10 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
 
               case "openTempFiles" =>
                 openTempFiles = element.getChildren("file").map(element => element("path"))
+              
+              case "resources" =>
+                resources = element.getChildren("resource").map(element =>
+                  new ExternalResource(element("name"), element("type"), element.text))
 
               case _ =>
             }
@@ -163,7 +168,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
 
       Success(Model(code.getOrElse(Model.defaultCode), widgets, info.getOrElse(defaultInfo), version,
                     turtleShapes.getOrElse(Model.defaultShapes), linkShapes.getOrElse(Model.defaultLinkShapes),
-                    optionalSections, openTempFiles))
+                    optionalSections, openTempFiles, resources))
     }
 
     else
@@ -179,44 +184,44 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
 
     writer.writeAttribute("version", model.version)
 
-    writeXMLElement(XMLElement("widgets", Map(), "", model.widgets.map(WidgetXMLLoader.writeWidget).toList), writer)
+    writeXMLElement(writer, XMLElement("widgets", Map(), "", model.widgets.map(WidgetXMLLoader.writeWidget).toList))
 
     writer.writeStartElement("info")
-    writeCDataEscaped(model.info, writer)
-    writer.writeEndElement
+    writeCDataEscaped(writer, model.info)
+    writer.writeEndElement()
 
     writer.writeStartElement("code")
-    writeCDataEscaped(model.code, writer)
-    writer.writeEndElement
+    writeCDataEscaped(writer, model.code)
+    writer.writeEndElement()
 
-    writeXMLElement(XMLElement("turtleShapes", Map(), "", model.turtleShapes.map(ShapeXMLLoader.writeShape).toList),
-                    writer)
-    writeXMLElement(XMLElement("linkShapes", Map(), "", model.linkShapes.map(ShapeXMLLoader.writeLinkShape).toList),
-                    writer)
+    writeXMLElement(writer, XMLElement("turtleShapes", Map(), "",
+                                       model.turtleShapes.map(ShapeXMLLoader.writeShape).toList))
+    writeXMLElement(writer, XMLElement("linkShapes", Map(), "",
+                                       model.linkShapes.map(ShapeXMLLoader.writeLinkShape).toList))
 
     for (section <- model.optionalSections) {
       section.key match {
         case "org.nlogo.modelsection.previewcommands" =>
           writer.writeStartElement("previewCommands")
-          writeCDataEscaped(section.get.get.asInstanceOf[PreviewCommands].source, writer)
-          writer.writeEndElement
+          writeCDataEscaped(writer, section.get.get.asInstanceOf[PreviewCommands].source)
+          writer.writeEndElement()
 
         // case "org.nlogo.modelsection.systemdynamics.gui" =>
-        //   writeXMLElement(SDMXMLLoader.writeDrawing(section.get.get.asInstanceOf[AnyRef]))
+        //   writeXMLElement(writer, SDMXMLLoader.writeDrawing(section.get.get.asInstanceOf[AnyRef]))
 
         case "org.nlogo.modelsection.behaviorspace" =>
           val experiments = section.get.get.asInstanceOf[Seq[LabProtocol]]
 
           if (experiments.nonEmpty)
-            writeXMLElement(XMLElement("experiments", Map(), "", experiments.map(LabXMLLoader.writeExperiment).toList),
-                            writer)
+            writeXMLElement(writer, XMLElement("experiments", Map(), "",
+                                               experiments.map(LabXMLLoader.writeExperiment).toList))
 
         case "org.nlogo.modelsection.hubnetclient" =>
           val widgets = section.get.get.asInstanceOf[Seq[Widget]]
 
           if (widgets.nonEmpty)
-            writeXMLElement(XMLElement("hubNetClient", Map(), "", widgets.map(WidgetXMLLoader.writeWidget).toList),
-                            writer)
+            writeXMLElement(writer, XMLElement("hubNetClient", Map(), "",
+                                               widgets.map(WidgetXMLLoader.writeWidget).toList))
 
         case "org.nlogo.modelsection.modelsettings" =>
           val settings = section.get.get.asInstanceOf[ModelSettings]
@@ -224,7 +229,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
           if (settings.snapToGrid) {
             writer.writeStartElement("settings")
             writer.writeAttribute("snapToGrid", settings.snapToGrid.toString)
-            writer.writeEndElement
+            writer.writeEndElement()
           }
 
         case _ =>
@@ -239,17 +244,34 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
 
         writer.writeAttribute("path", file)
 
-        writer.writeEndElement
+        writer.writeEndElement()
       }
 
-      writer.writeEndElement
+      writer.writeEndElement()
     }
 
-    writer.writeEndElement
+    if (model.resources.nonEmpty) {
+      writer.writeStartElement("resources")
 
-    writer.writeEndDocument
+      for (resource <- model.resources) {
+        writer.writeStartElement("resource")
 
-    writer.close
+        writer.writeAttribute("name", resource.name)
+        writer.writeAttribute("type", resource.resourceType)
+
+        writeCDataEscaped(writer, resource.data)
+
+        writer.writeEndElement()
+      }
+
+      writer.writeEndElement()
+    }
+
+    writer.writeEndElement()
+
+    writer.writeEndDocument()
+
+    writer.close()
   }
 
   def save(model: Model, uri: URI): Try[URI] = {
@@ -308,7 +330,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
   def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
     val xmlWriter = XMLOutputFactory.newFactory.createXMLStreamWriter(writer)
 
-    Try(writeXMLElement(XMLElement("experiments", Map(), "", experiments.map(LabXMLLoader.writeExperiment).toList),
-                        xmlWriter))
+    Try(writeXMLElement(xmlWriter, XMLElement("experiments", Map(), "",
+                                              experiments.map(LabXMLLoader.writeExperiment).toList)))
   }
 }

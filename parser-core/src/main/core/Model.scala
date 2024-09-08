@@ -14,7 +14,8 @@ case class Model(code: String = "",
   turtleShapes: Seq[VectorShape] = Model.defaultShapes,
   linkShapes: Seq[LinkShape] = Model.defaultLinkShapes,
   optionalSections: Seq[OptionalSection[_]] = Seq(),
-  openTempFiles: Seq[String] = Nil) {
+  openTempFiles: Seq[String] = Nil,
+  resources: Seq[ExternalResource] = Nil) {
 
   def interfaceGlobals: Seq[String] = widgets.collect{case x:DeclaresGlobal => x}.map(_.varName)
   def constraints: Map[String, ConstraintSpecification] = widgets.collect{case x:DeclaresConstraint => (x.varName, x.constraint)}.toMap
