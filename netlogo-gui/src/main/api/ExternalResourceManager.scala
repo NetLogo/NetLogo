@@ -21,12 +21,8 @@ class ExternalResourceManager {
     this.resources = resources
   }
 
-  def getResource(name: String): Option[String] = {
-    resources.find(_.name == name) match {
-      case Some(resource) => Some(resource.data)
-      case None => None
-    }
-  }
+  def getResource(name: String): Option[String] =
+    resources.find(_.name == name).map(_.data)
 
   def addResource(resource: ExternalResource): Boolean = {
     if (resources.find(_.name == resource.name).isDefined)
