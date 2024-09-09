@@ -62,8 +62,6 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
   def setImage(name: String): Boolean = {
     resourceManager.getResource(name) match {
       case Some(data) =>
-        imagePath = ExternalResource.Existing(name)
-
         try {
           val image = ImageIO.read(new ByteArrayInputStream(Base64.getDecoder.decode(data)))
 
@@ -121,6 +119,17 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
       Seq((I18N.gui.get("edit.image.image"), I18N.gui.getN("resource.loadError", name)))
   }
 
+  override def editFinished(): Boolean = {
+    imagePath match {
+      case ExternalResource.New(path) =>
+        imagePath = ExternalResource.Existing(ExternalResourceManager.getResourceName(path))
+
+      case _ =>
+    }
+
+    true
+  }
+
   override def getMinimumSize: Dimension =
     new Dimension(25, 25)
 
@@ -142,6 +151,8 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
 
     if (!setImage(model.image))
       imageError(model.image)
+    
+    imagePath = ExternalResource.Existing(model.image)
     
     preserveAspect = model.preserveAspect
 

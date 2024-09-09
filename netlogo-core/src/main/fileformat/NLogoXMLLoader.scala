@@ -184,7 +184,11 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
 
     writer.writeAttribute("version", model.version)
 
-    writeXMLElement(writer, XMLElement("widgets", Map(), "", model.widgets.map(WidgetXMLLoader.writeWidget).toList))
+    writer.writeStartElement("widgets")
+
+    model.widgets.foreach(widget => writeXMLElement(writer, WidgetXMLLoader.writeWidget(widget)))
+
+    writer.writeEndElement()
 
     writer.writeStartElement("info")
     writeCDataEscaped(writer, model.info)
