@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import org.nlogo.core.I18N
 import org.nlogo.core.{ I18N, View => CoreView, Widget => CoreWidget,
-  Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
+  Button => CoreButton, Chooser => CoreChooser, Image => CoreImage, InputBox => CoreInputBox,
   Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider,
   Switch => CoreSwitch, TextBox => CoreTextBox }
 import org.nlogo.swing.{ Utils => SwingUtils }
@@ -24,6 +24,7 @@ object WidgetInfo {
   val plot    = WidgetInfo("plot", "plot.gif", () => CorePlot(None))
   val output  = WidgetInfo("output", "output.gif", () => CoreOutput(0, 0, 0, 0, 13))
   val note    = WidgetInfo("note", "note.gif", () => CoreTextBox(None, fontSize = 11, color = 0))
+  val image   = WidgetInfo("image", "note.gif", () => CoreImage(0, 0, 0, 0, "")) // placeholder image, change later
   val view    = WidgetInfo("view", "view.gif", () => CoreView())
 }
 

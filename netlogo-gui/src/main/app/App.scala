@@ -15,7 +15,7 @@ import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, Find
 import org.nlogo.app.interfacetab.{ InterfaceTab, InterfaceToolBar, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManagerErrorDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model,
+import org.nlogo.core.{ AgentKind, CompilerException, ExternalResource, I18N, Model,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
 import org.nlogo.fileformat
@@ -124,6 +124,7 @@ object App {
               new ComponentParameter(), new ComponentParameter(),
               new ComponentParameter(), new ComponentParameter()))
       pico.add("org.nlogo.lab.gui.LabManager")
+      pico.addComponent(classOf[ExternalResourceManager])
       pico.add("org.nlogo.properties.EditDialogFactory")
       // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
       // HeadlessWorkspace uses picocontainer too, but it could get confusing
@@ -252,6 +253,7 @@ class App extends
     BeforeLoadEvent.Handler with
     LoadBeginEvent.Handler with
     LoadEndEvent.Handler with
+    LoadModelEvent.Handler with
     ModelSavedEvent.Handler with
     ModelSections with
     AppEvents.SwitchedTabsEvent.Handler with
@@ -274,6 +276,7 @@ class App extends
   def tabManager = _tabManager
   var menuBar: MenuBar = null
   var _fileManager: FileManager = null
+  private var resourceManager: ExternalResourceManager = null
   var monitorManager: AgentMonitorManager = null
   def getMonitorManager = monitorManager
   var aggregateManager: AggregateManagerInterface = null
@@ -311,6 +314,8 @@ class App extends
     Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
       def uncaughtException(t: Thread, e: Throwable) { org.nlogo.api.Exceptions.handle(e) }
     })
+
+    resourceManager = pico.getComponent(classOf[ExternalResourceManager])
 
     val interfaceFactory = new InterfaceFactory() {
       def widgetPanel(workspace: GUIWorkspace): AbstractWidgetPanel =
@@ -480,7 +485,7 @@ class App extends
       app.setMenuBar(menuBar)
       frame.setJMenuBar(menuBar)
 
-      _tabManager.init(fileManager, dirtyMonitor, menuBar, allActions)
+      _tabManager.init(fileManager, resourceManager, dirtyMonitor, menuBar, allActions)
 
       // OK, this is a little kludgy.  First we pack so everything
       // is realized, and all addNotify() methods are called.  But
@@ -851,6 +856,10 @@ class App extends
     _tabManager.interfaceTab.requestFocus()
   }
 
+  def handle(e: LoadModelEvent) {
+    resourceManager.setResources(e.model.resources)
+  }
+
   /**
    * Internal use only.
    */
@@ -1215,6 +1224,8 @@ class App extends
   }
   def openTempFiles:    Seq[String] =
     _tabManager.openTempFiles
+  def resources:        Seq[ExternalResource] =
+    resourceManager.getResources
 
   def askForName() = {
     val frame = new JFrame()

@@ -2,6 +2,7 @@
 
 package org.nlogo.properties
 
+import org.nlogo.api.{ Editable, ExternalResourceManager, CompilerServices }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import javax.swing.border.TitledBorder
@@ -9,11 +10,11 @@ import org.nlogo.window.{WorldViewSettings, OriginConfiguration}
 import java.awt.{GridBagLayout, BorderLayout, GridBagConstraints}
 import javax.swing.{JLabel, JComboBox, JPanel}
 import java.awt.event.{ItemListener, ItemEvent}
-import org.nlogo.api.{ Editable, CompilerServices}
 import collection.JavaConverters._
 
-class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Colorizer)
-  extends EditPanel(widget, compiler, colorizer){
+class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Colorizer,
+                     resourceManager: ExternalResourceManager)
+  extends EditPanel(widget, compiler, colorizer, resourceManager) {
 
   private implicit val i18nPrefix = I18N.Prefix("edit.viewSettings")
   private val previewPanel = new WorldPreview(200, 200)
