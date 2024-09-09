@@ -50,6 +50,8 @@ class TokenLexer {
       case ((None, 0), '{')              => ((Some('{'), 0), Accept)
       case ((_, n), _) if n < 0          => ((None, n), Error)
       case ((_, n), c) if c == '\r' || c == '\n' => ((Some(c), n), Finished)
+      case ((Some('"'), n), '{')         => ((None, n), Accept)
+      case ((Some('"'), n), '}')         => ((None, n), Accept)
       case ((Some('}'), 1), '}')         => ((None, 0), Finished)
       case ((Some('{'), n), '{')         => ((None, n + 1), Accept)
       case ((Some('}'), n), '}')         => ((None, n - 1), Accept)

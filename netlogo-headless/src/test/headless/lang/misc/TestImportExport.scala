@@ -440,6 +440,10 @@ class TestImportExport extends FixtureSuite  {
     testReporter("table:to-list t2", "[[1 2] [3 4]]")
   }
 
+  test("ImportingArrayContainingStringsWithCurlyBraces", SlowTest.Tag) { implicit fixture =>
+    roundTripHelper("set a array:from-list [\"}}\" \"{{\"]", "extensions [array] globals [a]")
+  }
+
   /// other tests (that don't use roundTripHelper)
 
   test("TrailingCommas", SlowTest.Tag) { implicit fixture =>
