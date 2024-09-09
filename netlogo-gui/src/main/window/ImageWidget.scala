@@ -19,17 +19,45 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
   private class ImageFitter extends JPanel {
     private var image: Image = null
 
+    private var width: Int = 0
+    private var height: Int = 0
+
     def setImage(image: Image) {
       this.image = image
+
+      width = image.getWidth(this)
+      height = image.getHeight(this)
     }
 
     override def paintComponent(g: Graphics) {
-      if (image != null)
-        g.drawImage(image, 0, 0, getWidth, getHeight, 0, 0, image.getWidth(this), image.getHeight(this), this)
+      if (image != null) {
+        if (preserveAspect) {
+          val aspect = width.toFloat / height
+
+          if (aspect * getHeight <= getWidth) {
+            val width = (aspect * getHeight).toInt
+            val x = (getWidth - width) / 2
+
+            g.drawImage(image, x, 0, x + width, getHeight, 0, 0, this.width, height, this)
+          }
+
+          else {
+            val height = (getWidth / aspect).toInt
+            val y = (getHeight - height) / 2
+
+            g.drawImage(image, 0, y, getWidth, y + height, 0, 0, width, this.height, this)
+          }
+        }
+
+        else
+          g.drawImage(image, 0, 0, getWidth, getHeight, 0, 0, width, height, this)
+      }
     }
   }
 
   var imagePath: ExternalResource.Location = ExternalResource.None
+
+  var preserveAspect = true
 
   def setImage(name: String): Boolean = {
     resourceManager.getResource(name) match {
@@ -103,8 +131,9 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
     val bounds = getBoundsTuple
 
     imagePath match {
-      case ExternalResource.Existing(name) => CoreImage(bounds._1, bounds._2, bounds._3, bounds._4, name)
-      case _ => CoreImage(bounds._1, bounds._2, bounds._3, bounds._4, "")
+      case ExternalResource.Existing(name) => CoreImage(bounds._1, bounds._2, bounds._3, bounds._4, name,
+                                                        preserveAspect)
+      case _ => null
     }
   }
 
@@ -113,6 +142,8 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
 
     if (!setImage(model.image))
       imageError(model.image)
+    
+    preserveAspect = model.preserveAspect
 
     this
   }

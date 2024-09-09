@@ -79,8 +79,10 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     }
     menu.add(outputItem)
 
-    menu.add(new WidgetCreationMenuItem(I18N.gui.get("tabs.run.widgets.note"), CoreTextBox(None, fontSize = 11, color = 0), e.getX, e.getY))
-    menu.add(new WidgetCreationMenuItem(I18N.gui.get("tabs.run.widgets.image"), CoreImage(0, 0, 0, 0, ""), e.getX, e.getY))
+    menu.add(new WidgetCreationMenuItem(I18N.gui.get("tabs.run.widgets.note"),
+                                        CoreTextBox(None, fontSize = 11, color = 0), e.getX, e.getY))
+    menu.add(new WidgetCreationMenuItem(I18N.gui.get("tabs.run.widgets.image"), CoreImage(0, 0, 0, 0, "", true),
+                                        e.getX, e.getY))
 
     // add extra stuff
     menu.add(new JPopupMenu.Separator())

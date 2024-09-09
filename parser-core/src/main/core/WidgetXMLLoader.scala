@@ -113,7 +113,7 @@ object WidgetXMLLoader {
 
       case "image" =>
         Image(element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt,
-              element("image"))
+              element("image"), element("preserveAspect").toBoolean)
 
     }
   }
@@ -431,7 +431,8 @@ object WidgetXMLLoader {
           ("top", image.top.toString),
           ("right", image.right.toString),
           ("bottom", image.bottom.toString),
-          ("image", image.image)
+          ("image", image.image),
+          ("preserveAspect", image.preserveAspect.toString)
         )
 
         XMLElement("image", attributes, "", Nil)

@@ -69,7 +69,8 @@ object Properties {
     P("typeOptions", P.InputBoxOptions, I18N.gui("input.type"), gridWidth = RELATIVE)
   )
   val image = javaList(
-    P("imagePath", P.ResourcePath, I18N.gui("image.image"))
+    P("imagePath", P.ResourcePath, I18N.gui("image.image")),
+    P("preserveAspect", P.Boolean, I18N.gui("image.preserveAspect"))
   )
 
   // WorldViewSettings

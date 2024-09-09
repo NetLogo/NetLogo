@@ -293,7 +293,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       menuItem("monitor", CoreMonitor(None, 0, 0, 0, 0, None, 10)),
       plot,
       menuItem("note", CoreTextBox(None, fontSize = 11, color = 0)),
-      menuItem("image", CoreImage(0, 0, 0, 0, "")))
+      menuItem("image", CoreImage(0, 0, 0, 0, "", true)))
     menuItems.foreach(menu.add)
 
     // if there are no plots in this model, then you can't have a plot in a hubnet client.
