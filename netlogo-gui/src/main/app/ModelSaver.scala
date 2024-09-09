@@ -18,7 +18,8 @@ class ModelSaver(model: ModelSections, loader: GenericModelLoader) {
       info          = model.info,
       turtleShapes  = model.turtleShapes,
       linkShapes    = model.linkShapes,
-      openTempFiles = model.openTempFiles)
+      openTempFiles = model.openTempFiles,
+      resources     = model.resources)
     if (model.additionalSections.isEmpty)
       m
     else

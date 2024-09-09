@@ -68,6 +68,9 @@ object Properties {
     P("nameWrapper", P.Identifier, I18N.gui("input.globalVar")),
     P("typeOptions", P.InputBoxOptions, I18N.gui("input.type"), gridWidth = RELATIVE)
   )
+  val image = javaList(
+    P("imagePath", P.ResourcePath, I18N.gui("image.image"))
+  )
 
   // WorldViewSettings
   val model = javaList(

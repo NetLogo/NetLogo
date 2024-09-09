@@ -90,7 +90,7 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   locally {
     import WidgetInfo._
-    val buttons = List(button, slider, switch, chooser, input, monitor, plot, output, note)
+    val buttons = List(button, slider, switch, chooser, input, monitor, plot, output, note, image)
     add(new InterfaceToolBar(iP, workspace, buttons, workspace.getFrame, dialogFactory) {
       override def addControls() {
         super.addControls()

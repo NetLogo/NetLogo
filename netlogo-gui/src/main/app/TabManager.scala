@@ -9,7 +9,7 @@ import java.nio.file.{ Path, Paths }
 import java.util.prefs.Preferences
 import javax.swing.{ AbstractAction, Action, JComponent, JFrame }
 
-import org.nlogo.api.Exceptions
+import org.nlogo.api.{ Exceptions, ExternalResourceManager }
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
 import org.nlogo.app.common.Events.SwitchedTabsEvent
 import org.nlogo.app.common.{ ExceptionCatchingAction, MenuTab, TabsInterface }
@@ -119,7 +119,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   })
 
-  def init(fileManager: FileManager, dirtyMonitor: DirtyMonitor, menuBar: MenuBar, actions: Seq[Action]) {
+  def init(fileManager: FileManager, resourceManager: ExternalResourceManager, dirtyMonitor: DirtyMonitor,
+           menuBar: MenuBar, actions: Seq[Action]) {
     this.fileManager = fileManager
     this.dirtyMonitor = dirtyMonitor
     this.menuBar = menuBar
@@ -128,6 +129,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     permanentMenuActions.foreach(offerAction)
 
     updateTabActions()
+
+    interfaceTab.iP.setResourceManager(resourceManager)
   }
 
   def startWatcherThread(modelPath: String = workspace.getModelPath) {

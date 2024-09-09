@@ -3,12 +3,12 @@
 package org.nlogo.properties
 
 import java.util.function.Consumer
-import org.nlogo.api.{ CompilerServices, Editable }
+import org.nlogo.api.{ CompilerServices, Editable, ExternalResourceManager }
 import org.nlogo.editor.Colorizer
 
 // see commentary in EditDialogFactoryInterface
 
-class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
+class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer, _resourceManager: ExternalResourceManager)
   extends org.nlogo.window.EditDialogFactoryInterface
 {
   var dialog: EditDialog = null
@@ -20,6 +20,7 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
          override def target = _target
          override def compiler = _compiler
          override def colorizer = _colorizer
+         override def resourceManager = _resourceManager
          override def getPreferredSize = limit(super.getPreferredSize)
          override def useTooltips = _useTooltips
        }).canceled
@@ -31,6 +32,7 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
          override def target = _target
          override def compiler = _compiler
          override def colorizer = _colorizer
+         override def resourceManager = _resourceManager
          override def getPreferredSize = limit(super.getPreferredSize)
          override def useTooltips = _useTooltips
        }).canceled
@@ -43,6 +45,7 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
                  override def target = _target
                  override def compiler = _compiler
                  override def colorizer = _colorizer
+                 override def resourceManager = _resourceManager
                  override def getPreferredSize = limit(super.getPreferredSize)
                  override def useTooltips = _useTooltips
                }
@@ -60,6 +63,7 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
                       override def target = _target
                       override def compiler = _compiler
                       override def colorizer = _colorizer
+                      override def resourceManager = _resourceManager
                       override def getPreferredSize = limit(super.getPreferredSize)
                       override def useTooltips = _useTooltips
                     }

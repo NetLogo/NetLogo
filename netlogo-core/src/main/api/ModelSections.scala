@@ -3,7 +3,7 @@
 package org.nlogo.api
 
 import
-  org.nlogo.core.{ Model, Shape, Widget },
+  org.nlogo.core.{ ExternalResource, Model, Shape, Widget },
     Shape.{ LinkShape, VectorShape }
 
 import
@@ -17,6 +17,7 @@ private[nlogo] trait ModelSections {
   def linkShapes:         Seq[LinkShape]
   def additionalSections: Seq[ModelSaveable]
   def openTempFiles:      Seq[String]
+  def resources:          Seq[ExternalResource]
 }
 
 private[nlogo] object ModelSections {
