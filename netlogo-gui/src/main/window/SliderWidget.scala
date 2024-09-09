@@ -30,23 +30,31 @@ trait AbstractSliderWidget extends MultiErrorWidget {
         if (thumbRect.contains(e.getPoint)) {
           hover = false
           pressed = true
+
+          repaint()
         }
       }
 
       override def mouseReleased(e: MouseEvent) {
         hover = thumbRect.contains(e.getPoint)
         pressed = false
+
+        repaint()
       }
 
       override def mouseExited(e: MouseEvent) {
         hover = false
         pressed = false
+
+        repaint()
       }
     })
 
     slider.addMouseMotionListener(new MouseMotionAdapter {
       override def mouseMoved(e: MouseEvent) {
         hover = thumbRect.contains(e.getPoint) && !pressed
+
+        repaint()
       }
     })
 
@@ -106,7 +114,6 @@ trait AbstractSliderWidget extends MultiErrorWidget {
           g2d.setColor(InterfaceColors.SLIDER_THUMB_BACKGROUND)
         g2d.fillOval(thumbRect.x + 1, startY + 1, getThumbSize.width - 2, getThumbSize.width - 2)
       }
-      repaint()
     }
 
     override def paintFocus(g: Graphics) {
