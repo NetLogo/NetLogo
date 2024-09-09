@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ Color, Component, Dimension, FlowLayout, Font, Graphics, Insets }
+import java.awt.{ Color, Component, Dimension, FlowLayout, Graphics, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.{ Box, JLabel, JPanel, JTabbedPane, SwingConstants }
@@ -142,16 +142,16 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
 
   private val textLabel = new JLabel(text)
 
+  private var rawText = text
+
   def setText(text: String) {
-    textLabel.setText(text)
+    rawText = text
   }
 
   def getText: String =
-    textLabel.getText
+    rawText
 
   private var closeButton: CloseButton = null
-
-  private val startFont = textLabel.getFont
 
   var error = false
 
@@ -187,7 +187,7 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
   override def paintComponent(g: Graphics) {
     if (tab == tabsPanel.getSelectedComponent) {
       textLabel.setForeground(Color.WHITE)
-      textLabel.setFont(startFont.deriveFont(Font.BOLD))
+      textLabel.setText("<html><b>" + rawText + "</b></html>")
 
       if (closeButton != null)
         closeButton.setForeground(Color.WHITE)
@@ -195,7 +195,7 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
 
     else if (tabsPanel.getError(tabsPanel.indexOfComponent(tab))) {
       textLabel.setForeground(InterfaceColors.TAB_TEXT_ERROR)
-      textLabel.setFont(startFont.deriveFont(Font.BOLD))
+      textLabel.setText("<html><b>" + rawText + "</b></html>")
 
       if (closeButton != null)
         closeButton.setForeground(InterfaceColors.TAB_TEXT_ERROR)
@@ -203,7 +203,7 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
 
     else {
       textLabel.setForeground(Color.BLACK)
-      textLabel.setFont(startFont.deriveFont(Font.PLAIN))
+      textLabel.setText(rawText)
 
       if (closeButton != null)
         closeButton.setForeground(Color.BLACK)
