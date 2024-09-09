@@ -105,7 +105,7 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
     val name = imagePath match {
       case ExternalResource.Existing(name) => name
       case ExternalResource.New(path) =>
-        val name = ExternalResourceManager.getResourceName(path)
+        val name = ExternalResourceManager.getName(path)
 
         resourceManager.addResource(new ExternalResource(name, "image",
           Base64.getEncoder.encodeToString(Files.readAllBytes(new File(path).toPath))))
@@ -122,7 +122,7 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
   override def editFinished(): Boolean = {
     imagePath match {
       case ExternalResource.New(path) =>
-        imagePath = ExternalResource.Existing(ExternalResourceManager.getResourceName(path))
+        imagePath = ExternalResource.Existing(ExternalResourceManager.getName(path))
 
       case _ =>
     }

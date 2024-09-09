@@ -7,8 +7,16 @@ import java.io.File
 import org.nlogo.core.ExternalResource
 
 object ExternalResourceManager {
-  def getResourceName(path: String): String =
+  def getName(path: String): String =
     new File(path).getName
+  
+  def getName(location: ExternalResource.Location): Option[String] = {
+    location match {
+      case ExternalResource.Existing(name) => Some(name)
+      case ExternalResource.New(path) => Some(getName(path))
+      case ExternalResource.None => None
+    }
+  }
 }
 
 class ExternalResourceManager {
@@ -24,12 +32,8 @@ class ExternalResourceManager {
   def getResource(name: String): Option[String] =
     resources.find(_.name == name).map(_.data)
 
-  def addResource(resource: ExternalResource): Boolean = {
-    if (resources.find(_.name == resource.name).isDefined)
-      return false
-
-    resources = resources :+ resource
-
-    true
+  def addResource(resource: ExternalResource) {
+    if (resources.find(_.name == resource.name).isEmpty)
+      resources = resources :+ resource
   }
 }

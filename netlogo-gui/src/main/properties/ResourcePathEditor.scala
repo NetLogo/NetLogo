@@ -44,11 +44,7 @@ abstract class ResourcePathEditor(accessor: PropertyAccessor[ExternalResource.Lo
     })
 
     def setSelection(resource: ExternalResource.Location) {
-      resource match {
-        case ExternalResource.Existing(name) => label.setText(name)
-        case ExternalResource.New(path) => label.setText(ExternalResourceManager.getResourceName(path))
-        case ExternalResource.None => label.setText(emptyName)
-      }
+      label.setText(ExternalResourceManager.getName(resource).getOrElse(emptyName))
 
       this.resource = resource
     }
@@ -69,7 +65,7 @@ abstract class ResourcePathEditor(accessor: PropertyAccessor[ExternalResource.Lo
     def actionPerformed(e: ActionEvent) {
       try {
         val path = FileDialog.showFiles(parent, I18N.gui("import"), JFileDialog.LOAD, null)
-        val name = ExternalResourceManager.getResourceName(path)
+        val name = ExternalResourceManager.getName(path)
 
         if (resourceManager.getResource(name).isDefined)
           OptionDialog.showMessage(parent, I18N.gui("importError"), I18N.gui("exists", name),
