@@ -105,7 +105,7 @@ object LabXMLLoader {
     def writeValueSet(valueSet: RefValueSet): XMLElement = {
       valueSet match {
         case stepped: SteppedValueSet =>
-          val attributes = Map[String, String](
+          val attributes = Map(
             ("variable", stepped.variableName),
             ("first", stepped.firstValue.toString),
             ("step", stepped.step.toString),
@@ -115,7 +115,7 @@ object LabXMLLoader {
           XMLElement("steppedValueSet", attributes, "", Nil)
         
         case enumerated: RefEnumeratedValueSet =>
-          val attributes = Map[String, String](
+          val attributes = Map(
             ("variable", enumerated.variableName)
           )
 
@@ -128,7 +128,7 @@ object LabXMLLoader {
       }
     }
 
-    var attributes = Map[String, String](
+    var attributes = Map(
       ("name", experiment.name),
       ("repetitions", experiment.repetitions.toString),
       ("sequentialRunOrder", experiment.sequentialRunOrder.toString),

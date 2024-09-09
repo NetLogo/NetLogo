@@ -104,7 +104,7 @@ object SDMXMLLoader {
   def writeDrawing(drawingRef: AnyRef): XMLElement = {
     val drawing = drawingRef.asInstanceOf[AggregateDrawing]
 
-    val attributes = Map[String, String](
+    val attributes = Map(
       ("dt", drawing.getModel.dt.toString)
     )
 
@@ -117,7 +117,7 @@ object SDMXMLLoader {
     while (figures.hasNextFigure) {
       figures.nextFigure match {
         case stock: StockFigure =>
-          val attributes = Map[String, String](
+          val attributes = Map(
             ("name", stock.nameWrapper),
             ("initialValue", stock.initialValueExpressionWrapper),
             ("allowNegative", stock.allowNegative.toString),
@@ -132,7 +132,7 @@ object SDMXMLLoader {
           refs += ((stock, refs.size))
         
         case converter: ConverterFigure =>
-          val attributes = Map[String, String](
+          val attributes = Map(
             ("name", converter.nameWrapper),
             ("expression", converter.expressionWrapper),
             ("centerX", converter.center.x.toString),
@@ -146,7 +146,7 @@ object SDMXMLLoader {
           refs += ((converter, refs.size))
         
         case reservoir: ReservoirFigure =>
-          val attributes = Map[String, String](
+          val attributes = Map(
             ("centerX", reservoir.center.x.toString),
             ("centerY", reservoir.center.y.toString),
             ("startX", reservoir.displayBox.x.toString),
@@ -158,7 +158,7 @@ object SDMXMLLoader {
           refs += ((reservoir, refs.size))
         
         case binding: BindingConnection =>
-          val attributes = Map[String, String](
+          val attributes = Map(
             ("startX", binding.startPoint.x.toString),
             ("startY", binding.startPoint.y.toString),
             ("endX", binding.endPoint.x.toString),
@@ -172,7 +172,7 @@ object SDMXMLLoader {
           refs += ((binding, refs.size))
 
         case rate: RateConnection =>
-          var attributes = Map[String, String](
+          var attributes = Map(
             ("name", rate.nameWrapper),
             ("expression", rate.expressionWrapper),
             ("bivalent", rate.bivalentWrapper.toString),

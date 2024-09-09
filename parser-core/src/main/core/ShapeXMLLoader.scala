@@ -64,7 +64,7 @@ object ShapeXMLLoader {
     def colorToString(color: RgbColor) =
       (color.red << 24 | color.green << 16 | color.blue << 8 | color.alpha).toString
 
-    val attributes = Map[String, String](
+    val attributes = Map(
       ("name", shape.name),
       ("rotatable", shape.rotatable.toString),
       ("editableColorIndex", shape.editableColorIndex.toString)
@@ -74,7 +74,7 @@ object ShapeXMLLoader {
       for (element <- shape.elements.toList) yield {
         element match {
           case circle: CoreCircle =>
-            val attributes = Map[String, String](
+            val attributes = Map(
               ("color", colorToString(circle.color)),
               ("filled", circle.filled.toString),
               ("marked", circle.marked.toString),
@@ -86,7 +86,7 @@ object ShapeXMLLoader {
             XMLElement("circle", attributes, "", Nil)
 
           case line: CoreLine =>
-            val attributes = Map[String, String](
+            val attributes = Map(
               ("color", colorToString(line.color)),
               ("marked", line.marked.toString),
               ("startX", line.startPoint._1.toString),
@@ -98,7 +98,7 @@ object ShapeXMLLoader {
             XMLElement("line", attributes, "", Nil)
           
           case polygon: CorePolygon =>
-            val attributes = Map[String, String](
+            val attributes = Map(
               ("color", colorToString(polygon.color)),
               ("filled", polygon.filled.toString),
               ("marked", polygon.marked.toString)
@@ -106,7 +106,7 @@ object ShapeXMLLoader {
 
             val children =
               for (point <- polygon.points.toList) yield {
-                val attributes = Map[String, String](
+                val attributes = Map(
                   ("x", point._1.toString),
                   ("y", point._2.toString)
                 )
@@ -117,7 +117,7 @@ object ShapeXMLLoader {
             XMLElement("polygon", attributes, "", children)
 
           case rectangle: CoreRectangle =>
-            val attributes = Map[String, String](
+            val attributes = Map(
               ("color", colorToString(rectangle.color)),
               ("filled", rectangle.filled.toString),
               ("marked", rectangle.marked.toString),
@@ -158,21 +158,21 @@ object ShapeXMLLoader {
   }
 
   def writeLinkShape(shape: CoreLinkShape): XMLElement = {
-    val attributes = Map[String, String](
+    val attributes = Map(
       ("name", shape.name),
       ("curviness", shape.curviness.toString)
     )
 
     val lines =
       for (line <- shape.linkLines.toList) yield {
-        val attributes = Map[String, String](
+        val attributes = Map(
           ("x", line.xcor.toString),
           ("visible", line.isVisible.toString)
         )
 
         val children =
           for (dash <- line.dashChoices.toList) yield {
-            XMLElement("dash", Map[String, String](("value", dash.toString)), "", Nil)
+            XMLElement("dash", Map(("value", dash.toString)), "", Nil)
           }
 
         XMLElement("line", attributes, "", children)
