@@ -121,7 +121,7 @@ object WidgetXMLLoader {
   def writeWidget(widget: Widget): XMLElement = {
     widget match {
       case button: Button =>
-        var attributes = Map[String, String](
+        var attributes = Map(
           ("left", button.left.toString),
           ("top", button.top.toString),
           ("right", button.right.toString),
@@ -146,7 +146,7 @@ object WidgetXMLLoader {
         XMLElement("button", attributes, "", children)
       
       case slider: Slider =>
-        var attributes = Map[String, String](
+        var attributes = Map(
           ("left", slider.left.toString),
           ("top", slider.top.toString),
           ("right", slider.right.toString),
@@ -172,7 +172,7 @@ object WidgetXMLLoader {
       case view: View =>
         view.dimensions.get3D match {
           case Some((minPzcor, maxPzcor, wrappingAllowedInZ)) =>
-            var attributes = Map[String, String](
+            var attributes = Map(
               ("left", view.left.toString),
               ("top", view.top.toString),
               ("right", view.right.toString),
@@ -199,7 +199,7 @@ object WidgetXMLLoader {
             XMLElement("view3d", attributes, "", Nil)
           
           case None =>
-            var attributes = Map[String, String](
+            var attributes = Map(
               ("left", view.left.toString),
               ("top", view.top.toString),
               ("right", view.right.toString),
@@ -224,7 +224,7 @@ object WidgetXMLLoader {
         }
 
       case monitor: Monitor =>
-        var attributes = Map[String, String](
+        var attributes = Map(
           ("left", monitor.left.toString),
           ("top", monitor.top.toString),
           ("right", monitor.right.toString),
@@ -245,7 +245,7 @@ object WidgetXMLLoader {
         XMLElement("monitor", attributes, "", children)
       
       case switch: Switch =>
-        var attributes = Map[String, String](
+        var attributes = Map(
           ("left", switch.left.toString),
           ("top", switch.top.toString),
           ("right", switch.right.toString),
@@ -262,7 +262,7 @@ object WidgetXMLLoader {
         XMLElement("switch", attributes, "", Nil)
       
       case plot: Plot =>
-        var attributes = Map[String, String](
+        var attributes = Map(
           ("left", plot.left.toString),
           ("top", plot.top.toString),
           ("right", plot.right.toString),
@@ -291,7 +291,7 @@ object WidgetXMLLoader {
         )
 
         for (pen <- plot.pens) {
-          val attributes = Map[String, String](
+          val attributes = Map(
             ("display", pen.display),
             ("interval", pen.interval.toString),
             ("mode", pen.mode.toString),
@@ -310,7 +310,7 @@ object WidgetXMLLoader {
         XMLElement("plot", attributes, "", children)
 
       case chooser: Chooser =>
-        var attributes = Map[String, String](
+        var attributes = Map(
           ("left", chooser.left.toString),
           ("top", chooser.top.toString),
           ("right", chooser.right.toString),
@@ -328,7 +328,7 @@ object WidgetXMLLoader {
           for (choice <- chooser.choices) yield {
             choice match {
               case ChooseableString(string) =>
-                val attributes = Map[String, String](
+                val attributes = Map(
                   ("type", "string"),
                   ("value", string)
                 )
@@ -336,7 +336,7 @@ object WidgetXMLLoader {
                 XMLElement("choice", attributes, "", Nil)
               
               case ChooseableDouble(double) =>
-                val attributes = Map[String, String](
+                val attributes = Map(
                   ("type", "double"),
                   ("value", double.toString)
                 )
@@ -344,7 +344,7 @@ object WidgetXMLLoader {
                 XMLElement("choice", attributes, "", Nil)
               
               case ChooseableBoolean(boolean) =>
-                val attributes = Map[String, String](
+                val attributes = Map(
                   ("type", "boolean"),
                   ("value", boolean.toString)
                 )
@@ -352,13 +352,13 @@ object WidgetXMLLoader {
                 XMLElement("choice", attributes, "", Nil)
               
               case ChooseableList(list) =>
-                val attributes = Map[String, String](
+                val attributes = Map(
                   ("type", "list")
                 )
 
                 val children =
                   for (value <- list) yield {
-                    val attributes = Map[String, String](
+                    val attributes = Map(
                       ("value", value.toString)
                     )
 
@@ -373,7 +373,7 @@ object WidgetXMLLoader {
         XMLElement("chooser", attributes, "", children)
       
       case output: Output =>
-        val attributes = Map[String, String](
+        val attributes = Map(
           ("left", output.left.toString),
           ("top", output.top.toString),
           ("right", output.right.toString),
@@ -384,7 +384,7 @@ object WidgetXMLLoader {
         XMLElement("output", attributes, "", Nil)
       
       case input: InputBox =>
-        var attributes = Map[String, String](
+        var attributes = Map(
           ("left", input.left.toString),
           ("top", input.top.toString),
           ("right", input.right.toString),
