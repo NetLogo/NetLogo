@@ -42,7 +42,6 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     val c = new GridBagConstraints
 
     c.gridx = 0
-    c.gridy = 0
     c.gridwidth = 1
     c.weightx = 1
     c.anchor = GridBagConstraints.NORTHWEST
@@ -54,7 +53,6 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
 
     add(label, c)
 
-    c.gridy = 1
     c.fill = GridBagConstraints.BOTH
     c.insets =
       if (preserveWidgetSizes)
@@ -135,7 +133,9 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
       c.weightx = 1
       c.weighty = 1
       c.fill = GridBagConstraints.BOTH
-      c.insets = new Insets(3, 3, 3, 3)
+
+      if (!preserveWidgetSizes)
+        c.insets = new Insets(3, 3, 3, 3)
 
       add(comboBox, c)
     }
