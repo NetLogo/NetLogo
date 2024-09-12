@@ -7,7 +7,7 @@ import org.nlogo.swing.Utils
 import org.nlogo.window.{ Events, InterfaceColors, MultiErrorWidget }
 
 import java.awt._
-import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
+import javax.swing.{ JLabel, JPanel }
 import event.{ MouseWheelEvent, MouseEvent, MouseAdapter, MouseWheelListener }
 
 object Switch {
@@ -30,21 +30,38 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   protected var nameChanged = false
   protected var _name = ""
 
-  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  setLayout(new GridBagLayout)
 
   if (preserveWidgetSizes) {
-    add(Box.createHorizontalStrut(6))
-    add(label)
-    add(Box.createHorizontalStrut(6))
-    add(toggle)
+    val c = new GridBagConstraints
+
+    c.insets = new Insets(0, 6, 0, 6)
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.weightx = 1
+
+    add(label, c)
+
+    c.insets = new Insets(0, 0, 0, 6)
+    c.fill = GridBagConstraints.NONE
+    c.weightx = 0
+    c.anchor = GridBagConstraints.EAST
+
+    add(toggle, c)
   }
 
   else {
-    add(Box.createHorizontalStrut(12))
-    add(label)
-    add(Box.createHorizontalStrut(12))
-    add(toggle)
-    add(Box.createHorizontalStrut(12))
+    val c = new GridBagConstraints
+
+    c.insets = new Insets(0, 12, 0, 12)
+    c.fill = GridBagConstraints.HORIZONTAL
+
+    add(label, c)
+
+    c.insets = new Insets(0, 0, 0, 12)
+    c.fill = GridBagConstraints.NONE
+    c.anchor = GridBagConstraints.EAST
+
+    add(toggle, c)
   }
 
   addMouseWheelListener(this)
@@ -79,7 +96,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
   override def getPreferredSize: Dimension =
     if (preserveWidgetSizes)
-      new Dimension(MINWIDTH.max(label.getWidth + toggle.getWidth + 18), MINHEIGHT.max(37))
+      new Dimension(MINWIDTH, 37)
     else
       super.getPreferredSize
 
