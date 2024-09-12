@@ -119,8 +119,14 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     add(widgetMenu, c)
 
     c.insets = new Insets(0, 0, 6, 6)
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.weightx = 1
 
     add(alignmentMenu, c)
+
+    c.fill = GridBagConstraints.NONE
+    c.weightx = 0
+
     add(editButton, c)
     add(deleteButton, c)
   }
@@ -248,8 +254,14 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       val c = new GridBagConstraints
 
       c.insets = new Insets(6, 6, 6, 6)
+      c.fill = GridBagConstraints.HORIZONTAL
+      c.weightx = 1
 
-      add(new JLabel(Utils.iconScaled("/images/align-left.png", 16, 16)), c)
+      add(new JLabel(Utils.iconScaled("/images/align-left.png", 16, 16), SwingConstants.LEFT), c)
+
+      c.fill = GridBagConstraints.NONE
+      c.weightx = 0
+
       add(new DropdownArrow, c)
     }
 
