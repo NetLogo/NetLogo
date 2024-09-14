@@ -93,6 +93,8 @@ class MonitorWidget(random: MersenneTwisterFast)
   private val nameLabel = new JLabel
   private val valueLabel = new JLabel
 
+  nameLabel.setForeground(InterfaceColors.WIDGET_TEXT)
+
   addMouseListener(this)
 
   setLayout(new GridBagLayout)
@@ -178,6 +180,7 @@ class MonitorWidget(random: MersenneTwisterFast)
       new AddJobEvent(this, agents, procedure).raise(this)
       jobRunning = true
     }
+    nameLabel.setForeground(if (procedure == null) Color.RED else InterfaceColors.WIDGET_TEXT)
     repaint()
   }
 
@@ -230,8 +233,6 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   override def paintComponent(g: Graphics) {
     backgroundColor = InterfaceColors.MONITOR_BACKGROUND
-
-    nameLabel.setForeground(if (procedure == null) Color.RED else InterfaceColors.WIDGET_TEXT)
 
     if (nameLabel.getPreferredSize.width > nameLabel.getWidth)
       nameLabel.setToolTipText(nameLabel.getText)
