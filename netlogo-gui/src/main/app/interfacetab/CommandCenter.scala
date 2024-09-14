@@ -83,16 +83,37 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
     //SOUTH
     //-----------------------------------------
     southPanel.setOpaque(false)
-    southPanel.setLayout(new BorderLayout)
-    southPanel.add(prompt, BorderLayout.WEST)
-    southPanel.add(commandLine, BorderLayout.CENTER)
-    val historyPanel = new JPanel()
-    historyPanel.setOpaque(false)
-    historyPanel.setLayout(new BorderLayout)
-    historyPanel.add(new HistoryPrompt(commandLine), BorderLayout.CENTER)
-    if(System.getProperty("os.name").startsWith("Mac"))
-      historyPanel.add(Box.createHorizontalStrut(12), BorderLayout.EAST)
-    southPanel.add(historyPanel, BorderLayout.EAST)
+    southPanel.setLayout(new GridBagLayout)
+
+    locally {
+      val c = new GridBagConstraints
+
+      c.insets = new Insets(0, 6, 0, 6)
+
+      southPanel.add(prompt, c)
+
+      c.weightx = 1
+      c.fill = GridBagConstraints.HORIZONTAL
+      c.insets = new Insets(0, 0, 0, 0)
+
+      southPanel.add(commandLine, c)
+
+      val historyPanel = new JPanel
+
+      historyPanel.setOpaque(false)
+      historyPanel.setLayout(new BorderLayout)
+
+      historyPanel.add(new HistoryPrompt(commandLine), BorderLayout.CENTER)
+
+      if (System.getProperty("os.name").startsWith("Mac"))
+        historyPanel.add(Box.createHorizontalStrut(12), BorderLayout.EAST)
+      
+      c.weightx = 0
+      c.fill = GridBagConstraints.VERTICAL
+
+      southPanel.add(historyPanel, c)
+    }
+    
     add(southPanel, BorderLayout.SOUTH)
   }
 
