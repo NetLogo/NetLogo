@@ -8,6 +8,7 @@ import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, M
 import javax.swing.{ BorderFactory, JLabel, JSlider, JTextField, SwingConstants }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.plaf.basic.BasicSliderUI
+import javax.swing.text.{ AttributeSet, PlainDocument }
 
 import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ Dump, Editable, MersenneTwisterFast }
@@ -152,11 +153,11 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     }
   }
 
-  protected class TextField extends JTextField {
+  protected class TextField extends JTextField("", 3) {
     setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0))
     setBackground(InterfaceColors.TRANSPARENT)
-
     setFont(getFont.deriveFont(11f))
+    setHorizontalAlignment(SwingConstants.RIGHT)
 
     addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent) {
@@ -168,7 +169,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
           case e: NumberFormatException =>
         }
 
-        setText(value.toString)
+        setText(valueString(value))
 
         getParent.requestFocus()
       }
@@ -179,6 +180,18 @@ trait AbstractSliderWidget extends MultiErrorWidget {
         fireActionPerformed()
       }
     })
+
+    override def getPreferredSize: Dimension =
+      new Dimension(25.max(getFontMetrics(getFont).stringWidth(getText) + 6), super.getPreferredSize.height)
+
+    protected override def createDefaultModel =
+      new PlainDocument {
+        override def insertString(offset: Int, str: String, attributes: AttributeSet) {
+          super.insertString(offset, str, attributes)
+
+          AbstractSliderWidget.this.revalidate()
+        }
+      }
 
     override def contains(x: Int, y: Int): Boolean = {
       if (vertical)
@@ -264,25 +277,25 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   def value = sliderData.value
   def value_=(d: Double) {
     sliderData.value = d
-    valueComponent.setText(value.toString)
+    valueComponent.setText(valueString(value))
     slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
     new Events.WidgetEditedEvent(this).raise(this)
   }
   def value_=(d: Double, inc: Double) {
     sliderData.value = d
-    valueComponent.setText(value.toString)
+    valueComponent.setText(valueString(value))
     slider.setValue(((value - minimum) / inc).asInstanceOf[Int])
     new Events.WidgetEditedEvent(this).raise(this)
   }
   def value_=(d: Double, buttonRelease: Boolean) {
     sliderData.value_=(d, buttonRelease)
-    valueComponent.setText(value.toString)
+    valueComponent.setText(valueString(value))
     slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
     new Events.WidgetEditedEvent(this).raise(this)
   }
   def coerceValue(value: Double): Double = {
     val ret = sliderData.coerceValue(value)
-    valueComponent.setText(value.toString)
+    valueComponent.setText(valueString(value))
     slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
     ret
   }
