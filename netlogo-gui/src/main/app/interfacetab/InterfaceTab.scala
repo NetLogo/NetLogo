@@ -58,8 +58,16 @@ class InterfaceTab(workspace: GUIWorkspace,
     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
 
   scrollPane.setBorder(null)
-  scrollPane.getVerticalScrollBar.setPreferredSize(new Dimension(10, 0))
-  scrollPane.getHorizontalScrollBar.setPreferredSize(new Dimension(0, 10))
+
+  if (System.getProperty("os.name").startsWith("Windows")) {
+    scrollPane.getVerticalScrollBar.setPreferredSize(new Dimension(7, 0))
+    scrollPane.getHorizontalScrollBar.setPreferredSize(new Dimension(0, 7))
+  }
+
+  else {
+    scrollPane.getVerticalScrollBar.setPreferredSize(new Dimension(10, 0))
+    scrollPane.getHorizontalScrollBar.setPreferredSize(new Dimension(0, 10))
+  }
 
   commandCenter.setMinimumSize(new Dimension(0, 0))
 
