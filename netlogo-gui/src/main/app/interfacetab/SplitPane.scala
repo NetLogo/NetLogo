@@ -209,4 +209,11 @@ private class SplitPane(mainComponent: Component, topComponent: Component, comma
 
     dividerChanged()
   }
+
+  override def setBounds(x: Int, y: Int, width: Int, height: Int) {
+    if (dividerLocation > 0 && dividerLocation < maxDividerLocation)
+      dividerLocation += (height - getHeight)
+
+    super.setBounds(x, y, width, height)
+  }
 }
