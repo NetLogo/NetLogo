@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Component, Dimension, Graphics, GridBagConstraints, GridBagLayout }
+import java.awt.{ Color, Component, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ MouseEvent, MouseListener, MouseWheelEvent, MouseWheelListener }
 import javax.swing.{ JLabel, JPanel, JSlider, SwingConstants }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
@@ -45,11 +45,13 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
 
     c.gridx = 1
     c.anchor = GridBagConstraints.CENTER
+    c.insets = new Insets(0, 12, 0, 12)
 
     add(new JLabel(I18N.gui("modelSpeed"), SwingConstants.CENTER), c)
 
     c.gridx = 2
     c.anchor = GridBagConstraints.SOUTHEAST
+    c.insets = new Insets(0, 0, 0, 0)
 
     val faster = new JLabel(I18N.gui("faster"), SwingConstants.RIGHT)
 
@@ -60,6 +62,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
     c.gridx = 0
     c.gridy = 1
     c.gridwidth = 3
+    c.fill = GridBagConstraints.HORIZONTAL
     c.anchor = GridBagConstraints.CENTER
 
     add(speedSlider, c)

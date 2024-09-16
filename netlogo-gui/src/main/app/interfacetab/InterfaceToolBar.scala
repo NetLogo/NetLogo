@@ -44,7 +44,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
   editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
   deleteButton.setToolTipText(I18N.gui.get("tabs.run.deleteButton.tooltip"))
-  widgetMenu.setToolTipText(I18N.gui.get("tabs.run.widgets.tooltip"))
 
   class EditAction extends AbstractAction {
     putValue(Action.SMALL_ICON, Utils.icon("/images/edit.png"))
@@ -119,8 +118,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     add(widgetMenu, c)
 
     c.insets = new Insets(0, 0, 6, 6)
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
 
     add(alignmentMenu, c)
 
@@ -249,6 +246,8 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   class AlignmentMenu extends JPanel(new GridBagLayout) {
     setOpaque(false)
     setBackground(InterfaceColors.TRANSPARENT)
+
+    setPreferredSize(widgetMenu.getPreferredSize)
 
     locally {
       val c = new GridBagConstraints
