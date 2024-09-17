@@ -4,7 +4,6 @@ package org.nlogo.swing
 
 import java.awt.{ Component, FileDialog => AWTFileDialog, Frame }
 import java.io.File
-import javax.swing.filechooser.FileFilter
 import javax.swing.JFileChooser
 
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
@@ -70,36 +69,20 @@ object FileDialog {
 
   @throws[UserCancelException]
   private def showFiles(parentFrame: Frame, title: String, mode: Int, file: String, allowed: List[String]): String = {
-    val chooser = new JFileChooser(currentDirectory)
-    chooser.setDialogTitle(title)
-    chooser.setFileSelectionMode(JFileChooser.FILES_ONLY)
+    val chooser = new AWTFileDialog(parentFrame, title, mode)
+    chooser.setDirectory(currentDirectory)
     if (file != null)
-      chooser.setSelectedFile(new File(file))
-    if (!allowed.isEmpty) {
-      chooser.setAcceptAllFileFilterUsed(false)
-      chooser.setFileFilter(new FileFilter {
-        def accept(file: File): Boolean =
-          file.isDirectory || allowed.exists(x => file.getName.endsWith("." + x))
-        def getDescription(): String =
-          allowed.map(x => "*." + x).mkString(", ")
-      })
-    }
-    var result = 0
-    if (mode == AWTFileDialog.SAVE) {
-      chooser.setDialogType(JFileChooser.SAVE_DIALOG)
-      result = chooser.showSaveDialog(parentFrame)
-    }
-    else {
-      chooser.setDialogType(JFileChooser.OPEN_DIALOG)
-      result = chooser.showOpenDialog(parentFrame)
-    }
-    if (result != JFileChooser.APPROVE_OPTION || chooser.getSelectedFile == null)
+      chooser.setFile(file)
+    chooser.setVisible(true)
+    if (chooser.getFile == null)
       throw new UserCancelException
-    currentDirectory = selectedDirectory(chooser)
-    if (mode == AWTFileDialog.LOAD && !chooser.getSelectedFile.exists)
-      showFiles(parentFrame, title, mode, file, allowed)
+    currentDirectory = chooser.getDirectory
+    if (mode == AWTFileDialog.LOAD && !new File(currentDirectory + chooser.getFile).exists)
+      return showFiles(parentFrame, title, mode, chooser.getFile, allowed)
+    if (chooser.getDirectory == null)
+      chooser.getFile
     else
-      chooser.getSelectedFile.getCanonicalPath
+      chooser.getDirectory + chooser.getFile
   }
 
   private def selectedDirectory(chooser: JFileChooser): String = {
