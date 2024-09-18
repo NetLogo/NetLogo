@@ -211,8 +211,17 @@ private class SplitPane(mainComponent: Component, topComponent: Component, comma
   }
 
   override def setBounds(x: Int, y: Int, width: Int, height: Int) {
-    if (dividerLocation > 0 && dividerLocation < maxDividerLocation)
-      dividerLocation = 0.max(dividerLocation + (height - getHeight))
+    if (dividerLocation > 0 && dividerLocation < maxDividerLocation) {
+      orientation match {
+        case JSplitPane.HORIZONTAL_SPLIT =>
+          dividerLocation = 1.max(dividerLocation + (height - getHeight))
+        case JSplitPane.VERTICAL_SPLIT =>
+          dividerLocation = 1.max(dividerLocation + (width - getWidth))
+      }
+    }
+
+    else if (dividerLocation < 0)
+      dividerLocation = 0
 
     super.setBounds(x, y, width, height)
   }
