@@ -38,7 +38,6 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   }
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.output")
-  override def zoomSubcomponents = true
   override def setZoomFactor(zoomFactor: Double) {
     super.setZoomFactor(zoomFactor)
 

@@ -219,10 +219,6 @@ class ViewWidget(workspace: GUIWorkspace)
     view.applyNewFontSize(newFontSize, zoomDiff)
   }
 
-  /// tell the zooming code it's OK to grab our subcomponents and zoom them too
-
-  override def zoomSubcomponents: Boolean = true
-
   /// ViewWidgetInterface
 
   override def asWidget: Widget = this

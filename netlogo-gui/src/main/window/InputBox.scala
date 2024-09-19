@@ -481,7 +481,6 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   override def exportable = true
   override def getDefaultExportName = "export.txt"
   override def hasContextMenu = true
-  override def zoomSubcomponents = true
   override def getMaximumSize = null
 
   protected class NLButton(title:String) extends JButton(title) {

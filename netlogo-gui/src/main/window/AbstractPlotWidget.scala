@@ -176,7 +176,6 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   /// satisfy the usual obligations of top-level widgets
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.plot")
   override def needsPreferredWidthFudgeFactor = false
-  override def zoomSubcomponents = true
   def makeDirty(){
     // yuck! plot calls makeDirty when its being constructed.
     // but canvas isnt created yet.

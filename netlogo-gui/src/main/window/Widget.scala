@@ -61,7 +61,6 @@ abstract class Widget extends JPanel {
   def isNote = false
   def hasContextMenu = false
   def exportable = false
-  def zoomSubcomponents = false
   def setZoomFactor(zoomFactor: Double) {
     this.zoomFactor = zoomFactor
   }

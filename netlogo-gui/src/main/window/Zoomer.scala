@@ -26,8 +26,6 @@ class Zoomer(container: Container) {
   ///
 
   def zoomWidgets(newZoom: Double) {
-    container.setVisible(false) // is this really necessary?
-
     for (component <- container.getComponents) {
       component match {
         case w: WidgetWrapperInterface => zoomWidget(w, false, false, _zoomFactor, newZoom)
@@ -36,8 +34,6 @@ class Zoomer(container: Container) {
     }
 
     _zoomFactor = newZoom
-
-    container.setVisible(true)
   }
 
   def zoomWidget(wrapper: WidgetWrapperInterface, newWidget: Boolean, loadingWidget: Boolean, oldZoom: Double,
@@ -107,14 +103,12 @@ class Zoomer(container: Container) {
    */
   def zoomWidgetFont(wrapper: WidgetWrapperInterface, widget: Widget, newWidget: Boolean, loadingWidget: Boolean,
                      oldZoom: Double, newZoom: Double) {
-    val recursive = widget.zoomSubcomponents
-
-    if (fonts.get(widget).isEmpty)
-      storeComponentFont(widget, recursive, newWidget, loadingWidget, oldZoom)
+    if (!fonts.contains(widget))
+      storeComponentFont(widget, true, newWidget, loadingWidget, oldZoom)
     
-    scaleComponentFont(widget, newZoom, oldZoom, recursive)
+    scaleComponentFont(widget, newZoom, oldZoom, true)
 
-    if (wrapper != null && recursive)
+    if (wrapper != null)
       wrapper.validate()
   }
 
@@ -125,9 +119,9 @@ class Zoomer(container: Container) {
     // font sizes are so small that rounding error will mess us up unless we
     // always scale from the normal, unzoomed size
     if ((!(component.isInstanceOf[ViewWidgetInterface]) || !newWidget || loadingWidget) &&
-        fonts.get(component).isEmpty) {
+        !fonts.contains(component)) {
       fonts += ((component, component.getFont))
-      fontZooms += ((component,oldZoom))
+      fontZooms += ((component, oldZoom))
     }
 
     if (recursive) {
@@ -141,9 +135,9 @@ class Zoomer(container: Container) {
   }
 
   def scaleComponentFont(component: Component, newZoom: Double, oldZoom: Double, recursive: Boolean) {
-    if (fonts.get(component).isEmpty)
+    if (!fonts.contains(component))
       storeComponentFont(component, recursive, false, false, oldZoom)
-
+    
     component.invalidate()
     component.setFont(component.getFont.deriveFont(
       (fonts(component).getSize * newZoom / fontZooms(component)).ceil.toFloat))
