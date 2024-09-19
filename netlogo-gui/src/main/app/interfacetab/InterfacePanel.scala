@@ -99,6 +99,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     addActionListener(this)
 
     override def actionPerformed(e: ActionEvent): Unit = {
+      unselectWidgets()
       WidgetActions.addWidget(InterfacePanel.this, coreWidget, x, y)
     }
   }
