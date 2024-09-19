@@ -70,9 +70,9 @@ class MonitorWidget(random: MersenneTwisterFast)
     override def paintComponent(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
       g2d.setColor(Color.WHITE)
-      g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
+      g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
       g2d.setColor(InterfaceColors.MONITOR_BORDER)
-      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
       super.paintComponent(g)
     }
   }

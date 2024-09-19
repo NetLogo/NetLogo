@@ -40,6 +40,8 @@ abstract class Widget extends JPanel {
   protected val preserveWidgetSizes = Preferences.userRoot.node("/org/nlogo/NetLogo")
                                                  .getBoolean("preserveWidgetSizes", true)
 
+  protected var zoomFactor = 1.0
+
   def widgetWrapperOpaque = true
   def getEditable: Object = this
   def copyable = true // only OutputWidget and ViewWidget are not copyable
@@ -60,6 +62,9 @@ abstract class Widget extends JPanel {
   def hasContextMenu = false
   def exportable = false
   def zoomSubcomponents = false
+  def setZoomFactor(zoomFactor: Double) {
+    this.zoomFactor = zoomFactor
+  }
   def getDefaultExportName = "output.txt"
   def updateConstraints(): Unit = {}
   def classDisplayName: String = getClass.getName
@@ -116,7 +121,7 @@ abstract class Widget extends JPanel {
   override def paintComponent(g: Graphics): Unit = {
     val g2d = Utils.initGraphics2D(g)
     g2d.setColor(backgroundColor)
-    g2d.fillRoundRect(0, 0, getWidth, getHeight, 12, 12)
+    g2d.fillRoundRect(0, 0, getWidth, getHeight, (12 * zoomFactor).toInt, (12 * zoomFactor).toInt)
     super.paintComponent(g)
   }
 

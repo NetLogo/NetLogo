@@ -79,6 +79,7 @@ public class Zoomer {
     if (!newWidget || loadingWidget) {
       wrapper.setSize(zoomSize(originalSize, originalZoom.doubleValue(), newZoom));
     }
+    wrapper.widget().setZoomFactor(newZoom);
   }
 
   public java.awt.Dimension zoomSize(java.awt.Dimension originalSize, double oldZoom, double newZoom) {

@@ -166,9 +166,9 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     override def paintComponent(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
       g2d.setColor(Color.WHITE)
-      g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
+      g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
       g2d.setColor(InterfaceColors.CHOOSER_BORDER)
-      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
       super.paintComponent(g)
     }
   }

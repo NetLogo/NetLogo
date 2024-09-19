@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import javax.swing.{ JLabel, JPanel, SwingConstants }
-import java.awt.{ BasicStroke, Color, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Color, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.image.BufferedImage
 
 import org.nlogo.api.Editable
@@ -40,12 +40,9 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     override def paintComponent(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
       g2d.setColor(Color.WHITE)
-      g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
-      val stroke = g2d.getStroke
-      g2d.setStroke(new BasicStroke(1))
+      g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
       g2d.setColor(InterfaceColors.PLOT_BORDER)
-      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
-      g2d.setStroke(stroke)
+      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
       super.paintComponent(g)
     }
   }

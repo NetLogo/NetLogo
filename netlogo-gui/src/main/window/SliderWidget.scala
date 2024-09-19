@@ -61,19 +61,20 @@ trait AbstractSliderWidget extends MultiErrorWidget {
 
     override def paintTrack(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
+      val thickness = (6 * zoomFactor).toInt
       if (vertical) {
-        val startX = trackRect.x + trackRect.width / 2 - 3
+        val startX = trackRect.x + trackRect.width / 2 - thickness / 2
         g2d.setColor(InterfaceColors.SLIDER_BAR_BACKGROUND_FILLED)
-        g2d.fillRoundRect(startX, thumbRect.y, 6, trackRect.height - thumbRect.y, 6, 6)
+        g2d.fillRoundRect(startX, thumbRect.y, thickness, trackRect.height - thumbRect.y, thickness, thickness)
         g2d.setColor(InterfaceColors.SLIDER_BAR_BACKGROUND)
-        g2d.fillRoundRect(startX, trackRect.y, 6, thumbRect.y, 6, 6)
+        g2d.fillRoundRect(startX, trackRect.y, thickness, thumbRect.y, thickness, thickness)
       }
       else {
-        val startY = trackRect.y + trackRect.height / 2 - 3
+        val startY = trackRect.y + trackRect.height / 2 - thickness / 2
         g2d.setColor(InterfaceColors.SLIDER_BAR_BACKGROUND_FILLED)
-        g2d.fillRoundRect(trackRect.x, startY, thumbRect.x, 6, 6, 6)
+        g2d.fillRoundRect(trackRect.x, startY, thumbRect.x, thickness, thickness, thickness)
         g2d.setColor(InterfaceColors.SLIDER_BAR_BACKGROUND)
-        g2d.fillRoundRect(thumbRect.x, startY, trackRect.width - thumbRect.x, 6, 6, 6)
+        g2d.fillRoundRect(thumbRect.x, startY, trackRect.width - thumbRect.x, thickness, thickness, thickness)
       }
     }
 
@@ -96,24 +97,26 @@ trait AbstractSliderWidget extends MultiErrorWidget {
         }
       }
       if (vertical) {
-        val startX = getThumbSize.width / 2 - getThumbSize.height / 2
-        g2d.setColor(InterfaceColors.SLIDER_THUMB_BORDER)
-        g2d.fillOval(startX, thumbRect.y, getThumbSize.height, getThumbSize.height)
+        val height = (getThumbSize.height * zoomFactor).toInt
+        val startX = thumbRect.getCenterX.toInt - height / 2
         if (pressed)
           g2d.setColor(InterfaceColors.SLIDER_THUMB_BACKGROUND_PRESSED)
         else
           g2d.setColor(InterfaceColors.SLIDER_THUMB_BACKGROUND)
-        g2d.fillOval(startX + 1, thumbRect.y + 1, getThumbSize.height - 2, getThumbSize.height - 2)
+        g2d.fillOval(startX, thumbRect.y + thumbRect.height / 2 - height / 2, height, height)
+        g2d.setColor(InterfaceColors.SLIDER_THUMB_BORDER)
+        g2d.drawOval(startX, thumbRect.y + thumbRect.height / 2 - height / 2, height - 1, height - 1)
       }
       else {
-        val startY = getThumbSize.height / 2 - getThumbSize.width / 2
-        g2d.setColor(InterfaceColors.SLIDER_THUMB_BORDER)
-        g2d.fillOval(thumbRect.x, startY, getThumbSize.width, getThumbSize.width)
+        val width = (getThumbSize.width * zoomFactor).toInt
+        val startY = thumbRect.getCenterY.toInt - width / 2
         if (pressed)
           g2d.setColor(InterfaceColors.SLIDER_THUMB_BACKGROUND_PRESSED)
         else
           g2d.setColor(InterfaceColors.SLIDER_THUMB_BACKGROUND)
-        g2d.fillOval(thumbRect.x + 1, startY + 1, getThumbSize.width - 2, getThumbSize.width - 2)
+        g2d.fillOval(thumbRect.x + thumbRect.width / 2 - width / 2, startY, width, width)
+        g2d.setColor(InterfaceColors.SLIDER_THUMB_BORDER)
+        g2d.drawOval(thumbRect.x + thumbRect.width / 2 - width / 2, startY, width - 1, width - 1)
       }
     }
 
@@ -224,9 +227,9 @@ trait AbstractSliderWidget extends MultiErrorWidget {
         g2d.rotate(-Pi / 2)
       }
       g2d.setColor(InterfaceColors.INPUT_BORDER)
-      g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
+      g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
       g2d.setColor(Color.WHITE)
-      g2d.fillRoundRect(1, 1, getWidth - 2, getHeight - 2, 6, 6)
+      g2d.fillRoundRect(1, 1, getWidth - 2, getHeight - 2, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
       super.paintComponent(g)
     }
   }
@@ -348,7 +351,8 @@ trait AbstractSliderWidget extends MultiErrorWidget {
                                 nameComponent.getPreferredSize.height)
         valueComponent.setBounds(0, valueComponent.getPreferredSize.width + 6, valueComponent.getPreferredSize.width,
                                  valueComponent.getPreferredSize.height)
-        slider.setBounds(getWidth - slider.getPreferredSize.width, 0, slider.getPreferredSize.width, getHeight)
+        slider.setBounds(getWidth - (slider.getPreferredSize.width * zoomFactor).toInt, 0,
+                         (slider.getPreferredSize.width * zoomFactor).toInt, getHeight)
       }
 
       else {
@@ -357,7 +361,8 @@ trait AbstractSliderWidget extends MultiErrorWidget {
                                 nameComponent.getPreferredSize.height)
         valueComponent.setBounds(getWidth - valueComponent.getPreferredSize.width - 6, 0,
                                  valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
-        slider.setBounds(0, getHeight - slider.getPreferredSize.height, getWidth, slider.getPreferredSize.height)
+        slider.setBounds(0, getHeight - (slider.getPreferredSize.height * zoomFactor).toInt, getWidth,
+                         (slider.getPreferredSize.height * zoomFactor).toInt)
       }
     }
 

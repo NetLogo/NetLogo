@@ -30,6 +30,8 @@ import OutputArea._
 class OutputArea(val text: JTextArea) extends JPanel {
   setOpaque(false)
 
+  var zoomFactor = 1.0
+
   private val scrollPane: JScrollPane =
     new JScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
@@ -92,9 +94,9 @@ class OutputArea(val text: JTextArea) extends JPanel {
   override def paintComponent(g: Graphics) {
     val g2d = Utils.initGraphics2D(g)
     g2d.setColor(Color.WHITE)
-    g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
+    g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
     g2d.setColor(InterfaceColors.OUTPUT_BORDER)
-    g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+    g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
     super.paintComponent(g)
   }
 

@@ -2,8 +2,8 @@
 
 package org.nlogo.window
 
-import java.awt.{ BasicStroke, Color, Component, Dimension, Font, Frame, Graphics, GridBagConstraints, GridBagLayout,
-                  Insets, LinearGradientPaint }
+import java.awt.{ Color, Component, Dimension, Font, Frame, Graphics, GridBagConstraints, GridBagLayout, Insets,
+                  LinearGradientPaint }
 import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, MouseEvent, MouseAdapter,
                         WindowAdapter, WindowEvent }
 import javax.swing.{ AbstractAction, JButton, JDialog, JLabel, JPanel, JScrollPane, ScrollPaneConstants }
@@ -68,9 +68,9 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     override def paintComponent(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
       g2d.setColor(color)
-      g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
+      g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
       g2d.setColor(InterfaceColors.INPUT_BORDER)
-      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
       super.paintComponent(g)
     }
   }
@@ -117,12 +117,9 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       textArea.setSize(scrollPane.getWidth - 10, scrollPane.getHeight)
       val g2d = Utils.initGraphics2D(g)
       g2d.setColor(Color.WHITE)
-      g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
-      val stroke = g2d.getStroke
-      g2d.setStroke(new BasicStroke(1))
+      g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
       g2d.setColor(InterfaceColors.INPUT_BORDER)
-      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
-      g2d.setStroke(stroke)
+      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
       super.paintComponent(g)
     }
   }

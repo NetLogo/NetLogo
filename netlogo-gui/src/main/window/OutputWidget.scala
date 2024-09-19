@@ -39,6 +39,11 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.output")
   override def zoomSubcomponents = true
+  override def setZoomFactor(zoomFactor: Double) {
+    super.setZoomFactor(zoomFactor)
+
+    outputArea.zoomFactor = zoomFactor
+  }
   override def exportable = true
   override def getDefaultExportName = "output.txt"
   def valueText: String = outputArea.text.getText
