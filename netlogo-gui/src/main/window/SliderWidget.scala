@@ -443,7 +443,11 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   override def paintComponent(g: Graphics) {
     backgroundColor = InterfaceColors.SLIDER_BACKGROUND
 
-    nameComponent.setForeground(InterfaceColors.WIDGET_TEXT)
+    if (anyErrors)
+      nameComponent.setForeground(InterfaceColors.WIDGET_TEXT_ERROR)
+    else
+      nameComponent.setForeground(InterfaceColors.WIDGET_TEXT)
+
     valueComponent.setForeground(InterfaceColors.WIDGET_TEXT)
 
     super.paintComponent(g)
@@ -537,16 +541,6 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
 
   override def updateConstraints() {
     new AddSliderConstraintEvent(this, name, minimumCode, maximumCode, incrementCode, defaultValue).raise(this)
-  }
-
-  override def error(key: Object, e: Exception): Unit = {
-    super.error(key, e)
-    setForeground(java.awt.Color.RED)
-  }
-
-  override def removeAllErrors() = {
-    super.removeAllErrors()
-    setForeground(java.awt.Color.BLACK)
   }
 
   // EVENT HANDLING

@@ -441,7 +441,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
       if (error == null)
         InterfaceColors.BUTTON_TEXT
       else
-        InterfaceColors.BUTTON_TEXT_ERROR)
+        InterfaceColors.WIDGET_TEXT_ERROR)
     foreverLabel.setIcon(FOREVER_GRAPHIC)
 
     if (disabledWaitingForSetup) {

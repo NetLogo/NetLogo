@@ -35,6 +35,8 @@ object InterfaceColors {
       case "classic" => Color.BLACK
       case "light" => new Color(85, 87, 112)
     }
+  
+  def WIDGET_TEXT_ERROR = Color.RED
 
   def WIDGET_HOVER_SHADOW = new Color(75, 75, 75)
 
@@ -89,8 +91,6 @@ object InterfaceColors {
       case "classic" => Color.BLACK
       case "light" => new Color(154, 154, 154)
     }
-
-  def BUTTON_TEXT_ERROR = Color.RED
 
   def SLIDER_BACKGROUND =
     theme match {

@@ -300,7 +300,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   }
 
   protected def recolor() {
-    nameLabel.setForeground(if(anyErrors) java.awt.Color.RED else InterfaceColors.WIDGET_TEXT)
+    nameLabel.setForeground(if(anyErrors) InterfaceColors.WIDGET_TEXT_ERROR else InterfaceColors.WIDGET_TEXT)
   }
 
   def handle(e: AfterLoadEvent){
