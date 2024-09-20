@@ -11,7 +11,7 @@ import javax.swing.plaf.basic.BasicSliderUI
 import javax.swing.text.{ AttributeSet, PlainDocument }
 
 import org.nlogo.agent.SliderConstraint
-import org.nlogo.api.{ Dump, Editable, MersenneTwisterFast }
+import org.nlogo.api.{ CompilerServices, Dump, Editable, MersenneTwisterFast }
 import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical }
 import org.nlogo.swing.Utils
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent,
@@ -455,13 +455,14 @@ trait AbstractSliderWidget extends MultiErrorWidget {
 }
 
 
-class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) extends MultiErrorWidget with
-        AbstractSliderWidget with InterfaceGlobalWidget with Editable with
-        org.nlogo.window.Events.PeriodicUpdateEvent.Handler with org.nlogo.window.Events.AfterLoadEvent.Handler {
+class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
+                   compiler: CompilerServices)
+  extends MultiErrorWidget with AbstractSliderWidget with InterfaceGlobalWidget with Editable
+  with PeriodicUpdateEvent.Handler with AfterLoadEvent.Handler {
 
   type WidgetModel = CoreSlider
 
-  def this(random: MersenneTwisterFast) = this (false, random)
+  def this(random: MersenneTwisterFast, compiler: CompilerServices) = this(false, random, compiler)
 
   var minimumCode: String = "0"
   var maximumCode: String = "100"
@@ -469,6 +470,17 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast) ext
   var defaultValue = 1d
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.slider")
   override def propertySet = Properties.slider
+
+  override def invalidSettings: Seq[(String, String)] = {
+    if (checkRecursive(compiler, minimumCode, name))
+      Seq((I18N.gui.get("edit.slider.minimum"), I18N.gui.get("edit.general.recursive")))
+    else if (checkRecursive(compiler, maximumCode, name))
+      Seq((I18N.gui.get("edit.slider.maximum"), I18N.gui.get("edit.general.recursive")))
+    else if (checkRecursive(compiler, incrementCode, name))
+      Seq((I18N.gui.get("edit.slider.increment"), I18N.gui.get("edit.general.recursive")))
+    else
+      Nil
+  }
 
   // VALUE RELATED METHODS
   def valueObject: Object = value.asInstanceOf[AnyRef]

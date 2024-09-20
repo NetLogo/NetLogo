@@ -7,8 +7,8 @@ import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, Point,
 import java.util.prefs.Preferences
 import javax.swing.{ JPanel, JMenuItem, JPopupMenu }
 
-import org.nlogo.api.{ MultiErrorHandler, SingleErrorHandler }
-import org.nlogo.core.{ Widget => CoreWidget }
+import org.nlogo.api.{ CompilerServices, MultiErrorHandler, SingleErrorHandler }
+import org.nlogo.core.{ TokenType, Widget => CoreWidget }
 import org.nlogo.swing.Utils
 import org.nlogo.window.Events.{ WidgetAddedEvent, WidgetEditedEvent, WidgetRemovedEvent }
 
@@ -189,6 +189,9 @@ abstract class Widget extends JPanel {
   def raiseWidgetAdded(): Unit = {
     new WidgetAddedEvent(this).raise(this)
   }
+
+  protected def checkRecursive(compiler: CompilerServices, source: String, name: String): Boolean =
+    compiler.tokenizeForColorization(source).exists(token => token.tpe == TokenType.Ident && token.text == name)
 
   implicit class RichStringOption(s: Option[String]) {
     def optionToPotentiallyEmptyString = s.getOrElse("")
