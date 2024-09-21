@@ -10,7 +10,7 @@ import org.nlogo.api.Editable
 import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot }
 import org.nlogo.plot.{ PlotManagerInterface, PlotLoader, PlotPen, Plot }
 import org.nlogo.swing.{ Utils, VTextIcon }
-import org.nlogo.window.Events.{WidgetRemovedEvent, AfterLoadEvent}
+import org.nlogo.window.Events.{ WidgetRemovedEvent, AfterLoadEvent, WidgetErrorEvent }
 
 abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInterface)
         extends Widget with Editable with Plot.DirtyListener with
@@ -300,7 +300,14 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   }
 
   protected def recolor() {
-    nameLabel.setForeground(if(anyErrors) InterfaceColors.WIDGET_TEXT_ERROR else InterfaceColors.WIDGET_TEXT)
+    nameLabel.setForeground(if (anyErrors) InterfaceColors.WIDGET_TEXT_ERROR else InterfaceColors.WIDGET_TEXT)
+
+    if (error("setupCode") != null)
+      new WidgetErrorEvent(this, error("setupCode")).raise(this)
+    else if (error("updateCode") != null)
+      new WidgetErrorEvent(this, error("updateCode")).raise(this)
+    else
+      new WidgetErrorEvent(this, null).raise(this)
   }
 
   def handle(e: AfterLoadEvent){

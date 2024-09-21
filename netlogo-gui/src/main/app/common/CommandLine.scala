@@ -161,7 +161,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
     if (e.sourceOwner == this) {
       error(e.error)
 
-      error match {
+      error() match {
         case err: CompilerException =>
           val offset = headerSource.length
           // highlight error location

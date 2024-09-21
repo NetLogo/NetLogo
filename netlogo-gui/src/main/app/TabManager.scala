@@ -21,14 +21,17 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ Printable, PrinterManager, UserAction }
 import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, CompileAllEvent, CompiledEvent,
                                  ExternalFileSavedEvent, LoadBeginEvent, LoadErrorEvent, LoadModelEvent,
-                                 ModelSavedEvent, RuntimeErrorEvent }
-import org.nlogo.window.{ ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget }
+                                 ModelSavedEvent, RuntimeErrorEvent, WidgetErrorEvent, WidgetRemovedEvent }
+import org.nlogo.window.{ ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget, Widget }
+
+import scala.collection.mutable.Set
 
 class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
                  val externalFileManager: ExternalFileManager)
   extends TabsInterface with AboutToCloseFilesEvent.Handler with AboutToSaveModelEvent.Handler
   with CompiledEvent.Handler with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler
-  with LoadErrorEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler {
+  with LoadErrorEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler
+  with WidgetErrorEvent.Handler with WidgetRemovedEvent.Handler {
 
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
@@ -47,6 +50,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   var fileManager: FileManager = null
   var dirtyMonitor: DirtyMonitor = null
   var menuBar: MenuBar = null
+
+  private val widgetErrors = Set[Widget]()
 
   private var smartTabbing = true
 
@@ -601,6 +606,16 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     tab.selectError(e.pos, e.pos + e.length)
   }
 
+  def recolorTab(tab: Component, hasError: Boolean) {
+    if (separateTabsWindow.isVisible && tab.isInstanceOf[CodeTab])
+      separateTabs.setError(separateTabs.indexOfComponent(tab), hasError)
+    else
+      mainTabs.setError(mainTabs.indexOfComponent(tab), hasError)
+    
+    if (hasError && focusOnError)
+      setSelectedTab(tab)
+  }
+
   def handle(e: CompiledEvent) {
     def clearErrors() {
       if (separateTabsWindow.isVisible) {
@@ -612,16 +627,6 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         for (i <- 0 until mainTabs.getTabCount)
           mainTabs.setError(i, false)
       }
-    }
-
-    def recolorTab(tab: Component, hasError: Boolean): Unit = {
-      if (separateTabsWindow.isVisible && tab.isInstanceOf[CodeTab])
-        separateTabs.setError(separateTabs.indexOfComponent(tab), hasError)
-      else
-        mainTabs.setError(mainTabs.indexOfComponent(tab), hasError)
-      
-      if (hasError && focusOnError)
-        setSelectedTab(tab)
     }
 
     e.sourceOwner match {
@@ -651,6 +656,25 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
     mainTabs.repaint()
     separateTabs.repaint()
+  }
+
+  def handle(e: WidgetErrorEvent) {
+    if (e.error == null)
+      widgetErrors -= e.widget
+    else
+      widgetErrors += e.widget
+    
+    recolorTab(interfaceTab, widgetErrors.nonEmpty)
+
+    mainTabs.repaint()
+  }
+
+  def handle(e: WidgetRemovedEvent) {
+    widgetErrors -= e.widget
+
+    recolorTab(interfaceTab, widgetErrors.nonEmpty)
+
+    mainTabs.repaint()
   }
 
   def handle(e: AboutToSaveModelEvent) {

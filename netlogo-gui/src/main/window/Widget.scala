@@ -10,7 +10,7 @@ import javax.swing.{ JPanel, JMenuItem, JPopupMenu }
 import org.nlogo.api.{ CompilerServices, MultiErrorHandler, SingleErrorHandler }
 import org.nlogo.core.{ TokenType, Widget => CoreWidget }
 import org.nlogo.swing.Utils
-import org.nlogo.window.Events.{ WidgetAddedEvent, WidgetEditedEvent, WidgetRemovedEvent }
+import org.nlogo.window.Events.{ WidgetAddedEvent, WidgetEditedEvent, WidgetErrorEvent, WidgetRemovedEvent }
 
 object Widget {
   trait LoadHelper {
@@ -21,8 +21,33 @@ object Widget {
   def validWidgetType(name:String) = validWidgetTypes.contains(name)
 }
 
-abstract class SingleErrorWidget extends Widget with SingleErrorHandler
-abstract class MultiErrorWidget extends Widget with MultiErrorHandler
+abstract class SingleErrorWidget extends Widget with SingleErrorHandler {
+  override def error(e: Exception) {
+    super.error(e)
+
+    new WidgetErrorEvent(this, e).raise(this)
+  }
+
+  override def error(key: Object, e: Exception) {
+    super.error(key, e)
+
+    new WidgetErrorEvent(this, e).raise(this)
+  }
+}
+
+abstract class MultiErrorWidget extends Widget with MultiErrorHandler {
+  override def removeAllErrors() {
+    super.removeAllErrors()
+
+    new WidgetErrorEvent(this, null).raise(this)
+  }
+
+  override def error(key: Object, e: Exception) {
+    super.error(key, e)
+
+    new WidgetErrorEvent(this, e).raise(this)
+  }
+}
 
 abstract class Widget extends JPanel {
 

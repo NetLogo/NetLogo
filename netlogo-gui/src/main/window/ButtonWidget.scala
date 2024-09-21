@@ -201,7 +201,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   }
 
   def keyTriggered(){
-    if (error == null){
+    if (error() == null){
       buttonUp = false
       respondToClick(true)
     }
@@ -218,7 +218,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   private var lastMousePressedWasPopupTrigger = false
 
   def mouseReleased(e:MouseEvent){
-    if (error == null && ! e.isPopupTrigger() && isEnabled() &&
+    if (error() == null && ! e.isPopupTrigger() && isEnabled() &&
             ! lastMousePressedWasPopupTrigger && ! disabledWaitingForSetup){
       e.translatePoint(getX(), getY())
       respondToClick(getBounds().contains(e.getPoint()))
@@ -231,7 +231,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     if(disabledWaitingForSetup){
       buttonUp = true
     }
-    else if (error == null) {
+    else if (error() == null) {
       if (forever) {
         if (inBounds) {
           foreverOn = !foreverOn
@@ -250,11 +250,11 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   def mousePressed(e: MouseEvent) {
     new Events.InputBoxLoseFocusEvent().raise(this)
     lastMousePressedWasPopupTrigger = e.isPopupTrigger()
-    if (error == null && !e.isPopupTrigger && hasButton1(e) && isEnabled && !disabledWaitingForSetup) buttonUp = false
+    if (error() == null && !e.isPopupTrigger && hasButton1(e) && isEnabled && !disabledWaitingForSetup) buttonUp = false
   }
 
   def mouseDragged(e: MouseEvent) {
-    if (error == null){
+    if (error() == null){
       if (hasButton1(e) && isEnabled) {
         e.translatePoint(getX(), getY())
         if (getBounds().contains(e.getPoint()) && !e.isPopupTrigger && ! disabledWaitingForSetup) buttonUp = false
@@ -275,7 +275,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   def mouseMoved(e: MouseEvent) {}
   def mouseClicked(e: MouseEvent) {
-    if (!e.isPopupTrigger() && error != null && !lastMousePressedWasPopupTrigger && hasButton1(e))
+    if (!e.isPopupTrigger() && error() != null && !lastMousePressedWasPopupTrigger && hasButton1(e))
       new Events.EditWidgetEvent(this).raise(this)
   }
 
@@ -301,7 +301,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   }
 
   def action() {
-    if (error == null) {
+    if (error() == null) {
       // warning, confusing code ahead. not sure if there's a
       // clearer way to write this hard to know without trying.
       // it looks like maybe the forever button and the once button
@@ -438,7 +438,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
     keyLabel.setForeground(InterfaceColors.BUTTON_TEXT)
     nameLabel.setForeground(
-      if (error == null)
+      if (error() == null)
         InterfaceColors.BUTTON_TEXT
       else
         InterfaceColors.WIDGET_TEXT_ERROR)
@@ -466,7 +466,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
         else
           InterfaceColors.BUTTON_BACKGROUND_PRESSED
       keyLabel.setForeground(InterfaceColors.BUTTON_TEXT_PRESSED)
-      if (error == null)
+      if (error() == null)
         nameLabel.setForeground(InterfaceColors.BUTTON_TEXT_PRESSED)
     }
     
