@@ -2,7 +2,7 @@
 
 package org.nlogo.editor
 
-import java.awt.event.{ MouseAdapter, MouseEvent }
+import java.awt.event.{ KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ Action, JMenu, JPopupMenu }
 import javax.swing.text.EditorKit
 
@@ -72,14 +72,20 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   // with this editor area
   def setSelection(s: Boolean): Unit = { }
 
-  override def select(start: Int, end: Int) {
+  def selectError(start: Int, end: Int) {
     setSelectionColor(AbstractEditorArea.ERROR_HIGHLIGHT)
 
-    super.select(start, end)
+    select(start, end)
   }
 
   addMouseListener(new MouseAdapter {
     override def mousePressed(e: MouseEvent) {
+      setSelectionColor(defaultSelectionColor)
+    }
+  })
+
+  addKeyListener(new KeyAdapter {
+    override def keyPressed(e: KeyEvent) {
       setSelectionColor(defaultSelectionColor)
     }
   })

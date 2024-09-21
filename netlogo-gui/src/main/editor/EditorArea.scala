@@ -10,7 +10,7 @@ package org.nlogo.editor
 
 import java.awt.{ Component, Dimension, Point, Toolkit }
 import java.awt.datatransfer.DataFlavor
-import java.awt.event.{ FocusListener, KeyEvent, MouseAdapter, MouseEvent }
+import java.awt.event.{ FocusListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ Action, JMenuItem, JEditorPane, JPopupMenu }
 import javax.swing.text.{ Document, TextAction, PlainDocument, BadLocationException }
 
@@ -145,14 +145,20 @@ class EditorArea(val configuration: EditorConfiguration)
     _selectionActive = s
   }
 
-  override def select(start: Int, end: Int) {
+  def selectError(start: Int, end: Int) {
     setSelectionColor(AbstractEditorArea.ERROR_HIGHLIGHT)
 
-    super.select(start, end)
+    select(start, end)
   }
 
   addMouseListener(new MouseAdapter {
     override def mousePressed(e: MouseEvent) {
+      setSelectionColor(defaultSelectionColor)
+    }
+  })
+
+  addKeyListener(new KeyAdapter {
+    override def keyPressed(e: KeyEvent) {
       setSelectionColor(defaultSelectionColor)
     }
   })

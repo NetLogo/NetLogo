@@ -166,7 +166,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
           val offset = headerSource.length
           // highlight error location
 
-          textField.select(err.start - offset, err.end - offset)
+          textField.selectError(err.start - offset, err.end - offset)
           // print error message
           new WindowEvents.OutputEvent(false,
             new OutputObject("", "ERROR: " + err.getMessage(), true, true),

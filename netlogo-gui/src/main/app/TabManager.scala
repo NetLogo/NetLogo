@@ -598,7 +598,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   def highlightRuntimeError(tab: CodeTab, e: RuntimeErrorEvent) {
     setSelectedTab(tab)
 
-    tab.select(e.pos, e.pos + e.length)
+    tab.selectError(e.pos, e.pos + e.length)
   }
 
   def handle(e: CompiledEvent) {

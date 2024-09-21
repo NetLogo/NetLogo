@@ -211,6 +211,8 @@ with MenuTab {
 
   def select(start: Int, end: Int) = text.select(start, end)
 
+  def selectError(start: Int, end: Int) = text.selectError(start, end)
+
   def classDisplayName = "Code"
 
   @throws(classOf[IOException])
