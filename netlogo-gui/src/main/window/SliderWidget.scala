@@ -5,6 +5,7 @@ package org.nlogo.window
 import java.awt.{ Color, Dimension, Graphics, Point, RadialGradientPaint }
 import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, MouseAdapter, MouseEvent,
                         MouseMotionAdapter }
+import java.lang.NumberFormatException
 import javax.swing.{ BorderFactory, JLabel, JSlider, JTextField, SwingConstants }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.plaf.basic.BasicSliderUI
@@ -472,18 +473,24 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
   override def propertySet = Properties.slider
 
   override def invalidSettings: Seq[(String, String)] = {
-    if (minimumCode.toDouble >= maximumCode.toDouble)
-      Seq((I18N.gui.get("edit.slider.maximum"), I18N.gui.get("edit.slider.invalidBounds")))
-    else if (incrementCode.toDouble > maximumCode.toDouble - minimumCode.toDouble)
-      Seq((I18N.gui.get("edit.slider.increment"), I18N.gui.get("edit.slider.invalidIncrement")))
-    else if (checkRecursive(compiler, minimumCode, name))
-      Seq((I18N.gui.get("edit.slider.minimum"), I18N.gui.get("edit.general.recursive")))
-    else if (checkRecursive(compiler, maximumCode, name))
-      Seq((I18N.gui.get("edit.slider.maximum"), I18N.gui.get("edit.general.recursive")))
-    else if (checkRecursive(compiler, incrementCode, name))
-      Seq((I18N.gui.get("edit.slider.increment"), I18N.gui.get("edit.general.recursive")))
-    else
-      Nil
+    try {
+      if (checkRecursive(compiler, minimumCode, name))
+        return Seq((I18N.gui.get("edit.slider.minimum"), I18N.gui.get("edit.general.recursive")))
+      else if (checkRecursive(compiler, maximumCode, name))
+        return Seq((I18N.gui.get("edit.slider.maximum"), I18N.gui.get("edit.general.recursive")))
+      else if (checkRecursive(compiler, incrementCode, name))
+        return Seq((I18N.gui.get("edit.slider.increment"), I18N.gui.get("edit.general.recursive")))
+      else if (minimumCode.toDouble >= maximumCode.toDouble)
+        return Seq((I18N.gui.get("edit.slider.maximum"), I18N.gui.get("edit.slider.invalidBounds")))
+      else if (incrementCode.toDouble > maximumCode.toDouble - minimumCode.toDouble)
+        return Seq((I18N.gui.get("edit.slider.increment"), I18N.gui.get("edit.slider.invalidIncrement")))
+    }
+
+    catch {
+      case e: NumberFormatException =>
+    }
+    
+    Nil
   }
 
   // VALUE RELATED METHODS
