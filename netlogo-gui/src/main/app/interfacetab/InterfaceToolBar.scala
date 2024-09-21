@@ -4,7 +4,6 @@ package org.nlogo.app.interfacetab
 
 import java.awt.{ Color, Frame, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import java.util.{ HashSet => JHashSet }
 import javax.swing.{ Action, AbstractAction, JLabel, JMenuItem, JPanel, JPopupMenu, SwingConstants }
 
 import org.nlogo.api.Editable
@@ -26,9 +25,12 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   with WindowEvents.WidgetRemovedEvent.Handler
   with AppEvents.WidgetSelectedEvent.Handler
   with WindowEvents.LoadBeginEvent.Handler
-  with WindowEvents.EditWidgetEvent.Handler {
+  with WindowEvents.EditWidgetEvent.Handler
+  with WindowEvents.WidgetAddedEvent.Handler {
 
   private val selectedObjects = new HashSet[Widget]
+  private val deleteableObjects = new HashSet[Widget]
+
   private val editAction = new EditAction
   private val editButton = new ToolBarActionButton(editAction)
   private val deleteAction = new DeleteAction
@@ -148,28 +150,46 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     }
   }
 
-  private val deleteableObjects = new JHashSet[Widget]
+  private def updateActions(widget: Widget) {
+    if (wPanel.getWrapper(widget).selected) {
+      selectedObjects += widget
 
-  final def handle(e: AppEvents.WidgetSelectedEvent) {
-    val w = e.widget
-    if(wPanel.getWrapper(w).selected) {
-      if(!selectedObjects.contains(w)) selectedObjects.add(w)
-      if(w.deleteable && !deleteableObjects.contains(w)) deleteableObjects.add(w)
+      if (widget.deleteable)
+        deleteableObjects += widget
     }
+
     else {
-      selectedObjects.remove(w)
-      deleteableObjects.remove(w)
+      selectedObjects -= widget
+      deleteableObjects -= widget
     }
-    if(selectedObjects.size != 1) {
+
+    updateTarget(widget)
+
+    deleteAction.setEnabled(deleteableObjects.nonEmpty)
+  }
+
+  private def updateTarget(widget: Widget) {
+    if (selectedObjects.size == 1) {
+      editTarget = Some(widget.getEditable).collect { case editable: Editable => editable }
+      editAction.setEnabled(editTarget.isDefined)
+    }
+
+    else {
       editTarget = None
       editAction.setEnabled(false)
     }
-    deleteAction.setEnabled(!deleteableObjects.isEmpty)
+  }
+
+  def handle(e: WindowEvents.WidgetAddedEvent) {
+    updateActions(e.widget.asInstanceOf[Widget])
+  }
+
+  final def handle(e: AppEvents.WidgetSelectedEvent) {
+    updateActions(e.widget)
   }
 
   def handle(e: WindowEvents.WidgetForegroundedEvent) {
-    editTarget = Some(e.widget.getEditable).collect{case editable: Editable => editable}
-    editAction.setEnabled(editTarget.isDefined && selectedObjects.size == 1)
+    updateTarget(e.widget)
   }
 
   def getItems: Array[JMenuItem] = WidgetInfos.map(spec => new JMenuItem(spec.displayName, spec.icon)).toArray
