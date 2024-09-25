@@ -64,12 +64,6 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   locally {
     val c = new GridBagConstraints
 
-    c.gridwidth = 1
-    c.gridheight = 1
-    c.weightx = 0.0
-    c.weighty = 0.0
-    c.fill = GridBagConstraints.NONE
-
     //ROW1
     //-----------------------------------------
     c.insets =
@@ -81,8 +75,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     c.gridx = 0
     c.gridy = 0
     c.gridwidth = 2
-    c.anchor = GridBagConstraints.NORTHWEST
-    c.fill = GridBagConstraints.HORIZONTAL
+    c.anchor = GridBagConstraints.CENTER
 
     add(nameLabel, c)
 
