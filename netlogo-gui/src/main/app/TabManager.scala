@@ -659,14 +659,25 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   }
 
   def handle(e: WidgetErrorEvent) {
-    if (e.error == null)
-      widgetErrors -= e.widget
-    else
-      widgetErrors += e.widget
-    
-    recolorTab(interfaceTab, widgetErrors.nonEmpty)
+    var changed = false
 
-    mainTabs.repaint()
+    if (e.error == null) {
+      changed = widgetErrors.contains(e.widget)
+
+      widgetErrors -= e.widget
+    }
+
+    else {
+      changed = !widgetErrors.contains(e.widget)
+
+      widgetErrors += e.widget
+    }
+
+    if (changed) {
+      recolorTab(interfaceTab, widgetErrors.nonEmpty)
+
+      mainTabs.repaint()
+    }
   }
 
   def handle(e: WidgetRemovedEvent) {
