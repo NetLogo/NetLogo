@@ -135,11 +135,11 @@ extends PlotInterface {
   def growRanges(x: Double, y: Double) {
     if (x > state.xMax)
       state = state.copy(xMax = prettyRange(x))
-    if (x < xMin)
+    if (x < state.xMin)
       state = state.copy(xMin = prettyRange(x))
-    if (y > yMax)
+    if (y > state.yMax)
       state = state.copy(yMax = prettyRange(y))
-    if (y < yMin)
+    if (y < state.yMin)
       state = state.copy(yMin = prettyRange(y))
   }
 
