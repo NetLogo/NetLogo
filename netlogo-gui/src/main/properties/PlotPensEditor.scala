@@ -13,8 +13,7 @@ import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.{ Colorizer, EditorField }
 import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
-import org.nlogo.swing.{ RichJButton, Utils},
-  Utils.icon
+import org.nlogo.swing.{ RichJButton, Utils }
 import org.nlogo.window.{ ColorDialog, PlotWidget }
 
 object PlotPensEditor {
@@ -271,9 +270,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], useTooltip: Bool
 
     // renders the delete and edit buttons for each column
     class ButtonCellEditor extends AbstractCellEditor with TableCellRenderer with TableCellEditor {
-      val EditIcon   = icon("/images/edit.png")
-      val AlertIcon  = icon("/images/alert.gif")
-      val DeleteIcon = icon("/images/delete.png")
+      val EditIcon   = Utils.icon("/images/edit.png")
+      val AlertIcon  = Utils.iconScaled("/images/edit-error.png", 15, 15)
+      val DeleteIcon = Utils.icon("/images/delete.png")
 
       val editButton = RichJButton(EditIcon) {
         openAdvancedPenEditor(model.pens(getSelectedRow))
