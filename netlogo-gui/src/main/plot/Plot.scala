@@ -12,6 +12,8 @@ import
 import
   java.io.{ Serializable => JSerializable }
 
+import scala.math.{ log10, pow }
+
 // normally, to create a new Plot, you have to go through PlotManager.newPlot
 // this makes sense because the PlotManager then controls compilation
 // and running of code, and it needs to know about all the Plots.
@@ -21,8 +23,6 @@ import
 // JC - 12/20/10
 @SerialVersionUID(0)
 class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializable {
-
-  import Plot._
 
   var state = PlotState()
 
@@ -198,43 +198,40 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
     if(autoPlotOn){
       if(pen.mode == PlotPen.BAR_MODE){
         // allow extra room on the right for bar
-        growRanges(x + pen.interval, y, true)
+        growRanges(x + pen.interval, y)
       }
       // calling growRanges() twice is sometimes redundant,
       // but it's the easiest way to ensure that both the
       // left and right edges of the bar become visible
       // (consider the case where the bar is causing the
       // min to decrease) - ST 2/23/06
-      growRanges(x, y, true)
+      growRanges(x, y)
     }
   }
 
-  private def growRanges(x:Double, y:Double, extraRoom:Boolean){
-    def adjust(d:Double, factor: Double) = d * (if(extraRoom) factor else 1)
-    if(x > xMax){
-      val newRange = adjust(x - xMin, AUTOPLOT_X_FACTOR)
-      state = state.copy(
-        xMax = newBound(xMin + newRange, newRange)
-      )
+  private def prettyRange(range: Double): Double = {
+    if (range < 0) {
+      val tmag = pow(10, log10(-range).floor - 1) * 2
+
+      (range / tmag).floor * tmag
     }
-    if(x < xMin){
-      val newRange = adjust(xMax - x, AUTOPLOT_X_FACTOR)
-      state = state.copy(
-        xMin = newBound(xMax - newRange, newRange)
-      )
+
+    else {
+      val tmag = pow(10, log10(range).floor - 1) * 2
+
+      (range / tmag).ceil * tmag
     }
-    if(y > yMax){
-      val newRange = adjust(y - yMin, AUTOPLOT_Y_FACTOR)
-      state = state.copy(
-        yMax = newBound(yMin + newRange, newRange)
-      )
-    }
-    if(y < yMin){
-      val newRange = adjust(yMax - y, AUTOPLOT_Y_FACTOR)
-      state = state.copy(
-        yMin = newBound(yMax - newRange, newRange)
-      )
-    }
+  }
+
+  private def growRanges(x: Double, y: Double) {
+    if (x > xMax)
+      state = state.copy(xMax = prettyRange(x))
+    if (x < xMin)
+      state = state.copy(xMin = prettyRange(x))
+    if (y > yMax)
+      state = state.copy(yMax = prettyRange(y))
+    if (y < yMin)
+      state = state.copy(yMin = prettyRange(y))
   }
 
   /// histograms
@@ -266,7 +263,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
       // note also that we never grow the x range, only the y range,
       // because it's the current x range that determined the extent
       // of the histogram in the first place - ST 2/23/06
-      growRanges(xMin, histogram.get.ceiling, false)
+      growRanges(xMin, histogram.get.ceiling)
     }
     for((bar, barNumber) <- histogram.get.bars.zipWithIndex) {
       // there is a design decision here not to generate points corresponding to empty bins.  not
@@ -314,21 +311,6 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
 }
 
 object Plot {
-
-  /// autoplot
-  val AUTOPLOT_X_FACTOR = 1.25
-  val AUTOPLOT_Y_FACTOR = 1.10
-
-  // The purpose of this is to make the new bounds land on nice
-  // numbers like 12.4 instead of long ones like 12.33333333, so
-  // that displaying them in the axis labels doesn't use up a lot of
-  // screen real estate.  (Thus, the x and y growth factors are only
-  // approximate.) - ST 2/23/06
-  def newBound(bound:Double, range:Double): Double = {
-    val places = 2.0 - StrictMath.floor(StrictMath.log(range) / StrictMath.log(10))
-    org.nlogo.api.Approximate.approximate(bound, places.toInt)
-  }
-
   trait DirtyListener {
     def makeDirty(): Unit
   }
