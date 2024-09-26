@@ -20,7 +20,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
                        WidgetInfos: List[WidgetInfo],
                        frame: Frame,
                        dialogFactory: EditDialogFactoryInterface) extends ToolBar
-  with WidgetCreator
   with WindowEvents.WidgetForegroundedEvent.Handler
   with WindowEvents.WidgetRemovedEvent.Handler
   with AppEvents.WidgetSelectedEvent.Handler
@@ -37,10 +36,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   private val deleteButton = new ToolBarActionButton(deleteAction)
   private val widgetMenu = new WidgetMenu
   private val alignmentMenu = new AlignmentMenu
-
-  private var adding = false
-
-  wPanel.setWidgetCreator(this)
 
   setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
@@ -61,18 +56,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     }
   }
 
-  def getWidget: Widget = {
-    if (adding) {
-      adding = false
-
-      wPanel.makeWidget(widgetMenu.getSelectedWidget)
-    }
-
-    else {
-      null
-    }
-  }
-
   var editTarget: Option[Editable] = None
 
   def handle(e: WindowEvents.EditWidgetEvent) {
@@ -90,7 +73,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       }
       suppress(true)
       editButton.setSelected(true)
-      adding = false
       wPanel.editWidgetFinished(target, dialogFactory.canceled(frame, target, false))
       editButton.setSelected(false)
       suppress(false)
@@ -133,8 +115,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   def handle(e: WindowEvents.LoadBeginEvent) {
     editAction.setEnabled(false)
     deleteAction.setEnabled(false)
-
-    adding = false
   }
 
   def handle(e: WindowEvents.WidgetRemovedEvent) {
@@ -199,7 +179,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       def actionPerformed(e: ActionEvent) {
         chosenItem = item
 
-        adding = true
+        wPanel.createShadowWidget(widgetMenu.getSelectedWidget)
       }
 
       def getText = item.getText
@@ -242,9 +222,11 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent) {
-        actions.foreach(action => action.setEnabled(wPanel.canAddWidget(action.getText)))
+        if (!wPanel.addingWidget) {
+          actions.foreach(action => action.setEnabled(wPanel.canAddWidget(action.getText)))
 
-        popup.show(WidgetMenu.this, 0, getHeight)
+          popup.show(WidgetMenu.this, 0, getHeight)
+        }
       }
     })
 

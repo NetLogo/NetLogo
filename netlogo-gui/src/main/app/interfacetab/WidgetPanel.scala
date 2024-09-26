@@ -3,7 +3,7 @@
 package org.nlogo.app.interfacetab
 
 import java.awt.{ Component, Cursor, Dimension, Graphics, Point, Rectangle, Color => AwtColor }
-import java.awt.event.{ ActionListener, ActionEvent, MouseEvent, MouseListener, MouseMotionListener }
+import java.awt.event.{ ActionListener, ActionEvent, MouseAdapter, MouseEvent, MouseListener, MouseMotionAdapter, MouseMotionListener }
 import javax.swing.{ JComponent, JLayeredPane, JMenuItem, JPopupMenu }
 
 import org.nlogo.api.Editable
@@ -45,7 +45,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
   import WidgetPanel.GridSnap
 
   protected var selectionRect: Rectangle = null // convert to Option?
-  protected var widgetCreator: WidgetCreator = null
   var widgetsBeingDragged: Seq[WidgetWrapper] = Seq()
   private var view: Widget = null // convert to Option?
 
@@ -56,7 +55,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   protected var startDragPoint: Point = null // convert to Option?
   protected var newWidget: WidgetWrapper = null // convert to Option?
-  protected var glassPane: JComponent =
+  protected var selectionPane: JComponent =
     new JComponent() {
       override def paintComponent(g: Graphics): Unit = {
         if (selectionRect != null) {
@@ -69,6 +68,29 @@ class WidgetPanel(val workspace: GUIWorkspace)
         }
       }
     }
+  protected var shadowPane = new JComponent {
+    addMouseListener(new MouseAdapter {
+      override def mousePressed(e: MouseEvent) {
+        WidgetPanel.this.mousePressed(e)
+      }
+
+      override def mouseReleased(e: MouseEvent) {
+        WidgetPanel.this.mouseReleased(e)
+      }
+    })
+
+    addMouseMotionListener(new MouseMotionAdapter {
+      override def mouseMoved(e: MouseEvent) {
+        WidgetPanel.this.mouseMoved(e)
+      }
+
+      override def mouseDragged(e: MouseEvent) {
+        WidgetPanel.this.mouseDragged(e)
+      }
+    })
+  }
+
+  add(shadowPane, JLayeredPane.DRAG_LAYER)
 
   protected val editorFactory: EditorFactory = new EditorFactory(workspace, workspace.getExtensionManager)
 
@@ -78,9 +100,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
   addMouseListener(this)
   addMouseMotionListener(this)
   setAutoscrolls(true)
-  glassPane.setOpaque(false)
-  glassPane.setVisible(false)
-  add(glassPane, JLayeredPane.DRAG_LAYER)
+  selectionPane.setOpaque(false)
+  selectionPane.setVisible(false)
+  add(selectionPane, JLayeredPane.DRAG_LAYER)
 
   // our children may overlap
   override def isOptimizedDrawingEnabled: Boolean = false
@@ -95,7 +117,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   override def getPreferredSize: Dimension = {
     var maxX = 0
     var maxY = 0
-    for { component <- getComponents if component ne glassPane } {
+    for { component <- getComponents if component ne selectionPane } {
       val location = component.getLocation
       val size = component.getSize
       var x = location.x + size.width
@@ -130,10 +152,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
       case w: WidgetWrapper if w.widget.isInstanceOf[OutputWidget] =>
         w.widget.asInstanceOf[OutputWidget]
     }.headOption.orNull
-  }
-
-  def setWidgetCreator(widgetCreator: WidgetCreator): Unit = {
-    this.widgetCreator = widgetCreator
   }
 
   ///
@@ -196,7 +214,16 @@ class WidgetPanel(val workspace: GUIWorkspace)
     setForegroundWrapper()
   }
 
-  def mouseMoved(e: MouseEvent): Unit = { }
+  def mouseMoved(e: MouseEvent) {
+    if (newWidget != null) {
+      if (workspace.snapOn)
+        newWidget.setLocation((e.getX / GridSnap) * GridSnap, (e.getY / GridSnap) * GridSnap)
+      else
+        newWidget.setLocation(e.getX, e.getY)
+      
+      newWidget.originalBounds = newWidget.getBounds
+    }
+  }
 
   def mouseDragged(e: MouseEvent): Unit =
     if (NlogoMouse.hasButton1(e)) {
@@ -214,9 +241,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
         val p2 = restrictDrag(new Point(e.getX - startDragPoint.x, e.getY - startDragPoint.y), newWidget)
         newWidget.setLocation(startDragPoint.x + p2.x, startDragPoint.y + p2.y)
       } else if (null != startDragPoint) {
-        if (!glassPane.isVisible()) {
-          glassPane.setBounds(0, 0, getWidth(), getHeight())
-          glassPane.setVisible(true)
+        if (!selectionPane.isVisible()) {
+          selectionPane.setBounds(0, 0, getWidth(), getHeight())
+          selectionPane.setVisible(true)
         }
         scrollRectToVisible(new Rectangle(e.getX - 20, e.getY - 20, 40, 40))
         val oldSelectionRect = selectionRect
@@ -231,8 +258,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
           )
           selectWidgets(selectionRect)
           if (oldSelectionRect != null)
-            glassPane.repaint(oldSelectionRect)
-          glassPane.repaint(selectionRect)
+            selectionPane.repaint(oldSelectionRect)
+          selectionPane.repaint(selectionRect)
       }
     }
 
@@ -257,14 +284,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
       if (rect.contains(p)) {
         unselectWidgets()
         startDragPoint = e.getPoint
-
-        if (widgetCreator != null) {
-          val widget = widgetCreator.getWidget
-          if (widget != null) {
-            WidgetActions.addWidget(this, widget, e.getX, e.getY)
-            revalidate()
-          }
-        }
       }
     }
 
@@ -275,7 +294,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   protected def doPopup(e: MouseEvent): Unit = {
     val menu = new JPopupMenu()
     def menuItem(keyName: String, widget: CoreWidget): WidgetCreationMenuItem = {
-      new WidgetCreationMenuItem(I18N.gui.get(s"tabs.run.widgets.$keyName"), widget, e.getX, e.getY)
+      new WidgetCreationMenuItem(I18N.gui.get(s"tabs.run.widgets.$keyName"), widget)
     }
     val plot = menuItem("plot", CorePlot(None))
     val menuItems = Seq(
@@ -296,27 +315,13 @@ class WidgetPanel(val workspace: GUIWorkspace)
     menu.show(this, e.getX, e.getY)
   }
 
-  protected class WidgetCreationMenuItem(displayName: String, coreWidget: CoreWidget, x: Int, y: Int)
+  protected class WidgetCreationMenuItem(displayName: String, coreWidget: CoreWidget)
     extends JMenuItem(displayName) with ActionListener {
     addActionListener(this)
 
     override def actionPerformed(e: ActionEvent): Unit = {
-      createWidget(coreWidget, x, y)
+      createShadowWidget(coreWidget)
     }
-  }
-
-  def createWidget(coreWidget: CoreWidget, x: Int, y: Int): WidgetWrapper = {
-    val widget = makeWidget(coreWidget)
-    val wrapper = addWidget(widget, x, y, true, false)
-    revalidate()
-    wrapper.selected(true)
-    wrapper.foreground()
-    wrapper.isNew(true)
-    new EditWidgetEvent(null).raise(WidgetPanel.this)
-    newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
-    wrapper.isNew(false)
-    newWidget = null // TODO: new widget set somewhere else and nulled here, gross
-    wrapper
   }
 
   // This is used both when loading a model and when the user is making
@@ -359,31 +364,29 @@ class WidgetPanel(val workspace: GUIWorkspace)
     editorFactory.defaultConfiguration(5, 20)
       .withFont(NlogoFonts.monospacedFont)
 
-  def mouseReleased(e: MouseEvent): Unit =
-    if (e.isPopupTrigger)
-      doPopup(e)
-    else {
-      if (NlogoMouse.hasButton1(e)) {
-        val p = e.getPoint
-        val rect = getBounds()
-
-        p.x += rect.x
-        p.y += rect.y
-
-        selectionRect = null
-        glassPane.setVisible(false)
-
-        if (newWidget != null) {
-          newWidget.selected(true)
-          newWidget.foreground()
-          newWidget.isNew(true)
-          new EditWidgetEvent(null).raise(this)
-          newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
-          newWidget.isNew(false)
-          newWidget = null
-        }
-      }
+  def mouseReleased(e: MouseEvent) {
+    if (e.getButton == MouseEvent.BUTTON3 && newWidget != null) {
+      removeShadowWidget()
     }
+
+    else if (e.isPopupTrigger) {
+      doPopup(e)
+    }
+
+    else if (NlogoMouse.hasButton1(e)) {
+      val p = e.getPoint
+      val rect = getBounds()
+
+      p.x += rect.x
+      p.y += rect.y
+
+      selectionRect = null
+      selectionPane.setVisible(false)
+
+      if (newWidget != null)
+        placeShadowWidget()
+    }
+  }
 
   private[interfacetab] def setForegroundWrapper(): Unit =
     getComponents.collect {
@@ -446,7 +449,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     wrapper
   }
 
-  def reAddWidget(widgetWrapper: WidgetWrapper): WidgetWrapper ={
+  def reAddWidget(widgetWrapper: WidgetWrapper): WidgetWrapper = {
     widgetWrapper.setVisible(false)
     // we need to add the wrapper before we can call wrapper.getPreferredSize(), because
     // that method looks at its parent and sees if it's an InterfacePanel
@@ -463,15 +466,71 @@ class WidgetPanel(val workspace: GUIWorkspace)
     widgetWrapper
   }
 
-  def editWidgetFinished(target: Editable, canceled: Boolean): Unit = {
-    target match {
-      case comp: Component if comp.getParent.isInstanceOf[WidgetWrapper] =>
-        comp.getParent.asInstanceOf[WidgetWrapper].selected(false)
-      case _ =>
-    }
-    if (canceled && newWidget != null) {
+  def createShadowWidget(widget: CoreWidget): WidgetWrapper = {
+    val wrapper = new WidgetWrapper(makeWidget(widget), this)
+
+    add(wrapper, JLayeredPane.DEFAULT_LAYER)
+
+    moveToFront(wrapper)
+
+    wrapper.setSize(wrapper.getPreferredSize)
+    wrapper.validate()
+
+    zoomer.zoomWidget(wrapper, true, false, 1.0, zoomFactor)
+
+    newWidget = wrapper
+
+    newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
+
+    shadowPane.setBounds(0, 0, getWidth, getHeight)
+
+    wrapper
+  }
+
+  def placeShadowWidget() {
+    shadowPane.setBounds(0, 0, 0, 0)
+    newWidget.selected(true)
+    newWidget.foreground()
+    newWidget.isNew(true)
+    new EditWidgetEvent(null).raise(this)
+    newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+    newWidget.isNew(false)
+    newWidget = null
+  }
+
+  def removeShadowWidget() {
+    if (newWidget != null) {
       removeWidget(newWidget)
       revalidate()
+    }
+  }
+
+  def addingWidget: Boolean =
+    newWidget != null
+
+  def editWidgetFinished(target: Editable, canceled: Boolean): Unit = {
+    target match {
+      case comp: Component =>
+        comp.getParent match {
+          case ww: WidgetWrapper => ww.selected(false)
+          case _ =>
+        }
+      case _ =>
+    }
+    if (canceled)
+      removeShadowWidget()
+    else {
+      target match {
+        case comp: Component =>
+          comp.getParent match {
+            case ww: WidgetWrapper =>
+              WidgetActions.addWidget(this, ww)
+
+              LogManager.widgetAdded(false, ww.widget.classDisplayName, ww.widget.displayName)
+            case _ =>
+          }
+        case _ =>
+      }
     }
     setForegroundWrapper()
   }

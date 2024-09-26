@@ -3,7 +3,6 @@ package org.nlogo.app.interfacetab
 import java.awt.Rectangle
 import javax.swing.undo.AbstractUndoableEdit
 
-import org.nlogo.core.Widget
 import org.nlogo.editor.UndoManager
 
 object WidgetActions {
@@ -13,13 +12,7 @@ object WidgetActions {
     override def canRedo = editToBeRedone() != null
   }
 
-  def addWidget(widgetPanel: WidgetPanel, coreWidget: Widget, x: Int, y: Int): Unit = {
-    val ww: WidgetWrapper = widgetPanel.createWidget(coreWidget, x, y)
-    undoManager.addEdit(new AddWidget(widgetPanel, ww))
-  }
-
-  def addWidget(widgetPanel: WidgetPanel, widget: org.nlogo.window.Widget, x: Int, y: Int): Unit = {
-    val ww: WidgetWrapper = widgetPanel.addWidget(widget, x, y, true, false)
+  def addWidget(widgetPanel: WidgetPanel, ww: WidgetWrapper): Unit = {
     undoManager.addEdit(new AddWidget(widgetPanel, ww))
   }
 
