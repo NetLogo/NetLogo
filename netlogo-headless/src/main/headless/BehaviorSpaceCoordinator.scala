@@ -52,7 +52,7 @@ object BehaviorSpaceCoordinator {
 
   private def modelAtPath(path: String): Model = {
     val loader =
-      fileformat.standardLoader(literalParser)
+      fileformat.standardAnyLoader(literalParser)
 
     loader.readModel(Paths.get(path).toUri) match {
       case Success(m) => m

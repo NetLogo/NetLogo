@@ -2,10 +2,10 @@
 
 package org.nlogo.app
 
-import org.nlogo.api.{ ModelLoader, ModelSections, Version}
+import org.nlogo.api.{ GenericModelLoader, ModelSections, Version}
 import org.nlogo.core.Model
 
-class ModelSaver(model: ModelSections, loader: ModelLoader) {
+class ModelSaver(model: ModelSections, loader: GenericModelLoader) {
 
   private var _currentModel: Model = Model()
 
@@ -13,11 +13,13 @@ class ModelSaver(model: ModelSections, loader: ModelLoader) {
 
   def currentModel = {
     val m = _currentModel.copy(
-      code         = model.procedureSource,
-      widgets      = model.widgets,
-      info         = model.info,
-      turtleShapes = model.turtleShapes,
-      linkShapes   = model.linkShapes)
+      code          = model.procedureSource,
+      widgets       = model.widgets,
+      info          = model.info,
+      turtleShapes  = model.turtleShapes,
+      linkShapes    = model.linkShapes,
+      openTempFiles = model.openTempFiles,
+      resources     = model.resources)
     if (model.additionalSections.isEmpty)
       m
     else

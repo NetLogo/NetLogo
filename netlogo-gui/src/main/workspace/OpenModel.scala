@@ -6,7 +6,7 @@ import java.net.URI
 import java.nio.file.Paths
 
 import org.nlogo.core.Model
-import org.nlogo.api.{ ModelLoader, Version }
+import org.nlogo.api.{ GenericModelLoader, Version }
 import org.nlogo.fileformat.{ FailedConversionResult, ModelConversion }
 
 import scala.util.{ Failure, Success, Try }
@@ -29,17 +29,17 @@ import OpenModel.Controller
 trait OpenModel[OpenParameter] {
   class InvalidModelException(message: String) extends Exception(message)
 
-  def readModel(loader: ModelLoader, param: OpenParameter): Try[Model]
+  def readModel(loader: GenericModelLoader, param: OpenParameter): Try[Model]
 
   def runOpenModelProcess(
     openParam: OpenParameter,
     uri: URI,
     controller: Controller,
-    loader: ModelLoader,
+    loader: GenericModelLoader,
     modelConverter: ModelConversion,
     currentVersion: Version): Option[Model] = {
       val isValidURI = Option(uri)
-        .flatMap(ModelLoader.getURIExtension)
+        .flatMap(GenericModelLoader.getURIExtension)
         .map(ext => true)
         .getOrElse(false)
       if (! isValidURI) {
@@ -81,13 +81,13 @@ trait OpenModel[OpenParameter] {
 }
 
 object OpenModelFromURI extends OpenModel[URI] {
-  def readModel(loader: ModelLoader, uri: URI): Try[Model] =
+  def readModel(loader: GenericModelLoader, uri: URI): Try[Model] =
     loader.readModel(uri)
 
   def apply(
     uri:            URI,
     controller:     Controller,
-    loader:         ModelLoader,
+    loader:         GenericModelLoader,
     modelConverter: ModelConversion,
     currentVersion: Version): Option[Model] = {
     runOpenModelProcess(uri, uri, controller, loader, modelConverter, currentVersion)
@@ -95,14 +95,14 @@ object OpenModelFromURI extends OpenModel[URI] {
 }
 
 object OpenModelFromSource extends OpenModel[(URI, String)] {
-  def readModel(loader: ModelLoader, uriAndSource: (URI, String)): Try[Model] =
+  def readModel(loader: GenericModelLoader, uriAndSource: (URI, String)): Try[Model] =
     loader.readModel(uriAndSource._2, uriAndSource._1.getPath.split("\\.").last)
 
   def apply(
     uri:            URI,
     source:         String,
     controller:     Controller,
-    loader:         ModelLoader,
+    loader:         GenericModelLoader,
     modelConverter: ModelConversion,
     currentVersion: Version): Option[Model] = {
     runOpenModelProcess((uri, source), uri, controller, loader, modelConverter, currentVersion)

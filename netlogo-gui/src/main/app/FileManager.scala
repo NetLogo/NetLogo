@@ -11,7 +11,7 @@ import javax.swing.{ Action, JOptionPane }
 import scala.util.{ Failure, Try }
 
 import org.nlogo.core.{ I18N, Model }
-import org.nlogo.api.{ Exceptions, FileIO, ModelLoader, ModelReader, ModelType, Version },
+import org.nlogo.api.{ Exceptions, FileIO, GenericModelLoader, ModelReader, ModelType, Version },
   ModelReader.{ emptyModelPath, modelSuffix }
 import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction }, Actions.Ellipsis
 import org.nlogo.app.codetab.TemporaryCodeTab
@@ -262,7 +262,7 @@ import FileManager._
  *  fileMenu, but it's obviously undesirable to couple the behavior in this class too closely to
  *  its presentation (the menu) */
 class FileManager(workspace: AbstractWorkspaceScala,
-  modelLoader: ModelLoader,
+  modelLoader: GenericModelLoader,
   modelConverter: ModelConversion,
   dirtyMonitor: DirtyMonitor,
   modelSaver: ModelSaver,

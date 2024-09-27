@@ -10,7 +10,7 @@ import javax.swing.event.{ListSelectionEvent, MouseInputAdapter, ListSelectionLi
 
 import java.nio.file.Paths
 
-import org.nlogo.api.ModelLoader
+import org.nlogo.api.GenericModelLoader
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
   ShapeList.{ shapesToMap, isDefaultShapeName }
 import org.nlogo.swing.Implicits.thunk2action
@@ -19,7 +19,7 @@ import scala.util.{ Failure, Success }
 import scala.reflect.ClassTag
 
 abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
-  modelLoader: ModelLoader,
+  modelLoader: GenericModelLoader,
   val shapeListTracker: ShapeListTracker)(implicit ct: ClassTag[A])
   extends JDialog(parentFrame)
   with ListSelectionListener {

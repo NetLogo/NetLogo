@@ -30,6 +30,7 @@ object Property {
   case object ReporterLine extends Type
   case object String extends Type
   case class FilePath(suggestedName: String) extends Type
+  case object ResourcePath extends Type
   case object Label extends Type
 }
 

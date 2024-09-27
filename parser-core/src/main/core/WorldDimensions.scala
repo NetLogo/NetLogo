@@ -13,4 +13,7 @@ case class WorldDimensions(
   }
   def width = maxPxcor - minPxcor + 1
   def height = maxPycor - minPycor + 1
+
+  // (minPzcor, maxPzcor, wrappingAllowedInZ) - used to streamline 3D parsing in XML format (IB 8/31/24)
+  def get3D: Option[(Int, Int, Boolean)] = None
 }

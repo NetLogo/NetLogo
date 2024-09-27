@@ -2,14 +2,16 @@
 
 package org.nlogo.lab.gui
 
-import org.nlogo.api.LabProtocol
-import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol }
-import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 import java.awt.{ Component, Dimension }
 import javax.swing.{ JButton, JDialog, JLabel, JList, JMenuBar, JOptionPane, JPanel, JScrollPane, ListCellRenderer }
+
+import org.nlogo.api.{ LabProtocol, RefEnumeratedValueSet }
 import org.nlogo.core.I18N
-import org.nlogo.fileformat.{ LabSaver, LabLoader }
 import org.nlogo.swing.FileDialog
+import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
+
+import scala.collection.mutable.Set
+import scala.io.Source
 
 private class ManagerDialog(manager:       LabManager,
                             dialogFactory: EditDialogFactoryInterface,
@@ -228,13 +230,8 @@ private class ManagerDialog(manager:       LabManager,
       for (file <- dialog.getFiles)
       {
         try {
-          for (protocol <- new LabLoader(manager.workspace.compiler.utilities)
-                                         (scala.io.Source.fromFile(file).mkString,
-                                          true,
-                                          manager.protocols.map(_.name).to[collection.mutable.Set]))
-          {
-            manager.addProtocol(protocol)
-          }
+          manager.modelLoader.readExperiments(Source.fromFile(file).mkString, true,
+                                              manager.protocols.map(_.name).to[Set]).foreach(_.foreach(manager.addProtocol(_)))
         } catch {
           case e: org.xml.sax.SAXParseException => {
             if (!java.awt.GraphicsEnvironment.isHeadless) {
@@ -274,8 +271,7 @@ private class ManagerDialog(manager:       LabManager,
 
       val out = new java.io.PrintWriter(path)
 
-      out.write(s"${LabLoader.XMLVER}\n${LabLoader.DOCTYPE}\n")
-      out.write(LabSaver.save(indices.map(manager.protocols(_))))
+      manager.modelLoader.writeExperiments(manager.protocols.toSeq, out)
 
       out.close()
     } catch {

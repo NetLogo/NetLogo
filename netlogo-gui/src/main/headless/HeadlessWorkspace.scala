@@ -46,7 +46,7 @@ object HeadlessWorkspace {
     pico.add("org.nlogo.sdm.AggregateManagerLite")
     pico.add("org.nlogo.render.Renderer")
     pico.addComponent(subclass)
-    pico.addAdapter(new ModelLoaderComponent())
+    pico.addAdapter(new LegacyModelLoaderComponent())
     pico.add(classOf[HubNetManagerFactory], "org.nlogo.hubnet.server.HeadlessHubNetManagerFactory")
     val hw = pico.getComponent(subclass)
     hw.set3d(is3d)
@@ -477,7 +477,7 @@ with org.nlogo.api.ViewSettings {
   }
 
   private lazy val loader = {
-    fileformat.standardLoader(compiler.utilities)
+    fileformat.standardAnyLoader(compiler.utilities)
       .addSerializer[Array[String], NLogoFormat](
         Femto.get[ComponentSerialization[Array[String], NLogoFormat]]("org.nlogo.sdm.NLogoSDMFormat"))
       .addSerializer[Array[String], NLogoThreeDFormat](

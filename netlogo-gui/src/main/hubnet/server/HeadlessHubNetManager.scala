@@ -5,7 +5,7 @@ package org.nlogo.hubnet.server
 import org.nlogo.hubnet.connection.{ HubNetException, NetworkUtils }
 import org.nlogo.workspace.AbstractWorkspaceScala
 import org.nlogo.core.{ Model, Widget => CoreWidget }
-import org.nlogo.api.{ ModelType, ModelLoader }
+import org.nlogo.api.{ ModelType, GenericModelLoader }
 import org.nlogo.hubnet.protocol.{ ComputerInterface, TestClient }
 import org.nlogo.fileformat.ModelConversion
 import collection.mutable.ListBuffer
@@ -13,7 +13,7 @@ import java.util.concurrent.{Executors, ExecutorService}
 
 // TODO: we really need to do something about the printlns in this class.
 // but what?
-class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: ModelLoader, modelConverter: ModelConversion)
+class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: GenericModelLoader, modelConverter: ModelConversion)
   extends HubNetManager(workspace, loader, modelConverter) {
   // since the server is headless, the clients cant be, or no one would have a view.
   // so, set this to true by default. JC 12/28/10

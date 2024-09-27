@@ -2,10 +2,12 @@
 
 package org.nlogo.api
 
+import java.io.Writer
 import java.net.URI
 
 import org.nlogo.core.Model
 
+import scala.collection.mutable.Set
 import scala.util.{ Success, Try }
 
 trait ComponentSerialization[A, B <: ModelFormat[A, B]] {
@@ -73,6 +75,9 @@ trait ModelFormat[Section, Format <: ModelFormat[Section, Format]] {
       (defaultComponents ++ optionalComponents).foldLeft(Map[String, Section]())(addSerializedSection(model))
     sectionsToSource(serializedSections)
   }
+
+  def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[Seq[LabProtocol]]
+  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit]
 
   private def addSerializedSection(model: Model)(sections: Map[String, Section], component: ComponentSerialization[Section, Format]): Map[String, Section] = {
     sections + (component.componentName -> component.serialize(model))

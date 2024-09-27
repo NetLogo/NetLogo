@@ -218,7 +218,7 @@ with ControlSet {
       , workspace.getCompilationEnvironment
       , workspace
       , fileformat.defaultAutoConvertables) _
-    val loader = fileformat.standardLoader(workspace.compiler.utilities)
+    val loader = fileformat.standardAnyLoader(workspace.compiler.utilities)
     val modelOpt = OpenModelFromURI(uri, controller, loader, converter(workspace.world.program.dialect), Version)
     modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace))
   }

@@ -13,7 +13,9 @@ case class Model(code: String = "",
   version: String = "NetLogo 6.3",
   turtleShapes: Seq[VectorShape] = Model.defaultShapes,
   linkShapes: Seq[LinkShape] = Model.defaultLinkShapes,
-  optionalSections: Seq[OptionalSection[_]] = Seq()) {
+  optionalSections: Seq[OptionalSection[_]] = Seq(),
+  openTempFiles: Seq[String] = Nil,
+  resources: Seq[ExternalResource] = Nil) {
 
   def interfaceGlobals: Seq[String] = widgets.collect{case x:DeclaresGlobal => x}.map(_.varName)
   def constraints: Map[String, ConstraintSpecification] = widgets.collect{case x:DeclaresConstraint => (x.varName, x.constraint)}.toMap
@@ -43,6 +45,7 @@ case class Model(code: String = "",
 }
 
 object Model {
+  val defaultCode = ""
   lazy val defaultShapes: List[VectorShape] =
     parseVectorShapes(Resource.lines("/system/defaultShapes.txt").toSeq).toList
   lazy val defaultLinkShapes: List[LinkShape] =
@@ -53,3 +56,5 @@ object Model {
 class OptionalSection[A <: AnyRef](val key: String, value: Option[A], val default: A) {
   def get: Option[A] = value
 }
+
+class Section[A <: AnyRef](key: String, value: A) extends OptionalSection[A](key, Some(value), value) {}
