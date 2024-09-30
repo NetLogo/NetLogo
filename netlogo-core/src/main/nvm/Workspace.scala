@@ -27,6 +27,8 @@ trait Workspace extends ApiWorkspace with JobManagerOwner {
   def behaviorSpaceExperimentName: String
   def behaviorSpaceExperimentName(name: String): Unit
 
+  def setMainWorkspace(workspace: Workspace)
+
   def getComponent[A <: AnyRef](componentClass: Class[A]): Option[A]
 
   /** lastRunTimes is used by `every` to track how long ago a job ran */

@@ -627,6 +627,20 @@ object AbstractWorkspaceTraits {
       }
     }
 
+    private var mainWorkspace: AbstractWorkspace = null
+
+    def setMainWorkspace(workspace: Workspace) {
+      workspace match {
+        case aw: AbstractWorkspace => mainWorkspace = aw
+        case _ =>
+      }
+    }
+
+    def forwardOutput(oo: agent.OutputObject) {
+      if (mainWorkspace != null)
+        mainWorkspace.sendOutput(oo, false)
+    }
+
   }
 
   trait Importing { this: nvm.Workspace =>
