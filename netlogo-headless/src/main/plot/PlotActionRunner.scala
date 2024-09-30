@@ -54,7 +54,17 @@ trait PlotActionRunner extends ActionRunner[PlotAction] {
 
       case AutoPlot(plotName, on) =>
         withPlot(plotName) { plot =>
-          plot.state = plot.state.copy(autoPlotOn = on)
+          plot.state = plot.state.copy(autoPlotX = on, autoPlotY = on)
+        }
+      
+      case AutoPlotX(plotName, on) =>
+        withPlot(plotName) { plot =>
+          plot.state = plot.state.copy(autoPlotX = on)
+        }
+      
+      case AutoPlotY(plotName, on) =>
+        withPlot(plotName) { plot =>
+          plot.state = plot.state.copy(autoPlotY = on)
         }
 
       case SetRange(plotName, isX, min, max) =>

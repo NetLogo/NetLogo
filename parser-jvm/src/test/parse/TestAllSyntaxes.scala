@@ -37,6 +37,8 @@ class TestAllSyntaxes extends AnyFunSuite {
                      |_atan number/number,number,OTPL,None,10,2,2
                      |_atpoints turtle agentset or patch agentset,list,agentset,OTPL,None,13,1,1
                      |_autoplot ,TRUE/FALSE,OTPL,None,10,0,0
+                     |_autoplotx ,TRUE/FALSE,OTPL,None,10,0,0
+                     |_autoploty ,TRUE/FALSE,OTPL,None,10,0,0
                      |_basecolors ,list,OTPL,None,10,0,0
                      |_behaviorspaceexperimentname ,string,OTPL,None,10,0,0
                      |_behaviorspacerunnumber ,number,OTPL,None,10,0,0
@@ -275,6 +277,10 @@ class TestAllSyntaxes extends AnyFunSuite {
                     |_askconcurrent agentset/command block,OTPL,Some(?),0,2,2
                     |_autoplotoff ,OTPL,None,0,0,0
                     |_autoploton ,OTPL,None,0,0,0
+                    |_autoplotxoff ,OTPL,None,0,0,0
+                    |_autoplotxon ,OTPL,None,0,0,0
+                    |_autoplotyoff ,OTPL,None,0,0,0
+                    |_autoplotyon ,OTPL,None,0,0,0
                     |_beep ,OTPL,None,0,0,0
                     |_bench number/number,O---,None,0,2,2
                     |_bk number,-T--,None,0,1,1

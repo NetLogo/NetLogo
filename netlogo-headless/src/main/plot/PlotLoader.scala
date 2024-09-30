@@ -13,7 +13,8 @@ object PlotLoader {
         xMax = parsedPlot.xmax,
         yMin = parsedPlot.ymin,
         yMax = parsedPlot.ymax,
-        autoPlotOn = parsedPlot.autoPlotOn)
+        autoPlotX = parsedPlot.autoPlotX,
+        autoPlotY = parsedPlot.autoPlotY)
     plot.setupCode = parsedPlot.setupCode
     plot.updateCode = parsedPlot.updateCode
     plot.legendIsOpen = parsedPlot.legendOn

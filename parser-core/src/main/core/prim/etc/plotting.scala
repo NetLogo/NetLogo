@@ -20,6 +20,10 @@ case class _setcurrentplot() extends PlotCommand(Syntax.StringType)
 case class _clearplot() extends PlotCommand()
 case class _autoplotoff() extends PlotCommand()
 case class _autoploton() extends PlotCommand()
+case class _autoplotxoff() extends PlotCommand()
+case class _autoplotxon() extends PlotCommand()
+case class _autoplotyoff() extends PlotCommand()
+case class _autoplotyon() extends PlotCommand()
 
 class SetPlotRangeCommand extends PlotCommand(Syntax.NumberType, Syntax.NumberType)
 case class _setplotxrange() extends SetPlotRangeCommand
@@ -55,6 +59,8 @@ abstract class PlotReporter(returnType: Int, args: Int*) extends Reporter {
 }
 
 case class _autoplot() extends PlotReporter(Syntax.BooleanType)
+case class _autoplotx() extends PlotReporter(Syntax.BooleanType)
+case class _autoploty() extends PlotReporter(Syntax.BooleanType)
 case class _plotname() extends PlotReporter(Syntax.StringType)
 case class _plotxmin() extends PlotReporter(Syntax.NumberType)
 case class _plotxmax() extends PlotReporter(Syntax.NumberType)

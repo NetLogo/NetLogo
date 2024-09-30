@@ -105,36 +105,45 @@ extends PlotInterface {
   }
 
   def perhapsGrowRanges(pen: PlotPen, x: Double, y: Double){
-    if(state.autoPlotOn){
-      if(pen.state.mode == PlotPenInterface.BarMode){
+    if (state.autoPlotX) {
+      if (pen.state.mode == PlotPenInterface.BarMode) {
         // allow extra room on the right for bar
-        growRanges(x + pen.state.interval, y, true)
+        growRangeX(x + pen.state.interval, true)
       }
       // calling growRanges() twice is sometimes redundant,
       // but it's the easiest way to ensure that both the
       // left and right edges of the bar become visible
       // (consider the case where the bar is causing the
       // min to decrease) - ST 2/23/06
-      growRanges(x, y, true)
+      growRangeX(x, true)
     }
+
+    if (state.autoPlotY) growRangeY(y, true)
   }
 
-  def growRanges(x: Double, y: Double, extraRoom: Boolean) {
-    def adjust(d: Double, factor: Double) =
-      d * (if(extraRoom) factor else 1)
-    if(x > state.xMax){
+  def growRangeX(x: Double, extraRoom: Boolean) {
+    def adjust(d: Double, factor: Double) = d * (if (extraRoom) factor else 1)
+
+    if (x > state.xMax) {
       val newRange = adjust(x - state.xMin, AutoplotXFactor)
       state = state.copy(xMax = newBound(state.xMin + newRange, newRange))
     }
-    if(x < state.xMin) {
+
+    if (x < state.xMin) {
       val newRange = adjust(state.xMax - x, AutoplotXFactor)
       state = state.copy(xMin = newBound(state.xMax - newRange, newRange))
     }
-    if(y > state.yMax){
+  }
+
+  def growRangeY(y: Double, extraRoom: Boolean) {
+    def adjust(d: Double, factor: Double) = d * (if (extraRoom) factor else 1)
+
+    if (y > state.yMax) {
       val newRange = adjust(y - state.yMin, AutoplotYFactor)
       state = state.copy(yMax = newBound(state.yMin + newRange, newRange))
     }
-    if(y < state.yMin){
+
+    if (y < state.yMin) {
       val newRange = adjust(state.yMax - y, AutoplotYFactor)
       state = state.copy(yMin = newBound(state.yMax - newRange, newRange))
     }
@@ -145,14 +154,14 @@ extends PlotInterface {
     values.foreach(histogram.nextValue)
     val actions = new VectorBuilder[PlotAction]
     actions += SoftResetPen(this.name, pen.name)
-    if (state.autoPlotOn)
+    if (state.autoPlotY)
       // note that we pass extraRoom as false; we know the exact height
       // of the histogram so there's no point in leaving any extra empty
       // space like we normally do when growing the ranges;
       // note also that we never grow the x range, only the y range,
       // because it's the current x range that determined the extent
       // of the histogram in the first place - ST 2/23/06
-      growRanges(state.xMin, histogram.ceiling, false)
+      growRangeY(histogram.ceiling, false)
     actions ++= (for {
       (barHeight, barNumber) <- histogram.bars.zipWithIndex
       // there is a design decision here not to generate points corresponding to empty bins.  not

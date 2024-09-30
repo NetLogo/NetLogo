@@ -116,17 +116,28 @@ object WidgetReader {
       "TEXTBOX"         -> TextBoxReader,
       "INPUTBOX"        -> InputBoxReader
     )
+  
+  // helper for converting old models to new plot widget format, but can be
+  // extended for any such conversion - IB 6/21/24
+  def upgradeWidgetFormat(widget: List[String]): List[String] = {
+    if (widget(0) == "PLOT" && widget.indexOf("PENS") == 15)
+      // insert duplicate of autoplot to sync autoplotx and autoploty in new format
+      widget.take(13) ++ (widget(12) :: widget.drop(13))
+    else
+      widget
+  }
 
   def read(lines: List[String], parser: LiteralParser,
     additionalReaders: Map[String, WidgetReader] = Map(),
     conversion: String => String = identity): Widget = {
+    val upgradedLines = upgradeWidgetFormat(lines)
     val readers = (defaultReaders ++ additionalReaders).values
-    readers.find(_.validate(lines)) match {
-      case Some(reader) => reader.parse(lines, parser).convertSource(conversion)
+    readers.find(_.validate(upgradedLines)) match {
+      case Some(reader) => reader.parse(upgradedLines, parser).convertSource(conversion)
       case None =>
         throw new RuntimeException(
           s"Dimensions provided don't match the NetLogo file reader\n" +
-          s"Couldn't find corresponding reader for ${lines.head}")
+          s"Couldn't find corresponding reader for ${upgradedLines.head}")
     }
   }
 
@@ -282,20 +293,21 @@ object PlotReader extends BaseWidgetReader {
                         DoubleLine(),   // xmax
                         DoubleLine(),   // ymin
                         DoubleLine(),   // ymax
-                        StringBooleanLine(), // autoploton
+                        StringBooleanLine(), // autoplotx
+                        StringBooleanLine(), // autoploty
                         StringBooleanLine(), // legend on
                         StringLine(Some(""""" """""))   // Double code lines, parse later
                       )
   def asList(plot: Plot) = List((), plot.left, plot.top, plot.right, plot.bottom, plot.display,
                                     plot.xAxis, plot.yAxis, plot.xmin, plot.xmax, plot.ymin, plot.ymax,
-                                    plot.autoPlotOn, plot.legendOn,
+                                    plot.autoPlotX, plot.autoPlotY, plot.legendOn,
                                     "\"" + escapeString(plot.setupCode) + "\" \"" + escapeString(plot.updateCode) + "\"")
   def asWidget(vals: List[Any], literalParser: LiteralParser): Plot = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, display: Option[String] @unchecked,
       xAxis: Option[String] @unchecked, yAxis: Option[String] @unchecked, xmin: Double, xmax: Double, ymin: Double, ymax: Double,
-      autoPlotOn: Boolean, legendOn: Boolean, code: String, pens: List[Pen] @unchecked) = vals
+      autoPlotX: Boolean, autoPlotY: Boolean, legendOn: Boolean, code: String, pens: List[Pen] @unchecked) = vals
     val List(setupCode: String, updateCode: String) = PenReader.parseStringLiterals(code)
-    Plot(display, left, top, right, bottom, xAxis, yAxis, xmin, xmax, ymin, ymax, autoPlotOn, legendOn,
+    Plot(display, left, top, right, bottom, xAxis, yAxis, xmin, xmax, ymin, ymax, autoPlotX, autoPlotY, legendOn,
          unescapeString(setupCode), unescapeString(updateCode), pens)
   }
 
