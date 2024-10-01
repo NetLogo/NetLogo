@@ -11,10 +11,7 @@ import javax.swing.{ JLabel, JPanel }
 import event.{ MouseWheelEvent, MouseEvent, MouseAdapter, MouseWheelListener }
 
 object Switch {
-  val BORDERX: Int = 3
-  val BORDERY: Int = 3
   val MINWIDTH: Int = 90
-  val CHANNEL_WIDTH: Int = 15
   val CHANNEL_HEIGHT: Int = 28
   val MINHEIGHT: Int = CHANNEL_HEIGHT + 5
 }
@@ -96,9 +93,9 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
   override def getPreferredSize: Dimension =
     if (preserveWidgetSizes)
-      new Dimension(MINWIDTH, 37)
+      new Dimension(MINWIDTH, MINHEIGHT)
     else
-      super.getPreferredSize
+      new Dimension(90, 37)
 
   override def getMinimumSize =
     if (preserveWidgetSizes)
