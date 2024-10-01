@@ -51,11 +51,13 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
     c.insets = new Insets(0, 12, 0, 12)
     c.fill = GridBagConstraints.HORIZONTAL
+    c.weightx = 1
 
     add(label, c)
 
     c.insets = new Insets(0, 0, 0, 12)
     c.fill = GridBagConstraints.NONE
+    c.weightx = 0
     c.anchor = GridBagConstraints.EAST
 
     add(toggle, c)
