@@ -365,14 +365,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
       .withFont(NlogoFonts.monospacedFont)
 
   def mouseReleased(e: MouseEvent) {
-    if (e.getButton == MouseEvent.BUTTON3 && newWidget != null) {
+    if (e.getButton == MouseEvent.BUTTON3 && newWidget != null)
       removeShadowWidget()
-    }
-
-    else if (e.isPopupTrigger) {
+    else if (e.isPopupTrigger)
       doPopup(e)
-    }
-
     else if (NlogoMouse.hasButton1(e)) {
       val p = e.getPoint
       val rect = getBounds()
@@ -493,14 +489,17 @@ class WidgetPanel(val workspace: GUIWorkspace)
     newWidget.foreground()
     newWidget.isNew(true)
     new EditWidgetEvent(null).raise(this)
-    newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
-    newWidget.isNew(false)
-    newWidget = null
+    if (newWidget != null) {
+      newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
+      newWidget.isNew(false)
+      newWidget = null
+    }
   }
 
   def removeShadowWidget() {
     if (newWidget != null) {
       removeWidget(newWidget)
+      newWidget = null
       revalidate()
     }
   }
