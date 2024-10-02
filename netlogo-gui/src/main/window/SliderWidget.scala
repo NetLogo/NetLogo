@@ -157,7 +157,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     }
   }
 
-  protected class TextField extends JTextField("", 3) {
+  protected class TextField extends JTextField("50", 3) {
     setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0))
     setBackground(InterfaceColors.TRANSPARENT)
     setFont(getFont.deriveFont(11f))
@@ -242,7 +242,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
 
   val nameComponent = new Label
   val valueComponent = new TextField
-  var slider = new JSlider(0, ((maximum - minimum) / increment).asInstanceOf[Int], 0)
+  var slider = new JSlider(0, ((maximum - minimum) / increment).toInt, 50)
 
   slider.setUI(new SliderUI(slider))
 
@@ -473,6 +473,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
   var maximumCode: String = "100"
   var incrementCode: String = "1"
   var defaultValue = 1d
+
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.slider")
   override def propertySet = Properties.slider
 
