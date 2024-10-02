@@ -477,7 +477,6 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       boxedValue = boxedValue)
   }
 
-  override def needsPreferredWidthFudgeFactor = false
   override def exportable = true
   override def getDefaultExportName = "export.txt"
   override def hasContextMenu = true

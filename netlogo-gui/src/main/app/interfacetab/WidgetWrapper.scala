@@ -16,10 +16,6 @@ import org.nlogo.window.{ InterfaceColors, MouseMode, Widget, WidgetWrapperInter
 import org.nlogo.window.Events.{ DirtyEvent, EditWidgetEvent, ExportWidgetEvent, WidgetForegroundedEvent }
 
 object WidgetWrapper {
-  // fudge factor to account for different platforms having different font sizes;
-  // eventually we should deal with this in a more sophisticated way
-  private val PREFERRED_WIDTH_FUDGE_FACTOR = 0.15d
-
   private val NON_FOREGROUND_BACKGROUND = new Color(205, 205, 205)
 
   val BORDER_N = 10
@@ -273,24 +269,17 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     if (dim == null)
       return null
 
-    if (widget.needsPreferredWidthFudgeFactor) {
-      // kludge city...
-      dim.width = (dim.width * (1 + WidgetWrapper.PREFERRED_WIDTH_FUDGE_FACTOR)).toInt
-    }
+    val newDim =
+      getParent match {
+        case wp: WidgetPanel if !widget.isNote => wp.zoomer.zoomSize(dim)
+        case _ => dim
+      }
 
-    var newDim = dim
-
-    getParent match {
-      case wp: WidgetPanel if !widget.isNote => newDim = wp.zoomer.zoomSize(dim)
-      case _ =>
-    }
-
-    if (selected) {
-      newDim.width += WidgetWrapper.BORDER_E + WidgetWrapper.BORDER_W
-      newDim.height += WidgetWrapper.BORDER_N + WidgetWrapper.BORDER_S
-    }
-
-    newDim
+    if (selected)
+      new Dimension(newDim.width + WidgetWrapper.BORDER_E + WidgetWrapper.BORDER_W,
+                    newDim.height + WidgetWrapper.BORDER_N + WidgetWrapper.BORDER_S)
+    else
+      newDim
   }
 
   override def getPreferredSize: Dimension = {

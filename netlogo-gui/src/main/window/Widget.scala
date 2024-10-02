@@ -78,7 +78,6 @@ abstract class Widget extends JPanel {
   def sourceOffset = 0
   def hasContextMenuInApplet = false
   def getUnzoomedPreferredSize: Dimension = getPreferredSize
-  def needsPreferredWidthFudgeFactor = true
   def isButton = false
   def isTurtleForeverButton = false
   def isLinkForeverButton = false

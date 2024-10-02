@@ -88,8 +88,6 @@ class ViewWidget(workspace: GUIWorkspace)
   override def getPreferredSize: Dimension =
     new Dimension(0, 0)
 
-  override def needsPreferredWidthFudgeFactor: Boolean = false
-
   override def getMinimumSize: Dimension = {
     val gSize = view.getMinimumSize
     new Dimension(gSize.getWidth.toInt, getExtraHeight + gSize.height)

@@ -96,7 +96,6 @@ class NoteWidget extends SingleErrorWidget with Editable {
   override def getMinimumSize = new Dimension(MIN_WIDTH, MIN_HEIGHT)
   override def getPreferredSize: Dimension =
     new Dimension(MIN_WIDTH.max(_width), MIN_HEIGHT.max(textLabel.getHeight + 8))
-  override def needsPreferredWidthFudgeFactor = false
 
   override def model: WidgetModel = {
     val b = getBoundsTuple

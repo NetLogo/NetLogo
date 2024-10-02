@@ -54,8 +54,6 @@ class DummyViewWidget(val world: World)
   override def getMinimumSize: Dimension =
     new Dimension(world.worldWidth, world.worldHeight)
 
-  override def needsPreferredWidthFudgeFactor: Boolean =
-    false
 
   override def constrainDrag(newBounds: Rectangle,
     originalBounds: Rectangle,
