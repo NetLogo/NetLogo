@@ -8,7 +8,7 @@ import javax.swing.{ JComboBox, JLabel, JPanel }
 
 import org.nlogo.agent.ChooserConstraint
 import org.nlogo.api.{ CompilerServices, Dump }
-import org.nlogo.core.LogoList
+import org.nlogo.core.{ I18N, LogoList }
 import org.nlogo.swing.Utils
 
 object Chooser {
@@ -32,7 +32,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   protected var constraint = new ChooserConstraint()
 
   // sub-elements of Switch
-  protected val label = new JLabel
+  protected val label = new JLabel(I18N.gui.get("edit.chooser.previewName"))
   private val control = new JComboBox[AnyRef]
   private val controlPanel = new ComboBoxPanel(control)
 

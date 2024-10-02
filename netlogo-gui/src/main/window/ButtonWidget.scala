@@ -80,7 +80,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   private var _buttonType: ButtonType = ButtonType.ObserverButton
 
   val keyLabel = new JLabel
-  val nameLabel = new JLabel
+  val nameLabel = new JLabel(I18N.gui.get("edit.button.previewName"))
   val foreverLabel = new JLabel(FOREVER_GRAPHIC)
   val agentLabel = new JLabel
 

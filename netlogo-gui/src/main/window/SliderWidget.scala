@@ -146,7 +146,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
       }
   }
 
-  protected class Label extends JLabel {
+  protected class Label extends JLabel(I18N.gui.get("edit.slider.previewName")) {
     override def paintComponent(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
       if (vertical) {

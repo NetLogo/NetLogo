@@ -90,7 +90,7 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   private var _fontSize = DefaultFontSize
 
-  private val nameLabel = new JLabel
+  private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName"))
   private val valueLabel = new JLabel
 
   nameLabel.setForeground(InterfaceColors.WIDGET_TEXT)

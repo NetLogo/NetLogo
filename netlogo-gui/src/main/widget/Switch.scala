@@ -3,6 +3,7 @@
 package org.nlogo.widget
 
 import org.nlogo.agent.BooleanConstraint
+import org.nlogo.core.I18N
 import org.nlogo.swing.Utils
 import org.nlogo.window.{ Events, InterfaceColors, MultiErrorWidget }
 
@@ -22,7 +23,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   import Switch._
 
   protected var constraint = new BooleanConstraint
-  protected val label = new JLabel
+  protected val label = new JLabel(I18N.gui.get("edit.switch.previewName"))
   protected val toggle = new Toggle
   protected var nameChanged = false
   protected var _name = ""
