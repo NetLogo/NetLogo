@@ -67,7 +67,6 @@ abstract class Widget extends JPanel {
 
   protected var zoomFactor = 1.0
 
-  def widgetWrapperOpaque = true
   def getEditable: Object = this
   def copyable = true // only OutputWidget and ViewWidget are not copyable
   def constrainDrag(newBounds: Rectangle, originalBounds: Rectangle, mouseMode: MouseMode): Rectangle = newBounds

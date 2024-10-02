@@ -40,7 +40,6 @@ class NoteWidget extends SingleErrorWidget with Editable {
   override def propertySet = Properties.text
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.note")
   override def isNote = true
-  override def widgetWrapperOpaque = ! transparency
 
   private def wrapText() {
     textLabel.setText("<html>" + LineBreaker.breakLines(_text, getFontMetrics(textLabel.getFont), _width - 8).asScala
