@@ -40,6 +40,8 @@ object InterfaceColors {
 
   def WIDGET_HOVER_SHADOW = new Color(75, 75, 75)
 
+  def WIDGET_PREVIEW_COVER = new Color(255, 255, 255, 150)
+
   def TEXT_BOX_BACKGROUND = Color.WHITE
 
   def COMMAND_CENTER_BACKGROUND = LIGHT_GRAY

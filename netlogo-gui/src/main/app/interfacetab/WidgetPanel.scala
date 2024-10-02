@@ -477,6 +477,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     newWidget = wrapper
 
     newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
+    newWidget.setShadow(true)
 
     shadowPane.setBounds(0, 0, getWidth, getHeight)
 
@@ -488,6 +489,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     newWidget.selected(true)
     newWidget.foreground()
     newWidget.isNew(true)
+    newWidget.setShadow(false)
     new EditWidgetEvent(null).raise(this)
     if (newWidget != null) {
       newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))

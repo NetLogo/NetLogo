@@ -2,17 +2,17 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Color, Component, Cursor, Dimension, Point, Rectangle }
+import java.awt.{ Color, Component, Cursor, Dimension, Graphics, Point, Rectangle }
 import java.awt.event.{ ActionEvent, InputEvent, MouseAdapter, MouseEvent, MouseListener,  MouseMotionAdapter,
                         MouseMotionListener }
-import javax.swing.{ AbstractAction, JComponent, JLayeredPane, JPopupMenu }
+import javax.swing.{ AbstractAction, JComponent, JLayeredPane, JPanel, JPopupMenu }
 
 import org.nlogo.api.Editable
 import org.nlogo.app.common.Events.WidgetSelectedEvent
 import org.nlogo.awt.{ Coordinates, Mouse }
 import org.nlogo.core.I18N
-import org.nlogo.swing.WrappingPopupMenu
-import org.nlogo.window.{ MouseMode, Widget, WidgetWrapperInterface }
+import org.nlogo.swing.{ Utils, WrappingPopupMenu }
+import org.nlogo.window.{ InterfaceColors, MouseMode, Widget, WidgetWrapperInterface }
 import org.nlogo.window.Events.{ DirtyEvent, EditWidgetEvent, ExportWidgetEvent, WidgetForegroundedEvent }
 
 object WidgetWrapper {
@@ -65,12 +65,30 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   glass.addMouseListener(this)
   glass.addMouseMotionListener(this)
 
+  def setShadow(shadow: Boolean) {
+    shadowPane.setVisible(shadow)
+
+    revalidate()
+  }
+
+  private val shadowPane = new JPanel {
+    setVisible(false)
+    setOpaque(false)
+
+    override def paintComponent(g: Graphics) {
+      val g2d = Utils.initGraphics2D(g)
+
+      g2d.setColor(InterfaceColors.WIDGET_PREVIEW_COVER)
+      g2d.fillRect(0, 0, getWidth, getHeight)
+    }
+  }
+
   var originalBounds: Rectangle = null
 
   // this is for notes, when the bg is transparent we don't want to see the
   // white widget wrapper.  I don't know why setting the background to a
   // transparent color doesn't work.  but it doesn't ev 6/8/07
-  setOpaque(widget.widgetWrapperOpaque)
+  setOpaque(false)
 
   setBackground(widget.getBackground)
   setCursor(Cursor.getDefaultCursor)
@@ -78,6 +96,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
   add(glass, JLayeredPane.DRAG_LAYER)
   add(widget)
+  add(shadowPane, JLayeredPane.PALETTE_LAYER)
   add(topBar)
   add(leftBar)
   add(rightBar)
@@ -287,10 +306,6 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     addWrapperBorder(widget.getMaximumSize)
 
   override def doLayout() {
-    // make sure opacity gets set properly since it might
-    // have changed. ev 8/8/07
-    setOpaque(widget.widgetWrapperOpaque)
-
     if (selected) {
       topBar.setVisible(true)
       leftBar.setVisible(true)
@@ -325,6 +340,8 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
     glass.setBounds(0, 0, getWidth, getHeight)
     glass.setVisible(selected)
+
+    shadowPane.setBounds(0, 0, getWidth, getHeight)
   }
 
   /*
