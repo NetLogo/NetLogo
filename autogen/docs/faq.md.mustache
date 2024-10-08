@@ -428,6 +428,23 @@ for a number of reasons, we encourage you to
 [contact us](mailto:bugs@ccl.northwestern.edu?subject=NetLogo%206%20Launch%20Problem%20in%20Windows)
 if these steps aren't effective in resolving the problem.
 
+### How can I speed up the launching of NetLogo on a remote server that is behind a proxy?
+A few NetLogo users on systems with a proxy have observed startup times of several 
+minutes. So far all of these cases have been on Linux systems.
+
+This happens when NetLogo makes a request over the network to update information about
+extensions and their latest versions. We offer the following workaround.
+
+Turn off the request to update the extensions information by setting the java preference
+netlogo.libraries.disabled=true by editing the NetLogo configuration file. Add the 
+following line to the section with java-options (order doesn’t matter)
+
+    java-options=-Dnetlogo.libraries.disabled=true
+
+If you want to allow the updates again, you can set the value to false, or remove that preference .
+(see [Where are the NetLogo Configuration Files?](#where-are-the-netlogo-configuration-files)
+for more information)
+
 ### Can I run NetLogo from the command line, without the GUI?
 
 Yes. The easiest way is to set up your model run or runs as a BehaviorSpace
