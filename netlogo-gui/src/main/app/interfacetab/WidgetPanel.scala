@@ -278,14 +278,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
     interactMode match {
       case InteractMode.SELECT =>
       case InteractMode.ADD =>
-        if (newWidget != null) {
-          if (workspace.snapOn)
-            newWidget.setLocation((e.getX / GridSnap) * GridSnap, (e.getY / GridSnap) * GridSnap)
-          else
-            newWidget.setLocation(e.getX, e.getY)
-          
-          newWidget.originalBounds = newWidget.getBounds
-        }
+        if (workspace.snapOn)
+          newWidget.setLocation((e.getX / GridSnap) * GridSnap, (e.getY / GridSnap) * GridSnap)
+        else
+          newWidget.setLocation(e.getX, e.getY)
+        
+        newWidget.originalBounds = newWidget.getBounds
       
       case InteractMode.EDIT =>
         val topWrapper = wrapperAtPoint(e.getX, e.getY).getOrElse(null)
