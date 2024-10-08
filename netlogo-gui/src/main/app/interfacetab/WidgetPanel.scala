@@ -2,7 +2,7 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Component, Cursor, Dimension, Graphics, Point, Rectangle, Color => AwtColor }
+import java.awt.{ Component, Cursor, Dimension, Graphics, Point, Rectangle, Color => AwtColor, Toolkit }
 import java.awt.event.{ ActionListener, ActionEvent, MouseAdapter, MouseEvent, MouseListener, MouseMotionAdapter, MouseMotionListener }
 import javax.swing.{ JComponent, JLayeredPane, JMenuItem, JPopupMenu }
 
@@ -16,6 +16,7 @@ import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser,
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
+import org.nlogo.swing.Utils
 import org.nlogo.window.{ AbstractWidgetPanel, Events => WindowEvents,
   GUIWorkspace, OutputWidget, Widget, WidgetContainer, WidgetRegistry,
   DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget,
@@ -68,7 +69,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
         }
       }
     }
-  protected var shadowPane = new JComponent {
+  
+  protected class InterceptPane extends JComponent {
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent) {
         WidgetPanel.this.mousePressed(e)
@@ -88,11 +90,54 @@ class WidgetPanel(val workspace: GUIWorkspace)
         WidgetPanel.this.mouseDragged(e)
       }
     })
+
+    def enableIntercept() {
+      setBounds(0, 0, WidgetPanel.this.getWidth, WidgetPanel.this.getHeight)
+    }
+
+    def disableIntercept() {
+      setBounds(0, 0, 0, 0)
+    }
   }
 
-  add(shadowPane, JLayeredPane.DRAG_LAYER)
+  protected var interceptPane = new InterceptPane
+
+  add(interceptPane, JLayeredPane.DRAG_LAYER)
 
   protected val editorFactory: EditorFactory = new EditorFactory(workspace, workspace.getExtensionManager)
+
+  protected sealed trait InteractMode {
+    val cursor: Cursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR)
+  }
+
+  protected object InteractMode {
+    case object SELECT extends InteractMode
+    case object ADD extends InteractMode
+    case object EDIT extends InteractMode {
+      override val cursor =
+        Toolkit.getDefaultToolkit.createCustomCursor(Utils.icon("/images/edit-cursor.png").getImage, new Point(0, 15),
+                                                     I18N.gui.get("tabs.run.widget.editWidget"))
+    }
+    case object DELETE extends InteractMode {
+      override val cursor =
+        Toolkit.getDefaultToolkit.createCustomCursor(Utils.icon("/images/delete-cursor.png").getImage, new Point(0, 15),
+                                                     I18N.gui.get("tabs.run.widget.deleteWidget"))
+    }
+  }
+
+  protected var interactMode: InteractMode = InteractMode.SELECT
+
+  protected def setInteractMode(mode: InteractMode) {
+    interactMode = mode
+
+    if (mode == InteractMode.SELECT)
+      interceptPane.disableIntercept()
+    else
+      interceptPane.enableIntercept()
+    
+    setCursor(mode.cursor)
+    unselectWidgets()
+  }
 
   setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
   setOpaque(true)
@@ -137,6 +182,21 @@ class WidgetPanel(val workspace: GUIWorkspace)
     maxX += 8
     maxY += 8
     new Dimension(maxX, maxY)
+  }
+
+  protected def getWrappers: Seq[WidgetWrapper] = {
+    getComponents.collect(
+      _ match {
+        case ww: WidgetWrapper => ww
+      }
+    )
+  }
+
+  protected def wrapperAtPoint(x: Int, y: Int): Option[WidgetWrapper] = {
+    getWrappers.filter(ww => ww.contains(x - ww.getX, y - ww.getY)) match {
+      case Nil => None
+      case wrappers: Seq[WidgetWrapper] => Some(wrappers.minBy(getPosition(_)))
+    }
   }
 
   override def empty: Boolean =
@@ -215,77 +275,109 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def mouseMoved(e: MouseEvent) {
-    if (newWidget != null) {
-      if (workspace.snapOn)
-        newWidget.setLocation((e.getX / GridSnap) * GridSnap, (e.getY / GridSnap) * GridSnap)
-      else
-        newWidget.setLocation(e.getX, e.getY)
+    interactMode match {
+      case InteractMode.SELECT =>
+      case InteractMode.ADD =>
+        if (newWidget != null) {
+          if (workspace.snapOn)
+            newWidget.setLocation((e.getX / GridSnap) * GridSnap, (e.getY / GridSnap) * GridSnap)
+          else
+            newWidget.setLocation(e.getX, e.getY)
+          
+          newWidget.originalBounds = newWidget.getBounds
+        }
       
-      newWidget.originalBounds = newWidget.getBounds
+      case InteractMode.EDIT =>
+        val topWrapper = wrapperAtPoint(e.getX, e.getY).getOrElse(null)
+
+        getWrappers.foreach(wrapper => wrapper.selected(wrapper == topWrapper))
+
+      case InteractMode.DELETE =>
+        val topWrapper = wrapperAtPoint(e.getX, e.getY).filter(_.widget.deleteable).getOrElse(null)
+
+        getWrappers.foreach(wrapper => wrapper.selected(wrapper == topWrapper))
     }
   }
 
-  def mouseDragged(e: MouseEvent): Unit =
-    if (NlogoMouse.hasButton1(e)) {
-      val p = e.getPoint
-      val rect = getBounds()
-
-      p.x += rect.x
-      p.y += rect.y
-
-      if (newWidget != null) {
-        if (workspace.snapOn) {
-          startDragPoint.x = (startDragPoint.x / GridSnap) * GridSnap
-          startDragPoint.y = (startDragPoint.y / GridSnap) * GridSnap
-        }
-        val p2 = restrictDrag(new Point(e.getX - startDragPoint.x, e.getY - startDragPoint.y), newWidget)
-        newWidget.setLocation(startDragPoint.x + p2.x, startDragPoint.y + p2.y)
-      } else if (null != startDragPoint) {
-        if (!selectionPane.isVisible()) {
-          selectionPane.setBounds(0, 0, getWidth(), getHeight())
-          selectionPane.setVisible(true)
-        }
-        scrollRectToVisible(new Rectangle(e.getX - 20, e.getY - 20, 40, 40))
-        val oldSelectionRect = selectionRect
-        val x = StrictMath.min(getWidth, StrictMath.max(e.getX, 0))
-        val y = StrictMath.min(getHeight, StrictMath.max(e.getY, 0))
-        selectionRect =
-          new java.awt.Rectangle(
-            StrictMath.min(startDragPoint.x, x),
-            StrictMath.min(startDragPoint.y, y),
-            StrictMath.abs(x - startDragPoint.x),
-            StrictMath.abs(y - startDragPoint.y)
-          )
+  def mouseDragged(e: MouseEvent) {
+    if (NlogoMouse.hasButton1(e) && startDragPoint != null) {
+      interactMode match {
+        case InteractMode.SELECT =>
+          if (!selectionPane.isVisible()) {
+            selectionPane.setBounds(0, 0, getWidth(), getHeight())
+            selectionPane.setVisible(true)
+          }
+          scrollRectToVisible(new Rectangle(e.getX - 20, e.getY - 20, 40, 40))
+          val oldSelectionRect = selectionRect
+          val x = StrictMath.min(getWidth, StrictMath.max(e.getX, 0))
+          val y = StrictMath.min(getHeight, StrictMath.max(e.getY, 0))
+          selectionRect =
+            new java.awt.Rectangle(
+              StrictMath.min(startDragPoint.x, x),
+              StrictMath.min(startDragPoint.y, y),
+              StrictMath.abs(x - startDragPoint.x),
+              StrictMath.abs(y - startDragPoint.y)
+            )
           selectWidgets(selectionRect)
           if (oldSelectionRect != null)
             selectionPane.repaint(oldSelectionRect)
           selectionPane.repaint(selectionRect)
+        
+        case InteractMode.ADD =>
+          if (workspace.snapOn) {
+            startDragPoint.x = (startDragPoint.x / GridSnap) * GridSnap
+            startDragPoint.y = (startDragPoint.y / GridSnap) * GridSnap
+          }
+          val p2 = restrictDrag(new Point(e.getX - startDragPoint.x, e.getY - startDragPoint.y), newWidget)
+          newWidget.setLocation(startDragPoint.x + p2.x, startDragPoint.y + p2.y)
+        
+        case InteractMode.EDIT =>
+          val topWrapper = wrapperAtPoint(e.getX, e.getY).getOrElse(null)
+
+          getWrappers.foreach(wrapper => wrapper.selected(wrapper == topWrapper))
+
+        case InteractMode.DELETE =>
+          val topWrapper = wrapperAtPoint(e.getX, e.getY).filter(_.widget.deleteable).getOrElse(null)
+
+          getWrappers.foreach(wrapper => wrapper.selected(wrapper == topWrapper))
+        
+        case _ =>
       }
     }
+  }
 
   def mouseEntered(e: MouseEvent): Unit = { }
   def mouseExited(e: MouseEvent): Unit = { }
   def mouseClicked(e: MouseEvent): Unit = { }
 
-  def mousePressed(e: MouseEvent): Unit =
-    if (e.isPopupTrigger)
-      doPopup(e)
-    else if (NlogoMouse.hasButton1(e)) {
-      // this is so the user can use action keys to control buttons
-      // - ST 8/6/04,8/31/04
-      requestFocus()
+  def mousePressed(e: MouseEvent): Unit = {
+    interactMode match {
+      case InteractMode.SELECT =>
+        if (e.isPopupTrigger)
+          doPopup(e)
+        else if (e.getButton == MouseEvent.BUTTON1) {
+          // this is so the user can use action keys to control buttons
+          // - ST 8/6/04,8/31/04
+          requestFocus()
 
-      val p = e.getPoint
-      val rect = getBounds()
+          val p = e.getPoint
+          val rect = getBounds()
 
-      p.x += rect.x
-      p.y += rect.y
+          p.x += rect.x
+          p.y += rect.y
 
-      if (rect.contains(p)) {
-        unselectWidgets()
+          if (rect.contains(p)) {
+            unselectWidgets()
+            startDragPoint = e.getPoint
+          }
+        }
+
+      case InteractMode.ADD | InteractMode.EDIT | InteractMode.DELETE if e.getButton == MouseEvent.BUTTON1 =>
         startDragPoint = e.getPoint
-      }
+      
+      case _ =>
     }
+  }
 
   // this is bordering on comical its so confusing.
   // this method runs for the hubnet client editor.
@@ -365,22 +457,45 @@ class WidgetPanel(val workspace: GUIWorkspace)
       .withFont(NlogoFonts.monospacedFont)
 
   def mouseReleased(e: MouseEvent) {
-    if (e.getButton == MouseEvent.BUTTON3 && newWidget != null)
-      removeShadowWidget()
-    else if (e.isPopupTrigger)
-      doPopup(e)
-    else if (NlogoMouse.hasButton1(e)) {
-      val p = e.getPoint
-      val rect = getBounds()
+    interactMode match {
+      case InteractMode.SELECT =>
+        if (e.isPopupTrigger)
+          doPopup(e)
+        else if (e.getButton == MouseEvent.BUTTON1) {
+          val p = e.getPoint
+          val rect = getBounds()
 
-      p.x += rect.x
-      p.y += rect.y
+          p.x += rect.x
+          p.y += rect.y
 
-      selectionRect = null
-      selectionPane.setVisible(false)
+          selectionRect = null
+          selectionPane.setVisible(false)
+        }
 
-      if (newWidget != null)
-        placeShadowWidget()
+      case InteractMode.ADD =>
+        if (e.getButton == MouseEvent.BUTTON1)
+          placeShadowWidget()
+        else if (e.getButton == MouseEvent.BUTTON3) {
+          removeShadowWidget()
+          setInteractMode(InteractMode.SELECT)
+        }
+
+      case InteractMode.EDIT =>
+        if (e.getButton == MouseEvent.BUTTON1)
+          new EditWidgetEvent(null).raise(this)
+        else if (e.getButton == MouseEvent.BUTTON3)
+          setInteractMode(InteractMode.SELECT)
+
+      case InteractMode.DELETE =>
+        if (e.getButton == MouseEvent.BUTTON1) {
+          wrapperAtPoint(e.getX, e.getY).foreach(wrapper => {
+            if (wrapper.widget.deleteable)
+              WidgetActions.removeWidget(this, wrapper)
+          })
+        }
+
+        else if (e.getButton == MouseEvent.BUTTON3)
+          setInteractMode(InteractMode.SELECT)
     }
   }
 
@@ -388,6 +503,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
     getComponents.collect {
       case w: WidgetWrapper if w.selected => w
     }.foreach(_.foreground())
+
+  def beginSelect() {
+    setInteractMode(InteractMode.SELECT)
+  }
 
   protected def selectWidgets(rect: Rectangle): Unit = {
     getComponents.collect {
@@ -479,13 +598,14 @@ class WidgetPanel(val workspace: GUIWorkspace)
     newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
     newWidget.setShadow(true)
 
-    shadowPane.setBounds(0, 0, getWidth, getHeight)
+    setInteractMode(InteractMode.ADD)
 
     wrapper
   }
 
   def placeShadowWidget() {
-    shadowPane.setBounds(0, 0, 0, 0)
+    interceptPane.disableIntercept()
+
     newWidget.selected(true)
     newWidget.foreground()
     newWidget.isNew(true)
@@ -507,7 +627,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def addingWidget: Boolean =
-    newWidget != null
+    interactMode == InteractMode.ADD
+  
+  def beginEdit() {
+    setInteractMode(InteractMode.EDIT)
+  }
 
   def editWidgetFinished(target: Editable, canceled: Boolean): Unit = {
     target match {
@@ -534,6 +658,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
       }
     }
     setForegroundWrapper()
+    setInteractMode(InteractMode.SELECT)
+  }
+
+  def beginDelete() {
+    setInteractMode(InteractMode.DELETE)
   }
 
   def deleteSelectedWidgets(): Unit = {

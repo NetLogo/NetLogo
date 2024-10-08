@@ -4,7 +4,7 @@ package org.nlogo.app.interfacetab
 
 import java.awt.{ Color, Frame, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ Action, AbstractAction, JLabel, JMenuItem, JPanel, JPopupMenu, SwingConstants }
+import javax.swing.{ AbstractAction, JLabel, JMenuItem, JPanel, JPopupMenu, SwingConstants }
 
 import org.nlogo.api.Editable
 import org.nlogo.app.common.{ Events => AppEvents }
@@ -23,40 +23,42 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   with WindowEvents.WidgetForegroundedEvent.Handler
   with WindowEvents.WidgetRemovedEvent.Handler
   with AppEvents.WidgetSelectedEvent.Handler
-  with WindowEvents.LoadBeginEvent.Handler
   with WindowEvents.EditWidgetEvent.Handler
   with WindowEvents.WidgetAddedEvent.Handler {
 
   private val selectedObjects = new HashSet[Widget]
-  private val deleteableObjects = new HashSet[Widget]
 
-  private val editAction = new EditAction
-  private val editButton = new ToolBarActionButton(editAction)
-  private val deleteAction = new DeleteAction
-  private val deleteButton = new ToolBarActionButton(deleteAction)
+  private val selectButton = new ToolBarActionButton(new SelectAction)
+  private val editButton = new ToolBarActionButton(new EditAction)
+  private val deleteButton = new ToolBarActionButton(new DeleteAction)
   private val widgetMenu = new WidgetMenu
   private val alignmentMenu = new AlignmentMenu
 
   setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
+  selectButton.setToolTipText(I18N.gui.get("tabs.run.selectButton.tooltip"))
   editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
   deleteButton.setToolTipText(I18N.gui.get("tabs.run.deleteButton.tooltip"))
 
-  class EditAction extends AbstractAction {
-    putValue(Action.SMALL_ICON, Utils.icon("/images/edit.png"))
+  class SelectAction extends AbstractAction("S") {
     def actionPerformed(e: ActionEvent) {
-      new WindowEvents.EditWidgetEvent(null).raise(InterfaceToolBar.this)
+      wPanel.beginSelect()
     }
   }
 
-  class DeleteAction extends AbstractAction {
-    putValue(Action.SMALL_ICON, Utils.icon("/images/delete.png"))
+  class EditAction extends AbstractAction(null, Utils.icon("/images/edit.png")) {
     def actionPerformed(e: ActionEvent) {
-      wPanel.deleteSelectedWidgets()
+      wPanel.beginEdit()
     }
   }
 
-  var editTarget: Option[Editable] = None
+  class DeleteAction extends AbstractAction(null, Utils.icon("/images/delete.png")) {
+    def actionPerformed(e: ActionEvent) {
+      wPanel.beginDelete()
+    }
+  }
+
+  private var editTarget: Option[Editable] = None
 
   def handle(e: WindowEvents.EditWidgetEvent) {
     // this is to support the "Edit..." button in the view control strip - ST 7/18/03
@@ -72,9 +74,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
         }
       }
       suppress(true)
-      editButton.setSelected(true)
       wPanel.editWidgetFinished(target, dialogFactory.canceled(frame, target, false))
-      editButton.setSelected(false)
       suppress(false)
     }
   }
@@ -108,56 +108,34 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     c.fill = GridBagConstraints.NONE
     c.weightx = 0
 
+    add(selectButton, c)
     add(editButton, c)
     add(deleteButton, c)
-  }
-
-  def handle(e: WindowEvents.LoadBeginEvent) {
-    editAction.setEnabled(false)
-    deleteAction.setEnabled(false)
   }
 
   def handle(e: WindowEvents.WidgetRemovedEvent) {
     val r = e.widget
     if(selectedObjects.contains(r)) {
-      if(r.isInstanceOf[Editable] && editTarget.exists(_ == r.asInstanceOf[Editable])) {
+      if(r.isInstanceOf[Editable] && editTarget.exists(_ == r.asInstanceOf[Editable]))
         editTarget = None
-        editAction.setEnabled(false)
-      }
       selectedObjects.remove(r)
-      deleteableObjects.remove(r)
-      deleteAction.setEnabled(!deleteableObjects.isEmpty)
     }
   }
 
   private def updateActions(widget: Widget) {
-    if (wPanel.getWrapper(widget).selected) {
+    if (wPanel.getWrapper(widget).selected)
       selectedObjects += widget
-
-      if (widget.deleteable)
-        deleteableObjects += widget
-    }
-
-    else {
+    else
       selectedObjects -= widget
-      deleteableObjects -= widget
-    }
 
     updateTarget(widget)
-
-    deleteAction.setEnabled(deleteableObjects.nonEmpty)
   }
 
   private def updateTarget(widget: Widget) {
-    if (selectedObjects.size == 1) {
+    if (selectedObjects.size == 1)
       editTarget = Some(widget.getEditable).collect { case editable: Editable => editable }
-      editAction.setEnabled(editTarget.isDefined)
-    }
-
-    else {
+    else
       editTarget = None
-      editAction.setEnabled(false)
-    }
   }
 
   def handle(e: WindowEvents.WidgetAddedEvent) {
