@@ -115,12 +115,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
     case object ADD extends InteractMode
     case object EDIT extends InteractMode {
       override val cursor =
-        Toolkit.getDefaultToolkit.createCustomCursor(Utils.icon("/images/edit-cursor.png").getImage, new Point(0, 15),
+        Toolkit.getDefaultToolkit.createCustomCursor(Utils.icon("/images/edit-cursor.png").getImage, new Point(0, 0),
                                                      I18N.gui.get("tabs.run.widget.editWidget"))
     }
     case object DELETE extends InteractMode {
       override val cursor =
-        Toolkit.getDefaultToolkit.createCustomCursor(Utils.icon("/images/delete-cursor.png").getImage, new Point(0, 15),
+        Toolkit.getDefaultToolkit.createCustomCursor(Utils.icon("/images/delete-cursor.png").getImage, new Point(0, 0),
                                                      I18N.gui.get("tabs.run.widget.deleteWidget"))
     }
   }

@@ -40,7 +40,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
   deleteButton.setToolTipText(I18N.gui.get("tabs.run.deleteButton.tooltip"))
 
-  class SelectAction extends AbstractAction("S") {
+  class SelectAction extends AbstractAction(null, Utils.iconScaled("/images/select.png", 15, 15)) {
     def actionPerformed(e: ActionEvent) {
       wPanel.beginSelect()
     }
