@@ -21,8 +21,27 @@ import org.nlogo.window.{ AbstractWidgetPanel, Events => WindowEvents,
   GUIWorkspace, OutputWidget, Widget, WidgetContainer, WidgetRegistry,
   DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget,
   PlotWidget },
-    WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, LoadBeginEvent,
+    WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, InteractModeChangedEvent, LoadBeginEvent,
       WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent }
+
+sealed trait InteractMode {
+  val cursor: Cursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR)
+}
+
+object InteractMode {
+  case object SELECT extends InteractMode
+  case object ADD extends InteractMode
+  case object EDIT extends InteractMode {
+    override val cursor =
+      Toolkit.getDefaultToolkit.createCustomCursor(Utils.icon("/images/edit-cursor.png").getImage, new Point(0, 0),
+                                                   I18N.gui.get("tabs.run.widget.editWidget"))
+  }
+  case object DELETE extends InteractMode {
+    override val cursor =
+      Toolkit.getDefaultToolkit.createCustomCursor(Utils.icon("/images/delete-cursor.png").getImage, new Point(0, 0),
+                                                   I18N.gui.get("tabs.run.widget.deleteWidget"))
+  }
+}
 
 // note that an instance of this class is used for the hubnet client editor
 // and its subclass InterfacePanel is used for the interface tab.
@@ -92,7 +111,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     })
 
     def enableIntercept() {
-      setBounds(0, 0, WidgetPanel.this.getWidth, WidgetPanel.this.getHeight)
+      setBounds(0, 0, WidgetPanel.this.getWidth - 10, WidgetPanel.this.getHeight - 10)
     }
 
     def disableIntercept() {
@@ -106,25 +125,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   protected val editorFactory: EditorFactory = new EditorFactory(workspace, workspace.getExtensionManager)
 
-  protected sealed trait InteractMode {
-    val cursor: Cursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR)
-  }
-
-  protected object InteractMode {
-    case object SELECT extends InteractMode
-    case object ADD extends InteractMode
-    case object EDIT extends InteractMode {
-      override val cursor =
-        Toolkit.getDefaultToolkit.createCustomCursor(Utils.icon("/images/edit-cursor.png").getImage, new Point(0, 0),
-                                                     I18N.gui.get("tabs.run.widget.editWidget"))
-    }
-    case object DELETE extends InteractMode {
-      override val cursor =
-        Toolkit.getDefaultToolkit.createCustomCursor(Utils.icon("/images/delete-cursor.png").getImage, new Point(0, 0),
-                                                     I18N.gui.get("tabs.run.widget.deleteWidget"))
-    }
-  }
-
   protected var interactMode: InteractMode = InteractMode.SELECT
 
   protected def setInteractMode(mode: InteractMode) {
@@ -137,6 +137,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
     
     setCursor(mode.cursor)
     unselectWidgets()
+
+    new InteractModeChangedEvent(mode).raise(this)
   }
 
   setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
@@ -656,7 +658,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
       }
     }
     setForegroundWrapper()
-    setInteractMode(InteractMode.SELECT)
   }
 
   def beginDelete() {

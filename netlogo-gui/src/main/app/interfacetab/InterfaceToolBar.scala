@@ -4,12 +4,12 @@ package org.nlogo.app.interfacetab
 
 import java.awt.{ Color, Frame, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, JLabel, JMenuItem, JPanel, JPopupMenu }
+import javax.swing.{ AbstractAction, ButtonGroup, JLabel, JMenuItem, JPanel, JPopupMenu }
 
 import org.nlogo.api.Editable
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ DropdownArrow, ToolBar, ToolBarActionButton, Utils }
+import org.nlogo.swing.{ DropdownArrow, ToolBar, ToolBarToggleButton, Utils }
 import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents, GUIWorkspace, InterfaceColors, JobWidget,
                           Widget, WidgetInfo }
 
@@ -24,13 +24,17 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   with WindowEvents.WidgetRemovedEvent.Handler
   with AppEvents.WidgetSelectedEvent.Handler
   with WindowEvents.EditWidgetEvent.Handler
-  with WindowEvents.WidgetAddedEvent.Handler {
+  with WindowEvents.WidgetAddedEvent.Handler
+  with WindowEvents.InteractModeChangedEvent.Handler {
 
   private val selectedObjects = new HashSet[Widget]
 
-  private val selectButton = new ToolBarActionButton(new SelectAction)
-  private val editButton = new ToolBarActionButton(new EditAction)
-  private val deleteButton = new ToolBarActionButton(new DeleteAction)
+  private val selectButton = new ToolBarToggleButton(new SelectAction)
+  private val editButton = new ToolBarToggleButton(new EditAction)
+  private val deleteButton = new ToolBarToggleButton(new DeleteAction)
+
+  private val buttonGroup = new ButtonGroup
+
   private val widgetMenu = new WidgetMenu
   private val alignmentMenu = new AlignmentMenu
 
@@ -48,12 +52,15 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
   class EditAction extends AbstractAction(null, Utils.icon("/images/edit.png")) {
     def actionPerformed(e: ActionEvent) {
+      new WindowEvents.EditWidgetEvent(null).raise(InterfaceToolBar.this)
+
       wPanel.beginEdit()
     }
   }
 
   class DeleteAction extends AbstractAction(null, Utils.icon("/images/delete.png")) {
     def actionPerformed(e: ActionEvent) {
+      wPanel.deleteSelectedWidgets()
       wPanel.beginDelete()
     }
   }
@@ -100,6 +107,12 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     c.insets = new Insets(0, 0, 0, 0)
 
     add(deleteButton, c)
+
+    buttonGroup.add(selectButton)
+    buttonGroup.add(editButton)
+    buttonGroup.add(deleteButton)
+
+    selectButton.setSelected(true)
   }
 
   def handle(e: WindowEvents.WidgetRemovedEvent) {
@@ -137,6 +150,11 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
   def handle(e: WindowEvents.WidgetForegroundedEvent) {
     updateTarget(e.widget)
+  }
+
+  def handle(e: WindowEvents.InteractModeChangedEvent) {
+    if (e.interactMode == InteractMode.SELECT)
+      selectButton.setSelected(true)
   }
 
   def getItems: Array[JMenuItem] = WidgetInfos.map(spec => new JMenuItem(spec.displayName, spec.icon)).toArray
