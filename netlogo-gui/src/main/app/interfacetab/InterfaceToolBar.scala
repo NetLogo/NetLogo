@@ -4,7 +4,7 @@ package org.nlogo.app.interfacetab
 
 import java.awt.{ Color, Frame, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, JLabel, JMenuItem, JPanel, JPopupMenu, SwingConstants }
+import javax.swing.{ AbstractAction, JLabel, JMenuItem, JPanel, JPopupMenu }
 
 import org.nlogo.api.Editable
 import org.nlogo.app.common.{ Events => AppEvents }
@@ -84,32 +84,21 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
     val c = new GridBagConstraints
 
-    c.gridy = 0
-    c.anchor = GridBagConstraints.SOUTHWEST
+    c.anchor = GridBagConstraints.CENTER
     c.weighty = 1
-    c.insets = new Insets(6, 6, 3, 12)
-
-    add(new JLabel("Add Widget"), c)
-
-    c.insets = new Insets(6, 0, 3, 12)
-
-    add(new JLabel("Align Widgets"), c)
-
-    c.gridy = 1
-    c.weighty = 0
-    c.insets = new Insets(0, 6, 6, 12)
+    c.insets = new Insets(0, 6, 0, 6)
 
     add(widgetMenu, c)
 
-    c.insets = new Insets(0, 0, 6, 6)
+    c.insets = new Insets(0, 0, 0, 6)
 
     add(alignmentMenu, c)
 
-    c.fill = GridBagConstraints.NONE
-    c.weightx = 0
-
     add(selectButton, c)
     add(editButton, c)
+
+    c.insets = new Insets(0, 0, 0, 0)
+
     add(deleteButton, c)
   }
 
@@ -171,11 +160,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
       c.insets = new Insets(6, 6, 6, 6)
 
-      val label = new JLabel("Button", WidgetInfos.find(_.displayName == "Button").get.icon, SwingConstants.LEFT)
-
-      label.setIconTextGap(6)
-
-      add(label, c)
+      add(new JLabel(I18N.gui.get("tabs.run.addWidget")), c)
       add(new DropdownArrow, c)
     }
 
@@ -227,20 +212,12 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     setOpaque(false)
     setBackground(InterfaceColors.TRANSPARENT)
 
-    setPreferredSize(widgetMenu.getPreferredSize)
-
     locally {
       val c = new GridBagConstraints
 
       c.insets = new Insets(6, 6, 6, 6)
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.weightx = 1
 
-      add(new JLabel(Utils.iconScaled("/images/align-left.png", 16, 16), SwingConstants.LEFT), c)
-
-      c.fill = GridBagConstraints.NONE
-      c.weightx = 0
-
+      add(new JLabel(I18N.gui.get("tabs.run.alignWidgets")), c)
       add(new DropdownArrow, c)
     }
 
