@@ -146,7 +146,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
       }
   }
 
-  protected class Label extends JLabel(I18N.gui.get("edit.slider.previewName")) {
+  protected class Label(text: String) extends JLabel(text) {
     override def paintComponent(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
       if (vertical) {
@@ -240,8 +240,9 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   private var _vertical = false
   private val sliderData = new SliderData(this)
 
-  val nameComponent = new Label
+  val nameComponent = new Label(I18N.gui.get("edit.slider.previewName"))
   val valueComponent = new TextField
+  val unitsComponent = new Label("")
   var slider = new JSlider(0, ((maximum - minimum) / increment).toInt, 50)
 
   slider.setUI(new SliderUI(slider))
@@ -250,6 +251,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
 
   add(nameComponent)
   add(valueComponent)
+  add(unitsComponent)
   add(slider)
 
   slider.addChangeListener(new ChangeListener {
@@ -309,7 +311,12 @@ trait AbstractSliderWidget extends MultiErrorWidget {
   }
 
   def units = _units
-  def units_=(units:String){ _units = units; repaint() }
+  def units_=(units: String) {
+    _units = units.trim
+    unitsComponent.setText(units.trim)
+    revalidate()
+    repaint()
+  }
 
   def valueSetter(v: Double) = {
     if (sliderData.valueSetter(v)) {
@@ -345,27 +352,34 @@ trait AbstractSliderWidget extends MultiErrorWidget {
       val padding = p - (numString.length - place - 1)
       numString = numString + ("0" * padding)
     }
-    if (units=="") numString else numString + " " + units
+    numString
   }
 
   override def doLayout() {
     if (preserveWidgetSizes) {
       if (vertical) {
         nameComponent.setBounds(0, getHeight - 6, nameComponent.getPreferredSize.width.min(
-                                                    getHeight - valueComponent.getPreferredSize.width - 12),
+                                                    getHeight - unitsComponent.getPreferredSize.width -
+                                                    valueComponent.getPreferredSize.width - 18),
                                 nameComponent.getPreferredSize.height)
-        valueComponent.setBounds(0, valueComponent.getPreferredSize.width + 6, valueComponent.getPreferredSize.width,
-                                 valueComponent.getPreferredSize.height)
+        unitsComponent.setBounds(0, unitsComponent.getPreferredSize.width + 6, unitsComponent.getPreferredSize.width,
+                                 unitsComponent.getPreferredSize.height)
+        valueComponent.setBounds(0, unitsComponent.getPreferredSize.width + valueComponent.getPreferredSize.width + 12,
+                                 valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
         slider.setBounds(getWidth - (slider.getPreferredSize.width * zoomFactor).toInt, 0,
                          (slider.getPreferredSize.width * zoomFactor).toInt, getHeight)
       }
 
       else {
         nameComponent.setBounds(6, 0, nameComponent.getPreferredSize.width.min(
-                                        getWidth - valueComponent.getPreferredSize.width - 12),
+                                        getWidth - unitsComponent.getPreferredSize.width -
+                                        valueComponent.getPreferredSize.width - 18),
                                 nameComponent.getPreferredSize.height)
-        valueComponent.setBounds(getWidth - valueComponent.getPreferredSize.width - 6, 0,
-                                 valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
+        unitsComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width - 6, 0,
+                                 unitsComponent.getPreferredSize.width, unitsComponent.getPreferredSize.height)
+        valueComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width -
+                                 valueComponent.getPreferredSize.width - 12, 0, valueComponent.getPreferredSize.width,
+                                 valueComponent.getPreferredSize.height)
         slider.setBounds(0, getHeight - (slider.getPreferredSize.height * zoomFactor).toInt, getWidth,
                          (slider.getPreferredSize.height * zoomFactor).toInt)
       }
@@ -374,19 +388,26 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     else {
       if (vertical) {
         nameComponent.setBounds(6, getHeight - 12, nameComponent.getPreferredSize.width.min(
-                                                     getWidth - valueComponent.getPreferredSize.width - 24),
+                                                     getWidth - unitsComponent.getPreferredSize.width -
+                                                     valueComponent.getPreferredSize.width - 30),
                                 nameComponent.getPreferredSize.height)
-        valueComponent.setBounds(6, valueComponent.getPreferredSize.width + 12, valueComponent.getPreferredSize.width,
-                                 valueComponent.getPreferredSize.height)
+        unitsComponent.setBounds(6, unitsComponent.getPreferredSize.width + 12, unitsComponent.getPreferredSize.width,
+                                 unitsComponent.getPreferredSize.height)
+        valueComponent.setBounds(6, unitsComponent.getPreferredSize.width + valueComponent.getPreferredSize.width + 18,
+                                 valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
         slider.setBounds(getWidth - slider.getPreferredSize.width - 6, 6, slider.getPreferredSize.width, getHeight - 6)
       }
 
       else {
         nameComponent.setBounds(12, 6, nameComponent.getPreferredSize.width.min(
-                                        getWidth - valueComponent.getPreferredSize.width - 24),
+                                        getWidth - unitsComponent.getPreferredSize.width -
+                                        valueComponent.getPreferredSize.width - 36),
                                 nameComponent.getPreferredSize.height)
-        valueComponent.setBounds(getWidth - valueComponent.getPreferredSize.width - 12, 6,
-                                valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
+        unitsComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width - 12, 6,
+                                 unitsComponent.getPreferredSize.width, unitsComponent.getPreferredSize.height)
+        valueComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width -
+                                   valueComponent.getPreferredSize.width - 18, 6,
+                                 valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
         slider.setBounds(6, getHeight - slider.getPreferredSize.height - 6, getWidth - 6, slider.getPreferredSize.height)
       }
     }
