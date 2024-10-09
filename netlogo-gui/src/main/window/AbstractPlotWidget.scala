@@ -74,7 +74,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
     c.gridx = 0
     c.gridy = 0
-    c.gridwidth = 2
+    c.gridwidth = GridBagConstraints.REMAINDER
     c.anchor = GridBagConstraints.CENTER
 
     add(nameLabel, c)
@@ -88,7 +88,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     c.gridx = GridBagConstraints.RELATIVE
     c.gridy = 1
     c.gridwidth = 1
-    c.gridheight = GridBagConstraints.RELATIVE
+    c.gridheight = 1
     c.weighty = 3.0
     c.anchor = GridBagConstraints.WEST
     c.fill = GridBagConstraints.VERTICAL
@@ -110,7 +110,6 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     c.weightx = 0.0
     c.weighty = 0.0
     c.gridwidth = 1
-    c.gridheight = 1
     c.anchor = GridBagConstraints.WEST
     c.fill = GridBagConstraints.NONE
 
