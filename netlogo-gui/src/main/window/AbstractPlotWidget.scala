@@ -50,7 +50,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   private var fullyConstructed = false
   plot.dirtyListener = Some(this)
   val canvas = new PlotCanvas(plot)
-  private val legend = new PlotLegend(plot, this)
+  private val legend = new PlotLegend(plot)
   private val nameLabel = new JLabel(I18N.gui.get("edit.plot.previewName"))
   private val xAxis = new XAxisLabels()
   private val yAxis = new YAxisLabels()
@@ -102,14 +102,6 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
     add(new CanvasPanel(canvas), c)
 
-    c.gridwidth = GridBagConstraints.REMAINDER
-    c.weightx = 0.0
-    c.anchor = GridBagConstraints.NORTH
-    c.fill = GridBagConstraints.NONE
-    c.insets = new Insets(0, 3, 0, 3)
-    
-    add(legend, c)
-
     //ROW3
     //-----------------------------------------
     c.insets = new Insets(0, 3, 3, 3)
@@ -138,6 +130,18 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     c.fill = GridBagConstraints.NONE
 
     add(new JLabel, c)
+
+    //ROW4
+    //-----------------------------------------
+
+    c.gridx = 0
+    c.gridy = 3
+    c.gridwidth = GridBagConstraints.REMAINDER
+    c.weightx = 1
+    c.anchor = GridBagConstraints.CENTER
+    c.insets = new Insets(0, 0, 0, 0)
+    
+    add(legend, c)
 
     // make sure to update the gui components in case
     // something changed underneath ev 8/26/08

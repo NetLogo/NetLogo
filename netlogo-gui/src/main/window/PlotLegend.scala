@@ -2,24 +2,21 @@
 
 package org.nlogo.window
 
+import java.awt.{ Color, Dimension }
+import javax.swing.{ JLabel, JPanel }
+
 import org.nlogo.plot.{ Plot, PlotPen }
 
-// we use fontSource in order to keep the font sizes of the PlotPen objects
-// in sync with the current zoom level even when the PlotLegend is
-// closed.  a bit kludgy perhaps, but oh well - ST 9/2/04
-class PlotLegend(plot: Plot, fontSource: java.awt.Component)
-extends javax.swing.JPanel {
-
-  setLayout(new org.nlogo.awt.ColumnLayout(2)) // 2 pixel gap
+class PlotLegend(plot: Plot) extends JPanel {
   setOpaque(false)
 
   var open = false
 
   def addPen(pen: PlotPen) {
     if (open) {
-      if (pen.inLegend) {
-        add(new LegendItem(pen) { setFont(fontSource.getFont) })
-      }
+      if (pen.inLegend)
+        add(new LegendItem(pen))
+
       revalidate()
     }
   }
@@ -29,28 +26,23 @@ extends javax.swing.JPanel {
   def clearGUI() { removeAll(); revalidate() }
 
   private def fillGUI() {
-    for (pen <- plot.pens; if (pen.inLegend)) {
-      add(new LegendItem(pen) { setFont(fontSource.getFont) })
-    }
+    for (pen <- plot.pens; if (pen.inLegend))
+      add(new LegendItem(pen))
+    
     revalidate()
   }
 
-  private class LegendItem(pen: PlotPen) extends javax.swing.JComponent {
-    override def paintComponent(g: java.awt.Graphics) {
-      val ascent = g.getFontMetrics.getMaxAscent
-      g.setColor(new java.awt.Color(pen.color))
-      g.fillRect(0, 0, ascent, ascent)
-      g.setColor(getForeground)
-      g.drawRect(0, 0, ascent, ascent)
-      g.drawString(pen.name, ascent + 4, ascent)
-    }
+  private class LegendItem(pen: PlotPen) extends JPanel {
+    setOpaque(false)
+    setBackground(InterfaceColors.TRANSPARENT)
 
-    override def getPreferredSize = getMinimumSize
-    override def getMinimumSize = {
-      val metrics = getFontMetrics(getFont())
-      new java.awt.Dimension(metrics.stringWidth(pen.name) + metrics.getMaxAscent + 4,
-        StrictMath.max(8, metrics.getMaxDescent + metrics.getMaxAscent))
-    }
+    add(new JPanel {
+      setBackground(new Color(pen.color))
+
+      override def getPreferredSize: Dimension =
+        new Dimension(15, 2)
+    })
+
+    add(new JLabel(pen.name))
   }
-
 }
