@@ -29,7 +29,6 @@ window.ExportWidget - org.nlogo.window.Widget widget
 window.ExternalFileSaved - String path
 window.Iconified - java.awt.Frame frame - boolean iconified
 window.InputBoxLoseFocus
-window.InteractModeChanged - org.nlogo.app.interfacetab.InteractMode interactMode
 window.InterfaceGlobal - InterfaceGlobalWidget widget - boolean nameChanged - boolean updating - boolean valueChanged - boolean buttonReleased
 window.JobRemoved - org.nlogo.api.JobOwner owner
 window.JobStopping - org.nlogo.api.JobOwner owner
@@ -50,6 +49,7 @@ window.RemoveConstraint - String varname
 window.RemoveJob - org.nlogo.api.JobOwner owner
 window.ResizeView - int width - int height
 window.RuntimeError - org.nlogo.api.JobOwner jobOwner - org.nlogo.api.SourceOwner sourceOwner - int pos - int length
+window.SelectMode
 window.TickStateChange - boolean tickCounterInitialized
 window.WidgetAdded - Object widget
 window.WidgetEdited - Widget widget

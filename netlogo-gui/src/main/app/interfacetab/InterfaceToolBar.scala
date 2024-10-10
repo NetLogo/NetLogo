@@ -25,7 +25,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   with AppEvents.WidgetSelectedEvent.Handler
   with WindowEvents.EditWidgetEvent.Handler
   with WindowEvents.WidgetAddedEvent.Handler
-  with WindowEvents.InteractModeChangedEvent.Handler {
+  with WindowEvents.SelectModeEvent.Handler {
 
   private val selectedObjects = new HashSet[Widget]
 
@@ -152,9 +152,8 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     updateTarget(e.widget)
   }
 
-  def handle(e: WindowEvents.InteractModeChangedEvent) {
-    if (e.interactMode == InteractMode.SELECT)
-      selectButton.setSelected(true)
+  def handle(e: WindowEvents.SelectModeEvent) {
+    selectButton.setSelected(true)
   }
 
   def getItems: Array[JMenuItem] = WidgetInfos.map(spec => new JMenuItem(spec.displayName, spec.icon)).toArray

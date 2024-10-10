@@ -21,7 +21,7 @@ import org.nlogo.window.{ AbstractWidgetPanel, Events => WindowEvents,
   GUIWorkspace, OutputWidget, Widget, WidgetContainer, WidgetRegistry,
   DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget,
   PlotWidget },
-    WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, InteractModeChangedEvent, LoadBeginEvent,
+    WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, LoadBeginEvent, SelectModeEvent,
       WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent }
 
 sealed trait InteractMode {
@@ -130,15 +130,17 @@ class WidgetPanel(val workspace: GUIWorkspace)
   protected def setInteractMode(mode: InteractMode) {
     interactMode = mode
 
-    if (mode == InteractMode.SELECT)
+    if (mode == InteractMode.SELECT) {
       interceptPane.disableIntercept()
+
+      new SelectModeEvent().raise(this)
+    }
+
     else
       interceptPane.enableIntercept()
     
     setCursor(mode.cursor)
     unselectWidgets()
-
-    new InteractModeChangedEvent(mode).raise(this)
   }
 
   setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
