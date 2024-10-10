@@ -15,4 +15,6 @@ object Mouse {
       case MouseEvent.MOUSE_RELEASED => (e.getButton & MouseEvent.BUTTON1) != 0
       case _ => (e.getModifiersEx & InputEvent.BUTTON1_DOWN_MASK) != 0
     }
+  def hasCtrl(e: MouseEvent) =
+    (e.getModifiersEx & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK
 }

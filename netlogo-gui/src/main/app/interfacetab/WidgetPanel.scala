@@ -318,7 +318,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
               StrictMath.abs(x - startDragPoint.x),
               StrictMath.abs(y - startDragPoint.y)
             )
-          selectWidgets(selectionRect)
+          selectWidgets(selectionRect, NlogoMouse.hasCtrl(e))
           if (oldSelectionRect != null)
             selectionPane.repaint(oldSelectionRect)
           selectionPane.repaint(selectionRect)
@@ -367,7 +367,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
           p.y += rect.y
 
           if (rect.contains(p)) {
-            unselectWidgets()
+            if (!NlogoMouse.hasCtrl(e))
+              unselectWidgets()
+
             startDragPoint = e.getPoint
           }
         }
@@ -473,8 +475,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
         }
 
       case InteractMode.ADD =>
-        if (e.getButton == MouseEvent.BUTTON1)
+        if (e.getButton == MouseEvent.BUTTON1) {
           placeShadowWidget()
+          setInteractMode(InteractMode.SELECT)
+        }
+
         else if (e.getButton == MouseEvent.BUTTON3) {
           removeShadowWidget()
           setInteractMode(InteractMode.SELECT)
@@ -508,7 +513,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     setInteractMode(InteractMode.SELECT)
   }
 
-  protected def selectWidgets(rect: Rectangle): Unit = {
+  protected def selectWidgets(rect: Rectangle, persist: Boolean): Unit = {
     getComponents.collect {
       case w: WidgetWrapper => w
     }.foreach { wrapper =>
@@ -516,7 +521,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       val wrapperRect = wrapper.getUnselectedBounds
       if (! selected && rect.intersects(wrapperRect))
         wrapper.selected(true)
-      else if (selected && ! rect.intersects(wrapperRect))
+      else if (!persist && selected && ! rect.intersects(wrapperRect))
         wrapper.selected(false)
     }
     setForegroundWrapper()
