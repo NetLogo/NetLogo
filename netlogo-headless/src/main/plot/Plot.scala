@@ -120,12 +120,18 @@ extends PlotInterface {
 
   private def prettyRange(range: Double): Double = {
     if (range < 0) {
+      if (range > -1)
+        return -1
+
       val tmag = pow(10, log10(-range).floor - 1) * 2
 
       (range / tmag).floor * tmag
     }
 
     else {
+      if (range < 1)
+        return 1
+
       val tmag = pow(10, log10(range).floor - 1) * 2
 
       (range / tmag).ceil * tmag
