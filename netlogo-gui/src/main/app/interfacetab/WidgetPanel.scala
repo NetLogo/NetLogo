@@ -3,7 +3,8 @@
 package org.nlogo.app.interfacetab
 
 import java.awt.{ Component, Cursor, Dimension, Graphics, Point, Rectangle, Color => AwtColor, Toolkit }
-import java.awt.event.{ ActionListener, ActionEvent, MouseAdapter, MouseEvent, MouseListener, MouseMotionAdapter, MouseMotionListener }
+import java.awt.event.{ ActionListener, ActionEvent, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, MouseListener,
+                        MouseMotionAdapter, MouseMotionListener }
 import javax.swing.{ JComponent, JLayeredPane, JMenuItem, JPopupMenu }
 
 import org.nlogo.api.Editable
@@ -153,6 +154,18 @@ class WidgetPanel(val workspace: GUIWorkspace)
   selectionPane.setVisible(false)
   add(selectionPane, JLayeredPane.DRAG_LAYER)
 
+  addKeyListener(new KeyAdapter {
+    override def keyPressed(e: KeyEvent) {
+      if (e.getKeyCode == KeyEvent.VK_CONTROL)
+        interceptPane.enableIntercept()
+    }
+
+    override def keyReleased(e: KeyEvent) {
+      if (e.getKeyCode == KeyEvent.VK_CONTROL)
+        interceptPane.disableIntercept()
+    }
+  })
+
   // our children may overlap
   override def isOptimizedDrawingEnabled: Boolean = false
 
@@ -292,12 +305,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
       case InteractMode.EDIT =>
         val topWrapper = wrapperAtPoint(e.getX, e.getY).getOrElse(null)
 
-        getWrappers.foreach(wrapper => wrapper.selected(wrapper == topWrapper))
+        getWrappers.foreach(wrapper => selectWidget(wrapper, wrapper == topWrapper))
 
       case InteractMode.DELETE =>
         val topWrapper = wrapperAtPoint(e.getX, e.getY).filter(_.widget.deleteable).getOrElse(null)
 
-        getWrappers.foreach(wrapper => wrapper.selected(wrapper == topWrapper))
+        getWrappers.foreach(wrapper => selectWidget(wrapper, wrapper == topWrapper))
     }
   }
 
@@ -336,12 +349,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
         case InteractMode.EDIT =>
           val topWrapper = wrapperAtPoint(e.getX, e.getY).getOrElse(null)
 
-          getWrappers.foreach(wrapper => wrapper.selected(wrapper == topWrapper))
+          getWrappers.foreach(wrapper => selectWidget(wrapper, wrapper == topWrapper))
 
         case InteractMode.DELETE =>
           val topWrapper = wrapperAtPoint(e.getX, e.getY).filter(_.widget.deleteable).getOrElse(null)
 
-          getWrappers.foreach(wrapper => wrapper.selected(wrapper == topWrapper))
+          getWrappers.foreach(wrapper => selectWidget(wrapper, wrapper == topWrapper))
         
         case _ =>
       }
@@ -362,18 +375,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
           // - ST 8/6/04,8/31/04
           requestFocus()
 
-          val p = e.getPoint
-          val rect = getBounds()
+          if (!NlogoMouse.hasCtrl(e))
+            unselectWidgets()
 
-          p.x += rect.x
-          p.y += rect.y
-
-          if (rect.contains(p)) {
-            if (!NlogoMouse.hasCtrl(e))
-              unselectWidgets()
-
-            startDragPoint = e.getPoint
-          }
+          startDragPoint = e.getPoint
         }
 
       case InteractMode.ADD | InteractMode.EDIT | InteractMode.DELETE if e.getButton == MouseEvent.BUTTON1 =>
@@ -466,11 +471,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
         if (e.isPopupTrigger)
           doPopup(e)
         else if (e.getButton == MouseEvent.BUTTON1) {
-          val p = e.getPoint
-          val rect = getBounds()
-
-          p.x += rect.x
-          p.y += rect.y
+          if (NlogoMouse.hasCtrl(e) && selectionRect == null)
+            wrapperAtPoint(e.getX, e.getY).foreach(wrapper => selectWidget(wrapper, !wrapper.selected))
 
           selectionRect = null
           selectionPane.setVisible(false)
@@ -513,6 +515,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def beginSelect() {
     setInteractMode(InteractMode.SELECT)
+  }
+
+  protected def selectWidget(wrapper: WidgetWrapper, selected: Boolean) {
+    wrapper.selected(selected)
+
+    setForegroundWrapper()
   }
 
   protected def selectWidgets(rect: Rectangle, persist: Boolean): Unit = {
