@@ -406,7 +406,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   def wrapSource: String = innerSource
 
   def wrapSource(newInnerSource:String) {
-    if (newInnerSource != "" && newInnerSource != innerSource) {
+    if (newInnerSource != innerSource) {
       this.innerSource = newInnerSource
       recompile()
     }
