@@ -472,10 +472,23 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     
     foreverLabel.setVisible(forever)
 
-    if (nameLabel.getPreferredSize.width > nameLabel.getWidth)
-      nameLabel.setToolTipText(nameLabel.getText)
-    else
-      nameLabel.setToolTipText(null)
+    if (nameLabel.getPreferredSize.width > nameLabel.getWidth) {
+      nameLabel.setToolTipText(
+        if (disabledWaitingForSetup)
+          "(disabled) " + nameLabel.getText
+        else
+          nameLabel.getText
+      )
+    }
+
+    else {
+      nameLabel.setToolTipText(
+        if (disabledWaitingForSetup)
+          "(disabled)"
+        else
+          null
+      )
+    }
 
     super.paintComponent(g)
   }
