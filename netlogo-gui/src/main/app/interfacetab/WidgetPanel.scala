@@ -673,6 +673,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       }
     }
     setForegroundWrapper()
+    setInteractMode(InteractMode.SELECT)
   }
 
   def beginDelete() {
