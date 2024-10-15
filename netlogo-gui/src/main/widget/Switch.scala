@@ -98,7 +98,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     if (preserveWidgetSizes)
       new Dimension(MINWIDTH, MINHEIGHT)
     else
-      new Dimension(90, 37)
+      new Dimension(super.getPreferredSize.width, 37)
 
   override def getMinimumSize =
     if (preserveWidgetSizes)
