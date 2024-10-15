@@ -74,8 +74,15 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     override def paintComponent(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
 
-      g2d.setColor(InterfaceColors.WIDGET_PREVIEW_COVER)
-      g2d.fillRect(0, 0, getWidth, getHeight)
+      if (widget.isNote) {
+        g2d.setColor(InterfaceColors.WIDGET_PREVIEW_COVER_NOTE)
+        g2d.fillRoundRect(0, 0, getWidth, getHeight, 12, 12)
+      }
+
+      else {
+        g2d.setColor(InterfaceColors.WIDGET_PREVIEW_COVER)
+        g2d.fillRect(0, 0, getWidth, getHeight)
+      }
     }
   }
 
