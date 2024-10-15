@@ -344,9 +344,14 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     var numString = Dump.number(num)
     var place = numString.indexOf('.')
     val p = sliderData.precision
-    if (p > 0 && place == -1) {
-      numString += "."
-      place = numString.length - 1
+    if (p > 0) {
+      if (place == -1) {
+        numString += "."
+        place = numString.length - 1
+      }
+      else {
+        numString = numString.substring(0, numString.size.min(place + p + 1))
+      }
     }
     if (place != -1 && numString.indexOf('E') == -1) {
       val padding = p - (numString.length - place - 1)
