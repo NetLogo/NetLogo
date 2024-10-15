@@ -32,7 +32,7 @@ class ProtocolEditable(protocol: LabProtocol,
                   backgroundColor = new java.awt.Color(128, 200, 128, 64), // de york green (light yellow-ish green)
                   borderSize = 6),
          Property("name", Property.String, I18N.gui("experimentName"),
-                  "<html>"+I18N.gui("experimentName.info")+"</html>"),
+                  "<html>"+I18N.gui("experimentName.info")+"</html>", focus = true),
          Property("valueSets", Property.ReporterOrEmpty,
                   I18N.gui("vary"), "<html>"+I18N.gui("vary.info")+"</html>"),
          Property("repetitions", Property.Integer, I18N.gui("repetitions"),

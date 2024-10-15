@@ -2,9 +2,8 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.Cursor
 import java.awt.image.BufferedImage
-import java.awt.event.{ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, KeyListener, MouseEvent}
+import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, KeyListener, MouseEvent }
 import javax.swing.{ JMenuItem, JPopupMenu }
 
 import org.nlogo.api.{ Editable, Exceptions, Version }
@@ -20,7 +19,7 @@ import org.nlogo.log.LogManager
 import org.nlogo.window.{ ButtonWidget, ChooserWidget, Events => WindowEvents,
   GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, MonitorWidget,
   PlotWidget, SliderWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
-    WindowEvents.{CompileAllEvent, EditWidgetEvent, LoadBeginEvent, LoadWidgetsEvent,
+    WindowEvents.{CompileAllEvent, LoadBeginEvent, LoadWidgetsEvent,
     RemoveConstraintEvent, WidgetRemovedEvent}
 import org.nlogo.workspace.Evaluator
 
@@ -39,7 +38,6 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   viewWidget.asInstanceOf[Widget].deleteable = false
   addKeyListener(this)
-  addMouseListener(this)
   addFocusListener(this)
 
   ///
@@ -67,19 +65,17 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     .map(i => i.displayName -> i.widgetThunk)
     .foreach {
         case (displayName, widgetThunk) =>
-          menu.add(new WidgetCreationMenuItem(displayName, widgetThunk(), e.getX, e.getY))
+          menu.add(new WidgetCreationMenuItem(displayName, widgetThunk()))
     }
 
     // add all the widgets
-    val outputItem =
-        new WidgetCreationMenuItem(I18N.gui.get("tabs.run.widgets.output"),
-          CoreOutput(0, 0, 0, 0, 11), e.getX, e.getY)
+    val outputItem = new WidgetCreationMenuItem(I18N.gui.get("tabs.run.widgets.output"), CoreOutput(0, 0, 0, 0, 11))
     if (getOutputWidget != null) {
       outputItem.setEnabled(false)
     }
     menu.add(outputItem)
 
-    menu.add(new WidgetCreationMenuItem(I18N.gui.get("tabs.run.widgets.note"), CoreTextBox(None, fontSize = 11, color = 0), e.getX, e.getY))
+    menu.add(new WidgetCreationMenuItem(I18N.gui.get("tabs.run.widgets.note"), CoreTextBox(None, fontSize = 11, color = 0)))
 
     // add extra stuff
     menu.add(new JPopupMenu.Separator())
@@ -94,27 +90,14 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     new JMenuItem(exportAction)
   }
 
-  class WidgetCreationMenuItem(val displayName: String, val coreWidget: CoreWidget, x: Int, y: Int)
+  class WidgetCreationMenuItem(val displayName: String, val coreWidget: CoreWidget)
   extends JMenuItem(displayName) with ActionListener {
     addActionListener(this)
 
     override def actionPerformed(e: ActionEvent): Unit = {
-      WidgetActions.addWidget(InterfacePanel.this, coreWidget, x, y)
+      unselectWidgets()
+      createShadowWidget(coreWidget)
     }
-  }
-
-  override def createWidget(coreWidget: CoreWidget, x: Int, y: Int): WidgetWrapper = {
-    val widget = makeWidget(coreWidget)
-    val wrapper = addWidget(widget, x, y, true, false)
-    revalidate()
-    wrapper.selected(true)
-    wrapper.foreground()
-    wrapper.isNew(true)
-    new EditWidgetEvent(null).raise(InterfacePanel.this)
-    newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
-    wrapper.isNew(false)
-    newWidget = null
-    wrapper
   }
 
   // This is used both when loading a model and when the user is making
@@ -130,7 +113,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
       case p: CorePlot     => PlotWidget(workspace.plotManager)
       case m: CoreMonitor  => new MonitorWidget(workspace.world.auxRNG)
       case s: CoreSlider =>
-        new SliderWidget(workspace.world.auxRNG) {
+        new SliderWidget(workspace.world.auxRNG, workspace) {
           override def sourceOffset: Int =
             Evaluator.sourceOffset(AgentKind.Observer, false)
         }

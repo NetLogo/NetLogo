@@ -2,8 +2,13 @@
 
 package org.nlogo.editor
 
+import java.awt.Color
 import javax.swing.{ Action, JViewport, SwingUtilities }
 import javax.swing.text.{ EditorKit, JTextComponent }
+
+object AbstractEditorArea {
+  val ERROR_HIGHLIGHT = new Color(251, 96, 85)
+}
 
 trait AbstractEditorArea extends JTextComponent {
   def configuration: EditorConfiguration
@@ -13,6 +18,8 @@ trait AbstractEditorArea extends JTextComponent {
   def setIndenter(i: Indenter): Unit
 
   def setSelection(s: Boolean): Unit
+
+  def selectError(start: Int, end: Int): Unit
 
   def resetUndoHistory(): Unit
 

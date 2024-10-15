@@ -2,11 +2,12 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Component, Dimension, EventQueue, Font }
-import javax.swing.{ JScrollPane, JTextArea, ScrollPaneConstants }
+import java.awt.{ Color, Component, Dimension, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import javax.swing.{ JPanel, JScrollPane, JTextArea, ScrollPaneConstants }
 
 import org.nlogo.awt.{ Fonts => NLogoFonts, LineBreaker }
 import org.nlogo.agent.OutputObject
+import org.nlogo.swing.Utils
 
 object OutputArea {
   private val PreferredWidth = 200
@@ -26,10 +27,18 @@ object OutputArea {
 
 import OutputArea._
 
-class OutputArea(val text: JTextArea) extends javax.swing.JPanel {
+class OutputArea(val text: JTextArea) extends JPanel {
+  setOpaque(false)
+
+  var zoomFactor = 1.0
+
   private val scrollPane: JScrollPane =
-    new javax.swing.JScrollPane(text,
-      ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+    new JScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+  
+  scrollPane.setBorder(null)
+
+  text.setBackground(Color.WHITE)
 
   // when someone prints something that
   // ends in a carriage return, we don't want to print it immediately,
@@ -42,12 +51,20 @@ class OutputArea(val text: JTextArea) extends javax.swing.JPanel {
 
   // var help: String = null // don't think this is used any longer....
   //
+  text.setEditable(false)
+  text.setDragEnabled(false)
+  fontSize(12)
+  setLayout(new GridBagLayout)
+
   locally {
-    text.setEditable(false)
-    text.setDragEnabled(false)
-    fontSize(12)
-    setLayout(new BorderLayout())
-    add(scrollPane, BorderLayout.CENTER)
+    val c = new GridBagConstraints
+
+    c.weightx = 1
+    c.weighty = 1
+    c.fill = GridBagConstraints.BOTH
+    c.insets = new Insets(3, 3, 3, 3)
+
+    add(scrollPane, c)
   }
 
   def this() = this(new DefaultTextArea())
@@ -73,6 +90,15 @@ class OutputArea(val text: JTextArea) extends javax.swing.JPanel {
     new Dimension(PreferredWidth, PreferredHeight)
 
   override def isFocusable: Boolean = false
+
+  override def paintComponent(g: Graphics) {
+    val g2d = Utils.initGraphics2D(g)
+    g2d.setColor(Color.WHITE)
+    g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
+    g2d.setColor(InterfaceColors.OUTPUT_BORDER)
+    g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
+    super.paintComponent(g)
+  }
 
   def append(oo: OutputObject, wrapLines: Boolean): Unit = {
     var message = oo.get

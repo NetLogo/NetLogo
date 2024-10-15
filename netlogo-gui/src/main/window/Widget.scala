@@ -2,14 +2,15 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, Container, Dimension, Font, Graphics, Graphics2D, Point, Rectangle, event },
-  event.{MouseAdapter, MouseEvent, MouseListener}
-import javax.swing.border.Border
-import javax.swing.{JPanel, JMenuItem, JPopupMenu}
+import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, Point, Rectangle, event },
+                event.{ MouseAdapter, MouseEvent, MouseListener }
+import java.util.prefs.Preferences
+import javax.swing.{ JPanel, JMenuItem, JPopupMenu }
 
-import org.nlogo.api.{ MultiErrorHandler, SingleErrorHandler }
-import org.nlogo.core.{ Widget => CoreWidget }
-import org.nlogo.window.Events.{ WidgetAddedEvent, WidgetEditedEvent, WidgetRemovedEvent }
+import org.nlogo.api.{ CompilerServices, MultiErrorHandler, SingleErrorHandler }
+import org.nlogo.core.{ TokenType, Widget => CoreWidget }
+import org.nlogo.swing.Utils
+import org.nlogo.window.Events.{ WidgetAddedEvent, WidgetEditedEvent, WidgetErrorEvent, WidgetRemovedEvent }
 
 object Widget {
   trait LoadHelper {
@@ -20,8 +21,33 @@ object Widget {
   def validWidgetType(name:String) = validWidgetTypes.contains(name)
 }
 
-abstract class SingleErrorWidget extends Widget with SingleErrorHandler
-abstract class MultiErrorWidget extends Widget with MultiErrorHandler
+abstract class SingleErrorWidget extends Widget with SingleErrorHandler {
+  override def error(e: Exception) {
+    super.error(e)
+
+    new WidgetErrorEvent(this, e).raise(this)
+  }
+
+  override def error(key: Object, e: Exception) {
+    super.error(key, e)
+
+    new WidgetErrorEvent(this, e).raise(this)
+  }
+}
+
+abstract class MultiErrorWidget extends Widget with MultiErrorHandler {
+  override def removeAllErrors() {
+    super.removeAllErrors()
+
+    new WidgetErrorEvent(this, null).raise(this)
+  }
+
+  override def error(key: Object, e: Exception) {
+    super.error(key, e)
+
+    new WidgetErrorEvent(this, e).raise(this)
+  }
+}
 
 abstract class Widget extends JPanel {
 
@@ -31,12 +57,16 @@ abstract class Widget extends JPanel {
   var originalFont: Font = null
   var displayName: String = ""
   var deleteable: Boolean = true
-  val widgetBorder: Border = org.nlogo.swing.Utils.createWidgetBorder
-  val widgetPressedBorder: Border = org.nlogo.swing.Utils.createWidgetPressedBorder
 
-  override def getPreferredSize: Dimension = getPreferredSize(getFont)
-  def getPreferredSize(font: Font): Dimension = super.getPreferredSize
-  def widgetWrapperOpaque = true
+  protected var backgroundColor = Color.WHITE
+
+  setOpaque(false)
+
+  protected val preserveWidgetSizes = Preferences.userRoot.node("/org/nlogo/NetLogo")
+                                                 .getBoolean("preserveWidgetSizes", true)
+
+  protected var zoomFactor = 1.0
+
   def getEditable: Object = this
   def copyable = true // only OutputWidget and ViewWidget are not copyable
   def constrainDrag(newBounds: Rectangle, originalBounds: Rectangle, mouseMode: MouseMode): Rectangle = newBounds
@@ -47,15 +77,16 @@ abstract class Widget extends JPanel {
   def load(widget: WidgetModel): Object
   def sourceOffset = 0
   def hasContextMenuInApplet = false
-  def getUnzoomedPreferredSize: Dimension = getPreferredSize(originalFont)
-  def needsPreferredWidthFudgeFactor = true
+  def getUnzoomedPreferredSize: Dimension = getPreferredSize
   def isButton = false
   def isTurtleForeverButton = false
   def isLinkForeverButton = false
   def isNote = false
   def hasContextMenu = false
   def exportable = false
-  def zoomSubcomponents = false
+  def setZoomFactor(zoomFactor: Double) {
+    this.zoomFactor = zoomFactor
+  }
   def getDefaultExportName = "output.txt"
   def updateConstraints(): Unit = {}
   def classDisplayName: String = getClass.getName
@@ -110,8 +141,9 @@ abstract class Widget extends JPanel {
   }
 
   override def paintComponent(g: Graphics): Unit = {
-    val g2d: Graphics2D = g.asInstanceOf[Graphics2D]
-    g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON)
+    val g2d = Utils.initGraphics2D(g)
+    g2d.setColor(backgroundColor)
+    g2d.fillRoundRect(0, 0, getWidth, getHeight, (12 * zoomFactor).toInt, (12 * zoomFactor).toInt)
     super.paintComponent(g)
   }
 
@@ -180,6 +212,9 @@ abstract class Widget extends JPanel {
   def raiseWidgetAdded(): Unit = {
     new WidgetAddedEvent(this).raise(this)
   }
+
+  protected def checkRecursive(compiler: CompilerServices, source: String, name: String): Boolean =
+    compiler.tokenizeForColorization(source).exists(token => token.tpe == TokenType.Ident && token.text == name)
 
   implicit class RichStringOption(s: Option[String]) {
     def optionToPotentiallyEmptyString = s.getOrElse("")

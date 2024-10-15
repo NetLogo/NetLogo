@@ -4,16 +4,14 @@ package org.nlogo.window
 
 import org.nlogo.api.{ Editable, Property }
 import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton }
-import org.nlogo.awt.{ Fonts => NlogoFonts }
+import org.nlogo.awt.Fonts
 
-import java.awt.{ Color, Dimension, Font, Graphics }
+import java.awt.{ Color, Dimension, Graphics }
 import java.util.{ List => JList }
 
 object DummyButtonWidget {
   private val MinimumWidth = 55
   private val MinimumHeight = 33
-  private val PreferredTextHorizontalPadding = 28
-  private val PreferredTextVertialPadding = 12
 }
 
 class DummyButtonWidget
@@ -24,9 +22,7 @@ class DummyButtonWidget
 
   import DummyButtonWidget._
 
-  setBackground(InterfaceColors.BUTTON_BACKGROUND)
-  setBorder(widgetBorder)
-  org.nlogo.awt.Fonts.adjustDefaultFont(this)
+  backgroundColor = InterfaceColors.BUTTON_BACKGROUND
 
   private var _actionKey: Char = '\u0000'
   private var _keyEnabled: Boolean = false
@@ -72,24 +68,13 @@ class DummyButtonWidget
   override def getMinimumSize: Dimension =
     new Dimension(MinimumWidth, MinimumHeight)
 
-  override def getPreferredSize(font: Font): Dimension = {
-    val size = getMinimumSize
-    val fontMetrics = getFontMetrics(font)
-    size.width = StrictMath.max(size.width,
-      fontMetrics.stringWidth(displayName) +
-      PreferredTextHorizontalPadding)
-    size.height = StrictMath.max(size.height,
-      fontMetrics.getMaxDescent +
-      fontMetrics.getMaxAscent +
-      PreferredTextVertialPadding)
-    size
-  }
+  override def getPreferredSize: Dimension =
+    new Dimension(MinimumWidth.max(super.getPreferredSize.width), MinimumHeight.max(super.getPreferredSize.height))
 
   /// painting
 
   override def paintComponent(g: Graphics): Unit = {
-    g.setColor(getBackground)
-    g.fillRect(0, 0, getWidth, getHeight)
+    super.paintComponent(g)
     val size = getSize()
     val fontMetrics = g.getFontMetrics
     val labelHeight =
@@ -99,7 +84,7 @@ class DummyButtonWidget
     g.setColor(getForeground)
 
     val shortString =
-      NlogoFonts.shortenStringToFit(displayName, availableWidth, fontMetrics)
+      Fonts.shortenStringToFit(displayName, availableWidth, fontMetrics)
 
     val nx =
       if (stringWidth > availableWidth) 4

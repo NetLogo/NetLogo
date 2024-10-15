@@ -99,13 +99,13 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
     putValue(Action.SMALL_ICON, icon(image))
     setEnabled(enableMe)
   }
-  val compileAction = new MyAction("Check", "/images/check.gif", enableMe = true) {
+  val compileAction = new MyAction("Check", "/images/check-filled.png", enableMe = true) {
     def actionPerformed(e: ActionEvent) {new org.nlogo.window.Events.CompileAllEvent().raise(editor)}
   }
-  val editAction = new MyAction("Edit", "/images/edit.gif", enableMe = false) {
+  val editAction = new MyAction("Edit", "/images/edit.png", enableMe = false) {
     def actionPerformed(e: ActionEvent) {editor.inspectFigure(editor.view.selection.nextFigure)}
   }
-  val deleteAction = new MyAction("Delete", "/images/delete.gif", enableMe = false) {
+  val deleteAction = new MyAction("Delete", "/images/delete.png", enableMe = false) {
     def actionPerformed(e: ActionEvent) {
       new DeleteCommand(I18N.gui("delete"), editor).execute()
       new org.nlogo.window.Events.CompileAllEvent().raise(editor)

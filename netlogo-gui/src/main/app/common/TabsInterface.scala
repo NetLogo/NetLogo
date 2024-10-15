@@ -29,7 +29,7 @@ trait TabsInterface {
   def watchingFiles_=(b: Boolean): Unit
 
   def newExternalFile(): Unit
-  def openExternalFile(filename: String): Unit
+  def openExternalFile(filename: String, focus: Boolean = true): Unit
   def closeExternalFile(filename: Filename): Unit
 
   def switchWindow(separate: Boolean, preserveSelected: Boolean): Unit

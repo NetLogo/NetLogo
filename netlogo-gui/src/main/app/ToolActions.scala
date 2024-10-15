@@ -9,7 +9,7 @@ import javax.swing.{ AbstractAction, JDialog }
 
 import org.nlogo.api.{ AggregateManagerInterface, LibraryManager }
 import org.nlogo.app.common.TabsInterface
-import org.nlogo.app.tools.{ LibrariesDialog, Preferences, PreferencesDialog }
+import org.nlogo.app.tools.{ LibrariesDialog, Preferences, PreferencesDialog, ThemesDialog }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.workspace.AbstractWorkspaceScala
@@ -45,8 +45,16 @@ with MenuAction {
     Preferences.IncludedFilesMenu,
     Preferences.ProceduresMenuSortOrder,
     Preferences.FocusOnError,
-    Preferences.StartSeparateCodeTab
+    Preferences.StartSeparateCodeTab,
+    Preferences.PreserveWidgetSizes
   )
+}
+
+class ShowThemesDialog(frame: Frame) extends ShowDialogAction(I18N.gui.get("menu.tools.themes")) with MenuAction {
+  category = ToolsCategory
+  group = ToolsSettingsGroup
+
+  override def createDialog = new ThemesDialog(frame)
 }
 
 class OpenLibrariesDialog( frame:              Frame

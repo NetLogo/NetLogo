@@ -52,11 +52,10 @@ extends ToolDialog(parent, "preferences") {
   override def initGUI() = {
     val preferencesPanel = new TextFieldBox(SwingConstants.TRAILING)
     preferencesPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10))
-    preferences foreach { pref =>
-      val text = (if (pref.restartRequired) I18N.gui("restartRequired") + "  " else "") +
-        I18N.gui(pref.i18nKey)
-      preferencesPanel.addField(text, pref.component)
-    }
+    preferences.foreach(pref =>
+      preferencesPanel.addField(
+        (if (pref.requirement.nonEmpty) I18N.gui(pref.requirement) + " " else "") +
+        I18N.gui(pref.i18nKey), pref.component))
 
     val buttonsPanel = new Box(BoxLayout.LINE_AXIS)
     buttonsPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 10, 20))

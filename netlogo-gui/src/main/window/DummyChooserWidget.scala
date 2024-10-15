@@ -23,8 +23,6 @@ class DummyChooserWidget(val compiler: CompilerServices)
     repaint()
   }
 
-  setBorder(widgetBorder)
-
   override def updateConstraints(): Unit = {
     // we never update constraints in a dummy widget -- CLB
   }

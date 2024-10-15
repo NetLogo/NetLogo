@@ -161,12 +161,12 @@ class CommandLine(commandCenter: CommandCenterInterface,
     if (e.sourceOwner == this) {
       error(e.error)
 
-      error match {
+      error() match {
         case err: CompilerException =>
           val offset = headerSource.length
           // highlight error location
 
-          textField.select(err.start - offset, err.end - offset)
+          textField.selectError(err.start - offset, err.end - offset)
           // print error message
           new WindowEvents.OutputEvent(false,
             new OutputObject("", "ERROR: " + err.getMessage(), true, true),

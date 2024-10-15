@@ -14,8 +14,6 @@ import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical }
 class DummySliderWidget extends AbstractSliderWidget with Editable {
   type WidgetModel = CoreSlider
 
-  setBorder( widgetBorder )
-
   override def classDisplayName =  I18N.gui.get("tabs.run.widgets.slider")
 
   def propertySet = Properties.dummySlider

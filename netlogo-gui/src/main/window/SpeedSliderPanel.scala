@@ -2,17 +2,19 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Component, Dimension, Graphics, GridBagConstraints, GridBagLayout }
-import java.awt.event.{ ComponentEvent, ComponentListener, MouseEvent, MouseListener, MouseWheelEvent, MouseWheelListener }
-import javax.swing.{ JLabel, JPanel, JSlider }
+import java.awt.{ Color, Component, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.event.{ MouseEvent, MouseListener, MouseWheelEvent, MouseWheelListener }
+import javax.swing.{ JLabel, JPanel, JSlider, SwingConstants }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 
-import org.nlogo.awt.Fonts.adjustDefaultFont
 import org.nlogo.core.I18N
 import org.nlogo.log.LogManager
 import org.nlogo.window.Events.LoadBeginEvent
 
-class SpeedSliderPanel(workspace: GUIWorkspace) extends JPanel with MouseListener with ChangeListener with LoadBeginEvent.Handler {
+class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) extends JPanel
+                                                                              with MouseListener
+                                                                              with ChangeListener
+                                                                              with LoadBeginEvent.Handler {
   implicit val prefix = I18N.Prefix("tabs.run.speedslider")
 
   val speedSlider = {
@@ -24,35 +26,52 @@ class SpeedSliderPanel(workspace: GUIWorkspace) extends JPanel with MouseListene
     slider
   }
 
-  private val speedLabel = {
-    val label = new SpeedLabel(I18N.gui("normalspeed"), (i: Int) => (i / 2, i / 2))
-    adjustDefaultFont(label)
-    label.resizeWithComponent(speedSlider)
-    label
-  }
+  setOpaque(false)
+  setLayout(new GridBagLayout)
 
   locally {
-    val gridbag = new GridBagLayout()
-    val c = new GridBagConstraints()
-    setOpaque(false)
-    setLayout(gridbag)
+    val c = new GridBagConstraints
 
-    c.fill = GridBagConstraints.VERTICAL
-    c.gridwidth = 1
-    c.gridheight = 1
+    c.gridx = 0
     c.gridy = 0
-    c.anchor = GridBagConstraints.PAGE_START
-    add(speedLabel, c)
+    c.weightx = 1
+    c.anchor = GridBagConstraints.SOUTHWEST
 
-    c.fill = GridBagConstraints.VERTICAL
+    val slower = new JLabel(I18N.gui("slower"))
+
+    slower.setFont(slower.getFont.deriveFont(10f))
+
+    add(slower, c)
+
+    c.gridx = 1
     c.anchor = GridBagConstraints.CENTER
-    c.gridwidth = 1
-    c.gridheight = 1
-    c.weighty = 0.25
+    c.insets = new Insets(0, 12, 0, 12)
+
+    add(new JLabel(I18N.gui("modelSpeed"), SwingConstants.CENTER), c)
+
+    c.gridx = 2
+    c.anchor = GridBagConstraints.SOUTHEAST
+    c.insets = new Insets(0, 0, 0, 0)
+
+    val faster = new JLabel(I18N.gui("faster"), SwingConstants.RIGHT)
+
+    faster.setFont(slower.getFont.deriveFont(10f))
+
+    add(faster, c)
+
+    c.gridx = 0
     c.gridy = 1
+    c.gridwidth = 3
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.anchor = GridBagConstraints.CENTER
+
     add(speedSlider, c)
 
-    enableLabels(0)
+    if (ticksLabel != null) {
+      c.gridy = 2
+
+      add(ticksLabel, c)
+    }
   }
 
   override def setEnabled(enabled: Boolean): Unit = {
@@ -61,8 +80,8 @@ class SpeedSliderPanel(workspace: GUIWorkspace) extends JPanel with MouseListene
     // which is a bit jarring, so do this instead - ST 9/16/08
     if (enabled)
       stateChanged(null)
-    else
-      speedLabel.setText(" ")
+    // else
+    //   speedLabel.setText(" ")
   }
 
   def stateChanged(e: ChangeEvent): Unit = {
@@ -78,16 +97,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace) extends JPanel with MouseListene
     workspace.speedSliderPosition(adjustedValue.toDouble / 2);
 
     LogManager.speedSliderChanged(adjustedValue)
-    enableLabels(adjustedValue)
     workspace.updateManager.nudgeSleeper()
-  }
-
-  private[window] def enableLabels(value: Int): Unit = {
-    val (labelText, spaceRatios) =
-      if (value == 0)     (I18N.gui("normalspeed"), (i: Int) => (i / 2, i / 2))
-      else if (value < 0) (I18N.gui("slower"),      (i: Int) => (i / 5, i * 4 / 5))
-      else                (I18N.gui("faster"),      (i: Int) => (i * 4 / 5, i / 5))
-    speedLabel.setUnpaddedText(labelText, spaceRatios)
   }
 
   // mouse listener junk
@@ -113,8 +123,6 @@ class SpeedSliderPanel(workspace: GUIWorkspace) extends JPanel with MouseListene
   def setValue(speed: Int): Unit = {
     if (speedSlider.getValue != speed)
       speedSlider.setValue(speed)
-
-    enableLabels(workspace.speedSliderPosition().toInt)
   }
 
   def getValue: Int = speedSlider.getValue
@@ -149,40 +157,5 @@ class SpeedSliderPanel(workspace: GUIWorkspace) extends JPanel with MouseListene
       g.drawLine(x, bounds.y - (bounds.height / 2), x, bounds.y - (bounds.height / 4))
       super.paint(g)
     }
-  }
-
-  private class SpeedLabel(label: String, private var spaceRatios: Int => (Int, Int)) extends JLabel(label) with ComponentListener {
-    private def fontMetrics = getFontMetrics(getFont)
-
-    private var desiredWidth = 180
-
-    override def getPreferredSize: Dimension = getMinimumSize
-
-    override def getMinimumSize:   Dimension =
-      new Dimension(desiredWidth, super.getPreferredSize.height)
-
-    override def paint(g: Graphics): Unit = {
-      val width = getBounds().width
-      val (spaceBefore, _) = spaceRatios(width - fontMetrics.stringWidth(getText))
-      g.translate(spaceBefore, 0)
-      super.paint(g)
-    }
-
-    def setUnpaddedText(labelText: String, newSpaceRatios: Int => (Int, Int)): Unit = {
-      setText(labelText)
-      spaceRatios = newSpaceRatios
-    }
-
-    def resizeWithComponent(component: Component): Unit = {
-      desiredWidth = component.getPreferredSize.width
-      component.addComponentListener(this)
-    }
-
-    def componentResized(e: ComponentEvent): Unit = {
-      desiredWidth = e.getComponent.getPreferredSize.width
-    }
-    def componentMoved(e: ComponentEvent): Unit = {}
-    def componentShown(e: ComponentEvent): Unit = {}
-    def componentHidden(e: ComponentEvent): Unit = {}
   }
 }

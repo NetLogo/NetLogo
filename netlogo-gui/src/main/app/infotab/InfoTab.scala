@@ -68,8 +68,8 @@ class InfoTab(attachModelDir: String => String)
   }
   private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit")))
   private val helpButton = new ToolBarButton(I18N.gui.get("tabs.info.help"),
-    BrowserLauncher.openPath(this, baseDocPath, "information"))
-  helpButton.setIcon(icon("/images/questionmark.gif"))
+                                             BrowserLauncher.openPath(this, baseDocPath, "information"))
+  helpButton.setIcon(icon("/images/help.png"))
   helpButton.setVisible(false)
   private def toggleHelpButton(){ helpButton.setVisible(view == textArea) }
 
@@ -95,8 +95,9 @@ class InfoTab(attachModelDir: String => String)
         this.addAll(new ToolBarActionButton(FindDialog.FIND_ACTION), editableButton, helpButton)
       }
     }, BorderLayout.NORTH)
+    scrollPane.setBorder(null)
     scrollPane.getVerticalScrollBar.setUnitIncrement(16)
-    add(scrollPane,BorderLayout.CENTER)
+    add(scrollPane, BorderLayout.CENTER)
   }
 
   private def resetBorders() {
@@ -201,7 +202,7 @@ class InfoTab(attachModelDir: String => String)
   }
 
   private class EditableAction(label: String) extends AbstractAction(label) {
-    putValue(Action.SMALL_ICON, icon("/images/edit.gif"))
+    putValue(Action.SMALL_ICON, icon("/images/edit.png"))
     def actionPerformed(e: ActionEvent) {
       val scrollBar = scrollPane.getVerticalScrollBar
       val (min, max) = (scrollBar.getMinimum, scrollBar.getMaximum)

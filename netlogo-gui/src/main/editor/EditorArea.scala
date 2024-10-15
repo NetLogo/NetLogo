@@ -8,9 +8,9 @@
 
 package org.nlogo.editor
 
-import java.awt.{ Component, Dimension, Graphics, Graphics2D, Point, RenderingHints, Toolkit }
+import java.awt.{ Component, Dimension, Point, Toolkit }
 import java.awt.datatransfer.DataFlavor
-import java.awt.event.{ FocusListener, KeyEvent, MouseEvent }
+import java.awt.event.{ FocusListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ Action, JMenuItem, JEditorPane, JPopupMenu }
 import javax.swing.text.{ Document, TextAction, PlainDocument, BadLocationException }
 
@@ -40,6 +40,8 @@ class EditorArea(val configuration: EditorConfiguration)
 
   private val caret = new DoubleClickCaret(colorizer, bracketMatcher)
 
+  private val defaultSelectionColor = getSelectionColor
+
   locally {
     enableEvents(java.awt.AWTEvent.MOUSE_EVENT_MASK)
     addFocusListener(this)
@@ -60,12 +62,6 @@ class EditorArea(val configuration: EditorConfiguration)
     getKeymap.addActionForKeyStroke(keystroke(KeyEvent.VK_Y, mask), UndoManager.redoAction())
 
     configuration.configureEditorArea(this)
-  }
-
-  override def paintComponent(g: Graphics): Unit = {
-    val g2d = g.asInstanceOf[Graphics2D]
-    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    super.paintComponent(g)
   }
 
   private var bracketMatcherEnabled: Boolean = true
@@ -148,6 +144,24 @@ class EditorArea(val configuration: EditorConfiguration)
   def setSelection(s: Boolean): Unit = {
     _selectionActive = s
   }
+
+  def selectError(start: Int, end: Int) {
+    setSelectionColor(AbstractEditorArea.ERROR_HIGHLIGHT)
+
+    select(start, end)
+  }
+
+  addMouseListener(new MouseAdapter {
+    override def mousePressed(e: MouseEvent) {
+      setSelectionColor(defaultSelectionColor)
+    }
+  })
+
+  addKeyListener(new KeyAdapter {
+    override def keyPressed(e: KeyEvent) {
+      setSelectionColor(defaultSelectionColor)
+    }
+  })
 
   def focusGained(fe: java.awt.event.FocusEvent): Unit = { }
 

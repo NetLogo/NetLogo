@@ -7,6 +7,7 @@ import PlotAction.{ PlotXY, SoftResetPen }
 import org.nlogo.core.PlotPenInterface
 import scala.collection.immutable
 import scala.collection.immutable.VectorBuilder
+import scala.math.{ log10, pow }
 
 // normally, to create a new Plot, you have to go through PlotManager.newPlot
 // this makes sense because the PlotManager then controls compilation
@@ -18,8 +19,6 @@ import scala.collection.immutable.VectorBuilder
 // NP 2012-12-17
 class Plot(var name: String, var defaultState: PlotState = PlotState())
 extends PlotInterface {
-
-  import Plot._
 
   var state = defaultState
   var dirty = true
@@ -108,36 +107,46 @@ extends PlotInterface {
     if(state.autoPlotOn){
       if(pen.state.mode == PlotPenInterface.BarMode){
         // allow extra room on the right for bar
-        growRanges(x + pen.state.interval, y, true)
+        growRanges(x + pen.state.interval, y)
       }
       // calling growRanges() twice is sometimes redundant,
       // but it's the easiest way to ensure that both the
       // left and right edges of the bar become visible
       // (consider the case where the bar is causing the
       // min to decrease) - ST 2/23/06
-      growRanges(x, y, true)
+      growRanges(x, y)
     }
   }
 
-  def growRanges(x: Double, y: Double, extraRoom: Boolean) {
-    def adjust(d: Double, factor: Double) =
-      d * (if(extraRoom) factor else 1)
-    if(x > state.xMax){
-      val newRange = adjust(x - state.xMin, AutoplotXFactor)
-      state = state.copy(xMax = newBound(state.xMin + newRange, newRange))
+  private def prettyRange(range: Double): Double = {
+    if (range < 0) {
+      if (range > -1)
+        return -1
+
+      val tmag = pow(10, log10(-range).floor - 1) * 2
+
+      (range / tmag).floor * tmag
     }
-    if(x < state.xMin) {
-      val newRange = adjust(state.xMax - x, AutoplotXFactor)
-      state = state.copy(xMin = newBound(state.xMax - newRange, newRange))
+
+    else {
+      if (range < 1)
+        return 1
+
+      val tmag = pow(10, log10(range).floor - 1) * 2
+
+      (range / tmag).ceil * tmag
     }
-    if(y > state.yMax){
-      val newRange = adjust(y - state.yMin, AutoplotYFactor)
-      state = state.copy(yMax = newBound(state.yMin + newRange, newRange))
-    }
-    if(y < state.yMin){
-      val newRange = adjust(state.yMax - y, AutoplotYFactor)
-      state = state.copy(yMin = newBound(state.yMax - newRange, newRange))
-    }
+  }
+
+  def growRanges(x: Double, y: Double) {
+    if (x > state.xMax)
+      state = state.copy(xMax = prettyRange(x))
+    if (x < state.xMin)
+      state = state.copy(xMin = prettyRange(x))
+    if (y > state.yMax)
+      state = state.copy(yMax = prettyRange(y))
+    if (y < state.yMin)
+      state = state.copy(yMin = prettyRange(y))
   }
 
   def histogramActions(pen: PlotPenInterface, values: Seq[Double]): immutable.Seq[PlotAction] = {
@@ -152,7 +161,7 @@ extends PlotInterface {
       // note also that we never grow the x range, only the y range,
       // because it's the current x range that determined the extent
       // of the histogram in the first place - ST 2/23/06
-      growRanges(state.xMin, histogram.ceiling, false)
+      growRanges(state.xMin, histogram.ceiling)
     actions ++= (for {
       (barHeight, barNumber) <- histogram.bars.zipWithIndex
       // there is a design decision here not to generate points corresponding to empty bins.  not
@@ -180,24 +189,6 @@ extends PlotInterface {
     newPlot.updateCode = updateCode
     // newPlot.dirty will be true by default, which is fine
     newPlot
-  }
-
-}
-
-object Plot {
-
-  /// autoplot
-  val AutoplotXFactor = 1.25
-  val AutoplotYFactor = 1.10
-
-  // The purpose of this is to make the new bounds land on nice
-  // numbers like 12.4 instead of long ones like 12.33333333, so
-  // that displaying them in the axis labels doesn't use up a lot of
-  // screen real estate.  (Thus, the x and y growth factors are only
-  // approximate.) - ST 2/23/06
-  def newBound(bound:Double, range:Double): Double = {
-    val places = 2.0 - StrictMath.floor(StrictMath.log(range) / StrictMath.log(10))
-    org.nlogo.api.Approximate.approximate(bound, places.toInt)
   }
 
 }

@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ Color, Component, KeyboardFocusManager }
+import java.awt.{ Component, KeyboardFocusManager }
 import java.awt.event.{ ActionEvent, KeyEvent, WindowAdapter, WindowEvent, WindowFocusListener }
 import java.awt.print.PrinterAbortException
 import java.nio.file.{ Path, Paths }
@@ -11,8 +11,8 @@ import javax.swing.{ AbstractAction, Action, JComponent, JFrame }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
-import org.nlogo.app.common.Events.SwitchedTabsEvent
 import org.nlogo.app.common.{ ExceptionCatchingAction, MenuTab, TabsInterface }
+import org.nlogo.app.common.Events.SwitchedTabsEvent
 import org.nlogo.app.common.TabsInterface.Filename
 import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
@@ -21,14 +21,17 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ Printable, PrinterManager, UserAction }
 import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, CompileAllEvent, CompiledEvent,
                                  ExternalFileSavedEvent, LoadBeginEvent, LoadErrorEvent, LoadModelEvent,
-                                 ModelSavedEvent, RuntimeErrorEvent }
-import org.nlogo.window.{ ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget }
+                                 ModelSavedEvent, RuntimeErrorEvent, WidgetErrorEvent, WidgetRemovedEvent }
+import org.nlogo.window.{ ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget, Widget }
+
+import scala.collection.mutable.Set
 
 class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
                  val externalFileManager: ExternalFileManager)
   extends TabsInterface with AboutToCloseFilesEvent.Handler with AboutToSaveModelEvent.Handler
   with CompiledEvent.Handler with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler
-  with LoadErrorEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler {
+  with LoadErrorEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler
+  with WidgetErrorEvent.Handler with WidgetRemovedEvent.Handler {
 
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
@@ -48,6 +51,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   var dirtyMonitor: DirtyMonitor = null
   var menuBar: MenuBar = null
 
+  private val widgetErrors = Set[Widget]()
+
   private var smartTabbing = true
 
   smartTabbingEnabled = prefs.getBoolean("indentAutomatically", true)
@@ -61,9 +66,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   private var reloading = false
   private var movingTabs = true
 
-  mainTabs.addTab(I18N.gui.get("tabs.run"), interfaceTab)
-  mainTabs.addTab(I18N.gui.get("tabs.info"), infoTab)
-  mainTabs.addTab(I18N.gui.get("tabs.code"), mainCodeTab)
+  addTabWithLabel(mainTabs, I18N.gui.get("tabs.run"), interfaceTab)
+  addTabWithLabel(mainTabs, I18N.gui.get("tabs.info"), infoTab)
+  addTabWithLabel(mainTabs, I18N.gui.get("tabs.code"), mainCodeTab)
 
   movingTabs = false
 
@@ -85,9 +90,25 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   appComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_W, withMenu = true, withShift = true), "openSeparateCodeTab")
-  appComponent.getActionMap.put("openSeparateCodeTab", new AbstractAction("OpenSeparateCodeTab") {
+  appComponent.getActionMap.put("openSeparateCodeTab", new AbstractAction {
     def actionPerformed(e: ActionEvent) {
       switchWindow(true)
+    }
+  })
+
+  appComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_OPEN_BRACKET, withMenu = true, withShift = true), "previousTab")
+  appComponent.getActionMap.put("previousTab", new AbstractAction {
+    def actionPerformed(e: ActionEvent) {
+      previousTab(mainTabs)
+    }
+  })
+
+  appComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_CLOSE_BRACKET, withMenu = true, withShift = true), "nextTab")
+  appComponent.getActionMap.put("nextTab", new AbstractAction {
+    def actionPerformed(e: ActionEvent) {
+      nextTab(mainTabs)
     }
   })
 
@@ -113,9 +134,25 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   separateComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_W, withMenu = true), "closeSeparateCodeTab")
-  separateComponent.getActionMap.put("closeSeparateCodeTab", new AbstractAction("CloseSeparateCodeTab") {
+  separateComponent.getActionMap.put("closeSeparateCodeTab", new AbstractAction {
     def actionPerformed(e: ActionEvent) {
       switchWindow(false)
+    }
+  })
+
+  separateComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_OPEN_BRACKET, withMenu = true, withShift = true), "previousTab")
+  separateComponent.getActionMap.put("previousTab", new AbstractAction {
+    def actionPerformed(e: ActionEvent) {
+      previousTab(separateTabs)
+    }
+  })
+
+  separateComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
+    .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_CLOSE_BRACKET, withMenu = true, withShift = true), "nextTab")
+  separateComponent.getActionMap.put("nextTab", new AbstractAction {
+    def actionPerformed(e: ActionEvent) {
+      nextTab(separateTabs)
     }
   })
 
@@ -275,9 +312,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def getTabTitle(index: Int): String = {
     if (index >= mainTabs.getTabCount)
-      separateTabs.getTitleAt(index - mainTabs.getTabCount)
+      separateTabs.getTabLabelAt(index - mainTabs.getTabCount).getText
     else
-      mainTabs.getTitleAt(index)
+      mainTabs.getTabLabelAt(index).getText
   }
 
   def getTabWithFilename(filename: Filename): Option[TemporaryCodeTab] =
@@ -295,6 +332,16 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       for (i <- 1 until separateTabs.getTabCount) yield separateTabs.getComponentAt(i).asInstanceOf[TemporaryCodeTab]
     else
       for (i <- 3 until mainTabs.getTabCount) yield mainTabs.getComponentAt(i).asInstanceOf[TemporaryCodeTab]
+  }
+
+  private def addTabWithLabel(tabsPanel: TabsPanel, title: String, tab: Component) {
+    tabsPanel.addTab(null, tab)
+
+    val tabLabel = new TabLabel(title, tab)
+
+    tabLabel.setTabsPanel(tabsPanel)
+
+    tabsPanel.setTabComponentAt(tabsPanel.getTabCount - 1, tabLabel)
   }
 
   def setSelectedIndex(index: Int) {
@@ -321,6 +368,16 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
+  def previousTab(tabsPanel: TabsPanel) {
+    if (tabsPanel.getSelectedIndex > 0)
+      tabsPanel.setSelectedIndex(tabsPanel.getSelectedIndex - 1)
+  }
+
+  def nextTab(tabsPanel: TabsPanel) {
+    if (tabsPanel.getSelectedIndex < tabsPanel.getTabCount - 1)
+      tabsPanel.setSelectedIndex(tabsPanel.getSelectedIndex + 1)
+  }
+
   def switchedTabs(tab: Component) {
     if (!movingTabs && tab != previousTab) {
       tab.requestFocus
@@ -333,7 +390,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
-  private def addExternalFile(name: Filename) {
+  private def addExternalFile(name: Filename, focus: Boolean) {
     if (getExternalFileTabs.isEmpty)
       offerAction(SaveAllAction)
 
@@ -341,37 +398,41 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
                                    smartTabbing, separateTabsWindow.isVisible)
 
     if (separateTabsWindow.isVisible) {
-      separateTabs.addTab(tab.filenameForDisplay, tab)
-      separateTabs.setSelectedComponent(tab)
+      addTabWithLabel(separateTabs, tab.filenameForDisplay, tab)
+
+      if (focus)
+        separateTabs.setSelectedComponent(tab)
     }
 
     else {
-      mainTabs.addTab(tab.filenameForDisplay, tab)
-      mainTabs.setSelectedComponent(tab)
+      addTabWithLabel(mainTabs, tab.filenameForDisplay, tab)
+
+      if (focus)
+        mainTabs.setSelectedComponent(tab)
     }
 
     updateTabActions()
   }
 
   def newExternalFile {
-    addExternalFile(Left(I18N.gui.getN("tabs.external.new", newFileNumber: Integer)))
+    addExternalFile(Left(I18N.gui.getN("tabs.external.new", newFileNumber: Integer)), true)
 
     newFileNumber += 1
   }
 
   def addTab(tab: Component, name: String) {
     if (separateTabsWindow.isVisible) {
-      separateTabs.addTab(name, tab)
+      addTabWithLabel(separateTabs, name, tab)
       separateTabs.setSelectedComponent(tab)
     }
 
     else {
-      mainTabs.addTab(name, tab)
+      addTabWithLabel(mainTabs, name, tab)
       mainTabs.setSelectedComponent(tab)
     }
   }
 
-  def openExternalFile(filename: String) {
+  def openExternalFile(filename: String, focus: Boolean = true) {
     getTabWithFilename(Right(filename)) match {
       case Some(tab) =>
         if (separateTabsWindow.isVisible)
@@ -379,7 +440,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         else
           mainTabs.setSelectedComponent(tab)
       case _ =>
-        addExternalFile(Right(filename))
+        addExternalFile(Right(filename), focus)
 
         new CompileAllEvent().raise(mainCodeTab)
     }
@@ -431,7 +492,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       val selected = mainTabs.getSelectedComponent
 
       while (mainTabs.getTabCount > 2) {
-        separateTabs.addTab(mainTabs.getTitleAt(2), mainTabs.getComponentAt(2))
+        val tabLabel = mainTabs.getTabLabelAt(2)
+
+        separateTabs.addTab(null, mainTabs.getComponentAt(2))
+        separateTabs.setTabComponentAt(separateTabs.getTabCount - 1, tabLabel)
+
+        tabLabel.setTabsPanel(separateTabs)
       }
 
       separateTabsWindow.open()
@@ -456,7 +522,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       val selected = separateTabs.getSelectedComponent
 
       while (separateTabs.getTabCount > 0) {
-        mainTabs.addTab(separateTabs.getTitleAt(0), separateTabs.getComponentAt(0))
+        val tabLabel = separateTabs.getTabLabelAt(0)
+
+        mainTabs.addTab(null, separateTabs.getComponentAt(0))
+        mainTabs.setTabComponentAt(mainTabs.getTabCount - 1, tabLabel)
+
+        tabLabel.setTabsPanel(mainTabs)
       }
 
       separateTabsWindow.setVisible(false)
@@ -532,38 +603,29 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   def highlightRuntimeError(tab: CodeTab, e: RuntimeErrorEvent) {
     setSelectedTab(tab)
 
-    // should be no longer necessary, confirm
+    tab.selectError(e.pos, e.pos + e.length)
+  }
 
-    // // the use of invokeLater here is a desperate attempt to work around the Mac bug where sometimes
-    // // the selection happens and sometime it doesn't - ST 8/28/04
-    // EventQueue.invokeLater(() => tab.select(e.pos, e.pos + e.length))
-
-    tab.select(e.pos, e.pos + e.length)
+  def recolorTab(tab: Component, hasError: Boolean) {
+    if (separateTabsWindow.isVisible && tab.isInstanceOf[CodeTab])
+      separateTabs.setError(separateTabs.indexOfComponent(tab), hasError)
+    else
+      mainTabs.setError(mainTabs.indexOfComponent(tab), hasError)
+    
+    if (hasError && focusOnError)
+      setSelectedTab(tab)
   }
 
   def handle(e: CompiledEvent) {
     def clearErrors() {
       if (separateTabsWindow.isVisible) {
         for (i <- 0 until separateTabs.getTabCount)
-          separateTabs.setForegroundAt(i, null)
+          separateTabs.setError(i, false)
       }
 
       else {
-        for (i <- 2 until mainTabs.getTabCount)
-          mainTabs.setForegroundAt(i, null)
-      }
-    }
-
-    def recolorTab(tab: Component, hasError: Boolean): Unit = {
-      val color = if (hasError) Color.red else null
-
-      if (separateTabsWindow.isVisible && tab.isInstanceOf[CodeTab])
-        separateTabs.setForegroundAt(separateTabs.indexOfComponent(tab), color)
-      else
-        mainTabs.setForegroundAt(mainTabs.indexOfComponent(tab), color)
-      
-      if (hasError && focusOnError) {
-        setSelectedTab(tab)
+        for (i <- 0 until mainTabs.getTabCount)
+          mainTabs.setError(i, false)
       }
     }
 
@@ -579,7 +641,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         val filename = file.getFileName
         var tab = getTabWithFilename(Right(filename))
         if (!tab.isDefined && e.error != null) {
-          openExternalFile(filename)
+          openExternalFile(filename, focusOnError)
           tab = getTabWithFilename(Right(filename))
           tab.get.handle(e) // it was late to the party, let it handle the event too
         }
@@ -591,6 +653,39 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         recolorTab(interfaceTab, e.error != null)
       case _ =>
     }
+
+    mainTabs.repaint()
+    separateTabs.repaint()
+  }
+
+  def handle(e: WidgetErrorEvent) {
+    var changed = false
+
+    if (e.error == null) {
+      changed = widgetErrors.contains(e.widget)
+
+      widgetErrors -= e.widget
+    }
+
+    else {
+      changed = !widgetErrors.contains(e.widget)
+
+      widgetErrors += e.widget
+    }
+
+    if (changed) {
+      recolorTab(interfaceTab, widgetErrors.nonEmpty)
+
+      mainTabs.repaint()
+    }
+  }
+
+  def handle(e: WidgetRemovedEvent) {
+    widgetErrors -= e.widget
+
+    recolorTab(interfaceTab, widgetErrors.nonEmpty)
+
+    mainTabs.repaint()
   }
 
   def handle(e: AboutToSaveModelEvent) {
@@ -605,9 +700,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   def handle(e: ExternalFileSavedEvent) = {
     getTabWithFilename(Right(e.path)).foreach(tab => {
       if (separateTabsWindow.isVisible)
-        separateTabs.setTitleAt(separateTabs.indexOfComponent(tab), tab.filenameForDisplay)
+        separateTabs.getTabLabelAt(separateTabs.indexOfComponent(tab)).setText(tab.filenameForDisplay)
       else
-        mainTabs.setTitleAt(mainTabs.indexOfComponent(tab), tab.filenameForDisplay)
+        mainTabs.getTabLabelAt(mainTabs.indexOfComponent(tab)).setText(tab.filenameForDisplay)
     })
   }
 

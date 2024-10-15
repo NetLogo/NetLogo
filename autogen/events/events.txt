@@ -49,9 +49,11 @@ window.RemoveConstraint - String varname
 window.RemoveJob - org.nlogo.api.JobOwner owner
 window.ResizeView - int width - int height
 window.RuntimeError - org.nlogo.api.JobOwner jobOwner - org.nlogo.api.SourceOwner sourceOwner - int pos - int length
+window.SelectMode
 window.TickStateChange - boolean tickCounterInitialized
 window.WidgetAdded - Object widget
 window.WidgetEdited - Widget widget
+window.WidgetError - Widget widget - Exception error
 window.WidgetForegrounded - Widget widget
 window.WidgetRemoved - Widget widget
 window.Zoomed - int action

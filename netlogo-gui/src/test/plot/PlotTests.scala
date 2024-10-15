@@ -48,7 +48,7 @@ class PlotTests extends SimplePlotTest {
   testPlot("AutoPlotGrowMin") { plot =>
     val pen = plot.createPlotPen("test", false)
     pen.plot(-0.0001, -0.0001)
-    assertResult(-2.5)(plot.xMin)
+    assertResult(-1.0)(plot.xMin)
     assertResult(-1.0)(plot.yMin)
     assertResult(10.0)(plot.xMax)
     assertResult(10.0)(plot.yMax)
@@ -60,16 +60,16 @@ class PlotTests extends SimplePlotTest {
     assertResult(10.0)(plot.xMax)
     assertResult(10.0)(plot.yMax)
     pen.plot(10.0001, 10.0001)
-    assertResult(12.5)(plot.xMax)
-    assertResult(11.0)(plot.yMax)
+    assertResult(12.0)(plot.xMax)
+    assertResult(12.0)(plot.yMax)
   }
   testPlot("AutoPlotGrowExtraRoomForBar") { plot =>
     val pen = plot.createPlotPen("test", false)
     pen.mode = PlotPen.BAR_MODE
     pen.interval = 5.0
     pen.plot(10.0001, 10.0001)
-    assertResult(18.8)(plot.xMax)
-    assertResult(11.0)(plot.yMax)
+    assertResult(16.0)(plot.xMax)
+    assertResult(12.0)(plot.yMax)
   }
   testPlot("HistogramNumBars") { plot =>
     val pen = plot.createPlotPen("test", false)
@@ -114,7 +114,7 @@ class PlotTests extends SimplePlotTest {
     plot.clear()
     plot.state = plot.state.copy(yMax=5)
     pen.plot(0, 10)
-    assertResult(11.0)(plot.yMax)
+    assertResult(10.0)(plot.yMax)
   }
   testPlot("Iterator") { plot =>
     plot.pens = Nil

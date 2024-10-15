@@ -189,9 +189,9 @@ with WindowEvents.JobRemovedEvent.Handler
     super.handle(e)
     if(e.sourceOwner == this) {
       error(e.error)
-      if(error != null) {
+      if(error() != null) {
         OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui.get("common.messages.error"), error.getMessage, Array(I18N.gui.get("common.buttons.ok")))
+          workspace.getFrame, I18N.gui.get("common.messages.error"), error().getMessage, Array(I18N.gui.get("common.buttons.ok")))
         setEnabled(true)
         editor.setText(get)
         lastTextBeforeUserChangedAnything = editor.getText()

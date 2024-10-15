@@ -8,7 +8,7 @@ import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
 import javax.swing.{ AbstractAction, BorderFactory, JButton, JDialog, JPanel }
 
 import org.nlogo.api.PreviewCommands
-import org.nlogo.awt.{ Fonts, Positioning }
+import org.nlogo.awt.Positioning
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model }
 import org.nlogo.swing.Utils.addEscKeyAction
 import org.nlogo.window.{ EditorColorizer, GraphicsPreviewInterface }
@@ -25,7 +25,6 @@ class PreviewCommandsDialog(
   workspaceFactory: WorkspaceFactory,
   graphicsPreview: GraphicsPreviewInterface)
   extends JDialog(owner, title, true) {
-  Fonts.adjustDefaultFont(this)
 
   private val workspace = initWorkspace(workspaceFactory, _.openModel(model))
 

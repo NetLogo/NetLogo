@@ -2,25 +2,21 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ BorderLayout, Component, Container,
-  ContainerOrderFocusTraversalPolicy, Dimension, Graphics, Graphics2D }
+import java.awt.{ BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Graphics,
+                  Graphics2D, GridBagConstraints }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.{ PageFormat, Printable }
-import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
-import javax.swing.{ AbstractAction, Action, BorderFactory, JComponent,
-  JPanel, JScrollPane, JSplitPane, ScrollPaneConstants }
+import javax.swing.{ AbstractAction, Action, JComponent, JPanel, JScrollPane, JSplitPane, ScrollPaneConstants }
 
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, ToolBar, UserAction, Utils },
-  Implicits.thunk2action,
-  UserAction.{ MenuAction, ToolsCategory },
-  Utils.icon
+import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, UserAction, Utils },
+                       Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
 import org.nlogo.swing.{ Utils => SwingUtils }
-import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace,
-  InterfaceColors, ViewUpdatePanel, WidgetInfo, Events => WindowEvents, WorkspaceActions },
-    WindowEvents.{ Enable2DEvent, LoadBeginEvent, OutputEvent }
+import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace, ViewUpdatePanel, WidgetInfo,
+                          Events => WindowEvents, WorkspaceActions },
+                        WindowEvents.{ Enable2DEvent, LoadBeginEvent, OutputEvent }
 
 object InterfaceTab {
   val MenuGroup = "org.nlogo.app.InterfaceTab"
@@ -38,6 +34,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   with SwitchedTabsEvent.Handler
   with NlogoPrintable
   with MenuTab {
+
   setFocusCycleRoot(true)
   setFocusTraversalPolicy(new InterfaceTabFocusTraversalPolicy)
   commandCenter.locationToggleAction = new CommandCenterLocationToggleAction
@@ -59,25 +56,25 @@ class InterfaceTab(workspace: GUIWorkspace,
     // way so that only a vertical scrollbar is really needed - ST 7/13/04
     ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
-  scrollPane.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, InterfaceColors.GRAPHICS_BACKGROUND))
-  commandCenter.setBorder(BorderFactory.createMatteBorder(1, 0, 0, 0, InterfaceColors.GRAPHICS_BACKGROUND))
+
+  scrollPane.setBorder(null)
+
+  if (System.getProperty("os.name").startsWith("Windows")) {
+    scrollPane.getVerticalScrollBar.setPreferredSize(new Dimension(7, 0))
+    scrollPane.getHorizontalScrollBar.setPreferredSize(new Dimension(0, 7))
+  }
+
+  else {
+    scrollPane.getVerticalScrollBar.setPreferredSize(new Dimension(10, 0))
+    scrollPane.getHorizontalScrollBar.setPreferredSize(new Dimension(0, 10))
+  }
+
   commandCenter.setMinimumSize(new Dimension(0, 0))
 
   private var viewUpdatePanel: ViewUpdatePanel = null
 
-  private val splitPane = new JSplitPane(
-    JSplitPane.VERTICAL_SPLIT,
-    true, // continuous layout as the user drags
-    scrollPane, commandCenter)
-  splitPane.setOneTouchExpandable(true)
-  splitPane.setResizeWeight(1) // give the InterfacePanel all
-  splitPane.addPropertyChangeListener("dividerLocation", new PropertyChangeListener {
-    def propertyChange(e: PropertyChangeEvent) {
-      commandCenterToggleAction.putValue(Action.NAME,
-        if (e.getNewValue.asInstanceOf[Int] < maxDividerLocation) I18N.gui.get("menu.tools.hideCommandCenter")
-        else I18N.gui.get("menu.tools.showCommandCenter"))
-    }
-  })
+  private val splitPane = new SplitPane(scrollPane, commandCenter, commandCenterToggleAction)
+
   add(splitPane, BorderLayout.CENTER)
 
   object TrackingFocusListener extends FocusListener {
@@ -94,9 +91,11 @@ class InterfaceTab(workspace: GUIWorkspace,
     add(new InterfaceToolBar(iP, workspace, buttons, workspace.getFrame, dialogFactory) {
       override def addControls() {
         super.addControls()
-        add(new ToolBar.Separator)
         viewUpdatePanel = new ViewUpdatePanel(workspace, workspace.viewWidget.displaySwitch, workspace.viewWidget.tickCounter)
-        add(viewUpdatePanel)
+        val c = new GridBagConstraints
+        c.gridy = 0
+        c.gridheight = 2
+        add(viewUpdatePanel, c)
       }
     }, BorderLayout.NORTH)
     iP.addFocusListener(TrackingFocusListener)
@@ -169,31 +168,26 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   /// command center stuff
 
-  private class CommandCenterLocationToggleAction extends AbstractAction("Toggle") {
-    putValue(Action.SMALL_ICON, icon("/images/toggle.gif"))
+  private class CommandCenterLocationToggleAction extends AbstractAction {
+    putValue(Action.SMALL_ICON, Utils.iconScaled("/images/shift-right.png", 10, 10))
+
     override def actionPerformed(e: ActionEvent) {
       splitPane.getOrientation match {
         case JSplitPane.VERTICAL_SPLIT =>
           splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT)
-          // dunno why, but resetToPreferredSizes() doesn't do the right thing here - ST 11/12/04
-          splitPane.setDividerLocation(0.5)
-        case _ => // horizontal
+          putValue(Action.SMALL_ICON, Utils.iconScaled("/images/shift-right.png", 10, 10))
+        case JSplitPane.HORIZONTAL_SPLIT =>
           splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT)
-          splitPane.resetToPreferredSizes()
+          putValue(Action.SMALL_ICON, Utils.iconScaled("/images/shift-bottom.png", 10, 10))
       }
+
+      splitPane.resetToPreferredSizes()
     }
   }
 
   private def showCommandCenter(): Unit = {
-    if (splitPane.getLastDividerLocation < maxDividerLocation)
-      splitPane.setDividerLocation(splitPane.getLastDividerLocation)
-    else // the window must have been resized.  oh well, hope for the best... - ST 11/12/04
-      splitPane.getOrientation match {
-        case JSplitPane.VERTICAL_SPLIT => splitPane.resetToPreferredSizes()
-        case _ => // horizontal
-          // dunno why, but resetToPreferredSizes() doesn't work - ST 11/12/04
-          splitPane.setDividerLocation(0.5)
-      }
+    if (splitPane.getDividerLocation >= splitPane.maxDividerLocation)
+      splitPane.resetToPreferredSizes()
   }
 
   class CommandCenterToggleAction extends AbstractAction(I18N.gui.get("menu.tools.hideCommandCenter"))
@@ -203,8 +197,8 @@ class InterfaceTab(workspace: GUIWorkspace,
     accelerator = UserAction.KeyBindings.keystroke('/', withMenu = true)
 
     override def actionPerformed(e: ActionEvent) {
-      if (splitPane.getDividerLocation < maxDividerLocation) {
-        splitPane.setDividerLocation(maxDividerLocation)
+      if (splitPane.getDividerLocation < splitPane.maxDividerLocation) {
+        splitPane.setDividerLocation(splitPane.maxDividerLocation)
         if (iP.isFocusable) iP.requestFocus()
       } else {
         showCommandCenter()
@@ -212,7 +206,6 @@ class InterfaceTab(workspace: GUIWorkspace,
       }
     }
   }
-
 
   class JumpToCommandCenterAction extends AbstractAction(I18N.gui.get("menu.tools.jumpToCommandCenter"))
   with MenuAction {
@@ -228,15 +221,21 @@ class InterfaceTab(workspace: GUIWorkspace,
     }
   }
 
-  private def maxDividerLocation =
-    if(splitPane.getOrientation == JSplitPane.VERTICAL_SPLIT)
-      splitPane.getHeight - splitPane.getDividerSize - splitPane.getInsets.top
-    else splitPane.getWidth - splitPane.getDividerSize - splitPane.getInsets.left
+  def packSplitPane() {
+    splitPane.setPreferredSize(
+      splitPane.getOrientation match {
+        case JSplitPane.HORIZONTAL_SPLIT =>
+          new Dimension(scrollPane.getPreferredSize.width, scrollPane.getPreferredSize.height + splitPane.getDividerSize
+                        + commandCenter.getPreferredSize.height)
+        case JSplitPane.VERTICAL_SPLIT =>
+          new Dimension(scrollPane.getPreferredSize.width + splitPane.getDividerSize +
+                        commandCenter.getPreferredSize.width, scrollPane.getPreferredSize.height)
+      })
 
-  // respect the size of the command center when loading and normalizing
-  def adjustTargetSize(targetSize: Dimension) {
-    if(splitPane.getOrientation == JSplitPane.HORIZONTAL_SPLIT)
-      targetSize.width += commandCenter.getSize().width - commandCenter.getPreferredSize.width
-    else targetSize.height += commandCenter.getSize().height - commandCenter.getPreferredSize.height
+    splitPane.revalidate()
+  }
+
+  def resetSplitPane() {
+    splitPane.resetToPreferredSizes()
   }
 }

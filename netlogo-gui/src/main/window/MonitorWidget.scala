@@ -2,28 +2,22 @@
 
 package org.nlogo.window
 
+import java.awt.event.MouseEvent
+import java.awt.{ Color, Component, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets, Dimension }
+import java.util.{ List => JList }
+import javax.swing.{ JLabel, JPanel }
+
 import org.nlogo.core.{ AgentKind, AgentKindJ, I18N, Monitor => CoreMonitor }
 import org.nlogo.api.{ Dump, Editable, MersenneTwisterFast, Property }
-import org.nlogo.awt.{ Fonts => NlogoFonts }
 import org.nlogo.nvm.Procedure
+import org.nlogo.swing.Utils
 import org.nlogo.window.Events.{ AddJobEvent, EditWidgetEvent,
   RuntimeErrorEvent, PeriodicUpdateEvent, JobRemovedEvent, RemoveJobEvent }
 
-import java.awt.event.MouseEvent
-import java.awt.{ Component, EventQueue,
-  Font, Graphics, Dimension, Color => AwtColor }
-import java.util.{ List => JList }
-
-
 object MonitorWidget {
-  private val LeftMargin = 5
-  private val RightMargin = 6
-  private val BottomMargin = 6
-  private val InsideBottomMargin = 3
   private val MinWidth = 50
   private val DefaultDecimalPlaces = 17
   private val DefaultFontSize = 11
-  private val PreferredSizePad = 12
 
   trait ToMonitorModel { self: Widget with Component =>
     def decimalPlaces: Int
@@ -57,6 +51,31 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   type WidgetModel = CoreMonitor
 
+  private class ValuePanel(label: JLabel) extends JPanel {
+    setBackground(InterfaceColors.TRANSPARENT)
+
+    setLayout(new GridBagLayout)
+
+    locally {
+      val c = new GridBagConstraints
+
+      c.weightx = 1
+      c.anchor = GridBagConstraints.WEST
+      c.insets = new Insets(0, 6, 0, 6)
+
+      add(label, c)
+    }
+
+    override def paintComponent(g: Graphics) {
+      val g2d = Utils.initGraphics2D(g)
+      g2d.setColor(Color.WHITE)
+      g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
+      g2d.setColor(InterfaceColors.MONITOR_BORDER)
+      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
+      super.paintComponent(g)
+    }
+  }
+
   private var jobRunning: Boolean = false
   private var hasError: Boolean = false
   private var _name: String = ""
@@ -70,15 +89,44 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   private var _fontSize = DefaultFontSize
 
-  setOpaque(true)
+  private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName"))
+  private val valueLabel = new JLabel
+
+  nameLabel.setForeground(InterfaceColors.WIDGET_TEXT)
+
   addMouseListener(this)
-  setBackground(InterfaceColors.MONITOR_BACKGROUND)
-  setBorder(widgetBorder)
-  NlogoFonts.adjustDefaultFont(this)
+
+  setLayout(new GridBagLayout)
+
+  locally {
+    val c = new GridBagConstraints
+
+    c.gridx = 0
+    c.weightx = 1
+    c.anchor = GridBagConstraints.NORTHWEST
+    c.insets =
+      if (preserveWidgetSizes)
+        new Insets(3, 6, 0, 6)
+      else
+        new Insets(6, 12, 6, 12)
+
+    add(nameLabel, c)
+
+    c.weighty = 1
+    c.fill = GridBagConstraints.BOTH
+    c.insets =
+      if (preserveWidgetSizes)
+        new Insets(0, 6, 6, 6)
+      else
+        new Insets(0, 12, 6, 12)
+
+    add(new ValuePanel(valueLabel), c)
+  }
 
   def name(name: String): Unit = {
     _name = name
     chooseDisplayName()
+    repaint()
   }
 
   def name: String = _name
@@ -125,13 +173,13 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   override def procedure_=(procedure: Procedure): Unit = {
     super.procedure = procedure
-    setForeground(if (procedure == null) AwtColor.RED else null)
     halt()
     if (procedure != null) {
       hasError = false
       new AddJobEvent(this, agents, procedure).raise(this)
       jobRunning = true
     }
+    nameLabel.setForeground(if (procedure == null) Color.RED else InterfaceColors.WIDGET_TEXT)
     repaint()
   }
 
@@ -142,6 +190,7 @@ class MonitorWidget(random: MersenneTwisterFast)
     val newString = Dump.logoObject(value)
     if (newString != valueString) {
       valueString = newString
+      valueLabel.setText(valueString)
       repaint()
     }
   }
@@ -149,11 +198,14 @@ class MonitorWidget(random: MersenneTwisterFast)
   def propertySet: JList[Property] =
     Properties.monitor
 
-  def chooseDisplayName(): Unit =
+  def chooseDisplayName() {
     if (name == null || name == "")
       displayName(getSourceName)
     else
       displayName(name)
+    
+    nameLabel.setText(displayName)
+  }
 
   // behold the mighty regular expression
   private def getSourceName: String =
@@ -178,44 +230,34 @@ class MonitorWidget(random: MersenneTwisterFast)
     super.suppressRecompiles(suppressRecompiles)
   }
 
-  override def getMinimumSize: Dimension = {
-    val h = (fontSize * 4) + 1
-    new Dimension(MinWidth, h)
-  }
+  override def paintComponent(g: Graphics) {
+    backgroundColor = InterfaceColors.MONITOR_BACKGROUND
 
-  override def getMaximumSize: Dimension = {
-    val h = (fontSize * 4) + 1
-    new Dimension(10000, h)
-  }
+    if (nameLabel.getPreferredSize.width > nameLabel.getWidth)
+      nameLabel.setToolTipText(nameLabel.getText)
+    else
+      nameLabel.setToolTipText(null)
 
-  override def getPreferredSize(font: Font): Dimension = {
-    val size = getMinimumSize
-    val fontMetrics = getFontMetrics(font)
-    size.width = StrictMath.max(size.width, fontMetrics.stringWidth(displayName) + PreferredSizePad)
-    size
-  }
-
-  override def paintComponent(g: Graphics): Unit = {
     super.paintComponent(g)
-    val fm = g.getFontMetrics
-    val labelHeight = fm.getMaxDescent + fm.getMaxAscent
-    val d = getSize()
-    g.setColor(getForeground);
-    val boxHeight = StrictMath.ceil(labelHeight * 1.4).toInt
-    val shortString = NlogoFonts.shortenStringToFit(
-      displayName, d.width - LeftMargin - RightMargin, fm);
-    g.drawString(shortString, LeftMargin,
-        d.height - BottomMargin - boxHeight - fm.getMaxDescent - 1);
-    g.setColor(AwtColor.WHITE)
-    g.fillRect(LeftMargin, d.height - BottomMargin - boxHeight,
-        d.width - LeftMargin - RightMargin - 1, boxHeight)
-    g.setColor(AwtColor.BLACK)
-    if (valueString != "")
-      g.drawString(valueString,
-          LeftMargin + 5,
-          d.height - BottomMargin - InsideBottomMargin - fm.getMaxDescent)
-    setToolTipText(if (shortString != displayName) displayName else null)
   }
+
+  override def getMinimumSize: Dimension =
+    if (preserveWidgetSizes)
+      new Dimension(MinWidth, (fontSize * 4) + 1)
+    else
+      new Dimension(100, 60)
+
+  override def getMaximumSize: Dimension =
+    if (preserveWidgetSizes)
+      new Dimension(10000, (fontSize * 4) + 1)
+    else
+      new Dimension(10000, 60)
+
+  override def getPreferredSize: Dimension =
+    if (preserveWidgetSizes)
+      new Dimension(100, getMinimumSize.height)
+    else
+      new Dimension(100, 60)
 
   def decimalPlaces: Int = _decimalPlaces
 
@@ -282,7 +324,7 @@ class MonitorWidget(random: MersenneTwisterFast)
   }
 
   def mouseClicked(e: MouseEvent): Unit = {
-    if (!e.isPopupTrigger && error != null && !lastMousePressedWasPopupTrigger)
+    if (!e.isPopupTrigger && error() != null && !lastMousePressedWasPopupTrigger)
       new EditWidgetEvent(this).raise(this)
   }
 

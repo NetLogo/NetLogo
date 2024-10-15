@@ -22,7 +22,7 @@ import org.nlogo.fileformat
 import org.nlogo.log.{ JsonFileLogger, LogEvents, LogManager }
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
-import org.nlogo.swing.OptionDialog
+import org.nlogo.swing.{ OptionDialog, SetSystemLookAndFeel }
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
@@ -53,6 +53,7 @@ object App {
   private var logEvents: String = null
   private var logDirectory: String = null
   private var popOutCodeTab = false
+  private var colorTheme: String = null
   /**
    * Should be called once at startup to create the application and
    * start it running.  May not be called more than once.  Once
@@ -217,6 +218,15 @@ object App {
                 commandLineURL == null)
         commandLineURL = nextToken()
       }
+      else if (token == "--color-theme") {
+        colorTheme = nextToken()
+
+        colorTheme match {
+          case "classic" =>
+          case "light" =>
+          case _ => throw new IllegalArgumentException(I18N.errors.getN("themes.unknown", colorTheme))
+        }
+      }
       else if (token == "--version") printAndExit(Version.version)
       else if (token == "--extension-api-version") printAndExit(APIVersion.version)
       else if (token == "--builddate") printAndExit(Version.buildDate)
@@ -302,7 +312,12 @@ class App extends
     frame.addLinkComponent(this)
     pico.addComponent(frame)
 
-    org.nlogo.swing.Utils.setSystemLookAndFeel()
+    if (App.colorTheme == null)
+      App.colorTheme = prefs.get("colorTheme", "light")
+
+    SetSystemLookAndFeel.setSystemLookAndFeel()
+
+    InterfaceColors.setTheme(App.colorTheme)
 
     errorDialogManager = new ErrorDialogManager(frame,
       Map(classOf[MetadataLoadingException] -> new LibraryManagerErrorDialog(frame)))
@@ -492,11 +507,12 @@ class App extends
       frame.pack()
 
       loadDefaultModel()
-      // smartPack respects the command center's current size, rather
-      // than its preferred size, so we have to explicitly set the
-      // command center to the size we want - ST 1/7/05
-      _tabManager.interfaceTab.commandCenter.setSize(_tabManager.interfaceTab.commandCenter.getPreferredSize)
+
+      _tabManager.interfaceTab.packSplitPane()
+
       smartPack(frame.getPreferredSize, true)
+
+      _tabManager.interfaceTab.resetSplitPane()
 
       if (! isMac) { org.nlogo.awt.Positioning.center(frame, null) }
 
@@ -631,6 +647,8 @@ class App extends
 
   lazy val openPreferencesDialog = new ShowPreferencesDialog(frame, _tabManager)
 
+  lazy val showThemesDialog = new ShowThemesDialog(frame)
+
   lazy val openAboutDialog = new ShowAboutWindow(frame)
 
   lazy val openColorDialog = new OpenColorDialog(frame)
@@ -652,6 +670,7 @@ class App extends
     val workspaceActions = org.nlogo.window.WorkspaceActions(workspace)
 
     val generalActions = Seq[javax.swing.Action](
+      showThemesDialog,
       openLibrariesDialog,
       openColorDialog,
       new ShowShapeManager("turtleShapesEditor", turtleShapesManager),
@@ -834,7 +853,7 @@ class App extends
     if(AbstractWorkspace.isApp){
       // if we don't call revalidate() here we don't get up-to-date
       // preferred size information - ST 11/4/03
-      _tabManager.interfaceTab.getInterfacePanel.revalidate()
+      _tabManager.interfaceTab.packSplitPane()
       if(wasAtPreferredSizeBeforeLoadBegan) smartPack(frame.getPreferredSize, true)
       else{
         val currentSize = frame.getSize
@@ -845,6 +864,7 @@ class App extends
         if(preferredSize.height > newHeight) newHeight = preferredSize.height
         if(newWidth != currentSize.width || newHeight != currentSize.height) smartPack(new Dimension(newWidth, newHeight), true)
       }
+      _tabManager.interfaceTab.resetSplitPane()
       preferredSizeAtLoadEndTime = frame.getPreferredSize()
     }
     frame.toFront()
@@ -1134,8 +1154,6 @@ class App extends
     val maxBoundsY = maxBounds.y + insets.top
     val maxX = maxBoundsX + maxWidth
     val maxY = maxBoundsY + maxHeight
-
-    _tabManager.interfaceTab.adjustTargetSize(targetSize)
 
     import StrictMath.{ max, min }
 

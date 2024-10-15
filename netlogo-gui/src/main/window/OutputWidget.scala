@@ -2,6 +2,8 @@
 
 package org.nlogo.window
 
+import java.awt.{ Graphics, GridBagConstraints, GridBagLayout, Insets }
+
 import org.nlogo.swing.RichJMenuItem
 import org.nlogo.api.Editable
 import org.nlogo.core.{ I18N, Output => CoreOutput }
@@ -10,17 +12,20 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   org.nlogo.window.Events.ExportWorldEvent.Handler with Editable {
   type WidgetModel = CoreOutput
 
-  setLayout(new java.awt.BorderLayout())
-  setBorder(widgetBorder)
-  setBackground(InterfaceColors.MONITOR_BACKGROUND)
   displayName(I18N.gui.get("tabs.run.widgets.output"))
+
   val outputArea = new OutputArea()
-  add(new javax.swing.JPanel() {
-    setLayout(new java.awt.BorderLayout())
-    setBackground(InterfaceColors.MONITOR_BACKGROUND)
-    setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2))
-    add(outputArea, java.awt.BorderLayout.CENTER)
-  }, java.awt.BorderLayout.CENTER)
+
+  setLayout(new GridBagLayout)
+
+  val c = new GridBagConstraints
+
+  c.weightx = 1
+  c.weighty = 1
+  c.fill = GridBagConstraints.BOTH
+  c.insets = new Insets(6, 6, 6, 6)
+
+  add(outputArea, c)
 
   def propertySet = Properties.output
 
@@ -33,7 +38,11 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   }
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.output")
-  override def zoomSubcomponents = true
+  override def setZoomFactor(zoomFactor: Double) {
+    super.setZoomFactor(zoomFactor)
+
+    outputArea.zoomFactor = zoomFactor
+  }
   override def exportable = true
   override def getDefaultExportName = "output.txt"
   def valueText: String = outputArea.text.getText
@@ -51,6 +60,12 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
     val copyItem = RichJMenuItem(I18N.gui.get("tabs.run.widget.copyselectedtext")){ outputArea.text.copy }
     menu.add(copyItem)
     p
+  }
+
+  override def paintComponent(g: Graphics) {
+    backgroundColor = InterfaceColors.OUTPUT_BACKGROUND
+
+    super.paintComponent(g)
   }
 
   // these are copied from the TrailDrawer, as is this code for breaking up
