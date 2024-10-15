@@ -18,7 +18,6 @@ object MonitorWidget {
   private val MinWidth = 50
   private val DefaultDecimalPlaces = 17
   private val DefaultFontSize = 11
-  private val PreferredSizePad = 12
 
   trait ToMonitorModel { self: Widget with Component =>
     def decimalPlaces: Int
