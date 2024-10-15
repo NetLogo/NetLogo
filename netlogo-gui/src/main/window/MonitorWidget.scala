@@ -256,7 +256,7 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   override def getPreferredSize: Dimension =
     if (preserveWidgetSizes)
-      new Dimension(getMinimumSize.width.max(nameLabel.getWidth + PreferredSizePad), getMinimumSize.height)
+      new Dimension(100, getMinimumSize.height)
     else
       new Dimension(100, 60)
 
