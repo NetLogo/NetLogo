@@ -156,12 +156,22 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   addKeyListener(new KeyAdapter {
     override def keyPressed(e: KeyEvent) {
-      if (e.getKeyCode == KeyEvent.VK_CONTROL)
+      if (System.getProperty("os.name").contains("Mac")) {
+        if (e.getKeyCode == KeyEvent.VK_META)
+          interceptPane.enableIntercept()
+      }
+
+      else if (e.getKeyCode == KeyEvent.VK_CONTROL)
         interceptPane.enableIntercept()
     }
 
     override def keyReleased(e: KeyEvent) {
-      if (e.getKeyCode == KeyEvent.VK_CONTROL)
+      if (System.getProperty("os.name").contains("Mac")) {
+        if (e.getKeyCode == KeyEvent.VK_META)
+          interceptPane.disableIntercept()
+      }
+
+      else if (e.getKeyCode == KeyEvent.VK_CONTROL)
         interceptPane.disableIntercept()
     }
   })
