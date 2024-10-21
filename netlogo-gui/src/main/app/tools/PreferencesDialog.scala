@@ -4,6 +4,7 @@ package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Frame }
 import java.io.File
+import java.nio.file.Files
 import java.util.prefs.{ Preferences => JavaPreferences }
 import javax.swing.{ BorderFactory, Box, BoxLayout, JButton, SwingConstants }
 
@@ -37,13 +38,25 @@ extends ToolDialog(parent, "preferences") {
       val path = preferences.find(x => x.i18nKey == "logDirectory").get.
                  asInstanceOf[Preferences.LogDirectory].textField.getText
       val file = new File(path)
-      if (path.nonEmpty && !file.exists) {
+      if (path.isEmpty) {
+        OptionDialog.showMessage(this, I18N.gui.get("common.messages.error"),
+                                 I18N.gui.get("tools.preferences.emptyDirectory"),
+                                 Array[Object](I18N.gui.get("common.buttons.ok")))
+        return false
+      }
+      else if (!file.exists) {
         if (OptionDialog.showMessage(this, I18N.gui.get("common.messages.warning"),
                                               I18N.gui.get("tools.preferences.missingDirectory"),
                                               Array[Object](I18N.gui.get("common.buttons.ok"),
                                                             I18N.gui.get("common.buttons.cancel"))) == 1)
           return false
         file.mkdirs
+      }
+      if (!Files.isWritable(file.toPath)) {
+        OptionDialog.showMessage(this, I18N.gui.get("common.messages.error"),
+                                 I18N.gui.get("tools.preferences.badPermissions"),
+                                 Array[Object](I18N.gui.get("common.buttons.ok")))
+        return false
       }
     }
     true
