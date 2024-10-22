@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, Graphics, Point, RadialGradientPaint }
+import java.awt.{ Dimension, Graphics, Point, RadialGradientPaint }
 import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, MouseAdapter, MouseEvent,
                         MouseMotionAdapter }
 import java.lang.NumberFormatException
@@ -229,7 +229,7 @@ trait AbstractSliderWidget extends MultiErrorWidget {
       }
       g2d.setColor(InterfaceColors.INPUT_BORDER)
       g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
-      g2d.setColor(Color.WHITE)
+      g2d.setColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
       g2d.fillRoundRect(1, 1, getWidth - 2, getHeight - 2, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
       super.paintComponent(g)
     }
@@ -479,7 +479,10 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     else
       nameComponent.setForeground(InterfaceColors.WIDGET_TEXT)
 
-    valueComponent.setForeground(InterfaceColors.WIDGET_TEXT)
+    valueComponent.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
+    unitsComponent.setForeground(InterfaceColors.WIDGET_TEXT)
+
+    valueComponent.setCaretColor(InterfaceColors.DISPLAY_AREA_TEXT)
 
     super.paintComponent(g)
   }

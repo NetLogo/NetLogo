@@ -2,7 +2,7 @@
 
 package org.nlogo.app.common
 
-import java.awt.{BorderLayout, Dimension}
+import java.awt.{ BorderLayout, Dimension, Graphics }
 import java.awt.event.{ActionEvent, ActionListener, KeyEvent, KeyListener}
 import javax.swing.{JScrollPane, KeyStroke, ScrollPaneConstants}
 
@@ -11,7 +11,7 @@ import org.nlogo.core.{AgentKind, CompilerException, I18N, Widget => CoreWidget}
 import org.nlogo.editor.EditorField
 import org.nlogo.ide.{AutoSuggestAction, CodeCompletionPopup}
 import org.nlogo.workspace.AbstractWorkspace
-import org.nlogo.window.{CommandCenterInterface, EditorColorizer, JobWidget, Events => WindowEvents}
+import org.nlogo.window.{ CommandCenterInterface, EditorColorizer, InterfaceColors, JobWidget, Events => WindowEvents }
 
 import scala.collection.immutable.List
 
@@ -57,7 +57,14 @@ class CommandLine(commandCenter: CommandCenterInterface,
     new org.nlogo.editor.EditorField(30,
       new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont,
         java.awt.Font.PLAIN, 12),
-      true, new EditorColorizer(workspace), actionMap)
+      true, new EditorColorizer(workspace), actionMap) {
+      override def paintComponent(g: Graphics) {
+        setBackground(InterfaceColors.COMMAND_LINE_BACKGROUND)
+        setCaretColor(InterfaceColors.DISPLAY_AREA_TEXT)
+
+        super.paintComponent(g)
+      }
+    }
 
   agentKind(AgentKind.Observer)
 
@@ -68,8 +75,10 @@ class CommandLine(commandCenter: CommandCenterInterface,
   displayName(classDisplayName)
   add(new JScrollPane(textField,
         ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER),
-      java.awt.BorderLayout.CENTER)
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
+        setOpaque(false)
+        setBackground(InterfaceColors.TRANSPARENT)
+      }, java.awt.BorderLayout.CENTER)
 
 
   def agent(agent: Agent): Unit = {

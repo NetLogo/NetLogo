@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension }
+import java.awt.{ Color, Dimension, Graphics }
 import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.plot.{ Plot, PlotPen }
@@ -43,6 +43,12 @@ class PlotLegend(plot: Plot) extends JPanel {
         new Dimension(15, 2)
     })
 
-    add(new JLabel(pen.name))
+    add(new JLabel(pen.name) {
+      override def paintComponent(g: Graphics) {
+        setForeground(InterfaceColors.WIDGET_TEXT)
+
+        super.paintComponent(g)
+      }
+    })
   }
 }

@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Component, Dimension, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Component, Dimension, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import javax.swing.{ JPanel, JScrollPane, JTextArea, ScrollPaneConstants }
 
 import org.nlogo.awt.{ Fonts => NLogoFonts, LineBreaker }
@@ -37,8 +37,6 @@ class OutputArea(val text: JTextArea) extends JPanel {
                     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   
   scrollPane.setBorder(null)
-
-  text.setBackground(Color.WHITE)
 
   // when someone prints something that
   // ends in a carriage return, we don't want to print it immediately,
@@ -93,10 +91,14 @@ class OutputArea(val text: JTextArea) extends JPanel {
 
   override def paintComponent(g: Graphics) {
     val g2d = Utils.initGraphics2D(g)
-    g2d.setColor(Color.WHITE)
+    g2d.setColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
     g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
     g2d.setColor(InterfaceColors.OUTPUT_BORDER)
     g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
+
+    text.setBackground(InterfaceColors.DISPLAY_AREA_BACKGROUND)
+    text.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
+
     super.paintComponent(g)
   }
 

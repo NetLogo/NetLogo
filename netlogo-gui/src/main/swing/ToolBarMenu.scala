@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Color, FlowLayout, Graphics }
+import java.awt.{ Color, FlowLayout }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, JButton, JLabel, JPopupMenu }
 
@@ -13,8 +13,11 @@ abstract class ToolBarMenu(name: String) extends JButton {
 
   setLayout(new FlowLayout)
 
-  add(new JLabel(name))
-  add(new DropdownArrow)
+  protected val label = new JLabel(name)
+  protected val arrow = new DropdownArrow
+
+  add(label)
+  add(arrow)
 
   setAction(new AbstractAction {
     override def actionPerformed(e: ActionEvent): Unit = popup()
@@ -35,15 +38,4 @@ abstract class ToolBarMenu(name: String) extends JButton {
   }
 
   protected def populate(menu: JPopupMenu): Unit
-
-  override def paintComponent(g: Graphics) {
-    val g2d = Utils.initGraphics2D(g)
-
-    g2d.setColor(Color.WHITE)
-    g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
-    g2d.setColor(new Color(150, 150, 150))
-    g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
-
-    super.paintComponent(g)
-  }
 }

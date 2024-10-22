@@ -29,6 +29,13 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
   setOpaque(false)
   setLayout(new GridBagLayout)
 
+  val slower = new JLabel(I18N.gui("slower"))
+  val faster = new JLabel(I18N.gui("faster"), SwingConstants.RIGHT)
+  val modelSpeed = new JLabel(I18N.gui("modelSpeed"), SwingConstants.CENTER)
+
+  slower.setFont(slower.getFont.deriveFont(10f))
+  faster.setFont(faster.getFont.deriveFont(10f))
+
   locally {
     val c = new GridBagConstraints
 
@@ -37,25 +44,17 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
     c.weightx = 1
     c.anchor = GridBagConstraints.SOUTHWEST
 
-    val slower = new JLabel(I18N.gui("slower"))
-
-    slower.setFont(slower.getFont.deriveFont(10f))
-
     add(slower, c)
 
     c.gridx = 1
     c.anchor = GridBagConstraints.CENTER
     c.insets = new Insets(0, 12, 0, 12)
 
-    add(new JLabel(I18N.gui("modelSpeed"), SwingConstants.CENTER), c)
+    add(modelSpeed, c)
 
     c.gridx = 2
     c.anchor = GridBagConstraints.SOUTHEAST
     c.insets = new Insets(0, 0, 0, 0)
-
-    val faster = new JLabel(I18N.gui("faster"), SwingConstants.RIGHT)
-
-    faster.setFont(slower.getFont.deriveFont(10f))
 
     add(faster, c)
 
@@ -130,6 +129,14 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
   def getMaximum: Int = speedSlider.getMaximum
 
   override def isEnabled: Boolean = speedSlider.isEnabled
+
+  override def paintComponent(g: Graphics) {
+    slower.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    faster.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    modelSpeed.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    super.paintComponent(g)
+  }
 
   class SpeedSlider(defaultSpeed: Int) extends JSlider(-110, 112, defaultSpeed) with MouseWheelListener {
     setExtent(1)

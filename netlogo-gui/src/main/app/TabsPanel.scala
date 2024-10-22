@@ -2,10 +2,10 @@
 
 package org.nlogo.app
 
-import java.awt.{ Color, Component, Dimension, FlowLayout, Graphics, Insets }
+import java.awt.{ Component, Dimension, FlowLayout, Graphics, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
-import javax.swing.{ Box, JLabel, JPanel, JTabbedPane, SwingConstants }
+import javax.swing.{ Box, JComponent, JLabel, JPanel, JTabbedPane, SwingConstants }
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
 import org.nlogo.app.codetab.{ CodeTab, TemporaryCodeTab }
@@ -117,6 +117,15 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
   override def paintContentBorder(g: Graphics, tabPlacement: Int, selectedIndex: Int) {
     // no content border
   }
+
+  override def paint(g: Graphics, c: JComponent) {
+    val g2d = Utils.initGraphics2D(g)
+
+    g2d.setColor(InterfaceColors.TOOLBAR_BACKGROUND)
+    g2d.fillRect(0, 0, tabsPanel.getWidth, tabsPanel.getHeight)
+
+    super.paint(g, c)
+  }
 }
 
 class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
@@ -186,11 +195,11 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
   
   override def paintComponent(g: Graphics) {
     if (tab == tabsPanel.getSelectedComponent) {
-      textLabel.setForeground(Color.WHITE)
+      textLabel.setForeground(InterfaceColors.TAB_TEXT_SELECTED)
       textLabel.setText("<html><b>" + rawText + "</b></html>")
 
       if (closeButton != null)
-        closeButton.setForeground(Color.WHITE)
+        closeButton.setForeground(InterfaceColors.TAB_TEXT_SELECTED)
     }
 
     else if (tabsPanel.getError(tabsPanel.indexOfComponent(tab))) {
@@ -202,11 +211,11 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
     }
 
     else {
-      textLabel.setForeground(Color.BLACK)
+      textLabel.setForeground(InterfaceColors.TAB_TEXT)
       textLabel.setText(rawText)
 
       if (closeButton != null)
-        closeButton.setForeground(Color.BLACK)
+        closeButton.setForeground(InterfaceColors.TAB_TEXT)
     }
 
     super.paintComponent(g)

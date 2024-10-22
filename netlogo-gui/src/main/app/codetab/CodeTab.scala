@@ -17,7 +17,7 @@ import org.nlogo.editor.DumbIndenter
 import org.nlogo.ide.FocusedOnlyAction
 import org.nlogo.swing.{ PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction,
                          Printable => NlogoPrintable, Utils }
-import org.nlogo.window.{CommentableError, ProceduresInterface, Zoomable, Events => WindowEvents}
+import org.nlogo.window.{ CommentableError, InterfaceColors, ProceduresInterface, Zoomable, Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
 
 abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) extends JPanel
@@ -29,6 +29,9 @@ with Zoomable
 with NlogoPrintable
 with MenuTab {
   protected val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
+
+  private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION_CODE)
+  private val compileButton = new ToolBarActionButton(CompileAction)
 
   private val tabbing: JCheckBox = new JCheckBox(
     new AbstractAction(I18N.gui.get("tabs.code.indentAutomatically")) {
@@ -121,12 +124,12 @@ with MenuTab {
                                                            "procmenu")
         getActionMap.put("procmenu", proceduresMenu.getAction)
 
-        add(new ToolBarActionButton(FindDialog.FIND_ACTION_CODE))
+        add(findButton)
 
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(UserAction.KeyBindings.keystroke('F', withMenu = true), "find")
         getActionMap.put("find", FindDialog.FIND_ACTION_CODE)
 
-        add(new ToolBarActionButton(CompileAction))
+        add(compileButton)
         add(proceduresMenu)
         add(new IncludedFilesMenu(getIncludesTable, tabs))
         add(tabbing)
@@ -242,5 +245,19 @@ with MenuTab {
         else         "/images/check.png"
       putValue(Action.SMALL_ICON, Utils.icon(iconPath))
     }
+  }
+
+  override def paintComponent(g: Graphics) {
+    toolBar.setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
+
+    findButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    compileButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    tabbing.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    separate.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    text.setBackground(InterfaceColors.CODE_BACKGROUND)
+
+    super.paintComponent(g)
   }
 }

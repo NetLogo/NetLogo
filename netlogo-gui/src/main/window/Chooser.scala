@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets, LinearGradientPaint }
+import java.awt.{ Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets, LinearGradientPaint }
 import java.awt.event.{ ItemEvent, ItemListener, MouseAdapter, MouseEvent, MouseWheelEvent, MouseWheelListener }
 import javax.swing.{ JComboBox, JLabel, JPanel }
 
@@ -165,10 +165,14 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
 
     override def paintComponent(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
-      g2d.setColor(Color.WHITE)
+
+      g2d.setColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
       g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
       g2d.setColor(InterfaceColors.CHOOSER_BORDER)
       g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
+
+      comboBox.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
+
       super.paintComponent(g)
     }
   }

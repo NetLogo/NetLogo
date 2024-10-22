@@ -21,7 +21,7 @@ import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ OptionDialog, ToolBar, ToolBarButton, ToolBarActionButton,
   ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, Utils },
   BrowserLauncher.docPath, Utils.icon
-import org.nlogo.window.{ Events => WindowEvents, Zoomable }
+import org.nlogo.window.{ Events => WindowEvents, InterfaceColors, Zoomable }
 
 class InfoTab(attachModelDir: String => String)
   extends JPanel
@@ -66,6 +66,8 @@ class InfoTab(attachModelDir: String => String)
     setContentType("text/html")
     addHyperlinkListener(InfoTab.this)
   }
+
+  private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION)
   private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit")))
   private val helpButton = new ToolBarButton(I18N.gui.get("tabs.info.help"),
                                              BrowserLauncher.openPath(this, baseDocPath, "information"))
@@ -87,14 +89,16 @@ class InfoTab(attachModelDir: String => String)
 
   override val activeMenuActions = Seq(undoAction, redoAction)
 
+  private val toolBar = new ToolBar {
+    override def addControls() {
+      this.addAll(findButton, editableButton, helpButton)
+    }
+  }
+
   locally {
     resetBorders()
     setLayout(new BorderLayout)
-    add(new ToolBar() {
-      override def addControls() {
-        this.addAll(new ToolBarActionButton(FindDialog.FIND_ACTION), editableButton, helpButton)
-      }
-    }, BorderLayout.NORTH)
+    add(toolBar, BorderLayout.NORTH)
     scrollPane.setBorder(null)
     scrollPane.getVerticalScrollBar.setUnitIncrement(16)
     add(scrollPane, BorderLayout.CENTER)
@@ -148,6 +152,16 @@ class InfoTab(attachModelDir: String => String)
       editableButton.setSelected(false)
     }
     updateEditorPane()
+  }
+
+  override def paintComponent(g: Graphics) {
+    toolBar.setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
+
+    findButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    editableButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    helpButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    super.paintComponent(g)
   }
 
   def handle(e: AppEvents.SwitchedTabsEvent) {

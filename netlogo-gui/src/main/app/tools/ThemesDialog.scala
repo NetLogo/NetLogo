@@ -25,6 +25,12 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") {
     }
   })
 
+  private lazy val darkButton = new JRadioButton(new AbstractAction(I18N.gui("dark")) {
+    def actionPerformed(e: ActionEvent) {
+      setTheme("dark")
+    }
+  })
+
   private var startTheme = ""
 
   override def initGUI() {
@@ -45,11 +51,13 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") {
     c.insets = new Insets(0, 6, 6, 6)
 
     panel.add(lightButton, c)
+    panel.add(darkButton, c)
 
     val themeButtons = new ButtonGroup
 
     themeButtons.add(classicButton)
     themeButtons.add(lightButton)
+    themeButtons.add(darkButton)
 
     val buttonPanel = new JPanel
 
@@ -97,6 +105,7 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") {
     theme match {
       case "classic" => classicButton.setSelected(true)
       case "light" => lightButton.setSelected(true)
+      case "dark" => darkButton.setSelected(true)
     }
   }
 }

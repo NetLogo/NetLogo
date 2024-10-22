@@ -2,7 +2,7 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.{ Dimension, FileDialog }
+import java.awt.{ Dimension, FileDialog, Graphics }
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.prefs.Preferences
@@ -13,8 +13,8 @@ import scala.util.control.Exception.ignoring
 import org.nlogo.app.common.{ Actions, TabsInterface }, Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, RichJMenuItem, ToolBarMenu }
-import org.nlogo.window.{ Events => WindowEvents }
+import org.nlogo.swing.{ FileDialog => SwingFileDialog, RichJMenuItem, ToolBarMenu, Utils }
+import org.nlogo.window.{ Events => WindowEvents, InterfaceColors }
 
 class IncludedFilesMenu(includesTable: => Option[Map[String, String]], tabs: TabsInterface)
 extends ToolBarMenu(I18N.gui.get("tabs.code.includedFiles"))
@@ -58,6 +58,21 @@ with WindowEvents.CompiledEvent.Handler {
 
   override def getMinimumSize = sizeIfVisible(super.getMinimumSize)
   override def getPreferredSize = sizeIfVisible(super.getPreferredSize)
+
+  override def paintComponent(g: Graphics) {
+    val g2d = Utils.initGraphics2D(g)
+
+    g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
+    g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+    g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+
+    label.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    
+    arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
+
+    super.paintComponent(g)
+  }
 
   private object NewSourceEditorAction extends AbstractAction(I18N.gui("new")) {
     override def actionPerformed(e: ActionEvent) = tabs.newExternalFile()

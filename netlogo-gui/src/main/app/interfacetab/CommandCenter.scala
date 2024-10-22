@@ -40,19 +40,18 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
 
   titleLabel.setFont(titleLabel.getFont.deriveFont(Font.BOLD))
 
+  private val clearButton = new JButton(RichAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) {
+    _ => output.clear()
+  }) {
+    setFocusable(false)
+  }
+
   locally {
     setOpaque(true)  // so background color shows up - ST 10/4/05
-    setBackground(InterfaceColors.COMMAND_CENTER_BACKGROUND)
     setLayout(new BorderLayout)
 
     //NORTH
     //-----------------------------------------
-
-    val clearButton = new JButton(RichAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) {
-      _ => output.clear()
-    }) {
-      setFocusable(false)
-    }
 
     add(northPanel, BorderLayout.NORTH)
 
@@ -156,7 +155,13 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
   }
 
   override def paintComponent(g: Graphics) {
-    titleLabel.setForeground(InterfaceColors.WIDGET_TEXT)
+    setBackground(InterfaceColors.COMMAND_CENTER_BACKGROUND)
+
+    titleLabel.setForeground(InterfaceColors.COMMAND_CENTER_TEXT)
+
+    locationToggleButton.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    clearButton.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    clearButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
     super.paintComponent(g)
   }

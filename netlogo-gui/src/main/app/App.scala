@@ -775,6 +775,10 @@ class App extends
     }
   }
 
+  def repaintOtherWindows() {
+    tabManager.separateTabsWindow.repaint()
+  }
+
   /**
    * Internal use only.
    */

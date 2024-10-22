@@ -31,4 +31,10 @@ class AppFrame extends JFrame with LinkParent with LinkRoot {
       new IconifiedEvent(AppFrame.this, false).raise(App.app)
     }
   })
+
+  override def repaint() {
+    super.repaint()
+
+    App.app.repaintOtherWindows()
+  }
 }

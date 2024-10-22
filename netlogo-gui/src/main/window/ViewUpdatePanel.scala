@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
 import javax.swing.{ AbstractAction, Action, JButton, JCheckBox, JPanel }
 
@@ -21,8 +21,6 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
   displaySwitch.addItemListener(new ViewUpdateListener(speedSlider))
 
   updateModeChooser.refreshSelection()
-
-  setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
   locally {
     val c = new GridBagConstraints
@@ -56,6 +54,17 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
   def handle(e: LoadEndEvent): Unit = {
     updateModeChooser.refreshSelection()
     speedSlider.setValue(workspace.speedSliderPosition.toInt)
+  }
+
+  override def paintComponent(g: Graphics) {
+    setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
+
+    displaySwitch.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    settingsButton.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    settingsButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    super.paintComponent(g)
   }
 
   private class ViewUpdateListener(slider: SpeedSliderPanel) extends ItemListener {

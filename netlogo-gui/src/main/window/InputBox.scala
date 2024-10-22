@@ -80,8 +80,16 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
                                      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
     
     scrollPane.setBorder(null)
+    scrollPane.setOpaque(false)
+    scrollPane.setBackground(InterfaceColors.TRANSPARENT)
 
+    scrollPane.getViewport.setBackground(InterfaceColors.TRANSPARENT)
+
+    setOpaque(false)
     setBackground(InterfaceColors.TRANSPARENT)
+
+    textArea.setOpaque(false)
+    textArea.setBackground(InterfaceColors.TRANSPARENT)
 
     setLayout(new GridBagLayout)
 
@@ -115,8 +123,10 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     override def paintComponent(g: Graphics) {
       // this mostly fixes some weird horizontal scrollbar issues (IB 8/7/24)
       textArea.setSize(scrollPane.getWidth - 10, scrollPane.getHeight)
+      textArea.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
+      textArea.setCaretColor(InterfaceColors.DISPLAY_AREA_TEXT)
       val g2d = Utils.initGraphics2D(g)
-      g2d.setColor(Color.WHITE)
+      g2d.setColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
       g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
       g2d.setColor(InterfaceColors.INPUT_BORDER)
       g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)

@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component }
+import java.awt.{ Component, Graphics }
 import javax.swing.{ JComboBox, JLabel, JList, ListCellRenderer }
 import java.awt.event.{ ItemEvent, ItemListener }
 
@@ -30,6 +30,13 @@ class UpdateModeChooser(workspace: GUIWorkspace) extends JComboBox[UpdateMode](C
 
   def refreshSelection(): Unit = {
     setSelectedItem(workspace.updateMode())
+  }
+
+  override def paintComponent(g: Graphics) {
+    setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    super.paintComponent(g)
   }
 
   private class UpdateModeRenderer(delegateRenderer: ListCellRenderer[_ >: UpdateMode]) extends ListCellRenderer[UpdateMode] {

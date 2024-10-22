@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.Dimension
+import java.awt.{ Dimension, Graphics }
 
 import javax.swing.JLabel
 
@@ -66,4 +66,9 @@ class TickCounterLabel(world: World)
 
   def label: String = _label
 
+  override def paintComponent(g: Graphics) {
+    setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    super.paintComponent(g)
+  }
 }

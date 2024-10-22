@@ -2,6 +2,7 @@
 
 package org.nlogo.app.interfacetab
 
+import java.awt.Graphics
 import java.awt.image.BufferedImage
 import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, KeyListener, MouseEvent }
 import javax.swing.{ JMenuItem, JPopupMenu }
@@ -17,7 +18,7 @@ import org.nlogo.core.{
 import org.nlogo.editor.{ EditorArea, UndoManager }
 import org.nlogo.log.LogManager
 import org.nlogo.window.{ ButtonWidget, ChooserWidget, Events => WindowEvents,
-  GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, MonitorWidget,
+  GUIWorkspace, InputBoxWidget, InterfaceColors, InterfaceGlobalWidget, MonitorWidget,
   PlotWidget, SliderWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
     WindowEvents.{CompileAllEvent, LoadBeginEvent, LoadWidgetsEvent,
     RemoveConstraintEvent, WidgetRemovedEvent}
@@ -49,6 +50,12 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   override def focusLost(e: FocusEvent): Unit = {
     enableButtonKeys(false)
+  }
+
+  override def paintComponent(g: Graphics) {
+    setBackground(InterfaceColors.INTERFACE_BACKGROUND)
+
+    super.paintComponent(g)
   }
 
   ///

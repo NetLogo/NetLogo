@@ -24,7 +24,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
       lastColors
     else {
       val tokens = tokenizeForColorization(line)
-      val result = Array.fill(line.size)(SyntaxColors.DEFAULT_COLOR)
+      val result = Array.fill(line.size)(InterfaceColors.DEFAULT_COLOR)
       for (tok <- tokens) {
         // "breed" can be either a keyword or a turtle variable, which means we can't reliably
         // colorize it correctly; so as a kludge we colorize it as a keyword if it's right at the
@@ -36,7 +36,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
             TokenType.Keyword
           else
             tok.tpe
-        ).getOrElse(SyntaxColors.DEFAULT_COLOR)
+        ).getOrElse(InterfaceColors.DEFAULT_COLOR)
         for (j <- tok.start until tok.end)
           // guard against any bugs in tokenization causing out-of-bounds positions
           if(result.isDefinedAt(j))
@@ -77,16 +77,16 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
 
   ///
 
-  private val tokenTypeColors = Map[TokenType, java.awt.Color](
-    TokenType.Literal  -> SyntaxColors.CONSTANT_COLOR,
-    TokenType.Command  -> SyntaxColors.COMMAND_COLOR,
-    TokenType.Reporter -> SyntaxColors.REPORTER_COLOR,
-    TokenType.Keyword  -> SyntaxColors.KEYWORD_COLOR,
-    TokenType.Comment  -> SyntaxColors.COMMENT_COLOR
-  )
-
-  private def getTokenColor(tpe: TokenType): Option[java.awt.Color] =
-    tokenTypeColors.get(tpe)
+  private def getTokenColor(tpe: TokenType): Option[java.awt.Color] = {
+    tpe match {
+      case TokenType.Literal  => Some(InterfaceColors.CONSTANT_COLOR)
+      case TokenType.Command  => Some(InterfaceColors.COMMAND_COLOR)
+      case TokenType.Reporter => Some(InterfaceColors.REPORTER_COLOR)
+      case TokenType.Keyword  => Some(InterfaceColors.KEYWORD_COLOR)
+      case TokenType.Comment  => Some(InterfaceColors.COMMENT_COLOR)
+      case _ => None
+    }
+  }
 
   def getTokenAtPosition(text: String, position: Int): Option[String] =
     Option(compiler.getTokenAtPosition(text, position))

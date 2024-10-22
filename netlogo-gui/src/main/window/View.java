@@ -476,7 +476,7 @@ public class View
       JMenuItem resetItem =
         new JMenuItem(
             "<html>"
-            + org.nlogo.awt.Colors.colorize("reset-perspective", SyntaxColors.COMMAND_COLOR));
+            + org.nlogo.awt.Colors.colorize("reset-perspective", InterfaceColors.COMMAND_COLOR()));
       resetItem.addActionListener(new ActionListener() {
         public void actionPerformed(ActionEvent e) {
           workspace.world().observer().resetPerspective();
@@ -613,14 +613,14 @@ public class View
       super("<html>"
           + org.nlogo.awt.Colors.colorize(
           caption,
-          SyntaxColors.COMMAND_COLOR)
+          InterfaceColors.COMMAND_COLOR())
           + " "
           + org.nlogo.awt.Colors.colorize(
           agent.classDisplayName(),
-          SyntaxColors.REPORTER_COLOR)
+          InterfaceColors.REPORTER_COLOR())
           + org.nlogo.awt.Colors.colorize(
           agent.toString().substring(agent.classDisplayName().length()),
-          SyntaxColors.CONSTANT_COLOR)
+          InterfaceColors.CONSTANT_COLOR())
       );
       this.agent = agent;
       this.type = type;

@@ -2,7 +2,7 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Color, Frame, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Frame, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, ButtonGroup, JLabel, JMenuItem, JPanel, JPopupMenu }
 
@@ -37,8 +37,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
   private val widgetMenu = new WidgetMenu
   private val alignmentMenu = new AlignmentMenu
-
-  setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
   selectButton.setToolTipText(I18N.gui.get("tabs.run.selectButton.tooltip"))
   editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
@@ -115,6 +113,18 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     selectButton.setSelected(true)
   }
 
+  override def paintComponent(g: Graphics) {
+    setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
+
+    selectButton.setColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
+    editButton.setColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
+    deleteButton.setColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
+
+    // set action icons here
+
+    super.paintComponent(g)
+  }
+
   def handle(e: WindowEvents.WidgetRemovedEvent) {
     val r = e.widget
     if(selectedObjects.contains(r)) {
@@ -172,13 +182,16 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     setOpaque(false)
     setBackground(InterfaceColors.TRANSPARENT)
 
+    private val label = new JLabel(I18N.gui.get("tabs.run.addWidget"))
+    private val arrow = new DropdownArrow
+
     locally {
       val c = new GridBagConstraints
 
       c.insets = new Insets(6, 6, 6, 6)
 
-      add(new JLabel(I18N.gui.get("tabs.run.addWidget")), c)
-      add(new DropdownArrow, c)
+      add(label, c)
+      add(arrow, c)
     }
 
     private val actions = getItems.map(new WidgetAction(_))
@@ -216,10 +229,14 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     override def paintComponent(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
 
-      g2d.setColor(Color.WHITE)
+      g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
       g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
-      g2d.setColor(InterfaceColors.DARK_GRAY)
+      g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
       g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+
+      label.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+      arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
 
       super.paintComponent(g)
     }
@@ -229,13 +246,16 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     setOpaque(false)
     setBackground(InterfaceColors.TRANSPARENT)
 
+    private val label = new JLabel(I18N.gui.get("tabs.run.alignWidgets"))
+    private val arrow = new DropdownArrow
+
     locally {
       val c = new GridBagConstraints
 
       c.insets = new Insets(6, 6, 6, 6)
 
-      add(new JLabel(I18N.gui.get("tabs.run.alignWidgets")), c)
-      add(new DropdownArrow, c)
+      add(label, c)
+      add(arrow, c)
     }
 
     private val leftAction = new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft"),
@@ -332,10 +352,14 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     override def paintComponent(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
 
-      g2d.setColor(Color.WHITE)
+      g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
       g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
-      g2d.setColor(InterfaceColors.DARK_GRAY)
+      g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
       g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+
+      label.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+      arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
 
       super.paintComponent(g)
     }

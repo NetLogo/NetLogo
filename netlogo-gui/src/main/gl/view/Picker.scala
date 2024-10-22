@@ -5,7 +5,7 @@ package org.nlogo.gl.view
 import org.nlogo.core.AgentKind
 import org.nlogo.api.{ Agent, Perspective, Turtle }
 import org.nlogo.gl.render.PickListener
-import org.nlogo.window.SyntaxColors
+import org.nlogo.window.InterfaceColors
 import org.nlogo.awt.Colors.colorize
 import java.awt.event.{ ActionEvent, ActionListener }
 import java.util.{ List => JList }
@@ -60,7 +60,7 @@ class Picker(view: View) extends PickListener with ActionListener {
     menu.add(new JPopupMenu.Separator)
 
     val resetItem = new javax.swing.JMenuItem(
-        "<html>" + colorize("reset-perspective", SyntaxColors.COMMAND_COLOR))
+        "<html>" + colorize("reset-perspective", InterfaceColors.COMMAND_COLOR))
     resetItem.addActionListener(
       new ActionListener {
         override def actionPerformed(e: ActionEvent) {
@@ -119,9 +119,9 @@ class Picker(view: View) extends PickListener with ActionListener {
 
   def htmlString(agent: Agent, caption: String) =
     "<html>" +
-    colorize(caption, SyntaxColors.COMMAND_COLOR) + " "  +
-    colorize(agent.classDisplayName, SyntaxColors.REPORTER_COLOR) +
-    colorize(agent.toString.drop(agent.classDisplayName.size), SyntaxColors.CONSTANT_COLOR)
+    colorize(caption, InterfaceColors.COMMAND_COLOR) + " "  +
+    colorize(agent.classDisplayName, InterfaceColors.REPORTER_COLOR) +
+    colorize(agent.toString.drop(agent.classDisplayName.size), InterfaceColors.CONSTANT_COLOR)
 
   private class AgentMenuItem(val agent: Agent, val action: AgentAction, caption: String)
   extends javax.swing.JMenuItem(htmlString(agent, caption)) {

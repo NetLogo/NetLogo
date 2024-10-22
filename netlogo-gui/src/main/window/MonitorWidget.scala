@@ -68,7 +68,7 @@ class MonitorWidget(random: MersenneTwisterFast)
 
     override def paintComponent(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
-      g2d.setColor(Color.WHITE)
+      g2d.setColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
       g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
       g2d.setColor(InterfaceColors.MONITOR_BORDER)
       g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
@@ -91,8 +91,6 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName"))
   private val valueLabel = new JLabel
-
-  nameLabel.setForeground(InterfaceColors.WIDGET_TEXT)
 
   addMouseListener(this)
 
@@ -232,6 +230,9 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   override def paintComponent(g: Graphics) {
     backgroundColor = InterfaceColors.MONITOR_BACKGROUND
+
+    nameLabel.setForeground(InterfaceColors.WIDGET_TEXT)
+    valueLabel.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
 
     if (nameLabel.getPreferredSize.width > nameLabel.getWidth)
       nameLabel.setToolTipText(nameLabel.getText)

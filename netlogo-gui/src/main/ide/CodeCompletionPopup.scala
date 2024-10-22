@@ -11,7 +11,7 @@ import javax.swing.text.JTextComponent
 import org.nlogo.awt.Fonts
 import org.nlogo.core.{Dialect, Femto, NetLogoCore, Token, TokenType, TokenizerInterface}
 import org.nlogo.nvm.ExtensionManager
-import org.nlogo.window.SyntaxColors
+import org.nlogo.window.InterfaceColors
 
 object CodeCompletionPopup {
   def apply() =
@@ -224,9 +224,9 @@ class SuggestionListRenderer(dialect: Dialect, extensionManager: Option[Extensio
     val fgColor =
       if (dialect.tokenMapper.getCommand(value).nonEmpty ||
         extensionManager.flatMap(_.cachedType(value)).contains(TokenType.Command))
-        SyntaxColors.COMMAND_COLOR
+        InterfaceColors.COMMAND_COLOR
       else
-        SyntaxColors.REPORTER_COLOR
+        InterfaceColors.REPORTER_COLOR
     label.setForeground(fgColor)
     label.setBackground(if(isSelected || cellHasFocus) new Color(0xEEAEEE) else Color.white)
     label.setOpaque(true)

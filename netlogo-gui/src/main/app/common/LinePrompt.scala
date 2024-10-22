@@ -7,6 +7,7 @@ import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.{ JLabel, JMenuItem, JPopupMenu }
 
 import org.nlogo.core.{ AgentKind, I18N }
+import org.nlogo.window.InterfaceColors
 
 class LinePrompt(commandLine: CommandLine) extends JLabel {
   setText(getPrompt)
@@ -65,7 +66,7 @@ class LinePrompt(commandLine: CommandLine) extends JLabel {
     if (mouseInBounds)
       setForeground(Color.BLUE)
     else
-      setForeground(Color.BLACK)
+      setForeground(InterfaceColors.COMMAND_CENTER_TEXT)
 
     super.paintComponent(g)
   }

@@ -2,6 +2,7 @@
 
 package org.nlogo.app.codetab
 
+import java.awt.Graphics
 import java.awt.event.KeyEvent
 import javax.swing.{JMenuItem, JPopupMenu, JTextField, MenuSelectionManager, SwingUtilities}
 import java.text.Collator
@@ -10,7 +11,8 @@ import java.util.prefs.{ Preferences => JavaPreferences }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.I18N
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.ToolBarMenu
+import org.nlogo.swing.{ ToolBarMenu, Utils }
+import org.nlogo.window.InterfaceColors
 
 class ProceduresMenu(target: ProceduresMenuTarget)
 extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) {
@@ -161,5 +163,20 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) {
         case _ => noMatchScore orElse matchScore
       }
     }
+  }
+
+  override def paintComponent(g: Graphics) {
+    val g2d = Utils.initGraphics2D(g)
+
+    g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
+    g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+    g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+
+    label.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    
+    arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
+
+    super.paintComponent(g)
   }
 }
