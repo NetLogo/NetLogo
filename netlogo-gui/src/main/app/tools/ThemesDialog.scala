@@ -8,9 +8,9 @@ import java.util.prefs.{ Preferences => JavaPreferences }
 import javax.swing.{ AbstractAction, ButtonGroup, JButton, JPanel, JRadioButton }
 
 import org.nlogo.core.I18N
-import org.nlogo.window.InterfaceColors
+import org.nlogo.window.{ InterfaceColors, ThemeSync }
 
-class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") {
+class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "themes") {
   private lazy val prefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
 
   private lazy val classicButton = new JRadioButton(new AbstractAction(I18N.gui("classic")) {
@@ -98,7 +98,7 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") {
 
     prefs.put("colorTheme", theme)
 
-    frame.repaint()
+    frame.syncTheme()
   }
 
   private def setSelected(theme: String) {

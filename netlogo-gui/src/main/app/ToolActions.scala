@@ -13,7 +13,7 @@ import org.nlogo.app.tools.{ LibrariesDialog, Preferences, PreferencesDialog, Th
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.workspace.AbstractWorkspaceScala
-import org.nlogo.window.{ ColorDialog, LinkRoot }
+import org.nlogo.window.{ ColorDialog, LinkRoot, ThemeSync }
 import org.nlogo.shape.ShapesManagerInterface
 import org.nlogo.swing.UserAction._
 
@@ -50,7 +50,7 @@ with MenuAction {
   )
 }
 
-class ShowThemesDialog(frame: Frame) extends ShowDialogAction(I18N.gui.get("menu.tools.themes")) with MenuAction {
+class ShowThemesDialog(frame: Frame with ThemeSync) extends ShowDialogAction(I18N.gui.get("menu.tools.themes")) with MenuAction {
   category = ToolsCategory
   group = ToolsSettingsGroup
 

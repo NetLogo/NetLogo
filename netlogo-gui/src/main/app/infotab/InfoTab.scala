@@ -21,7 +21,7 @@ import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ OptionDialog, ToolBar, ToolBarButton, ToolBarActionButton,
   ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, Utils },
   BrowserLauncher.docPath, Utils.icon
-import org.nlogo.window.{ Events => WindowEvents, InterfaceColors, Zoomable }
+import org.nlogo.window.{ Events => WindowEvents, InterfaceColors, ThemeSync, Zoomable }
 
 class InfoTab(attachModelDir: String => String)
   extends JPanel
@@ -33,7 +33,8 @@ class InfoTab(attachModelDir: String => String)
   with AppEvents.SwitchedTabsEvent.Handler
   with WindowEvents.LoadModelEvent.Handler
   with WindowEvents.ZoomedEvent.Handler
-  with Zoomable {
+  with Zoomable
+  with ThemeSync {
 
   val baseDocPath: Path = docPath("infotab.html")
 
@@ -154,14 +155,14 @@ class InfoTab(attachModelDir: String => String)
     updateEditorPane()
   }
 
-  override def paintComponent(g: Graphics) {
+  def syncTheme() {
     toolBar.setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
     findButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
     editableButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
     helpButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
-    super.paintComponent(g)
+    // change css here
   }
 
   def handle(e: AppEvents.SwitchedTabsEvent) {

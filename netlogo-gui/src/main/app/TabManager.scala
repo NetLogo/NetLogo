@@ -22,7 +22,7 @@ import org.nlogo.swing.{ Printable, PrinterManager, UserAction }
 import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, CompileAllEvent, CompiledEvent,
                                  ExternalFileSavedEvent, LoadBeginEvent, LoadErrorEvent, LoadModelEvent,
                                  ModelSavedEvent, RuntimeErrorEvent, WidgetErrorEvent, WidgetRemovedEvent }
-import org.nlogo.window.{ ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget, Widget }
+import org.nlogo.window.{ ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget, ThemeSync, Widget }
 
 import scala.collection.mutable.Set
 
@@ -31,7 +31,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   extends TabsInterface with AboutToCloseFilesEvent.Handler with AboutToSaveModelEvent.Handler
   with CompiledEvent.Handler with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler
   with LoadErrorEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler
-  with WidgetErrorEvent.Handler with WidgetRemovedEvent.Handler {
+  with WidgetErrorEvent.Handler with WidgetRemovedEvent.Handler with ThemeSync {
 
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
@@ -708,4 +708,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def handle(e: AboutToCloseFilesEvent) =
     OfferSaveExternalsDialog.offer(getExternalFileTabs.filter(_.saveNeeded).toSet, workspace.getFrame)
+  
+  def syncTheme() {
+    interfaceTab.syncTheme()
+    infoTab.syncTheme()
+    mainCodeTab.syncTheme()
+
+    getExternalFileTabs.foreach(_.syncTheme())
+  }
 }

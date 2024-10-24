@@ -14,7 +14,7 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, UserAction, Utils },
                        Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
 import org.nlogo.swing.{ Utils => SwingUtils }
-import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace, ViewUpdatePanel, WidgetInfo,
+import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace, ThemeSync, ViewUpdatePanel, WidgetInfo,
                           Events => WindowEvents, WorkspaceActions },
                         WindowEvents.{ Enable2DEvent, LoadBeginEvent, OutputEvent }
 
@@ -33,7 +33,8 @@ class InterfaceTab(workspace: GUIWorkspace,
   with Enable2DEvent.Handler
   with SwitchedTabsEvent.Handler
   with NlogoPrintable
-  with MenuTab {
+  with MenuTab
+  with ThemeSync {
 
   setFocusCycleRoot(true)
   setFocusTraversalPolicy(new InterfaceTabFocusTraversalPolicy)
@@ -85,19 +86,24 @@ class InterfaceTab(workspace: GUIWorkspace,
     override def focusLost(e: FocusEvent): Unit = { }
   }
 
+  import WidgetInfo._
+
+  private val buttons = List(button, slider, switch, chooser, input, monitor, plot, output, note)
+
+  private val toolBar = new InterfaceToolBar(iP, workspace, buttons, workspace.getFrame, dialogFactory) {
+    override def addControls() {
+      super.addControls()
+      viewUpdatePanel = new ViewUpdatePanel(workspace, workspace.viewWidget.displaySwitch,
+                                            workspace.viewWidget.tickCounter)
+      val c = new GridBagConstraints
+      c.gridy = 0
+      c.gridheight = 2
+      add(viewUpdatePanel, c)
+    }
+  }
+
   locally {
-    import WidgetInfo._
-    val buttons = List(button, slider, switch, chooser, input, monitor, plot, output, note)
-    add(new InterfaceToolBar(iP, workspace, buttons, workspace.getFrame, dialogFactory) {
-      override def addControls() {
-        super.addControls()
-        viewUpdatePanel = new ViewUpdatePanel(workspace, workspace.viewWidget.displaySwitch, workspace.viewWidget.tickCounter)
-        val c = new GridBagConstraints
-        c.gridy = 0
-        c.gridheight = 2
-        add(viewUpdatePanel, c)
-      }
-    }, BorderLayout.NORTH)
+    add(toolBar, BorderLayout.NORTH)
     iP.addFocusListener(TrackingFocusListener)
     commandCenter.getDefaultComponentForFocus.addFocusListener(TrackingFocusListener)
   }
@@ -237,5 +243,12 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   def resetSplitPane() {
     splitPane.resetToPreferredSizes()
+  }
+
+  def syncTheme() {
+    toolBar.syncTheme()
+    viewUpdatePanel.syncTheme()
+    iP.syncTheme()
+    commandCenter.syncTheme()
   }
 }

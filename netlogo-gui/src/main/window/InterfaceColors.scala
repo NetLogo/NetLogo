@@ -398,3 +398,7 @@ object InterfaceColors {
       case "dark" => Color.WHITE
     }
 }
+
+trait ThemeSync {
+  def syncTheme(): Unit
+}

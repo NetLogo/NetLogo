@@ -529,6 +529,8 @@ class App extends
       if (popOutCodeTab || prefs.getBoolean("startSeparateCodeTab", false)) {
         _tabManager.switchWindow(true)
       }
+
+      syncWindowThemes()
     }
     catch {
       case ex: java.lang.Throwable =>
@@ -775,7 +777,10 @@ class App extends
     }
   }
 
-  def repaintOtherWindows() {
+  def syncWindowThemes() {
+    tabManager.syncTheme()
+
+    frame.repaint()
     tabManager.separateTabsWindow.repaint()
   }
 
@@ -873,6 +878,8 @@ class App extends
     }
     frame.toFront()
     _tabManager.interfaceTab.requestFocus()
+
+    syncWindowThemes()
   }
 
   /**

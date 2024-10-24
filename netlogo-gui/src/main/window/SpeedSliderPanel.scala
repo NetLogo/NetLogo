@@ -14,7 +14,8 @@ import org.nlogo.window.Events.LoadBeginEvent
 class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) extends JPanel
                                                                               with MouseListener
                                                                               with ChangeListener
-                                                                              with LoadBeginEvent.Handler {
+                                                                              with LoadBeginEvent.Handler
+                                                                              with ThemeSync {
   implicit val prefix = I18N.Prefix("tabs.run.speedslider")
 
   val speedSlider = {
@@ -130,12 +131,10 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
 
   override def isEnabled: Boolean = speedSlider.isEnabled
 
-  override def paintComponent(g: Graphics) {
+  def syncTheme() {
     slower.setForeground(InterfaceColors.TOOLBAR_TEXT)
     faster.setForeground(InterfaceColors.TOOLBAR_TEXT)
     modelSpeed.setForeground(InterfaceColors.TOOLBAR_TEXT)
-
-    super.paintComponent(g)
   }
 
   class SpeedSlider(defaultSpeed: Int) extends JSlider(-110, 112, defaultSpeed) with MouseWheelListener {

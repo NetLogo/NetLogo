@@ -8,11 +8,11 @@ import javax.swing.{ JFrame, WindowConstants }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.awt.{ Images, UserCancelException }
-import org.nlogo.window.LinkRoot
+import org.nlogo.window.{ LinkRoot, ThemeSync }
 import org.nlogo.window.Event.LinkParent
 import org.nlogo.window.Events.IconifiedEvent
 
-class AppFrame extends JFrame with LinkParent with LinkRoot {
+class AppFrame extends JFrame with LinkParent with LinkRoot with ThemeSync {
   setIconImage(Images.loadImageResource("/images/arrowhead.gif"))
   setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
   setMinimumSize(new Dimension(300, 300))
@@ -32,9 +32,7 @@ class AppFrame extends JFrame with LinkParent with LinkRoot {
     }
   })
 
-  override def repaint() {
-    super.repaint()
-
-    App.app.repaintOtherWindows()
+  override def syncTheme() {
+    App.app.syncWindowThemes()
   }
 }

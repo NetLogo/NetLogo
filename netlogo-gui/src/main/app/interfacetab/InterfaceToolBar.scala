@@ -11,7 +11,7 @@ import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ DropdownArrow, ToolBar, ToolBarToggleButton, Utils }
 import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents, GUIWorkspace, InterfaceColors, JobWidget,
-                          Widget, WidgetInfo }
+                          ThemeSync, Widget, WidgetInfo }
 
 import scala.collection.mutable.HashSet
 
@@ -25,7 +25,8 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   with AppEvents.WidgetSelectedEvent.Handler
   with WindowEvents.EditWidgetEvent.Handler
   with WindowEvents.WidgetAddedEvent.Handler
-  with WindowEvents.SelectModeEvent.Handler {
+  with WindowEvents.SelectModeEvent.Handler
+  with ThemeSync {
 
   private val selectedObjects = new HashSet[Widget]
 
@@ -113,7 +114,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     selectButton.setSelected(true)
   }
 
-  override def paintComponent(g: Graphics) {
+  def syncTheme() {
     setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
     selectButton.setColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
@@ -121,8 +122,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     deleteButton.setColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
 
     // set action icons here
-
-    super.paintComponent(g)
   }
 
   def handle(e: WindowEvents.WidgetRemovedEvent) {

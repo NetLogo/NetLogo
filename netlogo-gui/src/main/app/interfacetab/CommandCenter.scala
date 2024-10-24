@@ -14,13 +14,14 @@ import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.{ FileDialog => SwingFileDialog, ModalProgressTask, RichAction, Utils }
 import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents,
-  InterfaceColors, OutputArea, TextMenuActions, Zoomable }
+  InterfaceColors, OutputArea, TextMenuActions, ThemeSync, Zoomable }
 import org.nlogo.workspace.{ AbstractWorkspace, ExportOutput }
 
 class CommandCenter(workspace: AbstractWorkspace) extends JPanel
   with Zoomable with CommandCenterInterface
   with WindowEvents.LoadBeginEvent.Handler
-  with WindowEvents.ZoomedEvent.Handler {
+  with WindowEvents.ZoomedEvent.Handler
+  with ThemeSync {
 
   // true = echo commands to output
   val commandLine = new CommandLine(this, true, 12, workspace)
@@ -171,14 +172,14 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
     }.show(this, e.getX, e.getY)
   }
 
-  override def paintComponent(g: Graphics) {
+  def syncTheme() {
     setBackground(InterfaceColors.COMMAND_CENTER_BACKGROUND)
 
     titleLabel.setForeground(InterfaceColors.COMMAND_CENTER_TEXT)
 
     locationToggleButton.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
 
-    super.paintComponent(g)
+    commandLine.syncTheme()
   }
 
   /// event handlers

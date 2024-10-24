@@ -5,11 +5,12 @@ package org.nlogo.widget
 import org.nlogo.agent.BooleanConstraint
 import org.nlogo.core.I18N
 import org.nlogo.swing.Utils
-import org.nlogo.window.{ Events, InterfaceColors, MultiErrorWidget }
+import org.nlogo.window.{ Events, InterfaceColors, MultiErrorWidget, ThemeSync }
 
 import java.awt._
 import javax.swing.{ JLabel, JPanel }
 import event.{ MouseWheelEvent, MouseEvent, MouseAdapter, MouseWheelListener }
+
 
 object Switch {
   val MINWIDTH: Int = 90
@@ -18,7 +19,7 @@ object Switch {
 }
 
 abstract class Switch extends MultiErrorWidget with MouseWheelListener
-  with org.nlogo.window.Events.AfterLoadEvent.Handler {
+  with org.nlogo.window.Events.AfterLoadEvent.Handler with ThemeSync {
 
   import Switch._
 
@@ -114,12 +115,10 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
   def mouseWheelMoved(e: MouseWheelEvent) { isOn = ! (e.getWheelRotation >= 1) }
 
-  override def paintComponent(g: Graphics) {
+  override def syncTheme() {
     backgroundColor = InterfaceColors.SWITCH_BACKGROUND
 
     label.setForeground(InterfaceColors.WIDGET_TEXT)
-
-    super.paintComponent(g)
   }
 
   protected class Toggle extends JPanel {

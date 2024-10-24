@@ -2,7 +2,7 @@
 
 package org.nlogo.app.common
 
-import java.awt.{ BorderLayout, Dimension, Graphics }
+import java.awt.{ BorderLayout, Dimension }
 import java.awt.event.{ActionEvent, ActionListener, KeyEvent, KeyListener}
 import javax.swing.{JScrollPane, KeyStroke, ScrollPaneConstants}
 
@@ -57,14 +57,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
     new org.nlogo.editor.EditorField(30,
       new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont,
         java.awt.Font.PLAIN, 12),
-      true, new EditorColorizer(workspace), actionMap) {
-      override def paintComponent(g: Graphics) {
-        setBackground(InterfaceColors.CODE_BACKGROUND)
-        setCaretColor(InterfaceColors.DISPLAY_AREA_TEXT)
-
-        super.paintComponent(g)
-      }
-    }
+      true, new EditorColorizer(workspace), actionMap)
 
   agentKind(AgentKind.Observer)
 
@@ -287,4 +280,8 @@ class CommandLine(commandCenter: CommandCenterInterface,
   override def raiseWidgetRemoved(): Unit = {}
   override def raiseWidgetAdded(): Unit = {}
 
+  override def syncTheme() {
+    textField.setBackground(InterfaceColors.CODE_BACKGROUND)
+    textField.setCaretColor(InterfaceColors.DISPLAY_AREA_TEXT)
+  }
 }

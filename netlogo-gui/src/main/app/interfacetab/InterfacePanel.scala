@@ -2,7 +2,6 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.Graphics
 import java.awt.image.BufferedImage
 import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, KeyListener, MouseEvent }
 import javax.swing.{ JMenuItem, JPopupMenu }
@@ -19,9 +18,9 @@ import org.nlogo.editor.{ EditorArea, UndoManager }
 import org.nlogo.log.LogManager
 import org.nlogo.window.{ ButtonWidget, ChooserWidget, Events => WindowEvents,
   GUIWorkspace, InputBoxWidget, InterfaceColors, InterfaceGlobalWidget, MonitorWidget,
-  PlotWidget, SliderWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
+  PlotWidget, SliderWidget, ThemeSync, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
     WindowEvents.{CompileAllEvent, LoadBeginEvent, LoadWidgetsEvent,
-    RemoveConstraintEvent, WidgetRemovedEvent}
+    RemoveConstraintEvent, WidgetRemovedEvent }
 import org.nlogo.workspace.Evaluator
 
 class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspace)
@@ -29,7 +28,8 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   with FocusListener
   with KeyListener
   with LoadWidgetsEvent.Handler
-  with UndoRedoActions {
+  with UndoRedoActions
+  with ThemeSync {
 
   workspace.setWidgetContainer(this)
   // in 3d don't add the view widget since it's always
@@ -52,10 +52,10 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     enableButtonKeys(false)
   }
 
-  override def paintComponent(g: Graphics) {
+  def syncTheme() {
     setBackground(InterfaceColors.INTERFACE_BACKGROUND)
 
-    super.paintComponent(g)
+    getWrappers.foreach(_.widget.syncTheme())
   }
 
   ///

@@ -49,7 +49,7 @@ abstract class MultiErrorWidget extends Widget with MultiErrorHandler {
   }
 }
 
-abstract class Widget extends JPanel {
+abstract class Widget extends JPanel with ThemeSync {
 
   type WidgetModel <: CoreWidget
 
@@ -146,6 +146,8 @@ abstract class Widget extends JPanel {
     g2d.fillRoundRect(0, 0, getWidth, getHeight, (12 * zoomFactor).toInt, (12 * zoomFactor).toInt)
     super.paintComponent(g)
   }
+
+  def syncTheme() {}
 
   override def toString: String = {
     val sup: String = super.toString

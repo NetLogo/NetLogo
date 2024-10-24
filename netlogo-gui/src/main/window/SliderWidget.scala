@@ -20,7 +20,7 @@ import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicU
 
 import scala.math.Pi
 
-trait AbstractSliderWidget extends MultiErrorWidget {
+trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   private class SliderUI(slider: JSlider) extends BasicSliderUI(slider) {
     private var hover = false
     private var pressed = false
@@ -471,18 +471,20 @@ trait AbstractSliderWidget extends MultiErrorWidget {
     }
   }
 
-  override def paintComponent(g: Graphics) {
+  override def syncTheme() {
     backgroundColor = InterfaceColors.SLIDER_BACKGROUND
-
-    if (anyErrors)
-      nameComponent.setForeground(InterfaceColors.WIDGET_TEXT_ERROR)
-    else
-      nameComponent.setForeground(InterfaceColors.WIDGET_TEXT)
 
     valueComponent.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
     unitsComponent.setForeground(InterfaceColors.WIDGET_TEXT)
 
     valueComponent.setCaretColor(InterfaceColors.DISPLAY_AREA_TEXT)
+  }
+
+  override def paintComponent(g: Graphics) {
+    if (anyErrors)
+      nameComponent.setForeground(InterfaceColors.WIDGET_TEXT_ERROR)
+    else
+      nameComponent.setForeground(InterfaceColors.WIDGET_TEXT)
 
     super.paintComponent(g)
   }

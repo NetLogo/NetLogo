@@ -12,7 +12,7 @@ import org.nlogo.swing.Utils
 import org.nlogo.window.Events.LoadEndEvent
 
 class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCounter: TickCounterLabel)
-    extends JPanel(new GridBagLayout) with LoadEndEvent.Handler {
+    extends JPanel(new GridBagLayout) with LoadEndEvent.Handler with ThemeSync {
   implicit val prefix = Prefix("tabs.run")
 
   private val updateModeChooser = new UpdateModeChooser(workspace)
@@ -61,10 +61,10 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
     speedSlider.setValue(workspace.speedSliderPosition.toInt)
   }
 
-  override def paintComponent(g: Graphics) {
+  def syncTheme() {
     displaySwitch.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
-    super.paintComponent(g)
+    speedSlider.syncTheme()
   }
 
   private class ViewUpdateListener(slider: SpeedSliderPanel) extends ItemListener {
