@@ -55,7 +55,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   def syncTheme() {
     setBackground(InterfaceColors.INTERFACE_BACKGROUND)
 
-    getWrappers.foreach(_.widget.syncTheme())
+    getWrappers.foreach(_.syncTheme())
   }
 
   ///

@@ -84,6 +84,8 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
   def setZoomFactor(zoomFactor: Double) {
     this.zoomFactor = zoomFactor
   }
+  def getZoomFactor: Double =
+    zoomFactor
   def getDefaultExportName = "output.txt"
   def updateConstraints(): Unit = {}
   def classDisplayName: String = getClass.getName

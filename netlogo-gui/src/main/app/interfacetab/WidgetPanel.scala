@@ -580,6 +580,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     zoomer.zoomWidget(wrapper, true, loadingWidget, 1.0, zoomFactor)
 
+    wrapper.syncTheme()
+
     if (select) {
       newWidget = wrapper
       newWidget.originalBounds = newWidget.getBounds
@@ -618,12 +620,14 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     zoomer.zoomWidget(wrapper, true, false, 1.0, zoomFactor)
 
-    newWidget = wrapper
+    wrapper.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
+    wrapper.setShadow(true)
 
-    newWidget.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
-    newWidget.setShadow(true)
+    wrapper.syncTheme()
 
     setInteractMode(InteractMode.ADD)
+
+    newWidget = wrapper
 
     wrapper
   }

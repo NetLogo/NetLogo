@@ -11,8 +11,8 @@ import org.nlogo.api.Editable
 import org.nlogo.app.common.Events.WidgetSelectedEvent
 import org.nlogo.awt.{ Coordinates, Mouse }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Utils, WrappingPopupMenu }
-import org.nlogo.window.{ InterfaceColors, MouseMode, Widget, WidgetWrapperInterface }
+import org.nlogo.swing.WrappingPopupMenu
+import org.nlogo.window.{ InterfaceColors, MouseMode, RoundedBorderPanel, ThemeSync, Widget, WidgetWrapperInterface }
 import org.nlogo.window.Events.{ DirtyEvent, EditWidgetEvent, ExportWidgetEvent, WidgetForegroundedEvent }
 
 object WidgetWrapper {
@@ -35,7 +35,8 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   with WidgetWrapperInterface
   with MouseListener
   with MouseMotionListener
-  with WidgetForegroundedEvent.Handler {
+  with WidgetForegroundedEvent.Handler
+  with ThemeSync {
   
   private var _verticallyResizable = false
   private var horizontallyResizable = false
@@ -67,22 +68,21 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     revalidate()
   }
 
-  private val shadowPane = new JPanel {
+  private val shadowPane = new JPanel with RoundedBorderPanel with ThemeSync {
+    setBorderColor(InterfaceColors.TRANSPARENT)
     setVisible(false)
-    setOpaque(false)
 
     override def paintComponent(g: Graphics) {
-      val g2d = Utils.initGraphics2D(g)
+      setDiameter(12 * widget.getZoomFactor)
 
-      if (widget.isNote) {
-        g2d.setColor(InterfaceColors.WIDGET_PREVIEW_COVER_NOTE)
-        g2d.fillRoundRect(0, 0, getWidth, getHeight, 12, 12)
-      }
+      super.paintComponent(g)
+    }
 
-      else {
-        g2d.setColor(InterfaceColors.WIDGET_PREVIEW_COVER)
-        g2d.fillRect(0, 0, getWidth, getHeight)
-      }
+    def syncTheme() {
+      if (widget.isNote)
+        setBackgroundColor(InterfaceColors.WIDGET_PREVIEW_COVER_NOTE)
+      else
+        setBackgroundColor(InterfaceColors.WIDGET_PREVIEW_COVER)
     }
   }
 
@@ -972,5 +972,10 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     }
 
     p
+  }
+
+  def syncTheme() {
+    shadowPane.syncTheme()
+    widget.syncTheme()
   }
 }
