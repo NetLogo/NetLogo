@@ -26,7 +26,10 @@ object InterfaceColors {
   private val DARK_BLUE = new Color(0, 54, 117)
   private val LIGHT_GRAY = new Color(238, 238, 238)
   private val MEDIUM_GRAY = new Color(175, 175, 175)
+  private val LIGHT_GRAY_OUTLINE = new Color(120, 120, 120)
   private val DARK_GRAY = new Color(79, 79, 79)
+  private val BLUE_GRAY = new Color(70, 70, 76)
+  private val DARK_BLUE_GRAY = new Color(45, 45, 54)
   private val LIGHT_RED = new Color(251, 96, 85)
   private val ALMOST_BLACK = new Color(22, 22, 22)
 
@@ -69,7 +72,7 @@ object InterfaceColors {
   def COMMAND_CENTER_BACKGROUND =
     theme match {
       case "classic" | "light" => LIGHT_GRAY
-      case "dark" => DARK_GRAY
+      case "dark" => BLUE_GRAY
     }
   
   def COMMAND_CENTER_TEXT = WIDGET_TEXT
@@ -78,6 +81,12 @@ object InterfaceColors {
     theme match {
       case "classic" | "light" => Color.WHITE
       case "dark" => DARK_GRAY
+    }
+  
+  def COMMAND_OUTPUT_BACKGROUND =
+    theme match {
+      case "classic" | "light" => Color.WHITE
+      case "dark" => DARK_BLUE_GRAY
     }
   
   def SPLIT_PANE_DIVIDER_BACKGROUND =
@@ -233,7 +242,11 @@ object InterfaceColors {
       case "dark" => DARK_GRAY
     }
 
-  def MONITOR_BORDER = MEDIUM_GRAY
+  def MONITOR_BORDER =
+    theme match {
+      case "classic" | "light" => MEDIUM_GRAY
+      case "dark" => LIGHT_GRAY_OUTLINE
+    }
 
   def PLOT_BACKGROUND =
     theme match {
@@ -242,7 +255,11 @@ object InterfaceColors {
       case "dark" => DARK_GRAY
     }
 
-  def PLOT_BORDER = MEDIUM_GRAY
+  def PLOT_BORDER =
+    theme match {
+      case "classic" | "light" => MEDIUM_GRAY
+      case "dark" => LIGHT_GRAY_OUTLINE
+    }
 
   def PLOT_MOUSE_BACKGROUND =
     theme match {
@@ -259,7 +276,11 @@ object InterfaceColors {
       case "dark" => DARK_GRAY
     }
 
-  def OUTPUT_BORDER = MEDIUM_GRAY
+  def OUTPUT_BORDER =
+    theme match {
+      case "classic" | "light" => MEDIUM_GRAY
+      case "dark" => LIGHT_GRAY_OUTLINE
+    }
 
   def AGENT_EDITOR_BACKGROUND = LIGHT_GRAY
 
@@ -268,13 +289,13 @@ object InterfaceColors {
   def TOOLBAR_BACKGROUND =
     theme match {
       case "classic" | "light" => LIGHT_GRAY
-      case "dark" => DARK_GRAY
+      case "dark" => BLUE_GRAY
     }
 
   def TAB_BACKGROUND =
     theme match {
       case "classic" | "light" => LIGHT_GRAY
-      case "dark" => ALMOST_BLACK
+      case "dark" => DARK_BLUE_GRAY
     }
 
   def TAB_BACKGROUND_SELECTED = MEDIUM_BLUE
@@ -294,13 +315,13 @@ object InterfaceColors {
   def TAB_BORDER =
     theme match {
       case "classic" | "light" => MEDIUM_GRAY
-      case "dark" => LIGHT_GRAY
+      case "dark" => LIGHT_GRAY_OUTLINE
     }
 
   def TAB_SEPARATOR =
     theme match {
       case "classic" | "light" => MEDIUM_GRAY
-      case "dark" => LIGHT_GRAY
+      case "dark" => LIGHT_GRAY_OUTLINE
     }
   
   def TOOLBAR_TEXT =
@@ -312,10 +333,14 @@ object InterfaceColors {
   def TOOLBAR_CONTROL_BACKGROUND =
     theme match {
       case "classic" | "light" => Color.WHITE
-      case "dark" => ALMOST_BLACK
+      case "dark" => DARK_BLUE_GRAY
     }
   
-  def TOOLBAR_CONTROL_BORDER = MEDIUM_GRAY
+  def TOOLBAR_CONTROL_BORDER =
+    theme match {
+      case "classic" | "light" => MEDIUM_GRAY
+      case "dark" => LIGHT_GRAY_OUTLINE
+    }
 
   def TOOLBAR_BUTTON_PRESSED =
     theme match {
@@ -329,6 +354,18 @@ object InterfaceColors {
     theme match {
       case "classic" | "light" => Color.WHITE
       case "dark" => ALMOST_BLACK
+    }
+  
+  def CODE_LINE_HIGHLIGHT =
+    theme match {
+      case "classic" | "light" => new Color(255, 255, 204)
+      case "dark" => new Color(35, 35, 35)
+    }
+  
+  def CODE_SEPARATOR =
+    theme match {
+      case "classic" | "light" => LIGHT_GRAY
+      case "dark" => DARK_GRAY
     }
 
   // Syntax highlighting colors

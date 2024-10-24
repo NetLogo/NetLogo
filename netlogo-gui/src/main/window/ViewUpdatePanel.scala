@@ -2,11 +2,13 @@
 
 package org.nlogo.window
 
-import java.awt.{ Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
 import javax.swing.{ AbstractAction, Action, JButton, JCheckBox, JPanel }
+import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.I18N, I18N.Prefix
+import org.nlogo.swing.Utils
 import org.nlogo.window.Events.LoadEndEvent
 
 class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCounter: TickCounterLabel)
@@ -21,6 +23,9 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
   displaySwitch.addItemListener(new ViewUpdateListener(speedSlider))
 
   updateModeChooser.refreshSelection()
+
+  setOpaque(false)
+  setBackground(InterfaceColors.TRANSPARENT)
 
   locally {
     val c = new GridBagConstraints
@@ -57,12 +62,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
   }
 
   override def paintComponent(g: Graphics) {
-    setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
-
     displaySwitch.setForeground(InterfaceColors.TOOLBAR_TEXT)
-
-    settingsButton.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    settingsButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
     super.paintComponent(g)
   }
@@ -85,7 +85,26 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
   }
 
   private class SettingsButton(action: Action) extends JButton(action) {
+    setOpaque(false)
+    setBackground(InterfaceColors.TRANSPARENT)
+    setBorder(new EmptyBorder(3, 12, 3, 12))
     setFocusable(false)
+
+    override def paintComponent(g: Graphics) {
+      val g2d = Utils.initGraphics2D(g)
+
+      g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
+      g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+
+      setForeground(InterfaceColors.TOOLBAR_TEXT)
+      
+      super.paintComponent(g)
+    }
+
+    override def getPreferredSize: Dimension =
+      new Dimension(super.getPreferredSize.width, updateModeChooser.getPreferredSize.height)
   }
 
   private class EditSettings(settings: WorldViewSettings)

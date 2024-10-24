@@ -91,12 +91,12 @@ class OutputArea(val text: JTextArea) extends JPanel {
 
   override def paintComponent(g: Graphics) {
     val g2d = Utils.initGraphics2D(g)
-    g2d.setColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
+    g2d.setColor(InterfaceColors.COMMAND_OUTPUT_BACKGROUND)
     g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
     g2d.setColor(InterfaceColors.OUTPUT_BORDER)
     g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
 
-    text.setBackground(InterfaceColors.DISPLAY_AREA_BACKGROUND)
+    text.setBackground(InterfaceColors.COMMAND_OUTPUT_BACKGROUND)
     text.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
 
     super.paintComponent(g)

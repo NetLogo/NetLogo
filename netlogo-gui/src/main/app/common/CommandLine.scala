@@ -59,7 +59,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
         java.awt.Font.PLAIN, 12),
       true, new EditorColorizer(workspace), actionMap) {
       override def paintComponent(g: Graphics) {
-        setBackground(InterfaceColors.COMMAND_LINE_BACKGROUND)
+        setBackground(InterfaceColors.CODE_BACKGROUND)
         setCaretColor(InterfaceColors.DISPLAY_AREA_TEXT)
 
         super.paintComponent(g)

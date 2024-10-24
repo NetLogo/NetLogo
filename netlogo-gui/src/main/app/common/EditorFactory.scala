@@ -3,7 +3,7 @@
 package org.nlogo.app.common
 
 import java.util.prefs.Preferences
-import java.awt.Font
+import java.awt.{ Font, Graphics }
 import java.awt.event.{InputEvent, KeyEvent}
 import javax.swing.{ Action, KeyStroke }
 
@@ -12,7 +12,7 @@ import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup, JumpToDeclaration
   NetLogoFoldParser, NetLogoTokenMakerFactory, ShiftActions, ShowUsageBox, ShowUsageBoxAction, ToggleComments }
 import org.nlogo.editor.{ AbstractEditorArea, AdvancedEditorArea, EditorConfiguration, EditorScrollPane }
 import org.nlogo.nvm.ExtensionManager
-import org.nlogo.window.DefaultEditorFactory
+import org.nlogo.window.{ DefaultEditorFactory, InterfaceColors }
 
 import org.fife.ui.rsyntaxtextarea.{ folding, TokenMakerFactory },
   folding.FoldParserManager
@@ -80,6 +80,11 @@ class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManag
           override def setFont(f: Font) = {
             super.setFont(f)
             Option(getGutter).foreach(_.setLineNumberFont(f))
+          }
+
+          override def paintComponent(g: Graphics) {
+            getGutter.setBackground(InterfaceColors.CODE_BACKGROUND)
+            getGutter.setBorderColor(InterfaceColors.CODE_SEPARATOR)
           }
         }
         sp.setLineNumbersEnabled(editor.configuration.showLineNumbers)

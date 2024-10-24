@@ -2,7 +2,7 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.{ BorderLayout, Component, Dimension, Graphics, Insets }
+import java.awt.{ BorderLayout, Color, Component, Dimension, Font, Graphics, Insets }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, TextEvent, TextListener }
 import java.awt.print.PageFormat
 import java.io.IOException
@@ -10,15 +10,19 @@ import java.net.MalformedURLException
 import java.util.prefs.Preferences
 import javax.swing.{ AbstractAction, Action, JCheckBox, JComponent, JPanel }
 
+import org.fife.ui.rsyntaxtextarea.{ Style, SyntaxScheme, TokenTypes }
+
 import org.nlogo.agent.Observer
 import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, TabsInterface, Events => AppEvents}
 import org.nlogo.core.{ AgentKind, CompilerException, I18N }
-import org.nlogo.editor.DumbIndenter
+import org.nlogo.editor.{ AdvancedEditorArea, DumbIndenter }
 import org.nlogo.ide.FocusedOnlyAction
 import org.nlogo.swing.{ PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction,
                          Printable => NlogoPrintable, Utils }
 import org.nlogo.window.{ CommentableError, InterfaceColors, ProceduresInterface, Zoomable, Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
+
+import scala.collection.mutable.{ Map => MutableMap }
 
 abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) extends JPanel
 with ProceduresInterface
@@ -247,6 +251,34 @@ with MenuTab {
     }
   }
 
+  private val cachedSchemes = MutableMap[String, SyntaxScheme]()
+
+  private def getScheme(name: String): SyntaxScheme = {
+    def boldStyle(color: Color): Style =
+      new Style(color, Style.DEFAULT_BACKGROUND, text.getFont.deriveFont(Font.BOLD), false)
+
+    if (cachedSchemes.contains(name))
+      cachedSchemes(name)
+    else {
+      val scheme = new SyntaxScheme(true) {
+        setStyle(TokenTypes.IDENTIFIER, new Style(InterfaceColors.DEFAULT_COLOR))
+        setStyle(TokenTypes.RESERVED_WORD, boldStyle(InterfaceColors.KEYWORD_COLOR))
+        setStyle(TokenTypes.COMMENT_KEYWORD, new Style(InterfaceColors.COMMENT_COLOR))
+        setStyle(TokenTypes.FUNCTION, new Style(InterfaceColors.REPORTER_COLOR))
+        setStyle(TokenTypes.LITERAL_BOOLEAN, boldStyle(InterfaceColors.CONSTANT_COLOR))
+        setStyle(TokenTypes.LITERAL_NUMBER_FLOAT, new Style(InterfaceColors.CONSTANT_COLOR))
+        setStyle(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, new Style(InterfaceColors.CONSTANT_COLOR))
+        setStyle(TokenTypes.LITERAL_BACKQUOTE, new Style(InterfaceColors.CONSTANT_COLOR))
+        setStyle(TokenTypes.OPERATOR, new Style(InterfaceColors.COMMAND_COLOR))
+        setStyle(TokenTypes.SEPARATOR, new Style(InterfaceColors.DEFAULT_COLOR))
+      }
+
+      cachedSchemes += ((name, scheme))
+
+      scheme
+    }
+  }
+
   override def paintComponent(g: Graphics) {
     toolBar.setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
@@ -257,6 +289,12 @@ with MenuTab {
     separate.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
     text.setBackground(InterfaceColors.CODE_BACKGROUND)
+
+    text match {
+      case editor: AdvancedEditorArea =>
+        editor.setCurrentLineHighlightColor(InterfaceColors.CODE_LINE_HIGHLIGHT)
+        editor.setSyntaxScheme(getScheme(InterfaceColors.getTheme))
+    }
 
     super.paintComponent(g)
   }

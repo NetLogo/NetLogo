@@ -6,12 +6,13 @@ import java.awt.{ BorderLayout, Component, Dimension, FileDialog, Font, Graphics
                   Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.{ Action, Box, JButton, JLabel, JMenuItem, JPanel, JPopupMenu }
+import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, ModalProgressTask, RichAction }
+import org.nlogo.swing.{ FileDialog => SwingFileDialog, ModalProgressTask, RichAction, Utils }
 import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents,
   InterfaceColors, OutputArea, TextMenuActions, Zoomable }
 import org.nlogo.workspace.{ AbstractWorkspace, ExportOutput }
@@ -43,7 +44,23 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
   private val clearButton = new JButton(RichAction(I18N.gui.get("tabs.run.commandcenter.clearButton")) {
     _ => output.clear()
   }) {
+    setOpaque(false)
+    setBackground(InterfaceColors.TRANSPARENT)
+    setBorder(new EmptyBorder(3, 12, 3, 12))
     setFocusable(false)
+
+    override def paintComponent(g: Graphics) {
+      val g2d = Utils.initGraphics2D(g)
+
+      g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
+      g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+
+      setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+      super.paintComponent(g)
+    }
   }
 
   locally {
@@ -160,8 +177,6 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
     titleLabel.setForeground(InterfaceColors.COMMAND_CENTER_TEXT)
 
     locationToggleButton.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    clearButton.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    clearButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
     super.paintComponent(g)
   }

@@ -3,10 +3,12 @@
 package org.nlogo.window
 
 import java.awt.{ Component, Graphics }
-import javax.swing.{ JComboBox, JLabel, JList, ListCellRenderer }
 import java.awt.event.{ ItemEvent, ItemListener }
+import javax.swing.{ JComboBox, JLabel, JList, ListCellRenderer }
+import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.{ I18N, UpdateMode }, I18N.Prefix
+import org.nlogo.swing.Utils
 
 object UpdateModeChooser {
   private val Choices = Seq(UpdateMode.TickBased, UpdateMode.Continuous)
@@ -16,6 +18,11 @@ import UpdateModeChooser._
 
 class UpdateModeChooser(workspace: GUIWorkspace) extends JComboBox[UpdateMode](Choices.toArray[UpdateMode]) with ItemListener {
   implicit val prefix = Prefix("tabs.run.viewUpdates")
+
+  setOpaque(false)
+  setBackground(InterfaceColors.TRANSPARENT)
+  setBorder(new EmptyBorder(2, 0, 2, 0))
+
   setToolTipText(I18N.gui("dropdown.tooltip"))
   setFocusable(false)
   setRenderer(new UpdateModeRenderer(getRenderer))
@@ -33,7 +40,13 @@ class UpdateModeChooser(workspace: GUIWorkspace) extends JComboBox[UpdateMode](C
   }
 
   override def paintComponent(g: Graphics) {
-    setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    val g2d = Utils.initGraphics2D(g)
+
+    g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
+    g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+    g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+
     setForeground(InterfaceColors.TOOLBAR_TEXT)
 
     super.paintComponent(g)
