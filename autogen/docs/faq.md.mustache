@@ -325,7 +325,7 @@ Java bundled with NetLogo, they can configure NetLogo to use a different Java
 runtime. Please note that **this change is done at your own risk**. We are
 unable to offer support for problems caused by running NetLogo with an alternate
 Java Runtime. To change the Java runtime used by NetLogo, open the
-[NetLogo.cfg](#where-is-cfg-file) file and modify the `app.runtime` property to
+[NetLogo.cfg](#where-are-the-netlogo-configuration-files) file and modify the `app.runtime` property to
 the path of your preferred Java Runtime.
 
 ### How come NetLogo won't start up on my Linux machine?
@@ -333,7 +333,7 @@ the path of your preferred Java Runtime.
 We bundle Bellsoft's OpenJDK-based Java runtime when using NetLogo on Linux. If you would like
 to change the version of linux used, you can modify the .cfg files to point to a
 different version of Java (see
-[How big can my model be?](#how-big-can-my-model-be-how-many-turtles-patches-procedures-buttons-and-so-on-can-my-model-contain)
+[Where are the NetLogo Configuration Files?](#where-are-the-netlogo-configuration-files)
 for more information).
 
 In theory, any Java 11 or later runtime will run NetLogo. In practice, some Java
@@ -427,6 +427,23 @@ disabling any graphics card utilities. Because NetLogo might be unable to start
 for a number of reasons, we encourage you to
 [contact us](mailto:bugs@ccl.northwestern.edu?subject=NetLogo%206%20Launch%20Problem%20in%20Windows)
 if these steps aren't effective in resolving the problem.
+
+### How can I speed up the launching of NetLogo on a remote server that is behind a proxy?
+In a few cases involving a remote server that is behind a proxy, NetLogo users have observed
+startup times of several minutes. So far all of these cases have been on Linux systems.
+
+This happens when NetLogo makes a request over the network to update information about
+extensions and their latest versions and there is a problem getting the response. We offer the following workaround.
+
+Turn off the request to update the extensions information by setting the java preference
+netlogo.libraries.disabled=true by editing the NetLogo configuration file. Add the 
+following line to the section with java-options (order doesn’t matter)
+
+    java-options=-Dnetlogo.libraries.disabled=true
+
+If you want to allow the updates again, you can set the value to false, or remove that preference.
+(see [Where are the NetLogo Configuration Files?](#where-are-the-netlogo-configuration-files)
+for more information)
 
 ### Can I run NetLogo from the command line, without the GUI?
 
@@ -564,12 +581,9 @@ system memory.  If your model exceeds that memory limit, you'll get an `OutOfMem
 If you are using BehaviorSpace, note that doing runs in parallel will multiply your RAM usage accordingly.  Similarly,
 using LevelSpace with many child models increases RAM usage greatly.
 
-If you want to increase the memory limit Java uses, you can do so using the NetLogo app configuration files.
+If you want to increase the memory limit Java uses, you can do so using the [NetLogo app configuration files](#where-are-the-netlogo-configuration-files).
 
-<a id="where-is-cfg-file"></a>Each platform contains ".cfg" files containing JVM settings. There is one cfg file for
-each sub-application (NetLogo, NetLogo 3D, HubNet Client, etc.).  Windows also has a cfg file for the NetLogo_Console
-app; on macOS and Linux the cfg file for NetLogo_Console is just the NetLogo.cfg file.  Although the file location
-varies by platform, the process for changing it is the same. Locate the section of the file that looks like the
+ Locate the section of the file that looks like the
 following:
 
     [JavaOptions]
@@ -583,6 +597,12 @@ take effect.  If you need to set an exact amount of memory (as opposed to a perc
 Replace the `####m` with whatever amount of memory you like; using `4096m` would limit NetLogo to 4096 megabytes of
 memory, or 4 gigabytes.
 
+### Where are the NetLogo Configuration Files?
+Each platform contains configuration files (with the extension ".cfg") containing JVM settings. There is one
+configuration file for each sub-application (NetLogo, NetLogo 3D, HubNet Client, etc.).  Windows also has a
+configuration file for the NetLogo_Console app; on macOS and Linux the configuration file for NetLogo_Console is just
+the NetLogo.cfg file.  Although the file location varies by platform, the process for changing it is the same.
+
 Platform specific notes follow:
 
 - **Windows:** The file will typically be in `C:\Program Files\NetLogo {{version}}\app`,
@@ -591,17 +611,17 @@ Platform specific notes follow:
 - **Mac OS X:** The file for NetLogo will be located at:
   `/Applications/NetLogo {{version}}/NetLogo {{version}}.app/Contents/app/NetLogo {{version}}.cfg` For
   NetLogo 3D and the other applications, you will find the file in the
-  corresponding location for each application package. You can reach the cfg
+  corresponding location for each application package. You can reach the configuration
   file by control-clicking the application in the Finder and choosing "Show
   Package Contents" from the popup menu.
 
-    Please note that depending on your version of Mac OS X, changing the cfg file
+    Please note that depending on your version of Mac OS X, changing the configuration file
     *may* break application signing. If this happens, follow Apple's directions on
     [this page](https://support.apple.com/en-us/HT202491) to temporarily allow
     apps from "Anywhere", run NetLogo once, then restore the setting to "Mac App
     Store and Identified Developers".
-- **Linux:** The cfg files will be located in the `NetLogo {{version}}/lib/app`
-  folder after untarring.
+- **Linux:** The configuration files will be located in the `lib/app`
+   directory of your NetLogo installation.
 
 By default, Mac builds of NetLogo bundle a 64-bit JVM.  Windows and Linux will bundle a 32-bit or 64-bit JVM, depending
 on which version you have downloaded. It is recommended that you install 64-bit NetLogo on all 64-bit operating systems
