@@ -36,6 +36,8 @@ with ThemeSync {
   private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION_CODE)
   private val compileButton = new ToolBarActionButton(CompileAction)
 
+  private val proceduresMenu = new ProceduresMenu(CodeTab.this)
+
   private val tabbing: JCheckBox = new JCheckBox(
     new AbstractAction(I18N.gui.get("tabs.code.indentAutomatically")) {
       def actionPerformed(e: ActionEvent) {
@@ -82,6 +84,8 @@ with ThemeSync {
     editor
   }
 
+  private val includedFilesMenu = new IncludedFilesMenu(getIncludesTable, tabs)
+
   lazy val undoAction: Action = {
     new WrappedAction(text.undoAction,
       UserAction.EditCategory,
@@ -122,7 +126,6 @@ with ThemeSync {
       // This method gets called when the code tab pops in or pops out
       // because org.nlogo.swing.ToolBar overrides addNotify. AAB 10/2020
       if (getActionMap.get("procmenu") == null) {
-        val proceduresMenu = new ProceduresMenu(CodeTab.this)
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(UserAction.KeyBindings.keystroke('G', withMenu = true),
                                                            "procmenu")
         getActionMap.put("procmenu", proceduresMenu.getAction)
@@ -134,7 +137,7 @@ with ThemeSync {
 
         add(compileButton)
         add(proceduresMenu)
-        add(new IncludedFilesMenu(getIncludesTable, tabs))
+        add(includedFilesMenu)
         add(tabbing)
         add(separate)
         getAdditionalToolBarComponents.foreach(add)
@@ -258,6 +261,9 @@ with ThemeSync {
 
     findButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
     compileButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    proceduresMenu.syncTheme()
+    includedFilesMenu.syncTheme()
 
     tabbing.setForeground(InterfaceColors.TOOLBAR_TEXT)
     separate.setForeground(InterfaceColors.TOOLBAR_TEXT)

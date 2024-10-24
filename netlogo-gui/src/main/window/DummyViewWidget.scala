@@ -15,7 +15,7 @@ class DummyViewWidget(val world: World)
 
   type WidgetModel = CoreView
 
-  backgroundColor = InterfaceColors.GRAPHICS_BACKGROUND
+  setBackgroundColor(InterfaceColors.GRAPHICS_BACKGROUND)
 
   private var newWidth = StrictMath.round(world.worldWidth * world.patchSize).toInt
   private var newHeight = StrictMath.round(world.worldHeight * world.patchSize).toInt

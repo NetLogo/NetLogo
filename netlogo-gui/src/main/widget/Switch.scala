@@ -116,7 +116,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   def mouseWheelMoved(e: MouseWheelEvent) { isOn = ! (e.getWheelRotation >= 1) }
 
   override def syncTheme() {
-    backgroundColor = InterfaceColors.SWITCH_BACKGROUND
+    setBackgroundColor(InterfaceColors.SWITCH_BACKGROUND)
 
     label.setForeground(InterfaceColors.WIDGET_TEXT)
   }

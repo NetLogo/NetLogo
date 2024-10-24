@@ -2,7 +2,7 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Frame, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, ButtonGroup, JLabel, JMenuItem, JPanel, JPopupMenu }
 
@@ -11,7 +11,7 @@ import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ DropdownArrow, ToolBar, ToolBarToggleButton, Utils }
 import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents, GUIWorkspace, InterfaceColors, JobWidget,
-                          ThemeSync, Widget, WidgetInfo }
+                          RoundedBorderPanel, ThemeSync, Widget, WidgetInfo }
 
 import scala.collection.mutable.HashSet
 
@@ -117,6 +117,9 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   def syncTheme() {
     setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
+    widgetMenu.syncTheme()
+    alignmentMenu.syncTheme()
+
     selectButton.setColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
     editButton.setColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
     deleteButton.setColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
@@ -167,7 +170,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
   def getItems: Array[JMenuItem] = WidgetInfos.map(spec => new JMenuItem(spec.displayName, spec.icon)).toArray
 
-  class WidgetMenu extends JPanel(new GridBagLayout) {
+  class WidgetMenu extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync {
     private class WidgetAction(item: JMenuItem) extends AbstractAction(item.getText, item.getIcon) {
       def actionPerformed(e: ActionEvent) {
         chosenItem = item
@@ -178,8 +181,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       def getText = item.getText
     }
 
-    setOpaque(false)
-    setBackground(InterfaceColors.TRANSPARENT)
+    setDiameter(6)
 
     private val label = new JLabel(I18N.gui.get("tabs.run.addWidget"))
     private val arrow = new DropdownArrow
@@ -225,28 +227,21 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     def getSelectedWidget =
       WidgetInfos.find(_.displayName == chosenItem.getText).get.coreWidget
     
-    override def paintComponent(g: Graphics) {
-      val g2d = Utils.initGraphics2D(g)
-
-      g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
-      g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+    def syncTheme() {
+      setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
 
       label.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
       arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
-
-      super.paintComponent(g)
     }
   }
 
-  class AlignmentMenu extends JPanel(new GridBagLayout) {
-    setOpaque(false)
-    setBackground(InterfaceColors.TRANSPARENT)
-
+  class AlignmentMenu extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync {
     private val label = new JLabel(I18N.gui.get("tabs.run.alignWidgets"))
     private val arrow = new DropdownArrow
+
+    setDiameter(6)
 
     locally {
       val c = new GridBagConstraints
@@ -348,19 +343,13 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       }
     })
 
-    override def paintComponent(g: Graphics) {
-      val g2d = Utils.initGraphics2D(g)
-
-      g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
-      g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+    def syncTheme() {
+      setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
 
       label.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
       arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
-
-      super.paintComponent(g)
     }
   }
 }

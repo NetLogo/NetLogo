@@ -472,7 +472,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   }
 
   override def syncTheme() {
-    backgroundColor = InterfaceColors.SLIDER_BACKGROUND
+    setBackgroundColor(InterfaceColors.SLIDER_BACKGROUND)
 
     valueComponent.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
     unitsComponent.setForeground(InterfaceColors.WIDGET_TEXT)

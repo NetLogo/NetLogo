@@ -2,13 +2,12 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Dimension, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
 import javax.swing.{ AbstractAction, Action, JButton, JCheckBox, JPanel }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.I18N, I18N.Prefix
-import org.nlogo.swing.Utils
 import org.nlogo.window.Events.LoadEndEvent
 
 class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCounter: TickCounterLabel)
@@ -65,6 +64,8 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
     displaySwitch.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
     speedSlider.syncTheme()
+    updateModeChooser.syncTheme()
+    settingsButton.syncTheme()
   }
 
   private class ViewUpdateListener(slider: SpeedSliderPanel) extends ItemListener {
@@ -84,23 +85,15 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
     }
   }
 
-  private class SettingsButton(action: Action) extends JButton(action) {
-    setOpaque(false)
-    setBackground(InterfaceColors.TRANSPARENT)
+  private class SettingsButton(action: Action) extends JButton(action) with RoundedBorderPanel with ThemeSync {
     setBorder(new EmptyBorder(3, 12, 3, 12))
     setFocusable(false)
+    setDiameter(6)
 
-    override def paintComponent(g: Graphics) {
-      val g2d = Utils.initGraphics2D(g)
-
-      g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
-      g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
-
+    def syncTheme() {
+      setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
       setForeground(InterfaceColors.TOOLBAR_TEXT)
-      
-      super.paintComponent(g)
     }
 
     override def getPreferredSize: Dimension =

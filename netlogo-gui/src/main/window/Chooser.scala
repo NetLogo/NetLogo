@@ -119,9 +119,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
 
   ///
 
-  class ComboBoxPanel(comboBox: JComboBox[AnyRef]) extends JPanel {
-    setBackground(InterfaceColors.TRANSPARENT)
-
+  class ComboBoxPanel(comboBox: JComboBox[AnyRef]) extends JPanel with RoundedBorderPanel with ThemeSync {
     comboBox.setBorder(null)
     comboBox.setBackground(InterfaceColors.TRANSPARENT)
     
@@ -164,16 +162,16 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     })
 
     override def paintComponent(g: Graphics) {
-      val g2d = Utils.initGraphics2D(g)
-
-      g2d.setColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
-      g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
-      g2d.setColor(InterfaceColors.CHOOSER_BORDER)
-      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
-
-      comboBox.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
+      setDiameter(6 * zoomFactor)
 
       super.paintComponent(g)
+    }
+
+    def syncTheme() {
+      setBackgroundColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
+      setBorderColor(InterfaceColors.CHOOSER_BORDER)
+
+      comboBox.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
     }
   }
 
@@ -190,10 +188,6 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   }
 
   override def paintComponent(g: Graphics) {
-    backgroundColor = InterfaceColors.CHOOSER_BACKGROUND
-
-    label.setForeground(InterfaceColors.WIDGET_TEXT)
-
     super.paintComponent(g)
 
     if (hover) {
@@ -209,5 +203,13 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
       label.setToolTipText(label.getText)
     else
       label.setToolTipText(null)
+  }
+
+  override def syncTheme() {
+    setBackgroundColor(InterfaceColors.CHOOSER_BACKGROUND)
+
+    label.setForeground(InterfaceColors.WIDGET_TEXT)
+
+    controlPanel.syncTheme()
   }
 }

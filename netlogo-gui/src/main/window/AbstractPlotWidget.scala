@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage
 import org.nlogo.api.Editable
 import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot }
 import org.nlogo.plot.{ PlotManagerInterface, PlotLoader, PlotPen, Plot }
-import org.nlogo.swing.{ Utils, VTextIcon }
+import org.nlogo.swing.{ VTextIcon }
 import org.nlogo.window.Events.{ WidgetRemovedEvent, AfterLoadEvent, WidgetErrorEvent }
 
 abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInterface)
@@ -22,7 +22,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   import AbstractPlotWidget._
 
-  private class CanvasPanel(canvas: PlotCanvas) extends JPanel {
+  private class CanvasPanel(canvas: PlotCanvas) extends JPanel with RoundedBorderPanel with ThemeSync {
     setBackground(InterfaceColors.TRANSPARENT)
     setLayout(new GridBagLayout)
 
@@ -38,18 +38,21 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     }
 
     override def paintComponent(g: Graphics) {
-      val g2d = Utils.initGraphics2D(g)
-      g2d.setColor(Color.WHITE)
-      g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
-      g2d.setColor(InterfaceColors.PLOT_BORDER)
-      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
+      setDiameter(6 * zoomFactor)
+
       super.paintComponent(g)
+    }
+
+    def syncTheme() {
+      setBackgroundColor(Color.WHITE)
+      setBorderColor(InterfaceColors.PLOT_BORDER)
     }
   }
 
   private var fullyConstructed = false
   plot.dirtyListener = Some(this)
   val canvas = new PlotCanvas(plot)
+  private val canvasPanel = new CanvasPanel(canvas)
   private val legend = new PlotLegend(plot)
   private val nameLabel = new JLabel(I18N.gui.get("edit.plot.previewName"))
   private val xAxis = new XAxisLabels()
@@ -100,7 +103,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     c.anchor = GridBagConstraints.CENTER
     c.fill = GridBagConstraints.BOTH
 
-    add(new CanvasPanel(canvas), c)
+    add(canvasPanel, c)
 
     //ROW3
     //-----------------------------------------
@@ -148,7 +151,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   }
 
   override def paintComponent(g: Graphics) = {
-    backgroundColor = InterfaceColors.PLOT_BACKGROUND
+    setBackgroundColor(InterfaceColors.PLOT_BACKGROUND)
 
     recolor()
 
@@ -243,6 +246,10 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   override def getMinimumSize = AbstractPlotWidget.MIN_SIZE
   override def getPreferredSize = AbstractPlotWidget.PREF_SIZE
   override def getMaximumSize: Dimension = null
+
+  override def syncTheme() {
+    canvasPanel.syncTheme()
+  }
 
   def savePens(s: StringBuilder){
     import org.nlogo.api.StringUtils.escapeString

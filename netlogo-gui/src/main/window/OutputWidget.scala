@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
 
 import org.nlogo.swing.RichJMenuItem
 import org.nlogo.api.Editable
@@ -62,10 +62,10 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
     p
   }
 
-  override def paintComponent(g: Graphics) {
-    backgroundColor = InterfaceColors.OUTPUT_BACKGROUND
+  override def syncTheme() {
+    setBackgroundColor(InterfaceColors.OUTPUT_BACKGROUND)
 
-    super.paintComponent(g)
+    outputArea.syncTheme()
   }
 
   // these are copied from the TrailDrawer, as is this code for breaking up

@@ -7,7 +7,6 @@ import javax.swing.{ JPanel, JScrollPane, JTextArea, ScrollPaneConstants }
 
 import org.nlogo.awt.{ Fonts => NLogoFonts, LineBreaker }
 import org.nlogo.agent.OutputObject
-import org.nlogo.swing.Utils
 
 object OutputArea {
   private val PreferredWidth = 200
@@ -27,7 +26,7 @@ object OutputArea {
 
 import OutputArea._
 
-class OutputArea(val text: JTextArea) extends JPanel {
+class OutputArea(val text: JTextArea) extends JPanel with RoundedBorderPanel with ThemeSync {
   setOpaque(false)
 
   var zoomFactor = 1.0
@@ -90,16 +89,17 @@ class OutputArea(val text: JTextArea) extends JPanel {
   override def isFocusable: Boolean = false
 
   override def paintComponent(g: Graphics) {
-    val g2d = Utils.initGraphics2D(g)
-    g2d.setColor(InterfaceColors.COMMAND_OUTPUT_BACKGROUND)
-    g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
-    g2d.setColor(InterfaceColors.OUTPUT_BORDER)
-    g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
+    setDiameter(6 * zoomFactor)
+
+    super.paintComponent(g)
+  }
+
+  def syncTheme() {
+    setBackgroundColor(InterfaceColors.COMMAND_OUTPUT_BACKGROUND)
+    setBorderColor(InterfaceColors.OUTPUT_BORDER)
 
     text.setBackground(InterfaceColors.COMMAND_OUTPUT_BACKGROUND)
     text.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
-
-    super.paintComponent(g)
   }
 
   def append(oo: OutputObject, wrapLines: Boolean): Unit = {

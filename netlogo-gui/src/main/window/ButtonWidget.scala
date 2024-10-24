@@ -445,26 +445,29 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     foreverLabel.setIcon(FOREVER_GRAPHIC)
 
     if (disabledWaitingForSetup) {
-      backgroundColor = InterfaceColors.BUTTON_BACKGROUND_DISABLED
+      setBackgroundColor(InterfaceColors.BUTTON_BACKGROUND_DISABLED)
       keyLabel.setForeground(InterfaceColors.BUTTON_TEXT_DISABLED)
       nameLabel.setForeground(InterfaceColors.BUTTON_TEXT_DISABLED)
       foreverLabel.setIcon(FOREVER_GRAPHIC_DISABLED)
     }
 
     else if (drawAsUp) {
-      backgroundColor =
+      setBackgroundColor(
         if (hover)
           InterfaceColors.BUTTON_BACKGROUND_HOVER
         else
           InterfaceColors.BUTTON_BACKGROUND
+      )
     }
 
     else {
-      backgroundColor =
+      setBackgroundColor(
         if (hover)
           InterfaceColors.BUTTON_BACKGROUND_PRESSED_HOVER
         else
           InterfaceColors.BUTTON_BACKGROUND_PRESSED
+      )
+
       keyLabel.setForeground(InterfaceColors.BUTTON_TEXT_PRESSED)
       if (error() == null)
         nameLabel.setForeground(InterfaceColors.BUTTON_TEXT_PRESSED)

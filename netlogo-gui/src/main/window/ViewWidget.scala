@@ -34,7 +34,7 @@ class ViewWidget(workspace: GUIWorkspace)
   val tickCounter = new TickCounterLabel(workspace.world)
   val displaySwitch = new DisplaySwitch(workspace)
 
-  backgroundColor = InterfaceColors.TRANSPARENT
+  setBackgroundColor(InterfaceColors.TRANSPARENT)
 
   setLayout(null)
   add(view)

@@ -10,7 +10,6 @@ import javax.swing.{ JLabel, JPanel }
 import org.nlogo.core.{ AgentKind, AgentKindJ, I18N, Monitor => CoreMonitor }
 import org.nlogo.api.{ Dump, Editable, MersenneTwisterFast, Property }
 import org.nlogo.nvm.Procedure
-import org.nlogo.swing.Utils
 import org.nlogo.window.Events.{ AddJobEvent, EditWidgetEvent,
   RuntimeErrorEvent, PeriodicUpdateEvent, JobRemovedEvent, RemoveJobEvent }
 
@@ -51,7 +50,7 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   type WidgetModel = CoreMonitor
 
-  private class ValuePanel(label: JLabel) extends JPanel {
+  private class ValuePanel(label: JLabel) extends JPanel with RoundedBorderPanel with ThemeSync {
     setBackground(InterfaceColors.TRANSPARENT)
 
     setLayout(new GridBagLayout)
@@ -67,12 +66,14 @@ class MonitorWidget(random: MersenneTwisterFast)
     }
 
     override def paintComponent(g: Graphics) {
-      val g2d = Utils.initGraphics2D(g)
-      g2d.setColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
-      g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
-      g2d.setColor(InterfaceColors.MONITOR_BORDER)
-      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
+      setDiameter(6 * zoomFactor)
+
       super.paintComponent(g)
+    }
+
+    def syncTheme() {
+      setBackgroundColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
+      setBorderColor(InterfaceColors.MONITOR_BORDER)
     }
   }
 
@@ -91,6 +92,8 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName"))
   private val valueLabel = new JLabel
+
+  private val valuePanel = new ValuePanel(valueLabel)
 
   addMouseListener(this)
 
@@ -118,7 +121,7 @@ class MonitorWidget(random: MersenneTwisterFast)
       else
         new Insets(0, 12, 6, 12)
 
-    add(new ValuePanel(valueLabel), c)
+    add(valuePanel, c)
   }
 
   def name(name: String): Unit = {
@@ -203,6 +206,11 @@ class MonitorWidget(random: MersenneTwisterFast)
       displayName(name)
     
     nameLabel.setText(displayName)
+
+    if (nameLabel.getPreferredSize.width > nameLabel.getWidth)
+      nameLabel.setToolTipText(nameLabel.getText)
+    else
+      nameLabel.setToolTipText(null)
   }
 
   // behold the mighty regular expression
@@ -228,18 +236,13 @@ class MonitorWidget(random: MersenneTwisterFast)
     super.suppressRecompiles(suppressRecompiles)
   }
 
-  override def paintComponent(g: Graphics) {
-    backgroundColor = InterfaceColors.MONITOR_BACKGROUND
+  override def syncTheme() {
+    setBackgroundColor(InterfaceColors.MONITOR_BACKGROUND)
 
     nameLabel.setForeground(InterfaceColors.WIDGET_TEXT)
     valueLabel.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
 
-    if (nameLabel.getPreferredSize.width > nameLabel.getWidth)
-      nameLabel.setToolTipText(nameLabel.getText)
-    else
-      nameLabel.setToolTipText(null)
-
-    super.paintComponent(g)
+    valuePanel.syncTheme()
   }
 
   override def getMinimumSize: Dimension =

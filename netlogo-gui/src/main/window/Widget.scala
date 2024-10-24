@@ -2,14 +2,13 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Component, Container, Dimension, Font, Graphics, Point, Rectangle, event },
+import java.awt.{ Component, Container, Dimension, Font, Graphics, Point, Rectangle, event },
                 event.{ MouseAdapter, MouseEvent, MouseListener }
 import java.util.prefs.Preferences
 import javax.swing.{ JPanel, JMenuItem, JPopupMenu }
 
 import org.nlogo.api.{ CompilerServices, MultiErrorHandler, SingleErrorHandler }
 import org.nlogo.core.{ TokenType, Widget => CoreWidget }
-import org.nlogo.swing.Utils
 import org.nlogo.window.Events.{ WidgetAddedEvent, WidgetEditedEvent, WidgetErrorEvent, WidgetRemovedEvent }
 
 object Widget {
@@ -49,7 +48,7 @@ abstract class MultiErrorWidget extends Widget with MultiErrorHandler {
   }
 }
 
-abstract class Widget extends JPanel with ThemeSync {
+abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
 
   type WidgetModel <: CoreWidget
 
@@ -58,9 +57,7 @@ abstract class Widget extends JPanel with ThemeSync {
   var displayName: String = ""
   var deleteable: Boolean = true
 
-  protected var backgroundColor = Color.WHITE
-
-  setOpaque(false)
+  setBorderColor(InterfaceColors.TRANSPARENT)
 
   protected val preserveWidgetSizes = Preferences.userRoot.node("/org/nlogo/NetLogo")
                                                  .getBoolean("preserveWidgetSizes", true)
@@ -141,9 +138,8 @@ abstract class Widget extends JPanel with ThemeSync {
   }
 
   override def paintComponent(g: Graphics): Unit = {
-    val g2d = Utils.initGraphics2D(g)
-    g2d.setColor(backgroundColor)
-    g2d.fillRoundRect(0, 0, getWidth, getHeight, (12 * zoomFactor).toInt, (12 * zoomFactor).toInt)
+    setDiameter(12 * zoomFactor)
+
     super.paintComponent(g)
   }
 

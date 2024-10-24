@@ -130,9 +130,11 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
 
 class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
   private class CloseButton extends JPanel {
-    setBackground(InterfaceColors.TRANSPARENT)
     setOpaque(false)
-    setSize(new Dimension(8, 8))
+    setBackground(InterfaceColors.TRANSPARENT)
+
+    override def getPreferredSize: Dimension =
+      new Dimension(8, 8)
 
     override def paintComponent(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)

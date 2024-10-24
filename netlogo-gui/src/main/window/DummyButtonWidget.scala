@@ -22,7 +22,7 @@ class DummyButtonWidget
 
   import DummyButtonWidget._
 
-  backgroundColor = InterfaceColors.BUTTON_BACKGROUND
+  setBackgroundColor(InterfaceColors.BUTTON_BACKGROUND)
 
   private var _actionKey: Char = '\u0000'
   private var _keyEnabled: Boolean = false

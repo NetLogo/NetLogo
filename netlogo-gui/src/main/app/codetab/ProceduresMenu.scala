@@ -2,7 +2,6 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.Graphics
 import java.awt.event.KeyEvent
 import javax.swing.{JMenuItem, JPopupMenu, JTextField, MenuSelectionManager, SwingUtilities}
 import java.text.Collator
@@ -11,17 +10,19 @@ import java.util.prefs.{ Preferences => JavaPreferences }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.I18N
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ ToolBarMenu, Utils }
-import org.nlogo.window.InterfaceColors
+import org.nlogo.swing.ToolBarMenu
+import org.nlogo.window.{ InterfaceColors, RoundedBorderPanel, ThemeSync }
 
 class ProceduresMenu(target: ProceduresMenuTarget)
-extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) {
+extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPanel with ThemeSync {
 
   // Locale-aware, case-insensitive ordering for optional alphabetic sorting of procedures:
   private lazy val ordering = {
     val locale = I18N.localeFromPreferences.getOrElse(I18N.gui.defaultLocale)
     Ordering.comparatorToOrdering(Collator.getInstance(locale))
   }
+
+  setDiameter(6)
 
   override def populate(menu: JPopupMenu) {
     val procsTable = {
@@ -165,18 +166,12 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) {
     }
   }
 
-  override def paintComponent(g: Graphics) {
-    val g2d = Utils.initGraphics2D(g)
-
-    g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
-    g2d.setColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-    g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
+  def syncTheme() {
+    setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
 
     label.setForeground(InterfaceColors.TOOLBAR_TEXT)
     
     arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
-
-    super.paintComponent(g)
   }
 }

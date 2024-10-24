@@ -34,11 +34,10 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
   private var hover = false
 
-  protected class ColorButton extends JButton {
+  protected class ColorButton extends JButton with RoundedBorderPanel with ThemeSync {
     var color = Color.black
 
     setBorder(null)
-    setBackground(InterfaceColors.TRANSPARENT)
     setFont(getFont.deriveFont(9.0f))
 
     addActionListener(new SelectColorActionListener)
@@ -61,21 +60,19 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       }
     })
 
-    // on winXP if we don't set this the color in the button doesn't show up ev 2/15/08
-    // after UI redesign this made color no longer appear on any platform (IB 6/3/24)
-    // setContentAreaFilled(false)
-
     override def paintComponent(g: Graphics) {
-      val g2d = Utils.initGraphics2D(g)
-      g2d.setColor(color)
-      g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
-      g2d.setColor(InterfaceColors.INPUT_BORDER)
-      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
+      setBackgroundColor(color)
+      setDiameter(6 * zoomFactor)
+
       super.paintComponent(g)
+    }
+
+    def syncTheme() {
+      setBorderColor(InterfaceColors.INPUT_BORDER)
     }
   }
 
-  protected class InputScrollPane(textArea: AbstractEditorArea) extends JPanel {
+  protected class InputScrollPane(textArea: AbstractEditorArea) extends JPanel with RoundedBorderPanel with ThemeSync {
     val scrollPane = new JScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
                                      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
     
@@ -123,14 +120,18 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     override def paintComponent(g: Graphics) {
       // this mostly fixes some weird horizontal scrollbar issues (IB 8/7/24)
       textArea.setSize(scrollPane.getWidth - 10, scrollPane.getHeight)
+
+      setDiameter(6 * zoomFactor)
+      
+      super.paintComponent(g)
+    }
+
+    def syncTheme() {
+      setBackgroundColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
+      setBorderColor(InterfaceColors.INPUT_BORDER)
+
       textArea.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
       textArea.setCaretColor(InterfaceColors.DISPLAY_AREA_TEXT)
-      val g2d = Utils.initGraphics2D(g)
-      g2d.setColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
-      g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
-      g2d.setColor(InterfaceColors.INPUT_BORDER)
-      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
-      super.paintComponent(g)
     }
   }
 
@@ -301,7 +302,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     })
 
   override def paintComponent(g: Graphics) = {
-    backgroundColor = InterfaceColors.INPUT_BACKGROUND
+    setBackgroundColor(InterfaceColors.INPUT_BACKGROUND)
 
     widgetLabel.setForeground(InterfaceColors.WIDGET_TEXT)
 
@@ -329,6 +330,11 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
         g2d.fillRoundRect(scroller.getX, scroller.getY + 3, scroller.getWidth, scroller.getHeight, 6, 6)
       }
     }
+  }
+
+  override def syncTheme() {
+    colorSwatch.syncTheme()
+    scroller.syncTheme()
   }
 
   private class EditActionListener extends ActionListener {
@@ -493,7 +499,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   override def getMaximumSize = null
 
   protected class NLButton(title:String) extends JButton(title) {
-    backgroundColor = InterfaceColors.GRAPHICS_BACKGROUND
+    setBackgroundColor(InterfaceColors.GRAPHICS_BACKGROUND)
 
     setFont(new Font(platformFont,Font.PLAIN, 10))
     setFocusable(false)

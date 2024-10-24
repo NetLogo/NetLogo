@@ -34,7 +34,7 @@ class DummyMonitorWidget
   def innerSource = ""
   def fontSize = DefaultFontSize
 
-  backgroundColor = InterfaceColors.MONITOR_BACKGROUND
+  setBackgroundColor(InterfaceColors.MONITOR_BACKGROUND)
 
   def name: String = _name
 
