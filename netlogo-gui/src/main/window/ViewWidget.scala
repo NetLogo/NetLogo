@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, Dimension, Graphics, Point, Rectangle }
+import java.awt.{ Component, Dimension, Point, Rectangle }
 import javax.swing.JPopupMenu
 
 import org.nlogo.api.{ Approximate, Version }
@@ -33,6 +33,8 @@ class ViewWidget(workspace: GUIWorkspace)
   val view = new View(workspace)
   val tickCounter = new TickCounterLabel(workspace.world)
   val displaySwitch = new DisplaySwitch(workspace)
+
+  backgroundColor = InterfaceColors.TRANSPARENT
 
   setLayout(null)
   add(view)
@@ -201,12 +203,6 @@ class ViewWidget(workspace: GUIWorkspace)
       case _ =>
     }
     new Rectangle(newX, newY, newWidth, newHeight)
-  }
-
-  override def paintComponent(g: Graphics) {
-    backgroundColor = InterfaceColors.GRAPHICS_BACKGROUND
-
-    super.paintComponent(g)
   }
 
   /// font handling for turtle and patch labels
