@@ -8,7 +8,7 @@ import java.awt.print.PageFormat
 import java.io.IOException
 import java.net.MalformedURLException
 import java.util.prefs.Preferences
-import javax.swing.{ AbstractAction, Action, JCheckBox, JComponent, JPanel }
+import javax.swing.{ AbstractAction, Action, JComponent, JPanel }
 
 import org.fife.ui.rsyntaxtextarea.{ Style, SyntaxScheme, TokenTypes }
 
@@ -19,7 +19,8 @@ import org.nlogo.editor.{ AdvancedEditorArea, DumbIndenter }
 import org.nlogo.ide.FocusedOnlyAction
 import org.nlogo.swing.{ PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction,
                          Printable => NlogoPrintable, Utils }
-import org.nlogo.window.{ CommentableError, InterfaceColors, ProceduresInterface, ThemeSync, Zoomable, Events => WindowEvents }
+import org.nlogo.window.{ CheckBox, CommentableError, InterfaceColors, ProceduresInterface, ThemeSync, Zoomable,
+                          Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
 
 abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) extends JPanel
@@ -38,14 +39,14 @@ with ThemeSync {
 
   private val proceduresMenu = new ProceduresMenu(CodeTab.this)
 
-  private val tabbing: JCheckBox = new JCheckBox(
+  private val tabbing: CheckBox = new CheckBox(
     new AbstractAction(I18N.gui.get("tabs.code.indentAutomatically")) {
       def actionPerformed(e: ActionEvent) {
         tabs.smartTabbingEnabled = tabbing.isSelected
       }
     })
   
-  private val separate: JCheckBox = new JCheckBox(
+  private val separate: CheckBox = new CheckBox(
     new AbstractAction(I18N.gui.get("tabs.code.separateCodeWindow")) {
       def actionPerformed(e: ActionEvent) {
         tabs.switchWindow(separate.isSelected, true)

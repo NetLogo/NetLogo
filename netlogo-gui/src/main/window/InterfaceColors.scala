@@ -367,6 +367,22 @@ object InterfaceColors {
       case "classic" | "light" => LIGHT_GRAY
       case "dark" => DARK_GRAY
     }
+  
+  def CHECKBOX_BACKGROUND_SELECTED = MEDIUM_BLUE
+
+  def CHECKBOX_BACKGROUND_UNSELECTED =
+    theme match {
+      case "classic" | "light" => Color.WHITE
+      case "dark" => DARK_BLUE_GRAY
+    }
+
+  def CHECKBOX_BORDER =
+    theme match {
+      case "classic" | "light" => MEDIUM_GRAY
+      case "dark" => LIGHT_GRAY_OUTLINE
+    }
+  
+  def CHECKBOX_CHECK = Color.WHITE
 
   // Syntax highlighting colors
 
