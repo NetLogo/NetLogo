@@ -7,7 +7,7 @@ import java.awt.event.{ ActionListener, ActionEvent, KeyAdapter, KeyEvent, Mouse
                         MouseMotionAdapter, MouseMotionListener }
 import javax.swing.{ JComponent, JLayeredPane, JMenuItem, JPopupMenu }
 
-import org.nlogo.api.Editable
+import org.nlogo.api.{ Editable, SimpleJobOwner }
 import org.nlogo.app.common.EditorFactory
 import org.nlogo.awt.{ Fonts => NlogoFonts, Mouse => NlogoMouse }
 import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser,
@@ -22,7 +22,7 @@ import org.nlogo.window.{ AbstractWidgetPanel, Events => WindowEvents,
   GUIWorkspace, OutputWidget, Widget, WidgetContainer, WidgetRegistry,
   DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget,
   PlotWidget },
-    WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, LoadBeginEvent, SelectModeEvent,
+    WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, LoadBeginEvent, RunCodeOnChangeEvent, SelectModeEvent,
       WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent }
 
 sealed trait InteractMode {
@@ -59,6 +59,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     with WidgetContainer
     with MouseListener
     with MouseMotionListener
+    with RunCodeOnChangeEvent.Handler
     with WidgetEditedEvent.Handler
     with WidgetRemovedEvent.Handler
     with LoadBeginEvent.Handler {
@@ -926,5 +927,13 @@ class WidgetPanel(val workspace: GUIWorkspace)
       workspace.plotManager.getPlotNames.length > 0
     else
       true
+  }
+
+  def handle(e: RunCodeOnChangeEvent) {
+    new Thread {
+      override def run() {
+        workspace.evaluateCommands(new SimpleJobOwner("WidgetPanel", workspace.world.mainRNG), e.code)
+      }
+    }.start()
   }
 }
