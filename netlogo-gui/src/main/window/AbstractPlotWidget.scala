@@ -23,7 +23,6 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   import AbstractPlotWidget._
 
   private class CanvasPanel(canvas: PlotCanvas) extends JPanel with RoundedBorderPanel with ThemeSync {
-    setBackground(InterfaceColors.TRANSPARENT)
     setLayout(new GridBagLayout)
 
     locally {

@@ -8,6 +8,7 @@ import javax.swing.{ JComboBox, JLabel, JList, ListCellRenderer }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.{ I18N, UpdateMode }, I18N.Prefix
+import org.nlogo.swing.HoverDecoration
 
 object UpdateModeChooser {
   private val Choices = Seq(UpdateMode.TickBased, UpdateMode.Continuous)
@@ -16,11 +17,12 @@ object UpdateModeChooser {
 import UpdateModeChooser._
 
 class UpdateModeChooser(workspace: GUIWorkspace) extends JComboBox[UpdateMode](Choices.toArray[UpdateMode])
-  with ItemListener with RoundedBorderPanel with ThemeSync {
+  with ItemListener with RoundedBorderPanel with ThemeSync with HoverDecoration {
   implicit val prefix = Prefix("tabs.run.viewUpdates")
 
   setBorder(new EmptyBorder(2, 0, 2, 0))
   setDiameter(6)
+  enableHover()
 
   setToolTipText(I18N.gui("dropdown.tooltip"))
   setFocusable(false)
@@ -40,6 +42,7 @@ class UpdateModeChooser(workspace: GUIWorkspace) extends JComboBox[UpdateMode](C
 
   def syncTheme() {
     setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
     setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
     setForeground(InterfaceColors.TOOLBAR_TEXT)
   }

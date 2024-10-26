@@ -23,6 +23,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
   }
 
   setDiameter(6)
+  enableHover()
 
   override def populate(menu: JPopupMenu) {
     val procsTable = {
@@ -168,6 +169,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
 
   def syncTheme() {
     setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
     setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
 
     label.setForeground(InterfaceColors.TOOLBAR_TEXT)

@@ -6,52 +6,50 @@ import java.awt.{ Color, Dimension, Graphics }
 import java.awt.event.{ ActionEvent, ActionListener }
 
 import javax.swing.{ AbstractButton, Action, JButton, JToggleButton }
-import javax.swing.border.Border
-import javax.swing.plaf.basic.BasicToggleButtonUI
 
-trait AbstractToolBarButton extends AbstractButton {
+trait AbstractToolBarButton extends AbstractButton with HoverDecoration {
+  private var pressedColor = new Color(0, 0, 0, 0)
+  private var hoverColor = new Color(0, 0, 0, 0)
+
+  setOpaque(false)
+  setBackground(new Color(0, 0, 0, 0))
+
+  def setPressedColor(color: Color) {
+    pressedColor = color
+  }
+
+  def setHoverColor(color: Color) {
+    hoverColor = color
+  }
+
   override def getPreferredSize: Dimension = {
     val ps = super.getPreferredSize
     val dim = ps.height max ps.width
     new Dimension(dim, dim)
   }
-}
 
-class ToolBarButtonUI extends BasicToggleButtonUI {
-  private var color = new Color(0, 0, 0, 0)
-
-  override def paintButtonPressed(g: Graphics, b: AbstractButton) {
+  override def paintComponent(g: Graphics) {
     val g2d = Utils.initGraphics2D(g)
 
-    g2d.setColor(color)
-    g2d.fillRoundRect(0, 0, b.getWidth, b.getHeight, 6, 6)
-  }
+    if (isSelected)
+      g2d.setColor(pressedColor)
+    else if (isHover)
+      g2d.setColor(hoverColor)
+    else
+      g2d.setColor(new Color(0, 0, 0, 0))
 
-  def setColor(color: Color) {
-    this.color = color
-  }
-}
+    g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
 
-class ToolBarToggleButton(action: Action) extends JToggleButton(action) with AbstractToolBarButton {
-  setOpaque(false)
-  setBackground(new Color(0, 0, 0, 0))
-
-  private val buttonUI = new ToolBarButtonUI
-
-  setUI(buttonUI)
-
-  def setColor(color: Color) {
-    buttonUI.setColor(color)
+    super.paintComponent(g)
   }
 }
 
-class ToolBarActionButton(action: Action) extends JButton(action) with AbstractToolBarButton {
-  override def getBorder: Border = null
-}
+class ToolBarToggleButton(action: Action) extends JToggleButton(action) with AbstractToolBarButton
+
+class ToolBarActionButton(action: Action) extends JButton(action) with AbstractToolBarButton
 
 class ToolBarButton(name: String, f: => Unit) extends JButton(name) with AbstractToolBarButton {
   addActionListener(new ActionListener {
     def actionPerformed(e: ActionEvent) { f }
   })
-  override def getBorder: Border = null
 }

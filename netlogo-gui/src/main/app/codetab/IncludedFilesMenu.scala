@@ -28,6 +28,7 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
   updateVisibility()
 
   setDiameter(6)
+  enableHover()
 
   def handle(e: WindowEvents.CompiledEvent) = updateVisibility()
 
@@ -63,6 +64,7 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
 
   def syncTheme() {
     setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
     setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
 
     label.setForeground(InterfaceColors.TOOLBAR_TEXT)

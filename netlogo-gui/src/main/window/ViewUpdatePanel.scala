@@ -8,6 +8,7 @@ import javax.swing.{ AbstractAction, Action, JButton, JCheckBox, JPanel }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.I18N, I18N.Prefix
+import org.nlogo.swing.HoverDecoration
 import org.nlogo.window.Events.LoadEndEvent
 
 class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCounter: TickCounterLabel)
@@ -85,13 +86,16 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
     }
   }
 
-  private class SettingsButton(action: Action) extends JButton(action) with RoundedBorderPanel with ThemeSync {
+  private class SettingsButton(action: Action) extends JButton(action) with RoundedBorderPanel with ThemeSync
+                                               with HoverDecoration {
     setBorder(new EmptyBorder(3, 12, 3, 12))
     setFocusable(false)
     setDiameter(6)
+    enableHover()
 
     def syncTheme() {
       setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
       setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
       setForeground(InterfaceColors.TOOLBAR_TEXT)
     }

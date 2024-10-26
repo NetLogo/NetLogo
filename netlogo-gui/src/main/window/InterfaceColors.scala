@@ -23,13 +23,18 @@ object InterfaceColors {
 
   private val LIGHT_BLUE = new Color(207, 229, 255)
   private val MEDIUM_BLUE = new Color(6, 112, 237)
+  private val MEDIUM_BLUE_2 = new Color(0, 102, 227)
   private val DARK_BLUE = new Color(0, 54, 117)
+  private val WHITE_2 = new Color(245, 245, 245)
   private val LIGHT_GRAY = new Color(238, 238, 238)
+  private val LIGHT_GRAY_2 = new Color(215, 215, 215)
   private val MEDIUM_GRAY = new Color(175, 175, 175)
   private val LIGHT_GRAY_OUTLINE = new Color(120, 120, 120)
   private val DARK_GRAY = new Color(79, 79, 79)
   private val BLUE_GRAY = new Color(70, 70, 76)
+  private val MEDIUM_BLUE_GRAY = new Color(60, 60, 65)
   private val DARK_BLUE_GRAY = new Color(45, 45, 54)
+  private val DARK_BLUE_GRAY_2 = new Color(35, 35, 44)
   private val LIGHT_RED = new Color(251, 96, 85)
   private val ALMOST_BLACK = new Color(22, 22, 22)
 
@@ -336,6 +341,12 @@ object InterfaceColors {
       case "dark" => DARK_BLUE_GRAY
     }
   
+  def TOOLBAR_CONTROL_BACKGROUND_HOVER =
+    theme match {
+      case "classic" | "light" => WHITE_2
+      case "dark" => DARK_BLUE_GRAY_2
+    }
+  
   def TOOLBAR_CONTROL_BORDER =
     theme match {
       case "classic" | "light" => MEDIUM_GRAY
@@ -345,7 +356,13 @@ object InterfaceColors {
   def TOOLBAR_BUTTON_PRESSED =
     theme match {
       case "classic" | "light" => MEDIUM_GRAY
-      case "dark" => ALMOST_BLACK
+      case "dark" => DARK_BLUE_GRAY
+    }
+  
+  def TOOLBAR_BUTTON_HOVER =
+    theme match {
+      case "classic" | "light" => LIGHT_GRAY_2
+      case "dark" => MEDIUM_BLUE_GRAY
     }
 
   def ERROR_LABEL_BACKGROUND = LIGHT_RED
@@ -370,10 +387,18 @@ object InterfaceColors {
   
   def CHECKBOX_BACKGROUND_SELECTED = MEDIUM_BLUE
 
+  def CHECKBOX_BACKGROUND_SELECTED_HOVER = MEDIUM_BLUE_2
+
   def CHECKBOX_BACKGROUND_UNSELECTED =
     theme match {
       case "classic" | "light" => Color.WHITE
       case "dark" => DARK_BLUE_GRAY
+    }
+  
+  def CHECKBOX_BACKGROUND_UNSELECTED_HOVER =
+    theme match {
+      case "classic"| "light" => WHITE_2
+      case "dark" => DARK_BLUE_GRAY_2
     }
 
   def CHECKBOX_BORDER =

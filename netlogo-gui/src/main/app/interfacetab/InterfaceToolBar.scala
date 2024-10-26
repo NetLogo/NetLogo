@@ -4,12 +4,12 @@ package org.nlogo.app.interfacetab
 
 import java.awt.{ Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, ButtonGroup, JLabel, JMenuItem, JPanel, JPopupMenu }
+import javax.swing.{ AbstractAction, JLabel, JMenuItem, JPanel, JPopupMenu }
 
 import org.nlogo.api.Editable
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ DropdownArrow, ToolBar, ToolBarToggleButton, Utils }
+import org.nlogo.swing.{ DropdownArrow, HoverDecoration, ToolBar, ToolBarToggleButton, Utils }
 import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents, GUIWorkspace, InterfaceColors, JobWidget,
                           RoundedBorderPanel, ThemeSync, Widget, WidgetInfo }
 
@@ -34,8 +34,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   private val editButton = new ToolBarToggleButton(new EditAction)
   private val deleteButton = new ToolBarToggleButton(new DeleteAction)
 
-  private val buttonGroup = new ButtonGroup
-
   private val widgetMenu = new WidgetMenu
   private val alignmentMenu = new AlignmentMenu
 
@@ -46,21 +44,40 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   class SelectAction extends AbstractAction(null, Utils.iconScaled("/images/select.png", 15, 15)) {
     def actionPerformed(e: ActionEvent) {
       wPanel.beginSelect()
+
+      editButton.setSelected(false)
+      deleteButton.setSelected(false)
     }
   }
 
   class EditAction extends AbstractAction(null, Utils.icon("/images/edit.png")) {
     def actionPerformed(e: ActionEvent) {
-      new WindowEvents.EditWidgetEvent(null).raise(InterfaceToolBar.this)
+      if (editButton.isSelected) {
+        new WindowEvents.EditWidgetEvent(null).raise(InterfaceToolBar.this)
 
-      wPanel.beginEdit()
+        wPanel.beginEdit()
+
+        selectButton.setSelected(false)
+        deleteButton.setSelected(false)
+      }
+
+      else
+        editButton.doClick()
     }
   }
 
   class DeleteAction extends AbstractAction(null, Utils.icon("/images/delete.png")) {
     def actionPerformed(e: ActionEvent) {
-      wPanel.deleteSelectedWidgets()
-      wPanel.beginDelete()
+      if (deleteButton.isSelected) {
+        wPanel.deleteSelectedWidgets()
+        wPanel.beginDelete()
+
+        selectButton.setSelected(false)
+        editButton.setSelected(false)
+      }
+
+      else
+        deleteButton.doClick()
     }
   }
 
@@ -107,10 +124,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
     add(deleteButton, c)
 
-    buttonGroup.add(selectButton)
-    buttonGroup.add(editButton)
-    buttonGroup.add(deleteButton)
-
     selectButton.setSelected(true)
   }
 
@@ -120,9 +133,13 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     widgetMenu.syncTheme()
     alignmentMenu.syncTheme()
 
-    selectButton.setColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
-    editButton.setColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
-    deleteButton.setColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
+    selectButton.setPressedColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
+    editButton.setPressedColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
+    deleteButton.setPressedColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
+
+    selectButton.setHoverColor(InterfaceColors.TOOLBAR_BUTTON_HOVER)
+    editButton.setHoverColor(InterfaceColors.TOOLBAR_BUTTON_HOVER)
+    deleteButton.setHoverColor(InterfaceColors.TOOLBAR_BUTTON_HOVER)
 
     // set action icons here
   }
@@ -166,11 +183,13 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
   def handle(e: WindowEvents.SelectModeEvent) {
     selectButton.setSelected(true)
+    editButton.setSelected(false)
+    deleteButton.setSelected(false)
   }
 
   def getItems: Array[JMenuItem] = WidgetInfos.map(spec => new JMenuItem(spec.displayName, spec.icon)).toArray
 
-  class WidgetMenu extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync {
+  class WidgetMenu extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with HoverDecoration {
     private class WidgetAction(item: JMenuItem) extends AbstractAction(item.getText, item.getIcon) {
       def actionPerformed(e: ActionEvent) {
         chosenItem = item
@@ -182,6 +201,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     }
 
     setDiameter(6)
+    enableHover()
 
     private val label = new JLabel(I18N.gui.get("tabs.run.addWidget"))
     private val arrow = new DropdownArrow
@@ -229,6 +249,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     
     def syncTheme() {
       setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
       setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
 
       label.setForeground(InterfaceColors.TOOLBAR_TEXT)
@@ -237,11 +258,12 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     }
   }
 
-  class AlignmentMenu extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync {
+  class AlignmentMenu extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with HoverDecoration {
     private val label = new JLabel(I18N.gui.get("tabs.run.alignWidgets"))
     private val arrow = new DropdownArrow
 
     setDiameter(6)
+    enableHover()
 
     locally {
       val c = new GridBagConstraints
@@ -345,6 +367,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
     def syncTheme() {
       setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
       setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
 
       label.setForeground(InterfaceColors.TOOLBAR_TEXT)

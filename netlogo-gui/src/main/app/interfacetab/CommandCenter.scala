@@ -38,9 +38,11 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
     setBorder(new EmptyBorder(3, 3, 3, 3))
     setFocusable(false)
     setDiameter(6)
+    enableHover()
 
     def syncTheme() {
       setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
       setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
 
       // set image here
@@ -57,9 +59,11 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
     setBorder(new EmptyBorder(3, 12, 3, 12))
     setFocusable(false)
     setDiameter(6)
+    enableHover()
 
     def syncTheme() {
       setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
       setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
       setForeground(InterfaceColors.TOOLBAR_TEXT)
     }

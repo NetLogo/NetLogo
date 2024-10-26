@@ -10,7 +10,7 @@ import javax.swing.plaf.basic.BasicTabbedPaneUI
 
 import org.nlogo.app.codetab.{ CodeTab, TemporaryCodeTab }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.swing.Utils
+import org.nlogo.swing.{ HoverDecoration, Utils }
 import org.nlogo.window.InterfaceColors
 
 private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
@@ -225,7 +225,7 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
 }
 
 class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
-                                            with ChangeListener {
+                                            with ChangeListener with HoverDecoration {
   setUI(new TabsPanelUI(this))
   setFocusable(false)
 

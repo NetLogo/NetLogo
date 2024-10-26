@@ -158,6 +158,12 @@ class InfoTab(attachModelDir: String => String)
   def syncTheme() {
     toolBar.setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
+    editableButton.setPressedColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
+
+    findButton.setHoverColor(InterfaceColors.TOOLBAR_BUTTON_HOVER)
+    editableButton.setHoverColor(InterfaceColors.TOOLBAR_BUTTON_HOVER)
+    helpButton.setHoverColor(InterfaceColors.TOOLBAR_BUTTON_HOVER)
+
     findButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
     editableButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
     helpButton.setForeground(InterfaceColors.TOOLBAR_TEXT)

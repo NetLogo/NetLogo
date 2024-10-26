@@ -260,6 +260,9 @@ with ThemeSync {
 
     toolBar.setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
+    findButton.setHoverColor(InterfaceColors.TOOLBAR_BUTTON_HOVER)
+    compileButton.setHoverColor(InterfaceColors.TOOLBAR_BUTTON_HOVER)
+
     findButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
     compileButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
