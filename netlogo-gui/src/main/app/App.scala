@@ -155,6 +155,9 @@ object App {
       pico.add("org.nlogo.app.interfacetab.CommandCenter")
       pico.add("org.nlogo.app.interfacetab.InterfaceTab")
       pico.addComponent(classOf[AgentMonitorManager])
+
+      System.setProperty("flatlaf.menuBarEmbedded", "false")
+
       app = pico.getComponent(classOf[App])
       // It's pretty silly, but in order for the splash screen to show up
       // for more than a fraction of a second, we want to initialize as
@@ -778,6 +781,8 @@ class App extends
   }
 
   def syncWindowThemes() {
+    menuBar.syncTheme()
+
     tabManager.syncTheme()
 
     frame.repaint()

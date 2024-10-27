@@ -2,18 +2,16 @@
 
 package org.nlogo.app
 
+import java.awt.Graphics
 import javax.swing.{ Action, JMenuBar }
 
 import org.nlogo.core.I18N
 import org.nlogo.editor.EditorMenu
-import org.nlogo.swing.UserAction,
+import org.nlogo.swing.{ UserAction, Utils },
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, TabsCategory, ToolsCategory }
+import org.nlogo.window.{ InterfaceColors, ThemeSync }
 
-class MenuBar(isApplicationWide: Boolean)
-  extends JMenuBar
-  with EditorMenu
-  with UserAction.Menu {
-
+class MenuBar(isApplicationWide: Boolean) extends JMenuBar with EditorMenu with UserAction.Menu with ThemeSync {
   val editMenu  = new EditMenu
   val fileMenu  = new FileMenu
   val tabsMenu  = new TabsMenu(I18N.gui.get("menu.tabs"))
@@ -58,5 +56,23 @@ class MenuBar(isApplicationWide: Boolean)
       case _ => ""
     }
     categoryMenus.get(categoryKey).foreach(_.revokeAction(action))
+  }
+
+  override def paintComponent(g: Graphics) {
+    val g2d = Utils.initGraphics2D(g)
+
+    g2d.setColor(InterfaceColors.TOOLBAR_BACKGROUND)
+    g2d.fillRect(0, 0, getWidth, getHeight)
+  }
+
+  override def paintBorder(g: Graphics) {
+    val g2d = Utils.initGraphics2D(g)
+
+    g2d.setColor(InterfaceColors.MENU_BAR_BORDER)
+    g2d.drawLine(0, getHeight - 1, getWidth, getHeight - 1)
+  }
+
+  def syncTheme() {
+    setForeground(InterfaceColors.TOOLBAR_TEXT)
   }
 }

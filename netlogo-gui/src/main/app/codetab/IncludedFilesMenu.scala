@@ -6,15 +6,15 @@ import java.awt.{ Dimension, FileDialog }
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.prefs.Preferences
-import javax.swing.{ AbstractAction, JMenuItem, JOptionPane, JPopupMenu }
+import javax.swing.{ AbstractAction, JOptionPane, JPopupMenu }
 
 import scala.util.control.Exception.ignoring
 
 import org.nlogo.app.common.{ Actions, TabsInterface }, Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, RichJMenuItem, ToolBarMenu }
-import org.nlogo.window.{ Events => WindowEvents, InterfaceColors, RoundedBorderPanel, ThemeSync }
+import org.nlogo.swing.{ FileDialog => SwingFileDialog, ToolBarMenu }
+import org.nlogo.window.{ Events => WindowEvents, InterfaceColors, PopupMenuItem, RoundedBorderPanel, ThemeSync }
 
 class IncludedFilesMenu(includesTable: => Option[Map[String, String]], tabs: TabsInterface)
 extends ToolBarMenu(I18N.gui.get("tabs.code.includedFiles"))
@@ -39,22 +39,27 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
   }
 
   override def populate(menu: JPopupMenu) = {
+    menu.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
     includesTable match {
       case Some(includePaths) =>
         includePaths.keys.toSeq
           .filter(include => include.endsWith(".nls") && new File(includePaths(include)).exists)
           .sortBy(_.toUpperCase)
-          .foreach(include => menu.add(RichJMenuItem(include) {
-            tabs.openExternalFile(includePaths(include))
-          }))
+          .foreach(include => menu.add(new PopupMenuItem(new AbstractAction(include) {
+            def actionPerformed(e: ActionEvent) {
+              tabs.openExternalFile(includePaths(include))
+            }
+          })))
       case None =>
-        val nullItem = new JMenuItem(I18N.gui.get("common.menus.empty"))
-        nullItem.setEnabled(false)
-        menu.add(nullItem)
+        menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("common.menus.empty")) {
+          setEnabled(false)
+          
+          def actionPerformed(e: ActionEvent) {}
+        }))
     }
     menu.addSeparator()
-    menu.add(new JMenuItem(NewSourceEditorAction))
-    menu.add(new JMenuItem(OpenSourceEditorAction))
+    menu.add(new PopupMenuItem(NewSourceEditorAction))
+    menu.add(new PopupMenuItem(OpenSourceEditorAction))
   }
 
   private def sizeIfVisible(size: => Dimension) = if (alwaysVisible || !isEmpty) size else new Dimension(0,0)

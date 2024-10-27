@@ -409,6 +409,30 @@ object InterfaceColors {
   
   def CHECKBOX_CHECK = Color.WHITE
 
+  def MENU_BAR_BORDER =
+    theme match {
+      case "classic" | "light" => LIGHT_GRAY_2
+      case "dark" => MEDIUM_BLUE_GRAY
+    }
+  
+  def MENU_BACKGROUND_HOVER =
+    theme match {
+      case "classic" | "light" => MEDIUM_BLUE
+      case "dark" => DARK_BLUE_GRAY_2
+    }
+  
+  def MENU_TEXT_HOVER =
+    theme match {
+      case "classic" | "light" => Color.WHITE
+      case "dark" => MEDIUM_GRAY
+    }
+  
+  def MENU_TEXT_DISABLED =
+    theme match {
+      case "classic" | "light" => MEDIUM_GRAY
+      case "dark" => DARK_GRAY
+    }
+
   // Syntax highlighting colors
 
   def COMMENT_COLOR = new Color(90, 90, 90) // gray

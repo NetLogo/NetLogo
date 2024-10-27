@@ -2,8 +2,8 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.event.KeyEvent
-import javax.swing.{JMenuItem, JPopupMenu, JTextField, MenuSelectionManager, SwingUtilities}
+import java.awt.event.{ ActionEvent, KeyEvent }
+import javax.swing.{ AbstractAction, JMenuItem, JPopupMenu, JTextField, MenuSelectionManager, SwingUtilities }
 import java.text.Collator
 import java.util.prefs.{ Preferences => JavaPreferences }
 
@@ -11,7 +11,7 @@ import org.nlogo.awt.EventQueue
 import org.nlogo.core.I18N
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.ToolBarMenu
-import org.nlogo.window.{ InterfaceColors, RoundedBorderPanel, ThemeSync }
+import org.nlogo.window.{ InterfaceColors, PopupMenuItem, RoundedBorderPanel, ThemeSync }
 
 class ProceduresMenu(target: ProceduresMenuTarget)
 extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPanel with ThemeSync {
@@ -26,6 +26,8 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
   enableHover()
 
   override def populate(menu: JPopupMenu) {
+    menu.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+
     val procsTable = {
       target.compiler.findProcedurePositions(target.getText)
     }
@@ -44,21 +46,26 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
     }
 
     val items = procs.map { proc =>
-      val item = new JMenuItem(proc)
       val namePos = procsTable(proc).identifier.start
       val end  = procsTable(proc).endKeyword.end
-      item.addActionListener { _ =>
-        // invokeLater for the scrolling behavior we want. we scroll twice: first bring the end into
-        // view, then bring the beginning into view, so then we can see both, if they fit - ST 11/4/04
-        target.select(end, end)
-        EventQueue.invokeLater{() =>
-          target.select(namePos, namePos + proc.length)  // highlight the name
+      val item = new PopupMenuItem(new AbstractAction(proc) {
+        def actionPerformed(e: ActionEvent) {
+          // invokeLater for the scrolling behavior we want. we scroll twice: first bring the end into
+          // view, then bring the beginning into view, so then we can see both, if they fit - ST 11/4/04
+          target.select(end, end)
+          EventQueue.invokeLater{() =>
+            target.select(namePos, namePos + proc.length)  // highlight the name
+          }
         }
-      }
+      })
       item
     }
 
-    val filterField = new JTextField
+    val filterField = new JTextField {
+      setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      setForeground(InterfaceColors.TOOLBAR_TEXT)
+      setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+    }
     filterField.getDocument.addDocumentListener(() => {
       repopulate(menu, filterField, items)
       menu.getSubElements.collectFirst {
@@ -129,8 +136,13 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
         .collect{case (it, Some(score)) => (it, score)}
         .sortBy(-_._2)
         .map(_._1)
-    if (visibleItems.isEmpty)
-      menu.add(new JMenuItem("<"+I18N.gui.get("tabs.code.procedures.none")+">") { setEnabled(false) })
+    if (visibleItems.isEmpty) {
+      menu.add(new PopupMenuItem(new AbstractAction("<"+I18N.gui.get("tabs.code.procedures.none")+">") {
+        setEnabled(false)
+
+        def actionPerformed(e: ActionEvent) {}
+      }))
+    }
     else
       visibleItems.foreach(menu.add)
   }
