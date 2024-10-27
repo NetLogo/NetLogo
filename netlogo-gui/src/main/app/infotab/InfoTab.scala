@@ -19,8 +19,7 @@ import org.nlogo.core.I18N
 import org.nlogo.editor.UndoManager
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ OptionDialog, ToolBar, ToolBarButton, ToolBarActionButton,
-  ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, Utils },
-  BrowserLauncher.docPath, Utils.icon
+  ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, Utils }, BrowserLauncher.docPath
 import org.nlogo.window.{ Events => WindowEvents, InterfaceColors, ThemeSync, Zoomable }
 
 class InfoTab(attachModelDir: String => String)
@@ -72,7 +71,7 @@ class InfoTab(attachModelDir: String => String)
   private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit")))
   private val helpButton = new ToolBarButton(I18N.gui.get("tabs.info.help"),
                                              BrowserLauncher.openPath(this, baseDocPath, "information"))
-  helpButton.setIcon(icon("/images/help.png"))
+  helpButton.setIcon(Utils.iconScaled("/images/help.png", 15, 15))
   helpButton.setVisible(false)
   private def toggleHelpButton(){ helpButton.setVisible(view == textArea) }
 
@@ -223,7 +222,7 @@ class InfoTab(attachModelDir: String => String)
   }
 
   private class EditableAction(label: String) extends AbstractAction(label) {
-    putValue(Action.SMALL_ICON, icon("/images/edit.png"))
+    putValue(Action.SMALL_ICON, Utils.icon("/images/edit.png"))
     def actionPerformed(e: ActionEvent) {
       val scrollBar = scrollPane.getVerticalScrollBar
       val (min, max) = (scrollBar.getMinimum, scrollBar.getMaximum)
