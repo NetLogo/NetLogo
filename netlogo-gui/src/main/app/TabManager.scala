@@ -411,6 +411,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         mainTabs.setSelectedComponent(tab)
     }
 
+    tab.syncTheme()
+
     updateTabActions()
   }
 
