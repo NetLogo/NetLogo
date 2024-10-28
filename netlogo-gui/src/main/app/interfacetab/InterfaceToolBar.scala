@@ -252,6 +252,8 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
 
       popup.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+
+      actions.foreach(_.syncTheme())
     }
   }
 
@@ -372,6 +374,11 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
 
       popup.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+
+      popup.getComponents.foreach(_ match {
+        case p: PopupMenuItem => p.syncTheme()
+        case _ =>
+      })
     }
   }
 }

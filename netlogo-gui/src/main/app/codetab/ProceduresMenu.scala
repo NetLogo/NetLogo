@@ -137,11 +137,9 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
         .sortBy(-_._2)
         .map(_._1)
     if (visibleItems.isEmpty) {
-      menu.add(new PopupMenuItem(new AbstractAction("<"+I18N.gui.get("tabs.code.procedures.none")+">") {
+      menu.add(new PopupMenuItem("<"+I18N.gui.get("tabs.code.procedures.none")+">") {
         setEnabled(false)
-
-        def actionPerformed(e: ActionEvent) {}
-      }))
+      })
     }
     else
       visibleItems.foreach(menu.add)

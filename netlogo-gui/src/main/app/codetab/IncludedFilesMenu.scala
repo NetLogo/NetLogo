@@ -51,11 +51,9 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
             }
           })))
       case None =>
-        menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("common.menus.empty")) {
+        menu.add(new PopupMenuItem(I18N.gui.get("common.menus.empty")) {
           setEnabled(false)
-          
-          def actionPerformed(e: ActionEvent) {}
-        }))
+        })
     }
     menu.addSeparator()
     menu.add(new PopupMenuItem(NewSourceEditorAction))

@@ -427,11 +427,7 @@ object InterfaceColors {
       case "dark" => MEDIUM_GRAY
     }
   
-  def MENU_TEXT_DISABLED =
-    theme match {
-      case "classic" | "light" => MEDIUM_GRAY
-      case "dark" => DARK_GRAY
-    }
+  def MENU_TEXT_DISABLED = MEDIUM_GRAY
 
   // Syntax highlighting colors
 

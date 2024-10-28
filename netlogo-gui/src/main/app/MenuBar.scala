@@ -17,11 +17,12 @@ class MenuBar(isApplicationWide: Boolean) extends JMenuBar with EditorMenu with 
   val tabsMenu  = new TabsMenu(I18N.gui.get("menu.tabs"))
   val toolsMenu = new ToolsMenu
   val helpMenu  = new HelpMenu
+  val zoomMenu = new ZoomMenu
 
   add(fileMenu)
   add(editMenu)
   add(toolsMenu)
-  add(new ZoomMenu)
+  add(zoomMenu)
   add(tabsMenu)
   add(helpMenu)
 
@@ -74,5 +75,12 @@ class MenuBar(isApplicationWide: Boolean) extends JMenuBar with EditorMenu with 
 
   def syncTheme() {
     setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    fileMenu.syncTheme()
+    editMenu.syncTheme()
+    toolsMenu.syncTheme()
+    zoomMenu.syncTheme()
+    tabsMenu.syncTheme()
+    helpMenu.syncTheme()
   }
 }

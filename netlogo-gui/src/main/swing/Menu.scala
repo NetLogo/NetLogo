@@ -2,8 +2,12 @@
 
 package org.nlogo.swing
 
-import javax.swing.{ Action, JCheckBoxMenuItem, JMenu, JMenuItem }
+import javax.swing.{ Action, JMenu, JMenuItem, JPopupMenu }
+import javax.swing.plaf.basic.BasicMenuUI
+
 import UserAction.{ ActionRankKey, DefaultGroup, DefaultRank, RichUserAction }
+
+import org.nlogo.window.{ InterfaceColors, PopupMenuItem, PopupCheckBoxMenuItem, ThemeSync }
 
 import scala.math.Ordering
 
@@ -26,9 +30,32 @@ object Menu {
   def model(sortOrder: Seq[String]) = new MenuModel[Action, String](sortOrder)
 }
 
-class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu(text) with UserAction.Menu {
+class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu(text) with UserAction.Menu
+                                                                   with ThemeSync {
 
   def this(text: String) = this(text, Menu.model)
+
+  private val menuUI = new BasicMenuUI with ThemeSync {
+    def syncTheme() {
+      setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+      selectionBackground = InterfaceColors.MENU_BACKGROUND_HOVER
+      selectionForeground = InterfaceColors.MENU_TEXT_HOVER
+      acceleratorForeground = InterfaceColors.TOOLBAR_TEXT
+      acceleratorSelectionForeground = InterfaceColors.MENU_TEXT_HOVER
+      disabledForeground = InterfaceColors.MENU_TEXT_DISABLED
+    }
+  }
+
+  setUI(menuUI)
+
+  override def getPopupMenu: JPopupMenu = {
+    val menu = super.getPopupMenu
+
+    menu.setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
+
+    menu
+  }
 
   def addMenuItem(name: String, fn: () => Unit): javax.swing.JMenuItem =
     addMenuItem(RichAction(name) { _ => fn() })
@@ -59,9 +86,9 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
   def addMenuItem(text: String, shortcut: Char, shift: Boolean, action: javax.swing.Action, addMenuMask: Boolean): javax.swing.JMenuItem = {
     val item =
       if(action == null)
-        new javax.swing.JMenuItem(text)
+        new PopupMenuItem(text)
       else {
-        val item = new javax.swing.JMenuItem(action)
+        val item = new PopupMenuItem(action)
         item.setText(text)
         item
       }
@@ -97,13 +124,14 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
         add(itemToAdd)
         Some(node.groupName)
     }
+    syncTheme()
   }
 
   private def createMenuItem(action: Action): JMenuItem =
     action match {
-      case cba: UserAction.CheckBoxAction => new JCheckBoxMenuItem(action)
+      case cba: UserAction.CheckBoxAction => new PopupCheckBoxMenuItem(action)
       case _                              =>
-        val jmi = new JMenuItem(action)
+        val jmi = new PopupMenuItem(action)
         jmi.setIcon(null)
         jmi
     }
@@ -135,5 +163,18 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
 
   protected def subcategoryNameAndGroup(key: String): (String, String) = {
     (key, DefaultGroup)
+  }
+
+  def syncTheme() {
+    setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    menuUI.syncTheme()
+
+    getMenuComponents.foreach(_ match {
+      case m: Menu => m.syncTheme()
+      case p: PopupMenuItem => p.syncTheme()
+      case p: PopupCheckBoxMenuItem => p.syncTheme()
+      case _ =>
+    })
   }
 }

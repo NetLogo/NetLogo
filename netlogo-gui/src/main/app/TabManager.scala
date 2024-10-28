@@ -717,5 +717,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     mainCodeTab.syncTheme()
 
     getExternalFileTabs.foreach(_.syncTheme())
+
+    separateTabsWindow.syncTheme()
   }
 }

@@ -2,41 +2,50 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Graphics, Rectangle, Toolkit }
-import java.util.Map
-import javax.swing.{ Action, JMenuItem }
-import javax.swing.plaf.basic.BasicMenuItemUI
+import java.awt.event.ActionEvent
+import javax.swing.{ AbstractAction, Action, JCheckBoxMenuItem, JMenuItem }
+import javax.swing.plaf.basic.{ BasicCheckBoxMenuItemUI, BasicMenuItemUI }
 
-import org.nlogo.swing.Utils
+class PopupMenuItem(action: Action) extends JMenuItem(action) with ThemeSync {
+  def this(text: String) = this(new AbstractAction(text) {
+    def actionPerformed(e: ActionEvent) {}
+  })
 
-object PopupMenuItem {
-  private val DESKTOP_HINTS = Toolkit.getDefaultToolkit.getDesktopProperty("awt.font.desktophints").asInstanceOf[Map[_, _]]
+  private val itemUI = new BasicMenuItemUI with ThemeSync {
+    def syncTheme() {
+      setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+      selectionBackground = InterfaceColors.MENU_BACKGROUND_HOVER
+      selectionForeground = InterfaceColors.MENU_TEXT_HOVER
+      acceleratorForeground = InterfaceColors.TOOLBAR_TEXT
+      acceleratorSelectionForeground = InterfaceColors.MENU_TEXT_HOVER
+      disabledForeground = InterfaceColors.MENU_TEXT_DISABLED
+    }
+  }
+
+  setUI(itemUI)
+
+  def syncTheme() {
+    itemUI.syncTheme()
+  }
 }
 
-class PopupMenuItem(action: Action) extends JMenuItem(action) {
-  setUI(new BasicMenuItemUI {
-    override def paintBackground(g: Graphics, menuItem: JMenuItem, bgColor: Color) {
-      if (isArmed) {
-        g.setColor(InterfaceColors.MENU_BACKGROUND_HOVER)
-        g.fillRect(0, 0, menuItem.getWidth, menuItem.getHeight)
-      }
+class PopupCheckBoxMenuItem(action: Action) extends JCheckBoxMenuItem(action) with ThemeSync {
+  private val itemUI = new BasicCheckBoxMenuItemUI with ThemeSync {
+    def syncTheme() {
+      setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+      selectionBackground = InterfaceColors.MENU_BACKGROUND_HOVER
+      selectionForeground = InterfaceColors.MENU_TEXT_HOVER
+      acceleratorForeground = InterfaceColors.TOOLBAR_TEXT
+      acceleratorSelectionForeground = InterfaceColors.MENU_TEXT_HOVER
+      disabledForeground = InterfaceColors.MENU_TEXT_DISABLED
     }
+  }
 
-    override def paintText(g: Graphics, menuItem: JMenuItem, textRect: Rectangle, text: String) {
-      val g2d = Utils.initGraphics2D(g)
+  setUI(itemUI)
 
-      g2d.setRenderingHints(PopupMenuItem.DESKTOP_HINTS)
-
-      if (!isEnabled)
-        g2d.setColor(InterfaceColors.MENU_TEXT_DISABLED)
-      else if (isArmed)
-        g2d.setColor(InterfaceColors.MENU_TEXT_HOVER)
-      else
-        g2d.setColor(InterfaceColors.TOOLBAR_TEXT)
-
-      val metrics = g2d.getFontMetrics(g2d.getFont)
-
-      g2d.drawString(text, textRect.x + 4, textRect.y + textRect.height / 2 + metrics.getMaxAscent - metrics.getHeight / 2)
-    }
-  })
+  def syncTheme() {
+    itemUI.syncTheme()
+  }
 }
