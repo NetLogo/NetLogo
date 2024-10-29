@@ -41,7 +41,8 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
   deleteButton.setToolTipText(I18N.gui.get("tabs.run.deleteButton.tooltip"))
 
-  class SelectAction extends AbstractAction(null, Utils.iconScaled("/images/select.png", 15, 15)) {
+  class SelectAction extends AbstractAction(null, Utils.iconScaledWithColor("/images/select.png", 15, 15,
+                                                                            InterfaceColors.TOOLBAR_IMAGE)) {
     def actionPerformed(e: ActionEvent) {
       wPanel.beginSelect()
 
@@ -50,7 +51,8 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     }
   }
 
-  class EditAction extends AbstractAction(null, Utils.icon("/images/edit.png")) {
+  class EditAction extends AbstractAction(null, Utils.iconScaledWithColor("/images/edit.png", 15, 15,
+                                                                          InterfaceColors.TOOLBAR_IMAGE)) {
     def actionPerformed(e: ActionEvent) {
       if (editButton.isSelected) {
         new WindowEvents.EditWidgetEvent(null).raise(InterfaceToolBar.this)
@@ -66,7 +68,8 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     }
   }
 
-  class DeleteAction extends AbstractAction(null, Utils.icon("/images/delete.png")) {
+  class DeleteAction extends AbstractAction(null, Utils.iconScaledWithColor("/images/delete.png", 15, 15,
+                                                                            InterfaceColors.TOOLBAR_IMAGE)) {
     def actionPerformed(e: ActionEvent) {
       if (deleteButton.isSelected) {
         wPanel.deleteSelectedWidgets()
@@ -132,6 +135,10 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
     widgetMenu.syncTheme()
     alignmentMenu.syncTheme()
+
+    selectButton.setIcon(Utils.iconScaledWithColor("/images/select.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
+    editButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
+    deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
 
     selectButton.setPressedColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
     editButton.setPressedColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)

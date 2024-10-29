@@ -243,14 +243,22 @@ with ThemeSync {
 
   def isTextSelected: Boolean = text.getSelectedText != null && !text.getSelectedText.isEmpty
 
-  private object CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
-    putValue(Action.SMALL_ICON, Utils.icon("/images/check.png"))
+  private object CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) with ThemeSync {
+    private var dirty = false
+
     def actionPerformed(e: ActionEvent) = compile()
-    def setDirty(isDirty: Boolean) = {
-      val iconPath =
-        if (isDirty) "/images/check-filled.png"
-        else         "/images/check.png"
-      putValue(Action.SMALL_ICON, Utils.icon(iconPath))
+    def setDirty(isDirty: Boolean) {
+      dirty = isDirty
+
+      syncTheme()
+    }
+    
+    def syncTheme() {
+      putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/check.png", 15, 15,
+                                                            if (dirty)
+                                                              InterfaceColors.CHECK_FILLED
+                                                            else
+                                                              InterfaceColors.TOOLBAR_IMAGE))
     }
   }
 
@@ -265,6 +273,8 @@ with ThemeSync {
 
     findButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
     compileButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    CompileAction.syncTheme()
 
     proceduresMenu.syncTheme()
     includedFilesMenu.syncTheme()

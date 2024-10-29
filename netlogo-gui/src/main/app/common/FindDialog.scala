@@ -12,10 +12,10 @@ import javax.swing.text.{ BadLocationException, JTextComponent, TextAction }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ ButtonPanel, NonemptyTextFieldActionEnabler, NonemptyTextFieldButtonEnabler, TextField,
                          TextFieldBox, UserAction, Utils }
+import org.nlogo.window.{ InterfaceColors, ThemeSync }
 
-object FindDialog {
+object FindDialog extends ThemeSync {
   class FindAction extends TextAction(I18N.gui.get("menu.edit.find")) {
-    putValue(Action.SMALL_ICON, Utils.icon("/images/find.png"))
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
     putValue(Action.ACCELERATOR_KEY, UserAction.KeyBindings.keystroke('F', withMenu = true))
@@ -49,7 +49,6 @@ object FindDialog {
   }
 
   class FindNextAction extends TextAction(I18N.gui.get("menu.edit.findNext")) {
-    putValue(Action.SMALL_ICON, Utils.icon("/images/find.png"))
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
     putValue(Action.ACCELERATOR_KEY, UserAction.KeyBindings.keystroke('G', withMenu = true))
@@ -64,7 +63,6 @@ object FindDialog {
   }
 
   class FindActionCode extends TextAction(I18N.gui.get("menu.edit.find")) {
-    putValue(Action.SMALL_ICON, Utils.icon("/images/find.png"))
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
 
@@ -97,7 +95,6 @@ object FindDialog {
   }
 
   class FindNextActionCode extends TextAction(I18N.gui.get("menu.edit.findNext")) {
-    putValue(Action.SMALL_ICON, Utils.icon("/images/find.png"))
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
     putValue(Action.ACCELERATOR_KEY, UserAction.KeyBindings.keystroke('G', withMenu = true))
@@ -175,6 +172,17 @@ object FindDialog {
       getInstance.setVisible(false)
       FIND_ACTION.setEnabled(false)
     }
+  }
+
+  def syncTheme() {
+    FIND_ACTION.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
+                                                                      InterfaceColors.TOOLBAR_IMAGE))
+    FIND_ACTION_CODE.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
+                                                                           InterfaceColors.TOOLBAR_IMAGE))
+    FIND_NEXT_ACTION.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
+                                                                           InterfaceColors.TOOLBAR_IMAGE))
+    FIND_NEXT_ACTION_CODE.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
+                                                                                InterfaceColors.TOOLBAR_IMAGE))
   }
 }
 

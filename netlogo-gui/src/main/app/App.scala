@@ -785,6 +785,8 @@ class App extends
 
     tabManager.syncTheme()
 
+    FindDialog.syncTheme()
+
     frame.repaint()
     tabManager.separateTabsWindow.repaint()
   }

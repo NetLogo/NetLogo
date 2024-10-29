@@ -364,6 +364,14 @@ object InterfaceColors {
       case "classic" | "light" => LIGHT_GRAY_2
       case "dark" => MEDIUM_BLUE_GRAY
     }
+  
+  def TOOLBAR_IMAGE =
+    theme match {
+      case "classic" | "light" => new Color(85, 87, 112)
+      case "dark" =>new Color(168, 170, 194)
+    }
+  
+  def CHECK_FILLED = new Color(0, 173, 90)
 
   def ERROR_LABEL_BACKGROUND = LIGHT_RED
 

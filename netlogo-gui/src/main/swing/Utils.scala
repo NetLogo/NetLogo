@@ -2,8 +2,9 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Font, Frame, Graphics, Graphics2D, Image, RenderingHints }
+import java.awt.{ Color, Font, Frame, Graphics, Graphics2D, Image, RenderingHints }
 import java.awt.event.KeyEvent
+import java.awt.image.BufferedImage
 
 import javax.swing.{ Action, ImageIcon, InputMap, JComponent, JDialog, JWindow, KeyStroke }
 
@@ -13,6 +14,29 @@ final object Utils {
 
   def iconScaled(path: String, width: Int, height: Int) =
     new ImageIcon(icon(path).getImage.getScaledInstance(width, height, Image.SCALE_SMOOTH))
+  
+  def iconScaledWithColor(path: String, width: Int, height: Int, color: Color): ImageIcon = {
+    val image = iconScaled(path, width, height)
+    val buffered = new BufferedImage(image.getIconWidth, image.getIconHeight, BufferedImage.TYPE_INT_ARGB)
+
+    image.paintIcon(null, buffered.getGraphics, 0, 0)
+
+    for (y <- 0 until buffered.getHeight) {
+      for (x <- 0 until buffered.getWidth) {
+        val c1 = buffered.getRGB(x, y)
+        val c2 = color.getRGB
+
+        val r = ((c1 & 255) * (c2 & 255)) / 255
+        val g = (((c1 >> 8) & 255) * ((c2 >> 8) & 255)) / 255
+        val b = (((c1 >> 16) & 255) * ((c2 >> 16) & 255)) / 255
+        val a = (((c1 >> 24) & 255) * ((c2 >> 24) & 255)) / 255
+
+        buffered.setRGB(x, y, r | (g << 8) | (b << 16) | (a << 24))
+      }
+    }
+
+    new ImageIcon(buffered)
+  }
 
   def font(path: String): Font =
     Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream(path))
