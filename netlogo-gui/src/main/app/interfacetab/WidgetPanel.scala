@@ -19,28 +19,31 @@ import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.swing.Utils
 import org.nlogo.window.{ AbstractWidgetPanel, Events => WindowEvents,
-  GUIWorkspace, OutputWidget, Widget, WidgetContainer, WidgetRegistry,
+  GUIWorkspace, InterfaceColors, OutputWidget, Widget, WidgetContainer, WidgetRegistry,
   DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget,
   PlotWidget },
     WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, LoadBeginEvent, RunCodeOnChangeEvent, SelectModeEvent,
       WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent }
 
 sealed trait InteractMode {
-  val cursor: Cursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR)
+  def cursor: Cursor =
+    Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR)
 }
 
 object InteractMode {
   case object SELECT extends InteractMode
   case object ADD extends InteractMode
   case object EDIT extends InteractMode {
-    override val cursor =
-      Toolkit.getDefaultToolkit.createCustomCursor(Utils.icon("/images/edit-cursor.png").getImage, new Point(0, 0),
-                                                   I18N.gui.get("tabs.run.widget.editWidget"))
+    override def cursor =
+      Toolkit.getDefaultToolkit.createCustomCursor(Utils.iconScaledWithColor("/images/edit-cursor.png", 32, 32,
+                                                                             InterfaceColors.TOOLBAR_IMAGE).getImage,
+                                                   new Point(0, 0), I18N.gui.get("tabs.run.widget.editWidget"))
   }
   case object DELETE extends InteractMode {
-    override val cursor =
-      Toolkit.getDefaultToolkit.createCustomCursor(Utils.icon("/images/delete-cursor.png").getImage, new Point(0, 0),
-                                                   I18N.gui.get("tabs.run.widget.deleteWidget"))
+    override def cursor =
+      Toolkit.getDefaultToolkit.createCustomCursor(Utils.iconScaledWithColor("/images/delete-cursor.png", 32, 32,
+                                                                             InterfaceColors.TOOLBAR_IMAGE).getImage,
+                                                   new Point(0, 0), I18N.gui.get("tabs.run.widget.deleteWidget"))
   }
 }
 
@@ -935,5 +938,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
         workspace.evaluateCommands(new SimpleJobOwner("WidgetPanel", workspace.world.mainRNG), e.code)
       }
     }.start()
+  }
+
+  def syncCursorTheme() {
+    setCursor(interactMode.cursor)
   }
 }
