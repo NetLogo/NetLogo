@@ -1,13 +1,12 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.swing
+package org.nlogo.window
 
 import javax.swing.{ Action, JMenu, JMenuItem, JPopupMenu }
 import javax.swing.plaf.basic.BasicMenuUI
 
-import UserAction.{ ActionRankKey, DefaultGroup, DefaultRank, RichUserAction }
-
-import org.nlogo.window.{ InterfaceColors, PopupMenuItem, PopupCheckBoxMenuItem, ThemeSync }
+import org.nlogo.swing.{ MenuModel, RichAction, UserAction }
+import org.nlogo.swing.UserAction.{ ActionRankKey, DefaultGroup, DefaultRank, RichUserAction }
 
 import scala.math.Ordering
 

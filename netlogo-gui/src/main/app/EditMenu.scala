@@ -9,8 +9,9 @@ import javax.swing.Action
 
 import org.nlogo.api.Refreshable
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Menu, UserAction },
+import org.nlogo.swing.UserAction,
   UserAction.{ EditClipboardGroup, EditFindGroup, EditFormatGroup, EditSelectionGroup, EditUndoGroup }
+import org.nlogo.window.Menu
 
 object EditMenu {
   def sortOrder = Seq(EditUndoGroup, EditClipboardGroup, EditSelectionGroup, EditFindGroup, EditFormatGroup)

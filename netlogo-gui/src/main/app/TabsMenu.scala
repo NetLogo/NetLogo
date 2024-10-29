@@ -25,7 +25,7 @@ object TabsMenu {
 
 }
 
-class TabsMenu(name: String, initialActions: Seq[Action]) extends org.nlogo.swing.Menu(name) {
+class TabsMenu(name: String, initialActions: Seq[Action]) extends org.nlogo.window.Menu(name) {
   setMnemonic('A')
 
   initialActions.foreach(offerAction)
