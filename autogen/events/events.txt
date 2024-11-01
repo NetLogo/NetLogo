@@ -48,7 +48,6 @@ window.RemoveAllJobs
 window.RemoveConstraint - String varname
 window.RemoveJob - org.nlogo.api.JobOwner owner
 window.ResizeView - int width - int height
-window.RunCodeOnChange - String code
 window.RuntimeError - org.nlogo.api.JobOwner jobOwner - org.nlogo.api.SourceOwner sourceOwner - int pos - int length
 window.SelectMode
 window.TickStateChange - boolean tickCounterInitialized

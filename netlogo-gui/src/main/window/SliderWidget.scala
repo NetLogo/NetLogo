@@ -238,7 +238,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   protected var _name = ""
   private var _units = ""
   private var _vertical = false
-  private var _changeCode = ""
   private val sliderData = new SliderData(this)
 
   val nameComponent = new Label(I18N.gui.get("edit.slider.previewName"))
@@ -288,7 +287,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
     repaint()
     new Events.WidgetEditedEvent(this).raise(this)
-    runChangeCode()
   }
   def value_=(d: Double, inc: Double) {
     sliderData.value = d
@@ -296,7 +294,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     slider.setValue(((value - minimum) / inc).asInstanceOf[Int])
     repaint()
     new Events.WidgetEditedEvent(this).raise(this)
-    runChangeCode()
   }
   def value_=(d: Double, buttonRelease: Boolean) {
     sliderData.value_=(d, buttonRelease)
@@ -304,14 +301,12 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
     repaint()
     new Events.WidgetEditedEvent(this).raise(this)
-    runChangeCode()
   }
   def coerceValue(value: Double): Double = {
     val ret = sliderData.coerceValue(value)
     valueComponent.setText(valueString(value))
     slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
     repaint()
-    runChangeCode()
     ret
   }
 
@@ -343,16 +338,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
       else
         slider.setOrientation(SwingConstants.HORIZONTAL)
     }
-  }
-
-  def changeCode: String = _changeCode
-  def changeCode_=(code: String) {
-    _changeCode = code.trim
-  }
-
-  private def runChangeCode() {
-    if (_changeCode.nonEmpty)
-      new Events.RunCodeOnChangeEvent(_changeCode).raise(this)
   }
 
   def valueString(num: Double): String = {

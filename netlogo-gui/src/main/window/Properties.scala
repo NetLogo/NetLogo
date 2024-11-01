@@ -53,8 +53,7 @@ object Properties {
       " "), // empty, so layout lines up
     P("value", P.Double, I18N.gui("slider.value"), gridWidth = RELATIVE),
     P("units", P.String, I18N.gui("slider.units")),
-    P("vertical", P.Boolean, I18N.gui("slider.vertical")),
-    P("changeCode", P.Commands, I18N.gui("slider.changeCode"), collapsible = true, collapseByDefault = true)
+    P("vertical", P.Boolean, I18N.gui("slider.vertical"))
   )
   val monitor = javaList(
     P("wrapSource", P.Reporter, I18N.gui("monitor.reporter")),
