@@ -42,14 +42,23 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
     menu.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
     includesTable match {
       case Some(includePaths) =>
-        includePaths.keys.toSeq
-          .filter(include => include.endsWith(".nls") && new File(includePaths(include)).exists)
-          .sortBy(_.toUpperCase)
-          .foreach(include => menu.add(new PopupMenuItem(new AbstractAction(include) {
+        val filtered =
+          includePaths.keys.toSeq.filter(include => include.endsWith(".nls") && new File(includePaths(include)).exists)
+        
+        if (filtered.isEmpty) {
+          menu.add(new PopupMenuItem(I18N.gui.get("common.menus.empty")) {
+            setEnabled(false)
+            syncTheme()
+          })
+        }
+
+        else {
+          filtered.sortBy(_.toUpperCase).foreach(include => menu.add(new PopupMenuItem(new AbstractAction(include) {
             def actionPerformed(e: ActionEvent) {
               tabs.openExternalFile(includePaths(include))
             }
           }) { syncTheme() }))
+        }
       case None =>
         menu.add(new PopupMenuItem(I18N.gui.get("common.menus.empty")) {
           setEnabled(false)
