@@ -781,11 +781,11 @@ class App extends
   }
 
   def syncWindowThemes() {
+    FindDialog.syncTheme()
+
     menuBar.syncTheme()
 
     tabManager.syncTheme()
-
-    FindDialog.syncTheme()
 
     frame.repaint()
     tabManager.separateTabsWindow.repaint()

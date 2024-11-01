@@ -6,10 +6,14 @@ import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, Action, JCheckBoxMenuItem, JMenuItem }
 import javax.swing.plaf.basic.{ BasicCheckBoxMenuItemUI, BasicMenuItemUI }
 
-class PopupMenuItem(action: Action) extends JMenuItem(action) with ThemeSync {
+class PopupMenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(action) with ThemeSync {
+  def this(text: String, showIcon: Boolean) = this(new AbstractAction(text) {
+    def actionPerformed(e: ActionEvent) {}
+  }, showIcon)
+
   def this(text: String) = this(new AbstractAction(text) {
     def actionPerformed(e: ActionEvent) {}
-  })
+  }, true)
 
   private val itemUI = new BasicMenuItemUI with ThemeSync {
     def syncTheme() {
@@ -27,6 +31,9 @@ class PopupMenuItem(action: Action) extends JMenuItem(action) with ThemeSync {
 
   def syncTheme() {
     itemUI.syncTheme()
+
+    if (!showIcon)
+      setIcon(null)
   }
 }
 

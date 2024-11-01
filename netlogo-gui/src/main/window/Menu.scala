@@ -85,9 +85,9 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
   def addMenuItem(text: String, shortcut: Char, shift: Boolean, action: javax.swing.Action, addMenuMask: Boolean): javax.swing.JMenuItem = {
     val item =
       if(action == null)
-        new PopupMenuItem(text)
+        new PopupMenuItem(text, false)
       else {
-        val item = new PopupMenuItem(action)
+        val item = new PopupMenuItem(action, false)
         item.setText(text)
         item
       }
@@ -98,7 +98,6 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
         javax.swing.KeyStroke.getKeyStroke(
           shortcut, mask | menuMask))
     }
-    item.setIcon(null) // unwanted visual clutter - ST 7/31/03
     add(item)
     item
   }
@@ -130,9 +129,7 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
     action match {
       case cba: UserAction.CheckBoxAction => new PopupCheckBoxMenuItem(action)
       case _                              =>
-        val jmi = new PopupMenuItem(action)
-        jmi.setIcon(null)
-        jmi
+        new PopupMenuItem(action, false)
     }
 
   def revokeAction(action: Action): Unit = {
