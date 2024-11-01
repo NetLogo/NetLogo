@@ -49,15 +49,16 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
             def actionPerformed(e: ActionEvent) {
               tabs.openExternalFile(includePaths(include))
             }
-          })))
+          }) { syncTheme() }))
       case None =>
         menu.add(new PopupMenuItem(I18N.gui.get("common.menus.empty")) {
           setEnabled(false)
+          syncTheme()
         })
     }
     menu.addSeparator()
-    menu.add(new PopupMenuItem(NewSourceEditorAction))
-    menu.add(new PopupMenuItem(OpenSourceEditorAction))
+    menu.add(new PopupMenuItem(NewSourceEditorAction) { syncTheme() })
+    menu.add(new PopupMenuItem(OpenSourceEditorAction) { syncTheme() })
   }
 
   private def sizeIfVisible(size: => Dimension) = if (alwaysVisible || !isEmpty) size else new Dimension(0,0)

@@ -58,6 +58,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
           }
         }
       })
+      item.syncTheme()
       item
     }
 
@@ -80,14 +81,12 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
       // Resize the popup to match. On Mac, the popup has is in its own undecorated window, so we resize root. On
       // Windows and Linux, the root of the menu is the app itself, but the parent is the popup, so resize that.
       // -BCH 1/29/2018
-      Option(
-        if (System.getProperty("os.name").startsWith("Mac")) SwingUtilities.getRoot(menu)
-        else menu.getParent
-      ).foreach(r => {
-        r.setSize(r.getPreferredSize)
-        r.validate()
-        r.repaint()
-      })
+      // this no longer works as commented after switching to FlatLaf, resizing root now works on all platforms.
+      // (IB 11/1/24)
+      val r = SwingUtilities.getRoot(menu)
+      r.setSize(r.getPreferredSize)
+      r.validate()
+      r.repaint()
     })
 
     filterField.addKeyListener { e: KeyEvent =>
