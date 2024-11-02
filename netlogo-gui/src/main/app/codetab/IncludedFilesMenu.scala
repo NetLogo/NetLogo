@@ -45,29 +45,22 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
         val filtered =
           includePaths.keys.toSeq.filter(include => include.endsWith(".nls") && new File(includePaths(include)).exists)
         
-        if (filtered.isEmpty) {
-          menu.add(new PopupMenuItem(I18N.gui.get("common.menus.empty")) {
-            setEnabled(false)
-            syncTheme()
-          })
-        }
+        if (filtered.isEmpty)
+          menu.add(new PopupMenuItem(I18N.gui.get("common.menus.empty"))).setEnabled(false)
 
         else {
           filtered.sortBy(_.toUpperCase).foreach(include => menu.add(new PopupMenuItem(new AbstractAction(include) {
             def actionPerformed(e: ActionEvent) {
               tabs.openExternalFile(includePaths(include))
             }
-          }) { syncTheme() }))
+          })))
         }
       case None =>
-        menu.add(new PopupMenuItem(I18N.gui.get("common.menus.empty")) {
-          setEnabled(false)
-          syncTheme()
-        })
+        menu.add(new PopupMenuItem(I18N.gui.get("common.menus.empty"))).setEnabled(false)
     }
     menu.addSeparator()
-    menu.add(new PopupMenuItem(NewSourceEditorAction) { syncTheme() })
-    menu.add(new PopupMenuItem(OpenSourceEditorAction) { syncTheme() })
+    menu.add(new PopupMenuItem(NewSourceEditorAction))
+    menu.add(new PopupMenuItem(OpenSourceEditorAction))
   }
 
   private def sizeIfVisible(size: => Dimension) = if (alwaysVisible || !isEmpty) size else new Dimension(0,0)

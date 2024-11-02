@@ -48,7 +48,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
     val items = procs.map { proc =>
       val namePos = procsTable(proc).identifier.start
       val end  = procsTable(proc).endKeyword.end
-      val item = new PopupMenuItem(new AbstractAction(proc) {
+      new PopupMenuItem(new AbstractAction(proc) {
         def actionPerformed(e: ActionEvent) {
           // invokeLater for the scrolling behavior we want. we scroll twice: first bring the end into
           // view, then bring the beginning into view, so then we can see both, if they fit - ST 11/4/04
@@ -58,8 +58,6 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
           }
         }
       })
-      item.syncTheme()
-      item
     }
 
     val filterField = new JTextField {
@@ -135,11 +133,8 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
         .collect{case (it, Some(score)) => (it, score)}
         .sortBy(-_._2)
         .map(_._1)
-    if (visibleItems.isEmpty) {
-      menu.add(new PopupMenuItem("<"+I18N.gui.get("tabs.code.procedures.none")+">") {
-        setEnabled(false)
-      })
-    }
+    if (visibleItems.isEmpty)
+      menu.add(new PopupMenuItem("<"+I18N.gui.get("tabs.code.procedures.none")+">")).setEnabled(false)
     else
       visibleItems.foreach(menu.add)
   }

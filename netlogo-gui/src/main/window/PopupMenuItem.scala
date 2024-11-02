@@ -28,6 +28,7 @@ class PopupMenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(
   }
 
   setUI(itemUI)
+  syncTheme()
 
   def syncTheme() {
     itemUI.syncTheme()

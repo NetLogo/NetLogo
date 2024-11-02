@@ -3,8 +3,8 @@
 package org.nlogo.app.interfacetab
 
 import java.awt.image.BufferedImage
-import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, KeyListener, MouseEvent }
-import javax.swing.{ JMenuItem, JPopupMenu }
+import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyEvent, KeyListener, MouseEvent }
+import javax.swing.{ AbstractAction, JPopupMenu }
 
 import org.nlogo.api.{ Editable, Exceptions, Version }
 import org.nlogo.app.common.{ FileActions, UndoRedoActions },
@@ -18,7 +18,8 @@ import org.nlogo.editor.{ EditorArea, UndoManager }
 import org.nlogo.log.LogManager
 import org.nlogo.window.{ ButtonWidget, ChooserWidget, Events => WindowEvents,
   GUIWorkspace, InputBoxWidget, InterfaceColors, InterfaceGlobalWidget, MonitorWidget,
-  PlotWidget, SliderWidget, ThemeSync, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
+  PlotWidget, PopupMenuItem, SliderWidget, ThemeSync, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo,
+  WidgetRegistry },
     WindowEvents.{CompileAllEvent, LoadBeginEvent, LoadWidgetsEvent,
     RemoveConstraintEvent, WidgetRemovedEvent }
 import org.nlogo.workspace.Evaluator
@@ -63,7 +64,10 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   ///
 
   override protected def doPopup(e: MouseEvent): Unit = {
-    val menu = new JPopupMenu()
+    val menu = new JPopupMenu
+
+    menu.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+
     Seq(WidgetInfo.button,
       WidgetInfo.slider,
       WidgetInfo.switch,
@@ -88,26 +92,18 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
     // add extra stuff
     menu.add(new JPopupMenu.Separator())
-    menu.add(exportItem)
+    menu.add(new PopupMenuItem(new ExportInterfaceAction(workspace, this)))
 
     menu.show(this, e.getX, e.getY)
   }
 
-  val exportItem: JMenuItem = {
-    val exportAction =
-      new ExportInterfaceAction(workspace, this)
-    new JMenuItem(exportAction)
-  }
-
   class WidgetCreationMenuItem(val displayName: String, val coreWidget: CoreWidget)
-  extends JMenuItem(displayName) with ActionListener {
-    addActionListener(this)
-
-    override def actionPerformed(e: ActionEvent): Unit = {
-      unselectWidgets()
-      createShadowWidget(coreWidget)
-    }
-  }
+    extends PopupMenuItem(new AbstractAction(displayName) {
+      def actionPerformed(e: ActionEvent) {
+        unselectWidgets()
+        createShadowWidget(coreWidget)
+      }
+    })
 
   // This is used both when loading a model and when the user is making
   // new widgets in the UI.  For most widget types, the same type string

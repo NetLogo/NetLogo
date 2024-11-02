@@ -3,9 +3,9 @@
 package org.nlogo.app.interfacetab
 
 import java.awt.{ Component, Cursor, Dimension, Graphics, Point, Rectangle, Color => AwtColor, Toolkit }
-import java.awt.event.{ ActionListener, ActionEvent, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, MouseListener,
-                        MouseMotionAdapter, MouseMotionListener }
-import javax.swing.{ JComponent, JLayeredPane, JMenuItem, JPopupMenu }
+import java.awt.event.{ ActionEvent, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, MouseListener, MouseMotionAdapter,
+                        MouseMotionListener }
+import javax.swing.{ AbstractAction, JComponent, JLayeredPane, JPopupMenu }
 
 import org.nlogo.api.Editable
 import org.nlogo.app.common.EditorFactory
@@ -21,7 +21,7 @@ import org.nlogo.swing.Utils
 import org.nlogo.window.{ AbstractWidgetPanel, Events => WindowEvents,
   GUIWorkspace, InterfaceColors, OutputWidget, Widget, WidgetContainer, WidgetRegistry,
   DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget,
-  PlotWidget },
+  PlotWidget, PopupMenuItem },
     WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, LoadBeginEvent, SelectModeEvent,
       WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent }
 
@@ -407,6 +407,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
   // that seems like bugs waiting to happen. JC - 12/20/10
   protected def doPopup(e: MouseEvent): Unit = {
     val menu = new JPopupMenu()
+
+    menu.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+
     def menuItem(keyName: String, widget: CoreWidget): WidgetCreationMenuItem = {
       new WidgetCreationMenuItem(I18N.gui.get(s"tabs.run.widgets.$keyName"), widget)
     }
@@ -430,13 +433,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   protected class WidgetCreationMenuItem(displayName: String, coreWidget: CoreWidget)
-    extends JMenuItem(displayName) with ActionListener {
-    addActionListener(this)
-
-    override def actionPerformed(e: ActionEvent): Unit = {
-      createShadowWidget(coreWidget)
-    }
-  }
+    extends PopupMenuItem(new AbstractAction(displayName) {
+      def actionPerformed(e: ActionEvent) {
+        createShadowWidget(coreWidget)
+      }
+    })
 
   // This is used both when loading a model and when the user is making
   // new widgets in the UI.  For most widget types, the same type string
