@@ -6,7 +6,7 @@ import java.awt.{ Color, Component, Dimension, Rectangle }
 import java.awt.event.{ FocusListener, FocusEvent,
   KeyEvent, KeyAdapter, MouseAdapter, MouseEvent }
 import java.awt.image.BufferedImage
-import javax.swing.{ JLayeredPane, JPopupMenu, JMenuItem }
+import javax.swing.{ JLayeredPane, JPopupMenu }
 
 import org.nlogo.api.{ CompilerServices, Exceptions, RandomServices, Version }
 import org.nlogo.awt.Images
@@ -161,16 +161,15 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   ///
 
   private def doPopup(e: MouseEvent): Unit = {
-    val menu = new JPopupMenu()
-    def disabledItem(s: String): JMenuItem = {
-      val item = new javax.swing.JMenuItem(s)
-      item.setEnabled(false)
-      item
-    }
-    menu.add(disabledItem(Version.version))
-    menu.add(disabledItem(SysInfo.getOSInfoString))
-    menu.add(disabledItem(SysInfo.getVMInfoString))
-    menu.add(disabledItem(SysInfo.getMemoryInfoString))
+    val menu = new JPopupMenu
+
+    setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+
+    menu.add(new PopupMenuItem(Version.version)).setEnabled(false)
+    menu.add(new PopupMenuItem(SysInfo.getOSInfoString)).setEnabled(false)
+    menu.add(new PopupMenuItem(SysInfo.getVMInfoString)).setEnabled(false)
+    menu.add(new PopupMenuItem(SysInfo.getMemoryInfoString)).setEnabled(false)
+
     menu.show(this, e.getX, e.getY)
   }
 

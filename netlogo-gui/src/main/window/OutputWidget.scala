@@ -3,8 +3,9 @@
 package org.nlogo.window
 
 import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
+import java.awt.event.ActionEvent
+import javax.swing.AbstractAction
 
-import org.nlogo.swing.RichJMenuItem
 import org.nlogo.api.Editable
 import org.nlogo.core.{ I18N, Output => CoreOutput }
 
@@ -57,8 +58,11 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   override def populateContextMenu(menu:javax.swing.JPopupMenu, p:java.awt.Point, source:java.awt.Component) = {
     // at least on Macs, Command-C to copy may not work, so this
     // is needed - ST 4/21/05
-    val copyItem = RichJMenuItem(I18N.gui.get("tabs.run.widget.copyselectedtext")){ outputArea.text.copy }
-    menu.add(copyItem)
+    menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copyselectedtext")) {
+      def actionPerformed(e: ActionEvent) {
+        outputArea.text.copy
+      }
+    }))
     p
   }
 

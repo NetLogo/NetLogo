@@ -2,14 +2,15 @@
 
 package org.nlogo.window
 
-import javax.swing.{JMenuItem, JPopupMenu}
-import org.nlogo.awt.ImageSelection
-import org.nlogo.window.Events.PeriodicUpdateEvent
-import java.awt.{Component, Point}
+import java.awt.{ Component, Point, Toolkit }
+import java.awt.event.ActionEvent
 import java.awt.image.BufferedImage
-import org.nlogo.swing.RichJMenuItem
-import org.nlogo.plot.{PlotManagerInterface, Plot}
+import javax.swing.{ AbstractAction, JMenuItem, JPopupMenu }
+
+import org.nlogo.awt.ImageSelection
 import org.nlogo.core.I18N
+import org.nlogo.plot.{PlotManagerInterface, Plot}
+import org.nlogo.window.Events.PeriodicUpdateEvent
 
 object PlotWidget{
   def apply(name:String, plotManager:PlotManagerInterface): PlotWidget = {
@@ -46,15 +47,20 @@ class PlotWidget(plot:Plot, plotManager: PlotManagerInterface) extends AbstractP
   }
 
   override def populateContextMenu(menu: JPopupMenu, p: Point, source: Component): Point = {
-    val copyItem = RichJMenuItem(I18N.gui.get("edit.plot.copyimage")){
-      java.awt.Toolkit.getDefaultToolkit.getSystemClipboard.setContents(new ImageSelection(exportGraphics), null)
-    }
-    menu.add(copyItem)
+    menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("edit.plot.copyimage")) {
+      def actionPerformed(e: ActionEvent) {
+        Toolkit.getDefaultToolkit.getSystemClipboard.setContents(new ImageSelection(exportGraphics), null)
+      }
+    }))
     p
   }
 
   override def extraMenuItems: List[JMenuItem] = List(
-    RichJMenuItem(I18N.gui.get("edit.plot.clearplot")){ clear() }
+    new PopupMenuItem(new AbstractAction(I18N.gui.get("edit.plot.clearplot")) {
+      def actionPerformed(e: ActionEvent) {
+        clear()
+      }
+    })
   )
 
   def repaintIfNeeded(){

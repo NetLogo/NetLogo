@@ -5,12 +5,13 @@ package org.nlogo.app.common
 // pulled this out of CommandLine.java so I could translate it separately to Scala - ST 8/19/10
 
 import java.awt.{ Font, Insets }
-import java.awt.event.{ ActionEvent, ActionListener, MouseAdapter, MouseEvent }
-import javax.swing.{ JButton, JMenuItem, JPopupMenu }
+import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
+import javax.swing.{ AbstractAction, JButton, JPopupMenu }
 
 import org.nlogo.awt.{ Fonts, Mouse }
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.Utils.icon
+import org.nlogo.window.{ InterfaceColors, PopupMenuItem }
 
 class HistoryPrompt(commandLine: CommandLine) extends JButton {
 
@@ -33,6 +34,9 @@ class HistoryPrompt(commandLine: CommandLine) extends JButton {
 
   private def doPopupMenu() {
     val popMenu = new JPopupMenu(I18N.gui.get("tabs.run.commandcenter.history"))
+
+    popMenu.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+
     for(ex <- commandLine.getExecutionList) {
       val str =
         if(commandLine.agent != null)          // if we're in an agent monitor
@@ -46,31 +50,24 @@ class HistoryPrompt(commandLine: CommandLine) extends JButton {
           }
           prompt + " " + ex.string
         }
-      val item = new JMenuItem(str)
-      item.addActionListener(
-        new ActionListener {
-          override def actionPerformed(e: ActionEvent) {
-            commandLine.setExecutionString(ex)
-            commandLine.requestFocus()}})
-      popMenu.add(item)
+      popMenu.add(new PopupMenuItem(new AbstractAction(str) {
+        def actionPerformed(e: ActionEvent) {
+          commandLine.setExecutionString(ex)
+          commandLine.requestFocus()
+        }
+      }))
     }
-    if(commandLine.getExecutionList.isEmpty) {
-      val noHistoryItem = new JMenuItem(I18N.gui.get("tabs.run.commandcenter.nohistory"))
-      noHistoryItem.setEnabled(false)
-      popMenu.add(noHistoryItem)
-    }
+    if (commandLine.getExecutionList.isEmpty)
+      popMenu.add(new PopupMenuItem(I18N.gui.get("tabs.run.commandcenter.nohistory"))).setEnabled(false)
     else {
       popMenu.add(new JPopupMenu.Separator)
-      val hintItem = new JMenuItem(I18N.gui.get("tabs.run.commandcenter.useArrowKeys"))
-      hintItem.setEnabled(false)
-      popMenu.add(hintItem)
-      val clearHistoryItem = new JMenuItem(I18N.gui.get("tabs.run.commandcenter.clearHistory"))
-      val clearActionListener = new ActionListener {
-        override def actionPerformed(e: ActionEvent) {
-          commandLine.clearList() }}
-      clearHistoryItem.addActionListener(clearActionListener)
+      popMenu.add(new PopupMenuItem(I18N.gui.get("tabs.run.commandcenter.useArrowKeys"))).setEnabled(false)
       popMenu.add(new JPopupMenu.Separator)
-      popMenu.add(clearHistoryItem)
+      popMenu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.commandcenter.clearHistory")) {
+        def actionPerformed(e: ActionEvent) {
+          commandLine.clearList()
+        }
+      }))
     }
     popMenu.show(this, getWidth / 2, getHeight / 2)
   }

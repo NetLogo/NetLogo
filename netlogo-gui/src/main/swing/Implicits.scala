@@ -73,18 +73,6 @@ object RichAction{
   }
 }
 
-// open question
-// can we use structural typing to add this method to anything with an addActionListener method?
-object RichJMenuItem {
-  def apply(name:String)(f: => Unit) = {
-    new JMenuItem(name){
-      addActionListener(new ActionListener{
-        def actionPerformed(e:ActionEvent) { f }
-      })
-    }
-  }
-}
-
 case class RichJComboBox[T](combo: JComboBox[T]) {
   class PossibleSelection(t: T) {
     def becomesSelected(f: => Unit) {

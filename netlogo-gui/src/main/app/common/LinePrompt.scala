@@ -3,11 +3,11 @@
 package org.nlogo.app.common
 
 import java.awt.{ Color, Graphics }
-import java.awt.event.{ MouseAdapter, MouseEvent }
-import javax.swing.{ JLabel, JMenuItem, JPopupMenu }
+import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
+import javax.swing.{ AbstractAction, JLabel, JPopupMenu }
 
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.window.InterfaceColors
+import org.nlogo.window.{ InterfaceColors, PopupMenuItem }
 
 class LinePrompt(commandLine: CommandLine) extends JLabel {
   setText(getPrompt)
@@ -30,22 +30,24 @@ class LinePrompt(commandLine: CommandLine) extends JLabel {
     override def mousePressed(e: MouseEvent)  {
       if (isEnabled) {
         val popMenu = new JPopupMenu("Ask who?")
+
+        popMenu.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+
         def addItem(name: String, clazz: AgentKind) {
-          popMenu.add(new JMenuItem(name) {
-            addActionListener { _ =>
+          popMenu.add(new PopupMenuItem(new AbstractAction(name) {
+            def actionPerformed(e: ActionEvent) {
               commandLine.agentKind(clazz)
               LinePrompt.this.repaint()
               commandLine.requestFocus()
             }
-          })
+          }))
         }
         addItem(I18N.gui.get("common.observer"), AgentKind.Observer)
         addItem(I18N.gui.get("common.turtles"), AgentKind.Turtle)
         addItem(I18N.gui.get("common.patches"), AgentKind.Patch)
         addItem(I18N.gui.get("common.links"), AgentKind.Link)
         popMenu.add(new JPopupMenu.Separator)
-        val hintItem = new JMenuItem(I18N.gui.get("tabs.run.commandcenter.orusetabkey")) {setEnabled(false)}
-        popMenu.add(hintItem)
+        popMenu.add(new PopupMenuItem(I18N.gui.get("tabs.run.commandcenter.orusetabkey"))).setEnabled(false)
         popMenu.show(LinePrompt.this, 0, getHeight)
       }
     }

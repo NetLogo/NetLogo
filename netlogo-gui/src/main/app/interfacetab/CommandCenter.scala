@@ -4,8 +4,8 @@ package org.nlogo.app.interfacetab
 
 import java.awt.{ BorderLayout, Component, Dimension, FileDialog, Font, GridBagConstraints, GridBagLayout,
                   Insets }
-import java.awt.event.{ MouseAdapter, MouseEvent }
-import javax.swing.{ Action, Box, JButton, JLabel, JMenuItem, JPanel, JPopupMenu }
+import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
+import javax.swing.{ AbstractAction, Action, Box, JButton, JLabel, JPanel, JPopupMenu }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.Exceptions
@@ -14,7 +14,8 @@ import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.{ FileDialog => SwingFileDialog, ModalProgressTask, RichAction }
 import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents,
-  InterfaceColors, OutputArea, RoundedBorderPanel, TextMenuActions, ThemeSync, Zoomable }
+                          InterfaceColors, OutputArea, PopupMenuItem, RoundedBorderPanel, TextMenuActions, ThemeSync,
+                          Zoomable }
 import org.nlogo.workspace.{ AbstractWorkspace, ExportOutput }
 
 class CommandCenter(workspace: AbstractWorkspace) extends JPanel
@@ -158,10 +159,12 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
   def getDefaultComponentForFocus(): Component = commandLine.textField
 
   private def doPopup(e: MouseEvent) {
-    new JPopupMenu{
-      add(new JMenuItem(TextMenuActions.CopyAction))
-      add(new JMenuItem(I18N.gui.get("menu.file.export")){
-        addActionListener { _ =>
+    new JPopupMenu {
+      setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+
+      add(new PopupMenuItem(TextMenuActions.CopyAction))
+      add(new PopupMenuItem(new AbstractAction(I18N.gui.get("menu.file.export")) {
+        def actionPerformed(e: ActionEvent) {
           try {
             val filename = SwingFileDialog.showFiles(
               output, I18N.gui.get("tabs.run.commandcenter.exporting"), FileDialog.SAVE,
@@ -173,7 +176,7 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
             case uce: UserCancelException => Exceptions.ignore(uce)
           }
         }
-      })
+      }))
     }.show(this, e.getX, e.getY)
   }
 

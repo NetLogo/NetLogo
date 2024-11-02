@@ -2,22 +2,25 @@
 
 package org.nlogo.window;
 
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.AbstractAction;
+import javax.swing.JPopupMenu;
+
 import org.nlogo.agent.AgentIterator;
-import org.nlogo.core.AgentKindJ;
-import org.nlogo.core.I18N;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentFollowingPerspective;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.RendererInterface;
+import org.nlogo.awt.Colors;
 import org.nlogo.awt.ImageSelection;
-import scala.Option;
+import org.nlogo.core.AgentKindJ;
+import org.nlogo.core.I18N;
 
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import scala.Option;
 
 public class View
     extends javax.swing.JComponent
@@ -442,48 +445,37 @@ public class View
     // the only ones that do are watch, follow and reset-perspective
     // this check (and others below) prevent items from being added
     // when we are running in Applet. JC - 6/8/10
-    JMenuItem copyItem = new JMenuItem(I18N.guiJ().get("tabs.run.widget.view.copy"));
-    copyItem.addActionListener(new ActionListener() {
+    menu.add(new PopupMenuItem(new AbstractAction(I18N.guiJ().get("tabs.run.widget.view.copy")) {
       public void actionPerformed(ActionEvent e) {
-        java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
           new ImageSelection(exportView()), null);
       }
-    });
-    menu.add(copyItem);
-    JMenuItem exportItem = new JMenuItem(I18N.guiJ().get("tabs.run.widget.view.export"));
-    exportItem.addActionListener(new ActionListener() {
+    }, true));
+    menu.add(new PopupMenuItem(new AbstractAction(I18N.guiJ().get("tabs.run.widget.view.export")) {
       public void actionPerformed(ActionEvent e) {
         workspace.doExportView(View.this);
       }
-    });
-    menu.add(exportItem);
+    }, true));
 
-    JMenuItem open3DView = new JMenuItem(workspace.switchTo3DViewAction);
-    menu.add(open3DView);
+    menu.add(new PopupMenuItem(workspace.switchTo3DViewAction, true));
 
     menu.add(new JPopupMenu.Separator());
 
-    JMenuItem inspectGlobalsItem = new JMenuItem(I18N.guiJ().get("tabs.run.widget.view.inspectGlobals"));
-    inspectGlobalsItem.addActionListener(new ActionListener() {
+    menu.add(new PopupMenuItem(new AbstractAction(I18N.guiJ().get("tabs.run.widget.view.inspectGlobals")) {
       public void actionPerformed(ActionEvent actionEvent) {
         workspace.inspectAgent(AgentKindJ.Observer());
       }
-    });
-    menu.add(inspectGlobalsItem);
+    }, true));
 
     if (!workspace.world().observer().atHome2D()) {
       menu.add(new JPopupMenu.Separator());
-      JMenuItem resetItem =
-        new JMenuItem(
-            "<html>"
-            + org.nlogo.awt.Colors.colorize("reset-perspective", InterfaceColors.COMMAND_COLOR()));
-      resetItem.addActionListener(new ActionListener() {
+      menu.add(new PopupMenuItem(new AbstractAction(
+        "<html>" + Colors.colorize("reset-perspective", InterfaceColors.COMMAND_COLOR())) {
         public void actionPerformed(ActionEvent e) {
           workspace.world().observer().resetPerspective();
           workspace.viewManager().incrementalUpdateFromEventThread();
         }
-      });
-      menu.add(resetItem);
+      }, true));
     }
     p = new java.awt.Point(p);
     mouser.translatePointToXCorYCor(p);
@@ -604,24 +596,16 @@ public class View
   enum AgentMenuType {INSPECT, FOLLOW, WATCH}
 
   private class AgentMenuItem
-      extends javax.swing.JMenuItem {
+      extends PopupMenuItem {
     org.nlogo.agent.Agent agent;
     AgentMenuType type;
     boolean submenu = false;
 
     AgentMenuItem(org.nlogo.agent.Agent agent, AgentMenuType type, String caption, boolean submenu) {
-      super("<html>"
-          + org.nlogo.awt.Colors.colorize(
-          caption,
-          InterfaceColors.COMMAND_COLOR())
-          + " "
-          + org.nlogo.awt.Colors.colorize(
-          agent.classDisplayName(),
-          InterfaceColors.REPORTER_COLOR())
-          + org.nlogo.awt.Colors.colorize(
-          agent.toString().substring(agent.classDisplayName().length()),
-          InterfaceColors.CONSTANT_COLOR())
-      );
+      super("<html>" + org.nlogo.awt.Colors.colorize(caption, InterfaceColors.COMMAND_COLOR()) + " " +
+            org.nlogo.awt.Colors.colorize(agent.classDisplayName(), InterfaceColors.REPORTER_COLOR()) +
+            org.nlogo.awt.Colors.colorize(agent.toString().substring(agent.classDisplayName().length()),
+            InterfaceColors.CONSTANT_COLOR()));
       this.agent = agent;
       this.type = type;
       addActionListener(View.this);
