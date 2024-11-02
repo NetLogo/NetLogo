@@ -843,7 +843,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     if (interfacePanel != null) {
       val menu = new WrappingPopupMenu
 
-      menu.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      menu.setBackground(InterfaceColors.POPUP_BACKGROUND)
 
       val p = populateContextMenu(menu, e.getPoint, e.getSource.asInstanceOf[Component])
 

@@ -26,7 +26,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
   enableHover()
 
   override def populate(menu: JPopupMenu) {
-    menu.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    menu.setBackground(InterfaceColors.POPUP_BACKGROUND)
 
     val procsTable = {
       target.compiler.findProcedurePositions(target.getText)
@@ -61,7 +61,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
     }
 
     val filterField = new JTextField {
-      setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      setBackground(InterfaceColors.POPUP_BACKGROUND)
       setForeground(InterfaceColors.TOOLBAR_TEXT)
       setCaretColor(InterfaceColors.TOOLBAR_TEXT)
     }

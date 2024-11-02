@@ -20,7 +20,7 @@ class Picker(view: View) extends PickListener with ActionListener {
 
     val menu = new WrappingPopupMenu
 
-    menu.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    menu.setBackground(InterfaceColors.POPUP_BACKGROUND)
 
     menu.add(new PopupMenuItem(new AbstractAction("Edit...") {
       def actionPerformed(e: ActionEvent) {

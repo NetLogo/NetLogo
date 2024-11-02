@@ -258,7 +258,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
       arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
 
-      popup.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      popup.setBackground(InterfaceColors.POPUP_BACKGROUND)
 
       actions.foreach(_.syncTheme())
     }
@@ -380,7 +380,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
       arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
 
-      popup.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      popup.setBackground(InterfaceColors.POPUP_BACKGROUND)
 
       popup.getComponents.foreach(_ match {
         case p: PopupMenuItem => p.syncTheme()

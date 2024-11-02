@@ -437,6 +437,12 @@ object InterfaceColors {
   
   def MENU_TEXT_DISABLED = MEDIUM_GRAY
 
+  def POPUP_BACKGROUND =
+    theme match {
+      case "classic" | "light" => Color.WHITE
+      case "dark" => DARK_BLUE_GRAY
+    }
+  
   // Syntax highlighting colors
 
   def COMMENT_COLOR = new Color(90, 90, 90) // gray

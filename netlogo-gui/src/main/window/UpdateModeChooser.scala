@@ -81,7 +81,7 @@ class UpdateModeChooser(workspace: GUIWorkspace) extends JPanel(new GridBagLayou
 
     arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
 
-    popup.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    popup.setBackground(InterfaceColors.POPUP_BACKGROUND)
 
     continuousAction.syncTheme()
     onTicksAction.syncTheme()

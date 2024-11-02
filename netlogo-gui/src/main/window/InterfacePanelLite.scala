@@ -163,7 +163,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   private def doPopup(e: MouseEvent): Unit = {
     val menu = new JPopupMenu
 
-    setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    menu.setBackground(InterfaceColors.POPUP_BACKGROUND)
 
     menu.add(new PopupMenuItem(Version.version)).setEnabled(false)
     menu.add(new PopupMenuItem(SysInfo.getOSInfoString)).setEnabled(false)

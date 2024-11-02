@@ -35,7 +35,7 @@ class HistoryPrompt(commandLine: CommandLine) extends JButton {
   private def doPopupMenu() {
     val popMenu = new JPopupMenu(I18N.gui.get("tabs.run.commandcenter.history"))
 
-    popMenu.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    popMenu.setBackground(InterfaceColors.POPUP_BACKGROUND)
 
     for(ex <- commandLine.getExecutionList) {
       val str =

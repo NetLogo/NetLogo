@@ -160,7 +160,7 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
 
   private def doPopup(e: MouseEvent) {
     new JPopupMenu {
-      setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      setBackground(InterfaceColors.POPUP_BACKGROUND)
 
       add(new PopupMenuItem(TextMenuActions.CopyAction))
       add(new PopupMenuItem(new AbstractAction(I18N.gui.get("menu.file.export")) {

@@ -31,7 +31,7 @@ class LinePrompt(commandLine: CommandLine) extends JLabel {
       if (isEnabled) {
         val popMenu = new JPopupMenu("Ask who?")
 
-        popMenu.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+        popMenu.setBackground(InterfaceColors.POPUP_BACKGROUND)
 
         def addItem(name: String, clazz: AgentKind) {
           popMenu.add(new PopupMenuItem(new AbstractAction(name) {

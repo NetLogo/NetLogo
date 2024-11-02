@@ -408,7 +408,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   protected def doPopup(e: MouseEvent): Unit = {
     val menu = new JPopupMenu()
 
-    menu.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    menu.setBackground(InterfaceColors.POPUP_BACKGROUND)
 
     def menuItem(keyName: String, widget: CoreWidget): WidgetCreationMenuItem = {
       new WidgetCreationMenuItem(I18N.gui.get(s"tabs.run.widgets.$keyName"), widget)
