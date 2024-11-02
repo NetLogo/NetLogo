@@ -42,10 +42,12 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
     add(displaySwitch, c)
 
     c.gridy = 1
+    c.fill = GridBagConstraints.HORIZONTAL
     c.insets = new Insets(0, 0, 6, 12)
 
     add(updateModeChooser, c)
 
+    c.fill = GridBagConstraints.NONE
     c.insets = new Insets(0, 0, 6, 6)
 
     add(settingsButton, c)

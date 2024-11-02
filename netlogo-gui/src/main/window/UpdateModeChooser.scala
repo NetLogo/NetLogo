@@ -2,42 +2,73 @@
 
 package org.nlogo.window
 
-import java.awt.Component
-import java.awt.event.{ ItemEvent, ItemListener }
-import javax.swing.{ JComboBox, JLabel, JList, ListCellRenderer }
-import javax.swing.border.EmptyBorder
+import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
+import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
+import javax.swing.{ AbstractAction, JLabel, JPanel, JPopupMenu }
 
-import org.nlogo.core.{ I18N, UpdateMode }, I18N.Prefix
-import org.nlogo.swing.HoverDecoration
+import org.nlogo.core.{ I18N, UpdateMode }
+import org.nlogo.swing.DropdownArrow
 
-object UpdateModeChooser {
-  private val Choices = Seq(UpdateMode.TickBased, UpdateMode.Continuous)
-}
+class UpdateModeChooser(workspace: GUIWorkspace) extends JPanel(new GridBagLayout) with RoundedBorderPanel
+                                                 with ThemeSync {
+  implicit val prefix = I18N.Prefix("tabs.run.viewUpdates")
 
-import UpdateModeChooser._
-
-class UpdateModeChooser(workspace: GUIWorkspace) extends JComboBox[UpdateMode](Choices.toArray[UpdateMode])
-  with ItemListener with RoundedBorderPanel with ThemeSync with HoverDecoration {
-  implicit val prefix = Prefix("tabs.run.viewUpdates")
-
-  setBorder(new EmptyBorder(2, 0, 2, 0))
   setDiameter(6)
   enableHover()
 
   setToolTipText(I18N.gui("dropdown.tooltip"))
   setFocusable(false)
-  setRenderer(new UpdateModeRenderer(getRenderer))
-  addItemListener(this)
 
-  def itemStateChanged(e: ItemEvent): Unit = {
-    e.getItem match {
-      case mode: UpdateMode => workspace.updateMode(mode)
-      case _                => // ItemEvent.getItem is an AnyRef, but should *always* be an UpdateMode
-    }
+  private val label = new JLabel(I18N.gui("dropdown.continuous"))
+  private val arrow = new DropdownArrow
+
+  locally {
+    val c = new GridBagConstraints
+
+    c.weightx = 1
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.insets = new Insets(4, 6, 4, 6)
+
+    add(label, c)
+
+    c.weightx = 0
+    c.fill = GridBagConstraints.NONE
+
+    add(arrow, c)
   }
 
+  addMouseListener(new MouseAdapter {
+    override def mousePressed(e: MouseEvent) {
+      popup.show(UpdateModeChooser.this, 0, getHeight)
+    }
+  })
+
+  private val popup = new JPopupMenu
+
+  private val continuousAction = new PopupMenuItem(new AbstractAction(I18N.gui("dropdown.continuous")) {
+    def actionPerformed(e: ActionEvent) {
+      label.setText(I18N.gui("dropdown.continuous"))
+
+      workspace.updateMode(UpdateMode.Continuous)
+    }
+  })
+
+  val onTicksAction = new PopupMenuItem(new AbstractAction(I18N.gui("dropdown.onticks")) {
+    def actionPerformed(e: ActionEvent) {
+      label.setText(I18N.gui("dropdown.onticks"))
+
+      workspace.updateMode(UpdateMode.TickBased)
+    }
+  })
+
+  popup.add(continuousAction)
+  popup.add(onTicksAction)
+
   def refreshSelection(): Unit = {
-    setSelectedItem(workspace.updateMode())
+    workspace.updateMode() match {
+      case UpdateMode.Continuous => label.setText(I18N.gui("dropdown.continuous"))
+      case UpdateMode.TickBased => label.setText(I18N.gui("dropdown.onticks"))
+    }
   }
 
   def syncTheme() {
@@ -45,19 +76,14 @@ class UpdateModeChooser(workspace: GUIWorkspace) extends JComboBox[UpdateMode](C
     setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
     setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
     setForeground(InterfaceColors.TOOLBAR_TEXT)
-  }
 
-  private class UpdateModeRenderer(delegateRenderer: ListCellRenderer[_ >: UpdateMode]) extends ListCellRenderer[UpdateMode] {
-    def getListCellRendererComponent(list: JList[_ <: UpdateMode], value: UpdateMode, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component = {
-      (delegateRenderer.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus), value) match {
-        case (label: JLabel, UpdateMode.Continuous) =>
-          label.setText(I18N.gui("dropdown.continuous"))
-          label
-        case (label: JLabel, UpdateMode.TickBased) =>
-          label.setText(I18N.gui("dropdown.onticks"))
-          label
-        case (cell, _) => cell
-      }
-    }
+    label.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
+
+    popup.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+
+    continuousAction.syncTheme()
+    onTicksAction.syncTheme()
   }
 }
