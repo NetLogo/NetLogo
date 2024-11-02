@@ -82,6 +82,12 @@ object InterfaceColors {
   
   def COMMAND_CENTER_TEXT = WIDGET_TEXT
 
+  def LOCATION_TOGGLE_IMAGE =
+    theme match {
+      case "classic" | "light" => Color.BLACK
+      case "dark" => Color.WHITE
+    }
+
   def COMMAND_LINE_BACKGROUND =
     theme match {
       case "classic" | "light" => Color.WHITE

@@ -36,7 +36,7 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
   })
 
   private val locationToggleButton = new JButton with RoundedBorderPanel with ThemeSync {
-    setBorder(new EmptyBorder(3, 3, 3, 3))
+    setBorder(new EmptyBorder(3, 5, 3, 6))
     setFocusable(false)
     setDiameter(6)
     enableHover()
@@ -45,8 +45,6 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
       setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
       setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
       setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-
-      // set image here
     }
   }
 

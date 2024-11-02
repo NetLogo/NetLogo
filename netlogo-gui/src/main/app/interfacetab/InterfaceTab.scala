@@ -14,8 +14,8 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, UserAction, Utils },
                        Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
 import org.nlogo.swing.{ Utils => SwingUtils }
-import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace, ThemeSync, ViewUpdatePanel, WidgetInfo,
-                          Events => WindowEvents, WorkspaceActions },
+import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace, InterfaceColors, ThemeSync, ViewUpdatePanel,
+                          WidgetInfo, Events => WindowEvents, WorkspaceActions },
                         WindowEvents.{ Enable2DEvent, LoadBeginEvent, OutputEvent }
 
 object InterfaceTab {
@@ -38,7 +38,8 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   setFocusCycleRoot(true)
   setFocusTraversalPolicy(new InterfaceTabFocusTraversalPolicy)
-  commandCenter.locationToggleAction = new CommandCenterLocationToggleAction
+  private val locationToggleAction = new CommandCenterLocationToggleAction
+  commandCenter.locationToggleAction = locationToggleAction
   val iP = new InterfacePanel(workspace.viewWidget, workspace)
 
   val commandCenterToggleAction = new CommandCenterToggleAction()
@@ -174,20 +175,27 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   /// command center stuff
 
-  private class CommandCenterLocationToggleAction extends AbstractAction {
-    putValue(Action.SMALL_ICON, Utils.iconScaled("/images/shift-right.png", 10, 10))
-
+  private class CommandCenterLocationToggleAction extends AbstractAction with ThemeSync {
     override def actionPerformed(e: ActionEvent) {
       splitPane.getOrientation match {
-        case JSplitPane.VERTICAL_SPLIT =>
-          splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT)
-          putValue(Action.SMALL_ICON, Utils.iconScaled("/images/shift-right.png", 10, 10))
-        case JSplitPane.HORIZONTAL_SPLIT =>
-          splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT)
-          putValue(Action.SMALL_ICON, Utils.iconScaled("/images/shift-bottom.png", 10, 10))
+        case JSplitPane.VERTICAL_SPLIT => splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT)
+        case JSplitPane.HORIZONTAL_SPLIT => splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT)
       }
 
       splitPane.resetToPreferredSizes()
+
+      syncTheme()
+    }
+
+    def syncTheme() {
+      splitPane.getOrientation match {
+        case JSplitPane.VERTICAL_SPLIT =>
+          putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shift-bottom.png", 10, 10,
+                                                                InterfaceColors.LOCATION_TOGGLE_IMAGE))
+        case JSplitPane.HORIZONTAL_SPLIT =>
+          putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shift-right.png", 10, 10,
+                                                                InterfaceColors.LOCATION_TOGGLE_IMAGE))
+      }
     }
   }
 
@@ -250,5 +258,6 @@ class InterfaceTab(workspace: GUIWorkspace,
     viewUpdatePanel.syncTheme()
     iP.syncTheme()
     commandCenter.syncTheme()
+    locationToggleAction.syncTheme()
   }
 }
