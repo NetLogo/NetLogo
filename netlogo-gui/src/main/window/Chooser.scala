@@ -141,8 +141,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
 
     comboBox.addItemListener(new ItemListener {
       override def itemStateChanged(e: ItemEvent) {
-        if (hasFocus)
-          index(comboBox.getSelectedIndex)
+        index(comboBox.getSelectedIndex)
       }
     })
 
