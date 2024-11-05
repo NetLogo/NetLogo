@@ -40,7 +40,7 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
   }
 
   override def populate(menu: JPopupMenu) = {
-    menu.setBackground(InterfaceColors.POPUP_BACKGROUND)
+    menu.setBackground(InterfaceColors.MENU_BACKGROUND)
     includesTable match {
       case Some(includePaths) =>
         val filtered =

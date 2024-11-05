@@ -11,8 +11,11 @@ package org.nlogo.editor
 import java.awt.{ Component, Dimension, Point, Toolkit }
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.{ FocusListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ Action, JMenuItem, JEditorPane, JPopupMenu }
+import javax.swing.{ Action, JEditorPane, JPopupMenu }
 import javax.swing.text.{ Document, TextAction, PlainDocument, BadLocationException }
+
+import org.nlogo.swing.PopupMenuItem
+import org.nlogo.theme.InterfaceColors
 
 import KeyBinding.keystroke
 
@@ -190,19 +193,16 @@ class EditorArea(val configuration: EditorConfiguration)
   }
 
   private class EditorContextMenu(colorizer: Colorizer) extends JPopupMenu {
-    val copyItem  = new JMenuItem(Actions.CopyAction)
-    val cutItem   = new JMenuItem(Actions.CutAction)
-    val pasteItem = new JMenuItem(Actions.PasteAction)
+    val copyItem  = new PopupMenuItem(Actions.CopyAction)
+    val cutItem   = new PopupMenuItem(Actions.CutAction)
+    val pasteItem = new PopupMenuItem(Actions.PasteAction)
+    val contextItems = configuration.contextActions.map(new PopupMenuItem(_))
 
-    locally {
-      add(copyItem)
-      add(cutItem)
-      add(pasteItem)
-      addSeparator()
-      for (item <- configuration.contextActions) {
-        add(new JMenuItem(item))
-      }
-    }
+    add(copyItem)
+    add(cutItem)
+    add(pasteItem)
+    addSeparator()
+    contextItems.foreach(add)
 
     override def show(invoker: Component, x: Int, y: Int): Unit = {
       val text = EditorArea.this.getSelectedText
@@ -217,6 +217,11 @@ class EditorArea(val configuration: EditorConfiguration)
         case e: EditorAwareAction => e.updateEditorInfo(EditorArea.this, point, mousePos)
         case _ =>
       }
+      setBackground(InterfaceColors.MENU_BACKGROUND)
+      copyItem.syncTheme()
+      cutItem.syncTheme()
+      pasteItem.syncTheme()
+      contextItems.foreach(_.syncTheme())
       super.show(invoker, x, y)
     }
   }

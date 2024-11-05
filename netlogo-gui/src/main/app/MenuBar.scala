@@ -62,7 +62,7 @@ class MenuBar(isApplicationWide: Boolean) extends JMenuBar with EditorMenu with 
   override def paintComponent(g: Graphics) {
     val g2d = Utils.initGraphics2D(g)
 
-    g2d.setColor(InterfaceColors.TOOLBAR_BACKGROUND)
+    g2d.setColor(InterfaceColors.MENU_BACKGROUND)
     g2d.fillRect(0, 0, getWidth, getHeight)
   }
 

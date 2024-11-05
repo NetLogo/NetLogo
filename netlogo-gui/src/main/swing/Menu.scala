@@ -52,7 +52,7 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
   override def getPopupMenu: JPopupMenu = {
     val menu = super.getPopupMenu
 
-    menu.setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
+    menu.setBackground(InterfaceColors.MENU_BACKGROUND)
 
     menu
   }
@@ -168,9 +168,7 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
     menuUI.syncTheme()
 
     getMenuComponents.foreach(_ match {
-      case m: Menu => m.syncTheme()
-      case p: PopupMenuItem => p.syncTheme()
-      case p: PopupCheckBoxMenuItem => p.syncTheme()
+      case ts: ThemeSync => ts.syncTheme()
       case _ =>
     })
   }

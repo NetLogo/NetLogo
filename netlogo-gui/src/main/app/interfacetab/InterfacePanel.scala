@@ -66,7 +66,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   override protected def doPopup(e: MouseEvent): Unit = {
     val menu = new JPopupMenu
 
-    menu.setBackground(InterfaceColors.POPUP_BACKGROUND)
+    menu.setBackground(InterfaceColors.MENU_BACKGROUND)
 
     Seq(WidgetInfo.button,
       WidgetInfo.slider,

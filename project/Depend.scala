@@ -52,7 +52,7 @@ object Depend {
       "core/prim" -> List("core"),
       "core/model" -> List("core"),
       "drawing" -> List("api"),
-      "editor" -> List("core"),
+      "editor" -> List("core", "swing"),
       "generate" -> List("prim", "prim/dead", "prim/threed"),
       "generate" -> List("prim"), // for headless
       "gl/render" -> List("shape"),

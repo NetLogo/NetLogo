@@ -2,12 +2,16 @@
 
 package org.nlogo.editor
 
+import java.awt.Component
 import java.awt.event.{ KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ Action, JMenu, JPopupMenu }
+import javax.swing.{ Action, JMenu, JMenuItem, JPopupMenu }
 import javax.swing.text.EditorKit
 
 import org.fife.ui.rtextarea.RTextArea
 import org.fife.ui.rsyntaxtextarea.{ RSyntaxTextArea, Theme }
+
+import org.nlogo.swing.{ Menu, PopupMenuItem }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class AdvancedEditorArea(val configuration: EditorConfiguration)
   extends RSyntaxTextArea(configuration.rows, configuration.columns) with AbstractEditorArea {
@@ -39,16 +43,37 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   }
 
   override def createPopupMenu(): JPopupMenu = {
-    val popupMenu = super.createPopupMenu
-    val toggleFolds = new ToggleFoldsAction(this)
-    popupMenu.getComponents.last match {
-      case foldMenu: JMenu => foldMenu.add(toggleFolds)
-      case _               => popupMenu.add(toggleFolds)
+    new JPopupMenu {
+      // RSyntaxTextArea creates menu items that don't sync with the color theme,
+      // so we have to convert them to the synced versions (IB 11/5/24)
+      AdvancedEditorArea.super.createPopupMenu.getComponents.foreach(_ match {
+        case menu: JMenu => add(new Menu(menu.getText) {
+          menu.getMenuComponents.foreach(_ match {
+            case item: JMenuItem => add(new PopupMenuItem(item.getAction))
+          })
+          add(new PopupMenuItem(new ToggleFoldsAction(AdvancedEditorArea.this)))
+        })
+        case item: JMenuItem => add(new PopupMenuItem(item.getAction))
+        case separator: JPopupMenu.Separator => addSeparator()
+      })
+
+      addSeparator()
+
+      configuration.contextActions.foreach(action => add(new PopupMenuItem(action)))
+
+      addPopupMenuListener(new SuspendCaretPopupListener(AdvancedEditorArea.this))
+
+      override def show(component: Component, x: Int, y: Int) {
+        setBackground(InterfaceColors.MENU_BACKGROUND)
+
+        getComponents.foreach(_ match {
+          case ts: ThemeSync => ts.syncTheme()
+          case _ =>
+        })
+
+        super.show(component, x, y)
+      }
     }
-    popupMenu.addSeparator()
-    configuration.contextActions.foreach(popupMenu.add)
-    popupMenu.addPopupMenuListener(new SuspendCaretPopupListener(this))
-    popupMenu
   }
 
   def setIndenter(indenter: Indenter): Unit = {
