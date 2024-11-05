@@ -187,11 +187,11 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   }
 
   class WidgetMenu extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with HoverDecoration {
-    setDiameter(6)
-    enableHover()
-
     private val label = new JLabel(I18N.gui.get("tabs.run.addWidget"))
     private val arrow = new DropdownArrow
+
+    setDiameter(6)
+    enableHover()
 
     locally {
       val c = new GridBagConstraints
@@ -270,65 +270,57 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       add(arrow, c)
     }
 
-    private val leftAction = new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft"),
-                                                Utils.iconScaled("/images/align-left.png", 16, 16)) {
+    private val leftAction = new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft")) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignLeft(wPanel.getWrapper(selectedObjects.minBy(_.getParent.getX)))
       }
     })
 
     private val centerHorizontalAction = new PopupMenuItem(
-      new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterHorizontal"),
-                         Utils.iconScaled("/images/align-horizontal-center.png", 16, 16)) {
+      new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterHorizontal")) {
         def actionPerformed(e: ActionEvent) {
           wPanel.alignCenterHorizontal(wPanel.getWrapper(selectedObjects.head))
         }
       })
 
-    private val rightAction = new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight"),
-                                                 Utils.iconScaled("/images/align-right.png", 16, 16)) {
+    private val rightAction = new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight")) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignRight(wPanel.getWrapper(selectedObjects.maxBy(_.getParent.getX)))
       }
     })
 
-    private val topAction = new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop"),
-                                               Utils.iconScaled("/images/align-top.png", 16, 16)) {
+    private val topAction = new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop")) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignTop(wPanel.getWrapper(selectedObjects.minBy(_.getParent.getY)))
       }
     })
 
-    private val centerVerticalAction = new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterVertical"),
-                                                          Utils.iconScaled("/images/align-vertical-center.png",
-                                                                           16, 16)) {
-      def actionPerformed(e: ActionEvent) {
-        wPanel.alignCenterVertical(wPanel.getWrapper(selectedObjects.head))
-      }
-    })
+    private val centerVerticalAction = new PopupMenuItem(
+      new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterVertical")) {
+        def actionPerformed(e: ActionEvent) {
+          wPanel.alignCenterVertical(wPanel.getWrapper(selectedObjects.head))
+        }
+      })
 
-    private val bottomAction = new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom"),
-                                                  Utils.iconScaled("/images/align-bottom.png", 16, 16)) {
+    private val bottomAction = new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom")) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignBottom(wPanel.getWrapper(selectedObjects.maxBy(_.getParent.getY)))
       }
     })
 
-    private val distributeHorizontalAction = new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.distributeHorizontal"),
-                                                                Utils.iconScaled("/images/distribute-horizontal.png",
-                                                                                 16, 16)) {
-      def actionPerformed(e: ActionEvent) {
-        wPanel.distributeHorizontal()
-      }
-    })
+    private val distributeHorizontalAction = new PopupMenuItem(
+      new AbstractAction(I18N.gui.get("tabs.run.widget.distributeHorizontal")) {
+        def actionPerformed(e: ActionEvent) {
+          wPanel.distributeHorizontal()
+        }
+      })
 
-    private val distributeVerticalAction = new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.distributeVertical"),
-                                                              Utils.iconScaled("/images/distribute-vertical.png",
-                                                                               16, 16)) {
-      def actionPerformed(e: ActionEvent) {
-        wPanel.distributeVertical()
-      }
-    })
+    private val distributeVerticalAction = new PopupMenuItem(
+      new AbstractAction(I18N.gui.get("tabs.run.widget.distributeVertical")) {
+        def actionPerformed(e: ActionEvent) {
+          wPanel.distributeVertical()
+        }
+      })
 
     private val popup = new JPopupMenu
 
@@ -374,6 +366,19 @@ class InterfaceToolBar(wPanel: WidgetPanel,
         case p: PopupMenuItem => p.syncTheme()
         case _ =>
       })
+
+      leftAction.setIcon(Utils.iconScaledWithColor("/images/align-left.png", 16, 16, InterfaceColors.TOOLBAR_IMAGE))
+      centerHorizontalAction.setIcon(Utils.iconScaledWithColor("/images/align-horizontal-center.png", 16, 16,
+                                                               InterfaceColors.TOOLBAR_IMAGE))
+      rightAction.setIcon(Utils.iconScaledWithColor("/images/align-right.png", 16, 16, InterfaceColors.TOOLBAR_IMAGE))
+      topAction.setIcon(Utils.iconScaledWithColor("/images/align-top.png", 16, 16, InterfaceColors.TOOLBAR_IMAGE))
+      centerVerticalAction.setIcon(Utils.iconScaledWithColor("/images/align-vertical-center.png", 16, 16,
+                                                             InterfaceColors.TOOLBAR_IMAGE))
+      bottomAction.setIcon(Utils.iconScaledWithColor("/images/align-bottom.png", 16, 16, InterfaceColors.TOOLBAR_IMAGE))
+      distributeHorizontalAction.setIcon(Utils.iconScaledWithColor("/images/distribute-horizontal.png", 16, 16,
+                                                                   InterfaceColors.TOOLBAR_IMAGE))
+      distributeVerticalAction.setIcon(Utils.iconScaledWithColor("/images/distribute-vertical.png", 16, 16,
+                                                                 InterfaceColors.TOOLBAR_IMAGE))
     }
   }
 }
