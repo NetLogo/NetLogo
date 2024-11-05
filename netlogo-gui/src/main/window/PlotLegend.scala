@@ -6,6 +6,7 @@ import java.awt.{ Color, Dimension, Graphics }
 import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.plot.{ Plot, PlotPen }
+import org.nlogo.theme.InterfaceColors
 
 class PlotLegend(plot: Plot) extends JPanel {
   setOpaque(false)

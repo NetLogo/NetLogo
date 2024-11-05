@@ -10,13 +10,14 @@ import javax.swing.{ Action, BorderFactory, JButton, JLabel, JOptionPane, JPanel
 import org.nlogo.api.{ FileIO, LibraryInfoDownloader, LibraryManager }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ ProgressListener, SwingWorker }
+import org.nlogo.theme.ThemeSync
 
 class LibrariesDialog( parent:          Frame
                      , manager:         LibraryManager
                      , recompile:       () => Unit
                      , updateSource:    ((String) => String) => Unit
                      , extPathMappings: Map[String, Path]
-                     ) extends ToolDialog(parent, "libraries") {
+                     ) extends ToolDialog(parent, "libraries") with ThemeSync {
 
   private lazy val bottomPanelBorder =
     BorderFactory.createCompoundBorder(
@@ -105,4 +106,7 @@ class LibrariesDialog( parent:          Frame
     }
   }
 
+  def syncTheme() {
+
+  }
 }

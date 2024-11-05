@@ -11,7 +11,8 @@ import org.nlogo.awt.EventQueue
 import org.nlogo.core.I18N
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.ToolBarMenu
-import org.nlogo.window.{ InterfaceColors, PopupMenuItem, RoundedBorderPanel, ThemeSync }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.{ PopupMenuItem, RoundedBorderPanel }
 
 class ProceduresMenu(target: ProceduresMenuTarget)
 extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPanel with ThemeSync {

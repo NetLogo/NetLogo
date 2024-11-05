@@ -15,6 +15,7 @@ import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ CompilerServices, Dump, Editable, MersenneTwisterFast }
 import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical }
 import org.nlogo.swing.Utils
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent,
                                  InputBoxLoseFocusEvent }
 

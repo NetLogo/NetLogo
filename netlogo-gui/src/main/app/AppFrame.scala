@@ -8,7 +8,8 @@ import javax.swing.{ JFrame, WindowConstants }
 
 import org.nlogo.api.Exceptions
 import org.nlogo.awt.{ Images, UserCancelException }
-import org.nlogo.window.{ LinkRoot, ThemeSync }
+import org.nlogo.theme.ThemeSync
+import org.nlogo.window.LinkRoot
 import org.nlogo.window.Event.LinkParent
 import org.nlogo.window.Events.IconifiedEvent
 

@@ -16,12 +16,11 @@ import org.nlogo.core.{
   TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, UndoManager }
 import org.nlogo.log.LogManager
-import org.nlogo.window.{ ButtonWidget, ChooserWidget, Events => WindowEvents,
-  GUIWorkspace, InputBoxWidget, InterfaceColors, InterfaceGlobalWidget, MonitorWidget,
-  PlotWidget, PopupMenuItem, SliderWidget, ThemeSync, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo,
-  WidgetRegistry },
-    WindowEvents.{CompileAllEvent, LoadBeginEvent, LoadWidgetsEvent,
-    RemoveConstraintEvent, WidgetRemovedEvent }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.{ ButtonWidget, ChooserWidget, Events => WindowEvents, GUIWorkspace, InputBoxWidget,
+                          InterfaceGlobalWidget, MonitorWidget, PlotWidget, PopupMenuItem, SliderWidget, ViewWidget,
+                          ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
+  WindowEvents.{ CompileAllEvent, LoadBeginEvent, LoadWidgetsEvent, RemoveConstraintEvent, WidgetRemovedEvent }
 import org.nlogo.workspace.Evaluator
 
 class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspace)

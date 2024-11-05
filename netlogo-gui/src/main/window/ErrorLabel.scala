@@ -7,6 +7,7 @@ import javax.swing.JLabel
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.swing.Utils
+import org.nlogo.theme.InterfaceColors
 
 class ErrorLabel extends JLabel {
 

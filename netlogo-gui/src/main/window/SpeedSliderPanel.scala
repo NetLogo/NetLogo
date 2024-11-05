@@ -9,6 +9,7 @@ import javax.swing.event.{ ChangeEvent, ChangeListener }
 
 import org.nlogo.core.I18N
 import org.nlogo.log.LogManager
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.LoadBeginEvent
 
 class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) extends JPanel

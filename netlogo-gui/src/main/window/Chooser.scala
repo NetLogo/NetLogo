@@ -10,6 +10,7 @@ import org.nlogo.agent.ChooserConstraint
 import org.nlogo.api.{ CompilerServices, Dump }
 import org.nlogo.core.{ I18N, LogoList }
 import org.nlogo.swing.Utils
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object Chooser {
   // visual parameters

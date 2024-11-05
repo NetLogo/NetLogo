@@ -12,7 +12,8 @@ import org.nlogo.awt.{ Colors, ImageSelection }, Colors.colorize
 import org.nlogo.core.AgentKind
 import org.nlogo.gl.render.PickListener
 import org.nlogo.swing.WrappingPopupMenu
-import org.nlogo.window.{ InterfaceColors, PopupMenuItem }
+import org.nlogo.theme.InterfaceColors
+import org.nlogo.window.PopupMenuItem
 
 class Picker(view: View) extends PickListener with ActionListener {
 

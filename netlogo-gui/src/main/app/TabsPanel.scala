@@ -11,7 +11,7 @@ import javax.swing.plaf.basic.BasicTabbedPaneUI
 import org.nlogo.app.codetab.{ CodeTab, TemporaryCodeTab }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.swing.{ HoverDecoration, Utils }
-import org.nlogo.window.InterfaceColors
+import org.nlogo.theme.InterfaceColors
 
 private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
   override def getContentBorderInsets(tabPlacement: Int) =

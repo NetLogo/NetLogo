@@ -15,7 +15,8 @@ import org.nlogo.core.{ AgentKind, I18N, Nobody, Widget => CoreWidget }
 import org.nlogo.editor.EditorField
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.OptionDialog
-import org.nlogo.window.{ EditorColorizer, Events => WindowEvents, InterfaceColors, JobWidget }
+import org.nlogo.theme.InterfaceColors
+import org.nlogo.window.{ EditorColorizer, Events => WindowEvents, JobWidget }
 
 class AgentMonitorEditor(parent: AgentMonitor) extends JPanel {
   setBackground(InterfaceColors.AGENT_EDITOR_BACKGROUND)

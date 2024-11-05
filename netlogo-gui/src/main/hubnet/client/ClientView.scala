@@ -8,7 +8,8 @@ import org.nlogo.core.{ View => CoreView }
 import java.io.{ByteArrayInputStream, DataInputStream}
 import org.nlogo.api.{Perspective, Graphics2DWrapper, ViewSettings}
 import org.nlogo.hubnet.mirroring._
-import org.nlogo.window.{InterfaceColors, ViewMouseHandler, ViewWidgetInterface, Widget}
+import org.nlogo.theme.InterfaceColors
+import org.nlogo.window.{ ViewMouseHandler, ViewWidgetInterface, Widget }
 
 // The view widget in the client.
 class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterface with ViewSettings {

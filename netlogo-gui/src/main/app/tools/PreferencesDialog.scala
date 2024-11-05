@@ -6,13 +6,39 @@ import java.awt.{ BorderLayout, Frame }
 import java.io.File
 import java.util.prefs.{ Preferences => JavaPreferences }
 import javax.swing.{ BorderFactory, Box, BoxLayout, JButton, SwingConstants }
+import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ OptionDialog, RichAction, TextFieldBox }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.RoundedBorderPanel
 
-class PreferencesDialog(parent: Frame, preferences: Preference*)
-extends ToolDialog(parent, "preferences") {
+class PreferencesDialog(parent: Frame, preferences: Preference*) extends ToolDialog(parent, "preferences")
+                                                                 with ThemeSync {
   private lazy val netLogoPrefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
+
+  private lazy val preferencesPanel = new TextFieldBox(SwingConstants.TRAILING)
+
+  private lazy val okButton = new JButton(RichAction(I18N.gui.get("common.buttons.ok"))(_ => ok()))
+    with RoundedBorderPanel {
+    setBorder(new EmptyBorder(3, 12, 3, 12))
+    setDiameter(6)
+    enableHover()
+  }
+
+  private lazy val applyButton = new JButton(RichAction(I18N.gui.get("common.buttons.apply"))(_ => apply()))
+    with RoundedBorderPanel {
+    setBorder(new EmptyBorder(3, 12, 3, 12))
+    setDiameter(6)
+    enableHover()
+  }
+
+  private lazy val cancelButton = new JButton(RichAction(I18N.gui.get("common.buttons.cancel"))(_ => cancel()))
+    with RoundedBorderPanel {
+    setBorder(new EmptyBorder(3, 12, 3, 12))
+    setDiameter(6)
+    enableHover()
+  }
 
   private def reset() = {
     preferences foreach (_.load(netLogoPrefs))
@@ -50,7 +76,6 @@ extends ToolDialog(parent, "preferences") {
   }
 
   override def initGUI() = {
-    val preferencesPanel = new TextFieldBox(SwingConstants.TRAILING)
     preferencesPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10))
     preferences.foreach(pref =>
       preferencesPanel.addField(
@@ -59,15 +84,12 @@ extends ToolDialog(parent, "preferences") {
 
     val buttonsPanel = new Box(BoxLayout.LINE_AXIS)
     buttonsPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 10, 20))
-    val okAction = RichAction(I18N.gui.get("common.buttons.ok"))(_ => ok())
-    val applyAction = RichAction(I18N.gui.get("common.buttons.apply"))(_ => apply())
-    val cancelAction = RichAction(I18N.gui.get("common.buttons.cancel"))(_ => cancel())
     buttonsPanel.add(Box.createHorizontalGlue)
-    buttonsPanel.add(new JButton(okAction))
+    buttonsPanel.add(okButton)
     buttonsPanel.add(Box.createHorizontalGlue)
-    buttonsPanel.add(new JButton(applyAction))
+    buttonsPanel.add(applyButton)
     buttonsPanel.add(Box.createHorizontalGlue)
-    buttonsPanel.add(new JButton(cancelAction))
+    buttonsPanel.add(cancelButton)
     buttonsPanel.add(Box.createHorizontalGlue)
 
     add(preferencesPanel, BorderLayout.CENTER)
@@ -79,4 +101,26 @@ extends ToolDialog(parent, "preferences") {
   }
 
   override def onClose() = reset()
+
+  def syncTheme() {
+    getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    preferencesPanel.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    okButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    okButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
+    okButton.setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+    okButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    applyButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    applyButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
+    applyButton.setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+    applyButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    cancelButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    cancelButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
+    cancelButton.setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+    cancelButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    preferences.foreach(_.component.syncTheme())
+  }
 }

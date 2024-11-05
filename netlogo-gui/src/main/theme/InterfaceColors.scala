@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window
+package org.nlogo.theme
 
 import java.awt.Color
 
@@ -447,6 +447,30 @@ object InterfaceColors {
     theme match {
       case "classic" | "light" => Color.WHITE
       case "dark" => DARK_BLUE_GRAY
+    }
+  
+  def DIALOG_BACKGROUND =
+    theme match {
+      case "classic" | "light" => Color.WHITE
+      case "dark" => BLUE_GRAY
+    }
+  
+  def DIALOG_BACKGROUND_SELECTED =
+    theme match {
+      case "classic" | "light" => MEDIUM_BLUE
+      case "dark" => DARK_BLUE_GRAY
+    }
+  
+  def DIALOG_TEXT =
+    theme match {
+      case "classic" | "light" => Color.BLACK
+      case "dark" => Color.WHITE
+    }
+  
+  def DIALOG_TEXT_SELECTED =
+    theme match {
+      case "classic" | "light" => Color.WHITE
+      case "dark" => MEDIUM_GRAY
     }
   
   // Syntax highlighting colors

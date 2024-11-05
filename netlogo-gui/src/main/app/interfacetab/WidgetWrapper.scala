@@ -12,8 +12,8 @@ import org.nlogo.app.common.Events.WidgetSelectedEvent
 import org.nlogo.awt.{ Coordinates, Mouse }
 import org.nlogo.core.I18N
 import org.nlogo.swing.WrappingPopupMenu
-import org.nlogo.window.{ InterfaceColors, MouseMode, PopupMenuItem, RoundedBorderPanel, ThemeSync, Widget,
-                          WidgetWrapperInterface }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.{ MouseMode, PopupMenuItem, RoundedBorderPanel, Widget, WidgetWrapperInterface }
 import org.nlogo.window.Events.{ DirtyEvent, EditWidgetEvent, ExportWidgetEvent, WidgetForegroundedEvent }
 
 object WidgetWrapper {

@@ -10,8 +10,9 @@ import org.nlogo.agent.{Agent, AgentSet, OutputObject}
 import org.nlogo.core.{AgentKind, CompilerException, I18N, Widget => CoreWidget}
 import org.nlogo.editor.EditorField
 import org.nlogo.ide.{AutoSuggestAction, CodeCompletionPopup}
+import org.nlogo.theme.InterfaceColors
+import org.nlogo.window.{ CommandCenterInterface, EditorColorizer, JobWidget, Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
-import org.nlogo.window.{ CommandCenterInterface, EditorColorizer, InterfaceColors, JobWidget, Events => WindowEvents }
 
 import scala.collection.immutable.List
 

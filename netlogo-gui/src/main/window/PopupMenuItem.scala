@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, Action, JCheckBoxMenuItem, JMenuItem }
 import javax.swing.plaf.basic.{ BasicCheckBoxMenuItemUI, BasicMenuItemUI }
 
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+
 class PopupMenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(action) with ThemeSync {
   def this(text: String, showIcon: Boolean) = this(new AbstractAction(text) {
     def actionPerformed(e: ActionEvent) {}

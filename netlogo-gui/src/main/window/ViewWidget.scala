@@ -7,6 +7,7 @@ import javax.swing.JPopupMenu
 
 import org.nlogo.api.{ Approximate, Version }
 import org.nlogo.core.{ View => CoreView }
+import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.Events.ResizeViewEvent
 import org.nlogo.window.MouseMode._
 

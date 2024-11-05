@@ -12,6 +12,7 @@ import org.nlogo.awt.{ DarkenImageFilter, Mouse }, Mouse.hasButton1
 import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N }
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.Utils.icon
+import org.nlogo.theme.InterfaceColors
 
 object ButtonWidget {
 

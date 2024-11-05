@@ -4,6 +4,7 @@ package org.nlogo.window;
 
 import org.nlogo.plot.Plot;
 import org.nlogo.plot.PlotPainter;
+import org.nlogo.theme.InterfaceColors;
 
 class PlotCanvas extends javax.swing.JPanel {
 

@@ -8,8 +8,7 @@ package org.nlogo.app.tools
 // super slow. ev 3/26/09
 
 import java.awt.{ Color, Dimension, Frame, Toolkit }
-import java.awt.event.{ ActionEvent, ActionListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent,
-  WindowAdapter, WindowEvent }
+import java.awt.event.{ ActionEvent, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
 import java.io.File
 import java.nio.file.Paths
 import java.net.URI
@@ -17,8 +16,10 @@ import java.util.{ Enumeration, LinkedList, List => JList }
 import javax.swing.{ AbstractAction, Action, Box, BorderFactory, BoxLayout,
   InputMap, JButton, JComponent, JDialog, JEditorPane, JLabel, JOptionPane, JPanel,
   JScrollPane, JTextField, JTree, KeyStroke, SwingUtilities, WindowConstants }
+import javax.swing.border.EmptyBorder
 import javax.swing.text.{ BadLocationException, DefaultHighlighter }
-import javax.swing.tree.{ DefaultMutableTreeNode, DefaultTreeModel, TreePath, TreeSelectionModel }
+import javax.swing.tree.{ DefaultMutableTreeNode, DefaultTreeCellRenderer, DefaultTreeModel, TreePath,
+                          TreeSelectionModel }
 import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, DocumentListener,
   HyperlinkEvent, HyperlinkListener, TreeExpansionEvent, TreeExpansionListener,
   TreeSelectionEvent, TreeSelectionListener }
@@ -26,8 +27,9 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, Docum
 import org.nlogo.core.I18N
 import org.nlogo.api.FileIO
 import org.nlogo.awt.{ Positioning, UserCancelException }
-import org.nlogo.swing.{ BrowserLauncher, ModalProgressTask, Utils },
-  Utils.{ addEscKeyAction, icon }
+import org.nlogo.swing.{ BrowserLauncher, ModalProgressTask, Utils }, Utils.addEscKeyAction
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.RoundedBorderPanel
 import org.nlogo.workspace.ModelsLibrary
 
 import scala.util.Try
@@ -62,6 +64,7 @@ object ModelsLibraryDialog {
   // must be called from the UI Thread
   private def finishOpen(me: ModelsLibraryDialog, onSelect: URI => Unit): Unit = {
     this.me = me
+    me.syncTheme()
     me.setVisible(true)
     me.searchField.selectAll()
     me.sourceURI.foreach(onSelect)
@@ -156,18 +159,42 @@ import ModelsLibraryDialog._
 class ModelsLibraryDialog(parent: Frame, node: Node)
   extends JDialog(parent, I18N.gui.get("menu.file.modelsLibrary"), true)
   with TreeSelectionListener
-  with TreeExpansionListener {
+  with TreeExpansionListener
+  with ThemeSync {
 
   private var selected = Option.empty[Node]
   private var sourceURI = Option.empty[URI]
   private val savedExpandedPaths: JList[TreePath] = new LinkedList[TreePath]()
-  private val searchField: JTextField = new JTextField("");
+  private val searchField: JTextField = new JTextField("")
   private var searchText = Option.empty[String]
+  private val searchIcon = new JLabel
 
   private val modelPreviewPanel: ModelPreviewPanel = new ModelPreviewPanel()
 
-  private val tree = new JTree(new SearchableModelTree(node))
+  private val tree = new JTree(new SearchableModelTree(node)) with ThemeSync {
+    private val renderer = new DefaultTreeCellRenderer with ThemeSync {
+      def syncTheme() {
+        backgroundNonSelectionColor = InterfaceColors.DIALOG_BACKGROUND
+        backgroundSelectionColor = InterfaceColors.DIALOG_BACKGROUND_SELECTED
+        textNonSelectionColor = InterfaceColors.DIALOG_TEXT
+        textSelectionColor = InterfaceColors.DIALOG_TEXT_SELECTED
+      }
+    }
+
+    setCellRenderer(renderer)
+
+    def syncTheme() {
+      setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+      renderer.syncTheme()
+    }
+  }
+
   tree.setSelectionRow(0)
+
+  private val contentPane = new JPanel
+
+  contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS))
 
   private val openAction: Action =
     new AbstractAction(I18N.gui.get("modelsLibrary.open")) {
@@ -218,6 +245,36 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
         searchField.selectAll()
       }
     }
+  
+  private val communityButton = new JButton(communityAction) with RoundedBorderPanel {
+    setBorder(new EmptyBorder(3, 12, 3, 12))
+    setDiameter(6)
+    enableHover()
+  }
+
+  private val selectButton = new JButton(openAction) with RoundedBorderPanel {
+    setBorder(new EmptyBorder(3, 12, 3, 12))
+    setDiameter(6)
+    enableHover()
+
+    setContentAreaFilled(false)
+  }
+
+  private val cancelButton = new JButton(cancelAction) with RoundedBorderPanel {
+    setBorder(new EmptyBorder(3, 12, 3, 12))
+    setDiameter(6)
+    enableHover()
+  }
+
+  private val clearSearchButton = new JButton(new AbstractAction(I18N.gui.get("modelsLibrary.clear")) {
+    def actionPerformed(e: ActionEvent) {
+      searchField.setText("")
+    }
+  }) with RoundedBorderPanel {
+    setBorder(new EmptyBorder(3, 12, 3, 12))
+    setDiameter(6)
+    enableHover()
+  }
 
   locally {
     setResizable(true)
@@ -228,10 +285,6 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     openAction.setEnabled(false)
     toggleOrOpenAction.setEnabled(false)
 
-    // create subcomponents
-    val communityButton = new JButton(communityAction)
-    val selectButton = new JButton(openAction)
-    val cancelButton = new JButton(cancelAction)
     getRootPane.setDefaultButton(selectButton)
     tree.getSelectionModel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION)
     tree.setToggleClickCount(1)
@@ -269,9 +322,9 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
     // lay out content pane & bottom buttons
 
-    val topPanel = new Box(BoxLayout.X_AXIS);
+    val topPanel = new Box(BoxLayout.X_AXIS)
 
-    val searchPanel = new Box(BoxLayout.X_AXIS);
+    val searchPanel = new Box(BoxLayout.X_AXIS)
     searchField.getDocument.addDocumentListener(
       new DocumentListener() {
         def changedUpdate(e: DocumentEvent): Unit = {
@@ -303,29 +356,21 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       }
     })
     searchField.setMaximumSize(new Dimension(Short.MaxValue, searchField.getMinimumSize.height))
-    val clearSearchButton = new JButton(I18N.gui.get("modelsLibrary.clear"))
-    clearSearchButton.addActionListener(new ActionListener() {
-      def actionPerformed(evt: ActionEvent): Unit = {
-        searchField.setText("")
-      }
-    })
-    val buttonFont = clearSearchButton.getFont()
-    clearSearchButton.setFont(buttonFont.deriveFont(buttonFont.getSize2D - 2))
-    searchPanel.add(new JLabel(icon("/images/find.png")))
+    searchPanel.add(searchIcon)
     searchPanel.add(Box.createRigidArea(new java.awt.Dimension(2, 0)))
     searchPanel.add(searchField)
     searchPanel.add(Box.createRigidArea(new Dimension(2, 0)))
-    searchPanel.add(clearSearchButton);
-    searchPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+    searchPanel.add(clearSearchButton)
+    searchPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
 
-    val treePanel = new Box(BoxLayout.Y_AXIS);
-    treePanel.add(new javax.swing.JScrollPane(tree));
-    treePanel.add(searchPanel);
+    val treePanel = new Box(BoxLayout.Y_AXIS)
+    treePanel.add(new JScrollPane(tree))
+    treePanel.add(searchPanel)
 
-    topPanel.add(treePanel);
-    topPanel.add(new JScrollPane(modelPreviewPanel));
+    topPanel.add(treePanel)
+    topPanel.add(new JScrollPane(modelPreviewPanel))
 
-    val buttonPanel = new Box(BoxLayout.X_AXIS);
+    val buttonPanel = new Box(BoxLayout.X_AXIS)
     buttonPanel.add(Box.createRigidArea(new Dimension(40, 0)))
     buttonPanel.add(communityButton)
     buttonPanel.add(Box.createHorizontalGlue)
@@ -341,8 +386,6 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     buttonPanel.add(Box.createRigidArea(new Dimension(40, 0)))
     buttonPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
 
-    val contentPane = new JPanel()
-    contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS))
     contentPane.add(topPanel)
     contentPane.add(buttonPanel)
     setContentPane(contentPane)
@@ -525,25 +568,23 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     }
   }
 
-  private class ModelPreviewPanel
-    extends JPanel
-    with HyperlinkListener {
-      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  private class ModelPreviewPanel extends JPanel with HyperlinkListener with ThemeSync {
+    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
 
-      private val graphicsPreview: GraphicsPreview = new GraphicsPreview()
-      graphicsPreview.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1))
+    private val graphicsPreview: GraphicsPreview = new GraphicsPreview()
+    graphicsPreview.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1))
 
-      private val textArea = new JEditorPane()
-      textArea.setContentType("text/html")
-      textArea.setEditable(false)
-      textArea.setOpaque(false)
-      textArea.addHyperlinkListener(this)
+    private val textArea = new JEditorPane()
+    textArea.setContentType("text/html")
+    textArea.setEditable(false)
+    textArea.setOpaque(false)
+    textArea.addHyperlinkListener(this)
 
-      add(graphicsPreview)
-      add(textArea)
-      add(Box.createVerticalGlue())
+    add(graphicsPreview)
+    add(textArea)
+    add(Box.createVerticalGlue())
 
-      setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
+    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
 
     def showModel(): Unit = {
       val image =
@@ -620,6 +661,12 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
           }
       }
     }
+
+    def syncTheme() {
+      setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+      textArea.setForeground(InterfaceColors.DIALOG_TEXT)
+    }
   }
 
   private class SearchableModelTree(node: Node)
@@ -689,5 +736,38 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
           node.info.toUpperCase.contains(t) ||
           node.path.toUpperCase.contains(t))
     }
+  }
+
+  def syncTheme() {
+    contentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    tree.syncTheme()
+    modelPreviewPanel.syncTheme()
+
+    searchField.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    searchField.setForeground(InterfaceColors.DIALOG_TEXT)
+    searchField.setCaretColor(InterfaceColors.DIALOG_TEXT)
+
+    searchIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
+
+    communityButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    communityButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
+    communityButton.setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+    communityButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    selectButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    selectButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
+    selectButton.setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+    selectButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    cancelButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    cancelButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
+    cancelButton.setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+    cancelButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    clearSearchButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    clearSearchButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
+    clearSearchButton.setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+    clearSearchButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
   }
 }

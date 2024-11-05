@@ -2,11 +2,12 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.{ Editable, Property }
-import org.nlogo.core.{ I18N, Monitor => CoreMonitor }
-
 import java.awt.{ Color, Dimension, Graphics }
 import java.util.{ List => JList }
+
+import org.nlogo.api.{ Editable, Property }
+import org.nlogo.core.{ I18N, Monitor => CoreMonitor }
+import org.nlogo.theme.InterfaceColors
 
 object DummyMonitorWidget {
   private val LeftMargin = 5;

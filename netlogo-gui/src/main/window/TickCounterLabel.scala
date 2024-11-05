@@ -7,6 +7,7 @@ import java.awt.{ Dimension, Graphics }
 import javax.swing.JLabel
 
 import org.nlogo.api.{ Dump, World }
+import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.Events.{ AfterLoadEvent, PeriodicUpdateEvent, LoadBeginEvent }
 
 object TickCounterLabel {

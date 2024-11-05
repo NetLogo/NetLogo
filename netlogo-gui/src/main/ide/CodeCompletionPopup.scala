@@ -11,7 +11,7 @@ import javax.swing.text.JTextComponent
 import org.nlogo.awt.Fonts
 import org.nlogo.core.{Dialect, Femto, NetLogoCore, Token, TokenType, TokenizerInterface}
 import org.nlogo.nvm.ExtensionManager
-import org.nlogo.window.InterfaceColors
+import org.nlogo.theme.InterfaceColors
 
 object CodeCompletionPopup {
   def apply() =

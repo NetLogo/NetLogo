@@ -12,19 +12,24 @@ import org.nlogo.app.common.TabsInterface
 import org.nlogo.app.tools.{ LibrariesDialog, Preferences, PreferencesDialog, ThemesDialog }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
-import org.nlogo.workspace.AbstractWorkspaceScala
-import org.nlogo.window.{ ColorDialog, LinkRoot, ThemeSync }
 import org.nlogo.shape.ShapesManagerInterface
 import org.nlogo.swing.UserAction._
+import org.nlogo.theme.ThemeSync
+import org.nlogo.window.{ ColorDialog, LinkRoot }
+import org.nlogo.workspace.AbstractWorkspaceScala
 
-abstract class ShowDialogAction(name: String) extends AbstractAction(name) {
-  protected def createDialog(): JDialog
+abstract class ShowDialogAction(name: String) extends AbstractAction(name) with ThemeSync {
+  protected def createDialog(): JDialog with ThemeSync
 
   lazy protected val createdDialog = createDialog
 
   override def actionPerformed(e: ActionEvent): Unit = {
     createdDialog.toFront()
     createdDialog.setVisible(true)
+  }
+
+  def syncTheme() {
+    createdDialog.syncTheme()
   }
 }
 

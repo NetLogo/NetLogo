@@ -20,7 +20,8 @@ import org.nlogo.editor.UndoManager
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ OptionDialog, ToolBar, ToolBarButton, ToolBarActionButton,
   ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, Utils }, BrowserLauncher.docPath
-import org.nlogo.window.{ Events => WindowEvents, InterfaceColors, ThemeSync, Zoomable }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.{ Events => WindowEvents, Zoomable }
 
 class InfoTab(attachModelDir: String => String)
   extends JPanel

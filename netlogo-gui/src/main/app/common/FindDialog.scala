@@ -10,9 +10,9 @@ import javax.swing.border.EmptyBorder
 import javax.swing.text.{ BadLocationException, JTextComponent, TextAction }
 
 import org.nlogo.core.I18N
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.swing.{ ButtonPanel, NonemptyTextFieldActionEnabler, NonemptyTextFieldButtonEnabler, TextField,
                          TextFieldBox, UserAction, Utils }
-import org.nlogo.window.{ InterfaceColors, ThemeSync }
 
 object FindDialog extends ThemeSync {
   class FindAction extends TextAction(I18N.gui.get("menu.edit.find")) {

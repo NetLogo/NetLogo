@@ -10,8 +10,9 @@ import org.nlogo.api.Editable
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ DropdownArrow, HoverDecoration, ToolBar, ToolBarToggleButton, Utils }
-import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents, GUIWorkspace, InterfaceColors, JobWidget,
-                          PopupMenuItem, RoundedBorderPanel, ThemeSync, Widget, WidgetInfo }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents, GUIWorkspace, JobWidget, PopupMenuItem,
+                          RoundedBorderPanel, Widget, WidgetInfo }
 
 import scala.collection.mutable.HashSet
 

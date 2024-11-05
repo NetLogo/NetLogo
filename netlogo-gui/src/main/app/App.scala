@@ -23,6 +23,7 @@ import org.nlogo.log.{ JsonFileLogger, LogEvents, LogManager }
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
 import org.nlogo.swing.{ OptionDialog, SetSystemLookAndFeel }
+import org.nlogo.theme.InterfaceColors
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
@@ -789,6 +790,11 @@ class App extends
 
     frame.repaint()
     tabManager.separateTabsWindow.repaint()
+
+    openPreferencesDialog.syncTheme()
+    showThemesDialog.syncTheme()
+    openColorDialog.syncTheme()
+    openLibrariesDialog.syncTheme()
   }
 
   /**

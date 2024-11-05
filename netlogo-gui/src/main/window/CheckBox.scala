@@ -6,8 +6,9 @@ import java.awt.{ Component, Graphics }
 import javax.swing.{ Action, Icon, JCheckBox }
 
 import org.nlogo.swing.{ HoverDecoration, Utils }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class CheckBox(text: String) extends JCheckBox(text) with HoverDecoration {
+class CheckBox(text: String = "") extends JCheckBox(text) with HoverDecoration with ThemeSync {
   def this(action: Action) = {
     this(action.getValue(Action.NAME).toString)
 
@@ -47,4 +48,6 @@ class CheckBox(text: String) extends JCheckBox(text) with HoverDecoration {
       }
     }
   })
+
+  def syncTheme() {} // sync done in paintIcon (IB 11/4/24)
 }

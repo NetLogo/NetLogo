@@ -24,7 +24,7 @@ public class StockFigure
     super();
 
     setAttribute(FigureAttributeConstant.FILL_COLOR,
-        org.nlogo.window.InterfaceColors.MONITOR_BACKGROUND());
+        org.nlogo.theme.InterfaceColors.MONITOR_BACKGROUND());
     stock = new org.nlogo.sdm.Stock();
   }
 

@@ -2,12 +2,13 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, Rectangle }
-import java.util.{ List => JList }
-
+import org.nlogo.agent.World
 import org.nlogo.api.{ Editable, Property }
 import org.nlogo.core.{ I18N, View => CoreView }
-import org.nlogo.agent.World
+import org.nlogo.theme.InterfaceColors
+
+import java.awt.{ Dimension, Rectangle }
+import java.util.{ List => JList }
 
 class DummyViewWidget(val world: World)
     extends SingleErrorWidget

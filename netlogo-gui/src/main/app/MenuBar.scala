@@ -9,7 +9,7 @@ import org.nlogo.core.I18N
 import org.nlogo.editor.EditorMenu
 import org.nlogo.swing.{ UserAction, Utils },
   UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, TabsCategory, ToolsCategory }
-import org.nlogo.window.{ InterfaceColors, ThemeSync }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class MenuBar(isApplicationWide: Boolean) extends JMenuBar with EditorMenu with UserAction.Menu with ThemeSync {
   val editMenu  = new EditMenu

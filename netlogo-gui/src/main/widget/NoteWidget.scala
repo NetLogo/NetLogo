@@ -10,7 +10,8 @@ import org.nlogo.api.{ Color => NlogoColor, Editable }
 import org.nlogo.awt.LineBreaker
 import org.nlogo.core.{ TextBox => CoreTextBox }
 import org.nlogo.core.I18N
-import org.nlogo.window.{ InterfaceColors, SingleErrorWidget }
+import org.nlogo.theme.InterfaceColors
+import org.nlogo.window.SingleErrorWidget
 
 import scala.collection.JavaConverters._
 

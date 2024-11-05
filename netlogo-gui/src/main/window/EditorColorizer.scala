@@ -2,10 +2,12 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.{ Token, TokenType }
 import java.awt.Color
+
 import org.nlogo.api.CompilerServices
+import org.nlogo.core.{ Token, TokenType }
 import org.nlogo.editor.Colorizer
+import org.nlogo.theme.InterfaceColors
 
 class EditorColorizer(compiler: CompilerServices) extends Colorizer {
 

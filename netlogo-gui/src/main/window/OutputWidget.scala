@@ -8,6 +8,7 @@ import javax.swing.AbstractAction
 
 import org.nlogo.api.Editable
 import org.nlogo.core.{ I18N, Output => CoreOutput }
+import org.nlogo.theme.InterfaceColors
 
 class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   org.nlogo.window.Events.ExportWorldEvent.Handler with Editable {

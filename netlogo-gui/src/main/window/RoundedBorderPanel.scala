@@ -6,6 +6,7 @@ import java.awt.{ Color, Graphics }
 import javax.swing.JComponent
 
 import org.nlogo.swing.{ HoverDecoration, Utils }
+import org.nlogo.theme.InterfaceColors
 
 trait RoundedBorderPanel extends JComponent with HoverDecoration {
   private var backgroundColor: Color = Color.WHITE
@@ -43,7 +44,7 @@ trait RoundedBorderPanel extends JComponent with HoverDecoration {
   override def paintComponent(g: Graphics) {
     val g2d = Utils.initGraphics2D(g)
 
-    if (hoverEnabled && isHover)
+    if (isEnabled && hoverEnabled && isHover)
       g2d.setColor(backgroundHoverColor)
     else
       g2d.setColor(backgroundColor)

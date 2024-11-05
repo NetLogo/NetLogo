@@ -11,7 +11,8 @@ import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.CollapsiblePane
-import org.nlogo.window.{ CommandCenterInterface, GUIWorkspace, InterfaceColors }
+import org.nlogo.theme.InterfaceColors
+import org.nlogo.window.{ CommandCenterInterface, GUIWorkspace }
 
 abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
 extends JPanel with CommandCenterInterface // lets us embed CommandLine

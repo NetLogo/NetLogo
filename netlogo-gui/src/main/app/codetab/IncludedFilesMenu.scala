@@ -14,7 +14,8 @@ import org.nlogo.app.common.{ Actions, TabsInterface }, Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ FileDialog => SwingFileDialog, ToolBarMenu }
-import org.nlogo.window.{ Events => WindowEvents, InterfaceColors, PopupMenuItem, RoundedBorderPanel, ThemeSync }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.{ Events => WindowEvents, PopupMenuItem, RoundedBorderPanel }
 
 class IncludedFilesMenu(includesTable: => Option[Map[String, String]], tabs: TabsInterface)
 extends ToolBarMenu(I18N.gui.get("tabs.code.includedFiles"))

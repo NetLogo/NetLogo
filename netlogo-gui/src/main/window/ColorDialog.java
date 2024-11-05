@@ -2,10 +2,6 @@
 
 package org.nlogo.window;
 
-import org.nlogo.core.I18N;
-import org.nlogo.shape.VectorShape;
-import org.nlogo.swing.DialogForegrounder$;
-
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -45,11 +41,17 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Enumeration;
 
+import org.nlogo.core.I18N;
+import org.nlogo.shape.VectorShape;
+import org.nlogo.swing.DialogForegrounder$;
+import org.nlogo.theme.ThemeSync;
+
 public class ColorDialog extends JDialog implements ActionListener,
     ItemListener,
     MouseListener,
     ClipboardOwner,
-    WindowListener {
+    WindowListener,
+    ThemeSync {
 
   private double step = 1; // The increment of the color index incremented  patches
   private boolean numberVisibilityFlag = false; // Flat to view color value on swatches
@@ -611,5 +613,9 @@ public class ColorDialog extends JDialog implements ActionListener,
   }
 
   public void windowDeactivated(WindowEvent arg0) {
+  }
+
+  public void syncTheme() {
+    
   }
 }

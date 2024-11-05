@@ -18,12 +18,12 @@ import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.swing.Utils
-import org.nlogo.window.{ AbstractWidgetPanel, Events => WindowEvents,
-  GUIWorkspace, InterfaceColors, OutputWidget, Widget, WidgetContainer, WidgetRegistry,
-  DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget,
-  PlotWidget, PopupMenuItem },
-    WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, LoadBeginEvent, SelectModeEvent,
-      WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent }
+import org.nlogo.theme.InterfaceColors
+import org.nlogo.window.{ AbstractWidgetPanel, Events => WindowEvents, GUIWorkspace, OutputWidget, Widget,
+                          WidgetContainer, WidgetRegistry, DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget,
+                          DummyViewWidget, PlotWidget, PopupMenuItem },
+  WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, LoadBeginEvent, SelectModeEvent, WidgetEditedEvent,
+                 WidgetRemovedEvent, ZoomedEvent }
 
 sealed trait InteractMode {
   def cursor: Cursor =

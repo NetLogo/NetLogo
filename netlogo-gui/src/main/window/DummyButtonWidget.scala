@@ -2,12 +2,13 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.{ Editable, Property }
-import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton }
-import org.nlogo.awt.Fonts
-
 import java.awt.{ Color, Dimension, Graphics }
 import java.util.{ List => JList }
+
+import org.nlogo.api.{ Editable, Property }
+import org.nlogo.awt.Fonts
+import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton }
+import org.nlogo.theme.{ InterfaceColors }
 
 object DummyButtonWidget {
   private val MinimumWidth = 55

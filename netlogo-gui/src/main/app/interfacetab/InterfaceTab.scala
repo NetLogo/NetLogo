@@ -14,8 +14,9 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, UserAction, Utils },
                        Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
 import org.nlogo.swing.{ Utils => SwingUtils }
-import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace, InterfaceColors, ThemeSync, ViewUpdatePanel,
-                          WidgetInfo, Events => WindowEvents, WorkspaceActions },
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace, ViewUpdatePanel, WidgetInfo,
+                          Events => WindowEvents, WorkspaceActions },
                         WindowEvents.{ Enable2DEvent, LoadBeginEvent, OutputEvent }
 
 object InterfaceTab {

@@ -8,6 +8,7 @@ import javax.swing.{ AbstractAction, JLabel, JPanel, JPopupMenu }
 
 import org.nlogo.core.{ I18N, UpdateMode }
 import org.nlogo.swing.DropdownArrow
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class UpdateModeChooser(workspace: GUIWorkspace) extends JPanel(new GridBagLayout) with RoundedBorderPanel
                                                  with ThemeSync {

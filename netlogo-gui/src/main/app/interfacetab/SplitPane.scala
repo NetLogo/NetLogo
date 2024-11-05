@@ -8,7 +8,7 @@ import javax.swing.{ AbstractAction, Action, JButton, JLayeredPane, JPanel, JSpl
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.Utils
-import org.nlogo.window.InterfaceColors
+import org.nlogo.theme.InterfaceColors
 
 private class SizeButton(expand: Boolean, splitPane: SplitPane) extends JButton {
   setBorder(null)

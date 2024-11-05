@@ -13,9 +13,9 @@ import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.{ FileDialog => SwingFileDialog, ModalProgressTask, RichAction }
-import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents,
-                          InterfaceColors, OutputArea, PopupMenuItem, RoundedBorderPanel, TextMenuActions, ThemeSync,
-                          Zoomable }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents, OutputArea, PopupMenuItem,
+                          RoundedBorderPanel, TextMenuActions, Zoomable }
 import org.nlogo.workspace.{ AbstractWorkspace, ExportOutput }
 
 class CommandCenter(workspace: AbstractWorkspace) extends JPanel

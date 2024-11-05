@@ -92,8 +92,9 @@ object Depend {
       "sdm/gui" -> List("sdm", "window"),
       "shape" -> List("api"),
       "shape/editor" -> List("shape", "swing"),
-      "swing" -> List("awt", "core"),
+      "swing" -> List("awt", "core", "theme"),
       "util" -> Nil,
+      "theme" -> List("api"),
       "widget" -> List("window"),
       "window" -> List("core/model", "editor", "fileformat", "log", "shape", "swing", "workspace"),
       "workspace" -> List("fileformat", "nvm", "plot"))

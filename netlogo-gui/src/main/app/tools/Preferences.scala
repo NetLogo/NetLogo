@@ -6,15 +6,17 @@ import java.awt.Frame
 import java.io.File
 import java.util.Locale
 import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ JCheckBox, JComboBox, JFileChooser, JPanel, JTextField }
+import javax.swing.{ JComboBox, JFileChooser, JPanel, JTextField }
 
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.I18N
 import org.nlogo.swing.RichJButton
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.CheckBox
 
 object Preferences {
   abstract class BooleanPreference(val i18nKey: String, val requirement: String, default: Boolean) extends Preference {
-    val component = new JCheckBox
+    val component = new CheckBox
 
     def load(prefs: JavaPreferences) = {
       val value = prefs.get(i18nKey, default.toString).toBoolean
@@ -27,7 +29,13 @@ object Preferences {
   }
 
   abstract class StringPreference(val i18nKey: String, val requirement: String, default: String) extends Preference {
-    val component = new JTextField(default, 20)
+    val component = new JTextField(default, 20) with ThemeSync {
+      def syncTheme() {
+        setBackground(InterfaceColors.DIALOG_BACKGROUND)
+        setForeground(InterfaceColors.DIALOG_TEXT)
+        setCaretColor(InterfaceColors.DIALOG_TEXT)
+      }
+    }
 
     def load(prefs: JavaPreferences) = {
       val value = prefs.get(i18nKey, default)
@@ -47,7 +55,7 @@ object Preferences {
     val languages = I18N.availableLocales map (LocaleWrapper(_)) sortBy (_.toString)
 
     val i18nKey = "uiLanguage"
-    val component = new JComboBox(languages)
+    val component = new JComboBox(languages) with ThemeSync { def syncTheme() {} }
     val requirement = "restartRequired"
 
     def load(prefs: JavaPreferences) = {
@@ -65,7 +73,7 @@ object Preferences {
 
   class ReloadOnExternalChanges(tabs: TabsInterface) extends Preference {
     val i18nKey = "reloadOnExternalChanges"
-    val component = new JCheckBox
+    val component = new CheckBox
     val requirement = ""
 
     def load(prefs: JavaPreferences) = {
@@ -82,7 +90,7 @@ object Preferences {
 
   class LineNumbers(tabs: TabsInterface) extends Preference {
     val i18nKey = "editorLineNumbers"
-    val component = new JCheckBox
+    val component = new CheckBox
     val requirement = ""
 
     def load(prefs: JavaPreferences) = {
@@ -113,13 +121,22 @@ object Preferences {
       prefs.put("logDirectory", textField.getText)
     }
 
-    def createComponent(): JPanel = {
-      val editPanel = new JPanel
-      editPanel.add(textField)
-      editPanel.add(RichJButton("Browse...") {
-        askForConfigFile(textField.getText).foreach(textField.setText)
-      })
-      editPanel
+    def createComponent(): JPanel with ThemeSync = {
+      new JPanel with ThemeSync {
+        setOpaque(false)
+        setBackground(InterfaceColors.TRANSPARENT)
+
+        add(textField)
+        add(RichJButton("Browse...") {
+          askForConfigFile(textField.getText).foreach(textField.setText)
+        })
+
+        def syncTheme() {
+          textField.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+          textField.setForeground(InterfaceColors.DIALOG_TEXT)
+          textField.setCaretColor(InterfaceColors.DIALOG_TEXT)
+        }
+      }
     }
 
     def askForConfigFile(current: String): Option[String] = {
@@ -150,7 +167,7 @@ object Preferences {
       I18N.gui.get("tools.preferences.proceduresSortAlphabetical")
     )
 
-    val component = new JComboBox(options)
+    val component = new JComboBox(options) with ThemeSync { def syncTheme() {} }
     val requirement = ""
 
     def load(prefs: JavaPreferences) = {

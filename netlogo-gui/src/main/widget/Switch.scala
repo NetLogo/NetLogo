@@ -5,7 +5,8 @@ package org.nlogo.widget
 import org.nlogo.agent.BooleanConstraint
 import org.nlogo.core.I18N
 import org.nlogo.swing.Utils
-import org.nlogo.window.{ Events, InterfaceColors, MultiErrorWidget, ThemeSync }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.{ Events, MultiErrorWidget }
 
 import java.awt._
 import javax.swing.{ JLabel, JPanel }
