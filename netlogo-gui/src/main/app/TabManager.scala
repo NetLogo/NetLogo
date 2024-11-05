@@ -383,11 +383,13 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     if (!movingTabs && tab != previousTab) {
       tab.requestFocus
 
-      new SwitchedTabsEvent(previousTab, tab).raise(workspace.getFrame)
-
       setMenuActions(previousTab, tab)
 
+      val prev = previousTab
+
       previousTab = tab
+
+      new SwitchedTabsEvent(prev, tab).raise(workspace.getFrame)
     }
   }
 
