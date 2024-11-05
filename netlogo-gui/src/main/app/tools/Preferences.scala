@@ -3,16 +3,17 @@
 package org.nlogo.app.tools
 
 import java.awt.Frame
+import java.awt.event.ActionEvent
 import java.io.File
 import java.util.Locale
 import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ JComboBox, JFileChooser, JPanel, JTextField }
+import javax.swing.{ AbstractAction, JButton, JComboBox, JFileChooser, JPanel, JTextField }
+import javax.swing.border.EmptyBorder
 
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.I18N
-import org.nlogo.swing.RichJButton
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.CheckBox
+import org.nlogo.window.{ CheckBox, RoundedBorderPanel }
 
 object Preferences {
   abstract class BooleanPreference(val i18nKey: String, val requirement: String, default: Boolean) extends Preference {
@@ -127,14 +128,28 @@ object Preferences {
         setBackground(InterfaceColors.TRANSPARENT)
 
         add(textField)
-        add(RichJButton("Browse...") {
-          askForConfigFile(textField.getText).foreach(textField.setText)
-        })
+
+        private val browseButton = new JButton(new AbstractAction("Browse...") {
+          def actionPerformed(e: ActionEvent) {
+            askForConfigFile(textField.getText).foreach(textField.setText)
+          }
+        }) with RoundedBorderPanel {
+          setBorder(new EmptyBorder(3, 12, 3, 12))
+          setDiameter(6)
+          enableHover()
+        }
+
+        add(browseButton)
 
         def syncTheme() {
           textField.setBackground(InterfaceColors.DIALOG_BACKGROUND)
           textField.setForeground(InterfaceColors.DIALOG_TEXT)
           textField.setCaretColor(InterfaceColors.DIALOG_TEXT)
+
+          browseButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+          browseButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
+          browseButton.setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+          browseButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
         }
       }
     }

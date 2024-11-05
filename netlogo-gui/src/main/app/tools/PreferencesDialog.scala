@@ -121,6 +121,8 @@ class PreferencesDialog(parent: Frame, preferences: Preference*) extends ToolDia
     cancelButton.setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
     cancelButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
+    preferencesPanel.syncTheme()
+
     preferences.foreach(_.component.syncTheme())
   }
 }
