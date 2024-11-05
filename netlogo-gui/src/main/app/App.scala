@@ -551,7 +551,7 @@ class App extends
     import org.nlogo.swing.UserAction, UserAction.{ ActionCategoryKey, EditCategory, FileCategory, HelpCategory, ToolsCategory }
     def actions = allActions ++ _tabManager.permanentMenuActions
 
-    def createMenu(newMenu: org.nlogo.window.Menu, category: String): JMenu = {
+    def createMenu(newMenu: org.nlogo.swing.Menu, category: String): JMenu = {
       actions.filter(_.getValue(ActionCategoryKey) == category).foreach(newMenu.offerAction)
       newMenu
     }

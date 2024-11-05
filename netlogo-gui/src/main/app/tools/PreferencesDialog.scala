@@ -9,9 +9,8 @@ import javax.swing.{ BorderFactory, Box, BoxLayout, JButton, SwingConstants }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ OptionDialog, RichAction, TextFieldBox }
+import org.nlogo.swing.{ OptionDialog, RichAction, RoundedBorderPanel, TextFieldBox }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.RoundedBorderPanel
 
 class PreferencesDialog(parent: Frame, preferences: Preference*) extends ToolDialog(parent, "preferences")
                                                                  with ThemeSync {

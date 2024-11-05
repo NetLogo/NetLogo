@@ -1,11 +1,10 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window
+package org.nlogo.swing
 
 import java.awt.{ Component, Graphics }
 import javax.swing.{ Action, Icon, JCheckBox }
 
-import org.nlogo.swing.{ HoverDecoration, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class CheckBox(text: String = "") extends JCheckBox(text) with HoverDecoration with ThemeSync {

@@ -17,10 +17,10 @@ import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, Tab
 import org.nlogo.core.{ AgentKind, CompilerException, I18N }
 import org.nlogo.editor.{ AdvancedEditorArea, DumbIndenter }
 import org.nlogo.ide.FocusedOnlyAction
-import org.nlogo.swing.{ PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction,
+import org.nlogo.swing.{ CheckBox, PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction,
                          Printable => NlogoPrintable, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ CheckBox, CommentableError, ProceduresInterface, Zoomable, Events => WindowEvents }
+import org.nlogo.window.{ CommentableError, ProceduresInterface, Zoomable, Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
 
 abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) extends JPanel
@@ -267,12 +267,6 @@ with ThemeSync {
       new Style(color, Style.DEFAULT_BACKGROUND, text.getFont.deriveFont(Font.BOLD), false)
 
     toolBar.setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
-
-    findButton.setHoverColor(InterfaceColors.TOOLBAR_BUTTON_HOVER)
-    compileButton.setHoverColor(InterfaceColors.TOOLBAR_BUTTON_HOVER)
-
-    findButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
-    compileButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
     CompileAction.syncTheme()
 

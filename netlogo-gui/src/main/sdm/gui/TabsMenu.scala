@@ -23,7 +23,7 @@ object TabsMenu {
     for (i <- 0 until tabs.getTabCount) yield tabAction(tabs, i)
 }
 
-class TabsMenu(name: String, initialActions: Seq[Action]) extends org.nlogo.window.Menu(name) {
+class TabsMenu(name: String, initialActions: Seq[Action]) extends org.nlogo.swing.Menu(name) {
   setMnemonic('A')
 
   initialActions.foreach(offerAction)

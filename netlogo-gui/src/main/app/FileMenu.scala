@@ -5,8 +5,7 @@ package org.nlogo.app
 import javax.swing.Action
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.UserAction
-import org.nlogo.window.{ Menu => SwingMenu }
+import org.nlogo.swing.{ Menu => SwingMenu, UserAction }
 
 object FileMenu {
   val ExportImportGroup = "ExportImportGroup"

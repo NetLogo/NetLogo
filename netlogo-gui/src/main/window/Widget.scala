@@ -9,6 +9,7 @@ import javax.swing.{ JPanel, JMenuItem, JPopupMenu }
 
 import org.nlogo.api.{ CompilerServices, MultiErrorHandler, SingleErrorHandler }
 import org.nlogo.core.{ TokenType, Widget => CoreWidget }
+import org.nlogo.swing.RoundedBorderPanel
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ WidgetAddedEvent, WidgetEditedEvent, WidgetErrorEvent, WidgetRemovedEvent }
 

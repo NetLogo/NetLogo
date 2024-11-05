@@ -1,15 +1,15 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window
+package org.nlogo.swing
 
 import javax.swing.{ Action, JMenu, JMenuItem, JPopupMenu }
 import javax.swing.plaf.basic.BasicMenuUI
 
-import org.nlogo.swing.{ MenuModel, RichAction, UserAction }
-import org.nlogo.swing.UserAction.{ ActionRankKey, DefaultGroup, DefaultRank, RichUserAction }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import scala.math.Ordering
+
+import UserAction._
 
 object Menu {
   object MenuOrdering extends scala.math.Ordering[Action] {

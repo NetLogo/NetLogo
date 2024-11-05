@@ -18,7 +18,7 @@ import org.nlogo.agent.InputBoxConstraint
 import org.nlogo.awt.Fonts.{ platformFont, platformMonospacedFont }
 import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, NumericInput, StringInput }
 import org.nlogo.editor.AbstractEditorArea
-import org.nlogo.swing.{ ButtonPanel, Utils }
+import org.nlogo.swing.{ ButtonPanel, RoundedBorderPanel, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object InputBox {

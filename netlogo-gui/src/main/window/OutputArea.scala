@@ -7,6 +7,7 @@ import javax.swing.{ JPanel, JScrollPane, JTextArea, ScrollPaneConstants }
 
 import org.nlogo.agent.OutputObject
 import org.nlogo.awt.{ Fonts => NLogoFonts, LineBreaker }
+import org.nlogo.swing.RoundedBorderPanel
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object OutputArea {

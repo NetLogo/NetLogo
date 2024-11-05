@@ -10,14 +10,13 @@ import javax.swing.{ AbstractAction, JButton, JPopupMenu }
 
 import org.nlogo.awt.{ Fonts, Mouse }
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.Utils.icon
+import org.nlogo.swing.{ PopupMenuItem, Utils }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.PopupMenuItem
 
 class HistoryPrompt(commandLine: CommandLine) extends JButton {
 
   locally {
-    val arrowIcon = icon("/images/popup.gif")
+    val arrowIcon = Utils.icon("/images/popup.gif")
     setIcon(arrowIcon)
     setDisabledIcon(arrowIcon)
   }

@@ -12,8 +12,8 @@ import javax.swing.border.EmptyBorder
 
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.I18N
+import org.nlogo.swing.{ CheckBox, RoundedBorderPanel }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ CheckBox, RoundedBorderPanel }
 
 object Preferences {
   abstract class BooleanPreference(val i18nKey: String, val requirement: String, default: Boolean) extends Preference {

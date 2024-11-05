@@ -9,7 +9,7 @@ import java.awt.image.BufferedImage
 import org.nlogo.api.Editable
 import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot }
 import org.nlogo.plot.{ PlotManagerInterface, PlotLoader, PlotPen, Plot }
-import org.nlogo.swing.{ VTextIcon }
+import org.nlogo.swing.{ RoundedBorderPanel, VTextIcon }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ WidgetRemovedEvent, AfterLoadEvent, WidgetErrorEvent }
 

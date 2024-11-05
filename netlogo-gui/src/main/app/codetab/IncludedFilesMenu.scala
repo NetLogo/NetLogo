@@ -13,9 +13,9 @@ import scala.util.control.Exception.ignoring
 import org.nlogo.app.common.{ Actions, TabsInterface }, Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, ToolBarMenu }
+import org.nlogo.swing.{ FileDialog => SwingFileDialog, PopupMenuItem, RoundedBorderPanel, ToolBarMenu }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ Events => WindowEvents, PopupMenuItem, RoundedBorderPanel }
+import org.nlogo.window.{ Events => WindowEvents }
 
 class IncludedFilesMenu(includesTable: => Option[Map[String, String]], tabs: TabsInterface)
 extends ToolBarMenu(I18N.gui.get("tabs.code.includedFiles"))
@@ -75,8 +75,6 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
     setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
 
     label.setForeground(InterfaceColors.TOOLBAR_TEXT)
-    
-    arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
   }
 
   private object NewSourceEditorAction extends AbstractAction(I18N.gui("new")) {

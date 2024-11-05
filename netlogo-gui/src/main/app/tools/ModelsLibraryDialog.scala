@@ -27,9 +27,8 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, Docum
 import org.nlogo.core.I18N
 import org.nlogo.api.FileIO
 import org.nlogo.awt.{ Positioning, UserCancelException }
-import org.nlogo.swing.{ BrowserLauncher, ModalProgressTask, Utils }, Utils.addEscKeyAction
+import org.nlogo.swing.{ BrowserLauncher, ModalProgressTask, RoundedBorderPanel, Utils }, Utils.addEscKeyAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.RoundedBorderPanel
 import org.nlogo.workspace.ModelsLibrary
 
 import scala.util.Try

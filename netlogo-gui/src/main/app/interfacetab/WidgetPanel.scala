@@ -17,11 +17,11 @@ import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser,
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.swing.Utils
+import org.nlogo.swing.{ PopupMenuItem, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ AbstractWidgetPanel, Events => WindowEvents, GUIWorkspace, OutputWidget, Widget,
                           WidgetContainer, WidgetRegistry, DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget,
-                          DummyViewWidget, PlotWidget, PopupMenuItem },
+                          DummyViewWidget, PlotWidget },
   WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, LoadBeginEvent, SelectModeEvent, WidgetEditedEvent,
                  WidgetRemovedEvent, ZoomedEvent }
 

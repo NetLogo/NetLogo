@@ -1,11 +1,10 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window
+package org.nlogo.swing
 
 import java.awt.{ Color, Graphics }
 import javax.swing.JComponent
 
-import org.nlogo.swing.{ HoverDecoration, Utils }
 import org.nlogo.theme.InterfaceColors
 
 trait RoundedBorderPanel extends JComponent with HoverDecoration {

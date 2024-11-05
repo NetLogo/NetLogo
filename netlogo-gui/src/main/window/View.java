@@ -19,6 +19,7 @@ import org.nlogo.awt.Colors;
 import org.nlogo.awt.ImageSelection;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.I18N;
+import org.nlogo.swing.PopupMenuItem;
 import org.nlogo.theme.InterfaceColors;
 
 import scala.Option;

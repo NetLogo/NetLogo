@@ -8,7 +8,7 @@ import javax.swing.{ AbstractAction, Action, JButton, JCheckBox, JPanel }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.I18N, I18N.Prefix
-import org.nlogo.swing.HoverDecoration
+import org.nlogo.swing.{ HoverDecoration, RoundedBorderPanel }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.LoadEndEvent
 

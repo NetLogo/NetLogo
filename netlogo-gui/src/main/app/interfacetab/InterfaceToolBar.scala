@@ -9,10 +9,11 @@ import javax.swing.{ AbstractAction, JLabel, JPanel, JPopupMenu }
 import org.nlogo.api.Editable
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ DropdownArrow, HoverDecoration, ToolBar, ToolBarToggleButton, Utils }
+import org.nlogo.swing.{ DropdownArrow, HoverDecoration, PopupMenuItem, RoundedBorderPanel, ToolBar,
+                         ToolBarToggleButton, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents, GUIWorkspace, JobWidget, PopupMenuItem,
-                          RoundedBorderPanel, Widget, WidgetInfo }
+import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents, GUIWorkspace, JobWidget, Widget,
+                          WidgetInfo }
 
 import scala.collection.mutable.HashSet
 
@@ -140,16 +141,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     selectButton.setIcon(Utils.iconScaledWithColor("/images/select.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
     editButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
     deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
-
-    selectButton.setPressedColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
-    editButton.setPressedColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
-    deleteButton.setPressedColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
-
-    selectButton.setHoverColor(InterfaceColors.TOOLBAR_BUTTON_HOVER)
-    editButton.setHoverColor(InterfaceColors.TOOLBAR_BUTTON_HOVER)
-    deleteButton.setHoverColor(InterfaceColors.TOOLBAR_BUTTON_HOVER)
-
-    // set action icons here
   }
 
   def handle(e: WindowEvents.WidgetRemovedEvent) {
@@ -256,8 +247,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
 
       label.setForeground(InterfaceColors.TOOLBAR_TEXT)
-
-      arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
 
       popup.setBackground(InterfaceColors.POPUP_BACKGROUND)
 
@@ -378,8 +367,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
 
       label.setForeground(InterfaceColors.TOOLBAR_TEXT)
-
-      arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
 
       popup.setBackground(InterfaceColors.POPUP_BACKGROUND)
 

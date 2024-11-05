@@ -7,8 +7,9 @@ package org.nlogo.app
 
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.core.I18N
-import org.nlogo.swing.UserAction, UserAction.{ ToolsDialogsGroup, ToolsMonitorGroup, ToolsHubNetGroup, ToolsSettingsGroup }
-import org.nlogo.window.{ Menu, WorkspaceActions },
+import org.nlogo.swing.{ Menu, UserAction }, UserAction.{ ToolsDialogsGroup, ToolsMonitorGroup, ToolsHubNetGroup,
+                                                          ToolsSettingsGroup }
+import org.nlogo.window.WorkspaceActions,
   WorkspaceActions.HaltGroup
 
 object ToolsMenu {

@@ -10,9 +10,8 @@ import java.util.prefs.{ Preferences => JavaPreferences }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.I18N
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.ToolBarMenu
+import org.nlogo.swing.{ PopupMenuItem, RoundedBorderPanel, ToolBarMenu }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ PopupMenuItem, RoundedBorderPanel }
 
 class ProceduresMenu(target: ProceduresMenuTarget)
 extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPanel with ThemeSync {
@@ -178,7 +177,5 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
     setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
 
     label.setForeground(InterfaceColors.TOOLBAR_TEXT)
-    
-    arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
   }
 }

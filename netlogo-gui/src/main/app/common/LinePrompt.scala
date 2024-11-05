@@ -7,8 +7,8 @@ import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, JLabel, JPopupMenu }
 
 import org.nlogo.core.{ AgentKind, I18N }
+import org.nlogo.swing.PopupMenuItem
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.PopupMenuItem
 
 class LinePrompt(commandLine: CommandLine) extends JLabel {
   setText(getPrompt)

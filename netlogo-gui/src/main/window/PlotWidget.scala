@@ -10,6 +10,7 @@ import javax.swing.{ AbstractAction, JMenuItem, JPopupMenu }
 import org.nlogo.awt.ImageSelection
 import org.nlogo.core.I18N
 import org.nlogo.plot.{PlotManagerInterface, Plot}
+import org.nlogo.swing.PopupMenuItem
 import org.nlogo.window.Events.PeriodicUpdateEvent
 
 object PlotWidget{

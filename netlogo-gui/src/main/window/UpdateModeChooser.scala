@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, JLabel, JPanel, JPopupMenu }
 
 import org.nlogo.core.{ I18N, UpdateMode }
-import org.nlogo.swing.DropdownArrow
+import org.nlogo.swing.{ DropdownArrow, PopupMenuItem, RoundedBorderPanel }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class UpdateModeChooser(workspace: GUIWorkspace) extends JPanel(new GridBagLayout) with RoundedBorderPanel
@@ -79,8 +79,6 @@ class UpdateModeChooser(workspace: GUIWorkspace) extends JPanel(new GridBagLayou
     setForeground(InterfaceColors.TOOLBAR_TEXT)
 
     label.setForeground(InterfaceColors.TOOLBAR_TEXT)
-
-    arrow.setColor(InterfaceColors.TOOLBAR_TEXT)
 
     popup.setBackground(InterfaceColors.POPUP_BACKGROUND)
 

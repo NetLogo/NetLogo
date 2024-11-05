@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window
+package org.nlogo.swing
 
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, Action, JCheckBoxMenuItem, JMenuItem }
