@@ -16,13 +16,16 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
   private var lastLine = ""
   private var lastColors = Array[Color]()
 
+  // discard cache if the theme changed (IB 11/7/24)
+  private var lastTheme = ""
+
   def reset() {
     lastLine = ""
     lastColors = Array()
   }
 
   def getCharacterColors(line: String): Array[Color] =
-    if (line == lastLine)
+    if (line == lastLine && InterfaceColors.getTheme == lastTheme)
       lastColors
     else {
       val tokens = tokenizeForColorization(line)
@@ -46,6 +49,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
       }
       lastColors = result
       lastLine = line
+      lastTheme = InterfaceColors.getTheme
       result
     }
 
