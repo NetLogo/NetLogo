@@ -5,11 +5,10 @@ package org.nlogo.app.tools
 import java.awt.{ BorderLayout, Frame }
 import java.io.File
 import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ BorderFactory, Box, BoxLayout, JButton, SwingConstants }
-import javax.swing.border.EmptyBorder
+import javax.swing.{ BorderFactory, Box, BoxLayout, SwingConstants }
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ OptionDialog, RichAction, RoundedBorderPanel, TextFieldBox }
+import org.nlogo.swing.{ Button, OptionDialog, RichAction, TextFieldBox }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class PreferencesDialog(parent: Frame, preferences: Preference*) extends ToolDialog(parent, "preferences")
@@ -18,26 +17,9 @@ class PreferencesDialog(parent: Frame, preferences: Preference*) extends ToolDia
 
   private lazy val preferencesPanel = new TextFieldBox(SwingConstants.TRAILING)
 
-  private lazy val okButton = new JButton(RichAction(I18N.gui.get("common.buttons.ok"))(_ => ok()))
-    with RoundedBorderPanel {
-    setBorder(new EmptyBorder(3, 12, 3, 12))
-    setDiameter(6)
-    enableHover()
-  }
-
-  private lazy val applyButton = new JButton(RichAction(I18N.gui.get("common.buttons.apply"))(_ => apply()))
-    with RoundedBorderPanel {
-    setBorder(new EmptyBorder(3, 12, 3, 12))
-    setDiameter(6)
-    enableHover()
-  }
-
-  private lazy val cancelButton = new JButton(RichAction(I18N.gui.get("common.buttons.cancel"))(_ => cancel()))
-    with RoundedBorderPanel {
-    setBorder(new EmptyBorder(3, 12, 3, 12))
-    setDiameter(6)
-    enableHover()
-  }
+  private lazy val okButton = new Button(RichAction(I18N.gui.get("common.buttons.ok"))(_ => ok()))
+  private lazy val applyButton = new Button(RichAction(I18N.gui.get("common.buttons.apply"))(_ => apply()))
+  private lazy val cancelButton = new Button(RichAction(I18N.gui.get("common.buttons.cancel"))(_ => cancel()))
 
   private def reset() = {
     preferences foreach (_.load(netLogoPrefs))
@@ -105,20 +87,9 @@ class PreferencesDialog(parent: Frame, preferences: Preference*) extends ToolDia
     getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     preferencesPanel.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
-    okButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    okButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-    okButton.setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-    okButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
-
-    applyButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    applyButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-    applyButton.setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-    applyButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
-
-    cancelButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    cancelButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-    cancelButton.setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-    cancelButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    okButton.syncTheme()
+    applyButton.syncTheme()
+    cancelButton.syncTheme()
 
     preferencesPanel.syncTheme()
 

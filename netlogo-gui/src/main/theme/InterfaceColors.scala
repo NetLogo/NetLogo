@@ -473,6 +473,28 @@ object InterfaceColors {
       case "dark" => MEDIUM_GRAY
     }
   
+  def RADIO_BUTTON_BACKGROUND =
+    theme match {
+      case "classic" | "light" => Color.WHITE
+      case "dark" => DARK_BLUE_GRAY
+    }
+  
+  def RADIO_BUTTON_BACKGROUND_HOVER =
+    theme match {
+      case "classic" | "light" => WHITE_2
+      case "dark" => DARK_BLUE_GRAY_2
+    }
+  
+  def RADIO_BUTTON_SELECTED = MEDIUM_BLUE
+  
+  def RADIO_BUTTON_SELECTED_HOVER = MEDIUM_BLUE_2
+
+  def RADIO_BUTTON_BORDER =
+    theme match {
+      case "classic" | "light" => MEDIUM_GRAY
+      case "dark" => LIGHT_GRAY_OUTLINE
+    }
+  
   // Syntax highlighting colors
 
   def COMMENT_COLOR = new Color(90, 90, 90) // gray

@@ -13,10 +13,9 @@ import java.io.File
 import java.nio.file.Paths
 import java.net.URI
 import java.util.{ Enumeration, LinkedList, List => JList }
-import javax.swing.{ AbstractAction, Action, Box, BorderFactory, BoxLayout,
-  InputMap, JButton, JComponent, JDialog, JEditorPane, JLabel, JOptionPane, JPanel,
-  JScrollPane, JTextField, JTree, KeyStroke, SwingUtilities, WindowConstants }
-import javax.swing.border.EmptyBorder
+import javax.swing.{ AbstractAction, Action, Box, BorderFactory, BoxLayout, InputMap, JComponent, JDialog, JEditorPane,
+                     JLabel, JOptionPane, JPanel, JScrollPane, JTextField, JTree, KeyStroke, SwingUtilities,
+                     WindowConstants }
 import javax.swing.text.{ BadLocationException, DefaultHighlighter }
 import javax.swing.tree.{ DefaultMutableTreeNode, DefaultTreeCellRenderer, DefaultTreeModel, TreePath,
                           TreeSelectionModel }
@@ -27,7 +26,7 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, Docum
 import org.nlogo.core.I18N
 import org.nlogo.api.FileIO
 import org.nlogo.awt.{ Positioning, UserCancelException }
-import org.nlogo.swing.{ BrowserLauncher, ModalProgressTask, RoundedBorderPanel, Utils }, Utils.addEscKeyAction
+import org.nlogo.swing.{ BrowserLauncher, Button, ModalProgressTask, Utils }, Utils.addEscKeyAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
@@ -245,35 +244,19 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       }
     }
   
-  private val communityButton = new JButton(communityAction) with RoundedBorderPanel {
-    setBorder(new EmptyBorder(3, 12, 3, 12))
-    setDiameter(6)
-    enableHover()
-  }
+  private val communityButton = new Button(communityAction)
 
-  private val selectButton = new JButton(openAction) with RoundedBorderPanel {
-    setBorder(new EmptyBorder(3, 12, 3, 12))
-    setDiameter(6)
-    enableHover()
-
+  private val selectButton = new Button(openAction) {
     setContentAreaFilled(false)
   }
 
-  private val cancelButton = new JButton(cancelAction) with RoundedBorderPanel {
-    setBorder(new EmptyBorder(3, 12, 3, 12))
-    setDiameter(6)
-    enableHover()
-  }
+  private val cancelButton = new Button(cancelAction)
 
-  private val clearSearchButton = new JButton(new AbstractAction(I18N.gui.get("modelsLibrary.clear")) {
+  private val clearSearchButton = new Button(new AbstractAction(I18N.gui.get("modelsLibrary.clear")) {
     def actionPerformed(e: ActionEvent) {
       searchField.setText("")
     }
-  }) with RoundedBorderPanel {
-    setBorder(new EmptyBorder(3, 12, 3, 12))
-    setDiameter(6)
-    enableHover()
-  }
+  })
 
   locally {
     setResizable(true)
@@ -749,24 +732,9 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
     searchIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
 
-    communityButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    communityButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-    communityButton.setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-    communityButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
-
-    selectButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    selectButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-    selectButton.setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-    selectButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
-
-    cancelButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    cancelButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-    cancelButton.setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-    cancelButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
-
-    clearSearchButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    clearSearchButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-    clearSearchButton.setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-    clearSearchButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    communityButton.syncTheme()
+    selectButton.syncTheme()
+    cancelButton.syncTheme()
+    clearSearchButton.syncTheme()
   }
 }

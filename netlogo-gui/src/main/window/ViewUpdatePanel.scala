@@ -4,11 +4,10 @@ package org.nlogo.window
 
 import java.awt.{ Dimension, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
-import javax.swing.{ AbstractAction, Action, JButton, JCheckBox, JPanel }
-import javax.swing.border.EmptyBorder
+import javax.swing.{ AbstractAction, Action, JCheckBox, JPanel }
 
 import org.nlogo.core.I18N, I18N.Prefix
-import org.nlogo.swing.{ HoverDecoration, RoundedBorderPanel }
+import org.nlogo.swing.Button
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.LoadEndEvent
 
@@ -89,20 +88,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
     }
   }
 
-  private class SettingsButton(action: Action) extends JButton(action) with RoundedBorderPanel with ThemeSync
-                                               with HoverDecoration {
-    setBorder(new EmptyBorder(3, 12, 3, 12))
-    setFocusable(false)
-    setDiameter(6)
-    enableHover()
-
-    def syncTheme() {
-      setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-      setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-      setForeground(InterfaceColors.TOOLBAR_TEXT)
-    }
-
+  private class SettingsButton(action: Action) extends Button(action) {
     override def getPreferredSize: Dimension =
       new Dimension(super.getPreferredSize.width, updateModeChooser.getPreferredSize.height)
   }

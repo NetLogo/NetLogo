@@ -5,29 +5,47 @@ package org.nlogo.app.tools
 import java.awt.{ Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.ActionEvent
 import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ AbstractAction, ButtonGroup, JButton, JPanel, JRadioButton }
+import javax.swing.{ AbstractAction, ButtonGroup, JPanel }
 
 import org.nlogo.core.I18N
+import org.nlogo.swing.{ Button, RadioButton }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "themes") with ThemeSync {
   private lazy val prefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
 
-  private lazy val classicButton = new JRadioButton(new AbstractAction(I18N.gui("classic")) {
+  private lazy val panel = new JPanel(new GridBagLayout)
+
+  private lazy val classicButton = new RadioButton(new AbstractAction(I18N.gui("classic")) {
     def actionPerformed(e: ActionEvent) {
       setTheme("classic")
     }
   })
 
-  private lazy val lightButton = new JRadioButton(new AbstractAction(I18N.gui("light")) {
+  private lazy val lightButton = new RadioButton(new AbstractAction(I18N.gui("light")) {
     def actionPerformed(e: ActionEvent) {
       setTheme("light")
     }
   })
 
-  private lazy val darkButton = new JRadioButton(new AbstractAction(I18N.gui("dark")) {
+  private lazy val darkButton = new RadioButton(new AbstractAction(I18N.gui("dark")) {
     def actionPerformed(e: ActionEvent) {
       setTheme("dark")
+    }
+  })
+
+  private lazy val okButton = new Button(new AbstractAction(I18N.gui.get("common.buttons.ok")) {
+    def actionPerformed(e: ActionEvent) {
+      setVisible(false)
+    }
+  })
+
+  private lazy val cancelButton = new Button(new AbstractAction(I18N.gui.get("common.buttons.cancel")) {
+    def actionPerformed(e: ActionEvent) {
+      setTheme(startTheme)
+      setSelected(startTheme)
+
+      setVisible(false)
     }
   })
 
@@ -35,10 +53,6 @@ class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "theme
 
   override def initGUI() {
     setResizable(false)
-
-    val panel = new JPanel
-
-    panel.setLayout(new GridBagLayout)
 
     val c = new GridBagConstraints
 
@@ -59,22 +73,13 @@ class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "theme
     themeButtons.add(lightButton)
     themeButtons.add(darkButton)
 
-    val buttonPanel = new JPanel
+    val buttonPanel = new JPanel {
+      setOpaque(false)
+      setBackground(InterfaceColors.TRANSPARENT)
+    }
 
-    buttonPanel.add(new JButton(new AbstractAction(I18N.gui.get("common.buttons.ok")) {
-      def actionPerformed(e: ActionEvent) {
-        setVisible(false)
-      }
-    }))
-
-    buttonPanel.add(new JButton(new AbstractAction(I18N.gui.get("common.buttons.cancel")) {
-      def actionPerformed(e: ActionEvent) {
-        setTheme(startTheme)
-        setSelected(startTheme)
-
-        setVisible(false)
-      }
-    }))
+    buttonPanel.add(okButton)
+    buttonPanel.add(cancelButton)
 
     panel.add(buttonPanel, c)
 
@@ -110,6 +115,13 @@ class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "theme
   }
 
   def syncTheme() {
-    
+    panel.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    classicButton.syncTheme()
+    lightButton.syncTheme()
+    darkButton.syncTheme()
+
+    okButton.syncTheme()
+    cancelButton.syncTheme()
   }
 }
