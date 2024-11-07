@@ -52,6 +52,7 @@ class ViewManager(val workspace: GUIWorkspace,
           }
           throw ex
       }
+    syncTheme()
   }
 
   def init() {
@@ -257,4 +258,11 @@ class ViewManager(val workspace: GUIWorkspace,
 
   var warned = false
 
+  def syncTheme() {
+    if (observerView != null)
+      observerView.syncTheme()
+    
+    if (fullscreenView != null)
+      fullscreenView.syncTheme()
+  }
 }

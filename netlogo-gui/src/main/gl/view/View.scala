@@ -5,13 +5,16 @@ package org.nlogo.gl.view
 import com.jogamp.opengl.GLProfile
 import com.jogamp.opengl.awt.GLCanvas
 
-import org.nlogo.gl.render.Renderer
-import java.awt.image.BufferedImage
+import java.awt.Frame
 import java.awt.event.{ KeyEvent, KeyAdapter, MouseEvent }
+import java.awt.image.BufferedImage
+
+import org.nlogo.gl.render.Renderer
+import org.nlogo.theme.ThemeSync
+import org.nlogo.window.Event.LinkChild
 
 abstract class View(title: String, val viewManager: ViewManager, var renderer: Renderer)
-extends java.awt.Frame(title)
-with org.nlogo.window.Event.LinkChild {
+  extends Frame(title) with LinkChild with ThemeSync {
 
   var canvas: GLCanvas = null
   val picker = new Picker(this)

@@ -791,6 +791,9 @@ class App extends
     frame.repaint()
     tabManager.separateTabsWindow.repaint()
 
+    workspace.glView.syncTheme()
+    workspace.glView.repaint()
+
     openPreferencesDialog.syncTheme()
     showThemesDialog.syncTheme()
     openColorDialog.syncTheme()

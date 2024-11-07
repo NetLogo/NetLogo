@@ -2,8 +2,10 @@
 
 package org.nlogo.window;
 
+import org.nlogo.theme.ThemeSync;
+
 public interface GLViewManagerInterface
-    extends LocalViewInterface {
+    extends LocalViewInterface, ThemeSync {
   void open()
       throws JOGLLoadingException;
 

@@ -2,14 +2,16 @@
 
 package org.nlogo.gl.view
 
+import java.awt.event.{ ActionEvent, ActionListener }
+import javax.swing.JToolBar
+
 import org.nlogo.api.Perspective
 import org.nlogo.core.I18N
-import java.awt.event.{ ActionEvent, ActionListener }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+
 import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InteractMode }
 
-class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
-    extends javax.swing.JToolBar {
-
+class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler) extends JToolBar with ThemeSync {
   val orbitAction =
     new MovementAction(I18N.gui.get("view.3d.orbit"), OrbitMode)
   val zoomAction =
@@ -123,5 +125,17 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
     override def actionPerformed(e: ActionEvent) {
       setMovementMode(mode)
     }
+  }
+
+  def syncTheme() {
+    setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
+
+    orbitButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    zoomButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    moveButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    interactButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    resetButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    fullScreenButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
   }
 }
