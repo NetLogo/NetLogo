@@ -12,6 +12,7 @@ class Button(action: Action) extends JButton(action) with RoundedBorderPanel wit
   enableHover()
   setBorder(new EmptyBorder(3, 12, 3, 12))
   setFocusable(false)
+  setContentAreaFilled(false)
 
   def syncTheme() {
     setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)

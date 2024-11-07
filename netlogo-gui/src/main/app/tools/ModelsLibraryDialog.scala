@@ -245,11 +245,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     }
   
   private val communityButton = new Button(communityAction)
-
-  private val selectButton = new Button(openAction) {
-    setContentAreaFilled(false)
-  }
-
+  private val selectButton = new Button(openAction)
   private val cancelButton = new Button(cancelAction)
 
   private val clearSearchButton = new Button(new AbstractAction(I18N.gui.get("modelsLibrary.clear")) {
