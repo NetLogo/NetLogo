@@ -29,14 +29,12 @@ class NotificationBanner(initialMessage: String) extends JPanel with ThemeSync  
 
     // Customize the message label
     messageLabel.setHorizontalAlignment(SwingConstants.LEFT)
-//    messageLabel.setForeground(InterfaceColors.COMMAND_OUTPUT_BACKGROUND)
     add(messageLabel, BorderLayout.CENTER)
 
     // Configure the close button
     closeButton.setBorderPainted(false)
     closeButton.setContentAreaFilled(false)
     closeButton.setFocusPainted(false)
-//    closeButton.setForeground(Color.WHITE)  // Optional: White color for "X"
     closeButton.addActionListener(new ActionListener {
       override def actionPerformed(e: ActionEvent): Unit = {
         setVisible(false)  // Hide the banner when the close button is pressed

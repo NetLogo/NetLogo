@@ -73,10 +73,9 @@ object InAppAnnouncementsHelper {
       jsonObjectList = parseJsonToList(jsonContent) // Populate the class variable
       val formattedString = formatJsonObjectList(jsonObjectList)
       val lastSeenEventId = prefs.getInt(lastSeenEventIdKey, -1)
-      println(s"lastSeenEventId: $lastSeenEventId, head title: ${getJsonObjectHead.getOrElse("None")}")
 
       val html = InfoFormatter.toInnerHtml(formattedString)
-      println("voila:  "+ formattedString)
+
       if (!jsonContent.trim.isEmpty) {
         SwingUtilities.invokeLater(() => {
           val editorPane: JEditorPane = new JEditorPane { self =>
@@ -132,17 +131,6 @@ object InAppAnnouncementsHelper {
 //        s"<p>$fullTextHtml</p>"
     }.mkString("<html>", "", "</html>")
   }
-//  def formatJsonObjectList(jsonObjects: List[JsonObject]): String = {
-//    jsonObjects.map { obj =>
-//      s"* ${I18N.gui.get("dialog.interface.update")}: ${obj.date}\n  ${obj.fullText}"
-//    }.mkString("\n\n")
-//  }
-//def formatJsonObjectList(jsonObjectList: List[JsonObject]): String = {
-//  jsonObjectList.map { obj =>
-//    s"<h3>* ${I18N.gui.get("dialog.interface.update")}: ${obj.date} -- ${obj.title}</h3>" +
-//      s"<p>${obj.fullText}</p>"
-//  }.mkString("<html>", "<br><br>", "</html>")
-//}
 
   // Static method to get the title of the head of jsonObjectList, with lazy initialization
   def getJsonObjectHead: Option[String] = {
