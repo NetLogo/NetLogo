@@ -32,14 +32,14 @@ class NotificationBanner() extends JPanel with ThemeSync {
   jsonObjectList = parseJsonToList(fetchJsonFromUrl(JsonUrl))
 
   private val initialMessage = getJsonObjectHead.getOrElse("")
-  val lastSeenEventIdKey: String = "lastSeenEventId" // The key for the most recently seen event-id
+  lazy val lastSeenEventIdKey: String = "lastSeenEventId" // The key for the most recently seen event-id
 
   // Label to display notification messages
   private val messageLabel = new JLabel(" " + initialMessage)
 
   // Close button with an "X" icon
   private val closeButton = new JButton("\u2716") // Unicode character for "X"
-
+  setVisible(isShowNeeded()) // Set visibility based on isShowNeeded
   // Initialize the NotificationBanner panel
   initUI()
 
@@ -135,7 +135,7 @@ class NotificationBanner() extends JPanel with ThemeSync {
       val jsonContent = fetchJsonFromUrl(JsonUrl)
       jsonObjectList = parseJsonToList(jsonContent) // Populate the class variable
       val formattedString = formatJsonObjectList(jsonObjectList)
-      if(!checkIfShowNeeded()){
+      if(!isShowNeeded()){
         return
       }
       val lastSeenEventId = prefs.getInt(lastSeenEventIdKey, -1); // Returns -1 if "event-id" is not found
@@ -184,6 +184,7 @@ class NotificationBanner() extends JPanel with ThemeSync {
           // Check if OK was clicked (index 0 in options array) and hide the NotificationBanner
           if (result == 0) {
             setVisible(false) // Hide NotificationBanner
+            prefs.putInt("lastSeenEventId", jsonObjectList.head.eventId)
           }
         })
       }
@@ -208,26 +209,37 @@ class NotificationBanner() extends JPanel with ThemeSync {
     }.mkString("<html>", "", "</html>")
   }
 
-  // Static method to get the title of the head of jsonObjectList, with lazy initialization
+    // Static method to get the title of the head of jsonObjectList, with lazy initialization
   def getJsonObjectHead: Option[String] = {
-    // Check if jsonObjectList is empty, and fetch the JSON if needed
-//    if(jsonObjectList == null){}
-    if (jsonObjectList.isEmpty) {
+    // Check if jsonObjectList is null or empty, and fetch the JSON if needed
+    if (jsonObjectList == null) {
       val jsonContent = fetchJsonFromUrl(JsonUrl) // Use the static URL here
       jsonObjectList = parseJsonToList(jsonContent)
     }
 
-    // Return the fullText of the first item, if available
-    jsonObjectList.headOption.map(_.title)
+    // Return the title of the first item if jsonObjectList is not null and has elements
+    jsonObjectList match {
+      case null | Nil =>
+        println("jsonObjectList is empty or null; hiding NotificationBanner.")
+        this.setVisible(false) // Hide the NotificationBanner panel
+        None // Return None if jsonObjectList is null or empty
+      case list =>
+        this.setVisible(true) // Ensure the NotificationBanner is visible
+        list.headOption.map(_.title) // Return the title of the head element if available
+    }
   }
 
-  private def checkIfShowNeeded(): Boolean = {
+
+  private def isShowNeeded(): Boolean = {
     val prefs = JPreferences.userNodeForPackage(getClass)
       val jsonContent = fetchJsonFromUrl(JsonUrl)
       jsonObjectList = parseJsonToList(jsonContent) // Populate the class variable
       val lastSeenEventId = prefs.getInt(lastSeenEventIdKey, -1); // Returns -1 if "event-id" is not found
-      println(s"lastSeenEventId: $lastSeenEventId, head of the list: ${jsonObjectList.head.eventId}")
-      if (jsonObjectList.head.eventId > lastSeenEventId) {
+    if(jsonObjectList == null ) {
+      return false
+    }
+    println(s"lastSeenEventId: $lastSeenEventId, head of the list: ${jsonObjectList.head.eventId}")
+    if (jsonObjectList.head.eventId > lastSeenEventId) {
         println(s"Show this ${jsonObjectList.head.eventId}")
         true
       }
