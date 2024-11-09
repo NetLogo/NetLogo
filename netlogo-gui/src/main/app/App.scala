@@ -421,9 +421,7 @@ class App extends
                                  pico.getComponent(classOf[ExternalFileManager]))
 
     frame.addLinkComponent(_tabManager)
-    val newestNotificationTitle = InAppAnnouncementsHelper.getJsonObjectHead.getOrElse("")
-    //    println(newestNotificationTitle)
-    notificationBanner = new NotificationBanner(newestNotificationTitle)
+    notificationBanner = new NotificationBanner()
     frame.add(notificationBanner, java.awt.BorderLayout.NORTH)
     controlSet.interfaceTab = Some(_tabManager.interfaceTab)
 
