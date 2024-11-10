@@ -11,7 +11,7 @@ import org.nlogo.api.{ Agent, Perspective, Turtle }
 import org.nlogo.awt.{ Colors, ImageSelection }, Colors.colorize
 import org.nlogo.core.AgentKind
 import org.nlogo.gl.render.PickListener
-import org.nlogo.swing.{ PopupMenuItem, WrappingPopupMenu }
+import org.nlogo.swing.{ Menu, PopupMenuItem, WrappingPopupMenu }
 import org.nlogo.theme.InterfaceColors
 
 class Picker(view: View) extends PickListener with ActionListener {
@@ -98,7 +98,7 @@ class Picker(view: View) extends PickListener with ActionListener {
 
   /// context menu
 
-  private class AgentMenu(agent: Agent) extends javax.swing.JMenu(agent.toString) {
+  private class AgentMenu(agent: Agent) extends Menu(agent.toString) {
     var action: AgentAction = null
     override def menuSelectionChanged(isIncluded: Boolean) {
       super.menuSelectionChanged(isIncluded)
