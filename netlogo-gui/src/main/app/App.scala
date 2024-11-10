@@ -796,6 +796,8 @@ class App extends
     workspace.glView.syncTheme()
     workspace.glView.repaint()
 
+    monitorManager.syncTheme()
+
     openPreferencesDialog.syncTheme()
     showThemesDialog.syncTheme()
     openColorDialog.syncTheme()

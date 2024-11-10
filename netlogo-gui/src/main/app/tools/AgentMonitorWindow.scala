@@ -4,25 +4,22 @@ package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Container, Frame }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
-import javax.swing.{ AbstractAction, BorderFactory, JDialog, LayoutFocusTraversalPolicy }
+import javax.swing.{ AbstractAction, JDialog, LayoutFocusTraversalPolicy }
 
 import scala.collection.JavaConverters._
 
 import org.nlogo.agent.{ Agent, Link, Observer, Turtle }
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.{ Utils => SwingUtils }
+import org.nlogo.theme.ThemeSync
 import org.nlogo.window.{ Event, Events => WindowEvents }
 
 class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double,
                          manager: AgentMonitorManager, parent: Frame)
-// to force the window to stay above the application window replace the following
-// line with 'extends JDialog(parent)' AAB - Feb 02 2021
-extends JDialog()
-with Event.LinkChild
-with WindowEvents.PeriodicUpdateEvent.Handler
-with WindowEvents.PatchesCreatedEvent.Handler
-with WindowEvents.LoadBeginEvent.Handler
-{
+  // to force the window to stay above the application window replace the following
+  // line with 'extends JDialog(parent)' AAB - Feb 02 2021
+  extends JDialog with Event.LinkChild with WindowEvents.PeriodicUpdateEvent.Handler
+  with WindowEvents.PatchesCreatedEvent.Handler with WindowEvents.LoadBeginEvent.Handler with ThemeSync {
 
   private val monitor = {
     agentKind match {
@@ -40,8 +37,6 @@ with WindowEvents.LoadBeginEvent.Handler
   override def getParent = parent  // parent frame
 
   monitor.setAgent(_agent, radius)
-  if(!System.getProperty("os.name").startsWith("Mac"))
-    getRootPane.setBorder(BorderFactory.createRaisedBevelBorder)
   getContentPane.setLayout(new BorderLayout)
   getContentPane.add(monitor, BorderLayout.CENTER)
   setFocusTraversalPolicy(
@@ -186,4 +181,7 @@ with WindowEvents.LoadBeginEvent.Handler
     }
   }
 
+  def syncTheme() {
+    monitor.syncTheme()
+  }
 }
