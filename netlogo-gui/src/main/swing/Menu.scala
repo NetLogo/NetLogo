@@ -48,6 +48,7 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
   }
 
   setUI(menuUI)
+  syncTheme()
 
   override def getPopupMenu: JPopupMenu = {
     val menu = super.getPopupMenu
