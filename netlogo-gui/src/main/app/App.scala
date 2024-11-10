@@ -300,7 +300,7 @@ class App extends
   private val runningInMacWrapper = Option(System.getProperty("org.nlogo.mac.appClassName")).nonEmpty
   private val ImportWorldURLProp = "netlogo.world_state_url"
   private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
-  var notificationBanner: NotificationBanner = null
+  private var notificationBanner: NotificationBanner = null
 
   val isMac = System.getProperty("os.name").startsWith("Mac")
 

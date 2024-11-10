@@ -1,3 +1,5 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.app
 
 import org.nlogo.theme.{InterfaceColors, ThemeSync}
@@ -13,10 +15,6 @@ import org.nlogo.app.infotab.InfoFormatter
 import com.vladsch.flexmark.html.HtmlRenderer
 import com.vladsch.flexmark.parser.Parser
 
-
-import java.awt._
-import javax.swing._
-import java.util.prefs.{Preferences => JPreferences}
 import org.nlogo.core.I18N
 
 import java.awt.event.{FocusEvent, FocusListener}
@@ -209,7 +207,6 @@ class NotificationBanner() extends JPanel with ThemeSync {
     }.mkString("<html>", "", "</html>")
   }
 
-    // Static method to get the title of the head of jsonObjectList, with lazy initialization
   def getJsonObjectHead: Option[String] = {
     // Check if jsonObjectList is null or empty, and fetch the JSON if needed
     if (jsonObjectList == null) {
@@ -232,19 +229,18 @@ class NotificationBanner() extends JPanel with ThemeSync {
 
   private def isShowNeeded(): Boolean = {
     val prefs = JPreferences.userNodeForPackage(getClass)
-      val jsonContent = fetchJsonFromUrl(JsonUrl)
-      jsonObjectList = parseJsonToList(jsonContent) // Populate the class variable
-      val lastSeenEventId = prefs.getInt(lastSeenEventIdKey, -1); // Returns -1 if "event-id" is not found
-    if(jsonObjectList == null ) {
+    val jsonContent = fetchJsonFromUrl(JsonUrl)
+    jsonObjectList = parseJsonToList(jsonContent) // Populate the class variable
+    val lastSeenEventId = prefs.getInt(lastSeenEventIdKey, -1); // Returns -1 if "event-id" is not found
+    if(jsonObjectList == null || jsonObjectList.head == null) {
       return false
     }
-    println(s"lastSeenEventId: $lastSeenEventId, head of the list: ${jsonObjectList.head.eventId}")
     if (jsonObjectList.head.eventId > lastSeenEventId) {
-        println(s"Show this ${jsonObjectList.head.eventId}")
+//       Show this message
         true
       }
       else {
-        println(s"Don't show this  ${jsonObjectList.head.eventId}")
+//        Don't show this message
         false
       }
   }
