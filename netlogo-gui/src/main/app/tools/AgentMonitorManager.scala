@@ -9,12 +9,10 @@ import scala.collection.mutable
 import org.nlogo.agent.Agent
 import org.nlogo.core.AgentKind
 import org.nlogo.swing.Tiler
+import org.nlogo.theme.ThemeSync
 import org.nlogo.window.{ Event, GUIWorkspace }
 
-class AgentMonitorManager(val workspace: GUIWorkspace)
-extends Event.LinkChild with Event.LinkParent
-{
-
+class AgentMonitorManager(val workspace: GUIWorkspace) extends Event.LinkChild with Event.LinkParent with ThemeSync {
   private val monitorWindows      = mutable.Map[Agent, AgentMonitorWindow]()
   private val emptyMonitorWindows = mutable.Map[AgentKind, AgentMonitorWindow]()
   private val monitorList         = collection.mutable.Buffer[Agent]()
@@ -109,6 +107,8 @@ extends Event.LinkChild with Event.LinkParent
       emptyMonitorWindows.getOrElse(agentKind, newWindow(agentKind, agent, radius))
     }
 
+    window.syncTheme()
+
     window.radius(radius)
     window.setVisible(true)
     org.nlogo.window.Event.rehash()
@@ -140,7 +140,10 @@ extends Event.LinkChild with Event.LinkParent
   def hideAll() { showOrHideAll(show = false) }
 
   private def showOrHideAll(show: Boolean) {
-    monitorWindows.values.foreach(_.setVisible(show))
+    monitorWindows.values.foreach(monitor => {
+      monitor.syncTheme()
+      monitor.setVisible(show)
+    })
     emptyMonitorWindows.values.foreach(_.setVisible(show))
   }
 
@@ -150,5 +153,9 @@ extends Event.LinkChild with Event.LinkParent
 
   def refresh() {
     monitorWindows.values.foreach(_.refresh())
+  }
+
+  def syncTheme() {
+    monitorWindows.values.foreach(_.syncTheme())
   }
 }

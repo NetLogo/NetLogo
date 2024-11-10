@@ -293,10 +293,6 @@ object InterfaceColors {
       case "dark" => LIGHT_GRAY_OUTLINE
     }
 
-  def AGENT_EDITOR_BACKGROUND = LIGHT_GRAY
-
-  def AGENT_COMMANDER_BACKGROUND = LIGHT_GRAY
-
   def TOOLBAR_BACKGROUND =
     theme match {
       case "classic" | "light" => LIGHT_GRAY

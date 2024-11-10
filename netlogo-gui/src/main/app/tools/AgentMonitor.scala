@@ -11,12 +11,14 @@ import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ AgentKind, I18N }
 import org.nlogo.swing.CollapsiblePane
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, GUIWorkspace }
 
 abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
-extends JPanel with CommandCenterInterface // lets us embed CommandLine
-{
+                      // lets us embed CommandLine
+  extends JPanel(new BorderLayout) with CommandCenterInterface with ThemeSync {
+
+  private implicit val i18nPrefix = I18N.Prefix("tools.agentMonitor")
 
   private var _agent: Agent = null
   def agent = _agent
@@ -49,48 +51,48 @@ extends JPanel with CommandCenterInterface // lets us embed CommandLine
   private val historyPrompt = new HistoryPrompt(commandLine)
   private val agentEditor = new AgentMonitorEditor(this)
 
-  setLayout(new BorderLayout)
-
-  val scrollPane = new JScrollPane(agentEditor,
+  private val scrollPane = new JScrollPane(agentEditor,
     ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
-      // never let preferred height exceed 350; after 350, just let scrolling kick in - ST 8/17/03
-      override def getPreferredSize = {
-        val sup = super.getPreferredSize
-        new Dimension(sup.width, StrictMath.min(sup.height, 350))
-      }
+
+    setBorder(null)
+
+    // never let preferred height exceed 350; after 350, just let scrolling kick in - ST 8/17/03
+    override def getPreferredSize = {
+      val sup = super.getPreferredSize
+      new Dimension(sup.width, StrictMath.min(sup.height, 350))
     }
-  val viewPanel: Option[AgentMonitorViewPanel] =
+  }
+
+  private val panel = new AgentMonitorViewPanel(workspace)
+  private val viewPane = new CollapsiblePane(I18N.gui("view"), panel, window)
+  private val propertiesPane = new CollapsiblePane(I18N.gui("properties"), scrollPane, window)
+  private val viewPanel: Option[AgentMonitorViewPanel] =
     if(agentKind == AgentKind.Observer) {
       // the observer monitor doesn't have a view or the command center. ev 6/4/08
       add(scrollPane, BorderLayout.CENTER)
       None
     }
     else {
-      implicit val i18nPrefix = I18N.Prefix("tools.agentMonitor")
-      val panel = new AgentMonitorViewPanel(workspace)
-      add(new CollapsiblePane(I18N.gui("view"), panel, window), BorderLayout.NORTH)
-      add(new CollapsiblePane(I18N.gui("properties"), scrollPane, window), BorderLayout.CENTER)
+      add(viewPane, BorderLayout.NORTH)
+      add(propertiesPane, BorderLayout.CENTER)
       commandLine.setEnabled(agent != null && agent.id != -1)
       historyPrompt.setEnabled(agent != null && agent.id != -1)
       commandLine.agentKind(agentKind)
       prompt.setEnabled(false)
-      val commandPanel = new JPanel
-      val gridBag = new GridBagLayout
-      commandPanel.setLayout(gridBag)
-      commandPanel.setBackground(InterfaceColors.AGENT_COMMANDER_BACKGROUND)
+      val commandPanel = new JPanel(new GridBagLayout) {
+        setOpaque(false)
+        setBackground(InterfaceColors.TRANSPARENT)
+      }
       val c = new GridBagConstraints
-      gridBag.setConstraints(prompt, c)
-      commandPanel.add(prompt)
-      c.weightx = 1.0
+      commandPanel.add(prompt, c)
+      c.weightx = 1
       c.fill = GridBagConstraints.BOTH
-      gridBag.setConstraints(commandLine, c)
-      commandPanel.add(commandLine)
-      c.weightx = 0.0
+      commandPanel.add(commandLine, c)
+      c.weightx = 0
       c.fill = GridBagConstraints.NONE
       c.insets = new Insets(1, 1, 1, 1)
-      gridBag.setConstraints(historyPrompt, c)
-      commandPanel.add(historyPrompt)
+      commandPanel.add(historyPrompt, c)
       add(commandPanel, BorderLayout.SOUTH)
       Some(panel)
     }
@@ -139,5 +141,17 @@ extends JPanel with CommandCenterInterface // lets us embed CommandLine
 
   def close(): Unit = {
     viewPanel.foreach(_.close())
+  }
+
+  def syncTheme() {
+    setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    agentEditor.syncTheme()
+
+    viewPane.syncTheme()
+    propertiesPane.syncTheme()
+    commandLine.syncTheme()
   }
 }

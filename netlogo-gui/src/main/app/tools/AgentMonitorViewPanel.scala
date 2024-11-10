@@ -4,30 +4,30 @@ package org.nlogo.app.tools
 
 import java.awt.BorderLayout
 import java.awt.event.{ ActionEvent, MouseWheelEvent, MouseWheelListener }
-import javax.swing.{ AbstractAction, JToggleButton, JPanel, JSlider }
+import javax.swing.{ AbstractAction, JPanel, JSlider }
 
 import org.nlogo.agent.Agent
 import org.nlogo.api.Perspective
 import org.nlogo.core.I18N
+import org.nlogo.swing.ToggleButton
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.GUIWorkspace
 
-class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel(new BorderLayout) {
+class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel(new BorderLayout) with ThemeSync {
   private val view = new AgentMonitorView(workspace)
-  private val watchButton = new JToggleButton(new WatchAction)
+  private val watchButton = new ToggleButton(new WatchAction)
   private val zoomer = new ZoomSlider(view)
 
-  locally {
-    add(view, BorderLayout.CENTER)
-    view.setSize(workspace.world.worldWidth, workspace.world.worldHeight, 255.toDouble / workspace.world.worldWidth)
-    view.applyNewFontSize(workspace.view.fontSize, 0)
-    watchButton.setFocusable(false)
-    val controls = new JPanel
-    controls.add(watchButton)
-    controls.add(zoomer)
-    add(controls, BorderLayout.SOUTH)
-    watchButton.setEnabled(false)
-    zoomer.setEnabled(false)
-  }
+  add(view, BorderLayout.CENTER)
+  view.setSize(workspace.world.worldWidth, workspace.world.worldHeight, 255.toDouble / workspace.world.worldWidth)
+  view.applyNewFontSize(workspace.view.fontSize, 0)
+  watchButton.setFocusable(false)
+  private val controls = new JPanel
+  controls.add(watchButton)
+  controls.add(zoomer)
+  add(controls, BorderLayout.SOUTH)
+  watchButton.setEnabled(false)
+  zoomer.setEnabled(false)
 
   def agent(agent: Agent, radius: Double): Unit = {
     view.agent(agent)
@@ -56,6 +56,12 @@ class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel(new BorderLa
   }
 
   def close(): Unit = view.close()
+
+  def syncTheme() {
+    controls.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    watchButton.syncTheme()
+  }
 
   private class WatchAction extends AbstractAction(I18N.gui.get("tools.agentMonitor.view.watch")) {
     override def actionPerformed(e: ActionEvent) = {
