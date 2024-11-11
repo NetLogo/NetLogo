@@ -10,6 +10,7 @@ import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody }
 import org.nlogo.api.{ CompilerServices, Editable, Property }
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.OptionDialog
+import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.WidgetWrapperInterface
 
 import scala.reflect.ClassTag
@@ -39,6 +40,10 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
     case Some(wrapper) => (wrapper.getSize, wrapper.getPreferredSize)
     case None => (null, null)
   }
+
+  setOpaque(false)
+  setBackground(InterfaceColors.TRANSPARENT)
+
   def init(): PropertyEditor[_] = {
     val properties = target.propertySet
     val layout = new GridBagLayout()
@@ -54,8 +59,10 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
     var claimsFirstFocus: PropertyEditor[_] = null
     for(property <- properties) {
       val editor = getEditor(property, target, useTooltips && property.notes != null && property.notes.trim != "")
-      val panel = new JPanel{
+      val panel = new JPanel {
         setLayout(new BorderLayout)
+        setOpaque(false)
+        setBackground(InterfaceColors.TRANSPARENT)
         add(editor, BorderLayout.CENTER)
         if (property.notes != null && property.notes.trim != "")
           if (useTooltips)

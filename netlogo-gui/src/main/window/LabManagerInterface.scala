@@ -4,10 +4,11 @@ package org.nlogo.window
 
 import javax.swing.Action
 
-import org.nlogo.window.Event.LinkChild
 import org.nlogo.api.ModelSections.ModelSaveable
+import org.nlogo.theme.ThemeSync
+import org.nlogo.window.Event.LinkChild
 
-trait LabManagerInterface extends LinkChild with ModelSaveable {
+trait LabManagerInterface extends LinkChild with ModelSaveable with ThemeSync {
   def show(): Unit
 
   def actions: Seq[Action]

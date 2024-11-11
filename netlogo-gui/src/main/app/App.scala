@@ -801,6 +801,8 @@ class App extends
     _turtleShapesManager.syncTheme()
     _linkShapesManager.syncTheme()
 
+    labManager.syncTheme()
+
     openPreferencesDialog.syncTheme()
     showThemesDialog.syncTheme()
     openColorDialog.syncTheme()

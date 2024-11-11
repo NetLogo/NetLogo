@@ -2,16 +2,22 @@
 
 package org.nlogo.properties
 
-// An EditDialog contains an EditPanel, plus some buttons at the bottom (OK/Apply/Cancel).
+import java.awt.{ BorderLayout, Dialog, Dimension, Point, Window }
+import java.awt.event.{ WindowAdapter, WindowEvent }
+import javax.swing.{ JButton, JDialog, JPanel, WindowConstants }
+import javax.swing.border.EmptyBorder
 
-import javax.swing.JButton
-
+import org.nlogo.api.{ CompilerServices, Editable }
+import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, Implicits, RichJButton },
+import org.nlogo.swing.{ BrowserLauncher, Button, ButtonPanel, Implicits, Utils },
   BrowserLauncher.docPath,
   Implicits.thunk2action
-import org.nlogo.api.CompilerServices
+import org.nlogo.theme.InterfaceColors
+import org.nlogo.window.WorldViewSettings
+
+// An EditDialog contains an EditPanel, plus some buttons at the bottom (OK/Apply/Cancel).
 
 // EditDialog is a trait because in EditDialogFactory we need to be able to call two different
 // constructors of JDialog.  See
@@ -20,54 +26,60 @@ import org.nlogo.api.CompilerServices
 
 object EditDialog {
   // aiee! a mutable static global! for shame! - ST 2/18/10
-  var lastLocation: Option[java.awt.Point] = None
+  var lastLocation: Option[Point] = None
 }
 
-trait EditDialog extends javax.swing.JDialog {
+abstract class EditDialog(window: Window, target: Editable, useTooltips: Boolean, modal: Boolean,
+                          compiler: CompilerServices, colorizer: Colorizer)
+  extends JDialog(window, target.classDisplayName,
+                  if (modal)
+                    Dialog.ModalityType.APPLICATION_MODAL
+                  else
+                    Dialog.ModalityType.MODELESS) {
 
-  // these would all be constructor parameters, except traits don't allow them, so we have to make
-  // them abstract instead - ST 2/18/10
-  def window: java.awt.Window
-  def target: org.nlogo.api.Editable
-  def compiler: CompilerServices
-  def colorizer: Colorizer
-  def useTooltips: Boolean
   var canceled = false
 
-  getContentPane.setBackground(java.awt.Color.LIGHT_GRAY)
-  getContentPane.setLayout(new java.awt.BorderLayout)
-  private val mainPanel = new javax.swing.JPanel
-  mainPanel.setBorder(
-    javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5))
-  mainPanel.setLayout(new java.awt.BorderLayout())
-  getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER)
+  getContentPane.setLayout(new BorderLayout)
+  getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+  private val mainPanel = new JPanel(new BorderLayout) {
+    setBorder(new EmptyBorder(5, 5, 5, 5))
+    setOpaque(false)
+    setBackground(InterfaceColors.TRANSPARENT)
+  }
+
+  getContentPane.add(mainPanel, BorderLayout.CENTER)
 
   // forget the fancy dialog in 3D for now.
   private val editPanel =
-    if(target.isInstanceOf[org.nlogo.window.WorldViewSettings])
+    if (target.isInstanceOf[WorldViewSettings])
       new WorldEditPanel(target, compiler, colorizer)
-    else new EditPanel(target, compiler, colorizer, useTooltips)
+    else
+      new EditPanel(target, compiler, colorizer, useTooltips)
 
-  val okButton = new javax.swing.JButton(I18N.gui.get("common.buttons.ok"))
-  okButton.addActionListener { _ =>
-    if(editPanel.valid) {
+  val okButton = new Button(I18N.gui.get("common.buttons.ok"), () => {
+    if (editPanel.valid) {
       editPanel.apply()
-      if(target.editFinished)
+
+      if (target.editFinished)
         bye()
     }
-  }
+  })
 
   var sendEditFinishedOnCancel = false
-  val applyButton = RichJButton(I18N.gui.get("common.buttons.apply")){
-    if(editPanel.valid) {
+  val applyButton = new Button(I18N.gui.get("common.buttons.apply"), () => {
+    if (editPanel.valid) {
       sendEditFinishedOnCancel = true
       editPanel.apply()
       target.editFinished()
     }
-  }
+  })
 
-  val cancelButton = RichJButton(I18N.gui.get("common.buttons.cancel")){ cancel(target) }
-  val helpButton = RichJButton(I18N.gui.get("common.buttons.help")){
+  val cancelButton = new Button(I18N.gui.get("common.buttons.cancel"), () => {
+    cancel(target)
+  })
+
+  val helpButton = new Button(I18N.gui.get("common.buttons.help"), () => {
     val link = target.helpLink.getOrElse("")
     val splitLink = link.split("#")
     val (mainLink, anchor) =
@@ -75,7 +87,7 @@ trait EditDialog extends javax.swing.JDialog {
       else                      (splitLink.head, "")
     val path = docPath(mainLink)
     BrowserLauncher.openPath(this, path, anchor)
-  }
+  })
 
   private val buttons: List[JButton] = List(
     Some(okButton),
@@ -83,8 +95,8 @@ trait EditDialog extends javax.swing.JDialog {
     target.helpLink.map(_ => helpButton),
     Some(cancelButton)).flatten
   private val buttonPanel = ButtonPanel(buttons)
-  mainPanel.add(buttonPanel, java.awt.BorderLayout.SOUTH)
-  mainPanel.add(editPanel, java.awt.BorderLayout.CENTER)
+  mainPanel.add(buttonPanel, BorderLayout.SOUTH)
+  mainPanel.add(editPanel, BorderLayout.CENTER)
 
   // this used to happen in the editPanel constructor itself however, with the new plotting dialog,
   // we decided we wanted the ability to hide code sections by default.  we cant do that without
@@ -92,10 +104,10 @@ trait EditDialog extends javax.swing.JDialog {
   // we add in the previous line. - josh 2/13/2010
   editPanel.init()
 
-  setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
+  setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
   addWindowListener(
-    new java.awt.event.WindowAdapter() {
-      override def windowClosing(e: java.awt.event.WindowEvent) {
+    new WindowAdapter() {
+      override def windowClosing(e: WindowEvent) {
         if (sendEditFinishedOnCancel) {
           if(editPanel.valid) {
             editPanel.apply()
@@ -106,7 +118,7 @@ trait EditDialog extends javax.swing.JDialog {
         }
         }})
 
-  org.nlogo.swing.Utils.addEscKeyAction(this, () => cancel(target))
+  Utils.addEscKeyAction(this, () => cancel(target))
 
   pack()
   getRootPane().setDefaultButton(okButton)
@@ -114,7 +126,7 @@ trait EditDialog extends javax.swing.JDialog {
     case Some(location) =>
       setLocation(location)
     case None =>
-      org.nlogo.awt.Positioning.center(this, window)
+      Positioning.center(this, window)
       EditDialog.lastLocation = Some(getLocation)
   }
   editPanel.requestFocus()
@@ -125,7 +137,7 @@ trait EditDialog extends javax.swing.JDialog {
     cancel(target)
   }
 
-  private def cancel(target: org.nlogo.api.Editable) {
+  private def cancel(target: Editable) {
     editPanel.revert()
     if(!sendEditFinishedOnCancel || target.editFinished) {
       canceled = true
@@ -139,8 +151,8 @@ trait EditDialog extends javax.swing.JDialog {
     dispose()
   }
 
-  def limit(dim: java.awt.Dimension) =
-    new java.awt.Dimension(
+  def limit(dim: Dimension) =
+    new Dimension(
       dim.width max 400,
       dim.height min getGraphicsConfiguration.getBounds.height)
 

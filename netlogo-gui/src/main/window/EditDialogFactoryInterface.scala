@@ -1,9 +1,11 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window;
+package org.nlogo.window
 
-import java.util.function.Consumer;
-import org.nlogo.api.Editable;
+import java.awt.Window
+import javax.swing.JDialog
+
+import org.nlogo.api.Editable
 
 // This is used so that other packages don't depend on the properties package.  It gets instantiated
 // by dependency injection. - ST 2/17/10
@@ -17,15 +19,13 @@ import org.nlogo.api.Editable;
 // There are two different methods because the JDialog created needs a parent, and JDialog has
 // two different constructors for the two different possible parent types. - ST 2/24/10
 
-public interface EditDialogFactoryInterface {
+trait EditDialogFactoryInterface {
   // used for modal dialog
-  boolean canceled(java.awt.Frame frame, Editable target, boolean useTooltips);
-  boolean canceled(java.awt.Dialog dialog, Editable target, boolean useTooltips);
+  def canceled(window: Window, target: Editable, useTooltips: Boolean): Boolean
   
   //used for non-modal dialog
-  void create(java.awt.Frame frame, Editable target, Consumer<Boolean> finish, boolean useTooltips);
-  void create(java.awt.Dialog dialog, Editable target, Consumer<Boolean> finish, boolean useTooltips);
+  def create(window: Window, target: Editable, finish: (Boolean) => Unit, useTooltips: Boolean): Unit
 
-  javax.swing.JDialog getDialog();
-  void clearDialog();
+  def getDialog: JDialog
+  def clearDialog(): Unit
 }

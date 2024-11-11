@@ -18,9 +18,7 @@ import org.nlogo.workspace.PreviewCommandsRunner
 class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel(new GridBagLayout) {
   setOpaque(false)
   setBackground(InterfaceColors.TRANSPARENT)
-  val button = new Button(null) {
-    syncTheme()
-  }
+  val button = new Button(null)
   val imageLabel = new JLabel {
     override val getPreferredSize = graphicsPreview.getPreferredSize
     setHorizontalAlignment(SwingConstants.CENTER)

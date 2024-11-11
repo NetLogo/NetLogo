@@ -54,9 +54,7 @@ class PreviewCommandsDialog(
       workspace.dispose()
       setVisible(false)
     }
-  }) {
-    syncTheme()
-  }
+  })
 
   getRootPane.setDefaultButton(okButton)
 
@@ -68,9 +66,7 @@ class PreviewCommandsDialog(
       setOpaque(false)
       setBackground(InterfaceColors.TRANSPARENT)
       add(okButton)
-      add(new Button(cancelAction) {
-        syncTheme()
-      })
+      add(new Button(cancelAction))
     }, BorderLayout.PAGE_END)
   })
 
