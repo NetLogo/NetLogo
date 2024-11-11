@@ -12,8 +12,8 @@ import org.jhotdraw.standard.{ CreationTool, DeleteCommand }
 
 import org.nlogo.core.I18N
 import org.nlogo.sdm.Model
-import org.nlogo.swing.{ ToolBar, ToolBarActionButton, ToolBarToggleButton }
-import org.nlogo.swing.Utils.icon
+import org.nlogo.swing.{ ToolBar, ToolBarActionButton, ToolBarToggleButton, Utils => SwingUtils }
+import org.nlogo.theme.InterfaceColors
 
 class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) extends ToolBar {
   // Invisible button allows no selection in visible buttongroup
@@ -96,10 +96,10 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
   /// Actions
   abstract class MyAction(name:String, image:String, enableMe: Boolean)
           extends AbstractAction(I18N.gui(name.toLowerCase)) {
-    putValue(Action.SMALL_ICON, icon(image))
+    putValue(Action.SMALL_ICON, SwingUtils.iconScaledWithColor(image, 15, 15, InterfaceColors.TOOLBAR_IMAGE))
     setEnabled(enableMe)
   }
-  val compileAction = new MyAction("Check", "/images/check-filled.png", enableMe = true) {
+  val compileAction = new MyAction("Check", "/images/check.png", enableMe = true) {
     def actionPerformed(e: ActionEvent) {new org.nlogo.window.Events.CompileAllEvent().raise(editor)}
   }
   val editAction = new MyAction("Edit", "/images/edit.png", enableMe = false) {
@@ -128,7 +128,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
     }
   }
   class ToolAction(toolName: String, iconName: String, tool: Tool) extends AbstractAction(toolName) {
-    putValue(Action.SMALL_ICON, icon(iconName))
+    putValue(Action.SMALL_ICON, SwingUtils.icon(iconName))
     def actionPerformed(e: ActionEvent) {editor.setTool(tool)}
   }
 }
