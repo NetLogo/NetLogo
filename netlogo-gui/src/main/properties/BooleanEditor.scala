@@ -11,7 +11,6 @@ abstract class BooleanEditor(accessor: PropertyAccessor[Boolean], useTooltip: Bo
   extends PropertyEditor(accessor, useTooltip) {
 
   private val checkbox = new CheckBox(accessor.displayName)
-  checkbox.setForeground(InterfaceColors.DIALOG_TEXT)
   tooltipFont(checkbox)
   checkbox.addItemListener(_ => changed())
   setLayout(new BorderLayout)
@@ -29,4 +28,8 @@ abstract class BooleanEditor(accessor: PropertyAccessor[Boolean], useTooltip: Bo
     c
   }
   override def setTooltip(text: String) = checkbox.setToolTipText(text)
+
+  def syncTheme() {
+    checkbox.setForeground(InterfaceColors.DIALOG_TEXT)
+  }
 }

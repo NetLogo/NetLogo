@@ -10,16 +10,11 @@ import org.nlogo.swing.Implicits._
 import org.nlogo.theme.InterfaceColors
 
 abstract class StringEditor(accessor: PropertyAccessor[String], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip)
-{
-  val editor = new TextField(12) {
-    setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    setForeground(InterfaceColors.TOOLBAR_TEXT)
-    setCaretColor(InterfaceColors.TOOLBAR_TEXT)
-  }
+  extends PropertyEditor(accessor, useTooltip) {
+
+  private val editor = new TextField(12)
   setLayout(new BorderLayout(BORDER_PADDING, 0))
-  val label = new JLabel(accessor.displayName)
-  label.setForeground(InterfaceColors.DIALOG_TEXT)
+  private val label = new JLabel(accessor.displayName)
   tooltipFont(label)
   add(label, BorderLayout.WEST)
   editor.getDocument.addDocumentListener({ () => changed })
@@ -32,5 +27,13 @@ abstract class StringEditor(accessor: PropertyAccessor[String], useTooltip: Bool
     c.fill = GridBagConstraints.HORIZONTAL
     c.weightx = 0.25
     c
+  }
+
+  def syncTheme() {
+    label.setForeground(InterfaceColors.DIALOG_TEXT)
+
+    editor.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    editor.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    editor.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
   }
 }

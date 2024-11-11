@@ -515,6 +515,8 @@ object InterfaceColors {
       case "dark" => LIGHT_GRAY_OUTLINE
     }
   
+  def BSPACE_HINT_BACKGROUND = new Color(128, 200, 128, 64)
+  
   // Syntax highlighting colors
 
   def COMMENT_COLOR = new Color(90, 90, 90) // gray

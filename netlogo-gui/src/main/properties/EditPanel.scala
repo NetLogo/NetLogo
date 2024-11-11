@@ -10,7 +10,7 @@ import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody }
 import org.nlogo.api.{ CompilerServices, Editable, Property }
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.OptionDialog
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.WidgetWrapperInterface
 
 import scala.reflect.ClassTag
@@ -18,7 +18,7 @@ import scala.collection.JavaConverters._
 
 // This is the contents of an EditDialog, except for the buttons at the bottom (OK/Apply/Cancel).
 class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer: Colorizer, useTooltips: Boolean = false)
-  extends JPanel {
+  extends JPanel with ThemeSync {
 
   val oldDelay = ToolTipManager.sharedInstance.getDismissDelay()
   ToolTipManager.sharedInstance.setDismissDelay(30000)
@@ -80,7 +80,6 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       propertyEditors += editor
       editor.refresh()
       editor.setEnabled(property.enabled)
-      editor.setBackground(property.backgroundColor)
       editor.setBorder(new javax.swing.border.EmptyBorder(property.borderSize, property.borderSize,
                                                           property.borderSize, property.borderSize))
 
@@ -332,4 +331,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
 
   private def frame = org.nlogo.awt.Hierarchy.getFrame(this)
 
+  def syncTheme() {
+    propertyEditors.foreach(_.syncTheme())
+  }
 }

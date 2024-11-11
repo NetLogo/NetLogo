@@ -41,22 +41,16 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
                               collapsible: Boolean = false,
                               collapseWhenEmpty: Boolean = false,
                               rows: Int = 5, columns: Int = 30)
-  extends PropertyEditor(accessor, useTooltip){
+  extends PropertyEditor(accessor, useTooltip) {
 
   val editorConfig =
     EditorConfiguration.default(rows, columns, colorizer)
       .withFocusTraversalEnabled(true)
       .withListener(new TextListener() {def textValueChanged(e: TextEvent) {changed()}})
 
-  lazy val editor = new EditorArea(editorConfig) {
-    setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    setCaretColor(InterfaceColors.TOOLBAR_TEXT)
-  }
-  lazy val scrollPane = new JScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                                        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
-    getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-  }
+  protected lazy val editor = new EditorArea(editorConfig)
+  protected lazy val scrollPane = new JScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   private val errorLabel = new EditorAreaErrorLabel(editor)
   // the panel that should collapse
   private lazy val collapso = new JPanel(new BorderLayout()) {
@@ -75,20 +69,18 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     def updateDirection() { self.setDirection(arrowDirection) }
   }
 
-  locally{
-    setLayout(new BorderLayout())
-    // add the panel containing the button that forces the collapse, and a label.
-    add(new JPanel(rowLayout(2)) {
-      setOpaque(false)
-      setBackground(InterfaceColors.TRANSPARENT)
-      if (collapsible) add(arrow)
-      val label = new JLabel(accessor.displayName)
-      label.setForeground(InterfaceColors.DIALOG_TEXT)
-      tooltipFont(label)
-      add(label)
-    }, BorderLayout.NORTH)
-    add(collapso, BorderLayout.CENTER)
-  }
+  private val nameLabel = new JLabel(accessor.displayName)
+
+  setLayout(new BorderLayout)
+  // add the panel containing the button that forces the collapse, and a label.
+  add(new JPanel(rowLayout(2)) {
+    setOpaque(false)
+    setBackground(InterfaceColors.TRANSPARENT)
+    if (collapsible) add(arrow)
+    tooltipFont(nameLabel)
+    add(nameLabel)
+  }, BorderLayout.NORTH)
+  add(collapso, BorderLayout.CENTER)
 
   private def setVisibility(newVisibility: Boolean) {
     if (collapsible && collapseWhenEmpty) {
@@ -129,5 +121,15 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     }
     super.setEnabled(state)
     setEnabledRecursive(this, state)
+  }
+
+  def syncTheme() {
+    editor.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    editor.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+
+    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+
+    nameLabel.setForeground(InterfaceColors.DIALOG_TEXT)
   }
 }

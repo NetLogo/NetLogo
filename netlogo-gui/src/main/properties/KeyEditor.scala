@@ -2,33 +2,39 @@
 
 package org.nlogo.properties
 
+import java.awt.EventQueue
+import javax.swing.{ BoxLayout, JLabel }
+import javax.swing.event.{ DocumentEvent, DocumentListener }
+
 import org.nlogo.swing.Implicits._
+import org.nlogo.swing.{ FixedLengthDocument, TextField }
+import org.nlogo.theme.InterfaceColors
 
 abstract class KeyEditor(accessor: PropertyAccessor[Char], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip)
-{
-  val editor = makeEditor()
-  setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.X_AXIS))
-  val label = new javax.swing.JLabel(accessor.displayName)
+  extends PropertyEditor(accessor, useTooltip) {
+
+  private val editor = makeEditor()
+  setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+  private val label = new JLabel(accessor.displayName)
   tooltipFont(label)
   add(label)
   add(javax.swing.Box.createHorizontalStrut(5))
   editor.getDocument.addDocumentListener({ () => changed() })
   add(editor, java.awt.BorderLayout.CENTER)
   def makeEditor() = {
-    val newEditor = new org.nlogo.swing.TextField(
-      new org.nlogo.swing.FixedLengthDocument(1), "",
+    val newEditor = new TextField(
+      new FixedLengthDocument(1), "",
       // 2 not 1 here otherwise "W" doesn't fit - ST 1/18/05
       2)
     newEditor.setMaximumSize(newEditor.getPreferredSize)
     // use a listener to make it so that after I type a character that character is selected, so if
     // I type another one it replaces the old one - ST 8/6/04
-    val listener = new javax.swing.event.DocumentListener() {
-      def changedUpdate(e: javax.swing.event.DocumentEvent) { }
-      def removeUpdate(e: javax.swing.event.DocumentEvent) { }
-      def insertUpdate(e: javax.swing.event.DocumentEvent) {
+    val listener = new DocumentListener {
+      def changedUpdate(e: DocumentEvent) { }
+      def removeUpdate(e: DocumentEvent) { }
+      def insertUpdate(e: DocumentEvent) {
         // not quite sure why this won't work without the invokeLater - ST 8/6/04
-        java.awt.EventQueue.invokeLater{() => newEditor.selectAll()}
+        EventQueue.invokeLater{() => newEditor.selectAll()}
       }
     }
     newEditor.getDocument.addDocumentListener(listener)
@@ -47,5 +53,13 @@ abstract class KeyEditor(accessor: PropertyAccessor[Char], useTooltip: Boolean)
     c.fill = java.awt.GridBagConstraints.HORIZONTAL
     c.weightx = 0.25
     c
+  }
+
+  def syncTheme() {
+    label.setForeground(InterfaceColors.DIALOG_TEXT)
+
+    editor.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    editor.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    editor.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
   }
 }

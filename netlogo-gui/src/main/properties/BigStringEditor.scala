@@ -12,8 +12,7 @@ abstract class BigStringEditor(accessor: PropertyAccessor[String], useTooltip: B
   extends PropertyEditor(accessor, useTooltip) {
 
   setLayout(new BorderLayout(BORDER_PADDING, 0))
-  val label = new JLabel(accessor.displayName)
-  label.setForeground(InterfaceColors.DIALOG_TEXT)
+  private val label = new JLabel(accessor.displayName)
   tooltipFont(label)
   label.setVerticalAlignment(SwingConstants.TOP)
   add(label, BorderLayout.NORTH)
@@ -22,10 +21,9 @@ abstract class BigStringEditor(accessor: PropertyAccessor[String], useTooltip: B
   editor.setLineWrap(true)
   editor.setWrapStyleWord(true)
   editor.getDocument().addDocumentListener({ () => changed() })
-  editor.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-  editor.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
-  add(new JScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                              ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER)
+  private val scrollPane = new JScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+  add(scrollPane, BorderLayout.CENTER)
   override def get = Option(editor.getText())
   override def set(value: String) {
     editor.setText(value)
@@ -38,5 +36,14 @@ abstract class BigStringEditor(accessor: PropertyAccessor[String], useTooltip: B
     c.weightx = 1.0
     c.weighty = 1.0
     c
+  }
+
+  def syncTheme() {
+    label.setForeground(InterfaceColors.DIALOG_TEXT)
+
+    editor.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    editor.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+
+    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
   }
 }

@@ -14,7 +14,7 @@ import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ BrowserLauncher, Button, ButtonPanel, Implicits, Utils },
   BrowserLauncher.docPath,
   Implicits.thunk2action
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.WorldViewSettings
 
 // An EditDialog contains an EditPanel, plus some buttons at the bottom (OK/Apply/Cancel).
@@ -35,12 +35,11 @@ abstract class EditDialog(window: Window, target: Editable, useTooltips: Boolean
                   if (modal)
                     Dialog.ModalityType.APPLICATION_MODAL
                   else
-                    Dialog.ModalityType.MODELESS) {
+                    Dialog.ModalityType.MODELESS) with ThemeSync {
 
   var canceled = false
 
   getContentPane.setLayout(new BorderLayout)
-  getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
   private val mainPanel = new JPanel(new BorderLayout) {
     setBorder(new EmptyBorder(5, 5, 5, 5))
@@ -133,6 +132,8 @@ abstract class EditDialog(window: Window, target: Editable, useTooltips: Boolean
   setResizable(editPanel.isResizable)
   setVisible(true)
 
+  syncTheme()
+
   def abort() {
     cancel(target)
   }
@@ -156,4 +157,14 @@ abstract class EditDialog(window: Window, target: Editable, useTooltips: Boolean
       dim.width max 400,
       dim.height min getGraphicsConfiguration.getBounds.height)
 
+  def syncTheme() {
+    getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    okButton.syncTheme()
+    applyButton.syncTheme()
+    helpButton.syncTheme()
+    cancelButton.syncTheme()
+
+    editPanel.syncTheme()
+  }
 }

@@ -2,22 +2,23 @@
 
 package org.nlogo.properties
 
-import org.nlogo.api.Dump
-import org.nlogo.api.Approximate.approximate
-import org.nlogo.api.Color.{getClosestColorNumberByARGB, getColorNameByIndex}
-import java.awt.event.{ActionEvent, ActionListener}
-import java.awt.{Graphics, Component, Color}
-import javax.swing.{Icon, JPanel, JButton}
+import java.awt.{ Color, Component, Frame, Graphics }
+import java.awt.event.{ ActionEvent, ActionListener }
+import javax.swing.{ Icon, JButton, JLabel, JPanel }
 
-abstract class ColorEditor(accessor: PropertyAccessor[Color], useTooltip: Boolean, frame: java.awt.Frame)
-  extends PropertyEditor(accessor, useTooltip)
-{
+import org.nlogo.api.Approximate.approximate
+import org.nlogo.api.Color.{ getClosestColorNumberByARGB, getColorNameByIndex }
+import org.nlogo.api.Dump
+import org.nlogo.theme.InterfaceColors
+
+abstract class ColorEditor(accessor: PropertyAccessor[Color], useTooltip: Boolean, frame: Frame)
+  extends PropertyEditor(accessor, useTooltip) {
 
   private val colorIcon = new ColorIcon
   private val colorButton = new JButton("0 (black)", colorIcon)
   private val originalColor: Color = accessor.get
 
-  val label = new javax.swing.JLabel(accessor.displayName)
+  private val label = new JLabel(accessor.displayName)
   tooltipFont(label)
   add(label)
   add(colorButton)
@@ -54,13 +55,17 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], useTooltip: Boolea
     super.revert()
   }
 
-   private class SelectColorActionListener extends ActionListener{
-     def actionPerformed(e: ActionEvent){
-       val colorDialog = new org.nlogo.window.ColorDialog(frame, true)
-       val c = colorDialog.showInputBoxDialog(getClosestColorNumberByARGB(colorIcon.getColor.getRGB))
-       setColor(org.nlogo.api.Color.getColor(c: java.lang.Double))
-     }
-   }
+  def syncTheme() {
+    label.setForeground(InterfaceColors.DIALOG_TEXT)
+  }
+
+  private class SelectColorActionListener extends ActionListener{
+    def actionPerformed(e: ActionEvent){
+      val colorDialog = new org.nlogo.window.ColorDialog(frame, true)
+      val c = colorDialog.showInputBoxDialog(getClosestColorNumberByARGB(colorIcon.getColor.getRGB))
+      setColor(org.nlogo.api.Color.getColor(c: java.lang.Double))
+    }
+  }
 
   private class ColorIcon extends Icon {
     val color = new JPanel

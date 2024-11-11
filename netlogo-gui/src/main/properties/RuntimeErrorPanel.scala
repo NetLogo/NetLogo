@@ -50,6 +50,10 @@ abstract class RuntimeErrorDisplay(accessor: PropertyAccessor[Option[Exception]]
       c.gridheight = if (dismissed) 0 else 1
       c
     }
+
+    def syncTheme() {
+      // do later
+    }
   }
 
 

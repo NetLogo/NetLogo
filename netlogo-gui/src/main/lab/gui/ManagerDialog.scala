@@ -351,6 +351,8 @@ private class ManagerDialog(manager:       LabManager,
     exportButton.syncTheme()
     abortButton.syncTheme()
     runButton.syncTheme()
+
+    dialogFactory.syncTheme()
   }
 
   class ProtocolRenderer extends JPanel(new FlowLayout(FlowLayout.LEFT)) with ListCellRenderer[LabProtocol] {
