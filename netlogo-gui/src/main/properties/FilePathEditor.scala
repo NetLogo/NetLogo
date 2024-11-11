@@ -8,7 +8,7 @@ import javax.swing.{ JLabel, JToolBar }
 
 import org.nlogo.awt.UserCancelException
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ FileDialog, RichJButton, TextField }
+import org.nlogo.swing.{ Button, FileDialog, TextField }
 import org.nlogo.theme.InterfaceColors
 
 abstract class FilePathEditor(accessor: PropertyAccessor[String], useTooltip: Boolean, parent: Component,
@@ -22,16 +22,19 @@ abstract class FilePathEditor(accessor: PropertyAccessor[String], useTooltip: Bo
   }
   val homePath = (new File(System.getProperty("user.home"))).toPath.toAbsolutePath
 
-  private val editor = makeEditor()
+  private val editor = new TextField(12)
   setLayout(new BorderLayout(BORDER_PADDING, 0))
   private val label = new JLabel(accessor.displayName)
   tooltipFont(label)
   add(label, BorderLayout.WEST)
   editor.getDocument().addDocumentListener({ () => changed() })
   add(editor, BorderLayout.CENTER)
-  private val toolbar = new JToolBar()
+  private val toolbar = new JToolBar {
+    setOpaque(false)
+    setBackground(InterfaceColors.TRANSPARENT)
+  }
   toolbar.setFloatable(false)
-  private val browseButton = RichJButton("Browse...") {
+  private val browseButton = new Button("Browse...", () => {
     try {
       val currentText = getCurrentText()
       val filePath    = asPath(currentText)
@@ -42,13 +45,13 @@ abstract class FilePathEditor(accessor: PropertyAccessor[String], useTooltip: Bo
       case ex: UserCancelException =>
         println(s"User canceled the ${accessor.displayName} file browser.")
     }
-  }
+  })
   toolbar.add(browseButton)
-  private val disableButton = RichJButton("Disable") { this.set("") }
+  private val disableButton = new Button("Disable", () => {
+    set("")
+  })
   toolbar.add(disableButton)
   add(toolbar, BorderLayout.EAST)
-
-  def makeEditor() = new TextField(12)
 
   private def asPath(currentText: String) = {
     val currentFile = new File(currentText)
@@ -100,5 +103,8 @@ abstract class FilePathEditor(accessor: PropertyAccessor[String], useTooltip: Bo
     editor.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
     editor.setForeground(InterfaceColors.TOOLBAR_TEXT)
     editor.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+
+    browseButton.syncTheme()
+    disableButton.syncTheme()
   }
 }

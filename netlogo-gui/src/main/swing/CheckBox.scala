@@ -22,7 +22,7 @@ class CheckBox(text: String = "") extends JCheckBox(text) with HoverDecoration w
       val g2d = Utils.initGraphics2D(g)
 
       if (isSelected) {
-        if (isHover)
+        if (isHover && isEnabled)
           g2d.setColor(InterfaceColors.CHECKBOX_BACKGROUND_SELECTED_HOVER)
         else
           g2d.setColor(InterfaceColors.CHECKBOX_BACKGROUND_SELECTED)
@@ -35,7 +35,7 @@ class CheckBox(text: String = "") extends JCheckBox(text) with HoverDecoration w
       }
 
       else {
-        if (isHover)
+        if (isHover && isEnabled)
           g2d.setColor(InterfaceColors.CHECKBOX_BACKGROUND_UNSELECTED_HOVER)
         else
           g2d.setColor(InterfaceColors.CHECKBOX_BACKGROUND_UNSELECTED)

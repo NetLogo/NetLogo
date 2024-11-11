@@ -34,30 +34,6 @@ object Implicits {
   implicit def EnrichContainer(c: Container) = new RichComponent(c)
 }
 
-object RichJButton{
-  def apply(name:String)(f: => Unit) = {
-    new JButton(name){
-      addActionListener(new ActionListener{
-        def actionPerformed(e:ActionEvent) { f }
-      })
-    }
-  }
-  def apply(icon:ImageIcon)(f: => Unit) = {
-    new JButton(icon){
-      addActionListener(new ActionListener{
-        def actionPerformed(e:ActionEvent) { f }
-      })
-    }
-  }
-  def apply(action:AbstractAction)(f: => Unit) = {
-    new JButton(action){
-      addActionListener(new ActionListener{
-        def actionPerformed(e:ActionEvent) { f }
-      })
-    }
-  }
-}
-
 class RichComponent(c:Container){
   def addAll(comps:Component*){
     for(c2<-comps) c.add(c2)

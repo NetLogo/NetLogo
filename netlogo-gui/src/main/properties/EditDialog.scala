@@ -35,7 +35,7 @@ abstract class EditDialog(window: Window, target: Editable, useTooltips: Boolean
                   if (modal)
                     Dialog.ModalityType.APPLICATION_MODAL
                   else
-                    Dialog.ModalityType.MODELESS) with ThemeSync {
+                    Dialog.DEFAULT_MODALITY_TYPE) with ThemeSync {
 
   var canceled = false
 
@@ -103,6 +103,8 @@ abstract class EditDialog(window: Window, target: Editable, useTooltips: Boolean
   // we add in the previous line. - josh 2/13/2010
   editPanel.init()
 
+  syncTheme()
+
   setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
   addWindowListener(
     new WindowAdapter() {
@@ -131,8 +133,6 @@ abstract class EditDialog(window: Window, target: Editable, useTooltips: Boolean
   editPanel.requestFocus()
   setResizable(editPanel.isResizable)
   setVisible(true)
-
-  syncTheme()
 
   def abort() {
     cancel(target)
