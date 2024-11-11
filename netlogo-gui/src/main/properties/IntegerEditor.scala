@@ -2,19 +2,30 @@
 
 package org.nlogo.properties
 
-import util.control.Exception.catching
+import java.awt.{ BorderLayout, GridBagConstraints }
+import javax.swing.JLabel
+
+import org.nlogo.swing.TextField
 import org.nlogo.swing.Implicits._
+import org.nlogo.theme.InterfaceColors
+
+import util.control.Exception.catching
 
 abstract class IntegerEditor(accessor: PropertyAccessor[Int], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip)
-{
-  val editor = new org.nlogo.swing.TextField(8)
-  setLayout(new java.awt.BorderLayout(BORDER_PADDING, 0))
-  private val label = new javax.swing.JLabel(accessor.displayName)
+  extends PropertyEditor(accessor, useTooltip) {
+
+  val editor = new TextField(8) {
+    setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    setForeground(InterfaceColors.TOOLBAR_TEXT)
+    setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+  }
+  setLayout(new BorderLayout(BORDER_PADDING, 0))
+  private val label = new JLabel(accessor.displayName)
+  label.setForeground(InterfaceColors.DIALOG_TEXT)
   tooltipFont(label)
-  add(label, java.awt.BorderLayout.WEST)
+  add(label, BorderLayout.WEST)
   editor.getDocument().addDocumentListener({ () => changed() })
-  add(editor, java.awt.BorderLayout.CENTER)
+  add(editor, BorderLayout.CENTER)
   override def setEnabled(enabled: Boolean) {
     super.setEnabled(enabled)
     editor.setEnabled(enabled)
@@ -27,7 +38,7 @@ abstract class IntegerEditor(accessor: PropertyAccessor[Int], useTooltip: Boolea
   override def requestFocus() { editor.requestFocus() }
   override def getConstraints = {
     val c = super.getConstraints
-    c.fill = java.awt.GridBagConstraints.HORIZONTAL
+    c.fill = GridBagConstraints.HORIZONTAL
     c.weightx = 0.025
     c
   }

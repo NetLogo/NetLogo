@@ -2,17 +2,20 @@
 
 package org.nlogo.properties
 
-import java.awt.{ GridBagConstraints }
+import java.awt.{ BorderLayout, GridBagConstraints }
+
+import org.nlogo.swing.CheckBox
+import org.nlogo.theme.InterfaceColors
 
 abstract class BooleanEditor(accessor: PropertyAccessor[Boolean], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip)
-{
-  private val checkbox = new javax.swing.JCheckBox
+  extends PropertyEditor(accessor, useTooltip) {
+
+  private val checkbox = new CheckBox(accessor.displayName)
+  checkbox.setForeground(InterfaceColors.DIALOG_TEXT)
   tooltipFont(checkbox)
-  checkbox.setText(accessor.displayName)
   checkbox.addItemListener(_ => changed())
-  setLayout(new java.awt.BorderLayout)
-  add(checkbox, java.awt.BorderLayout.CENTER)
+  setLayout(new BorderLayout)
+  add(checkbox, BorderLayout.CENTER)
   override def get = Some(checkbox.isSelected)
   override def set(value: Boolean) { checkbox.setSelected(value) }
   override def requestFocus() { checkbox.requestFocus() }

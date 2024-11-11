@@ -2,78 +2,42 @@
 
 package org.nlogo.properties
 
-import java.util.function.Consumer
+import java.awt.Window
+import java.awt.event.{ WindowAdapter, WindowEvent }
+
 import org.nlogo.api.{ CompilerServices, Editable }
 import org.nlogo.editor.Colorizer
+import org.nlogo.window.EditDialogFactoryInterface
 
 // see commentary in EditDialogFactoryInterface
 
-class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
-  extends org.nlogo.window.EditDialogFactoryInterface
-{
+class EditDialogFactory(compiler: CompilerServices, colorizer: Colorizer) extends EditDialogFactoryInterface {
   var dialog: EditDialog = null
 
-  def canceled(frame: java.awt.Frame, _target: Editable, _useTooltips: Boolean) = {
-    (new javax.swing.JDialog(frame, _target.classDisplayName, true)
-       with EditDialog {
-         override def window = frame
-         override def target = _target
-         override def compiler = _compiler
-         override def colorizer = _colorizer
-         override def getPreferredSize = limit(super.getPreferredSize)
-         override def useTooltips = _useTooltips
-       }).canceled
-  }
-  def canceled(dialog: java.awt.Dialog, _target: Editable, _useTooltips: Boolean) = {
-    (new javax.swing.JDialog(dialog, _target.classDisplayName, true)
-       with EditDialog {
-         override def window = dialog
-         override def target = _target
-         override def compiler = _compiler
-         override def colorizer = _colorizer
-         override def getPreferredSize = limit(super.getPreferredSize)
-         override def useTooltips = _useTooltips
-       }).canceled
+  def canceled(window: Window, target: Editable, useTooltips: Boolean) = {
+    (new EditDialog(window, target, useTooltips, true, compiler, colorizer) {
+      override def getPreferredSize = limit(super.getPreferredSize)
+    }).canceled
   }
 
-  def create(frame: java.awt.Frame, _target: Editable, finish: Consumer[java.lang.Boolean], _useTooltips: Boolean) = {
-    dialog = new javax.swing.JDialog(frame, _target.classDisplayName, false)
-               with EditDialog {
-                 override def window = frame
-                 override def target = _target
-                 override def compiler = _compiler
-                 override def colorizer = _colorizer
-                 override def getPreferredSize = limit(super.getPreferredSize)
-                 override def useTooltips = _useTooltips
-               }
-    dialog.addWindowListener(new java.awt.event.WindowAdapter {
-      override def windowClosed(e: java.awt.event.WindowEvent) {
-        finish.accept(dialog != null && !dialog.canceled)
-      }
-    })
-  }
+  def create(window: Window, target: Editable, finish: (Boolean) => Unit, useTooltips: Boolean) = {
+    dialog =
+      new EditDialog(window, target, useTooltips, false, compiler, colorizer) {
+        override def getPreferredSize = limit(super.getPreferredSize)
 
-  def create(_dialog: java.awt.Dialog, _target: Editable, finish: Consumer[java.lang.Boolean], _useTooltips: Boolean) = {
-    dialog = new javax.swing.JDialog(_dialog, _target.classDisplayName, false)
-                    with EditDialog {
-                      override def window = _dialog
-                      override def target = _target
-                      override def compiler = _compiler
-                      override def colorizer = _colorizer
-                      override def getPreferredSize = limit(super.getPreferredSize)
-                      override def useTooltips = _useTooltips
-                    }
-    dialog.addWindowListener(new java.awt.event.WindowAdapter {
-      override def windowClosed(e: java.awt.event.WindowEvent) {
-        finish.accept(dialog != null && !dialog.canceled)
+        addWindowListener(new WindowAdapter {
+          override def windowClosed(e: WindowEvent) {
+            finish(dialog != null && !dialog.canceled)
+          }
+        })
       }
-    })
   }
   
-  def getDialog() = dialog
+  def getDialog =
+    dialog
+
   def clearDialog() = {
-    if (dialog != null)
-    {
+    if (dialog != null) {
       dialog.abort()
       dialog = null
     }

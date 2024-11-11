@@ -2,11 +2,16 @@
 
 package org.nlogo.properties
 
+import java.awt.{ Component, Font, GridBagConstraints, Insets }
+import javax.swing.JPanel
+
+import org.nlogo.theme.InterfaceColors
+
 abstract class PropertyEditor[T](val accessor: PropertyAccessor[T],
                                  val useTooltip: Boolean,
-                                 val handlesOwnErrors: Boolean = false)
-         extends javax.swing.JPanel
-{
+                                 val handlesOwnErrors: Boolean = false) extends JPanel {
+  setOpaque(false)
+  setBackground(InterfaceColors.TRANSPARENT)
 
   def changed() // abstract
 
@@ -22,16 +27,15 @@ abstract class PropertyEditor[T](val accessor: PropertyAccessor[T],
   def apply() { get.foreach(accessor.set) }
 
   def getConstraints = {
-    val c = new java.awt.GridBagConstraints
-    c.anchor = java.awt.GridBagConstraints.WEST
-    c.insets = new java.awt.Insets(3, 3, 3, 3)
+    val c = new GridBagConstraints
+    c.anchor = GridBagConstraints.WEST
+    c.insets = new Insets(3, 3, 3, 3)
     c
   }
 
   def setTooltip(text: String) = setToolTipText(text)
-  def tooltipFont(component: java.awt.Component) =
-    if (useTooltip) {
-      component.setFont(component.getFont.deriveFont(java.awt.Font.BOLD))
-      component.setForeground(java.awt.Color.black)
-    }
+  def tooltipFont(component: Component) = {
+    if (useTooltip)
+      component.setFont(component.getFont.deriveFont(Font.BOLD))
+  }
 }

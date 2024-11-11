@@ -90,7 +90,7 @@ object Depend {
       "fileformat" -> List("api", "core", "core/model"),
       "sdm" -> List("api", "fileformat"),
       "sdm/gui" -> List("sdm", "window"),
-      "shape" -> List("api"),
+      "shape" -> List("api", "theme"),
       "shape/editor" -> List("shape", "swing"),
       "swing" -> List("awt", "core", "theme"),
       "util" -> Nil,

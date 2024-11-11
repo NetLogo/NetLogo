@@ -2,21 +2,19 @@
 
 package org.nlogo.properties
 
-import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
+
+import java.awt.{ BorderLayout, Component, Container }
+import java.awt.event.{ TextListener, TextEvent, ActionEvent, ActionListener }
+import javax.swing.{ JLabel, JPanel, JScrollPane, ScrollPaneConstants, SwingConstants }
 import javax.swing.plaf.basic.BasicArrowButton
 
+import org.nlogo.api.DummyEditable
 import org.nlogo.awt.RowLayout
+import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
+import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.EditorAreaErrorLabel
 
-import javax.swing.ScrollPaneConstants.{HORIZONTAL_SCROLLBAR_AS_NEEDED, VERTICAL_SCROLLBAR_ALWAYS}
-import java.awt.BorderLayout
-import java.awt.Component.{LEFT_ALIGNMENT, TOP_ALIGNMENT}
-import java.awt.event.{TextListener, TextEvent, ActionEvent, ActionListener}
-import javax.swing.{SwingConstants, JLabel, JPanel, JScrollPane}
-import org.nlogo.api.DummyEditable
-
 import scala.language.reflectiveCalls
-import java.awt.Container
 
 object CodeEditor {
   def apply(displayName: String, useTooltip: Boolean, colorizer: Colorizer,
@@ -50,11 +48,20 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
       .withFocusTraversalEnabled(true)
       .withListener(new TextListener() {def textValueChanged(e: TextEvent) {changed()}})
 
-  lazy val editor = new EditorArea(editorConfig)
-  lazy val scrollPane = new JScrollPane(editor, VERTICAL_SCROLLBAR_ALWAYS, HORIZONTAL_SCROLLBAR_AS_NEEDED)
+  lazy val editor = new EditorArea(editorConfig) {
+    setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+  }
+  lazy val scrollPane = new JScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                                        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+    getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+  }
   private val errorLabel = new EditorAreaErrorLabel(editor)
   // the panel that should collapse
   private lazy val collapso = new JPanel(new BorderLayout()) {
+    setOpaque(false)
+    setBackground(InterfaceColors.TRANSPARENT)
     add(errorLabel, BorderLayout.NORTH)
     add(scrollPane, BorderLayout.CENTER)
     if (collapseWhenEmpty) setVisible(false)
@@ -72,8 +79,11 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     setLayout(new BorderLayout())
     // add the panel containing the button that forces the collapse, and a label.
     add(new JPanel(rowLayout(2)) {
+      setOpaque(false)
+      setBackground(InterfaceColors.TRANSPARENT)
       if (collapsible) add(arrow)
       val label = new JLabel(accessor.displayName)
+      label.setForeground(InterfaceColors.DIALOG_TEXT)
       tooltipFont(label)
       add(label)
     }, BorderLayout.NORTH)
@@ -100,7 +110,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     accessor.error.foreach{ errorLabel.setError(_, accessor.target.sourceOffset) }
   }
   override def requestFocus() { editor.requestFocus() }
-  private def rowLayout(rows:Int) = new RowLayout(rows, LEFT_ALIGNMENT, TOP_ALIGNMENT)
+  private def rowLayout(rows:Int) = new RowLayout(rows, Component.LEFT_ALIGNMENT, Component.TOP_ALIGNMENT)
   override def getConstraints = {
     val c = super.getConstraints
     c.fill = java.awt.GridBagConstraints.BOTH
