@@ -3,17 +3,18 @@
 package org.nlogo.properties
 
 import java.awt.{ BorderLayout, Component, FileDialog => JFileDialog, GridBagConstraints }
-import java.io.{ File }
+import java.io.File
 import javax.swing.{ JLabel, JToolBar }
 
-import org.nlogo.awt.{ UserCancelException }
+import org.nlogo.awt.UserCancelException
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ FileDialog, RichJButton, TextField }
+import org.nlogo.theme.InterfaceColors
 
 abstract class FilePathEditor(accessor: PropertyAccessor[String], useTooltip: Boolean, parent: Component,
                               suggestedFile: String)
-  extends PropertyEditor(accessor, useTooltip)
-{
+  extends PropertyEditor(accessor, useTooltip) {
+
   val suggestedFileName = if (suggestedFile != null && suggestedFile.trim() != "") {
     suggestedFile
   } else {
@@ -21,16 +22,16 @@ abstract class FilePathEditor(accessor: PropertyAccessor[String], useTooltip: Bo
   }
   val homePath = (new File(System.getProperty("user.home"))).toPath.toAbsolutePath
 
-  val editor = makeEditor()
+  private val editor = makeEditor()
   setLayout(new BorderLayout(BORDER_PADDING, 0))
-  val label = new JLabel(accessor.displayName)
+  private val label = new JLabel(accessor.displayName)
   tooltipFont(label)
   add(label, BorderLayout.WEST)
   editor.getDocument().addDocumentListener({ () => changed() })
   add(editor, BorderLayout.CENTER)
-  val toolbar = new JToolBar()
+  private val toolbar = new JToolBar()
   toolbar.setFloatable(false)
-  val browseButton = RichJButton("Browse...") {
+  private val browseButton = RichJButton("Browse...") {
     try {
       val currentText = getCurrentText()
       val filePath    = asPath(currentText)
@@ -43,7 +44,7 @@ abstract class FilePathEditor(accessor: PropertyAccessor[String], useTooltip: Bo
     }
   }
   toolbar.add(browseButton)
-  val disableButton = RichJButton("Disable") { this.set("") }
+  private val disableButton = RichJButton("Disable") { this.set("") }
   toolbar.add(disableButton)
   add(toolbar, BorderLayout.EAST)
 
@@ -91,5 +92,13 @@ abstract class FilePathEditor(accessor: PropertyAccessor[String], useTooltip: Bo
     c.fill = GridBagConstraints.HORIZONTAL
     c.weightx = 0.25
     c
+  }
+
+  def syncTheme() {
+    label.setForeground(InterfaceColors.DIALOG_TEXT)
+
+    editor.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    editor.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    editor.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
   }
 }

@@ -6,6 +6,7 @@ import java.awt.Window
 import javax.swing.JDialog
 
 import org.nlogo.api.Editable
+import org.nlogo.theme.ThemeSync
 
 // This is used so that other packages don't depend on the properties package.  It gets instantiated
 // by dependency injection. - ST 2/17/10
@@ -19,7 +20,7 @@ import org.nlogo.api.Editable
 // There are two different methods because the JDialog created needs a parent, and JDialog has
 // two different constructors for the two different possible parent types. - ST 2/24/10
 
-trait EditDialogFactoryInterface {
+trait EditDialogFactoryInterface extends ThemeSync {
   // used for modal dialog
   def canceled(window: Window, target: Editable, useTooltips: Boolean): Boolean
   

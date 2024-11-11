@@ -2,15 +2,15 @@
 
 package org.nlogo.properties
 
-import org.nlogo.api.Options
-import org.nlogo.window.InputBox
-
 import java.awt.FlowLayout
 import javax.swing.{ JCheckBox, JComboBox, JLabel }
 
+import org.nlogo.api.Options
+import org.nlogo.theme.InterfaceColors
+import org.nlogo.window.InputBox
+
 abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputType]], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip)
-{
+  extends PropertyEditor(accessor, useTooltip) {
 
   private val typeCombo: JComboBox[InputBox#InputType] = new JComboBox[InputBox#InputType]
   private val multiline: JCheckBox = new JCheckBox("Multi-Line")
@@ -19,7 +19,7 @@ abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputT
   private val originalMultiline: Boolean = accessor.get.chosenValue.multiline
 
   setLayout(new FlowLayout(FlowLayout.LEFT))
-  val label = new JLabel(accessor.displayName)
+  private val label = new JLabel(accessor.displayName)
   tooltipFont(label)
   add(label)
   add(typeCombo)
@@ -53,4 +53,8 @@ abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputT
   }
 
   override def requestFocus = typeCombo.requestFocus
+
+  def syncTheme() {
+    label.setForeground(InterfaceColors.DIALOG_TEXT)
+  }
 }

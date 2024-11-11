@@ -14,14 +14,9 @@ import util.control.Exception.catching
 abstract class IntegerEditor(accessor: PropertyAccessor[Int], useTooltip: Boolean)
   extends PropertyEditor(accessor, useTooltip) {
 
-  val editor = new TextField(8) {
-    setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    setForeground(InterfaceColors.TOOLBAR_TEXT)
-    setCaretColor(InterfaceColors.TOOLBAR_TEXT)
-  }
+  private val editor = new TextField(8)
   setLayout(new BorderLayout(BORDER_PADDING, 0))
   private val label = new JLabel(accessor.displayName)
-  label.setForeground(InterfaceColors.DIALOG_TEXT)
   tooltipFont(label)
   add(label, BorderLayout.WEST)
   editor.getDocument().addDocumentListener({ () => changed() })
@@ -41,5 +36,13 @@ abstract class IntegerEditor(accessor: PropertyAccessor[Int], useTooltip: Boolea
     c.fill = GridBagConstraints.HORIZONTAL
     c.weightx = 0.025
     c
+  }
+
+  def syncTheme() {
+    label.setForeground(InterfaceColors.DIALOG_TEXT)
+
+    editor.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    editor.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    editor.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
   }
 }

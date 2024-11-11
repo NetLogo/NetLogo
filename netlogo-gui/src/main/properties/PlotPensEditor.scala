@@ -132,6 +132,10 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], useTooltip: Bool
     c
   }
 
+  def syncTheme() {
+    // do later
+  }
+
   class PlotPensTable extends JTable { table =>
 
     val UpdateCommandsColumnName = I18N.gui("updateCommands")

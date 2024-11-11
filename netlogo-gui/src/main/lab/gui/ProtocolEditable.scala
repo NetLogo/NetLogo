@@ -2,11 +2,10 @@
 
 package org.nlogo.lab.gui
 
-import org.nlogo.api.{ LabProtocol, LabVariableParser }
-import org.nlogo.core.I18N
-import org.nlogo.api.{ LabProtocol, RefValueSet }
 import java.awt.{ GridBagConstraints, Window }
-import org.nlogo.api.{ CompilerServices, Editable, Property }
+
+import org.nlogo.api.{ CompilerServices, Editable, LabProtocol, LabVariableParser, Property, RefValueSet }
+import org.nlogo.core.I18N
 
 // normally we'd be package-private but the org.nlogo.properties stuff requires we be public - ST 2/25/09
 
@@ -28,7 +27,8 @@ class ProtocolEditable(protocol: LabProtocol,
 
   val propertySet = {
     import scala.collection.JavaConverters._
-    List(Property("name", Property.String, I18N.gui("experimentName"),
+    List(Property("hint", Property.Label, "<html>" + I18N.gui("hint") + "</html>", borderSize = 6),
+         Property("name", Property.String, I18N.gui("experimentName"),
                   "<html>"+I18N.gui("experimentName.info")+"</html>", focus = true),
          Property("valueSets", Property.ReporterOrEmpty,
                   I18N.gui("vary"), "<html>"+I18N.gui("vary.info")+"</html>"),

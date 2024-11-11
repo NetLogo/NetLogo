@@ -13,7 +13,7 @@ abstract class ReporterLineEditor(accessor: PropertyAccessor[String],
                                   colorizer: Colorizer,
                                   optional: Boolean
                                   )
-         extends CodeEditor(accessor, useTooltip, colorizer, false, false){
+         extends CodeEditor(accessor, useTooltip, colorizer, false, false) {
 
   override lazy val editor = new EditorField(
     30, new Font(platformMonospacedFont, Font.PLAIN, 12), true, colorizer)

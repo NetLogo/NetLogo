@@ -6,13 +6,14 @@ import java.awt.FlowLayout
 import javax.swing.{ JComboBox, JLabel }
 
 import org.nlogo.api.Options
+import org.nlogo.theme.InterfaceColors
 
 abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip)
-{
+  extends PropertyEditor(accessor, useTooltip) {
+
   private val combo = new JComboBox[String]
   setLayout(new FlowLayout(FlowLayout.LEFT))
-  val label = new JLabel(accessor.displayName)
+  private val label = new JLabel(accessor.displayName)
   tooltipFont(label)
   add(label)
   add(combo)
@@ -34,5 +35,9 @@ abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]], useToolt
   }
   override def requestFocus() {
     combo.requestFocus()
+  }
+
+  def syncTheme() {
+    label.setForeground(InterfaceColors.DIALOG_TEXT)
   }
 }

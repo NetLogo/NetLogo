@@ -42,4 +42,9 @@ class EditDialogFactory(compiler: CompilerServices, colorizer: Colorizer) extend
       dialog = null
     }
   }
+
+  def syncTheme() {
+    if (dialog != null)
+      dialog.syncTheme()
+  }
 }
