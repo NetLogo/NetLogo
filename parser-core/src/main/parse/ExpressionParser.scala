@@ -309,7 +309,10 @@ object ExpressionParser {
       parseExpressionInternal(tokens, false, syntax.precedence, goalType, scope)
     catch {
       case _: MissingPrefixException | _: UnexpectedTokenException =>
-        exception(missingInput(syntax, displayName, true), sourceLocation)
+        if (tokens.head.tpe == TokenType.CloseParen)
+          exception("Unexpected closing parenthesis.", tokens.head.sourceLocation)
+        else
+          exception(missingInput(syntax, displayName, true), sourceLocation)
     }
   }
 
