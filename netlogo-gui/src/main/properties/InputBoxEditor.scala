@@ -9,8 +9,8 @@ import org.nlogo.api.Options
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.InputBox
 
-abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputType]], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip) {
+abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputType]])
+  extends PropertyEditor(accessor) {
 
   private val typeCombo: JComboBox[InputBox#InputType] = new JComboBox[InputBox#InputType]
   private val multiline: JCheckBox = new JCheckBox("Multi-Line")
@@ -20,7 +20,6 @@ abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputT
 
   setLayout(new FlowLayout(FlowLayout.LEFT))
   private val label = new JLabel(accessor.displayName)
-  tooltipFont(label)
   add(label)
   add(typeCombo)
 

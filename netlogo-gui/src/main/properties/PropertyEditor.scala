@@ -2,14 +2,14 @@
 
 package org.nlogo.properties
 
-import java.awt.{ Component, Font, GridBagConstraints, Insets }
+import java.awt.{ GridBagConstraints, Insets }
 import javax.swing.JPanel
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-abstract class PropertyEditor[T](val accessor: PropertyAccessor[T],
-                                 val useTooltip: Boolean,
-                                 val handlesOwnErrors: Boolean = false) extends JPanel with ThemeSync {
+abstract class PropertyEditor[T](val accessor: PropertyAccessor[T], val handlesOwnErrors: Boolean = false)
+  extends JPanel with ThemeSync {
+
   setOpaque(false)
   setBackground(InterfaceColors.TRANSPARENT)
 
@@ -34,8 +34,4 @@ abstract class PropertyEditor[T](val accessor: PropertyAccessor[T],
   }
 
   def setTooltip(text: String) = setToolTipText(text)
-  def tooltipFont(component: Component) = {
-    if (useTooltip)
-      component.setFont(component.getFont.deriveFont(Font.BOLD))
-  }
 }

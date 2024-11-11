@@ -11,15 +11,14 @@ import org.nlogo.api.Color.{ getClosestColorNumberByARGB, getColorNameByIndex }
 import org.nlogo.api.Dump
 import org.nlogo.theme.InterfaceColors
 
-abstract class ColorEditor(accessor: PropertyAccessor[Color], useTooltip: Boolean, frame: Frame)
-  extends PropertyEditor(accessor, useTooltip) {
+abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
+  extends PropertyEditor(accessor) {
 
   private val colorIcon = new ColorIcon
   private val colorButton = new JButton("0 (black)", colorIcon)
   private val originalColor: Color = accessor.get
 
   private val label = new JLabel(accessor.displayName)
-  tooltipFont(label)
   add(label)
   add(colorButton)
   colorButton.addActionListener(new SelectColorActionListener())

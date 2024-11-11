@@ -3,9 +3,7 @@
 package org.nlogo.properties
 
 import java.awt.{ BorderLayout, Color, Dimension, Font, GridBagConstraints }
-import javax.swing._
-import javax.swing.BorderFactory._
-import javax.swing.border.{ EtchedBorder, TitledBorder }
+import javax.swing.{ AbstractCellEditor, GroupLayout, JLabel, JPanel, JScrollPane, JTable, LayoutStyle }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 import javax.swing.table.{ DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, TableCellRenderer }
 
@@ -13,7 +11,8 @@ import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.{ Colorizer, EditorField }
 import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
-import org.nlogo.swing.{ Button, Utils }
+import org.nlogo.swing.{ Button, Popup, Utils }
+import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ ColorDialog, PlotWidget }
 
 object PlotPensEditor {
@@ -76,8 +75,8 @@ object PlotPensEditor {
   }
 }
 
-class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], useTooltip: Boolean, colorizer: Colorizer)
-        extends PropertyEditor(accessor, useTooltip, handlesOwnErrors = true) {
+class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Colorizer)
+        extends PropertyEditor(accessor, handlesOwnErrors = true) {
 
   import PlotPensEditor._
   private implicit val i18nPrefix = I18N.Prefix("edit.plot.pen")
@@ -97,12 +96,11 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], useTooltip: Bool
   setPreferredSize(new Dimension(600, 200))
 
   add(new JScrollPane(table), BorderLayout.CENTER)
-  add(new JPanel {add(new Button(I18N.gui("add"), () => { table.newPen }))}, BorderLayout.SOUTH)
-
-  // border
-  val title = createTitledBorder(createEtchedBorder(EtchedBorder.LOWERED), I18N.gui("plotPens"))
-  title.setTitleJustification(TitledBorder.LEFT)
-  setBorder(title)
+  add(new JPanel {
+    setOpaque(false)
+    setBackground(InterfaceColors.TRANSPARENT)
+    add(new Button(I18N.gui("add"), () => { table.newPen }))
+  }, BorderLayout.SOUTH)
 
   def changed() {} // seemingly no need to do anything here
   def set(value: List[PlotPen]) {} // seemingly no need to do anything here either
@@ -133,7 +131,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], useTooltip: Bool
   }
 
   def syncTheme() {
-    // do later
+    table.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    table.setGridColor(InterfaceColors.DIALOG_TEXT)
   }
 
   class PlotPensTable extends JTable { table =>
@@ -153,7 +152,6 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], useTooltip: Bool
       setModel(model)
       setRowHeight(getRowHeight + 14)
       setRowMargin(1)
-      setGridColor(Color.BLACK)
       setShowGrid(true)
       setRowSelectionAllowed(false)
       getTableHeader.setReorderingAllowed(false)
@@ -225,7 +223,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], useTooltip: Bool
     // pops up the color swatch when the user clicks the cell
     class ColorEditor extends AbstractCellEditor with TableCellEditor {
       var currentColor = ColorInfo(Color.BLACK)
-      val button: JButton = new Button("", () => {
+      val button: Button = new Button("", () => {
         button.setBackground(model.pens(getSelectedRow).color.color)
         val plotPenColorDialog = new ColorDialog(null, true)
         val newColor = plotPenColorDialog.showPlotPenDialog(currentColor.color)
@@ -251,13 +249,20 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], useTooltip: Bool
       override def getTableCellRendererComponent(table: JTable, value: Object,
                                         isSelected: Boolean, hasFocus: Boolean, row: Int, col: Int) = {
         val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col)
-        if (model.pens(row).hasErrors) c.setForeground(Color.RED) else c.setForeground(Color.BLACK)
+        if (isSelected)
+          c.setBackground(InterfaceColors.DIALOG_BACKGROUND_SELECTED)
+        else
+          c.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+        if (model.pens(row).hasErrors)
+          c.setForeground(Color.RED)
+        else
+          c.setForeground(InterfaceColors.DIALOG_TEXT)
         c
       }
     }
 
     def showEditorPopup(editingPen: Pen, p: PlotPenEditorAdvanced): Unit = {
-      new org.nlogo.swing.Popup(frame, I18N.gui("editing") + " " + editingPen.name, p, (), {
+      new Popup(frame, I18N.gui("editing") + " " + editingPen.name, p, (), {
         p.getResult match {
           case Some(p) =>
             model.pens(getSelectedRow) = p
@@ -269,14 +274,14 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], useTooltip: Bool
     }
 
     def openAdvancedPenEditor(editingPen: Pen) {
-      showEditorPopup(editingPen, new PlotPenEditorAdvanced(useTooltip, editingPen, colorizer, plotManager))
+      showEditorPopup(editingPen, new PlotPenEditorAdvanced(editingPen, colorizer, plotManager))
     }
 
     // renders the delete and edit buttons for each column
     class ButtonCellEditor extends AbstractCellEditor with TableCellRenderer with TableCellEditor {
-      val EditIcon   = Utils.icon("/images/edit.png")
+      val EditIcon   = Utils.iconScaled("/images/edit.png", 15, 15)
       val AlertIcon  = Utils.iconScaled("/images/edit-error.png", 15, 15)
-      val DeleteIcon = Utils.icon("/images/delete.png")
+      val DeleteIcon = Utils.iconScaled("/images/delete.png", 15, 15)
 
       val editButton = new Button("", () => {
         openAdvancedPenEditor(model.pens(getSelectedRow))
@@ -293,7 +298,10 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], useTooltip: Bool
       }
       editButton.putClientProperty("JComponent.sizeVariant", "small")
       deleteButton.putClientProperty("JComponent.sizeVariant", "small")
-      val buttonPanel = new JPanel()
+      val buttonPanel = new JPanel {
+        setOpaque(false)
+        setBackground(InterfaceColors.TRANSPARENT)
+      }
       val layout = new GroupLayout(buttonPanel)
       layout.setAutoCreateGaps(true)
       layout.setVerticalGroup(layout.createParallelGroup().addComponent(editButton).addComponent(deleteButton))
@@ -333,6 +341,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], useTooltip: Bool
         if (value != null) {
           editor.setText(value.asInstanceOf[String])
         }
+        editor.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
         editor
       }
     }
@@ -342,6 +351,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], useTooltip: Bool
       val editor = new EditorField(30, goodFont, true, colorizer)
       def getTableCellEditorComponent(table: JTable, value: Object, isSelected: Boolean, row: Int, col: Int) = {
         editor.setText(value.asInstanceOf[String])
+        editor.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+        editor.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
         editor
       }
       def getCellEditorValue = editor.getText()

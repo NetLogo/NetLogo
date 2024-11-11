@@ -12,13 +12,12 @@ import org.nlogo.theme.InterfaceColors
 
 import util.control.Exception.catching
 
-abstract class DoubleEditor(accessor: PropertyAccessor[Double], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip) {
+abstract class DoubleEditor(accessor: PropertyAccessor[Double])
+  extends PropertyEditor(accessor) {
 
   private val editor = new TextField(8)
   setLayout(new BorderLayout(BORDER_PADDING, 0))
   private val label = new JLabel(accessor.displayName)
-  tooltipFont(label)
   add(label, BorderLayout.WEST)
   editor.getDocument().addDocumentListener({ () => changed() })
   add(editor, BorderLayout.CENTER)

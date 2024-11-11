@@ -11,9 +11,8 @@ import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ Button, FileDialog, TextField }
 import org.nlogo.theme.InterfaceColors
 
-abstract class FilePathEditor(accessor: PropertyAccessor[String], useTooltip: Boolean, parent: Component,
-                              suggestedFile: String)
-  extends PropertyEditor(accessor, useTooltip) {
+abstract class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, suggestedFile: String)
+  extends PropertyEditor(accessor) {
 
   val suggestedFileName = if (suggestedFile != null && suggestedFile.trim() != "") {
     suggestedFile
@@ -25,7 +24,6 @@ abstract class FilePathEditor(accessor: PropertyAccessor[String], useTooltip: Bo
   private val editor = new TextField(12)
   setLayout(new BorderLayout(BORDER_PADDING, 0))
   private val label = new JLabel(accessor.displayName)
-  tooltipFont(label)
   add(label, BorderLayout.WEST)
   editor.getDocument().addDocumentListener({ () => changed() })
   add(editor, BorderLayout.CENTER)

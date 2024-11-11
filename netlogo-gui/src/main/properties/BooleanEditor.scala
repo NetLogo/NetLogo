@@ -7,11 +7,10 @@ import java.awt.{ BorderLayout, GridBagConstraints }
 import org.nlogo.swing.CheckBox
 import org.nlogo.theme.InterfaceColors
 
-abstract class BooleanEditor(accessor: PropertyAccessor[Boolean], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip) {
+abstract class BooleanEditor(accessor: PropertyAccessor[Boolean])
+  extends PropertyEditor(accessor) {
 
   private val checkbox = new CheckBox(accessor.displayName)
-  tooltipFont(checkbox)
   checkbox.addItemListener(_ => changed())
   setLayout(new BorderLayout)
   add(checkbox, BorderLayout.CENTER)

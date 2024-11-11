@@ -10,13 +10,12 @@ import org.nlogo.swing.Implicits._
 import org.nlogo.swing.{ FixedLengthDocument, TextField }
 import org.nlogo.theme.InterfaceColors
 
-abstract class KeyEditor(accessor: PropertyAccessor[Char], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip) {
+abstract class KeyEditor(accessor: PropertyAccessor[Char])
+  extends PropertyEditor(accessor) {
 
   private val editor = makeEditor()
   setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
   private val label = new JLabel(accessor.displayName)
-  tooltipFont(label)
   add(label)
   add(javax.swing.Box.createHorizontalStrut(5))
   editor.getDocument.addDocumentListener({ () => changed() })

@@ -8,12 +8,11 @@ import javax.swing.{ JLabel, JScrollPane, JTextArea, ScrollPaneConstants, SwingC
 import org.nlogo.swing.Implicits._
 import org.nlogo.theme.InterfaceColors
 
-abstract class BigStringEditor(accessor: PropertyAccessor[String], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip) {
+abstract class BigStringEditor(accessor: PropertyAccessor[String])
+  extends PropertyEditor(accessor) {
 
   setLayout(new BorderLayout(BORDER_PADDING, 0))
   private val label = new JLabel(accessor.displayName)
-  tooltipFont(label)
   label.setVerticalAlignment(SwingConstants.TOP)
   add(label, BorderLayout.NORTH)
   private val editor = new JTextArea(6, 30)

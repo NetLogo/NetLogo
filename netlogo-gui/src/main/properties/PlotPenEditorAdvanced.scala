@@ -3,17 +3,16 @@
 package org.nlogo.properties
 
 import java.awt.{ BorderLayout, GridBagConstraints, GridBagLayout }
-
-import javax.swing.border.{EtchedBorder, TitledBorder}
 import javax.swing._
-import javax.swing.BorderFactory._
+import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.plot.PlotManagerInterface
-import org.nlogo.swing.OptionDialog
+import org.nlogo.swing.{ CheckBox, OptionDialog, TextField }
+import org.nlogo.theme.InterfaceColors
 
-class PlotPenEditorAdvanced(useTooltip: Boolean, inputPen: PlotPensEditor.Pen, colorizer: Colorizer, plotManager: PlotManagerInterface) extends JPanel {
+class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, plotManager: PlotManagerInterface) extends JPanel {
   private implicit val i18nPrefix = I18N.Prefix("edit.plot.pen")
 
   def getPlotPenModeNames = PlotPenModes.toArray
@@ -24,11 +23,11 @@ class PlotPenEditorAdvanced(useTooltip: Boolean, inputPen: PlotPensEditor.Pen, c
                I18N.gui("mode.point"))
 
   // pieces of the UI
-  private val intervalField = new org.nlogo.swing.TextField("", 8)
+  private val intervalField = new TextField("", 8)
   private val penModes = new JComboBox(getPlotPenModeNames.asInstanceOf[Array[Object]])
-  private val showPenInLegend = new JCheckBox(I18N.gui("showInLegend"), true)
-  val setupCode = CodeEditor(I18N.gui("setupCommands"), useTooltip, colorizer, columns = 65, err=inputPen.setupError)
-  val updateCode = CodeEditor(I18N.gui("updateCommands"), useTooltip, colorizer, columns = 65, err=inputPen.updateError)
+  private val showPenInLegend = new CheckBox(I18N.gui("showInLegend"))
+  val setupCode = CodeEditor(I18N.gui("setupCommands"), colorizer, columns = 65, err=inputPen.setupError)
+  val updateCode = CodeEditor(I18N.gui("updateCommands"), colorizer, columns = 65, err=inputPen.updateError)
 
   val runtimeErrorPanel =
     inputPen.runtimeError.map(
@@ -76,30 +75,63 @@ class PlotPenEditorAdvanced(useTooltip: Boolean, inputPen: PlotPensEditor.Pen, c
   }
 
   private def addWidgets() {
-    val title = createTitledBorder(createEtchedBorder(EtchedBorder.LOWERED), I18N.gui("advanced"))
-    title.setTitleJustification(TitledBorder.LEFT)
-    setBorder(title)
-    val topPanel = new JPanel(){
-      val modePanel = new JPanel(new BorderLayout){
-        add(new JLabel(I18N.gui("mode")), BorderLayout.WEST)
+    setBorder(new EmptyBorder(6, 6, 6, 6))
+    setOpaque(false)
+    setBackground(InterfaceColors.TRANSPARENT)
+
+    intervalField.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    intervalField.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    intervalField.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+
+    penModes.setForeground(InterfaceColors.DIALOG_TEXT)
+    showPenInLegend.setForeground(InterfaceColors.DIALOG_TEXT)
+
+    setupCode.syncTheme()
+    updateCode.syncTheme()
+
+    val topPanel = new JPanel {
+      setOpaque(false)
+      setBackground(InterfaceColors.TRANSPARENT)
+
+      val modePanel = new JPanel(new BorderLayout) {
+        setOpaque(false)
+        setBackground(InterfaceColors.TRANSPARENT)
+
+        add(new JLabel(I18N.gui("mode")) {
+          setForeground(InterfaceColors.DIALOG_TEXT)
+        }, BorderLayout.WEST)
         add(penModes, BorderLayout.CENTER)
       }
-      val intervalPanel = new JPanel(new BorderLayout){
-        add(new JLabel(I18N.gui("interval")), BorderLayout.WEST)
+      val intervalPanel = new JPanel(new BorderLayout) {
+        setOpaque(false)
+        setBackground(InterfaceColors.TRANSPARENT)
+
+        add(new JLabel(I18N.gui("interval")) {
+          setForeground(InterfaceColors.DIALOG_TEXT)
+        }, BorderLayout.WEST)
         add(intervalField, BorderLayout.CENTER)
       }
-      val showPanel = new JPanel(new BorderLayout){ add(showPenInLegend, BorderLayout.WEST) }
+      val showPanel = new JPanel(new BorderLayout) {
+        setOpaque(false)
+        setBackground(InterfaceColors.TRANSPARENT)
+        
+        add(showPenInLegend, BorderLayout.WEST)
+      }
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
       Seq(modePanel, intervalPanel, showPanel).foreach(add)
     }
-    val codePanel = new JPanel(){
+    val codePanel = new JPanel {
+      setOpaque(false)
+      setBackground(InterfaceColors.TRANSPARENT)
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-      add(new JPanel) // for a little space
+      add(new JPanel {
+        setOpaque(false)
+        setBackground(InterfaceColors.TRANSPARENT)
+      }) // for a little space
       add(setupCode)
       add(updateCode)
     }
-    val gbLayout = new GridBagLayout()
-    setLayout(gbLayout)
+    setLayout(new GridBagLayout)
     val c = new GridBagConstraints()
     c.anchor = GridBagConstraints.NORTH
     c.fill = GridBagConstraints.HORIZONTAL
@@ -107,16 +139,13 @@ class PlotPenEditorAdvanced(useTooltip: Boolean, inputPen: PlotPensEditor.Pen, c
     c.gridx = 0
     c.weightx = 1.0
     c.weighty = 0
-    gbLayout.setConstraints(topPanel, c)
-    add(topPanel)
+    add(topPanel, c)
     runtimeErrorPanel.foreach { panel =>
       c.weighty = 0
-      gbLayout.setConstraints(panel, c)
-      add(panel)
+      add(panel, c)
     }
     c.weighty = 1.0
     c.fill = GridBagConstraints.BOTH
-    gbLayout.setConstraints(codePanel, c)
-    add(codePanel)
+    add(codePanel, c)
   }
 }

@@ -8,13 +8,10 @@ import javax.swing.{ JComboBox, JLabel }
 import org.nlogo.api.Options
 import org.nlogo.theme.InterfaceColors
 
-abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip) {
-
+abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]]) extends PropertyEditor(accessor) {
   private val combo = new JComboBox[String]
   setLayout(new FlowLayout(FlowLayout.LEFT))
   private val label = new JLabel(accessor.displayName)
-  tooltipFont(label)
   add(label)
   add(combo)
   private val options: Options[T] = accessor.get
