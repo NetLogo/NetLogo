@@ -2,11 +2,13 @@
 
 package org.nlogo.shape
 
-import org.nlogo.api.GraphicsInterface
 import java.awt.Color
 import java.io.IOException
 
-trait ShapesManagerInterface {
+import org.nlogo.api.GraphicsInterface
+import org.nlogo.theme.ThemeSync
+
+trait ShapesManagerInterface extends ThemeSync {
   def reset(): Unit
   def init(name: String): Unit
 }

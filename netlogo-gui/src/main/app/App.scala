@@ -798,6 +798,9 @@ class App extends
 
     monitorManager.syncTheme()
 
+    _turtleShapesManager.syncTheme()
+    _linkShapesManager.syncTheme()
+
     openPreferencesDialog.syncTheme()
     showThemesDialog.syncTheme()
     openColorDialog.syncTheme()

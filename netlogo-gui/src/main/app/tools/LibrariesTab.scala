@@ -4,12 +4,11 @@ package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Component, Dimension, FlowLayout, GridBagConstraints, GridBagLayout, GridLayout,
                   Insets }
-import java.awt.event.ActionEvent
 import java.awt.font.TextAttribute
 import java.io.IOException
 import java.nio.file.Path
-import javax.swing.{ AbstractAction, Action, Box, DefaultListModel, JLabel, JList, JOptionPane, JPanel, JScrollPane,
-                     JTextField, JTextArea, ListCellRenderer, ListModel }
+import javax.swing.{ Action, Box, DefaultListModel, JLabel, JList, JOptionPane, JPanel, JScrollPane, JTextField,
+                     JTextArea, ListCellRenderer, ListModel }
 import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
 
 import java.util.Collections
@@ -118,33 +117,25 @@ class LibrariesTab( category:        String
     setBackground(InterfaceColors.TRANSPARENT)
   }
 
-  private val installButton = new Button(new AbstractAction(I18N.gui("install")) {
-    def actionPerformed(e: ActionEvent) {
-      val installCheck = (lib: LibraryInfo) =>
-        lib.isVersionRequirementMet(Version.version) && lib.status != LibraryStatus.UpToDate
-      val uninstallCheck = (lib: LibraryInfo) => installCheck(lib) && lib.canUninstall
-      perform("uninstalling", uninstall, uninstallCheck)
-      perform("installing", wrappedInstall, installCheck)
-    }
+  private val installButton = new Button(I18N.gui("install"), () => {
+    val installCheck = (lib: LibraryInfo) =>
+      lib.isVersionRequirementMet(Version.version) && lib.status != LibraryStatus.UpToDate
+    val uninstallCheck = (lib: LibraryInfo) => installCheck(lib) && lib.canUninstall
+    perform("uninstalling", uninstall, uninstallCheck)
+    perform("installing", wrappedInstall, installCheck)
   })
 
-  private val addToCodeTabButton = new Button(new AbstractAction(I18N.gui("addToCodeTab")) {
-    def actionPerformed(e: ActionEvent) {
-      updateSource(addExtsToSource(_, selectedValues.map(_.codeName).toSet))
-      recompile()
-    }
+  private val addToCodeTabButton = new Button(I18N.gui("addToCodeTab"), () => {
+    updateSource(addExtsToSource(_, selectedValues.map(_.codeName).toSet))
+    recompile()
   })
 
-  private val homepageButton = new Button(new AbstractAction(I18N.gui("homepage")) {
-    def actionPerformed(e: ActionEvent) {
-      BrowserLauncher.openURI(LibrariesTab.this, selectedValue.homepage.toURI)
-    }
+  private val homepageButton = new Button(I18N.gui("homepage"), () => {
+    BrowserLauncher.openURI(LibrariesTab.this, selectedValue.homepage.toURI)
   })
 
-  private val uninstallButton = new Button(new AbstractAction(I18N.gui("uninstall")) {
-    def actionPerformed(e: ActionEvent) {
-      perform("uninstalling", uninstall, _.canUninstall)
-    }
+  private val uninstallButton = new Button(I18N.gui("uninstall"), () => {
+    perform("uninstalling", uninstall, _.canUninstall)
   })
 
   private val info = new JTextArea(2, 28)

@@ -248,10 +248,8 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   private val selectButton = new Button(openAction)
   private val cancelButton = new Button(cancelAction)
 
-  private val clearSearchButton = new Button(new AbstractAction(I18N.gui.get("modelsLibrary.clear")) {
-    def actionPerformed(e: ActionEvent) {
-      searchField.setText("")
-    }
+  private val clearSearchButton = new Button(I18N.gui.get("modelsLibrary.clear"), () => {
+    searchField.setText("")
   })
 
   locally {
