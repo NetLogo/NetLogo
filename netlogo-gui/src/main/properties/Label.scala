@@ -7,13 +7,10 @@ import javax.swing.JLabel
 
 import org.nlogo.theme.InterfaceColors
 
-abstract class Label(accessor: PropertyAccessor[String], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip) {
-
+abstract class Label(accessor: PropertyAccessor[String]) extends PropertyEditor(accessor) {
   setLayout(new BorderLayout(BORDER_PADDING, 0))
   setOpaque(true)
   private val label = new JLabel(accessor.displayName)
-  tooltipFont(label)
   add(label, BorderLayout.CENTER)
   override def get: Option[String] = Some("")
   override def set(value: String) { }

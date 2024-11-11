@@ -243,35 +243,35 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
 
     tpe match {
       case Property.StringOptions =>
-        new OptionsEditor[String](accessor, useTooltips) with Changed
+        new OptionsEditor[String](accessor) with Changed
       case Property.BigString =>
-        new BigStringEditor(accessor, useTooltips) with Changed
+        new BigStringEditor(accessor) with Changed
       case Property.Boolean =>
-        new BooleanEditor(accessor, useTooltips) with Changed
+        new BooleanEditor(accessor) with Changed
       case Property.MetricsBoolean =>
-        new MetricsBooleanEditor(accessor, useTooltips, propertyEditors)
+        new MetricsBooleanEditor(accessor, propertyEditors)
       case Property.Color =>
-        new ColorEditor(accessor, useTooltips, frame) with Changed
+        new ColorEditor(accessor, frame) with Changed
       case Property.Commands =>
-        new CodeEditor(accessor, useTooltips, colorizer, collapsible, collapseByDefault) with Changed
+        new CodeEditor(accessor, colorizer, collapsible, collapseByDefault) with Changed
       case Property.Double =>
-        new DoubleEditor(accessor, useTooltips) with Changed
+        new DoubleEditor(accessor) with Changed
       case Property.Error =>
-        new RuntimeErrorDisplay(accessor, useTooltips) with Changed
+        new RuntimeErrorDisplay(accessor) with Changed
       case Property.StrictlyPositiveDouble =>
-        new DoubleEditor(accessor, useTooltips) with Changed
+        new DoubleEditor(accessor) with Changed
         { override def get = super.get.filter(_ > 0) }
       case Property.Identifier =>
-        new StringEditor(accessor, useTooltips) with Changed
+        new StringEditor(accessor) with Changed
         { override def get = super.get.map(_.trim).filter(compiler.isValidIdentifier) }
       case Property.InputBoxOptions =>
-        new InputBoxEditor(accessor, useTooltips) with Changed
+        new InputBoxEditor(accessor) with Changed
       case Property.Integer =>
-        new IntegerEditor(accessor, useTooltips) with Changed
+        new IntegerEditor(accessor) with Changed
       case Property.Key =>
-        new KeyEditor(accessor, useTooltips) with Changed
+        new KeyEditor(accessor) with Changed
       case Property.LogoListString =>
-        new CodeEditor(accessor, useTooltips, colorizer, false, false) with Changed {
+        new CodeEditor(accessor, colorizer, false, false) with Changed {
           private def nobodyFree(a: AnyRef): Boolean = {
             a match {
               case Nobody       => false
@@ -288,32 +288,32 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
             catch { case _: CompilerException => false }
         }}
       case Property.NegativeInteger =>
-        new IntegerEditor(accessor, useTooltips) with Changed
+        new IntegerEditor(accessor) with Changed
         { override def get = super.get.filter(_ <= 0) }
       case Property.NonEmptyString =>
-        new StringEditor(accessor, useTooltips) with Changed
+        new StringEditor(accessor) with Changed
         { override def get = super.get.filter(_.nonEmpty) }
       case Property.PlotOptions =>
-        new OptionsEditor[org.nlogo.plot.Plot](accessor, useTooltips) with Changed
+        new OptionsEditor[org.nlogo.plot.Plot](accessor) with Changed
       case Property.PlotPens =>
         new PlotPensEditor(
-          new PropertyAccessor[List[org.nlogo.plot.PlotPen]](r, property.name, property.accessString), useTooltips, colorizer)
+          new PropertyAccessor[List[org.nlogo.plot.PlotPen]](r, property.name, property.accessString), colorizer)
       case Property.PositiveInteger =>
-        new IntegerEditor(accessor, useTooltips) with Changed
+        new IntegerEditor(accessor) with Changed
         { override def get = super.get.filter(_ >= 0) }
       case Property.Reporter =>
-        new CodeEditor(accessor, useTooltips, colorizer, collapsible, collapseByDefault) with Changed
+        new CodeEditor(accessor, colorizer, collapsible, collapseByDefault) with Changed
         { override def get = super.get.map(_.trim).filter(_.nonEmpty) }
       case Property.ReporterOrEmpty =>
-        new CodeEditor(accessor, useTooltips, colorizer, collapsible, collapseByDefault) with Changed
+        new CodeEditor(accessor, colorizer, collapsible, collapseByDefault) with Changed
       case Property.ReporterLine =>
-        new ReporterLineEditor(accessor, useTooltips, colorizer, property.optional) with Changed
+        new ReporterLineEditor(accessor, colorizer, property.optional) with Changed
       case Property.String =>
-        new StringEditor(accessor, useTooltips) with Changed
+        new StringEditor(accessor) with Changed
       case Property.FilePath(suggestedFile) =>
-        new FilePathEditor(accessor, useTooltips, this, suggestedFile) with Changed
+        new FilePathEditor(accessor, this, suggestedFile) with Changed
       case Property.Label =>
-        new Label(accessor, useTooltips) with Changed
+        new Label(accessor) with Changed
     }
   }
 

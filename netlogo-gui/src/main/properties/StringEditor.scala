@@ -9,13 +9,12 @@ import org.nlogo.swing.TextField
 import org.nlogo.swing.Implicits._
 import org.nlogo.theme.InterfaceColors
 
-abstract class StringEditor(accessor: PropertyAccessor[String], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip) {
+abstract class StringEditor(accessor: PropertyAccessor[String])
+  extends PropertyEditor(accessor) {
 
   private val editor = new TextField(12)
   setLayout(new BorderLayout(BORDER_PADDING, 0))
   private val label = new JLabel(accessor.displayName)
-  tooltipFont(label)
   add(label, BorderLayout.WEST)
   editor.getDocument.addDocumentListener({ () => changed })
   add(editor, BorderLayout.CENTER)

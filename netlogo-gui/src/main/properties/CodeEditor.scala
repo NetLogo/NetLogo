@@ -17,7 +17,7 @@ import org.nlogo.window.EditorAreaErrorLabel
 import scala.language.reflectiveCalls
 
 object CodeEditor {
-  def apply(displayName: String, useTooltip: Boolean, colorizer: Colorizer,
+  def apply(displayName: String, colorizer: Colorizer,
             collapsible: Boolean = false,
             collapseWhenEmpty: Boolean = false,
             rows: Int = 5, columns: Int = 30,
@@ -28,7 +28,7 @@ object CodeEditor {
     val accessor = new PropertyAccessor[String](new Dummy, displayName, "dummy"){
       override def error = err
     }
-    new CodeEditor(accessor, useTooltip, colorizer, rows=rows, columns=columns,
+    new CodeEditor(accessor, colorizer, rows=rows, columns=columns,
       collapsible=collapsible, collapseWhenEmpty=collapseWhenEmpty){
       def changed{ changedFunc }
     }
@@ -36,12 +36,11 @@ object CodeEditor {
 }
 
 abstract class CodeEditor(accessor: PropertyAccessor[String],
-                              useTooltip: Boolean,
                               colorizer: Colorizer,
                               collapsible: Boolean = false,
                               collapseWhenEmpty: Boolean = false,
                               rows: Int = 5, columns: Int = 30)
-  extends PropertyEditor(accessor, useTooltip) {
+  extends PropertyEditor(accessor) {
 
   val editorConfig =
     EditorConfiguration.default(rows, columns, colorizer)
@@ -77,7 +76,6 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     setOpaque(false)
     setBackground(InterfaceColors.TRANSPARENT)
     if (collapsible) add(arrow)
-    tooltipFont(nameLabel)
     add(nameLabel)
   }, BorderLayout.NORTH)
   add(collapso, BorderLayout.CENTER)
