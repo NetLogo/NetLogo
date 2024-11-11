@@ -3,10 +3,9 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, FlowLayout, Frame }
-import java.awt.event.ActionEvent
 import java.io.File
 import java.nio.file.Path
-import javax.swing.{ AbstractAction, JLabel, JOptionPane, JPanel }
+import javax.swing.{ JLabel, JOptionPane, JPanel }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.{ FileIO, LibraryInfoDownloader, LibraryManager }
@@ -31,14 +30,12 @@ class LibrariesDialog( parent:          Frame
     setOpaque(false)
     setBackground(InterfaceColors.TRANSPARENT)
   }
-  private lazy val libPathsButton  = new Button(new AbstractAction(I18N.gui("showLibPaths")) {
-    def actionPerformed(e: ActionEvent) {
-      val mappingsStr = extPathMappings.map { case (k, v) => s"  * $k: $v" }.toSeq.sorted.mkString("\n")
-      val msg = s"""${I18N.gui("libPathsExplanation")}
-                    |
-                    |$mappingsStr""".stripMargin
-      JOptionPane.showMessageDialog(LibrariesDialog.this, msg, I18N.gui("showLibPaths"), JOptionPane.PLAIN_MESSAGE)
-    }
+  private lazy val libPathsButton  = new Button(I18N.gui("showLibPaths"), () => {
+    val mappingsStr = extPathMappings.map { case (k, v) => s"  * $k: $v" }.toSeq.sorted.mkString("\n")
+    val msg = s"""${I18N.gui("libPathsExplanation")}
+                  |
+                  |$mappingsStr""".stripMargin
+    JOptionPane.showMessageDialog(LibrariesDialog.this, msg, I18N.gui("showLibPaths"), JOptionPane.PLAIN_MESSAGE)
   })
   private lazy val updateAllButton = new Button(tab.updateAllAction)
 

@@ -34,19 +34,15 @@ class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "theme
     }
   })
 
-  private lazy val okButton = new Button(new AbstractAction(I18N.gui.get("common.buttons.ok")) {
-    def actionPerformed(e: ActionEvent) {
-      setVisible(false)
-    }
+  private lazy val okButton = new Button(I18N.gui.get("common.buttons.ok"), () => {
+    setVisible(false)
   })
 
-  private lazy val cancelButton = new Button(new AbstractAction(I18N.gui.get("common.buttons.cancel")) {
-    def actionPerformed(e: ActionEvent) {
-      setTheme(startTheme)
-      setSelected(startTheme)
+  private lazy val cancelButton = new Button(I18N.gui.get("common.buttons.cancel"), () => {
+    setTheme(startTheme)
+    setSelected(startTheme)
 
-      setVisible(false)
-    }
+    setVisible(false)
   })
 
   private var startTheme = ""

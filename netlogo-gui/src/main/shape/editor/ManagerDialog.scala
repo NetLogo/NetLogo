@@ -2,27 +2,28 @@
 
 package org.nlogo.shape.editor
 
-import java.awt.{Font, Component}
+import java.awt.{ BorderLayout, Font, Component }
 import java.awt.event.MouseEvent
-import javax.swing.{ JScrollPane, SwingConstants, Box, BoxLayout,
-  JPanel, JLabel, JDialog, JButton, JOptionPane }
-import javax.swing.event.{ListSelectionEvent, MouseInputAdapter, ListSelectionListener}
-
 import java.nio.file.Paths
+import javax.swing.{ JScrollPane, SwingConstants, Box, BoxLayout, JPanel, JLabel, JDialog, JOptionPane }
+import javax.swing.event.{ ListSelectionEvent, MouseInputAdapter, ListSelectionListener }
 
 import org.nlogo.api.ModelLoader
+import org.nlogo.awt.ColumnLayout
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
   ShapeList.{ shapesToMap, isDefaultShapeName }
+import org.nlogo.swing.{ Button, Utils }
 import org.nlogo.swing.Implicits.thunk2action
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-import scala.util.{ Failure, Success }
 import scala.reflect.ClassTag
+import scala.util.{ Failure, Success }
 
 abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
   modelLoader: ModelLoader,
   val shapeListTracker: ShapeListTracker)(implicit ct: ClassTag[A])
   extends JDialog(parentFrame)
-  with ListSelectionListener {
+  with ListSelectionListener with ThemeSync {
 
   implicit val i18nPrefix = I18N.Prefix("tools.shapesEditor")
 
@@ -44,11 +45,10 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
   def importButtons: Seq[Component] = Seq(modelImportButton)
 
   // Create the buttons
-  lazy val modelImportButton = new JButton(I18N.gui("importFromModel")) {addActionListener(_ => importFromModel())}
-  lazy val editButton = new JButton(I18N.gui("edit")) {addActionListener(_ => editShape())}
-  lazy val newButton = new JButton(I18N.gui("new")) {addActionListener(_ => newShape())}
-  lazy val deleteButton = new JButton(I18N.gui("delete")) {
-    addActionListener(_ => {
+  lazy val modelImportButton = new Button(I18N.gui("importFromModel"), importFromModel)
+  lazy val editButton = new Button(I18N.gui("edit"), editShape)
+  lazy val newButton = new Button(I18N.gui("new"), newShape)
+  lazy val deleteButton = new Button(I18N.gui("delete"), () => {
       ManagerDialog.this.shapesList.deleteShapes()
       editButton.setEnabled(true) // Since at most one shape is highlighted now, enable edit
       setEnabled(true)
@@ -57,15 +57,52 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
       if (shape.map(_.name).exists(isDefaultShapeName)) {
         setEnabled(false)
       }
-    })
+  }) {
     setEnabled(false)
   }
 
-  lazy val duplicateButton = new JButton(I18N.gui("duplicate")) {addActionListener(_ => duplicateShape())}
+  lazy val duplicateButton = new Button(I18N.gui("duplicate"), duplicateShape)
 
   lazy val libraryLabel = new JLabel(I18N.gui("info"), SwingConstants.CENTER) {
     setFont(new Font(org.nlogo.awt.Fonts.platformFont, Font.PLAIN, 10))
   }
+
+  // make a panel to hold the two rows of buttons
+  lazy val buttonPanel = new JPanel {
+    setLayout(new ColumnLayout(3, Component.CENTER_ALIGNMENT, Component.TOP_ALIGNMENT))
+    // Setup the first row of buttons
+    add(new JPanel {
+      setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+      setOpaque(false)
+      setBackground(InterfaceColors.TRANSPARENT)
+      add(Box.createHorizontalGlue())
+      add(Box.createHorizontalStrut(20))
+      add(newButton)
+      add(Box.createHorizontalStrut(5))
+      add(editButton)
+      add(Box.createHorizontalStrut(5))
+      add(duplicateButton)
+      add(Box.createHorizontalStrut(5))
+      add(deleteButton)
+      add(Box.createHorizontalStrut(20))
+      add(Box.createHorizontalGlue())
+    })
+    // Setup the second row of buttons
+    add(new JPanel {
+      setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
+      setOpaque(false)
+      setBackground(InterfaceColors.TRANSPARENT)
+      add(Box.createHorizontalGlue())
+      add(Box.createHorizontalStrut(20))
+      importButtons.foreach(add)
+      add(Box.createHorizontalStrut(20))
+      add(Box.createHorizontalGlue())
+    })
+    add(libraryLabel)
+  }
+
+  // Create the scroll pane where the list will be displayed
+  val scrollPane = new JScrollPane(shapesList)
 
   locally {
     shapesList.addMouseListener(new MouseInputAdapter {
@@ -73,44 +110,12 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
       override def mouseClicked(e: MouseEvent) {if (e.getClickCount() > 1) editShape()}
     })
 
-    org.nlogo.swing.Utils.addEscKeyAction(this, () => dispose())
-
-    // Create the scroll pane where the list will be displayed
-    val scrollPane = new JScrollPane(shapesList)
+    Utils.addEscKeyAction(this, () => dispose())
 
     // Add everything to the window
-    getContentPane().setLayout(new java.awt.BorderLayout(0, 10))
-    getContentPane().add(scrollPane, java.awt.BorderLayout.CENTER)
-    // make a panel to hold the two rows of buttons
-
-    getContentPane().add(new JPanel {
-      setLayout(new org.nlogo.awt.ColumnLayout(3, Component.CENTER_ALIGNMENT, Component.TOP_ALIGNMENT))
-      // Setup the first row of buttons
-      add(new JPanel {
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-        add(Box.createHorizontalGlue())
-        add(Box.createHorizontalStrut(20))
-        add(newButton)
-        add(Box.createHorizontalStrut(5))
-        add(editButton)
-        add(Box.createHorizontalStrut(5))
-        add(duplicateButton)
-        add(Box.createHorizontalStrut(5))
-        add(deleteButton)
-        add(Box.createHorizontalStrut(20))
-        add(Box.createHorizontalGlue())
-      })
-      // Setup the second row of buttons
-      add(new JPanel {
-        setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-        add(Box.createHorizontalGlue())
-        add(Box.createHorizontalStrut(20))
-        importButtons.foreach(add)
-        add(Box.createHorizontalStrut(20))
-        add(Box.createHorizontalGlue())
-      })
-      add(libraryLabel)
-    }, java.awt.BorderLayout.SOUTH)
+    getContentPane().setLayout(new BorderLayout(0, 10))
+    getContentPane().add(scrollPane, BorderLayout.CENTER)
+    getContentPane().add(buttonPanel, BorderLayout.SOUTH)
 
     // Set the window size
     val maxBounds = getGraphicsConfiguration().getBounds()
@@ -185,5 +190,29 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
       deleteButton.setEnabled(false)
     else // You can't delete the default turtle shapes
       deleteButton.setEnabled(true)
+  }
+
+  def syncTheme() {
+    getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    buttonPanel.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    shapesList.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    modelImportButton.syncTheme()
+    editButton.syncTheme()
+    newButton.syncTheme()
+    deleteButton.syncTheme()
+    duplicateButton.syncTheme()
+
+    importButtons.foreach(_ match {
+      case ts: ThemeSync => ts.syncTheme()
+      case _ =>
+    })
+
+    libraryLabel.setForeground(InterfaceColors.DIALOG_TEXT)
   }
 }

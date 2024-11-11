@@ -3,11 +3,12 @@
 package org.nlogo.shape.editor
 
 import java.awt.{ Component, Frame }
-import javax.swing.{ Box, JButton }
+import javax.swing.Box
 
 import org.nlogo.api.{ FileIO, ModelLoader, World }
 import org.nlogo.shape.{ ShapeConverter, VectorShape },
   ShapeConverter.baseVectorShapeToVectorShape
+import org.nlogo.swing.Button
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape, ShapeList, ShapeParser },
   Shape.{ VectorShape => CoreVectorShape },
   ShapeList.{ isDefaultShapeName, sortShapes },
@@ -28,8 +29,7 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
 
   shapesList.addListSelectionListener(this)
 
-  lazy val libraryButton =
-    new JButton(I18N.gui("importFromLibrary")) {addActionListener(_ => importFromLibrary())}
+  lazy val libraryButton = new Button(I18N.gui("importFromLibrary"), importFromLibrary)
 
   override def shapeKind = AgentKind.Turtle
 
