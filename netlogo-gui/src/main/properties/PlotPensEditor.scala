@@ -13,7 +13,7 @@ import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.{ Colorizer, EditorField }
 import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
-import org.nlogo.swing.{ RichJButton, Utils }
+import org.nlogo.swing.{ Button, Utils }
 import org.nlogo.window.{ ColorDialog, PlotWidget }
 
 object PlotPensEditor {
@@ -97,7 +97,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], useTooltip: Bool
   setPreferredSize(new Dimension(600, 200))
 
   add(new JScrollPane(table), BorderLayout.CENTER)
-  add(new JPanel {add(RichJButton(I18N.gui("add")) {table.newPen})}, BorderLayout.SOUTH)
+  add(new JPanel {add(new Button(I18N.gui("add"), () => { table.newPen }))}, BorderLayout.SOUTH)
 
   // border
   val title = createTitledBorder(createEtchedBorder(EtchedBorder.LOWERED), I18N.gui("plotPens"))
@@ -225,13 +225,13 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], useTooltip: Bool
     // pops up the color swatch when the user clicks the cell
     class ColorEditor extends AbstractCellEditor with TableCellEditor {
       var currentColor = ColorInfo(Color.BLACK)
-      val button: JButton = RichJButton(""){
+      val button: JButton = new Button("", () => {
         button.setBackground(model.pens(getSelectedRow).color.color)
         val plotPenColorDialog = new ColorDialog(null, true)
         val newColor = plotPenColorDialog.showPlotPenDialog(currentColor.color)
         if (newColor != null) { currentColor = ColorInfo(newColor) }
         fireEditingStopped()
-      }
+      })
       button.setOpaque(true)
       button.setBorderPainted(false)
 
@@ -278,14 +278,18 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], useTooltip: Bool
       val AlertIcon  = Utils.iconScaled("/images/edit-error.png", 15, 15)
       val DeleteIcon = Utils.icon("/images/delete.png")
 
-      val editButton = RichJButton(EditIcon) {
+      val editButton = new Button("", () => {
         openAdvancedPenEditor(model.pens(getSelectedRow))
+      }) {
+        setIcon(EditIcon)
       }
-      val deleteButton = RichJButton(DeleteIcon) {
+      val deleteButton = new Button("", () => {
         val index = getSelectedRow
         removeEditor()
         clearSelection()
         removePen(index)
+      }) {
+        setIcon(DeleteIcon)
       }
       editButton.putClientProperty("JComponent.sizeVariant", "small")
       deleteButton.putClientProperty("JComponent.sizeVariant", "small")

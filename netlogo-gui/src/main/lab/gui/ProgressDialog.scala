@@ -2,29 +2,36 @@
 
 package org.nlogo.lab.gui
 
-import org.nlogo.swing.{ RichAction, OptionDialog }
-import org.nlogo.api.LabProtocol
-import org.nlogo.nvm.Workspace
-import org.nlogo.nvm.LabInterface.ProgressListener
-import org.nlogo.window.{ GUIWorkspace, PlotWidget, SpeedSliderPanel }
-import javax.swing.ScrollPaneConstants._
-import javax.swing._
-import java.awt.Dimension
-import org.nlogo.api.{ Dump, ExportPlotWarningAction, PeriodicUpdateDelay }
-import org.nlogo.plot.DummyPlotManager
-import org.nlogo.core.I18N
+import java.awt.{ Dialog, Dimension, GridBagConstraints, GridBagLayout, Insets, Window }
+import javax.swing.{ JDialog, JPanel, JScrollPane, JTextArea, ScrollPaneConstants, Timer, WindowConstants }
+import javax.swing.border.EmptyBorder
 
-private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervisor,
+import org.nlogo.api.{ Dump, ExportPlotWarningAction, LabProtocol, PeriodicUpdateDelay }
+import org.nlogo.awt.Positioning
+import org.nlogo.core.I18N
+import org.nlogo.nvm.LabInterface.ProgressListener
+import org.nlogo.nvm.Workspace
+import org.nlogo.plot.DummyPlotManager
+import org.nlogo.swing.{ Button, CheckBox, OptionDialog, RichAction }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.{ GUIWorkspace, PlotWidget, SpeedSliderPanel }
+
+private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor,
                                    saveProtocol: (LabProtocol) => Unit)
-              extends JDialog(parent, java.awt.Dialog.DEFAULT_MODALITY_TYPE) with ProgressListener {
+              extends JDialog(parent, Dialog.DEFAULT_MODALITY_TYPE) with ProgressListener with ThemeSync {
   val protocol = supervisor.worker.protocol
   val workspace = supervisor.workspace.asInstanceOf[GUIWorkspace]
   private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace.progressDialog")
   private val totalRuns = protocol.countRuns
   private val progressArea = new JTextArea(10 min (protocol.valueSets(0).size + 3), 0)
+  private val scrollPane = new JScrollPane(progressArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   private val timer = new Timer(PeriodicUpdateDelay.DelayInMilliseconds, periodicUpdateAction)
-  private val displaySwitch = new JCheckBox(displaySwitchAction)
-  private val plotsAndMonitorsSwitch = new JCheckBox(plotsAndMonitorsSwitchAction)
+  private val displaySwitch = new CheckBox(displaySwitchAction)
+  private val plotsAndMonitorsSwitch = new CheckBox(plotsAndMonitorsSwitchAction)
+  private lazy val pauseButton = new Button(pauseAction)
+  private lazy val abortButton = new Button(abortAction)
+  private val speedSlider = new SpeedSliderPanel(workspace)
 
   private var updatePlots = false
   private var started = 0L
@@ -69,17 +76,15 @@ private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervis
     })
     setTitle(I18N.gui("title", protocol.name))
     setResizable(true)
-    val layout = new java.awt.GridBagLayout
-    getContentPane.setLayout(layout)
-    val c = new java.awt.GridBagConstraints
+    getContentPane.setLayout(new GridBagLayout)
+    val c = new GridBagConstraints
 
-    c.gridwidth = java.awt.GridBagConstraints.REMAINDER
-    c.fill = java.awt.GridBagConstraints.BOTH
+    c.gridwidth = GridBagConstraints.REMAINDER
+    c.fill = GridBagConstraints.BOTH
     c.weightx = 1
     c.weighty = 1
-    c.insets = new java.awt.Insets(6, 6, 0, 6)
+    c.insets = new Insets(6, 6, 0, 6)
 
-    val speedSlider = new SpeedSliderPanel(workspace)
     getContentPane.add(speedSlider, c)
 
     c.weighty = 1.0
@@ -89,34 +94,38 @@ private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervis
     }
 
     progressArea.setEditable(false)
-    progressArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    val scrollPane = new JScrollPane(progressArea, VERTICAL_SCROLLBAR_ALWAYS, HORIZONTAL_SCROLLBAR_AS_NEEDED)
+    progressArea.setBorder(new EmptyBorder(5, 5, 5, 5))
+    
     getContentPane.add(scrollPane, c)
     updateProgressArea(true)
     scrollPane.setMinimumSize(scrollPane.getPreferredSize())
 
     c.weighty = 0.0
-    c.fill = java.awt.GridBagConstraints.HORIZONTAL
+    c.fill = GridBagConstraints.HORIZONTAL
     getContentPane.add(displaySwitch, c)
 
-    c.insets = new java.awt.Insets(0, 6, 0, 6)
+    c.insets = new Insets(0, 6, 0, 6)
     getContentPane.add(plotsAndMonitorsSwitch, c)
 
-    val buttonPanel = new JPanel
+    val buttonPanel = new JPanel {
+      setOpaque(false)
+      setBackground(InterfaceColors.TRANSPARENT)
+    }
 
-    buttonPanel.add(new JButton(pauseAction))
-    buttonPanel.add(new JButton(abortAction))
+    buttonPanel.add(pauseButton)
+    buttonPanel.add(abortButton)
 
-    c.fill = java.awt.GridBagConstraints.NONE
-    c.anchor = java.awt.GridBagConstraints.EAST
-    c.insets = new java.awt.Insets(6, 6, 6, 6)
+    c.fill = GridBagConstraints.NONE
+    c.anchor = GridBagConstraints.EAST
+    c.insets = new Insets(6, 6, 6, 6)
 
     getContentPane.add(buttonPanel, c)
 
     timer.start()
 
     pack()
-    org.nlogo.awt.Positioning.center(this, parent)
+
+    Positioning.center(this, parent)
   }
 
   override def getMinimumSize = getPreferredSize
@@ -144,10 +153,10 @@ private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervis
     plotWidgetOption.foreach{ plotWidget => if (updatePlots) plotWidget.handle(null) }
   }
   lazy val displaySwitchAction = RichAction(I18N.gui("updateView")) { e =>
-    workspace.displaySwitchOn(e.getSource.asInstanceOf[JCheckBox].isSelected)
+    workspace.displaySwitchOn(e.getSource.asInstanceOf[CheckBox].isSelected)
   }
   lazy val plotsAndMonitorsSwitchAction = RichAction(I18N.gui("updatePlotsAndMonitors")) { e =>
-    updatePlots = e.getSource.asInstanceOf[JCheckBox].isSelected
+    updatePlots = e.getSource.asInstanceOf[CheckBox].isSelected
     if (updatePlots) workspace.setPeriodicUpdatesEnabled(true)
     else {
       workspace.setPeriodicUpdatesEnabled(false)
@@ -200,6 +209,12 @@ private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervis
   def writing() {
     timer.stop()
     progressArea.setText(I18N.gui("writing"))
+  }
+
+  override def setVisible(visible: Boolean) {
+    syncTheme()
+
+    super.setVisible(visible)
   }
 
   /// ProgressListener implementation
@@ -297,5 +312,20 @@ private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervis
         }
       })
     }
+  }
+
+  def syncTheme() {
+    getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    progressArea.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    progressArea.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
+    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+
+    displaySwitch.setForeground(InterfaceColors.DIALOG_TEXT)
+    plotsAndMonitorsSwitch.setForeground(InterfaceColors.DIALOG_TEXT)
+
+    speedSlider.syncTheme()
   }
 }
