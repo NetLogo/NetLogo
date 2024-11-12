@@ -796,8 +796,13 @@ class App extends
 
     monitorManager.syncTheme()
 
-    _turtleShapesManager.syncTheme()
-    _linkShapesManager.syncTheme()
+    _turtleShapesManager match {
+      case ts: ThemeSync => ts.syncTheme()
+    }
+
+    _linkShapesManager match {
+      case ts: ThemeSync => ts.syncTheme()
+    }
 
     labManager.syncTheme()
 
