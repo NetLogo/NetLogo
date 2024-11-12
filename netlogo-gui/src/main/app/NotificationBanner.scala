@@ -58,7 +58,6 @@ class NotificationBanner() extends JPanel with ThemeSync {
       case e: Exception =>
       println(s"Unable to connect to ccl.northwestern.edu but not throwing an exception")
       ""
-//        throw new Exception(s"Error fetching JSON from URL: ${e.getMessage}", e)
     }
   }
 
@@ -137,7 +136,6 @@ class NotificationBanner() extends JPanel with ThemeSync {
         return
       }
       val lastSeenEventId = prefs.getInt(lastSeenEventIdKey, -1); // Returns -1 if "event-id" is not found
-      println(s"lastSeenEventId: $lastSeenEventId, head of the list: ${jsonObjectList.head.eventId}")
       if(jsonObjectList.head.eventId > lastSeenEventId){
         println(s"Show this ${jsonObjectList.head.eventId}")
       }
@@ -236,12 +234,10 @@ class NotificationBanner() extends JPanel with ThemeSync {
       return false
     }
     if (jsonObjectList.head.eventId > lastSeenEventId) {
-//       Show this message
-        true
+        true  // Show this message
       }
       else {
-//        Don't show this message
-        false
+        false //Don't show this message
       }
   }
 }
