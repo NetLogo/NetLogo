@@ -2,39 +2,21 @@
 
 package org.nlogo.swing
 
-import java.awt.{ BorderLayout, Component, FlowLayout, Graphics }
+import java.awt.{ BorderLayout, FlowLayout }
 import java.awt.event.{ MouseAdapter, MouseEvent }
-import javax.swing.{ Icon, JComponent, JDialog, JLabel, JPanel }
+import javax.swing.{ JComponent, JDialog, JLabel, JPanel }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
   extends JPanel(new BorderLayout) with ThemeSync {
-
-  private class Arrow extends Icon {
-    def getIconWidth = 9
-    def getIconHeight = 9
-
-    def paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-      val g2d = Utils.initGraphics2D(g)
-
-      g2d.setColor(InterfaceColors.DIALOG_TEXT)
-
-      if (isOpen) {
-        g2d.drawLine(x, y + 2, x + 4, y + 6)
-        g2d.drawLine(x + 4, y + 6, x + 8, y + 2)
-      }
-
-      else {
-        g2d.drawLine(x + 2, y + 8, x + 6, y + 4)
-        g2d.drawLine(x + 6, y + 4, x + 2, y)
-      }
-    }
-  }
   
   private val titleLabel = new JLabel(title)
+  private val arrow = new CollapsibleArrow
 
-  titleLabel.setIcon(new Arrow)
+  arrow.setOpen(element.isVisible)
+
+  titleLabel.setIcon(arrow)
 
   private val titlePanel = new JPanel(new FlowLayout(FlowLayout.LEADING))
 
@@ -48,6 +30,7 @@ class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
 
   def setOpen(open: Boolean): Unit = {
     element.setVisible(open)
+    arrow.setOpen(open)
     parent.pack()
     repaint()
   }

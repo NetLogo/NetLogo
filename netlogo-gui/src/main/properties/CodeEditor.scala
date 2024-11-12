@@ -4,17 +4,15 @@ package org.nlogo.properties
 
 
 import java.awt.{ BorderLayout, Component, Container }
-import java.awt.event.{ TextListener, TextEvent, ActionEvent, ActionListener }
-import javax.swing.{ JLabel, JPanel, JScrollPane, ScrollPaneConstants, SwingConstants }
-import javax.swing.plaf.basic.BasicArrowButton
+import java.awt.event.{ MouseAdapter, MouseEvent, TextListener, TextEvent }
+import javax.swing.{ JLabel, JPanel, JScrollPane, ScrollPaneConstants }
 
 import org.nlogo.api.DummyEditable
 import org.nlogo.awt.RowLayout
 import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
+import org.nlogo.swing.CollapsibleArrow
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.EditorAreaErrorLabel
-
-import scala.language.reflectiveCalls
 
 object CodeEditor {
   def apply(displayName: String, colorizer: Colorizer,
@@ -60,22 +58,30 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     if (collapseWhenEmpty) setVisible(false)
   }
   private def collapsed = !collapso.isVisible()
-  private def arrowDirection = if (collapsed) SwingConstants.EAST else SwingConstants.SOUTH
-  private val arrow = new BasicArrowButton(arrowDirection) { self =>
-    addActionListener(new ActionListener() {
-      def actionPerformed(e: ActionEvent) { setVisibility(collapsed) }
-    })
-    def updateDirection() { self.setDirection(arrowDirection) }
+  private val arrow = new CollapsibleArrow {
+    setOpen(!collapsed)
   }
 
-  private val nameLabel = new JLabel(accessor.displayName)
+  private val nameLabel = new JLabel(accessor.displayName) {
+    addMouseListener(new MouseAdapter {
+      override def mouseClicked(e: MouseEvent) {
+        setVisibility(collapsed)
+      }
+    })
+  }
 
   setLayout(new BorderLayout)
   // add the panel containing the button that forces the collapse, and a label.
-  add(new JPanel(rowLayout(2)) {
+  add(new JPanel(new RowLayout(2, Component.LEFT_ALIGNMENT, Component.CENTER_ALIGNMENT)) {
     setOpaque(false)
     setBackground(InterfaceColors.TRANSPARENT)
-    if (collapsible) add(arrow)
+    if (collapsible) add(new JLabel(arrow) {
+      addMouseListener(new MouseAdapter {
+        override def mouseClicked(e: MouseEvent) {
+          setVisibility(collapsed)
+        }
+      })
+    })
     add(nameLabel)
   }, BorderLayout.NORTH)
   add(collapso, BorderLayout.CENTER)
@@ -87,7 +93,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
         add(collapso, BorderLayout.CENTER)
       else
         remove(collapso)
-      arrow.updateDirection()
+      arrow.setOpen(!collapsed)
       org.nlogo.awt.Hierarchy.getWindow(this).pack()
       if (!collapsed) editor.requestFocus()
     }
@@ -100,7 +106,6 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     accessor.error.foreach{ errorLabel.setError(_, accessor.target.sourceOffset) }
   }
   override def requestFocus() { editor.requestFocus() }
-  private def rowLayout(rows:Int) = new RowLayout(rows, Component.LEFT_ALIGNMENT, Component.TOP_ALIGNMENT)
   override def getConstraints = {
     val c = super.getConstraints
     c.fill = java.awt.GridBagConstraints.BOTH

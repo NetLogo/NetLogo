@@ -85,12 +85,14 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
         setBackground(InterfaceColors.TRANSPARENT)
       }
       val c = new GridBagConstraints
+      c.insets = new Insets(0, 6, 0, 0)
       commandPanel.add(prompt, c)
       c.weightx = 1
       c.fill = GridBagConstraints.BOTH
       commandPanel.add(commandLine, c)
       c.weightx = 0
-      c.fill = GridBagConstraints.NONE
+      c.weighty = 1
+      c.fill = GridBagConstraints.VERTICAL
       c.insets = new Insets(1, 1, 1, 1)
       commandPanel.add(historyPrompt, c)
       add(commandPanel, BorderLayout.SOUTH)
