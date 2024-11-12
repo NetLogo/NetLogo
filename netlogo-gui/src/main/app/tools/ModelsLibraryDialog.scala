@@ -169,6 +169,8 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
   private val modelPreviewPanel: ModelPreviewPanel = new ModelPreviewPanel()
 
+  private val modelPreviewScrollPane = new JScrollPane(modelPreviewPanel)
+
   private val tree = new JTree(new SearchableModelTree(node)) with ThemeSync {
     private val renderer = new DefaultTreeCellRenderer with ThemeSync {
       def syncTheme() {
@@ -189,6 +191,8 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   }
 
   tree.setSelectionRow(0)
+
+  private val treeScrollPane = new JScrollPane(tree)
 
   private val contentPane = new JPanel
 
@@ -340,11 +344,11 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     searchPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
 
     val treePanel = new Box(BoxLayout.Y_AXIS)
-    treePanel.add(new JScrollPane(tree))
+    treePanel.add(treeScrollPane)
     treePanel.add(searchPanel)
 
     topPanel.add(treePanel)
-    topPanel.add(new JScrollPane(modelPreviewPanel))
+    topPanel.add(modelPreviewScrollPane)
 
     val buttonPanel = new Box(BoxLayout.X_AXIS)
     buttonPanel.add(Box.createRigidArea(new Dimension(40, 0)))
@@ -718,11 +722,18 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     contentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     tree.syncTheme()
+
+    treeScrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    treeScrollPane.getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
     modelPreviewPanel.syncTheme()
 
-    searchField.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-    searchField.setForeground(InterfaceColors.DIALOG_TEXT)
-    searchField.setCaretColor(InterfaceColors.DIALOG_TEXT)
+    modelPreviewScrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    modelPreviewScrollPane.getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    searchField.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    searchField.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    searchField.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
 
     searchIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
 

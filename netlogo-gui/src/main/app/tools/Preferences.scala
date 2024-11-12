@@ -32,9 +32,9 @@ object Preferences {
   abstract class StringPreference(val i18nKey: String, val requirement: String, default: String) extends Preference {
     val component = new JTextField(default, 20) with ThemeSync {
       def syncTheme() {
-        setBackground(InterfaceColors.DIALOG_BACKGROUND)
-        setForeground(InterfaceColors.DIALOG_TEXT)
-        setCaretColor(InterfaceColors.DIALOG_TEXT)
+        setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+        setForeground(InterfaceColors.TOOLBAR_TEXT)
+        setCaretColor(InterfaceColors.TOOLBAR_TEXT)
       }
     }
 
@@ -142,9 +142,9 @@ object Preferences {
         add(browseButton)
 
         def syncTheme() {
-          textField.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-          textField.setForeground(InterfaceColors.DIALOG_TEXT)
-          textField.setCaretColor(InterfaceColors.DIALOG_TEXT)
+          textField.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+          textField.setForeground(InterfaceColors.TOOLBAR_TEXT)
+          textField.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
 
           browseButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
           browseButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)

@@ -4,18 +4,21 @@ package org.nlogo.app.tools
 
 import java.awt.{ Dimension, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ FocusEvent, TextEvent, TextListener }
-import javax.swing.{ DefaultComboBoxModel, JButton, JComboBox, JPanel, JScrollPane }
+import javax.swing.{ DefaultComboBoxModel, JComboBox, JPanel, JScrollPane }
+import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.PreviewCommands, PreviewCommands.{ Compilable, Custom, Default, Manual }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
-import org.nlogo.swing.{ HasPropertyChangeSupport, Utils }
+import org.nlogo.swing.{ Button, HasPropertyChangeSupport, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.window.{ EditorAreaErrorLabel, EditorColorizer }
 
 class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) {
   val comboBox = new ComboBox
-  val compileButton = new JButton
+  val compileButton = new Button(null) {
+    setBorder(new EmptyBorder(4, 4, 4, 4))
+  }
 
   private var dirty = false
   val textListener = new TextListener with HasPropertyChangeSupport {
