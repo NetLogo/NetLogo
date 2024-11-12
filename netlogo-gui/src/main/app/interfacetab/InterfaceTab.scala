@@ -258,6 +258,10 @@ class InterfaceTab(workspace: GUIWorkspace,
     toolBar.syncTheme()
     viewUpdatePanel.syncTheme()
     iP.syncTheme()
+
+    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.INTERFACE_BACKGROUND)
+    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.INTERFACE_BACKGROUND)
+
     commandCenter.syncTheme()
     locationToggleAction.syncTheme()
   }
