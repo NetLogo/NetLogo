@@ -6,9 +6,8 @@ import java.awt.Color
 import java.io.IOException
 
 import org.nlogo.api.GraphicsInterface
-import org.nlogo.theme.ThemeSync
 
-trait ShapesManagerInterface extends ThemeSync {
+trait ShapesManagerInterface {
   def reset(): Unit
   def init(name: String): Unit
 }
