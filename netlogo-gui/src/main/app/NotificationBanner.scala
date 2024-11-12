@@ -100,7 +100,7 @@ class NotificationBanner() extends JPanel with ThemeSync {
   // Method to parse JSON content to a list of JsonObject instances
   def parseJsonToList(jsonContent: String): List[JsonObject] = {
     if(jsonContent.isEmpty){
-      return null
+      return Nil
     }
 
     try {
@@ -217,7 +217,7 @@ class NotificationBanner() extends JPanel with ThemeSync {
     // Return the title of the first item if jsonObjectList is not null and has elements
     jsonObjectList match {
       case null | Nil =>
-        println("jsonObjectList is empty or null; hiding NotificationBanner.")
+        println("jsonObjectList is empty or Nil; hiding NotificationBanner.")
         this.setVisible(false) // Hide the NotificationBanner panel
         None // Return None if jsonObjectList is null or empty
       case list =>
@@ -232,7 +232,7 @@ class NotificationBanner() extends JPanel with ThemeSync {
     val jsonContent = fetchJsonFromUrl(JsonUrl)
     jsonObjectList = parseJsonToList(jsonContent) // Populate the class variable
     val lastSeenEventId = prefs.getInt(lastSeenEventIdKey, -1); // Returns -1 if "event-id" is not found
-    if(jsonObjectList == null || jsonObjectList.head == null) {
+    if(jsonObjectList.isEmpty ) {
       return false
     }
     if (jsonObjectList.head.eventId > lastSeenEventId) {
