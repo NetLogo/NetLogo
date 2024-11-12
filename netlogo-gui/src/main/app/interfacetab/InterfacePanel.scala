@@ -17,7 +17,7 @@ import org.nlogo.core.{
 import org.nlogo.editor.{ EditorArea, UndoManager }
 import org.nlogo.log.LogManager
 import org.nlogo.swing.PopupMenuItem
-import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ ButtonWidget, ChooserWidget, Events => WindowEvents, GUIWorkspace, InputBoxWidget,
                           InterfaceGlobalWidget, MonitorWidget, PlotWidget, SliderWidget, ViewWidget,
                           ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
@@ -29,8 +29,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   with FocusListener
   with KeyListener
   with LoadWidgetsEvent.Handler
-  with UndoRedoActions
-  with ThemeSync {
+  with UndoRedoActions {
 
   workspace.setWidgetContainer(this)
   // in 3d don't add the view widget since it's always
@@ -51,14 +50,6 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   override def focusLost(e: FocusEvent): Unit = {
     enableButtonKeys(false)
-  }
-
-  def syncTheme() {
-    setBackground(InterfaceColors.INTERFACE_BACKGROUND)
-
-    syncCursorTheme()
-
-    getWrappers.foreach(_.syncTheme())
   }
 
   ///

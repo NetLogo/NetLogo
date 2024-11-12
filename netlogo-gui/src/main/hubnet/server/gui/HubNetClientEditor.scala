@@ -7,6 +7,7 @@ import javax.swing.{JMenuBar, JScrollPane, JFrame, ScrollPaneConstants}
 
 import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel }
 
 class HubNetClientEditor(workspace: GUIWorkspace,
@@ -14,18 +15,26 @@ class HubNetClientEditor(workspace: GUIWorkspace,
                          iFactory: InterfaceFactory,
                          menuFactory: MenuBarFactory) extends JFrame
         with org.nlogo.window.Event.LinkChild
-        with org.nlogo.window.Events.ZoomedEvent.Handler {
+        with org.nlogo.window.Events.ZoomedEvent.Handler
+        with ThemeSync {
   val interfacePanel: AbstractWidgetPanel = iFactory.widgetPanel(workspace)
+  private val scrollPane = new JScrollPane(interfacePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+    setBorder(null)
+  }
+  
+  private val toolbar = {
+    import WidgetInfo._
+    val buttons = List(button, slider, switch, chooser, input, monitor, plot, note, view)
+
+    iFactory.toolbar(interfacePanel, workspace, buttons, this)
+  }
 
   locally {
     setTitle(getTitle(workspace.modelNameForDisplay, workspace.getModelDir, workspace.getModelType))
     getContentPane.setLayout(new BorderLayout())
-    getContentPane.add(new JScrollPane(interfacePanel,
-      ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED), BorderLayout.CENTER)
-    import WidgetInfo._
-    val buttons = List(button, slider, switch, chooser, input, monitor, plot, note, view)
-    getContentPane.add(iFactory.toolbar(interfacePanel, workspace, buttons, this), BorderLayout.NORTH)
+    getContentPane.add(scrollPane, BorderLayout.CENTER)
+    getContentPane.add(toolbar, BorderLayout.NORTH)
     if (System.getProperty("os.name").startsWith("Mac")) {
       val menus = new JMenuBar() {add(menuFactory.createFileMenu)}
       val edit = menuFactory.createEditMenu
@@ -73,5 +82,16 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     }
     // OS X UI guidelines prohibit paths in title bars, but oh well...
     if (mt == ModelType.Normal) t + " {" + directory + "}" else t
+  }
+
+  def syncTheme() {
+    interfacePanel.syncTheme()
+
+    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.INTERFACE_BACKGROUND)
+    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.INTERFACE_BACKGROUND)
+
+    toolbar match {
+      case ts: ThemeSync => ts.syncTheme()
+    }
   }
 }

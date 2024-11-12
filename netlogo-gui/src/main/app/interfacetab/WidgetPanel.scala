@@ -935,4 +935,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
   def syncCursorTheme() {
     setCursor(interactMode.cursor)
   }
+
+  def syncTheme() {
+    setBackground(InterfaceColors.INTERFACE_BACKGROUND)
+
+    syncCursorTheme()
+
+    getWrappers.foreach(_.syncTheme())
+  }
 }
