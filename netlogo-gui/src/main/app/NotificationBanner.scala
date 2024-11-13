@@ -9,8 +9,8 @@ import scala.io.Source
 import java.awt.{BorderLayout, Dimension}
 import java.awt.event.{ActionEvent, ActionListener, FocusEvent, FocusListener, MouseAdapter, MouseEvent}
 import java.util.prefs.Preferences
-import javax.swing.{JButton, JEditorPane, JLabel, JOptionPane, JPanel, JScrollPane, SwingConstants, SwingUtilities}
-import org.json.simple.parser.{JSONParser, ParseException}
+import javax.swing.{JButton, JEditorPane, JLabel, JOptionPane, JPanel, JScrollPane, SwingConstants}
+import org.json.simple.parser.JSONParser
 import org.json.simple.{JSONArray, JSONObject}
 import org.nlogo.app.common.FindDialog
 import org.nlogo.app.infotab.InfoFormatter
@@ -25,11 +25,11 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
   private var jsonObjectList: List[JsonObject] = List() // Initialize here first
   private val JsonUrl = "https://ccl.northwestern.edu/netlogo/announce-test.json"
   // Fetch and populate jsonObjectList in the constructor
-  jsonObjectList = parseJsonToList(fetchJsonFromUrl(JsonUrl))
+  jsonObjectList = parseJsonToList(fetchJsonFromUrl())
 
   private val initialMessage = getJsonObjectHead.getOrElse("")
   lazy val lastSeenEventIdKey: String = "lastSeenEventId" // The key for the most recently seen event-id
-
+  private var editorPane: JEditorPane = new JEditorPane()
   // Label to display notification messages
   private val messageLabel = new JLabel(" " + initialMessage)
 
@@ -46,9 +46,9 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
   }
 
   // Method to fetch JSON content from a URL
-  def fetchJsonFromUrl(url: String): String = {
+  private def fetchJsonFromUrl(): String = {
     try {
-      val source = Source.fromURL(url)
+      val source = Source.fromURL(JsonUrl)
       val content = source.mkString
       source.close()
       content
@@ -60,6 +60,7 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
   }
 
   private def initUI(): Unit = {
+
     // Set layout and appearance
     setLayout(new BorderLayout())
     setPreferredSize(new Dimension(400, 50))
@@ -88,19 +89,12 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
     })
   }
 
-  // Method to update the notification message
-  def setMessage(message: String): Unit = {
-    messageLabel.setText(" " + message)
-    setVisible(true) // Ensure the banner is visible when updating the message
-  }
-
   // Method to parse JSON content to a list of JsonObject instances
-  def parseJsonToList(jsonContent: String): List[JsonObject] = {
+  private def parseJsonToList(jsonContent: String): List[JsonObject] = {
     if(jsonContent.isEmpty){
       return Nil
     }
 
-    try {
       val parser = new JSONParser()
       val jsonArray = parser.parse(jsonContent).asInstanceOf[JSONArray]
       jsonArray.toArray.flatMap { obj =>
@@ -112,22 +106,15 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
           JsonObject(eventId, date, title, fullText)
         }
       }.toList.sortBy(_.eventId)(Ordering[Int].reverse)
-    } catch {
-      case e: ParseException =>
-        throw new Exception(s"Error parsing JSON: ${e.getMessage}", e)
-      case e: ClassCastException =>
-        throw new Exception(s"Error casting JSON objects: ${e.getMessage}", e)
-      case e: Exception =>
-        throw new Exception(s"General error: ${e.getMessage}", e)
-    }
+
   }
 
   // Method to show JSON content in a dialog
-  def showJsonInDialog(): Unit = {
+  private def showJsonInDialog(): Unit = {
 
     val prefs = Preferences.userNodeForPackage(getClass)
     try {
-      val jsonContent = fetchJsonFromUrl(JsonUrl)
+      val jsonContent = fetchJsonFromUrl()
       jsonObjectList = parseJsonToList(jsonContent) // Populate the class variable
       val formattedString = formatJsonObjectList(jsonObjectList)
       if(!isShowNeeded()){
@@ -144,8 +131,7 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
       val html = InfoFormatter.toInnerHtml(formattedString)
 
       if (!jsonContent.trim.isEmpty) {
-        SwingUtilities.invokeLater(() => {
-          val editorPane: JEditorPane = new JEditorPane {
+          editorPane = new JEditorPane {
             self =>
             addFocusListener(new FocusListener {
               def focusGained(fe: FocusEvent): Unit = {
@@ -180,10 +166,11 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
             setVisible(false) // Hide NotificationBanner
             prefs.putInt("lastSeenEventId", jsonObjectList.head.eventId)
           }
-        })
       }
     } catch {
-      case e: Exception => throw new Exception(s"Error in showJsonInDialog: ${e.getMessage}", e)
+      case e: Exception =>{
+        org.nlogo.swing.OptionDialog.showCustom(this, I18N.gui.get("error.dialog.unknown"), e.getMessage, null)
+      }
     }
   }
 
@@ -192,7 +179,7 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
   private lazy val markdownParser = Parser.builder().build()
   private lazy val htmlRenderer = HtmlRenderer.builder().build()
 
-  def formatJsonObjectList(jsonObjectList: List[JsonObject]): String = {
+  private def formatJsonObjectList(jsonObjectList: List[JsonObject]): String = {
     jsonObjectList.map { obj =>
       // Convert fullText from Markdown to HTML
       val fullTextHtml = htmlRenderer.render(markdownParser.parse(obj.fullText))
@@ -203,8 +190,8 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
     }.mkString("<html>", "", "</html>")
   }
 
-  def getJsonObjectHead: Option[String] = {
-      val jsonContent = fetchJsonFromUrl(JsonUrl) // Use the static URL here
+  private def getJsonObjectHead: Option[String] = {
+      val jsonContent = fetchJsonFromUrl() // Use the static URL here
       jsonObjectList = parseJsonToList(jsonContent)
 
     // Return the title of the first item if jsonObjectList is not null and has elements
@@ -222,7 +209,7 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
 
   private def isShowNeeded(): Boolean = {
     val prefs = Preferences.userNodeForPackage(getClass)
-    val jsonContent = fetchJsonFromUrl(JsonUrl)
+    val jsonContent = fetchJsonFromUrl()
     jsonObjectList = parseJsonToList(jsonContent) // Populate the class variable
     val lastSeenEventId = prefs.getInt(lastSeenEventIdKey, -1); // Returns -1 if "event-id" is not found
     //return true if jsonObjectList is non-empty and eventId of the first element is> lastSeenEventId; otherwise return false
