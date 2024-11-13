@@ -161,6 +161,9 @@ class InfoTab(attachModelDir: String => String)
     editableButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
     helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
 
+    textArea.setBackground(InterfaceColors.CODE_BACKGROUND)
+    textArea.setForeground(InterfaceColors.TOOLBAR_TEXT)
+
     // change css here
   }
 
