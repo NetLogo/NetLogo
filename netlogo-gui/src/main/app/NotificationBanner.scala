@@ -31,7 +31,6 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
   private var editorPane: JEditorPane = new JEditorPane()
   // Label to display notification messages
   private val messageLabel = new JLabel(" " + initialMessage)
-
   // Close button with an "X" icon
   private val closeButton = new JButton("\u2716") // Unicode character for "X"
   setVisible(isShowNeeded()) // Set visibility based on isShowNeeded
@@ -144,7 +143,9 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
             setDragEnabled(false)
             setEditable(false)
             setContentType("text/html")
-            setOpaque(false)
+            setOpaque(true)
+            setBackground(InterfaceColors.CODE_BACKGROUND) // Set the background color)
+            setForeground(InterfaceColors.DEFAULT_COLOR) //Set the font color
             setText(html)
             setCaretPosition(0)
           }
