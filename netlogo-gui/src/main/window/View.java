@@ -20,7 +20,7 @@ import org.nlogo.awt.ImageSelection;
 import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.I18N;
 import org.nlogo.swing.Menu;
-import org.nlogo.swing.PopupMenuItem;
+import org.nlogo.swing.MenuItem;
 import org.nlogo.theme.InterfaceColors;
 
 import scala.Option;
@@ -448,23 +448,23 @@ public class View
     // the only ones that do are watch, follow and reset-perspective
     // this check (and others below) prevent items from being added
     // when we are running in Applet. JC - 6/8/10
-    menu.add(new PopupMenuItem(new AbstractAction(I18N.guiJ().get("tabs.run.widget.view.copy")) {
+    menu.add(new MenuItem(new AbstractAction(I18N.guiJ().get("tabs.run.widget.view.copy")) {
       public void actionPerformed(ActionEvent e) {
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
           new ImageSelection(exportView()), null);
       }
     }, true));
-    menu.add(new PopupMenuItem(new AbstractAction(I18N.guiJ().get("tabs.run.widget.view.export")) {
+    menu.add(new MenuItem(new AbstractAction(I18N.guiJ().get("tabs.run.widget.view.export")) {
       public void actionPerformed(ActionEvent e) {
         workspace.doExportView(View.this);
       }
     }, true));
 
-    menu.add(new PopupMenuItem(workspace.switchTo3DViewAction, true));
+    menu.add(new MenuItem(workspace.switchTo3DViewAction, true));
 
     menu.add(new JPopupMenu.Separator());
 
-    menu.add(new PopupMenuItem(new AbstractAction(I18N.guiJ().get("tabs.run.widget.view.inspectGlobals")) {
+    menu.add(new MenuItem(new AbstractAction(I18N.guiJ().get("tabs.run.widget.view.inspectGlobals")) {
       public void actionPerformed(ActionEvent actionEvent) {
         workspace.inspectAgent(AgentKindJ.Observer());
       }
@@ -472,7 +472,7 @@ public class View
 
     if (!workspace.world().observer().atHome2D()) {
       menu.add(new JPopupMenu.Separator());
-      menu.add(new PopupMenuItem(new AbstractAction(
+      menu.add(new MenuItem(new AbstractAction(
         "<html>" + Colors.colorize("reset-perspective", InterfaceColors.COMMAND_COLOR())) {
         public void actionPerformed(ActionEvent e) {
           workspace.world().observer().resetPerspective();
@@ -599,7 +599,7 @@ public class View
   enum AgentMenuType {INSPECT, FOLLOW, WATCH}
 
   private class AgentMenuItem
-      extends PopupMenuItem {
+      extends MenuItem {
     org.nlogo.agent.Agent agent;
     AgentMenuType type;
     boolean submenu = false;

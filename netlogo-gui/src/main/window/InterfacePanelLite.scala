@@ -12,7 +12,7 @@ import org.nlogo.api.{ CompilerServices, Exceptions, RandomServices, Version }
 import org.nlogo.awt.Images
 import org.nlogo.core.{ Widget => CoreWidget, View => CoreView }
 import org.nlogo.plot.PlotManager
-import org.nlogo.swing.PopupMenuItem
+import org.nlogo.swing.MenuItem
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.Events.{ LoadWidgetsEvent, OutputEvent }
 import org.nlogo.util.SysInfo
@@ -167,10 +167,10 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
 
     menu.setBackground(InterfaceColors.MENU_BACKGROUND)
 
-    menu.add(new PopupMenuItem(Version.version)).setEnabled(false)
-    menu.add(new PopupMenuItem(SysInfo.getOSInfoString)).setEnabled(false)
-    menu.add(new PopupMenuItem(SysInfo.getVMInfoString)).setEnabled(false)
-    menu.add(new PopupMenuItem(SysInfo.getMemoryInfoString)).setEnabled(false)
+    menu.add(new MenuItem(Version.version)).setEnabled(false)
+    menu.add(new MenuItem(SysInfo.getOSInfoString)).setEnabled(false)
+    menu.add(new MenuItem(SysInfo.getVMInfoString)).setEnabled(false)
+    menu.add(new MenuItem(SysInfo.getMemoryInfoString)).setEnabled(false)
 
     menu.show(this, e.getX, e.getY)
   }

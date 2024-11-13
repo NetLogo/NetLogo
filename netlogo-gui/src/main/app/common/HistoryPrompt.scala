@@ -10,7 +10,7 @@ import javax.swing.{ AbstractAction, JButton, JPopupMenu }
 
 import org.nlogo.awt.{ Fonts, Mouse }
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ PopupMenuItem, Utils }
+import org.nlogo.swing.{ MenuItem, Utils }
 import org.nlogo.theme.InterfaceColors
 
 class HistoryPrompt(commandLine: CommandLine) extends JButton {
@@ -50,7 +50,7 @@ class HistoryPrompt(commandLine: CommandLine) extends JButton {
           }
           prompt + " " + ex.string
         }
-      popMenu.add(new PopupMenuItem(new AbstractAction(str) {
+      popMenu.add(new MenuItem(new AbstractAction(str) {
         def actionPerformed(e: ActionEvent) {
           commandLine.setExecutionString(ex)
           commandLine.requestFocus()
@@ -58,12 +58,12 @@ class HistoryPrompt(commandLine: CommandLine) extends JButton {
       }))
     }
     if (commandLine.getExecutionList.isEmpty)
-      popMenu.add(new PopupMenuItem(I18N.gui.get("tabs.run.commandcenter.nohistory"))).setEnabled(false)
+      popMenu.add(new MenuItem(I18N.gui.get("tabs.run.commandcenter.nohistory"))).setEnabled(false)
     else {
       popMenu.add(new JPopupMenu.Separator)
-      popMenu.add(new PopupMenuItem(I18N.gui.get("tabs.run.commandcenter.useArrowKeys"))).setEnabled(false)
+      popMenu.add(new MenuItem(I18N.gui.get("tabs.run.commandcenter.useArrowKeys"))).setEnabled(false)
       popMenu.add(new JPopupMenu.Separator)
-      popMenu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.commandcenter.clearHistory")) {
+      popMenu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.commandcenter.clearHistory")) {
         def actionPerformed(e: ActionEvent) {
           commandLine.clearList()
         }

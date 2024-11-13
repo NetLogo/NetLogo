@@ -14,7 +14,7 @@ import java.awt.event.{ FocusListener, KeyAdapter, KeyEvent, MouseAdapter, Mouse
 import javax.swing.{ Action, JEditorPane, JPopupMenu }
 import javax.swing.text.{ Document, TextAction, PlainDocument, BadLocationException }
 
-import org.nlogo.swing.PopupMenuItem
+import org.nlogo.swing.MenuItem
 import org.nlogo.theme.InterfaceColors
 
 import KeyBinding.keystroke
@@ -193,10 +193,10 @@ class EditorArea(val configuration: EditorConfiguration)
   }
 
   private class EditorContextMenu(colorizer: Colorizer) extends JPopupMenu {
-    val copyItem  = new PopupMenuItem(Actions.CopyAction)
-    val cutItem   = new PopupMenuItem(Actions.CutAction)
-    val pasteItem = new PopupMenuItem(Actions.PasteAction)
-    val contextItems = configuration.contextActions.map(new PopupMenuItem(_))
+    val copyItem  = new MenuItem(Actions.CopyAction)
+    val cutItem   = new MenuItem(Actions.CutAction)
+    val pasteItem = new MenuItem(Actions.PasteAction)
+    val contextItems = configuration.contextActions.map(new MenuItem(_))
 
     add(copyItem)
     add(cutItem)

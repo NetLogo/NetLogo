@@ -10,7 +10,7 @@ import java.util.prefs.{ Preferences => JavaPreferences }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.I18N
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ PopupMenuItem, RoundedBorderPanel, ToolBarMenu }
+import org.nlogo.swing.{ MenuItem, RoundedBorderPanel, ToolBarMenu }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class ProceduresMenu(target: ProceduresMenuTarget)
@@ -48,7 +48,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
     val items = procs.map { proc =>
       val namePos = procsTable(proc).identifier.start
       val end  = procsTable(proc).endKeyword.end
-      new PopupMenuItem(new AbstractAction(proc) {
+      new MenuItem(new AbstractAction(proc) {
         def actionPerformed(e: ActionEvent) {
           // invokeLater for the scrolling behavior we want. we scroll twice: first bring the end into
           // view, then bring the beginning into view, so then we can see both, if they fit - ST 11/4/04
@@ -134,7 +134,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
         .sortBy(-_._2)
         .map(_._1)
     if (visibleItems.isEmpty)
-      menu.add(new PopupMenuItem("<"+I18N.gui.get("tabs.code.procedures.none")+">")).setEnabled(false)
+      menu.add(new MenuItem("<"+I18N.gui.get("tabs.code.procedures.none")+">")).setEnabled(false)
     else
       visibleItems.foreach(menu.add)
   }

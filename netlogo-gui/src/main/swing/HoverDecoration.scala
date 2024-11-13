@@ -24,11 +24,13 @@ trait HoverDecoration extends Component {
     }
 
     override def mouseExited(e: MouseEvent) {
-      setCursor(null)
+      if (!contains(e.getPoint)) {
+        setCursor(null)
 
-      hover = false
+        hover = false
 
-      repaint()
+        repaint()
+      }
     }
   })
 

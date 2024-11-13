@@ -12,7 +12,7 @@ import org.nlogo.api.Exceptions
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, ModalProgressTask, PopupMenuItem, RichAction,
+import org.nlogo.swing.{ FileDialog => SwingFileDialog, ModalProgressTask, MenuItem, RichAction,
                          RoundedBorderPanel }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents, OutputArea, TextMenuActions, Zoomable }
@@ -160,8 +160,8 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
     new JPopupMenu {
       setBackground(InterfaceColors.MENU_BACKGROUND)
 
-      add(new PopupMenuItem(TextMenuActions.CopyAction))
-      add(new PopupMenuItem(new AbstractAction(I18N.gui.get("menu.file.export")) {
+      add(new MenuItem(TextMenuActions.CopyAction))
+      add(new MenuItem(new AbstractAction(I18N.gui.get("menu.file.export")) {
         def actionPerformed(e: ActionEvent) {
           try {
             val filename = SwingFileDialog.showFiles(

@@ -16,7 +16,7 @@ import org.nlogo.core.{
   TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, UndoManager }
 import org.nlogo.log.LogManager
-import org.nlogo.swing.PopupMenuItem
+import org.nlogo.swing.MenuItem
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ ButtonWidget, ChooserWidget, Events => WindowEvents, GUIWorkspace, InputBoxWidget,
                           InterfaceGlobalWidget, MonitorWidget, PlotWidget, SliderWidget, ViewWidget,
@@ -83,13 +83,13 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
     // add extra stuff
     menu.add(new JPopupMenu.Separator())
-    menu.add(new PopupMenuItem(new ExportInterfaceAction(workspace, this)))
+    menu.add(new MenuItem(new ExportInterfaceAction(workspace, this)))
 
     menu.show(this, e.getX, e.getY)
   }
 
   class WidgetCreationMenuItem(val displayName: String, val coreWidget: CoreWidget)
-    extends PopupMenuItem(new AbstractAction(displayName) {
+    extends MenuItem(new AbstractAction(displayName) {
       def actionPerformed(e: ActionEvent) {
         unselectWidgets()
         createShadowWidget(coreWidget)
