@@ -16,6 +16,7 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
   enableHover()
 
   private var selectedItem: T = null
+
   private val label = new JLabel
   private val arrow = new DropdownArrow
 
@@ -37,12 +38,7 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
     c.insets = new Insets(3, 0, 3, 6)
 
     add(arrow, c)
-  }
 
-  setItems(items)
-  syncTheme()
-
-  locally {
     val mouseListener = new MouseAdapter {
       override def mousePressed(e: MouseEvent) {
         popup.show(ComboBox.this, 0, getHeight)
@@ -53,6 +49,9 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
     label.addMouseListener(mouseListener)
     arrow.addMouseListener(mouseListener)
   }
+
+  setItems(items)
+  syncTheme()
 
   def setItems(items: List[T]) {
     this.items = items
