@@ -2,29 +2,23 @@
 
 package org.nlogo.properties
 
-import java.awt.{ BorderLayout, GridBagConstraints, GridBagLayout }
-import javax.swing._
-import javax.swing.border.EmptyBorder
+import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
+import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.plot.PlotManagerInterface
-import org.nlogo.swing.{ CheckBox, OptionDialog, TextField }
+import org.nlogo.swing.{ CheckBox, ComboBox, OptionDialog, TextField }
 import org.nlogo.theme.InterfaceColors
 
-class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, plotManager: PlotManagerInterface) extends JPanel {
+class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, plotManager: PlotManagerInterface)
+  extends JPanel(new GridBagLayout) {
+
   private implicit val i18nPrefix = I18N.Prefix("edit.plot.pen")
-
-  def getPlotPenModeNames = PlotPenModes.toArray
-
-  val PlotPenModes =
-    scala.List(I18N.gui("mode.line"),
-               I18N.gui("mode.bar"),
-               I18N.gui("mode.point"))
 
   // pieces of the UI
   private val intervalField = new TextField("", 8)
-  private val penModes = new JComboBox(getPlotPenModeNames.asInstanceOf[Array[Object]])
+  private val penModes = new ComboBox(List(I18N.gui("mode.line"), I18N.gui("mode.bar"), I18N.gui("mode.point")))
   private val showPenInLegend = new CheckBox(I18N.gui("showInLegend"))
   val setupCode = CodeEditor(I18N.gui("setupCommands"), colorizer, columns = 65, err=inputPen.setupError)
   val updateCode = CodeEditor(I18N.gui("updateCommands"), colorizer, columns = 65, err=inputPen.updateError)
@@ -75,7 +69,6 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, 
   }
 
   private def addWidgets() {
-    setBorder(new EmptyBorder(6, 6, 6, 6))
     setOpaque(false)
     setBackground(InterfaceColors.TRANSPARENT)
 
@@ -83,69 +76,64 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, 
     intervalField.setForeground(InterfaceColors.TOOLBAR_TEXT)
     intervalField.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
 
-    penModes.setForeground(InterfaceColors.DIALOG_TEXT)
     showPenInLegend.setForeground(InterfaceColors.DIALOG_TEXT)
 
+    penModes.syncTheme()
     setupCode.syncTheme()
     updateCode.syncTheme()
 
-    val topPanel = new JPanel {
-      setOpaque(false)
-      setBackground(InterfaceColors.TRANSPARENT)
+    val c = new GridBagConstraints
 
-      val modePanel = new JPanel(new BorderLayout) {
-        setOpaque(false)
-        setBackground(InterfaceColors.TRANSPARENT)
+    c.gridy = 0
+    c.anchor = GridBagConstraints.WEST
+    c.insets = new Insets(6, 6, 6, 6)
 
-        add(new JLabel(I18N.gui("mode")) {
-          setForeground(InterfaceColors.DIALOG_TEXT)
-        }, BorderLayout.WEST)
-        add(penModes, BorderLayout.CENTER)
-      }
-      val intervalPanel = new JPanel(new BorderLayout) {
-        setOpaque(false)
-        setBackground(InterfaceColors.TRANSPARENT)
+    add(new JLabel(I18N.gui("mode")) {
+      setForeground(InterfaceColors.DIALOG_TEXT)
+    }, c)
 
-        add(new JLabel(I18N.gui("interval")) {
-          setForeground(InterfaceColors.DIALOG_TEXT)
-        }, BorderLayout.WEST)
-        add(intervalField, BorderLayout.CENTER)
-      }
-      val showPanel = new JPanel(new BorderLayout) {
-        setOpaque(false)
-        setBackground(InterfaceColors.TRANSPARENT)
-        
-        add(showPenInLegend, BorderLayout.WEST)
-      }
-      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-      Seq(modePanel, intervalPanel, showPanel).foreach(add)
-    }
-    val codePanel = new JPanel {
-      setOpaque(false)
-      setBackground(InterfaceColors.TRANSPARENT)
-      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-      add(new JPanel {
-        setOpaque(false)
-        setBackground(InterfaceColors.TRANSPARENT)
-      }) // for a little space
-      add(setupCode)
-      add(updateCode)
-    }
-    setLayout(new GridBagLayout)
-    val c = new GridBagConstraints()
-    c.anchor = GridBagConstraints.NORTH
     c.fill = GridBagConstraints.HORIZONTAL
-    c.gridheight = 3
-    c.gridx = 0
-    c.weightx = 1.0
-    c.weighty = 0
-    add(topPanel, c)
-    runtimeErrorPanel.foreach { panel =>
-      c.weighty = 0
+    c.weightx = 1
+    c.insets = new Insets(6, 0, 6, 6)
+
+    add(penModes, c)
+
+    c.gridy = 1
+    c.fill = GridBagConstraints.NONE
+    c.weightx = 0
+    c.insets = new Insets(0, 6, 6, 6)
+
+    add(new JLabel(I18N.gui("interval")) {
+      setForeground(InterfaceColors.DIALOG_TEXT)
+    }, c)
+
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.weightx = 1
+    c.insets = new Insets(0, 0, 6, 6)
+
+    add(intervalField, c)
+
+    c.gridy = 2
+    c.gridwidth = 2
+    c.insets = new Insets(0, 6, 6, 6)
+    
+    add(showPenInLegend, c)
+
+    c.gridy = 3
+
+    runtimeErrorPanel.foreach(panel => {
       add(panel, c)
-    }
-    c.weighty = 1.0
+
+      c.gridy = 4
+    })
+
     c.fill = GridBagConstraints.BOTH
-    add(codePanel, c)
+    c.weighty = 1
+
+    add(setupCode, c)
+
+    c.gridy += 1
+
+    add(updateCode, c)
   }
 }
