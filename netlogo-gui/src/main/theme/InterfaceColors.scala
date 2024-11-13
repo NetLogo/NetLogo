@@ -246,6 +246,21 @@ object InterfaceColors {
 
   def GRAPHICS_BACKGROUND = Constants.ViewBackground
 
+  def BANNER_BACKGROUND =
+    theme match {
+      case "classic" => CLASSIC_LIGHT_GREEN
+      case "light" => LIGHT_GRAY
+      case "dark" => DARK_GRAY
+    }
+
+  def ANNOUNCEMENTS_BANNER_TEXT =
+    theme match {
+      case "classic" | "light" => Color.BLACK
+      case "dark" => Color.WHITE
+    }
+
+
+
   def MONITOR_BACKGROUND =
     theme match {
       case "classic" => CLASSIC_BEIGE

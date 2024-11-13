@@ -2,29 +2,26 @@
 
 package org.nlogo.app
 
+import org.nlogo.core.I18N
 import org.nlogo.theme.{InterfaceColors, ThemeSync}
 
+import scala.io.Source
 import java.awt.{BorderLayout, Dimension}
-import java.awt.event.{ActionEvent, ActionListener, MouseAdapter, MouseEvent, FocusEvent, FocusListener}
-
+import java.awt.event.{ActionEvent, ActionListener, FocusEvent, FocusListener, MouseAdapter, MouseEvent}
+import java.util.prefs.Preferences
 import javax.swing.{JButton, JEditorPane, JLabel, JOptionPane, JPanel, JScrollPane, SwingConstants, SwingUtilities}
-
 import org.json.simple.parser.{JSONParser, ParseException}
 import org.json.simple.{JSONArray, JSONObject}
-import java.util.prefs.{Preferences => JPreferences}
 import org.nlogo.app.common.FindDialog
 import org.nlogo.app.infotab.InfoFormatter
 import com.vladsch.flexmark.html.HtmlRenderer
 import com.vladsch.flexmark.parser.Parser
+import org.nlogo.swing.HoverDecoration
 
-import org.nlogo.core.I18N
-
-import scala.io.Source
-import scala.collection.immutable.List
 
 case class JsonObject(eventId: Int, date: String, title: String, fullText: String)
 
-class NotificationBanner() extends JPanel with ThemeSync {
+class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
   private var jsonObjectList: List[JsonObject] = List() // Initialize here first
   private val JsonUrl = "https://ccl.northwestern.edu/netlogo/announce-test.json"
   // Fetch and populate jsonObjectList in the constructor
@@ -43,9 +40,9 @@ class NotificationBanner() extends JPanel with ThemeSync {
   initUI()
 
   def syncTheme(): Unit = {
-    setBackground(InterfaceColors.MONITOR_BACKGROUND)
-    messageLabel.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
-    closeButton.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
+    setBackground(InterfaceColors.BANNER_BACKGROUND)
+    messageLabel.setForeground(InterfaceColors.ANNOUNCEMENTS_BANNER_TEXT)
+    closeButton.setForeground(InterfaceColors.ANNOUNCEMENTS_BANNER_TEXT)
   }
 
   // Method to fetch JSON content from a URL
@@ -128,7 +125,7 @@ class NotificationBanner() extends JPanel with ThemeSync {
   // Method to show JSON content in a dialog
   def showJsonInDialog(): Unit = {
 
-    val prefs = JPreferences.userNodeForPackage(getClass)
+    val prefs = Preferences.userNodeForPackage(getClass)
     try {
       val jsonContent = fetchJsonFromUrl(JsonUrl)
       jsonObjectList = parseJsonToList(jsonContent) // Populate the class variable
@@ -224,7 +221,7 @@ class NotificationBanner() extends JPanel with ThemeSync {
 
 
   private def isShowNeeded(): Boolean = {
-    val prefs = JPreferences.userNodeForPackage(getClass)
+    val prefs = Preferences.userNodeForPackage(getClass)
     val jsonContent = fetchJsonFromUrl(JsonUrl)
     jsonObjectList = parseJsonToList(jsonContent) // Populate the class variable
     val lastSeenEventId = prefs.getInt(lastSeenEventIdKey, -1); // Returns -1 if "event-id" is not found
