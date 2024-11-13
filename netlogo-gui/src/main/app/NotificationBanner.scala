@@ -4,9 +4,11 @@ package org.nlogo.app
 
 import org.nlogo.theme.{InterfaceColors, ThemeSync}
 
-import javax.swing._
-import java.awt._
-import java.awt.event.{ActionEvent, ActionListener, MouseAdapter, MouseEvent}
+import java.awt.{BorderLayout, Dimension}
+import java.awt.event.{ActionEvent, ActionListener, MouseAdapter, MouseEvent, FocusEvent, FocusListener}
+
+import javax.swing.{JButton, JEditorPane, JLabel, JOptionPane, JPanel, JScrollPane, SwingConstants, SwingUtilities}
+
 import org.json.simple.parser.{JSONParser, ParseException}
 import org.json.simple.{JSONArray, JSONObject}
 import java.util.prefs.{Preferences => JPreferences}
@@ -17,7 +19,6 @@ import com.vladsch.flexmark.parser.Parser
 
 import org.nlogo.core.I18N
 
-import java.awt.event.{FocusEvent, FocusListener}
 import scala.io.Source
 import scala.collection.immutable.List
 
@@ -206,11 +207,8 @@ class NotificationBanner() extends JPanel with ThemeSync {
   }
 
   def getJsonObjectHead: Option[String] = {
-    // Check if jsonObjectList is null or empty, and fetch the JSON if needed
-    if (jsonObjectList == null) {
       val jsonContent = fetchJsonFromUrl(JsonUrl) // Use the static URL here
       jsonObjectList = parseJsonToList(jsonContent)
-    }
 
     // Return the title of the first item if jsonObjectList is not null and has elements
     jsonObjectList match {
@@ -230,14 +228,7 @@ class NotificationBanner() extends JPanel with ThemeSync {
     val jsonContent = fetchJsonFromUrl(JsonUrl)
     jsonObjectList = parseJsonToList(jsonContent) // Populate the class variable
     val lastSeenEventId = prefs.getInt(lastSeenEventIdKey, -1); // Returns -1 if "event-id" is not found
-    if(jsonObjectList.isEmpty ) {
-      return false
-    }
-    if (jsonObjectList.head.eventId > lastSeenEventId) {
-        true  // Show this message
-      }
-      else {
-        false //Don't show this message
-      }
+    //return true if jsonObjectList is non-empty and eventId of the first element is> lastSeenEventId; otherwise return false
+    jsonObjectList.nonEmpty && jsonObjectList.head.eventId > lastSeenEventId
   }
 }
