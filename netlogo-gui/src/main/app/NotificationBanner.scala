@@ -6,13 +6,12 @@ import org.nlogo.core.I18N
 import org.nlogo.theme.{InterfaceColors, ThemeSync}
 
 import scala.io.Source
-import java.awt.{BorderLayout, Dimension}
-import java.awt.event.{ActionEvent, ActionListener, FocusEvent, FocusListener, MouseAdapter, MouseEvent}
+import java.awt.{BorderLayout, Dimension, Graphics}
+import java.awt.event.{ActionEvent, ActionListener, MouseAdapter, MouseEvent}
 import java.util.prefs.Preferences
 import javax.swing.{JButton, JEditorPane, JLabel, JOptionPane, JPanel, JScrollPane, SwingConstants}
 import org.json.simple.parser.JSONParser
 import org.json.simple.{JSONArray, JSONObject}
-import org.nlogo.app.common.FindDialog
 import org.nlogo.app.infotab.InfoFormatter
 import com.vladsch.flexmark.html.HtmlRenderer
 import com.vladsch.flexmark.parser.Parser
@@ -23,7 +22,7 @@ case class JsonObject(eventId: Int, date: String, title: String, fullText: Strin
 
 class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
   private var jsonObjectList: List[JsonObject] = List() // Initialize here first
-  private val JsonUrl = "https://ccl.northwestern.edu/netlogo/announce-test.json"
+  private val jsonUrl = "https://ccl.northwestern.edu/netlogo/announce-test.json"
   // Fetch and populate jsonObjectList in the constructor
   jsonObjectList = parseJsonToList(fetchJsonFromUrl())
 
@@ -39,8 +38,16 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
   // Initialize the NotificationBanner panel
   initUI()
 
+  override def paintComponent(g: Graphics) {
+    if (isHover)
+      setBackground(InterfaceColors.ANNOUNCEMENTS_BANNER_BACKGROUND_HOVER)
+    else
+      setBackground(InterfaceColors.ANNOUNCEMENTS_BANNER_BACKGROUND)
+
+    super.paintComponent(g)
+  }
   def syncTheme(): Unit = {
-    setBackground(InterfaceColors.BANNER_BACKGROUND)
+    setBackground(InterfaceColors.ANNOUNCEMENTS_BANNER_BACKGROUND)
     messageLabel.setForeground(InterfaceColors.ANNOUNCEMENTS_BANNER_TEXT)
     closeButton.setForeground(InterfaceColors.ANNOUNCEMENTS_BANNER_TEXT)
   }
@@ -48,7 +55,7 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
   // Method to fetch JSON content from a URL
   private def fetchJsonFromUrl(): String = {
     try {
-      val source = Source.fromURL(JsonUrl)
+      val source = Source.fromURL(jsonUrl)
       val content = source.mkString
       source.close()
       content
@@ -133,15 +140,7 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
       if (!jsonContent.trim.isEmpty) {
           editorPane = new JEditorPane {
             self =>
-            addFocusListener(new FocusListener {
-              def focusGained(fe: FocusEvent): Unit = {
-                FindDialog.watch(self)
-              }
 
-              def focusLost(fe: FocusEvent): Unit = {
-                if (!fe.isTemporary) FindDialog.dontWatch(self)
-              }
-            })
             setDragEnabled(false)
             setEditable(false)
             setContentType("text/html")
@@ -191,12 +190,12 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
   }
 
   private def getJsonObjectHead: Option[String] = {
-      val jsonContent = fetchJsonFromUrl() // Use the static URL here
+      val jsonContent = fetchJsonFromUrl()
       jsonObjectList = parseJsonToList(jsonContent)
 
     // Return the title of the first item if jsonObjectList is not null and has elements
     jsonObjectList match {
-      case null | Nil =>
+      case Nil =>
         println("jsonObjectList is empty or Nil; hiding NotificationBanner.")
         this.setVisible(false) // Hide the NotificationBanner panel
         None // Return None if jsonObjectList is null or empty
