@@ -11,12 +11,12 @@ import org.nlogo.core.Shape.{ LinkLine => BaseLinkLine }
 
 @SerialVersionUID(0L)
 object LinkLine {
-  val dashChoices: Array[Array[Float]] =
-    Array(Array(0.0f, 1.0f),
-          Array(1.0f, 0.0f),
-          Array(2.0f, 2.0f),
-          Array(4.0f, 4.0f),
-          Array(4.0f, 4.0f, 2.0f, 2.0f))
+  val dashChoices: List[Array[Float]] =
+    List(Array(0.0f, 1.0f),
+         Array(1.0f, 0.0f),
+         Array(2.0f, 2.0f),
+         Array(4.0f, 4.0f),
+         Array(4.0f, 4.0f, 2.0f, 2.0f))
 }
 
 @SerialVersionUID(0L)

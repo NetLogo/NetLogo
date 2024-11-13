@@ -33,13 +33,13 @@ class LinkShapeManagerDialog(parentFrame: Frame,
 
   // Load a new shapes editor to let the user create a new shape
   override def newShape(): Unit = {
-    new LinkEditorDialog(shapesList, new LinkShape(), getLocation.x, getLocation.y)
+    new LinkEditorDialog(this, shapesList, new LinkShape())
   }
 
   // Edit an existing shape
   override def editShape(): Unit = {
     shapesList.getOneSelected.foreach { shape =>
-      new LinkEditorDialog(shapesList, shape, getLocation.x, getLocation.y)
+      new LinkEditorDialog(this, shapesList, shape)
     }
   }
 
@@ -49,7 +49,7 @@ class LinkShapeManagerDialog(parentFrame: Frame,
       // You can only duplicate one shape at a time
       val newShape = shape.clone.asInstanceOf[LinkShape]
       newShape.name = ""
-      new LinkEditorDialog(shapesList, newShape, getLocation.x, getLocation.y)
+      new LinkEditorDialog(this, shapesList, newShape)
     }
   }
 }
