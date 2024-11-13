@@ -11,7 +11,7 @@ import org.nlogo.api.{ Agent, Perspective, Turtle }
 import org.nlogo.awt.{ Colors, ImageSelection }, Colors.colorize
 import org.nlogo.core.AgentKind
 import org.nlogo.gl.render.PickListener
-import org.nlogo.swing.{ Menu, PopupMenuItem, WrappingPopupMenu }
+import org.nlogo.swing.{ Menu, MenuItem, WrappingPopupMenu }
 import org.nlogo.theme.InterfaceColors
 
 class Picker(view: View) extends PickListener with ActionListener {
@@ -22,7 +22,7 @@ class Picker(view: View) extends PickListener with ActionListener {
 
     menu.setBackground(InterfaceColors.MENU_BACKGROUND)
 
-    menu.add(new PopupMenuItem(new AbstractAction("Edit...") {
+    menu.add(new MenuItem(new AbstractAction("Edit...") {
       def actionPerformed(e: ActionEvent) {
         new org.nlogo.window.Events.EditWidgetEvent(
           view.viewManager.workspace.viewWidget.settings)
@@ -32,14 +32,14 @@ class Picker(view: View) extends PickListener with ActionListener {
 
     menu.add(new JPopupMenu.Separator)
 
-    menu.add(new PopupMenuItem(new AbstractAction("Copy View") {
+    menu.add(new MenuItem(new AbstractAction("Copy View") {
       def actionPerformed(e: ActionEvent) {
         Toolkit.getDefaultToolkit.getSystemClipboard.setContents(
           new ImageSelection(view.exportView), null)
       }
     }))
 
-    menu.add(new PopupMenuItem(new AbstractAction("Export View...") {
+    menu.add(new MenuItem(new AbstractAction("Export View...") {
       def actionPerformed(e: ActionEvent) {
         view.viewManager.workspace.doExportView(view.viewManager)
       }
@@ -47,7 +47,7 @@ class Picker(view: View) extends PickListener with ActionListener {
 
     menu.add(new JPopupMenu.Separator)
 
-    menu.add(new PopupMenuItem(new AbstractAction("inspect globals") {
+    menu.add(new MenuItem(new AbstractAction("inspect globals") {
       def actionPerformed(e: ActionEvent) {
         view.viewManager.workspace.inspectAgent(AgentKind.Observer)
       }
@@ -55,7 +55,7 @@ class Picker(view: View) extends PickListener with ActionListener {
 
     menu.add(new JPopupMenu.Separator)
 
-    val resetItem = new PopupMenuItem(new AbstractAction(
+    val resetItem = new MenuItem(new AbstractAction(
         "<html>" + colorize("reset-perspective", InterfaceColors.COMMAND_COLOR)) {
       def actionPerformed(e: ActionEvent) {
         view.resetPerspective()
@@ -121,7 +121,7 @@ class Picker(view: View) extends PickListener with ActionListener {
     colorize(agent.toString.drop(agent.classDisplayName.size), InterfaceColors.CONSTANT_COLOR)
 
   private class AgentMenuItem(val agent: Agent, val action: AgentAction, caption: String)
-  extends PopupMenuItem(htmlString(agent, caption)) {
+  extends MenuItem(htmlString(agent, caption)) {
     addActionListener(Picker.this)
     override def menuSelectionChanged(isIncluded: Boolean) {
       super.menuSelectionChanged(isIncluded)

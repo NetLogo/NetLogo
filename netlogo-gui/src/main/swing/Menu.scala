@@ -87,9 +87,9 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
   def addMenuItem(text: String, shortcut: Char, shift: Boolean, action: javax.swing.Action, addMenuMask: Boolean): javax.swing.JMenuItem = {
     val item =
       if(action == null)
-        new PopupMenuItem(text, false)
+        new MenuItem(text, false)
       else {
-        val item = new PopupMenuItem(action, false)
+        val item = new MenuItem(action, false)
         item.setText(text)
         item
       }
@@ -131,7 +131,7 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
     action match {
       case cba: UserAction.CheckBoxAction => new PopupCheckBoxMenuItem(action)
       case _                              =>
-        new PopupMenuItem(action, false)
+        new MenuItem(action, false)
     }
 
   def revokeAction(action: Action): Unit = {

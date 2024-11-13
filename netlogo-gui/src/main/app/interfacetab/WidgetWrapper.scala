@@ -11,7 +11,7 @@ import org.nlogo.api.Editable
 import org.nlogo.app.common.Events.WidgetSelectedEvent
 import org.nlogo.awt.{ Coordinates, Mouse }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ PopupMenuItem, RoundedBorderPanel, WrappingPopupMenu }
+import org.nlogo.swing.{ MenuItem, RoundedBorderPanel, WrappingPopupMenu }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ MouseMode, Widget, WidgetWrapperInterface }
 import org.nlogo.window.Events.{ DirtyEvent, EditWidgetEvent, ExportWidgetEvent, WidgetForegroundedEvent }
@@ -856,7 +856,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
   private def populateContextMenu(menu: JPopupMenu, p: Point, source: Component): Point = {
     if (widget.getEditable.isInstanceOf[Editable] && !interfacePanel.multiSelected) {
-      menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.edit")) {
+      menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.edit")) {
         def actionPerformed(e: ActionEvent) {
           selected(true)
           foreground()
@@ -866,7 +866,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     }
 
     if (selected) {
-      menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deselect")) {
+      menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deselect")) {
         def actionPerformed(e: ActionEvent) {
           selected(false)
           interfacePanel.setForegroundWrapper()
@@ -876,37 +876,37 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       if (interfacePanel.multiSelected) {
         menu.add(new JPopupMenu.Separator)
 
-        menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft")) {
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft")) {
           def actionPerformed(e: ActionEvent) {
             interfacePanel.alignLeft(WidgetWrapper.this)
           }
         }))
 
-        menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterHorizontal")) {
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterHorizontal")) {
           def actionPerformed(e: ActionEvent) {
             interfacePanel.alignCenterHorizontal(WidgetWrapper.this)
           }
         }))
 
-        menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight")) {
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight")) {
           def actionPerformed(e: ActionEvent) {
             interfacePanel.alignRight(WidgetWrapper.this)
           }
         }))
 
-        menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop")) {
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop")) {
           def actionPerformed(e: ActionEvent) {
             interfacePanel.alignTop(WidgetWrapper.this)
           }
         }))
 
-        menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterVertical")) {
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterVertical")) {
           def actionPerformed(e: ActionEvent) {
             interfacePanel.alignCenterVertical(WidgetWrapper.this)
           }
         }))
 
-        menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom")) {
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom")) {
           def actionPerformed(e: ActionEvent) {
             interfacePanel.alignBottom(WidgetWrapper.this)
           }
@@ -914,13 +914,13 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
         menu.add(new JPopupMenu.Separator)
 
-        menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.distributeHorizontal")) {
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.distributeHorizontal")) {
           def actionPerformed(e: ActionEvent) {
             interfacePanel.distributeHorizontal()
           }
         }))
 
-        menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.distributeVertical")) {
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.distributeVertical")) {
           def actionPerformed(e: ActionEvent) {
             interfacePanel.distributeVertical()
           }
@@ -929,7 +929,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     }
     
     else {
-      menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.select")) {
+      menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.select")) {
         def actionPerformed(e: ActionEvent) {
           selected(true)
           foreground()
@@ -940,7 +940,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     if (interfacePanel.selectedWrappers.size > 1) {
       menu.add(new JPopupMenu.Separator)
 
-      menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deleteSelected")) {
+      menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deleteSelected")) {
         def actionPerformed(e: ActionEvent) {
           interfacePanel.deleteSelectedWidgets()
         }
@@ -950,7 +950,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     else if (widget.deleteable) {
       menu.add(new JPopupMenu.Separator)
 
-      menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.delete")) {
+      menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.delete")) {
         def actionPerformed(e: ActionEvent) {
           WidgetActions.removeWidget(interfacePanel, WidgetWrapper.this)
         }
@@ -963,7 +963,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       val location = widget.populateContextMenu(menu, p, source)
 
       if (widget.exportable) {
-        menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.export")) {
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.export")) {
           def actionPerformed(e: ActionEvent) {
             new ExportWidgetEvent(widget).raise(WidgetWrapper.this)
           }

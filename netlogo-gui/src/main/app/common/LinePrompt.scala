@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, JLabel, JPopupMenu }
 
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.PopupMenuItem
+import org.nlogo.swing.MenuItem
 import org.nlogo.theme.InterfaceColors
 
 class LinePrompt(commandLine: CommandLine) extends JLabel {
@@ -35,7 +35,7 @@ class LinePrompt(commandLine: CommandLine) extends JLabel {
         popMenu.setBackground(InterfaceColors.MENU_BACKGROUND)
 
         def addItem(name: String, clazz: AgentKind) {
-          popMenu.add(new PopupMenuItem(new AbstractAction(name) {
+          popMenu.add(new MenuItem(new AbstractAction(name) {
             def actionPerformed(e: ActionEvent) {
               commandLine.agentKind(clazz)
               LinePrompt.this.repaint()
@@ -48,7 +48,7 @@ class LinePrompt(commandLine: CommandLine) extends JLabel {
         addItem(I18N.gui.get("common.patches"), AgentKind.Patch)
         addItem(I18N.gui.get("common.links"), AgentKind.Link)
         popMenu.add(new JPopupMenu.Separator)
-        popMenu.add(new PopupMenuItem(I18N.gui.get("tabs.run.commandcenter.orusetabkey"))).setEnabled(false)
+        popMenu.add(new MenuItem(I18N.gui.get("tabs.run.commandcenter.orusetabkey"))).setEnabled(false)
         popMenu.show(LinePrompt.this, 0, getHeight)
       }
     }

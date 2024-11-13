@@ -7,12 +7,12 @@ import java.awt.event.ActionEvent
 import java.io.File
 import java.util.Locale
 import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ AbstractAction, JButton, JComboBox, JFileChooser, JPanel, JTextField }
+import javax.swing.{ AbstractAction, JButton, JFileChooser, JPanel, JTextField }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ CheckBox, RoundedBorderPanel }
+import org.nlogo.swing.{ CheckBox, ComboBox, RoundedBorderPanel }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object Preferences {
@@ -56,7 +56,7 @@ object Preferences {
     val languages = I18N.availableLocales map (LocaleWrapper(_)) sortBy (_.toString)
 
     val i18nKey = "uiLanguage"
-    val component = new JComboBox(languages) with ThemeSync { def syncTheme() {} }
+    val component = new ComboBox(languages.toList)
     val requirement = "restartRequired"
 
     def load(prefs: JavaPreferences) = {
@@ -177,12 +177,12 @@ object Preferences {
   object ProceduresMenuSortOrder extends Preference {
     val i18nKey = "proceduresMenuSortOrder"
 
-    val options = Array(
+    val options = List(
       I18N.gui.get("tools.preferences.proceduresSortByOrderOfAppearance"),
       I18N.gui.get("tools.preferences.proceduresSortAlphabetical")
     )
 
-    val component = new JComboBox(options) with ThemeSync { def syncTheme() {} }
+    val component = new ComboBox(options)
     val requirement = ""
 
     def load(prefs: JavaPreferences) = {

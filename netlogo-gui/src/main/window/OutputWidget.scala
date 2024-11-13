@@ -8,7 +8,7 @@ import javax.swing.AbstractAction
 
 import org.nlogo.api.Editable
 import org.nlogo.core.{ I18N, Output => CoreOutput }
-import org.nlogo.swing.PopupMenuItem
+import org.nlogo.swing.MenuItem
 import org.nlogo.theme.InterfaceColors
 
 class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
@@ -60,7 +60,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   override def populateContextMenu(menu:javax.swing.JPopupMenu, p:java.awt.Point, source:java.awt.Component) = {
     // at least on Macs, Command-C to copy may not work, so this
     // is needed - ST 4/21/05
-    menu.add(new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copyselectedtext")) {
+    menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copyselectedtext")) {
       def actionPerformed(e: ActionEvent) {
         outputArea.text.copy
       }

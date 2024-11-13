@@ -15,7 +15,7 @@ import org.nlogo.util.Implicits.RichString
 import org.nlogo.window.{ EditorAreaErrorLabel, EditorColorizer }
 
 class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) {
-  val comboBox = new ComboBox
+  val comboBox = new PreviewCommandsComboBox
   val compileButton = new Button(null) {
     setBorder(new EmptyBorder(4, 4, 4, 4))
   }
@@ -116,7 +116,7 @@ class PreviewCommandsComboBoxModel(val defaultCustomCommands: Custom = Custom(De
   }
 }
 
-class ComboBox(val model: PreviewCommandsComboBoxModel = new PreviewCommandsComboBoxModel)
+class PreviewCommandsComboBox(val model: PreviewCommandsComboBoxModel = new PreviewCommandsComboBoxModel)
   extends JComboBox[PreviewCommands](model) {
   def previewCommands: Option[PreviewCommands] = Option(getItemAt(getSelectedIndex))
   def updateCommands(newPreviewCommands: PreviewCommands): Unit = {

@@ -9,7 +9,7 @@ import javax.swing.{ AbstractAction, JLabel, JPanel, JPopupMenu }
 import org.nlogo.api.Editable
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ DropdownArrow, HoverDecoration, PopupMenuItem, RoundedBorderPanel, ToolBar,
+import org.nlogo.swing.{ DropdownArrow, HoverDecoration, MenuItem, RoundedBorderPanel, ToolBar,
                          ToolBarToggleButton, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents, GUIWorkspace, JobWidget, Widget,
@@ -203,7 +203,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
     }
 
     private val actions =
-      WidgetInfos.map(spec => new PopupMenuItem(new AbstractAction(spec.displayName, spec.icon) {
+      WidgetInfos.map(spec => new MenuItem(new AbstractAction(spec.displayName, spec.icon) {
         def actionPerformed(e: ActionEvent) {
           chosenItem = spec.displayName
 
@@ -270,52 +270,52 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       add(arrow, c)
     }
 
-    private val leftAction = new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft")) {
+    private val leftAction = new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft")) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignLeft(wPanel.getWrapper(selectedObjects.minBy(_.getParent.getX)))
       }
     })
 
-    private val centerHorizontalAction = new PopupMenuItem(
+    private val centerHorizontalAction = new MenuItem(
       new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterHorizontal")) {
         def actionPerformed(e: ActionEvent) {
           wPanel.alignCenterHorizontal(wPanel.getWrapper(selectedObjects.head))
         }
       })
 
-    private val rightAction = new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight")) {
+    private val rightAction = new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight")) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignRight(wPanel.getWrapper(selectedObjects.maxBy(_.getParent.getX)))
       }
     })
 
-    private val topAction = new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop")) {
+    private val topAction = new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop")) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignTop(wPanel.getWrapper(selectedObjects.minBy(_.getParent.getY)))
       }
     })
 
-    private val centerVerticalAction = new PopupMenuItem(
+    private val centerVerticalAction = new MenuItem(
       new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterVertical")) {
         def actionPerformed(e: ActionEvent) {
           wPanel.alignCenterVertical(wPanel.getWrapper(selectedObjects.head))
         }
       })
 
-    private val bottomAction = new PopupMenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom")) {
+    private val bottomAction = new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom")) {
       def actionPerformed(e: ActionEvent) {
         wPanel.alignBottom(wPanel.getWrapper(selectedObjects.maxBy(_.getParent.getY)))
       }
     })
 
-    private val distributeHorizontalAction = new PopupMenuItem(
+    private val distributeHorizontalAction = new MenuItem(
       new AbstractAction(I18N.gui.get("tabs.run.widget.distributeHorizontal")) {
         def actionPerformed(e: ActionEvent) {
           wPanel.distributeHorizontal()
         }
       })
 
-    private val distributeVerticalAction = new PopupMenuItem(
+    private val distributeVerticalAction = new MenuItem(
       new AbstractAction(I18N.gui.get("tabs.run.widget.distributeVertical")) {
         def actionPerformed(e: ActionEvent) {
           wPanel.distributeVertical()
@@ -363,7 +363,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       popup.setBackground(InterfaceColors.MENU_BACKGROUND)
 
       popup.getComponents.foreach(_ match {
-        case p: PopupMenuItem => p.syncTheme()
+        case p: MenuItem => p.syncTheme()
         case _ =>
       })
 

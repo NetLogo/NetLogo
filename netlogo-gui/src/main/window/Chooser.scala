@@ -3,14 +3,14 @@
 package org.nlogo.window
 
 import java.awt.{ Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets, LinearGradientPaint }
-import java.awt.event.{ ItemEvent, ItemListener, MouseAdapter, MouseEvent, MouseWheelEvent, MouseWheelListener }
-import javax.swing.{ JComboBox, JLabel, JPanel }
+import java.awt.event.{ MouseWheelEvent, MouseWheelListener }
+import javax.swing.JLabel
 
 import org.nlogo.agent.ChooserConstraint
 import org.nlogo.api.{ CompilerServices, Dump }
 import org.nlogo.core.{ I18N, LogoList }
-import org.nlogo.swing.{ RoundedBorderPanel, Utils }
-import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.swing.{ ComboBox, Utils }
+import org.nlogo.theme.InterfaceColors
 
 object Chooser {
   // visual parameters
@@ -25,8 +25,6 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   def compiler: CompilerServices
   def name: String
 
-  private var hover = false
-
   // The constraint track the list of choices, and ensures the
   // global is always one of them.  We use it to track our current
   // index too (the selected value in the chooser). -- CLB
@@ -34,8 +32,15 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
 
   // sub-elements of Switch
   protected val label = new JLabel(I18N.gui.get("edit.chooser.previewName"))
-  private val control = new JComboBox[AnyRef]
-  private val controlPanel = new ComboBoxPanel(control)
+  private val control = new ComboBox[AnyRef] {
+    addItemListener(_ => index(getSelectedIndex))
+
+    override def paintComponent(g: Graphics) {
+      setDiameter(6 * zoomFactor)
+
+      super.paintComponent(g)
+    }
+  }
 
   setLayout(new GridBagLayout)
 
@@ -61,7 +66,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
       else
         new Insets(0, 12, 6, 12)
 
-    add(controlPanel, c)
+    add(control, c)
   }
 
   addMouseWheelListener(this)
@@ -80,16 +85,11 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     constraint.acceptedValues(acceptedValues)
   }
 
-  def value: AnyRef = {
+  def value: AnyRef =
     constraint.defaultValue
-  }
 
-  def populate(): Unit = {
-    control.removeAllItems()
-
-    for (choice <- constraint.acceptedValues) {
-      control.addItem(Dump.logoObject(choice))
-    }
+  def populate() {
+    control.setItems(constraint.acceptedValues.map(Dump.logoObject).toList)
   }
 
   override def updateConstraints(): Unit = {
@@ -120,61 +120,6 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
 
   ///
 
-  class ComboBoxPanel(comboBox: JComboBox[AnyRef]) extends JPanel with RoundedBorderPanel with ThemeSync {
-    comboBox.setBorder(null)
-    comboBox.setBackground(InterfaceColors.TRANSPARENT)
-    
-    setLayout(new GridBagLayout)
-
-    locally {
-      val c = new GridBagConstraints
-
-      c.weightx = 1
-      c.weighty = 1
-      c.fill = GridBagConstraints.BOTH
-
-      if (!preserveWidgetSizes)
-        c.insets = new Insets(3, 3, 3, 3)
-
-      add(comboBox, c)
-    }
-
-    comboBox.addItemListener(new ItemListener {
-      override def itemStateChanged(e: ItemEvent) {
-        index(comboBox.getSelectedIndex)
-      }
-    })
-
-    addMouseListener(new MouseAdapter {
-      override def mouseEntered(e: MouseEvent) {
-        hover = true
-
-        getParent.repaint()
-      }
-
-      override def mouseExited(e: MouseEvent) {
-        if (!contains(e.getPoint)) {
-          hover = false
-
-          getParent.repaint()
-        }
-      }
-    })
-
-    override def paintComponent(g: Graphics) {
-      setDiameter(6 * zoomFactor)
-
-      super.paintComponent(g)
-    }
-
-    def syncTheme() {
-      setBackgroundColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
-      setBorderColor(InterfaceColors.CHOOSER_BORDER)
-
-      comboBox.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
-    }
-  }
-
   def mouseWheelMoved(e: MouseWheelEvent): Unit = {
     val i =
       if (e.getWheelRotation >= 1) {
@@ -190,13 +135,13 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   override def paintComponent(g: Graphics) {
     super.paintComponent(g)
 
-    if (hover) {
+    if (isHover) {
       val g2d = Utils.initGraphics2D(g)
 
-      g2d.setPaint(new LinearGradientPaint(controlPanel.getX.toFloat, controlPanel.getY + 3, controlPanel.getX.toFloat,
-                                           controlPanel.getY + controlPanel.getHeight + 3, Array(0f, 1f),
+      g2d.setPaint(new LinearGradientPaint(control.getX.toFloat, control.getY + 3, control.getX.toFloat,
+                                           control.getY + control.getHeight + 3, Array(0f, 1f),
                                            Array(InterfaceColors.WIDGET_HOVER_SHADOW, InterfaceColors.TRANSPARENT)))
-      g2d.fillRoundRect(controlPanel.getX, controlPanel.getY + 3, controlPanel.getWidth, controlPanel.getHeight, 6, 6)
+      g2d.fillRoundRect(control.getX, control.getY + 3, control.getWidth, control.getHeight, 6, 6)
     }
 
     control.setSelectedIndex(index)
@@ -212,6 +157,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
 
     label.setForeground(InterfaceColors.WIDGET_TEXT)
 
-    controlPanel.syncTheme()
+    control.syncTheme()
+    control.setBorderColor(InterfaceColors.CHOOSER_BORDER)
   }
 }
