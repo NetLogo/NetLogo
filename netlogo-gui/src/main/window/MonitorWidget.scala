@@ -52,11 +52,7 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   type WidgetModel = CoreMonitor
 
-  private class ValuePanel(label: JLabel) extends JPanel with RoundedBorderPanel with ThemeSync {
-    setBackground(InterfaceColors.TRANSPARENT)
-
-    setLayout(new GridBagLayout)
-
+  private class ValuePanel(label: JLabel) extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync {
     locally {
       val c = new GridBagConstraints
 

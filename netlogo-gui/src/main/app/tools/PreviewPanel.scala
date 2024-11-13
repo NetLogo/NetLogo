@@ -10,14 +10,11 @@ import scala.util.{ Failure, Success }
 
 import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, ModalProgressTask }
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.swing.{ Button, ModalProgressTask, Transparent }
 import org.nlogo.window.GraphicsPreviewInterface
 import org.nlogo.workspace.PreviewCommandsRunner
 
-class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel(new GridBagLayout) {
-  setOpaque(false)
-  setBackground(InterfaceColors.TRANSPARENT)
+class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel(new GridBagLayout) with Transparent {
   val button = new Button(null)
   val imageLabel = new JLabel {
     override val getPreferredSize = graphicsPreview.getPreferredSize

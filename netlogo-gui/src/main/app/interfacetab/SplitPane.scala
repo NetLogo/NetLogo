@@ -7,12 +7,11 @@ import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent, MouseMotionAdapte
 import javax.swing.{ AbstractAction, Action, JButton, JLayeredPane, JPanel, JSplitPane }
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.Utils
+import org.nlogo.swing.{ Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 
-private class SizeButton(expand: Boolean, splitPane: SplitPane) extends JButton {
+private class SizeButton(expand: Boolean, splitPane: SplitPane) extends JButton with Transparent {
   setBorder(null)
-  setBackground(InterfaceColors.TRANSPARENT)
 
   if (expand) {
     setAction(new AbstractAction {

@@ -10,7 +10,7 @@ import org.nlogo.agent.Agent
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.CollapsiblePane
+import org.nlogo.swing.{ CollapsiblePane, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, GUIWorkspace }
 
@@ -80,10 +80,7 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
       historyPrompt.setEnabled(agent != null && agent.id != -1)
       commandLine.agentKind(agentKind)
       prompt.setEnabled(false)
-      val commandPanel = new JPanel(new GridBagLayout) {
-        setOpaque(false)
-        setBackground(InterfaceColors.TRANSPARENT)
-      }
+      val commandPanel = new JPanel(new GridBagLayout) with Transparent
       val c = new GridBagConstraints
       c.insets = new Insets(0, 6, 0, 0)
       commandPanel.add(prompt, c)

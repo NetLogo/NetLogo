@@ -12,7 +12,7 @@ import org.nlogo.core.I18N
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.nvm.Workspace
 import org.nlogo.plot.DummyPlotManager
-import org.nlogo.swing.{ Button, CheckBox, OptionDialog, RichAction }
+import org.nlogo.swing.{ Button, CheckBox, OptionDialog, RichAction, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ GUIWorkspace, PlotWidget, SpeedSliderPanel }
 
@@ -107,10 +107,7 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor,
     c.insets = new Insets(0, 6, 0, 6)
     getContentPane.add(plotsAndMonitorsSwitch, c)
 
-    val buttonPanel = new JPanel {
-      setOpaque(false)
-      setBackground(InterfaceColors.TRANSPARENT)
-    }
+    val buttonPanel = new JPanel with Transparent
 
     buttonPanel.add(pauseButton)
     buttonPanel.add(abortButton)

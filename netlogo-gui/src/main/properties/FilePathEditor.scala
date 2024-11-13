@@ -8,7 +8,7 @@ import javax.swing.{ JLabel, JToolBar }
 
 import org.nlogo.awt.UserCancelException
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ Button, FileDialog, TextField }
+import org.nlogo.swing.{ Button, FileDialog, TextField, Transparent }
 import org.nlogo.theme.InterfaceColors
 
 abstract class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, suggestedFile: String)
@@ -27,10 +27,7 @@ abstract class FilePathEditor(accessor: PropertyAccessor[String], parent: Compon
   add(label, BorderLayout.WEST)
   editor.getDocument().addDocumentListener({ () => changed() })
   add(editor, BorderLayout.CENTER)
-  private val toolbar = new JToolBar {
-    setOpaque(false)
-    setBackground(InterfaceColors.TRANSPARENT)
-  }
+  private val toolbar = new JToolBar with Transparent
   toolbar.setFloatable(false)
   private val browseButton = new Button("Browse...", () => {
     try {

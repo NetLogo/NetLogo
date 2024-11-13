@@ -11,7 +11,7 @@ import org.nlogo.api.{ CompilerServices, Editable }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.{ BrowserLauncher, Button, ButtonPanel, Implicits, Utils },
+import org.nlogo.swing.{ BrowserLauncher, Button, ButtonPanel, Implicits, Transparent, Utils },
   BrowserLauncher.docPath,
   Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -41,10 +41,8 @@ abstract class EditDialog(window: Window, target: Editable, useTooltips: Boolean
 
   getContentPane.setLayout(new BorderLayout)
 
-  private val mainPanel = new JPanel(new BorderLayout) {
+  private val mainPanel = new JPanel(new BorderLayout) with Transparent {
     setBorder(new EmptyBorder(5, 5, 5, 5))
-    setOpaque(false)
-    setBackground(InterfaceColors.TRANSPARENT)
   }
 
   getContentPane.add(mainPanel, BorderLayout.CENTER)

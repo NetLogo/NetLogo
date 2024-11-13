@@ -18,7 +18,7 @@ import org.nlogo.agent.InputBoxConstraint
 import org.nlogo.awt.Fonts.{ platformFont, platformMonospacedFont }
 import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, NumericInput, StringInput }
 import org.nlogo.editor.AbstractEditorArea
-import org.nlogo.swing.{ ButtonPanel, RoundedBorderPanel, Utils }
+import org.nlogo.swing.{ ButtonPanel, RoundedBorderPanel, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object InputBox {
@@ -75,16 +75,10 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
   protected class InputScrollPane(textArea: AbstractEditorArea) extends JPanel with RoundedBorderPanel with ThemeSync {
     val scrollPane = new JScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                                     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
-    
-    scrollPane.setBorder(null)
-    scrollPane.setOpaque(false)
-    scrollPane.setBackground(InterfaceColors.TRANSPARENT)
-
-    scrollPane.getViewport.setBackground(InterfaceColors.TRANSPARENT)
-
-    setOpaque(false)
-    setBackground(InterfaceColors.TRANSPARENT)
+                                     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) with Transparent {
+      setBorder(null)
+      getViewport.setBackground(InterfaceColors.TRANSPARENT)
+    }
 
     textArea.setOpaque(false)
     textArea.setBackground(InterfaceColors.TRANSPARENT)

@@ -2,7 +2,6 @@
 
 package org.nlogo.properties
 
-
 import java.awt.{ BorderLayout, Component, Container }
 import java.awt.event.{ MouseAdapter, MouseEvent, TextListener, TextEvent }
 import javax.swing.{ JLabel, JPanel, JScrollPane, ScrollPaneConstants }
@@ -10,7 +9,7 @@ import javax.swing.{ JLabel, JPanel, JScrollPane, ScrollPaneConstants }
 import org.nlogo.api.DummyEditable
 import org.nlogo.awt.RowLayout
 import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
-import org.nlogo.swing.CollapsibleArrow
+import org.nlogo.swing.{ CollapsibleArrow, Transparent }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.EditorAreaErrorLabel
 
@@ -50,9 +49,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
                                            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   private val errorLabel = new EditorAreaErrorLabel(editor)
   // the panel that should collapse
-  private lazy val collapso = new JPanel(new BorderLayout()) {
-    setOpaque(false)
-    setBackground(InterfaceColors.TRANSPARENT)
+  private lazy val collapso = new JPanel(new BorderLayout) with Transparent {
     add(errorLabel, BorderLayout.NORTH)
     add(scrollPane, BorderLayout.CENTER)
     if (collapseWhenEmpty) setVisible(false)
@@ -72,9 +69,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
 
   setLayout(new BorderLayout)
   // add the panel containing the button that forces the collapse, and a label.
-  add(new JPanel(new RowLayout(2, Component.LEFT_ALIGNMENT, Component.CENTER_ALIGNMENT)) {
-    setOpaque(false)
-    setBackground(InterfaceColors.TRANSPARENT)
+  add(new JPanel(new RowLayout(2, Component.LEFT_ALIGNMENT, Component.CENTER_ALIGNMENT)) with Transparent {
     if (collapsible) add(new JLabel(arrow) {
       addMouseListener(new MouseAdapter {
         override def mouseClicked(e: MouseEvent) {

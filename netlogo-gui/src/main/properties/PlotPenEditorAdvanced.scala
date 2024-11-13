@@ -8,11 +8,11 @@ import javax.swing.{ JLabel, JPanel }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.plot.PlotManagerInterface
-import org.nlogo.swing.{ CheckBox, ComboBox, OptionDialog, TextField }
+import org.nlogo.swing.{ CheckBox, ComboBox, OptionDialog, TextField, Transparent }
 import org.nlogo.theme.InterfaceColors
 
 class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, plotManager: PlotManagerInterface)
-  extends JPanel(new GridBagLayout) {
+  extends JPanel(new GridBagLayout) with Transparent {
 
   private implicit val i18nPrefix = I18N.Prefix("edit.plot.pen")
 
@@ -69,9 +69,6 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, 
   }
 
   private def addWidgets() {
-    setOpaque(false)
-    setBackground(InterfaceColors.TRANSPARENT)
-
     intervalField.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
     intervalField.setForeground(InterfaceColors.TOOLBAR_TEXT)
     intervalField.setCaretColor(InterfaceColors.TOOLBAR_TEXT)

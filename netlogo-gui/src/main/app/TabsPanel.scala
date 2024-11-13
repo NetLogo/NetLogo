@@ -10,7 +10,7 @@ import javax.swing.plaf.basic.BasicTabbedPaneUI
 
 import org.nlogo.app.codetab.{ CodeTab, TemporaryCodeTab }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.swing.{ HoverDecoration, Utils }
+import org.nlogo.swing.{ HoverDecoration, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 
 private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
@@ -129,10 +129,7 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
 }
 
 class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
-  private class CloseButton extends JPanel {
-    setOpaque(false)
-    setBackground(InterfaceColors.TRANSPARENT)
-
+  private class CloseButton extends JPanel with Transparent {
     override def getPreferredSize: Dimension =
       new Dimension(8, 8)
 

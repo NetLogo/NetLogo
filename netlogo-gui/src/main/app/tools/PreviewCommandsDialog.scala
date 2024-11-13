@@ -10,7 +10,7 @@ import javax.swing.{ AbstractAction, JDialog, JPanel }
 import org.nlogo.api.PreviewCommands
 import org.nlogo.awt.Positioning
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model }
-import org.nlogo.swing.{ Button, Utils }
+import org.nlogo.swing.{ Button, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ EditorColorizer, GraphicsPreviewInterface }
 import org.nlogo.workspace.{ Evaluator, WorkspaceFactory }
@@ -62,9 +62,7 @@ class PreviewCommandsDialog(
     setBackground(InterfaceColors.DIALOG_BACKGROUND)
     add(editorPanel, BorderLayout.CENTER)
     add(previewPanel, BorderLayout.LINE_END)
-    add(new JPanel {
-      setOpaque(false)
-      setBackground(InterfaceColors.TRANSPARENT)
+    add(new JPanel with Transparent {
       add(okButton)
       add(new Button(cancelAction))
     }, BorderLayout.PAGE_END)
