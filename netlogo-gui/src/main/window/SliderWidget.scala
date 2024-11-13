@@ -14,7 +14,7 @@ import javax.swing.text.{ AttributeSet, PlainDocument }
 import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ CompilerServices, Dump, Editable, MersenneTwisterFast }
 import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical }
-import org.nlogo.swing.Utils
+import org.nlogo.swing.{ Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent,
                                  InputBoxLoseFocusEvent }
@@ -158,9 +158,8 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
   }
 
-  protected class TextField extends JTextField("50", 3) {
+  protected class TextField extends JTextField("50", 3) with Transparent {
     setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0))
-    setBackground(InterfaceColors.TRANSPARENT)
     setFont(getFont.deriveFont(11f))
     setHorizontalAlignment(SwingConstants.RIGHT)
 

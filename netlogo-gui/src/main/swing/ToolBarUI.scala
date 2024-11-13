@@ -8,10 +8,7 @@ import javax.swing.{ AbstractButton, Action, JButton, JToggleButton }
 
 import org.nlogo.theme.InterfaceColors
 
-trait AbstractToolBarButton extends AbstractButton with HoverDecoration {
-  setOpaque(false)
-  setBackground(InterfaceColors.TRANSPARENT)
-
+trait AbstractToolBarButton extends AbstractButton with Transparent with HoverDecoration {
   override def getPreferredSize: Dimension = {
     val ps = super.getPreferredSize
     val dim = ps.height max ps.width

@@ -5,13 +5,11 @@ package org.nlogo.properties
 import java.awt.{ GridBagConstraints, Insets }
 import javax.swing.JPanel
 
-import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.swing.Transparent
+import org.nlogo.theme.ThemeSync
 
 abstract class PropertyEditor[T](val accessor: PropertyAccessor[T], val handlesOwnErrors: Boolean = false)
-  extends JPanel with ThemeSync {
-
-  setOpaque(false)
-  setBackground(InterfaceColors.TRANSPARENT)
+  extends JPanel with Transparent with ThemeSync {
 
   def changed() // abstract
 

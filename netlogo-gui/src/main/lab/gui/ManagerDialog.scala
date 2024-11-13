@@ -14,7 +14,7 @@ import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 
 import org.nlogo.core.I18N
 import org.nlogo.fileformat.{ LabSaver, LabLoader }
-import org.nlogo.swing.{ Button, FileDialog, Utils }
+import org.nlogo.swing.{ Button, FileDialog, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 private class ManagerDialog(manager:       LabManager,
@@ -108,20 +108,14 @@ private class ManagerDialog(manager:       LabManager,
     c.weighty = 0
     c.insets = new Insets(0, 6, 6, 6)
 
-    getContentPane.add(new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 0)) {
-      setOpaque(false)
-      setBackground(InterfaceColors.TRANSPARENT)
-
+    getContentPane.add(new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 0)) with Transparent {
       add(newButton)
       add(editButton)
       add(duplicateButton)
       add(deleteButton)
     }, c)
 
-    getContentPane.add(new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 0)) {
-      setOpaque(false)
-      setBackground(InterfaceColors.TRANSPARENT)
-
+    getContentPane.add(new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 0)) with Transparent {
       add(importButton)
       add(exportButton)
       add(abortButton)

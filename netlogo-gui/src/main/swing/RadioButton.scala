@@ -7,10 +7,7 @@ import javax.swing.{ Action, Icon, JRadioButton }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class RadioButton(action: Action) extends JRadioButton(action) with HoverDecoration with ThemeSync {
-  setOpaque(false)
-  setBackground(InterfaceColors.TRANSPARENT)
-
+class RadioButton(action: Action) extends JRadioButton(action) with HoverDecoration with Transparent with ThemeSync {
   setIcon(new Icon {
     def getIconWidth: Int = 14
     def getIconHeight: Int = 14

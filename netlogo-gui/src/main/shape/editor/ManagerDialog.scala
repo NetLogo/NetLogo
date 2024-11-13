@@ -12,7 +12,7 @@ import org.nlogo.api.ModelLoader
 import org.nlogo.awt.ColumnLayout
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
   ShapeList.{ shapesToMap, isDefaultShapeName }
-import org.nlogo.swing.{ Button, Utils }
+import org.nlogo.swing.{ Button, Transparent, Utils }
 import org.nlogo.swing.Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -71,10 +71,8 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
   lazy val buttonPanel = new JPanel {
     setLayout(new ColumnLayout(3, Component.CENTER_ALIGNMENT, Component.TOP_ALIGNMENT))
     // Setup the first row of buttons
-    add(new JPanel {
+    add(new JPanel with Transparent {
       setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-      setOpaque(false)
-      setBackground(InterfaceColors.TRANSPARENT)
       add(Box.createHorizontalGlue())
       add(Box.createHorizontalStrut(20))
       add(newButton)
@@ -88,10 +86,8 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
       add(Box.createHorizontalGlue())
     })
     // Setup the second row of buttons
-    add(new JPanel {
+    add(new JPanel with Transparent {
       setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
-      setOpaque(false)
-      setBackground(InterfaceColors.TRANSPARENT)
       add(Box.createHorizontalGlue())
       add(Box.createHorizontalStrut(20))
       importButtons.foreach(add)

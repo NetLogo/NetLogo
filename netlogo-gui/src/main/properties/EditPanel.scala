@@ -9,8 +9,8 @@ import javax.swing.{JLabel, JPanel, ToolTipManager}
 import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody }
 import org.nlogo.api.{ CompilerServices, Editable, Property }
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.OptionDialog
-import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.swing.{ OptionDialog, Transparent }
+import org.nlogo.theme.ThemeSync
 import org.nlogo.window.WidgetWrapperInterface
 
 import scala.reflect.ClassTag
@@ -18,7 +18,7 @@ import scala.collection.JavaConverters._
 
 // This is the contents of an EditDialog, except for the buttons at the bottom (OK/Apply/Cancel).
 class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer: Colorizer, useTooltips: Boolean = false)
-  extends JPanel with ThemeSync {
+  extends JPanel with Transparent with ThemeSync {
 
   val oldDelay = ToolTipManager.sharedInstance.getDismissDelay()
   ToolTipManager.sharedInstance.setDismissDelay(30000)
@@ -41,9 +41,6 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
     case None => (null, null)
   }
 
-  setOpaque(false)
-  setBackground(InterfaceColors.TRANSPARENT)
-
   def init(): PropertyEditor[_] = {
     val properties = target.propertySet
     val layout = new GridBagLayout()
@@ -59,10 +56,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
     var claimsFirstFocus: PropertyEditor[_] = null
     for(property <- properties) {
       val editor = getEditor(property, target, useTooltips && property.notes != null && property.notes.trim != "")
-      val panel = new JPanel {
-        setLayout(new BorderLayout)
-        setOpaque(false)
-        setBackground(InterfaceColors.TRANSPARENT)
+      val panel = new JPanel(new BorderLayout) with Transparent {
         add(editor, BorderLayout.CENTER)
         if (property.notes != null && property.notes.trim != "")
           if (useTooltips)

@@ -7,12 +7,12 @@ import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
 import javax.swing.{ AbstractAction, Action, JCheckBox, JPanel }
 
 import org.nlogo.core.I18N, I18N.Prefix
-import org.nlogo.swing.Button
+import org.nlogo.swing.{ Button, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.LoadEndEvent
 
 class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCounter: TickCounterLabel)
-    extends JPanel(new GridBagLayout) with LoadEndEvent.Handler with ThemeSync {
+    extends JPanel(new GridBagLayout) with Transparent with LoadEndEvent.Handler with ThemeSync {
   implicit val prefix = Prefix("tabs.run")
 
   private val updateModeChooser = new UpdateModeChooser(workspace)
@@ -23,9 +23,6 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
   displaySwitch.addItemListener(new ViewUpdateListener(speedSlider))
 
   updateModeChooser.refreshSelection()
-
-  setOpaque(false)
-  setBackground(InterfaceColors.TRANSPARENT)
 
   locally {
     val c = new GridBagConstraints

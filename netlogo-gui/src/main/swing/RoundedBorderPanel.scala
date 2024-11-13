@@ -3,19 +3,13 @@
 package org.nlogo.swing
 
 import java.awt.{ Color, Graphics }
-import javax.swing.JComponent
 
-import org.nlogo.theme.InterfaceColors
-
-trait RoundedBorderPanel extends JComponent with HoverDecoration {
+trait RoundedBorderPanel extends Transparent with HoverDecoration {
   private var backgroundColor: Color = Color.WHITE
   private var backgroundHoverColor: Color = Color.WHITE
   private var borderColor: Color = Color.BLACK
   private var diameter: Int = 0
   private var hoverEnabled = false
-
-  setOpaque(false)
-  setBackground(InterfaceColors.TRANSPARENT)
 
   def setBackgroundColor(color: Color) {
     backgroundColor = color

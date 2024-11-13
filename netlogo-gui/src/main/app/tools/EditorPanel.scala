@@ -9,12 +9,12 @@ import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.PreviewCommands, PreviewCommands.{ Compilable, Custom, Default, Manual }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
-import org.nlogo.swing.{ Button, HasPropertyChangeSupport, Utils }
+import org.nlogo.swing.{ Button, HasPropertyChangeSupport, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.window.{ EditorAreaErrorLabel, EditorColorizer }
 
-class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) {
+class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) with Transparent {
   val comboBox = new PreviewCommandsComboBox
   val compileButton = new Button(null) {
     setBorder(new EmptyBorder(4, 4, 4, 4))
@@ -67,9 +67,6 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) 
                                                       InterfaceColors.TOOLBAR_IMAGE))
   }
   
-  setOpaque(false)
-  setBackground(InterfaceColors.TRANSPARENT)
-
   updateCompileIcon()
 
   locally {

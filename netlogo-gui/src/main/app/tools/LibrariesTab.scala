@@ -18,7 +18,8 @@ import scala.collection.mutable.Buffer
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus }
-import org.nlogo.swing.{ BrowserLauncher, Button, EmptyIcon, FilterableListModel, RichAction, SwingWorker, Utils }
+import org.nlogo.swing.{ BrowserLauncher, Button, EmptyIcon, FilterableListModel, RichAction, SwingWorker, Transparent,
+                         Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
@@ -108,14 +109,8 @@ class LibrariesTab( category:        String
   private val libraryScroll = new JScrollPane(libraryList)
 
   private val sidebar             = Box.createVerticalBox()
-  private val libraryButtonsPanel = new JPanel(new GridLayout(3, 1, 2, 2)) {
-    setOpaque(false)
-    setBackground(InterfaceColors.TRANSPARENT)
-  }
-  private val installationPanel   = new JPanel(new GridLayout(1, 2, 2, 2)) {
-    setOpaque(false)
-    setBackground(InterfaceColors.TRANSPARENT)
-  }
+  private val libraryButtonsPanel = new JPanel(new GridLayout(3, 1, 2, 2)) with Transparent
+  private val installationPanel   = new JPanel(new GridLayout(1, 2, 2, 2)) with Transparent
 
   private val installButton = new Button(I18N.gui("install"), () => {
     val installCheck = (lib: LibraryInfo) =>
@@ -149,10 +144,7 @@ class LibrariesTab( category:        String
   private val latestVersion = new JLabel
   private val minNetLogoVersion = new JLabel
 
-  private val nlvPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
-    setOpaque(false)
-    setBackground(InterfaceColors.TRANSPARENT)
-  }
+  private val nlvPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) with Transparent
 
   locally {
 
@@ -173,19 +165,13 @@ class LibrariesTab( category:        String
     embolden(latestVersionLabel)
     embolden(minNetLogoVersionLabel)
 
-    val ivPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
-      setOpaque(false)
-      setBackground(InterfaceColors.TRANSPARENT)
-    }
+    val ivPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) with Transparent
 
     ivPanel.add(installedVersionLabel)
     ivPanel.add(installedVersion)
     ivPanel.setMaximumSize(new Dimension(Short.MaxValue, 20))
 
-    val lvPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
-      setOpaque(false)
-      setBackground(InterfaceColors.TRANSPARENT)
-    }
+    val lvPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) with Transparent
 
     lvPanel.add(latestVersionLabel)
     lvPanel.add(latestVersion)
@@ -494,6 +480,8 @@ class LibrariesTab( category:        String
 
     libraryScroll.getHorizontalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     libraryScroll.getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    
+    libraryList.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     installButton.syncTheme()
     addToCodeTabButton.syncTheme()

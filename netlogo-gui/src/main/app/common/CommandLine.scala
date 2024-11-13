@@ -3,13 +3,14 @@
 package org.nlogo.app.common
 
 import java.awt.{ BorderLayout, Dimension }
-import java.awt.event.{ActionEvent, ActionListener, KeyEvent, KeyListener}
-import javax.swing.{JScrollPane, KeyStroke, ScrollPaneConstants}
+import java.awt.event.{ ActionEvent, ActionListener, KeyEvent, KeyListener }
+import javax.swing.{ JScrollPane, KeyStroke, ScrollPaneConstants }
 
-import org.nlogo.agent.{Agent, AgentSet, OutputObject}
-import org.nlogo.core.{AgentKind, CompilerException, I18N, Widget => CoreWidget}
+import org.nlogo.agent.{ Agent, AgentSet, OutputObject }
+import org.nlogo.core.{ AgentKind, CompilerException, I18N, Widget => CoreWidget }
 import org.nlogo.editor.EditorField
-import org.nlogo.ide.{AutoSuggestAction, CodeCompletionPopup}
+import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup }
+import org.nlogo.swing.Transparent
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ CommandCenterInterface, EditorColorizer, JobWidget, Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
@@ -67,13 +68,9 @@ class CommandLine(commandCenter: CommandCenterInterface,
 
   setLayout(new BorderLayout)
   displayName(classDisplayName)
-  add(new JScrollPane(textField,
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
-        setOpaque(false)
-        setBackground(InterfaceColors.TRANSPARENT)
-      }, java.awt.BorderLayout.CENTER)
-
+  add(new JScrollPane(textField, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+                      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) with Transparent,
+      BorderLayout.CENTER)
 
   def agent(agent: Agent): Unit = {
     this.agent = agent

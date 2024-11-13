@@ -7,12 +7,11 @@ import java.awt.event.ActionEvent
 import java.io.File
 import java.util.Locale
 import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ AbstractAction, JButton, JFileChooser, JPanel, JTextField }
-import javax.swing.border.EmptyBorder
+import javax.swing.{ AbstractAction, JFileChooser, JPanel, JTextField }
 
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ CheckBox, ComboBox, RoundedBorderPanel }
+import org.nlogo.swing.{ Button, CheckBox, ComboBox, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object Preferences {
@@ -111,33 +110,15 @@ object Preferences {
     val i18nKey         = "logDirectory"
     val requirement = "restartRequired"
     val textField       = new JTextField("", 20)
-    val component       = createComponent()
-
-    def load(prefs: JavaPreferences) = {
-      val logDirectory = prefs.get("logDirectory", "")
-      textField.setText(logDirectory)
-    }
-
-    def save(prefs: JavaPreferences) = {
-      prefs.put("logDirectory", textField.getText)
-    }
-
-    def createComponent(): JPanel with ThemeSync = {
-      new JPanel with ThemeSync {
-        setOpaque(false)
-        setBackground(InterfaceColors.TRANSPARENT)
-
+    val component =
+      new JPanel with Transparent with ThemeSync {
         add(textField)
 
-        private val browseButton = new JButton(new AbstractAction("Browse...") {
+        private val browseButton = new Button(new AbstractAction("Browse...") {
           def actionPerformed(e: ActionEvent) {
             askForConfigFile(textField.getText).foreach(textField.setText)
           }
-        }) with RoundedBorderPanel {
-          setBorder(new EmptyBorder(3, 12, 3, 12))
-          setDiameter(6)
-          enableHover()
-        }
+        })
 
         add(browseButton)
 
@@ -152,6 +133,14 @@ object Preferences {
           browseButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
         }
       }
+
+    def load(prefs: JavaPreferences) = {
+      val logDirectory = prefs.get("logDirectory", "")
+      textField.setText(logDirectory)
+    }
+
+    def save(prefs: JavaPreferences) = {
+      prefs.put("logDirectory", textField.getText)
     }
 
     def askForConfigFile(current: String): Option[String] = {

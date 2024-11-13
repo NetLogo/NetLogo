@@ -11,7 +11,7 @@ import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.{ Colorizer, EditorField }
 import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
-import org.nlogo.swing.{ Button, Popup, Utils }
+import org.nlogo.swing.{ Button, Popup, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ ColorDialog, PlotWidget }
 
@@ -96,9 +96,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
   setPreferredSize(new Dimension(600, 200))
 
   add(new JScrollPane(table), BorderLayout.CENTER)
-  add(new JPanel {
-    setOpaque(false)
-    setBackground(InterfaceColors.TRANSPARENT)
+  add(new JPanel with Transparent {
     add(new Button(I18N.gui("add"), () => { table.newPen }))
   }, BorderLayout.SOUTH)
 
@@ -298,10 +296,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       }
       editButton.putClientProperty("JComponent.sizeVariant", "small")
       deleteButton.putClientProperty("JComponent.sizeVariant", "small")
-      val buttonPanel = new JPanel {
-        setOpaque(false)
-        setBackground(InterfaceColors.TRANSPARENT)
-      }
+      val buttonPanel = new JPanel with Transparent
       val layout = new GroupLayout(buttonPanel)
       layout.setAutoCreateGaps(true)
       layout.setVerticalGroup(layout.createParallelGroup().addComponent(editButton).addComponent(deleteButton))
