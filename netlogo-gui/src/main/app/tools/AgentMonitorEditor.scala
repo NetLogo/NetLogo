@@ -38,6 +38,7 @@ class AgentMonitorEditor(parent: AgentMonitor) extends JPanel with ThemeSync {
       add(noVarLabel)
     }
     else fill()
+    syncTheme()
   }
 
   private def fill() {
