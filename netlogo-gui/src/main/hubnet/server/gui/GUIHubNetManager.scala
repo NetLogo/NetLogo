@@ -18,6 +18,8 @@ import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window._
 
+import scala.collection.mutable.Set
+
 class GUIHubNetManager(workspace: GUIWorkspace,
                        linkParent: Component,
                        ifactory: InterfaceFactory,
@@ -45,6 +47,8 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   val connectionManager = new ConnectionManager(this, listener, this.workspace)
   var controlCenter: ControlCenter = null // created in showControlCenter
 
+  val clientWindows = Set[ClientAppInterface]()
+
   /// view mirroring / view interface
 
   /**
@@ -54,6 +58,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     val clientApp = Femto.get[ClientAppInterface]("org.nlogo.hubnet.client.ClientApp")
     val host = try Some(InetAddress.getLocalHost.getHostAddress.toString)
     catch {case ex: java.net.UnknownHostException => None}
+    clientWindows += clientApp
     // TODO: this seems like a bunch of bugs waiting to happen
     clientApp.startup("", host.orNull, connectionManager.port, true,
       isRobo, waitTime, new DefaultCompilerServices(workspace.compiler))
@@ -189,5 +194,10 @@ class GUIHubNetManager(workspace: GUIWorkspace,
 
     if (controlCenter != null)
       controlCenter.syncTheme()
+    
+    clientWindows.foreach(_ match {
+      case ts: ThemeSync => ts.syncTheme()
+      case _ =>
+    })
   }
 }

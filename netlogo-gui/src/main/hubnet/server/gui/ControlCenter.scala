@@ -31,16 +31,14 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   private val clientsPanel = new ClientsPanel(server.clients.keys)
   private val messagePanel = new MessagePanel
 
-  locally {
-    setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE)
-    getContentPane.setLayout(new BorderLayout())
-    getContentPane.add(serverPanel, BorderLayout.CENTER)
-    getContentPane.add(clientsPanel, BorderLayout.EAST)
-    getContentPane.add(messagePanel, BorderLayout.SOUTH)
-    pack()
-    Positioning.moveNextTo(this, frame)
-    setVisible(true)
-  }
+  setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE)
+  getContentPane.setLayout(new BorderLayout())
+  getContentPane.add(serverPanel, BorderLayout.CENTER)
+  getContentPane.add(clientsPanel, BorderLayout.EAST)
+  getContentPane.add(messagePanel, BorderLayout.SOUTH)
+  pack()
+  Positioning.moveNextTo(this, frame)
+  setVisible(true)
 
   def setViewMirroring(mirror: Boolean) {
     EventQueue.mustBeEventDispatchThread()
