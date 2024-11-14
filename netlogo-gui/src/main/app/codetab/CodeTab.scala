@@ -39,20 +39,13 @@ with ThemeSync {
 
   private val proceduresMenu = new ProceduresMenu(CodeTab.this)
 
-  private val tabbing: CheckBox = new CheckBox(
-    new AbstractAction(I18N.gui.get("tabs.code.indentAutomatically")) {
-      def actionPerformed(e: ActionEvent) {
-        tabs.smartTabbingEnabled = tabbing.isSelected
-      }
-    })
+  private val tabbing: CheckBox = new CheckBox(I18N.gui.get("tabs.code.indentAutomatically"), () => {
+    tabs.smartTabbingEnabled = tabbing.isSelected
+  })
   
-  private val separate: CheckBox = new CheckBox(
-    new AbstractAction(I18N.gui.get("tabs.code.separateCodeWindow")) {
-      def actionPerformed(e: ActionEvent) {
-        tabs.switchWindow(separate.isSelected, true)
-      }
-    }
-  )
+  private val separate: CheckBox = new CheckBox(I18N.gui.get("tabs.code.separateCodeWindow"), () => {
+    tabs.switchWindow(separate.isSelected, true)
+  })
 
   private var _dirty = false // Has the buffer changed since it was compiled?
   def dirty = _dirty
