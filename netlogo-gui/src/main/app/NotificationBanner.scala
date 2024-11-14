@@ -30,7 +30,7 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
   lazy val lastSeenEventIdKey: String = "lastSeenEventId" // The key for the most recently seen event-id
   private var editorPane: JEditorPane = new JEditorPane()
   // Label to display notification messages
-  private val messageLabel = new JLabel(" " + initialMessage)
+  private val messageLabel = new JLabel(" " + initialMessage + "   -  " + I18N.gui.get("dialog.interface.viewMore"))
   // Close button with an "X" icon
   private val closeButton = new JButton("\u2716") // Unicode character for "X"
   setVisible(isShowNeeded()) // Set visibility based on isShowNeeded
