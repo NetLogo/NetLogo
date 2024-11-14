@@ -62,6 +62,8 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
   addWindowListener(new WindowAdapter {
     override def windowClosing(e: WindowEvent) {
       saveShape()
+      dispose()
+      setVisible(false)
     }
   })
 
@@ -95,7 +97,7 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
     c.insets = new Insets(0, 6, 6, 6)
 
     add(new LabeledComponent(I18N.gui("direction"), new Button(I18N.gui("edit"), () => {
-      new EditorDialog(LinkEditorDialog.this, shape.directionIndicator, getX, getY, false)
+      new EditorDialog(LinkEditorDialog.this, LinkEditorDialog.this, shape.directionIndicator, false)
     })) {
       setForeground(InterfaceColors.DIALOG_TEXT)
     }, c)
@@ -178,7 +180,6 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
 
     list.update(originalShape, shape)
 
-    setVisible(false)
     dispose()
   }
 

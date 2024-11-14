@@ -161,7 +161,7 @@ class ShapeView
   public void selfFinishPolygon(boolean add) {
     if (tempElement instanceof Polygon) {
       ((Polygon) tempElement).selfClose();
-      tempElement.filled_$eq(editorDialog.fillShapes());
+      tempElement.filled_$eq(editorDialog.isFillShapes());
       editorDialog.makeUndoableDraw(tempElement);
       if (add) {
         shape.add(tempElement);
@@ -316,12 +316,12 @@ class ShapeView
     start = last = e.getPoint();
 
     // if editing is on, find out if one of the shapes was clicked in
-    if (editorDialog.editingElements()) {
+    if (editorDialog.isEditingElements()) {
       checkElements(start);
     }
 
     // if snap to grid is on, change start to a grid corner
-    if (editorDialog.snapToGrid()) {
+    if (editorDialog.isSnapToGrid()) {
       snapPointToGrid(start);
     }
 
@@ -345,7 +345,7 @@ class ShapeView
   private void mouseMoved(java.awt.event.MouseEvent e) {
     last = e.getPoint();
 
-    if (editorDialog.snapToGrid()) {
+    if (editorDialog.isSnapToGrid()) {
       snapPointToGrid(last);
     }
 
@@ -360,11 +360,11 @@ class ShapeView
     previous = last;
     last = e.getPoint();
 
-    if (editorDialog.snapToGrid()) {
+    if (editorDialog.isSnapToGrid()) {
       snapPointToGrid(last);
     }
 
-    if (editorDialog.editingElements()) {
+    if (editorDialog.isEditingElements()) {
       if (draggingHandle) {
         selectedElement.reshapeElement
             (handles[handleIndex], last);
@@ -389,7 +389,7 @@ class ShapeView
   }
 
   private void mouseReleased(java.awt.event.MouseEvent e) {
-    if (editorDialog.editingElements()) {
+    if (editorDialog.isEditingElements()) {
       if (draggingHandle) {
         draggingHandle = false;
         shape.changed();
@@ -410,7 +410,7 @@ class ShapeView
         // Add the shape, unless it's a polygon that has too few points
         if (!((tempElement instanceof Polygon) &&
             (((Polygon) tempElement).xCoords().size() < 3))) {
-          tempElement.filled_$eq(editorDialog.fillShapes());
+          tempElement.filled_$eq(editorDialog.isFillShapes());
           shape.add(tempElement);
           editorDialog.makeUndoableDraw(tempElement);
           tempElement.select();
@@ -430,7 +430,7 @@ class ShapeView
   // updated coordinates
   private Element createElement(java.awt.Point start, java.awt.Point last) {
     // don't create an element if the arrow tool is the current tool
-    if (!editorDialog.editingElements()) {
+    if (!editorDialog.isEditingElements()) {
       if (editorDialog.getElementType() == Line.class) {
         return new Line
             (start, last, editorDialog.getElementColor());
