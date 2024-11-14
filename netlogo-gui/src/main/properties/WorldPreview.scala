@@ -2,19 +2,24 @@
 
 package org.nlogo.properties
 
-class WorldPreview(width: Int, height: Int)
-  extends javax.swing.JPanel(new java.awt.BorderLayout(0, 0))
-{
+import java.awt.{ BorderLayout, Canvas, GridBagConstraints, GridBagLayout }
+import javax.swing.{ JLabel, JPanel }
 
+import org.nlogo.swing.Transparent
+import org.nlogo.theme.InterfaceColors
+
+class WorldPreview(width: Int, height: Int) extends JPanel(new BorderLayout(0, 0)) with Transparent {
   setSize(width, height + 10)
 
   private var wrapX, wrapY = false
   private var minx, maxx, miny, maxy = 0
-  private val shapeLabel = new javax.swing.JLabel("Torus")
-  private val worldPanel = new javax.swing.JPanel(new java.awt.GridBagLayout) {
+  private val shapeLabel = new JLabel("Torus") {
+    setForeground(InterfaceColors.DIALOG_TEXT)
+  }
+  private val worldPanel = new JPanel(new GridBagLayout) with Transparent {
     setSize(width, height)
   }
-  private val c = new java.awt.GridBagConstraints
+
   private val theCanvas = new WorldPreviewCanvas(width - 10, height - 10)
   private val topY = new WorldPreviewWrapCanvas(
     width - 10, 5, WorldPreviewWrapCanvas.WRAP_Y)
@@ -24,52 +29,33 @@ class WorldPreview(width: Int, height: Int)
     5, height - 10, WorldPreviewWrapCanvas.WRAP_X)
   private val rightX = new WorldPreviewWrapCanvas(
     5, height - 10, WorldPreviewWrapCanvas.WRAP_X)
+  
+  locally {
+    val c = new GridBagConstraints
 
-  c.gridx = 0
-  c.gridy = 0
-  worldPanel.add(new BlankAreaCanvas(5, 5), c)
+    c.gridy = 0
 
-  c.gridx = 1
-  c.gridy = 0
-  worldPanel.add(topY, c)
+    worldPanel.add(new BlankAreaCanvas(5, 5), c)
+    worldPanel.add(topY, c)
+    worldPanel.add(new BlankAreaCanvas(5, 5), c)
 
-  c.gridx = 2
-  c.gridy = 0
-  worldPanel.add(new BlankAreaCanvas(5, 5), c)
+    c.gridy = 1
 
-  c.gridx = 0
-  c.gridy = 1
-  worldPanel.add(rightX, c)
+    worldPanel.add(rightX, c)
+    worldPanel.add(theCanvas, c)
+    worldPanel.add(leftX, c)
 
-  c.gridx = 1
-  c.gridy = 1
-  worldPanel.add(theCanvas, c)
+    c.weighty = 1.0
+    c.anchor = GridBagConstraints.NORTH
+    c.gridy = 2
+    
+    worldPanel.add(new BlankAreaCanvas(5, 5), c)
+    worldPanel.add(bottomY, c)
+    worldPanel.add(new BlankAreaCanvas(5, 5), c)
+  }
 
-  c.gridx = 2
-  c.gridy = 1
-  worldPanel.add(leftX, c)
-
-  c.weighty = 1.0
-  c.anchor = java.awt.GridBagConstraints.NORTH
-  c.gridx = 0
-  c.gridy = 2
-  worldPanel.add(new BlankAreaCanvas(5, 5), c)
-
-  c.weighty = 1.0
-  c.anchor = java.awt.GridBagConstraints.NORTH
-  c.gridx = 1
-  c.gridy = 2
-  worldPanel.add(bottomY, c)
-
-  c.weighty = 1.0
-  c.anchor = java.awt.GridBagConstraints.NORTH
-  c.gridx = 2
-  c.gridy = 2
-  worldPanel.add(new BlankAreaCanvas(5, 5), c)
-
-  add(worldPanel, java.awt.BorderLayout.NORTH)
-
-  add(shapeLabel, java.awt.BorderLayout.CENTER)
+  add(worldPanel, BorderLayout.NORTH)
+  add(shapeLabel, BorderLayout.CENTER)
 
   setVisible(true)
 
@@ -130,7 +116,7 @@ class WorldPreview(width: Int, height: Int)
     override def paint(g: java.awt.Graphics) { }
   }
 
-  private class WorldPreviewCanvas(width: Int, height: Int) extends java.awt.Canvas {
+  private class WorldPreviewCanvas(width: Int, height: Int) extends Canvas {
     val TO_LEFT, TO_BOTTOM = -1
     val TO_RIGHT, TO_TOP = 1
     val AT_ORIGIN = 0
@@ -281,7 +267,7 @@ class WorldPreview(width: Int, height: Int)
     val WRAP_Y = 1
   }
   private class WorldPreviewWrapCanvas(width: Int, height: Int, wrapDim: Int)
-          extends java.awt.Canvas
+          extends Canvas
   {
     setSize(width, height)
     setBackground(java.awt.Color.black)
