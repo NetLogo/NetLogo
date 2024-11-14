@@ -811,9 +811,10 @@ class App extends
     openColorDialog.syncTheme()
     openLibrariesDialog.syncTheme()
 
-    workspace.hubNetManager.foreach(_.clientEditor match {
-      case ts: ThemeSync => ts.syncTheme()
-    })
+    workspace.hubNetManager match {
+      case Some(manager: ThemeSync) => manager.syncTheme()
+      case _ =>
+    }
   }
 
   /**
