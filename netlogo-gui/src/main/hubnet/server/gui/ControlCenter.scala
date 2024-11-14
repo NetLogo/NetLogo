@@ -3,6 +3,7 @@
 package org.nlogo.hubnet.server.gui
 
 import java.awt.{ BorderLayout, Component, Dimension, Font, Frame, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.event.{ WindowAdapter, WindowEvent }
 import java.net.{ Inet4Address, InetAddress, NetworkInterface, UnknownHostException }
 import java.text.SimpleDateFormat
 import javax.swing.{ Box, BoxLayout, DefaultListModel, JFrame, JLabel, JList, JPanel, JScrollPane, JTextArea,
@@ -16,6 +17,9 @@ import org.nlogo.hubnet.server.{ ConnectionManager, HubNetUtils }
 import org.nlogo.swing.{ Button, CheckBox, NonemptyTextFieldButtonEnabler, SelectableJLabel, TextFieldBox,
                          Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.ClientAppInterface
+
+import scala.collection.mutable.Set
 
 /**
  * The Control Center window allows the user to interact with
@@ -30,6 +34,8 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   private val serverPanel = new ServerOptionsPanel(HubNetUtils.viewMirroring, HubNetUtils.plotMirroring)
   private val clientsPanel = new ClientsPanel(server.clients.keys)
   private val messagePanel = new MessagePanel
+
+  private val clientWindows = Set[ClientAppInterface]()
 
   setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE)
   getContentPane.setLayout(new BorderLayout())
@@ -83,8 +89,21 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     clientsPanel.removeClientEntry(clientId)
   }
 
-  def logMessage(message: String) {messagePanel.logMessage(message)}
-  def launchNewClient() {server.connection.newClient(false, 0)}
+  def logMessage(message: String) {
+    messagePanel.logMessage(message)
+  }
+
+  def launchNewClient() {
+    val window = server.connection.newClient(false, 0).asInstanceOf[ClientAppInterface]
+
+    window.addWindowListener(new WindowAdapter {
+      override def windowClosed(e: WindowEvent) {
+        clientWindows -= window
+      }
+    })
+
+    clientWindows += window
+  }
 
   def syncTheme() {
     getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
@@ -92,6 +111,8 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     serverPanel.syncTheme()
     clientsPanel.syncTheme()
     messagePanel.syncTheme()
+
+    clientWindows.foreach(_.syncTheme())
   }
 
   /**
