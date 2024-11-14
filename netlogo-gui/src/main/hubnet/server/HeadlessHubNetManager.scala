@@ -92,7 +92,7 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: ModelLoad
   lazy val executor: ExecutorService = Executors.newCachedThreadPool()
 
   // creates a new local client. this method should be renamed.
-  def newClient(isRobo: Boolean, waitTime: Int) {
+  def newClient(isRobo: Boolean, waitTime: Int): AnyRef = {
     // login happens automatically in the constructor.
     // its debateable that i should do this, but ok for now.
     // JC - 3/30/11
@@ -103,6 +103,8 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: ModelLoad
         clientsAddedViaNewClient.synchronized(clientsAddedViaNewClient += client)
       }
     })
+
+    null
   }
 
   // send a message from a local client to the server
