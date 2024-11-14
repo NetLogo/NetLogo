@@ -8,6 +8,7 @@ import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.window.{ ClientAppInterface, DefaultEditorFactory }
 import org.nlogo.swing.{ Implicits, ModalProgressTask, OptionDialog, SetSystemLookAndFeel }, Implicits._
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.awt.{ Hierarchy, Images, Positioning, EventQueue }
 import org.nlogo.hubnet.connection.Ports
 
@@ -51,17 +52,15 @@ object ClientApp {
   }
 }
 
-class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterface {
+class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterface with ThemeSync {
   import ClientApp.localClientIndex
 
   private var clientPanel: ClientPanel = _
   private var loginDialog: LoginDialog = _
   private var isLocal: Boolean = _
 
-  locally {
-    setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
-    setResizable(false)
-  }
+  setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
+  setResizable(false)
 
   def startup(userid: String, hostip: String,
               port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, compiler: CompilerServices): Unit = {
@@ -82,8 +81,12 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
         else new ClientPanel(editorFactory, this, compiler)
 
       getContentPane.add(clientPanel, BorderLayout.CENTER)
+
       pack()
+
       Positioning.center(this, null)
+
+      syncTheme()
 
       if (isLocal) {
         val killLocalListener = () => {
@@ -178,5 +181,11 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
       I18N.gui.get("common.buttons.quit"),
       "Do you really want to quit HubNet?")
     if (shouldExit) System.exit(0)
+  }
+
+  def syncTheme() {
+    getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    clientPanel.syncTheme()
   }
 }
