@@ -32,11 +32,19 @@ class Button(action: Action) extends JButton(action) with RoundedBorderPanel wit
 }
 
 class ToggleButton(action: Action) extends JToggleButton(action) with RoundedBorderPanel with ThemeSync {
+  def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
+    def actionPerformed(e: ActionEvent) {
+      function()
+    }
+  })
+
   setDiameter(6)
   enableHover()
   setBorder(new EmptyBorder(3, 12, 3, 12))
   setFocusable(false)
   setContentAreaFilled(false)
+
+  syncTheme()
 
   override def isHover: Boolean =
     super.isHover || isSelected

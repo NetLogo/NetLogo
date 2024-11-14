@@ -3,7 +3,8 @@
 package org.nlogo.swing
 
 import java.awt.{ Component, Graphics }
-import javax.swing.{ Action, Icon, JCheckBox }
+import java.awt.event.ActionEvent
+import javax.swing.{ AbstractAction, Action, Icon, JCheckBox }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -12,6 +13,16 @@ class CheckBox(text: String = "") extends JCheckBox(text) with HoverDecoration w
     this(action.getValue(Action.NAME).toString)
 
     setAction(action)
+  }
+
+  def this(text: String, function: () => Unit) = {
+    this(text)
+
+    setAction(new AbstractAction(text) {
+      def actionPerformed(e: ActionEvent) {
+        function()
+      }
+    })
   }
 
   setIcon(new Icon {

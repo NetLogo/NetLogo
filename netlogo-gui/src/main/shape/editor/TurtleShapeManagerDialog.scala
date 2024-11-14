@@ -47,13 +47,13 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
 
   // Load a new shapes editor to let the user create a new shape
   override def newShape(): Unit = {
-    new EditorDialog(shapesList, new VectorShape(), getLocation.x, getLocation.y, true)
+    new EditorDialog(this, shapesList, new VectorShape(), true)
   }
 
   // Edit an existing shape
   override def editShape(): Unit = {
     shapesList.getOneSelected.foreach { shape =>
-      new EditorDialog(shapesList, shape, getLocation.x, getLocation.y, !isDefaultShapeName(shape.name))
+      new EditorDialog(this, shapesList, shape, !isDefaultShapeName(shape.name))
     }
   }
 
@@ -62,7 +62,7 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
     shapesList.getOneSelected.foreach { (shape: VectorShape) =>
       val newShape = shape.clone
       newShape.name = ""
-      new EditorDialog(shapesList, newShape, getLocation.x, getLocation.y, true)
+      new EditorDialog(this, shapesList, newShape, true)
     }
   }
 
