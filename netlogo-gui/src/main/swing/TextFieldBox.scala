@@ -35,7 +35,7 @@ object TextFieldBox {
  * nicely alligned.
  */
 class TextFieldBox(labelAlignment: Int = SwingConstants.LEFT, labelFont: Font = null, fieldFont: Font = null)
-  extends JPanel with ThemeSync {
+  extends JPanel with Transparent with ThemeSync {
 
   private var maxLabelWidth = 0
   private var labels: List[JLabel] = Nil

@@ -2,20 +2,21 @@
 
 package org.nlogo.hubnet.server.gui
 
+import java.awt.Component
+import java.net.{ InetAddress, NetworkInterface }
+import javax.swing.JOptionPane
+
 import org.nlogo.api.{ ModelLoader, ModelType, ViewInterface }
 import org.nlogo.api.HubNetInterface.ClientInterface
-import org.nlogo.core.{ Femto, Model, Widget => CoreWidget }
-import org.nlogo.hubnet.protocol.ComputerInterface
-import org.nlogo.hubnet.connection.{ HubNetException, NetworkUtils }
-import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
-import org.nlogo.fileformat.ModelConversion
-import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.awt.EventQueue.invokeLater
+import org.nlogo.core.{ Femto, Model, Widget => CoreWidget }
+import org.nlogo.fileformat.ModelConversion
+import org.nlogo.hubnet.connection.{ HubNetException, NetworkUtils }
+import org.nlogo.hubnet.protocol.ComputerInterface
+import org.nlogo.hubnet.server.{ ClientEventListener, ConnectionManager, HubNetManager }
+import org.nlogo.nvm.DefaultCompilerServices
+import org.nlogo.theme.ThemeSync
 import org.nlogo.window._
-
-import java.net.{ InetAddress, NetworkInterface }
-import java.awt.Component
-import javax.swing.JOptionPane
 
 class GUIHubNetManager(workspace: GUIWorkspace,
                        linkParent: Component,
@@ -23,7 +24,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
                        menuFactory: MenuBarFactory,
                        loader: ModelLoader,
                        modelConverter: ModelConversion)
-  extends HubNetManager(workspace, loader, modelConverter) with ViewInterface {
+  extends HubNetManager(workspace, loader, modelConverter) with ViewInterface with ThemeSync {
 
   private var _clientEditor: HubNetClientEditor = new HubNetClientEditor(workspace, linkParent, ifactory, menuFactory)
   // used in the discovery messages, and displayed in the control center.
@@ -105,6 +106,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
         new ControlCenter(connectionManager, workspace.getFrame, serverName, workspace.modelNameForDisplay, serverInterface.map(_._2))
       controlCenter.pack()
     }
+    controlCenter.syncTheme()
     controlCenter.setVisible(true)
   }
 
@@ -180,5 +182,12 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   // JC - 3/31/11
   def sendFromLocalClient(clientName:String, tag: String, content: AnyRef) = {
     Some("unimplemented")
+  }
+
+  def syncTheme() {
+    _clientEditor.syncTheme()
+
+    if (controlCenter != null)
+      controlCenter.syncTheme()
   }
 }
