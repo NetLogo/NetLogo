@@ -15,7 +15,7 @@ import org.nlogo.core.I18N
 import org.nlogo.shape.ShapesManagerInterface
 import org.nlogo.swing.UserAction._
 import org.nlogo.theme.ThemeSync
-import org.nlogo.window.{ ColorDialog, LinkRoot }
+import org.nlogo.window.{ ColorDialog, LinkRoot, RGBAColorDialog }
 import org.nlogo.workspace.AbstractWorkspaceScala
 
 abstract class ShowDialogAction(name: String) extends AbstractAction(name) with ThemeSync {
@@ -93,6 +93,20 @@ with MenuAction {
       hasShown = true
     } else
       super.actionPerformed(e)
+  }
+}
+
+class OpenRGBAColorDialog(frame: Frame) extends ShowDialogAction(I18N.gui.get("menu.tools.rgbaColorPicker"))
+                                        with MenuAction {
+  category = ToolsCategory
+  group = ToolsDialogsGroup
+
+  def createDialog() = new RGBAColorDialog(frame, false)
+
+  override def actionPerformed(e: ActionEvent) {
+    Positioning.center(createdDialog, frame)
+
+    super.actionPerformed(e)
   }
 }
 
