@@ -1,6 +1,7 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.app
+
 import com.vladsch.flexmark.html.HtmlRenderer
 import com.vladsch.flexmark.parser.Parser
 
@@ -11,7 +12,7 @@ import javax.swing.{JButton, JEditorPane, JLabel, JOptionPane, JPanel, JScrollPa
 
 import org.nlogo.app.infotab.InfoFormatter
 import org.nlogo.core.I18N
-import org.nlogo.swing.HoverDecoration
+import org.nlogo.swing.{HoverDecoration, OptionDialog}
 import org.nlogo.theme.{InterfaceColors, ThemeSync}
 
 import org.json.simple.parser.JSONParser
@@ -27,6 +28,7 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
   private val jsonUrl = "https://ccl.northwestern.edu/netlogo/announce-test.json"
   // Fetch and populate jsonObjectList in the constructor
   jsonObjectList = parseJsonToList(fetchJsonFromUrl())
+  private var scrollPane = new JScrollPane()
 
   private val initialMessage = getJsonObjectHead.getOrElse("")
   lazy val lastSeenEventIdKey: String = "lastSeenEventId" // The key for the most recently seen event-id
@@ -75,6 +77,9 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
     setBackground(InterfaceColors.ANNOUNCEMENTS_BANNER_BACKGROUND)
     messageLabel.setForeground(InterfaceColors.ANNOUNCEMENTS_BANNER_TEXT)
     closeButton.setForeground(InterfaceColors.ANNOUNCEMENTS_BANNER_TEXT)
+    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
   }
 
   // Method to fetch JSON content from a URL
@@ -122,11 +127,7 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
         return
       }
       val lastSeenEventId = prefs.getInt(lastSeenEventIdKey, -1); // Returns -1 if "event-id" is not found
-      if(jsonObjectList.head.eventId > lastSeenEventId){
-        println(s"Show this ${jsonObjectList.head.eventId}")
-      }
-      else {
-        println(s"Don't show this  ${jsonObjectList.head.eventId}")
+      if(jsonObjectList.head.eventId <= lastSeenEventId){
         return
       }
       val html = InfoFormatter.toInnerHtml(formattedString)
@@ -145,7 +146,7 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
             setCaretPosition(0)
           }
 
-          val scrollPane = new JScrollPane(editorPane)
+          scrollPane = new JScrollPane(editorPane)
           scrollPane.setPreferredSize(new Dimension(500, 400))
           val panel = new JPanel(new BorderLayout())
           panel.add(scrollPane, BorderLayout.CENTER)
@@ -164,7 +165,7 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
       }
     } catch {
       case e: Exception =>{
-        org.nlogo.swing.OptionDialog.showCustom(this, I18N.gui.get("error.dialog.unknown"), e.getMessage, null)
+        OptionDialog.showCustom(this, I18N.gui.get("error.dialog.unknown"), e.getMessage, null)
       }
     }
   }
