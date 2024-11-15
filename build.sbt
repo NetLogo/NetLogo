@@ -175,22 +175,31 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     Test / unmanagedSourceDirectories      += baseDirectory.value / "src" / "tools",
     Compile / resourceDirectory            := baseDirectory.value / "resources",
     Compile / unmanagedResourceDirectories ++= (sharedResources / Compile / unmanagedResourceDirectories).value,
-    libraryDependencies ++= Seq(
-      "com.formdev" % "flatlaf" % "3.4",
-      "org.picocontainer" % "picocontainer" % "2.15",
-      "javax.media" % "jmf" % "2.1.1e",
-      "commons-codec" % "commons-codec" % "1.16.0",
-      "org.parboiled" %% "parboiled" % "2.5.0",
-      "org.jogamp.jogl" % "jogl-all" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0/jar/jogl-all.jar",
-      "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0/jar/gluegen-rt.jar",
-      "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
-      "org.apache.httpcomponents" % "httpclient" % "4.2",
-      "org.apache.httpcomponents" % "httpmime" % "4.2",
-      "com.googlecode.json-simple" % "json-simple" % "1.1.1",
-      "com.fifesoft" % "rsyntaxtextarea" % "3.3.0",
-      "com.typesafe" % "config" % "1.4.3",
-      "net.lingala.zip4j" % "zip4j" % "2.11.5"
-    ),
+    libraryDependencies ++= {
+      lazy val osName = System.getProperty("os.name") match {
+        case n if n.startsWith("Linux") => "linux"
+        case n if n.startsWith("Mac") => "mac-aarch64"
+        case n if n.startsWith("Windows") => "win"
+        case _ => throw new Exception("Unknown platform!")
+      }
+      Seq(
+        "com.formdev" % "flatlaf" % "3.4",
+        "org.picocontainer" % "picocontainer" % "2.15",
+        "javax.media" % "jmf" % "2.1.1e",
+        "commons-codec" % "commons-codec" % "1.16.0",
+        "org.parboiled" %% "parboiled" % "2.5.0",
+        "org.jogamp.jogl" % "jogl-all" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0/jar/jogl-all.jar",
+        "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0/jar/gluegen-rt.jar",
+        "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
+        "org.apache.httpcomponents" % "httpclient" % "4.2",
+        "org.apache.httpcomponents" % "httpmime" % "4.2",
+        "com.googlecode.json-simple" % "json-simple" % "1.1.1",
+        "com.fifesoft" % "rsyntaxtextarea" % "3.3.0",
+        "com.typesafe" % "config" % "1.4.3",
+        "net.lingala.zip4j" % "zip4j" % "2.11.5"
+      ) ++ Seq("base", "controls", "graphics", "swing", "web")
+        .map(m => "org.openjfx" % s"javafx-$m" % "22" classifier osName)
+    },
     all := {},
     all := {
       all.dependsOn(

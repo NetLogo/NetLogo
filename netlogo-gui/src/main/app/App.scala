@@ -661,6 +661,8 @@ class App extends
 
   lazy val openColorDialog = new OpenColorDialog(frame)
 
+  lazy val openRGBAColorDialog = new OpenRGBAColorDialog(frame)
+
   lazy val openLibrariesDialog = {
     val updateSource =
       (transform: (String) => String) =>
@@ -681,6 +683,7 @@ class App extends
       showThemesDialog,
       openLibrariesDialog,
       openColorDialog,
+      openRGBAColorDialog,
       new ShowShapeManager("turtleShapesEditor", turtleShapesManager),
       new ShowShapeManager("linkShapesEditor",   linkShapesManager),
       new ShowSystemDynamicsModeler(aggregateManager),
@@ -811,6 +814,7 @@ class App extends
     openPreferencesDialog.syncTheme()
     showThemesDialog.syncTheme()
     openColorDialog.syncTheme()
+    openRGBAColorDialog.syncTheme()
     openLibrariesDialog.syncTheme()
 
     workspace.hubNetManager match {
