@@ -2,7 +2,8 @@
 
 package org.nlogo.app
 
-import java.awt.{ Component, Dimension, FlowLayout, Graphics, Insets }
+import java.awt.{ Component, FlowLayout, Graphics, Insets }
+//import java.awt.{ Component, Dimension, FlowLayout, Graphics, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.{ Box, JComponent, JLabel, JPanel, JTabbedPane, SwingConstants }
@@ -129,21 +130,6 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
 }
 
 class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
-  private class CloseButton extends JPanel {
-    setOpaque(false)
-    setBackground(InterfaceColors.TRANSPARENT)
-
-    override def getPreferredSize: Dimension =
-      new Dimension(8, 8)
-
-    override def paintComponent(g: Graphics) {
-      val g2d = Utils.initGraphics2D(g)
-
-      g2d.setColor(getForeground)
-      g2d.drawLine(0, 0, getWidth - 1, getHeight - 1)
-      g2d.drawLine(getWidth - 1, 0, 0, getHeight - 1)
-    }
-  }
 
   private var tabsPanel: TabsPanel = null
 

@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ Dimension, Frame, Toolkit }
+import java.awt.{ Dimension, Frame, Toolkit, BorderLayout}
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.prefs.Preferences
@@ -422,11 +422,11 @@ class App extends
 
     frame.addLinkComponent(_tabManager)
     notificationBanner = new NotificationBanner()
-    frame.add(notificationBanner, java.awt.BorderLayout.NORTH)
+    frame.add(notificationBanner, BorderLayout.NORTH)
     controlSet.interfaceTab = Some(_tabManager.interfaceTab)
 
     pico.addComponent(_tabManager.interfaceTab.getInterfacePanel)
-    frame.getContentPane.add(_tabManager.mainTabs, java.awt.BorderLayout.CENTER)
+    frame.getContentPane.add(_tabManager.mainTabs, BorderLayout.CENTER)
 
     frame.addLinkComponent(new CompilerManager(workspace, world, _tabManager.mainCodeTab))
     frame.addLinkComponent(listenerManager)

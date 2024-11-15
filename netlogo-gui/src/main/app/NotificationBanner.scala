@@ -1,21 +1,23 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.app
+import com.vladsch.flexmark.html.HtmlRenderer
+import com.vladsch.flexmark.parser.Parser
 
-import org.nlogo.core.I18N
-import org.nlogo.theme.{InterfaceColors, ThemeSync}
-
-import scala.io.Source
 import java.awt.{BorderLayout, Dimension, Graphics}
 import java.awt.event.{ActionEvent, ActionListener, MouseAdapter, MouseEvent}
 import java.util.prefs.Preferences
 import javax.swing.{JButton, JEditorPane, JLabel, JOptionPane, JPanel, JScrollPane, SwingConstants}
+
+import org.nlogo.app.infotab.InfoFormatter
+import org.nlogo.core.I18N
+import org.nlogo.swing.HoverDecoration
+import org.nlogo.theme.{InterfaceColors, ThemeSync}
+
 import org.json.simple.parser.JSONParser
 import org.json.simple.{JSONArray, JSONObject}
-import org.nlogo.app.infotab.InfoFormatter
-import com.vladsch.flexmark.html.HtmlRenderer
-import com.vladsch.flexmark.parser.Parser
-import org.nlogo.swing.HoverDecoration
+
+import scala.io.Source
 
 
 case class JsonObject(eventId: Int, date: String, title: String, fullText: String)
@@ -34,8 +36,32 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
   // Close button with an "X" icon
   private val closeButton = new JButton("\u2716") // Unicode character for "X"
   setVisible(isShowNeeded()) // Set visibility based on isShowNeeded
-  // Initialize the NotificationBanner panel
-  initUI()
+  // Initialize the NotificationBanner panel and set layout and appearance
+  setLayout(new BorderLayout())
+  setPreferredSize(new Dimension(400, 50))
+
+  // Customize the message label
+  messageLabel.setHorizontalAlignment(SwingConstants.LEFT)
+  add(messageLabel, BorderLayout.CENTER)
+
+  // Configure the close button
+  closeButton.setBorderPainted(false)
+  closeButton.setContentAreaFilled(false)
+  closeButton.setFocusPainted(false)
+  //TODO this action needs to get called on the okay button click.
+  closeButton.addActionListener(new ActionListener {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      setVisible(false) // Hide the banner when the close button is pressed
+    }
+  })
+  add(closeButton, BorderLayout.EAST)
+
+  // Add a mouse listener to call showJsonInDialog when the banner is clicked
+  addMouseListener(new MouseAdapter {
+    override def mouseClicked(e: MouseEvent): Unit = {
+      showJsonInDialog() // Call the method on click
+    }
+  })
 
   override def paintComponent(g: Graphics) {
     if (isHover)
@@ -60,39 +86,8 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
       content
     } catch {
       case e: Exception =>
-      println(s"Unable to connect to ccl.northwestern.edu but not throwing an exception")
       ""
     }
-  }
-
-  private def initUI(): Unit = {
-
-    // Set layout and appearance
-    setLayout(new BorderLayout())
-    setPreferredSize(new Dimension(400, 50))
-
-    // Customize the message label
-    messageLabel.setHorizontalAlignment(SwingConstants.LEFT)
-    add(messageLabel, BorderLayout.CENTER)
-
-    // Configure the close button
-    closeButton.setBorderPainted(false)
-    closeButton.setContentAreaFilled(false)
-    closeButton.setFocusPainted(false)
-    //TODO this action needs to get called on the okay button click.
-    closeButton.addActionListener(new ActionListener {
-      override def actionPerformed(e: ActionEvent): Unit = {
-        setVisible(false) // Hide the banner when the close button is pressed
-      }
-    })
-    add(closeButton, BorderLayout.EAST)
-
-    // Add a mouse listener to call showJsonInDialog when the banner is clicked
-    addMouseListener(new MouseAdapter {
-      override def mouseClicked(e: MouseEvent): Unit = {
-        showJsonInDialog() // Call the method on click
-      }
-    })
   }
 
   // Method to parse JSON content to a list of JsonObject instances
@@ -205,7 +200,6 @@ class NotificationBanner() extends JPanel with ThemeSync with HoverDecoration {
         list.headOption.map(_.title) // Return the title of the head element if available
     }
   }
-
 
   private def isShowNeeded(): Boolean = {
     val prefs = Preferences.userNodeForPackage(getClass)
