@@ -16,8 +16,9 @@ import org.nlogo.agent.{ ImporterJ, World }
 import org.nlogo.api.{ ControlSet, Exceptions, FileIO, ModelReader, ModelSettings }
 import org.nlogo.awt.{ EventQueue, Hierarchy, UserCancelException }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog }
+import org.nlogo.swing.{ CustomOptionPane, FileDialog, ModalProgressTask, OptionPane, Transparent }
 import org.nlogo.shape.ShapeConverter
+import org.nlogo.theme.InterfaceColors
 import org.nlogo.workspace.{ AbstractWorkspaceScala, ExportOutput, HubNetManagerFactory }
 import org.nlogo.window.Events.{ ExportPlotEvent, ExportWidgetEvent, LoadModelEvent }
 
@@ -60,15 +61,21 @@ with LoadModelEvent.Handler {
   override def importerErrorHandler: ImporterJ.ErrorHandler = new ImporterJ.ErrorHandler {
     def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean = {
       EventQueue.mustBeEventDispatchThread()
-      val options = {
-        implicit val i18nPrefix = I18N.Prefix("common.buttons")
-        val buttons = if (fatalError) Array("ok") else Array("continue", "cancel")
-        buttons.map(I18N.gui.apply)
+      val options =
+        if (fatalError)
+          OptionPane.Options.OK
+        else
+          OptionPane.Options.OK_CANCEL
+      val textArea = new JTextArea(errorDetails) with Transparent {
+        setEditable(false)
+        setForeground(InterfaceColors.TOOLBAR_TEXT)
       }
-      val textArea = new JTextArea
-      textArea.setText(errorDetails)
-      textArea.setEditable(false)
-      0 == OptionDialog.showCustom(getFrame, title, new JScrollPane(textArea), options)
+      val scrollPane = new JScrollPane(textArea) {
+        getViewport.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+        getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+        getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      }
+      new CustomOptionPane(getFrame, title, scrollPane, options).getSelectedIndex == 0
     }
   }
 

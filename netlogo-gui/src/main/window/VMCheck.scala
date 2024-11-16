@@ -1,16 +1,14 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window;
+package org.nlogo.window
 
-import org.nlogo.core.I18N;
+import java.awt.Frame
 
-public final class VMCheck {
+import org.nlogo.core.I18N
+import org.nlogo.swing.OptionPane
+import org.nlogo.util.SysInfo
 
-  // not instantiable
-  private VMCheck() {
-    throw new IllegalStateException();
-  }
-
+object VMCheck {
   // Our class files are in Java 1.5 format, so there's no need in
   // this code to detect and reject older Java versions. Ideally the
   // app would have some Java 1.1 compatible startup code that would
@@ -29,22 +27,16 @@ public final class VMCheck {
   // We don't know about any of those in any of Apple's Java 1.5 releases,
   // so it seems OK to let it slide. - ST 2/25/08
 
-  public static void detectBadJVMs() {
-    if (org.nlogo.util.SysInfo.isLibgcj()) {
-      warn(I18N.guiJ().get("warn.dialog.badjvm"));
+  def detectBadJVMs() {
+    if (SysInfo.isLibgcj) {
+      val bogusFrame = new Frame
+
+      bogusFrame.pack() // otherwise OptionPane will fail to get font metrics
+
+      if (new OptionPane(bogusFrame, I18N.gui.get("common.messages.warning"), I18N.gui.get("warn.dialog.badjvm"),
+                        List(I18N.gui.get("common.buttons.quit"), I18N.gui.get("common.buttons.continue")),
+                        OptionPane.Icons.WARNING).getSelectedIndex == 0)
+        System.exit(0)
     }
   }
-
-  private static void warn(String message) {
-    java.awt.Frame bogusFrame = new java.awt.Frame();
-    bogusFrame.pack(); // otherwise OptionDialog will fail to get font metrics
-    int choice = org.nlogo.swing.OptionDialog.showMessage(
-        bogusFrame, I18N.guiJ().get("common.messages.warning"),
-            message,
-            new String[]{I18N.guiJ().get("common.buttons.quit"), I18N.guiJ().get("common.buttons.continue")});
-    if (choice == 0) {
-      System.exit(0);
-    }
-  }
-
 }

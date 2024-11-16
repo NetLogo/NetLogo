@@ -7,6 +7,7 @@ import javax.swing.{ JComboBox, JOptionPane }
 
 import org.nlogo.awt.{ Hierarchy, LineBreaker }
 
+// this class is deprecated, use OptionPane instead for theme synchronization (IB 11/16/24)
 class OptionDialog[T <: AnyRef](owner: Frame, title: String, message: String, choices: Array[T], i18n: String => String)
 extends UserDialog(owner, title, i18n) {
   private val options = new JComboBox[T](choices)
