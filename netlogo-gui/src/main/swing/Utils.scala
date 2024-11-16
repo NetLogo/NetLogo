@@ -2,11 +2,12 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Color, Font, Frame, Graphics, Graphics2D, Image, RenderingHints }
+import java.awt.{ Color, Font, Graphics, Graphics2D, Image, RenderingHints }
 import java.awt.event.KeyEvent
 import java.awt.image.BufferedImage
-
 import javax.swing.{ Action, ImageIcon, InputMap, JComponent, JDialog, JWindow, KeyStroke }
+
+import org.nlogo.core.I18N
 
 final object Utils {
   def icon(path: String): ImageIcon = new ImageIcon(getClass.getResource(path))
@@ -42,15 +43,11 @@ final object Utils {
     Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream(path))
 
   def alert(message: String, continueText: String): Unit = {
-    val bogusFrame = new Frame
-    bogusFrame.pack() // otherwise OptionDialog will fail to get font metrics
-    OptionDialog.showMessage(bogusFrame, "Notice", message, Array(continueText))
+    new OptionPane(null, I18N.gui.get("common.messages.notice"), message, List(continueText), OptionPane.Icons.INFO)
   }
 
   def alert(title: String, message: String, details: String, continueText: String): Unit = {
-    val bogusFrame = new Frame
-    bogusFrame.pack() // otherwise OptionDialog will fail to get font metrics
-    OptionDialog.showMessage(bogusFrame, title, s"$message\n\n$details", Array(continueText))
+    new OptionPane(null, title, s"$message\n\n$details", List(continueText), OptionPane.Icons.INFO)
   }
 
   /// Esc key handling in dialogs

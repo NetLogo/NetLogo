@@ -18,7 +18,7 @@ import org.nlogo.agent.InputBoxConstraint
 import org.nlogo.awt.Fonts.{ platformFont, platformMonospacedFont }
 import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, NumericInput, StringInput }
 import org.nlogo.editor.AbstractEditorArea
-import org.nlogo.swing.{ ButtonPanel, RoundedBorderPanel, Transparent, Utils }
+import org.nlogo.swing.{ ButtonPanel, OptionPane, RoundedBorderPanel, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object InputBox {
@@ -359,8 +359,8 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       var msg = ex.getMessage
       if (msg.startsWith("REPORT expected 1 input."))
         msg = I18N.gui.get("edit.input.invalid.message")
-      org.nlogo.swing.OptionDialog.showMessage(frame, I18N.gui.getN("edit.input.invalid.title", inputType),
-        msg, Array(I18N.gui.get("common.buttons.ok")))
+      new OptionPane(frame, I18N.gui.getN("edit.input.invalid.title", inputType), msg, OptionPane.Options.OK,
+                     OptionPane.Icons.ERROR)
     }
   }
 

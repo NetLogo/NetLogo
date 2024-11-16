@@ -22,7 +22,7 @@ import org.nlogo.fileformat
 import org.nlogo.log.{ JsonFileLogger, LogEvents, LogManager }
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
-import org.nlogo.swing.{ InputOptionPane, OptionDialog, OptionPane, SetSystemLookAndFeel }
+import org.nlogo.swing.{ DropdownOptionPane, InputOptionPane, OptionPane, SetSystemLookAndFeel }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
@@ -445,9 +445,8 @@ class App extends
       val addListener       = (l) => listenerManager.addListener(l)
       val loggerFactory     = (p) => new JsonFileLogger(p)
       LogManager.start(addListener, loggerFactory, finalLogDirectory, events, studentName, () =>
-        OptionDialog.showMessage(frame, I18N.gui.get("common.messages.warning"),
-                                 I18N.gui.get("error.dialog.logDirectory"),
-                                 Array[Object](I18N.gui.get("common.buttons.ok"))))
+        new OptionPane(frame, I18N.gui.get("common.messages.warning"), I18N.gui.get("error.dialog.logDirectory"),
+                       OptionPane.Options.OK, OptionPane.Icons.WARNING))
     }
 
   }
@@ -750,9 +749,11 @@ class App extends
       val fullName =
         if (matches.size == 1) matches(0)
         else {
-          val options = matches.map(_.replaceAllLiterally(".nlogo3d", "").replaceAllLiterally(".nlogo", "")).toArray[AnyRef]
-          val i = org.nlogo.swing.OptionDialog.showAsList(frame, I18N.gui.get("tools.magicModelMatcher"), I18N.gui.get("tools.magicModelMathcer.mustChoose"), options)
-          if (i != -1) matches(i) else null
+          new DropdownOptionPane(frame, I18N.gui.get("tools.magicModelMatcher"),
+                                 I18N.gui.get("tools.magicModelMathcer.mustChoose"),
+                                 matches.map(_.replaceAllLiterally(".nlogo3d", "")
+                                              .replaceAllLiterally(".nlogo", "")).toList)
+            .getSelectedChoice
         }
       if (fullName != null) {
         org.nlogo.workspace.ModelsLibrary.getModelPath(fullName).foreach { path =>

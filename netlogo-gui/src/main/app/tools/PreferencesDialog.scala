@@ -8,7 +8,7 @@ import java.util.prefs.{ Preferences => JavaPreferences }
 import javax.swing.{ BorderFactory, Box, BoxLayout, SwingConstants }
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, OptionDialog, TextFieldBox }
+import org.nlogo.swing.{ Button, OptionPane, TextFieldBox }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class PreferencesDialog(parent: Frame, preferences: Preference*) extends ToolDialog(parent, "preferences")
@@ -45,10 +45,9 @@ class PreferencesDialog(parent: Frame, preferences: Preference*) extends ToolDia
                  asInstanceOf[Preferences.LogDirectory].textField.getText
       val file = new File(path)
       if (path.nonEmpty && !file.exists) {
-        if (OptionDialog.showMessage(this, I18N.gui.get("common.messages.warning"),
-                                              I18N.gui.get("tools.preferences.missingDirectory"),
-                                              Array[Object](I18N.gui.get("common.buttons.ok"),
-                                                            I18N.gui.get("common.buttons.cancel"))) == 1)
+        if (new OptionPane(this, I18N.gui.get("common.messages.warning"),
+                           I18N.gui.get("tools.preferences.missingDirectory"), OptionPane.Options.YES_NO,
+                           OptionPane.Icons.WARNING).getSelectedIndex != 0)
           return false
         file.mkdirs
       }

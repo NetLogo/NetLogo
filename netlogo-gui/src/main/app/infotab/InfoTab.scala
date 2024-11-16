@@ -18,7 +18,7 @@ import org.nlogo.awt.{ Fonts, Hierarchy }
 import org.nlogo.core.I18N
 import org.nlogo.editor.UndoManager
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ OptionDialog, ToolBar, ToolBarButton, ToolBarActionButton,
+import org.nlogo.swing.{ OptionPane, ToolBar, ToolBarButton, ToolBarActionButton,
   ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, Utils }, BrowserLauncher.docPath
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents, Zoomable }
@@ -163,6 +163,7 @@ class InfoTab(attachModelDir: String => String)
 
     textArea.setBackground(InterfaceColors.CODE_BACKGROUND)
     textArea.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    textArea.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
 
     // change css here
   }
@@ -195,13 +196,12 @@ class InfoTab(attachModelDir: String => String)
   def hyperlinkUpdate(e: HyperlinkEvent) {
     if (e.getEventType == HyperlinkEvent.EventType.ACTIVATED) {
       if (e.getURL == null) {
-        val message =
-          """The URL you just clicked is invalid. This could
-            |mean that it is formatted incorrectly. Click Help
-            |to see documentation on using URLs in the Info Tab.""".stripMargin
-        val selection = OptionDialog.showMessage(Hierarchy.getFrame(InfoTab.this), "Bad URL", message,
-          Array(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.help")))
-        if(selection == 1 /*Help*/) BrowserLauncher.openPath(this, baseDocPath, "links")
+        
+        if (new OptionPane(Hierarchy.getFrame(InfoTab.this), I18N.gui.get("common.messages.error"),
+                           I18N.gui.get("tabs.info.invalidURL"),
+                           List(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.help")),
+                           OptionPane.Icons.ERROR).getSelectedIndex == 1) // Help
+          BrowserLauncher.openPath(this, baseDocPath, "links")
       }
       else BrowserLauncher.openURI(this, e.getURL.toURI)
     }

@@ -7,6 +7,7 @@ import javax.swing.JToolBar
 
 import org.nlogo.api.Perspective
 import org.nlogo.core.I18N
+import org.nlogo.swing.OptionPane
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InteractMode }
@@ -58,12 +59,12 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler) extends J
   fullScreenButton.addActionListener(
     new ActionListener {
       override def actionPerformed(e: ActionEvent) {
-        val options = Array[AnyRef](I18N.gui.get("common.buttons.continue"),
-                                    I18N.gui.get("common.buttons.cancel"))
+        val options = List(I18N.gui.get("common.buttons.continue"),
+                           I18N.gui.get("common.buttons.cancel"))
         val isWindows = System.getProperty("os.name").toLowerCase.startsWith("win")
         if (!isWindows || view.viewManager.warned ||
-          (0 == org.nlogo.swing.OptionDialog.showMessage(
-            view, I18N.gui.get("common.messages.warning"), fullScreenWarning, options))) {
+          (new OptionPane(view, I18N.gui.get("common.messages.warning"), fullScreenWarning, options,
+                          OptionPane.Icons.WARNING).getSelectedIndex == 0)) {
           view.viewManager.setFullscreen(true)
           view.viewManager.warned = true
         }

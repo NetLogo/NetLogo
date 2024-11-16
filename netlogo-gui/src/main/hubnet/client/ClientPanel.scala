@@ -17,7 +17,7 @@ import org.nlogo.hubnet.mirroring.{ OverrideList, HubNetLinkStamp, HubNetPlotPoi
 import org.nlogo.hubnet.protocol._
 import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.awt.Hierarchy.getFrame
-import org.nlogo.swing.{ OptionDialog, Transparent }
+import org.nlogo.swing.{ OptionPane, Transparent }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.{ PlotWidgetExport, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget, NetLogoExecutionContext }
 import org.nlogo.window.Events.{ AddJobEvent, AddSliderConstraintEvent, AfterLoadEvent, ExportPlotEvent, InterfaceGlobalEvent, LoadWidgetsEvent }
@@ -267,8 +267,9 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       case Text(content, messageType) => messageType match {
         case Text.MessageType.TEXT => clientGUI.addMessage(content.toString)
         case Text.MessageType.USER =>
-          OptionDialog.showMessage(getFrame(this), "User Message", content.toString,
-            Array(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.halt")))
+          new OptionPane(getFrame(this), I18N.gui.get("common.messages.userMessage"), content.toString,
+                         List(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.halt")),
+                         OptionPane.Icons.INFO)
         case Text.MessageType.CLEAR => clientGUI.clearMessages()
       }
     }

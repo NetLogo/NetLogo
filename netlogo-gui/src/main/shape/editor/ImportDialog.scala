@@ -65,7 +65,7 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
 
   // Import shapes from another model
   private def importSelectedShapes() {
-    val choices = Array(I18N.gui("replace"), I18N.gui("rename"), I18N.gui.get("common.buttons.cancel"))
+    val choices = List(I18N.gui("replace"), I18N.gui("rename"), I18N.gui.get("common.buttons.cancel"))
 
     // For each selected shape, add it to the current model's file and the turtledrawer,
     val shapes = for (index <- list.getSelectedIndices) yield {

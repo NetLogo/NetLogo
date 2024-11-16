@@ -13,9 +13,9 @@ import scala.collection.JavaConverters._
 
 object OptionPane {
   object Options {
-    val OK = Array(I18N.gui.get("common.buttons.ok"))
-    val OK_CANCEL = Array(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.cancel"))
-    val YES_NO = Array(I18N.gui.get("common.buttons.yes"), I18N.gui.get("common.buttons.no"))
+    val OK = List(I18N.gui.get("common.buttons.ok"))
+    val OK_CANCEL = List(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.cancel"))
+    val YES_NO = List(I18N.gui.get("common.buttons.yes"), I18N.gui.get("common.buttons.no"))
   }
 
   object Icons {
@@ -28,13 +28,13 @@ object OptionPane {
 }
 
 // like OptionDialog, but allows synchronization with theme (IB 11/16/24)
-class OptionPane(parent: Component, title: String, message: String, options: Array[String],
-                 icon: Icon = OptionPane.Icons.NONE) extends JDialog(parent match {
+class OptionPane(parent: Component, title: String, message: String, options: List[String],
+                 protected val icon: Icon = OptionPane.Icons.NONE) extends JDialog(parent match {
                    case w: Window => w
                    case _ => null
                  }, title, Dialog.ModalityType.APPLICATION_MODAL) {
 
-  private var selectedOption = ""
+  private var selectedOption: String = null
   
   getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
   getContentPane.setLayout(new GridBagLayout)
@@ -114,7 +114,7 @@ class OptionPane(parent: Component, title: String, message: String, options: Arr
 }
 
 class InputOptionPane(parent: Component, title: String, message: String, startingInput: String = "")
-  extends OptionPane(parent, title, message, OptionPane.Options.OK_CANCEL) {
+  extends OptionPane(parent, title, message, OptionPane.Options.OK_CANCEL, OptionPane.Icons.QUESTION) {
 
   // lazy because addContents is called in super (IB 11/16/24)
   private lazy val input = new JTextField(startingInput) {
@@ -124,8 +124,8 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
   }
 
   def getInput: String = {
-    if (getSelectedIndex == 0)
-      input.getText
+    if (getSelectedIndex == 0 && input.getText.trim.nonEmpty)
+      input.getText.trim
     else
       null
   }
@@ -143,7 +143,13 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
       locally {
         val c = new GridBagConstraints
 
-        c.gridx = 0
+        c.gridheight = 2
+        c.insets = new Insets(0, 0, 0, 12)
+
+        add(new JLabel(icon), c)
+
+        c.gridx = 1
+        c.gridheight = 1
         c.anchor = GridBagConstraints.WEST
         c.insets = new Insets(0, 0, 6, 0)
 
@@ -154,6 +160,61 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
         c.insets = new Insets(0, 0, 0, 0)
 
         add(input, c)
+      }
+    }, c)
+  }
+}
+
+class DropdownOptionPane[T >: Null](parent: Component, title: String, message: String, choices: List[T])
+  extends OptionPane(parent, title, message, OptionPane.Options.OK_CANCEL, OptionPane.Icons.QUESTION) {
+  
+  // lazy because addContents is called in super (IB 11/16/24)
+  private lazy val dropdown = new ComboBox(choices)
+
+  def getSelectedChoice: T = {
+    if (getSelectedIndex == 0)
+      dropdown.getSelectedItem
+    else
+      null
+  }
+
+  def getChoiceIndex: Int = {
+    if (getSelectedIndex == 0)
+      choices.indexOf(dropdown.getSelectedItem)
+    else
+      -1
+  }
+  
+  override protected def addContents() {
+    val c = new GridBagConstraints
+
+    c.gridx = 0
+    c.fill = GridBagConstraints.BOTH
+    c.weightx = 1
+    c.weighty = 1
+    c.insets = new Insets(50, 50, 50, 50)
+
+    add(new JPanel(new GridBagLayout) with Transparent {
+      locally {
+        val c = new GridBagConstraints
+
+        c.gridheight = 2
+        c.insets = new Insets(0, 0, 0, 12)
+
+        add(new JLabel(icon), c)
+
+        c.gridx = 1
+        c.gridheight = 1
+        c.anchor = GridBagConstraints.WEST
+        c.insets = new Insets(0, 0, 6, 0)
+
+        add(new JLabel(getWrappedMessage) {
+          setForeground(InterfaceColors.DIALOG_TEXT)
+        }, c)
+
+        c.insets = new Insets(0, 0, 0, 0)
+
+        add(dropdown, c)
       }
     }, c)
   }

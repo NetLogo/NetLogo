@@ -11,7 +11,7 @@ import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.{ Colorizer, EditorField }
 import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
-import org.nlogo.swing.{ Button, Popup, Transparent, Utils }
+import org.nlogo.swing.{ Button, OptionPane, Popup, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ ColorDialog, PlotWidget }
 
@@ -113,9 +113,10 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     val groupedNames = (names.groupBy(_.toUpperCase) - "").toSeq
     val duplicateNames = groupedNames.filter(_._2.length > 1)
     if (duplicateNames.nonEmpty) {
-      org.nlogo.swing.OptionDialog.showMessage(this, "Invalid Entry",
-        I18N.gui.getN("edit.plot.pen.duplicateNames", duplicateNames.map(_._1.toUpperCase).mkString(", ")),
-        Array(I18N.gui.get("common.buttons.ok")))
+      new OptionPane(this, I18N.gui.get("edit.plot.pen.invalidEntry"),
+                     I18N.gui.getN("edit.plot.pen.duplicateNames",
+                                   duplicateNames.map(_._1.toUpperCase).mkString(", ")), OptionPane.Options.OK,
+                     OptionPane.Icons.ERROR)
       None
     } else Some(table.getPlotPens)
   }

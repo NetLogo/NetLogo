@@ -12,7 +12,7 @@ import org.nlogo.core.I18N
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.nvm.Workspace
 import org.nlogo.plot.DummyPlotManager
-import org.nlogo.swing.{ Button, CheckBox, OptionDialog, RichAction, Transparent }
+import org.nlogo.swing.{ Button, CheckBox, OptionPane, RichAction, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ GUIWorkspace, PlotWidget, SpeedSliderPanel }
 
@@ -235,11 +235,9 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor,
         workspace.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
         org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
           def run() {
-            OptionDialog.showMessage(
-              workspace.getFrame, I18N.gui("updatingPlotsWarningTitle"),
-              I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
-              Array(I18N.gui.get("common.buttons.continue"))
-            )
+            new OptionPane(workspace.getFrame, I18N.gui("updatingPlotsWarningTitle"),
+                           I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
+                           OptionPane.Options.OK, OptionPane.Icons.WARNING)
           }
         })
       }
