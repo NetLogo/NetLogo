@@ -48,10 +48,7 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
 
     val wheelListener = new MouseWheelListener {
       def mouseWheelMoved(e: MouseWheelEvent) {
-        if (e.getWheelRotation > 0)
-          setSelectedIndex(getSelectedIndex + 1)
-        else
-          setSelectedIndex(getSelectedIndex - 1)
+        setSelectedIndex(getSelectedIndex + e.getWheelRotation)
       }
     }
 

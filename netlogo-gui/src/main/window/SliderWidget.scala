@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import java.awt.{ Dimension, Graphics, Point, RadialGradientPaint }
 import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, MouseAdapter, MouseEvent,
-                        MouseMotionAdapter }
+                        MouseMotionAdapter, MouseWheelEvent, MouseWheelListener }
 import java.lang.NumberFormatException
 import javax.swing.{ BorderFactory, JLabel, JSlider, JTextField, SwingConstants }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
@@ -243,7 +243,13 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   val nameComponent = new Label(I18N.gui.get("edit.slider.previewName"))
   val valueComponent = new TextField
   val unitsComponent = new Label("")
-  var slider = new JSlider(0, ((maximum - minimum) / increment).toInt, 50)
+  var slider = new JSlider(0, ((maximum - minimum) / increment).toInt, 50) {
+    addMouseWheelListener(new MouseWheelListener {
+      def mouseWheelMoved(e: MouseWheelEvent) {
+        value = minimum.max(value - increment * e.getWheelRotation).min(effectiveMaximum)
+      }
+    })
+  }
 
   slider.setUI(new SliderUI(slider))
 
