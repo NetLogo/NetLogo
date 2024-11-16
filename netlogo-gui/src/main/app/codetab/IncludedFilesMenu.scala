@@ -6,14 +6,14 @@ import java.awt.{ Dimension, FileDialog }
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.prefs.Preferences
-import javax.swing.{ AbstractAction, JOptionPane, JPopupMenu }
+import javax.swing.{ AbstractAction, JPopupMenu }
 
 import scala.util.control.Exception.ignoring
 
 import org.nlogo.app.common.{ Actions, TabsInterface }, Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, MenuItem, RoundedBorderPanel, ToolBarMenu }
+import org.nlogo.swing.{ FileDialog => SwingFileDialog, MenuItem, OptionPane, RoundedBorderPanel, ToolBarMenu }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents }
 
@@ -88,7 +88,8 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
       if(path.endsWith(".nls"))
         tabs.openExternalFile(path)
       else
-        JOptionPane.showMessageDialog(IncludedFilesMenu.this, I18N.gui.get("file.open.error.external.suffix"))
+        new OptionPane(IncludedFilesMenu.this, "", I18N.gui.get("file.open.error.external.suffix"),
+                       OptionPane.Options.OK, OptionPane.Icons.ERROR)
     }
   }
 }

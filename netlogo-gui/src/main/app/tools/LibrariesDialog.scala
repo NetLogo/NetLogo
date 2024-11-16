@@ -5,12 +5,12 @@ package org.nlogo.app.tools
 import java.awt.{ BorderLayout, FlowLayout, Frame }
 import java.io.File
 import java.nio.file.Path
-import javax.swing.{ JLabel, JOptionPane, JPanel }
+import javax.swing.{ JLabel, JPanel }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.{ FileIO, LibraryInfoDownloader, LibraryManager }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, ProgressListener, SwingWorker, Transparent }
+import org.nlogo.swing.{ Button, ProgressListener, OptionPane, SwingWorker, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class LibrariesDialog( parent:          Frame
@@ -32,7 +32,7 @@ class LibrariesDialog( parent:          Frame
     val msg = s"""${I18N.gui("libPathsExplanation")}
                   |
                   |$mappingsStr""".stripMargin
-    JOptionPane.showMessageDialog(LibrariesDialog.this, msg, I18N.gui("showLibPaths"), JOptionPane.PLAIN_MESSAGE)
+    new OptionPane(LibrariesDialog.this, I18N.gui("showLibPaths"), msg, OptionPane.Options.OK)
   })
   private lazy val updateAllButton = new Button(tab.updateAllAction)
 

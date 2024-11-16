@@ -492,6 +492,12 @@ object InterfaceColors {
     }
   
   def BSPACE_HINT_BACKGROUND = new Color(128, 200, 128, 64)
+
+  def INFO_ICON = new Color(50, 150, 200)
+
+  def WARNING_ICON = new Color(220, 170, 50)
+
+  def ERROR_ICON = new Color(220, 50, 50)
   
   // Syntax highlighting colors
 

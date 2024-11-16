@@ -5,11 +5,11 @@ package org.nlogo.app
 import java.awt.Component
 import java.awt.event.ActionEvent
 import java.util.prefs.Preferences
-import javax.swing.{AbstractAction, Action, JOptionPane}
+import javax.swing.{ AbstractAction, Action }
 
 import org.nlogo.api.{ ModelType, Version }
 import org.nlogo.core.I18N
-import org.nlogo.swing.UserAction, UserAction.{ Menu => ActionMenu, MenuAction }
+import org.nlogo.swing.{ OptionPane, UserAction }, UserAction.{ Menu => ActionMenu, MenuAction }
 import org.nlogo.window.Events._
 
 case class ModelEntry(path: String, modelType: ModelType) {
@@ -69,11 +69,8 @@ class OpenRecentFileAction(modelEntry: ModelEntry, fileManager: FileManager, ind
       case ex: org.nlogo.awt.UserCancelException =>
         org.nlogo.api.Exceptions.ignore(ex)
       case ex: java.io.IOException => {
-        JOptionPane.showMessageDialog(
-          source,
-          ex.getMessage,
-          I18N.gui.get("common.messages.error"),
-          JOptionPane.ERROR_MESSAGE)
+        new OptionPane(source, I18N.gui.get("common.messages.error"), ex.getMessage, OptionPane.Options.YES_NO,
+                       OptionPane.Icons.ERROR)
       }
     }
   }

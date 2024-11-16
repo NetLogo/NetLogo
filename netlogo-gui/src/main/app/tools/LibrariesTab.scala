@@ -7,8 +7,8 @@ import java.awt.{ BorderLayout, Component, Dimension, FlowLayout, GridBagConstra
 import java.awt.font.TextAttribute
 import java.io.IOException
 import java.nio.file.Path
-import javax.swing.{ Action, Box, DefaultListModel, JLabel, JList, JOptionPane, JPanel, JScrollPane, JTextField,
-                     JTextArea, ListCellRenderer, ListModel }
+import javax.swing.{ Action, Box, DefaultListModel, JLabel, JList, JPanel, JScrollPane, JTextField, JTextArea,
+                     ListCellRenderer, ListModel }
 import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
 
 import java.util.Collections
@@ -18,8 +18,8 @@ import scala.collection.mutable.Buffer
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus }
-import org.nlogo.swing.{ BrowserLauncher, Button, EmptyIcon, FilterableListModel, RichAction, SwingWorker, Transparent,
-                         Utils }
+import org.nlogo.swing.{ BrowserLauncher, Button, EmptyIcon, FilterableListModel, OptionPane, RichAction, SwingWorker,
+                         Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
@@ -351,12 +351,8 @@ class LibrariesTab( category:        String
       install(lib)
     } catch {
       case ex: IOException =>
-        JOptionPane.showMessageDialog(
-          this
-        , I18N.gui("downloadFailed", lib.downloadURL)
-        , I18N.gui.get("common.messages.error")
-        , JOptionPane.ERROR_MESSAGE
-        )
+        new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui("downloadFailed", lib.downloadURL),
+                       OptionPane.Options.OK, OptionPane.Icons.ERROR)
     }
 
   private def containsLib(info: LibraryInfo, text: String): Boolean =

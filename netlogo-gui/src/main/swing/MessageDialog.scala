@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import javax.swing.{ AbstractAction, BorderFactory, JButton, JComponent, JDialog,
   JScrollPane, JTextArea }
 
-import org.nlogo.awt.{ Hierarchy, Positioning }
+import org.nlogo.awt.{ Hierarchy, Positioning => AWTPositioning }
 
 object MessageDialog {
   private val DefaultRows    = 15
@@ -64,7 +64,7 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
     pack()
     if (firstShow) {
       firstShow = false
-      Positioning.center(this, parentFrame)
+      AWTPositioning.center(this, parentFrame)
     }
     setVisible(true)
   }
