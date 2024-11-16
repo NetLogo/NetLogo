@@ -14,8 +14,7 @@ import java.nio.file.Paths
 import java.net.URI
 import java.util.{ Enumeration, LinkedList, List => JList }
 import javax.swing.{ AbstractAction, Action, Box, BorderFactory, BoxLayout, InputMap, JComponent, JDialog, JEditorPane,
-                     JLabel, JOptionPane, JPanel, JScrollPane, JTextField, JTree, KeyStroke, SwingUtilities,
-                     WindowConstants }
+                     JLabel, JPanel, JScrollPane, JTextField, JTree, KeyStroke, SwingUtilities, WindowConstants }
 import javax.swing.text.{ BadLocationException, DefaultHighlighter }
 import javax.swing.tree.{ DefaultMutableTreeNode, DefaultTreeCellRenderer, DefaultTreeModel, TreePath,
                           TreeSelectionModel }
@@ -26,7 +25,7 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, Docum
 import org.nlogo.core.I18N
 import org.nlogo.api.FileIO
 import org.nlogo.awt.{ Positioning, UserCancelException }
-import org.nlogo.swing.{ BrowserLauncher, Button, ModalProgressTask, Utils }, Utils.addEscKeyAction
+import org.nlogo.swing.{ BrowserLauncher, Button, ModalProgressTask, OptionPane, Utils }, Utils.addEscKeyAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
@@ -635,8 +634,9 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       if (e.getEventType == HyperlinkEvent.EventType.ACTIVATED) {
         Option(e.getURL)
           .flatMap(u => Try(u.toURI).toOption) match {
-            // TODO: Convert to I18N
-            case None => JOptionPane.showMessageDialog(this, "Invalid URL!", "Error", JOptionPane.ERROR_MESSAGE);
+            case None => new OptionPane(this, I18N.gui.get("common.messages.error"),
+                                        I18N.gui.get("modelsLibrary.invalidURL"), OptionPane.Options.OK,
+                                        OptionPane.Icons.ERROR)
             case Some(toOpen) => BrowserLauncher.openURI(this, toOpen)
           }
       }

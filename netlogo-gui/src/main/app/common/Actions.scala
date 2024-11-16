@@ -5,12 +5,12 @@ package org.nlogo.app.common
 import java.awt.{ Component, FileDialog => AWTFileDialog }
 import java.awt.event.ActionEvent
 import java.io.IOException
-import javax.swing.{ AbstractAction => SwingAbstractAction, JDialog, JOptionPane }
+import javax.swing.{ AbstractAction => SwingAbstractAction, JDialog }
 
 import org.nlogo.core.I18N
 import org.nlogo.api.Exceptions
 import org.nlogo.awt.{ EventQueue, Hierarchy => NLogoHierarchy, UserCancelException }
-import org.nlogo.swing.{ FileDialog, ModalProgressTask, UserAction },
+import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionPane, UserAction },
   UserAction.MenuAction
 import org.nlogo.window.ExportControls
 
@@ -113,9 +113,8 @@ abstract class ExceptionCatchingAction(name: String, parent: Component) extends 
       action()
     } catch {
       case ex: UserCancelException => Exceptions.ignore(ex)
-      case ex: IOException => JOptionPane.showMessageDialog(
-        parent, ex.getMessage,
-        I18N.gui.get("common.messages.error"), JOptionPane.ERROR_MESSAGE)
+      case ex: IOException => new OptionPane(parent, I18N.gui.get("common.messages.error"), ex.getMessage,
+                                             OptionPane.Options.OK, OptionPane.Icons.ERROR)
     }
   }
 }

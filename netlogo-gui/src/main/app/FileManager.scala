@@ -6,7 +6,7 @@ import java.awt.{ Component, Container, FileDialog => AWTFileDialog }
 import java.io.{ File, IOException }
 import java.net.{ URI, URISyntaxException }
 import java.nio.file.Paths
-import javax.swing.{ Action, JOptionPane }
+import javax.swing.Action
 
 import scala.util.{ Failure, Try }
 
@@ -18,10 +18,12 @@ import org.nlogo.app.codetab.TemporaryCodeTab
 import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.fileformat.{ FailedConversionResult, ModelConversion, SuccessfulConversion }
-import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog, UserAction }, UserAction.MenuAction
+import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog, OptionPane, UserAction }, UserAction.MenuAction
 import org.nlogo.window.{ BackgroundFileController, Events, FileController, ReconfigureWorkspaceUI },
-  Events.{AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent, LoadModelEvent, LoadErrorEvent, ModelSavedEvent, OpenModelEvent }
-import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI, OpenModelFromSource, SaveModel, SaveModelAs }
+  Events.{ AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent, LoadModelEvent, LoadErrorEvent,
+           ModelSavedEvent, OpenModelEvent }
+import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI, OpenModelFromSource, SaveModel,
+                             SaveModelAs }
 
 object FileManager {
   class NewAction(manager: FileManager, parent: Container)
@@ -381,9 +383,8 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
       saver.result match {
         case Some(Failure(e: Throwable)) =>
-          JOptionPane.showMessageDialog(parent,
-            I18N.gui.getN("menu.file.save.error", e.getMessage),
-            "NetLogo", JOptionPane.ERROR_MESSAGE)
+          new OptionPane(parent, "NetLogo", I18N.gui.getN("menu.file.save.error", e.getMessage), OptionPane.Options.OK,
+                         OptionPane.Icons.ERROR)
         case _ =>
       }
     }

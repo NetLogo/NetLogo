@@ -6,7 +6,7 @@ import java.awt.{ Dimension, Frame, Toolkit, BorderLayout}
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.prefs.Preferences
-import javax.swing.{ JFrame, JOptionPane, JMenu }
+import javax.swing.{ JFrame, JMenu }
 
 import org.nlogo.agent.{ Agent, World2D, World3D }
 import org.nlogo.api._
@@ -22,7 +22,7 @@ import org.nlogo.fileformat
 import org.nlogo.log.{ JsonFileLogger, LogEvents, LogManager }
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
-import org.nlogo.swing.{ OptionDialog, SetSystemLookAndFeel }
+import org.nlogo.swing.{ InputOptionPane, OptionDialog, OptionPane, SetSystemLookAndFeel }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
@@ -624,9 +624,9 @@ class App extends
       catch {
         case ex: java.net.ConnectException =>
           fileManager.newModel()
-          JOptionPane.showConfirmDialog(null,
-            I18N.gui.getN("file.open.error.unloadable.message", commandLineURL),
-            I18N.gui.get("file.open.error.unloadable.title"), JOptionPane.DEFAULT_OPTION)
+          new OptionPane(null, I18N.gui.get("file.open.error.unloadable.title"),
+                         I18N.gui.getN("file.open.error.unloadable.message", commandLineURL),
+                         OptionPane.Options.OK_CANCEL, OptionPane.Icons.WARNING)
       }
 
     } else if (prefs.get("loadLastOnStartup", "false").toBoolean) {
@@ -1020,9 +1020,8 @@ class App extends
     } catch {
       case ex: UserCancelException => org.nlogo.api.Exceptions.ignore(ex)
       case ex: java.io.IOException =>
-        javax.swing.JOptionPane.showMessageDialog(
-          frame, ex.getMessage,
-          I18N.gui.get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE)
+        new OptionPane(frame, I18N.gui.get("common.messages.error"), ex.getMessage, OptionPane.Options.OK,
+                       OptionPane.Icons.ERROR)
     }
   }
 
@@ -1286,7 +1285,7 @@ class App extends
     val frame = new JFrame()
     frame.setAlwaysOnTop(true)
     val prompt = I18N.gui.get("tools.loggingMode.enterName")
-    val name   = JOptionPane.showInputDialog(frame, prompt, "", JOptionPane.QUESTION_MESSAGE, null, null, "")
+    val name   = new InputOptionPane(frame, "", prompt).getInput
     if (name == null) { "unknown" } else { name.toString.trim() }
   }
 
