@@ -219,3 +219,19 @@ class DropdownOptionPane[T >: Null](parent: Component, title: String, message: S
     }, c)
   }
 }
+
+class CustomOptionPane(parent: Component, title: String, contents: Component, options: List[String])
+  extends OptionPane(parent, title, "", options) {
+  
+  override protected def addContents() {
+    val c = new GridBagConstraints
+
+    c.gridx = 0
+    c.fill = GridBagConstraints.BOTH
+    c.weightx = 1
+    c.weighty = 1
+    c.insets = new Insets(50, 50, 50, 50)
+
+    add(contents, c)
+  }
+}
