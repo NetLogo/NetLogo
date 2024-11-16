@@ -3,7 +3,8 @@
 package org.nlogo.swing
 
 import java.awt.{ GridBagConstraints, GridBagLayout, Insets, ItemSelectable }
-import java.awt.event.{ ActionEvent, ItemEvent, ItemListener, MouseAdapter, MouseEvent }
+import java.awt.event.{ ActionEvent, ItemEvent, ItemListener, MouseAdapter, MouseEvent, MouseWheelEvent,
+                        MouseWheelListener }
 import javax.swing.{ AbstractAction, JLabel, JPanel, JPopupMenu }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -45,9 +46,23 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
       }
     }
 
+    val wheelListener = new MouseWheelListener {
+      def mouseWheelMoved(e: MouseWheelEvent) {
+        if (e.getWheelRotation > 0)
+          setSelectedIndex(getSelectedIndex + 1)
+        else
+          setSelectedIndex(getSelectedIndex - 1)
+      }
+    }
+
     addMouseListener(mouseListener)
+    addMouseWheelListener(wheelListener)
+
     label.addMouseListener(mouseListener)
+    label.addMouseWheelListener(wheelListener)
+
     arrow.addMouseListener(mouseListener)
+    arrow.addMouseWheelListener(wheelListener)
   }
 
   setItems(items)
