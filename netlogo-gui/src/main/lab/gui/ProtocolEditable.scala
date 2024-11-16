@@ -6,6 +6,7 @@ import java.awt.{ GridBagConstraints, Window }
 
 import org.nlogo.api.{ CompilerServices, Editable, LabProtocol, LabVariableParser, Property, RefValueSet }
 import org.nlogo.core.I18N
+import org.nlogo.swing.OptionPane
 
 // normally we'd be package-private but the org.nlogo.properties stuff requires we be public - ST 2/25/09
 
@@ -84,10 +85,10 @@ class ProtocolEditable(protocol: LabProtocol,
   def editFinished: Boolean = get.isDefined
   def get: Option[LabProtocol] = {
     def complain(message: String) {
-      if (!java.awt.GraphicsEnvironment.isHeadless)
-        javax.swing.JOptionPane.showMessageDialog(
-          window, I18N.gui.getN("edit.behaviorSpace.invalidVarySpec", message),
-         I18N.gui("invalid"), javax.swing.JOptionPane.ERROR_MESSAGE)
+      if (!java.awt.GraphicsEnvironment.isHeadless) {
+        new OptionPane(window, I18N.gui("invalid"), I18N.gui.getN("edit.behaviorSpace.invalidVarySpec", message),
+                       OptionPane.Options.OK, OptionPane.Icons.ERROR)
+      }
     }
     return LabVariableParser.parseVariables(valueSets, repetitions, worldLock, compiler) match {
       case (Some((constants: List[RefValueSet], subExperiments: List[List[RefValueSet]])), _) =>

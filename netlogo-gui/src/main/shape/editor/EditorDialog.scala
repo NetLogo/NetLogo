@@ -6,15 +6,15 @@ import java.awt.{ Color, Component, Cursor, Dimension, GridLayout, Insets }
 import java.awt.event.{ ActionEvent, ActionListener, WindowAdapter, WindowEvent }
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
 import java.lang.{ Class, Integer }
-import javax.swing.{ AbstractAction, Action, Box, BoxLayout, ButtonGroup, JComboBox, JDialog, JLabel, JOptionPane,
-                     JPanel, JToolBar, WindowConstants }
+import javax.swing.{ AbstractAction, Action, Box, BoxLayout, ButtonGroup, JComboBox, JDialog, JLabel, JPanel, JToolBar,
+                     WindowConstants }
 import javax.swing.undo.{ AbstractUndoableEdit, UndoableEdit }
 
 import org.nlogo.api.{ Color => NLColor }
 import org.nlogo.awt.ColumnLayout
 import org.nlogo.core.{ I18N, Shape }
 import org.nlogo.shape.{ Circle, Element, Line, Polygon, Rectangle, VectorShape }
-import org.nlogo.swing.{ Button, ButtonPanel, CheckBox, TextField, ToggleButton, Transparent, Utils }
+import org.nlogo.swing.{ Button, ButtonPanel, CheckBox, OptionPane, TextField, ToggleButton, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 
 object EditorDialog {
@@ -211,8 +211,8 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   private val closingAction = new AbstractAction {
     def actionPerformed(e: ActionEvent) {
       if (originalShape.toString != getCurrentShape.toString &&
-          JOptionPane.showConfirmDialog(EditorDialog.this, I18N.gui("confirmCancel.message"),
-                                        I18N.gui("confirmCancel"), JOptionPane.YES_NO_OPTION) != 0)
+          new OptionPane(EditorDialog.this, I18N.gui("confirmCancel"), I18N.gui("confirmCancel.message"),
+                         OptionPane.Options.YES_NO, OptionPane.Icons.QUESTION).getSelectedIndex != 0)
         return
 
       dispose()
@@ -495,7 +495,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
     // Make sure the shape has a name
     if (name.isEmpty) {
-      JOptionPane.showMessageDialog(this, I18N.gui("nameEmpty"), I18N.gui("invalid"), JOptionPane.PLAIN_MESSAGE)
+      new OptionPane(this, I18N.gui("invalid"), I18N.gui("nameEmpty"), OptionPane.Options.OK, OptionPane.Icons.ERROR)
 
       return
     }
@@ -503,8 +503,8 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     // If this is an attempt to overwrite a shape, prompt for
     // permission to do it
     if (container.exists(name) && name != originalShape.name &&
-        JOptionPane.showConfirmDialog(this, I18N.gui("nameConflict"), I18N.gui("confirmOverwrite"),
-                                      JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
+        new OptionPane(this, I18N.gui("confirmOverwrite"), I18N.gui("nameConflict"), OptionPane.Options.YES_NO,
+                       OptionPane.Icons.QUESTION).getSelectedIndex != 0)
       return
 
     val newShape = shape

@@ -4,8 +4,7 @@ package org.nlogo.lab.gui
 
 import java.awt.{ Component, Dimension, FlowLayout, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.ActionEvent
-import javax.swing.{ AbstractAction, JDialog, JLabel, JList, JMenuBar, JOptionPane, JPanel, JScrollPane,
-                     ListCellRenderer }
+import javax.swing.{ AbstractAction, JDialog, JLabel, JList, JMenuBar, JPanel, JScrollPane, ListCellRenderer }
 import javax.swing.event.ListSelectionListener
 
 import org.nlogo.api.LabProtocol
@@ -14,7 +13,7 @@ import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 
 import org.nlogo.core.I18N
 import org.nlogo.fileformat.{ LabSaver, LabLoader }
-import org.nlogo.swing.{ Button, FileDialog, Transparent, Utils }
+import org.nlogo.swing.{ Button, FileDialog, OptionPane, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 private class ManagerDialog(manager:       LabManager,
@@ -217,7 +216,8 @@ private class ManagerDialog(manager:       LabManager,
       if (selected.length > 1) I18N.gui("delete.confirm.multiple", selected.length.toString)
       else I18N.gui("delete.confirm.one", listModel.getElementAt(selected(0)).asInstanceOf[LabProtocol].name)
     }
-    if (JOptionPane.YES_OPTION == JOptionPane.showConfirmDialog(this, message, I18N.gui("delete"), JOptionPane.YES_NO_OPTION)) {
+    if (new OptionPane(this, I18N.gui("delete"), message, OptionPane.Options.YES_NO, OptionPane.Icons.QUESTION)
+          .getSelectedIndex == 0) {
       for(i <- 0 until selected.length)
         manager.protocols -= listModel.getElementAt(selected(i)).asInstanceOf[LabProtocol]
       update()
@@ -258,10 +258,8 @@ private class ManagerDialog(manager:       LabManager,
         } catch {
           case e: org.xml.sax.SAXParseException => {
             if (!java.awt.GraphicsEnvironment.isHeadless) {
-              javax.swing.JOptionPane.showMessageDialog(manager.workspace.getFrame,
-                                                        I18N.gui("error.import", file.getName),
-                                                        I18N.gui("invalid"),
-                                                        javax.swing.JOptionPane.ERROR_MESSAGE)
+              new OptionPane(manager.workspace.getFrame, I18N.gui("invalid"), I18N.gui("error.import", file.getName),
+                             OptionPane.Options.OK, OptionPane.Icons.ERROR)
             }
           }
         }

@@ -21,6 +21,7 @@ object OptionPane {
   object Icons {
     val NONE: Icon = null
     val INFO = Utils.iconScaledWithColor("/images/exclamation-circle.png", 30, 30, InterfaceColors.INFO_ICON)
+    val QUESTION = Utils.iconScaledWithColor("/images/question.png", 30, 30, InterfaceColors.INFO_ICON)
     val WARNING = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 30, 30, InterfaceColors.WARNING_ICON)
     val ERROR = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 30, 30, InterfaceColors.ERROR_ICON)
   }
@@ -72,6 +73,7 @@ class OptionPane(parent: Component, title: String, message: String, options: Arr
 
   Positioning.center(this, parent)
 
+  setResizable(false)
   setVisible(true)
 
   def getSelectedOption: String =
@@ -111,18 +113,22 @@ class OptionPane(parent: Component, title: String, message: String, options: Arr
 
 }
 
-class InputOptionPane(parent: Component, title: String, message: String)
+class InputOptionPane(parent: Component, title: String, message: String, startingInput: String = "")
   extends OptionPane(parent, title, message, OptionPane.Options.OK_CANCEL) {
 
   // lazy because addContents is called in super (IB 11/16/24)
-  private lazy val input = new JTextField {
+  private lazy val input = new JTextField(startingInput) {
     setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
     setForeground(InterfaceColors.TOOLBAR_TEXT)
     setCaretColor(InterfaceColors.TOOLBAR_TEXT)
   }
 
-  def getInput: String =
-    input.getText
+  def getInput: String = {
+    if (getSelectedIndex == 0)
+      input.getText
+    else
+      null
+  }
 
   override protected def addContents() {
     val c = new GridBagConstraints
@@ -138,13 +144,13 @@ class InputOptionPane(parent: Component, title: String, message: String)
         val c = new GridBagConstraints
 
         c.gridx = 0
+        c.anchor = GridBagConstraints.WEST
         c.insets = new Insets(0, 0, 6, 0)
 
         add(new JLabel(getWrappedMessage) {
           setForeground(InterfaceColors.DIALOG_TEXT)
         }, c)
 
-        c.anchor = GridBagConstraints.WEST
         c.insets = new Insets(0, 0, 0, 0)
 
         add(input, c)

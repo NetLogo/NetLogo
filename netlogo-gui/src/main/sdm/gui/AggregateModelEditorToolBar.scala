@@ -3,8 +3,7 @@
 package org.nlogo.sdm.gui
 
 import java.awt.event.{ ActionEvent, MouseEvent }
-import javax.swing.{ JOptionPane, Action, AbstractAction, ButtonGroup, JButton,
-  JLabel, JPanel, JToggleButton }
+import javax.swing.{ Action, AbstractAction, ButtonGroup, JButton, JLabel, JPanel, JToggleButton }
 import javax.swing.JToolBar.Separator
 
 import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, FigureSelectionListener, Tool }
@@ -12,7 +11,8 @@ import org.jhotdraw.standard.{ CreationTool, DeleteCommand }
 
 import org.nlogo.core.I18N
 import org.nlogo.sdm.Model
-import org.nlogo.swing.{ ToolBar, ToolBarActionButton, ToolBarToggleButton, Utils => SwingUtils }
+import org.nlogo.swing.{ InputOptionPane, OptionPane, ToolBar, ToolBarActionButton, ToolBarToggleButton,
+                         Utils => SwingUtils }
 import org.nlogo.theme.InterfaceColors
 
 class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) extends ToolBar {
@@ -114,7 +114,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
   }
   val changeDTAction = new AbstractAction(I18N.gui("edit")) {
     def actionPerformed(e: ActionEvent) {
-      val newDt = JOptionPane.showInputDialog(editor, "dt", model.getDt)
+      val newDt = new InputOptionPane(editor, "", "dt", model.getDt.toString).getInput
       try if (newDt != null) {
         model.setDt(newDt.toDouble)
         dtLabel.setText("dt = " + model.getDt)
@@ -122,8 +122,12 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
         new org.nlogo.window.Events.DirtyEvent(None).raise(editor)
       }
       catch {
-        case ex: NumberFormatException => JOptionPane.showMessageDialog(null, I18N.gui("dtNumberError"))
-        case ex: Model.ModelException => JOptionPane.showMessageDialog(null, I18N.gui("dtZeroError"))
+        case ex: NumberFormatException => new OptionPane(null, I18N.gui.get("common.messages.error"),
+                                                         I18N.gui("dtNumberError"), OptionPane.Options.OK,
+                                                         OptionPane.Icons.ERROR)
+        case ex: Model.ModelException => new OptionPane(null, I18N.gui.get("common.messages.error"),
+                                                        I18N.gui("dtZeroError"), OptionPane.Options.OK,
+                                                        OptionPane.Icons.ERROR)
       }
     }
   }
