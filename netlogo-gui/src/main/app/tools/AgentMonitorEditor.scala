@@ -12,7 +12,7 @@ import org.nlogo.awt.Fonts
 import org.nlogo.core.{ AgentKind, I18N, Nobody, Widget => CoreWidget }
 import org.nlogo.editor.EditorField
 import org.nlogo.nvm.Procedure
-import org.nlogo.swing.{ OptionDialog, Transparent }
+import org.nlogo.swing.{ OptionPane, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditorColorizer, Events => WindowEvents, JobWidget }
 
@@ -186,8 +186,8 @@ with ThemeSync {
     if(e.sourceOwner == this) {
       error(e.error)
       if(error() != null) {
-        OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui.get("common.messages.error"), error().getMessage, Array(I18N.gui.get("common.buttons.ok")))
+        new OptionPane(workspace.getFrame, I18N.gui.get("common.messages.error"), error().getMessage,
+                       OptionPane.Options.OK, OptionPane.Icons.ERROR)
         setEnabled(true)
         editor.setText(get)
         lastTextBeforeUserChangedAnything = editor.getText()

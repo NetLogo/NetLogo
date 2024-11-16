@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions }
 import org.nlogo.awt.Hierarchy
-import org.nlogo.swing.{ ModalProgressTask, OptionDialog }
+import org.nlogo.swing.{ ModalProgressTask, OptionPane }
 
 object WorldViewSettings2D {
   private val HubNetKick   = 0
@@ -85,12 +85,10 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
 
     private def hubnetDecision(): Int = {
       if (workspace.hubNetRunning) {
-        val message = I18N.gui.get("view.resize.hubnet.warning")
-        val title = I18N.gui.get("view.resize.hubnet.prompt")
-        val options = Array[Object](
-          I18N.gui.get("view.resize.hubnet.kick"),
-          I18N.gui.get("view.resize.hubnet.dontkick"))
-        OptionDialog.showMessage(workspace.getFrame, title, message, options)
+        new OptionPane(workspace.getFrame, I18N.gui.get("view.resize.hubnet.prompt"),
+                       I18N.gui.get("view.resize.hubnet.warning"),
+                       List(I18N.gui.get("view.resize.hubnet.kick"), I18N.gui.get("view.resize.hubnet.dontkick")),
+                       OptionPane.Icons.QUESTION).getSelectedIndex
       } else
         HubNetIgnore
     }

@@ -9,7 +9,7 @@ import javax.swing.{JLabel, JPanel, ToolTipManager}
 import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody }
 import org.nlogo.api.{ CompilerServices, Editable, Property }
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.{ OptionDialog, Transparent }
+import org.nlogo.swing.{ OptionPane, Transparent }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.WidgetWrapperInterface
 
@@ -151,10 +151,9 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       // the error to pop up twice. - JC 4/9/10
         val value = editor.get
         if (!value.isDefined && !editor.handlesOwnErrors)
-          OptionDialog.showMessage(this,
-            I18N.gui.get("edit.general.invalidSettings"),
-            I18N.gui.getN("edit.general.invalidValue", editor.accessor.displayName),
-            Array(I18N.gui.get("common.buttons.ok")))
+          new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"),
+                         I18N.gui.getN("edit.general.invalidValue", editor.accessor.displayName),
+                         OptionPane.Options.OK, OptionPane.Icons.ERROR)
         value.isDefined
       }
     }
@@ -202,10 +201,8 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
                 s"${displayName}: ${error}"
         }.mkString("\n", "\n", "")
       val invalidMessage = I18N.gui.getN("edit.general.invalidValues", allInvalidations)
-      OptionDialog.showMessage(this,
-        I18N.gui.get("edit.general.invalidSettings"),
-        invalidMessage,
-        Array(I18N.gui.get("common.buttons.ok")))
+      new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"), invalidMessage, OptionPane.Options.OK,
+                     OptionPane.Icons.ERROR)
     }
     isValid
   }

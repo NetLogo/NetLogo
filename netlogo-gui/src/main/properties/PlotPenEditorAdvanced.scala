@@ -5,10 +5,11 @@ package org.nlogo.properties
 import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
 import javax.swing.{ JLabel, JPanel }
 
+import org.nlogo.awt.Hierarchy
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.plot.PlotManagerInterface
-import org.nlogo.swing.{ CheckBox, ComboBox, OptionDialog, TextField, Transparent }
+import org.nlogo.swing.{ CheckBox, ComboBox, OptionPane, TextField, Transparent }
 import org.nlogo.theme.InterfaceColors
 
 class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, plotManager: PlotManagerInterface)
@@ -52,8 +53,8 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, 
       try {intervalField.getText.toDouble; true}
       catch {
         case ex: NumberFormatException =>
-          OptionDialog.showMessage(org.nlogo.awt.Hierarchy.getWindow(this),
-            "Invalid Entry", "Invalid value for the pen interval", Array(I18N.gui.get("common.buttons.ok")))
+          new OptionPane(Hierarchy.getWindow(this), I18N.gui.get("edit.plot.pen.invalidEntry"),
+                         I18N.gui.get("edit.plot.pen.invalidInterval"), OptionPane.Options.OK, OptionPane.Icons.ERROR)
           false
       }
     }

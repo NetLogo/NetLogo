@@ -35,11 +35,9 @@ object FileDialog {
     // so we need to check with the user to see if they really meant to use
     // the extension so we don't overwrite anything we're not meant to.
     // -Jeremy B June 2021
-    val options = Array[Object](
-      I18N.gui.get("common.buttons.replace"),
-      I18N.gui.get("common.buttons.cancel"))
-    val message = I18N.gui.getN("file.save.warn.overwrite", path)
-    if (OptionDialog.showMessage(owner, "NetLogo", message, options) != 0) {
+    if (new OptionPane(owner, I18N.gui.get("common.netlogo"), I18N.gui.getN("file.save.warn.overwrite", path),
+                       List(I18N.gui.get("common.buttons.replace"), I18N.gui.get("common.buttons.cancel")),
+                       OptionPane.Icons.QUESTION).getSelectedIndex != 0) {
       None
     } else {
       Some(path)

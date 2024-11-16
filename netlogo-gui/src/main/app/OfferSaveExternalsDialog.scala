@@ -31,7 +31,7 @@ object OfferSaveExternalsDialog {
       table.validate()
       panel.add(new JScrollPane(table))
       val options = Array(I18N.gui("saveSelected"), I18N.gui("discardAll"), I18N.gui.get("common.buttons.cancel"))
-      OptionDialog.showCustom(parent, "NetLogo", panel, options) match {
+      OptionDialog.showCustom(parent, I18N.gui.get("common.netlogo"), panel, options) match {
         case 0 =>
           tableModel.files
             .filter (_ (0).asInstanceOf[Boolean])
