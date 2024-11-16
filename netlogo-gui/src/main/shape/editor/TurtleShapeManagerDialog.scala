@@ -8,7 +8,7 @@ import javax.swing.Box
 import org.nlogo.api.{ FileIO, ModelLoader, World }
 import org.nlogo.shape.{ ShapeConverter, VectorShape },
   ShapeConverter.baseVectorShapeToVectorShape
-import org.nlogo.swing.Button
+import org.nlogo.swing.{ Button, OptionPane }
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape, ShapeList, ShapeParser },
   Shape.{ VectorShape => CoreVectorShape },
   ShapeList.{ isDefaultShapeName, sortShapes },
@@ -76,10 +76,9 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
         importDialog = Some(new ImportDialog(TurtleShapeManagerDialog.this, this, drawableList))
         shapesList.requestFocus()
       case None =>
-        javax.swing.JOptionPane.showMessageDialog(this,
-          I18N.gui.get("tools.shapesEditor.import.libraryError"),
-          I18N.gui.get("tools.shapesEditor.import"),
-          javax.swing.JOptionPane.WARNING_MESSAGE)
+        new OptionPane(this, I18N.gui.get("tools.shapesEditor.import"),
+                       I18N.gui.get("tools.shapesEditor.import.libraryError"), OptionPane.Options.OK,
+                       OptionPane.Icons.ERROR)
     }
   }
 

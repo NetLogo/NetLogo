@@ -2,20 +2,20 @@
 
 package org.nlogo.window
 
-import javax.swing.{ AbstractAction, JButton, JOptionPane, JPanel }
+import javax.swing.{ AbstractAction, JButton, JPanel }
 import java.awt.BorderLayout
 import java.awt.event.ActionEvent
 
 import org.nlogo.core.I18N
 import org.nlogo.editor.AbstractEditorArea
 import org.nlogo.log.LogManager
+import org.nlogo.swing.InputOptionPane
 
 class CommentableError(val editorArea: AbstractEditorArea) {
   private val errorLabel = new EditorAreaErrorLabel(editorArea)
   private val commentAction = new AbstractAction(I18N.gui.get("tools.loggingMode.errorComment.button")) {
     def actionPerformed(e: ActionEvent) {
-      val comment = JOptionPane.showInputDialog(null, I18N.gui.get("tools.loggingMode.errorComment.label"), "",
-        JOptionPane.QUESTION_MESSAGE, null, null, "").asInstanceOf[String]
+      val comment = new InputOptionPane(null, "", I18N.gui.get("tools.loggingMode.errorComment.label")).getInput
       if (comment != null && !comment.trim().isEmpty()) {
         LogManager.userComment(comment)
       }

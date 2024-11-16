@@ -4,11 +4,11 @@ package org.nlogo.shape.editor
 
 import java.awt.{ BorderLayout, Dimension }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, JDialog, JOptionPane, JScrollPane }
+import javax.swing.{ AbstractAction, JDialog, JScrollPane }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
 import org.nlogo.core.{ I18N, Shape }
-import org.nlogo.swing.{ Button, ButtonPanel, Utils }
+import org.nlogo.swing.{ Button, ButtonPanel, InputOptionPane, OptionPane, Utils }
 import org.nlogo.theme.InterfaceColors
 
 class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: DrawableList[_ <: Shape])
@@ -65,22 +65,21 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
 
   // Import shapes from another model
   private def importSelectedShapes() {
-    val choices: Array[Object] = Array(I18N.gui("replace"), I18N.gui("rename"), I18N.gui.get("common.buttons.cancel"))
+    val choices = Array(I18N.gui("replace"), I18N.gui("rename"), I18N.gui.get("common.buttons.cancel"))
 
     // For each selected shape, add it to the current model's file and the turtledrawer,
     val shapes = for (index <- list.getSelectedIndices) yield {
       val shape = list.getShape(index).get
+      var choice = -1
 
       // If the shape exists, give the user the chance to overwrite or rename
-      if (manager.shapesList.exists(shape.name)) {
-        val choice = JOptionPane.showOptionDialog(this, I18N.gui("nameConflict", shape.name),
-                                                  I18N.gui.get("tools.shapesEditor.import"),
-                                                  JOptionPane.YES_NO_CANCEL_OPTION,
-                                                  JOptionPane.WARNING_MESSAGE, null, choices, choices(0))
+      while (manager.shapesList.exists(shape.name) && choice != 0) {
+        choice = new OptionPane(this, I18N.gui.get("tools.shapesEditor.import"),
+                                    I18N.gui("nameConflict", shape.name), choices,
+                                    OptionPane.Icons.WARNING).getSelectedIndex
 
         if (choice == 1) { // rename
-          val name = JOptionPane.showInputDialog(this, I18N.gui("importAs"), I18N.gui("importShapes"),
-                                                 JOptionPane.PLAIN_MESSAGE)
+          val name = new InputOptionPane(this, I18N.gui("importShapes"), I18N.gui("importAs")).getInput
 
           // if the user cancels the inputdialog, then name could
           // be null causing a nullpointerexception later on
@@ -106,8 +105,8 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
 
   // Show a warning dialog to indicate something went wrong when importing
   def sendImportWarning(message: String) {
-    JOptionPane.showMessageDialog(this, message, I18N.gui.get("tools.shapesEditor.import"),
-                                  JOptionPane.WARNING_MESSAGE)
+    new OptionPane(this, I18N.gui.get("tools.shapesEditor.import"), message, OptionPane.Options.OK,
+                   OptionPane.Icons.WARNING)
   }
 
   override def getPreferredSize: Dimension =

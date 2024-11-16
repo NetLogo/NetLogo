@@ -5,14 +5,14 @@ package org.nlogo.shape.editor
 import java.awt.{ BorderLayout, Font, Component }
 import java.awt.event.MouseEvent
 import java.nio.file.Paths
-import javax.swing.{ JScrollPane, SwingConstants, Box, BoxLayout, JPanel, JLabel, JDialog, JOptionPane }
+import javax.swing.{ JScrollPane, SwingConstants, Box, BoxLayout, JPanel, JLabel, JDialog }
 import javax.swing.event.{ ListSelectionEvent, MouseInputAdapter, ListSelectionListener }
 
 import org.nlogo.api.ModelLoader
 import org.nlogo.awt.ColumnLayout
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
   ShapeList.{ shapesToMap, isDefaultShapeName }
-import org.nlogo.swing.{ Button, Transparent, Utils }
+import org.nlogo.swing.{ Button, OptionPane, Transparent, Utils }
 import org.nlogo.swing.Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -145,10 +145,8 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
         .map(modelShapes)
         .map(drawableListFromModelShapes) match {
           case Failure(ex) =>
-            JOptionPane.showMessageDialog(this,
-              I18N.gui.get("import.invalidError"),
-              I18N.gui.get("import"),
-              JOptionPane.WARNING_MESSAGE)
+            new OptionPane(this, I18N.gui.get("import"), I18N.gui.get("import.invalidError"), OptionPane.Options.OK,
+                           OptionPane.Icons.ERROR)
           case Success(drawableList) =>
             if (drawableList.shapeList.isEmpty)
               importDialog.foreach(_.sendImportWarning(I18N.gui("import.error")))
