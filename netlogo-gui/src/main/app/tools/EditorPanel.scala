@@ -4,19 +4,25 @@ package org.nlogo.app.tools
 
 import java.awt.{ Dimension, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ FocusEvent, TextEvent, TextListener }
-import javax.swing.{ DefaultComboBoxModel, JComboBox, JPanel, JScrollPane }
+import javax.swing.{ JPanel, JScrollPane }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.PreviewCommands, PreviewCommands.{ Compilable, Custom, Default, Manual }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
-import org.nlogo.swing.{ Button, HasPropertyChangeSupport, Transparent, Utils }
+import org.nlogo.swing.{ Button, ComboBox, HasPropertyChangeSupport, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.window.{ EditorAreaErrorLabel, EditorColorizer }
 
 class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) with Transparent {
   val comboBox = new PreviewCommandsComboBox
-  val compileButton = new Button(null) {
+  val compileButton = new Button("", () => {
+    if (dirty) {
+      dirty = false
+      updateCompileIcon()
+      comboBox.updateCommands(PreviewCommands(editor.getText()))
+    }
+  }) {
     setBorder(new EmptyBorder(4, 4, 4, 4))
   }
 
@@ -99,25 +105,11 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) 
   }
 }
 
-class PreviewCommandsComboBoxModel(val defaultCustomCommands: Custom = Custom(Default.source))
-  extends DefaultComboBoxModel[PreviewCommands](Array[PreviewCommands](Default, defaultCustomCommands, Manual)) {
-  val customIndex = getIndexOf(defaultCustomCommands)
-  def update(currentCommands: PreviewCommands): Unit = {
-    setSelectedItem(null)
-    val custom = currentCommands match {
-      case Custom(_) => currentCommands
-      case _         => getElementAt(customIndex)
-    }
-    removeElementAt(customIndex)
-    insertElementAt(custom, customIndex)
-  }
-}
-
-class PreviewCommandsComboBox(val model: PreviewCommandsComboBoxModel = new PreviewCommandsComboBoxModel)
-  extends JComboBox[PreviewCommands](model) {
-  def previewCommands: Option[PreviewCommands] = Option(getItemAt(getSelectedIndex))
-  def updateCommands(newPreviewCommands: PreviewCommands): Unit = {
-    model.update(newPreviewCommands)
+class PreviewCommandsComboBox extends ComboBox[PreviewCommands](List(Default, Custom(Default.source), Manual)) {
+  def updateCommands(newPreviewCommands: PreviewCommands) {
+    if (newPreviewCommands.isInstanceOf[Custom])
+      setItems(List(Default, newPreviewCommands, Manual))
+    
     setSelectedItem(newPreviewCommands)
   }
 }
