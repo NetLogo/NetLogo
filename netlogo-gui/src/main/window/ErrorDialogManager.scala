@@ -9,7 +9,7 @@ import org.nlogo.api.{ LogoException, Version }
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Context, Instruction }
 import org.nlogo.swing.{ BrowserLauncher, Button, CheckBox, MessageDialog }
-import org.nlogo.theme.ThemeSync
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.util.{ SysInfo, Utils }
 
 import scala.annotation.tailrec
@@ -174,6 +174,12 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.logo")) {
   }
 
   override def makeButtons = super.makeButtons ++ Seq(new CopyButton(textArea), checkbox)
+
+  override def syncTheme() {
+    super.syncTheme()
+
+    checkbox.setForeground(InterfaceColors.DIALOG_TEXT)
+  }
 }
 
 class OutOfMemoryDialog(owner: Component)
