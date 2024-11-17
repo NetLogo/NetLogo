@@ -2,10 +2,11 @@
 
 package org.nlogo.sdm.gui
 
-import org.nlogo.api.CompilerServices
+import org.nlogo.api.{ AggregateManagerInterface, CompilerServices }
 import org.nlogo.core.{ AgentKind, LiteralParser, Model => CoreModel }
 import org.nlogo.editor.Colorizer
-import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
+import org.nlogo.theme.ThemeSync
+import org.nlogo.window.{ EditDialogFactoryInterface, Event, Events, MenuBarFactory }
 
 class GUIAggregateManager(
   linkParent: java.awt.Component,
@@ -13,11 +14,12 @@ class GUIAggregateManager(
   compiler: CompilerServices,
   colorizer: Colorizer,
   dialogFactory: EditDialogFactoryInterface)
-extends org.nlogo.api.AggregateManagerInterface
-with org.nlogo.window.Event.LinkChild
-with org.nlogo.window.Events.CompiledEvent.Handler
-with org.nlogo.window.Events.BeforeLoadEvent.Handler
-with org.nlogo.window.Events.LoadModelEvent.Handler {
+extends AggregateManagerInterface
+with Event.LinkChild
+with Events.CompiledEvent.Handler
+with Events.BeforeLoadEvent.Handler
+with Events.LoadModelEvent.Handler
+with ThemeSync {
 
   private var editor: AggregateModelEditor = null
 
@@ -68,6 +70,13 @@ with org.nlogo.window.Events.LoadModelEvent.Handler {
       editor.setError(
         this,
         if(e.sourceOwner eq this) e.error else null)
+  }
+
+  def syncTheme() {
+    if (editor != null) {
+      editor.syncTheme()
+      editor.repaint()
+    }
   }
 
   /// from org.nlogo.nvm.SourceOwner

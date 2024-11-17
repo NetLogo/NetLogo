@@ -164,8 +164,6 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
   }
 
   def syncTheme() {
-    setForeground(InterfaceColors.TOOLBAR_TEXT)
-
     menuUI.syncTheme()
 
     getMenuComponents.foreach(_ match {
