@@ -2,8 +2,9 @@
 
 package org.nlogo.sdm.gui
 
+import java.awt.FlowLayout
 import java.awt.event.{ ActionEvent, MouseEvent }
-import javax.swing.{ Action, AbstractAction, ButtonGroup, JButton, JLabel, JPanel, JToggleButton }
+import javax.swing.{ Action, AbstractAction, ButtonGroup, JLabel, JPanel, JToggleButton }
 import javax.swing.JToolBar.Separator
 
 import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, FigureSelectionListener, Tool }
@@ -11,15 +12,17 @@ import org.jhotdraw.standard.{ CreationTool, DeleteCommand }
 
 import org.nlogo.core.I18N
 import org.nlogo.sdm.Model
-import org.nlogo.swing.{ InputOptionPane, OptionPane, ToolBar, ToolBarActionButton, ToolBarToggleButton,
-                         Utils => SwingUtils }
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.swing.{ Button, InputOptionPane, OptionPane, ToolBar, ToolBarActionButton, ToolBarToggleButton,
+                         Transparent, Utils => SwingUtils }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) extends ToolBar {
+class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) extends ToolBar with ThemeSync {
+  implicit val i18nPrefix = I18N.Prefix("tools.sdm")
+
   // Invisible button allows no selection in visible buttongroup
   private val noToolButton = new JToggleButton("")
   private var dtLabel: JLabel = null
-  implicit val i18nPrefix = I18N.Prefix("tools.sdm")
+  private var dtButton: Button = null
 
   override def addControls() {
     add(new ToolBarActionButton(editAction))
@@ -45,9 +48,10 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
 
     // dt Panel
     dtLabel = new JLabel("dt = " + model.getDt) { setOpaque(false) }
-    add(new JPanel(new java.awt.FlowLayout()) {
+    add(new JPanel(new FlowLayout()) with Transparent {
       add(dtLabel)
-      add(new JButton(changeDTAction))
+      dtButton = new Button(changeDTAction)
+      add(dtButton)
       setAlignmentX(1.0f)
     })
     // Event listeners
@@ -57,9 +61,18 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
         deleteAction.setEnabled(view.selectionCount == 1)
       }
     })
+
+    syncTheme()
   }
 
   def popButtons() {noToolButton.setSelected(true)}
+  
+  def syncTheme() {
+    setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
+
+    if (dtButton != null)
+      dtButton.syncTheme()
+  }
 
   private class ModelElementCreationTool(model: Model, editor: DrawingEditor, figure: ModelElementFigure with Figure)
     extends CreationTool(editor, figure) {

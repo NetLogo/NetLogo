@@ -822,6 +822,10 @@ class App extends
       case Some(manager: ThemeSync) => manager.syncTheme()
       case _ =>
     }
+
+    aggregateManager match {
+      case ts: ThemeSync => ts.syncTheme()
+    }
   }
 
   /**

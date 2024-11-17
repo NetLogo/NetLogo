@@ -74,8 +74,6 @@ class MenuBar(isApplicationWide: Boolean) extends JMenuBar with EditorMenu with 
   }
 
   def syncTheme() {
-    setForeground(InterfaceColors.TOOLBAR_TEXT)
-
     fileMenu.syncTheme()
     editMenu.syncTheme()
     toolsMenu.syncTheme()
