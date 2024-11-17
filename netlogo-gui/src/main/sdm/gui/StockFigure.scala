@@ -20,7 +20,7 @@ import scala.collection.JavaConverters.seqAsJavaList
 class StockFigure extends RectangleFigure with ModelElementFigure with Editable {
   private var stock = new Stock
 
-  setAttribute(FigureAttributeConstant.FILL_COLOR, InterfaceColors.STOCK_BACKGROUND)
+  setAttribute(FigureAttributeConstant.FILL_COLOR, InterfaceColors.MONITOR_BACKGROUND)
 
   def getModelElement: ModelElement =
     stock
