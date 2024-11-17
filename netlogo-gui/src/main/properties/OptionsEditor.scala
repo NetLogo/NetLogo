@@ -10,13 +10,12 @@ import org.nlogo.swing.ComboBox
 import org.nlogo.theme.InterfaceColors
 
 abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]]) extends PropertyEditor(accessor) {
-  private val combo = new ComboBox[String]
+  private val options: Options[T] = accessor.get
+  private val combo = new ComboBox[String](options.names)
   setLayout(new FlowLayout(FlowLayout.LEFT))
   private val label = new JLabel(accessor.displayName)
   add(label)
   add(combo)
-  private val options: Options[T] = accessor.get
-  combo.setItems(options.names)
   private val originalOption: T = options.chosenValue
   combo.addItemListener(_ => changed())
   override def get = {

@@ -2,6 +2,7 @@
 
 package org.nlogo.swing
 
+import java.awt.{ Component, Dimension }
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, Action, JCheckBoxMenuItem, JMenuItem }
 import javax.swing.plaf.basic.{ BasicCheckBoxMenuItemUI, BasicMenuItemUI }
@@ -58,4 +59,15 @@ class PopupCheckBoxMenuItem(action: Action) extends JCheckBoxMenuItem(action) wi
   def syncTheme() {
     itemUI.syncTheme()
   }
+}
+
+class CustomMenuItem(component: Component, action: Action) extends MenuItem(action) {
+  locally {
+    val insets = getInsets
+
+    setPreferredSize(new Dimension(component.getPreferredSize.width + insets.left + insets.right,
+                                   component.getPreferredSize.height + insets.top + insets.bottom))
+  }
+
+  add(component)
 }

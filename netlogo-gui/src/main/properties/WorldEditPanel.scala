@@ -87,6 +87,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
     }
 
     c.gridwidth = GridBagConstraints.REMAINDER
+    c.anchor = GridBagConstraints.EAST
 
     buttons.add(positionChoices, c)
 

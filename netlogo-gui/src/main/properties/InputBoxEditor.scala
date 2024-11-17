@@ -13,9 +13,9 @@ import org.nlogo.window.InputBox
 abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputType]])
   extends PropertyEditor(accessor) {
 
-  private val typeCombo = new ComboBox[InputBox#InputType]
-  private val multiline = new CheckBox("Multi-Line")
   private val options: Options[InputBox#InputType] = accessor.get
+  private val typeCombo = new ComboBox[InputBox#InputType](options.values)
+  private val multiline = new CheckBox("Multi-Line")
   private val originalOption: InputBox#InputType = accessor.get.chosenValue
   private val originalMultiline: Boolean = accessor.get.chosenValue.multiline
 
@@ -24,7 +24,6 @@ abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputT
   add(label)
   add(typeCombo)
 
-  typeCombo.setItems(options.values)
   typeCombo.addItemListener(_ => multiline.setEnabled(selected.enableMultiline))
 
   multiline.setSelected(originalOption.multiline)

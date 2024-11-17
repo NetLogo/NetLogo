@@ -2,11 +2,11 @@
 
 package org.nlogo.shape.editor
 
-import java.awt.{ Color, Component, Cursor, Dimension, GridLayout, Insets }
-import java.awt.event.{ ActionEvent, ActionListener, WindowAdapter, WindowEvent }
+import java.awt.{ Color, Component, Cursor, Dimension, FlowLayout, GridLayout, Insets }
+import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
-import java.lang.{ Class, Integer }
-import javax.swing.{ AbstractAction, Action, Box, BoxLayout, ButtonGroup, JComboBox, JDialog, JLabel, JPanel, JToolBar,
+import java.lang.Class
+import javax.swing.{ AbstractAction, Action, Box, BoxLayout, ButtonGroup, JDialog, JLabel, JPanel, JToolBar,
                      WindowConstants }
 import javax.swing.undo.{ AbstractUndoableEdit, UndoableEdit }
 
@@ -14,7 +14,8 @@ import org.nlogo.api.{ Color => NLColor }
 import org.nlogo.awt.ColumnLayout
 import org.nlogo.core.{ I18N, Shape }
 import org.nlogo.shape.{ Circle, Element, Line, Polygon, Rectangle, VectorShape }
-import org.nlogo.swing.{ Button, ButtonPanel, CheckBox, OptionPane, TextField, ToggleButton, Transparent, Utils }
+import org.nlogo.swing.{ Button, ButtonPanel, CheckBox, ComboBox, MenuItem, OptionPane, TextField, ToggleButton,
+                         Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 
 object EditorDialog {
@@ -183,19 +184,14 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     if (i == shape.getEditableColorIndex)
         button.setSelected(true)
 
-    Integer.valueOf(i)
+    new ColorPanel(i)
   }
 
-  private val colorSelection = new JComboBox(colors.toArray) {
-    setRenderer(new ColorCellRenderer)
-    setSelectedIndex(shape.getEditableColorIndex)
-
-    addActionListener(new ActionListener {
-      def actionPerformed(e: ActionEvent) {
-        setEditableColor()
-      }
-    })
+  private val colorSelection = new ComboBox(colors.toList) {
+    addItemListener(_ => setEditableColor())
   }
+
+  colorSelection.setSelectedIndex(shape.getEditableColorIndex)
 
   private var fillShapes = true
   private var shapeRotatable = shape.isRotatable
@@ -547,6 +543,34 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       override def getInsets: Insets =
         new Insets(3, 3, 3, 3)
     }
+  }
+
+  private class ColorPanel(index: Int) extends JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0)) with Transparent
+                                                                                             with ComboBox.Clone {
+    private val label = {
+      val name = NLColor.getColorNameByIndex(index)
+
+      new JLabel(name(0).toUpper + name.substring(1))
+    }
+
+    add(new JPanel {
+      setBackground(EditorDialog.getColor(index))
+      setPreferredSize(new Dimension(10, 10))
+    })
+
+    add(label)
+
+    override def paintComponent(g: java.awt.Graphics) {
+      getParent match {
+        case item: MenuItem if item.isArmed => label.setForeground(InterfaceColors.MENU_TEXT_HOVER)
+        case _ => label.setForeground(InterfaceColors.TOOLBAR_TEXT)
+      }
+
+      super.paintComponent(g)
+    }
+
+    def getClone: Component =
+      new ColorPanel(index)
   }
 
   private class CreateAction(name: String, typeID: Class[_ <: Element], filled: Boolean)
