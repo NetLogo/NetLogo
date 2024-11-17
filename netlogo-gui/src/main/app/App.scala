@@ -824,6 +824,8 @@ class App extends
     aggregateManager match {
       case ts: ThemeSync => ts.syncTheme()
     }
+
+    errorDialogManager.syncTheme()
   }
 
   /**

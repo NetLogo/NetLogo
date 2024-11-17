@@ -5,14 +5,12 @@ package org.nlogo.window
 import java.awt.Component
 import javax.swing.text.JTextComponent
 
-import javax.swing.{ JButton, JCheckBox }
-
-import org.nlogo.core.I18N
 import org.nlogo.api.{ LogoException, Version }
+import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Context, Instruction }
-import org.nlogo.swing.{ BrowserLauncher, MessageDialog }
-import org.nlogo.util.Utils
-import org.nlogo.util.SysInfo
+import org.nlogo.swing.{ BrowserLauncher, Button, CheckBox, MessageDialog }
+import org.nlogo.theme.ThemeSync
+import org.nlogo.util.{ SysInfo, Utils }
 
 import scala.annotation.tailrec
 
@@ -58,7 +56,9 @@ case class DebuggingInfo(var className: String, var threadName: String, var mode
 // SwitchedTabsEvent and handling it. This is why `dialogs` is a lazy val and
 // `additionalDialogs` is passed by name -- EL 2018-07-27
 
-class ErrorDialogManager(owner: Component, additionalDialogs: => Map[Class[_ <: Throwable], ErrorDialog] = Map()) {
+class ErrorDialogManager(owner: Component, additionalDialogs: => Map[Class[_ <: Throwable], ErrorDialog] = Map())
+  extends ThemeSync {
+
   private val debuggingInfo = DebuggingInfo("", "", "", "", "")
   private val errorInfo = ErrorInfo(null)
   private lazy val dialogs = additionalDialogs.toSeq ++ Seq(
@@ -110,15 +110,17 @@ class ErrorDialogManager(owner: Component, additionalDialogs: => Map[Class[_ <: 
       case _ => false
     }
   }
-}
 
-class CopyButton(textComp: JTextComponent) extends JButton(I18N.gui.get("menu.edit.copy")) {
-  addActionListener { _ =>
-    textComp.select(0, textComp.getText.length)
-    textComp.copy()
-    textComp.setCaretPosition(0)
+  def syncTheme() {
+    dialogs.foreach(_._2.syncTheme())
   }
 }
+
+class CopyButton(textComp: JTextComponent) extends Button(I18N.gui.get("menu.edit.copy"), () => {
+  textComp.select(0, textComp.getText.length)
+  textComp.copy()
+  textComp.setCaretPosition(0)
+})
 
 abstract class ErrorDialog(owner: Component, dialogTitle: String)
 extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) {
@@ -151,22 +153,19 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.unknown")) {
   }
 
   override def makeButtons = {
-    val suppressButton = new JButton(I18N.gui.get("error.dialog.suppress"))
-    suppressButton.addActionListener { _ =>
+    val suppressButton = new Button(I18N.gui.get("error.dialog.suppress"), () => {
       suppressed = true
       setVisible(false)
-    }
+    })
     super.makeButtons ++ Seq(new CopyButton(textArea), suppressButton)
   }
 }
 
 class LogoExceptionDialog(owner: Component)
 extends ErrorDialog(owner, I18N.gui.get("error.dialog.logo")) {
-  private lazy val checkbox = {
-    val b = new JCheckBox(I18N.gui.get("error.dialog.showInternals"))
-    b.addItemListener(_ => doShow(b.isSelected))
-    b
-  }
+  private lazy val checkbox: CheckBox = new CheckBox(I18N.gui.get("error.dialog.showInternals"), () => {
+    doShow(checkbox.isSelected)
+  })
 
   override def show(errorInfo: ErrorInfo, debugInfo: DebuggingInfo): Unit = {
     message = errorInfo.errorMessage.getOrElse("")
@@ -186,9 +185,8 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.outOfMemory.title")) {
   }
 
   override def makeButtons = {
-    val openFAQ = new JButton(I18N.gui.get("error.dialog.openFAQ"))
-    val baseFaqUrl = BrowserLauncher.docPath("faq.html")
-    openFAQ.addActionListener(_ => BrowserLauncher.openPath(owner, baseFaqUrl, "howbig"))
-    super.makeButtons :+ openFAQ
+    super.makeButtons :+ new Button(I18N.gui.get("error.dialog.openFAQ"), () => {
+      BrowserLauncher.openPath(owner, BrowserLauncher.docPath("faq.html"), "howbig")
+    })
   }
 }

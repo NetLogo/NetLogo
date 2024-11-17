@@ -6,13 +6,13 @@ import java.awt.{ Component, Dialog, FileDialog => AWTFileDialog }
 import java.awt.event.ActionEvent
 import java.nio.file.Paths
 import java.net.URI
-import javax.swing.{ AbstractAction, JButton, JComponent, JDialog }
+import javax.swing.{ AbstractAction, JComponent, JDialog }
 
 import org.nlogo.api.{ FileIO, ModelReader, ModelType, Version }, ModelReader.modelSuffix
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.{ ConversionError, ConversionWithErrors, ErroredConversion, FailedConversionResult }
-import org.nlogo.swing.{ BrowserLauncher, FileDialog, MessageDialog, OptionPane }
+import org.nlogo.swing.{ BrowserLauncher, Button, FileDialog, MessageDialog, OptionPane }
 import org.nlogo.workspace.{ ModelTracker, OpenModel, SaveModel },
   OpenModel.{ Controller => OpenModelController },
   SaveModel.{ Controller => SaveModelController }
@@ -240,7 +240,7 @@ class AutoConversionErrorDialog(owner: Component, keyContext: String) extends Me
   lazy val originalAction = new ConversionAction(I18N.gui.get(s"file.open.warn.autoconversion.$keyContext.original"))
 
   override def makeButtons(): Seq[JComponent] = {
-    super.makeButtons() ++ Seq(new JButton(bestEffortAction), new JButton(originalAction))
+    super.makeButtons() ++ Seq(new Button(bestEffortAction), new Button(originalAction))
   }
 
   def errorMessage(failure: FailedConversionResult): String =
