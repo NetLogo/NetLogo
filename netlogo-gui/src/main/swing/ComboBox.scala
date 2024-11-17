@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.{ GridBagConstraints, GridBagLayout, Insets, ItemSelectable }
+import java.awt.{ Component, GridBagConstraints, GridBagLayout, Insets, ItemSelectable }
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener, MouseAdapter, MouseEvent, MouseWheelEvent,
                         MouseWheelListener }
 import javax.swing.{ AbstractAction, JLabel, JPanel, JPopupMenu }
@@ -11,14 +11,56 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import scala.collection.mutable.Set
 
+object ComboBox {
+  // required for custom menu item components since they are only allowed in one place (IB 11/17/24)
+  trait Clone {
+    def getClone: Component
+  }
+}
+
 class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new GridBagLayout) with RoundedBorderPanel
                                                             with ThemeSync with ItemSelectable {
+
+  private class ChoiceDisplay extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
+    private val c = new GridBagConstraints
+
+    c.anchor = GridBagConstraints.WEST
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.weightx = 1
+
+    def setItem(item: T) {
+      removeAll()
+
+      if (item != null) {
+        item match {
+          case comp: Component with ComboBox.Clone => add(comp.getClone, c)
+          case a => add(new JLabel(a.toString), c)
+        }
+
+        syncTheme()
+      }
+
+      revalidate()
+      repaint()
+    }
+
+    def syncTheme() {
+      if (getComponentCount > 0) {
+        getComponent(0) match {
+          case ts: ThemeSync => ts.syncTheme()
+          case l: JLabel => l.setForeground(InterfaceColors.TOOLBAR_TEXT)
+          case _ =>
+        }
+      }
+    }
+  }
+
   setDiameter(6)
   enableHover()
 
   private var selectedItem: T = null
 
-  private val label = new JLabel
+  private val choiceDisplay = new ChoiceDisplay
   private val arrow = new DropdownArrow
 
   private val popup = new JPopupMenu
@@ -32,7 +74,7 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
     c.weightx = 1
     c.insets = new Insets(3, 6, 3, 6)
 
-    add(label, c)
+    add(choiceDisplay, c)
 
     c.fill = GridBagConstraints.NONE
     c.weightx = 0
@@ -55,8 +97,8 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
     addMouseListener(mouseListener)
     addMouseWheelListener(wheelListener)
 
-    label.addMouseListener(mouseListener)
-    label.addMouseWheelListener(wheelListener)
+    choiceDisplay.addMouseListener(mouseListener)
+    choiceDisplay.addMouseWheelListener(wheelListener)
 
     arrow.addMouseListener(mouseListener)
     arrow.addMouseWheelListener(wheelListener)
@@ -72,16 +114,23 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
 
     if (items.isEmpty) {
       selectedItem = null
-      label.setText("")
+      choiceDisplay.setItem(null)
     }
 
     else {
-      items.foreach(item => {
-        popup.add(new MenuItem(new AbstractAction(item.toString) {
-          def actionPerformed(e: ActionEvent) {
-            selectItem(item)
-          }
-        }))
+      items.foreach(_ match {
+        case c: Component =>
+          popup.add(new CustomMenuItem(c, new AbstractAction {
+            def actionPerformed(e: ActionEvent) {
+              selectItem(c.asInstanceOf[T])
+            }
+          }))
+        case a =>
+          popup.add(new MenuItem(new AbstractAction(a.toString) {
+            def actionPerformed(e: ActionEvent) {
+              selectItem(a)
+            }
+          }))
       })
 
       selectItem(items(0))
@@ -106,7 +155,7 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
   
   private def selectItem(item: T) {
     selectedItem = item
-    label.setText(item.toString)
+    choiceDisplay.setItem(item)
 
     itemListeners.foreach(_.itemStateChanged(
       new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED, item, ItemEvent.SELECTED)))
@@ -120,7 +169,6 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
     itemListeners -= listener
   }
 
-  // required to implement ItemSelectable, but not used in NetLogo (IB 11/12/24)
   def getSelectedObjects: Array[Object] = {
     selectedItem match {
       case obj: Object => Array(obj)
@@ -133,7 +181,7 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
     setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
     setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
 
-    label.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    choiceDisplay.syncTheme()
 
     popup.setBackground(InterfaceColors.MENU_BACKGROUND)
 
