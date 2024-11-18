@@ -814,6 +814,7 @@ class App extends
 
     openPreferencesDialog.syncTheme()
     showThemesDialog.syncTheme()
+    openAboutDialog.syncTheme()
     openColorDialog.syncTheme()
     openRGBAColorDialog.syncTheme()
     openLibrariesDialog.syncTheme()
