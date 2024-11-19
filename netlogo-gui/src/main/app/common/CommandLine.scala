@@ -247,6 +247,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
     clearList()
     setText("")
     agentKind(AgentKind.Observer)
+    textField.resetUndoHistory()
   }
 
   private[app] def clearList(): Unit = {

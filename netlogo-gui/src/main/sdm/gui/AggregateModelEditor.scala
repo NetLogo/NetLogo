@@ -18,7 +18,7 @@ import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
 import org.nlogo.swing.{ MenuItem, Utils => SwingUtils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
+import org.nlogo.window.{ EditDialogFactoryInterface, Events, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild
 
 object AggregateModelEditor {
@@ -39,6 +39,7 @@ class AggregateModelEditor(
     I18N.gui.get("menu.tools.systemDynamicsModeler"), linkParent.getGraphicsConfiguration)
   with DrawingEditor
   with LinkChild
+  with Events.LoadBeginEvent.Handler
   with ThemeSync {
 
   def this(
@@ -228,6 +229,11 @@ class AggregateModelEditor(
    * @see DrawingEditor
    */
   def removeViewChangeListener(vcl: ViewChangeListener): Unit = { }
+
+  def handle(e: Events.LoadBeginEvent) {
+    undoManager.clearUndos()
+    undoManager.clearRedos()
+  }
 
   def syncTheme() {
     menuBar.syncTheme()

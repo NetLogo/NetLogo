@@ -31,6 +31,7 @@ class InfoTab(attachModelDir: String => String)
   with HyperlinkListener
   with UndoRedoActions
   with AppEvents.SwitchedTabsEvent.Handler
+  with WindowEvents.LoadBeginEvent.Handler
   with WindowEvents.LoadModelEvent.Handler
   with WindowEvents.ZoomedEvent.Handler
   with Zoomable
@@ -173,14 +174,18 @@ class InfoTab(attachModelDir: String => String)
       FindDialog.dontWatch(editorPane)
   }
 
-  def handle(e: org.nlogo.window.Events.LoadModelEvent) {
+  def handle(e: WindowEvents.LoadBeginEvent) {
+    undoManager.discardAllEdits()
+  }
+
+  def handle(e: WindowEvents.LoadModelEvent) {
     info(e.model.info)
     resetView()
   }
 
   private var editorPaneFontSize = InfoFormatter.defaultFontSize
   private var originalFontSize = -1
-  override def handle(e: org.nlogo.window.Events.ZoomedEvent) {
+  override def handle(e: WindowEvents.ZoomedEvent) {
     super.handle(e)
     if(originalFontSize == -1)
       originalFontSize = textArea.getFont.getSize
