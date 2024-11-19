@@ -827,7 +827,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
 
   def handle(e: LoadBeginEvent): Unit = {
-    unselectWidgets()
+    setInteractMode(InteractMode.SELECT)
     removeAllWidgets()
     zoomer.forgetAllZoomInfo()
   }
