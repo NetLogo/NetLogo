@@ -246,6 +246,12 @@ object InterfaceColors {
 
   def GRAPHICS_BACKGROUND = Constants.ViewBackground
 
+  def VIEW_BORDER =
+    theme match {
+      case "classic" | "light" => TRANSPARENT
+      case "dark" => LIGHT_GRAY_OUTLINE
+    }
+
   def MONITOR_BACKGROUND =
     theme match {
       case "classic" => CLASSIC_BEIGE

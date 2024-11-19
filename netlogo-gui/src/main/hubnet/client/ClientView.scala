@@ -2,11 +2,13 @@
 
 package org.nlogo.hubnet.client
 
+import java.awt.{ Font, Graphics2D, Graphics }
 import java.awt.event.MouseEvent
-import java.awt.{Font, Graphics2D, Graphics}
+import java.io.{ ByteArrayInputStream, DataInputStream }
+import javax.swing.border.LineBorder
+
+import org.nlogo.api.{ Perspective, Graphics2DWrapper, ViewSettings }
 import org.nlogo.core.{ View => CoreView }
-import java.io.{ByteArrayInputStream, DataInputStream}
-import org.nlogo.api.{Perspective, Graphics2DWrapper, ViewSettings}
 import org.nlogo.hubnet.mirroring._
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ ViewMouseHandler, ViewWidgetInterface, Widget }
@@ -90,6 +92,10 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   def handleAgentPerspective(data: Array[Byte]) {
     world.updateClientPerspective(new AgentPerspective(new DataInputStream(new ByteArrayInputStream(data))))
     if (_displayOn) repaint()
+  }
+
+  override def syncTheme() {
+    setBorder(new LineBorder(InterfaceColors.VIEW_BORDER, 2))
   }
 
   /// satisfy ViewWidgetInterface

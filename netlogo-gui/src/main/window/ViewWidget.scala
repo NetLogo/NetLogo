@@ -4,13 +4,13 @@ package org.nlogo.window
 
 import java.awt.{ Component, Dimension, Point, Rectangle }
 import javax.swing.JPopupMenu
+import javax.swing.border.LineBorder
 
 import org.nlogo.api.{ Approximate, Version }
 import org.nlogo.core.{ View => CoreView }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.Events.ResizeViewEvent
 import org.nlogo.window.MouseMode._
-
 
 object ViewWidget {
   private val InsideBorderHeight = 1
@@ -204,6 +204,10 @@ class ViewWidget(workspace: GUIWorkspace)
       case _ =>
     }
     new Rectangle(newX, newY, newWidth, newHeight)
+  }
+
+  override def syncTheme() {
+    setBorder(new LineBorder(InterfaceColors.VIEW_BORDER, 2))
   }
 
   /// font handling for turtle and patch labels
