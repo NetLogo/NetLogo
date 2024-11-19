@@ -255,7 +255,6 @@ object InterfaceColors {
       case "dark" => DARK_GRAY
     }
 
-
   def ANNOUNCEMENTS_BANNER_BACKGROUND_HOVER =
     theme match {
       case "classic" => CLASSIC_LIGHT_GREEN_2
@@ -269,6 +268,11 @@ object InterfaceColors {
       case "dark" => Color.WHITE
     }
 
+  def VIEW_BORDER =
+    theme match {
+      case "classic" | "light" => TRANSPARENT
+      case "dark" => LIGHT_GRAY_OUTLINE
+    }
 
   def MONITOR_BACKGROUND =
     theme match {
