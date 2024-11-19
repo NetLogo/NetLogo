@@ -33,7 +33,7 @@ class NLogoThreeDFormat
     }
   override def isCompatible(model: Model): Boolean =
     model.version.contains("3D")
-  override lazy val defaultView: View = View(left = 210, top = 10, right = 649, bottom = 470,
+  override lazy val defaultView: View = View(left = 255, top = 10, right = 694, bottom = 470,
     dimensions = new WorldDimensions3D(-16, 16, -16, 16, -16, 16, 13.0), fontSize = 10, updateMode = UpdateMode.Continuous,
     showTickCounter = true, frameRate = 30)
   }
