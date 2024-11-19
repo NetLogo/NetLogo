@@ -830,6 +830,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     setInteractMode(InteractMode.SELECT)
     removeAllWidgets()
     zoomer.forgetAllZoomInfo()
+    WidgetActions.undoManager.discardAllEdits()
   }
 
   override def loadWidgets(widgets: Seq[CoreWidget]): Unit = {
