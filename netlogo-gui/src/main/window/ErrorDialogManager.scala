@@ -111,6 +111,10 @@ class ErrorDialogManager(owner: Component, additionalDialogs: => Map[Class[_ <: 
     }
   }
 
+  def closeAllDialogs() {
+    dialogs.foreach(_._2.setVisible(false))
+  }
+
   def syncTheme() {
     dialogs.foreach(_._2.syncTheme())
   }
