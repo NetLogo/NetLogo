@@ -93,5 +93,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     toolbar match {
       case ts: ThemeSync => ts.syncTheme()
     }
+
+    repaint()
   }
 }

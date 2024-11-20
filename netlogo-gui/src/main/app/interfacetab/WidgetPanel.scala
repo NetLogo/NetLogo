@@ -580,11 +580,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
 
     wrapper.validate()
+    wrapper.syncTheme()
     wrapper.setVisible(true)
 
     zoomer.zoomWidget(wrapper, true, loadingWidget, 1.0, zoomFactor)
-
-    wrapper.syncTheme()
 
     if (select) {
       newWidget = wrapper
@@ -603,6 +602,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     add(widgetWrapper, javax.swing.JLayeredPane.DEFAULT_LAYER)
     moveToFront(widgetWrapper)
     widgetWrapper.validate()
+    widgetWrapper.syncTheme()
     widgetWrapper.setVisible(true)
     widgetWrapper.widget.reAdd()
 

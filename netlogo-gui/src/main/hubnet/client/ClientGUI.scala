@@ -158,5 +158,7 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
     statusPanel.syncTheme()
     messagePanel.syncTheme()
     interfacePanel.syncTheme()
+
+    repaint()
   }
 }

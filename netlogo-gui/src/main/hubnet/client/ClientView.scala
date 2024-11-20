@@ -24,6 +24,8 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   private var _displayOn = false
   def setDisplayOn(on: Boolean) { _displayOn = on; repaint() }
 
+  setBackground(InterfaceColors.TRANSPARENT)
+
   locally {
     world.setTrailDrawer(renderer.trailDrawer())
     val mouser = new ViewMouseHandler(this, world, this) {
