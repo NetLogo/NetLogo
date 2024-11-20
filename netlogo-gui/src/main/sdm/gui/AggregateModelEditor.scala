@@ -82,7 +82,7 @@ class AggregateModelEditor(
 
   private val selectionTool = new InspectionTool(this, drawing.getModel)
 
-  private val menuBar = new MenuBar
+  private val menuBar: MenuBar = new MenuBar
 
   locally {
     // Build the menu bar. For OS X, we add a bunch of the menus from app
