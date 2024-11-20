@@ -11,11 +11,10 @@ package org.nlogo.editor
 import java.awt.{ Component, Dimension, Point, Toolkit }
 import java.awt.datatransfer.DataFlavor
 import java.awt.event.{ FocusListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ Action, JEditorPane, JPopupMenu }
+import javax.swing.{ Action, JEditorPane }
 import javax.swing.text.{ Document, TextAction, PlainDocument, BadLocationException }
 
-import org.nlogo.swing.MenuItem
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.swing.{ MenuItem, PopupMenu }
 
 import KeyBinding.keystroke
 
@@ -36,7 +35,7 @@ class EditorArea(val configuration: EditorConfiguration)
   val colorizer = configuration.colorizer
 
   private var indenter: Option[Indenter] = None
-  private val contextMenu: JPopupMenu = new EditorContextMenu(colorizer)
+  private val contextMenu: PopupMenu = new EditorContextMenu(colorizer)
   contextMenu.addPopupMenuListener(new SuspendCaretPopupListener(this))
   private val bracketMatcher = new BracketMatcher(colorizer)
   private val undoManager: UndoManager = new UndoManager()
@@ -192,7 +191,7 @@ class EditorArea(val configuration: EditorConfiguration)
     contextMenu.show(this, e.getX, e.getY)
   }
 
-  private class EditorContextMenu(colorizer: Colorizer) extends JPopupMenu {
+  private class EditorContextMenu(colorizer: Colorizer) extends PopupMenu {
     val copyItem  = new MenuItem(Actions.CopyAction)
     val cutItem   = new MenuItem(Actions.CutAction)
     val pasteItem = new MenuItem(Actions.PasteAction)
@@ -217,11 +216,7 @@ class EditorArea(val configuration: EditorConfiguration)
         case e: EditorAwareAction => e.updateEditorInfo(EditorArea.this, point, mousePos)
         case _ =>
       }
-      setBackground(InterfaceColors.MENU_BACKGROUND)
-      copyItem.syncTheme()
-      cutItem.syncTheme()
-      pasteItem.syncTheme()
-      contextItems.foreach(_.syncTheme())
+      syncTheme()
       super.show(invoker, x, y)
     }
   }

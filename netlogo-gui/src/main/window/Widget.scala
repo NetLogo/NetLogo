@@ -5,11 +5,11 @@ package org.nlogo.window
 import java.awt.{ Component, Container, Dimension, Font, Graphics, Point, Rectangle, event },
                 event.{ MouseAdapter, MouseEvent, MouseListener }
 import java.util.prefs.Preferences
-import javax.swing.{ JPanel, JMenuItem, JPopupMenu }
+import javax.swing.{ JPanel, JMenuItem }
 
 import org.nlogo.api.{ CompilerServices, MultiErrorHandler, SingleErrorHandler }
 import org.nlogo.core.{ TokenType, Widget => CoreWidget }
-import org.nlogo.swing.RoundedBorderPanel
+import org.nlogo.swing.{ PopupMenu, RoundedBorderPanel }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ WidgetAddedEvent, WidgetEditedEvent, WidgetErrorEvent, WidgetRemovedEvent }
 
@@ -91,8 +91,8 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
   def getDefaultExportName = "output.txt"
   def updateConstraints(): Unit = {}
   def classDisplayName: String = getClass.getName
-  def addExtraMenuItems(menu:JPopupMenu): Unit = {
-    for(i<-extraMenuItems) menu.add(i)
+  def addExtraMenuItems(menu: PopupMenu): Unit = {
+    extraMenuItems.foreach(add)
   }
   def extraMenuItems: List[JMenuItem] = Nil
 
@@ -117,9 +117,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
 
   private def doPopup(e: MouseEvent): Unit = {
     if (hasContextMenu) {
-      val menu: JPopupMenu = new JPopupMenu
-
-      menu.setBackground(InterfaceColors.MENU_BACKGROUND)
+      val menu = new PopupMenu
 
       populateContextMenu(menu, e.getPoint, e.getSource.asInstanceOf[Component])
       if (menu.getSubElements.length > 0) {
@@ -158,7 +156,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
     else sup
   }
 
-  def populateContextMenu(menu: JPopupMenu, p: Point, source: Component): Point = p
+  def populateContextMenu(menu: PopupMenu, p: Point, source: Component): Point = p
 
   protected def resetZoomInfo(): Unit = {
     if (findWidgetContainer != null) {

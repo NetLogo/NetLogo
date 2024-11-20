@@ -3,6 +3,7 @@
 package org.nlogo.swing
 
 import javax.swing.{ Action, JMenu, JMenuItem, JPopupMenu }
+import javax.swing.border.LineBorder
 import javax.swing.plaf.basic.BasicMenuUI
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -54,6 +55,7 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
     val menu = super.getPopupMenu
 
     menu.setBackground(InterfaceColors.MENU_BACKGROUND)
+    menu.setBorder(new LineBorder(InterfaceColors.MENU_BORDER))
 
     menu
   }

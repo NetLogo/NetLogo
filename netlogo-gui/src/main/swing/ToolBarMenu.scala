@@ -4,7 +4,7 @@ package org.nlogo.swing
 
 import java.awt.{ Color, FlowLayout }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, JButton, JLabel, JPopupMenu }
+import javax.swing.{ AbstractAction, JButton, JLabel }
 
 abstract class ToolBarMenu(name: String) extends JButton {
   setOpaque(false)
@@ -34,8 +34,9 @@ abstract class ToolBarMenu(name: String) extends JButton {
     menu.setVisible(false)
     menu.show(this, 0, getHeight)
     menu.pack()
+    menu.syncTheme()
     menu.setVisible(true)
   }
 
-  protected def populate(menu: JPopupMenu): Unit
+  protected def populate(menu: PopupMenu): Unit
 }

@@ -5,14 +5,14 @@ package org.nlogo.app.interfacetab
 import java.awt.{ BorderLayout, Component, Dimension, FileDialog, Font, GridBagConstraints, GridBagLayout,
                   Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, Action, Box, JButton, JLabel, JPanel, JPopupMenu }
+import javax.swing.{ AbstractAction, Action, Box, JButton, JLabel, JPanel }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.Exceptions
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, ModalProgressTask, MenuItem, RichAction,
+import org.nlogo.swing.{ FileDialog => SwingFileDialog, ModalProgressTask, MenuItem, PopupMenu, RichAction,
                          RoundedBorderPanel }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents, OutputArea, TextMenuActions, Zoomable }
@@ -157,9 +157,7 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
   def getDefaultComponentForFocus(): Component = commandLine.textField
 
   private def doPopup(e: MouseEvent) {
-    new JPopupMenu {
-      setBackground(InterfaceColors.MENU_BACKGROUND)
-
+    new PopupMenu {
       add(new MenuItem(TextMenuActions.CopyAction))
       add(new MenuItem(new AbstractAction(I18N.gui.get("menu.file.export")) {
         def actionPerformed(e: ActionEvent) {

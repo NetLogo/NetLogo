@@ -2,17 +2,17 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Component, GridBagConstraints, GridBagLayout, Insets, Point }
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 
 import org.nlogo.api.Editable
 import org.nlogo.core.{ I18N, Output => CoreOutput }
-import org.nlogo.swing.MenuItem
+import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
 
 class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
-  org.nlogo.window.Events.ExportWorldEvent.Handler with Editable {
+  Events.ExportWorldEvent.Handler with Editable {
   type WidgetModel = CoreOutput
 
   displayName(I18N.gui.get("tabs.run.widgets.output"))
@@ -57,7 +57,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   def repaintPrompt(){}
   def cycleAgentType(forward:Boolean){}
 
-  override def populateContextMenu(menu:javax.swing.JPopupMenu, p:java.awt.Point, source:java.awt.Component) = {
+  override def populateContextMenu(menu: PopupMenu, p: Point, source: Component) = {
     // at least on Macs, Command-C to copy may not work, so this
     // is needed - ST 4/21/05
     menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copyselectedtext")) {

@@ -3,14 +3,14 @@
 package org.nlogo.app.codetab
 
 import java.awt.event.{ ActionEvent, KeyEvent }
-import javax.swing.{ AbstractAction, JMenuItem, JPopupMenu, JTextField, MenuSelectionManager, SwingUtilities }
+import javax.swing.{ AbstractAction, JMenuItem, JTextField, MenuSelectionManager, SwingUtilities }
 import java.text.Collator
 import java.util.prefs.{ Preferences => JavaPreferences }
 
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.I18N
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ MenuItem, RoundedBorderPanel, ToolBarMenu }
+import org.nlogo.swing.{ MenuItem, PopupMenu, RoundedBorderPanel, ToolBarMenu }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class ProceduresMenu(target: ProceduresMenuTarget)
@@ -25,9 +25,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
   setDiameter(6)
   enableHover()
 
-  override def populate(menu: JPopupMenu) {
-    menu.setBackground(InterfaceColors.MENU_BACKGROUND)
-
+  override def populate(menu: PopupMenu) {
     val procsTable = {
       target.compiler.findProcedurePositions(target.getText)
     }
@@ -118,7 +116,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
     SwingUtilities.invokeLater(() => filterField.requestFocusInWindow())
   }
 
-  private def repopulate(menu: JPopupMenu, filterField: JTextField, items: Seq[JMenuItem]): Unit = {
+  private def repopulate(menu: PopupMenu, filterField: JTextField, items: Seq[JMenuItem]): Unit = {
     val query = filterField.getText
 
     // If the filterField is removed and re-added (as would happen if we completely cleared the menu), it loses focus on

@@ -4,7 +4,7 @@ package org.nlogo.app.interfacetab
 
 import java.awt.image.BufferedImage
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyEvent, KeyListener, MouseEvent }
-import javax.swing.{ AbstractAction, JPopupMenu }
+import javax.swing.AbstractAction
 
 import org.nlogo.api.{ Editable, Exceptions, Version }
 import org.nlogo.app.common.{ FileActions, UndoRedoActions },
@@ -16,8 +16,7 @@ import org.nlogo.core.{
   TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, UndoManager }
 import org.nlogo.log.LogManager
-import org.nlogo.swing.MenuItem
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.window.{ ButtonWidget, ChooserWidget, Events => WindowEvents, GUIWorkspace, InputBoxWidget,
                           InterfaceGlobalWidget, MonitorWidget, PlotWidget, SliderWidget, ViewWidget,
                           ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
@@ -55,9 +54,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   ///
 
   override protected def doPopup(e: MouseEvent): Unit = {
-    val menu = new JPopupMenu
-
-    menu.setBackground(InterfaceColors.MENU_BACKGROUND)
+    val menu = new PopupMenu
 
     Seq(WidgetInfo.button,
       WidgetInfo.slider,
@@ -82,7 +79,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     menu.add(new WidgetCreationMenuItem(I18N.gui.get("tabs.run.widgets.note"), CoreTextBox(None, fontSize = 11, color = 0)))
 
     // add extra stuff
-    menu.add(new JPopupMenu.Separator())
+    menu.addSeparator()
     menu.add(new MenuItem(new ExportInterfaceAction(workspace, this)))
 
     menu.show(this, e.getX, e.getY)

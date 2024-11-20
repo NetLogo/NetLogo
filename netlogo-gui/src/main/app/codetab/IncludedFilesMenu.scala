@@ -6,14 +6,15 @@ import java.awt.{ Dimension, FileDialog }
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.prefs.Preferences
-import javax.swing.{ AbstractAction, JPopupMenu }
+import javax.swing.AbstractAction
 
 import scala.util.control.Exception.ignoring
 
 import org.nlogo.app.common.{ Actions, TabsInterface }, Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, MenuItem, OptionPane, RoundedBorderPanel, ToolBarMenu }
+import org.nlogo.swing.{ FileDialog => SwingFileDialog, MenuItem, OptionPane, PopupMenu, RoundedBorderPanel,
+                         ToolBarMenu }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents }
 
@@ -39,8 +40,7 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
     super.doLayout()
   }
 
-  override def populate(menu: JPopupMenu) = {
-    menu.setBackground(InterfaceColors.MENU_BACKGROUND)
+  override def populate(menu: PopupMenu) = {
     includesTable match {
       case Some(includePaths) =>
         val filtered =
