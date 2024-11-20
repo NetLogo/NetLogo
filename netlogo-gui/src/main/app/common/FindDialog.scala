@@ -4,15 +4,14 @@ package org.nlogo.app.common;
 
 import java.awt.{ BorderLayout, Frame, Toolkit }
 import java.awt.event.{ ActionEvent, ActionListener, FocusEvent }
-import javax.swing.{ AbstractAction, Action, Box, BoxLayout, JButton, JCheckBox, JComponent, JDialog, JEditorPane,
-                     JLabel, JPanel, SwingConstants }
+import javax.swing.{ AbstractAction, Action, Box, BoxLayout, JDialog, JEditorPane, JLabel, JPanel, SwingConstants }
 import javax.swing.border.EmptyBorder
 import javax.swing.text.{ BadLocationException, JTextComponent, TextAction }
 
 import org.nlogo.core.I18N
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.swing.{ ButtonPanel, NonemptyTextFieldActionEnabler, NonemptyTextFieldButtonEnabler, TextField,
-                         TextFieldBox, UserAction, Utils }
+import org.nlogo.swing.{ Button, ButtonPanel, CheckBox, NonemptyTextFieldActionEnabler, NonemptyTextFieldButtonEnabler,
+                         TextField, TextFieldBox, Transparent, UserAction, Utils }
 
 object FindDialog extends ThemeSync {
   class FindAction extends TextAction(I18N.gui.get("menu.edit.find")) {
@@ -175,6 +174,12 @@ object FindDialog extends ThemeSync {
   }
 
   def syncTheme() {
+    if (instance != null)
+      instance.syncTheme()
+    
+    if (codeInstance != null)
+      codeInstance.syncTheme()
+
     FIND_ACTION.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
                                                                       InterfaceColors.TOOLBAR_IMAGE))
     FIND_ACTION_CODE.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
@@ -186,14 +191,53 @@ object FindDialog extends ThemeSync {
   }
 }
 
-class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.find.title"), false) with ActionListener {
+class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.find.title"), false) with ActionListener
+                                                                                                    with ThemeSync {
   private var target: JTextComponent = null
 
-  private val nextButton = new JButton(I18N.gui.get("dialog.find.next"))
-  private val prevButton = new JButton(I18N.gui.get("dialog.find.previous"))
-  private val replaceButton = new JButton(I18N.gui.get("dialog.find.replace"))
-  private val replaceAndFindButton = new JButton(I18N.gui.get("dialog.find.replaceAndFind"))
-  private val replaceAllButton = new JButton(I18N.gui.get("dialog.find.replaceAll"))
+  private val nextButton = new Button(I18N.gui.get("dialog.find.next"), () => {
+    if (!next(findBox.getText, ignoreCaseCheckBox.isSelected, wrapAroundCheckBox.isSelected)) {
+      Toolkit.getDefaultToolkit.beep()
+      notFoundLabel.setVisible(true)
+    } else {
+      notFoundLabel.setVisible(false)
+    }
+  })
+  
+  private val prevButton = new Button(I18N.gui.get("dialog.find.previous"), () => {
+    if (!prev(findBox.getText, ignoreCaseCheckBox.isSelected, wrapAroundCheckBox.isSelected)) {
+      Toolkit.getDefaultToolkit.beep()
+      notFoundLabel.setVisible(true)
+    } else {
+      notFoundLabel.setVisible(false)
+    }
+  })
+
+  private val replaceButton = new Button(I18N.gui.get("dialog.find.replace"), () => {
+    replace(replaceBox.getText)
+  })
+
+  private val replaceAndFindButton = new Button(I18N.gui.get("dialog.find.replaceAndFind"), () => {
+    if (target.getSelectedText != null && (
+      if (ignoreCaseCheckBox.isSelected)
+        target.getSelectedText.equalsIgnoreCase(findBox.getText)
+      else
+        target.getSelectedText.equals(findBox.getText)
+    )) {
+      replace(replaceBox.getText)
+    }
+
+    if (!next(findBox.getText, ignoreCaseCheckBox.isSelected, wrapAroundCheckBox.isSelected)) {
+      Toolkit.getDefaultToolkit.beep()
+      notFoundLabel.setVisible(true);
+    } else {
+      notFoundLabel.setVisible(false);
+    }
+  })
+
+  private val replaceAllButton = new Button(I18N.gui.get("dialog.find.replaceAll"), () => {
+    replaceAll(findBox.getText, ignoreCaseCheckBox.isSelected, replaceBox.getText)
+  })
 
   private val nextEnabler = new NonemptyTextFieldButtonEnabler(nextButton)
   private val prevEnabler = new NonemptyTextFieldButtonEnabler(prevButton)
@@ -201,18 +245,18 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
   private val replaceAndFindEnabler = new NonemptyTextFieldButtonEnabler(replaceAndFindButton)
   private val replaceAllEnabler = new NonemptyTextFieldButtonEnabler(replaceAllButton)
 
-  private val ignoreCaseCheckBox = new JCheckBox(I18N.gui.get("dialog.find.ignoreCase"), true)
-  private val wrapAroundCheckBox = new JCheckBox(I18N.gui.get("dialog.find.wrapAround"), true)
+  private val ignoreCaseCheckBox = new CheckBox(I18N.gui.get("dialog.find.ignoreCase")) {
+    setSelected(true)
+  }
+
+  private val wrapAroundCheckBox = new CheckBox(I18N.gui.get("dialog.find.wrapAround")) {
+    setSelected(true)
+  }
+
   private val findBox = new TextField(25)
   private val replaceBox = new TextField(25)
   private val replaceLabel = new JLabel(I18N.gui.get("dialog.find.replaceWith"))
   private val notFoundLabel = new JLabel(I18N.gui.get("dialog.find.notFound"))
-
-  nextButton.addActionListener(this)
-  prevButton.addActionListener(this)
-  replaceButton.addActionListener(this)
-  replaceAndFindButton.addActionListener(this)
-  replaceAllButton.addActionListener(this)
 
   nextEnabler.addRequiredField(findBox)
   prevEnabler.addRequiredField(findBox)
@@ -232,15 +276,15 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
   setResizable(false)
   setVisible(false)
 
-  locally {
-    val findPanel = new TextFieldBox(SwingConstants.LEFT)
+  private val findPanel = new TextFieldBox(SwingConstants.LEFT)
 
+  locally {
     findPanel.setBorder(new EmptyBorder(16, 8, 8, 8))
 
     findPanel.addField(I18N.gui.get("dialog.find.find"), findBox)
     findPanel.addField(replaceLabel, replaceBox)
 
-    val optionsPanel = new JPanel
+    val optionsPanel = new JPanel with Transparent
 
     optionsPanel.setLayout(new BoxLayout(optionsPanel, BoxLayout.X_AXIS))
     optionsPanel.setBorder(new EmptyBorder(8, 8, 8, 8))
@@ -252,7 +296,7 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     optionsPanel.add(notFoundLabel)
 
     val buttonPanel = new ButtonPanel(
-      Array[JComponent](
+      Array(
         nextButton,
         prevButton,
         replaceButton,
@@ -280,44 +324,13 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
 
   def actionPerformed(e: ActionEvent) {
     e.getSource match {
-      case `nextButton` | `findBox` =>
+      case `findBox` =>
         if (!next(findBox.getText, ignoreCaseCheckBox.isSelected, wrapAroundCheckBox.isSelected)) {
           Toolkit.getDefaultToolkit.beep()
           notFoundLabel.setVisible(true)
         } else {
           notFoundLabel.setVisible(false)
         }
-
-      case `prevButton` =>
-        if (!prev(findBox.getText, ignoreCaseCheckBox.isSelected, wrapAroundCheckBox.isSelected)) {
-          Toolkit.getDefaultToolkit.beep()
-          notFoundLabel.setVisible(true)
-        } else {
-          notFoundLabel.setVisible(false)
-        }
-
-      case `replaceButton` =>
-        replace(replaceBox.getText)
-
-      case `replaceAndFindButton` =>
-        if (target.getSelectedText != null && (
-          if (ignoreCaseCheckBox.isSelected)
-            target.getSelectedText.equalsIgnoreCase(findBox.getText)
-          else
-            target.getSelectedText.equals(findBox.getText)
-        )) {
-          replace(replaceBox.getText)
-        }
-
-        if (!next(findBox.getText, ignoreCaseCheckBox.isSelected, wrapAroundCheckBox.isSelected)) {
-          Toolkit.getDefaultToolkit.beep()
-          notFoundLabel.setVisible(true);
-        } else {
-          notFoundLabel.setVisible(false);
-        }
-
-      case `replaceAllButton` =>
-        replaceAll(findBox.getText, ignoreCaseCheckBox.isSelected, replaceBox.getText)
 
       case _ =>
         notFoundLabel.setVisible(false)
@@ -433,5 +446,31 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     replaceAllEnabler.setEnabled(enabled)
     replaceBox.setEnabled(enabled)
     replaceLabel.setEnabled(enabled)
+  }
+
+  def syncTheme() {
+    getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    nextButton.syncTheme()
+    prevButton.syncTheme()
+    replaceButton.syncTheme()
+    replaceAndFindButton.syncTheme()
+    replaceAllButton.syncTheme()
+
+    ignoreCaseCheckBox.setForeground(InterfaceColors.DIALOG_TEXT)
+    wrapAroundCheckBox.setForeground(InterfaceColors.DIALOG_TEXT)
+
+    findBox.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    findBox.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    findBox.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+
+    replaceBox.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    replaceBox.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    replaceBox.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+
+    replaceLabel.setForeground(InterfaceColors.DIALOG_TEXT)
+    notFoundLabel.setForeground(InterfaceColors.DIALOG_TEXT)
+
+    findPanel.syncTheme()
   }
 }
