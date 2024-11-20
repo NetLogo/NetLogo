@@ -873,6 +873,7 @@ class App extends
     if (AbstractWorkspace.isApp)
       setWindowTitles()
     workspace.hubNetManager.foreach(_.closeClientEditor())
+    errorDialogManager.closeAllDialogs()
   }
 
   private var wasAtPreferredSizeBeforeLoadBegan = false
