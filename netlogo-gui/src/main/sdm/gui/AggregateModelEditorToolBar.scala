@@ -70,7 +70,8 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
   def syncTheme() {
     setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
-    dtLabel.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    if (dtLabel != null)
+      dtLabel.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
     if (dtButton != null)
       dtButton.syncTheme()
