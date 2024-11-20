@@ -6,7 +6,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.AbstractAction;
-import javax.swing.JPopupMenu;
 
 import org.nlogo.agent.AgentIterator;
 import org.nlogo.agent.AgentSet;
@@ -21,6 +20,7 @@ import org.nlogo.core.AgentKindJ;
 import org.nlogo.core.I18N;
 import org.nlogo.swing.Menu;
 import org.nlogo.swing.MenuItem;
+import org.nlogo.swing.PopupMenu;
 import org.nlogo.theme.InterfaceColors;
 
 import scala.Option;
@@ -443,7 +443,7 @@ public class View
     return renderPerspective;
   }
 
-  public java.awt.Point populateContextMenu(javax.swing.JPopupMenu menu, java.awt.Point p, java.awt.Component source) {
+  public java.awt.Point populateContextMenu(PopupMenu menu, java.awt.Point p, java.awt.Component source) {
     // certain menu items dont work in Applets.
     // the only ones that do are watch, follow and reset-perspective
     // this check (and others below) prevent items from being added
@@ -462,7 +462,7 @@ public class View
 
     menu.add(new MenuItem(workspace.switchTo3DViewAction, true));
 
-    menu.add(new JPopupMenu.Separator());
+    menu.addSeparator();
 
     menu.add(new MenuItem(new AbstractAction(I18N.guiJ().get("tabs.run.widget.view.inspectGlobals")) {
       public void actionPerformed(ActionEvent actionEvent) {
@@ -471,7 +471,7 @@ public class View
     }, true));
 
     if (!workspace.world().observer().atHome2D()) {
-      menu.add(new JPopupMenu.Separator());
+      menu.addSeparator();
       menu.add(new MenuItem(new AbstractAction(
         "<html>" + Colors.colorize("reset-perspective", InterfaceColors.COMMAND_COLOR())) {
         public void actionPerformed(ActionEvent e) {
@@ -490,7 +490,7 @@ public class View
 
       try {
         patch = workspace.world().getPatchAt(xcor, ycor);
-        menu.add(new JPopupMenu.Separator());
+        menu.addSeparator();
         menu.add(new AgentMenuItem(patch, AgentMenuType.INSPECT, "inspect", false));
       } catch (AgentException e) {
         org.nlogo.api.Exceptions.ignore(e);
@@ -504,7 +504,7 @@ public class View
         if (!link.hidden() &&
             workspace.world().protractor().distance(link, xcor, ycor, true) < link.lineThickness() + 0.5) {
           if (!linksAdded) {
-            menu.add(new javax.swing.JPopupMenu.Separator());
+            menu.addSeparator();
             linksAdded = true;
           }
           menu.add(new AgentMenuItem(link, AgentMenuType.INSPECT, "inspect", false));
@@ -530,7 +530,7 @@ public class View
 
             if (dist <= offset) {
               if (!turtlesAdded) {
-                menu.add(new javax.swing.JPopupMenu.Separator());
+                menu.addSeparator();
                 turtlesAdded = true;
               }
 
@@ -559,7 +559,7 @@ public class View
             if ((xMouse >= xCor - offset) && (xMouse <= xCor + offset) &&
                 (yMouse >= yCor - offset) && (yMouse <= yCor + offset)) {
               if (!turtlesAdded) {
-                menu.add(new JPopupMenu.Separator());
+                menu.addSeparator();
                 turtlesAdded = true;
               }
 
@@ -584,11 +584,11 @@ public class View
     return p;
   }
 
-  private void addTurtleToContextMenu(javax.swing.JPopupMenu menu,
+  private void addTurtleToContextMenu(PopupMenu menu,
                                       org.nlogo.agent.Turtle turtle) {
     javax.swing.JMenu submenu = new AgentMenu(turtle);
     submenu.add(new AgentMenuItem(turtle, AgentMenuType.INSPECT, "inspect", true));
-    submenu.add(new javax.swing.JPopupMenu.Separator());
+    submenu.addSeparator();
     submenu.add(new AgentMenuItem(turtle, AgentMenuType.WATCH, "watch", true));
     submenu.add(new AgentMenuItem(turtle, AgentMenuType.FOLLOW, "follow", true));
     menu.add(submenu);

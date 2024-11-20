@@ -5,7 +5,7 @@ package org.nlogo.swing
 import java.awt.{ Component, GridBagConstraints, GridBagLayout, Insets, ItemSelectable }
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener, MouseAdapter, MouseEvent, MouseWheelEvent,
                         MouseWheelListener }
-import javax.swing.{ AbstractAction, JLabel, JPanel, JPopupMenu }
+import javax.swing.{ AbstractAction, JLabel, JPanel }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -63,7 +63,7 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
   private val choiceDisplay = new ChoiceDisplay
   private val arrow = new DropdownArrow
 
-  private val popup = new JPopupMenu
+  private val popup = new PopupMenu
 
   private val itemListeners = Set[ItemListener]()
 
@@ -183,10 +183,6 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
 
     choiceDisplay.syncTheme()
 
-    popup.setBackground(InterfaceColors.MENU_BACKGROUND)
-
-    popup.getComponents.foreach(_ match {
-      case ts: ThemeSync => ts.syncTheme()
-    })
+    popup.syncTheme()
   }
 }

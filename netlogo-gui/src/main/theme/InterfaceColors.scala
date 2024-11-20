@@ -465,6 +465,8 @@ object InterfaceColors {
       case "dark" => DARK_BLUE_GRAY
     }
   
+  def MENU_BORDER = MEDIUM_GRAY
+  
   def MENU_TEXT_HOVER =
     theme match {
       case "classic" | "light" => Color.WHITE

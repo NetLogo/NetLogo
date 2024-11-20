@@ -5,7 +5,7 @@ package org.nlogo.app.interfacetab
 import java.awt.{ Component, Cursor, Dimension, Graphics, Point, Rectangle, Color => AwtColor, Toolkit }
 import java.awt.event.{ ActionEvent, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, MouseListener, MouseMotionAdapter,
                         MouseMotionListener }
-import javax.swing.{ AbstractAction, JComponent, JLayeredPane, JPopupMenu }
+import javax.swing.{ AbstractAction, JComponent, JLayeredPane }
 
 import org.nlogo.api.Editable
 import org.nlogo.app.common.EditorFactory
@@ -17,7 +17,7 @@ import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser,
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.swing.{ MenuItem, Utils }
+import org.nlogo.swing.{ MenuItem, PopupMenu, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ AbstractWidgetPanel, Events => WindowEvents, GUIWorkspace, OutputWidget, Widget,
                           WidgetContainer, WidgetRegistry, DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget,
@@ -406,9 +406,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   // im not yet sure if it runs anywhere else.
   // that seems like bugs waiting to happen. JC - 12/20/10
   protected def doPopup(e: MouseEvent): Unit = {
-    val menu = new JPopupMenu()
-
-    menu.setBackground(InterfaceColors.MENU_BACKGROUND)
+    val menu = new PopupMenu
 
     def menuItem(keyName: String, widget: CoreWidget): WidgetCreationMenuItem = {
       new WidgetCreationMenuItem(I18N.gui.get(s"tabs.run.widgets.$keyName"), widget)

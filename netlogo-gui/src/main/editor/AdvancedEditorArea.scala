@@ -10,7 +10,7 @@ import javax.swing.text.EditorKit
 import org.fife.ui.rtextarea.RTextArea
 import org.fife.ui.rsyntaxtextarea.{ RSyntaxTextArea, Theme }
 
-import org.nlogo.swing.{ Menu, MenuItem }
+import org.nlogo.swing.{ Menu, MenuItem, PopupMenu }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class AdvancedEditorArea(val configuration: EditorConfiguration)
@@ -42,8 +42,8 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
     discardAllEdits()
   }
 
-  override def createPopupMenu(): JPopupMenu = {
-    new JPopupMenu {
+  override def createPopupMenu(): PopupMenu = {
+    new PopupMenu {
       // RSyntaxTextArea creates menu items that don't sync with the color theme,
       // so we have to convert them to the synced versions (IB 11/5/24)
       AdvancedEditorArea.super.createPopupMenu.getComponents.foreach(_ match {

@@ -4,10 +4,10 @@ package org.nlogo.app.common
 
 import java.awt.{ Color, Graphics }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, JLabel, JPopupMenu }
+import javax.swing.{ AbstractAction, JLabel }
 
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.MenuItem
+import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
 
 class LinePrompt(commandLine: CommandLine) extends JLabel {
@@ -30,9 +30,7 @@ class LinePrompt(commandLine: CommandLine) extends JLabel {
 
     override def mousePressed(e: MouseEvent)  {
       if (isEnabled) {
-        val popMenu = new JPopupMenu("Ask who?")
-
-        popMenu.setBackground(InterfaceColors.MENU_BACKGROUND)
+        val popMenu = new PopupMenu("Ask who?")
 
         def addItem(name: String, clazz: AgentKind) {
           popMenu.add(new MenuItem(new AbstractAction(name) {
@@ -47,7 +45,7 @@ class LinePrompt(commandLine: CommandLine) extends JLabel {
         addItem(I18N.gui.get("common.turtles"), AgentKind.Turtle)
         addItem(I18N.gui.get("common.patches"), AgentKind.Patch)
         addItem(I18N.gui.get("common.links"), AgentKind.Link)
-        popMenu.add(new JPopupMenu.Separator)
+        popMenu.addSeparator()
         popMenu.add(new MenuItem(I18N.gui.get("tabs.run.commandcenter.orusetabkey"))).setEnabled(false)
         popMenu.show(LinePrompt.this, 0, getHeight)
       }

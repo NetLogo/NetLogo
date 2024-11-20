@@ -5,7 +5,7 @@ package org.nlogo.gl.view
 import java.awt.Toolkit
 import java.awt.event.{ ActionEvent, ActionListener }
 import java.util.{ List => JList }
-import javax.swing.{ AbstractAction, JPopupMenu }
+import javax.swing.AbstractAction
 
 import org.nlogo.api.{ Agent, Perspective, Turtle }
 import org.nlogo.awt.{ Colors, ImageSelection }, Colors.colorize
@@ -17,10 +17,7 @@ import org.nlogo.theme.InterfaceColors
 class Picker(view: View) extends PickListener with ActionListener {
 
   def pick(mousePt: java.awt.Point, agents: JList[Agent]) {
-
     val menu = new WrappingPopupMenu
-
-    menu.setBackground(InterfaceColors.MENU_BACKGROUND)
 
     menu.add(new MenuItem(new AbstractAction("Edit...") {
       def actionPerformed(e: ActionEvent) {
@@ -30,7 +27,7 @@ class Picker(view: View) extends PickListener with ActionListener {
       }
     }))
 
-    menu.add(new JPopupMenu.Separator)
+    menu.addSeparator()
 
     menu.add(new MenuItem(new AbstractAction("Copy View") {
       def actionPerformed(e: ActionEvent) {
@@ -45,7 +42,7 @@ class Picker(view: View) extends PickListener with ActionListener {
       }
     }))
 
-    menu.add(new JPopupMenu.Separator)
+    menu.addSeparator()
 
     menu.add(new MenuItem(new AbstractAction("inspect globals") {
       def actionPerformed(e: ActionEvent) {
@@ -53,7 +50,7 @@ class Picker(view: View) extends PickListener with ActionListener {
       }
     }))
 
-    menu.add(new JPopupMenu.Separator)
+    menu.addSeparator()
 
     val resetItem = new MenuItem(new AbstractAction(
         "<html>" + colorize("reset-perspective", InterfaceColors.COMMAND_COLOR)) {
@@ -73,13 +70,13 @@ class Picker(view: View) extends PickListener with ActionListener {
     import collection.JavaConverters._
     for(agent <- agents.asScala) {
       if (last == null || !last.isInstance(agent)) {
-        menu.add(new javax.swing.JPopupMenu.Separator)
+        menu.addSeparator()
         last = agent.getClass
       }
       if (agent.isInstanceOf[Turtle]) {
         val submenu = new AgentMenu(agent)
         submenu.add(new AgentMenuItem(agent, Inspect, "inspect"))
-        submenu.add(new javax.swing.JPopupMenu.Separator())
+        submenu.addSeparator()
         submenu.add(new AgentMenuItem(agent, Watch, "watch"))
         submenu.add(new AgentMenuItem(agent, Follow, "follow"))
         submenu.add(new AgentMenuItem(agent, Ride, "ride"))

@@ -6,13 +6,13 @@ import java.awt.{ Component, Dimension, Rectangle }
 import java.awt.event.{ FocusListener, FocusEvent,
   KeyEvent, KeyAdapter, MouseAdapter, MouseEvent }
 import java.awt.image.BufferedImage
-import javax.swing.{ JLayeredPane, JPopupMenu }
+import javax.swing.JLayeredPane
 
 import org.nlogo.api.{ CompilerServices, Exceptions, RandomServices, Version }
 import org.nlogo.awt.Images
 import org.nlogo.core.{ Widget => CoreWidget, View => CoreView }
 import org.nlogo.plot.PlotManager
-import org.nlogo.swing.MenuItem
+import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ LoadWidgetsEvent, OutputEvent }
 import org.nlogo.util.SysInfo
@@ -165,9 +165,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   ///
 
   private def doPopup(e: MouseEvent): Unit = {
-    val menu = new JPopupMenu
-
-    menu.setBackground(InterfaceColors.MENU_BACKGROUND)
+    val menu = new PopupMenu
 
     menu.add(new MenuItem(Version.version)).setEnabled(false)
     menu.add(new MenuItem(SysInfo.getOSInfoString)).setEnabled(false)

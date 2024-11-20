@@ -6,12 +6,11 @@ package org.nlogo.app.common
 
 import java.awt.{ Font, Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, JButton, JPopupMenu }
+import javax.swing.{ AbstractAction, JButton }
 
 import org.nlogo.awt.{ Fonts, Mouse }
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ MenuItem, Utils }
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.swing.{ MenuItem, PopupMenu, Utils }
 
 class HistoryPrompt(commandLine: CommandLine) extends JButton {
 
@@ -33,9 +32,7 @@ class HistoryPrompt(commandLine: CommandLine) extends JButton {
   override def getInsets =  new Insets(0, 4, 0, 4)  // ad hoc - ST 11/24/04
 
   private def doPopupMenu() {
-    val popMenu = new JPopupMenu(I18N.gui.get("tabs.run.commandcenter.history"))
-
-    popMenu.setBackground(InterfaceColors.MENU_BACKGROUND)
+    val popMenu = new PopupMenu(I18N.gui.get("tabs.run.commandcenter.history"))
 
     for(ex <- commandLine.getExecutionList) {
       val str =
@@ -60,9 +57,9 @@ class HistoryPrompt(commandLine: CommandLine) extends JButton {
     if (commandLine.getExecutionList.isEmpty)
       popMenu.add(new MenuItem(I18N.gui.get("tabs.run.commandcenter.nohistory"))).setEnabled(false)
     else {
-      popMenu.add(new JPopupMenu.Separator)
+      popMenu.addSeparator()
       popMenu.add(new MenuItem(I18N.gui.get("tabs.run.commandcenter.useArrowKeys"))).setEnabled(false)
-      popMenu.add(new JPopupMenu.Separator)
+      popMenu.addSeparator()
       popMenu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.commandcenter.clearHistory")) {
         def actionPerformed(e: ActionEvent) {
           commandLine.clearList()

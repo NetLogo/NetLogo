@@ -3,11 +3,11 @@
 package org.nlogo.window
 
 import java.awt.{ Component, Dimension, Point, Rectangle }
-import javax.swing.JPopupMenu
 import javax.swing.border.LineBorder
 
 import org.nlogo.api.{ Approximate, Version }
 import org.nlogo.core.{ View => CoreView }
+import org.nlogo.swing.PopupMenu
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.Events.ResizeViewEvent
 import org.nlogo.window.MouseMode._
@@ -227,7 +227,7 @@ class ViewWidget(workspace: GUIWorkspace)
   override def hasContextMenu: Boolean =
     true;
 
-  override def populateContextMenu(menu: JPopupMenu, p: Point, source: Component): Point =
+  override def populateContextMenu(menu: PopupMenu, p: Point, source: Component): Point =
     view.populateContextMenu(menu, p, source)
 
   /// display switch

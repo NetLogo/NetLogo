@@ -4,11 +4,11 @@ package org.nlogo.shape.editor
 
 import java.awt.{ BasicStroke, Component, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
-import javax.swing.{ AbstractAction, Icon, JDialog, JLabel, JPanel, JPopupMenu, JTextField, WindowConstants }
+import javax.swing.{ AbstractAction, Icon, JDialog, JLabel, JPanel, JTextField, WindowConstants }
 
 import org.nlogo.core.{ I18N, Shape, ShapeList }
 import org.nlogo.shape.{ LinkLine, LinkShape, VectorShape }
-import org.nlogo.swing.{ Button, ButtonPanel, DropdownArrow, LabeledComponent, MenuItem, OptionPane,
+import org.nlogo.swing.{ Button, ButtonPanel, DropdownArrow, LabeledComponent, MenuItem, OptionPane, PopupMenu,
                          RoundedBorderPanel, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -228,7 +228,7 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
     private val label = new JLabel
     private val arrow = new DropdownArrow
 
-    private val popup = new JPopupMenu
+    private val popup = new PopupMenu
 
     locally {
       val c = new GridBagConstraints
@@ -290,11 +290,7 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
       setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
       setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
 
-      popup.setBackground(InterfaceColors.MENU_BACKGROUND)
-
-      popup.getComponents.foreach(_ match {
-        case ts: ThemeSync => ts.syncTheme()
-      })
+      popup.syncTheme()
     }
   }
 }

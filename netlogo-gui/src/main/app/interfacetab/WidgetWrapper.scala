@@ -5,13 +5,13 @@ package org.nlogo.app.interfacetab
 import java.awt.{ Color, Component, Cursor, Dimension, Graphics, Point, Rectangle }
 import java.awt.event.{ ActionEvent, InputEvent, MouseAdapter, MouseEvent, MouseListener,  MouseMotionAdapter,
                         MouseMotionListener }
-import javax.swing.{ AbstractAction, JComponent, JLayeredPane, JPanel, JPopupMenu }
+import javax.swing.{ AbstractAction, JComponent, JLayeredPane, JPanel }
 
 import org.nlogo.api.Editable
 import org.nlogo.app.common.Events.WidgetSelectedEvent
 import org.nlogo.awt.{ Coordinates, Mouse }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ MenuItem, RoundedBorderPanel, WrappingPopupMenu }
+import org.nlogo.swing.{ MenuItem, PopupMenu, RoundedBorderPanel, WrappingPopupMenu }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ MouseMode, Widget, WidgetWrapperInterface }
 import org.nlogo.window.Events.{ DirtyEvent, EditWidgetEvent, ExportWidgetEvent, WidgetForegroundedEvent }
@@ -843,8 +843,6 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     if (interfacePanel != null) {
       val menu = new WrappingPopupMenu
 
-      menu.setBackground(InterfaceColors.MENU_BACKGROUND)
-
       val p = populateContextMenu(menu, e.getPoint, e.getSource.asInstanceOf[Component])
 
       if (menu.getSubElements.size > 0)
@@ -854,7 +852,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     }
   }
 
-  private def populateContextMenu(menu: JPopupMenu, p: Point, source: Component): Point = {
+  private def populateContextMenu(menu: PopupMenu, p: Point, source: Component): Point = {
     if (widget.getEditable.isInstanceOf[Editable] && !interfacePanel.multiSelected) {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.edit")) {
         def actionPerformed(e: ActionEvent) {
@@ -874,7 +872,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       }))
 
       if (interfacePanel.multiSelected) {
-        menu.add(new JPopupMenu.Separator)
+        menu.addSeparator()
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft")) {
           def actionPerformed(e: ActionEvent) {
@@ -912,7 +910,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
           }
         }))
 
-        menu.add(new JPopupMenu.Separator)
+        menu.addSeparator()
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.distributeHorizontal")) {
           def actionPerformed(e: ActionEvent) {
@@ -938,7 +936,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     }
 
     if (interfacePanel.selectedWrappers.size > 1) {
-      menu.add(new JPopupMenu.Separator)
+      menu.addSeparator()
 
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deleteSelected")) {
         def actionPerformed(e: ActionEvent) {
@@ -948,7 +946,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     }
 
     else if (widget.deleteable) {
-      menu.add(new JPopupMenu.Separator)
+      menu.addSeparator()
 
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.delete")) {
         def actionPerformed(e: ActionEvent) {
@@ -958,7 +956,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     }
 
     if (widget.hasContextMenu) {
-      menu.add(new JPopupMenu.Separator)
+      menu.addSeparator()
 
       val location = widget.populateContextMenu(menu, p, source)
 
@@ -971,11 +969,11 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       }
 
       widget.addExtraMenuItems(menu)
-
-      return location
+      location
     }
 
-    p
+    else
+      p
   }
 
   def syncTheme() {

@@ -6,6 +6,7 @@ import java.awt.{ Component, Dimension, Graphics }
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, JFrame, JMenuBar, JMenuItem, JPopupMenu, WindowConstants },
   WindowConstants.HIDE_ON_CLOSE
+import javax.swing.border.LineBorder
 import javax.swing.plaf.basic.BasicMenuUI
 
 import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, Tool, ViewChangeListener }
@@ -293,6 +294,7 @@ class AggregateModelEditor(
       val menu = super.getPopupMenu
 
       menu.setBackground(InterfaceColors.MENU_BACKGROUND)
+      menu.setBorder(new LineBorder(InterfaceColors.MENU_BORDER))
 
       menu
     }
