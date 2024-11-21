@@ -3,11 +3,11 @@
 package org.nlogo.window
 
 import java.awt.{ Component, Dimension, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets }
-import javax.swing.{ JPanel, JScrollPane, JTextArea, ScrollPaneConstants }
+import javax.swing.{ JPanel, JScrollPane, ScrollPaneConstants }
 
 import org.nlogo.agent.OutputObject
 import org.nlogo.awt.{ Fonts => NLogoFonts, LineBreaker }
-import org.nlogo.swing.RoundedBorderPanel
+import org.nlogo.swing.{ RoundedBorderPanel, TextArea }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object OutputArea {
@@ -15,7 +15,7 @@ object OutputArea {
   private val PreferredHeight = 45
   private val MinimumWidth = 50
   private val GuessScrollBarWidth = 24
-  class DefaultTextArea extends JTextArea {
+  class DefaultTextArea extends TextArea {
     override def getMinimumSize: Dimension = new Dimension(50, (getRowHeight * 1.25).toInt)
   }
   class DefaultTextAreaWithNextFocus(nextComponent: Component) extends DefaultTextArea {
@@ -28,7 +28,7 @@ object OutputArea {
 
 import OutputArea._
 
-class OutputArea(val text: JTextArea) extends JPanel with RoundedBorderPanel with ThemeSync {
+class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with ThemeSync {
   setOpaque(false)
 
   var zoomFactor = 1.0
@@ -100,8 +100,10 @@ class OutputArea(val text: JTextArea) extends JPanel with RoundedBorderPanel wit
     setBackgroundColor(InterfaceColors.COMMAND_OUTPUT_BACKGROUND)
     setBorderColor(InterfaceColors.OUTPUT_BORDER)
 
-    text.setBackground(InterfaceColors.COMMAND_OUTPUT_BACKGROUND)
-    text.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
+    text.syncTheme()
+
+    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.COMMAND_OUTPUT_BACKGROUND)
+    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.COMMAND_OUTPUT_BACKGROUND)
   }
 
   def append(oo: OutputObject, wrapLines: Boolean): Unit = {

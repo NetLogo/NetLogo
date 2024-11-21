@@ -7,8 +7,8 @@ import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.PageFormat
 import java.io.File
 import java.nio.file.Path
-import javax.swing.{ AbstractAction, Action, BorderFactory, JEditorPane, JPanel,
-  JScrollPane, JTextArea, ScrollPaneConstants }
+import javax.swing.{ AbstractAction, Action, BorderFactory, JEditorPane, JPanel, JScrollPane, JTextArea,
+                     ScrollPaneConstants }
 import javax.swing.event.{ DocumentListener, HyperlinkListener, DocumentEvent, HyperlinkEvent }
 import javax.swing.text.JTextComponent
 import javax.swing.text.html.HTMLDocument
@@ -18,7 +18,7 @@ import org.nlogo.awt.{ Fonts, Hierarchy }
 import org.nlogo.core.I18N
 import org.nlogo.editor.UndoManager
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ OptionPane, ToolBar, ToolBarButton, ToolBarActionButton,
+import org.nlogo.swing.{ OptionPane, TextArea, ToolBar, ToolBarButton, ToolBarActionButton,
   ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, Utils }, BrowserLauncher.docPath
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents, Zoomable }
@@ -42,7 +42,7 @@ class InfoTab(attachModelDir: String => String)
   private val undoManager = new UndoManager
   // 90 columns seems reasonable: wide enough to not waste screen real estate, but narrow enough so
   // as not to cause readability problems if the frame is really wide - ST 10/27/03
-  private val textArea = new JTextArea(0, 90) { self =>
+  private val textArea = new TextArea(0, 90) { self =>
     addFocusListener(new FocusListener {
       def focusGained(fe: FocusEvent) { FindDialog.watch(self); UndoManager.setCurrentManager(undoManager) }
       def focusLost(fe: FocusEvent) {
@@ -162,9 +162,7 @@ class InfoTab(attachModelDir: String => String)
     editableButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
     helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
 
-    textArea.setBackground(InterfaceColors.CODE_BACKGROUND)
-    textArea.setForeground(InterfaceColors.TOOLBAR_TEXT)
-    textArea.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+    textArea.syncTheme()
 
     // change css here
   }

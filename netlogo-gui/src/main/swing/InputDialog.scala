@@ -6,7 +6,7 @@ import java.awt.Frame
 
 class InputDialog(owner: Frame, title: String, message: String, i18n: String => String, defaultInput: String = "")
 extends UserDialog(owner, title, i18n) {
-  private val field = new javax.swing.JTextField(defaultInput)
+  private val field = new TextField(defaultInput, 0)
   addComponents(field, message)
   def showInputDialog(): String = {
     val r = getOwner.getBounds

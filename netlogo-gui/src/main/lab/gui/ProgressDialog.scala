@@ -3,7 +3,7 @@
 package org.nlogo.lab.gui
 
 import java.awt.{ Dialog, Dimension, GridBagConstraints, GridBagLayout, Insets, Window }
-import javax.swing.{ JDialog, JPanel, JScrollPane, JTextArea, ScrollPaneConstants, Timer, WindowConstants }
+import javax.swing.{ JDialog, JPanel, JScrollPane, ScrollPaneConstants, Timer, WindowConstants }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.{ Dump, ExportPlotWarningAction, LabProtocol, PeriodicUpdateDelay }
@@ -12,7 +12,7 @@ import org.nlogo.core.I18N
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.nvm.Workspace
 import org.nlogo.plot.DummyPlotManager
-import org.nlogo.swing.{ Button, CheckBox, OptionPane, RichAction, Transparent }
+import org.nlogo.swing.{ Button, CheckBox, OptionPane, RichAction, TextArea, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ GUIWorkspace, PlotWidget, SpeedSliderPanel }
 
@@ -23,7 +23,7 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor,
   val workspace = supervisor.workspace.asInstanceOf[GUIWorkspace]
   private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace.progressDialog")
   private val totalRuns = protocol.countRuns
-  private val progressArea = new JTextArea(10 min (protocol.valueSets(0).size + 3), 0)
+  private val progressArea = new TextArea(10 min (protocol.valueSets(0).size + 3), 0)
   private val scrollPane = new JScrollPane(progressArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                            ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   private val timer = new Timer(PeriodicUpdateDelay.DelayInMilliseconds, periodicUpdateAction)
@@ -312,8 +312,7 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor,
   def syncTheme() {
     getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
-    progressArea.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    progressArea.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    progressArea.syncTheme()
 
     scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
     scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)

@@ -4,7 +4,7 @@ package org.nlogo.swing
 
 import java.awt.{ BorderLayout, Component, Frame }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
-import javax.swing.{ AbstractAction, BorderFactory, JComponent, JDialog, JScrollPane, JTextArea }
+import javax.swing.{ AbstractAction, BorderFactory, JComponent, JDialog, JScrollPane }
 
 import org.nlogo.awt.{ Hierarchy, Positioning => AWTPositioning }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -20,7 +20,7 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
                                                                        with ThemeSync {
   private def parentFrame: Frame = Hierarchy.getFrame(owner)
 
-  protected val textArea = new JTextArea(DefaultRows, DefaultColumns) {
+  protected val textArea = new TextArea(DefaultRows, DefaultColumns) {
     setDragEnabled(false)
     setLineWrap(true)
     setWrapStyleWord(true)
@@ -78,9 +78,7 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
   def syncTheme() {
     getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
-    textArea.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    textArea.setForeground(InterfaceColors.TOOLBAR_TEXT)
-    textArea.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+    textArea.syncTheme()
 
     scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
     scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)

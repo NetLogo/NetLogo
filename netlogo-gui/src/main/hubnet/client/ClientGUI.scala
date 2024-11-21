@@ -3,13 +3,13 @@
 package org.nlogo.hubnet.client
 
 import java.awt.{ BorderLayout, Font, Insets }
-import javax.swing.{ Box, BoxLayout, JLabel, JPanel, JScrollPane, JTextArea }
+import javax.swing.{ Box, BoxLayout, JLabel, JPanel, JScrollPane }
 import javax.swing.border.{ BevelBorder, EmptyBorder }
 
 import org.nlogo.api.{ CompilerServices, MersenneTwisterFast, RandomServices }
 import org.nlogo.awt.Hierarchy
 import org.nlogo.plot.PlotManager
-import org.nlogo.swing.Transparent
+import org.nlogo.swing.{ TextArea, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ ButtonWidget, ChooserWidget, EditorFactory, InterfacePanelLite }
 
@@ -18,7 +18,7 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
                 compiler: CompilerServices) extends JPanel(new BorderLayout) with Transparent with ThemeSync {
 
   private val statusPanel = new StatusPanel()
-  private val messagePanel = new MessagePanel(new JTextArea(4,3))
+  private val messagePanel = new MessagePanel(new TextArea(4, 3))
   private val interfacePanel = new InterfacePanelLite(clientView, compiler, new DummyRandomServices(), plotManager, editorFactory) {
     sliderEventOnReleaseOnly(true)
 
@@ -65,7 +65,7 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
     for ((k,v) <- chooserChoices){ getWidget(k).setChoices(v) }
   }
 
-  private class MessagePanel(messageTextArea: JTextArea) extends JScrollPane(messageTextArea) with Transparent
+  private class MessagePanel(messageTextArea: TextArea) extends JScrollPane(messageTextArea) with Transparent
                                                          with ThemeSync {
     
     setBorder(new BevelBorder(BevelBorder.LOWERED))
@@ -92,8 +92,7 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
       getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
       getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
 
-      messageTextArea.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      messageTextArea.setForeground(InterfaceColors.TOOLBAR_TEXT)
+      messageTextArea.syncTheme()
     }
   }
 

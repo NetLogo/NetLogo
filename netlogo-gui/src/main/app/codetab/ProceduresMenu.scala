@@ -3,14 +3,14 @@
 package org.nlogo.app.codetab
 
 import java.awt.event.{ ActionEvent, KeyEvent }
-import javax.swing.{ AbstractAction, JMenuItem, JTextField, MenuSelectionManager, SwingUtilities }
+import javax.swing.{ AbstractAction, JMenuItem, MenuSelectionManager, SwingUtilities }
 import java.text.Collator
 import java.util.prefs.{ Preferences => JavaPreferences }
 
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.I18N
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ MenuItem, PopupMenu, RoundedBorderPanel, ToolBarMenu }
+import org.nlogo.swing.{ MenuItem, PopupMenu, RoundedBorderPanel, TextField, ToolBarMenu }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class ProceduresMenu(target: ProceduresMenuTarget)
@@ -58,50 +58,47 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
       })
     }
 
-    val filterField = new JTextField {
-      setBackground(InterfaceColors.MENU_BACKGROUND)
-      setForeground(InterfaceColors.TOOLBAR_TEXT)
-      setCaretColor(InterfaceColors.TOOLBAR_TEXT)
-    }
-    filterField.getDocument.addDocumentListener(() => {
-      repopulate(menu, filterField, items)
-      menu.getSubElements.collectFirst {
-        case it: JMenuItem => MenuSelectionManager.defaultManager.setSelectedPath(Array(menu, it))
-        case _ =>
-      }
-
-      // Changing the number of items changes the desired size of the menu
-      // -BCH 1/29/2018
-      menu.validate() // recalculate correct size
-      menu.setSize(menu.getPreferredSize) // resize to that size
-      // Resize the popup to match. On Mac, the popup has is in its own undecorated window, so we resize root. On
-      // Windows and Linux, the root of the menu is the app itself, but the parent is the popup, so resize that.
-      // -BCH 1/29/2018
-      // this no longer works as commented after switching to FlatLaf, resizing root now works on all platforms.
-      // (IB 11/1/24)
-      val r = SwingUtilities.getRoot(menu)
-      r.setSize(r.getPreferredSize)
-      r.validate()
-      r.repaint()
-    })
-
-    filterField.addKeyListener { e: KeyEvent =>
-      // Although it seems like you should just be able to do:
-      // MenuSelectionManager.defaultManager().processKeyEvent(e)
-      // here and have arrow keys and enter work, this is not the case.
-      // Instead, we have to pass through the keyboard events to the menu itself to make arrow keys work.
-      // We have to explicitly simulate the click on enter for enter to work.
-      // I decided to pass through ALL keys instead of just the keys we care about because we can't guarantee that
-      // menu manipulation keys are the same on all systems (nor that I know about all of them).
-      // Furthermore, there are no detrimental effects of passing on the keyboard events. -BCH 1/29/2018
-      menu.dispatchEvent(e)
-      if (e.getKeyCode == KeyEvent.VK_ENTER) {
-        val path = MenuSelectionManager.defaultManager().getSelectedPath
-        if (path.nonEmpty) path.last match {
-          case it: JMenuItem if it.isArmed =>
-            it.doClick()
-            menu.setVisible(false)
+    val filterField = new TextField {
+      getDocument.addDocumentListener(() => {
+        repopulate(menu, this, items)
+        menu.getSubElements.collectFirst {
+          case it: JMenuItem => MenuSelectionManager.defaultManager.setSelectedPath(Array(menu, it))
           case _ =>
+        }
+
+        // Changing the number of items changes the desired size of the menu
+        // -BCH 1/29/2018
+        menu.validate() // recalculate correct size
+        menu.setSize(menu.getPreferredSize) // resize to that size
+        // Resize the popup to match. On Mac, the popup has is in its own undecorated window, so we resize root. On
+        // Windows and Linux, the root of the menu is the app itself, but the parent is the popup, so resize that.
+        // -BCH 1/29/2018
+        // this no longer works as commented after switching to FlatLaf, resizing root now works on all platforms.
+        // (IB 11/1/24)
+        val r = SwingUtilities.getRoot(menu)
+        r.setSize(r.getPreferredSize)
+        r.validate()
+        r.repaint()
+      })
+
+      addKeyListener { e: KeyEvent =>
+        // Although it seems like you should just be able to do:
+        // MenuSelectionManager.defaultManager().processKeyEvent(e)
+        // here and have arrow keys and enter work, this is not the case.
+        // Instead, we have to pass through the keyboard events to the menu itself to make arrow keys work.
+        // We have to explicitly simulate the click on enter for enter to work.
+        // I decided to pass through ALL keys instead of just the keys we care about because we can't guarantee that
+        // menu manipulation keys are the same on all systems (nor that I know about all of them).
+        // Furthermore, there are no detrimental effects of passing on the keyboard events. -BCH 1/29/2018
+        menu.dispatchEvent(e)
+        if (e.getKeyCode == KeyEvent.VK_ENTER) {
+          val path = MenuSelectionManager.defaultManager().getSelectedPath
+          if (path.nonEmpty) path.last match {
+            case it: JMenuItem if it.isArmed =>
+              it.doClick()
+              menu.setVisible(false)
+            case _ =>
+          }
         }
       }
     }
@@ -116,7 +113,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
     SwingUtilities.invokeLater(() => filterField.requestFocusInWindow())
   }
 
-  private def repopulate(menu: PopupMenu, filterField: JTextField, items: Seq[JMenuItem]): Unit = {
+  private def repopulate(menu: PopupMenu, filterField: TextField, items: Seq[JMenuItem]): Unit = {
     val query = filterField.getText
 
     // If the filterField is removed and re-added (as would happen if we completely cleared the menu), it loses focus on

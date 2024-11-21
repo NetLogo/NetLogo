@@ -2,11 +2,12 @@
 
 package org.nlogo.app.common
 
-import java.awt.{ BorderLayout, Dimension }
+import java.awt.{ BorderLayout, Dimension, Font }
 import java.awt.event.{ ActionEvent, ActionListener, KeyEvent, KeyListener }
 import javax.swing.{ JScrollPane, KeyStroke, ScrollPaneConstants }
 
 import org.nlogo.agent.{ Agent, AgentSet, OutputObject }
+import org.nlogo.awt.Fonts
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Widget => CoreWidget }
 import org.nlogo.editor.EditorField
 import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup }
@@ -56,9 +57,9 @@ class CommandLine(commandCenter: CommandCenterInterface,
     -> new AutoSuggestAction("auto-suggest", codeCompletionPopup))
 
   val textField: EditorField =
-    new org.nlogo.editor.EditorField(30,
-      new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont,
-        java.awt.Font.PLAIN, 12),
+    new EditorField(30,
+      new Font(Fonts.platformMonospacedFont,
+        Font.PLAIN, 12),
       true, new EditorColorizer(workspace), actionMap)
 
   agentKind(AgentKind.Observer)
@@ -68,9 +69,11 @@ class CommandLine(commandCenter: CommandCenterInterface,
 
   setLayout(new BorderLayout)
   displayName(classDisplayName)
-  add(new JScrollPane(textField, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-                      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) with Transparent,
-      BorderLayout.CENTER)
+
+  private val scrollPane = new JScrollPane(textField, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+                                              ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) with Transparent
+
+  add(scrollPane, BorderLayout.CENTER)
 
   def agent(agent: Agent): Unit = {
     this.agent = agent
@@ -282,5 +285,8 @@ class CommandLine(commandCenter: CommandCenterInterface,
   override def syncTheme() {
     textField.setBackground(InterfaceColors.CODE_BACKGROUND)
     textField.setCaretColor(InterfaceColors.DISPLAY_AREA_TEXT)
+
+    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.CODE_BACKGROUND)
+    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.CODE_BACKGROUND)
   }
 }

@@ -5,11 +5,11 @@ package org.nlogo.hubnet.client
 import java.awt.event.{ActionEvent, ActionListener, MouseEvent, MouseAdapter}
 import java.awt.{BorderLayout, FlowLayout, Dimension, Frame}
 import java.net.{ InetAddress, NetworkInterface }
-import javax.swing.{Box, BoxLayout, JPanel, JButton, JComboBox, JDialog, JScrollPane, JTable, SwingUtilities}
+import javax.swing.{Box, BoxLayout, JPanel, JComboBox, JDialog, JScrollPane, JTable, SwingUtilities}
 import javax.swing.event.{DocumentEvent, ListSelectionEvent, DocumentListener, ListSelectionListener}
 import javax.swing.table.{AbstractTableModel, DefaultTableCellRenderer}
 import org.nlogo.hubnet.connection.NetworkUtils
-import org.nlogo.swing.{NonemptyTextFieldButtonEnabler, TextField, TextFieldBox}
+import org.nlogo.swing.{ Button, NonemptyTextFieldButtonEnabler, TextField, TextFieldBox }
 
 abstract class LoginCallback{
   def apply(user:String, host:String, port:Int)
@@ -23,8 +23,8 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
         extends JDialog(parent, "HubNet", true)
         with ListSelectionListener with ActionListener with DocumentListener {
 
-  final val nameField = new TextField(14) {setText(defaultUserId)}
-  private val serverField = new TextField(26) {setText(defaultServerName)}
+  final val nameField = new TextField(defaultUserId, 14)
+  private val serverField = new TextField(defaultServerName, 26)
   private val portField = new TextField(4) {
     setText(defaultPort.toString)
     getDocument.addDocumentListener(LoginDialog.this)
@@ -34,7 +34,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
   def server = serverField.getText
   def port = portField.getText.toInt
 
-  private val enterButton = new JButton("Enter") {addActionListener(LoginDialog.this)}
+  private val enterButton = new Button("Enter", null) {addActionListener(LoginDialog.this)}
   private val interfaceChooser = new InterfaceComboBox()
   private val serverTable = new ServerTable(interfaceChooser.selectedNetworkAddress)
   interfaceChooser.addActionListener(serverTable)
@@ -58,7 +58,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
     }
     add(centerPanel, java.awt.BorderLayout.CENTER)
 
-    val buttonEnabler = new NonemptyTextFieldButtonEnabler(enterButton)
+    new NonemptyTextFieldButtonEnabler(enterButton, List(serverField, nameField, portField))
 
     centerPanel.add(Box.createVerticalStrut(12))
     centerPanel.add(Box.createVerticalStrut(2))
@@ -85,15 +85,11 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
       }
     })
 
-    buttonEnabler.addRequiredField(serverField)
     serverTablePane.setVisible(true)
     serverTable.setActive(true)
     centerPanel.add(Box.createVerticalGlue())
 
     add(new JPanel(new FlowLayout(FlowLayout.RIGHT)) {add(enterButton)}, java.awt.BorderLayout.SOUTH)
-
-    buttonEnabler.addRequiredField(nameField)
-    buttonEnabler.addRequiredField(portField)
 
     pack()
   }
