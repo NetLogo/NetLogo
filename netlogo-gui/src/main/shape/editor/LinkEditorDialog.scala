@@ -3,14 +3,13 @@
 package org.nlogo.shape.editor
 
 import java.awt.{ BasicStroke, Component, Graphics, GridBagConstraints, GridBagLayout, Insets }
-import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
-import javax.swing.{ AbstractAction, Icon, JDialog, JLabel, JPanel, WindowConstants }
+import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
+import javax.swing.{ AbstractAction, Icon, JDialog, JLabel, WindowConstants }
 
 import org.nlogo.core.{ I18N, Shape, ShapeList }
 import org.nlogo.shape.{ LinkLine, LinkShape, VectorShape }
-import org.nlogo.swing.{ Button, ButtonPanel, DropdownArrow, LabeledComponent, MenuItem, OptionPane, PopupMenu,
-                         RoundedBorderPanel, TextField, Utils }
-import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.swing.{ Button, ButtonPanel, ComboBox, LabeledComponent, OptionPane, TextField, Utils }
+import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Failure, Success, Try }
 
@@ -181,99 +180,27 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
     currentShape
   }
 
-  private class DashComboBox(items: List[Array[Float]])
-    extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync {
+  private class DashComboBox(items: List[Array[Float]]) extends ComboBox[JLabel] {
+    private class DashLabel(item: Array[Float]) extends JLabel with ComboBox.Clone {
+      setIcon(new Icon {
+        def getIconWidth = 85
+        def getIconHeight = 18
 
-    private class Dash(private var item: Array[Float]) extends Icon {
-      def setItem(item: Array[Float]) {
-        this.item = item
-      }
+        def paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+          if (item(0) != 0) {
+            val g2d = Utils.initGraphics2D(g)
 
-      def getIconWidth = 85
-      def getIconHeight = 18
-
-      def paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
-        if (item(0) != 0) {
-          val g2d = Utils.initGraphics2D(g)
-
-          g2d.setColor(InterfaceColors.TOOLBAR_TEXT)
-          g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1, item, 0))
-          g2d.drawLine(x, y + getIconHeight / 2, x + getIconWidth, y + getIconHeight / 2)
+            g2d.setColor(InterfaceColors.TOOLBAR_TEXT)
+            g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1, item, 0))
+            g2d.drawLine(x, y + getIconHeight / 2, x + getIconWidth, y + getIconHeight / 2)
+          }
         }
-      }
-    }
-
-    setDiameter(6)
-    enableHover()
-
-    private var selectedIndex = -1
-
-    private val label = new JLabel
-    private val arrow = new DropdownArrow
-
-    private val popup = new PopupMenu
-
-    locally {
-      val c = new GridBagConstraints
-
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.weightx = 1
-      c.insets = new Insets(3, 6, 3, 6)
-
-      add(label, c)
-
-      c.fill = GridBagConstraints.NONE
-      c.weightx = 0
-      c.insets = new Insets(3, 0, 3, 6)
-
-      add(arrow, c)
-
-      val mouseListener = new MouseAdapter {
-        override def mousePressed(e: MouseEvent) {
-          popup.show(DashComboBox.this, 0, getHeight)
-        }
-      }
-
-      addMouseListener(mouseListener)
-      label.addMouseListener(mouseListener)
-      arrow.addMouseListener(mouseListener)
-    }
-
-    private val dashIcons = items.map(new Dash(_))
-
-    for (i <- 0 until dashIcons.size) {
-      popup.add(new MenuItem(new AbstractAction {
-        def actionPerformed(e: ActionEvent) {
-          selectIndex(i)
-        }
-      }) {
-        setIcon(dashIcons(i))
       })
+
+      def getClone: Component =
+        new DashLabel(item)
     }
 
-    selectIndex(0)
-
-    syncTheme()
-
-    def setSelectedIndex(index: Int) {
-      if (index >= 0 && index < items.size)
-        selectIndex(index)
-    }
-
-    def getSelectedIndex: Int =
-      selectedIndex
-    
-    private def selectIndex(index: Int) {
-      selectedIndex = index
-      label.setIcon(dashIcons(selectedIndex))
-    }
-
-    def syncTheme() {
-      setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-      setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-
-      popup.syncTheme()
-    }
+    setItems(items.map(new DashLabel(_)))
   }
 }
