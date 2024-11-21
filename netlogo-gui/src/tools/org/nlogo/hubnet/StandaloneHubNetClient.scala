@@ -2,7 +2,7 @@
 
 package org.nlogo.hubnet
 
-import java.awt.event.{ ActionEvent, ActionListener, WindowAdapter, WindowEvent }
+import java.awt.event.{ WindowAdapter, WindowEvent }
 import javax.swing.{ BoxLayout, JFrame, JLabel, JPanel }
 
 import org.nlogo.hubnet.protocol.TestClient
@@ -14,7 +14,7 @@ object StandaloneHubNetClient {
   def main(args:Array[String]){ new ConnectionGUI().go() }
 
   class ConnectionGUI extends JFrame {
-    getContentPane.setBackgroundColor(InterfaceColors.DIALOG_BACKGROUND)
+    getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     getContentPane.add(new ConnectionPanel)
     addWindowListener(new WindowAdapter() {
       override def windowClosing(e: WindowEvent) {ConnectionGUI.this.dispose()}
