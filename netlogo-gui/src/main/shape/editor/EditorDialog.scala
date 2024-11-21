@@ -49,12 +49,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     new ShapePreview(shape, 50, 1)
   )
 
-  private val nameText = new TextField(4) {
-    setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    setForeground(InterfaceColors.TOOLBAR_TEXT)
-    setCaretColor(InterfaceColors.TOOLBAR_TEXT)
-
-    setText(shape.name)
+  private val nameText = new TextField(shape.name, 4) {
     setEnabled(nameEditable)
   }
 

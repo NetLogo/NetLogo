@@ -3,9 +3,10 @@
 package org.nlogo.properties
 
 import java.awt.{ BorderLayout, GridBagConstraints }
-import javax.swing.{ JLabel, JScrollPane, JTextArea, ScrollPaneConstants, SwingConstants }
+import javax.swing.{ JLabel, JScrollPane, ScrollPaneConstants, SwingConstants }
 
 import org.nlogo.swing.Implicits._
+import org.nlogo.swing.TextArea
 import org.nlogo.theme.InterfaceColors
 
 abstract class BigStringEditor(accessor: PropertyAccessor[String])
@@ -15,7 +16,7 @@ abstract class BigStringEditor(accessor: PropertyAccessor[String])
   private val label = new JLabel(accessor.displayName)
   label.setVerticalAlignment(SwingConstants.TOP)
   add(label, BorderLayout.NORTH)
-  private val editor = new JTextArea(6, 30)
+  private val editor = new TextArea(6, 30)
   editor.setDragEnabled(false)
   editor.setLineWrap(true)
   editor.setWrapStyleWord(true)

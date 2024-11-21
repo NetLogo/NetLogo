@@ -14,7 +14,7 @@ import java.nio.file.Paths
 import java.net.URI
 import java.util.{ Enumeration, LinkedList, List => JList }
 import javax.swing.{ AbstractAction, Action, Box, BorderFactory, BoxLayout, InputMap, JComponent, JDialog, JEditorPane,
-                     JLabel, JPanel, JScrollPane, JTextField, JTree, KeyStroke, SwingUtilities, WindowConstants }
+                     JLabel, JPanel, JScrollPane, JTree, KeyStroke, SwingUtilities, WindowConstants }
 import javax.swing.text.{ BadLocationException, DefaultHighlighter }
 import javax.swing.tree.{ DefaultMutableTreeNode, DefaultTreeCellRenderer, DefaultTreeModel, TreePath,
                           TreeSelectionModel }
@@ -25,7 +25,8 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, Docum
 import org.nlogo.core.I18N
 import org.nlogo.api.FileIO
 import org.nlogo.awt.{ Positioning, UserCancelException }
-import org.nlogo.swing.{ BrowserLauncher, Button, ModalProgressTask, OptionPane, Utils }, Utils.addEscKeyAction
+import org.nlogo.swing.{ BrowserLauncher, Button, ModalProgressTask, OptionPane, TextField, Utils },
+  Utils.addEscKeyAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
@@ -162,7 +163,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   private var selected = Option.empty[Node]
   private var sourceURI = Option.empty[URI]
   private val savedExpandedPaths: JList[TreePath] = new LinkedList[TreePath]()
-  private val searchField: JTextField = new JTextField("")
+  private val searchField = new TextField
   private var searchText = Option.empty[String]
   private val searchIcon = new JLabel
 
@@ -731,9 +732,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     modelPreviewScrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     modelPreviewScrollPane.getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
-    searchField.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    searchField.setForeground(InterfaceColors.TOOLBAR_TEXT)
-    searchField.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+    searchField.syncTheme()
 
     searchIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
 

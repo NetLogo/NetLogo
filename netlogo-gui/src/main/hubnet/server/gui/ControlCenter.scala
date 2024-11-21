@@ -6,16 +6,16 @@ import java.awt.{ BorderLayout, Component, Dimension, Font, Frame, GridBagConstr
 import java.awt.event.{ WindowAdapter, WindowEvent }
 import java.net.{ Inet4Address, InetAddress, NetworkInterface, UnknownHostException }
 import java.text.SimpleDateFormat
-import javax.swing.{ Box, BoxLayout, DefaultListModel, JFrame, JLabel, JList, JPanel, JScrollPane, JTextArea,
-                     JTextField, ListCellRenderer, ListSelectionModel, SwingConstants }
+import javax.swing.{ Box, BoxLayout, DefaultListModel, JFrame, JLabel, JList, JPanel, JScrollPane, ListCellRenderer,
+                     ListSelectionModel, SwingConstants }
 import javax.swing.border.EmptyBorder
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
 import org.nlogo.awt.{ EventQueue, Positioning }
 import org.nlogo.core.I18N
 import org.nlogo.hubnet.server.{ ConnectionManager, HubNetUtils }
-import org.nlogo.swing.{ Button, CheckBox, NonemptyTextFieldButtonEnabler, SelectableJLabel, TextFieldBox,
-                         Transparent }
+import org.nlogo.swing.{ Button, CheckBox, NonemptyTextFieldButtonEnabler, SelectableJLabel, TextArea, TextField,
+                         TextFieldBox, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.ClientAppInterface
 
@@ -240,13 +240,12 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
    * and sends broadcast messages.
    */
   class MessagePanel extends JPanel with Transparent with ThemeSync {
-    private val inputField = new JTextField {
+    private val inputField = new TextField {
       addActionListener(_ => beginBroadcast)
     }
 
-    private val messageTextArea = new JTextArea {
+    private val messageTextArea = new TextArea(4, 0) {
       setEditable(false)
-      setRows(4)
     }
 
     private val scrollPane = new JScrollPane(messageTextArea) {
@@ -258,9 +257,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
 
     private val broadcastButton = new Button(I18N.gui.get("menu.tools.hubnetControlCenter.broadcastMessage"), beginBroadcast)
 
-    private[gui] val buttonEnabler = new NonemptyTextFieldButtonEnabler(broadcastButton) {
-      addRequiredField(inputField)
-    }
+    private[gui] val buttonEnabler = new NonemptyTextFieldButtonEnabler(broadcastButton, List(inputField))
 
     locally {
       setBorder(new EmptyBorder(12, 12, 12, 12))

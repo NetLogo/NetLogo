@@ -5,19 +5,19 @@ package org.nlogo.app
 import java.awt.{ BorderLayout, Dimension, Font, Frame }
 import java.awt.event.{ WindowAdapter, WindowEvent, MouseAdapter, MouseEvent }
 import java.net.URI
-import javax.swing.{ JDialog, JLabel, JScrollPane, JTabbedPane, JTextArea, SwingConstants, Timer, WindowConstants }
+import javax.swing.{ JDialog, JLabel, JScrollPane, JTabbedPane, SwingConstants, Timer, WindowConstants }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.{ APIVersion, FileIO, Version }
 import org.nlogo.awt.{ Fonts, Positioning }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BrowserLauncher, RichAction, Utils }
+import org.nlogo.swing.{ BrowserLauncher, RichAction, TextArea, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.util.SysInfo
 
 class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.about"), false) with ThemeSync {
   private val refreshTimer: Timer = new Timer(2000, _ => refreshSystemText())
-  private val system: JTextArea = new JTextArea() {
+  private val system = new TextArea {
     setFont(new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12))
     setLineWrap(true)
     setWrapStyleWord(true)
@@ -58,7 +58,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     })
   }
 
-  val credits = new JTextArea(FileIO.getResourceAsString("/system/about.txt"), 15, 0){
+  val credits = new TextArea(FileIO.getResourceAsString("/system/about.txt"), 15, 0){
     setFont(new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12))
     setDragEnabled(false)
     setLineWrap(true)
@@ -139,13 +139,8 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
 
     label.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
-    credits.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    credits.setForeground(InterfaceColors.TOOLBAR_TEXT)
-    credits.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
-
-    system.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    system.setForeground(InterfaceColors.TOOLBAR_TEXT)
-    system.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+    credits.syncTheme()
+    system.syncTheme()
 
     creditsScrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
     creditsScrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)

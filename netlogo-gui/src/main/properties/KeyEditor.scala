@@ -57,8 +57,6 @@ abstract class KeyEditor(accessor: PropertyAccessor[Char])
   def syncTheme() {
     label.setForeground(InterfaceColors.DIALOG_TEXT)
 
-    editor.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    editor.setForeground(InterfaceColors.TOOLBAR_TEXT)
-    editor.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+    editor.syncTheme()
   }
 }

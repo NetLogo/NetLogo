@@ -7,8 +7,7 @@ import java.awt.{ BorderLayout, Component, Dimension, FlowLayout, GridBagConstra
 import java.awt.font.TextAttribute
 import java.io.IOException
 import java.nio.file.Path
-import javax.swing.{ Action, Box, DefaultListModel, JLabel, JList, JPanel, JScrollPane, JTextField, JTextArea,
-                     ListCellRenderer, ListModel }
+import javax.swing.{ Action, Box, DefaultListModel, JLabel, JList, JPanel, JScrollPane, ListCellRenderer, ListModel }
 import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
 
 import java.util.Collections
@@ -19,7 +18,7 @@ import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus }
 import org.nlogo.swing.{ BrowserLauncher, Button, EmptyIcon, FilterableListModel, OptionPane, RichAction, SwingWorker,
-                         Transparent, Utils }
+                         TextArea, TextField, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
@@ -104,7 +103,7 @@ class LibrariesTab( category:        String
 
   private val topPanel = new JPanel(new GridBagLayout)
   private val magIcon = new JLabel
-  private val filterField = new JTextField
+  private val filterField = new TextField
 
   private val libraryScroll = new JScrollPane(libraryList)
 
@@ -133,7 +132,7 @@ class LibrariesTab( category:        String
     perform("uninstalling", uninstall, _.canUninstall)
   })
 
-  private val info = new JTextArea(2, 28)
+  private val info = new TextArea(2, 28)
   private val infoScroll = new JScrollPane(info)
 
   private val installedVersionLabel  = new JLabel(s"${I18N.gui("installedVersion")}: ")
@@ -470,9 +469,7 @@ class LibrariesTab( category:        String
 
     magIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
 
-    filterField.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    filterField.setForeground(InterfaceColors.TOOLBAR_TEXT)
-    filterField.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+    filterField.syncTheme()
 
     libraryScroll.getHorizontalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     libraryScroll.getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
@@ -494,7 +491,6 @@ class LibrariesTab( category:        String
 
     infoScroll.getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
-    info.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-    info.setForeground(InterfaceColors.DIALOG_TEXT)
+    info.syncTheme()
   }
 }

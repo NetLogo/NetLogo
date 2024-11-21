@@ -4,7 +4,10 @@ package org.nlogo.app
 
 import java.awt.BorderLayout
 import java.awt.event.{ WindowAdapter, WindowEvent }
-import javax.swing.{ JFrame, JLabel, JTextArea, WindowConstants }
+import javax.swing.{ JFrame, JLabel, WindowConstants }
+
+import org.nlogo.swing.TextArea
+import org.nlogo.theme.InterfaceColors
 
 // Unfortunately errors can occur during startup of the NetLogo GUI.  On Windows these are swallowed by the launcher and
 // just give a generic "Failed to launch JVM" message.  Other platforms might be a little better, but this way we'll
@@ -29,11 +32,15 @@ object StartupError {
       }
     })
 
-    val title = new JLabel("NetLogo encountered an error while starting to run.  See the details below.")
+    frame.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    val title = new JLabel("NetLogo encountered an error while starting to run.  See the details below.") {
+      setForeground(InterfaceColors.DIALOG_TEXT)
+    }
     title.setFont(title.getFont().deriveFont(16f))
     frame.add(title, BorderLayout.NORTH)
 
-    val report = new JTextArea(message)
+    val report = new TextArea(message)
     report.setFont(report.getFont().deriveFont(18f))
     report.setEditable(false)
     report.setLineWrap(true)
@@ -42,7 +49,5 @@ object StartupError {
 
     frame.setSize(640, 640)
     frame.setVisible(true)
-
   }
-
 }

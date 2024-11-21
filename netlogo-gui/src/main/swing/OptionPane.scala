@@ -3,7 +3,7 @@
 package org.nlogo.swing
 
 import java.awt.{ Component, Dialog, GridBagConstraints, GridBagLayout, Insets, Window }
-import javax.swing.{ Icon, JDialog, JLabel, JPanel, JTextField }
+import javax.swing.{ Icon, JDialog, JLabel, JPanel }
 
 import org.nlogo.awt.LineBreaker
 import org.nlogo.core.I18N
@@ -117,11 +117,7 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
   extends OptionPane(parent, title, message, OptionPane.Options.OK_CANCEL, OptionPane.Icons.QUESTION) {
 
   // lazy because addContents is called in super (IB 11/16/24)
-  private lazy val input = new JTextField(startingInput) {
-    setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    setForeground(InterfaceColors.TOOLBAR_TEXT)
-    setCaretColor(InterfaceColors.TOOLBAR_TEXT)
-  }
+  private lazy val input = new TextField(startingInput, 0)
 
   def getInput: String = {
     if (getSelectedIndex == 0 && input.getText.trim.nonEmpty)

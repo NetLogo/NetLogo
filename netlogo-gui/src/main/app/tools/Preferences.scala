@@ -7,11 +7,11 @@ import java.awt.event.ActionEvent
 import java.io.File
 import java.util.Locale
 import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ AbstractAction, JFileChooser, JPanel, JTextField }
+import javax.swing.{ AbstractAction, JFileChooser, JPanel }
 
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, CheckBox, ComboBox, Transparent }
+import org.nlogo.swing.{ Button, CheckBox, ComboBox, TextField, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object Preferences {
@@ -29,13 +29,7 @@ object Preferences {
   }
 
   abstract class StringPreference(val i18nKey: String, val requirement: String, default: String) extends Preference {
-    val component = new JTextField(default, 20) with ThemeSync {
-      def syncTheme() {
-        setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-        setForeground(InterfaceColors.TOOLBAR_TEXT)
-        setCaretColor(InterfaceColors.TOOLBAR_TEXT)
-      }
-    }
+    val component = new TextField(default, 20)
 
     def load(prefs: JavaPreferences) = {
       val value = prefs.get(i18nKey, default)
@@ -109,7 +103,7 @@ object Preferences {
   class LogDirectory(val frame: Frame) extends Preference {
     val i18nKey         = "logDirectory"
     val requirement = "restartRequired"
-    val textField       = new JTextField("", 20)
+    val textField       = new TextField(20)
     val component =
       new JPanel with Transparent with ThemeSync {
         add(textField)
@@ -123,9 +117,7 @@ object Preferences {
         add(browseButton)
 
         def syncTheme() {
-          textField.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-          textField.setForeground(InterfaceColors.TOOLBAR_TEXT)
-          textField.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+          textField.syncTheme()
 
           browseButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
           browseButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)

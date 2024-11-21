@@ -4,12 +4,12 @@ package org.nlogo.shape.editor
 
 import java.awt.{ BasicStroke, Component, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
-import javax.swing.{ AbstractAction, Icon, JDialog, JLabel, JPanel, JTextField, WindowConstants }
+import javax.swing.{ AbstractAction, Icon, JDialog, JLabel, JPanel, WindowConstants }
 
 import org.nlogo.core.{ I18N, Shape, ShapeList }
 import org.nlogo.shape.{ LinkLine, LinkShape, VectorShape }
 import org.nlogo.swing.{ Button, ButtonPanel, DropdownArrow, LabeledComponent, MenuItem, OptionPane, PopupMenu,
-                         RoundedBorderPanel, Utils }
+                         RoundedBorderPanel, TextField, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import scala.util.{ Failure, Success, Try }
@@ -19,25 +19,8 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
   
   private implicit val i18nPrefix = I18N.Prefix("tools.linkEditor")
 
-  private val name = new JTextField(10) with ThemeSync {
-    setText(shape.name)
-
-    def syncTheme() {
-      setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      setForeground(InterfaceColors.TOOLBAR_TEXT)
-      setCaretColor(InterfaceColors.TOOLBAR_TEXT)
-    }
-  }
-
-  private val curviness = new JTextField(10) with ThemeSync {
-    setText(shape.curviness.toString)
-
-    def syncTheme() {
-      setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      setForeground(InterfaceColors.TOOLBAR_TEXT)
-      setCaretColor(InterfaceColors.TOOLBAR_TEXT)
-    }
-  }
+  private val name = new TextField(shape.name, 10)
+  private val curviness = new TextField(shape.curviness.toString, 10)
 
   private val dashes =
     (for (i <- 0 until 3) yield {

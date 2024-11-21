@@ -239,11 +239,17 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     replaceAll(findBox.getText, ignoreCaseCheckBox.isSelected, replaceBox.getText)
   })
 
-  private val nextEnabler = new NonemptyTextFieldButtonEnabler(nextButton)
-  private val prevEnabler = new NonemptyTextFieldButtonEnabler(prevButton)
-  private val replaceEnabler = new NonemptyTextFieldButtonEnabler(replaceButton)
-  private val replaceAndFindEnabler = new NonemptyTextFieldButtonEnabler(replaceAndFindButton)
-  private val replaceAllEnabler = new NonemptyTextFieldButtonEnabler(replaceAllButton)
+  private val findBox = new TextField(25)
+  private val replaceBox = new TextField(25)
+  private val replaceLabel = new JLabel(I18N.gui.get("dialog.find.replaceWith"))
+  private val notFoundLabel = new JLabel(I18N.gui.get("dialog.find.notFound"))
+
+  new NonemptyTextFieldButtonEnabler(nextButton, List(findBox))
+  new NonemptyTextFieldButtonEnabler(prevButton, List(findBox))
+
+  private val replaceEnabler = new NonemptyTextFieldButtonEnabler(replaceButton, List(findBox))
+  private val replaceAndFindEnabler = new NonemptyTextFieldButtonEnabler(replaceAndFindButton, List(findBox))
+  private val replaceAllEnabler = new NonemptyTextFieldButtonEnabler(replaceAllButton, List(findBox))
 
   private val ignoreCaseCheckBox = new CheckBox(I18N.gui.get("dialog.find.ignoreCase")) {
     setSelected(true)
@@ -253,19 +259,8 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     setSelected(true)
   }
 
-  private val findBox = new TextField(25)
-  private val replaceBox = new TextField(25)
-  private val replaceLabel = new JLabel(I18N.gui.get("dialog.find.replaceWith"))
-  private val notFoundLabel = new JLabel(I18N.gui.get("dialog.find.notFound"))
-
-  nextEnabler.addRequiredField(findBox)
-  prevEnabler.addRequiredField(findBox)
-  replaceEnabler.addRequiredField(findBox)
-  replaceAndFindEnabler.addRequiredField(findBox)
-  replaceAllEnabler.addRequiredField(findBox)
-
-  new NonemptyTextFieldActionEnabler(FindDialog.FIND_NEXT_ACTION).addRequiredField(findBox)
-  new NonemptyTextFieldActionEnabler(FindDialog.FIND_NEXT_ACTION_CODE).addRequiredField(findBox)
+  new NonemptyTextFieldActionEnabler(FindDialog.FIND_NEXT_ACTION, List(findBox))
+  new NonemptyTextFieldActionEnabler(FindDialog.FIND_NEXT_ACTION_CODE, List(findBox))
 
   findBox.setEditable(true)
   replaceBox.setEditable(true)
@@ -460,13 +455,8 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     ignoreCaseCheckBox.setForeground(InterfaceColors.DIALOG_TEXT)
     wrapAroundCheckBox.setForeground(InterfaceColors.DIALOG_TEXT)
 
-    findBox.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    findBox.setForeground(InterfaceColors.TOOLBAR_TEXT)
-    findBox.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
-
-    replaceBox.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    replaceBox.setForeground(InterfaceColors.TOOLBAR_TEXT)
-    replaceBox.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+    findBox.syncTheme()
+    replaceBox.syncTheme()
 
     replaceLabel.setForeground(InterfaceColors.DIALOG_TEXT)
     notFoundLabel.setForeground(InterfaceColors.DIALOG_TEXT)

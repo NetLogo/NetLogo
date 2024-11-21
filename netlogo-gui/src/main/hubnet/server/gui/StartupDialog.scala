@@ -17,12 +17,7 @@ class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)]
                     preferredNetworkConnection: Option[(NetworkInterface, InetAddress)])
   extends JDialog(parent, I18N.gui.get("edit.hubnet.startActivity"), true) {
 
-  private val nameField = new TextField(14) {
-    setText(System.getProperty("user.name", ""))
-    setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    setForeground(InterfaceColors.TOOLBAR_TEXT)
-    setCaretColor(InterfaceColors.TOOLBAR_TEXT)
-  }
+  private val nameField = new TextField(System.getProperty("user.name", ""), 14)
 
   private val discoveryCheckBox = new CheckBox("Broadcast server location") {
     setForeground(InterfaceColors.DIALOG_TEXT)
@@ -57,7 +52,7 @@ class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)]
     networkChoices.get(networkSelection.getSelectedItem)
 
     // does this work via some magic side effect? or can it just be removed? JC - 8/21/10
-  private[gui] val buttonEnabler = new NonemptyTextFieldButtonEnabler(okButton){addRequiredField(nameField)}
+  private[gui] val buttonEnabler = new NonemptyTextFieldButtonEnabler(okButton, List(nameField))
 
   locally {
     val content = new JPanel {
