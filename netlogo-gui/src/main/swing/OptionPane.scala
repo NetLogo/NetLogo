@@ -133,7 +133,7 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
     c.fill = GridBagConstraints.BOTH
     c.weightx = 1
     c.weighty = 1
-    c.insets = new Insets(50, 50, 50, 50)
+    c.insets = new Insets(30, 30, 30, 30)
 
     add(new JPanel(new GridBagLayout) with Transparent {
       locally {
@@ -188,7 +188,7 @@ class DropdownOptionPane[T >: Null](parent: Component, title: String, message: S
     c.fill = GridBagConstraints.BOTH
     c.weightx = 1
     c.weighty = 1
-    c.insets = new Insets(50, 50, 50, 50)
+    c.insets = new Insets(30, 30, 30, 30)
 
     add(new JPanel(new GridBagLayout) with Transparent {
       locally {
@@ -226,7 +226,7 @@ class CustomOptionPane(parent: Component, title: String, contents: Component, op
     c.fill = GridBagConstraints.BOTH
     c.weightx = 1
     c.weighty = 1
-    c.insets = new Insets(50, 50, 50, 50)
+    c.insets = new Insets(30, 30, 30, 30)
 
     add(contents, c)
   }
