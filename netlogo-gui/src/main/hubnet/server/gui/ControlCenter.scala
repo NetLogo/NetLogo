@@ -296,9 +296,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     }
 
     def syncTheme() {
-      inputField.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      inputField.setForeground(InterfaceColors.TOOLBAR_TEXT)
-      inputField.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+      inputField.syncTheme()
 
       messageTextArea.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
       messageTextArea.setForeground(InterfaceColors.TOOLBAR_TEXT)
