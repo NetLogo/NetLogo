@@ -7,7 +7,7 @@ import javax.swing.{ BoxLayout, JFrame, JLabel, JPanel }
 
 import org.nlogo.hubnet.protocol.TestClient
 import org.nlogo.swing.{ Button, TextField, Transparent }
-import org.nloog.theme.InterfaceColors
+import org.nlogo.theme.InterfaceColors
 
 object StandaloneHubNetClient {
 
