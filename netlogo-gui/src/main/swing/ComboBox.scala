@@ -175,6 +175,9 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
       case _ => null
     }
   }
+
+  def itemCount: Int =
+    items.size
   
   def syncTheme() {
     setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)

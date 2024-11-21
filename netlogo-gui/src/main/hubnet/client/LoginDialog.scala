@@ -2,14 +2,16 @@
 
 package org.nlogo.hubnet.client
 
-import java.awt.event.{ActionEvent, ActionListener, MouseEvent, MouseAdapter}
-import java.awt.{BorderLayout, FlowLayout, Dimension, Frame}
+import java.awt.{ BorderLayout, Dimension, FlowLayout, Frame }
+import java.awt.event.{ ActionEvent, ActionListener, MouseAdapter, MouseEvent }
 import java.net.{ InetAddress, NetworkInterface }
-import javax.swing.{Box, BoxLayout, JPanel, JComboBox, JDialog, JScrollPane, JTable, SwingUtilities}
-import javax.swing.event.{DocumentEvent, ListSelectionEvent, DocumentListener, ListSelectionListener}
-import javax.swing.table.{AbstractTableModel, DefaultTableCellRenderer}
+import javax.swing.{ Box, BoxLayout, JDialog, JPanel, JScrollPane, JTable, SwingUtilities }
+import javax.swing.event.{ DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
+import javax.swing.table.{ AbstractTableModel, DefaultTableCellRenderer }
+
 import org.nlogo.hubnet.connection.NetworkUtils
-import org.nlogo.swing.{ Button, NonemptyTextFieldButtonEnabler, TextField, TextFieldBox }
+import org.nlogo.swing.{ Button, ComboBox, NonemptyTextFieldButtonEnabler, TextField, TextFieldBox, Transparent }
+import org.nlogo.theme.InterfaceColors
 
 abstract class LoginCallback{
   def apply(user:String, host:String, port:Int)
@@ -18,15 +20,12 @@ abstract class LoginCallback{
 /**
  * The HubNet client login graphical interface.
  **/
-class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: String,
-                  defaultPort: Int)
-        extends JDialog(parent, "HubNet", true)
-        with ListSelectionListener with ActionListener with DocumentListener {
+class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: String, defaultPort: Int)
+  extends JDialog(parent, "HubNet", true) with ListSelectionListener with DocumentListener {
 
-  final val nameField = new TextField(defaultUserId, 14)
+  private val nameField = new TextField(defaultUserId, 14)
   private val serverField = new TextField(defaultServerName, 26)
-  private val portField = new TextField(4) {
-    setText(defaultPort.toString)
+  private val portField = new TextField(defaultPort.toString, 4) {
     getDocument.addDocumentListener(LoginDialog.this)
   }
 
@@ -34,31 +33,42 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
   def server = serverField.getText
   def port = portField.getText.toInt
 
-  private val enterButton = new Button("Enter", null) {addActionListener(LoginDialog.this)}
-  private val interfaceChooser = new InterfaceComboBox()
+  private val enterButton = new Button("Enter", () => {
+    try this.loginCallback(username, server, port)
+    catch {
+      case nfex: NumberFormatException =>
+        // we run this later on the swing thread so as not
+        // to interfere with a concurrent keyboard event
+        SwingUtilities.invokeLater(() => portField.requestFocus())
+    }
+  })
+
+  new NonemptyTextFieldButtonEnabler(enterButton, List(serverField, nameField, portField))
+
+  private val interfaceChooser = new InterfaceComboBox
   private val serverTable = new ServerTable(interfaceChooser.selectedNetworkAddress)
-  interfaceChooser.addActionListener(serverTable)
+  interfaceChooser.addItemListener(_ => serverTable.actionPerformed(null))
   private var isServerTableSelectingValue = false
 
   // this is all really crazy... - JC 8/21/10
   locally {
     setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
+    setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     // Layout the main components
-    setLayout(new BorderLayout())
+    setLayout(new BorderLayout)
 
-    val centerPanel = new JPanel() {
+    val centerPanel = new JPanel with Transparent {
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
-      add(new TextFieldBox() {
+      add(new TextFieldBox {
         addField("User name:", nameField)
         add(Box.createVerticalStrut(12))
         addField("Server:", serverField)
         addField("Port:", portField)
       })
     }
-    add(centerPanel, java.awt.BorderLayout.CENTER)
 
-    new NonemptyTextFieldButtonEnabler(enterButton, List(serverField, nameField, portField))
+    add(centerPanel, BorderLayout.CENTER)
 
     centerPanel.add(Box.createVerticalStrut(12))
     centerPanel.add(Box.createVerticalStrut(2))
@@ -67,9 +77,12 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
     val serverTablePane = new JScrollPane(serverTable) {
       setPreferredSize(new Dimension(100, 88))
       setVisible(false)
+
+      getHorizontalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+      getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     }
     centerPanel.add(serverTablePane)
-    if (interfaceChooser.getItemCount > 1) {
+    if (interfaceChooser.itemCount > 1) {
       centerPanel.add(interfaceChooser)
     }
 
@@ -89,7 +102,9 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
     serverTable.setActive(true)
     centerPanel.add(Box.createVerticalGlue())
 
-    add(new JPanel(new FlowLayout(FlowLayout.RIGHT)) {add(enterButton)}, java.awt.BorderLayout.SOUTH)
+    add(new JPanel(new FlowLayout(FlowLayout.RIGHT)) with Transparent {
+      add(enterButton)
+    }, BorderLayout.SOUTH)
 
     pack()
   }
@@ -124,21 +139,6 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
         portField.setText(port)
         isServerTableSelectingValue = false
       }
-    }
-  }
-
-  /**
-   * Handles action events from the enter button.
-   * Logs in to the server.
-   * From interface ActionListener.
-   **/
-  def actionPerformed(e: ActionEvent) {
-    try this.loginCallback(username, server, port)
-    catch {
-      case nfex: NumberFormatException =>
-        // we run this later on the swing thread so as not
-        // to interfere with a concurrent keyboard event
-        SwingUtilities.invokeLater(() => portField.requestFocus())
     }
   }
 
@@ -344,14 +344,14 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
   }
 
   class InterfaceComboBox(val choices: Seq[(NetworkInterface, InetAddress)] = InterfaceComboBox.choices)
-    extends JComboBox(choices.map(InterfaceComboBox.choiceToString).toArray[String]) {
-      import InterfaceComboBox._
-      val choiceMap = choices.map(c => choiceToString(c) -> c).toMap
+    extends ComboBox(choices.map(InterfaceComboBox.choiceToString).toList) {
 
-    setPrototypeDisplayValue("1234567890123456789012345")
-    setMaximumSize(new java.awt.Dimension(250, 80))
+    import InterfaceComboBox._
+    val choiceMap = choices.map(c => choiceToString(c) -> c).toMap
+
+    setMaximumSize(new Dimension(250, 80))
     setAlignmentX(0.0f)
 
-    def selectedNetworkAddress = choiceMap.get(getItemAt(getSelectedIndex)).map(_._2)
+    def selectedNetworkAddress = choiceMap.get(getSelectedItem).map(_._2)
   }
 }
