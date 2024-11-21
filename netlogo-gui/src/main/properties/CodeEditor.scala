@@ -122,11 +122,11 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
   }
 
   def syncTheme() {
-    editor.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    editor.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+    editor.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    editor.setCaretColor(InterfaceColors.TEXT_AREA_TEXT)
 
-    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
 
     nameLabel.setForeground(InterfaceColors.DIALOG_TEXT)
   }

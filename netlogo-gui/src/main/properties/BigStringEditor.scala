@@ -4,6 +4,7 @@ package org.nlogo.properties
 
 import java.awt.{ BorderLayout, GridBagConstraints }
 import javax.swing.{ JLabel, JScrollPane, ScrollPaneConstants, SwingConstants }
+import javax.swing.border.LineBorder
 
 import org.nlogo.swing.Implicits._
 import org.nlogo.swing.TextArea
@@ -41,9 +42,9 @@ abstract class BigStringEditor(accessor: PropertyAccessor[String])
   def syncTheme() {
     label.setForeground(InterfaceColors.DIALOG_TEXT)
 
-    editor.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    editor.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+    editor.syncTheme()
 
-    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    scrollPane.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_EDITABLE))
+    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
   }
 }

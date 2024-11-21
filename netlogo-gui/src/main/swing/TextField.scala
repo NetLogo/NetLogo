@@ -4,6 +4,7 @@ package org.nlogo.swing
 
 import java.awt.event.{ FocusEvent, FocusListener, MouseAdapter, MouseEvent }
 import javax.swing.JTextField
+import javax.swing.border.LineBorder
 import javax.swing.text.Document
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -45,8 +46,9 @@ class TextField(document: Document, text: String, columns: Int)
   syncTheme()
 
   def syncTheme() {
-    setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    setForeground(InterfaceColors.TOOLBAR_TEXT)
-    setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+    setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    setForeground(InterfaceColors.TEXT_AREA_TEXT)
+    setCaretColor(InterfaceColors.TEXT_AREA_TEXT)
+    setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_EDITABLE))
   }
 }

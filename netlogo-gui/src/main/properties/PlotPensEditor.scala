@@ -337,7 +337,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
         if (value != null) {
           editor.setText(value.asInstanceOf[String])
         }
-        editor.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+        editor.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+        editor.setCaretColor(InterfaceColors.TEXT_AREA_TEXT)
         editor
       }
     }
@@ -347,8 +348,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       val editor = new EditorField(30, goodFont, true, colorizer)
       def getTableCellEditorComponent(table: JTable, value: Object, isSelected: Boolean, row: Int, col: Int) = {
         editor.setText(value.asInstanceOf[String])
-        editor.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-        editor.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+        editor.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+        editor.setCaretColor(InterfaceColors.TEXT_AREA_TEXT)
         editor
       }
       def getCellEditorValue = editor.getText()
