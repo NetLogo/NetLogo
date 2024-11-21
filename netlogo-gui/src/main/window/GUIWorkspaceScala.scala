@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage
 import java.io.{ IOException, PrintWriter }
 import java.nio.file.Paths
 import javax.swing.JScrollPane
+import javax.swing.border.LineBorder
 
 import scala.concurrent.{ Await, Future }
 import scala.concurrent.duration.{ Duration, MILLISECONDS }
@@ -16,7 +17,7 @@ import org.nlogo.agent.{ ImporterJ, World }
 import org.nlogo.api.{ ControlSet, Exceptions, FileIO, ModelReader, ModelSettings }
 import org.nlogo.awt.{ EventQueue, Hierarchy, UserCancelException }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ CustomOptionPane, FileDialog, ModalProgressTask, OptionPane, TextArea, Transparent }
+import org.nlogo.swing.{ CustomOptionPane, FileDialog, ModalProgressTask, OptionPane, TextArea }
 import org.nlogo.shape.ShapeConverter
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.workspace.{ AbstractWorkspaceScala, ExportOutput, HubNetManagerFactory }
@@ -66,14 +67,14 @@ with LoadModelEvent.Handler {
           OptionPane.Options.OK
         else
           OptionPane.Options.OK_CANCEL
-      val textArea = new TextArea(errorDetails) with Transparent {
+      val textArea = new TextArea(errorDetails) {
         setEditable(false)
-        setForeground(InterfaceColors.TOOLBAR_TEXT)
       }
       val scrollPane = new JScrollPane(textArea) {
-        getViewport.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-        getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-        getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+        setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
+        getViewport.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+        getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+        getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
       }
       new CustomOptionPane(getFrame, title, scrollPane, options).getSelectedIndex == 0
     }

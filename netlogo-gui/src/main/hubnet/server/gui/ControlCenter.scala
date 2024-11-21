@@ -8,7 +8,7 @@ import java.net.{ Inet4Address, InetAddress, NetworkInterface, UnknownHostExcept
 import java.text.SimpleDateFormat
 import javax.swing.{ Box, BoxLayout, DefaultListModel, JFrame, JLabel, JList, JPanel, JScrollPane, ListCellRenderer,
                      ListSelectionModel, SwingConstants }
-import javax.swing.border.EmptyBorder
+import javax.swing.border.{ EmptyBorder, LineBorder }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
 import org.nlogo.awt.{ EventQueue, Positioning }
@@ -297,12 +297,11 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
 
     def syncTheme() {
       inputField.syncTheme()
+      messageTextArea.syncTheme()
 
-      messageTextArea.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      messageTextArea.setForeground(InterfaceColors.TOOLBAR_TEXT)
-
-      scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      scrollPane.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
+      scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+      scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
     }
   }
 

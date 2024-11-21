@@ -437,7 +437,7 @@ with ThemeSync {
       else
         InterfaceColors.MENU_TEXT_DISABLED)
 
-    editor.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    editor.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+    editor.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    editor.setCaretColor(InterfaceColors.TEXT_AREA_TEXT)
   }
 }

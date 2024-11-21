@@ -5,6 +5,7 @@ package org.nlogo.swing
 import java.awt.{ BorderLayout, Component, Frame }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import javax.swing.{ AbstractAction, BorderFactory, JComponent, JDialog, JScrollPane }
+import javax.swing.border.LineBorder
 
 import org.nlogo.awt.{ Hierarchy, Positioning => AWTPositioning }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -80,8 +81,9 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
 
     textArea.syncTheme()
 
-    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    scrollPane.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
+    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
 
     buttonPanel.getComponents.foreach(_ match {
       case ts: ThemeSync => ts.syncTheme()

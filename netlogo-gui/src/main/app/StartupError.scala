@@ -4,7 +4,8 @@ package org.nlogo.app
 
 import java.awt.BorderLayout
 import java.awt.event.{ WindowAdapter, WindowEvent }
-import javax.swing.{ JFrame, JLabel, WindowConstants }
+import javax.swing.{ JFrame, JLabel, JScrollPane, WindowConstants }
+import javax.swing.border.LineBorder
 
 import org.nlogo.swing.TextArea
 import org.nlogo.theme.InterfaceColors
@@ -25,6 +26,7 @@ object StartupError {
     val message = s"Exception: ${ex.getMessage} (${ex.getClass.toString})\n\nStack Trace:\n$stack"
 
     val frame = new JFrame("NetLogo Startup Error")
+
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
     frame.addWindowListener(new WindowAdapter() {
       override def windowClosing(e: WindowEvent) {
@@ -32,7 +34,7 @@ object StartupError {
       }
     })
 
-    frame.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    frame.getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     val title = new JLabel("NetLogo encountered an error while starting to run.  See the details below.") {
       setForeground(InterfaceColors.DIALOG_TEXT)
@@ -40,12 +42,20 @@ object StartupError {
     title.setFont(title.getFont().deriveFont(16f))
     frame.add(title, BorderLayout.NORTH)
 
-    val report = new TextArea(message)
-    report.setFont(report.getFont().deriveFont(18f))
-    report.setEditable(false)
-    report.setLineWrap(true)
-    frame.add(report)
-    report.selectAll()
+    val report = new TextArea(message) {
+      setFont(getFont.deriveFont(18f))
+      setEditable(false)
+      setLineWrap(true)
+    }
+
+    val scrollPane = new JScrollPane(report) {
+      setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
+
+      getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+      getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    }
+
+    frame.add(scrollPane)
 
     frame.setSize(640, 640)
     frame.setVisible(true)

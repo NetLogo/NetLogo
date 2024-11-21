@@ -8,6 +8,7 @@ import java.awt.font.TextAttribute
 import java.io.IOException
 import java.nio.file.Path
 import javax.swing.{ Action, Box, DefaultListModel, JLabel, JList, JPanel, JScrollPane, ListCellRenderer, ListModel }
+import javax.swing.border.LineBorder
 import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
 
 import java.util.Collections
@@ -489,7 +490,9 @@ class LibrariesTab( category:        String
     latestVersion.setForeground(InterfaceColors.DIALOG_TEXT)
     minNetLogoVersion.setForeground(InterfaceColors.DIALOG_TEXT)
 
-    infoScroll.getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    infoScroll.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
+    infoScroll.getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    infoScroll.getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
 
     info.syncTheme()
   }

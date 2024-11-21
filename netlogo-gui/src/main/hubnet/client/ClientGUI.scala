@@ -4,7 +4,7 @@ package org.nlogo.hubnet.client
 
 import java.awt.{ BorderLayout, Font, Insets }
 import javax.swing.{ Box, BoxLayout, JLabel, JPanel, JScrollPane }
-import javax.swing.border.{ BevelBorder, EmptyBorder }
+import javax.swing.border.{ BevelBorder, EmptyBorder, LineBorder }
 
 import org.nlogo.api.{ CompilerServices, MersenneTwisterFast, RandomServices }
 import org.nlogo.awt.Hierarchy
@@ -89,8 +89,10 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
     }
 
     def syncTheme() {
-      getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
+
+      getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+      getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
 
       messageTextArea.syncTheme()
     }

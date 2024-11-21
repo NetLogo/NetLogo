@@ -101,7 +101,6 @@ class InfoTab(attachModelDir: String => String)
     resetBorders()
     setLayout(new BorderLayout)
     add(toolBar, BorderLayout.NORTH)
-    scrollPane.setBorder(null)
     scrollPane.getVerticalScrollBar.setUnitIncrement(16)
     add(scrollPane, BorderLayout.CENTER)
   }
@@ -161,6 +160,9 @@ class InfoTab(attachModelDir: String => String)
 
     editableButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
     helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
+
+    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
 
     textArea.syncTheme()
 

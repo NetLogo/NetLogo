@@ -499,6 +499,30 @@ object InterfaceColors {
       case "dark" => LIGHT_GRAY_OUTLINE
     }
   
+  def TEXT_AREA_BACKGROUND =
+    theme match {
+      case "classic" | "light" => Color.WHITE
+      case "dark" => DARK_BLUE_GRAY
+    }
+  
+  def TEXT_AREA_TEXT =
+    theme match {
+      case "classic" | "light" => Color.BLACK
+      case "dark" => Color.WHITE
+    }
+  
+  def TEXT_AREA_BORDER_EDITABLE =
+    theme match {
+      case "classic" | "light" => MEDIUM_GRAY
+      case "dark" => LIGHT_GRAY_2
+    }
+  
+  def TEXT_AREA_BORDER_NONEDITABLE =
+    theme match {
+      case "classic" | "light" => LIGHT_GRAY
+      case "dark" => LIGHT_GRAY_OUTLINE
+    }
+  
   def BSPACE_HINT_BACKGROUND = new Color(128, 200, 128, 64)
 
   def INFO_ICON = new Color(50, 150, 200)

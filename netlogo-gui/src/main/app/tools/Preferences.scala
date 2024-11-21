@@ -12,7 +12,7 @@ import javax.swing.{ AbstractAction, JFileChooser, JPanel }
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ Button, CheckBox, ComboBox, TextField, Transparent }
-import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.theme.ThemeSync
 
 object Preferences {
   abstract class BooleanPreference(val i18nKey: String, val requirement: String, default: Boolean) extends Preference {
@@ -118,11 +118,7 @@ object Preferences {
 
         def syncTheme() {
           textField.syncTheme()
-
-          browseButton.setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-          browseButton.setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-          browseButton.setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-          browseButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+          browseButton.syncTheme()
         }
       }
 

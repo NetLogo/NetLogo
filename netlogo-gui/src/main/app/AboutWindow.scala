@@ -6,7 +6,7 @@ import java.awt.{ BorderLayout, Dimension, Font, Frame }
 import java.awt.event.{ WindowAdapter, WindowEvent, MouseAdapter, MouseEvent }
 import java.net.URI
 import javax.swing.{ JDialog, JLabel, JScrollPane, JTabbedPane, SwingConstants, Timer, WindowConstants }
-import javax.swing.border.EmptyBorder
+import javax.swing.border.{ EmptyBorder, LineBorder }
 
 import org.nlogo.api.{ APIVersion, FileIO, Version }
 import org.nlogo.awt.{ Fonts, Positioning }
@@ -142,10 +142,14 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     credits.syncTheme()
     system.syncTheme()
 
-    creditsScrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    creditsScrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    creditsScrollPane.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
 
-    systemScrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    systemScrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+    creditsScrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    creditsScrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+
+    systemScrollPane.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
+
+    systemScrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    systemScrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
   }
 }
