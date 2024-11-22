@@ -4,11 +4,11 @@ package org.nlogo.shape.editor
 
 import java.awt.{ BorderLayout, Dimension }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, JDialog, JScrollPane }
+import javax.swing.{ AbstractAction, JDialog }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
 import org.nlogo.core.{ I18N, Shape }
-import org.nlogo.swing.{ Button, ButtonPanel, InputOptionPane, OptionPane, Utils }
+import org.nlogo.swing.{ Button, ButtonPanel, InputOptionPane, OptionPane, ScrollPane, Utils }
 import org.nlogo.theme.InterfaceColors
 
 class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: DrawableList[_ <: Shape])
@@ -21,9 +21,8 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
     val cancelButton = new Button(I18N.gui.get("common.buttons.cancel"), dispose)
 
     getContentPane.setLayout(new BorderLayout(0, 10))
-    getContentPane.add(new JScrollPane(list) {
-      getHorizontalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-      getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    getContentPane.add(new ScrollPane(list) {
+      setBackground(InterfaceColors.DIALOG_BACKGROUND)
     }, BorderLayout.CENTER)
     getContentPane.add(new ButtonPanel(Array(importButton, cancelButton)), BorderLayout.SOUTH)
 

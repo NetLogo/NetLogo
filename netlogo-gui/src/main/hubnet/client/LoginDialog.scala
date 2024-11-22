@@ -5,12 +5,13 @@ package org.nlogo.hubnet.client
 import java.awt.{ BorderLayout, Dimension, FlowLayout, Frame }
 import java.awt.event.{ ActionEvent, ActionListener, MouseAdapter, MouseEvent }
 import java.net.{ InetAddress, NetworkInterface }
-import javax.swing.{ Box, BoxLayout, JDialog, JPanel, JScrollPane, JTable, SwingUtilities }
+import javax.swing.{ Box, BoxLayout, JDialog, JPanel, JTable, SwingUtilities }
 import javax.swing.event.{ DocumentEvent, DocumentListener, ListSelectionEvent, ListSelectionListener }
 import javax.swing.table.{ AbstractTableModel, DefaultTableCellRenderer }
 
 import org.nlogo.hubnet.connection.NetworkUtils
-import org.nlogo.swing.{ Button, ComboBox, NonemptyTextFieldButtonEnabler, TextField, TextFieldBox, Transparent }
+import org.nlogo.swing.{ Button, ComboBox, NonemptyTextFieldButtonEnabler, ScrollPane, TextField, TextFieldBox,
+                         Transparent }
 import org.nlogo.theme.InterfaceColors
 
 abstract class LoginCallback{
@@ -74,12 +75,11 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
     centerPanel.add(Box.createVerticalStrut(2))
 
     // Set up server table
-    val serverTablePane = new JScrollPane(serverTable) {
+    val serverTablePane = new ScrollPane(serverTable) {
       setPreferredSize(new Dimension(100, 88))
       setVisible(false)
 
-      getHorizontalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-      getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+      setBackground(InterfaceColors.DIALOG_BACKGROUND)
     }
     centerPanel.add(serverTablePane)
     if (interfaceChooser.itemCount > 1) {

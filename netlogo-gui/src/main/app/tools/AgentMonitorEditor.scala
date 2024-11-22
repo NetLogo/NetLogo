@@ -4,7 +4,7 @@ package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, FlowLayout, Font, GridBagConstraints, GridBagLayout, Insets, Rectangle }
 import java.awt.event.{ FocusEvent, FocusListener, KeyEvent, KeyListener }
-import javax.swing.{ JLabel, JPanel, JScrollPane, ScrollPaneConstants }
+import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
 
 import org.nlogo.agent.{ Agent, AgentSet, Turtle, Patch, Link }
 import org.nlogo.api.{ AgentVariables, Dump }
@@ -12,7 +12,7 @@ import org.nlogo.awt.Fonts
 import org.nlogo.core.{ AgentKind, I18N, Nobody, Widget => CoreWidget }
 import org.nlogo.editor.EditorField
 import org.nlogo.nvm.Procedure
-import org.nlogo.swing.{ OptionPane, Transparent }
+import org.nlogo.swing.{ OptionPane, ScrollPane, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditorColorizer, Events => WindowEvents, JobWidget }
 
@@ -144,8 +144,9 @@ with ThemeSync {
   private val editor = new EditorField(17, new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12), true,
                                        new EditorColorizer(workspace))
   editor.setFont(editor.getFont.deriveFont(10f))
-  add(new JScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-                      ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER)
+  private val scrollPane = new ScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+  add(scrollPane, BorderLayout.CENTER)
   editor.addKeyListener(this)
   editor.addFocusListener(this)
   refresh(true)
@@ -439,5 +440,7 @@ with ThemeSync {
 
     editor.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
     editor.setCaretColor(InterfaceColors.TEXT_AREA_TEXT)
+
+    scrollPane.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
   }
 }

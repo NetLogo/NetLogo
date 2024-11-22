@@ -4,12 +4,12 @@ package org.nlogo.properties
 
 import java.awt.{ BorderLayout, Component, Container }
 import java.awt.event.{ MouseAdapter, MouseEvent, TextListener, TextEvent }
-import javax.swing.{ JLabel, JPanel, JScrollPane, ScrollPaneConstants }
+import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
 
 import org.nlogo.api.DummyEditable
 import org.nlogo.awt.RowLayout
 import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
-import org.nlogo.swing.{ CollapsibleArrow, Transparent }
+import org.nlogo.swing.{ CollapsibleArrow, ScrollPane, Transparent }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.EditorAreaErrorLabel
 
@@ -45,8 +45,8 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
       .withListener(new TextListener() {def textValueChanged(e: TextEvent) {changed()}})
 
   protected lazy val editor = new EditorArea(editorConfig)
-  protected lazy val scrollPane = new JScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+  protected lazy val scrollPane = new ScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                                                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   private val errorLabel = new EditorAreaErrorLabel(editor)
   // the panel that should collapse
   private lazy val collapso = new JPanel(new BorderLayout) with Transparent {
@@ -125,8 +125,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     editor.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
     editor.setCaretColor(InterfaceColors.TEXT_AREA_TEXT)
 
-    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
-    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    scrollPane.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
 
     nameLabel.setForeground(InterfaceColors.DIALOG_TEXT)
   }

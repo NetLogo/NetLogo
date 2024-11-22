@@ -4,7 +4,7 @@ package org.nlogo.lab.gui
 
 import java.awt.{ Component, Dimension, FlowLayout, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.ActionEvent
-import javax.swing.{ AbstractAction, JDialog, JLabel, JList, JMenuBar, JPanel, JScrollPane, ListCellRenderer }
+import javax.swing.{ AbstractAction, JDialog, JLabel, JList, JMenuBar, JPanel, ListCellRenderer }
 import javax.swing.event.ListSelectionListener
 
 import org.nlogo.api.LabProtocol
@@ -13,7 +13,7 @@ import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 
 import org.nlogo.core.I18N
 import org.nlogo.fileformat.{ LabSaver, LabLoader }
-import org.nlogo.swing.{ Button, FileDialog, OptionPane, Transparent, Utils }
+import org.nlogo.swing.{ Button, FileDialog, OptionPane, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 private class ManagerDialog(manager:       LabManager,
@@ -72,7 +72,7 @@ private class ManagerDialog(manager:       LabManager,
   jlist.setCellRenderer(new ProtocolRenderer)
 
   private val listLabel = new JLabel(I18N.gui("experiments"))
-  private val scrollPane = new JScrollPane(jlist)
+  private val scrollPane = new ScrollPane(jlist)
 
   private val newButton = new Button(newAction)
   private val editButton = new Button(editAction)
@@ -327,12 +327,8 @@ private class ManagerDialog(manager:       LabManager,
   
   def syncTheme() {
     getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-
     listLabel.setForeground(InterfaceColors.DIALOG_TEXT)
-
-    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-
+    scrollPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     jlist.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     newButton.syncTheme()

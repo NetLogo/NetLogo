@@ -14,7 +14,7 @@ import java.nio.file.Paths
 import java.net.URI
 import java.util.{ Enumeration, LinkedList, List => JList }
 import javax.swing.{ AbstractAction, Action, Box, BorderFactory, BoxLayout, InputMap, JComponent, JDialog, JEditorPane,
-                     JLabel, JPanel, JScrollPane, JTree, KeyStroke, SwingUtilities, WindowConstants }
+                     JLabel, JPanel, JTree, KeyStroke, SwingUtilities, WindowConstants }
 import javax.swing.text.{ BadLocationException, DefaultHighlighter }
 import javax.swing.tree.{ DefaultMutableTreeNode, DefaultTreeCellRenderer, DefaultTreeModel, TreePath,
                           TreeSelectionModel }
@@ -25,7 +25,7 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, Docum
 import org.nlogo.core.I18N
 import org.nlogo.api.FileIO
 import org.nlogo.awt.{ Positioning, UserCancelException }
-import org.nlogo.swing.{ BrowserLauncher, Button, ModalProgressTask, OptionPane, TextField, Utils },
+import org.nlogo.swing.{ BrowserLauncher, Button, ModalProgressTask, OptionPane, ScrollPane, TextField, Utils },
   Utils.addEscKeyAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
@@ -169,7 +169,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
   private val modelPreviewPanel: ModelPreviewPanel = new ModelPreviewPanel()
 
-  private val modelPreviewScrollPane = new JScrollPane(modelPreviewPanel)
+  private val modelPreviewScrollPane = new ScrollPane(modelPreviewPanel)
 
   private val tree = new JTree(new SearchableModelTree(node)) with ThemeSync {
     private val renderer = new DefaultTreeCellRenderer with ThemeSync {
@@ -192,7 +192,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
   tree.setSelectionRow(0)
 
-  private val treeScrollPane = new JScrollPane(tree)
+  private val treeScrollPane = new ScrollPane(tree)
 
   private val contentPane = new JPanel
 
@@ -721,17 +721,11 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
   def syncTheme() {
     contentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-
-    tree.syncTheme()
-
-    treeScrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-    treeScrollPane.getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    modelPreviewScrollPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    treeScrollPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     modelPreviewPanel.syncTheme()
-
-    modelPreviewScrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-    modelPreviewScrollPane.getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-
+    tree.syncTheme()
     searchField.syncTheme()
 
     searchIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))

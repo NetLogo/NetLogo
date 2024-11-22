@@ -6,7 +6,7 @@ import java.awt.{ BorderLayout, Component, Dimension, Font, Frame, GridBagConstr
 import java.awt.event.{ WindowAdapter, WindowEvent }
 import java.net.{ Inet4Address, InetAddress, NetworkInterface, UnknownHostException }
 import java.text.SimpleDateFormat
-import javax.swing.{ Box, BoxLayout, DefaultListModel, JFrame, JLabel, JList, JPanel, JScrollPane, ListCellRenderer,
+import javax.swing.{ Box, BoxLayout, DefaultListModel, JFrame, JLabel, JList, JPanel, ListCellRenderer,
                      ListSelectionModel, SwingConstants }
 import javax.swing.border.{ EmptyBorder, LineBorder }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
@@ -14,8 +14,8 @@ import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 import org.nlogo.awt.{ EventQueue, Positioning }
 import org.nlogo.core.I18N
 import org.nlogo.hubnet.server.{ ConnectionManager, HubNetUtils }
-import org.nlogo.swing.{ Button, CheckBox, NonemptyTextFieldButtonEnabler, SelectableJLabel, TextArea, TextField,
-                         TextFieldBox, Transparent }
+import org.nlogo.swing.{ Button, CheckBox, NonemptyTextFieldButtonEnabler, ScrollPane, SelectableJLabel, TextArea,
+                         TextField, TextFieldBox, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.ClientAppInterface
 
@@ -167,7 +167,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       setAlignmentY(0)
     }
 
-    private val scrollPane = new JScrollPane(clientsList) with Transparent
+    private val scrollPane = new ScrollPane(clientsList) with Transparent
 
     private val kickButton = new Button(I18N.gui.get("menu.tools.hubnetControlCenter.kick"), () => {
       import scala.collection.JavaConverters._
@@ -227,10 +227,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       reloadButton.syncTheme()
 
       clientsLabel.setForeground(InterfaceColors.DIALOG_TEXT)
-
-      scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-
+      scrollPane.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
       clientsList.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     }
   }
@@ -248,7 +245,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       setEditable(false)
     }
 
-    private val scrollPane = new JScrollPane(messageTextArea) {
+    private val scrollPane = new ScrollPane(messageTextArea) {
       setPreferredSize(new Dimension(10, 70))
     }
 
@@ -300,8 +297,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       messageTextArea.syncTheme()
 
       scrollPane.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
-      scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
-      scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+      scrollPane.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
     }
   }
 

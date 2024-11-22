@@ -4,10 +4,10 @@ package org.nlogo.app
 
 import java.awt.BorderLayout
 import java.awt.event.{ WindowAdapter, WindowEvent }
-import javax.swing.{ JFrame, JLabel, JScrollPane, WindowConstants }
+import javax.swing.{ JFrame, JLabel, WindowConstants }
 import javax.swing.border.LineBorder
 
-import org.nlogo.swing.TextArea
+import org.nlogo.swing.{ ScrollPane, TextArea }
 import org.nlogo.theme.InterfaceColors
 
 // Unfortunately errors can occur during startup of the NetLogo GUI.  On Windows these are swallowed by the launcher and
@@ -48,11 +48,9 @@ object StartupError {
       setLineWrap(true)
     }
 
-    val scrollPane = new JScrollPane(report) {
+    val scrollPane = new ScrollPane(report) {
       setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
-
-      getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
-      getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+      setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
     }
 
     frame.add(scrollPane)

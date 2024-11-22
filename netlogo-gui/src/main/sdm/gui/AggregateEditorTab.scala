@@ -4,17 +4,18 @@ package org.nlogo.sdm.gui
 
 import java.awt.{ BorderLayout, Component }
 
-import javax.swing.{ JPanel, JScrollPane, ScrollPaneConstants }
+import javax.swing.{ JPanel, ScrollPaneConstants }
 
 import org.nlogo.core.CompilerException
+import org.nlogo.swing.ScrollPane
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.ErrorLabel
 
 class AggregateEditorTab(toolbar: AggregateModelEditorToolBar, contents: Component) extends JPanel with ThemeSync {
   private val errorLabel = new ErrorLabel()
 
-  private val scrollPane = new JScrollPane(contents, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+  private val scrollPane = new ScrollPane(contents, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
 
   locally {
     setAlignmentX(Component.LEFT_ALIGNMENT)
@@ -38,7 +39,6 @@ class AggregateEditorTab(toolbar: AggregateModelEditorToolBar, contents: Compone
   }
 
   def syncTheme() {
-    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.INTERFACE_BACKGROUND)
-    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.INTERFACE_BACKGROUND)
+    scrollPane.setBackground(InterfaceColors.INTERFACE_BACKGROUND)
   }
 }

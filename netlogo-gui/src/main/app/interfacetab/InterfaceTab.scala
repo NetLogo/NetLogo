@@ -6,12 +6,12 @@ import java.awt.{ BorderLayout, Component, Container, ContainerOrderFocusTravers
                   Graphics2D, GridBagConstraints }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.{ PageFormat, Printable }
-import javax.swing.{ AbstractAction, Action, JComponent, JPanel, JScrollPane, JSplitPane, ScrollPaneConstants }
+import javax.swing.{ AbstractAction, Action, JComponent, JPanel, JSplitPane, ScrollPaneConstants }
 
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, UserAction, Utils },
+import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, ScrollPane, UserAction, Utils },
                        Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
 import org.nlogo.swing.{ Utils => SwingUtils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -51,7 +51,7 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   var lastFocusedComponent: JComponent = commandCenter
   setLayout(new BorderLayout)
-  private val scrollPane = new JScrollPane(
+  private val scrollPane = new ScrollPane(
     iP,
     // always reserve space for the vertical scrollbar, otherwise when it appears it causes a
     // horizontal scrollbar to appear too!  this problem is especially noticeable now that we have
@@ -259,8 +259,7 @@ class InterfaceTab(workspace: GUIWorkspace,
     viewUpdatePanel.syncTheme()
     iP.syncTheme()
 
-    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.INTERFACE_BACKGROUND)
-    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.INTERFACE_BACKGROUND)
+    scrollPane.setBackground(InterfaceColors.INTERFACE_BACKGROUND)
 
     commandCenter.syncTheme()
     locationToggleAction.syncTheme()

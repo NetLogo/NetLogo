@@ -3,7 +3,7 @@
 package org.nlogo.properties
 
 import java.awt.{ BorderLayout, Color, Dimension, Font, GridBagConstraints }
-import javax.swing.{ AbstractCellEditor, GroupLayout, JLabel, JPanel, JScrollPane, JTable, LayoutStyle }
+import javax.swing.{ AbstractCellEditor, GroupLayout, JLabel, JPanel, JTable, LayoutStyle }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 import javax.swing.table.{ DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, TableCellRenderer }
 
@@ -11,7 +11,7 @@ import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.{ Colorizer, EditorField }
 import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
-import org.nlogo.swing.{ Button, OptionPane, Popup, Transparent, Utils }
+import org.nlogo.swing.{ Button, OptionPane, Popup, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ ColorDialog, PlotWidget }
 
@@ -95,7 +95,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
   setMinimumSize(new Dimension(600, 200))
   setPreferredSize(new Dimension(600, 200))
 
-  add(new JScrollPane(table), BorderLayout.CENTER)
+  add(new ScrollPane(table) {
+    setBackground(InterfaceColors.DIALOG_BACKGROUND)
+  }, BorderLayout.CENTER)
   add(new JPanel with Transparent {
     add(new Button(I18N.gui("add"), () => { table.newPen }))
   }, BorderLayout.SOUTH)

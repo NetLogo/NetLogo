@@ -5,14 +5,14 @@ package org.nlogo.shape.editor
 import java.awt.{ BorderLayout, Font, Component }
 import java.awt.event.MouseEvent
 import java.nio.file.Paths
-import javax.swing.{ JScrollPane, SwingConstants, Box, BoxLayout, JPanel, JLabel, JDialog }
+import javax.swing.{ SwingConstants, Box, BoxLayout, JPanel, JLabel, JDialog }
 import javax.swing.event.{ ListSelectionEvent, MouseInputAdapter, ListSelectionListener }
 
 import org.nlogo.api.ModelLoader
 import org.nlogo.awt.ColumnLayout
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
   ShapeList.{ shapesToMap, isDefaultShapeName }
-import org.nlogo.swing.{ Button, OptionPane, Transparent, Utils }
+import org.nlogo.swing.{ Button, OptionPane, ScrollPane, Transparent, Utils }
 import org.nlogo.swing.Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -98,7 +98,7 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
   }
 
   // Create the scroll pane where the list will be displayed
-  val scrollPane = new JScrollPane(shapesList)
+  val scrollPane = new ScrollPane(shapesList)
 
   locally {
     shapesList.addMouseListener(new MouseInputAdapter {
@@ -188,12 +188,8 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
 
   def syncTheme() {
     getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-
     buttonPanel.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-
-    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-
+    scrollPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     shapesList.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     modelImportButton.syncTheme()

@@ -6,7 +6,7 @@ import java.awt.{ Color, Component, Dimension, Font, Frame, Graphics, GridBagCon
                   LinearGradientPaint }
 import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, MouseEvent, MouseAdapter,
                         WindowAdapter, WindowEvent }
-import javax.swing.{ AbstractAction, JButton, JDialog, JLabel, JPanel, JScrollPane, ScrollPaneConstants }
+import javax.swing.{ AbstractAction, JButton, JDialog, JLabel, JPanel, ScrollPaneConstants }
 import javax.swing.KeyStroke.getKeyStroke
 import javax.swing.plaf.basic.BasicButtonUI
 import javax.swing.text.EditorKit
@@ -18,7 +18,7 @@ import org.nlogo.agent.InputBoxConstraint
 import org.nlogo.awt.Fonts.{ platformFont, platformMonospacedFont }
 import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, NumericInput, StringInput }
 import org.nlogo.editor.AbstractEditorArea
-import org.nlogo.swing.{ ButtonPanel, OptionPane, RoundedBorderPanel, Transparent, Utils }
+import org.nlogo.swing.{ ButtonPanel, OptionPane, RoundedBorderPanel, ScrollPane, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object InputBox {
@@ -74,10 +74,9 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   }
 
   protected class InputScrollPane(textArea: AbstractEditorArea) extends JPanel with RoundedBorderPanel with ThemeSync {
-    val scrollPane = new JScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-                                     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) with Transparent {
+    val scrollPane = new ScrollPane(textArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+                                    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
       setBorder(null)
-      getViewport.setBackground(InterfaceColors.TRANSPARENT)
     }
 
     textArea.setOpaque(false)
@@ -127,6 +126,8 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
       textArea.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
       textArea.setCaretColor(InterfaceColors.DISPLAY_AREA_TEXT)
+
+      scrollPane.setBackground(InterfaceColors.DISPLAY_AREA_BACKGROUND)
     }
   }
 

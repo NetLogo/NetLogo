@@ -11,6 +11,7 @@ import javax.swing.text.JTextComponent
 import org.nlogo.awt.Fonts
 import org.nlogo.core.{Dialect, Femto, NetLogoCore, Token, TokenType, TokenizerInterface}
 import org.nlogo.nvm.ExtensionManager
+import org.nlogo.swing.ScrollPane
 import org.nlogo.theme.InterfaceColors
 
 object CodeCompletionPopup {
@@ -32,15 +33,13 @@ case class CodeCompletionPopup(autoSuggest: AutoSuggest,
   var lastSuggested = ""
   val dlm = new DefaultListModel[String]()
   val suggestionDisplaylist = new JList[String](dlm)
-  val scrollPane = new JScrollPane(suggestionDisplaylist)
+  val scrollPane = new ScrollPane(suggestionDisplaylist, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                                  ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   val window = new JDialog()
   window.setUndecorated(true)
   window.add(scrollPane)
   window.setMinimumSize(new Dimension(150, 210))
   var editorArea: Option[JTextComponent] = None
-
-  scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
-  scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS)
 
   def init(editorArea: JTextComponent, autoSuggestDocumentListener: AutoSuggestDocumentListener): Unit = {
     if(this.editorArea.isDefined)

@@ -3,11 +3,11 @@
 package org.nlogo.window
 
 import java.awt.{ Component, Dimension, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets }
-import javax.swing.{ JPanel, JScrollPane, ScrollPaneConstants }
+import javax.swing.{ JPanel, ScrollPaneConstants }
 
 import org.nlogo.agent.OutputObject
 import org.nlogo.awt.{ Fonts => NLogoFonts, LineBreaker }
-import org.nlogo.swing.{ RoundedBorderPanel, TextArea }
+import org.nlogo.swing.{ RoundedBorderPanel, ScrollPane, TextArea }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object OutputArea {
@@ -33,11 +33,11 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
 
   var zoomFactor = 1.0
 
-  private val scrollPane: JScrollPane =
-    new JScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
-  
-  scrollPane.setBorder(null)
+  private val scrollPane =
+    new ScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                   ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+    setBorder(null)
+  }
 
   // when someone prints something that
   // ends in a carriage return, we don't want to print it immediately,
@@ -102,8 +102,7 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
 
     text.syncTheme()
 
-    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.COMMAND_OUTPUT_BACKGROUND)
-    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.COMMAND_OUTPUT_BACKGROUND)
+    scrollPane.setBackground(InterfaceColors.COMMAND_OUTPUT_BACKGROUND)
   }
 
   def append(oo: OutputObject, wrapLines: Boolean): Unit = {

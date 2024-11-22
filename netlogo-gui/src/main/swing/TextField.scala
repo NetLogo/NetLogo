@@ -2,6 +2,7 @@
 
 package org.nlogo.swing
 
+import java.awt.Insets
 import java.awt.event.{ FocusEvent, FocusListener, MouseAdapter, MouseEvent }
 import javax.swing.JTextField
 import javax.swing.border.LineBorder
@@ -44,6 +45,9 @@ class TextField(document: Document, text: String, columns: Int)
   })
 
   syncTheme()
+
+  override def getInsets: Insets =
+    new Insets(0, 3, 0, 0)
 
   def syncTheme() {
     setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)

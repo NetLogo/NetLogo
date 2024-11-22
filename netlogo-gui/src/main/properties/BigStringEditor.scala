@@ -3,11 +3,11 @@
 package org.nlogo.properties
 
 import java.awt.{ BorderLayout, GridBagConstraints }
-import javax.swing.{ JLabel, JScrollPane, ScrollPaneConstants, SwingConstants }
+import javax.swing.{ JLabel, ScrollPaneConstants, SwingConstants }
 import javax.swing.border.LineBorder
 
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.TextArea
+import org.nlogo.swing.{ ScrollPane, TextArea }
 import org.nlogo.theme.InterfaceColors
 
 abstract class BigStringEditor(accessor: PropertyAccessor[String])
@@ -22,8 +22,8 @@ abstract class BigStringEditor(accessor: PropertyAccessor[String])
   editor.setLineWrap(true)
   editor.setWrapStyleWord(true)
   editor.getDocument().addDocumentListener({ () => changed() })
-  private val scrollPane = new JScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+  private val scrollPane = new ScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
   add(scrollPane, BorderLayout.CENTER)
   override def get = Option(editor.getText())
   override def set(value: String) {
@@ -45,6 +45,6 @@ abstract class BigStringEditor(accessor: PropertyAccessor[String])
     editor.syncTheme()
 
     scrollPane.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_EDITABLE))
-    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    scrollPane.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
   }
 }

@@ -4,12 +4,12 @@ package org.nlogo.app
 
 import java.awt.{ Component, Dimension, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent }
-import javax.swing.{ JLabel, JPanel, JScrollPane }
+import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.app.codetab.TemporaryCodeTab
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ CheckBox, CustomOptionPane, Transparent }
+import org.nlogo.swing.{ CheckBox, CustomOptionPane, ScrollPane, Transparent }
 import org.nlogo.theme.InterfaceColors
 
 import scala.collection.mutable.Map
@@ -78,10 +78,8 @@ object OfferSaveExternalsDialog {
           add(new JPanel with Transparent, c)
         }
 
-        add(new JScrollPane(filesPanel) {
-          getViewport.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-          getHorizontalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-          getVerticalScrollBar.setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+        add(new ScrollPane(filesPanel) {
+          setBackground(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
 
           override def getPreferredSize: Dimension =
             new Dimension(super.getPreferredSize.width, 200)

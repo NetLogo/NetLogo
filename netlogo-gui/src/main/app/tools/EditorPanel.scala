@@ -4,12 +4,12 @@ package org.nlogo.app.tools
 
 import java.awt.{ Dimension, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ FocusEvent, TextEvent, TextListener }
-import javax.swing.{ JPanel, JScrollPane }
+import javax.swing.JPanel
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.PreviewCommands, PreviewCommands.{ Compilable, Custom, Default, Manual }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
-import org.nlogo.swing.{ Button, ComboBox, HasPropertyChangeSupport, Transparent, Utils }
+import org.nlogo.swing.{ Button, ComboBox, HasPropertyChangeSupport, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.window.{ EditorAreaErrorLabel, EditorColorizer }
@@ -101,7 +101,9 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) 
     c.fill = GridBagConstraints.BOTH
     c.weighty = 1
 
-    add(new JScrollPane(editor), c)
+    add(new ScrollPane(editor) {
+      setBackground(InterfaceColors.CODE_BACKGROUND)
+    }, c)
   }
 }
 

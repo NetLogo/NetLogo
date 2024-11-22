@@ -7,8 +7,7 @@ import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.PageFormat
 import java.io.File
 import java.nio.file.Path
-import javax.swing.{ AbstractAction, Action, BorderFactory, JEditorPane, JPanel, JScrollPane, JTextArea,
-                     ScrollPaneConstants }
+import javax.swing.{ AbstractAction, Action, BorderFactory, JEditorPane, JPanel, JTextArea, ScrollPaneConstants }
 import javax.swing.event.{ DocumentListener, HyperlinkListener, DocumentEvent, HyperlinkEvent }
 import javax.swing.text.JTextComponent
 import javax.swing.text.html.HTMLDocument
@@ -18,8 +17,9 @@ import org.nlogo.awt.{ Fonts, Hierarchy }
 import org.nlogo.core.I18N
 import org.nlogo.editor.UndoManager
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ OptionPane, TextArea, ToolBar, ToolBarButton, ToolBarActionButton,
-  ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, Utils }, BrowserLauncher.docPath
+import org.nlogo.swing.{ OptionPane, ScrollPane, TextArea, ToolBar, ToolBarButton, ToolBarActionButton,
+                         ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, Utils },
+  BrowserLauncher.docPath
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents, Zoomable }
 
@@ -83,9 +83,8 @@ class InfoTab(attachModelDir: String => String)
   // there are some funny casts around because of this, and maybe we should clean it up.
   // -JC 9/7/10
   private var view: JTextComponent = editorPane.asInstanceOf[JTextComponent]
-  private val scrollPane = new JScrollPane(view,
-                                           ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+  private val scrollPane = new ScrollPane(view, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
 
   override def zoomTarget = scrollPane
 
@@ -161,8 +160,8 @@ class InfoTab(attachModelDir: String => String)
     editableButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
     helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
 
-    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
-    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    scrollPane.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    editorPane.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
 
     textArea.syncTheme()
 

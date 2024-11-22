@@ -2,11 +2,12 @@
 
 package org.nlogo.hubnet.server.gui
 
-import java.awt.{Dimension, BorderLayout, Component}
-import javax.swing.{JMenuBar, JScrollPane, JFrame, ScrollPaneConstants}
+import java.awt.{ BorderLayout, Component, Dimension }
+import javax.swing.{ JFrame, JMenuBar, ScrollPaneConstants }
 
 import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
+import org.nlogo.swing.ScrollPane
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel }
 
@@ -18,8 +19,8 @@ class HubNetClientEditor(workspace: GUIWorkspace,
         with org.nlogo.window.Events.ZoomedEvent.Handler
         with ThemeSync {
   val interfacePanel: AbstractWidgetPanel = iFactory.widgetPanel(workspace)
-  private val scrollPane = new JScrollPane(interfacePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+  private val scrollPane = new ScrollPane(interfacePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
     setBorder(null)
   }
   
@@ -87,8 +88,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   def syncTheme() {
     interfacePanel.syncTheme()
 
-    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.INTERFACE_BACKGROUND)
-    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.INTERFACE_BACKGROUND)
+    scrollPane.setBackground(InterfaceColors.INTERFACE_BACKGROUND)
 
     toolbar match {
       case ts: ThemeSync => ts.syncTheme()

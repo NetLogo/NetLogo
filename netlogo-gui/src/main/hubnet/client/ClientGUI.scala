@@ -3,13 +3,13 @@
 package org.nlogo.hubnet.client
 
 import java.awt.{ BorderLayout, Font, Insets }
-import javax.swing.{ Box, BoxLayout, JLabel, JPanel, JScrollPane }
+import javax.swing.{ Box, BoxLayout, JLabel, JPanel }
 import javax.swing.border.{ BevelBorder, EmptyBorder, LineBorder }
 
 import org.nlogo.api.{ CompilerServices, MersenneTwisterFast, RandomServices }
 import org.nlogo.awt.Hierarchy
 import org.nlogo.plot.PlotManager
-import org.nlogo.swing.{ TextArea, Transparent }
+import org.nlogo.swing.{ ScrollPane, TextArea, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ ButtonWidget, ChooserWidget, EditorFactory, InterfacePanelLite }
 
@@ -65,9 +65,7 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
     for ((k,v) <- chooserChoices){ getWidget(k).setChoices(v) }
   }
 
-  private class MessagePanel(messageTextArea: TextArea) extends JScrollPane(messageTextArea) with Transparent
-                                                         with ThemeSync {
-    
+  private class MessagePanel(messageTextArea: TextArea) extends ScrollPane(messageTextArea) with ThemeSync {
     setBorder(new BevelBorder(BevelBorder.LOWERED))
     setVisible(false)
 
@@ -90,9 +88,7 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
 
     def syncTheme() {
       setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
-
-      getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
-      getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+      setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
 
       messageTextArea.syncTheme()
     }

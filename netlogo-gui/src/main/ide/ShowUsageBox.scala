@@ -4,13 +4,14 @@ package org.nlogo.ide
 
 import java.awt.{ Component, Cursor, Point }
 import java.awt.event.{ KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, WindowFocusListener, WindowEvent }
-import javax.swing.{ JDialog, JEditorPane, JScrollPane, JTable, SwingConstants }
+import javax.swing.{ JDialog, JEditorPane, JTable, SwingConstants }
 import javax.swing.table.{ DefaultTableCellRenderer, DefaultTableModel, TableCellRenderer }
 import javax.swing.text.BadLocationException
 
 import org.nlogo.core.{ Femto, Token, TokenType, TokenizerInterface }
 import org.nlogo.api.Exceptions
 import org.nlogo.editor.{ AbstractEditorArea, Colorizer, HighlightEditorKit, RichDocument }, RichDocument.RichDoc
+import org.nlogo.swing.ScrollPane
 import org.nlogo.theme.InterfaceColors
 
 class ShowUsageBox(colorizer: Colorizer) {
@@ -25,7 +26,9 @@ class ShowUsageBox(colorizer: Colorizer) {
     }
   }
   val usageTable = new JTable(dataModel)
-  val scrollPane = new JScrollPane(usageTable)
+  val scrollPane = new ScrollPane(usageTable) {
+    setBackground(InterfaceColors.MENU_BACKGROUND)
+  }
   usageBox.add(scrollPane)
   usageBox.setUndecorated(true)
   usageTable.setDefaultRenderer(classOf[Token], new LineNumberRenderer())

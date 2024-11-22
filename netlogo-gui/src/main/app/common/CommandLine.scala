@@ -4,14 +4,14 @@ package org.nlogo.app.common
 
 import java.awt.{ BorderLayout, Dimension, Font }
 import java.awt.event.{ ActionEvent, ActionListener, KeyEvent, KeyListener }
-import javax.swing.{ JScrollPane, KeyStroke, ScrollPaneConstants }
+import javax.swing.{ KeyStroke, ScrollPaneConstants }
 
 import org.nlogo.agent.{ Agent, AgentSet, OutputObject }
 import org.nlogo.awt.Fonts
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Widget => CoreWidget }
 import org.nlogo.editor.EditorField
 import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup }
-import org.nlogo.swing.Transparent
+import org.nlogo.swing.{ ScrollPane, Transparent }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ CommandCenterInterface, EditorColorizer, JobWidget, Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
@@ -70,8 +70,8 @@ class CommandLine(commandCenter: CommandCenterInterface,
   setLayout(new BorderLayout)
   displayName(classDisplayName)
 
-  private val scrollPane = new JScrollPane(textField, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-                                              ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) with Transparent
+  private val scrollPane = new ScrollPane(textField, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) with Transparent
 
   add(scrollPane, BorderLayout.CENTER)
 
@@ -286,7 +286,6 @@ class CommandLine(commandCenter: CommandCenterInterface,
     textField.setBackground(InterfaceColors.CODE_BACKGROUND)
     textField.setCaretColor(InterfaceColors.DISPLAY_AREA_TEXT)
 
-    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.CODE_BACKGROUND)
-    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.CODE_BACKGROUND)
+    scrollPane.setBackground(InterfaceColors.CODE_BACKGROUND)
   }
 }

@@ -3,10 +3,11 @@
 package org.nlogo.sdm.gui
 
 import java.awt.{ GridBagConstraints, GridBagLayout }
-import javax.swing.{ JPanel, JScrollPane, ScrollPaneConstants }
+import javax.swing.{ JPanel, ScrollPaneConstants }
 
 import org.nlogo.core.CompilerException
 import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
+import org.nlogo.swing.ScrollPane
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.EditorAreaErrorLabel
 
@@ -18,8 +19,8 @@ class AggregateProceduresTab(colorizer: Colorizer) extends JPanel(new GridBagLay
 
   private val errorLabel = new EditorAreaErrorLabel(text)
 
-  private val scrollableEditor = new JScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                                                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+  private val scrollableEditor = new ScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                                                ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
 
   locally {
     val c = new GridBagConstraints
@@ -52,7 +53,6 @@ class AggregateProceduresTab(colorizer: Colorizer) extends JPanel(new GridBagLay
     text.setBackground(InterfaceColors.CODE_BACKGROUND)
     text.setCaretColor(InterfaceColors.TOOLBAR_TEXT)
 
-    scrollableEditor.getHorizontalScrollBar.setBackground(InterfaceColors.CODE_BACKGROUND)
-    scrollableEditor.getVerticalScrollBar.setBackground(InterfaceColors.CODE_BACKGROUND)
+    scrollableEditor.setBackground(InterfaceColors.CODE_BACKGROUND)
   }
 }

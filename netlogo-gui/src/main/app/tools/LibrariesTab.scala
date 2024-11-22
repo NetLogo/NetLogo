@@ -7,7 +7,7 @@ import java.awt.{ BorderLayout, Component, Dimension, FlowLayout, GridBagConstra
 import java.awt.font.TextAttribute
 import java.io.IOException
 import java.nio.file.Path
-import javax.swing.{ Action, Box, DefaultListModel, JLabel, JList, JPanel, JScrollPane, ListCellRenderer, ListModel }
+import javax.swing.{ Action, Box, DefaultListModel, JLabel, JList, JPanel, ListCellRenderer, ListModel }
 import javax.swing.border.LineBorder
 import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
 
@@ -18,8 +18,8 @@ import scala.collection.mutable.Buffer
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus }
-import org.nlogo.swing.{ BrowserLauncher, Button, EmptyIcon, FilterableListModel, OptionPane, RichAction, SwingWorker,
-                         TextArea, TextField, Transparent, Utils }
+import org.nlogo.swing.{ BrowserLauncher, Button, EmptyIcon, FilterableListModel, OptionPane, RichAction, ScrollPane,
+                         SwingWorker, TextArea, TextField, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
@@ -106,7 +106,7 @@ class LibrariesTab( category:        String
   private val magIcon = new JLabel
   private val filterField = new TextField
 
-  private val libraryScroll = new JScrollPane(libraryList)
+  private val libraryScroll = new ScrollPane(libraryList)
 
   private val sidebar             = Box.createVerticalBox()
   private val libraryButtonsPanel = new JPanel(new GridLayout(3, 1, 2, 2)) with Transparent
@@ -134,7 +134,7 @@ class LibrariesTab( category:        String
   })
 
   private val info = new TextArea(2, 28)
-  private val infoScroll = new JScrollPane(info)
+  private val infoScroll = new ScrollPane(info)
 
   private val installedVersionLabel  = new JLabel(s"${I18N.gui("installedVersion")}: ")
   private val latestVersionLabel  = new JLabel(s"${I18N.gui("latestVersion")}: ")
@@ -472,9 +472,7 @@ class LibrariesTab( category:        String
 
     filterField.syncTheme()
 
-    libraryScroll.getHorizontalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-    libraryScroll.getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-    
+    libraryScroll.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     libraryList.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     installButton.syncTheme()
@@ -491,8 +489,7 @@ class LibrariesTab( category:        String
     minNetLogoVersion.setForeground(InterfaceColors.DIALOG_TEXT)
 
     infoScroll.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
-    infoScroll.getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
-    infoScroll.getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    infoScroll.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
 
     info.syncTheme()
   }

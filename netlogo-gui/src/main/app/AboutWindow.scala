@@ -5,13 +5,13 @@ package org.nlogo.app
 import java.awt.{ BorderLayout, Dimension, Font, Frame }
 import java.awt.event.{ WindowAdapter, WindowEvent, MouseAdapter, MouseEvent }
 import java.net.URI
-import javax.swing.{ JDialog, JLabel, JScrollPane, JTabbedPane, SwingConstants, Timer, WindowConstants }
+import javax.swing.{ JDialog, JLabel, JTabbedPane, SwingConstants, Timer, WindowConstants }
 import javax.swing.border.{ EmptyBorder, LineBorder }
 
 import org.nlogo.api.{ APIVersion, FileIO, Version }
 import org.nlogo.awt.{ Fonts, Positioning }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BrowserLauncher, RichAction, TextArea, Utils }
+import org.nlogo.swing.{ BrowserLauncher, RichAction, ScrollPane, TextArea, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.util.SysInfo
 
@@ -67,11 +67,11 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     setBorder(new EmptyBorder(5, 10, 5, 10))
   }
 
-  val creditsScrollPane = new JScrollPane(credits) {
+  val creditsScrollPane = new ScrollPane(credits) {
     setPreferredSize(new Dimension(200, 230))
   }
 
-  val systemScrollPane = new JScrollPane(system) {
+  val systemScrollPane = new ScrollPane(system) {
     setPreferredSize(new Dimension(200, 230))
   }
 
@@ -143,13 +143,9 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     system.syncTheme()
 
     creditsScrollPane.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
-
-    creditsScrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
-    creditsScrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    creditsScrollPane.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
 
     systemScrollPane.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
-
-    systemScrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
-    systemScrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    systemScrollPane.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
   }
 }

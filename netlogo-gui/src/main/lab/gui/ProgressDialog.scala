@@ -3,7 +3,7 @@
 package org.nlogo.lab.gui
 
 import java.awt.{ Dialog, Dimension, GridBagConstraints, GridBagLayout, Insets, Window }
-import javax.swing.{ JDialog, JPanel, JScrollPane, ScrollPaneConstants, Timer, WindowConstants }
+import javax.swing.{ JDialog, JPanel, ScrollPaneConstants, Timer, WindowConstants }
 import javax.swing.border.{ EmptyBorder, LineBorder }
 
 import org.nlogo.api.{ Dump, ExportPlotWarningAction, LabProtocol, PeriodicUpdateDelay }
@@ -12,7 +12,7 @@ import org.nlogo.core.I18N
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.nvm.Workspace
 import org.nlogo.plot.DummyPlotManager
-import org.nlogo.swing.{ Button, CheckBox, OptionPane, RichAction, TextArea, Transparent }
+import org.nlogo.swing.{ Button, CheckBox, OptionPane, RichAction, ScrollPane, TextArea, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ GUIWorkspace, PlotWidget, SpeedSliderPanel }
 
@@ -24,8 +24,8 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor,
   private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace.progressDialog")
   private val totalRuns = protocol.countRuns
   private val progressArea = new TextArea(10 min (protocol.valueSets(0).size + 3), 0)
-  private val scrollPane = new JScrollPane(progressArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+  private val scrollPane = new ScrollPane(progressArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   private val timer = new Timer(PeriodicUpdateDelay.DelayInMilliseconds, periodicUpdateAction)
   private val displaySwitch = new CheckBox(displaySwitchAction)
   private val plotsAndMonitorsSwitch = new CheckBox(plotsAndMonitorsSwitchAction)
@@ -315,8 +315,7 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor,
     progressArea.syncTheme()
 
     scrollPane.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
-    scrollPane.getHorizontalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
-    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    scrollPane.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
 
     displaySwitch.setForeground(InterfaceColors.DIALOG_TEXT)
     plotsAndMonitorsSwitch.setForeground(InterfaceColors.DIALOG_TEXT)

@@ -4,13 +4,13 @@ package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, Dimension, GridBagConstraints, GridBagLayout, Insets }
 import java.util.{ List => JList }
-import javax.swing.{ JDialog, JPanel, JScrollPane, ScrollPaneConstants }
+import javax.swing.{ JDialog, JPanel, ScrollPaneConstants }
 
 import org.nlogo.agent.Agent
 import org.nlogo.app.common.{ CommandLine, HistoryPrompt, LinePrompt }
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ AgentKind, I18N }
-import org.nlogo.swing.{ CollapsiblePane, Transparent }
+import org.nlogo.swing.{ CollapsiblePane, ScrollPane, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, GUIWorkspace }
 
@@ -51,7 +51,7 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
   private val historyPrompt = new HistoryPrompt(commandLine)
   private val agentEditor = new AgentMonitorEditor(this)
 
-  private val scrollPane = new JScrollPane(agentEditor,
+  private val scrollPane = new ScrollPane(agentEditor,
     ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) {
 
@@ -145,7 +145,7 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
   def syncTheme() {
     setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
-    scrollPane.getVerticalScrollBar.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    scrollPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     agentEditor.syncTheme()
 
