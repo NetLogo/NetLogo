@@ -67,7 +67,7 @@ class DummyViewWidget(val world: World)
 
   override def hasContextMenu: Boolean = false
 
-  override def syncTheme() {
+  def syncTheme() {
     setBorder(new LineBorder(InterfaceColors.VIEW_BORDER, 2))
   }
 

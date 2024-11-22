@@ -206,7 +206,7 @@ class ViewWidget(workspace: GUIWorkspace)
     new Rectangle(newX, newY, newWidth, newHeight)
   }
 
-  override def syncTheme() {
+  def syncTheme() {
     setBorder(new LineBorder(InterfaceColors.VIEW_BORDER, 2))
   }
 

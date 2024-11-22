@@ -328,7 +328,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
   }
 
-  override def syncTheme() {
+  def syncTheme() {
     colorSwatch.syncTheme()
     scroller.syncTheme()
   }

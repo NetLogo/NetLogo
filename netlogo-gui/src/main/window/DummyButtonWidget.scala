@@ -2,13 +2,13 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, Graphics }
+import java.awt.{ Dimension, Graphics }
 import java.util.{ List => JList }
 
 import org.nlogo.api.{ Editable, Property }
 import org.nlogo.awt.Fonts
 import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton }
-import org.nlogo.theme.{ InterfaceColors }
+import org.nlogo.theme.InterfaceColors
 
 object DummyButtonWidget {
   private val MinimumWidth = 55
@@ -22,8 +22,6 @@ class DummyButtonWidget
   type WidgetModel = CoreButton
 
   import DummyButtonWidget._
-
-  setBackgroundColor(InterfaceColors.BUTTON_BACKGROUND)
 
   private var _actionKey: Char = '\u0000'
   private var _keyEnabled: Boolean = false
@@ -82,7 +80,7 @@ class DummyButtonWidget
       fontMetrics.getMaxDescent + fontMetrics.getMaxAscent
     val availableWidth = size.width - 8
     val stringWidth = fontMetrics.stringWidth(displayName)
-    g.setColor(getForeground)
+    g.setColor(InterfaceColors.BUTTON_TEXT)
 
     val shortString =
       Fonts.shortenStringToFit(displayName, availableWidth, fontMetrics)
@@ -97,12 +95,20 @@ class DummyButtonWidget
     if (actionKeyString != "") {
       val ax = size.width - 4 - fontMetrics.stringWidth(actionKeyString)
       val ay = fontMetrics.getMaxAscent + 2
-      val keyColor =
-        if (keyEnabled) Color.BLACK else Color.GRAY
 
-      g.setColor(keyColor)
+      g.setColor(
+        if (keyEnabled)
+          InterfaceColors.BUTTON_TEXT
+        else
+          InterfaceColors.BUTTON_TEXT_DISABLED
+      )
+
       g.drawString(actionKeyString, ax - 1, ay)
     }
+  }
+
+  def syncTheme() {
+    setBackgroundColor(InterfaceColors.BUTTON_BACKGROUND)
   }
 
   ///

@@ -282,7 +282,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
   override def raiseWidgetRemoved(): Unit = {}
   override def raiseWidgetAdded(): Unit = {}
 
-  override def syncTheme() {
+  def syncTheme() {
     textField.setBackground(InterfaceColors.CODE_BACKGROUND)
     textField.setCaretColor(InterfaceColors.DISPLAY_AREA_TEXT)
 

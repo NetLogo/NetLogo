@@ -96,7 +96,7 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
     if (_displayOn) repaint()
   }
 
-  override def syncTheme() {
+  def syncTheme() {
     setBorder(new LineBorder(InterfaceColors.VIEW_BORDER, 2))
   }
 

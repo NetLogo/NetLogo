@@ -81,7 +81,7 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
   // the results could be a Thunk, or a CompilerException.
   type CompilationResult = Either[CompilerException,CommandLogoThunk]
   case class Results(setup: CompilationResult, update: CompilationResult)
-  private val plotThunks = new mutable.WeakHashMap[Plot, Results]()
+  private val plotThunks = new mutable.WeakHashMap[String, Results]()
   private val penThunks = new mutable.WeakHashMap[PlotPen, Results]()
 
   // when plot code fails to compile in headless mode, we need to throw an exception
@@ -106,7 +106,7 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
     val plotResults =
       Results(compile(plot.setupCode, procName(setup=true)),compile(plot.updateCode, procName(setup=false)))
     // store the results
-    plotThunks(plot) = plotResults
+    plotThunks(plot.name) = plotResults
     // compile all the pens in the plot (unless they are temporary)
     val plotPensResults = for(pen <- plot.pens; if(!pen.temporary)) yield
       (pen, Results(compile(pen.setupCode,procName(setup=true, pen=Some(pen))),
@@ -140,7 +140,7 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
       // this line below runs the code if there is any to run, and it tells
       // us if stop was called from the code. if so, we dont run the pens code.
       val stopped =
-        codeType.call(plotThunks(plot)) match {
+        codeType.call(plotThunks(plot.name)) match {
           case Success(stop) => stop
           case Failure(e: HaltSignal) => throw e
           case Failure(e: Exception) =>
@@ -209,8 +209,8 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
     plot.runtimeError.isDefined ||
     plot.pens.filterNot(_.temporary).exists(hasErrors)
   }
-  def getPlotSetupError(plot:Plot) = plotThunks(plot).setup.left.toOption
-  def getPlotUpdateError(plot:Plot) = plotThunks(plot).update.left.toOption
+  def getPlotSetupError(plot:Plot) = plotThunks(plot.name).setup.left.toOption
+  def getPlotUpdateError(plot:Plot) = plotThunks(plot.name).update.left.toOption
   def hasErrors(pen:PlotPen): Boolean = {
     pen.runtimeError.isDefined ||
     getPenSetupError(pen).isDefined ||

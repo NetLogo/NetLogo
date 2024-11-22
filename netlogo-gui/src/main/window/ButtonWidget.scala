@@ -85,15 +85,11 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   val foreverLabel = new JLabel(FOREVER_GRAPHIC)
   val agentLabel = new JLabel
 
-  keyLabel.setForeground(InterfaceColors.BUTTON_TEXT)
   keyLabel.setFont(keyLabel.getFont.deriveFont(10.0f))
+
   keyLabel.addMouseListener(this)
-
-  nameLabel.setForeground(InterfaceColors.BUTTON_TEXT)
   nameLabel.addMouseListener(this)
-
   foreverLabel.addMouseListener(this)
-
   agentLabel.addMouseListener(this)
 
   setLayout(new GridBagLayout)
@@ -496,6 +492,8 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
     super.paintComponent(g)
   }
+
+  def syncTheme() {} // everything synced in paintComponent
 
   // saving and loading
   override def model: WidgetModel = {

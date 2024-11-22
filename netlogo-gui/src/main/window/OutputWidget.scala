@@ -68,7 +68,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
     p
   }
 
-  override def syncTheme() {
+  def syncTheme() {
     setBackgroundColor(InterfaceColors.OUTPUT_BACKGROUND)
 
     outputArea.syncTheme()

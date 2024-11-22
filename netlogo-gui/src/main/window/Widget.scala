@@ -148,8 +148,6 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
     super.paintComponent(g)
   }
 
-  def syncTheme() {}
-
   override def toString: String = {
     val sup: String = super.toString
     if (displayName != null && !displayName.equals("")) sup + "(" + displayName + ")"

@@ -33,7 +33,7 @@ class AppFrame extends JFrame with LinkParent with LinkRoot with ThemeSync {
     }
   })
 
-  override def syncTheme() {
+  def syncTheme() {
     App.app.syncWindowThemes()
   }
 }

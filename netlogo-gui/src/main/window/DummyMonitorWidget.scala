@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, Graphics }
+import java.awt.{ Dimension, Graphics }
 import java.util.{ List => JList }
 
 import org.nlogo.api.{ Editable, Property }
@@ -34,8 +34,6 @@ class DummyMonitorWidget
 
   def innerSource = ""
   def fontSize = DefaultFontSize
-
-  setBackgroundColor(InterfaceColors.MONITOR_BACKGROUND)
 
   def name: String = _name
 
@@ -69,16 +67,19 @@ class DummyMonitorWidget
     val fm = g.getFontMetrics;
     val labelHeight = fm.getMaxDescent + fm.getMaxAscent
     val d = getSize()
-    g.setColor(getForeground)
     val boxHeight = StrictMath.ceil(labelHeight * 1.4).toInt
 
+    g.setColor(InterfaceColors.WIDGET_TEXT)
     g.drawString(displayName, LeftMargin,
         d.height - BottomMargin - boxHeight - fm.getMaxDescent - 1)
-    g.setColor(Color.WHITE)
 
+    g.setColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
     g.fillRect(LeftMargin, d.height - BottomMargin - boxHeight,
         d.width - LeftMargin - RightMargin - 1, boxHeight)
-    g.setColor(Color.BLACK);
+  }
+
+  def syncTheme() {
+    setBackgroundColor(InterfaceColors.MONITOR_BACKGROUND)
   }
 
   def decimalPlaces: Int = _decimalPlaces

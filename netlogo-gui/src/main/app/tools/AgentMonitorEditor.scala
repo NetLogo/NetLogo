@@ -431,7 +431,7 @@ with ThemeSync {
   override def raiseWidgetRemoved(): Unit = {}
   override def raiseWidgetAdded(): Unit = {}
 
-  override def syncTheme() {
+  def syncTheme() {
     label.setForeground(
       if (isEnabled)
         InterfaceColors.DIALOG_TEXT

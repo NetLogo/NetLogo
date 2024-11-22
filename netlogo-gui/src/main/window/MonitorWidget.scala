@@ -234,7 +234,7 @@ class MonitorWidget(random: MersenneTwisterFast)
     super.suppressRecompiles(suppressRecompiles)
   }
 
-  override def syncTheme() {
+  def syncTheme() {
     setBackgroundColor(InterfaceColors.MONITOR_BACKGROUND)
 
     nameLabel.setForeground(InterfaceColors.WIDGET_TEXT)
