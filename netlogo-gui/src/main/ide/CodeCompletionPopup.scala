@@ -2,17 +2,18 @@
 
 package org.nlogo.ide
 
-import java.awt.{Color, Component, Dimension, Font, GraphicsEnvironment}
-import java.awt.event._
-import javax.swing._
+import java.awt.{ Component, Dimension, Font, GraphicsEnvironment }
+import java.awt.event.{ KeyEvent, KeyListener, MouseAdapter, MouseEvent }
+import javax.swing.{ DefaultListModel, JDialog, JLabel, JList, ListCellRenderer, ListSelectionModel,
+                     ScrollPaneConstants }
 import javax.swing.event.DocumentEvent
 import javax.swing.text.JTextComponent
 
 import org.nlogo.awt.Fonts
-import org.nlogo.core.{Dialect, Femto, NetLogoCore, Token, TokenType, TokenizerInterface}
+import org.nlogo.core.{ Dialect, Femto, NetLogoCore, Token, TokenizerInterface, TokenType }
 import org.nlogo.nvm.ExtensionManager
 import org.nlogo.swing.ScrollPane
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object CodeCompletionPopup {
   def apply() =
@@ -26,7 +27,7 @@ object CodeCompletionPopup {
 }
 
 case class CodeCompletionPopup(autoSuggest: AutoSuggest,
-  listRenderer: SuggestionListRenderer = new SuggestionListRenderer(NetLogoCore, None)) {
+  listRenderer: SuggestionListRenderer = new SuggestionListRenderer(NetLogoCore, None)) extends ThemeSync {
   // To control when the popup has to automatically show
   var isPopupEnabled = false
   // To store the last value user selected
@@ -35,11 +36,15 @@ case class CodeCompletionPopup(autoSuggest: AutoSuggest,
   val suggestionDisplaylist = new JList[String](dlm)
   val scrollPane = new ScrollPane(suggestionDisplaylist, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                   ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
-  val window = new JDialog()
-  window.setUndecorated(true)
-  window.add(scrollPane)
-  window.setMinimumSize(new Dimension(150, 210))
+  val window = new JDialog {
+    setUndecorated(true)
+    setMinimumSize(new Dimension(150, 210))
+    add(scrollPane)
+  }
+  
   var editorArea: Option[JTextComponent] = None
+
+  syncTheme()
 
   def init(editorArea: JTextComponent, autoSuggestDocumentListener: AutoSuggestDocumentListener): Unit = {
     if(this.editorArea.isDefined)
@@ -125,6 +130,7 @@ case class CodeCompletionPopup(autoSuggest: AutoSuggest,
       fireUpdatePopup(None)
       placeWindowOnScreen(eA, position)
     }
+    syncTheme()
   }
 
   /**
@@ -205,6 +211,12 @@ case class CodeCompletionPopup(autoSuggest: AutoSuggest,
     val iterator = Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer").tokenizeString(source)
     iterator.find(p => p.start < position && p.end >= position)
   }
+
+  def syncTheme() {
+    window.getContentPane.setBackground(InterfaceColors.MENU_BACKGROUND)
+    scrollPane.setBackground(InterfaceColors.MENU_BACKGROUND)
+    suggestionDisplaylist.setBackground(InterfaceColors.MENU_BACKGROUND)
+  }
 }
 
 /**
@@ -226,10 +238,13 @@ class SuggestionListRenderer(dialect: Dialect, extensionManager: Option[Extensio
         InterfaceColors.COMMAND_COLOR
       else
         InterfaceColors.REPORTER_COLOR
-    label.setForeground(fgColor)
-    label.setBackground(if(isSelected || cellHasFocus) new Color(0xEEAEEE) else Color.white)
+
     label.setOpaque(true)
-    label.setBorder(BorderFactory.createEmptyBorder())
+    label.setForeground(fgColor)
+    label.setBackground(if (isSelected || cellHasFocus)
+                          InterfaceColors.MENU_BACKGROUND_HOVER
+                        else
+                          InterfaceColors.MENU_BACKGROUND)
     label.setFont(font)
     label
   }

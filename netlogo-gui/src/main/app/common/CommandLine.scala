@@ -287,5 +287,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
     textField.setCaretColor(InterfaceColors.DISPLAY_AREA_TEXT)
 
     scrollPane.setBackground(InterfaceColors.CODE_BACKGROUND)
+
+    codeCompletionPopup.syncTheme()
   }
 }
