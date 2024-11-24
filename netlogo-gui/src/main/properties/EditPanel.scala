@@ -2,15 +2,14 @@
 
 package org.nlogo.properties
 
-import java.awt.{Component, Insets, GridBagConstraints, Dimension, GridBagLayout, BorderLayout}
+import java.awt.{ BorderLayout, Component, Dimension, GridBagConstraints, GridBagLayout, Insets }
+import javax.swing.{ JLabel, JPanel, ToolTipManager }
 
-import javax.swing.{JLabel, JPanel, ToolTipManager}
-
-import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody }
 import org.nlogo.api.{ CompilerServices, Editable, Property }
+import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody }
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ OptionPane, Transparent }
-import org.nlogo.theme.ThemeSync
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.WidgetWrapperInterface
 
 import scala.reflect.ClassTag
@@ -62,7 +61,10 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
           if (useTooltips)
             editor.setTooltip(property.notes)
           else
-            add(new JLabel(property.notes){ setFont(getFont.deriveFont(9.0f)) }, BorderLayout.SOUTH)
+            add(new JLabel(property.notes){
+              setFont(getFont.deriveFont(9.0f))
+              setForeground(InterfaceColors.DIALOG_TEXT)
+            }, BorderLayout.SOUTH)
       }
 
       val c = editor.getConstraints
