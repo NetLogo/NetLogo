@@ -2,6 +2,7 @@
 
 package org.nlogo.swing
 
+import java.awt.Insets
 import javax.swing.JPopupMenu
 import javax.swing.border.LineBorder
 
@@ -19,6 +20,9 @@ class PopupMenu(title: String = "") extends JPopupMenu(title) with ThemeSync {
   override def addSeparator() {
     add(new Separator)
   }
+
+  override def getInsets: Insets =
+    new Insets(5, 0, 5, 0)
 
   def syncTheme() {
     setBackground(InterfaceColors.MENU_BACKGROUND)
