@@ -439,9 +439,9 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
 
     else {
       if (vertical)
-        new Dimension(53, 150)
+        new Dimension(55, 150)
       else
-        new Dimension(150, 53)
+        new Dimension(150, 55)
     }
   }
 
@@ -455,9 +455,9 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
 
     else {
       if (vertical)
-        new Dimension(53, 10000)
+        new Dimension(55, 10000)
       else
-        new Dimension(10000, 53)
+        new Dimension(10000, 55)
     }
   }
 
@@ -471,9 +471,9 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
 
     else {
       if (vertical)
-        new Dimension(53, 250)
+        new Dimension(55, 250)
       else
-        new Dimension(250, 53)
+        new Dimension(250, 55)
     }
   }
 

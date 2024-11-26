@@ -420,7 +420,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   /// sizing
   override def getMinimumSize =
-    new Dimension(55, 33)
+    new Dimension(55, 35)
   
   override def getMaximumSize =
     new Dimension(10000, 10000)
