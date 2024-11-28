@@ -71,8 +71,6 @@ final object SetSystemLookAndFeel {
       UIManager.getDefaults.put("Table.focusCellBackground", new Color(202, 202, 202))
     }
 
-    // GraphicsEnvironment.getLocalGraphicsEnvironment.registerFont(Utils.font("/fonts/Inter.ttf"))
-
     FlatLaf.registerCustomDefaultsSource("themes")
 
     FlatLightLaf.setup()
