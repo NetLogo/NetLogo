@@ -17,7 +17,6 @@ object InterfaceColors {
 
   private val CLASSIC_LAVENDER = new Color(188, 188, 230)
   private val CLASSIC_LIGHT_GREEN = new Color(130, 188, 183)
-  private val CLASSIC_LIGHT_GREEN_2 = new Color(110, 159, 155)
   private val CLASSIC_DARK_GREEN = new Color(65, 94, 91)
   private val CLASSIC_ORANGE = new Color(200, 103, 103)
   private val CLASSIC_BEIGE = new Color(225, 225, 182)
@@ -32,7 +31,6 @@ object InterfaceColors {
   private val MEDIUM_GRAY = new Color(175, 175, 175)
   private val LIGHT_GRAY_OUTLINE = new Color(120, 120, 120)
   private val DARK_GRAY = new Color(79, 79, 79)
-  private val DARK_GRAY_2 = new Color(100, 100, 100)
   private val BLUE_GRAY = new Color(70, 70, 76)
   private val MEDIUM_BLUE_GRAY = new Color(60, 60, 65)
   private val DARK_BLUE_GRAY = new Color(45, 45, 54)
