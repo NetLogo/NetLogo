@@ -248,26 +248,6 @@ object InterfaceColors {
 
   def GRAPHICS_BACKGROUND = Constants.ViewBackground
 
-  def ANNOUNCEMENTS_BANNER_BACKGROUND =
-    theme match {
-      case "classic" => CLASSIC_LIGHT_GREEN
-      case "light" => LIGHT_GRAY
-      case "dark" => DARK_GRAY
-    }
-
-  def ANNOUNCEMENTS_BANNER_BACKGROUND_HOVER =
-    theme match {
-      case "classic" => CLASSIC_LIGHT_GREEN_2
-      case "light" => LIGHT_GRAY_2
-      case "dark" => DARK_GRAY_2
-    }
-
-  def ANNOUNCEMENTS_BANNER_TEXT =
-    theme match {
-      case "classic" | "light" => Color.BLACK
-      case "dark" => Color.WHITE
-    }
-
   def VIEW_BORDER =
     theme match {
       case "classic" | "light" => TRANSPARENT
