@@ -19,41 +19,40 @@ import org.nlogo.theme.ThemeSync
 
 class RGBAColorDialog(parent: Frame, returnColor: Boolean) extends JDialog(parent) with ThemeSync {
   private class Bridge {
-    // methods to be called from JavaScript go here
+    def selectColor(color: AnyRef) {
+      println(color)
+    }
   }
 
   private val bridge = new Bridge
 
+  setResizable(false)
   setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE)
 
-  val panel = new JFXPanel
+  locally {
+    val panel = new JFXPanel
 
-  add(panel)
+    add(panel)
 
-  override def setVisible(visible: Boolean) {
-    if (visible)
-      Platform.runLater(() => { loadHTML() }) // this is only for testing, for release this will only happen once at initialization
-    
-    super.setVisible(visible)
-  }
+    Platform.runLater(() => {
+      val webView = new WebView
 
-  private def loadHTML() {
-    val webView = new WebView
+      webView.getEngine.load(getClass.getResource("/web/color-picker/index.html").toString)
 
-    webView.getEngine.load(getClass.getResource("/web/color-picker/index.html").toString)
+      webView.getEngine.getLoadWorker.stateProperty.addListener(
+        (value: ObservableValue[_ <: State], oldState: State, newState: State) => {
+          webView.getEngine.executeScript("window").asInstanceOf[JSObject].setMember("bridge", bridge)
+          webView.getEngine.executeScript("initWithMode(\"RGBA\")")
+          
+          val width = webView.getEngine.executeScript("document.body.clientWidth").asInstanceOf[Number].intValue
+          val height = webView.getEngine.executeScript("document.body.clientHeight").asInstanceOf[Number].intValue
+          
+          setSize(width, height)
+        }
+      )
 
-    webView.getEngine.getLoadWorker.stateProperty.addListener(
-      (value: ObservableValue[_ <: State], oldState: State, newState: State) => {
-        webView.getEngine.executeScript("window").asInstanceOf[JSObject].setMember("bridge", bridge)
-        
-        val rect = webView.getEngine.executeScript(
-          "document.getElementsByClassName(\"code-editor\")[0].getBoundingClientRect()").asInstanceOf[JSObject]
-        
-        setSize(rect.getMember("width").asInstanceOf[Int], rect.getMember("height").asInstanceOf[Int])
-      }
-    )
-
-    panel.setScene(new Scene(new VBox(webView)))
+      panel.setScene(new Scene(new VBox(webView)))
+    })
   }
 
   def syncTheme() {
