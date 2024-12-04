@@ -300,7 +300,6 @@ class App extends
   private val runningInMacWrapper = Option(System.getProperty("org.nlogo.mac.appClassName")).nonEmpty
   private val ImportWorldURLProp = "netlogo.world_state_url"
   private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
-  private var notificationBanner: NotificationBanner = null
 
   val isMac = System.getProperty("os.name").startsWith("Mac")
 
@@ -421,8 +420,6 @@ class App extends
                                  pico.getComponent(classOf[ExternalFileManager]))
 
     frame.addLinkComponent(_tabManager)
-    notificationBanner = new NotificationBanner()
-    frame.add(notificationBanner, BorderLayout.NORTH)
     controlSet.interfaceTab = Some(_tabManager.interfaceTab)
 
     pico.addComponent(_tabManager.interfaceTab.getInterfacePanel)
@@ -793,7 +790,6 @@ class App extends
     menuBar.syncTheme()
 
     tabManager.syncTheme()
-    notificationBanner.syncTheme()
     frame.repaint()
     tabManager.separateTabsWindow.repaint()
 

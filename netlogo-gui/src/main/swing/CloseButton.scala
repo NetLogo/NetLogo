@@ -1,15 +1,11 @@
-package org.nlogo.app
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-import org.nlogo.swing.Utils
-import org.nlogo.theme.InterfaceColors
+package org.nlogo.swing
 
-import java.awt.{Dimension, Graphics}
+import java.awt.{ Dimension, Graphics }
 import javax.swing.JPanel
 
-private class CloseButton extends JPanel {
-  setOpaque(false)
-  setBackground(InterfaceColors.TRANSPARENT)
-
+class CloseButton extends JPanel with Transparent {
   override def getPreferredSize: Dimension =
     new Dimension(8, 8)
 
