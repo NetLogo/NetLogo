@@ -42,7 +42,7 @@ with ThemeSync {
   private val tabbing: CheckBox = new CheckBox(I18N.gui.get("tabs.code.indentAutomatically"), () => {
     tabs.smartTabbingEnabled = tabbing.isSelected
   })
-  
+
   private val separate: CheckBox = new CheckBox(I18N.gui.get("tabs.code.separateCodeWindow"), () => {
     tabs.switchWindow(separate.isSelected, true)
   })
@@ -245,7 +245,7 @@ with ThemeSync {
 
       syncTheme()
     }
-    
+
     def syncTheme() {
       putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/check.png", 15, 15,
                                                             if (dirty)
@@ -287,5 +287,10 @@ with ThemeSync {
           setStyle(TokenTypes.SEPARATOR, new Style(InterfaceColors.DEFAULT_COLOR))
         })
     }
+
+    scrollableEditor.setBackground(InterfaceColors.CODE_BACKGROUND)
+    scrollableEditor.getViewport.setBackground(InterfaceColors.CODE_BACKGROUND)
+    scrollableEditor.getHorizontalScrollBar.setBackground(InterfaceColors.CODE_BACKGROUND)
+    scrollableEditor.getVerticalScrollBar.setBackground(InterfaceColors.CODE_BACKGROUND)
   }
 }
