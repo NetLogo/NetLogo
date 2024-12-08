@@ -8,17 +8,17 @@ import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, FocusListener, 
                         WindowAdapter, WindowEvent }
 import javax.swing.{ AbstractAction, JButton, JDialog, JLabel, JPanel, ScrollPaneConstants }
 import javax.swing.KeyStroke.getKeyStroke
-import javax.swing.plaf.basic.BasicButtonUI
 import javax.swing.text.EditorKit
 
 import org.nlogo.api.{ CompilerServices, Dump, Editable, Exceptions, LogoException, Options, ValueConstraint }
 import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.Color.{ getColor, getColorNameByIndex, modulateDouble }
 import org.nlogo.agent.InputBoxConstraint
-import org.nlogo.awt.Fonts.{ platformFont, platformMonospacedFont }
+import org.nlogo.awt.Fonts.platformMonospacedFont
+import org.nlogo.awt.{ Hierarchy, Positioning }
 import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, NumericInput, StringInput }
 import org.nlogo.editor.AbstractEditorArea
-import org.nlogo.swing.{ ButtonPanel, OptionPane, RoundedBorderPanel, ScrollPane, Utils }
+import org.nlogo.swing.{ Button, ButtonPanel, OptionPane, RoundedBorderPanel, ScrollPane, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object InputBox {
@@ -116,7 +116,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       textArea.setSize(scrollPane.getWidth - 10, scrollPane.getHeight)
 
       setDiameter(6 * zoomFactor)
-      
+
       super.paintComponent(g)
     }
 
@@ -142,9 +142,15 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   private val codeEditorKit: EditorKit = textArea.getEditorKit
   protected var inputType: InputType = new StringInputType()
   private val constraint: InputBoxConstraint = new InputBoxConstraint(inputType.baseName, inputType.defaultValue)
-  protected val changeButton: JButton = new NLButton("Change") {
-    addActionListener(new EditActionListener())
-  }
+  protected val changeButton = new Button("Change", () => {
+    if (dialog == null || !dialog.isVisible) {
+      editing = true
+      dialog = new InputDialog(Hierarchy.getFrame(InputBox.this), name, `inputType`, editDialogTextArea)
+      dialog.setVisible(true)
+      editDialogTextArea.setText(textArea.getText)
+      editDialogTextArea.selectAll()
+    }
+  })
   protected val colorSwatch = new ColorButton
 
   private val scroller = new InputScrollPane(textArea)
@@ -255,7 +261,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
         new Insets(3, 0, 6, 6)
       else
         new Insets(6, 0, 6, 12)
-    
+
     add(changeButton, c)
 
     c.gridx = 0
@@ -331,16 +337,10 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   def syncTheme() {
     colorSwatch.syncTheme()
     scroller.syncTheme()
-  }
+    changeButton.syncTheme()
 
-  private class EditActionListener extends ActionListener {
-    def actionPerformed(e: ActionEvent): Unit = if (dialog == null || !dialog.isVisible) {
-      editing = true
-      dialog = new InputDialog(org.nlogo.awt.Hierarchy.getFrame(InputBox.this), name, `inputType`, editDialogTextArea)
-      dialog.setVisible(true)
-      editDialogTextArea.setText(textArea.getText)
-      editDialogTextArea.selectAll()
-    }
+    if (dialog != null)
+      dialog.syncTheme()
   }
 
   private class SelectColorActionListener extends ActionListener {
@@ -494,34 +494,25 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   override def hasContextMenu = true
   override def getMaximumSize = null
 
-  protected class NLButton(title:String) extends JButton(title) {
-    setBackgroundColor(InterfaceColors.GRAPHICS_BACKGROUND)
+  protected class InputDialog(parent: Frame, title: String, inputType: InputType, textArea: AbstractEditorArea)
+    extends JDialog(parent, title) with ThemeSync {
 
-    setFont(new Font(platformFont,Font.PLAIN, 10))
-    setFocusable(false)
-    setFont(new Font(platformFont, Font.PLAIN, 10))
-    // without this it looks funny on Windows - ST 9/18/03
-    override def updateUI() { setUI(new BasicButtonUI()) }
-  }
+    private val label = new JLabel(inputType.toString)
+    private val scrollPane = new InputScrollPane(textArea)
 
-  protected class InputDialog(parent: Frame, title: String, inputType: InputType,
-                              textArea: AbstractEditorArea) extends JDialog(parent, title) {
-    private val textArea1: AbstractEditorArea = textArea
-    private val okAction = new AbstractAction(I18N.gui.get("common.buttons.ok")) {
-      def actionPerformed(e: ActionEvent) {
-        try{
-          val value = inputType.readValue(textArea1.getText)
-          inputText(value)
-          editing = false
-          dispose()
-          dialog = null
-        }
-        catch {
-          case ex@(_:LogoException | _:CompilerException | _:ValueConstraint.Violation) =>
-            showError(ex.asInstanceOf[Exception])
-        }
+    private val okButton = new Button(I18N.gui.get("common.buttons.ok"), () => {
+      try{
+        val value = inputType.readValue(textArea.getText)
+        inputText(value)
+        editing = false
+        dispose()
+        dialog = null
       }
-    }
+      catch {
+        case ex@(_:LogoException | _:CompilerException | _:ValueConstraint.Violation) =>
+          showError(ex.asInstanceOf[Exception])
+      }
+    })
 
     private val cancelAction = new AbstractAction(I18N.gui.get("common.buttons.cancel")) {
       def actionPerformed(e: ActionEvent) {
@@ -531,16 +522,16 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       }
     }
 
-    private val applyAction =
-    new AbstractAction(I18N.gui.get("common.buttons.apply")) {
-      def actionPerformed(e: ActionEvent) {
-        try inputText(inputType.readValue(textArea1.getText))
-        catch {
-          case ex@(_:LogoException | _:CompilerException | _:ValueConstraint.Violation) =>
-            showError(ex.asInstanceOf[Exception])
-        }
+    private val cancelButton = new Button(cancelAction)
+
+    private val applyButton = new Button(I18N.gui.get("common.buttons.apply"), () => {
+      try inputText(inputType.readValue(textArea.getText))
+      catch {
+        case ex@(_:LogoException | _:CompilerException | _:ValueConstraint.Violation) =>
+          showError(ex.asInstanceOf[Exception])
       }
-    }
+    })
+
     locally {
       setResizable(true)
       textArea.setEditorKit(inputType.getEditorKit)
@@ -555,26 +546,25 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       c.gridwidth = GridBagConstraints.REMAINDER
       c.anchor = GridBagConstraints.WEST
 
-      getContentPane.add(new JLabel(inputType.toString), c)
+      getContentPane.add(label, c)
 
       c.weightx = 1
       c.weighty = 1
       c.fill = GridBagConstraints.BOTH
 
-      getContentPane.add(new InputScrollPane(textArea), c)
+      getContentPane.add(scrollPane, c)
 
       c.gridy = 2
       c.anchor = GridBagConstraints.EAST
       c.weightx = 0
       c.weighty = 0
 
-      getContentPane.add(new ButtonPanel(Array(new JButton(okAction), new JButton(applyAction),
-                                               new JButton(cancelAction))), c)
+      getContentPane.add(new ButtonPanel(Array(okButton, applyButton, cancelButton)), c)
 
-      org.nlogo.swing.Utils.addEscKeyAction(this, cancelAction)
+      Utils.addEscKeyAction(this, cancelAction)
 
       pack()
-      org.nlogo.awt.Positioning.center(this, parent)
+      Positioning.center(this, parent)
       addWindowListener(new WindowAdapter() {
         override def windowClosing(e: WindowEvent) {
           dispose()
@@ -583,9 +573,28 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
         }
       })
     }
+
+    syncTheme()
+
     def setText(text: String) {
-      textArea1.setText(text)
-      textArea1.selectAll()
+      textArea.setText(text)
+      textArea.selectAll()
+    }
+
+    def syncTheme() {
+      getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+      label.setForeground(InterfaceColors.DIALOG_TEXT)
+
+      textArea.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+      textArea.setForeground(InterfaceColors.TEXT_AREA_TEXT)
+      textArea.setCaretColor(InterfaceColors.TEXT_AREA_TEXT)
+
+      scrollPane.syncTheme()
+
+      okButton.syncTheme()
+      applyButton.syncTheme()
+      cancelButton.syncTheme()
     }
   }
 

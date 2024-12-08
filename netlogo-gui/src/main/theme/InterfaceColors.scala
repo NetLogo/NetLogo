@@ -8,7 +8,7 @@ import org.nlogo.api.Constants
 
 object InterfaceColors {
   private var theme: String = null
-  
+
   def setTheme(theme: String) {
     this.theme = theme
   }
@@ -46,7 +46,7 @@ object InterfaceColors {
       case "light" => new Color(85, 87, 112)
       case "dark" => Color.WHITE
     }
-  
+
   def WIDGET_TEXT_ERROR = Color.RED
 
   def WIDGET_HOVER_SHADOW = new Color(75, 75, 75)
@@ -59,7 +59,7 @@ object InterfaceColors {
       case "classic" | "light" => Color.WHITE
       case "dark" => Color.BLACK
     }
-  
+
   def DISPLAY_AREA_TEXT =
     theme match {
       case "classic" | "light" => Color.BLACK
@@ -79,7 +79,7 @@ object InterfaceColors {
       case "classic" | "light" => LIGHT_GRAY
       case "dark" => BLUE_GRAY
     }
-  
+
   def COMMAND_CENTER_TEXT = WIDGET_TEXT
 
   def LOCATION_TOGGLE_IMAGE =
@@ -93,13 +93,13 @@ object InterfaceColors {
       case "classic" | "light" => Color.WHITE
       case "dark" => DARK_GRAY
     }
-  
+
   def COMMAND_OUTPUT_BACKGROUND =
     theme match {
       case "classic" | "light" => Color.WHITE
       case "dark" => DARK_BLUE_GRAY
     }
-  
+
   def SPLIT_PANE_DIVIDER_BACKGROUND =
     theme match {
       case "classic" | "light" => MEDIUM_GRAY
@@ -191,7 +191,7 @@ object InterfaceColors {
       case "classic" => CLASSIC_ORANGE
       case "light" | "dark" => MEDIUM_BLUE
     }
-  
+
   def SWITCH_BACKGROUND =
     theme match {
       case "classic" => CLASSIC_LIGHT_GREEN
@@ -204,7 +204,7 @@ object InterfaceColors {
       case "classic" => CLASSIC_ORANGE
       case "light" | "dark" => Color.WHITE
     }
-    
+
   def SWITCH_TOGGLE_BACKGROUND_ON =
     theme match {
       case "classic" => CLASSIC_DARK_GREEN
@@ -283,7 +283,7 @@ object InterfaceColors {
       case "classic" => CLASSIC_BEIGE
       case "light" | "dark" => LIGHT_GRAY
     }
-  
+
   def PLOT_MOUSE_TEXT = Color.BLACK
 
   def OUTPUT_BACKGROUND =
@@ -320,7 +320,7 @@ object InterfaceColors {
       case "classic" | "light" => Color.BLACK
       case "dark" => Color.WHITE
     }
-  
+
   def TAB_TEXT_SELECTED = Color.WHITE
 
   def TAB_TEXT_ERROR = LIGHT_RED
@@ -336,25 +336,25 @@ object InterfaceColors {
       case "classic" | "light" => MEDIUM_GRAY
       case "dark" => LIGHT_GRAY_OUTLINE
     }
-  
+
   def TOOLBAR_TEXT =
     theme match {
       case "classic" | "light" => Color.BLACK
       case "dark" => Color.WHITE
     }
-  
+
   def TOOLBAR_CONTROL_BACKGROUND =
     theme match {
       case "classic" | "light" => Color.WHITE
       case "dark" => DARK_BLUE_GRAY
     }
-  
+
   def TOOLBAR_CONTROL_BACKGROUND_HOVER =
     theme match {
       case "classic" | "light" => WHITE_2
       case "dark" => DARK_BLUE_GRAY_2
     }
-  
+
   def TOOLBAR_CONTROL_BORDER =
     theme match {
       case "classic" | "light" => MEDIUM_GRAY
@@ -366,19 +366,19 @@ object InterfaceColors {
       case "classic" | "light" => MEDIUM_GRAY
       case "dark" => DARK_BLUE_GRAY
     }
-  
+
   def TOOLBAR_BUTTON_HOVER =
     theme match {
       case "classic" | "light" => LIGHT_GRAY_2
       case "dark" => MEDIUM_BLUE_GRAY
     }
-  
+
   def TOOLBAR_IMAGE =
     theme match {
       case "classic" | "light" => new Color(85, 87, 112)
       case "dark" =>new Color(168, 170, 194)
     }
-  
+
   def CHECK_FILLED = new Color(0, 173, 90)
 
   def ERROR_LABEL_BACKGROUND = LIGHT_RED
@@ -388,19 +388,19 @@ object InterfaceColors {
       case "classic" | "light" => Color.WHITE
       case "dark" => ALMOST_BLACK
     }
-  
+
   def CODE_LINE_HIGHLIGHT =
     theme match {
       case "classic" | "light" => new Color(255, 255, 204)
       case "dark" => new Color(35, 35, 35)
     }
-  
+
   def CODE_SEPARATOR =
     theme match {
       case "classic" | "light" => LIGHT_GRAY
       case "dark" => DARK_GRAY
     }
-  
+
   def CHECKBOX_BACKGROUND_SELECTED = MEDIUM_BLUE
 
   def CHECKBOX_BACKGROUND_SELECTED_HOVER = MEDIUM_BLUE_2
@@ -410,7 +410,7 @@ object InterfaceColors {
       case "classic" | "light" => Color.WHITE
       case "dark" => DARK_BLUE_GRAY
     }
-  
+
   def CHECKBOX_BACKGROUND_UNSELECTED_HOVER =
     theme match {
       case "classic"| "light" => WHITE_2
@@ -422,7 +422,7 @@ object InterfaceColors {
       case "classic" | "light" => MEDIUM_GRAY
       case "dark" => LIGHT_GRAY_OUTLINE
     }
-  
+
   def CHECKBOX_CHECK = Color.WHITE
 
   def MENU_BAR_BORDER =
@@ -430,27 +430,27 @@ object InterfaceColors {
       case "classic" | "light" => LIGHT_GRAY_2
       case "dark" => MEDIUM_BLUE_GRAY
     }
-  
+
   def MENU_BACKGROUND =
     theme match {
       case "classic" | "light" => Color.WHITE
       case "dark" => BLUE_GRAY
     }
-  
+
   def MENU_BACKGROUND_HOVER =
     theme match {
       case "classic" | "light" => MEDIUM_BLUE
       case "dark" => DARK_BLUE_GRAY
     }
-  
+
   def MENU_BORDER = MEDIUM_GRAY
-  
+
   def MENU_TEXT_HOVER =
     theme match {
       case "classic" | "light" => Color.WHITE
       case "dark" => MEDIUM_GRAY
     }
-  
+
   def MENU_TEXT_DISABLED = MEDIUM_GRAY
 
   def DIALOG_BACKGROUND =
@@ -458,39 +458,39 @@ object InterfaceColors {
       case "classic" | "light" => Color.WHITE
       case "dark" => BLUE_GRAY
     }
-  
+
   def DIALOG_BACKGROUND_SELECTED =
     theme match {
       case "classic" | "light" => MEDIUM_BLUE
       case "dark" => DARK_BLUE_GRAY
     }
-  
+
   def DIALOG_TEXT =
     theme match {
       case "classic" | "light" => Color.BLACK
       case "dark" => Color.WHITE
     }
-  
+
   def DIALOG_TEXT_SELECTED =
     theme match {
       case "classic" | "light" => Color.WHITE
       case "dark" => MEDIUM_GRAY
     }
-  
+
   def RADIO_BUTTON_BACKGROUND =
     theme match {
       case "classic" | "light" => Color.WHITE
       case "dark" => DARK_BLUE_GRAY
     }
-  
+
   def RADIO_BUTTON_BACKGROUND_HOVER =
     theme match {
       case "classic" | "light" => WHITE_2
       case "dark" => DARK_BLUE_GRAY_2
     }
-  
+
   def RADIO_BUTTON_SELECTED = MEDIUM_BLUE
-  
+
   def RADIO_BUTTON_SELECTED_HOVER = MEDIUM_BLUE_2
 
   def RADIO_BUTTON_BORDER =
@@ -498,31 +498,31 @@ object InterfaceColors {
       case "classic" | "light" => MEDIUM_GRAY
       case "dark" => LIGHT_GRAY_OUTLINE
     }
-  
+
   def TEXT_AREA_BACKGROUND =
     theme match {
       case "classic" | "light" => Color.WHITE
       case "dark" => DARK_BLUE_GRAY
     }
-  
+
   def TEXT_AREA_TEXT =
     theme match {
       case "classic" | "light" => Color.BLACK
       case "dark" => Color.WHITE
     }
-  
+
   def TEXT_AREA_BORDER_EDITABLE =
     theme match {
       case "classic" | "light" => MEDIUM_GRAY
       case "dark" => LIGHT_GRAY_2
     }
-  
+
   def TEXT_AREA_BORDER_NONEDITABLE =
     theme match {
       case "classic" | "light" => LIGHT_GRAY
       case "dark" => LIGHT_GRAY_OUTLINE
     }
-  
+
   def BSPACE_HINT_BACKGROUND = new Color(128, 200, 128, 64)
 
   def INFO_ICON = new Color(50, 150, 200)
@@ -530,7 +530,7 @@ object InterfaceColors {
   def WARNING_ICON = new Color(220, 170, 50)
 
   def ERROR_ICON = new Color(220, 50, 50)
-  
+
   // Syntax highlighting colors
 
   def COMMENT_COLOR = new Color(90, 90, 90) // gray
