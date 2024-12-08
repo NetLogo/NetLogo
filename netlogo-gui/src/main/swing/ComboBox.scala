@@ -144,7 +144,7 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
 
   def getSelectedItem: T =
     selectedItem
-  
+
   def setSelectedIndex(index: Int) {
     if (index >= 0 && index < items.size)
       selectItem(items(index))
@@ -152,7 +152,7 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
 
   def getSelectedIndex: Int =
     items.indexOf(selectedItem)
-  
+
   private def selectItem(item: T) {
     selectedItem = item
     choiceDisplay.setItem(item)
@@ -178,7 +178,7 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
 
   def itemCount: Int =
     items.size
-  
+
   def syncTheme() {
     setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
     setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)

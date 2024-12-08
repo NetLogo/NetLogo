@@ -203,7 +203,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
       else
         super.contains(x, y)
     }
-    
+
     override def contains(point: Point): Boolean = {
       if (vertical)
         -point.y > 0 && point.x > 0 && -point.y < getWidth && point.x < getHeight
@@ -531,7 +531,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
     catch {
       case e: NumberFormatException =>
     }
-    
+
     Nil
   }
 
