@@ -69,7 +69,7 @@ object ShapeXMLLoader {
       ("rotatable", shape.rotatable.toString),
       ("editableColorIndex", shape.editableColorIndex.toString)
     )
-    
+
     val children: List[XMLElement] =
       for (element <- shape.elements.toList) yield {
         element match {
@@ -96,7 +96,7 @@ object ShapeXMLLoader {
             )
 
             XMLElement("line", attributes, "", Nil)
-          
+
           case polygon: CorePolygon =>
             val attributes = Map(
               ("color", colorToString(polygon.color)),
@@ -146,10 +146,10 @@ object ShapeXMLLoader {
             lines = lines :+ new LinkLine(element("x").toDouble, element("visible").toBoolean,
                                           element.getChildren("dash").map(element => element("value").toFloat))
           })
-        
+
         case "indicator" =>
           indicator = readShape(element.getChild("shape"))
-        
+
         case _ =>
       }
     }
@@ -177,7 +177,7 @@ object ShapeXMLLoader {
 
         XMLElement("line", attributes, "", children)
       }
-    
+
     val children = List[XMLElement](
       XMLElement("lines", Map(), "", lines),
       XMLElement("indicator", Map(), "", List(writeShape(shape.indicator)))

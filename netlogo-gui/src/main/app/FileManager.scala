@@ -215,7 +215,7 @@ object FileManager {
 
       if (includes.isEmpty)
         return Nil
-      
+
       includes.get.flatMap({ case (name, path) =>
         val file = scala.io.Source.fromFile(path)
         val source = file.mkString

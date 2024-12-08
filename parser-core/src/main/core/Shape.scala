@@ -9,7 +9,7 @@ object Shape {
       other match {
         case color: RgbColor =>
           red == color.red && green == color.green && blue == color.blue && alpha == color.alpha
-        
+
         case _ => false
       }
     }
@@ -52,7 +52,7 @@ object Shape {
         case line: Line =>
           color == line.color && marked == line.marked && startPoint == line.startPoint && endPoint == line.endPoint &&
             filled == line.filled
-        
+
         case _ => false
       }
     }
@@ -74,7 +74,7 @@ object Shape {
         case rectangle: Rectangle =>
           color == rectangle.color && filled == rectangle.filled && marked == rectangle.marked &&
             upperLeftCorner == rectangle.upperLeftCorner && lowerRightCorner == rectangle.lowerRightCorner
-        
+
         case _ => false
       }
     }
@@ -107,7 +107,7 @@ object Shape {
       other match {
         case line: LinkLine =>
           xcor == line.xcor && isVisible == line.isVisible && dashChoices == line.dashChoices
-        
+
         case _ => false
       }
     }
@@ -134,7 +134,7 @@ object Shape {
         case shape: VectorShape =>
           name == shape.name && rotatable == shape.rotatable && editableColorIndex == shape.editableColorIndex &&
             elements == shape.elements
-        
+
         case _ => false
       }
     }
@@ -151,7 +151,7 @@ object Shape {
         case shape: LinkShape =>
           name == shape.name && curviness == shape.curviness && linkLines == shape.linkLines &&
             indicator == shape.indicator
-        
+
         case _ => false
       }
     }

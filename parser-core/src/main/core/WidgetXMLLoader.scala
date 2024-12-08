@@ -32,7 +32,7 @@ object WidgetXMLLoader {
                                  element("wrappingAllowedX").toBoolean, element("wrappingAllowedY").toBoolean),
              element("fontSize").toInt, UpdateMode.load(element("updateMode").toInt),
              element("showTickCounter").toBoolean, element.get("tickCounterLabel"), element("frameRate").toDouble)
-      
+
       case "view3d" =>
         View(element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt,
              makeDimensions3D(new WorldDimensions(element("minPxcor").toInt, element("maxPxcor").toInt,
@@ -70,13 +70,13 @@ object WidgetXMLLoader {
                   element("type") match {
                     case "string" =>
                       ChooseableString(element("value"))
-                    
+
                     case "double" =>
                       ChooseableDouble(element("value").toDouble)
-                    
+
                     case "boolean" =>
                       ChooseableBoolean(element("value").toBoolean)
-                    
+
                     case "list" =>
                       ChooseableList(LogoList.fromList(element.getChildren("value").map(element => element("value"))))
 
@@ -86,25 +86,25 @@ object WidgetXMLLoader {
       case "output" =>
         Output(element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt,
                element("fontSize").toInt)
-      
+
       case "input" =>
         InputBox(element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt,
                  element("bottom").toInt,
                  element("type") match {
                    case "number" =>
                      NumericInput(element.getChild("value").text.toDouble, NumericInput.NumberLabel)
-                  
+
                    case "color" =>
                      NumericInput(element.getChild("value").text.toDouble, NumericInput.ColorLabel)
-                  
+
                    case "string" =>
                      StringInput(element.getChild("value").text, StringInput.StringLabel,
                                  element("multiline").toBoolean)
-                  
+
                    case "reporter" =>
                      StringInput(element.getChild("value").text, StringInput.ReporterLabel,
                                  element("multiline").toBoolean)
-                  
+
                    case "command" =>
                      StringInput(element.getChild("value").text, StringInput.CommandLabel,
                                  element("multiline").toBoolean)
@@ -133,10 +133,10 @@ object WidgetXMLLoader {
 
         if (button.display.isDefined)
           attributes += (("display", button.display.get))
-        
+
         if (button.actionKey.isDefined)
           attributes += (("actionKey", button.actionKey.get.toString))
-        
+
         val children =
           if (button.source.isDefined)
             List(XMLElement("source", Map(), button.source.get, Nil))
@@ -144,7 +144,7 @@ object WidgetXMLLoader {
             Nil
 
         XMLElement("button", attributes, "", children)
-      
+
       case slider: Slider =>
         var attributes = Map(
           ("left", slider.left.toString),
@@ -160,10 +160,10 @@ object WidgetXMLLoader {
 
         if (slider.display.isDefined)
           attributes += (("display", slider.display.get))
-        
+
         if (slider.variable.isDefined)
           attributes += (("variable", slider.variable.get))
-        
+
         if (slider.units.isDefined)
           attributes += (("units", slider.units.get))
 
@@ -197,7 +197,7 @@ object WidgetXMLLoader {
               attributes += (("tickCounterLabel", view.tickCounterLabel.get))
 
             XMLElement("view3d", attributes, "", Nil)
-          
+
           case None =>
             var attributes = Map(
               ("left", view.left.toString),
@@ -235,7 +235,7 @@ object WidgetXMLLoader {
 
         if (monitor.display.isDefined)
           attributes += (("display", monitor.display.get))
-        
+
         val children =
           if (monitor.source.isDefined)
             List(XMLElement("source", Map(), monitor.source.get, Nil))
@@ -243,7 +243,7 @@ object WidgetXMLLoader {
             Nil
 
         XMLElement("monitor", attributes, "", children)
-      
+
       case switch: Switch =>
         var attributes = Map(
           ("left", switch.left.toString),
@@ -255,12 +255,12 @@ object WidgetXMLLoader {
 
         if (switch.display.isDefined)
           attributes += (("display", switch.display.get))
-        
+
         if (switch.variable.isDefined)
           attributes += (("variable", switch.variable.get))
 
         XMLElement("switch", attributes, "", Nil)
-      
+
       case plot: Plot =>
         var attributes = Map(
           ("left", plot.left.toString),
@@ -277,14 +277,14 @@ object WidgetXMLLoader {
 
         if (plot.display.isDefined)
           attributes += (("display", plot.display.get))
-        
+
         if (plot.xAxis.isDefined)
           attributes += (("xAxis", plot.xAxis.get))
-        
+
         if (plot.yAxis.isDefined)
           attributes += (("yAxis", plot.yAxis.get))
-        
-        
+
+
         var children = List(
           XMLElement("setup", Map(), plot.setupCode, Nil),
           XMLElement("update", Map(), plot.updateCode, Nil)
@@ -320,10 +320,10 @@ object WidgetXMLLoader {
 
         if (chooser.display.isDefined)
           attributes += (("display", chooser.display.get))
-        
+
         if (chooser.variable.isDefined)
           attributes += (("variable", chooser.variable.get))
-        
+
         val children =
           for (choice <- chooser.choices) yield {
             choice match {
@@ -334,15 +334,15 @@ object WidgetXMLLoader {
                 )
 
                 XMLElement("choice", attributes, "", Nil)
-              
+
               case ChooseableDouble(double) =>
                 val attributes = Map(
                   ("type", "double"),
                   ("value", double.toString)
                 )
-                
+
                 XMLElement("choice", attributes, "", Nil)
-              
+
               case ChooseableBoolean(boolean) =>
                 val attributes = Map(
                   ("type", "boolean"),
@@ -350,7 +350,7 @@ object WidgetXMLLoader {
                 )
 
                 XMLElement("choice", attributes, "", Nil)
-              
+
               case ChooseableList(list) =>
                 val attributes = Map(
                   ("type", "list")
@@ -364,14 +364,14 @@ object WidgetXMLLoader {
 
                     XMLElement("value", attributes, "", Nil)
                   }
-                
+
                 XMLElement("choice", attributes, "", children.toList)
 
             }
           }
 
         XMLElement("chooser", attributes, "", children)
-      
+
       case output: Output =>
         val attributes = Map(
           ("left", output.left.toString),
@@ -382,7 +382,7 @@ object WidgetXMLLoader {
         )
 
         XMLElement("output", attributes, "", Nil)
-      
+
       case input: InputBox =>
         var attributes = Map(
           ("left", input.left.toString),
@@ -394,13 +394,13 @@ object WidgetXMLLoader {
 
         if (input.variable.isDefined)
           attributes += (("variable", input.variable.get))
-        
+
         input.boxedValue match {
           case NumericInput(_, label) =>
             label match {
               case NumericInput.NumberLabel =>
                 attributes += (("type", "number"))
-              
+
               case NumericInput.ColorLabel =>
                 attributes += (("type", "color"))
 
@@ -410,10 +410,10 @@ object WidgetXMLLoader {
             input.label match {
               case StringInput.StringLabel =>
                 attributes += (("type", "string"))
-              
+
               case StringInput.ReporterLabel =>
                 attributes += (("type", "reporter"))
-              
+
               case StringInput.CommandLabel =>
                 attributes += (("type", "command"))
 
@@ -424,7 +424,7 @@ object WidgetXMLLoader {
         val children = List(XMLElement("value", Map(), input.boxedValue.asString, Nil))
 
         XMLElement("input", attributes, "", children)
-      
+
       case image: Image =>
         val attributes = Map(
           ("left", image.left.toString),

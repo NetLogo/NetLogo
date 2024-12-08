@@ -15,7 +15,7 @@ object SDMXMLLoader {
     drawing.getModel.setDt(element("dt").toDouble)
 
     var refs = Map[Int, Figure]()
-    
+
     for (element <- element.children) {
       element.name match {
         case "stock" =>
@@ -44,7 +44,7 @@ object SDMXMLLoader {
           drawing.add(converter)
 
           refs += ((refs.size, converter))
-        
+
         case "reservoir" =>
           val reservoir = new ReservoirFigure
 
@@ -66,7 +66,7 @@ object SDMXMLLoader {
 
           binding.connectStart(start.connectorAt(start.center.x, start.center.y))
           binding.connectEnd(end.connectorAt(end.center.x, end.center.y))
-          
+
           drawing.add(binding)
 
           refs += ((refs.size, binding))
@@ -130,7 +130,7 @@ object SDMXMLLoader {
           children = children :+ XMLElement("stock", attributes, "", Nil)
 
           refs += ((stock, refs.size))
-        
+
         case converter: ConverterFigure =>
           val attributes = Map(
             ("name", converter.nameWrapper),
@@ -144,7 +144,7 @@ object SDMXMLLoader {
           children = children :+ XMLElement("converter", attributes, "", Nil)
 
           refs += ((converter, refs.size))
-        
+
         case reservoir: ReservoirFigure =>
           val attributes = Map(
             ("centerX", reservoir.center.x.toString),
@@ -156,7 +156,7 @@ object SDMXMLLoader {
           children = children :+ XMLElement("reservoir", attributes, "", Nil)
 
           refs += ((reservoir, refs.size))
-        
+
         case binding: BindingConnection =>
           val attributes = Map(
             ("startX", binding.startPoint.x.toString),

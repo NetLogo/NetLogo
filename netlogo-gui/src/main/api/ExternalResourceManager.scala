@@ -9,7 +9,7 @@ import org.nlogo.core.ExternalResource
 object ExternalResourceManager {
   def getName(path: String): String =
     new File(path).getName
-  
+
   def getName(location: ExternalResource.Location): Option[String] = {
     location match {
       case ExternalResource.Existing(name) => Some(name)
@@ -24,7 +24,7 @@ class ExternalResourceManager {
 
   def getResources: Seq[ExternalResource] =
     resources
-  
+
   def setResources(resources: Seq[ExternalResource]) {
     this.resources = resources
   }

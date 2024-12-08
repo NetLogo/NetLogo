@@ -85,7 +85,7 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
   def imageError(name: String) {
     OptionDialog.showMessage(this, I18N.gui.get("common.messages.error"), I18N.gui.getN("resource.loadError", name),
                              Array(I18N.gui.get("common.buttons.ok")))
-    
+
     imagePath = ExternalResource.None
   }
 
@@ -100,7 +100,7 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
 
   override def propertySet =
     Properties.image
-  
+
   override def invalidSettings: Seq[(String, String)] = {
     val name = imagePath match {
       case ExternalResource.Existing(name) => name
@@ -109,7 +109,7 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
 
         resourceManager.addResource(new ExternalResource(name, "image",
           Base64.getEncoder.encodeToString(Files.readAllBytes(new File(path).toPath))))
-        
+
         name
     }
 
@@ -135,7 +135,7 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
 
   override def getPreferredSize: Dimension =
     new Dimension(100, 100)
-  
+
   override def model: WidgetModel = {
     val bounds = getBoundsTuple
 
@@ -151,9 +151,9 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
 
     if (!setImage(model.image))
       imageError(model.image)
-    
+
     imagePath = ExternalResource.Existing(model.image)
-    
+
     preserveAspect = model.preserveAspect
 
     this
