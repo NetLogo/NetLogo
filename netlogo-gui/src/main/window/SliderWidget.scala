@@ -235,6 +235,8 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
   }
 
+  protected var loading = false
+
   protected var _name = ""
   private var _units = ""
   private var _vertical = false
@@ -243,13 +245,13 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   val nameComponent = new Label(I18N.gui.get("edit.slider.previewName"))
   val valueComponent = new TextField
   val unitsComponent = new Label("")
-  var slider = new JSlider(0, ((maximum - minimum) / increment).toInt, 50) {
-    addMouseWheelListener(new MouseWheelListener {
-      def mouseWheelMoved(e: MouseWheelEvent) {
-        value = minimum.max(value - increment * e.getWheelRotation).min(effectiveMaximum)
-      }
-    })
-  }
+  var slider = new JSlider(0, ((maximum - minimum) / increment).toInt, 50)
+
+  slider.addMouseWheelListener(new MouseWheelListener {
+    def mouseWheelMoved(e: MouseWheelEvent) {
+      slider.setValue(slider.getValue - e.getWheelRotation)
+    }
+  })
 
   slider.setUI(new SliderUI(slider))
 
@@ -262,7 +264,8 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
 
   slider.addChangeListener(new ChangeListener {
     override def stateChanged(e: ChangeEvent): Unit = {
-      value = minimum + slider.getValue * increment
+      if (!loading)
+        value = minimum + slider.getValue * increment
     }
   })
 
@@ -290,28 +293,27 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   def value_=(d: Double) {
     sliderData.value = d
     valueComponent.setText(valueString(value))
-    slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
+    slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
     repaint()
     new Events.WidgetEditedEvent(this).raise(this)
   }
   def value_=(d: Double, inc: Double) {
     sliderData.value = d
     valueComponent.setText(valueString(value))
-    slider.setValue(((value - minimum) / inc).asInstanceOf[Int])
+    slider.setValue(((value - minimum) / inc).round.asInstanceOf[Int])
     repaint()
-    new Events.WidgetEditedEvent(this).raise(this)
   }
   def value_=(d: Double, buttonRelease: Boolean) {
     sliderData.value_=(d, buttonRelease)
     valueComponent.setText(valueString(value))
-    slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
+    slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
     repaint()
     new Events.WidgetEditedEvent(this).raise(this)
   }
   def coerceValue(value: Double): Double = {
     val ret = sliderData.coerceValue(value)
     valueComponent.setText(valueString(value))
-    slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
+    slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
     repaint()
     ret
   }
@@ -621,6 +623,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
   // LOADING AND SAVING
 
   override def load(model: WidgetModel): AnyRef = {
+    loading = true
     val min: String = model.min
     val max: String = model.max
     val v = model.default
@@ -638,6 +641,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
     value_=(v, inc.toDouble)
     defaultValue = v
     setSize(model.right - model.left, model.bottom - model.top)
+    loading = false
     this
   }
 
