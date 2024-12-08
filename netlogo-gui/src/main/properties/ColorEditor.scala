@@ -2,30 +2,30 @@
 
 package org.nlogo.properties
 
-import java.awt.{ Color, Component, Frame, Graphics }
-import java.awt.event.{ ActionEvent, ActionListener }
-import javax.swing.{ Icon, JButton, JLabel, JPanel }
+import java.awt.{ Color, Dimension, Frame }
+import java.awt.event.{ MouseAdapter, MouseEvent }
+import java.lang.Double
+import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.api.Approximate.approximate
-import org.nlogo.api.Color.{ getClosestColorNumberByARGB, getColorNameByIndex }
-import org.nlogo.api.Dump
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.api.{ Color => NLColor, Dump }, NLColor.{ getClosestColorNumberByARGB, getColorNameByIndex }
+import org.nlogo.swing.RoundedBorderPanel
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.ColorDialog
 
 abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
   extends PropertyEditor(accessor) {
 
-  private val colorIcon = new ColorIcon
-  private val colorButton = new JButton("0 (black)", colorIcon)
+  private val colorButton = new ColorButton
   private val originalColor: Color = accessor.get
 
   private val label = new JLabel(accessor.displayName)
   add(label)
   add(colorButton)
-  colorButton.addActionListener(new SelectColorActionListener())
   setColor(originalColor)
 
   def setColor(color: Color) {
-    colorIcon.setColor(color)
+    colorButton.setColor(color)
     val c = getClosestColorNumberByARGB(color.getRGB)
     val colorString = c match {
       // this logic is duplicated in InputBox
@@ -45,7 +45,7 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
   }
 
   override def getMinimumSize = colorButton.getMinimumSize
-  override def get = Some(colorIcon.getColor)
+  override def get = Some(colorButton.getColor)
   override def set(value: Color) { setColor(value) }
   override def requestFocus() { colorButton.requestFocus() }
 
@@ -56,25 +56,48 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
 
   def syncTheme() {
     label.setForeground(InterfaceColors.DIALOG_TEXT)
+
+    colorButton.syncTheme()
   }
 
-  private class SelectColorActionListener extends ActionListener{
-    def actionPerformed(e: ActionEvent){
-      val colorDialog = new org.nlogo.window.ColorDialog(frame, true)
-      val c = colorDialog.showInputBoxDialog(getClosestColorNumberByARGB(colorIcon.getColor.getRGB))
-      setColor(org.nlogo.api.Color.getColor(c: java.lang.Double))
+  private class ColorButton extends JPanel with RoundedBorderPanel with ThemeSync {
+    private val label = new JLabel("0 (black)")
+    private val panel = new JPanel {
+      setBackground(Color.black)
+      setPreferredSize(new Dimension(10, 10))
     }
-  }
 
-  private class ColorIcon extends Icon {
-    val color = new JPanel
-    def paintIcon(c:Component, g:Graphics, x:Int, y:Int){
-      g.setColor(getColor)
-      g.fillRect(x, y, getIconWidth, getIconHeight)
+    setDiameter(6)
+    enableHover()
+
+    add(panel)
+    add(label)
+
+    addMouseListener(new MouseAdapter {
+      override def mousePressed(e: MouseEvent) {
+        val colorDialog = new ColorDialog(frame, true)
+        val c = colorDialog.showInputBoxDialog(getClosestColorNumberByARGB(getColor.getRGB))
+        ColorEditor.this.setColor(NLColor.getColor(c: Double))
+      }
+    })
+
+    def setColor(color: Color) {
+      panel.setBackground(color)
     }
-    def getIconWidth = color.getMinimumSize().width
-    def getIconHeight = color.getMinimumSize().height
-    def setColor(c: Color) { color.setBackground(c) }
-    def getColor = color.getBackground
+
+    def getColor: Color =
+      panel.getBackground
+
+    def setText(text: String) {
+      label.setText(text)
+    }
+
+    def syncTheme() {
+      setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
+      setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
+      setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+
+      label.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    }
   }
 }
