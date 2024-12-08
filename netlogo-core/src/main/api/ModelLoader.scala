@@ -64,7 +64,7 @@ class FormatterPair[A, B <: ModelFormat[A, B]](
 
     def emptyModel: Model =
       modelFormat.emptyModel(serializers)
-    
+
     def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[Seq[LabProtocol]] =
       modelFormat.readExperiments(source, editNames, existingNames)
 
@@ -140,7 +140,7 @@ trait ModelLoader extends GenericModelLoader {
         return format.writeExperiments(experiments, writer)
       }
     }
-    
+
     Failure(new Exception("Unable to write experiments."))
   }
 }

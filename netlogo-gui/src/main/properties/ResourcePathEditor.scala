@@ -86,7 +86,7 @@ abstract class ResourcePathEditor(accessor: PropertyAccessor[ExternalResource.Lo
       case selection: ExternalResource.Location => Some(selection)
     }
   }
-  
+
   def set(value: ExternalResource.Location) {
     resourceMenu.setSelection(value)
   }

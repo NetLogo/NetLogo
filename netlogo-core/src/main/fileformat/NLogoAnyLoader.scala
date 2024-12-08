@@ -89,7 +89,7 @@ class NLogoAnyLoader(loaders: List[GenericModelLoader]) extends ConfigurableMode
 
   override def addSerializers[A, B <: ModelFormat[A, B]](ss: Seq[ComponentSerialization[A, B]])
     (implicit aTag: ClassTag[A], bTag: ClassTag[B], matchingFormat: ClassTag[FormatterPair[A, B]]): NLogoAnyLoader = {
-    
+
     new NLogoAnyLoader(loaders.map(loader => {
       loader match {
         case loader: ConfigurableModelLoader =>

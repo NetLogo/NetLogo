@@ -77,7 +77,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         switchedTabs(mainTabs.getSelectedComponent)
       }
     }
-    
+
     def windowLostFocus(e: WindowEvent) {}
   })
 
@@ -105,7 +105,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
       switchedTabs(separateTabs.getSelectedComponent)
     }
-    
+
     def windowLostFocus(e: WindowEvent) {}
   })
 
@@ -181,7 +181,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       dirtyDialog.setVisible(true)
     else
       reload()
-  
+
 
     // Return 'dirty' to stop the file watcher thread if file is dirty. This is
     // to prevent the file dirty dialog from being shown back-to-back.
@@ -414,12 +414,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       separateTabs.remove(tab)
     else
       mainTabs.remove(tab)
-    
+
     externalFileManager.remove(tab)
 
     if (getExternalFileTabs.isEmpty)
       revokeAction(SaveAllAction)
-    
+
     updateTabActions()
   }
 
@@ -569,7 +569,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         separateTabs.setForegroundAt(separateTabs.indexOfComponent(tab), color)
       else
         mainTabs.setForegroundAt(mainTabs.indexOfComponent(tab), color)
-      
+
       if (hasError && focusOnError) {
         setSelectedTab(tab)
       }

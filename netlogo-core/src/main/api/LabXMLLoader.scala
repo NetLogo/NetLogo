@@ -37,31 +37,31 @@ object LabXMLLoader {
       element.name match {
         case "preExperiment" =>
           preExperiment = element.text
-        
+
         case "setup" =>
           setup = element.text
-        
+
         case "go" =>
           go = element.text
-        
+
         case "postRun" =>
           postRun = element.text
-        
+
         case "postExperiment" =>
           postExperiment = element.text
-        
+
         case "runMetricsCondition" =>
           runMetricsCondition = element.text
-        
+
         case "exitCondition" =>
           exitCondition = element.text
-        
+
         case "metrics" =>
           metrics = element.getChildren("metric").map(_.text)
-        
+
         case "constants" =>
           constants = element.children.map(readValueSet)
-        
+
         case "subExperiments" =>
           subExperiments = element.getChildren("subExperiment").map(_.children.map(readValueSet))
 
@@ -113,7 +113,7 @@ object LabXMLLoader {
           )
 
           XMLElement("steppedValueSet", attributes, "", Nil)
-        
+
         case enumerated: RefEnumeratedValueSet =>
           val attributes = Map(
             ("variable", enumerated.variableName)
@@ -124,7 +124,7 @@ object LabXMLLoader {
               yield XMLElement("value", Map(("value", Dump.logoObject(value, true, false))), "", Nil)
 
           XMLElement("enumeratedValueSet", attributes, "", children)
-        
+
       }
     }
 
@@ -142,7 +142,7 @@ object LabXMLLoader {
 
     if (experiment.preExperimentCommands.trim.nonEmpty)
       children = children :+ XMLElement("preExperiment", Map(), experiment.preExperimentCommands.trim, Nil)
-    
+
     if (experiment.setupCommands.trim.nonEmpty)
       children = children :+ XMLElement("setup", Map(), experiment.setupCommands.trim, Nil)
 

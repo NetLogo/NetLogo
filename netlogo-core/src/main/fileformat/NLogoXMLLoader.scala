@@ -37,10 +37,10 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
 
         case XMLStreamConstants.END_ELEMENT =>
           end = true
-        
+
         case XMLStreamConstants.CHARACTERS =>
           text = new Regex("]]" + XMLElement.CDATA_ESCAPE + ">").replaceAllIn(reader.getText, "]]>")
-        
+
         case _ =>
       }
     }
@@ -53,7 +53,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
 
     for ((key, value) <- element.attributes)
       writer.writeAttribute(key, value)
-    
+
     if (element.text.isEmpty)
       element.children.foreach(writeXMLElement(writer, _))
     else
@@ -89,7 +89,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
                 Source.fromURI(uri).mkString
               }, GenericModelLoader.getURIExtension(uri).getOrElse(""))
   }
-  
+
   def readModel(source: String, extension: String): Try[Model] = {
     if (isCompatible(extension)) {
       val reader = XMLInputFactory.newFactory.createXMLStreamReader(new StringReader(source))
@@ -118,19 +118,19 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
             element.name match {
               case "widgets" =>
                 widgets = element.children.map(WidgetXMLLoader.readWidget(_, makeDimensions3D))
-              
+
               case "info" =>
                 info = Some(element.text)
 
               case "code" =>
                 code = Some(element.text)
-              
+
               case "turtleShapes" =>
                 turtleShapes = Some(element.getChildren("shape").map(ShapeXMLLoader.readShape))
-              
+
               case "linkShapes" =>
                 linkShapes = Some(element.getChildren("shape").map(ShapeXMLLoader.readLinkShape))
-              
+
               case "previewCommands" =>
                 optionalSections = optionalSections :+
                   new Section("org.nlogo.modelsection.previewcommands", PreviewCommands.Custom(element.text))
@@ -155,7 +155,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
 
               case "openTempFiles" =>
                 openTempFiles = element.getChildren("file").map(element => element("path"))
-              
+
               case "resources" =>
                 resources = element.getChildren("resource").map(element =>
                   new ExternalResource(element("name"), element("type"), element.text))
