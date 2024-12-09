@@ -8,7 +8,7 @@ import org.scalatest.funsuite.AnyFunSuite
 
 import org.nlogo.api.Version
 import org.nlogo.util.SlowTest
-import org.nlogo.fileformat, fileformat.NLogoThreeDFormat
+import org.nlogo.fileformat.{ FileFormat, NLogoThreeDFormat }
 
 class TestModelNetLogoVersions extends AnyFunSuite with SlowTest {
   val paths = ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")
@@ -18,7 +18,7 @@ class TestModelNetLogoVersions extends AnyFunSuite with SlowTest {
     test("model version: " + path, SlowTest.Tag) {
       // if this test suddenly starts failing, make sure all models are the most current version
       val loader =
-        fileformat.basicLoader
+        FileFormat.basicLoader
           .addFormat[Array[String], NLogoThreeDFormat](new NLogoThreeDFormat)
 
       // 5.x.nlogo is a LS is a test model for checking the graceful handling of version problems.

@@ -7,7 +7,8 @@ object XMLElement {
 }
 
 case class XMLElement(val name: String, val attributes: Map[String, String], val text: String,
-                      val children: List[XMLElement]) {
+                      val children: Seq[XMLElement]) {
+
   def apply(attribute: String): String =
     attributes(attribute)
 
@@ -23,6 +24,7 @@ case class XMLElement(val name: String, val attributes: Map[String, String], val
   def getOptionalChild(name: String): Option[XMLElement] =
     children.find(_.name == name)
 
-  def getChildren(name: String): List[XMLElement] =
+  def getChildren(name: String): Seq[XMLElement] =
     children.filter(_.name == name)
+
 }

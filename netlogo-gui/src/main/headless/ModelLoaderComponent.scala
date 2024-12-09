@@ -2,47 +2,48 @@
 
 package org.nlogo.headless
 
-import org.nlogo.api.{ GenericModelLoader, ComponentSerialization, ConfigurableModelLoader }
-import org.nlogo.fileformat
+import org.nlogo.api.{ AbstractModelLoader, ComponentSerialization, ConfigurableModelLoader }
+import org.nlogo.fileformat.{ FileFormat, NLogoFormat, NLogoXMLLoader }
 import org.nlogo.nvm.{ DefaultCompilerServices, PresentationCompilerInterface }
 
 import org.picocontainer.PicoContainer
 import org.picocontainer.adapters.AbstractAdapter
 
-class ModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[GenericModelLoader], classOf[fileformat.NLogoXMLLoader]) {
-  def getDescriptor(): String = "ModelLoaderComponent"
-  def verify(x$1: PicoContainer): Unit = {}
+class ModelLoaderComponent extends AbstractAdapter[AbstractModelLoader](classOf[AbstractModelLoader], classOf[NLogoXMLLoader]) {
 
-  def getComponentInstance(container: PicoContainer, into: java.lang.reflect.Type) = {
+  override def getDescriptor: String = "ModelLoaderComponent"
+  override def verify(x$1: PicoContainer): Unit = ()
+
+  override def getComponentInstance(container: PicoContainer, into: java.lang.reflect.Type) = {
     val compiler         = container.getComponent(classOf[PresentationCompilerInterface])
     val compilerServices = new DefaultCompilerServices(compiler)
-
-    fileformat.standardAnyLoader(compilerServices, true)
+    FileFormat.standardAnyLoader(compilerServices, true)
   }
+
 }
 
-class LegacyModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[GenericModelLoader], classOf[ConfigurableModelLoader]) {
-  import fileformat.NLogoFormat
+class LegacyModelLoaderComponent extends AbstractAdapter[AbstractModelLoader](classOf[AbstractModelLoader], classOf[ConfigurableModelLoader]) {
 
-  def getDescriptor(): String = "LegacyModelLoaderComponent"
+  override def getDescriptor: String = "LegacyModelLoaderComponent"
+  override def verify(x$1: PicoContainer): Unit = ()
 
-  def verify(x$1: PicoContainer): Unit = {}
+  override def getComponentInstance(container: PicoContainer, into: java.lang.reflect.Type) = {
 
-  def getComponentInstance(container: PicoContainer, into: java.lang.reflect.Type) = {
-    import scala.collection.JavaConverters._
+    import scala.collection.JavaConverters.iterableAsScalaIterableConverter
 
-    val compiler =
-      container.getComponent(classOf[PresentationCompilerInterface])
-    val compilerServices = new DefaultCompilerServices(compiler)
-    val loader = fileformat.standardAnyLoader(compilerServices, true)
-    val additionalComponents =
-      container.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]]).asScala
+    val compiler             = container.getComponent(classOf[PresentationCompilerInterface])
+    val compilerServices     = new DefaultCompilerServices(compiler)
+    val loader               = FileFormat.standardAnyLoader(compilerServices, true)
+    val additionalComponents = container.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]]).asScala
+
     if (additionalComponents.nonEmpty)
       additionalComponents.foldLeft(loader) {
         case (l, serialization) =>
           l.addSerializer[Array[String], NLogoFormat](serialization)
       }
-      else
-        loader
+    else
+      loader
+
   }
+
 }

@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.server
 
 import org.nlogo.core.{ AgentKind, Model, Widget => CoreWidget }
-import org.nlogo.api.{ HubNetInterface, GenericModelLoader, Version }, HubNetInterface.ClientInterface
+import org.nlogo.api.{ AbstractModelLoader, HubNetInterface, Version }, HubNetInterface.ClientInterface
 import org.nlogo.hubnet.mirroring
 import org.nlogo.hubnet.mirroring.{ HubNetLinkStamp, HubNetDrawingMessage, HubNetTurtleStamp, HubNetLine }
 import org.nlogo.hubnet.connection.{ HubNetException, ConnectionInterface }
@@ -12,14 +12,16 @@ import org.nlogo.hubnet.connection.MessageEnvelope.MessageEnvelope
 import org.nlogo.hubnet.protocol.{ CalculatorInterface, ComputerInterface }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI }
 import org.nlogo.agent.{Link, Turtle}
-import org.nlogo.fileformat.ModelConversion
+import org.nlogo.fileformat.FailedConversionResult
+import org.nlogo.fileformat.FileFormat.ModelConversion
 
 import java.nio.file.Paths
 import java.net.URI
 import java.io.{ Serializable => JSerializable }
 import java.util.concurrent.LinkedBlockingQueue
 
-abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: GenericModelLoader, modelConverter: ModelConversion)
+abstract class HubNetManager( workspace: AbstractWorkspaceScala, modelLoader: AbstractModelLoader
+                            , modelConverter: ModelConversion)
   extends HubNetInterface
   with ConnectionInterface {
 
@@ -337,7 +339,7 @@ abstract class HubNetManager(workspace: AbstractWorkspaceScala, modelLoader: Gen
     def errorOpeningURI(uri: URI,exception: Exception): Unit = { }
     def invalidModel(uri: URI): Unit = { }
     def invalidModelVersion(uri: java.net.URI,version: String): Unit = { }
-    def errorAutoconvertingModel(res: org.nlogo.fileformat.FailedConversionResult): Option[Model] = None
+    def errorAutoconvertingModel(res: FailedConversionResult): Option[Model] = None
     def shouldOpenModelOfDifferingArity(arity: Int,version: String): Boolean = true
     def shouldOpenModelOfLegacyVersion(version: String): Boolean = true
     def shouldOpenModelOfUnknownVersion(version: String): Boolean = true

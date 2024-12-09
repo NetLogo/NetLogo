@@ -16,7 +16,7 @@ import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Prog
 import org.nlogo.agent.{ CompilationManagement, World, World2D, World3D }
 import org.nlogo.nvm.{ LabInterface, DefaultCompilerServices, PresentationCompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, HubNetManagerFactory }
-import org.nlogo.fileformat, fileformat.{ NLogoFormat, NLogoThreeDFormat }
+import org.nlogo.fileformat.{ FileFormat, NLogoFormat, NLogoThreeDFormat }
 import org.nlogo.util.Pico
 
 import scala.io.Codec
@@ -477,7 +477,7 @@ with org.nlogo.api.ViewSettings {
   }
 
   private lazy val loader = {
-    fileformat.standardAnyLoader(compiler.utilities)
+    FileFormat.standardAnyLoader(compiler.utilities)
       .addSerializer[Array[String], NLogoFormat](
         Femto.get[ComponentSerialization[Array[String], NLogoFormat]]("org.nlogo.sdm.NLogoSDMFormat"))
       .addSerializer[Array[String], NLogoThreeDFormat](

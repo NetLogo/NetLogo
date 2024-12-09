@@ -2,13 +2,13 @@
 
 package org.nlogo.hubnet.server.gui
 
-import org.nlogo.api.{ GenericModelLoader, ModelType, ViewInterface }
+import org.nlogo.api.{ AbstractModelLoader, ModelType, ViewInterface }
 import org.nlogo.api.HubNetInterface.ClientInterface
 import org.nlogo.core.{ Femto, Model, Widget => CoreWidget }
 import org.nlogo.hubnet.protocol.ComputerInterface
 import org.nlogo.hubnet.connection.{ HubNetException, NetworkUtils }
 import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
-import org.nlogo.fileformat.ModelConversion
+import org.nlogo.fileformat.FileFormat.ModelConversion
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.window._
@@ -21,7 +21,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
                        linkParent: Component,
                        ifactory: InterfaceFactory,
                        menuFactory: MenuBarFactory,
-                       loader: GenericModelLoader,
+                       loader: AbstractModelLoader,
                        modelConverter: ModelConversion)
   extends HubNetManager(workspace, loader, modelConverter) with ViewInterface {
 

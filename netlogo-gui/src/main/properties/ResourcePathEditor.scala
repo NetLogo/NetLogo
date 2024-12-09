@@ -13,12 +13,13 @@ import org.nlogo.swing.{ FileDialog, OptionDialog }
 
 abstract class ResourcePathEditor(accessor: PropertyAccessor[ExternalResource.Location], useTooltip: Boolean,
                                   parent: Component, resourceManager: ExternalResourceManager)
-  extends PropertyEditor(accessor, useTooltip) {
+    extends PropertyEditor(accessor, useTooltip) {
 
   private class ResourceMenu extends JPanel {
+
     private val label = new JLabel(emptyName)
 
-    private var resource: ExternalResource.Location = ExternalResource.None
+    private var resourceOpt: Option[ExternalResource.Location] = None
 
     setBorder(BorderFactory.createLineBorder(Color.BLACK))
 
@@ -44,13 +45,13 @@ abstract class ResourcePathEditor(accessor: PropertyAccessor[ExternalResource.Lo
     })
 
     def setSelection(resource: ExternalResource.Location) {
-      label.setText(ExternalResourceManager.getName(resource).getOrElse(emptyName))
-
-      this.resource = resource
+      label.setText(ExternalResourceManager.getName(resource))
+      resourceOpt = Option(resource)
     }
 
-    def getSelection: ExternalResource.Location =
-      resource
+    def getSelection: Option[ExternalResource.Location] =
+      resourceOpt
+
   }
 
   implicit val i18nPrefix = I18N.Prefix("property.resourcePath")
@@ -59,7 +60,7 @@ abstract class ResourcePathEditor(accessor: PropertyAccessor[ExternalResource.Lo
 
   private val resourceMenu = new ResourceMenu
 
-  add(new JLabel(accessor.displayName + ":"))
+  add(new JLabel(s"${accessor.displayName}:"))
   add(resourceMenu)
   add(new JButton(new AbstractAction(I18N.gui("import")) {
     def actionPerformed(e: ActionEvent) {
@@ -72,22 +73,17 @@ abstract class ResourcePathEditor(accessor: PropertyAccessor[ExternalResource.Lo
                                    Array(I18N.gui.get("common.buttons.ok")))
         else
           set(ExternalResource.New(path))
-      }
-
-      catch {
+      } catch {
         case e: UserCancelException =>
       }
     }
   }))
 
-  def get: Option[ExternalResource.Location] = {
-    resourceMenu.getSelection match {
-      case ExternalResource.None => None
-      case selection: ExternalResource.Location => Some(selection)
-    }
-  }
+  def get: Option[ExternalResource.Location] =
+    resourceMenu.getSelection
 
-  def set(value: ExternalResource.Location) {
+  def set(value: ExternalResource.Location): Unit = {
     resourceMenu.setSelection(value)
   }
+
 }

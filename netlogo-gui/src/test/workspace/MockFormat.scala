@@ -8,7 +8,6 @@ import java.net.URI
 import org.nlogo.api.{ ComponentSerialization, LabProtocol, ModelFormat }
 import org.nlogo.core.Model
 
-import scala.collection.mutable.Set
 import scala.util.{ Failure, Success, Try }
 
 class MockFormat(val model: Model, error: Option[Exception]) extends ModelFormat[String, MockFormat] {
@@ -26,9 +25,9 @@ class MockFormat(val model: Model, error: Option[Exception]) extends ModelFormat
     Failure(new UnsupportedOperationException("MockFormat doesn't support this operation"))
   def writeSections(sections: Map[String, String], location: URI): Try[URI] =
     error.map(Failure.apply).getOrElse(Success(location))
-  def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[Seq[LabProtocol]] =
+  override def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])] =
     Failure(new UnsupportedOperationException("MockFormat doesn't support this operation"))
-  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] =
+  override def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] =
     Failure(new UnsupportedOperationException("MockFormat doesn't support this operation"))
   object DefaultSerialization extends ComponentSerialization[String, MockFormat] {
     def componentName: String = "org.nlogo.modelsection.code"

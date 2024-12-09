@@ -9,8 +9,9 @@ import java.nio.file.{ Path, Paths }
 
 import org.nlogo.core.{ Model, View, WorldDimensions }
 import org.nlogo.api.WorldDimensions3D
-import org.nlogo.fileformat.{ defaultConverter, ConversionError, FailedConversionResult, ModelConversion,
-  SuccessfulConversion, ErroredConversion, NLogoFormat, NLogoThreeDFormat }
+import org.nlogo.fileformat.{ ConversionError, FailedConversionResult, FileFormat
+                            , SuccessfulConversion, ErroredConversion, NLogoFormat, NLogoThreeDFormat }
+import org.nlogo.fileformat.FileFormat.ModelConversion
 import org.nlogo.api.{ ConfigurableModelLoader, Version }
 import scala.util.{ Success, Try }
 
@@ -21,7 +22,7 @@ class OpenModelTests extends AnyFunSuite {
     val uri: URI = testURI
     def modelChanges: Model => Model = identity
     def currentVersion = "NetLogo 6.3"
-    def autoconverter: ModelConversion = defaultConverter
+    def autoconverter: ModelConversion = FileFormat.defaultConverter
 
     def userContinuesOpen() = controller.openModel(true)
     def userCancelsOpen() = controller.openModel(false)

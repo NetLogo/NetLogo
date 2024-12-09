@@ -15,7 +15,7 @@ import org.nlogo.window.{ Event, FileController, LiteAdPanel, CompilerManager,
   ReconfigureWorkspaceUI, NetLogoListenerManager, OutputWidget, ErrorDialogManager }
 import org.nlogo.window.Events.{ CompiledEvent, LoadModelEvent }
 import org.nlogo.workspace.OpenModelFromURI
-import org.nlogo.fileformat
+import org.nlogo.fileformat.FileFormat
 
 import scala.concurrent.{ Future, Promise }
 import scala.util.Try
@@ -212,13 +212,13 @@ with ControlSet {
     errorDialogManager.setModelName(uri.getPath.split("/").last)
     val controller = new FileController(this, workspace)
     val converter =
-      fileformat.converter(
+      FileFormat.converter(
         workspace.getExtensionManager
       , workspace.getLibraryManager
       , workspace.getCompilationEnvironment
       , workspace
-      , fileformat.defaultAutoConvertables) _
-    val loader = fileformat.standardAnyLoader(workspace.compiler.utilities)
+      , FileFormat.defaultAutoConvertables) _
+    val loader = FileFormat.standardAnyLoader(workspace.compiler.utilities)
     val modelOpt = OpenModelFromURI(uri, controller, loader, converter(workspace.world.program.dialect), Version)
     modelOpt.foreach(model => ReconfigureWorkspaceUI(this, uri, ModelType.Library, model, workspace))
   }

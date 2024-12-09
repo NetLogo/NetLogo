@@ -10,7 +10,7 @@ import org.nlogo.api.{ NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
 import org.nlogo.workspace.{ OpenModel, OpenModelFromURI, SaveModel },
   OpenModel.{ Controller => OpenModelController },
   SaveModel.{ Controller => SaveModelController }
-import org.nlogo.fileformat, fileformat.{ FailedConversionResult, NLogoFormat }
+import org.nlogo.fileformat.{ FailedConversionResult, FileFormat, NLogoFormat }
 import org.nlogo.workspace.ModelsLibrary.modelsRoot
 import org.nlogo.headless.HeadlessWorkspace
 import org.nlogo.sdm.{ NLogoSDMFormat, SDMAutoConvertable }
@@ -58,10 +58,10 @@ object ModelResaver {
     val ws = HeadlessWorkspace.newInstance
     try {
       val converter =
-        fileformat.converter(ws.getExtensionManager, ws.getLibraryManager, ws.getCompilationEnvironment,
-          literalParser, fileformat.defaultAutoConvertables :+ SDMAutoConvertable) _
+        FileFormat.converter(ws.getExtensionManager, ws.getLibraryManager, ws.getCompilationEnvironment,
+          literalParser, FileFormat.defaultAutoConvertables :+ SDMAutoConvertable) _
       val modelLoader =
-        fileformat.standardAnyLoader(ws.compiler.utilities)
+        FileFormat.standardAnyLoader(ws.compiler.utilities)
           .addSerializer[Array[String], NLogoFormat](new NLogoSDMFormat())
       val controller = new ResaveController(modelPath.toUri)
       val dialect =

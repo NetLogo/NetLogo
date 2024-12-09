@@ -72,7 +72,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   protected val editorFactory: EditorFactory = new EditorFactory(workspace, workspace.getExtensionManager)
 
-  protected var resourceManager: ExternalResourceManager = null
+  protected var resourceManager: Option[ExternalResourceManager] = None
 
   setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
   setOpaque(true)
@@ -139,7 +139,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def setResourceManager(resourceManager: ExternalResourceManager) {
-    this.resourceManager = resourceManager
+    this.resourceManager = Option(resourceManager)
   }
 
   ///
@@ -352,7 +352,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
             new EditorArea(dialogEditorConfiguration),
             this,
             new DefaultCompilerServices(workspace.compiler))
-        case i: CoreImage => new ImageWidget(resourceManager)
+        case i: CoreImage => new ImageWidget(resourceManager.get)
         case _ =>
           throw new IllegalStateException("unknown widget type: " + widget.getClass)
       }

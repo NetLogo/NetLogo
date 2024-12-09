@@ -5,7 +5,7 @@ package org.nlogo.workspace
 import java.net.URI
 
 import org.nlogo.core.Model
-import org.nlogo.api.{ GenericModelLoader, ModelType, Version }
+import org.nlogo.api.{ AbstractModelLoader, ModelType, Version }
 
 import scala.annotation.tailrec
 import scala.util.Try
@@ -15,7 +15,7 @@ import SaveModel.Controller
 // this returns a thunk so that it can be run on a background thread, if desired
 trait SaveModel {
   def apply(model:  Model,
-    loader:         GenericModelLoader,
+    loader:         AbstractModelLoader,
     controller:     Controller,
     modelTracker:   ModelTracker,
     currentVersion: Version): Option[() => Try[URI]] = {
@@ -38,10 +38,10 @@ trait SaveModel {
   }
 
   @tailrec
-  protected final def validFilePath(controller: Controller, loader: GenericModelLoader, modelType: ModelType): Option[URI] = {
+  protected final def validFilePath(controller: Controller, loader: AbstractModelLoader, modelType: ModelType): Option[URI] = {
     controller.chooseFilePath(modelType) match {
       case res@Some(uri) =>
-        val extension = GenericModelLoader.getURIExtension(uri)
+        val extension = AbstractModelLoader.getURIExtension(uri)
         if (extension.isDefined)
           res
         else {
