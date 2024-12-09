@@ -5,86 +5,56 @@ package org.nlogo.fileformat
 import java.io.Writer
 import java.net.URI
 
-import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, FormatterPair, GenericModelLoader,
+import org.nlogo.api.{ AbstractModelLoader, ComponentSerialization, ConfigurableModelLoader, FormatterPair,
                        LabProtocol, ModelFormat }
 import org.nlogo.core.Model
 
-import scala.collection.mutable.Set
 import scala.reflect.ClassTag
 import scala.util.{ Failure, Try }
 
-class NLogoAnyLoader(loaders: List[GenericModelLoader]) extends ConfigurableModelLoader {
-  override def readModel(uri: URI): Try[Model] = {
-    for (loader <- loaders) {
-      Try {
-        return loader.readModel(uri)
-      }
-    }
+class NLogoAnyLoader(loaders: List[AbstractModelLoader]) extends ConfigurableModelLoader {
 
-    Failure(new Exception("Unable to read model with format \"" +
-                          GenericModelLoader.getURIExtension(uri).getOrElse("") + "\"."))
+  private def bruteForce[T, U](ts: Seq[T], f: (T) => Try[U])(errorMessage: String): Try[U] = {
+    val init: Try[U] = Failure(new Exception("Unable to read experiments."))
+    ts.foldLeft(init) {
+      case (acc, t) => if (acc.isSuccess) acc else f(t)
+    }
+  }
+
+  override def readModel(uri: URI): Try[Model] = {
+    val errorMessage = s"""Unable to read model with format "${AbstractModelLoader.getURIExtension(uri).getOrElse("")}"."""
+    bruteForce(loaders, (_: AbstractModelLoader).readModel(uri))(errorMessage)
   }
 
   override def readModel(source: String, extension: String): Try[Model] = {
-    for (loader <- loaders) {
-      Try {
-        return loader.readModel(source, extension)
-      }
-    }
-
-    Failure(new Exception("Unable to read model with format \"" + extension + "\"."))
+    val errorMessage = s"""Unable to read model with format "${extension}"."""
+    bruteForce(loaders, (_: AbstractModelLoader).readModel(source, extension))(errorMessage)
   }
 
   override def save(model: Model, uri: URI): Try[URI] = {
-    for (loader <- loaders) {
-      Try {
-        return loader.save(model, uri)
-      }
-    }
-
-    Failure(new Exception("Unable to save model with format \"" +
-                          GenericModelLoader.getURIExtension(uri).getOrElse("") + "\"."))
+    val errorMessage = s"""Unable to save model with format "${AbstractModelLoader.getURIExtension(uri).getOrElse("")}"."""
+    bruteForce(loaders, (_: AbstractModelLoader).save(model, uri))(errorMessage)
   }
 
   override def sourceString(model: Model, extension: String): Try[String] = {
-    for (loader <- loaders) {
-      Try {
-        return loader.sourceString(model, extension)
-      }
-    }
-
-    Failure(new Exception("Unable to create source string for model with format \"" + extension + "\"."))
+    val errorMessage = s"""Unable to create source string for model with format "${extension}"."""
+    bruteForce(loaders, (_: AbstractModelLoader).sourceString(model, extension))(errorMessage)
   }
 
   override def emptyModel(extension: String): Model = {
-    for (loader <- loaders) {
-      Try {
-        return loader.emptyModel(extension)
-      }
-    }
-
-    throw new Exception("Unable to create empty model for format \"" + extension + "\".")
+    val errorMessage = s"""Unable to create empty model for format "${extension}"."""
+    bruteForce(loaders, (gml: AbstractModelLoader) => Try(gml.emptyModel(extension)))(errorMessage).get
   }
 
   override def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]):
-    Try[Seq[LabProtocol]] = {
-    for (loader <- loaders) {
-      Try {
-        return loader.readExperiments(source, editNames, existingNames)
-      }
-    }
-
-    Failure(new Exception("Unable to read experiments."))
+      Try[(Seq[LabProtocol], Set[String])] = {
+    val errorMessage = "Unable to read experiments."
+    bruteForce(loaders, (_: AbstractModelLoader).readExperiments(source, editNames, existingNames))(errorMessage)
   }
 
   override def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
-    for (loader <- loaders) {
-      Try {
-        return loader.writeExperiments(experiments, writer)
-      }
-    }
-
-    Failure(new Exception("Unable to write experiments."))
+    val errorMessage = "Unable to write experiments."
+    bruteForce(loaders, (_: AbstractModelLoader).writeExperiments(experiments, writer))(errorMessage)
   }
 
   override def addSerializers[A, B <: ModelFormat[A, B]](ss: Seq[ComponentSerialization[A, B]])
@@ -94,22 +64,14 @@ class NLogoAnyLoader(loaders: List[GenericModelLoader]) extends ConfigurableMode
       loader match {
         case loader: ConfigurableModelLoader =>
           loader.addSerializers[A, B](ss)(aTag, bTag, matchingFormat)
-
-        case _ => loader
+        case x => x
       }
     }))
   }
 
   override def addSerializer[A, B <: ModelFormat[A, B]](s: ComponentSerialization[A, B])
     (implicit aTag: ClassTag[A], bTag: ClassTag[B], matchingFormat: ClassTag[FormatterPair[A, B]]): NLogoAnyLoader = {
-
-    new NLogoAnyLoader(loaders.map(loader => {
-      loader match {
-        case loader: ConfigurableModelLoader =>
-          loader.addSerializer[A, B](s)(aTag, bTag, matchingFormat)
-
-        case _ => loader
-      }
-    }))
+      addSerializers(Seq(s))
   }
+
 }

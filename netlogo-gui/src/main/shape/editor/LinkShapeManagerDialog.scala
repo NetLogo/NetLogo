@@ -4,16 +4,13 @@ package org.nlogo.shape.editor
 
 import java.awt.Frame
 
-import org.nlogo.api.GenericModelLoader
-
-import org.nlogo.api.World
+import org.nlogo.api.{ AbstractModelLoader, World }
 import org.nlogo.core.{ AgentKind, Model, Shape }, Shape.{ LinkShape => CoreLinkShape }
-import org.nlogo.shape.ShapeConverter
-import org.nlogo.shape.LinkShape
+import org.nlogo.shape.{ LinkShape, ShapeConverter }
 
 class LinkShapeManagerDialog(parentFrame: Frame,
                              world: World,
-                             modelLoader: GenericModelLoader)
+                             modelLoader: AbstractModelLoader)
         extends ManagerDialog[LinkShape](parentFrame, modelLoader, world.linkShapes)
                 with org.nlogo.shape.LinkShapesManagerInterface {
 

@@ -4,16 +4,7 @@ package org.nlogo.core
 
 object Shape {
   val Width = 300
-  case class RgbColor(red: Int, green: Int, blue: Int, alpha: Int = 255) {
-    override def equals(other: Any) = {
-      other match {
-        case color: RgbColor =>
-          red == color.red && green == color.green && blue == color.blue && alpha == color.alpha
-
-        case _ => false
-      }
-    }
-  }
+  case class RgbColor(red: Int, green: Int, blue: Int, alpha: Int = 255)
 
   trait Element {
     def filled: Boolean

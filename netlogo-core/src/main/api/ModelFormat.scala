@@ -7,7 +7,6 @@ import java.net.URI
 
 import org.nlogo.core.Model
 
-import scala.collection.mutable.Set
 import scala.util.{ Success, Try }
 
 trait ComponentSerialization[A, B <: ModelFormat[A, B]] {
@@ -76,7 +75,7 @@ trait ModelFormat[Section, Format <: ModelFormat[Section, Format]] {
     sectionsToSource(serializedSections)
   }
 
-  def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[Seq[LabProtocol]]
+  def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])]
   def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit]
 
   private def addSerializedSection(model: Model)(sections: Map[String, Section], component: ComponentSerialization[Section, Format]): Map[String, Section] = {

@@ -6,49 +6,49 @@ import java.io.{ File, PrintWriter, StringReader, StringWriter, Writer }
 import java.net.URI
 import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants, XMLStreamReader, XMLStreamWriter }
 
-import org.nlogo.api.{ FileIO, GenericModelLoader, LabProtocol, LabXMLLoader, ModelSettings, PreviewCommands, Version,
+import org.nlogo.api.{ AbstractModelLoader, FileIO, LabProtocol, LabXMLLoader, ModelSettings, PreviewCommands, Version,
                        WorldDimensions3D }
-import org.nlogo.core.{ ExternalResource, LiteralParser, Model, OptionalSection, Section, ShapeXMLLoader, UpdateMode,
+import org.nlogo.core.{ ExternalResource, LiteralParser, Model, Section, ShapeXMLLoader, UpdateMode,
                         View, Widget, WidgetXMLLoader, WorldDimensions, XMLElement }
-import org.nlogo.core.Shape.{ LinkShape, VectorShape }
-// import org.nlogo.sdm.gui.SDMXMLLoader
 
-import scala.collection.mutable.Set
 import scala.io.Source
 import scala.util.{ Failure, Success, Try }
 import scala.util.matching.Regex
 
-class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends GenericModelLoader {
-  lazy private val defaultInfo: String = FileIO.url2String("/system/empty-info.md")
+class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends AbstractModelLoader {
+
+  private lazy val defaultInfo: String = FileIO.url2String("/system/empty-info.md")
 
   private def readXMLElement(reader: XMLStreamReader): XMLElement = {
-    val name = reader.getLocalName
-    val attributes = (for (i <- 0 until reader.getAttributeCount) yield
-                        ((reader.getAttributeLocalName(i), reader.getAttributeValue(i)))).toMap
-    var text = ""
-    var children = List[XMLElement]()
 
-    var end = false
-
-    while (reader.hasNext && !end) {
-      reader.next match {
-        case XMLStreamConstants.START_ELEMENT =>
-          children = children :+ readXMLElement(reader)
-
-        case XMLStreamConstants.END_ELEMENT =>
-          end = true
-
-        case XMLStreamConstants.CHARACTERS =>
-          text = new Regex("]]" + XMLElement.CDATA_ESCAPE + ">").replaceAllIn(reader.getText, "]]>")
-
-        case _ =>
-      }
+    def parseElement(reader: XMLStreamReader, acc: XMLElement): XMLElement = {
+      if (reader.hasNext)
+        reader.next match {
+          case XMLStreamConstants.START_ELEMENT =>
+            parseElement(reader, acc.copy(children = acc.children :+ readXMLElement(reader)))
+          case XMLStreamConstants.END_ELEMENT =>
+            acc
+          case XMLStreamConstants.CHARACTERS =>
+            val newAcc = acc.copy(text = new Regex(s"]]${XMLElement.CDATA_ESCAPE}>").replaceAllIn(reader.getText, "]]>"))
+            parseElement(reader, newAcc)
+          case x =>
+            throw new Exception(s"Unexpected value found while parsing XML: ${x}")
+        }
+      else
+        acc
     }
 
-    XMLElement(name, attributes, text, children)
+    val attributes =
+      (0 until reader.getAttributeCount).
+        map((i) => reader.getAttributeLocalName(i) -> reader.getAttributeValue(i)).
+        toMap
+
+    parseElement(reader, XMLElement(reader.getLocalName, attributes,  "", Seq[XMLElement]()))
+
   }
 
-  private def writeXMLElement(writer: XMLStreamWriter, element: XMLElement) {
+  private def writeXMLElement(writer: XMLStreamWriter, element: XMLElement): Unit = {
+
     writer.writeStartElement(element.name)
 
     for ((key, value) <- element.attributes)
@@ -60,9 +60,10 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
       writeCDataEscaped(writer, element.text)
 
     writer.writeEndElement()
+
   }
 
-  private def writeCDataEscaped(writer: XMLStreamWriter, text: String) {
+  private def writeCDataEscaped(writer: XMLStreamWriter, text: String): Unit = {
     writer.writeCData(new Regex("]]>").replaceAllIn(text, "]]" + XMLElement.CDATA_ESCAPE + ">"))
   }
 
@@ -70,8 +71,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
     (Version.is3D && extension == "nlogo3d") || (!Version.is3D && extension == "nlogo")
 
   private def isCompatible(uri: URI): Boolean = {
-    val extension = GenericModelLoader.getURIExtension(uri)
-
+    val extension = AbstractModelLoader.getURIExtension(uri)
     extension.isDefined && isCompatible(extension.get)
   }
 
@@ -83,111 +83,100 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
   }
 
   def readModel(uri: URI): Try[Model] = {
-    readModel(if (uri.getScheme == "jar") {
-                Source.fromInputStream(uri.toURL.openStream).mkString
-              } else {
-                Source.fromURI(uri).mkString
-              }, GenericModelLoader.getURIExtension(uri).getOrElse(""))
+    val text =
+      if (uri.getScheme == "jar")
+        Source.fromInputStream(uri.toURL.openStream).mkString
+      else
+        Source.fromURI(uri).mkString
+    readModel(text, AbstractModelLoader.getURIExtension(uri).getOrElse(""))
   }
 
   def readModel(source: String, extension: String): Try[Model] = {
+
     if (isCompatible(extension)) {
+
       val reader = XMLInputFactory.newFactory.createXMLStreamReader(new StringReader(source))
 
       while (reader.hasNext && reader.next != XMLStreamConstants.START_ELEMENT) {}
 
       val element = readXMLElement(reader)
 
-      reader.close
-
-      var code: Option[String] = None
-      var widgets = List[Widget]()
-      var info: Option[String] = None
-      var version = ""
-      var turtleShapes: Option[List[VectorShape]] = None
-      var linkShapes: Option[List[LinkShape]] = None
-      var optionalSections = List[OptionalSection[_]]()
-      var openTempFiles = Seq[String]()
-      var resources = Seq[ExternalResource]()
+      reader.close()
 
       element.name match {
         case "model" =>
-          version = element("version")
 
-          for (element <- element.children) {
-            element.name match {
-              case "widgets" =>
-                widgets = element.children.map(WidgetXMLLoader.readWidget(_, makeDimensions3D))
+          import Model.{ defaultCode, defaultShapes, defaultLinkShapes }
 
-              case "info" =>
-                info = Some(element.text)
+          val version = element("version")
 
-              case "code" =>
-                code = Some(element.text)
+          val model = Model( defaultCode, List(), defaultInfo, version, defaultShapes, defaultLinkShapes, List(), Seq(), Seq())
 
-              case "turtleShapes" =>
-                turtleShapes = Some(element.getChildren("shape").map(ShapeXMLLoader.readShape))
+          element.children.foldLeft(Try(model)) {
+            case (model, XMLElement("widgets", _, _, children)) =>
+              model.map(_.copy(widgets = children.map(WidgetXMLLoader.readWidget(_, makeDimensions3D))))
+            case (model, XMLElement("info", _, text, _)) =>
+              model.map(_.copy(info = text))
+            case (model, XMLElement("code", _, text, _)) =>
+              model.map(_.copy(code = text))
+            case (model, el @ XMLElement("turtleShapes", _, _, _)) =>
+              model.map(_.copy(turtleShapes = el.getChildren("shape").map(ShapeXMLLoader.readShape)))
+            case (model, el @ XMLElement("linkShapes", _, _, _)) =>
+              model.map(_.copy(linkShapes = el.getChildren("shape").map(ShapeXMLLoader.readLinkShape)))
+            case (model, XMLElement("previewCommands", _, commands, _)) =>
+              val section = new Section("org.nlogo.modelsection.previewcommands", PreviewCommands.Custom(commands))
+              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
 
-              case "linkShapes" =>
-                linkShapes = Some(element.getChildren("shape").map(ShapeXMLLoader.readLinkShape))
+            // case "systemDynamics" =>
+            //   optionalSections = optionalSections :+
+            //     new Section("org.nlogo.modelsection.systemdynamics.gui", SDMXMLLoader.readDrawing(element))
 
-              case "previewCommands" =>
-                optionalSections = optionalSections :+
-                  new Section("org.nlogo.modelsection.previewcommands", PreviewCommands.Custom(element.text))
+            case (model, XMLElement("experiments", _, _, children)) =>
+              val bspaceElems = children.map(LabXMLLoader.readExperiment(_, literalParser, editNames, Set()))
+              val section     = new Section("org.nlogo.modelsection.behaviorspace", bspaceElems)
+              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
+            case (model, XMLElement("hubNetClient", _, _, children)) =>
+              val hnElems = children.map(WidgetXMLLoader.readWidget(_, makeDimensions3D))
+              val section = new Section("org.nlogo.modelsection.hubnetclient", hnElems)
+              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
+            case (model, el @ XMLElement("settings", _, _, _)) =>
+              val settings = ModelSettings(element("snapToGrid").toBoolean)
+              val section  = new Section("org.nlogo.modelsection.modelsettings", settings)
+              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
+            case (model, el @ XMLElement("openTempFiles", _, _, _)) =>
+              model.map(_.copy(openTempFiles = el.getChildren("file").map(file => file("path"))))
+            case (model, el @ XMLElement("resources", _, _, _)) =>
+              model.map(_.copy(
+                resources = el.getChildren("resource").map(
+                  resource => ExternalResource(resource("name"), resource("type"), resource.text)
+                )
+              ))
+            case (    _, XMLElement(name, _, _, _)) =>
+              Failure(new Exception(s"Unexpected file section: ${name}"))
 
-              // case "systemDynamics" =>
-              //   optionalSections = optionalSections :+
-              //     new Section("org.nlogo.modelsection.systemdynamics.gui", SDMXMLLoader.readDrawing(element))
-
-              case "experiments" =>
-                optionalSections = optionalSections :+
-                  new Section("org.nlogo.modelsection.behaviorspace",
-                              element.children.map(LabXMLLoader.readExperiment(_, literalParser, editNames, Set())))
-
-              case "hubNetClient" =>
-                optionalSections = optionalSections :+
-                  new Section("org.nlogo.modelsection.hubnetclient",
-                              element.children.map(WidgetXMLLoader.readWidget(_, makeDimensions3D)))
-
-              case "settings" =>
-                optionalSections = optionalSections :+
-                  new Section("org.nlogo.modelsection.modelsettings", ModelSettings(element("snapToGrid").toBoolean))
-
-              case "openTempFiles" =>
-                openTempFiles = element.getChildren("file").map(element => element("path"))
-
-              case "resources" =>
-                resources = element.getChildren("resource").map(element =>
-                  new ExternalResource(element("name"), element("type"), element.text))
-
-              case _ =>
-            }
           }
+
+        case x =>
+          Failure(new Exception(s"Expect 'model' element, but got: ${x}"))
 
       }
 
-      Success(Model(code.getOrElse(Model.defaultCode), widgets, info.getOrElse(defaultInfo), version,
-                    turtleShapes.getOrElse(Model.defaultShapes), linkShapes.getOrElse(Model.defaultLinkShapes),
-                    optionalSections, openTempFiles, resources))
+    } else {
+      Failure(new Exception(s"""Unable to open model with format "${extension}"."""))
     }
 
-    else
-      Failure(new Exception("Unable to open model with format \"" + extension + "\"."))
   }
 
   def saveToWriter(model: Model, destWriter: Writer) {
+
     val writer = XMLOutputFactory.newFactory.createXMLStreamWriter(destWriter)
 
     writer.writeStartDocument("utf-8", "1.0")
-
     writer.writeStartElement("model")
-
     writer.writeAttribute("version", model.version)
 
     writer.writeStartElement("widgets")
-
     model.widgets.foreach(widget => writeXMLElement(writer, WidgetXMLLoader.writeWidget(widget)))
-
     writer.writeEndElement()
 
     writer.writeStartElement("info")
@@ -215,49 +204,50 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
 
         case "org.nlogo.modelsection.behaviorspace" =>
           val experiments = section.get.get.asInstanceOf[Seq[LabProtocol]]
-
           if (experiments.nonEmpty)
             writeXMLElement(writer, XMLElement("experiments", Map(), "",
                                                experiments.map(LabXMLLoader.writeExperiment).toList))
 
         case "org.nlogo.modelsection.hubnetclient" =>
           val widgets = section.get.get.asInstanceOf[Seq[Widget]]
-
           if (widgets.nonEmpty)
             writeXMLElement(writer, XMLElement("hubNetClient", Map(), "",
                                                widgets.map(WidgetXMLLoader.writeWidget).toList))
 
         case "org.nlogo.modelsection.modelsettings" =>
           val settings = section.get.get.asInstanceOf[ModelSettings]
-
           if (settings.snapToGrid) {
             writer.writeStartElement("settings")
             writer.writeAttribute("snapToGrid", settings.snapToGrid.toString)
             writer.writeEndElement()
           }
 
-        case _ =>
+        case x =>
+          throw new Error(s"Unhandlable file section type: ${x}")
+
       }
     }
 
     if (model.openTempFiles.nonEmpty) {
+
       writer.writeStartElement("openTempFiles")
 
       for (file <- model.openTempFiles) {
         writer.writeStartElement("file")
-
         writer.writeAttribute("path", file)
-
         writer.writeEndElement()
       }
 
       writer.writeEndElement()
+
     }
 
     if (model.resources.nonEmpty) {
+
       writer.writeStartElement("resources")
 
       for (resource <- model.resources) {
+
         writer.writeStartElement("resource")
 
         writer.writeAttribute("name", resource.name)
@@ -266,75 +256,73 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends G
         writeCDataEscaped(writer, resource.data)
 
         writer.writeEndElement()
+
       }
 
       writer.writeEndElement()
+
     }
 
     writer.writeEndElement()
-
     writer.writeEndDocument()
-
     writer.close()
+
   }
 
   def save(model: Model, uri: URI): Try[URI] = {
     if (isCompatible(uri)) {
       saveToWriter(model, new PrintWriter(new File(uri)))
-
       Success(uri)
+    } else {
+      Failure(new Exception(s"""Unable to save model with format "${AbstractModelLoader.getURIExtension(uri)}"."""))
     }
-
-    else
-      Failure(new Exception("Unable to save model with format \"" + GenericModelLoader.getURIExtension(uri) + "\"."))
   }
 
   def sourceString(model: Model, extension: String): Try[String] = {
     if (isCompatible(extension)) {
       val writer = new StringWriter
-
       saveToWriter(model, writer)
-
       Success(writer.toString)
+    } else {
+      Failure(new Exception(s"""Unable to create source string for model with format "${extension}"."""))
     }
-
-    else
-      Failure(new Exception("Unable to create source string for model with format \"" + extension + "\"."))
   }
 
   def emptyModel(extension: String): Model = {
     if (isCompatible(extension)) {
-      if (Version.is3D) {
-        Model(Model.defaultCode, List(View(left = 210, top = 10, right = 649, bottom = 470,
-                                           dimensions = new WorldDimensions3D(-16, 16, -16, 16, -16, 16, 13.0),
-                                           fontSize = 10, updateMode = UpdateMode.Continuous,
-                                           showTickCounter = true, frameRate = 30)),
-              defaultInfo, "NetLogo 3D 6.4.0", Model.defaultShapes, Model.defaultLinkShapes)
-      }
 
-      else {
-        Model(Model.defaultCode, List(View(left = 210, top = 10, right = 649, bottom = 470,
-                                           dimensions = WorldDimensions(-16, 16, -16, 16, 13.0), fontSize = 10,
-                                           updateMode = UpdateMode.Continuous, showTickCounter = true,
-                                           frameRate = 30)),
-              defaultInfo, "NetLogo 6.4.0", Model.defaultShapes, Model.defaultLinkShapes)
-      }
+      val (name, dims) =
+        if (Version.is3D)
+          ("NetLogo 3D 6.4.0", new WorldDimensions3D(-16, 16, -16, 16, -16, 16, 13.0))
+        else
+          ("NetLogo 6.4.0", WorldDimensions(-16, 16, -16, 16, 13.0))
+
+      val widgets =
+        List(View( left = 210, top = 10, right = 649, bottom = 470, dimensions = dims, fontSize = 10
+                 , updateMode = UpdateMode.Continuous, showTickCounter = true, frameRate = 30))
+
+      Model(Model.defaultCode, widgets, defaultInfo, name, Model.defaultShapes, Model.defaultLinkShapes)
+
+    } else {
+      throw new Exception(s"""Unable to create empty model with format "${extension}".""")
     }
-
-    else
-      throw new Exception("Unable to create empty model with format \"" + extension + "\".")
   }
 
-  def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[Seq[LabProtocol]] = {
+  def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])] = {
     val reader = XMLInputFactory.newFactory.createXMLStreamReader(new StringReader(source))
-
-    Try(readXMLElement(reader).children.map(LabXMLLoader.readExperiment(_, literalParser, editNames, existingNames)))
+    Try(
+      readXMLElement(reader).children.foldLeft((Seq[LabProtocol](), existingNames)) {
+        case ((acc, names), elem) =>
+          val (proto, newNames) = LabXMLLoader.readExperiment(elem, literalParser, editNames, names)
+          (acc :+ proto, newNames)
+      }
+    )
   }
 
   def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
-    val xmlWriter = XMLOutputFactory.newFactory.createXMLStreamWriter(writer)
-
-    Try(writeXMLElement(xmlWriter, XMLElement("experiments", Map(), "",
-                                              experiments.map(LabXMLLoader.writeExperiment).toList)))
+    val xmlWriter     = XMLOutputFactory.newFactory.createXMLStreamWriter(writer)
+    val writeStatuses = experiments.map(LabXMLLoader.writeExperiment).toList
+    Try(writeXMLElement(xmlWriter, XMLElement("experiments", Map(), "", writeStatuses)))
   }
+
 }

@@ -8,7 +8,7 @@ import org.nlogo.core.{ Femto, LiteralParser, Model }
 import org.nlogo.api.{ LabProtocol, Version, Workspace }
 import org.nlogo.nvm.LabInterface.Settings
 import org.nlogo.workspace.OpenModelFromURI
-import org.nlogo.fileformat
+import org.nlogo.fileformat.{ FileFormat, NLogoLabFormat }
 import scala.util.{ Failure, Success }
 
 import scala.io.Source
@@ -17,8 +17,8 @@ object BehaviorSpaceCoordinator {
   private val literalParser =
     Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
 
-  private lazy val labFormat: fileformat.NLogoLabFormat =
-    new fileformat.NLogoLabFormat(literalParser)
+  private lazy val labFormat: NLogoLabFormat =
+    new NLogoLabFormat(literalParser)
 
   private def bsSection = labFormat.componentName
 
@@ -52,16 +52,16 @@ object BehaviorSpaceCoordinator {
   }
 
   private def modelAtPath(path: String, workspace: Workspace): Model = {
-    val allAutoConvertables = fileformat.defaultAutoConvertables :+
+    val allAutoConvertables = FileFormat.defaultAutoConvertables :+
       Femto.scalaSingleton[org.nlogo.api.AutoConvertable]("org.nlogo.sdm.SDMAutoConvertable")
     val converter =
-      fileformat.converter(
+      FileFormat.converter(
         workspace.getExtensionManager
       , workspace.getLibraryManager
       , workspace.getCompilationEnvironment
       , literalParser
       , allAutoConvertables) _
-    val loader = fileformat.standardAnyLoader(literalParser)
+    val loader = FileFormat.standardAnyLoader(literalParser)
     val modelConverter = converter(workspace.world.program.dialect)
 
     OpenModelFromURI(Paths.get(path).toUri, HeadlessFileController, loader, modelConverter, Version)

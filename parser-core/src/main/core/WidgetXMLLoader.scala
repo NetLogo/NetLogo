@@ -5,438 +5,375 @@ package org.nlogo.core
 object WidgetXMLLoader {
   def readWidget(element: XMLElement, makeDimensions3D: (WorldDimensions, Int, Int, Boolean) =>
                  WorldDimensions): Widget = {
+
     element.name match {
+
       case "button" =>
-        Button(element.getOptionalChild("source").map(_.text), element("left").toInt, element("top").toInt,
-               element("right").toInt, element("bottom").toInt, element.get("display"), element("forever").toBoolean,
-               element("kind") match {
-                 case "Observer" => AgentKind.Observer
-                 case "Patch" => AgentKind.Patch
-                 case "Turtle" => AgentKind.Turtle
-                 case "Link" => AgentKind.Link
-               }, element.get("actionKey").map(x => x(0)), element("disableUntilTicks").toBoolean)
+        val kind =
+          element("kind") match {
+            case "Observer" => AgentKind.Observer
+            case "Patch"    => AgentKind.Patch
+            case "Turtle"   => AgentKind.Turtle
+            case "Link"     => AgentKind.Link
+          }
+        Button( element.getOptionalChild("source").map(_.text), element("left").toInt, element("top").toInt
+              , element("right").toInt, element("bottom").toInt, element.get("display"), element("forever").toBoolean
+              , kind, element.get("actionKey").map(_.head), element("disableUntilTicks").toBoolean
+              )
 
       case "slider" =>
-        Slider(element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt,
-               element("bottom").toInt, element.get("display"), element("min"), element("max"),
-               element("default").toDouble, element("step"), element.get("units"),
-               element("direction") match {
-                 case "Horizontal" => Horizontal
-                 case "Vertical" => Vertical
-               })
+        val direction =
+          element("direction") match {
+            case "Horizontal" => Horizontal
+            case "Vertical"   => Vertical
+          }
+        Slider( element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt
+              , element("bottom").toInt, element.get("display"), element("min"), element("max")
+              , element("default").toDouble, element("step"), element.get("units"), direction
+              )
 
       case "view" =>
-        View(element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt,
-             new WorldDimensions(element("minPxcor").toInt, element("maxPxcor").toInt, element("minPycor").toInt,
-                                 element("maxPycor").toInt, element("patchSize").toDouble,
-                                 element("wrappingAllowedX").toBoolean, element("wrappingAllowedY").toBoolean),
-             element("fontSize").toInt, UpdateMode.load(element("updateMode").toInt),
-             element("showTickCounter").toBoolean, element.get("tickCounterLabel"), element("frameRate").toDouble)
+        val dims =
+          new WorldDimensions( element("minPxcor").toInt, element("maxPxcor").toInt, element("minPycor").toInt
+                             , element("maxPycor").toInt, element("patchSize").toDouble
+                             , element("wrappingAllowedX").toBoolean, element("wrappingAllowedY").toBoolean
+                             )
+        View( element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt, dims
+            , element("fontSize").toInt, UpdateMode.load(element("updateMode").toInt)
+            , element("showTickCounter").toBoolean, element.get("tickCounterLabel"), element("frameRate").toDouble
+            )
 
       case "view3d" =>
-        View(element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt,
-             makeDimensions3D(new WorldDimensions(element("minPxcor").toInt, element("maxPxcor").toInt,
-                                                  element("minPycor").toInt, element("maxPycor").toInt,
-                                                  element("patchSize").toDouble, element("wrappingAllowedX").toBoolean,
-                                                  element("wrappingAllowedY").toBoolean),
-                              element("minPzcor").toInt, element("maxPzcor").toInt,
-                              element("wrappingAllowedZ").toBoolean),
-             element("fontSize").toInt, UpdateMode.load(element("updateMode").toInt),
-             element("showTickCounter").toBoolean, element.get("tickCounterLabel"), element("frameRate").toDouble)
+        val dims =
+          new WorldDimensions( element("minPxcor").toInt, element("maxPxcor").toInt
+                             , element("minPycor").toInt, element("maxPycor").toInt
+                             , element("patchSize").toDouble, element("wrappingAllowedX").toBoolean
+                             , element("wrappingAllowedY").toBoolean
+                             )
+        val dims3D =
+          makeDimensions3D(dims, element("minPzcor").toInt, element("maxPzcor").toInt
+                          , element("wrappingAllowedZ").toBoolean
+                          )
+        View( element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt, dims3D
+            , element("fontSize").toInt, UpdateMode.load(element("updateMode").toInt)
+            , element("showTickCounter").toBoolean, element.get("tickCounterLabel"), element("frameRate").toDouble
+            )
 
       case "monitor" =>
-        Monitor(element.getOptionalChild("source").map(_.text), element("left").toInt, element("top").toInt,
-                element("right").toInt, element("bottom").toInt, element.get("display"), element("precision").toInt,
-                element("fontSize").toInt)
+        Monitor( element.getOptionalChild("source").map(_.text), element("left").toInt, element("top").toInt
+               , element("right").toInt, element("bottom").toInt, element.get("display"), element("precision").toInt
+               , element("fontSize").toInt
+               )
 
       case "switch" =>
-        Switch(element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt,
-               element("bottom").toInt, element.get("display"), element("on").toBoolean)
+        Switch( element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt
+              , element("bottom").toInt, element.get("display"), element("on").toBoolean
+              )
 
       case "plot" =>
-        Plot(element.get("display"), element("left").toInt, element("top").toInt, element("right").toInt,
-             element("bottom").toInt, element.get("xAxis"), element.get("yAxis"), element("xMin").toDouble,
-             element("xMax").toDouble, element("yMin").toDouble, element("yMax").toDouble,
-             element("autoplot").toBoolean, element("legend").toBoolean, element.getChild("setup").text,
-             element.getChild("update").text,
-             element.getChildren("pen").map(element =>
-               Pen(element("display"), element("interval").toDouble, element("mode").toInt, element("color").toInt,
-                   element("legend").toBoolean, element.getChild("setup").text, element.getChild("update").text)))
+        val pens =
+          element.getChildren("pen").map(
+            el =>
+               Pen( el("display"), el("interval").toDouble, el("mode").toInt, el("color").toInt
+                  , el("legend").toBoolean, el.getChild("setup").text, el.getChild("update").text
+                  )
+          ).toList
+        Plot( element.get("display"), element("left").toInt, element("top").toInt, element("right").toInt
+            , element("bottom").toInt, element.get("xAxis"), element.get("yAxis"), element("xMin").toDouble
+            , element("xMax").toDouble, element("yMin").toDouble, element("yMax").toDouble
+            , element("autoplot").toBoolean, element("legend").toBoolean, element.getChild("setup").text
+            , element.getChild("update").text, pens
+            )
 
       case "chooser" =>
-        Chooser(element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt,
-                element("bottom").toInt, element.get("display"),
-                element.getChildren("choice").map(element => {
-                  element("type") match {
-                    case "string" =>
-                      ChooseableString(element("value"))
-
-                    case "double" =>
-                      ChooseableDouble(element("value").toDouble)
-
-                    case "boolean" =>
-                      ChooseableBoolean(element("value").toBoolean)
-
-                    case "list" =>
-                      ChooseableList(LogoList.fromList(element.getChildren("value").map(element => element("value"))))
-
-                  }
-                }), element("current").toInt)
+        val children =
+          element.getChildren("choice").map(
+            el =>
+              el("type") match {
+                case "string" =>
+                  ChooseableString(el("value"))
+                case "double" =>
+                  ChooseableDouble(el("value").toDouble)
+                case "boolean" =>
+                  ChooseableBoolean(el("value").toBoolean)
+                case "list" =>
+                  ChooseableList(LogoList.fromList(el.getChildren("value").map(_("value")).toList))
+              }
+          )
+        Chooser( element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt
+               , element("bottom").toInt, element.get("display"), children.toList, element("current").toInt
+               )
 
       case "output" =>
-        Output(element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt,
-               element("fontSize").toInt)
+        Output( element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt
+              , element("fontSize").toInt
+              )
 
       case "input" =>
-        InputBox(element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt,
-                 element("bottom").toInt,
-                 element("type") match {
-                   case "number" =>
-                     NumericInput(element.getChild("value").text.toDouble, NumericInput.NumberLabel)
-
-                   case "color" =>
-                     NumericInput(element.getChild("value").text.toDouble, NumericInput.ColorLabel)
-
-                   case "string" =>
-                     StringInput(element.getChild("value").text, StringInput.StringLabel,
-                                 element("multiline").toBoolean)
-
-                   case "reporter" =>
-                     StringInput(element.getChild("value").text, StringInput.ReporterLabel,
-                                 element("multiline").toBoolean)
-
-                   case "command" =>
-                     StringInput(element.getChild("value").text, StringInput.CommandLabel,
-                                 element("multiline").toBoolean)
-
-                 })
+        val value = element.getChild("value").text
+        val input =
+          element("type") match {
+            case "number" =>
+              NumericInput(value.toDouble, NumericInput.NumberLabel)
+            case "color" =>
+              NumericInput(value.toDouble, NumericInput.ColorLabel)
+            case "string" =>
+              StringInput(value, StringInput.StringLabel, element("multiline").toBoolean)
+            case "reporter" =>
+              StringInput(value, StringInput.ReporterLabel, element("multiline").toBoolean)
+            case "command" =>
+              StringInput(value, StringInput.CommandLabel, element("multiline").toBoolean)
+          }
+        InputBox( element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt
+                , element("bottom").toInt, input
+                )
 
       case "image" =>
-        Image(element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt,
-              element("image"), element("preserveAspect").toBoolean)
+        Image( element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt
+             , element("image"), element("preserveAspect").toBoolean
+             )
 
     }
   }
 
   def writeWidget(widget: Widget): XMLElement = {
+
+    def ifDefined[T <: Widget](w: T)(key: String, f: (T) => Option[Any]): Map[String, String] =
+      if (f(w).isDefined) Map(key -> f(w).get.toString) else Map()
+
     widget match {
+
       case button: Button =>
-        var attributes = Map(
-          ("left", button.left.toString),
-          ("top", button.top.toString),
-          ("right", button.right.toString),
-          ("bottom", button.bottom.toString),
-          ("forever", button.forever.toString),
-          ("kind", button.buttonKind.toString),
-          ("disableUntilTicks", button.disableUntilTicksStart.toString)
-        )
-
-        if (button.display.isDefined)
-          attributes += (("display", button.display.get))
-
-        if (button.actionKey.isDefined)
-          attributes += (("actionKey", button.actionKey.get.toString))
+        val attributes =
+          Map( "left"              -> button.left.toString
+             , "top"               -> button.top.toString
+             , "right"             -> button.right.toString
+             , "bottom"            -> button.bottom.toString
+             , "forever"           -> button.forever.toString
+             , "kind"              -> button.buttonKind.toString
+             , "disableUntilTicks" -> button.disableUntilTicksStart.toString
+             ) ++
+          ifDefined(button)(  "display",   _.display) ++
+          ifDefined(button)("actionKey", _.actionKey)
 
         val children =
           if (button.source.isDefined)
-            List(XMLElement("source", Map(), button.source.get, Nil))
+            Seq(XMLElement("source", Map(), button.source.get, Seq()))
           else
-            Nil
+            Seq()
 
         XMLElement("button", attributes, "", children)
 
       case slider: Slider =>
-        var attributes = Map(
-          ("left", slider.left.toString),
-          ("top", slider.top.toString),
-          ("right", slider.right.toString),
-          ("bottom", slider.bottom.toString),
-          ("min", slider.min),
-          ("max", slider.max),
-          ("default", slider.default.toString),
-          ("step", slider.step),
-          ("direction", slider.direction.toString)
-        )
-
-        if (slider.display.isDefined)
-          attributes += (("display", slider.display.get))
-
-        if (slider.variable.isDefined)
-          attributes += (("variable", slider.variable.get))
-
-        if (slider.units.isDefined)
-          attributes += (("units", slider.units.get))
-
-        XMLElement("slider", attributes, "", Nil)
+        val attributes =
+          Map( "left"      -> slider.left.toString
+             , "top"       -> slider.top.toString
+             , "right"     -> slider.right.toString
+             , "bottom"    -> slider.bottom.toString
+             , "min"       -> slider.min
+             , "max"       -> slider.max
+             , "default"   -> slider.default.toString
+             , "step"      -> slider.step
+             , "direction" -> slider.direction.toString
+             ) ++
+          ifDefined(slider)( "display",  _.display) ++
+          ifDefined(slider)("variable", _.variable) ++
+          ifDefined(slider)(   "units",    _.units)
+        XMLElement("slider", attributes, "", Seq())
 
       case view: View =>
-        view.dimensions.get3D match {
-          case Some((minPzcor, maxPzcor, wrappingAllowedInZ)) =>
-            var attributes = Map(
-              ("left", view.left.toString),
-              ("top", view.top.toString),
-              ("right", view.right.toString),
-              ("bottom", view.bottom.toString),
-              ("minPxcor", view.dimensions.minPxcor.toString),
-              ("maxPxcor", view.dimensions.maxPxcor.toString),
-              ("minPycor", view.dimensions.minPycor.toString),
-              ("maxPycor", view.dimensions.maxPycor.toString),
-              ("minPzcor", minPzcor.toString),
-              ("maxPzcor", maxPzcor.toString),
-              ("patchSize", view.dimensions.patchSize.toString),
-              ("wrappingAllowedX", view.dimensions.wrappingAllowedInX.toString),
-              ("wrappingAllowedY", view.dimensions.wrappingAllowedInY.toString),
-              ("wrappingAllowedZ", wrappingAllowedInZ.toString),
-              ("fontSize", view.fontSize.toString),
-              ("updateMode", view.updateMode.save.toString),
-              ("showTickCounter", view.showTickCounter.toString),
-              ("frameRate", view.frameRate.toString)
-            )
 
-            if (view.tickCounterLabel.isDefined)
-              attributes += (("tickCounterLabel", view.tickCounterLabel.get))
+        val extraVars = view.dimensions.extras
 
-            XMLElement("view3d", attributes, "", Nil)
+        val baseAttributes =
+          Map( "left"             -> view.left.toString
+             , "top"              -> view.top.toString
+             , "right"            -> view.right.toString
+             , "bottom"           -> view.bottom.toString
+             , "minPxcor"         -> view.dimensions.minPxcor.toString
+             , "maxPxcor"         -> view.dimensions.maxPxcor.toString
+             , "minPycor"         -> view.dimensions.minPycor.toString
+             , "maxPycor"         -> view.dimensions.maxPycor.toString
+             , "patchSize"        -> view.dimensions.patchSize.toString
+             , "wrappingAllowedX" -> view.dimensions.wrappingAllowedInX.toString
+             , "wrappingAllowedY" -> view.dimensions.wrappingAllowedInY.toString
+             , "fontSize"         -> view.fontSize.toString
+             , "updateMode"       -> view.updateMode.save.toString
+             , "showTickCounter"  -> view.showTickCounter.toString
+             , "frameRate"        -> view.frameRate.toString
+             )
 
-          case None =>
-            var attributes = Map(
-              ("left", view.left.toString),
-              ("top", view.top.toString),
-              ("right", view.right.toString),
-              ("bottom", view.bottom.toString),
-              ("minPxcor", view.dimensions.minPxcor.toString),
-              ("maxPxcor", view.dimensions.maxPxcor.toString),
-              ("minPycor", view.dimensions.minPycor.toString),
-              ("maxPycor", view.dimensions.maxPycor.toString),
-              ("patchSize", view.dimensions.patchSize.toString),
-              ("wrappingAllowedX", view.dimensions.wrappingAllowedInX.toString),
-              ("wrappingAllowedY", view.dimensions.wrappingAllowedInY.toString),
-              ("fontSize", view.fontSize.toString),
-              ("updateMode", view.updateMode.save.toString),
-              ("showTickCounter", view.showTickCounter.toString),
-              ("frameRate", view.frameRate.toString)
-            )
+        val attributes =
+          baseAttributes ++
+            extraVars.get(          "minPzcor").map((z)   => "minPzcor"         ->   z.asInstanceOf[ String].toString).toMap ++
+            extraVars.get(          "maxPzcor").map((z)   => "maxPzcor"         ->   z.asInstanceOf[ String].toString).toMap ++
+            extraVars.get("wrappingAllowedInZ").map((isW) => "wrappingAllowedZ" -> isW.asInstanceOf[Boolean].toString).toMap ++
+            ifDefined(view)("tickCounterLabel", _.tickCounterLabel)
 
-            if (view.tickCounterLabel.isDefined)
-              attributes += (("tickCounterLabel", view.tickCounterLabel.get))
+        val nodeType = if (!extraVars.contains("minPzcor")) "view" else "view3d"
 
-            XMLElement("view", attributes, "", Nil)
-        }
+        XMLElement(nodeType, attributes, "", Seq())
 
       case monitor: Monitor =>
-        var attributes = Map(
-          ("left", monitor.left.toString),
-          ("top", monitor.top.toString),
-          ("right", monitor.right.toString),
-          ("bottom", monitor.bottom.toString),
-          ("precision", monitor.precision.toString),
-          ("fontSize", monitor.fontSize.toString)
-        )
-
-        if (monitor.display.isDefined)
-          attributes += (("display", monitor.display.get))
+        val attributes =
+          Map( "left"      -> monitor.left.toString
+             , "top"       -> monitor.top.toString
+             , "right"     -> monitor.right.toString
+             , "bottom"    -> monitor.bottom.toString
+             , "precision" -> monitor.precision.toString
+             , "fontSize"  -> monitor.fontSize.toString
+             ) ++
+          ifDefined(monitor)("display", _.display)
 
         val children =
           if (monitor.source.isDefined)
-            List(XMLElement("source", Map(), monitor.source.get, Nil))
+            List(XMLElement("source", Map(), monitor.source.get, Seq()))
           else
-            Nil
+            Seq()
 
         XMLElement("monitor", attributes, "", children)
 
       case switch: Switch =>
-        var attributes = Map(
-          ("left", switch.left.toString),
-          ("top", switch.top.toString),
-          ("right", switch.right.toString),
-          ("bottom", switch.bottom.toString),
-          ("on", switch.on.toString)
-        )
+        val attributes =
+          Map( "left"   -> switch.left.toString
+             , "top"    -> switch.top.toString
+             , "right"  -> switch.right.toString
+             , "bottom" -> switch.bottom.toString
+             , "on"     -> switch.on.toString
+             ) ++
+          ifDefined(switch)( "display",  _.display) ++
+          ifDefined(switch)("variable", _.variable)
 
-        if (switch.display.isDefined)
-          attributes += (("display", switch.display.get))
-
-        if (switch.variable.isDefined)
-          attributes += (("variable", switch.variable.get))
-
-        XMLElement("switch", attributes, "", Nil)
+        XMLElement("switch", attributes, "", Seq())
 
       case plot: Plot =>
-        var attributes = Map(
-          ("left", plot.left.toString),
-          ("top", plot.top.toString),
-          ("right", plot.right.toString),
-          ("bottom", plot.bottom.toString),
-          ("xMin", plot.xmin.toString),
-          ("xMax", plot.xmax.toString),
-          ("yMin", plot.ymin.toString),
-          ("yMax", plot.ymax.toString),
-          ("autoplot", plot.autoPlotOn.toString),
-          ("legend", plot.legendOn.toString)
-        )
 
-        if (plot.display.isDefined)
-          attributes += (("display", plot.display.get))
-
-        if (plot.xAxis.isDefined)
-          attributes += (("xAxis", plot.xAxis.get))
-
-        if (plot.yAxis.isDefined)
-          attributes += (("yAxis", plot.yAxis.get))
-
-
-        var children = List(
-          XMLElement("setup", Map(), plot.setupCode, Nil),
-          XMLElement("update", Map(), plot.updateCode, Nil)
-        )
-
-        for (pen <- plot.pens) {
-          val attributes = Map(
-            ("display", pen.display),
-            ("interval", pen.interval.toString),
-            ("mode", pen.mode.toString),
-            ("color", pen.color.toString),
-            ("legend", pen.inLegend.toString)
-          )
-
-          val penChildren = List(
-            XMLElement("setup", Map(), pen.setupCode, Nil),
-            XMLElement("update", Map(), pen.updateCode, Nil)
-          )
-
-          children = children :+ XMLElement("pen", attributes, "", penChildren)
-        }
-
-        XMLElement("plot", attributes, "", children)
-
-      case chooser: Chooser =>
-        var attributes = Map(
-          ("left", chooser.left.toString),
-          ("top", chooser.top.toString),
-          ("right", chooser.right.toString),
-          ("bottom", chooser.bottom.toString),
-          ("current", chooser.currentChoice.toString)
-        )
-
-        if (chooser.display.isDefined)
-          attributes += (("display", chooser.display.get))
-
-        if (chooser.variable.isDefined)
-          attributes += (("variable", chooser.variable.get))
+        val attributes =
+          Map( "left"     -> plot.left.toString
+             , "top"      -> plot.top.toString
+             , "right"    -> plot.right.toString
+             , "bottom"   -> plot.bottom.toString
+             , "xMin"     -> plot.xmin.toString
+             , "xMax"     -> plot.xmax.toString
+             , "yMin"     -> plot.ymin.toString
+             , "yMax"     -> plot.ymax.toString
+             , "autoplot" -> plot.autoPlotOn.toString
+             , "legend"   -> plot.legendOn.toString
+             ) ++
+          ifDefined(plot)("display", _.display) ++
+          ifDefined(plot)(  "xAxis",   _.xAxis) ++
+          ifDefined(plot)(  "yAxis",   _.yAxis)
 
         val children =
-          for (choice <- chooser.choices) yield {
-            choice match {
-              case ChooseableString(string) =>
-                val attributes = Map(
-                  ("type", "string"),
-                  ("value", string)
-                )
+          Seq( XMLElement( "setup", Map(), plot. setupCode, Seq())
+             , XMLElement("update", Map(), plot.updateCode, Seq())
+             )
 
-                XMLElement("choice", attributes, "", Nil)
+        val pens =
+          plot.pens.map {
+            pen =>
 
-              case ChooseableDouble(double) =>
-                val attributes = Map(
-                  ("type", "double"),
-                  ("value", double.toString)
-                )
+              val attrs =
+                Map( "display"  -> pen.display
+                   , "interval" -> pen.interval.toString
+                   , "mode"     -> pen.mode.toString
+                   , "color"    -> pen.color.toString
+                   , "legend"   -> pen.inLegend.toString
+                   )
 
-                XMLElement("choice", attributes, "", Nil)
+              val kids =
+                Seq( XMLElement( "setup", Map(), pen. setupCode, Seq())
+                   , XMLElement("update", Map(), pen.updateCode, Seq())
+                   )
 
-              case ChooseableBoolean(boolean) =>
-                val attributes = Map(
-                  ("type", "boolean"),
-                  ("value", boolean.toString)
-                )
+              XMLElement("pen", attrs, "", kids)
 
-                XMLElement("choice", attributes, "", Nil)
+          }
 
-              case ChooseableList(list) =>
-                val attributes = Map(
-                  ("type", "list")
-                )
+        XMLElement("plot", attributes, "", children ++ pens)
 
-                val children =
-                  for (value <- list) yield {
-                    val attributes = Map(
-                      ("value", value.toString)
-                    )
+      case chooser: Chooser =>
 
-                    XMLElement("value", attributes, "", Nil)
-                  }
+        val attributes =
+          Map( "left"    -> chooser.left.toString
+             , "top"     -> chooser.top.toString
+             , "right"   -> chooser.right.toString
+             , "bottom"  -> chooser.bottom.toString
+             , "current" -> chooser.currentChoice.toString
+             ) ++
+          ifDefined(chooser)( "display",  _.display) ++
+          ifDefined(chooser)("variable", _.variable)
 
-                XMLElement("choice", attributes, "", children.toList)
-
-            }
+        val children =
+          chooser.choices.map {
+            case ChooseableString(string) =>
+              XMLElement("choice", Map("type" ->  "string", "value" ->           string), "", Seq())
+            case ChooseableDouble(double) =>
+              XMLElement("choice", Map("type" ->  "double", "value" ->  double.toString), "", Seq())
+            case ChooseableBoolean(boolean) =>
+              XMLElement("choice", Map("type" -> "boolean", "value" -> boolean.toString), "", Seq())
+            case ChooseableList(list) =>
+              val children = list.map((x) => XMLElement("value", Map("value" -> x.toString), "", Seq()))
+              XMLElement("choice", Map("type" -> "list"), "", children)
           }
 
         XMLElement("chooser", attributes, "", children)
 
       case output: Output =>
-        val attributes = Map(
-          ("left", output.left.toString),
-          ("top", output.top.toString),
-          ("right", output.right.toString),
-          ("bottom", output.bottom.toString),
-          ("fontSize", output.fontSize.toString)
-        )
-
-        XMLElement("output", attributes, "", Nil)
+        val attributes =
+          Map( "left"     -> output.left.toString
+             , "top"      -> output.top.toString
+             , "right"    -> output.right.toString
+             , "bottom"   -> output.bottom.toString
+             , "fontSize" -> output.fontSize.toString
+             )
+        XMLElement("output", attributes, "", Seq())
 
       case input: InputBox =>
-        var attributes = Map(
-          ("left", input.left.toString),
-          ("top", input.top.toString),
-          ("right", input.right.toString),
-          ("bottom", input.bottom.toString),
-          ("multiline", input.multiline.toString)
-        )
 
-        if (input.variable.isDefined)
-          attributes += (("variable", input.variable.get))
+        val typeName =
+          input.boxedValue match {
+            case NumericInput(_, label) =>
+              label match {
+                case NumericInput.NumberLabel => "number"
+                case NumericInput.ColorLabel  => "color"
+              }
+            case input: StringInput =>
+              input.label match {
+                case StringInput.StringLabel   => "string"
+                case StringInput.ReporterLabel => "reporter"
+                case StringInput.CommandLabel  => "command"
+              }
+          }
 
-        input.boxedValue match {
-          case NumericInput(_, label) =>
-            label match {
-              case NumericInput.NumberLabel =>
-                attributes += (("type", "number"))
+        val attributes =
+          Map( "left"      -> input.left.toString
+             , "top"       -> input.top.toString
+             , "right"     -> input.right.toString
+             , "bottom"    -> input.bottom.toString
+             , "multiline" -> input.multiline.toString
+             , "type"      -> typeName
+             ) ++
+          ifDefined(input)("variable", _.variable)
 
-              case NumericInput.ColorLabel =>
-                attributes += (("type", "color"))
-
-            }
-
-          case input: StringInput =>
-            input.label match {
-              case StringInput.StringLabel =>
-                attributes += (("type", "string"))
-
-              case StringInput.ReporterLabel =>
-                attributes += (("type", "reporter"))
-
-              case StringInput.CommandLabel =>
-                attributes += (("type", "command"))
-
-            }
-
-        }
-
-        val children = List(XMLElement("value", Map(), input.boxedValue.asString, Nil))
+        val children = List(XMLElement("value", Map(), input.boxedValue.asString, Seq()))
 
         XMLElement("input", attributes, "", children)
 
       case image: Image =>
-        val attributes = Map(
-          ("left", image.left.toString),
-          ("top", image.top.toString),
-          ("right", image.right.toString),
-          ("bottom", image.bottom.toString),
-          ("image", image.image),
-          ("preserveAspect", image.preserveAspect.toString)
-        )
+        val attributes =
+          Map( "left"           -> image.left.toString
+             , "top"            -> image.top.toString
+             , "right"          -> image.right.toString
+             , "bottom"         -> image.bottom.toString
+             , "image"          -> image.image
+             , "preserveAspect" -> image.preserveAspect.toString
+          )
 
-        XMLElement("image", attributes, "", Nil)
+        XMLElement("image", attributes, "", Seq())
 
     }
+
   }
+
 }

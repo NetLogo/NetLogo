@@ -6,6 +6,8 @@ import java.nio.file.Path
 
 import org.nlogo.core.Model
 
+import FileFormat.ModelConversion
+
 class ChainConverter(converters: Seq[ModelConversion]) extends ModelConversion {
   def apply(model: Model, modelPath: Path): ConversionResult = {
     converters.foldLeft[ConversionResult](SuccessfulConversion(model, model)) {

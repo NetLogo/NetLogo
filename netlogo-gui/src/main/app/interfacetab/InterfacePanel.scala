@@ -142,7 +142,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
         val dialogTextArea = new EditorArea(dialogEditorConfiguration)
 
         new InputBoxWidget(textArea, dialogTextArea, workspace, this)
-      case i: CoreImage => new ImageWidget(resourceManager)
+      case i: CoreImage => new ImageWidget(resourceManager.get)
       case _ =>
         throw new IllegalStateException("unknown widget type: " + coreWidget.getClass.getName)
     }

@@ -46,6 +46,7 @@ extends WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor, patchSize, wrapp
     s"WorldDimensions3D($minPxcor, $maxPxcor, $minPycor, $maxPycor, $minPzcor, $maxPzcor, $patchSize, $wrappingAllowedInX, $wrappingAllowedInY, $wrappingAllowedInZ)"
   }
 
-  override def get3D: Option[(Int, Int, Boolean)] =
-    Some((minPzcor, maxPzcor, wrappingAllowedInZ))
+  override def extras: Map[String, Any] =
+    Map("minPzcor" -> minPzcor, "maxPzcor" -> maxPzcor, "wrappingAllowedInZ" -> wrappingAllowedInZ)
+
 }

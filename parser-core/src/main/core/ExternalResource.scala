@@ -3,11 +3,12 @@
 package org.nlogo.core
 
 object ExternalResource {
-  abstract class Location
+
+  sealed trait Location
 
   case class Existing(name: String) extends Location
-  case class New(path: String) extends Location
-  case object None extends Location
+  case class New     (path: String) extends Location
+
 }
 
-class ExternalResource(val name: String, val resourceType: String, val data: String) {}
+case class ExternalResource(name: String, resourceType: String, data: String)

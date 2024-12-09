@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo
+package org.nlogo.fileformat
 
 import java.nio.file.Path
 
@@ -8,7 +8,8 @@ import org.nlogo.api.{ AutoConvertable, ConfigurableModelLoader }
 import org.nlogo.core.{ CompilationEnvironment, Dialect, ExtensionManager, LibraryManager, LiteralParser, Model }
 import org.nlogo.core.model.WidgetReader
 
-package object fileformat {
+object FileFormat {
+
   type ModelConversion = (Model, Path) => ConversionResult
 
   def nlogoReaders(is3D: Boolean): Map[String, WidgetReader] =
@@ -29,8 +30,7 @@ package object fileformat {
     libManager:             LibraryManager,
     compilationEnvironment: CompilationEnvironment,
     literalParser:          LiteralParser,
-    conversionSections:     Seq[AutoConvertable])
-  (dialect:               Dialect): ModelConversion = {
+    conversionSections:     Seq[AutoConvertable])(dialect: Dialect): ModelConversion = {
     new ChainConverter(
       Seq(
         ModelConverter(extensionManager, libManager, compilationEnvironment, literalParser, dialect, conversionSections),
@@ -45,7 +45,7 @@ package object fileformat {
       .addFormat[Array[String], NLogoFormat](new NLogoFormat)
       .addSerializer[Array[String], NLogoFormat](NLogoModelSettings)
 
-  def standardLoader(literalParser: LiteralParser, editNames: Boolean = false) = {
+  def standardLoader(literalParser: LiteralParser, editNames: Boolean = false): ConfigurableModelLoader = {
     new ConfigurableModelLoader()
       .addFormat[Array[String], NLogoFormat](new NLogoFormat)
       .addSerializer[Array[String], NLogoFormat](NLogoModelSettings)
@@ -58,10 +58,10 @@ package object fileformat {
       .addSerializer[Array[String], NLogoThreeDFormat](NLogoThreeDPreviewCommandsFormat)
   }
 
-  def standardXMLLoader(literalParser: LiteralParser, editNames: Boolean = false) =
+  def standardXMLLoader(literalParser: LiteralParser, editNames: Boolean = false): NLogoXMLLoader =
     new NLogoXMLLoader(literalParser: LiteralParser, editNames)
 
-  def standardAnyLoader(literalParser: LiteralParser, editNames: Boolean = false) =
+  def standardAnyLoader(literalParser: LiteralParser, editNames: Boolean = false): NLogoAnyLoader =
     new NLogoAnyLoader(List(standardXMLLoader(literalParser, editNames), standardLoader(literalParser, editNames)))
 
 }

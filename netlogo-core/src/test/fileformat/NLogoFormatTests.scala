@@ -8,7 +8,7 @@ import java.util.Arrays
 
 import org.scalatest.funsuite.AnyFunSuite
 
-import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, GenericModelLoader, ModelSettings, Version }
+import org.nlogo.api.{ AbstractModelLoader, ComponentSerialization, ConfigurableModelLoader, ModelSettings, Version }
 import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Model, Shape, Widget },
   Shape.{ LinkShape, VectorShape }
 
@@ -78,7 +78,7 @@ class NLogoFormatIOTest extends AnyFunSuite {
 
 class NLogoFormatConversionTest extends AnyFunSuite with ConversionHelper {
   if (canTestConversions) {
-    def testLoader: GenericModelLoader =
+    def testLoader: AbstractModelLoader =
       new ConfigurableModelLoader().addFormat[Array[String], NLogoFormat](new NLogoFormat)
         .addSerializer[Array[String], NLogoFormat](new NLogoLabFormat(literalParser))
 

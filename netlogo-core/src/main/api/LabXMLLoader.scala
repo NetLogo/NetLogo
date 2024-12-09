@@ -4,178 +4,144 @@ package org.nlogo.api
 
 import org.nlogo.core.{ LiteralParser, XMLElement }
 
-import scala.collection.mutable.Set
-
 object LabXMLLoader {
-  def readExperiment(element: XMLElement, literalParser: LiteralParser, editNames: Boolean,
-                     existingNames: Set[String]): LabProtocol = {
+
+  def readExperiment( element: XMLElement, literalParser: LiteralParser, editNames: Boolean
+                    , existingNames: Set[String]): (LabProtocol, Set[String]) = {
+
     def readValueSet(element: XMLElement): RefValueSet = {
       element.name match {
         case "steppedValueSet" =>
-          SteppedValueSet(element("variable"), element("first").toDouble, element("step").toDouble,
-                          element("last").toDouble)
+          SteppedValueSet( element("variable"), element("first").toDouble, element("step").toDouble
+                         , element("last").toDouble)
 
         case "enumeratedValueSet" =>
-          RefEnumeratedValueSet(element("variable"), element.getChildren("value").map(element =>
-                                                       literalParser.readFromString(element("value"))))
+          val value = element.getChildren("value").map(element => literalParser.readFromString(element("value")))
+          RefEnumeratedValueSet(element("variable"), value.toList)
 
       }
     }
 
-    var preExperiment = ""
-    var setup = ""
-    var go = ""
-    var postRun = ""
-    var postExperiment = ""
-    var runMetricsCondition = ""
-    var exitCondition = ""
-    var metrics = List[String]()
-    var constants = List[RefValueSet]()
-    var subExperiments = List[List[RefValueSet]]()
+    val name = element("name")
 
-    for (element <- element.children) {
-      element.name match {
-        case "preExperiment" =>
-          preExperiment = element.text
+    val baseLab =
+      LabProtocol( name, "", "", "", "", "", element("repetitions").toInt
+                 , element("sequentialRunOrder").toBoolean, element("runMetricsEveryStep").toBoolean, ""
+                 , element("timeLimit", "0").toInt, "", List(), List(), List())
 
-        case "setup" =>
-          setup = element.text
-
-        case "go" =>
-          go = element.text
-
-        case "postRun" =>
-          postRun = element.text
-
-        case "postExperiment" =>
-          postExperiment = element.text
-
-        case "runMetricsCondition" =>
-          runMetricsCondition = element.text
-
-        case "exitCondition" =>
-          exitCondition = element.text
-
-        case "metrics" =>
-          metrics = element.getChildren("metric").map(_.text)
-
-        case "constants" =>
-          constants = element.children.map(readValueSet)
-
-        case "subExperiments" =>
-          subExperiments = element.getChildren("subExperiment").map(_.children.map(readValueSet))
-
-      }
-    }
-
-    var name = element("name")
-
-    if (editNames) {
-      if (name.nonEmpty) {
-        if (existingNames.contains(name)) {
-          var n = 1
-
-          while (existingNames.contains(s"$name ($n)")) n += 1
-
-          name = s"$name ($n)"
-        }
+    val filledLab =
+      element.children.foldLeft(baseLab) {
+        case (lab, XMLElement("preExperiment", _, text, _)) =>
+          lab.copy(preExperimentCommands = text)
+        case (lab, XMLElement("setup", _, text, _)) =>
+          lab.copy(setupCommands = text)
+        case (lab, XMLElement("go", _, text, _)) =>
+          lab.copy(goCommands = text)
+        case (lab, XMLElement("postRun", _, text, _)) =>
+          lab.copy(postRunCommands = text)
+        case (lab, XMLElement("postExperiment", _, text, _)) =>
+          lab.copy(postExperimentCommands = text)
+        case (lab, XMLElement("runMetricsCondition", _, text, _)) =>
+          lab.copy(runMetricsCondition = text)
+        case (lab, XMLElement("exitCondition", _, text, _)) =>
+          lab.copy(exitCondition = text)
+        case (lab, el @ XMLElement("metrics", _, _, _)) =>
+          lab.copy(metrics = el.getChildren("metric").map(_.text).toList)
+        case (lab, XMLElement("constants", _, _, children)) =>
+          lab.copy(constants = children.map(readValueSet).toList)
+        case (lab, el @ XMLElement("subExperiments", _, _, _)) =>
+          lab.copy(subExperiments = el.getChildren("subExperiment").map(_.children.map(readValueSet).toList).toList)
+        case (  _, XMLElement(otherName, _, _, _)) =>
+          throw new Exception(s"Unknown BehaviorSpace XML node type: ${otherName}")
       }
 
-      else if (existingNames.contains("no name")) {
-        var n = 1
+    val outNameMaybe =
+      if (editNames)
+        Option(
+          if (name.nonEmpty)
+            if (existingNames.contains(name))
+              s"$name (${Stream.from(1).dropWhile(x => existingNames.contains(s"$name ($x)")).head})"
+            else
+              name
+          else if (existingNames.contains("no name"))
+            s"no name (${Stream.from(1).dropWhile(x => existingNames.contains(s"no name ($x)")).head})"
+          else
+            "no name"
+        )
+      else
+        None
 
-        while (existingNames.contains(s"no name ($n)")) n += 1
+    (filledLab, existingNames ++ outNameMaybe)
 
-        name = s"no name ($n)"
-      }
-
-      else {
-        name = "no name"
-      }
-
-      existingNames += name
-    }
-
-    LabProtocol(name, preExperiment, setup, go, postRun, postExperiment, element("repetitions").toInt,
-                element("sequentialRunOrder").toBoolean, element("runMetricsEveryStep").toBoolean, runMetricsCondition,
-                element("timeLimit", "0").toInt, exitCondition, metrics, constants, subExperiments)
   }
 
   def writeExperiment(experiment: LabProtocol): XMLElement = {
+
+    def makeBabyMaybe(cond: => Boolean)
+                      (tagName: String, text: String, subBabies: Seq[XMLElement]): Option[XMLElement] =
+      if (cond)
+        Option(XMLElement(tagName, Map(), text, subBabies))
+      else
+        None
+
+    def makeBabyMaybeSimple(getValue: (LabProtocol) => String, tagName: String): Option[XMLElement] =
+      makeBabyMaybe(getValue(experiment).trim.nonEmpty)(tagName, getValue(experiment).trim, Seq())
+
     def writeValueSet(valueSet: RefValueSet): XMLElement = {
       valueSet match {
-        case stepped: SteppedValueSet =>
-          val attributes = Map(
-            ("variable", stepped.variableName),
-            ("first", stepped.firstValue.toString),
-            ("step", stepped.step.toString),
-            ("last", stepped.lastValue.toString)
-          )
 
-          XMLElement("steppedValueSet", attributes, "", Nil)
+        case stepped: SteppedValueSet =>
+
+          val attributes =
+            Map( "variable" -> stepped.variableName
+               , "first"    -> stepped.firstValue.toString
+               , "step"     -> stepped.step.toString
+               , "last"     -> stepped.lastValue.toString
+               )
+
+          XMLElement("steppedValueSet", attributes, "", Seq())
 
         case enumerated: RefEnumeratedValueSet =>
-          val attributes = Map(
-            ("variable", enumerated.variableName)
-          )
+
+          val attributes = Map("variable" -> enumerated.variableName)
 
           val children =
             for (value <- enumerated.toList)
-              yield XMLElement("value", Map(("value", Dump.logoObject(value, true, false))), "", Nil)
+              yield XMLElement("value", Map("value" -> Dump.logoObject(value, true, false)), "", Seq())
 
           XMLElement("enumeratedValueSet", attributes, "", children)
 
       }
     }
 
-    var attributes = Map(
-      ("name", experiment.name),
-      ("repetitions", experiment.repetitions.toString),
-      ("sequentialRunOrder", experiment.sequentialRunOrder.toString),
-      ("runMetricsEveryStep", experiment.runMetricsEveryStep.toString)
-    )
+    val baseAttributes =
+      Map( "name"                -> experiment.name
+         , "repetitions"         -> experiment.repetitions.toString
+         , "sequentialRunOrder"  -> experiment.sequentialRunOrder.toString
+         , "runMetricsEveryStep" -> experiment.runMetricsEveryStep.toString
+         )
 
-    if (experiment.timeLimit != 0)
-      attributes += (("timeLimit", experiment.timeLimit.toString))
+    val attributes =
+      baseAttributes ++
+        (if (experiment.timeLimit != 0) Map("timeLimit" -> experiment.timeLimit.toString) else Map())
 
-    var children = List[XMLElement]()
+    val subMetrics = experiment.metrics.flatMap((m) => makeBabyMaybe(true)("metric", m, Seq()))
 
-    if (experiment.preExperimentCommands.trim.nonEmpty)
-      children = children :+ XMLElement("preExperiment", Map(), experiment.preExperimentCommands.trim, Nil)
-
-    if (experiment.setupCommands.trim.nonEmpty)
-      children = children :+ XMLElement("setup", Map(), experiment.setupCommands.trim, Nil)
-
-    if (experiment.goCommands.trim.nonEmpty)
-      children = children :+ XMLElement("go", Map(), experiment.goCommands.trim, Nil)
-
-    if (experiment.postRunCommands.trim.nonEmpty)
-      children = children :+ XMLElement("postRun", Map(), experiment.postRunCommands.trim, Nil)
-
-    if (experiment.postExperimentCommands.trim.nonEmpty)
-      children = children :+ XMLElement("postExperiment", Map(), experiment.postExperimentCommands.trim, Nil)
-
-    if (experiment.exitCondition.trim.nonEmpty)
-      children = children :+ XMLElement("exitCondition", Map(), experiment.exitCondition.trim, Nil)
-
-    if (experiment.runMetricsCondition.trim.nonEmpty)
-      children = children :+ XMLElement("runMetricsCondition", Map(), experiment.runMetricsCondition.trim, Nil)
-
-    if (experiment.metrics.nonEmpty) {
-      val metrics =
-        for (metric <- experiment.metrics) yield {
-          XMLElement("metric", Map(), metric, Nil)
-        }
-
-      children = children :+ XMLElement("metrics", Map(), "", metrics)
-    }
-
-    if (experiment.constants.nonEmpty)
-      children = children :+ XMLElement("constants", Map(), "", experiment.constants.map(writeValueSet))
-
-    for (subExperiment <- experiment.subExperiments)
-      children = children :+ XMLElement("subExperiment", Map(), "", subExperiment.map(writeValueSet))
+    val children =
+      Seq[XMLElement]() ++
+        makeBabyMaybeSimple(_. preExperimentCommands,       "preExperiment") ++
+        makeBabyMaybeSimple(_.         setupCommands,               "setup") ++
+        makeBabyMaybeSimple(_.            goCommands,                  "go") ++
+        makeBabyMaybeSimple(_.       postRunCommands,             "postRun") ++
+        makeBabyMaybeSimple(_.postExperimentCommands,      "postExperiment") ++
+        makeBabyMaybeSimple(_.         exitCondition,       "exitCondition") ++
+        makeBabyMaybeSimple(_.   runMetricsCondition, "runMetricsCondition") ++
+        makeBabyMaybe(experiment.metrics.nonEmpty)("metrics", "", subMetrics) ++
+        makeBabyMaybe(experiment.constants.nonEmpty)("constants", "", experiment.constants.map(writeValueSet)) ++
+        experiment.subExperiments.flatMap((se) => makeBabyMaybe(true)("subExperiment", "", se.map(writeValueSet)))
 
     XMLElement("experiment", attributes, "", children)
+
   }
+
 }

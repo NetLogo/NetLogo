@@ -5,26 +5,30 @@ package org.nlogo.app
 import java.lang.reflect.{ Type => JType }
 
 import org.nlogo.core.Dialect
-import org.nlogo.api.{ AddableComponent, AutoConvertable, ConfigurableModelLoader, GenericModelLoader,
+import org.nlogo.api.{ AbstractModelLoader, AddableComponent, AutoConvertable, ConfigurableModelLoader,
                        Workspace => ApiWorkspace }
-import org.nlogo.fileformat, fileformat.{ ModelConversion, ModelConverter, NLogoXMLLoader }
+import org.nlogo.fileformat.{ FileFormat, ModelConverter, NLogoAnyLoader, NLogoXMLLoader }
+import org.nlogo.fileformat.FileFormat.ModelConversion
 import org.nlogo.nvm.{ DefaultCompilerServices, PresentationCompilerInterface }
 
 import org.picocontainer.PicoContainer
 import org.picocontainer.adapters.AbstractAdapter
 
-import scala.collection.JavaConverters._
-
 object Adapters {
-  class AnyModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[GenericModelLoader], classOf[fileformat.NLogoAnyLoader]) {
-    def getDescriptor(): String = "AnyModelLoaderComponent"
-    def verify(p: PicoContainer): Unit = {}
 
-    def getComponentInstance(container: PicoContainer, into: JType) = {
+  class AnyModelLoaderComponent extends AbstractAdapter[AbstractModelLoader](classOf[AbstractModelLoader], classOf[NLogoAnyLoader]) {
+
+    override def getDescriptor: String = "AnyModelLoaderComponent"
+    override def verify(p: PicoContainer): Unit = ()
+
+    override def getComponentInstance(container: PicoContainer, into: JType): AbstractModelLoader = {
+
+      import scala.collection.JavaConverters.iterableAsScalaIterableConverter
+
       val compiler = container.getComponent(classOf[PresentationCompilerInterface])
       val compilerServices = new DefaultCompilerServices(compiler)
 
-      val loader: ConfigurableModelLoader = fileformat.standardAnyLoader(compilerServices, true)
+      val loader: ConfigurableModelLoader = FileFormat.standardAnyLoader(compilerServices, true)
 
       val components = container.getComponents(classOf[AddableComponent]).asScala
 
@@ -32,59 +36,72 @@ object Adapters {
         components.foldLeft(loader) {
           case (loader, component) => component.addToLoader(loader)
         }
+      } else {
+        loader
       }
 
-      else loader
     }
+
   }
 
-  class XMLModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[GenericModelLoader], classOf[NLogoXMLLoader]) {
-    def getDescriptor(): String = "XMLModelLoaderComponent"
-    def verify(p: PicoContainer): Unit = {}
+  class XMLModelLoaderComponent extends AbstractAdapter[AbstractModelLoader](classOf[AbstractModelLoader], classOf[NLogoXMLLoader]) {
 
-    def getComponentInstance(container: PicoContainer, into: JType) = {
+    override def getDescriptor: String = "XMLModelLoaderComponent"
+    override def verify(p: PicoContainer): Unit = ()
+
+    override def getComponentInstance(container: PicoContainer, into: JType): AbstractModelLoader = {
       val compiler = container.getComponent(classOf[PresentationCompilerInterface])
       val compilerServices = new DefaultCompilerServices(compiler)
-
-      fileformat.standardXMLLoader(compilerServices, true)
+      FileFormat.standardXMLLoader(compilerServices, true)
     }
+
   }
 
-  class ModelLoaderComponent extends AbstractAdapter[GenericModelLoader](classOf[GenericModelLoader], classOf[ConfigurableModelLoader]) {
-    def getDescriptor(): String = "ModelLoaderComponent"
-    def verify(p: PicoContainer): Unit = {}
+  class ModelLoaderComponent extends AbstractAdapter[AbstractModelLoader](classOf[AbstractModelLoader], classOf[ConfigurableModelLoader]) {
 
-    def getComponentInstance(container: PicoContainer, into: JType) = {
-      val compiler         = container.getComponent(classOf[PresentationCompilerInterface])
-      val compilerServices = new DefaultCompilerServices(compiler)
+    override def getDescriptor: String = "ModelLoaderComponent"
+    override def verify(p: PicoContainer): Unit = ()
 
-      val loader =
-        fileformat.standardLoader(compilerServices, true)
-      val additionalComponents =
-        container.getComponents(classOf[AddableComponent]).asScala
+    override def getComponentInstance(container: PicoContainer, into: JType): AbstractModelLoader = {
+
+      import scala.collection.JavaConverters.iterableAsScalaIterableConverter
+
+      val compiler             = container.getComponent(classOf[PresentationCompilerInterface])
+      val compilerServices     = new DefaultCompilerServices(compiler)
+      val loader               = FileFormat.standardLoader(compilerServices, true)
+      val additionalComponents = container.getComponents(classOf[AddableComponent]).asScala
+
       if (additionalComponents.nonEmpty) {
         additionalComponents.foldLeft(loader) {
           case (l, component) => component.addToLoader(l)
         }
+      } else {
+        loader
       }
-        else
-          loader
+
     }
+
   }
 
   class ModelConverterComponent extends AbstractAdapter[ModelConversion](classOf[ModelConversion], classOf[ModelConverter]) {
-    def getDescriptor(): String = "ModelConverterComponent"
-    def verify(x: PicoContainer): Unit = {}
 
-    def getComponentInstance(container: PicoContainer, into: JType) = {
+    override def getDescriptor: String = "ModelConverterComponent"
+    override def verify(x: PicoContainer): Unit = ()
+
+    override def getComponentInstance(container: PicoContainer, into: JType): ModelConversion = {
+
+      import scala.collection.JavaConverters.iterableAsScalaIterableConverter
+
       val workspace = container.getComponent(classOf[ApiWorkspace])
 
       val allAutoConvertables =
-        fileformat.defaultAutoConvertables ++ container.getComponents(classOf[AutoConvertable]).asScala
+        FileFormat.defaultAutoConvertables ++ container.getComponents(classOf[AutoConvertable]).asScala
 
-      fileformat.converter( workspace.getExtensionManager, workspace.getLibraryManager
+      FileFormat.converter( workspace.getExtensionManager, workspace.getLibraryManager
                           , workspace.getCompilationEnvironment, workspace, allAutoConvertables)(
                             container.getComponent(classOf[Dialect]))
     }
+
   }
+
 }

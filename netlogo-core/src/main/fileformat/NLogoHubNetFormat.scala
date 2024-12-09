@@ -18,7 +18,7 @@ class NLogoHubNetFormat(literalParser: LiteralParser)
 
   def serialize(m: Model): Array[String] =
     m.optionalSectionValue[Seq[CoreWidget]](componentName)
-      .map(_.map(w => WidgetReader.format(w, hubNetReaders).linesIterator.toSeq :+ "").flatten.toArray[String])
+      .map(_.map(w => WidgetReader.format(w, FileFormat.hubNetReaders).linesIterator.toSeq :+ "").flatten.toArray[String])
       .getOrElse(Array[String]())
 
   def validationErrors(m: Model): Option[String] = None
@@ -26,7 +26,7 @@ class NLogoHubNetFormat(literalParser: LiteralParser)
   override def deserialize(widgetLines: Array[String]) = { (m: Model) =>
     Try {
       val widgets =
-        WidgetReader.readInterface(widgetLines.toList, literalParser, hubNetReaders, identity)
+        WidgetReader.readInterface(widgetLines.toList, literalParser, FileFormat.hubNetReaders, identity)
       m.withOptionalSection(componentName, Some(widgets), Seq[CoreWidget]())
     }
   }

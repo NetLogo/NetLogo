@@ -10,7 +10,6 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.FileDialog
 import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 
-import scala.collection.mutable.Set
 import scala.io.Source
 
 private class ManagerDialog(manager:       LabManager,
@@ -231,7 +230,7 @@ private class ManagerDialog(manager:       LabManager,
       {
         try {
           manager.modelLoader.readExperiments(Source.fromFile(file).mkString, true,
-                                              manager.protocols.map(_.name).to[Set]).foreach(_.foreach(manager.addProtocol(_)))
+                                              manager.protocols.map(_.name).to[Set]).foreach(_._1.foreach(manager.addProtocol(_)))
         } catch {
           case e: org.xml.sax.SAXParseException => {
             if (!java.awt.GraphicsEnvironment.isHeadless) {

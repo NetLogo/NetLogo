@@ -18,7 +18,7 @@ import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ AgentKind, CompilerException, ExternalResource, I18N, Model,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.fileformat
+import org.nlogo.fileformat.FileFormat
 import org.nlogo.log.{ JsonFileLogger, LogEvents, LogManager }
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
@@ -276,7 +276,6 @@ class App extends
   def tabManager = _tabManager
   var menuBar: MenuBar = null
   var _fileManager: FileManager = null
-  private var resourceManager: ExternalResourceManager = null
   var monitorManager: AgentMonitorManager = null
   def getMonitorManager = monitorManager
   var aggregateManager: AggregateManagerInterface = null
@@ -285,10 +284,12 @@ class App extends
   var recentFilesMenu: RecentFilesMenu = null
   private var errorDialogManager: ErrorDialogManager = null
   private val listenerManager = new NetLogoListenerManager
-  lazy val modelingCommons = pico.getComponent(classOf[ModelingCommonsInterface])
   private val runningInMacWrapper = Option(System.getProperty("org.nlogo.mac.appClassName")).nonEmpty
   private val ImportWorldURLProp = "netlogo.world_state_url"
   private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
+
+  lazy val modelingCommons                          = pico.getComponent(classOf[ModelingCommonsInterface])
+  lazy val resourceManager: ExternalResourceManager = pico.getComponent(classOf[ExternalResourceManager])
 
   val isMac = System.getProperty("os.name").startsWith("Mac")
 
@@ -314,8 +315,6 @@ class App extends
     Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
       def uncaughtException(t: Thread, e: Throwable) { org.nlogo.api.Exceptions.handle(e) }
     })
-
-    resourceManager = pico.getComponent(classOf[ExternalResourceManager])
 
     val interfaceFactory = new InterfaceFactory() {
       def widgetPanel(workspace: GUIWorkspace): AbstractWidgetPanel =
@@ -856,7 +855,7 @@ class App extends
     _tabManager.interfaceTab.requestFocus()
   }
 
-  def handle(e: LoadModelEvent) {
+  def handle(e: LoadModelEvent): Unit = {
     resourceManager.setResources(e.model.resources)
   }
 
@@ -1121,7 +1120,7 @@ class App extends
    */
   def makeWidget(text:String) {
     dispatchThreadOrBust(
-      _tabManager.interfaceTab.getInterfacePanel.loadWidget(WidgetReader.read(text.linesIterator.toList, workspace, fileformat.nlogoReaders(Version.is3D))))
+      _tabManager.interfaceTab.getInterfacePanel.loadWidget(WidgetReader.read(text.linesIterator.toList, workspace, FileFormat.nlogoReaders(Version.is3D))))
   }
 
   /// helpers for controlling methods

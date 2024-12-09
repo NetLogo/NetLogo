@@ -3,7 +3,7 @@
 package org.nlogo.hubnet.server.gui
 
 import org.nlogo.api.{ HubNetInterface, NetLogoLegacyDialect }
-import org.nlogo.fileformat
+import org.nlogo.fileformat.FileFormat
 import org.nlogo.workspace.{ AbstractWorkspaceScala, HubNetManagerFactory => WSHubNetManagerFactory }
 import org.nlogo.window.{ GUIWorkspace, InterfaceFactory, MenuBarFactory }
 
@@ -16,13 +16,13 @@ class HubNetManagerFactory(linkParent: Component,
     workspace match {
       case g: GUIWorkspace =>
         val converter =
-          fileformat.converter(
+          FileFormat.converter(
             workspace.getExtensionManager
           , workspace.getLibraryManager
           , workspace.getCompilationEnvironment
           , workspace
-          , fileformat.defaultAutoConvertables) _
-        val loader = fileformat.standardAnyLoader(workspace)
+          , FileFormat.defaultAutoConvertables) _
+        val loader = FileFormat.standardAnyLoader(workspace)
         new GUIHubNetManager(g, linkParent, ifactory, menuFactory, loader, converter(NetLogoLegacyDialect))
       case _ => throw new Exception("Expected GUIWorkspace, got: " + workspace)
     }

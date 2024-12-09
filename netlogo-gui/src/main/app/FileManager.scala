@@ -11,13 +11,14 @@ import javax.swing.{ Action, JOptionPane }
 import scala.util.{ Failure, Try }
 
 import org.nlogo.core.{ I18N, Model }
-import org.nlogo.api.{ Exceptions, FileIO, GenericModelLoader, ModelReader, ModelType, Version },
+import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, ModelReader, ModelType, Version },
   ModelReader.{ emptyModelPath, modelSuffix }
 import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction }, Actions.Ellipsis
 import org.nlogo.app.codetab.TemporaryCodeTab
 import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
-import org.nlogo.fileformat.{ FailedConversionResult, ModelConversion, SuccessfulConversion }
+import org.nlogo.fileformat.{ FailedConversionResult, SuccessfulConversion }
+import org.nlogo.fileformat.FileFormat.ModelConversion
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog, UserAction }, UserAction.MenuAction
 import org.nlogo.window.{ BackgroundFileController, Events, FileController, ReconfigureWorkspaceUI },
   Events.{AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent, LoadModelEvent, LoadErrorEvent, ModelSavedEvent, OpenModelEvent }
@@ -262,7 +263,7 @@ import FileManager._
  *  fileMenu, but it's obviously undesirable to couple the behavior in this class too closely to
  *  its presentation (the menu) */
 class FileManager(workspace: AbstractWorkspaceScala,
-  modelLoader: GenericModelLoader,
+  modelLoader: AbstractModelLoader,
   modelConverter: ModelConversion,
   dirtyMonitor: DirtyMonitor,
   modelSaver: ModelSaver,

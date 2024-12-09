@@ -4,6 +4,9 @@ package org.nlogo.fileformat
 
 import java.nio.file.Path
 
+import scala.util.{ Failure, Success, Try }
+import scala.util.matching.Regex
+
 import org.nlogo.core.{
   CompilationEnvironment
 , CompilationOperand
@@ -22,8 +25,7 @@ import org.nlogo.core.{
 import org.nlogo.core.FrontEndInterface.ProceduresMap
 import org.nlogo.api.{ AutoConverter, AutoConvertable, FileIO }
 
-import scala.util.{ Failure, Success, Try }
-import scala.util.matching.Regex
+import FileFormat.ModelConversion
 
 object ModelConverter {
   def apply(

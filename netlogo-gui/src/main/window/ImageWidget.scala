@@ -55,7 +55,7 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
     }
   }
 
-  var imagePath: ExternalResource.Location = ExternalResource.None
+  var imagePathOpt: Option[ExternalResource.Location] = None
 
   var preserveAspect = true
 
@@ -72,9 +72,7 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
 
             true
           }
-        }
-
-        catch {
+        } catch {
           case t: Throwable => false
         }
 
@@ -86,7 +84,7 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
     OptionDialog.showMessage(this, I18N.gui.get("common.messages.error"), I18N.gui.getN("resource.loadError", name),
                              Array(I18N.gui.get("common.buttons.ok")))
 
-    imagePath = ExternalResource.None
+    imagePathOpt = None
   }
 
   setLayout(new BorderLayout)
@@ -102,27 +100,26 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
     Properties.image
 
   override def invalidSettings: Seq[(String, String)] = {
-    val name = imagePath match {
-      case ExternalResource.Existing(name) => name
-      case ExternalResource.New(path) =>
-        val name = ExternalResourceManager.getName(path)
-
-        resourceManager.addResource(new ExternalResource(name, "image",
-          Base64.getEncoder.encodeToString(Files.readAllBytes(new File(path).toPath))))
-
+    val name = imagePathOpt match {
+      case Some(ExternalResource.Existing(name)) => name
+      case Some(ExternalResource.New(path)) =>
+        val name     = ExternalResourceManager.getName(path)
+        val contents = Base64.getEncoder.encodeToString(Files.readAllBytes(new File(path).toPath))
+        resourceManager.addResource(ExternalResource(name, "image", contents))
         name
+      case None => throw new Exception("Illegal operation performed without an image path")
     }
 
     if (setImage(name))
-      Nil
+      Seq()
     else
       Seq((I18N.gui.get("edit.image.image"), I18N.gui.getN("resource.loadError", name)))
   }
 
   override def editFinished(): Boolean = {
-    imagePath match {
-      case ExternalResource.New(path) =>
-        imagePath = ExternalResource.Existing(ExternalResourceManager.getName(path))
+    imagePathOpt match {
+      case Some(ExternalResource.New(path)) =>
+        imagePathOpt = Option(ExternalResource.Existing(ExternalResourceManager.getName(path)))
 
       case _ =>
     }
@@ -139,10 +136,11 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
   override def model: WidgetModel = {
     val bounds = getBoundsTuple
 
-    imagePath match {
-      case ExternalResource.Existing(name) => CoreImage(bounds._1, bounds._2, bounds._3, bounds._4, name,
-                                                        preserveAspect)
-      case _ => null
+    imagePathOpt match {
+      case Some(ExternalResource.Existing(name)) =>
+        CoreImage(bounds._1, bounds._2, bounds._3, bounds._4, name, preserveAspect)
+      case _ =>
+        null
     }
   }
 
@@ -152,7 +150,7 @@ class ImageWidget(resourceManager: ExternalResourceManager) extends SingleErrorW
     if (!setImage(model.image))
       imageError(model.image)
 
-    imagePath = ExternalResource.Existing(model.image)
+    imagePathOpt = Option(ExternalResource.Existing(model.image))
 
     preserveAspect = model.preserveAspect
 

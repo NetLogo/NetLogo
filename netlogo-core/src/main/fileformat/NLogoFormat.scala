@@ -11,7 +11,6 @@ import org.nlogo.core.{ Femto, I18N, LiteralParser, Model, ShapeParser,
   UpdateMode, View, Widget, WorldDimensions }
 import org.nlogo.core.model.WidgetReader
 
-import scala.collection.mutable.Set
 import scala.io.{ Codec, Source }, Codec.UTF8
 import scala.util.{ Failure, Success, Try }
 
@@ -133,7 +132,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
     }
   }
 
-  def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[Seq[LabProtocol]] =
+  def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])] =
     Failure(new Exception) // fix after compile
 
   def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {

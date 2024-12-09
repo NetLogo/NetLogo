@@ -23,11 +23,11 @@ trait ConversionHelper {
 
   def converter(conversions: Model => Seq[ConversionSet] = (_ => Seq())) =
     new ModelConverter( VidExtensionManager, libManager, FooCompilationEnvironment
-                      , literalParser, NetLogoLegacyDialect, defaultAutoConvertables, conversions)
+                      , literalParser, NetLogoLegacyDialect, FileFormat.defaultAutoConvertables, conversions)
 
   def plotConverter =
     new PlotConverter( VidExtensionManager, libManager, FooCompilationEnvironment
-                     , literalParser, NetLogoLegacyDialect, defaultAutoConvertables)
+                     , literalParser, NetLogoLegacyDialect, FileFormat.defaultAutoConvertables)
 
   def tryConvert(model: Model, conversions: ConversionSet*): ConversionResult =
     converter(_ => conversions)(model, modelPath)
