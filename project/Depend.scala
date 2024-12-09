@@ -17,11 +17,22 @@ object Depend {
       val testClasses = (Test / classDirectory).value.toString
       val ddfFile = baseDirectory.value / "tmp" / "depend.ddf"
       IO.write(ddfFile, ddfContents)
-      import classycle.dependency.DependencyChecker
-      def main() =
-        DependencyChecker.main(Array("-dependencies=@" + ddfFile.getPath, classes))
-      def test() =
-        DependencyChecker.main(Array("-dependencies=@" + ddfFile.getPath, testClasses))
+      import classycle.Analyser
+      import classycle.dependency.{ DefaultResultRenderer, DependencyChecker }
+      import java.io.PrintWriter
+      import java.lang.Object
+      import java.util.HashMap
+      import scala.io.Source
+      def main() = {
+        new DependencyChecker(new Analyser(Array(classes)), Source.fromFile(ddfFile).getLines.mkString("\n"),
+                              new HashMap[Object, Object],
+                              new DefaultResultRenderer()).check(new PrintWriter(System.out))
+      }
+      def test() = {
+        new DependencyChecker(new Analyser(Array(testClasses)), Source.fromFile(ddfFile).getLines.mkString("\n"),
+                              new HashMap[Object, Object],
+                              new DefaultResultRenderer()).check(new PrintWriter(System.out))
+      }
       main()
     }
 
