@@ -12,16 +12,16 @@ import org.nlogo.app.common.{ FileActions, UndoRedoActions },
   FileActions.ExportInterfaceAction
 import org.nlogo.awt.Images
 import org.nlogo.core.{
-  AgentKind, I18N, Button => CoreButton, Chooser => CoreChooser, Image => CoreImage, InputBox => CoreInputBox,
-  Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider,
-  TextBox => CoreTextBox, View => CoreView, Widget => CoreWidget }
+  AgentKind, I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor,
+  Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider, TextBox => CoreTextBox, View => CoreView,
+  Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, UndoManager }
 import org.nlogo.log.LogManager
 import org.nlogo.window.{ ButtonWidget, ChooserWidget, Events => WindowEvents,
-  GUIWorkspace, ImageWidget, InputBoxWidget, InterfaceGlobalWidget, MonitorWidget,
-  PlotWidget, SliderWidget, ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
-    WindowEvents.{CompileAllEvent, EditWidgetEvent, LoadBeginEvent, LoadWidgetsEvent,
-    RemoveConstraintEvent, WidgetRemovedEvent}
+  GUIWorkspace, InputBoxWidget, InterfaceGlobalWidget, MonitorWidget, PlotWidget, SliderWidget, ViewWidget,
+  ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
+    WindowEvents.{ CompileAllEvent, EditWidgetEvent, LoadBeginEvent, LoadWidgetsEvent, RemoveConstraintEvent,
+    WidgetRemovedEvent }
 import org.nlogo.workspace.Evaluator
 
 class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspace)
@@ -81,8 +81,6 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
     menu.add(new WidgetCreationMenuItem(I18N.gui.get("tabs.run.widgets.note"),
                                         CoreTextBox(None, fontSize = 11, color = 0), e.getX, e.getY))
-    menu.add(new WidgetCreationMenuItem(I18N.gui.get("tabs.run.widgets.image"), CoreImage(0, 0, 0, 0, "", true),
-                                        e.getX, e.getY))
 
     // add extra stuff
     menu.add(new JPopupMenu.Separator())
@@ -142,7 +140,6 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
         val dialogTextArea = new EditorArea(dialogEditorConfiguration)
 
         new InputBoxWidget(textArea, dialogTextArea, workspace, this)
-      case i: CoreImage => new ImageWidget(resourceManager.get)
       case _ =>
         throw new IllegalStateException("unknown widget type: " + coreWidget.getClass.getName)
     }
