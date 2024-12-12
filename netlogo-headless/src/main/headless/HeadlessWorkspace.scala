@@ -13,7 +13,7 @@ import
       ModelReader.modelSuffix,
     core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, Output, UpdateMode, WorldDimensions },
     drawing.DrawingActionBroker,
-    fileformat.{ NLogoFormat, NLogoPreviewCommandsFormat },
+    fileformat.{ FileFormat, NLogoFormat, NLogoPreviewCommandsFormat },
     nvm.{ CompilerInterface, Context, LabInterface },
     workspace.AbstractWorkspace
 
@@ -364,7 +364,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
   }
 
   private lazy val loader = {
-    fileformat.basicLoader.addSerializer[Array[String], NLogoFormat](new NLogoPreviewCommandsFormat())
+    FileFormat.basicLoader.addSerializer[Array[String], NLogoFormat](new NLogoPreviewCommandsFormat())
   }
 
   /// Controlling API methods
