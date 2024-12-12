@@ -167,16 +167,16 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
     writer.writeStartElement("model")
     writer.writeAttribute("version", model.version)
 
+    writer.writeStartElement("code")
+    writeCDataEscaped(writer, model.code)
+    writer.writeEndElement()
+
     writer.writeStartElement("widgets")
     model.widgets.foreach(widget => writeXMLElement(writer, WidgetXMLLoader.writeWidget(widget)))
     writer.writeEndElement()
 
     writer.writeStartElement("info")
     writeCDataEscaped(writer, model.info)
-    writer.writeEndElement()
-
-    writer.writeStartElement("code")
-    writeCDataEscaped(writer, model.code)
     writer.writeEndElement()
 
     writeXMLElement(writer, XMLElement("turtleShapes", Map(), "",
