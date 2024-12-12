@@ -124,6 +124,11 @@ object WidgetXMLLoader {
                 , element("bottom").toInt, input
                 )
 
+      case "note" =>
+        TextBox( element.get("display"), element("left").toInt, element("top").toInt, element("right").toInt
+               , element("bottom").toInt, element("fontSize").toInt, element("color").toDouble
+               , element("transparent").toBoolean)
+
     }
   }
 
@@ -348,6 +353,19 @@ object WidgetXMLLoader {
         val children = List(XMLElement("value", Map(), input.boxedValue.asString, Seq()))
 
         XMLElement("input", attributes, "", children)
+
+      case note: TextBox =>
+        val attributes =
+          Map( "left" -> note.left.toString
+             , "top"  -> note.top.toString
+             , "right" -> note.right.toString
+             , "bottom" -> note.bottom.toString
+             , "fontSize" -> note.fontSize.toString
+             , "color" -> note.color.toString
+             , "transparent" -> note.transparent.toString
+             )
+
+        XMLElement("note", attributes, note.display.getOrElse(""), Seq())
 
     }
 
