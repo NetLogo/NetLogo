@@ -7,8 +7,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import java.net.URI
 import java.nio.file.{ Path, Paths }
 
-import org.nlogo.core.{ Model, View, WorldDimensions }
-import org.nlogo.api.WorldDimensions3D
+import org.nlogo.core.{ Model, View, WorldDimensions, WorldDimensions3D }
 import org.nlogo.fileformat.{ ConversionError, FailedConversionResult, FileFormat
                             , SuccessfulConversion, ErroredConversion, NLogoFormat, NLogoThreeDFormat }
 import org.nlogo.fileformat.FileFormat.ModelConversion

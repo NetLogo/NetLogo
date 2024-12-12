@@ -10,8 +10,8 @@ import scala.collection.mutable.WeakHashMap
 import scala.util.Try
 import org.nlogo.agent.{ World, Agent, OutputObject }
 import org.nlogo.api.{ Dump, ExtensionManager => APIEM, FileIO, HubNetInterface, LabProtocol, LibraryManager,
-  LogoException, OutputDestination, PreviewCommands, Workspace => APIWorkspace, WorldDimensions3D }
-import org.nlogo.core.{ CompilerException, Model, View, Widget => CoreWidget, WorldDimensions }
+  LogoException, OutputDestination, PreviewCommands, Workspace => APIWorkspace }
+import org.nlogo.core.{ CompilerException, Model, View, Widget => CoreWidget, WorldDimensions, WorldDimensions3D }
 import org.nlogo.nvm.{ Activation, Instruction, Command, Context, Job, MutableLong, Procedure, Tracer }
 import org.nlogo.nvm.RuntimePrimitiveException
 import org.nlogo.api.PlotCompilationErrorAction

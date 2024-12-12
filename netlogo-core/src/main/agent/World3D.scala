@@ -3,8 +3,8 @@
 package org.nlogo.agent
 
 import org.nlogo.api.{ AgentException, Color, ImporterUser,
-  NetLogoThreeDDialect, WorldDimensionException, WorldDimensions3D }
-import org.nlogo.core.{ AgentKind, Program, WorldDimensions }
+  NetLogoThreeDDialect, WorldDimensionException }
+import org.nlogo.core.{ AgentKind, Program, WorldDimensions, WorldDimensions3D }
 import org.nlogo.log.LogManager
 
 import java.lang.{ Double => JDouble }

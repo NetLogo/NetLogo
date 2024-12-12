@@ -9,10 +9,11 @@ import java.nio.file.Paths
 // AbstractWorkspace are not, so if you want to document a method for everyone, override that method
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
-import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface,
-  WorldDimensions3D, AggregateManagerInterface, FileIO, LogoException, ModelReader, ModelType, NetLogoLegacyDialect,
+import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface, AggregateManagerInterface, FileIO,
+  LogoException, ModelReader, ModelType, NetLogoLegacyDialect,
   NetLogoThreeDDialect, CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
-import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions }
+import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions,
+  WorldDimensions3D }
 import org.nlogo.agent.{ CompilationManagement, World, World2D, World3D }
 import org.nlogo.nvm.{ LabInterface, DefaultCompilerServices, PresentationCompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, HubNetManagerFactory }

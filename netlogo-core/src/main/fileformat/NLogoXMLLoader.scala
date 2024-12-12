@@ -6,10 +6,9 @@ import java.io.{ File, PrintWriter, StringReader, StringWriter, Writer }
 import java.net.URI
 import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants, XMLStreamReader, XMLStreamWriter }
 
-import org.nlogo.api.{ AbstractModelLoader, FileIO, LabProtocol, LabXMLLoader, ModelSettings, PreviewCommands, Version,
-                       WorldDimensions3D }
+import org.nlogo.api.{ AbstractModelLoader, FileIO, LabProtocol, LabXMLLoader, ModelSettings, PreviewCommands, Version }
 import org.nlogo.core.{ ExternalResource, LiteralParser, Model, Section, ShapeXMLLoader, UpdateMode,
-                        View, Widget, WidgetXMLLoader, WorldDimensions, XMLElement }
+                        View, Widget, WidgetXMLLoader, WorldDimensions, WorldDimensions3D, XMLElement }
 
 import scala.io.Source
 import scala.util.{ Failure, Success, Try }
@@ -75,13 +74,6 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
     extension.isDefined && isCompatible(extension.get)
   }
 
-  private def makeDimensions3D(dimensions: WorldDimensions, minPzcor: Int, maxPzcor: Int,
-                               wrappingAllowedInZ: Boolean): WorldDimensions = {
-    new WorldDimensions3D(dimensions.minPxcor, dimensions.maxPxcor, dimensions.minPycor, dimensions.maxPycor,
-                          minPzcor, maxPzcor, dimensions.patchSize, dimensions.wrappingAllowedInX,
-                          dimensions.wrappingAllowedInY, wrappingAllowedInZ)
-  }
-
   def readModel(uri: URI): Try[Model] = {
     val text =
       if (uri.getScheme == "jar")
@@ -114,7 +106,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
 
           element.children.foldLeft(Try(model)) {
             case (model, XMLElement("widgets", _, _, children)) =>
-              model.map(_.copy(widgets = children.map(WidgetXMLLoader.readWidget(_, makeDimensions3D))))
+              model.map(_.copy(widgets = children.map(WidgetXMLLoader.readWidget)))
             case (model, XMLElement("info", _, text, _)) =>
               model.map(_.copy(info = text))
             case (model, XMLElement("code", _, text, _)) =>
@@ -136,7 +128,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
               val section     = new Section("org.nlogo.modelsection.behaviorspace", bspaceElems)
               model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
             case (model, XMLElement("hubNetClient", _, _, children)) =>
-              val hnElems = children.map(WidgetXMLLoader.readWidget(_, makeDimensions3D))
+              val hnElems = children.map(WidgetXMLLoader.readWidget)
               val section = new Section("org.nlogo.modelsection.hubnetclient", hnElems)
               model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
             case (model, el @ XMLElement("settings", _, _, _)) =>

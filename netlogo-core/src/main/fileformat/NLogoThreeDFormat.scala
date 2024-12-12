@@ -2,8 +2,8 @@
 
 package org.nlogo.fileformat
 
-import org.nlogo.api.{ ModelFormat, WorldDimensions3D }
-import org.nlogo.core.{ View, UpdateMode, Model }
+import org.nlogo.api.ModelFormat
+import org.nlogo.core.{ View, UpdateMode, Model, WorldDimensions3D }
 import scala.util.{ Failure, Success }
 import org.nlogo.core.model.WidgetReader
 

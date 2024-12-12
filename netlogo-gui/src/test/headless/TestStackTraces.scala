@@ -24,8 +24,8 @@ the stack traces, not the results.
  */
 
 import org.scalatest.funsuite.AnyFunSuite
-import org.nlogo.api.{LogoException, ExtensionException, Argument, Context, Command, WorldDimensions3D, Version}
-import org.nlogo.core.Syntax
+import org.nlogo.api.{LogoException, ExtensionException, Argument, Context, Command, Version}
+import org.nlogo.core.{ Syntax, WorldDimensions3D }
 import org.nlogo.workspace.{DummyClassManager, InMemoryExtensionLoader}
 import org.nlogo.core.{WorldDimensions, View, Model}
 
