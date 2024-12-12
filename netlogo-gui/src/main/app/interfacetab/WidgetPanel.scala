@@ -9,16 +9,14 @@ import javax.swing.{ JComponent, JLayeredPane, JMenuItem, JPopupMenu }
 import org.nlogo.api.{ Editable, ExternalResourceManager }
 import org.nlogo.app.common.EditorFactory
 import org.nlogo.awt.{ Fonts => NlogoFonts, Mouse => NlogoMouse }
-import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, Image => CoreImage,
-  InputBox => CoreInputBox, Monitor => CoreMonitor, Plot => CorePlot,
-  Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox,
+import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
+  Monitor => CoreMonitor, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox,
   View => CoreView, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.window.{ AbstractWidgetPanel, Events => WindowEvents,
-  GUIWorkspace, ImageWidget, OutputWidget, Widget, WidgetContainer, WidgetRegistry,
-  DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget,
+import org.nlogo.window.{ AbstractWidgetPanel, Events => WindowEvents, GUIWorkspace, OutputWidget, Widget,
+  WidgetContainer, WidgetRegistry, DummyChooserWidget, DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget,
   PlotWidget },
     WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, LoadBeginEvent,
       WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent }
@@ -292,8 +290,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       menuItem("input",   CoreInputBox(None)),
       menuItem("monitor", CoreMonitor(None, 0, 0, 0, 0, None, 10)),
       plot,
-      menuItem("note", CoreTextBox(None, fontSize = 11, color = 0)),
-      menuItem("image", CoreImage(0, 0, 0, 0, "", true)))
+      menuItem("note", CoreTextBox(None, fontSize = 11, color = 0)))
     menuItems.foreach(menu.add)
 
     // if there are no plots in this model, then you can't have a plot in a hubnet client.
@@ -352,7 +349,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
             new EditorArea(dialogEditorConfiguration),
             this,
             new DefaultCompilerServices(workspace.compiler))
-        case i: CoreImage => new ImageWidget(resourceManager.get)
         case _ =>
           throw new IllegalStateException("unknown widget type: " + widget.getClass)
       }

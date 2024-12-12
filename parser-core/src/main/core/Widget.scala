@@ -115,8 +115,6 @@ case class Output(
   right: Int, bottom: Int,
   fontSize: Int) extends Widget
 
-case class Image(left: Int, top: Int, right: Int, bottom: Int, image: String, preserveAspect: Boolean) extends Widget
-
 case class View(left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
   dimensions:       WorldDimensions = View.defaultDimensions,
   fontSize:         Int             = 13,

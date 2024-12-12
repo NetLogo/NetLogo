@@ -124,11 +124,6 @@ object WidgetXMLLoader {
                 , element("bottom").toInt, input
                 )
 
-      case "image" =>
-        Image( element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt
-             , element("image"), element("preserveAspect").toBoolean
-             )
-
     }
   }
 
@@ -353,18 +348,6 @@ object WidgetXMLLoader {
         val children = List(XMLElement("value", Map(), input.boxedValue.asString, Seq()))
 
         XMLElement("input", attributes, "", children)
-
-      case image: Image =>
-        val attributes =
-          Map( "left"           -> image.left.toString
-             , "top"            -> image.top.toString
-             , "right"          -> image.right.toString
-             , "bottom"         -> image.bottom.toString
-             , "image"          -> image.image
-             , "preserveAspect" -> image.preserveAspect.toString
-          )
-
-        XMLElement("image", attributes, "", Seq())
 
     }
 

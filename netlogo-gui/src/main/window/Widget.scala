@@ -16,7 +16,7 @@ object Widget {
     def version: String
     def convert(source: String, reporter: Boolean): String
   }
-  val validWidgetTypes = List("BUTTON", "SLIDER", "SWITCH", "CHOOSER", "INPUT", "MONITOR", "PLOT", "NOTE", "IMAGE")
+  val validWidgetTypes = List("BUTTON", "SLIDER", "SWITCH", "CHOOSER", "INPUT", "MONITOR", "PLOT", "NOTE")
   def validWidgetType(name:String) = validWidgetTypes.contains(name)
 }
 
