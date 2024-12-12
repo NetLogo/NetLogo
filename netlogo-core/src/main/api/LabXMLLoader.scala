@@ -138,7 +138,8 @@ object LabXMLLoader {
         makeBabyMaybeSimple(_.   runMetricsCondition, "runMetricsCondition") ++
         makeBabyMaybe(experiment.metrics.nonEmpty)("metrics", "", subMetrics) ++
         makeBabyMaybe(experiment.constants.nonEmpty)("constants", "", experiment.constants.map(writeValueSet)) ++
-        experiment.subExperiments.flatMap((se) => makeBabyMaybe(true)("subExperiment", "", se.map(writeValueSet)))
+        makeBabyMaybe(experiment.subExperiments.nonEmpty)("subExperiments", "",
+          experiment.subExperiments.flatMap((se) => makeBabyMaybe(true)("subExperiment", "", se.map(writeValueSet))))
 
     XMLElement("experiment", attributes, "", children)
 
