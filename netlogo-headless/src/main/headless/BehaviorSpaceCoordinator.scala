@@ -7,7 +7,7 @@ import java.nio.file.Paths
 import org.nlogo.core.{ Femto, LiteralParser, Model }
 import org.nlogo.api.{ LabProtocol, Workspace }
 import org.nlogo.nvm.LabInterface.Settings
-import org.nlogo.fileformat
+import org.nlogo.fileformat.{ FileFormat, NLogoLabFormat }
 import scala.util.{ Failure, Success }
 
 import scala.io.Source
@@ -16,8 +16,8 @@ object BehaviorSpaceCoordinator {
   private val literalParser =
     Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
 
-  private lazy val labFormat: fileformat.NLogoLabFormat =
-    new fileformat.NLogoLabFormat(literalParser)
+  private lazy val labFormat: NLogoLabFormat =
+    new NLogoLabFormat(literalParser)
 
   private def bsSection = labFormat.componentName
 
@@ -52,7 +52,7 @@ object BehaviorSpaceCoordinator {
 
   private def modelAtPath(path: String): Model = {
     val loader =
-      fileformat.standardAnyLoader(literalParser)
+      FileFormat.standardAnyLoader(literalParser)
 
     loader.readModel(Paths.get(path).toUri) match {
       case Success(m) => m
