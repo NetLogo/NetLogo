@@ -17,7 +17,7 @@ trait AbstractModelLoader {
   def save(model: Model, uri: URI): Try[URI]
   def sourceString(model: Model, extension: String): Try[String]
   def emptyModel(extension: String): Model
-  // these next two allow ManagerDialog to use the correct format for experiment loading/saving (IB 8/17/24)
+  // these next two allow ManagerDialog to use the correct format for experiment loading/saving (Isaac B 8/17/24)
   def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])]
   def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit]
 }
