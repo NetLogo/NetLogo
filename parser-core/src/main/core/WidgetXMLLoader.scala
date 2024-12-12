@@ -3,8 +3,7 @@
 package org.nlogo.core
 
 object WidgetXMLLoader {
-  def readWidget(element: XMLElement, makeDimensions3D: (WorldDimensions, Int, Int, Boolean) =>
-                 WorldDimensions): Widget = {
+  def readWidget(element: XMLElement): Widget = {
 
     element.name match {
 
@@ -45,16 +44,13 @@ object WidgetXMLLoader {
 
       case "view3d" =>
         val dims =
-          new WorldDimensions( element("minPxcor").toInt, element("maxPxcor").toInt
-                             , element("minPycor").toInt, element("maxPycor").toInt
-                             , element("patchSize").toDouble, element("wrappingAllowedX").toBoolean
-                             , element("wrappingAllowedY").toBoolean
-                             )
-        val dims3D =
-          makeDimensions3D(dims, element("minPzcor").toInt, element("maxPzcor").toInt
-                          , element("wrappingAllowedZ").toBoolean
-                          )
-        View( element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt, dims3D
+          new WorldDimensions3D( element("minPxcor").toInt, element("maxPxcor").toInt
+                               , element("minPycor").toInt, element("maxPycor").toInt
+                               , element("minPzcor").toInt, element("maxPzcor").toInt
+                               , element("patchSize").toDouble, element("wrappingAllowedX").toBoolean
+                               , element("wrappingAllowedY").toBoolean, element("wrappingAllowedZ").toBoolean
+                               )
+        View( element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt, dims
             , element("fontSize").toInt, UpdateMode.load(element("updateMode").toInt)
             , element("showTickCounter").toBoolean, element.get("tickCounterLabel"), element("frameRate").toDouble
             )
@@ -183,8 +179,6 @@ object WidgetXMLLoader {
 
       case view: View =>
 
-        val extraVars = view.dimensions.extras
-
         val baseAttributes =
           Map( "left"             -> view.left.toString
              , "top"              -> view.top.toString
@@ -201,18 +195,18 @@ object WidgetXMLLoader {
              , "updateMode"       -> view.updateMode.save.toString
              , "showTickCounter"  -> view.showTickCounter.toString
              , "frameRate"        -> view.frameRate.toString
-             )
+             ) ++ ifDefined(view)("tickCounterLabel", _.tickCounterLabel)
 
-        val attributes =
-          baseAttributes ++
-            extraVars.get(          "minPzcor").map((z)   => "minPzcor"         ->   z.asInstanceOf[ String].toString).toMap ++
-            extraVars.get(          "maxPzcor").map((z)   => "maxPzcor"         ->   z.asInstanceOf[ String].toString).toMap ++
-            extraVars.get("wrappingAllowedInZ").map((isW) => "wrappingAllowedZ" -> isW.asInstanceOf[Boolean].toString).toMap ++
-            ifDefined(view)("tickCounterLabel", _.tickCounterLabel)
-
-        val nodeType = if (!extraVars.contains("minPzcor")) "view" else "view3d"
-
-        XMLElement(nodeType, attributes, "", Seq())
+        view.dimensions match {
+          case d3d: WorldDimensions3D =>
+            XMLElement("view3d", baseAttributes ++ Map(
+                                   ("minPzcor" -> d3d.minPzcor.toString),
+                                   ("maxPzcor" -> d3d.maxPzcor.toString),
+                                   ("wrappingAllowedZ" -> d3d.wrappingAllowedInZ.toString)
+                                 ), "", Seq())
+          case d: WorldDimensions =>
+            XMLElement("view", baseAttributes, "", Seq())
+        }
 
       case monitor: Monitor =>
         val attributes =

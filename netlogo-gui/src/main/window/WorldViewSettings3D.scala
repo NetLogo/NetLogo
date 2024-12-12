@@ -2,8 +2,7 @@
 
 package org.nlogo.window;
 
-import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions }
-import org.nlogo.api.WorldDimensions3D
+import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions, WorldDimensions3D }
 import org.nlogo.agent.World3D
 import org.nlogo.window.Events.RemoveAllJobsEvent
 import org.nlogo.swing.ModalProgressTask

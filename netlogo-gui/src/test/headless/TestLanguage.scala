@@ -2,13 +2,13 @@
 
 package org.nlogo.headless
 
-import org.nlogo.core.{ AgentKind, Model, WorldDimensions }
+import org.nlogo.core.{ AgentKind, Model, WorldDimensions, WorldDimensions3D }
 import org.nlogo.headless.test.{ Parser, LanguageTest, Open, Declaration, Command,
   Reporter, Compile, Success, CompileError, RuntimeError, StackTrace }
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.Tag
 import org.scalatest.exceptions.TestFailedException
-import org.nlogo.api.{ SimpleJobOwner, Version, WorldDimensions3D }
+import org.nlogo.api.{ SimpleJobOwner, Version }
 import org.nlogo.api.FileIO.fileToString
 import java.io.File
 import org.nlogo.util.{ Utils, SlowTest }
