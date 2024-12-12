@@ -33,7 +33,7 @@ class NetLogoWebSaver(loader: NLWTemplateLoader, saveFunction: String => Unit) {
         stringMut = "; " + name + "\n\n" + source + "\n\n" + stringMut
       }
 
-      stringMut = new Regex("__includes\\s*\\[.*?\\]").replaceAllIn(stringMut, "") // will break if __includes is in a string (IB 6/15/24)
+      stringMut = new Regex("__includes\\s*\\[.*?\\]").replaceAllIn(stringMut, "") // will break if __includes is in a string (Isaac B 6/15/24)
     }
 
     saveFunction(templateHTML(loader.loadTemplate(), stringMut, modelName))
