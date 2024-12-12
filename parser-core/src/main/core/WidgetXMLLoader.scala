@@ -106,19 +106,18 @@ object WidgetXMLLoader {
               )
 
       case "input" =>
-        val value = element.getChild("value").text
         val input =
           element("type") match {
             case "number" =>
-              NumericInput(value.toDouble, NumericInput.NumberLabel)
+              NumericInput(element.text.toDouble, NumericInput.NumberLabel)
             case "color" =>
-              NumericInput(value.toDouble, NumericInput.ColorLabel)
+              NumericInput(element.text.toDouble, NumericInput.ColorLabel)
             case "string" =>
-              StringInput(value, StringInput.StringLabel, element("multiline").toBoolean)
+              StringInput(element.text, StringInput.StringLabel, element("multiline").toBoolean)
             case "reporter" =>
-              StringInput(value, StringInput.ReporterLabel, element("multiline").toBoolean)
+              StringInput(element.text, StringInput.ReporterLabel, element("multiline").toBoolean)
             case "command" =>
-              StringInput(value, StringInput.CommandLabel, element("multiline").toBoolean)
+              StringInput(element.text, StringInput.CommandLabel, element("multiline").toBoolean)
           }
         InputBox( element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt
                 , element("bottom").toInt, input
@@ -127,7 +126,8 @@ object WidgetXMLLoader {
       case "note" =>
         TextBox( element.get("display"), element("left").toInt, element("top").toInt, element("right").toInt
                , element("bottom").toInt, element("fontSize").toInt, element("color").toDouble
-               , element("transparent").toBoolean)
+               , element("transparent").toBoolean
+               )
 
     }
   }
@@ -350,9 +350,7 @@ object WidgetXMLLoader {
              ) ++
           ifDefined(input)("variable", _.variable)
 
-        val children = List(XMLElement("value", Map(), input.boxedValue.asString, Seq()))
-
-        XMLElement("input", attributes, "", children)
+        XMLElement("input", attributes, input.boxedValue.asString, Seq())
 
       case note: TextBox =>
         val attributes =
