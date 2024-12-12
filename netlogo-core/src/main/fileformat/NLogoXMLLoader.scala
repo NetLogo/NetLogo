@@ -101,8 +101,11 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
           import Model.{ defaultCode, defaultShapes, defaultLinkShapes }
 
           val version = element("version")
+          val snapToGrid = element("snapToGrid", "false").toBoolean
 
-          val model = Model( defaultCode, List(), defaultInfo, version, defaultShapes, defaultLinkShapes, List(), Seq(), Seq())
+          val settings  = new Section("org.nlogo.modelsection.modelsettings", ModelSettings(snapToGrid))
+
+          val model = Model(defaultCode, List(), defaultInfo, version, defaultShapes, defaultLinkShapes, List(settings), Seq(), Seq())
 
           element.children.foldLeft(Try(model)) {
             case (model, XMLElement("widgets", _, _, children)) =>
@@ -130,10 +133,6 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
             case (model, XMLElement("hubNetClient", _, _, children)) =>
               val hnElems = children.map(WidgetXMLLoader.readWidget)
               val section = new Section("org.nlogo.modelsection.hubnetclient", hnElems)
-              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
-            case (model, el @ XMLElement("settings", _, _, _)) =>
-              val settings = ModelSettings(element("snapToGrid").toBoolean)
-              val section  = new Section("org.nlogo.modelsection.modelsettings", settings)
               model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
             case (model, el @ XMLElement("openTempFiles", _, _, _)) =>
               model.map(_.copy(openTempFiles = el.getChildren("file").map(file => file("path"))))
@@ -166,6 +165,10 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
     writer.writeStartDocument("utf-8", "1.0")
     writer.writeStartElement("model")
     writer.writeAttribute("version", model.version)
+
+    model.optionalSections.find(_.key == "org.nlogo.modelsection.modelsettings").foreach(section =>
+      writer.writeAttribute("snapToGrid", section.get.get.asInstanceOf[ModelSettings].snapToGrid.toString)
+    )
 
     writer.writeStartElement("code")
     writeCDataEscaped(writer, model.code)
@@ -207,12 +210,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
                                                widgets.map(WidgetXMLLoader.writeWidget).toList))
 
         case "org.nlogo.modelsection.modelsettings" =>
-          val settings = section.get.get.asInstanceOf[ModelSettings]
-          if (settings.snapToGrid) {
-            writer.writeStartElement("settings")
-            writer.writeAttribute("snapToGrid", settings.snapToGrid.toString)
-            writer.writeEndElement()
-          }
+          // handled in model attributes
 
         case x =>
           throw new Error(s"Unhandlable file section type: ${x}")
