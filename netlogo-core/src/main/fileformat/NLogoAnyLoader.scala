@@ -15,7 +15,7 @@ import scala.util.{ Failure, Try }
 class NLogoAnyLoader(loaders: List[AbstractModelLoader]) extends ConfigurableModelLoader {
 
   private def bruteForce[T, U](ts: Seq[T], f: (T) => Try[U])(errorMessage: String): Try[U] = {
-    val init: Try[U] = Failure(new Exception("Unable to read experiments."))
+    val init: Try[U] = Failure(new Exception(errorMessage))
     ts.foldLeft(init) {
       case (acc, t) => if (acc.isSuccess) acc else f(t)
     }

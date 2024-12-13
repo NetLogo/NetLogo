@@ -105,7 +105,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
 
           val settings  = new Section("org.nlogo.modelsection.modelsettings", ModelSettings(snapToGrid))
 
-          val model = Model(defaultCode, List(), defaultInfo, version, defaultShapes, defaultLinkShapes, List(settings), Seq(), Seq())
+          val model = Model(defaultCode, List(View()), defaultInfo, version, defaultShapes, defaultLinkShapes, List(settings), Seq(), Seq())
 
           element.children.foldLeft(Try(model)) {
             case (model, XMLElement("widgets", _, _, children)) =>
