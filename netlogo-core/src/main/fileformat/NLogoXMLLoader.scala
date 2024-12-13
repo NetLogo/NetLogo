@@ -139,7 +139,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
             case (model, el @ XMLElement("resources", _, _, _)) =>
               model.map(_.copy(
                 resources = el.getChildren("resource").map(
-                  resource => ExternalResource(resource("name"), resource("type"), resource.text)
+                  resource => ExternalResource(resource("name"), resource.text)
                 )
               ))
             case (    _, XMLElement(name, _, _, _)) =>
@@ -241,7 +241,6 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
         writer.writeStartElement("resource")
 
         writer.writeAttribute("name", resource.name)
-        writer.writeAttribute("type", resource.resourceType)
 
         writeCDataEscaped(writer, resource.data)
 

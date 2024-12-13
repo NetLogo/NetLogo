@@ -30,6 +30,7 @@ class ExternalResourceManager {
     resources.toSeq
 
   def setResources(rs: Seq[ExternalResource]) {
+    resources.clear()
     resources ++= rs
   }
 

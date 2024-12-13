@@ -33,7 +33,6 @@ object Property {
   case object ReporterOrEmpty        extends Type
   case object ReporterLine           extends Type
   case object String                 extends Type
-  case object ResourcePath           extends Type
   case object Label                  extends Type
 
 }

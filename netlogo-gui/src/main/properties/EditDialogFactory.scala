@@ -69,7 +69,7 @@ class EditDialogFactory(_compiler: CompilerServices, _colorizer: Colorizer)
       }
     })
   }
-  
+
   def getDialog() = dialog
   def clearDialog() = {
     if (dialog != null)

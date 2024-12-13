@@ -14,9 +14,9 @@ import scala.collection.mutable.WeakHashMap
 import
   org.nlogo.{ agent, api, core, nvm, plot },
   agent.{ AbstractExporter, Agent, AgentSet, World },
-  api.{ PlotInterface, CommandLogoThunk, Dump, Exceptions, ExtensionManager => APIEM, ExportPlotWarningAction,
-    JobOwner, LabProtocol, LibraryManager, LogoException, MersenneTwisterFast, ModelType, PreviewCommands,
-    ReporterLogoThunk, SimpleJobOwner },
+  api.{ PlotInterface, CommandLogoThunk, Dump, Exceptions, ExtensionManager => APIEM, ExternalResourceManager,
+    ExportPlotWarningAction, JobOwner, LabProtocol, LibraryManager, LogoException, MersenneTwisterFast, ModelType,
+    PreviewCommands, ReporterLogoThunk, SimpleJobOwner },
   core.{ CompilationEnvironment, AgentKind, CompilerException, Femto, File, FileMode, I18N, LiteralParser},
   nvm.{ Activation, Command, Context, FileManager, ImportHandler,
     Instruction, Job, MutableLong, Procedure, RuntimePrimitiveException, Workspace },
@@ -66,6 +66,11 @@ with Compiling with Profiling with Extensions with BehaviorSpace with Paths with
 with RunCache with Jobs with Warning with OutputArea with Importing
 with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant {
   val fileManager: FileManager = new DefaultFileManager(this)
+
+  protected val resourceManager = new ExternalResourceManager
+
+  def getResourceManager: ExternalResourceManager =
+    resourceManager
 
   private var _shouldUpdatePlots: Boolean = true
   def shouldUpdatePlots: Boolean = this._shouldUpdatePlots

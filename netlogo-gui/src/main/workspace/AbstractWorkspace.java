@@ -46,6 +46,8 @@ public abstract class AbstractWorkspace
   protected final Evaluator evaluator;
   protected final ExtensionManager extensionManager;
 
+  protected final ExternalResourceManager resourceManager;
+
   public abstract WeakHashMap<Job, WeakHashMap<Agent, WeakHashMap<Command, MutableLong>>> lastRunTimes();
 
   private boolean _shouldUpdatePlots = true;
@@ -93,6 +95,7 @@ public abstract class AbstractWorkspace
     jobManager = Femto.getJ(JobManagerInterface.class, "org.nlogo.job.JobManager",
         new Object[]{this, world, world});
     extensionManager = new ExtensionManager(this, new JarLoader(this));
+    resourceManager = new ExternalResourceManager();
   }
 
   public org.nlogo.workspace.ExtensionManager getExtensionManager() {
@@ -106,6 +109,10 @@ public abstract class AbstractWorkspace
   public void importExtensionData(String name, List<String[]> data, org.nlogo.api.ImportErrorHandler handler)
       throws org.nlogo.api.ExtensionException {
     extensionManager.importExtensionData(name, data, handler);
+  }
+
+  public ExternalResourceManager getResourceManager() {
+    return resourceManager;
   }
 
   /**

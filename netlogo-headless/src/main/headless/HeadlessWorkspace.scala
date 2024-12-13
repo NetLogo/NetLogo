@@ -89,7 +89,11 @@ with org.nlogo.workspace.WorldLoaderInterface {
   def modelOpened = _openModel.nonEmpty
 
   private[this] var _openModel = Option.empty[Model]
-  def setOpenModel(model: Model) { _openModel = Some(model) }
+  def setOpenModel(model: Model): Unit = {
+    _openModel = Some(model)
+
+    resourceManager.setResources(model.resources)
+  }
 
   val outputAreaBuffer = new StringBuilder
 
