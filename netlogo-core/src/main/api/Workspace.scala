@@ -11,6 +11,7 @@ with ViewSettings with Controllable {
   def world: World
   def getExtensionManager: ExtensionManager
   def getLibraryManager:   LibraryManager
+  def getResourceManager: ExternalResourceManager
   def getCompilationEnvironment: CompilationEnvironment
   def waitFor(runnable: CommandRunnable)
   def waitForResult[T](runnable: ReporterRunnable[T]): T

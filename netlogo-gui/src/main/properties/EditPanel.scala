@@ -7,7 +7,7 @@ import java.awt.{Component, Insets, GridBagConstraints, Dimension, GridBagLayout
 import javax.swing.{JLabel, JPanel, ToolTipManager}
 
 import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody }
-import org.nlogo.api.{ CompilerServices, Editable, ExternalResourceManager, Property }
+import org.nlogo.api.{ CompilerServices, Editable, Property }
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.OptionDialog
 import org.nlogo.window.WidgetWrapperInterface
@@ -17,7 +17,7 @@ import scala.collection.JavaConverters._
 
 // This is the contents of an EditDialog, except for the buttons at the bottom (OK/Apply/Cancel).
 class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer: Colorizer,
-                resourceManager: ExternalResourceManager, useTooltips: Boolean = false)
+                useTooltips: Boolean = false)
   extends JPanel {
 
   val oldDelay = ToolTipManager.sharedInstance.getDismissDelay()
@@ -307,8 +307,6 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         new StringEditor(accessor, useTooltips) with Changed
       case Property.FilePath(suggestedFile) =>
         new FilePathEditor(accessor, useTooltips, this, suggestedFile) with Changed
-      case Property.ResourcePath =>
-        new ResourcePathEditor(accessor, useTooltips, this, resourceManager) with Changed
       case Property.Label =>
         new Label(accessor, useTooltips) with Changed
     }

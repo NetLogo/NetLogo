@@ -6,7 +6,7 @@ import java.awt.{ Component, Cursor, Dimension, Graphics, Point, Rectangle, Colo
 import java.awt.event.{ ActionListener, ActionEvent, MouseEvent, MouseListener, MouseMotionListener }
 import javax.swing.{ JComponent, JLayeredPane, JMenuItem, JPopupMenu }
 
-import org.nlogo.api.{ Editable, ExternalResourceManager }
+import org.nlogo.api.Editable
 import org.nlogo.app.common.EditorFactory
 import org.nlogo.awt.{ Fonts => NlogoFonts, Mouse => NlogoMouse }
 import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
@@ -70,8 +70,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   protected val editorFactory: EditorFactory = new EditorFactory(workspace, workspace.getExtensionManager)
 
-  protected var resourceManager: Option[ExternalResourceManager] = None
-
   setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
   setOpaque(true)
   setBackground(AwtColor.WHITE)
@@ -134,10 +132,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def setWidgetCreator(widgetCreator: WidgetCreator): Unit = {
     this.widgetCreator = widgetCreator
-  }
-
-  def setResourceManager(resourceManager: ExternalResourceManager) {
-    this.resourceManager = Option(resourceManager)
   }
 
   ///

@@ -124,7 +124,6 @@ object App {
               new ComponentParameter(), new ComponentParameter(),
               new ComponentParameter(), new ComponentParameter()))
       pico.add("org.nlogo.lab.gui.LabManager")
-      pico.addComponent(classOf[ExternalResourceManager])
       pico.add("org.nlogo.properties.EditDialogFactory")
       // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
       // HeadlessWorkspace uses picocontainer too, but it could get confusing
@@ -289,7 +288,6 @@ class App extends
   private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
 
   lazy val modelingCommons                          = pico.getComponent(classOf[ModelingCommonsInterface])
-  lazy val resourceManager: ExternalResourceManager = pico.getComponent(classOf[ExternalResourceManager])
 
   val isMac = System.getProperty("os.name").startsWith("Mac")
 
@@ -484,7 +482,7 @@ class App extends
       app.setMenuBar(menuBar)
       frame.setJMenuBar(menuBar)
 
-      _tabManager.init(fileManager, resourceManager, dirtyMonitor, menuBar, allActions)
+      _tabManager.init(fileManager, dirtyMonitor, menuBar, allActions)
 
       // OK, this is a little kludgy.  First we pack so everything
       // is realized, and all addNotify() methods are called.  But
@@ -856,7 +854,7 @@ class App extends
   }
 
   def handle(e: LoadModelEvent): Unit = {
-    resourceManager.setResources(e.model.resources)
+    workspace.getResourceManager.setResources(e.model.resources)
   }
 
   /**
@@ -1224,7 +1222,7 @@ class App extends
   def openTempFiles:    Seq[String] =
     _tabManager.openTempFiles
   def resources:        Seq[ExternalResource] =
-    resourceManager.getResources
+    workspace.getResourceManager.getResources
 
   def askForName() = {
     val frame = new JFrame()
