@@ -6,8 +6,9 @@ import java.io.{ File, PrintWriter, StringReader, StringWriter, Writer }
 import java.net.URI
 import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants, XMLStreamReader, XMLStreamWriter }
 
-import org.nlogo.api.{ AbstractModelLoader, FileIO, LabProtocol, LabXMLLoader, ModelSettings, PreviewCommands, Version }
-import org.nlogo.core.{ ExternalResource, LiteralParser, Model, Section, ShapeXMLLoader, UpdateMode,
+import org.nlogo.api.{ AbstractModelLoader, AggregateDrawingInterface, FileIO, LabProtocol, LabXMLLoader,
+                       ModelSettings, PreviewCommands, Version }
+import org.nlogo.core.{ ExternalResource, Femto, LiteralParser, Model, Section, ShapeXMLLoader, UpdateMode,
                         View, Widget, WidgetXMLLoader, WorldDimensions, WorldDimensions3D, XMLElement }
 
 import scala.io.Source
@@ -121,11 +122,10 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
             case (model, XMLElement("previewCommands", _, commands, _)) =>
               val section = new Section("org.nlogo.modelsection.previewcommands", PreviewCommands.Custom(commands))
               model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
-
-            // case "systemDynamics" =>
-            //   optionalSections = optionalSections :+
-            //     new Section("org.nlogo.modelsection.systemdynamics.gui", SDMXMLLoader.readDrawing(element))
-
+            case (model, el @ XMLElement("systemDynamics", _, _, _)) =>
+              val section = new Section("org.nlogo.modelsection.systemdynamics.gui",
+                Femto.get[AggregateDrawingInterface]("org.nlogo.sdm.gui.AggregateDrawing").read(el))
+              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
             case (model, XMLElement("experiments", _, _, children)) =>
               val bspaceElems = children.map(LabXMLLoader.readExperiment(_, literalParser, editNames, Set()))
               val section     = new Section("org.nlogo.modelsection.behaviorspace", bspaceElems)
@@ -194,8 +194,8 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
           writeCDataEscaped(writer, section.get.get.asInstanceOf[PreviewCommands].source)
           writer.writeEndElement()
 
-        // case "org.nlogo.modelsection.systemdynamics.gui" =>
-        //   writeXMLElement(writer, SDMXMLLoader.writeDrawing(section.get.get.asInstanceOf[AnyRef]))
+        case "org.nlogo.modelsection.systemdynamics.gui" =>
+          writeXMLElement(writer, section.get.get.asInstanceOf[AggregateDrawingInterface].write())
 
         case "org.nlogo.modelsection.behaviorspace" =>
           val experiments = section.get.get.asInstanceOf[Seq[LabProtocol]]

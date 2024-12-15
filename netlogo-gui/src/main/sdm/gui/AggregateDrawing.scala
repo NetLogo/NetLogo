@@ -4,46 +4,75 @@ package org.nlogo.sdm.gui
 
 import java.awt.Point
 
-import org.jhotdraw.framework.{ Figure, FigureEnumeration }
+import org.jhotdraw.framework.Figure
+import org.jhotdraw.standard.StandardDrawing
 
+import org.nlogo.api.AggregateDrawingInterface
 import org.nlogo.core.XMLElement
+import org.nlogo.sdm.Model
 
-object SDMXMLLoader {
+class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
-  def readDrawing(element: XMLElement): AggregateDrawing = {
+  private val model = new Model("default", 1)
 
-    val initialDrawing = new AggregateDrawing
-    initialDrawing.getModel.setDt(element("dt").toDouble)
+  def getModel: Model =
+    model
 
-    element.children.foldLeft((initialDrawing, Seq[Figure]())) {
+  def synchronizeModel() {
+    model.elements.clear()
 
-      case ((drawing, refs), el @ XMLElement("stock", _, _, _)) =>
+    val figs = figures
+
+    while (figs.hasNextFigure) {
+      figs.nextFigure match {
+        case mef: ModelElementFigure if mef.getModelElement != null =>
+          model.addElement(mef.getModelElement)
+        case _ =>
+      }
+    }
+  }
+
+  override def orphan(figure: Figure): Figure = {
+    figure match {
+      case mef: ModelElementFigure if mef.getModelElement != null =>
+        model.removeElement(mef.getModelElement)
+    }
+
+    super.orphan(figure)
+  }
+
+  def read(element: XMLElement): AnyRef = {
+    model.setDt(element("dt").toDouble)
+
+    element.children.foldLeft(Seq[Figure]()) {
+
+      case (refs, el @ XMLElement("stock", _, _, _)) =>
         val stock = new StockFigure
         stock.nameWrapper(el("name"))
         stock.initialValueExpressionWrapper(el("initialValue"))
         stock.allowNegative(el("allowNegative").toBoolean)
         stock.displayBox( new Point(el("centerX").toInt, el("centerY").toInt)
                         , new Point(el("startX").toInt, el("startY").toInt))
-        drawing.add(stock)
-        (drawing, refs :+ stock)
+        add(stock)
+        refs :+ stock
 
-      case ((drawing, refs), el @ XMLElement("converter", _, _, _)) =>
+      case (refs, el @ XMLElement("converter", _, _, _)) =>
         val converter = new ConverterFigure
         converter.nameWrapper(el("name"))
         converter.expressionWrapper(el("expression"))
         converter.displayBox( new Point(el("centerX").toInt, el("centerY").toInt)
                             , new Point(el("startX").toInt, el("startY").toInt))
-        drawing.add(converter)
-        (drawing, refs :+ converter)
+        add(converter)
+        refs :+ converter
 
-      case ((drawing, refs), el @ XMLElement("reservoir", _, _, _)) =>
+      case (refs, el @ XMLElement("reservoir", _, _, _)) =>
         val reservoir = new ReservoirFigure
         reservoir.displayBox( new Point(el("centerX").toInt, el("centerY").toInt)
                             , new Point(el("startX").toInt, el("startY").toInt))
-        drawing.add(reservoir)
-        (drawing, refs :+ reservoir)
+        add(reservoir)
+        refs :+ reservoir
 
-      case ((drawing, refs), el @ XMLElement("binding", _, _, _)) =>
+      case (refs, el @ XMLElement("binding", _, _, _)) =>
         val binding = new BindingConnection
         binding.displayBox( new Point(el("centerX").toInt, el("centerY").toInt)
                           , new Point(el("startX").toInt, el("startY").toInt))
@@ -51,10 +80,10 @@ object SDMXMLLoader {
         val end = refs(el("endFigure").toInt)
         binding.connectStart(start.connectorAt(start.center.x, start.center.y))
         binding.connectEnd(end.connectorAt(end.center.x, end.center.y))
-        drawing.add(binding)
-        (drawing, refs :+ binding)
+        add(binding)
+        refs :+ binding
 
-      case ((drawing, refs), el @ XMLElement("rate", attrs, _, _)) =>
+      case (refs, el @ XMLElement("rate", attrs, _, _)) =>
 
         val rate = new RateConnection
 
@@ -75,19 +104,19 @@ object SDMXMLLoader {
         rate.connectStart(start.connectorAt(start.center.x, start.center.y))
         rate.connectEnd(end.connectorAt(end.center.x, end.center.y))
 
-        drawing.add(rate)
+        add(rate)
 
-        (drawing, refs :+ rate)
+        refs :+ rate
 
-      case ((drawing, refs), el @ XMLElement(otherName, _, _, _)) =>
+      case (refs, el @ XMLElement(otherName, _, _, _)) =>
         throw new Exception(s"Unable to deserialize SDM node with name: ${otherName}")
 
-    }._1
+    }
 
+    this
   }
 
-  def writeDrawing(drawingRef: AnyRef): XMLElement = {
-
+  def write(): XMLElement = {
     type Kids = Seq[XMLElement]
     type Refs = Map[Figure, Int]
 
@@ -161,7 +190,7 @@ object SDMXMLLoader {
 
     }
 
-    def iterateFigures(figures: FigureEnumeration): PartialFunction[(Kids, Refs), (Kids, Refs)] = {
+    def iterateFigures: PartialFunction[(Kids, Refs), (Kids, Refs)] = {
       case (children: Kids, refs: Refs) =>
         if (figures.hasNextFigure) {
           val figure            = figures.nextFigure
@@ -174,12 +203,10 @@ object SDMXMLLoader {
         }
     }
 
-    val drawing       = drawingRef.asInstanceOf[AggregateDrawing]
-    val attributes    = Map("dt" -> drawing.getModel.dt.toString)
-    val (children, _) = iterateFigures(drawing.figures)((Seq(), Map()))
+    val attributes    = Map("dt" -> model.dt.toString)
+    val (children, _) = iterateFigures((Seq(), Map()))
 
     XMLElement("systemDynamics", attributes, "", children)
-
   }
 
 }
