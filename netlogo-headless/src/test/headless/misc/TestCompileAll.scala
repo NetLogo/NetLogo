@@ -6,7 +6,7 @@ package misc
 import org.nlogo.core.{ Femto, LiteralParser }
 import org.nlogo.core.model.ModelReader
 import org.nlogo.api.{ FileIO, Version }
-import org.nlogo.fileformat
+import org.nlogo.fileformat.FileFormat
 import org.nlogo.workspace.ModelsLibrary
 import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.util.SlowTest
@@ -86,7 +86,7 @@ class TestCompileAll extends AnyFunSuite  {
   def readWriteRead(path: String, text: String) {
     val workspace = HeadlessWorkspace.newInstance
     try {
-      val loader = fileformat.standardAnyLoader(literalParser)
+      val loader = FileFormat.standardAnyLoader(literalParser)
       val model = loader.readModel(text, "nlogo").get
       val newModel = loader.readModel(loader.sourceString(model, "nlogo").get, "nlogo").get
       assertResult(model.code)(newModel.code)
