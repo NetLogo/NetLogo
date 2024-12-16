@@ -4,7 +4,8 @@ package org.nlogo.fileformat
 
 import java.io.{ File, PrintWriter, StringReader, StringWriter, Writer }
 import java.net.URI
-import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants, XMLStreamReader, XMLStreamWriter }
+import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants, XMLStreamException, XMLStreamReader,
+                          XMLStreamWriter }
 
 import org.nlogo.api.{ AbstractModelLoader, AggregateDrawingInterface, FileIO, LabProtocol, LabXMLLoader,
                        ModelSettings, PreviewCommands, Version }
@@ -90,7 +91,13 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
 
       val reader = XMLInputFactory.newFactory.createXMLStreamReader(new StringReader(source))
 
-      while (reader.hasNext && reader.next != XMLStreamConstants.START_ELEMENT) {}
+      try {
+        while (reader.hasNext && reader.next != XMLStreamConstants.START_ELEMENT) {}
+      }
+
+      catch {
+        case e: XMLStreamException => return Failure(new Exception(e))
+      }
 
       val element = readXMLElement(reader)
 
