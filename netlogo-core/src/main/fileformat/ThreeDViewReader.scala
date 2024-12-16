@@ -86,7 +86,7 @@ object ThreeDViewReader extends WidgetReader with BaseWidgetParser with ConstWid
 
     def ViewDimensions: Rule1[View => View] = rule {
       4.times(IntValue ~ NewLine) ~> ((dims: Seq[Int]) =>
-          ((v: View) => v.copy(x = dims(0), y = dims(1), width = dims(2), height = dims(3))))
+          ((v: View) => v.copy(x = dims(0), y = dims(1), width = dims(2) - dims(0), height = dims(3) - dims(1))))
     }
 
     def WrappingInXAndY: Rule1[View => View] = rule {
