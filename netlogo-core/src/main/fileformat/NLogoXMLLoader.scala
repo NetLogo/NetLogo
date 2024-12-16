@@ -20,23 +20,23 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
 
   private lazy val defaultInfo: String = FileIO.url2String("/system/empty-info.md")
 
-  private def readXMLElement(reader: XMLStreamReader): XMLElement = {
+  private def readXMLElement(reader: XMLStreamReader): Try[XMLElement] = {
 
-    def parseElement(reader: XMLStreamReader, acc: XMLElement): XMLElement = {
+    def parseElement(reader: XMLStreamReader, acc: XMLElement): Try[XMLElement] = {
       if (reader.hasNext)
         reader.next match {
           case XMLStreamConstants.START_ELEMENT =>
-            parseElement(reader, acc.copy(children = acc.children :+ readXMLElement(reader)))
+            readXMLElement(reader).flatMap(nexties => parseElement(reader, acc.copy(children = acc.children :+ nexties)))
           case XMLStreamConstants.END_ELEMENT =>
-            acc
+            Try(acc)
           case XMLStreamConstants.CHARACTERS =>
             val newAcc = acc.copy(text = new Regex(s"]]${XMLElement.CDATA_ESCAPE}>").replaceAllIn(reader.getText, "]]>"))
             parseElement(reader, newAcc)
           case x =>
-            throw new Exception(s"Unexpected value found while parsing XML: ${x}")
+            Failure(throw new Exception(s"Unexpected value found while parsing XML: ${x}"))
         }
       else
-        acc
+        Try(acc)
     }
 
     val attributes =
@@ -99,63 +99,68 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
         case e: XMLStreamException => return Failure(new Exception(e))
       }
 
-      val element = readXMLElement(reader)
+      val elementTry = readXMLElement(reader)
 
       reader.close()
 
-      element.name match {
-        case "model" =>
+      elementTry.flatMap {
+        element =>
 
-          import Model.{ defaultCode, defaultShapes, defaultLinkShapes }
+          element.name match {
+            case "model" =>
 
-          val version = element("version")
-          val snapToGrid = element("snapToGrid", "false").toBoolean
+              import Model.{ defaultCode, defaultShapes, defaultLinkShapes }
 
-          val settings  = new Section("org.nlogo.modelsection.modelsettings", ModelSettings(snapToGrid))
+              val version = element("version")
+              val snapToGrid = element("snapToGrid", "false").toBoolean
 
-          val model = Model(defaultCode, List(View()), defaultInfo, version, defaultShapes, defaultLinkShapes, List(settings), Seq(), Seq())
+              val settings  = new Section("org.nlogo.modelsection.modelsettings", ModelSettings(snapToGrid))
 
-          element.children.foldLeft(Try(model)) {
-            case (model, XMLElement("widgets", _, _, children)) =>
-              model.map(_.copy(widgets = children.map(WidgetXMLLoader.readWidget)))
-            case (model, XMLElement("info", _, text, _)) =>
-              model.map(_.copy(info = text))
-            case (model, XMLElement("code", _, text, _)) =>
-              model.map(_.copy(code = text))
-            case (model, el @ XMLElement("turtleShapes", _, _, _)) =>
-              model.map(_.copy(turtleShapes = el.getChildren("shape").map(ShapeXMLLoader.readShape)))
-            case (model, el @ XMLElement("linkShapes", _, _, _)) =>
-              model.map(_.copy(linkShapes = el.getChildren("shape").map(ShapeXMLLoader.readLinkShape)))
-            case (model, XMLElement("previewCommands", _, commands, _)) =>
-              val section = new Section("org.nlogo.modelsection.previewcommands", PreviewCommands.Custom(commands))
-              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
-            case (model, el @ XMLElement("systemDynamics", _, _, _)) =>
-              val section = new Section("org.nlogo.modelsection.systemdynamics.gui",
-                Femto.get[AggregateDrawingInterface]("org.nlogo.sdm.gui.AggregateDrawing").read(el))
-              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
-            case (model, XMLElement("experiments", _, _, children)) =>
-              val bspaceElems = children.map(LabXMLLoader.readExperiment(_, literalParser, editNames, Set()))
-              val section     = new Section("org.nlogo.modelsection.behaviorspace", bspaceElems)
-              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
-            case (model, XMLElement("hubNetClient", _, _, children)) =>
-              val hnElems = children.map(WidgetXMLLoader.readWidget)
-              val section = new Section("org.nlogo.modelsection.hubnetclient", hnElems)
-              model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
-            case (model, el @ XMLElement("openTempFiles", _, _, _)) =>
-              model.map(_.copy(openTempFiles = el.getChildren("file").map(file => file("path"))))
-            case (model, el @ XMLElement("resources", _, _, _)) =>
-              model.map(_.copy(
-                resources = el.getChildren("resource").map(
-                  resource => ExternalResource(resource("name"), resource.text)
-                )
-              ))
-            case (    _, XMLElement(name, _, _, _)) =>
-              Failure(new Exception(s"Unexpected file section: ${name}"))
+              val model = Model(defaultCode, List(View()), defaultInfo, version, defaultShapes, defaultLinkShapes, List(settings), Seq(), Seq())
+
+              element.children.foldLeft(Try(model)) {
+                case (model, XMLElement("widgets", _, _, children)) =>
+                  model.map(_.copy(widgets = children.map(WidgetXMLLoader.readWidget)))
+                case (model, XMLElement("info", _, text, _)) =>
+                  model.map(_.copy(info = text))
+                case (model, XMLElement("code", _, text, _)) =>
+                  model.map(_.copy(code = text))
+                case (model, el @ XMLElement("turtleShapes", _, _, _)) =>
+                  model.map(_.copy(turtleShapes = el.getChildren("shape").map(ShapeXMLLoader.readShape)))
+                case (model, el @ XMLElement("linkShapes", _, _, _)) =>
+                  model.map(_.copy(linkShapes = el.getChildren("shape").map(ShapeXMLLoader.readLinkShape)))
+                case (model, XMLElement("previewCommands", _, commands, _)) =>
+                  val section = new Section("org.nlogo.modelsection.previewcommands", PreviewCommands.Custom(commands))
+                  model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
+                case (model, el @ XMLElement("systemDynamics", _, _, _)) =>
+                  val section = new Section("org.nlogo.modelsection.systemdynamics.gui",
+                    Femto.get[AggregateDrawingInterface]("org.nlogo.sdm.gui.AggregateDrawing").read(el))
+                  model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
+                case (model, XMLElement("experiments", _, _, children)) =>
+                  val bspaceElems = children.map(LabXMLLoader.readExperiment(_, literalParser, editNames, Set()))
+                  val section     = new Section("org.nlogo.modelsection.behaviorspace", bspaceElems)
+                  model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
+                case (model, XMLElement("hubNetClient", _, _, children)) =>
+                  val hnElems = children.map(WidgetXMLLoader.readWidget)
+                  val section = new Section("org.nlogo.modelsection.hubnetclient", hnElems)
+                  model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
+                case (model, el @ XMLElement("openTempFiles", _, _, _)) =>
+                  model.map(_.copy(openTempFiles = el.getChildren("file").map(file => file("path"))))
+                case (model, el @ XMLElement("resources", _, _, _)) =>
+                  model.map(_.copy(
+                    resources = el.getChildren("resource").map(
+                      resource => ExternalResource(resource("name"), resource.text)
+                    )
+                  ))
+                case (    _, XMLElement(name, _, _, _)) =>
+                  Failure(new Exception(s"Unexpected file section: ${name}"))
+
+              }
+
+            case x =>
+              Failure(new Exception(s"Expect 'model' element, but got: ${x}"))
 
           }
-
-        case x =>
-          Failure(new Exception(s"Expect 'model' element, but got: ${x}"))
 
       }
 
@@ -306,13 +311,11 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
 
   def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])] = {
     val reader = XMLInputFactory.newFactory.createXMLStreamReader(new StringReader(source))
-    Try(
-      readXMLElement(reader).children.foldLeft((Seq[LabProtocol](), existingNames)) {
-        case ((acc, names), elem) =>
-          val (proto, newNames) = LabXMLLoader.readExperiment(elem, literalParser, editNames, names)
-          (acc :+ proto, newNames)
-      }
-    )
+    readXMLElement(reader).map(_.children.foldLeft((Seq[LabProtocol](), existingNames)) {
+      case ((acc, names), elem) =>
+        val (proto, newNames) = LabXMLLoader.readExperiment(elem, literalParser, editNames, names)
+        (acc :+ proto, newNames)
+    })
   }
 
   def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
