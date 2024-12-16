@@ -191,7 +191,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
     }
   }
 
-  lazy val defaultView: View = View(left = 210, top = 10, right = 649, bottom = 470,
+  lazy val defaultView: View = View(x = 210, y = 10, width = 439, height = 460,
     dimensions = WorldDimensions(-16, 16, -16, 16, 13.0), fontSize = 10, updateMode = UpdateMode.Continuous,
     showTickCounter = true, frameRate = 30)
 

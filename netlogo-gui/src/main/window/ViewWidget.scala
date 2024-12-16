@@ -14,13 +14,6 @@ import org.nlogo.window.MouseMode._
 
 object ViewWidget {
   private val InsideBorderHeight = 1
-
-  // The 245 here was determined empirically by measuring the width
-  // on Mac OS X and then adding some slop.  Yes, this an incredible
-  // kludge, but I figure it's not worth it to try to do it the right
-  // way, since all of this view widget sizing code is targeted to be
-  // thrown out and redone anyway - ST 1/20/11
-  private val MaxViewWidthFudgeValue = 245
 }
 
 class ViewWidget(workspace: GUIWorkspace)
@@ -141,20 +134,6 @@ class ViewWidget(workspace: GUIWorkspace)
 
   override def setBounds(bounds: Rectangle): Unit = {
     setBounds(bounds.x, bounds.y, bounds.width, bounds.height)
-  }
-
-  override def getBoundsString: String = {
-    // If we're in a zoomed container, save the unzoomed size
-    val r =
-      if (findWidgetContainer == null)
-        getBounds()
-      else
-        findWidgetContainer.getUnzoomedBounds(this)
-
-    val width = StrictMath.max(MaxViewWidthFudgeValue, r.width)
-    // and, ugh, this is copy-and-pasted from Widget.java. more
-    // kludginess - ST 1/20/11
-    Seq(r.x, r.y, r.x + width, r.y + r.height).mkString("\n")
   }
 
   override def constrainDrag(newBounds: Rectangle,

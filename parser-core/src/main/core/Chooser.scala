@@ -40,8 +40,8 @@ case class ChooseableBoolean(value: java.lang.Boolean) extends Chooseable {
 
 case class Chooser(
   variable: Option[String],
-  left:  Int = 0, top:    Int = 0,
-  right: Int = 0, bottom: Int = 0,
+  x:  Int = 0, y:    Int = 0,
+  width: Int = 0, height: Int = 0,
   display: Option[String] = None,
   choices: List[Chooseable] = Nil,
   currentChoice: Int = 0)

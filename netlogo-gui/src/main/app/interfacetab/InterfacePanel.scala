@@ -186,8 +186,8 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   // it passes in x=0, y=0 and we do a check. ugly, but works for now.
   // paste uses the x and y from the right click location.
   private def loadWidget(coreWidget: CoreWidget, _x: Int, _y: Int): Widget = {
-    val x = if (_x == 0) coreWidget.left else _x
-    val y = if (_y == 0) coreWidget.top  else _y
+    val x = if (_x == 0) coreWidget.x else _x
+    val y = if (_y == 0) coreWidget.y  else _y
     coreWidget match {
       case view: CoreView =>
         // the graphics widget (and the command center) are special cases because

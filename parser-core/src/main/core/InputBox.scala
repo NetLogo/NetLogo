@@ -81,8 +81,8 @@ sealed trait BoxedValue {
 }
 
 case class InputBox(variable: Option[String],
-  left:  Int = 0, top:    Int = 0,
-  right: Int = 0, bottom: Int = 0,
+  x:  Int = 0, y:    Int = 0,
+  width: Int = 0, height: Int = 0,
   boxedValue: BoxedValue = StringInput("", StringInput.StringLabel, false))
   extends Widget
   with DeclaresGlobal

@@ -87,10 +87,10 @@ class NoteWidget extends SingleErrorWidget with Editable {
   }
 
   override def model: WidgetModel = {
-    val b = getBoundsTuple
+    val b = getUnzoomedBounds
     val txt = if (text != null && text.trim != "") Some(text) else None
     CoreTextBox(display = txt,
-      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      x = b.x, y = b.y, width = b.width, height = b.height,
       fontSize = fontSize,
       color = NlogoColor.argbToColor(color.getRGB),
       transparent = transparency)
@@ -101,7 +101,7 @@ class NoteWidget extends SingleErrorWidget with Editable {
     fontSize = model.fontSize
     color = NlogoColor.getColor(Double.box(model.color))
     transparency(model.transparent)
-    setSize(model.right - model.left, model.bottom - model.top)
+    setSize(model.width, model.height)
     this
   }
 }

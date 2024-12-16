@@ -39,10 +39,10 @@ class WidgetTest extends AnyFunSuite {
   val literalParser = SimpleLiteralParser
 
   case class TestWidget(vals: List[Any]) extends Widget {
-    def left = 0
-    def top = 0
-    def right = 5
-    def bottom = 5
+    def x = 0
+    def y = 0
+    def width = 5
+    def height = 5
   }
 
   test("Required reader lines") {

@@ -55,20 +55,20 @@ class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
   }
 
   override def model: WidgetModel = {
-    val b = getBoundsTuple
+    val b = getUnzoomedBounds
     val savedDisplayName =
       if (displayName != null && displayName != "") Some(displayName) else None
     val varName =
       if (_name != null && _name.trim != "") Some(_name) else None
     CoreSwitch(display = savedDisplayName,
-      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      x = b.x, y = b.y, width = b.width, height = b.height,
       variable = varName, on = isOn)
   }
 
   override def load(model: WidgetModel): AnyRef = {
     name(model.varName, true)
     isOn = model.on
-    setSize(model.right - model.left, model.bottom - model.top)
+    setSize(model.width, model.height)
     this
   }
 

@@ -15,8 +15,8 @@ object WidgetXMLLoader {
             case "Turtle"   => AgentKind.Turtle
             case "Link"     => AgentKind.Link
           }
-        Button( element.getOptionalChild("source").map(_.text), element("left").toInt, element("top").toInt
-              , element("right").toInt, element("bottom").toInt, element.get("display"), element("forever").toBoolean
+        Button( element.getOptionalChild("source").map(_.text), element("x").toInt, element("y").toInt
+              , element("width").toInt, element("height").toInt, element.get("display"), element("forever").toBoolean
               , kind, element.get("actionKey").map(_.head), element("disableUntilTicks").toBoolean
               )
 
@@ -26,8 +26,8 @@ object WidgetXMLLoader {
             case "Horizontal" => Horizontal
             case "Vertical"   => Vertical
           }
-        Slider( element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt
-              , element("bottom").toInt, element.get("display"), element("min"), element("max")
+        Slider( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
+              , element("height").toInt, element.get("display"), element("min"), element("max")
               , element("default").toDouble, element("step"), element.get("units"), direction
               )
 
@@ -37,7 +37,7 @@ object WidgetXMLLoader {
                              , element("maxPycor").toInt, element("patchSize").toDouble
                              , element("wrappingAllowedX").toBoolean, element("wrappingAllowedY").toBoolean
                              )
-        View( element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt, dims
+        View( element("x").toInt, element("y").toInt, element("width").toInt, element("height").toInt, dims
             , element("fontSize").toInt, UpdateMode.load(element("updateMode").toInt)
             , element("showTickCounter").toBoolean, element.get("tickCounterLabel"), element("frameRate").toDouble
             )
@@ -50,20 +50,20 @@ object WidgetXMLLoader {
                                , element("patchSize").toDouble, element("wrappingAllowedX").toBoolean
                                , element("wrappingAllowedY").toBoolean, element("wrappingAllowedZ").toBoolean
                                )
-        View( element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt, dims
+        View( element("x").toInt, element("y").toInt, element("width").toInt, element("height").toInt, dims
             , element("fontSize").toInt, UpdateMode.load(element("updateMode").toInt)
             , element("showTickCounter").toBoolean, element.get("tickCounterLabel"), element("frameRate").toDouble
             )
 
       case "monitor" =>
-        Monitor( element.getOptionalChild("source").map(_.text), element("left").toInt, element("top").toInt
-               , element("right").toInt, element("bottom").toInt, element.get("display"), element("precision").toInt
+        Monitor( element.getOptionalChild("source").map(_.text), element("x").toInt, element("y").toInt
+               , element("width").toInt, element("height").toInt, element.get("display"), element("precision").toInt
                , element("fontSize").toInt
                )
 
       case "switch" =>
-        Switch( element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt
-              , element("bottom").toInt, element.get("display"), element("on").toBoolean
+        Switch( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
+              , element("height").toInt, element.get("display"), element("on").toBoolean
               )
 
       case "plot" =>
@@ -74,8 +74,8 @@ object WidgetXMLLoader {
                   , el("legend").toBoolean, el.getChild("setup").text, el.getChild("update").text
                   )
           ).toList
-        Plot( element.get("display"), element("left").toInt, element("top").toInt, element("right").toInt
-            , element("bottom").toInt, element.get("xAxis"), element.get("yAxis"), element("xMin").toDouble
+        Plot( element.get("display"), element("x").toInt, element("y").toInt, element("width").toInt
+            , element("height").toInt, element.get("xAxis"), element.get("yAxis"), element("xMin").toDouble
             , element("xMax").toDouble, element("yMin").toDouble, element("yMax").toDouble
             , element("autoplot").toBoolean, element("legend").toBoolean, element.getChild("setup").text
             , element.getChild("update").text, pens
@@ -96,12 +96,12 @@ object WidgetXMLLoader {
                   ChooseableList(LogoList.fromList(el.getChildren("value").map(_("value")).toList))
               }
           )
-        Chooser( element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt
-               , element("bottom").toInt, element.get("display"), children.toList, element("current").toInt
+        Chooser( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
+               , element("height").toInt, element.get("display"), children.toList, element("current").toInt
                )
 
       case "output" =>
-        Output( element("left").toInt, element("top").toInt, element("right").toInt, element("bottom").toInt
+        Output( element("x").toInt, element("y").toInt, element("width").toInt, element("height").toInt
               , element("fontSize").toInt
               )
 
@@ -119,13 +119,13 @@ object WidgetXMLLoader {
             case "command" =>
               StringInput(element.text, StringInput.CommandLabel, element("multiline").toBoolean)
           }
-        InputBox( element.get("variable"), element("left").toInt, element("top").toInt, element("right").toInt
-                , element("bottom").toInt, input
+        InputBox( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
+                , element("height").toInt, input
                 )
 
       case "note" =>
-        TextBox( element.get("display"), element("left").toInt, element("top").toInt, element("right").toInt
-               , element("bottom").toInt, element("fontSize").toInt, element("color").toDouble
+        TextBox( element.get("display"), element("x").toInt, element("y").toInt, element("width").toInt
+               , element("height").toInt, element("fontSize").toInt, element("color").toDouble
                , element("transparent").toBoolean
                )
 
@@ -141,10 +141,10 @@ object WidgetXMLLoader {
 
       case button: Button =>
         val attributes =
-          Map( "left"              -> button.left.toString
-             , "top"               -> button.top.toString
-             , "right"             -> button.right.toString
-             , "bottom"            -> button.bottom.toString
+          Map( "x"              -> button.x.toString
+             , "y"               -> button.y.toString
+             , "width"             -> button.width.toString
+             , "height"            -> button.height.toString
              , "forever"           -> button.forever.toString
              , "kind"              -> button.buttonKind.toString
              , "disableUntilTicks" -> button.disableUntilTicksStart.toString
@@ -162,10 +162,10 @@ object WidgetXMLLoader {
 
       case slider: Slider =>
         val attributes =
-          Map( "left"      -> slider.left.toString
-             , "top"       -> slider.top.toString
-             , "right"     -> slider.right.toString
-             , "bottom"    -> slider.bottom.toString
+          Map( "x"      -> slider.x.toString
+             , "y"       -> slider.y.toString
+             , "width"     -> slider.width.toString
+             , "height"    -> slider.height.toString
              , "min"       -> slider.min
              , "max"       -> slider.max
              , "default"   -> slider.default.toString
@@ -180,10 +180,10 @@ object WidgetXMLLoader {
       case view: View =>
 
         val baseAttributes =
-          Map( "left"             -> view.left.toString
-             , "top"              -> view.top.toString
-             , "right"            -> view.right.toString
-             , "bottom"           -> view.bottom.toString
+          Map( "x"             -> view.x.toString
+             , "y"              -> view.y.toString
+             , "width"            -> view.width.toString
+             , "height"           -> view.height.toString
              , "minPxcor"         -> view.dimensions.minPxcor.toString
              , "maxPxcor"         -> view.dimensions.maxPxcor.toString
              , "minPycor"         -> view.dimensions.minPycor.toString
@@ -210,10 +210,10 @@ object WidgetXMLLoader {
 
       case monitor: Monitor =>
         val attributes =
-          Map( "left"      -> monitor.left.toString
-             , "top"       -> monitor.top.toString
-             , "right"     -> monitor.right.toString
-             , "bottom"    -> monitor.bottom.toString
+          Map( "x"      -> monitor.x.toString
+             , "y"       -> monitor.y.toString
+             , "width"     -> monitor.width.toString
+             , "height"    -> monitor.height.toString
              , "precision" -> monitor.precision.toString
              , "fontSize"  -> monitor.fontSize.toString
              ) ++
@@ -229,10 +229,10 @@ object WidgetXMLLoader {
 
       case switch: Switch =>
         val attributes =
-          Map( "left"   -> switch.left.toString
-             , "top"    -> switch.top.toString
-             , "right"  -> switch.right.toString
-             , "bottom" -> switch.bottom.toString
+          Map( "x"   -> switch.x.toString
+             , "y"    -> switch.y.toString
+             , "width"  -> switch.width.toString
+             , "height" -> switch.height.toString
              , "on"     -> switch.on.toString
              ) ++
           ifDefined(switch)( "display",  _.display) ++
@@ -243,10 +243,10 @@ object WidgetXMLLoader {
       case plot: Plot =>
 
         val attributes =
-          Map( "left"     -> plot.left.toString
-             , "top"      -> plot.top.toString
-             , "right"    -> plot.right.toString
-             , "bottom"   -> plot.bottom.toString
+          Map( "x"     -> plot.x.toString
+             , "y"      -> plot.y.toString
+             , "width"    -> plot.width.toString
+             , "height"   -> plot.height.toString
              , "xMin"     -> plot.xmin.toString
              , "xMax"     -> plot.xmax.toString
              , "yMin"     -> plot.ymin.toString
@@ -289,10 +289,10 @@ object WidgetXMLLoader {
       case chooser: Chooser =>
 
         val attributes =
-          Map( "left"    -> chooser.left.toString
-             , "top"     -> chooser.top.toString
-             , "right"   -> chooser.right.toString
-             , "bottom"  -> chooser.bottom.toString
+          Map( "x"    -> chooser.x.toString
+             , "y"     -> chooser.y.toString
+             , "width"   -> chooser.width.toString
+             , "height"  -> chooser.height.toString
              , "current" -> chooser.currentChoice.toString
              ) ++
           ifDefined(chooser)( "display",  _.display) ++
@@ -315,10 +315,10 @@ object WidgetXMLLoader {
 
       case output: Output =>
         val attributes =
-          Map( "left"     -> output.left.toString
-             , "top"      -> output.top.toString
-             , "right"    -> output.right.toString
-             , "bottom"   -> output.bottom.toString
+          Map( "x"     -> output.x.toString
+             , "y"      -> output.y.toString
+             , "width"    -> output.width.toString
+             , "height"   -> output.height.toString
              , "fontSize" -> output.fontSize.toString
              )
         XMLElement("output", attributes, "", Seq())
@@ -341,10 +341,10 @@ object WidgetXMLLoader {
           }
 
         val attributes =
-          Map( "left"      -> input.left.toString
-             , "top"       -> input.top.toString
-             , "right"     -> input.right.toString
-             , "bottom"    -> input.bottom.toString
+          Map( "x"      -> input.x.toString
+             , "y"       -> input.y.toString
+             , "width"     -> input.width.toString
+             , "height"    -> input.height.toString
              , "multiline" -> input.multiline.toString
              , "type"      -> typeName
              ) ++
@@ -354,10 +354,10 @@ object WidgetXMLLoader {
 
       case note: TextBox =>
         val attributes =
-          Map( "left" -> note.left.toString
-             , "top"  -> note.top.toString
-             , "right" -> note.right.toString
-             , "bottom" -> note.bottom.toString
+          Map( "x" -> note.x.toString
+             , "y"  -> note.y.toString
+             , "width" -> note.width.toString
+             , "height" -> note.height.toString
              , "fontSize" -> note.fontSize.toString
              , "color" -> note.color.toString
              , "transparent" -> note.transparent.toString

@@ -226,8 +226,8 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
 
   def loadWidget(coreWidget: CoreWidget): Widget = {
     try {
-      val x = coreWidget.left
-      val y = coreWidget.top
+      val x = coreWidget.x
+      val y = coreWidget.y
       coreWidget match {
         case v: CoreView =>
           // the graphics widget (and the command center) are special cases because
