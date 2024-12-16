@@ -34,12 +34,25 @@ class ExternalResourceManager {
     resources ++= rs
   }
 
-  def getResource(name: String): Option[String] =
-    resources.find(_.name == name).map(_.data)
+  def getResource(name: String): Option[ExternalResource] =
+    resources.find(_.name == name)
 
-  def addResource(resource: ExternalResource) {
-    if (resources.find(_.name == resource.name).isEmpty)
+  def addResource(resource: ExternalResource): Boolean = {
+    if (resources.find(_.name == resource.name).isEmpty) {
       resources += resource
+
+      true
+    }
+
+    else
+      false
+  }
+
+  def removeResource(name: String) {
+    val index = resources.indexWhere(_.name == name)
+
+    if (index != -1)
+      resources.remove(index)
   }
 
 }

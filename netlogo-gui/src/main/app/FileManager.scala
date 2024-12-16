@@ -20,7 +20,7 @@ import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.fileformat.{ FailedConversionResult, SuccessfulConversion }
 import org.nlogo.fileformat.FileFormat.ModelConversion
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog, UserAction }, UserAction.MenuAction
-import org.nlogo.window.{ BackgroundFileController, Events, FileController, ReconfigureWorkspaceUI },
+import org.nlogo.window.{ BackgroundFileController, Events, FileController, GUIWorkspace, ReconfigureWorkspaceUI },
   Events.{AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent, LoadModelEvent, LoadErrorEvent, ModelSavedEvent, OpenModelEvent }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI, OpenModelFromSource, SaveModel, SaveModelAs }
 
@@ -255,6 +255,18 @@ object FileManager {
     }
   }
 
+  class ManageResourcesAction(manager: FileManager, workspace: AbstractWorkspaceScala, parent: Component)
+    extends ExceptionCatchingAction(I18N.gui.get("menu.file.manageResources"), parent) with MenuAction {
+
+    category = UserAction.FileCategory
+    group = UserAction.FileResourcesGroup
+    rank = 1
+
+    override def action() {
+      new ResourceManagerDialog(workspace.asInstanceOf[GUIWorkspace].getFrame, workspace).setVisible(true)
+    }
+  }
+
 }
 
 import FileManager._
@@ -434,7 +446,8 @@ class FileManager(workspace: AbstractWorkspaceScala,
     new QuitAction(this, parent),
     new ModelsLibraryAction(this, parent),
     new SaveAsNetLogoWebAction(this, workspace, modelSaver, parent),
-    new ImportClientAction(this, workspace, parent))
+    new ImportClientAction(this, workspace, parent),
+    new ManageResourcesAction(this, workspace, parent))
 
   def saveModelActions(parent: Component) = {
     def saveAction(saveAs: Boolean) =
