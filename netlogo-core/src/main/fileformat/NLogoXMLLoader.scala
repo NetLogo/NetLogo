@@ -287,7 +287,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
           ("NetLogo 6.4.0", WorldDimensions(-16, 16, -16, 16, 13.0))
 
       val widgets =
-        List(View( left = 210, top = 10, right = 649, bottom = 470, dimensions = dims, fontSize = 10
+        List(View( x = 210, y = 10, width = 439, height = 460, dimensions = dims, fontSize = 10
                  , updateMode = UpdateMode.Continuous, showTickCounter = true, frameRate = 30))
 
       Model(Model.defaultCode, widgets, defaultInfo, name, Model.defaultShapes, Model.defaultLinkShapes)

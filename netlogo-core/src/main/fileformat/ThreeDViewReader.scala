@@ -86,7 +86,7 @@ object ThreeDViewReader extends WidgetReader with BaseWidgetParser with ConstWid
 
     def ViewDimensions: Rule1[View => View] = rule {
       4.times(IntValue ~ NewLine) ~> ((dims: Seq[Int]) =>
-          ((v: View) => v.copy(left = dims(0), top = dims(1), right = dims(2), bottom = dims(3))))
+          ((v: View) => v.copy(x = dims(0), y = dims(1), width = dims(2), height = dims(3))))
     }
 
     def WrappingInXAndY: Rule1[View => View] = rule {
@@ -122,10 +122,10 @@ object ThreeDViewReader extends WidgetReader with BaseWidgetParser with ConstWid
     val dimensions = t.dimensions.asInstanceOf[WorldDimensions3D]
     Seq(
       "GRAPHICS-WINDOW",
-      t.left.toString,
-      t.top.toString,
-      t.right.toString,
-      t.bottom.toString,
+      t.x.toString,
+      t.y.toString,
+      (t.x + t.width).toString,
+      (t.y + t.height).toString,
       "-1",
       "-1",
       dimensions.patchSize.toString,

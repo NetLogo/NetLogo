@@ -42,7 +42,7 @@ object HubNetSwitchReader extends BaseWidgetParser with ConstWidgetParser with W
       notOn: Boolean): Switch = {
         Switch(
           name.map(restoreLines),
-          pos._1, pos._2, pos._3, pos._4,
+          pos._1, pos._2, pos._3 - pos._1, pos._4 - pos._2,
           name.map(restoreLines), ! notOn)
     }
 
@@ -71,10 +71,10 @@ object HubNetSwitchReader extends BaseWidgetParser with ConstWidgetParser with W
   def format(switch: T): String = {
     Seq(
       "SWITCH",
-      switch.left.toString,
-      switch.top.toString,
-      switch.right.toString,
-      switch.bottom.toString,
+      switch.x.toString,
+      switch.y.toString,
+      (switch.x + switch.width).toString,
+      (switch.y + switch.height).toString,
       switch.display.map(stripLines).getOrElse("NIL"),
       switch.variable.map(stripLines).getOrElse("NIL"),
       if (switch.on) "0" else "1",
@@ -92,7 +92,7 @@ object HubNetViewReader extends BaseWidgetParser with ConstWidgetParser with Wid
       dim: Seq[Int],
       maxPy: Int): View = {
         View(
-          left = pos._1, top = pos._2, right = pos._3, bottom = pos._4,
+          x = pos._1, y = pos._2, width = pos._3 - pos._1, height = pos._4 - pos._2,
           dimensions = WorldDimensions(dim(0), dim(1), dim(2), maxPy))
     }
 
@@ -120,10 +120,10 @@ object HubNetViewReader extends BaseWidgetParser with ConstWidgetParser with Wid
   def format(view: T): String = {
     Seq(
       "VIEW", // 0
-      view.left.toString,
-      view.top.toString,
-      view.right.toString,
-      view.bottom.toString,
+      view.x.toString,
+      view.y.toString,
+      (view.x + view.width).toString,
+      (view.y + view.height).toString,
       "0", // 5
       "0", // 6
       "0", // 7
@@ -153,8 +153,8 @@ object HubNetButtonReader extends BaseWidgetParser with ConstWidgetParser with W
       actionKey: Option[String]): Button = {
         Button(
           display = name,
-          left = pos._1, top = pos._2,
-          right = pos._3, bottom = pos._4,
+          x = pos._1, y = pos._2,
+          width = pos._3 - pos._1, height = pos._4 - pos._2,
           source = None,
           forever = false,
           actionKey = actionKey.map(_.head))
@@ -185,10 +185,10 @@ object HubNetButtonReader extends BaseWidgetParser with ConstWidgetParser with W
     val savedActionKey = button.actionKey.map(_.toString).getOrElse("NIL")
     Seq(
       "BUTTON", // 0
-      button.left.toString,
-      button.top.toString,
-      button.right.toString,
-      button.bottom.toString,
+      button.x.toString,
+      button.y.toString,
+      (button.x + button.width).toString,
+      (button.y + button.height).toString,
       button.display.map(saveNillableString).getOrElse("NIL"),
       "NIL",
       "NIL",
@@ -211,7 +211,7 @@ object HubNetMonitorReader extends BaseWidgetParser with ConstWidgetParser with 
       precision: Int): Monitor = {
         Monitor(
           display = name,
-          left = pos._1, top = pos._2, right = pos._3, bottom = pos._4,
+          x = pos._1, y = pos._2, width = pos._3 - pos._1, height = pos._4 - pos._2,
           source = source,
           precision = precision, fontSize = 11)
     }
@@ -241,10 +241,10 @@ object HubNetMonitorReader extends BaseWidgetParser with ConstWidgetParser with 
   def format(monitor: T): String = {
     Seq(
       "MONITOR",
-      monitor.left.toString,
-      monitor.top.toString,
-      monitor.right.toString,
-      monitor.bottom.toString,
+      monitor.x.toString,
+      monitor.y.toString,
+      (monitor.x + monitor.width).toString,
+      (monitor.y + monitor.height).toString,
       monitor.display.map(saveNillableString).getOrElse("NIL"),
       monitor.source.map(saveNillableString).getOrElse("NIL"),
       monitor.precision,
@@ -265,8 +265,8 @@ object HubNetSliderReader extends BaseWidgetParser with ConstWidgetParser with W
         val Seq(min, max, value, inc) = sliderParams
         Slider(
           display = name.map(restoreLines),
-          left = pos._1, top = pos._2,
-          right = pos._3, bottom = pos._4,
+          x = pos._1, y = pos._2,
+          width = pos._3 - pos._1, height = pos._4 - pos._2,
           variable = name.map(restoreLines),
           min = min.toString,
           max = max.toString,
@@ -310,10 +310,10 @@ object HubNetSliderReader extends BaseWidgetParser with ConstWidgetParser with W
     val directionString = if (slider.direction == Vertical) "VERTICAL" else "HORIZONTAL"
     Seq(
       "SLIDER",
-      slider.left.toString,
-      slider.top.toString,
-      slider.right.toString,
-      slider.bottom.toString,
+      slider.x.toString,
+      slider.y.toString,
+      (slider.x + slider.width).toString,
+      (slider.y + slider.height).toString,
       savedName,
       savedName,
       slider.min,
@@ -337,8 +337,8 @@ object HubNetChooserReader extends BaseWidgetParser with WidgetReader {
       selectedIndex: Int): Chooser = {
         val restoredVarName = name.map(restoreLines)
         Chooser(restoredVarName,
-          left  = pos._1, top    = pos._2,
-          right = pos._3, bottom = pos._4,
+          x = pos._1, y = pos._2,
+          width = pos._3 - pos._1, height = pos._4 - pos._2,
           display = restoredVarName, choices = choices,
           currentChoice = selectedIndex)
     }
@@ -389,10 +389,10 @@ object HubNetChooserReader extends BaseWidgetParser with WidgetReader {
     val savedVarName = saveNillableString(stripLines(chooser.varName))
     Seq(
       "CHOOSER",
-      chooser.left.toString,
-      chooser.top.toString,
-      chooser.right.toString,
-      chooser.bottom.toString,
+      chooser.x.toString,
+      chooser.y.toString,
+      (chooser.x + chooser.width).toString,
+      (chooser.y + chooser.height).toString,
       savedVarName,
       savedVarName,
       stripLines(chooser.choices.map(_.value).map(o => Dump.logoObject(o, true, false)).mkString(" ")),

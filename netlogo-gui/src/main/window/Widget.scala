@@ -129,30 +129,9 @@ abstract class Widget extends JPanel {
     }
   }
 
-  protected def getUnzoomedBounds: Rectangle = {
+  def getUnzoomedBounds: Rectangle = {
     if (findWidgetContainer != null) findWidgetContainer.getUnzoomedBounds(this)
     else getBounds
-  }
-
-  def getBoundsString: String = {
-    if (findWidgetContainer != null) findWidgetContainer.getBoundsString(this)
-    else {
-      val buf: StringBuilder = new StringBuilder
-      val r: Rectangle = getBounds
-      buf.append(r.x + "\n")
-      buf.append(r.y + "\n")
-      buf.append((r.x + r.width) + "\n")
-      buf.append((r.y + r.height) + "\n")
-      buf.toString
-    }
-  }
-
-  def getBoundsTuple: (Int, Int, Int, Int) = {
-    if (findWidgetContainer != null) findWidgetContainer.getBoundsTuple(this)
-    else {
-      val r: Rectangle = getBounds
-      (r.x, r.y, r.x + r.width, r.y + r.height)
-    }
   }
 
   override def removeNotify: Unit = {

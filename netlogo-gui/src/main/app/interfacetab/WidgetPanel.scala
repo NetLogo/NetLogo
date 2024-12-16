@@ -514,7 +514,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   /// loading and saving
 
   def loadWidget(coreWidget: CoreWidget): Widget = {
-    makeAndLoadWidget(coreWidget, coreWidget.left, coreWidget.top)
+    makeAndLoadWidget(coreWidget, coreWidget.x, coreWidget.y)
   }
 
   protected def makeAndLoadWidget(coreWidget: CoreWidget, x: Int, y: Int): Widget = {

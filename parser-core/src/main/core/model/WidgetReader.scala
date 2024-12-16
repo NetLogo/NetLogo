@@ -206,14 +206,15 @@ object ButtonReader extends BaseWidgetReader {
                         ReservedLine("NIL"),
                         IntLine()  // Enabled before ticks start implemented as an int
                       )
-  def asList(button: Button) = List((), button.left, button.top, button.right, button.bottom, button.display,
-                                    button.source, button.forever, (), (), button.buttonKind, (), button.actionKey,
-                                    (), (), if(button.disableUntilTicksStart) 0 else 1)
+  def asList(button: Button) = List((), button.x, button.y, button.x + button.width, button.y + button.height,
+                                    button.display, button.source, button.forever, (), (), button.buttonKind, (),
+                                    button.actionKey, (), (), if(button.disableUntilTicksStart) 0 else 1)
   def asWidget(vals: List[Any], literalParser: LiteralParser): Button = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, rawDisplay: Option[String] @unchecked,
       source: Option[String] @unchecked, forever: Boolean, _, _, buttonKind: AgentKind, _, actionKey: Option[Char] @unchecked, _, _,
       enabledBeforeTicks: Int) = vals
-    Button(source, left, top, right, bottom, rawDisplay, forever, buttonKind, actionKey, enabledBeforeTicks == 0)
+    Button(source, left, top, right - left, bottom - top, rawDisplay, forever, buttonKind, actionKey,
+      enabledBeforeTicks == 0)
   }
 }
 
@@ -286,7 +287,7 @@ object PlotReader extends BaseWidgetReader {
                         StringBooleanLine(), // legend on
                         StringLine(Some(""""" """""))   // Double code lines, parse later
                       )
-  def asList(plot: Plot) = List((), plot.left, plot.top, plot.right, plot.bottom, plot.display,
+  def asList(plot: Plot) = List((), plot.x, plot.y, plot.x + plot.width, plot.y + plot.height, plot.display,
                                     plot.xAxis, plot.yAxis, plot.xmin, plot.xmax, plot.ymin, plot.ymax,
                                     plot.autoPlotOn, plot.legendOn,
                                     "\"" + escapeString(plot.setupCode) + "\" \"" + escapeString(plot.updateCode) + "\"")
@@ -295,7 +296,7 @@ object PlotReader extends BaseWidgetReader {
       xAxis: Option[String] @unchecked, yAxis: Option[String] @unchecked, xmin: Double, xmax: Double, ymin: Double, ymax: Double,
       autoPlotOn: Boolean, legendOn: Boolean, code: String, pens: List[Pen] @unchecked) = vals
     val List(setupCode: String, updateCode: String) = PenReader.parseStringLiterals(code)
-    Plot(display, left, top, right, bottom, xAxis, yAxis, xmin, xmax, ymin, ymax, autoPlotOn, legendOn,
+    Plot(display, left, top, right - left, bottom - top, xAxis, yAxis, xmin, xmax, ymin, ymax, autoPlotOn, legendOn,
          unescapeString(setupCode), unescapeString(updateCode), pens)
   }
 
@@ -332,13 +333,13 @@ object SliderReader extends BaseWidgetReader {
     ReservedLine("1"),
     OptionLine[String]("NIL", StringLine()),   // units
     new MapLine(List(("HORIZONTAL", Horizontal), ("VERTICAL", Vertical))))
-  def asList(slider: Slider) = List((), slider.left, slider.top, slider.right, slider.bottom, slider.display,
-                                    slider.variable, slider.min, slider.max, slider.default, slider.step,
-                                    (), slider.units, slider.direction)
+  def asList(slider: Slider) = List((), slider.x, slider.y, slider.x + slider.width, slider.y + slider.height,
+                                    slider.display, slider.variable, slider.min, slider.max, slider.default,
+                                    slider.step, (), slider.units, slider.direction)
   def asWidget(vals: List[Any], literalParser: LiteralParser): Slider = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, display: Option[String] @unchecked, varName: Option[String] @unchecked, min: String,
              max: String, default: Double, step: String, _, units: Option[String] @unchecked, direction: Direction) = vals
-    Slider(varName, left, top, right, bottom, display, min, max, default, step, units, direction)
+    Slider(varName, left, top, right - left, bottom - top, display, min, max, default, step, units, direction)
   }
 }
 
@@ -356,11 +357,11 @@ object TextBoxReader extends BaseWidgetReader {
                         DoubleLine(),        // color
                         BooleanLine()        // transparent
                       )
-  def asList(textBox: TextBox) = List((), textBox.left, textBox.top, textBox.right, textBox.bottom,
+  def asList(textBox: TextBox) = List((), textBox.x, textBox.y, textBox.x + textBox.width, textBox.y + textBox.height,
                                     textBox.display, textBox.fontSize, textBox.color, textBox.transparent)
   def asWidget(vals: List[Any], literalParser: LiteralParser): TextBox = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, display: Option[String] @unchecked, fontSize: Int, color: Double, transparent: Boolean) = vals
-    TextBox(display, left, top, right, bottom, fontSize, color, transparent)
+    TextBox(display, left, top, right - left, bottom - top, fontSize, color, transparent)
   }
 }
 
@@ -379,11 +380,11 @@ object SwitchReader extends BaseWidgetReader {
     InvertedBooleanLine(),  // on
     ReservedLine("1"),
     ReservedLine("-1000"))
-  def asList(switch: Switch) = List((), switch.left, switch.top, switch.right, switch.bottom,
+  def asList(switch: Switch) = List((), switch.x, switch.y, switch.x + switch.width, switch.y + switch.height,
                                     switch.display, switch.variable, switch.on, (), ())
   def asWidget(vals: List[Any], literalParser: LiteralParser): Switch = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, display: Option[String] @unchecked, varName: Option[String] @unchecked, on: Boolean, _, _) = vals
-    Switch(varName, left, top, right, bottom, display, on)
+    Switch(varName, left, top, right - left, bottom - top, display, on)
   }
 }
 
@@ -402,8 +403,9 @@ object ChooserReader extends BaseWidgetReader {
     StringLine(),   // choices
     IntLine())   // current choice
 
-  def asList(chooser: Chooser) = List((), chooser.left, chooser.top, chooser.right, chooser.bottom, chooser.display,
-    chooser.variable, chooser.choices.map(v => Dump.logoObject(v.value, true, false)).mkString(" "), chooser.currentChoice)
+  def asList(chooser: Chooser) = List((), chooser.x, chooser.y, chooser.x + chooser.width, chooser.y + chooser.height,
+    chooser.display, chooser.variable, chooser.choices.map(v => Dump.logoObject(v.value, true, false)).mkString(" "),
+    chooser.currentChoice)
 
   def asWidget(vals: List[Any], parser: LiteralParser): Chooser = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, display: Option[String] @unchecked, variable: Option[String] @unchecked,
@@ -417,7 +419,8 @@ object ChooserReader extends BaseWidgetReader {
       case other        => other
     }
 
-    Chooser(variable, left, top, right, bottom, display, choices.map(convertAllNobodies).map(Chooseable(_)).toList, currentChoice)
+    Chooser(variable, left, top, right - left, bottom - top, display,
+      choices.map(convertAllNobodies).map(Chooseable(_)).toList, currentChoice)
   }
 }
 
@@ -436,13 +439,13 @@ object MonitorReader extends BaseWidgetReader {
     IntLine(),   // precision
     ReservedLine("1"),
     IntLine())    // font size
-  def asList(monitor: Monitor) = List((), monitor.left, monitor.top, monitor.right, monitor.bottom, monitor.display,
-    monitor.source, monitor.precision, (), monitor.fontSize)
+  def asList(monitor: Monitor) = List((), monitor.x, monitor.y, monitor.x + monitor.width, monitor.y + monitor.height,
+    monitor.display, monitor.source, monitor.precision, (), monitor.fontSize)
   def asWidget(vals: List[Any], literalParser: LiteralParser): Monitor = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int,
       rawDisplay: Option[String] @unchecked,
       source: Option[String] @unchecked, precision: Int, _, fontSize: Int) = vals
-    Monitor(source, left, top, right, bottom, rawDisplay, precision, fontSize)
+    Monitor(source, left, top, right - left, bottom - top, rawDisplay, precision, fontSize)
   }
 }
 
@@ -457,10 +460,11 @@ object OutputReader extends BaseWidgetReader {
                         IntLine(),  // bottom
                         IntLine()    // font size
                       )
-  def asList(output: Output) = List((), output.left, output.top, output.right, output.bottom, output.fontSize)
+  def asList(output: Output) = List((), output.x, output.y, output.x + output.width, output.y + output.height,
+    output.fontSize)
   def asWidget(vals: List[Any], literalParser: LiteralParser): Output = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, fontSize: Int) = vals
-    Output(left, top, right, bottom, fontSize)
+    Output(left, top, right - left, bottom - top, fontSize)
   }
 }
 
@@ -481,8 +485,9 @@ object InputBoxReader extends BaseWidgetReader {
     BooleanLine(),  // multiline
     StringLine())    // inputboxtype
 
-  def asList(inputbox: InputBox) = List((), inputbox.left, inputbox.top, inputbox.right, inputbox.bottom, inputbox.variable,
-    inputbox.boxedValue.asString, (), inputbox.multiline, inputbox.boxedValue.name)
+  def asList(inputbox: InputBox) = List((), inputbox.x, inputbox.y, inputbox.x + inputbox.width,
+    inputbox.y + inputbox.height, inputbox.variable, inputbox.boxedValue.asString, (), inputbox.multiline,
+    inputbox.boxedValue.name)
   def asWidget(vals: List[Any], literalParser: LiteralParser): InputBox = {
 
     val List((), left: Int, top: Int, right: Int, bottom: Int, variable: Option[String] @unchecked, value: String,
@@ -494,7 +499,7 @@ object InputBoxReader extends BaseWidgetReader {
       case _ =>
         throw new RuntimeException("Couldn't find corresponding input box type for " + inputBoxTypeStr)
     }
-    InputBox(variable, left, top, right, bottom, inputBoxValue)
+    InputBox(variable, left, top, right - left, bottom - top, inputBoxValue)
   }
 }
 
@@ -531,8 +536,8 @@ object ViewReader extends BaseWidgetReader {
                         OptionLine[String]("NIL", StringLine()), // tick counter label
                         DoubleLine(Some(30))   // frame rate
                       )
-  def asList(view: View) = List((), view.left, view.top, view.right, view.bottom, (), (), view.patchSize, (), view.fontSize,
-    (), (), (), (), view.wrappingAllowedInX, view.wrappingAllowedInY, (),
+  def asList(view: View) = List((), view.x, view.y, view.x + view.width, view.y + view.height, (), (), view.patchSize,
+    (), view.fontSize, (), (), (), (), view.wrappingAllowedInX, view.wrappingAllowedInY, (),
     view.minPxcor, view.maxPxcor, view.minPycor, view.maxPycor,
     view.updateMode, view.updateMode, view.showTickCounter, view.tickCounterLabel, view.frameRate)
   def asWidget(vals: List[Any], literalParser: LiteralParser): View = {
@@ -540,7 +545,7 @@ object ViewReader extends BaseWidgetReader {
          (fontSize: Int) :: _ :: _ :: _ :: _ :: (wrappingAllowedInX: Boolean) :: (wrappingAllowedInY: Boolean) ::
          _ :: (minPxcor: Int) :: (maxPxcor: Int) :: (minPycor: Int) :: (maxPycor: Int) :: (updateMode: UpdateMode) ::
          _ :: (showTickCounter: Boolean) :: (tickCounterLabel: Option[String] @unchecked) :: (frameRate: Double) :: Nil) = vals
-    View(left, top, right, bottom,
+    View(left, top, right - left, bottom - top,
       new WorldDimensions(minPxcor, maxPxcor, minPycor, maxPycor, patchSize, wrappingAllowedInX, wrappingAllowedInY),
         fontSize, updateMode, showTickCounter, tickCounterLabel, frameRate)
   }

@@ -5,10 +5,10 @@ package org.nlogo.core
 import ConstraintSpecification._
 
 trait Widget {
-  def left:   Int
-  def top:    Int
-  def right:  Int
-  def bottom: Int
+  def x:   Int
+  def y:    Int
+  def width:  Int
+  def height: Int
 
   /** convertSource applies the given conversion to all code found in the widget. */
   def convertSource(conversion: String => String): Widget = this
@@ -38,8 +38,8 @@ trait DeclaresGlobalCommand extends NamedWidget {
 }
 
 case class Button(source: Option[String],
-  left: Int, top: Int,
-  right: Int, bottom: Int,
+  x: Int, y: Int,
+  width: Int, height: Int,
   display: Option[String] = None,
   forever: Boolean = false,
   buttonKind: AgentKind = AgentKind.Observer,
@@ -50,15 +50,15 @@ case class Button(source: Option[String],
   }
 
 case class TextBox(display: Option[String],
-  left:  Int = 0, top:    Int = 0,
-  right: Int = 5, bottom: Int = 5,
+  x: Int = 0, y: Int = 0,
+  width: Int = 5, height: Int = 5,
   fontSize: Int,
   color: Double,
   transparent: Boolean = false) extends Widget
 
 case class Switch(variable: Option[String],
-  left:  Int = 0, top:    Int = 0,
-  right: Int = 0, bottom: Int = 0,
+  x:  Int = 0, y:    Int = 0,
+  width: Int = 0, height: Int = 0,
   display: Option[String] = None,
   on: Boolean = false) extends Widget
   with DeclaresGlobal
@@ -73,8 +73,8 @@ sealed trait Direction
 case object Horizontal extends Direction
 case object Vertical extends Direction
 case class Slider(variable: Option[String],
-  left:  Int = 0, top:    Int = 0,
-  right: Int = 0, bottom: Int = 0,
+  x:  Int = 0, y:    Int = 0,
+  width: Int = 0, height: Int = 0,
   display:  Option[String]  = None,
   min:       String         = "0",
   max:       String         = "100",
@@ -101,8 +101,8 @@ case class Slider(variable: Option[String],
 
 case class Monitor(
   source: Option[String],
-  left:  Int, top:    Int,
-  right: Int, bottom: Int,
+  x:  Int, y:    Int,
+  width: Int, height: Int,
   display: Option[String],
   precision: Int,
   fontSize:  Int = 11) extends Widget {
@@ -111,11 +111,11 @@ case class Monitor(
   }
 
 case class Output(
-  left:  Int, top:    Int,
-  right: Int, bottom: Int,
+  x:  Int, y:    Int,
+  width: Int, height: Int,
   fontSize: Int) extends Widget
 
-case class View(left: Int = 0, top: Int = 0, right: Int = 5, bottom: Int = 5,
+case class View(x: Int = 0, y: Int = 0, width: Int = 5, height: Int = 5,
   dimensions:       WorldDimensions = View.defaultDimensions,
   fontSize:         Int             = 13,
   updateMode:       UpdateMode      = UpdateMode.TickBased,

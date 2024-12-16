@@ -296,10 +296,10 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
       wrappingAllowedInX = world.wrappingAllowedInX,
       wrappingAllowedInY = world.wrappingAllowedInY,
       wrappingAllowedInZ = world.wrappingAllowedInZ)
-    val b = gWidget.getBoundsTuple
+    val b = gWidget.getUnzoomedBounds
     val label = if (tickCounterLabel == null || tickCounterLabel.trim == "") None else Some(tickCounterLabel)
     CoreView(
-      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      x = b.x, y = b.y, width = b.width, height = b.height,
       dimensions = dimensions,
       fontSize = gWidget.view.fontSize,
       updateMode = workspace.updateMode(),
