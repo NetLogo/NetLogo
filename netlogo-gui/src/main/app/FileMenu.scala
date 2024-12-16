@@ -10,7 +10,8 @@ import org.nlogo.swing.{ Menu => SwingMenu, UserAction }
 object FileMenu {
   val ExportImportGroup = "ExportImportGroup"
 
-  def sortOrder = Seq(UserAction.FileOpenGroup, UserAction.FileSaveGroup, UserAction.FileShareGroup, ExportImportGroup)
+  def sortOrder = Seq(UserAction.FileOpenGroup, UserAction.FileSaveGroup, UserAction.FileShareGroup,
+                      UserAction.FileResourcesGroup, ExportImportGroup)
 }
 
 import FileMenu._

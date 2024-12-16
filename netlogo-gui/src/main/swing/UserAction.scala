@@ -36,6 +36,7 @@ object UserAction {
   val FileOpenGroup         = "org.nlogo.swing.FileOpenGroup"
   val FileSaveGroup         = "org.nlogo.swing.FileSaveGroup"
   val FileShareGroup        = "org.nlogo.swing.FileShareGroup"
+  val FileResourcesGroup    = "org.nlogo.swing.FileResourcesGroup"
 
   val HelpWebGroup     = "org.nlogo.swing.HelpWebGroup"
   val HelpContextGroup = "org.nlogo.swing.HelpContextGroup"
