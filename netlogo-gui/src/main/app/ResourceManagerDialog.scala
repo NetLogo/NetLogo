@@ -6,6 +6,7 @@ import java.awt.{ FileDialog => AWTFileDialog, Frame, GridBagConstraints, GridBa
 import java.awt.event.ActionEvent
 import java.io.FileOutputStream
 import java.nio.file.{ Files, Paths }
+import java.util.Base64
 import javax.swing.{ AbstractAction, JButton, JDialog, JList, JPanel, JScrollPane, ListSelectionModel }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
@@ -47,17 +48,22 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
                                      Array(I18N.gui.get("common.buttons.ok")))
           }
 
-          else if (manager.addResource(new ExternalResource(name, Files.readAllBytes(path), file.split('.')(1)))) {
-            refreshList()
-
-            new DirtyEvent(None).raise(parent)
-          }
-
           else {
-            // use org.nlogo.swing.OptionPane after new GUI is integrated
-            OptionDialog.showMessage(parent, I18N.gui.get("common.messages.error"),
-                                     I18N.gui.getN("resource.alreadyExists", name),
-                                     Array(I18N.gui.get("common.buttons.ok")))
+            val resource = new ExternalResource(name, file.split('.')(1),
+                                                Base64.getEncoder.encodeToString(Files.readAllBytes(path)))
+
+            if (manager.addResource(resource)) {
+              refreshList()
+
+              new DirtyEvent(None).raise(parent)
+            }
+
+            else {
+              // use org.nlogo.swing.OptionPane after new GUI is integrated
+              OptionDialog.showMessage(parent, I18N.gui.get("common.messages.error"),
+                                      I18N.gui.getN("resource.alreadyExists", name),
+                                      Array(I18N.gui.get("common.buttons.ok")))
+            }
           }
         }
 
@@ -80,7 +86,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
                                                                AWTFileDialog.SAVE,
                                                                s"${resource.name}.${resource.extension}"))
 
-        stream.write(resource.data)
+        stream.write(Base64.getDecoder.decode(resource.data))
         stream.close()
       }
 
