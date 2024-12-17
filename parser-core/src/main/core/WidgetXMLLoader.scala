@@ -8,6 +8,11 @@ object WidgetXMLLoader {
     element.name match {
 
       case "button" =>
+        val source =
+          if (element.text.isEmpty)
+            None
+          else
+            Some(element.text)
         val kind =
           element("kind") match {
             case "Observer" => AgentKind.Observer
@@ -15,7 +20,7 @@ object WidgetXMLLoader {
             case "Turtle"   => AgentKind.Turtle
             case "Link"     => AgentKind.Link
           }
-        Button( element.getOptionalChild("source").map(_.text), element("x").toInt, element("y").toInt
+        Button( source, element("x").toInt, element("y").toInt
               , element("width").toInt, element("height").toInt, element.get("display"), element("forever").toBoolean
               , kind, element.get("actionKey").map(_.head), element("disableUntilTicks").toBoolean
               )
@@ -152,13 +157,7 @@ object WidgetXMLLoader {
           ifDefined(button)(  "display",   _.display) ++
           ifDefined(button)("actionKey", _.actionKey)
 
-        val children =
-          if (button.source.isDefined)
-            Seq(XMLElement("source", Map(), button.source.get, Seq()))
-          else
-            Seq()
-
-        XMLElement("button", attributes, "", children)
+        XMLElement("button", attributes, button.source.getOrElse(""), Seq())
 
       case slider: Slider =>
         val attributes =
