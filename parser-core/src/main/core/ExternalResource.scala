@@ -11,4 +11,4 @@ object ExternalResource {
 
 }
 
-case class ExternalResource(name: String, data: Array[Byte], extension: String)
+case class ExternalResource(name: String, extension: String, data: String)

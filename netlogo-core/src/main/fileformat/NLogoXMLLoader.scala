@@ -4,7 +4,6 @@ package org.nlogo.fileformat
 
 import java.io.{ File, PrintWriter, StringReader, StringWriter, Writer }
 import java.net.URI
-import java.util.Base64
 import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants, XMLStreamException, XMLStreamReader,
                           XMLStreamWriter }
 
@@ -150,7 +149,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
                 case (model, el @ XMLElement("resources", _, _, _)) =>
                   model.map(_.copy(
                     resources = el.getChildren("resource").map(
-                      resource => ExternalResource(resource("name"), Base64.getDecoder.decode(resource.text), resource("extension"))
+                      resource => ExternalResource(resource("name"), resource("extension"), resource.text)
                     )
                   ))
                 case (    _, XMLElement(name, _, _, _)) =>
@@ -256,7 +255,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
         writer.writeAttribute("name", resource.name)
         writer.writeAttribute("extension", resource.extension)
 
-        writeCDataEscaped(writer, Base64.getEncoder.encodeToString(resource.data))
+        writeCDataEscaped(writer, resource.data)
 
         writer.writeEndElement()
 
