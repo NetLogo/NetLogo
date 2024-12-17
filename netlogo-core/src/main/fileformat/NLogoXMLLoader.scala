@@ -2,71 +2,21 @@
 
 package org.nlogo.fileformat
 
-import java.io.{ File, PrintWriter, StringReader, StringWriter, Writer }
+import java.io.{ File, PrintWriter, StringWriter, Writer }
 import java.net.URI
-import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants, XMLStreamException, XMLStreamReader,
-                          XMLStreamWriter }
 
 import org.nlogo.api.{ AbstractModelLoader, AggregateDrawingInterface, FileIO, LabProtocol, LabXMLLoader,
                        ModelSettings, PreviewCommands, Version }
 import org.nlogo.core.{ ExternalResource, Femto, LiteralParser, Model, Section, ShapeXMLLoader, UpdateMode,
-                        View, Widget, WidgetXMLLoader, WorldDimensions, WorldDimensions3D, XMLElement }
+                        View, Widget, WidgetXMLLoader, WorldDimensions, WorldDimensions3D, XMLElement, XMLReader,
+                        XMLWriter }
 
 import scala.io.Source
 import scala.util.{ Failure, Success, Try }
-import scala.util.matching.Regex
 
 class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends AbstractModelLoader {
 
   private lazy val defaultInfo: String = FileIO.url2String("/system/empty-info.md")
-
-  private def readXMLElement(reader: XMLStreamReader): Try[XMLElement] = {
-
-    def parseElement(reader: XMLStreamReader, acc: XMLElement): Try[XMLElement] = {
-      if (reader.hasNext)
-        reader.next match {
-          case XMLStreamConstants.START_ELEMENT =>
-            readXMLElement(reader).flatMap(nexties => parseElement(reader, acc.copy(children = acc.children :+ nexties)))
-          case XMLStreamConstants.END_ELEMENT =>
-            Try(acc)
-          case XMLStreamConstants.CHARACTERS =>
-            val newAcc = acc.copy(text = new Regex(s"]]${XMLElement.CDATA_ESCAPE}>").replaceAllIn(reader.getText, "]]>"))
-            parseElement(reader, newAcc)
-          case x =>
-            Failure(throw new Exception(s"Unexpected value found while parsing XML: ${x}"))
-        }
-      else
-        Try(acc)
-    }
-
-    val attributes =
-      (0 until reader.getAttributeCount).
-        map((i) => reader.getAttributeLocalName(i) -> reader.getAttributeValue(i)).
-        toMap
-
-    parseElement(reader, XMLElement(reader.getLocalName, attributes,  "", Seq[XMLElement]()))
-
-  }
-
-  private def writeXMLElement(writer: XMLStreamWriter, element: XMLElement): Unit = {
-
-    writer.writeStartElement(element.name)
-
-    for ((key, value) <- element.attributes)
-      writer.writeAttribute(key, value)
-
-    if (element.text.isEmpty)
-      element.children.foreach(writeXMLElement(writer, _))
-    else
-      writeCDataEscaped(writer, element.text)
-
-    writer.writeEndElement()
-
-  }
-
-  private def writeCDataEscaped(writer: XMLStreamWriter, text: String): Unit = {
-    writer.writeCData(new Regex("]]>").replaceAllIn(text, "]]" + XMLElement.CDATA_ESCAPE + ">"))
-  }
 
   private def isCompatible(extension: String): Boolean =
     (Version.is3D && extension == "nlogo3d") || (!Version.is3D && extension == "nlogo")
@@ -89,21 +39,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
 
     if (isCompatible(extension)) {
 
-      val reader = XMLInputFactory.newFactory.createXMLStreamReader(new StringReader(source))
-
-      try {
-        while (reader.hasNext && reader.next != XMLStreamConstants.START_ELEMENT) {}
-      }
-
-      catch {
-        case e: XMLStreamException => return Failure(new Exception(e))
-      }
-
-      val elementTry = readXMLElement(reader)
-
-      reader.close()
-
-      elementTry.flatMap {
+      XMLReader.read(source).flatMap {
         element =>
 
           element.name match {
@@ -172,54 +108,50 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
 
   def saveToWriter(model: Model, destWriter: Writer) {
 
-    val writer = XMLOutputFactory.newFactory.createXMLStreamWriter(destWriter)
+    val writer = new XMLWriter(destWriter)
 
-    writer.writeStartDocument("utf-8", "1.0")
-    writer.writeStartElement("model")
-    writer.writeAttribute("version", model.version)
+    writer.startDocument()
+    writer.startElement("model")
+    writer.attribute("version", model.version)
 
     model.optionalSections.find(_.key == "org.nlogo.modelsection.modelsettings").foreach(section =>
-      writer.writeAttribute("snapToGrid", section.get.get.asInstanceOf[ModelSettings].snapToGrid.toString)
+      writer.attribute("snapToGrid", section.get.get.asInstanceOf[ModelSettings].snapToGrid.toString)
     )
 
-    writer.writeStartElement("code")
-    writeCDataEscaped(writer, model.code)
-    writer.writeEndElement()
+    writer.startElement("code")
+    writer.cData(model.code)
+    writer.endElement("code")
 
-    writer.writeStartElement("widgets")
-    model.widgets.foreach(widget => writeXMLElement(writer, WidgetXMLLoader.writeWidget(widget)))
-    writer.writeEndElement()
+    writer.startElement("widgets")
+    model.widgets.foreach(widget => writer.element(WidgetXMLLoader.writeWidget(widget)))
+    writer.endElement("widgets")
 
-    writer.writeStartElement("info")
-    writeCDataEscaped(writer, model.info)
-    writer.writeEndElement()
+    writer.startElement("info")
+    writer.cData(model.info)
+    writer.endElement("info")
 
-    writeXMLElement(writer, XMLElement("turtleShapes", Map(), "",
-                                       model.turtleShapes.map(ShapeXMLLoader.writeShape).toList))
-    writeXMLElement(writer, XMLElement("linkShapes", Map(), "",
-                                       model.linkShapes.map(ShapeXMLLoader.writeLinkShape).toList))
+    writer.element(XMLElement("turtleShapes", Map(), "", model.turtleShapes.map(ShapeXMLLoader.writeShape).toList))
+    writer.element(XMLElement("linkShapes", Map(), "", model.linkShapes.map(ShapeXMLLoader.writeLinkShape).toList))
 
     for (section <- model.optionalSections) {
       section.key match {
         case "org.nlogo.modelsection.previewcommands" =>
-          writer.writeStartElement("previewCommands")
-          writeCDataEscaped(writer, section.get.get.asInstanceOf[PreviewCommands].source)
-          writer.writeEndElement()
+          writer.startElement("previewCommands")
+          writer.cData(section.get.get.asInstanceOf[PreviewCommands].source)
+          writer.endElement("previewCommands")
 
         case "org.nlogo.modelsection.systemdynamics.gui" =>
-          writeXMLElement(writer, section.get.get.asInstanceOf[AggregateDrawingInterface].write())
+          writer.element(section.get.get.asInstanceOf[AggregateDrawingInterface].write())
 
         case "org.nlogo.modelsection.behaviorspace" =>
           val experiments = section.get.get.asInstanceOf[Seq[LabProtocol]]
           if (experiments.nonEmpty)
-            writeXMLElement(writer, XMLElement("experiments", Map(), "",
-                                               experiments.map(LabXMLLoader.writeExperiment).toList))
+            writer.element(XMLElement("experiments", Map(), "", experiments.map(LabXMLLoader.writeExperiment).toList))
 
         case "org.nlogo.modelsection.hubnetclient" =>
           val widgets = section.get.get.asInstanceOf[Seq[Widget]]
           if (widgets.nonEmpty)
-            writeXMLElement(writer, XMLElement("hubNetClient", Map(), "",
-                                               widgets.map(WidgetXMLLoader.writeWidget).toList))
+            writer.element(XMLElement("hubNetClient", Map(), "", widgets.map(WidgetXMLLoader.writeWidget).toList))
 
         case "org.nlogo.modelsection.modelsettings" =>
           // handled in model attributes
@@ -232,41 +164,40 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
 
     if (model.openTempFiles.nonEmpty) {
 
-      writer.writeStartElement("openTempFiles")
+      writer.startElement("openTempFiles")
 
       for (file <- model.openTempFiles) {
-        writer.writeStartElement("file")
-        writer.writeAttribute("path", file)
-        writer.writeEndElement()
+        writer.startElement("file")
+        writer.attribute("path", file)
+        writer.endElement("file")
       }
 
-      writer.writeEndElement()
+      writer.endElement("openTempFiles")
 
     }
 
     if (model.resources.nonEmpty) {
 
-      writer.writeStartElement("resources")
+      writer.startElement("resources")
 
       for (resource <- model.resources) {
 
-        writer.writeStartElement("resource")
+        writer.startElement("resource")
 
-        writer.writeAttribute("name", resource.name)
-        writer.writeAttribute("extension", resource.extension)
+        writer.attribute("name", resource.name)
+        writer.attribute("extension", resource.extension)
+        writer.cData(resource.data)
 
-        writeCDataEscaped(writer, resource.data)
-
-        writer.writeEndElement()
+        writer.endElement("resource")
 
       }
 
-      writer.writeEndElement()
+      writer.endElement("resources")
 
     }
 
-    writer.writeEndElement()
-    writer.writeEndDocument()
+    writer.endElement("model")
+    writer.endDocument()
     writer.close()
 
   }
@@ -311,8 +242,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
   }
 
   def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])] = {
-    val reader = XMLInputFactory.newFactory.createXMLStreamReader(new StringReader(source))
-    readXMLElement(reader).map(_.children.foldLeft((Seq[LabProtocol](), existingNames)) {
+    XMLReader.read(source).map(_.children.foldLeft((Seq[LabProtocol](), existingNames)) {
       case ((acc, names), elem) =>
         val (proto, newNames) = LabXMLLoader.readExperiment(elem, literalParser, editNames, names)
         (acc :+ proto, newNames)
@@ -320,9 +250,9 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
   }
 
   def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
-    val xmlWriter     = XMLOutputFactory.newFactory.createXMLStreamWriter(writer)
+    val xmlWriter     = new XMLWriter(writer)
     val writeStatuses = experiments.map(LabXMLLoader.writeExperiment).toList
-    Try(writeXMLElement(xmlWriter, XMLElement("experiments", Map(), "", writeStatuses)))
+    Try(xmlWriter.element(XMLElement("experiments", Map(), "", writeStatuses)))
   }
 
 }
