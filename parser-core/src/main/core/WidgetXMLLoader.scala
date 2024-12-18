@@ -218,13 +218,7 @@ object WidgetXMLLoader {
              ) ++
           ifDefined(monitor)("display", _.display)
 
-        val children =
-          if (monitor.source.isDefined)
-            List(XMLElement("source", Map(), monitor.source.get, Seq()))
-          else
-            Seq()
-
-        XMLElement("monitor", attributes, "", children)
+        XMLElement("monitor", attributes, monitor.source.getOrElse(""), Seq())
 
       case switch: Switch =>
         val attributes =
