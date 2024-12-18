@@ -9,7 +9,7 @@ import scala.util.{ Failure, Try }
 import scala.util.matching.Regex
 
 object XMLUtils {
-  val CDATA_ESCAPE = 0xe000.asInstanceOf[Char].toString
+  val CDataEscape = 0xe000.asInstanceOf[Char].toString
 }
 
 // this wrapper around XMLStreamWriter allows for pretty-printing and other formatting (Isaac B 12/16/24)
@@ -46,7 +46,7 @@ class XMLWriter(dest: Writer) {
     for (i <- 0 until indentLevel)
       writer.writeCharacters("\t")
 
-    writer.writeCData(new Regex("]]>").replaceAllIn(text, "]]" + XMLUtils.CDATA_ESCAPE + ">"))
+    writer.writeCData(new Regex("]]>").replaceAllIn(text, "]]" + XMLUtils.CDataEscape + ">"))
 
     lastStart = ""
   }
@@ -111,7 +111,7 @@ object XMLReader {
               Try(acc)
             case XMLStreamConstants.CHARACTERS =>
               parseElement(acc.copy(
-                text = new Regex(s"]]${XMLUtils.CDATA_ESCAPE}>").replaceAllIn(reader.getText, "]]>")))
+                text = new Regex(s"]]${XMLUtils.CDataEscape}>").replaceAllIn(reader.getText, "]]>")))
             case x =>
               Failure(throw new Exception(s"Unexpected value found while parsing XML: ${x}"))
           }
