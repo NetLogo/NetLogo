@@ -110,8 +110,11 @@ object XMLReader {
             case XMLStreamConstants.END_ELEMENT =>
               Try(acc)
             case XMLStreamConstants.CHARACTERS =>
-              parseElement(acc.copy(
-                text = new Regex(s"]]${XMLUtils.CDataEscape}>").replaceAllIn(reader.getText, "]]>")))
+              if (reader.isWhiteSpace)
+                parseElement(acc)
+              else
+                parseElement(acc.copy(
+                  text = new Regex(s"]]${XMLUtils.CDataEscape}>").replaceAllIn(reader.getText, "]]>")))
             case x =>
               Failure(throw new Exception(s"Unexpected value found while parsing XML: ${x}"))
           }
