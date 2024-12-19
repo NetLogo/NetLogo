@@ -5,10 +5,10 @@ package org.nlogo.fileformat
 import java.io.{ File, PrintWriter, StringWriter, Writer }
 import java.net.URI
 
-import org.nlogo.api.{ AbstractModelLoader, AggregateDrawingInterface, FileIO, LabProtocol, LabXMLLoader,
-                       ModelSettings, PreviewCommands, Version }
+import org.nlogo.api.{ AbstractModelLoader, AggregateDrawingInterface, FileIO, LabProtocol, ModelSettings,
+                       PreviewCommands, Version, XMLElement }
 import org.nlogo.core.{ ExternalResource, Femto, LiteralParser, Model, Section, UpdateMode, View, Widget,
-                        WorldDimensions, WorldDimensions3D, XMLElement, XMLReader, XMLWriter }
+                        WorldDimensions, WorldDimensions3D }
 
 import scala.io.Source
 import scala.util.{ Failure, Success, Try }
