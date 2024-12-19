@@ -1,6 +1,10 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.core
+package org.nlogo.api
+
+object XMLElement {
+  val CDataEscape = 0xe000.asInstanceOf[Char].toString
+}
 
 case class XMLElement(val name: String, val attributes: Map[String, String], val text: String,
                       val children: Seq[XMLElement]) {

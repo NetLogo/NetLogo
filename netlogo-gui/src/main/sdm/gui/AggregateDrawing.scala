@@ -7,8 +7,7 @@ import java.awt.Point
 import org.jhotdraw.framework.Figure
 import org.jhotdraw.standard.StandardDrawing
 
-import org.nlogo.api.AggregateDrawingInterface
-import org.nlogo.core.XMLElement
+import org.nlogo.api.{ AggregateDrawingInterface, XMLElement }
 import org.nlogo.sdm.Model
 
 class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {

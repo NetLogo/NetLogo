@@ -2,10 +2,10 @@
 
 package org.nlogo.fileformat
 
+import org.nlogo.api.XMLElement
 import org.nlogo.core.Shape.{ Circle => CoreCircle, Element, Line => CoreLine, LinkLine => CoreLinkLine
                               , LinkShape => CoreLinkShape, Polygon => CorePolygon, Rectangle => CoreRectangle
                               , RgbColor, VectorShape => CoreVectorShape }
-import org.nlogo.core.XMLElement
 
 object ShapeXMLLoader {
 

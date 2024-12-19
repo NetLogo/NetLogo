@@ -1,16 +1,14 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.core
+package org.nlogo.fileformat
 
 import java.io.{ StringReader, Writer }
 import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants, XMLStreamException }
 
+import org.nlogo.api.XMLElement
+
 import scala.util.{ Failure, Try }
 import scala.util.matching.Regex
-
-object XMLUtils {
-  val CDataEscape = 0xe000.asInstanceOf[Char].toString
-}
 
 // this wrapper around XMLStreamWriter allows for pretty-printing and other formatting (Isaac B 12/16/24)
 class XMLWriter(dest: Writer) {
@@ -46,7 +44,7 @@ class XMLWriter(dest: Writer) {
     for (i <- 0 until indentLevel)
       writer.writeCharacters("\t")
 
-    writer.writeCData(new Regex("]]>").replaceAllIn(text, "]]" + XMLUtils.CDataEscape + ">"))
+    writer.writeCData(new Regex("]]>").replaceAllIn(text, "]]" + XMLElement.CDataEscape + ">"))
 
     lastStart = ""
   }
@@ -114,7 +112,7 @@ object XMLReader {
                 parseElement(acc)
               else
                 parseElement(acc.copy(
-                  text = new Regex(s"]]${XMLUtils.CDataEscape}>").replaceAllIn(reader.getText, "]]>")))
+                  text = new Regex(s"]]${XMLElement.CDataEscape}>").replaceAllIn(reader.getText, "]]>")))
             case x =>
               Failure(throw new Exception(s"Unexpected value found while parsing XML: ${x}"))
           }

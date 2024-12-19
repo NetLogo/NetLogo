@@ -1,8 +1,9 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.api
+package org.nlogo.fileformat
 
-import org.nlogo.core.{ LiteralParser, XMLElement }
+import org.nlogo.api.{ Dump, LabProtocol, RefEnumeratedValueSet, RefValueSet, SteppedValueSet, XMLElement }
+import org.nlogo.core.LiteralParser
 
 object LabXMLLoader {
 
