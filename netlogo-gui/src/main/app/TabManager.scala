@@ -21,14 +21,14 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ Printable, PrinterManager, UserAction }
 import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, CompileAllEvent, CompiledEvent,
                                  ExternalFileSavedEvent, LoadBeginEvent, LoadErrorEvent, LoadModelEvent,
-                                 ModelSavedEvent, RuntimeErrorEvent }
+                                 RuntimeErrorEvent }
 import org.nlogo.window.{ ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget }
 
 class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
                  val externalFileManager: ExternalFileManager)
   extends TabsInterface with AboutToCloseFilesEvent.Handler with AboutToSaveModelEvent.Handler
   with CompiledEvent.Handler with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler
-  with LoadErrorEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler {
+  with LoadErrorEvent.Handler with LoadModelEvent.Handler with RuntimeErrorEvent.Handler {
 
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
@@ -603,9 +603,6 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     // write.
     stopWatcherThread()
   }
-
-  def handle(e: ModelSavedEvent) =
-    setWatchingFiles(getAutoReload, e.modelPath)
 
   def handle(e: ExternalFileSavedEvent) = {
     getTabWithFilename(Right(e.path)).foreach(tab => {
