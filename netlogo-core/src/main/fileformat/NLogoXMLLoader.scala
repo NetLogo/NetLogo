@@ -7,9 +7,8 @@ import java.net.URI
 
 import org.nlogo.api.{ AbstractModelLoader, AggregateDrawingInterface, FileIO, LabProtocol, LabXMLLoader,
                        ModelSettings, PreviewCommands, Version }
-import org.nlogo.core.{ ExternalResource, Femto, LiteralParser, Model, Section, ShapeXMLLoader, UpdateMode,
-                        View, Widget, WidgetXMLLoader, WorldDimensions, WorldDimensions3D, XMLElement, XMLReader,
-                        XMLWriter }
+import org.nlogo.core.{ ExternalResource, Femto, LiteralParser, Model, Section, UpdateMode, View, Widget,
+                        WorldDimensions, WorldDimensions3D, XMLElement, XMLReader, XMLWriter }
 
 import scala.io.Source
 import scala.util.{ Failure, Success, Try }

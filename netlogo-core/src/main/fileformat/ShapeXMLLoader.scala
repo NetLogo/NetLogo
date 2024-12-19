@@ -1,9 +1,11 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.core
+package org.nlogo.fileformat
 
-import Shape.{ Circle => CoreCircle, Element, Line => CoreLine, LinkLine => CoreLinkLine, LinkShape => CoreLinkShape
-             , Polygon => CorePolygon, Rectangle => CoreRectangle, RgbColor, VectorShape => CoreVectorShape }
+import org.nlogo.core.Shape.{ Circle => CoreCircle, Element, Line => CoreLine, LinkLine => CoreLinkLine
+                              , LinkShape => CoreLinkShape, Polygon => CorePolygon, Rectangle => CoreRectangle
+                              , RgbColor, VectorShape => CoreVectorShape }
+import org.nlogo.core.XMLElement
 
 object ShapeXMLLoader {
 

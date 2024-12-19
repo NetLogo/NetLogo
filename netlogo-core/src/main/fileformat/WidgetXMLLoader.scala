@@ -1,6 +1,11 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.core
+package org.nlogo.fileformat
+
+import org.nlogo.core.{ AgentKind, Button, ChooseableBoolean, ChooseableDouble, ChooseableList, ChooseableString,
+                        Chooser, Horizontal, InputBox, LogoList, Monitor, NumericInput, Output, Pen, Plot, Slider,
+                        StringInput, Switch, TextBox, UpdateMode, Vertical, View, Widget, WorldDimensions,
+                        WorldDimensions3D, XMLElement }
 
 object WidgetXMLLoader {
   def readWidget(element: XMLElement): Widget = {
