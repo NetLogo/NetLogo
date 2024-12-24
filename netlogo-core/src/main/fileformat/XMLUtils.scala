@@ -14,6 +14,8 @@ import scala.util.matching.Regex
 class XMLWriter(dest: Writer) {
   private val writer = XMLOutputFactory.newFactory.createXMLStreamWriter(dest)
 
+  private val indentStr = "  "
+
   private var indentLevel = 0
   private var lastStart = ""
 
@@ -25,7 +27,7 @@ class XMLWriter(dest: Writer) {
     writer.writeCharacters("\n")
 
     for (i <- 0 until indentLevel)
-      writer.writeCharacters("\t")
+      writer.writeCharacters(indentStr)
 
     writer.writeStartElement(name)
 
@@ -42,7 +44,7 @@ class XMLWriter(dest: Writer) {
     writer.writeCharacters("\n")
 
     for (i <- 0 until indentLevel)
-      writer.writeCharacters("\t")
+      writer.writeCharacters(indentStr)
 
     writer.writeCData(new Regex("]]>").replaceAllIn(text, "]]" + XMLElement.CDataEscape + ">"))
 
@@ -56,7 +58,7 @@ class XMLWriter(dest: Writer) {
       writer.writeCharacters("\n")
 
       for (i <- 0 until indentLevel)
-        writer.writeCharacters("\t")
+        writer.writeCharacters(indentStr)
     }
 
     writer.writeEndElement()
