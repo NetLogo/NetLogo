@@ -31,7 +31,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     })
   }
 
-  private val importButton = new JButton(new AbstractAction(I18N.gui.get("resource.import")) {
+  private val addButton = new JButton(new AbstractAction(I18N.gui.get("resource.add")) {
     def actionPerformed(e: ActionEvent) {
       try {
         val file = FileDialog.showFiles(parent, I18N.gui.get("resource.select"), AWTFileDialog.LOAD)
@@ -166,7 +166,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
       c.insets = new Insets(0, 6, 6, 6)
 
-      add(importButton, c)
+      add(addButton, c)
 
       c.insets = new Insets(0, 0, 6, 6)
 
