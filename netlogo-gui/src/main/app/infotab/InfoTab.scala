@@ -137,9 +137,7 @@ class InfoTab(attachModelDir: String => String)
   private def updateEditorPane(str: String) {
     if(str != editorPane.getText) {
       editorPane.getDocument.asInstanceOf[HTMLDocument].setBase(new File(attachModelDir(".")).toURI.toURL)
-      val html = InfoFormatter(str, editorPaneFontSize)
-      //println(html)
-      editorPane.setText(html)
+      editorPane.setText(InfoFormatter(str, editorPaneFontSize))
       editorPane.setCaretPosition(0)
     }
     toggleHelpButton()
@@ -160,12 +158,12 @@ class InfoTab(attachModelDir: String => String)
     editableButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
     helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
 
-    scrollPane.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
-    editorPane.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    scrollPane.setBackground(InterfaceColors.INFO_BACKGROUND)
+    editorPane.setBackground(InterfaceColors.INFO_BACKGROUND)
 
     textArea.syncTheme()
 
-    // change css here
+    updateEditorPane()
   }
 
   def handle(e: AppEvents.SwitchedTabsEvent) {
@@ -200,7 +198,6 @@ class InfoTab(attachModelDir: String => String)
   def hyperlinkUpdate(e: HyperlinkEvent) {
     if (e.getEventType == HyperlinkEvent.EventType.ACTIVATED) {
       if (e.getURL == null) {
-        
         if (new OptionPane(Hierarchy.getFrame(InfoTab.this), I18N.gui.get("common.messages.error"),
                            I18N.gui.get("tabs.info.invalidURL"),
                            List(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.help")),

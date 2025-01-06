@@ -2,6 +2,7 @@
 
 package org.nlogo.app.infotab
 
+import java.awt.Color
 import java.io.InputStream
 import java.util.{ ArrayList => JArrayList }
 
@@ -14,6 +15,7 @@ import com.vladsch.flexmark.ext.autolink.AutolinkExtension
 import com.vladsch.flexmark.ext.typographic.TypographicExtension
 
 import org.nlogo.api.FileIO
+import org.nlogo.theme.InterfaceColors
 
 // This gets tested by TestInfoFormatter. - ST 9/7/10
 
@@ -39,9 +41,17 @@ object InfoFormatter {
   def styleSheet(fontSize: Int): CSS = "<style type=\"text/css\">\n<!--\n"+
           styleSheetFile.
             replace("{BODY-FONT-SIZE}", fontSize.toString).
+            replace("{H1-BACKGROUND}", colorString(InterfaceColors.INFO_H1_BACKGROUND)).
+            replace("{H1-COLOR}", colorString(InterfaceColors.INFO_H1_COLOR)).
             replace("{H1-FONT-SIZE}", (fontSize * 1.5).toInt.toString).
+            replace("{H2-BACKGROUND}", colorString(InterfaceColors.INFO_H2_BACKGROUND)).
+            replace("{H2-COLOR}", colorString(InterfaceColors.INFO_H2_COLOR)).
             replace("{H2-FONT-SIZE}", (fontSize * 1.25).toInt.toString).
+            replace("{H3-COLOR}", colorString(InterfaceColors.INFO_H3_COLOR)).
             replace("{H3-FONT-SIZE}", fontSize.toString).
+            replace("{P-COLOR}", colorString(InterfaceColors.INFO_P_COLOR)).
+            replace("{CODE-BACKGROUND}", colorString(InterfaceColors.INFO_CODE_BACKGROUND)).
+            replace("{BLOCK-BACKGROUND}", colorString(InterfaceColors.INFO_BLOCK_BACKGROUND)).
             replace("{BULLET-1-IMAGE}", getClass.getResource("/system/bullet.png").toString).
             replace("{BULLET-2-IMAGE}", getClass.getResource("/system/bullet-hollow.png").toString).
             replace("{BULLET-3-IMAGE}", getClass.getResource("/system/box.png").toString) + "\n-->\n</style>"
@@ -83,4 +93,7 @@ object InfoFormatter {
     val document = parser.parse(content)
     renderer.render(document)
   }
+
+  private def colorString(color: Color): String =
+    s"rgb(${color.getRed},${color.getGreen},${color.getBlue})"
 }
