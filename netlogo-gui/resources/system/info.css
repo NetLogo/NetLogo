@@ -12,12 +12,12 @@
 body {
     margin-left: 5px;
     font-family: arial, sans-serif;
-    background: white;
+    background: none;
     font-size: {BODY-FONT-SIZE}pt
 }
 h1 {
-    color: white;
-    background: rgb(45,0,45);
+    background: {H1-BACKGROUND};
+    color: {H1-COLOR};
     font-size: {H1-FONT-SIZE}pt;
     margin-bottom: 4px;
     padding-left: 6px;
@@ -29,7 +29,8 @@ h2 {
     margin-top: 15px;
     margin-left: 6px;
     margin-bottom: 4px;
-    background: rgb(166,172,255);
+    background: {H2-BACKGROUND};
+    color: {H2-COLOR};
     font-size: {H2-FONT-SIZE}pt;
     padding-left: 6px;
     padding-right: 6px;
@@ -38,12 +39,11 @@ h2 {
 }
 h3 {
     margin-top: 15px;
-    margin-left: 13px;
+    margin-left: 15px;
     margin-bottom: 4px;
-    background: rgb(175,175,175);
+    color: {H3-COLOR};
     font-size: {H3-FONT-SIZE}pt;
     padding: 0.2em;
-    padding-left: 6px;
     padding-right: 6px;
     padding-top: 6px;
     padding-bottom: 6px;
@@ -52,31 +52,35 @@ h4 {
     margin-top: 15px;
     margin-bottom: 5px;
     margin-left: 15px;
+    color: {H3-COLOR};
     font-size: {H3-FONT-SIZE}pt;
 }
 h5 {
     margin-top: 15px;
     margin-left: 15px;
+    color: {H3-COLOR};
     font-size: {H3-FONT-SIZE}pt;
 }
 h6 {
     margin-top: 15px;
     margin-left: 15px;
+    color: {H3-COLOR};
     font-size: {H3-FONT-SIZE}pt;
 }
 p {
     margin-left: 15px;
     margin-bottom: 3px;
+    color: {P-COLOR};
 }
 pre {
-    margin-left: 13px;
-    background: rgb(225,225,225);
+    background: {CODE-BACKGROUND};
     font-family: monospace;
     font-size: {BODY-FONT-SIZE}pt;
     padding-left: 10px;
     padding-right: 3px;
     padding-top: 7px;
     padding-bottom: 7px;
+    margin-left: 15px;
     margin-top:9px;
     margin-bottom:0px;
 }
@@ -85,26 +89,24 @@ code {
     font-size: {BODY-FONT-SIZE}pt;
 }
 blockquote {
-    border: solid;
-    border-style: solid;
-    border-width: thin;
-    border-color: black;
-    background: rgb(250,250,220);
+    background: {BLOCK-BACKGROUND};
+    padding-left: 0px;
     padding-top: 0px;
     padding-bottom: 7px;
+    margin-left: 15px;
     margin-top: 7px;
     margin-bottom: 1px;
+}
+blockquote p
+{
+    color: black;
 }
 ol {
     margin-bottom: 1px;
 }
 ul {
-    list-style-image: url('{BULLET-1-IMAGE}');
     margin-bottom: 1px;
 }
-ul ul {
-    list-style-image: url('{BULLET-2-IMAGE}');
-}
-ul ul ul {
-    list-style-image: url('{BULLET-3-IMAGE}');
+li {
+    color: {P-COLOR};
 }

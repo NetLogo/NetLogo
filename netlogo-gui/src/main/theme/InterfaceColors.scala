@@ -376,7 +376,61 @@ object InterfaceColors {
   def TOOLBAR_IMAGE =
     theme match {
       case "classic" | "light" => new Color(85, 87, 112)
-      case "dark" =>new Color(168, 170, 194)
+      case "dark" => new Color(168, 170, 194)
+    }
+
+  def INFO_BACKGROUND =
+    theme match {
+      case "classic" | "light" => Color.WHITE
+      case "dark" => ALMOST_BLACK
+    }
+
+  def INFO_H1_BACKGROUND =
+    theme match {
+      case "classic" | "light" => new Color(209, 208, 255)
+      case "dark" => new Color(10, 0, 199)
+    }
+
+  def INFO_H1_COLOR =
+    theme match {
+      case "classic" | "light" => new Color(10, 0, 199)
+      case "dark" => new Color(205, 202, 255)
+    }
+
+  def INFO_H2_BACKGROUND =
+    theme match {
+      case "classic" | "light" => new Color(211, 231, 255)
+      case "dark" => new Color(0, 80, 177)
+    }
+
+  def INFO_H2_COLOR =
+    theme match {
+      case "classic" | "light" => new Color(35, 135, 255)
+      case "dark" => new Color(221, 237, 255)
+    }
+
+  def INFO_H3_COLOR =
+    theme match {
+      case "classic" | "light" => new Color(132, 132, 132)
+      case "dark" => new Color(173, 183, 196)
+    }
+
+  def INFO_P_COLOR =
+    theme match {
+      case "classic" | "light" => Color.BLACK
+      case "dark" => Color.WHITE
+    }
+
+  def INFO_CODE_BACKGROUND =
+    theme match {
+      case "classic" | "light" => LIGHT_GRAY
+      case "dark" => new Color(67, 67, 67)
+    }
+
+  def INFO_BLOCK_BACKGROUND =
+    theme match {
+      case "classic" | "light" => new Color(255, 247, 194)
+      case "dark" => new Color(237, 225, 145)
     }
 
   def CHECK_FILLED = new Color(0, 173, 90)
