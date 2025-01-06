@@ -176,10 +176,11 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     Compile / resourceDirectory            := baseDirectory.value / "resources",
     Compile / unmanagedResourceDirectories ++= (sharedResources / Compile / unmanagedResourceDirectories).value,
     libraryDependencies ++= {
-      lazy val osName = System.getProperty("os.name") match {
-        case n if n.startsWith("Linux") => "linux"
-        case n if n.startsWith("Mac") => "mac-aarch64"
-        case n if n.startsWith("Windows") => "win"
+      lazy val osName = (System.getProperty("os.name"), System.getProperty("os.arch")) match {
+        case (n, _) if n.startsWith("Linux") => "linux"
+        case (n, arch) if n.startsWith("Mac") && arch == "aarch64" => "mac-aarch64"
+        case (n, _) if n.startsWith("Mac") => "mac"
+        case (n, _) if n.startsWith("Windows") => "win"
         case _ => throw new Exception("Unknown platform!")
       }
       Seq(
