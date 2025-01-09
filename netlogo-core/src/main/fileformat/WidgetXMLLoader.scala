@@ -67,7 +67,7 @@ object WidgetXMLLoader {
             )
 
       case "monitor" =>
-        Monitor( element.getOptionalChild("source").map(_.text), element("x").toInt, element("y").toInt
+        Monitor( Some(element.text), element("x").toInt, element("y").toInt
                , element("width").toInt, element("height").toInt, element.get("display"), element("precision").toInt
                , element("fontSize").toInt
                )
@@ -135,7 +135,7 @@ object WidgetXMLLoader {
                 )
 
       case "note" =>
-        TextBox( element.get("display"), element("x").toInt, element("y").toInt, element("width").toInt
+        TextBox( Some(element.text), element("x").toInt, element("y").toInt, element("width").toInt
                , element("height").toInt, element("fontSize").toInt, element("color").toDouble
                , element("transparent").toBoolean
                )

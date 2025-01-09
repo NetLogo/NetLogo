@@ -7,8 +7,7 @@ import java.net.URI
 import java.nio.file.{ Files, Paths }
 
 import org.nlogo.api.{ ComponentSerialization, FileIO, LabProtocol, ModelFormat, Version, VersionHistory }
-import org.nlogo.core.{ Femto, I18N, LiteralParser, Model, ShapeParser,
-  UpdateMode, View, Widget, WorldDimensions }
+import org.nlogo.core.{ Femto, I18N, LiteralParser, Model, ShapeParser, Widget }
 import org.nlogo.core.model.WidgetReader
 
 import scala.io.{ Codec, Source }, Codec.UTF8
@@ -191,15 +190,11 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
     }
   }
 
-  lazy val defaultView: View = View(x = 210, y = 10, width = 439, height = 460,
-    dimensions = WorldDimensions(-16, 16, -16, 16, 13.0), fontSize = 10, updateMode = UpdateMode.Continuous,
-    showTickCounter = true, frameRate = 30)
-
   object InterfaceComponent extends ComponentSerialization[Array[String], A] {
     val componentName = "org.nlogo.modelsection.interface"
     private val additionalReaders = AbstractNLogoFormat.this.widgetReaders
     private val literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
-    override def addDefault = _.copy(widgets = Seq(defaultView))
+    override def addDefault = _.copy(widgets = Seq(Model.defaultView))
 
     def serialize(m: Model): Array[String] =
       m.widgets.flatMap((w: Widget) => (WidgetReader.format(w, additionalReaders).linesIterator.toSeq :+ "")).toArray

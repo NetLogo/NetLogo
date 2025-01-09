@@ -3,7 +3,7 @@
 package org.nlogo.fileformat
 
 import org.nlogo.api.ModelFormat
-import org.nlogo.core.{ View, UpdateMode, Model, WorldDimensions3D }
+import org.nlogo.core.{ Model, WorldDimensions3D }
 import scala.util.{ Failure, Success }
 import org.nlogo.core.model.WidgetReader
 
@@ -33,7 +33,5 @@ class NLogoThreeDFormat
     }
   override def isCompatible(model: Model): Boolean =
     model.version.contains("3D")
-  override lazy val defaultView: View = View(x = 210, y = 10, width = 439, height = 460,
-    dimensions = new WorldDimensions3D(-16, 16, -16, 16, -16, 16, 13.0), fontSize = 10, updateMode = UpdateMode.Continuous,
-    showTickCounter = true, frameRate = 30)
-  }
+  lazy val defaultView = Model.defaultView.copy(dimensions = new WorldDimensions3D(-16, 16, -16, 16, -16, 16, 13.0))
+}
