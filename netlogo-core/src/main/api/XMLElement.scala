@@ -2,12 +2,17 @@
 
 package org.nlogo.api
 
+import scala.util.hashing.MurmurHash3
+
 object XMLElement {
   val CDataEscape = 0xe000.asInstanceOf[Char].toString
 }
 
 case class XMLElement(val name: String, val attributes: Map[String, String], val text: String,
                       val children: Seq[XMLElement]) {
+
+  private val hash: Int = MurmurHash3.unorderedHash(Seq(name, text) ++ attributes)
+  private val childHashes: Map[Int, Seq[XMLElement]] = children.groupBy(_.hash)
 
   def apply(attribute: String): String =
     attributes(attribute)
@@ -27,4 +32,12 @@ case class XMLElement(val name: String, val attributes: Map[String, String], val
   def getChildren(name: String): Seq[XMLElement] =
     children.filter(_.name == name)
 
+  // this ensures that child order is ignored when checking for semantic equivalence
+  override def equals(other: Any): Boolean = {
+    other match {
+      case el: XMLElement =>
+        name == el.name && text == el.text && attributes == el.attributes && childHashes == el.childHashes
+      case _ => false
+    }
+  }
 }

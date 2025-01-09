@@ -18,7 +18,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
   private lazy val defaultInfo: String = FileIO.url2String("/system/empty-info.md")
 
   private def isCompatible(extension: String): Boolean =
-    (Version.is3D && extension == "nlogo3d") || (!Version.is3D && extension == "nlogo")
+    extension == "nlogox"
 
   private def isCompatible(uri: URI): Boolean = {
     val extension = AbstractModelLoader.getURIExtension(uri)
@@ -44,14 +44,14 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
           element.name match {
             case "model" =>
 
-              import Model.{ defaultCode, defaultShapes, defaultLinkShapes }
+              import Model.{ defaultCode, defaultShapes, defaultLinkShapes, defaultView }
 
               val version = element("version")
               val snapToGrid = element("snapToGrid", "false").toBoolean
 
               val settings  = new Section("org.nlogo.modelsection.modelsettings", ModelSettings(snapToGrid))
 
-              val model = Model(defaultCode, List(View()), defaultInfo, version, defaultShapes, defaultLinkShapes, List(settings), Seq(), Seq())
+              val model = Model(defaultCode, List(defaultView), defaultInfo, version, defaultShapes, defaultLinkShapes, List(settings), Seq(), Seq())
 
               element.children.foldLeft(Try(model)) {
                 case (model, XMLElement("widgets", _, _, children)) =>
@@ -72,7 +72,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
                     Femto.get[AggregateDrawingInterface]("org.nlogo.sdm.gui.AggregateDrawing").read(el))
                   model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
                 case (model, XMLElement("experiments", _, _, children)) =>
-                  val bspaceElems = children.map(LabXMLLoader.readExperiment(_, literalParser, editNames, Set()))
+                  val bspaceElems = children.map(LabXMLLoader.readExperiment(_, literalParser, editNames, Set())._1)
                   val section     = new Section("org.nlogo.modelsection.behaviorspace", bspaceElems)
                   model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
                 case (model, XMLElement("hubNetClient", _, _, children)) =>

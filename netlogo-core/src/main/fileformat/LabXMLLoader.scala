@@ -13,8 +13,8 @@ object LabXMLLoader {
     def readValueSet(element: XMLElement): RefValueSet = {
       element.name match {
         case "steppedValueSet" =>
-          SteppedValueSet( element("variable"), element("first").toDouble, element("step").toDouble
-                         , element("last").toDouble)
+          SteppedValueSet( element("variable"), BigDecimal(element("first")), BigDecimal(element("step"))
+                         , BigDecimal(element("last")))
 
         case "enumeratedValueSet" =>
           val value = element.getChildren("value").map(element => literalParser.readFromString(element("value")))
@@ -95,9 +95,9 @@ object LabXMLLoader {
 
           val attributes =
             Map( "variable" -> stepped.variableName
-               , "first"    -> stepped.firstValue.toString
-               , "step"     -> stepped.step.toString
-               , "last"     -> stepped.lastValue.toString
+               , "first"    -> Dump.number(stepped.firstValue.toDouble)
+               , "step"     -> Dump.number(stepped.step.toDouble)
+               , "last"     -> Dump.number(stepped.lastValue.toDouble)
                )
 
           XMLElement("steppedValueSet", attributes, "", Seq())
