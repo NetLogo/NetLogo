@@ -72,8 +72,13 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
                     Femto.get[AggregateDrawingInterface]("org.nlogo.sdm.gui.AggregateDrawing").read(el))
                   model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
                 case (model, XMLElement("experiments", _, _, children)) =>
-                  val bspaceElems = children.map(LabXMLLoader.readExperiment(_, literalParser, editNames, Set())._1)
-                  val section     = new Section("org.nlogo.modelsection.behaviorspace", bspaceElems)
+                  val (bspaceElems, _) = children.foldLeft((Seq[LabProtocol](), Set[String]())) {
+                    case ((elems, accNames), child) => {
+                      val (elem, names) = LabXMLLoader.readExperiment(child, literalParser, editNames, accNames)
+                      (elems :+ elem, accNames ++ names)
+                    }
+                  }
+                  val section = new Section("org.nlogo.modelsection.behaviorspace", bspaceElems)
                   model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
                 case (model, XMLElement("hubNetClient", _, _, children)) =>
                   val hnElems = children.map(WidgetXMLLoader.readWidget)
