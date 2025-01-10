@@ -6,7 +6,7 @@ import java.awt.{ BorderLayout, Dimension }
 import java.awt.event.{WindowAdapter, WindowEvent}
 import javax.swing.{ JFrame, WindowConstants }
 
-import org.nlogo.api.Exceptions
+import org.nlogo.api.{ Exceptions, Version }
 import org.nlogo.awt.{ Images, UserCancelException }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.LinkRoot
@@ -14,7 +14,11 @@ import org.nlogo.window.Event.LinkParent
 import org.nlogo.window.Events.IconifiedEvent
 
 class AppFrame extends JFrame with LinkParent with LinkRoot with ThemeSync {
-  setIconImage(Images.loadImageResource("/images/arrowhead.gif"))
+  if (Version.is3D)
+    setIconImage(Images.loadImageResource("/images/netlogo3d.png"))
+  else
+    setIconImage(Images.loadImageResource("/images/netlogo.png"))
+
   setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
   setMinimumSize(new Dimension(300, 300))
 

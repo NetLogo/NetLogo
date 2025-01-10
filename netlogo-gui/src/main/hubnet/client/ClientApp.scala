@@ -73,7 +73,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
       })
 
       this.isLocal = isLocal
-      setIconImage(Images.loadImageResource("/images/arrowhead.gif"))
+      setIconImage(Images.loadImageResource("/images/hubnet.png"))
       getContentPane.setLayout(new BorderLayout())
       loginDialog = new LoginDialog(this, userid, hostip, port)
       clientPanel =
