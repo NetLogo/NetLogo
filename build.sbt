@@ -75,7 +75,8 @@ lazy val scalatestSettings = Seq(
   ) }
   // Tests must be forked to get the above `javaOptions`
 , Test / fork := true
-, threed := { System.setProperty("org.nlogo.is3d", "true") }
+, twod   := { System.setProperty("org.nlogo.is3d", "false") }
+, threed := { System.setProperty("org.nlogo.is3d",  "true") }
 , nogen  := { System.setProperty("org.nlogo.noGenerator", "true") }
 , noopt  := { System.setProperty("org.nlogo.noOptimizer", "true") }
 )
@@ -233,6 +234,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     )
   )
 
+lazy val twod   = TaskKey[Unit]("twod", "disable NetLogo 3D")
 lazy val threed = TaskKey[Unit]("threed", "enable NetLogo 3D")
 lazy val nogen = TaskKey[Unit]("nogen", "disable bytecode generator")
 lazy val noopt = TaskKey[Unit]("noopt", "disable compiler optimizations")
