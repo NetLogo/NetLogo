@@ -43,5 +43,9 @@ class NLogoXMLFormatTests extends AnyFunSuite {
     assert(equivalent(modelString, roundTripString(modelString)))
   }
 
-  // test model with every possible feature
+  test("Model with all features") {
+    val modelString = loadString("test/fileformat/All.nlogox")
+
+    assert(equivalent(modelString, roundTripString(modelString)))
+  }
 }
