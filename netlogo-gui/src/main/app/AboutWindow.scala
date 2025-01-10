@@ -87,7 +87,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     refreshSystemText()
 
     getContentPane.setLayout(new BorderLayout(0, 10))
-    val graphic = new JLabel(Utils.icon("/images/title.jpg")) {
+    val graphic = new JLabel(Utils.iconScaled("/images/title.png", 600, 97)) {
       setBorder(new EmptyBorder(10,10,0,10))
     }
     getContentPane.add(graphic, BorderLayout.NORTH)
