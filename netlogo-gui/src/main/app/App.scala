@@ -12,7 +12,7 @@ import org.nlogo.agent.{ Agent, World2D, World3D }
 import org.nlogo.api._
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
 import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, FindDialog, SaveModelingCommonsAction }
-import org.nlogo.app.interfacetab.{ InterfaceTab, InterfaceToolBar, WidgetPanel }
+import org.nlogo.app.interfacetab.{ InterfaceTab, InterfaceWidgetControls, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManagerErrorDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model,
@@ -334,8 +334,8 @@ class App extends
     val interfaceFactory = new InterfaceFactory() {
       def widgetPanel(workspace: GUIWorkspace): AbstractWidgetPanel =
         new WidgetPanel(workspace)
-      def toolbar(wp: AbstractWidgetPanel, workspace: GUIWorkspace, buttons: List[WidgetInfo], frame: Frame) = {
-        new InterfaceToolBar(wp.asInstanceOf[WidgetPanel], workspace, buttons, frame,
+      def widgetControls(wp: AbstractWidgetPanel, workspace: GUIWorkspace, buttons: List[WidgetInfo], frame: Frame) = {
+        new InterfaceWidgetControls(wp.asInstanceOf[WidgetPanel], workspace, buttons, frame,
           pico.getComponent(classOf[EditDialogFactoryInterface]))
       }
     }

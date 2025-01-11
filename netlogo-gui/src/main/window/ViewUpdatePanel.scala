@@ -11,12 +11,13 @@ import org.nlogo.swing.{ Button, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.LoadEndEvent
 
-class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCounter: TickCounterLabel)
-    extends JPanel(new GridBagLayout) with Transparent with LoadEndEvent.Handler with ThemeSync {
+class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, displaySwitch: JCheckBox,
+                      tickCounter: TickCounterLabel)
+  extends JPanel(new GridBagLayout) with Transparent with LoadEndEvent.Handler with ThemeSync {
+
   implicit val prefix = Prefix("tabs.run")
 
   private val updateModeChooser = new UpdateModeChooser(workspace)
-  private val speedSlider       = new SpeedSliderPanel(workspace, tickCounter)
 
   private val settingsButton = new SettingsButton(new EditSettings(workspace.viewWidget.settings))
 
@@ -28,12 +29,6 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
     val c = new GridBagConstraints
 
     c.gridy = 0
-    c.gridheight = 2
-    c.insets = new Insets(6, 24, 6, 24)
-
-    add(speedSlider, c)
-
-    c.gridheight = 1
     c.insets = new Insets(6, 0, 3, 12)
 
     add(displaySwitch, c)

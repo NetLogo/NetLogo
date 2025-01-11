@@ -2,6 +2,8 @@
 
 package org.nlogo.window
 
+import java.awt.{ Component, Frame }
+
 import org.nlogo.core.{ I18N, View => CoreView, Widget => CoreWidget,
   Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
   Monitor => CoreMonitor, Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider,
@@ -34,7 +36,6 @@ case class WidgetInfo(displayName: String, widgetThunk: () => CoreWidget, imageN
 trait InterfaceFactory {
   def widgetPanel(workspace: GUIWorkspace): AbstractWidgetPanel
 
-  def toolbar(interfacePanel: AbstractWidgetPanel,
-              workspace: GUIWorkspace,
-              buttons: List[WidgetInfo], frame: java.awt.Frame): java.awt.Component
+  def widgetControls(interfacePanel: AbstractWidgetPanel, workspace: GUIWorkspace, buttons: List[WidgetInfo],
+                     frame: Frame): Component
 }

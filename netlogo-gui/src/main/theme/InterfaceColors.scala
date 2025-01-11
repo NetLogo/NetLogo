@@ -379,6 +379,12 @@ object InterfaceColors {
       case "dark" => new Color(168, 170, 194)
     }
 
+  def TOOLBAR_SEPARATOR =
+    theme match {
+      case "classic" | "light" => MEDIUM_GRAY
+      case "dark" => LIGHT_GRAY_OUTLINE
+    }
+
   def INFO_BACKGROUND =
     theme match {
       case "classic" | "light" => Color.WHITE

@@ -7,7 +7,7 @@ import javax.swing.{ JFrame, JMenuBar, ScrollPaneConstants }
 
 import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
-import org.nlogo.swing.ScrollPane
+import org.nlogo.swing.{ ScrollPane, ToolBar }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel }
 
@@ -23,12 +23,19 @@ class HubNetClientEditor(workspace: GUIWorkspace,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
     setBorder(null)
   }
-  
-  private val toolbar = {
+
+  private val widgetControls = {
     import WidgetInfo._
+
     val buttons = List(button, slider, switch, chooser, input, monitor, plot, note, view)
 
-    iFactory.toolbar(interfacePanel, workspace, buttons, this)
+    iFactory.widgetControls(interfacePanel, workspace, buttons, HubNetClientEditor.this)
+  }
+
+  private val toolbar = new ToolBar {
+    override def addControls() {
+      add(widgetControls)
+    }
   }
 
   locally {
@@ -90,7 +97,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
 
     scrollPane.setBackground(InterfaceColors.INTERFACE_BACKGROUND)
 
-    toolbar match {
+    widgetControls match {
       case ts: ThemeSync => ts.syncTheme()
     }
 

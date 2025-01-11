@@ -3,7 +3,7 @@
 package org.nlogo.app.interfacetab
 
 import java.awt.{ BorderLayout, Component, Container, ContainerOrderFocusTraversalPolicy, Dimension, Graphics,
-                  Graphics2D, GridBagConstraints }
+                  Graphics2D }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.{ PageFormat, Printable }
 import javax.swing.{ AbstractAction, Action, JComponent, JPanel, JSplitPane, ScrollPaneConstants }
@@ -11,11 +11,11 @@ import javax.swing.{ AbstractAction, Action, JComponent, JPanel, JSplitPane, Scr
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, ScrollPane, UserAction, Utils },
+import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, ScrollPane, ToolBar, UserAction,
+                         Utils },
                        Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
-import org.nlogo.swing.{ Utils => SwingUtils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace, ViewUpdatePanel, WidgetInfo,
+import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace, SpeedSliderPanel, ViewUpdatePanel, WidgetInfo,
                           Events => WindowEvents, WorkspaceActions },
                         WindowEvents.{ Enable2DEvent, LoadBeginEvent, OutputEvent }
 
@@ -74,7 +74,18 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   commandCenter.setMinimumSize(new Dimension(0, 0))
 
-  private var viewUpdatePanel: ViewUpdatePanel = null
+  private val widgetControls = {
+    import WidgetInfo._
+
+    val buttons = List(button, slider, switch, chooser, input, monitor, plot, output, note)
+
+    new InterfaceWidgetControls(iP, workspace, buttons, workspace.getFrame, dialogFactory)
+  }
+
+  private val speedSlider = new SpeedSliderPanel(workspace, workspace.viewWidget.tickCounter)
+
+  private val viewUpdatePanel = new ViewUpdatePanel(workspace, speedSlider, workspace.viewWidget.displaySwitch,
+                                                    workspace.viewWidget.tickCounter)
 
   private val splitPane = new SplitPane(scrollPane, commandCenter, commandCenterToggleAction)
 
@@ -88,29 +99,15 @@ class InterfaceTab(workspace: GUIWorkspace,
     override def focusLost(e: FocusEvent): Unit = { }
   }
 
-  import WidgetInfo._
+  private val toolBar = new DynamicToolbar(widgetControls, speedSlider, viewUpdatePanel)
 
-  private val buttons = List(button, slider, switch, chooser, input, monitor, plot, output, note)
+  add(toolBar, BorderLayout.NORTH)
 
-  private val toolBar = new InterfaceToolBar(iP, workspace, buttons, workspace.getFrame, dialogFactory) {
-    override def addControls() {
-      super.addControls()
-      viewUpdatePanel = new ViewUpdatePanel(workspace, workspace.viewWidget.displaySwitch,
-                                            workspace.viewWidget.tickCounter)
-      val c = new GridBagConstraints
-      c.gridy = 0
-      c.gridheight = 2
-      add(viewUpdatePanel, c)
-    }
-  }
+  iP.addFocusListener(TrackingFocusListener)
 
-  locally {
-    add(toolBar, BorderLayout.NORTH)
-    iP.addFocusListener(TrackingFocusListener)
-    commandCenter.getDefaultComponentForFocus.addFocusListener(TrackingFocusListener)
-  }
+  commandCenter.getDefaultComponentForFocus.addFocusListener(TrackingFocusListener)
 
-  SwingUtils.addEscKeyAction(this, () => InterfaceTab.this.monitorManager.closeTopMonitor())
+  Utils.addEscKeyAction(this, () => InterfaceTab.this.monitorManager.closeTopMonitor())
 
   private class InterfaceTabFocusTraversalPolicy extends ContainerOrderFocusTraversalPolicy {
     override def getComponentAfter(focusCycleRoot: Container, aComponent: Component) =
@@ -155,8 +152,11 @@ class InterfaceTab(workspace: GUIWorkspace,
   }
 
   def handle(e: Enable2DEvent) {
+    speedSlider.setVisible(e.enabled)
     viewUpdatePanel.setVisible(e.enabled)
     viewUpdatePanel.handle(null)
+    revalidate()
+    repaint()
   }
 
   /// printing
@@ -173,6 +173,68 @@ class InterfaceTab(workspace: GUIWorkspace,
       iP.printAll(g2d)
       Printable.PAGE_EXISTS
     }
+
+  class DynamicToolbar(widgetControls: InterfaceWidgetControls, speedSlider: SpeedSliderPanel,
+                       viewUpdatePanel: ViewUpdatePanel)
+    extends ToolBar with ThemeSync {
+
+    setLayout(null)
+
+    override def getPreferredSize: Dimension =
+      new Dimension(super.getPreferredSize.width, widgetControls.getPreferredSize.height.
+                                                  max(speedSlider.getPreferredSize.height).
+                                                  max(viewUpdatePanel.getPreferredSize.height) + 16)
+
+    override def addControls() {
+      add(widgetControls)
+      add(speedSlider)
+      add(viewUpdatePanel)
+    }
+
+    override def doLayout() {
+      if (speedSlider.isVisible) {
+        val left = (getWidth / 2 - speedSlider.getPreferredSize.width / 2 -
+                    widgetControls.getPreferredSize.width - 180).max(0)
+
+        widgetControls.setBounds(left, getHeight / 2 - widgetControls.getPreferredSize.height / 2,
+                                 widgetControls.getPreferredSize.width, widgetControls.getPreferredSize.height)
+        speedSlider.setBounds((getWidth / 2 - speedSlider.getPreferredSize.width / 2).
+                              max(left + widgetControls.getWidth + 40),
+                              getHeight / 2 - speedSlider.getPreferredSize.height / 2,
+                              speedSlider.getPreferredSize.width, speedSlider.getPreferredSize.height)
+        viewUpdatePanel.setBounds(speedSlider.getX + speedSlider.getWidth +
+                                  speedSlider.getX - (widgetControls.getX + widgetControls.getWidth),
+                                  getHeight / 2 - viewUpdatePanel.getPreferredSize.height / 2,
+                                  viewUpdatePanel.getPreferredSize.width, viewUpdatePanel.getPreferredSize.height)
+      }
+
+      else {
+        widgetControls.setBounds(0, getHeight / 2 - widgetControls.getPreferredSize.height / 2,
+                                 widgetControls.getPreferredSize.width, widgetControls.getPreferredSize.height)
+      }
+    }
+
+    override def paintComponent(g: Graphics) {
+      super.paintComponent(g)
+
+      val gap = speedSlider.getX - (widgetControls.getX + widgetControls.getWidth)
+
+      if (speedSlider.isVisible && gap <= 80) {
+        val g2d = Utils.initGraphics2D(g)
+
+        g2d.setColor(InterfaceColors.TOOLBAR_SEPARATOR)
+        g2d.fillRect(speedSlider.getX - gap / 2, getY + 8, 1, getHeight - 16)
+        g2d.fillRect(viewUpdatePanel.getX - gap / 2, getY + 8, 1, getHeight - 16)
+      }
+    }
+
+    def syncTheme() {
+      setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
+
+      widgetControls.syncTheme()
+      viewUpdatePanel.syncTheme()
+    }
+  }
 
   /// command center stuff
 
@@ -256,7 +318,6 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   def syncTheme() {
     toolBar.syncTheme()
-    viewUpdatePanel.syncTheme()
     iP.syncTheme()
 
     scrollPane.setBackground(InterfaceColors.INTERFACE_BACKGROUND)

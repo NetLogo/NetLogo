@@ -2,26 +2,28 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Frame, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Dimension, Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, JLabel, JPanel }
+import javax.swing.{ AbstractAction, Action, JLabel, JPanel }
 
 import org.nlogo.api.Editable
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ DropdownArrow, HoverDecoration, MenuItem, PopupMenu, RoundedBorderPanel, ToolBar,
-                         ToolBarToggleButton, Utils }
+import org.nlogo.swing.{ DropdownArrow, HoverDecoration, MenuItem, PopupMenu, RoundedBorderPanel, ToolBarToggleButton,
+                         Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents, GUIWorkspace, JobWidget, Widget,
                           WidgetInfo }
 
 import scala.collection.mutable.HashSet
 
-class InterfaceToolBar(wPanel: WidgetPanel,
-                       workspace: GUIWorkspace,
-                       WidgetInfos: List[WidgetInfo],
-                       frame: Frame,
-                       dialogFactory: EditDialogFactoryInterface) extends ToolBar
+class InterfaceWidgetControls(wPanel: WidgetPanel,
+                              workspace: GUIWorkspace,
+                              WidgetInfos: List[WidgetInfo],
+                              frame: Frame,
+                              dialogFactory: EditDialogFactoryInterface)
+  extends JPanel(new GridBagLayout)
+  with Transparent
   with WindowEvents.WidgetForegroundedEvent.Handler
   with WindowEvents.WidgetRemovedEvent.Handler
   with AppEvents.WidgetSelectedEvent.Handler
@@ -32,9 +34,9 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
   private val selectedObjects = new HashSet[Widget]
 
-  private val selectButton = new ToolBarToggleButton(new SelectAction)
-  private val editButton = new ToolBarToggleButton(new EditAction)
-  private val deleteButton = new ToolBarToggleButton(new DeleteAction)
+  private val selectButton = new SquareButton(new SelectAction)
+  private val editButton = new SquareButton(new EditAction)
+  private val deleteButton = new SquareButton(new DeleteAction)
 
   private val widgetMenu = new WidgetMenu
   private val alignmentMenu = new AlignmentMenu
@@ -42,6 +44,30 @@ class InterfaceToolBar(wPanel: WidgetPanel,
   selectButton.setToolTipText(I18N.gui.get("tabs.run.selectButton.tooltip"))
   editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
   deleteButton.setToolTipText(I18N.gui.get("tabs.run.deleteButton.tooltip"))
+
+  locally {
+    val c = new GridBagConstraints
+
+    c.anchor = GridBagConstraints.CENTER
+    c.fill = GridBagConstraints.VERTICAL
+    c.weighty = 1
+    c.insets = new Insets(0, 6, 0, 6)
+
+    add(widgetMenu, c)
+
+    c.insets = new Insets(0, 0, 0, 6)
+
+    add(alignmentMenu, c)
+
+    add(selectButton, c)
+    add(editButton, c)
+
+    c.insets = new Insets(0, 0, 0, 0)
+
+    add(deleteButton, c)
+
+    selectButton.setSelected(true)
+  }
 
   class SelectAction extends AbstractAction(null, Utils.iconScaledWithColor("/images/select.png", 15, 15,
                                                                             InterfaceColors.TOOLBAR_IMAGE)) {
@@ -57,7 +83,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
                                                                           InterfaceColors.TOOLBAR_IMAGE)) {
     def actionPerformed(e: ActionEvent) {
       if (editButton.isSelected) {
-        new WindowEvents.EditWidgetEvent(null).raise(InterfaceToolBar.this)
+        new WindowEvents.EditWidgetEvent(null).raise(InterfaceWidgetControls.this)
 
         wPanel.beginEdit()
 
@@ -105,31 +131,6 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       wPanel.editWidgetFinished(target, dialogFactory.canceled(frame, target, false))
       suppress(false)
     }
-  }
-
-  override def addControls() {
-    setLayout(new GridBagLayout)
-
-    val c = new GridBagConstraints
-
-    c.anchor = GridBagConstraints.CENTER
-    c.weighty = 1
-    c.insets = new Insets(0, 6, 0, 6)
-
-    add(widgetMenu, c)
-
-    c.insets = new Insets(0, 0, 0, 6)
-
-    add(alignmentMenu, c)
-
-    add(selectButton, c)
-    add(editButton, c)
-
-    c.insets = new Insets(0, 0, 0, 0)
-
-    add(deleteButton, c)
-
-    selectButton.setSelected(true)
   }
 
   def syncTheme() {
@@ -240,7 +241,7 @@ class InterfaceToolBar(wPanel: WidgetPanel,
 
     def getSelectedWidget =
       WidgetInfos.find(_.displayName == chosenItem).get.coreWidget
-    
+
     def syncTheme() {
       setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
       setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
@@ -373,5 +374,13 @@ class InterfaceToolBar(wPanel: WidgetPanel,
       distributeVerticalAction.setIcon(Utils.iconScaledWithColor("/images/distribute-vertical.png", 16, 16,
                                                                  InterfaceColors.TOOLBAR_IMAGE))
     }
+  }
+
+  class SquareButton(action: Action) extends ToolBarToggleButton(action) {
+    override def getMinimumSize: Dimension =
+      new Dimension(widgetMenu.getPreferredSize.height, widgetMenu.getPreferredSize.height)
+
+    override def getPreferredSize: Dimension =
+      getMinimumSize
   }
 }
