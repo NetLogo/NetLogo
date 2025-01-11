@@ -27,7 +27,7 @@ class DisplaySwitch(workspace: GUIWorkspace) extends CheckBox(I18N.gui.get("tabs
       workspace.view.thaw()
       workspace.viewManager.incrementalUpdateFromEventThread()
     }
-    
+
     else
       workspace.view.freeze()
   }

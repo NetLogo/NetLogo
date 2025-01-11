@@ -261,7 +261,7 @@ class ViewManager(val workspace: GUIWorkspace,
   def syncTheme() {
     if (observerView != null)
       observerView.syncTheme()
-    
+
     if (fullscreenView != null)
       fullscreenView.syncTheme()
   }

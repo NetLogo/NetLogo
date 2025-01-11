@@ -20,7 +20,7 @@ class AppFrame extends JFrame with LinkParent with LinkRoot with ThemeSync {
     setIconImage(Images.loadImageResource("/images/netlogo.png"))
 
   setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
-  setMinimumSize(new Dimension(300, 300))
+  setMinimumSize(new Dimension(768, 300))
 
   getContentPane.setLayout(new BorderLayout)
 

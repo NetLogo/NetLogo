@@ -2,19 +2,24 @@
 
 package org.nlogo.gl.view
 
-import java.awt.BorderLayout
+import java.awt.{ BorderLayout, FlowLayout }
 import javax.swing.JPanel
 
+import org.nlogo.swing.Transparent
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ DisplaySwitch, GUIWorkspace, TickCounterLabel, ViewUpdatePanel }
+import org.nlogo.window.{ DisplaySwitch, GUIWorkspace, SpeedSliderPanel, TickCounterLabel, ViewUpdatePanel }
 
 class ViewControlStrip3D(workspace: GUIWorkspace, val tickCounter: TickCounterLabel)
   extends JPanel(new BorderLayout) with ThemeSync {
 
+  val speedSlider = new SpeedSliderPanel(workspace, tickCounter)
   val displaySwitch = new DisplaySwitch(workspace)
-  val controls = new ViewUpdatePanel(workspace, displaySwitch, tickCounter)
+  val controls = new ViewUpdatePanel(workspace, speedSlider, displaySwitch, tickCounter)
 
-  add(controls, BorderLayout.CENTER)
+  add(new JPanel(new FlowLayout(FlowLayout.CENTER, 40, 0)) with Transparent {
+    add(speedSlider)
+    add(controls)
+  }, BorderLayout.CENTER)
 
   updateTicks()
 
