@@ -11,8 +11,8 @@ import javax.swing.{ AbstractAction, Action, JComponent, JPanel, JSplitPane, Scr
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, ScrollPane, ToolBar, UserAction,
-                         Utils },
+import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable, ScrollPane, SplitPane, ToolBar,
+                         UserAction, Utils },
                        Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace, SpeedSliderPanel, ViewUpdatePanel, WidgetInfo,
@@ -87,7 +87,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   private val viewUpdatePanel = new ViewUpdatePanel(workspace, speedSlider, workspace.viewWidget.displaySwitch,
                                                     workspace.viewWidget.tickCounter)
 
-  private val splitPane = new SplitPane(scrollPane, commandCenter, commandCenterToggleAction)
+  private val splitPane = new SplitPane(scrollPane, commandCenter, Some(commandCenterToggleAction))
 
   add(splitPane, BorderLayout.CENTER)
 

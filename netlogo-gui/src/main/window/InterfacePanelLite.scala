@@ -121,19 +121,17 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   override def getPreferredSize: Dimension = {
     var maxX = 0
     var maxY = 0
-    getComponents.foreach {
-      case w: Widget =>
-        val location = w.getLocation()
-        val size = w.getSize()
-        val x = location.x + size.width
-        val y = location.y + size.height
-        if (x > maxX)
-          maxX = x
-        if (y > maxY)
-          maxY = y
-      case _ =>
+    for (component <- getComponents) {
+      val location = component.getLocation
+      val size = component.getSize
+      val x = location.x + size.width
+      val y = location.y + size.height
+      if (x > maxX)
+        maxX = x
+      if (y > maxY)
+        maxY = y
     }
-    new Dimension(maxX, maxY)
+    new Dimension(maxX + 8, maxY + 8)
   }
 
   private def getOutputWidget: OutputWidget =
@@ -277,7 +275,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
 
   def interfaceImage: BufferedImage =
     Images.paintToImage(this)
-  
+
   def syncTheme() {
     setBackground(InterfaceColors.INTERFACE_BACKGROUND)
 

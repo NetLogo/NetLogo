@@ -1,13 +1,12 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.app.interfacetab
+package org.nlogo.swing
 
 import java.awt.{ Color, Component, Cursor, Graphics, Point }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent, MouseMotionAdapter }
 import javax.swing.{ AbstractAction, Action, JButton, JLayeredPane, JPanel, JSplitPane }
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 
 private class SizeButton(expand: Boolean, splitPane: SplitPane) extends JButton with Transparent {
@@ -73,7 +72,7 @@ private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) {
 
   add(expandButton)
   add(contractButton)
-  
+
   setBackground(InterfaceColors.SPLIT_PANE_DIVIDER_BACKGROUND)
 
   private val dragRadius = 3
@@ -131,7 +130,7 @@ private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) {
   }
 }
 
-private class SplitPane(mainComponent: Component, topComponent: Component, commandCenterToggleAction: Action)
+class SplitPane(mainComponent: Component, topComponent: Component, commandCenterToggleAction: Option[Action])
   extends JLayeredPane {
 
   private val divider = new SplitPaneDivider(this)
@@ -163,9 +162,9 @@ private class SplitPane(mainComponent: Component, topComponent: Component, comma
   }
 
   private def dividerChanged() {
-    commandCenterToggleAction.putValue(Action.NAME,
+    commandCenterToggleAction.foreach(_.putValue(Action.NAME,
       if (dividerLocation < maxDividerLocation) I18N.gui.get("menu.tools.hideCommandCenter")
-      else I18N.gui.get("menu.tools.showCommandCenter"))
+      else I18N.gui.get("menu.tools.showCommandCenter")))
   }
 
   def getDividerSize: Int = dividerSize
@@ -196,7 +195,7 @@ private class SplitPane(mainComponent: Component, topComponent: Component, comma
 
     if (dividerLocation > maxDividerLocation)
       dividerLocation = maxDividerLocation
-    
+
     orientation match {
       case JSplitPane.HORIZONTAL_SPLIT =>
         topComponent.setBounds(0, dividerLocation + dividerSize, getWidth, getHeight - dividerLocation - dividerSize)

@@ -208,6 +208,7 @@ class ViewWidget(workspace: GUIWorkspace)
 
   def syncTheme() {
     setBorder(new LineBorder(InterfaceColors.VIEW_BORDER, 2))
+    tickCounter.syncTheme()
   }
 
   /// font handling for turtle and patch labels

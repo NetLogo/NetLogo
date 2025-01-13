@@ -2,12 +2,12 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, Graphics }
+import java.awt.Dimension
 
 import javax.swing.JLabel
 
 import org.nlogo.api.{ Dump, World }
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ AfterLoadEvent, PeriodicUpdateEvent, LoadBeginEvent }
 
 object TickCounterLabel {
@@ -20,7 +20,8 @@ class TickCounterLabel(world: World)
   extends JLabel
   with AfterLoadEvent.Handler
   with LoadBeginEvent.Handler
-  with PeriodicUpdateEvent.Handler {
+  with PeriodicUpdateEvent.Handler
+  with ThemeSync {
   private var _label: String = TickCounterLabelDefault
 
   override def getPreferredSize: Dimension = getMinimumSize
@@ -67,9 +68,7 @@ class TickCounterLabel(world: World)
 
   def label: String = _label
 
-  override def paintComponent(g: Graphics) {
+  def syncTheme() {
     setForeground(InterfaceColors.TOOLBAR_TEXT)
-
-    super.paintComponent(g)
   }
 }
