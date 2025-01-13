@@ -154,7 +154,7 @@ object App {
       pico.add(classOf[MenuBar], "org.nlogo.app.MenuBar",
         new ConstantParameter(AbstractWorkspace.isApp))
       pico.add(classOf[CommandCenter], "org.nlogo.app.interfacetab.CommandCenter", new ComponentParameter(),
-               new ConstantParameter(false))
+               new ConstantParameter(true))
       pico.add("org.nlogo.app.interfacetab.InterfaceTab")
       pico.addComponent(classOf[AgentMonitorManager])
 
