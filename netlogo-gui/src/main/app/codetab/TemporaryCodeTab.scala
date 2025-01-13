@@ -99,7 +99,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     new WindowEvents.ExternalFileSavedEvent(filename.merge).raise(this)
   }
 
-  def prepareForClose() {
+  override def close() {
     if (saveNeeded) {
       if (Dialogs.userWantsToSaveFirst(filenameForDisplay, this)) {
         // The user is saving the file with its current name
@@ -107,6 +107,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
       }
     }
     closing = true
+    tabs.closeExternalFile(_filename)
   }
 
   def compileIfDirty() {

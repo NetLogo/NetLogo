@@ -2,7 +2,7 @@
 
 package org.nlogo.app.codetab
 
-import java.awt.{ BorderLayout, Color, Component, Dimension, Font, Graphics, Insets }
+import java.awt.{ BorderLayout, Color, Dimension, Font, Graphics, Insets }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, TextEvent, TextListener }
 import java.awt.print.PageFormat
 import java.io.IOException
@@ -134,12 +134,9 @@ with ThemeSync {
         add(includedFilesMenu)
         add(tabbing)
         add(separate)
-        getAdditionalToolBarComponents.foreach(add)
       }
     }
   }
-
-  protected def getAdditionalToolBarComponents: Seq[Component] = Seq.empty[Component]
 
   override val permanentMenuActions =
     Seq(new CodeToHtml.Action(workspace, this, () => getText)) ++ editorConfiguration.permanentActions
@@ -235,6 +232,8 @@ with ThemeSync {
   def lineNumbersVisible_=(visible: Boolean) = scrollableEditor.setLineNumbersEnabled(visible)
 
   def isTextSelected: Boolean = text.getSelectedText != null && !text.getSelectedText.isEmpty
+
+  def close() {}
 
   private object CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) with ThemeSync {
     private var dirty = false

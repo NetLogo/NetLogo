@@ -9,7 +9,7 @@ import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.{ Box, JComponent, JLabel, JPanel, JTabbedPane, SwingConstants }
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
-import org.nlogo.app.codetab.{ CodeTab, TemporaryCodeTab }
+import org.nlogo.app.codetab.{ CodeTab, MainCodeTab }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.swing.{ CloseButton, HoverDecoration, Utils }
 import org.nlogo.theme.InterfaceColors
@@ -20,7 +20,7 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
 
   override def calculateTabHeight(tabPlacement: Int, tabIndex: Int, fontHeight: Int): Int =
     fontHeight + 5
-  
+
   override def getTabLabelShiftY(tabPlacement: Int, tabIndex: Int, isSelected: Boolean): Int =
     super.getTabLabelShiftY(tabPlacement, tabIndex, true)
 
@@ -29,7 +29,7 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
 
     for (i <- 0 until tabsPanel.getTabCount)
       x -= calculateTabWidth(tabPlacement, i, getFontMetrics) / 2
-    
+
     new Insets(10, x, 0, 0)
   }
 
@@ -156,15 +156,16 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
   add(textLabel)
 
   tab match {
-    case tempTab: TemporaryCodeTab =>
+    case main: MainCodeTab =>
+
+    case codeTab: CodeTab =>
       closeButton = new CloseButton
 
       closeButton.addMouseListener(new MouseAdapter {
         override def mouseClicked(e: MouseEvent) {
           if (e.getButton == MouseEvent.BUTTON1) {
             try {
-              tempTab.prepareForClose()
-              tabsPanel.tabManager.closeExternalTab(tempTab)
+              codeTab.close()
             }
 
             catch {
@@ -176,10 +177,10 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
 
       add(Box.createHorizontalStrut(10))
       add(closeButton)
-    
+
     case _ =>
   }
-  
+
   override def paintComponent(g: Graphics) {
     if (tab == tabsPanel.getSelectedComponent) {
       textLabel.setForeground(InterfaceColors.TAB_TEXT_SELECTED)
@@ -229,13 +230,13 @@ class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.T
 
   def stateChanged(e: ChangeEvent) =
     tabManager.switchedTabs(getSelectedComponent)
-  
+
   def focusSelected() =
     getSelectedComponent.requestFocus
-  
+
   def getError(index: Int): Boolean =
     getTabLabelAt(index).error
-  
+
   def setError(index: Int, error: Boolean) {
     getTabLabelAt(index).error = error
   }

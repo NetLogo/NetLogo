@@ -83,7 +83,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         switchedTabs(mainTabs.getSelectedComponent)
       }
     }
-    
+
     def windowLostFocus(e: WindowEvent) {}
   })
 
@@ -127,7 +127,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
       switchedTabs(separateTabs.getSelectedComponent)
     }
-    
+
     def windowLostFocus(e: WindowEvent) {}
   })
 
@@ -216,7 +216,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       dirtyDialog.setVisible(true)
     else
       reload()
-  
+
 
     // Return 'dirty' to stop the file watcher thread if file is dirty. This is
     // to prevent the file dirty dialog from being shown back-to-back.
@@ -330,9 +330,15 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def getExternalFileTabs: Seq[TemporaryCodeTab] = {
     if (separateTabsWindow.isVisible)
-      for (i <- 1 until separateTabs.getTabCount) yield separateTabs.getComponentAt(i).asInstanceOf[TemporaryCodeTab]
+      (for (i <- 1 until separateTabs.getTabCount) yield separateTabs.getComponentAt(i))
+        .collect(_ match {
+          case t: TemporaryCodeTab => t
+        })
     else
-      for (i <- 3 until mainTabs.getTabCount) yield mainTabs.getComponentAt(i).asInstanceOf[TemporaryCodeTab]
+      (for (i <- 3 until mainTabs.getTabCount) yield mainTabs.getComponentAt(i))
+        .collect(_ match {
+          case t: TemporaryCodeTab => t
+        })
   }
 
   private def addTabWithLabel(tabsPanel: TabsPanel, title: String, tab: Component) {
@@ -343,6 +349,11 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     tabLabel.setTabsPanel(tabsPanel)
 
     tabsPanel.setTabComponentAt(tabsPanel.getTabCount - 1, tabLabel)
+
+    tab match {
+      case ts: ThemeSync => ts.syncTheme()
+      case _ =>
+    }
   }
 
   def setSelectedIndex(index: Int) {
@@ -474,12 +485,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       separateTabs.remove(tab)
     else
       mainTabs.remove(tab)
-    
+
     externalFileManager.remove(tab)
 
     if (getExternalFileTabs.isEmpty)
       revokeAction(SaveAllAction)
-    
+
     updateTabActions()
   }
 
@@ -585,7 +596,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   def handle(e: LoadErrorEvent) {
     reloading = false
   }
-  
+
   def handle(e: RuntimeErrorEvent) {
     if (!e.jobOwner.isInstanceOf[MonitorWidget]) {
       e.sourceOwner match {
@@ -616,7 +627,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       separateTabs.setError(separateTabs.indexOfComponent(tab), hasError)
     else
       mainTabs.setError(mainTabs.indexOfComponent(tab), hasError)
-    
+
     if (hasError && focusOnError)
       setSelectedTab(tab)
   }
@@ -713,13 +724,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   def handle(e: AboutToCloseFilesEvent) =
     OfferSaveExternalsDialog.offer(getExternalFileTabs.filter(_.saveNeeded).toSet, workspace.getFrame)
-  
-  def syncTheme() {
-    interfaceTab.syncTheme()
-    infoTab.syncTheme()
-    mainCodeTab.syncTheme()
 
-    getExternalFileTabs.foreach(_.syncTheme())
+  def syncTheme() {
+    (mainTabs.getComponents ++ separateTabs.getComponents).foreach(_ match {
+      case ts: ThemeSync => ts.syncTheme()
+      case _ =>
+    })
 
     separateTabsWindow.syncTheme()
   }
