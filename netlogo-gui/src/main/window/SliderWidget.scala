@@ -401,7 +401,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     else {
       if (vertical) {
         nameComponent.setBounds(6, getHeight - 12, nameComponent.getPreferredSize.width.min(
-                                                     getWidth - unitsComponent.getPreferredSize.width -
+                                                     getHeight - unitsComponent.getPreferredSize.width -
                                                      valueComponent.getPreferredSize.width - 30),
                                 nameComponent.getPreferredSize.height)
         unitsComponent.setBounds(6, unitsComponent.getPreferredSize.width + 12, unitsComponent.getPreferredSize.width,
