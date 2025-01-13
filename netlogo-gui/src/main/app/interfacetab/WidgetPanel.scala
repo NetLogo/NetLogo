@@ -92,7 +92,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
         }
       }
     }
-  
+
   protected class InterceptPane extends JComponent {
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent) {
@@ -142,7 +142,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     else
       interceptPane.enableIntercept()
-    
+
     setCursor(mode.cursor)
     unselectWidgets()
   }
@@ -312,9 +312,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
           newWidget.setLocation((e.getX / GridSnap) * GridSnap, (e.getY / GridSnap) * GridSnap)
         else
           newWidget.setLocation(e.getX, e.getY)
-        
+
         newWidget.originalBounds = newWidget.getBounds
-      
+
       case InteractMode.EDIT =>
         val topWrapper = wrapperAtPoint(e.getX, e.getY).getOrElse(null)
 
@@ -350,7 +350,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
           if (oldSelectionRect != null)
             selectionPane.repaint(oldSelectionRect)
           selectionPane.repaint(selectionRect)
-        
+
         case InteractMode.ADD =>
           if (workspace.snapOn) {
             startDragPoint.x = (startDragPoint.x / GridSnap) * GridSnap
@@ -358,7 +358,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
           }
           val p2 = restrictDrag(new Point(e.getX - startDragPoint.x, e.getY - startDragPoint.y), newWidget)
           newWidget.setLocation(startDragPoint.x + p2.x, startDragPoint.y + p2.y)
-        
+
         case InteractMode.EDIT =>
           val topWrapper = wrapperAtPoint(e.getX, e.getY).getOrElse(null)
 
@@ -368,7 +368,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
           val topWrapper = wrapperAtPoint(e.getX, e.getY).filter(_.widget.deleteable).getOrElse(null)
 
           getWrappers.foreach(wrapper => selectWidget(wrapper, wrapper == topWrapper))
-        
+
         case _ =>
       }
     }
@@ -396,7 +396,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
       case InteractMode.ADD | InteractMode.EDIT | InteractMode.DELETE if e.getButton == MouseEvent.BUTTON1 =>
         startDragPoint = e.getPoint
-      
+
       case _ =>
     }
   }
@@ -659,7 +659,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def addingWidget: Boolean =
     interactMode == InteractMode.ADD
-  
+
   def beginEdit() {
     setInteractMode(InteractMode.EDIT)
   }

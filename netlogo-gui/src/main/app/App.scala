@@ -12,7 +12,7 @@ import org.nlogo.agent.{ Agent, World2D, World3D }
 import org.nlogo.api._
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
 import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, FindDialog, SaveModelingCommonsAction }
-import org.nlogo.app.interfacetab.{ InterfaceTab, InterfaceWidgetControls, WidgetPanel }
+import org.nlogo.app.interfacetab.{ CommandCenter, InterfaceTab, InterfaceWidgetControls, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManagerErrorDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model,
@@ -153,7 +153,8 @@ object App {
         new ComponentParameter(), new ComponentParameter())
       pico.add(classOf[MenuBar], "org.nlogo.app.MenuBar",
         new ConstantParameter(AbstractWorkspace.isApp))
-      pico.add("org.nlogo.app.interfacetab.CommandCenter")
+      pico.add(classOf[CommandCenter], "org.nlogo.app.interfacetab.CommandCenter", new ComponentParameter(),
+               new ConstantParameter(false))
       pico.add("org.nlogo.app.interfacetab.InterfaceTab")
       pico.addComponent(classOf[AgentMonitorManager])
 
@@ -296,6 +297,7 @@ class App extends
   var recentFilesMenu: RecentFilesMenu = null
   private var errorDialogManager: ErrorDialogManager = null
   private val listenerManager = new NetLogoListenerManager
+  private var syncComponents = Set[ThemeSync]()
   lazy val modelingCommons = pico.getComponent(classOf[ModelingCommonsInterface])
   private val runningInMacWrapper = Option(System.getProperty("org.nlogo.mac.appClassName")).nonEmpty
   private val ImportWorldURLProp = "netlogo.world_state_url"
@@ -784,6 +786,16 @@ class App extends
     }
   }
 
+  /// ThemeSync stuff
+
+  def addSyncComponent(ts: ThemeSync) {
+    syncComponents = syncComponents + ts
+  }
+
+  def removeSyncComponent(ts: ThemeSync) {
+    syncComponents = syncComponents - ts
+  }
+
   def syncWindowThemes() {
     FindDialog.syncTheme()
 
@@ -825,6 +837,9 @@ class App extends
     }
 
     errorDialogManager.syncTheme()
+
+    // this allows external objects like extension GUIs to sync with the theme (Isaac B 1/12/25)
+    syncComponents.foreach(_.syncTheme())
   }
 
   /**

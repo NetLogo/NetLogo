@@ -18,7 +18,7 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, Events => WindowEvents, OutputArea, TextMenuActions, Zoomable }
 import org.nlogo.workspace.{ AbstractWorkspace, ExportOutput }
 
-class CommandCenter(workspace: AbstractWorkspace) extends JPanel
+class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends JPanel
   with Zoomable with CommandCenterInterface
   with WindowEvents.LoadBeginEvent.Handler
   with WindowEvents.ZoomedEvent.Handler
@@ -92,7 +92,9 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
     c.weightx = 0
     c.insets = new Insets(6, 0, 6, 6)
 
-    northPanel.add(locationToggleButton, c)
+    if (showToggle)
+      northPanel.add(locationToggleButton, c)
+
     northPanel.add(clearButton, c)
 
     resizeNorthPanel()
@@ -128,13 +130,13 @@ class CommandCenter(workspace: AbstractWorkspace) extends JPanel
 
       if (System.getProperty("os.name").startsWith("Mac"))
         historyPanel.add(Box.createHorizontalStrut(12), BorderLayout.EAST)
-      
+
       c.weightx = 0
       c.fill = GridBagConstraints.VERTICAL
 
       southPanel.add(historyPanel, c)
     }
-    
+
     add(southPanel, BorderLayout.SOUTH)
   }
 

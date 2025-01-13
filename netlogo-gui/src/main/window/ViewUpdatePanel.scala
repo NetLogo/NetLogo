@@ -59,6 +59,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
     displaySwitch.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
     speedSlider.syncTheme()
+    tickCounter.syncTheme()
     updateModeChooser.syncTheme()
     settingsButton.syncTheme()
   }
