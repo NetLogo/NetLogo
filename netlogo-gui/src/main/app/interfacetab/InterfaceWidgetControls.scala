@@ -5,6 +5,7 @@ package org.nlogo.app.interfacetab
 import java.awt.{ Dimension, Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, Action, JLabel, JPanel }
+import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.Editable
 import org.nlogo.app.common.{ Events => AppEvents }
@@ -324,7 +325,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     private val popup = new PopupMenu
 
     popup.add(new JLabel("Arrange selected widgets") {
-      setBorder(new javax.swing.border.EmptyBorder(0, 6, 0, 0))
+      setBorder(new EmptyBorder(0, 6, 0, 0))
     }).setEnabled(false)
     popup.addSeparator()
     popup.add(leftAction)

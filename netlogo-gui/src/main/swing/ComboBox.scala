@@ -12,7 +12,7 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import scala.collection.mutable.Set
 
 object ComboBox {
-  // required for custom menu item components since they are only allowed in one place (IB 11/17/24)
+  // required for custom menu item components since they are only allowed in one place (Isaac B 11/17/24)
   trait Clone {
     def getClone: Component
   }
@@ -20,6 +20,18 @@ object ComboBox {
 
 class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new GridBagLayout) with RoundedBorderPanel
                                                             with ThemeSync with ItemSelectable {
+
+  private val mouseListener = new MouseAdapter {
+    override def mousePressed(e: MouseEvent) {
+      popup.show(ComboBox.this, 0, getHeight)
+    }
+  }
+
+  private val wheelListener = new MouseWheelListener {
+    def mouseWheelMoved(e: MouseWheelEvent) {
+      setSelectedIndex(getSelectedIndex + e.getWheelRotation)
+    }
+  }
 
   private class ChoiceDisplay extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
     private val c = new GridBagConstraints
@@ -33,8 +45,21 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
 
       if (item != null) {
         item match {
-          case comp: Component with ComboBox.Clone => add(comp.getClone, c)
-          case a => add(new JLabel(a.toString), c)
+          case comp: Component with ComboBox.Clone =>
+            val child = comp.getClone
+
+            add(child, c)
+
+            child.addMouseListener(mouseListener)
+            child.addMouseWheelListener(wheelListener)
+
+          case a =>
+            val child = new JLabel(a.toString)
+
+            add(child, c)
+
+            child.addMouseListener(mouseListener)
+            child.addMouseWheelListener(wheelListener)
         }
 
         syncTheme()
@@ -81,18 +106,6 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
     c.insets = new Insets(3, 0, 3, 6)
 
     add(arrow, c)
-
-    val mouseListener = new MouseAdapter {
-      override def mousePressed(e: MouseEvent) {
-        popup.show(ComboBox.this, 0, getHeight)
-      }
-    }
-
-    val wheelListener = new MouseWheelListener {
-      def mouseWheelMoved(e: MouseWheelEvent) {
-        setSelectedIndex(getSelectedIndex + e.getWheelRotation)
-      }
-    }
 
     addMouseListener(mouseListener)
     addMouseWheelListener(wheelListener)
