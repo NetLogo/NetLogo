@@ -2,14 +2,12 @@
 
 package org.nlogo.sdm.gui
 
-import java.awt.{ Color, Component, Graphics }
-import javax.swing.{ JComponent, JTabbedPane, SwingConstants }
+import java.awt.{ Color, Component }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
-import javax.swing.plaf.basic.BasicTabbedPaneUI
 
 import org.nlogo.core.{ CompilerException, I18N }
-import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.swing.{ Utils => SwingUtils }
+import org.nlogo.theme.InterfaceColors
+import org.nlogo.swing.TabbedPane
 
 object AggregateTabs {
   private val ErrorColor: Color = Color.RED
@@ -18,54 +16,7 @@ object AggregateTabs {
 import AggregateTabs._
 
 class AggregateTabs(editor: AggregateModelEditor, editorTab: AggregateEditorTab, val proceduresTab: AggregateProceduresTab)
-  extends JTabbedPane(SwingConstants.TOP) with ChangeListener with ThemeSync {
-  
-  private class TabsPanelUI extends BasicTabbedPaneUI with ThemeSync {
-    override def getTabLabelShiftY(tabPlacement: Int, tabIndex: Int, isSelected: Boolean): Int =
-      super.getTabLabelShiftY(tabPlacement, tabIndex, true)
-
-    override def paintTabBackground(g: Graphics, tabPlacement: Int, tabIndex: Int, x: Int, y: Int, w: Int, h: Int,
-                                    isSelected: Boolean) {
-      val g2d = SwingUtils.initGraphics2D(g)
-
-      if (isSelected)
-        g2d.setColor(InterfaceColors.TAB_BACKGROUND_SELECTED)
-      else
-        g2d.setColor(InterfaceColors.TAB_BACKGROUND)
-      
-      g2d.fillRect(x, y, w, h)
-    }
-
-    override def paintTabBorder(g: Graphics, tabPlacement: Int, tabIndex: Int, x: Int, y: Int, w: Int, h: Int,
-                                isSelected: Boolean) {
-      // no tab border
-    }
-
-    override def paintContentBorder(g: Graphics, tabPlacement: Int, selectedIndex: Int) {
-      // no content border
-    }
-
-    override def paint(g: Graphics, c: JComponent) {
-      val g2d = SwingUtils.initGraphics2D(g)
-
-      g2d.setColor(InterfaceColors.TOOLBAR_BACKGROUND)
-      g2d.fillRect(0, 0, getWidth, getHeight)
-
-      super.paint(g, c)
-    }
-
-    def syncTheme() {
-      getComponents.foreach(_ match {
-        case ts: ThemeSync => ts.syncTheme()
-        case _ =>
-      })
-    }
-  }
-
-  private val tabsUI = new TabsPanelUI
-
-  setUI(tabsUI)
-  setFocusable(false)
+  extends TabbedPane with ChangeListener {
 
   addChangeListener(this)
 
@@ -96,9 +47,14 @@ class AggregateTabs(editor: AggregateModelEditor, editorTab: AggregateEditorTab,
     setForegroundAt(indexOfComponent(proceduresTab), null)
   }
 
-  def syncTheme() {
-    tabsUI.syncTheme()
-
-    setForeground(InterfaceColors.TOOLBAR_TEXT)
+  override def setTabForegrounds() {
+    for (i <- 0 until getTabCount) {
+      if (getForegroundAt(i) != ErrorColor) {
+        if (i == getSelectedIndex)
+          setForegroundAt(i, InterfaceColors.TABBED_PANE_TEXT_SELECTED)
+        else
+          setForegroundAt(i, InterfaceColors.TABBED_PANE_TEXT)
+      }
+    }
   }
 }

@@ -247,7 +247,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
         searchField.selectAll()
       }
     }
-  
+
   private val communityButton = new Button(communityAction)
   private val selectButton = new Button(openAction)
   private val cancelButton = new Button(cancelAction)

@@ -5,13 +5,13 @@ package org.nlogo.app
 import java.awt.{ BorderLayout, Dimension, Font, Frame }
 import java.awt.event.{ WindowAdapter, WindowEvent, MouseAdapter, MouseEvent }
 import java.net.URI
-import javax.swing.{ JDialog, JLabel, JTabbedPane, SwingConstants, Timer, WindowConstants }
+import javax.swing.{ JDialog, JLabel, SwingConstants, Timer, WindowConstants }
 import javax.swing.border.{ EmptyBorder, LineBorder }
 
 import org.nlogo.api.{ APIVersion, FileIO, Version }
 import org.nlogo.awt.{ Fonts, Positioning }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ BrowserLauncher, RichAction, ScrollPane, TextArea, Utils }
+import org.nlogo.swing.{ BrowserLauncher, RichAction, ScrollPane, TabbedPane, TextArea, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.util.SysInfo
 
@@ -58,7 +58,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     })
   }
 
-  val credits = new TextArea(FileIO.getResourceAsString("/system/about.txt"), 15, 0){
+  private val credits = new TextArea(FileIO.getResourceAsString("/system/about.txt"), 15, 0) {
     setFont(new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12))
     setDragEnabled(false)
     setLineWrap(true)
@@ -67,15 +67,15 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     setBorder(new EmptyBorder(5, 10, 5, 10))
   }
 
-  val creditsScrollPane = new ScrollPane(credits) {
+  private val creditsScrollPane = new ScrollPane(credits) {
     setPreferredSize(new Dimension(200, 230))
   }
 
-  val systemScrollPane = new ScrollPane(system) {
+  private val systemScrollPane = new ScrollPane(system) {
     setPreferredSize(new Dimension(200, 230))
   }
 
-  val tabs = new JTabbedPane {
+  private val tabs = new TabbedPane {
     add("Credits", creditsScrollPane)
     add("System", systemScrollPane)
   }
@@ -147,5 +147,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
 
     systemScrollPane.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
     systemScrollPane.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+
+    tabs.syncTheme()
   }
 }

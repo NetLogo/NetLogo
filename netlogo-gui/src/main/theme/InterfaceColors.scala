@@ -583,6 +583,15 @@ object InterfaceColors {
       case "dark" => LIGHT_GRAY_OUTLINE
     }
 
+  def TABBED_PANE_TEXT =
+    theme match {
+      case "classic" | "light" => Color.BLACK
+      case "dark" => Color.WHITE
+    }
+
+  def TABBED_PANE_TEXT_SELECTED =
+    Color.WHITE
+
   def BSPACE_HINT_BACKGROUND = new Color(128, 200, 128, 64)
 
   def INFO_ICON = new Color(50, 150, 200)
