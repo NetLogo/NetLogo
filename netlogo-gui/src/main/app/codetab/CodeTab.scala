@@ -291,5 +291,8 @@ with ThemeSync {
     scrollableEditor.getViewport.setBackground(InterfaceColors.CODE_BACKGROUND)
     scrollableEditor.getHorizontalScrollBar.setBackground(InterfaceColors.CODE_BACKGROUND)
     scrollableEditor.getVerticalScrollBar.setBackground(InterfaceColors.CODE_BACKGROUND)
+
+    // for code completion popup
+    editorFactory.syncTheme()
   }
 }

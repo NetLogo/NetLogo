@@ -12,20 +12,24 @@ import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup, JumpToDeclaration
   NetLogoFoldParser, NetLogoTokenMakerFactory, ShiftActions, ShowUsageBox, ShowUsageBoxAction, ToggleComments }
 import org.nlogo.editor.{ AbstractEditorArea, AdvancedEditorArea, EditorConfiguration, EditorScrollPane }
 import org.nlogo.nvm.ExtensionManager
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.DefaultEditorFactory
 
 import org.fife.ui.rsyntaxtextarea.{ folding, TokenMakerFactory },
   folding.FoldParserManager
 import org.fife.ui.rtextarea.RTextScrollPane
 
-class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManager) extends DefaultEditorFactory(compiler) {
+class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManager)
+  extends DefaultEditorFactory(compiler) with ThemeSync {
+
   System.setProperty(TokenMakerFactory.PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY,
     "org.nlogo.ide.NetLogoTokenMakerFactory")
   useExtensionManager(extensionManager)
 
+  private val codeCompletionPopup = CodeCompletionPopup(compiler.dialect, extensionManager)
+
   def autoSuggestAction =
-    new AutoSuggestAction("auto-suggest", CodeCompletionPopup(compiler.dialect, extensionManager))
+    new AutoSuggestAction("auto-suggest", codeCompletionPopup)
 
   override def defaultConfiguration(rows: Int, cols: Int): EditorConfiguration = {
     val showUsageBox = new ShowUsageBox(colorizer)
@@ -92,4 +96,8 @@ class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManag
         sp
       case _ => super.scrollPane(editor)
     }
+
+  def syncTheme() {
+    codeCompletionPopup.syncTheme()
+  }
 }
