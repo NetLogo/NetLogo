@@ -19,13 +19,13 @@ class NLogoXMLFormatTests extends AnyFunSuite {
     loader.readModel(source, "nlogox").map(loader.sourceString(_, "nlogox").get).get
 
   // checks if two XML sources semantically represent the same model
-  private def equivalent(a: String, b: String): Boolean =
-    XMLReader.read(a).get == XMLReader.read(b).get
+  private def assertResultXML(a: String, b: String) =
+    assertResult(XMLReader.read(a))(XMLReader.read(b))
 
   test("Empty model round trip remains the same") {
     val modelString = FileIO.getResourceAsString("/system/empty.nlogox")
 
-    assert(equivalent(modelString, roundTripString(modelString)))
+    assertResultXML(modelString, roundTripString(modelString))
   }
 
   test("Rejects model with no view") {
@@ -34,18 +34,18 @@ class NLogoXMLFormatTests extends AnyFunSuite {
   }
 
   test("Empty model tag results in default model") {
-    assert(equivalent(FileIO.getResourceAsString("/system/empty.nlogox"), roundTripString(loadString("test/fileformat/Empty Model.nlogox"))))
+    assertResultXML(FileIO.getResourceAsString("/system/empty.nlogox"), roundTripString(loadString("test/fileformat/Empty Model.nlogox")))
   }
 
   test("Sample model round trip remains the same") {
     val modelString = loadString("test/fileformat/Wolf Sheep Predation.nlogox")
 
-    assert(equivalent(modelString, roundTripString(modelString)))
+    assertResultXML(modelString, roundTripString(modelString))
   }
 
   test("Model with all features") {
     val modelString = loadString("test/fileformat/All.nlogox")
 
-    assert(equivalent(modelString, roundTripString(modelString)))
+    assertResultXML(modelString, roundTripString(modelString))
   }
 }
