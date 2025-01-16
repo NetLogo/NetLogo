@@ -111,7 +111,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
       case t: Throwable => t.printStackTrace
     }
 
-    editors = propertyEditors.take(4).map(_.asInstanceOf[IntegerEditor]).toList
+    editors = propertyEditors.map(_.asInstanceOf[IntegerEditor]).toList
 
     buttons
   }
