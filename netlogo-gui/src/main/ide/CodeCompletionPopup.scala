@@ -41,7 +41,7 @@ case class CodeCompletionPopup(autoSuggest: AutoSuggest,
     setMinimumSize(new Dimension(150, 210))
     add(scrollPane)
   }
-  
+
   var editorArea: Option[JTextComponent] = None
 
   syncTheme()

@@ -941,5 +941,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
     syncCursorTheme()
 
     getWrappers.foreach(_.syncTheme())
+
+    // for code completion popup
+    editorFactory.syncTheme()
   }
 }
