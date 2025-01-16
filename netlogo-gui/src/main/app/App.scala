@@ -159,6 +159,7 @@ object App {
       pico.addComponent(classOf[AgentMonitorManager])
 
       System.setProperty("flatlaf.menuBarEmbedded", "false")
+      System.setProperty("sun.awt.noerasebackground", "true") // stops view2.5d and 3d windows from blanking to white until next interaction
 
       app = pico.getComponent(classOf[App])
       // It's pretty silly, but in order for the splash screen to show up

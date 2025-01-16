@@ -3,11 +3,18 @@
 package org.nlogo.swing
 
 import java.awt.{ Component, Graphics }
-import javax.swing.{ Action, Icon, JRadioButton }
+import java.awt.event.ActionEvent
+import javax.swing.{ AbstractAction, Action, Icon, JRadioButton }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class RadioButton(action: Action) extends JRadioButton(action) with HoverDecoration with Transparent with ThemeSync {
+  def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
+    def actionPerformed(e: ActionEvent) {
+      function()
+    }
+  })
+
   setIcon(new Icon {
     def getIconWidth: Int = 14
     def getIconHeight: Int = 14
