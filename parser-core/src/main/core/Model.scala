@@ -21,7 +21,7 @@ case class Model(code: String = "",
   def constraints: Map[String, ConstraintSpecification] = widgets.collect{case x:DeclaresConstraint => (x.varName, x.constraint)}.toMap
   def interfaceGlobalCommands: Seq[String] = widgets.collect{case x:DeclaresGlobalCommand => x}.map(_.command)
 
-  if(widgets.collectFirst{case (w: View) => w}.isEmpty)
+  if(widgets.collectFirst{case (w: ViewLike) => w}.isEmpty)
     throw new Model.InvalidModelError("Every model must have at least a view...")
 
   def view: View = widgets.collectFirst{case (w: View) => w}.get

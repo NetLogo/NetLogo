@@ -115,6 +115,8 @@ case class Output(
   width: Int, height: Int,
   fontSize: Int) extends Widget
 
+trait ViewLike extends Widget
+
 case class View(x: Int = 0, y: Int = 0, width: Int = 5, height: Int = 5,
   dimensions:       WorldDimensions = View.defaultDimensions,
   fontSize:         Int             = 13,
@@ -122,7 +124,7 @@ case class View(x: Int = 0, y: Int = 0, width: Int = 5, height: Int = 5,
   showTickCounter:  Boolean         = true,
   tickCounterLabel: Option[String]  = Some("ticks"),
   frameRate:        Double          = 30)
-extends Widget {
+extends ViewLike {
   val minPxcor = dimensions.minPxcor
   val maxPxcor = dimensions.maxPxcor
   val wrappingAllowedInX = dimensions.wrappingAllowedInX
@@ -132,6 +134,14 @@ extends Widget {
   val wrappingAllowedInY = dimensions.wrappingAllowedInY
 
   val patchSize = dimensions.patchSize
+}
+
+// enables smoother folding in XML reader
+case object DummyView extends ViewLike {
+  def x: Int = 0
+  def y: Int = 0
+  def width: Int = 0
+  def height: Int = 0
 }
 
 object View {
