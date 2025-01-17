@@ -25,16 +25,17 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
                               dialogFactory: EditDialogFactoryInterface)
   extends JPanel(new GridBagLayout)
   with Transparent
+  with AppEvents.WidgetSelectedEvent.Handler
+  with AppEvents.InterfaceModeEvent.Handler
   with WindowEvents.WidgetForegroundedEvent.Handler
   with WindowEvents.WidgetRemovedEvent.Handler
-  with AppEvents.WidgetSelectedEvent.Handler
   with WindowEvents.EditWidgetEvent.Handler
   with WindowEvents.WidgetAddedEvent.Handler
-  with WindowEvents.SelectModeEvent.Handler
   with ThemeSync {
 
   private val selectedObjects = new HashSet[Widget]
 
+  private val interactButton = new SquareButton(new InteractAction)
   private val selectButton = new SquareButton(new SelectAction)
   private val editButton = new SquareButton(new EditAction)
   private val deleteButton = new SquareButton(new DeleteAction)
@@ -42,6 +43,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   private val widgetMenu = new WidgetMenu
   private val alignmentMenu = new AlignmentMenu
 
+  interactButton.setToolTipText(I18N.gui.get("tabs.run.interactButton.tooltip"))
   selectButton.setToolTipText(I18N.gui.get("tabs.run.selectButton.tooltip"))
   editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
   deleteButton.setToolTipText(I18N.gui.get("tabs.run.deleteButton.tooltip"))
@@ -60,14 +62,25 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
     add(alignmentMenu, c)
 
+    add(interactButton, c)
     add(selectButton, c)
     add(editButton, c)
 
     c.insets = new Insets(0, 0, 0, 0)
 
     add(deleteButton, c)
+  }
 
-    selectButton.setSelected(true)
+  interactButton.setSelected(true)
+
+  class InteractAction extends AbstractAction("I", null) { // add icon if moving forward with design
+    def actionPerformed(e: ActionEvent) {
+      wPanel.beginInteract()
+
+      selectButton.setSelected(false)
+      editButton.setSelected(false)
+      deleteButton.setSelected(false)
+    }
   }
 
   class SelectAction extends AbstractAction(null, Utils.iconScaledWithColor("/images/select.png", 15, 15,
@@ -75,6 +88,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     def actionPerformed(e: ActionEvent) {
       wPanel.beginSelect()
 
+      interactButton.setSelected(false)
       editButton.setSelected(false)
       deleteButton.setSelected(false)
     }
@@ -88,6 +102,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
         wPanel.beginEdit()
 
+        interactButton.setSelected(false)
         selectButton.setSelected(false)
         deleteButton.setSelected(false)
       }
@@ -104,6 +119,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
         wPanel.deleteSelectedWidgets()
         wPanel.beginDelete()
 
+        interactButton.setSelected(false)
         selectButton.setSelected(false)
         editButton.setSelected(false)
       }
@@ -140,6 +156,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     widgetMenu.syncTheme()
     alignmentMenu.syncTheme()
 
+    interactButton.setIcon(null) // add icon if moving forward with this design
     selectButton.setIcon(Utils.iconScaledWithColor("/images/select.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
     editButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
     deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
@@ -182,10 +199,25 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     updateTarget(e.widget)
   }
 
-  def handle(e: WindowEvents.SelectModeEvent) {
-    selectButton.setSelected(true)
+  def handle(e: AppEvents.InterfaceModeEvent) {
+    selectButton.setSelected(false)
+    interactButton.setSelected(false)
     editButton.setSelected(false)
     deleteButton.setSelected(false)
+
+    e.mode match {
+      case InteractMode.SELECT =>
+        selectButton.setSelected(true)
+
+      case InteractMode.EDIT =>
+        editButton.setSelected(true)
+
+      case InteractMode.DELETE =>
+        deleteButton.setSelected(true)
+
+      case _ =>
+        interactButton.setSelected(true)
+    }
   }
 
   class WidgetMenu extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with HoverDecoration {

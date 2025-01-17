@@ -38,7 +38,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   with MouseMotionListener
   with WidgetForegroundedEvent.Handler
   with ThemeSync {
-  
+
   private var _verticallyResizable = false
   private var horizontallyResizable = false
   private var _isNew = false
@@ -114,7 +114,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   // (is there a more elegant way to do this?) - ST 8/9/03
   addMouseListener(new MouseAdapter {})
   addMouseMotionListener(new MouseMotionAdapter {})
-  
+
   widget.addPopupListeners(new MouseAdapter {
     override def mousePressed(e: MouseEvent) {
       if (e.isPopupTrigger)
@@ -154,7 +154,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       topBar.handles(true)
       bottomBar.handles(true)
     }
-    
+
     else {
       topBar.handles(false)
       bottomBar.handles(false)
@@ -166,7 +166,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       leftBar.handles(true)
       rightBar.handles(true)
     }
-    
+
     else {
       topBar.cornerHandles(false)
       bottomBar.cornerHandles(false)
@@ -244,7 +244,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       rightBar.setForeground(Color.BLACK)
       bottomBar.setForeground(Color.BLACK)
     }
-    
+
     else {
       topBar.setBackground(WidgetWrapper.NON_FOREGROUND_BACKGROUND)
       leftBar.setBackground(WidgetWrapper.NON_FOREGROUND_BACKGROUND)
@@ -320,7 +320,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
                        getWidth - WidgetWrapper.BORDER_E - WidgetWrapper.BORDER_W,
                        getHeight - WidgetWrapper.BORDER_N - WidgetWrapper.BORDER_S)
     }
-    
+
     else {
       topBar.setVisible(false)
       leftBar.setVisible(false)
@@ -406,14 +406,14 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         bounds.width += newX
         bounds.y += newY
         bounds.height -= newY
-        
+
       case MouseMode.SW =>
         val newX = x.max(-bounds.x)
 
         bounds.x += newX
         bounds.width -= newX
         bounds.height += y
-        
+
       case MouseMode.W =>
         val newX = x.max(-bounds.x)
 
@@ -477,7 +477,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
       return
     }
-    
+
     val x = e.getX
     val y = e.getY
 
@@ -499,7 +499,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
                                               WidgetWrapper.HANDLE_WIDTH) / 2)
         mouseMode = MouseMode.W
     }
-    
+
     else if (x > getWidth - WidgetWrapper.BORDER_E) {
       if (_verticallyResizable && y < WidgetWrapper.BORDER_N)
         mouseMode = MouseMode.NE
@@ -511,7 +511,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
                                               WidgetWrapper.HANDLE_WIDTH) / 2)
         mouseMode = MouseMode.E
     }
-    
+
     else if (_verticallyResizable && y > getHeight - WidgetWrapper.BORDER_S) {
       if (x <= WidgetWrapper.BORDER_W + (getWidth - WidgetWrapper.BORDER_E - WidgetWrapper.BORDER_W +
                                          WidgetWrapper.HANDLE_WIDTH) / 2 &&
@@ -519,14 +519,14 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
                                          WidgetWrapper.HANDLE_WIDTH) / 2)
         mouseMode = MouseMode.S
     }
-    
+
     else if (_verticallyResizable && y < WidgetWrapper.BORDER_N &&
              x <= WidgetWrapper.BORDER_W + (getWidth - WidgetWrapper.BORDER_E - WidgetWrapper.BORDER_W +
                                             WidgetWrapper.HANDLE_WIDTH) / 2 &&
              x >= WidgetWrapper.BORDER_W + (getWidth - WidgetWrapper.BORDER_E - WidgetWrapper.BORDER_W -
                                             WidgetWrapper.HANDLE_WIDTH) / 2)
       mouseMode = MouseMode.N
-    
+
     if (mouseMode == MouseMode.DRAG)
       interfacePanel.aboutToDragSelectedWidgets(startPressX, startPressY)
     else
@@ -548,7 +548,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         constrainToHorizontal = false
         constrainToVertical = false
       }
-      
+
       else {
         if (!constrainToHorizontal && !constrainToVertical &&
             (p.x - startPressX).abs > (p.y - startPressY).abs)
@@ -564,7 +564,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
       interfacePanel.dragSelectedWidgets(p.x - startPressX, p.y - startPressY)
     }
-    
+
     else if (mouseMode != MouseMode.IDLE)
       doResize(p.x - startPressX, p.y - startPressY)
   }
@@ -577,7 +577,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     if (e.isPopupTrigger && mouseMode != MouseMode.DRAG)
       doPopup(e)
     else if (Mouse.hasButton1(e)) {
-      if (mouseMode == MouseMode.DRAG) 
+      if (mouseMode == MouseMode.DRAG)
         WidgetActions.moveSelectedWidgets(interfacePanel)
       else if (mouseMode != MouseMode.IDLE)
         WidgetActions.resizeWidget(this)
@@ -629,7 +629,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         case MouseMode.SE =>
           if (r.width < minWidgetSize.width)
             r.width = minWidgetSize.width
-          
+
           if (r.height < minWidgetSize.height)
             r.height = minWidgetSize.height
 
@@ -657,7 +657,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         case MouseMode.NE =>
           if (r.width < minWidgetSize.width)
             r.width = minWidgetSize.width
-          
+
           if (r.height < minWidgetSize.height) {
             r.y -= minWidgetSize.height - r.height
             r.height = minWidgetSize.height
@@ -680,13 +680,13 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
       if (maxWidgetSize == null)
         return
-      
+
       if (maxWidgetSize.height <= 0)
         maxWidgetSize.height = 10000
-      
+
       if (maxWidgetSize.width <= 0)
         maxWidgetSize.width = 10000
-      
+
       getParent match {
         case wp: WidgetPanel => wp.zoomer.zoomSize(maxWidgetSize)
         case _ =>
@@ -696,14 +696,14 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         case MouseMode.S =>
           if (r.height > maxWidgetSize.height)
             r.height = maxWidgetSize.height
-          
+
         case MouseMode.SW =>
           if (r.width > maxWidgetSize.width)
             r.width = maxWidgetSize.width
-          
+
           if (r.height > maxWidgetSize.height)
             r.height = maxWidgetSize.height
-          
+
         case MouseMode.SE =>
           if (r.width > maxWidgetSize.width) {
             r.width = maxWidgetSize.width
@@ -712,7 +712,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
           if (r.height > maxWidgetSize.height)
             r.height = maxWidgetSize.height
-          
+
         case MouseMode.E =>
           if (r.width > maxWidgetSize.width) {
             r.width = maxWidgetSize.width
@@ -722,7 +722,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         case MouseMode.NW =>
           if (r.width > maxWidgetSize.width)
             r.width = maxWidgetSize.width
-          
+
           if (r.height > maxWidgetSize.height) {
             r.height = maxWidgetSize.height
             r.y = getY + getHeight - r.height
@@ -731,7 +731,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         case MouseMode.W =>
           if (r.width > maxWidgetSize.width)
             r.width = maxWidgetSize.width
-          
+
         case MouseMode.NE =>
           if (r.width > maxWidgetSize.width) {
             r.width = maxWidgetSize.width
@@ -840,14 +840,15 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   ///
 
   private def doPopup(e: MouseEvent) {
-    if (interfacePanel != null) {
+    if (interfacePanel != null && (interfacePanel.getInteractMode == InteractMode.INTERACT ||
+                                   interfacePanel.getInteractMode == InteractMode.SELECT)) {
       val menu = new WrappingPopupMenu
 
       val p = populateContextMenu(menu, e.getPoint, e.getSource.asInstanceOf[Component])
 
       if (menu.getSubElements.size > 0)
         menu.show(e.getSource.asInstanceOf[Component], p.x, p.y)
-      
+
       e.consume()
     }
   }
@@ -925,7 +926,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         }))
       }
     }
-    
+
     else {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.select")) {
         def actionPerformed(e: ActionEvent) {
