@@ -89,17 +89,19 @@ code {
     font-size: {BODY-FONT-SIZE}pt;
 }
 blockquote {
-    background: {BLOCK-BACKGROUND};
-    padding-left: 0px;
-    padding-top: 0px;
-    padding-bottom: 7px;
+    background: {BLOCK-BAR};
     margin-left: 15px;
     margin-top: 7px;
     margin-bottom: 1px;
+    padding-left: 3px;
+}
+blockquote div {
+    background: {INFO-BACKGROUND};
+    padding-bottom: 10px;
 }
 blockquote p
 {
-    color: black;
+    color: {P-COLOR};
 }
 ol {
     margin-bottom: 1px;

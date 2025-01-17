@@ -433,10 +433,10 @@ object InterfaceColors {
       case "dark" => new Color(67, 67, 67)
     }
 
-  def INFO_BLOCK_BACKGROUND =
+  def INFO_BLOCK_BAR =
     theme match {
-      case "classic" | "light" => new Color(255, 247, 194)
-      case "dark" => new Color(237, 225, 145)
+      case "classic" | "light" => new Color(96, 96, 96)
+      case "dark" => MEDIUM_GRAY
     }
 
   def CHECK_FILLED = new Color(0, 173, 90)
