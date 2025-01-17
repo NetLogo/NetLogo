@@ -7,7 +7,7 @@ import java.net.URI
 
 import org.nlogo.api.{ AbstractModelLoader, AggregateDrawingInterface, FileIO, LabProtocol, ModelSettings,
                        PreviewCommands, Version, XMLElement }
-import org.nlogo.core.{ ExternalResource, Femto, LiteralParser, Model, Section, UpdateMode, View, Widget,
+import org.nlogo.core.{ DummyView, ExternalResource, Femto, LiteralParser, Model, Section, UpdateMode, View, Widget,
                         WorldDimensions, WorldDimensions3D }
 
 import scala.io.Source
@@ -44,14 +44,15 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
           element.name match {
             case "model" =>
 
-              import Model.{ defaultCode, defaultShapes, defaultLinkShapes, defaultView }
+              import Model.{ defaultCode, defaultShapes, defaultLinkShapes }
 
               val version = element("version")
               val snapToGrid = element("snapToGrid", "false").toBoolean
 
               val settings  = new Section("org.nlogo.modelsection.modelsettings", ModelSettings(snapToGrid))
 
-              val model = Model(defaultCode, List(defaultView), defaultInfo, version, defaultShapes, defaultLinkShapes, List(settings), Seq(), Seq())
+              val model = Model(defaultCode, List(DummyView), defaultInfo, version, defaultShapes,
+                                defaultLinkShapes, List(settings), Seq(), Seq())
 
               element.children.foldLeft(Try(model)) {
                 case (model, XMLElement("widgets", _, _, children)) =>
@@ -102,7 +103,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
 
           }
 
-      }
+      }.map(model => model.copy(widgets = model.widgets.filter(_ != DummyView)))
 
     } else {
       Failure(new Exception(s"""Unable to open model with format "${extension}"."""))
