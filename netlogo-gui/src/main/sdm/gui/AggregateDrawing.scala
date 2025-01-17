@@ -161,7 +161,7 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
              , "bivalent"    -> rate.bivalentWrapper.toString
              , "startX"      -> rate.startPoint.x.toString
              , "startY"      -> rate.startPoint.y.toString
-             , "endX"        -> (rate.endPoint.x + 2).toString
+             , "endX"        -> (rate.endPoint.x + 1).toString
              , "endY"        -> rate.endPoint.y.toString
              , "startFigure" -> refs(rate.startFigure).toString
              , "endFigure"   -> refs(rate.endFigure).toString
