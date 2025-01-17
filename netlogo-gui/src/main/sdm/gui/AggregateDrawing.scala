@@ -50,7 +50,7 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
         stock.nameWrapper(el("name"))
         stock.initialValueExpressionWrapper(el("initialValue"))
         stock.allowNegative(el("allowNegative").toBoolean)
-        stock.displayBox( new Point(el("centerX").toInt, el("centerY").toInt)
+        stock.displayBox( new Point(el("startX").toInt + 60, el("startY").toInt + 40)
                         , new Point(el("startX").toInt, el("startY").toInt))
         add(stock)
         refs :+ stock
@@ -59,14 +59,14 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
         val converter = new ConverterFigure
         converter.nameWrapper(el("name"))
         converter.expressionWrapper(el("expression"))
-        converter.displayBox( new Point(el("centerX").toInt, el("centerY").toInt)
+        converter.displayBox( new Point(el("startX").toInt + 50, el("startY").toInt + 50)
                             , new Point(el("startX").toInt, el("startY").toInt))
         add(converter)
         refs :+ converter
 
       case (refs, el @ XMLElement("reservoir", _, _, _)) =>
         val reservoir = new ReservoirFigure
-        reservoir.displayBox( new Point(el("centerX").toInt, el("centerY").toInt)
+        reservoir.displayBox( new Point(el("startX").toInt, el("startX").toInt)
                             , new Point(el("startX").toInt, el("startY").toInt))
         add(reservoir)
         refs :+ reservoir
@@ -126,10 +126,8 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
           Map( "name"          -> stock.nameWrapper
              , "initialValue"  -> stock.initialValueExpressionWrapper
              , "allowNegative" -> stock.allowNegative.toString
-             , "centerX"       -> stock.center.x.toString
-             , "centerY"       -> stock.center.y.toString
-             , "startX"        -> stock.displayBox.x.toString
-             , "startY"        -> stock.displayBox.y.toString
+             , "startX"        -> (stock.displayBox.x + 12).toString
+             , "startY"        -> (stock.displayBox.y + 12).toString
              )
         ("stock", attributes)
 
@@ -137,8 +135,6 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
         val attributes =
           Map( "name"       -> converter.nameWrapper
              , "expression" -> converter.expressionWrapper
-             , "centerX"    -> converter.center.x.toString
-             , "centerY"    -> converter.center.y.toString
              , "startX"     -> converter.displayBox.x.toString
              , "startY"     -> converter.displayBox.y.toString
              )
@@ -146,9 +142,7 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
       case reservoir: ReservoirFigure =>
         val attributes =
-          Map( "centerX" -> reservoir.center.x.toString
-             , "centerY" -> reservoir.center.y.toString
-             , "startX"  -> reservoir.displayBox.x.toString
+          Map( "startX"  -> reservoir.displayBox.x.toString
              , "startY"  -> reservoir.displayBox.y.toString
              )
         ("reservoir", attributes)
