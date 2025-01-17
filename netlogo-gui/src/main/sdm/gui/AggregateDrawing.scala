@@ -189,14 +189,16 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
     }
 
+    val figs = figures
+
     def iterateFigures: PartialFunction[(Kids, Refs), (Kids, Refs)] = {
       case (children: Kids, refs: Refs) =>
-        if (figures.hasNextFigure) {
-          val figure            = figures.nextFigure
+        if (figs.hasNextFigure) {
+          val figure            = figs.nextFigure
           val (elemType, attrs) = processFigure(refs)(figure)
           val cs                = children :+ XMLElement(elemType, attrs, "", Seq())
           val rs                = refs + (figure -> refs.size)
-          (cs, rs)
+          iterateFigures((cs, rs))
         } else {
           (children, refs)
         }
