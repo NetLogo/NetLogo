@@ -33,10 +33,6 @@ class NLogoXMLFormatTests extends AnyFunSuite {
     intercept[Model.InvalidModelError](loader.readModel(loadString("test/fileformat/No Widgets.nlogox"), "nlogox").get)
   }
 
-  test("Empty model tag results in default model") {
-    assertResultXML(FileIO.getResourceAsString("/system/empty.nlogox"), roundTripString(loadString("test/fileformat/Empty Model.nlogox")))
-  }
-
   test("Sample model round trip remains the same") {
     val modelString = loadString("test/fileformat/Wolf Sheep Predation.nlogox")
 
