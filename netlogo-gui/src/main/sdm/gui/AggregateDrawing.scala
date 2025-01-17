@@ -73,8 +73,8 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
       case (refs, el @ XMLElement("binding", _, _, _)) =>
         val binding = new BindingConnection
-        binding.displayBox( new Point(el("centerX").toInt, el("centerY").toInt)
-                          , new Point(el("startX").toInt, el("startY").toInt))
+        binding.startPoint(el("startX").toInt, el("startY").toInt)
+        binding.endPoint(el("endX").toInt, el("endY").toInt)
         val start = refs(el("startFigure").toInt)
         val end = refs(el("endFigure").toInt)
         binding.connectStart(start.connectorAt(start.center.x, start.center.y))
@@ -180,7 +180,7 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
         val extras =
           if (rate.pointCount == 3)
             Map( "middleX" -> rate.pointAt(1).x.toString
-               , "middleY" -> rate.pointAt(2).y.toString
+               , "middleY" -> rate.pointAt(1).y.toString
                )
           else
             Map()
