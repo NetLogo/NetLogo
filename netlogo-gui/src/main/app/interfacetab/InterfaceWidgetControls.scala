@@ -4,7 +4,7 @@ package org.nlogo.app.interfacetab
 
 import java.awt.{ Dimension, Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
-import javax.swing.{ AbstractAction, Action, JLabel, JPanel }
+import javax.swing.{ AbstractAction, Action, ButtonGroup, JLabel, JPanel }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.Editable
@@ -49,6 +49,13 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   deleteButton.setToolTipText(I18N.gui.get("tabs.run.deleteButton.tooltip"))
 
   locally {
+    val group = new ButtonGroup
+
+    group.add(interactButton)
+    group.add(selectButton)
+    group.add(editButton)
+    group.add(deleteButton)
+
     val c = new GridBagConstraints
 
     c.anchor = GridBagConstraints.CENTER
@@ -76,10 +83,6 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   class InteractAction extends AbstractAction("I", null) { // add icon if moving forward with design
     def actionPerformed(e: ActionEvent) {
       wPanel.beginInteract()
-
-      selectButton.setSelected(false)
-      editButton.setSelected(false)
-      deleteButton.setSelected(false)
     }
   }
 
@@ -87,10 +90,6 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
                                                                             InterfaceColors.TOOLBAR_IMAGE)) {
     def actionPerformed(e: ActionEvent) {
       wPanel.beginSelect()
-
-      interactButton.setSelected(false)
-      editButton.setSelected(false)
-      deleteButton.setSelected(false)
     }
   }
 
@@ -101,10 +100,6 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
         new WindowEvents.EditWidgetEvent(null).raise(InterfaceWidgetControls.this)
 
         wPanel.beginEdit()
-
-        interactButton.setSelected(false)
-        selectButton.setSelected(false)
-        deleteButton.setSelected(false)
       }
 
       else
@@ -118,10 +113,6 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       if (deleteButton.isSelected) {
         wPanel.deleteSelectedWidgets()
         wPanel.beginDelete()
-
-        interactButton.setSelected(false)
-        selectButton.setSelected(false)
-        editButton.setSelected(false)
       }
 
       else
@@ -200,11 +191,6 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   }
 
   def handle(e: AppEvents.InterfaceModeEvent) {
-    selectButton.setSelected(false)
-    interactButton.setSelected(false)
-    editButton.setSelected(false)
-    deleteButton.setSelected(false)
-
     e.mode match {
       case InteractMode.SELECT =>
         selectButton.setSelected(true)
