@@ -51,7 +51,8 @@ object InfoFormatter {
             replace("{H3-FONT-SIZE}", fontSize.toString).
             replace("{P-COLOR}", colorString(InterfaceColors.INFO_P_COLOR)).
             replace("{CODE-BACKGROUND}", colorString(InterfaceColors.INFO_CODE_BACKGROUND)).
-            replace("{BLOCK-BACKGROUND}", colorString(InterfaceColors.INFO_BLOCK_BACKGROUND)).
+            replace("{BLOCK-BAR}", colorString(InterfaceColors.INFO_BLOCK_BAR)).
+            replace("{INFO-BACKGROUND}", colorString(InterfaceColors.INFO_BACKGROUND)).
             replace("{BULLET-1-IMAGE}", getClass.getResource("/system/bullet.png").toString).
             replace("{BULLET-2-IMAGE}", getClass.getResource("/system/bullet-hollow.png").toString).
             replace("{BULLET-3-IMAGE}", getClass.getResource("/system/box.png").toString) + "\n-->\n</style>"
@@ -83,6 +84,7 @@ object InfoFormatter {
     options.set(Parser.MATCH_CLOSING_FENCE_CHARACTERS, Boolean.box(false))
 
     extensions.add(new CodeBlockRenderer())
+    extensions.add(new BlockQuoteRenderer())
 
     options.set(Parser.EXTENSIONS, extensions)
 
