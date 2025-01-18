@@ -50,8 +50,8 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
         stock.nameWrapper(el("name"))
         stock.initialValueExpressionWrapper(el("initialValue"))
         stock.allowNegative(el("allowNegative").toBoolean)
-        stock.displayBox( new Point(el("startX").toInt + 60, el("startY").toInt + 40)
-                        , new Point(el("startX").toInt, el("startY").toInt))
+        stock.displayBox( new Point(el("startX").toInt, el("startY").toInt)
+                        , new Point(el("startX").toInt + 60, el("startY").toInt + 40))
         add(stock)
         refs :+ stock
 
@@ -59,15 +59,15 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
         val converter = new ConverterFigure
         converter.nameWrapper(el("name"))
         converter.expressionWrapper(el("expression"))
-        converter.displayBox( new Point(el("startX").toInt + 50, el("startY").toInt + 50)
-                            , new Point(el("startX").toInt, el("startY").toInt))
+        converter.displayBox( new Point(el("startX").toInt, el("startY").toInt)
+                            , new Point(el("startX").toInt + 50, el("startY").toInt + 50))
         add(converter)
         refs :+ converter
 
       case (refs, el @ XMLElement("reservoir", _, _, _)) =>
         val reservoir = new ReservoirFigure
-        reservoir.displayBox( new Point(el("startX").toInt, el("startX").toInt)
-                            , new Point(el("startX").toInt, el("startY").toInt))
+        reservoir.displayBox( new Point(el("startX").toInt, el("startY").toInt)
+                            , new Point(el("startX").toInt + 30, el("startY").toInt + 30))
         add(reservoir)
         refs :+ reservoir
 
@@ -90,11 +90,11 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
         rate.expressionWrapper(el("expression"))
         rate.bivalentWrapper(el("bivalent").toBoolean)
 
-        rate.startPoint(el("startX").toInt, el("startY").toInt)
-        rate.endPoint(el("endX").toInt, el("endY").toInt)
-
         val start = refs(el("startFigure").toInt)
         val end = refs(el("endFigure").toInt)
+
+        rate.startPoint(start.center.x, start.center.y)
+        rate.endPoint(end.center.x, end.center.y)
 
         rate.connectStart(start.connectorAt(start.center.x, start.center.y))
         rate.connectEnd(end.connectorAt(end.center.x, end.center.y))
@@ -159,10 +159,6 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
           Map( "name"        -> rate.nameWrapper
              , "expression"  -> rate.expressionWrapper
              , "bivalent"    -> rate.bivalentWrapper.toString
-             , "startX"      -> rate.startPoint.x.toString
-             , "startY"      -> rate.startPoint.y.toString
-             , "endX"        -> (rate.endPoint.x + 1).toString
-             , "endY"        -> rate.endPoint.y.toString
              , "startFigure" -> refs(rate.startFigure).toString
              , "endFigure"   -> refs(rate.endFigure).toString
              )

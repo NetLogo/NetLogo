@@ -148,6 +148,9 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
         case "org.nlogo.modelsection.systemdynamics.gui" =>
           writer.element(section.get.get.asInstanceOf[AggregateDrawingInterface].write())
 
+        case "org.nlogo.modelsection.systemdynamics" =>
+          // need to make this work for headless mode
+
         case "org.nlogo.modelsection.behaviorspace" =>
           val experiments = section.get.get.asInstanceOf[Seq[LabProtocol]]
           if (experiments.nonEmpty)
