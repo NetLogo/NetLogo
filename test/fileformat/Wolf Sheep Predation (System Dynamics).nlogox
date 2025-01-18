@@ -827,30 +827,30 @@ Commercial licenses are also available. To inquire about commercial licenses, pl
     <![CDATA[need-to-manually-make-preview-for-this-model]]>
   </previewCommands>
   <systemDynamics dt="0.001">
-    <stock name="sheep" startY="88" allowNegative="false" initialValue="100" startX="233"></stock>
-    <stock name="wolves" startY="275" allowNegative="false" initialValue="30" startX="279"></stock>
-    <reservoir startX="39" startY="92"></reservoir>
-    <reservoir startX="38" startY="284"></reservoir>
-    <reservoir startX="487" startY="96"></reservoir>
-    <reservoir startX="487" startY="278"></reservoir>
+    <stock x="233" name="sheep" y="88" allowNegative="false" initialValue="100"></stock>
+    <stock x="279" name="wolves" y="275" allowNegative="false" initialValue="30"></stock>
+    <reservoir x="39" y="92"></reservoir>
+    <reservoir x="38" y="284"></reservoir>
+    <reservoir x="487" y="96"></reservoir>
+    <reservoir x="487" y="278"></reservoir>
     <rate name="sheep-births" startFigure="2" bivalent="false" expression="sheep-birth-rate * sheep" endFigure="0"></rate>
     <rate name="sheep-deaths" startFigure="0" bivalent="false" expression="sheep * predation-rate * wolves" endFigure="4"></rate>
     <rate name="wolf-births" startFigure="3" bivalent="false" expression="wolves * predator-efficiency * predation-rate * sheep" endFigure="1"></rate>
     <rate name="wolf-deaths" startFigure="1" bivalent="false" expression="wolves * wolf-death-rate" endFigure="5"></rate>
-    <converter name="sheep-birth-rate" expression=".04" startX="29" startY="174"></converter>
-    <converter name="predation-rate" expression="3.0E-4" startX="233" startY="175"></converter>
-    <converter name="predator-efficiency" expression=".8" startX="97" startY="371"></converter>
-    <converter name="wolf-death-rate" expression="0.15" startX="337" startY="372"></converter>
-    <binding endX="145" startFigure="10" startY="182" endFigure="6" endY="107" startX="72"></binding>
-    <binding endX="145" startFigure="0" startY="107" endFigure="6" endY="107" startX="221"></binding>
-    <binding endX="396" startFigure="11" startY="187" endFigure="7" endY="109" startX="279"></binding>
-    <binding endX="167" startFigure="11" startY="218" endFigure="8" endY="296" startX="242"></binding>
-    <binding endX="396" startFigure="0" startY="108" endFigure="7" endY="109" startX="305"></binding>
-    <binding endX="396" startFigure="1" startY="263" endFigure="7" endY="109" startX="323"></binding>
-    <binding endX="167" startFigure="12" startY="374" endFigure="8" endY="296" startX="132"></binding>
-    <binding endX="167" startFigure="1" startY="295" endFigure="8" endY="296" startX="267"></binding>
-    <binding endX="167" startFigure="0" startY="140" endFigure="8" endY="296" startX="246"></binding>
-    <binding endX="419" startFigure="13" startY="376" endFigure="9" endY="293" startX="374"></binding>
-    <binding endX="419" startFigure="1" startY="294" endFigure="9" endY="293" startX="351"></binding>
+    <converter name="sheep-birth-rate" expression=".04" x="29" y="174"></converter>
+    <converter name="predation-rate" expression="3.0E-4" x="233" y="175"></converter>
+    <converter name="predator-efficiency" expression=".8" x="97" y="371"></converter>
+    <converter name="wolf-death-rate" expression="0.15" x="337" y="372"></converter>
+    <binding startFigure="10" endFigure="6"></binding>
+    <binding startFigure="0" endFigure="6"></binding>
+    <binding startFigure="11" endFigure="7"></binding>
+    <binding startFigure="11" endFigure="8"></binding>
+    <binding startFigure="0" endFigure="7"></binding>
+    <binding startFigure="1" endFigure="7"></binding>
+    <binding startFigure="12" endFigure="8"></binding>
+    <binding startFigure="1" endFigure="8"></binding>
+    <binding startFigure="0" endFigure="8"></binding>
+    <binding startFigure="13" endFigure="9"></binding>
+    <binding startFigure="1" endFigure="9"></binding>
   </systemDynamics>
 </model>

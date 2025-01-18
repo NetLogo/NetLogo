@@ -943,10 +943,10 @@ string]]>
     <![CDATA[setup repeat 75 [ go ]]]>
   </previewCommands>
   <systemDynamics dt="1.2">
-    <stock name="random-stock" startY="133" allowNegative="true" initialValue="42" startX="143"></stock>
-    <converter name="var42" expression="random-stock + 42" startX="365" startY="126"></converter>
-    <binding endX="365" startFigure="0" startY="152" endFigure="1" endY="151" startX="215"></binding>
-    <reservoir startX="83" startY="35"></reservoir>
+    <stock x="143" name="random-stock" y="133" allowNegative="true" initialValue="42"></stock>
+    <converter name="var42" expression="random-stock + 42" x="365" y="126"></converter>
+    <binding startFigure="0" endFigure="1"></binding>
+    <reservoir x="83" y="35"></reservoir>
     <rate name="flower" startFigure="3" bivalent="false" expression="-42" endFigure="0"></rate>
   </systemDynamics>
 </model>
