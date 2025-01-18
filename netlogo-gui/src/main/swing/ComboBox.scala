@@ -18,7 +18,7 @@ object ComboBox {
   }
 }
 
-class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new GridBagLayout) with RoundedBorderPanel
+class ComboBox[T >: Null](private var items: Seq[T] = Seq()) extends JPanel(new GridBagLayout) with RoundedBorderPanel
                                                             with ThemeSync with ItemSelectable {
 
   private val mouseListener = new MouseAdapter {
@@ -120,7 +120,7 @@ class ComboBox[T >: Null](private var items: List[T] = Nil) extends JPanel(new G
   setItems(items)
   syncTheme()
 
-  def setItems(items: List[T]) {
+  def setItems(items: Seq[T]) {
     this.items = items
 
     popup.removeAll()

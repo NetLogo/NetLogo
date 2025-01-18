@@ -13,9 +13,9 @@ import scala.collection.JavaConverters._
 
 object OptionPane {
   object Options {
-    val OK = List(I18N.gui.get("common.buttons.ok"))
-    val OK_CANCEL = List(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.cancel"))
-    val YES_NO = List(I18N.gui.get("common.buttons.yes"), I18N.gui.get("common.buttons.no"))
+    val OK = Seq(I18N.gui.get("common.buttons.ok"))
+    val OK_CANCEL = Seq(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.cancel"))
+    val YES_NO = Seq(I18N.gui.get("common.buttons.yes"), I18N.gui.get("common.buttons.no"))
   }
 
   object Icons {
@@ -28,14 +28,14 @@ object OptionPane {
 }
 
 // like OptionDialog, but allows synchronization with theme (IB 11/16/24)
-class OptionPane(parent: Component, title: String, message: String, options: List[String],
+class OptionPane(parent: Component, title: String, message: String, options: Seq[String],
                  protected val icon: Icon = OptionPane.Icons.NONE) extends JDialog(parent match {
                    case w: Window => w
                    case _ => null
                  }, title, Dialog.ModalityType.APPLICATION_MODAL) {
 
   private var selectedOption: String = null
-  
+
   getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
   getContentPane.setLayout(new GridBagLayout)
 
@@ -78,10 +78,10 @@ class OptionPane(parent: Component, title: String, message: String, options: Lis
 
   def getSelectedOption: String =
     selectedOption
-  
+
   def getSelectedIndex: Int =
     options.indexOf(selectedOption)
-  
+
   protected def addContents() {
     val c = new GridBagConstraints
 
@@ -161,9 +161,9 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
   }
 }
 
-class DropdownOptionPane[T >: Null](parent: Component, title: String, message: String, choices: List[T])
+class DropdownOptionPane[T >: Null](parent: Component, title: String, message: String, choices: Seq[T])
   extends OptionPane(parent, title, message, OptionPane.Options.OK_CANCEL, OptionPane.Icons.QUESTION) {
-  
+
   // lazy because addContents is called in super (IB 11/16/24)
   private lazy val dropdown = new ComboBox(choices)
 
@@ -180,7 +180,7 @@ class DropdownOptionPane[T >: Null](parent: Component, title: String, message: S
     else
       -1
   }
-  
+
   override protected def addContents() {
     val c = new GridBagConstraints
 
@@ -216,9 +216,9 @@ class DropdownOptionPane[T >: Null](parent: Component, title: String, message: S
   }
 }
 
-class CustomOptionPane(parent: Component, title: String, contents: Component, options: List[String])
+class CustomOptionPane(parent: Component, title: String, contents: Component, options: Seq[String])
   extends OptionPane(parent, title, "", options) {
-  
+
   override protected def addContents() {
     val c = new GridBagConstraints
 
