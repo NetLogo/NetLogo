@@ -47,39 +47,55 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
       case (refs, el @ XMLElement("stock", _, _, _)) =>
         val stock = new StockFigure
+
         stock.nameWrapper(el("name"))
         stock.initialValueExpressionWrapper(el("initialValue"))
         stock.allowNegative(el("allowNegative").toBoolean)
-        stock.displayBox( new Point(el("startX").toInt, el("startY").toInt)
-                        , new Point(el("startX").toInt + 60, el("startY").toInt + 40))
+        stock.displayBox( new Point(el("x").toInt, el("y").toInt)
+                        , new Point(el("x").toInt + 60, el("y").toInt + 40))
+
         add(stock)
+
         refs :+ stock
 
       case (refs, el @ XMLElement("converter", _, _, _)) =>
         val converter = new ConverterFigure
+
         converter.nameWrapper(el("name"))
         converter.expressionWrapper(el("expression"))
-        converter.displayBox( new Point(el("startX").toInt, el("startY").toInt)
-                            , new Point(el("startX").toInt + 50, el("startY").toInt + 50))
+        converter.displayBox( new Point(el("x").toInt, el("y").toInt)
+                            , new Point(el("x").toInt + 50, el("y").toInt + 50))
+
         add(converter)
+
         refs :+ converter
 
       case (refs, el @ XMLElement("reservoir", _, _, _)) =>
         val reservoir = new ReservoirFigure
-        reservoir.displayBox( new Point(el("startX").toInt, el("startY").toInt)
-                            , new Point(el("startX").toInt + 30, el("startY").toInt + 30))
+
+        reservoir.displayBox( new Point(el("x").toInt, el("y").toInt)
+                            , new Point(el("x").toInt + 30, el("y").toInt + 30))
+
         add(reservoir)
+
         refs :+ reservoir
 
       case (refs, el @ XMLElement("binding", _, _, _)) =>
         val binding = new BindingConnection
-        binding.startPoint(el("startX").toInt, el("startY").toInt)
-        binding.endPoint(el("endX").toInt, el("endY").toInt)
+
         val start = refs(el("startFigure").toInt)
         val end = refs(el("endFigure").toInt)
+
+        binding.startPoint(start.center.x, start.center.y)
+        binding.endPoint(end.center.x, end.center.y)
+
         binding.connectStart(start.connectorAt(start.center.x, start.center.y))
         binding.connectEnd(end.connectorAt(end.center.x, end.center.y))
+
+        binding.updateConnection()
+
         add(binding)
+
         refs :+ binding
 
       case (refs, el @ XMLElement("rate", attrs, _, _)) =>
@@ -122,8 +138,8 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
           Map( "name"          -> stock.nameWrapper
              , "initialValue"  -> stock.initialValueExpressionWrapper
              , "allowNegative" -> stock.allowNegative.toString
-             , "startX"        -> (stock.displayBox.x + 12).toString
-             , "startY"        -> (stock.displayBox.y + 12).toString
+             , "x"             -> (stock.displayBox.x + 12).toString
+             , "y"             -> (stock.displayBox.y + 12).toString
              )
         ("stock", attributes)
 
@@ -131,25 +147,21 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
         val attributes =
           Map( "name"       -> converter.nameWrapper
              , "expression" -> converter.expressionWrapper
-             , "startX"     -> converter.displayBox.x.toString
-             , "startY"     -> converter.displayBox.y.toString
+             , "x"          -> converter.displayBox.x.toString
+             , "y"          -> converter.displayBox.y.toString
              )
         ("converter", attributes)
 
       case reservoir: ReservoirFigure =>
         val attributes =
-          Map( "startX"  -> reservoir.displayBox.x.toString
-             , "startY"  -> reservoir.displayBox.y.toString
+          Map( "x" -> reservoir.displayBox.x.toString
+             , "y" -> reservoir.displayBox.y.toString
              )
         ("reservoir", attributes)
 
       case binding: BindingConnection =>
         val attributes =
-          Map( "startX"      -> binding.startPoint.x.toString
-             , "startY"      -> binding.startPoint.y.toString
-             , "endX"        -> binding.endPoint.x.toString
-             , "endY"        -> binding.endPoint.y.toString
-             , "startFigure" -> refs(binding.startFigure).toString
+          Map( "startFigure" -> refs(binding.startFigure).toString
              , "endFigure"   -> refs(binding.endFigure).toString
              )
         ("binding", attributes)

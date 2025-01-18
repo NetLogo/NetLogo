@@ -45,7 +45,7 @@ class NLogoXMLFormatTests extends AnyFunSuite {
     assertResultXML(modelString, roundTripString(modelString))
   }
 
-  test("Wolf Sheep Predation (System Dynamics)") {
+  test("Complex System Dynamics") {
     val modelString = loadString("test/fileformat/Wolf Sheep Predation (System Dynamics).nlogox")
 
     assertResultXML(modelString, roundTripString(modelString))
