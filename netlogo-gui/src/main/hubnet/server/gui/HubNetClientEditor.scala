@@ -2,12 +2,12 @@
 
 package org.nlogo.hubnet.server.gui
 
-import java.awt.{ BorderLayout, Component, Dimension }
+import java.awt.{ BorderLayout, Component, Dimension, GridBagConstraints, GridBagLayout, Insets }
 import javax.swing.{ JFrame, JMenuBar, ScrollPaneConstants }
 
 import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
-import org.nlogo.swing.{ ScrollPane, ToolBar }
+import org.nlogo.swing.{ NetLogoIcon, ScrollPane, ToolBar }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel }
 
@@ -17,7 +17,8 @@ class HubNetClientEditor(workspace: GUIWorkspace,
                          menuFactory: MenuBarFactory) extends JFrame
         with org.nlogo.window.Event.LinkChild
         with org.nlogo.window.Events.ZoomedEvent.Handler
-        with ThemeSync {
+        with ThemeSync
+        with NetLogoIcon {
   val interfacePanel: AbstractWidgetPanel = iFactory.widgetPanel(workspace)
   private val scrollPane = new ScrollPane(interfacePanel, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
@@ -33,8 +34,16 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   }
 
   private val toolbar = new ToolBar {
+    setLayout(new GridBagLayout)
+
     override def addControls() {
-      add(widgetControls)
+      val c = new GridBagConstraints
+
+      c.anchor = GridBagConstraints.WEST
+      c.weightx = 1
+      c.insets = new Insets(6, 0, 6, 0)
+
+      add(widgetControls, c)
     }
   }
 
@@ -100,6 +109,8 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     widgetControls match {
       case ts: ThemeSync => ts.syncTheme()
     }
+
+    toolbar.setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
     repaint()
   }

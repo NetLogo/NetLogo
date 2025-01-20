@@ -5,20 +5,14 @@ package org.nlogo.app
 import java.awt.{ Dimension, Frame, GraphicsEnvironment, Point }
 import javax.swing.{ JFrame, WindowConstants }
 
-import org.nlogo.api.Version
-import org.nlogo.awt.Images
+import org.nlogo.swing.NetLogoIcon
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Event.LinkChild
 
-class CodeTabsWindow(parent: Frame, tabs: TabsPanel) extends JFrame with LinkChild with ThemeSync {
+class CodeTabsWindow(parent: Frame, tabs: TabsPanel) extends JFrame with LinkChild with ThemeSync with NetLogoIcon {
   val menuBar: MenuBar = new MenuBar(false)
 
   setJMenuBar(menuBar)
-
-  if (Version.is3D)
-    setIconImage(Images.loadImageResource("/images/netlogo3d.png"))
-  else
-    setIconImage(Images.loadImageResource("/images/netlogo.png"))
 
   setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE)
   setSize(new Dimension(600, 400))

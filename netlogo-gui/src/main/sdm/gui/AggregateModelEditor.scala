@@ -12,12 +12,12 @@ import javax.swing.plaf.basic.BasicMenuUI
 import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, Tool, ViewChangeListener }
 import org.jhotdraw.util.{ Command, CommandMenu, RedoCommand, UndoCommand, UndoManager }
 
-import org.nlogo.api.{ CompilerServices, Editable, SourceOwner, Version }
-import org.nlogo.awt.{ EventQueue, Images }
+import org.nlogo.api.{ CompilerServices, Editable, SourceOwner }
+import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ CompilerException, I18N, LiteralParser }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
-import org.nlogo.swing.{ MenuItem, Utils => SwingUtils }
+import org.nlogo.swing.{ MenuItem, NetLogoIcon, Utils => SwingUtils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialogFactoryInterface, Events, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild
@@ -41,7 +41,8 @@ class AggregateModelEditor(
   with DrawingEditor
   with LinkChild
   with Events.LoadBeginEvent.Handler
-  with ThemeSync {
+  with ThemeSync
+  with NetLogoIcon {
 
   def this(
     linkParent: Component,
@@ -53,11 +54,6 @@ class AggregateModelEditor(
 
   private val undoManager: UndoManager = new UndoManager()
   private var currentTool: Option[Tool] = None
-
-  if (Version.is3D)
-    setIconImage(Images.loadImageResource("/images/netlogo3d.png"))
-  else
-    setIconImage(Images.loadImageResource("/images/netlogo.png"))
 
   locally {
     Wrapper.reset()
