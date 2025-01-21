@@ -2,8 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ Component, FlowLayout, Graphics, Insets }
-//import java.awt.{ Component, Dimension, FlowLayout, Graphics, Insets }
+import java.awt.{ Component, Dimension, FlowLayout, Graphics, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.{ Box, JComponent, JLabel, JPanel, JTabbedPane, SwingConstants }
@@ -147,6 +146,9 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
   def getText: String =
     rawText
 
+  def boldWidth: Int =
+    new JLabel("<html><b>" + rawText + "</b></html>").getPreferredSize.width
+
   private var closeButton: CloseButton = null
 
   var error = false
@@ -180,6 +182,9 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
 
     case _ =>
   }
+
+  override def getPreferredSize: Dimension =
+    new Dimension(boldWidth, super.getPreferredSize.height)
 
   override def paintComponent(g: Graphics) {
     if (tab == tabsPanel.getSelectedComponent) {
