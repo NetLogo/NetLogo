@@ -70,6 +70,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
 
     if (ticksLabel != null) {
       c.gridy = 2
+      c.fill = GridBagConstraints.NONE
 
       add(ticksLabel, c)
     }
