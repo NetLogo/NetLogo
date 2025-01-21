@@ -16,7 +16,6 @@ private[nlogo] trait ModelSections {
   def turtleShapes:       Seq[VectorShape]
   def linkShapes:         Seq[LinkShape]
   def additionalSections: Seq[ModelSaveable]
-  def openTempFiles:      Seq[String]
   def resources:          Seq[ExternalResource]
 }
 
