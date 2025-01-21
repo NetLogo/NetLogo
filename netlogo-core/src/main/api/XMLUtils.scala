@@ -1,11 +1,9 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.fileformat
+package org.nlogo.api
 
 import java.io.{ StringReader, Writer }
 import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants, XMLStreamException }
-
-import org.nlogo.api.XMLElement
 
 import scala.util.{ Failure, Try }
 import scala.util.matching.Regex

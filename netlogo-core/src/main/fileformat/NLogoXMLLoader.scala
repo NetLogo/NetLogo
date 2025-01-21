@@ -6,7 +6,7 @@ import java.io.{ File, PrintWriter, StringWriter, Writer }
 import java.net.URI
 
 import org.nlogo.api.{ AbstractModelLoader, AggregateDrawingInterface, FileIO, LabProtocol, ModelSettings,
-                       PreviewCommands, Version, XMLElement }
+                       PreviewCommands, Version, XMLElement, XMLReader, XMLWriter }
 import org.nlogo.core.{ DummyView, ExternalResource, Femto, LiteralParser, Model, Section, UpdateMode, View, Widget,
                         WorldDimensions, WorldDimensions3D }
 
@@ -52,7 +52,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
               val settings  = new Section("org.nlogo.modelsection.modelsettings", ModelSettings(snapToGrid))
 
               val model = Model(defaultCode, List(DummyView), defaultInfo, version, defaultShapes,
-                                defaultLinkShapes, List(settings), Seq(), Seq())
+                                defaultLinkShapes, List(settings), Seq())
 
               element.children.foldLeft(Try(model)) {
                 case (model, XMLElement("widgets", _, _, children)) =>
@@ -85,8 +85,6 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
                   val hnElems = children.map(WidgetXMLLoader.readWidget)
                   val section = new Section("org.nlogo.modelsection.hubnetclient", hnElems)
                   model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
-                case (model, el @ XMLElement("openTempFiles", _, _, _)) =>
-                  model.map(_.copy(openTempFiles = el.getChildren("file").map(file => file("path"))))
                 case (model, el @ XMLElement("resources", _, _, _)) =>
                   model.map(_.copy(
                     resources = el.getChildren("resource").map(
@@ -168,20 +166,6 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
           throw new Error(s"Unhandlable file section type: ${x}")
 
       }
-    }
-
-    if (model.openTempFiles.nonEmpty) {
-
-      writer.startElement("openTempFiles")
-
-      for (file <- model.openTempFiles) {
-        writer.startElement("file")
-        writer.attribute("path", file)
-        writer.endElement("file")
-      }
-
-      writer.endElement("openTempFiles")
-
     }
 
     if (model.resources.nonEmpty) {

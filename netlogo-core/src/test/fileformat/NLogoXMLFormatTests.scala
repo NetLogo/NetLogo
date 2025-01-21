@@ -2,7 +2,7 @@
 
 package org.nlogo.fileformat
 
-import org.nlogo.api.FileIO
+import org.nlogo.api.{ FileIO, XMLReader }
 import org.nlogo.core.{ Femto, LiteralParser, Model }
 
 import org.scalatest.funsuite.AnyFunSuite
