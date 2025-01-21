@@ -69,9 +69,7 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
     }, c)
   }
 
-  pack()
-
-  Positioning.center(this, parent)
+  packAndCenter()
 
   setResizable(false)
   setVisible(true)
@@ -111,6 +109,11 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
   protected def getWrappedMessage: String =
     LineBreaker.breakLines(message, getFontMetrics(new JLabel().getFont), 400).asScala.mkString("<html>", "<br>", "</html>")
 
+  protected def packAndCenter() {
+    pack()
+
+    Positioning.center(this, parent)
+  }
 }
 
 class InputOptionPane(parent: Component, title: String, message: String, startingInput: String = "")
@@ -213,6 +216,8 @@ class DropdownOptionPane[T >: Null](parent: Component, title: String, message: S
         add(dropdown, c)
       }
     }, c)
+
+    dropdown.addItemListener(_ => packAndCenter)
   }
 }
 
