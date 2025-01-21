@@ -2,8 +2,6 @@
 
 package org.nlogo.window
 
-import java.awt.Dimension
-
 import javax.swing.JLabel
 
 import org.nlogo.api.{ Dump, World }
@@ -24,15 +22,6 @@ class TickCounterLabel(world: World)
   with ThemeSync {
   private var _label: String = TickCounterLabelDefault
 
-  override def getPreferredSize: Dimension = getMinimumSize
-
-  override def getMinimumSize: Dimension = {
-    val d = super.getMinimumSize
-    val fontMetrics = getFontMetrics(getFont)
-    d.width = StrictMath.max(d.width, fontMetrics.stringWidth(label + ": 00000000"))
-    d
-  }
-
   def handle(e: LoadBeginEvent): Unit = {
     setText("")
     _label = "ticks"
@@ -51,7 +40,7 @@ class TickCounterLabel(world: World)
     val ticks = world.ticks
     val tickText =
         if (ticks == -1) "" else Dump.number(StrictMath.floor(ticks))
-    setText("     " + _label + ": " + tickText)
+    setText((_label + ": " + tickText).trim)
   }
 
   /// tick counter
