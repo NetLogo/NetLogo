@@ -149,6 +149,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
     interactMode
 
   protected def setInteractMode(mode: InteractMode) {
+    if (interactMode == InteractMode.ADD)
+      removeShadowWidget()
+
     interactMode = mode
 
     if (mode == InteractMode.INTERACT)
