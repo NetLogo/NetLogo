@@ -3,8 +3,8 @@
 package org.nlogo.window
 
 import java.awt.{ Dimension, Graphics, Point, RadialGradientPaint }
-import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, MouseAdapter, MouseEvent,
-                        MouseMotionAdapter, MouseWheelEvent, MouseWheelListener }
+import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, KeyAdapter, KeyEvent, MouseAdapter,
+                        MouseEvent, MouseMotionAdapter, MouseWheelEvent, MouseWheelListener }
 import java.lang.NumberFormatException
 import javax.swing.{ BorderFactory, JLabel, JSlider, JTextField, SwingConstants }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
@@ -247,11 +247,46 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   val unitsComponent = new Label("")
   var slider = new JSlider(0, ((maximum - minimum) / increment).toInt, 50)
 
-  slider.addMouseWheelListener(new MouseWheelListener {
-    def mouseWheelMoved(e: MouseWheelEvent) {
-      slider.setValue(slider.getValue - e.getWheelRotation)
+  locally {
+    val mouseListener = new MouseAdapter {
+      override def mousePressed(e: MouseEvent) {
+        new InputBoxLoseFocusEvent().raise(AbstractSliderWidget.this)
+
+        requestFocus()
+      }
     }
-  })
+
+    addMouseListener(mouseListener)
+    nameComponent.addMouseListener(mouseListener)
+    valueComponent.addMouseListener(mouseListener)
+    unitsComponent.addMouseListener(mouseListener)
+    slider.addMouseListener(mouseListener)
+
+    val mouseWheelListener = new MouseWheelListener {
+      def mouseWheelMoved(e: MouseWheelEvent) {
+        slider.setValue(slider.getValue - e.getWheelRotation)
+      }
+    }
+
+    addMouseWheelListener(mouseWheelListener)
+    nameComponent.addMouseWheelListener(mouseWheelListener)
+    unitsComponent.addMouseWheelListener(mouseWheelListener)
+    slider.addMouseWheelListener(mouseWheelListener)
+
+    val keyListener = new KeyAdapter {
+      override def keyPressed(e: KeyEvent) {
+        if (e.getKeyCode == KeyEvent.VK_LEFT)
+          slider.setValue(slider.getValue - 1)
+        else if (e.getKeyCode == KeyEvent.VK_RIGHT)
+          slider.setValue(slider.getValue + 1)
+      }
+    }
+
+    addKeyListener(keyListener)
+    nameComponent.addKeyListener(keyListener)
+    unitsComponent.addKeyListener(keyListener)
+    slider.addKeyListener(keyListener)
+  }
 
   slider.setUI(new SliderUI(slider))
 
@@ -266,14 +301,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     override def stateChanged(e: ChangeEvent): Unit = {
       if (!loading)
         value = minimum + slider.getValue * increment
-    }
-  })
-
-  addMouseListener(new MouseAdapter {
-    override def mousePressed(e: MouseEvent) {
-      requestFocus()
-
-      new InputBoxLoseFocusEvent().raise(AbstractSliderWidget.this)
     }
   })
 
