@@ -67,11 +67,20 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   }
 
   addMouseWheelListener(this)
-  addMouseListener(new MouseAdapter {
-    override def mousePressed(e: MouseEvent) {
-      new Events.InputBoxLoseFocusEvent().raise(Switch.this)
+
+  locally {
+    val mouseListener = new MouseAdapter {
+      override def mousePressed(e: MouseEvent) {
+        new Events.InputBoxLoseFocusEvent().raise(Switch.this)
+
+        isOn = !isOn
+      }
     }
-  })
+
+    addMouseListener(mouseListener)
+    label.addMouseListener(mouseListener)
+    toggle.addMouseListener(mouseListener)
+  }
 
   def isOn = constraint.defaultValue.booleanValue
 
@@ -150,11 +159,6 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
         hover = false
 
         repaint()
-      }
-
-      override def mousePressed(e: MouseEvent) {
-        new Events.InputBoxLoseFocusEvent().raise(Toggle.this)
-        isOn = !isOn
       }
     })
 
