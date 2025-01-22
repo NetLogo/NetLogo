@@ -159,7 +159,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   }
 
   protected class TextField extends JTextField("50", 3) with Transparent {
-    setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 0))
+    setBorder(BorderFactory.createEmptyBorder(0, 3, 0, 2))
     setFont(getFont.deriveFont(11f))
     setHorizontalAlignment(SwingConstants.RIGHT)
 
@@ -258,7 +258,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
 
     addMouseListener(mouseListener)
     nameComponent.addMouseListener(mouseListener)
-    valueComponent.addMouseListener(mouseListener)
     unitsComponent.addMouseListener(mouseListener)
     slider.addMouseListener(mouseListener)
 
