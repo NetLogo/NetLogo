@@ -4,6 +4,8 @@ import java.net.URL
 import sbt.IO
 import org.apache.commons.io.FileUtils
 
+import scala.collection.JavaConverters._
+
 object FileActions {
   class ListVisitor extends FileVisitor[Path] {
     val pathBuffer = scala.collection.mutable.Buffer[Path]()
@@ -152,6 +154,12 @@ object FileActions {
     Files.move(src.toPath, dest.toPath)
   }
 
+  // Finds files at the specified path (non-recursive)
+  def listDirectory(path: Path): Seq[Path] = {
+    Files.walk(path, 1).iterator.asScala.toSeq
+  }
+
+  // Finds files at the specified path and below (recursive)
   def enumeratePaths(path: Path): Seq[Path] = {
     val listVisitor = new ListVisitor()
     Files.walkFileTree(path, new java.util.HashSet(), Int.MaxValue, listVisitor)
