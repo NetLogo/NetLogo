@@ -11,13 +11,17 @@ import org.nlogo.api.{ Editable, MersenneTwisterFast, Options }
 import org.nlogo.awt.{ DarkenImageFilter, Mouse }, Mouse.hasButton1
 import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N }
 import org.nlogo.nvm.Procedure
-import org.nlogo.swing.Utils.icon
+import org.nlogo.swing.Utils
 import org.nlogo.theme.InterfaceColors
 
 object ButtonWidget {
 
-  val FOREVER_GRAPHIC: ImageIcon = icon("/images/forever.png")
-  val FOREVER_GRAPHIC_DISABLED: ImageIcon = icon("/images/forever-disabled.png")
+  def FOREVER_GRAPHIC = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+                                                  InterfaceColors.BUTTON_TEXT)
+  def FOREVER_GRAPHIC_PRESSED = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+                                                          InterfaceColors.BUTTON_TEXT_PRESSED)
+  def FOREVER_GRAPHIC_DISABLED = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+                                                           InterfaceColors.BUTTON_TEXT_DISABLED)
 
   object ButtonType {
 
@@ -33,7 +37,7 @@ object ButtonWidget {
       new FilteredImageSource(image.getImage.getSource, new DarkenImageFilter(0.5))))
 
     private def apply(headerCode:String, agentKind:AgentKind, imagePath: String): ButtonType = {
-      val img = icon(imagePath)
+      val img = Utils.icon(imagePath)
       new ButtonType(headerCode, agentKind, Some(img), Some(darkImage(img)))
     }
     def apply(c:AgentKind): ButtonType = {
@@ -85,7 +89,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   val foreverLabel = new JLabel(FOREVER_GRAPHIC)
   val agentLabel = new JLabel
 
-  keyLabel.setFont(keyLabel.getFont.deriveFont(10.0f))
+  keyLabel.setFont(keyLabel.getFont.deriveFont(12.0f))
 
   keyLabel.addMouseListener(this)
   nameLabel.addMouseListener(this)
@@ -107,7 +111,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     c.insets = new Insets(3, 0, 3, 3)
 
     add(nameLabel, c)
-    
+
     c.gridheight = 1
     c.weightx = 0
     c.anchor = GridBagConstraints.NORTH
@@ -421,10 +425,10 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   /// sizing
   override def getMinimumSize =
     new Dimension(55, 35)
-  
+
   override def getMaximumSize =
     new Dimension(10000, 10000)
-  
+
   override def getPreferredSize =
     new Dimension(getMinimumSize.width.max(super.getPreferredSize.width),
                   getMinimumSize.height.max(super.getPreferredSize.height))
@@ -432,14 +436,6 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   /// painting
   override def paintComponent(g: Graphics) {
     val drawAsUp = buttonUp && !running
-
-    keyLabel.setForeground(InterfaceColors.BUTTON_TEXT)
-    nameLabel.setForeground(
-      if (error() == null)
-        InterfaceColors.BUTTON_TEXT
-      else
-        InterfaceColors.WIDGET_TEXT_ERROR)
-    foreverLabel.setIcon(FOREVER_GRAPHIC)
 
     if (disabledWaitingForSetup) {
       setBackgroundColor(InterfaceColors.BUTTON_BACKGROUND_DISABLED)
@@ -455,6 +451,14 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
         else
           InterfaceColors.BUTTON_BACKGROUND
       )
+
+      keyLabel.setForeground(InterfaceColors.BUTTON_TEXT)
+      nameLabel.setForeground(
+        if (error() == null)
+          InterfaceColors.BUTTON_TEXT
+        else
+          InterfaceColors.WIDGET_TEXT_ERROR)
+      foreverLabel.setIcon(FOREVER_GRAPHIC)
     }
 
     else {
@@ -468,8 +472,9 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
       keyLabel.setForeground(InterfaceColors.BUTTON_TEXT_PRESSED)
       if (error() == null)
         nameLabel.setForeground(InterfaceColors.BUTTON_TEXT_PRESSED)
+      foreverLabel.setIcon(FOREVER_GRAPHIC_PRESSED)
     }
-    
+
     foreverLabel.setVisible(forever)
 
     if (nameLabel.getPreferredSize.width > nameLabel.getWidth) {
