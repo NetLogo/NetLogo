@@ -27,22 +27,34 @@ import org.nlogo.window.{ AbstractWidgetPanel, Events => WindowEvents, GUIWorksp
                  ZoomedEvent }
 
 sealed trait InteractMode {
-  def cursor: Cursor =
-    Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR)
+  def cursor: Cursor
 }
 
 object InteractMode {
-  case object INTERACT extends InteractMode
-  case object SELECT extends InteractMode
-  case object ADD extends InteractMode
+  case object INTERACT extends InteractMode {
+    def cursor =
+      Cursor.getDefaultCursor
+  }
+
+  case object SELECT extends InteractMode {
+    def cursor =
+      Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR)
+  }
+
+  case object ADD extends InteractMode {
+    def cursor =
+      Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR)
+  }
+
   case object EDIT extends InteractMode {
-    override def cursor =
+    def cursor =
       Toolkit.getDefaultToolkit.createCustomCursor(Utils.iconScaledWithColor("/images/edit-cursor.png", 32, 32,
                                                                              InterfaceColors.TOOLBAR_IMAGE).getImage,
                                                    new Point(0, 0), I18N.gui.get("tabs.run.widget.editWidget"))
   }
+
   case object DELETE extends InteractMode {
-    override def cursor =
+    def cursor =
       Toolkit.getDefaultToolkit.createCustomCursor(Utils.iconScaledWithColor("/images/delete-cursor.png", 32, 32,
                                                                              InterfaceColors.TOOLBAR_IMAGE).getImage,
                                                    new Point(0, 0), I18N.gui.get("tabs.run.widget.deleteWidget"))
