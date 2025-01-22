@@ -293,6 +293,12 @@ object NetLogoPackaging {
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir, rootFiles)
       JavaPackager.createScripts(log, appImageDir, appImageDir / "app", configDir / platform, "netlogo-headless.bat", "netlogo-gui.bat", variables)
 
+      // clean up unwanted icon files
+      FileActions.listDirectory(appImageDir.toPath).foreach(path => {
+        if (path.toString.endsWith(".ico"))
+          FileActions.remove(path.toFile)
+      })
+
       PackageWinAggregate(
         log
       , version
@@ -415,6 +421,12 @@ object NetLogoPackaging {
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir, rootFiles)
       val bundleDir = PackageMacAggregate.createBundleDir(log, version, destDir, configDir, launchers)
       JavaPackager.createScripts(log, bundleDir, bundleDir / "app", configDir, "netlogo-headless.sh", "netlogo-gui.sh", variables + ("javaOptions" -> "--add-exports=java.desktop/com.apple.laf=ALL-UNNAMED"))
+
+      // clean up unwanted icon files
+      FileActions.listDirectory(appImageDir.toPath).foreach(path => {
+        if (path.toString.endsWith(".icns"))
+          FileActions.remove(path.toFile)
+      })
 
       PackageMacAggregate(
         log
