@@ -16,7 +16,7 @@ import org.nlogo.window.Events.IconifiedEvent
 
 class AppFrame extends JFrame with LinkParent with LinkRoot with ThemeSync with NetLogoIcon {
   setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
-  setMinimumSize(new Dimension(768, 300))
+  setMinimumSize(new Dimension(800, 300))
 
   getContentPane.setLayout(new BorderLayout)
 
