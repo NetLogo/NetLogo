@@ -808,6 +808,15 @@ class WidgetPanel(val workspace: GUIWorkspace)
     })
   }
 
+  def stretchLeft(target: WidgetWrapper) {
+    WidgetActions.reboundWidgets(selectedWrappers.map(w =>
+      (w, new Rectangle(target.getX, w.getY, w.getX + w.getWidth - target.getX, w.getHeight))))
+  }
+
+  def stretchRight(target: WidgetWrapper) {
+    WidgetActions.resizeWidgets(selectedWrappers.map(w => (w, target.getX + target.getWidth - w.getX, w.getHeight)))
+  }
+
   def sliderEventOnReleaseOnly(sliderEventOnReleaseOnly: Boolean): Unit = {
     this.sliderEventOnReleaseOnly = sliderEventOnReleaseOnly
   }
