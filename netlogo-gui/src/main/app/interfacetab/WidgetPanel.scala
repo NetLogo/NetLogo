@@ -2,10 +2,10 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Component, Cursor, Dimension, Graphics, Point, Rectangle, Color => AwtColor, Toolkit }
+import java.awt.{ Component, Cursor, Dimension, Graphics, MouseInfo, Point, Rectangle, Color => AwtColor, Toolkit }
 import java.awt.event.{ ActionEvent, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, MouseListener, MouseMotionAdapter,
                         MouseMotionListener }
-import javax.swing.{ AbstractAction, JComponent, JLayeredPane }
+import javax.swing.{ AbstractAction, JComponent, JLayeredPane, SwingUtilities }
 
 import org.nlogo.api.Editable
 import org.nlogo.app.common.EditorFactory
@@ -645,6 +645,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     moveToFront(wrapper)
 
+    val mouse = MouseInfo.getPointerInfo.getLocation
+
+    SwingUtilities.convertPointFromScreen(mouse, this)
+
+    wrapper.setLocation(mouse.x.max(0), mouse.y.max(0))
     wrapper.setSize(wrapper.getPreferredSize)
     wrapper.validate()
 
