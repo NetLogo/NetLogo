@@ -32,7 +32,7 @@ object WidgetActions {
       val newBounds = new Rectangle(move._2, move._3, move._1.getWidth, move._1.getHeight)
 
       move._1.setBounds(newBounds)
-      
+
       (move._1, oldBounds, newBounds)
     })))
   }
@@ -51,6 +51,29 @@ object WidgetActions {
     val initialBounds = addSelectionMargin(widgetWrapper.originalBounds)
     widgetWrapper.doDrop()
     undoManager.addEdit(new ResizeWidget(widgetWrapper, initialBounds, widgetWrapper.getBounds()))
+  }
+
+  def resizeWidgets(wrappers: Seq[(WidgetWrapper, Int, Int)]) {
+    undoManager.addEdit(new ReboundWidgets(wrappers.map {
+      case (ww, width, height) =>
+        val oldBounds = ww.getBounds()
+        val newBounds = new Rectangle(ww.getX, ww.getY, width, height)
+
+        ww.setBounds(newBounds)
+
+        (ww, oldBounds, newBounds)
+    }))
+  }
+
+  def reboundWidgets(wrappers: Seq[(WidgetWrapper, Rectangle)]) {
+    undoManager.addEdit(new ReboundWidgets(wrappers.map {
+      case (ww, newBounds) =>
+        val oldBounds = ww.getBounds()
+
+        ww.setBounds(newBounds)
+
+        (ww, oldBounds, newBounds)
+    }))
   }
 
   private def addSelectionMargin(bounds: Rectangle): Rectangle = {
@@ -155,6 +178,29 @@ object WidgetActions {
     override def getPresentationName: String = "Widget Resizing"
 
     def setWidgetSize(bounds: Rectangle): Unit = {
+      widgetWrapper.setBounds(
+        if (widgetWrapper.selected)
+          bounds
+        else
+          removeSelectionMargin(bounds)
+      )
+    }
+  }
+
+  class ReboundWidgets(wrappers: Seq[(WidgetWrapper, Rectangle, Rectangle)]) extends AbstractUndoableEdit {
+    override def redo {
+      for ((ww, _, bounds) <- wrappers)
+        setBounds(ww, bounds)
+    }
+
+    override def undo {
+      for ((ww, bounds, _) <- wrappers)
+        setBounds(ww, bounds)
+    }
+
+    override def getPresentationName = "Widget Stretching"
+
+    private def setBounds(widgetWrapper: WidgetWrapper, bounds: Rectangle) {
       widgetWrapper.setBounds(
         if (widgetWrapper.selected)
           bounds

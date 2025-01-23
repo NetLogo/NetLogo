@@ -340,6 +340,20 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
         }
       })
 
+    private val stretchLeftAction = new MenuItem(
+      new AbstractAction(I18N.gui.get("tabs.run.widget.stretchLeft")) {
+        def actionPerformed(e: ActionEvent) {
+          wPanel.stretchLeft(wPanel.getWrapper(selectedObjects.minBy(w => w.getParent.getX)))
+        }
+      })
+
+    private val stretchRightAction = new MenuItem(
+      new AbstractAction(I18N.gui.get("tabs.run.widget.stretchRight")) {
+        def actionPerformed(e: ActionEvent) {
+          wPanel.stretchRight(wPanel.getWrapper(selectedObjects.maxBy(w => w.getParent.getX + w.getParent.getWidth)))
+        }
+      })
+
     private val popup = new PopupMenu
 
     popup.add(new JLabel("Arrange selected widgets") {
@@ -355,6 +369,9 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     popup.addSeparator()
     popup.add(distributeHorizontalAction)
     popup.add(distributeVerticalAction)
+    popup.addSeparator()
+    popup.add(stretchLeftAction)
+    popup.add(stretchRightAction)
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent) {
@@ -366,6 +383,8 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
         bottomAction.setEnabled(selectedObjects.size > 1)
         distributeHorizontalAction.setEnabled(selectedObjects.size > 1)
         distributeVerticalAction.setEnabled(selectedObjects.size > 1)
+        stretchLeftAction.setEnabled(selectedObjects.size > 1)
+        stretchRightAction.setEnabled(selectedObjects.size > 1)
 
         popup.show(AlignmentMenu.this, 0, getHeight)
       }

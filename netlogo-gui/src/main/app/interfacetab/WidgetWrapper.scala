@@ -924,6 +924,20 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
             interfacePanel.distributeVertical()
           }
         }))
+
+        menu.addSeparator()
+
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchLeft")) {
+          def actionPerformed(e: ActionEvent) {
+            interfacePanel.stretchLeft(WidgetWrapper.this)
+          }
+        }))
+
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchRight")) {
+          def actionPerformed(e: ActionEvent) {
+            interfacePanel.stretchRight(WidgetWrapper.this)
+          }
+        }))
       }
     }
 
