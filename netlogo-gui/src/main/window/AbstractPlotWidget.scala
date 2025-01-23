@@ -142,7 +142,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     c.weightx = 1
     c.anchor = GridBagConstraints.CENTER
     c.insets = new Insets(0, 0, 0, 0)
-    
+
     add(legend, c)
 
     // make sure to update the gui components in case
@@ -352,7 +352,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     xAxis.setLabel(_xAxisLabel)
     yAxis.setLabel(_yAxisLabel)
     recolor()
-    legend.refresh
+    clear()
     true
   }
 
@@ -403,7 +403,7 @@ object AbstractPlotWidget {
 
       label.setToolTipText(
         if (label.getPreferredSize.width > label.getSize().width) getLabel else null)
-      
+
       super.paintComponent(g)
     }
 
@@ -454,7 +454,7 @@ object AbstractPlotWidget {
         label.setToolTipText(label.getText)
       else
         label.setToolTipText(null)
-      
+
       super.paintComponent(g)
     }
 
