@@ -98,7 +98,9 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   override def getPreferredSize: Dimension =
     new Dimension(MIN_WIDTH.max(_width), MIN_HEIGHT.max(textLabel.getHeight + 8))
 
-  def syncTheme() {} // nothing to sync
+  def syncTheme() {
+    transparency(transparency)
+  }
 
   override def model: WidgetModel = {
     val b = getBoundsTuple
