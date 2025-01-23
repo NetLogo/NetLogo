@@ -10,7 +10,7 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
   extends JPanel(new BorderLayout) with ThemeSync {
-  
+
   private val titleLabel = new JLabel(title)
   private val arrow = new CollapsibleArrow
 
@@ -21,9 +21,17 @@ class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
   private val titlePanel = new JPanel(new FlowLayout(FlowLayout.LEADING))
 
   titlePanel.add(titleLabel)
-  titlePanel.addMouseListener(new MouseAdapter {
-    override def mouseClicked(e: MouseEvent) = setOpen(!isOpen)
-  })
+
+  locally {
+    val mouseListener = new MouseAdapter {
+      override def mouseClicked(e: MouseEvent) {
+        setOpen(!isOpen)
+      }
+    }
+
+    titlePanel.addMouseListener(mouseListener)
+    titleLabel.addMouseListener(mouseListener)
+  }
 
   add(titlePanel, BorderLayout.NORTH)
   add(element, BorderLayout.CENTER)
