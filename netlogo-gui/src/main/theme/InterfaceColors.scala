@@ -66,7 +66,11 @@ object InterfaceColors {
       case "dark" => Color.WHITE
     }
 
-  def TEXT_BOX_BACKGROUND = Color.WHITE
+  def TEXT_BOX_BACKGROUND =
+    theme match {
+      case "classic" | "light" => Color.WHITE
+      case "dark" => ALMOST_BLACK
+    }
 
   def INTERFACE_BACKGROUND =
     theme match {
