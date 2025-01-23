@@ -68,20 +68,7 @@ object Extensions {
       streams.value.log.info(s"building extension: ${extensionDir.getName}")
       buildExtension(extensionDir, extensionNetLogoJar.value, state.value)(Set()).toSeq
     },
-    extensions := {
-      val nlJar = extensionNetLogoJar.value
-      val excluded = excludedExtensions.value
-      val base = baseDirectory.value
-      val s    = streams.value
-      Process("git -C " + base + " submodule --quiet update --init") ! s.log
-      val dirs = extensionDirs(extensionRoot.value)
-      val stateValue = state.value
-      dirs.filterNot(f => excluded.contains(f.getName)).flatMap{ dir =>
-        cacheBuild(s.cacheDirectory, dir, Set(base / "NetLogo.jar", base / "NetLogoLite.jar")) {
-          s.log.info("building extension: " + dir.getName)
-          buildExtension(dir, nlJar, stateValue) }
-      }
-    },
+    extensions := Seq(),
     excludedExtensions := Seq(),
     javaOptions +=
       "-Dnetlogo.extensions.dir=" + extensionRoot.value.getAbsolutePath.toString
