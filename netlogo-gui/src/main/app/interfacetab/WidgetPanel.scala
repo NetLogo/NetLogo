@@ -148,8 +148,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
   def getInteractMode: InteractMode =
     interactMode
 
-  protected def setInteractMode(mode: InteractMode) {
-    if (interactMode == InteractMode.ADD)
+  protected def setInteractMode(mode: InteractMode, preserveShadow: Boolean = false) {
+    if (interactMode == InteractMode.ADD && !preserveShadow)
       removeShadowWidget()
 
     interactMode = mode
@@ -722,7 +722,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       }
     }
     setForegroundWrapper()
-    setInteractMode(InteractMode.INTERACT)
+    setInteractMode(InteractMode.INTERACT, true)
   }
 
   def beginDelete() {
