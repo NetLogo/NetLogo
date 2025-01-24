@@ -419,11 +419,9 @@ object InterfaceColors {
       case "dark" => new Color(221, 237, 255)
     }
 
-  def INFO_H3_COLOR =
-    theme match {
-      case "classic" | "light" => new Color(132, 132, 132)
-      case "dark" => new Color(173, 183, 196)
-    }
+  def INFO_H3_COLOR = new Color(88, 88, 88)
+
+  def INFO_H4_COLOR = new Color(115, 115, 115)
 
   def INFO_P_COLOR =
     theme match {
