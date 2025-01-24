@@ -9,19 +9,22 @@ import org.scalatest.funsuite.AnyFunSuite
 
 import scala.io.Source
 
-class NLogoXMLFormatTests extends AnyFunSuite {
-  private val loader = new NLogoXMLLoader(Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities"), false)
+class XMLTester extends AnyFunSuite {
+  protected val loader = new NLogoXMLLoader(Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities"),
+                                            false)
 
-  private def loadString(path: String): String =
+  protected def loadString(path: String): String =
     Source.fromFile(path, "UTF-8").getLines.mkString("\n")
 
-  private def roundTripString(source: String): String =
+  protected def roundTripString(source: String): String =
     loader.readModel(source, "nlogox").map(loader.sourceString(_, "nlogox").get).get
 
   // checks if two XML sources semantically represent the same model
-  private def assertResultXML(a: String, b: String) =
+  protected def assertResultXML(a: String, b: String) =
     assertResult(XMLReader.read(a))(XMLReader.read(b))
+}
 
+class NLogoXMLFormatTests extends XMLTester {
   test("Empty model round trip remains the same") {
     val modelString = FileIO.getResourceAsString("/system/empty.nlogox")
 
@@ -35,18 +38,6 @@ class NLogoXMLFormatTests extends AnyFunSuite {
 
   test("Sample model round trip remains the same") {
     val modelString = loadString("test/fileformat/Wolf Sheep Predation.nlogox")
-
-    assertResultXML(modelString, roundTripString(modelString))
-  }
-
-  test("Model with all features") {
-    val modelString = loadString("test/fileformat/All.nlogox")
-
-    assertResultXML(modelString, roundTripString(modelString))
-  }
-
-  test("Complex System Dynamics") {
-    val modelString = loadString("test/fileformat/Wolf Sheep Predation (System Dynamics).nlogox")
 
     assertResultXML(modelString, roundTripString(modelString))
   }
