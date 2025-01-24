@@ -10,10 +10,12 @@ import org.nlogo.api.{ AbstractModelLoader, AggregateDrawingInterface, FileIO, L
 import org.nlogo.core.{ DummyView, ExternalResource, Femto, LiteralParser, Model, Section, UpdateMode, View, Widget,
                         WorldDimensions, WorldDimensions3D }
 
-import scala.io.Source
+import scala.io.{ Codec, Source }
 import scala.util.{ Failure, Success, Try }
 
 class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends AbstractModelLoader {
+
+  private implicit val codec = Codec("UTF-8")
 
   private lazy val defaultInfo: String = FileIO.url2String("/system/empty-info.md")
 
