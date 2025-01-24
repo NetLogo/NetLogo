@@ -43,12 +43,16 @@ object InfoFormatter {
             replace("{BODY-FONT-SIZE}", fontSize.toString).
             replace("{H1-BACKGROUND}", colorString(InterfaceColors.INFO_H1_BACKGROUND)).
             replace("{H1-COLOR}", colorString(InterfaceColors.INFO_H1_COLOR)).
-            replace("{H1-FONT-SIZE}", (fontSize * 1.5).toInt.toString).
+            replace("{H1-FONT-SIZE}", (fontSize * 2).toInt.toString).
             replace("{H2-BACKGROUND}", colorString(InterfaceColors.INFO_H2_BACKGROUND)).
             replace("{H2-COLOR}", colorString(InterfaceColors.INFO_H2_COLOR)).
-            replace("{H2-FONT-SIZE}", (fontSize * 1.25).toInt.toString).
+            replace("{H2-FONT-SIZE}", (fontSize * 1.75).toInt.toString).
             replace("{H3-COLOR}", colorString(InterfaceColors.INFO_H3_COLOR)).
-            replace("{H3-FONT-SIZE}", fontSize.toString).
+            replace("{H3-FONT-SIZE}", (fontSize * 1.5).toInt.toString).
+            replace("{H4-COLOR}", colorString(InterfaceColors.INFO_H4_COLOR)).
+            replace("{H4-FONT-SIZE}", (fontSize * 1.28).toString).
+            replace("{H5-FONT-SIZE}", (fontSize * 1.14).toString).
+            replace("{H6-FONT-SIZE}", fontSize.toString).
             replace("{P-COLOR}", colorString(InterfaceColors.INFO_P_COLOR)).
             replace("{CODE-BACKGROUND}", colorString(InterfaceColors.INFO_CODE_BACKGROUND)).
             replace("{BLOCK-BAR}", colorString(InterfaceColors.INFO_BLOCK_BAR)).

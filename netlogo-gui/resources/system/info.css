@@ -50,22 +50,21 @@ h3 {
 }
 h4 {
     margin-top: 15px;
-    margin-bottom: 5px;
     margin-left: 15px;
-    color: {H3-COLOR};
-    font-size: {H3-FONT-SIZE}pt;
+    color: {H4-COLOR};
+    font-size: {H4-FONT-SIZE}pt;
 }
 h5 {
     margin-top: 15px;
     margin-left: 15px;
-    color: {H3-COLOR};
-    font-size: {H3-FONT-SIZE}pt;
+    color: {H4-COLOR};
+    font-size: {H5-FONT-SIZE}pt;
 }
 h6 {
     margin-top: 15px;
     margin-left: 15px;
-    color: {H3-COLOR};
-    font-size: {H3-FONT-SIZE}pt;
+    color: {H4-COLOR};
+    font-size: {H6-FONT-SIZE}pt;
 }
 p {
     margin-left: 15px;
