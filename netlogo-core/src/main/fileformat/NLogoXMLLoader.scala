@@ -28,11 +28,21 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
   }
 
   def readModel(uri: URI): Try[Model] = {
-    val text =
-      if (uri.getScheme == "jar")
-        Source.fromInputStream(uri.toURL.openStream).mkString
-      else
-        Source.fromURI(uri).mkString
+    val text = {
+      val source = {
+        if (uri.getScheme == "jar")
+          Source.fromInputStream(uri.toURL.openStream)
+        else
+          Source.fromURI(uri)
+      }
+
+      val str = source.mkString
+
+      source.close()
+
+      str
+    }
+
     readModel(text, AbstractModelLoader.getURIExtension(uri).getOrElse(""))
   }
 
@@ -152,9 +162,14 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
           // duplicate of previous section, but appears in some models
 
         case "org.nlogo.modelsection.behaviorspace" =>
-          val experiments = section.get.get.asInstanceOf[Seq[LabProtocol]]
-          if (experiments.nonEmpty)
-            writer.element(XMLElement("experiments", Map(), "", experiments.map(LabXMLLoader.writeExperiment).toList))
+          section.get.map(section => {
+            val experiments = section.asInstanceOf[Seq[LabProtocol]]
+
+            if (experiments.nonEmpty) {
+              writer.element(XMLElement("experiments", Map(), "",
+                                        experiments.map(LabXMLLoader.writeExperiment).toList))
+            }
+          })
 
         case "org.nlogo.modelsection.hubnetclient" =>
           val widgets = section.get.get.asInstanceOf[Seq[Widget]]
@@ -198,7 +213,9 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
 
   def save(model: Model, uri: URI): Try[URI] = {
     if (isCompatible(uri)) {
-      saveToWriter(model, new PrintWriter(new File(uri)))
+      val writer = new PrintWriter(new File(uri))
+      saveToWriter(model, writer)
+      writer.close()
       Success(uri)
     } else {
       Failure(new Exception(s"""Unable to save model with format "${AbstractModelLoader.getURIExtension(uri)}"."""))
@@ -209,7 +226,9 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
     if (isCompatible(extension)) {
       val writer = new StringWriter
       saveToWriter(model, writer)
-      Success(writer.toString)
+      val result = writer.toString
+      writer.close()
+      Success(result)
     } else {
       Failure(new Exception(s"""Unable to create source string for model with format "${extension}"."""))
     }
@@ -220,9 +239,9 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
 
       val (name, dims) =
         if (Version.is3D)
-          ("NetLogo 3D 6.4.0", new WorldDimensions3D(-16, 16, -16, 16, -16, 16, 13.0))
+          ("NetLogo 3D 7.0.0", new WorldDimensions3D(-16, 16, -16, 16, -16, 16, 13.0))
         else
-          ("NetLogo 6.4.0", WorldDimensions(-16, 16, -16, 16, 13.0))
+          ("NetLogo 7.0.0", WorldDimensions(-16, 16, -16, 16, 13.0))
 
       val widgets =
         List(View( x = 210, y = 10, width = 439, height = 460, dimensions = dims, fontSize = 10
@@ -246,7 +265,9 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
   def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
     val xmlWriter     = new XMLWriter(writer)
     val writeStatuses = experiments.map(LabXMLLoader.writeExperiment).toList
-    Try(xmlWriter.element(XMLElement("experiments", Map(), "", writeStatuses)))
+    val result = Try(xmlWriter.element(XMLElement("experiments", Map(), "", writeStatuses)))
+    xmlWriter.close()
+    result
   }
 
 }

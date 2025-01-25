@@ -10,7 +10,7 @@ import scala.reflect.ClassTag
 case class Model(code: String = "",
   widgets: Seq[Widget] = List(View()),
   info: String = "",
-  version: String = "NetLogo 6.3",
+  version: String = "NetLogo 7.0.0",
   turtleShapes: Seq[VectorShape] = Model.defaultShapes,
   linkShapes: Seq[LinkShape] = Model.defaultLinkShapes,
   optionalSections: Seq[OptionalSection[_]] = Seq(),

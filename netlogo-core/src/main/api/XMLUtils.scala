@@ -88,14 +88,19 @@ class XMLWriter(dest: Writer) {
 
 object XMLReader {
   def read(source: String): Try[XMLElement] = {
-    val reader = XMLInputFactory.newFactory.createXMLStreamReader(new StringReader(source))
+    val sourceReader = new StringReader(source)
+    val reader = XMLInputFactory.newFactory.createXMLStreamReader(sourceReader)
 
     try {
       while (reader.hasNext && reader.next != XMLStreamConstants.START_ELEMENT) {}
     }
 
     catch {
-      case e: XMLStreamException => return Failure(new Exception(e))
+      case e: XMLStreamException =>
+        reader.close()
+        sourceReader.close()
+
+        return Failure(new Exception(e))
     }
 
     def readElement(): Try[XMLElement] = {
@@ -131,6 +136,7 @@ object XMLReader {
     val elementTry = readElement()
 
     reader.close()
+    sourceReader.close()
 
     elementTry
   }
