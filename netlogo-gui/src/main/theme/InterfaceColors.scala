@@ -403,7 +403,7 @@ object InterfaceColors {
 
   def INFO_H1_COLOR =
     theme match {
-      case "classic" | "light" => new Color(10, 0, 199)
+      case "classic" | "light" => new Color(19, 13, 134)
       case "dark" => new Color(205, 202, 255)
     }
 
@@ -415,13 +415,21 @@ object InterfaceColors {
 
   def INFO_H2_COLOR =
     theme match {
-      case "classic" | "light" => new Color(35, 135, 255)
+      case "classic" | "light" => new Color(0, 90, 200)
       case "dark" => new Color(221, 237, 255)
     }
 
-  def INFO_H3_COLOR = new Color(88, 88, 88)
+  def INFO_H3_COLOR =
+    theme match {
+      case "classic" | "light" => new Color(88, 88, 88)
+      case "dark" => new Color(173, 183, 196)
+    }
 
-  def INFO_H4_COLOR = new Color(115, 115, 115)
+  def INFO_H4_COLOR =
+    theme match {
+      case "classic" | "light" => new Color(115, 115, 115)
+      case "dark" => new Color(173, 183, 196)
+    }
 
   def INFO_P_COLOR =
     theme match {
