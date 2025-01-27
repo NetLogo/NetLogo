@@ -269,6 +269,7 @@ with ThemeSync {
     separate.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
     text.setBackground(InterfaceColors.CODE_BACKGROUND)
+    text.setCaretColor(InterfaceColors.TEXT_AREA_TEXT)
 
     text match {
       case editor: AdvancedEditorArea =>

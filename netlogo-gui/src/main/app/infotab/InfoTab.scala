@@ -86,6 +86,8 @@ class InfoTab(attachModelDir: String => String)
   private val scrollPane = new ScrollPane(view, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
 
+  scrollPane.setBorder(null)
+
   override def zoomTarget = scrollPane
 
   override val activeMenuActions = Seq(undoAction, redoAction)
