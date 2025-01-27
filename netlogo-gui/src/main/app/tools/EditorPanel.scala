@@ -41,7 +41,7 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) 
       .withListener(textListener)
   val editor = new EditorArea(configuration) {
     setBackground(InterfaceColors.CODE_BACKGROUND)
-    setCaretColor(InterfaceColors.TOOLBAR_TEXT)
+    setCaretColor(InterfaceColors.TEXT_AREA_TEXT)
 
     override def getPreferredSize = new Dimension(350, 100)
     override def setText(text: String) = super.setText(text.stripTrailingWhiteSpace + "\n")
@@ -72,7 +72,7 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) 
                                                     else
                                                       InterfaceColors.TOOLBAR_IMAGE))
   }
-  
+
   updateCompileIcon()
 
   locally {
@@ -111,7 +111,7 @@ class PreviewCommandsComboBox extends ComboBox[PreviewCommands](List(Default, Cu
   def updateCommands(newPreviewCommands: PreviewCommands) {
     if (newPreviewCommands.isInstanceOf[Custom])
       setItems(List(Default, newPreviewCommands, Manual))
-    
+
     setSelectedItem(newPreviewCommands)
   }
 }
