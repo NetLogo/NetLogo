@@ -98,7 +98,7 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   def setSelection(s: Boolean): Unit = { }
 
   def selectError(start: Int, end: Int) {
-    setSelectionColor(AbstractEditorArea.ERROR_HIGHLIGHT)
+    setSelectionColor(InterfaceColors.ERROR_HIGHLIGHT)
 
     select(start, end)
   }

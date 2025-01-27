@@ -453,6 +453,8 @@ object InterfaceColors {
 
   def ERROR_LABEL_BACKGROUND = LIGHT_RED
 
+  def ERROR_HIGHLIGHT = LIGHT_RED
+
   def CODE_BACKGROUND =
     theme match {
       case "classic" | "light" => Color.WHITE

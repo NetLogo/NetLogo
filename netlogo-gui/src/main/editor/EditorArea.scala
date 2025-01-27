@@ -15,6 +15,7 @@ import javax.swing.{ Action, JEditorPane }
 import javax.swing.text.{ Document, TextAction, PlainDocument, BadLocationException }
 
 import org.nlogo.swing.{ MenuItem, PopupMenu }
+import org.nlogo.theme.InterfaceColors
 
 import KeyBinding.keystroke
 
@@ -148,7 +149,7 @@ class EditorArea(val configuration: EditorConfiguration)
   }
 
   def selectError(start: Int, end: Int) {
-    setSelectionColor(AbstractEditorArea.ERROR_HIGHLIGHT)
+    setSelectionColor(InterfaceColors.ERROR_HIGHLIGHT)
 
     select(start, end)
   }

@@ -2,13 +2,8 @@
 
 package org.nlogo.editor
 
-import java.awt.Color
 import javax.swing.{ Action, JViewport, SwingUtilities }
 import javax.swing.text.{ EditorKit, JTextComponent }
-
-object AbstractEditorArea {
-  val ERROR_HIGHLIGHT = new Color(251, 96, 85)
-}
 
 trait AbstractEditorArea extends JTextComponent {
   def configuration: EditorConfiguration
