@@ -634,7 +634,11 @@ object InterfaceColors {
       case "dark" => new Color(6, 142, 120) // lighter bluish green
     }
 
-  def CONSTANT_COLOR = new Color(150, 55, 0) // orange
+  def CONSTANT_COLOR =
+    theme match {
+      case "classic" | "light" => new Color(237, 79, 0) // orange
+      case "dark" => new Color(234, 110, 33) // lighter orange
+    }
 
   def DEFAULT_COLOR =
     theme match {
