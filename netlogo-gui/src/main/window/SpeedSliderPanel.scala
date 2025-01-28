@@ -2,13 +2,14 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Component, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Color, Component, Dimension, Graphics, GridBagConstraints, GridBagLayout }
 import java.awt.event.{ MouseEvent, MouseListener, MouseWheelEvent, MouseWheelListener }
 import javax.swing.{ JLabel, JPanel, JSlider, SwingConstants }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 
 import org.nlogo.core.I18N
 import org.nlogo.log.LogManager
+import org.nlogo.swing.{ Button, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.LoadBeginEvent
 
@@ -31,8 +32,35 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
   setOpaque(false)
   setLayout(new GridBagLayout)
 
-  val slower = new JLabel(I18N.gui("slower"))
-  val faster = new JLabel(I18N.gui("faster"), SwingConstants.RIGHT)
+  val slower = new Button("", () => speedSlider.setValue(speedSlider.getValue - 1)) {
+    override def getPreferredSize: Dimension =
+      new Dimension(19, 19)
+
+    override def paintComponent(g: Graphics) {
+      super.paintComponent(g)
+
+      val g2d = Utils.initGraphics2D(g)
+
+      g2d.setColor(InterfaceColors.TOOLBAR_TEXT)
+      g2d.fillRect(6, 9, 7, 1)
+    }
+  }
+
+  val faster = new Button("", () => speedSlider.setValue(speedSlider.getValue + 1)) {
+    override def getPreferredSize: Dimension =
+      new Dimension(19, 19)
+
+    override def paintComponent(g: Graphics) {
+      super.paintComponent(g)
+
+      val g2d = Utils.initGraphics2D(g)
+
+      g2d.setColor(InterfaceColors.TOOLBAR_TEXT)
+      g2d.fillRect(6, 9, 7, 1)
+      g2d.fillRect(9, 6, 1, 7)
+    }
+  }
+
   val modelSpeed = new JLabel(I18N.gui("modelSpeed"), SwingConstants.CENTER)
 
   slower.setFont(slower.getFont.deriveFont(10f))
@@ -42,27 +70,22 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
     val c = new GridBagConstraints
 
     c.gridx = 0
-    c.gridy = 0
-    c.weightx = 1
-    c.anchor = GridBagConstraints.SOUTHWEST
+    c.gridy = 1
 
     add(slower, c)
 
     c.gridx = 1
-    c.anchor = GridBagConstraints.CENTER
-    c.insets = new Insets(0, 12, 0, 12)
+    c.gridy = 0
+    c.weightx = 1
 
     add(modelSpeed, c)
 
     c.gridx = 2
-    c.anchor = GridBagConstraints.SOUTHEAST
-    c.insets = new Insets(0, 0, 0, 0)
+    c.gridy = 1
 
     add(faster, c)
 
-    c.gridx = 0
-    c.gridy = 1
-    c.gridwidth = 3
+    c.gridx = 1
     c.fill = GridBagConstraints.HORIZONTAL
     c.anchor = GridBagConstraints.CENTER
 
@@ -134,8 +157,9 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
   override def isEnabled: Boolean = speedSlider.isEnabled
 
   def syncTheme() {
-    slower.setForeground(InterfaceColors.TOOLBAR_TEXT)
-    faster.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    slower.syncTheme()
+    faster.syncTheme()
+
     modelSpeed.setForeground(InterfaceColors.TOOLBAR_TEXT)
   }
 
@@ -158,12 +182,13 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
       setValue(getValue - e.getWheelRotation)
     }
 
-    override def paint(g: Graphics): Unit = {
-      val bounds = getBounds()
-      val x = bounds.x + (bounds.width / 2) - 1
-      g.setColor(Color.gray)
-      g.drawLine(x, bounds.y - (bounds.height / 2), x, bounds.y - (bounds.height / 4))
-      super.paint(g)
+    override def paintComponent(g: Graphics): Unit = {
+      val g2d = Utils.initGraphics2D(g)
+
+      g2d.setColor(Color.GRAY)
+      g2d.drawLine(getWidth / 2 - 1, getHeight / 4, getWidth / 2 - 1, getHeight * 3 / 4)
+
+      super.paintComponent(g)
     }
   }
 }
