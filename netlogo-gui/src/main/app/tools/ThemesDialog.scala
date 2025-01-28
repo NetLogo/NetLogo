@@ -7,11 +7,12 @@ import java.awt.event.ActionEvent
 import java.util.prefs.{ Preferences => JavaPreferences }
 import javax.swing.{ AbstractAction, ButtonGroup, JPanel }
 
+import org.nlogo.app.App
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ Button, RadioButton, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "themes") with ThemeSync {
+class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") with ThemeSync {
   private lazy val prefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
 
   private lazy val panel = new JPanel(new GridBagLayout)
@@ -96,7 +97,7 @@ class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "theme
 
     prefs.put("colorTheme", theme)
 
-    frame.syncTheme()
+    App.app.syncWindowThemes()
   }
 
   private def setSelected(theme: String) {

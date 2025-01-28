@@ -55,7 +55,7 @@ with MenuAction {
   )
 }
 
-class ShowThemesDialog(frame: Frame with ThemeSync) extends ShowDialogAction(I18N.gui.get("menu.tools.themes")) with MenuAction {
+class ShowThemesDialog(frame: Frame) extends ShowDialogAction(I18N.gui.get("menu.tools.themes")) with MenuAction {
   category = ToolsCategory
   group = ToolsSettingsGroup
 
