@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, Point, Toolkit }
+import java.awt.{ Point, Toolkit }
 import java.awt.event.ActionEvent
 import java.awt.image.BufferedImage
 import javax.swing.{ AbstractAction, JMenuItem }
@@ -47,7 +47,7 @@ class PlotWidget(plot:Plot, plotManager: PlotManagerInterface) extends AbstractP
     image
   }
 
-  override def populateContextMenu(menu: PopupMenu, p: Point, source: Component): Point = {
+  override def populateContextMenu(menu: PopupMenu, p: Point): Point = {
     menu.add(new MenuItem(new AbstractAction(I18N.gui.get("edit.plot.copyimage")) {
       def actionPerformed(e: ActionEvent) {
         Toolkit.getDefaultToolkit.getSystemClipboard.setContents(new ImageSelection(exportGraphics), null)

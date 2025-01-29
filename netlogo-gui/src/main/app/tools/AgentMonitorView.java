@@ -166,7 +166,7 @@ public class AgentMonitorView
   private void doPopup(java.awt.event.MouseEvent e) {
     WrappingPopupMenu menu = new WrappingPopupMenu();
     java.awt.Point p = e.getPoint();
-    p = populateContextMenu(menu, p, (java.awt.Component) e.getSource());
+    p = populateContextMenu(menu, p);
     if (menu.getSubElements().length > 0) {
       menu.show((java.awt.Component) e.getSource(), p.x, p.y);
     }
