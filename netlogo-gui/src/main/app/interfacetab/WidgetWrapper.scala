@@ -971,7 +971,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deleteSelected")) {
         def actionPerformed(e: ActionEvent) {
-          interfacePanel.beginDelete()
+          interfacePanel.setInteractMode(InteractMode.DELETE)
           interfacePanel.deleteSelectedWidgets()
         }
       }))
@@ -982,7 +982,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.delete")) {
         def actionPerformed(e: ActionEvent) {
-          interfacePanel.beginDelete()
+          interfacePanel.setInteractMode(InteractMode.DELETE)
           WidgetActions.removeWidget(interfacePanel, WidgetWrapper.this)
         }
       }))
