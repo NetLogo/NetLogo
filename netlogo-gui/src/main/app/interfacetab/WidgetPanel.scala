@@ -167,7 +167,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       }
     }
 
-    if (mode == InteractMode.EDIT || mode == InteractMode.INTERACT)
+    if (mode == InteractMode.EDIT || mode == InteractMode.INTERACT || mode == InteractMode.DELETE)
       unselectWidgets()
 
     setCursor(mode.cursor)
@@ -795,12 +795,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
       }
     }
     setForegroundWrapper()
-  }
-
-  def beginDelete() {
-    setInteractMode(InteractMode.DELETE)
-
-    unselectWidgets()
   }
 
   def deleteSelectedWidgets(): Unit = {

@@ -109,7 +109,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     def actionPerformed(e: ActionEvent) {
       if (deleteButton.isSelected) {
         wPanel.deleteSelectedWidgets()
-        wPanel.beginDelete()
+        wPanel.setInteractMode(InteractMode.DELETE)
       }
 
       else
