@@ -2,7 +2,7 @@
 
 package org.nlogo.app.interfacetab
 
-import java.awt.{ Color, Component, Cursor, Dimension, Graphics, Point, Rectangle }
+import java.awt.{ Color, Dimension, Graphics, Point, Rectangle }
 import java.awt.event.{ ActionEvent, InputEvent, MouseAdapter, MouseEvent, MouseListener,  MouseMotionAdapter,
                         MouseMotionListener }
 import javax.swing.{ AbstractAction, JComponent, JLayeredPane, JPanel }
@@ -95,7 +95,6 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   setOpaque(false)
 
   setBackground(widget.getBackground)
-  setCursor(Cursor.getDefaultCursor)
   setLayout(null)
 
   add(glass, JLayeredPane.DRAG_LAYER)
@@ -340,6 +339,12 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
     shadowPane.setBounds(0, 0, getWidth, getHeight)
   }
+
+  def widgetX: Int =
+    getX + widget.getX
+
+  def widgetY: Int =
+    getY + widget.getY
 
   /*
   private def mouseMode_=(mouseMode: MouseMode) {
@@ -837,26 +842,35 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       getBounds
   }
 
+  def getSelectedBounds: Rectangle = {
+    if (selected)
+      getBounds
+    else
+      new Rectangle(getX - WidgetWrapper.BORDER_W, getY - WidgetWrapper.BORDER_N,
+                    getWidth + WidgetWrapper.BORDER_W + WidgetWrapper.BORDER_E,
+                    getHeight + WidgetWrapper.BORDER_N + WidgetWrapper.BORDER_S)
+  }
+
   ///
 
   private def doPopup(e: MouseEvent) {
-    if (interfacePanel != null && (interfacePanel.getInteractMode == InteractMode.INTERACT ||
-                                   interfacePanel.getInteractMode == InteractMode.SELECT)) {
+    if (interfacePanel != null) {
       val menu = new WrappingPopupMenu
 
-      val p = populateContextMenu(menu, e.getPoint, e.getSource.asInstanceOf[Component])
+      val p = populateContextMenu(menu, e.getPoint)
 
       if (menu.getSubElements.size > 0)
-        menu.show(e.getSource.asInstanceOf[Component], p.x, p.y)
+        menu.show(this, p.x, p.y)
 
       e.consume()
     }
   }
 
-  private def populateContextMenu(menu: PopupMenu, p: Point, source: Component): Point = {
+  private def populateContextMenu(menu: PopupMenu, p: Point): Point = {
     if (widget.getEditable.isInstanceOf[Editable] && !interfacePanel.multiSelected) {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.edit")) {
         def actionPerformed(e: ActionEvent) {
+          interfacePanel.beginEdit()
           selected(true)
           foreground()
           new EditWidgetEvent(null).raise(WidgetWrapper.this)
@@ -867,6 +881,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     if (selected) {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deselect")) {
         def actionPerformed(e: ActionEvent) {
+          interfacePanel.beginSelect()
           selected(false)
           interfacePanel.setForegroundWrapper()
         }
@@ -944,6 +959,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     else {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.select")) {
         def actionPerformed(e: ActionEvent) {
+          interfacePanel.beginSelect()
           selected(true)
           foreground()
         }
@@ -955,6 +971,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deleteSelected")) {
         def actionPerformed(e: ActionEvent) {
+          interfacePanel.beginDelete()
           interfacePanel.deleteSelectedWidgets()
         }
       }))
@@ -965,6 +982,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.delete")) {
         def actionPerformed(e: ActionEvent) {
+          interfacePanel.beginDelete()
           WidgetActions.removeWidget(interfacePanel, WidgetWrapper.this)
         }
       }))
@@ -973,7 +991,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     if (widget.hasContextMenu) {
       menu.addSeparator()
 
-      val location = widget.populateContextMenu(menu, p, source)
+      val location = widget.populateContextMenu(menu, p)
 
       if (widget.exportable) {
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.export")) {

@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, Dimension, Point, Rectangle }
+import java.awt.{ Dimension, Point, Rectangle }
 import javax.swing.border.LineBorder
 
 import org.nlogo.api.{ Approximate, Version }
@@ -228,8 +228,8 @@ class ViewWidget(workspace: GUIWorkspace)
   override def hasContextMenu: Boolean =
     true;
 
-  override def populateContextMenu(menu: PopupMenu, p: Point, source: Component): Point =
-    view.populateContextMenu(menu, p, source)
+  override def populateContextMenu(menu: PopupMenu, p: Point): Point =
+    view.populateContextMenu(menu, p)
 
   /// display switch
 

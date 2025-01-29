@@ -443,7 +443,7 @@ public class View
     return renderPerspective;
   }
 
-  public java.awt.Point populateContextMenu(PopupMenu menu, java.awt.Point p, java.awt.Component source) {
+  public java.awt.Point populateContextMenu(PopupMenu menu, java.awt.Point p) {
     // certain menu items dont work in Applets.
     // the only ones that do are watch, follow and reset-perspective
     // this check (and others below) prevent items from being added

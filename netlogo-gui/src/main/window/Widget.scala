@@ -119,7 +119,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
     if (hasContextMenu) {
       val menu = new PopupMenu
 
-      populateContextMenu(menu, e.getPoint, e.getSource.asInstanceOf[Component])
+      populateContextMenu(menu, e.getPoint)
       if (menu.getSubElements.length > 0) {
         menu.show(e.getSource.asInstanceOf[Component], e.getX, e.getY)
       }
@@ -154,7 +154,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
     else sup
   }
 
-  def populateContextMenu(menu: PopupMenu, p: Point, source: Component): Point = p
+  def populateContextMenu(menu: PopupMenu, p: Point): Point = p
 
   protected def resetZoomInfo(): Unit = {
     if (findWidgetContainer != null) {

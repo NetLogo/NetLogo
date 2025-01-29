@@ -80,21 +80,19 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
   interactButton.setSelected(true)
 
-  class InteractAction extends AbstractAction("I", null) { // add icon if moving forward with design
+  class InteractAction extends AbstractAction {
     def actionPerformed(e: ActionEvent) {
       wPanel.beginInteract()
     }
   }
 
-  class SelectAction extends AbstractAction(null, Utils.iconScaledWithColor("/images/select.png", 15, 15,
-                                                                            InterfaceColors.TOOLBAR_IMAGE)) {
+  class SelectAction extends AbstractAction {
     def actionPerformed(e: ActionEvent) {
       wPanel.beginSelect()
     }
   }
 
-  class EditAction extends AbstractAction(null, Utils.iconScaledWithColor("/images/edit.png", 15, 15,
-                                                                          InterfaceColors.TOOLBAR_IMAGE)) {
+  class EditAction extends AbstractAction {
     def actionPerformed(e: ActionEvent) {
       if (editButton.isSelected) {
         new WindowEvents.EditWidgetEvent(null).raise(InterfaceWidgetControls.this)
@@ -107,8 +105,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
   }
 
-  class DeleteAction extends AbstractAction(null, Utils.iconScaledWithColor("/images/delete.png", 15, 15,
-                                                                            InterfaceColors.TOOLBAR_IMAGE)) {
+  class DeleteAction extends AbstractAction {
     def actionPerformed(e: ActionEvent) {
       if (deleteButton.isSelected) {
         wPanel.deleteSelectedWidgets()
@@ -147,7 +144,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     widgetMenu.syncTheme()
     alignmentMenu.syncTheme()
 
-    interactButton.setIcon(null) // add icon if moving forward with this design
+    interactButton.setIcon(Utils.iconScaledWithColor("/images/pointer.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
     selectButton.setIcon(Utils.iconScaledWithColor("/images/select.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
     editButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
     deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
@@ -415,6 +412,8 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   }
 
   class SquareButton(action: Action) extends ToolBarToggleButton(action) {
+    setFocusable(false)
+
     override def getMinimumSize: Dimension =
       new Dimension(widgetMenu.getPreferredSize.height, widgetMenu.getPreferredSize.height)
 

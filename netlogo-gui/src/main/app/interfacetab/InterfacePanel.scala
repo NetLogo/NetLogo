@@ -3,7 +3,7 @@
 package org.nlogo.app.interfacetab
 
 import java.awt.image.BufferedImage
-import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyEvent, KeyListener, MouseEvent }
+import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyEvent, MouseEvent }
 import javax.swing.AbstractAction
 
 import org.nlogo.api.{ Editable, Exceptions, Version }
@@ -26,7 +26,6 @@ import org.nlogo.workspace.Evaluator
 class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspace)
   extends WidgetPanel(workspace)
   with FocusListener
-  with KeyListener
   with LoadWidgetsEvent.Handler
   with UndoRedoActions {
 
@@ -37,7 +36,6 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     addWidget(viewWidget.asInstanceOf[Widget], 0, 0, false, false)
 
   viewWidget.asInstanceOf[Widget].deleteable = false
-  addKeyListener(this)
   addFocusListener(this)
 
   ///
@@ -48,6 +46,9 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   }
 
   override def focusLost(e: FocusEvent): Unit = {
+    if (interactMode == InteractMode.ADD)
+      setInteractMode(InteractMode.INTERACT)
+
     enableButtonKeys(false)
   }
 
@@ -263,7 +264,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
       case _ =>
     }
 
-  def keyTyped(e: KeyEvent): Unit = {
+  override def keyTyped(e: KeyEvent): Unit = {
     if (e.getKeyChar() != KeyEvent.CHAR_UNDEFINED &&
       !e.isActionKey &&
     (e.getModifiersEx & getToolkit.getMenuShortcutKeyMaskEx) == 0) {
@@ -272,10 +273,6 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
       }
     }
   }
-
-  def keyPressed(evt: KeyEvent): Unit = { }
-
-  def keyReleased(evt: KeyEvent): Unit = { }
 
   override def canAddWidget(widget: String): Boolean = {
     return (widget != "Output" || getOutputWidget == null)
