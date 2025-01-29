@@ -870,7 +870,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     if (widget.getEditable.isInstanceOf[Editable] && !interfacePanel.multiSelected) {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.edit")) {
         def actionPerformed(e: ActionEvent) {
-          interfacePanel.beginEdit()
+          interfacePanel.setInteractMode(InteractMode.EDIT)
           selected(true)
           foreground()
           new EditWidgetEvent(null).raise(WidgetWrapper.this)
@@ -881,7 +881,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     if (selected) {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deselect")) {
         def actionPerformed(e: ActionEvent) {
-          interfacePanel.beginSelect()
+          interfacePanel.setInteractMode(InteractMode.SELECT)
           selected(false)
           interfacePanel.setForegroundWrapper()
         }
@@ -959,7 +959,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     else {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.select")) {
         def actionPerformed(e: ActionEvent) {
-          interfacePanel.beginSelect()
+          interfacePanel.setInteractMode(InteractMode.SELECT)
           selected(true)
           foreground()
         }
