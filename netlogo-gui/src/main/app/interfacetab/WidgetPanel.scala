@@ -148,7 +148,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   def getInteractMode: InteractMode =
     interactMode
 
-  protected def setInteractMode(mode: InteractMode) {
+  def setInteractMode(mode: InteractMode) {
     if (interactMode == InteractMode.ADD && !placedShadowWidget)
       removeShadowWidget()
 
@@ -166,6 +166,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
         workspace.halt()
       }
     }
+
+    if (mode == InteractMode.EDIT || mode == InteractMode.INTERACT)
+      unselectWidgets()
 
     setCursor(mode.cursor)
 
@@ -603,10 +606,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def keyReleased(e: KeyEvent) {
-    if (e.getKeyCode == KeyEvent.VK_ESCAPE) {
+    if (e.getKeyCode == KeyEvent.VK_ESCAPE)
       setInteractMode(InteractMode.INTERACT)
-      unselectWidgets()
-    }
 
     else if (interactMode == InteractMode.INTERACT) {
       if (System.getProperty("os.name").contains("Mac")) {
@@ -625,15 +626,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
     getComponents.collect {
       case w: WidgetWrapper if w.selected => w
     }.foreach(_.foreground())
-
-  def beginInteract() {
-    setInteractMode(InteractMode.INTERACT)
-    unselectWidgets()
-  }
-
-  def beginSelect() {
-    setInteractMode(InteractMode.SELECT)
-  }
 
   protected def selectWidget(wrapper: WidgetWrapper, selected: Boolean) {
     wrapper.selected(selected)
@@ -777,12 +769,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def addingWidget: Boolean =
     interactMode == InteractMode.ADD
-
-  def beginEdit() {
-    setInteractMode(InteractMode.EDIT)
-
-    unselectWidgets()
-  }
 
   def editWidgetFinished(target: Editable, canceled: Boolean): Unit = {
     target match {

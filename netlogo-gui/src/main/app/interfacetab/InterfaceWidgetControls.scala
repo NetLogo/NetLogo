@@ -82,13 +82,13 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
   class InteractAction extends AbstractAction {
     def actionPerformed(e: ActionEvent) {
-      wPanel.beginInteract()
+      wPanel.setInteractMode(InteractMode.INTERACT)
     }
   }
 
   class SelectAction extends AbstractAction {
     def actionPerformed(e: ActionEvent) {
-      wPanel.beginSelect()
+      wPanel.setInteractMode(InteractMode.SELECT)
     }
   }
 
@@ -97,7 +97,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       if (editButton.isSelected) {
         new WindowEvents.EditWidgetEvent(null).raise(InterfaceWidgetControls.this)
 
-        wPanel.beginEdit()
+        wPanel.setInteractMode(InteractMode.EDIT)
       }
 
       else
