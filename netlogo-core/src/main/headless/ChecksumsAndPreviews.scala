@@ -26,7 +26,7 @@ object ChecksumsAndPreviews {
     def paths(fn: String => Boolean, includeBenchmarks: Boolean) = {
       val allLibrary = ModelsLibrary.getModelPaths(true, false).toList
       val library = if (includeBenchmarks)
-        allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogo") ::: allLibrary
+        allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogox") ::: allLibrary
       else
         allLibrary
 
