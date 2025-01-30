@@ -69,7 +69,7 @@ class NetLogoDocs(
   }
 
   private def infoTabHTML: String = {
-    InfoTabGenerator(modelsDirectory / "Code Examples" / "Info Tab Example.nlogo")
+    InfoTabGenerator(modelsDirectory / "Code Examples" / "Info Tab Example.nlogox")
   }
 
   def generatePDF(buildVariables: Map[String, Object], documentedExtensions: Seq[(String, String)]): File = {
