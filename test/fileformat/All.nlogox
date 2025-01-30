@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <model version="NetLogo 7.0.0" snapToGrid="false">
-  <code>
-    <![CDATA[to test-code
+  <code>to test-code
   print "hello from the code"
-end]]>
-  </code>
+end</code>
   <widgets>
     <view x="435" maxPycor="16" updateMode="0" wrappingAllowedX="true" y="19" frameRate="30.0" minPycor="-16" height="438" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="437" tickCounterLabel="ticks" maxPxcor="16" minPxcor="-16"></view>
-    <button x="12" actionKey="P" y="15" height="33" disableUntilTicks="false" forever="false" kind="Observer" width="83" display="print-test">
-      <![CDATA[print "test"]]>
-    </button>
+    <button x="12" actionKey="P" y="15" height="33" disableUntilTicks="false" forever="false" kind="Observer" width="83" display="print-test">print "test"</button>
     <slider x="13" step="1" y="64" height="150" min="-100" direction="Vertical" max="100" default="0.0" variable="slides" units="slides" width="33" display="slides"></slider>
     <switch x="59" y="64" height="33" on="true" variable="switching" width="106" display="switching"></switch>
     <chooser x="60" y="113" height="45" variable="choice" current="0" width="138" display="choice">
@@ -34,42 +30,35 @@ end]]>
         <value value="9.0"></value>
       </choice>
     </chooser>
-    <input x="12" multiline="true" y="235" height="60" variable="input-string" type="string" width="311">
-      <![CDATA[hello
+    <input x="12" multiline="true" y="235" height="60" variable="input-string" type="string" width="311">hello
 i
 am
 a
-string]]>
-    </input>
-    <input x="13" multiline="false" y="310" height="60" variable="color-input" type="color" width="155">
-      <![CDATA[117.0]]>
-    </input>
-    <monitor x="181" precision="5" y="310" height="33" fontSize="8" width="57" display="slides">
-      <![CDATA[slides]]>
-    </monitor>
+string</input>
+    <input x="13" multiline="false" y="310" height="60" variable="color-input" type="color" width="155">117.0</input>
+    <monitor x="181" precision="5" y="310" height="33" fontSize="8" width="57" display="slides">slides</monitor>
     <plot x="213" yMax="66.6666" yAxis="number" y="15" xMin="-10.0" height="150" legend="false" xMax="20.0" autoplot="true" yMin="-33.3333" width="200" xAxis="choice" display="c hoice-plotter">
       <setup>
-        <![CDATA[print "the plot has been set up"]]>
+        print "the plot has been set up"
       </setup>
       <update>
-        <![CDATA[print "the plot is updating"]]>
+        print "the plot is updating"
       </update>
       <pen color="-16777216" legend="true" interval="4.2" mode="2" display="default">
         <setup>
-          <![CDATA[print "the pen has been set up"]]>
+          print "the pen has been set up"
         </setup>
         <update>
-          <![CDATA[plot item 0 list-choice]]>
+          plot item 0 list-choice
         </update>
       </pen>
     </plot>
     <output x="13" y="383" height="54" fontSize="8" width="240"></output>
     <note x="214" y="181" height="31" color="95.0" transparent="true" fontSize="25" width="150">
-      <![CDATA[nota bene]]>
+      nota bene
     </note>
   </widgets>
-  <info>
-    <![CDATA[## WHAT IS IT?
+  <info>## WHAT IS IT?
 
 (a general understanding of what the model is trying to show or explain)
 
@@ -103,9 +92,7 @@ string]]>
 
 ## CREDITS AND REFERENCES
 
-(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
-]]>
-  </info>
+(a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)</info>
   <turtleShapes>
     <shape name="default" rotatable="true" editableColorIndex="0">
       <polygon color="-1920102913" filled="true" marked="true">
@@ -940,7 +927,7 @@ string]]>
     </shape>
   </linkShapes>
   <previewCommands>
-    <![CDATA[setup repeat 75 [ go ]]]>
+    setup repeat 75 [ go ]
   </previewCommands>
   <systemDynamics dt="1.2">
     <stock x="143" name="random-stock" y="133" allowNegative="true" initialValue="42"></stock>
