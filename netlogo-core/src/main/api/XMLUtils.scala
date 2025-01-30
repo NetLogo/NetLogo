@@ -6,7 +6,6 @@ import java.io.{ StringReader, Writer }
 import javax.xml.stream.{ XMLInputFactory, XMLOutputFactory, XMLStreamConstants, XMLStreamException }
 
 import scala.util.{ Failure, Try }
-import scala.util.matching.Regex
 
 // this wrapper around XMLStreamWriter allows for pretty-printing and other formatting (Isaac B 12/16/24)
 class XMLWriter(dest: Writer) {
@@ -38,15 +37,8 @@ class XMLWriter(dest: Writer) {
     writer.writeAttribute(name, value)
   }
 
-  def cData(text: String) {
-    writer.writeCharacters("\n")
-
-    for (i <- 0 until indentLevel)
-      writer.writeCharacters(indentStr)
-
-    writer.writeCData(new Regex("]]>").replaceAllIn(text, "]]" + XMLElement.CDataEscape + ">"))
-
-    lastStart = ""
+  def escapedText(text: String) {
+    writer.writeCharacters(text)
   }
 
   def endElement(name: String) {
@@ -71,7 +63,7 @@ class XMLWriter(dest: Writer) {
     if (el.text.isEmpty)
       el.children.foreach(element)
     else
-      cData(el.text)
+      escapedText(el.text)
 
     endElement(el.name)
   }
@@ -89,7 +81,13 @@ class XMLWriter(dest: Writer) {
 object XMLReader {
   def read(source: String): Try[XMLElement] = {
     val sourceReader = new StringReader(source)
-    val reader = XMLInputFactory.newFactory.createXMLStreamReader(sourceReader)
+    val reader = {
+      val factory = XMLInputFactory.newFactory
+
+      factory.setProperty("javax.xml.stream.isCoalescing", true)
+
+      factory.createXMLStreamReader(sourceReader)
+    }
 
     try {
       while (reader.hasNext && reader.next != XMLStreamConstants.START_ELEMENT) {}
@@ -116,8 +114,7 @@ object XMLReader {
               if (reader.isWhiteSpace)
                 parseElement(acc)
               else
-                parseElement(acc.copy(
-                  text = new Regex(s"]]${XMLElement.CDataEscape}>").replaceAllIn(reader.getText, "]]>")))
+                parseElement(acc.copy(text = reader.getText))
             case x =>
               Failure(throw new Exception(s"Unexpected value found while parsing XML: ${x}"))
           }

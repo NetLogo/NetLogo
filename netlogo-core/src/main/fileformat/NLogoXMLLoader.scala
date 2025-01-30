@@ -134,7 +134,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
     )
 
     writer.startElement("code")
-    writer.cData(model.code)
+    writer.escapedText(model.code)
     writer.endElement("code")
 
     writer.startElement("widgets")
@@ -142,7 +142,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
     writer.endElement("widgets")
 
     writer.startElement("info")
-    writer.cData(model.info)
+    writer.escapedText(model.info)
     writer.endElement("info")
 
     writer.element(XMLElement("turtleShapes", Map(), "", model.turtleShapes.map(ShapeXMLLoader.writeShape).toList))
@@ -152,7 +152,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
       section.key match {
         case "org.nlogo.modelsection.previewcommands" =>
           writer.startElement("previewCommands")
-          writer.cData(section.get.get.asInstanceOf[PreviewCommands].source)
+          writer.escapedText(section.get.get.asInstanceOf[PreviewCommands].source)
           writer.endElement("previewCommands")
 
         case "org.nlogo.modelsection.systemdynamics.gui" =>
@@ -195,7 +195,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
 
         writer.attribute("name", resource.name)
         writer.attribute("extension", resource.extension)
-        writer.cData(resource.data)
+        writer.escapedText(resource.data)
 
         writer.endElement("resource")
 
