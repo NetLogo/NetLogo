@@ -17,9 +17,9 @@ class XMLWriter(dest: Writer) {
   private var lastStart = ""
 
   def startDocument() {
-    writer.writeComment(" WARNING: All text sections in this file must use &lt; in place of <, &gt; in place of >, and &amp; in place of & ")
-    writer.writeCharacters("\n")
     writer.writeStartDocument("utf-8", "1.0")
+    writer.writeCharacters("\n")
+    writer.writeComment(" WARNING: All text sections in this file must use &lt; in place of <, &gt; in place of >, and &amp; in place of & ")
   }
 
   def startElement(name: String) {
