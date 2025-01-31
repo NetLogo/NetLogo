@@ -247,11 +247,9 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent) {
-        if (!wPanel.addingWidget) {
-          actions.foreach(action => action.setEnabled(wPanel.canAddWidget(action.getText)))
+        actions.foreach(action => action.setEnabled(wPanel.canAddWidget(action.getText)))
 
-          popup.show(WidgetMenu.this, 0, getHeight)
-        }
+        popup.show(WidgetMenu.this, 0, getHeight)
       }
     })
 
