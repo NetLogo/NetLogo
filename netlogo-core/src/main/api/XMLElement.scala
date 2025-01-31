@@ -4,6 +4,10 @@ package org.nlogo.api
 
 import scala.util.hashing.MurmurHash3
 
+object XMLElement {
+  val CDataEscape = 0xe000.asInstanceOf[Char].toString
+}
+
 case class XMLElement(val name: String, val attributes: Map[String, String], val text: String,
                       val children: Seq[XMLElement]) {
 
