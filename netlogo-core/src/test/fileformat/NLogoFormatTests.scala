@@ -34,7 +34,7 @@ class NLogoFormatIOTest extends AnyFunSuite {
 
   val format = new NLogoFormat
 
-  lazy val antsBenchmarkPath = Paths.get(modelsLibrary, "test", "benchmarks", "Ants Benchmark.nlogo")
+  lazy val antsBenchmarkPath = Paths.get("test", "fileformat", "Ants Benchmark.nlogo")
   // sanity checking, if these fail NetLogo will be pretty unusable
   test("fails when reading in sections from a bad URI") {
     assert(format.sections(new URI("file:///not-a-real-file")).isFailure)
