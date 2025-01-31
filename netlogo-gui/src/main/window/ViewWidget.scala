@@ -228,8 +228,9 @@ class ViewWidget(workspace: GUIWorkspace)
   override def hasContextMenu: Boolean =
     true;
 
-  override def populateContextMenu(menu: PopupMenu, p: Point): Point =
+  override def populateContextMenu(menu: PopupMenu, p: Point) {
     view.populateContextMenu(menu, p)
+  }
 
   /// display switch
 

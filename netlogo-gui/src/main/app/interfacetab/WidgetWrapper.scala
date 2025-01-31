@@ -857,16 +857,16 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     if (interfacePanel != null) {
       val menu = new WrappingPopupMenu
 
-      val p = populateContextMenu(menu, e.getPoint)
+      populateContextMenu(menu, e.getPoint)
 
       if (menu.getSubElements.size > 0)
-        menu.show(this, p.x, p.y)
+        menu.show(this, getMousePosition().x, getMousePosition().y)
 
       e.consume()
     }
   }
 
-  private def populateContextMenu(menu: PopupMenu, p: Point): Point = {
+  private def populateContextMenu(menu: PopupMenu, p: Point) {
     if (widget.getEditable.isInstanceOf[Editable] && !interfacePanel.multiSelected) {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.edit")) {
         def actionPerformed(e: ActionEvent) {
@@ -991,7 +991,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     if (widget.hasContextMenu) {
       menu.addSeparator()
 
-      val location = widget.populateContextMenu(menu, p)
+      widget.populateContextMenu(menu, p)
 
       if (widget.exportable) {
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.export")) {
@@ -1002,11 +1002,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       }
 
       widget.addExtraMenuItems(menu)
-      location
     }
-
-    else
-      p
   }
 
   def syncTheme() {

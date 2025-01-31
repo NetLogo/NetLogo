@@ -57,7 +57,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   def repaintPrompt(){}
   def cycleAgentType(forward:Boolean){}
 
-  override def populateContextMenu(menu: PopupMenu, p: Point) = {
+  override def populateContextMenu(menu: PopupMenu, p: Point) {
     // at least on Macs, Command-C to copy may not work, so this
     // is needed - ST 4/21/05
     menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copyselectedtext")) {
@@ -65,7 +65,6 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
         outputArea.text.copy
       }
     }))
-    p
   }
 
   def syncTheme() {
