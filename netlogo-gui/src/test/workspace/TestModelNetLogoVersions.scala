@@ -7,8 +7,9 @@ import java.nio.file.Paths
 import org.scalatest.funsuite.AnyFunSuite
 
 import org.nlogo.api.Version
+import org.nlogo.core.{ Femto, LiteralParser }
 import org.nlogo.util.SlowTest
-import org.nlogo.fileformat.{ FileFormat, NLogoThreeDFormat }
+import org.nlogo.fileformat.FileFormat
 
 class TestModelNetLogoVersions extends AnyFunSuite with SlowTest {
   val paths = ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")
@@ -17,9 +18,8 @@ class TestModelNetLogoVersions extends AnyFunSuite with SlowTest {
   for(path <- paths)
     test("model version: " + path, SlowTest.Tag) {
       // if this test suddenly starts failing, make sure all models are the most current version
-      val loader =
-        FileFormat.basicLoader
-          .addFormat[Array[String], NLogoThreeDFormat](new NLogoThreeDFormat)
+      val literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
+      val loader = FileFormat.standardAnyLoader(literalParser, false)
 
       // 5.x.nlogo is a LS is a test model for checking the graceful handling of version problems.
       if (!path.endsWith("5.x.nlogo")) {
