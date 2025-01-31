@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <model version="NetLogo 7.0.0" snapToGrid="false">
-  <code>
-    <![CDATA[]]>
-  </code>
+  <code></code>
   <widgets>
     <view x="210" maxPycor="16" updateMode="0" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-16" height="438" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="437" tickCounterLabel="ticks" maxPxcor="16" minPxcor="-16"></view>
   </widgets>
-  <info>
-    <![CDATA[## WHAT IS IT?
+  <info>## WHAT IS IT?
 
 (a general understanding of what the model is trying to show or explain)
 
@@ -42,8 +39,7 @@
 ## CREDITS AND REFERENCES
 
 (a reference to the model's URL on the web if it has one, as well as any other necessary credits, citations, and links)
-]]>
-  </info>
+</info>
   <turtleShapes>
     <shape name="default" rotatable="true" editableColorIndex="0">
       <polygon color="-1920102913" filled="true" marked="true">
@@ -877,7 +873,5 @@
       </indicator>
     </shape>
   </linkShapes>
-  <previewCommands>
-    <![CDATA[setup repeat 75 [ go ]]]>
-  </previewCommands>
+  <previewCommands>setup repeat 75 [ go ]</previewCommands>
 </model>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <model version="NetLogo 7.0.0" snapToGrid="true">
-  <code>globals [ max-sheep ]  ; don't let the sheep population grow too large
+  <code><![CDATA[globals [ max-sheep ]  ; don't let the sheep population grow too large
 
 ; Sheep and wolves are both breeds of turtles
 breed [ sheep a-sheep ]  ; sheep is its own plural, so we use "a-sheep" as the singular
@@ -55,7 +55,7 @@ to go
   ; stop the model if there are no wolves and no sheep
   if not any? turtles [ stop ]
   ; stop the model if there are no wolves and the number of sheep gets very large
-  if not any? wolves and count sheep &gt; max-sheep [ user-message "The sheep have inherited the earth" stop ]
+  if not any? wolves and count sheep > max-sheep [ user-message "The sheep have inherited the earth" stop ]
   ask sheep [
     move
 
@@ -97,14 +97,14 @@ to eat-grass  ; sheep procedure
 end
 
 to reproduce-sheep  ; sheep procedure
-  if random-float 100 &lt; sheep-reproduce [  ; throw "dice" to see if you will reproduce
+  if random-float 100 < sheep-reproduce [  ; throw "dice" to see if you will reproduce
     set energy (energy / 2)                ; divide energy between parent and offspring
     hatch 1 [ rt random-float 360 fd 1 ]   ; hatch an offspring and move it forward 1 step
   ]
 end
 
 to reproduce-wolves  ; wolf procedure
-  if random-float 100 &lt; wolf-reproduce [  ; throw "dice" to see if you will reproduce
+  if random-float 100 < wolf-reproduce [  ; throw "dice" to see if you will reproduce
     set energy (energy / 2)               ; divide energy between parent and offspring
     hatch 1 [ rt random-float 360 fd 1 ]  ; hatch an offspring and move it forward 1 step
   ]
@@ -120,13 +120,13 @@ end
 
 to death  ; turtle procedure (i.e. both wolf and sheep procedure)
   ; when energy dips below zero, die
-  if energy &lt; 0 [ die ]
+  if energy < 0 [ die ]
 end
 
 to grow-grass  ; patch procedure
   ; countdown on brown patches: if you reach 0, grow some grass
   if pcolor = brown [
-    ifelse countdown &lt;= 0
+    ifelse countdown <= 0
       [ set pcolor green
         set countdown grass-regrowth-time ]
       [ set countdown countdown - 1 ]
@@ -151,7 +151,7 @@ end
 
 
 ; Copyright 1997 Uri Wilensky.
-; See Info tab for full copyright and license.</code>
+; See Info tab for full copyright and license.]]></code>
   <widgets>
     <view x="355" maxPycor="25" updateMode="1" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-25" height="519" showTickCounter="true" patchSize="10.0" fontSize="14" wrappingAllowedY="true" width="518" tickCounterLabel="ticks" maxPxcor="25" minPxcor="-25"></view>
     <slider x="5" step="1" y="60" height="33" min="0" direction="Horizontal" max="250" default="100.0" variable="initial-number-sheep" width="174" display="initial-number-sheep"></slider>
@@ -190,7 +190,7 @@ end
       <choice type="string" value="sheep-wolves-grass"></choice>
     </chooser>
   </widgets>
-  <info>## WHAT IS IT?
+  <info><![CDATA[## WHAT IS IT?
 
 This model explores the stability of predator-prey ecosystems. Such a system is called unstable if it tends to result in extinction for one or more species involved.  In contrast, a system is stable if it tends to maintain itself over time, despite fluctuations in population sizes.
 
@@ -200,9 +200,9 @@ There are two main variations to this model.
 
 In the first variation, the "sheep-wolves" version, wolves and sheep wander randomly around the landscape, while the wolves look for sheep to prey on. Each step costs the wolves energy, and they must eat sheep in order to replenish their energy - when they run out of energy they die. To allow the population to continue, each wolf or sheep has a fixed probability of reproducing at each time step. In this variation, we model the grass as "infinite" so that sheep always have enough to eat, and we don't explicitly model the eating or growing of grass. As such, sheep don't either gain or lose energy by eating or moving. This variation produces interesting population dynamics, but is ultimately unstable. This variation of the model is particularly well-suited to interacting species in a rich nutrient environment, such as two strains of bacteria in a petri dish (Gause, 1934).
 
-The second variation, the "sheep-wolves-grass" version explicitly models grass (green) in addition to wolves and sheep. The behavior of the wolves is identical to the first variation, however this time the sheep must eat grass in order to maintain their energy - when they run out of energy they die. Once grass is eaten it will only regrow after a fixed amount of time. This variation is more complex than the first, but it is generally stable. It is a closer match to the classic Lotka Volterra population oscillation models. The classic LV models though assume the populations can take on real values, but in small populations these models underestimate extinctions and agent-based models such as the ones here, provide more realistic results. (See Wilensky &amp; Rand, 2015; chapter 4).
+The second variation, the "sheep-wolves-grass" version explicitly models grass (green) in addition to wolves and sheep. The behavior of the wolves is identical to the first variation, however this time the sheep must eat grass in order to maintain their energy - when they run out of energy they die. Once grass is eaten it will only regrow after a fixed amount of time. This variation is more complex than the first, but it is generally stable. It is a closer match to the classic Lotka Volterra population oscillation models. The classic LV models though assume the populations can take on real values, but in small populations these models underestimate extinctions and agent-based models such as the ones here, provide more realistic results. (See Wilensky & Rand, 2015; chapter 4).
 
-The construction of this model is described in two papers by Wilensky &amp; Reisman (1998; 2006) referenced below.
+The construction of this model is described in two papers by Wilensky & Reisman (1998; 2006) referenced below.
 
 ## HOW TO USE IT
 
@@ -270,7 +270,7 @@ Note the use of the ONE-OF agentset reporter to select a random sheep to be eate
 
 For more information about BehaviorSpace and the features introduced in NetLogo 6.4.0 see the [documentation](https://ccl.northwestern.edu/netlogo/docs/behaviorspace.html).
 
-The “New BehaviorSpace Features” experiment illustrates some of the BehaviorSpace features introduced in NetLogo 6.4.0. You can open BehaviorSpace using the Tools -&gt; BehaviorSpace menu item. Click the EDIT button to see the details of the experiment.
+The “New BehaviorSpace Features” experiment illustrates some of the BehaviorSpace features introduced in NetLogo 6.4.0. You can open BehaviorSpace using the Tools -> BehaviorSpace menu item. Click the EDIT button to see the details of the experiment.
 
 Note the use of 3 repetitions, so there is enough data to calculate the standard deviation of metrics at steps where data is available for all repetitions.
 
@@ -327,17 +327,17 @@ Look at Rabbits Grass Weeds for another model of interacting populations with di
 
 ## CREDITS AND REFERENCES
 
-Wilensky, U. &amp; Reisman, K. (1998). Connected Science: Learning Biology through Constructing and Testing Computational Theories -- an Embodied Modeling Approach. International Journal of Complex Systems, M. 234, pp. 1 - 12. (The Wolf-Sheep-Predation model is a slightly extended version of the model described in the paper.)
+Wilensky, U. & Reisman, K. (1998). Connected Science: Learning Biology through Constructing and Testing Computational Theories -- an Embodied Modeling Approach. International Journal of Complex Systems, M. 234, pp. 1 - 12. (The Wolf-Sheep-Predation model is a slightly extended version of the model described in the paper.)
 
-Wilensky, U. &amp; Reisman, K. (2006). Thinking like a Wolf, a Sheep or a Firefly: Learning Biology through Constructing and Testing Computational Theories -- an Embodied Modeling Approach. Cognition &amp; Instruction, 24(2), pp. 171-209. http://ccl.northwestern.edu/papers/wolfsheep.pdf .
+Wilensky, U. & Reisman, K. (2006). Thinking like a Wolf, a Sheep or a Firefly: Learning Biology through Constructing and Testing Computational Theories -- an Embodied Modeling Approach. Cognition & Instruction, 24(2), pp. 171-209. http://ccl.northwestern.edu/papers/wolfsheep.pdf .
 
-Wilensky, U., &amp; Rand, W. (2015). An introduction to agent-based modeling: Modeling natural, social and engineered complex systems with NetLogo. Cambridge, MA: MIT Press.
+Wilensky, U., & Rand, W. (2015). An introduction to agent-based modeling: Modeling natural, social and engineered complex systems with NetLogo. Cambridge, MA: MIT Press.
 
 Lotka, A. J. (1925). Elements of physical biology. New York: Dover.
 
 Volterra, V. (1926, October 16). Fluctuations in the abundance of a species considered mathematically. Nature, 118, 558–560.
 
-Gause, G. F. (1934). The struggle for existence. Baltimore: Williams &amp; Wilkins.
+Gause, G. F. (1934). The struggle for existence. Baltimore: Williams & Wilkins.
 
 ## HOW TO CITE
 
@@ -363,9 +363,9 @@ Commercial licenses are also available. To inquire about commercial licenses, pl
 
 This model was created as part of the project: CONNECTED MATHEMATICS: MAKING SENSE OF COMPLEX PHENOMENA THROUGH BUILDING OBJECT-BASED PARALLEL MODELS (OBPML).  The project gratefully acknowledges the support of the National Science Foundation (Applications of Advanced Technologies Program) -- grant numbers RED #9552950 and REC #9632612.
 
-This model was converted to NetLogo as part of the projects: PARTICIPATORY SIMULATIONS: NETWORK-BASED DESIGN FOR SYSTEMS LEARNING IN CLASSROOMS and/or INTEGRATED SIMULATION AND MODELING ENVIRONMENT. The project gratefully acknowledges the support of the National Science Foundation (REPP &amp; ROLE programs) -- grant numbers REC #9814682 and REC-0126227. Converted from StarLogoT to NetLogo, 2000.
+This model was converted to NetLogo as part of the projects: PARTICIPATORY SIMULATIONS: NETWORK-BASED DESIGN FOR SYSTEMS LEARNING IN CLASSROOMS and/or INTEGRATED SIMULATION AND MODELING ENVIRONMENT. The project gratefully acknowledges the support of the National Science Foundation (REPP & ROLE programs) -- grant numbers REC #9814682 and REC-0126227. Converted from StarLogoT to NetLogo, 2000.
 
-&lt;!-- 1997 2000 --&gt;</info>
+<!-- 1997 2000 -->]]></info>
   <turtleShapes>
     <shape name="default" rotatable="true" editableColorIndex="0">
       <polygon color="-1920102913" filled="true" marked="true">
