@@ -37,7 +37,7 @@ end
     <monitor x="194" precision="3" y="15" height="45" fontSize="11" width="96">sheep</monitor>
     <monitor x="194" precision="3" y="83" height="45" fontSize="11" width="95">wolves</monitor>
   </widgets>
-  <info>## WHAT IS IT?
+  <info><![CDATA[## WHAT IS IT?
 
 This is a model of a simple predator-prey ecosystem. It uses the System Dynamics Modeler to implement the Lotka-Volterra equations.
 
@@ -101,7 +101,7 @@ This work is licensed under the Creative Commons Attribution-NonCommercial-Share
 
 Commercial licenses are also available. To inquire about commercial licenses, please contact Uri Wilensky at uri@northwestern.edu.
 
-&lt;!-- 2005 --&gt;</info>
+<!-- 2005 -->]]></info>
   <turtleShapes>
     <shape name="default" rotatable="true" editableColorIndex="0">
       <polygon color="-1920102913" filled="true" marked="true">
