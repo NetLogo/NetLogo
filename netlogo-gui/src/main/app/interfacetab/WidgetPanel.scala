@@ -430,9 +430,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
         }
 
       case InteractMode.SELECT =>
-        if (e.isPopupTrigger)
-          doPopup(e)
-        else if (e.getButton == MouseEvent.BUTTON1) {
+        if (e.getButton == MouseEvent.BUTTON1) {
           requestFocus()
 
           if (NlogoMouse.hasCtrl(e))
@@ -448,6 +446,18 @@ class WidgetPanel(val workspace: GUIWorkspace)
               case _ =>
                 startDragPoint = e.getPoint
             }
+          }
+        }
+
+        else {
+          wrapperAtPoint(e.getPoint) match {
+            case Some(w) =>
+              e.translatePoint(-w.getX, -w.getY)
+              w.mouseReleased(e)
+
+            case _ =>
+              if (e.isPopupTrigger)
+                doPopup(e)
           }
         }
 
