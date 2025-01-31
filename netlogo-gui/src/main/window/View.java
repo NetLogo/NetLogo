@@ -443,7 +443,7 @@ public class View
     return renderPerspective;
   }
 
-  public java.awt.Point populateContextMenu(PopupMenu menu, java.awt.Point p) {
+  public void populateContextMenu(PopupMenu menu, java.awt.Point p) {
     // certain menu items dont work in Applets.
     // the only ones that do are watch, follow and reset-perspective
     // this check (and others below) prevent items from being added
@@ -580,8 +580,6 @@ public class View
         p.y += StrictMath.min((y - p.y), 15);
       }
     }
-
-    return p;
   }
 
   private void addTurtleToContextMenu(PopupMenu menu,

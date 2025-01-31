@@ -154,7 +154,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
     else sup
   }
 
-  def populateContextMenu(menu: PopupMenu, p: Point): Point = p
+  def populateContextMenu(menu: PopupMenu, p: Point): Unit = {}
 
   protected def resetZoomInfo(): Unit = {
     if (findWidgetContainer != null) {
