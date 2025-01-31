@@ -34,10 +34,10 @@ class ModelsLibraryTests extends AnyFunSuite {
     assert(ModelsLibrary.findModelsBySubstring("oper").size > 1)
   }
   test("getModelPath returns the full path to the model whose name matches exactly") {
-    assert(ModelsLibrary.getModelPath("ants.nlogo").get.endsWith(s"Biology${File.separator}Ants.nlogo"))
+    assert(ModelsLibrary.getModelPath("ants.nlogox").get.endsWith(s"Biology${File.separator}Ants.nlogox"))
   }
   test("getModelPath returns null when no model name matches exactly") {
-    assert(ModelsLibrary.getModelPath("pong.nlogo") == None)
+    assert(ModelsLibrary.getModelPath("pong.nlogox") == None)
   }
   if (! Version.is3D) {
     test("getModelPaths returns a list of all model paths in the models library") {
