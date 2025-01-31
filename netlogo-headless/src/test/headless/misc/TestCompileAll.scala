@@ -37,7 +37,7 @@ object TestCompileAll {
       path.containsSlice("Sound Machines") || // uses sound extension
       path.containsSlice("GoGoMonitor") ||
       path.containsSlice("Movie Example") ||
-      path.containsSlice("Anisogamy.nlogo") || // uses behaviorspace-experiment-name
+      path.containsSlice("Anisogamy.nlogox") || // uses behaviorspace-experiment-name
       path.endsWith("5.x.nlogo") || // explicitly 5.x models
       path.endsWith(".nlogo3d")
   }

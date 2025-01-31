@@ -266,7 +266,7 @@ class StructureParserTests extends AnyFunSuite {
   }
 
   test("invalid included file") {
-    expectParseAllError("""__includes [ "foobar.nlogo" ]""", "Included files must end with .nls")
+    expectParseAllError("""__includes [ "foobar.nlogox" ]""", "Included files must end with .nls")
   }
 
   test("nonexistent included file") {

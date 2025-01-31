@@ -9,7 +9,7 @@ object HeadlessServerExample {
   def main(args: Array[String]) {
     val workspace = HeadlessWorkspace.newInstance
     val commandLine = new CommandLineThread(workspace)
-    workspace.open("models/HubNet Activities/Code Examples/Template.nlogo")
+    workspace.open("models/HubNet Activities/Code Examples/Template.nlogox")
     workspace.command("hubnet-reset")
     workspace.command("setup")
     while(true) {

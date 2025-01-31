@@ -52,7 +52,7 @@ class ControlFlowVerifierTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
   }
 
   def stmt(prim: Command, args: Expression*) =
-    new Statement(prim, args, SourceLocation(0, 0, "foo.nlogo"))
+    new Statement(prim, args, SourceLocation(0, 0, "foo.nlogox"))
 
   def _if: Command =
     Femto.get[Command]("org.nlogo.core.prim.etc._if")
@@ -109,7 +109,7 @@ class ControlFlowVerifierTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
     def name: String = "foobar"
     def isReporter: Boolean = reporterProcedure
     def displayName: String = "foobar"
-    def filename: String = "foo.nlogo"
+    def filename: String = "foo.nlogox"
     def nameToken: Token = TokenDSL.id("foobar")
     def argTokens: Seq[Token] = Seq()
     def dump: String = "TEST FRONTENDPROCEDURE"

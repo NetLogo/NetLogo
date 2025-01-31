@@ -14,14 +14,14 @@ class ModelTrackerTest extends AnyFunSuite {
     def getExtensionManager = null
   }
 
-  def makeModelNameForDisplay(modelType: ModelType = ModelType.Normal, name: String = "foo.nlogo"): String = {
+  def makeModelNameForDisplay(modelType: ModelType = ModelType.Normal, name: String = "foo.nlogox"): String = {
     new Subject(modelType, name).modelNameForDisplay
   }
 
   test("if the model is of model type new, modelName for Display is Untitled") {
     assertResult("Untitled")(makeModelNameForDisplay(ModelType.New, null))
     assertResult("Untitled")(makeModelNameForDisplay(ModelType.New, ""))
-    assertResult("Untitled")(makeModelNameForDisplay(ModelType.New, "empty.nlogo"))
+    assertResult("Untitled")(makeModelNameForDisplay(ModelType.New, "empty.nlogox"))
   }
   test("if the model name is null, modelNameForDisplay is Untitled") {
     assertResult("Untitled")(makeModelNameForDisplay(ModelType.New, null))
@@ -29,7 +29,7 @@ class ModelTrackerTest extends AnyFunSuite {
     assertResult("Untitled")(makeModelNameForDisplay(ModelType.Normal, null))
   }
   test("MakeModelNameForDisplay") {
-    assertResult("there")(makeModelNameForDisplay(name = "there.nlogo"))
+    assertResult("there")(makeModelNameForDisplay(name = "there.nlogox"))
   }
   test("MakeModelNameForDisplay2") {
     assertResult("there")(makeModelNameForDisplay(name = "there"))
@@ -38,7 +38,7 @@ class ModelTrackerTest extends AnyFunSuite {
     assertResult("th.ere")(makeModelNameForDisplay(name = "th.ere"))
   }
   test("MakeModelNameForDisplay4") {
-    assertResult("th.ere")(makeModelNameForDisplay(name = "th.ere.nlogo"))
+    assertResult("th.ere")(makeModelNameForDisplay(name = "th.ere.nlogox"))
   }
   test("MakeModelNameForDisplay5") {
     assertResult("foo.nlogo2")(makeModelNameForDisplay(name = "foo.nlogo2"))

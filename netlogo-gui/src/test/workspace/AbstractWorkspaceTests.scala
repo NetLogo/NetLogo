@@ -10,15 +10,15 @@ class AbstractWorkspaceTests extends AnyFunSuite with BeforeAndAfterEach with On
   override def afterEach() { workspace.dispose() }
 ///
   test("GuessExportName1") {
-    workspace.setModelPath("foo.nlogo")
+    workspace.setModelPath("foo.nlogox")
     assertResult("foo graphics.png")(workspace.guessExportName("graphics.png"))
   }
   test("GuessExportName2") {
-    workspace.setModelPath("fo.o.nlogo")
+    workspace.setModelPath("fo.o.nlogox")
     assertResult("fo.o graph.ics.png")(workspace.guessExportName("graph.ics.png"))
   }
   test("GuessExportName3") {
-    workspace.setModelPath("foo.nlogo.nlogo")
+    workspace.setModelPath("foo.nlogo.nlogox")
     assertResult("foo.nlogo graphics.png")(workspace.guessExportName("graphics.png"))
   }
   test("GuessExportName4") {
@@ -30,11 +30,11 @@ class AbstractWorkspaceTests extends AnyFunSuite with BeforeAndAfterEach with On
     assertResult("foo graphics.png")(workspace.guessExportName("graphics.png"))
   }
   test("AttachModelDir1") {
-    workspace.setModelPath("/tmp/foo.nlogo")
+    workspace.setModelPath("/tmp/foo.nlogox")
     assertResult("/tmp/abc.txt")(workspace.attachModelDir("abc.txt"))
   }
   test("AttachModelDir2") {
-    workspace.setModelPath("/tmp/foo.nlogo")
+    workspace.setModelPath("/tmp/foo.nlogox")
     assertResult("/usr/abc.txt")(workspace.attachModelDir("/usr/abc.txt"))
   }
   test("AttachModelDir3") {

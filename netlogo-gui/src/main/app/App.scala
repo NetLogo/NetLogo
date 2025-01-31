@@ -724,7 +724,7 @@ class App extends
       val fullName =
         if (matches.size == 1) matches(0)
         else {
-          val options = matches.map(_.replaceAllLiterally(".nlogo3d", "").replaceAllLiterally(".nlogo", "")).toArray[AnyRef]
+          val options = matches.map(_.replaceAllLiterally(".nlogox", "")).toArray[AnyRef]
           val i = org.nlogo.swing.OptionDialog.showAsList(frame, I18N.gui.get("tools.magicModelMatcher"), I18N.gui.get("tools.magicModelMathcer.mustChoose"), options)
           if (i != -1) matches(i) else null
         }

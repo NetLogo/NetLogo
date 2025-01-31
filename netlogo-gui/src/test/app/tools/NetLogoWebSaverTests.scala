@@ -30,7 +30,7 @@ class NetLogoWebSaverTests extends AnyFunSuite {
     val saveFunction: String => Unit = { t => savedText = t }
     val saver = new NetLogoWebSaver(templateLoader, saveFunction)
     saver.save(dummyModel, "model name")
-    assert(savedText == dummyTemplate(dummyModel, "model name.nlogo"))
+    assert(savedText == dummyTemplate(dummyModel, "model name.nlogox"))
   }
 
   test("nlwsaver strips the html suffix off received filenames") {
@@ -38,7 +38,7 @@ class NetLogoWebSaverTests extends AnyFunSuite {
     val saveFunction: String => Unit = { t => savedText = t }
     val saver = new NetLogoWebSaver(templateLoader, saveFunction)
     saver.save(dummyModel, "model name.html")
-    assert(savedText == dummyTemplate(dummyModel, "model name.nlogo"))
+    assert(savedText == dummyTemplate(dummyModel, "model name.nlogox"))
   }
 
   val dummyModel = "model text"

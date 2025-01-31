@@ -268,7 +268,7 @@ object ChecksumsAndPreviews {
           Paths.get("tmp/checksum-exports")
             .resolve(
               modelPath.subpath(modelIndex, pathCount - 2)
-                .resolve(modelName.replaceAllLiterally(".nlogo", ".csv")))
+                .resolve(modelName.replaceAllLiterally(".nlogox", ".csv")))
 
         Files.createDirectories(exportPath.getParent)
         workspace.exportWorld(exportPath.toString)

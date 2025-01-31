@@ -69,7 +69,7 @@ trait TestMultiThreadedModels extends AbstractTestModels {
 class GasLabInParallelTests extends TestMultiThreadedModels with SlowTest {
 
   testModelFile("gas lab in parallel",
-    "models/Sample Models/Chemistry & Physics/GasLab/GasLab Gas in a Box.nlogo"){
+    "models/Sample Models/Chemistry & Physics/GasLab/GasLab Gas in a Box.nlogox"){
     observer >> "random-seed 571  setup  repeat 50 [ go ]"
     reporter("avg-speed") -> 9.760082324073991
   }
