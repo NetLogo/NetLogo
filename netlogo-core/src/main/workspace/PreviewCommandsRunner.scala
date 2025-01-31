@@ -65,7 +65,7 @@ object PreviewCommandsRunner {
         // way widgets behave when there is an error in the code tab.
         // And in the unlikely case where the preview commands don't depend on
         // the rest of the model, they'll work. NP 2016-01-12
-        newWorkspace(_.openString(FileIO.getResourceAsString("/system/empty.nlogo")))
+        newWorkspace(_.openString(FileIO.getResourceAsString("/system/empty.nlogox")))
     }
     previewCommands.foreach(ws.setPreviewCommands(_))
     ws

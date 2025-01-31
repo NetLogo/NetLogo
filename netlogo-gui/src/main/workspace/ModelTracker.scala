@@ -135,6 +135,7 @@ trait ModelTracker {
           if (getModelType == ModelType.New) "Untitled"
           else if (name.endsWith(".nlogo")) name.stripSuffix(".nlogo")
           else if (name.endsWith(".nlogo3d")) name.stripSuffix(".nlogo3d")
+          else if (name.endsWith(".nlogox")) name.stripSuffix(".nlogox")
           else name)
       .getOrElse("Untitled")
 }

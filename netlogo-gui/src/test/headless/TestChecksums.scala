@@ -129,7 +129,7 @@ class ChecksumTester(info: String => Unit) {
     }
     new java.io.File("tmp").mkdir()
     new java.io.File("tmp/TestChecksums").mkdir()
-    workspace.exportView("tmp/TestChecksums/" + model.substring(model.lastIndexOf('/'), model.lastIndexOf(".nlogo")) + ".png",
+    workspace.exportView("tmp/TestChecksums/" + model.substring(model.lastIndexOf('/'), model.lastIndexOf(".nlogox")) + ".png",
       "PNG")
     workspace.dispose()
   }

@@ -36,7 +36,7 @@ object ModelsLibrary {
   def modelFiles(directory: File): Seq[Path] = {
     val dirPath = directory.toPath
     FileActions.enumeratePaths(dirPath)
-      .filter(p => p.getFileName.toString.endsWith(".nlogo") || p.getFileName.toString.endsWith(".nlogo3d"))
+      .filter(p => p.getFileName.toString.endsWith(".nlogox"))
   }
 
   lazy val settings = Seq(
@@ -67,9 +67,9 @@ object ModelsLibrary {
       .enumeratePaths(modelsPath.toPath)
       .filterNot(p => p.toString.contains("test"))
       .filterNot(p => Files.isDirectory(p))
-      .filter(p => p.getFileName.toString.endsWith("nlogo") || p.getFileName.toString.endsWith("nlogo3d"))
+      .filter(p => p.getFileName.toString.endsWith("nlogox"))
     def infoTab(path: Path) = try {
-      Files.readAllLines(path).asScala.mkString("\n").split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n")(2)
+      InfoExtractor(Files.readAllLines(path).asScala.mkString("\n"))
     } catch {
       case e: Exception =>
         logger.error(s"while generating index, encountered error on file $path : ${e.getMessage}")

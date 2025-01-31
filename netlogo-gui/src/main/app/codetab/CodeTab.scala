@@ -36,7 +36,7 @@ with MenuTab {
         tabs.smartTabbingEnabled = tabbing.isSelected
       }
     })
-  
+
   private val separate: JCheckBox = new JCheckBox(
     new AbstractAction(I18N.gui.get("tabs.code.separateCodeWindow")) {
       def actionPerformed(e: ActionEvent) {
@@ -153,7 +153,7 @@ with MenuTab {
     val path = Option(workspace.getModelPath).getOrElse{
       // we create an arbitrary model name for checking include paths when we don't have an actual
       // modelPath or directory
-      try workspace.attachModelDir("foo.nlogo")
+      try workspace.attachModelDir("foo.nlogox")
       catch {
         case ex: MalformedURLException =>
           // if we can't even figure out where we are, we certainly can't have includes

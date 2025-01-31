@@ -80,7 +80,7 @@ class TestMirroringModels extends AnyFunSuite  {
 
   for {
     path <- checksums.values.map(_.path).toSet
-    if !exclusions.exists(name => path.endsWith(name + ".nlogo"))
+    if !exclusions.exists(name => path.endsWith(name + ".nlogox"))
     if !moreExclusions.exists(name => path.containsSlice(name))
   } test("Mirroring: " + path, SlowTest.Tag) {
     modelRenderingTest(path)

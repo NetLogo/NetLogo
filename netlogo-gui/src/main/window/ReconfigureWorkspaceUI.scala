@@ -25,7 +25,7 @@ object ReconfigureWorkspaceUI {
     def loadHelper( modelURI: URI, modelType: ModelType, model: Model, compilerServices: CompilerServices
                   , shouldAutoInstallLibs: Boolean = false) {
       val uriOption = Try(Paths.get(modelURI)).toOption
-        .filterNot(p => p.getFileName.toString.startsWith("empty.nlogo"))
+        .filterNot(p => p.getFileName.toString.startsWith("empty.nlogox"))
         .filter(p => Files.isRegularFile(p))
         .map(_.toString)
       val beforeEvents = List(

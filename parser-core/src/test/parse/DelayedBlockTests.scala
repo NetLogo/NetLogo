@@ -8,8 +8,8 @@ import PrimDSL._
 import org.scalatest.funsuite.AnyFunSuite
 
 class DelayedBlockTests extends AnyFunSuite {
-  val openBracket  = new Token("[", TokenType.OpenBracket, null)(SourceLocation(5, 6, "file.nlogo"))
-  val closeBracket = new Token("]", TokenType.CloseBracket, null)(SourceLocation(14, 15, "file.nlogo"))
+  val openBracket  = new Token("[", TokenType.OpenBracket, null)(SourceLocation(5, 6, "file.nlogox"))
+  val closeBracket = new Token("]", TokenType.CloseBracket, null)(SourceLocation(14, 15, "file.nlogox"))
   val unterminatedTokens = Seq(unid("foo"), unid("bar"), closeBracket)
   val arrowTokens = Seq(`[`, unid("foo"), `]`, `->`, unid("foo"), closeBracket)
 

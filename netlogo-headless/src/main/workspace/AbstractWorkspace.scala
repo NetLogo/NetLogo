@@ -37,14 +37,11 @@ object AbstractWorkspace {
     if (str == null)
       "Untitled"
     else {
-      var result = str
-      var suffixIndex = str.lastIndexOf(".nlogo")
-      if (suffixIndex > 0 && suffixIndex == result.size - 6)
-        result = result.substring(0, result.size - 6)
-      suffixIndex = result.lastIndexOf(".nlogo3d")
-      if (suffixIndex > 0 && suffixIndex == result.size - 8)
-        result = result.substring(0, str.size - 8)
-      result
+      val suffixIndex = str.lastIndexOf(".nlogo")
+      if (suffixIndex > 0)
+        str.substring(0, suffixIndex)
+      else
+        str
     }
 
   def setHeadlessProperty() {
@@ -466,7 +463,7 @@ object AbstractWorkspaceTraits {
      * name of the currently loaded model. Will be null if this is a new
      * (unsaved) model. To get a version for display to the user, see
      * modelNameForDisplay(). This is NOT a full path name, however, it does
-     * end in ".nlogo".
+     * end in ".nlogox".
      */
     private var _modelFileName: String = null
 

@@ -16,7 +16,7 @@ object HeadlessBenchmarker {
     println("@@@@@@ warmup " + minTime + " seconds, min " + minTime + " seconds, max " + maxTime + " seconds")
     val workspace = HeadlessWorkspace.newInstance
     try {
-      workspace.open("../models/test/benchmarks/" + name + " Benchmark.nlogo")
+      workspace.open("../models/test/benchmarks/" + name + " Benchmark.nlogox")
       Benchmarker.benchmark(workspace,minTime,maxTime)
     }
     finally { workspace.dispose() }

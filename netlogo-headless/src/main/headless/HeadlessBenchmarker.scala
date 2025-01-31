@@ -19,7 +19,7 @@ object HeadlessBenchmarker {
     val workspace = HeadlessWorkspace.newInstance
     workspace.silent = true
     try {
-      workspace.open("../models/test/benchmarks/" + name + " Benchmark.nlogo")
+      workspace.open("../models/test/benchmarks/" + name + " Benchmark.nlogox")
       Benchmarker.benchmark(workspace,minTime,maxTime)
     }
     finally { workspace.dispose() }

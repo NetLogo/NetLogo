@@ -45,7 +45,7 @@ class OpenModelTests extends AnyFunSuite {
   } }
 
   test("if the model doesn't exist, doesn't continue loading") { new OpenTest {
-    override val uri = Paths.get("test/fileformat/does-not-exist.nlogo").toUri
+    override val uri = Paths.get("test/fileformat/does-not-exist.nlogox").toUri
     assert(openedModel.isEmpty)
   } }
 

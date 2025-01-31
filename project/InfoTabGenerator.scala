@@ -1,33 +1,8 @@
-import java.io.StringReader
-import javax.xml.stream.{ XMLInputFactory, XMLStreamConstants }
-
 import sbt._
 
 object InfoTabGenerator {
-  def apply(model: File): String = {
-    val sourceReader = new StringReader(IO.read(model))
-    val reader = {
-      val factory = XMLInputFactory.newFactory
-
-      factory.setProperty("javax.xml.stream.isCoalescing", true)
-
-      factory.createXMLStreamReader(sourceReader)
-    }
-
-    while (reader.hasNext && reader.next != XMLStreamConstants.START_ELEMENT) {}
-
-    var infoText = ""
-
-    while (reader.hasNext && infoText.isEmpty) {
-      if (reader.next == XMLStreamConstants.START_ELEMENT && reader.getLocalName == "info")
-        infoText = reader.getElementText
-    }
-
-    reader.close()
-    sourceReader.close()
-
-    Markdown(Preprocessor.convert(infoText), "", extension = false)
-  }
+  def apply(model: File): String =
+    Markdown(Preprocessor.convert(InfoExtractor(IO.read(model))), "", extension = false)
 
   // runs on the wiki text, before it gets converted to HTML
   object Preprocessor {

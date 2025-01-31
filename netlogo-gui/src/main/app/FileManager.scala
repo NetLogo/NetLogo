@@ -170,7 +170,11 @@ object FileManager {
     def suggestedFileName: String = {
       if (workspace.getModelType == ModelType.New) {
         manager.saveModel(false)
-        workspace.getModelFileName.stripSuffix(".nlogo") + ".html"
+        val index = workspace.getModelFileName.lastIndexOf(".nlogo")
+        if (index == -1)
+          workspace.getModelFileName
+        else
+          workspace.getModelFileName.substring(0, index) + ".html"
       } else
         workspace.modelNameForDisplay + ".html"
     }
@@ -179,9 +183,9 @@ object FileManager {
     @throws(classOf[IOException])
     def modelToSave: String = {
       if (doesNotMatchWorkingCopy && userWantsLastSaveExported())
-        modelSaver.modelAsString(modelSaver.priorModel, "nlogo")
+        modelSaver.modelAsString(modelSaver.priorModel, "nlogox")
       else
-        modelSaver.modelAsString(modelSaver.currentModel, "nlogo")
+        modelSaver.modelAsString(modelSaver.currentModel, "nlogox")
     }
 
     @throws(classOf[UserCancelException])
