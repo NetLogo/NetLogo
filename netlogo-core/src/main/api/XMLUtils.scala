@@ -18,8 +18,6 @@ class XMLWriter(dest: Writer) {
 
   def startDocument() {
     writer.writeStartDocument("utf-8", "1.0")
-    writer.writeCharacters("\n")
-    writer.writeComment(" WARNING: All text sections in this file must use &lt; in place of <, &gt; in place of >, and &amp; in place of & ")
   }
 
   def startElement(name: String) {
@@ -40,7 +38,10 @@ class XMLWriter(dest: Writer) {
   }
 
   def escapedText(text: String) {
-    writer.writeCharacters(text)
+    if (text.contains('<') || text.contains('>') || text.contains('&'))
+      writer.writeCData("]]>".r.replaceAllIn(text, s"]]${XMLElement.CDataEscape}>"))
+    else
+      writer.writeCharacters(text)
   }
 
   def endElement(name: String) {
@@ -116,7 +117,7 @@ object XMLReader {
               if (reader.isWhiteSpace)
                 parseElement(acc)
               else
-                parseElement(acc.copy(text = reader.getText))
+                parseElement(acc.copy(text = s"]]${XMLElement.CDataEscape}>".r.replaceAllIn(reader.getText, "]]>")))
             case x =>
               Failure(throw new Exception(s"Unexpected value found while parsing XML: ${x}"))
           }
