@@ -767,9 +767,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
   }
 
-  def addingWidget: Boolean =
-    interactMode == InteractMode.ADD
-
   def editWidgetFinished(target: Editable, canceled: Boolean): Unit = {
     target match {
       case comp: Component =>
