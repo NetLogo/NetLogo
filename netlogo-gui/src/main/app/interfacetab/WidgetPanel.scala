@@ -417,7 +417,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
   def mousePressed(e: MouseEvent): Unit = {
     interactMode match {
       case InteractMode.INTERACT =>
-        if (e.getButton == MouseEvent.BUTTON1) {
+        if (e.isPopupTrigger)
+          doPopup(e)
+        else if (e.getButton == MouseEvent.BUTTON1) {
           // this is so the user can use action keys to control buttons
           // - ST 8/6/04,8/31/04
           requestFocus()
@@ -428,7 +430,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
         }
 
       case InteractMode.SELECT =>
-        if (e.getButton == MouseEvent.BUTTON1) {
+        if (e.isPopupTrigger)
+          doPopup(e)
+        else if (e.getButton == MouseEvent.BUTTON1) {
           requestFocus()
 
           if (NlogoMouse.hasCtrl(e))
