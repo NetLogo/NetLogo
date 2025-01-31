@@ -357,6 +357,13 @@ class WidgetPanel(val workspace: GUIWorkspace)
       }
 
       else {
+        val dx = e.getX - startDragPoint.x
+        val dy = e.getY - startDragPoint.y
+
+        // this check reduces the likelihood that a click is registered as a drag (Isaac B 1/30/25)
+        if (dx * dx + dy * dy < 25)
+          return
+
         interactMode match {
           case InteractMode.SELECT =>
             if (!selectionPane.isVisible) {
