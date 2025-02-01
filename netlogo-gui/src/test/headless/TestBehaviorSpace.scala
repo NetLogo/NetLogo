@@ -262,11 +262,11 @@ with OneInstancePerTest with BeforeAndAfterEach {
     }
   if (!Version.is3D)
     test("ModelWithIncludedExperiments", SlowTest.Tag) {
-      runExperimentFromModel("test/lab/FireWithExperiments.nlogox", "test1", "test/lab/FireWithExperiments1")
-      runExperimentFromModel("test/lab/FireWithExperiments.nlogox", "test2", "test/lab/FireWithExperiments2")
-      runExperimentFromModel("test/lab/FireWithExperiments.nlogox", "test3", "test/lab/FireWithExperiments3")
-      runExperimentFromModel("test/lab/FireWithExperiments.nlogox", "test4", "test/lab/FireWithExperiments4")
-      runExperimentFromModel("test/lab/FireWithExperiments.nlogox", "test5", "test/lab/FireWithExperiments5")
+      runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "test1", "test/lab/FireWithExperiments1")
+      runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "test2", "test/lab/FireWithExperiments2")
+      runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "test3", "test/lab/FireWithExperiments3")
+      runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "test4", "test/lab/FireWithExperiments4")
+      runExperimentFromModel("test/lab/FireWithExperiments.nlogo", "test5", "test/lab/FireWithExperiments5")
     }
   if (!Version.is3D)
     test("ResizingWorld3", SlowTest.Tag) {
@@ -313,7 +313,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
       runParallelExperiment("metricGoBoom2", goBoom2Declarations)
     }
     test("metricGoBoom2-parallel-from-model", SlowTest.Tag) {
-      runExperimentFromModel("test/lab/metricGoBoom2.nlogox", "experiment", "test/lab/metricGoBoom2", wantTable = false,
+      runExperimentFromModel("test/lab/metricGoBoom2.nlogo", "experiment", "test/lab/metricGoBoom2", wantTable = false,
                              threads = Runtime.getRuntime.availableProcessors)
     }
   }
