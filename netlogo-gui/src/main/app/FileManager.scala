@@ -380,7 +380,8 @@ class FileManager(workspace: AbstractWorkspaceScala,
   @throws(classOf[UserCancelException])
   private[app] def saveModel(saveAs: Boolean): Unit = {
     val saveThunk = {
-      val saveModel = if (saveAs) SaveModelAs else SaveModel
+      val newFormat = workspace.getModelFileName != null && workspace.getModelFileName.endsWith(".nlogox")
+      val saveModel = if (saveAs || !newFormat) SaveModelAs else SaveModel
       saveModel(currentModel, modelLoader, controller, workspace, Version)
     }
 
