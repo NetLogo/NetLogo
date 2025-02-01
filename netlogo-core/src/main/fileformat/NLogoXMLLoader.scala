@@ -78,7 +78,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
                 case (model, el @ XMLElement("linkShapes", _, _, _)) =>
                   model.map(_.copy(linkShapes = el.getChildren("shape").map(ShapeXMLLoader.readLinkShape)))
                 case (model, XMLElement("previewCommands", _, commands, _)) =>
-                  val section = new Section("org.nlogo.modelsection.previewcommands", PreviewCommands.Custom(commands))
+                  val section = new Section("org.nlogo.modelsection.previewcommands", PreviewCommands(commands))
                   model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
                 case (model, el @ XMLElement("systemDynamics", _, _, _)) =>
                   val section = new Section("org.nlogo.modelsection.systemdynamics.gui",
