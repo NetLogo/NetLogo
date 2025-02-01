@@ -366,7 +366,8 @@ with org.nlogo.workspace.WorldLoaderInterface {
   }
 
   private lazy val loader = {
-    FileFormat.basicLoader.addSerializer[Array[String], NLogoFormat](new NLogoPreviewCommandsFormat())
+    FileFormat.standardAnyLoader(true, parser)
+      .addSerializer[Array[String], NLogoFormat](new NLogoPreviewCommandsFormat())
   }
 
   /// Controlling API methods

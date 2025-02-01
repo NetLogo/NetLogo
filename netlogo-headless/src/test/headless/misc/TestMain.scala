@@ -97,9 +97,7 @@ class TestMain extends AnyFunSuite {
     // version number varies, date and time varies, compare carefully!
     assertResult(expected.replaceFirst("VERSION", api.Version.version)
                           .replaceFirst("EXPORTER_VERSION", api.LabExporterVersion.version))(
-      out.replaceAll(
-        """"\d\d/\d\d/\d\d\d\d \d\d:\d\d:\d\d:\d\d\d .\d\d\d\d"\n""",
-        ""))
+      out.replaceFirst(out.split("\n")(3) + "\n", ""))
   }
 
 }
