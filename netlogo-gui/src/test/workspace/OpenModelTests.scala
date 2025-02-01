@@ -20,7 +20,7 @@ class OpenModelTests extends AnyFunSuite {
   trait OpenTest {
     val uri: URI = testURI
     def modelChanges: Model => Model = identity
-    def currentVersion = "NetLogo 7.0"
+    def currentVersion = "NetLogo 7.0.0"
     def autoconverter: ModelConversion = FileFormat.defaultConverter
 
     def userContinuesOpen() = controller.openModel(true)
