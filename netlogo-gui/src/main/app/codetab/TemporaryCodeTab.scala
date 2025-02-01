@@ -16,7 +16,6 @@ import org.nlogo.swing.{ FileDialog => SwingFileDialog, ToolBarActionButton }
 import org.nlogo.window.{ Events => WindowEvents, ExternalFileInterface }
 import org.nlogo.workspace.{ AbstractWorkspace, ModelTracker }
 
-import scala.io.Codec
 import scala.util.control.Exception.ignoring
 import scala.util.matching.Regex
 
@@ -53,7 +52,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
 
     filename.right foreach { path =>
       try {
-        innerSource = FileIO.fileToString(path)(Codec.UTF8).replaceAll("\r\n", "\n")
+        innerSource = FileIO.fileToString(path).replaceAll("\r\n", "\n")
         dirty = false // Has the buffer changed since it was compiled?
         saveNeeded = false
         loaded = true

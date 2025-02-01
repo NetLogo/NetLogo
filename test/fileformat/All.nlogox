@@ -928,10 +928,10 @@ string</input>
   </linkShapes>
   <previewCommands>setup repeat 75 [ go ]</previewCommands>
   <systemDynamics dt="1.2">
-    <stock x="143" name="random-stock" y="133" allowNegative="true" initialValue="42"></stock>
-    <converter name="var42" expression="random-stock + 42" x="365" y="126"></converter>
+    <stock x="143" name="random-stock" y="133" allowNegative="true">42</stock>
+    <converter name="var42" x="365" y="126">random-stock + 42</converter>
     <binding startFigure="0" endFigure="1"></binding>
     <reservoir x="83" y="35"></reservoir>
-    <rate name="flower" startFigure="3" bivalent="false" expression="-42" endFigure="0"></rate>
+    <rate name="flower" startFigure="3" bivalent="false" endFigure="0">-42</rate>
   </systemDynamics>
 </model>

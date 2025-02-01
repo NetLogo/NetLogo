@@ -8,7 +8,6 @@ import java.nio.file.{ Path, Paths }
 import java.util.zip.{ ZipEntry, ZipOutputStream }
 
 import collection.JavaConverters._
-import scala.io.Codec
 
 import org.nlogo.api.{ Equality, NetLogoAdapter, Version }
 import org.nlogo.api.Exceptions.{ ignoring, warning }
@@ -155,7 +154,7 @@ object LogManager {
             ignoring(classOf[IOException]) {
               zipStream.putNextEntry(new ZipEntry(logFileName))
               val logFilePath = LogManager.state.logDirectoryPath.resolve(logFileName).toAbsolutePath
-              val logFileData = fileToString(logFilePath.toString)(Codec.UTF8).getBytes
+              val logFileData = fileToString(logFilePath.toString).getBytes
               zipStream.write(logFileData, 0, logFileData.length)
               zipStream.closeEntry()
             }

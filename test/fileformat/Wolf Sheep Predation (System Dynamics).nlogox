@@ -813,20 +813,20 @@ Commercial licenses are also available. To inquire about commercial licenses, pl
   </linkShapes>
   <previewCommands>need-to-manually-make-preview-for-this-model</previewCommands>
   <systemDynamics dt="0.001">
-    <stock x="233" name="sheep" y="88" allowNegative="false" initialValue="100"></stock>
-    <stock x="279" name="wolves" y="275" allowNegative="false" initialValue="30"></stock>
+    <stock name="sheep" allowNegative="false" x="233" y="88">100</stock>
+    <stock name="wolves" allowNegative="false" x="279" y="275">30</stock>
     <reservoir x="39" y="92"></reservoir>
     <reservoir x="38" y="284"></reservoir>
     <reservoir x="487" y="96"></reservoir>
     <reservoir x="487" y="278"></reservoir>
-    <rate name="sheep-births" startFigure="2" bivalent="false" expression="sheep-birth-rate * sheep" endFigure="0"></rate>
-    <rate name="sheep-deaths" startFigure="0" bivalent="false" expression="sheep * predation-rate * wolves" endFigure="4"></rate>
-    <rate name="wolf-births" startFigure="3" bivalent="false" expression="wolves * predator-efficiency * predation-rate * sheep" endFigure="1"></rate>
-    <rate name="wolf-deaths" startFigure="1" bivalent="false" expression="wolves * wolf-death-rate" endFigure="5"></rate>
-    <converter name="sheep-birth-rate" expression=".04" x="29" y="174"></converter>
-    <converter name="predation-rate" expression="3.0E-4" x="233" y="175"></converter>
-    <converter name="predator-efficiency" expression=".8" x="97" y="371"></converter>
-    <converter name="wolf-death-rate" expression="0.15" x="337" y="372"></converter>
+    <rate name="sheep-births" bivalent="false" startFigure="2" endFigure="0">sheep-birth-rate * sheep</rate>
+    <rate name="sheep-deaths" bivalent="false" startFigure="0" endFigure="4">sheep * predation-rate * wolves</rate>
+    <rate name="wolf-births" bivalent="false" startFigure="3" endFigure="1">wolves * predator-efficiency * predation-rate * sheep</rate>
+    <rate name="wolf-deaths" bivalent="false" startFigure="1" endFigure="5">wolves * wolf-death-rate</rate>
+    <converter name="sheep-birth-rate" x="29" y="174">.04</converter>
+    <converter name="predation-rate" x="233" y="175">3.0E-4</converter>
+    <converter name="predator-efficiency" x="97" y="371">.8</converter>
+    <converter name="wolf-death-rate" x="337" y="372">0.15</converter>
     <binding startFigure="10" endFigure="6"></binding>
     <binding startFigure="0" endFigure="6"></binding>
     <binding startFigure="11" endFigure="7"></binding>
