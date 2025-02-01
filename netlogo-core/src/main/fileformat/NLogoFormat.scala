@@ -132,7 +132,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
   }
 
   def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])] =
-    Failure(new Exception) // fix after compile
+    Failure(new Exception) // this is not supported
 
   def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
     Try {
