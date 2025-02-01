@@ -19,7 +19,7 @@ class TestModelNetLogoVersions extends AnyFunSuite with SlowTest {
     test("model version: " + path, SlowTest.Tag) {
       // if this test suddenly starts failing, make sure all models are the most current version
       val literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
-      val loader = FileFormat.standardAnyLoader(literalParser, false)
+      val loader = FileFormat.standardAnyLoader(false, literalParser, false)
 
       // 5.x.nlogo is a LS is a test model for checking the graceful handling of version problems.
       if (!path.endsWith("5.x.nlogo")) {

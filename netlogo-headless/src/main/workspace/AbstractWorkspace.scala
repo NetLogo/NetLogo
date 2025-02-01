@@ -38,8 +38,16 @@ object AbstractWorkspace {
       "Untitled"
     else {
       val suffixIndex = str.lastIndexOf(".nlogo")
-      if (suffixIndex > 0)
-        str.substring(0, suffixIndex)
+
+      if (suffixIndex > 0) {
+        val suffix = str.substring(suffixIndex)
+
+        if (suffix == ".nlogo" || suffix == ".nlogo3d" || suffix == ".nlogox")
+          str.substring(0, suffixIndex)
+        else
+          str
+      }
+
       else
         str
     }

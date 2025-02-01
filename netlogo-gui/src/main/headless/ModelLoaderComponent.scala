@@ -17,7 +17,7 @@ class ModelLoaderComponent extends AbstractAdapter[AbstractModelLoader](classOf[
   override def getComponentInstance(container: PicoContainer, into: java.lang.reflect.Type) = {
     val compiler         = container.getComponent(classOf[PresentationCompilerInterface])
     val compilerServices = new DefaultCompilerServices(compiler)
-    FileFormat.standardAnyLoader(compilerServices, true)
+    FileFormat.standardAnyLoader(true, compilerServices, true)
   }
 
 }
@@ -33,7 +33,7 @@ class LegacyModelLoaderComponent extends AbstractAdapter[AbstractModelLoader](cl
 
     val compiler             = container.getComponent(classOf[PresentationCompilerInterface])
     val compilerServices     = new DefaultCompilerServices(compiler)
-    val loader               = FileFormat.standardAnyLoader(compilerServices, true)
+    val loader               = FileFormat.standardAnyLoader(true, compilerServices, true)
     val additionalComponents = container.getComponents(classOf[ComponentSerialization[Array[String], NLogoFormat]]).asScala
 
     if (additionalComponents.nonEmpty)
