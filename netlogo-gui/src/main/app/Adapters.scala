@@ -28,7 +28,7 @@ object Adapters {
       val compiler = container.getComponent(classOf[PresentationCompilerInterface])
       val compilerServices = new DefaultCompilerServices(compiler)
 
-      val loader: ConfigurableModelLoader = FileFormat.standardAnyLoader(compilerServices, true)
+      val loader: ConfigurableModelLoader = FileFormat.standardAnyLoader(false, compilerServices, true)
 
       val components = container.getComponents(classOf[AddableComponent]).asScala
 
@@ -52,7 +52,7 @@ object Adapters {
     override def getComponentInstance(container: PicoContainer, into: JType): AbstractModelLoader = {
       val compiler = container.getComponent(classOf[PresentationCompilerInterface])
       val compilerServices = new DefaultCompilerServices(compiler)
-      FileFormat.standardXMLLoader(compilerServices, true)
+      FileFormat.standardXMLLoader(false, compilerServices, true)
     }
 
   }

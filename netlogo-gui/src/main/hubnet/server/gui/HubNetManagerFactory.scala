@@ -22,7 +22,7 @@ class HubNetManagerFactory(linkParent: Component,
           , workspace.getCompilationEnvironment
           , workspace
           , FileFormat.defaultAutoConvertables) _
-        val loader = FileFormat.standardAnyLoader(workspace)
+        val loader = FileFormat.standardAnyLoader(false, workspace)
         new GUIHubNetManager(g, linkParent, ifactory, menuFactory, loader, converter(NetLogoLegacyDialect))
       case _ => throw new Exception("Expected GUIWorkspace, got: " + workspace)
     }

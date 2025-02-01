@@ -1,6 +1,5 @@
 package org.nlogo.tools
 
-import java.net.URI
 import java.nio.file.{ Files, FileVisitor, FileVisitResult, Path, Paths }
 
 import scala.util.{ Failure, Success }
@@ -13,7 +12,8 @@ import org.nlogo.workspace.{ OpenModel, OpenModelFromURI, SaveModel },
 import org.nlogo.fileformat.{ FailedConversionResult, FileFormat, NLogoFormat }
 import org.nlogo.workspace.ModelsLibrary.modelsRoot
 import org.nlogo.headless.HeadlessWorkspace
-import org.nlogo.sdm.{ NLogoSDMFormat, SDMAutoConvertable }
+import org.nlogo.sdm.SDMAutoConvertable
+import org.nlogo.sdm.gui.NLogoGuiSDMFormat
 
 /**
  *
@@ -61,15 +61,19 @@ object ModelResaver {
         FileFormat.converter(ws.getExtensionManager, ws.getLibraryManager, ws.getCompilationEnvironment,
           literalParser, FileFormat.defaultAutoConvertables :+ SDMAutoConvertable) _
       val modelLoader =
-        FileFormat.standardAnyLoader(ws.compiler.utilities)
-          .addSerializer[Array[String], NLogoFormat](new NLogoSDMFormat())
-      val controller = new ResaveController(modelPath.toUri)
+        FileFormat.standardAnyLoader(false, ws.compiler.utilities)
+          .addSerializer[Array[String], NLogoFormat](new NLogoGuiSDMFormat())
+      val controller = new ResaveController(modelPath.toString)
       val dialect =
         if (modelPath.toString.toUpperCase.endsWith("3D")) NetLogoThreeDDialect
         else NetLogoLegacyDialect
       OpenModelFromURI(modelPath.toUri, controller, modelLoader, converter(dialect), Version).foreach { model =>
         SaveModel(model, modelLoader, controller, ws, Version).map(_.apply()) match {
-          case Some(Success(u)) => println("resaved: " + u)
+          case Some(Success(u)) =>
+            println("resaved: " + u)
+
+            if (u != modelPath.toUri)
+              Files.delete(modelPath)
           case Some(Failure(e)) => println("errored resaving: " + modelPath.toString + " " + e.toString)
           case None => println("failed to resave: " + modelPath.toString)
         }
@@ -86,7 +90,7 @@ object ModelResaver {
   class ResaveVisitor(resave: Path => Unit) extends FileVisitor[Path] {
     import java.nio.file.attribute.BasicFileAttributes
 
-    val excludeFolders = Seq("TEST", "BIN", "PROJECT", "SRC")
+    val excludeFolders = Seq("BIN", "PROJECT", "SRC")
 
     def postVisitDirectory(path: Path, error: java.io.IOException): FileVisitResult = {
       if (error != null) throw error
@@ -102,7 +106,12 @@ object ModelResaver {
     }
 
     def visitFile(path: Path, attrs: BasicFileAttributes): FileVisitResult = {
-      if (path.getFileName.toString.endsWith(".nlogox"))
+      val name = path.getFileName.toString
+      if (name.endsWith(".nlogox"))
+        resave(path)
+      else if (Version.is3D && name.endsWith(".nlogo3d"))
+        resave(path)
+      else if (!Version.is3D && name.endsWith(".nlogo"))
         resave(path)
       FileVisitResult.CONTINUE
     }
@@ -113,10 +122,10 @@ object ModelResaver {
     }
   }
 
-  class ResaveController(path: URI) extends OpenModelController with SaveModelController {
+  class ResaveController(path: String) extends OpenModelController with SaveModelController {
     // SaveModelController
     def chooseFilePath(modelType: org.nlogo.api.ModelType): Option[java.net.URI] = {
-      Some(path)
+      Some(Paths.get("(.nlogo3d|.nlogo)$".r.replaceAllIn(path, ".nlogox")).toUri)
     }
     def shouldSaveModelOfDifferingVersion(version: String): Boolean = true
     def warnInvalidFileFormat(format: String): Unit = {

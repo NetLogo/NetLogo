@@ -13,7 +13,7 @@ import org.nlogo.core.{ DummyView, ExternalResource, Femto, LiteralParser, Model
 import scala.io.{ Codec, Source }
 import scala.util.{ Failure, Success, Try }
 
-class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends AbstractModelLoader {
+class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames: Boolean) extends AbstractModelLoader {
 
   private implicit val codec = Codec("UTF-8")
 
@@ -81,8 +81,17 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
                   val section = new Section("org.nlogo.modelsection.previewcommands", PreviewCommands(commands))
                   model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
                 case (model, el @ XMLElement("systemDynamics", _, _, _)) =>
-                  val section = new Section("org.nlogo.modelsection.systemdynamics.gui",
-                    Femto.get[AggregateDrawingInterface]("org.nlogo.sdm.gui.AggregateDrawing").read(el))
+                  val section = {
+                    if (headless) {
+                      new Section("org.nlogo.modelsection.systemdynamics",
+                        Femto.get[AggregateDrawingInterface]("org.nlogo.sdm.Model").read(el))
+                    }
+
+                    else {
+                      new Section("org.nlogo.modelsection.systemdynamics.gui",
+                        Femto.get[AggregateDrawingInterface]("org.nlogo.sdm.gui.AggregateDrawing").read(el))
+                    }
+                  }
                   model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
                 case (model, XMLElement("experiments", _, _, children)) =>
                   val (bspaceElems, _) = children.foldLeft((Seq[LabProtocol](), Set[String]())) {
@@ -159,7 +168,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
           writer.element(section.get.get.asInstanceOf[AggregateDrawingInterface].write())
 
         case "org.nlogo.modelsection.systemdynamics" =>
-          // duplicate of previous section, but appears in some models
+          // only applies to headless
 
         case "org.nlogo.modelsection.behaviorspace" =>
           section.get.map(section => {
@@ -213,7 +222,7 @@ class NLogoXMLLoader(literalParser: LiteralParser, editNames: Boolean) extends A
 
   def save(model: Model, uri: URI): Try[URI] = {
     if (isCompatible(uri)) {
-      val writer = new PrintWriter(new File(uri))
+      val writer = new PrintWriter(new File(uri), "UTF-8")
       saveToWriter(model, writer)
       writer.close()
       Success(uri)

@@ -482,7 +482,7 @@ with org.nlogo.api.ViewSettings {
   }
 
   private lazy val loader = {
-    FileFormat.standardAnyLoader(compiler.utilities)
+    FileFormat.standardAnyLoader(true, compiler.utilities)
       .addSerializer[Array[String], NLogoFormat](
         Femto.get[ComponentSerialization[Array[String], NLogoFormat]]("org.nlogo.sdm.NLogoSDMFormat"))
       .addSerializer[Array[String], NLogoThreeDFormat](

@@ -43,34 +43,34 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
   def read(element: XMLElement): AnyRef = {
     model.setDt(element("dt").toDouble)
 
-    element.children.foldLeft(Seq[Figure]()) {
+    val (refs, conns) = element.children.foldLeft((Seq[Figure](), Map[Figure, (Int, Int)]())) {
 
-      case (refs, el @ XMLElement("stock", _, _, _)) =>
+      case ((refs, conns), el @ XMLElement("stock", _, text, _)) =>
         val stock = new StockFigure
 
         stock.nameWrapper(el("name"))
-        stock.initialValueExpressionWrapper(el("initialValue"))
+        stock.initialValueExpressionWrapper(text)
         stock.allowNegative(el("allowNegative").toBoolean)
         stock.displayBox( new Point(el("x").toInt, el("y").toInt)
                         , new Point(el("x").toInt + 60, el("y").toInt + 40))
 
         add(stock)
 
-        refs :+ stock
+        (refs :+ stock, conns)
 
-      case (refs, el @ XMLElement("converter", _, _, _)) =>
+      case ((refs, conns), el @ XMLElement("converter", _, text, _)) =>
         val converter = new ConverterFigure
 
         converter.nameWrapper(el("name"))
-        converter.expressionWrapper(el("expression"))
+        converter.expressionWrapper(text)
         converter.displayBox( new Point(el("x").toInt, el("y").toInt)
                             , new Point(el("x").toInt + 50, el("y").toInt + 50))
 
         add(converter)
 
-        refs :+ converter
+        (refs :+ converter, conns)
 
-      case (refs, el @ XMLElement("reservoir", _, _, _)) =>
+      case ((refs, conns), el @ XMLElement("reservoir", _, _, _)) =>
         val reservoir = new ReservoirFigure
 
         reservoir.displayBox( new Point(el("x").toInt, el("y").toInt)
@@ -78,13 +78,36 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
         add(reservoir)
 
-        refs :+ reservoir
+        (refs :+ reservoir, conns)
 
-      case (refs, el @ XMLElement("binding", _, _, _)) =>
+      case ((refs, conns), el @ XMLElement("binding", _, _, _)) =>
         val binding = new BindingConnection
 
-        val start = refs(el("startFigure").toInt)
-        val end = refs(el("endFigure").toInt)
+        add(binding)
+
+        (refs :+ binding, conns + (binding -> ((el("startFigure").toInt, el("endFigure").toInt))))
+
+      case ((refs, conns), el @ XMLElement("rate", _, text, _)) =>
+
+        val rate = new RateConnection
+
+        rate.nameWrapper(el("name"))
+        rate.expressionWrapper(text)
+        rate.bivalentWrapper(el("bivalent").toBoolean)
+
+        add(rate)
+
+        (refs :+ rate, conns + (rate -> ((el("startFigure").toInt, el("endFigure").toInt))))
+
+      case ((refs, conns), el @ XMLElement(otherName, _, _, _)) =>
+        throw new Exception(s"Unable to deserialize SDM node with name: ${otherName}")
+
+    }
+
+    conns.foreach {
+      case (binding: BindingConnection, conns) =>
+        val start = refs(conns._1)
+        val end = refs(conns._2)
 
         binding.startPoint(start.center.x, start.center.y)
         binding.endPoint(end.center.x, end.center.y)
@@ -94,20 +117,9 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
         binding.updateConnection()
 
-        add(binding)
-
-        refs :+ binding
-
-      case (refs, el @ XMLElement("rate", attrs, _, _)) =>
-
-        val rate = new RateConnection
-
-        rate.nameWrapper(el("name"))
-        rate.expressionWrapper(el("expression"))
-        rate.bivalentWrapper(el("bivalent").toBoolean)
-
-        val start = refs(el("startFigure").toInt)
-        val end = refs(el("endFigure").toInt)
+      case (rate: RateConnection, conns) =>
+        val start = refs(conns._1)
+        val end = refs(conns._2)
 
         rate.startPoint(start.center.x, start.center.y)
         rate.endPoint(end.center.x, end.center.y)
@@ -115,13 +127,7 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
         rate.connectStart(start.connectorAt(start.center.x, start.center.y))
         rate.connectEnd(end.connectorAt(end.center.x, end.center.y))
 
-        add(rate)
-
-        refs :+ rate
-
-      case (refs, el @ XMLElement(otherName, _, _, _)) =>
-        throw new Exception(s"Unable to deserialize SDM node with name: ${otherName}")
-
+      case _ =>
     }
 
     this
@@ -129,73 +135,78 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
   def write(): XMLElement = {
     type Kids = Seq[XMLElement]
-    type Refs = Map[Figure, Int]
 
-    def processFigure(refs: Refs): PartialFunction[Figure, (String, Map[String, String])] = {
+    var figs = figures
 
-      case stock: StockFigure =>
-        val attributes =
-          Map( "name"          -> stock.nameWrapper
-             , "initialValue"  -> stock.initialValueExpressionWrapper
-             , "allowNegative" -> stock.allowNegative.toString
-             , "x"             -> (stock.displayBox.x + 12).toString
-             , "y"             -> (stock.displayBox.y + 12).toString
-             )
-        ("stock", attributes)
+    def buildRefs(refs: Map[Figure, Int]): Map[Figure, Int] = {
+      if (figs.hasNextFigure)
+        buildRefs(refs + (figs.nextFigure -> refs.size))
+      else
+        refs
+    }
 
-      case converter: ConverterFigure =>
-        val attributes =
-          Map( "name"       -> converter.nameWrapper
-             , "expression" -> converter.expressionWrapper
-             , "x"          -> converter.displayBox.x.toString
-             , "y"          -> converter.displayBox.y.toString
-             )
-        ("converter", attributes)
+    val refs = buildRefs(Map())
 
-      case reservoir: ReservoirFigure =>
-        val attributes =
-          Map( "x" -> reservoir.displayBox.x.toString
-             , "y" -> reservoir.displayBox.y.toString
-             )
-        ("reservoir", attributes)
+    def processFigure(figure: Figure): XMLElement = {
 
-      case binding: BindingConnection =>
-        val attributes =
-          Map( "startFigure" -> refs(binding.startFigure).toString
-             , "endFigure"   -> refs(binding.endFigure).toString
-             )
-        ("binding", attributes)
+      figure match {
 
-      case rate: RateConnection =>
-        val attributes =
-          Map( "name"        -> rate.nameWrapper
-             , "expression"  -> rate.expressionWrapper
-             , "bivalent"    -> rate.bivalentWrapper.toString
-             , "startFigure" -> refs(rate.startFigure).toString
-             , "endFigure"   -> refs(rate.endFigure).toString
-             )
+        case stock: StockFigure =>
+          val attributes =
+            Map( "name"          -> stock.nameWrapper
+              , "allowNegative" -> stock.allowNegative.toString
+              , "x"             -> (stock.displayBox.x + 12).toString
+              , "y"             -> (stock.displayBox.y + 12).toString
+              )
+          XMLElement("stock", attributes, stock.initialValueExpressionWrapper, Seq())
 
-        ("rate", attributes)
+        case converter: ConverterFigure =>
+          val attributes =
+            Map( "name"       -> converter.nameWrapper
+              , "x"          -> converter.displayBox.x.toString
+              , "y"          -> converter.displayBox.y.toString
+              )
+          XMLElement("converter", attributes, converter.expressionWrapper, Seq())
+
+        case reservoir: ReservoirFigure =>
+          val attributes =
+            Map( "x" -> reservoir.displayBox.x.toString
+              , "y" -> reservoir.displayBox.y.toString
+              )
+          XMLElement("reservoir", attributes, "", Seq())
+
+        case binding: BindingConnection =>
+          val attributes =
+            Map( "startFigure" -> refs(binding.startFigure).toString
+              , "endFigure"   -> refs(binding.endFigure).toString
+              )
+          XMLElement("binding", attributes, "", Seq())
+
+        case rate: RateConnection =>
+          val attributes =
+            Map( "name"        -> rate.nameWrapper
+              , "bivalent"    -> rate.bivalentWrapper.toString
+              , "startFigure" -> refs(rate.startFigure).toString
+              , "endFigure"   -> refs(rate.endFigure).toString
+              )
+          XMLElement("rate", attributes, rate.expressionWrapper, Seq())
+
+      }
 
     }
 
-    val figs = figures
+    figs = figures
 
-    def iterateFigures: PartialFunction[(Kids, Refs), (Kids, Refs)] = {
-      case (children: Kids, refs: Refs) =>
-        if (figs.hasNextFigure) {
-          val figure            = figs.nextFigure
-          val (elemType, attrs) = processFigure(refs)(figure)
-          val cs                = children :+ XMLElement(elemType, attrs, "", Seq())
-          val rs                = refs + (figure -> refs.size)
-          iterateFigures((cs, rs))
-        } else {
-          (children, refs)
-        }
+    def iterateFigures: PartialFunction[Kids, Kids] = {
+      case (children: Kids) =>
+        if (figs.hasNextFigure)
+          iterateFigures(children :+ processFigure(figs.nextFigure))
+        else
+          children
     }
 
     val attributes    = Map("dt" -> model.dt.toString)
-    val (children, _) = iterateFigures((Seq(), Map()))
+    val children = iterateFigures(Seq())
 
     XMLElement("systemDynamics", attributes, "", children)
   }

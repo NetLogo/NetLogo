@@ -2,6 +2,8 @@
 
 package org.nlogo.sdm
 
+import org.nlogo.api.{ AggregateDrawingInterface, XMLElement }
+
 import scala.collection.mutable.ListBuffer
 
 object Model {
@@ -10,9 +12,10 @@ object Model {
 class Model(modelName: String,
   var dt: Double,
   val elements: ListBuffer[ModelElement] = new ListBuffer[ModelElement],
-  val serializedGUI: String = "") extends ModelElement(modelName) {
+  val serializedGUI: String = "") extends ModelElement(modelName) with AggregateDrawingInterface {
 
   def this(modelName: String, dt: Double) = this(modelName, dt, new ListBuffer[ModelElement], "")
+  def this() = this("default", 1)
 
   def getDt = dt
   @throws(classOf[Model.ModelException])
@@ -42,4 +45,65 @@ class Model(modelName: String,
     elements: ListBuffer[ModelElement] = elements,
     serializedGUI: String = serializedGUI) =
       new Model(name, dt, elements, serializedGUI)
+
+  def read(element: XMLElement): AnyRef = {
+    setDt(element("dt").toDouble)
+
+    val (refs, conns) = element.children.foldLeft((Seq[ModelElement](), Map[Rate, (Int, Int)]())) {
+      case ((refs, conns), el @ XMLElement("stock", _, text, _)) =>
+        val stock = new Stock
+
+        stock.setName(el("name"))
+        stock.setInitialValueExpression(text)
+        stock.setNonNegative(!el("allowNegative").toBoolean)
+
+        addElement(stock)
+
+        (refs :+ stock, conns)
+
+      case ((refs, conns), el @ XMLElement("converter", _, text, _)) =>
+        val converter = new Converter
+
+        converter.setName(el("name"))
+        converter.setExpression(text)
+
+        addElement(converter)
+
+        (refs :+ converter, conns)
+
+      case ((refs, conns), el @ XMLElement("rate", _, text, _)) =>
+        val rate = new Rate
+
+        rate.setName(el("name"))
+        rate.setExpression(text)
+
+        addElement(rate)
+
+        (refs :+ rate, conns + (rate -> ((el("startFigure").toInt, el("endFigure").toInt))))
+
+      case ((refs, conns), el @ XMLElement("reservoir", _, _, _)) =>
+        val reservoir = new Reservoir
+
+        (refs :+ reservoir, conns)
+
+      case ((refs, conns), el @ XMLElement("binding", _, _, _)) =>
+        (refs :+ null, conns)
+
+      case ((refs, conns), el @ XMLElement(otherName, _, _, _)) =>
+        throw new Exception(s"Unable to deserialize SDM node with name: ${otherName}")
+
+    }
+
+    conns.foreach {
+      case (rate, conn) =>
+        rate.setSource(refs(conn._1).asInstanceOf[Stock])
+        rate.setSink(refs(conn._2).asInstanceOf[Stock])
+    }
+
+    this
+  }
+
+  // not supported
+  def write(): XMLElement =
+    null
 }

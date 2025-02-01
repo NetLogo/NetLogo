@@ -10,8 +10,8 @@ import org.scalatest.funsuite.AnyFunSuite
 import scala.io.Source
 
 class XMLTester extends AnyFunSuite {
-  protected val loader = new NLogoXMLLoader(Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities"),
-                                            false)
+  protected val loader =
+    new NLogoXMLLoader(false, Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities"), false)
 
   protected def loadString(path: String): String =
     Source.fromFile(path, "UTF-8").getLines.mkString("\n")

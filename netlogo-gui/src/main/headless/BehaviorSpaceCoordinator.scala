@@ -61,7 +61,7 @@ object BehaviorSpaceCoordinator {
       , workspace.getCompilationEnvironment
       , literalParser
       , allAutoConvertables) _
-    val loader = FileFormat.standardAnyLoader(literalParser)
+    val loader = FileFormat.standardAnyLoader(true, literalParser)
     val modelConverter = converter(workspace.world.program.dialect)
 
     OpenModelFromURI(Paths.get(path).toUri, HeadlessFileController, loader, modelConverter, Version)
