@@ -20,8 +20,6 @@ import
 import java.io.InputStream
 import java.nio.file.Paths
 
-import scala.io.Codec
-
 /**
  * Companion object, and factory object, for the HeadlessWorkspace class.
  */
@@ -382,7 +380,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
   @throws(classOf[java.io.IOException])
   override def open(path: String, shouldAutoInstallLibs: Boolean) {
     setModelPath(path)
-    val modelContents = FileIO.fileToString(path)(Codec.UTF8)
+    val modelContents = FileIO.fileToString(path)
     try loader.readModel(Paths.get(path).toUri).foreach(m => openModel(m, shouldAutoInstallLibs))
     catch {
       case ex: CompilerException =>
