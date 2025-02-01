@@ -105,18 +105,6 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
     }
 
     conns.foreach {
-      case (binding: BindingConnection, conns) =>
-        val start = refs(conns._1)
-        val end = refs(conns._2)
-
-        binding.startPoint(start.center.x, start.center.y)
-        binding.endPoint(end.center.x, end.center.y)
-
-        binding.connectStart(start.connectorAt(start.center.x, start.center.y))
-        binding.connectEnd(end.connectorAt(end.center.x, end.center.y))
-
-        binding.updateConnection()
-
       case (rate: RateConnection, conns) =>
         val start = refs(conns._1)
         val end = refs(conns._2)
@@ -126,6 +114,20 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
         rate.connectStart(start.connectorAt(start.center.x, start.center.y))
         rate.connectEnd(end.connectorAt(end.center.x, end.center.y))
+
+      case _ =>
+    }
+
+    conns.foreach {
+      case (binding: BindingConnection, conns) =>
+        val start = refs(conns._1)
+        val end = refs(conns._2)
+
+        binding.startPoint(start.center.x, start.center.y)
+        binding.endPoint(end.center.x, end.center.y)
+
+        binding.connectStart(start.connectorAt(start.center.x, start.center.y))
+        binding.connectEnd(end.connectorAt(end.center.x, end.center.y))
 
       case _ =>
     }
