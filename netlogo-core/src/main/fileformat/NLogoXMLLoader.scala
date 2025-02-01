@@ -85,9 +85,7 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
                     if (headless) {
                       new Section("org.nlogo.modelsection.systemdynamics",
                         Femto.get[AggregateDrawingInterface]("org.nlogo.sdm.Model").read(el))
-                    }
-
-                    else {
+                    } else {
                       new Section("org.nlogo.modelsection.systemdynamics.gui",
                         Femto.get[AggregateDrawingInterface]("org.nlogo.sdm.gui.AggregateDrawing").read(el))
                     }
