@@ -5,9 +5,10 @@ package org.nlogo.app.tools
 // This is a little piece of ModelsLibraryDialog I wanted to write in Scala without having to
 // convert the whole thing to Scala. - ST 2/27/11
 
+import java.io.{ File, StringReader }
 import java.nio.file.{ Files, Path }
-import java.io.File
 import java.util.{ ArrayList => JArrayList, List => JList }
+import javax.xml.stream.{ XMLInputFactory, XMLStreamConstants }
 
 import com.typesafe.config.{ Config, ConfigException, ConfigFactory, ConfigParseOptions, ConfigSyntax }
 
@@ -23,7 +24,26 @@ object ModelsLibraryIndexReader {
   def getWhatIsIt(path: Path): Option[String] = {
     import scala.collection.JavaConverters._
     val info = try {
-      Files.readAllLines(path).asScala.mkString("\n").split("\\@\\#\\$\\#\\@\\#\\$\\#\\@\n")(2)
+      val sourceReader = new StringReader(Files.readAllLines(path).asScala.mkString("\n"))
+      val reader = {
+        val factory = XMLInputFactory.newFactory
+
+        factory.setProperty("javax.xml.stream.isCoalescing", true)
+
+        factory.createXMLStreamReader(sourceReader)
+      }
+
+      var text = ""
+
+      while (reader.hasNext && text.isEmpty) {
+        if (reader.next == XMLStreamConstants.START_ELEMENT && reader.getLocalName == "info")
+          text = reader.getElementText
+      }
+
+      reader.close()
+      sourceReader.close()
+
+      text
     } catch {
       case e: Exception => ""
     }
