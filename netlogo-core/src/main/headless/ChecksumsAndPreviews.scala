@@ -102,7 +102,7 @@ object ChecksumsAndPreviews {
         .forall(!path.toUpperCase.containsSlice(_))
 
     def remake(path: String) {
-      val previewPath = path.replaceFirst("\\.nlogo$", ".png")
+      val previewPath = path.replaceFirst(".nlogox", ".png")
       try {
         val runner = PreviewCommandsRunner.fromModelPath(new WorkspaceFactory, path)
         println("making preview for: " + path)
