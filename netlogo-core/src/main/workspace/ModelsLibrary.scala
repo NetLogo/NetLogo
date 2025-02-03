@@ -79,7 +79,7 @@ object ModelsLibrary {
    * models library.
    *
    * @param targetName the name of the model to scan for, not including the
-   *                   ".nlogox" extension.
+   *                   ".nlogox(3d)" extension.
    * @return the path to the model, or None if no such model is in the library.
    */
   def getModelPath(targetName: String): Option[String] = {
@@ -181,7 +181,8 @@ object ModelsLibrary {
               scanDirectory(p, exclusive)
             } else {
               val fileName = p.getFileName.toString.toUpperCase
-              if (fileName.endsWith(".NLOGO") || fileName.endsWith(".NLOGO3D") || fileName.endsWith(".NLOGOX")) {
+              if (fileName.endsWith(".NLOGO") || fileName.endsWith(".NLOGO3D") ||
+                  fileName.endsWith(".NLOGOX") || fileName.endsWith(".NLOGOX3D")) {
                 Some(Leaf(p.getFileName.toString, p.toString))
               } else {
                 None
@@ -216,8 +217,9 @@ object ModelsLibrary {
 
     private def munge(_s: String): String = {
       val s = _s.toUpperCase()
-      if (s.endsWith(".NLOGOX")) s.substring(0, s.length - 7)
-      else                       s
+      if (s.endsWith(".NLOGOX"))        s.substring(0, s.length - 7)
+      else if (s.endsWith(".NLOGOX3D")) s.substring(0, s.length - 9)
+      else                              s
     }
   }
 

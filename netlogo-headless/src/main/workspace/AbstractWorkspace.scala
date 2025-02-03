@@ -42,7 +42,7 @@ object AbstractWorkspace {
       if (suffixIndex > 0) {
         val suffix = str.substring(suffixIndex)
 
-        if (suffix == ".nlogo" || suffix == ".nlogo3d" || suffix == ".nlogox")
+        if (suffix == ".nlogo" || suffix == ".nlogo3d" || suffix == ".nlogox" || suffix == ".nlogox3d")
           str.substring(0, suffixIndex)
         else
           str
@@ -471,7 +471,7 @@ object AbstractWorkspaceTraits {
      * name of the currently loaded model. Will be null if this is a new
      * (unsaved) model. To get a version for display to the user, see
      * modelNameForDisplay(). This is NOT a full path name, however, it does
-     * end in ".nlogox".
+     * end in ".nlogox(3d)".
      */
     private var _modelFileName: String = null
 

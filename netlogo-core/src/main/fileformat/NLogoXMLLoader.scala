@@ -20,7 +20,7 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
   private lazy val defaultInfo: String = FileIO.url2String("/system/empty-info.md")
 
   private def isCompatible(extension: String): Boolean =
-    extension == "nlogox"
+    extension == "nlogox" || extension == "nlogox3d"
 
   private def isCompatible(uri: URI): Boolean = {
     val extension = AbstractModelLoader.getURIExtension(uri)

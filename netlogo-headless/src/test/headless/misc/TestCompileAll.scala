@@ -38,7 +38,7 @@ object TestCompileAll {
       path.containsSlice("Movie Example") ||
       path.containsSlice("Anisogamy.nlogox") || // uses behaviorspace-experiment-name
       path.endsWith("5.x.nlogo") || // explicitly 5.x models
-      path.endsWith(".nlogo3d")
+      path.endsWith(".nlogo3d") || path.endsWith(".nlogox3d")
   }
 
   def goodModel(text: String): Option[String] = {

@@ -1,5 +1,6 @@
 package org.nlogo.tools
 
+import java.net.URI
 import java.nio.file.{ Files, FileVisitor, FileVisitResult, Path, Paths }
 
 import scala.util.{ Failure, Success }
@@ -33,6 +34,13 @@ import org.nlogo.sdm.gui.NLogoGuiSDMFormat
  * Moved to org.nlogo.tools, NP 2013-08-07
  *
  */
+
+ /**
+ *
+ * Addendum: All models in the library are now supported. (Isaac B 2/2/25)
+ *
+ */
+
 object ModelResaver {
   def main(args: Array[String]): Unit = {
     System.setProperty("org.nlogo.preferHeadless", "true")
@@ -63,7 +71,7 @@ object ModelResaver {
       val modelLoader =
         FileFormat.standardAnyLoader(false, ws.compiler.utilities)
           .addSerializer[Array[String], NLogoFormat](new NLogoGuiSDMFormat())
-      val controller = new ResaveController(modelPath.toString)
+      val controller = new ResaveController(modelPath.toUri)
       val dialect =
         if (modelPath.toString.toUpperCase.endsWith("3D")) NetLogoThreeDDialect
         else NetLogoLegacyDialect
@@ -107,11 +115,9 @@ object ModelResaver {
 
     def visitFile(path: Path, attrs: BasicFileAttributes): FileVisitResult = {
       val name = path.getFileName.toString
-      if (name.endsWith(".nlogox"))
+      if (Version.is3D && name.endsWith(".nlogox3d"))
         resave(path)
-      else if (Version.is3D && name.endsWith(".nlogo3d"))
-        resave(path)
-      else if (!Version.is3D && name.endsWith(".nlogo"))
+      else if (!Version.is3D && name.endsWith(".nlogox"))
         resave(path)
       FileVisitResult.CONTINUE
     }
@@ -122,10 +128,10 @@ object ModelResaver {
     }
   }
 
-  class ResaveController(path: String) extends OpenModelController with SaveModelController {
+  class ResaveController(path: URI) extends OpenModelController with SaveModelController {
     // SaveModelController
     def chooseFilePath(modelType: org.nlogo.api.ModelType): Option[java.net.URI] = {
-      Some(Paths.get("(.nlogo3d|.nlogo)$".r.replaceAllIn(path, ".nlogox")).toUri)
+      Some(path)
     }
     def shouldSaveModelOfDifferingVersion(version: String): Boolean = true
     def warnInvalidFileFormat(format: String): Unit = {
