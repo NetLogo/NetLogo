@@ -418,7 +418,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     interactMode match {
       case InteractMode.INTERACT =>
         if (e.isPopupTrigger)
-          doPopup(e)
+          doPopup(e.getPoint)
         else if (e.getButton == MouseEvent.BUTTON1) {
           // this is so the user can use action keys to control buttons
           // - ST 8/6/04,8/31/04
@@ -457,7 +457,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
             case _ =>
               if (e.isPopupTrigger)
-                doPopup(e)
+                doPopup(e.getPoint)
           }
         }
 
@@ -473,7 +473,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   // this method runs for the hubnet client editor.
   // im not yet sure if it runs anywhere else.
   // that seems like bugs waiting to happen. JC - 12/20/10
-  protected def doPopup(e: MouseEvent): Unit = {
+  protected def doPopup(point: Point): Unit = {
     val menu = new PopupMenu
 
     def menuItem(keyName: String, widget: CoreWidget): WidgetCreationMenuItem = {
@@ -495,7 +495,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     if (workspace.plotManager.plots.size == 0)
       plot.setEnabled(false)
 
-    menu.show(this, e.getX, e.getY)
+    menu.show(this, point.x, point.y)
   }
 
   protected class WidgetCreationMenuItem(displayName: String, coreWidget: CoreWidget)
@@ -549,7 +549,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     interactMode match {
       case InteractMode.INTERACT =>
         if (e.isPopupTrigger)
-          doPopup(e)
+          doPopup(e.getPoint)
         else if (e.getButton == MouseEvent.BUTTON1) {
           if (NlogoMouse.hasCtrl(e)) {
             wrapperAtPoint(e.getPoint).foreach(wrapper => {
@@ -587,7 +587,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
             case _ =>
               if (e.isPopupTrigger)
-                doPopup(e)
+                doPopup(e.getPoint)
           }
         }
 
@@ -598,7 +598,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
         if (e.getButton == MouseEvent.BUTTON1)
           placeShadowWidget()
         else if (e.getButton == MouseEvent.BUTTON3)
-          doPopup(e)
+          doPopup(e.getPoint)
 
       case InteractMode.EDIT =>
         if (e.getButton == MouseEvent.BUTTON1)
@@ -761,7 +761,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   private def placeShadowWidget() {
     interceptPane.disableIntercept()
 
-    val model = newWidget.widget.model
+    val point = newWidget.getLocation()
 
     newWidget.selected(true)
     newWidget.foreground()
@@ -777,7 +777,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     if (newWidget != null)
       newWidget.isNew(false)
 
-    createShadowWidget(model)
+    doPopup(point)
   }
 
   def removeShadowWidget() {
