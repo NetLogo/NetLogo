@@ -92,7 +92,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
   def updateConstraints(): Unit = {}
   def classDisplayName: String = getClass.getName
   def addExtraMenuItems(menu: PopupMenu): Unit = {
-    extraMenuItems.foreach(add)
+    extraMenuItems.foreach(menu.add)
   }
   def extraMenuItems: List[JMenuItem] = Nil
 
