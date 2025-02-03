@@ -228,6 +228,10 @@ class InterfaceTab(workspace: GUIWorkspace,
       }
     }
 
+    def getMinimumWidth: Int =
+      widgetControls.getPreferredSize.width + speedSlider.getPreferredSize.width +
+        viewUpdatePanel.getPreferredSize.width + 96
+
     def syncTheme() {
       setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
@@ -315,6 +319,9 @@ class InterfaceTab(workspace: GUIWorkspace,
   def resetSplitPane() {
     splitPane.resetToPreferredSizes()
   }
+
+  def getMinimumWidth: Int =
+    toolBar.getMinimumWidth
 
   def syncTheme() {
     toolBar.syncTheme()

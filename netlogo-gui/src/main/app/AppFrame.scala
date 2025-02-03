@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ BorderLayout, Dimension }
+import java.awt.BorderLayout
 import java.awt.event.{WindowAdapter, WindowEvent}
 import javax.swing.{ JFrame, WindowConstants }
 
@@ -15,7 +15,6 @@ import org.nlogo.window.Events.IconifiedEvent
 
 class AppFrame extends JFrame with LinkParent with LinkRoot with NetLogoIcon {
   setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
-  setMinimumSize(new Dimension(800, 300))
 
   getContentPane.setLayout(new BorderLayout)
 
