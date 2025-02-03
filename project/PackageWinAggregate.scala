@@ -141,7 +141,8 @@ object PackageWinAggregate {
           "desktopShortcutId"      -> winVariables("NetLogoDesktopShortcutId"),
           "startMenuShortcutId"    -> winVariables("NetLogoStartMenuShortcutId"),
           "hasFileAssociation"     -> Boolean.box(true),
-          "fileAssociation"        -> "nlogo",
+          "fileAssociationOld"     -> "nlogo",
+          "fileAssociationNew"     -> "nlogox",
           "fileIcon"               -> "ModelIcon",
           "launchArgs"             -> """--launch "%1"""",
           "associationDescription" -> "NetLogo Model"
@@ -157,7 +158,8 @@ object PackageWinAggregate {
           "startMenuShortcutId"    -> winVariables("NetLogo3DStartMenuShortcutId"),
           "hasFileAssociation"     -> Boolean.box(true),
           "launchArgs"             -> """--launch "%1"""",
-          "fileAssociation"        -> "nlogo3d",
+          "fileAssociationOld"     -> "nlogo3d",
+          "fileAssociationNew"     -> "nlogox3d",
           "fileIcon"               -> "ModelIcon",
           "associationDescription" -> "NetLogo 3D Model"
         ) ++ baseComponentVariables,
@@ -172,7 +174,7 @@ object PackageWinAggregate {
           "startMenuShortcutId"    -> winVariables("behaviorSearchStartMenuShortcutId"),
           "hasFileAssociation"     -> Boolean.box(true),
           "launchArgs"             -> """"%1"""",
-          "fileAssociation"        -> "bsearch",
+          "fileAssociationOld"     -> "bsearch",
           "fileIcon"               -> "BehaviorsearchExperimentIcon",
           "associationDescription" -> "Behaviorsearch Experiment"
         ) ++ baseComponentVariables
