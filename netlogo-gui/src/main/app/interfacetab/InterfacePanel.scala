@@ -2,8 +2,9 @@
 
 package org.nlogo.app.interfacetab
 
+import java.awt.Point
+import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyEvent }
 import java.awt.image.BufferedImage
-import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyEvent, MouseEvent }
 import javax.swing.AbstractAction
 
 import org.nlogo.api.{ Editable, Exceptions, Version }
@@ -54,7 +55,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   ///
 
-  override protected def doPopup(e: MouseEvent): Unit = {
+  override protected def doPopup(point: Point): Unit = {
     val menu = new PopupMenu
 
     Seq(WidgetInfo.button,
@@ -83,7 +84,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     menu.addSeparator()
     menu.add(new MenuItem(new ExportInterfaceAction(workspace, this)))
 
-    menu.show(this, e.getX, e.getY)
+    menu.show(this, point.x, point.y)
   }
 
   class WidgetCreationMenuItem(val displayName: String, val coreWidget: CoreWidget)
