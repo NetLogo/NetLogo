@@ -859,8 +859,15 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
       populateContextMenu(menu, e.getPoint)
 
-      if (menu.getSubElements.size > 0)
-        menu.show(this, getMousePosition().x, getMousePosition().y)
+      if (menu.getSubElements.size > 0) {
+        val point =
+          if (getMousePosition() != null)
+            getMousePosition()
+          else
+            e.getPoint
+
+        menu.show(this, point.x, point.y)
+      }
 
       e.consume()
     }
