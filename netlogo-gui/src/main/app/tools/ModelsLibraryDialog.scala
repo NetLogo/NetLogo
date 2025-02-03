@@ -94,7 +94,7 @@ object ModelsLibraryDialog {
         removeSuffix(name)
 
     private def removeSuffix(reference: String): String =
-      if (reference.endsWith(".nlogox"))
+      if (reference.endsWith(".nlogox") || reference.endsWith(".nlogox3d"))
         reference.substring(0, reference.lastIndexOf(".nlogox"))
       else
         reference

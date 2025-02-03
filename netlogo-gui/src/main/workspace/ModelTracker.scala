@@ -136,6 +136,7 @@ trait ModelTracker {
           else if (name.endsWith(".nlogo")) name.stripSuffix(".nlogo")
           else if (name.endsWith(".nlogo3d")) name.stripSuffix(".nlogo3d")
           else if (name.endsWith(".nlogox")) name.stripSuffix(".nlogox")
+          else if (name.endsWith(".nlogox3d")) name.stripSuffix(".nlogox3d")
           else name)
       .getOrElse("Untitled")
 }

@@ -36,7 +36,7 @@ object ModelsLibrary {
   def modelFiles(directory: File): Seq[Path] = {
     val dirPath = directory.toPath
     FileActions.enumeratePaths(dirPath)
-      .filter(p => p.getFileName.toString.endsWith(".nlogox"))
+      .filter(p => p.getFileName.toString.endsWith(".nlogox") || p.getFileName.toString.endsWith(".nlogox3d"))
   }
 
   lazy val settings = Seq(
@@ -67,7 +67,7 @@ object ModelsLibrary {
       .enumeratePaths(modelsPath.toPath)
       .filterNot(p => p.toString.contains("test"))
       .filterNot(p => Files.isDirectory(p))
-      .filter(p => p.getFileName.toString.endsWith("nlogox"))
+      .filter(p => p.getFileName.toString.endsWith("nlogox") || p.getFileName.toString.endsWith("nlogox3d"))
     def infoTab(path: Path) = try {
       InfoExtractor(Files.readAllLines(path).asScala.mkString("\n"))
     } catch {

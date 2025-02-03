@@ -5,7 +5,7 @@ package org.nlogo.api
 object ModelReader {
 
   val modelSuffix =
-    "nlogox"
+    if (Version.is3D) "nlogox3d" else "nlogox"
 
   val emptyModelPath =
     "/system/empty." + modelSuffix
