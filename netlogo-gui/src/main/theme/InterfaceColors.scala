@@ -449,6 +449,8 @@ object InterfaceColors {
       case "dark" => MEDIUM_GRAY
     }
 
+  def INFO_LINK = new Color(0, 110, 240)
+
   def CHECK_FILLED = new Color(0, 173, 90)
 
   def ERROR_LABEL_BACKGROUND = LIGHT_RED

@@ -57,9 +57,7 @@ object InfoFormatter {
             replace("{CODE-BACKGROUND}", colorString(InterfaceColors.INFO_CODE_BACKGROUND)).
             replace("{BLOCK-BAR}", colorString(InterfaceColors.INFO_BLOCK_BAR)).
             replace("{INFO-BACKGROUND}", colorString(InterfaceColors.INFO_BACKGROUND)).
-            replace("{BULLET-1-IMAGE}", getClass.getResource("/system/bullet.png").toString).
-            replace("{BULLET-2-IMAGE}", getClass.getResource("/system/bullet-hollow.png").toString).
-            replace("{BULLET-3-IMAGE}", getClass.getResource("/system/box.png").toString) + "\n-->\n</style>"
+            replace("{LINK-COLOR}", colorString(InterfaceColors.INFO_LINK)) + "\n-->\n</style>"
 
   def apply(content: String, fontSize: Int = defaultFontSize) = {
     wrapHtml(toInnerHtml(content), fontSize)

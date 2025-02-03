@@ -111,3 +111,6 @@ ul {
 li {
     color: {P-COLOR};
 }
+a {
+    color: {LINK-COLOR};
+}
