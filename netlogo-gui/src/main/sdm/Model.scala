@@ -17,6 +17,8 @@ class Model(modelName: String,
   def this(modelName: String, dt: Double) = this(modelName, dt, new ListBuffer[ModelElement], "")
   def this() = this("default", 1)
 
+  var xmlElement: XMLElement = null
+
   def getDt = dt
   @throws(classOf[Model.ModelException])
   def setDt(dt: Double) {
@@ -47,6 +49,8 @@ class Model(modelName: String,
       new Model(name, dt, elements, serializedGUI)
 
   def read(element: XMLElement): AnyRef = {
+    xmlElement = element
+
     setDt(element("dt").toDouble)
 
     val (refs, conns) = element.children.foldLeft((Seq[ModelElement](), Map[Rate, (Int, Int)]())) {
@@ -103,7 +107,6 @@ class Model(modelName: String,
     this
   }
 
-  // not supported
   def write(): XMLElement =
-    null
+    xmlElement
 }
