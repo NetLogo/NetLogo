@@ -32,6 +32,8 @@ import org.nlogo.sdm.gui.NLogoGuiSDMFormat
  * Nicolas 2012-10-31
  *
  * Moved to org.nlogo.tools, NP 2013-08-07
+ * Copied to org.nlogo.models in the models repository so it can be used outside
+ * of the NetLogo repo. -Jeremy B September 2023
  *
  */
 
