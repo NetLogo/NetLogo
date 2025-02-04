@@ -386,6 +386,12 @@ object InterfaceColors {
       case "dark" => MEDIUM_BLUE_GRAY
     }
 
+  def TOOLBAR_TOOL_PRESSED =
+    theme match {
+      case "classic" | "light" => MEDIUM_GRAY
+      case "dark" => DARK_BLUE_GRAY_2
+    }
+
   def TOOLBAR_IMAGE =
     theme match {
       case "classic" | "light" => new Color(85, 87, 112)

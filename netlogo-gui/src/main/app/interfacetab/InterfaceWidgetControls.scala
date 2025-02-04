@@ -411,6 +411,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
   class SquareButton(action: Action) extends ToolBarToggleButton(action) {
     setFocusable(false)
+    setPressedColor(InterfaceColors.TOOLBAR_TOOL_PRESSED)
 
     override def getMinimumSize: Dimension =
       new Dimension(widgetMenu.getPreferredSize.height, widgetMenu.getPreferredSize.height)
