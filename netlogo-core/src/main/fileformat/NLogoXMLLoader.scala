@@ -162,11 +162,8 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
           writer.escapedText(section.get.get.asInstanceOf[PreviewCommands].source)
           writer.endElement("previewCommands")
 
-        case "org.nlogo.modelsection.systemdynamics.gui" =>
+        case "org.nlogo.modelsection.systemdynamics" | "org.nlogo.modelsection.systemdynamics.gui" =>
           writer.element(section.get.get.asInstanceOf[AggregateDrawingInterface].write())
-
-        case "org.nlogo.modelsection.systemdynamics" =>
-          // only applies to headless
 
         case "org.nlogo.modelsection.behaviorspace" =>
           section.get.map(section => {
