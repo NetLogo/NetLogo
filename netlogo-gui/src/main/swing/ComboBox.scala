@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, GridBagConstraints, GridBagLayout, Insets, ItemSelectable }
+import java.awt.{ Component, Dimension, GridBagConstraints, GridBagLayout, Insets, ItemSelectable }
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener, MouseAdapter, MouseEvent, MouseWheelEvent,
                         MouseWheelListener }
 import javax.swing.{ AbstractAction, JLabel, JPanel }
@@ -18,8 +18,8 @@ object ComboBox {
   }
 }
 
-class ComboBox[T >: Null](private var items: Seq[T] = Seq()) extends JPanel(new GridBagLayout) with RoundedBorderPanel
-                                                            with ThemeSync with ItemSelectable {
+class ComboBox[T >: Null](private var items: Seq[T] = Seq())
+  extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with ItemSelectable {
 
   private val mouseListener = new MouseAdapter {
     override def mousePressed(e: MouseEvent) {
@@ -88,7 +88,10 @@ class ComboBox[T >: Null](private var items: Seq[T] = Seq()) extends JPanel(new 
   private val choiceDisplay = new ChoiceDisplay
   private val arrow = new DropdownArrow
 
-  private val popup = new PopupMenu
+  private val popup = new PopupMenu {
+    override def getPreferredSize: Dimension =
+      new Dimension(ComboBox.this.getSize().width, super.getPreferredSize.height)
+  }
 
   private val itemListeners = Set[ItemListener]()
 
