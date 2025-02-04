@@ -51,8 +51,17 @@ object InterfaceColors {
 
   def WIDGET_HOVER_SHADOW = new Color(75, 75, 75)
 
-  def WIDGET_PREVIEW_COVER = new Color(255, 255, 255, 150)
-  def WIDGET_PREVIEW_COVER_NOTE = new Color(225, 225, 225, 150)
+  def WIDGET_PREVIEW_COVER =
+    theme match {
+      case "classic" | "light" => new Color(255, 255, 255, 150)
+      case "dark" => new Color(0, 0, 0, 150)
+    }
+
+  def WIDGET_PREVIEW_COVER_NOTE =
+    theme match {
+      case "classic" | "light" => new Color(225, 225, 225, 150)
+      case "dark" => new Color(30, 30, 30, 150)
+    }
 
   def DISPLAY_AREA_BACKGROUND =
     theme match {
