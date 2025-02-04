@@ -154,8 +154,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     interactMode = mode
 
-    if (mode == InteractMode.INTERACT)
+    if (mode == InteractMode.INTERACT) {
       interceptPane.disableIntercept()
+
+      getWrappers.foreach(_.setShadow(false))
+    }
+
     else {
       interceptPane.enableIntercept()
 
@@ -165,6 +169,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
       })) {
         workspace.halt()
       }
+
+      getWrappers.foreach(_.setShadow(true))
     }
 
     if (mode == InteractMode.EDIT || mode == InteractMode.INTERACT || mode == InteractMode.DELETE)
@@ -365,6 +371,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
           return
 
         interactMode match {
+          case InteractMode.INTERACT =>
+            setInteractMode(InteractMode.SELECT)
+
           case InteractMode.SELECT =>
             if (!selectionPane.isVisible) {
               selectionPane.setBounds(0, 0, getWidth, getHeight)
@@ -403,8 +412,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
             val topWrapper = wrapperAtPoint(e.getPoint).filter(_.widget.deleteable).getOrElse(null)
 
             getWrappers.foreach(wrapper => selectWidget(wrapper, wrapper == topWrapper))
-
-          case _ =>
         }
       }
     }
@@ -424,9 +431,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
           // - ST 8/6/04,8/31/04
           requestFocus()
           startDragPoint = e.getPoint
-
-          if (NlogoMouse.hasCtrl(e))
-            setInteractMode(InteractMode.SELECT)
         }
 
       case InteractMode.SELECT =>
