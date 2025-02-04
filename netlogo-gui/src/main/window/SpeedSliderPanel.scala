@@ -32,7 +32,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
   setOpaque(false)
   setLayout(new GridBagLayout)
 
-  val slower = new Button("", () => speedSlider.setValue(speedSlider.getValue - 5)) {
+  val slower = new Button("", () => speedSlider.setValue(speedSlider.getValue - 11)) {
     override def getPreferredSize: Dimension =
       new Dimension(19, 19)
 
@@ -46,7 +46,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
     }
   }
 
-  val faster = new Button("", () => speedSlider.setValue(speedSlider.getValue + 5)) {
+  val faster = new Button("", () => speedSlider.setValue(speedSlider.getValue + 11)) {
     override def getPreferredSize: Dimension =
       new Dimension(19, 19)
 
