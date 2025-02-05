@@ -73,7 +73,8 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
       override def mousePressed(e: MouseEvent) {
         new Events.InputBoxLoseFocusEvent().raise(Switch.this)
 
-        isOn = !isOn
+        if (e.getButton == MouseEvent.BUTTON1)
+          isOn = !isOn
       }
     }
 
