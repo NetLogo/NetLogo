@@ -263,6 +263,11 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
       label.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
+      interactButton.syncTheme()
+      selectButton.syncTheme()
+      editButton.syncTheme()
+      deleteButton.syncTheme()
+
       popup.syncTheme()
     }
   }
@@ -409,14 +414,19 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
   }
 
-  class SquareButton(action: Action) extends ToolBarToggleButton(action) {
+  class SquareButton(action: Action) extends ToolBarToggleButton(action) with ThemeSync {
     setFocusable(false)
-    setPressedColor(InterfaceColors.TOOLBAR_TOOL_PRESSED)
+
+    syncTheme()
 
     override def getMinimumSize: Dimension =
       new Dimension(widgetMenu.getPreferredSize.height, widgetMenu.getPreferredSize.height)
 
     override def getPreferredSize: Dimension =
       getMinimumSize
+
+    def syncTheme() {
+      setPressedColor(InterfaceColors.TOOLBAR_TOOL_PRESSED)
+    }
   }
 }
