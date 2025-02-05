@@ -44,7 +44,7 @@ object InteractMode {
     override def cursor =
       Toolkit.getDefaultToolkit.createCustomCursor(Utils.iconScaledWithColor("/images/edit-cursor.png", 32, 32,
                                                                              InterfaceColors.TOOLBAR_IMAGE).getImage,
-                                                   new Point(0, 0), I18N.gui.get("tabs.run.widget.editWidget"))
+                                                   new Point(0, 16), I18N.gui.get("tabs.run.widget.editWidget"))
   }
 
   case object DELETE extends InteractMode
@@ -372,7 +372,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
         interactMode match {
           case InteractMode.INTERACT =>
-            setInteractMode(InteractMode.SELECT)
+            if (NlogoMouse.hasCtrl(e))
+              setInteractMode(InteractMode.SELECT)
 
           case InteractMode.SELECT =>
             if (!selectionPane.isVisible) {
@@ -423,16 +424,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def mousePressed(e: MouseEvent): Unit = {
     interactMode match {
-      case InteractMode.INTERACT =>
-        if (e.isPopupTrigger)
-          doPopup(e.getPoint)
-        else if (e.getButton == MouseEvent.BUTTON1) {
-          // this is so the user can use action keys to control buttons
-          // - ST 8/6/04,8/31/04
-          requestFocus()
-          startDragPoint = e.getPoint
-        }
-
       case InteractMode.SELECT =>
         if (e.getButton == MouseEvent.BUTTON1) {
           requestFocus()
@@ -466,7 +457,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
         }
 
       case _ =>
-        if (e.getButton == MouseEvent.BUTTON1) {
+        if (e.isPopupTrigger)
+          doPopup(e.getPoint)
+        else if (e.getButton == MouseEvent.BUTTON1) {
+          // this is so the user can use action keys to control buttons
+          // - ST 8/6/04,8/31/04
           requestFocus()
           startDragPoint = e.getPoint
         }
@@ -557,8 +552,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
         else if (e.getButton == MouseEvent.BUTTON1) {
           if (NlogoMouse.hasCtrl(e)) {
             wrapperAtPoint(e.getPoint).foreach(wrapper => {
-              selectWidget(wrapper, !wrapper.selected)
               setInteractMode(InteractMode.SELECT)
+              selectWidget(wrapper, !wrapper.selected)
             })
           }
 
@@ -605,11 +600,15 @@ class WidgetPanel(val workspace: GUIWorkspace)
           doPopup(e.getPoint)
 
       case InteractMode.EDIT =>
-        if (e.getButton == MouseEvent.BUTTON1)
+        if (e.isPopupTrigger)
+          doPopup(e.getPoint)
+        else if (e.getButton == MouseEvent.BUTTON1)
           new EditWidgetEvent(null).raise(this)
 
       case InteractMode.DELETE =>
-        if (e.getButton == MouseEvent.BUTTON1) {
+        if (e.isPopupTrigger)
+          doPopup(e.getPoint)
+        else if (e.getButton == MouseEvent.BUTTON1) {
           wrapperAtPoint(e.getPoint).foreach(wrapper => {
             if (wrapper.widget.deleteable)
               WidgetActions.removeWidget(this, wrapper)

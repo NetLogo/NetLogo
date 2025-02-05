@@ -53,14 +53,14 @@ object InterfaceColors {
 
   def WIDGET_PREVIEW_COVER =
     theme match {
-      case "classic" | "light" => new Color(255, 255, 255, 200)
-      case "dark" => new Color(0, 0, 0, 200)
+      case "classic" | "light" => new Color(255, 255, 255, 100)
+      case "dark" => new Color(0, 0, 0, 100)
     }
 
   def WIDGET_PREVIEW_COVER_NOTE =
     theme match {
-      case "classic" | "light" => new Color(225, 225, 225, 200)
-      case "dark" => new Color(30, 30, 30, 200)
+      case "classic" | "light" => new Color(225, 225, 225, 100)
+      case "dark" => new Color(30, 30, 30, 100)
     }
 
   def DISPLAY_AREA_BACKGROUND =

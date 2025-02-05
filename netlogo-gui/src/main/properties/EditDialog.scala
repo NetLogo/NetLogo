@@ -87,10 +87,10 @@ abstract class EditDialog(window: Window, target: Editable, useTooltips: Boolean
   })
 
   private val buttons: List[JButton] = List(
-    Some(cancelButton),
+    Some(okButton),
     if (editPanel.liveUpdate) None else Some(applyButton),
     target.helpLink.map(_ => helpButton),
-    Some(okButton)).flatten
+    Some(cancelButton)).flatten
   private val buttonPanel = ButtonPanel(buttons)
   mainPanel.add(buttonPanel, BorderLayout.SOUTH)
   mainPanel.add(editPanel, BorderLayout.CENTER)
