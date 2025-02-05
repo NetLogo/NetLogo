@@ -63,28 +63,27 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   glass.addMouseListener(this)
   glass.addMouseMotionListener(this)
 
-  def setShadow(shadow: Boolean) {
-    shadowPane.setVisible(shadow)
+  private val shadowPane = new ShadowPane
+
+  def enableShadow() {
+    shadowPane.setVisible(true)
+    shadowPane.setFull(false)
 
     revalidate()
   }
 
-  private val shadowPane = new JPanel with RoundedBorderPanel with ThemeSync {
-    setBorderColor(InterfaceColors.TRANSPARENT)
-    setVisible(false)
+  def enableFullShadow() {
+    shadowPane.setVisible(true)
+    shadowPane.setFull(true)
 
-    override def paintComponent(g: Graphics) {
-      setDiameter(12 * widget.getZoomFactor)
+    revalidate()
+  }
 
-      super.paintComponent(g)
-    }
+  def disableShadow() {
+    shadowPane.setVisible(false)
+    shadowPane.setFull(false)
 
-    def syncTheme() {
-      if (widget.isNote)
-        setBackgroundColor(InterfaceColors.WIDGET_PREVIEW_COVER_NOTE)
-      else
-        setBackgroundColor(InterfaceColors.WIDGET_PREVIEW_COVER)
-    }
+    revalidate()
   }
 
   var originalBounds: Rectangle = null
@@ -201,10 +200,10 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
                   getHeight - WidgetWrapper.BORDER_N - WidgetWrapper.BORDER_S)
       }
 
-      if (selected)
-        setShadow(false)
+      if (selected || interfacePanel.getInteractMode == InteractMode.INTERACT)
+        disableShadow()
       else
-        setShadow(interfacePanel.getInteractMode != InteractMode.INTERACT)
+        enableShadow()
 
       if (!temporary)
         new WidgetSelectedEvent(widget, selected).raise(this)
@@ -1017,5 +1016,40 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   def syncTheme() {
     shadowPane.syncTheme()
     widget.syncTheme()
+  }
+
+  private class ShadowPane extends JPanel with RoundedBorderPanel with ThemeSync {
+    private var full = false
+
+    setBorderColor(InterfaceColors.TRANSPARENT)
+    setVisible(false)
+
+    override def paintComponent(g: Graphics) {
+      setDiameter(12 * widget.getZoomFactor)
+
+      super.paintComponent(g)
+    }
+
+    def setFull(full: Boolean) {
+      this.full = full
+
+      syncTheme()
+    }
+
+    def syncTheme() {
+      if (full) {
+        if (widget.isNote)
+          setBackgroundColor(InterfaceColors.WIDGET_PREVIEW_COVER_NOTE)
+        else
+          setBackgroundColor(InterfaceColors.WIDGET_PREVIEW_COVER)
+      }
+
+      else {
+        if (widget.isNote)
+          setBackgroundColor(InterfaceColors.WIDGET_INTERACT_COVER_NOTE)
+        else
+          setBackgroundColor(InterfaceColors.WIDGET_INTERACT_COVER)
+      }
+    }
   }
 }

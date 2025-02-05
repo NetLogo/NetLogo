@@ -9,7 +9,7 @@ import javax.swing.{ AbstractAction, ButtonGroup, JPanel }
 
 import org.nlogo.app.App
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, RadioButton, Transparent }
+import org.nlogo.swing.{ Button, ButtonPanel, RadioButton }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") with ThemeSync {
@@ -57,12 +57,12 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") with ThemeS
     c.anchor = GridBagConstraints.WEST
     c.insets = new Insets(6, 6, 6, 6)
 
-    panel.add(classicButton, c)
+    panel.add(lightButton, c)
 
     c.insets = new Insets(0, 6, 6, 6)
 
-    panel.add(lightButton, c)
     panel.add(darkButton, c)
+    panel.add(classicButton, c)
 
     val themeButtons = new ButtonGroup
 
@@ -70,10 +70,7 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") with ThemeS
     themeButtons.add(lightButton)
     themeButtons.add(darkButton)
 
-    val buttonPanel = new JPanel with Transparent
-
-    buttonPanel.add(okButton)
-    buttonPanel.add(cancelButton)
+    val buttonPanel = new ButtonPanel(Array(okButton, cancelButton))
 
     panel.add(buttonPanel, c)
 
@@ -111,9 +108,9 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") with ThemeS
   def syncTheme() {
     panel.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
-    classicButton.syncTheme()
     lightButton.syncTheme()
     darkButton.syncTheme()
+    classicButton.syncTheme()
 
     okButton.syncTheme()
     cancelButton.syncTheme()
