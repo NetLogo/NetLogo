@@ -17,5 +17,9 @@ object ButtonPanel {
 class ButtonPanel(buttons: Array[JComponent])
   extends JPanel(new RowLayout(10, Component.CENTER_ALIGNMENT, Component.CENTER_ALIGNMENT)) with Transparent {
 
-  buttons.foreach(add)
+  // obey platform standards
+  if (System.getProperty("os.name").contains("Mac"))
+    buttons.reverse.foreach(add)
+  else
+    buttons.foreach(add)
 }

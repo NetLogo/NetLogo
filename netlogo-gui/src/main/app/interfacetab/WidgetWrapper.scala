@@ -201,6 +201,11 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
                   getHeight - WidgetWrapper.BORDER_N - WidgetWrapper.BORDER_S)
       }
 
+      if (selected)
+        setShadow(false)
+      else
+        setShadow(interfacePanel.getInteractMode != InteractMode.INTERACT)
+
       if (!temporary)
         new WidgetSelectedEvent(widget, selected).raise(this)
     }
@@ -877,7 +882,6 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     if (widget.getEditable.isInstanceOf[Editable] && !interfacePanel.multiSelected) {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.edit")) {
         def actionPerformed(e: ActionEvent) {
-          interfacePanel.setInteractMode(InteractMode.EDIT)
           selected(true)
           foreground()
           new EditWidgetEvent(null).raise(WidgetWrapper.this)
@@ -978,7 +982,6 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deleteSelected")) {
         def actionPerformed(e: ActionEvent) {
-          interfacePanel.setInteractMode(InteractMode.DELETE)
           interfacePanel.deleteSelectedWidgets()
         }
       }))
@@ -989,7 +992,6 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.delete")) {
         def actionPerformed(e: ActionEvent) {
-          interfacePanel.setInteractMode(InteractMode.DELETE)
           WidgetActions.removeWidget(interfacePanel, WidgetWrapper.this)
         }
       }))
