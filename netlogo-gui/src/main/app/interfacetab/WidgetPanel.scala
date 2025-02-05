@@ -765,7 +765,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   private def placeShadowWidget() {
     interceptPane.disableIntercept()
 
-    val point = newWidget.getLocation()
+    val model = newWidget.widget.model
 
     newWidget.selected(true)
     newWidget.foreground()
@@ -781,7 +781,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     if (newWidget != null)
       newWidget.isNew(false)
 
-    doPopup(point)
+    createShadowWidget(model)
   }
 
   def removeShadowWidget() {
