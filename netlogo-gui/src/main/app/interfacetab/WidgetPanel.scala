@@ -157,7 +157,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     if (mode == InteractMode.INTERACT) {
       interceptPane.disableIntercept()
 
-      getWrappers.foreach(_.setShadow(false))
+      getWrappers.foreach(_.disableShadow())
     }
 
     else {
@@ -170,7 +170,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
         workspace.halt()
       }
 
-      getWrappers.foreach(_.setShadow(true))
+      getWrappers.foreach(_.enableShadow())
     }
 
     if (mode == InteractMode.EDIT || mode == InteractMode.INTERACT || mode == InteractMode.DELETE)
@@ -457,13 +457,23 @@ class WidgetPanel(val workspace: GUIWorkspace)
         }
 
       case _ =>
-        if (e.isPopupTrigger)
-          doPopup(e.getPoint)
-        else if (e.getButton == MouseEvent.BUTTON1) {
+        if (e.getButton == MouseEvent.BUTTON1) {
           // this is so the user can use action keys to control buttons
           // - ST 8/6/04,8/31/04
           requestFocus()
           startDragPoint = e.getPoint
+        }
+
+        else {
+          wrapperAtPoint(e.getPoint) match {
+            case Some(w) =>
+              e.translatePoint(-w.getX, -w.getY)
+              w.mouseReleased(e)
+
+            case _ =>
+              if (e.isPopupTrigger)
+                doPopup(e.getPoint)
+          }
         }
     }
   }
@@ -600,19 +610,39 @@ class WidgetPanel(val workspace: GUIWorkspace)
           doPopup(e.getPoint)
 
       case InteractMode.EDIT =>
-        if (e.isPopupTrigger)
-          doPopup(e.getPoint)
-        else if (e.getButton == MouseEvent.BUTTON1)
+        if (e.getButton == MouseEvent.BUTTON1)
           new EditWidgetEvent(null).raise(this)
 
+        else {
+          wrapperAtPoint(e.getPoint) match {
+            case Some(w) =>
+              e.translatePoint(-w.getX, -w.getY)
+              w.mouseReleased(e)
+
+            case _ =>
+              if (e.isPopupTrigger)
+                doPopup(e.getPoint)
+          }
+        }
+
       case InteractMode.DELETE =>
-        if (e.isPopupTrigger)
-          doPopup(e.getPoint)
-        else if (e.getButton == MouseEvent.BUTTON1) {
+        if (e.getButton == MouseEvent.BUTTON1) {
           wrapperAtPoint(e.getPoint).foreach(wrapper => {
             if (wrapper.widget.deleteable)
               WidgetActions.removeWidget(this, wrapper)
           })
+        }
+
+        else {
+          wrapperAtPoint(e.getPoint) match {
+            case Some(w) =>
+              e.translatePoint(-w.getX, -w.getY)
+              w.mouseReleased(e)
+
+            case _ =>
+              if (e.isPopupTrigger)
+                doPopup(e.getPoint)
+          }
         }
     }
   }
@@ -748,11 +778,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     zoomer.zoomWidget(wrapper, true, false, 1.0, zoomFactor)
 
-    wrapper.setShadow(true)
+    setInteractMode(InteractMode.ADD)
+
+    wrapper.enableFullShadow()
 
     wrapper.syncTheme()
-
-    setInteractMode(InteractMode.ADD)
 
     unselectWidgets()
 
@@ -769,7 +799,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     newWidget.selected(true)
     newWidget.foreground()
     newWidget.isNew(true)
-    newWidget.setShadow(false)
+    newWidget.disableShadow()
 
     placedShadowWidget = true
 
