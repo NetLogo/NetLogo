@@ -144,7 +144,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     widgetMenu.syncTheme()
     alignmentMenu.syncTheme()
 
-    interactButton.setIcon(Utils.iconScaledWithColor("/images/pointer.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
+    interactButton.setIcon(Utils.iconScaledWithColor("/images/interact.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
     selectButton.setIcon(Utils.iconScaledWithColor("/images/select.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
     editButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
     deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
