@@ -31,8 +31,12 @@
             <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities" Name="ApplicationIcon" Value="[INSTALLDIR]{{{componentFileName}}},0" Type="string" />
             <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities" Name="ApplicationName" Value="{{componentFriendlyName}}" Type="string" />
             <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\DefaultIcon" Value="[APPLICATIONFOLDER]{{componentFileName}},1" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\FileAssociations" Name=".{{fileAssociation}}" Value="NetLogo.{{fileAssociation}}" Type="string" />
-            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\MIMEAssociations" Name="text/{{fileAssociation}}" Value="NetLogo.{{fileAssociation}}" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\FileAssociations" Name=".{{fileAssociationOld}}" Value="NetLogo.{{fileAssociationOld}}" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\MIMEAssociations" Name="text/{{fileAssociationOld}}" Value="NetLogo.{{fileAssociationOld}}" Type="string" />
+            {{#fileAssociationNew}}
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\FileAssociations" Name=".{{fileAssociationNew}}" Value="NetLogo.{{fileAssociationNew}}" Type="string" />
+            <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\MIMEAssociations" Name="text/{{fileAssociationNew}}" Value="NetLogo.{{fileAssociationNew}}" Type="string" />
+            {{/fileAssociationNew}}
             <RegistryValue Root="HKLM" Key="SOFTWARE\NetLogo {{version}}\Capabilities\shell\Open\command" Value="&quot;[INSTALLDIR]{{{componentFileName}}}&quot; {{launchArgs}}" Type="string" />
             <RegistryValue Root="HKLM" Key="SOFTWARE\RegisteredApplications" Name="NetLogo {{version}}" Value="SOFTWARE\NetLogo {{version}}\Capabilities" Type="string" />
 
@@ -40,12 +44,22 @@
             <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{{{componentFileName}}}" Value="[!{{componentId}}]" Type="string" />
             <RegistryValue Root="HKLM" Key="SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\{{{componentFileName}}}" Name="Path" Value="[INSTALLDIR]" Type="string" />
 
-            <ProgId Id="NetLogo.{{fileAssociation}}" Description="{{associationDescription}}" Advertise="yes" Icon="{{fileIcon}}">
-              <Extension Id='{{fileAssociation}}'>
+            <ProgId Id="NetLogo.{{fileAssociationOld}}" Description="{{associationDescription}}" Advertise="yes" Icon="{{fileIcon}}">
+              <Extension Id='{{fileAssociationOld}}'>
                 <Verb Id='open' Command='Edit with {{componentFriendlyName}} {{numericOnlyVersion}}' Argument='{{launchArgs}}' />
-                <MIME Advertise='yes' ContentType="text/{{fileAssociation}}" Default="yes"/>
+                <MIME Advertise='yes' ContentType="text/{{fileAssociationOld}}" Default="yes"/>
               </Extension>
             </ProgId>
+
+            {{#fileAssociationNew}}
+            <ProgId Id="NetLogo.{{fileAssociationNew}}" Description="{{associationDescription}}" Advertise="yes" Icon="{{fileIcon}}">
+              <Extension Id='{{fileAssociationNew}}'>
+                <Verb Id='open' Command='Edit with {{componentFriendlyName}} {{numericOnlyVersion}}' Argument='{{launchArgs}}' />
+                <MIME Advertise='yes' ContentType="text/{{fileAssociationNew}}" Default="yes"/>
+              </Extension>
+            </ProgId>
+            {{/fileAssociationNew}}
+
             {{/hasFileAssociation}}
           </Component>
           {{/components}}

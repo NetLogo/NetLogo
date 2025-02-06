@@ -12,9 +12,8 @@ import org.nlogo.api.Editable
 import org.nlogo.app.common.EditorFactory
 import org.nlogo.app.common.Events.InterfaceModeEvent
 import org.nlogo.awt.{ Fonts => NlogoFonts, Mouse => NlogoMouse }
-import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser,
-  InputBox => CoreInputBox, Monitor => CoreMonitor, Plot => CorePlot,
-  Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox,
+import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
+  Monitor => CoreMonitor, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox,
   View => CoreView, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.LogManager
@@ -950,7 +949,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   /// loading and saving
 
   def loadWidget(coreWidget: CoreWidget): Widget = {
-    makeAndLoadWidget(coreWidget, coreWidget.left, coreWidget.top)
+    makeAndLoadWidget(coreWidget, coreWidget.x, coreWidget.y)
   }
 
   protected def makeAndLoadWidget(coreWidget: CoreWidget, x: Int, y: Int): Widget = {

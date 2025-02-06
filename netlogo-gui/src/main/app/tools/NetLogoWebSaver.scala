@@ -33,7 +33,7 @@ class NetLogoWebSaver(loader: NLWTemplateLoader, saveFunction: String => Unit) {
         stringMut = "; " + name + "\n\n" + source + "\n\n" + stringMut
       }
 
-      stringMut = new Regex("__includes\\s*\\[.*?\\]").replaceAllIn(stringMut, "") // will break if __includes is in a string (IB 6/15/24)
+      stringMut = new Regex("__includes\\s*\\[.*?\\]").replaceAllIn(stringMut, "") // will break if __includes is in a string (Isaac B 6/15/24)
     }
 
     saveFunction(templateHTML(loader.loadTemplate(), stringMut, modelName))
@@ -43,7 +43,7 @@ class NetLogoWebSaver(loader: NLWTemplateLoader, saveFunction: String => Unit) {
     if (htmlTemplate.contains(ModelContents))
       htmlTemplate
         .replaceAllLiterally(ModelContents, model)
-        .replaceAllLiterally(ModelName, modelName.stripSuffix(".html") + ".nlogo")
+        .replaceAllLiterally(ModelName, modelName.stripSuffix(".html") + ".nlogox")
     else
       throw new IllegalArgumentException("Invalid HTML Template")
   }

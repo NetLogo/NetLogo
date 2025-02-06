@@ -11,13 +11,14 @@ import javax.swing.Action
 import scala.util.{ Failure, Try }
 
 import org.nlogo.core.{ I18N, Model }
-import org.nlogo.api.{ Exceptions, FileIO, ModelLoader, ModelReader, ModelType, Version },
+import org.nlogo.api.{ AbstractModelLoader, Exceptions, FileIO, ModelReader, ModelType, Version },
   ModelReader.{ emptyModelPath, modelSuffix }
 import org.nlogo.app.common.{ Actions, Dialogs, ExceptionCatchingAction }, Actions.Ellipsis
 import org.nlogo.app.codetab.TemporaryCodeTab
 import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
-import org.nlogo.fileformat.{ FailedConversionResult, ModelConversion, SuccessfulConversion }
+import org.nlogo.fileformat.{ FailedConversionResult, SuccessfulConversion }
+import org.nlogo.fileformat.FileFormat.ModelConversion
 import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionPane, UserAction }, UserAction.MenuAction
 import org.nlogo.window.{ BackgroundFileController, Events, FileController, ReconfigureWorkspaceUI },
   Events.{ AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent, LoadModelEvent, LoadErrorEvent,
@@ -168,7 +169,11 @@ object FileManager {
     def suggestedFileName: String = {
       if (workspace.getModelType == ModelType.New) {
         manager.saveModel(false)
-        workspace.getModelFileName.stripSuffix(".nlogo") + ".html"
+        val index = workspace.getModelFileName.lastIndexOf(".nlogo")
+        if (index == -1)
+          workspace.getModelFileName
+        else
+          workspace.getModelFileName.substring(0, index) + ".html"
       } else
         workspace.modelNameForDisplay + ".html"
     }
@@ -177,9 +182,9 @@ object FileManager {
     @throws(classOf[IOException])
     def modelToSave: String = {
       if (doesNotMatchWorkingCopy && userWantsLastSaveExported())
-        modelSaver.modelAsString(modelSaver.priorModel, "nlogo")
+        modelSaver.modelAsString(modelSaver.priorModel, "nlogox")
       else
-        modelSaver.modelAsString(modelSaver.currentModel, "nlogo")
+        modelSaver.modelAsString(modelSaver.currentModel, "nlogox")
     }
 
     @throws(classOf[UserCancelException])
@@ -211,7 +216,7 @@ object FileManager {
 
       if (includes.isEmpty)
         return Nil
-      
+
       includes.get.flatMap({ case (name, path) =>
         val file = scala.io.Source.fromFile(path)
         val source = file.mkString
@@ -250,6 +255,18 @@ object FileManager {
     }
   }
 
+  class ManageResourcesAction(manager: FileManager, workspace: AbstractWorkspaceScala, parent: Component)
+    extends ExceptionCatchingAction(I18N.gui.get("menu.file.manageResources"), parent) with MenuAction {
+
+    category = UserAction.FileCategory
+    group = UserAction.FileResourcesGroup
+    rank = 1
+
+    override def action() {
+      new ResourceManagerDialog(workspace.asInstanceOf[GUIWorkspace].getFrame, workspace).setVisible(true)
+    }
+  }
+
 }
 
 import FileManager._
@@ -258,7 +275,7 @@ import FileManager._
  *  fileMenu, but it's obviously undesirable to couple the behavior in this class too closely to
  *  its presentation (the menu) */
 class FileManager(workspace: AbstractWorkspaceScala,
-  modelLoader: ModelLoader,
+  modelLoader: AbstractModelLoader,
   modelConverter: ModelConversion,
   dirtyMonitor: DirtyMonitor,
   modelSaver: ModelSaver,
@@ -359,7 +376,10 @@ class FileManager(workspace: AbstractWorkspaceScala,
   @throws(classOf[UserCancelException])
   private[app] def saveModel(saveAs: Boolean): Unit = {
     val saveThunk = {
-      val saveModel = if (saveAs) SaveModelAs else SaveModel
+      val newFormat =
+        workspace.getModelFileName != null && (workspace.getModelFileName.endsWith(".nlogox") ||
+                                               workspace.getModelFileName.endsWith(".nlogox3d"))
+      val saveModel = if (saveAs || !newFormat) SaveModelAs else SaveModel
       saveModel(currentModel, modelLoader, controller, workspace, Version)
     }
 
@@ -428,7 +448,8 @@ class FileManager(workspace: AbstractWorkspaceScala,
     new QuitAction(this, parent),
     new ModelsLibraryAction(this, parent),
     new SaveAsNetLogoWebAction(this, workspace, modelSaver, parent),
-    new ImportClientAction(this, workspace, parent))
+    new ImportClientAction(this, workspace, parent),
+    new ManageResourcesAction(this, workspace, parent))
 
   def saveModelActions(parent: Component) = {
     def saveAction(saveAs: Boolean) =

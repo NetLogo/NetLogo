@@ -16,18 +16,18 @@ trait ConversionHelper {
   val libManager             = new DummyLibraryManager
   val canTestConversions     = NetLogoLegacyDialect.isAvailable
   val tempDir                = Files.createTempDirectory("ConversionTest")
-  val modelPath              = Files.createTempFile(tempDir, "ConversionTest", ".nlogo") // this is only used for includes file testing
+  val modelPath              = Files.createTempFile(tempDir, "ConversionTest", ".nlogox") // this is only used for includes file testing
 
   val literalParser =
     Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
 
   def converter(conversions: Model => Seq[ConversionSet] = (_ => Seq())) =
     new ModelConverter( VidExtensionManager, libManager, FooCompilationEnvironment
-                      , literalParser, NetLogoLegacyDialect, defaultAutoConvertables, conversions)
+                      , literalParser, NetLogoLegacyDialect, FileFormat.defaultAutoConvertables, conversions)
 
   def plotConverter =
     new PlotConverter( VidExtensionManager, libManager, FooCompilationEnvironment
-                     , literalParser, NetLogoLegacyDialect, defaultAutoConvertables)
+                     , literalParser, NetLogoLegacyDialect, FileFormat.defaultAutoConvertables)
 
   def tryConvert(model: Model, conversions: ConversionSet*): ConversionResult =
     converter(_ => conversions)(model, modelPath)

@@ -152,7 +152,7 @@ with ThemeSync {
     val path = Option(workspace.getModelPath).getOrElse{
       // we create an arbitrary model name for checking include paths when we don't have an actual
       // modelPath or directory
-      try workspace.attachModelDir("foo.nlogo")
+      try workspace.attachModelDir("foo.nlogox")
       catch {
         case ex: MalformedURLException =>
           // if we can't even figure out where we are, we certainly can't have includes

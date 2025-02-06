@@ -1,0 +1,1504 @@
+<?xml version="1.0" encoding="utf-8"?>
+<model version="NetLogo 7.0.0" snapToGrid="true">
+  <code><![CDATA[globals [ max-sheep ]  ; don't let the sheep population grow too large
+
+; Sheep and wolves are both breeds of turtles
+breed [ sheep a-sheep ]  ; sheep is its own plural, so we use "a-sheep" as the singular
+breed [ wolves wolf ]
+
+turtles-own [ energy ]       ; both wolves and sheep have energy
+
+patches-own [ countdown ]    ; this is for the sheep-wolves-grass model version
+
+to setup
+  clear-all
+  ifelse netlogo-web? [ set max-sheep 10000 ] [ set max-sheep 30000 ]
+
+  ; Check model-version switch
+  ; if we're not modeling grass, then the sheep don't need to eat to survive
+  ; otherwise each grass' state of growth and growing logic need to be set up
+  ifelse model-version = "sheep-wolves-grass" [
+    ask patches [
+      set pcolor one-of [ green brown ]
+      ifelse pcolor = green
+        [ set countdown grass-regrowth-time ]
+      [ set countdown random grass-regrowth-time ] ; initialize grass regrowth clocks randomly for brown patches
+    ]
+  ]
+  [
+    ask patches [ set pcolor green ]
+  ]
+
+  create-sheep initial-number-sheep  ; create the sheep, then initialize their variables
+  [
+    set shape  "sheep"
+    set color white
+    set size 1.5  ; easier to see
+    set label-color blue - 2
+    set energy random (2 * sheep-gain-from-food)
+    setxy random-xcor random-ycor
+  ]
+
+  create-wolves initial-number-wolves  ; create the wolves, then initialize their variables
+  [
+    set shape "wolf"
+    set color black
+    set size 2  ; easier to see
+    set energy random (2 * wolf-gain-from-food)
+    setxy random-xcor random-ycor
+  ]
+  display-labels
+  reset-ticks
+end
+
+to go
+  ; stop the model if there are no wolves and no sheep
+  if not any? turtles [ stop ]
+  ; stop the model if there are no wolves and the number of sheep gets very large
+  if not any? wolves and count sheep > max-sheep [ user-message "The sheep have inherited the earth" stop ]
+  ask sheep [
+    move
+
+    ; in this version, sheep eat grass, grass grows, and it costs sheep energy to move
+    if model-version = "sheep-wolves-grass" [
+      set energy energy - 1  ; deduct energy for sheep only if running sheep-wolves-grass model version
+      eat-grass  ; sheep eat grass only if running the sheep-wolves-grass model version
+      death ; sheep die from starvation only if running the sheep-wolves-grass model version
+    ]
+
+    reproduce-sheep  ; sheep reproduce at a random rate governed by a slider
+  ]
+  ask wolves [
+    move
+    set energy energy - 1  ; wolves lose energy as they move
+    eat-sheep ; wolves eat a sheep on their patch
+    death ; wolves die if they run out of energy
+    reproduce-wolves ; wolves reproduce at a random rate governed by a slider
+  ]
+
+  if model-version = "sheep-wolves-grass" [ ask patches [ grow-grass ] ]
+
+  tick
+  display-labels
+end
+
+to move  ; turtle procedure
+  rt random 50
+  lt random 50
+  fd 1
+end
+
+to eat-grass  ; sheep procedure
+  ; sheep eat grass and turn the patch brown
+  if pcolor = green [
+    set pcolor brown
+    set energy energy + sheep-gain-from-food  ; sheep gain energy by eating
+  ]
+end
+
+to reproduce-sheep  ; sheep procedure
+  if random-float 100 < sheep-reproduce [  ; throw "dice" to see if you will reproduce
+    set energy (energy / 2)                ; divide energy between parent and offspring
+    hatch 1 [ rt random-float 360 fd 1 ]   ; hatch an offspring and move it forward 1 step
+  ]
+end
+
+to reproduce-wolves  ; wolf procedure
+  if random-float 100 < wolf-reproduce [  ; throw "dice" to see if you will reproduce
+    set energy (energy / 2)               ; divide energy between parent and offspring
+    hatch 1 [ rt random-float 360 fd 1 ]  ; hatch an offspring and move it forward 1 step
+  ]
+end
+
+to eat-sheep  ; wolf procedure
+  let prey one-of sheep-here                    ; grab a random sheep
+  if prey != nobody  [                          ; did we get one? if so,
+    ask prey [ die ]                            ; kill it, and...
+    set energy energy + wolf-gain-from-food     ; get energy from eating
+  ]
+end
+
+to death  ; turtle procedure (i.e. both wolf and sheep procedure)
+  ; when energy dips below zero, die
+  if energy < 0 [ die ]
+end
+
+to grow-grass  ; patch procedure
+  ; countdown on brown patches: if you reach 0, grow some grass
+  if pcolor = brown [
+    ifelse countdown <= 0
+      [ set pcolor green
+        set countdown grass-regrowth-time ]
+      [ set countdown countdown - 1 ]
+  ]
+end
+
+to-report grass
+  ifelse model-version = "sheep-wolves-grass" [
+    report patches with [pcolor = green]
+  ]
+  [ report 0 ]
+end
+
+
+to display-labels
+  ask turtles [ set label "" ]
+  if show-energy? [
+    ask wolves [ set label round energy ]
+    if model-version = "sheep-wolves-grass" [ ask sheep [ set label round energy ] ]
+  ]
+end
+
+
+; Copyright 1997 Uri Wilensky.
+; See Info tab for full copyright and license.]]></code>
+  <widgets>
+    <view x="355" maxPycor="25" updateMode="1" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-25" height="519" showTickCounter="true" patchSize="10.0" fontSize="14" wrappingAllowedY="true" width="518" tickCounterLabel="ticks" maxPxcor="25" minPxcor="-25"></view>
+    <slider x="5" step="1" y="60" height="33" min="0" direction="Horizontal" max="250" default="100.0" variable="initial-number-sheep" width="174" display="initial-number-sheep"></slider>
+    <slider x="5" step="1.0" y="196" height="33" min="0.0" direction="Horizontal" max="50.0" default="4.0" variable="sheep-gain-from-food" width="174" display="sheep-gain-from-food"></slider>
+    <slider x="5" step="1.0" y="231" height="33" min="1.0" direction="Horizontal" max="20.0" default="4.0" variable="sheep-reproduce" units="%" width="174" display="sheep-reproduce"></slider>
+    <slider x="185" step="1" y="60" height="33" min="0" direction="Horizontal" max="250" default="50.0" variable="initial-number-wolves" width="165" display="initial-number-wolves"></slider>
+    <slider x="183" step="1.0" y="195" height="33" min="0.0" direction="Horizontal" max="100.0" default="20.0" variable="wolf-gain-from-food" width="165" display="wolf-gain-from-food"></slider>
+    <slider x="183" step="1.0" y="231" height="33" min="0.0" direction="Horizontal" max="20.0" default="5.0" variable="wolf-reproduce" units="%" width="165" display="wolf-reproduce"></slider>
+    <slider x="40" step="1" y="100" height="33" min="0" direction="Horizontal" max="100" default="30.0" variable="grass-regrowth-time" width="212" display="grass-regrowth-time"></slider>
+    <button x="40" y="140" height="33" disableUntilTicks="false" forever="false" kind="Observer" width="69" display="setup">setup</button>
+    <button x="115" y="140" height="33" disableUntilTicks="true" forever="true" kind="Observer" width="75" display="go">go</button>
+    <plot x="10" yMax="100.0" yAxis="pop." y="360" xMin="0.0" height="170" legend="true" xMax="100.0" autoplot="true" yMin="0.0" width="340" xAxis="time" display="populations">
+      <setup></setup>
+      <update></update>
+      <pen color="-612749" legend="true" interval="1.0" mode="0" display="sheep">
+        <setup></setup>
+        <update>plot count sheep</update>
+      </pen>
+      <pen color="-16449023" legend="true" interval="1.0" mode="0" display="wolves">
+        <setup></setup>
+        <update>plot count wolves</update>
+      </pen>
+      <pen color="-10899396" legend="true" interval="1.0" mode="0" display="grass / 4">
+        <setup></setup>
+        <update>if model-version = "sheep-wolves-grass" [ plot count grass / 4 ]</update>
+      </pen>
+    </plot>
+    <monitor x="41" precision="3" y="308" height="45" fontSize="11" width="70" display="sheep">count sheep</monitor>
+    <monitor x="115" precision="3" y="308" height="45" fontSize="11" width="70" display="wolves">count wolves</monitor>
+    <monitor x="191" precision="0" y="308" height="45" fontSize="11" width="65" display="grass">count grass / 4</monitor>
+    <note x="20" y="178" height="18" color="0.0" transparent="false" fontSize="11" width="140">Sheep settings</note>
+    <note x="198" y="176" height="18" color="0.0" transparent="false" fontSize="11" width="113">Wolf settings</note>
+    <switch x="105" y="270" height="33" on="false" variable="show-energy?" width="136" display="show-energy?"></switch>
+    <chooser x="5" y="10" height="45" variable="model-version" current="0" width="345" display="model-version">
+      <choice type="string" value="sheep-wolves"></choice>
+      <choice type="string" value="sheep-wolves-grass"></choice>
+    </chooser>
+  </widgets>
+  <info><![CDATA[## WHAT IS IT?
+
+This model explores the stability of predator-prey ecosystems. Such a system is called unstable if it tends to result in extinction for one or more species involved.  In contrast, a system is stable if it tends to maintain itself over time, despite fluctuations in population sizes.
+
+## HOW IT WORKS
+
+There are two main variations to this model.
+
+In the first variation, the "sheep-wolves" version, wolves and sheep wander randomly around the landscape, while the wolves look for sheep to prey on. Each step costs the wolves energy, and they must eat sheep in order to replenish their energy - when they run out of energy they die. To allow the population to continue, each wolf or sheep has a fixed probability of reproducing at each time step. In this variation, we model the grass as "infinite" so that sheep always have enough to eat, and we don't explicitly model the eating or growing of grass. As such, sheep don't either gain or lose energy by eating or moving. This variation produces interesting population dynamics, but is ultimately unstable. This variation of the model is particularly well-suited to interacting species in a rich nutrient environment, such as two strains of bacteria in a petri dish (Gause, 1934).
+
+The second variation, the "sheep-wolves-grass" version explicitly models grass (green) in addition to wolves and sheep. The behavior of the wolves is identical to the first variation, however this time the sheep must eat grass in order to maintain their energy - when they run out of energy they die. Once grass is eaten it will only regrow after a fixed amount of time. This variation is more complex than the first, but it is generally stable. It is a closer match to the classic Lotka Volterra population oscillation models. The classic LV models though assume the populations can take on real values, but in small populations these models underestimate extinctions and agent-based models such as the ones here, provide more realistic results. (See Wilensky & Rand, 2015; chapter 4).
+
+The construction of this model is described in two papers by Wilensky & Reisman (1998; 2006) referenced below.
+
+## HOW TO USE IT
+
+1. Set the model-version chooser to "sheep-wolves-grass" to include grass eating and growth in the model, or to "sheep-wolves" to only include wolves (black) and sheep (white).
+2. Adjust the slider parameters (see below), or use the default settings.
+3. Press the SETUP button.
+4. Press the GO button to begin the simulation.
+5. Look at the monitors to see the current population sizes
+6. Look at the POPULATIONS plot to watch the populations fluctuate over time
+
+Parameters:
+MODEL-VERSION: Whether we model sheep wolves and grass or just sheep and wolves
+INITIAL-NUMBER-SHEEP: The initial size of sheep population
+INITIAL-NUMBER-WOLVES: The initial size of wolf population
+SHEEP-GAIN-FROM-FOOD: The amount of energy sheep get for every grass patch eaten (Note this is not used in the sheep-wolves model version)
+WOLF-GAIN-FROM-FOOD: The amount of energy wolves get for every sheep eaten
+SHEEP-REPRODUCE: The probability of a sheep reproducing at each time step
+WOLF-REPRODUCE: The probability of a wolf reproducing at each time step
+GRASS-REGROWTH-TIME: How long it takes for grass to regrow once it is eaten (Note this is not used in the sheep-wolves model version)
+SHOW-ENERGY?: Whether or not to show the energy of each animal as a number
+
+Notes:
+- one unit of energy is deducted for every step a wolf takes
+- when running the sheep-wolves-grass model version, one unit of energy is deducted for every step a sheep takes
+
+There are three monitors to show the populations of the wolves, sheep and grass and a populations plot to display the population values over time.
+
+If there are no wolves left and too many sheep, the model run stops.
+
+## THINGS TO NOTICE
+
+When running the sheep-wolves model variation, watch as the sheep and wolf populations fluctuate. Notice that increases and decreases in the sizes of each population are related. In what way are they related? What eventually happens?
+
+In the sheep-wolves-grass model variation, notice the green line added to the population plot representing fluctuations in the amount of grass. How do the sizes of the three populations appear to relate now? What is the explanation for this?
+
+Why do you suppose that some variations of the model might be stable while others are not?
+
+## THINGS TO TRY
+
+Try adjusting the parameters under various settings. How sensitive is the stability of the model to the particular parameters?
+
+Can you find any parameters that generate a stable ecosystem in the sheep-wolves model variation?
+
+Try running the sheep-wolves-grass model variation, but setting INITIAL-NUMBER-WOLVES to 0. This gives a stable ecosystem with only sheep and grass. Why might this be stable while the variation with only sheep and wolves is not?
+
+Notice that under stable settings, the populations tend to fluctuate at a predictable pace. Can you find any parameters that will speed this up or slow it down?
+
+## EXTENDING THE MODEL
+
+There are a number of ways to alter the model so that it will be stable with only wolves and sheep (no grass). Some will require new elements to be coded in or existing behaviors to be changed. Can you develop such a version?
+
+Try changing the reproduction rules -- for example, what would happen if reproduction depended on energy rather than being determined by a fixed probability?
+
+Can you modify the model so the sheep will flock?
+
+Can you modify the model so that wolves actively chase sheep?
+
+## NETLOGO FEATURES
+
+Note the use of breeds to model two different kinds of "turtles": wolves and sheep. Note the use of patches to model grass.
+
+Note the use of the ONE-OF agentset reporter to select a random sheep to be eaten by a wolf.
+
+### BEHAVIORSPACE FEATURES
+
+For more information about BehaviorSpace and the features introduced in NetLogo 6.4.0 see the [documentation](https://ccl.northwestern.edu/netlogo/docs/behaviorspace.html).
+
+The “New BehaviorSpace Features” experiment illustrates some of the BehaviorSpace features introduced in NetLogo 6.4.0. You can open BehaviorSpace using the Tools -> BehaviorSpace menu item. Click the EDIT button to see the details of the experiment.
+
+Note the use of 3 repetitions, so there is enough data to calculate the standard deviation of metrics at steps where data is available for all repetitions.
+
+Note the use of metrics that return lists, which can be processed in the Lists and Statistics Outputs.
+
+Note the use of a reporter to conditionally record metrics every other tick.
+
+Note the use of pre experiment and post experiment commands to show the total elapsed time in the command center at the end of the experiment.
+
+Click the OK button to finish viewing/editing the experiment.
+
+The “Wolf Sheep Crossing” experiment illustrates the use of a reporter to capture interesting behavior, in this case the approximate periodicity of the simulation.
+
+The “BehaviorSpace run 3 experiments” experiment shows how to use the subexperiment syntax (introduced in NetLogo 6.4.0) to run three different experiments. If you uncheck UPDATE VIEW, check UPDATE PLOTS AND MONITORS, and select 1 for SIMULTANEOUS RUNS IN PARALLEL the plots will show you how the experiments differ significantly. The results are also written to the COMMAND CENTER. Since there are list reporters as metrics there is no value to using the lists output format. Since there is only one repetition, there is no value to using statistics output format.
+
+The “BehaviorSpace run 3 variable values per experiments” experiment is an example of how to use the subexperiment syntax to try multiple values of a variable non-combinatorially. Notice that default values need to be provided because the subexperiments only give the value of one of the variables explicitly.
+
+The “BehaviorSpace subset” experiment makes use of the subexperiment syntax to run multiple combinations on a single line. Compare this to the combinatorial combination of the same variable values in the experiment “BehaviorSpace combinatorial”.
+
+## THINGS TO TRY - BEHAVIORSPACE
+
+Use the EXPORT button to save the "New BehaviorSpace Features" experiment as an XML file. Then open the Wolf Sheep Stride Inheritance model and use the IMPORT button to add the "New BehaviorSpace Features" experiment to the model. Run the experiment in this model.
+
+Create your own experiments to explore how the different variables interact. What is the most dynamically stable combination you can find?
+
+With the "New BehaviorSpace Features" experiment explore the effect on the total time of varying your choices for  UPDATE VIEW, UPDATE PLOTS AND MONITORS, and SIMULTANEOUS RUNS IN PARALLEL. Which combination is the fastest? The slowest?
+
+
+### Reproducibility of Experiments
+
+The experiment “New BehaviorSpace Features Reproducible” produces the same numerical results every time it is run. You can see this by running the experiment twice and saving spreadsheet output with two different names. If you compare the files they will differ only in the line that includes the time at which the experiment was run.
+
+Contrast this to what happens when you do the same thing with the experiment “New BehaviorSpace Features”. In this case the results vary between runs because the NetLogo code includes primitives that introduce randomness, such as RANDOM, RANDOM-XCOR, RANDOM-YCOR and RANDOM-FLOAT. Sometimes it is desirable to have the same outcome each time the experiment is run, for example to show interesting behavior that only happens some of the time or to create a predictable lesson or demonstration. The output of the random functions is made reproducible by the line "random-seed (474 + behaviorspace-run-number)" in the setup command section.
+
+What is the effect of each of the following changes on multiple experiment runs:
+
+- Changing 474 to another number?
+- Removing the addition of behaviorspace-run-number?
+- Moving setup to before the random-seed line?
+- Replacing the random-seed line with new-seed?
+
+With the experiments “New BehaviorSpace Features” and “New BehaviorSpace Features Reproducible” explore whether output values change when you try the following actions:
+
+- Use the slider to vary `wolf-gain-from-food`
+- Use sliders to change other variables
+- Use the chooser to select `sheep-wolves`
+- Use the switch to turn on `show-energy?`
+
+Output values for the experiment “New BehaviorSpace Features Reproducible” remain unchanged because the value of all Interface variables is specified. Note that when you start a new experiment the variables section specifies all the slider variables, but not any chooser or switch variables.
+
+## RELATED MODELS
+
+Look at Rabbits Grass Weeds for another model of interacting populations with different rules.
+
+## CREDITS AND REFERENCES
+
+Wilensky, U. & Reisman, K. (1998). Connected Science: Learning Biology through Constructing and Testing Computational Theories -- an Embodied Modeling Approach. International Journal of Complex Systems, M. 234, pp. 1 - 12. (The Wolf-Sheep-Predation model is a slightly extended version of the model described in the paper.)
+
+Wilensky, U. & Reisman, K. (2006). Thinking like a Wolf, a Sheep or a Firefly: Learning Biology through Constructing and Testing Computational Theories -- an Embodied Modeling Approach. Cognition & Instruction, 24(2), pp. 171-209. http://ccl.northwestern.edu/papers/wolfsheep.pdf .
+
+Wilensky, U., & Rand, W. (2015). An introduction to agent-based modeling: Modeling natural, social and engineered complex systems with NetLogo. Cambridge, MA: MIT Press.
+
+Lotka, A. J. (1925). Elements of physical biology. New York: Dover.
+
+Volterra, V. (1926, October 16). Fluctuations in the abundance of a species considered mathematically. Nature, 118, 558–560.
+
+Gause, G. F. (1934). The struggle for existence. Baltimore: Williams & Wilkins.
+
+## HOW TO CITE
+
+If you mention this model or the NetLogo software in a publication, we ask that you include the citations below.
+
+For the model itself:
+
+* Wilensky, U. (1997).  NetLogo Wolf Sheep Predation model.  http://ccl.northwestern.edu/netlogo/models/WolfSheepPredation.  Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+
+Please cite the NetLogo software as:
+
+* Wilensky, U. (1999). NetLogo. http://ccl.northwestern.edu/netlogo/. Center for Connected Learning and Computer-Based Modeling, Northwestern University, Evanston, IL.
+
+## COPYRIGHT AND LICENSE
+
+Copyright 1997 Uri Wilensky.
+
+![CC BY-NC-SA 3.0](http://ccl.northwestern.edu/images/creativecommons/byncsa.png)
+
+This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License.  To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.
+
+Commercial licenses are also available. To inquire about commercial licenses, please contact Uri Wilensky at uri@northwestern.edu.
+
+This model was created as part of the project: CONNECTED MATHEMATICS: MAKING SENSE OF COMPLEX PHENOMENA THROUGH BUILDING OBJECT-BASED PARALLEL MODELS (OBPML).  The project gratefully acknowledges the support of the National Science Foundation (Applications of Advanced Technologies Program) -- grant numbers RED #9552950 and REC #9632612.
+
+This model was converted to NetLogo as part of the projects: PARTICIPATORY SIMULATIONS: NETWORK-BASED DESIGN FOR SYSTEMS LEARNING IN CLASSROOMS and/or INTEGRATED SIMULATION AND MODELING ENVIRONMENT. The project gratefully acknowledges the support of the National Science Foundation (REPP & ROLE programs) -- grant numbers REC #9814682 and REC-0126227. Converted from StarLogoT to NetLogo, 2000.
+
+<!-- 1997 2000 -->]]></info>
+  <turtleShapes>
+    <shape name="default" rotatable="true" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="5"></point>
+        <point x="40" y="250"></point>
+        <point x="150" y="205"></point>
+        <point x="260" y="250"></point>
+      </polygon>
+    </shape>
+    <shape name="airplane" rotatable="true" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="0"></point>
+        <point x="135" y="15"></point>
+        <point x="120" y="60"></point>
+        <point x="120" y="105"></point>
+        <point x="15" y="165"></point>
+        <point x="15" y="195"></point>
+        <point x="120" y="180"></point>
+        <point x="135" y="240"></point>
+        <point x="105" y="270"></point>
+        <point x="120" y="285"></point>
+        <point x="150" y="270"></point>
+        <point x="180" y="285"></point>
+        <point x="210" y="270"></point>
+        <point x="165" y="240"></point>
+        <point x="180" y="180"></point>
+        <point x="285" y="195"></point>
+        <point x="285" y="165"></point>
+        <point x="180" y="105"></point>
+        <point x="180" y="60"></point>
+        <point x="165" y="15"></point>
+      </polygon>
+    </shape>
+    <shape name="arrow" rotatable="true" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="0"></point>
+        <point x="0" y="150"></point>
+        <point x="105" y="150"></point>
+        <point x="105" y="293"></point>
+        <point x="195" y="293"></point>
+        <point x="195" y="150"></point>
+        <point x="300" y="150"></point>
+      </polygon>
+    </shape>
+    <shape name="box" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="285"></point>
+        <point x="285" y="225"></point>
+        <point x="285" y="75"></point>
+        <point x="150" y="135"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="135"></point>
+        <point x="15" y="75"></point>
+        <point x="150" y="15"></point>
+        <point x="285" y="75"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="15" y="75"></point>
+        <point x="15" y="225"></point>
+        <point x="150" y="285"></point>
+        <point x="150" y="135"></point>
+      </polygon>
+      <line endX="150" startY="285" marked="false" color="255" endY="135" startX="150"></line>
+      <line endX="15" startY="135" marked="false" color="255" endY="75" startX="150"></line>
+      <line endX="285" startY="135" marked="false" color="255" endY="75" startX="150"></line>
+    </shape>
+    <shape name="bug" rotatable="true" editableColorIndex="0">
+      <circle x="96" y="182" marked="true" color="-1920102913" diameter="108" filled="true"></circle>
+      <circle x="110" y="127" marked="true" color="-1920102913" diameter="80" filled="true"></circle>
+      <circle x="110" y="75" marked="true" color="-1920102913" diameter="80" filled="true"></circle>
+      <line endX="80" startY="100" marked="true" color="-1920102913" endY="30" startX="150"></line>
+      <line endX="220" startY="100" marked="true" color="-1920102913" endY="30" startX="150"></line>
+    </shape>
+    <shape name="butterfly" rotatable="true" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="165"></point>
+        <point x="209" y="199"></point>
+        <point x="225" y="225"></point>
+        <point x="225" y="255"></point>
+        <point x="195" y="270"></point>
+        <point x="165" y="255"></point>
+        <point x="150" y="240"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="165"></point>
+        <point x="89" y="198"></point>
+        <point x="75" y="225"></point>
+        <point x="75" y="255"></point>
+        <point x="105" y="270"></point>
+        <point x="135" y="255"></point>
+        <point x="150" y="240"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="139" y="148"></point>
+        <point x="100" y="105"></point>
+        <point x="55" y="90"></point>
+        <point x="25" y="90"></point>
+        <point x="10" y="105"></point>
+        <point x="10" y="135"></point>
+        <point x="25" y="180"></point>
+        <point x="40" y="195"></point>
+        <point x="85" y="194"></point>
+        <point x="139" y="163"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="162" y="150"></point>
+        <point x="200" y="105"></point>
+        <point x="245" y="90"></point>
+        <point x="275" y="90"></point>
+        <point x="290" y="105"></point>
+        <point x="290" y="135"></point>
+        <point x="275" y="180"></point>
+        <point x="260" y="195"></point>
+        <point x="215" y="195"></point>
+        <point x="162" y="165"></point>
+      </polygon>
+      <polygon color="255" filled="true" marked="false">
+        <point x="150" y="255"></point>
+        <point x="135" y="225"></point>
+        <point x="120" y="150"></point>
+        <point x="135" y="120"></point>
+        <point x="150" y="105"></point>
+        <point x="165" y="120"></point>
+        <point x="180" y="150"></point>
+        <point x="165" y="225"></point>
+      </polygon>
+      <circle x="135" y="90" marked="false" color="255" diameter="30" filled="true"></circle>
+      <line endX="195" startY="105" marked="false" color="255" endY="60" startX="150"></line>
+      <line endX="105" startY="105" marked="false" color="255" endY="60" startX="150"></line>
+    </shape>
+    <shape name="car" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="300" y="180"></point>
+        <point x="279" y="164"></point>
+        <point x="261" y="144"></point>
+        <point x="240" y="135"></point>
+        <point x="226" y="132"></point>
+        <point x="213" y="106"></point>
+        <point x="203" y="84"></point>
+        <point x="185" y="63"></point>
+        <point x="159" y="50"></point>
+        <point x="135" y="50"></point>
+        <point x="75" y="60"></point>
+        <point x="0" y="150"></point>
+        <point x="0" y="165"></point>
+        <point x="0" y="225"></point>
+        <point x="300" y="225"></point>
+        <point x="300" y="180"></point>
+      </polygon>
+      <circle x="180" y="180" marked="false" color="255" diameter="90" filled="true"></circle>
+      <circle x="30" y="180" marked="false" color="255" diameter="90" filled="true"></circle>
+      <polygon color="255" filled="true" marked="false">
+        <point x="162" y="80"></point>
+        <point x="132" y="78"></point>
+        <point x="134" y="135"></point>
+        <point x="209" y="135"></point>
+        <point x="194" y="105"></point>
+        <point x="189" y="96"></point>
+        <point x="180" y="89"></point>
+      </polygon>
+      <circle x="47" y="195" marked="true" color="-1920102913" diameter="58" filled="true"></circle>
+      <circle x="195" y="195" marked="true" color="-1920102913" diameter="58" filled="true"></circle>
+    </shape>
+    <shape name="circle" rotatable="false" editableColorIndex="0">
+      <circle x="0" y="0" marked="true" color="-1920102913" diameter="300" filled="true"></circle>
+    </shape>
+    <shape name="circle 2" rotatable="false" editableColorIndex="0">
+      <circle x="0" y="0" marked="true" color="-1920102913" diameter="300" filled="true"></circle>
+      <circle x="30" y="30" marked="false" color="255" diameter="240" filled="true"></circle>
+    </shape>
+    <shape name="cow" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="200" y="193"></point>
+        <point x="197" y="249"></point>
+        <point x="179" y="249"></point>
+        <point x="177" y="196"></point>
+        <point x="166" y="187"></point>
+        <point x="140" y="189"></point>
+        <point x="93" y="191"></point>
+        <point x="78" y="179"></point>
+        <point x="72" y="211"></point>
+        <point x="49" y="209"></point>
+        <point x="48" y="181"></point>
+        <point x="37" y="149"></point>
+        <point x="25" y="120"></point>
+        <point x="25" y="89"></point>
+        <point x="45" y="72"></point>
+        <point x="103" y="84"></point>
+        <point x="179" y="75"></point>
+        <point x="198" y="76"></point>
+        <point x="252" y="64"></point>
+        <point x="272" y="81"></point>
+        <point x="293" y="103"></point>
+        <point x="285" y="121"></point>
+        <point x="255" y="121"></point>
+        <point x="242" y="118"></point>
+        <point x="224" y="167"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="73" y="210"></point>
+        <point x="86" y="251"></point>
+        <point x="62" y="249"></point>
+        <point x="48" y="208"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="25" y="114"></point>
+        <point x="16" y="195"></point>
+        <point x="9" y="204"></point>
+        <point x="23" y="213"></point>
+        <point x="25" y="200"></point>
+        <point x="39" y="123"></point>
+      </polygon>
+    </shape>
+    <shape name="cylinder" rotatable="false" editableColorIndex="0">
+      <circle x="0" y="0" marked="true" color="-1920102913" diameter="300" filled="true"></circle>
+    </shape>
+    <shape name="dot" rotatable="false" editableColorIndex="0">
+      <circle x="90" y="90" marked="true" color="-1920102913" diameter="120" filled="true"></circle>
+    </shape>
+    <shape name="face happy" rotatable="false" editableColorIndex="0">
+      <circle x="8" y="8" marked="true" color="-1920102913" diameter="285" filled="true"></circle>
+      <circle x="60" y="75" marked="false" color="255" diameter="60" filled="true"></circle>
+      <circle x="180" y="75" marked="false" color="255" diameter="60" filled="true"></circle>
+      <polygon color="255" filled="true" marked="false">
+        <point x="150" y="255"></point>
+        <point x="90" y="239"></point>
+        <point x="62" y="213"></point>
+        <point x="47" y="191"></point>
+        <point x="67" y="179"></point>
+        <point x="90" y="203"></point>
+        <point x="109" y="218"></point>
+        <point x="150" y="225"></point>
+        <point x="192" y="218"></point>
+        <point x="210" y="203"></point>
+        <point x="227" y="181"></point>
+        <point x="251" y="194"></point>
+        <point x="236" y="217"></point>
+        <point x="212" y="240"></point>
+      </polygon>
+    </shape>
+    <shape name="face neutral" rotatable="false" editableColorIndex="0">
+      <circle x="8" y="7" marked="true" color="-1920102913" diameter="285" filled="true"></circle>
+      <circle x="60" y="75" marked="false" color="255" diameter="60" filled="true"></circle>
+      <circle x="180" y="75" marked="false" color="255" diameter="60" filled="true"></circle>
+      <rectangle endX="240" startY="195" marked="false" color="255" endY="225" startX="60" filled="true"></rectangle>
+    </shape>
+    <shape name="face sad" rotatable="false" editableColorIndex="0">
+      <circle x="8" y="8" marked="true" color="-1920102913" diameter="285" filled="true"></circle>
+      <circle x="60" y="75" marked="false" color="255" diameter="60" filled="true"></circle>
+      <circle x="180" y="75" marked="false" color="255" diameter="60" filled="true"></circle>
+      <polygon color="255" filled="true" marked="false">
+        <point x="150" y="168"></point>
+        <point x="90" y="184"></point>
+        <point x="62" y="210"></point>
+        <point x="47" y="232"></point>
+        <point x="67" y="244"></point>
+        <point x="90" y="220"></point>
+        <point x="109" y="205"></point>
+        <point x="150" y="198"></point>
+        <point x="192" y="205"></point>
+        <point x="210" y="220"></point>
+        <point x="227" y="242"></point>
+        <point x="251" y="229"></point>
+        <point x="236" y="206"></point>
+        <point x="212" y="183"></point>
+      </polygon>
+    </shape>
+    <shape name="fish" rotatable="false" editableColorIndex="0">
+      <polygon color="-1" filled="true" marked="false">
+        <point x="44" y="131"></point>
+        <point x="21" y="87"></point>
+        <point x="15" y="86"></point>
+        <point x="0" y="120"></point>
+        <point x="15" y="150"></point>
+        <point x="0" y="180"></point>
+        <point x="13" y="214"></point>
+        <point x="20" y="212"></point>
+        <point x="45" y="166"></point>
+      </polygon>
+      <polygon color="-1" filled="true" marked="false">
+        <point x="135" y="195"></point>
+        <point x="119" y="235"></point>
+        <point x="95" y="218"></point>
+        <point x="76" y="210"></point>
+        <point x="46" y="204"></point>
+        <point x="60" y="165"></point>
+      </polygon>
+      <polygon color="-1" filled="true" marked="false">
+        <point x="75" y="45"></point>
+        <point x="83" y="77"></point>
+        <point x="71" y="103"></point>
+        <point x="86" y="114"></point>
+        <point x="166" y="78"></point>
+        <point x="135" y="60"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="30" y="136"></point>
+        <point x="151" y="77"></point>
+        <point x="226" y="81"></point>
+        <point x="280" y="119"></point>
+        <point x="292" y="146"></point>
+        <point x="292" y="160"></point>
+        <point x="287" y="170"></point>
+        <point x="270" y="195"></point>
+        <point x="195" y="210"></point>
+        <point x="151" y="212"></point>
+        <point x="30" y="166"></point>
+      </polygon>
+      <circle x="215" y="106" marked="false" color="255" diameter="30" filled="true"></circle>
+    </shape>
+    <shape name="flag" rotatable="false" editableColorIndex="0">
+      <rectangle endX="75" startY="15" marked="true" color="-1920102913" endY="300" startX="60" filled="true"></rectangle>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="90" y="150"></point>
+        <point x="270" y="90"></point>
+        <point x="90" y="30"></point>
+      </polygon>
+      <line endX="90" startY="135" marked="true" color="-1920102913" endY="135" startX="75"></line>
+      <line endX="90" startY="45" marked="true" color="-1920102913" endY="45" startX="75"></line>
+    </shape>
+    <shape name="flower" rotatable="false" editableColorIndex="0">
+      <polygon color="1504722175" filled="true" marked="false">
+        <point x="135" y="120"></point>
+        <point x="165" y="165"></point>
+        <point x="180" y="210"></point>
+        <point x="180" y="240"></point>
+        <point x="150" y="300"></point>
+        <point x="165" y="300"></point>
+        <point x="195" y="240"></point>
+        <point x="195" y="195"></point>
+        <point x="165" y="135"></point>
+      </polygon>
+      <circle x="85" y="132" marked="true" color="-1920102913" diameter="38" filled="true"></circle>
+      <circle x="130" y="147" marked="true" color="-1920102913" diameter="38" filled="true"></circle>
+      <circle x="192" y="85" marked="true" color="-1920102913" diameter="38" filled="true"></circle>
+      <circle x="85" y="40" marked="true" color="-1920102913" diameter="38" filled="true"></circle>
+      <circle x="177" y="40" marked="true" color="-1920102913" diameter="38" filled="true"></circle>
+      <circle x="177" y="132" marked="true" color="-1920102913" diameter="38" filled="true"></circle>
+      <circle x="70" y="85" marked="true" color="-1920102913" diameter="38" filled="true"></circle>
+      <circle x="130" y="25" marked="true" color="-1920102913" diameter="38" filled="true"></circle>
+      <circle x="96" y="51" marked="true" color="-1920102913" diameter="108" filled="true"></circle>
+      <circle x="113" y="68" marked="false" color="255" diameter="74" filled="true"></circle>
+      <polygon color="1504722175" filled="true" marked="false">
+        <point x="189" y="233"></point>
+        <point x="219" y="188"></point>
+        <point x="249" y="173"></point>
+        <point x="279" y="188"></point>
+        <point x="234" y="218"></point>
+      </polygon>
+      <polygon color="1504722175" filled="true" marked="false">
+        <point x="180" y="255"></point>
+        <point x="150" y="210"></point>
+        <point x="105" y="210"></point>
+        <point x="75" y="240"></point>
+        <point x="135" y="240"></point>
+      </polygon>
+    </shape>
+    <shape name="house" rotatable="false" editableColorIndex="0">
+      <rectangle endX="255" startY="120" marked="true" color="-1920102913" endY="285" startX="45" filled="true"></rectangle>
+      <rectangle endX="180" startY="210" marked="false" color="255" endY="285" startX="120" filled="true"></rectangle>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="15" y="120"></point>
+        <point x="150" y="15"></point>
+        <point x="285" y="120"></point>
+      </polygon>
+      <line endX="270" startY="120" marked="false" color="255" endY="120" startX="30"></line>
+    </shape>
+    <shape name="leaf" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="210"></point>
+        <point x="135" y="195"></point>
+        <point x="120" y="210"></point>
+        <point x="60" y="210"></point>
+        <point x="30" y="195"></point>
+        <point x="60" y="180"></point>
+        <point x="60" y="165"></point>
+        <point x="15" y="135"></point>
+        <point x="30" y="120"></point>
+        <point x="15" y="105"></point>
+        <point x="40" y="104"></point>
+        <point x="45" y="90"></point>
+        <point x="60" y="90"></point>
+        <point x="90" y="105"></point>
+        <point x="105" y="120"></point>
+        <point x="120" y="120"></point>
+        <point x="105" y="60"></point>
+        <point x="120" y="60"></point>
+        <point x="135" y="30"></point>
+        <point x="150" y="15"></point>
+        <point x="165" y="30"></point>
+        <point x="180" y="60"></point>
+        <point x="195" y="60"></point>
+        <point x="180" y="120"></point>
+        <point x="195" y="120"></point>
+        <point x="210" y="105"></point>
+        <point x="240" y="90"></point>
+        <point x="255" y="90"></point>
+        <point x="263" y="104"></point>
+        <point x="285" y="105"></point>
+        <point x="270" y="120"></point>
+        <point x="285" y="135"></point>
+        <point x="240" y="165"></point>
+        <point x="240" y="180"></point>
+        <point x="270" y="195"></point>
+        <point x="240" y="210"></point>
+        <point x="180" y="210"></point>
+        <point x="165" y="195"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="135" y="195"></point>
+        <point x="135" y="240"></point>
+        <point x="120" y="255"></point>
+        <point x="105" y="255"></point>
+        <point x="105" y="285"></point>
+        <point x="135" y="285"></point>
+        <point x="165" y="240"></point>
+        <point x="165" y="195"></point>
+      </polygon>
+    </shape>
+    <shape name="line" rotatable="true" editableColorIndex="0">
+      <line endX="150" startY="0" marked="true" color="-1920102913" endY="300" startX="150"></line>
+    </shape>
+    <shape name="line half" rotatable="true" editableColorIndex="0">
+      <line endX="150" startY="0" marked="true" color="-1920102913" endY="150" startX="150"></line>
+    </shape>
+    <shape name="pentagon" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="15"></point>
+        <point x="15" y="120"></point>
+        <point x="60" y="285"></point>
+        <point x="240" y="285"></point>
+        <point x="285" y="120"></point>
+      </polygon>
+    </shape>
+    <shape name="person" rotatable="false" editableColorIndex="0">
+      <circle x="110" y="5" marked="true" color="-1920102913" diameter="80" filled="true"></circle>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="105" y="90"></point>
+        <point x="120" y="195"></point>
+        <point x="90" y="285"></point>
+        <point x="105" y="300"></point>
+        <point x="135" y="300"></point>
+        <point x="150" y="225"></point>
+        <point x="165" y="300"></point>
+        <point x="195" y="300"></point>
+        <point x="210" y="285"></point>
+        <point x="180" y="195"></point>
+        <point x="195" y="90"></point>
+      </polygon>
+      <rectangle endX="172" startY="79" marked="true" color="-1920102913" endY="94" startX="127" filled="true"></rectangle>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="195" y="90"></point>
+        <point x="240" y="150"></point>
+        <point x="225" y="180"></point>
+        <point x="165" y="105"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="105" y="90"></point>
+        <point x="60" y="150"></point>
+        <point x="75" y="180"></point>
+        <point x="135" y="105"></point>
+      </polygon>
+    </shape>
+    <shape name="plant" rotatable="false" editableColorIndex="0">
+      <rectangle endX="165" startY="90" marked="true" color="-1920102913" endY="300" startX="135" filled="true"></rectangle>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="135" y="255"></point>
+        <point x="90" y="210"></point>
+        <point x="45" y="195"></point>
+        <point x="75" y="255"></point>
+        <point x="135" y="285"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="165" y="255"></point>
+        <point x="210" y="210"></point>
+        <point x="255" y="195"></point>
+        <point x="225" y="255"></point>
+        <point x="165" y="285"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="135" y="180"></point>
+        <point x="90" y="135"></point>
+        <point x="45" y="120"></point>
+        <point x="75" y="180"></point>
+        <point x="135" y="210"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="165" y="180"></point>
+        <point x="165" y="210"></point>
+        <point x="225" y="180"></point>
+        <point x="255" y="120"></point>
+        <point x="210" y="135"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="135" y="105"></point>
+        <point x="90" y="60"></point>
+        <point x="45" y="45"></point>
+        <point x="75" y="105"></point>
+        <point x="135" y="135"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="165" y="105"></point>
+        <point x="165" y="135"></point>
+        <point x="225" y="105"></point>
+        <point x="255" y="45"></point>
+        <point x="210" y="60"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="135" y="90"></point>
+        <point x="120" y="45"></point>
+        <point x="150" y="15"></point>
+        <point x="180" y="45"></point>
+        <point x="165" y="90"></point>
+      </polygon>
+    </shape>
+    <shape name="sheep" rotatable="false" editableColorIndex="15">
+      <circle x="203" y="65" marked="true" color="-1" diameter="88" filled="true"></circle>
+      <circle x="70" y="65" marked="true" color="-1" diameter="162" filled="true"></circle>
+      <circle x="150" y="105" marked="true" color="-1" diameter="120" filled="true"></circle>
+      <polygon color="-1920102913" filled="true" marked="false">
+        <point x="218" y="120"></point>
+        <point x="240" y="165"></point>
+        <point x="255" y="165"></point>
+        <point x="278" y="120"></point>
+      </polygon>
+      <circle x="214" y="72" marked="false" color="-1920102913" diameter="67" filled="true"></circle>
+      <rectangle endX="179" startY="223" marked="true" color="-1" endY="298" startX="164" filled="true"></rectangle>
+      <polygon color="-1" filled="true" marked="true">
+        <point x="45" y="285"></point>
+        <point x="30" y="285"></point>
+        <point x="30" y="240"></point>
+        <point x="15" y="195"></point>
+        <point x="45" y="210"></point>
+      </polygon>
+      <circle x="3" y="83" marked="true" color="-1" diameter="150" filled="true"></circle>
+      <rectangle endX="80" startY="221" marked="true" color="-1" endY="296" startX="65" filled="true"></rectangle>
+      <polygon color="-1" filled="true" marked="true">
+        <point x="195" y="285"></point>
+        <point x="210" y="285"></point>
+        <point x="210" y="240"></point>
+        <point x="240" y="210"></point>
+        <point x="195" y="210"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="false">
+        <point x="276" y="85"></point>
+        <point x="285" y="105"></point>
+        <point x="302" y="99"></point>
+        <point x="294" y="83"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="false">
+        <point x="219" y="85"></point>
+        <point x="210" y="105"></point>
+        <point x="193" y="99"></point>
+        <point x="201" y="83"></point>
+      </polygon>
+    </shape>
+    <shape name="square" rotatable="false" editableColorIndex="0">
+      <rectangle endX="270" startY="30" marked="true" color="-1920102913" endY="270" startX="30" filled="true"></rectangle>
+    </shape>
+    <shape name="square 2" rotatable="false" editableColorIndex="0">
+      <rectangle endX="270" startY="30" marked="true" color="-1920102913" endY="270" startX="30" filled="true"></rectangle>
+      <rectangle endX="240" startY="60" marked="false" color="255" endY="240" startX="60" filled="true"></rectangle>
+    </shape>
+    <shape name="star" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="151" y="1"></point>
+        <point x="185" y="108"></point>
+        <point x="298" y="108"></point>
+        <point x="207" y="175"></point>
+        <point x="242" y="282"></point>
+        <point x="151" y="216"></point>
+        <point x="59" y="282"></point>
+        <point x="94" y="175"></point>
+        <point x="3" y="108"></point>
+        <point x="116" y="108"></point>
+      </polygon>
+    </shape>
+    <shape name="target" rotatable="false" editableColorIndex="0">
+      <circle x="0" y="0" marked="true" color="-1920102913" diameter="300" filled="true"></circle>
+      <circle x="30" y="30" marked="false" color="255" diameter="240" filled="true"></circle>
+      <circle x="60" y="60" marked="true" color="-1920102913" diameter="180" filled="true"></circle>
+      <circle x="90" y="90" marked="false" color="255" diameter="120" filled="true"></circle>
+      <circle x="120" y="120" marked="true" color="-1920102913" diameter="60" filled="true"></circle>
+    </shape>
+    <shape name="tree" rotatable="false" editableColorIndex="0">
+      <circle x="118" y="3" marked="true" color="-1920102913" diameter="94" filled="true"></circle>
+      <rectangle endX="180" startY="195" marked="false" color="-1653716737" endY="300" startX="120" filled="true"></rectangle>
+      <circle x="65" y="21" marked="true" color="-1920102913" diameter="108" filled="true"></circle>
+      <circle x="116" y="41" marked="true" color="-1920102913" diameter="127" filled="true"></circle>
+      <circle x="45" y="90" marked="true" color="-1920102913" diameter="120" filled="true"></circle>
+      <circle x="104" y="74" marked="true" color="-1920102913" diameter="152" filled="true"></circle>
+    </shape>
+    <shape name="triangle" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="30"></point>
+        <point x="15" y="255"></point>
+        <point x="285" y="255"></point>
+      </polygon>
+    </shape>
+    <shape name="triangle 2" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="150" y="30"></point>
+        <point x="15" y="255"></point>
+        <point x="285" y="255"></point>
+      </polygon>
+      <polygon color="255" filled="true" marked="false">
+        <point x="151" y="99"></point>
+        <point x="225" y="223"></point>
+        <point x="75" y="224"></point>
+      </polygon>
+    </shape>
+    <shape name="truck" rotatable="false" editableColorIndex="0">
+      <rectangle endX="195" startY="45" marked="true" color="-1920102913" endY="187" startX="4" filled="true"></rectangle>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="296" y="193"></point>
+        <point x="296" y="150"></point>
+        <point x="259" y="134"></point>
+        <point x="244" y="104"></point>
+        <point x="208" y="104"></point>
+        <point x="207" y="194"></point>
+      </polygon>
+      <rectangle endX="195" startY="60" marked="false" color="-1" endY="105" startX="195" filled="true"></rectangle>
+      <polygon color="255" filled="true" marked="false">
+        <point x="238" y="112"></point>
+        <point x="252" y="141"></point>
+        <point x="219" y="141"></point>
+        <point x="218" y="112"></point>
+      </polygon>
+      <circle x="234" y="174" marked="false" color="255" diameter="42" filled="true"></circle>
+      <rectangle endX="214" startY="185" marked="true" color="-1920102913" endY="194" startX="181" filled="true"></rectangle>
+      <circle x="144" y="174" marked="false" color="255" diameter="42" filled="true"></circle>
+      <circle x="24" y="174" marked="false" color="255" diameter="42" filled="true"></circle>
+      <circle x="24" y="174" marked="true" color="-1920102913" diameter="42" filled="false"></circle>
+      <circle x="144" y="174" marked="true" color="-1920102913" diameter="42" filled="false"></circle>
+      <circle x="234" y="174" marked="true" color="-1920102913" diameter="42" filled="false"></circle>
+    </shape>
+    <shape name="turtle" rotatable="true" editableColorIndex="0">
+      <polygon color="1504722175" filled="true" marked="false">
+        <point x="215" y="204"></point>
+        <point x="240" y="233"></point>
+        <point x="246" y="254"></point>
+        <point x="228" y="266"></point>
+        <point x="215" y="252"></point>
+        <point x="193" y="210"></point>
+      </polygon>
+      <polygon color="1504722175" filled="true" marked="false">
+        <point x="195" y="90"></point>
+        <point x="225" y="75"></point>
+        <point x="245" y="75"></point>
+        <point x="260" y="89"></point>
+        <point x="269" y="108"></point>
+        <point x="261" y="124"></point>
+        <point x="240" y="105"></point>
+        <point x="225" y="105"></point>
+        <point x="210" y="105"></point>
+      </polygon>
+      <polygon color="1504722175" filled="true" marked="false">
+        <point x="105" y="90"></point>
+        <point x="75" y="75"></point>
+        <point x="55" y="75"></point>
+        <point x="40" y="89"></point>
+        <point x="31" y="108"></point>
+        <point x="39" y="124"></point>
+        <point x="60" y="105"></point>
+        <point x="75" y="105"></point>
+        <point x="90" y="105"></point>
+      </polygon>
+      <polygon color="1504722175" filled="true" marked="false">
+        <point x="132" y="85"></point>
+        <point x="134" y="64"></point>
+        <point x="107" y="51"></point>
+        <point x="108" y="17"></point>
+        <point x="150" y="2"></point>
+        <point x="192" y="18"></point>
+        <point x="192" y="52"></point>
+        <point x="169" y="65"></point>
+        <point x="172" y="87"></point>
+      </polygon>
+      <polygon color="1504722175" filled="true" marked="false">
+        <point x="85" y="204"></point>
+        <point x="60" y="233"></point>
+        <point x="54" y="254"></point>
+        <point x="72" y="266"></point>
+        <point x="85" y="252"></point>
+        <point x="107" y="210"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="119" y="75"></point>
+        <point x="179" y="75"></point>
+        <point x="209" y="101"></point>
+        <point x="224" y="135"></point>
+        <point x="220" y="225"></point>
+        <point x="175" y="261"></point>
+        <point x="128" y="261"></point>
+        <point x="81" y="224"></point>
+        <point x="74" y="135"></point>
+        <point x="88" y="99"></point>
+      </polygon>
+    </shape>
+    <shape name="wheel" rotatable="false" editableColorIndex="0">
+      <circle x="3" y="3" marked="true" color="-1920102913" diameter="294" filled="true"></circle>
+      <circle x="30" y="30" marked="false" color="255" diameter="240" filled="true"></circle>
+      <line endX="150" startY="285" marked="true" color="-1920102913" endY="15" startX="150"></line>
+      <line endX="285" startY="150" marked="true" color="-1920102913" endY="150" startX="15"></line>
+      <circle x="120" y="120" marked="true" color="-1920102913" diameter="60" filled="true"></circle>
+      <line endX="79" startY="40" marked="true" color="-1920102913" endY="269" startX="216"></line>
+      <line endX="269" startY="84" marked="true" color="-1920102913" endY="221" startX="40"></line>
+      <line endX="269" startY="216" marked="true" color="-1920102913" endY="79" startX="40"></line>
+      <line endX="221" startY="40" marked="true" color="-1920102913" endY="269" startX="84"></line>
+    </shape>
+    <shape name="wolf" rotatable="false" editableColorIndex="0">
+      <polygon color="255" filled="true" marked="false">
+        <point x="253" y="133"></point>
+        <point x="245" y="131"></point>
+        <point x="245" y="133"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="2" y="194"></point>
+        <point x="13" y="197"></point>
+        <point x="30" y="191"></point>
+        <point x="38" y="193"></point>
+        <point x="38" y="205"></point>
+        <point x="20" y="226"></point>
+        <point x="20" y="257"></point>
+        <point x="27" y="265"></point>
+        <point x="38" y="266"></point>
+        <point x="40" y="260"></point>
+        <point x="31" y="253"></point>
+        <point x="31" y="230"></point>
+        <point x="60" y="206"></point>
+        <point x="68" y="198"></point>
+        <point x="75" y="209"></point>
+        <point x="66" y="228"></point>
+        <point x="65" y="243"></point>
+        <point x="82" y="261"></point>
+        <point x="84" y="268"></point>
+        <point x="100" y="267"></point>
+        <point x="103" y="261"></point>
+        <point x="77" y="239"></point>
+        <point x="79" y="231"></point>
+        <point x="100" y="207"></point>
+        <point x="98" y="196"></point>
+        <point x="119" y="201"></point>
+        <point x="143" y="202"></point>
+        <point x="160" y="195"></point>
+        <point x="166" y="210"></point>
+        <point x="172" y="213"></point>
+        <point x="173" y="238"></point>
+        <point x="167" y="251"></point>
+        <point x="160" y="248"></point>
+        <point x="154" y="265"></point>
+        <point x="169" y="264"></point>
+        <point x="178" y="247"></point>
+        <point x="186" y="240"></point>
+        <point x="198" y="260"></point>
+        <point x="200" y="271"></point>
+        <point x="217" y="271"></point>
+        <point x="219" y="262"></point>
+        <point x="207" y="258"></point>
+        <point x="195" y="230"></point>
+        <point x="192" y="198"></point>
+        <point x="210" y="184"></point>
+        <point x="227" y="164"></point>
+        <point x="242" y="144"></point>
+        <point x="259" y="145"></point>
+        <point x="284" y="151"></point>
+        <point x="277" y="141"></point>
+        <point x="293" y="140"></point>
+        <point x="299" y="134"></point>
+        <point x="297" y="127"></point>
+        <point x="273" y="119"></point>
+        <point x="270" y="105"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="-1" y="195"></point>
+        <point x="14" y="180"></point>
+        <point x="36" y="166"></point>
+        <point x="40" y="153"></point>
+        <point x="53" y="140"></point>
+        <point x="82" y="131"></point>
+        <point x="134" y="133"></point>
+        <point x="159" y="126"></point>
+        <point x="188" y="115"></point>
+        <point x="227" y="108"></point>
+        <point x="236" y="102"></point>
+        <point x="238" y="98"></point>
+        <point x="268" y="86"></point>
+        <point x="269" y="92"></point>
+        <point x="281" y="87"></point>
+        <point x="269" y="103"></point>
+        <point x="269" y="113"></point>
+      </polygon>
+    </shape>
+    <shape name="x" rotatable="false" editableColorIndex="0">
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="270" y="75"></point>
+        <point x="225" y="30"></point>
+        <point x="30" y="225"></point>
+        <point x="75" y="270"></point>
+      </polygon>
+      <polygon color="-1920102913" filled="true" marked="true">
+        <point x="30" y="75"></point>
+        <point x="75" y="30"></point>
+        <point x="270" y="225"></point>
+        <point x="225" y="270"></point>
+      </polygon>
+    </shape>
+  </turtleShapes>
+  <linkShapes>
+    <shape name="default" curviness="0.0">
+      <lines>
+        <line x="-0.2" visible="false">
+          <dash value="0.0"></dash>
+          <dash value="1.0"></dash>
+        </line>
+        <line x="0.0" visible="true">
+          <dash value="1.0"></dash>
+          <dash value="0.0"></dash>
+        </line>
+        <line x="0.2" visible="false">
+          <dash value="0.0"></dash>
+          <dash value="1.0"></dash>
+        </line>
+      </lines>
+      <indicator>
+        <shape name="link direction" rotatable="true" editableColorIndex="0">
+          <line endX="90" startY="150" marked="true" color="-1920102913" endY="180" startX="150"></line>
+          <line endX="210" startY="150" marked="true" color="-1920102913" endY="180" startX="150"></line>
+        </shape>
+      </indicator>
+    </shape>
+  </linkShapes>
+  <previewCommands>set model-version "sheep-wolves-grass"
+set show-energy? false
+setup
+repeat 75 [ go ]</previewCommands>
+  <experiments>
+    <experiment name="New BehaviorSpace Features" repetitions="3" sequentialRunOrder="true" runMetricsEveryStep="false" timeLimit="200">
+      <preExperiment>reset-timer</preExperiment>
+      <setup>setup</setup>
+      <go>go</go>
+      <postExperiment>show timer</postExperiment>
+      <runMetricsCondition>ticks mod 2 = 0</runMetricsCondition>
+      <metrics>
+        <metric>count sheep</metric>
+        <metric>count wolves</metric>
+        <metric>[ xcor ] of sheep</metric>
+        <metric>[ ycor ] of sheep</metric>
+        <metric>[ xcor ] of wolves</metric>
+        <metric>[ ycor ] of wolves</metric>
+      </metrics>
+      <subExperiments>
+        <subExperiment>
+          <steppedValueSet variable="wolf-gain-from-food" first="30" step="5" last="50"></steppedValueSet>
+        </subExperiment>
+      </subExperiments>
+    </experiment>
+    <experiment name="BehaviorSpace run 3 experiments" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="false" timeLimit="1500">
+      <setup>setup
+print (word "sheep-reproduce: " sheep-reproduce ", wolf-reproduce: " wolf-reproduce)
+print (word "sheep-gain-from-food: " sheep-gain-from-food ", wolf-gain-from-food: " wolf-gain-from-food)</setup>
+      <go>go</go>
+      <postRun>print (word "sheep: " count sheep ", wolves: " count wolves)
+print ""
+wait 1</postRun>
+      <runMetricsCondition>ticks mod 10 = 0</runMetricsCondition>
+      <metrics>
+        <metric>count sheep</metric>
+        <metric>count wolves</metric>
+        <metric>count grass</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="model-version">
+          <value value="&quot;sheep-wolves-grass&quot;"></value>
+        </enumeratedValueSet>
+      </constants>
+      <subExperiments>
+        <subExperiment>
+          <enumeratedValueSet variable="sheep-reproduce">
+            <value value="1"></value>
+          </enumeratedValueSet>
+          <enumeratedValueSet variable="sheep-gain-from-food">
+            <value value="1"></value>
+          </enumeratedValueSet>
+          <enumeratedValueSet variable="wolf-reproduce">
+            <value value="2"></value>
+          </enumeratedValueSet>
+          <enumeratedValueSet variable="wolf-gain-from-food">
+            <value value="10"></value>
+          </enumeratedValueSet>
+        </subExperiment>
+        <subExperiment>
+          <enumeratedValueSet variable="sheep-reproduce">
+            <value value="6"></value>
+          </enumeratedValueSet>
+          <enumeratedValueSet variable="sheep-gain-from-food">
+            <value value="8"></value>
+          </enumeratedValueSet>
+          <enumeratedValueSet variable="wolf-reproduce">
+            <value value="5"></value>
+          </enumeratedValueSet>
+          <enumeratedValueSet variable="wolf-gain-from-food">
+            <value value="20"></value>
+          </enumeratedValueSet>
+        </subExperiment>
+        <subExperiment>
+          <enumeratedValueSet variable="sheep-reproduce">
+            <value value="20"></value>
+          </enumeratedValueSet>
+          <enumeratedValueSet variable="sheep-gain-from-food">
+            <value value="15"></value>
+          </enumeratedValueSet>
+          <enumeratedValueSet variable="wolf-reproduce">
+            <value value="15"></value>
+          </enumeratedValueSet>
+          <enumeratedValueSet variable="wolf-gain-from-food">
+            <value value="30"></value>
+          </enumeratedValueSet>
+        </subExperiment>
+      </subExperiments>
+    </experiment>
+    <experiment name="BehaviorSpace run 3 variable values per experiments" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="false" timeLimit="1500">
+      <setup>setup
+print (word "sheep-reproduce: " sheep-reproduce ", wolf-reproduce: " wolf-reproduce)
+print (word "sheep-gain-from-food: " sheep-gain-from-food ", wolf-gain-from-food: " wolf-gain-from-food)</setup>
+      <go>go</go>
+      <postRun>print (word "sheep: " count sheep ", wolves: " count wolves)
+print ""
+wait 1</postRun>
+      <runMetricsCondition>ticks mod 10 = 0</runMetricsCondition>
+      <metrics>
+        <metric>count sheep</metric>
+        <metric>count wolves</metric>
+        <metric>count grass</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="model-version">
+          <value value="&quot;sheep-wolves-grass&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="sheep-reproduce">
+          <value value="4"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="wolf-reproduce">
+          <value value="2"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="sheep-gain-from-food">
+          <value value="4"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="wolf-gain-from-food">
+          <value value="20"></value>
+        </enumeratedValueSet>
+      </constants>
+      <subExperiments>
+        <subExperiment>
+          <enumeratedValueSet variable="sheep-reproduce">
+            <value value="1"></value>
+            <value value="6"></value>
+            <value value="20"></value>
+          </enumeratedValueSet>
+        </subExperiment>
+        <subExperiment>
+          <enumeratedValueSet variable="wolf-reproduce">
+            <value value="2"></value>
+            <value value="7"></value>
+            <value value="15"></value>
+          </enumeratedValueSet>
+        </subExperiment>
+        <subExperiment>
+          <enumeratedValueSet variable="sheep-gain-from-food">
+            <value value="1"></value>
+            <value value="8"></value>
+            <value value="15"></value>
+          </enumeratedValueSet>
+        </subExperiment>
+        <subExperiment>
+          <enumeratedValueSet variable="wolf-gain-from-food">
+            <value value="10"></value>
+            <value value="20"></value>
+            <value value="30"></value>
+          </enumeratedValueSet>
+        </subExperiment>
+      </subExperiments>
+    </experiment>
+    <experiment name="BehaviorSpace subset" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="false" timeLimit="1500">
+      <setup>setup</setup>
+      <go>go</go>
+      <postRun>wait .5</postRun>
+      <runMetricsCondition>ticks mod 10 = 0</runMetricsCondition>
+      <metrics>
+        <metric>count sheep</metric>
+        <metric>count wolves</metric>
+        <metric>count grass</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="model-version">
+          <value value="&quot;sheep-wolves-grass&quot;"></value>
+        </enumeratedValueSet>
+      </constants>
+      <subExperiments>
+        <subExperiment>
+          <enumeratedValueSet variable="wolf-reproduce">
+            <value value="3"></value>
+            <value value="5"></value>
+          </enumeratedValueSet>
+          <enumeratedValueSet variable="wolf-gain-from-food">
+            <value value="30"></value>
+            <value value="40"></value>
+          </enumeratedValueSet>
+        </subExperiment>
+        <subExperiment>
+          <enumeratedValueSet variable="wolf-reproduce">
+            <value value="10"></value>
+            <value value="15"></value>
+          </enumeratedValueSet>
+          <enumeratedValueSet variable="wolf-gain-from-food">
+            <value value="10"></value>
+            <value value="15"></value>
+          </enumeratedValueSet>
+        </subExperiment>
+      </subExperiments>
+    </experiment>
+    <experiment name="BehaviorSpace combinatorial" repetitions="1" sequentialRunOrder="true" runMetricsEveryStep="false" timeLimit="1500">
+      <setup>setup</setup>
+      <go>go</go>
+      <postRun>wait .5</postRun>
+      <runMetricsCondition>ticks mod 10 = 0</runMetricsCondition>
+      <metrics>
+        <metric>count sheep</metric>
+        <metric>count wolves</metric>
+        <metric>count grass</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="model-version">
+          <value value="&quot;sheep-wolves-grass&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="wolf-reproduce">
+          <value value="3"></value>
+          <value value="5"></value>
+          <value value="10"></value>
+          <value value="15"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="wolf-gain-from-food">
+          <value value="10"></value>
+          <value value="15"></value>
+          <value value="30"></value>
+          <value value="40"></value>
+        </enumeratedValueSet>
+      </constants>
+    </experiment>
+    <experiment name="Wolf Sheep Crossing" repetitions="4" sequentialRunOrder="true" runMetricsEveryStep="false" timeLimit="1500">
+      <setup>setup</setup>
+      <go>go</go>
+      <runMetricsCondition>count sheep = count wolves</runMetricsCondition>
+      <metrics>
+        <metric>count sheep</metric>
+        <metric>count wolves</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="wolf-gain-from-food">
+          <value value="20"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="show-energy?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="wolf-reproduce">
+          <value value="5"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="initial-number-wolves">
+          <value value="50"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="initial-number-sheep">
+          <value value="100"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="model-version">
+          <value value="&quot;sheep-wolves-grass&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="sheep-gain-from-food">
+          <value value="4"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="grass-regrowth-time">
+          <value value="30"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="sheep-reproduce">
+          <value value="4"></value>
+        </enumeratedValueSet>
+      </constants>
+    </experiment>
+    <experiment name="New BehaviorSpace Features reproducible" repetitions="3" sequentialRunOrder="true" runMetricsEveryStep="false" timeLimit="200">
+      <preExperiment>reset-timer</preExperiment>
+      <setup>random-seed (474 + behaviorspace-run-number)
+
+setup</setup>
+      <go>go</go>
+      <postExperiment>show timer</postExperiment>
+      <runMetricsCondition>ticks mod 2 = 0</runMetricsCondition>
+      <metrics>
+        <metric>count sheep</metric>
+        <metric>count wolves</metric>
+        <metric>[ xcor ] of sheep</metric>
+        <metric>[ ycor ] of sheep</metric>
+        <metric>[ xcor ] of wolves</metric>
+        <metric>[ ycor ] of wolves</metric>
+      </metrics>
+      <constants>
+        <enumeratedValueSet variable="model-version">
+          <value value="&quot;sheep-wolves-grass&quot;"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="wolf-gain-from-food">
+          <value value="20"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="show-energy?">
+          <value value="false"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="wolf-reproduce">
+          <value value="5"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="initial-number-wolves">
+          <value value="50"></value>
+        </enumeratedValueSet>
+        <enumeratedValueSet variable="initial-number-sheep">
+          <value value="100"></value>
+        </enumeratedValueSet>
+      </constants>
+      <subExperiments>
+        <subExperiment>
+          <enumeratedValueSet variable="wolf-gain-from-food">
+            <value value="10"></value>
+            <value value="20"></value>
+            <value value="30"></value>
+          </enumeratedValueSet>
+        </subExperiment>
+      </subExperiments>
+    </experiment>
+  </experiments>
+</model>

@@ -15,10 +15,10 @@ import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, Find
 import org.nlogo.app.interfacetab.{ CommandCenter, InterfaceTab, InterfaceWidgetControls, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManagerErrorDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model,
+import org.nlogo.core.{ AgentKind, CompilerException, ExternalResource, I18N, Model,
   Shape, Widget => CoreWidget }, Shape.{ LinkShape, VectorShape }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.fileformat
+import org.nlogo.fileformat.FileFormat
 import org.nlogo.log.{ JsonFileLogger, LogEvents, LogManager }
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
@@ -32,7 +32,6 @@ import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controll
 import org.picocontainer.parameters.{ ComponentParameter, ConstantParameter }
 import org.picocontainer.Parameter
 
-import scala.io.Codec
 /**
  * The main class for the complete NetLogo application.
  *
@@ -98,7 +97,7 @@ object App {
       }
       pico.addScalaObject("org.nlogo.sdm.gui.SDMGuiAutoConvertable")
 
-      pico.addAdapter(new Adapters.ModelLoaderComponent())
+      pico.addAdapter(new Adapters.AnyModelLoaderComponent())
 
       pico.addAdapter(new Adapters.ModelConverterComponent())
 
@@ -268,6 +267,7 @@ class App extends
     BeforeLoadEvent.Handler with
     LoadBeginEvent.Handler with
     LoadEndEvent.Handler with
+    LoadModelEvent.Handler with
     ModelSavedEvent.Handler with
     ModelSections with
     AppEvents.SwitchedTabsEvent.Handler with
@@ -303,6 +303,8 @@ class App extends
   private val runningInMacWrapper = Option(System.getProperty("org.nlogo.mac.appClassName")).nonEmpty
   private val ImportWorldURLProp = "netlogo.world_state_url"
   private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
+
+  lazy val modelingCommons                          = pico.getComponent(classOf[ModelingCommonsInterface])
 
   val isMac = System.getProperty("os.name").startsWith("Mac")
 
@@ -740,7 +742,7 @@ class App extends
   private def reload() {
     val modelType = workspace.getModelType
     val path = workspace.getModelPath
-    if (modelType != ModelType.New && path != null) openFromSource(FileIO.fileToString(path)(Codec.UTF8), path, modelType)
+    if (modelType != ModelType.New && path != null) openFromSource(FileIO.fileToString(path), path, modelType)
     else commandLater("print \"can't, new model\"")
   }
 
@@ -759,7 +761,7 @@ class App extends
         }
       if (fullName != null) {
         org.nlogo.workspace.ModelsLibrary.getModelPath(fullName).foreach { path =>
-          val source = org.nlogo.api.FileIO.fileToString(path)(Codec.UTF8)
+          val source = FileIO.fileToString(path)
           org.nlogo.awt.EventQueue.invokeLater(() => openFromSource(source, path, ModelType.Library))
         }
       }
@@ -940,6 +942,10 @@ class App extends
     _tabManager.interfaceTab.requestFocus()
 
     syncWindowThemes()
+  }
+
+  def handle(e: LoadModelEvent): Unit = {
+    workspace.getResourceManager.setResources(e.model.resources)
   }
 
   /**
@@ -1202,7 +1208,7 @@ class App extends
    */
   def makeWidget(text:String) {
     dispatchThreadOrBust(
-      _tabManager.interfaceTab.getInterfacePanel.loadWidget(WidgetReader.read(text.linesIterator.toList, workspace, fileformat.nlogoReaders(Version.is3D))))
+      _tabManager.interfaceTab.getInterfacePanel.loadWidget(WidgetReader.read(text.linesIterator.toList, workspace, FileFormat.nlogoReaders(Version.is3D))))
   }
 
   /// helpers for controlling methods
@@ -1303,6 +1309,8 @@ class App extends
         workspace)
     workspace.hubNetManager.map(_ +: sections).getOrElse(sections)
   }
+  def resources:        Seq[ExternalResource] =
+    workspace.getResourceManager.getResources
 
   def askForName() = {
     val frame = new JFrame()

@@ -27,12 +27,12 @@ object MonitorWidget {
     def name: String
 
     override def model: CoreMonitor = {
-      val b       = getBoundsTuple
+      val b       = getUnzoomedBounds
       val display = name.potentiallyEmptyStringToOption
       val src     = innerSource.potentiallyEmptyStringToOption
 
       CoreMonitor(display = display,
-        left = b._1, top = b._2, right = b._3, bottom = b._4,
+        x = b.x, y = b.y, width = b.width, height = b.height,
         source   = src, precision = decimalPlaces,
         fontSize = fontSize)
     }
@@ -320,7 +320,7 @@ class MonitorWidget(random: MersenneTwisterFast)
 
     model.source.foreach(wrapSource)
 
-    setSize(model.right - model.left, model.bottom - model.top)
+    setSize(model.width, model.height)
     chooseDisplayName()
     this
   }

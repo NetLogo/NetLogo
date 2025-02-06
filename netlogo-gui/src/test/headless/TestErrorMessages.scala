@@ -8,8 +8,8 @@ package org.nlogo.headless
 
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.{ BeforeAndAfter, BeforeAndAfterAll }
-import org.nlogo.core.{ CompilerException, Model, View }
-import org.nlogo.api.{ Version, WorldDimensions3D }
+import org.nlogo.api.Version
+import org.nlogo.core.{ CompilerException, Model, View, WorldDimensions3D }
 import org.nlogo.nvm.{ ArgumentTypeException, EngineException }
 
 class TestErrorMessages extends AnyFunSuite with AbstractTestLanguage with BeforeAndAfterAll with BeforeAndAfter {

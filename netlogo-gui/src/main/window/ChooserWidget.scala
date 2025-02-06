@@ -103,7 +103,7 @@ class ChooserWidget(val compiler: CompilerServices)
     LogoList(choices.map(_.value): _*)
 
   override def load(model: WidgetModel): AnyRef = {
-    setSize(model.right - model.left, model.bottom - model.top)
+    setSize(model.width, model.height)
     name(model.display.optionToPotentiallyEmptyString)
     choicesWrapper(chooseableListToLogoList(model.choices))
     index(model.currentChoice)
@@ -111,11 +111,11 @@ class ChooserWidget(val compiler: CompilerServices)
   }
 
   override def model: WidgetModel = {
-    val b = getBoundsTuple
+    val b = getUnzoomedBounds
     val savedName = (name: String).potentiallyEmptyStringToOption
     CoreChooser(
       display       = savedName,
-      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      x = b.x, y = b.y, width = b.width, height = b.height,
       variable      = savedName,
       choices       = constraint.acceptedValues.map(Chooseable.apply).toList,
       currentChoice = index)

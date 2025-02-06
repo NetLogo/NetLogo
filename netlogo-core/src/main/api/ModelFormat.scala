@@ -2,6 +2,7 @@
 
 package org.nlogo.api
 
+import java.io.Writer
 import java.net.URI
 
 import org.nlogo.core.Model
@@ -73,6 +74,9 @@ trait ModelFormat[Section, Format <: ModelFormat[Section, Format]] {
       (defaultComponents ++ optionalComponents).foldLeft(Map[String, Section]())(addSerializedSection(model))
     sectionsToSource(serializedSections)
   }
+
+  def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])]
+  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit]
 
   private def addSerializedSection(model: Model)(sections: Map[String, Section], component: ComponentSerialization[Section, Format]): Map[String, Section] = {
     sections + (component.componentName -> component.serialize(model))

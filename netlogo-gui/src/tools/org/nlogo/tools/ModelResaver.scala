@@ -10,10 +10,11 @@ import org.nlogo.api.{ NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
 import org.nlogo.workspace.{ OpenModel, OpenModelFromURI, SaveModel },
   OpenModel.{ Controller => OpenModelController },
   SaveModel.{ Controller => SaveModelController }
-import org.nlogo.fileformat, fileformat.{ FailedConversionResult, NLogoFormat }
+import org.nlogo.fileformat.{ FailedConversionResult, FileFormat, NLogoFormat }
 import org.nlogo.workspace.ModelsLibrary.modelsRoot
 import org.nlogo.headless.HeadlessWorkspace
-import org.nlogo.sdm.{ NLogoSDMFormat, SDMAutoConvertable }
+import org.nlogo.sdm.SDMAutoConvertable
+import org.nlogo.sdm.gui.NLogoGuiSDMFormat
 
 /**
  *
@@ -31,8 +32,17 @@ import org.nlogo.sdm.{ NLogoSDMFormat, SDMAutoConvertable }
  * Nicolas 2012-10-31
  *
  * Moved to org.nlogo.tools, NP 2013-08-07
+ * Copied to org.nlogo.models in the models repository so it can be used outside
+ * of the NetLogo repo. -Jeremy B September 2023
  *
  */
+
+ /**
+ *
+ * Addendum: All models in the library are now supported. (Isaac B 2/2/25)
+ *
+ */
+
 object ModelResaver {
   def main(args: Array[String]): Unit = {
     System.setProperty("org.nlogo.preferHeadless", "true")
@@ -58,18 +68,22 @@ object ModelResaver {
     val ws = HeadlessWorkspace.newInstance
     try {
       val converter =
-        fileformat.converter(ws.getExtensionManager, ws.getLibraryManager, ws.getCompilationEnvironment,
-          literalParser, fileformat.defaultAutoConvertables :+ SDMAutoConvertable) _
+        FileFormat.converter(ws.getExtensionManager, ws.getLibraryManager, ws.getCompilationEnvironment,
+          literalParser, FileFormat.defaultAutoConvertables :+ SDMAutoConvertable) _
       val modelLoader =
-        fileformat.standardLoader(ws.compiler.utilities)
-          .addSerializer[Array[String], NLogoFormat](new NLogoSDMFormat())
+        FileFormat.standardAnyLoader(false, ws.compiler.utilities)
+          .addSerializer[Array[String], NLogoFormat](new NLogoGuiSDMFormat())
       val controller = new ResaveController(modelPath.toUri)
       val dialect =
         if (modelPath.toString.toUpperCase.endsWith("3D")) NetLogoThreeDDialect
         else NetLogoLegacyDialect
       OpenModelFromURI(modelPath.toUri, controller, modelLoader, converter(dialect), Version).foreach { model =>
         SaveModel(model, modelLoader, controller, ws, Version).map(_.apply()) match {
-          case Some(Success(u)) => println("resaved: " + u)
+          case Some(Success(u)) =>
+            println("resaved: " + u)
+
+            if (u != modelPath.toUri)
+              Files.delete(modelPath)
           case Some(Failure(e)) => println("errored resaving: " + modelPath.toString + " " + e.toString)
           case None => println("failed to resave: " + modelPath.toString)
         }
@@ -86,7 +100,7 @@ object ModelResaver {
   class ResaveVisitor(resave: Path => Unit) extends FileVisitor[Path] {
     import java.nio.file.attribute.BasicFileAttributes
 
-    val excludeFolders = Seq("TEST", "BIN", "PROJECT", "SRC")
+    val excludeFolders = Seq("BIN", "PROJECT", "SRC")
 
     def postVisitDirectory(path: Path, error: java.io.IOException): FileVisitResult = {
       if (error != null) throw error
@@ -102,8 +116,10 @@ object ModelResaver {
     }
 
     def visitFile(path: Path, attrs: BasicFileAttributes): FileVisitResult = {
-      val fileName = path.getFileName.toString
-      if (fileName.endsWith(".nlogo") || fileName.endsWith(".nlogo3d"))
+      val name = path.getFileName.toString
+      if (Version.is3D && name.endsWith(".nlogox3d"))
+        resave(path)
+      else if (!Version.is3D && name.endsWith(".nlogox"))
         resave(path)
       FileVisitResult.CONTINUE
     }

@@ -5,7 +5,7 @@ package org.nlogo.shape.editor
 import java.awt.{ Component, Frame }
 import javax.swing.Box
 
-import org.nlogo.api.{ FileIO, ModelLoader, World }
+import org.nlogo.api.{ AbstractModelLoader, FileIO, World }
 import org.nlogo.shape.{ ShapeConverter, VectorShape },
   ShapeConverter.baseVectorShapeToVectorShape
 import org.nlogo.swing.{ Button, OptionPane }
@@ -23,7 +23,7 @@ import TurtleShapeManagerDialog._
 
 class TurtleShapeManagerDialog(parentFrame: Frame,
                                world: World,
-                               modelLoader: ModelLoader)
+                               modelLoader: AbstractModelLoader)
         extends ManagerDialog[VectorShape](parentFrame, modelLoader, world.turtleShapes)
                 with org.nlogo.shape.TurtleShapesManagerInterface {
 

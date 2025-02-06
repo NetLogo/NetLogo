@@ -8,11 +8,18 @@
   <string>English</string>
   <key>CFBundleAllowMixedLocalizations</key>
   <true/>
-  {{#fileAssociation}}
   <key>CFBundleDocumentTypes</key>
   <array>
     <dict>
-      <key>CFBundleTypeExtensions</key> <array> <string>{{{.}}}</string> </array>
+      <key>CFBundleTypeExtensions</key>
+      <array>
+        {{#fileAssociationOld}}
+        <string>{{fileAssociationOld}}</string>
+        {{/fileAssociationOld}}
+        {{#fileAssociationNew}}
+        <string>{{fileAssociationNew}}</string>
+        {{/fileAssociationNew}}
+      </array>
       <key>CFBundleTypeIconFile</key>
       <string>{{{fileAssociationIcon}}}</string>
       <key>CFBundleTypeName</key>
@@ -25,7 +32,6 @@
       </array>
     </dict>
   </array>
-  {{/fileAssociation}}
   <key>CFBundleExecutable</key>
   <string>{{appName}}</string>
   <key>CFBundleIconFile</key>

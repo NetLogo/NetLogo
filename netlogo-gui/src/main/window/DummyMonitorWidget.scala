@@ -92,7 +92,7 @@ class DummyMonitorWidget
   override def load(monitor: WidgetModel): AnyRef = {
     name(monitor.display.optionToPotentiallyEmptyString)
     decimalPlaces(monitor.precision)
-    setSize(monitor.right - monitor.left, monitor.bottom - monitor.top)
+    setSize(monitor.width, monitor.height)
     this
   }
 }

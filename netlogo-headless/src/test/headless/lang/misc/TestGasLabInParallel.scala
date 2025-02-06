@@ -12,7 +12,7 @@ import org.nlogo.util.SlowTest
  */
 class TestGasLabInParallel extends ParallelSuite  {
 
-  val path = "models/Sample Models/Chemistry & Physics/GasLab/GasLab Gas in a Box.nlogo"
+  val path = "models/Sample Models/Chemistry & Physics/GasLab/GasLab Gas in a Box.nlogox"
 
   test("gas lab in parallel", SlowTest.Tag) {
     openParallel(path){implicit fixture =>

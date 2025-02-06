@@ -5,7 +5,8 @@ package org.nlogo.app
 import java.nio.file.Path
 
 import org.nlogo.core.{ DeclaresGlobal, Model, Slider, View }
-import org.nlogo.fileformat.{ ConversionResult, ModelConversion }
+import org.nlogo.fileformat.ConversionResult
+import org.nlogo.fileformat.FileFormat.ModelConversion
 
 class ConvertIncludeFile(modelConverter: ModelConversion, baseVersion: String) {
   /* We filter out widgets in such a way that we avoid two types of errors:

@@ -22,7 +22,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
                        linkParent: Component,
                        ifactory: InterfaceFactory,
                        menuFactory: MenuBarFactory,
-                       loader: ModelLoader,
+                       loader: AbstractModelLoader,
                        modelConverter: ModelConversion)
   extends HubNetManager(workspace, loader, modelConverter) with ViewInterface with ThemeSync {
 

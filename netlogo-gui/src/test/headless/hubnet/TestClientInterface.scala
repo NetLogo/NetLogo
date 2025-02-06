@@ -3,7 +3,7 @@
 package org.nlogo.headless.hubnet
 
 import org.nlogo.core.{ LiteralParser, Widget => CoreWidget }
-import org.nlogo.fileformat, fileformat.{ NLogoFormat, NLogoHubNetFormat }
+import org.nlogo.fileformat.{ FileFormat, NLogoFormat, NLogoHubNetFormat }
 import org.nlogo.hubnet.protocol.ComputerInterface
 import org.nlogo.headless.TestUsingWorkspace
 
@@ -47,7 +47,7 @@ class TestClientInterface extends TestUsingWorkspace {
   }
 
   private def getClientWidgets(modelFilePath: String, workspace: LiteralParser): Seq[CoreWidget] = {
-    fileformat.basicLoader
+    FileFormat.basicLoader
       .addSerializer[Array[String], NLogoFormat](new NLogoHubNetFormat(workspace))
       .readModel(Paths.get(modelFilePath).toUri)
       .get

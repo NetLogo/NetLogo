@@ -89,7 +89,7 @@ class RecentFiles {
     _models = newModels
       .flatMap(ensureCanonicalPath)
       .distinct
-      .filter(x => Version.is3D == x.path.endsWith(".nlogo3d"))
+      .filter(x => Version.is3D == (x.path.endsWith(".nlogo3d") || x.path.endsWith(".nlogox3d")))
       .take(maxEntries)
     prefs.put(key, _models.mkString("\n"))
   }

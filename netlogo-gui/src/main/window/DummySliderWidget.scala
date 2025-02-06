@@ -43,16 +43,16 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
     con.defaultValue = value
     setSliderConstraint(con)  // ensure cached values are updated
     super.value = value
-    setSize(model.right - model.left, model.bottom - model.top)
+    setSize(model.width, model.height)
     this
   }
 
   override def model: WidgetModel = {
-    val b = getBoundsTuple
+    val b = getUnzoomedBounds
     val savedName = name.potentiallyEmptyStringToOption
     CoreSlider(
       display = savedName,
-      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      x = b.x, y = b.y, width = b.width, height = b.height,
       variable = savedName,
       min = min.toString,
       max = max.toString,

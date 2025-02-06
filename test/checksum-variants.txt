@@ -4,7 +4,7 @@
 # non-empty, non-comment lines that follow will each be treated as NetLogo
 # commands that define the variant.
 
-* models/IABM Textbook/chapter 2/Heroes and Cowards.nlogo
+* models/IABM Textbook/chapter 2/Heroes and Cowards.nlogox
 preset -1177467632
 preset -608717654
 preset -1315170766
@@ -14,6 +14,6 @@ preset 1086013561
 preset 878469395
 preset 961107169
 
-* models/Sample Models/Chemistry & Physics/Chaos in a Box.nlogo
+* models/Sample Models/Chemistry & Physics/Chaos in a Box.nlogox
 setup-periodic-x
 setup-periodic-quilt

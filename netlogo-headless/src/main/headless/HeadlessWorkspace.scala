@@ -13,14 +13,12 @@ import
       ModelReader.modelSuffix,
     core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, Output, UpdateMode, WorldDimensions },
     drawing.DrawingActionBroker,
-    fileformat.{ NLogoFormat, NLogoPreviewCommandsFormat },
+    fileformat.{ FileFormat, NLogoFormat, NLogoPreviewCommandsFormat },
     nvm.{ CompilerInterface, Context, LabInterface },
     workspace.AbstractWorkspace
 
 import java.io.InputStream
 import java.nio.file.Paths
-
-import scala.io.Codec
 
 /**
  * Companion object, and factory object, for the HeadlessWorkspace class.
@@ -89,7 +87,11 @@ with org.nlogo.workspace.WorldLoaderInterface {
   def modelOpened = _openModel.nonEmpty
 
   private[this] var _openModel = Option.empty[Model]
-  def setOpenModel(model: Model) { _openModel = Some(model) }
+  def setOpenModel(model: Model): Unit = {
+    _openModel = Some(model)
+
+    resourceManager.setResources(model.resources)
+  }
 
   val outputAreaBuffer = new StringBuilder
 
@@ -364,7 +366,8 @@ with org.nlogo.workspace.WorldLoaderInterface {
   }
 
   private lazy val loader = {
-    fileformat.basicLoader.addSerializer[Array[String], NLogoFormat](new NLogoPreviewCommandsFormat())
+    FileFormat.standardAnyLoader(true, parser)
+      .addSerializer[Array[String], NLogoFormat](new NLogoPreviewCommandsFormat())
   }
 
   /// Controlling API methods
@@ -378,7 +381,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
   @throws(classOf[java.io.IOException])
   override def open(path: String, shouldAutoInstallLibs: Boolean) {
     setModelPath(path)
-    val modelContents = FileIO.fileToString(path)(Codec.UTF8)
+    val modelContents = FileIO.fileToString(path)
     try loader.readModel(Paths.get(path).toUri).foreach(m => openModel(m, shouldAutoInstallLibs))
     catch {
       case ex: CompilerException =>

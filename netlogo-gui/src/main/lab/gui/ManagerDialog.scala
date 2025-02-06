@@ -248,13 +248,8 @@ private class ManagerDialog(manager:       LabManager,
       for (file <- dialog.getFiles)
       {
         try {
-          for (protocol <- new LabLoader(manager.workspace.compiler.utilities)
-                                         (scala.io.Source.fromFile(file).mkString,
-                                          true,
-                                          manager.protocols.map(_.name).to[collection.mutable.Set]))
-          {
-            manager.addProtocol(protocol)
-          }
+          manager.modelLoader.readExperiments(Source.fromFile(file).mkString, true,
+                                              manager.protocols.map(_.name).to[Set]).foreach(_._1.foreach(manager.addProtocol(_)))
         } catch {
           case e: org.xml.sax.SAXParseException => {
             if (!java.awt.GraphicsEnvironment.isHeadless) {
@@ -292,8 +287,7 @@ private class ManagerDialog(manager:       LabManager,
 
       val out = new java.io.PrintWriter(path)
 
-      out.write(s"${LabLoader.XMLVER}\n${LabLoader.DOCTYPE}\n")
-      out.write(LabSaver.save(indices.map(manager.protocols(_))))
+      manager.modelLoader.writeExperiments(manager.protocols.toSeq, out)
 
       out.close()
     } catch {
@@ -324,7 +318,7 @@ private class ManagerDialog(manager:       LabManager,
     jlist.getSelectedIndices match { case Array(i: Int) => i }
   private def selectedProtocol =
     manager.protocols(jlist.getSelectedIndices()(0))
-  
+
   def syncTheme() {
     getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     listLabel.setForeground(InterfaceColors.DIALOG_TEXT)
@@ -360,7 +354,7 @@ private class ManagerDialog(manager:       LabManager,
         setBackground(InterfaceColors.DIALOG_BACKGROUND_SELECTED)
         label.setForeground(InterfaceColors.DIALOG_TEXT_SELECTED)
       }
-      
+
       else {
         setBackground(InterfaceColors.DIALOG_BACKGROUND)
         label.setForeground(InterfaceColors.DIALOG_TEXT)

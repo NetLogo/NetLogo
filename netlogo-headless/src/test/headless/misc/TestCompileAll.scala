@@ -3,10 +3,9 @@
 package org.nlogo.headless
 package misc
 
+import org.nlogo.api.{ FileIO, ModelReader, Version }
 import org.nlogo.core.{ Femto, LiteralParser }
-import org.nlogo.core.model.ModelReader
-import org.nlogo.api.{ FileIO, Version }
-import org.nlogo.fileformat
+import org.nlogo.fileformat.FileFormat
 import org.nlogo.workspace.ModelsLibrary
 import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.util.SlowTest
@@ -37,9 +36,9 @@ object TestCompileAll {
       path.containsSlice("Sound Machines") || // uses sound extension
       path.containsSlice("GoGoMonitor") ||
       path.containsSlice("Movie Example") ||
-      path.containsSlice("Anisogamy.nlogo") || // uses behaviorspace-experiment-name
+      path.containsSlice("Anisogamy.nlogox") || // uses behaviorspace-experiment-name
       path.endsWith("5.x.nlogo") || // explicitly 5.x models
-      path.endsWith(".nlogo3d")
+      path.endsWith(".nlogo3d") || path.endsWith(".nlogox3d")
   }
 
   def goodModel(text: String): Option[String] = {
@@ -73,31 +72,28 @@ class TestCompileAll extends AnyFunSuite  {
       }
     }
 
-  for(path <- (ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")).filterNot(TestCompileAll.badPath))
-    test("version: " + path, SlowTest.Tag) {
-      val workspace = HeadlessWorkspace.newInstance
-      val version = ModelReader.parseModel(FileIO.fileToString(path), workspace.parser, Map()).version
-      assert(Version.compatibleVersion(version))
-    }
-
   private val literalParser =
     Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
 
-  def readWriteRead(path: String, text: String) {
-    val workspace = HeadlessWorkspace.newInstance
-    try {
-      val loader = fileformat.standardLoader(literalParser)
-      val model = loader.readModel(text, "nlogo").get
-      val newModel = loader.readModel(loader.sourceString(model, "nlogo").get, "nlogo").get
-      assertResult(model.code)(newModel.code)
-      assertResult(model.widgets)(newModel.widgets)
-      assertResult(model.info)(newModel.info)
-      assertResult(model.version)(newModel.version)
-      assertResult(model.turtleShapes)(newModel.turtleShapes)
-      assertResult(model.linkShapes)(newModel.linkShapes)
-      assertResult(model.optionalSections)(model.optionalSections)
+  for(path <- (ModelsLibrary.getModelPaths ++ ModelsLibrary.getModelPathsAtRoot("extensions")).filterNot(TestCompileAll.badPath))
+    test("version: " + path, SlowTest.Tag) {
+      val loader = FileFormat.standardAnyLoader(true, literalParser)
+      val version = loader.readModel(FileIO.fileToString(path), ModelReader.modelSuffix).get.version
+      assert(Version.compatibleVersion(version))
     }
-    finally workspace.dispose()
+
+  def readWriteRead(path: String, text: String) {
+    val loader = FileFormat.standardAnyLoader(true, literalParser)
+    val model = loader.readModel(text, ModelReader.modelSuffix).get
+    val newModel = loader.readModel(loader.sourceString(model, ModelReader.modelSuffix).get,
+                                    ModelReader.modelSuffix).get
+    assertResult(model.code)(newModel.code)
+    assertResult(model.widgets)(newModel.widgets)
+    assertResult(model.info)(newModel.info)
+    assertResult(model.version)(newModel.version)
+    assertResult(model.turtleShapes)(newModel.turtleShapes)
+    assertResult(model.linkShapes)(newModel.linkShapes)
+    assertResult(model.optionalSections)(model.optionalSections)
   }
 
   def compile(path: String, text: String) {

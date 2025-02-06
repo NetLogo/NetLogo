@@ -22,7 +22,7 @@ def ignore(path: String) =
 
 // probably there are a lot more that could be here
 val extensions =
-  List("java", "scala", "py", "txt", "sh", "nlogo", "nlogo3d", "html", "css",
+  List("java", "scala", "py", "txt", "sh", "nlogo", "nlogo3d", "nlogox", "nlogox3d", "html", "css",
        "properties", "md", "csv", "asc", "prj", "xml")
 
 val directories =

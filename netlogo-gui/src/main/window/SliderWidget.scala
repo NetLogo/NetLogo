@@ -666,7 +666,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
     incrementCode = inc
     value_=(v, inc.toDouble)
     defaultValue = v
-    setSize(model.right - model.left, model.bottom - model.top)
+    setSize(model.width, model.height)
     loading = false
     this
   }
@@ -675,9 +675,9 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
     val savedName = name.potentiallyEmptyStringToOption
     val savedUnits = units.potentiallyEmptyStringToOption
     val dir = if (vertical) Vertical else Horizontal
-    val b = getBoundsTuple
+    val b = getUnzoomedBounds
     CoreSlider(display = savedName,
-      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      x = b.x, y = b.y, width = b.width, height = b.height,
       variable = savedName, min = minimumCode, max = maximumCode,
       default = value, step = incrementCode,
       units = savedUnits, direction = dir)

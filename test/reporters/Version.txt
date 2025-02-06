@@ -1,5 +1,5 @@
 Version_2D
-  substring netlogo-version 0 3 => "6.4"
+  substring netlogo-version 0 3 => "7.0"
 
 Version_3D
-  substring netlogo-version 0 6 => "3D 6.4"
+  substring netlogo-version 0 6 => "3D 7.0"

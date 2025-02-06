@@ -57,9 +57,9 @@ class WorldLoader {
 
 class WorldLoader3D extends WorldLoader {
   override def getWidth(world: WorldLoaderInterface, d: WorldDimensions, v: CoreView) =
-    v.right - v.left
+    v.width
   override def getHeight(world: WorldLoaderInterface, d: WorldDimensions, adjustedPatchSize: Double, v: CoreView) =
-    v.bottom - v.top
+    v.height
   override def adjustPatchSize(world: WorldLoaderInterface, d: WorldDimensions) =
     d.patchSize
 }

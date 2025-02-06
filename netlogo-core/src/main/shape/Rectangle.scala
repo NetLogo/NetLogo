@@ -16,6 +16,12 @@ class Rectangle(color: Color) extends Element(color) with BaseRectangle with Clo
     lowerRight = new Point(end)
   }
 
+  def this(color: Color, filled: Boolean, marked: Boolean, start: Point, end: Point) {
+    this(start, end, color)
+    this.filled = filled
+    this.marked = marked
+  }
+
   protected var upperLeft: Point = null
   protected var upperRight: Point = null
   protected var lowerRight: Point = null

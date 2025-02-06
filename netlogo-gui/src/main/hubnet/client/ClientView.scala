@@ -103,7 +103,7 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   /// satisfy ViewWidgetInterface
 
   override def load(view: WidgetModel): AnyRef = {
-    setBounds(view.left, view.top, view.right - view.left, view.bottom - view.top)
+    setBounds(view.x, view.y, view.width, view.height)
     world.viewWidth(getWidth)
     world.viewHeight(getHeight)
     world.setWorldSize(
@@ -115,9 +115,9 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   }
 
   override def model: WidgetModel = {
-    val b = getBoundsTuple
+    val b = getUnzoomedBounds
     CoreView(
-      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      x = b.x, y = b.y, width = b.width, height = b.height,
       dimensions = world.getDimensions)
   }
 

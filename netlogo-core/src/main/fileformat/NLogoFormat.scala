@@ -2,15 +2,16 @@
 
 package org.nlogo.fileformat
 
+import java.io.Writer
 import java.net.URI
 import java.nio.file.{ Files, Paths }
 
-import org.nlogo.core.{ Femto, I18N, LiteralParser, Model, ShapeParser,
-  UpdateMode, View, Widget, WorldDimensions }
+import org.nlogo.api.{ ComponentSerialization, FileIO, LabProtocol, ModelFormat, Version, VersionHistory }
+import org.nlogo.core.{ Femto, I18N, LiteralParser, Model, ShapeParser, Widget }
 import org.nlogo.core.model.WidgetReader
-import org.nlogo.api.{ ComponentSerialization, FileIO, ModelFormat, Version, VersionHistory }
-import scala.util.{ Failure, Success, Try }
+
 import scala.io.{ Codec, Source }, Codec.UTF8
+import scala.util.{ Failure, Success, Try }
 
 // THIS format is the 2D format, for changes that affect both 2D and 3D, change AbstractNLogoFormat
 class NLogoFormat
@@ -130,6 +131,16 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
     }
   }
 
+  def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])] =
+    Failure(new Exception) // this is not supported
+
+  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
+    Try {
+      writer.write(s"${LabLoader.XMLVER}\n${LabLoader.DOCTYPE}\n")
+      writer.write(LabSaver.save(experiments))
+    }
+  }
+
   object CodeComponent extends ComponentSerialization[Array[String], A] {
     val componentName = "org.nlogo.modelsection.code"
     val EndOfLineSpaces = new scala.util.matching.Regex("(?m)[ ]+$", "content")
@@ -179,15 +190,11 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
     }
   }
 
-  lazy val defaultView: View = View(left = 331, top = 10, right = 770, bottom = 470,
-    dimensions = WorldDimensions(-16, 16, -16, 16, 13.0), fontSize = 10, updateMode = UpdateMode.Continuous,
-    showTickCounter = true, frameRate = 30)
-
   object InterfaceComponent extends ComponentSerialization[Array[String], A] {
     val componentName = "org.nlogo.modelsection.interface"
     private val additionalReaders = AbstractNLogoFormat.this.widgetReaders
     private val literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
-    override def addDefault = _.copy(widgets = Seq(defaultView))
+    override def addDefault = _.copy(widgets = Seq(Model.defaultView))
 
     def serialize(m: Model): Array[String] =
       m.widgets.flatMap((w: Widget) => (WidgetReader.format(w, additionalReaders).linesIterator.toSeq :+ "")).toArray

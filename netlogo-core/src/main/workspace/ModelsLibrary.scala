@@ -48,7 +48,7 @@ object ModelsLibrary {
 
     def exactMatch(node: Node): Option[Seq[String]] =
       node.depthFirstIterable
-        .find(n => n.name.toUpperCase.startsWith(s"${targetName.toUpperCase}.NLOGO"))
+        .find(n => n.name.toUpperCase.startsWith(s"${targetName.toUpperCase}.NLOGOX"))
         .filter(_.isLeaf)
         .map(n => Seq(n.name))
 
@@ -79,7 +79,7 @@ object ModelsLibrary {
    * models library.
    *
    * @param targetName the name of the model to scan for, not including the
-   *                   ".nlogo" extension.
+   *                   ".nlogox(3d)" extension.
    * @return the path to the model, or None if no such model is in the library.
    */
   def getModelPath(targetName: String): Option[String] = {
@@ -146,7 +146,7 @@ object ModelsLibrary {
     scanDirectory(new File(path, "").toPath, exclusive)
 
   def getImagePath(filePath: String): String = {
-    val index = filePath.indexOf(".nlogo");
+    val index = filePath.indexOf(".nlogox");
     val path =
       if (index != -1) filePath.substring(0, index)
       else             filePath
@@ -181,7 +181,8 @@ object ModelsLibrary {
               scanDirectory(p, exclusive)
             } else {
               val fileName = p.getFileName.toString.toUpperCase
-              if (fileName.endsWith(".NLOGO") || fileName.endsWith(".NLOGO3D")) {
+              if (fileName.endsWith(".NLOGO") || fileName.endsWith(".NLOGO3D") ||
+                  fileName.endsWith(".NLOGOX") || fileName.endsWith(".NLOGOX3D")) {
                 Some(Leaf(p.getFileName.toString, p.toString))
               } else {
                 None
@@ -202,8 +203,8 @@ object ModelsLibrary {
 
   /// helpers
 
-  // we use this so that "Foo.nlogo" sorts before "Foo
-  // Alternate.nlogo", not after - ST 8/31/04
+  // we use this so that "Foo.nlogox" sorts before "Foo
+  // Alternate.nlogox", not after - ST 8/31/04
   object NLogoModelOrdering
     extends scala.math.Ordering[String] {
     def compare(s1: String, s2: String): Int =
@@ -216,9 +217,9 @@ object ModelsLibrary {
 
     private def munge(_s: String): String = {
       val s = _s.toUpperCase()
-      if (s.endsWith(".NLOGO"))        s.substring(0, s.length - 6)
-      else if (s.endsWith(".NLOGO3D")) s.substring(0, s.length - 8)
-      else                             s
+      if (s.endsWith(".NLOGOX"))        s.substring(0, s.length - 7)
+      else if (s.endsWith(".NLOGOX3D")) s.substring(0, s.length - 9)
+      else                              s
     }
   }
 

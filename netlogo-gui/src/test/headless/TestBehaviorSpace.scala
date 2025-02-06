@@ -256,7 +256,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
   if (!Version.is3D)
     test("ExportGraphics", SlowTest.Tag) {
       val workspace = newWorkspace()
-      workspace.open("models/test/lab/FireWithExperiments.nlogo")
+      workspace.open("models/test/lab/FireWithExperiments.nlogox")
       newWorker("testExportGraphics")
         .run(workspace, () => workspace, 1)
     }

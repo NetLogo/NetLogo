@@ -22,7 +22,7 @@ object InfoTab {
                 testCpValue.map(_.data), Seq(), streamsValue.log)(runnerValue)
               Set(baseDirectoryValue / "docs" / "infotab.html")
           }
-          cache(Set(baseDirectory.value / "models" / "Code Examples" / "Info Tab Example.nlogo")).toSeq
+          cache(Set(baseDirectory.value / "models" / "Code Examples" / "Info Tab Example.nlogox")).toSeq
     }
 
 }

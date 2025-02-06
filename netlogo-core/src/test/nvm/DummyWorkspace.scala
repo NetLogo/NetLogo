@@ -17,6 +17,7 @@ class DummyWorkspace extends Workspace {
   override def addJobFromJobThread(job: Job) = unsupported
   override def getExtensionManager = unsupported
   override def getLibraryManager   = unsupported
+  override def getResourceManager = unsupported
   override def getCompilationEnvironment = new DummyCompilationEnvironment
   override def waitFor(runnable: CommandRunnable) = unsupported
   override def waitForResult[T](runnable: ReporterRunnable[T]): T = unsupported

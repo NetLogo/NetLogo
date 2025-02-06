@@ -83,15 +83,15 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   }
 
   override def load(model: WidgetModel): AnyRef = {
-    setSize(model.right - model.left, model.bottom - model.top)
+    setSize(model.width, model.height)
     fontSize = model.fontSize
     this
   }
 
   override def model: WidgetModel = {
-    val b = getBoundsTuple
+    val b = getUnzoomedBounds
     CoreOutput(
-      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      x = b.x, y = b.y, width = b.width, height = b.height,
       fontSize = fontSize)
   }
 }

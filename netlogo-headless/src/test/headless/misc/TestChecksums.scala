@@ -98,7 +98,7 @@ class ChecksumTester(val info: String => Unit, versionMismatch: () => Unit = () 
       new java.io.File("tmp/TestChecksums").mkdir()
       val name = model.substring(
         model.lastIndexOf('/'),
-        model.lastIndexOf(".nlogo"))
+        model.lastIndexOf(".nlogox"))
       workspace.exportView("tmp/TestChecksums/" + name + ".png",
         "PNG")
     }

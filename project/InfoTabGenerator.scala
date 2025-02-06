@@ -1,11 +1,8 @@
 import sbt._
 
 object InfoTabGenerator {
-  def apply(model: File): String = {
-    val modelText = IO.read(model)
-    val info = modelText.split("\\@\\#\\$\\#\\@\\#\\$\\#\\@(\r)?\n")(2)
-    Markdown(Preprocessor.convert(info), "", extension = false)
-  }
+  def apply(model: File): String =
+    Markdown(Preprocessor.convert(InfoExtractor(IO.read(model))), "", extension = false)
 
   // runs on the wiki text, before it gets converted to HTML
   object Preprocessor {

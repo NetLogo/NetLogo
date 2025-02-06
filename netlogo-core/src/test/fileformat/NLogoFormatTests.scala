@@ -8,7 +8,7 @@ import java.util.Arrays
 
 import org.scalatest.funsuite.AnyFunSuite
 
-import org.nlogo.api.{ ComponentSerialization, ConfigurableModelLoader, ModelLoader, ModelSettings, Version }
+import org.nlogo.api.{ AbstractModelLoader, ComponentSerialization, ConfigurableModelLoader, ModelSettings, Version }
 import org.nlogo.core.{ DummyCompilationEnvironment, DummyExtensionManager, Model, Shape, Widget },
   Shape.{ LinkShape, VectorShape }
 
@@ -34,7 +34,7 @@ class NLogoFormatIOTest extends AnyFunSuite {
 
   val format = new NLogoFormat
 
-  lazy val antsBenchmarkPath = Paths.get(modelsLibrary, "test", "benchmarks", "Ants Benchmark.nlogo")
+  lazy val antsBenchmarkPath = Paths.get("test", "fileformat", "Ants Benchmark.nlogo")
   // sanity checking, if these fail NetLogo will be pretty unusable
   test("fails when reading in sections from a bad URI") {
     assert(format.sections(new URI("file:///not-a-real-file")).isFailure)
@@ -78,7 +78,7 @@ class NLogoFormatIOTest extends AnyFunSuite {
 
 class NLogoFormatConversionTest extends AnyFunSuite with ConversionHelper {
   if (canTestConversions) {
-    def testLoader: ModelLoader =
+    def testLoader: AbstractModelLoader =
       new ConfigurableModelLoader().addFormat[Array[String], NLogoFormat](new NLogoFormat)
         .addSerializer[Array[String], NLogoFormat](new NLogoLabFormat(literalParser))
 

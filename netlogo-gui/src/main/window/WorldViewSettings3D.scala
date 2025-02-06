@@ -2,8 +2,7 @@
 
 package org.nlogo.window;
 
-import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions }
-import org.nlogo.api.WorldDimensions3D
+import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions, WorldDimensions3D }
 import org.nlogo.agent.World3D
 import org.nlogo.window.Events.RemoveAllJobsEvent
 import org.nlogo.swing.ModalProgressTask
@@ -297,10 +296,10 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
       wrappingAllowedInX = world.wrappingAllowedInX,
       wrappingAllowedInY = world.wrappingAllowedInY,
       wrappingAllowedInZ = world.wrappingAllowedInZ)
-    val b = gWidget.getBoundsTuple
+    val b = gWidget.getUnzoomedBounds
     val label = if (tickCounterLabel == null || tickCounterLabel.trim == "") None else Some(tickCounterLabel)
     CoreView(
-      left = b._1, top = b._2, right = b._3, bottom = b._4,
+      x = b.x, y = b.y, width = b.width, height = b.height,
       dimensions = dimensions,
       fontSize = gWidget.view.fontSize,
       updateMode = workspace.updateMode(),

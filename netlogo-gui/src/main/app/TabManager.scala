@@ -5,11 +5,12 @@ package org.nlogo.app
 import java.awt.{ Component, KeyboardFocusManager }
 import java.awt.event.{ ActionEvent, KeyEvent, WindowAdapter, WindowEvent, WindowFocusListener }
 import java.awt.print.PrinterAbortException
+import java.io.{ File, PrintWriter }
 import java.nio.file.{ Path, Paths }
 import java.util.prefs.Preferences
 import javax.swing.{ AbstractAction, Action, JComponent, JFrame }
 
-import org.nlogo.api.Exceptions
+import org.nlogo.api.{ Exceptions, XMLElement, XMLReader, XMLWriter }
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
 import org.nlogo.app.common.{ ExceptionCatchingAction, MenuTab, TabsInterface }
 import org.nlogo.app.common.Events.SwitchedTabsEvent
@@ -26,6 +27,8 @@ import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, 
 import org.nlogo.window.{ ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget, Widget }
 
 import scala.collection.mutable.Set
+
+import scala.io.Source
 
 class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
                  val externalFileManager: ExternalFileManager)
@@ -66,6 +69,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   private var reloading = false
   private var movingTabs = true
+  private var loadingTabs = false
 
   addTabWithLabel(mainTabs, I18N.gui.get("tabs.run"), interfaceTab)
   addTabWithLabel(mainTabs, I18N.gui.get("tabs.info"), infoTab)
@@ -83,7 +87,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         switchedTabs(mainTabs.getSelectedComponent)
       }
     }
-    
+
     def windowLostFocus(e: WindowEvent) {}
   })
 
@@ -127,7 +131,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
       switchedTabs(separateTabs.getSelectedComponent)
     }
-    
+
     def windowLostFocus(e: WindowEvent) {}
   })
 
@@ -216,7 +220,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       dirtyDialog.setVisible(true)
     else
       reload()
-  
+
 
     // Return 'dirty' to stop the file watcher thread if file is dirty. This is
     // to prevent the file dirty dialog from being shown back-to-back.
@@ -356,6 +360,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
+  def openTempFiles: Seq[String] =
+    getExternalFileTabs.filter(_.isInstanceOf[TemporaryCodeTab]).map(_.filename.toOption.get)
+
   def setSelectedIndex(index: Int) {
     if (index >= mainTabs.getTabCount) {
       separateTabs.setSelectedIndex(index - mainTabs.getTabCount)
@@ -428,6 +435,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     tab.syncTheme()
 
     updateTabActions()
+    saveOpenTabs()
   }
 
   def newExternalFile {
@@ -485,13 +493,14 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       separateTabs.remove(tab)
     else
       mainTabs.remove(tab)
-    
+
     externalFileManager.remove(tab)
 
     if (getExternalFileTabs.isEmpty)
       revokeAction(SaveAllAction)
-    
+
     updateTabActions()
+    saveOpenTabs()
   }
 
   def removeTab(tab: Component) {
@@ -579,6 +588,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   }
 
   def handle(e: LoadModelEvent) {
+    loadOpenTabs()
+
     // We need to restart the watcher thread every load because the list of
     // included files may have changed.
 
@@ -596,7 +607,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   def handle(e: LoadErrorEvent) {
     reloading = false
   }
-  
+
   def handle(e: RuntimeErrorEvent) {
     if (!e.jobOwner.isInstanceOf[MonitorWidget]) {
       e.sourceOwner match {
@@ -710,9 +721,6 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     stopWatcherThread()
   }
 
-  def handle(e: ModelSavedEvent) =
-    setWatchingFiles(getAutoReload, e.modelPath)
-
   def handle(e: ExternalFileSavedEvent) = {
     getTabWithFilename(Right(e.path)).foreach(tab => {
       if (separateTabsWindow.isVisible)
@@ -732,5 +740,49 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     })
 
     separateTabsWindow.syncTheme()
+  }
+
+  private def tabFilePath: Option[String] =
+    Option(workspace.getModelFileName).map(name =>
+      Paths.get(System.getProperty("user.home"), ".nlogo", name + ".tmp").toString)
+
+  private def loadOpenTabs() {
+    loadingTabs = true
+
+    tabFilePath.foreach(path => {
+      if (new File(path).exists) {
+        XMLReader.read(Source.fromFile(path).getLines.mkString("\n")).foreach(el => {
+          if (el.name == "model") {
+            el.getOptionalChild("openTempFiles").foreach(_.getChildren("file").foreach(
+              _.get("path").foreach(openExternalFile)))
+          }
+        })
+      }
+    })
+
+    loadingTabs = false
+  }
+
+  private def saveOpenTabs() {
+    if (!loadingTabs) {
+      tabFilePath.foreach(path => {
+        val file = new File(path)
+
+        file.getParentFile.mkdirs()
+
+        val writer = new XMLWriter(new PrintWriter(file))
+
+        writer.startDocument()
+        writer.startElement("model")
+        writer.startElement("openTempFiles")
+
+        openTempFiles.foreach(path => writer.element(XMLElement("file", Map("path" -> path), "", Seq())))
+
+        writer.endElement("openTempFiles")
+        writer.endElement("model")
+        writer.endDocument()
+        writer.close()
+      })
+    }
   }
 }

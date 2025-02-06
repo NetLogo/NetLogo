@@ -1,14 +1,35 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
 package org.nlogo.api
 
-import java.io.FileNotFoundException
+import java.io.{ FileNotFoundException, Writer }
 import java.net.URI
 import java.nio.file.{ Files, Paths }
 
 import org.nlogo.core.{ I18N, Model }
 
-import scala.util.{ Failure, Try }
 import scala.reflect.ClassTag
+import scala.util.{ Failure, Try }
+
+trait AbstractModelLoader {
+  def readModel(uri: URI): Try[Model]
+  def readModel(source: String, extension: String): Try[Model]
+  def save(model: Model, uri: URI): Try[URI]
+  def sourceString(model: Model, extension: String): Try[String]
+  def emptyModel(extension: String): Model
+  // these next two allow ManagerDialog to use the correct format for experiment loading/saving (Isaac B 8/17/24)
+  def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])]
+  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit]
+}
+
+object AbstractModelLoader {
+  def getURIExtension(uri: URI): Option[String] = {
+    if (uri.getScheme == "jar")
+      uri.getSchemeSpecificPart.split("\\.").lastOption
+    else
+      uri.getPath.split("\\.").lastOption
+  }
+}
 
 class FormatterPair[A, B <: ModelFormat[A, B]](
   val modelFormat: B,
@@ -42,18 +63,16 @@ class FormatterPair[A, B <: ModelFormat[A, B]](
 
     def emptyModel: Model =
       modelFormat.emptyModel(serializers)
+
+    def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])] =
+      modelFormat.readExperiments(source, editNames, existingNames)
+
+    def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] =
+      modelFormat.writeExperiments(experiments, writer)
+
   }
 
-object ModelLoader {
-  def getURIExtension(uri: URI): Option[String] = {
-    if (uri.getScheme == "jar")
-      uri.getSchemeSpecificPart.split("\\.").lastOption
-    else
-      uri.getPath.split("\\.").lastOption
-  }
-}
-
-trait ModelLoader {
+trait ModelLoader extends AbstractModelLoader {
   def formats: Seq[FormatterPair[_, _]]
 
   def uriCompatible(uri: URI): Option[FormatterPair[_, _]] =
@@ -102,6 +121,20 @@ trait ModelLoader {
     val format = formats.find(_.name == extension)
       .getOrElse(throw new Exception("Unable to create empty NetLogo model for format: " + extension))
     format.emptyModel
+  }
+
+  def readExperiments(source: String, editNames: Boolean, existingNames: Set[String]): Try[(Seq[LabProtocol], Set[String])] = {
+    val init: Try[(Seq[LabProtocol], Set[String])] = Failure(new Exception("Unable to read experiments."))
+    formats.foldLeft(init) {
+      case (acc, format) => if (acc.isSuccess) acc else format.readExperiments(source, editNames, existingNames)
+    }
+  }
+
+  def writeExperiments(experiments: Seq[LabProtocol], writer: Writer): Try[Unit] = {
+    val init: Try[Unit] = Failure(new Exception("Unable to write experiments."))
+    formats.foldLeft(init) {
+      case (acc, format) => if (acc.isSuccess) acc else format.writeExperiments(experiments, writer)
+    }
   }
 }
 

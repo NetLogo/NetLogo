@@ -26,7 +26,7 @@ object ChecksumsAndPreviews {
     def paths(fn: String => Boolean, includeBenchmarks: Boolean) = {
       val allLibrary = ModelsLibrary.getModelPaths(true, false).toList
       val library = if (includeBenchmarks)
-        allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogo") ::: allLibrary
+        allBenchmarks.map("models/test/benchmarks/" + _ + " Benchmark.nlogox") ::: allLibrary
       else
         allLibrary
 
@@ -102,7 +102,7 @@ object ChecksumsAndPreviews {
         .forall(!path.toUpperCase.containsSlice(_))
 
     def remake(path: String) {
-      val previewPath = path.replaceFirst("\\.nlogo$", ".png")
+      val previewPath = path.replaceFirst(".nlogox", ".png")
       try {
         val runner = PreviewCommandsRunner.fromModelPath(new WorkspaceFactory, path)
         println("making preview for: " + path)
@@ -268,7 +268,7 @@ object ChecksumsAndPreviews {
           Paths.get("tmp/checksum-exports")
             .resolve(
               modelPath.subpath(modelIndex, pathCount - 2)
-                .resolve(modelName.replaceAllLiterally(".nlogo", ".csv")))
+                .resolve(modelName.replaceAllLiterally(".nlogox", ".csv")))
 
         Files.createDirectories(exportPath.getParent)
         workspace.exportWorld(exportPath.toString)

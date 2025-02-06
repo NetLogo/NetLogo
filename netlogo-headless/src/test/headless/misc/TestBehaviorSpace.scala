@@ -167,7 +167,7 @@ class TestBehaviorSpace extends AnyFunSuite
   // test export-graphics in headless mode
   test("ExportGraphics", SlowTest.Tag) {
     val workspace = newWorkspace()
-    workspace.open("models/test/lab/FireWithExperiments.nlogo")
+    workspace.open("models/test/lab/FireWithExperiments.nlogox")
     newWorker("testExportGraphics")
       .run(workspace, () => workspace, 1)
   }

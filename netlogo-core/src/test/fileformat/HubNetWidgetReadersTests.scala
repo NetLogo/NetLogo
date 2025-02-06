@@ -47,8 +47,8 @@ object HubNetGenerators {
     pos       <- genPos
     actionKey <- optionalOneChar
   } yield Button(display = display,
-    left  = pos._1, top    = pos._2,
-    right = pos._3, bottom = pos._4,
+    x  = pos._1, y    = pos._2,
+    width = pos._3 - pos._1, height = pos._4 - pos._2,
     source = None, forever = false, actionKey = actionKey)
 
   val escapedChars = Gen.oneOf('\n', '\t', '\r', '\\', '"')
@@ -70,8 +70,8 @@ object HubNetGenerators {
     choices       <- chooseableList
     currentChoice <- Gen.choose(0, choices.length)
   } yield Chooser(display = varName,
-    left  = pos._1, top    = pos._2,
-    right = pos._3, bottom = pos._4,
+    x  = pos._1, y    = pos._2,
+    width = pos._3 - pos._1, height = pos._4 - pos._2,
     variable = varName, choices = choices,
     currentChoice = currentChoice)
 
@@ -82,8 +82,8 @@ object HubNetGenerators {
       pos       <- genPos
       precision <- Gen.choose(0, 17)
     } yield Monitor(display = display,
-      left = pos._1, top = pos._2,
-      right = pos._3, bottom = pos._4,
+      x = pos._1, y = pos._2,
+      width = pos._3 - pos._1, height = pos._4 - pos._2,
       source = source, precision = precision, fontSize = 11)
 
   val sliderWidget: Gen[Slider] =
@@ -98,8 +98,8 @@ object HubNetGenerators {
       direction <- Gen.oneOf(Horizontal, Vertical)
       } yield {
         Slider(display = name,
-          left = pos._1,       top = pos._2,
-          right = pos._3,      bottom = pos._4,
+          x = pos._1, y = pos._2,
+          width = pos._3 - pos._1, height = pos._4 - pos._2,
           min = min.toString,  max = max.toString,
           variable = name, default = value,
           step = inc.toString, units = units,
@@ -112,8 +112,8 @@ object HubNetGenerators {
     isOn    <- Arbitrary.arbBool.arbitrary
     } yield {
       Switch(display = name,
-        left = pos._1,       top = pos._2,
-        right = pos._3,      bottom = pos._4,
+        x = pos._1, y = pos._2,
+        width = pos._3 - pos._1, height = pos._4 - pos._2,
         variable = name, on = isOn)
     }
 
@@ -124,8 +124,8 @@ object HubNetGenerators {
     minPy <- Arbitrary.arbInt.arbitrary
     maxPy <- Arbitrary.arbInt.arbitrary.map(_ + minPy)
   } yield View(
-    left  = pos._1, top    = pos._2,
-    right = pos._3, bottom = pos._4,
+    x = pos._1, y = pos._2,
+    width = pos._3 - pos._1, height = pos._4 - pos._2,
     dimensions = WorldDimensions(minPx, maxPx, minPy, maxPy))
 
   val hubNetWidgets: Gen[Widget] =

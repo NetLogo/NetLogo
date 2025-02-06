@@ -199,7 +199,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
 
   /**
    * makes a guess as to what the user would like to save this model as.
-   * This is the model name if there is one, "Untitled.nlogo" otherwise.
+   * This is the model name if there is one, "Untitled.nlogox(3d)" otherwise.
    */
   private def guessFileName: String =
     FileIO.ensureExtension(modelTracker.modelNameForDisplay, modelSuffix)

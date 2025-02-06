@@ -15,10 +15,10 @@ import org.nlogo.workspace.ModelsLibrary
 object Dump {
   def main(argv:Array[String]) {
     argv match {
-      case Array() => println("usage: dump all, dump bench, dump Fire, dump foo/bar/Fire.nlogo")
+      case Array() => println("usage: dump all, dump bench, dump Fire, dump foo/bar/Fire.nlogox")
       case Array("all") => dumpAll()
       case Array("bench") => dumpBenchmarks()
-      case Array(path:String) if path.endsWith(".nlogo") => print(dump(path))
+      case Array(path:String) if path.endsWith(".nlogox") => print(dump(path))
       case Array(name:String) => print(dump(benchPath(name)))
     }
   }
@@ -33,7 +33,7 @@ object Dump {
     }
     finally { workspace.dispose() }
   }
-  def benchPath(name:String) = "models/test/benchmarks/" + name + " Benchmark.nlogo"
+  def benchPath(name:String) = "models/test/benchmarks/" + name + " Benchmark.nlogox"
   def dumpBenchmarks() {
     for(name <- ChecksumsAndPreviews.allBenchmarks)
       writeFile(DumpsPath + name + ".txt",
@@ -47,7 +47,7 @@ object Dump {
       path <- ModelsLibrary.getModelPaths
       if !TestCompileAll.badPath(path)
     } {
-      val name = path.split("/").last.toList.mkString.stripSuffix(".nlogo")
+      val name = path.split("/").last.toList.mkString.stripSuffix(".nlogox")
       print('.')
       writeFile("target/dumps/" + name + ".txt",dump(path))
     }

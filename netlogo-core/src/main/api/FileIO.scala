@@ -9,31 +9,29 @@ import javax.imageio.ImageIO
 
 import org.nlogo.core.FileMode
 
-import scala.io.Codec
-
 object FileIO {
 
   @throws(classOf[java.io.IOException])
-  @deprecated("Use fileToString and specify codec", "6.0.1")
+  @deprecated("Use fileToString to specify codec", "6.0.1")
   def file2String(path: String) =
     io.Source.fromFile(path).mkString
 
   @throws(classOf[java.io.IOException])
-  @deprecated("Use fileToString and specify codec", "6.0.1")
+  @deprecated("Use fileToString to specify codec", "6.0.1")
   def file2String(file: java.io.File) =
     io.Source.fromFile(file).mkString
 
   @throws(classOf[java.io.IOException])
-  def fileToString(file: java.io.File)(implicit codec: Codec) =
-    io.Source.fromFile(file)(codec).mkString
+  def fileToString(file: java.io.File) =
+    io.Source.fromFile(file, "UTF-8").mkString
 
   @throws(classOf[java.io.IOException])
-  def fileToString(path: String)(implicit codec: Codec) =
-    io.Source.fromFile(path)(codec).mkString
+  def fileToString(path: String) =
+    io.Source.fromFile(path, "UTF-8").mkString
 
   @throws(classOf[java.io.IOException])
   def fileToString(path: String, encoding: String) =
-    io.Source.fromFile(path, encoding).mkString
+    io.Source.fromFile(path, "UTF-8").mkString
 
   @throws(classOf[java.io.IOException])
   def url2String(sampleURL: String): String = {

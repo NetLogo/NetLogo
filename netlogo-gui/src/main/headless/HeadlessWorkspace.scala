@@ -9,17 +9,16 @@ import java.nio.file.Paths
 // AbstractWorkspace are not, so if you want to document a method for everyone, override that method
 // here and document it here.  The overriding method can simply call super(). - ST 6/1/05, 7/28/11
 
-import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface,
-  WorldDimensions3D, AggregateManagerInterface, FileIO, LogoException, ModelReader, ModelType, NetLogoLegacyDialect,
+import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface, AggregateManagerInterface, FileIO,
+  LogoException, ModelReader, ModelType, NetLogoLegacyDialect,
   NetLogoThreeDDialect, CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
-import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions }
+import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions,
+  WorldDimensions3D }
 import org.nlogo.agent.{ CompilationManagement, World, World2D, World3D }
 import org.nlogo.nvm.{ LabInterface, DefaultCompilerServices, PresentationCompilerInterface }
 import org.nlogo.workspace.{ AbstractWorkspaceScala, HubNetManagerFactory }
-import org.nlogo.fileformat, fileformat.{ NLogoFormat, NLogoThreeDFormat }
+import org.nlogo.fileformat.{ FileFormat, NLogoFormat, NLogoThreeDFormat }
 import org.nlogo.util.Pico
-
-import scala.io.Codec
 
 /**
  * Companion object, and factory object, for the HeadlessWorkspace class.
@@ -46,7 +45,7 @@ object HeadlessWorkspace {
     pico.add("org.nlogo.sdm.AggregateManagerLite")
     pico.add("org.nlogo.render.Renderer")
     pico.addComponent(subclass)
-    pico.addAdapter(new ModelLoaderComponent())
+    pico.addAdapter(new LegacyModelLoaderComponent())
     pico.add(classOf[HubNetManagerFactory], "org.nlogo.hubnet.server.HeadlessHubNetManagerFactory")
     val hw = pico.getComponent(subclass)
     hw.set3d(is3d)
@@ -128,7 +127,11 @@ with org.nlogo.api.ViewSettings {
   def modelOpened = _openModel.nonEmpty
 
   private[this] var _openModel = Option.empty[Model]
-  def setOpenModel(model: Model): Unit = { _openModel = Some(model) }
+  def setOpenModel(model: Model): Unit = {
+    _openModel = Some(model)
+
+    resourceManager.setResources(model.resources)
+  }
 
   val outputAreaBuffer = new StringBuilder
 
@@ -477,7 +480,7 @@ with org.nlogo.api.ViewSettings {
   }
 
   private lazy val loader = {
-    fileformat.standardLoader(compiler.utilities)
+    FileFormat.standardAnyLoader(true, compiler.utilities)
       .addSerializer[Array[String], NLogoFormat](
         Femto.get[ComponentSerialization[Array[String], NLogoFormat]]("org.nlogo.sdm.NLogoSDMFormat"))
       .addSerializer[Array[String], NLogoThreeDFormat](
@@ -505,7 +508,7 @@ with org.nlogo.api.ViewSettings {
       case ex: CompilerException =>
         // models with special comment are allowed not to compile
         if (compilerTestingMode &&
-            FileIO.fileToString(path)(Codec.UTF8).startsWith(";; DOESN'T COMPILE IN CURRENT BUILD"))
+            FileIO.fileToString(path).startsWith(";; DOESN'T COMPILE IN CURRENT BUILD"))
           System.out.println("ignored compile error: " + path)
         else throw ex
     }

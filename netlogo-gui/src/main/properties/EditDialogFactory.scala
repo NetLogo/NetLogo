@@ -32,7 +32,7 @@ class EditDialogFactory(compiler: CompilerServices, colorizer: Colorizer) extend
         })
       }
   }
-  
+
   def getDialog =
     dialog
 
