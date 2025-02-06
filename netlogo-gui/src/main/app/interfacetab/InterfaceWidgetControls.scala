@@ -144,10 +144,15 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     widgetMenu.syncTheme()
     alignmentMenu.syncTheme()
 
-    interactButton.setIcon(Utils.iconScaledWithColor("/images/interact.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
-    selectButton.setIcon(Utils.iconScaledWithColor("/images/select.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
-    editButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
-    deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
+    interactButton.syncTheme()
+    selectButton.syncTheme()
+    editButton.syncTheme()
+    deleteButton.syncTheme()
+
+    interactButton.setIcon(Utils.iconScaledWithColor("/images/interact.png", 18, 18, InterfaceColors.TOOLBAR_IMAGE))
+    selectButton.setIcon(Utils.iconScaledWithColor("/images/select.png", 18, 18, InterfaceColors.TOOLBAR_IMAGE))
+    editButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 18, 18, InterfaceColors.TOOLBAR_IMAGE))
+    deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 18, 18, InterfaceColors.TOOLBAR_IMAGE))
   }
 
   def handle(e: WindowEvents.WidgetRemovedEvent) {
@@ -262,11 +267,6 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
 
       label.setForeground(InterfaceColors.TOOLBAR_TEXT)
-
-      interactButton.syncTheme()
-      selectButton.syncTheme()
-      editButton.syncTheme()
-      deleteButton.syncTheme()
 
       popup.syncTheme()
     }
