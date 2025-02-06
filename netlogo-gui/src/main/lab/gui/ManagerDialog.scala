@@ -12,9 +12,10 @@ import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol }
 import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
 
 import org.nlogo.core.I18N
-import org.nlogo.fileformat.{ LabSaver, LabLoader }
 import org.nlogo.swing.{ Button, FileDialog, OptionPane, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+
+import scala.io.Source
 
 private class ManagerDialog(manager:       LabManager,
                             dialogFactory: EditDialogFactoryInterface,

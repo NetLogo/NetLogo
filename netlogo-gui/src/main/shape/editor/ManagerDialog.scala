@@ -8,12 +8,8 @@ import java.nio.file.Paths
 import javax.swing.{ SwingConstants, Box, BoxLayout, JPanel, JLabel, JDialog }
 import javax.swing.event.{ ListSelectionEvent, MouseInputAdapter, ListSelectionListener }
 
-<<<<<<< HEAD
-import org.nlogo.api.ModelLoader
-import org.nlogo.awt.ColumnLayout
-=======
 import org.nlogo.api.AbstractModelLoader
->>>>>>> hexy
+import org.nlogo.awt.ColumnLayout
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
   ShapeList.{ shapesToMap, isDefaultShapeName }
 import org.nlogo.swing.{ Button, OptionPane, ScrollPane, Transparent, Utils }

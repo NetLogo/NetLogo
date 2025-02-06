@@ -304,8 +304,6 @@ class App extends
   private val ImportWorldURLProp = "netlogo.world_state_url"
   private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
 
-  lazy val modelingCommons                          = pico.getComponent(classOf[ModelingCommonsInterface])
-
   val isMac = System.getProperty("os.name").startsWith("Mac")
 
   /**

@@ -23,7 +23,7 @@ import org.nlogo.swing.{ Printable, PrinterManager, UserAction }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, CompileAllEvent, CompiledEvent,
                                  ExternalFileSavedEvent, LoadBeginEvent, LoadErrorEvent, LoadModelEvent,
-                                 ModelSavedEvent, RuntimeErrorEvent, WidgetErrorEvent, WidgetRemovedEvent }
+                                 RuntimeErrorEvent, WidgetErrorEvent, WidgetRemovedEvent }
 import org.nlogo.window.{ ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget, Widget }
 
 import scala.collection.mutable.Set
@@ -34,7 +34,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
                  val externalFileManager: ExternalFileManager)
   extends TabsInterface with AboutToCloseFilesEvent.Handler with AboutToSaveModelEvent.Handler
   with CompiledEvent.Handler with ExternalFileSavedEvent.Handler with LoadBeginEvent.Handler
-  with LoadErrorEvent.Handler with LoadModelEvent.Handler with ModelSavedEvent.Handler with RuntimeErrorEvent.Handler
+  with LoadErrorEvent.Handler with LoadModelEvent.Handler with RuntimeErrorEvent.Handler
   with WidgetErrorEvent.Handler with WidgetRemovedEvent.Handler with ThemeSync {
 
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
@@ -754,7 +754,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         XMLReader.read(Source.fromFile(path).getLines.mkString("\n")).foreach(el => {
           if (el.name == "model") {
             el.getOptionalChild("openTempFiles").foreach(_.getChildren("file").foreach(
-              _.get("path").foreach(openExternalFile)))
+              _.get("path").foreach(openExternalFile(_))))
           }
         })
       }

@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import java.awt.{ Color => AWTColor, GridBagConstraints }
+import java.awt.GridBagConstraints
 
 object Property {
 

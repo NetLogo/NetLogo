@@ -5,11 +5,11 @@ package org.nlogo.hubnet.server.gui
 import java.awt.Component
 import java.net.{ InetAddress, NetworkInterface }
 
-import org.nlogo.api.{ ModelLoader, ModelType, ViewInterface }
+import org.nlogo.api.{ AbstractModelLoader, ModelType, ViewInterface }
 import org.nlogo.api.HubNetInterface.ClientInterface
 import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.core.{ Femto, I18N, Model, Widget => CoreWidget }
-import org.nlogo.fileformat.ModelConversion
+import org.nlogo.fileformat.FileFormat.ModelConversion
 import org.nlogo.hubnet.connection.{ HubNetException, NetworkUtils }
 import org.nlogo.hubnet.protocol.ComputerInterface
 import org.nlogo.hubnet.server.{ ClientEventListener, ConnectionManager, HubNetManager }
