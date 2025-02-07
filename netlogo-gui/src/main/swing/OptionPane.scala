@@ -123,7 +123,7 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
   private lazy val input = new TextField(startingInput, 0)
 
   def getInput: String = {
-    if (getSelectedIndex == 0 && input.getText.trim.nonEmpty)
+    if (getSelectedIndex == 0)
       input.getText.trim
     else
       null

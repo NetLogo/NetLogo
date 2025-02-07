@@ -2,27 +2,27 @@
 
 package org.nlogo.app
 
-import java.awt.{ FileDialog => AWTFileDialog, Frame, GridBagConstraints, GridBagLayout, Insets }
-import java.awt.event.ActionEvent
+import java.awt.{ Component, FileDialog => AWTFileDialog, Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.io.FileOutputStream
 import java.nio.file.{ Files, Paths }
 import java.util.Base64
-import javax.swing.{ AbstractAction, JButton, JDialog, JList, JPanel, JScrollPane, ListSelectionModel }
+import javax.swing.{ JDialog, JLabel, JList, JPanel, ListCellRenderer, ListSelectionModel }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
 import org.nlogo.api.{ Workspace }
 import org.nlogo.awt.{ Positioning, UserCancelException }
 import org.nlogo.core.{ ExternalResource, I18N }
-import org.nlogo.swing.{ FileDialog, InputOptionPane, OptionPane }
+import org.nlogo.swing.{ Button, FileDialog, InputOptionPane, OptionPane, ScrollPane, Transparent }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.DirtyEvent
 
-// sync with this theme and new GUI helper classes after integrating new GUI
 class ResourceManagerDialog(parent: Frame, workspace: Workspace)
-  extends JDialog(parent, I18N.gui.get("resource.manager"), true) {
+  extends JDialog(parent, I18N.gui.get("resource.manager"), true) with ThemeSync {
 
   private val manager = workspace.getResourceManager
   private val resourceList = new JList(manager.getResources.map(_.name).toArray) {
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
+    setCellRenderer(new ResourceCellRenderer)
 
     addListSelectionListener(new ListSelectionListener {
       def valueChanged(e: ListSelectionEvent) {
@@ -31,22 +31,26 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     })
   }
 
-  private val addButton = new JButton(new AbstractAction(I18N.gui.get("resource.add")) {
-    def actionPerformed(e: ActionEvent) {
-      try {
-        val file = FileDialog.showFiles(parent, I18N.gui.get("resource.select"), AWTFileDialog.LOAD)
-        val path = Paths.get(file)
+  private val scrollPane = new ScrollPane(resourceList)
 
-        val name = new InputOptionPane(parent, I18N.gui.get("resource.name"), I18N.gui.get("resource.name"),
-                                        path.getFileName.toString.split('.')(0)).getInput.trim
+  private val addButton = new Button(I18N.gui.get("resource.add"), () => {
+    try {
+      val file = FileDialog.showFiles(parent, I18N.gui.get("resource.select"), AWTFileDialog.LOAD)
+      val path = Paths.get(file)
 
-        if (name.isEmpty) {
+      val name = new InputOptionPane(parent, I18N.gui.get("resource.name"), I18N.gui.get("resource.name"),
+                                      path.getFileName.toString.split('.')(0)).getInput
+
+      if (name != null) {
+        val trimmed = name.trim
+
+        if (trimmed.isEmpty) {
           new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.get("resource.nameEmpty"),
-                         OptionPane.Options.OK)
+                          OptionPane.Options.OK, OptionPane.Icons.ERROR)
         }
 
         else {
-          val resource = new ExternalResource(name, file.split('.')(1),
+          val resource = new ExternalResource(trimmed, file.split('.')(1),
                                               Base64.getEncoder.encodeToString(Files.readAllBytes(path)))
 
           if (manager.addResource(resource)) {
@@ -56,52 +60,52 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
           }
 
           else {
-            new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.getN("resource.alreadyExists", name),
-                           OptionPane.Options.OK)
+            new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.getN("resource.alreadyExists", trimmed),
+                            OptionPane.Options.OK, OptionPane.Icons.ERROR)
           }
         }
       }
+    }
 
-      catch {
-        case e: UserCancelException =>
-      }
+    catch {
+      case e: UserCancelException =>
     }
   })
 
-  private val exportButton = new JButton(new AbstractAction(I18N.gui.get("resource.export")) {
-    def actionPerformed(e: ActionEvent) {
-      try {
-        val resource = manager.getResource(resourceList.getSelectedValue).get
-        val stream = new FileOutputStream(FileDialog.showFiles(parent, I18N.gui.get("resource.select"),
-                                                               AWTFileDialog.SAVE,
-                                                               s"${resource.name}.${resource.extension}"))
-
-        stream.write(Base64.getDecoder.decode(resource.data))
-        stream.close()
-      }
-
-      catch {
-        case e: UserCancelException =>
-      }
-    }
-  })
-
-  private val renameButton = new JButton(new AbstractAction(I18N.gui.get("resource.rename")) {
-    def actionPerformed(e: ActionEvent) {
+  private val exportButton = new Button(I18N.gui.get("resource.export"), () => {
+    try {
       val resource = manager.getResource(resourceList.getSelectedValue).get
+      val stream = new FileOutputStream(FileDialog.showFiles(parent, I18N.gui.get("resource.select"),
+                                                              AWTFileDialog.SAVE,
+                                                              s"${resource.name}.${resource.extension}"))
 
-      val name = new InputOptionPane(parent, I18N.gui.get("resource.newName"), I18N.gui.get("resource.newName"),
-                                      resource.name).getInput.trim
+      stream.write(Base64.getDecoder.decode(resource.data))
+      stream.close()
+    }
 
-      if (name.isEmpty) {
+    catch {
+      case e: UserCancelException =>
+    }
+  })
+
+  private val renameButton = new Button(I18N.gui.get("resource.rename"), () => {
+    val resource = manager.getResource(resourceList.getSelectedValue).get
+
+    val name = new InputOptionPane(parent, I18N.gui.get("resource.newName"), I18N.gui.get("resource.newName"),
+                                    resource.name).getInput
+
+    if (name != null) {
+      val trimmed = name.trim
+
+      if (trimmed.isEmpty) {
         new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.get("resource.nameEmpty"),
-                       OptionPane.Options.OK)
+                        OptionPane.Options.OK, OptionPane.Icons.ERROR)
       }
 
-      else if (name != resource.name) {
+      else if (trimmed != resource.name) {
         manager.removeResource(resource.name)
 
-        if (manager.addResource(resource.copy(name = name))) {
+        if (manager.addResource(resource.copy(name = trimmed))) {
           refreshList()
 
           new DirtyEvent(None).raise(parent)
@@ -110,21 +114,19 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
         else {
           manager.addResource(resource)
 
-          new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.getN("resource.alreadyExists", name),
-                         OptionPane.Options.OK)
+          new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.getN("resource.alreadyExists", trimmed),
+                          OptionPane.Options.OK, OptionPane.Icons.ERROR)
         }
       }
     }
   })
 
-  private val removeButton = new JButton(new AbstractAction(I18N.gui.get("resource.remove")) {
-    def actionPerformed(e: ActionEvent) {
-      manager.removeResource(resourceList.getSelectedValue)
+  private val removeButton = new Button(I18N.gui.get("resource.remove"), () => {
+    manager.removeResource(resourceList.getSelectedValue)
 
-      refreshList()
+    refreshList()
 
-      new DirtyEvent(None).raise(parent)
-    }
+    new DirtyEvent(None).raise(parent)
   })
 
   setLayout(new GridBagLayout)
@@ -136,12 +138,12 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     c.fill = GridBagConstraints.HORIZONTAL
     c.insets = new Insets(6, 6, 6, 6)
 
-    add(new JScrollPane(resourceList), c)
+    add(scrollPane, c)
 
     c.fill = GridBagConstraints.HORIZONTAL
     c.weighty = 0
 
-    add(new JPanel(new GridBagLayout) {
+    add(new JPanel(new GridBagLayout) with Transparent {
       val c = new GridBagConstraints
 
       c.insets = new Insets(0, 6, 6, 6)
@@ -162,6 +164,8 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
   Positioning.center(this, parent)
 
+  syncTheme()
+
   private def refreshList() {
     resourceList.setListData(manager.getResources.map(_.name).toArray)
 
@@ -172,5 +176,52 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     exportButton.setEnabled(!resourceList.isSelectionEmpty)
     renameButton.setEnabled(!resourceList.isSelectionEmpty)
     removeButton.setEnabled(!resourceList.isSelectionEmpty)
+  }
+
+  def syncTheme() {
+    getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    scrollPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    resourceList.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+    addButton.syncTheme()
+    exportButton.syncTheme()
+    renameButton.syncTheme()
+    removeButton.syncTheme()
+  }
+
+  private class ResourceCellRenderer extends JPanel(new GridBagLayout) with ListCellRenderer[String] {
+    private val label = new JLabel
+
+    locally {
+      val c = new GridBagConstraints
+
+      c.anchor = GridBagConstraints.WEST
+      c.fill = GridBagConstraints.HORIZONTAL
+      c.weightx = 1
+      c.insets = new Insets(3, 3, 3, 3)
+
+      add(label, c)
+    }
+
+    def getListCellRendererComponent(list: JList[_ <: String], value: String, index: Int, isSelected: Boolean,
+                                     hasFocus: Boolean): Component = {
+      label.setText(value)
+
+      if (isSelected) {
+        setBackground(InterfaceColors.DIALOG_BACKGROUND_SELECTED)
+
+        label.setForeground(InterfaceColors.DIALOG_TEXT_SELECTED)
+      }
+
+      else {
+        setBackground(InterfaceColors.DIALOG_BACKGROUND)
+
+        label.setForeground(InterfaceColors.DIALOG_TEXT)
+      }
+
+      this
+    }
   }
 }
