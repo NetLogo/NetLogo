@@ -80,8 +80,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
   // --mag 9/25/02, ST 4/9/03
   var sliderEventOnReleaseOnly: Boolean = false
 
-  protected var startDragPoint: Point = null // convert to Option?
-  protected var newWidget: WidgetWrapper = null // convert to Option?
+  protected var startDragPoint: Option[Point] = None
+  protected var newWidget: Option[WidgetWrapper] = None
   protected var selectionPane: JComponent =
     new JComponent() {
       override def paintComponent(g: Graphics): Unit = {
@@ -98,40 +98,40 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   protected class InterceptPane extends JComponent {
     addMouseListener(new MouseAdapter {
-      override def mousePressed(e: MouseEvent) {
+      override def mousePressed(e: MouseEvent): Unit = {
         WidgetPanel.this.mousePressed(e)
       }
 
-      override def mouseReleased(e: MouseEvent) {
+      override def mouseReleased(e: MouseEvent): Unit = {
         WidgetPanel.this.mouseReleased(e)
       }
     })
 
     addMouseMotionListener(new MouseMotionAdapter {
-      override def mouseMoved(e: MouseEvent) {
+      override def mouseMoved(e: MouseEvent): Unit = {
         WidgetPanel.this.mouseMoved(e)
       }
 
-      override def mouseDragged(e: MouseEvent) {
+      override def mouseDragged(e: MouseEvent): Unit = {
         WidgetPanel.this.mouseDragged(e)
       }
     })
 
     addKeyListener(new KeyAdapter {
-      override def keyPressed(e: KeyEvent) {
+      override def keyPressed(e: KeyEvent): Unit = {
         WidgetPanel.this.keyPressed(e)
       }
 
-      override def keyReleased(e: KeyEvent) {
+      override def keyReleased(e: KeyEvent): Unit = {
         WidgetPanel.this.keyReleased(e)
       }
     })
 
-    def enableIntercept() {
+    def enableIntercept(): Unit = {
       setBounds(0, 0, WidgetPanel.this.getWidth - 10, WidgetPanel.this.getHeight - 10)
     }
 
-    def disableIntercept() {
+    def disableIntercept(): Unit = {
       setBounds(0, 0, 0, 0)
     }
   }
@@ -147,7 +147,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   def getInteractMode: InteractMode =
     interactMode
 
-  def setInteractMode(mode: InteractMode) {
+  def setInteractMode(mode: InteractMode): Unit = {
     if (interactMode == InteractMode.ADD && !placedShadowWidget)
       removeShadowWidget()
 
@@ -157,9 +157,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       interceptPane.disableIntercept()
 
       getWrappers.foreach(_.disableShadow())
-    }
-
-    else {
+    } else {
       interceptPane.enableIntercept()
 
       if (getWrappers.exists(_.widget match {
@@ -232,19 +230,13 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   private def getWrappers: Seq[WidgetWrapper] = {
-    getComponents.collect(
-      _ match {
-        case ww: WidgetWrapper => ww
-      }
-    )
-  }
-
-  private def wrapperAtPoint(point: Point): Option[WidgetWrapper] = {
-    getWrappers.filter(ww => ww.getSelectedBounds.contains(point)) match {
-      case Nil => None
-      case wrappers: Seq[WidgetWrapper] => Some(wrappers.minBy(getPosition(_)))
+    getComponents.collect {
+      case ww: WidgetWrapper => ww
     }
   }
+
+  private def wrapperAtPoint(point: Point): Option[WidgetWrapper] =
+    getWrappers.filter(ww => ww.getSelectedBounds.contains(point)).sortBy(getPosition(_)).headOption
 
   override def empty: Boolean =
     getComponents.exists {
@@ -321,15 +313,18 @@ class WidgetPanel(val workspace: GUIWorkspace)
     setForegroundWrapper()
   }
 
-  def mouseMoved(e: MouseEvent) {
+  def mouseMoved(e: MouseEvent): Unit = {
     interactMode match {
       case InteractMode.ADD =>
-        if (workspace.snapOn)
-          newWidget.setLocation((e.getX / GridSnap) * GridSnap, (e.getY / GridSnap) * GridSnap)
-        else
-          newWidget.setLocation(e.getX, e.getY)
+        newWidget.foreach(widget => {
+          if (workspace.snapOn) {
+            widget.setLocation((e.getX / GridSnap) * GridSnap, (e.getY / GridSnap) * GridSnap)
+          } else {
+            widget.setLocation(e.getX, e.getY)
+          }
 
-        newWidget.originalBounds = newWidget.getBounds
+          widget.originalBounds = widget.getBounds
+        })
 
       case InteractMode.EDIT =>
         val topWrapper = wrapperAtPoint(e.getPoint).getOrElse(null)
@@ -345,74 +340,76 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
   }
 
-  def mouseDragged(e: MouseEvent) {
+  def mouseDragged(e: MouseEvent): Unit = {
     if (widgetsBeingDragged.nonEmpty) {
       wrapperAtPoint(e.getPoint).foreach(w => {
         e.translatePoint(-w.getX, -w.getY)
         w.mouseDragged(e)
       })
-    }
+    } else if (NlogoMouse.hasButton1(e)) {
+      startDragPoint match {
+        case Some(point) =>
+          val dx = e.getX - point.x
+          val dy = e.getY - point.y
 
-    else if (NlogoMouse.hasButton1(e)) {
-      if (startDragPoint == null) {
-        wrapperAtPoint(e.getPoint).foreach(w => {
-          e.translatePoint(-w.getX, -w.getY)
-          w.mouseDragged(e)
-        })
-      }
+          // this check reduces the likelihood that a click is registered as a drag (Isaac B 1/30/25)
+          if (dx * dx + dy * dy < 25)
+            return
 
-      else {
-        val dx = e.getX - startDragPoint.x
-        val dy = e.getY - startDragPoint.y
+          interactMode match {
+            case InteractMode.INTERACT =>
+              if (NlogoMouse.hasCtrl(e))
+                setInteractMode(InteractMode.SELECT)
 
-        // this check reduces the likelihood that a click is registered as a drag (Isaac B 1/30/25)
-        if (dx * dx + dy * dy < 25)
-          return
+            case InteractMode.SELECT =>
+              if (!selectionPane.isVisible) {
+                selectionPane.setBounds(0, 0, getWidth, getHeight)
+                selectionPane.setVisible(true)
+              }
+              scrollRectToVisible(new Rectangle(e.getX - 20, e.getY - 20, 40, 40))
+              val oldSelectionRect = selectionRect
+              val x = StrictMath.min(getWidth, StrictMath.max(e.getX, 0))
+              val y = StrictMath.min(getHeight, StrictMath.max(e.getY, 0))
+              selectionRect =
+                new java.awt.Rectangle(
+                  StrictMath.min(point.x, x),
+                  StrictMath.min(point.y, y),
+                  StrictMath.abs(x - point.x),
+                  StrictMath.abs(y - point.y)
+                )
+              selectWidgets(selectionRect, NlogoMouse.hasCtrl(e))
+              if (oldSelectionRect != null)
+                selectionPane.repaint(oldSelectionRect)
+              selectionPane.repaint(selectionRect)
 
-        interactMode match {
-          case InteractMode.INTERACT =>
-            if (NlogoMouse.hasCtrl(e))
-              setInteractMode(InteractMode.SELECT)
+            case InteractMode.ADD =>
+              if (workspace.snapOn) {
+                point.x = (point.x / GridSnap) * GridSnap
+                point.y = (point.y / GridSnap) * GridSnap
+              }
 
-          case InteractMode.SELECT =>
-            if (!selectionPane.isVisible) {
-              selectionPane.setBounds(0, 0, getWidth, getHeight)
-              selectionPane.setVisible(true)
-            }
-            scrollRectToVisible(new Rectangle(e.getX - 20, e.getY - 20, 40, 40))
-            val oldSelectionRect = selectionRect
-            val x = StrictMath.min(getWidth, StrictMath.max(e.getX, 0))
-            val y = StrictMath.min(getHeight, StrictMath.max(e.getY, 0))
-            selectionRect =
-              new java.awt.Rectangle(
-                StrictMath.min(startDragPoint.x, x),
-                StrictMath.min(startDragPoint.y, y),
-                StrictMath.abs(x - startDragPoint.x),
-                StrictMath.abs(y - startDragPoint.y)
-              )
-            selectWidgets(selectionRect, NlogoMouse.hasCtrl(e))
-            if (oldSelectionRect != null)
-              selectionPane.repaint(oldSelectionRect)
-            selectionPane.repaint(selectionRect)
+              newWidget.foreach(widget => {
+                val p2 = restrictDrag(new Point(e.getX - point.x, e.getY - point.y), widget)
 
-          case InteractMode.ADD =>
-            if (workspace.snapOn) {
-              startDragPoint.x = (startDragPoint.x / GridSnap) * GridSnap
-              startDragPoint.y = (startDragPoint.y / GridSnap) * GridSnap
-            }
-            val p2 = restrictDrag(new Point(e.getX - startDragPoint.x, e.getY - startDragPoint.y), newWidget)
-            newWidget.setLocation(startDragPoint.x + p2.x, startDragPoint.y + p2.y)
+                widget.setLocation(point.x + p2.x, point.y + p2.y)
+              })
 
-          case InteractMode.EDIT =>
-            val topWrapper = wrapperAtPoint(e.getPoint).getOrElse(null)
+            case InteractMode.EDIT =>
+              val topWrapper = wrapperAtPoint(e.getPoint).getOrElse(null)
 
-            getWrappers.foreach(wrapper => selectWidget(wrapper, wrapper == topWrapper))
+              getWrappers.foreach(wrapper => selectWidget(wrapper, wrapper == topWrapper))
 
-          case InteractMode.DELETE =>
-            val topWrapper = wrapperAtPoint(e.getPoint).filter(_.widget.deleteable).getOrElse(null)
+            case InteractMode.DELETE =>
+              val topWrapper = wrapperAtPoint(e.getPoint).filter(_.widget.deleteable).getOrElse(null)
 
-            getWrappers.foreach(wrapper => selectWidget(wrapper, wrapper == topWrapper))
-        }
+              getWrappers.foreach(wrapper => selectWidget(wrapper, wrapper == topWrapper))
+          }
+
+        case None =>
+          wrapperAtPoint(e.getPoint).foreach(w => {
+            e.translatePoint(-w.getX, -w.getY)
+            w.mouseDragged(e)
+          })
       }
     }
   }
@@ -427,23 +424,20 @@ class WidgetPanel(val workspace: GUIWorkspace)
         if (e.getButton == MouseEvent.BUTTON1) {
           requestFocus()
 
-          if (NlogoMouse.hasCtrl(e))
-            startDragPoint = e.getPoint
-
-          else {
+          if (NlogoMouse.hasCtrl(e)) {
+            startDragPoint = Some(e.getPoint)
+          } else {
             wrapperAtPoint(e.getPoint) match {
               case Some(w) if w.selected =>
                 e.translatePoint(-w.getX, -w.getY)
                 w.mousePressed(e)
-                startDragPoint = null
+                startDragPoint = None
 
               case _ =>
-                startDragPoint = e.getPoint
+                startDragPoint = Some(e.getPoint)
             }
           }
-        }
-
-        else {
+        } else {
           wrapperAtPoint(e.getPoint) match {
             case Some(w) =>
               e.translatePoint(-w.getX, -w.getY)
@@ -460,10 +454,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
           // this is so the user can use action keys to control buttons
           // - ST 8/6/04,8/31/04
           requestFocus()
-          startDragPoint = e.getPoint
-        }
-
-        else {
+          startDragPoint = Some(e.getPoint)
+        } else {
           wrapperAtPoint(e.getPoint) match {
             case Some(w) =>
               e.translatePoint(-w.getX, -w.getY)
@@ -508,7 +500,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   protected class WidgetCreationMenuItem(displayName: String, coreWidget: CoreWidget)
     extends MenuItem(new AbstractAction(displayName) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         createShadowWidget(coreWidget)
       }
     })
@@ -519,9 +511,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
   def makeWidget(widget: CoreWidget): Widget = {
     val widgetType = "Dummy " + widget.getClass.getSimpleName
     val fromRegistry = WidgetRegistry(widgetType)
-    if (fromRegistry != null)
+    if (fromRegistry != null) {
       fromRegistry
-    else
+    } else {
       widget match {
         case v: CoreView    => new DummyViewWidget(workspace.world)
         case c: CoreChooser => new DummyChooserWidget(new DefaultCompilerServices(workspace.compiler))
@@ -542,6 +534,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
         case _ =>
           throw new IllegalStateException("unknown widget type: " + widget.getClass)
       }
+    }
   }
 
   protected def textEditorConfiguration: EditorConfiguration =
@@ -553,21 +546,20 @@ class WidgetPanel(val workspace: GUIWorkspace)
     editorFactory.defaultConfiguration(5, 20)
       .withFont(NlogoFonts.monospacedFont)
 
-  def mouseReleased(e: MouseEvent) {
+  def mouseReleased(e: MouseEvent): Unit = {
     interactMode match {
       case InteractMode.INTERACT =>
-        if (e.isPopupTrigger)
+        if (e.isPopupTrigger) {
           doPopup(e.getPoint)
-        else if (e.getButton == MouseEvent.BUTTON1) {
+        } else if (e.getButton == MouseEvent.BUTTON1) {
           if (NlogoMouse.hasCtrl(e)) {
             wrapperAtPoint(e.getPoint).foreach(wrapper => {
               setInteractMode(InteractMode.SELECT)
               selectWidget(wrapper, !wrapper.selected)
             })
-          }
-
-          else
+          } else {
             unselectWidgets()
+          }
         }
 
       case InteractMode.SELECT =>
@@ -577,17 +569,13 @@ class WidgetPanel(val workspace: GUIWorkspace)
               e.translatePoint(-w.getX, -w.getY)
               w.mouseReleased(e)
             })
-          }
-
-          else {
+          } else {
             if (!NlogoMouse.hasCtrl(e))
               unselectWidgets()
 
             wrapperAtPoint(e.getPoint).foreach(wrapper => selectWidget(wrapper, !wrapper.selected))
           }
-        }
-
-        else {
+        } else {
           wrapperAtPoint(e.getPoint) match {
             case Some(w) =>
               e.translatePoint(-w.getX, -w.getY)
@@ -603,16 +591,16 @@ class WidgetPanel(val workspace: GUIWorkspace)
         selectionPane.setVisible(false)
 
       case InteractMode.ADD =>
-        if (e.getButton == MouseEvent.BUTTON1)
+        if (e.getButton == MouseEvent.BUTTON1) {
           placeShadowWidget()
-        else if (e.getButton == MouseEvent.BUTTON3)
+        } else if (e.getButton == MouseEvent.BUTTON3) {
           doPopup(e.getPoint)
+        }
 
       case InteractMode.EDIT =>
-        if (e.getButton == MouseEvent.BUTTON1)
+        if (e.getButton == MouseEvent.BUTTON1) {
           new EditWidgetEvent(null).raise(this)
-
-        else {
+        } else {
           wrapperAtPoint(e.getPoint) match {
             case Some(w) =>
               e.translatePoint(-w.getX, -w.getY)
@@ -630,9 +618,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
             if (wrapper.widget.deleteable)
               WidgetActions.removeWidget(this, wrapper)
           })
-        }
-
-        else {
+        } else {
           wrapperAtPoint(e.getPoint) match {
             case Some(w) =>
               e.translatePoint(-w.getX, -w.getY)
@@ -646,41 +632,38 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
   }
 
-  def keyPressed(e: KeyEvent) {
+  def keyPressed(e: KeyEvent): Unit = {
     if (interactMode == InteractMode.INTERACT) {
       if (System.getProperty("os.name").contains("Mac")) {
         if (e.getKeyCode == KeyEvent.VK_META)
           interceptPane.enableIntercept()
-      }
-
-      else if (e.getKeyCode == KeyEvent.VK_CONTROL)
+      } else if (e.getKeyCode == KeyEvent.VK_CONTROL) {
         interceptPane.enableIntercept()
+      }
     }
   }
 
-  def keyReleased(e: KeyEvent) {
-    if (e.getKeyCode == KeyEvent.VK_ESCAPE)
+  def keyReleased(e: KeyEvent): Unit = {
+    if (e.getKeyCode == KeyEvent.VK_ESCAPE) {
       setInteractMode(InteractMode.INTERACT)
-
-    else if (interactMode == InteractMode.INTERACT) {
+    } else if (interactMode == InteractMode.INTERACT) {
       if (System.getProperty("os.name").contains("Mac")) {
         if (e.getKeyCode == KeyEvent.VK_META)
           interceptPane.disableIntercept()
-      }
-
-      else if (e.getKeyCode == KeyEvent.VK_CONTROL)
+      } else if (e.getKeyCode == KeyEvent.VK_CONTROL) {
         interceptPane.disableIntercept()
+      }
     }
   }
 
-  def keyTyped(e: KeyEvent) {}
+  def keyTyped(e: KeyEvent): Unit = {}
 
   private[interfacetab] def setForegroundWrapper(): Unit =
     getComponents.collect {
       case w: WidgetWrapper if w.selected => w
     }.foreach(_.foreground())
 
-  protected def selectWidget(wrapper: WidgetWrapper, selected: Boolean) {
+  protected def selectWidget(wrapper: WidgetWrapper, selected: Boolean): Unit = {
     wrapper.selected(selected)
 
     setForegroundWrapper()
@@ -692,10 +675,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }.foreach { wrapper =>
       import wrapper.selected
       val wrapperRect = wrapper.getUnselectedBounds
-      if (! selected && rect.intersects(wrapperRect))
+      if (! selected && rect.intersects(wrapperRect)) {
         wrapper.selected(true)
-      else if (!persist && selected && ! rect.intersects(wrapperRect))
+      } else if (!persist && selected && ! rect.intersects(wrapperRect)) {
         wrapper.selected(false)
+      }
     }
     setForegroundWrapper()
   }
@@ -715,10 +699,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
     add(wrapper, javax.swing.JLayeredPane.DEFAULT_LAYER)
     moveToFront(wrapper)
 
-    if (select || ! loadingWidget)
+    if (select || ! loadingWidget) {
       wrapper.setSize(wrapper.getPreferredSize)
-    else
+    } else {
       wrapper.setSize(size)
+    }
 
     if (workspace.snapOn && ! loadingWidget) {
       val gridX = (x / GridSnap) * GridSnap
@@ -735,8 +720,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
     zoomer.zoomWidget(wrapper, true, loadingWidget, 1.0, zoomFactor)
 
     if (select) {
-      newWidget = wrapper
-      newWidget.originalBounds = newWidget.getBounds
+      newWidget = Some(wrapper)
+      newWidget.get.originalBounds = newWidget.get.getBounds
     }
     LogManager.widgetAdded(loadingWidget, widget.classDisplayName, widget.displayName)
     wrapper
@@ -785,39 +770,41 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     unselectWidgets()
 
-    newWidget = wrapper
+    newWidget = Some(wrapper)
 
     wrapper
   }
 
-  private def placeShadowWidget() {
+  private def placeShadowWidget(): Unit = {
     interceptPane.disableIntercept()
 
-    val model = newWidget.widget.model
+    newWidget.foreach(widget => {
+      val model = widget.widget.model
 
-    newWidget.selected(true)
-    newWidget.foreground()
-    newWidget.isNew(true)
-    newWidget.disableShadow()
+      widget.selected(true)
+      widget.foreground()
+      widget.isNew(true)
+      widget.disableShadow()
 
-    placedShadowWidget = true
+      placedShadowWidget = true
 
-    new EditWidgetEvent(null).raise(this)
+      new EditWidgetEvent(null).raise(this)
 
-    placedShadowWidget = false
+      placedShadowWidget = false
 
-    if (newWidget != null)
-      newWidget.isNew(false)
+      if (widget != null)
+        widget.isNew(false)
 
-    createShadowWidget(model)
+      createShadowWidget(model)
+    })
   }
 
-  def removeShadowWidget() {
-    if (newWidget != null) {
-      removeWidget(newWidget)
-      newWidget = null
+  def removeShadowWidget(): Unit = {
+    newWidget.foreach(widget => {
+      removeWidget(widget)
+      newWidget = None
       revalidate()
-    }
+    })
   }
 
   def editWidgetFinished(target: Editable, canceled: Boolean): Unit = {
@@ -829,9 +816,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
         }
       case _ =>
     }
-    if (canceled)
+    if (canceled) {
       removeShadowWidget()
-    else {
+    } else {
       target match {
         case comp: Component =>
           comp.getParent match {
@@ -876,47 +863,47 @@ class WidgetPanel(val workspace: GUIWorkspace)
   private[interfacetab] def multiSelected: Boolean =
     selectedWrappers.length > 1
 
-  def alignLeft() {
+  def alignLeft(): Unit = {
     val target = selectedWrappers.minBy(_.getX)
 
     WidgetActions.moveWidgets(selectedWrappers.map(w => (w, target.getX, w.getY)))
   }
 
-  def alignCenterHorizontal() {
+  def alignCenterHorizontal(): Unit = {
     val target = selectedWrappers.head
     val x = (target.getX + target.getWidth / 2).max(selectedWrappers.maxBy(_.getWidth).getWidth / 2)
 
     WidgetActions.moveWidgets(selectedWrappers.map(w => (w, x - w.getWidth / 2, w.getY)))
   }
 
-  def alignRight() {
+  def alignRight(): Unit = {
     val target = selectedWrappers.maxBy(w => w.getX + w.getWidth)
     val x = (target.getX + target.getWidth).max(selectedWrappers.maxBy(_.getWidth).getWidth)
 
     WidgetActions.moveWidgets(selectedWrappers.map(w => (w, x - w.getWidth, w.getY)))
   }
 
-  def alignTop() {
+  def alignTop(): Unit = {
     val target = selectedWrappers.minBy(_.getY)
 
     WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX, target.getY)))
   }
 
-  def alignCenterVertical() {
+  def alignCenterVertical(): Unit = {
     val target = selectedWrappers.head
     val y = (target.getY + target.getHeight / 2).max(selectedWrappers.maxBy(_.getHeight).getHeight / 2)
 
     WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX, y - w.getHeight / 2)))
   }
 
-  def alignBottom() {
+  def alignBottom(): Unit = {
     val target = selectedWrappers.maxBy(w => w.getY + w.getHeight)
     val y = (target.getY + target.getHeight).max(selectedWrappers.maxBy(_.getHeight).getHeight)
 
     WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX, y - w.getHeight)))
   }
 
-  def distributeHorizontal() {
+  def distributeHorizontal(): Unit = {
     val ordered = selectedWrappers.sortBy(_.getX)
     val delta = (ordered.last.getX - ordered(0).getX) / (ordered.size - 1)
 
@@ -925,7 +912,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     })
   }
 
-  def distributeVertical() {
+  def distributeVertical(): Unit = {
     val ordered = selectedWrappers.sortBy(_.getY)
     val delta = (ordered.last.getY - ordered(0).getY) / (ordered.size - 1)
 
@@ -934,14 +921,14 @@ class WidgetPanel(val workspace: GUIWorkspace)
     })
   }
 
-  def stretchLeft() {
+  def stretchLeft(): Unit = {
     val target = selectedWrappers.minBy(_.getX)
 
     WidgetActions.reboundWidgets(selectedWrappers.map(w =>
       (w, new Rectangle(target.getX, w.getY, w.getX + w.getWidth - target.getX, w.getHeight))))
   }
 
-  def stretchRight() {
+  def stretchRight(): Unit = {
     val target = selectedWrappers.maxBy(w => w.getX + w.getWidth)
 
     WidgetActions.resizeWidgets(selectedWrappers.map(w => (w, target.getX + target.getWidth - w.getX, w.getHeight)))
@@ -1092,15 +1079,16 @@ class WidgetPanel(val workspace: GUIWorkspace)
     zoomer.zoomFactor != 1.0
 
   def canAddWidget(widget: String): Boolean = {
-    if (widget.equals(I18N.gui.get("tabs.run.widgets.view")))
-      ! hasView
-    else if (widget.equals(I18N.gui.get("tabs.run.widgets.plot")))
+    if (widget.equals(I18N.gui.get("tabs.run.widgets.view"))) {
+      !hasView
+    } else if (widget.equals(I18N.gui.get("tabs.run.widgets.plot"))) {
       // you can't add a plot to the client interface unless
       // there are plots in the server interface so enable the
       // plot button accordingly ev 1/25/07
       workspace.plotManager.getPlotNames.length > 0
-    else
+    } else {
       true
+    }
   }
 
   def syncTheme() {

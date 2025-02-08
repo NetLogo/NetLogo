@@ -23,15 +23,15 @@ class WidgetWrapperEdge(tpe: WidgetWrapperEdge.Type, eastBorder: Int, westBorder
   setBackground(Color.GRAY)
   setOpaque(true)
 
-  def handles(show: Boolean) {
+  def handles(show: Boolean): Unit = {
     handles = show
   }
 
-  def cornerHandles(show: Boolean) {
+  def cornerHandles(show: Boolean): Unit = {
     cornerHandles = show
   }
 
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics): Unit = {
     super.paintComponent(g)
 
     g.setColor(getBackground)
@@ -44,12 +44,12 @@ class WidgetWrapperEdge(tpe: WidgetWrapperEdge.Type, eastBorder: Int, westBorder
     }
   }
 
-  private def paintTop(g: Graphics) {
+  private def paintTop(g: Graphics): Unit = {
     if (getWidth == 0 || getHeight == 0)
       return
-    
+
     val bleed = 5
-    
+
     if (westBorder == 0) // draw 3D border on top and right edges only
       drawConvexRect(g, new Rectangle(-bleed, getY, getWidth + bleed, getHeight + bleed))
     else // draw it on the left, too
@@ -69,7 +69,7 @@ class WidgetWrapperEdge(tpe: WidgetWrapperEdge.Type, eastBorder: Int, westBorder
 
       if (cornerHandles)
         g.fillRect(0, 0, westBorder, getHeight)
-      
+
       g.fillRect(westBorder + (getWidth - eastBorder - westBorder - WidgetWrapper.HANDLE_WIDTH) / 2, 0,
                  WidgetWrapper.HANDLE_WIDTH, getHeight)
 
@@ -78,10 +78,10 @@ class WidgetWrapperEdge(tpe: WidgetWrapperEdge.Type, eastBorder: Int, westBorder
     }
   }
 
-  private def paintBottom(g: Graphics) {
+  private def paintBottom(g: Graphics): Unit = {
     if (getWidth == 0 || getHeight == 0)
       return
-    
+
     val oldClip = g.getClip
 
     drawConvexRect(g, new Rectangle(0, -5, getWidth, getHeight + 5))
@@ -105,7 +105,7 @@ class WidgetWrapperEdge(tpe: WidgetWrapperEdge.Type, eastBorder: Int, westBorder
     }
   }
 
-  private def paintSide(g: Graphics) {
+  private def paintSide(g: Graphics): Unit = {
     if (getWidth == 0 || getHeight == 0)
       return
 
@@ -118,7 +118,7 @@ class WidgetWrapperEdge(tpe: WidgetWrapperEdge.Type, eastBorder: Int, westBorder
     }
   }
 
-  private def drawConvexRect(g: Graphics, r: Rectangle) {
+  private def drawConvexRect(g: Graphics, r: Rectangle): Unit = {
     g.setColor(Colors.mixColors(getForeground, getBackground, 0.5))
     g.drawRect(r.x, r.y, r.width, r.height)
   }
