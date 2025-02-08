@@ -23,7 +23,7 @@ import org.nlogo.theme.ThemeSync
 trait EditDialogFactoryInterface extends ThemeSync {
   // used for modal dialog
   def canceled(window: Window, target: Editable, useTooltips: Boolean): Boolean
-  
+
   //used for non-modal dialog
   def create(window: Window, target: Editable, finish: (Boolean) => Unit, useTooltips: Boolean): Unit
 

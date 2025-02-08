@@ -17,7 +17,7 @@ trait HoverDecoration extends Component {
     override def mouseEntered(e: MouseEvent) {
       if (useHandCursor)
         setCursor(HoverDecoration.HAND_CURSOR)
-      
+
       hover = true
 
       repaint()

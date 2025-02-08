@@ -15,7 +15,7 @@ object Positioning {
 
     else {
       val targetCorner = new Point
-      
+
       SwingUtilities.convertPointToScreen(targetCorner, target)
 
       window.setLocation(targetCorner.x + target.getWidth / 2 - window.getWidth / 2,

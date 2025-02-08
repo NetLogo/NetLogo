@@ -615,7 +615,5 @@ public class ColorDialog extends JDialog implements ActionListener,
   public void windowDeactivated(WindowEvent arg0) {
   }
 
-  public void syncTheme() {
-    
-  }
+  public void syncTheme() {}
 }

@@ -63,7 +63,7 @@ class Zoomer(container: Container) {
 
     if (!newWidget || loadingWidget)
       wrapper.setSize(zoomSize(originalSize.get, originalZoom.get, newZoom))
-    
+
     wrapper.widget.setZoomFactor(newZoom)
   }
 
@@ -105,7 +105,7 @@ class Zoomer(container: Container) {
                      oldZoom: Double, newZoom: Double) {
     if (!fonts.contains(widget))
       storeComponentFont(widget, true, newWidget, loadingWidget, oldZoom)
-    
+
     scaleComponentFont(widget, newZoom, oldZoom, true)
 
     if (wrapper != null)
@@ -137,7 +137,7 @@ class Zoomer(container: Container) {
   def scaleComponentFont(component: Component, newZoom: Double, oldZoom: Double, recursive: Boolean) {
     if (!fonts.contains(component))
       storeComponentFont(component, recursive, false, false, oldZoom)
-    
+
     component.invalidate()
     component.setFont(component.getFont.deriveFont(
       (fonts(component).getSize * newZoom / fontZooms(component)).ceil.toFloat))
@@ -194,7 +194,7 @@ class Zoomer(container: Container) {
             fontZooms.remove(v.view)
           case _ =>
         }
-      
+
       case _ =>
     }
   }
@@ -214,7 +214,7 @@ class Zoomer(container: Container) {
         case Some(location) => zoomLocation(location, locationZooms(component), 1.0)
         case None => zoomLocation(r.getLocation, zoomFactor, 1.0)
       }
-    
+
     val unzoomedSize =
       sizes.get(component) match {
         case Some(size) => zoomSize(size, sizeZooms(component), 1.0)

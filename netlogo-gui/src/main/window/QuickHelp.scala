@@ -53,7 +53,7 @@ object QuickHelp {
           loadHelp(QUICKHELPWORDS_PATH3D)
         else
           Map[String, String]()
-      
+
       quickHelpLoaded = true
     }
 

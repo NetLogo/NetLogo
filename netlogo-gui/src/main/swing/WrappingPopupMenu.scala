@@ -36,7 +36,7 @@ class WrappingPopupMenu extends PopupMenu {
         if (i % rows == 0) {
           for (j <- lastRowStart until i)
             target.getComponent(j).setSize(columnWidth, target.getComponent(j).getHeight)
-          
+
           lastRowStart = i
           x += columnWidth + insets.left
           columnWidth = 0
@@ -50,7 +50,7 @@ class WrappingPopupMenu extends PopupMenu {
 
         if (pref.width > columnWidth)
           columnWidth = pref.width
-        
+
         y += pref.height
       }
 
@@ -71,7 +71,7 @@ class WrappingPopupMenu extends PopupMenu {
 
           if (columnHeight > maxColumnHeight)
             maxColumnHeight = columnHeight
-          
+
           columnWidth = 0
           columnHeight = insets.top + insets.bottom
         }
@@ -87,7 +87,7 @@ class WrappingPopupMenu extends PopupMenu {
 
       if (columnHeight > maxColumnHeight)
         maxColumnHeight = columnHeight
-      
+
       new Dimension(x + columnWidth + insets.right, maxColumnHeight)
     }
 

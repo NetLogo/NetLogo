@@ -25,7 +25,7 @@ class ShowUsageBoxAction(showUsageBox: ShowUsageBox) extends DocumentAction(I18N
     }
 
     val caretScreenPosition = component.getCaret.getMagicCaretPosition
-    
+
     if (caretScreenPosition != null) {
       val screenPosition = component.getLocationOnScreen
       screenPosition.x += caretScreenPosition.x;
