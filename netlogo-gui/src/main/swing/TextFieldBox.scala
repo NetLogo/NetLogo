@@ -34,11 +34,11 @@ object TextFieldBox {
  * A box for TextFields and their labels that keeps the fields and labels
  * nicely alligned.
  */
-class TextFieldBox(labelAlignment: Int = SwingConstants.LEFT, labelFont: Font = null, fieldFont: Font = null)
+class TextFieldBox(labelAlignment: Int = SwingConstants.LEFT, labelFont: Option[Font] = None, fieldFont: Option[Font] = None)
   extends JPanel with Transparent with ThemeSync {
 
   private var maxLabelWidth = 0
-  private var labels: List[JLabel] = Nil
+  private var labels = Seq[JLabel]()
 
   setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
 
@@ -48,7 +48,7 @@ class TextFieldBox(labelAlignment: Int = SwingConstants.LEFT, labelFont: Font = 
    * @param prompt    the text of the label
    * @param textField the field
    */
-  def addField(prompt: String, textField: JComponent) {
+  def addField(prompt: String, textField: JComponent): Unit = {
     addField(new JLabel(prompt, labelAlignment), textField)
   }
 
@@ -58,14 +58,11 @@ class TextFieldBox(labelAlignment: Int = SwingConstants.LEFT, labelFont: Font = 
    * @param label     the text of the label
    * @param textField the field
    */
-  def addField(label: JLabel, textField: JComponent) {
+  def addField(label: JLabel, textField: JComponent): Unit = {
     label.setLabelFor(textField)
 
-    if (labelFont != null)
-      label.setFont(labelFont)
-    
-    if (fieldFont != null)
-      textField.setFont(fieldFont)
+    labelFont.foreach(label.setFont)
+    fieldFont.foreach(textField.setFont)
 
     textField.setMaximumSize(textField.getPreferredSize)
 
@@ -93,7 +90,7 @@ class TextFieldBox(labelAlignment: Int = SwingConstants.LEFT, labelFont: Font = 
 
     if (w > maxLabelWidth)
       maxLabelWidth = w
-    
+
     for (label <- labels)
       label.setPreferredSize(new Dimension(maxLabelWidth, label.getPreferredSize.height))
   }

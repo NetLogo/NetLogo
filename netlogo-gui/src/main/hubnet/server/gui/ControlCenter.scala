@@ -316,13 +316,13 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
                    () => setPlotMirroring(mirrorViewCheckBox.isSelected)) {
         setSelected(mirrorPlots)
       }
-    
+
     private val idLabel = new SelectableJLabel(serverId)
     private val activityLabel = new SelectableJLabel(activityName)
     private val addressLabel = new SelectableJLabel(address.map(_.toString.drop(1)).getOrElse(findLocalHostAddress()))
     private val portLabel = new SelectableJLabel(server.port.toString)
-    
-    private val fields = new TextFieldBox(SwingConstants.RIGHT, null, new JLabel().getFont.deriveFont(Font.BOLD)) {
+
+    private val fields = new TextFieldBox(SwingConstants.RIGHT, None, Some(new JLabel().getFont.deriveFont(Font.BOLD))) {
       addField(I18N.gui.get("menu.tools.hubnetControlCenter.name"), idLabel)
       addField(I18N.gui.get("menu.tools.hubnetControlCenter.activity"), activityLabel)
       add(Box.createVerticalStrut(12))
