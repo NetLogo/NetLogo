@@ -74,7 +74,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
         // Windows and Linux, the root of the menu is the app itself, but the parent is the popup, so resize that.
         // -BCH 1/29/2018
         // this no longer works as commented after switching to FlatLaf, resizing root now works on all platforms.
-        // (IB 11/1/24)
+        // (Isaac B 11/1/24)
         val r = SwingUtilities.getRoot(menu)
         r.setSize(r.getPreferredSize)
         r.validate()

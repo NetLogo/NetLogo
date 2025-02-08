@@ -167,7 +167,7 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
 class DropdownOptionPane[T >: Null](parent: Component, title: String, message: String, choices: Seq[T])
   extends OptionPane(parent, title, message, OptionPane.Options.OK_CANCEL, OptionPane.Icons.QUESTION) {
 
-  // lazy because addContents is called in super (IB 11/16/24)
+  // lazy because addContents is called in super (Isaac B 11/16/24)
   private lazy val dropdown = new ComboBox(choices)
 
   def getSelectedChoice: T = {

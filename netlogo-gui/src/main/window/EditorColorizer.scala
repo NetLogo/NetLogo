@@ -16,7 +16,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
   private var lastLine = ""
   private var lastColors = Array[Color]()
 
-  // discard cache if the theme changed (IB 11/7/24)
+  // discard cache if the theme changed (Isaac B 11/7/24)
   private var lastTheme = ""
 
   def reset() {

@@ -45,7 +45,7 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   override def createPopupMenu(): PopupMenu = {
     new PopupMenu {
       // RSyntaxTextArea creates menu items that don't sync with the color theme,
-      // so we have to convert them to the synced versions (IB 11/5/24)
+      // so we have to convert them to the synced versions (Isaac B 11/5/24)
       AdvancedEditorArea.super.createPopupMenu.getComponents.foreach(_ match {
         case menu: JMenu => add(new Menu(menu.getText) {
           menu.getMenuComponents.foreach(_ match {

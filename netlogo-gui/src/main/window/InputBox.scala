@@ -112,7 +112,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     })
 
     override def paintComponent(g: Graphics) {
-      // this mostly fixes some weird horizontal scrollbar issues (IB 8/7/24)
+      // this mostly fixes some weird horizontal scrollbar issues (Isaac B 8/7/24)
       textArea.setSize(scrollPane.getWidth - 10, scrollPane.getHeight)
 
       setDiameter(6 * zoomFactor)

@@ -20,5 +20,5 @@ extends View("", viewManager, renderer) {
   // We override this so no popup menus -- otherwise the screen just goes blank. - AZS 6/1/05
   override def doPopup(e: java.awt.event.MouseEvent) { }
 
-  def syncTheme(): Unit = {} // nothing to sync in full screen (IB 11/7/24)
+  def syncTheme(): Unit = {} // nothing to sync in full screen (Isaac B 11/7/24)
 }

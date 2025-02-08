@@ -151,7 +151,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     override def paintComponent(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
       if (vertical) {
-        g2d.setClip(null) // this does not feel right but it's the only thing that works for now (IB 8/11/24)
+        g2d.setClip(null) // this does not feel right but it's the only thing that works for now (Isaac B 8/11/24)
         g2d.rotate(-Pi / 2)
       }
       super.paintComponent(g)
@@ -224,7 +224,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     override def paintComponent(g: Graphics) {
       val g2d = Utils.initGraphics2D(g)
       if (vertical) {
-        g2d.setClip(null) // this does not feel right but it's the only thing that works for now (IB 8/11/24)
+        g2d.setClip(null) // this does not feel right but it's the only thing that works for now (Isaac B 8/11/24)
         g2d.rotate(-Pi / 2)
       }
       g2d.setColor(InterfaceColors.INPUT_BORDER)
