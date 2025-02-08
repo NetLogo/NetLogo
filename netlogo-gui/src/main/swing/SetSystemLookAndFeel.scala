@@ -4,7 +4,6 @@ package org.nlogo.swing
 
 import com.formdev.flatlaf.{ FlatLaf, FlatLightLaf }
 
-// Frame
 import java.awt.{ Color, Font, GraphicsEnvironment, Insets }
 import javax.swing.{ UIManager, UnsupportedLookAndFeelException }
 
@@ -13,7 +12,7 @@ final object SetSystemLookAndFeel {
   /// Swing look & feel
 
   def setSystemLookAndFeel(): Unit = {
-    try{
+    try {
       setFlatLafLookAndFeel()
     } catch {
       case e: Throwable => println(e); setClassicNetLogoSystemLookAndFeel()

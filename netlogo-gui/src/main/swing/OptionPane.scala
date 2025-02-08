@@ -27,7 +27,7 @@ object OptionPane {
   }
 }
 
-// like OptionDialog, but allows synchronization with theme (IB 11/16/24)
+// like OptionDialog, but allows synchronization with theme (Isaac B 11/16/24)
 class OptionPane(parent: Component, title: String, message: String, options: Seq[String],
                  protected val icon: Icon = OptionPane.Icons.NONE) extends JDialog(parent match {
                    case w: Window => w
