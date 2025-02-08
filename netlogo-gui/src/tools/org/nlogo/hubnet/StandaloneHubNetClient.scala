@@ -21,9 +21,9 @@ object StandaloneHubNetClient {
     })
     def go() { pack(); setVisible(true) }
     class ConnectionPanel extends JPanel with Transparent {
-      private val name = new TextField("robot", 20)
-      private val ip = new TextField("localhost", 20)
-      private val port = new TextField("9173", 20)
+      private val name = new TextField(20, "robot")
+      private val ip = new TextField(20, "localhost")
+      private val port = new TextField(20, "9173")
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
       def makePanel(name: String, tf: TextField) = {
         new JPanel with Transparent {

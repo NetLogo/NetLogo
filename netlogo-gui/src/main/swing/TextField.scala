@@ -10,23 +10,19 @@ import javax.swing.text.Document
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class TextField(document: Document, text: String, columns: Int)
+class TextField(columns: Int = 0, text: String = null, document: Document = null)
   extends JTextField(document, text, columns) with ThemeSync {
-  
-  def this(text: String, columns: Int) = this(null, text, columns)
-  def this(columns: Int) = this(null, null, columns)
-  def this() = this(null, null, 0)
 
   private var mouseEvent = false
 
   addMouseListener(new MouseAdapter {
-    override def mousePressed(e: MouseEvent) {
+    override def mousePressed(e: MouseEvent): Unit = {
       mouseEvent = true
     }
   })
 
   addFocusListener(new FocusListener {
-    def focusGained(e: FocusEvent) {
+    def focusGained(e: FocusEvent): Unit = {
       if (!mouseEvent) {
         // this is like selectAll(), but it leaves the
         // caret at the beginning rather than the start;
@@ -39,7 +35,7 @@ class TextField(document: Document, text: String, columns: Int)
       }
     }
 
-    def focusLost(e: FocusEvent) {
+    def focusLost(e: FocusEvent): Unit = {
       mouseEvent = e.isTemporary
     }
   })

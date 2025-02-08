@@ -49,7 +49,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     new ShapePreview(shape, 50, 1)
   )
 
-  private val nameText = new TextField(shape.name, 4) {
+  private val nameText = new TextField(4, shape.name) {
     setEnabled(nameEditable)
   }
 
@@ -66,7 +66,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
         shapeView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
       else
         shapeView.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
-      
+
       if (shapeView.drawingPolygon)
         shapeView.selfFinishPolygon(true)
     }
@@ -209,7 +209,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       dispose()
     }
   }
-  
+
   addWindowListener(new WindowAdapter {
     override def windowClosing(e: WindowEvent) {
       closingAction.actionPerformed(null)
@@ -269,7 +269,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
       shapeView.getSelectedElement.rotateLeft()
     }
-    
+
     else {
       undoableEdit = null
 
@@ -287,7 +287,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
       shapeView.getSelectedElement.rotateRight()
     }
-    
+
     else {
       undoableEdit = null
 
@@ -305,7 +305,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
       shapeView.getSelectedElement.flipHorizontal()
     }
-    
+
     else {
       undoableEdit = null
 
@@ -323,7 +323,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
       shapeView.getSelectedElement.flipVertical()
     }
-    
+
     else {
       undoableEdit = null
 
@@ -577,7 +577,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     def actionPerformed(e: ActionEvent) {
       if (shapeView.drawingPolygon)
         shapeView.selfFinishPolygon(true)
-      
+
       elementType = typeID
       fillShapes = filled
       editingElements = false

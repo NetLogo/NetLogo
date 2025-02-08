@@ -29,7 +29,7 @@ object Preferences {
   }
 
   abstract class StringPreference(val i18nKey: String, val requirement: String, default: String) extends Preference {
-    val component = new TextField(default, 20)
+    val component = new TextField(20, default)
 
     def load(prefs: JavaPreferences) = {
       val value = prefs.get(i18nKey, default)

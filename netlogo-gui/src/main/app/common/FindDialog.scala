@@ -51,7 +51,7 @@ object FindDialog extends ThemeSync {
     putValue(UserAction.ActionCategoryKey, UserAction.EditCategory)
     putValue(UserAction.ActionGroupKey, UserAction.EditFindGroup)
     putValue(Action.ACCELERATOR_KEY, UserAction.KeyBindings.keystroke('G', withMenu = true))
-        
+
     setEnabled(false)
 
     def actionPerformed(e: ActionEvent) {
@@ -176,7 +176,7 @@ object FindDialog extends ThemeSync {
   def syncTheme() {
     if (instance != null)
       instance.syncTheme()
-    
+
     if (codeInstance != null)
       codeInstance.syncTheme()
 
@@ -203,7 +203,7 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
       notFoundLabel.setVisible(false)
     }
   })
-  
+
   private val prevButton = new Button(I18N.gui.get("dialog.find.previous"), () => {
     if (!prev(findBox.getText, ignoreCaseCheckBox.isSelected, wrapAroundCheckBox.isSelected)) {
       Toolkit.getDefaultToolkit.beep()
@@ -409,7 +409,7 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
 
       do {
         replace(replacement)
-        
+
         i += 1
 
         if (i > 50000)

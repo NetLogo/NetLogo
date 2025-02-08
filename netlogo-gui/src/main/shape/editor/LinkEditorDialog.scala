@@ -18,8 +18,8 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
 
   private implicit val i18nPrefix = I18N.Prefix("tools.linkEditor")
 
-  private val name = new TextField(shape.name, 10)
-  private val curviness = new TextField(shape.curviness.toString, 10)
+  private val name = new TextField(10, shape.name)
+  private val curviness = new TextField(10, shape.curviness.toString)
 
   private val dashes =
     (for (i <- 0 until 3) yield {

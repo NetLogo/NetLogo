@@ -119,8 +119,8 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
 class InputOptionPane(parent: Component, title: String, message: String, startingInput: String = "")
   extends OptionPane(parent, title, message, OptionPane.Options.OK_CANCEL, OptionPane.Icons.QUESTION) {
 
-  // lazy because addContents is called in super (IB 11/16/24)
-  private lazy val input = new TextField(startingInput, 0)
+  // lazy because addContents is called in super (Isaac B 11/16/24)
+  private lazy val input = new TextField(0, startingInput)
 
   def getInput: String = {
     if (getSelectedIndex == 0)

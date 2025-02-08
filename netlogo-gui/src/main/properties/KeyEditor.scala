@@ -21,10 +21,8 @@ abstract class KeyEditor(accessor: PropertyAccessor[Char])
   editor.getDocument.addDocumentListener({ () => changed() })
   add(editor, java.awt.BorderLayout.CENTER)
   def makeEditor() = {
-    val newEditor = new TextField(
-      new FixedLengthDocument(1), "",
-      // 2 not 1 here otherwise "W" doesn't fit - ST 1/18/05
-      2)
+    // 2 not 1 here otherwise "W" doesn't fit - ST 1/18/05
+    val newEditor = new TextField(2, "", new FixedLengthDocument(1))
     newEditor.setMaximumSize(newEditor.getPreferredSize)
     // use a listener to make it so that after I type a character that character is selected, so if
     // I type another one it replaces the old one - ST 8/6/04

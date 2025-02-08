@@ -17,7 +17,7 @@ class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)]
                     preferredNetworkConnection: Option[(NetworkInterface, InetAddress)])
   extends JDialog(parent, I18N.gui.get("edit.hubnet.startActivity"), true) {
 
-  private val nameField = new TextField(System.getProperty("user.name", ""), 14)
+  private val nameField = new TextField(14, System.getProperty("user.name", ""))
 
   private val discoveryCheckBox = new CheckBox("Broadcast server location") {
     setForeground(InterfaceColors.DIALOG_TEXT)

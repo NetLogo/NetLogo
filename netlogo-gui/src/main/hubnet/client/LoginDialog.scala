@@ -24,9 +24,9 @@ abstract class LoginCallback{
 class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: String, defaultPort: Int)
   extends JDialog(parent, "HubNet", true) with ListSelectionListener with DocumentListener {
 
-  private val nameField = new TextField(defaultUserId, 14)
-  private val serverField = new TextField(defaultServerName, 26)
-  private val portField = new TextField(defaultPort.toString, 4) {
+  private val nameField = new TextField(14, defaultUserId)
+  private val serverField = new TextField(26, defaultServerName)
+  private val portField = new TextField(4, defaultPort.toString) {
     getDocument.addDocumentListener(LoginDialog.this)
   }
 
