@@ -12,7 +12,7 @@ import org.nlogo.swing.Utils
 import org.nlogo.theme.InterfaceColors
 
 class ShapeCellRenderer extends JPanel with ListCellRenderer[Shape] {
-  protected var shape: DrawableShape = null
+  protected var shape: Option[DrawableShape] = None
   protected val dimension = new Dimension(90, 34)
   protected val shapeName = new JLabel
   protected val shapeComponent = new Component {
@@ -20,22 +20,25 @@ class ShapeCellRenderer extends JPanel with ListCellRenderer[Shape] {
     setPreferredSize(dimension)
     setMaximumSize(dimension)
 
-    private def preview(g2d: Graphics2D, clip: JShape, left: Int, top: Int, size: Int) {
-      g2d.setColor(getForeground)
+    private def preview(g2d: Graphics2D, clip: JShape, left: Int, top: Int, size: Int): Unit = {
+      shape.foreach(shape => {
+        g2d.setColor(getForeground)
 
-      if (shape.isRotatable)
-        g2d.fillOval(left - 1, top - 1, size + 1, size + 1)
-      else
-        g2d.fillRect(left - 1, top - 1, size + 2, size + 2)
-      
-      g2d.clipRect(left, top, size, size)
+        if (shape.isRotatable) {
+          g2d.fillOval(left - 1, top - 1, size + 1, size + 1)
+        } else {
+          g2d.fillRect(left - 1, top - 1, size + 2, size + 2)
+        }
 
-      shape.paint(new Graphics2DWrapper(g2d), EditorDialog.getColor(shape.getEditableColorIndex), left, top, size, 0)
+        g2d.clipRect(left, top, size, size)
 
-      g2d.setClip(clip)
+        shape.paint(new Graphics2DWrapper(g2d), EditorDialog.getColor(shape.getEditableColorIndex), left, top, size, 0)
+
+        g2d.setClip(clip)
+      })
     }
 
-    override def paint(g: Graphics) {
+    override def paint(g: Graphics): Unit = {
       val g2d = Utils.initGraphics2D(g)
 
       g2d.setColor(getBackground)
@@ -58,7 +61,7 @@ class ShapeCellRenderer extends JPanel with ListCellRenderer[Shape] {
   // Method that actually renders the item
   override def getListCellRendererComponent(list: JList[_ <: Shape], value: Shape, index: Int, isSelected: Boolean,
                                             cellHasFocus: Boolean): Component = {
-    shape = value.asInstanceOf[DrawableShape]
+    shape = Option(value.asInstanceOf[DrawableShape])
     shapeName.setText(value.name)
 
     if (isSelected) {
@@ -67,7 +70,7 @@ class ShapeCellRenderer extends JPanel with ListCellRenderer[Shape] {
       shapeComponent.setBackground(InterfaceColors.DIALOG_BACKGROUND_SELECTED)
       shapeComponent.setForeground(InterfaceColors.DIALOG_TEXT_SELECTED)
     }
-    
+
     else {
       setBackground(InterfaceColors.DIALOG_BACKGROUND)
       shapeName.setForeground(InterfaceColors.DIALOG_TEXT)
