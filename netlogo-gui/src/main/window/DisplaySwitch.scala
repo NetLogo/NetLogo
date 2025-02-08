@@ -14,21 +14,19 @@ class DisplaySwitch(workspace: GUIWorkspace) extends CheckBox(I18N.gui.get("tabs
 
   addActionListener(this)
 
-  def actionPerformed(e: ActionEvent) {
+  def actionPerformed(e: ActionEvent): Unit = {
     setOn(isSelected)
   }
 
-  def setOn(on: Boolean) {
-    if (on != isSelected) {
+  def setOn(on: Boolean): Unit = {
+    if (on != isSelected)
       setSelected(on)
-    }
 
     if (on) {
       workspace.view.thaw()
       workspace.viewManager.incrementalUpdateFromEventThread()
-    }
-
-    else
+    } else {
       workspace.view.freeze()
+    }
   }
 }
