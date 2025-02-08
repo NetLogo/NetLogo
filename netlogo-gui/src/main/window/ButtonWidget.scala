@@ -129,7 +129,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   addMouseListener(this)
   addMouseMotionListener(this)
 
-  def buttonType_=(bt: ButtonType) {
+  def buttonType_=(bt: ButtonType): Unit = {
     _buttonType = bt
     agentLabel.setIcon(_buttonType.img(false).getOrElse(null))
     repaint()
@@ -141,7 +141,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   // agentKind from outside of this class anyway.
   // the ui edits work through agent options, which now just set the button type
   override def kind = buttonType.agentKind
-  override def agentKind(c:AgentKind) { /* ignoring, no one should call this. */ }
+  override def agentKind(c:AgentKind): Unit = { /* ignoring, no one should call this. */ }
   def agentOptions = buttonType.toAgentOptions
   def agentOptions(newAgentOptions:Options[String]){
     if (newAgentOptions.chosenValue != this.agentOptions.chosenValue){
@@ -182,7 +182,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   /// keyboard stuff
   private var _actionKey: Option[Char] = None
   def actionKey = _actionKey.getOrElse(0.toChar)
-  def actionKey_=(newActionKey:Char) {
+  def actionKey_=(newActionKey:Char): Unit = {
     _actionKey = newActionKey match {
       case 0 => None
       case _ => Some(newActionKey)
@@ -228,54 +228,56 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   private def disabledWaitingForSetup = goTime && ! setupFinished
 
-  private def respondToClick(inBounds: Boolean) {
+  private def respondToClick(inBounds: Boolean): Unit = {
     if(disabledWaitingForSetup){
       buttonUp = true
-    }
-    else if (error() == null) {
+    } else if (error() == null) {
       if (forever) {
         if (inBounds) {
           foreverOn = !foreverOn
           buttonUp = !foreverOn
           action()
+        } else {
+          buttonUp = !foreverOn
         }
-        else buttonUp = !foreverOn
-      }
-      else {
+      } else {
         buttonUp = true
         if (inBounds) action()
       }
     }
   }
 
-  def mousePressed(e: MouseEvent) {
+  def mousePressed(e: MouseEvent): Unit = {
     new Events.InputBoxLoseFocusEvent().raise(this)
     lastMousePressedWasPopupTrigger = e.isPopupTrigger()
     if (error() == null && !e.isPopupTrigger && hasButton1(e) && isEnabled && !disabledWaitingForSetup) buttonUp = false
   }
 
-  def mouseDragged(e: MouseEvent) {
+  def mouseDragged(e: MouseEvent): Unit = {
     if (error() == null){
       if (hasButton1(e) && isEnabled) {
         e.translatePoint(getX(), getY())
-        if (getBounds().contains(e.getPoint()) && !e.isPopupTrigger && ! disabledWaitingForSetup) buttonUp = false
-        else if (!forever || !foreverOn) buttonUp = true
+        if (getBounds().contains(e.getPoint()) && !e.isPopupTrigger && ! disabledWaitingForSetup) {
+          buttonUp = false
+        } else if (!forever || !foreverOn) {
+          buttonUp = true
+        }
       }
     }
   }
 
-  def mouseEntered(e: MouseEvent) {
+  def mouseEntered(e: MouseEvent): Unit = {
     hover = true
     repaint()
   }
 
-  def mouseExited(e: MouseEvent) {
+  def mouseExited(e: MouseEvent): Unit = {
     hover = false
     repaint()
   }
 
-  def mouseMoved(e: MouseEvent) {}
-  def mouseClicked(e: MouseEvent) {
+  def mouseMoved(e: MouseEvent): Unit = {}
+  def mouseClicked(e: MouseEvent): Unit = {
     if (!e.isPopupTrigger() && error() != null && !lastMousePressedWasPopupTrigger && hasButton1(e))
       new Events.EditWidgetEvent(this).raise(this)
   }
@@ -301,7 +303,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     super.procedure_=(p)
   }
 
-  def action() {
+  def action(): Unit = {
     if (error() == null) {
       // warning, confusing code ahead. not sure if there's a
       // clearer way to write this hard to know without trying.
@@ -331,8 +333,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
           // then we mark the job for stopping -- the button will pop back up
           // when the job stops
           stopping = true
-        }
-        else {
+        } else {
           // in this case, it could be a forever button, but its not running
           // or it could be a once button that is not running.
           // remember, we couldn't have gotten into this if statement
@@ -365,18 +366,18 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     }
   }
 
-  def handle(e: Events.JobRemovedEvent) {
+  def handle(e: Events.JobRemovedEvent): Unit = {
     if (e.owner == this) {
       popUpStoppingButton()
     }
   }
 
-  def handle(e: Events.TickStateChangeEvent) {
+  def handle(e: Events.TickStateChangeEvent): Unit = {
     setupFinished = e.tickCounterInitialized
     repaint()
   }
 
-  def popUpStoppingButton() {
+  def popUpStoppingButton(): Unit = {
     buttonUp = true
     running = false
     stopping = false
@@ -386,10 +387,11 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   /// source code
   private def chooseDisplayName(): Unit = {
-    if (name == "")
+    if (name == "") {
       displayName(getSourceName)
-    else
+    } else {
       displayName(name)
+    }
     nameLabel.setText(displayName)
     repaint()
   }
@@ -406,7 +408,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   def wrapSource: String = innerSource
 
-  def wrapSource(newInnerSource:String) {
+  def wrapSource(newInnerSource:String): Unit = {
     if (newInnerSource != innerSource) {
       this.innerSource = newInnerSource
       recompile()
@@ -434,7 +436,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
                   getMinimumSize.height.max(super.getPreferredSize.height))
 
   /// painting
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics): Unit = {
     val drawAsUp = buttonUp && !running
 
     if (disabledWaitingForSetup) {
@@ -442,31 +444,31 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
       keyLabel.setForeground(InterfaceColors.BUTTON_TEXT_DISABLED)
       nameLabel.setForeground(InterfaceColors.BUTTON_TEXT_DISABLED)
       foreverLabel.setIcon(FOREVER_GRAPHIC_DISABLED)
-    }
-
-    else if (drawAsUp) {
+    } else if (drawAsUp) {
       setBackgroundColor(
-        if (hover)
+        if (hover) {
           InterfaceColors.BUTTON_BACKGROUND_HOVER
-        else
+        } else {
           InterfaceColors.BUTTON_BACKGROUND
+        }
       )
 
       keyLabel.setForeground(InterfaceColors.BUTTON_TEXT)
       nameLabel.setForeground(
-        if (error() == null)
+        if (error() == null) {
           InterfaceColors.BUTTON_TEXT
-        else
-          InterfaceColors.WIDGET_TEXT_ERROR)
+        } else {
+          InterfaceColors.WIDGET_TEXT_ERROR
+        }
+      )
       foreverLabel.setIcon(FOREVER_GRAPHIC)
-    }
-
-    else {
+    } else {
       setBackgroundColor(
-        if (hover)
+        if (hover) {
           InterfaceColors.BUTTON_BACKGROUND_PRESSED_HOVER
-        else
+        } else {
           InterfaceColors.BUTTON_BACKGROUND_PRESSED
+        }
       )
 
       keyLabel.setForeground(InterfaceColors.BUTTON_TEXT_PRESSED)
@@ -479,19 +481,19 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
     if (nameLabel.getPreferredSize.width > nameLabel.getWidth) {
       nameLabel.setToolTipText(
-        if (disabledWaitingForSetup)
+        if (disabledWaitingForSetup) {
           "(disabled) " + nameLabel.getText
-        else
+        } else {
           nameLabel.getText
+        }
       )
-    }
-
-    else {
+    } else {
       nameLabel.setToolTipText(
-        if (disabledWaitingForSetup)
+        if (disabledWaitingForSetup) {
           "(disabled)"
-        else
+        } else {
           null
+        }
       )
     }
 

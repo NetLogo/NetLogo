@@ -93,11 +93,11 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   private val valuePanel = new ValuePanel(valueLabel)
 
-  addMouseListener(this)
-
-  setLayout(new GridBagLayout)
-
   locally {
+    addMouseListener(this)
+
+    setLayout(new GridBagLayout)
+
     val c = new GridBagConstraints
 
     c.gridx = 0

@@ -30,7 +30,7 @@ class PlotLegend(plot: Plot) extends JPanel {
   private def fillGUI() {
     for (pen <- plot.pens; if (pen.inLegend))
       add(new LegendItem(pen))
-    
+
     revalidate()
   }
 
