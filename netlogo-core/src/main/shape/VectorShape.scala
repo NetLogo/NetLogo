@@ -81,10 +81,13 @@ class VectorShape
   def setOutline() =
     elementList.foreach(_.filled = false)
 
-  def getElements: java.util.List[Element] = {
+  def getElementsJ: java.util.List[Element] = {
     import scala.collection.JavaConverters._
     elementList.toList.asJava
   }
+
+  def getElements: Seq[Element] =
+    elementList.toSeq
 
   def setRotatable(rotatable: Boolean) =
     this.rotatable = rotatable

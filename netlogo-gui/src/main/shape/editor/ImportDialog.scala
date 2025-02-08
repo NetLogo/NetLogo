@@ -13,7 +13,7 @@ import org.nlogo.theme.InterfaceColors
 
 class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: DrawableList[_ <: Shape])
   extends JDialog(parent, I18N.gui.get("tools.shapesEditor.importFromLibrary"), true) with ListSelectionListener {
-  
+
   private implicit val i18nPrefix = I18N.Prefix("tools.shapesEditor.import")
 
   locally {
@@ -85,7 +85,7 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
           if (name != null)
             shape.name = name
         }
-        
+
         else if (choice != 0) // 0 == overwrite
           return
       }

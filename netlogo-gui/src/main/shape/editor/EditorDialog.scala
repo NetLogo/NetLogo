@@ -2,10 +2,9 @@
 
 package org.nlogo.shape.editor
 
-import java.awt.{ Color, Component, Cursor, Dimension, FlowLayout, GridLayout, Insets }
+import java.awt.{ Color, Component, Cursor, Dimension, FlowLayout, Graphics, GridLayout, Insets }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
-import java.lang.Class
 import javax.swing.{ AbstractAction, Action, Box, BoxLayout, ButtonGroup, JDialog, JLabel, JPanel, JToolBar,
                      WindowConstants }
 import javax.swing.undo.{ AbstractUndoableEdit, UndoableEdit }
@@ -13,10 +12,20 @@ import javax.swing.undo.{ AbstractUndoableEdit, UndoableEdit }
 import org.nlogo.api.{ Color => NLColor }
 import org.nlogo.awt.ColumnLayout
 import org.nlogo.core.{ I18N, Shape }
-import org.nlogo.shape.{ Circle, Element, Line, Polygon, Rectangle, VectorShape }
+import org.nlogo.shape.{ Element, VectorShape }
 import org.nlogo.swing.{ Button, ButtonPanel, CheckBox, ComboBox, MenuItem, OptionPane, TextField, ToggleButton,
                          Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
+
+sealed trait ElementType
+
+object ElementType {
+  case object None extends ElementType
+  case object Line extends ElementType
+  case object Rectangle extends ElementType
+  case object Circle extends ElementType
+  case object Polygon extends ElementType
+}
 
 object EditorDialog {
   trait VectorShapeContainer {
@@ -37,7 +46,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   private val shape = originalShape.clone()
   private val shapeView = new ShapeView(this, shape)
 
-  private var elementType: Class[_ <: Element]  = null
+  private var elementType: ElementType = ElementType.None
   private var elementColor = EditorDialog.getColor(shape.getEditableColorIndex)
   private var editingElements = false
 
@@ -54,7 +63,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   }
 
   private val editElements: ToggleButton = new ToggleButton(new AbstractAction {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       editingElements = editElements.isSelected
 
       shapeView.deselectAll()
@@ -62,13 +71,13 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       deleteSelected.setEnabled(false)
       duplicateSelected.setEnabled(false)
 
-      if (editingElements)
+      if (editingElements) {
         shapeView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
-      else
+      } else {
         shapeView.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
+      }
 
-      if (shapeView.drawingPolygon)
-        shapeView.selfFinishPolygon(true)
+      shapeView.selfFinishPolygon(true)
     }
   }) {
     setIcon(Utils.icon("/images/shapes-editor/arrow.gif"))
@@ -83,51 +92,56 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   private var undoableEdit: UndoableEdit = null
 
   private val deleteSelected: Button = new Button(I18N.gui("delete"), () => {
-    undoableEdit = new UndoableDeleteEdit(shapeView.getSelectedElement,
-                                          shape.getElements.indexOf(shapeView.getSelectedElement))
+    shapeView.getSelectedElement.foreach(element => {
+      undoableEdit = new UndoableDeleteEdit(element, shape.getElements.indexOf(element))
 
-    undoButton.setEnabled(undoableEdit.canUndo)
-    shape.remove(shapeView.getSelectedElement)
+      undoButton.setEnabled(undoableEdit.canUndo)
+      shape.remove(element)
 
-    shapeView.deselectAll()
+      shapeView.deselectAll()
 
-    if (shape.getElements.isEmpty) {
-      // last element was deleted
-      deleteSelected.setEnabled(false)
-      bringToFront.setEnabled(false)
-      sendToBack.setEnabled(false)
+      if (shape.getElements.isEmpty) {
+        // last element was deleted
+        deleteSelected.setEnabled(false)
+        bringToFront.setEnabled(false)
+        sendToBack.setEnabled(false)
 
-      shape.changed()
-    }
+        shape.changed()
+      }
+    })
   }) {
     setEnabled(false)
   }
 
   private val duplicateSelected = new Button(I18N.gui("duplicate"), () => {
-    if (shapeView.getSelectedElement != null) {
-      val newElement = shapeView.getSelectedElement.clone().asInstanceOf[Element]
+    shapeView.getSelectedElement.foreach(element => {
+      val newElement = element.clone.asInstanceOf[Element]
 
       shape.add(newElement)
       makeUndoableDraw(newElement)
-    }
+    })
   }) {
     setEnabled(false)
   }
 
   private val bringToFront = new Button(I18N.gui("bringToFront"), () => {
-    makeUndoableModification(shapeView.getSelectedElement, shape.getElements.indexOf(shapeView.getSelectedElement))
+    shapeView.getSelectedElement.foreach(element => {
+      makeUndoableModification(element, shape.getElements.indexOf(element))
 
-    shape.remove(shapeView.getSelectedElement)
-    shape.add(shapeView.getSelectedElement)
+      shape.remove(element)
+      shape.add(element)
+    })
   }) {
     setEnabled(false)
   }
 
   private val sendToBack = new Button(I18N.gui("sendToBack"), () => {
-    makeUndoableModification(shapeView.getSelectedElement, shape.getElements.indexOf(shapeView.getSelectedElement))
+    shapeView.getSelectedElement.foreach(element => {
+      makeUndoableModification(element, shape.getElements.indexOf(element))
 
-    shape.remove(shapeView.getSelectedElement)
-    shape.addAtPosition(0, shapeView.getSelectedElement)
+      shape.remove(element)
+      shape.addAtPosition(0, element)
+    })
   }) {
     setEnabled(false)
   }
@@ -156,12 +170,14 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     val button = new ToggleButton(name, () => {
       elementColor = color
 
-      if (editingElements && shapeView.getSelectedElement != null) {
-        makeUndoableModification(shapeView.getSelectedElement, shape.getElements.indexOf(shapeView.getSelectedElement))
+      shapeView.getSelectedElement.foreach(element => {
+        if (editingElements) {
+          makeUndoableModification(element, shape.getElements.indexOf(element))
 
-        shapeView.getSelectedElement.awtColor = color
-        shapeView.repaint()
-      }
+          element.awtColor = color
+          shapeView.repaint()
+        }
+      })
     }) {
       setText(null)
       setBorder(null)
@@ -177,7 +193,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     colorGroup.add(button)
 
     if (i == shape.getEditableColorIndex)
-        button.setSelected(true)
+      button.setSelected(true)
 
     new ColorPanel(i)
   }
@@ -200,7 +216,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
 
   private val closingAction = new AbstractAction {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       if (originalShape.toString != getCurrentShape.toString &&
           new OptionPane(EditorDialog.this, I18N.gui("confirmCancel"), I18N.gui("confirmCancel.message"),
                          OptionPane.Options.YES_NO, OptionPane.Icons.QUESTION).getSelectedIndex != 0)
@@ -211,7 +227,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   }
 
   addWindowListener(new WindowAdapter {
-    override def windowClosing(e: WindowEvent) {
+    override def windowClosing(e: WindowEvent): Unit = {
       closingAction.actionPerformed(null)
     }
   })
@@ -235,13 +251,13 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   editingToolBar.add(editElements)
   editingToolGroup.add(editElements)
 
-  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("line", classOf[Line], false))
-  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("rectangleFilled", classOf[Rectangle], true))
-  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("rectangle", classOf[Rectangle], false))
-  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("circleFilled", classOf[Circle], true))
-  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("circle", classOf[Circle], false))
-  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("polygonFilled", classOf[Polygon], true))
-  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("polygon", classOf[Polygon], false))
+  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("line", ElementType.Line, false))
+  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("rectangleFilled", ElementType.Rectangle, true))
+  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("rectangle", ElementType.Rectangle, false))
+  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("circleFilled", ElementType.Circle, true))
+  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("circle", ElementType.Circle, false))
+  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("polygonFilled", ElementType.Polygon, true))
+  addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("polygon", ElementType.Polygon, false))
 
   private val snapToGridButton: CheckBox = new CheckBox(I18N.gui("snapToGrid"), () => {
     snapToGrid = snapToGridButton.isSelected
@@ -264,72 +280,72 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   }
 
   private val rotateLeftButton = new Button(I18N.gui("rotateLeft"), () => {
-    if (shapeView.hasSelectedElement) {
-      makeUndoableModification(shapeView.getSelectedElement, shape.getElements.indexOf(shapeView.getSelectedElement))
+    shapeView.getSelectedElement match {
+      case Some(element) =>
+        makeUndoableModification(element, shape.getElements.indexOf(element))
 
-      shapeView.getSelectedElement.rotateLeft()
-    }
+        element.rotateLeft()
 
-    else {
-      undoableEdit = null
+      case None =>
+        undoableEdit = null
 
-      undoButton.setEnabled(false)
+        undoButton.setEnabled(false)
 
-      shape.rotateLeft()
+        shape.rotateLeft()
     }
 
     shapeView.repaint()
   })
 
   private val rotateRightButton = new Button(I18N.gui("rotateRight"), () => {
-    if (shapeView.hasSelectedElement) {
-      makeUndoableModification(shapeView.getSelectedElement, shape.getElements.indexOf(shapeView.getSelectedElement))
+    shapeView.getSelectedElement match {
+      case Some(element) =>
+        makeUndoableModification(element, shape.getElements.indexOf(element))
 
-      shapeView.getSelectedElement.rotateRight()
-    }
+        element.rotateRight()
 
-    else {
-      undoableEdit = null
+      case None =>
+        undoableEdit = null
 
-      undoButton.setEnabled(false)
+        undoButton.setEnabled(false)
 
-      shape.rotateRight()
+        shape.rotateRight()
     }
 
     shapeView.repaint()
   })
 
   private val flipHorizontalButton = new Button(I18N.gui("flipHorizontal"), () => {
-    if (shapeView.hasSelectedElement) {
-      makeUndoableModification(shapeView.getSelectedElement, shape.getElements.indexOf(shapeView.getSelectedElement))
+    shapeView.getSelectedElement match {
+      case Some(element) =>
+        makeUndoableModification(element, shape.getElements.indexOf(element))
 
-      shapeView.getSelectedElement.flipHorizontal()
-    }
+        element.flipHorizontal()
 
-    else {
-      undoableEdit = null
+      case None =>
+        undoableEdit = null
 
-      undoButton.setEnabled(false)
+        undoButton.setEnabled(false)
 
-      shape.flipHorizontal()
+        shape.flipHorizontal()
     }
 
     shapeView.repaint()
   })
 
   private val flipVerticalButton = new Button(I18N.gui("flipVertical"), () => {
-    if (shapeView.hasSelectedElement) {
-      makeUndoableModification(shapeView.getSelectedElement, shape.getElements.indexOf(shapeView.getSelectedElement))
+    shapeView.getSelectedElement match {
+      case Some(element) =>
+        makeUndoableModification(element, shape.getElements.indexOf(element))
 
-      shapeView.getSelectedElement.flipVertical()
-    }
+        element.flipVertical()
 
-    else {
-      undoableEdit = null
+      case None =>
+        undoableEdit = null
 
-      undoButton.setEnabled(false)
+        undoButton.setEnabled(false)
 
-      shape.flipVertical()
+        shape.flipVertical()
     }
 
     shapeView.repaint()
@@ -404,7 +420,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   getContentPane.setLayout(new BoxLayout(getContentPane, BoxLayout.Y_AXIS))
   getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
-  getContentPane.add(Box.createVerticalStrut(10));
+  getContentPane.add(Box.createVerticalStrut(10))
   getContentPane.add(namePanel)
   getContentPane.add(Box.createVerticalStrut(15))
   getContentPane.add(drawingPanel)
@@ -425,7 +441,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
   shape.changed()
 
-  def getElementType: Class[_ <: Element] =
+  def getElementType: ElementType =
     elementType
 
   def getElementColor: Color =
@@ -443,45 +459,46 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   def isEditingElements: Boolean =
     editingElements
 
-  def setEditingElements(e: Boolean) {
+  def setEditingElements(e: Boolean): Unit = {
     editingElements = e
 
     editElements.setSelected(e)
 
-    if (e)
+    if (e) {
       shapeView.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR))
-    else
+    } else {
       shapeView.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR))
+    }
   }
 
-  def makeUndoableModification(el: Element, z: Int) {
+  def makeUndoableModification(el: Element, z: Int): Unit = {
     undoableEdit = new UndoableModification(el, z)
 
     undoButton.setEnabled(undoableEdit.canUndo)
   }
 
-  def makeUndoableDraw(el: Element) {
+  def makeUndoableDraw(el: Element): Unit = {
     undoableEdit = new UndoableDraw(el)
 
     undoButton.setEnabled(undoableEdit.canUndo)
   }
 
-  def makeUndoableUnfinishedPolygon() {
+  def makeUndoableUnfinishedPolygon(): Unit = {
     undoableEdit = new UndoableUnfinishedPolygon()
 
     undoButton.setEnabled(undoableEdit.canUndo)
   }
 
-  def propertyChange(e: PropertyChangeEvent) {
-    deleteSelected.setEnabled(shapeView.hasSelectedElement)
-    duplicateSelected.setEnabled(shapeView.hasSelectedElement)
-    bringToFront.setEnabled(shapeView.hasSelectedElement)
-    sendToBack.setEnabled(shapeView.hasSelectedElement)
+  def propertyChange(e: PropertyChangeEvent): Unit = {
+    deleteSelected.setEnabled(shapeView.getSelectedElement.isDefined)
+    duplicateSelected.setEnabled(shapeView.getSelectedElement.isDefined)
+    bringToFront.setEnabled(shapeView.getSelectedElement.isDefined)
+    sendToBack.setEnabled(shapeView.getSelectedElement.isDefined)
   }
 
   // Attempts to save the current shape being drawn, prompting the
   // user if any issues come up
-  private def saveShape() {
+  private def saveShape(): Unit = {
     val name = nameText.getText.trim.toLowerCase
 
     // Make sure the shape has a name
@@ -522,7 +539,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
   // Sets <editableColor> to whatever the current selection in
   // <colorSelection> is
-  private def setEditableColor() {
+  private def setEditableColor(): Unit = {
     shape.setEditableColorIndex(colorSelection.getSelectedIndex)
     shape.markRecolorableElements(EditorDialog.getColor(shape.getEditableColorIndex), shape.getEditableColorIndex)
   }
@@ -555,7 +572,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
     add(label)
 
-    override def paintComponent(g: java.awt.Graphics) {
+    override def paintComponent(g: Graphics): Unit = {
       getParent match {
         case item: MenuItem if item.isArmed => label.setForeground(InterfaceColors.MENU_TEXT_HOVER)
         case _ => label.setForeground(InterfaceColors.TOOLBAR_TEXT)
@@ -568,15 +585,14 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       new ColorPanel(index)
   }
 
-  private class CreateAction(name: String, typeID: Class[_ <: Element], filled: Boolean)
+  private class CreateAction(name: String, typeID: ElementType, filled: Boolean)
     extends AbstractAction(name) {
 
     putValue(Action.SMALL_ICON, Utils.icon("/images/shapes-editor/" + name + ".gif"))
     putValue(Action.SHORT_DESCRIPTION, I18N.gui(name))
 
-    def actionPerformed(e: ActionEvent) {
-      if (shapeView.drawingPolygon)
-        shapeView.selfFinishPolygon(true)
+    def actionPerformed(e: ActionEvent): Unit = {
+      shapeView.selfFinishPolygon(true)
 
       elementType = typeID
       fillShapes = filled
@@ -590,22 +606,22 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   // this is used when the user modifies an existing shape, such as
   // by moving it or dragging a handle
   private class UndoableModification(el: Element, zOrder: Int) extends AbstractUndoableEdit {
-    private val originalElement = el.clone().asInstanceOf[Element]
+    private val originalElement = el.clone.asInstanceOf[Element]
 
-    override def undo() {
+    override def undo(): Unit = {
       super.undo()
 
       shape.remove(el)
       shape.addAtPosition(zOrder, originalElement)
 
-      if (shapeView.hasSelectedElement)
+      if (shapeView.getSelectedElement.isDefined)
         shapeView.selectElement(originalElement)
     }
   }
 
   // this is used when the user creates a new element
   private class UndoableDraw(newElement: Element) extends AbstractUndoableEdit {
-    override def undo() {
+    override def undo(): Unit = {
       super.undo()
 
       shape.remove(newElement)
@@ -616,7 +632,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   private class UndoableDeleteEdit(el: Element, zOrder: Int) extends AbstractUndoableEdit {
     private val deletedElement = el.clone().asInstanceOf[Element]
 
-    override def undo() {
+    override def undo(): Unit = {
       super.undo()
 
       shape.addAtPosition(zOrder, deletedElement)
@@ -626,7 +642,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   // this is used when the user is in the middle of drawing a polygon;
   // if they press undo at that time, we abort the creation of that polygon.
   private class UndoableUnfinishedPolygon extends AbstractUndoableEdit {
-    override def undo() {
+    override def undo(): Unit = {
       super.undo()
 
       shapeView.setTempElement(null)
