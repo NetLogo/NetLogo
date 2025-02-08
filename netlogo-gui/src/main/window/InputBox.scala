@@ -36,7 +36,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   private var hover = false
 
   protected class ColorButton extends JButton with RoundedBorderPanel with ThemeSync {
-    var color = Color.black
+    private var color = Color.black
 
     setBorder(null)
     setFont(getFont.deriveFont(9.0f))
@@ -44,7 +44,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     addActionListener(new SelectColorActionListener)
 
     addMouseListener(new MouseAdapter {
-      override def mouseEntered(e: MouseEvent) {
+      override def mouseEntered(e: MouseEvent): Unit = {
         if (isVisible) {
           hover = true
 
@@ -52,7 +52,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
         }
       }
 
-      override def mouseExited(e: MouseEvent) {
+      override def mouseExited(e: MouseEvent): Unit = {
         if (isVisible && !contains(e.getPoint)) {
           hover = false
 
@@ -61,11 +61,15 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       }
     })
 
-    override def paintComponent(g: Graphics) {
+    override def paintComponent(g: Graphics): Unit = {
       setBackgroundColor(color)
       setDiameter(6 * zoomFactor)
 
       super.paintComponent(g)
+    }
+
+    def setColor(color: Color): Unit = {
+      this.color = color
     }
 
     def syncTheme(): Unit = {
@@ -94,7 +98,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     add(scrollPane, c)
 
     addMouseListener(new MouseAdapter {
-      override def mouseEntered(e: MouseEvent) {
+      override def mouseEntered(e: MouseEvent): Unit = {
         if (isVisible) {
           hover = true
 
@@ -102,7 +106,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
         }
       }
 
-      override def mouseExited(e: MouseEvent) {
+      override def mouseExited(e: MouseEvent): Unit = {
         if (isVisible && !contains(e.getPoint)) {
           hover = false
 
@@ -111,7 +115,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       }
     })
 
-    override def paintComponent(g: Graphics) {
+    override def paintComponent(g: Graphics): Unit = {
       // this mostly fixes some weird horizontal scrollbar issues (Isaac B 8/7/24)
       textArea.setSize(scrollPane.getWidth - 10, scrollPane.getHeight)
 
@@ -163,8 +167,8 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   protected var value: Option[AnyRef] = Option.empty[AnyRef]
   def valueText = text
   def valueObject = value.orNull
-  def valueObject(value: AnyRef) {valueObject(value, false)}
-  def valueObject(value: Any, raiseEvent: Boolean) {
+  def valueObject(value: AnyRef): Unit = {valueObject(value, false)}
+  def valueObject(value: Any, raiseEvent: Boolean): Unit = {
     oldText = text
     text = Dump.logoObject(toAnyRef(value))
     this.value = Option(toAnyRef(value))
@@ -178,13 +182,13 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
   }
 
-  protected def inputText(input: Object) {
+  protected def inputText(input: Object): Unit = {
     if (input != null) valueObject(input, true)
   }
 
   // multiline property
   protected var multiline = false
-  def multiline(multiline: Boolean) {
+  def multiline(multiline: Boolean): Unit = {
     this.multiline = multiline
     changeButton.setVisible(inputType.changeVisible)
     editing = false
@@ -206,8 +210,8 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   var nameChanged = false
 
   /// name needs a wrapper because we don't want to recompile until editFinished()
-  def name(name: String) {this.name(name, true)}
-  def name(name: String, sendEvent: Boolean) {
+  def name(name: String): Unit = {this.name(name, true)}
+  def name(name: String, sendEvent: Boolean): Unit = {
     this.name = name
     // I don't think anyone ever uses the display name, but let's keep it in sync
     // with the real name, just in case - ST 6/3/02
@@ -216,13 +220,13 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   }
 
   def nameWrapper = name
-  def nameWrapper(name: String) {
+  def nameWrapper(name: String): Unit = {
     nameChanged = name != this.name || nameChanged
     this.name(name, false)
   }
 
   protected var editing = false
-  protected def stopEdit() {
+  protected def stopEdit(): Unit = {
     editing = false
     transferFocus()
     nextComponent.requestFocus()
@@ -246,10 +250,11 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     c.weightx = 1
     c.anchor = GridBagConstraints.NORTHWEST
     c.insets =
-      if (preserveWidgetSizes)
+      if (preserveWidgetSizes) {
         new Insets(3, 6, 6, 6)
-      else
+      } else {
         new Insets(6, 12, 6, 12)
+      }
 
     add(widgetLabel, c)
 
@@ -257,10 +262,11 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     c.weightx = 0
     c.anchor = GridBagConstraints.EAST
     c.insets =
-      if (preserveWidgetSizes)
+      if (preserveWidgetSizes) {
         new Insets(3, 0, 6, 6)
-      else
+      } else {
         new Insets(6, 0, 6, 12)
+      }
 
     add(changeButton, c)
 
@@ -272,10 +278,11 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     c.fill = GridBagConstraints.BOTH
     c.anchor = GridBagConstraints.WEST
     c.insets =
-      if (preserveWidgetSizes)
+      if (preserveWidgetSizes) {
         new Insets(0, 6, 6, 6)
-      else
+      } else {
         new Insets(0, 12, 6, 12)
+      }
 
     add(scroller, c)
     add(colorSwatch, c)
@@ -286,11 +293,11 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   // focus listener for in place editing
   textArea.addFocusListener(
     new FocusListener() {
-      def focusGained(e: FocusEvent) {
+      def focusGained(e: FocusEvent): Unit = {
         _hasFocus = true
         editing = true
       }
-      def focusLost(e: FocusEvent) {
+      def focusLost(e: FocusEvent): Unit = {
         _hasFocus = false
         if (editing) {
           try inputText(inputType.readValue(InputBox.this.textArea.getText))
@@ -310,10 +317,11 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
     super.paintComponent(g)
 
-    if (widgetLabel.getPreferredSize.width > widgetLabel.getWidth)
+    if (widgetLabel.getPreferredSize.width > widgetLabel.getWidth) {
       widgetLabel.setToolTipText(widgetLabel.getText)
-    else
+    } else {
       widgetLabel.setToolTipText(null)
+    }
 
     if (hover) {
       val g2d = Utils.initGraphics2D(g)
@@ -323,9 +331,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
                                             colorSwatch.getY + colorSwatch.getHeight + 3, Array(0f, 1f),
                                             Array(InterfaceColors.WIDGET_HOVER_SHADOW, InterfaceColors.TRANSPARENT)))
         g2d.fillRoundRect(colorSwatch.getX, colorSwatch.getY + 3, colorSwatch.getWidth, colorSwatch.getHeight, 6, 6)
-      }
-
-      else {
+      } else {
         g2d.setPaint(new LinearGradientPaint(scroller.getX.toFloat, scroller.getY + 3, scroller.getX.toFloat,
                                             scroller.getY + scroller.getHeight + 3, Array(0f, 1f),
                                             Array(InterfaceColors.WIDGET_HOVER_SHADOW, InterfaceColors.TRANSPARENT)))
@@ -344,17 +350,19 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   }
 
   private class SelectColorActionListener extends ActionListener {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       val colorDialog = new ColorDialog(org.nlogo.awt.Hierarchy.getFrame(InputBox.this), true)
       valueObject(colorDialog.showInputBoxDialog(
-        if (value.exists(_.isInstanceOf[Double]))
+        if (value.exists(_.isInstanceOf[Double])) {
           modulateDouble(value.get.asInstanceOf[Double])
-        else 0d
+        } else {
+          0d
+        }
       ).asInstanceOf[AnyRef], true)
     }
   }
 
-  private def showError(ex: Exception) {
+  private def showError(ex: Exception): Unit = {
     val frame = org.nlogo.awt.Hierarchy.getFrame(this)
     if (frame != null) {
       var msg = ex.getMessage
@@ -377,13 +385,13 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   }
 
   private class TransferFocusAction extends AbstractAction {
-    def actionPerformed(e:ActionEvent) {
+    def actionPerformed(e:ActionEvent): Unit = {
       transferFocus()
       nextComponent.requestFocus()
     }
   }
 
-  override def updateConstraints() {
+  override def updateConstraints(): Unit = {
     if (name.length > 0) new org.nlogo.window.Events.AddInputBoxConstraintEvent(name, constraint).raise(this)
   }
 
@@ -400,7 +408,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     true
   }
 
-  def typeOptions(typeOptions: org.nlogo.api.Options[InputType]) {
+  def typeOptions(typeOptions: org.nlogo.api.Options[InputType]): Unit = {
     this.typeOptions = typeOptions
     if (inputType.displayName != typeOptions.chosenValue.displayName) {
       inputType = typeOptions.chosenValue
@@ -418,8 +426,11 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       inputType.colorPanel(colorSwatch)
     }
     scroller.scrollPane.setHorizontalScrollBarPolicy(
-      if (inputType.multiline) ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
-      else ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+      if (inputType.multiline) {
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
+      } else {
+        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER
+      })
     multiline(inputType.multiline)
     if (dialog != null) {
       dialog.dispose()
@@ -427,11 +438,14 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
   }
 
-  override def getMinimumSize =
-    if (preserveWidgetSizes)
+  override def getMinimumSize = {
+    if (preserveWidgetSizes) {
       new Dimension(MinWidth, MinHeight)
-    else
+    } else {
       new Dimension(100, 60)
+    }
+  }
+
   override def getPreferredSize = {
     if (preserveWidgetSizes) {
       val result = super.getPreferredSize
@@ -442,17 +456,16 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
               textArea.getPreferredSize.width + insets.left + insets.right +
               textArea.getInsets.right + textArea.getInsets.left + 4
       new Dimension(MinWidth.max(result.width), MinHeight.max(result.height))
-    }
-
-    else
+    } else {
       new Dimension(250, 60)
+    }
   }
 
   override def load(model: WidgetModel): AnyRef = {
     name(model.varName)
     multiline(model.multiline)
 
-    def setType(i: BoxedValue) {
+    def setType(i: BoxedValue): Unit = {
       this.inputType = InputType.create(i)
       textArea.setEditorKit(this.inputType.getEditorKit)
       textArea.setFont(this.inputType.getFont)
@@ -515,7 +528,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     })
 
     private val cancelAction = new AbstractAction(I18N.gui.get("common.buttons.cancel")) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         dispose()
         editing = false
         dialog = null
@@ -566,7 +579,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       pack()
       Positioning.center(this, parent)
       addWindowListener(new WindowAdapter() {
-        override def windowClosing(e: WindowEvent) {
+        override def windowClosing(e: WindowEvent): Unit = {
           dispose()
           editing = false
           dialog = null
@@ -576,7 +589,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
     syncTheme()
 
-    def setText(text: String) {
+    def setText(text: String): Unit = {
       textArea.setText(text)
       textArea.selectAll()
     }
@@ -624,13 +637,13 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   case class InputType(baseName: String, i18nKey: String, editorKit: EditorKit, font: Font) {
     def defaultValue: AnyRef = ""
     def multiline = InputBox.this.multiline
-    def multiline(newMultiline: Boolean) {InputBox.this.multiline(newMultiline)}
+    def multiline(newMultiline: Boolean): Unit = {InputBox.this.multiline(newMultiline)}
     override def toString = displayName
     def saveName = baseName
     def displayName = I18N.gui.get("edit.input.type." + i18nKey)
     def getEditorKit = editorKit
     def getFont = font
-    def colorPanel(panel: ColorButton) {
+    def colorPanel(panel: ColorButton): Unit = {
       panel.setVisible(false)
       scroller.setVisible(true)
     }
@@ -714,7 +727,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       NumericInput(num.doubleValue, NumericInput.ColorLabel)
     }
 
-    override def colorPanel(panel: ColorButton) {
+    override def colorPanel(panel: ColorButton): Unit = {
       panel.setVisible(true)
       scroller.setVisible(false)
 
@@ -725,7 +738,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
         }
         else (0d: java.lang.Double, Color.BLACK)
 
-      panel.color = c
+      panel.setColor(c)
       panel.setForeground(if ((colorval % 10) > 5) Color.BLACK else Color.WHITE)
       panel.setText(colorval match {
         // this logic is duplicated in ColorEditor; black and white are special cases
@@ -735,9 +748,14 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
           val index = (c / 10).toInt
           val baseColor = index * 10 + 5
           Dump.number(c) + " (" + getColorNameByIndex(index) + (
-            if (c > baseColor) {" + " + Dump.number(approximate(c - baseColor, 1))}
-            else if (c < baseColor) {" - "} + Dump.number(approximate(baseColor - c, 1))
-            else ""
+            if (c > baseColor) {
+              " + " + Dump.number(approximate(c - baseColor, 1))
+            } else if (c < baseColor) {
+              " - "
+            } + Dump.number(approximate(baseColor - c, 1))
+            else {
+              ""
+            }
           ) + ")"
       })
     }
