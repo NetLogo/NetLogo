@@ -24,11 +24,9 @@ extends UserDialog(owner, title, i18n) {
 
 object OptionDialog {
   def showMessage(owner: Component, title: String, message: String, options: Array[_ <: Object]): Int = {
-    import scala.collection.JavaConverters._
-
     val brokenLines = LineBreaker.breakLines(message,
       owner.getFontMetrics(owner.getFont), UserDialog.DIALOG_WIDTH)
-    showCustom(owner, title, brokenLines.asScala.mkString("\n"), options)
+    showCustom(owner, title, brokenLines.mkString("\n"), options)
   }
 
   def showCustom(owner: Component, title: String, message: AnyRef, options: Array[_ <: Object]): Int = {

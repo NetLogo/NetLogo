@@ -142,11 +142,11 @@ class GUIHubNetManager(workspace: GUIWorkspace,
       serverInterface = selectedNetwork
       if (serverInterface.isEmpty) {
         new OptionPane(workspace.getFrame, I18N.gui.get("common.messages.error"),
-                       I18N.gui.get("edit.hubnet.checkNetwork"), OptionPane.Options.OK, OptionPane.Icons.ERROR)
+                       I18N.gui.get("edit.hubnet.checkNetwork"), OptionPane.Options.Ok, OptionPane.Icons.Error)
       }
       else if (serverInterface.exists(_._1.isLoopback))
         new OptionPane(workspace.getFrame, I18N.gui.get("common.messages.error"),
-                       I18N.gui.get("edit.hubnet.noNetwork"), OptionPane.Options.OK, OptionPane.Icons.ERROR)
+                       I18N.gui.get("edit.hubnet.noNetwork"), OptionPane.Options.Ok, OptionPane.Icons.Error)
     }
     serverInterface.foreach { nw =>
       connectionManager.startup(serverName, nw)

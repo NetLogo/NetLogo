@@ -64,7 +64,7 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler) extends J
         val isWindows = System.getProperty("os.name").toLowerCase.startsWith("win")
         if (!isWindows || view.viewManager.warned ||
           (new OptionPane(view, I18N.gui.get("common.messages.warning"), fullScreenWarning, options,
-                          OptionPane.Icons.WARNING).getSelectedIndex == 0)) {
+                          OptionPane.Icons.Warning).getSelectedIndex == 0)) {
           view.viewManager.setFullscreen(true)
           view.viewManager.warned = true
         }

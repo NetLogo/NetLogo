@@ -116,16 +116,8 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
     }
     lastTemporaryAddition = None
     if (wrapLines) {
-      val fontMetrics = getFontMetrics(text.getFont)
-      val messageLines = LineBreaker.breakLines(message, fontMetrics, text.getWidth - GuessScrollBarWidth)
-      val wrappedMessage = new StringBuilder()
-      var i = 0
-      while (i < messageLines.size) {
-        wrappedMessage.append(messageLines.get(i))
-        wrappedMessage.append("\n")
-        i += 1
-      }
-      message = wrappedMessage.toString();
+      message = LineBreaker.breakLines(message, getFontMetrics(text.getFont), text.getWidth - GuessScrollBarWidth)
+                           .mkString("\n")
     }
     val buf = new StringBuilder();
     if (addCarriageReturn) {

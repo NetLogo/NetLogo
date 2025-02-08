@@ -139,11 +139,11 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
       }
       catch {
         case ex: NumberFormatException => new OptionPane(null, I18N.gui.get("common.messages.error"),
-                                                         I18N.gui("dtNumberError"), OptionPane.Options.OK,
-                                                         OptionPane.Icons.ERROR)
+                                                         I18N.gui("dtNumberError"), OptionPane.Options.Ok,
+                                                         OptionPane.Icons.Error)
         case ex: Model.ModelException => new OptionPane(null, I18N.gui.get("common.messages.error"),
-                                                        I18N.gui("dtZeroError"), OptionPane.Options.OK,
-                                                        OptionPane.Icons.ERROR)
+                                                        I18N.gui("dtZeroError"), OptionPane.Options.Ok,
+                                                        OptionPane.Icons.Error)
       }
     }
   }

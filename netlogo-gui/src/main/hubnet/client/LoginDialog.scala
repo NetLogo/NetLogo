@@ -352,6 +352,6 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
     setMaximumSize(new Dimension(250, 80))
     setAlignmentX(0.0f)
 
-    def selectedNetworkAddress = choiceMap.get(getSelectedItem).map(_._2)
+    def selectedNetworkAddress = choiceMap.get(getSelectedItem.orNull).map(_._2)
   }
 }

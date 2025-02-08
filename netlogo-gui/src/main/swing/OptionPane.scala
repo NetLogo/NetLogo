@@ -9,27 +9,25 @@ import org.nlogo.awt.LineBreaker
 import org.nlogo.core.I18N
 import org.nlogo.theme.InterfaceColors
 
-import scala.collection.JavaConverters._
-
 object OptionPane {
   object Options {
-    val OK = Seq(I18N.gui.get("common.buttons.ok"))
-    val OK_CANCEL = Seq(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.cancel"))
-    val YES_NO = Seq(I18N.gui.get("common.buttons.yes"), I18N.gui.get("common.buttons.no"))
+    val Ok = Seq(I18N.gui.get("common.buttons.ok"))
+    val OkCancel = Seq(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.cancel"))
+    val YesNo = Seq(I18N.gui.get("common.buttons.yes"), I18N.gui.get("common.buttons.no"))
   }
 
   object Icons {
-    val NONE: Icon = null
-    val INFO = Utils.iconScaledWithColor("/images/exclamation-circle.png", 30, 30, InterfaceColors.INFO_ICON)
-    val QUESTION = Utils.iconScaledWithColor("/images/question.png", 30, 30, InterfaceColors.INFO_ICON)
-    val WARNING = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 30, 30, InterfaceColors.WARNING_ICON)
-    val ERROR = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 30, 30, InterfaceColors.ERROR_ICON)
+    val None: Icon = null
+    val Info = Utils.iconScaledWithColor("/images/exclamation-circle.png", 30, 30, InterfaceColors.INFO_ICON)
+    val Question = Utils.iconScaledWithColor("/images/question.png", 30, 30, InterfaceColors.INFO_ICON)
+    val Warning = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 30, 30, InterfaceColors.WARNING_ICON)
+    val Error = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 30, 30, InterfaceColors.ERROR_ICON)
   }
 }
 
 // like OptionDialog, but allows synchronization with theme (Isaac B 11/16/24)
 class OptionPane(parent: Component, title: String, message: String, options: Seq[String],
-                 protected val icon: Icon = OptionPane.Icons.NONE) extends JDialog(parent match {
+                 protected val icon: Icon = OptionPane.Icons.None) extends JDialog(parent match {
                    case w: Window => w
                    case _ => null
                  }, title, Dialog.ModalityType.APPLICATION_MODAL) {
@@ -80,7 +78,7 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
   def getSelectedIndex: Int =
     options.indexOf(selectedOption)
 
-  protected def addContents() {
+  protected def addContents(): Unit = {
     val c = new GridBagConstraints
 
     c.gridx = 0
@@ -107,9 +105,9 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
   }
 
   protected def getWrappedMessage: String =
-    LineBreaker.breakLines(message, getFontMetrics(new JLabel().getFont), 400).asScala.mkString("<html>", "<br>", "</html>")
+    LineBreaker.breakLines(message, getFontMetrics(new JLabel().getFont), 400).mkString("<html>", "<br>", "</html>")
 
-  protected def packAndCenter() {
+  protected def packAndCenter(): Unit = {
     pack()
 
     Positioning.center(this, parent)
@@ -117,19 +115,20 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
 }
 
 class InputOptionPane(parent: Component, title: String, message: String, startingInput: String = "")
-  extends OptionPane(parent, title, message, OptionPane.Options.OK_CANCEL, OptionPane.Icons.QUESTION) {
+  extends OptionPane(parent, title, message, OptionPane.Options.OkCancel, OptionPane.Icons.Question) {
 
   // lazy because addContents is called in super (Isaac B 11/16/24)
   private lazy val input = new TextField(0, startingInput)
 
   def getInput: String = {
-    if (getSelectedIndex == 0)
+    if (getSelectedIndex == 0) {
       input.getText.trim
-    else
+    } else {
       null
+    }
   }
 
-  override protected def addContents() {
+  override protected def addContents(): Unit = {
     val c = new GridBagConstraints
 
     c.gridx = 0
@@ -164,27 +163,29 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
   }
 }
 
-class DropdownOptionPane[T >: Null](parent: Component, title: String, message: String, choices: Seq[T])
-  extends OptionPane(parent, title, message, OptionPane.Options.OK_CANCEL, OptionPane.Icons.QUESTION) {
+class DropdownOptionPane[T](parent: Component, title: String, message: String, choices: Seq[T])
+  extends OptionPane(parent, title, message, OptionPane.Options.OkCancel, OptionPane.Icons.Question) {
 
   // lazy because addContents is called in super (Isaac B 11/16/24)
-  private lazy val dropdown = new ComboBox(choices)
+  private lazy val dropdown = new ComboBox[T](choices)
 
-  def getSelectedChoice: T = {
-    if (getSelectedIndex == 0)
+  def getSelectedChoice: Option[T] = {
+    if (getSelectedIndex == 0) {
       dropdown.getSelectedItem
-    else
-      null
+    } else {
+      None
+    }
   }
 
   def getChoiceIndex: Int = {
-    if (getSelectedIndex == 0)
+    if (getSelectedIndex == 0) {
       choices.indexOf(dropdown.getSelectedItem)
-    else
+    } else {
       -1
+    }
   }
 
-  override protected def addContents() {
+  override protected def addContents(): Unit = {
     val c = new GridBagConstraints
 
     c.gridx = 0
@@ -224,7 +225,7 @@ class DropdownOptionPane[T >: Null](parent: Component, title: String, message: S
 class CustomOptionPane(parent: Component, title: String, contents: Component, options: Seq[String])
   extends OptionPane(parent, title, "", options) {
 
-  override protected def addContents() {
+  override protected def addContents(): Unit = {
     val c = new GridBagConstraints
 
     c.gridx = 0

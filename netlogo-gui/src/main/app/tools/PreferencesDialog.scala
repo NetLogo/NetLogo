@@ -46,8 +46,8 @@ class PreferencesDialog(parent: Frame, preferences: Preference*) extends ToolDia
       val file = new File(path)
       if (path.nonEmpty && !file.exists) {
         if (new OptionPane(this, I18N.gui.get("common.messages.warning"),
-                           I18N.gui.get("tools.preferences.missingDirectory"), OptionPane.Options.YES_NO,
-                           OptionPane.Icons.WARNING).getSelectedIndex != 0)
+                           I18N.gui.get("tools.preferences.missingDirectory"), OptionPane.Options.YesNo,
+                           OptionPane.Icons.Warning).getSelectedIndex != 0)
           return false
         file.mkdirs
       }

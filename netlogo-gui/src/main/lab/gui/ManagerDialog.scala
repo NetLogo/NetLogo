@@ -221,7 +221,7 @@ private class ManagerDialog(manager:       LabManager,
         I18N.gui("delete.confirm.one", listModel.getElementAt(selected(0)).asInstanceOf[LabProtocol].name)
       }
     }
-    if (new OptionPane(this, I18N.gui("delete"), message, OptionPane.Options.YES_NO, OptionPane.Icons.QUESTION)
+    if (new OptionPane(this, I18N.gui("delete"), message, OptionPane.Options.YesNo, OptionPane.Icons.Question)
           .getSelectedIndex == 0) {
       for(i <- 0 until selected.length)
         manager.protocols -= listModel.getElementAt(selected(i)).asInstanceOf[LabProtocol]
@@ -263,7 +263,7 @@ private class ManagerDialog(manager:       LabManager,
           case e: org.xml.sax.SAXParseException => {
             if (!java.awt.GraphicsEnvironment.isHeadless) {
               new OptionPane(manager.workspace.getFrame, I18N.gui("invalid"), I18N.gui("error.import", file.getName),
-                             OptionPane.Options.OK, OptionPane.Icons.ERROR)
+                             OptionPane.Options.Ok, OptionPane.Icons.Error)
             }
           }
         }

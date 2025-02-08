@@ -20,7 +20,7 @@ class PlotExportControls(plotManager: PlotManager) {
     } else {
       val plotnum = new DropdownOptionPane(frame, I18N.gui.get("menu.file.export.plot"),
                                            I18N.gui.get("menu.file.export.plot.whichPlot"),
-                                           plotNames.toList).getChoiceIndex
+                                           plotNames).getChoiceIndex
       if (plotnum == -1)
         None
       else
@@ -42,6 +42,6 @@ class PlotExportControls(plotManager: PlotManager) {
 
   def sorryNoPlots(frame: Frame) {
     new OptionPane(frame, I18N.gui.get("menu.file.export.plot"), I18N.gui.get("menu.file.export.noPlots"),
-                   OptionPane.Options.OK, OptionPane.Icons.INFO)
+                   OptionPane.Options.Ok, OptionPane.Icons.Info)
   }
 }

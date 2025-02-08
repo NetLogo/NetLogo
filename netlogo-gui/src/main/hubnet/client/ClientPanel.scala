@@ -269,7 +269,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
         case Text.MessageType.USER =>
           new OptionPane(getFrame(this), I18N.gui.get("common.messages.userMessage"), content.toString,
                          List(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.halt")),
-                         OptionPane.Icons.INFO)
+                         OptionPane.Icons.Info)
         case Text.MessageType.CLEAR => clientGUI.clearMessages()
       }
     }

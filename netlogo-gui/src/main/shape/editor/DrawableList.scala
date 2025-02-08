@@ -93,8 +93,8 @@ class DrawableList[A <: Shape](shapeTracker: ShapeListTracker, rows: Int, height
         None
 
     message.map { msg =>
-      new OptionPane(parent, I18N.gui.get("tools.shapesEditor.delete"), msg, OptionPane.Options.YES_NO,
-                     OptionPane.Icons.QUESTION).getSelectedIndex == 0
+      new OptionPane(parent, I18N.gui.get("tools.shapesEditor.delete"), msg, OptionPane.Options.YesNo,
+                     OptionPane.Icons.Question).getSelectedIndex == 0
     }.getOrElse(false)
   }
 

@@ -18,7 +18,7 @@ object ComboBox {
   }
 }
 
-class ComboBox[T >: Null](private var items: Seq[T] = Seq())
+class ComboBox[T](private var items: Seq[T] = Seq())
   extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with ItemSelectable {
 
   private val mouseListener = new MouseAdapter {
@@ -40,31 +40,28 @@ class ComboBox[T >: Null](private var items: Seq[T] = Seq())
     c.fill = GridBagConstraints.HORIZONTAL
     c.weightx = 1
 
-    def setItem(item: T) {
+    def setItem(item: Option[T]) {
       removeAll()
 
-      if (item != null) {
-        item match {
-          case comp: Component with ComboBox.Clone =>
-            val child = comp.getClone
+      item.foreach(_ match {
+        case comp: Component with ComboBox.Clone =>
+          val child = comp.getClone
 
-            add(child, c)
+          add(child, c)
 
-            child.addMouseListener(mouseListener)
-            child.addMouseWheelListener(wheelListener)
+          child.addMouseListener(mouseListener)
+          child.addMouseWheelListener(wheelListener)
 
-          case a =>
-            val child = new JLabel(a.toString)
+        case a =>
+          val child = new JLabel(a.toString)
 
-            add(child, c)
+          add(child, c)
 
-            child.addMouseListener(mouseListener)
-            child.addMouseWheelListener(wheelListener)
-        }
+          child.addMouseListener(mouseListener)
+          child.addMouseWheelListener(wheelListener)
+      })
 
-        syncTheme()
-      }
-
+      syncTheme()
       revalidate()
       repaint()
     }
@@ -83,7 +80,7 @@ class ComboBox[T >: Null](private var items: Seq[T] = Seq())
   setDiameter(6)
   enableHover()
 
-  private var selectedItem: T = null
+  private var selectedItem: Option[T] = None
 
   private val choiceDisplay = new ChoiceDisplay
   private val arrow = new DropdownArrow
@@ -129,8 +126,8 @@ class ComboBox[T >: Null](private var items: Seq[T] = Seq())
     popup.removeAll()
 
     if (items.isEmpty) {
-      selectedItem = null
-      choiceDisplay.setItem(null)
+      selectedItem = None
+      choiceDisplay.setItem(None)
     }
 
     else {
@@ -158,7 +155,7 @@ class ComboBox[T >: Null](private var items: Seq[T] = Seq())
       selectItem(item)
   }
 
-  def getSelectedItem: T =
+  def getSelectedItem: Option[T] =
     selectedItem
 
   def setSelectedIndex(index: Int) {
@@ -167,11 +164,11 @@ class ComboBox[T >: Null](private var items: Seq[T] = Seq())
   }
 
   def getSelectedIndex: Int =
-    items.indexOf(selectedItem)
+    selectedItem.map(items.indexOf).getOrElse(-1)
 
   private def selectItem(item: T) {
-    selectedItem = item
-    choiceDisplay.setItem(item)
+    selectedItem = Option(item)
+    choiceDisplay.setItem(selectedItem)
 
     itemListeners.foreach(_.itemStateChanged(
       new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED, item, ItemEvent.SELECTED)))
@@ -185,12 +182,10 @@ class ComboBox[T >: Null](private var items: Seq[T] = Seq())
     itemListeners -= listener
   }
 
-  def getSelectedObjects: Array[Object] = {
-    selectedItem match {
-      case obj: Object => Array(obj)
-      case _ => null
-    }
-  }
+  // required by ItemSelectable, but not used by NetLogo code
+  // unimplemented because T can't be interpreted as Object
+  // (Isaac B 2/8/25)
+  def getSelectedObjects: Array[Object] = ???
 
   def itemCount: Int =
     items.size

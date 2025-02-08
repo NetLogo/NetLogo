@@ -24,7 +24,7 @@ class _useryesorno extends Reporter {
                                             List(I18N.gui.get("common.buttons.yes"),
                                                  I18N.gui.get("common.buttons.no"),
                                                  I18N.gui.get("common.buttons.halt")),
-                                            OptionPane.Icons.QUESTION).getSelectedIndex
+                                            OptionPane.Icons.Question).getSelectedIndex
               response match {
                 case 0 => java.lang.Boolean.TRUE
                 case 1 => java.lang.Boolean.FALSE

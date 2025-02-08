@@ -75,7 +75,7 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
       while (manager.shapesList.exists(shape.name) && choice != 0) {
         choice = new OptionPane(this, I18N.gui.get("tools.shapesEditor.import"),
                                     I18N.gui("nameConflict", shape.name), choices,
-                                    OptionPane.Icons.WARNING).getSelectedIndex
+                                    OptionPane.Icons.Warning).getSelectedIndex
 
         if (choice == 1) { // rename
           val name = new InputOptionPane(this, I18N.gui("importShapes"), I18N.gui("importAs")).getInput
@@ -104,8 +104,8 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
 
   // Show a warning dialog to indicate something went wrong when importing
   def sendImportWarning(message: String) {
-    new OptionPane(this, I18N.gui.get("tools.shapesEditor.import"), message, OptionPane.Options.OK,
-                   OptionPane.Icons.WARNING)
+    new OptionPane(this, I18N.gui.get("tools.shapesEditor.import"), message, OptionPane.Options.Ok,
+                   OptionPane.Icons.Warning)
   }
 
   override def getPreferredSize: Dimension =

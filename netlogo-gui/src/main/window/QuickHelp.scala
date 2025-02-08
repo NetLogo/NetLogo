@@ -63,7 +63,7 @@ object QuickHelp {
     else {
       if (new OptionPane(comp, I18N.gui.get("common.netlogo"),
                          I18N.gui.getN("tabs.code.rightclick.quickhelp.notfound", tokenLower.toUpperCase),
-                         OptionPane.Options.OK, OptionPane.Icons.ERROR).getSelectedIndex == 0)
+                         OptionPane.Options.Ok, OptionPane.Icons.Error).getSelectedIndex == 0)
         BrowserLauncher.openPath(comp, docPath("index2.html"), null)
     }
   }

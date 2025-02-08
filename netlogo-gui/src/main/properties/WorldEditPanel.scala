@@ -67,8 +67,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
     add(modelPanel, BorderLayout.SOUTH)
 
     positionChoices.setSelectedIndex(settings.getSelectedLocation)
-    selectPosition(
-      positionChoices.getSelectedItem.asInstanceOf[OriginConfiguration], settings.getSelectedConfiguration)
+    selectPosition(positionChoices.getSelectedItem.get, settings.getSelectedConfiguration)
 
     if(! editors(0).isEnabled) editors(1) else editors(0)
   }
@@ -120,10 +119,17 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
     previewPanel.update(field, value)
     if(!value.isDefined) return
     def v = value.get.asInstanceOf[Int]
-    if(positionChoices.getSelectedObjects()(0).toString == I18N.gui("origin.location.center") && editors != Nil) {
-      if(field == "maxPxcor") editors(0).set(0 - v)
-      else if(field == "maxPycor") editors(2).set(0 - v)
-      else if(field == "maxPzcor") editors(4).set(0 - v)
+    positionChoices.getSelectedItem match {
+      case Some(item) if item.toString == I18N.gui("origin.location.center") && editors.nonEmpty =>
+        if (field == "maxPxcor") {
+          editors(0).set(0 - v)
+        } else if (field == "maxPycor") {
+          editors(2).set(0 - v)
+        } else if (field == "maxPzcor") {
+          editors(4).set(0 - v)
+        }
+
+      case _ =>
     }
   }
 
@@ -145,12 +151,12 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
     if (selection.toString == I18N.gui("origin.location.corner")){
       enableChoices(true, false)
       cornerChoices.setSelectedIndex(index)
-      selectConfiguration(cornerChoices.getSelectedItem.asInstanceOf[OriginConfiguration])
+      selectConfiguration(cornerChoices.getSelectedItem.get)
     }
     else if (selection.toString == I18N.gui("origin.location.edge")){
       enableChoices(false, true)
       edgeChoices.setSelectedIndex(index)
-      selectConfiguration(edgeChoices.getSelectedItem.asInstanceOf[OriginConfiguration])
+      selectConfiguration(edgeChoices.getSelectedItem.get)
     }
     else{
       enableChoices(false, false)

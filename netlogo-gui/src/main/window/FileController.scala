@@ -73,7 +73,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     exception.printStackTrace()
     new OptionPane(owner, I18N.gui.get("common.messages.error"),
                    I18N.gui.getN("file.open.error.unableToOpen", Paths.get(uri).toString, exception.getMessage),
-                   OptionPane.Options.OK, OptionPane.Icons.ERROR)
+                   OptionPane.Options.Ok, OptionPane.Icons.Error)
     throw new UserCancelException()
   }
 
@@ -128,7 +128,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
   def checkWithUserBeforeOpeningModelFromFutureVersion(version: String): Unit = {
     if (new OptionPane(owner, I18N.gui.get("common.messages.warning"),
                        I18N.gui.getN("file.open.warn.version.newer", Version.version, version),
-                       OptionPane.Options.OK_CANCEL, OptionPane.Icons.WARNING).getSelectedIndex != 0)
+                       OptionPane.Options.OkCancel, OptionPane.Icons.Warning).getSelectedIndex != 0)
       throw new UserCancelException()
   }
 
@@ -136,7 +136,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
   def checkWithUserBeforeOpening3DModelin2D(version: String): Unit = {
     if (new OptionPane(owner, I18N.gui.get("common.messages.warning"),
                        I18N.gui.getN("file.open.warn.intwod.openthreed", Version.version, version),
-                       OptionPane.Options.OK_CANCEL, OptionPane.Icons.WARNING).getSelectedIndex != 0)
+                       OptionPane.Options.OkCancel, OptionPane.Icons.Warning).getSelectedIndex != 0)
       throw new UserCancelException()
   }
 
@@ -144,7 +144,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
   def checkWithUserBeforeOpening2DModelin3D(): Unit = {
    if (new OptionPane(owner, I18N.gui.get("common.messages.warning"),
                        I18N.gui.getN("file.open.warn.inthreed.opentwod", Version.version),
-                       OptionPane.Options.OK_CANCEL, OptionPane.Icons.WARNING).getSelectedIndex != 0)
+                       OptionPane.Options.OkCancel, OptionPane.Icons.Warning).getSelectedIndex != 0)
       throw new UserCancelException()
   }
 
@@ -154,8 +154,8 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
       .toOption
       .map(path => I18N.gui.getN("file.open.error.invalidmodel.withPath", path.toString))
       .getOrElse(I18N.gui.get("file.open.error.invalidmodel"))
-    new OptionPane(owner, I18N.gui.get("common.messages.error"), warningText, OptionPane.Options.OK,
-                   OptionPane.Icons.ERROR)
+    new OptionPane(owner, I18N.gui.get("common.messages.error"), warningText, OptionPane.Options.Ok,
+                   OptionPane.Icons.Error)
     throw new UserCancelException()
   }
 
@@ -165,7 +165,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
                                   List(I18N.gui.get("common.buttons.continue"),
                                        I18N.gui.get("file.open.warn.version.transitionGuide"),
                                        I18N.gui.get("common.buttons.cancel")),
-                                  OptionPane.Icons.WARNING).getSelectedIndex
+                                  OptionPane.Icons.Warning).getSelectedIndex
     response match {
       case 0 => true
       case 1 =>
@@ -210,14 +210,14 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
                      I18N.gui.getN("file.save.warn.savingInNewerVersion", version, Version.version),
                      List(I18N.gui.get("common.buttons.save"),
                           I18N.gui.get("common.buttons.cancel")),
-                     OptionPane.Icons.ERROR).getSelectedIndex == 0
+                     OptionPane.Icons.Error).getSelectedIndex == 0
     }
   }
 
   def warnInvalidFileFormat(format: String): Unit = {
     new OptionPane(owner, I18N.gui.get("common.messages.warning"),
-                   I18N.gui.getN("file.save.warn.invalidFormat", format), OptionPane.Options.OK,
-                   OptionPane.Icons.WARNING)
+                   I18N.gui.getN("file.save.warn.invalidFormat", format), OptionPane.Options.Ok,
+                   OptionPane.Icons.Warning)
   }
 }
 

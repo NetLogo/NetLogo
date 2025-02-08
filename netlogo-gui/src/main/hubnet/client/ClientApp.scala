@@ -143,8 +143,8 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
   def showExitMessage(title: String, message: String): Boolean = {
     EventQueue.mustBeEventDispatchThread()
-    new OptionPane(loginDialog, title, message, OptionPane.Options.OK_CANCEL,
-                   OptionPane.Icons.INFO).getSelectedIndex == 0
+    new OptionPane(loginDialog, title, message, OptionPane.Options.OkCancel,
+                   OptionPane.Icons.Info).getSelectedIndex == 0
   }
 
   def handleDisconnect(activityName: String, connected: Boolean, reason:String) {
@@ -152,8 +152,8 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     if (isLocal) this.dispose()
     else if (connected) {
       new OptionPane(this, I18N.gui.get("edit.hubnet.disconnected"),
-                     I18N.gui.getN("edit.hubnet.disconnected.message", activityName), OptionPane.Options.OK,
-                     OptionPane.Icons.INFO)
+                     I18N.gui.getN("edit.hubnet.disconnected.message", activityName), OptionPane.Options.Ok,
+                     OptionPane.Icons.Info)
       dispose()
       doLogin()
       ()
@@ -162,8 +162,8 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
   def handleLoginFailure(errorMessage: String) {
     EventQueue.mustBeEventDispatchThread()
-    new OptionPane(ClientApp.this, I18N.gui.get("edit.hubnet.loginFailed"), errorMessage, OptionPane.Options.OK,
-                   OptionPane.Icons.ERROR)
+    new OptionPane(ClientApp.this, I18N.gui.get("edit.hubnet.loginFailed"), errorMessage, OptionPane.Options.Ok,
+                   OptionPane.Icons.Error)
     loginDialog.setVisible(true)
   }
 

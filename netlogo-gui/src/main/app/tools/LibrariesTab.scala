@@ -353,7 +353,7 @@ class LibrariesTab( category:        String
     } catch {
       case ex: IOException =>
         new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui("downloadFailed", lib.downloadURL),
-                       OptionPane.Options.OK, OptionPane.Icons.ERROR)
+                       OptionPane.Options.Ok, OptionPane.Icons.Error)
     }
 
   private def containsLib(info: LibraryInfo, text: String): Boolean =

@@ -448,7 +448,7 @@ class App extends
       val loggerFactory     = (p) => new JsonFileLogger(p)
       LogManager.start(addListener, loggerFactory, finalLogDirectory, events, studentName, () =>
         new OptionPane(frame, I18N.gui.get("common.messages.warning"), I18N.gui.get("error.dialog.logDirectory"),
-                       OptionPane.Options.OK, OptionPane.Icons.WARNING))
+                       OptionPane.Options.Ok, OptionPane.Icons.Warning))
     }
 
   }
@@ -625,7 +625,7 @@ class App extends
           fileManager.newModel()
           new OptionPane(null, I18N.gui.get("file.open.error.unloadable.title"),
                          I18N.gui.getN("file.open.error.unloadable.message", commandLineURL),
-                         OptionPane.Options.OK_CANCEL, OptionPane.Icons.WARNING)
+                         OptionPane.Options.OkCancel, OptionPane.Icons.Warning)
       }
 
     } else if (prefs.get("loadLastOnStartup", "false").toBoolean) {
@@ -749,20 +749,21 @@ class App extends
     if (matches.isEmpty) commandLater("print \"no models matching \\\"" + name + "\\\" found\"")
     else {
       val fullName =
-        if (matches.size == 1) matches(0)
-        else {
+        if (matches.size == 1) {
+          Some(matches(0))
+        } else {
           new DropdownOptionPane(frame, I18N.gui.get("tools.magicModelMatcher"),
                                  I18N.gui.get("tools.magicModelMathcer.mustChoose"),
                                  matches.map(_.replaceAllLiterally(".nlogo3d", "")
                                               .replaceAllLiterally(".nlogo", "")).toList)
             .getSelectedChoice
         }
-      if (fullName != null) {
-        org.nlogo.workspace.ModelsLibrary.getModelPath(fullName).foreach { path =>
+      fullName.foreach(name => {
+        org.nlogo.workspace.ModelsLibrary.getModelPath(name).foreach { path =>
           val source = FileIO.fileToString(path)
           org.nlogo.awt.EventQueue.invokeLater(() => openFromSource(source, path, ModelType.Library))
         }
-      }
+      })
     }
   }
 
@@ -1045,8 +1046,8 @@ class App extends
     } catch {
       case ex: UserCancelException => org.nlogo.api.Exceptions.ignore(ex)
       case ex: java.io.IOException =>
-        new OptionPane(frame, I18N.gui.get("common.messages.error"), ex.getMessage, OptionPane.Options.OK,
-                       OptionPane.Icons.ERROR)
+        new OptionPane(frame, I18N.gui.get("common.messages.error"), ex.getMessage, OptionPane.Options.Ok,
+                       OptionPane.Icons.Error)
     }
   }
 

@@ -188,7 +188,7 @@ with ThemeSync {
       error(e.error)
       if(error() != null) {
         new OptionPane(workspace.getFrame, I18N.gui.get("common.messages.error"), error().getMessage,
-                       OptionPane.Options.OK, OptionPane.Icons.ERROR)
+                       OptionPane.Options.Ok, OptionPane.Icons.Error)
         setEnabled(true)
         editor.setText(get)
         lastTextBeforeUserChangedAnything = editor.getText()

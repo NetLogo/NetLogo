@@ -234,7 +234,7 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor,
           def run(): Unit = {
             new OptionPane(workspace.getFrame, I18N.gui("updatingPlotsWarningTitle"),
                            I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
-                           OptionPane.Options.OK, OptionPane.Icons.WARNING)
+                           OptionPane.Options.Ok, OptionPane.Icons.Warning)
           }
         })
       }

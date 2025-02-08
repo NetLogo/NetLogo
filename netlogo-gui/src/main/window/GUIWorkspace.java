@@ -323,8 +323,8 @@ public abstract class GUIWorkspace
   @Override
   public boolean warningMessage(String message) {
     return new OptionPane(getFrame(), I18N.guiJ().get("common.messages.warning"), message,
-                          OptionPane.Options$.MODULE$.OK_CANCEL(),
-                          OptionPane.Icons$.MODULE$.WARNING()).getSelectedIndex() == 0;
+                          OptionPane.Options$.MODULE$.OkCancel(),
+                          OptionPane.Icons$.MODULE$.Warning()).getSelectedIndex() == 0;
   }
 
   public void resizeView() {

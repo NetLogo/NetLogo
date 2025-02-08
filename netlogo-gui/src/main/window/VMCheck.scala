@@ -35,7 +35,7 @@ object VMCheck {
 
       if (new OptionPane(bogusFrame, I18N.gui.get("common.messages.warning"), I18N.gui.get("warn.dialog.badjvm"),
                         List(I18N.gui.get("common.buttons.quit"), I18N.gui.get("common.buttons.continue")),
-                        OptionPane.Icons.WARNING).getSelectedIndex == 0)
+                        OptionPane.Icons.Warning).getSelectedIndex == 0)
         System.exit(0)
     }
   }

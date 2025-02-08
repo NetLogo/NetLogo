@@ -69,8 +69,8 @@ class OpenRecentFileAction(modelEntry: ModelEntry, fileManager: FileManager, ind
       case ex: org.nlogo.awt.UserCancelException =>
         org.nlogo.api.Exceptions.ignore(ex)
       case ex: java.io.IOException => {
-        new OptionPane(source, I18N.gui.get("common.messages.error"), ex.getMessage, OptionPane.Options.YES_NO,
-                       OptionPane.Icons.ERROR)
+        new OptionPane(source, I18N.gui.get("common.messages.error"), ex.getMessage, OptionPane.Options.YesNo,
+                       OptionPane.Icons.Error)
       }
     }
   }

@@ -368,8 +368,8 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       var msg = ex.getMessage
       if (msg.startsWith("REPORT expected 1 input."))
         msg = I18N.gui.get("edit.input.invalid.message")
-      new OptionPane(frame, I18N.gui.getN("edit.input.invalid.title", inputType), msg, OptionPane.Options.OK,
-                     OptionPane.Icons.ERROR)
+      new OptionPane(frame, I18N.gui.getN("edit.input.invalid.title", inputType), msg, OptionPane.Options.Ok,
+                     OptionPane.Icons.Error)
     }
   }
 

@@ -10,7 +10,7 @@ import org.nlogo.theme.ThemeSync
 class LabeledComponent(text: String, component: JComponent with ThemeSync)
   extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
 
-  private lazy val label = new JLabel(text)
+  private val label = new JLabel(text)
 
   locally {
     val c = new GridBagConstraints
@@ -24,11 +24,11 @@ class LabeledComponent(text: String, component: JComponent with ThemeSync)
     c.insets = new Insets(0, 0, 0, 0)
 
     add(component, c)
+
+    syncTheme()
   }
 
-  syncTheme()
-
-  override def setForeground(color: Color) {
+  override def setForeground(color: Color): Unit = {
     label.setForeground(color)
   }
 

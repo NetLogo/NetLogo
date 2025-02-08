@@ -34,7 +34,7 @@ public class UserDialog
     c.ipadx = 10;
     c.ipady = 0;
     c.insets = new java.awt.Insets(2, 10, 5, 5);
-    List<String> brokenLines = org.nlogo.awt.LineBreaker.breakLines
+    List<String> brokenLines = org.nlogo.awt.LineBreaker.breakLinesJ
         (message,
             getFontMetrics(getFont()), DIALOG_WIDTH);
     for (Iterator<String> iter = brokenLines.iterator();

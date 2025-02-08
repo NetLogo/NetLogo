@@ -15,8 +15,6 @@ import org.nlogo.swing.Transparent
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.SingleErrorWidget
 
-import scala.collection.JavaConverters._
-
 class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 
   type WidgetModel = CoreTextBox
@@ -43,7 +41,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   override def isNote = true
 
   private def wrapText(): Unit = {
-    textLabel.setText(s"<html>${LineBreaker.breakLines(_text, getFontMetrics(textLabel.getFont), _width - 8).asScala
+    textLabel.setText(s"<html>${LineBreaker.breakLines(_text, getFontMetrics(textLabel.getFont), _width - 8)
                                            .mkString("<br>")}</html>")
     repaint()
   }

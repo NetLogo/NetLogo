@@ -77,8 +77,8 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
         shapesList.requestFocus()
       case None =>
         new OptionPane(this, I18N.gui.get("tools.shapesEditor.import"),
-                       I18N.gui.get("tools.shapesEditor.import.libraryError"), OptionPane.Options.OK,
-                       OptionPane.Icons.ERROR)
+                       I18N.gui.get("tools.shapesEditor.import.libraryError"), OptionPane.Options.Ok,
+                       OptionPane.Icons.Error)
     }
   }
 

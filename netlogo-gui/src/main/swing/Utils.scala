@@ -15,7 +15,7 @@ final object Utils {
 
   def iconScaled(path: String, width: Int, height: Int) =
     new ImageIcon(icon(path).getImage.getScaledInstance(width, height, Image.SCALE_SMOOTH))
-  
+
   def iconScaledWithColor(path: String, width: Int, height: Int, color: Color): ImageIcon = {
     val image = iconScaled(path, width, height)
     val buffered = new BufferedImage(image.getIconWidth, image.getIconHeight, BufferedImage.TYPE_INT_ARGB)
@@ -43,11 +43,11 @@ final object Utils {
     Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream(path))
 
   def alert(message: String, continueText: String): Unit = {
-    new OptionPane(null, I18N.gui.get("common.messages.notice"), message, List(continueText), OptionPane.Icons.INFO)
+    new OptionPane(null, I18N.gui.get("common.messages.notice"), message, List(continueText), OptionPane.Icons.Info)
   }
 
   def alert(title: String, message: String, details: String, continueText: String): Unit = {
-    new OptionPane(null, title, s"$message\n\n$details", List(continueText), OptionPane.Icons.INFO)
+    new OptionPane(null, title, s"$message\n\n$details", List(continueText), OptionPane.Icons.Info)
   }
 
   /// Esc key handling in dialogs

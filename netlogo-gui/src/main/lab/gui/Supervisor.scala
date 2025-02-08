@@ -325,7 +325,7 @@ class Supervisor(
   private def guiError(message: String) {
     if (runMode == Supervisor.GUI) {
       new OptionPane(workspace.asInstanceOf[GUIWorkspace].getFrame, I18N.gui("error.title"), message,
-                     OptionPane.Options.OK, OptionPane.Icons.ERROR)
+                     OptionPane.Options.Ok, OptionPane.Icons.Error)
     }
   }
 }

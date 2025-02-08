@@ -33,16 +33,16 @@ object BrowserLauncher {
         osSpecificBrowserRunner.getOrElse(browserNotFound()).apply(normalUri.toString)
     } catch {
       case ex: UnsupportedOperationException =>
-        new OptionPane(comp, I18N.gui.get("common.messages.error"), unableToOpenBrowserError, OptionPane.Options.OK,
-                       OptionPane.Icons.ERROR)
+        new OptionPane(comp, I18N.gui.get("common.messages.error"), unableToOpenBrowserError, OptionPane.Options.Ok,
+                       OptionPane.Icons.Error)
       case ex: BrowserNotFoundException =>
-        new OptionPane(comp, I18N.gui.get("common.messages.error"), ex.getLocalizedMessage, OptionPane.Options.OK,
-                       OptionPane.Icons.ERROR)
+        new OptionPane(comp, I18N.gui.get("common.messages.error"), ex.getLocalizedMessage, OptionPane.Options.Ok,
+                       OptionPane.Icons.Error)
       case ex: IOException =>
         new OptionPane(comp, I18N.gui.get("common.messages.error"),
                        s"""Unable to open a browser to: ${normalUri.toString}
                        ${if (normalUri.toString != uri.toString) { s"with original URI: ${uri.toString}" } else { "" }}
-                       Please report to bugs@ccl.northwestern.edu""", OptionPane.Options.OK, OptionPane.Icons.ERROR)
+                       Please report to bugs@ccl.northwestern.edu""", OptionPane.Options.Ok, OptionPane.Icons.Error)
     }
   }
 
@@ -90,7 +90,7 @@ object BrowserLauncher {
       case ue: URISyntaxException =>
         new OptionPane(comp, I18N.gui.get("common.messages.error"),
                        s"Unable to open a browser to: $s\n" + "Please report to bugs@ccl.northwestern.edu",
-                       OptionPane.Options.OK, OptionPane.Icons.ERROR)
+                       OptionPane.Options.Ok, OptionPane.Icons.Error)
       null
     }
   }

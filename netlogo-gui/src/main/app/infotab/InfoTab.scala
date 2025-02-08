@@ -203,7 +203,7 @@ class InfoTab(attachModelDir: String => String)
         if (new OptionPane(Hierarchy.getFrame(InfoTab.this), I18N.gui.get("common.messages.error"),
                            I18N.gui.get("tabs.info.invalidURL"),
                            List(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.help")),
-                           OptionPane.Icons.ERROR).getSelectedIndex == 1) // Help
+                           OptionPane.Icons.Error).getSelectedIndex == 1) // Help
           BrowserLauncher.openPath(this, baseDocPath, "links")
       }
       else BrowserLauncher.openURI(this, e.getURL.toURI)

@@ -145,8 +145,8 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
         .map(modelShapes)
         .map(drawableListFromModelShapes) match {
           case Failure(ex) =>
-            new OptionPane(this, I18N.gui.get("import"), I18N.gui.get("import.invalidError"), OptionPane.Options.OK,
-                           OptionPane.Icons.ERROR)
+            new OptionPane(this, I18N.gui.get("import"), I18N.gui.get("import.invalidError"), OptionPane.Options.Ok,
+                           OptionPane.Icons.Error)
           case Success(drawableList) =>
             if (drawableList.shapeList.isEmpty)
               importDialog.foreach(_.sendImportWarning(I18N.gui("import.error")))

@@ -24,7 +24,7 @@ abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputT
   add(label)
   add(typeCombo)
 
-  typeCombo.addItemListener(_ => multiline.setEnabled(selected.enableMultiline))
+  typeCombo.addItemListener(_ => multiline.setEnabled(selected.map(_.enableMultiline).getOrElse(false)))
 
   multiline.setSelected(originalOption.multiline)
   add(multiline)
@@ -39,7 +39,7 @@ abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputT
   }
 
   override def get = {
-    options.selectByName(selected.displayName)
+    options.selectByName(selected.map(_.displayName).getOrElse(""))
     options.chosenValue.multiline(multiline.isSelected)
     Some(options)
   }

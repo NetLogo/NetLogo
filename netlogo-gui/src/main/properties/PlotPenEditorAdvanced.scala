@@ -54,7 +54,7 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, 
       catch {
         case ex: NumberFormatException =>
           new OptionPane(Hierarchy.getWindow(this), I18N.gui.get("edit.plot.pen.invalidEntry"),
-                         I18N.gui.get("edit.plot.pen.invalidInterval"), OptionPane.Options.OK, OptionPane.Icons.ERROR)
+                         I18N.gui.get("edit.plot.pen.invalidInterval"), OptionPane.Options.Ok, OptionPane.Icons.Error)
           false
       }
     }

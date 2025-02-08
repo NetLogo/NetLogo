@@ -46,7 +46,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
         if (trimmed.isEmpty) {
           new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.get("resource.nameEmpty"),
-                          OptionPane.Options.OK, OptionPane.Icons.ERROR)
+                          OptionPane.Options.Ok, OptionPane.Icons.Error)
         }
 
         else {
@@ -61,7 +61,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
           else {
             new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.getN("resource.alreadyExists", trimmed),
-                            OptionPane.Options.OK, OptionPane.Icons.ERROR)
+                            OptionPane.Options.Ok, OptionPane.Icons.Error)
           }
         }
       }
@@ -99,7 +99,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
       if (trimmed.isEmpty) {
         new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.get("resource.nameEmpty"),
-                        OptionPane.Options.OK, OptionPane.Icons.ERROR)
+                        OptionPane.Options.Ok, OptionPane.Icons.Error)
       }
 
       else if (trimmed != resource.name) {
@@ -115,7 +115,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
           manager.addResource(resource)
 
           new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.getN("resource.alreadyExists", trimmed),
-                          OptionPane.Options.OK, OptionPane.Icons.ERROR)
+                          OptionPane.Options.Ok, OptionPane.Icons.Error)
         }
       }
     }

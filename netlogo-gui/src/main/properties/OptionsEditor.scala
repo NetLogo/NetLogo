@@ -19,7 +19,7 @@ abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]]) extends 
   private val originalOption: T = options.chosenValue
   combo.addItemListener(_ => changed())
   override def get = {
-    options.selectByName(combo.getSelectedItem)
+    options.selectByName(combo.getSelectedItem.getOrElse(""))
     Some(options)
   }
   override def set(value: Options[T]) {

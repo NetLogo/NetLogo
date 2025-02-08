@@ -87,7 +87,7 @@ class ProtocolEditable(protocol: LabProtocol,
     def complain(message: String) {
       if (!java.awt.GraphicsEnvironment.isHeadless) {
         new OptionPane(window, I18N.gui("invalid"), I18N.gui.getN("edit.behaviorSpace.invalidVarySpec", message),
-                       OptionPane.Options.OK, OptionPane.Icons.ERROR)
+                       OptionPane.Options.Ok, OptionPane.Icons.Error)
       }
     }
     return LabVariableParser.parseVariables(valueSets, repetitions, worldLock, compiler) match {

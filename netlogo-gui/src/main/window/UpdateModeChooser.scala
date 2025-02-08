@@ -14,10 +14,12 @@ class UpdateModeChooser(workspace: GUIWorkspace) extends ComboBox[String] {
   setItems(List(I18N.gui("dropdown.continuous"), I18N.gui("dropdown.onticks")))
 
   addItemListener(_ => {
-    if (getSelectedItem == I18N.gui("dropdown.continuous"))
-      workspace.updateMode(UpdateMode.Continuous)
-    else
-      workspace.updateMode(UpdateMode.TickBased)
+    getSelectedItem match {
+      case Some(text) if text == I18N.gui("dropdown.continuous") =>
+        workspace.updateMode(UpdateMode.Continuous)
+      case _ =>
+        workspace.updateMode(UpdateMode.TickBased)
+    }
   })
 
   def refreshSelection(): Unit = {

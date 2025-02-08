@@ -117,8 +117,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     if (duplicateNames.nonEmpty) {
       new OptionPane(this, I18N.gui.get("edit.plot.pen.invalidEntry"),
                      I18N.gui.getN("edit.plot.pen.duplicateNames",
-                                   duplicateNames.map(_._1.toUpperCase).mkString(", ")), OptionPane.Options.OK,
-                     OptionPane.Icons.ERROR)
+                                   duplicateNames.map(_._1.toUpperCase).mkString(", ")), OptionPane.Options.Ok,
+                     OptionPane.Icons.Error)
       None
     } else Some(table.getPlotPens)
   }

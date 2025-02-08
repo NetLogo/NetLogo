@@ -49,7 +49,7 @@ class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)]
   }
 
   def selectedNetwork: Option[(NetworkInterface, InetAddress)] =
-    networkChoices.get(networkSelection.getSelectedItem)
+    networkChoices.get(networkSelection.getSelectedItem.orNull)
 
     // does this work via some magic side effect? or can it just be removed? JC - 8/21/10
   private[gui] val buttonEnabler = new NonemptyTextFieldButtonEnabler(okButton, List(nameField))

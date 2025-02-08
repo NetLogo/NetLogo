@@ -155,7 +155,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         if (!value.isDefined && !editor.handlesOwnErrors)
           new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"),
                          I18N.gui.getN("edit.general.invalidValue", editor.accessor.displayName),
-                         OptionPane.Options.OK, OptionPane.Icons.ERROR)
+                         OptionPane.Options.Ok, OptionPane.Icons.Error)
         value.isDefined
       }
     }
@@ -203,8 +203,8 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
                 s"${displayName}: ${error}"
         }.mkString("\n", "\n", "")
       val invalidMessage = I18N.gui.getN("edit.general.invalidValues", allInvalidations)
-      new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"), invalidMessage, OptionPane.Options.OK,
-                     OptionPane.Icons.ERROR)
+      new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"), invalidMessage, OptionPane.Options.Ok,
+                     OptionPane.Icons.Error)
     }
     isValid
   }

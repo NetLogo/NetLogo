@@ -634,8 +634,8 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
         Option(e.getURL)
           .flatMap(u => Try(u.toURI).toOption) match {
             case None => new OptionPane(this, I18N.gui.get("common.messages.error"),
-                                        I18N.gui.get("modelsLibrary.invalidURL"), OptionPane.Options.OK,
-                                        OptionPane.Icons.ERROR)
+                                        I18N.gui.get("modelsLibrary.invalidURL"), OptionPane.Options.Ok,
+                                        OptionPane.Icons.Error)
             case Some(toOpen) => BrowserLauncher.openURI(this, toOpen)
           }
       }

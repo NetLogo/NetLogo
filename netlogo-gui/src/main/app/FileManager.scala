@@ -122,7 +122,7 @@ object FileManager {
                          I18N.gui.get("menu.file.import.hubNetClientInterface.prompt"),
                          List(I18N.gui.get("menu.file.import.hubNetClientInterface.fromInterface"),
                               I18N.gui.get("menu.file.import.hubNetClientInterface.fromClient"),
-                              I18N.gui.get("common.buttons.cancel")), OptionPane.Icons.QUESTION).getSelectedIndex
+                              I18N.gui.get("common.buttons.cancel")), OptionPane.Icons.Question).getSelectedIndex
 
       if (choice != 2) {
         ModalProgressTask.onUIThread(
@@ -158,8 +158,8 @@ object FileManager {
 
       if (includes.nonEmpty &&
         new OptionPane(parent, I18N.gui.get("common.messages.warning"),
-                       I18N.gui.get("menu.file.nlw.prompt.includesWarning"), OptionPane.Options.OK_CANCEL,
-                       OptionPane.Icons.WARNING).getSelectedIndex != 0)
+                       I18N.gui.get("menu.file.nlw.prompt.includesWarning"), OptionPane.Options.OkCancel,
+                       OptionPane.Icons.Warning).getSelectedIndex != 0)
         throw new UserCancelException()
 
       saver.save(modelString, exportFile.getName, includes)
@@ -398,7 +398,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
       saver.result match {
         case Some(Failure(e: Throwable)) =>
           new OptionPane(parent, I18N.gui.get("common.netlogo"), I18N.gui.getN("menu.file.save.error", e.getMessage),
-                         OptionPane.Options.OK, OptionPane.Icons.ERROR)
+                         OptionPane.Options.Ok, OptionPane.Icons.Error)
         case _ =>
       }
     }

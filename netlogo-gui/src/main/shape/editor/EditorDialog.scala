@@ -221,7 +221,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     def actionPerformed(e: ActionEvent): Unit = {
       if (originalShape.toString != getCurrentShape.toString &&
           new OptionPane(EditorDialog.this, I18N.gui("confirmCancel"), I18N.gui("confirmCancel.message"),
-                         OptionPane.Options.YES_NO, OptionPane.Icons.QUESTION).getSelectedIndex != 0)
+                         OptionPane.Options.YesNo, OptionPane.Icons.Question).getSelectedIndex != 0)
         return
 
       dispose()
@@ -505,7 +505,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
     // Make sure the shape has a name
     if (name.isEmpty) {
-      new OptionPane(this, I18N.gui("invalid"), I18N.gui("nameEmpty"), OptionPane.Options.OK, OptionPane.Icons.ERROR)
+      new OptionPane(this, I18N.gui("invalid"), I18N.gui("nameEmpty"), OptionPane.Options.Ok, OptionPane.Icons.Error)
 
       return
     }
@@ -513,8 +513,8 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     // If this is an attempt to overwrite a shape, prompt for
     // permission to do it
     if (container.exists(name) && name != originalShape.name &&
-        new OptionPane(this, I18N.gui("confirmOverwrite"), I18N.gui("nameConflict"), OptionPane.Options.YES_NO,
-                       OptionPane.Icons.QUESTION).getSelectedIndex != 0)
+        new OptionPane(this, I18N.gui("confirmOverwrite"), I18N.gui("nameConflict"), OptionPane.Options.YesNo,
+                       OptionPane.Icons.Question).getSelectedIndex != 0)
       return
 
     val newShape = shape

@@ -49,8 +49,8 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
       def actionPerformed(e: ActionEvent) {
         if (originalShape.toString != getCurrentShape.toString ||
             new OptionPane(LinkEditorDialog.this, I18N.gui.get("tools.shapesEditor.confirmCancel"),
-                          I18N.gui.get("tools.shapesEditor.confirmCancel.message"), OptionPane.Options.YES_NO,
-                          OptionPane.Icons.QUESTION).getSelectedIndex != 0)
+                          I18N.gui.get("tools.shapesEditor.confirmCancel.message"), OptionPane.Options.YesNo,
+                          OptionPane.Icons.Question).getSelectedIndex != 0)
           return
 
         dispose()
@@ -133,15 +133,15 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
 
     // Make sure the shape has a name
     if (nameStr.isEmpty) {
-      new OptionPane(this, I18N.gui("invalid"), I18N.gui("nameEmpty"), OptionPane.Options.OK, OptionPane.Icons.ERROR)
+      new OptionPane(this, I18N.gui("invalid"), I18N.gui("nameEmpty"), OptionPane.Options.Ok, OptionPane.Icons.Error)
 
       return
     }
 
     // If this is an attempt to overwrite a shape, prompt for permission to do it
     if (list.exists(nameStr) && nameStr != originalShape.name &&
-        new OptionPane(this, I18N.gui("confirmOverwrite"), I18N.gui("nameConflict"), OptionPane.Options.YES_NO,
-                       OptionPane.Icons.QUESTION).getSelectedIndex != 0)
+        new OptionPane(this, I18N.gui("confirmOverwrite"), I18N.gui("nameConflict"), OptionPane.Options.YesNo,
+                       OptionPane.Icons.Question).getSelectedIndex != 0)
       return
 
     shape.name = nameStr
@@ -149,8 +149,8 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
     Try(curviness.getText.toDouble) match {
       case Success(cv) => shape.curviness = cv
       case Failure(_) =>
-        new OptionPane(this, I18N.gui("invalid"), I18N.gui("invalidCurviness"), OptionPane.Options.OK,
-                       OptionPane.Icons.ERROR)
+        new OptionPane(this, I18N.gui("invalid"), I18N.gui("invalidCurviness"), OptionPane.Options.Ok,
+                       OptionPane.Icons.Error)
 
         return
     }

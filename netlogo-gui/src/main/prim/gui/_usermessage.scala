@@ -23,7 +23,7 @@ class _usermessage extends Command {
               gw.view.mouseDown(false)
               Boolean.box(new OptionPane(gw.getFrame, I18N.gui.get("common.messages.userMessage"), message,
                                          List(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.halt")),
-                                         OptionPane.Icons.INFO).getSelectedIndex == 1)
+                                         OptionPane.Icons.Info).getSelectedIndex == 1)
             }}).booleanValue
         if(canceled)
           throw new org.nlogo.nvm.HaltException(true)

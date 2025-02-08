@@ -63,9 +63,9 @@ with LoadModelEvent.Handler {
       EventQueue.mustBeEventDispatchThread()
       val options =
         if (fatalError)
-          OptionPane.Options.OK
+          OptionPane.Options.Ok
         else
-          OptionPane.Options.OK_CANCEL
+          OptionPane.Options.OkCancel
       val textArea = new TextArea(errorDetails) {
         setEditable(false)
       }
