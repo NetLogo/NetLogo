@@ -65,21 +65,21 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
   private val shadowPane = new ShadowPane
 
-  def enableShadow() {
+  def enableShadow(): Unit = {
     shadowPane.setVisible(true)
     shadowPane.setFull(false)
 
     revalidate()
   }
 
-  def enableFullShadow() {
+  def enableFullShadow(): Unit = {
     shadowPane.setVisible(true)
     shadowPane.setFull(true)
 
     revalidate()
   }
 
-  def disableShadow() {
+  def disableShadow(): Unit = {
     shadowPane.setVisible(false)
     shadowPane.setFull(false)
 
@@ -114,12 +114,12 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   addMouseMotionListener(new MouseMotionAdapter {})
 
   widget.addPopupListeners(new MouseAdapter {
-    override def mousePressed(e: MouseEvent) {
+    override def mousePressed(e: MouseEvent): Unit = {
       if (e.isPopupTrigger)
         doPopup(e)
     }
 
-    override def mouseReleased(e: MouseEvent) {
+    override def mouseReleased(e: MouseEvent): Unit = {
       if (e.isPopupTrigger)
         doPopup(e)
     }
@@ -134,7 +134,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   def isNew: Boolean =
     _isNew
 
-  def isNew(isNew: Boolean) {
+  def isNew(isNew: Boolean): Unit = {
     _isNew = isNew
   }
 
@@ -144,16 +144,14 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   def computeHorizontallyResizable: Boolean =
     widget.getMaximumSize == null || widget.getMaximumSize.width != widget.getMinimumSize.width
 
-  def widgetChanged() {
+  def widgetChanged(): Unit = {
     _verticallyResizable = computeVerticallyResizable
     horizontallyResizable = computeHorizontallyResizable
 
     if (_verticallyResizable) {
       topBar.handles(true)
       bottomBar.handles(true)
-    }
-
-    else {
+    } else {
       topBar.handles(false)
       bottomBar.handles(false)
     }
@@ -163,9 +161,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       bottomBar.cornerHandles(true)
       leftBar.handles(true)
       rightBar.handles(true)
-    }
-
-    else {
+    } else {
       topBar.cornerHandles(false)
       bottomBar.cornerHandles(false)
       leftBar.handles(false)
@@ -179,11 +175,11 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   def selected: Boolean =
     _selected
 
-  def selected(selected: Boolean) {
+  def selected(selected: Boolean): Unit = {
     this.selected(selected, false)
   }
 
-  def selected(selected: Boolean, temporary: Boolean) {
+  def selected(selected: Boolean, temporary: Boolean): Unit = {
     if (_selected != selected) {
       _selected = selected
 
@@ -191,35 +187,34 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         setBounds(getX - WidgetWrapper.BORDER_E, getY - WidgetWrapper.BORDER_N,
                   getWidth + WidgetWrapper.BORDER_E + WidgetWrapper.BORDER_W,
                   getHeight + WidgetWrapper.BORDER_N + WidgetWrapper.BORDER_S)
-      }
-
-      else {
+      } else {
         isForeground(false)
         setBounds(getX + WidgetWrapper.BORDER_E, getY + WidgetWrapper.BORDER_N,
                   getWidth - WidgetWrapper.BORDER_E - WidgetWrapper.BORDER_W,
                   getHeight - WidgetWrapper.BORDER_N - WidgetWrapper.BORDER_S)
       }
 
-      if (selected || interfacePanel.getInteractMode == InteractMode.INTERACT)
+      if (selected || interfacePanel.getInteractMode == InteractMode.INTERACT) {
         disableShadow()
-      else
+      } else {
         enableShadow()
+      }
 
       if (!temporary)
         new WidgetSelectedEvent(widget, selected).raise(this)
     }
   }
 
-  private def revalidateInterfacePanel() {
+  private def revalidateInterfacePanel(): Unit = {
     if (interfacePanel != null)
       interfacePanel.revalidate()
   }
 
-  override def setBounds(r: Rectangle) {
+  override def setBounds(r: Rectangle): Unit = {
     setBounds(r.x, r.y, r.width, r.height)
   }
 
-  override def setBounds(x: Int, y: Int, width: Int, height: Int) {
+  override def setBounds(x: Int, y: Int, width: Int, height: Int): Unit = {
     val sizeChanged = getWidth != width || getHeight != height
 
     super.setBounds(x, y, width, height)
@@ -233,7 +228,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   def isForeground: Boolean =
     _isForeground
 
-  def isForeground(isForeground: Boolean) {
+  def isForeground(isForeground: Boolean): Unit = {
     _isForeground = isForeground
 
     if (isForeground) {
@@ -246,9 +241,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       leftBar.setForeground(Color.BLACK)
       rightBar.setForeground(Color.BLACK)
       bottomBar.setForeground(Color.BLACK)
-    }
-
-    else {
+    } else {
       topBar.setBackground(WidgetWrapper.NON_FOREGROUND_BACKGROUND)
       leftBar.setBackground(WidgetWrapper.NON_FOREGROUND_BACKGROUND)
       rightBar.setBackground(WidgetWrapper.NON_FOREGROUND_BACKGROUND)
@@ -266,7 +259,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     bottomBar.repaint()
   }
 
-  def foreground() {
+  def foreground(): Unit = {
     if (!isForeground) {
       isForeground(true)
 
@@ -286,26 +279,28 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         case _ => dim
       }
 
-    if (selected)
+    if (selected) {
       new Dimension(newDim.width + WidgetWrapper.BORDER_E + WidgetWrapper.BORDER_W,
                     newDim.height + WidgetWrapper.BORDER_N + WidgetWrapper.BORDER_S)
-    else
+    } else {
       newDim
+    }
   }
 
   override def getPreferredSize: Dimension = {
     addWrapperBorder(
-      if (widget.isNote)
+      if (widget.isNote) {
         widget.getPreferredSize
-      else
+      } else {
         widget.getUnzoomedPreferredSize
+      }
     )
   }
 
   override def getMaximumSize: Dimension =
     addWrapperBorder(widget.getMaximumSize)
 
-  override def doLayout() {
+  override def doLayout(): Unit = {
     if (selected) {
       topBar.setVisible(true)
       leftBar.setVisible(true)
@@ -322,9 +317,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       widget.setBounds(WidgetWrapper.BORDER_E, WidgetWrapper.BORDER_N,
                        getWidth - WidgetWrapper.BORDER_E - WidgetWrapper.BORDER_W,
                        getHeight - WidgetWrapper.BORDER_N - WidgetWrapper.BORDER_S)
-    }
-
-    else {
+    } else {
       topBar.setVisible(false)
       leftBar.setVisible(false)
       rightBar.setVisible(false)
@@ -350,46 +343,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   def widgetY: Int =
     getY + widget.getY
 
-  /*
-  private def mouseMode_=(mouseMode: MouseMode) {
-    it would be nice if it were this easy, but it's not, because setCursor only sets
-    the cursor for when the mouse is actually over the component... at least in Java
-    1.1, there's no way to globally set the cursor, which is what we want - ST 1/20/02
-    switch( mouseMode )
-    {
-    case MOUSE_IDLE :
-    case MOUSE_DRAG :
-    setCursor( java.awt.Cursor.getDefaultCursor() ) ;
-    break ;
-    case MouseMode.NE :
-    setCursor( java.awt.Cursor.getPredefinedCursor( java.awt.Cursor.NE_RESIZE_CURSOR ) ) ;
-    break ;
-    case MouseMode.NW :
-    setCursor( java.awt.Cursor.getPredefinedCursor( java.awt.Cursor.NW_RESIZE_CURSOR ) ) ;
-    break ;
-    case MouseMode.SE :
-    setCursor( java.awt.Cursor.getPredefinedCursor( java.awt.Cursor.SE_RESIZE_CURSOR ) ) ;
-    break ;
-    case MouseMode.SW :
-    setCursor( java.awt.Cursor.getPredefinedCursor( java.awt.Cursor.SW_RESIZE_CURSOR ) ) ;
-    break ;
-    case MouseMode.S :
-    setCursor( java.awt.Cursor.getPredefinedCursor( java.awt.Cursor.S_RESIZE_CURSOR ) ) ;
-    break ;
-    case MouseMode.W :
-    setCursor( java.awt.Cursor.getPredefinedCursor( java.awt.Cursor.W_RESIZE_CURSOR ) ) ;
-    break ;
-    case MouseMode.E :
-    setCursor( java.awt.Cursor.getPredefinedCursor( java.awt.Cursor.E_RESIZE_CURSOR ) ) ;
-    break ;
-    case MouseMode.N :
-    setCursor( java.awt.Cursor.getPredefinedCursor( java.awt.Cursor.N_RESIZE_CURSOR ) ) ;
-    break ;
-    }
-  }
-  */
-
-  def doResize(x: Int, y: Int) {
+  def doResize(x: Int, y: Int): Unit = {
     /* x and y represent the distance from the original click and the dragged cursor position,
         so the widget can resize based on the position of the cursor. Interestingly, the
         x and y can be negative since the difference is calculated from the coordinates.
@@ -458,18 +412,19 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   }
 
   def gridSnap: Int = {
-    if (interfacePanel.workspace.snapOn)
+    if (interfacePanel.workspace.snapOn) {
       WidgetPanel.GridSnap
-    else
+    } else {
       1
+    }
   }
 
-  def mouseMoved(e: MouseEvent) {}
-  def mouseClicked(e: MouseEvent) {}
-  def mouseEntered(e: MouseEvent) {}
-  def mouseExited(e: MouseEvent) {}
+  def mouseMoved(e: MouseEvent): Unit = {}
+  def mouseClicked(e: MouseEvent): Unit = {}
+  def mouseEntered(e: MouseEvent): Unit = {}
+  def mouseExited(e: MouseEvent): Unit = {}
 
-  def mousePressed(e: MouseEvent) {
+  def mousePressed(e: MouseEvent): Unit = {
     if (e.isPopupTrigger && mouseMode != MouseMode.DRAG) {
       doPopup(e)
 
@@ -498,104 +453,103 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     mouseMode = MouseMode.DRAG
 
     if (x < WidgetWrapper.BORDER_W) {
-      if (_verticallyResizable && y < WidgetWrapper.BORDER_N)
+      if (_verticallyResizable && y < WidgetWrapper.BORDER_N) {
         mouseMode = MouseMode.NW
-      else if (_verticallyResizable && y > getHeight - WidgetWrapper.BORDER_S)
+      } else if (_verticallyResizable && y > getHeight - WidgetWrapper.BORDER_S) {
         mouseMode = MouseMode.SW
-      else if (y <= WidgetWrapper.BORDER_N + (getHeight - WidgetWrapper.BORDER_S - WidgetWrapper.BORDER_N -
+      } else if (y <= WidgetWrapper.BORDER_N + (getHeight - WidgetWrapper.BORDER_S - WidgetWrapper.BORDER_N -
                                               WidgetWrapper.HANDLE_WIDTH) / 2 + WidgetWrapper.HANDLE_WIDTH &&
                y >= WidgetWrapper.BORDER_N + (getHeight - WidgetWrapper.BORDER_S - WidgetWrapper.BORDER_N -
-                                              WidgetWrapper.HANDLE_WIDTH) / 2)
+                                              WidgetWrapper.HANDLE_WIDTH) / 2) {
         mouseMode = MouseMode.W
-    }
-
-    else if (x > getWidth - WidgetWrapper.BORDER_E) {
-      if (_verticallyResizable && y < WidgetWrapper.BORDER_N)
+      }
+    } else if (x > getWidth - WidgetWrapper.BORDER_E) {
+      if (_verticallyResizable && y < WidgetWrapper.BORDER_N) {
         mouseMode = MouseMode.NE
-      else if (_verticallyResizable && y > getHeight - WidgetWrapper.BORDER_S)
+      } else if (_verticallyResizable && y > getHeight - WidgetWrapper.BORDER_S) {
         mouseMode = MouseMode.SE
-      else if (y <= WidgetWrapper.BORDER_N + (getHeight - WidgetWrapper.BORDER_S - WidgetWrapper.BORDER_N -
+      } else if (y <= WidgetWrapper.BORDER_N + (getHeight - WidgetWrapper.BORDER_S - WidgetWrapper.BORDER_N -
                                               WidgetWrapper.HANDLE_WIDTH) / 2 + WidgetWrapper.HANDLE_WIDTH &&
                y >= WidgetWrapper.BORDER_N + (getHeight - WidgetWrapper.BORDER_S - WidgetWrapper.BORDER_N -
-                                              WidgetWrapper.HANDLE_WIDTH) / 2)
+                                              WidgetWrapper.HANDLE_WIDTH) / 2) {
         mouseMode = MouseMode.E
-    }
-
-    else if (_verticallyResizable && y > getHeight - WidgetWrapper.BORDER_S) {
+      }
+    } else if (_verticallyResizable && y > getHeight - WidgetWrapper.BORDER_S) {
       if (x <= WidgetWrapper.BORDER_W + (getWidth - WidgetWrapper.BORDER_E - WidgetWrapper.BORDER_W +
                                          WidgetWrapper.HANDLE_WIDTH) / 2 &&
           x >= WidgetWrapper.BORDER_W + (getWidth - WidgetWrapper.BORDER_E - WidgetWrapper.BORDER_W -
-                                         WidgetWrapper.HANDLE_WIDTH) / 2)
+                                         WidgetWrapper.HANDLE_WIDTH) / 2) {
         mouseMode = MouseMode.S
-    }
-
-    else if (_verticallyResizable && y < WidgetWrapper.BORDER_N &&
+      }
+    } else if (_verticallyResizable && y < WidgetWrapper.BORDER_N &&
              x <= WidgetWrapper.BORDER_W + (getWidth - WidgetWrapper.BORDER_E - WidgetWrapper.BORDER_W +
                                             WidgetWrapper.HANDLE_WIDTH) / 2 &&
              x >= WidgetWrapper.BORDER_W + (getWidth - WidgetWrapper.BORDER_E - WidgetWrapper.BORDER_W -
-                                            WidgetWrapper.HANDLE_WIDTH) / 2)
+                                            WidgetWrapper.HANDLE_WIDTH) / 2) {
       mouseMode = MouseMode.N
+    }
 
-    if (mouseMode == MouseMode.DRAG)
+    if (mouseMode == MouseMode.DRAG) {
       interfacePanel.aboutToDragSelectedWidgets(startPressX, startPressY)
-    else
+    } else {
       aboutToDrag(startPressX, startPressY)
+    }
   }
 
-  def aboutToDrag(startX: Int, startY: Int) {
+  def aboutToDrag(startX: Int, startY: Int): Unit = {
     startPressX = startX
     startPressY = startY
     selected(false, true) // true = change is temporary, don't raise events
     originalBounds = getBounds()
   }
 
-  def mouseDragged(e: MouseEvent) {
+  def mouseDragged(e: MouseEvent): Unit = {
     val p = Coordinates.convertPointToScreen(e.getPoint, this)
 
     if (mouseMode == MouseMode.DRAG) {
       if ((e.getModifiersEx & InputEvent.SHIFT_DOWN_MASK) == 0) {
         constrainToHorizontal = false
         constrainToVertical = false
-      }
-
-      else {
+      } else {
         if (!constrainToHorizontal && !constrainToVertical &&
-            (p.x - startPressX).abs > (p.y - startPressY).abs)
+            (p.x - startPressX).abs > (p.y - startPressY).abs) {
           constrainToHorizontal = true
-        else
+        } else {
           constrainToVertical = true
+        }
 
-        if (constrainToHorizontal)
+        if (constrainToHorizontal) {
           p.y = startPressY
-        else if (constrainToVertical)
+        } else if (constrainToVertical) {
           p.x = startPressX
+        }
       }
 
       interfacePanel.dragSelectedWidgets(p.x - startPressX, p.y - startPressY)
-    }
-
-    else if (mouseMode != MouseMode.IDLE)
+    } else if (mouseMode != MouseMode.IDLE) {
       doResize(p.x - startPressX, p.y - startPressY)
+    }
   }
 
-  def doDrag(x: Int, y: Int) {
+  def doDrag(x: Int, y: Int): Unit = {
     setLocation(x + originalBounds.x, y + originalBounds.y)
   }
 
-  def mouseReleased(e: MouseEvent) {
-    if (e.isPopupTrigger && mouseMode != MouseMode.DRAG)
+  def mouseReleased(e: MouseEvent): Unit = {
+    if (e.isPopupTrigger && mouseMode != MouseMode.DRAG) {
       doPopup(e)
-    else if (Mouse.hasButton1(e)) {
-      if (mouseMode == MouseMode.DRAG)
+    } else if (Mouse.hasButton1(e)) {
+      if (mouseMode == MouseMode.DRAG) {
         WidgetActions.moveSelectedWidgets(interfacePanel)
-      else if (mouseMode != MouseMode.IDLE)
+      } else if (mouseMode != MouseMode.IDLE) {
         WidgetActions.resizeWidget(this)
+      }
 
       mouseMode = MouseMode.IDLE
     }
   }
 
-  def doDrop() {
+  def doDrop(): Unit = {
     selected(true, true) // 2nd true = change was temporary
 
     new DirtyEvent(None).raise(this)
@@ -603,7 +557,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     getParent.asInstanceOf[WidgetPanel].zoomer.updateZoomInfo(widget)
   }
 
-  private def enforceMinimumSize(r: Rectangle) {
+  private def enforceMinimumSize(r: Rectangle): Unit = {
     if (widget != null) {
       var minWidgetSize = widget.getMinimumSize
 
@@ -683,7 +637,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     }
   }
 
-  private def enforceMaximumSize(r: Rectangle) {
+  private def enforceMaximumSize(r: Rectangle): Unit = {
     if (widget != null) {
       val maxWidgetSize = widget.getMaximumSize
 
@@ -763,7 +717,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     }
   }
 
-  private def enforceGridSnapSize(r: Rectangle) {
+  private def enforceGridSnapSize(r: Rectangle): Unit = {
     if (widget != null) {
       val newWidth = (r.width / WidgetPanel.GridSnap) * WidgetPanel.GridSnap
       val newHeight = (r.height / WidgetPanel.GridSnap) * WidgetPanel.GridSnap
@@ -808,21 +762,20 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     }
   }
 
-  def widgetResized() {
+  def widgetResized(): Unit = {
     super.setBounds(
       if (selected) {
         new Rectangle(getX, getY, widget.getWidth + WidgetWrapper.BORDER_E + WidgetWrapper.BORDER_W,
                       widget.getHeight + WidgetWrapper.BORDER_N + WidgetWrapper.BORDER_S)
-      }
-
-      else
+      } else {
         new Rectangle(getX, getY, widget.getWidth, widget.getHeight)
+      }
     )
 
     revalidateInterfacePanel()
   }
 
-  def handle(e: WidgetForegroundedEvent) {
+  def handle(e: WidgetForegroundedEvent): Unit = {
     if (e.widget != widget)
       isForeground(false)
   }
@@ -831,33 +784,36 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   // return what our location would be if we *weren't* selected... this
   // is needed for the zooming code in InterfacePanel
   def getUnselectedLocation: Point = {
-    if (selected)
+    if (selected) {
       new Point(getX + WidgetWrapper.BORDER_E, getY + WidgetWrapper.BORDER_N)
-    else
+    } else {
       getLocation
+    }
   }
 
   def getUnselectedBounds: Rectangle = {
-    if (selected)
+    if (selected) {
       new Rectangle(getX + WidgetWrapper.BORDER_E, getY + WidgetWrapper.BORDER_N,
                     getWidth - WidgetWrapper.BORDER_E - WidgetWrapper.BORDER_W,
                     getHeight - WidgetWrapper.BORDER_N - WidgetWrapper.BORDER_S)
-    else
+    } else {
       getBounds
+    }
   }
 
   def getSelectedBounds: Rectangle = {
-    if (selected)
+    if (selected) {
       getBounds
-    else
+    } else {
       new Rectangle(getX - WidgetWrapper.BORDER_W, getY - WidgetWrapper.BORDER_N,
                     getWidth + WidgetWrapper.BORDER_W + WidgetWrapper.BORDER_E,
                     getHeight + WidgetWrapper.BORDER_N + WidgetWrapper.BORDER_S)
+    }
   }
 
   ///
 
-  private def doPopup(e: MouseEvent) {
+  private def doPopup(e: MouseEvent): Unit = {
     if (interfacePanel != null) {
       val menu = new WrappingPopupMenu
 
@@ -865,10 +821,11 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
       if (menu.getSubElements.size > 0) {
         val point =
-          if (getMousePosition() != null)
+          if (getMousePosition() != null) {
             getMousePosition()
-          else
+          } else {
             e.getPoint
+          }
 
         menu.show(this, point.x, point.y)
       }
@@ -877,10 +834,10 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     }
   }
 
-  private def populateContextMenu(menu: PopupMenu, p: Point) {
+  private def populateContextMenu(menu: PopupMenu, p: Point): Unit = {
     if (widget.getEditable.isInstanceOf[Editable] && !interfacePanel.multiSelected) {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.edit")) {
-        def actionPerformed(e: ActionEvent) {
+        def actionPerformed(e: ActionEvent): Unit = {
           selected(true)
           foreground()
           new EditWidgetEvent(null).raise(WidgetWrapper.this)
@@ -890,7 +847,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
     if (selected) {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deselect")) {
-        def actionPerformed(e: ActionEvent) {
+        def actionPerformed(e: ActionEvent): Unit = {
           interfacePanel.setInteractMode(InteractMode.SELECT)
           selected(false)
           interfacePanel.setForegroundWrapper()
@@ -901,37 +858,37 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         menu.addSeparator()
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft")) {
-          def actionPerformed(e: ActionEvent) {
+          def actionPerformed(e: ActionEvent): Unit = {
             interfacePanel.alignLeft()
           }
         }))
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterHorizontal")) {
-          def actionPerformed(e: ActionEvent) {
+          def actionPerformed(e: ActionEvent): Unit = {
             interfacePanel.alignCenterHorizontal()
           }
         }))
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight")) {
-          def actionPerformed(e: ActionEvent) {
+          def actionPerformed(e: ActionEvent): Unit = {
             interfacePanel.alignRight()
           }
         }))
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop")) {
-          def actionPerformed(e: ActionEvent) {
+          def actionPerformed(e: ActionEvent): Unit = {
             interfacePanel.alignTop()
           }
         }))
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterVertical")) {
-          def actionPerformed(e: ActionEvent) {
+          def actionPerformed(e: ActionEvent): Unit = {
             interfacePanel.alignCenterVertical()
           }
         }))
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom")) {
-          def actionPerformed(e: ActionEvent) {
+          def actionPerformed(e: ActionEvent): Unit = {
             interfacePanel.alignBottom()
           }
         }))
@@ -939,13 +896,13 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         menu.addSeparator()
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.distributeHorizontal")) {
-          def actionPerformed(e: ActionEvent) {
+          def actionPerformed(e: ActionEvent): Unit = {
             interfacePanel.distributeHorizontal()
           }
         }))
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.distributeVertical")) {
-          def actionPerformed(e: ActionEvent) {
+          def actionPerformed(e: ActionEvent): Unit = {
             interfacePanel.distributeVertical()
           }
         }))
@@ -953,22 +910,20 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         menu.addSeparator()
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchLeft")) {
-          def actionPerformed(e: ActionEvent) {
+          def actionPerformed(e: ActionEvent): Unit = {
             interfacePanel.stretchLeft()
           }
         }))
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchRight")) {
-          def actionPerformed(e: ActionEvent) {
+          def actionPerformed(e: ActionEvent): Unit = {
             interfacePanel.stretchRight()
           }
         }))
       }
-    }
-
-    else {
+    } else {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.select")) {
-        def actionPerformed(e: ActionEvent) {
+        def actionPerformed(e: ActionEvent): Unit = {
           interfacePanel.setInteractMode(InteractMode.SELECT)
           selected(true)
           foreground()
@@ -980,17 +935,15 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       menu.addSeparator()
 
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deleteSelected")) {
-        def actionPerformed(e: ActionEvent) {
+        def actionPerformed(e: ActionEvent): Unit = {
           interfacePanel.deleteSelectedWidgets()
         }
       }))
-    }
-
-    else if (widget.deleteable) {
+    } else if (widget.deleteable) {
       menu.addSeparator()
 
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.delete")) {
-        def actionPerformed(e: ActionEvent) {
+        def actionPerformed(e: ActionEvent): Unit = {
           WidgetActions.removeWidget(interfacePanel, WidgetWrapper.this)
         }
       }))
@@ -1003,7 +956,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
       if (widget.exportable) {
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.export")) {
-          def actionPerformed(e: ActionEvent) {
+          def actionPerformed(e: ActionEvent): Unit = {
             new ExportWidgetEvent(widget).raise(WidgetWrapper.this)
           }
         }))
@@ -1024,13 +977,13 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     setBorderColor(InterfaceColors.TRANSPARENT)
     setVisible(false)
 
-    override def paintComponent(g: Graphics) {
+    override def paintComponent(g: Graphics): Unit = {
       setDiameter(12 * widget.getZoomFactor)
 
       super.paintComponent(g)
     }
 
-    def setFull(full: Boolean) {
+    def setFull(full: Boolean): Unit = {
       this.full = full
 
       syncTheme()
@@ -1038,17 +991,17 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
     def syncTheme() {
       if (full) {
-        if (widget.isNote)
+        if (widget.isNote) {
           setBackgroundColor(InterfaceColors.WIDGET_PREVIEW_COVER_NOTE)
-        else
+        } else {
           setBackgroundColor(InterfaceColors.WIDGET_PREVIEW_COVER)
-      }
-
-      else {
-        if (widget.isNote)
+        }
+      } else {
+        if (widget.isNote) {
           setBackgroundColor(InterfaceColors.WIDGET_INTERACT_COVER_NOTE)
-        else
+        } else {
           setBackgroundColor(InterfaceColors.WIDGET_INTERACT_COVER)
+        }
       }
     }
   }
