@@ -19,7 +19,7 @@ class CheckBox(text: String = "") extends JCheckBox(text) with HoverDecoration w
     this(text)
 
     setAction(new AbstractAction(text) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         function()
       }
     })
@@ -29,27 +29,27 @@ class CheckBox(text: String = "") extends JCheckBox(text) with HoverDecoration w
     def getIconWidth: Int = 14
     def getIconHeight: Int = 14
 
-    def paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+    def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
       val g2d = Utils.initGraphics2D(g)
 
       if (isSelected) {
-        if (isHover && isEnabled)
+        if (isHover && isEnabled) {
           g2d.setColor(InterfaceColors.CHECKBOX_BACKGROUND_SELECTED_HOVER)
-        else
+        } else {
           g2d.setColor(InterfaceColors.CHECKBOX_BACKGROUND_SELECTED)
+        }
 
         g2d.fillRoundRect(x, y, 14, 14, 4, 4)
 
         g2d.setColor(InterfaceColors.CHECKBOX_CHECK)
         g2d.drawLine(x + 3, y + 7, x + 5, y + 10)
         g2d.drawLine(x + 5, y + 10, x + 10, y + 3)
-      }
-
-      else {
-        if (isHover && isEnabled)
+      } else {
+        if (isHover && isEnabled) {
           g2d.setColor(InterfaceColors.CHECKBOX_BACKGROUND_UNSELECTED_HOVER)
-        else
+        } else {
           g2d.setColor(InterfaceColors.CHECKBOX_BACKGROUND_UNSELECTED)
+        }
 
         g2d.fillRoundRect(x, y, 14, 14, 4, 4)
 
