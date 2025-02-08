@@ -110,12 +110,14 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, 
     c.gridy = 2
     c.gridwidth = 2
     c.insets = new Insets(0, 6, 6, 6)
-    
+
     add(showPenInLegend, c)
 
     c.gridy = 3
 
     runtimeErrorPanel.foreach(panel => {
+      panel.syncTheme()
+
       add(panel, c)
 
       c.gridy = 4
