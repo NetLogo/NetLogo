@@ -81,19 +81,19 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   interactButton.setSelected(true)
 
   class InteractAction extends AbstractAction {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       wPanel.setInteractMode(InteractMode.INTERACT)
     }
   }
 
   class SelectAction extends AbstractAction {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       wPanel.setInteractMode(InteractMode.SELECT)
     }
   }
 
   class EditAction extends AbstractAction {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       if (editButton.isSelected) {
         new WindowEvents.EditWidgetEvent(null).raise(InterfaceWidgetControls.this)
 
@@ -106,7 +106,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   }
 
   class DeleteAction extends AbstractAction {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       if (deleteButton.isSelected) {
         wPanel.deleteSelectedWidgets()
         wPanel.setInteractMode(InteractMode.DELETE)
@@ -119,14 +119,14 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
   private var editTarget: Option[Editable] = None
 
-  def handle(e: WindowEvents.EditWidgetEvent) {
+  def handle(e: WindowEvents.EditWidgetEvent): Unit = {
     // this is to support the "Edit..." button in the view control strip - ST 7/18/03
     val targetOption = Option(e.widget).orElse {
       if (!editButton.isEnabled) return
       editTarget
     }.filter(wPanel.contains)
-    for(target <- targetOption) {
-      def suppress(b: Boolean) {
+    for (target <- targetOption) {
+      def suppress(b: Boolean): Unit = {
         target match {
           case w: JobWidget => w.suppressRecompiles(b)
           case _ =>
@@ -155,7 +155,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 18, 18, InterfaceColors.TOOLBAR_IMAGE))
   }
 
-  def handle(e: WindowEvents.WidgetRemovedEvent) {
+  def handle(e: WindowEvents.WidgetRemovedEvent): Unit = {
     val r = e.widget
     if(selectedObjects.contains(r)) {
       if(r.isInstanceOf[Editable] && editTarget.exists(_ == r.asInstanceOf[Editable]))
@@ -164,7 +164,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
   }
 
-  private def updateActions(widget: Widget) {
+  private def updateActions(widget: Widget): Unit = {
     if (wPanel.getWrapper(widget).selected)
       selectedObjects += widget
     else
@@ -173,26 +173,26 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     updateTarget(widget)
   }
 
-  private def updateTarget(widget: Widget) {
+  private def updateTarget(widget: Widget): Unit = {
     if (selectedObjects.size == 1)
       editTarget = Some(widget.getEditable).collect { case editable: Editable => editable }
     else
       editTarget = None
   }
 
-  def handle(e: WindowEvents.WidgetAddedEvent) {
+  def handle(e: WindowEvents.WidgetAddedEvent): Unit = {
     updateActions(e.widget.asInstanceOf[Widget])
   }
 
-  final def handle(e: AppEvents.WidgetSelectedEvent) {
+  final def handle(e: AppEvents.WidgetSelectedEvent): Unit = {
     updateActions(e.widget)
   }
 
-  def handle(e: WindowEvents.WidgetForegroundedEvent) {
+  def handle(e: WindowEvents.WidgetForegroundedEvent): Unit = {
     updateTarget(e.widget)
   }
 
-  def handle(e: AppEvents.InterfaceModeEvent) {
+  def handle(e: AppEvents.InterfaceModeEvent): Unit = {
     e.mode match {
       case InteractMode.SELECT =>
         selectButton.setSelected(true)
@@ -226,7 +226,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
     private val actions =
       WidgetInfos.map(spec => new MenuItem(new AbstractAction(spec.displayName, spec.icon) {
-        def actionPerformed(e: ActionEvent) {
+        def actionPerformed(e: ActionEvent): Unit = {
           chosenItem = spec.displayName
 
           wPanel.createShadowWidget(widgetMenu.getSelectedWidget)
@@ -251,7 +251,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     popup.add(actions(8))
 
     addMouseListener(new MouseAdapter {
-      override def mousePressed(e: MouseEvent) {
+      override def mousePressed(e: MouseEvent): Unit = {
         actions.foreach(action => action.setEnabled(wPanel.canAddWidget(action.getText)))
 
         popup.show(WidgetMenu.this, 0, getHeight)
@@ -289,67 +289,67 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
 
     private val leftAction = new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft")) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         wPanel.alignLeft()
       }
     })
 
     private val centerHorizontalAction = new MenuItem(
       new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterHorizontal")) {
-        def actionPerformed(e: ActionEvent) {
+        def actionPerformed(e: ActionEvent): Unit = {
           wPanel.alignCenterHorizontal()
         }
       })
 
     private val rightAction = new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight")) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         wPanel.alignRight()
       }
     })
 
     private val topAction = new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop")) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         wPanel.alignTop()
       }
     })
 
     private val centerVerticalAction = new MenuItem(
       new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterVertical")) {
-        def actionPerformed(e: ActionEvent) {
+        def actionPerformed(e: ActionEvent): Unit = {
           wPanel.alignCenterVertical()
         }
       })
 
     private val bottomAction = new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom")) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         wPanel.alignBottom()
       }
     })
 
     private val distributeHorizontalAction = new MenuItem(
       new AbstractAction(I18N.gui.get("tabs.run.widget.distributeHorizontal")) {
-        def actionPerformed(e: ActionEvent) {
+        def actionPerformed(e: ActionEvent): Unit = {
           wPanel.distributeHorizontal()
         }
       })
 
     private val distributeVerticalAction = new MenuItem(
       new AbstractAction(I18N.gui.get("tabs.run.widget.distributeVertical")) {
-        def actionPerformed(e: ActionEvent) {
+        def actionPerformed(e: ActionEvent): Unit = {
           wPanel.distributeVertical()
         }
       })
 
     private val stretchLeftAction = new MenuItem(
       new AbstractAction(I18N.gui.get("tabs.run.widget.stretchLeft")) {
-        def actionPerformed(e: ActionEvent) {
+        def actionPerformed(e: ActionEvent): Unit = {
           wPanel.stretchLeft()
         }
       })
 
     private val stretchRightAction = new MenuItem(
       new AbstractAction(I18N.gui.get("tabs.run.widget.stretchRight")) {
-        def actionPerformed(e: ActionEvent) {
+        def actionPerformed(e: ActionEvent): Unit = {
           wPanel.stretchRight()
         }
       })
@@ -374,7 +374,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     popup.add(stretchRightAction)
 
     addMouseListener(new MouseAdapter {
-      override def mousePressed(e: MouseEvent) {
+      override def mousePressed(e: MouseEvent): Unit = {
         leftAction.setEnabled(selectedObjects.size > 1)
         centerHorizontalAction.setEnabled(selectedObjects.size > 1)
         rightAction.setEnabled(selectedObjects.size > 1)
