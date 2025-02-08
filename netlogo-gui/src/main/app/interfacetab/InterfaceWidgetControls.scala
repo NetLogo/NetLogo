@@ -290,39 +290,39 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
     private val leftAction = new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft")) {
       def actionPerformed(e: ActionEvent) {
-        wPanel.alignLeft(wPanel.getWrapper(selectedObjects.minBy(_.getParent.getX)))
+        wPanel.alignLeft()
       }
     })
 
     private val centerHorizontalAction = new MenuItem(
       new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterHorizontal")) {
         def actionPerformed(e: ActionEvent) {
-          wPanel.alignCenterHorizontal(wPanel.getWrapper(selectedObjects.head))
+          wPanel.alignCenterHorizontal()
         }
       })
 
     private val rightAction = new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight")) {
       def actionPerformed(e: ActionEvent) {
-        wPanel.alignRight(wPanel.getWrapper(selectedObjects.maxBy(_.getParent.getX)))
+        wPanel.alignRight()
       }
     })
 
     private val topAction = new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop")) {
       def actionPerformed(e: ActionEvent) {
-        wPanel.alignTop(wPanel.getWrapper(selectedObjects.minBy(_.getParent.getY)))
+        wPanel.alignTop()
       }
     })
 
     private val centerVerticalAction = new MenuItem(
       new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterVertical")) {
         def actionPerformed(e: ActionEvent) {
-          wPanel.alignCenterVertical(wPanel.getWrapper(selectedObjects.head))
+          wPanel.alignCenterVertical()
         }
       })
 
     private val bottomAction = new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom")) {
       def actionPerformed(e: ActionEvent) {
-        wPanel.alignBottom(wPanel.getWrapper(selectedObjects.maxBy(_.getParent.getY)))
+        wPanel.alignBottom()
       }
     })
 
@@ -343,14 +343,14 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     private val stretchLeftAction = new MenuItem(
       new AbstractAction(I18N.gui.get("tabs.run.widget.stretchLeft")) {
         def actionPerformed(e: ActionEvent) {
-          wPanel.stretchLeft(wPanel.getWrapper(selectedObjects.minBy(w => w.getParent.getX)))
+          wPanel.stretchLeft()
         }
       })
 
     private val stretchRightAction = new MenuItem(
       new AbstractAction(I18N.gui.get("tabs.run.widget.stretchRight")) {
         def actionPerformed(e: ActionEvent) {
-          wPanel.stretchRight(wPanel.getWrapper(selectedObjects.maxBy(w => w.getParent.getX + w.getParent.getWidth)))
+          wPanel.stretchRight()
         }
       })
 

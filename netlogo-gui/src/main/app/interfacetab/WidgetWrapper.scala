@@ -902,37 +902,37 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft")) {
           def actionPerformed(e: ActionEvent) {
-            interfacePanel.alignLeft(WidgetWrapper.this)
+            interfacePanel.alignLeft()
           }
         }))
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterHorizontal")) {
           def actionPerformed(e: ActionEvent) {
-            interfacePanel.alignCenterHorizontal(WidgetWrapper.this)
+            interfacePanel.alignCenterHorizontal()
           }
         }))
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight")) {
           def actionPerformed(e: ActionEvent) {
-            interfacePanel.alignRight(WidgetWrapper.this)
+            interfacePanel.alignRight()
           }
         }))
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop")) {
           def actionPerformed(e: ActionEvent) {
-            interfacePanel.alignTop(WidgetWrapper.this)
+            interfacePanel.alignTop()
           }
         }))
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterVertical")) {
           def actionPerformed(e: ActionEvent) {
-            interfacePanel.alignCenterVertical(WidgetWrapper.this)
+            interfacePanel.alignCenterVertical()
           }
         }))
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom")) {
           def actionPerformed(e: ActionEvent) {
-            interfacePanel.alignBottom(WidgetWrapper.this)
+            interfacePanel.alignBottom()
           }
         }))
 
@@ -954,13 +954,13 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchLeft")) {
           def actionPerformed(e: ActionEvent) {
-            interfacePanel.stretchLeft(WidgetWrapper.this)
+            interfacePanel.stretchLeft()
           }
         }))
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchRight")) {
           def actionPerformed(e: ActionEvent) {
-            interfacePanel.stretchRight(WidgetWrapper.this)
+            interfacePanel.stretchRight()
           }
         }))
       }

@@ -7,8 +7,8 @@ import java.net.URI
 
 import org.nlogo.api.{ AbstractModelLoader, AggregateDrawingInterface, FileIO, LabProtocol, ModelSettings,
                        PreviewCommands, Version, XMLElement, XMLReader, XMLWriter }
-import org.nlogo.core.{ DummyView, ExternalResource, Femto, LiteralParser, Model, Section, UpdateMode, View, Widget,
-                        WorldDimensions, WorldDimensions3D }
+import org.nlogo.core.{ DummyView, ExternalResource, Femto, LiteralParser, Model, Section, Widget, WorldDimensions,
+                        WorldDimensions3D }
 
 import scala.io.{ Codec, Source }
 import scala.util.{ Failure, Success, Try }
@@ -248,8 +248,7 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
           ("NetLogo 7.0.0", WorldDimensions(-16, 16, -16, 16, 13.0))
 
       val widgets =
-        List(View( x = 210, y = 10, width = 439, height = 460, dimensions = dims, fontSize = 10
-                 , updateMode = UpdateMode.Continuous, showTickCounter = true, frameRate = 30))
+        List(Model.defaultView.copy(dimensions = dims))
 
       Model(Model.defaultCode, widgets, defaultInfo, name, Model.defaultShapes, Model.defaultLinkShapes)
 

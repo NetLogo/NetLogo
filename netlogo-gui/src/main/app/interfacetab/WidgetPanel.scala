@@ -876,34 +876,42 @@ class WidgetPanel(val workspace: GUIWorkspace)
   private[interfacetab] def multiSelected: Boolean =
     selectedWrappers.length > 1
 
-  def alignLeft(wrapper: WidgetWrapper) {
-    WidgetActions.moveWidgets(selectedWrappers.filter(_ != wrapper).map(w => (w, wrapper.getX, w.getY)))
+  def alignLeft() {
+    val target = selectedWrappers.minBy(_.getX)
+
+    WidgetActions.moveWidgets(selectedWrappers.map(w => (w, target.getX, w.getY)))
   }
 
-  def alignCenterHorizontal(wrapper: WidgetWrapper) {
-    val x = (wrapper.getX + wrapper.getWidth / 2).max(selectedWrappers.maxBy(_.getWidth).getWidth / 2)
+  def alignCenterHorizontal() {
+    val target = selectedWrappers.head
+    val x = (target.getX + target.getWidth / 2).max(selectedWrappers.maxBy(_.getWidth).getWidth / 2)
 
     WidgetActions.moveWidgets(selectedWrappers.map(w => (w, x - w.getWidth / 2, w.getY)))
   }
 
-  def alignRight(wrapper: WidgetWrapper) {
-    val x = (wrapper.getX + wrapper.getWidth).max(selectedWrappers.maxBy(_.getWidth).getWidth)
+  def alignRight() {
+    val target = selectedWrappers.maxBy(w => w.getX + w.getWidth)
+    val x = (target.getX + target.getWidth).max(selectedWrappers.maxBy(_.getWidth).getWidth)
 
     WidgetActions.moveWidgets(selectedWrappers.map(w => (w, x - w.getWidth, w.getY)))
   }
 
-  def alignTop(wrapper: WidgetWrapper) {
-    WidgetActions.moveWidgets(selectedWrappers.filter(_ != wrapper).map(w => (w, w.getX, wrapper.getY)))
+  def alignTop() {
+    val target = selectedWrappers.minBy(_.getY)
+
+    WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX, target.getY)))
   }
 
-  def alignCenterVertical(wrapper: WidgetWrapper) {
-    val y = (wrapper.getY + wrapper.getHeight / 2).max(selectedWrappers.maxBy(_.getHeight).getHeight / 2)
+  def alignCenterVertical() {
+    val target = selectedWrappers.head
+    val y = (target.getY + target.getHeight / 2).max(selectedWrappers.maxBy(_.getHeight).getHeight / 2)
 
     WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX, y - w.getHeight / 2)))
   }
 
-  def alignBottom(wrapper: WidgetWrapper) {
-    val y = (wrapper.getY + wrapper.getHeight).max(selectedWrappers.maxBy(_.getHeight).getHeight)
+  def alignBottom() {
+    val target = selectedWrappers.maxBy(w => w.getY + w.getHeight)
+    val y = (target.getY + target.getHeight).max(selectedWrappers.maxBy(_.getHeight).getHeight)
 
     WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX, y - w.getHeight)))
   }
@@ -926,12 +934,16 @@ class WidgetPanel(val workspace: GUIWorkspace)
     })
   }
 
-  def stretchLeft(target: WidgetWrapper) {
+  def stretchLeft() {
+    val target = selectedWrappers.minBy(_.getX)
+
     WidgetActions.reboundWidgets(selectedWrappers.map(w =>
       (w, new Rectangle(target.getX, w.getY, w.getX + w.getWidth - target.getX, w.getHeight))))
   }
 
-  def stretchRight(target: WidgetWrapper) {
+  def stretchRight() {
+    val target = selectedWrappers.maxBy(w => w.getX + w.getWidth)
+
     WidgetActions.resizeWidgets(selectedWrappers.map(w => (w, target.getX + target.getWidth - w.getX, w.getHeight)))
   }
 
