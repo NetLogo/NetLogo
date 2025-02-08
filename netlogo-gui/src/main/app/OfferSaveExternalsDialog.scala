@@ -85,7 +85,7 @@ object OfferSaveExternalsDialog {
             new Dimension(super.getPreferredSize.width, 200)
         }, c)
       }
-      
+
       new CustomOptionPane(parent, I18N.gui.get("common.netlogo"), panel,
                            List(I18N.gui("saveSelected"),
                                 I18N.gui("discardAll"),

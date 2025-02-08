@@ -31,8 +31,8 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
   private val southPanel = new JPanel
   val output = OutputArea.withNextFocus(commandLine)
   output.text.addMouseListener(new MouseAdapter {
-    override def mousePressed(e: MouseEvent) { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
-    override def mouseReleased(e: MouseEvent) { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
+    override def mousePressed(e: MouseEvent): Unit = { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
+    override def mouseReleased(e: MouseEvent): Unit = { if(e.isPopupTrigger) { e.consume(); doPopup(e) }}
   })
 
   private val locationToggleButton = new JButton with RoundedBorderPanel with ThemeSync {
@@ -151,18 +151,18 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
       output.getMinimumSize.height +
       southPanel.getMinimumSize.height)
 
-  def repaintPrompt() { prompt.repaint() }
-  override def requestFocus() { getDefaultComponentForFocus().requestFocus() }
+  def repaintPrompt(): Unit = { prompt.repaint() }
+  override def requestFocus(): Unit = { getDefaultComponentForFocus().requestFocus() }
   override def requestFocusInWindow(): Boolean = {
     getDefaultComponentForFocus().requestFocusInWindow()
   }
   def getDefaultComponentForFocus(): Component = commandLine.textField
 
-  private def doPopup(e: MouseEvent) {
+  private def doPopup(e: MouseEvent): Unit = {
     new PopupMenu {
       add(new MenuItem(TextMenuActions.CopyAction))
       add(new MenuItem(new AbstractAction(I18N.gui.get("menu.file.export")) {
-        def actionPerformed(e: ActionEvent) {
+        def actionPerformed(e: ActionEvent): Unit = {
           try {
             val filename = SwingFileDialog.showFiles(
               output, I18N.gui.get("tabs.run.commandcenter.exporting"), FileDialog.SAVE,
@@ -191,7 +191,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
 
   /// event handlers
 
-  def handle(e: WindowEvents.LoadBeginEvent) {
+  def handle(e: WindowEvents.LoadBeginEvent): Unit = {
     commandLine.reset()
     repaintPrompt()
     output.clear()
@@ -205,7 +205,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
       (northPanel.getMinimumSize.getHeight * zoomFactor).toInt))
   }
 
-  def cycleAgentType(forward: Boolean) {
+  def cycleAgentType(forward: Boolean): Unit = {
     import AgentKind.{ Observer => O, Turtle => T, Patch => P, Link => L}
     commandLine.kind match {
       case O => commandLine.agentKind(if (forward) T else L)
