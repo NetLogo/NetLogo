@@ -40,7 +40,7 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
     super.doLayout()
   }
 
-  override def populate(menu: PopupMenu) = {
+  override def populate(menu: PopupMenu): Unit = {
     includesTable match {
       case Some(includePaths) =>
         val filtered =
@@ -51,7 +51,7 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
 
         else {
           filtered.sortBy(_.toUpperCase).foreach(include => menu.add(new MenuItem(new AbstractAction(include) {
-            def actionPerformed(e: ActionEvent) {
+            def actionPerformed(e: ActionEvent): Unit = {
               tabs.openExternalFile(includePaths(include))
             }
           })))
@@ -82,7 +82,7 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
   }
 
   private object OpenSourceEditorAction extends AbstractAction(I18N.gui("open") + Ellipsis) {
-    override def actionPerformed(e: ActionEvent) = ignoring(classOf[UserCancelException]) {
+    override def actionPerformed(e: ActionEvent): Unit = ignoring(classOf[UserCancelException]) {
       val path = SwingFileDialog.showFiles(IncludedFilesMenu.this, I18N.gui("open"), FileDialog.LOAD, null)
         .replace(File.separatorChar, '/')
       if(path.endsWith(".nls"))
