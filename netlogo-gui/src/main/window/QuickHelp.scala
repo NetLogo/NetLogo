@@ -25,9 +25,15 @@ object QuickHelp {
   private val QUICKHELPWORDS_PATH = "/system/dict.txt"
   private val QUICKHELPWORDS_PATH3D = "/system/dict3d.txt"
 
-  private var quickHelpLoaded = false
-  private var quickHelpWords = Map[String, String]()
-  private var quickHelpWords3d = Map[String, String]()
+  private lazy val quickHelpWords = loadHelp(QUICKHELPWORDS_PATH)
+  // if we're not in 3D don't load the 3d dictionary words
+  // cause we don't need 'em and they'll override the 2d
+  // dictionary ev 10/25/07
+  private lazy val quickHelpWords3d =
+    if (Version.is3D)
+      loadHelp(QUICKHELPWORDS_PATH3D)
+    else
+      Map[String, String]()
 
   private def loadHelp(path: String): Map[String, String] = {
     FileIO.getResourceAsStringArray(path).map(line => {
@@ -39,24 +45,10 @@ object QuickHelp {
     BrowserLauncher.docPath(docName)
 
   private def openDictionary(comp: Component, word: String, words: Map[String, String]) {
-    BrowserLauncher.openPath(comp, docPath("dict/" + words.get(word)), null)
+    BrowserLauncher.openPath(comp, docPath(s"dict/${words.get(word)}"), null)
   }
 
   def doHelp(comp: Component, token: String) {
-    if (!quickHelpLoaded) {
-      quickHelpWords = loadHelp(QUICKHELPWORDS_PATH)
-      // if we're not in 3D don't load the 3d dictionary words
-      // cause we don't need 'em and they'll override the 2d
-      // dictionary ev 10/25/07
-      quickHelpWords3d =
-        if (Version.is3D)
-          loadHelp(QUICKHELPWORDS_PATH3D)
-        else
-          Map[String, String]()
-
-      quickHelpLoaded = true
-    }
-
     if (token == null)
       return
 
