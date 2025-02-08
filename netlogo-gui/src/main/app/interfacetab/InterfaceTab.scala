@@ -65,9 +65,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   if (System.getProperty("os.name").startsWith("Windows")) {
     scrollPane.getVerticalScrollBar.setPreferredSize(new Dimension(7, 0))
     scrollPane.getHorizontalScrollBar.setPreferredSize(new Dimension(0, 7))
-  }
-
-  else {
+  } else {
     scrollPane.getVerticalScrollBar.setPreferredSize(new Dimension(10, 0))
     scrollPane.getHorizontalScrollBar.setPreferredSize(new Dimension(0, 10))
   }
@@ -111,11 +109,17 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   private class InterfaceTabFocusTraversalPolicy extends ContainerOrderFocusTraversalPolicy {
     override def getComponentAfter(focusCycleRoot: Container, aComponent: Component) =
-      if(aComponent == iP) commandCenter.getDefaultComponentForFocus
-      else super.getComponentAfter(focusCycleRoot, aComponent)
+      if (aComponent == iP) {
+        commandCenter.getDefaultComponentForFocus
+      } else {
+        super.getComponentAfter(focusCycleRoot, aComponent)
+      }
     override def getComponentBefore(focusCycleRoot: Container, aComponent: Component) =
-      if(aComponent == iP) commandCenter.getDefaultComponentForFocus
-      else super.getComponentBefore(focusCycleRoot, aComponent)
+      if (aComponent == iP) {
+        commandCenter.getDefaultComponentForFocus
+      } else {
+        super.getComponentBefore(focusCycleRoot, aComponent)
+      }
   }
 
   def getInterfacePanel = iP
@@ -166,8 +170,9 @@ class InterfaceTab(workspace: GUIWorkspace,
                      pageIndex: Int, printer: PrinterManager) =
     // only allow printing on 1 page since printing graphics over multiple pages would require a lot
     // more changes to the NetLogo source code --mag 10/23/02
-    if(pageIndex > 0) Printable.NO_SUCH_PAGE
-    else {
+    if (pageIndex > 0) {
+      Printable.NO_SUCH_PAGE
+    } else {
       val g2d = g.asInstanceOf[Graphics2D]
       g2d.translate(pageFormat.getImageableX, pageFormat.getImageableY)
       iP.printAll(g2d)
@@ -206,9 +211,7 @@ class InterfaceTab(workspace: GUIWorkspace,
                                   speedSlider.getX - (widgetControls.getX + widgetControls.getWidth),
                                   getHeight / 2 - viewUpdatePanel.getPreferredSize.height / 2,
                                   viewUpdatePanel.getPreferredSize.width, viewUpdatePanel.getPreferredSize.height)
-      }
-
-      else {
+      } else {
         widgetControls.setBounds(0, getHeight / 2 - widgetControls.getPreferredSize.height / 2,
                                  widgetControls.getPreferredSize.width, widgetControls.getPreferredSize.height)
       }

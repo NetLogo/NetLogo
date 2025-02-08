@@ -3,10 +3,11 @@
 package org.nlogo.widget
 
 import java.awt.{ Color, Dimension, FlowLayout, Rectangle }
+import java.util.List
 import javax.swing.JLabel
 import javax.swing.border.EmptyBorder
 
-import org.nlogo.api.{ Color => NlogoColor, Editable }
+import org.nlogo.api.{ Color => NlogoColor, Editable, Property }
 import org.nlogo.awt.LineBreaker
 import org.nlogo.core.{ TextBox => CoreTextBox }
 import org.nlogo.core.I18N
@@ -37,53 +38,55 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   private var _fontSize: Int = textLabel.getFont.getSize
   var color: Color = Color.black
 
-  override def propertySet = Properties.text
-  override def classDisplayName = I18N.gui.get("tabs.run.widgets.note")
+  override def propertySet: List[Property] = Properties.text
+  override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.note")
   override def isNote = true
 
-  private def wrapText() {
-    textLabel.setText("<html>" + LineBreaker.breakLines(_text, getFontMetrics(textLabel.getFont), _width - 8).asScala
-                                            .mkString("<br>") + "</html>")
+  private def wrapText(): Unit = {
+    textLabel.setText(s"<html>${LineBreaker.breakLines(_text, getFontMetrics(textLabel.getFont), _width - 8).asScala
+                                           .mkString("<br>")}</html>")
     repaint()
   }
 
-  def text = _text
-  def text_=(newText: String) {
+  def text: String = _text
+  def text_=(newText: String): Unit = {
     _text = newText
     displayName = newText
     wrapText()
   }
 
-  def transparency = getBackgroundColor eq InterfaceColors.TRANSPARENT
-  def transparency(trans: Boolean) {
+  def transparency: Boolean = getBackgroundColor eq InterfaceColors.TRANSPARENT
+  def transparency(trans: Boolean): Unit = {
     setBackgroundColor(
-      if (trans)
+      if (trans) {
         InterfaceColors.TRANSPARENT
-      else
+      } else {
         InterfaceColors.TEXT_BOX_BACKGROUND
+      }
     )
   }
 
-  def fontSize = _fontSize
-  def fontSize_=(size: Int) {
+  def fontSize: Int = _fontSize
+  def fontSize_=(size: Int): Unit = {
     _fontSize = size
     if (isZoomed && originalFont != null) {
       val zoomDiff: Int = getFont.getSize - originalFont.getSize
       textLabel.setFont(textLabel.getFont.deriveFont((size + zoomDiff).toFloat))
+    } else {
+      textLabel.setFont(textLabel.getFont.deriveFont(size.toFloat))
     }
-    else textLabel.setFont(textLabel.getFont.deriveFont(size.toFloat))
     if (originalFont != null) originalFont = (originalFont.deriveFont(size.toFloat))
     resetZoomInfo()
     resetSizeInfo()
     wrapText()
   }
 
-  override def setBounds(r: Rectangle) {
+  override def setBounds(r: Rectangle): Unit = {
     if (r.width > 0) _width = r.width
     super.setBounds(r)
     wrapText()
   }
-  override def setBounds(x: Int, y: Int, width: Int, height: Int) {
+  override def setBounds(x: Int, y: Int, width: Int, height: Int): Unit = {
     if (width > 0) _width = width
     super.setBounds(x, y, width, height)
     wrapText()

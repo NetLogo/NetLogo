@@ -12,7 +12,6 @@ import java.awt._
 import javax.swing.{ JLabel, JPanel }
 import event.{ MouseWheelEvent, MouseEvent, MouseAdapter, MouseWheelListener }
 
-
 object Switch {
   val MINWIDTH: Int = 90
   val CHANNEL_HEIGHT: Int = 28
@@ -47,9 +46,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     c.anchor = GridBagConstraints.EAST
 
     add(toggle, c)
-  }
-
-  else {
+  } else {
     val c = new GridBagConstraints
 
     c.insets = new Insets(0, 12, 0, 12)
@@ -70,7 +67,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
   locally {
     val mouseListener = new MouseAdapter {
-      override def mousePressed(e: MouseEvent) {
+      override def mousePressed(e: MouseEvent): Unit = {
         new Events.InputBoxLoseFocusEvent().raise(Switch.this)
 
         if (e.getButton == MouseEvent.BUTTON1)
@@ -83,9 +80,9 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     toggle.addMouseListener(mouseListener)
   }
 
-  def isOn = constraint.defaultValue.booleanValue
+  def isOn: Boolean = constraint.defaultValue.booleanValue
 
-  def isOn_=(on: Boolean) {
+  def isOn_=(on: Boolean): Unit = {
     if (isOn != on) {
       constraint.defaultValue = on
       updateConstraints()
@@ -94,37 +91,43 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     }
   }
 
-  def name = _name
-  def name_=(name: String) {
+  def name: String = _name
+  def name_=(name: String): Unit = {
     this._name = name
     displayName(name)
     label.setText(displayName)
     repaint()
   }
 
-  override def updateConstraints() {
+  override def updateConstraints(): Unit = {
     if (_name.length > 0) { new Events.AddBooleanConstraintEvent(_name, isOn).raise(this) }
   }
 
-  override def getPreferredSize: Dimension =
-    if (preserveWidgetSizes)
+  override def getPreferredSize: Dimension = {
+    if (preserveWidgetSizes) {
       new Dimension(super.getPreferredSize.width, MINHEIGHT)
-    else
+    } else {
       new Dimension(super.getPreferredSize.width, 37)
+    }
+  }
 
-  override def getMinimumSize =
-    if (preserveWidgetSizes)
+  override def getMinimumSize: Dimension = {
+    if (preserveWidgetSizes) {
       new Dimension(MINWIDTH, MINHEIGHT)
-    else
+    } else {
       new Dimension(50, 40)
+    }
+  }
 
-  override def getMaximumSize =
-    if (preserveWidgetSizes)
+  override def getMaximumSize: Dimension = {
+    if (preserveWidgetSizes) {
       new Dimension(10000, MINHEIGHT)
-    else
+    } else {
       new Dimension(10000, 40)
+    }
+  }
 
-  def mouseWheelMoved(e: MouseWheelEvent) { isOn = ! (e.getWheelRotation >= 1) }
+  def mouseWheelMoved(e: MouseWheelEvent): Unit = { isOn = ! (e.getWheelRotation >= 1) }
 
   def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.SWITCH_BACKGROUND)
@@ -137,10 +140,11 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
     locally {
       val size =
-        if (preserveWidgetSizes)
+        if (preserveWidgetSizes) {
           new Dimension(10, 20)
-        else
+        } else {
           new Dimension(10, 25)
+        }
 
       setPreferredSize(size)
       setMinimumSize(size)
@@ -150,25 +154,26 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     setOpaque(false)
 
     addMouseListener(new MouseAdapter {
-      override def mouseEntered(e: MouseEvent) {
+      override def mouseEntered(e: MouseEvent): Unit = {
         hover = true
 
         repaint()
       }
 
-      override def mouseExited(e: MouseEvent) {
+      override def mouseExited(e: MouseEvent): Unit = {
         hover = false
 
         repaint()
       }
     })
 
-    override def paintComponent(g: Graphics) {
+    override def paintComponent(g: Graphics): Unit = {
       val g2d = Utils.initGraphics2D(g)
-      if (isOn)
+      if (isOn) {
         g2d.setColor(InterfaceColors.SWITCH_TOGGLE_BACKGROUND_ON)
-      else
+      } else {
         g2d.setColor(InterfaceColors.SWITCH_TOGGLE_BACKGROUND_OFF)
+      }
       g2d.fillRoundRect(0, 0, getWidth, getHeight, getWidth, getWidth)
       val y = if (isOn) 0 else getHeight - getWidth
       val d = if (isOn) 3 else -3
