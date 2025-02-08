@@ -15,7 +15,7 @@ object OutputArea {
   private val PreferredHeight = 45
   private val MinimumWidth = 50
   private val GuessScrollBarWidth = 24
-  class DefaultTextArea extends TextArea {
+  class DefaultTextArea extends TextArea(0, 0, "") {
     override def getMinimumSize: Dimension = new Dimension(50, (getRowHeight * 1.25).toInt)
   }
   class DefaultTextAreaWithNextFocus(nextComponent: Component) extends DefaultTextArea {

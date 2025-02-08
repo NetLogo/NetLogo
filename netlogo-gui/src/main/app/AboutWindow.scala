@@ -17,7 +17,7 @@ import org.nlogo.util.SysInfo
 
 class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.about"), false) with ThemeSync {
   private val refreshTimer: Timer = new Timer(2000, _ => refreshSystemText())
-  private val system = new TextArea {
+  private val system = new TextArea(0, 0, "") {
     setFont(new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12))
     setLineWrap(true)
     setWrapStyleWord(true)
@@ -58,7 +58,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     })
   }
 
-  private val credits = new TextArea(FileIO.getResourceAsString("/system/about.txt"), 15, 0) {
+  private val credits = new TextArea(15, 0, FileIO.getResourceAsString("/system/about.txt")) {
     setFont(new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12))
     setDragEnabled(false)
     setLineWrap(true)

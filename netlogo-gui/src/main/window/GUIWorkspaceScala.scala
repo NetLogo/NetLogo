@@ -66,7 +66,7 @@ with LoadModelEvent.Handler {
           OptionPane.Options.Ok
         else
           OptionPane.Options.OkCancel
-      val textArea = new TextArea(errorDetails) {
+      val textArea = new TextArea(0, 0, errorDetails) {
         setEditable(false)
       }
       val scrollPane = new ScrollPane(textArea) {

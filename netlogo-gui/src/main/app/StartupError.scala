@@ -42,7 +42,7 @@ object StartupError {
     title.setFont(title.getFont().deriveFont(16f))
     frame.add(title, BorderLayout.NORTH)
 
-    val report = new TextArea(message) {
+    val report = new TextArea(0, 0, message) {
       setFont(getFont.deriveFont(18f))
       setEditable(false)
       setLineWrap(true)
