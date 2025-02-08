@@ -89,13 +89,13 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   // concrete subclasses of AbstractUndoableEdit, which implements
   // UndoableEdit.  This is standard Swing undo API stuff.
   // - SAB/ST 6/11/04
-  private var undoableEdit: UndoableEdit = null
+  private var undoableEdit: Option[UndoableEdit] = None
 
   private val deleteSelected: Button = new Button(I18N.gui("delete"), () => {
     shapeView.getSelectedElement.foreach(element => {
-      undoableEdit = new UndoableDeleteEdit(element, shape.getElements.indexOf(element))
+      undoableEdit = Some(new UndoableDeleteEdit(element, shape.getElements.indexOf(element)))
 
-      undoButton.setEnabled(undoableEdit.canUndo)
+      undoButton.setEnabled(undoableEdit.get.canUndo)
       shape.remove(element)
 
       shapeView.deselectAll()
@@ -147,11 +147,13 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   }
 
   private val undoButton: Button = new Button(I18N.gui("undo"), () => {
-    undoableEdit.undo()
+    undoableEdit.foreach(edit => {
+      edit.undo()
 
-    undoButton.setEnabled(undoableEdit.canUndo)
+      undoButton.setEnabled(edit.canUndo)
 
-    shapeView.deselectAll()
+      shapeView.deselectAll()
+    })
   }) {
     setEnabled(false)
   }
@@ -287,7 +289,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
         element.rotateLeft()
 
       case None =>
-        undoableEdit = null
+        undoableEdit = None
 
         undoButton.setEnabled(false)
 
@@ -305,7 +307,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
         element.rotateRight()
 
       case None =>
-        undoableEdit = null
+        undoableEdit = None
 
         undoButton.setEnabled(false)
 
@@ -323,7 +325,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
         element.flipHorizontal()
 
       case None =>
-        undoableEdit = null
+        undoableEdit = None
 
         undoButton.setEnabled(false)
 
@@ -341,7 +343,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
         element.flipVertical()
 
       case None =>
-        undoableEdit = null
+        undoableEdit = None
 
         undoButton.setEnabled(false)
 
@@ -472,21 +474,21 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   }
 
   def makeUndoableModification(el: Element, z: Int): Unit = {
-    undoableEdit = new UndoableModification(el, z)
+    undoableEdit = Some(new UndoableModification(el, z))
 
-    undoButton.setEnabled(undoableEdit.canUndo)
+    undoButton.setEnabled(undoableEdit.get.canUndo)
   }
 
   def makeUndoableDraw(el: Element): Unit = {
-    undoableEdit = new UndoableDraw(el)
+    undoableEdit = Some(new UndoableDraw(el))
 
-    undoButton.setEnabled(undoableEdit.canUndo)
+    undoButton.setEnabled(undoableEdit.get.canUndo)
   }
 
   def makeUndoableUnfinishedPolygon(): Unit = {
-    undoableEdit = new UndoableUnfinishedPolygon()
+    undoableEdit = Some(new UndoableUnfinishedPolygon())
 
-    undoButton.setEnabled(undoableEdit.canUndo)
+    undoButton.setEnabled(undoableEdit.get.canUndo)
   }
 
   def propertyChange(e: PropertyChangeEvent): Unit = {
