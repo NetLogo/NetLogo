@@ -154,7 +154,7 @@ class InfoTab(attachModelDir: String => String)
     updateEditorPane()
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     toolBar.setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
     editableButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))

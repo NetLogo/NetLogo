@@ -156,7 +156,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
 
   override def isEnabled: Boolean = speedSlider.isEnabled
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     slower.syncTheme()
     faster.syncTheme()
 

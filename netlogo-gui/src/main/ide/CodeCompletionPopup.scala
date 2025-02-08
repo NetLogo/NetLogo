@@ -212,7 +212,7 @@ case class CodeCompletionPopup(autoSuggest: AutoSuggest,
     iterator.find(p => p.start < position && p.end >= position)
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     window.getContentPane.setBackground(InterfaceColors.MENU_BACKGROUND)
     scrollPane.setBackground(InterfaceColors.MENU_BACKGROUND)
     suggestionDisplaylist.setBackground(InterfaceColors.MENU_BACKGROUND)

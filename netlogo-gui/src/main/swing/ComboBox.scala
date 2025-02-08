@@ -69,7 +69,7 @@ class ComboBox[T >: Null](private var items: Seq[T] = Seq())
       repaint()
     }
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       if (getComponentCount > 0) {
         getComponent(0) match {
           case ts: ThemeSync => ts.syncTheme()
@@ -195,7 +195,7 @@ class ComboBox[T >: Null](private var items: Seq[T] = Seq())
   def itemCount: Int =
     items.size
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
     setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
     setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)

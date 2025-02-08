@@ -183,7 +183,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     if (shouldExit) System.exit(0)
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     clientPanel.syncTheme()

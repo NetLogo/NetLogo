@@ -69,7 +69,7 @@ class MonitorWidget(random: MersenneTwisterFast)
       super.paintComponent(g)
     }
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
       setBorderColor(InterfaceColors.MONITOR_BORDER)
     }
@@ -202,7 +202,7 @@ class MonitorWidget(random: MersenneTwisterFast)
       displayName(getSourceName)
     else
       displayName(name)
-    
+
     nameLabel.setText(displayName)
 
     if (nameLabel.getPreferredSize.width > nameLabel.getWidth)
@@ -234,7 +234,7 @@ class MonitorWidget(random: MersenneTwisterFast)
     super.suppressRecompiles(suppressRecompiles)
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.MONITOR_BACKGROUND)
 
     nameLabel.setForeground(InterfaceColors.WIDGET_TEXT)

@@ -92,7 +92,7 @@ abstract class FilePathEditor(accessor: PropertyAccessor[String], parent: Compon
     c
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     label.setForeground(InterfaceColors.DIALOG_TEXT)
 
     editor.syncTheme()

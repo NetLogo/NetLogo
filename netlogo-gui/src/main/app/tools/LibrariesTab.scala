@@ -396,7 +396,7 @@ class LibrariesTab( category:        String
             label
           case _ => originalComponent
         }
-      
+
       if (isSelected) {
         newComponent.setBackground(InterfaceColors.DIALOG_BACKGROUND_SELECTED)
         newComponent.setForeground(InterfaceColors.DIALOG_TEXT_SELECTED)
@@ -463,7 +463,7 @@ class LibrariesTab( category:        String
 
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     topPanel.setBackground(InterfaceColors.DIALOG_BACKGROUND)

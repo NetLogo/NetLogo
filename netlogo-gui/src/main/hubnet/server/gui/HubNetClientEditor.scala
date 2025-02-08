@@ -101,7 +101,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     if (mt == ModelType.Normal) t + " {" + directory + "}" else t
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     interfacePanel.syncTheme()
 
     scrollPane.setBackground(InterfaceColors.INTERFACE_BACKGROUND)

@@ -55,7 +55,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
     speedSlider.setValue(workspace.speedSliderPosition.toInt)
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     displaySwitch.setForeground(InterfaceColors.TOOLBAR_TEXT)
 
     speedSlider.syncTheme()

@@ -82,7 +82,7 @@ class PreferencesDialog(parent: Frame, preferences: Preference*) extends ToolDia
 
   override def onClose() = reset()
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     preferencesPanel.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 

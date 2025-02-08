@@ -324,7 +324,7 @@ class DummyJobWidget(source: String, rand: MersenneTwisterFast) extends JobWidge
   def model: org.nlogo.window.DummyJobWidget#WidgetModel = {
     null
   }
-  def syncTheme() {}
+  def syncTheme(): Unit = {}
 }
 
 class DummyIGWidget(source: String, var value: AnyRef = Double.box(0)) extends DummyWidget(source) with InterfaceGlobalWidget {

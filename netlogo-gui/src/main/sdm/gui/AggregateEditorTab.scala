@@ -38,7 +38,7 @@ class AggregateEditorTab(toolbar: AggregateModelEditorToolBar, contents: Compone
     errorLabel.setError(null, 0)
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     scrollPane.setBackground(InterfaceColors.INTERFACE_BACKGROUND)
   }
 }

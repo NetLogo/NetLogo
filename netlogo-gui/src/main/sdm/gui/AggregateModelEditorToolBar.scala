@@ -66,8 +66,8 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
   }
 
   def popButtons() {noToolButton.setSelected(true)}
-  
-  def syncTheme() {
+
+  def syncTheme(): Unit = {
     setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
     if (dtLabel != null)

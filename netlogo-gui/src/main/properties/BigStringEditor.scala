@@ -39,7 +39,7 @@ abstract class BigStringEditor(accessor: PropertyAccessor[String])
     c
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     label.setForeground(InterfaceColors.DIALOG_TEXT)
 
     editor.syncTheme()

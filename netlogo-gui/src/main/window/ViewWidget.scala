@@ -185,7 +185,7 @@ class ViewWidget(workspace: GUIWorkspace)
     new Rectangle(newX, newY, newWidth, newHeight)
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     setBorder(new LineBorder(InterfaceColors.VIEW_BORDER, 2))
     tickCounter.syncTheme()
   }

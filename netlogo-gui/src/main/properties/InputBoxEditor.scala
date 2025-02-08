@@ -52,7 +52,7 @@ abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputT
 
   override def requestFocus = typeCombo.requestFocus
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     label.setForeground(InterfaceColors.DIALOG_TEXT)
     multiline.setForeground(InterfaceColors.DIALOG_TEXT)
 

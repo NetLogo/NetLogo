@@ -121,7 +121,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     setEnabledRecursive(this, state)
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     editor.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
     editor.setCaretColor(InterfaceColors.TEXT_AREA_TEXT)
 

@@ -45,7 +45,7 @@ class TextField(columns: Int = 0, text: String = null, document: Document = null
   override def getInsets: Insets =
     new Insets(0, 3, 0, 0)
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
     setForeground(InterfaceColors.TEXT_AREA_TEXT)
     setCaretColor(InterfaceColors.TEXT_AREA_TEXT)

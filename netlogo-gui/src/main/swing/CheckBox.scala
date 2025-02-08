@@ -59,5 +59,5 @@ class CheckBox(text: String = "") extends JCheckBox(text) with HoverDecoration w
     }
   })
 
-  def syncTheme() {} // sync done in paintIcon (IB 11/4/24)
+  def syncTheme(): Unit = {} // sync done in paintIcon (IB 11/4/24)
 }

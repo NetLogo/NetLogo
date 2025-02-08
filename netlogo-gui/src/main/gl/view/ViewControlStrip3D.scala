@@ -30,7 +30,7 @@ class ViewControlStrip3D(workspace: GUIWorkspace, val tickCounter: TickCounterLa
       doLayout()
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
     displaySwitch.syncTheme()

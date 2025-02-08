@@ -128,7 +128,7 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler) extends J
     }
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
     orbitButton.setForeground(InterfaceColors.TOOLBAR_TEXT)

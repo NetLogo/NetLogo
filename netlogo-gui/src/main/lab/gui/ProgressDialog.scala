@@ -306,7 +306,7 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor,
     }
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     progressArea.syncTheme()

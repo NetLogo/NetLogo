@@ -173,7 +173,7 @@ object FindDialog extends ThemeSync {
     }
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     if (instance != null)
       instance.syncTheme()
 
@@ -443,7 +443,7 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     replaceLabel.setEnabled(enabled)
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     nextButton.syncTheme()

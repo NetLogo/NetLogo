@@ -151,7 +151,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
       label.setToolTipText(null)
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.CHOOSER_BACKGROUND)
 
     label.setForeground(InterfaceColors.WIDGET_TEXT)

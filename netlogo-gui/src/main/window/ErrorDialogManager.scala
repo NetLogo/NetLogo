@@ -115,7 +115,7 @@ class ErrorDialogManager(owner: Component, additionalDialogs: => Map[Class[_ <: 
     dialogs.foreach(_._2.setVisible(false))
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     dialogs.foreach(_._2.syncTheme())
   }
 }
@@ -179,7 +179,7 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.logo")) {
 
   override def makeButtons = super.makeButtons ++ Seq(new CopyButton(textArea), checkbox)
 
-  override def syncTheme() {
+  override def syncTheme(): Unit = {
     super.syncTheme()
 
     checkbox.setForeground(InterfaceColors.DIALOG_TEXT)

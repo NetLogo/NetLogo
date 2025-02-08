@@ -95,7 +95,7 @@ class TextFieldBox(labelAlignment: Int = SwingConstants.LEFT, labelFont: Option[
       label.setPreferredSize(new Dimension(maxLabelWidth, label.getPreferredSize.height))
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     labels.foreach(_.setForeground(InterfaceColors.DIALOG_TEXT))
   }
 }

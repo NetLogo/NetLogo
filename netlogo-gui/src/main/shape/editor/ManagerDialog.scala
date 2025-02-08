@@ -186,7 +186,7 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
       deleteButton.setEnabled(true)
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     buttonPanel.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     scrollPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)

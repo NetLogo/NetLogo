@@ -966,7 +966,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     }
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     shadowPane.syncTheme()
     widget.syncTheme()
   }
@@ -989,7 +989,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       syncTheme()
     }
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       if (full) {
         if (widget.isNote) {
           setBackgroundColor(InterfaceColors.WIDGET_PREVIEW_COVER_NOTE)

@@ -28,7 +28,7 @@ abstract class ShowDialogAction(name: String) extends AbstractAction(name) with 
     createdDialog.setVisible(true)
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     createdDialog.syncTheme()
   }
 }

@@ -43,7 +43,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
       super.paintComponent(g)
     }
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       setBackgroundColor(Color.WHITE)
       setBorderColor(InterfaceColors.PLOT_BORDER)
     }
@@ -247,7 +247,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   override def getPreferredSize = AbstractPlotWidget.PREF_SIZE
   override def getMaximumSize: Dimension = null
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     canvasPanel.syncTheme()
   }
 

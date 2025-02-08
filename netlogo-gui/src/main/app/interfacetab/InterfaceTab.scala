@@ -232,7 +232,7 @@ class InterfaceTab(workspace: GUIWorkspace,
       widgetControls.getPreferredSize.width + speedSlider.getPreferredSize.width +
         viewUpdatePanel.getPreferredSize.width + 96
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
       widgetControls.syncTheme()
@@ -254,7 +254,7 @@ class InterfaceTab(workspace: GUIWorkspace,
       syncTheme()
     }
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       splitPane.getOrientation match {
         case JSplitPane.VERTICAL_SPLIT =>
           putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shift-bottom.png", 10, 10,
@@ -323,7 +323,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   def getMinimumWidth: Int =
     toolBar.getMinimumWidth
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     toolBar.syncTheme()
     iP.syncTheme()
 

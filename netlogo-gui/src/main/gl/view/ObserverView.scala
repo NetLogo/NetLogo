@@ -34,7 +34,7 @@ extends View("3D View", viewManager, renderer) {
     true
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     navBar.syncTheme()
     controlStrip.syncTheme()
   }

@@ -138,7 +138,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
 
     widgetMenu.syncTheme()
@@ -261,7 +261,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     def getSelectedWidget =
       WidgetInfos.find(_.displayName == chosenItem).get.coreWidget
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
       setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
       setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
@@ -390,7 +390,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       }
     })
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
       setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
       setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
@@ -425,7 +425,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     override def getPreferredSize: Dimension =
       getMinimumSize
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       setPressedColor(InterfaceColors.TOOLBAR_TOOL_PRESSED)
     }
   }

@@ -258,7 +258,7 @@ class ViewManager(val workspace: GUIWorkspace,
 
   var warned = false
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     if (observerView != null)
       observerView.syncTheme()
 

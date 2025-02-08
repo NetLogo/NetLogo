@@ -429,7 +429,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
     }
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     if (clientGUI != null)
       clientGUI.syncTheme()
   }

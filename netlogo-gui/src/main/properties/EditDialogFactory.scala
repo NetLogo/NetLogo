@@ -43,7 +43,7 @@ class EditDialogFactory(compiler: CompilerServices, colorizer: Colorizer) extend
     }
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     if (dialog != null)
       dialog.syncTheme()
   }

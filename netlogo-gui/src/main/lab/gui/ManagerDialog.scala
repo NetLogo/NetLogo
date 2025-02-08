@@ -329,7 +329,7 @@ private class ManagerDialog(manager:       LabManager,
   private def selectedProtocol =
     manager.protocols(jlist.getSelectedIndices()(0))
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     listLabel.setForeground(InterfaceColors.DIALOG_TEXT)
     scrollPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)

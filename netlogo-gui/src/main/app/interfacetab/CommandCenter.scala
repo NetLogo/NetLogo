@@ -41,7 +41,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
     setDiameter(6)
     enableHover()
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
       setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
       setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
@@ -60,7 +60,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
     setDiameter(6)
     enableHover()
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
       setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
       setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
@@ -178,7 +178,7 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
     }.show(this, e.getX, e.getY)
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     setBackground(InterfaceColors.COMMAND_CENTER_BACKGROUND)
 
     titleLabel.setForeground(InterfaceColors.COMMAND_CENTER_TEXT)

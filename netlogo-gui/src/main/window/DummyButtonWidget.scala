@@ -107,7 +107,7 @@ class DummyButtonWidget
     }
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.BUTTON_BACKGROUND)
   }
 

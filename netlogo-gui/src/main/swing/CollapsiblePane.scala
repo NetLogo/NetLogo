@@ -45,7 +45,7 @@ class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
 
   def isOpen = element.isVisible
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     titlePanel.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     titleLabel.setForeground(InterfaceColors.DIALOG_TEXT)
 

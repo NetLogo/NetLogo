@@ -47,7 +47,7 @@ class TabbedPane extends JTabbedPane with ThemeSync {
       super.paint(g, c)
     }
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       getComponents.foreach(_ match {
         case ts: ThemeSync => ts.syncTheme()
         case _ =>
@@ -75,7 +75,7 @@ class TabbedPane extends JTabbedPane with ThemeSync {
     }
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     tabsUI.syncTheme()
 
     setTabForegrounds()

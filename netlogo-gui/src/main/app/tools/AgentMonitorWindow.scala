@@ -181,7 +181,7 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
     }
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     monitor.syncTheme()
   }
 }

@@ -105,7 +105,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     clientWindows += window
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     serverPanel.syncTheme()
@@ -219,7 +219,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       clientNames.foreach(listData.addElement)
     }
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       kickButton.syncTheme()
       newClientButton.syncTheme()
       reloadButton.syncTheme()
@@ -290,7 +290,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
         messageTextArea.getText() + (if (newMessage.endsWith("\n")) newMessage else newMessage) + "\n")
     }
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       inputField.syncTheme()
       messageTextArea.syncTheme()
 
@@ -358,7 +358,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
         case _: UnknownHostException => I18N.gui.get("menu.tools.hubnetControlCenter.unknown")
       }
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       mirrorViewCheckBox.setForeground(InterfaceColors.DIALOG_TEXT)
       mirrorPlotsCheckBox.setForeground(InterfaceColors.DIALOG_TEXT)
       settingsLabel.setForeground(InterfaceColors.DIALOG_TEXT)

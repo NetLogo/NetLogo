@@ -78,7 +78,7 @@ class DummyMonitorWidget
         d.width - LeftMargin - RightMargin - 1, boxHeight)
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.MONITOR_BACKGROUND)
   }
 

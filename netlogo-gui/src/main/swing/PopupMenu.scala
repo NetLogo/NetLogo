@@ -10,7 +10,7 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class PopupMenu(title: String = "") extends JPopupMenu(title) with ThemeSync {
   private class Separator extends JPopupMenu.Separator with ThemeSync {
-    def syncTheme() {
+    def syncTheme(): Unit = {
       setForeground(InterfaceColors.MENU_BORDER)
     }
   }
@@ -24,7 +24,7 @@ class PopupMenu(title: String = "") extends JPopupMenu(title) with ThemeSync {
   override def getInsets: Insets =
     new Insets(5, 0, 5, 0)
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     setBackground(InterfaceColors.MENU_BACKGROUND)
     setBorder(new LineBorder(InterfaceColors.MENU_BORDER))
 

@@ -86,7 +86,7 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
       messageTextArea.setText("")
     }
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
       setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
 
@@ -112,7 +112,7 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
       Hierarchy.getFrame(ClientGUI.this).setTitle("HubNet: " + activity)
     }
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       username.syncTheme()
       server.syncTheme()
       port.syncTheme()
@@ -139,7 +139,7 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
       value.setText(text)
     }
 
-    def syncTheme() {
+    def syncTheme(): Unit = {
       label.setForeground(InterfaceColors.DIALOG_TEXT)
       value.setForeground(InterfaceColors.DIALOG_TEXT)
     }
@@ -151,7 +151,7 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
     def seedRNGs(seed: Int): Unit = {}
   }
 
-  def syncTheme() {
+  def syncTheme(): Unit = {
     statusPanel.syncTheme()
     messagePanel.syncTheme()
     interfacePanel.syncTheme()
