@@ -90,7 +90,7 @@ class _hubnetoutqsize extends Reporter with HubNetPrim {
 class _hubnetcreateclient extends Command with HubNetPrim {
 
   override def perform(context: Context) {
-    hubNetManager.map(_.newClient(false,0)).get
+    hubNetManager.map(_.newClient(false,0).get).get
     context.ip = next
   }
 }

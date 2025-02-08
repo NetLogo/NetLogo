@@ -94,15 +94,17 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   }
 
   def launchNewClient(): Unit = {
-    val window = server.connection.newClient(false, 0).asInstanceOf[ClientAppInterface]
+    server.connection.newClient(false, 0).foreach(window => {
+      val client = window.asInstanceOf[ClientAppInterface]
 
-    window.addWindowListener(new WindowAdapter {
-      override def windowClosed(e: WindowEvent): Unit = {
-        clientWindows -= window
-      }
+      client.addWindowListener(new WindowAdapter {
+        override def windowClosed(e: WindowEvent): Unit = {
+          clientWindows -= client
+        }
+      })
+
+      clientWindows += client
     })
-
-    clientWindows += window
   }
 
   def syncTheme(): Unit = {

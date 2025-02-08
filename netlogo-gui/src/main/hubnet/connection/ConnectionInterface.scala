@@ -8,5 +8,5 @@ trait ConnectionInterface {
   def enqueueMessage(msg:MessageEnvelope.MessageEnvelope)
   def modelWidgets: Seq[CoreWidget]
   // returns client window if in GUI mode, for theme synchronization (Isaac B 11/14/24)
-  def newClient(isRobo: Boolean, waitTime: Int): AnyRef
+  def newClient(isRobo: Boolean, waitTime: Int): Option[AnyRef]
 }
