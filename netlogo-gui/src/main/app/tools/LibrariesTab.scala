@@ -325,12 +325,13 @@ class LibrariesTab( category:        String
   }
 
   private def installButtonText: String =
-    if (actionableLibraries.forall(_.status == LibraryStatus.CanInstall))
+    if (actionableLibraries.forall(_.status == LibraryStatus.CanInstall)) {
       I18N.gui("install")
-    else if (actionableLibraries.forall(_.status == LibraryStatus.CanUpdate))
+    } else if (actionableLibraries.forall(_.status == LibraryStatus.CanUpdate)) {
       I18N.gui("update")
-    else
+    } else {
       I18N.gui("update") + " / " + I18N.gui("install")
+    }
 
   private def finishManagement(): Unit = {
     updateSidebar()
@@ -400,9 +401,7 @@ class LibrariesTab( category:        String
       if (isSelected) {
         newComponent.setBackground(InterfaceColors.DIALOG_BACKGROUND_SELECTED)
         newComponent.setForeground(InterfaceColors.DIALOG_TEXT_SELECTED)
-      }
-
-      else {
+      } else {
         newComponent.setBackground(InterfaceColors.DIALOG_BACKGROUND)
         newComponent.setForeground(InterfaceColors.DIALOG_TEXT)
       }
@@ -411,14 +410,15 @@ class LibrariesTab( category:        String
     }
 
     private def statusIcon(status: LibraryStatus, extName: String) =
-      if (!extPathMappings.contains(extName))
+      if (!extPathMappings.contains(extName)) {
         status match {
           case LibraryStatus.UpToDate   => upToDateIcon
           case LibraryStatus.CanUpdate  => canUpdateIcon
           case LibraryStatus.CanInstall => noIcon
         }
-      else
+      } else {
         warningIcon
+      }
   }
 
   private class Worker( operation: String, fn: LibraryInfo => Unit

@@ -58,21 +58,6 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) 
 
   val errorLabel = new EditorAreaErrorLabel(editor)
 
-  def update(previewCommands: PreviewCommands): Unit = {
-    editor.setText(previewCommands.source)
-    editor.setEnabled(previewCommands.isInstanceOf[Compilable])
-    dirty = false
-    updateCompileIcon()
-  }
-
-  private def updateCompileIcon() {
-    compileButton.setIcon(Utils.iconScaledWithColor("/images/check.png", 15, 15,
-                                                    if (dirty)
-                                                      InterfaceColors.CHECK_FILLED
-                                                    else
-                                                      InterfaceColors.TOOLBAR_IMAGE))
-  }
-
   updateCompileIcon()
 
   locally {
@@ -105,10 +90,26 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) 
       setBackground(InterfaceColors.CODE_BACKGROUND)
     }, c)
   }
+
+  def update(previewCommands: PreviewCommands): Unit = {
+    editor.setText(previewCommands.source)
+    editor.setEnabled(previewCommands.isInstanceOf[Compilable])
+    dirty = false
+    updateCompileIcon()
+  }
+
+  private def updateCompileIcon(): Unit = {
+    compileButton.setIcon(Utils.iconScaledWithColor("/images/check.png", 15, 15,
+                                                    if (dirty) {
+                                                      InterfaceColors.CHECK_FILLED
+                                                    } else {
+                                                      InterfaceColors.TOOLBAR_IMAGE
+                                                    }))
+  }
 }
 
 class PreviewCommandsComboBox extends ComboBox[PreviewCommands](List(Default, Custom(Default.source), Manual)) {
-  def updateCommands(newPreviewCommands: PreviewCommands) {
+  def updateCommands(newPreviewCommands: PreviewCommands): Unit = {
     if (newPreviewCommands.isInstanceOf[Custom])
       setItems(List(Default, newPreviewCommands, Manual))
 

@@ -167,7 +167,7 @@ class ShowUsageBox(colorizer: Colorizer) {
         cell.setBackground(InterfaceColors.MENU_BACKGROUND)
         cell.setForeground(InterfaceColors.TOOLBAR_TEXT)
       }
-      
+
       cell
     }
 
