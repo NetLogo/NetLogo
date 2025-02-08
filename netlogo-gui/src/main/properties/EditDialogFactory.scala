@@ -26,7 +26,7 @@ class EditDialogFactory(compiler: CompilerServices, colorizer: Colorizer) extend
         override def getPreferredSize = limit(super.getPreferredSize)
 
         addWindowListener(new WindowAdapter {
-          override def windowClosed(e: WindowEvent) {
+          override def windowClosed(e: WindowEvent): Unit = {
             finish(dialog != null && !dialog.canceled)
           }
         })
