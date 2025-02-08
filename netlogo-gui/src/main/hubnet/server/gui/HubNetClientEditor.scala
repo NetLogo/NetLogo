@@ -36,7 +36,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   private val toolbar = new ToolBar {
     setLayout(new GridBagLayout)
 
-    override def addControls() {
+    override def addControls(): Unit = {
       val c = new GridBagConstraints
 
       c.anchor = GridBagConstraints.WEST
@@ -73,8 +73,8 @@ class HubNetClientEditor(workspace: GUIWorkspace,
 
   override def getPreferredSize = if (interfacePanel.empty) new Dimension(700, 550) else super.getPreferredSize
   def getLinkParent = linkParent
-  def close() {interfacePanel.removeAllWidgets()}
-  override def requestFocus() {interfacePanel.requestFocus()}
+  def close(): Unit = {interfacePanel.removeAllWidgets()}
+  override def requestFocus(): Unit = {interfacePanel.requestFocus()}
   def getWidgetsForSaving: Seq[CoreWidget] = interfacePanel.getWidgetsForSaving
 
   def interfaceWidgets: Seq[CoreWidget] =
@@ -85,8 +85,8 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     setSize(getPreferredSize)
   }
 
-  def handle(e: org.nlogo.window.Events.ZoomedEvent) {setSize(getPreferredSize)}
-  def setTitle(title: String, directory: String, mt: ModelType) {setTitle(getTitle(title, directory, mt))}
+  def handle(e: org.nlogo.window.Events.ZoomedEvent): Unit = {setSize(getPreferredSize)}
+  def setTitle(title: String, directory: String, mt: ModelType): Unit = {setTitle(getTitle(title, directory, mt))}
 
   private def getTitle (title:String, directory:String, mt: ModelType) = {
     // on OS X, use standard window title format. otherwise use Windows convention

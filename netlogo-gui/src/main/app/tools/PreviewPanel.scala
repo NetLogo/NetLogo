@@ -90,7 +90,7 @@ class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel(new
 
     c.gridx = 0
     c.insets = new Insets(6, 0, 0, 0)
-    
+
     add(button, c)
     add(imageLabel, c)
     add(graphicsPreview, c)

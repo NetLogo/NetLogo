@@ -34,7 +34,7 @@ private class ManagerDialog(manager:       LabManager,
   /// actions
   private def makeAction(name: String, fn: () => Unit) = {
     new AbstractAction(name) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         fn()
       }
     }
@@ -56,7 +56,7 @@ private class ManagerDialog(manager:       LabManager,
   /// initialization
   setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
   addWindowListener(new java.awt.event.WindowAdapter {
-    override def windowClosing(e: java.awt.event.WindowEvent) { closeAction.actionPerformed(null) } })
+    override def windowClosing(e: java.awt.event.WindowEvent): Unit = { closeAction.actionPerformed(null) } })
   setTitle(I18N.gui.get("menu.tools.behaviorSpace"))
   // set up the list
   jlist.setVisibleRowCount(5)
@@ -64,7 +64,7 @@ private class ManagerDialog(manager:       LabManager,
   jlist.addListSelectionListener(this)
   // Listen for double-clicks, and edit the selected protocol
   jlist.addMouseListener(new javax.swing.event.MouseInputAdapter {
-    override def mouseClicked(e: java.awt.event.MouseEvent) {
+    override def mouseClicked(e: java.awt.event.MouseEvent): Unit = {
       if (e.getClickCount > 1 && jlist.getSelectedIndices.length == 1
           && selectedProtocol.runsCompleted == 0 && !blockActions) {
         edit()
@@ -140,7 +140,7 @@ private class ManagerDialog(manager:       LabManager,
   Utils.addEscKeyAction(this, closeAction)
   getRootPane.setDefaultButton(runButton)
   /// implement ListSelectionListener
-  def valueChanged(e: javax.swing.event.ListSelectionEvent) {
+  def valueChanged(e: javax.swing.event.ListSelectionEvent): Unit = {
     if (blockActions) {
       editAction.setEnabled(false)
       newAction.setEnabled(false)
@@ -151,8 +151,7 @@ private class ManagerDialog(manager:       LabManager,
       closeAction.setEnabled(false)
       abortAction.setEnabled(false)
       runAction.setEnabled(false)
-    }
-    else {
+    } else {
       val count = jlist.getSelectedIndices.length
       editAction.setEnabled(count == 1 && selectedProtocol.runsCompleted == 0)
       newAction.setEnabled(true)
@@ -186,10 +185,10 @@ private class ManagerDialog(manager:       LabManager,
                                         List(manager.workspace.world.getObserverVariableByName(variableName)))}}),
       true)
   }
-  private def duplicate() { editProtocol(selectedProtocol.copy(name = selectedProtocol.name + " (copy)",
+  private def duplicate(): Unit = { editProtocol(selectedProtocol.copy(name = selectedProtocol.name + " (copy)",
                                                                runsCompleted = 0), true) }
-  private def edit() { editProtocol(selectedProtocol, false) }
-  private def editProtocol(protocol: LabProtocol, isNew: Boolean) {
+  private def edit(): Unit = { editProtocol(selectedProtocol, false) }
+  private def editProtocol(protocol: LabProtocol, isNew: Boolean): Unit = {
     blockActions = true
     if (!isNew) editIndex = selectedIndex
     update()
@@ -200,22 +199,27 @@ private class ManagerDialog(manager:       LabManager,
       blockActions = false
       if (success) {
         val newProtocol = editable.get.get
-        if (isNew) manager.protocols += newProtocol
-        else manager.protocols(editIndex) = newProtocol
+        if (isNew) {
+          manager.protocols += newProtocol
+        } else {
+          manager.protocols(editIndex) = newProtocol
+        }
         update()
         select(newProtocol)
         manager.dirty()
-      }
-      else {
+      } else {
         update()
       }
     }, true)
   }
-  private def delete() {
+  private def delete(): Unit = {
     val selected = jlist.getSelectedIndices
     val message = {
-      if (selected.length > 1) I18N.gui("delete.confirm.multiple", selected.length.toString)
-      else I18N.gui("delete.confirm.one", listModel.getElementAt(selected(0)).asInstanceOf[LabProtocol].name)
+      if (selected.length > 1) {
+        I18N.gui("delete.confirm.multiple", selected.length.toString)
+      } else {
+        I18N.gui("delete.confirm.one", listModel.getElementAt(selected(0)).asInstanceOf[LabProtocol].name)
+      }
     }
     if (new OptionPane(this, I18N.gui("delete"), message, OptionPane.Options.YES_NO, OptionPane.Icons.QUESTION)
           .getSelectedIndex == 0) {
@@ -224,12 +228,16 @@ private class ManagerDialog(manager:       LabManager,
       update()
       // it's annoying if nothing is left selected, so select something
       val newSize = manager.protocols.size
-      if (newSize > 0) select(if (selected(0) >= newSize) (selected(0) - 1) min (newSize - 1)
-                             else selected(0))
+      if (newSize > 0) select(
+        if (selected(0) >= newSize) {
+          (selected(0) - 1) min (newSize - 1)
+        } else {
+          selected(0)
+        })
       manager.dirty()
     }
   }
-  private def importnl() {
+  private def importnl(): Unit = {
     try {
       class XMLFilter extends java.io.FilenameFilter {
         def accept(dir: java.io.File, name: String): Boolean = {
@@ -266,25 +274,26 @@ private class ManagerDialog(manager:       LabManager,
       case e: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(e)
     }
   }
-  private def export() {
+  private def export(): Unit = {
     try {
       val indices = jlist.getSelectedIndices
 
       val modelName =
-        if (manager.workspace.getModelFileName == null)
+        if (manager.workspace.getModelFileName == null) {
           ""
-        else
+        } else {
           manager.workspace.getModelFileName.split('.')(0) + '-'
+        }
 
       var path = FileDialog.showFiles(manager.workspace.getFrame, I18N.gui("export.dialog"), java.awt.FileDialog.SAVE,
-                  if (indices.length == 1)
+                  if (indices.length == 1) {
                     modelName + selectedProtocol.name + "-experiment.xml"
-                  else
-                    modelName + "experiments.xml")
+                  } else {
+                    modelName + "experiments.xml"
+                  })
 
-      if (!path.endsWith(".xml")) {
+      if (!path.endsWith(".xml"))
         path += ".xml"
-      }
 
       val out = new java.io.PrintWriter(path)
 
@@ -295,22 +304,22 @@ private class ManagerDialog(manager:       LabManager,
       case e: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(e)
     }
   }
-  private def abort() {
+  private def abort(): Unit = {
     saveProtocol(selectedProtocol.copy(runsCompleted = 0, runOptions = null))
   }
   /// helpers
-  def update() {
+  def update(): Unit = {
     listModel.clear
     manager.protocols.foreach(listModel.addElement(_))
     manager.workspace.setBehaviorSpaceExperiments(manager.protocols.toList)
     valueChanged(null)
     if (manager.protocols.size > 0) jlist.setSelectedIndices(Array(0))
   }
-  private def select(index: Int) {
+  private def select(index: Int): Unit = {
     jlist.setSelectedIndices(Array(index))
     jlist.ensureIndexIsVisible(index)
   }
-  private def select(targetProtocol: LabProtocol) {
+  private def select(targetProtocol: LabProtocol): Unit = {
     val index = manager.protocols.indexWhere(_ eq targetProtocol)
     jlist.setSelectedIndices(Array(index))
     jlist.ensureIndexIsVisible(index)
@@ -346,17 +355,16 @@ private class ManagerDialog(manager:       LabManager,
     def getListCellRendererComponent(list: JList[_ <: LabProtocol], proto: LabProtocol, index: Int,
                                      isSelected: Boolean, cellHasFocus: Boolean): Component = {
       label.setText(
-        if (proto.runsCompleted != 0)
+        if (proto.runsCompleted != 0) {
           I18N.gui("inProgress", proto.name, proto.runsCompleted.toString, proto.countRuns.toString)
-        else
-          s"${proto.name} (${proto.countRuns} run${(if (proto.countRuns != 1) "s" else "")})")
+        } else {
+          s"${proto.name} (${proto.countRuns} run${(if (proto.countRuns != 1) "s" else "")})"
+        })
 
       if (isSelected) {
         setBackground(InterfaceColors.DIALOG_BACKGROUND_SELECTED)
         label.setForeground(InterfaceColors.DIALOG_TEXT_SELECTED)
-      }
-
-      else {
+      } else {
         setBackground(InterfaceColors.DIALOG_BACKGROUND)
         label.setForeground(InterfaceColors.DIALOG_TEXT)
       }

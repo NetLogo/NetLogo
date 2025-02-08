@@ -71,27 +71,27 @@ with MenuAction with ThemeSync {
   category = HelpCategory
   group    = HelpAboutGroup
 
-  private var aboutWindow: AboutWindow = null
+  private var aboutWindow: Option[AboutWindow] = None
 
   override def actionPerformed(e: ActionEvent): Unit = {
-    if (aboutWindow == null) {
-      aboutWindow = new AboutWindow(frame) {
-        addWindowListener(new WindowAdapter {
-          override def windowClosed(e: WindowEvent) {
-            aboutWindow = null
-          }
+    aboutWindow match {
+      case Some(window) =>
+        window.setVisible(true)
+
+      case None =>
+        aboutWindow = Some(new AboutWindow(frame) {
+          addWindowListener(new WindowAdapter {
+            override def windowClosed(e: WindowEvent) {
+              aboutWindow = None
+            }
+          })
+
+          setVisible(true)
         })
-
-        setVisible(true)
-      }
     }
-
-    else
-      aboutWindow.setVisible(true)
   }
 
   def syncTheme() {
-    if (aboutWindow != null)
-      aboutWindow.syncTheme()
+    aboutWindow.foreach(_.syncTheme())
   }
 }
