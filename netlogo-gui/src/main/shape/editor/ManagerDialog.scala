@@ -45,10 +45,10 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
   def importButtons: Seq[Component] = Seq(modelImportButton)
 
   // Create the buttons
-  lazy val modelImportButton = new Button(I18N.gui("importFromModel"), importFromModel)
-  lazy val editButton = new Button(I18N.gui("edit"), editShape)
-  lazy val newButton = new Button(I18N.gui("new"), newShape)
-  lazy val deleteButton = new Button(I18N.gui("delete"), () => {
+  private val modelImportButton = new Button(I18N.gui("importFromModel"), importFromModel)
+  private val editButton = new Button(I18N.gui("edit"), editShape)
+  private val newButton = new Button(I18N.gui("new"), newShape)
+  private val deleteButton = new Button(I18N.gui("delete"), () => {
       ManagerDialog.this.shapesList.deleteShapes()
       editButton.setEnabled(true) // Since at most one shape is highlighted now, enable edit
       setEnabled(true)
@@ -61,17 +61,16 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
     setEnabled(false)
   }
 
-  lazy val duplicateButton = new Button(I18N.gui("duplicate"), duplicateShape)
+  private val duplicateButton = new Button(I18N.gui("duplicate"), duplicateShape)
 
-  lazy val libraryLabel = new JLabel(I18N.gui("info"), SwingConstants.CENTER) {
+  private val libraryLabel = new JLabel(I18N.gui("info"), SwingConstants.CENTER) {
     setFont(new Font(org.nlogo.awt.Fonts.platformFont, Font.PLAIN, 10))
   }
 
-  // make a panel to hold the two rows of buttons
-  lazy val buttonPanel = new JPanel {
+  private val buttonPanel = new JPanel {
     setLayout(new ColumnLayout(3, Component.CENTER_ALIGNMENT, Component.TOP_ALIGNMENT))
-    // Setup the first row of buttons
-    add(new JPanel with Transparent {
+
+    val topRow = new JPanel with Transparent {
       setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
       add(Box.createHorizontalGlue())
       add(Box.createHorizontalStrut(20))
@@ -84,41 +83,42 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
       add(deleteButton)
       add(Box.createHorizontalStrut(20))
       add(Box.createHorizontalGlue())
-    })
-    // Setup the second row of buttons
-    add(new JPanel with Transparent {
+    }
+
+    val bottomRow = new JPanel with Transparent {
       setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
       add(Box.createHorizontalGlue())
       add(Box.createHorizontalStrut(20))
       importButtons.foreach(add)
       add(Box.createHorizontalStrut(20))
       add(Box.createHorizontalGlue())
-    })
+    }
+
+    add(topRow)
+    add(bottomRow)
     add(libraryLabel)
   }
 
-  // Create the scroll pane where the list will be displayed
-  val scrollPane = new ScrollPane(shapesList)
+  private val scrollPane = new ScrollPane(shapesList)
 
   locally {
     shapesList.addMouseListener(new MouseInputAdapter {
-      // Listen for double-clicks, and edit the selected shape
-      override def mouseClicked(e: MouseEvent) {if (e.getClickCount() > 1) editShape()}
+      // double click on a list item will edit it
+      override def mouseClicked(e: MouseEvent): Unit = {
+        if (e.getClickCount() > 1) editShape()
+      }
     })
 
     Utils.addEscKeyAction(this, () => dispose())
 
-    // Add everything to the window
-    getContentPane().setLayout(new BorderLayout(0, 10))
-    getContentPane().add(scrollPane, BorderLayout.CENTER)
-    getContentPane().add(buttonPanel, BorderLayout.SOUTH)
+    getContentPane.setLayout(new BorderLayout(0, 10))
+    getContentPane.add(scrollPane, BorderLayout.CENTER)
+    getContentPane.add(buttonPanel, BorderLayout.SOUTH)
 
-    // Set the window size
-    val maxBounds = getGraphicsConfiguration().getBounds()
+    val maxBounds = getGraphicsConfiguration.getBounds()
     setLocation(maxBounds.x + maxBounds.width / 3, maxBounds.y + maxBounds.height / 3)
 
-    // set the default button
-    getRootPane().setDefaultButton(editButton)
+    getRootPane.setDefaultButton(editButton)
 
     pack()
   }
