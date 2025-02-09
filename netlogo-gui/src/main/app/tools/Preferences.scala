@@ -15,7 +15,7 @@ import org.nlogo.swing.{ Button, CheckBox, ComboBox, TextField, Transparent }
 import org.nlogo.theme.ThemeSync
 
 object Preferences {
-  abstract class BooleanPreference(val i18nKey: String, val requirement: String, default: Boolean) extends Preference {
+  abstract class BooleanPreference(val i18nKey: String, val requirement: RequiredAction, default: Boolean) extends Preference {
     val component = new CheckBox
 
     def load(prefs: JavaPreferences) = {
@@ -28,7 +28,7 @@ object Preferences {
     }
   }
 
-  abstract class StringPreference(val i18nKey: String, val requirement: String, default: String) extends Preference {
+  abstract class StringPreference(val i18nKey: String, val requirement: RequiredAction, default: String) extends Preference {
     val component = new TextField(20, default)
 
     def load(prefs: JavaPreferences) = {
@@ -50,7 +50,7 @@ object Preferences {
 
     val i18nKey = "uiLanguage"
     val component = new ComboBox(languages.toList)
-    val requirement = "restartRequired"
+    val requirement = RequiredAction.Restart
 
     def load(prefs: JavaPreferences) = {
       val locale = I18N.localeFromPreferences.getOrElse(I18N.gui.defaultLocale)
@@ -63,12 +63,12 @@ object Preferences {
     }
   }
 
-  object LoadLastOnStartup extends BooleanPreference("loadLastOnStartup", "", false) {}
+  object LoadLastOnStartup extends BooleanPreference("loadLastOnStartup", RequiredAction.None, false) {}
 
   class ReloadOnExternalChanges(tabs: TabsInterface) extends Preference {
     val i18nKey = "reloadOnExternalChanges"
     val component = new CheckBox
-    val requirement = ""
+    val requirement = RequiredAction.None
 
     def load(prefs: JavaPreferences) = {
       val enabled = prefs.get("reloadOnExternalChanges", "false").toBoolean
@@ -85,7 +85,7 @@ object Preferences {
   class LineNumbers(tabs: TabsInterface) extends Preference {
     val i18nKey = "editorLineNumbers"
     val component = new CheckBox
-    val requirement = ""
+    val requirement = RequiredAction.None
 
     def load(prefs: JavaPreferences) = {
       val lineNumsEnabled = prefs.get("line_numbers", "false").toBoolean
@@ -98,11 +98,11 @@ object Preferences {
     }
   }
 
-  object IsLoggingEnabled extends BooleanPreference("loggingEnabled", "restartRequired", false) {}
+  object IsLoggingEnabled extends BooleanPreference("loggingEnabled", RequiredAction.Restart, false) {}
 
   class LogDirectory(val frame: Frame) extends Preference {
     val i18nKey         = "logDirectory"
-    val requirement = "restartRequired"
+    val requirement = RequiredAction.Restart
     val textField       = new TextField(20)
     val component =
       new JPanel with Transparent with ThemeSync {
@@ -147,9 +147,9 @@ object Preferences {
 
   }
 
-  object LogEvents extends StringPreference("logEvents", "restartRequired", "")
+  object LogEvents extends StringPreference("logEvents", RequiredAction.Restart, "")
 
-  object IncludedFilesMenu  extends BooleanPreference("includedFilesMenu", "restartRequired", false) {}
+  object IncludedFilesMenu  extends BooleanPreference("includedFilesMenu", RequiredAction.Restart, false) {}
 
   object ProceduresMenuSortOrder extends Preference {
     val i18nKey = "proceduresMenuSortOrder"
@@ -160,7 +160,7 @@ object Preferences {
     )
 
     val component = new ComboBox(options)
-    val requirement = ""
+    val requirement = RequiredAction.None
 
     def load(prefs: JavaPreferences) = {
       val sortOrder = prefs.get("proceduresMenuSortOrder", options(0))
@@ -173,9 +173,9 @@ object Preferences {
     }
   }
 
-  object FocusOnError extends BooleanPreference("focusOnError", "", true) {}
+  object FocusOnError extends BooleanPreference("focusOnError", RequiredAction.None, true) {}
 
-  object StartSeparateCodeTab extends BooleanPreference("startSeparateCodeTab", "", false) {}
+  object StartSeparateCodeTab extends BooleanPreference("startSeparateCodeTab", RequiredAction.None, false) {}
 
-  object PreserveWidgetSizes extends BooleanPreference("preserveWidgetSizes", "reloadRequired", true) {}
+  object PreserveWidgetSizes extends BooleanPreference("preserveWidgetSizes", RequiredAction.Reload, true) {}
 }

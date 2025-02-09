@@ -9,7 +9,7 @@ import java.awt.event.{ ActionEvent, ActionListener }
 import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.swing.{ Button, Utils }
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 abstract class RuntimeErrorDisplay(accessor: PropertyAccessor[Option[Exception]])
   extends PropertyEditor(accessor, handlesOwnErrors = true) with RuntimeErrorDisplayer {
@@ -55,7 +55,7 @@ abstract class RuntimeErrorDisplay(accessor: PropertyAccessor[Option[Exception]]
   }
 }
 
-trait RuntimeErrorDisplayer extends JPanel with ActionListener {
+trait RuntimeErrorDisplayer extends JPanel with ActionListener with ThemeSync {
 
   def exceptionMessage: Option[String]
 

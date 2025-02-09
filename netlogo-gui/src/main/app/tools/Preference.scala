@@ -7,10 +7,23 @@ import javax.swing.JComponent
 
 import org.nlogo.theme.ThemeSync
 
+// stores I18N key for hint to be added before preference name (Isaac B 2/9/25)
+sealed trait RequiredAction
+
+object RequiredAction {
+  case object None extends RequiredAction
+  case object Reload extends RequiredAction {
+    override def toString: String = "reloadRequired"
+  }
+  case object Restart extends RequiredAction {
+    override def toString: String = "restartRequired"
+  }
+}
+
 trait Preference {
   val i18nKey: String
   val component: JComponent with ThemeSync
-  val requirement: String
+  val requirement: RequiredAction
   def load(prefs: JavaPreferences): Unit
   def save(prefs: JavaPreferences): Unit
 }

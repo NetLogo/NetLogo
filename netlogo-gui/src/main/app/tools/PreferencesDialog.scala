@@ -59,7 +59,7 @@ class PreferencesDialog(parent: Frame, preferences: Preference*) extends ToolDia
     preferencesPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10))
     preferences.foreach(pref =>
       preferencesPanel.addField(
-        (if (pref.requirement.nonEmpty) I18N.gui(pref.requirement) + " " else "") +
+        (if (pref.requirement != RequiredAction.None) I18N.gui(pref.requirement.toString) + " " else "") +
         I18N.gui(pref.i18nKey), pref.component))
 
     val buttonsPanel = new Box(BoxLayout.LINE_AXIS)

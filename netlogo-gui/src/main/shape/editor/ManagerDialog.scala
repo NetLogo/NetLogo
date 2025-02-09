@@ -63,7 +63,7 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
 
   private val duplicateButton = new Button(I18N.gui("duplicate"), duplicateShape)
 
-  private val libraryLabel = new JLabel(I18N.gui("info"), SwingConstants.CENTER) {
+  protected val libraryLabel = new JLabel(I18N.gui("info"), SwingConstants.CENTER) {
     setFont(new Font(org.nlogo.awt.Fonts.platformFont, Font.PLAIN, 10))
   }
 
