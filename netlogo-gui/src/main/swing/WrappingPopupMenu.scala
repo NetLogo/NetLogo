@@ -11,7 +11,7 @@ import java.awt.{ Component, Container, Dimension, LayoutManager, Toolkit }
 // http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=4246124 .
 
 class WrappingPopupMenu extends PopupMenu {
-  override def show(invoker: Component, x: Int, y: Int) {
+  override def show(invoker: Component, x: Int, y: Int): Unit = {
     setLayout(new WrappingLayout((Toolkit.getDefaultToolkit.getScreenSize.getHeight
                                   * 0.7 / getFontMetrics(getFont).getHeight).toInt))
 
@@ -19,15 +19,15 @@ class WrappingPopupMenu extends PopupMenu {
   }
 
   private class WrappingLayout(rows: Int) extends LayoutManager {
-    // not implemented
-    def addLayoutComponent(name: String, comp: Component) {}
+    // not implemented, WrappingPopupMenu is static
+    def addLayoutComponent(name: String, comp: Component): Unit = {}
 
-    // not implemented
-    def removeLayoutComponent(comp: Component) {}
+    // not implemented, WrappingPopupMenu is static
+    def removeLayoutComponent(comp: Component): Unit = {}
 
-    def layoutContainer(target: Container) {
+    def layoutContainer(target: Container): Unit = {
       val insets = target.getInsets
-      var x = 0;
+      var x = 0
       var y = insets.top
       var columnWidth = 0
       var lastRowStart = 0
@@ -60,7 +60,7 @@ class WrappingPopupMenu extends PopupMenu {
 
     def minimumLayoutSize(target: Container): Dimension = {
       val insets = target.getInsets
-      var x = 0;
+      var x = 0
       var columnWidth = 0
       var columnHeight = 0
       var maxColumnHeight = 0
