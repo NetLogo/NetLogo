@@ -115,7 +115,7 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
   }
 
   override def paintContentBorder(g: Graphics, tabPlacement: Int, selectedIndex: Int) {
-    // no content border
+    // don't draw default content border (Isaac B 2/9/25)
   }
 
   override def paint(g: Graphics, c: JComponent) {

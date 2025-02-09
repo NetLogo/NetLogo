@@ -53,7 +53,7 @@ object LineBreaker {
   }
 
   def breakLines(_text: String, metrics: FontMetrics, width: Int): Seq[String] = {
-    import scala.collection.JavaConverters._
+    import scala.collection.JavaConverters.iterableAsScalaIterableConverter
 
     breakLinesJ(_text, metrics, width).asScala.toSeq
   }

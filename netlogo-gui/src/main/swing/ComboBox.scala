@@ -185,7 +185,7 @@ class ComboBox[T](private var items: Seq[T] = Seq())
   // required by ItemSelectable, but not used by NetLogo code
   // unimplemented because T can't be interpreted as Object
   // (Isaac B 2/8/25)
-  def getSelectedObjects: Array[Object] = ???
+  override def getSelectedObjects: Array[AnyRef] = ???
 
   def itemCount: Int =
     items.size
