@@ -18,19 +18,19 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") with ThemeS
   private lazy val panel = new JPanel(new GridBagLayout)
 
   private lazy val classicButton = new RadioButton(new AbstractAction(I18N.gui("classic")) {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       setTheme("classic")
     }
   })
 
   private lazy val lightButton = new RadioButton(new AbstractAction(I18N.gui("light")) {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       setTheme("light")
     }
   })
 
   private lazy val darkButton = new RadioButton(new AbstractAction(I18N.gui("dark")) {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       setTheme("dark")
     }
   })
@@ -46,9 +46,9 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") with ThemeS
     setVisible(false)
   })
 
-  private var startTheme = ""
+  private var startTheme = "light"
 
-  override def initGUI() {
+  override def initGUI(): Unit = {
     setResizable(false)
 
     val c = new GridBagConstraints
@@ -79,7 +79,7 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") with ThemeS
     pack()
   }
 
-  override def setVisible(visible: Boolean) {
+  override def setVisible(visible: Boolean): Unit = {
     if (visible) {
       startTheme = InterfaceColors.getTheme
 
@@ -89,7 +89,7 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") with ThemeS
     super.setVisible(visible)
   }
 
-  private def setTheme(theme: String) {
+  private def setTheme(theme: String): Unit = {
     InterfaceColors.setTheme(theme)
 
     prefs.put("colorTheme", theme)
@@ -97,7 +97,7 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") with ThemeS
     App.app.syncWindowThemes()
   }
 
-  private def setSelected(theme: String) {
+  private def setSelected(theme: String): Unit = {
     theme match {
       case "classic" => classicButton.setSelected(true)
       case "light" => lightButton.setSelected(true)

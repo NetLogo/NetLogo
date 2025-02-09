@@ -10,7 +10,7 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class RadioButton(action: Action) extends JRadioButton(action) with HoverDecoration with Transparent with ThemeSync {
   def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       function()
     }
   })
@@ -19,23 +19,25 @@ class RadioButton(action: Action) extends JRadioButton(action) with HoverDecorat
     def getIconWidth: Int = 14
     def getIconHeight: Int = 14
 
-    def paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+    def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
       val g2d = Utils.initGraphics2D(g)
 
       if (isSelected) {
-        if (isHover)
+        if (isHover) {
           g2d.setColor(InterfaceColors.RADIO_BUTTON_SELECTED_HOVER)
-        else
+        } else {
           g2d.setColor(InterfaceColors.RADIO_BUTTON_SELECTED)
+        }
 
         g2d.fillOval(x, y, getIconWidth, getIconHeight)
       }
 
       else {
-        if (isHover)
+        if (isHover) {
           g2d.setColor(InterfaceColors.RADIO_BUTTON_BACKGROUND_HOVER)
-        else
+        } else {
           g2d.setColor(InterfaceColors.RADIO_BUTTON_BACKGROUND)
+        }
 
         g2d.fillOval(x, y, getIconWidth, getIconHeight)
 

@@ -13,7 +13,7 @@ class CollapsibleArrow extends Icon {
   def getIconWidth = 9
   def getIconHeight = 9
 
-  def paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+  def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
     val g2d = Utils.initGraphics2D(g)
 
     g2d.setColor(InterfaceColors.DIALOG_TEXT)
@@ -21,15 +21,13 @@ class CollapsibleArrow extends Icon {
     if (isOpen) {
       g2d.drawLine(x, y + 2, x + 4, y + 6)
       g2d.drawLine(x + 4, y + 6, x + 8, y + 2)
-    }
-
-    else {
+    } else {
       g2d.drawLine(x + 2, y + 8, x + 6, y + 4)
       g2d.drawLine(x + 6, y + 4, x + 2, y)
     }
   }
 
-  def setOpen(open: Boolean) {
+  def setOpen(open: Boolean): Unit = {
     isOpen = open
   }
 }

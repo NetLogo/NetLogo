@@ -18,17 +18,19 @@ import org.nlogo.theme.InterfaceColors
 import scala.collection.JavaConverters.seqAsJavaList
 
 class StockFigure extends RectangleFigure with ModelElementFigure with Editable {
-  private var stock = new Stock
+  private var stock: Option[Stock] = Some(new Stock)
 
-  setAttribute(FigureAttributeConstant.FILL_COLOR, InterfaceColors.MONITOR_BACKGROUND)
+  private var _dirty = false
+
+  setAttribute(FigureAttributeConstant.FILL_COLOR, InterfaceColors.MonitorBackground)
 
   def getModelElement: ModelElement =
-    stock
+    stock.orNull
 
   def anyErrors: Boolean =
     false
 
-  def error(o: Object, e: Exception) {}
+  def error(o: Object, e: Exception): Unit = {}
 
   def error(key: Object): Exception =
     null
@@ -36,20 +38,21 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
   def sourceOffset: Int =
     0
 
-  override def draw(g: Graphics) {
+  override def draw(g: Graphics): Unit = {
     val g2d = SwingUtils.initGraphics2D(g)
 
     super.draw(g2d)
 
-    if (stock != null) {
-      if (!stock.isComplete)
+    stock.foreach(s => {
+      if (!s.isComplete)
         g.setColor(Color.RED)
 
       val name =
-        if (stock.getName.trim.isEmpty)
+        if (s.getName.trim.isEmpty) {
           "?"
-        else
-          stock.getName.trim
+        } else {
+          s.getName.trim
+        }
 
       g.setFont(g.getFont.deriveFont(Font.BOLD))
 
@@ -58,7 +61,7 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
 
       g.drawString(name, displayBox.x + (displayBox.width - width) / 2,
                    displayBox.y + (displayBox.height - height) / 2 + g.getFontMetrics.getMaxAscent)
-    }
+    })
   }
 
   override protected def invalidateRectangle(r: Rectangle): Rectangle = {
@@ -87,16 +90,16 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
     )))
   }
 
-  override def write(dw: StorableOutput) {
+  override def write(dw: StorableOutput): Unit = {
     super.write(dw)
 
-    dw.writeStorable(Wrapper.wrap(stock))
+    dw.writeStorable(Wrapper.wrap(stock.orNull))
   }
 
-  override def read(dr: StorableInput) {
+  override def read(dr: StorableInput): Unit = {
     super.read(dr)
 
-    stock = dr.readStorable.asInstanceOf[WrappedStock].stock
+    stock = Option(dr.readStorable.asInstanceOf[WrappedStock].stock)
   }
 
   /// For org.nlogo.window.Editable
@@ -113,35 +116,39 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
   def editFinished(): Boolean =
     true
 
-  private var _dirty = false
-
   def dirty: Boolean =
     _dirty
 
-  def nameWrapper(name: String) {
-    _dirty = _dirty || stock.getName != name
+  def nameWrapper(name: String): Unit = {
+    stock.foreach(s => {
+      _dirty = _dirty || s.getName != name
 
-    stock.setName(name)
+      s.setName(name)
+    })
   }
 
   def nameWrapper: String =
-    stock.getName
+    stock.map(_.getName).orNull
 
-  def initialValueExpressionWrapper(expression: String) {
-    _dirty = _dirty || stock.getInitialValueExpression != expression
+  def initialValueExpressionWrapper(expression: String): Unit = {
+    stock.foreach(s => {
+      _dirty = _dirty || s.getInitialValueExpression != expression
 
-    stock.setInitialValueExpression(expression)
+      s.setInitialValueExpression(expression)
+    })
   }
 
   def initialValueExpressionWrapper: String =
-    stock.getInitialValueExpression
+    stock.map(_.getInitialValueExpression).orNull
 
   def allowNegative: Boolean =
-    !stock.isNonNegative
+    !stock.map(_.isNonNegative).getOrElse(false)
 
-  def allowNegative(allow: Boolean) {
-    _dirty = _dirty || stock.isNonNegative == allow
+  def allowNegative(allow: Boolean): Unit = {
+    stock.foreach(s => {
+      _dirty = _dirty || s.isNonNegative == allow
 
-    stock.setNonNegative(!allow)
+      s.setNonNegative(!allow)
+    })
   }
 }

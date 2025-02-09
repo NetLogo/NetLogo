@@ -29,12 +29,12 @@ class AggregateTabs(editor: AggregateModelEditor, editorTab: AggregateEditorTab,
     proceduresTab.setText(editor.toNetLogoCode)
   }
 
-  private[gui] def recolorTab(component: Component, hasError: Boolean) {
+  private[gui] def recolorTab(component: Component, hasError: Boolean): Unit = {
     val index = indexOfComponent(component)
     setForegroundAt(index, if (hasError) ErrorColor else InterfaceColors.TOOLBAR_TEXT)
   }
 
-  private[gui] def setError(e: CompilerException, offset: Int) {
+  private[gui] def setError(e: CompilerException, offset: Int): Unit = {
     setSelectedComponent(proceduresTab)
     proceduresTab.setError(e, offset)
     editorTab.setError(e, offset)
@@ -47,7 +47,7 @@ class AggregateTabs(editor: AggregateModelEditor, editorTab: AggregateEditorTab,
     setForegroundAt(indexOfComponent(proceduresTab), null)
   }
 
-  override def setTabForegrounds() {
+  override def setTabForegrounds(): Unit = {
     for (i <- 0 until getTabCount) {
       if (getForegroundAt(i) != ErrorColor) {
         if (i == getSelectedIndex)

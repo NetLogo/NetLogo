@@ -14,12 +14,10 @@ private class SizeButton(expand: Boolean, splitPane: SplitPane) extends JButton 
 
   if (expand) {
     setAction(new AbstractAction {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         if (splitPane.getDividerLocation >= splitPane.maxDividerLocation) {
           splitPane.resetToPreferredSizes()
-        }
-
-        else if (splitPane.getDividerLocation > 0) {
+        } else if (splitPane.getDividerLocation > 0) {
           splitPane.setDividerLocation(0)
         }
       }
@@ -28,19 +26,17 @@ private class SizeButton(expand: Boolean, splitPane: SplitPane) extends JButton 
 
   else {
     setAction(new AbstractAction {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         if (splitPane.getDividerLocation <= 0) {
           splitPane.resetToPreferredSizes()
-        }
-
-        else if (splitPane.getDividerLocation < splitPane.maxDividerLocation) {
+        } else if (splitPane.getDividerLocation < splitPane.maxDividerLocation) {
           splitPane.setDividerLocation(splitPane.maxDividerLocation)
         }
       }
     })
   }
 
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics): Unit = {
     super.paintComponent(g)
 
     val g2d = Utils.initGraphics2D(g)
@@ -49,19 +45,22 @@ private class SizeButton(expand: Boolean, splitPane: SplitPane) extends JButton 
 
     splitPane.getOrientation match {
       case JSplitPane.HORIZONTAL_SPLIT =>
-        if (expand)
+        if (expand) {
           g2d.fillPolygon(Array(getWidth / 2, getWidth / 2 + 5, getWidth / 2 - 5),
                           Array(getHeight / 2 - 2, getHeight / 2 + 2, getHeight / 2 + 2), 3)
-        else
+        } else {
           g2d.fillPolygon(Array(getWidth / 2, getWidth / 2 + 5, getWidth / 2 - 5),
                           Array(getHeight / 2 + 2, getHeight / 2 - 2, getHeight / 2 - 2), 3)
+        }
+
       case JSplitPane.VERTICAL_SPLIT =>
-        if (expand)
+        if (expand) {
           g2d.fillPolygon(Array(getWidth / 2 - 2, getWidth / 2 + 2, getWidth / 2 + 2),
                           Array(getHeight / 2, getHeight / 2 - 5, getHeight / 2 + 5), 3)
-        else
+        } else {
           g2d.fillPolygon(Array(getWidth / 2 + 2, getWidth / 2 - 2, getWidth / 2 - 2),
                           Array(getHeight / 2, getHeight / 2 - 5, getHeight / 2 + 5), 3)
+        }
     }
   }
 }
@@ -80,24 +79,24 @@ private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) {
   private var offset = new Point(0, 0)
 
   addMouseListener(new MouseAdapter {
-    override def mouseEntered(e: MouseEvent) {
+    override def mouseEntered(e: MouseEvent): Unit = {
       splitPane.getOrientation match {
         case JSplitPane.HORIZONTAL_SPLIT => setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR))
         case JSplitPane.VERTICAL_SPLIT => setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR))
       }
     }
 
-    override def mouseExited(e: MouseEvent) {
+    override def mouseExited(e: MouseEvent): Unit = {
       setCursor(Cursor.getDefaultCursor)
     }
 
-    override def mousePressed(e: MouseEvent) {
+    override def mousePressed(e: MouseEvent): Unit = {
       offset = e.getPoint
     }
   })
 
   addMouseMotionListener(new MouseMotionAdapter {
-    override def mouseDragged(e: MouseEvent) {
+    override def mouseDragged(e: MouseEvent): Unit = {
       e.translatePoint(getX, getY)
 
       splitPane.getOrientation match {
@@ -107,7 +106,7 @@ private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) {
     }
   })
 
-  override def doLayout() {
+  override def doLayout(): Unit = {
     val size = splitPane.getDividerSize
 
     splitPane.getOrientation match {
@@ -120,7 +119,7 @@ private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) {
     }
   }
 
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics): Unit = {
     super.paintComponent(g)
 
     val g2d = Utils.initGraphics2D(g)
@@ -145,7 +144,7 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
 
   def getOrientation: Int = orientation
 
-  def setOrientation(orientation: Int) {
+  def setOrientation(orientation: Int): Unit = {
     this.orientation = orientation
 
     revalidate()
@@ -154,14 +153,14 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
 
   def getDividerLocation: Int = dividerLocation
 
-  def setDividerLocation(location: Int) {
+  def setDividerLocation(location: Int): Unit = {
     dividerLocation = location.max(0).min(maxDividerLocation)
 
     revalidate()
     dividerChanged()
   }
 
-  private def dividerChanged() {
+  private def dividerChanged(): Unit = {
     commandCenterToggleAction.foreach(_.putValue(Action.NAME,
       if (dividerLocation < maxDividerLocation) I18N.gui.get("menu.tools.hideCommandCenter")
       else I18N.gui.get("menu.tools.showCommandCenter")))
@@ -169,7 +168,7 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
 
   def getDividerSize: Int = dividerSize
 
-  def resetToPreferredSizes() {
+  def resetToPreferredSizes(): Unit = {
     orientation match {
       case JSplitPane.HORIZONTAL_SPLIT =>
         setDividerLocation(getHeight - topComponent.getPreferredSize.height - dividerSize)
@@ -185,7 +184,7 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
     }
   }
 
-  override def doLayout() {
+  override def doLayout(): Unit = {
     orientation match {
       case JSplitPane.HORIZONTAL_SPLIT =>
         mainComponent.setBounds(0, 0, getWidth, dividerLocation)
@@ -208,7 +207,7 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
     dividerChanged()
   }
 
-  override def setBounds(x: Int, y: Int, width: Int, height: Int) {
+  override def setBounds(x: Int, y: Int, width: Int, height: Int): Unit = {
     if (dividerLocation > 0 && dividerLocation < maxDividerLocation) {
       orientation match {
         case JSplitPane.HORIZONTAL_SPLIT =>
