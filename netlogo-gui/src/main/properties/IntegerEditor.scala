@@ -37,7 +37,7 @@ abstract class IntegerEditor(accessor: PropertyAccessor[Int])
     c
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     label.setForeground(InterfaceColors.DIALOG_TEXT)
 
     editor.syncTheme()

@@ -178,7 +178,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     removeButton.setEnabled(!resourceList.isSelectionEmpty)
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     scrollPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)

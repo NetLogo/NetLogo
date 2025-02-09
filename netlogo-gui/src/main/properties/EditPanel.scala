@@ -324,7 +324,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
 
   private def frame = org.nlogo.awt.Hierarchy.getFrame(this)
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     propertyEditors.foreach(_.syncTheme())
   }
 }

@@ -155,7 +155,7 @@ class AgentMonitorManager(val workspace: GUIWorkspace) extends Event.LinkChild w
     monitorWindows.values.foreach(_.refresh())
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     monitorWindows.values.foreach(_.syncTheme())
     emptyMonitorWindows.values.foreach(_.syncTheme())
   }

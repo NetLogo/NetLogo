@@ -69,7 +69,7 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
   override def getMinimumSize = sizeIfVisible(super.getMinimumSize)
   override def getPreferredSize = sizeIfVisible(super.getPreferredSize)
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
     setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
     setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)

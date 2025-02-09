@@ -19,7 +19,7 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
   }, true)
 
   private val itemUI = new BasicMenuItemUI with ThemeSync {
-    def syncTheme(): Unit = {
+    override def syncTheme(): Unit = {
       setForeground(InterfaceColors.TOOLBAR_TEXT)
 
       selectionBackground = InterfaceColors.MENU_BACKGROUND_HOVER
@@ -33,7 +33,7 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
   setUI(itemUI)
   syncTheme()
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     itemUI.syncTheme()
 
     if (!showIcon)
@@ -43,7 +43,7 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
 
 class PopupCheckBoxMenuItem(action: Action) extends JCheckBoxMenuItem(action) with ThemeSync {
   private val itemUI = new BasicCheckBoxMenuItemUI with ThemeSync {
-    def syncTheme(): Unit = {
+    override def syncTheme(): Unit = {
       setForeground(InterfaceColors.TOOLBAR_TEXT)
 
       selectionBackground = InterfaceColors.MENU_BACKGROUND_HOVER
@@ -56,7 +56,7 @@ class PopupCheckBoxMenuItem(action: Action) extends JCheckBoxMenuItem(action) wi
 
   setUI(itemUI)
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     itemUI.syncTheme()
   }
 }

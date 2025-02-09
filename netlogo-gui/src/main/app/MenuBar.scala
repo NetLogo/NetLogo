@@ -73,7 +73,7 @@ class MenuBar(isApplicationWide: Boolean) extends JMenuBar with EditorMenu with 
     g2d.drawLine(0, getHeight - 1, getWidth, getHeight - 1)
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     fileMenu.syncTheme()
     editMenu.syncTheme()
     toolsMenu.syncTheme()

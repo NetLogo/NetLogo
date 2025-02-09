@@ -97,7 +97,7 @@ class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManag
       case _ => super.scrollPane(editor)
     }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     codeCompletionPopup.syncTheme()
   }
 }

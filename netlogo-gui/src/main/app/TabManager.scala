@@ -733,7 +733,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   def handle(e: AboutToCloseFilesEvent) =
     OfferSaveExternalsDialog.offer(getExternalFileTabs.filter(_.saveNeeded).toSet, workspace.getFrame)
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     (mainTabs.getComponents ++ separateTabs.getComponents).foreach(_ match {
       case ts: ThemeSync => ts.syncTheme()
       case _ =>

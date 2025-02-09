@@ -166,7 +166,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
     }
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
     setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
     setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)

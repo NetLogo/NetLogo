@@ -115,7 +115,7 @@ class ErrorDialogManager(owner: Component, additionalDialogs: => Map[Class[_ <: 
     dialogs.foreach(_._2.setVisible(false))
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     dialogs.foreach(_._2.syncTheme())
   }
 }

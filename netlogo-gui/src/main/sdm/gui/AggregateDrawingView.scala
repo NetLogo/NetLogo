@@ -11,7 +11,7 @@ class AggregateDrawingView(editor: AggregateModelEditor, width: Int, height: Int
 
   syncTheme()
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     setBackground(InterfaceColors.INTERFACE_BACKGROUND)
   }
 }

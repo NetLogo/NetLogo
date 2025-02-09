@@ -72,7 +72,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       this.color = color
     }
 
-    def syncTheme(): Unit = {
+    override def syncTheme(): Unit = {
       setBorderColor(InterfaceColors.INPUT_BORDER)
     }
   }
@@ -124,7 +124,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       super.paintComponent(g)
     }
 
-    def syncTheme(): Unit = {
+    override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
       setBorderColor(InterfaceColors.INPUT_BORDER)
 
@@ -340,7 +340,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     colorSwatch.syncTheme()
     scroller.syncTheme()
     changeButton.syncTheme()
@@ -594,7 +594,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       textArea.selectAll()
     }
 
-    def syncTheme(): Unit = {
+    override def syncTheme(): Unit = {
       getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
       label.setForeground(InterfaceColors.DIALOG_TEXT)

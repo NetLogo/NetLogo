@@ -463,7 +463,7 @@ class LibrariesTab( category:        String
 
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     topPanel.setBackground(InterfaceColors.DIALOG_BACKGROUND)

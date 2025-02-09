@@ -88,7 +88,7 @@ class LibrariesDialog( parent:          Frame
     }
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     tab.syncTheme()
 
     bottomPanel.setBackground(InterfaceColors.DIALOG_BACKGROUND)

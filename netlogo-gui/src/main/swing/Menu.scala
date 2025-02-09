@@ -37,7 +37,7 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
   def this(text: String) = this(text, Menu.model)
 
   private val menuUI = new BasicMenuUI with ThemeSync {
-    def syncTheme(): Unit = {
+    override def syncTheme(): Unit = {
       setForeground(InterfaceColors.TOOLBAR_TEXT)
 
       selectionBackground = InterfaceColors.MENU_BACKGROUND_HOVER
@@ -165,7 +165,7 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
     (key, DefaultGroup)
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     menuUI.syncTheme()
 
     getMenuComponents.foreach(_ match {

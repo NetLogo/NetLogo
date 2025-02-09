@@ -116,7 +116,7 @@ object Preferences {
 
         add(browseButton)
 
-        def syncTheme(): Unit = {
+        override def syncTheme(): Unit = {
           textField.syncTheme()
           browseButton.syncTheme()
         }

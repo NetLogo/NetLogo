@@ -500,7 +500,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     super.paintComponent(g)
   }
 
-  def syncTheme(): Unit = {} // everything synced in paintComponent
+  override def syncTheme(): Unit = {} // everything synced in paintComponent
 
   // saving and loading
   override def model: WidgetModel = {

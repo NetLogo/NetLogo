@@ -27,7 +27,7 @@ class CodeTabsWindow(parent: Frame, tabs: TabsPanel) extends JFrame with LinkChi
     setVisible(true)
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     menuBar.syncTheme()
   }
 

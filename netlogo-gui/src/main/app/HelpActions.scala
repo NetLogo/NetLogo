@@ -91,7 +91,7 @@ with MenuAction with ThemeSync {
     }
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     aboutWindow.foreach(_.syncTheme())
   }
 }

@@ -185,7 +185,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     Some("unimplemented")
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     _clientEditor.syncTheme()
 
     if (controlCenter != null)

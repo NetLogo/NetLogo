@@ -72,7 +72,7 @@ with ThemeSync {
         if(e.sourceOwner eq this) e.error else null)
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     if (editor != null) {
       editor.syncTheme()
       editor.repaint()

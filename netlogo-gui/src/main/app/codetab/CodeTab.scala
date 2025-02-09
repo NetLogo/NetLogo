@@ -245,7 +245,7 @@ with ThemeSync {
       syncTheme()
     }
 
-    def syncTheme(): Unit = {
+    override def syncTheme(): Unit = {
       putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/check.png", 15, 15,
                                                             if (dirty)
                                                               InterfaceColors.CHECK_FILLED
@@ -254,7 +254,7 @@ with ThemeSync {
     }
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     def boldStyle(color: Color): Style =
       new Style(color, Style.DEFAULT_BACKGROUND, text.getFont.deriveFont(Font.BOLD), false)
 

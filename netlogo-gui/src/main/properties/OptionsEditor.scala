@@ -33,7 +33,7 @@ abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]]) extends 
     combo.requestFocus()
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     label.setForeground(InterfaceColors.DIALOG_TEXT)
 
     combo.syncTheme()

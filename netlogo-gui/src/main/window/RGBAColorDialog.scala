@@ -57,7 +57,7 @@ class RGBAColorDialog(parent: Frame, returnColor: Boolean) extends JDialog(paren
     })
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     // do this once the new dialog is finalized
   }
 }

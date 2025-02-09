@@ -32,7 +32,7 @@ class LabeledComponent(text: String, component: JComponent with ThemeSync)
     label.setForeground(color)
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     component.syncTheme()
   }
 }

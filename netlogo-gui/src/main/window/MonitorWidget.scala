@@ -69,7 +69,7 @@ class MonitorWidget(random: MersenneTwisterFast)
       super.paintComponent(g)
     }
 
-    def syncTheme(): Unit = {
+    override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
       setBorderColor(InterfaceColors.MONITOR_BORDER)
     }
@@ -234,7 +234,7 @@ class MonitorWidget(random: MersenneTwisterFast)
     super.suppressRecompiles(suppressRecompiles)
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.MONITOR_BACKGROUND)
 
     nameLabel.setForeground(InterfaceColors.WIDGET_TEXT)

@@ -142,7 +142,7 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
     viewPanel.foreach(_.close())
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     scrollPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)

@@ -237,7 +237,7 @@ class AggregateModelEditor(
     undoManager.clearRedos()
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     menuBar.syncTheme()
     tabs.syncTheme()
     toolbar.syncTheme()
@@ -269,7 +269,7 @@ class AggregateModelEditor(
 
   private class SyncedCommandMenu(name: String) extends CommandMenu(name) with ThemeSync {
     private val menuUI = new BasicMenuUI with ThemeSync {
-      def syncTheme(): Unit = {
+      override def syncTheme(): Unit = {
         setForeground(InterfaceColors.TOOLBAR_TEXT)
 
         selectionBackground = InterfaceColors.MENU_BACKGROUND_HOVER
@@ -300,7 +300,7 @@ class AggregateModelEditor(
       menu
     }
 
-    def syncTheme(): Unit = {
+    override def syncTheme(): Unit = {
       menuUI.syncTheme()
 
       getMenuComponents.foreach(_ match {

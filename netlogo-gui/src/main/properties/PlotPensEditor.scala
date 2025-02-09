@@ -131,7 +131,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     c
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     table.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     table.setGridColor(InterfaceColors.DIALOG_TEXT)
   }

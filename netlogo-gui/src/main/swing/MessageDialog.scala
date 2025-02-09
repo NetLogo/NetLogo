@@ -76,7 +76,7 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
     setVisible(true)
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
     textArea.syncTheme()

@@ -47,7 +47,7 @@ class RadioButton(action: Action) extends JRadioButton(action) with HoverDecorat
     }
   })
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     setForeground(InterfaceColors.DIALOG_TEXT)
   }
 }

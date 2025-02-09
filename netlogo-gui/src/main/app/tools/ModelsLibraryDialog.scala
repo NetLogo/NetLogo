@@ -171,7 +171,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
   private val tree = new JTree(new SearchableModelTree(node)) with ThemeSync {
     private val renderer = new DefaultTreeCellRenderer with ThemeSync {
-      def syncTheme(): Unit = {
+      override def syncTheme(): Unit = {
         backgroundNonSelectionColor = InterfaceColors.DIALOG_BACKGROUND
         backgroundSelectionColor = InterfaceColors.DIALOG_BACKGROUND_SELECTED
         textNonSelectionColor = InterfaceColors.DIALOG_TEXT
@@ -181,7 +181,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
     setCellRenderer(renderer)
 
-    def syncTheme(): Unit = {
+    override def syncTheme(): Unit = {
       setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
       renderer.syncTheme()
@@ -641,7 +641,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       }
     }
 
-    def syncTheme(): Unit = {
+    override def syncTheme(): Unit = {
       setBackground(InterfaceColors.DIALOG_BACKGROUND)
 
       textArea.setForeground(InterfaceColors.DIALOG_TEXT)
@@ -717,7 +717,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     }
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     contentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     modelPreviewScrollPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
     treeScrollPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)

@@ -81,7 +81,7 @@ class LabManager(val workspace:        GUIWorkspace,
 
   val actions = Seq(new ShowLabManager)
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     dialog.syncTheme()
   }
 

@@ -96,7 +96,7 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
     super.paintComponent(g)
   }
 
-  def syncTheme(): Unit = {
+  override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.COMMAND_OUTPUT_BACKGROUND)
     setBorderColor(InterfaceColors.OUTPUT_BORDER)
 
