@@ -19,17 +19,17 @@ object Widget {
     def convert(source: String, reporter: Boolean): String
   }
   val validWidgetTypes = List("BUTTON", "SLIDER", "SWITCH", "CHOOSER", "INPUT", "MONITOR", "PLOT", "NOTE")
-  def validWidgetType(name:String) = validWidgetTypes.contains(name)
+  def validWidgetType(name: String) = validWidgetTypes.contains(name)
 }
 
 abstract class SingleErrorWidget extends Widget with SingleErrorHandler {
-  override def error(e: Exception) {
+  override def error(e: Exception): Unit = {
     super.error(e)
 
     new WidgetErrorEvent(this, e).raise(this)
   }
 
-  override def error(key: Object, e: Exception) {
+  override def error(key: Object, e: Exception): Unit = {
     super.error(key, e)
 
     new WidgetErrorEvent(this, e).raise(this)
@@ -37,13 +37,13 @@ abstract class SingleErrorWidget extends Widget with SingleErrorHandler {
 }
 
 abstract class MultiErrorWidget extends Widget with MultiErrorHandler {
-  override def removeAllErrors() {
+  override def removeAllErrors(): Unit = {
     super.removeAllErrors()
 
     new WidgetErrorEvent(this, null).raise(this)
   }
 
-  override def error(key: Object, e: Exception) {
+  override def error(key: Object, e: Exception): Unit = {
     super.error(key, e)
 
     new WidgetErrorEvent(this, e).raise(this)
@@ -69,7 +69,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
   def getEditable: Object = this
   def copyable = true // only OutputWidget and ViewWidget are not copyable
   def constrainDrag(newBounds: Rectangle, originalBounds: Rectangle, mouseMode: MouseMode): Rectangle = newBounds
-  def isZoomed = if (findWidgetContainer != null) findWidgetContainer.isZoomed else false
+  def isZoomed: Boolean = if (findWidgetContainer != null) findWidgetContainer.isZoomed else false
 
   def model: WidgetModel
   def reAdd(): Unit = { }
@@ -83,7 +83,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
   def isNote = false
   def hasContextMenu = false
   def exportable = false
-  def setZoomFactor(zoomFactor: Double) {
+  def setZoomFactor(zoomFactor: Double): Unit = {
     this.zoomFactor = zoomFactor
   }
   def getZoomFactor: Double =
@@ -96,7 +96,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
   }
   def extraMenuItems: List[JMenuItem] = Nil
 
-  def addPopupListeners(popupListener: MouseListener){ addPopupListeners(this, popupListener) }
+  def addPopupListeners(popupListener: MouseListener): Unit = { addPopupListeners(this, popupListener) }
   def addPopupListeners(): Unit = { addPopupListeners(this, popupListener) }
   private def addPopupListeners(component: Component, popupListener: MouseListener): Unit = {
     component.addMouseListener(popupListener)
@@ -120,16 +120,17 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
       val menu = new PopupMenu
 
       populateContextMenu(menu, e.getPoint)
-      if (menu.getSubElements.length > 0) {
+
+      if (menu.getSubElements.length > 0)
         menu.show(e.getSource.asInstanceOf[Component], e.getX, e.getY)
-      }
+
       e.consume
     }
   }
 
   private final val popupListener: MouseListener = new MouseAdapter {
-    override def mousePressed(e: MouseEvent){ if (e.isPopupTrigger) { doPopup(e) } }
-    override def mouseReleased(e: MouseEvent){ if (e.isPopupTrigger) { doPopup(e) } }
+    override def mousePressed(e: MouseEvent): Unit = { if (e.isPopupTrigger) { doPopup(e) } }
+    override def mouseReleased(e: MouseEvent): Unit = { if (e.isPopupTrigger) { doPopup(e) } }
   }
 
   def findWidgetContainer: WidgetContainer =
@@ -150,21 +151,26 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
 
   override def toString: String = {
     val sup: String = super.toString
-    if (displayName != null && !displayName.equals("")) sup + "(" + displayName + ")"
-    else sup
+    if (displayName != null && !displayName.equals("")) {
+      sup + "(" + displayName + ")"
+    } else {
+      sup
+    }
   }
 
   def populateContextMenu(menu: PopupMenu, p: Point): Unit = {}
 
   protected def resetZoomInfo(): Unit = {
-    if (findWidgetContainer != null) {
+    if (findWidgetContainer != null)
       findWidgetContainer.resetZoomInfo(this)
-    }
   }
 
   def getUnzoomedBounds: Rectangle = {
-    if (findWidgetContainer != null) findWidgetContainer.getUnzoomedBounds(this)
-    else getBounds
+    if (findWidgetContainer != null) {
+      findWidgetContainer.getUnzoomedBounds(this)
+    } else {
+      getBounds
+    }
   }
 
   override def removeNotify: Unit = {
@@ -201,6 +207,12 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
   }
 
   implicit class RichWidgetString(s: String) {
-    def potentiallyEmptyStringToOption = if (s != null && s.trim != "") Some(s) else None
+    def potentiallyEmptyStringToOption = {
+      if (s != null && s.trim != "") {
+        Some(s)
+      } else {
+        None
+      }
+    }
   }
 }
