@@ -39,9 +39,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
       } else if (incrementCode.toDouble > maximumCode.toDouble - minimumCode.toDouble) {
         return Seq((I18N.gui.get("edit.slider.increment"), I18N.gui.get("edit.slider.invalidIncrement")))
       }
-    }
-
-    catch {
+    } catch {
       case e: NumberFormatException =>
     }
 
@@ -63,9 +61,8 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
       super.value_=(v, buttonRelease)
       if (!eventOnReleaseOnly) new InterfaceGlobalEvent(this, false, false, true, buttonRelease).raise(this)
     }
-    if (eventOnReleaseOnly && buttonRelease) {
+    if (eventOnReleaseOnly && buttonRelease)
       new InterfaceGlobalEvent(this, false, false, valueChanged, buttonRelease).raise(this)
-    }
   }
 
   def forceValue(v: Double): Unit = {

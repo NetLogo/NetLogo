@@ -105,8 +105,6 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
     // which is a bit jarring, so do this instead - ST 9/16/08
     if (enabled)
       stateChanged(null)
-    // else
-    //   speedLabel.setText(" ")
   }
 
   def stateChanged(e: ChangeEvent): Unit = {

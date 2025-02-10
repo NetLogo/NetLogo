@@ -14,17 +14,17 @@ import org.nlogo.swing.{ CollapsiblePane, ScrollPane, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ CommandCenterInterface, GUIWorkspace }
 
+// implementing CommandCenterInterface lets us embed CommandLine
 abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
-                      // lets us embed CommandLine
   extends JPanel(new BorderLayout) with CommandCenterInterface with ThemeSync {
 
   private implicit val i18nPrefix = I18N.Prefix("tools.agentMonitor")
 
   private var _agent: Agent = null
-  def agent = _agent
-  def setAgent(agent: Agent, radius: Double) {
+  def agent: Agent = _agent
+  def setAgent(agent: Agent, radius: Double): Unit = {
     val oldAgent = _agent
-    if(agent != oldAgent) {
+    if (agent != oldAgent) {
       _agent = agent
       commandLine.agent(agent)
       commandLine.setEnabled(agent != null && agent.id != -1)
@@ -32,7 +32,7 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
       agentEditor.reset()
       val window = Hierarchy.findAncestorOfClass(this, classOf[AgentMonitorWindow])
         .orNull.asInstanceOf[AgentMonitorWindow]
-      if(window != null)
+      if (window != null)
         window.agentChangeNotify(oldAgent)
       viewPanel.foreach(_.agent(agent, radius))
     }
@@ -58,7 +58,7 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
     setBorder(null)
 
     // never let preferred height exceed 350; after 350, just let scrolling kick in - ST 8/17/03
-    override def getPreferredSize = {
+    override def getPreferredSize: Dimension = {
       val sup = super.getPreferredSize
       new Dimension(sup.width, StrictMath.min(sup.height, 350))
     }
@@ -68,12 +68,11 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
   private val viewPane = new CollapsiblePane(I18N.gui("view"), panel, window)
   private val propertiesPane = new CollapsiblePane(I18N.gui("properties"), scrollPane, window)
   private val viewPanel: Option[AgentMonitorViewPanel] =
-    if(agentKind == AgentKind.Observer) {
+    if (agentKind == AgentKind.Observer) {
       // the observer monitor doesn't have a view or the command center. ev 6/4/08
       add(scrollPane, BorderLayout.CENTER)
       None
-    }
-    else {
+    } else {
       add(viewPane, BorderLayout.NORTH)
       add(propertiesPane, BorderLayout.CENTER)
       commandLine.setEnabled(agent != null && agent.id != -1)
@@ -97,44 +96,46 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
     }
 
   // confusing method name, should be "tabKeyPressed" or something - ST 8/16/03
-  def cycleAgentType(forward: Boolean)   {
-    if(forward)
+  def cycleAgentType(forward: Boolean): Unit = {
+    if (forward) {
       // calling commandLine.transferFocus() here didn't work for some reason - ST 8/16/03
       agentEditor.requestFocus()
-    else
+    } else {
       // but this does the right thing! go figure! - ST 8/16/03
       commandLine.transferFocusBackward()
+    }
   }
 
   def radius(radius: Double): Unit = {
     viewPanel.foreach(_.radius(radius))
   }
 
-  override def requestFocus() {
-    if(commandLine.isEnabled)
+  override def requestFocus(): Unit = {
+    if (commandLine.isEnabled) {
       commandLine.requestFocus
-    else
+    } else {
       agentEditor.requestFocus
+    }
   }
 
-  def refresh() {
+  def refresh(): Unit = {
     viewPanel.foreach(_.refresh())
     if (agent != null && agent.id == -1) {
       viewPanel.foreach(_.setEnabled(false))
       commandLine.setEnabled(false)
       historyPrompt.setEnabled(false)
     }
-    if((oldVars ne vars) && (vars == null || oldVars == null || !sameVars(oldVars, vars))) {
+    if ((oldVars ne vars) && (vars == null || oldVars == null || !sameVars(oldVars, vars))) {
       agentEditor.reset()
       oldVars = vars
-    }
-    else
+    } else {
       agentEditor.refresh()
+    }
   }
 
   /// helpers
 
-  private def sameVars(vars1: JList[String], vars2: JList[String]) =
+  private def sameVars(vars1: JList[String], vars2: JList[String]): Boolean =
     vars1.size == vars2.size &&
     (0 until vars1.size).forall(i => vars1.get(i) == vars2.get(i))
 

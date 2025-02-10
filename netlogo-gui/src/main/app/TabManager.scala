@@ -26,8 +26,6 @@ import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, 
                                  RuntimeErrorEvent, WidgetErrorEvent, WidgetRemovedEvent }
 import org.nlogo.window.{ ExternalFileInterface, GUIWorkspace, JobWidget, MonitorWidget, Widget }
 
-import scala.collection.mutable.Set
-
 import scala.io.Source
 
 class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
@@ -55,7 +53,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   var dirtyMonitor: DirtyMonitor = null
   var menuBar: MenuBar = null
 
-  private val widgetErrors = Set[Widget]()
+  private var widgetErrors = Set[Widget]()
 
   private var smartTabbing = true
 
@@ -78,7 +76,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   movingTabs = false
 
   workspace.getFrame.addWindowFocusListener(new WindowFocusListener {
-    def windowGainedFocus(e: WindowEvent) {
+    def windowGainedFocus(e: WindowEvent): Unit = {
       if (separateTabs.getSelectedComponent != null) {
         mainTabs.focusSelected
 
@@ -88,7 +86,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       }
     }
 
-    def windowLostFocus(e: WindowEvent) {}
+    def windowLostFocus(e: WindowEvent): Unit = {}
   })
 
   private val appComponent = workspace.getFrame.asInstanceOf[JFrame].getContentPane.asInstanceOf[JComponent]
@@ -96,7 +94,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   appComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_W, withMenu = true, withShift = true), "openSeparateCodeTab")
   appComponent.getActionMap.put("openSeparateCodeTab", new AbstractAction {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       switchWindow(true)
     }
   })
@@ -104,7 +102,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   appComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_OPEN_BRACKET, withMenu = true, withShift = true), "previousTab")
   appComponent.getActionMap.put("previousTab", new AbstractAction {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       previousTab(mainTabs)
     }
   })
@@ -112,19 +110,19 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   appComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_CLOSE_BRACKET, withMenu = true, withShift = true), "nextTab")
   appComponent.getActionMap.put("nextTab", new AbstractAction {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       nextTab(mainTabs)
     }
   })
 
   separateTabsWindow.addWindowListener(new WindowAdapter {
-    override def windowClosing(e: WindowEvent) {
+    override def windowClosing(e: WindowEvent): Unit = {
       switchWindow(false)
     }
   })
 
   separateTabsWindow.addWindowFocusListener(new WindowFocusListener {
-    def windowGainedFocus(e: WindowEvent) {
+    def windowGainedFocus(e: WindowEvent): Unit = {
       separateTabs.focusSelected
 
       setMenuActions(mainTabs.getSelectedComponent, separateTabs.getSelectedComponent)
@@ -132,7 +130,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       switchedTabs(separateTabs.getSelectedComponent)
     }
 
-    def windowLostFocus(e: WindowEvent) {}
+    def windowLostFocus(e: WindowEvent): Unit = {}
   })
 
   private val separateComponent = separateTabsWindow.getContentPane.asInstanceOf[JComponent]
@@ -140,7 +138,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   separateComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_W, withMenu = true), "closeSeparateCodeTab")
   separateComponent.getActionMap.put("closeSeparateCodeTab", new AbstractAction {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       switchWindow(false)
     }
   })
@@ -148,7 +146,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   separateComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_OPEN_BRACKET, withMenu = true, withShift = true), "previousTab")
   separateComponent.getActionMap.put("previousTab", new AbstractAction {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       previousTab(separateTabs)
     }
   })
@@ -156,12 +154,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   separateComponent.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW)
     .put(UserAction.KeyBindings.keystroke(KeyEvent.VK_CLOSE_BRACKET, withMenu = true, withShift = true), "nextTab")
   separateComponent.getActionMap.put("nextTab", new AbstractAction {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       nextTab(separateTabs)
     }
   })
 
-  def init(fileManager: FileManager, dirtyMonitor: DirtyMonitor, menuBar: MenuBar, actions: Seq[Action]) {
+  def init(fileManager: FileManager, dirtyMonitor: DirtyMonitor, menuBar: MenuBar, actions: Seq[Action]): Unit = {
     this.fileManager = fileManager
     this.dirtyMonitor = dirtyMonitor
     this.menuBar = menuBar
@@ -172,7 +170,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     updateTabActions()
   }
 
-  def startWatcherThread(modelPath: String = workspace.getModelPath) {
+  def startWatcherThread(modelPath: String = workspace.getModelPath): Unit = {
     // Stop the current thread if there's one. This ensures that there can be
     // at most one thread.
     stopWatcherThread()
@@ -186,28 +184,29 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
-  def stopWatcherThread() {
+  def stopWatcherThread(): Unit = {
     if (watcherThread != null) {
       watcherThread.interrupt
       watcherThread = null
     }
   }
 
-  def setWatchingFiles(value: Boolean, modelPath: String = workspace.getModelPath) {
-    if (value)
+  def setWatchingFiles(value: Boolean, modelPath: String = workspace.getModelPath): Unit = {
+    if (value) {
       startWatcherThread(modelPath)
-    else
+    } else {
       stopWatcherThread()
+    }
   }
 
   private def handleFileChange(): Boolean = {
     // We stop the file watcher thread after the dialog is shown, so we need to
     // start it back up in these callbacks.
 
-    def cancelCallback() =
+    def cancelCallback(): Unit =
       startWatcherThread()
 
-    def okCallback() {
+    def okCallback(): Unit = {
       reload()
       startWatcherThread()
     }
@@ -246,7 +245,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     group = "org.nlogo.app.Tabs.Print"
     accelerator = UserAction.KeyBindings.keystroke('P', withMenu = true)
 
-    def actionPerformed(e: ActionEvent) =
+    def actionPerformed(e: ActionEvent): Unit =
       getSelectedTab match {
         case printable: Printable =>
           try PrinterManager.print(printable, workspace.modelNameForDisplay)
@@ -256,11 +255,11 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       }
   }
 
-  def permanentMenuActions =
+  def permanentMenuActions: Seq[Action] =
     mainCodeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions ++ interfaceTab.activeMenuActions ++
       fileManager.saveModelActions(workspace.getFrame) :+ PrintAction
 
-  def setMenuActions(oldTab: Component, newTab: Component) {
+  def setMenuActions(oldTab: Component, newTab: Component): Unit = {
     oldTab match {
       case mt: MenuTab => mt.activeMenuActions.foreach(revokeAction)
     }
@@ -270,7 +269,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
-  def updateTabActions() {
+  def updateTabActions(): Unit = {
     tabActions.foreach(revokeAction)
 
     tabActions = TabsMenu.tabActions(this)
@@ -278,18 +277,18 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     tabActions.foreach(offerAction)
   }
 
-  def offerAction(action: Action) {
+  def offerAction(action: Action): Unit = {
     menuBar.offerAction(action)
     separateTabsWindow.menuBar.offerAction(action)
   }
 
-  def revokeAction(action: Action) {
+  def revokeAction(action: Action): Unit = {
     menuBar.revokeAction(action)
     separateTabsWindow.menuBar.revokeAction(action)
   }
 
-  def smartTabbingEnabled = smartTabbing
-  def smartTabbingEnabled_=(enabled: Boolean) = {
+  def smartTabbingEnabled: Boolean = smartTabbing
+  def smartTabbingEnabled_=(enabled: Boolean): Unit = {
     smartTabbing = enabled
     prefs.putBoolean("indentAutomatically", enabled)
 
@@ -297,22 +296,22 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     getExternalFileTabs.foreach(_.setIndenter(enabled))
   }
 
-  def lineNumbersVisible = mainCodeTab.lineNumbersVisible
-  def lineNumbersVisible_=(visible: Boolean) = {
+  def lineNumbersVisible: Boolean = mainCodeTab.lineNumbersVisible
+  def lineNumbersVisible_=(visible: Boolean): Unit = {
     mainCodeTab.lineNumbersVisible = visible
     getExternalFileTabs.foreach(_.lineNumbersVisible = visible)
   }
 
-  def watchingFiles = watcherThread != null
-  def watchingFiles_=(value: Boolean) = setWatchingFiles(value)
+  def watchingFiles: Boolean = watcherThread != null
+  def watchingFiles_=(value: Boolean): Unit = setWatchingFiles(value)
 
   watchingFiles = getAutoReload
 
-  def getAutoReload = prefs.get("reloadOnExternalChanges", "false").toBoolean
+  def getAutoReload: Boolean = prefs.get("reloadOnExternalChanges", "false").toBoolean
 
-  def focusOnError = prefs.getBoolean("focusOnError", true)
+  def focusOnError: Boolean = prefs.getBoolean("focusOnError", true)
 
-  def getTotalTabCount =
+  def getTotalTabCount: Int =
     mainTabs.getTabCount + separateTabs.getTabCount
 
   def getTabTitle(index: Int): String = {
@@ -333,19 +332,20 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   }
 
   def getExternalFileTabs: Seq[TemporaryCodeTab] = {
-    if (separateTabsWindow.isVisible)
+    if (separateTabsWindow.isVisible) {
       (for (i <- 1 until separateTabs.getTabCount) yield separateTabs.getComponentAt(i))
         .collect(_ match {
           case t: TemporaryCodeTab => t
         })
-    else
+    } else {
       (for (i <- 3 until mainTabs.getTabCount) yield mainTabs.getComponentAt(i))
         .collect(_ match {
           case t: TemporaryCodeTab => t
         })
+    }
   }
 
-  private def addTabWithLabel(tabsPanel: TabsPanel, title: String, tab: Component) {
+  private def addTabWithLabel(tabsPanel: TabsPanel, title: String, tab: Component): Unit = {
     tabsPanel.addTab(null, tab)
 
     val tabLabel = new TabLabel(title, tab)
@@ -363,41 +363,37 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   def openTempFiles: Seq[String] =
     getExternalFileTabs.filter(_.isInstanceOf[TemporaryCodeTab]).map(_.filename.toOption.get)
 
-  def setSelectedIndex(index: Int) {
+  def setSelectedIndex(index: Int): Unit = {
     if (index >= mainTabs.getTabCount) {
       separateTabs.setSelectedIndex(index - mainTabs.getTabCount)
       separateTabs.focusSelected
-    }
-
-    else {
+    } else {
       mainTabs.setSelectedIndex(index)
       mainTabs.focusSelected
     }
   }
 
-  def setSelectedTab(tab: Component) {
+  def setSelectedTab(tab: Component): Unit = {
     if (mainTabs.indexOfComponent(tab) == -1) {
       separateTabs.setSelectedComponent(tab)
       separateTabs.focusSelected
-    }
-
-    else {
+    } else {
       mainTabs.setSelectedComponent(tab)
       mainTabs.focusSelected
     }
   }
 
-  def previousTab(tabsPanel: TabsPanel) {
+  def previousTab(tabsPanel: TabsPanel): Unit = {
     if (tabsPanel.getSelectedIndex > 0)
       tabsPanel.setSelectedIndex(tabsPanel.getSelectedIndex - 1)
   }
 
-  def nextTab(tabsPanel: TabsPanel) {
+  def nextTab(tabsPanel: TabsPanel): Unit = {
     if (tabsPanel.getSelectedIndex < tabsPanel.getTabCount - 1)
       tabsPanel.setSelectedIndex(tabsPanel.getSelectedIndex + 1)
   }
 
-  def switchedTabs(tab: Component) {
+  def switchedTabs(tab: Component): Unit = {
     if (!movingTabs && tab != previousTab) {
       tab.requestFocus
 
@@ -411,7 +407,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
-  private def addExternalFile(name: Filename, focus: Boolean) {
+  private def addExternalFile(name: Filename, focus: Boolean): Unit = {
     if (getExternalFileTabs.isEmpty)
       offerAction(SaveAllAction)
 
@@ -423,9 +419,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
       if (focus)
         separateTabs.setSelectedComponent(tab)
-    }
-
-    else {
+    } else {
       addTabWithLabel(mainTabs, tab.filenameForDisplay, tab)
 
       if (focus)
@@ -438,31 +432,31 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     saveOpenTabs()
   }
 
-  def newExternalFile {
+  def newExternalFile: Unit = {
     addExternalFile(Left(I18N.gui.getN("tabs.external.new", newFileNumber: Integer)), true)
 
     newFileNumber += 1
   }
 
-  def addTab(tab: Component, name: String) {
+  def addTab(tab: Component, name: String): Unit = {
     if (separateTabsWindow.isVisible) {
       addTabWithLabel(separateTabs, name, tab)
       separateTabs.setSelectedComponent(tab)
-    }
-
-    else {
+    } else {
       addTabWithLabel(mainTabs, name, tab)
       mainTabs.setSelectedComponent(tab)
     }
   }
 
-  def openExternalFile(filename: String, focus: Boolean = true) {
+  def openExternalFile(filename: String, focus: Boolean = true): Unit = {
     getTabWithFilename(Right(filename)) match {
       case Some(tab) =>
-        if (separateTabsWindow.isVisible)
+        if (separateTabsWindow.isVisible) {
           separateTabs.setSelectedComponent(tab)
-        else
+        } else {
           mainTabs.setSelectedComponent(tab)
+        }
+
       case _ =>
         addExternalFile(Right(filename), focus)
 
@@ -470,16 +464,17 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
-  def replaceTab(oldTab: Component, newTab: Component) {
+  def replaceTab(oldTab: Component, newTab: Component): Unit = {
     val index = mainTabs.indexOfComponent(oldTab)
 
-    if (index == -1)
+    if (index == -1) {
       separateTabs.setComponentAt(separateTabs.indexOfComponent(oldTab), newTab)
-    else
+    } else {
       mainTabs.setComponentAt(index, newTab)
+    }
   }
 
-  def closeExternalFile(filename: Filename) {
+  def closeExternalFile(filename: Filename): Unit = {
     getTabWithFilename(filename) match {
       case Some(tab) =>
         closeExternalTab(tab)
@@ -488,11 +483,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
-  def closeExternalTab(tab: TemporaryCodeTab) {
-    if (separateTabsWindow.isVisible)
+  def closeExternalTab(tab: TemporaryCodeTab): Unit = {
+    if (separateTabsWindow.isVisible) {
       separateTabs.remove(tab)
-    else
+    } else {
       mainTabs.remove(tab)
+    }
 
     externalFileManager.remove(tab)
 
@@ -503,14 +499,15 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     saveOpenTabs()
   }
 
-  def removeTab(tab: Component) {
-    if (mainTabs.indexOfComponent(tab) == -1)
+  def removeTab(tab: Component): Unit = {
+    if (mainTabs.indexOfComponent(tab) == -1) {
       separateTabs.remove(tab)
-    else
+    } else {
       mainTabs.remove(tab)
+    }
   }
 
-  def switchWindow(separate: Boolean, preserveSelected: Boolean = false) {
+  def switchWindow(separate: Boolean, preserveSelected: Boolean = false): Unit = {
     movingTabs = true
 
     if (separate) {
@@ -534,16 +531,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
         mainTabs.setSelectedIndex(0)
         separateTabs.setSelectedComponent(selected)
         selected.requestFocus
-      }
-
-      else {
+      } else {
         mainTabs.setSelectedComponent(selected)
         separateTabs.setSelectedIndex(0)
         mainCodeTab.requestFocus
       }
-    }
-
-    else {
+    } else {
       val selected = separateTabs.getSelectedComponent
 
       while (separateTabs.getTabCount > 0) {
@@ -573,21 +566,21 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     App.app.setWindowTitles()
   }
 
-  def reload() {
+  def reload(): Unit = {
     if (!reloading) {
       reloading = true
       workspace.reload
     }
   }
 
-  def handle(e: LoadBeginEvent) {
+  def handle(e: LoadBeginEvent): Unit = {
     if (!reloading) {
       getExternalFileTabs.foreach(closeExternalTab)
       mainTabs.setSelectedComponent(interfaceTab)
     }
   }
 
-  def handle(e: LoadModelEvent) {
+  def handle(e: LoadModelEvent): Unit = {
     loadOpenTabs()
 
     // We need to restart the watcher thread every load because the list of
@@ -604,11 +597,11 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     reloading = false
   }
 
-  def handle(e: LoadErrorEvent) {
+  def handle(e: LoadErrorEvent): Unit = {
     reloading = false
   }
 
-  def handle(e: RuntimeErrorEvent) {
+  def handle(e: RuntimeErrorEvent): Unit = {
     if (!e.jobOwner.isInstanceOf[MonitorWidget]) {
       e.sourceOwner match {
         case `mainCodeTab` =>
@@ -627,30 +620,29 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
-  def highlightRuntimeError(tab: CodeTab, e: RuntimeErrorEvent) {
+  def highlightRuntimeError(tab: CodeTab, e: RuntimeErrorEvent): Unit = {
     setSelectedTab(tab)
 
     tab.selectError(e.pos, e.pos + e.length)
   }
 
-  def recolorTab(tab: Component, hasError: Boolean) {
-    if (separateTabsWindow.isVisible && tab.isInstanceOf[CodeTab])
+  def recolorTab(tab: Component, hasError: Boolean): Unit = {
+    if (separateTabsWindow.isVisible && tab.isInstanceOf[CodeTab]) {
       separateTabs.setError(separateTabs.indexOfComponent(tab), hasError)
-    else
+    } else {
       mainTabs.setError(mainTabs.indexOfComponent(tab), hasError)
+    }
 
     if (hasError && focusOnError)
       setSelectedTab(tab)
   }
 
-  def handle(e: CompiledEvent) {
+  def handle(e: CompiledEvent): Unit = {
     def clearErrors() {
       if (separateTabsWindow.isVisible) {
         for (i <- 0 until separateTabs.getTabCount)
           separateTabs.setError(i, false)
-      }
-
-      else {
+      } else {
         for (i <- 0 until mainTabs.getTabCount)
           mainTabs.setError(i, false)
       }
@@ -659,10 +651,11 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     e.sourceOwner match {
       case `mainCodeTab` => {
         // on null error, clear all errors, as we only get one event for all the files. AAB 10/2020
-        if (e.error == null)
+        if (e.error == null) {
           clearErrors()
-        else
+        } else {
           recolorTab(mainCodeTab, true)
+        }
       }
       case file: ExternalFileInterface => {
         val filename = file.getFileName
@@ -685,16 +678,14 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     separateTabs.repaint()
   }
 
-  def handle(e: WidgetErrorEvent) {
+  def handle(e: WidgetErrorEvent): Unit = {
     var changed = false
 
     if (e.error == null) {
       changed = widgetErrors.contains(e.widget)
 
       widgetErrors -= e.widget
-    }
-
-    else {
+    } else {
       changed = !widgetErrors.contains(e.widget)
 
       widgetErrors += e.widget
@@ -707,7 +698,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
-  def handle(e: WidgetRemovedEvent) {
+  def handle(e: WidgetRemovedEvent): Unit = {
     widgetErrors -= e.widget
 
     recolorTab(interfaceTab, widgetErrors.nonEmpty)
@@ -715,22 +706,23 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     mainTabs.repaint()
   }
 
-  def handle(e: AboutToSaveModelEvent) {
+  def handle(e: AboutToSaveModelEvent): Unit = {
     // Stop watching here so that the watcher thread doesn't detect our own
     // write.
     stopWatcherThread()
   }
 
-  def handle(e: ExternalFileSavedEvent) = {
+  def handle(e: ExternalFileSavedEvent): Unit = {
     getTabWithFilename(Right(e.path)).foreach(tab => {
-      if (separateTabsWindow.isVisible)
+      if (separateTabsWindow.isVisible) {
         separateTabs.getTabLabelAt(separateTabs.indexOfComponent(tab)).setText(tab.filenameForDisplay)
-      else
+      } else {
         mainTabs.getTabLabelAt(mainTabs.indexOfComponent(tab)).setText(tab.filenameForDisplay)
+      }
     })
   }
 
-  def handle(e: AboutToCloseFilesEvent) =
+  def handle(e: AboutToCloseFilesEvent): Unit =
     OfferSaveExternalsDialog.offer(getExternalFileTabs.filter(_.saveNeeded).toSet, workspace.getFrame)
 
   override def syncTheme(): Unit = {
@@ -746,7 +738,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     Option(workspace.getModelFileName).map(name =>
       Paths.get(System.getProperty("user.home"), ".nlogo", name + ".tmp").toString)
 
-  private def loadOpenTabs() {
+  private def loadOpenTabs(): Unit = {
     loadingTabs = true
 
     tabFilePath.foreach(path => {
@@ -763,7 +755,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     loadingTabs = false
   }
 
-  private def saveOpenTabs() {
+  private def saveOpenTabs(): Unit = {
     if (!loadingTabs) {
       tabFilePath.foreach(path => {
         val file = new File(path)

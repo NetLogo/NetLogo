@@ -14,25 +14,25 @@ class NonemptyTextFieldButtonEnabler(target: Button, fields: List[TextField]) ex
 
   update()
 
-  def setEnabled(enabled: Boolean) {
+  def setEnabled(enabled: Boolean): Unit = {
     this.enabled = enabled
 
     update()
   }
 
-  private def update() {
-    target.setEnabled(enabled && fields.forall(_.getDocument.getLength > 0));
+  private def update(): Unit = {
+    target.setEnabled(enabled && fields.forall(_.getDocument.getLength > 0))
   }
 
-  def changedUpdate(e: DocumentEvent) {
+  def changedUpdate(e: DocumentEvent): Unit = {
     update()
   }
 
-  def insertUpdate(e: DocumentEvent) {
+  def insertUpdate(e: DocumentEvent): Unit = {
     update()
   }
 
-  def removeUpdate(e: DocumentEvent) {
+  def removeUpdate(e: DocumentEvent): Unit = {
     update()
   }
 }

@@ -13,19 +13,19 @@ class NonemptyTextFieldActionEnabler(target: Action, fields: List[TextField]) ex
 
   update()
 
-  private def update() {
+  private def update(): Unit = {
     target.setEnabled(fields.forall(_.getDocument.getLength > 0));
   }
 
-  def changedUpdate(e: DocumentEvent) {
+  def changedUpdate(e: DocumentEvent): Unit = {
     update()
   }
 
-  def insertUpdate(e: DocumentEvent) {
+  def insertUpdate(e: DocumentEvent): Unit = {
     update()
   }
 
-  def removeUpdate(e: DocumentEvent) {
+  def removeUpdate(e: DocumentEvent): Unit = {
     update()
   }
 }

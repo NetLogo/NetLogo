@@ -32,7 +32,7 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
     new Insets(10, x, 0, 0)
   }
 
-  override def paintTabArea(g: Graphics, tabPlacement: Int, selectedIndex: Int) {
+  override def paintTabArea(g: Graphics, tabPlacement: Int, selectedIndex: Int): Unit = {
     super.paintTabArea(g, tabPlacement, selectedIndex)
 
     val g2d = Utils.initGraphics2D(g)
@@ -52,40 +52,34 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
   }
 
   override def paintTabBackground(g: Graphics, tabPlacement: Int, tabIndex: Int, x: Int, y: Int, w: Int, h: Int,
-                                  isSelected: Boolean) {
+                                  isSelected: Boolean): Unit = {
     val g2d = Utils.initGraphics2D(g)
 
     if (isSelected) {
-      if (tabsPanel.getError(tabIndex))
+      if (tabsPanel.getError(tabIndex)) {
         g2d.setColor(InterfaceColors.TAB_BACKGROUND_ERROR)
-      else
+      } else {
         g2d.setColor(InterfaceColors.TAB_BACKGROUND_SELECTED)
-    }
-
-    else
+      }
+    } else {
       g2d.setColor(InterfaceColors.TAB_BACKGROUND)
+    }
 
     if (tabsPanel.getTabCount == 1) {
       g2d.fillRoundRect(x, y, w, h, 10, 10)
-    }
-
-    else if (tabIndex == 0) {
+    } else if (tabIndex == 0) {
       g2d.fillRoundRect(x, y, w - 10, h, 10, 10)
       g2d.fillRect(x + w - 20, y, 20, h)
-    }
-
-    else if (tabIndex == tabsPanel.getTabCount - 1) {
+    } else if (tabIndex == tabsPanel.getTabCount - 1) {
       g2d.fillRoundRect(x + 10, y, w - 10, h, 10, 10)
       g2d.fillRect(x, y, 20, h)
-    }
-
-    else {
+    } else {
       g2d.fillRect(x, y, w, h)
     }
   }
 
   override def paintTabBorder(g: Graphics, tabPlacement: Int, tabIndex: Int, x: Int, y: Int, w: Int, h: Int,
-                              isSelected: Boolean) {
+                              isSelected: Boolean): Unit = {
     if (!isSelected) {
       val g2d = Utils.initGraphics2D(g)
 
@@ -97,28 +91,24 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
         g2d.drawLine(x, y + 5, x, y + h - 5)
         g2d.drawLine(x + 5, y, x + w, y)
         g2d.drawLine(x + 5, y + h - 1, x + w, y + h - 1)
-      }
-
-      else if (tabIndex == tabsPanel.getTabCount - 1) {
+      } else if (tabIndex == tabsPanel.getTabCount - 1) {
         g2d.drawArc(x + w - 10, y, 10, 10, 0, 90)
         g2d.drawArc(x + w - 10, y + h - 11, 10, 10, 270, 90)
         g2d.drawLine(x + w, y + 5, x + w, y + h - 5)
         g2d.drawLine(x, y, x + w - 5, y)
         g2d.drawLine(x, y + h - 1, x + w - 5, y + h - 1)
-      }
-
-      else {
+      } else {
         g2d.drawLine(x, y, x + w, y)
         g2d.drawLine(x, y + h - 1, x + w, y + h - 1)
       }
     }
   }
 
-  override def paintContentBorder(g: Graphics, tabPlacement: Int, selectedIndex: Int) {
+  override def paintContentBorder(g: Graphics, tabPlacement: Int, selectedIndex: Int): Unit = {
     // don't draw default content border (Isaac B 2/9/25)
   }
 
-  override def paint(g: Graphics, c: JComponent) {
+  override def paint(g: Graphics, c: JComponent): Unit = {
     val g2d = Utils.initGraphics2D(g)
 
     g2d.setColor(InterfaceColors.TOOLBAR_BACKGROUND)
@@ -131,7 +121,7 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
 class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
   private var tabsPanel: TabsPanel = null
 
-  def setTabsPanel(tabsPanel: TabsPanel) {
+  def setTabsPanel(tabsPanel: TabsPanel): Unit = {
     this.tabsPanel = tabsPanel
   }
 
@@ -139,7 +129,7 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
 
   private var rawText = text
 
-  def setText(text: String) {
+  def setText(text: String): Unit = {
     rawText = text
   }
 
@@ -147,9 +137,9 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
     rawText
 
   def boldWidth: Int =
-    new JLabel("<html><b>" + rawText + "</b></html>").getPreferredSize.width
+    new JLabel(s"<html><b>$rawText</b></html>").getPreferredSize.width
 
-  private var closeButton: CloseButton = null
+  private var closeButton: Option[CloseButton] = None
 
   var error = false
 
@@ -161,16 +151,14 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
     case main: MainCodeTab =>
 
     case codeTab: CodeTab =>
-      closeButton = new CloseButton
+      val button = new CloseButton
 
-      closeButton.addMouseListener(new MouseAdapter {
-        override def mouseClicked(e: MouseEvent) {
+      button.addMouseListener(new MouseAdapter {
+        override def mouseClicked(e: MouseEvent): Unit = {
           if (e.getButton == MouseEvent.BUTTON1) {
             try {
               codeTab.close()
-            }
-
-            catch {
+            } catch {
               case e: UserCancelException =>
             }
           }
@@ -178,7 +166,9 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
       })
 
       add(Box.createHorizontalStrut(10))
-      add(closeButton)
+      add(button)
+
+      closeButton = Some(button)
 
     case _ =>
   }
@@ -186,29 +176,22 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
   override def getPreferredSize: Dimension =
     new Dimension(boldWidth, super.getPreferredSize.height)
 
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics): Unit = {
     if (tab == tabsPanel.getSelectedComponent) {
       textLabel.setForeground(InterfaceColors.TAB_TEXT_SELECTED)
       textLabel.setText("<html><b>" + rawText + "</b></html>")
 
-      if (closeButton != null)
-        closeButton.setForeground(InterfaceColors.TAB_TEXT_SELECTED)
-    }
-
-    else if (tabsPanel.getError(tabsPanel.indexOfComponent(tab))) {
+      closeButton.foreach(_.setForeground(InterfaceColors.TAB_TEXT_SELECTED))
+    } else if (tabsPanel.getError(tabsPanel.indexOfComponent(tab))) {
       textLabel.setForeground(InterfaceColors.TAB_TEXT_ERROR)
       textLabel.setText("<html><b>" + rawText + "</b></html>")
 
-      if (closeButton != null)
-        closeButton.setForeground(InterfaceColors.TAB_TEXT_ERROR)
-    }
-
-    else {
+      closeButton.foreach(_.setForeground(InterfaceColors.TAB_TEXT_ERROR))
+    } else {
       textLabel.setForeground(InterfaceColors.TAB_TEXT)
       textLabel.setText(rawText)
 
-      if (closeButton != null)
-        closeButton.setForeground(InterfaceColors.TAB_TEXT)
+      closeButton.foreach(_.setForeground(InterfaceColors.TAB_TEXT))
     }
 
     super.paintComponent(g)
@@ -223,26 +206,27 @@ class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.T
   addChangeListener(this)
 
   addMouseListener(new MouseAdapter {
-    override def mouseClicked(e: MouseEvent) {
+    override def mouseClicked(e: MouseEvent): Unit = {
       if (e.getClickCount == 1 && e.isControlDown && tabManager.getSelectedTab.isInstanceOf[CodeTab]) {
-        if (tabManager.separateTabsWindow.isAncestorOf(tabManager.getSelectedTab))
+        if (tabManager.separateTabsWindow.isAncestorOf(tabManager.getSelectedTab)) {
           tabManager.switchWindow(false, true)
-        else
+        } else {
           tabManager.switchWindow(true)
+        }
       }
     }
   })
 
-  def stateChanged(e: ChangeEvent) =
+  def stateChanged(e: ChangeEvent): Unit =
     tabManager.switchedTabs(getSelectedComponent)
 
-  def focusSelected() =
+  def focusSelected(): Unit =
     getSelectedComponent.requestFocus
 
   def getError(index: Int): Boolean =
     getTabLabelAt(index).error
 
-  def setError(index: Int, error: Boolean) {
+  def setError(index: Int, error: Boolean): Unit = {
     getTabLabelAt(index).error = error
   }
 

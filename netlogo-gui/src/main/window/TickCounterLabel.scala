@@ -40,7 +40,7 @@ class TickCounterLabel(world: World)
     val ticks = world.ticks
     val tickText =
         if (ticks == -1) "" else Dump.number(StrictMath.floor(ticks))
-    setText((_label + ": " + tickText).trim)
+    setText(s"${_label}: $tickText".trim)
   }
 
   /// tick counter
