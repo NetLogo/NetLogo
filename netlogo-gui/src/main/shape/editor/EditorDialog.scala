@@ -474,21 +474,27 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   }
 
   def makeUndoableModification(el: Element, z: Int): Unit = {
-    undoableEdit = Some(new UndoableModification(el, z))
+    val mod = new UndoableModification(el, z)
 
-    undoButton.setEnabled(undoableEdit.get.canUndo)
+    undoableEdit = Some(mod)
+
+    undoButton.setEnabled(mod.canUndo)
   }
 
   def makeUndoableDraw(el: Element): Unit = {
-    undoableEdit = Some(new UndoableDraw(el))
+    val draw = new UndoableDraw(el)
 
-    undoButton.setEnabled(undoableEdit.get.canUndo)
+    undoableEdit = Some(draw)
+
+    undoButton.setEnabled(draw.canUndo)
   }
 
   def makeUndoableUnfinishedPolygon(): Unit = {
-    undoableEdit = Some(new UndoableUnfinishedPolygon())
+    val poly = new UndoableUnfinishedPolygon()
 
-    undoButton.setEnabled(undoableEdit.get.canUndo)
+    undoableEdit = Some(poly)
+
+    undoButton.setEnabled(poly.canUndo)
   }
 
   def propertyChange(e: PropertyChangeEvent): Unit = {
