@@ -85,6 +85,10 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
   val plotManager = accessor.target.asInstanceOf[PlotWidget].plotManager
   val table = new PlotPensTable()
 
+  private val scrollPane = new ScrollPane(table)
+
+  private val addButton = new Button(I18N.gui("add"), () => { table.newPen })
+
   override def apply() {
     super.apply()
     plotManager.compilePlot(plot)
@@ -95,11 +99,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
   setMinimumSize(new Dimension(600, 200))
   setPreferredSize(new Dimension(600, 200))
 
-  add(new ScrollPane(table) {
-    setBackground(InterfaceColors.dialogBackground)
-  }, BorderLayout.CENTER)
+  add(scrollPane, BorderLayout.CENTER)
   add(new JPanel with Transparent {
-    add(new Button(I18N.gui("add"), () => { table.newPen }))
+    add(addButton)
   }, BorderLayout.SOUTH)
 
   def changed() {} // seemingly no need to do anything here
@@ -132,8 +134,11 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
   }
 
   override def syncTheme(): Unit = {
+    scrollPane.setBackground(InterfaceColors.dialogBackground)
     table.setBackground(InterfaceColors.dialogBackground)
     table.setGridColor(InterfaceColors.dialogText)
+
+    addButton.syncTheme()
   }
 
   class PlotPensTable extends JTable { table =>
@@ -280,9 +285,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     // renders the delete and edit buttons for each column
     class ButtonCellEditor extends AbstractCellEditor with TableCellRenderer with TableCellEditor {
-      val EditIcon   = Utils.iconScaled("/images/edit.png", 15, 15)
+      val EditIcon   = Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.toolbarImage)
       val AlertIcon  = Utils.iconScaled("/images/edit-error.png", 15, 15)
-      val DeleteIcon = Utils.iconScaled("/images/delete.png", 15, 15)
+      val DeleteIcon = Utils.iconScaledWithColor("/images/delete.png", 15, 15, InterfaceColors.toolbarImage)
 
       val editButton = new Button("", () => {
         openAdvancedPenEditor(model.pens(getSelectedRow))
