@@ -267,6 +267,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     widgetsBeingDragged = selectedWrappers
     widgetsBeingDragged.foreach { w =>
       w.aboutToDrag(startPressX, startPressY)
+      moveToFront(w)
     }
   }
 
