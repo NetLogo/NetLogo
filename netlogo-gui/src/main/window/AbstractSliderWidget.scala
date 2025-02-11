@@ -40,9 +40,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
       def actionPerformed(e: ActionEvent): Unit = {
         try {
           value = getText.toDouble
-        }
-
-        catch {
+        } catch {
           case e: NumberFormatException =>
         }
 
