@@ -27,6 +27,9 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
   override def propertySet = Properties.slider
 
   override def invalidSettings: Seq[(String, String)] = {
+    // if everything can be parsed as a number, might as well check that the range is valid
+    // otherwise, it's probably code, so ignore it and let the compiler figure it out
+    // (Isaac B 2/11/25)
     try {
       if (checkRecursive(compiler, minimumCode, name)) {
         return Seq((I18N.gui.get("edit.slider.minimum"), I18N.gui.get("edit.general.recursive")))
