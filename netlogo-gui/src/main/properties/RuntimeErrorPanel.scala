@@ -89,7 +89,7 @@ trait RuntimeErrorDisplayer extends JPanel with ActionListener with ThemeSync {
   override def actionPerformed(e: ActionEvent): Unit
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.ERROR_LABEL_BACKGROUND)
+    setBackground(InterfaceColors.errorLabelBackground)
 
     errorLabel.setForeground(Color.WHITE)
     messageLabel.setForeground(Color.WHITE)

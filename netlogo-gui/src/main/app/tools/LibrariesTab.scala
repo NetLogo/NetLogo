@@ -399,11 +399,11 @@ class LibrariesTab( category:        String
         }
 
       if (isSelected) {
-        newComponent.setBackground(InterfaceColors.DIALOG_BACKGROUND_SELECTED)
-        newComponent.setForeground(InterfaceColors.DIALOG_TEXT_SELECTED)
+        newComponent.setBackground(InterfaceColors.dialogBackgroundSelected)
+        newComponent.setForeground(InterfaceColors.dialogTextSelected)
       } else {
-        newComponent.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-        newComponent.setForeground(InterfaceColors.DIALOG_TEXT)
+        newComponent.setBackground(InterfaceColors.dialogBackground)
+        newComponent.setForeground(InterfaceColors.dialogText)
       }
 
       newComponent
@@ -464,32 +464,32 @@ class LibrariesTab( category:        String
   }
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    setBackground(InterfaceColors.dialogBackground)
 
-    topPanel.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    topPanel.setBackground(InterfaceColors.dialogBackground)
 
-    magIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
+    magIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.toolbarImage))
 
     filterField.syncTheme()
 
-    libraryScroll.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-    libraryList.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    libraryScroll.setBackground(InterfaceColors.dialogBackground)
+    libraryList.setBackground(InterfaceColors.dialogBackground)
 
     installButton.syncTheme()
     addToCodeTabButton.syncTheme()
     homepageButton.syncTheme()
     uninstallButton.syncTheme()
 
-    installedVersionLabel.setForeground(InterfaceColors.DIALOG_TEXT)
-    latestVersionLabel.setForeground(InterfaceColors.DIALOG_TEXT)
-    minNetLogoVersionLabel.setForeground(InterfaceColors.DIALOG_TEXT)
+    installedVersionLabel.setForeground(InterfaceColors.dialogText)
+    latestVersionLabel.setForeground(InterfaceColors.dialogText)
+    minNetLogoVersionLabel.setForeground(InterfaceColors.dialogText)
 
-    installedVersion.setForeground(InterfaceColors.DIALOG_TEXT)
-    latestVersion.setForeground(InterfaceColors.DIALOG_TEXT)
-    minNetLogoVersion.setForeground(InterfaceColors.DIALOG_TEXT)
+    installedVersion.setForeground(InterfaceColors.dialogText)
+    latestVersion.setForeground(InterfaceColors.dialogText)
+    minNetLogoVersion.setForeground(InterfaceColors.dialogText)
 
-    infoScroll.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
-    infoScroll.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    infoScroll.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable))
+    infoScroll.setBackground(InterfaceColors.textAreaBackground)
 
     info.syncTheme()
   }

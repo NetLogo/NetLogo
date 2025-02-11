@@ -135,18 +135,18 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
   }
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    getContentPane.setBackground(InterfaceColors.dialogBackground)
 
-    label.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    label.setForeground(InterfaceColors.toolbarText)
 
     credits.syncTheme()
     system.syncTheme()
 
-    creditsScrollPane.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
-    creditsScrollPane.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    creditsScrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable))
+    creditsScrollPane.setBackground(InterfaceColors.textAreaBackground)
 
-    systemScrollPane.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
-    systemScrollPane.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    systemScrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable))
+    systemScrollPane.setBackground(InterfaceColors.textAreaBackground)
 
     tabs.syncTheme()
   }

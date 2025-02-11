@@ -143,9 +143,9 @@ class ComboBox[T](private var items: Seq[T] = Seq())
     items.size
 
   override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-    setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+    setBackgroundColor(InterfaceColors.toolbarControlBackground)
+    setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
+    setBorderColor(InterfaceColors.toolbarControlBorder)
 
     choiceDisplay.syncTheme()
 
@@ -189,7 +189,7 @@ class ComboBox[T](private var items: Seq[T] = Seq())
       if (getComponentCount > 0) {
         getComponent(0) match {
           case ts: ThemeSync => ts.syncTheme()
-          case l: JLabel => l.setForeground(InterfaceColors.TOOLBAR_TEXT)
+          case l: JLabel => l.setForeground(InterfaceColors.toolbarText)
           case _ =>
         }
       }

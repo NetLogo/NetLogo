@@ -24,10 +24,10 @@ class Button(action: Action) extends JButton(action) with RoundedBorderPanel wit
   syncTheme()
 
   override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-    setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-    setForeground(InterfaceColors.TOOLBAR_TEXT)
+    setBackgroundColor(InterfaceColors.toolbarControlBackground)
+    setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
+    setBorderColor(InterfaceColors.toolbarControlBorder)
+    setForeground(InterfaceColors.toolbarText)
   }
 }
 
@@ -50,9 +50,9 @@ class ToggleButton(action: Action) extends JToggleButton(action) with RoundedBor
     super.isHover || isSelected
 
   override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-    setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-    setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-    setForeground(InterfaceColors.TOOLBAR_TEXT)
+    setBackgroundColor(InterfaceColors.toolbarControlBackground)
+    setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
+    setBorderColor(InterfaceColors.toolbarControlBorder)
+    setForeground(InterfaceColors.toolbarText)
   }
 }

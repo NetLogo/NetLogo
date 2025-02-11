@@ -237,7 +237,7 @@ public class View
     frameCount++;
     if (frozen || !workspace.world().displayOn()) {
       if (dirty) {
-        g.setColor(InterfaceColors.GRAPHICS_BACKGROUND());
+        g.setColor(InterfaceColors.graphicsBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
       } else {
         g.drawImage(offscreenImage, 0, 0, null);
@@ -473,7 +473,7 @@ public class View
     if (!workspace.world().observer().atHome2D()) {
       menu.addSeparator();
       menu.add(new MenuItem(new AbstractAction(
-        "<html>" + Colors.colorize("reset-perspective", InterfaceColors.COMMAND_COLOR())) {
+        "<html>" + Colors.colorize("reset-perspective", InterfaceColors.commandColor())) {
         public void actionPerformed(ActionEvent e) {
           workspace.world().observer().resetPerspective();
           workspace.viewManager().incrementalUpdateFromEventThread();
@@ -603,10 +603,10 @@ public class View
     boolean submenu = false;
 
     AgentMenuItem(org.nlogo.agent.Agent agent, AgentMenuType type, String caption, boolean submenu) {
-      super("<html>" + org.nlogo.awt.Colors.colorize(caption, InterfaceColors.COMMAND_COLOR()) + " " +
-            org.nlogo.awt.Colors.colorize(agent.classDisplayName(), InterfaceColors.REPORTER_COLOR()) +
+      super("<html>" + org.nlogo.awt.Colors.colorize(caption, InterfaceColors.commandColor()) + " " +
+            org.nlogo.awt.Colors.colorize(agent.classDisplayName(), InterfaceColors.reporterColor()) +
             org.nlogo.awt.Colors.colorize(agent.toString().substring(agent.classDisplayName().length()),
-            InterfaceColors.CONSTANT_COLOR()));
+            InterfaceColors.constantColor()));
       this.agent = agent;
       this.type = type;
       addActionListener(View.this);

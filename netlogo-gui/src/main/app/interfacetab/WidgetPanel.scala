@@ -42,7 +42,7 @@ object InteractMode {
   case object EDIT extends InteractMode {
     override def cursor =
       Toolkit.getDefaultToolkit.createCustomCursor(Utils.iconScaledWithColor("/images/edit-cursor.png", 32, 32,
-                                                                             InterfaceColors.TOOLBAR_IMAGE).getImage,
+                                                                             InterfaceColors.toolbarImage).getImage,
                                                    new Point(0, 16), I18N.gui.get("tabs.run.widget.editWidget"))
   }
 
@@ -1092,7 +1092,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.INTERFACE_BACKGROUND)
+    setBackground(InterfaceColors.interfaceBackground)
 
     setCursor(interactMode.cursor)
 

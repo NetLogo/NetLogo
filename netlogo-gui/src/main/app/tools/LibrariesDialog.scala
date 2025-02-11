@@ -91,11 +91,11 @@ class LibrariesDialog( parent:          Frame
   override def syncTheme(): Unit = {
     tab.syncTheme()
 
-    bottomPanel.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    bottomPanel.setBackground(InterfaceColors.dialogBackground)
 
     libPathsButton.syncTheme()
     updateAllButton.syncTheme()
 
-    status.setForeground(InterfaceColors.DIALOG_TEXT)
+    status.setForeground(InterfaceColors.dialogText)
   }
 }

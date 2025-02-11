@@ -29,7 +29,7 @@ abstract class StringEditor(accessor: PropertyAccessor[String])
   }
 
   override def syncTheme(): Unit = {
-    label.setForeground(InterfaceColors.DIALOG_TEXT)
+    label.setForeground(InterfaceColors.dialogText)
 
     editor.syncTheme()
   }

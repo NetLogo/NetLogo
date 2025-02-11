@@ -77,12 +77,12 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
   }
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    getContentPane.setBackground(InterfaceColors.dialogBackground)
 
     textArea.syncTheme()
 
-    scrollPane.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
-    scrollPane.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    scrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable))
+    scrollPane.setBackground(InterfaceColors.textAreaBackground)
 
     buttonPanel.getComponents.foreach(_ match {
       case ts: ThemeSync => ts.syncTheme()

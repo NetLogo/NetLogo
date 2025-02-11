@@ -70,8 +70,8 @@ class MonitorWidget(random: MersenneTwisterFast)
     }
 
     override def syncTheme(): Unit = {
-      setBackgroundColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
-      setBorderColor(InterfaceColors.MONITOR_BORDER)
+      setBackgroundColor(InterfaceColors.displayAreaBackground)
+      setBorderColor(InterfaceColors.monitorBorder)
     }
   }
 
@@ -178,7 +178,7 @@ class MonitorWidget(random: MersenneTwisterFast)
       new AddJobEvent(this, agents, procedure).raise(this)
       jobRunning = true
     }
-    nameLabel.setForeground(if (procedure == null) Color.RED else InterfaceColors.WIDGET_TEXT)
+    nameLabel.setForeground(if (procedure == null) Color.RED else InterfaceColors.widgetText)
     repaint()
   }
 
@@ -235,10 +235,10 @@ class MonitorWidget(random: MersenneTwisterFast)
   }
 
   override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.MONITOR_BACKGROUND)
+    setBackgroundColor(InterfaceColors.monitorBackground)
 
-    nameLabel.setForeground(InterfaceColors.WIDGET_TEXT)
-    valueLabel.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
+    nameLabel.setForeground(InterfaceColors.widgetText)
+    valueLabel.setForeground(InterfaceColors.displayAreaText)
 
     valuePanel.syncTheme()
   }

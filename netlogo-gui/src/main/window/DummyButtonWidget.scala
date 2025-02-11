@@ -80,7 +80,7 @@ class DummyButtonWidget
       fontMetrics.getMaxDescent + fontMetrics.getMaxAscent
     val availableWidth = size.width - 8
     val stringWidth = fontMetrics.stringWidth(displayName)
-    g.setColor(InterfaceColors.BUTTON_TEXT)
+    g.setColor(InterfaceColors.buttonText)
 
     val shortString =
       Fonts.shortenStringToFit(displayName, availableWidth, fontMetrics)
@@ -98,9 +98,9 @@ class DummyButtonWidget
 
       g.setColor(
         if (keyEnabled)
-          InterfaceColors.BUTTON_TEXT
+          InterfaceColors.buttonText
         else
-          InterfaceColors.BUTTON_TEXT_DISABLED
+          InterfaceColors.buttonTextDisabled
       )
 
       g.drawString(actionKeyString, ax - 1, ay)
@@ -108,7 +108,7 @@ class DummyButtonWidget
   }
 
   override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.BUTTON_BACKGROUND)
+    setBackgroundColor(InterfaceColors.buttonBackground)
   }
 
   ///

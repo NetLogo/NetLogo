@@ -70,7 +70,7 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, 
   }
 
   private def addWidgets() {
-    showPenInLegend.setForeground(InterfaceColors.DIALOG_TEXT)
+    showPenInLegend.setForeground(InterfaceColors.dialogText)
 
     penModes.syncTheme()
     setupCode.syncTheme()
@@ -83,7 +83,7 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, 
     c.insets = new Insets(6, 6, 6, 6)
 
     add(new JLabel(I18N.gui("mode")) {
-      setForeground(InterfaceColors.DIALOG_TEXT)
+      setForeground(InterfaceColors.dialogText)
     }, c)
 
     c.fill = GridBagConstraints.HORIZONTAL
@@ -98,7 +98,7 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, 
     c.insets = new Insets(0, 6, 6, 6)
 
     add(new JLabel(I18N.gui("interval")) {
-      setForeground(InterfaceColors.DIALOG_TEXT)
+      setForeground(InterfaceColors.dialogText)
     }, c)
 
     c.fill = GridBagConstraints.HORIZONTAL

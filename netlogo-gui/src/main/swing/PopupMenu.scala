@@ -11,7 +11,7 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 class PopupMenu(title: String = "") extends JPopupMenu(title) with ThemeSync {
   private class Separator extends JPopupMenu.Separator with ThemeSync {
     override def syncTheme(): Unit = {
-      setForeground(InterfaceColors.MENU_BORDER)
+      setForeground(InterfaceColors.menuBorder)
     }
   }
 
@@ -25,8 +25,8 @@ class PopupMenu(title: String = "") extends JPopupMenu(title) with ThemeSync {
     new Insets(5, 0, 5, 0)
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.MENU_BACKGROUND)
-    setBorder(new LineBorder(InterfaceColors.MENU_BORDER))
+    setBackground(InterfaceColors.menuBackground)
+    setBorder(new LineBorder(InterfaceColors.menuBorder))
 
     getComponents.foreach(_ match {
       case ts: ThemeSync => ts.syncTheme()

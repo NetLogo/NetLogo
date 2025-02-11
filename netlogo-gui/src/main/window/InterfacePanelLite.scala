@@ -277,7 +277,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
     Images.paintToImage(this)
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.INTERFACE_BACKGROUND)
+    setBackground(InterfaceColors.interfaceBackground)
 
     getComponents.foreach(_ match {
       case ts: ThemeSync => ts.syncTheme()

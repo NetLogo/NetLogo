@@ -55,7 +55,7 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
   }
 
   override def syncTheme(): Unit = {
-    label.setForeground(InterfaceColors.DIALOG_TEXT)
+    label.setForeground(InterfaceColors.dialogText)
 
     colorButton.syncTheme()
   }
@@ -93,11 +93,11 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
     }
 
     override def syncTheme(): Unit = {
-      setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-      setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+      setBackgroundColor(InterfaceColors.toolbarControlBackground)
+      setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
+      setBorderColor(InterfaceColors.toolbarControlBorder)
 
-      label.setForeground(InterfaceColors.TOOLBAR_TEXT)
+      label.setForeground(InterfaceColors.toolbarText)
     }
   }
 }

@@ -93,7 +93,7 @@ abstract class FilePathEditor(accessor: PropertyAccessor[String], parent: Compon
   }
 
   override def syncTheme(): Unit = {
-    label.setForeground(InterfaceColors.DIALOG_TEXT)
+    label.setForeground(InterfaceColors.dialogText)
 
     editor.syncTheme()
     browseButton.syncTheme()

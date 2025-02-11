@@ -59,7 +59,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
   var displayName: String = ""
   var deleteable: Boolean = true
 
-  setBorderColor(InterfaceColors.TRANSPARENT)
+  setBorderColor(InterfaceColors.Transparent)
 
   protected val preserveWidgetSizes = Preferences.userRoot.node("/org/nlogo/NetLogo")
                                                  .getBoolean("preserveWidgetSizes", true)

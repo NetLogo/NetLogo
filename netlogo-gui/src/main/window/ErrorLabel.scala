@@ -16,7 +16,7 @@ class ErrorLabel extends JLabel {
   locally {
     setOpaque(true)
     setForeground(Color.WHITE)
-    setBackground(InterfaceColors.ERROR_LABEL_BACKGROUND)
+    setBackground(InterfaceColors.errorLabelBackground)
     setIcon(Utils.icon("/images/error.png"))
     setBorder(new EmptyBorder(6, 6, 6, 6))
     setVisible(compilerError.isDefined)

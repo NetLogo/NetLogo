@@ -129,14 +129,14 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler) extends J
   }
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
+    setBackground(InterfaceColors.toolbarBackground)
 
-    orbitButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
-    zoomButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
-    moveButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
-    interactButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    orbitButton.setForeground(InterfaceColors.toolbarText)
+    zoomButton.setForeground(InterfaceColors.toolbarText)
+    moveButton.setForeground(InterfaceColors.toolbarText)
+    interactButton.setForeground(InterfaceColors.toolbarText)
 
-    resetButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
-    fullScreenButton.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    resetButton.setForeground(InterfaceColors.toolbarText)
+    fullScreenButton.setForeground(InterfaceColors.toolbarText)
   }
 }

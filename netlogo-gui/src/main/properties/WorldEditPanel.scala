@@ -33,7 +33,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
     val panelGridbag = new GridBagLayout
     val worldPanel = new JPanel(new BorderLayout) with Transparent {
       setBorder(new TitledBorder(I18N.gui("world")) {
-        setTitleColor(InterfaceColors.DIALOG_TEXT)
+        setTitleColor(InterfaceColors.dialogText)
       })
       add(makeButtonPanel(settings), BorderLayout.WEST)
       add(new JPanel(new BorderLayout) with Transparent {
@@ -48,7 +48,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
 
     val viewPanel = new JPanel(panelGridbag) with Transparent {
       setBorder(new TitledBorder(I18N.gui("view")) {
-        setTitleColor(InterfaceColors.DIALOG_TEXT)
+        setTitleColor(InterfaceColors.dialogText)
       })
     }
 
@@ -56,7 +56,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
 
     val modelPanel = new JPanel(panelGridbag) with Transparent {
       setBorder(new TitledBorder(I18N.gui("tickCounter")) {
-        setTitleColor(InterfaceColors.DIALOG_TEXT)
+        setTitleColor(InterfaceColors.dialogText)
       })
     }
 
@@ -78,7 +78,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
     val c = new GridBagConstraints
 
     buttons.add(new JLabel(I18N.gui("origin.location") + " ") {
-      setForeground(InterfaceColors.DIALOG_TEXT)
+      setForeground(InterfaceColors.dialogText)
     }, c)
 
     positionChoices = new ComboBox(settings.originConfigurations.asScala.toList) {

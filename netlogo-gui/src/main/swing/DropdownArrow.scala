@@ -14,7 +14,7 @@ class DropdownArrow extends JPanel {
   override def paintComponent(g: Graphics) {
     val g2d = Utils.initGraphics2D(g)
 
-    g2d.setColor(InterfaceColors.TOOLBAR_TEXT)
+    g2d.setColor(InterfaceColors.toolbarText)
     g2d.drawLine(0, 0, getWidth / 2, getHeight - 1)
     g2d.drawLine(getWidth / 2, getHeight - 1, getWidth - 1, 0)
   }

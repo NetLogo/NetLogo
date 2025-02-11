@@ -144,9 +144,9 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
   }
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    setBackground(InterfaceColors.dialogBackground)
 
-    scrollPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    scrollPane.setBackground(InterfaceColors.dialogBackground)
 
     agentEditor.syncTheme()
 

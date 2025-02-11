@@ -106,7 +106,7 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") with ThemeS
   }
 
   override def syncTheme(): Unit = {
-    panel.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    panel.setBackground(InterfaceColors.dialogBackground)
 
     lightButton.syncTheme()
     darkButton.syncTheme()

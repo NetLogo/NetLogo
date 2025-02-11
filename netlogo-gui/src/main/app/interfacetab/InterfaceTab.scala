@@ -225,7 +225,7 @@ class InterfaceTab(workspace: GUIWorkspace,
       if (speedSlider.isVisible && gap <= 80) {
         val g2d = Utils.initGraphics2D(g)
 
-        g2d.setColor(InterfaceColors.TOOLBAR_SEPARATOR)
+        g2d.setColor(InterfaceColors.toolbarSeparator)
         g2d.fillRect(speedSlider.getX - gap / 2, getY + 8, 1, getHeight - 16)
         g2d.fillRect(viewUpdatePanel.getX - gap / 2, getY + 8, 1, getHeight - 16)
       }
@@ -236,7 +236,7 @@ class InterfaceTab(workspace: GUIWorkspace,
         viewUpdatePanel.getPreferredSize.width + 96
 
     override def syncTheme(): Unit = {
-      setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
+      setBackground(InterfaceColors.toolbarBackground)
 
       widgetControls.syncTheme()
       viewUpdatePanel.syncTheme()
@@ -261,10 +261,10 @@ class InterfaceTab(workspace: GUIWorkspace,
       splitPane.getOrientation match {
         case JSplitPane.VERTICAL_SPLIT =>
           putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shift-bottom.png", 10, 10,
-                                                                InterfaceColors.LOCATION_TOGGLE_IMAGE))
+                                                                InterfaceColors.locationToggleImage))
         case JSplitPane.HORIZONTAL_SPLIT =>
           putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shift-right.png", 10, 10,
-                                                                InterfaceColors.LOCATION_TOGGLE_IMAGE))
+                                                                InterfaceColors.locationToggleImage))
       }
     }
   }
@@ -330,7 +330,7 @@ class InterfaceTab(workspace: GUIWorkspace,
     toolBar.syncTheme()
     iP.syncTheme()
 
-    scrollPane.setBackground(InterfaceColors.INTERFACE_BACKGROUND)
+    scrollPane.setBackground(InterfaceColors.interfaceBackground)
 
     commandCenter.syncTheme()
     locationToggleAction.syncTheme()

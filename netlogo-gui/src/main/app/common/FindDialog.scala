@@ -181,13 +181,13 @@ object FindDialog extends ThemeSync {
       codeInstance.syncTheme()
 
     FIND_ACTION.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
-                                                                      InterfaceColors.TOOLBAR_IMAGE))
+                                                                      InterfaceColors.toolbarImage))
     FIND_ACTION_CODE.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
-                                                                           InterfaceColors.TOOLBAR_IMAGE))
+                                                                           InterfaceColors.toolbarImage))
     FIND_NEXT_ACTION.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
-                                                                           InterfaceColors.TOOLBAR_IMAGE))
+                                                                           InterfaceColors.toolbarImage))
     FIND_NEXT_ACTION_CODE.putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/find.png", 15, 15,
-                                                                                InterfaceColors.TOOLBAR_IMAGE))
+                                                                                InterfaceColors.toolbarImage))
   }
 }
 
@@ -444,7 +444,7 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
   }
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    getContentPane.setBackground(InterfaceColors.dialogBackground)
 
     nextButton.syncTheme()
     prevButton.syncTheme()
@@ -452,14 +452,14 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     replaceAndFindButton.syncTheme()
     replaceAllButton.syncTheme()
 
-    ignoreCaseCheckBox.setForeground(InterfaceColors.DIALOG_TEXT)
-    wrapAroundCheckBox.setForeground(InterfaceColors.DIALOG_TEXT)
+    ignoreCaseCheckBox.setForeground(InterfaceColors.dialogText)
+    wrapAroundCheckBox.setForeground(InterfaceColors.dialogText)
 
     findBox.syncTheme()
     replaceBox.syncTheme()
 
-    replaceLabel.setForeground(InterfaceColors.DIALOG_TEXT)
-    notFoundLabel.setForeground(InterfaceColors.DIALOG_TEXT)
+    replaceLabel.setForeground(InterfaceColors.dialogText)
+    notFoundLabel.setForeground(InterfaceColors.dialogText)
 
     findPanel.syncTheme()
   }

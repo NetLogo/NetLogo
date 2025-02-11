@@ -96,7 +96,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
   setPreferredSize(new Dimension(600, 200))
 
   add(new ScrollPane(table) {
-    setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    setBackground(InterfaceColors.dialogBackground)
   }, BorderLayout.CENTER)
   add(new JPanel with Transparent {
     add(new Button(I18N.gui("add"), () => { table.newPen }))
@@ -132,8 +132,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
   }
 
   override def syncTheme(): Unit = {
-    table.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-    table.setGridColor(InterfaceColors.DIALOG_TEXT)
+    table.setBackground(InterfaceColors.dialogBackground)
+    table.setGridColor(InterfaceColors.dialogText)
   }
 
   class PlotPensTable extends JTable { table =>
@@ -251,13 +251,13 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
                                         isSelected: Boolean, hasFocus: Boolean, row: Int, col: Int) = {
         val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col)
         if (isSelected)
-          c.setBackground(InterfaceColors.DIALOG_BACKGROUND_SELECTED)
+          c.setBackground(InterfaceColors.dialogBackgroundSelected)
         else
-          c.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+          c.setBackground(InterfaceColors.dialogBackground)
         if (model.pens(row).hasErrors)
           c.setForeground(Color.RED)
         else
-          c.setForeground(InterfaceColors.DIALOG_TEXT)
+          c.setForeground(InterfaceColors.dialogText)
         c
       }
     }
@@ -339,8 +339,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
         if (value != null) {
           editor.setText(value.asInstanceOf[String])
         }
-        editor.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
-        editor.setCaretColor(InterfaceColors.TEXT_AREA_TEXT)
+        editor.setBackground(InterfaceColors.textAreaBackground)
+        editor.setCaretColor(InterfaceColors.textAreaText)
         editor
       }
     }
@@ -350,8 +350,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       val editor = new EditorField(30, goodFont, true, colorizer)
       def getTableCellEditorComponent(table: JTable, value: Object, isSelected: Boolean, row: Int, col: Int) = {
         editor.setText(value.asInstanceOf[String])
-        editor.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
-        editor.setCaretColor(InterfaceColors.TEXT_AREA_TEXT)
+        editor.setBackground(InterfaceColors.textAreaBackground)
+        editor.setCaretColor(InterfaceColors.textAreaText)
         editor
       }
       def getCellEditorValue = editor.getText()

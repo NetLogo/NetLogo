@@ -25,7 +25,7 @@ class PreviewCommandsDialog(
   workspaceFactory: WorkspaceFactory,
   graphicsPreview: GraphicsPreviewInterface)
   extends JDialog(owner, title, true) {
-  
+
   private val workspace = initWorkspace(workspaceFactory, _.openModel(model))
 
   private var _previewCommands =
@@ -45,7 +45,7 @@ class PreviewCommandsDialog(
       setVisible(false)
     }
   }
-  
+
   Utils.addEscKeyAction(this, cancelAction)
 
   val okButton = new Button(I18N.gui.get("common.buttons.ok"), () => {
@@ -59,7 +59,7 @@ class PreviewCommandsDialog(
   getRootPane.setDefaultButton(okButton)
 
   add(new JPanel(new BorderLayout) {
-    setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    setBackground(InterfaceColors.dialogBackground)
     add(editorPanel, BorderLayout.CENTER)
     add(previewPanel, BorderLayout.LINE_END)
     add(new JPanel with Transparent {

@@ -172,17 +172,17 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   private val tree = new JTree(new SearchableModelTree(node)) with ThemeSync {
     private val renderer = new DefaultTreeCellRenderer with ThemeSync {
       override def syncTheme(): Unit = {
-        backgroundNonSelectionColor = InterfaceColors.DIALOG_BACKGROUND
-        backgroundSelectionColor = InterfaceColors.DIALOG_BACKGROUND_SELECTED
-        textNonSelectionColor = InterfaceColors.DIALOG_TEXT
-        textSelectionColor = InterfaceColors.DIALOG_TEXT_SELECTED
+        backgroundNonSelectionColor = InterfaceColors.dialogBackground
+        backgroundSelectionColor = InterfaceColors.dialogBackgroundSelected
+        textNonSelectionColor = InterfaceColors.dialogText
+        textSelectionColor = InterfaceColors.dialogTextSelected
       }
     }
 
     setCellRenderer(renderer)
 
     override def syncTheme(): Unit = {
-      setBackground(InterfaceColors.DIALOG_BACKGROUND)
+      setBackground(InterfaceColors.dialogBackground)
 
       renderer.syncTheme()
     }
@@ -642,9 +642,9 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     }
 
     override def syncTheme(): Unit = {
-      setBackground(InterfaceColors.DIALOG_BACKGROUND)
+      setBackground(InterfaceColors.dialogBackground)
 
-      textArea.setForeground(InterfaceColors.DIALOG_TEXT)
+      textArea.setForeground(InterfaceColors.dialogText)
     }
   }
 
@@ -718,15 +718,15 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   }
 
   override def syncTheme(): Unit = {
-    contentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-    modelPreviewScrollPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-    treeScrollPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    contentPane.setBackground(InterfaceColors.dialogBackground)
+    modelPreviewScrollPane.setBackground(InterfaceColors.dialogBackground)
+    treeScrollPane.setBackground(InterfaceColors.dialogBackground)
 
     modelPreviewPanel.syncTheme()
     tree.syncTheme()
     searchField.syncTheme()
 
-    searchIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
+    searchIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.toolbarImage))
 
     communityButton.syncTheme()
     selectButton.syncTheme()

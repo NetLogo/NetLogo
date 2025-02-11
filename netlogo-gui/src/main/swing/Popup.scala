@@ -17,7 +17,7 @@ class Popup(parentFrame: Frame, title:String, panel: JPanel, cancel: => Unit, ok
   dialog.setTitle(title)
   dialog.add(panel, BorderLayout.CENTER)
   dialog.setAutoRequestFocus(true)
-  dialog.getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+  dialog.getContentPane.setBackground(InterfaceColors.dialogBackground)
 
   dialog.add(ButtonPanel(
     new Button(i18n("common.buttons.ok"), () => { if (ok) die() }),

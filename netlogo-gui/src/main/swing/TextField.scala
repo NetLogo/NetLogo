@@ -46,9 +46,9 @@ class TextField(columns: Int = 0, text: String = null, document: Document = null
     new Insets(0, 3, 0, 0)
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
-    setForeground(InterfaceColors.TEXT_AREA_TEXT)
-    setCaretColor(InterfaceColors.TEXT_AREA_TEXT)
-    setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_EDITABLE))
+    setBackground(InterfaceColors.textAreaBackground)
+    setForeground(InterfaceColors.textAreaText)
+    setCaretColor(InterfaceColors.textAreaText)
+    setBorder(new LineBorder(InterfaceColors.textAreaBorderEditable))
   }
 }

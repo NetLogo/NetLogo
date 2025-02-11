@@ -41,7 +41,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
 
       val g2d = Utils.initGraphics2D(g)
 
-      g2d.setColor(InterfaceColors.TOOLBAR_TEXT)
+      g2d.setColor(InterfaceColors.toolbarText)
       g2d.fillRect(6, 9, 7, 1)
     }
   }
@@ -55,7 +55,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
 
       val g2d = Utils.initGraphics2D(g)
 
-      g2d.setColor(InterfaceColors.TOOLBAR_TEXT)
+      g2d.setColor(InterfaceColors.toolbarText)
       g2d.fillRect(6, 9, 7, 1)
       g2d.fillRect(9, 6, 1, 7)
     }
@@ -158,7 +158,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
     slower.syncTheme()
     faster.syncTheme()
 
-    modelSpeed.setForeground(InterfaceColors.TOOLBAR_TEXT)
+    modelSpeed.setForeground(InterfaceColors.toolbarText)
   }
 
   class SpeedSlider(defaultSpeed: Int) extends JSlider(-110, 112, defaultSpeed) with MouseWheelListener {

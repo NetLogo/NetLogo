@@ -31,7 +31,7 @@ class AggregateTabs(editor: AggregateModelEditor, editorTab: AggregateEditorTab,
 
   private[gui] def recolorTab(component: Component, hasError: Boolean): Unit = {
     val index = indexOfComponent(component)
-    setForegroundAt(index, if (hasError) ErrorColor else InterfaceColors.TOOLBAR_TEXT)
+    setForegroundAt(index, if (hasError) ErrorColor else InterfaceColors.toolbarText)
   }
 
   private[gui] def setError(e: CompilerException, offset: Int): Unit = {
@@ -51,9 +51,9 @@ class AggregateTabs(editor: AggregateModelEditor, editorTab: AggregateEditorTab,
     for (i <- 0 until getTabCount) {
       if (getForegroundAt(i) != ErrorColor) {
         if (i == getSelectedIndex)
-          setForegroundAt(i, InterfaceColors.TABBED_PANE_TEXT_SELECTED)
+          setForegroundAt(i, InterfaceColors.tabbedPaneTextSelected)
         else
-          setForegroundAt(i, InterfaceColors.TABBED_PANE_TEXT)
+          setForegroundAt(i, InterfaceColors.tabbedPaneText)
       }
     }
   }

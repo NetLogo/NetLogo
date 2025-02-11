@@ -184,7 +184,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   }
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    getContentPane.setBackground(InterfaceColors.dialogBackground)
 
     clientPanel.syncTheme()
   }

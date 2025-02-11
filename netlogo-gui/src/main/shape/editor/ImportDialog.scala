@@ -22,7 +22,7 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
 
     getContentPane.setLayout(new BorderLayout(0, 10))
     getContentPane.add(new ScrollPane(list) {
-      setBackground(InterfaceColors.DIALOG_BACKGROUND)
+      setBackground(InterfaceColors.dialogBackground)
     }, BorderLayout.CENTER)
     getContentPane.add(new ButtonPanel(Array(importButton, cancelButton)), BorderLayout.SOUTH)
 
@@ -37,7 +37,7 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
 
   list.update()
 
-  list.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+  list.setBackground(InterfaceColors.dialogBackground)
 
   list.addMouseListener(new MouseAdapter {
     // Listen for double-clicks, and edit the selected shape
@@ -47,7 +47,7 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
     }
   })
 
-  getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+  getContentPane.setBackground(InterfaceColors.dialogBackground)
 
   pack()
 

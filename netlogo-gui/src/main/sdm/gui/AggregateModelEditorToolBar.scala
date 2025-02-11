@@ -68,10 +68,10 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
   def popButtons() {noToolButton.setSelected(true)}
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
+    setBackground(InterfaceColors.toolbarBackground)
 
     if (dtLabel != null)
-      dtLabel.setForeground(InterfaceColors.TOOLBAR_TEXT)
+      dtLabel.setForeground(InterfaceColors.toolbarText)
 
     if (dtButton != null)
       dtButton.syncTheme()
@@ -112,7 +112,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
   /// Actions
   abstract class MyAction(name:String, image:String, enableMe: Boolean)
           extends AbstractAction(I18N.gui(name.toLowerCase)) {
-    putValue(Action.SMALL_ICON, SwingUtils.iconScaledWithColor(image, 15, 15, InterfaceColors.TOOLBAR_IMAGE))
+    putValue(Action.SMALL_ICON, SwingUtils.iconScaledWithColor(image, 15, 15, InterfaceColors.toolbarImage))
     setEnabled(enableMe)
   }
   val compileAction = new MyAction("Check", "/images/check.png", enableMe = true) {

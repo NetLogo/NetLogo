@@ -139,7 +139,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   }
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
+    setBackground(InterfaceColors.toolbarBackground)
 
     widgetMenu.syncTheme()
     alignmentMenu.syncTheme()
@@ -149,10 +149,10 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     editButton.syncTheme()
     deleteButton.syncTheme()
 
-    interactButton.setIcon(Utils.iconScaledWithColor("/images/interact.png", 18, 18, InterfaceColors.TOOLBAR_IMAGE))
-    selectButton.setIcon(Utils.iconScaledWithColor("/images/select.png", 18, 18, InterfaceColors.TOOLBAR_IMAGE))
-    editButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 18, 18, InterfaceColors.TOOLBAR_IMAGE))
-    deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 18, 18, InterfaceColors.TOOLBAR_IMAGE))
+    interactButton.setIcon(Utils.iconScaledWithColor("/images/interact.png", 18, 18, InterfaceColors.toolbarImage))
+    selectButton.setIcon(Utils.iconScaledWithColor("/images/select.png", 18, 18, InterfaceColors.toolbarImage))
+    editButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 18, 18, InterfaceColors.toolbarImage))
+    deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 18, 18, InterfaceColors.toolbarImage))
   }
 
   def handle(e: WindowEvents.WidgetRemovedEvent): Unit = {
@@ -262,11 +262,11 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       WidgetInfos.find(_.displayName == chosenItem).get.coreWidget
 
     override def syncTheme(): Unit = {
-      setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-      setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+      setBackgroundColor(InterfaceColors.toolbarControlBackground)
+      setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
+      setBorderColor(InterfaceColors.toolbarControlBorder)
 
-      label.setForeground(InterfaceColors.TOOLBAR_TEXT)
+      label.setForeground(InterfaceColors.toolbarText)
 
       popup.syncTheme()
     }
@@ -391,26 +391,26 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     })
 
     override def syncTheme(): Unit = {
-      setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-      setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+      setBackgroundColor(InterfaceColors.toolbarControlBackground)
+      setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
+      setBorderColor(InterfaceColors.toolbarControlBorder)
 
-      label.setForeground(InterfaceColors.TOOLBAR_TEXT)
+      label.setForeground(InterfaceColors.toolbarText)
 
       popup.syncTheme()
 
-      leftAction.setIcon(Utils.iconScaledWithColor("/images/align-left.png", 16, 16, InterfaceColors.TOOLBAR_IMAGE))
+      leftAction.setIcon(Utils.iconScaledWithColor("/images/align-left.png", 16, 16, InterfaceColors.toolbarImage))
       centerHorizontalAction.setIcon(Utils.iconScaledWithColor("/images/align-horizontal-center.png", 16, 16,
-                                                               InterfaceColors.TOOLBAR_IMAGE))
-      rightAction.setIcon(Utils.iconScaledWithColor("/images/align-right.png", 16, 16, InterfaceColors.TOOLBAR_IMAGE))
-      topAction.setIcon(Utils.iconScaledWithColor("/images/align-top.png", 16, 16, InterfaceColors.TOOLBAR_IMAGE))
+                                                               InterfaceColors.toolbarImage))
+      rightAction.setIcon(Utils.iconScaledWithColor("/images/align-right.png", 16, 16, InterfaceColors.toolbarImage))
+      topAction.setIcon(Utils.iconScaledWithColor("/images/align-top.png", 16, 16, InterfaceColors.toolbarImage))
       centerVerticalAction.setIcon(Utils.iconScaledWithColor("/images/align-vertical-center.png", 16, 16,
-                                                             InterfaceColors.TOOLBAR_IMAGE))
-      bottomAction.setIcon(Utils.iconScaledWithColor("/images/align-bottom.png", 16, 16, InterfaceColors.TOOLBAR_IMAGE))
+                                                             InterfaceColors.toolbarImage))
+      bottomAction.setIcon(Utils.iconScaledWithColor("/images/align-bottom.png", 16, 16, InterfaceColors.toolbarImage))
       distributeHorizontalAction.setIcon(Utils.iconScaledWithColor("/images/distribute-horizontal.png", 16, 16,
-                                                                   InterfaceColors.TOOLBAR_IMAGE))
+                                                                   InterfaceColors.toolbarImage))
       distributeVerticalAction.setIcon(Utils.iconScaledWithColor("/images/distribute-vertical.png", 16, 16,
-                                                                 InterfaceColors.TOOLBAR_IMAGE))
+                                                                 InterfaceColors.toolbarImage))
     }
   }
 
@@ -426,7 +426,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       getMinimumSize
 
     override def syncTheme(): Unit = {
-      setPressedColor(InterfaceColors.TOOLBAR_TOOL_PRESSED)
+      setPressedColor(InterfaceColors.toolbarToolPressed)
     }
   }
 }

@@ -14,7 +14,7 @@ class WorldPreview(width: Int, height: Int) extends JPanel(new BorderLayout(0, 0
   private var wrapX, wrapY = false
   private var minx, maxx, miny, maxy = 0
   private val shapeLabel = new JLabel("Torus") {
-    setForeground(InterfaceColors.DIALOG_TEXT)
+    setForeground(InterfaceColors.dialogText)
   }
   private val worldPanel = new JPanel(new GridBagLayout) with Transparent {
     setSize(width, height)
@@ -29,7 +29,7 @@ class WorldPreview(width: Int, height: Int) extends JPanel(new BorderLayout(0, 0
     5, height - 10, WorldPreviewWrapCanvas.WRAP_X)
   private val rightX = new WorldPreviewWrapCanvas(
     5, height - 10, WorldPreviewWrapCanvas.WRAP_X)
-  
+
   locally {
     val c = new GridBagConstraints
 
@@ -48,7 +48,7 @@ class WorldPreview(width: Int, height: Int) extends JPanel(new BorderLayout(0, 0
     c.weighty = 1.0
     c.anchor = GridBagConstraints.NORTH
     c.gridy = 2
-    
+
     worldPanel.add(new BlankAreaCanvas(5, 5), c)
     worldPanel.add(bottomY, c)
     worldPanel.add(new BlankAreaCanvas(5, 5), c)

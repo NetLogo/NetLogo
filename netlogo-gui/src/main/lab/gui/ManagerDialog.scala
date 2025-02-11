@@ -330,10 +330,10 @@ private class ManagerDialog(manager:       LabManager,
     manager.protocols(jlist.getSelectedIndices()(0))
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-    listLabel.setForeground(InterfaceColors.DIALOG_TEXT)
-    scrollPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-    jlist.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    getContentPane.setBackground(InterfaceColors.dialogBackground)
+    listLabel.setForeground(InterfaceColors.dialogText)
+    scrollPane.setBackground(InterfaceColors.dialogBackground)
+    jlist.setBackground(InterfaceColors.dialogBackground)
 
     newButton.syncTheme()
     editButton.syncTheme()
@@ -362,11 +362,11 @@ private class ManagerDialog(manager:       LabManager,
         })
 
       if (isSelected) {
-        setBackground(InterfaceColors.DIALOG_BACKGROUND_SELECTED)
-        label.setForeground(InterfaceColors.DIALOG_TEXT_SELECTED)
+        setBackground(InterfaceColors.dialogBackgroundSelected)
+        label.setForeground(InterfaceColors.dialogTextSelected)
       } else {
-        setBackground(InterfaceColors.DIALOG_BACKGROUND)
-        label.setForeground(InterfaceColors.DIALOG_TEXT)
+        setBackground(InterfaceColors.dialogBackground)
+        label.setForeground(InterfaceColors.dialogText)
       }
 
       this

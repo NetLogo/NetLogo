@@ -264,7 +264,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   private val snapToGridButton: CheckBox = new CheckBox(I18N.gui("snapToGrid"), () => {
     snapToGrid = snapToGridButton.isSelected
   }) {
-    setForeground(InterfaceColors.DIALOG_TEXT)
+    setForeground(InterfaceColors.dialogText)
     setSelected(true)
   }
 
@@ -277,7 +277,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
     shapeView.repaint()
   }) {
-    setForeground(InterfaceColors.DIALOG_TEXT)
+    setForeground(InterfaceColors.dialogText)
     setSelected(shapeRotatable)
   }
 
@@ -358,7 +358,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   leftPanel.add(colorGrid)
   leftPanel.add(Box.createVerticalStrut(10))
   leftPanel.add(new JLabel(I18N.gui("colorChanges")) {
-    setForeground(InterfaceColors.DIALOG_TEXT)
+    setForeground(InterfaceColors.dialogText)
   })
   leftPanel.add(Box.createVerticalStrut(3))
   leftPanel.add(colorSelection)
@@ -406,7 +406,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
   private val buttonPanel = new ButtonPanel(Array(done, cancel))
   private val nameLabel = new JLabel(I18N.gui("name")) {
-    setForeground(InterfaceColors.DIALOG_TEXT)
+    setForeground(InterfaceColors.dialogText)
   }
 
   private val namePanel = new JPanel with Transparent {
@@ -420,7 +420,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   }
 
   getContentPane.setLayout(new BoxLayout(getContentPane, BoxLayout.Y_AXIS))
-  getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+  getContentPane.setBackground(InterfaceColors.dialogBackground)
 
   getContentPane.add(Box.createVerticalStrut(10))
   getContentPane.add(namePanel)
@@ -582,8 +582,8 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
     override def paintComponent(g: Graphics): Unit = {
       getParent match {
-        case item: MenuItem if item.isArmed => label.setForeground(InterfaceColors.MENU_TEXT_HOVER)
-        case _ => label.setForeground(InterfaceColors.TOOLBAR_TEXT)
+        case item: MenuItem if item.isArmed => label.setForeground(InterfaceColors.menuTextHover)
+        case _ => label.setForeground(InterfaceColors.toolbarText)
       }
 
       super.paintComponent(g)

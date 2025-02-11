@@ -130,9 +130,9 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   def mouseWheelMoved(e: MouseWheelEvent): Unit = { isOn = ! (e.getWheelRotation >= 1) }
 
   override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.SWITCH_BACKGROUND)
+    setBackgroundColor(InterfaceColors.switchBackground)
 
-    label.setForeground(InterfaceColors.WIDGET_TEXT)
+    label.setForeground(InterfaceColors.widgetText)
   }
 
   protected class Toggle extends JPanel {
@@ -170,22 +170,22 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     override def paintComponent(g: Graphics): Unit = {
       val g2d = Utils.initGraphics2D(g)
       if (isOn) {
-        g2d.setColor(InterfaceColors.SWITCH_TOGGLE_BACKGROUND_ON)
+        g2d.setColor(InterfaceColors.switchToggleBackgroundOn)
       } else {
-        g2d.setColor(InterfaceColors.SWITCH_TOGGLE_BACKGROUND_OFF)
+        g2d.setColor(InterfaceColors.switchToggleBackgroundOff)
       }
       g2d.fillRoundRect(0, 0, getWidth, getHeight, getWidth, getWidth)
       val y = if (isOn) 0 else getHeight - getWidth
       val d = if (isOn) 3 else -3
       if (hover) {
         g2d.setPaint(new RadialGradientPaint(getWidth / 2f, y + getWidth / 2f + d, getWidth / 2f, Array(0f, 1f),
-                                             Array(InterfaceColors.WIDGET_HOVER_SHADOW,
-                                                   InterfaceColors.TRANSPARENT)))
+                                             Array(InterfaceColors.widgetHoverShadow,
+                                                   InterfaceColors.Transparent)))
         g2d.fillOval(0, y + d, getWidth, getWidth)
       }
-      g2d.setColor(InterfaceColors.SWITCH_TOGGLE_BACKGROUND_ON)
+      g2d.setColor(InterfaceColors.switchToggleBackgroundOn)
       g2d.fillOval(0, y, getWidth, getWidth)
-      g2d.setColor(InterfaceColors.SWITCH_TOGGLE)
+      g2d.setColor(InterfaceColors.switchToggle)
       g2d.fillOval(1, y + 1, getWidth - 2, getWidth - 2)
     }
   }

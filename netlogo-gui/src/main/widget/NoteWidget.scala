@@ -53,13 +53,13 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     wrapText()
   }
 
-  def transparency: Boolean = getBackgroundColor eq InterfaceColors.TRANSPARENT
+  def transparency: Boolean = getBackgroundColor eq InterfaceColors.Transparent
   def transparency(trans: Boolean): Unit = {
     setBackgroundColor(
       if (trans) {
-        InterfaceColors.TRANSPARENT
+        InterfaceColors.Transparent
       } else {
-        InterfaceColors.TEXT_BOX_BACKGROUND
+        InterfaceColors.textBoxBackground
       }
     )
   }

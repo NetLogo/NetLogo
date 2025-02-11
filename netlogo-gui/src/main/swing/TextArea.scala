@@ -12,8 +12,8 @@ class TextArea(rows: Int, columns: Int, text: String = "")
   syncTheme()
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
-    setForeground(InterfaceColors.TEXT_AREA_TEXT)
-    setCaretColor(InterfaceColors.TEXT_AREA_TEXT)
+    setBackground(InterfaceColors.textAreaBackground)
+    setForeground(InterfaceColors.textAreaText)
+    setCaretColor(InterfaceColors.textAreaText)
   }
 }

@@ -88,8 +88,8 @@ class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManag
           }
 
           override def paintComponent(g: Graphics) {
-            getGutter.setBackground(InterfaceColors.CODE_BACKGROUND)
-            getGutter.setBorderColor(InterfaceColors.CODE_SEPARATOR)
+            getGutter.setBackground(InterfaceColors.codeBackground)
+            getGutter.setBorderColor(InterfaceColors.codeSeparator)
           }
         }
         sp.setLineNumbersEnabled(editor.configuration.showLineNumbers)

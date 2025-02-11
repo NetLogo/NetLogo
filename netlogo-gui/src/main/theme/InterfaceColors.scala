@@ -15,661 +15,660 @@ object InterfaceColors {
 
   def getTheme = theme.orNull
 
-  private val CLASSIC_LAVENDER = new Color(188, 188, 230)
-  private val CLASSIC_LIGHT_GREEN = new Color(130, 188, 183)
-  private val CLASSIC_DARK_GREEN = new Color(65, 94, 91)
-  private val CLASSIC_ORANGE = new Color(200, 103, 103)
-  private val CLASSIC_BEIGE = new Color(225, 225, 182)
+  private val ClassicLavender = new Color(188, 188, 230)
+  private val ClassicLightGreen = new Color(130, 188, 183)
+  private val ClassicDarkGreen = new Color(65, 94, 91)
+  private val ClassicOrange = new Color(200, 103, 103)
+  private val ClassicBeige = new Color(225, 225, 182)
 
-  private val LIGHT_BLUE = new Color(207, 229, 255)
-  private val MEDIUM_BLUE = new Color(6, 112, 237)
-  private val MEDIUM_BLUE_2 = new Color(0, 102, 227)
-  private val DARK_BLUE = new Color(0, 54, 117)
-  private val WHITE_2 = new Color(245, 245, 245)
-  private val LIGHT_GRAY = new Color(238, 238, 238)
-  private val LIGHT_GRAY_2 = new Color(215, 215, 215)
-  private val MEDIUM_GRAY = new Color(175, 175, 175)
-  private val LIGHT_GRAY_OUTLINE = new Color(120, 120, 120)
-  private val DARK_GRAY = new Color(79, 79, 79)
-  private val BLUE_GRAY = new Color(70, 70, 76)
-  private val MEDIUM_BLUE_GRAY = new Color(60, 60, 65)
-  private val DARK_BLUE_GRAY = new Color(45, 45, 54)
-  private val DARK_BLUE_GRAY_2 = new Color(35, 35, 44)
-  private val LIGHT_RED = new Color(251, 96, 85)
-  private val ALMOST_BLACK = new Color(22, 22, 22)
+  private val LightBlue = new Color(207, 229, 255)
+  private val MediumBlue = new Color(6, 112, 237)
+  private val MediumBlue2 = new Color(0, 102, 227)
+  private val DarkBlue = new Color(0, 54, 117)
+  private val White2 = new Color(245, 245, 245)
+  private val LightGray = new Color(238, 238, 238)
+  private val LightGray2 = new Color(215, 215, 215)
+  private val MediumGray = new Color(175, 175, 175)
+  private val LightGrayOutline = new Color(120, 120, 120)
+  private val DarkGray = new Color(79, 79, 79)
+  private val BlueGray = new Color(70, 70, 76)
+  private val MediumBlueGray = new Color(60, 60, 65)
+  private val DarkBlueGray = new Color(45, 45, 54)
+  private val DarkBlueGray2 = new Color(35, 35, 44)
+  private val LightRed = new Color(251, 96, 85)
+  private val AlmostBlack = new Color(22, 22, 22)
 
-  val TRANSPARENT = new Color(0, 0, 0, 0)
+  val Transparent = new Color(0, 0, 0, 0)
 
-  def WIDGET_TEXT =
+  def widgetText =
     theme.getOrElse("light") match {
       case "classic" => Color.BLACK
       case "light" => new Color(85, 87, 112)
       case "dark" => Color.WHITE
     }
 
-  def WIDGET_TEXT_ERROR = Color.RED
+  def widgetTextError = Color.RED
 
-  def WIDGET_HOVER_SHADOW = new Color(75, 75, 75)
+  def widgetHoverShadow = new Color(75, 75, 75)
 
-  def WIDGET_PREVIEW_COVER =
+  def widgetPreviewCover =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(255, 255, 255, 150)
       case "dark" => new Color(0, 0, 0, 150)
     }
 
-  def WIDGET_PREVIEW_COVER_NOTE =
+  def widgetPreviewCoverNote =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(225, 225, 225, 150)
       case "dark" => new Color(30, 30, 30, 150)
     }
 
-  def WIDGET_INTERACT_COVER =
+  def widgetInteractCover =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(255, 255, 255, 100)
       case "dark" => new Color(0, 0, 0, 100)
     }
 
-  def WIDGET_INTERACT_COVER_NOTE =
+  def widgetInteractCoverNote =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(225, 225, 225, 100)
       case "dark" => new Color(30, 30, 30, 100)
     }
 
-  def DISPLAY_AREA_BACKGROUND =
+  def displayAreaBackground =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.WHITE
       case "dark" => Color.BLACK
     }
 
-  def DISPLAY_AREA_TEXT =
+  def displayAreaText =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.BLACK
       case "dark" => Color.WHITE
     }
 
-  def TEXT_BOX_BACKGROUND =
+  def textBoxBackground =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.WHITE
-      case "dark" => ALMOST_BLACK
+      case "dark" => AlmostBlack
     }
 
-  def INTERFACE_BACKGROUND =
+  def interfaceBackground =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.WHITE
-      case "dark" => ALMOST_BLACK
+      case "dark" => AlmostBlack
     }
 
-  def COMMAND_CENTER_BACKGROUND =
+  def commandCenterBackground =
     theme.getOrElse("light") match {
-      case "classic" | "light" => LIGHT_GRAY
-      case "dark" => BLUE_GRAY
+      case "classic" | "light" => LightGray
+      case "dark" => BlueGray
     }
 
-  def COMMAND_CENTER_TEXT = WIDGET_TEXT
+  def commandCenterText = widgetText
 
-  def LOCATION_TOGGLE_IMAGE =
+  def locationToggleImage =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.BLACK
       case "dark" => Color.WHITE
     }
 
-  def COMMAND_LINE_BACKGROUND =
+  def commandLineBackground =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.WHITE
-      case "dark" => DARK_GRAY
+      case "dark" => DarkGray
     }
 
-  def COMMAND_OUTPUT_BACKGROUND =
+  def commandOutputBackground =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.WHITE
-      case "dark" => DARK_BLUE_GRAY
+      case "dark" => DarkBlueGray
     }
 
-  def SPLIT_PANE_DIVIDER_BACKGROUND =
+  def splitPaneDividerBackground =
     theme.getOrElse("light") match {
-      case "classic" | "light" => MEDIUM_GRAY
+      case "classic" | "light" => MediumGray
       case "dark" => new Color(204, 204, 204)
     }
 
-  def BUTTON_BACKGROUND =
+  def buttonBackground =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_LAVENDER
-      case "light" | "dark" => MEDIUM_BLUE
+      case "classic" => ClassicLavender
+      case "light" | "dark" => MediumBlue
     }
 
-  def BUTTON_BACKGROUND_HOVER =
+  def buttonBackgroundHover =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_LAVENDER
+      case "classic" => ClassicLavender
       case "light" | "dark" => new Color(62, 150, 253)
     }
 
-  def BUTTON_BACKGROUND_PRESSED =
+  def buttonBackgroundPressed =
     theme.getOrElse("light") match {
       case "classic" => Color.BLACK
       case "light" | "dark" => new Color(0, 49, 106)
     }
 
-  def BUTTON_BACKGROUND_PRESSED_HOVER =
+  def buttonBackgroundPressedHover =
     theme.getOrElse("light") match {
       case "classic" => Color.BLACK
       case "light" | "dark" => new Color(9, 89, 183)
     }
 
-  def BUTTON_BACKGROUND_DISABLED =
+  def buttonBackgroundDisabled =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_LAVENDER
+      case "classic" => ClassicLavender
       case "light" | "dark" => new Color(213, 213, 213)
     }
 
-  def BUTTON_TEXT =
+  def buttonText =
     theme.getOrElse("light") match {
       case "classic" => Color.BLACK
       case "light" | "dark" => Color.WHITE
     }
 
-  def BUTTON_TEXT_PRESSED =
+  def buttonTextPressed =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_LAVENDER
+      case "classic" => ClassicLavender
       case "light" | "dark" => Color.WHITE
     }
 
-  def BUTTON_TEXT_DISABLED =
+  def buttonTextDisabled =
     theme.getOrElse("light") match {
       case "classic" => Color.BLACK
       case "light" | "dark" => new Color(154, 154, 154)
     }
 
-  def SLIDER_BACKGROUND =
+  def sliderBackground =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_LIGHT_GREEN
-      case "light" => LIGHT_BLUE
-      case "dark" => DARK_BLUE
+      case "classic" => ClassicLightGreen
+      case "light" => LightBlue
+      case "dark" => DarkBlue
     }
 
-  def SLIDER_BAR_BACKGROUND =
+  def sliderBarBackground =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_DARK_GREEN
-      case "light" => MEDIUM_GRAY
+      case "classic" => ClassicDarkGreen
+      case "light" => MediumGray
       case "dark" => Color.BLACK
     }
 
-  def SLIDER_BAR_BACKGROUND_FILLED =
+  def sliderBarBackgroundFilled =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_DARK_GREEN
-      case "light" | "dark" => MEDIUM_BLUE
+      case "classic" => ClassicDarkGreen
+      case "light" | "dark" => MediumBlue
     }
 
-  def SLIDER_THUMB_BORDER =
+  def sliderThumbBorder =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_ORANGE
-      case "light" | "dark" => MEDIUM_BLUE
+      case "classic" => ClassicOrange
+      case "light" | "dark" => MediumBlue
     }
 
-  def SLIDER_THUMB_BACKGROUND =
+  def sliderThumbBackground =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_ORANGE
+      case "classic" => ClassicOrange
       case "light" | "dark" => Color.WHITE
     }
 
-  def SLIDER_THUMB_BACKGROUND_PRESSED =
+  def sliderThumbBackgroundPressed =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_ORANGE
-      case "light" | "dark" => MEDIUM_BLUE
+      case "classic" => ClassicOrange
+      case "light" | "dark" => MediumBlue
     }
 
-  def SWITCH_BACKGROUND =
+  def switchBackground =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_LIGHT_GREEN
-      case "light" => LIGHT_BLUE
-      case "dark" => DARK_BLUE
+      case "classic" => ClassicLightGreen
+      case "light" => LightBlue
+      case "dark" => DarkBlue
     }
 
-  def SWITCH_TOGGLE =
+  def switchToggle =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_ORANGE
+      case "classic" => ClassicOrange
       case "light" | "dark" => Color.WHITE
     }
 
-  def SWITCH_TOGGLE_BACKGROUND_ON =
+  def switchToggleBackgroundOn =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_DARK_GREEN
-      case "light" | "dark" => MEDIUM_BLUE
+      case "classic" => ClassicDarkGreen
+      case "light" | "dark" => MediumBlue
     }
 
-  def SWITCH_TOGGLE_BACKGROUND_OFF =
+  def switchToggleBackgroundOff =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_DARK_GREEN
-      case "light" => MEDIUM_GRAY
+      case "classic" => ClassicDarkGreen
+      case "light" => MediumGray
       case "dark" => Color.BLACK
     }
 
-  def CHOOSER_BACKGROUND =
+  def chooserBackground =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_LIGHT_GREEN
-      case "light" => LIGHT_BLUE
-      case "dark" => DARK_BLUE
+      case "classic" => ClassicLightGreen
+      case "light" => LightBlue
+      case "dark" => DarkBlue
     }
 
-  def CHOOSER_BORDER =
+  def chooserBorder =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_DARK_GREEN
-      case "light" | "dark" => MEDIUM_BLUE
+      case "classic" => ClassicDarkGreen
+      case "light" | "dark" => MediumBlue
     }
 
-  def INPUT_BACKGROUND =
+  def inputBackground =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_LIGHT_GREEN
-      case "light" => LIGHT_BLUE
-      case "dark" => DARK_BLUE
+      case "classic" => ClassicLightGreen
+      case "light" => LightBlue
+      case "dark" => DarkBlue
     }
 
-  def INPUT_BORDER =
+  def inputBorder =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_DARK_GREEN
-      case "light" | "dark" => MEDIUM_BLUE
+      case "classic" => ClassicDarkGreen
+      case "light" | "dark" => MediumBlue
     }
 
-  def GRAPHICS_BACKGROUND = Constants.ViewBackground
+  def graphicsBackground = Constants.ViewBackground
 
-  def VIEW_BORDER =
+  def viewBorder =
     theme.getOrElse("light") match {
-      case "classic" | "light" => TRANSPARENT
-      case "dark" => LIGHT_GRAY_OUTLINE
+      case "classic" | "light" => Transparent
+      case "dark" => LightGrayOutline
     }
 
-  def MONITOR_BACKGROUND =
+  def monitorBackground =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_BEIGE
-      case "light" => LIGHT_GRAY
-      case "dark" => DARK_GRAY
+      case "classic" => ClassicBeige
+      case "light" => LightGray
+      case "dark" => DarkGray
     }
 
-  def MONITOR_BORDER =
+  def monitorBorder =
     theme.getOrElse("light") match {
-      case "classic" | "light" => MEDIUM_GRAY
-      case "dark" => LIGHT_GRAY_OUTLINE
+      case "classic" | "light" => MediumGray
+      case "dark" => LightGrayOutline
     }
 
-  def PLOT_BACKGROUND =
+  def plotBackground =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_BEIGE
-      case "light" => LIGHT_GRAY
-      case "dark" => DARK_GRAY
+      case "classic" => ClassicBeige
+      case "light" => LightGray
+      case "dark" => DarkGray
     }
 
-  def PLOT_BORDER =
+  def plotBorder =
     theme.getOrElse("light") match {
-      case "classic" | "light" => MEDIUM_GRAY
-      case "dark" => LIGHT_GRAY_OUTLINE
+      case "classic" | "light" => MediumGray
+      case "dark" => LightGrayOutline
     }
 
-  def PLOT_MOUSE_BACKGROUND =
+  def plotMouseBackground =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_BEIGE
-      case "light" | "dark" => LIGHT_GRAY
+      case "classic" => ClassicBeige
+      case "light" | "dark" => LightGray
     }
 
-  def PLOT_MOUSE_TEXT = Color.BLACK
+  def plotMouseText = Color.BLACK
 
-  def OUTPUT_BACKGROUND =
+  def outputBackground =
     theme.getOrElse("light") match {
-      case "classic" => CLASSIC_BEIGE
-      case "light" => LIGHT_GRAY
-      case "dark" => DARK_GRAY
+      case "classic" => ClassicBeige
+      case "light" => LightGray
+      case "dark" => DarkGray
     }
 
-  def OUTPUT_BORDER =
+  def outputBorder =
     theme.getOrElse("light") match {
-      case "classic" | "light" => MEDIUM_GRAY
-      case "dark" => LIGHT_GRAY_OUTLINE
+      case "classic" | "light" => MediumGray
+      case "dark" => LightGrayOutline
     }
 
-  def TOOLBAR_BACKGROUND =
+  def toolbarBackground =
     theme.getOrElse("light") match {
-      case "classic" | "light" => LIGHT_GRAY
-      case "dark" => BLUE_GRAY
+      case "classic" | "light" => LightGray
+      case "dark" => BlueGray
     }
 
-  def TAB_BACKGROUND =
+  def tabBackground =
     theme.getOrElse("light") match {
-      case "classic" | "light" => LIGHT_GRAY
-      case "dark" => DARK_BLUE_GRAY
+      case "classic" | "light" => LightGray
+      case "dark" => DarkBlueGray
     }
 
-  def TAB_BACKGROUND_SELECTED = MEDIUM_BLUE
+  def tabBackgroundSelected = MediumBlue
 
-  def TAB_BACKGROUND_ERROR = LIGHT_RED
+  def tabBackgroundError = LightRed
 
-  def TAB_TEXT =
+  def tabText =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.BLACK
       case "dark" => Color.WHITE
     }
 
-  def TAB_TEXT_SELECTED = Color.WHITE
+  def tabTextSelected = Color.WHITE
 
-  def TAB_TEXT_ERROR = LIGHT_RED
+  def tabTextError = LightRed
 
-  def TAB_BORDER =
+  def tabBorder =
     theme.getOrElse("light") match {
-      case "classic" | "light" => MEDIUM_GRAY
-      case "dark" => LIGHT_GRAY_OUTLINE
+      case "classic" | "light" => MediumGray
+      case "dark" => LightGrayOutline
     }
 
-  def TAB_SEPARATOR =
+  def tabSeparator =
     theme.getOrElse("light") match {
-      case "classic" | "light" => MEDIUM_GRAY
-      case "dark" => LIGHT_GRAY_OUTLINE
+      case "classic" | "light" => MediumGray
+      case "dark" => LightGrayOutline
     }
 
-  def TOOLBAR_TEXT =
+  def toolbarText =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.BLACK
       case "dark" => Color.WHITE
     }
 
-  def TOOLBAR_CONTROL_BACKGROUND =
+  def toolbarControlBackground =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.WHITE
-      case "dark" => DARK_BLUE_GRAY
+      case "dark" => DarkBlueGray
     }
 
-  def TOOLBAR_CONTROL_BACKGROUND_HOVER =
+  def toolbarControlBackgroundHover =
     theme.getOrElse("light") match {
-      case "classic" | "light" => WHITE_2
-      case "dark" => DARK_BLUE_GRAY_2
+      case "classic" | "light" => White2
+      case "dark" => DarkBlueGray2
     }
 
-  def TOOLBAR_CONTROL_BORDER =
+  def toolbarControlBorder =
     theme.getOrElse("light") match {
-      case "classic" | "light" => MEDIUM_GRAY
-      case "dark" => LIGHT_GRAY_OUTLINE
+      case "classic" | "light" => MediumGray
+      case "dark" => LightGrayOutline
     }
 
-  def TOOLBAR_BUTTON_PRESSED =
+  def toolbarButtonPressed =
     theme.getOrElse("light") match {
-      case "classic" | "light" => MEDIUM_GRAY
-      case "dark" => DARK_BLUE_GRAY
+      case "classic" | "light" => MediumGray
+      case "dark" => DarkBlueGray
     }
 
-  def TOOLBAR_BUTTON_HOVER =
+  def toolbarButtonHover =
     theme.getOrElse("light") match {
-      case "classic" | "light" => LIGHT_GRAY_2
-      case "dark" => MEDIUM_BLUE_GRAY
+      case "classic" | "light" => LightGray2
+      case "dark" => MediumBlueGray
     }
 
-  def TOOLBAR_TOOL_PRESSED =
+  def toolbarToolPressed =
     theme.getOrElse("light") match {
-      case "classic" | "light" => MEDIUM_GRAY
-      case "dark" => DARK_BLUE_GRAY_2
+      case "classic" | "light" => MediumGray
+      case "dark" => DarkBlueGray2
     }
 
-  def TOOLBAR_IMAGE =
+  def toolbarImage =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(85, 87, 112)
       case "dark" => new Color(168, 170, 194)
     }
 
-  def TOOLBAR_SEPARATOR =
+  def toolbarSeparator =
     theme.getOrElse("light") match {
-      case "classic" | "light" => MEDIUM_GRAY
-      case "dark" => LIGHT_GRAY_OUTLINE
+      case "classic" | "light" => MediumGray
+      case "dark" => LightGrayOutline
     }
 
-  def INFO_BACKGROUND =
+  def infoBackground =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.WHITE
-      case "dark" => ALMOST_BLACK
+      case "dark" => AlmostBlack
     }
 
-  def INFO_H1_BACKGROUND =
+  def infoH1Background =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(209, 208, 255)
       case "dark" => new Color(10, 0, 199)
     }
 
-  def INFO_H1_COLOR =
+  def infoH1Color =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(19, 13, 134)
       case "dark" => new Color(205, 202, 255)
     }
 
-  def INFO_H2_BACKGROUND =
+  def infoH2Background =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(211, 231, 255)
       case "dark" => new Color(0, 80, 177)
     }
 
-  def INFO_H2_COLOR =
+  def infoH2Color =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(0, 90, 200)
       case "dark" => new Color(221, 237, 255)
     }
 
-  def INFO_H3_COLOR =
+  def infoH3Color =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(88, 88, 88)
       case "dark" => new Color(173, 183, 196)
     }
 
-  def INFO_H4_COLOR =
+  def infoH4Color =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(115, 115, 115)
       case "dark" => new Color(173, 183, 196)
     }
 
-  def INFO_P_COLOR =
+  def infoPColor =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.BLACK
       case "dark" => Color.WHITE
     }
 
-  def INFO_CODE_BACKGROUND =
+  def infoCodeBackground =
     theme.getOrElse("light") match {
-      case "classic" | "light" => LIGHT_GRAY
+      case "classic" | "light" => LightGray
       case "dark" => new Color(67, 67, 67)
     }
 
-  def INFO_BLOCK_BAR =
+  def infoBlockBar =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(96, 96, 96)
-      case "dark" => MEDIUM_GRAY
+      case "dark" => MediumGray
     }
 
-  def INFO_LINK = new Color(0, 110, 240)
+  def infoLink = new Color(0, 110, 240)
 
-  def CHECK_FILLED = new Color(0, 173, 90)
+  def checkFilled = new Color(0, 173, 90)
 
-  def ERROR_LABEL_BACKGROUND = LIGHT_RED
+  def errorLabelBackground = LightRed
 
-  def ERROR_HIGHLIGHT = LIGHT_RED
+  def errorHighlight = LightRed
 
-  def CODE_BACKGROUND =
+  def codeBackground =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.WHITE
-      case "dark" => ALMOST_BLACK
+      case "dark" => AlmostBlack
     }
 
-  def CODE_LINE_HIGHLIGHT =
+  def codeLineHighlight =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(255, 255, 204)
       case "dark" => new Color(35, 35, 35)
     }
 
-  def CODE_SEPARATOR =
+  def codeSeparator =
     theme.getOrElse("light") match {
-      case "classic" | "light" => LIGHT_GRAY
-      case "dark" => DARK_GRAY
+      case "classic" | "light" => LightGray
+      case "dark" => DarkGray
     }
 
-  def CHECKBOX_BACKGROUND_SELECTED = MEDIUM_BLUE
+  def checkboxBackgroundSelected = MediumBlue
 
-  def CHECKBOX_BACKGROUND_SELECTED_HOVER = MEDIUM_BLUE_2
+  def checkboxBackgroundSelectedHover = MediumBlue2
 
-  def CHECKBOX_BACKGROUND_UNSELECTED =
-    theme.getOrElse("light") match {
-      case "classic" | "light" => Color.WHITE
-      case "dark" => DARK_BLUE_GRAY
-    }
-
-  def CHECKBOX_BACKGROUND_UNSELECTED_HOVER =
-    theme.getOrElse("light") match {
-      case "classic"| "light" => WHITE_2
-      case "dark" => DARK_BLUE_GRAY_2
-    }
-
-  def CHECKBOX_BORDER =
-    theme.getOrElse("light") match {
-      case "classic" | "light" => MEDIUM_GRAY
-      case "dark" => LIGHT_GRAY_OUTLINE
-    }
-
-  def CHECKBOX_CHECK = Color.WHITE
-
-  def MENU_BAR_BORDER =
-    theme.getOrElse("light") match {
-      case "classic" | "light" => LIGHT_GRAY_2
-      case "dark" => MEDIUM_BLUE_GRAY
-    }
-
-  def MENU_BACKGROUND =
+  def checkboxBackgroundUnselected =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.WHITE
-      case "dark" => BLUE_GRAY
+      case "dark" => DarkBlueGray
     }
 
-  def MENU_BACKGROUND_HOVER =
+  def checkboxBackgroundUnselectedHover =
     theme.getOrElse("light") match {
-      case "classic" | "light" => MEDIUM_BLUE
-      case "dark" => DARK_BLUE_GRAY
+      case "classic"| "light" => White2
+      case "dark" => DarkBlueGray2
     }
 
-  def MENU_BORDER = MEDIUM_GRAY
+  def checkboxBorder =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => MediumGray
+      case "dark" => LightGrayOutline
+    }
 
-  def MENU_TEXT_HOVER =
+  def checkboxCheck = Color.WHITE
+
+  def menuBarBorder =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => LightGray2
+      case "dark" => MediumBlueGray
+    }
+
+  def menuBackground =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.WHITE
-      case "dark" => MEDIUM_GRAY
+      case "dark" => BlueGray
     }
 
-  def MENU_TEXT_DISABLED = MEDIUM_GRAY
+  def menuBackgroundHover =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => MediumBlue
+      case "dark" => DarkBlueGray
+    }
 
-  def DIALOG_BACKGROUND =
+  def menuBorder = MediumGray
+
+  def menuTextHover =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.WHITE
-      case "dark" => BLUE_GRAY
+      case "dark" => MediumGray
     }
 
-  def DIALOG_BACKGROUND_SELECTED =
+  def menuTextDisabled = MediumGray
+
+  def dialogBackground =
     theme.getOrElse("light") match {
-      case "classic" | "light" => MEDIUM_BLUE
-      case "dark" => DARK_BLUE_GRAY
+      case "classic" | "light" => Color.WHITE
+      case "dark" => BlueGray
     }
 
-  def DIALOG_TEXT =
+  def dialogBackgroundSelected =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => MediumBlue
+      case "dark" => DarkBlueGray
+    }
+
+  def dialogText =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.BLACK
       case "dark" => Color.WHITE
     }
 
-  def DIALOG_TEXT_SELECTED =
+  def dialogTextSelected =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.WHITE
-      case "dark" => MEDIUM_GRAY
+      case "dark" => MediumGray
     }
 
-  def RADIO_BUTTON_BACKGROUND =
+  def radioButtonBackground =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.WHITE
-      case "dark" => DARK_BLUE_GRAY
+      case "dark" => DarkBlueGray
     }
 
-  def RADIO_BUTTON_BACKGROUND_HOVER =
+  def radioButtonBackgroundHover =
     theme.getOrElse("light") match {
-      case "classic" | "light" => WHITE_2
-      case "dark" => DARK_BLUE_GRAY_2
+      case "classic" | "light" => White2
+      case "dark" => DarkBlueGray2
     }
 
-  def RADIO_BUTTON_SELECTED = MEDIUM_BLUE
+  def radioButtonSelected = MediumBlue
 
-  def RADIO_BUTTON_SELECTED_HOVER = MEDIUM_BLUE_2
+  def radioButtonSelectedHover = MediumBlue2
 
-  def RADIO_BUTTON_BORDER =
+  def radioButtonBorder =
     theme.getOrElse("light") match {
-      case "classic" | "light" => MEDIUM_GRAY
-      case "dark" => LIGHT_GRAY_OUTLINE
+      case "classic" | "light" => MediumGray
+      case "dark" => LightGrayOutline
     }
 
-  def TEXT_AREA_BACKGROUND =
+  def textAreaBackground =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.WHITE
-      case "dark" => DARK_BLUE_GRAY
+      case "dark" => DarkBlueGray
     }
 
-  def TEXT_AREA_TEXT =
+  def textAreaText =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.BLACK
       case "dark" => Color.WHITE
     }
 
-  def TEXT_AREA_BORDER_EDITABLE =
+  def textAreaBorderEditable =
     theme.getOrElse("light") match {
-      case "classic" | "light" => MEDIUM_GRAY
-      case "dark" => LIGHT_GRAY_2
+      case "classic" | "light" => MediumGray
+      case "dark" => LightGray2
     }
 
-  def TEXT_AREA_BORDER_NONEDITABLE =
+  def textAreaBorderNoneditable =
     theme.getOrElse("light") match {
-      case "classic" | "light" => LIGHT_GRAY
-      case "dark" => LIGHT_GRAY_OUTLINE
+      case "classic" | "light" => LightGray
+      case "dark" => LightGrayOutline
     }
 
-  def TABBED_PANE_TEXT =
+  def tabbedPaneText =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.BLACK
       case "dark" => Color.WHITE
     }
 
-  def TABBED_PANE_TEXT_SELECTED =
-    Color.WHITE
+  def tabbedPaneTextSelected = Color.WHITE
 
-  def BSPACE_HINT_BACKGROUND = new Color(128, 200, 128, 64)
+  def bspaceHintBackground = new Color(128, 200, 128, 64)
 
-  def INFO_ICON = new Color(50, 150, 200)
+  def infoIcon = new Color(50, 150, 200)
 
-  def WARNING_ICON = new Color(220, 170, 50)
+  def warningIcon = new Color(220, 170, 50)
 
-  def ERROR_ICON = new Color(220, 50, 50)
+  def errorIcon = new Color(220, 50, 50)
 
   // Syntax highlighting colors
 
-  def COMMENT_COLOR = new Color(90, 90, 90) // gray
+  def commentColor = new Color(90, 90, 90) // gray
 
-  def COMMAND_COLOR =
+  def commandColor =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(0, 0, 170) // blue
       case "dark" => new Color(107, 107, 237) // lighter blue
     }
 
-  def REPORTER_COLOR =
+  def reporterColor =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(102, 0, 150) // purple
       case "dark" => new Color(151, 71, 255) // lighter purple
     }
 
-  def KEYWORD_COLOR =
+  def keywordColor =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(0, 127, 105) // bluish green
       case "dark" => new Color(6, 142, 120) // lighter bluish green
     }
 
-  def CONSTANT_COLOR =
+  def constantColor =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(237, 79, 0) // orange
       case "dark" => new Color(234, 110, 33) // lighter orange
     }
 
-  def DEFAULT_COLOR =
+  def defaultColor =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.BLACK
       case "dark" => Color.WHITE

@@ -44,7 +44,7 @@ class PlotLegend(plot: Plot) extends JPanel {
 
     add(new JLabel(pen.name) {
       override def paintComponent(g: Graphics) {
-        setForeground(InterfaceColors.WIDGET_TEXT)
+        setForeground(InterfaceColors.widgetText)
 
         super.paintComponent(g)
       }

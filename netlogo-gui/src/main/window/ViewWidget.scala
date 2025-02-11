@@ -28,7 +28,7 @@ class ViewWidget(workspace: GUIWorkspace)
   val tickCounter = new TickCounterLabel(workspace.world)
   val displaySwitch = new DisplaySwitch(workspace)
 
-  setBackgroundColor(InterfaceColors.TRANSPARENT)
+  setBackgroundColor(InterfaceColors.Transparent)
 
   setLayout(null)
   add(view)
@@ -186,7 +186,7 @@ class ViewWidget(workspace: GUIWorkspace)
   }
 
   override def syncTheme(): Unit = {
-    setBorder(new LineBorder(InterfaceColors.VIEW_BORDER, 2))
+    setBorder(new LineBorder(InterfaceColors.viewBorder, 2))
     tickCounter.syncTheme()
   }
 

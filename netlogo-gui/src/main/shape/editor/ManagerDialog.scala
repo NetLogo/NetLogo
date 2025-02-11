@@ -187,10 +187,10 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
   }
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-    buttonPanel.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-    scrollPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
-    shapesList.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    getContentPane.setBackground(InterfaceColors.dialogBackground)
+    buttonPanel.setBackground(InterfaceColors.dialogBackground)
+    scrollPane.setBackground(InterfaceColors.dialogBackground)
+    shapesList.setBackground(InterfaceColors.dialogBackground)
 
     modelImportButton.syncTheme()
     editButton.syncTheme()
@@ -203,6 +203,6 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
       case _ =>
     })
 
-    libraryLabel.setForeground(InterfaceColors.DIALOG_TEXT)
+    libraryLabel.setForeground(InterfaceColors.dialogText)
   }
 }

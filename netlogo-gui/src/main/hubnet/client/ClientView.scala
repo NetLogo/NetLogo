@@ -24,7 +24,7 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   private var _displayOn = false
   def setDisplayOn(on: Boolean) { _displayOn = on; repaint() }
 
-  setBackground(InterfaceColors.TRANSPARENT)
+  setBackground(InterfaceColors.Transparent)
 
   locally {
     world.setTrailDrawer(renderer.trailDrawer())
@@ -47,7 +47,7 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
     this.synchronized {
       setFontSize(g)
       if (!_displayOn || world == null) {
-        g.setColor(InterfaceColors.GRAPHICS_BACKGROUND)
+        g.setColor(InterfaceColors.graphicsBackground)
         g.fillRect(0, 0, getWidth, getHeight)
       }
       else {
@@ -97,7 +97,7 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   }
 
   override def syncTheme(): Unit = {
-    setBorder(new LineBorder(InterfaceColors.VIEW_BORDER, 2))
+    setBorder(new LineBorder(InterfaceColors.viewBorder, 2))
   }
 
   /// satisfy ViewWidgetInterface

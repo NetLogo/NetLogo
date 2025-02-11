@@ -8,5 +8,5 @@ import org.nlogo.theme.InterfaceColors
 
 trait Transparent extends JComponent {
   setOpaque(false)
-  setBackground(InterfaceColors.TRANSPARENT)
+  setBackground(InterfaceColors.Transparent)
 }

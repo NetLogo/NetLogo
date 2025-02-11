@@ -21,8 +21,8 @@ abstract class Label(accessor: PropertyAccessor[String]) extends PropertyEditor(
   }
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.BSPACE_HINT_BACKGROUND)
+    setBackground(InterfaceColors.bspaceHintBackground)
 
-    label.setForeground(InterfaceColors.DIALOG_TEXT)
+    label.setForeground(InterfaceColors.dialogText)
   }
 }

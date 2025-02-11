@@ -22,7 +22,7 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
 
   private var _dirty = false
 
-  setAttribute(FigureAttributeConstant.FILL_COLOR, InterfaceColors.MONITOR_BACKGROUND)
+  setAttribute(FigureAttributeConstant.FILL_COLOR, InterfaceColors.monitorBackground)
 
   def getModelElement: ModelElement =
     stock.orNull

@@ -17,11 +17,11 @@ import org.nlogo.theme.InterfaceColors
 object ButtonWidget {
 
   def FOREVER_GRAPHIC = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                                  InterfaceColors.BUTTON_TEXT)
+                                                  InterfaceColors.buttonText)
   def FOREVER_GRAPHIC_PRESSED = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                                          InterfaceColors.BUTTON_TEXT_PRESSED)
+                                                          InterfaceColors.buttonTextPressed)
   def FOREVER_GRAPHIC_DISABLED = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                                           InterfaceColors.BUTTON_TEXT_DISABLED)
+                                                           InterfaceColors.buttonTextDisabled)
 
   object ButtonType {
 
@@ -440,40 +440,40 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     val drawAsUp = buttonUp && !running
 
     if (disabledWaitingForSetup) {
-      setBackgroundColor(InterfaceColors.BUTTON_BACKGROUND_DISABLED)
-      keyLabel.setForeground(InterfaceColors.BUTTON_TEXT_DISABLED)
-      nameLabel.setForeground(InterfaceColors.BUTTON_TEXT_DISABLED)
+      setBackgroundColor(InterfaceColors.buttonBackgroundDisabled)
+      keyLabel.setForeground(InterfaceColors.buttonTextDisabled)
+      nameLabel.setForeground(InterfaceColors.buttonTextDisabled)
       foreverLabel.setIcon(FOREVER_GRAPHIC_DISABLED)
     } else if (drawAsUp) {
       setBackgroundColor(
         if (hover) {
-          InterfaceColors.BUTTON_BACKGROUND_HOVER
+          InterfaceColors.buttonBackgroundHover
         } else {
-          InterfaceColors.BUTTON_BACKGROUND
+          InterfaceColors.buttonBackground
         }
       )
 
-      keyLabel.setForeground(InterfaceColors.BUTTON_TEXT)
+      keyLabel.setForeground(InterfaceColors.buttonText)
       nameLabel.setForeground(
         if (error() == null) {
-          InterfaceColors.BUTTON_TEXT
+          InterfaceColors.buttonText
         } else {
-          InterfaceColors.WIDGET_TEXT_ERROR
+          InterfaceColors.widgetTextError
         }
       )
       foreverLabel.setIcon(FOREVER_GRAPHIC)
     } else {
       setBackgroundColor(
         if (hover) {
-          InterfaceColors.BUTTON_BACKGROUND_PRESSED_HOVER
+          InterfaceColors.buttonBackgroundPressedHover
         } else {
-          InterfaceColors.BUTTON_BACKGROUND_PRESSED
+          InterfaceColors.buttonBackgroundPressed
         }
       )
 
-      keyLabel.setForeground(InterfaceColors.BUTTON_TEXT_PRESSED)
+      keyLabel.setForeground(InterfaceColors.buttonTextPressed)
       if (error() == null)
-        nameLabel.setForeground(InterfaceColors.BUTTON_TEXT_PRESSED)
+        nameLabel.setForeground(InterfaceColors.buttonTextPressed)
       foreverLabel.setIcon(FOREVER_GRAPHIC_PRESSED)
     }
 

@@ -58,6 +58,6 @@ class TickCounterLabel(world: World)
   def label: String = _label
 
   override def syncTheme(): Unit = {
-    setForeground(InterfaceColors.TOOLBAR_TEXT)
+    setForeground(InterfaceColors.toolbarText)
   }
 }

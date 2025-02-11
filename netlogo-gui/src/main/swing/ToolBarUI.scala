@@ -26,19 +26,19 @@ trait AbstractToolBarButton extends AbstractButton with Transparent with HoverDe
 
     if (isSelected) {
       if (pressedColor == null)
-        g2d.setColor(InterfaceColors.TOOLBAR_BUTTON_PRESSED)
+        g2d.setColor(InterfaceColors.toolbarButtonPressed)
       else
         g2d.setColor(pressedColor)
     }
 
     else if (isHover)
-      g2d.setColor(InterfaceColors.TOOLBAR_BUTTON_HOVER)
+      g2d.setColor(InterfaceColors.toolbarButtonHover)
     else
-      g2d.setColor(InterfaceColors.TRANSPARENT)
+      g2d.setColor(InterfaceColors.Transparent)
 
     g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
 
-    setForeground(InterfaceColors.TOOLBAR_TEXT)
+    setForeground(InterfaceColors.toolbarText)
 
     super.paintComponent(g)
   }

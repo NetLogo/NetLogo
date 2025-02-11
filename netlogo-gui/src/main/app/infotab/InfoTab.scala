@@ -73,7 +73,7 @@ class InfoTab(attachModelDir: String => String)
   private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit")))
   private val helpButton = new ToolBarButton(I18N.gui.get("tabs.info.help"),
                                              BrowserLauncher.openPath(this, baseDocPath, "information"))
-  helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
+  helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage))
   helpButton.setVisible(false)
   private def toggleHelpButton(){ helpButton.setVisible(view == textArea) }
 
@@ -155,13 +155,13 @@ class InfoTab(attachModelDir: String => String)
   }
 
   override def syncTheme(): Unit = {
-    toolBar.setBackground(InterfaceColors.TOOLBAR_BACKGROUND)
+    toolBar.setBackground(InterfaceColors.toolbarBackground)
 
-    editableButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
-    helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
+    editableButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.toolbarImage))
+    helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage))
 
-    scrollPane.setBackground(InterfaceColors.INFO_BACKGROUND)
-    editorPane.setBackground(InterfaceColors.INFO_BACKGROUND)
+    scrollPane.setBackground(InterfaceColors.infoBackground)
+    editorPane.setBackground(InterfaceColors.infoBackground)
 
     textArea.syncTheme()
 
@@ -222,7 +222,7 @@ class InfoTab(attachModelDir: String => String)
   }
 
   private class EditableAction(label: String) extends AbstractAction(label) {
-    putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.TOOLBAR_IMAGE))
+    putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.toolbarImage))
     def actionPerformed(e: ActionEvent) {
       val scrollBar = scrollPane.getVerticalScrollBar
       val (min, max) = (scrollBar.getMinimum, scrollBar.getMaximum)

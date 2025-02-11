@@ -102,9 +102,9 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
         g2d.setClip(null) // this does not feel right but it's the only thing that works for now (Isaac B 8/11/24)
         g2d.rotate(-Pi / 2)
       }
-      g2d.setColor(InterfaceColors.INPUT_BORDER)
+      g2d.setColor(InterfaceColors.inputBorder)
       g2d.fillRoundRect(0, 0, getWidth, getHeight, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
-      g2d.setColor(InterfaceColors.DISPLAY_AREA_BACKGROUND)
+      g2d.setColor(InterfaceColors.displayAreaBackground)
       g2d.fillRoundRect(1, 1, getWidth - 2, getHeight - 2, (6 * zoomFactor).toInt, (6 * zoomFactor).toInt)
       super.paintComponent(g)
     }
@@ -378,19 +378,19 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   }
 
   override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.SLIDER_BACKGROUND)
+    setBackgroundColor(InterfaceColors.sliderBackground)
 
-    valueComponent.setForeground(InterfaceColors.DISPLAY_AREA_TEXT)
-    unitsComponent.setForeground(InterfaceColors.WIDGET_TEXT)
+    valueComponent.setForeground(InterfaceColors.displayAreaText)
+    unitsComponent.setForeground(InterfaceColors.widgetText)
 
-    valueComponent.setCaretColor(InterfaceColors.DISPLAY_AREA_TEXT)
+    valueComponent.setCaretColor(InterfaceColors.displayAreaText)
   }
 
   override def paintComponent(g: Graphics): Unit = {
     if (anyErrors) {
-      nameComponent.setForeground(InterfaceColors.WIDGET_TEXT_ERROR)
+      nameComponent.setForeground(InterfaceColors.widgetTextError)
     } else {
-      nameComponent.setForeground(InterfaceColors.WIDGET_TEXT)
+      nameComponent.setForeground(InterfaceColors.widgetText)
     }
 
     super.paintComponent(g)

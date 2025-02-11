@@ -116,10 +116,10 @@ class PlotCanvas extends javax.swing.JPanel {
     xx = StrictMath.max(xx, ycorWidth);
     xx = StrictMath.min(xx, getBounds().width - xcorWidth);
     int xy = getBounds().height - fontHeight + 1;
-    g.setColor(InterfaceColors.PLOT_MOUSE_BACKGROUND());
+    g.setColor(InterfaceColors.plotMouseBackground());
     g.fillRect(xx - 1, xy,
         xcorWidth + 1, fontHeight + 1);
-    g.setColor(InterfaceColors.PLOT_MOUSE_TEXT());
+    g.setColor(InterfaceColors.plotMouseText());
     g.drawString(xcor, xx, xy + fontHeight - 1);
 
     // position & draw ycor
@@ -127,9 +127,9 @@ class PlotCanvas extends javax.swing.JPanel {
     yy = StrictMath.max(yy, 0);
     yy = StrictMath.min(yy, getBounds().height - 2 * fontHeight);
     int yx = 0;
-    g.setColor(InterfaceColors.PLOT_MOUSE_BACKGROUND());
+    g.setColor(InterfaceColors.plotMouseBackground());
     g.fillRect(yx, yy, ycorWidth + 1, fontHeight + 1);
-    g.setColor(InterfaceColors.PLOT_MOUSE_TEXT());
+    g.setColor(InterfaceColors.plotMouseText());
     g.drawString(ycor, yx, yy + fontHeight - 1);
   }
 

@@ -40,8 +40,8 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) 
       .withFocusTraversalEnabled(true)
       .withListener(textListener)
   val editor = new EditorArea(configuration) {
-    setBackground(InterfaceColors.CODE_BACKGROUND)
-    setCaretColor(InterfaceColors.TEXT_AREA_TEXT)
+    setBackground(InterfaceColors.codeBackground)
+    setCaretColor(InterfaceColors.textAreaText)
 
     override def getPreferredSize = new Dimension(350, 100)
     override def setText(text: String) = super.setText(text.stripTrailingWhiteSpace + "\n")
@@ -87,7 +87,7 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) 
     c.weighty = 1
 
     add(new ScrollPane(editor) {
-      setBackground(InterfaceColors.CODE_BACKGROUND)
+      setBackground(InterfaceColors.codeBackground)
     }, c)
   }
 
@@ -101,9 +101,9 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) 
   private def updateCompileIcon(): Unit = {
     compileButton.setIcon(Utils.iconScaledWithColor("/images/check.png", 15, 15,
                                                     if (dirty) {
-                                                      InterfaceColors.CHECK_FILLED
+                                                      InterfaceColors.checkFilled
                                                     } else {
-                                                      InterfaceColors.TOOLBAR_IMAGE
+                                                      InterfaceColors.toolbarImage
                                                     }))
   }
 }

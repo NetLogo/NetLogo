@@ -34,7 +34,7 @@ abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]]) extends 
   }
 
   override def syncTheme(): Unit = {
-    label.setForeground(InterfaceColors.DIALOG_TEXT)
+    label.setForeground(InterfaceColors.dialogText)
 
     combo.syncTheme()
   }

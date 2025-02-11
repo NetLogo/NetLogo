@@ -974,7 +974,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   private class ShadowPane extends JPanel with RoundedBorderPanel with ThemeSync {
     private var full = false
 
-    setBorderColor(InterfaceColors.TRANSPARENT)
+    setBorderColor(InterfaceColors.Transparent)
     setVisible(false)
 
     override def paintComponent(g: Graphics): Unit = {
@@ -992,15 +992,15 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     override def syncTheme(): Unit = {
       if (full) {
         if (widget.isNote) {
-          setBackgroundColor(InterfaceColors.WIDGET_PREVIEW_COVER_NOTE)
+          setBackgroundColor(InterfaceColors.widgetPreviewCoverNote)
         } else {
-          setBackgroundColor(InterfaceColors.WIDGET_PREVIEW_COVER)
+          setBackgroundColor(InterfaceColors.widgetPreviewCover)
         }
       } else {
         if (widget.isNote) {
-          setBackgroundColor(InterfaceColors.WIDGET_INTERACT_COVER_NOTE)
+          setBackgroundColor(InterfaceColors.widgetInteractCoverNote)
         } else {
-          setBackgroundColor(InterfaceColors.WIDGET_INTERACT_COVER)
+          setBackgroundColor(InterfaceColors.widgetInteractCover)
         }
       }
     }

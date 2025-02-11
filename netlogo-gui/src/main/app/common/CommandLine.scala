@@ -283,10 +283,10 @@ class CommandLine(commandCenter: CommandCenterInterface,
   override def raiseWidgetAdded(): Unit = {}
 
   override def syncTheme(): Unit = {
-    textField.setBackground(InterfaceColors.CODE_BACKGROUND)
-    textField.setCaretColor(InterfaceColors.DISPLAY_AREA_TEXT)
+    textField.setBackground(InterfaceColors.codeBackground)
+    textField.setCaretColor(InterfaceColors.displayAreaText)
 
-    scrollPane.setBackground(InterfaceColors.CODE_BACKGROUND)
+    scrollPane.setBackground(InterfaceColors.codeBackground)
 
     codeCompletionPopup.syncTheme()
   }

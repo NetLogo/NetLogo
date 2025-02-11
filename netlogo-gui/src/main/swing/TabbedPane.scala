@@ -22,9 +22,9 @@ class TabbedPane extends JTabbedPane with ThemeSync {
       val g2d = Utils.initGraphics2D(g)
 
       if (isSelected)
-        g2d.setColor(InterfaceColors.TAB_BACKGROUND_SELECTED)
+        g2d.setColor(InterfaceColors.tabBackgroundSelected)
       else
-        g2d.setColor(InterfaceColors.TAB_BACKGROUND)
+        g2d.setColor(InterfaceColors.tabBackground)
 
       g2d.fillRect(x, y, w, h)
     }
@@ -41,7 +41,7 @@ class TabbedPane extends JTabbedPane with ThemeSync {
     override def paint(g: Graphics, c: JComponent) {
       val g2d = Utils.initGraphics2D(g)
 
-      g2d.setColor(InterfaceColors.TOOLBAR_BACKGROUND)
+      g2d.setColor(InterfaceColors.toolbarBackground)
       g2d.fillRect(0, 0, getWidth, getHeight)
 
       super.paint(g, c)
@@ -69,9 +69,9 @@ class TabbedPane extends JTabbedPane with ThemeSync {
   protected def setTabForegrounds() {
     for (i <- 0 until getTabCount) {
       if (i == getSelectedIndex)
-        setForegroundAt(i, InterfaceColors.TABBED_PANE_TEXT_SELECTED)
+        setForegroundAt(i, InterfaceColors.tabbedPaneTextSelected)
       else
-        setForegroundAt(i, InterfaceColors.TABBED_PANE_TEXT)
+        setForegroundAt(i, InterfaceColors.tabbedPaneText)
     }
   }
 

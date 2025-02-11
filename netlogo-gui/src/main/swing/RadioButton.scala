@@ -24,9 +24,9 @@ class RadioButton(action: Action) extends JRadioButton(action) with HoverDecorat
 
       if (isSelected) {
         if (isHover) {
-          g2d.setColor(InterfaceColors.RADIO_BUTTON_SELECTED_HOVER)
+          g2d.setColor(InterfaceColors.radioButtonSelectedHover)
         } else {
-          g2d.setColor(InterfaceColors.RADIO_BUTTON_SELECTED)
+          g2d.setColor(InterfaceColors.radioButtonSelected)
         }
 
         g2d.fillOval(x, y, getIconWidth, getIconHeight)
@@ -34,20 +34,20 @@ class RadioButton(action: Action) extends JRadioButton(action) with HoverDecorat
 
       else {
         if (isHover) {
-          g2d.setColor(InterfaceColors.RADIO_BUTTON_BACKGROUND_HOVER)
+          g2d.setColor(InterfaceColors.radioButtonBackgroundHover)
         } else {
-          g2d.setColor(InterfaceColors.RADIO_BUTTON_BACKGROUND)
+          g2d.setColor(InterfaceColors.radioButtonBackground)
         }
 
         g2d.fillOval(x, y, getIconWidth, getIconHeight)
 
-        g2d.setColor(InterfaceColors.RADIO_BUTTON_BORDER)
+        g2d.setColor(InterfaceColors.radioButtonBorder)
         g2d.drawOval(x, y, getIconWidth, getIconHeight)
       }
     }
   })
 
   override def syncTheme(): Unit = {
-    setForeground(InterfaceColors.DIALOG_TEXT)
+    setForeground(InterfaceColors.dialogText)
   }
 }

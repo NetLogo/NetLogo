@@ -156,7 +156,7 @@ abstract class EditDialog(window: Window, target: Editable, useTooltips: Boolean
       dim.height min getGraphicsConfiguration.getBounds.height)
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    getContentPane.setBackground(InterfaceColors.dialogBackground)
 
     okButton.syncTheme()
     applyButton.syncTheme()

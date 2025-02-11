@@ -34,26 +34,26 @@ class CheckBox(text: String = "") extends JCheckBox(text) with HoverDecoration w
 
       if (isSelected) {
         if (isHover && isEnabled) {
-          g2d.setColor(InterfaceColors.CHECKBOX_BACKGROUND_SELECTED_HOVER)
+          g2d.setColor(InterfaceColors.checkboxBackgroundSelectedHover)
         } else {
-          g2d.setColor(InterfaceColors.CHECKBOX_BACKGROUND_SELECTED)
+          g2d.setColor(InterfaceColors.checkboxBackgroundSelected)
         }
 
         g2d.fillRoundRect(x, y, 14, 14, 4, 4)
 
-        g2d.setColor(InterfaceColors.CHECKBOX_CHECK)
+        g2d.setColor(InterfaceColors.checkboxCheck)
         g2d.drawLine(x + 3, y + 7, x + 5, y + 10)
         g2d.drawLine(x + 5, y + 10, x + 10, y + 3)
       } else {
         if (isHover && isEnabled) {
-          g2d.setColor(InterfaceColors.CHECKBOX_BACKGROUND_UNSELECTED_HOVER)
+          g2d.setColor(InterfaceColors.checkboxBackgroundUnselectedHover)
         } else {
-          g2d.setColor(InterfaceColors.CHECKBOX_BACKGROUND_UNSELECTED)
+          g2d.setColor(InterfaceColors.checkboxBackgroundUnselected)
         }
 
         g2d.fillRoundRect(x, y, 14, 14, 4, 4)
 
-        g2d.setColor(InterfaceColors.CHECKBOX_BORDER)
+        g2d.setColor(InterfaceColors.checkboxBorder)
         g2d.drawRoundRect(x, y, 14, 14, 4, 4)
       }
     }

@@ -213,9 +213,9 @@ case class CodeCompletionPopup(autoSuggest: AutoSuggest,
   }
 
   override def syncTheme(): Unit = {
-    window.getContentPane.setBackground(InterfaceColors.MENU_BACKGROUND)
-    scrollPane.setBackground(InterfaceColors.MENU_BACKGROUND)
-    suggestionDisplaylist.setBackground(InterfaceColors.MENU_BACKGROUND)
+    window.getContentPane.setBackground(InterfaceColors.menuBackground)
+    scrollPane.setBackground(InterfaceColors.menuBackground)
+    suggestionDisplaylist.setBackground(InterfaceColors.menuBackground)
   }
 }
 
@@ -235,16 +235,16 @@ class SuggestionListRenderer(dialect: Dialect, extensionManager: Option[Extensio
     val fgColor =
       if (dialect.tokenMapper.getCommand(value).nonEmpty ||
         extensionManager.flatMap(_.cachedType(value)).contains(TokenType.Command))
-        InterfaceColors.COMMAND_COLOR
+        InterfaceColors.commandColor
       else
-        InterfaceColors.REPORTER_COLOR
+        InterfaceColors.reporterColor
 
     label.setOpaque(true)
     label.setForeground(fgColor)
     label.setBackground(if (isSelected || cellHasFocus)
-                          InterfaceColors.MENU_BACKGROUND_HOVER
+                          InterfaceColors.menuBackgroundHover
                         else
-                          InterfaceColors.MENU_BACKGROUND)
+                          InterfaceColors.menuBackground)
     label.setFont(font)
     label
   }

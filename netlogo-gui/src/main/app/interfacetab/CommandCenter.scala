@@ -42,9 +42,9 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
     enableHover()
 
     override def syncTheme(): Unit = {
-      setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-      setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
+      setBackgroundColor(InterfaceColors.toolbarControlBackground)
+      setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
+      setBorderColor(InterfaceColors.toolbarControlBorder)
     }
   }
 
@@ -61,10 +61,10 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
     enableHover()
 
     override def syncTheme(): Unit = {
-      setBackgroundColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND)
-      setBackgroundHoverColor(InterfaceColors.TOOLBAR_CONTROL_BACKGROUND_HOVER)
-      setBorderColor(InterfaceColors.TOOLBAR_CONTROL_BORDER)
-      setForeground(InterfaceColors.TOOLBAR_TEXT)
+      setBackgroundColor(InterfaceColors.toolbarControlBackground)
+      setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
+      setBorderColor(InterfaceColors.toolbarControlBorder)
+      setForeground(InterfaceColors.toolbarText)
     }
   }
 
@@ -179,9 +179,9 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
   }
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.COMMAND_CENTER_BACKGROUND)
+    setBackground(InterfaceColors.commandCenterBackground)
 
-    titleLabel.setForeground(InterfaceColors.COMMAND_CENTER_TEXT)
+    titleLabel.setForeground(InterfaceColors.commandCenterText)
 
     locationToggleButton.syncTheme()
     clearButton.syncTheme()

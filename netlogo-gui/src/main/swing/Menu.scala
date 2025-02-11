@@ -38,13 +38,13 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
 
   private val menuUI = new BasicMenuUI with ThemeSync {
     override def syncTheme(): Unit = {
-      setForeground(InterfaceColors.TOOLBAR_TEXT)
+      setForeground(InterfaceColors.toolbarText)
 
-      selectionBackground = InterfaceColors.MENU_BACKGROUND_HOVER
-      selectionForeground = InterfaceColors.MENU_TEXT_HOVER
-      acceleratorForeground = InterfaceColors.TOOLBAR_TEXT
-      acceleratorSelectionForeground = InterfaceColors.MENU_TEXT_HOVER
-      disabledForeground = InterfaceColors.MENU_TEXT_DISABLED
+      selectionBackground = InterfaceColors.menuBackgroundHover
+      selectionForeground = InterfaceColors.menuTextHover
+      acceleratorForeground = InterfaceColors.toolbarText
+      acceleratorSelectionForeground = InterfaceColors.menuTextHover
+      disabledForeground = InterfaceColors.menuTextDisabled
     }
   }
 
@@ -54,8 +54,8 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
   override def getPopupMenu: JPopupMenu = {
     val menu = super.getPopupMenu
 
-    menu.setBackground(InterfaceColors.MENU_BACKGROUND)
-    menu.setBorder(new LineBorder(InterfaceColors.MENU_BORDER))
+    menu.setBackground(InterfaceColors.menuBackground)
+    menu.setBorder(new LineBorder(InterfaceColors.menuBorder))
 
     menu
   }

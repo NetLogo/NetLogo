@@ -58,7 +58,7 @@ class AgentMonitorViewPanel(workspace: GUIWorkspace) extends JPanel(new BorderLa
   def close(): Unit = view.close()
 
   override def syncTheme(): Unit = {
-    controls.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    controls.setBackground(InterfaceColors.dialogBackground)
 
     watchButton.syncTheme()
   }

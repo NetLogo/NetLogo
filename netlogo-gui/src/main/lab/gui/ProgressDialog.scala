@@ -307,15 +307,15 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor,
   }
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.DIALOG_BACKGROUND)
+    getContentPane.setBackground(InterfaceColors.dialogBackground)
 
     progressArea.syncTheme()
 
-    scrollPane.setBorder(new LineBorder(InterfaceColors.TEXT_AREA_BORDER_NONEDITABLE))
-    scrollPane.setBackground(InterfaceColors.TEXT_AREA_BACKGROUND)
+    scrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable))
+    scrollPane.setBackground(InterfaceColors.textAreaBackground)
 
-    displaySwitch.setForeground(InterfaceColors.DIALOG_TEXT)
-    plotsAndMonitorsSwitch.setForeground(InterfaceColors.DIALOG_TEXT)
+    displaySwitch.setForeground(InterfaceColors.dialogText)
+    plotsAndMonitorsSwitch.setForeground(InterfaceColors.dialogText)
 
     speedSlider.syncTheme()
 

@@ -141,7 +141,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
 
       g2d.setPaint(new LinearGradientPaint(control.getX.toFloat, control.getY + 3, control.getX.toFloat,
                                            control.getY + control.getHeight + 3, Array(0f, 1f),
-                                           Array(InterfaceColors.WIDGET_HOVER_SHADOW, InterfaceColors.TRANSPARENT)))
+                                           Array(InterfaceColors.widgetHoverShadow, InterfaceColors.Transparent)))
       g2d.fillRoundRect(control.getX, control.getY + 3, control.getWidth, control.getHeight, 6, 6)
     }
 
@@ -152,11 +152,11 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   }
 
   override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.CHOOSER_BACKGROUND)
+    setBackgroundColor(InterfaceColors.chooserBackground)
 
-    label.setForeground(InterfaceColors.WIDGET_TEXT)
+    label.setForeground(InterfaceColors.widgetText)
 
     control.syncTheme()
-    control.setBorderColor(InterfaceColors.CHOOSER_BORDER)
+    control.setBorderColor(InterfaceColors.chooserBorder)
   }
 }
