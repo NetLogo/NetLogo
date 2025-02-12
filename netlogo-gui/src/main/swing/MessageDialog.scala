@@ -40,6 +40,8 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
 
   private val buttonPanel = ButtonPanel(makeButtons: _*)
 
+  buttonPanel.setBorder(new javax.swing.border.EmptyBorder(6, 6, 6, 6))
+
   addWindowListener(new WindowAdapter {
     override def windowClosing(e: WindowEvent): Unit = {
       setVisible(false)
