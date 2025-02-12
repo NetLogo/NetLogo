@@ -906,19 +906,33 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def distributeHorizontal(): Unit = {
     val ordered = selectedWrappers.sortBy(_.getX)
-    val delta = (ordered.last.getX - ordered(0).getX) / (ordered.size - 1)
+    val total = ordered.last.getX + ordered.last.getWidth - ordered.head.getX
+    val space = (total - ordered.foldLeft(0)((c, w) => c + w.getWidth)) / (ordered.size - 1)
 
-    WidgetActions.moveWidgets(for (i <- 0 until ordered.size) yield {
-      (ordered(i), ordered(0).getX + i * delta, ordered(i).getY)
+    var start = ordered(0).getX
+
+    WidgetActions.moveWidgets(ordered.map { w =>
+      val out = (w, start, w.getY)
+
+      start += w.getWidth + space
+
+      out
     })
   }
 
   def distributeVertical(): Unit = {
     val ordered = selectedWrappers.sortBy(_.getY)
-    val delta = (ordered.last.getY - ordered(0).getY) / (ordered.size - 1)
+    val total = ordered.last.getY + ordered.last.getHeight - ordered.head.getY
+    val space = (total - ordered.foldLeft(0)((c, w) => c + w.getHeight)) / (ordered.size - 1)
 
-    WidgetActions.moveWidgets(for (i <- 0 until ordered.size) yield {
-      (ordered(i), ordered(i).getX, ordered(0).getY + i * delta)
+    var start = ordered(0).getY
+
+    WidgetActions.moveWidgets(ordered.map { w =>
+      val out = (w, w.getX, start)
+
+      start += w.getHeight + space
+
+      out
     })
   }
 
