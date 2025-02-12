@@ -5,9 +5,9 @@ package org.nlogo.app.tools
 import java.awt.Frame
 import javax.swing.JDialog
 
-import org.nlogo.awt.Positioning.center
 import org.nlogo.core.I18N
 import org.nlogo.swing.Implicits.{ thunk2action, thunk2windowAdapter }
+import org.nlogo.swing.Positioning
 import org.nlogo.swing.Utils.addEscKeyAction
 
 /** ToolDialog provides functionality common to NetLogo tools. */
@@ -22,7 +22,7 @@ extends JDialog(frame, I18N.gui.get(s"tools.$i18nKey"), false) {
     onClose()
     setVisible(false)
   })
-  center(this, frame)
+  Positioning.center(this, frame)
 
   /** GUI initialization */
   protected def initGUI(): Unit

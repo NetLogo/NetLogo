@@ -6,14 +6,12 @@ import java.awt.{ Component, Point, Toolkit, Window }
 import javax.swing.SwingUtilities
 
 object Positioning {
-  def center(window: Window, target: Component) {
+  def center(window: Window, target: Component): Unit = {
     if (target == null) {
       val screenSize = Toolkit.getDefaultToolkit.getScreenSize
 
       window.setLocation(screenSize.width / 2 - window.getWidth / 2, screenSize.height / 2 - window.getHeight / 2)
-    }
-
-    else {
+    } else {
       val targetCorner = new Point
 
       SwingUtilities.convertPointToScreen(targetCorner, target)

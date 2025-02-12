@@ -9,7 +9,7 @@ import javax.swing.{ AbstractAction, ButtonGroup, JPanel }
 
 import org.nlogo.app.App
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, ButtonPanel, RadioButton }
+import org.nlogo.swing.{ Button, ButtonPanel, Positioning, RadioButton }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") with ThemeSync {
@@ -84,6 +84,8 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") with ThemeS
       startTheme = InterfaceColors.getTheme
 
       setSelected(startTheme)
+
+      Positioning.center(this, frame)
     }
 
     super.setVisible(visible)

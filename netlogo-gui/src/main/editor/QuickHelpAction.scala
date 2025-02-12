@@ -4,7 +4,7 @@ package org.nlogo.editor
 
 import java.awt.Component
 import java.awt.event.ActionEvent
-import javax.swing.AbstractAction
+import javax.swing.{ AbstractAction, SwingUtilities }
 import javax.swing.text.Document
 
 import org.nlogo.core.I18N
@@ -32,6 +32,6 @@ class MouseQuickHelpAction(val colorizer: Colorizer)
   with QuickHelpAction {
 
   override def actionPerformed(e: ActionEvent): Unit = {
-    doHelp(editor.getDocument, documentOffset, editor)
+    doHelp(editor.getDocument, documentOffset, SwingUtilities.getWindowAncestor(editor))
   }
 }

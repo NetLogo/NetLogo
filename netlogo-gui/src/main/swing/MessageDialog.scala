@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import javax.swing.{ AbstractAction, BorderFactory, JComponent, JDialog }
 import javax.swing.border.LineBorder
 
-import org.nlogo.awt.{ Hierarchy, Positioning => AWTPositioning }
+import org.nlogo.awt.Hierarchy
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object MessageDialog {
@@ -28,8 +28,6 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
     setEditable(false)
     setBorder(BorderFactory.createEmptyBorder(3, 5, 0, 5))
   }
-
-  private var firstShow = true
 
   val dismissAction =
     new AbstractAction(dismissName) {
@@ -70,11 +68,8 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
     textArea.setText(message)
     textArea.setCaretPosition(0)
     pack()
-    if (firstShow) {
-      firstShow = false
-      AWTPositioning.center(this, parentFrame)
-    }
     syncTheme()
+    Positioning.center(this, parentFrame)
     setVisible(true)
   }
 

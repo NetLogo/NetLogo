@@ -45,7 +45,7 @@ object QuickHelp {
     BrowserLauncher.docPath(docName)
 
   private def openDictionary(comp: Component, word: String, words: Map[String, String]) {
-    BrowserLauncher.openPath(comp, docPath(s"dict/${words.get(word)}"), null)
+    BrowserLauncher.openPath(comp, docPath(s"dict/${words(word)}"), null)
   }
 
   def doHelp(comp: Component, token: String) {
