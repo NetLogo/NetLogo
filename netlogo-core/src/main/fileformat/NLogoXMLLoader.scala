@@ -68,7 +68,7 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
 
               element.children.foldLeft(Try(model)) {
                 case (model, XMLElement("widgets", _, _, children)) =>
-                  model.map(_.copy(widgets = children.map(WidgetXMLLoader.readWidget)))
+                  model.map(_.copy(widgets = children.map(WidgetXMLLoader.readWidget).flatten))
                 case (model, XMLElement("info", _, text, _)) =>
                   model.map(_.copy(info = text))
                 case (model, XMLElement("code", _, text, _)) =>
@@ -101,7 +101,7 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
                   val section = new Section("org.nlogo.modelsection.behaviorspace", bspaceElems)
                   model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
                 case (model, XMLElement("hubNetClient", _, _, children)) =>
-                  val hnElems = children.map(WidgetXMLLoader.readWidget)
+                  val hnElems = children.map(WidgetXMLLoader.readWidget).flatten
                   val section = new Section("org.nlogo.modelsection.hubnetclient", hnElems)
                   model.map((m) => m.copy(optionalSections = m.optionalSections :+ section))
                 case (model, el @ XMLElement("resources", _, _, _)) =>
@@ -110,9 +110,7 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
                       resource => ExternalResource(resource("name"), resource("extension"), resource.text)
                     )
                   ))
-                case (    _, XMLElement(name, _, _, _)) =>
-                  Failure(new Exception(s"Unexpected file section: ${name}"))
-
+                case (model, _) => model // ignore other sections for compatibility with other versions in the future (Isaac B 2/12/25)
               }
 
             case x =>
@@ -178,7 +176,7 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
         case "org.nlogo.modelsection.hubnetclient" =>
           val widgets = section.get.get.asInstanceOf[Seq[Widget]]
           if (widgets.nonEmpty)
-            writer.element(XMLElement("hubNetClient", Map(), "", widgets.map(WidgetXMLLoader.writeWidget).toList))
+            writer.element(XMLElement("hubNetClient", Map(), "", widgets.map(WidgetXMLLoader.writeWidget)))
 
         case "org.nlogo.modelsection.modelsettings" =>
           // handled in model attributes

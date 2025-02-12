@@ -100,8 +100,7 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
         (refs :+ rate, conns + (rate -> ((el("startFigure").toInt, el("endFigure").toInt))))
 
-      case ((refs, conns), el @ XMLElement(otherName, _, _, _)) =>
-        throw new Exception(s"Unable to deserialize SDM node with name: ${otherName}")
+      case ((refs, conns), _) => (refs, conns) // ignore other figures for compatibility with other versions in the future (Isaac B 2/12/25)
 
     }
 

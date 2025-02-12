@@ -93,8 +93,7 @@ class Model(modelName: String,
       case ((refs, conns), el @ XMLElement("binding", _, _, _)) =>
         (refs :+ null, conns)
 
-      case ((refs, conns), el @ XMLElement(otherName, _, _, _)) =>
-        throw new Exception(s"Unable to deserialize SDM node with name: ${otherName}")
+      case ((refs, conns), _) => (refs, conns) // ignore other figures for compatibility with other versions in the future (Isaac B 2/12/25)
 
     }
 

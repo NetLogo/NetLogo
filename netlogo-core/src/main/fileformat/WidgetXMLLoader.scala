@@ -9,7 +9,7 @@ import org.nlogo.core.{ AgentKind, Button, ChooseableBoolean, ChooseableDouble, 
                         WorldDimensions3D }
 
 object WidgetXMLLoader {
-  def readWidget(element: XMLElement): Widget = {
+  def readWidget(element: XMLElement): Option[Widget] = {
 
     element.name match {
 
@@ -26,10 +26,11 @@ object WidgetXMLLoader {
             case "Turtle"   => AgentKind.Turtle
             case "Link"     => AgentKind.Link
           }
-        Button( source, element("x").toInt, element("y").toInt
-              , element("width").toInt, element("height").toInt, element.get("display"), element("forever").toBoolean
-              , kind, element.get("actionKey").map(_.head), element("disableUntilTicks").toBoolean
-              )
+        Some(Button( source, element("x").toInt, element("y").toInt
+                   , element("width").toInt, element("height").toInt, element.get("display")
+                   , element("forever").toBoolean, kind, element.get("actionKey").map(_.head)
+                   , element("disableUntilTicks").toBoolean
+                   ))
 
       case "slider" =>
         val direction =
@@ -37,10 +38,10 @@ object WidgetXMLLoader {
             case "Horizontal" => Horizontal
             case "Vertical"   => Vertical
           }
-        Slider( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
-              , element("height").toInt, element.get("display"), element("min"), element("max")
-              , element("default").toDouble, element("step"), element.get("units"), direction
-              )
+        Some(Slider( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
+                   , element("height").toInt, element.get("display"), element("min"), element("max")
+                   , element("default").toDouble, element("step"), element.get("units"), direction
+                   ))
 
       case "view" =>
         val dims =
@@ -48,10 +49,10 @@ object WidgetXMLLoader {
                              , element("maxPycor").toInt, element("patchSize").toDouble
                              , element("wrappingAllowedX").toBoolean, element("wrappingAllowedY").toBoolean
                              )
-        View( element("x").toInt, element("y").toInt, element("width").toInt, element("height").toInt, dims
-            , element("fontSize").toInt, UpdateMode.load(element("updateMode").toInt)
-            , element("showTickCounter").toBoolean, element.get("tickCounterLabel"), element("frameRate").toDouble
-            )
+        Some(View( element("x").toInt, element("y").toInt, element("width").toInt, element("height").toInt, dims
+                 , element("fontSize").toInt, UpdateMode.load(element("updateMode").toInt)
+                 , element("showTickCounter").toBoolean, element.get("tickCounterLabel"), element("frameRate").toDouble
+                 ))
 
       case "view3d" =>
         val dims =
@@ -61,21 +62,21 @@ object WidgetXMLLoader {
                                , element("patchSize").toDouble, element("wrappingAllowedX").toBoolean
                                , element("wrappingAllowedY").toBoolean, element("wrappingAllowedZ").toBoolean
                                )
-        View( element("x").toInt, element("y").toInt, element("width").toInt, element("height").toInt, dims
-            , element("fontSize").toInt, UpdateMode.load(element("updateMode").toInt)
-            , element("showTickCounter").toBoolean, element.get("tickCounterLabel"), element("frameRate").toDouble
-            )
+        Some(View( element("x").toInt, element("y").toInt, element("width").toInt, element("height").toInt, dims
+                 , element("fontSize").toInt, UpdateMode.load(element("updateMode").toInt)
+                 , element("showTickCounter").toBoolean, element.get("tickCounterLabel"), element("frameRate").toDouble
+                 ))
 
       case "monitor" =>
-        Monitor( Some(element.text), element("x").toInt, element("y").toInt
-               , element("width").toInt, element("height").toInt, element.get("display"), element("precision").toInt
-               , element("fontSize").toInt
-               )
+        Some(Monitor( Some(element.text), element("x").toInt, element("y").toInt
+                    , element("width").toInt, element("height").toInt, element.get("display")
+                    , element("precision").toInt, element("fontSize").toInt
+                    ))
 
       case "switch" =>
-        Switch( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
-              , element("height").toInt, element.get("display"), element("on").toBoolean
-              )
+        Some(Switch( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
+                   , element("height").toInt, element.get("display"), element("on").toBoolean
+                   ))
 
       case "plot" =>
         val pens =
@@ -85,12 +86,12 @@ object WidgetXMLLoader {
                   , el("legend").toBoolean, el.getChild("setup").text, el.getChild("update").text
                   )
           ).toList
-        Plot( element.get("display"), element("x").toInt, element("y").toInt, element("width").toInt
-            , element("height").toInt, element.get("xAxis"), element.get("yAxis"), element("xMin").toDouble
-            , element("xMax").toDouble, element("yMin").toDouble, element("yMax").toDouble
-            , element("autoplot").toBoolean, element("legend").toBoolean, element.getChild("setup").text
-            , element.getChild("update").text, pens
-            )
+        Some(Plot( element.get("display"), element("x").toInt, element("y").toInt, element("width").toInt
+                 , element("height").toInt, element.get("xAxis"), element.get("yAxis"), element("xMin").toDouble
+                 , element("xMax").toDouble, element("yMin").toDouble, element("yMax").toDouble
+                 , element("autoplot").toBoolean, element("legend").toBoolean, element.getChild("setup").text
+                 , element.getChild("update").text, pens
+                 ))
 
       case "chooser" =>
         val children =
@@ -107,14 +108,14 @@ object WidgetXMLLoader {
                   ChooseableList(LogoList.fromList(el.getChildren("value").map(_("value")).toList))
               }
           )
-        Chooser( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
-               , element("height").toInt, element.get("display"), children.toList, element("current").toInt
-               )
+        Some(Chooser( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
+                   , element("height").toInt, element.get("display"), children.toList, element("current").toInt
+                   ))
 
       case "output" =>
-        Output( element("x").toInt, element("y").toInt, element("width").toInt, element("height").toInt
-              , element("fontSize").toInt
-              )
+        Some(Output( element("x").toInt, element("y").toInt, element("width").toInt, element("height").toInt
+                   , element("fontSize").toInt
+                   ))
 
       case "input" =>
         val input =
@@ -130,15 +131,17 @@ object WidgetXMLLoader {
             case "command" =>
               StringInput(element.text, StringInput.CommandLabel, element("multiline").toBoolean)
           }
-        InputBox( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
-                , element("height").toInt, input
-                )
+        Some(InputBox( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
+                     , element("height").toInt, input
+                     ))
 
       case "note" =>
-        TextBox( Some(element.text), element("x").toInt, element("y").toInt, element("width").toInt
-               , element("height").toInt, element("fontSize").toInt, element("color").toDouble
-               , element("transparent").toBoolean
-               )
+        Some(TextBox( Some(element.text), element("x").toInt, element("y").toInt, element("width").toInt
+                    , element("height").toInt, element("fontSize").toInt, element("color").toDouble
+                    , element("transparent").toBoolean
+                    ))
+
+      case _ => None // ignore other widgets for compatibility with other versions in the future (Isaac B 2/12/25)
 
     }
   }
