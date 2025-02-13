@@ -456,6 +456,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
           }
         }
 
+      case InteractMode.ADD =>
+        if (e.getButton == MouseEvent.BUTTON3)
+          doPopup(e.getPoint)
+
       case _ =>
         if (e.getButton == MouseEvent.BUTTON1) {
           // this is so the user can use action keys to control buttons
