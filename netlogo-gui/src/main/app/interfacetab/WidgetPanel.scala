@@ -181,6 +181,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   private var placedShadowWidget = false
+  private var stampWidget = false
 
   setOpaque(true)
   setBackground(AwtColor.WHITE)
@@ -751,7 +752,19 @@ class WidgetPanel(val workspace: GUIWorkspace)
     widgetWrapper
   }
 
-  def createShadowWidget(widget: CoreWidget): WidgetWrapper = {
+  def createShadowWidget(widget: CoreWidget): Unit = {
+    newShadowWidget(widget)
+
+    stampWidget = false
+  }
+
+  def stampShadowWidget(widget: CoreWidget): Unit = {
+    newShadowWidget(widget)
+
+    stampWidget = true
+  }
+
+  def newShadowWidget(widget: CoreWidget): Unit = {
     val wrapper = new WidgetWrapper(makeWidget(widget), this)
 
     add(wrapper, JLayeredPane.DEFAULT_LAYER)
@@ -777,8 +790,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
     unselectWidgets()
 
     newWidget = Some(wrapper)
-
-    wrapper
   }
 
   private def placeShadowWidget(): Unit = {
@@ -801,7 +812,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
       if (widget != null)
         widget.isNew(false)
 
-      createShadowWidget(model)
+      if (stampWidget)
+        createShadowWidget(model)
     })
   }
 
