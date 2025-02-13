@@ -343,6 +343,12 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   def widgetY: Int =
     getY + widget.getY
 
+  def widgetWidth: Int =
+    widget.getWidth
+
+  def widgetHeight: Int =
+    widget.getHeight
+
   def doResize(x: Int, y: Int): Unit = {
     /* x and y represent the distance from the original click and the dragged cursor position,
         so the widget can resize based on the position of the cursor. Interestingly, the

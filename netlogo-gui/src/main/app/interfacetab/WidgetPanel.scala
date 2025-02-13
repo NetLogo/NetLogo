@@ -263,6 +263,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
       case w: WidgetWrapper if w.selected => w
     }
 
+  private def unselectedWrappers: Seq[WidgetWrapper] =
+    getComponents.collect {
+      case w: WidgetWrapper if !w.selected => w
+    }
+
   private[interfacetab] def aboutToDragSelectedWidgets(startPressX: Int, startPressY: Int): Unit = {
     widgetsBeingDragged = selectedWrappers
     widgetsBeingDragged.foreach { w =>
@@ -864,10 +869,31 @@ class WidgetPanel(val workspace: GUIWorkspace)
   private[interfacetab] def multiSelected: Boolean =
     selectedWrappers.length > 1
 
-  def alignLeft(): Unit = {
-    val target = selectedWrappers.minBy(_.getX)
+  // the following methods are helpers for the alignment and distribution tools (Isaac B 2/12/25)
 
-    WidgetActions.moveWidgets(selectedWrappers.map(w => (w, target.getX, w.getY)))
+  // returns true if the specified bounds do not overlap with any of the specified widgets (Isaac B 2/12/25)
+  private def noCollision(bounds: Rectangle, existing: Seq[WidgetWrapper]): Boolean = {
+    (existing ++ unselectedWrappers).forall { w =>
+      bounds.x > w.widgetX + w.widgetWidth || bounds.x + bounds.width < w.widgetX ||
+      bounds.y > w.widgetY + w.widgetHeight || bounds.y + bounds.height < w.widgetY
+    }
+  }
+
+  // returns the widgets that can be moved without creating a collision (Isaac B 2/12/25)
+  private def validWrappers(wrappers: Seq[WidgetWrapper], bounds: (WidgetWrapper) => Rectangle): Seq[WidgetWrapper] = {
+    wrappers.foldLeft(Seq[WidgetWrapper]()) {
+      case (existing, w) if noCollision(bounds(w), existing) => existing :+ w
+      case (existing, _) => existing
+    }
+  }
+
+  def alignLeft(): Unit = {
+    val ordered = selectedWrappers.sortBy(_.getX)
+    val target = ordered(0)
+
+    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+      new Rectangle(target.widgetX, w.widgetY, w.widgetWidth, w.widgetHeight)
+    }).map(w => (w, target.getX, w.getY)))
   }
 
   def alignCenterHorizontal(): Unit = {
@@ -878,16 +904,21 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def alignRight(): Unit = {
-    val target = selectedWrappers.maxBy(w => w.getX + w.getWidth)
-    val x = (target.getX + target.getWidth).max(selectedWrappers.maxBy(_.getWidth).getWidth)
+    val ordered = selectedWrappers.sortBy(w => w.getX + w.getWidth).reverse
+    val target = ordered(0)
 
-    WidgetActions.moveWidgets(selectedWrappers.map(w => (w, x - w.getWidth, w.getY)))
+    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+      new Rectangle(target.widgetX + target.widgetWidth - w.widgetWidth, w.widgetY, w.widgetWidth, w.widgetHeight)
+    }).map(w => (w, target.getX + target.getWidth - w.getWidth, w.getY)))
   }
 
   def alignTop(): Unit = {
-    val target = selectedWrappers.minBy(_.getY)
+    val ordered = selectedWrappers.sortBy(_.getY)
+    val target = ordered(0)
 
-    WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX, target.getY)))
+    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+      new Rectangle(w.widgetX, target.widgetY, w.widgetWidth, w.widgetHeight)
+    }).map(w => (w, w.getX, target.getY)))
   }
 
   def alignCenterVertical(): Unit = {
@@ -898,10 +929,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def alignBottom(): Unit = {
-    val target = selectedWrappers.maxBy(w => w.getY + w.getHeight)
-    val y = (target.getY + target.getHeight).max(selectedWrappers.maxBy(_.getHeight).getHeight)
+    val ordered = selectedWrappers.sortBy(w => w.getY + w.getHeight).reverse
+    val target = ordered(0)
 
-    WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX, y - w.getHeight)))
+    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+      new Rectangle(w.widgetX, target.widgetY + target.widgetHeight - w.widgetHeight, w.widgetWidth, w.widgetHeight)
+    }).map(w => (w, w.getX, target.getY + target.getHeight - w.getHeight)))
   }
 
   def distributeHorizontal(): Unit = {
