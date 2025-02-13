@@ -457,7 +457,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
         }
 
       case InteractMode.ADD =>
-        if (e.getButton == MouseEvent.BUTTON3)
+        if (e.isPopupTrigger)
           doPopup(e.getPoint)
 
       case _ =>
@@ -602,10 +602,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
         selectionPane.setVisible(false)
 
       case InteractMode.ADD =>
-        if (e.getButton == MouseEvent.BUTTON1) {
-          placeShadowWidget()
-        } else if (e.getButton == MouseEvent.BUTTON3) {
+        if (e.isPopupTrigger) {
           doPopup(e.getPoint)
+        } else if (e.getButton == MouseEvent.BUTTON1) {
+          placeShadowWidget()
         }
 
       case InteractMode.EDIT =>
