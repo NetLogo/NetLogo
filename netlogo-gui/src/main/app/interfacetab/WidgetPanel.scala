@@ -105,6 +105,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
       override def mouseReleased(e: MouseEvent): Unit = {
         WidgetPanel.this.mouseReleased(e)
       }
+
+      override def mouseExited(e: MouseEvent): Unit = {
+        WidgetPanel.this.mouseExited(e)
+      }
     })
 
     addMouseMotionListener(new MouseMotionAdapter {
@@ -160,12 +164,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     } else {
       interceptPane.enableIntercept()
 
-      if (getWrappers.exists(_.widget match {
-        case b: ButtonWidget if b.running => true
-        case _ => false
-      })) {
-        workspace.halt()
-      }
+      haltIfRunning()
 
       getWrappers.foreach(_.enableShadow())
     }
@@ -422,7 +421,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def mouseEntered(e: MouseEvent): Unit = { }
-  def mouseExited(e: MouseEvent): Unit = { }
+
+  def mouseExited(e: MouseEvent): Unit = {
+    if (interactMode == InteractMode.EDIT || interactMode == InteractMode.DELETE)
+      unselectWidgets()
+  }
+
   def mouseClicked(e: MouseEvent): Unit = { }
 
   def mousePressed(e: MouseEvent): Unit = {
@@ -1152,6 +1156,15 @@ class WidgetPanel(val workspace: GUIWorkspace)
       workspace.plotManager.getPlotNames.length > 0
     } else {
       true
+    }
+  }
+
+  def haltIfRunning(): Unit = {
+    if (getWrappers.exists(_.widget match {
+      case b: ButtonWidget if b.running => true
+      case _ => false
+    })) {
+      workspace.halt()
     }
   }
 

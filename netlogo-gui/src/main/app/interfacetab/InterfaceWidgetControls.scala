@@ -40,21 +40,21 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   private val editButton = new SquareButton(new EditAction)
   private val deleteButton = new SquareButton(new DeleteAction)
 
+  private val buttonGroup = new ButtonGroup
+
   private val widgetMenu = new WidgetMenu
   private val alignmentMenu = new AlignmentMenu
 
-  interactButton.setToolTipText(I18N.gui.get("tabs.run.interactButton.tooltip"))
-  selectButton.setToolTipText(I18N.gui.get("tabs.run.selectButton.tooltip"))
-  editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
-  deleteButton.setToolTipText(I18N.gui.get("tabs.run.deleteButton.tooltip"))
-
   locally {
-    val group = new ButtonGroup
+    interactButton.setToolTipText(I18N.gui.get("tabs.run.interactButton.tooltip"))
+    selectButton.setToolTipText(I18N.gui.get("tabs.run.selectButton.tooltip"))
+    editButton.setToolTipText(I18N.gui.get("tabs.run.editButton.tooltip"))
+    deleteButton.setToolTipText(I18N.gui.get("tabs.run.deleteButton.tooltip"))
 
-    group.add(interactButton)
-    group.add(selectButton)
-    group.add(editButton)
-    group.add(deleteButton)
+    buttonGroup.add(interactButton)
+    buttonGroup.add(selectButton)
+    buttonGroup.add(editButton)
+    buttonGroup.add(deleteButton)
 
     val c = new GridBagConstraints
 
@@ -76,9 +76,9 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     c.insets = new Insets(0, 0, 0, 0)
 
     add(deleteButton, c)
-  }
 
-  interactButton.setSelected(true)
+    interactButton.setSelected(true)
+  }
 
   class InteractAction extends AbstractAction {
     def actionPerformed(e: ActionEvent): Unit = {
@@ -132,6 +132,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
           case _ =>
         }
       }
+      wPanel.haltIfRunning()
       suppress(true)
       wPanel.editWidgetFinished(target, dialogFactory.canceled(frame, target, false))
       suppress(false)
@@ -194,6 +195,9 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
   def handle(e: AppEvents.InterfaceModeEvent): Unit = {
     e.mode match {
+      case InteractMode.INTERACT =>
+        interactButton.setSelected(true)
+
       case InteractMode.SELECT =>
         selectButton.setSelected(true)
 
@@ -203,8 +207,9 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       case InteractMode.DELETE =>
         deleteButton.setSelected(true)
 
-      case _ =>
-        interactButton.setSelected(true)
+      case InteractMode.ADD =>
+        buttonGroup.clearSelection()
+
     }
   }
 
