@@ -4,8 +4,8 @@
   print "hello from the code"
 end</code>
   <widgets>
-    <view x="435" maxPycor="16" updateMode="0" wrappingAllowedX="true" y="19" frameRate="30.0" minPycor="-16" height="438" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="437" tickCounterLabel="ticks" maxPxcor="16" minPxcor="-16"></view>
-    <button x="12" actionKey="P" y="15" height="33" disableUntilTicks="false" forever="false" kind="Observer" width="83" display="print-test">print "test"</button>
+    <view x="435" maxPycor="16" updateMode="0" wrappingAllowedX="true" y="19" frameRate="30.0" minPycor="-16" height="434" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="433" tickCounterLabel="ticks" maxPxcor="16" minPxcor="-16"></view>
+    <button x="12" actionKey="P" y="15" height="35" disableUntilTicks="false" forever="false" kind="Observer" width="83" display="print-test">print "test"</button>
     <slider x="13" step="1" y="64" height="150" min="-100" direction="Vertical" max="100" default="0.0" variable="slides" units="slides" width="33" display="slides"></slider>
     <switch x="59" y="64" height="33" on="true" variable="switching" width="106" display="switching"></switch>
     <chooser x="60" y="113" height="45" variable="choice" current="0" width="138" display="choice">
@@ -54,9 +54,7 @@ string</input>
       </pen>
     </plot>
     <output x="13" y="383" height="54" fontSize="8" width="240"></output>
-    <note x="214" y="181" height="31" color="95.0" transparent="true" fontSize="25" width="150">
-      nota bene
-    </note>
+    <note x="214" y="181" height="42" textColorDark="-1" backgroundDark="-13791810" textColorLight="-16777216" backgroundLight="-13791810" fontSize="25" width="150">nota bene</note>
   </widgets>
   <info>## WHAT IS IT?
 
@@ -928,10 +926,10 @@ string</input>
   </linkShapes>
   <previewCommands>setup repeat 75 [ go ]</previewCommands>
   <systemDynamics dt="1.2">
-    <stock x="143" name="random-stock" y="133" allowNegative="true">42</stock>
+    <stock name="random-stock" allowNegative="true" x="143" y="133">42</stock>
     <converter name="var42" x="365" y="126">random-stock + 42</converter>
     <binding startFigure="0" endFigure="1"></binding>
     <reservoir x="83" y="35"></reservoir>
-    <rate name="flower" startFigure="3" bivalent="false" endFigure="0">-42</rate>
+    <rate name="flower" bivalent="false" startFigure="3" endFigure="0">-42</rate>
   </systemDynamics>
 </model>

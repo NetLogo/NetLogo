@@ -478,7 +478,7 @@ class WidgetTest extends AnyFunSuite {
                      |11
                      |0.0
                      |0""".stripMargin.split("\n").toList
-    val textBoxWidget = TextBox(Some("Sheep settings"), 28, 11, 140, 19, 11)
+    val textBoxWidget = TextBox(Some("Sheep settings"), 28, 11, 140, 19, 11, Some(-16777216))
     runSerializationTests(textBox, textBoxWidget, TextBoxReader)
   }
 
@@ -493,7 +493,7 @@ class WidgetTest extends AnyFunSuite {
                      |0.0
                      |1""".stripMargin.split("\n").toList
     val escapedText = "Note, with\ttabs and\n\nnewlines and\nescaped newlines \"\\n\""
-    val textBoxWidget = TextBox(Some(escapedText), 18, 95, 150, 56, 11)
+    val textBoxWidget = TextBox(Some(escapedText), 18, 95, 150, 56, 11, Some(-16777216))
     runSerializationTests(textBox, textBoxWidget, TextBoxReader)
   }
 
