@@ -36,8 +36,8 @@ object InterfaceColors {
   private val DarkBlueGray = new Color(45, 45, 54)
   private val DarkBlueGray2 = new Color(35, 35, 44)
   private val LightRed = new Color(251, 96, 85)
-  private val AlmostBlack = new Color(22, 22, 22)
 
+  val AlmostBlack = new Color(22, 22, 22)
   val Transparent = new Color(0, 0, 0, 0)
 
   def widgetText =

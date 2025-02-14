@@ -7,7 +7,7 @@ import java.util.List
 import javax.swing.JLabel
 import javax.swing.border.EmptyBorder
 
-import org.nlogo.api.{ Color => NlogoColor, Editable, Property }
+import org.nlogo.api.{ Editable, Property }
 import org.nlogo.awt.LineBreaker
 import org.nlogo.core.{ TextBox => CoreTextBox }
 import org.nlogo.core.I18N
@@ -34,7 +34,10 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   private var _width: Int = DEFAULT_WIDTH
   private var _text: String = ""
   private var _fontSize: Int = textLabel.getFont.getSize
-  var color: Color = Color.black
+  private var _textColorLight = Color.BLACK
+  private var _textColorDark = Color.WHITE
+  private var _backgroundLight = Color.WHITE
+  private var _backgroundDark = InterfaceColors.AlmostBlack
 
   override def propertySet: List[Property] = Properties.text
   override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.note")
@@ -53,17 +56,6 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     wrapText()
   }
 
-  def transparency: Boolean = getBackgroundColor eq InterfaceColors.Transparent
-  def transparency(trans: Boolean): Unit = {
-    setBackgroundColor(
-      if (trans) {
-        InterfaceColors.Transparent
-      } else {
-        InterfaceColors.textBoxBackground
-      }
-    )
-  }
-
   def fontSize: Int = _fontSize
   def fontSize_=(size: Int): Unit = {
     _fontSize = size
@@ -79,6 +71,30 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     wrapText()
   }
 
+  def textColorLight: Color = _textColorLight
+  def textColorLight_=(color: Color): Unit = {
+    _textColorLight = color
+    syncTheme()
+  }
+
+  def textColorDark: Color = _textColorDark
+  def textColorDark_=(color: Color): Unit = {
+    _textColorDark = color
+    syncTheme()
+  }
+
+  def backgroundLight: Color = _backgroundLight
+  def backgroundLight_=(color: Color): Unit = {
+    _backgroundLight = color
+    syncTheme()
+  }
+
+  def backgroundDark: Color = _backgroundDark
+  def backgroundDark_=(color: Color): Unit = {
+    _backgroundDark = color
+    syncTheme()
+  }
+
   override def setBounds(r: Rectangle): Unit = {
     if (r.width > 0) _width = r.width
     super.setBounds(r)
@@ -91,7 +107,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   }
 
   override def editFinished(): Boolean = {
-    textLabel.setForeground(color)
+    syncTheme()
     super.editFinished()
   }
 
@@ -100,7 +116,17 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     new Dimension(MIN_WIDTH.max(_width), MIN_HEIGHT.max(textLabel.getHeight + 8))
 
   override def syncTheme(): Unit = {
-    transparency(transparency)
+    InterfaceColors.getTheme match {
+      case "light" | "classic" =>
+        setBackgroundColor(_backgroundLight)
+        textLabel.setForeground(_textColorLight)
+
+      case "dark" =>
+        setBackgroundColor(_backgroundDark)
+        textLabel.setForeground(_textColorDark)
+    }
+
+    repaint()
   }
 
   override def model: WidgetModel = {
@@ -109,16 +135,18 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     CoreTextBox(display = txt,
       x = b.x, y = b.y, width = b.width, height = b.height,
       fontSize = fontSize,
-      color = NlogoColor.argbToColor(color.getRGB),
-      transparent = transparency)
+      textColorLight = Some(textColorLight.getRGB), textColorDark = Some(textColorDark.getRGB),
+      backgroundLight = Some(backgroundLight.getRGB), backgroundDark = Some(backgroundDark.getRGB))
   }
 
   override def load(model: WidgetModel): AnyRef = {
     text = model.display.getOrElse("")
     fontSize = model.fontSize
-    color = NlogoColor.getColor(Double.box(model.color))
-    textLabel.setForeground(color)
-    transparency(model.transparent)
+    model.textColorLight.foreach { c => textColorLight = new Color(c, true) }
+    model.textColorDark.foreach { c => textColorDark = new Color(c, true) }
+    model.backgroundLight.foreach { c => backgroundLight = new Color(c, true) }
+    model.backgroundDark.foreach { c => backgroundDark = new Color(c, true) }
+    syncTheme()
     setSize(model.width, model.height)
     this
   }

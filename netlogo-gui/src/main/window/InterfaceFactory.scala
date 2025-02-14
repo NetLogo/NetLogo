@@ -24,7 +24,7 @@ object WidgetInfo {
   val monitor = WidgetInfo("monitor", "monitor.png", () => CoreMonitor(None, 0, 0, 0, 0, None, 10))
   val plot    = WidgetInfo("plot", "plot.png", () => CorePlot(None))
   val output  = WidgetInfo("output", "output.png", () => CoreOutput(0, 0, 0, 0, 13))
-  val note    = WidgetInfo("note", "note.png", () => CoreTextBox(None, fontSize = 11, color = 0))
+  val note    = WidgetInfo("note", "note.png", () => CoreTextBox(None, fontSize = 11))
   val view    = WidgetInfo("view", "view.gif", () => CoreView())
 }
 

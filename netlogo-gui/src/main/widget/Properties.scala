@@ -6,6 +6,9 @@ package org.nlogo.widget
 // so we put all of our Properties for this package here - ST 2/23/10
 
 import collection.JavaConverters._
+
+import java.awt.GridBagConstraints
+
 import org.nlogo.api.{ Property => P }
 import org.nlogo.core.I18N
 
@@ -15,8 +18,10 @@ object Properties {
   val text = List(
     P("text", P.BigString, I18N.gui("text.text")),
     P("fontSize", P.Integer, I18N.gui("text.fontSize")),
-    P("transparency", P.Boolean, I18N.gui("text.transparency")),
-    P("color", P.Color, I18N.gui("text.color"))
+    P("textColorLight", P.Color, I18N.gui("text.textLight"), gridWidth = GridBagConstraints.RELATIVE),
+    P("textColorDark", P.Color, I18N.gui("text.textDark")),
+    P("backgroundLight", P.Color, I18N.gui("text.backgroundLight"), gridWidth = GridBagConstraints.RELATIVE),
+    P("backgroundDark", P.Color, I18N.gui("text.backgroundDark"))
   ).asJava
   val switch = List(
     P("nameWrapper", P.Identifier, I18N.gui("switch.globalVar"))
