@@ -913,7 +913,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def alignCenterHorizontal(): Unit = {
     val ltr = selectedWrappers.sortBy(_.getX)
-    val center = (ltr.last.getX + ltr.last.getWidth - ltr(0).getX) / 2
+    val center = ltr.foldLeft(0) {
+      case (sum, w) => sum + w.getX + w.getWidth / 2
+    } / ltr.size
     val ordered = selectedWrappers.sortBy(w => (w.getX + w.getWidth / 2 - center).abs)
 
     WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
@@ -941,7 +943,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def alignCenterVertical(): Unit = {
     val ttb = selectedWrappers.sortBy(_.getY)
-    val center = (ttb.last.getY + ttb.last.getHeight - ttb(0).getY) / 2
+    val center = ttb.foldLeft(0) {
+      case (sum, w) => sum + w.getY + w.getHeight / 2
+    } / ttb.size
     val ordered = selectedWrappers.sortBy(w => (w.getY + w.getHeight / 2 - center).abs)
 
     WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
