@@ -912,10 +912,13 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def alignCenterHorizontal(): Unit = {
-    val target = selectedWrappers.head
-    val x = (target.getX + target.getWidth / 2).max(selectedWrappers.maxBy(_.getWidth).getWidth / 2)
+    val ltr = selectedWrappers.sortBy(_.getX)
+    val center = (ltr.last.getX + ltr.last.getWidth - ltr(0).getX) / 2
+    val ordered = selectedWrappers.sortBy(w => (w.getX + w.getWidth / 2 - center).abs)
 
-    WidgetActions.moveWidgets(selectedWrappers.map(w => (w, x - w.getWidth / 2, w.getY)))
+    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+      new Rectangle(center - w.widgetWidth / 2, w.widgetY, w.widgetWidth, w.widgetHeight)
+    }).map(w => (w, center - w.getWidth / 2, w.getY)))
   }
 
   def alignRight(): Unit = {
@@ -937,10 +940,13 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def alignCenterVertical(): Unit = {
-    val target = selectedWrappers.head
-    val y = (target.getY + target.getHeight / 2).max(selectedWrappers.maxBy(_.getHeight).getHeight / 2)
+    val ttb = selectedWrappers.sortBy(_.getY)
+    val center = (ttb.last.getY + ttb.last.getHeight - ttb(0).getY) / 2
+    val ordered = selectedWrappers.sortBy(w => (w.getY + w.getHeight / 2 - center).abs)
 
-    WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX, y - w.getHeight / 2)))
+    WidgetActions.moveWidgets(validWrappers(ordered, (w) => {
+      new Rectangle(w.widgetX, center - w.widgetHeight / 2, w.widgetWidth, w.widgetHeight)
+    }).map(w => (w, w.getX, center - w.getHeight / 2)))
   }
 
   def alignBottom(): Unit = {
