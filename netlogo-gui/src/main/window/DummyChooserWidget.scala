@@ -6,8 +6,6 @@ import org.nlogo.api.{ CompilerServices, Dump, Editable, Property }
 import org.nlogo.core.{ I18N, LogoList }
 import org.nlogo.core.{ Chooseable, Chooser => CoreChooser, CompilerException }
 
-import java.util.{ List => JList }
-
 class DummyChooserWidget(val compiler: CompilerServices)
     extends Chooser
     with Editable {
@@ -30,7 +28,7 @@ class DummyChooserWidget(val compiler: CompilerServices)
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.chooser")
 
-  def propertySet: JList[Property] = Properties.dummyChooser
+  def propertySet: Seq[Property] = Properties.dummyChooser
 
   override def editFinished: Boolean = {
     super.editFinished

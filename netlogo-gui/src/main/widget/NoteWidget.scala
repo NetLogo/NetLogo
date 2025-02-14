@@ -3,7 +3,6 @@
 package org.nlogo.widget
 
 import java.awt.{ Color, Dimension, FlowLayout, Rectangle }
-import java.util.List
 import javax.swing.JLabel
 import javax.swing.border.EmptyBorder
 
@@ -39,7 +38,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   private var _backgroundLight = Color.WHITE
   private var _backgroundDark = InterfaceColors.AlmostBlack
 
-  override def propertySet: List[Property] = Properties.text
+  override def propertySet: Seq[Property] = Properties.text
   override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.note")
   override def isNote = true
 

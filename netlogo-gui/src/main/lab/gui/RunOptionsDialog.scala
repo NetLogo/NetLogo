@@ -101,8 +101,7 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactoryInterface
     val classDisplayName = I18N.gui("title")
 
     val propertySet = {
-      import scala.collection.JavaConverters._
-      List(
+      Seq(
         Property("spreadsheet", Property.FilePath(spreadsheetFile), I18N.gui("spreadsheet")),
         Property("table", Property.FilePath(tableFile), I18N.gui("table")),
         Property("stats", Property.FilePath(statsFile), I18N.gui("stats")),
@@ -114,7 +113,7 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactoryInterface
                  "<html>" + I18N.gui("simultaneousruns.info",
                                 defaultProcessors.toString,
                                 (totalProcessors.toString))
-                + "</html>")).asJava
+                + "</html>"))
     }
     def get = LabRunOptions(threadCount, table, spreadsheet, stats, lists, updateView, updatePlotsAndMonitors, false)
     // boilerplate for Editable

@@ -3,7 +3,6 @@
 package org.nlogo.window
 
 import java.awt.{ Dimension, Graphics }
-import java.util.{ List => JList }
 
 import org.nlogo.api.{ Editable, Property }
 import org.nlogo.awt.Fonts
@@ -27,7 +26,7 @@ class DummyButtonWidget
   private var _keyEnabled: Boolean = false
   private var _name: String = ""
 
-  def propertySet: JList[Property] = Properties.dummyButton
+  def propertySet: Seq[Property] = Properties.dummyButton
 
   def actionKey: Char = _actionKey
 

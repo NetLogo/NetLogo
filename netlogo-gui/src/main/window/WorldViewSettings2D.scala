@@ -2,8 +2,9 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions }
+import org.nlogo.api.Property
 import org.nlogo.awt.Hierarchy
+import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions }
 import org.nlogo.swing.{ ModalProgressTask, OptionPane }
 
 object WorldViewSettings2D {
@@ -18,12 +19,68 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
 
   protected val world = workspace.world
 
-  override def addDimensionProperties(): Unit = {
-    dimensionProperties.addAll(Properties.dims2D)
+  override def dimensionProperties: Seq[Property] =
+    Properties.dims2D
+
+  override def wrappingProperties: Seq[Property] =
+    Properties.wrap2D
+
+  override def viewProperties: Seq[Property] =
+    Properties.view2D
+
+  override def cornerChoices: Seq[OriginConfiguration] = {
+    Seq(
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.bottomLeft"),
+        Array(false, true, false, true),
+        Array(true, false, true, false)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.topLeft"),
+        Array(false, true, true, false),
+        Array(true, false, false, true)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.topRight"),
+        Array(true, false, true, false),
+        Array(false, true, false, true)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.bottomRight"),
+        Array(true, false, false, true),
+        Array(false, true, true, false))
+    )
   }
 
-  override def addWrappingProperties(): Unit = {
-    wrappingProperties.addAll(Properties.wrap2D)
+  override def edgeChoices: Seq[OriginConfiguration] = {
+    Seq(
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.bottom"),
+        Array(true, true, false, true),
+        Array(false, false, true, false)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.top"),
+        Array(true, true, true, false),
+        Array(false, false, false, true)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.right"),
+        Array(true, false, true, true),
+        Array(false, true, false, false)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.left"),
+        Array(false, true, true, true),
+        Array(true, false, false, false))
+    )
+  }
+
+  override def originConfigurations: Seq[OriginConfiguration] = {
+    Seq(
+      new OriginConfiguration
+        (I18N.gui.get("edit.viewSettings.origin.location.center"),
+          Array(false, true, false, true),
+          Array(false, false, false, false)),
+      new OriginConfiguration
+        (I18N.gui.get("edit.viewSettings.origin.location.corner"),
+          Array(true, true, true, true),
+          Array(false, false, false, false)),
+      new OriginConfiguration
+        (I18N.gui.get("edit.viewSettings.origin.location.edge"),
+          Array(true, true, true, true),
+          Array(false, false, false, false)),
+      new OriginConfiguration
+        (I18N.gui.get("edit.viewSettings.origin.location.custom"),
+          Array(true, true, true, true),
+          Array(false, false, false, false))
+    )
   }
 
   def editFinished(): Boolean = {

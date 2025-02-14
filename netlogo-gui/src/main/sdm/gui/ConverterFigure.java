@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 import org.nlogo.api.Options;
-import scala.collection.JavaConverters;
+
+import scala.collection.Seq;
 
 public class ConverterFigure extends DiamondFigure
     implements
@@ -111,7 +112,7 @@ public class ConverterFigure extends DiamondFigure
     return scala.Option.apply(null);
   }
 
-  public List<Property> propertySet() {
+  public Seq<Property> propertySet() {
     return Properties.converter();
   }
 

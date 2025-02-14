@@ -3,7 +3,6 @@
 package org.nlogo.sdm.gui
 
 import java.awt.{ Color, Font, Graphics, Rectangle }
-import java.util.List
 
 import org.jhotdraw.figures.RectangleFigure
 import org.jhotdraw.framework.{ FigureAttributeConstant, HandleEnumeration }
@@ -107,7 +106,7 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
   def helpLink: Option[String] =
     None
 
-  def propertySet: List[Property] =
+  def propertySet: Seq[Property] =
     Properties.stock
 
   def classDisplayName: String =

@@ -3,7 +3,6 @@
 package org.nlogo.window
 
 import java.awt.{ Dimension, Graphics }
-import java.util.{ List => JList }
 
 import org.nlogo.api.{ Editable, Property }
 import org.nlogo.core.{ I18N, Monitor => CoreMonitor }
@@ -45,7 +44,7 @@ class DummyMonitorWidget
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.monitor")
 
-  def propertySet: JList[Property] =
+  def propertySet: Seq[Property] =
     Properties.dummyMonitor
 
   override def getMinimumSize: Dimension =

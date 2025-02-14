@@ -14,8 +14,6 @@ import org.nlogo.swing.{ ComboBox, Transparent }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ OriginConfiguration, WorldViewSettings }
 
-import scala.collection.JavaConverters._
-
 class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Colorizer)
   extends EditPanel(widget, compiler, colorizer) {
 
@@ -40,7 +38,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
         add(previewPanel, BorderLayout.CENTER)
         val worldStaticPropertiesPanel = new JPanel(panelGridbag) with Transparent
         addProperties(worldStaticPropertiesPanel,
-                      settings.wrappingProperties.asScala,
+                      settings.wrappingProperties,
                       panelGridbag)
         add(worldStaticPropertiesPanel, BorderLayout.SOUTH)
       }, BorderLayout.CENTER)
@@ -52,7 +50,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
       })
     }
 
-    addProperties(viewPanel, settings.viewProperties.asScala, panelGridbag)
+    addProperties(viewPanel, settings.viewProperties, panelGridbag)
 
     val modelPanel = new JPanel(panelGridbag) with Transparent {
       setBorder(new TitledBorder(I18N.gui("tickCounter")) {
@@ -60,7 +58,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
       })
     }
 
-    addProperties(modelPanel, settings.modelProperties.asScala, panelGridbag)
+    addProperties(modelPanel, settings.modelProperties, panelGridbag)
 
     add(worldPanel, BorderLayout.NORTH)
     add(viewPanel, BorderLayout.CENTER)
@@ -81,7 +79,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
       setForeground(InterfaceColors.dialogText)
     }, c)
 
-    positionChoices = new ComboBox(settings.originConfigurations.asScala.toList) {
+    positionChoices = new ComboBox(settings.originConfigurations) {
       addItemListener(new LocationItemListener)
     }
 
@@ -90,14 +88,14 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
 
     buttons.add(positionChoices, c)
 
-    edgeChoices = new ComboBox(settings.edgeChoices.asScala.toList) {
+    edgeChoices = new ComboBox(settings.edgeChoices) {
       addItemListener(new ConfigurationListener)
       setVisible(false)
     }
 
     buttons.add(edgeChoices, c)
 
-    cornerChoices = new ComboBox(settings.cornerChoices.asScala.toList) {
+    cornerChoices = new ComboBox(settings.cornerChoices) {
       addItemListener(new ConfigurationListener)
       setVisible(false)
     }
@@ -105,7 +103,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
     buttons.add(cornerChoices, c)
 
     try
-      addProperties(buttons, settings.dimensionProperties.asScala, buttonsLayout)
+      addProperties(buttons, settings.dimensionProperties, buttonsLayout)
     catch {
       case t: Throwable => t.printStackTrace
     }

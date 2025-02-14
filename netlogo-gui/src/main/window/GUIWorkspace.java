@@ -490,7 +490,6 @@ public abstract class GUIWorkspace
       viewWidget.setVisible(dualView);
     }
     view.renderPerspective = enabled;
-    viewWidget.settings().refreshViewProperties(!enabled);
     new org.nlogo.window.Events.Enable2DEvent(enabled).raise(this);
   }
 

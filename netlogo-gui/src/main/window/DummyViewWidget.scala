@@ -3,7 +3,6 @@
 package org.nlogo.window
 
 import java.awt.{ Color, Dimension, Rectangle }
-import java.util.{ List => JList }
 import javax.swing.border.LineBorder
 
 import org.nlogo.agent.World
@@ -41,7 +40,7 @@ class DummyViewWidget(val world: World)
     newHeight = height
   }
 
-  def propertySet: JList[Property] =
+  def propertySet: Seq[Property] =
     Properties.dummyView
 
   override def editFinished(): Boolean = {

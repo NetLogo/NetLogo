@@ -1,12 +1,13 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.window;
+package org.nlogo.window
 
-import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions, WorldDimensions3D }
 import org.nlogo.agent.World3D
-import org.nlogo.window.Events.RemoveAllJobsEvent
-import org.nlogo.swing.ModalProgressTask
+import org.nlogo.api.Property
 import org.nlogo.awt.Hierarchy
+import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions, WorldDimensions3D }
+import org.nlogo.swing.ModalProgressTask
+import org.nlogo.window.Events.RemoveAllJobsEvent
 
 class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: TickCounterLabel)
   extends WorldViewSettings(workspace, gw, tickCounter) {
@@ -48,75 +49,82 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
     wrappingChanged ||= newWrapZ != world.wrappingAllowedInZ
   }
 
-  override def addDimensionProperties(): Unit = {
-    dimensionProperties.addAll(Properties.dims3D)
-  }
+  override def dimensionProperties: Seq[Property] =
+    Properties.dims3D
 
-  override def addWrappingProperties(): Unit = {
-    wrappingProperties.addAll(Properties.wrap3D)
-  }
+  override def wrappingProperties: Seq[Property] =
+    Properties.wrap3D
 
-  override def addCornerChoices(): Unit = {
-    cornerChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomSouthwest"),
+  override def viewProperties: Seq[Property] =
+    Properties.view2D ++ Properties.view3D
+
+  override def cornerChoices: Seq[OriginConfiguration] = {
+    Seq(
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomSouthwest"),
         Array(false, true, false, true, false, true),
-        Array(true, false, true, false, true, false)))
-    cornerChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomNorthwest"),
+        Array(true, false, true, false, true, false)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomNorthwest"),
         Array(false, true, true, false, false, true),
-        Array(true, false, false, true, true, false)))
-    cornerChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomNortheast"),
+        Array(true, false, false, true, true, false)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomNortheast"),
         Array(true, false, true, false, false, true),
-        Array(false, true, false, true, true, false)))
-    cornerChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomSoutheast"),
+        Array(false, true, false, true, true, false)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomSoutheast"),
         Array(true, false, false, true, false, true),
-        Array(false, true, true, false, true, false)))
-    cornerChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topSouthwest"),
+        Array(false, true, true, false, true, false)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topSouthwest"),
         Array(false, true, false, true, true, false),
-        Array(true, false, true, false, false, true)))
-    cornerChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topNorthwest"),
+        Array(true, false, true, false, false, true)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topNorthwest"),
         Array(false, true, true, false, true, false),
-        Array(true, false, false, true, false, true)))
-    cornerChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topNortheast"),
+        Array(true, false, false, true, false, true)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topNortheast"),
         Array(true, false, true, false, true, false),
-        Array(false, true, false, true, false, true)))
-    cornerChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topSoutheast"),
+        Array(false, true, false, true, false, true)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topSoutheast"),
         Array(true, false, false, true, true, false),
-        Array(false, true, true, false, false, true)))
+        Array(false, true, true, false, false, true))
+    )
   }
 
-  override def addEdgeChoices(): Unit = {
-    edgeChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.south"),
+  override def edgeChoices: Seq[OriginConfiguration] = {
+    Seq(
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.south"),
         Array(true, true, false, true, true, true),
-        Array(false, false, true, false, false, false)))
-    edgeChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.north"),
+        Array(false, false, true, false, false, false)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.north"),
         Array(true, true, true, false, true, true),
-        Array(false, false, false, true, false, false)))
-    edgeChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.east"),
+        Array(false, false, false, true, false, false)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.east"),
         Array(true, false, true, true, true, true),
-        Array(false, true, false, false, false, false)))
-    edgeChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.west"),
+        Array(false, true, false, false, false, false)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.west"),
         Array(false, true, true, true, true, true),
-        Array(true, false, false, false, false, false)))
-    edgeChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.bottom"),
+        Array(true, false, false, false, false, false)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.bottom"),
         Array(true, true, true, true, false, true),
-        Array(false, false, false, false, true, false)))
-    edgeChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.top"),
+        Array(false, false, false, false, true, false)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.top"),
         Array(true, true, true, true, true, false),
-        Array(false, false, false, false, false, true)))
+        Array(false, false, false, false, false, true))
+    )
   }
 
-  override def addOriginConfigurations(): Unit = {
-    originConfigurations.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.center"),
+  override def originConfigurations: Seq[OriginConfiguration] = {
+    Seq(
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.center"),
         Array(false, true, false, true, false, true),
-        Array(false, false, false, false, false, false)))
-    originConfigurations.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner"),
+        Array(false, false, false, false, false, false)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner"),
         Array(true, true, true, true, true, true),
-        Array(false, false, false, false, false, false)))
-    originConfigurations.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge"),
+        Array(false, false, false, false, false, false)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge"),
         Array(true, true, true, true, true, true),
-        Array(false, false, false, false, false, false)))
-    originConfigurations.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.custom"),
+        Array(false, false, false, false, false, false)),
+      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.custom"),
         Array(true, true, true, true, true, true),
-        Array(false, false, false, false, false, false)))
+        Array(false, false, false, false, false, false))
+    )
   }
 
   override def firstEditor: Int = 0

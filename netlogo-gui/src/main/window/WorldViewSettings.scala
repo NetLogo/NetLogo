@@ -2,9 +2,7 @@
 
 package org.nlogo.window
 
-import java.util.{ ArrayList => ArrayJList, List => JList }
-
-import org.nlogo.core.{ CompilerException, I18N, UpdateMode, View => CoreView, WorldDimensions }
+import org.nlogo.core.{ CompilerException, UpdateMode, View => CoreView, WorldDimensions }
 import org.nlogo.api.{ Editable, Property, WorldPropertiesInterface }
 import org.nlogo.workspace.WorldLoaderInterface
 
@@ -12,16 +10,6 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
     extends Editable
     with WorldLoaderInterface
     with WorldPropertiesInterface {
-
-  val dimensionProperties: JList[Property] = new ArrayJList[Property]()
-  val wrappingProperties: JList[Property] = new ArrayJList[Property]()
-  val viewProperties: JList[Property] = new ArrayJList[Property]()
-  val modelProperties: JList[Property] = new ArrayJList[Property]()
-  val cornerChoices: JList[OriginConfiguration] = new ArrayJList[OriginConfiguration]()
-  val edgeChoices: JList[OriginConfiguration] = new ArrayJList[OriginConfiguration]()
-  val originConfigurations: JList[OriginConfiguration] = new ArrayJList[OriginConfiguration]()
-
-  protected var _propertySet: JList[Property] = null
 
   protected var wrappingChanged: Boolean = false
   protected var edgesChanged: Boolean = false
@@ -42,91 +30,22 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
 
   protected var _error: Option[CompilerException] = None
 
-  addProperties()
-
   def classDisplayName: String = "Model Settings"
 
   def resizeWithProgress(showProgress: Boolean): Unit
 
   def model: CoreView
 
-  def addWrappingProperties(): Unit
-  def addDimensionProperties(): Unit
+  def dimensionProperties: Seq[Property]
+  def wrappingProperties: Seq[Property]
+  def viewProperties: Seq[Property]
+  def modelProperties: Seq[Property] = Properties.model
+  def cornerChoices: Seq[OriginConfiguration]
+  def edgeChoices: Seq[OriginConfiguration]
+  def originConfigurations: Seq[OriginConfiguration]
 
-  protected def addProperties(): Unit = {
-    propertySet(new ArrayJList[Property]())
-    addDimensionProperties()
-    addWrappingProperties()
-    addViewProperties()
-    addModelProperties()
-    addCornerChoices()
-    addEdgeChoices()
-    addOriginConfigurations()
-  }
-
-  def addViewProperties(): Unit = {
-    viewProperties.addAll(Properties.view2D)
-  }
-
-  def addModelProperties(): Unit = {
-    modelProperties.addAll(Properties.model)
-  }
-
-  def refreshViewProperties(threedView: Boolean): Unit = {
-    viewProperties.clear()
-    addViewProperties()
-    if (threedView)
-      viewProperties.addAll(Properties.view3D)
-  }
-
-  def addCornerChoices(): Unit = {
-    cornerChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.bottomLeft"),
-        Array(false, true, false, true),
-        Array(true, false, true, false)))
-    cornerChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.topLeft"),
-        Array(false, true, true, false),
-        Array(true, false, false, true)))
-    cornerChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.topRight"),
-        Array(true, false, true, false),
-        Array(false, true, false, true)))
-    cornerChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.bottomRight"),
-        Array(true, false, false, true),
-        Array(false, true, true, false)))
-  }
-
-  def addEdgeChoices(): Unit = {
-    edgeChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.bottom"),
-        Array(true, true, false, true),
-        Array(false, false, true, false)))
-    edgeChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.top"),
-        Array(true, true, true, false),
-        Array(false, false, false, true)))
-    edgeChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.right"),
-        Array(true, false, true, true),
-        Array(false, true, false, false)))
-    edgeChoices.add(new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.left"),
-        Array(false, true, true, true),
-        Array(true, false, false, false)))
-  }
-
-  def addOriginConfigurations(): Unit = {
-    originConfigurations.add(new OriginConfiguration
-        (I18N.gui.get("edit.viewSettings.origin.location.center"),
-            Array(false, true, false, true),
-            Array(false, false, false, false)))
-    originConfigurations.add(new OriginConfiguration
-        (I18N.gui.get("edit.viewSettings.origin.location.corner"),
-            Array(true, true, true, true),
-            Array(false, false, false, false)))
-    originConfigurations.add(new OriginConfiguration
-        (I18N.gui.get("edit.viewSettings.origin.location.edge"),
-            Array(true, true, true, true),
-            Array(false, false, false, false)))
-    originConfigurations.add(new OriginConfiguration
-        (I18N.gui.get("edit.viewSettings.origin.location.custom"),
-            Array(true, true, true, true),
-            Array(false, false, false, false)))
-  }
+  // the properties are manually added in WorldEditPanel (Isaac B 2/14/25)
+  def propertySet = Seq[Property]()
 
   def firstEditor: Int = 0
 
@@ -212,11 +131,7 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
 
   def helpLink = Option.empty[String]
 
-  def propertySet: JList[Property] = _propertySet
-
-  def propertySet(propertySet: JList[Property]): Unit = {
-    _propertySet = propertySet
-  }
+  override def liveUpdate: Boolean = true
 
   def minPxcor(minPxcor: Int): Unit = {
     if (minPxcor <= 0) {

@@ -4,7 +4,6 @@ package org.nlogo.window
 
 import java.awt.event.MouseEvent
 import java.awt.{ Color, Component, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets, Dimension }
-import java.util.{ List => JList }
 import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.core.{ AgentKind, AgentKindJ, I18N, Monitor => CoreMonitor }
@@ -194,7 +193,7 @@ class MonitorWidget(random: MersenneTwisterFast)
     }
   }
 
-  def propertySet: JList[Property] =
+  def propertySet: Seq[Property] =
     Properties.monitor
 
   def chooseDisplayName() {

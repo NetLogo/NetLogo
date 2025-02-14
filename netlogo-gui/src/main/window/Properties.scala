@@ -6,14 +6,14 @@ package org.nlogo.window
 // so we put all of our Properties for this package here - ST 2/23/10
 
 import java.awt.GridBagConstraints._
-import org.nlogo.api.{ Property => P}
+
+import org.nlogo.api.{ Property => P }
 import org.nlogo.core.I18N
 
 object Properties {
   implicit val i18nPrefix = I18N.Prefix("edit")
-  def javaList[T](xs: T*) = { import collection.JavaConverters._; xs.asJava }
   // normal widgets
-  val plot = javaList(
+  val plot = Seq(
     P("plotName", P.NonEmptyString, I18N.gui("plot.name"), focus = true),
     P("xLabel", P.String, I18N.gui("plot.xLabel"), gridWidth = 1),
     P("defaultXMin", P.Double, I18N.gui("plot.xmin"), gridWidth = RELATIVE),
@@ -28,7 +28,7 @@ object Properties {
     P("updateCode", P.Commands, I18N.gui("plot.updateCode"), collapsible = true, collapseByDefault = true),
     P("editPlotPens", P.PlotPens, I18N.gui("plot.pen.plotPens"), gridWidth = REMAINDER)
   )
-  val button = javaList(
+  val button = Seq(
     P("agentOptions", P.StringOptions, I18N.gui("button.agents"), gridWidth = RELATIVE),
     P("forever", P.Boolean, I18N.gui("button.forever")),
     P("goTime", P.Boolean, I18N.gui("button.disable")),
@@ -36,12 +36,12 @@ object Properties {
     P("name", P.String, I18N.gui("button.displayName")),
     P("actionKey", P.Key, I18N.gui("button.actionKey"))
   )
-  val chooser = javaList(
+  val chooser = Seq(
     P("nameWrapper", P.Identifier, I18N.gui("chooser.globalVar")),
     P("choicesWrapper", P.LogoListString, I18N.gui("chooser.choices"),
       I18N.gui.get("edit.chooser.example"))
   )
-  val slider = javaList(
+  val slider = Seq(
     P("nameWrapper", P.Identifier, I18N.gui("slider.globalVar")),
     P("minimumCode", P.ReporterLine, I18N.gui("slider.minimum"),
       I18N.gui.get("edit.slider.minmax.message"),
@@ -55,26 +55,26 @@ object Properties {
     P("units", P.String, I18N.gui("slider.units")),
     P("vertical", P.Boolean, I18N.gui("slider.vertical"))
   )
-  val monitor = javaList(
+  val monitor = Seq(
     P("wrapSource", P.Reporter, I18N.gui("monitor.reporter")),
     P("name", P.String, I18N.gui("monitor.name")),
     P("decimalPlaces", P.Integer, I18N.gui("monitor.decimalPlaces"), I18N.gui.get("edit.monitor.precision"), gridWidth = RELATIVE),
     P("fontSize", P.Integer, I18N.gui("monitor.fontSize"))
   )
-  val output = javaList(
+  val output = Seq(
     P("fontSize", P.Integer, I18N.gui("output.fontSize"))
   )
-  val input = javaList(
+  val input = Seq(
     P("nameWrapper", P.Identifier, I18N.gui("input.globalVar")),
     P("typeOptions", P.InputBoxOptions, I18N.gui("input.type"), gridWidth = RELATIVE)
   )
 
   // WorldViewSettings
-  val model = javaList(
+  val model = Seq(
     P("showTickCounter", P.Boolean, I18N.gui("viewSettings.showTickCounter")),
     P("tickCounterLabel", P.String, I18N.gui("viewSettings.tickCounterLabel"))
   )
-  val view2D = javaList(
+  val view2D = Seq(
     P("patchSize", P.Double,
       I18N.gui("viewSettings.2D.patchSize"), I18N.gui("viewSettings.2D.patchSize.info"),
       gridWidth = RELATIVE),
@@ -83,27 +83,27 @@ object Properties {
     P("frameRate", P.StrictlyPositiveDouble,
       I18N.gui("viewSettings.2D.frameRate"), I18N.gui("viewSettings.2D.frameRate.info"))
   )
-  val view3D = javaList(
+  val view3D = Seq(
     P("smooth", P.Boolean, I18N.gui("viewSettings.3D.smooth"), I18N.gui("viewSettings.3D.affects")),
     P("wireframe", P.Boolean, I18N.gui("viewSettings.3D.wireFrame"), I18N.gui("viewSettings.3D.affects")),
     P("dualView", P.Boolean, I18N.gui("viewSettings.3D.dualView"))
   )
-  val wrap2D = javaList(
+  val wrap2D = Seq(
     P("wrappingX", P.Boolean, I18N.gui("viewSettings.2D.wrapX"), setLive = true),
     P("wrappingY", P.Boolean, I18N.gui("viewSettings.2D.wrapY"), setLive = true)
   )
-  val wrap3D = javaList(
+  val wrap3D = Seq(
     P("wrappingX", P.Boolean, I18N.gui("viewSettings.3D.wrapX"), enabled = false, setLive = true),
     P("wrappingY", P.Boolean, I18N.gui("viewSettings.3D.wrapY"), enabled = false, setLive = true),
     P("wrappingZ", P.Boolean, I18N.gui("viewSettings.3D.wrapZ"), enabled = false, setLive = true)
   )
-  val dims2D = javaList(
+  val dims2D = Seq(
     P("minPxcor", P.NegativeInteger, "min-pxcor", I18N.gui("viewSettings.2D.minPxcor"), setLive = true),
     P("maxPxcor", P.PositiveInteger, "max-pxcor", I18N.gui("viewSettings.2D.maxPxcor"), setLive = true),
     P("minPycor", P.NegativeInteger, "min-pycor", I18N.gui("viewSettings.2D.minPycor"), setLive = true),
     P("maxPycor", P.PositiveInteger, "max-pycor", I18N.gui("viewSettings.2D.maxPycor"), setLive = true)
   )
-  val dims3D = javaList(
+  val dims3D = Seq(
     P("minPxcor", P.NegativeInteger, "min-pxcor", I18N.gui("viewSettings.3D.minPxcor"), setLive = true),
     P("maxPxcor", P.PositiveInteger, "max-pxcor", I18N.gui("viewSettings.3D.maxPxcor"), setLive = true),
     P("minPycor", P.NegativeInteger, "min-pycor", I18N.gui("viewSettings.3D.minPycor"), setLive = true),
@@ -113,24 +113,24 @@ object Properties {
   )
 
   // dummies for HubNet clients
-  val dummyButton = javaList(
+  val dummyButton = Seq(
     P("name", P.String, I18N.gui("hubnet.tag")),
     P("actionKey", P.Key, I18N.gui("button.actionKey"))
   )
-  val dummyChooser = javaList(
+  val dummyChooser = Seq(
     P("name", P.String, I18N.gui("hubnet.tag")),
     P("choicesWrapper", P.LogoListString, I18N.gui("chooser.choices"),
       I18N.gui.get("edit.chooser.example"))
   )
-  val dummyInput = javaList(
+  val dummyInput = Seq(
     P("nameWrapper", P.String, I18N.gui("hubnet.tag")),
     P("typeOptions", P.InputBoxOptions, I18N.gui("input.type"), gridWidth = RELATIVE)
   )
-  val dummyMonitor = javaList(
+  val dummyMonitor = Seq(
     P("name", P.String, I18N.gui("hubnet.tag")),
     P("decimalPlaces", P.Integer, I18N.gui.get("edit.monitor.decimalPlaces"), gridWidth = RELATIVE)
   )
-  val dummyPlot = javaList(
+  val dummyPlot = Seq(
     P("nameOptions", P.PlotOptions, I18N.gui("plot.name")),
     P("xLabel", P.String, I18N.gui("plot.xLabel"), gridWidth = 1),
     P("defaultXMin", P.Double, I18N.gui("plot.xmin"), gridWidth = RELATIVE),
@@ -141,7 +141,7 @@ object Properties {
     P("defaultAutoPlotOn", P.Boolean, I18N.gui("plot.autoScale")),
     P("showLegend", P.Boolean, I18N.gui("plot.showLegend"))
   )
-  val dummySlider = javaList(
+  val dummySlider = Seq(
     P("name", P.String, I18N.gui("hubnet.tag")),
     P("min", P.Double, I18N.gui("slider.minimum"), gridWidth = 1),
     P("inc", P.Double, I18N.gui("slider.increment"), gridWidth = RELATIVE),
@@ -150,7 +150,7 @@ object Properties {
     P("units", P.String, I18N.gui("slider.units")),
     P("vertical", P.Boolean, I18N.gui("slider.vertical"))
   )
-  val dummyView = javaList(
+  val dummyView = Seq(
     P("width", P.Integer, I18N.gui("hubnet.view.width")),
     P("height", P.Integer, I18N.gui("hubnet.view.height"))
   )

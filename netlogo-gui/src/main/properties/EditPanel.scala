@@ -13,7 +13,6 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.WidgetWrapperInterface
 
 import scala.reflect.ClassTag
-import scala.collection.JavaConverters._
 
 // This is the contents of an EditDialog, except for the buttons at the bottom (OK/Apply/Cancel).
 class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer: Colorizer, useTooltips: Boolean = false)
@@ -21,17 +20,6 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
 
   val oldDelay = ToolTipManager.sharedInstance.getDismissDelay()
   ToolTipManager.sharedInstance.setDismissDelay(30000)
-
-  val liveUpdate =
-    // OK, it's a big hack that we're hardcoding these next checks, but it doesn't seem worth the
-    // effort for now to do it the right way - ST 12/16/01, 11/29/07
-    !(target.isInstanceOf[org.nlogo.window.ChooserWidget] ||
-      // Sliders: we were getting weirdness with the "value" property involving
-      // out of bounds values, so rather than fool with it, the easiest
-      // thing to do was just not live update - ST 11/29/07
-      target.isInstanceOf[org.nlogo.window.SliderWidget] ||
-      target.isInstanceOf[org.nlogo.window.WorldViewSettings] ||
-      target.isInstanceOf[org.nlogo.window.PlotWidget])
 
   val propertyEditors = collection.mutable.ArrayBuffer[PropertyEditor[_]]()
   private var getsFirstFocus: PropertyEditor[_] = null
@@ -41,30 +29,28 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
   }
 
   def init(): PropertyEditor[_] = {
-    val properties = target.propertySet
     val layout = new GridBagLayout()
     setLayout(layout)
-    getsFirstFocus = {
-      import collection.JavaConverters._
-      addProperties(this, properties.asScala, layout)
-    }
+    getsFirstFocus = addProperties(this, target.propertySet, layout)
     getsFirstFocus
   }
-  def addProperties(editorPanel: JPanel, properties: Iterable[Property],
-                    layout: GridBagLayout) = {
+
+  protected def addProperties(editorPanel: JPanel, properties: Seq[Property],
+                              layout: GridBagLayout): PropertyEditor[_] = {
     var claimsFirstFocus: PropertyEditor[_] = null
-    for(property <- properties) {
+    for (property <- properties) {
       val editor = getEditor(property, target, useTooltips && property.notes != null && property.notes.trim != "")
       val panel = new JPanel(new BorderLayout) with Transparent {
         add(editor, BorderLayout.CENTER)
         if (property.notes != null && property.notes.trim != "")
-          if (useTooltips)
+          if (useTooltips) {
             editor.setTooltip(property.notes)
-          else
-            add(new JLabel(property.notes){
+          } else {
+            add(new JLabel(property.notes) {
               setFont(getFont.deriveFont(9.0f))
               setForeground(InterfaceColors.dialogText)
             }, BorderLayout.SOUTH)
+          }
       }
 
       val c = editor.getConstraints
@@ -195,7 +181,6 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
           case (name, error) =>
             val displayName =
               target.propertySet
-                .asScala
                 .filter(_.accessString == name)
                 .map(_.name)
                 .headOption
@@ -313,7 +298,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
   trait Changed { self: PropertyEditor[_] =>
     override def changed() {
       if (get.isDefined) {
-        if (liveUpdate) {
+        if (target.liveUpdate) {
           apply()
           EditPanel.this.changed()
         }
