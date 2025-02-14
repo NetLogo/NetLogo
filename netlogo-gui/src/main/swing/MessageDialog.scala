@@ -5,7 +5,7 @@ package org.nlogo.swing
 import java.awt.{ BorderLayout, Component, Frame }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import javax.swing.{ AbstractAction, BorderFactory, JComponent, JDialog }
-import javax.swing.border.LineBorder
+import javax.swing.border.{ EmptyBorder, LineBorder }
 
 import org.nlogo.awt.Hierarchy
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -38,7 +38,7 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
 
   private val buttonPanel = ButtonPanel(makeButtons: _*)
 
-  buttonPanel.setBorder(new javax.swing.border.EmptyBorder(6, 6, 6, 6))
+  buttonPanel.setBorder(new EmptyBorder(6, 6, 6, 6))
 
   addWindowListener(new WindowAdapter {
     override def windowClosing(e: WindowEvent): Unit = {

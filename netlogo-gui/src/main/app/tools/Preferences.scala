@@ -52,14 +52,16 @@ object Preferences {
     val component = new ComboBox(languages.toList)
     val requirement = RequiredAction.Restart
 
-    def load(prefs: JavaPreferences) = {
+    def load(prefs: JavaPreferences): Unit = {
       val locale = I18N.localeFromPreferences.getOrElse(I18N.gui.defaultLocale)
       component.setSelectedItem(LocaleWrapper(locale))
     }
-    def save(prefs: JavaPreferences) = {
-      val chosenLocale = component.getSelectedItem.asInstanceOf[LocaleWrapper].locale
-      prefs.put("user.language", chosenLocale.getLanguage)
-      prefs.put("user.country", chosenLocale.getCountry)
+
+    def save(prefs: JavaPreferences): Unit = {
+      component.getSelectedItem.foreach { w =>
+        prefs.put("user.language", w.locale.getLanguage)
+        prefs.put("user.country", w.locale.getCountry)
+      }
     }
   }
 
@@ -162,14 +164,13 @@ object Preferences {
     val component = new ComboBox(options)
     val requirement = RequiredAction.None
 
-    def load(prefs: JavaPreferences) = {
+    def load(prefs: JavaPreferences): Unit = {
       val sortOrder = prefs.get("proceduresMenuSortOrder", options(0))
       component.setSelectedItem(sortOrder)
     }
 
-    def save(prefs: JavaPreferences) = {
-      val chosenSortOrder = component.getSelectedItem.asInstanceOf[String]
-      prefs.put("proceduresMenuSortOrder", chosenSortOrder)
+    def save(prefs: JavaPreferences): Unit = {
+      component.getSelectedItem.foreach(prefs.put("proceduresMenuSortOrder", _))
     }
   }
 

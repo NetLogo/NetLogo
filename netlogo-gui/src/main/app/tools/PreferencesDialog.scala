@@ -5,10 +5,11 @@ package org.nlogo.app.tools
 import java.awt.{ BorderLayout, Frame }
 import java.io.File
 import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ BorderFactory, Box, BoxLayout, SwingConstants }
+import javax.swing.{ BorderFactory, SwingConstants }
+import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, OptionPane, TextFieldBox }
+import org.nlogo.swing.{ Button, ButtonPanel, OptionPane, TextFieldBox }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class PreferencesDialog(parent: Frame, preferences: Preference*) extends ToolDialog(parent, "preferences")
@@ -18,7 +19,6 @@ class PreferencesDialog(parent: Frame, preferences: Preference*) extends ToolDia
   private lazy val preferencesPanel = new TextFieldBox(SwingConstants.TRAILING)
 
   private lazy val okButton = new Button(I18N.gui.get("common.buttons.ok"), ok)
-  private lazy val applyButton = new Button(I18N.gui.get("common.buttons.apply"), apply)
   private lazy val cancelButton = new Button(I18N.gui.get("common.buttons.cancel"), cancel)
 
   private def reset() = {
@@ -62,21 +62,16 @@ class PreferencesDialog(parent: Frame, preferences: Preference*) extends ToolDia
         (if (pref.requirement != RequiredAction.None) I18N.gui(pref.requirement.toString) + " " else "") +
         I18N.gui(pref.i18nKey), pref.component))
 
-    val buttonsPanel = new Box(BoxLayout.LINE_AXIS)
-    buttonsPanel.setBorder(BorderFactory.createEmptyBorder(0, 20, 10, 20))
-    buttonsPanel.add(Box.createHorizontalGlue)
-    buttonsPanel.add(okButton)
-    buttonsPanel.add(Box.createHorizontalGlue)
-    buttonsPanel.add(applyButton)
-    buttonsPanel.add(Box.createHorizontalGlue)
-    buttonsPanel.add(cancelButton)
-    buttonsPanel.add(Box.createHorizontalGlue)
+    val buttonPanel = new ButtonPanel(Array(okButton, cancelButton))
+
+    buttonPanel.setBorder(new EmptyBorder(6, 6, 6, 6))
 
     add(preferencesPanel, BorderLayout.CENTER)
-    add(buttonsPanel, BorderLayout.SOUTH)
-    pack()
+    add(buttonPanel, BorderLayout.SOUTH)
 
+    pack()
     reset()
+
     setResizable(false)
   }
 
@@ -87,7 +82,6 @@ class PreferencesDialog(parent: Frame, preferences: Preference*) extends ToolDia
     preferencesPanel.setBackground(InterfaceColors.dialogBackground)
 
     okButton.syncTheme()
-    applyButton.syncTheme()
     cancelButton.syncTheme()
 
     preferencesPanel.syncTheme()

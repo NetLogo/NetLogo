@@ -38,7 +38,7 @@ class ComboBox[T](private var items: Seq[T] = Seq())
 
   private val popup = new PopupMenu {
     override def getPreferredSize: Dimension =
-      new Dimension(ComboBox.this.getSize().width, super.getPreferredSize.height)
+      new Dimension(ComboBox.this.getWidth.max(super.getPreferredSize.width), super.getPreferredSize.height)
   }
 
   private var itemListeners = Set[ItemListener]()
