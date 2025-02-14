@@ -18,7 +18,7 @@ import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, Inpu
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
 import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
-import org.nlogo.swing.{ MenuItem, PopupMenu, Utils }
+import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ AbstractWidgetPanel, ButtonWidget, Events => WindowEvents, GUIWorkspace, OutputWidget,
                           Widget, WidgetContainer, WidgetRegistry, DummyChooserWidget, DummyInputBoxWidget,
@@ -35,17 +35,12 @@ object InteractMode {
   case object INTERACT extends InteractMode
   case object SELECT extends InteractMode
   case object ADD extends InteractMode {
+    // the shadow widget functions as the cursor when adding a widget, so this removes the default cursor (Isaac B 2/14/25)
     override def cursor =
-      Toolkit.getDefaultToolkit.createCustomCursor(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), null)
+      Toolkit.getDefaultToolkit.createCustomCursor(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB),
+                                                   new Point(0, 0), null)
   }
-
-  case object EDIT extends InteractMode {
-    override def cursor =
-      Toolkit.getDefaultToolkit.createCustomCursor(Utils.iconScaledWithColor("/images/edit-cursor.png", 32, 32,
-                                                                             InterfaceColors.toolbarImage).getImage,
-                                                   new Point(0, 16), I18N.gui.get("tabs.run.widget.editWidget"))
-  }
-
+  case object EDIT extends InteractMode
   case object DELETE extends InteractMode
 }
 
