@@ -10,7 +10,8 @@ import org.nlogo.theme.ThemeSync
 class LabeledComponent(text: String, component: JComponent with ThemeSync)
   extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
 
-  private val label = new JLabel(text)
+  // if this isn't lazy, setForeground gets called too early and throws an exception (Isaac B 2/15/25)
+  private lazy val label = new JLabel(text)
 
   locally {
     val c = new GridBagConstraints
