@@ -35,7 +35,7 @@ You should have received a copy of the GNU General Public License along with thi
 
 ==
 
-Commercial licenses are also available. To inquire about commercial licenses, please contact Uri Wilensky at uri@northwestern.edu.
+Commercial licenses are also available. To inquire about commercial licenses, please contact netlogo-commercial-admin@ccl.northwestern.edu.
 
 ===
 
