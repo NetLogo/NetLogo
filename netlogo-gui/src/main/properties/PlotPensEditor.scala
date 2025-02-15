@@ -2,7 +2,7 @@
 
 package org.nlogo.properties
 
-import java.awt.{ BorderLayout, Color, Dimension, Font, GridBagConstraints }
+import java.awt.{ BorderLayout, Color, Cursor, Dimension, Font, GridBagConstraints }
 import javax.swing.{ AbstractCellEditor, GroupLayout, JLabel, JPanel, JTable, LayoutStyle }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 import javax.swing.table.{ DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, TableCellRenderer }
@@ -336,6 +336,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     class CodeCellRenderer extends TableCellRenderer {
       val font = new Font(platformMonospacedFont, Font.PLAIN, 12)
       val editor = new EditorField(30, font, true, colorizer)
+      setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR))
       def getTableCellRendererComponent(table: JTable, value: Object,
                                         isSelected: Boolean, hasFocus: Boolean, row: Int, col: Int) = {
         // This null check is from strange behavior in java
