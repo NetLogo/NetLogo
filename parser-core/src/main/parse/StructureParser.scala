@@ -194,7 +194,11 @@ class StructureParser(
           else oldResults,
           subprogram)
       case Left((msg, token)) =>
-        exception(msg, token)
+        if (token.tpe == TokenType.Keyword) {
+          exception(s"""Keyword "${token.text}" cannot be used in this context.""", token)
+        } else {
+          exception(msg, token)
+        }
     }
 
 }
