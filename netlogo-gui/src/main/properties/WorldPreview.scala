@@ -2,95 +2,65 @@
 
 package org.nlogo.properties
 
-import java.awt.{ Color, BorderLayout, Dimension, Font, Graphics, Graphics2D, GridBagConstraints, GridBagLayout }
+import java.awt.{ Color, BorderLayout, Dimension, Font, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import javax.swing.{ JLabel, JPanel }
 
+import org.nlogo.awt.Fonts
 import org.nlogo.swing.{ Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 
-class WorldPreview(width: Int, height: Int) extends JPanel(new BorderLayout(0, 0)) with Transparent {
+class WorldPreview(width: Int, height: Int) extends JPanel(new BorderLayout) with Transparent {
   private var wrapX, wrapY = false
   private var minx, maxx, miny, maxy = 0
+
+  private var error = false
+
   private val shapeLabel = new JLabel("Torus") {
     setForeground(InterfaceColors.dialogText)
   }
-  private val worldPanel = new JPanel(new GridBagLayout) with Transparent {
-    setSize(width, height)
-  }
 
-  private val theCanvas = new WorldPreviewCanvas(width - 10, height - 10)
-  private val topY = new WorldPreviewWrapCanvas(
-    width - 10, 5, WorldPreviewWrapCanvas.WRAP_Y)
-  private val bottomY = new WorldPreviewWrapCanvas(
-    width - 10, 5, WorldPreviewWrapCanvas.WRAP_Y)
-  private val leftX = new WorldPreviewWrapCanvas(
-    5, height - 10, WorldPreviewWrapCanvas.WRAP_X)
-  private val rightX = new WorldPreviewWrapCanvas(
-    5, height - 10, WorldPreviewWrapCanvas.WRAP_X)
+  add(new PreviewPanel, BorderLayout.NORTH)
+  add(shapeLabel, BorderLayout.SOUTH)
 
-  locally {
-    val c = new GridBagConstraints
+  setVisible(true)
 
-    c.gridy = 0
+  // this is a bit ugly as there's no static checking that these field names
+  // match the real names in the code - ST 3/19/12
 
-    worldPanel.add(new BlankAreaCanvas(5, 5), c)
-    worldPanel.add(topY, c)
-    worldPanel.add(new BlankAreaCanvas(5, 5), c)
-
-    c.gridy = 1
-
-    worldPanel.add(rightX, c)
-    worldPanel.add(theCanvas, c)
-    worldPanel.add(leftX, c)
-
-    c.weighty = 1.0
-    c.anchor = GridBagConstraints.NORTH
-    c.gridy = 2
-
-    worldPanel.add(new BlankAreaCanvas(5, 5), c)
-    worldPanel.add(bottomY, c)
-    worldPanel.add(new BlankAreaCanvas(5, 5), c)
-
-    add(worldPanel, BorderLayout.NORTH)
-    add(shapeLabel, BorderLayout.CENTER)
-
-    setSize(width, height + 10)
-    setVisible(true)
-  }
-
-  def update(field: String, opt: Option[Any]): Unit = {
-    if(!opt.isDefined) return
-    val value = opt.get
-    theCanvas.update(field, value)
-    topY.update(field, value)
-    bottomY.update(field, value)
-    leftX.update(field, value)
-    rightX.update(field, value)
-
-    def asBoolean = value.asInstanceOf[java.lang.Boolean].booleanValue
-    def asInt = value.asInstanceOf[java.lang.Integer].intValue
-
-    // this is a bit ugly as there's no static checking that these field names
-    // match the real names in the code - ST 3/19/12
-    if (field == "wrappingX") {
-      wrapX = asBoolean
-      updateLabel()
-    } else if (field == "wrappingY") {
-      wrapY = asBoolean
-      updateLabel()
-    } else if (field == "minPxcor") {
-      minx = asInt
-      updateLabel()
+  def updateInt(field: String, value: Int): Unit = {
+    if (field == "minPxcor") {
+      minx = value
     } else if (field == "maxPxcor") {
-      maxx = asInt
-      updateLabel()
+      maxx = value
     } else if (field == "minPycor") {
-      miny = asInt
-      updateLabel()
+      miny = value
     } else if (field == "maxPycor") {
-      maxy = asInt
-      updateLabel()
+      maxy = value
     }
+
+    error = false
+
+    updateLabel()
+    repaint()
+  }
+
+  def updateBoolean(field: String, value: Boolean): Unit = {
+    if (field == "wrappingX") {
+      wrapX = value
+    } else if (field == "wrappingY") {
+      wrapY = value
+    }
+
+    error = false
+
+    updateLabel()
+    repaint()
+  }
+
+  def paintError(): Unit = {
+    error = true
+
+    repaint()
   }
 
   private def updateLabel(): Unit = {
@@ -103,205 +73,166 @@ class WorldPreview(width: Int, height: Int) extends JPanel(new BorderLayout(0, 0
     shapeLabel.setText(s"$text: ${maxx - minx + 1} x ${maxy - miny + 1}")
   }
 
-  private class BlankAreaCanvas(w: Int, h: Int) extends JPanel {
-    setBackground(Color.BLACK)
+  private class PreviewPanel extends JPanel(new GridBagLayout) {
+    private val topLeft = new JLabel
+    private val topRight = new JLabel
+    private val bottomLeft = new JLabel
+    private val bottomRight = new JLabel
+    private val errorLabel = new JLabel(
+      "<html>Invalid world dimensions. The origin (0, 0) must be inside the dimensions of the world.</html>")
 
-    override def getPreferredSize: Dimension =
-      new Dimension(w, h)
-  }
+    private val font = new Font(Fonts.platformMonospacedFont, Font.PLAIN, 10)
 
-  private class WorldPreviewCanvas(width: Int, height: Int) extends JPanel {
-    val TO_LEFT, TO_BOTTOM = -1
-    val TO_RIGHT, TO_TOP = 1
-    val AT_ORIGIN = 0
-    val PAD = 5
+    locally {
+      val c = new GridBagConstraints
 
-    private var minPxcor, maxPxcor, minPycor, maxPycor = 0
-    private var xOrigin, yOrigin = 0
+      c.gridx = 0
+      c.gridy = 0
+      c.anchor = GridBagConstraints.NORTHWEST
+      c.weightx = 1
+      c.weighty = 1
+      c.insets = new Insets(10, 10, 10, 10)
 
-    private val monoFont = org.nlogo.awt.Fonts.platformMonospacedFont
+      add(topLeft, c)
 
-    setBackground(Color.BLACK)
+      c.gridx = 1
+      c.anchor = GridBagConstraints.NORTHEAST
+
+      add(topRight, c)
+
+      c.gridx = 0
+      c.gridy = 1
+      c.anchor = GridBagConstraints.SOUTHWEST
+
+      add(bottomLeft, c)
+
+      c.gridx = 1
+      c.anchor = GridBagConstraints.SOUTHEAST
+
+      add(bottomRight, c)
+
+      c.gridx = 0
+      c.gridy = 0
+      c.gridwidth = 2
+      c.gridheight = 2
+      c.anchor = GridBagConstraints.CENTER
+      c.fill = GridBagConstraints.BOTH
+
+      add(errorLabel, c)
+
+      topLeft.setForeground(Color.WHITE)
+      topRight.setForeground(Color.WHITE)
+      bottomLeft.setForeground(Color.WHITE)
+      bottomRight.setForeground(Color.WHITE)
+      errorLabel.setForeground(Color.WHITE)
+
+      topLeft.setFont(font)
+      topRight.setFont(font)
+      bottomLeft.setFont(font)
+      bottomRight.setFont(font)
+      errorLabel.setFont(font)
+    }
 
     override def getPreferredSize: Dimension =
       new Dimension(width, height)
 
-    def update(field: String, value: Any): Unit = {
-      def asInt = value.asInstanceOf[java.lang.Integer].intValue
-      field match {
-        case "minPxcor" => minPxcor = asInt
-        case "maxPxcor" => maxPxcor = asInt
-        case "minPycor" => minPycor = asInt
-        case "maxPycor" => maxPycor = asInt
-        case _ => return
-      }
-      repaint()
-    }
-
     override def paintComponent(g: Graphics): Unit = {
-      super.paintComponent(g)
       val g2d = Utils.initGraphics2D(g)
-      if (minPxcor > 0 || maxPxcor < 0 || minPycor > 0 || maxPycor < 0) {
-        paintError(g2d, "Invalid world dimensions. The origin (0,0) must be inside the dimensions of the world.")
-      } else {
-        xOrigin =
-          ((if(maxPxcor == minPxcor) (width / 2.0).toInt
-            else (((width.toDouble)/((maxPxcor - minPxcor).toDouble)) * (-minPxcor)).toInt)
-           max PAD
-           min (width - PAD))
-        yOrigin =
-          ((if(maxPycor == minPycor) (height / 2.0).toInt
-            else (((height.toDouble)/((maxPycor - minPycor).toDouble)) * maxPycor).toInt)
-           max PAD
-           min (height - PAD))
-        paintCorners(g2d, 2, PAD, Color.WHITE, Color.WHITE)
-        paintOrigin(g2d, PAD)
-        g2d.setColor(Color.WHITE)
-        g2d.drawRect(0, 0, width - 1, height - 1)
-      }
-    }
 
-    private def paintError(g2d: Graphics2D, error: String): Unit = {
-      g2d.setFont(new Font(monoFont, Font.PLAIN, 12))
-      val fm = g2d.getFontMetrics
-      g2d.setColor(Color.GRAY)
-      // draw error
-      val xTextOff = ((fm.getStringBounds(error, g2d).getWidth()) / -2).toInt
-      val yTextOff = ((fm.getStringBounds(error, g2d).getHeight()) / -2).toInt
-      g2d.drawString(error, width / 2 + xTextOff, height / 2 + yTextOff)
-    }
+      // basic frame
 
-    def paintOrigin(g2d: Graphics2D, pad: Int): Unit = {
-      g2d.setColor(Color.RED)
-      g2d.fillOval(xOrigin - 4, yOrigin - 4, 8, 8)
-      paintOriginLabel(g2d, xOrigin, yOrigin, 5, AT_ORIGIN, AT_ORIGIN)
-    }
+      g2d.setColor(Color.BLACK)
+      g2d.fillRect(0, 0, getWidth, getHeight)
 
-    def paintOriginLabel(g2d: Graphics2D, x: Int, y: Int, radius: Int,
-                         txtHorizOrient: Int, txtVertOrient: Int): Unit = {
-      g2d.setFont(new Font(monoFont, Font.PLAIN, 10))
-      val fm = g2d.getFontMetrics
-
-      //Draw Cross
       g2d.setColor(Color.WHITE)
-      g2d.drawLine(x - radius, y, x + radius, y)
-      g2d.drawLine(x, y - radius, x, y + radius)
+      g2d.drawRect(5, 5, getWidth - 11, getHeight - 11)
 
-      //Draw Label
-      val label = "(0,0)"
-      val labelWidth = fm.getStringBounds(label, g2d).getWidth.toInt
-      val xTextOff =
-        if (x + 8 + labelWidth > width) //will label be off the edge of the preview
-          -(8 + labelWidth) //if so put on left
-        else 8 //keep on right
-      val yTextOff = -2 + (fm.getStringBounds(label, g2d).getHeight() / 2).toInt
-      g2d.drawString(label, x + xTextOff, y + yTextOff)
-    }
+      // origin and coordinates
 
-    def paintCorners(g: Graphics2D, radius: Int, pad: Int,
-                     center: Color, border: Color): Unit = {
-      val r = radius max 1
-      paintDot(g, PAD,       PAD,        r, TO_LEFT,  TO_TOP,    center, border)
-      paintDot(g, width-PAD, PAD,        r, TO_RIGHT, TO_TOP,    center, border)
-      paintDot(g, width-PAD, height-PAD, r, TO_RIGHT, TO_BOTTOM, center, border)
-      paintDot(g, PAD,       height-PAD, r, TO_LEFT,  TO_BOTTOM, center, border)
-    }
+      if (error) {
+        errorLabel.setVisible(true)
 
-    private def paintDot(g2d: Graphics2D, x: Int, y: Int, radius: Int, txtHorizOrient: Int, txtVertOrient: Int,
-                         center: Color, border: Color): Unit = {
-      if (xOrigin == x && yOrigin == y) return
-      g2d.setFont(new Font(monoFont, Font.PLAIN, 10))
-      val fm = g2d.getFontMetrics
-      val diameter = radius * 2
-      g2d.setColor(center)
-      g2d.fillOval(x - radius, y - radius, diameter, diameter)
-      //Draw Label
-      var xTextOff: Int = 0
-      var yTextOff: Int = 0
-      var label: String = "(0,0)"
-      if (txtHorizOrient == TO_LEFT && txtVertOrient == TO_TOP){
-        label = s"($minPxcor, $maxPycor)"
-        xTextOff = 4
-        yTextOff = fm.getStringBounds(label, g2d).getHeight.toInt
-      } else if (txtHorizOrient == TO_RIGHT && txtVertOrient == TO_TOP) {
-        label = s"($maxPxcor, $maxPycor)"
-        xTextOff = -4 - fm.getStringBounds(label, g2d).getWidth.toInt
-        yTextOff = fm.getStringBounds(label, g2d).getHeight.toInt
-      } else if (txtHorizOrient == TO_RIGHT && txtVertOrient == TO_BOTTOM) {
-        label = s"($maxPxcor, $minPycor)"
-        xTextOff = -4 - fm.getStringBounds(label, g2d).getWidth.toInt
-        yTextOff = -4
-      } else if (txtHorizOrient == TO_LEFT && txtVertOrient == TO_BOTTOM) {
-        label = s"($minPxcor, $minPycor)"
-        xTextOff = 4
-        yTextOff = -4
+        topLeft.setVisible(false)
+        topRight.setVisible(false)
+        bottomLeft.setVisible(false)
+        bottomRight.setVisible(false)
       } else {
-        xTextOff = 13
-        yTextOff = -3 + (fm.getStringBounds(label, g2d).getHeight() / 2).toInt
-      }
-      g2d.drawString(label, x + xTextOff, y + yTextOff)
-    }
-  }
+        errorLabel.setVisible(false)
 
-  private object WorldPreviewWrapCanvas {
-    val WRAP_X = 0
-    val WRAP_Y = 1
-  }
+        val x = 10 + ((getWidth - 20) * -minx.toFloat / (maxx - minx)).toInt
+        val y = 10 + ((getHeight - 20) * maxy.toFloat / (maxy - miny)).toInt
 
-  private class WorldPreviewWrapCanvas(width: Int, height: Int, wrapDim: Int) extends JPanel {
-    setBackground(Color.black)
+        g2d.setColor(Color.RED)
+        g2d.fillOval(x - 4, y - 4, 9, 9)
 
-    var wrapX, wrapY = false
+        g2d.setColor(Color.WHITE)
+        g2d.drawLine(x - 5, y, x + 5, y)
+        g2d.drawLine(x, y - 5, x, y + 5)
 
-    override def getPreferredSize: Dimension =
-      new Dimension(width, height)
+        g2d.setFont(font)
 
-    def update(field: String, value: Any): Unit = {
-      if (field != null) {
-        if (field == "wrappingX") {
-          wrapX = value.asInstanceOf[java.lang.Boolean].booleanValue
-        } else if (field == "wrappingY") {
-          wrapY = value.asInstanceOf[java.lang.Boolean].booleanValue
+        val metrics = g2d.getFontMetrics
+        val width = metrics.stringWidth("0, 0)")
+        val height = metrics.getHeight
+
+        if (x + 8 + width > getWidth - 20) {
+          g2d.drawString("(0, 0)", x - width - 8, y + height / 2)
+        } else {
+          g2d.drawString("(0, 0)", x + 8, y + height / 2)
         }
+
+        topLeft.setVisible(x > topLeft.getX + topLeft.getWidth + 8 || y > topLeft.getY + topLeft.getHeight + 8)
+        topRight.setVisible(x < topRight.getX - width - 8 || y > topRight.getY + topRight.getHeight + 8)
+        bottomLeft.setVisible(x > bottomLeft.getX + bottomLeft.getWidth + 8 || y < bottomLeft.getY - height - 8)
+        bottomRight.setVisible(x < getWidth - 10 - bottomRight.getWidth - 8 ||
+                               y < getHeight - 10 - bottomRight.getHeight - height - 8)
+
+        topLeft.setText(s"($minx, $maxy)")
+        topRight.setText(s"($maxx, $maxy)")
+        bottomLeft.setText(s"($minx, $miny)")
+        bottomRight.setText(s"($maxx, $miny)")
       }
 
-      repaint()
-    }
+      // horizontal wrap
 
-    override def paintComponent(g: Graphics): Unit = {
-      super.paintComponent(g)
-
-      val g2d = Utils.initGraphics2D(g)
-
-      if (wrapDim == WorldPreviewWrapCanvas.WRAP_X)
-        drawWrapXMonitor(g2d)
-      if (wrapDim == WorldPreviewWrapCanvas.WRAP_Y)
-        drawWrapYMonitor(g2d)
-    }
-
-    def drawWrapXMonitor(g2d: Graphics2D): Unit = {
       if (wrapX) {
-        g2d.setColor(new Color(33, 204, 0))
-        g2d.fillRect(width / 4, 0, width / 2, height)
-        g2d.setColor(Color.black)
-        for (i <- 0 to 16)
-          g2d.fillRect(width / 4, (i * height) / 16, width / 2, 2)
-      } else {
-        g2d.setColor(Color.RED)
-        g2d.fillRect(width / 4, 0, width / 2, height)
-      }
-    }
+        val chunkSize = (getHeight - 10) / 16.0
 
-    def drawWrapYMonitor(g2d: Graphics2D): Unit = {
-      if (wrapY) {
         g2d.setColor(new Color(33, 204, 0))
-        g2d.fillRect(0, height / 4, width, height / 2)
+        g2d.fillRect(1, 5, 3, getHeight - 10)
+        g2d.fillRect(getWidth - 4, 5, 3, getHeight - 10)
+
         g2d.setColor(Color.BLACK)
-        for (i <- 0 to 16)
-          g2d.fillRect((i * width) / 16, height / 4, 2, height / 2)
+
+        for (i <- 1 to 15) {
+          g2d.fillRect(1, 4 + (i * chunkSize).toInt, 3, 2)
+          g2d.fillRect(getWidth - 4, 4 + (i * chunkSize).toInt, 3, 2)
+        }
       } else {
         g2d.setColor(Color.RED)
-        g2d.fillRect(0, height / 4, width, height / 2)
+        g2d.fillRect(1, 5, 3, getHeight - 10)
+        g2d.fillRect(getWidth - 4, 5, 3, getHeight - 10)
+      }
+
+      // vertical wrap
+
+      if (wrapY) {
+        val chunkSize = (getWidth - 10) / 16.0
+
+        g2d.setColor(new Color(33, 204, 0))
+        g2d.fillRect(5, 1, getWidth - 10, 3)
+        g2d.fillRect(5, getHeight - 4, getWidth - 10, 3)
+
+        g2d.setColor(Color.BLACK)
+
+        for (i <- 1 to 15) {
+          g2d.fillRect(4 + (i * chunkSize).toInt, 1, 2, 3)
+          g2d.fillRect(4 + (i * chunkSize).toInt, getHeight - 4, 2, 3)
+        }
+      } else {
+        g2d.setColor(Color.RED)
+        g2d.fillRect(5, 1, getWidth - 10, 3)
+        g2d.fillRect(5, getHeight - 4, getWidth - 10, 3)
       }
     }
   }

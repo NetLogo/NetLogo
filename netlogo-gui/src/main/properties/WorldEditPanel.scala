@@ -113,19 +113,29 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
     buttons
   }
 
-  override def previewChanged(field: String, value: Option[Any]) {
-    previewPanel.update(field, value)
-    if(!value.isDefined) return
-    def v = value.get.asInstanceOf[Int]
-    positionChoices.getSelectedItem match {
-      case Some(item) if item.toString == I18N.gui("origin.location.center") && editors.nonEmpty =>
-        if (field == "maxPxcor") {
-          editors(0).set(0 - v)
-        } else if (field == "maxPycor") {
-          editors(2).set(0 - v)
-        } else if (field == "maxPzcor") {
-          editors(4).set(0 - v)
+  override def previewChanged(field: String, value: Option[Any]): Unit = {
+    value match {
+      case Some(i: Int) =>
+        previewPanel.updateInt(field, i)
+
+        positionChoices.getSelectedItem match {
+          case Some(item) if item.toString == I18N.gui("origin.location.center") && editors.nonEmpty =>
+            if (field == "maxPxcor") {
+              editors(0).set(0 - i)
+            } else if (field == "maxPycor") {
+              editors(2).set(0 - i)
+            } else if (field == "maxPzcor") {
+              editors(4).set(0 - i)
+            }
+
+          case _ =>
         }
+
+      case Some(b: Boolean) =>
+        previewPanel.updateBoolean(field, b)
+
+      case None =>
+        previewPanel.paintError()
 
       case _ =>
     }
