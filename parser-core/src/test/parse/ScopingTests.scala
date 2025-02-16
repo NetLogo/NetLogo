@@ -54,7 +54,7 @@ class ScopingTests extends AnyFunSuite with BaseParserTest {
       "There is already a procedure called A")
   }
   test("LetSameNameAsReporterProcedure2") {
-    duplicateName("to b let a 5 end  to-report a end",
+    duplicateName("to b let a 5 end  to-report a report 10 end",
       "There is already a procedure called A")
   }
   test("LetNameSameAsEnclosingCommandProcedureName") {

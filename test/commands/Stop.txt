@@ -37,11 +37,11 @@ StopFromForeach3
   glob1 => 2
 
 StopFromForeachInsideReporterProcedure
-  to-report foo foreach [1 2 3] [ stop ] end
+  to-report foo foreach [1 2 3] [ stop ] report 10 end
   O> __ignore foo => ERROR STOP is not allowed inside TO-REPORT.
 
 StopFromNestedForeachInsideReporterProcedure
-  to-report foo foreach [1 2] [ foreach [3 4] [ stop ] ] end
+  to-report foo foreach [1 2] [ foreach [3 4] [ stop ] ] report 10 end
   O> __ignore foo => ERROR STOP is not allowed inside TO-REPORT.
 
 ReportFromNestedAsk
@@ -91,12 +91,6 @@ StopInsideRunOfCommandLambda
   to test let x [[] -> set glob1 1 stop ] run x set glob1 2 end
   O> test set glob1 glob1 * 10
   glob1 => 10
-
-FallOffEndOfReporterProcedure
-  to-report foo1 report 0 end
-  to-report foo2 end
-  foo1 => 0
-  foo2 => ERROR Reached end of reporter procedure without REPORT being called.
 
 Bug86-1
   to setup ca go1 go2 end

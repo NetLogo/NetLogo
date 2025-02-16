@@ -137,7 +137,7 @@ LetSameNameAsCommandProcedure1
   O> let a 5 => COMPILER ERROR There is already a procedure called A
 
 LetSameNameAsReporterProcedure1
-  to-report a end
+  to-report a report 10 end
   O> let a 5 => COMPILER ERROR There is already a procedure called A
 
 LetSameNameAsPrimitiveCommand
