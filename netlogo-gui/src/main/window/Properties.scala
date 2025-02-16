@@ -75,7 +75,7 @@ object Properties {
     P("tickCounterLabel", P.String, I18N.gui("viewSettings.tickCounterLabel"))
   )
   val view2D = Seq(
-    P("patchSize", P.Double,
+    P("patchSize", P.StrictlyPositiveDouble,
       I18N.gui("viewSettings.2D.patchSize"), I18N.gui("viewSettings.2D.patchSize.info"),
       gridWidth = RELATIVE),
     P("fontSize", P.Integer,
