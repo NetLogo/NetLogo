@@ -157,13 +157,17 @@ case class EditorConfiguration(
         (KeyEvent.VK_K,          CtrlKey) -> RTextAreaEditorKit.rtaDeleteRestOfLineAction
       ).foreach { case ((key, mod), action) => editor.getInputMap().put(KeyStroke.getKeyStroke(key, mod), action)}
     }
+
+    editor.getInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, CtrlKey), new CorrectDeleteNextWordAction(editor))
   }
 
   def permanentActions: Seq[Action] = additionalActions.values.toSeq ++ menuActions
 
   def editorOnlyActions: Seq[Action] = Seq()
 
-  private class CorrectPreviousWordAction(editor: EditorArea, select: Boolean) extends TextAction("previous word") {
+  private class CorrectPreviousWordAction(editor: AbstractEditorArea, select: Boolean)
+    extends TextAction("previous word") {
+
     def actionPerformed(e: ActionEvent): Unit = {
       if (editor.getCaretPosition > 0) {
         if (editor.getText()(editor.getCaretPosition - 1).isLetterOrDigit) {
@@ -183,7 +187,7 @@ case class EditorConfiguration(
     }
   }
 
-  private class CorrectNextWordAction(editor: EditorArea, select: Boolean) extends TextAction("next word") {
+  private class CorrectNextWordAction(editor: AbstractEditorArea, select: Boolean) extends TextAction("next word") {
     def actionPerformed(e: ActionEvent): Unit = {
       if (editor.getCaretPosition < editor.getText().size) {
         if (editor.getText()(editor.getCaretPosition).isLetterOrDigit) {
@@ -204,14 +208,14 @@ case class EditorConfiguration(
     }
   }
 
-  private class CorrectSelectWordAction(editor: EditorArea) extends TextAction("select word") {
+  private class CorrectSelectWordAction(editor: AbstractEditorArea) extends TextAction("select word") {
     def actionPerformed(e: ActionEvent): Unit = {
       new CorrectPreviousWordAction(editor, false).actionPerformed(e)
       new CorrectNextWordAction(editor, true).actionPerformed(e)
     }
   }
 
-  private class CorrectDeletePrevWordAction(editor: EditorArea) extends TextAction("delete previous word") {
+  private class CorrectDeletePrevWordAction(editor: AbstractEditorArea) extends TextAction("delete previous word") {
     def actionPerformed(e: ActionEvent): Unit = {
       new CorrectPreviousWordAction(editor, true).actionPerformed(e)
 
@@ -219,7 +223,7 @@ case class EditorConfiguration(
     }
   }
 
-  private class CorrectDeleteNextWordAction(editor: EditorArea) extends TextAction("delete next word") {
+  private class CorrectDeleteNextWordAction(editor: AbstractEditorArea) extends TextAction("delete next word") {
     def actionPerformed(e: ActionEvent): Unit = {
       new CorrectNextWordAction(editor, true).actionPerformed(e)
 
