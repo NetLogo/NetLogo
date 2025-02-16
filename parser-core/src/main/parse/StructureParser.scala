@@ -188,6 +188,7 @@ class StructureParser(
         StructureChecker.rejectDuplicateNames(declarations,
           StructureParser.usedNames(
             oldResults.program, oldResults.procedures))
+        StructureChecker.rejectMissingReport(declarations)
         StructureConverter.convert(declarations, displayName,
           if (subprogram)
             StructureResults(program = oldResults.program)
