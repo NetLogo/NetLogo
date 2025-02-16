@@ -107,7 +107,7 @@ object StructureChecker {
     declarations.foreach(_ match {
       case Procedure(_, true, _, tokens) =>
         if (!tokens.exists(_ match {
-          case Token("report", TokenType.Keyword, "REPORT") => true
+          case Token("report", TokenType.Ident, "REPORT") => true
           case _ => false
         })) {
           exception("Reporter procedures must report a value", tokens(0))
