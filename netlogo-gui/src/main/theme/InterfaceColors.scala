@@ -480,6 +480,8 @@ object InterfaceColors {
 
   def checkFilled = new Color(0, 173, 90)
 
+  def errorLabelText = Color.WHITE
+
   def errorLabelBackground = LightRed
 
   def errorHighlight = LightRed

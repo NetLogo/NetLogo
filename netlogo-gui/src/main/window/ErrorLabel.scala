@@ -2,7 +2,6 @@
 
 package org.nlogo.window
 
-import java.awt.Color
 import javax.swing.JLabel
 import javax.swing.border.EmptyBorder
 
@@ -15,9 +14,9 @@ class ErrorLabel extends JLabel {
 
   locally {
     setOpaque(true)
-    setForeground(Color.WHITE)
+    setForeground(InterfaceColors.errorLabelText)
     setBackground(InterfaceColors.errorLabelBackground)
-    setIcon(Utils.icon("/images/error.png"))
+    setIcon(Utils.iconScaledWithColor("/images/error.png", 15, 15, InterfaceColors.errorLabelText))
     setBorder(new EmptyBorder(6, 6, 6, 6))
     setVisible(compilerError.isDefined)
   }
@@ -26,7 +25,7 @@ class ErrorLabel extends JLabel {
     compilerError = Option(errorOrNull)
     setVisible(compilerError.isDefined)
     val err = compilerError.map(_.getMessage).getOrElse("")
-    setText("<html>" + encodeHTML(err) + "</html>")
+    setText("<html><b>" + encodeHTML(err) + "</b></html>")
   }
 
   private var originalFontSize = -1
