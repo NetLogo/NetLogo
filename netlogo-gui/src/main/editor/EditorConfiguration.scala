@@ -2,13 +2,14 @@
 
 package org.nlogo.editor
 
-import java.awt.event.InputEvent.{ALT_DOWN_MASK => AltKey, CTRL_DOWN_MASK => CtrlKey, SHIFT_DOWN_MASK => ShiftKey}
-import java.awt.event.{KeyEvent, TextEvent, TextListener}
-import java.awt.{Font, GraphicsEnvironment}
-import javax.swing.text.{DefaultEditorKit, TextAction}
-import javax.swing.{Action, KeyStroke}
+import java.awt.{ Font, GraphicsEnvironment }
+import java.awt.event.{ ActionEvent, KeyEvent, TextEvent, TextListener }
+import java.awt.event.InputEvent.{ ALT_DOWN_MASK => AltKey, CTRL_DOWN_MASK => CtrlKey, SHIFT_DOWN_MASK => ShiftKey }
+import javax.swing.{ Action, KeyStroke }
+import javax.swing.text.{ DefaultEditorKit, TextAction }
 
 import org.fife.ui.rtextarea.RTextAreaEditorKit
+
 import org.nlogo.editor.KeyBinding._
 
 object EditorConfiguration {
@@ -116,6 +117,14 @@ case class EditorConfiguration(
         case e: InstallableAction => e.install(editor)
         case _ =>
       }
+
+      editor.getActionMap.put(DefaultEditorKit.previousWordAction, new CorrectPreviousWordAction(editor, false))
+      editor.getActionMap.put(DefaultEditorKit.selectionPreviousWordAction, new CorrectPreviousWordAction(editor, true))
+      editor.getActionMap.put(DefaultEditorKit.nextWordAction, new CorrectNextWordAction(editor, false))
+      editor.getActionMap.put(DefaultEditorKit.selectionNextWordAction, new CorrectNextWordAction(editor, true))
+      editor.getActionMap.put(DefaultEditorKit.selectWordAction, new CorrectSelectWordAction(editor))
+      editor.getActionMap.put(DefaultEditorKit.deletePrevWordAction, new CorrectDeletePrevWordAction(editor))
+      editor.getActionMap.put(DefaultEditorKit.deleteNextWordAction, new CorrectDeleteNextWordAction(editor))
     }
 
   def configureAdvancedEditorArea(editor: AbstractEditorArea) = {
@@ -153,4 +162,68 @@ case class EditorConfiguration(
   def permanentActions: Seq[Action] = additionalActions.values.toSeq ++ menuActions
 
   def editorOnlyActions: Seq[Action] = Seq()
+
+  private class CorrectPreviousWordAction(editor: EditorArea, select: Boolean) extends TextAction("previous word") {
+    def actionPerformed(e: ActionEvent): Unit = {
+      if (editor.getCaretPosition > 0) {
+        if (editor.getText()(editor.getCaretPosition - 1).isLetterOrDigit) {
+          while (editor.getCaretPosition > 0 && editor.getText()(editor.getCaretPosition - 1).isLetterOrDigit) {
+            if (select) {
+              editor.moveCaretPosition(editor.getCaretPosition - 1)
+            } else {
+              editor.setCaretPosition(editor.getCaretPosition - 1)
+            }
+          }
+        } else if (select) {
+          editor.moveCaretPosition(editor.getCaretPosition - 1)
+        } else {
+          editor.setCaretPosition(editor.getCaretPosition - 1)
+        }
+      }
+    }
+  }
+
+  private class CorrectNextWordAction(editor: EditorArea, select: Boolean) extends TextAction("next word") {
+    def actionPerformed(e: ActionEvent): Unit = {
+      if (editor.getCaretPosition < editor.getText().size) {
+        if (editor.getText()(editor.getCaretPosition).isLetterOrDigit) {
+          while (editor.getCaretPosition < editor.getText().size &&
+                 editor.getText()(editor.getCaretPosition).isLetterOrDigit) {
+            if (select) {
+              editor.moveCaretPosition(editor.getCaretPosition + 1)
+            } else {
+              editor.setCaretPosition(editor.getCaretPosition + 1)
+            }
+          }
+        } else if (select) {
+          editor.moveCaretPosition(editor.getCaretPosition + 1)
+        } else {
+          editor.setCaretPosition(editor.getCaretPosition + 1)
+        }
+      }
+    }
+  }
+
+  private class CorrectSelectWordAction(editor: EditorArea) extends TextAction("select word") {
+    def actionPerformed(e: ActionEvent): Unit = {
+      new CorrectPreviousWordAction(editor, false).actionPerformed(e)
+      new CorrectNextWordAction(editor, true).actionPerformed(e)
+    }
+  }
+
+  private class CorrectDeletePrevWordAction(editor: EditorArea) extends TextAction("delete previous word") {
+    def actionPerformed(e: ActionEvent): Unit = {
+      new CorrectPreviousWordAction(editor, true).actionPerformed(e)
+
+      editor.replaceSelection(null)
+    }
+  }
+
+  private class CorrectDeleteNextWordAction(editor: EditorArea) extends TextAction("delete next word") {
+    def actionPerformed(e: ActionEvent): Unit = {
+      new CorrectNextWordAction(editor, true).actionPerformed(e)
+
+      editor.replaceSelection(null)
+    }
+  }
 }
