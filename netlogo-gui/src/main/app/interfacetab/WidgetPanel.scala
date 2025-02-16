@@ -68,6 +68,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   protected var selectionRect: Rectangle = null // convert to Option?
   var widgetsBeingDragged: Seq[WidgetWrapper] = Seq()
+  private var widgetBeingResized: Option[WidgetWrapper] = None
   private var view: Widget = null // convert to Option?
 
   // if sliderEventOnReleaseOnly is true, a SliderWidget will only raise an InterfaceGlobalEvent
@@ -314,6 +315,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
     setForegroundWrapper()
   }
 
+  def resizeWidget(w: WidgetWrapper): Unit = {
+    widgetBeingResized = Option(w)
+  }
+
   def mouseMoved(e: MouseEvent): Unit = {
     interactMode match {
       case InteractMode.ADD =>
@@ -343,10 +348,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def mouseDragged(e: MouseEvent): Unit = {
     if (widgetsBeingDragged.nonEmpty) {
-      wrapperAtPoint(e.getPoint).foreach(w => {
-        e.translatePoint(-w.getX, -w.getY)
-        w.mouseDragged(e)
-      })
+      val first = widgetsBeingDragged(0)
+
+      e.translatePoint(-first.getX, -first.getY)
+
+      first.mouseDragged(e)
     } else if (NlogoMouse.hasButton1(e)) {
       startDragPoint match {
         case Some(point) =>
@@ -407,7 +413,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
           }
 
         case None =>
-          wrapperAtPoint(e.getPoint).foreach(w => {
+          widgetBeingResized.foreach(w => {
             e.translatePoint(-w.getX, -w.getY)
             w.mouseDragged(e)
           })
