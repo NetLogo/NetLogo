@@ -134,6 +134,7 @@ class StatsExporter(modelFileName: String,
       }
       case None =>
     }
+    out.close()
   }
 
   private def handleNonNumeric(entry: String, metricIndex: Int): Double = {
@@ -265,6 +266,7 @@ class StatsExporter(modelFileName: String,
         reachedRunData = true
       }
     }
+    bufferedReader.close()
     data
   }
 
