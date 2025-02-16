@@ -135,7 +135,10 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
         previewPanel.updateBoolean(field, b)
 
       case None =>
-        previewPanel.paintError()
+        if (field == "minPxcor" || field == "maxPxcor" || field == "minPycor" || field == "maxPycor" ||
+            field == "minPzcor" || field == "maxPzcor") {
+          previewPanel.setError(field)
+        }
 
       case _ =>
     }

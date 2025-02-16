@@ -13,7 +13,7 @@ class WorldPreview(width: Int, height: Int) extends JPanel(new BorderLayout) wit
   private var wrapX, wrapY = false
   private var minx, maxx, miny, maxy = 0
 
-  private var error = false
+  private var errors = Set[String]()
 
   private val shapeLabel = new JLabel("Torus") {
     setForeground(InterfaceColors.dialogText)
@@ -38,8 +38,7 @@ class WorldPreview(width: Int, height: Int) extends JPanel(new BorderLayout) wit
       maxy = value
     }
 
-    error = false
-
+    removeError(field)
     updateLabel()
     repaint()
   }
@@ -51,14 +50,18 @@ class WorldPreview(width: Int, height: Int) extends JPanel(new BorderLayout) wit
       wrapY = value
     }
 
-    error = false
-
     updateLabel()
     repaint()
   }
 
-  def paintError(): Unit = {
-    error = true
+  def setError(field: String): Unit = {
+    errors += field
+
+    repaint()
+  }
+
+  def removeError(field: String): Unit = {
+    errors -= field
 
     repaint()
   }
@@ -149,7 +152,7 @@ class WorldPreview(width: Int, height: Int) extends JPanel(new BorderLayout) wit
 
       // origin and coordinates
 
-      if (error) {
+      if (errors.nonEmpty) {
         errorLabel.setVisible(true)
 
         topLeft.setVisible(false)
