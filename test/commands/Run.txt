@@ -118,7 +118,7 @@ StringRunLetVarsDoNotEscape4
   O> foo => ERROR There is already a local variable here called A
 
 CannotReportOutOfRunString
-  to-report foo run "report 10" end
+  to-report foo run "report 10" report 10 end
   foo => ERROR REPORT can only be used inside TO-REPORT.
 
 StopInRunString

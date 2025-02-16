@@ -110,7 +110,7 @@ object StructureChecker {
           case Token("report", TokenType.Ident, "REPORT") => true
           case _ => false
         })) {
-          exception("Reporter procedures must report a value", tokens(0))
+          exception("Reporter procedures must report a value", tokens(1))
         }
 
       case _ =>

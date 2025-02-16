@@ -39,8 +39,8 @@ class AssemblerTests extends AnyFunSuite {
       test1("while [true] [die die]"))
   }
   test("assembleReporterProcedure") {
-    assertResult("_returnreport")(
-      compile("to-report", "").code.mkString(" "))
+    assertResult("_report _returnreport")(
+      compile("to-report", "report 10").code.mkString(" "))
   }
 
   // these tests are more about checking argument stuffing is working.
