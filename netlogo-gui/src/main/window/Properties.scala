@@ -26,7 +26,8 @@ object Properties {
     P("runtimeError", P.Error, I18N.gui("plot.error.runtimeError")),
     P("setupCode", P.Commands, I18N.gui("plot.setupCode"), collapsible = true, collapseByDefault = true),
     P("updateCode", P.Commands, I18N.gui("plot.updateCode"), collapsible = true, collapseByDefault = true),
-    P("editPlotPens", P.PlotPens, I18N.gui("plot.pen.plotPens"), gridWidth = REMAINDER)
+    P("editPlotPens", P.PlotPens, I18N.gui("plot.pen.plotPens"), gridWidth = REMAINDER),
+    P("oldSize", P.Boolean, I18N.gui("general.oldSize"))
   )
   val button = Seq(
     P("agentOptions", P.StringOptions, I18N.gui("button.agents"), gridWidth = RELATIVE),
@@ -39,7 +40,8 @@ object Properties {
   val chooser = Seq(
     P("nameWrapper", P.Identifier, I18N.gui("chooser.globalVar")),
     P("choicesWrapper", P.LogoListString, I18N.gui("chooser.choices"),
-      I18N.gui.get("edit.chooser.example"))
+      I18N.gui.get("edit.chooser.example")),
+    P("oldSize", P.Boolean, I18N.gui("general.oldSize"))
   )
   val slider = Seq(
     P("nameWrapper", P.Identifier, I18N.gui("slider.globalVar")),
@@ -53,20 +55,23 @@ object Properties {
       " "), // empty, so layout lines up
     P("value", P.Double, I18N.gui("slider.value"), gridWidth = RELATIVE),
     P("units", P.String, I18N.gui("slider.units")),
-    P("vertical", P.Boolean, I18N.gui("slider.vertical"))
+    P("vertical", P.Boolean, I18N.gui("slider.vertical")),
+    P("oldSize", P.Boolean, I18N.gui("general.oldSize"))
   )
   val monitor = Seq(
     P("wrapSource", P.Reporter, I18N.gui("monitor.reporter")),
     P("name", P.String, I18N.gui("monitor.name")),
     P("decimalPlaces", P.Integer, I18N.gui("monitor.decimalPlaces"), I18N.gui.get("edit.monitor.precision"), gridWidth = RELATIVE),
-    P("fontSize", P.Integer, I18N.gui("monitor.fontSize"))
+    P("fontSize", P.Integer, I18N.gui("monitor.fontSize")),
+    P("oldSize", P.Boolean, I18N.gui("general.oldSize"))
   )
   val output = Seq(
     P("fontSize", P.Integer, I18N.gui("output.fontSize"))
   )
   val input = Seq(
     P("nameWrapper", P.Identifier, I18N.gui("input.globalVar")),
-    P("typeOptions", P.InputBoxOptions, I18N.gui("input.type"), gridWidth = RELATIVE)
+    P("typeOptions", P.InputBoxOptions, I18N.gui("input.type"), gridWidth = RELATIVE),
+    P("oldSize", P.Boolean, I18N.gui("general.oldSize"))
   )
 
   // WorldViewSettings
@@ -120,15 +125,18 @@ object Properties {
   val dummyChooser = Seq(
     P("name", P.String, I18N.gui("hubnet.tag")),
     P("choicesWrapper", P.LogoListString, I18N.gui("chooser.choices"),
-      I18N.gui.get("edit.chooser.example"))
+      I18N.gui.get("edit.chooser.example")),
+    P("oldSize", P.Boolean, I18N.gui("general.oldSize"))
   )
   val dummyInput = Seq(
     P("nameWrapper", P.String, I18N.gui("hubnet.tag")),
-    P("typeOptions", P.InputBoxOptions, I18N.gui("input.type"), gridWidth = RELATIVE)
+    P("typeOptions", P.InputBoxOptions, I18N.gui("input.type"), gridWidth = RELATIVE),
+    P("oldSize", P.Boolean, I18N.gui("general.oldSize"))
   )
   val dummyMonitor = Seq(
     P("name", P.String, I18N.gui("hubnet.tag")),
-    P("decimalPlaces", P.Integer, I18N.gui.get("edit.monitor.decimalPlaces"), gridWidth = RELATIVE)
+    P("decimalPlaces", P.Integer, I18N.gui.get("edit.monitor.decimalPlaces"), gridWidth = RELATIVE),
+    P("oldSize", P.Boolean, I18N.gui("general.oldSize"))
   )
   val dummyPlot = Seq(
     P("nameOptions", P.PlotOptions, I18N.gui("plot.name")),
@@ -139,7 +147,8 @@ object Properties {
     P("defaultYMin", P.Double, I18N.gui("plot.ymin"), gridWidth = RELATIVE),
     P("defaultYMax", P.Double, I18N.gui("plot.ymax")),
     P("defaultAutoPlotOn", P.Boolean, I18N.gui("plot.autoScale")),
-    P("showLegend", P.Boolean, I18N.gui("plot.showLegend"))
+    P("showLegend", P.Boolean, I18N.gui("plot.showLegend")),
+    P("oldSize", P.Boolean, I18N.gui("general.oldSize"))
   )
   val dummySlider = Seq(
     P("name", P.String, I18N.gui("hubnet.tag")),
@@ -148,7 +157,8 @@ object Properties {
     P("max", P.Double, I18N.gui("slider.maximum")),
     P("value", P.Double, I18N.gui("slider.value"), gridWidth = RELATIVE),
     P("units", P.String, I18N.gui("slider.units")),
-    P("vertical", P.Boolean, I18N.gui("slider.vertical"))
+    P("vertical", P.Boolean, I18N.gui("slider.vertical")),
+    P("oldSize", P.Boolean, I18N.gui("general.oldSize"))
   )
   val dummyView = Seq(
     P("width", P.Integer, I18N.gui("hubnet.view.width")),

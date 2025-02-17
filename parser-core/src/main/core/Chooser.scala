@@ -42,6 +42,7 @@ case class Chooser(
   variable: Option[String],
   x:  Int = 0, y:    Int = 0,
   width: Int = 0, height: Int = 0,
+  oldSize: Boolean = false,
   display: Option[String] = None,
   choices: List[Chooseable] = Nil,
   currentChoice: Int = 0)

@@ -21,7 +21,7 @@ object WidgetInfo {
   val switch  = WidgetInfo("switch", "switch.png", () => CoreSwitch(None))
   val chooser = WidgetInfo("chooser", "chooser.png", () => CoreChooser(None))
   val input   = WidgetInfo("input", "input.png", () => CoreInputBox(None))
-  val monitor = WidgetInfo("monitor", "monitor.png", () => CoreMonitor(None, 0, 0, 0, 0, None, 10))
+  val monitor = WidgetInfo("monitor", "monitor.png", () => CoreMonitor(None, 0, 0, 0, 0, false, None, 10))
   val plot    = WidgetInfo("plot", "plot.png", () => CorePlot(None))
   val output  = WidgetInfo("output", "output.png", () => CoreOutput(0, 0, 0, 0, 13))
   val note    = WidgetInfo("note", "note.png", () => CoreTextBox(None, fontSize = 11))

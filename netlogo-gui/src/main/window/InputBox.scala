@@ -225,6 +225,13 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     this.name(name, false)
   }
 
+  protected var _oldSize = false
+
+  def oldSize: Boolean = _oldSize
+  def oldSize_=(value: Boolean): Unit = {
+    _oldSize = value
+  }
+
   protected var editing = false
   protected def stopEdit(): Unit = {
     editing = false
@@ -250,7 +257,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     c.weightx = 1
     c.anchor = GridBagConstraints.NORTHWEST
     c.insets =
-      if (preserveWidgetSizes) {
+      if (_oldSize) {
         new Insets(3, 6, 6, 6)
       } else {
         new Insets(6, 12, 6, 12)
@@ -262,7 +269,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     c.weightx = 0
     c.anchor = GridBagConstraints.EAST
     c.insets =
-      if (preserveWidgetSizes) {
+      if (_oldSize) {
         new Insets(3, 0, 6, 6)
       } else {
         new Insets(6, 0, 6, 12)
@@ -278,7 +285,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     c.fill = GridBagConstraints.BOTH
     c.anchor = GridBagConstraints.WEST
     c.insets =
-      if (preserveWidgetSizes) {
+      if (_oldSize) {
         new Insets(0, 6, 6, 6)
       } else {
         new Insets(0, 12, 6, 12)
@@ -439,7 +446,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   }
 
   override def getMinimumSize = {
-    if (preserveWidgetSizes) {
+    if (_oldSize) {
       new Dimension(MinWidth, MinHeight)
     } else {
       new Dimension(100, 60)
@@ -447,7 +454,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   }
 
   override def getPreferredSize = {
-    if (preserveWidgetSizes) {
+    if (_oldSize) {
       val result = super.getPreferredSize
       val insets = getInsets
       // add 4 because apparently we need a few extra pixels to make sure
@@ -489,6 +496,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       case e@(_:CompilerException|_:ValueConstraint.Violation|_:LogoException) =>
         setValue(model.boxedValue.default)
     }
+    oldSize = model.oldSize
     setSize(model.width, model.height)
     this
   }
@@ -498,6 +506,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     val boxedValue = inputType.boxValue(text)
     CoreInputBox(
       x          = b.x, y = b.y, width = b.width, height = b.height,
+      oldSize = _oldSize,
       variable   = name.potentiallyEmptyStringToOption,
       boxedValue = boxedValue)
   }

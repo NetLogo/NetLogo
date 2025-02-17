@@ -152,6 +152,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
     incrementCode = inc
     value_=(v, inc.toDouble)
     defaultValue = v
+    oldSize = model.oldSize
     setSize(model.width, model.height)
     loading = false
     this
@@ -164,6 +165,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
     val b = getUnzoomedBounds
     CoreSlider(display = savedName,
       x = b.x, y = b.y, width = b.width, height = b.height,
+      oldSize = _oldSize,
       variable = savedName, min = minimumCode, max = maximumCode,
       default = value, step = incrementCode,
       units = savedUnits, direction = dir)

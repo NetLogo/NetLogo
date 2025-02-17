@@ -50,8 +50,7 @@ with MenuAction {
     Preferences.IncludedFilesMenu,
     Preferences.ProceduresMenuSortOrder,
     Preferences.FocusOnError,
-    Preferences.StartSeparateCodeTab,
-    Preferences.PreserveWidgetSizes
+    Preferences.StartSeparateCodeTab
   )
 }
 

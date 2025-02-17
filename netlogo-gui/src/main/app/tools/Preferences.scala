@@ -177,6 +177,4 @@ object Preferences {
   object FocusOnError extends BooleanPreference("focusOnError", RequiredAction.None, true) {}
 
   object StartSeparateCodeTab extends BooleanPreference("startSeparateCodeTab", RequiredAction.None, false) {}
-
-  object PreserveWidgetSizes extends BooleanPreference("preserveWidgetSizes", RequiredAction.Reload, true) {}
 }

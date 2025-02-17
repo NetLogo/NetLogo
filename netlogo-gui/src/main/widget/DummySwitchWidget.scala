@@ -31,6 +31,7 @@ class DummySwitchWidget extends Switch with Editable {
     val varName = if (_name != null && _name.trim != "") Some(_name) else None
     CoreSwitch(display = varName,
       x = b.x, y = b.y, width = b.width, height = b.height,
+      oldSize = false,
       variable = varName, on = isOn)
   }
 }

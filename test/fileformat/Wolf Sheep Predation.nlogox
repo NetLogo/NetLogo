@@ -154,16 +154,16 @@ end
 ; See Info tab for full copyright and license.]]></code>
   <widgets>
     <view x="355" maxPycor="25" updateMode="1" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-25" height="515" showTickCounter="true" patchSize="10.0" fontSize="14" wrappingAllowedY="true" width="514" tickCounterLabel="ticks" maxPxcor="25" minPxcor="-25"></view>
-    <slider x="5" step="1" y="60" height="33" min="0" direction="Horizontal" max="250" default="100.0" variable="initial-number-sheep" width="174" display="initial-number-sheep"></slider>
-    <slider x="5" step="1.0" y="196" height="33" min="0.0" direction="Horizontal" max="50.0" default="4.0" variable="sheep-gain-from-food" width="174" display="sheep-gain-from-food"></slider>
-    <slider x="5" step="1.0" y="231" height="33" min="1.0" direction="Horizontal" max="20.0" default="4.0" variable="sheep-reproduce" units="%" width="174" display="sheep-reproduce"></slider>
-    <slider x="185" step="1" y="60" height="33" min="0" direction="Horizontal" max="250" default="50.0" variable="initial-number-wolves" width="165" display="initial-number-wolves"></slider>
-    <slider x="183" step="1.0" y="195" height="33" min="0.0" direction="Horizontal" max="100.0" default="20.0" variable="wolf-gain-from-food" width="165" display="wolf-gain-from-food"></slider>
-    <slider x="183" step="1.0" y="231" height="33" min="0.0" direction="Horizontal" max="20.0" default="5.0" variable="wolf-reproduce" units="%" width="165" display="wolf-reproduce"></slider>
-    <slider x="40" step="1" y="100" height="33" min="0" direction="Horizontal" max="100" default="30.0" variable="grass-regrowth-time" width="212" display="grass-regrowth-time"></slider>
+    <slider oldSize="true" x="5" step="1" y="60" height="33" min="0" direction="Horizontal" max="250" default="100.0" variable="initial-number-sheep" width="174" display="initial-number-sheep"></slider>
+    <slider oldSize="true" x="5" step="1.0" y="196" height="33" min="0.0" direction="Horizontal" max="50.0" default="4.0" variable="sheep-gain-from-food" width="174" display="sheep-gain-from-food"></slider>
+    <slider oldSize="true" x="5" step="1.0" y="231" height="33" min="1.0" direction="Horizontal" max="20.0" default="4.0" variable="sheep-reproduce" units="%" width="174" display="sheep-reproduce"></slider>
+    <slider oldSize="true" x="185" step="1" y="60" height="33" min="0" direction="Horizontal" max="250" default="50.0" variable="initial-number-wolves" width="165" display="initial-number-wolves"></slider>
+    <slider oldSize="true" x="183" step="1.0" y="195" height="33" min="0.0" direction="Horizontal" max="100.0" default="20.0" variable="wolf-gain-from-food" width="165" display="wolf-gain-from-food"></slider>
+    <slider oldSize="true" x="183" step="1.0" y="231" height="33" min="0.0" direction="Horizontal" max="20.0" default="5.0" variable="wolf-reproduce" units="%" width="165" display="wolf-reproduce"></slider>
+    <slider oldSize="true" x="40" step="1" y="100" height="33" min="0" direction="Horizontal" max="100" default="30.0" variable="grass-regrowth-time" width="212" display="grass-regrowth-time"></slider>
     <button x="40" y="140" height="35" disableUntilTicks="false" forever="false" kind="Observer" width="69" display="setup">setup</button>
     <button x="115" y="140" height="35" disableUntilTicks="true" forever="true" kind="Observer" width="75" display="go">go</button>
-    <plot x="10" yMax="100.0" yAxis="pop." y="360" xMin="0.0" height="170" legend="true" xMax="100.0" autoplot="true" yMin="0.0" width="340" xAxis="time" display="populations">
+    <plot oldSize="true" x="10" yMax="100.0" yAxis="pop." y="360" xMin="0.0" height="170" legend="true" xMax="100.0" autoplot="true" yMin="0.0" width="340" xAxis="time" display="populations">
       <setup></setup>
       <update></update>
       <pen color="-612749" legend="true" interval="1.0" mode="0" display="sheep">
@@ -179,13 +179,13 @@ end
         <update>if model-version = "sheep-wolves-grass" [ plot count grass / 4 ]</update>
       </pen>
     </plot>
-    <monitor x="41" precision="3" y="308" height="45" fontSize="11" width="70" display="sheep">count sheep</monitor>
-    <monitor x="115" precision="3" y="308" height="45" fontSize="11" width="70" display="wolves">count wolves</monitor>
-    <monitor x="191" precision="0" y="308" height="45" fontSize="11" width="65" display="grass">count grass / 4</monitor>
+    <monitor oldSize="true" x="41" precision="3" y="308" height="45" fontSize="11" width="70" display="sheep">count sheep</monitor>
+    <monitor oldSize="true" x="115" precision="3" y="308" height="45" fontSize="11" width="70" display="wolves">count wolves</monitor>
+    <monitor oldSize="true" x="191" precision="0" y="308" height="45" fontSize="11" width="65" display="grass">count grass / 4</monitor>
     <note x="20" y="178" height="18" textColorDark="-1" backgroundDark="-15329770" textColorLight="-16777216" backgroundLight="-1" fontSize="11" width="140">Sheep settings</note>
     <note x="198" y="176" height="18" textColorDark="-1" backgroundDark="-15329770" textColorLight="-16777216" backgroundLight="-1" fontSize="11" width="113">Wolf settings</note>
-    <switch x="105" y="270" height="33" on="false" variable="show-energy?" width="136" display="show-energy?"></switch>
-    <chooser x="5" y="10" height="45" variable="model-version" current="0" width="345" display="model-version">
+    <switch oldSize="true" x="105" y="270" height="33" on="false" variable="show-energy?" width="136" display="show-energy?"></switch>
+    <chooser oldSize="true" x="5" y="10" height="45" variable="model-version" current="0" width="345" display="model-version">
       <choice type="string" value="sheep-wolves"></choice>
       <choice type="string" value="sheep-wolves-grass"></choice>
     </chooser>

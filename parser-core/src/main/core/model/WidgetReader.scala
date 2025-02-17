@@ -296,7 +296,7 @@ object PlotReader extends BaseWidgetReader {
       xAxis: Option[String] @unchecked, yAxis: Option[String] @unchecked, xmin: Double, xmax: Double, ymin: Double, ymax: Double,
       autoPlotOn: Boolean, legendOn: Boolean, code: String, pens: List[Pen] @unchecked) = vals
     val List(setupCode: String, updateCode: String) = PenReader.parseStringLiterals(code)
-    Plot(display, left, top, right - left, bottom - top, xAxis, yAxis, xmin, xmax, ymin, ymax, autoPlotOn, legendOn,
+    Plot(display, left, top, right - left, bottom - top, true, xAxis, yAxis, xmin, xmax, ymin, ymax, autoPlotOn, legendOn,
          unescapeString(setupCode), unescapeString(updateCode), pens)
   }
 
@@ -339,7 +339,7 @@ object SliderReader extends BaseWidgetReader {
   def asWidget(vals: List[Any], literalParser: LiteralParser): Slider = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, display: Option[String] @unchecked, varName: Option[String] @unchecked, min: String,
              max: String, default: Double, step: String, _, units: Option[String] @unchecked, direction: Direction) = vals
-    Slider(varName, left, top, right - left, bottom - top, display, min, max, default, step, units, direction)
+    Slider(varName, left, top, right - left, bottom - top, true, display, min, max, default, step, units, direction)
   }
 }
 
@@ -384,7 +384,7 @@ object SwitchReader extends BaseWidgetReader {
                                     switch.display, switch.variable, switch.on, (), ())
   def asWidget(vals: List[Any], literalParser: LiteralParser): Switch = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, display: Option[String] @unchecked, varName: Option[String] @unchecked, on: Boolean, _, _) = vals
-    Switch(varName, left, top, right - left, bottom - top, display, on)
+    Switch(varName, left, top, right - left, bottom - top, true, display, on)
   }
 }
 
@@ -419,7 +419,7 @@ object ChooserReader extends BaseWidgetReader {
       case other        => other
     }
 
-    Chooser(variable, left, top, right - left, bottom - top, display,
+    Chooser(variable, left, top, right - left, bottom - top, true, display,
       choices.map(convertAllNobodies).map(Chooseable(_)).toList, currentChoice)
   }
 }
@@ -445,7 +445,7 @@ object MonitorReader extends BaseWidgetReader {
     val List(_, left: Int, top: Int, right: Int, bottom: Int,
       rawDisplay: Option[String] @unchecked,
       source: Option[String] @unchecked, precision: Int, _, fontSize: Int) = vals
-    Monitor(source, left, top, right - left, bottom - top, rawDisplay, precision, fontSize)
+    Monitor(source, left, top, right - left, bottom - top, true, rawDisplay, precision, fontSize)
   }
 }
 
@@ -499,7 +499,7 @@ object InputBoxReader extends BaseWidgetReader {
       case _ =>
         throw new RuntimeException("Couldn't find corresponding input box type for " + inputBoxTypeStr)
     }
-    InputBox(variable, left, top, right - left, bottom - top, inputBoxValue)
+    InputBox(variable, left, top, right - left, bottom - top, true, inputBoxValue)
   }
 }
 

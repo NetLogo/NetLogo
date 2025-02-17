@@ -58,6 +58,8 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   private val xAxis = new XAxisLabels()
   private val yAxis = new YAxisLabels()
 
+  protected var _oldSize = false
+
   displayName = plot.name
 
   plot.clear() // set current values to defaults
@@ -70,7 +72,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     //ROW1
     //-----------------------------------------
     c.insets =
-      if (preserveWidgetSizes)
+      if (_oldSize)
         new Insets(3, 6, 6, 6)
       else
         new Insets(6, 12, 6, 12)
@@ -221,6 +223,11 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     yAxis.setLabel(_yAxisLabel)
   }
 
+  def oldSize: Boolean = _oldSize
+  def oldSize_=(value: Boolean) : Unit = {
+    _oldSize = value
+  }
+
   def setupCode = plot.setupCode
   def setupCode(setupCode: String){ plot.setupCode=setupCode }
 
@@ -261,6 +268,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   }
 
   override def load(corePlot: WidgetModel): Object = {
+    oldSize = corePlot.oldSize
     setSize(corePlot.width, corePlot.height)
     xLabel(corePlot.xAxis.optionToPotentiallyEmptyString)
     yLabel(corePlot.yAxis.optionToPotentiallyEmptyString)
@@ -286,6 +294,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
     CorePlot(displayName,
       x = b.x, y = b.y, width = b.width, height = b.height,
+      oldSize = _oldSize,
       xAxis = savedXLabel, yAxis = savedYLabel,
       xmin = plot.defaultXMin, xmax = plot.defaultXMax,
       ymin = plot.defaultYMin, ymax = plot.defaultYMax,

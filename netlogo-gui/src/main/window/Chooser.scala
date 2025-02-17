@@ -42,6 +42,8 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     }
   }
 
+  protected var _oldSize = false
+
   setLayout(new GridBagLayout)
 
   locally {
@@ -52,7 +54,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     c.weightx = 1
     c.anchor = GridBagConstraints.NORTHWEST
     c.insets =
-      if (preserveWidgetSizes)
+      if (_oldSize)
         new Insets(3, 6, 0, 6)
       else
         new Insets(6, 12, 6, 6)
@@ -61,7 +63,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
 
     c.fill = GridBagConstraints.BOTH
     c.insets =
-      if (preserveWidgetSizes)
+      if (_oldSize)
         new Insets(0, 6, 6, 6)
       else
         new Insets(0, 12, 6, 12)
@@ -89,6 +91,11 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   def value: AnyRef =
     constraint.defaultValue
 
+  def oldSize: Boolean = _oldSize
+  def oldSize_=(value: Boolean): Unit = {
+    _oldSize = value
+  }
+
   def populate() {
     control.setItems(constraint.acceptedValues.map(Dump.logoObject).toList)
   }
@@ -102,19 +109,19 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   /// size calculations
 
   override def getMinimumSize: Dimension =
-    if (preserveWidgetSizes)
+    if (_oldSize)
       new Dimension(MinWidth, ChooserHeight)
     else
       new Dimension(100, 60)
 
   override def getMaximumSize: Dimension =
-    if (preserveWidgetSizes)
+    if (_oldSize)
       new Dimension(10000, ChooserHeight)
     else
       new Dimension(10000, 60)
 
   override def getPreferredSize: Dimension =
-    if (preserveWidgetSizes)
+    if (_oldSize)
       new Dimension(MinPreferredWidth, ChooserHeight)
     else
       new Dimension(250, 60)

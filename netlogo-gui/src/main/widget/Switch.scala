@@ -23,6 +23,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
   import Switch._
 
+  protected var _oldSize = false
   protected var constraint = new BooleanConstraint
   protected val label = new JLabel(I18N.gui.get("edit.switch.previewName"))
   protected val toggle = new Toggle
@@ -31,7 +32,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
   setLayout(new GridBagLayout)
 
-  if (preserveWidgetSizes) {
+  if (_oldSize) {
     val c = new GridBagConstraints
 
     c.insets = new Insets(0, 6, 0, 6)
@@ -99,12 +100,17 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     repaint()
   }
 
+  def oldSize: Boolean = _oldSize
+  def oldSize_=(value: Boolean): Unit = {
+    _oldSize = value
+  }
+
   override def updateConstraints(): Unit = {
     if (_name.length > 0) { new Events.AddBooleanConstraintEvent(_name, isOn).raise(this) }
   }
 
   override def getPreferredSize: Dimension = {
-    if (preserveWidgetSizes) {
+    if (_oldSize) {
       new Dimension(super.getPreferredSize.width, MINHEIGHT)
     } else {
       new Dimension(super.getPreferredSize.width, 37)
@@ -112,7 +118,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   }
 
   override def getMinimumSize: Dimension = {
-    if (preserveWidgetSizes) {
+    if (_oldSize) {
       new Dimension(MINWIDTH, MINHEIGHT)
     } else {
       new Dimension(50, 40)
@@ -120,7 +126,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   }
 
   override def getMaximumSize: Dimension = {
-    if (preserveWidgetSizes) {
+    if (_oldSize) {
       new Dimension(10000, MINHEIGHT)
     } else {
       new Dimension(10000, 40)
@@ -140,7 +146,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
     locally {
       val size =
-        if (preserveWidgetSizes) {
+        if (_oldSize) {
           new Dimension(10, 20)
         } else {
           new Dimension(10, 25)

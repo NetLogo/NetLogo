@@ -9,6 +9,7 @@ trait Widget {
   def y:    Int
   def width:  Int
   def height: Int
+  def oldSize: Boolean
 
   /** convertSource applies the given conversion to all code found in the widget. */
   def convertSource(conversion: String => String): Widget = this
@@ -45,6 +46,8 @@ case class Button(source: Option[String],
   buttonKind: AgentKind = AgentKind.Observer,
   actionKey: Option[Char] = None,
   disableUntilTicksStart: Boolean = false) extends Widget {
+    def oldSize: Boolean = false
+
     override def convertSource(conversion: String => String): Button =
       this.copy(source = source.map(conversion))
   }
@@ -54,11 +57,15 @@ case class TextBox(display: Option[String],
   width: Int = 5, height: Int = 5,
   fontSize: Int,
   textColorLight: Option[Int] = None, textColorDark: Option[Int] = None,
-  backgroundLight: Option[Int] = None, backgroundDark: Option[Int] = None) extends Widget
+  backgroundLight: Option[Int] = None, backgroundDark: Option[Int] = None) extends Widget {
+
+  def oldSize: Boolean = false
+}
 
 case class Switch(variable: Option[String],
   x:  Int = 0, y:    Int = 0,
   width: Int = 0, height: Int = 0,
+  oldSize: Boolean = false,
   display: Option[String] = None,
   on: Boolean = false) extends Widget
   with DeclaresGlobal
@@ -75,6 +82,7 @@ case object Vertical extends Direction
 case class Slider(variable: Option[String],
   x:  Int = 0, y:    Int = 0,
   width: Int = 0, height: Int = 0,
+  oldSize: Boolean = false,
   display:  Option[String]  = None,
   min:       String         = "0",
   max:       String         = "100",
@@ -103,6 +111,7 @@ case class Monitor(
   source: Option[String],
   x:  Int, y:    Int,
   width: Int, height: Int,
+  oldSize: Boolean,
   display: Option[String],
   precision: Int,
   fontSize:  Int = 11) extends Widget {
@@ -113,9 +122,14 @@ case class Monitor(
 case class Output(
   x:  Int, y:    Int,
   width: Int, height: Int,
-  fontSize: Int) extends Widget
+  fontSize: Int) extends Widget {
 
-trait ViewLike extends Widget
+  def oldSize: Boolean = false
+}
+
+trait ViewLike extends Widget {
+  def oldSize: Boolean = false
+}
 
 case class View(x: Int = 0, y: Int = 0, width: Int = 5, height: Int = 5,
   dimensions:       WorldDimensions = View.defaultDimensions,

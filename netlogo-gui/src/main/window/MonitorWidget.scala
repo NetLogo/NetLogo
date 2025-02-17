@@ -24,6 +24,7 @@ object MonitorWidget {
     def fontSize: Int
     def innerSource: String
     def name: String
+    def oldSize: Boolean
 
     override def model: CoreMonitor = {
       val b       = getUnzoomedBounds
@@ -32,6 +33,7 @@ object MonitorWidget {
 
       CoreMonitor(display = display,
         x = b.x, y = b.y, width = b.width, height = b.height,
+        oldSize = oldSize,
         source   = src, precision = decimalPlaces,
         fontSize = fontSize)
     }
@@ -87,6 +89,8 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   private var _fontSize = DefaultFontSize
 
+  private var _oldSize = false
+
   private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName"))
   private val valueLabel = new JLabel
 
@@ -103,7 +107,7 @@ class MonitorWidget(random: MersenneTwisterFast)
     c.weightx = 1
     c.anchor = GridBagConstraints.NORTHWEST
     c.insets =
-      if (preserveWidgetSizes)
+      if (_oldSize)
         new Insets(3, 6, 0, 6)
       else
         new Insets(6, 12, 6, 12)
@@ -113,7 +117,7 @@ class MonitorWidget(random: MersenneTwisterFast)
     c.weighty = 1
     c.fill = GridBagConstraints.BOTH
     c.insets =
-      if (preserveWidgetSizes)
+      if (_oldSize)
         new Insets(0, 6, 6, 6)
       else
         new Insets(0, 12, 6, 12)
@@ -160,6 +164,11 @@ class MonitorWidget(random: MersenneTwisterFast)
   }
 
   def fontSize: Int = _fontSize
+
+  def oldSize: Boolean = _oldSize
+  def oldSize_=(value: Boolean): Unit = {
+    _oldSize = value
+  }
 
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.monitor")
@@ -243,19 +252,19 @@ class MonitorWidget(random: MersenneTwisterFast)
   }
 
   override def getMinimumSize: Dimension =
-    if (preserveWidgetSizes)
+    if (_oldSize)
       new Dimension(MinWidth, (fontSize * 4) + 1)
     else
       new Dimension(100, 60)
 
   override def getMaximumSize: Dimension =
-    if (preserveWidgetSizes)
+    if (_oldSize)
       new Dimension(10000, (fontSize * 4) + 1)
     else
       new Dimension(10000, 60)
 
   override def getPreferredSize: Dimension =
-    if (preserveWidgetSizes)
+    if (_oldSize)
       new Dimension(100, getMinimumSize.height)
     else
       new Dimension(100, 60)
@@ -319,6 +328,7 @@ class MonitorWidget(random: MersenneTwisterFast)
 
     model.source.foreach(wrapSource)
 
+    oldSize = model.oldSize
     setSize(model.width, model.height)
     chooseDisplayName()
     this

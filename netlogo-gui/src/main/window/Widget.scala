@@ -4,7 +4,6 @@ package org.nlogo.window
 
 import java.awt.{ Component, Container, Dimension, Font, Graphics, Point, Rectangle, event },
                 event.{ MouseAdapter, MouseEvent, MouseListener }
-import java.util.prefs.Preferences
 import javax.swing.{ JPanel, JMenuItem }
 
 import org.nlogo.api.{ CompilerServices, MultiErrorHandler, SingleErrorHandler }
@@ -60,9 +59,6 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
   var deleteable: Boolean = true
 
   setBorderColor(InterfaceColors.Transparent)
-
-  protected val preserveWidgetSizes = Preferences.userRoot.node("/org/nlogo/NetLogo")
-                                                 .getBoolean("preserveWidgetSizes", true)
 
   protected var zoomFactor = 1.0
 

@@ -62,12 +62,14 @@ class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
       if (_name != null && _name.trim != "") Some(_name) else None
     CoreSwitch(display = savedDisplayName,
       x = b.x, y = b.y, width = b.width, height = b.height,
+      oldSize = _oldSize,
       variable = varName, on = isOn)
   }
 
   override def load(model: WidgetModel): AnyRef = {
     name(model.varName, true)
     isOn = model.on
+    oldSize = model.oldSize
     setSize(model.width, model.height)
     this
   }

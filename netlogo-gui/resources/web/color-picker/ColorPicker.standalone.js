@@ -455,13 +455,13 @@
       /** attachEventListeners: Attaches the event listeners to the GridMode body */
       attachEventListeners() {
           const gridBtns = this.parent.querySelectorAll('.cp-numbers-btn');
-          // Event listener for the numbers button 
+          // Event listener for the numbers button
           gridBtns[0].addEventListener('click', () => {
               this.setState({ showNumbers: !this.state.showNumbers });
               this.toggleTextVisibility();
               this.updateIncrementAppearance();
           });
-          // Event listeners for the increment buttons 
+          // Event listeners for the increment buttons
           for (let i = 1; i < gridBtns.length; i++) {
               gridBtns[i].addEventListener('click', () => {
                   var _a;
@@ -574,23 +574,23 @@
           this.parent.innerHTML = `
         <div class="cp-wheel-spacing-cont"><div class="cp-wheel-cont"><svg class="cp-wheel-svg" viewBox="0 0 110 110" width="100%" height="100%">
         <clipPath id="cp-inner-wheel-clip">
-        <path d="M 55 35 
-                 a 20 20 0 0 1 0 40 
-                 a 20 20 0 0 1 0 -40 
-                 M 55 10 
-                 a 45 45 0 0 0 0 90 
+        <path d="M 55 35
+                 a 20 20 0 0 1 0 40
+                 a 20 20 0 0 1 0 -40
+                 M 55 10
+                 a 45 45 0 0 0 0 90
                  a 45 45 0 0 0 0 -90"></path>
     </clipPath>
 
         <clipPath id="cp-outer-wheel-clip">
-            <path d="M 55 0 
-                        a 55 55 0 0 1 0 110 
-                        a 55 55 0 0 1 0 -110 
-                        M 55 5 
-                        a 50 50 0 0 0 0 100 
+            <path d="M 55 0
+                        a 55 55 0 0 1 0 110
+                        a 55 55 0 0 1 0 -110
+                        M 55 5
+                        a 50 50 0 0 0 0 100
                         a 50 50 0 0 0 0 -100"></path>
         </clipPath>
-    
+
 
         <foreignObject width="110" height="110" clip-path="url(#cp-inner-wheel-clip)" >
             <div xmlns="http://www.w3.org/1999/xhtml" class="cp-inner-wheel"></div>
@@ -608,7 +608,7 @@
       }
       /** innerWheelSetup() : sets up the color of the inner wheel  */
       innerWheelSetup() {
-          // get the inner wheel 
+          // get the inner wheel
           const innerWheel = document.querySelector('.cp-inner-wheel');
           let netlogoColors = Object.keys(mappedColors);
           let hexColors = [];
@@ -666,7 +666,7 @@
       /** numbersSetup: sets up & updates the appropriate numbers for the wheel */
       numbersSetup() {
           const radius = 38;
-          const degreesPerIncrement = 360 / 14; // divide by 14 because the wheel has 14 inner colors 
+          const degreesPerIncrement = 360 / 14; // divide by 14 because the wheel has 14 inner colors
           const center = [55, 55];
           const svg = document.querySelector(".cp-wheel-svg");
           if (svg === null) {
@@ -689,7 +689,7 @@
               this.textElements.push(text);
               svg.appendChild(text);
           }
-          // create text elements for the outer wheel 
+          // create text elements for the outer wheel
           const numIncrements = 10 / this.state.increment + 1;
           const degreesPerIncrementOuter = 360 / numIncrements;
           const outerRadius = 55;
@@ -772,7 +772,7 @@
           svg.appendChild(outerThumb);
           const innerAsSVG = innerThumb;
           this.updateInnerWheel(innerAsSVG);
-          this.changeColor(); // update the outer wheel 
+          this.changeColor(); // update the outer wheel
       }
       /** changeColor: changes the color based on the position of the outerwheel */
       changeColor() {
@@ -786,7 +786,7 @@
               const index = Math.floor(angle / degreesPerIndex);
               const color = this.outerWheelColors[index];
               outerThumb.setAttribute('fill', color);
-              // set the color to the current color 
+              // set the color to the current color
               const colorAsRGB = hexToRgb(color);
               const colorAsRGBA = [colorAsRGB[0], colorAsRGB[1], colorAsRGB[2], this.state.currentColor[3]];
               this.setState({ currentColor: colorAsRGBA, colorType: "netlogo" });
@@ -814,7 +814,7 @@
               this.outerWheelColors[numColors - 1] + ` ${degreeTracker}deg 0deg`;
           const outerWheel = document.querySelector('.cp-outer-wheel');
           outerWheel.setAttribute('style', cssFormat + `);`);
-          // also update the color based on the changed outer wheel since the color will be different 
+          // also update the color based on the changed outer wheel since the color will be different
           this.changeColor();
       }
       /** makeDraggable(): makes the thumbs of the color wheel draggable */
@@ -983,13 +983,13 @@
       /** attachEventListeners: Attaches the event listeners to the GridMode body */
       attachEventListeners() {
           const gridBtns = document.querySelectorAll('.cp-numbers-btn');
-          // event listener of the numbers button 
+          // event listener of the numbers button
           gridBtns[0].addEventListener('click', () => {
               this.setState({ showNumbers: !this.state.showNumbers });
               this.toggleTextVisibility();
               this.updateIncrementAppearance();
           });
-          // the increment buttons 
+          // the increment buttons
           for (let i = 1; i < gridBtns.length; i++) {
               gridBtns[i].addEventListener('click', () => {
                   var _a;
@@ -1015,7 +1015,7 @@
   }
 
   class Slider {
-      constructor(parent, startValue, min, max, sliderColor, sliderWidth, text, onValueChange, // callback function to be called after slider / inputbox value change 
+      constructor(parent, startValue, min, max, sliderColor, sliderWidth, text, onValueChange, // callback function to be called after slider / inputbox value change
       hasDisplay = true) {
           this.valueDisplayElement = null; // the input Element defining the value indicator
           this.sliderChangedValue = () => {
@@ -1063,7 +1063,7 @@
           sliderDisplayContainer.classList.add('cp-slider-display-container');
           sliderDisplayContainer.appendChild(sliderContainer);
           if (hasDisplay) {
-              // create value-display: the input element that shows the value of the slider. 
+              // create value-display: the input element that shows the value of the slider.
               this.valueDisplayElement = document.createElement('input');
               this.valueDisplayElement.classList.add('cp-slider-value-display-cont');
               this.valueDisplayElement.inputMode = 'numeric';
@@ -1072,7 +1072,7 @@
               this.valueDisplayElement.max = max.toString();
               this.valueDisplayElement.value = startValue.toString();
               sliderDisplayContainer.appendChild(this.valueDisplayElement);
-              // add event listener for this input element as well to change the color 
+              // add event listener for this input element as well to change the color
               this.valueDisplayElement.addEventListener('input', (event) => {
                   const input = event.target;
                   const value = input.value;
@@ -1188,7 +1188,7 @@
               this.setState({ savedColors });
               this.updateSavedColors();
           });
-          // Update the appearance of each color grid based on the queue 
+          // Update the appearance of each color grid based on the queue
           this.updateSavedColors();
           // Add event handler to each color button
           const savedButtons = document.querySelectorAll(".cp-saved-colors");
@@ -1196,7 +1196,7 @@
               button.addEventListener("click", () => {
                   const btn = button;
                   if (btn.dataset.value) {
-                      // has a color so return it 
+                      // has a color so return it
                       const colorsAsArr = btn.dataset.value.split(",").map(Number);
                       this.setState({ currentColor: colorsAsArr });
                       this.updateColorDisplay();
@@ -1242,7 +1242,7 @@
       }
       /** createRGB: creates the RGB sliders */
       createRGB() {
-          // Callback function for slider to change currentColor 
+          // Callback function for slider to change currentColor
           const updateRGBColor = (colorIndex, sliderValue) => {
               const newColor = [...this.state.currentColor];
               newColor[colorIndex] = sliderValue;
@@ -1315,7 +1315,7 @@
           this.displayParameter = 'RGBA'; // true if the color display is in RGB mode, false if it is in HSLA mode
           this.isNetLogoNum = false; // true if the color display is in NetLogo number, false if its a compound number like Red + 2
           this.isMinimized = false; // default value for minimize is false
-          this.copyMessageTimeout = null; //Keeps track of "Copied" message timeouts, so they don't stack and are cancelled if we switch colors 
+          this.copyMessageTimeout = null; //Keeps track of "Copied" message timeouts, so they don't stack and are cancelled if we switch colors
           this.operatingMode = config.mode || 'DEFAULT';
           this.state = {
               currentColor: config.initColor,
@@ -1371,7 +1371,7 @@
           this.initAlphaSlider();
           this.updateAlphaBlockVisibility();
           this.updateValuesDisplayVisibility();
-          // click the correct button to start 
+          // click the correct button to start
           switch (this.openTo) {
               case 'wheel':
                   this.parent.querySelectorAll('.cp-mode-btn')[1].dispatchEvent(new Event('click'));
@@ -1384,7 +1384,7 @@
                   break;
               case 'sliderHSB':
                   this.parent.querySelectorAll('.cp-mode-btn')[2].dispatchEvent(new Event('click'));
-                  // click the hsb button 
+                  // click the hsb button
                   this.parent.querySelectorAll('.cp-slider-changer')[0].dispatchEvent(new Event('click'));
                   break;
               default:
@@ -1418,7 +1418,7 @@
        */
       updateValuesDisplayVisibility() {
           if (this.operatingMode == 'DEFAULT') {
-              return; // return, because we don't need to hide anything 
+              return; // return, because we don't need to hide anything
           }
           // hide NetLogo display
           if (this.operatingMode == 'RGBA') {
@@ -1517,11 +1517,11 @@
               this.onColorSelect([selectedColorObj, this.state.savedColors]);
           }
           else if (this.operatingMode == 'RGBA') {
-              // return just the RGBA number, as a string 
+              // return just the RGBA number, as a string
               this.onColorSelect(`[${this.state.currentColor[0]}, ${this.state.currentColor[1]}, ${this.state.currentColor[2]}, ${this.state.currentColor[3]}]`);
           }
           else {
-              // netlogo color 
+              // netlogo color
               const compoundColor = `${netlogoToCompound(rgbToNetlogo([this.state.currentColor[0], this.state.currentColor[1], this.state.currentColor[2]]))}`;
               const formattedColor = compoundColor.charAt(0).toUpperCase() + compoundColor.slice(1);
               this.onColorSelect(formattedColor);
@@ -1540,7 +1540,7 @@
                   image.classList.toggle('cp-inverted', isPressed);
               }
           }
-          // attach event listeners to the mode buttons 
+          // attach event listeners to the mode buttons
           let modeButtons = this.parent.querySelectorAll('.cp-mode-btn');
           // Grid Button
           modeButtons[0].addEventListener('click', () => {
@@ -1580,14 +1580,14 @@
           // attach event listener to model indicator button
           let modelIndicatorButton = this.parent.querySelector('.cp-model-indicator');
           modelIndicatorButton === null || modelIndicatorButton === void 0 ? void 0 : modelIndicatorButton.addEventListener('click', () => {
-              this.state.changeModelColor = !this.state.changeModelColor; // we don't want to call set state, because it updates the appearance as well 
+              this.state.changeModelColor = !this.state.changeModelColor; // we don't want to call set state, because it updates the appearance as well
               modelIndicatorButton.querySelector('.cp-mode-btn-text').innerHTML = this.state.changeModelColor ? Localized('Foreground Color') : Localized('Background Color');
               changeButtonColor(modelIndicatorButton, !this.state.changeModelColor);
           });
           //attach event listener to close button
           const closeButton = this.parent.querySelector('.cp-close');
           closeButton === null || closeButton === void 0 ? void 0 : closeButton.addEventListener('click', () => this.handleClose());
-          // attach switch color display parameters event listeners 
+          // attach switch color display parameters event listeners
           const paramSwitchBtns = this.parent.querySelectorAll('.cp-values-type');
           // this is the RGBA / HSLA param button
           (_a = paramSwitchBtns[0]) === null || _a === void 0 ? void 0 : _a.addEventListener('click', () => {
@@ -1602,12 +1602,12 @@
               }
               this.updateColorParameters();
           });
-          // NetLogo number --> doesn't have to switch text but does switch the display value 
+          // NetLogo number --> doesn't have to switch text but does switch the display value
           (_b = paramSwitchBtns[1]) === null || _b === void 0 ? void 0 : _b.addEventListener('click', () => {
               this.isNetLogoNum = !this.isNetLogoNum;
               this.updateColorParameters();
           });
-          // add event listeners to copy elements 
+          // add event listeners to copy elements
           const valueDisplayElements = this.parent.querySelectorAll(".cp-values-value");
           valueDisplayElements.forEach((display, index) => {
               const displayAsElement = display;
@@ -1642,7 +1642,7 @@
               if (this.copyMessageTimeout) {
                   clearTimeout(this.copyMessageTimeout);
               }
-              // don't let user copy this 
+              // don't let user copy this
               displayElement.style.pointerEvents = 'none';
               displayElement.style.opacity = "0.5";
               this.copyMessageTimeout = window.setTimeout(() => {
@@ -1681,25 +1681,25 @@
                     <div class="cp-mode-btn-cont">
                         <button class="cp-mode-btn">
                             <img class="cp-mode-btn-img" src="${img$4}"/>
-                            <span class="cp-mode-btn-text">${Localized('Grid')}</span> 
+                            <span class="cp-mode-btn-text">${Localized('Grid')}</span>
                         </button>
                         <button class="cp-mode-btn">
                             <img class="cp-mode-btn-img" src="${img$3}"/>
-                            <span class="cp-mode-btn-text">${Localized('Wheel')}</span> 
+                            <span class="cp-mode-btn-text">${Localized('Wheel')}</span>
                         </button>
                         <button class="cp-mode-btn">
                             <img class="cp-mode-btn-img" src="${img$2}"/>
-                            <span class="cp-mode-btn-text">RGB</span> 
+                            <span class="cp-mode-btn-text">RGB</span>
                         </button>
                         <button class="cp-mode-btn"> <!-- New HSB button -->
                             <img class="cp-mode-btn-img" src="${img$2}"/>
-                            <span class="cp-mode-btn-text">HSB</span> 
+                            <span class="cp-mode-btn-text">HSB</span>
                         </button>
                     </div>
                     <div class="cp-body-mode-main no-select"></div>
                 </div>
                 <div class="cp-body-right">
-                    <button class="cp-mode-btn cp-model-indicator"> 
+                    <button class="cp-mode-btn cp-model-indicator">
                         <img class="cp-mode-btn-img" src="${img$1}"/>
                         <span class="cp-mode-btn-text">${Localized('Foreground Color')}</span>
                     </button>
@@ -1711,7 +1711,7 @@
                     </div>
                     <div class="cp-alpha-cont">
                         <span class="cp-alpha-text">${Localized('Alpha')}</span>
-                        <input type="range" min="0" max="255" value="${this.state.currentColor[3]}" class="cp-styled-slider cp-alpha-slider color-alpha slider-progress">
+                        <input oldSize="true" type="range" min="0" max="255" value="${this.state.currentColor[3]}" class="cp-styled-slider cp-alpha-slider color-alpha slider-progress">
                     </div>
                     <div class="cp-values-display-cont">
                         <span class="cp-color-param-txt">${Localized('Color Parameters')}</span>
@@ -1725,7 +1725,7 @@
                             <div class="cp-values-value-cont cp-values-value-cont-1">
                                 <span class="cp-values-value"></span>
                             </div>
-                            
+
                         </div>
                         <div id="cp-values-display-netlogo" class="cp-values-display">
                             <div class="cp-values-type">

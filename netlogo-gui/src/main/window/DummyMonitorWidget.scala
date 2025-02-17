@@ -30,6 +30,7 @@ class DummyMonitorWidget
 
   private var _name: String = ""
   private var _decimalPlaces: Int = DefaultDecimalPlaces;
+  private var _oldSize = false
 
   def innerSource = ""
   def fontSize = DefaultFontSize
@@ -39,6 +40,11 @@ class DummyMonitorWidget
   def name(name: String): Unit = {
     _name = name
     displayName = name
+  }
+
+  def oldSize: Boolean = _oldSize
+  def oldSize_=(value: Boolean): Unit = {
+    _oldSize = value
   }
 
   override def classDisplayName: String =

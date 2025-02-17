@@ -69,7 +69,7 @@ class ModelConverterTests extends AnyFunSuite with ConversionHelper {
     }
 
     test("if a monitor contains the affected prims, runs the code tab rewrites on the code tab") {
-      val model = Model(widgets = Seq(View(), Monitor(source = Some("e 10"), 0, 0, 0, 0, None, 1)))
+      val model = Model(widgets = Seq(View(), Monitor(source = Some("e 10"), 0, 0, 0, 0, true, None, 1)))
       assertResult("globals [foo]")(convert(model, conversion(codeTabConversions = Seq(_.addGlobal("foo")),targets =  Seq("e"))).code)
     }
 

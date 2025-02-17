@@ -22,7 +22,8 @@ object Properties {
     P("backgroundDark", P.Color, I18N.gui("text.backgroundDark"))
   )
   val switch = Seq(
-    P("nameWrapper", P.Identifier, I18N.gui("switch.globalVar"))
+    P("nameWrapper", P.Identifier, I18N.gui("switch.globalVar")),
+    P("oldSize", P.Boolean, I18N.gui("general.oldSize"))
   )
   val dummySwitch = Seq(
     P("name", P.String, I18N.gui("hubnet.tag"))

@@ -114,6 +114,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   private var _units = ""
   private var _vertical = false
   private val sliderData = new SliderData(this)
+  protected var _oldSize = false
 
   val nameComponent = new Label(I18N.gui.get("edit.slider.previewName"))
   val valueComponent = new TextField
@@ -250,6 +251,11 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
   }
 
+  def oldSize: Boolean = _oldSize
+  def oldSize_=(value: Boolean): Unit = {
+    _oldSize = value
+  }
+
   def valueString(num: Double): String = {
     var numString = Dump.number(num)
     var place = numString.indexOf('.')
@@ -270,7 +276,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   }
 
   override def doLayout(): Unit = {
-    if (preserveWidgetSizes) {
+    if (_oldSize) {
       if (vertical) {
         nameComponent.setBounds(0, getHeight - 6, nameComponent.getPreferredSize.width.min(
                                                     getHeight - unitsComponent.getPreferredSize.width -
@@ -328,7 +334,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   }
 
   override def getMinimumSize = {
-    if (preserveWidgetSizes) {
+    if (_oldSize) {
       if (vertical) {
         new Dimension(33, 92)
       } else {
@@ -344,7 +350,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   }
 
   override def getMaximumSize = {
-    if (preserveWidgetSizes) {
+    if (_oldSize) {
       if (vertical) {
         new Dimension(33, 10000)
       } else {
@@ -360,7 +366,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   }
 
   override def getPreferredSize = {
-    if (preserveWidgetSizes) {
+    if (_oldSize) {
       if (vertical) {
         new Dimension(33, 150)
       } else {

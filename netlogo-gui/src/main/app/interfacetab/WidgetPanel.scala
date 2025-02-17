@@ -502,7 +502,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       menuItem("switch",  CoreSwitch(None)),
       menuItem("chooser", CoreChooser(None)),
       menuItem("input",   CoreInputBox(None)),
-      menuItem("monitor", CoreMonitor(None, 0, 0, 0, 0, None, 10)),
+      menuItem("monitor", CoreMonitor(None, 0, 0, 0, 0, false, None, 10)),
       plot,
       menuItem("note", CoreTextBox(None, fontSize = 11)))
     menuItems.foreach(menu.add)
