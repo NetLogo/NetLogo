@@ -99,7 +99,7 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
       val cancel = new Button(I18N.gui.get("common.buttons.cancel"), dispose)
       val done = new Button(I18N.gui.get("common.buttons.ok"), saveShape)
 
-      add(new ButtonPanel(Array(done, cancel)), c)
+      add(new ButtonPanel(Seq(done, cancel)), c)
 
       getRootPane.setDefaultButton(done)
     }

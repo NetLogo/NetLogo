@@ -553,14 +553,6 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
     private val cancelButton = new Button(cancelAction)
 
-    private val applyButton = new Button(I18N.gui.get("common.buttons.apply"), () => {
-      try inputText(inputType.readValue(textArea.getText))
-      catch {
-        case ex@(_:LogoException | _:CompilerException | _:ValueConstraint.Violation) =>
-          showError(ex.asInstanceOf[Exception])
-      }
-    })
-
     locally {
       setResizable(true)
       textArea.setEditorKit(inputType.getEditorKit)
@@ -588,7 +580,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       c.weightx = 0
       c.weighty = 0
 
-      getContentPane.add(new ButtonPanel(Array(okButton, applyButton, cancelButton)), c)
+      getContentPane.add(new ButtonPanel(Seq(okButton, cancelButton)), c)
 
       Utils.addEscKeyAction(this, cancelAction)
 
@@ -622,7 +614,6 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       scrollPane.syncTheme()
 
       okButton.syncTheme()
-      applyButton.syncTheme()
       cancelButton.syncTheme()
     }
   }

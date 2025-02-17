@@ -70,7 +70,7 @@ class ThemesDialog(frame: Frame) extends ToolDialog(frame, "themes") with ThemeS
     themeButtons.add(lightButton)
     themeButtons.add(darkButton)
 
-    val buttonPanel = new ButtonPanel(Array(okButton, cancelButton))
+    val buttonPanel = new ButtonPanel(Seq(okButton, cancelButton))
 
     panel.add(buttonPanel, c)
 

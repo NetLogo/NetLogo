@@ -86,12 +86,12 @@ abstract class EditDialog(window: Window, target: Editable, useTooltips: Boolean
     BrowserLauncher.openPath(this, path, anchor)
   })
 
-  private val buttons: List[JButton] = List(
+  private val buttons: Seq[JButton] = Seq(
     Some(okButton),
     if (target.liveUpdate) Some(applyButton) else None,
     target.helpLink.map(_ => helpButton),
     Some(cancelButton)).flatten
-  private val buttonPanel = ButtonPanel(buttons)
+  private val buttonPanel = new ButtonPanel(buttons)
   mainPanel.add(buttonPanel, BorderLayout.SOUTH)
   mainPanel.add(editPanel, BorderLayout.CENTER)
 

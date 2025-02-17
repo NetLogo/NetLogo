@@ -24,7 +24,7 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
     getContentPane.add(new ScrollPane(list) {
       setBackground(InterfaceColors.dialogBackground)
     }, BorderLayout.CENTER)
-    getContentPane.add(new ButtonPanel(Array(importButton, cancelButton)), BorderLayout.SOUTH)
+    getContentPane.add(new ButtonPanel(Seq(importButton, cancelButton)), BorderLayout.SOUTH)
 
     getRootPane.setDefaultButton(importButton)
   }

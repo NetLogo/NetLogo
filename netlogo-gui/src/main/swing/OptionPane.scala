@@ -32,7 +32,7 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
                    case _ => null
                  }, title, Dialog.ModalityType.APPLICATION_MODAL) {
 
-  private var selectedOption: String = null
+  private var selectedOption: Option[String] = None
 
   getContentPane.setBackground(InterfaceColors.dialogBackground)
   getContentPane.setLayout(new GridBagLayout)
@@ -43,28 +43,18 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
     val c = new GridBagConstraints
 
     c.gridx = 0
-    c.anchor = GridBagConstraints.EAST
     c.fill = GridBagConstraints.NONE
-    c.weightx = 0
-    c.weighty = 0
     c.insets = new Insets(0, 6, 6, 6)
 
-    add(new JPanel(new GridBagLayout) with Transparent {
-      locally {
-        val c = new GridBagConstraints
+    add(new ButtonPanel(
+      options.map(option => {
+        new Button(option, () => {
+          selectedOption = Option(option)
 
-        c.anchor = GridBagConstraints.EAST
-        c.insets = new Insets(0, 6, 0, 0)
-
-        options.foreach(option => {
-          add(new Button(option, () => {
-            selectedOption = option
-
-            OptionPane.this.setVisible(false)
-          }), c)
+          OptionPane.this.setVisible(false)
         })
-      }
-    }, c)
+      })
+    ), c)
   }
 
   packAndCenter()
@@ -72,11 +62,11 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
   setResizable(false)
   setVisible(true)
 
-  def getSelectedOption: String =
+  def getSelectedOption: Option[String] =
     selectedOption
 
   def getSelectedIndex: Int =
-    options.indexOf(selectedOption)
+    selectedOption.map(options.indexOf).getOrElse(-1)
 
   protected def addContents(): Unit = {
     val c = new GridBagConstraints

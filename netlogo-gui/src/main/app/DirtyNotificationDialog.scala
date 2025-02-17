@@ -4,7 +4,7 @@ package org.nlogo.app
 
 import java.awt.event.ActionEvent
 import java.awt.{ BorderLayout, Component }
-import javax.swing.{ AbstractAction, BorderFactory, JButton, JComponent, JDialog, JLabel, JPanel, SwingConstants }
+import javax.swing.{ AbstractAction, BorderFactory, JComponent, JButton, JDialog, JLabel, JPanel, SwingConstants }
 
 import org.nlogo.awt.{ Hierarchy, Positioning }
 import org.nlogo.core.I18N
@@ -17,7 +17,7 @@ extends JDialog(Hierarchy.getFrame(owner), true)
   private val message: String = I18N.gui.get("dirty.dialog.message")
   private val label: JLabel = new JLabel(message, SwingConstants.CENTER)
   private val panel: JPanel = new JPanel
-  private val buttonsPanel: ButtonPanel = ButtonPanel(makeButtons: _*)
+  private val buttonsPanel = new ButtonPanel(makeButtons)
 
   setTitle(title)
 

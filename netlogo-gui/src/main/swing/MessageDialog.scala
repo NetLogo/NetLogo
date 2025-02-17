@@ -36,7 +36,7 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
       }
     }
 
-  private val buttonPanel = ButtonPanel(makeButtons: _*)
+  private val buttonPanel = new ButtonPanel(makeButtons)
 
   buttonPanel.setBorder(new EmptyBorder(6, 6, 6, 6))
 

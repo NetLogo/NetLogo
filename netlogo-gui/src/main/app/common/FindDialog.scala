@@ -291,7 +291,7 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     optionsPanel.add(notFoundLabel)
 
     val buttonPanel = new ButtonPanel(
-      Array(
+      Seq(
         nextButton,
         prevButton,
         replaceButton,

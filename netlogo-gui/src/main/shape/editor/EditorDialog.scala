@@ -404,7 +404,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     add(Box.createHorizontalStrut(10))
   }
 
-  private val buttonPanel = new ButtonPanel(Array(done, cancel))
+  private val buttonPanel = new ButtonPanel(Seq(done, cancel))
   private val nameLabel = new JLabel(I18N.gui("name")) {
     setForeground(InterfaceColors.dialogText)
   }

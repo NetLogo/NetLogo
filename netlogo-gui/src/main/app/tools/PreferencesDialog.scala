@@ -62,7 +62,7 @@ class PreferencesDialog(parent: Frame, preferences: Preference*) extends ToolDia
         (if (pref.requirement != RequiredAction.None) I18N.gui(pref.requirement.toString) + " " else "") +
         I18N.gui(pref.i18nKey), pref.component))
 
-    val buttonPanel = new ButtonPanel(Array(okButton, cancelButton))
+    val buttonPanel = new ButtonPanel(Seq(okButton, cancelButton))
 
     buttonPanel.setBorder(new EmptyBorder(6, 6, 6, 6))
 
