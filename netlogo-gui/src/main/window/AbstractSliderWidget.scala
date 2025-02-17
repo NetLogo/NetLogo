@@ -254,6 +254,8 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   def oldSize: Boolean = _oldSize
   def oldSize_=(value: Boolean): Unit = {
     _oldSize = value
+    revalidate()
+    repaint()
   }
 
   def valueString(num: Double): String = {

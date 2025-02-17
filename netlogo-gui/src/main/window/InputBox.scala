@@ -230,6 +230,8 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   def oldSize: Boolean = _oldSize
   def oldSize_=(value: Boolean): Unit = {
     _oldSize = value
+    initGUI()
+    repaint()
   }
 
   protected var editing = false
@@ -249,7 +251,34 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
   setLayout(new GridBagLayout)
 
-  locally {
+  initGUI()
+
+  colorSwatch.setVisible(false)
+
+  // focus listener for in place editing
+  textArea.addFocusListener(
+    new FocusListener() {
+      def focusGained(e: FocusEvent): Unit = {
+        _hasFocus = true
+        editing = true
+      }
+      def focusLost(e: FocusEvent): Unit = {
+        _hasFocus = false
+        if (editing) {
+          try inputText(inputType.readValue(InputBox.this.textArea.getText))
+          catch {
+            case ex@(_:LogoException|_:CompilerException|_:ValueConstraint.Violation) =>
+              inputText(oldText)
+          }
+          editing = false
+        }
+      }
+    })
+
+  // this allows the layout to be reorganized when the oldSize property changes (Isaac B 2/17/25)
+  private def initGUI(): Unit = {
+    removeAll()
+
     val c = new GridBagConstraints
 
     c.gridx = 0
@@ -294,28 +323,6 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     add(scroller, c)
     add(colorSwatch, c)
   }
-
-  colorSwatch.setVisible(false)
-
-  // focus listener for in place editing
-  textArea.addFocusListener(
-    new FocusListener() {
-      def focusGained(e: FocusEvent): Unit = {
-        _hasFocus = true
-        editing = true
-      }
-      def focusLost(e: FocusEvent): Unit = {
-        _hasFocus = false
-        if (editing) {
-          try inputText(inputType.readValue(InputBox.this.textArea.getText))
-          catch {
-            case ex@(_:LogoException|_:CompilerException|_:ValueConstraint.Violation) =>
-              inputText(oldText)
-          }
-          editing = false
-        }
-      }
-    })
 
   override def paintComponent(g: Graphics) = {
     setBackgroundColor(InterfaceColors.inputBackground)

@@ -66,7 +66,12 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   setLayout(new GridBagLayout)
 
-  locally {
+  initGUI()
+
+  // this allows the layout to be reorganized when the oldSize property changes (Isaac B 2/17/25)
+  private def initGUI(): Unit = {
+    removeAll()
+
     val c = new GridBagConstraints
 
     //ROW1
@@ -226,6 +231,8 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   def oldSize: Boolean = _oldSize
   def oldSize_=(value: Boolean) : Unit = {
     _oldSize = value
+    initGUI()
+    repaint()
   }
 
   def setupCode = plot.setupCode

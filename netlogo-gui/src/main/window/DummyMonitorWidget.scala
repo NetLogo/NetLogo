@@ -45,6 +45,7 @@ class DummyMonitorWidget
   def oldSize: Boolean = _oldSize
   def oldSize_=(value: Boolean): Unit = {
     _oldSize = value
+    repaint()
   }
 
   override def classDisplayName: String =

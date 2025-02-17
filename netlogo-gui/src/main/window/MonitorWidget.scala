@@ -96,10 +96,15 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   private val valuePanel = new ValuePanel(valueLabel)
 
-  locally {
-    addMouseListener(this)
+  addMouseListener(this)
 
-    setLayout(new GridBagLayout)
+  setLayout(new GridBagLayout)
+
+  initGUI()
+
+  // this allows the layout to be reorganized when the oldSize property changes (Isaac B 2/17/25)
+  private def initGUI(): Unit = {
+    removeAll()
 
     val c = new GridBagConstraints
 
@@ -168,6 +173,8 @@ class MonitorWidget(random: MersenneTwisterFast)
   def oldSize: Boolean = _oldSize
   def oldSize_=(value: Boolean): Unit = {
     _oldSize = value
+    initGUI()
+    repaint()
   }
 
   override def classDisplayName: String =

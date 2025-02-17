@@ -30,43 +30,13 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   protected var nameChanged = false
   protected var _name = ""
 
-  setLayout(new GridBagLayout)
-
-  if (_oldSize) {
-    val c = new GridBagConstraints
-
-    c.insets = new Insets(0, 6, 0, 6)
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-
-    add(label, c)
-
-    c.insets = new Insets(0, 0, 0, 6)
-    c.fill = GridBagConstraints.NONE
-    c.weightx = 0
-    c.anchor = GridBagConstraints.EAST
-
-    add(toggle, c)
-  } else {
-    val c = new GridBagConstraints
-
-    c.insets = new Insets(0, 12, 0, 12)
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-
-    add(label, c)
-
-    c.insets = new Insets(0, 0, 0, 12)
-    c.fill = GridBagConstraints.NONE
-    c.weightx = 0
-    c.anchor = GridBagConstraints.EAST
-
-    add(toggle, c)
-  }
-
-  addMouseWheelListener(this)
-
   locally {
+    setLayout(new GridBagLayout)
+
+    initGUI()
+
+    addMouseWheelListener(this)
+
     val mouseListener = new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
         new Events.InputBoxLoseFocusEvent().raise(Switch.this)
@@ -79,6 +49,43 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     addMouseListener(mouseListener)
     label.addMouseListener(mouseListener)
     toggle.addMouseListener(mouseListener)
+  }
+
+  // this allows the layout to be reorganized when the oldSize property changes (Isaac B 2/17/25)
+  private def initGUI(): Unit = {
+    removeAll()
+
+    if (_oldSize) {
+      val c = new GridBagConstraints
+
+      c.insets = new Insets(0, 6, 0, 6)
+      c.fill = GridBagConstraints.HORIZONTAL
+      c.weightx = 1
+
+      add(label, c)
+
+      c.insets = new Insets(0, 0, 0, 6)
+      c.fill = GridBagConstraints.NONE
+      c.weightx = 0
+      c.anchor = GridBagConstraints.EAST
+
+      add(toggle, c)
+    } else {
+      val c = new GridBagConstraints
+
+      c.insets = new Insets(0, 12, 0, 12)
+      c.fill = GridBagConstraints.HORIZONTAL
+      c.weightx = 1
+
+      add(label, c)
+
+      c.insets = new Insets(0, 0, 0, 12)
+      c.fill = GridBagConstraints.NONE
+      c.weightx = 0
+      c.anchor = GridBagConstraints.EAST
+
+      add(toggle, c)
+    }
   }
 
   def isOn: Boolean = constraint.defaultValue.booleanValue
@@ -103,6 +110,8 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   def oldSize: Boolean = _oldSize
   def oldSize_=(value: Boolean): Unit = {
     _oldSize = value
+    initGUI()
+    repaint()
   }
 
   override def updateConstraints(): Unit = {
