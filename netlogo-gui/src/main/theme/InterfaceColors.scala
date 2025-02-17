@@ -642,6 +642,10 @@ object InterfaceColors {
 
   def errorIcon = new Color(220, 50, 50)
 
+  def stockBackground = ClassicBeige
+
+  def converterBackground = ClassicLightGreen
+
   // Syntax highlighting colors
 
   def commentColor = new Color(90, 90, 90) // gray
