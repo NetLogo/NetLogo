@@ -43,6 +43,7 @@ class WidgetTest extends AnyFunSuite {
     def y = 0
     def width = 5
     def height = 5
+    def oldSize = true
   }
 
   test("Required reader lines") {
