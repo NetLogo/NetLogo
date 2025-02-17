@@ -80,7 +80,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       shapeView.selfFinishPolygon(true)
     }
   }) {
-    setIcon(Utils.icon("/images/shapes-editor/arrow.gif"))
+    setIcon(Utils.iconScaledWithColor("/images/shapes-editor/arrow.png", 15, 15, InterfaceColors.toolbarText))
     setSelected(false)
   }
 
@@ -596,7 +596,8 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   private class CreateAction(name: String, typeID: ElementType, filled: Boolean)
     extends AbstractAction(name) {
 
-    putValue(Action.SMALL_ICON, Utils.icon("/images/shapes-editor/" + name + ".gif"))
+    putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shapes-editor/" + name + ".png", 15, 15,
+                                                          InterfaceColors.toolbarText))
     putValue(Action.SHORT_DESCRIPTION, I18N.gui(name))
 
     def actionPerformed(e: ActionEvent): Unit = {
