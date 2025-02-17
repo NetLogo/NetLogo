@@ -98,6 +98,7 @@ class DummyMonitorWidget
   override def load(monitor: WidgetModel): AnyRef = {
     name(monitor.display.optionToPotentiallyEmptyString)
     decimalPlaces(monitor.precision)
+    oldSize = monitor.oldSize
     setSize(monitor.width, monitor.height)
     this
   }
