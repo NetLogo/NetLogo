@@ -274,7 +274,7 @@ class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel w
 
     // If we're in the middle of drawing a polygon, don't start
     // over - instead, draw the next side
-    tempElement.foreach(_ match {
+    tempElement.getOrElse(null) match {
       case p: Polygon =>
         p.addNewPoint(start)
 
@@ -286,7 +286,7 @@ class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel w
 
           editorDialog.makeUndoableUnfinishedPolygon()
         }
-    })
+    }
   }
 
   // Handler for mouse movement when drawing a polygon
@@ -368,6 +368,8 @@ class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel w
               editorDialog.setEditingElements(true)
               shape.changed()
             }
+
+            tempElement = None
           }
 
         case _ =>
@@ -378,9 +380,9 @@ class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel w
           selectedElement = Some(element)
           editorDialog.setEditingElements(true)
           shape.changed()
-      }
 
-      tempElement = None
+          tempElement = None
+      }
 
       repaint()
     })
