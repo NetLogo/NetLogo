@@ -19,7 +19,7 @@ import org.nlogo.app.infotab.InfoTab
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Printable, PrinterManager, UserAction }
+import org.nlogo.swing.{ OptionPane, Printable, PrinterManager, UserAction }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Events.{ AboutToCloseFilesEvent, AboutToSaveModelEvent, CompileAllEvent, CompiledEvent,
                                  ExternalFileSavedEvent, LoadBeginEvent, LoadErrorEvent, LoadModelEvent,
@@ -213,13 +213,19 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
     val dirty = dirtyMonitor.modelDirty
 
-    val dirtyDialog = new DirtyNotificationDialog(workspace.getFrame, okCallback, cancelCallback)
+    if (dirty) {
+      val index = new OptionPane(workspace.getFrame, I18N.gui.get("dirty.dialog.title"),
+                                 I18N.gui.get("dirty.dialog.message"), OptionPane.Options.OkCancel,
+                                 OptionPane.Icons.Question).getSelectedIndex
 
-    if (dirty)
-      dirtyDialog.setVisible(true)
-    else
+      if (index == 0) {
+        okCallback()
+      } else {
+        cancelCallback()
+      }
+    } else {
       reload()
-
+    }
 
     // Return 'dirty' to stop the file watcher thread if file is dirty. This is
     // to prevent the file dirty dialog from being shown back-to-back.

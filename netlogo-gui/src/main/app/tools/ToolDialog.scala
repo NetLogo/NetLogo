@@ -22,7 +22,13 @@ extends JDialog(frame, I18N.gui.get(s"tools.$i18nKey"), false) {
     onClose()
     setVisible(false)
   })
-  Positioning.center(this, frame)
+
+  override def setVisible(visible: Boolean): Unit = {
+    if (visible)
+      Positioning.center(this, frame)
+
+    super.setVisible(visible)
+  }
 
   /** GUI initialization */
   protected def initGUI(): Unit
