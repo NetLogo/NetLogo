@@ -13,7 +13,7 @@ public final class _wait
     extends Command
     implements org.nlogo.nvm.CustomAssembled {
 
-  private final Let let = new Let("~WAITCOUNTER");
+  private final Let let = new Let("~WAITCOUNTER", null);
 
   @Override
   public void perform(final Context context)

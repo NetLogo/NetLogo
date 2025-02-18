@@ -7,4 +7,4 @@ package org.nlogo.core
 
 // some lets are "synthetic" and don't have a name, so that's the null
 
-case class Let(name: String = null)
+case class Let(name: String = null, token: Token = null)

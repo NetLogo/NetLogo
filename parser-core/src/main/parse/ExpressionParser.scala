@@ -43,27 +43,42 @@ object ExpressionParser {
     while (tokens.head.tpe != terminator) {
       f(tokens, activeScope) match {
         case (stmt, s) if stmt.command.isInstanceOf[core.prim._multilet] =>
-          // The `_multilet` has the job of storing the list value and checking it at runtime to make sure it's long
-          // enough for all the given variable names.
-          val multilet      = stmt.command.asInstanceOf[core.prim._multilet]
           // This creates synthetic `let v1 _multiassignitem` statements, again to allow the rest of compilation to proceed
           // as normal.  The `_multiassignitem` gets the value from the list stored by the opening `_multilet`.
-          val letStatements = multilet.lets.zipWithIndex.map({ case ((token, let), i) =>
-            val splitLet     = new core.prim._let(Some(let), Some(token.text))
-            splitLet.token   = token
-            val item         = new core.prim._multiassignitem()
-            item.token       = token
-            val expression   = new core.ReporterApp(item, Seq(), token.sourceLocation)
-            // the `_letname()` here does absolutely nothing, but it allows future steps to run as though this is a normal `let`.
-            val letName      = new core.ReporterApp(new core.prim._letname(), token.sourceLocation)
-            val letArgs      = Seq(letName, expression)
-            val letStatement = new core.Statement(splitLet, letArgs, token.sourceLocation)
-            letStatement
-          })
+          def recurseLets(command: core.Command): Unit = {
+            command match {
+              case let @ core.prim._let(Some(l), _) =>
+                val item  = new core.prim._multiassignitem()
+
+                item.token = l.token
+
+                val expression   = new core.ReporterApp(item, Seq(), l.token.sourceLocation)
+                // the `_letname()` here does absolutely nothing, but it allows future steps to run as though this is a normal `let`.
+                val letName      = new core.ReporterApp(new core.prim._letname(), l.token.sourceLocation)
+                val letArgs      = Seq(letName, expression)
+                val letStatement = new core.Statement(let, letArgs, l.token.sourceLocation)
+
+                b += letStatement
+
+              case let @ core.prim._multilet(lets) =>
+                val enter = new core.prim._multiassignnest(lets.size)
+
+                enter.token = let.token
+
+                b += new core.Statement(enter, let.token.sourceLocation)
+
+                lets.foreach(recurseLets)
+
+              case _ =>
+            }
+          }
 
           activeScope = s
           b += stmt
-          b ++= letStatements
+
+          // The `_multilet` has the job of storing the list value and checking it at runtime to make sure it's long
+          // enough for all the given variable names.
+          stmt.command.asInstanceOf[core.prim._multilet].lets.foreach(recurseLets)
 
         case (stmt, s) if stmt.command.isInstanceOf[core.prim._multiset] =>
           val multiset = stmt.command.asInstanceOf[core.prim._multiset]
