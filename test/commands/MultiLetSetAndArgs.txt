@@ -117,16 +117,33 @@ SingleNestLiteral
   g1 => 1
   g2 => 2
   g3 => 3
+  O> set g1 0 set g2 0 set g3 0
+  O> set [ g1 [ g2 g3 ] ] [ 1 [ 2 3 ] ]
+  g1 => 1
+  g2 => 2
+  g3 => 3
 
 DoubleNestLiteral
   globals [ g1 g2 ]
   O> let [ [ a b ] ] [ [ 1 2 ] ] set g1 a set g2 b
   g1 => 1
   g2 => 2
+  O> set g1 0 set g2 0
+  O> set [ [ g1 g2 ] ] [ [ 1 2 ] ]
+  g1 => 1
+  g2 => 2
 
 MultiNestLiteral
   globals [ g1 g2 g3 g4 g5 g6 ]
   O> let [ a [ b c [ d f ] g ] ] [ 6 [ 5 4 [ 3 2 ] 1 ] ] set g1 a set g2 b set g3 c set g4 d set g5 f set g6 g
+  g1 => 6
+  g2 => 5
+  g3 => 4
+  g4 => 3
+  g5 => 2
+  g6 => 1
+  O> set g1 0 set g2 0 set g3 0 set g4 0 set g5 0 set g6 0
+  O> set [ g1 [ g2 g3 [ g4 g5 ] g6 ] ] [ 6 [ 5 4 [ 3 2 ] 1 ] ]
   g1 => 6
   g2 => 5
   g3 => 4
@@ -144,9 +161,21 @@ MultiNestFromReporter
   g4 => 42
   g5 => -33
   g6 => -99.9999
+  O> set g1 0 set g2 0 set g3 0 set g4 0 set g5 0 set g6 0
+  O> set [ g1 [ g2 g3 [ g4 g5 ] g6 ] ] get-values
+  g1 => 123
+  g2 => 22.5
+  g3 => 67
+  g4 => 42
+  g5 => -33
+  g6 => -99.9999
 
 MultiNestLengthErrorLess
+  globals [ g1 g2 g3 g4 ]
   O> let [ a [ b c d ] ] [ 1 [ 2 3 ] ] => ERROR Expected list of length 3, got [2.0, 3.0]
+  O> set [ g1 [ g2 g3 g4 ] ] [ 1 [ 2 3 ] ] => ERROR Expected list of length 3, got [2.0, 3.0]
 
 MultiNestLengthErrorGreater
+  globals [ g1 g2 g3 ]
   O> let [ a [ b c ] ] [ 1 [ 2 3 4 ] ] => ERROR Expected list of length 2, got [2.0, 3.0, 4.0]
+  O> set [ g1 [ g2 g3 ] ] [ 1 [ 2 3 4 ] ] => ERROR Expected list of length 2, got [2.0, 3.0, 4.0]

@@ -86,15 +86,16 @@ package org.nlogo.parse
 
 import org.nlogo.core.{ Reporter, Token, TokenType, Let }
 import org.nlogo.core.Fail._
+import org.nlogo.core.prim.{ _abstractlet, _let, _multilet }
 
 import org.nlogo.core
 
 import SymbolType.LocalVariable
 
 object LetScope {
-  def apply(l: core.prim._let, tokens: BufferedIterator[Token], usedNames: SymbolTable): (core.prim._abstractlet, SymbolTable) = {
+  def apply(l: _let, tokens: BufferedIterator[Token], usedNames: SymbolTable): (_abstractlet, SymbolTable) = {
     l match {
-      case core.prim._let(None, _) =>
+      case _let(None, _) =>
         tokens.head match {
           case nameToken @ Token(text, TokenType.Reporter, _) =>
             val name = text.toUpperCase
@@ -104,11 +105,13 @@ object LetScope {
             (l.copy(let = newLet, tokenText = Some(text)), usedNames.addSymbol(name, LocalVariable(newLet)))
 
           case _ @ Token(_, TokenType.OpenBracket, _) =>
-            val (let, multiUsedNames) = recurseScopes(l, tokens, usedNames)
+            val (let, multiUsedNames) = recurseScopes(tokens, usedNames)
 
             // pop the final close bracket
             if (tokens.hasNext)
               tokens.next()
+
+            l.token.refine(let, text = "_multilet")
 
             (let, multiUsedNames)
 
@@ -121,17 +124,15 @@ object LetScope {
 
         }
 
-      case core.prim._let(Some(let), _) =>
+      case _let(Some(let), _) =>
         (l, usedNames.addSymbol(let.name.toUpperCase, LocalVariable(let)))
 
     }
   }
 
-  def recurseScopes(l: core.prim._let, tokens: BufferedIterator[Token],
-                    usedNames: SymbolTable): (core.prim._abstractlet, SymbolTable) = {
-
+  def recurseScopes(tokens: BufferedIterator[Token], usedNames: SymbolTable): (_abstractlet, SymbolTable) = {
     val token = tokens.head
-    var lets = Seq[core.prim._abstractlet]()
+    var lets = Seq[_abstractlet]()
     var multiUsedNames = usedNames
 
     tokens.next()
@@ -140,14 +141,14 @@ object LetScope {
       val token = tokens.head
 
       if (token.tpe == TokenType.OpenBracket) {
-        val (subLet, newUsedNames) = recurseScopes(l, tokens, multiUsedNames)
+        val (subLet, newUsedNames) = recurseScopes(tokens, multiUsedNames)
 
         lets = lets :+ subLet
         multiUsedNames = newUsedNames
       } else {
         val name     = token.text.toUpperCase
         val newLet   = Let(name, token)
-        val splitLet = new core.prim._let(Some(newLet), Some(token.text))
+        val splitLet = new _let(Some(newLet), Some(token.text))
 
         splitLet.token = token
 
@@ -164,14 +165,11 @@ object LetScope {
     }
 
     if (lets.length == 0)
-      exception("The list of variables names given to LET must contain at least one item.", l.token)
+      exception("The list of variables names given to LET must contain at least one item.", token)
 
-    val multi = core.prim._multilet(lets)
+    val multi = _multilet(lets)
 
     multi.token = token
-
-    // what does this do??
-    l.token.refine(multi, text = "_multilet")
 
     (multi, multiUsedNames)
   }

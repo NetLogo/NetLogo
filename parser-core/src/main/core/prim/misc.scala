@@ -469,18 +469,24 @@ case class _sentence() extends Reporter with Pure {
       defaultOption = Some(2),
       minimumOption = Some(0))
 }
-case class _multiset(sets: Seq[Token]) extends Command {
+abstract class _abstractset extends Command {
+  def setList: String
+}
+case class _multiset(sets: Seq[_abstractset]) extends _abstractset {
   override def syntax =
     Syntax.commandSyntax(right = List(Syntax.ListType))
 
-  def setList: String =
-    sets.map(_.text).mkString("[", " ", "]")
+  override def setList: String =
+    sets.map(_.setList).mkString("[", " ", "]")
 
 }
-case class _set() extends Command {
+case class _set() extends _abstractset {
   override def syntax =
     Syntax.commandSyntax(
       right = List(Syntax.WildcardType, Syntax.WildcardType))
+
+  override def setList: String =
+    token.text
 }
 case class _sprout(breedName: String) extends Command {
   def this() = this("")
