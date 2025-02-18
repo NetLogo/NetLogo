@@ -239,22 +239,32 @@ case class _lessthan() extends Reporter with Pure {
       ret = Syntax.BooleanType,
       precedence = Syntax.NormalPrecedence - 4)
 }
-case class _multilet(lets: Seq[(Token, Let)]) extends Command {
+abstract class _abstractlet extends Command {
+  def letList: String
+}
+case class _multilet(lets: Seq[_abstractlet]) extends _abstractlet {
   override def syntax =
     Syntax.commandSyntax(right = List(Syntax.ListType))
 
-  def letList: String =
-    lets.map(_._1.text).mkString("[", " ", "]")
+  override def letList: String =
+    lets.map(_.letList).mkString("[", " ", "]")
 
 }
 case class _multiassignitem() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(ret = Syntax.WildcardType, right = List(Syntax.ListType))
 }
-case class _let(let: Option[Let], tokenText: Option[String]) extends Command {
+case class _multiassignnest(totalNeeded: Int) extends Command {
+  override def syntax =
+    Syntax.commandSyntax()
+}
+case class _let(let: Option[Let], tokenText: Option[String]) extends _abstractlet {
   def this() = this(None, None)
   override def syntax =
     Syntax.commandSyntax(right = List(Syntax.WildcardType, Syntax.WildcardType))
+
+  override def letList: String =
+    let.map(_.token.text).orNull
 
   override def toString = {
     val vals = Seq(let.map(_.toString).getOrElse("None"), tokenText.getOrElse("None"))

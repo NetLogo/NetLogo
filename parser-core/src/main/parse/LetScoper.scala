@@ -84,7 +84,7 @@ package org.nlogo.parse
 //    LetScoper, but it would result in having to change the syntax of the _let primitive,
 //    seems awkward and confusing.
 
-import org.nlogo.core.{ Command, Reporter, Token, TokenType, Let }
+import org.nlogo.core.{ Reporter, Token, TokenType, Let }
 import org.nlogo.core.Fail._
 
 import org.nlogo.core
@@ -92,7 +92,7 @@ import org.nlogo.core
 import SymbolType.LocalVariable
 
 object LetScope {
-  def apply(l: core.prim._let, tokens: BufferedIterator[Token], usedNames: SymbolTable): (Command, SymbolTable) = {
+  def apply(l: core.prim._let, tokens: BufferedIterator[Token], usedNames: SymbolTable): (core.prim._abstractlet, SymbolTable) = {
     l match {
       case core.prim._let(None, _) =>
         tokens.head match {
@@ -104,32 +104,13 @@ object LetScope {
             (l.copy(let = newLet, tokenText = Some(text)), usedNames.addSymbol(name, LocalVariable(newLet)))
 
           case _ @ Token(_, TokenType.OpenBracket, _) =>
-            var multiUsedNames = usedNames
-            var lets: Seq[(Token, Let)] = Seq()
-            tokens.next()
-            while (tokens.hasNext && tokens.head.tpe != TokenType.CloseBracket) {
-              val token    = tokens.head
-              val name     = token.text.toUpperCase
-              val newLet   = Let(name)
-              val tokenLet = (tokens.head, newLet)
-              lets         = lets :+ tokenLet
-              for (tpe <- multiUsedNames.get(name))
-                exception("There is already a " + SymbolType.typeName(tpe) + " called " + name, token)
-              multiUsedNames = multiUsedNames.addSymbol(name, LocalVariable(newLet))
-              tokens.next()
-            }
-            // pop the close bracket...
-            if (tokens.hasNext) {
-              tokens.next()
-            }
+            val (let, multiUsedNames) = recurseScopes(l, tokens, usedNames)
 
-            if (lets.length == 0) {
-              exception("The list of variables names given to LET must contain at least one item.", l.token)
-            }
+            // pop the final close bracket
+            if (tokens.hasNext)
+              tokens.next()
 
-            val multi = core.prim._multilet(lets)
-            l.token.refine(multi, text = "_multilet")
-            (multi, multiUsedNames)
+            (let, multiUsedNames)
 
           case _ @ Token(_, TokenType.Eof, _) =>
             // expression parser will generate the error
@@ -144,6 +125,55 @@ object LetScope {
         (l, usedNames.addSymbol(let.name.toUpperCase, LocalVariable(let)))
 
     }
+  }
+
+  def recurseScopes(l: core.prim._let, tokens: BufferedIterator[Token],
+                    usedNames: SymbolTable): (core.prim._abstractlet, SymbolTable) = {
+
+    val token = tokens.head
+    var lets = Seq[core.prim._abstractlet]()
+    var multiUsedNames = usedNames
+
+    tokens.next()
+
+    while (tokens.hasNext && tokens.head.tpe != TokenType.CloseBracket) {
+      val token = tokens.head
+
+      if (token.tpe == TokenType.OpenBracket) {
+        val (subLet, newUsedNames) = recurseScopes(l, tokens, multiUsedNames)
+
+        lets = lets :+ subLet
+        multiUsedNames = newUsedNames
+      } else {
+        val name     = token.text.toUpperCase
+        val newLet   = Let(name, token)
+        val splitLet = new core.prim._let(Some(newLet), Some(token.text))
+
+        splitLet.token = token
+
+        lets = lets :+ splitLet
+
+        multiUsedNames.get(name).foreach(tpe => {
+          exception("There is already a " + SymbolType.typeName(tpe) + " called " + name, token)
+        })
+
+        multiUsedNames = multiUsedNames.addSymbol(name, LocalVariable(newLet))
+      }
+
+      tokens.next()
+    }
+
+    if (lets.length == 0)
+      exception("The list of variables names given to LET must contain at least one item.", l.token)
+
+    val multi = core.prim._multilet(lets)
+
+    multi.token = token
+
+    // what does this do??
+    l.token.refine(multi, text = "_multilet")
+
+    (multi, multiUsedNames)
   }
 }
 

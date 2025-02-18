@@ -20,7 +20,7 @@ public final class _fd
   public _fd(org.nlogo.core.Token token) {
     super();
     token_$eq(token);
-    let = new Let("~" + token.text() + "_" + token.start());
+    let = new Let("~" + token.text() + "_" + token.start(), null);
   }
 
   @Override

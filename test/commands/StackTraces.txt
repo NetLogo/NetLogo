@@ -1,225 +1,225 @@
 *StackTraces-Simple
-  O> print __boom => STACKTRACE boom!\
-  error while observer running __BOOM\
+  O> print __boom => STACKTRACE boom! /
+  error while observer running __BOOM /
     called by procedure __EVALUATOR
 
 *StackTraces-Simple2
   to go print __boom end
-  O> go => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by procedure GO\
+  O> go => STACKTRACE boom! /
+  error while observer running __BOOM /
+    called by procedure GO /
     called by procedure __EVALUATOR
 
 *StackTraces-Error-After-Other-Calls
   to nothing end
   to go nothing nothing print __boom end
-  O> go => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by procedure GO\
+  O> go => STACKTRACE boom! /
+  error while observer running __BOOM /
+    called by procedure GO /
     called by procedure __EVALUATOR
 
 *StackTraces-Error-Before-Other-Calls
   to nothing end
   to go print __boom nothing nothing end
-  O> go => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by procedure GO\
+  O> go => STACKTRACE boom! /
+  error while observer running __BOOM /
+    called by procedure GO /
     called by procedure __EVALUATOR
 
 *StackTraces-Error-Surrounded-By-Other-Calls
   to nothing end
   to go nothing nothing print __boom nothing nothing end
-  O> go => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by procedure GO\
+  O> go => STACKTRACE boom! /
+  error while observer running __BOOM /
+    called by procedure GO /
     called by procedure __EVALUATOR
 
 *StackTraces-Error-Before-Tick
   to go print __boom tick end
-  O> go => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by procedure GO\
+  O> go => STACKTRACE boom! /
+  error while observer running __BOOM /
+    called by procedure GO /
     called by procedure __EVALUATOR
 
 *StackTraces-Error-After-Tick
   to go reset-ticks tick print __boom end
-  O> go => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by procedure GO\
+  O> go => STACKTRACE boom! /
+  error while observer running __BOOM /
+    called by procedure GO /
     called by procedure __EVALUATOR
 
 *StackTraces-Error-After-Other-Calls-Nested
   to nothing end
   to go2 go end
   to go nothing nothing print __boom end
-  O> go2 => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by procedure GO\
-    called by procedure GO2\
+  O> go2 => STACKTRACE boom! /
+  error while observer running __BOOM /
+    called by procedure GO /
+    called by procedure GO2 /
     called by procedure __EVALUATOR
 
 *StackTraces-Error-After-Other-Calls-Nested-2
   to nothing end
   to go2 nothing go nothing end
   to go nothing nothing print __boom end
-  O> go2 => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by procedure GO\
-    called by procedure GO2\
+  O> go2 => STACKTRACE boom! /
+  error while observer running __BOOM /
+    called by procedure GO /
+    called by procedure GO2 /
     called by procedure __EVALUATOR
 
 *StackTraces-Error-Before-Other-Calls-Nested
   to nothing end
   to go2 go end
   to go print __boom nothing nothing end
-  O> go2 => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by procedure GO\
-    called by procedure GO2\
+  O> go2 => STACKTRACE boom! /
+  error while observer running __BOOM /
+    called by procedure GO /
+    called by procedure GO2 /
     called by procedure __EVALUATOR
 
 *StackTraces-Error-Surrounded-By-Other-Calls-Nested
   to nothing end
   to go2 go end
   to go nothing nothing print __boom nothing nothing end
-  O> go2 => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by procedure GO\
-    called by procedure GO2\
+  O> go2 => STACKTRACE boom! /
+  error while observer running __BOOM /
+    called by procedure GO /
+    called by procedure GO2 /
     called by procedure __EVALUATOR
 
 *StackTraces-Error-Before-Tick-Nested
   to go2 go end
   to go print __boom tick end
-  O> go2 => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by procedure GO\
-    called by procedure GO2\
+  O> go2 => STACKTRACE boom! /
+  error while observer running __BOOM /
+    called by procedure GO /
+    called by procedure GO2 /
     called by procedure __EVALUATOR
 
 *StackTraces-Error-Before-Tick-Nested-2
   to go2 go tick end
   to go print __boom tick end
-  O> go2 => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by procedure GO\
-    called by procedure GO2\
+  O> go2 => STACKTRACE boom! /
+  error while observer running __BOOM /
+    called by procedure GO /
+    called by procedure GO2 /
     called by procedure __EVALUATOR
 
 *StackTraces-Error-After-Tick-Nested
   to go2 go end
   to go reset-ticks tick print __boom end
-  O> go2 => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by procedure GO\
-    called by procedure GO2\
+  O> go2 => STACKTRACE boom! /
+  error while observer running __BOOM /
+    called by procedure GO /
+    called by procedure GO2 /
     called by procedure __EVALUATOR
 
 *StackTraces-Error-After-Tick-Nested-2
   to go2 go tick end
   to go reset-ticks tick print __boom end
-  O> go2 => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by procedure GO\
-    called by procedure GO2\
+  O> go2 => STACKTRACE boom! /
+  error while observer running __BOOM /
+    called by procedure GO /
+    called by procedure GO2 /
     called by procedure __EVALUATOR
 
 *StackTraces-Error-After-Tick-Nested-3
   to go2 reset-ticks tick go tick end
   to go reset-ticks tick print __boom end
-  O> go2 => STACKTRACE boom!\
-  error while observer running __BOOM\
-    called by procedure GO\
-    called by procedure GO2\
+  O> go2 => STACKTRACE boom! /
+  error while observer running __BOOM /
+    called by procedure GO /
+    called by procedure GO2 /
     called by procedure __EVALUATOR
 
 *StackTraces-NumericRangeExceeded
   turtles-own [ n ]
   O> crt 10000 [ set n e ^ 706 ]
-  O> show sum [ n ] of turtles => STACKTRACE math operation produced a number too large for NetLogo\
-  error while observer running SUM\
+  O> show sum [ n ] of turtles => STACKTRACE math operation produced a number too large for NetLogo /
+  error while observer running SUM /
     called by procedure __EVALUATOR
 
 *StackTraceCommand
   to foo error "boom" end
-  O> foo => STACKTRACE boom\
-  error while observer running ERROR\
-    called by procedure FOO\
+  O> foo => STACKTRACE boom /
+  error while observer running ERROR /
+    called by procedure FOO /
     called by procedure __EVALUATOR
 
 *StackTraceCallCommand
   to foo bar end
   to bar error "boom" end
-  O> foo => STACKTRACE boom\
-  error while observer running ERROR\
-    called by procedure BAR\
-    called by procedure FOO\
+  O> foo => STACKTRACE boom /
+  error while observer running ERROR /
+    called by procedure BAR /
+    called by procedure FOO /
     called by procedure __EVALUATOR
 
 *StackTraceForeach
   to foo foreach [ 0 ] [ error "boom" ] end
-  O> foo => STACKTRACE boom\
-  error while observer running ERROR\
-    called by (anonymous command: [ error "boom" ])\
-    called by procedure FOO\
+  O> foo => STACKTRACE boom /
+  error while observer running ERROR /
+    called by (anonymous command: [ error "boom" ]) /
+    called by procedure FOO /
     called by procedure __EVALUATOR
 
 *StackTraceRepeat
   to foo repeat 1 [ error "boom" ] end
-  O> foo => STACKTRACE boom\
-  error while observer running ERROR\
-    called by procedure FOO\
+  O> foo => STACKTRACE boom /
+  error while observer running ERROR /
+    called by procedure FOO /
     called by procedure __EVALUATOR
 
 *StackTraceAsk
   to foo crt 1 ask turtles [ error "boom" ] end
-  O> foo => STACKTRACE boom\
-  error while turtle 0 running ERROR\
-    called by procedure FOO\
+  O> foo => STACKTRACE boom /
+  error while turtle 0 running ERROR /
+    called by procedure FOO /
     called by procedure __EVALUATOR
 
 *StackTraceForeachRepeat
   to foo foreach [ 0 ] [ repeat 1 [ error "boom" ] ] end
-  O> foo => STACKTRACE boom\
-  error while observer running ERROR\
-    called by (anonymous command: [ repeat 1 [ error "boom" ] ])\
-    called by procedure FOO\
+  O> foo => STACKTRACE boom /
+  error while observer running ERROR /
+    called by (anonymous command: [ repeat 1 [ error "boom" ] ]) /
+    called by procedure FOO /
     called by procedure __EVALUATOR
 
 *StackTraceForeachAsk
   to foo crt 1 foreach [ 0 ] [ ask turtles [ error "boom" ] ] end
-  O> foo => STACKTRACE boom\
-  error while turtle 0 running ERROR\
-    called by (anonymous command: [ ask turtles [ error "boom" ] ])\
-    called by procedure FOO\
+  O> foo => STACKTRACE boom /
+  error while turtle 0 running ERROR /
+    called by (anonymous command: [ ask turtles [ error "boom" ] ]) /
+    called by procedure FOO /
     called by procedure __EVALUATOR
 
 *StackTraceForeachRepeatAsk
   to foo foreach [ 0 ] [ repeat 1 [ crt 1 ask turtles [ error "boom" ] ] ] end
   O> random-seed 0
-  O> foo => STACKTRACE boom\
-  error while turtle 0 running ERROR\
-    called by (anonymous command: [ repeat 1 [ crt 1 ask turtles [ error "boom" ] ] ])\
-    called by procedure FOO\
+  O> foo => STACKTRACE boom /
+  error while turtle 0 running ERROR /
+    called by (anonymous command: [ repeat 1 [ crt 1 ask turtles [ error "boom" ] ] ]) /
+    called by procedure FOO /
     called by procedure __EVALUATOR
 
 *StackTracesCallForeachRepeat
   to foo ca crt 1 bar end
   to bar foreach [0] [ repeat 1 [ crt 1 ask turtles [ error "boom" ] ] ] end
   O> random-seed 0
-  O> foo => STACKTRACE boom\
-  error while turtle 1 running ERROR\
-    called by (anonymous command: [ repeat 1 [ crt 1 ask turtles [ error "boom" ] ] ])\
-    called by procedure BAR\
-    called by procedure FOO\
+  O> foo => STACKTRACE boom /
+  error while turtle 1 running ERROR /
+    called by (anonymous command: [ repeat 1 [ crt 1 ask turtles [ error "boom" ] ] ]) /
+    called by procedure BAR /
+    called by procedure FOO /
     called by procedure __EVALUATOR
 
 *StackTracesCall
   to foo ca crt 1 bar end
   to bar error "boom" end
-  O> foo => STACKTRACE boom\
-  error while observer running ERROR\
-    called by procedure BAR\
-    called by procedure FOO\
+  O> foo => STACKTRACE boom /
+  error while observer running ERROR /
+    called by procedure BAR /
+    called by procedure FOO /
     called by procedure __EVALUATOR
 

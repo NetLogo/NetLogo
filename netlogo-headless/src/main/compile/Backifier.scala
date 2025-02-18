@@ -42,6 +42,9 @@ class Backifier(
       case core.prim._multilet(lets) =>
         new nvmprim._multiassign("LET", lets.size)
 
+      case core.prim._multiassignnest(totalNeeded) =>
+        new nvmprim._multiassignnest(totalNeeded)
+
       case core.prim._multiset(sets) =>
         new nvmprim._multiassign("SET", sets.size)
 

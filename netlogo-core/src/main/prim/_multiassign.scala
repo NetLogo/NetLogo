@@ -8,31 +8,47 @@ import org.nlogo.api.Dump
 import org.nlogo.core.LogoList
 import org.nlogo.nvm.{ Context, Command, RuntimePrimitiveException, Workspace }
 
-private class SimpleListIter(private var list: LogoList) {
-  private var nextIndex = 0
+case class NestException(list: LogoList) extends Throwable
+
+private class NestedListIter(private var list: LogoList) {
+  // this functions as a stack, but Stack was deprecated in favor of List since Scala 2.11.0 (Isaac B 2/17/25)
+  private var values: List[AnyRef] = list.toList
+
   def next(): AnyRef = {
-    val value = list.get(nextIndex)
-    nextIndex = nextIndex + 1
+    val value = values.head
+    values = values.tail
     value
+  }
+
+  def nest(totalNeeded: Int): Unit = {
+    values.head match {
+      case l: LogoList =>
+        if (l.size != totalNeeded)
+          throw NestException(l)
+
+        values = l.toList ++ values.tail
+
+      case _ => // error, expected list
+    }
   }
 
   def reset(l: LogoList) = {
     list = l
-    nextIndex = 0
+    values = list.toList
   }
 }
 
 object MultiAssign {
   // While there can only ever be a single multi-assignment happening at a time, because of BehaviorSpace we can have
   // multiple across workspaces so we track them this way.  -Jeremy B February 2024
-  private val currentLists: Map[Workspace, SimpleListIter] = Map()
+  private val currentLists: Map[Workspace, NestedListIter] = Map()
 
   def setCurrentList(workspace: Workspace, list: LogoList) {
     if (MultiAssign.currentLists.contains(workspace)) {
       val iter = MultiAssign.currentLists.getOrElse(workspace, throw new IllegalStateException("No list for multi-assign?"))
       iter.reset(list)
     } else {
-      MultiAssign.currentLists.put(workspace, new SimpleListIter(list))
+      MultiAssign.currentLists.put(workspace, new NestedListIter(list))
     }
   }
 
@@ -41,6 +57,13 @@ object MultiAssign {
       throw new IllegalStateException("We're trying to get a list value for a multi-assign (let or set), but the list hasn't been set?")
     )
     iter.next()
+  }
+
+  def nest(workspace: Workspace, totalNeeded: Int): Unit = {
+    val iter = MultiAssign.currentLists.getOrElse(workspace,
+      throw new IllegalStateException("We're trying to get a list value for a multi-assign (let or set), but the list hasn't been set?")
+    )
+    iter.nest(totalNeeded)
   }
 }
 

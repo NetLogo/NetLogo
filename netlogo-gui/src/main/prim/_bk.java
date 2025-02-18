@@ -20,7 +20,7 @@ public final class _bk
   public _bk(org.nlogo.core.Token token) {
     super();
     token_$eq(token);
-    let = new Let("~" + token.text() + "_" + token.start());
+    let = new Let("~" + token.text() + "_" + token.start(), null);
   }
 
   @Override
