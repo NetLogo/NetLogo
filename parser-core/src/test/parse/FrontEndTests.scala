@@ -258,7 +258,7 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
 
   test("fancy new multi-let") {
     testParse("let [v1 v2] [1 2 3]",
-      "_multilet(List((Token(v1,Reporter,_unknownidentifier()),Let(V1)), (Token(v2,Reporter,_unknownidentifier()),Let(V2))))[_const([1, 2, 3])[]] _let(Let(V1),v1)[_multiassignitem()[]] _let(Let(V2),v2)[_multiassignitem()[]]")
+      "_multilet(List(_let(Let(V1),v1), _let(Let(V2),v2)))[_const([1, 2, 3])[]] _let(Let(V1),v1)[_multiassignitem()[]] _let(Let(V2),v2)[_multiassignitem()[]]")
   }
 
   test("regular old multi-set") {
@@ -268,7 +268,7 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
 
   test("fancy new multi-set") {
     testParse("let v1 0 let v2 0 set [v1 v2] [1 2 3]",
-      "_let(Let(V1),v1)[_const(0)[]] _let(Let(V2),v2)[_const(0)[]] _multiset(List(Token(v1,Reporter,_unknownidentifier()), Token(v2,Reporter,_unknownidentifier())))[_const([1, 2, 3])[]] _set()[_letvariable(Let(V1))[], _multiassignitem()[]] _set()[_letvariable(Let(V2))[], _multiassignitem()[]]")
+      "_let(Let(V1),v1)[_const(0)[]] _let(Let(V2),v2)[_const(0)[]] _multiset(List(_set(), _set()))[_const([1, 2, 3])[]] _set()[_letvariable(Let(V1))[], _multiassignitem()[]] _set()[_letvariable(Let(V2))[], _multiassignitem()[]]")
   }
 
 }
