@@ -45,7 +45,7 @@ object ExpressionParser {
         case (stmt, s) if stmt.command.isInstanceOf[core.prim._multilet] =>
           // This creates synthetic `let v1 _multiassignitem` statements, again to allow the rest of compilation to proceed
           // as normal.  The `_multiassignitem` gets the value from the list stored by the opening `_multilet`.
-          def recurseLets(command: core.Command): Unit = {
+          def recurseLets(command: core.prim._abstractlet): Unit = {
             command match {
               case let @ core.prim._let(Some(l), _) =>
                 val item  = new core.prim._multiassignitem()
@@ -81,44 +81,58 @@ object ExpressionParser {
           stmt.command.asInstanceOf[core.prim._multilet].lets.foreach(recurseLets)
 
         case (stmt, s) if stmt.command.isInstanceOf[core.prim._multiset] =>
-          val multiset = stmt.command.asInstanceOf[core.prim._multiset]
-          val setStatements = multiset.sets.zipWithIndex.map({ case (token, i) =>
-            val splitSet   = new core.prim._set()
-            splitSet.token = token
-            val setVar = token.value match {
-              case uv: core.prim._unknownidentifier =>
-                val varName = token.text.toUpperCase
-                val tpe = s.get(varName).getOrElse(exception(s"There is no variable called ${varName}.", token.sourceLocation))
-                val variable = tpe match {
-                  // normally this happens in `LetVariableScope` but that time has passed I guess?
-                  case LocalVariable(let) =>
-                    val v = new core.prim._letvariable(let)
-                    v.token = token
-                    v
+          def recurseSets(command: core.prim._abstractset): Unit = {
+            command match {
+              case set @ core.prim._set() =>
+                val setVar = set.token.value match {
+                  case uv: core.prim._unknownidentifier =>
+                    val varName = set.token.text.toUpperCase
+                    val tpe = s.get(varName).getOrElse(exception(s"There is no variable called ${varName}.", set.token.sourceLocation))
+                    val variable = tpe match {
+                      // normally this happens in `LetVariableScope` but that time has passed I guess?
+                      case LocalVariable(let) =>
+                        val v = new core.prim._letvariable(let)
+                        v.token = set.token
+                        v
+
+                      case _ =>
+                        uv
+                    }
+
+                    new core.ReporterApp(variable, Seq(), set.token.sourceLocation)
+
+                  case r: core.Reporter =>
+                    new core.ReporterApp(r, Seq(), set.token.sourceLocation)
 
                   case _ =>
-                    uv
+                    exception(s"Command found in multi-set where a variable name was expected: ${set.token.text.toUpperCase}.", set.token.sourceLocation)
+
                 }
-                new core.ReporterApp(variable, Seq(), token.sourceLocation)
 
-              case r: core.Reporter =>
-                new core.ReporterApp(r, Seq(), token.sourceLocation)
+                val item       = new core.prim._multiassignitem()
 
-              case _ =>
-                exception(s"Command found in multi-set where a variable name was expected: ${token.text.toUpperCase}.", token.sourceLocation)
+                item.token     = set.token
 
+                val expression = new core.ReporterApp(item, Seq(), set.token.sourceLocation)
+                val setArgs    = Seq(setVar, expression)
+
+                b += new core.Statement(set, setArgs, set.token.sourceLocation)
+
+              case set @ core.prim._multiset(sets) =>
+                val enter = new core.prim._multiassignnest(sets.size)
+
+                enter.token = set.token
+
+                b += new core.Statement(enter, set.token.sourceLocation)
+
+                sets.foreach(recurseSets)
             }
-            val item         = new core.prim._multiassignitem()
-            item.token       = token
-            val expression   = new core.ReporterApp(item, Seq(), token.sourceLocation)
-            val setArgs      = Seq(setVar, expression)
-            val setStatement = new core.Statement(splitSet, setArgs, token.sourceLocation)
-            setStatement
-          })
+          }
 
           activeScope = s
           b += stmt
-          b ++= setStatements
+
+          stmt.command.asInstanceOf[core.prim._multiset].sets.foreach(recurseSets)
 
         case (stmt, s) =>
           activeScope = s
