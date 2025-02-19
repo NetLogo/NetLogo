@@ -6,6 +6,7 @@ import org.nlogo.agent.World3D
 import org.nlogo.api.Property
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions, WorldDimensions3D }
+import org.nlogo.properties.IntegerEditor
 import org.nlogo.swing.ModalProgressTask
 import org.nlogo.window.Events.RemoveAllJobsEvent
 
@@ -58,139 +59,99 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
   override def viewProperties: Seq[Property] =
     Properties.view2D ++ Properties.view3D
 
-  override def cornerChoices: Seq[OriginConfiguration] = {
+  override def cornerConfigs: Seq[OriginConfiguration] = {
     Seq(
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomSouthwest"),
-        Array(false, true, false, true, false, true),
-        Array(true, false, true, false, true, false)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomNorthwest"),
-        Array(false, true, true, false, false, true),
-        Array(true, false, false, true, true, false)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomNortheast"),
-        Array(true, false, true, false, false, true),
-        Array(false, true, false, true, true, false)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomSoutheast"),
-        Array(true, false, false, true, false, true),
-        Array(false, true, true, false, true, false)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topSouthwest"),
-        Array(false, true, false, true, true, false),
-        Array(true, false, true, false, false, true)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topNorthwest"),
-        Array(false, true, true, false, true, false),
-        Array(true, false, false, true, false, true)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topNortheast"),
-        Array(true, false, true, false, true, false),
-        Array(false, true, false, true, false, true)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topSoutheast"),
-        Array(true, false, false, true, true, false),
-        Array(false, true, true, false, false, true))
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomSouthwest"),
+                          Extent.Min, Extent.Min, Extent.Min),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomNorthwest"),
+                          Extent.Min, Extent.Max, Extent.Min),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomNortheast"),
+                          Extent.Max, Extent.Max, Extent.Min),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.bottomSoutheast"),
+                          Extent.Max, Extent.Min, Extent.Min),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topSouthwest"),
+                          Extent.Min, Extent.Min, Extent.Max),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topNorthwest"),
+                          Extent.Min, Extent.Max, Extent.Max),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topNortheast"),
+                          Extent.Max, Extent.Max, Extent.Max),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.corner.topSoutheast"),
+                          Extent.Max, Extent.Min, Extent.Max)
     )
   }
 
-  override def edgeChoices: Seq[OriginConfiguration] = {
+  override def edgeConfigs: Seq[OriginConfiguration] = {
     Seq(
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.south"),
-        Array(true, true, false, true, true, true),
-        Array(false, false, true, false, false, false)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.north"),
-        Array(true, true, true, false, true, true),
-        Array(false, false, false, true, false, false)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.east"),
-        Array(true, false, true, true, true, true),
-        Array(false, true, false, false, false, false)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.west"),
-        Array(false, true, true, true, true, true),
-        Array(true, false, false, false, false, false)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.bottom"),
-        Array(true, true, true, true, false, true),
-        Array(false, false, false, false, true, false)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.top"),
-        Array(true, true, true, true, true, false),
-        Array(false, false, false, false, false, true))
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.south"),
+                          Extent.Center, Extent.Min, Extent.Center),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.north"),
+                          Extent.Center, Extent.Max, Extent.Center),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.east"),
+                          Extent.Max, Extent.Center, Extent.Center),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.west"),
+                          Extent.Min, Extent.Center, Extent.Center),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.bottom"),
+                          Extent.Center, Extent.Center, Extent.Min),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.3D.origin.location.edge.top"),
+                          Extent.Center, Extent.Center, Extent.Max)
     )
   }
 
-  override def originConfigurations: Seq[OriginConfiguration] = {
-    Seq(
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.center"),
-        Array(false, true, false, true, false, true),
-        Array(false, false, false, false, false, false)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner"),
-        Array(true, true, true, true, true, true),
-        Array(false, false, false, false, false, false)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge"),
-        Array(true, true, true, true, true, true),
-        Array(false, false, false, false, false, false)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.custom"),
-        Array(true, true, true, true, true, true),
-        Array(false, false, false, false, false, false))
-    )
-  }
+  override def configureEditors(editors: Seq[IntegerEditor]): Unit = {
+    editors(0).setEnabled(originType == OriginType.Custom || originConfig.map(_.x != Extent.Min).getOrElse(false))
+    editors(1).setEnabled(originConfig.map(_.x != Extent.Max).getOrElse(true))
+    editors(2).setEnabled(originType == OriginType.Custom || originConfig.map(_.y != Extent.Min).getOrElse(false))
+    editors(3).setEnabled(originConfig.map(_.y != Extent.Max).getOrElse(true))
+    editors(4).setEnabled(originType == OriginType.Custom || originConfig.map(_.z != Extent.Min).getOrElse(false))
+    editors(5).setEnabled(originConfig.map(_.z != Extent.Max).getOrElse(true))
 
-  override def firstEditor: Int = 0
+    if (originType != OriginType.Custom) {
+      val width = maxPxcor - minPxcor
+      val height = maxPycor - minPycor
+      val depth = maxPzcor - minPzcor
 
-  override def lastEditor: Int = 5
+      originConfig.map(_.x) match {
+        case Some(Extent.Min) =>
+          editors(0).set(0)
+          editors(1).set(width)
 
-  override def getSelectedLocation: Int = {
-    val minx = minPxcor
-    val maxx = maxPxcor
-    val miny = minPycor
-    val maxy = maxPycor
-    val maxz = maxPzcor
-    val minz = minPzcor
+        case Some(Extent.Max) =>
+          editors(0).set(-width)
+          editors(1).set(0)
 
-    if (minx == (-maxx) && miny == (-maxy) && minz == (-maxz))
-      0
-    else if ((minx == 0 || maxx == 0)
-        && (miny == 0 || maxy == 0)
-        && (minz == 0 || maxz == 0))
-      1
-    else if (minx == 0 || maxx == 0 ||
-        miny == 0 || maxy == 0 ||
-        minz == 0 || maxz == 0)
-      2
-    else
-      3
-  }
+        case _ =>
+          editors(0).set(-width / 2)
+          editors(1).set(width / 2)
+      }
 
-  override def getSelectedConfiguration: Int = {
-    val minx = minPxcor
-    val maxx = maxPxcor
-    val miny = minPycor
-    val maxy = maxPycor
-    val minz = minPzcor
-    val maxz = maxPzcor
+      originConfig.map(_.y) match {
+        case Some(Extent.Min) =>
+          editors(2).set(0)
+          editors(3).set(height)
 
-    if (minx == 0 && miny == 0 && minz == 0)
-      0
-    else if (minx == 0 && maxy == 0 && minz == 0)
-      1
-    else if (maxx == 0 && maxy == 0 && minz == 0)
-      2
-    else if (maxx == 0 && miny == 0 && minz == 0)
-      3
-    else if (minx == 0 && miny == 0 && maxz == 0)
-      4
-    else if (minx == 0 && maxy == 0 && maxz == 0)
-      5
-    else if (maxx == 0 && maxy == 0 && maxz == 0)
-      6
-    else if (maxx == 0 && miny == 0 && maxz == 0)
-      7
-    else if (minx == 0)
-      3
-    else if (maxx == 0)
-      2
-    else if (miny == 0)
-      0
-    else if (maxy == 0)
-      1
-    else if (minz == 0)
-      4
-    else if (maxz == 0)
-      5
-    else
-      0
+        case Some(Extent.Max) =>
+          editors(2).set(-height)
+          editors(3).set(0)
+
+        case _ =>
+          editors(2).set(-height / 2)
+          editors(3).set(height / 2)
+      }
+
+      originConfig.map(_.z) match {
+        case Some(Extent.Min) =>
+          editors(4).set(0)
+          editors(5).set(depth)
+
+        case Some(Extent.Max) =>
+          editors(4).set(-depth)
+          editors(5).set(0)
+
+        case _ =>
+          editors(4).set(-depth / 2)
+          editors(5).set(depth / 2)
+      }
+    }
   }
 
   def editFinished(): Boolean = {

@@ -2,14 +2,21 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.{ CompilerException, UpdateMode, View => CoreView, WorldDimensions }
 import org.nlogo.api.{ Editable, Property, WorldPropertiesInterface }
+import org.nlogo.core.{ CompilerException, UpdateMode, View => CoreView, WorldDimensions }
+import org.nlogo.properties.IntegerEditor
 import org.nlogo.workspace.WorldLoaderInterface
 
 abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protected val gWidget: ViewWidget, tickCounter: TickCounterLabel)
     extends Editable
     with WorldLoaderInterface
     with WorldPropertiesInterface {
+
+  protected var originType: OriginType = OriginType.Center
+  protected var originConfig: Option[OriginConfiguration] = None
+
+  private var originalType: OriginType = originType
+  private var originalConfig: Option[OriginConfiguration] = originConfig
 
   protected var wrappingChanged: Boolean = false
   protected var edgesChanged: Boolean = false
@@ -40,57 +47,41 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
   def wrappingProperties: Seq[Property]
   def viewProperties: Seq[Property]
   def modelProperties: Seq[Property] = Properties.model
-  def cornerChoices: Seq[OriginConfiguration]
-  def edgeChoices: Seq[OriginConfiguration]
-  def originConfigurations: Seq[OriginConfiguration]
+
+  val originTypes: Seq[OriginType] = Seq(OriginType.Center, OriginType.Corner, OriginType.Edge, OriginType.Custom)
+
+  def cornerConfigs: Seq[OriginConfiguration]
+  def edgeConfigs: Seq[OriginConfiguration]
 
   // the properties are manually added in WorldEditPanel (Isaac B 2/14/25)
   def propertySet = Seq[Property]()
 
-  def firstEditor: Int = 0
+  def getSelectedType: OriginType =
+    originType
 
-  def lastEditor: Int = 3
+  def getSelectedConfig: Option[OriginConfiguration] =
+    originConfig
 
-  def getSelectedLocation: Int = {
-    val minx = minPxcor
-    val maxx = maxPxcor
-    val miny = minPycor
-    val maxy = maxPycor
+  def setOriginType(originType: OriginType): Unit = {
+    this.originType = originType
 
-    if (minx == (-maxx) && miny == (-maxy))
-      0
-    else if ((minx == 0 || maxx == 0) && (miny == 0 || maxy == 0))
-      1
-    else if (minx == 0 || maxx == 0 || miny == 0 || maxy == 0)
-      2
-    else
-      3
+    originConfig = None
   }
 
-  def getSelectedConfiguration: Int = {
-    val minx = minPxcor
-    val maxx = maxPxcor
-    val miny = minPycor
-    val maxy = maxPycor
+  def setOriginConfig(originConfig: Option[OriginConfiguration]): Unit = {
+    this.originConfig = originConfig
+  }
 
-    if (minx == 0 && miny == 0)
-      0
-    else if (minx == 0 && maxy == 0)
-      1
-    else if (maxx == 0 && maxy == 0)
-      2
-    else if (maxx == 0 && miny == 0)
-      3
-    else if (minx == 0)
-      3
-    else if (maxx == 0)
-      2
-    else if (miny == 0)
-      0
-    else if (maxy == 0)
-      1
-    else
-      0
+  def configureEditors(editors: Seq[IntegerEditor]): Unit
+
+  def apply(): Unit = {
+    originalType = originType
+    originalConfig = originConfig
+  }
+
+  def revert(): Unit = {
+    originType = originalType
+    originConfig = originalConfig
   }
 
   def load(view: CoreView): AnyRef = {

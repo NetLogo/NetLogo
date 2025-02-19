@@ -5,6 +5,7 @@ package org.nlogo.window
 import org.nlogo.api.Property
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions }
+import org.nlogo.properties.IntegerEditor
 import org.nlogo.swing.{ ModalProgressTask, OptionPane }
 
 object WorldViewSettings2D {
@@ -28,59 +29,62 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
   override def viewProperties: Seq[Property] =
     Properties.view2D
 
-  override def cornerChoices: Seq[OriginConfiguration] = {
+  override def cornerConfigs: Seq[OriginConfiguration] = {
     Seq(
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.bottomLeft"),
-        Array(false, true, false, true),
-        Array(true, false, true, false)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.topLeft"),
-        Array(false, true, true, false),
-        Array(true, false, false, true)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.topRight"),
-        Array(true, false, true, false),
-        Array(false, true, false, true)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.bottomRight"),
-        Array(true, false, false, true),
-        Array(false, true, true, false))
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.bottomLeft"), Extent.Min, Extent.Min),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.topLeft"), Extent.Min, Extent.Max),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.topRight"), Extent.Max, Extent.Max),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.bottomRight"), Extent.Max, Extent.Min)
     )
   }
 
-  override def edgeChoices: Seq[OriginConfiguration] = {
+  override def edgeConfigs: Seq[OriginConfiguration] = {
     Seq(
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.bottom"),
-        Array(true, true, false, true),
-        Array(false, false, true, false)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.top"),
-        Array(true, true, true, false),
-        Array(false, false, false, true)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.right"),
-        Array(true, false, true, true),
-        Array(false, true, false, false)),
-      new OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.left"),
-        Array(false, true, true, true),
-        Array(true, false, false, false))
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.bottom"), Extent.Center, Extent.Min),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.top"), Extent.Center, Extent.Max),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.right"), Extent.Max, Extent.Center),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.left"), Extent.Min, Extent.Center)
     )
   }
 
-  override def originConfigurations: Seq[OriginConfiguration] = {
-    Seq(
-      new OriginConfiguration
-        (I18N.gui.get("edit.viewSettings.origin.location.center"),
-          Array(false, true, false, true),
-          Array(false, false, false, false)),
-      new OriginConfiguration
-        (I18N.gui.get("edit.viewSettings.origin.location.corner"),
-          Array(true, true, true, true),
-          Array(false, false, false, false)),
-      new OriginConfiguration
-        (I18N.gui.get("edit.viewSettings.origin.location.edge"),
-          Array(true, true, true, true),
-          Array(false, false, false, false)),
-      new OriginConfiguration
-        (I18N.gui.get("edit.viewSettings.origin.location.custom"),
-          Array(true, true, true, true),
-          Array(false, false, false, false))
-    )
+  override def configureEditors(editors: Seq[IntegerEditor]): Unit = {
+    editors(0).setEnabled(originType == OriginType.Custom || originConfig.map(_.x != Extent.Min).getOrElse(false))
+    editors(1).setEnabled(originConfig.map(_.x != Extent.Max).getOrElse(true))
+    editors(2).setEnabled(originType == OriginType.Custom || originConfig.map(_.y != Extent.Min).getOrElse(false))
+    editors(3).setEnabled(originConfig.map(_.y != Extent.Max).getOrElse(true))
+
+    if (originType != OriginType.Custom) {
+      val width = maxPxcor - minPxcor
+      val height = maxPycor - minPycor
+
+      originConfig.map(_.x) match {
+        case Some(Extent.Min) =>
+          editors(0).set(0)
+          editors(1).set(width)
+
+        case Some(Extent.Max) =>
+          editors(0).set(-width)
+          editors(1).set(0)
+
+        case _ =>
+          editors(0).set(-width / 2)
+          editors(1).set(width / 2)
+      }
+
+      originConfig.map(_.y) match {
+        case Some(Extent.Min) =>
+          editors(2).set(0)
+          editors(3).set(height)
+
+        case Some(Extent.Max) =>
+          editors(2).set(-height)
+          editors(3).set(0)
+
+        case _ =>
+          editors(2).set(-height / 2)
+          editors(3).set(height / 2)
+      }
+    }
   }
 
   def editFinished(): Boolean = {
@@ -144,7 +148,7 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
       if (workspace.hubNetRunning) {
         new OptionPane(workspace.getFrame, I18N.gui.get("view.resize.hubnet.prompt"),
                        I18N.gui.get("view.resize.hubnet.warning"),
-                       List(I18N.gui.get("view.resize.hubnet.kick"), I18N.gui.get("view.resize.hubnet.dontkick")),
+                       Seq(I18N.gui.get("view.resize.hubnet.kick"), I18N.gui.get("view.resize.hubnet.dontkick")),
                        OptionPane.Icons.Question).getSelectedIndex
       } else
         HubNetIgnore

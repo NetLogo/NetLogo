@@ -87,24 +87,24 @@ class ComboBox[T](private var items: Seq[T] = Seq())
         case c: Component =>
           popup.add(new CustomMenuItem(c, new AbstractAction {
             def actionPerformed(e: ActionEvent): Unit = {
-              selectItem(c.asInstanceOf[T])
+              selectItem(Option(c.asInstanceOf[T]))
             }
           }))
         case a =>
           popup.add(new MenuItem(new AbstractAction(a.toString) {
             def actionPerformed(e: ActionEvent): Unit = {
-              selectItem(a)
+              selectItem(Option(a))
             }
           }))
       })
 
-      selectItem(items(0))
+      selectItem(Option(items(0)))
     }
   }
 
   def setSelectedItem(item: T): Unit = {
     if (items.contains(item))
-      selectItem(item)
+      selectItem(Option(item))
   }
 
   def getSelectedItem: Option[T] =
@@ -112,14 +112,18 @@ class ComboBox[T](private var items: Seq[T] = Seq())
 
   def setSelectedIndex(index: Int): Unit = {
     if (index >= 0 && index < items.size)
-      selectItem(items(index))
+      selectItem(Option(items(index)))
   }
 
   def getSelectedIndex: Int =
     selectedItem.map(items.indexOf).getOrElse(-1)
 
-  private def selectItem(item: T): Unit = {
-    selectedItem = Option(item)
+  def clearSelection(): Unit = {
+    selectItem(None)
+  }
+
+  private def selectItem(item: Option[T]): Unit = {
+    selectedItem = item
     choiceDisplay.setItem(selectedItem)
 
     itemListeners.foreach(_.itemStateChanged(
