@@ -6,8 +6,8 @@ import java.awt.event.ActionEvent
 
 import javax.swing.{ AbstractAction, Action }
 
+import org.nlogo.api.{ Refreshable, Version }
 import org.nlogo.core.{ I18N, AgentKind }
-import org.nlogo.api.Refreshable
 import org.nlogo.swing.UserAction._
 
 object WorkspaceActions {
@@ -24,7 +24,7 @@ object WorkspaceActions {
       new SimpleGUIWorkspaceAction(I18N.gui("linkMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Link)),
       new SimpleGUIWorkspaceAction(I18N.gui("closeAllAgentMonitors"), ToolsMonitorGroup, workspace, _.closeAgentMonitors),
       new SimpleGUIWorkspaceAction(I18N.gui("closeDeadAgentMonitors"), ToolsMonitorGroup, workspace, _.stopInspectingDeadAgents),
-      new Open3DViewAction(workspace))
+    ) ++ (if (Version.is3D) Seq() else Seq(new Open3DViewAction(workspace)))
 
   def interfaceActions(workspace: GUIWorkspace): Seq[Action] =
     Seq(new SnapToGridAction(workspace))
