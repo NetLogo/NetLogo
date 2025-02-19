@@ -12,7 +12,7 @@ import javax.swing.{ AbstractAction, Action, JComponent, JFrame }
 
 import org.nlogo.api.{ Exceptions, XMLElement, XMLReader, XMLWriter }
 import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
-import org.nlogo.app.common.{ ExceptionCatchingAction, MenuTab, TabsInterface }
+import org.nlogo.app.common.{ CommandLine, ExceptionCatchingAction, MenuTab, TabsInterface }
 import org.nlogo.app.common.Events.SwitchedTabsEvent
 import org.nlogo.app.common.TabsInterface.Filename
 import org.nlogo.app.infotab.InfoTab
@@ -685,22 +685,26 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   }
 
   def handle(e: WidgetErrorEvent): Unit = {
-    var changed = false
+    e.widget match {
+      case cl: CommandLine => // don't track Command Center errors here, only placed widgets (Isaac B 2/19/25)
+      case w =>
+        var changed = false
 
-    if (e.error == null) {
-      changed = widgetErrors.contains(e.widget)
+        if (e.error == null) {
+          changed = widgetErrors.contains(w)
 
-      widgetErrors -= e.widget
-    } else {
-      changed = !widgetErrors.contains(e.widget)
+          widgetErrors -= w
+        } else {
+          changed = !widgetErrors.contains(w)
 
-      widgetErrors += e.widget
-    }
+          widgetErrors += w
+        }
 
-    if (changed) {
-      recolorTab(interfaceTab, widgetErrors.nonEmpty)
+        if (changed) {
+          recolorTab(interfaceTab, widgetErrors.nonEmpty)
 
-      mainTabs.repaint()
+          mainTabs.repaint()
+        }
     }
   }
 
