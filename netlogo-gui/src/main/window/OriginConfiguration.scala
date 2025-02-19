@@ -16,16 +16,7 @@ object OriginType {
   case object Custom extends OriginType(I18N.gui.get("edit.viewSettings.origin.location.custom"))
 }
 
-sealed trait Extent
-
-object Extent {
-  case object Min extends Extent
-  case object Max extends Extent
-  case object Center extends Extent
-  case object Custom extends Extent
-}
-
-case class OriginConfiguration(name: String, x: Extent, y: Extent, z: Extent = Extent.Center) {
+case class OriginConfiguration(name: String, x: Double, y: Double, z: Double = 0.5) {
   override def toString: String =
     name
 }

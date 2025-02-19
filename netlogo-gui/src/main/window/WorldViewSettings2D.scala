@@ -31,59 +31,39 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
 
   override def cornerConfigs: Seq[OriginConfiguration] = {
     Seq(
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.bottomLeft"), Extent.Min, Extent.Min),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.topLeft"), Extent.Min, Extent.Max),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.topRight"), Extent.Max, Extent.Max),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.bottomRight"), Extent.Max, Extent.Min)
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.bottomLeft"), 0, 0),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.topLeft"), 0, 1),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.topRight"), 1, 1),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.bottomRight"), 1, 0)
     )
   }
 
   override def edgeConfigs: Seq[OriginConfiguration] = {
     Seq(
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.bottom"), Extent.Center, Extent.Min),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.top"), Extent.Center, Extent.Max),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.right"), Extent.Max, Extent.Center),
-      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.left"), Extent.Min, Extent.Center)
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.bottom"), 0.5, 0),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.top"), 0.5, 1),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.right"), 1, 0.5),
+      OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.edge.left"), 0, 0.5)
     )
   }
 
   override def configureEditors(editors: Seq[IntegerEditor]): Unit = {
-    editors(0).setEnabled(originType == OriginType.Custom || originConfig.map(_.x != Extent.Min).getOrElse(false))
-    editors(1).setEnabled(originConfig.map(_.x != Extent.Max).getOrElse(true))
-    editors(2).setEnabled(originType == OriginType.Custom || originConfig.map(_.y != Extent.Min).getOrElse(false))
-    editors(3).setEnabled(originConfig.map(_.y != Extent.Max).getOrElse(true))
+    editors(0).setEnabled(originType == OriginType.Custom || originConfig.map(_.x != 0).getOrElse(false))
+    editors(1).setEnabled(originConfig.map(_.x != 1).getOrElse(true))
+    editors(2).setEnabled(originType == OriginType.Custom || originConfig.map(_.y != 0).getOrElse(false))
+    editors(3).setEnabled(originConfig.map(_.y != 1).getOrElse(true))
 
     if (originType != OriginType.Custom) {
-      val width = maxPxcor - minPxcor
-      val height = maxPycor - minPycor
+      val width = (maxPxcor - minPxcor).toDouble
+      val height = (maxPycor - minPycor).toDouble
 
-      originConfig.map(_.x) match {
-        case Some(Extent.Min) =>
-          editors(0).set(0)
-          editors(1).set(width)
+      val x = originConfig.map(_.x).getOrElse(0.5)
+      val y = originConfig.map(_.y).getOrElse(0.5)
 
-        case Some(Extent.Max) =>
-          editors(0).set(-width)
-          editors(1).set(0)
-
-        case _ =>
-          editors(0).set(-width / 2)
-          editors(1).set(width / 2)
-      }
-
-      originConfig.map(_.y) match {
-        case Some(Extent.Min) =>
-          editors(2).set(0)
-          editors(3).set(height)
-
-        case Some(Extent.Max) =>
-          editors(2).set(-height)
-          editors(3).set(0)
-
-        case _ =>
-          editors(2).set(-height / 2)
-          editors(3).set(height / 2)
-      }
+      editors(0).set((-width * x).toInt)
+      editors(1).set((width * (1 - x)).toInt)
+      editors(2).set((-height * y).toInt)
+      editors(3).set((height * (1 - y)).toInt)
     }
   }
 
