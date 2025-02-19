@@ -33,10 +33,14 @@ class CheckBox(text: String = "") extends JCheckBox(text) with HoverDecoration w
       val g2d = Utils.initGraphics2D(g)
 
       if (isSelected) {
-        if (isHover && isEnabled) {
-          g2d.setColor(InterfaceColors.checkboxBackgroundSelectedHover)
+        if (isEnabled) {
+          if (isHover) {
+            g2d.setColor(InterfaceColors.checkboxBackgroundSelectedHover)
+          } else {
+            g2d.setColor(InterfaceColors.checkboxBackgroundSelected)
+          }
         } else {
-          g2d.setColor(InterfaceColors.checkboxBackgroundSelected)
+          g2d.setColor(InterfaceColors.checkboxBackgroundDisabled)
         }
 
         g2d.fillRoundRect(x, y, 14, 14, 4, 4)

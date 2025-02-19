@@ -516,8 +516,14 @@ object InterfaceColors {
 
   def checkboxBackgroundUnselectedHover =
     theme.getOrElse("light") match {
-      case "classic"| "light" => White2
+      case "classic" | "light" => White2
       case "dark" => DarkBlueGray2
+    }
+
+  def checkboxBackgroundDisabled =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => MediumGray
+      case "dark" => LightGrayOutline
     }
 
   def checkboxBorder =
