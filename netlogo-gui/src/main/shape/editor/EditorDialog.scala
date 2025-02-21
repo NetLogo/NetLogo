@@ -261,15 +261,15 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("polygonFilled", ElementType.Polygon, true))
   addToolBarButton(editingToolBar, editingToolGroup, new CreateAction("polygon", ElementType.Polygon, false))
 
-  private val snapToGridButton: CheckBox = new CheckBox(I18N.gui("snapToGrid"), () => {
-    snapToGrid = snapToGridButton.isSelected
+  private val snapToGridButton = new CheckBox(I18N.gui("snapToGrid"), (selected) => {
+    snapToGrid = selected
   }) {
     setForeground(InterfaceColors.dialogText)
     setSelected(true)
   }
 
-  private val rotatableButton: CheckBox = new CheckBox(I18N.gui("rotatable"), () => {
-    shapeRotatable = rotatableButton.isSelected
+  private val rotatableButton = new CheckBox(I18N.gui("rotatable"), (selected) => {
+    shapeRotatable = selected
 
     previews.foreach(_.updateRotation(shapeRotatable))
 

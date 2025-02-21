@@ -305,15 +305,15 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
    * Panel in HubNet Control Center displays server info  and server options.
    */
   class ServerOptionsPanel(mirrorView: Boolean, mirrorPlots: Boolean) extends JPanel with Transparent with ThemeSync {
-    private val mirrorViewCheckBox: CheckBox =
+    private val mirrorViewCheckBox =
       new CheckBox(I18N.gui.get("menu.tools.hubnetControlCenter.mirrorViewOn2dClients"),
-                   () => setViewMirroring(mirrorViewCheckBox.isSelected)) {
+                   (selected) => setViewMirroring(selected)) {
         setSelected(mirrorView)
       }
 
-    private val mirrorPlotsCheckBox: CheckBox =
+    private val mirrorPlotsCheckBox =
       new CheckBox(I18N.gui.get("menu.tools.hubnetControlCenter.mirrorPlotsOnClients"),
-                   () => setPlotMirroring(mirrorViewCheckBox.isSelected)) {
+                   (selected) => setPlotMirroring(selected)) {
         setSelected(mirrorPlots)
       }
 

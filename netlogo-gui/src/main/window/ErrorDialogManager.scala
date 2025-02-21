@@ -167,8 +167,8 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.unknown")) {
 
 class LogoExceptionDialog(owner: Component)
 extends ErrorDialog(owner, I18N.gui.get("error.dialog.logo")) {
-  private lazy val checkbox: CheckBox = new CheckBox(I18N.gui.get("error.dialog.showInternals"), () => {
-    doShow(checkbox.isSelected)
+  private lazy val checkbox = new CheckBox(I18N.gui.get("error.dialog.showInternals"), (selected) => {
+    doShow(selected)
   })
 
   override def show(errorInfo: ErrorInfo, debugInfo: DebuggingInfo): Unit = {

@@ -15,12 +15,16 @@ class CheckBox(text: String = "") extends JCheckBox(text) with HoverDecoration w
     setAction(action)
   }
 
-  def this(text: String, function: () => Unit) = {
+  def this(text: String, function: (Boolean) => Unit) = {
     this(text)
+
+    // this is a workaround for a strange internal error that occurs if you
+    // try to call isSelected directly in the AbstractAction (Isaac B 2/21/25)
+    val selected = () => { isSelected }
 
     setAction(new AbstractAction(text) {
       def actionPerformed(e: ActionEvent): Unit = {
-        function()
+        function(selected())
       }
     })
   }

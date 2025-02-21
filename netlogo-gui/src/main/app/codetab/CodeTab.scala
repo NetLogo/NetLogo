@@ -41,8 +41,8 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   private val proceduresMenu = new ProceduresMenu(CodeTab.this)
 
-  private val separate: CheckBox = new CheckBox(I18N.gui.get("tabs.code.separateCodeWindow"), () => {
-    tabs.switchWindow(separate.isSelected, true)
+  private val separate = new CheckBox(I18N.gui.get("tabs.code.separateCodeWindow"), (selected) => {
+    tabs.switchWindow(selected, true)
   })
 
   private val prefsButton = new Button(I18N.gui.get("tabs.code.preferences"), () => {

@@ -13,12 +13,12 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 class CodeTabPreferences(parent: Frame, tabs: TabsInterface)
   extends JDialog(parent, I18N.gui.get("tabs.code.preferences.title")) with ThemeSync {
 
-  private val tabbing: CheckBox = new CheckBox(I18N.gui.get("tabs.code.indentAutomatically"), () => {
-    tabs.smartTabbingEnabled = tabbing.isSelected
+  private val tabbing = new CheckBox(I18N.gui.get("tabs.code.indentAutomatically"), (selected) => {
+    tabs.smartTabbingEnabled = selected
   })
 
-  private val lineNumbers: CheckBox = new CheckBox(I18N.gui.get("tabs.code.editorLineNumbers"), () => {
-    tabs.lineNumbersVisible = lineNumbers.isSelected
+  private val lineNumbers = new CheckBox(I18N.gui.get("tabs.code.editorLineNumbers"), (selected) => {
+    tabs.lineNumbersVisible = selected
   })
 
   locally {
