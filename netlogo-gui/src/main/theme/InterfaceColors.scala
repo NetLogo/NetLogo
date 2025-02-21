@@ -93,6 +93,12 @@ object InterfaceColors {
       case "dark" => AlmostBlack
     }
 
+  def scrollBarForeground =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => MediumGray
+      case "dark" => DarkGray
+    }
+
   def interfaceBackground =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.WHITE
