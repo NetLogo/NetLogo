@@ -148,6 +148,8 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
         c.insets = new Insets(0, 0, 0, 0)
 
         add(input, c)
+
+        input.requestFocus()
       }
     }, c)
   }
@@ -205,6 +207,8 @@ class DropdownOptionPane[T](parent: Component, title: String, message: String, c
         c.insets = new Insets(0, 0, 0, 0)
 
         add(dropdown, c)
+
+        dropdown.requestFocus()
       }
     }, c)
 

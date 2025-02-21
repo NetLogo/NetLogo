@@ -3,8 +3,8 @@
 package org.nlogo.swing
 
 import java.awt.{ Component, Dimension, GridBagConstraints, GridBagLayout, Insets, ItemSelectable }
-import java.awt.event.{ ActionEvent, ItemEvent, ItemListener, MouseAdapter, MouseEvent, MouseWheelEvent,
-                        MouseWheelListener }
+import java.awt.event.{ ActionEvent, ItemEvent, ItemListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent,
+                        MouseWheelEvent, MouseWheelListener }
 import javax.swing.{ AbstractAction, JLabel, JPanel }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -44,6 +44,7 @@ class ComboBox[T](private var items: Seq[T] = Seq())
   private var itemListeners = Set[ItemListener]()
 
   locally {
+    setFocusable(true)
     setDiameter(6)
     enableHover()
 
@@ -69,6 +70,13 @@ class ComboBox[T](private var items: Seq[T] = Seq())
 
     arrow.addMouseListener(mouseListener)
     arrow.addMouseWheelListener(wheelListener)
+
+    addKeyListener(new KeyAdapter {
+      override def keyPressed(e: KeyEvent): Unit = {
+        if (e.getKeyCode == KeyEvent.VK_DOWN)
+          popup.show(ComboBox.this, 0, getHeight)
+      }
+    })
 
     setItems(items)
     syncTheme()
