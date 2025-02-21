@@ -60,7 +60,7 @@ object ShiftActions {
         lineNum <- startLine to endLine
       } {
         val lineStart = document.lineToStartOffset(lineNum)
-        if (lineStart != -1) {
+        if (lineStart != -1 && document.getLength >= lineStart + 2) {
           val text = document.getText(lineStart, 2)
           text.length match {
             case 0 =>

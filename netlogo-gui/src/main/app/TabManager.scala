@@ -302,16 +302,12 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     smartTabbing = enabled
     mainCodeTab.setIndenter(enabled)
     getExternalFileTabs.foreach(_.setIndenter(enabled))
-
-    prefs.putBoolean("indentAutomatically", enabled)
   }
 
   def lineNumbersVisible: Boolean = mainCodeTab.lineNumbersVisible
   def lineNumbersVisible_=(visible: Boolean): Unit = {
     mainCodeTab.lineNumbersVisible = visible
     getExternalFileTabs.foreach(_.lineNumbersVisible = visible)
-
-    prefs.putBoolean("lineNumbers", visible)
   }
 
   def watchingFiles: Boolean = watcherThread != null
