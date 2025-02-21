@@ -259,6 +259,8 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     def boldStyle(color: Color): Style =
       new Style(color, Style.DEFAULT_BACKGROUND, text.getFont.deriveFont(Font.BOLD), false)
 
+    setBackground(InterfaceColors.codeBackground)
+
     toolBar.setBackground(InterfaceColors.toolbarBackground)
 
     CompileAction.syncTheme()
