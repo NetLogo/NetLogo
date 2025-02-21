@@ -753,9 +753,9 @@ class App extends
           Some(matches(0))
         } else {
           new DropdownOptionPane(frame, I18N.gui.get("tools.magicModelMatcher"),
-                                 I18N.gui.get("tools.magicModelMathcer.mustChoose"),
-                                 matches.map(_.replaceAllLiterally(".nlogo3d", "")
-                                              .replaceAllLiterally(".nlogo", "")).toList)
+                                 I18N.gui.get("tools.magicModelMatcher.mustChoose"),
+                                 matches.map(_.replaceAllLiterally(".nlogox3d", "")
+                                              .replaceAllLiterally(".nlogox", "")).toList)
             .getSelectedChoice
         }
       fullName.foreach(name => {
