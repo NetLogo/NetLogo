@@ -17,10 +17,10 @@ import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, Tab
 import org.nlogo.core.{ AgentKind, CompilerException, I18N }
 import org.nlogo.editor.{ AdvancedEditorArea, DumbIndenter }
 import org.nlogo.ide.FocusedOnlyAction
-import org.nlogo.swing.{ CheckBox, PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction,
+import org.nlogo.swing.{ Button, CheckBox, PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction,
                          Printable => NlogoPrintable, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ CommentableError, ProceduresInterface, Zoomable, Events => WindowEvents }
+import org.nlogo.window.{ CommentableError, GUIWorkspace, ProceduresInterface, Zoomable, Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
 
 abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) extends JPanel
@@ -39,12 +39,18 @@ with ThemeSync {
 
   private val proceduresMenu = new ProceduresMenu(CodeTab.this)
 
-  private val tabbing: CheckBox = new CheckBox(I18N.gui.get("tabs.code.indentAutomatically"), () => {
-    tabs.smartTabbingEnabled = tabbing.isSelected
-  })
-
   private val separate: CheckBox = new CheckBox(I18N.gui.get("tabs.code.separateCodeWindow"), () => {
     tabs.switchWindow(separate.isSelected, true)
+  })
+
+  // if this is initialized in constructor PicoContainer freaks out, so wait until first button click (Isaac B 2/21/25)\
+  private var prefsDialog: Option[CodeTabPreferences] = None
+
+  private val prefsButton = new Button(I18N.gui.get("tabs.code.preferences"), () => {
+    if (prefsDialog.isEmpty)
+      prefsDialog = Some(new CodeTabPreferences(workspace.asInstanceOf[GUIWorkspace].getFrame, tabs))
+
+    prefsDialog.foreach(_.setVisible(true))
   })
 
   private var _dirty = false // Has the buffer changed since it was compiled?
@@ -132,8 +138,8 @@ with ThemeSync {
         add(compileButton)
         add(proceduresMenu)
         add(includedFilesMenu)
-        add(tabbing)
         add(separate)
+        add(prefsButton)
       }
     }
   }
@@ -222,7 +228,6 @@ with ThemeSync {
   def setIndenter(isSmart: Boolean): Unit = {
     if(isSmart) text.setIndenter(new SmartIndenter(new EditorAreaWrapper(text), workspace))
     else text.setIndenter(new DumbIndenter(text))
-    tabbing.setSelected(isSmart)
   }
 
   def setSeparate(selected: Boolean): Unit =
@@ -265,8 +270,11 @@ with ThemeSync {
     proceduresMenu.syncTheme()
     includedFilesMenu.syncTheme()
 
-    tabbing.setForeground(InterfaceColors.toolbarText)
     separate.setForeground(InterfaceColors.toolbarText)
+
+    prefsButton.syncTheme()
+
+    prefsDialog.foreach(_.syncTheme())
 
     text.setBackground(InterfaceColors.codeBackground)
     text.setCaretColor(InterfaceColors.textAreaText)

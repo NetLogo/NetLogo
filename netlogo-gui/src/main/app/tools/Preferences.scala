@@ -84,22 +84,6 @@ object Preferences {
     }
   }
 
-  class LineNumbers(tabs: TabsInterface) extends Preference {
-    val i18nKey = "editorLineNumbers"
-    val component = new CheckBox
-    val requirement = RequiredAction.None
-
-    def load(prefs: JavaPreferences) = {
-      val lineNumsEnabled = prefs.get("line_numbers", "false").toBoolean
-      component.setSelected(lineNumsEnabled)
-    }
-
-    def save(prefs: JavaPreferences) = {
-      prefs.put("line_numbers", component.isSelected.toString)
-      tabs.lineNumbersVisible = component.isSelected
-    }
-  }
-
   object IsLoggingEnabled extends BooleanPreference("loggingEnabled", RequiredAction.Restart, false) {}
 
   class LogDirectory(val frame: Frame) extends Preference {

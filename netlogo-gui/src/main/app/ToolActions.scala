@@ -43,7 +43,6 @@ with MenuAction {
     Preferences.Language,
     Preferences.LoadLastOnStartup,
     new Preferences.ReloadOnExternalChanges(tabs),
-    new Preferences.LineNumbers(tabs),
     Preferences.IsLoggingEnabled,
     new Preferences.LogDirectory(frame),
     Preferences.LogEvents,

@@ -57,8 +57,6 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   private var smartTabbing = true
 
-  smartTabbingEnabled = prefs.getBoolean("indentAutomatically", true)
-
   private var watcherThread: FileWatcherThread = null
 
   private var tabActions: Seq[Action] = TabsMenu.tabActions(this)
@@ -158,6 +156,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       nextTab(separateTabs)
     }
   })
+
+  smartTabbingEnabled = prefs.getBoolean("indentAutomatically", true)
+  lineNumbersVisible = prefs.getBoolean("lineNumbers", true)
 
   def init(fileManager: FileManager, dirtyMonitor: DirtyMonitor, menuBar: MenuBar, actions: Seq[Action]): Unit = {
     this.fileManager = fileManager
@@ -296,16 +297,18 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   def smartTabbingEnabled: Boolean = smartTabbing
   def smartTabbingEnabled_=(enabled: Boolean): Unit = {
     smartTabbing = enabled
-    prefs.putBoolean("indentAutomatically", enabled)
-
     mainCodeTab.setIndenter(enabled)
     getExternalFileTabs.foreach(_.setIndenter(enabled))
+
+    prefs.putBoolean("indentAutomatically", enabled)
   }
 
   def lineNumbersVisible: Boolean = mainCodeTab.lineNumbersVisible
   def lineNumbersVisible_=(visible: Boolean): Unit = {
     mainCodeTab.lineNumbersVisible = visible
     getExternalFileTabs.foreach(_.lineNumbersVisible = visible)
+
+    prefs.putBoolean("lineNumbers", visible)
   }
 
   def watchingFiles: Boolean = watcherThread != null
@@ -418,7 +421,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       offerAction(SaveAllAction)
 
     val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, fileManager.convertTabAction(_),
-                                   smartTabbing, separateTabsWindow.isVisible)
+                                   separateTabsWindow.isVisible)
 
     if (separateTabsWindow.isVisible) {
       addTabWithLabel(separateTabs, tab.filenameForDisplay, tab)

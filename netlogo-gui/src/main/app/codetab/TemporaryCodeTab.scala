@@ -25,7 +25,6 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   private var _filename:          TabsInterface.Filename,
   externalFileManager:            ExternalFileManager,
   conversionAction:               TemporaryCodeTab => Action,
-  smartIndent:                    Boolean,
   separateCodeWindow:             Boolean)
   extends CodeTab(workspace, tabs) {
 
@@ -66,7 +65,6 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     externalFileManager.add(this)
   }
 
-  setIndenter(smartIndent)
   setSeparate(separateCodeWindow)
   lineNumbersVisible = tabs.lineNumbersVisible
 
