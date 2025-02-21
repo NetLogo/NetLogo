@@ -46,7 +46,7 @@ class CodeTabPreferences(parent: Frame, tabs: TabsInterface)
   }
 
   override def setVisible(visible: Boolean): Unit = {
-    if (visible)
+    if (visible && !isVisible)
       Positioning.center(this, parent)
 
     super.setVisible(visible)

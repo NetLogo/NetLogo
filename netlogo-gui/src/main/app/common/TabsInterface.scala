@@ -33,4 +33,6 @@ trait TabsInterface {
   def closeExternalFile(filename: Filename): Unit
 
   def switchWindow(separate: Boolean, preserveSelected: Boolean): Unit
+
+  def showCodeTabPreferences(): Unit
 }

@@ -11,7 +11,7 @@ import java.util.prefs.Preferences
 import javax.swing.{ AbstractAction, Action, JComponent, JFrame }
 
 import org.nlogo.api.{ Exceptions, XMLElement, XMLReader, XMLWriter }
-import org.nlogo.app.codetab.{ CodeTab, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
+import org.nlogo.app.codetab.{ CodeTab, CodeTabPreferences, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
 import org.nlogo.app.common.{ CommandLine, ExceptionCatchingAction, MenuTab, TabsInterface }
 import org.nlogo.app.common.Events.SwitchedTabsEvent
 import org.nlogo.app.common.TabsInterface.Filename
@@ -36,6 +36,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   with WidgetErrorEvent.Handler with WidgetRemovedEvent.Handler with ThemeSync {
 
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
+
+  // if this is initialized in constructor the event system freaks out, so wait until first button click (Isaac B 2/21/25)
+  private var prefsDialog: Option[CodeTabPreferences] = None
 
   private val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager
 
@@ -575,6 +578,13 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     App.app.setWindowTitles()
   }
 
+  def showCodeTabPreferences(): Unit = {
+    if (prefsDialog.isEmpty)
+      prefsDialog = Some(new CodeTabPreferences(workspace.getFrame, this))
+
+    prefsDialog.foreach(_.setVisible(true))
+  }
+
   def reload(): Unit = {
     if (!reloading) {
       reloading = true
@@ -745,6 +755,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     })
 
     separateTabsWindow.syncTheme()
+
+    prefsDialog.foreach(_.syncTheme())
   }
 
   private def tabFilePath: Option[String] =

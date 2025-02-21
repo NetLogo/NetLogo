@@ -174,7 +174,8 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
   }
 
   override def getPreferredSize: Dimension =
-    new Dimension(boldWidth, super.getPreferredSize.height)
+    new Dimension(boldWidth + closeButton.map(_.getPreferredSize.width + 10).getOrElse(0),
+                  super.getPreferredSize.height)
 
   override def paintComponent(g: Graphics): Unit = {
     if (tab == tabsPanel.getSelectedComponent) {

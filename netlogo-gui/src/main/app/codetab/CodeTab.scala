@@ -20,18 +20,20 @@ import org.nlogo.ide.FocusedOnlyAction
 import org.nlogo.swing.{ Button, CheckBox, PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction,
                          Printable => NlogoPrintable, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ CommentableError, GUIWorkspace, ProceduresInterface, Zoomable, Events => WindowEvents }
+import org.nlogo.window.{ CommentableError, ProceduresInterface, Zoomable, Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
 
-abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) extends JPanel
-with ProceduresInterface
-with ProceduresMenuTarget
-with AppEvents.SwitchedTabsEvent.Handler
-with WindowEvents.CompiledEvent.Handler
-with Zoomable
-with NlogoPrintable
-with MenuTab
-with ThemeSync {
+abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
+  extends JPanel
+  with ProceduresInterface
+  with ProceduresMenuTarget
+  with AppEvents.SwitchedTabsEvent.Handler
+  with WindowEvents.CompiledEvent.Handler
+  with Zoomable
+  with NlogoPrintable
+  with MenuTab
+  with ThemeSync {
+
   protected val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
   private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION_CODE)
@@ -43,14 +45,8 @@ with ThemeSync {
     tabs.switchWindow(separate.isSelected, true)
   })
 
-  // if this is initialized in constructor PicoContainer freaks out, so wait until first button click (Isaac B 2/21/25)\
-  private var prefsDialog: Option[CodeTabPreferences] = None
-
   private val prefsButton = new Button(I18N.gui.get("tabs.code.preferences"), () => {
-    if (prefsDialog.isEmpty)
-      prefsDialog = Some(new CodeTabPreferences(workspace.asInstanceOf[GUIWorkspace].getFrame, tabs))
-
-    prefsDialog.foreach(_.setVisible(true))
+    tabs.showCodeTabPreferences()
   })
 
   private var _dirty = false // Has the buffer changed since it was compiled?
@@ -273,8 +269,6 @@ with ThemeSync {
     separate.setForeground(InterfaceColors.toolbarText)
 
     prefsButton.syncTheme()
-
-    prefsDialog.foreach(_.syncTheme())
 
     text.setBackground(InterfaceColors.codeBackground)
     text.setCaretColor(InterfaceColors.textAreaText)
