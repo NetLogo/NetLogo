@@ -164,7 +164,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   // a String in the value field.  ev 8/13/06
   protected var text = ""
   protected var oldText = ""
-  protected var value: Option[AnyRef] = Option.empty[AnyRef]
+  protected var value: Option[AnyRef] = None
   def valueText = text
   def valueObject = value.orNull
   def valueObject(value: AnyRef): Unit = {valueObject(value, false)}
@@ -716,8 +716,12 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     @throws(classOf[CompilerException])
     override def readValue(text: String) = compiler.readNumberFromString(text)
     override def boxValue(text: String): BoxedValue = {
-      val num = compiler.readNumberFromString(text).asInstanceOf[java.lang.Double]
-      NumericInput(num.doubleValue, NumericInput.NumberLabel)
+      if (text.isEmpty) {
+        NumericInput(0, NumericInput.NumberLabel)
+      } else {
+        val num = compiler.readNumberFromString(text).asInstanceOf[java.lang.Double]
+        NumericInput(num.doubleValue, NumericInput.NumberLabel)
+      }
     }
     override def multiline = false
     override def enableMultiline = false
