@@ -161,4 +161,6 @@ object Preferences {
   object FocusOnError extends BooleanPreference("focusOnError", RequiredAction.None, true) {}
 
   object StartSeparateCodeTab extends BooleanPreference("startSeparateCodeTab", RequiredAction.None, false) {}
+
+  object UIScale extends StringPreference("uiScale", RequiredAction.Restart, "1.0")
 }
