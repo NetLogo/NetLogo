@@ -2,12 +2,12 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Component, Dimension, FlowLayout, GridBagConstraints, GridBagLayout, GridLayout,
+import java.awt.{ BorderLayout, Component, Dimension, FlowLayout, Font, GridBagConstraints, GridBagLayout, GridLayout,
                   Insets }
 import java.awt.font.TextAttribute
 import java.io.IOException
 import java.nio.file.Path
-import javax.swing.{ Action, Box, DefaultListModel, JLabel, JList, JPanel, ListCellRenderer, ListModel }
+import javax.swing.{ Action, Box, DefaultListModel, Icon, JLabel, JList, JPanel, ListCellRenderer, ListModel }
 import javax.swing.border.LineBorder
 import javax.swing.event.{ AncestorEvent, AncestorListener, ListDataEvent, ListDataListener }
 
@@ -18,17 +18,12 @@ import scala.collection.mutable.Buffer
 import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager, Version }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ I18N, LibraryInfo, LibraryStatus }
-import org.nlogo.swing.{ BrowserLauncher, Button, EmptyIcon, FilterableListModel, OptionPane, RichAction, ScrollPane,
-                         SwingWorker, TextArea, TextField, Transparent, Utils }
+import org.nlogo.swing.{ BrowserLauncher, Button, EmptyIcon, FilterableListModel, OptionPane, RichAction, ScalableIcon,
+                         ScrollPane, SwingWorker, TextArea, TextField, Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
 object LibrariesTab {
-  val itemHTMLTemplate =
-    """<html>
-      |<h3 style="margin: -10px 0">%s
-      |<p color="#AAAAAA">%s""".stripMargin
-
   def addExtsToSource(source: String, requiredExts: Set[String]): String = {
 
     // We have to be careful here.  I'd love to do clever things, but the extensions
@@ -153,7 +148,7 @@ class LibrariesTab( category:        String
     def embolden(l: JLabel) =
       l.setFont(l.getFont.deriveFont(Collections.singletonMap(TextAttribute.WEIGHT, TextAttribute.WEIGHT_BOLD)))
 
-    libraryList.setCellRenderer(new CellRenderer(libraryList.getCellRenderer))
+    libraryList.setCellRenderer(new CellRenderer)
 
     installationPanel.add(installButton)
 
@@ -379,38 +374,67 @@ class LibrariesTab( category:        String
   private def updateSingleOperationStatus(operation: String, libName: String) =
     updateStatus(I18N.gui(operation, libName))
 
-  private class CellRenderer(originalRenderer: ListCellRenderer[_ >: LibraryInfo]) extends ListCellRenderer[LibraryInfo] {
-
-    private val noIcon        = new EmptyIcon(32, 32)
-    private val upToDateIcon  = Utils.iconScaledWithColor("/images/check.png", 20, 20, InterfaceColors.checkFilled)
-    private val warningIcon   = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 20, 20,
+  private class CellRenderer extends JPanel(new GridBagLayout) with ListCellRenderer[LibraryInfo] {
+    private val noIcon        = new ScalableIcon(new EmptyIcon(24, 24), 24, 24)
+    private val upToDateIcon  = Utils.iconScaledWithColor("/images/check.png", 24, 24, InterfaceColors.checkFilled)
+    private val warningIcon   = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 24, 24,
                                                           InterfaceColors.warningIcon)
-    private val canUpdateIcon = Utils.iconScaledWithColor("/images/update.png", 20, 20, InterfaceColors.updateIcon)
+    private val canUpdateIcon = Utils.iconScaledWithColor("/images/update.png", 24, 24, InterfaceColors.updateIcon)
 
-    override def getListCellRendererComponent(list: JList[_ <: LibraryInfo], value: LibraryInfo, index: Int, isSelected: Boolean, hasFocus: Boolean) = {
-      val originalComponent = originalRenderer.getListCellRendererComponent(list, value, index, isSelected, hasFocus)
-      val newComponent =
-        originalComponent match {
-          case label: JLabel =>
-            label.setText(itemHTMLTemplate.format(value.name, value.shortDescription))
-            label.setIcon(statusIcon(value.status, value.codeName))
-            label.setIconTextGap(6)
-            label
-          case _ => originalComponent
-        }
+    private val iconLabel = new JLabel
+    private val nameLabel = new JLabel
+    private val descLabel = new JLabel
 
-      if (isSelected) {
-        newComponent.setBackground(InterfaceColors.dialogBackgroundSelected)
-        newComponent.setForeground(InterfaceColors.dialogTextSelected)
-      } else {
-        newComponent.setBackground(InterfaceColors.dialogBackground)
-        newComponent.setForeground(InterfaceColors.dialogText)
-      }
+    locally {
+      val c = new GridBagConstraints
 
-      newComponent
+      c.gridx = 0
+      c.gridy = 0
+      c.gridheight = 2
+      c.anchor = GridBagConstraints.WEST
+      c.insets = new Insets(6, 6, 6, 6)
+
+      add(iconLabel, c)
+
+      c.gridx = 1
+      c.gridy = 0
+      c.gridheight = 1
+      c.weightx = 1
+      c.insets = new Insets(6, 0, 3, 6)
+
+      add(nameLabel, c)
+
+      c.gridy = 1
+      c.insets = new Insets(0, 0, 6, 6)
+
+      add(descLabel, c)
+
+      nameLabel.setFont(nameLabel.getFont.deriveFont(14.0f).deriveFont(Font.BOLD))
     }
 
-    private def statusIcon(status: LibraryStatus, extName: String) =
+    override def getListCellRendererComponent(list: JList[_ <: LibraryInfo], value: LibraryInfo, index: Int,
+                                              isSelected: Boolean, hasFocus: Boolean): Component = {
+
+      iconLabel.setIcon(statusIcon(value.status, value.codeName))
+      nameLabel.setText(value.name)
+      descLabel.setText(value.shortDescription)
+
+      if (isSelected) {
+        setBackground(InterfaceColors.dialogBackgroundSelected)
+
+        nameLabel.setForeground(InterfaceColors.dialogTextSelected)
+        descLabel.setForeground(InterfaceColors.dialogTextSelected)
+      } else {
+        setBackground(InterfaceColors.dialogBackground)
+
+        nameLabel.setForeground(InterfaceColors.dialogText)
+        descLabel.setForeground(InterfaceColors.dialogText)
+      }
+
+      this
+    }
+
+    private def statusIcon(status: LibraryStatus, extName: String): Icon =
       if (!extPathMappings.contains(extName)) {
         status match {
           case LibraryStatus.UpToDate   => upToDateIcon
