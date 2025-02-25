@@ -356,11 +356,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   private def addTabWithLabel(tabsPanel: TabsPanel, title: String, tab: Component): Unit = {
     tabsPanel.addTab(null, tab)
 
-    val tabLabel = new TabLabel(title, tab)
-
-    tabLabel.setTabsPanel(tabsPanel)
-
-    tabsPanel.setTabComponentAt(tabsPanel.getTabCount - 1, tabLabel)
+    tabsPanel.setTabComponentAt(tabsPanel.getTabCount - 1, new TabLabel(tabsPanel, title, tab))
 
     tab match {
       case ts: ThemeSync => ts.syncTheme()

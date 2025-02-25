@@ -2,10 +2,10 @@
 
 package org.nlogo.app
 
-import java.awt.{ Component, Dimension, FlowLayout, Graphics, Insets }
+import java.awt.{ Component, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
-import javax.swing.{ Box, JComponent, JLabel, JPanel, JTabbedPane, SwingConstants }
+import javax.swing.{ JComponent, JLabel, JPanel, JTabbedPane, SwingConstants }
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
 import org.nlogo.app.codetab.{ CodeTab, MainCodeTab }
@@ -118,8 +118,8 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
   }
 }
 
-class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) {
-  private var tabsPanel: TabsPanel = null
+class TabLabel(startPanel: TabsPanel, text: String, tab: Component) extends JPanel(new GridBagLayout) {
+  private var tabsPanel: TabsPanel = startPanel
 
   def setTabsPanel(tabsPanel: TabsPanel): Unit = {
     this.tabsPanel = tabsPanel
@@ -143,34 +143,43 @@ class TabLabel(text: String, tab: Component) extends JPanel(new FlowLayout(FlowL
 
   var error = false
 
-  setOpaque(false)
+  locally {
+    setOpaque(false)
 
-  add(textLabel)
+    val c = new GridBagConstraints
 
-  tab match {
-    case main: MainCodeTab =>
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.weightx = 1
 
-    case codeTab: CodeTab =>
-      val button = new CloseButton
+    add(textLabel, c)
 
-      button.addMouseListener(new MouseAdapter {
-        override def mouseClicked(e: MouseEvent): Unit = {
-          if (e.getButton == MouseEvent.BUTTON1) {
-            try {
-              codeTab.close()
-            } catch {
-              case e: UserCancelException =>
+    tab match {
+      case main: MainCodeTab =>
+
+      case codeTab: CodeTab =>
+        val button = new CloseButton
+
+        button.addMouseListener(new MouseAdapter {
+          override def mouseClicked(e: MouseEvent): Unit = {
+            if (e.getButton == MouseEvent.BUTTON1) {
+              try {
+                codeTab.close()
+              } catch {
+                case e: UserCancelException =>
+              }
             }
           }
-        }
-      })
+        })
 
-      add(Box.createHorizontalStrut(10))
-      add(button)
+        c.fill = GridBagConstraints.NONE
+        c.weightx = 0
 
-      closeButton = Some(button)
+        add(button, c)
 
-    case _ =>
+        closeButton = Some(button)
+
+      case _ =>
+    }
   }
 
   override def getPreferredSize: Dimension =
