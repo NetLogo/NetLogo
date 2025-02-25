@@ -654,6 +654,8 @@ object InterfaceColors {
 
   def errorIcon = new Color(220, 50, 50)
 
+  def updateIcon = new Color(240, 91, 0)
+
   def stockBackground = ClassicBeige
 
   def converterBackground = ClassicLightGreen

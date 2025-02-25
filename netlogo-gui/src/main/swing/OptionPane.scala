@@ -85,6 +85,8 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
 
         add(new JLabel(icon), c)
 
+        c.fill = GridBagConstraints.HORIZONTAL
+        c.weightx = 1
         c.insets = new Insets(0, 0, 0, 0)
 
         add(new JLabel(getWrappedMessage) {

@@ -382,9 +382,10 @@ class LibrariesTab( category:        String
   private class CellRenderer(originalRenderer: ListCellRenderer[_ >: LibraryInfo]) extends ListCellRenderer[LibraryInfo] {
 
     private val noIcon        = new EmptyIcon(32, 32)
-    private val upToDateIcon  = Utils.iconScaled("/images/nice-checkmark.png", 32, 32)
-    private val warningIcon   = Utils.iconScaled("/images/exclamation.png", 32, 32)
-    private val canUpdateIcon = Utils.iconScaled("/images/update.gif", 32, 32)
+    private val upToDateIcon  = Utils.iconScaledWithColor("/images/check.png", 20, 20, InterfaceColors.checkFilled)
+    private val warningIcon   = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 20, 20,
+                                                          InterfaceColors.warningIcon)
+    private val canUpdateIcon = Utils.iconScaledWithColor("/images/update.png", 20, 20, InterfaceColors.updateIcon)
 
     override def getListCellRendererComponent(list: JList[_ <: LibraryInfo], value: LibraryInfo, index: Int, isSelected: Boolean, hasFocus: Boolean) = {
       val originalComponent = originalRenderer.getListCellRendererComponent(list, value, index, isSelected, hasFocus)
@@ -393,7 +394,7 @@ class LibrariesTab( category:        String
           case label: JLabel =>
             label.setText(itemHTMLTemplate.format(value.name, value.shortDescription))
             label.setIcon(statusIcon(value.status, value.codeName))
-            label.setIconTextGap(0)
+            label.setIconTextGap(6)
             label
           case _ => originalComponent
         }
