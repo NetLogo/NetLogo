@@ -13,9 +13,11 @@ class ScrollPane(component: Component, vScroll: Int = ScrollPaneConstants.VERTIC
                  hScroll: Int = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   extends JScrollPane(component, vScroll, hScroll) {
 
-  // these need org.nlogo.swing prefix because JScrollPane already has a ScrollBar class (Isaac B 2/24/25)
-  setHorizontalScrollBar(new org.nlogo.swing.ScrollBar(Adjustable.HORIZONTAL))
-  setVerticalScrollBar(new org.nlogo.swing.ScrollBar(Adjustable.VERTICAL))
+  // this is needed because JScrollPane defines its own ScrollBar class (Isaac B 2/25/25)
+  import org.nlogo.swing.{ ScrollBar => NLScrollBar }
+
+  setHorizontalScrollBar(new NLScrollBar(Adjustable.HORIZONTAL))
+  setVerticalScrollBar(new NLScrollBar(Adjustable.VERTICAL))
 
   override def setBackground(color: Color): Unit = {
     super.setBackground(color)

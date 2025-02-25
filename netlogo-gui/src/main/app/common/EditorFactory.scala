@@ -3,7 +3,7 @@
 package org.nlogo.app.common
 
 import java.util.prefs.Preferences
-import java.awt.{ Font, Graphics }
+import java.awt.{ Adjustable, Font, Graphics }
 import java.awt.event.{InputEvent, KeyEvent}
 import javax.swing.{ Action, KeyStroke }
 
@@ -81,6 +81,12 @@ class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManag
     editor match {
       case aea: AdvancedEditorArea =>
         val sp = new RTextScrollPane(aea) with EditorScrollPane {
+          // this is needed because JScrollPane defines its own ScrollBar class (Isaac B 2/25/25)
+          import org.nlogo.swing.{ ScrollBar => NLScrollBar }
+
+          setHorizontalScrollBar(new NLScrollBar(Adjustable.HORIZONTAL))
+          setVerticalScrollBar(new NLScrollBar(Adjustable.VERTICAL))
+
           def lineNumbersEnabled = getLineNumbersEnabled
           override def setFont(f: Font) = {
             super.setFont(f)
