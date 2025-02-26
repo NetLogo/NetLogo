@@ -662,6 +662,24 @@ class WidgetPanel(val workspace: GUIWorkspace)
       } else if (e.getKeyCode == KeyEvent.VK_CONTROL) {
         interceptPane.enableIntercept()
       }
+    } else if (interactMode == InteractMode.SELECT && selectedWrappers.nonEmpty) {
+      val dist = if (e.isShiftDown) 10 else 1
+
+      e.getKeyCode match {
+        case KeyEvent.VK_RIGHT =>
+          WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX + dist, w.getY)))
+
+        case KeyEvent.VK_LEFT if selectedWrappers.forall(_.widgetX - dist > 0) =>
+          WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX - dist, w.getY)))
+
+        case KeyEvent.VK_UP if selectedWrappers.forall(_.widgetY - dist > 0) =>
+          WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX, w.getY - dist)))
+
+        case KeyEvent.VK_DOWN =>
+          WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX, w.getY + dist)))
+
+        case _ =>
+      }
     }
   }
 
