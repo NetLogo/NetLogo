@@ -19,7 +19,7 @@ import org.nlogo.editor.{ EditorArea, UndoManager }
 import org.nlogo.log.LogManager
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.window.{ ButtonWidget, ChooserWidget, Events => WindowEvents, GUIWorkspace, InputBoxWidget,
-                          InterfaceGlobalWidget, MonitorWidget, PlotWidget, SliderWidget, ViewWidget,
+                          InterfaceGlobalWidget, InterfaceMode, MonitorWidget, PlotWidget, SliderWidget, ViewWidget,
                           ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
   WindowEvents.{ CompileAllEvent, LoadBeginEvent, LoadWidgetsEvent, RemoveConstraintEvent, WidgetRemovedEvent }
 import org.nlogo.workspace.Evaluator
@@ -47,8 +47,8 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   }
 
   override def focusLost(e: FocusEvent): Unit = {
-    if (interactMode == InteractMode.Add)
-      setInteractMode(InteractMode.Interact)
+    if (interactMode == InterfaceMode.Add)
+      setInteractMode(InterfaceMode.Interact)
 
     enableButtonKeys(false)
   }

@@ -3,7 +3,6 @@
 app.common.WidgetSelected - org.nlogo.window.Widget widget - boolean selected
 app.common.SwitchedTabs - java.awt.Component oldTab - java.awt.Component newTab
 app.common.OpenLibrariesDialog
-app.common.InterfaceMode - org.nlogo.app.interfacetab.InteractMode mode
 
 # org.nlogo.window package
 
@@ -31,6 +30,7 @@ window.ExternalFileSaved - String path
 window.Iconified - java.awt.Frame frame - boolean iconified
 window.InputBoxLoseFocus
 window.InterfaceGlobal - InterfaceGlobalWidget widget - boolean nameChanged - boolean updating - boolean valueChanged - boolean buttonReleased
+window.InterfaceMode - org.nlogo.window.InterfaceMode mode
 window.JobRemoved - org.nlogo.api.JobOwner owner
 window.JobStopping - org.nlogo.api.JobOwner owner
 window.Load3DShapes - String filename

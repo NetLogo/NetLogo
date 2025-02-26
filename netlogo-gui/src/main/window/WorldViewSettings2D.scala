@@ -5,7 +5,6 @@ package org.nlogo.window
 import org.nlogo.api.Property
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions }
-import org.nlogo.properties.IntegerEditor
 import org.nlogo.swing.{ ModalProgressTask, OptionPane }
 
 object WorldViewSettings2D {
@@ -47,7 +46,7 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
     )
   }
 
-  override def configureEditors(editors: Seq[IntegerEditor]): Unit = {
+  override def configureEditors(editors: Seq[WorldIntegerEditor]): Unit = {
     editors(0).setEnabled(originType == OriginType.Custom || originConfig.map(_.x != 0).getOrElse(false))
     editors(1).setEnabled(originConfig.map(_.x != 1).getOrElse(true))
     editors(2).setEnabled(originType == OriginType.Custom || originConfig.map(_.y != 0).getOrElse(false))

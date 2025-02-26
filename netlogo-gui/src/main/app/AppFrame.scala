@@ -9,11 +9,12 @@ import javax.swing.{ JFrame, WindowConstants }
 import org.nlogo.api.Exceptions
 import org.nlogo.awt.UserCancelException
 import org.nlogo.swing.NetLogoIcon
+import org.nlogo.theme.ThemeSync
 import org.nlogo.window.LinkRoot
 import org.nlogo.window.Event.LinkParent
 import org.nlogo.window.Events.IconifiedEvent
 
-class AppFrame extends JFrame with LinkParent with LinkRoot with NetLogoIcon {
+class AppFrame extends JFrame with LinkParent with LinkRoot with NetLogoIcon with ThemeSync {
   setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
 
   getContentPane.setLayout(new BorderLayout)
@@ -30,4 +31,8 @@ class AppFrame extends JFrame with LinkParent with LinkRoot with NetLogoIcon {
       new IconifiedEvent(AppFrame.this, false).raise(App.app)
     }
   })
+
+  override def syncTheme(): Unit = {
+    App.app.syncWindowThemes()
+  }
 }

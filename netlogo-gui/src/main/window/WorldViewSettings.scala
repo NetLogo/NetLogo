@@ -4,8 +4,12 @@ package org.nlogo.window
 
 import org.nlogo.api.{ Editable, Property, WorldPropertiesInterface }
 import org.nlogo.core.{ CompilerException, UpdateMode, View => CoreView, WorldDimensions }
-import org.nlogo.properties.IntegerEditor
 import org.nlogo.workspace.WorldLoaderInterface
+
+trait WorldIntegerEditor {
+  def setEnabled(enabled: Boolean): Unit
+  def set(value: Int): Unit
+}
 
 abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protected val gWidget: ViewWidget, tickCounter: TickCounterLabel)
     extends Editable
@@ -72,7 +76,7 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
     this.originConfig = originConfig
   }
 
-  def configureEditors(editors: Seq[IntegerEditor]): Unit
+  def configureEditors(editors: Seq[WorldIntegerEditor]): Unit
 
   def apply(): Unit = {
     originalType = originType

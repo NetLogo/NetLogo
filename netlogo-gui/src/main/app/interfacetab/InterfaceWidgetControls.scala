@@ -13,8 +13,8 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ DropdownArrow, HoverDecoration, MenuItem, PopupMenu, RoundedBorderPanel, ToolBarToggleButton,
                          Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents, GUIWorkspace, JobWidget, Widget,
-                          WidgetInfo }
+import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents, GUIWorkspace, InterfaceMode, JobWidget,
+                          Widget, WidgetInfo }
 
 import scala.collection.mutable.HashSet
 
@@ -26,7 +26,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   extends JPanel(new GridBagLayout)
   with Transparent
   with AppEvents.WidgetSelectedEvent.Handler
-  with AppEvents.InterfaceModeEvent.Handler
+  with WindowEvents.InterfaceModeEvent.Handler
   with WindowEvents.WidgetForegroundedEvent.Handler
   with WindowEvents.WidgetRemovedEvent.Handler
   with WindowEvents.EditWidgetEvent.Handler
@@ -82,13 +82,13 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
   class InteractAction extends AbstractAction {
     def actionPerformed(e: ActionEvent): Unit = {
-      wPanel.setInteractMode(InteractMode.Interact)
+      wPanel.setInteractMode(InterfaceMode.Interact)
     }
   }
 
   class SelectAction extends AbstractAction {
     def actionPerformed(e: ActionEvent): Unit = {
-      wPanel.setInteractMode(InteractMode.Select)
+      wPanel.setInteractMode(InterfaceMode.Select)
     }
   }
 
@@ -97,7 +97,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       if (editButton.isSelected) {
         new WindowEvents.EditWidgetEvent(null).raise(InterfaceWidgetControls.this)
 
-        wPanel.setInteractMode(InteractMode.Edit)
+        wPanel.setInteractMode(InterfaceMode.Edit)
       }
 
       else
@@ -109,7 +109,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     def actionPerformed(e: ActionEvent): Unit = {
       if (deleteButton.isSelected) {
         wPanel.deleteSelectedWidgets()
-        wPanel.setInteractMode(InteractMode.Delete)
+        wPanel.setInteractMode(InterfaceMode.Delete)
       }
 
       else
@@ -198,21 +198,21 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     updateTargets(e.widget)
   }
 
-  def handle(e: AppEvents.InterfaceModeEvent): Unit = {
+  def handle(e: WindowEvents.InterfaceModeEvent): Unit = {
     e.mode match {
-      case InteractMode.Interact =>
+      case InterfaceMode.Interact =>
         interactButton.setSelected(true)
 
-      case InteractMode.Select =>
+      case InterfaceMode.Select =>
         selectButton.setSelected(true)
 
-      case InteractMode.Edit =>
+      case InterfaceMode.Edit =>
         editButton.setSelected(true)
 
-      case InteractMode.Delete =>
+      case InterfaceMode.Delete =>
         deleteButton.setSelected(true)
 
-      case InteractMode.Add =>
+      case InterfaceMode.Add =>
         buttonGroup.clearSelection()
 
     }

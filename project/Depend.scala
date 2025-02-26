@@ -19,21 +19,27 @@ object Depend {
       IO.write(ddfFile, ddfContents)
       import classycle.Analyser
       import classycle.dependency.{ DefaultResultRenderer, DependencyChecker }
-      import java.io.PrintWriter
+      import java.io.{ PrintWriter, StringWriter }
       import java.lang.Object
       import java.util.HashMap
       import scala.io.Source
-      def main() = {
+      // if the output goes straight to System.out, it sometimes doesn't print everything,
+      // so you can't tell what went wrong (Isaac B 2/25/25)
+      val writer = new StringWriter
+      def main(): Boolean = {
         new DependencyChecker(new Analyser(Array(classes)), Source.fromFile(ddfFile).getLines.mkString("\n"),
                               new HashMap[Object, Object],
-                              new DefaultResultRenderer()).check(new PrintWriter(System.out))
+                              new DefaultResultRenderer()).check(new PrintWriter(writer))
       }
-      def test() = {
+      def test(): Boolean = {
         new DependencyChecker(new Analyser(Array(testClasses)), Source.fromFile(ddfFile).getLines.mkString("\n"),
                               new HashMap[Object, Object],
-                              new DefaultResultRenderer()).check(new PrintWriter(System.out))
+                              new DefaultResultRenderer()).check(new PrintWriter(writer))
       }
-      assert(main())
+      val result = main()
+      if (writer.toString.nonEmpty)
+        println(writer.toString)
+      assert(result)
     }
 
   private def ddfContents: String = {

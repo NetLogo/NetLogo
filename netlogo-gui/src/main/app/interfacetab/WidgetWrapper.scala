@@ -13,7 +13,7 @@ import org.nlogo.awt.{ Coordinates, Mouse }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ MenuItem, PopupMenu, WrappingPopupMenu, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ MouseMode, Widget, WidgetWrapperInterface }
+import org.nlogo.window.{ InterfaceMode, MouseMode, Widget, WidgetWrapperInterface }
 import org.nlogo.window.Events.{ DirtyEvent, EditWidgetEvent, ExportWidgetEvent, WidgetForegroundedEvent }
 
 object WidgetWrapper {
@@ -849,7 +849,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     if (selected) {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deselect")) {
         def actionPerformed(e: ActionEvent): Unit = {
-          interfacePanel.setInteractMode(InteractMode.Select)
+          interfacePanel.setInteractMode(InterfaceMode.Select)
           selected(false)
           interfacePanel.setForegroundWrapper()
         }
@@ -925,7 +925,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     } else {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.select")) {
         def actionPerformed(e: ActionEvent): Unit = {
-          interfacePanel.setInteractMode(InteractMode.Select)
+          interfacePanel.setInteractMode(InterfaceMode.Select)
           selected(true)
           foreground()
         }
@@ -977,7 +977,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     override def paintComponent(g: Graphics): Unit = {
       val g2d = Utils.initGraphics2D(g)
 
-      if (interfacePanel.getInteractMode != InteractMode.Interact && !selected && !highlighted && !dragging) {
+      if (interfacePanel.getInteractMode != InterfaceMode.Interact && !selected && !highlighted && !dragging) {
         if (widget.isNote) {
           g2d.setColor(InterfaceColors.widgetPreviewCoverNote)
         } else {

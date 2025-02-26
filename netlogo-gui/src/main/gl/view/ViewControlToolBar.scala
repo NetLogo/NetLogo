@@ -10,7 +10,7 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.OptionPane
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InteractMode }
+import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InterfaceMode }
 
 class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler) extends JToolBar with ThemeSync {
   val orbitAction =
@@ -20,7 +20,7 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler) extends J
   val moveAction =
     new MovementAction(I18N.gui.get("view.3d.move"), TranslateMode)
   val interactAction =
-    new MovementAction(I18N.gui.get("view.3d.interact"), InteractMode)
+    new MovementAction(I18N.gui.get("view.3d.interact"), InterfaceMode)
 
   val fullScreenWarning = I18N.gui.get("view.3d.fullScreenWarning")
 

@@ -8,11 +8,12 @@ import javax.swing.JLabel
 import org.nlogo.swing.TextField
 import org.nlogo.swing.Implicits._
 import org.nlogo.theme.InterfaceColors
+import org.nlogo.window.WorldIntegerEditor
 
 import util.control.Exception.catching
 
 abstract class IntegerEditor(accessor: PropertyAccessor[Int])
-  extends PropertyEditor(accessor) {
+  extends PropertyEditor(accessor) with WorldIntegerEditor {
 
   private val editor = new TextField(8)
   setLayout(new BorderLayout(BORDER_PADDING, 0))
