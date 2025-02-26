@@ -77,15 +77,15 @@ object WidgetActions {
   }
 
   private def addSelectionMargin(bounds: Rectangle): Rectangle = {
-    new Rectangle(bounds.x - WidgetWrapper.BORDER_E, bounds.y - WidgetWrapper.BORDER_N,
-                  bounds.width + WidgetWrapper.BORDER_E + WidgetWrapper.BORDER_W,
-                  bounds.height + WidgetWrapper.BORDER_N + WidgetWrapper.BORDER_S)
+    new Rectangle(bounds.x - WidgetWrapper.BorderRight, bounds.y - WidgetWrapper.BorderTop,
+                  bounds.width + WidgetWrapper.BorderRight + WidgetWrapper.BorderLeft,
+                  bounds.height + WidgetWrapper.BorderTop + WidgetWrapper.BorderBottom)
   }
 
   private def removeSelectionMargin(bounds: Rectangle): Rectangle = {
-    new Rectangle(bounds.x + WidgetWrapper.BORDER_E, bounds.y + WidgetWrapper.BORDER_N,
-                  bounds.width - WidgetWrapper.BORDER_E - WidgetWrapper.BORDER_W,
-                  bounds.height - WidgetWrapper.BORDER_N - WidgetWrapper.BORDER_S)
+    new Rectangle(bounds.x + WidgetWrapper.BorderRight, bounds.y + WidgetWrapper.BorderTop,
+                  bounds.width - WidgetWrapper.BorderRight - WidgetWrapper.BorderLeft,
+                  bounds.height - WidgetWrapper.BorderTop - WidgetWrapper.BorderBottom)
   }
 
   class AddWidget(widgetPanel: WidgetPanel, widgetWrapper: WidgetWrapper) extends AbstractUndoableEdit {

@@ -63,6 +63,12 @@ object InterfaceColors {
       case "dark" => new Color(30, 30, 30, 150)
     }
 
+  def widgetHandle =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => DarkGray
+      case "dark" => MediumGray
+    }
+
   def displayAreaBackground =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.WHITE

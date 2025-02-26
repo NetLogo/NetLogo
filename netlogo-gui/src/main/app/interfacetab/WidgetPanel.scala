@@ -189,8 +189,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
       var y = location.y + size.height
       if (component.isInstanceOf[WidgetWrapper] &&
         ! component.asInstanceOf[WidgetWrapper].selected) {
-        x += WidgetWrapper.BORDER_E
-        y += WidgetWrapper.BORDER_S
+        x += WidgetWrapper.BorderRight
+        y += WidgetWrapper.BorderBottom
       }
       if (x > maxX)
         maxX = x
@@ -276,12 +276,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     if (newWb.x < 0)
       x += - newWb.x
-    if (newWb.y < WidgetWrapper.BORDER_N)
-      y += WidgetWrapper.BORDER_N - newWb.y
-    if (newWb.x + 2 * WidgetWrapper.BORDER_W > b.width)
-      x -= (newWb.x + 2 * WidgetWrapper.BORDER_W) - b.width
-    if (newWb.y + WidgetWrapper.BORDER_N > b.height)
-      y -= (newWb.y + WidgetWrapper.BORDER_N) - b.height
+    if (newWb.y < WidgetWrapper.BorderTop)
+      y += WidgetWrapper.BorderTop - newWb.y
+    if (newWb.x + 2 * WidgetWrapper.BorderLeft > b.width)
+      x -= (newWb.x + 2 * WidgetWrapper.BorderLeft) - b.width
+    if (newWb.y + WidgetWrapper.BorderTop > b.height)
+      y -= (newWb.y + WidgetWrapper.BorderTop) - b.height
 
     new Point(x, y)
   }
