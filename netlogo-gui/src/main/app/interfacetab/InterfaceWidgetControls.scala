@@ -166,19 +166,24 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   }
 
   private def updateActions(widget: Widget): Unit = {
-    if (wPanel.getWrapper(widget).selected)
+    if (wPanel.getWrapper(widget).selected) {
       selectedObjects += widget
-    else
+    } else {
       selectedObjects -= widget
+    }
 
-    updateTarget(widget)
+    updateTargets(widget)
   }
 
-  private def updateTarget(widget: Widget): Unit = {
-    if (selectedObjects.size == 1)
+  private def updateTargets(widget: Widget): Unit = {
+    if (selectedObjects.size == 1) {
       editTarget = Some(widget.getEditable).collect { case editable: Editable => editable }
-    else
+    } else {
       editTarget = None
+    }
+
+    // uncomment this once the colors are fixed (Isaac B 2/25/25)
+    // deleteButton.setEnabled(selectedObjects.forall(_.deleteable))
   }
 
   def handle(e: WindowEvents.WidgetAddedEvent): Unit = {
@@ -190,7 +195,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   }
 
   def handle(e: WindowEvents.WidgetForegroundedEvent): Unit = {
-    updateTarget(e.widget)
+    updateTargets(e.widget)
   }
 
   def handle(e: AppEvents.InterfaceModeEvent): Unit = {

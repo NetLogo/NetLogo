@@ -63,18 +63,6 @@ object InterfaceColors {
       case "dark" => new Color(30, 30, 30, 150)
     }
 
-  def widgetInteractCover =
-    theme.getOrElse("light") match {
-      case "classic" | "light" => new Color(255, 255, 255, 100)
-      case "dark" => new Color(0, 0, 0, 100)
-    }
-
-  def widgetInteractCoverNote =
-    theme.getOrElse("light") match {
-      case "classic" | "light" => new Color(225, 225, 225, 100)
-      case "dark" => new Color(30, 30, 30, 100)
-    }
-
   def displayAreaBackground =
     theme.getOrElse("light") match {
       case "classic" | "light" => Color.WHITE

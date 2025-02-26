@@ -30,6 +30,9 @@ trait RoundedBorderPanel extends Transparent with HoverDecoration {
     this.diameter = diameter.toInt
   }
 
+  def getDiameter: Int =
+    diameter
+
   def enableHover() {
     hoverEnabled = true
   }

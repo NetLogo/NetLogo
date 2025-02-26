@@ -155,14 +155,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     if (mode == InteractMode.INTERACT) {
       interceptPane.disableIntercept()
-
-      getWrappers.foreach(_.disableShadow())
     } else {
       interceptPane.enableIntercept()
 
       haltIfRunning()
-
-      getWrappers.foreach(_.enableShadow())
     }
 
     if (mode == InteractMode.EDIT || mode == InteractMode.INTERACT || mode == InteractMode.DELETE)
@@ -264,12 +260,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
       case w: WidgetWrapper if !w.selected => w
     }
 
-  private[interfacetab] def aboutToDragSelectedWidgets(startPressX: Int, startPressY: Int): Unit = {
-    widgetsBeingDragged = selectedWrappers
-    widgetsBeingDragged.foreach { w =>
-      w.aboutToDrag(startPressX, startPressY)
-      moveToFront(w)
-    }
+  private[interfacetab] def aboutToDragSelectedWidgets(dragTarget: WidgetWrapper, startPressX: Int,
+                                                       startPressY: Int): Unit = {
+    widgetsBeingDragged = Seq(dragTarget) ++ selectedWrappers.filter(_ != dragTarget)
+    widgetsBeingDragged.foreach(_.aboutToDrag(startPressX, startPressY))
   }
 
   private[interfacetab] def dragSelectedWidgets(x: Int, y: Int): Unit = {
@@ -332,15 +326,15 @@ class WidgetPanel(val workspace: GUIWorkspace)
           widget.originalBounds = widget.getBounds
         })
 
-      case InteractMode.EDIT =>
+      case InteractMode.SELECT | InteractMode.EDIT =>
         val topWrapper = wrapperAtPoint(e.getPoint).getOrElse(null)
 
-        getWrappers.foreach(wrapper => selectWidget(wrapper, wrapper == topWrapper))
+        getWrappers.foreach(wrapper => wrapper.setHighlight(wrapper == topWrapper))
 
       case InteractMode.DELETE =>
         val topWrapper = wrapperAtPoint(e.getPoint).filter(_.widget.deleteable).getOrElse(null)
 
-        getWrappers.foreach(wrapper => selectWidget(wrapper, wrapper == topWrapper))
+        getWrappers.foreach(wrapper => wrapper.setHighlight(wrapper == topWrapper))
 
       case _ =>
     }
@@ -404,12 +398,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
             case InteractMode.EDIT =>
               val topWrapper = wrapperAtPoint(e.getPoint).getOrElse(null)
 
-              getWrappers.foreach(wrapper => selectWidget(wrapper, wrapper == topWrapper))
+              getWrappers.foreach(wrapper => wrapper.setHighlight(wrapper == topWrapper))
 
             case InteractMode.DELETE =>
               val topWrapper = wrapperAtPoint(e.getPoint).filter(_.widget.deleteable).getOrElse(null)
 
-              getWrappers.foreach(wrapper => selectWidget(wrapper, wrapper == topWrapper))
+              getWrappers.foreach(wrapper => wrapper.setHighlight(wrapper == topWrapper))
           }
 
         case None =>
@@ -426,6 +420,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
   def mouseExited(e: MouseEvent): Unit = {
     if (interactMode == InteractMode.EDIT || interactMode == InteractMode.DELETE)
       unselectWidgets()
+
+    getWrappers.foreach(_.setHighlight(false))
   }
 
   def mouseClicked(e: MouseEvent): Unit = { }
@@ -569,10 +565,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
           doPopup(e.getPoint)
         } else if (e.getButton == MouseEvent.BUTTON1) {
           if (NlogoMouse.hasCtrl(e)) {
-            wrapperAtPoint(e.getPoint).foreach(wrapper => {
+            wrapperAtPoint(e.getPoint).foreach { wrapper =>
               setInteractMode(InteractMode.SELECT)
               selectWidget(wrapper, !wrapper.selected)
-            })
+            }
           } else {
             unselectWidgets()
           }
@@ -581,10 +577,15 @@ class WidgetPanel(val workspace: GUIWorkspace)
       case InteractMode.SELECT =>
         if (e.getButton == MouseEvent.BUTTON1 && selectionRect == null) {
           if (widgetsBeingDragged.nonEmpty) {
-            wrapperAtPoint(e.getPoint).map(w => {
+            wrapperAtPoint(e.getPoint).foreach { w =>
               e.translatePoint(-w.getX, -w.getY)
               w.mouseReleased(e)
-            })
+            }
+          } else if (widgetBeingResized.isDefined) {
+            widgetBeingResized.foreach { w =>
+              e.translatePoint(-w.getX, -w.getY)
+              w.mouseReleased(e)
+            }
           } else {
             if (!NlogoMouse.hasCtrl(e))
               unselectWidgets()
@@ -615,7 +616,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
       case InteractMode.EDIT =>
         if (e.getButton == MouseEvent.BUTTON1) {
-          new EditWidgetEvent(null).raise(this)
+          wrapperAtPoint(e.getPoint).foreach(_.widget.getEditable match {
+            case e: Editable =>
+              new EditWidgetEvent(e).raise(this)
+
+            case _ =>
+          })
         } else {
           wrapperAtPoint(e.getPoint) match {
             case Some(w) =>
@@ -630,10 +636,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
       case InteractMode.DELETE =>
         if (e.getButton == MouseEvent.BUTTON1) {
-          wrapperAtPoint(e.getPoint).foreach(wrapper => {
+          wrapperAtPoint(e.getPoint).foreach { wrapper =>
             if (wrapper.widget.deleteable)
               WidgetActions.removeWidget(this, wrapper)
-          })
+          }
         } else {
           wrapperAtPoint(e.getPoint) match {
             case Some(w) =>
@@ -681,6 +687,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   protected def selectWidget(wrapper: WidgetWrapper, selected: Boolean): Unit = {
     wrapper.selected(selected)
+
+    if (selected)
+      moveToFront(wrapper)
 
     setForegroundWrapper()
   }
@@ -792,8 +801,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     setInteractMode(InteractMode.ADD)
 
-    wrapper.enableFullShadow()
-
     wrapper.syncTheme()
 
     unselectWidgets()
@@ -810,11 +817,15 @@ class WidgetPanel(val workspace: GUIWorkspace)
       widget.selected(true)
       widget.foreground()
       widget.isNew(true)
-      widget.disableShadow()
 
       placedShadowWidget = true
 
-      new EditWidgetEvent(null).raise(this)
+      widget.widget.getEditable match {
+        case e: Editable =>
+          new EditWidgetEvent(e).raise(this)
+
+        case _ =>
+      }
 
       placedShadowWidget = false
 

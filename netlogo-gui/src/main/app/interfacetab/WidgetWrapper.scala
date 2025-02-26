@@ -11,7 +11,7 @@ import org.nlogo.api.Editable
 import org.nlogo.app.common.Events.WidgetSelectedEvent
 import org.nlogo.awt.{ Coordinates, Mouse }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ MenuItem, PopupMenu, RoundedBorderPanel, WrappingPopupMenu }
+import org.nlogo.swing.{ MenuItem, PopupMenu, WrappingPopupMenu, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ MouseMode, Widget, WidgetWrapperInterface }
 import org.nlogo.window.Events.{ DirtyEvent, EditWidgetEvent, ExportWidgetEvent, WidgetForegroundedEvent }
@@ -44,6 +44,8 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   private var _isNew = false
   private var _selected = false
   private var _isForeground = false
+  private var highlighted = false
+  private var dragging = false
   private var mouseMode = MouseMode.IDLE
   private var startPressX = 0
   private var startPressY = 0
@@ -64,27 +66,6 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   glass.addMouseMotionListener(this)
 
   private val shadowPane = new ShadowPane
-
-  def enableShadow(): Unit = {
-    shadowPane.setVisible(true)
-    shadowPane.setFull(false)
-
-    revalidate()
-  }
-
-  def enableFullShadow(): Unit = {
-    shadowPane.setVisible(true)
-    shadowPane.setFull(true)
-
-    revalidate()
-  }
-
-  def disableShadow(): Unit = {
-    shadowPane.setVisible(false)
-    shadowPane.setFull(false)
-
-    revalidate()
-  }
 
   var originalBounds: Rectangle = null
 
@@ -175,13 +156,10 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   def selected: Boolean =
     _selected
 
-  def selected(selected: Boolean): Unit = {
-    this.selected(selected, false)
-  }
-
-  def selected(selected: Boolean, temporary: Boolean): Unit = {
+  def selected(selected: Boolean, temporary: Boolean = false): Unit = {
     if (_selected != selected) {
       _selected = selected
+      highlighted = selected
 
       if (selected) {
         setBounds(getX - WidgetWrapper.BORDER_E, getY - WidgetWrapper.BORDER_N,
@@ -194,15 +172,19 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
                   getHeight - WidgetWrapper.BORDER_N - WidgetWrapper.BORDER_S)
       }
 
-      if (selected || interfacePanel.getInteractMode == InteractMode.INTERACT) {
-        disableShadow()
-      } else {
-        enableShadow()
-      }
+      revalidate()
+      repaint()
 
       if (!temporary)
         new WidgetSelectedEvent(widget, selected).raise(this)
     }
+  }
+
+  def setHighlight(on: Boolean): Unit = {
+    highlighted = on
+
+    revalidate()
+    repaint()
   }
 
   private def revalidateInterfacePanel(): Unit = {
@@ -443,7 +425,12 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     foreground()
 
     if (e.getClickCount == 2) {
-      new EditWidgetEvent(null).raise(this)
+      widget.getEditable match {
+        case e: Editable =>
+          new EditWidgetEvent(e).raise(this)
+
+        case _ =>
+      }
 
       return
     }
@@ -496,7 +483,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     }
 
     if (mouseMode == MouseMode.DRAG) {
-      interfacePanel.aboutToDragSelectedWidgets(startPressX, startPressY)
+      interfacePanel.aboutToDragSelectedWidgets(this, startPressX, startPressY)
     } else {
       interfacePanel.resizeWidget(this)
       aboutToDrag(startPressX, startPressY)
@@ -508,6 +495,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     startPressY = startY
     selected(false, true) // true = change is temporary, don't raise events
     originalBounds = getBounds()
+    dragging = true
   }
 
   def mouseDragged(e: MouseEvent): Unit = {
@@ -563,6 +551,8 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     new DirtyEvent(None).raise(this)
 
     getParent.asInstanceOf[WidgetPanel].zoomer.updateZoomInfo(widget)
+
+    dragging = false
   }
 
   private def enforceMinimumSize(r: Rectangle): Unit = {
@@ -843,14 +833,17 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   }
 
   private def populateContextMenu(menu: PopupMenu, p: Point): Unit = {
-    if (widget.getEditable.isInstanceOf[Editable] && !interfacePanel.multiSelected) {
-      menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.edit")) {
-        def actionPerformed(e: ActionEvent): Unit = {
-          selected(true)
-          foreground()
-          new EditWidgetEvent(null).raise(WidgetWrapper.this)
-        }
-      }))
+    widget.getEditable match {
+      case editable: Editable if !interfacePanel.multiSelected =>
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.edit")) {
+          def actionPerformed(e: ActionEvent): Unit = {
+            selected(true)
+            foreground()
+            new EditWidgetEvent(editable).raise(WidgetWrapper.this)
+          }
+        }))
+
+      case _ =>
     }
 
     if (selected) {
@@ -975,41 +968,23 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   }
 
   override def syncTheme(): Unit = {
-    shadowPane.syncTheme()
     widget.syncTheme()
   }
 
-  private class ShadowPane extends JPanel with RoundedBorderPanel with ThemeSync {
-    private var full = false
-
-    setBorderColor(InterfaceColors.Transparent)
-    setVisible(false)
+  private class ShadowPane extends JPanel {
+    setOpaque(false)
 
     override def paintComponent(g: Graphics): Unit = {
-      setDiameter(12 * widget.getZoomFactor)
+      val g2d = Utils.initGraphics2D(g)
 
-      super.paintComponent(g)
-    }
-
-    def setFull(full: Boolean): Unit = {
-      this.full = full
-
-      syncTheme()
-    }
-
-    override def syncTheme(): Unit = {
-      if (full) {
+      if (interfacePanel.getInteractMode != InteractMode.INTERACT && !selected && !highlighted && !dragging) {
         if (widget.isNote) {
-          setBackgroundColor(InterfaceColors.widgetPreviewCoverNote)
+          g2d.setColor(InterfaceColors.widgetPreviewCoverNote)
         } else {
-          setBackgroundColor(InterfaceColors.widgetPreviewCover)
+          g2d.setColor(InterfaceColors.widgetPreviewCover)
         }
-      } else {
-        if (widget.isNote) {
-          setBackgroundColor(InterfaceColors.widgetInteractCoverNote)
-        } else {
-          setBackgroundColor(InterfaceColors.widgetInteractCover)
-        }
+
+        g2d.fillRoundRect(widget.getX, widget.getY, widget.getWidth, widget.getHeight, widget.getDiameter, widget.getDiameter)
       }
     }
   }
