@@ -33,7 +33,7 @@ object Depend {
                               new HashMap[Object, Object],
                               new DefaultResultRenderer()).check(new PrintWriter(System.out))
       }
-      main()
+      assert(main())
     }
 
   private def ddfContents: String = {
