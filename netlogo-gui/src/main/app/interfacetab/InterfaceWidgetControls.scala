@@ -82,13 +82,13 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
   class InteractAction extends AbstractAction {
     def actionPerformed(e: ActionEvent): Unit = {
-      wPanel.setInteractMode(InteractMode.INTERACT)
+      wPanel.setInteractMode(InteractMode.Interact)
     }
   }
 
   class SelectAction extends AbstractAction {
     def actionPerformed(e: ActionEvent): Unit = {
-      wPanel.setInteractMode(InteractMode.SELECT)
+      wPanel.setInteractMode(InteractMode.Select)
     }
   }
 
@@ -97,7 +97,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       if (editButton.isSelected) {
         new WindowEvents.EditWidgetEvent(null).raise(InterfaceWidgetControls.this)
 
-        wPanel.setInteractMode(InteractMode.EDIT)
+        wPanel.setInteractMode(InteractMode.Edit)
       }
 
       else
@@ -109,7 +109,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     def actionPerformed(e: ActionEvent): Unit = {
       if (deleteButton.isSelected) {
         wPanel.deleteSelectedWidgets()
-        wPanel.setInteractMode(InteractMode.DELETE)
+        wPanel.setInteractMode(InteractMode.Delete)
       }
 
       else
@@ -200,19 +200,19 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
   def handle(e: AppEvents.InterfaceModeEvent): Unit = {
     e.mode match {
-      case InteractMode.INTERACT =>
+      case InteractMode.Interact =>
         interactButton.setSelected(true)
 
-      case InteractMode.SELECT =>
+      case InteractMode.Select =>
         selectButton.setSelected(true)
 
-      case InteractMode.EDIT =>
+      case InteractMode.Edit =>
         editButton.setSelected(true)
 
-      case InteractMode.DELETE =>
+      case InteractMode.Delete =>
         deleteButton.setSelected(true)
 
-      case InteractMode.ADD =>
+      case InteractMode.Add =>
         buttonGroup.clearSelection()
 
     }

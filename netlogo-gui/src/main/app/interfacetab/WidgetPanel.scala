@@ -32,16 +32,16 @@ sealed trait InteractMode {
 }
 
 object InteractMode {
-  case object INTERACT extends InteractMode
-  case object SELECT extends InteractMode
-  case object ADD extends InteractMode {
+  case object Interact extends InteractMode
+  case object Select extends InteractMode
+  case object Add extends InteractMode {
     // the shadow widget functions as the cursor when adding a widget, so this removes the default cursor (Isaac B 2/14/25)
     override def cursor =
       Toolkit.getDefaultToolkit.createCustomCursor(new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB),
                                                    new Point(0, 0), null)
   }
-  case object EDIT extends InteractMode
-  case object DELETE extends InteractMode
+  case object Edit extends InteractMode
+  case object Delete extends InteractMode
 }
 
 // note that an instance of this class is used for the hubnet client editor
@@ -142,18 +142,18 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   protected val editorFactory: EditorFactory = new EditorFactory(workspace, workspace.getExtensionManager)
 
-  protected var interactMode: InteractMode = InteractMode.INTERACT
+  protected var interactMode: InteractMode = InteractMode.Interact
 
   def getInteractMode: InteractMode =
     interactMode
 
   def setInteractMode(mode: InteractMode): Unit = {
-    if (interactMode == InteractMode.ADD && !placedShadowWidget)
+    if (interactMode == InteractMode.Add && !placedShadowWidget)
       removeShadowWidget()
 
     interactMode = mode
 
-    if (mode == InteractMode.INTERACT) {
+    if (mode == InteractMode.Interact) {
       interceptPane.disableIntercept()
     } else {
       interceptPane.enableIntercept()
@@ -161,7 +161,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       haltIfRunning()
     }
 
-    if (mode == InteractMode.EDIT || mode == InteractMode.INTERACT || mode == InteractMode.DELETE)
+    if (mode == InteractMode.Edit || mode == InteractMode.Interact || mode == InteractMode.Delete)
       unselectWidgets()
 
     setCursor(mode.cursor)
@@ -315,7 +315,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def mouseMoved(e: MouseEvent): Unit = {
     interactMode match {
-      case InteractMode.ADD =>
+      case InteractMode.Add =>
         newWidget.foreach(widget => {
           if (workspace.snapOn) {
             widget.setLocation((e.getX / GridSnap) * GridSnap, (e.getY / GridSnap) * GridSnap)
@@ -326,12 +326,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
           widget.originalBounds = widget.getBounds
         })
 
-      case InteractMode.SELECT | InteractMode.EDIT =>
+      case InteractMode.Select | InteractMode.Edit =>
         val topWrapper = wrapperAtPoint(e.getPoint).getOrElse(null)
 
         getWrappers.foreach(wrapper => wrapper.setHighlight(wrapper == topWrapper))
 
-      case InteractMode.DELETE =>
+      case InteractMode.Delete =>
         val topWrapper = wrapperAtPoint(e.getPoint).filter(_.widget.deleteable).getOrElse(null)
 
         getWrappers.foreach(wrapper => wrapper.setHighlight(wrapper == topWrapper))
@@ -358,11 +358,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
             return
 
           interactMode match {
-            case InteractMode.INTERACT =>
+            case InteractMode.Interact =>
               if (NlogoMouse.hasCtrl(e))
-                setInteractMode(InteractMode.SELECT)
+                setInteractMode(InteractMode.Select)
 
-            case InteractMode.SELECT =>
+            case InteractMode.Select =>
               if (!selectionPane.isVisible) {
                 selectionPane.setBounds(0, 0, getWidth, getHeight)
                 selectionPane.setVisible(true)
@@ -383,7 +383,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
                 selectionPane.repaint(oldSelectionRect)
               selectionPane.repaint(selectionRect)
 
-            case InteractMode.ADD =>
+            case InteractMode.Add =>
               if (workspace.snapOn) {
                 point.x = (point.x / GridSnap) * GridSnap
                 point.y = (point.y / GridSnap) * GridSnap
@@ -395,12 +395,12 @@ class WidgetPanel(val workspace: GUIWorkspace)
                 widget.setLocation(point.x + p2.x, point.y + p2.y)
               })
 
-            case InteractMode.EDIT =>
+            case InteractMode.Edit =>
               val topWrapper = wrapperAtPoint(e.getPoint).getOrElse(null)
 
               getWrappers.foreach(wrapper => wrapper.setHighlight(wrapper == topWrapper))
 
-            case InteractMode.DELETE =>
+            case InteractMode.Delete =>
               val topWrapper = wrapperAtPoint(e.getPoint).filter(_.widget.deleteable).getOrElse(null)
 
               getWrappers.foreach(wrapper => wrapper.setHighlight(wrapper == topWrapper))
@@ -418,7 +418,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   def mouseEntered(e: MouseEvent): Unit = { }
 
   def mouseExited(e: MouseEvent): Unit = {
-    if (interactMode == InteractMode.EDIT || interactMode == InteractMode.DELETE)
+    if (interactMode == InteractMode.Edit || interactMode == InteractMode.Delete)
       unselectWidgets()
 
     getWrappers.foreach(_.setHighlight(false))
@@ -428,7 +428,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def mousePressed(e: MouseEvent): Unit = {
     interactMode match {
-      case InteractMode.SELECT =>
+      case InteractMode.Select =>
         if (e.getButton == MouseEvent.BUTTON1) {
           requestFocus()
 
@@ -457,7 +457,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
           }
         }
 
-      case InteractMode.ADD =>
+      case InteractMode.Add =>
         if (e.isPopupTrigger)
           doPopup(e.getPoint)
 
@@ -560,13 +560,13 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def mouseReleased(e: MouseEvent): Unit = {
     interactMode match {
-      case InteractMode.INTERACT =>
+      case InteractMode.Interact =>
         if (e.isPopupTrigger) {
           doPopup(e.getPoint)
         } else if (e.getButton == MouseEvent.BUTTON1) {
           if (NlogoMouse.hasCtrl(e)) {
             wrapperAtPoint(e.getPoint).foreach { wrapper =>
-              setInteractMode(InteractMode.SELECT)
+              setInteractMode(InteractMode.Select)
               selectWidget(wrapper, !wrapper.selected)
             }
           } else {
@@ -574,7 +574,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
           }
         }
 
-      case InteractMode.SELECT =>
+      case InteractMode.Select =>
         if (e.getButton == MouseEvent.BUTTON1 && selectionRect == null) {
           if (widgetsBeingDragged.nonEmpty) {
             wrapperAtPoint(e.getPoint).foreach { w =>
@@ -607,14 +607,14 @@ class WidgetPanel(val workspace: GUIWorkspace)
         selectionRect = null
         selectionPane.setVisible(false)
 
-      case InteractMode.ADD =>
+      case InteractMode.Add =>
         if (e.isPopupTrigger) {
           doPopup(e.getPoint)
         } else if (e.getButton == MouseEvent.BUTTON1) {
           placeShadowWidget()
         }
 
-      case InteractMode.EDIT =>
+      case InteractMode.Edit =>
         if (e.getButton == MouseEvent.BUTTON1) {
           wrapperAtPoint(e.getPoint).foreach(_.widget.getEditable match {
             case e: Editable =>
@@ -634,7 +634,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
           }
         }
 
-      case InteractMode.DELETE =>
+      case InteractMode.Delete =>
         if (e.getButton == MouseEvent.BUTTON1) {
           wrapperAtPoint(e.getPoint).foreach { wrapper =>
             if (wrapper.widget.deleteable)
@@ -655,14 +655,14 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def keyPressed(e: KeyEvent): Unit = {
-    if (interactMode == InteractMode.INTERACT) {
+    if (interactMode == InteractMode.Interact) {
       if (System.getProperty("os.name").contains("Mac")) {
         if (e.getKeyCode == KeyEvent.VK_META)
           interceptPane.enableIntercept()
       } else if (e.getKeyCode == KeyEvent.VK_CONTROL) {
         interceptPane.enableIntercept()
       }
-    } else if (interactMode == InteractMode.SELECT && selectedWrappers.nonEmpty) {
+    } else if (interactMode == InteractMode.Select && selectedWrappers.nonEmpty) {
       val dist = if (e.isShiftDown) 10 else 1
 
       e.getKeyCode match {
@@ -685,8 +685,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def keyReleased(e: KeyEvent): Unit = {
     if (e.getKeyCode == KeyEvent.VK_ESCAPE) {
-      setInteractMode(InteractMode.INTERACT)
-    } else if (interactMode == InteractMode.INTERACT) {
+      setInteractMode(InteractMode.Interact)
+    } else if (interactMode == InteractMode.Interact) {
       if (System.getProperty("os.name").contains("Mac")) {
         if (e.getKeyCode == KeyEvent.VK_META)
           interceptPane.disableIntercept()
@@ -817,7 +817,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     zoomer.zoomWidget(wrapper, true, false, 1.0, zoomFactor)
 
-    setInteractMode(InteractMode.ADD)
+    setInteractMode(InteractMode.Add)
 
     wrapper.syncTheme()
 
@@ -1092,7 +1092,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
 
   def handle(e: LoadBeginEvent): Unit = {
-    setInteractMode(InteractMode.INTERACT)
+    setInteractMode(InteractMode.Interact)
     removeAllWidgets()
     zoomer.forgetAllZoomInfo()
     WidgetActions.undoManager.discardAllEdits()

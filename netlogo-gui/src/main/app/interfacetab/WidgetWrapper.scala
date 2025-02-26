@@ -849,7 +849,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     if (selected) {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deselect")) {
         def actionPerformed(e: ActionEvent): Unit = {
-          interfacePanel.setInteractMode(InteractMode.SELECT)
+          interfacePanel.setInteractMode(InteractMode.Select)
           selected(false)
           interfacePanel.setForegroundWrapper()
         }
@@ -925,7 +925,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     } else {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.select")) {
         def actionPerformed(e: ActionEvent): Unit = {
-          interfacePanel.setInteractMode(InteractMode.SELECT)
+          interfacePanel.setInteractMode(InteractMode.Select)
           selected(true)
           foreground()
         }
@@ -977,7 +977,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     override def paintComponent(g: Graphics): Unit = {
       val g2d = Utils.initGraphics2D(g)
 
-      if (interfacePanel.getInteractMode != InteractMode.INTERACT && !selected && !highlighted && !dragging) {
+      if (interfacePanel.getInteractMode != InteractMode.Interact && !selected && !highlighted && !dragging) {
         if (widget.isNote) {
           g2d.setColor(InterfaceColors.widgetPreviewCoverNote)
         } else {
