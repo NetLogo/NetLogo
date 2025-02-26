@@ -22,7 +22,7 @@ trait WidgetWrapperInterface {
 
   def widgetChanged(): Unit
 
-  def gridSnap: Int
+  def snapToGrid(value: Int): Int
 
   def isNew: Boolean
 

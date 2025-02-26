@@ -29,10 +29,6 @@ import org.nlogo.window.{ AbstractWidgetPanel, ButtonWidget, Events => WindowEve
 // there are a few things in here that are specific to the client editor behavior
 // (eg the way it handles plots) which is overridden in the subclass. ev 1/25/07
 
-object WidgetPanel {
-  val GridSnap = 5 // grid size, in pixels
-}
-
 // public for widget extension - ST 6/12/08
 class WidgetPanel(val workspace: GUIWorkspace)
     extends AbstractWidgetPanel
@@ -43,8 +39,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
     with WidgetEditedEvent.Handler
     with WidgetRemovedEvent.Handler
     with LoadBeginEvent.Handler {
-
-  import WidgetPanel.GridSnap
 
   protected var selectionRect: Rectangle = null // convert to Option?
   var widgetsBeingDragged: Seq[WidgetWrapper] = Seq()
@@ -230,6 +224,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   ///
 
+  def snapToGrid(value: Int): Int =
+    ((value / (5 * zoomFactor)).toInt * 5 * zoomFactor).toInt
+
   def getWrapper(widget: Widget): WidgetWrapper =
     widget.getParent.asInstanceOf[WidgetWrapper]
 
@@ -265,9 +262,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
     val wb = w.originalBounds
     val b = getBounds()
     val newWb = new Rectangle(wb.x + x, wb.y + y, wb.width, wb.height)
-    if (workspace.snapOn && ! isZoomed) {
-      val xGridSnap = newWb.x - (newWb.x / GridSnap) * GridSnap
-      val yGridSnap = newWb.y - (newWb.y / GridSnap) * GridSnap
+    if (workspace.snapOn) {
+      val xGridSnap = newWb.x - snapToGrid(newWb.x)
+      val yGridSnap = newWb.y - snapToGrid(newWb.y)
       x -= xGridSnap
       y -= yGridSnap
       newWb.x -= xGridSnap
@@ -301,7 +298,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       case InterfaceMode.Add =>
         newWidget.foreach(widget => {
           if (workspace.snapOn) {
-            widget.setLocation((e.getX / GridSnap) * GridSnap, (e.getY / GridSnap) * GridSnap)
+            widget.setLocation(snapToGrid(e.getX), snapToGrid(e.getY))
           } else {
             widget.setLocation(e.getX, e.getY)
           }
@@ -368,8 +365,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
             case InterfaceMode.Add =>
               if (workspace.snapOn) {
-                point.x = (point.x / GridSnap) * GridSnap
-                point.y = (point.y / GridSnap) * GridSnap
+                point.x = snapToGrid(point.x)
+                point.y = snapToGrid(point.y)
               }
 
               newWidget.foreach(widget => {
@@ -731,10 +728,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
       wrapper.setSize(size)
     }
 
-    if (workspace.snapOn && ! loadingWidget) {
-      val gridX = (x / GridSnap) * GridSnap
-      val gridY = (y / GridSnap) * GridSnap
-      wrapper.setLocation(gridX, gridY)
+    if (workspace.snapOn && !loadingWidget) {
+      wrapper.setLocation(snapToGrid(x), snapToGrid(y))
     } else {
       wrapper.setLocation(x, y)
     }

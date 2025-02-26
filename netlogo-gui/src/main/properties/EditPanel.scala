@@ -101,11 +101,10 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
       val maxSize = Option(wrapper.getMaximumSize).getOrElse(new Dimension(10000, 10000))
       if (wrapper.isNew) {
         val currentSize = wrapper.getSize
-        val gridSnap = wrapper.gridSnap
         if (prefSize.width != currentSize.width)
-          prefSize.width = (prefSize.width / gridSnap) * gridSnap
+          prefSize.width = wrapper.snapToGrid(prefSize.width)
         if (prefSize.height != currentSize.height)
-          prefSize.height = (prefSize.height / gridSnap) * gridSnap
+          prefSize.height = wrapper.snapToGrid(prefSize.height)
         wrapper.setSize(prefSize)
       }
       else if (originalPreferredSize != prefSize) {
@@ -114,11 +113,10 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
                                            prefSize.height max originalSize.height
                                          else prefSize.height)
         val currentSize = wrapper.getSize
-        val gridSnap = wrapper.gridSnap
         if (width != currentSize.width)
-          width = (width / gridSnap) * gridSnap
+          width = wrapper.snapToGrid(width)
         if (prefSize.height != currentSize.height)
-          height = (height / gridSnap) * gridSnap
+          height = wrapper.snapToGrid(height)
         wrapper.setSize(width, height)
         originalPreferredSize = wrapper.getPreferredSize
       }

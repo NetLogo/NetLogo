@@ -312,7 +312,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       case _ => throw new IllegalStateException
     }
 
-    if (interfacePanel.workspace.snapOn && !interfacePanel.isZoomed)
+    if (interfacePanel.workspace.snapOn)
       enforceGridSnapSize(bounds)
 
     enforceMinimumSize(bounds)
@@ -321,11 +321,11 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     setBounds(widget.constrainDrag(bounds, originalBounds, mouseMode))
   }
 
-  def gridSnap: Int = {
+  def snapToGrid(value: Int): Int = {
     if (interfacePanel.workspace.snapOn) {
-      WidgetPanel.GridSnap
+      interfacePanel.snapToGrid(value)
     } else {
-      1
+      value
     }
   }
 
@@ -630,8 +630,8 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
   private def enforceGridSnapSize(r: Rectangle): Unit = {
     if (widget != null) {
-      val newWidth = (r.width / WidgetPanel.GridSnap) * WidgetPanel.GridSnap
-      val newHeight = (r.height / WidgetPanel.GridSnap) * WidgetPanel.GridSnap
+      val newWidth = interfacePanel.snapToGrid(r.width)
+      val newHeight = interfacePanel.snapToGrid(r.height)
 
       mouseMode match {
         case MouseMode.S =>
