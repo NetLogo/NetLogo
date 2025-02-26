@@ -40,17 +40,18 @@ with MenuAction {
   group    = ToolsSettingsGroup
 
   override def createDialog = new PreferencesDialog(frame,
-    Preferences.Language,
-    Preferences.LoadLastOnStartup,
-    new Preferences.ReloadOnExternalChanges(tabs),
-    Preferences.IsLoggingEnabled,
-    new Preferences.LogDirectory(frame),
-    Preferences.LogEvents,
-    Preferences.IncludedFilesMenu,
-    Preferences.ProceduresMenuSortOrder,
-    Preferences.FocusOnError,
-    Preferences.StartSeparateCodeTab,
-    Preferences.UIScale
+    Seq(
+      Preferences.Language,
+      Preferences.LoadLastOnStartup,
+      new Preferences.ReloadOnExternalChanges(tabs),
+      Preferences.IsLoggingEnabled,
+      new Preferences.LogDirectory(frame),
+      Preferences.LogEvents,
+      Preferences.IncludedFilesMenu,
+      Preferences.ProceduresMenuSortOrder,
+      Preferences.FocusOnError,
+      Preferences.StartSeparateCodeTab
+    ) ++ (if (System.getProperty("os.name").contains("Linux")) Seq(Preferences.UIScale) else Nil)
   )
 }
 

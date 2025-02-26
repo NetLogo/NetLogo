@@ -12,8 +12,9 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ Button, ButtonPanel, OptionPane, TextFieldBox }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class PreferencesDialog(parent: Frame, preferences: Preference*) extends ToolDialog(parent, "preferences")
-                                                                 with ThemeSync {
+class PreferencesDialog(parent: Frame, preferences: Seq[Preference])
+  extends ToolDialog(parent, "preferences") with ThemeSync {
+
   private lazy val netLogoPrefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
 
   private lazy val preferencesPanel = new TextFieldBox(SwingConstants.TRAILING)
