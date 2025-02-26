@@ -1,14 +1,13 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.widget
+package org.nlogo.window
 
 import org.nlogo.api.Editable
 import org.nlogo.core.I18N
 import org.nlogo.core.{ Switch => CoreSwitch }
-import org.nlogo.window.{Events, InterfaceGlobalWidget}
 
 class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
-  with org.nlogo.window.Events.PeriodicUpdateEvent.Handler {
+  with Events.PeriodicUpdateEvent.Handler {
 
   type WidgetModel = CoreSwitch
 

@@ -27,8 +27,7 @@ private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
 
   private class RoboWidgetControl extends Thread("RoboWidgetControl Thread") {
     import org.nlogo.awt.EventQueue.invokeAndWait
-    import org.nlogo.window.{ButtonWidget, SliderWidget, Widget}
-    import org.nlogo.widget.SwitchWidget
+    import org.nlogo.window.{ ButtonWidget, SliderWidget, SwitchWidget, Widget }
 
     private val r = new org.nlogo.api.MersenneTwisterFast()
     var running = true

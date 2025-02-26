@@ -73,6 +73,18 @@ object Properties {
     P("typeOptions", P.InputBoxOptions, I18N.gui("input.type"), gridWidth = RELATIVE),
     P("oldSize", P.Boolean, I18N.gui("general.oldSize"))
   )
+  val text = Seq(
+    P("text", P.BigString, I18N.gui("text.text")),
+    P("fontSize", P.Integer, I18N.gui("text.fontSize")),
+    P("textColorLight", P.Color, I18N.gui("text.textLight"), gridWidth = RELATIVE),
+    P("textColorDark", P.Color, I18N.gui("text.textDark")),
+    P("backgroundLight", P.Color, I18N.gui("text.backgroundLight"), gridWidth = RELATIVE),
+    P("backgroundDark", P.Color, I18N.gui("text.backgroundDark"))
+  )
+  val switch = Seq(
+    P("nameWrapper", P.Identifier, I18N.gui("switch.globalVar")),
+    P("oldSize", P.Boolean, I18N.gui("general.oldSize"))
+  )
 
   // WorldViewSettings
   val model = Seq(
@@ -163,5 +175,8 @@ object Properties {
   val dummyView = Seq(
     P("width", P.Integer, I18N.gui("hubnet.view.width")),
     P("height", P.Integer, I18N.gui("hubnet.view.height"))
+  )
+  val dummySwitch = Seq(
+    P("name", P.String, I18N.gui("hubnet.tag"))
   )
 }

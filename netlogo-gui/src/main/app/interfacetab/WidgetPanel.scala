@@ -164,6 +164,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
     if (mode == InteractMode.Edit || mode == InteractMode.Interact || mode == InteractMode.Delete)
       unselectWidgets()
 
+    revalidate()
+    repaint()
+
     setCursor(mode.cursor)
 
     requestFocus()

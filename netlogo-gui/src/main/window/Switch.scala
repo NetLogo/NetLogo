@@ -1,12 +1,11 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.widget
+package org.nlogo.window
 
 import org.nlogo.agent.BooleanConstraint
 import org.nlogo.core.I18N
 import org.nlogo.swing.Utils
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ Events, MultiErrorWidget }
 
 import java.awt._
 import javax.swing.{ JLabel, JPanel }
@@ -19,7 +18,7 @@ object Switch {
 }
 
 abstract class Switch extends MultiErrorWidget with MouseWheelListener
-  with org.nlogo.window.Events.AfterLoadEvent.Handler with ThemeSync {
+  with Events.AfterLoadEvent.Handler with ThemeSync {
 
   import Switch._
 

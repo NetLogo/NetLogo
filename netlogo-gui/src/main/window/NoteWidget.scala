@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.widget
+package org.nlogo.window
 
 import java.awt.{ Color, Dimension, FlowLayout, Rectangle }
 import javax.swing.JLabel
@@ -12,7 +12,6 @@ import org.nlogo.core.{ TextBox => CoreTextBox }
 import org.nlogo.core.I18N
 import org.nlogo.swing.Transparent
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.SingleErrorWidget
 
 class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 

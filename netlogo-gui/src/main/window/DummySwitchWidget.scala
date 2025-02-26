@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.widget
+package org.nlogo.window
 
 import org.nlogo.api.Editable
 import org.nlogo.core.{ I18N, Switch => CoreSwitch }
@@ -16,7 +16,7 @@ class DummySwitchWidget extends Switch with Editable {
   override def updateConstraints() {}
 
   // do nothing
-  def handle(e:org.nlogo.window.Events.AfterLoadEvent) {}
+  def handle(e: Events.AfterLoadEvent) {}
 
   /// load and save
   override def load(model: WidgetModel): AnyRef = {

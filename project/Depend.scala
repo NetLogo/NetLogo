@@ -71,7 +71,7 @@ object Depend {
       "headless" -> List("core/model", "drawing", "fileformat", "shape", "workspace", "headless/test"),
       "headless/hubnet" -> List("headless", "hubnet/protocol"),
       "headless/test" -> List("api", "core"),
-      "hubnet/client" -> List("hubnet/connection", "hubnet/mirroring", "hubnet/protocol", "render", "fileformat", "widget"),
+      "hubnet/client" -> List("hubnet/connection", "hubnet/mirroring", "hubnet/protocol", "render", "fileformat", "window"),
       "hubnet/connection" -> List("api"),
       "hubnet/mirroring" -> List("api"),
       "hubnet/protocol" -> List("api"),
@@ -106,7 +106,6 @@ object Depend {
       "swing" -> List("awt", "core", "theme"),
       "util" -> Nil,
       "theme" -> List("api"),
-      "widget" -> List("window"),
       "window" -> List("core/model", "editor", "fileformat", "log", "shape", "swing", "workspace"),
       "workspace" -> List("fileformat", "nvm", "plot"))
     case class Package(val dir: String, var depends: Set[Package]) {
