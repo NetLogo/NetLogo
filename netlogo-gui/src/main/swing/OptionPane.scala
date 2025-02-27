@@ -3,7 +3,8 @@
 package org.nlogo.swing
 
 import java.awt.{ Component, Dialog, GridBagConstraints, GridBagLayout, Insets, Window }
-import javax.swing.{ Icon, JDialog, JLabel, JPanel }
+import java.awt.event.{ ActionEvent, KeyEvent }
+import javax.swing.{ AbstractAction, Icon, JComponent, JDialog, JLabel, JPanel, KeyStroke }
 
 import org.nlogo.awt.LineBreaker
 import org.nlogo.core.I18N
@@ -34,12 +35,12 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
 
   private var selectedOption: Option[String] = None
 
-  getContentPane.setBackground(InterfaceColors.dialogBackground)
-  getContentPane.setLayout(new GridBagLayout)
-
-  addContents()
-
   locally {
+    getContentPane.setBackground(InterfaceColors.dialogBackground)
+    getContentPane.setLayout(new GridBagLayout)
+
+    addContents()
+
     val c = new GridBagConstraints
 
     c.gridx = 0
@@ -55,12 +56,23 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
         })
       })
     ), c)
+
+    packAndCenter()
+
+    getRootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
+                                                                   "OptionPaneCancel")
+
+    getRootPane.getActionMap.put("OptionPaneCancel", new AbstractAction {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        selectedOption = None
+
+        setVisible(false)
+      }
+    })
+
+    setResizable(false)
+    setVisible(true)
   }
-
-  packAndCenter()
-
-  setResizable(false)
-  setVisible(true)
 
   def getSelectedOption: Option[String] =
     selectedOption
