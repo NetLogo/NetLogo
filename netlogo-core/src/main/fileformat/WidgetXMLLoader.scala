@@ -39,7 +39,7 @@ object WidgetXMLLoader {
             case "Vertical"   => Vertical
           }
         Some(Slider( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
-                   , element("height").toInt, element("oldSize", "false").toBoolean, element.get("display")
+                   , element("height").toInt, element("sizeVersion", "1").toInt == 0, element.get("display")
                    , element("min"), element("max"), element("default").toDouble, element("step"), element.get("units")
                    , direction
                    ))
@@ -70,13 +70,13 @@ object WidgetXMLLoader {
 
       case "monitor" =>
         Some(Monitor( Some(element.text), element("x").toInt, element("y").toInt
-                    , element("width").toInt, element("height").toInt, element("oldSize", "false").toBoolean
+                    , element("width").toInt, element("height").toInt, element("sizeVersion", "1").toInt == 0
                     , element.get("display"), element("precision").toInt, element("fontSize").toInt
                     ))
 
       case "switch" =>
         Some(Switch( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
-                   , element("height").toInt, element("oldSize", "false").toBoolean, element.get("display")
+                   , element("height").toInt, element("sizeVersion", "1").toInt == 0, element.get("display")
                    , element("on").toBoolean
                    ))
 
@@ -89,7 +89,7 @@ object WidgetXMLLoader {
                   )
           ).toList
         Some(Plot( element.get("display"), element("x").toInt, element("y").toInt, element("width").toInt
-                 , element("height").toInt, element("oldSize", "false").toBoolean, element.get("xAxis")
+                 , element("height").toInt, element("sizeVersion", "1").toInt == 0, element.get("xAxis")
                  , element.get("yAxis"), element("xMin").toDouble, element("xMax").toDouble
                  , element("yMin").toDouble, element("yMax").toDouble, element("autoplot").toBoolean
                  , element("legend").toBoolean, element.getChild("setup").text, element.getChild("update").text, pens
@@ -111,7 +111,7 @@ object WidgetXMLLoader {
               }
           )
         Some(Chooser( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
-                   , element("height").toInt, element("oldSize", "false").toBoolean, element.get("display")
+                   , element("height").toInt, element("sizeVersion", "1").toInt == 0, element.get("display")
                    , children.toList, element("current").toInt
                    ))
 
@@ -135,7 +135,7 @@ object WidgetXMLLoader {
               StringInput(element.text, StringInput.CommandLabel, element("multiline").toBoolean)
           }
         Some(InputBox( element.get("variable"), element("x").toInt, element("y").toInt, element("width").toInt
-                     , element("height").toInt, element("oldSize", "false").toBoolean, input
+                     , element("height").toInt, element("sizeVersion", "1").toInt == 0, input
                      ))
 
       case "note" =>
@@ -187,7 +187,7 @@ object WidgetXMLLoader {
           ifDefined(slider)( "display",  _.display) ++
           ifDefined(slider)("variable", _.variable) ++
           ifDefined(slider)(   "units",    _.units) ++
-          (if (slider.oldSize) Map("oldSize" -> "true") else Map())
+          (if (slider.oldSize) Map("sizeVersion" -> "0") else Map())
         XMLElement("slider", attributes, "", Seq())
 
       case view: View =>
@@ -231,7 +231,7 @@ object WidgetXMLLoader {
              , "fontSize"  -> monitor.fontSize.toString
              ) ++
           ifDefined(monitor)("display", _.display) ++
-          (if (monitor.oldSize) Map("oldSize" -> "true") else Map())
+          (if (monitor.oldSize) Map("sizeVersion" -> "0") else Map())
 
         XMLElement("monitor", attributes, monitor.source.getOrElse(""), Seq())
 
@@ -245,7 +245,7 @@ object WidgetXMLLoader {
              ) ++
           ifDefined(switch)( "display",  _.display) ++
           ifDefined(switch)("variable", _.variable) ++
-          (if (switch.oldSize) Map("oldSize" -> "true") else Map())
+          (if (switch.oldSize) Map("sizeVersion" -> "0") else Map())
 
         XMLElement("switch", attributes, "", Seq())
 
@@ -266,7 +266,7 @@ object WidgetXMLLoader {
           ifDefined(plot)("display", _.display) ++
           ifDefined(plot)(  "xAxis",   _.xAxis) ++
           ifDefined(plot)(  "yAxis",   _.yAxis) ++
-          (if (plot.oldSize) Map("oldSize" -> "true") else Map())
+          (if (plot.oldSize) Map("sizeVersion" -> "0") else Map())
 
         val children =
           Seq( XMLElement( "setup", Map(), plot. setupCode, Seq())
@@ -307,7 +307,7 @@ object WidgetXMLLoader {
              ) ++
           ifDefined(chooser)( "display",  _.display) ++
           ifDefined(chooser)("variable", _.variable) ++
-          (if (chooser.oldSize) Map("oldSize" -> "true") else Map())
+          (if (chooser.oldSize) Map("sizeVersion" -> "0") else Map())
 
         val children =
           chooser.choices.map {
@@ -360,7 +360,7 @@ object WidgetXMLLoader {
              , "type"      -> typeName
              ) ++
           ifDefined(input)("variable", _.variable) ++
-          (if (input.oldSize) Map("oldSize" -> "true") else Map())
+          (if (input.oldSize) Map("sizeVersion" -> "0") else Map())
 
         XMLElement("input", attributes, input.boxedValue.asString, Seq())
 

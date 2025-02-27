@@ -6,14 +6,14 @@ end</code>
   <widgets>
     <view x="435" maxPycor="16" updateMode="0" wrappingAllowedX="true" y="19" frameRate="30.0" minPycor="-16" height="434" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="433" tickCounterLabel="ticks" maxPxcor="16" minPxcor="-16"></view>
     <button x="12" actionKey="P" y="15" height="35" disableUntilTicks="false" forever="false" kind="Observer" width="83" display="print-test">print "test"</button>
-    <slider oldSize="true" x="13" step="1" y="64" height="150" min="-100" direction="Vertical" max="100" default="0.0" variable="slides" units="slides" width="33" display="slides"></slider>
-    <switch oldSize="true" x="59" y="64" height="33" on="true" variable="switching" width="106" display="switching"></switch>
-    <chooser oldSize="true" x="60" y="113" height="45" variable="choice" current="0" width="138" display="choice">
+    <slider sizeVersion="0" x="13" step="1" y="64" height="150" min="-100" direction="Vertical" max="100" default="0.0" variable="slides" units="slides" width="33" display="slides"></slider>
+    <switch sizeVersion="0" x="59" y="64" height="33" on="true" variable="switching" width="106" display="switching"></switch>
+    <chooser sizeVersion="0" x="60" y="113" height="45" variable="choice" current="0" width="138" display="choice">
       <choice type="double" value="1.0"></choice>
       <choice type="double" value="2.0"></choice>
       <choice type="double" value="3.0"></choice>
     </chooser>
-    <chooser oldSize="true" x="60" y="178" height="45" variable="list-choice" current="0" width="138" display="list-choice">
+    <chooser sizeVersion="0" x="60" y="178" height="45" variable="list-choice" current="0" width="138" display="list-choice">
       <choice type="list">
         <value value="1.0"></value>
         <value value="2.0"></value>
@@ -30,14 +30,14 @@ end</code>
         <value value="9.0"></value>
       </choice>
     </chooser>
-    <input oldSize="true" x="12" multiline="true" y="235" height="60" variable="input-string" type="string" width="311">hello
+    <input sizeVersion="0" x="12" multiline="true" y="235" height="60" variable="input-string" type="string" width="311">hello
 i
 am
 a
 string</input>
-    <input oldSize="true" x="13" multiline="false" y="310" height="60" variable="color-input" type="color" width="155">117.0</input>
-    <monitor oldSize="true" x="181" precision="5" y="310" height="33" fontSize="8" width="57" display="slides">slides</monitor>
-    <plot oldSize="true" x="213" yMax="66.6666" yAxis="number" y="15" xMin="-10.0" height="150" legend="false" xMax="20.0" autoplot="true" yMin="-33.3333" width="200" xAxis="choice" display="c hoice-plotter">
+    <input sizeVersion="0" x="13" multiline="false" y="310" height="60" variable="color-input" type="color" width="155">117.0</input>
+    <monitor sizeVersion="0" x="181" precision="5" y="310" height="33" fontSize="8" width="57" display="slides">slides</monitor>
+    <plot sizeVersion="0" x="213" yMax="66.6666" yAxis="number" y="15" xMin="-10.0" height="150" legend="false" xMax="20.0" autoplot="true" yMin="-33.3333" width="200" xAxis="choice" display="c hoice-plotter">
       <setup>
         print "the plot has been set up"
       </setup>
