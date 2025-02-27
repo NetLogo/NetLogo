@@ -17,10 +17,7 @@ import org.nlogo.window.{ InterfaceMode, MouseMode, Widget, WidgetWrapperInterfa
 import org.nlogo.window.Events.{ DirtyEvent, EditWidgetEvent, ExportWidgetEvent, WidgetForegroundedEvent }
 
 object WidgetWrapper {
-  val BorderTop = 10
-  val BorderBottom = 9
-  val BorderRight = 9
-  val BorderLeft = 9
+  val BorderSize = 7
 
   private val HandleSize = 7
 
@@ -133,14 +130,14 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       highlighted = selected
 
       if (selected) {
-        setBounds(getX - BorderRight, getY - BorderTop,
-                  getWidth + BorderRight + BorderLeft,
-                  getHeight + BorderTop + BorderBottom)
+        setBounds(getX - BorderSize, getY - BorderSize,
+                  getWidth + BorderSize + BorderSize,
+                  getHeight + BorderSize + BorderSize)
       } else {
         isForeground(false)
-        setBounds(getX + BorderRight, getY + BorderTop,
-                  getWidth - BorderRight - BorderLeft,
-                  getHeight - BorderTop - BorderBottom)
+        setBounds(getX + BorderSize, getY + BorderSize,
+                  getWidth - BorderSize - BorderSize,
+                  getHeight - BorderSize - BorderSize)
       }
 
       revalidate()
@@ -208,7 +205,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       }
 
     if (selected) {
-      new Dimension(newDim.width + BorderRight + BorderLeft, newDim.height + BorderTop + BorderBottom)
+      new Dimension(newDim.width + BorderSize + BorderSize, newDim.height + BorderSize + BorderSize)
     } else {
       newDim
     }
@@ -229,8 +226,8 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
   override def doLayout(): Unit = {
     if (selected) {
-      widget.setBounds(BorderRight, BorderTop, getWidth - BorderRight - BorderLeft,
-                       getHeight - BorderTop - BorderBottom)
+      widget.setBounds(BorderSize, BorderSize, getWidth - BorderSize - BorderSize,
+                       getHeight - BorderSize - BorderSize)
     } else {
       widget.setBounds(0, 0, getWidth, getHeight)
     }
@@ -264,7 +261,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
     mouseMode match {
       case MouseMode.NW =>
-        val newY = y.max(BorderTop - bounds.y)
+        val newY = y.max(BorderSize - bounds.y)
         val newX = x.max(-bounds.x)
 
         bounds.x += newX
@@ -273,7 +270,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         bounds.height -= newY
 
       case MouseMode.NE =>
-        val newY = y.max(BorderTop - bounds.y)
+        val newY = y.max(BorderSize - bounds.y)
         val newX = x.max(-bounds.x - bounds.width)
 
         bounds.width += newX
@@ -304,7 +301,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         bounds.height += y
 
       case MouseMode.N =>
-        val newY = y.max(BorderTop - bounds.y)
+        val newY = y.max(BorderSize - bounds.y)
 
         bounds.y += newY
         bounds.height -= newY
@@ -367,32 +364,32 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
     mouseMode = MouseMode.DRAG
 
-    if (x < BorderLeft) {
-      if (_verticallyResizable && y < BorderTop) {
+    if (x < BorderSize) {
+      if (_verticallyResizable && y < BorderSize) {
         mouseMode = MouseMode.NW
-      } else if (_verticallyResizable && y > getHeight - BorderBottom) {
+      } else if (_verticallyResizable && y > getHeight - BorderSize) {
         mouseMode = MouseMode.SW
-      } else if (y <= BorderTop + (getHeight - BorderBottom - BorderTop - HandleSize) / 2 + HandleSize &&
-                 y >= BorderTop + (getHeight - BorderBottom - BorderTop - HandleSize) / 2) {
+      } else if (y <= BorderSize + (getHeight - BorderSize - BorderSize - HandleSize) / 2 + HandleSize &&
+                 y >= BorderSize + (getHeight - BorderSize - BorderSize - HandleSize) / 2) {
         mouseMode = MouseMode.W
       }
-    } else if (x > getWidth - BorderRight) {
-      if (_verticallyResizable && y < BorderTop) {
+    } else if (x > getWidth - BorderSize) {
+      if (_verticallyResizable && y < BorderSize) {
         mouseMode = MouseMode.NE
-      } else if (_verticallyResizable && y > getHeight - BorderBottom) {
+      } else if (_verticallyResizable && y > getHeight - BorderSize) {
         mouseMode = MouseMode.SE
-      } else if (y <= BorderTop + (getHeight - BorderBottom - BorderTop - HandleSize) / 2 + HandleSize &&
-                 y >= BorderTop + (getHeight - BorderBottom - BorderTop - HandleSize) / 2) {
+      } else if (y <= BorderSize + (getHeight - BorderSize - BorderSize - HandleSize) / 2 + HandleSize &&
+                 y >= BorderSize + (getHeight - BorderSize - BorderSize - HandleSize) / 2) {
         mouseMode = MouseMode.E
       }
-    } else if (_verticallyResizable && y > getHeight - BorderBottom) {
-      if (x <= BorderLeft + (getWidth - BorderRight - BorderLeft + HandleSize) / 2 &&
-          x >= BorderLeft + (getWidth - BorderRight - BorderLeft - HandleSize) / 2) {
+    } else if (_verticallyResizable && y > getHeight - BorderSize) {
+      if (x <= BorderSize + (getWidth - BorderSize - BorderSize + HandleSize) / 2 &&
+          x >= BorderSize + (getWidth - BorderSize - BorderSize - HandleSize) / 2) {
         mouseMode = MouseMode.S
       }
-    } else if (_verticallyResizable && y < BorderTop &&
-               x <= BorderLeft + (getWidth - BorderRight - BorderLeft + HandleSize) / 2 &&
-               x >= BorderLeft + (getWidth - BorderRight - BorderLeft - HandleSize) / 2) {
+    } else if (_verticallyResizable && y < BorderSize &&
+               x <= BorderSize + (getWidth - BorderSize - BorderSize + HandleSize) / 2 &&
+               x >= BorderSize + (getWidth - BorderSize - BorderSize - HandleSize) / 2) {
       mouseMode = MouseMode.N
     }
 
@@ -676,8 +673,8 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   def widgetResized(): Unit = {
     super.setBounds(
       if (selected) {
-        new Rectangle(getX, getY, widget.getWidth + BorderRight + BorderLeft,
-                      widget.getHeight + BorderTop + BorderBottom)
+        new Rectangle(getX, getY, widget.getWidth + BorderSize + BorderSize,
+                      widget.getHeight + BorderSize + BorderSize)
       } else {
         new Rectangle(getX, getY, widget.getWidth, widget.getHeight)
       }
@@ -696,7 +693,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   // is needed for the zooming code in InterfacePanel
   def getUnselectedLocation: Point = {
     if (selected) {
-      new Point(getX + BorderRight, getY + BorderTop)
+      new Point(getX + BorderSize, getY + BorderSize)
     } else {
       getLocation
     }
@@ -704,8 +701,8 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
   def getUnselectedBounds: Rectangle = {
     if (selected) {
-      new Rectangle(getX + BorderRight, getY + BorderTop, getWidth - BorderRight - BorderLeft,
-                    getHeight - BorderTop - BorderBottom)
+      new Rectangle(getX + BorderSize, getY + BorderSize, getWidth - BorderSize - BorderSize,
+                    getHeight - BorderSize - BorderSize)
     } else {
       getBounds
     }
@@ -715,8 +712,8 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     if (selected) {
       getBounds
     } else {
-      new Rectangle(getX - BorderLeft, getY - BorderTop, getWidth + BorderLeft + BorderRight,
-                    getHeight + BorderTop + BorderBottom)
+      new Rectangle(getX - BorderSize, getY - BorderSize, getWidth + BorderSize + BorderSize,
+                    getHeight + BorderSize + BorderSize)
     }
   }
 
