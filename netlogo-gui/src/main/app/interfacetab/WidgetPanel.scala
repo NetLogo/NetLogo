@@ -243,7 +243,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
   private[interfacetab] def aboutToDragSelectedWidgets(dragTarget: WidgetWrapper, startPressX: Int,
                                                        startPressY: Int): Unit = {
     widgetsBeingDragged = Seq(dragTarget) ++ selectedWrappers.filter(_ != dragTarget)
-    widgetsBeingDragged.foreach(_.aboutToDrag(startPressX, startPressY))
+    widgetsBeingDragged.foreach { w =>
+      w.aboutToDrag(startPressX, startPressY)
+      moveToFront(w)
+    }
   }
 
   private[interfacetab] def dragSelectedWidgets(x: Int, y: Int): Unit = {
@@ -416,7 +419,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
             startDragPoint = Some(e.getPoint)
           } else {
             wrapperAtPoint(e.getPoint) match {
-              case Some(w) if w.selected =>
+              case Some(w) =>
+                if (!w.selected)
+                  unselectWidgets()
+
                 e.translatePoint(-w.getX, -w.getY)
                 w.mousePressed(e)
                 startDragPoint = None
