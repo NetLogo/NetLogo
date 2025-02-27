@@ -8,7 +8,7 @@ import java.nio.file.Paths
 import java.net.URI
 import javax.swing.{ AbstractAction, JComponent, JDialog }
 
-import org.nlogo.api.{ FileIO, ModelReader, ModelType, Version }, ModelReader.modelSuffix
+import org.nlogo.api.{ FileIO, ModelReader, ModelType, Version }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.{ ConversionError, ConversionWithErrors, ErroredConversion, FailedConversionResult }
@@ -188,7 +188,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     val userPath = FileDialog.showFiles(
       owner, I18N.gui.get("menu.file.saveAs"), AWTFileDialog.SAVE,
       newFileName, List[String](ModelReader.modelSuffix))
-    val extensionPath = FileIO.ensureExtension(userPath, modelSuffix)
+    val extensionPath = FileIO.ensureExtension(userPath, ModelReader.modelSuffix)
     val path = Paths.get(extensionPath)
     if (!path.toFile.exists) {
       Some(path.toUri)
@@ -202,7 +202,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
    * This is the model name if there is one, "Untitled.nlogox(3d)" otherwise.
    */
   private def guessFileName: String =
-    FileIO.ensureExtension(modelTracker.modelNameForDisplay, modelSuffix)
+    FileIO.ensureExtension(modelTracker.modelNameForDisplay, ModelReader.modelSuffix)
 
   def shouldSaveModelOfDifferingVersion(version: String): Boolean = {
     Version.compatibleVersion(version) || {
