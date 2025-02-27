@@ -54,7 +54,7 @@ class PreferencesDialog(parent: Frame, preferences: Seq[Preference])
       }
     }
     try {
-      preferences.find(_.i18nKey == "uiScale").get.asInstanceOf[Preferences.StringPreference].component.getText.toDouble
+      preferences.find(_.i18nKey == "uiScale").map(_.asInstanceOf[Preferences.StringPreference].component.getText.toDouble)
     } catch {
       case e: NumberFormatException =>
         new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui.get("tools.preferences.scaleError"),

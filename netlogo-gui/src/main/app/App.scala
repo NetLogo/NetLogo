@@ -78,14 +78,6 @@ object App {
     }
 
     try {
-      val uiScale = {
-        val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
-
-        prefs.getDouble("uiScale", 1.0)
-      }
-
-      System.setProperty("sun.java2d.uiScale", uiScale.toString)
-
       // this call is reflective to avoid complicating dependencies
       appHandler.getClass.getDeclaredMethod("init").invoke(appHandler)
 
