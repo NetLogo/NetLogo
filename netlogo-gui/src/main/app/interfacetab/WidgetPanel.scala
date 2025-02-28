@@ -149,7 +149,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   private var placedShadowWidget = false
-  private var stampWidget = false
 
   setOpaque(true)
   setBackground(AwtColor.WHITE)
@@ -773,18 +772,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def createShadowWidget(widget: CoreWidget): Unit = {
-    newShadowWidget(widget)
-
-    stampWidget = false
-  }
-
-  def stampShadowWidget(widget: CoreWidget): Unit = {
-    newShadowWidget(widget)
-
-    stampWidget = true
-  }
-
-  def newShadowWidget(widget: CoreWidget): Unit = {
     val wrapper = new WidgetWrapper(makeWidget(widget), this)
 
     add(wrapper, JLayeredPane.DEFAULT_LAYER)
@@ -797,6 +784,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     wrapper.setLocation(mouse.x.max(0), mouse.y.max(0))
     wrapper.setSize(wrapper.getPreferredSize)
+    wrapper.setPlacing(true)
     wrapper.validate()
 
     zoomer.zoomWidget(wrapper, true, false, 1.0, zoomFactor)
@@ -814,11 +802,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
     interceptPane.disableIntercept()
 
     newWidget.foreach(widget => {
-      val model = widget.widget.model
-
       widget.selected(true)
       widget.foreground()
       widget.isNew(true)
+      widget.setPlacing(false)
 
       placedShadowWidget = true
 
@@ -833,9 +820,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
       if (widget != null)
         widget.isNew(false)
-
-      if (stampWidget)
-        createShadowWidget(model)
     })
   }
 

@@ -43,6 +43,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   private var _isForeground = false
   private var highlighted = false
   private var dragging = false
+  private var placing = false
   private var mouseMode = MouseMode.IDLE
   private var startPressX = 0
   private var startPressY = 0
@@ -190,6 +191,10 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
       new WidgetForegroundedEvent(widget).raise(this)
     }
+  }
+
+  def setPlacing(value: Boolean): Unit = {
+    placing = value
   }
 
   private def addWrapperBorder(dim: Dimension): Dimension = {
@@ -914,7 +919,9 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     override def paintComponent(g: Graphics): Unit = {
       val g2d = Utils.initGraphics2D(g)
 
-      if (interfacePanel.getInteractMode != InterfaceMode.Interact && !selected && !highlighted && !dragging) {
+      if (interfacePanel.getInteractMode != InterfaceMode.Interact &&
+          (interfacePanel.getInteractMode != InterfaceMode.Add || placing) && !selected && !highlighted && !dragging) {
+
         if (widget.isNote) {
           g2d.setColor(InterfaceColors.widgetPreviewCoverNote)
         } else {

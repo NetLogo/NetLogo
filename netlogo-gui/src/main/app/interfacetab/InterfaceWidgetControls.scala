@@ -239,7 +239,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
         def actionPerformed(e: ActionEvent): Unit = {
           chosenItem = spec.displayName
 
-          wPanel.stampShadowWidget(widgetMenu.getSelectedWidget)
+          wPanel.createShadowWidget(widgetMenu.getSelectedWidget)
         }
       }))
 
