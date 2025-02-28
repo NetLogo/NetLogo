@@ -13,7 +13,7 @@ object Tessellator {
   }
 }
 
-private class Tessellator extends com.jogamp.opengl.glu.GLUtessellatorCallbackAdapter {
+class Tessellator extends com.jogamp.opengl.glu.GLUtessellatorCallbackAdapter {
 
   import Tessellator.TessDataObject
 

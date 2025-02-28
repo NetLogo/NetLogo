@@ -43,6 +43,7 @@ object HubNetSwitchReader extends BaseWidgetParser with ConstWidgetParser with W
         Switch(
           name.map(restoreLines),
           pos._1, pos._2, pos._3 - pos._1, pos._4 - pos._2,
+          true,
           name.map(restoreLines), ! notOn)
     }
 
@@ -212,6 +213,7 @@ object HubNetMonitorReader extends BaseWidgetParser with ConstWidgetParser with 
         Monitor(
           display = name,
           x = pos._1, y = pos._2, width = pos._3 - pos._1, height = pos._4 - pos._2,
+          oldSize = true,
           source = source,
           precision = precision, fontSize = 11)
     }
@@ -267,6 +269,7 @@ object HubNetSliderReader extends BaseWidgetParser with ConstWidgetParser with W
           display = name.map(restoreLines),
           x = pos._1, y = pos._2,
           width = pos._3 - pos._1, height = pos._4 - pos._2,
+          oldSize = true,
           variable = name.map(restoreLines),
           min = min.toString,
           max = max.toString,
@@ -339,6 +342,7 @@ object HubNetChooserReader extends BaseWidgetParser with WidgetReader {
         Chooser(restoredVarName,
           x = pos._1, y = pos._2,
           width = pos._3 - pos._1, height = pos._4 - pos._2,
+          oldSize = true,
           display = restoredVarName, choices = choices,
           currentChoice = selectedIndex)
     }

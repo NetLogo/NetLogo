@@ -3,7 +3,7 @@
 package org.nlogo.app
 
 import java.awt.{ Component, Frame }
-import java.awt.event.ActionEvent
+import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import java.net.URI
 import java.nio.file.Path
 import javax.swing.{ Action, AbstractAction }
@@ -13,6 +13,7 @@ import org.nlogo.api.Version
 import org.nlogo.swing.{ BrowserLauncher, UserAction },
   BrowserLauncher.docPath,
   UserAction._
+import org.nlogo.theme.ThemeSync
 
 class LocalBrowseAction(name: String, path: Path)
 extends AbstractAction(name)
@@ -66,11 +67,31 @@ object HelpActions {
 
 class ShowAboutWindow(frame: Frame)
 extends AbstractAction(I18N.gui.getN("menu.help.aboutVersion", Version.versionDropZeroPatch))
-with MenuAction {
+with MenuAction with ThemeSync {
   category = HelpCategory
   group    = HelpAboutGroup
 
+  private var aboutWindow: Option[AboutWindow] = None
+
   override def actionPerformed(e: ActionEvent): Unit = {
-    new AboutWindow(frame).setVisible(true)
+    aboutWindow match {
+      case Some(window) =>
+        window.setVisible(true)
+
+      case None =>
+        aboutWindow = Some(new AboutWindow(frame) {
+          addWindowListener(new WindowAdapter {
+            override def windowClosed(e: WindowEvent) {
+              aboutWindow = None
+            }
+          })
+
+          setVisible(true)
+        })
+    }
+  }
+
+  override def syncTheme(): Unit = {
+    aboutWindow.foreach(_.syncTheme())
   }
 }

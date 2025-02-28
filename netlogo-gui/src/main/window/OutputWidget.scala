@@ -2,25 +2,33 @@
 
 package org.nlogo.window
 
-import org.nlogo.swing.RichJMenuItem
+import java.awt.{ GridBagConstraints, GridBagLayout, Insets, Point }
+import java.awt.event.ActionEvent
+import javax.swing.AbstractAction
+
 import org.nlogo.api.Editable
 import org.nlogo.core.{ I18N, Output => CoreOutput }
+import org.nlogo.swing.{ MenuItem, PopupMenu }
+import org.nlogo.theme.InterfaceColors
 
 class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
-  org.nlogo.window.Events.ExportWorldEvent.Handler with Editable {
+  Events.ExportWorldEvent.Handler with Editable {
   type WidgetModel = CoreOutput
 
-  setLayout(new java.awt.BorderLayout())
-  setBorder(widgetBorder)
-  setBackground(InterfaceColors.MONITOR_BACKGROUND)
   displayName(I18N.gui.get("tabs.run.widgets.output"))
+
   val outputArea = new OutputArea()
-  add(new javax.swing.JPanel() {
-    setLayout(new java.awt.BorderLayout())
-    setBackground(InterfaceColors.MONITOR_BACKGROUND)
-    setBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2))
-    add(outputArea, java.awt.BorderLayout.CENTER)
-  }, java.awt.BorderLayout.CENTER)
+
+  setLayout(new GridBagLayout)
+
+  val c = new GridBagConstraints
+
+  c.weightx = 1
+  c.weighty = 1
+  c.fill = GridBagConstraints.BOTH
+  c.insets = new Insets(6, 6, 6, 6)
+
+  add(outputArea, c)
 
   def propertySet = Properties.output
 
@@ -33,7 +41,11 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   }
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.output")
-  override def zoomSubcomponents = true
+  override def setZoomFactor(zoomFactor: Double) {
+    super.setZoomFactor(zoomFactor)
+
+    outputArea.zoomFactor = zoomFactor
+  }
   override def exportable = true
   override def getDefaultExportName = "output.txt"
   def valueText: String = outputArea.text.getText
@@ -45,12 +57,20 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   def repaintPrompt(){}
   def cycleAgentType(forward:Boolean){}
 
-  override def populateContextMenu(menu:javax.swing.JPopupMenu, p:java.awt.Point, source:java.awt.Component) = {
+  override def populateContextMenu(menu: PopupMenu, p: Point) {
     // at least on Macs, Command-C to copy may not work, so this
     // is needed - ST 4/21/05
-    val copyItem = RichJMenuItem(I18N.gui.get("tabs.run.widget.copyselectedtext")){ outputArea.text.copy }
-    menu.add(copyItem)
-    p
+    menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copyselectedtext")) {
+      def actionPerformed(e: ActionEvent) {
+        outputArea.text.copy
+      }
+    }))
+  }
+
+  override def syncTheme(): Unit = {
+    setBackgroundColor(InterfaceColors.outputBackground)
+
+    outputArea.syncTheme()
   }
 
   // these are copied from the TrailDrawer, as is this code for breaking up

@@ -7,7 +7,8 @@ import javax.swing.{WindowConstants, JFrame}
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.window.{ ClientAppInterface, DefaultEditorFactory }
-import org.nlogo.swing.{ Implicits, ModalProgressTask, OptionDialog }, Implicits._
+import org.nlogo.swing.{ Implicits, ModalProgressTask, OptionPane, SetSystemLookAndFeel }, Implicits._
+import org.nlogo.theme.InterfaceColors
 import org.nlogo.awt.{ Hierarchy, Images, Positioning, EventQueue }
 import org.nlogo.hubnet.connection.Ports
 
@@ -21,7 +22,7 @@ object ClientApp {
   def mainHelper(args: Array[String], workspace: CompilerServices) {
     try {
       val app = new ClientApp()
-      org.nlogo.swing.Utils.setSystemLookAndFeel()
+      SetSystemLookAndFeel.setSystemLookAndFeel()
 
       var isRoboClient = false
       var waitTime = 500
@@ -58,10 +59,8 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
   private var loginDialog: LoginDialog = _
   private var isLocal: Boolean = _
 
-  locally {
-    setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
-    setResizable(false)
-  }
+  setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
+  setResizable(false)
 
   def startup(userid: String, hostip: String,
               port: Int, isLocal: Boolean, isRobo: Boolean, waitTime: Long, compiler: CompilerServices): Unit = {
@@ -74,7 +73,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
       })
 
       this.isLocal = isLocal
-      setIconImage(Images.loadImageResource("/images/arrowhead.gif"))
+      setIconImage(Images.loadImageResource("/images/hubnet.png"))
       getContentPane.setLayout(new BorderLayout())
       loginDialog = new LoginDialog(this, userid, hostip, port)
       clientPanel =
@@ -82,8 +81,12 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
         else new ClientPanel(editorFactory, this, compiler)
 
       getContentPane.add(clientPanel, BorderLayout.CENTER)
+
       pack()
+
       Positioning.center(this, null)
+
+      syncTheme()
 
       if (isLocal) {
         val killLocalListener = () => {
@@ -140,15 +143,17 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
   def showExitMessage(title: String, message: String): Boolean = {
     EventQueue.mustBeEventDispatchThread()
-    val buttons = Array[Object](title, I18N.gui.get("common.buttons.cancel"))
-    0 == OptionDialog.showMessage(loginDialog, "Confirm " + title, message, buttons)
+    new OptionPane(loginDialog, title, message, OptionPane.Options.OkCancel,
+                   OptionPane.Icons.Info).getSelectedIndex == 0
   }
 
   def handleDisconnect(activityName: String, connected: Boolean, reason:String) {
     EventQueue.mustBeEventDispatchThread()
     if (isLocal) this.dispose()
     else if (connected) {
-      OptionDialog.showMessage(this, "", "You have been disconnected from " + activityName + ".", Array("ok"))
+      new OptionPane(this, I18N.gui.get("edit.hubnet.disconnected"),
+                     I18N.gui.getN("edit.hubnet.disconnected.message", activityName), OptionPane.Options.Ok,
+                     OptionPane.Icons.Info)
       dispose()
       doLogin()
       ()
@@ -157,14 +162,14 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
   def handleLoginFailure(errorMessage: String) {
     EventQueue.mustBeEventDispatchThread()
-    OptionDialog.showMessage(ClientApp.this, "Login Failed",
-      errorMessage, Array(I18N.gui.get("common.buttons.ok")))
+    new OptionPane(ClientApp.this, I18N.gui.get("edit.hubnet.loginFailed"), errorMessage, OptionPane.Options.Ok,
+                   OptionPane.Icons.Error)
     loginDialog.setVisible(true)
   }
 
   def handleExit() {
     EventQueue.mustBeEventDispatchThread()
-    if (showExitMessage(I18N.gui.get("common.buttons.exit"), "Do you really want to exit this activity?")){
+    if (showExitMessage(I18N.gui.get("edit.hubnet.exit"), I18N.gui.get("edit.hubnet.exit.message"))) {
       clientPanel.logout()
       setVisible(false)
       dispose()
@@ -174,9 +179,13 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
 
   def handleQuit() {
     EventQueue.mustBeEventDispatchThread()
-    val shouldExit = showExitMessage(
-      I18N.gui.get("common.buttons.quit"),
-      "Do you really want to quit HubNet?")
+    val shouldExit = showExitMessage(I18N.gui.get("edit.hubnet.quit"), I18N.gui.get("edit.hubnet.quit.message"))
     if (shouldExit) System.exit(0)
+  }
+
+  override def syncTheme(): Unit = {
+    getContentPane.setBackground(InterfaceColors.dialogBackground)
+
+    clientPanel.syncTheme()
   }
 }

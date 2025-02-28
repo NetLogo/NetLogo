@@ -6,7 +6,7 @@ import java.awt.Frame
 
 import org.nlogo.core.I18N
 import org.nlogo.plot.{ Plot, PlotManager }
-import org.nlogo.swing.OptionDialog
+import org.nlogo.swing.{ DropdownOptionPane, OptionPane }
 
 import ExportControls._
 
@@ -18,11 +18,10 @@ class PlotExportControls(plotManager: PlotManager) {
       sorryNoPlots(frame)
       None
     } else {
-      val plotnum = OptionDialog.showAsList(frame,
-        I18N.gui.get("menu.file.export.plot"),
-        I18N.gui.get("menu.file.export.plot.whichPlot"),
-        plotNames.toArray[Object])
-      if (plotnum < 0)
+      val plotnum = new DropdownOptionPane(frame, I18N.gui.get("menu.file.export.plot"),
+                                           I18N.gui.get("menu.file.export.plot.whichPlot"),
+                                           plotNames).getChoiceIndex
+      if (plotnum == -1)
         None
       else
         plotManager.maybeGetPlot(plotNames(plotnum))
@@ -41,10 +40,8 @@ class PlotExportControls(plotManager: PlotManager) {
       I18N.gui.get("menu.file.export.plot.failed"))
   }
 
-  def sorryNoPlots(frame: Frame): Unit = {
-    OptionDialog.showMessage(
-      frame, I18N.gui.get("menu.file.export.plot"),
-      I18N.gui.get("menu.file.export.noPlots"),
-      Array[Object](I18N.gui.get("common.buttons.ok")))
+  def sorryNoPlots(frame: Frame) {
+    new OptionPane(frame, I18N.gui.get("menu.file.export.plot"), I18N.gui.get("menu.file.export.noPlots"),
+                   OptionPane.Options.Ok, OptionPane.Icons.Info)
   }
 }

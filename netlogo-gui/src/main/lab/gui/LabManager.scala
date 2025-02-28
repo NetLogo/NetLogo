@@ -8,10 +8,11 @@ import javax.swing.AbstractAction
 import org.nlogo.api.{ AbstractModelLoader, LabProtocol }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.{ I18N, Model }
+import org.nlogo.swing.UserAction.{ ToolsCategory, ToolsDialogsGroup, KeyBindings, MenuAction }
+import org.nlogo.theme.ThemeSync
 import org.nlogo.window.{ GUIWorkspace, EditDialogFactoryInterface, LabManagerInterface, MenuBarFactory }
 import org.nlogo.window.Events._
 import org.nlogo.workspace.{ CurrentModelOpener, WorkspaceFactory }
-import org.nlogo.swing.UserAction.{ ToolsCategory, ToolsDialogsGroup, KeyBindings, MenuAction }
 
 import scala.collection.mutable.ListBuffer
 
@@ -24,7 +25,8 @@ class LabManager(val workspace:        GUIWorkspace,
   with CompiledEvent.Handler
   with LoadBeginEvent.Handler
   with LoadModelEvent.Handler
-{
+  with ThemeSync {
+
   val protocols = new ListBuffer[LabProtocol]
 
   def getComponent: Seq[LabProtocol] = protocols.toSeq
@@ -78,6 +80,10 @@ class LabManager(val workspace:        GUIWorkspace,
   }
 
   val actions = Seq(new ShowLabManager)
+
+  override def syncTheme(): Unit = {
+    dialog.syncTheme()
+  }
 
   class ShowLabManager extends AbstractAction(I18N.gui.get(s"menu.tools.behaviorSpace")) with MenuAction {
     category    = ToolsCategory

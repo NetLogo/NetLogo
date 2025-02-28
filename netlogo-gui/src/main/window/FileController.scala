@@ -6,13 +6,13 @@ import java.awt.{ Component, Dialog, FileDialog => AWTFileDialog }
 import java.awt.event.ActionEvent
 import java.nio.file.Paths
 import java.net.URI
-import javax.swing.{ AbstractAction, JButton, JComponent, JDialog }
+import javax.swing.{ AbstractAction, JComponent, JDialog }
 
-import org.nlogo.api.{ FileIO, ModelReader, ModelType, Version }, ModelReader.modelSuffix
+import org.nlogo.api.{ FileIO, ModelReader, ModelType, Version }
 import org.nlogo.awt.{ EventQueue, UserCancelException }
 import org.nlogo.core.{ I18N, Model }
 import org.nlogo.fileformat.{ ConversionError, ConversionWithErrors, ErroredConversion, FailedConversionResult }
-import org.nlogo.swing.{ BrowserLauncher, FileDialog, MessageDialog, OptionDialog }
+import org.nlogo.swing.{ BrowserLauncher, Button, FileDialog, MessageDialog, OptionPane }
 import org.nlogo.workspace.{ ModelTracker, OpenModel, SaveModel },
   OpenModel.{ Controller => OpenModelController },
   SaveModel.{ Controller => SaveModelController }
@@ -69,13 +69,11 @@ class BackgroundFileController(dialog: JDialog, foregroundController: FileContro
 class FileController(owner: Component, modelTracker: ModelTracker) extends OpenModelController with SaveModelController {
   // OpenModel.Controller methods
   def errorOpeningURI(uri: URI, exception: Exception): Unit = {
-    val options = Array[Object](I18N.gui.get("common.buttons.ok"))
     println(exception)
     exception.printStackTrace()
-    OptionDialog.showMessage(owner, "NetLogo",
-      I18N.gui.getN("file.open.error.unableToOpen",
-        Paths.get(uri).toString, exception.getMessage),
-      options)
+    new OptionPane(owner, I18N.gui.get("common.messages.error"),
+                   I18N.gui.getN("file.open.error.unableToOpen", Paths.get(uri).toString, exception.getMessage),
+                   OptionPane.Options.Ok, OptionPane.Icons.Error)
     throw new UserCancelException()
   }
 
@@ -126,32 +124,28 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     showVersionWarningAndGetResponse(version)
   }
 
-  lazy val continueAndCancelOptions = Array[Object](
-    I18N.gui.get("common.buttons.continue"),
-    I18N.gui.get("common.buttons.cancel"))
-
   @throws(classOf[UserCancelException])
   def checkWithUserBeforeOpeningModelFromFutureVersion(version: String): Unit = {
-    val message = I18N.gui.getN("file.open.warn.version.newer", Version.version, version)
-    if (OptionDialog.showMessage(owner, "NetLogo", message, continueAndCancelOptions) != 0) {
+    if (new OptionPane(owner, I18N.gui.get("common.messages.warning"),
+                       I18N.gui.getN("file.open.warn.version.newer", Version.version, version),
+                       OptionPane.Options.OkCancel, OptionPane.Icons.Warning).getSelectedIndex != 0)
       throw new UserCancelException()
-    }
   }
 
   @throws(classOf[UserCancelException])
   def checkWithUserBeforeOpening3DModelin2D(version: String): Unit = {
-    val message = I18N.gui.getN("file.open.warn.intwod.openthreed", Version.version, version)
-    if (OptionDialog.showMessage(owner, "NetLogo", message, continueAndCancelOptions) != 0) {
+    if (new OptionPane(owner, I18N.gui.get("common.messages.warning"),
+                       I18N.gui.getN("file.open.warn.intwod.openthreed", Version.version, version),
+                       OptionPane.Options.OkCancel, OptionPane.Icons.Warning).getSelectedIndex != 0)
       throw new UserCancelException()
-    }
   }
 
   @throws(classOf[UserCancelException])
   def checkWithUserBeforeOpening2DModelin3D(): Unit = {
-    val message = I18N.gui.getN("file.open.warn.inthreed.opentwod", Version.version)
-    if (OptionDialog.showMessage(owner, "NetLogo", message, continueAndCancelOptions) != 0) {
+   if (new OptionPane(owner, I18N.gui.get("common.messages.warning"),
+                       I18N.gui.getN("file.open.warn.inthreed.opentwod", Version.version),
+                       OptionPane.Options.OkCancel, OptionPane.Icons.Warning).getSelectedIndex != 0)
       throw new UserCancelException()
-    }
   }
 
   @throws(classOf[UserCancelException])
@@ -160,25 +154,24 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
       .toOption
       .map(path => I18N.gui.getN("file.open.error.invalidmodel.withPath", path.toString))
       .getOrElse(I18N.gui.get("file.open.error.invalidmodel"))
-    val options = Array[Object](I18N.gui.get("common.buttons.ok"))
-    OptionDialog.showMessage(owner, "NetLogo", warningText, options)
+    new OptionPane(owner, I18N.gui.get("common.messages.error"), warningText, OptionPane.Options.Ok,
+                   OptionPane.Icons.Error)
     throw new UserCancelException()
   }
 
   def showVersionWarningAndGetResponse(version: String): Boolean = {
-    val message = I18N.gui.getN("file.open.warn.version.older", version, Version.version)
-    val options = Array[Object](
-      I18N.gui.get("common.buttons.continue"),
-      I18N.gui.get("file.open.warn.version.transitionGuide"),
-      I18N.gui.get("common.buttons.cancel"))
-    val response =
-      OptionDialog.showMessage(owner, I18N.gui.get("common.messages.warning"), message, options)
+    val response = new OptionPane(owner, I18N.gui.get("common.messages.warning"),
+                                  I18N.gui.getN("file.open.warn.version.older", version, Version.version),
+                                  List(I18N.gui.get("common.buttons.continue"),
+                                       I18N.gui.get("file.open.warn.version.transitionGuide"),
+                                       I18N.gui.get("common.buttons.cancel")),
+                                  OptionPane.Icons.Warning).getSelectedIndex
     response match {
       case 0 => true
       case 1 =>
         BrowserLauncher.openURI(owner, new URI(I18N.gui.get("file.open.transitionGuide.url")))
         showVersionWarningAndGetResponse(version)
-      case 2 => false
+      case _ => false
     }
   }
 
@@ -195,7 +188,7 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     val userPath = FileDialog.showFiles(
       owner, I18N.gui.get("menu.file.saveAs"), AWTFileDialog.SAVE,
       newFileName, List[String](ModelReader.modelSuffix))
-    val extensionPath = FileIO.ensureExtension(userPath, modelSuffix)
+    val extensionPath = FileIO.ensureExtension(userPath, ModelReader.modelSuffix)
     val path = Paths.get(extensionPath)
     if (!path.toFile.exists) {
       Some(path.toUri)
@@ -209,22 +202,22 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
    * This is the model name if there is one, "Untitled.nlogox(3d)" otherwise.
    */
   private def guessFileName: String =
-    FileIO.ensureExtension(modelTracker.modelNameForDisplay, modelSuffix)
+    FileIO.ensureExtension(modelTracker.modelNameForDisplay, ModelReader.modelSuffix)
 
   def shouldSaveModelOfDifferingVersion(version: String): Boolean = {
     Version.compatibleVersion(version) || {
-      val options = Array[Object](
-        I18N.gui.get("common.buttons.save"),
-        I18N.gui.get("common.buttons.cancel"))
-      val message = I18N.gui.getN("file.save.warn.savingInNewerVersion", version, Version.version)
-      OptionDialog.showMessage(owner, "NetLogo", message, options) == 0
+      new OptionPane(owner, I18N.gui.get("common.messages.error"),
+                     I18N.gui.getN("file.save.warn.savingInNewerVersion", version, Version.version),
+                     List(I18N.gui.get("common.buttons.save"),
+                          I18N.gui.get("common.buttons.cancel")),
+                     OptionPane.Icons.Error).getSelectedIndex == 0
     }
   }
 
   def warnInvalidFileFormat(format: String): Unit = {
-    val options = Array[Object](I18N.gui.get("common.buttons.ok"))
-    val message = I18N.gui.getN("file.save.warn.invalidFormat", format)
-    OptionDialog.showMessage(owner, I18N.gui.get("common.messages.warning"), message, options)
+    new OptionPane(owner, I18N.gui.get("common.messages.warning"),
+                   I18N.gui.getN("file.save.warn.invalidFormat", format), OptionPane.Options.Ok,
+                   OptionPane.Icons.Warning)
   }
 }
 
@@ -247,7 +240,7 @@ class AutoConversionErrorDialog(owner: Component, keyContext: String) extends Me
   lazy val originalAction = new ConversionAction(I18N.gui.get(s"file.open.warn.autoconversion.$keyContext.original"))
 
   override def makeButtons(): Seq[JComponent] = {
-    super.makeButtons() ++ Seq(new JButton(bestEffortAction), new JButton(originalAction))
+    super.makeButtons() ++ Seq(new Button(bestEffortAction), new Button(originalAction))
   }
 
   def errorMessage(failure: FailedConversionResult): String =

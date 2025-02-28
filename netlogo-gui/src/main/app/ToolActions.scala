@@ -9,22 +9,27 @@ import javax.swing.{ AbstractAction, JDialog }
 
 import org.nlogo.api.{ AggregateManagerInterface, LibraryManager }
 import org.nlogo.app.common.TabsInterface
-import org.nlogo.app.tools.{ LibrariesDialog, Preferences, PreferencesDialog }
+import org.nlogo.app.tools.{ LibrariesDialog, Preferences, PreferencesDialog, ThemesDialog }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
-import org.nlogo.workspace.AbstractWorkspaceScala
-import org.nlogo.window.{ ColorDialog, LinkRoot }
 import org.nlogo.shape.ShapesManagerInterface
 import org.nlogo.swing.UserAction._
+import org.nlogo.theme.ThemeSync
+import org.nlogo.window.{ ColorDialog, LinkRoot, RGBAColorDialog }
+import org.nlogo.workspace.AbstractWorkspaceScala
 
-abstract class ShowDialogAction(name: String) extends AbstractAction(name) {
-  protected def createDialog(): JDialog
+abstract class ShowDialogAction(name: String) extends AbstractAction(name) with ThemeSync {
+  protected def createDialog(): JDialog with ThemeSync
 
   lazy protected val createdDialog = createDialog
 
   override def actionPerformed(e: ActionEvent): Unit = {
     createdDialog.toFront()
     createdDialog.setVisible(true)
+  }
+
+  override def syncTheme(): Unit = {
+    createdDialog.syncTheme()
   }
 }
 
@@ -35,18 +40,28 @@ with MenuAction {
   group    = ToolsSettingsGroup
 
   override def createDialog = new PreferencesDialog(frame,
-    Preferences.Language,
-    Preferences.LoadLastOnStartup,
-    new Preferences.ReloadOnExternalChanges(tabs),
-    new Preferences.LineNumbers(tabs),
-    Preferences.IsLoggingEnabled,
-    new Preferences.LogDirectory(frame),
-    Preferences.LogEvents,
-    Preferences.IncludedFilesMenu,
-    Preferences.ProceduresMenuSortOrder,
-    Preferences.FocusOnError,
-    Preferences.StartSeparateCodeTab
+    Seq(
+      Preferences.Language,
+      Preferences.LoadLastOnStartup,
+      new Preferences.ReloadOnExternalChanges(tabs),
+      Preferences.IsLoggingEnabled,
+      new Preferences.LogDirectory(frame),
+      Preferences.LogEvents,
+      Preferences.IncludedFilesMenu,
+      Preferences.ProceduresMenuSortOrder,
+      Preferences.FocusOnError,
+      Preferences.StartSeparateCodeTab
+    ) ++ (if (System.getProperty("os.name").contains("Linux")) Seq(Preferences.UIScale) else Nil)
   )
+}
+
+class ShowThemesDialog(frame: Frame with ThemeSync)
+  extends ShowDialogAction(I18N.gui.get("menu.tools.themes")) with MenuAction {
+
+  category = ToolsCategory
+  group = ToolsSettingsGroup
+
+  override def createDialog = new ThemesDialog(frame)
 }
 
 class OpenLibrariesDialog( frame:              Frame
@@ -80,6 +95,20 @@ with MenuAction {
       hasShown = true
     } else
       super.actionPerformed(e)
+  }
+}
+
+class OpenRGBAColorDialog(frame: Frame) extends ShowDialogAction(I18N.gui.get("menu.tools.rgbaColorPicker"))
+                                        with MenuAction {
+  category = ToolsCategory
+  group = ToolsDialogsGroup
+
+  def createDialog() = new RGBAColorDialog(frame, false)
+
+  override def actionPerformed(e: ActionEvent) {
+    Positioning.center(createdDialog, frame)
+
+    super.actionPerformed(e)
   }
 }
 

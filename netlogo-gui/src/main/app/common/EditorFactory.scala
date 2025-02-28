@@ -3,7 +3,7 @@
 package org.nlogo.app.common
 
 import java.util.prefs.Preferences
-import java.awt.Font
+import java.awt.{ Adjustable, Font, Graphics }
 import java.awt.event.{InputEvent, KeyEvent}
 import javax.swing.{ Action, KeyStroke }
 
@@ -12,19 +12,24 @@ import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup, JumpToDeclaration
   NetLogoFoldParser, NetLogoTokenMakerFactory, ShiftActions, ShowUsageBox, ShowUsageBoxAction, ToggleComments }
 import org.nlogo.editor.{ AbstractEditorArea, AdvancedEditorArea, EditorConfiguration, EditorScrollPane }
 import org.nlogo.nvm.ExtensionManager
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.DefaultEditorFactory
 
 import org.fife.ui.rsyntaxtextarea.{ folding, TokenMakerFactory },
   folding.FoldParserManager
 import org.fife.ui.rtextarea.RTextScrollPane
 
-class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManager) extends DefaultEditorFactory(compiler) {
+class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManager)
+  extends DefaultEditorFactory(compiler) with ThemeSync {
+
   System.setProperty(TokenMakerFactory.PROPERTY_DEFAULT_TOKEN_MAKER_FACTORY,
     "org.nlogo.ide.NetLogoTokenMakerFactory")
   useExtensionManager(extensionManager)
 
+  private val codeCompletionPopup = CodeCompletionPopup(compiler.dialect, extensionManager)
+
   def autoSuggestAction =
-    new AutoSuggestAction("auto-suggest", CodeCompletionPopup(compiler.dialect, extensionManager))
+    new AutoSuggestAction("auto-suggest", codeCompletionPopup)
 
   override def defaultConfiguration(rows: Int, cols: Int): EditorConfiguration = {
     val showUsageBox = new ShowUsageBox(colorizer)
@@ -76,14 +81,29 @@ class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManag
     editor match {
       case aea: AdvancedEditorArea =>
         val sp = new RTextScrollPane(aea) with EditorScrollPane {
+          // this is needed because JScrollPane defines its own ScrollBar class (Isaac B 2/25/25)
+          import org.nlogo.swing.{ ScrollBar => NLScrollBar }
+
+          setHorizontalScrollBar(new NLScrollBar(Adjustable.HORIZONTAL))
+          setVerticalScrollBar(new NLScrollBar(Adjustable.VERTICAL))
+
           def lineNumbersEnabled = getLineNumbersEnabled
           override def setFont(f: Font) = {
             super.setFont(f)
             Option(getGutter).foreach(_.setLineNumberFont(f))
+          }
+
+          override def paintComponent(g: Graphics) {
+            getGutter.setBackground(InterfaceColors.codeBackground)
+            getGutter.setBorderColor(InterfaceColors.codeSeparator)
           }
         }
         sp.setLineNumbersEnabled(editor.configuration.showLineNumbers)
         sp
       case _ => super.scrollPane(editor)
     }
+
+  override def syncTheme(): Unit = {
+    codeCompletionPopup.syncTheme()
+  }
 }

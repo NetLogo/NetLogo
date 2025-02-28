@@ -256,6 +256,7 @@ object NetLogoPackaging {
         (behaviorsearchProject / baseDirectory).value / "resources" / "Behaviorsearch.ico"
       , (behaviorsearchProject / baseDirectory).value / "resources" / "behaviorsearch_model.ico"
       , configDir / "windows" / "NetLogo.ico"
+      , configDir / "windows" / "NetLogo3D.ico"
       , configDir / "windows" / "HubNet Client.ico"
       , configDir / "windows" / "model.ico"
       )
@@ -274,7 +275,7 @@ object NetLogoPackaging {
           override def id = "NetLogo_Console"
           override def mustachePrefix = "win-console-launcher"
         }
-      , new NetLogo3dLauncher(version, Some("NetLogo.ico"), extraJavaOptions)
+      , new NetLogo3dLauncher(version, Some("NetLogo3D.ico"), extraJavaOptions)
       , new HubNetClientLauncher(version, Some("HubNet Client.ico"), extraJavaOptions)
       , new BehaviorsearchLauncher(version, Some("Behaviorsearch.ico"), extraJavaOptions)
       )
@@ -291,6 +292,12 @@ object NetLogoPackaging {
       val extraDirs = bundledDirs(netlogo, behaviorsearchProject).value(platform, buildJDK.arch)
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir, rootFiles)
       JavaPackager.createScripts(log, appImageDir, appImageDir / "app", configDir / platform, "netlogo-headless.bat", "netlogo-gui.bat", variables)
+
+      // clean up unwanted icon files
+      FileActions.listDirectory(appImageDir.toPath).foreach(path => {
+        if (path.toString.endsWith(".ico"))
+          FileActions.remove(path.toFile)
+      })
 
       PackageWinAggregate(
         log
@@ -319,6 +326,7 @@ object NetLogoPackaging {
       val icons = Seq(
         (behaviorsearchProject / baseDirectory).value / "resources" / "Behaviorsearch.icns"
       , configDir / "macosx" / "NetLogo.icns"
+      , configDir / "macosx" / "NetLogo3D.icns"
       , configDir / "macosx" / "HubNet Client.icns"
       , configDir / "macosx" / "Model.icns"
       )
@@ -351,7 +359,7 @@ object NetLogoPackaging {
         }
       , new NetLogo3dLauncher(
           version
-        , Some("NetLogo.icns")
+        , Some("NetLogo3D.icns")
         , extraJavaOptions ++ Seq(
             "\"-Xdock:name=NetLogo 3D\""
           , "-Dorg.nlogo.mac.appClassName=org.nlogo.app.App$"
@@ -413,6 +421,12 @@ object NetLogoPackaging {
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir, rootFiles)
       val bundleDir = PackageMacAggregate.createBundleDir(log, version, destDir, configDir, launchers)
       JavaPackager.createScripts(log, bundleDir, bundleDir / "app", configDir, "netlogo-headless.sh", "netlogo-gui.sh", variables + ("javaOptions" -> "--add-exports=java.desktop/com.apple.laf=ALL-UNNAMED"))
+
+      // clean up unwanted icon files
+      FileActions.listDirectory(appImageDir.toPath).foreach(path => {
+        if (path.toString.endsWith(".icns"))
+          FileActions.remove(path.toFile)
+      })
 
       PackageMacAggregate(
         log

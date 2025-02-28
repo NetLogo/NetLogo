@@ -2,7 +2,7 @@
 
 package org.nlogo.hubnet.client
 
-import java.awt.AWTEvent
+import java.awt.{ AWTEvent, BorderLayout }
 import java.io.{IOException, PrintWriter}
 import java.net.{Socket, ConnectException, UnknownHostException, NoRouteToHostException}
 import java.util.concurrent.atomic.AtomicBoolean
@@ -17,7 +17,8 @@ import org.nlogo.hubnet.mirroring.{ OverrideList, HubNetLinkStamp, HubNetPlotPoi
 import org.nlogo.hubnet.protocol._
 import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.awt.Hierarchy.getFrame
-import org.nlogo.swing.OptionDialog
+import org.nlogo.swing.{ OptionPane, Transparent }
+import org.nlogo.theme.ThemeSync
 import org.nlogo.window.{ PlotWidgetExport, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget, NetLogoExecutionContext }
 import org.nlogo.window.Events.{ AddJobEvent, AddSliderConstraintEvent, AfterLoadEvent, ExportPlotEvent, InterfaceGlobalEvent, LoadWidgetsEvent }
 
@@ -29,20 +30,16 @@ import scala.concurrent.Future
 // moved, so we use events.  - ST 8/24/03
 class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
                   errorHandler:ErrorHandler,
-                  compiler:CompilerServices) extends JPanel with
+                  compiler:CompilerServices) extends JPanel(new BorderLayout) with Transparent with
         AddJobEvent.Handler with
         ExportPlotEvent.Handler with
         InterfaceGlobalEvent.Handler with
-        AddSliderConstraintEvent.Handler {
+        AddSliderConstraintEvent.Handler with
+        ThemeSync {
 
   var clientGUI:ClientGUI = null
   var viewWidget:ClientView = null
   private val plotManager = new PlotManager(new DummyLogoThunkFactory(), new MersenneTwisterFast())
-
-  locally {
-    setBackground(java.awt.Color.white)
-    setLayout(new java.awt.BorderLayout())
-  }
 
   def setDisplayOn(on: Boolean) { if (viewWidget != null) viewWidget.setDisplayOn(on) }
 
@@ -270,8 +267,9 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       case Text(content, messageType) => messageType match {
         case Text.MessageType.TEXT => clientGUI.addMessage(content.toString)
         case Text.MessageType.USER =>
-          OptionDialog.showMessage(getFrame(this), "User Message", content.toString,
-            Array(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.halt")))
+          new OptionPane(getFrame(this), I18N.gui.get("common.messages.userMessage"), content.toString,
+                         List(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.halt")),
+                         OptionPane.Icons.Info)
         case Text.MessageType.CLEAR => clientGUI.clearMessages()
       }
     }
@@ -429,5 +427,10 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
                 "server. Please use the HubNet Client that comes with " + info)
       }
     }
+  }
+
+  override def syncTheme(): Unit = {
+    if (clientGUI != null)
+      clientGUI.syncTheme()
   }
 }

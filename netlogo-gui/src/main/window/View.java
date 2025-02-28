@@ -2,22 +2,28 @@
 
 package org.nlogo.window;
 
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.AbstractAction;
+
 import org.nlogo.agent.AgentIterator;
-import org.nlogo.core.AgentKindJ;
-import org.nlogo.core.I18N;
 import org.nlogo.agent.AgentSet;
 import org.nlogo.api.AgentException;
 import org.nlogo.api.AgentFollowingPerspective;
 import org.nlogo.api.Perspective;
 import org.nlogo.api.PerspectiveJ;
 import org.nlogo.api.RendererInterface;
+import org.nlogo.awt.Colors;
 import org.nlogo.awt.ImageSelection;
-import scala.Option;
+import org.nlogo.core.AgentKindJ;
+import org.nlogo.core.I18N;
+import org.nlogo.swing.Menu;
+import org.nlogo.swing.MenuItem;
+import org.nlogo.swing.PopupMenu;
+import org.nlogo.theme.InterfaceColors;
 
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import scala.Option;
 
 public class View
     extends javax.swing.JComponent
@@ -231,7 +237,7 @@ public class View
     frameCount++;
     if (frozen || !workspace.world().displayOn()) {
       if (dirty) {
-        g.setColor(InterfaceColors.GRAPHICS_BACKGROUND);
+        g.setColor(InterfaceColors.graphicsBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
       } else {
         g.drawImage(offscreenImage, 0, 0, null);
@@ -437,53 +443,42 @@ public class View
     return renderPerspective;
   }
 
-  public java.awt.Point populateContextMenu(javax.swing.JPopupMenu menu, java.awt.Point p, java.awt.Component source) {
+  public void populateContextMenu(PopupMenu menu, java.awt.Point p) {
     // certain menu items dont work in Applets.
     // the only ones that do are watch, follow and reset-perspective
     // this check (and others below) prevent items from being added
     // when we are running in Applet. JC - 6/8/10
-    JMenuItem copyItem = new JMenuItem(I18N.guiJ().get("tabs.run.widget.view.copy"));
-    copyItem.addActionListener(new ActionListener() {
+    menu.add(new MenuItem(new AbstractAction(I18N.guiJ().get("tabs.run.widget.view.copy")) {
       public void actionPerformed(ActionEvent e) {
-        java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(
           new ImageSelection(exportView()), null);
       }
-    });
-    menu.add(copyItem);
-    JMenuItem exportItem = new JMenuItem(I18N.guiJ().get("tabs.run.widget.view.export"));
-    exportItem.addActionListener(new ActionListener() {
+    }, true));
+    menu.add(new MenuItem(new AbstractAction(I18N.guiJ().get("tabs.run.widget.view.export")) {
       public void actionPerformed(ActionEvent e) {
         workspace.doExportView(View.this);
       }
-    });
-    menu.add(exportItem);
+    }, true));
 
-    JMenuItem open3DView = new JMenuItem(workspace.switchTo3DViewAction);
-    menu.add(open3DView);
+    menu.add(new MenuItem(workspace.switchTo3DViewAction, true));
 
-    menu.add(new JPopupMenu.Separator());
+    menu.addSeparator();
 
-    JMenuItem inspectGlobalsItem = new JMenuItem(I18N.guiJ().get("tabs.run.widget.view.inspectGlobals"));
-    inspectGlobalsItem.addActionListener(new ActionListener() {
+    menu.add(new MenuItem(new AbstractAction(I18N.guiJ().get("tabs.run.widget.view.inspectGlobals")) {
       public void actionPerformed(ActionEvent actionEvent) {
         workspace.inspectAgent(AgentKindJ.Observer());
       }
-    });
-    menu.add(inspectGlobalsItem);
+    }, true));
 
     if (!workspace.world().observer().atHome2D()) {
-      menu.add(new JPopupMenu.Separator());
-      JMenuItem resetItem =
-        new JMenuItem(
-            "<html>"
-            + org.nlogo.awt.Colors.colorize("reset-perspective", SyntaxColors.COMMAND_COLOR));
-      resetItem.addActionListener(new ActionListener() {
+      menu.addSeparator();
+      menu.add(new MenuItem(new AbstractAction(
+        "<html>" + Colors.colorize("reset-perspective", InterfaceColors.commandColor())) {
         public void actionPerformed(ActionEvent e) {
           workspace.world().observer().resetPerspective();
           workspace.viewManager().incrementalUpdateFromEventThread();
         }
-      });
-      menu.add(resetItem);
+      }, true));
     }
     p = new java.awt.Point(p);
     mouser.translatePointToXCorYCor(p);
@@ -495,7 +490,7 @@ public class View
 
       try {
         patch = workspace.world().getPatchAt(xcor, ycor);
-        menu.add(new JPopupMenu.Separator());
+        menu.addSeparator();
         menu.add(new AgentMenuItem(patch, AgentMenuType.INSPECT, "inspect", false));
       } catch (AgentException e) {
         org.nlogo.api.Exceptions.ignore(e);
@@ -509,7 +504,7 @@ public class View
         if (!link.hidden() &&
             workspace.world().protractor().distance(link, xcor, ycor, true) < link.lineThickness() + 0.5) {
           if (!linksAdded) {
-            menu.add(new javax.swing.JPopupMenu.Separator());
+            menu.addSeparator();
             linksAdded = true;
           }
           menu.add(new AgentMenuItem(link, AgentMenuType.INSPECT, "inspect", false));
@@ -535,7 +530,7 @@ public class View
 
             if (dist <= offset) {
               if (!turtlesAdded) {
-                menu.add(new javax.swing.JPopupMenu.Separator());
+                menu.addSeparator();
                 turtlesAdded = true;
               }
 
@@ -564,7 +559,7 @@ public class View
             if ((xMouse >= xCor - offset) && (xMouse <= xCor + offset) &&
                 (yMouse >= yCor - offset) && (yMouse <= yCor + offset)) {
               if (!turtlesAdded) {
-                menu.add(new JPopupMenu.Separator());
+                menu.addSeparator();
                 turtlesAdded = true;
               }
 
@@ -585,15 +580,13 @@ public class View
         p.y += StrictMath.min((y - p.y), 15);
       }
     }
-
-    return p;
   }
 
-  private void addTurtleToContextMenu(javax.swing.JPopupMenu menu,
+  private void addTurtleToContextMenu(PopupMenu menu,
                                       org.nlogo.agent.Turtle turtle) {
     javax.swing.JMenu submenu = new AgentMenu(turtle);
     submenu.add(new AgentMenuItem(turtle, AgentMenuType.INSPECT, "inspect", true));
-    submenu.add(new javax.swing.JPopupMenu.Separator());
+    submenu.addSeparator();
     submenu.add(new AgentMenuItem(turtle, AgentMenuType.WATCH, "watch", true));
     submenu.add(new AgentMenuItem(turtle, AgentMenuType.FOLLOW, "follow", true));
     menu.add(submenu);
@@ -604,24 +597,16 @@ public class View
   enum AgentMenuType {INSPECT, FOLLOW, WATCH}
 
   private class AgentMenuItem
-      extends javax.swing.JMenuItem {
+      extends MenuItem {
     org.nlogo.agent.Agent agent;
     AgentMenuType type;
     boolean submenu = false;
 
     AgentMenuItem(org.nlogo.agent.Agent agent, AgentMenuType type, String caption, boolean submenu) {
-      super("<html>"
-          + org.nlogo.awt.Colors.colorize(
-          caption,
-          SyntaxColors.COMMAND_COLOR)
-          + " "
-          + org.nlogo.awt.Colors.colorize(
-          agent.classDisplayName(),
-          SyntaxColors.REPORTER_COLOR)
-          + org.nlogo.awt.Colors.colorize(
-          agent.toString().substring(agent.classDisplayName().length()),
-          SyntaxColors.CONSTANT_COLOR)
-      );
+      super("<html>" + org.nlogo.awt.Colors.colorize(caption, InterfaceColors.commandColor()) + " " +
+            org.nlogo.awt.Colors.colorize(agent.classDisplayName(), InterfaceColors.reporterColor()) +
+            org.nlogo.awt.Colors.colorize(agent.toString().substring(agent.classDisplayName().length()),
+            InterfaceColors.constantColor()));
       this.agent = agent;
       this.type = type;
       addActionListener(View.this);
@@ -639,7 +624,7 @@ public class View
   }
 
   private class AgentMenu
-      extends javax.swing.JMenu {
+      extends Menu {
     org.nlogo.agent.Agent agent;
     int type;
 

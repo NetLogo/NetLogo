@@ -2,73 +2,67 @@
 
 package org.nlogo.gl.view
 
-import org.nlogo.core.AgentKind
-import org.nlogo.api.{ Agent, Perspective, Turtle }
-import org.nlogo.gl.render.PickListener
-import org.nlogo.window.SyntaxColors
-import org.nlogo.awt.Colors.colorize
+import java.awt.Toolkit
 import java.awt.event.{ ActionEvent, ActionListener }
 import java.util.{ List => JList }
-import javax.swing.JPopupMenu
+import javax.swing.AbstractAction
+
+import org.nlogo.api.{ Agent, Perspective, Turtle }
+import org.nlogo.awt.{ Colors, ImageSelection }, Colors.colorize
+import org.nlogo.core.AgentKind
+import org.nlogo.gl.render.PickListener
+import org.nlogo.swing.{ Menu, MenuItem, WrappingPopupMenu }
+import org.nlogo.theme.InterfaceColors
 
 class Picker(view: View) extends PickListener with ActionListener {
 
   def pick(mousePt: java.awt.Point, agents: JList[Agent]) {
+    val menu = new WrappingPopupMenu
 
-    val menu = new org.nlogo.swing.WrappingPopupMenu()
-
-    val editItem = new javax.swing.JMenuItem("Edit...")
-    editItem.addActionListener(
-      new ActionListener {
-        override def actionPerformed(e: ActionEvent) {
-          new org.nlogo.window.Events.EditWidgetEvent(
-            view.viewManager.workspace.viewWidget.settings)
-          .raise(view)
-        }})
-    menu.add(editItem)
-
-    menu.add(new javax.swing.JPopupMenu.Separator)
-
-    val copyItem = new javax.swing.JMenuItem("Copy View")
-    copyItem.addActionListener(
-      new ActionListener {
-        override def actionPerformed(e: ActionEvent) {
-          java.awt.Toolkit.getDefaultToolkit.getSystemClipboard.setContents(
-            new org.nlogo.awt.ImageSelection(view.exportView), null)}})
-    menu.add(copyItem)
-
-    val exportItem = new javax.swing.JMenuItem("Export View...")
-    exportItem.addActionListener(
-      new ActionListener {
-        override def actionPerformed(e: ActionEvent) {
-          view.viewManager.workspace.doExportView(view.viewManager)
-        }})
-    menu.add(exportItem)
-
-    menu.add(new javax.swing.JPopupMenu.Separator)
-
-    val inspectGlobalsItem = new javax.swing.JMenuItem("inspect globals")
-    inspectGlobalsItem.addActionListener(
-      new ActionListener {
-        override def actionPerformed(p1: ActionEvent) = {
-          view.viewManager.workspace.inspectAgent(AgentKind.Observer)
-        }
+    menu.add(new MenuItem(new AbstractAction("Edit...") {
+      def actionPerformed(e: ActionEvent) {
+        new org.nlogo.window.Events.EditWidgetEvent(
+          view.viewManager.workspace.viewWidget.settings)
+        .raise(view)
       }
-    )
-    menu.add(inspectGlobalsItem)
+    }))
 
-    menu.add(new JPopupMenu.Separator)
+    menu.addSeparator()
 
-    val resetItem = new javax.swing.JMenuItem(
-        "<html>" + colorize("reset-perspective", SyntaxColors.COMMAND_COLOR))
-    resetItem.addActionListener(
-      new ActionListener {
-        override def actionPerformed(e: ActionEvent) {
-          view.resetPerspective()
-        }})
+    menu.add(new MenuItem(new AbstractAction("Copy View") {
+      def actionPerformed(e: ActionEvent) {
+        Toolkit.getDefaultToolkit.getSystemClipboard.setContents(
+          new ImageSelection(view.exportView), null)
+      }
+    }))
+
+    menu.add(new MenuItem(new AbstractAction("Export View...") {
+      def actionPerformed(e: ActionEvent) {
+        view.viewManager.workspace.doExportView(view.viewManager)
+      }
+    }))
+
+    menu.addSeparator()
+
+    menu.add(new MenuItem(new AbstractAction("inspect globals") {
+      def actionPerformed(e: ActionEvent) {
+        view.viewManager.workspace.inspectAgent(AgentKind.Observer)
+      }
+    }))
+
+    menu.addSeparator()
+
+    val resetItem = new MenuItem(new AbstractAction(
+        "<html>" + colorize("reset-perspective", InterfaceColors.commandColor)) {
+      def actionPerformed(e: ActionEvent) {
+        view.resetPerspective()
+      }
+    })
+
     menu.add(resetItem)
+
     if (view.viewManager.world.observer.atHome3D) {
-      resetItem.setEnabled (false)
+      resetItem.setEnabled(false)
       resetItem.setText("reset-perspective")
     }
 
@@ -76,13 +70,13 @@ class Picker(view: View) extends PickListener with ActionListener {
     import collection.JavaConverters._
     for(agent <- agents.asScala) {
       if (last == null || !last.isInstance(agent)) {
-        menu.add(new javax.swing.JPopupMenu.Separator)
+        menu.addSeparator()
         last = agent.getClass
       }
       if (agent.isInstanceOf[Turtle]) {
         val submenu = new AgentMenu(agent)
         submenu.add(new AgentMenuItem(agent, Inspect, "inspect"))
-        submenu.add(new javax.swing.JPopupMenu.Separator())
+        submenu.addSeparator()
         submenu.add(new AgentMenuItem(agent, Watch, "watch"))
         submenu.add(new AgentMenuItem(agent, Follow, "follow"))
         submenu.add(new AgentMenuItem(agent, Ride, "ride"))
@@ -101,7 +95,7 @@ class Picker(view: View) extends PickListener with ActionListener {
 
   /// context menu
 
-  private class AgentMenu(agent: Agent) extends javax.swing.JMenu(agent.toString) {
+  private class AgentMenu(agent: Agent) extends Menu(agent.toString) {
     var action: AgentAction = null
     override def menuSelectionChanged(isIncluded: Boolean) {
       super.menuSelectionChanged(isIncluded)
@@ -119,12 +113,12 @@ class Picker(view: View) extends PickListener with ActionListener {
 
   def htmlString(agent: Agent, caption: String) =
     "<html>" +
-    colorize(caption, SyntaxColors.COMMAND_COLOR) + " "  +
-    colorize(agent.classDisplayName, SyntaxColors.REPORTER_COLOR) +
-    colorize(agent.toString.drop(agent.classDisplayName.size), SyntaxColors.CONSTANT_COLOR)
+    colorize(caption, InterfaceColors.commandColor) + " "  +
+    colorize(agent.classDisplayName, InterfaceColors.reporterColor) +
+    colorize(agent.toString.drop(agent.classDisplayName.size), InterfaceColors.constantColor)
 
   private class AgentMenuItem(val agent: Agent, val action: AgentAction, caption: String)
-  extends javax.swing.JMenuItem(htmlString(agent, caption)) {
+  extends MenuItem(htmlString(agent, caption)) {
     addActionListener(Picker.this)
     override def menuSelectionChanged(isIncluded: Boolean) {
       super.menuSelectionChanged(isIncluded)

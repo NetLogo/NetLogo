@@ -2,15 +2,17 @@
 
 package org.nlogo.ide
 
-import java.awt.{ Color, Component, Cursor, Point }
+import java.awt.{ Component, Cursor, Point }
 import java.awt.event.{ KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, WindowFocusListener, WindowEvent }
-import javax.swing.{ BorderFactory, JDialog, JEditorPane, JScrollPane, JTable, SwingConstants, UIDefaults, UIManager }
+import javax.swing.{ JDialog, JEditorPane, JTable, SwingConstants }
 import javax.swing.table.{ DefaultTableCellRenderer, DefaultTableModel, TableCellRenderer }
 import javax.swing.text.BadLocationException
 
 import org.nlogo.core.{ Femto, Token, TokenType, TokenizerInterface }
 import org.nlogo.api.Exceptions
 import org.nlogo.editor.{ AbstractEditorArea, Colorizer, HighlightEditorKit, RichDocument }, RichDocument.RichDoc
+import org.nlogo.swing.ScrollPane
+import org.nlogo.theme.InterfaceColors
 
 class ShowUsageBox(colorizer: Colorizer) {
 
@@ -24,7 +26,9 @@ class ShowUsageBox(colorizer: Colorizer) {
     }
   }
   val usageTable = new JTable(dataModel)
-  val scrollPane = new JScrollPane(usageTable)
+  val scrollPane = new ScrollPane(usageTable) {
+    setBackground(InterfaceColors.menuBackground)
+  }
   usageBox.add(scrollPane)
   usageBox.setUndecorated(true)
   usageTable.setDefaultRenderer(classOf[Token], new LineNumberRenderer())
@@ -100,6 +104,7 @@ class ShowUsageBox(colorizer: Colorizer) {
           dataModel.addRow(Array[AnyRef](t, line.trim))
         }
         if (dataModel.getRowCount != 0) {
+          usageTable.setBackground(InterfaceColors.menuBackground)
           usageTable.setDefaultRenderer(classOf[String], new LineRenderer(Some(token.text)))
           usageTable.setPreferredScrollableViewportSize(usageTable.getPreferredSize())
           usageTable.setFillsViewportHeight(true)
@@ -127,46 +132,54 @@ class ShowUsageBox(colorizer: Colorizer) {
   }
 
   class LineRenderer(boldedString: Option[String]) extends TableCellRenderer {
-    override def getTableCellRendererComponent(table: JTable, value: AnyRef, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int): Component = {
-      val pane  = new JEditorPane()
-      pane.setOpaque(true)
-      pane.setBorder(BorderFactory.createEmptyBorder(1,0,0,0))
-      val editorKit = boldedString match {
-        case None                 => new HighlightEditorKit(colorizer)
-        case Some(selectedString) => new BoldEditorKit(selectedString)
+    override def getTableCellRendererComponent(table: JTable, value: AnyRef, isSelected: Boolean, hasFocus: Boolean,
+                                               row: Int, column: Int): Component = {
+      new JEditorPane {
+        if (isSelected)
+          setBackground(InterfaceColors.menuBackgroundHover)
+        else
+          setBackground(InterfaceColors.menuBackground)
+
+        setEditorKit(
+          boldedString match {
+            case None => new HighlightEditorKit(colorizer)
+            case Some(s) => new BoldEditorKit(s)
+          }
+        )
+
+        setText(value.asInstanceOf[String])
+        setFont(editorArea.getFont)
       }
-      pane.setEditorKit(editorKit)
-      pane.setText(value.asInstanceOf[String])
-      val alternate = UIManager.getColor("Table.alternateRowColor")
-      val defaults = new UIDefaults()
-      if (row%2 == 0){
-        defaults.put("EditorPane[Enabled].backgroundPainter", Color.WHITE)
-        pane.setBackground(Color.WHITE)
-      }
-      else {
-        defaults.put("EditorPane[Enabled].backgroundPainter", alternate)
-        pane.setBackground(alternate)
-      }
-      if(isSelected) {
-        pane.setBackground(usageTable.getSelectionBackground)
-        pane.setForeground(usageTable.getSelectionForeground)
-      }
-      pane.putClientProperty("Nimbus.Overrides", defaults)
-      pane.putClientProperty("Nimbus.Overrides.InheritDefaults", true)
-      pane.setFont(org.nlogo.awt.Fonts.monospacedFont)
-      pane
     }
   }
+
   class LineNumberRenderer extends DefaultTableCellRenderer {
+    override def getTableCellRendererComponent(table: JTable, value: AnyRef, isSelected: Boolean, hasFocus: Boolean,
+                                               row: Int, column: Int): Component = {
+      val cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+
+      if (isSelected) {
+        cell.setBackground(InterfaceColors.menuBackgroundHover)
+        cell.setForeground(InterfaceColors.menuTextHover)
+      }
+
+      else {
+        cell.setBackground(InterfaceColors.menuBackground)
+        cell.setForeground(InterfaceColors.toolbarText)
+      }
+
+      cell
+    }
+
     override def setValue(value: AnyRef) = {
       if (value != null) {
         setText((document.offsetToLine(value.asInstanceOf[Token].start) + 1).toString)
         setHorizontalAlignment(SwingConstants.RIGHT)
-        setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 8))
       } else
         super.setValue(null)
     }
   }
+
   import org.nlogo.editor.{ HighlightEditorKit, HighlightView }
 
   class BoldEditorKit(selectedString: String) extends HighlightEditorKit(colorizer) {

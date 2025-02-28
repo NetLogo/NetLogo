@@ -5,7 +5,7 @@ package org.nlogo.prim.gui
 import org.nlogo.api.{ Dump, ReporterRunnable }
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Context, HaltException, Reporter, RuntimePrimitiveException }
-import org.nlogo.swing.OptionDialog
+import org.nlogo.swing.OptionPane
 import org.nlogo.window.GUIWorkspace
 
 class _useryesorno extends Reporter {
@@ -19,13 +19,12 @@ class _useryesorno extends Reporter {
           new ReporterRunnable[java.lang.Boolean] {
             override def run = {
               gw.view.mouseDown(false)
-              val response = OptionDialog.showIgnoringCloseBox(
-                gw.getFrame, "User Yes or No",
-                Dump.logoObject(yesNoMessage),
-                Array(I18N.gui.get("common.buttons.yes"),
-                      I18N.gui.get("common.buttons.no"),
-                      I18N.gui.get("common.buttons.halt")),
-                false)
+              val response = new OptionPane(gw.getFrame, I18N.gui.get("dialog.userYesOrNo"),
+                                            Dump.logoObject(yesNoMessage),
+                                            List(I18N.gui.get("common.buttons.yes"),
+                                                 I18N.gui.get("common.buttons.no"),
+                                                 I18N.gui.get("common.buttons.halt")),
+                                            OptionPane.Icons.Question).getSelectedIndex
               response match {
                 case 0 => java.lang.Boolean.TRUE
                 case 1 => java.lang.Boolean.FALSE

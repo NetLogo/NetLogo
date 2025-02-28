@@ -69,7 +69,8 @@ trait HubNetInterface extends ViewInterface with ModelSections.ModelSaveable {
   /// clients
   @throws(classOf[LogoException])
   def setClientInterface(clientType: String, clientInterface: Iterable[HubNetInterface.ClientInterface])
-  def newClient(isRobo: Boolean, waitTime: Int)
+  // returns client window if in GUI mode, for theme synchronization (Isaac B 11/14/24)
+  def newClient(isRobo: Boolean, waitTime: Int): Option[AnyRef]
   def sendFromLocalClient(clientName:String, tag: String, content: AnyRef): Option[String]
   def isOverridable(agentType: AgentKind, varName: String): Boolean
   def sendOverrideList(client: String, agentType: AgentKind,

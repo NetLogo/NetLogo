@@ -2,13 +2,16 @@
 
 package org.nlogo.hubnet.client
 
+import java.awt.{ Font, Graphics2D, Graphics }
 import java.awt.event.MouseEvent
-import java.awt.{Font, Graphics2D, Graphics}
+import java.io.{ ByteArrayInputStream, DataInputStream }
+import javax.swing.border.LineBorder
+
+import org.nlogo.api.{ Perspective, Graphics2DWrapper, ViewSettings }
 import org.nlogo.core.{ View => CoreView }
-import java.io.{ByteArrayInputStream, DataInputStream}
-import org.nlogo.api.{Perspective, Graphics2DWrapper, ViewSettings}
 import org.nlogo.hubnet.mirroring._
-import org.nlogo.window.{InterfaceColors, ViewMouseHandler, ViewWidgetInterface, Widget}
+import org.nlogo.theme.InterfaceColors
+import org.nlogo.window.{ ViewMouseHandler, ViewWidgetInterface, Widget }
 
 // The view widget in the client.
 class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterface with ViewSettings {
@@ -20,6 +23,8 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   def isHeadless = false
   private var _displayOn = false
   def setDisplayOn(on: Boolean) { _displayOn = on; repaint() }
+
+  setBackground(InterfaceColors.Transparent)
 
   locally {
     world.setTrailDrawer(renderer.trailDrawer())
@@ -42,7 +47,7 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
     this.synchronized {
       setFontSize(g)
       if (!_displayOn || world == null) {
-        g.setColor(InterfaceColors.GRAPHICS_BACKGROUND)
+        g.setColor(InterfaceColors.graphicsBackground)
         g.fillRect(0, 0, getWidth, getHeight)
       }
       else {
@@ -89,6 +94,10 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   def handleAgentPerspective(data: Array[Byte]) {
     world.updateClientPerspective(new AgentPerspective(new DataInputStream(new ByteArrayInputStream(data))))
     if (_displayOn) repaint()
+  }
+
+  override def syncTheme(): Unit = {
+    setBorder(new LineBorder(InterfaceColors.viewBorder, 2))
   }
 
   /// satisfy ViewWidgetInterface

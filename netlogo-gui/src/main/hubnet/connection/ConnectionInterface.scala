@@ -7,5 +7,6 @@ import org.nlogo.core.{ Widget => CoreWidget }
 trait ConnectionInterface {
   def enqueueMessage(msg:MessageEnvelope.MessageEnvelope)
   def modelWidgets: Seq[CoreWidget]
-  def newClient(isRobo:Boolean, waitTime:Int)
+  // returns client window if in GUI mode, for theme synchronization (Isaac B 11/14/24)
+  def newClient(isRobo: Boolean, waitTime: Int): Option[AnyRef]
 }

@@ -8,11 +8,14 @@
 
 package org.nlogo.editor
 
-import java.awt.{ Component, Dimension, Graphics, Graphics2D, Point, RenderingHints, Toolkit }
+import java.awt.{ Component, Dimension, Point, Toolkit }
 import java.awt.datatransfer.DataFlavor
-import java.awt.event.{ FocusListener, KeyEvent, MouseEvent }
-import javax.swing.{ Action, JMenuItem, JEditorPane, JPopupMenu }
+import java.awt.event.{ FocusListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
+import javax.swing.{ Action, JEditorPane }
 import javax.swing.text.{ Document, TextAction, PlainDocument, BadLocationException }
+
+import org.nlogo.swing.{ MenuItem, PopupMenu }
+import org.nlogo.theme.InterfaceColors
 
 import KeyBinding.keystroke
 
@@ -33,12 +36,14 @@ class EditorArea(val configuration: EditorConfiguration)
   val colorizer = configuration.colorizer
 
   private var indenter: Option[Indenter] = None
-  private val contextMenu: JPopupMenu = new EditorContextMenu(colorizer)
+  private val contextMenu: PopupMenu = new EditorContextMenu(colorizer)
   contextMenu.addPopupMenuListener(new SuspendCaretPopupListener(this))
   private val bracketMatcher = new BracketMatcher(colorizer)
   private val undoManager: UndoManager = new UndoManager()
 
   private val caret = new DoubleClickCaret(colorizer, bracketMatcher)
+
+  private val defaultSelectionColor = getSelectionColor
 
   locally {
     enableEvents(java.awt.AWTEvent.MOUSE_EVENT_MASK)
@@ -60,12 +65,6 @@ class EditorArea(val configuration: EditorConfiguration)
     getKeymap.addActionForKeyStroke(keystroke(KeyEvent.VK_Y, mask), UndoManager.redoAction())
 
     configuration.configureEditorArea(this)
-  }
-
-  override def paintComponent(g: Graphics): Unit = {
-    val g2d = g.asInstanceOf[Graphics2D]
-    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    super.paintComponent(g)
   }
 
   private var bracketMatcherEnabled: Boolean = true
@@ -149,6 +148,24 @@ class EditorArea(val configuration: EditorConfiguration)
     _selectionActive = s
   }
 
+  def selectError(start: Int, end: Int) {
+    setSelectionColor(InterfaceColors.errorHighlight)
+
+    select(start, end)
+  }
+
+  addMouseListener(new MouseAdapter {
+    override def mousePressed(e: MouseEvent) {
+      setSelectionColor(defaultSelectionColor)
+    }
+  })
+
+  addKeyListener(new KeyAdapter {
+    override def keyPressed(e: KeyEvent) {
+      setSelectionColor(defaultSelectionColor)
+    }
+  })
+
   def focusGained(fe: java.awt.event.FocusEvent): Unit = { }
 
   def focusLost(fe: java.awt.event.FocusEvent): Unit = {
@@ -175,20 +192,17 @@ class EditorArea(val configuration: EditorConfiguration)
     contextMenu.show(this, e.getX, e.getY)
   }
 
-  private class EditorContextMenu(colorizer: Colorizer) extends JPopupMenu {
-    val copyItem  = new JMenuItem(Actions.CopyAction)
-    val cutItem   = new JMenuItem(Actions.CutAction)
-    val pasteItem = new JMenuItem(Actions.PasteAction)
+  private class EditorContextMenu(colorizer: Colorizer) extends PopupMenu {
+    val copyItem  = new MenuItem(Actions.CopyAction)
+    val cutItem   = new MenuItem(Actions.CutAction)
+    val pasteItem = new MenuItem(Actions.PasteAction)
+    val contextItems = configuration.contextActions.map(new MenuItem(_))
 
-    locally {
-      add(copyItem)
-      add(cutItem)
-      add(pasteItem)
-      addSeparator()
-      for (item <- configuration.contextActions) {
-        add(new JMenuItem(item))
-      }
-    }
+    add(copyItem)
+    add(cutItem)
+    add(pasteItem)
+    addSeparator()
+    contextItems.foreach(add)
 
     override def show(invoker: Component, x: Int, y: Int): Unit = {
       val text = EditorArea.this.getSelectedText
@@ -203,6 +217,7 @@ class EditorArea(val configuration: EditorConfiguration)
         case e: EditorAwareAction => e.updateEditorInfo(EditorArea.this, point, mousePos)
         case _ =>
       }
+      syncTheme()
       super.show(invoker, x, y)
     }
   }

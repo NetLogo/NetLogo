@@ -2,6 +2,7 @@
 
 package org.nlogo.app.infotab
 
+import java.awt.Color
 import java.io.InputStream
 import java.util.{ ArrayList => JArrayList }
 
@@ -14,6 +15,7 @@ import com.vladsch.flexmark.ext.autolink.AutolinkExtension
 import com.vladsch.flexmark.ext.typographic.TypographicExtension
 
 import org.nlogo.api.FileIO
+import org.nlogo.theme.InterfaceColors
 
 // This gets tested by TestInfoFormatter. - ST 9/7/10
 
@@ -39,12 +41,23 @@ object InfoFormatter {
   def styleSheet(fontSize: Int): CSS = "<style type=\"text/css\">\n<!--\n"+
           styleSheetFile.
             replace("{BODY-FONT-SIZE}", fontSize.toString).
-            replace("{H1-FONT-SIZE}", (fontSize * 1.5).toInt.toString).
-            replace("{H2-FONT-SIZE}", (fontSize * 1.25).toInt.toString).
-            replace("{H3-FONT-SIZE}", fontSize.toString).
-            replace("{BULLET-1-IMAGE}", getClass.getResource("/system/bullet.png").toString).
-            replace("{BULLET-2-IMAGE}", getClass.getResource("/system/bullet-hollow.png").toString).
-            replace("{BULLET-3-IMAGE}", getClass.getResource("/system/box.png").toString) + "\n-->\n</style>"
+            replace("{H1-BACKGROUND}", colorString(InterfaceColors.infoH1Background)).
+            replace("{H1-COLOR}", colorString(InterfaceColors.infoH1Color)).
+            replace("{H1-FONT-SIZE}", (fontSize * 2).toInt.toString).
+            replace("{H2-BACKGROUND}", colorString(InterfaceColors.infoH2Background)).
+            replace("{H2-COLOR}", colorString(InterfaceColors.infoH2Color)).
+            replace("{H2-FONT-SIZE}", (fontSize * 1.75).toInt.toString).
+            replace("{H3-COLOR}", colorString(InterfaceColors.infoH3Color)).
+            replace("{H3-FONT-SIZE}", (fontSize * 1.5).toInt.toString).
+            replace("{H4-COLOR}", colorString(InterfaceColors.infoH4Color)).
+            replace("{H4-FONT-SIZE}", (fontSize * 1.28).toString).
+            replace("{H5-FONT-SIZE}", (fontSize * 1.14).toString).
+            replace("{H6-FONT-SIZE}", fontSize.toString).
+            replace("{P-COLOR}", colorString(InterfaceColors.infoPColor)).
+            replace("{CODE-BACKGROUND}", colorString(InterfaceColors.infoCodeBackground)).
+            replace("{BLOCK-BAR}", colorString(InterfaceColors.infoBlockBar)).
+            replace("{INFO-BACKGROUND}", colorString(InterfaceColors.infoBackground)).
+            replace("{LINK-COLOR}", colorString(InterfaceColors.infoLink)) + "\n-->\n</style>"
 
   def apply(content: String, fontSize: Int = defaultFontSize) = {
     wrapHtml(toInnerHtml(content), fontSize)
@@ -73,6 +86,7 @@ object InfoFormatter {
     options.set(Parser.MATCH_CLOSING_FENCE_CHARACTERS, Boolean.box(false))
 
     extensions.add(new CodeBlockRenderer())
+    extensions.add(new BlockQuoteRenderer())
 
     options.set(Parser.EXTENSIONS, extensions)
 
@@ -83,4 +97,7 @@ object InfoFormatter {
     val document = parser.parse(content)
     renderer.render(document)
   }
+
+  private def colorString(color: Color): String =
+    s"rgb(${color.getRed},${color.getGreen},${color.getBlue})"
 }

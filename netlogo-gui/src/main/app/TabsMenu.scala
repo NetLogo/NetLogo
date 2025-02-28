@@ -9,11 +9,10 @@ import org.nlogo.swing.UserAction._
 
 object TabsMenu {
   def tabAction(tabManager: TabManager, index: Int): Action =
-    new AbstractAction() with MenuAction {
+    new AbstractAction(tabManager.getTabTitle(index)) with MenuAction {
       category    = TabsCategory
       rank        = index
       accelerator = KeyBindings.keystroke(('1' + index).toChar, withMenu = true)
-      this.putValue(Action.NAME, tabManager.getTabTitle(index));
       override def actionPerformed(e: ActionEvent) {
         tabManager.setSelectedIndex(index)
       }

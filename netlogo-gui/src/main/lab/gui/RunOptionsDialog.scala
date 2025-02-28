@@ -2,7 +2,9 @@
 
 package org.nlogo.lab.gui
 
-import org.nlogo.api.{Editable, Property, LabDefaultValues, LabRunOptions}
+import java.awt.Window
+
+import org.nlogo.api.{ Editable, Property, LabDefaultValues, LabRunOptions }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N }
 import org.nlogo.window.EditDialogFactoryInterface
@@ -10,10 +12,7 @@ import org.nlogo.window.EditDialogFactoryInterface
 import java.io.File
 import java.util.prefs.Preferences
 
-class RunOptionsDialog(parent: java.awt.Window,
-                       dialogFactory: EditDialogFactoryInterface,
-                       filePrefix: String)
-{
+class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactoryInterface, filePrefix: String) {
   val userHome = System.getProperty("user.home")
   val spreadsheetFile = s"$filePrefix-spreadsheet.csv"
   val tableFile = s"$filePrefix-table.csv"
@@ -84,10 +83,8 @@ class RunOptionsDialog(parent: java.awt.Window,
   }
   def get = {
     val editable = new EditableRunOptions
-    if (parent match {
-      case dialog: java.awt.Dialog => dialogFactory.canceled(dialog, editable, false)
-      case frame: java.awt.Frame => dialogFactory.canceled(frame, editable, false)
-    }) throw new UserCancelException
+    if (dialogFactory.canceled(parent, editable, false))
+      throw new UserCancelException
     val runOptions = editable.get
     Prefs.updateFrom(runOptions)
     runOptions
@@ -104,8 +101,7 @@ class RunOptionsDialog(parent: java.awt.Window,
     val classDisplayName = I18N.gui("title")
 
     val propertySet = {
-      import scala.collection.JavaConverters._
-      List(
+      Seq(
         Property("spreadsheet", Property.FilePath(spreadsheetFile), I18N.gui("spreadsheet")),
         Property("table", Property.FilePath(tableFile), I18N.gui("table")),
         Property("stats", Property.FilePath(statsFile), I18N.gui("stats")),
@@ -117,7 +113,7 @@ class RunOptionsDialog(parent: java.awt.Window,
                  "<html>" + I18N.gui("simultaneousruns.info",
                                 defaultProcessors.toString,
                                 (totalProcessors.toString))
-                + "</html>")).asJava
+                + "</html>"))
     }
     def get = LabRunOptions(threadCount, table, spreadsheet, stats, lists, updateView, updatePlotsAndMonitors, false)
     // boilerplate for Editable

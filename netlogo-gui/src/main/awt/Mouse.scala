@@ -15,4 +15,10 @@ object Mouse {
       case MouseEvent.MOUSE_RELEASED => (e.getButton & MouseEvent.BUTTON1) != 0
       case _ => (e.getModifiersEx & InputEvent.BUTTON1_DOWN_MASK) != 0
     }
+  def hasCtrl(e: MouseEvent) = {
+    if (System.getProperty("os.name").contains("Mac"))
+      (e.getModifiersEx & InputEvent.META_DOWN_MASK) == InputEvent.META_DOWN_MASK
+    else
+      (e.getModifiersEx & InputEvent.CTRL_DOWN_MASK) == InputEvent.CTRL_DOWN_MASK
+  }
 }

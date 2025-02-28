@@ -2,14 +2,17 @@
 
 package org.nlogo.gl.view
 
+import java.awt.event.{ ActionEvent, ActionListener }
+import javax.swing.JToolBar
+
 import org.nlogo.api.Perspective
 import org.nlogo.core.I18N
-import java.awt.event.{ ActionEvent, ActionListener }
-import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InteractMode }
+import org.nlogo.swing.OptionPane
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
-    extends javax.swing.JToolBar {
+import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InterfaceMode }
 
+class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler) extends JToolBar with ThemeSync {
   val orbitAction =
     new MovementAction(I18N.gui.get("view.3d.orbit"), OrbitMode)
   val zoomAction =
@@ -17,7 +20,7 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
   val moveAction =
     new MovementAction(I18N.gui.get("view.3d.move"), TranslateMode)
   val interactAction =
-    new MovementAction(I18N.gui.get("view.3d.interact"), InteractMode)
+    new MovementAction(I18N.gui.get("view.3d.interact"), InterfaceMode)
 
   val fullScreenWarning = I18N.gui.get("view.3d.fullScreenWarning")
 
@@ -56,12 +59,12 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
   fullScreenButton.addActionListener(
     new ActionListener {
       override def actionPerformed(e: ActionEvent) {
-        val options = Array[AnyRef](I18N.gui.get("common.buttons.continue"),
-                                    I18N.gui.get("common.buttons.cancel"))
+        val options = List(I18N.gui.get("common.buttons.continue"),
+                           I18N.gui.get("common.buttons.cancel"))
         val isWindows = System.getProperty("os.name").toLowerCase.startsWith("win")
         if (!isWindows || view.viewManager.warned ||
-          (0 == org.nlogo.swing.OptionDialog.showMessage(
-            view, I18N.gui.get("common.messages.warning"), fullScreenWarning, options))) {
+          (new OptionPane(view, I18N.gui.get("common.messages.warning"), fullScreenWarning, options,
+                          OptionPane.Icons.Warning).getSelectedIndex == 0)) {
           view.viewManager.setFullscreen(true)
           view.viewManager.warned = true
         }
@@ -123,5 +126,17 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
     override def actionPerformed(e: ActionEvent) {
       setMovementMode(mode)
     }
+  }
+
+  override def syncTheme(): Unit = {
+    setBackground(InterfaceColors.toolbarBackground)
+
+    orbitButton.setForeground(InterfaceColors.toolbarText)
+    zoomButton.setForeground(InterfaceColors.toolbarText)
+    moveButton.setForeground(InterfaceColors.toolbarText)
+    interactButton.setForeground(InterfaceColors.toolbarText)
+
+    resetButton.setForeground(InterfaceColors.toolbarText)
+    fullScreenButton.setForeground(InterfaceColors.toolbarText)
   }
 }

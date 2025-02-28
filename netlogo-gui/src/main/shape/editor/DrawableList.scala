@@ -3,8 +3,7 @@
 package org.nlogo.shape.editor
 
 import org.nlogo.core.{ I18N, Shape, ShapeList, ShapeListTracker }
-
-import javax.swing.JOptionPane
+import org.nlogo.swing.OptionPane
 
 import scala.reflect.ClassTag
 
@@ -94,8 +93,8 @@ class DrawableList[A <: Shape](shapeTracker: ShapeListTracker, rows: Int, height
         None
 
     message.map { msg =>
-      JOptionPane.showConfirmDialog(parent, msg,
-        I18N.gui.get("tools.shapesEditor.delete"), JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION
+      new OptionPane(parent, I18N.gui.get("tools.shapesEditor.delete"), msg, OptionPane.Options.YesNo,
+                     OptionPane.Icons.Question).getSelectedIndex == 0
     }.getOrElse(false)
   }
 

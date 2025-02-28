@@ -140,14 +140,16 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
       // this line below runs the code if there is any to run, and it tells
       // us if stop was called from the code. if so, we dont run the pens code.
       val stopped =
-        codeType.call(plotThunks(plot)) match {
-          case Success(stop) => stop
-          case Failure(e: HaltSignal) => throw e
-          case Failure(e: Exception) =>
-            plot.runtimeError = Some(e)
-            false
-          case Failure(t: Throwable) => throw t
-        }
+        plotThunks.get(plot).map(
+          codeType.call(_) match {
+            case Success(stop) => stop
+            case Failure(e: HaltSignal) => throw e
+            case Failure(e: Exception) =>
+              plot.runtimeError = Some(e)
+              false
+            case Failure(t: Throwable) => throw t
+          }
+        ).getOrElse(false)
       if (! stopped) {
         // save the currently selected pen
         val oldCurrentPen = plot.currentPen
@@ -209,8 +211,8 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
     plot.runtimeError.isDefined ||
     plot.pens.filterNot(_.temporary).exists(hasErrors)
   }
-  def getPlotSetupError(plot:Plot) = plotThunks(plot).setup.left.toOption
-  def getPlotUpdateError(plot:Plot) = plotThunks(plot).update.left.toOption
+  def getPlotSetupError(plot:Plot) = plotThunks.get(plot).flatMap(_.setup.left.toOption)
+  def getPlotUpdateError(plot:Plot) = plotThunks.get(plot).flatMap(_.update.left.toOption)
   def hasErrors(pen:PlotPen): Boolean = {
     pen.runtimeError.isDefined ||
     getPenSetupError(pen).isDefined ||

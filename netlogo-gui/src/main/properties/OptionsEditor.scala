@@ -3,26 +3,23 @@
 package org.nlogo.properties
 
 import java.awt.FlowLayout
-import javax.swing.{ JComboBox, JLabel }
+import javax.swing.JLabel
 
 import org.nlogo.api.Options
+import org.nlogo.swing.ComboBox
+import org.nlogo.theme.InterfaceColors
 
-abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip)
-{
-  private val combo = new JComboBox[String]
+abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]]) extends PropertyEditor(accessor) {
+  private val options: Options[T] = accessor.get
+  private val combo = new ComboBox[String](options.names)
   setLayout(new FlowLayout(FlowLayout.LEFT))
-  val label = new JLabel(accessor.displayName)
-  tooltipFont(label)
+  private val label = new JLabel(accessor.displayName)
   add(label)
   add(combo)
-  private val options: Options[T] = accessor.get
-  for(optionName <- options.names)
-    combo.addItem(optionName)
   private val originalOption: T = options.chosenValue
-  combo.addActionListener(_ => changed())
+  combo.addItemListener(_ => changed())
   override def get = {
-    options.selectByName(combo.getSelectedItem.asInstanceOf[String])
+    options.selectByName(combo.getSelectedItem.getOrElse(""))
     Some(options)
   }
   override def set(value: Options[T]) {
@@ -34,5 +31,11 @@ abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]], useToolt
   }
   override def requestFocus() {
     combo.requestFocus()
+  }
+
+  override def syncTheme(): Unit = {
+    label.setForeground(InterfaceColors.dialogText)
+
+    combo.syncTheme()
   }
 }

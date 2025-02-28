@@ -4,7 +4,11 @@ package org.nlogo.app
 
 import java.awt.BorderLayout
 import java.awt.event.{ WindowAdapter, WindowEvent }
-import javax.swing.{ JFrame, JLabel, JTextArea, WindowConstants }
+import javax.swing.{ JFrame, JLabel, WindowConstants }
+import javax.swing.border.LineBorder
+
+import org.nlogo.swing.{ ScrollPane, TextArea }
+import org.nlogo.theme.InterfaceColors
 
 // Unfortunately errors can occur during startup of the NetLogo GUI.  On Windows these are swallowed by the launcher and
 // just give a generic "Failed to launch JVM" message.  Other platforms might be a little better, but this way we'll
@@ -22,6 +26,7 @@ object StartupError {
     val message = s"Exception: ${ex.getMessage} (${ex.getClass.toString})\n\nStack Trace:\n$stack"
 
     val frame = new JFrame("NetLogo Startup Error")
+
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
     frame.addWindowListener(new WindowAdapter() {
       override def windowClosing(e: WindowEvent) {
@@ -29,20 +34,28 @@ object StartupError {
       }
     })
 
-    val title = new JLabel("NetLogo encountered an error while starting to run.  See the details below.")
+    frame.getContentPane.setBackground(InterfaceColors.dialogBackground)
+
+    val title = new JLabel("NetLogo encountered an error while starting to run.  See the details below.") {
+      setForeground(InterfaceColors.dialogText)
+    }
     title.setFont(title.getFont().deriveFont(16f))
     frame.add(title, BorderLayout.NORTH)
 
-    val report = new JTextArea(message)
-    report.setFont(report.getFont().deriveFont(18f))
-    report.setEditable(false)
-    report.setLineWrap(true)
-    frame.add(report)
-    report.selectAll()
+    val report = new TextArea(0, 0, message) {
+      setFont(getFont.deriveFont(18f))
+      setEditable(false)
+      setLineWrap(true)
+    }
+
+    val scrollPane = new ScrollPane(report) {
+      setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable))
+      setBackground(InterfaceColors.textAreaBackground)
+    }
+
+    frame.add(scrollPane)
 
     frame.setSize(640, 640)
     frame.setVisible(true)
-
   }
-
 }

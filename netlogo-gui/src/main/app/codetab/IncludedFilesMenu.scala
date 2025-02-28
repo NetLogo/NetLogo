@@ -6,19 +6,21 @@ import java.awt.{ Dimension, FileDialog }
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.prefs.Preferences
-import javax.swing.{ AbstractAction, JMenuItem, JOptionPane, JPopupMenu }
+import javax.swing.AbstractAction
 
 import scala.util.control.Exception.ignoring
 
 import org.nlogo.app.common.{ Actions, TabsInterface }, Actions.Ellipsis
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ FileDialog => SwingFileDialog, RichJMenuItem, ToolBarMenu }
+import org.nlogo.swing.{ FileDialog => SwingFileDialog, MenuItem, OptionPane, PopupMenu, RoundedBorderPanel,
+                         ToolBarMenu }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents }
 
 class IncludedFilesMenu(includesTable: => Option[Map[String, String]], tabs: TabsInterface)
 extends ToolBarMenu(I18N.gui.get("tabs.code.includedFiles"))
-with WindowEvents.CompiledEvent.Handler {
+with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
   implicit val i18nPrefix = I18N.Prefix("tabs.code.includedFiles")
 
   val alwaysVisible = Preferences.userRoot.node("/org/nlogo/NetLogo").get("includedFilesMenu", "false").toBoolean
@@ -26,6 +28,9 @@ with WindowEvents.CompiledEvent.Handler {
   private var isEmpty = true
 
   updateVisibility()
+
+  setDiameter(6)
+  enableHover()
 
   def handle(e: WindowEvents.CompiledEvent) = updateVisibility()
 
@@ -35,23 +40,28 @@ with WindowEvents.CompiledEvent.Handler {
     super.doLayout()
   }
 
-  override def populate(menu: JPopupMenu) = {
+  override def populate(menu: PopupMenu): Unit = {
     includesTable match {
       case Some(includePaths) =>
-        includePaths.keys.toSeq
-          .filter(include => include.endsWith(".nls") && new File(includePaths(include)).exists)
-          .sortBy(_.toUpperCase)
-          .foreach(include => menu.add(RichJMenuItem(include) {
-            tabs.openExternalFile(includePaths(include))
-          }))
+        val filtered =
+          includePaths.keys.toSeq.filter(include => include.endsWith(".nls") && new File(includePaths(include)).exists)
+
+        if (filtered.isEmpty)
+          menu.add(new MenuItem(I18N.gui.get("common.menus.empty"))).setEnabled(false)
+
+        else {
+          filtered.sortBy(_.toUpperCase).foreach(include => menu.add(new MenuItem(new AbstractAction(include) {
+            def actionPerformed(e: ActionEvent): Unit = {
+              tabs.openExternalFile(includePaths(include))
+            }
+          })))
+        }
       case None =>
-        val nullItem = new JMenuItem(I18N.gui.get("common.menus.empty"))
-        nullItem.setEnabled(false)
-        menu.add(nullItem)
+        menu.add(new MenuItem(I18N.gui.get("common.menus.empty"))).setEnabled(false)
     }
     menu.addSeparator()
-    menu.add(new JMenuItem(NewSourceEditorAction))
-    menu.add(new JMenuItem(OpenSourceEditorAction))
+    menu.add(new MenuItem(NewSourceEditorAction))
+    menu.add(new MenuItem(OpenSourceEditorAction))
   }
 
   private def sizeIfVisible(size: => Dimension) = if (alwaysVisible || !isEmpty) size else new Dimension(0,0)
@@ -59,18 +69,27 @@ with WindowEvents.CompiledEvent.Handler {
   override def getMinimumSize = sizeIfVisible(super.getMinimumSize)
   override def getPreferredSize = sizeIfVisible(super.getPreferredSize)
 
+  override def syncTheme(): Unit = {
+    setBackgroundColor(InterfaceColors.toolbarControlBackground)
+    setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
+    setBorderColor(InterfaceColors.toolbarControlBorder)
+
+    label.setForeground(InterfaceColors.toolbarText)
+  }
+
   private object NewSourceEditorAction extends AbstractAction(I18N.gui("new")) {
     override def actionPerformed(e: ActionEvent) = tabs.newExternalFile()
   }
 
   private object OpenSourceEditorAction extends AbstractAction(I18N.gui("open") + Ellipsis) {
-    override def actionPerformed(e: ActionEvent) = ignoring(classOf[UserCancelException]) {
+    override def actionPerformed(e: ActionEvent): Unit = ignoring(classOf[UserCancelException]) {
       val path = SwingFileDialog.showFiles(IncludedFilesMenu.this, I18N.gui("open"), FileDialog.LOAD, null)
         .replace(File.separatorChar, '/')
       if(path.endsWith(".nls"))
         tabs.openExternalFile(path)
       else
-        JOptionPane.showMessageDialog(IncludedFilesMenu.this, I18N.gui.get("file.open.error.external.suffix"))
+        new OptionPane(IncludedFilesMenu.this, "", I18N.gui.get("file.open.error.external.suffix"),
+                       OptionPane.Options.Ok, OptionPane.Icons.Error)
     }
   }
 }

@@ -8,17 +8,16 @@ package org.nlogo.app.tools
 // super slow. ev 3/26/09
 
 import java.awt.{ Color, Dimension, Frame, Toolkit }
-import java.awt.event.{ ActionEvent, ActionListener, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent,
-  WindowAdapter, WindowEvent }
+import java.awt.event.{ ActionEvent, KeyAdapter, KeyEvent, MouseAdapter, MouseEvent, WindowAdapter, WindowEvent }
 import java.io.File
 import java.nio.file.Paths
 import java.net.URI
 import java.util.{ Enumeration, LinkedList, List => JList }
-import javax.swing.{ AbstractAction, Action, Box, BorderFactory, BoxLayout,
-  InputMap, JButton, JComponent, JDialog, JEditorPane, JLabel, JOptionPane, JPanel,
-  JScrollPane, JTextField, JTree, KeyStroke, SwingUtilities, WindowConstants }
+import javax.swing.{ AbstractAction, Action, Box, BorderFactory, BoxLayout, InputMap, JComponent, JDialog, JEditorPane,
+                     JLabel, JPanel, JTree, KeyStroke, SwingUtilities, WindowConstants }
 import javax.swing.text.{ BadLocationException, DefaultHighlighter }
-import javax.swing.tree.{ DefaultMutableTreeNode, DefaultTreeModel, TreePath, TreeSelectionModel }
+import javax.swing.tree.{ DefaultMutableTreeNode, DefaultTreeCellRenderer, DefaultTreeModel, TreePath,
+                          TreeSelectionModel }
 import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, DocumentListener,
   HyperlinkEvent, HyperlinkListener, TreeExpansionEvent, TreeExpansionListener,
   TreeSelectionEvent, TreeSelectionListener }
@@ -26,8 +25,9 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, Docum
 import org.nlogo.core.I18N
 import org.nlogo.api.FileIO
 import org.nlogo.awt.{ Positioning, UserCancelException }
-import org.nlogo.swing.{ BrowserLauncher, ModalProgressTask, Utils },
-  Utils.{ addEscKeyAction, icon }
+import org.nlogo.swing.{ BrowserLauncher, Button, ModalProgressTask, OptionPane, ScrollPane, TextField, Utils },
+  Utils.addEscKeyAction
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
 import scala.util.Try
@@ -62,6 +62,7 @@ object ModelsLibraryDialog {
   // must be called from the UI Thread
   private def finishOpen(me: ModelsLibraryDialog, onSelect: URI => Unit): Unit = {
     this.me = me
+    me.syncTheme()
     me.setVisible(true)
     me.searchField.selectAll()
     me.sourceURI.foreach(onSelect)
@@ -154,18 +155,46 @@ import ModelsLibraryDialog._
 class ModelsLibraryDialog(parent: Frame, node: Node)
   extends JDialog(parent, I18N.gui.get("menu.file.modelsLibrary"), true)
   with TreeSelectionListener
-  with TreeExpansionListener {
+  with TreeExpansionListener
+  with ThemeSync {
 
   private var selected = Option.empty[Node]
   private var sourceURI = Option.empty[URI]
   private val savedExpandedPaths: JList[TreePath] = new LinkedList[TreePath]()
-  private val searchField: JTextField = new JTextField("");
+  private val searchField = new TextField
   private var searchText = Option.empty[String]
+  private val searchIcon = new JLabel
 
   private val modelPreviewPanel: ModelPreviewPanel = new ModelPreviewPanel()
 
-  private val tree = new JTree(new SearchableModelTree(node))
+  private val modelPreviewScrollPane = new ScrollPane(modelPreviewPanel)
+
+  private val tree = new JTree(new SearchableModelTree(node)) with ThemeSync {
+    private val renderer = new DefaultTreeCellRenderer with ThemeSync {
+      override def syncTheme(): Unit = {
+        backgroundNonSelectionColor = InterfaceColors.dialogBackground
+        backgroundSelectionColor = InterfaceColors.dialogBackgroundSelected
+        textNonSelectionColor = InterfaceColors.dialogText
+        textSelectionColor = InterfaceColors.dialogTextSelected
+      }
+    }
+
+    setCellRenderer(renderer)
+
+    override def syncTheme(): Unit = {
+      setBackground(InterfaceColors.dialogBackground)
+
+      renderer.syncTheme()
+    }
+  }
+
   tree.setSelectionRow(0)
+
+  private val treeScrollPane = new ScrollPane(tree)
+
+  private val contentPane = new JPanel
+
+  contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS))
 
   private val openAction: Action =
     new AbstractAction(I18N.gui.get("modelsLibrary.open")) {
@@ -217,6 +246,14 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       }
     }
 
+  private val communityButton = new Button(communityAction)
+  private val selectButton = new Button(openAction)
+  private val cancelButton = new Button(cancelAction)
+
+  private val clearSearchButton = new Button(I18N.gui.get("modelsLibrary.clear"), () => {
+    searchField.setText("")
+  })
+
   locally {
     setResizable(true)
     val findKeyStroke =
@@ -226,10 +263,6 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     openAction.setEnabled(false)
     toggleOrOpenAction.setEnabled(false)
 
-    // create subcomponents
-    val communityButton = new JButton(communityAction)
-    val selectButton = new JButton(openAction)
-    val cancelButton = new JButton(cancelAction)
     getRootPane.setDefaultButton(selectButton)
     tree.getSelectionModel.setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION)
     tree.setToggleClickCount(1)
@@ -267,9 +300,9 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
     // lay out content pane & bottom buttons
 
-    val topPanel = new Box(BoxLayout.X_AXIS);
+    val topPanel = new Box(BoxLayout.X_AXIS)
 
-    val searchPanel = new Box(BoxLayout.X_AXIS);
+    val searchPanel = new Box(BoxLayout.X_AXIS)
     searchField.getDocument.addDocumentListener(
       new DocumentListener() {
         def changedUpdate(e: DocumentEvent): Unit = {
@@ -301,29 +334,21 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       }
     })
     searchField.setMaximumSize(new Dimension(Short.MaxValue, searchField.getMinimumSize.height))
-    val clearSearchButton = new JButton(I18N.gui.get("modelsLibrary.clear"))
-    clearSearchButton.addActionListener(new ActionListener() {
-      def actionPerformed(evt: ActionEvent): Unit = {
-        searchField.setText("")
-      }
-    })
-    val buttonFont = clearSearchButton.getFont()
-    clearSearchButton.setFont(buttonFont.deriveFont(buttonFont.getSize2D - 2))
-    searchPanel.add(new JLabel(icon("/images/magnify.gif")))
+    searchPanel.add(searchIcon)
     searchPanel.add(Box.createRigidArea(new java.awt.Dimension(2, 0)))
     searchPanel.add(searchField)
     searchPanel.add(Box.createRigidArea(new Dimension(2, 0)))
-    searchPanel.add(clearSearchButton);
-    searchPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+    searchPanel.add(clearSearchButton)
+    searchPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
 
-    val treePanel = new Box(BoxLayout.Y_AXIS);
-    treePanel.add(new javax.swing.JScrollPane(tree));
-    treePanel.add(searchPanel);
+    val treePanel = new Box(BoxLayout.Y_AXIS)
+    treePanel.add(treeScrollPane)
+    treePanel.add(searchPanel)
 
-    topPanel.add(treePanel);
-    topPanel.add(new JScrollPane(modelPreviewPanel));
+    topPanel.add(treePanel)
+    topPanel.add(modelPreviewScrollPane)
 
-    val buttonPanel = new Box(BoxLayout.X_AXIS);
+    val buttonPanel = new Box(BoxLayout.X_AXIS)
     buttonPanel.add(Box.createRigidArea(new Dimension(40, 0)))
     buttonPanel.add(communityButton)
     buttonPanel.add(Box.createHorizontalGlue)
@@ -339,8 +364,6 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     buttonPanel.add(Box.createRigidArea(new Dimension(40, 0)))
     buttonPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2))
 
-    val contentPane = new JPanel()
-    contentPane.setLayout(new BoxLayout(contentPane, BoxLayout.Y_AXIS))
     contentPane.add(topPanel)
     contentPane.add(buttonPanel)
     setContentPane(contentPane)
@@ -523,25 +546,23 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     }
   }
 
-  private class ModelPreviewPanel
-    extends JPanel
-    with HyperlinkListener {
-      setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
+  private class ModelPreviewPanel extends JPanel with HyperlinkListener with ThemeSync {
+    setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
 
-      private val graphicsPreview: GraphicsPreview = new GraphicsPreview()
-      graphicsPreview.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1))
+    private val graphicsPreview: GraphicsPreview = new GraphicsPreview()
+    graphicsPreview.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1))
 
-      private val textArea = new JEditorPane()
-      textArea.setContentType("text/html")
-      textArea.setEditable(false)
-      textArea.setOpaque(false)
-      textArea.addHyperlinkListener(this)
+    private val textArea = new JEditorPane()
+    textArea.setContentType("text/html")
+    textArea.setEditable(false)
+    textArea.setOpaque(false)
+    textArea.addHyperlinkListener(this)
 
-      add(graphicsPreview)
-      add(textArea)
-      add(Box.createVerticalGlue())
+    add(graphicsPreview)
+    add(textArea)
+    add(Box.createVerticalGlue())
 
-      setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
+    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
 
     def showModel(): Unit = {
       val image =
@@ -612,11 +633,18 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       if (e.getEventType == HyperlinkEvent.EventType.ACTIVATED) {
         Option(e.getURL)
           .flatMap(u => Try(u.toURI).toOption) match {
-            // TODO: Convert to I18N
-            case None => JOptionPane.showMessageDialog(this, "Invalid URL!", "Error", JOptionPane.ERROR_MESSAGE);
+            case None => new OptionPane(this, I18N.gui.get("common.messages.error"),
+                                        I18N.gui.get("modelsLibrary.invalidURL"), OptionPane.Options.Ok,
+                                        OptionPane.Icons.Error)
             case Some(toOpen) => BrowserLauncher.openURI(this, toOpen)
           }
       }
+    }
+
+    override def syncTheme(): Unit = {
+      setBackground(InterfaceColors.dialogBackground)
+
+      textArea.setForeground(InterfaceColors.dialogText)
     }
   }
 
@@ -687,5 +715,22 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
           node.info.toUpperCase.contains(t) ||
           node.path.toUpperCase.contains(t))
     }
+  }
+
+  override def syncTheme(): Unit = {
+    contentPane.setBackground(InterfaceColors.dialogBackground)
+    modelPreviewScrollPane.setBackground(InterfaceColors.dialogBackground)
+    treeScrollPane.setBackground(InterfaceColors.dialogBackground)
+
+    modelPreviewPanel.syncTheme()
+    tree.syncTheme()
+    searchField.syncTheme()
+
+    searchIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.toolbarImage))
+
+    communityButton.syncTheme()
+    selectButton.syncTheme()
+    cancelButton.syncTheme()
+    clearSearchButton.syncTheme()
   }
 }

@@ -14,7 +14,7 @@ import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.lab.{ Exporter, ListsExporter, PartialData, SpreadsheetExporter, StatsExporter, TableExporter, Worker }
 import org.nlogo.nvm.{ EngineException, Workspace }
 import org.nlogo.nvm.LabInterface.ProgressListener
-import org.nlogo.swing.OptionDialog
+import org.nlogo.swing.OptionPane
 import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace }
 import org.nlogo.workspace.{ AbstractWorkspace, CurrentModelOpener, WorkspaceFactory }
 
@@ -324,8 +324,8 @@ class Supervisor(
 
   private def guiError(message: String) {
     if (runMode == Supervisor.GUI) {
-      OptionDialog.showMessage(workspace.asInstanceOf[GUIWorkspace].getFrame, I18N.gui("error.title"), message,
-                               Array(I18N.gui.get("common.buttons.ok")))
+      new OptionPane(workspace.asInstanceOf[GUIWorkspace].getFrame, I18N.gui("error.title"), message,
+                     OptionPane.Options.Ok, OptionPane.Icons.Error)
     }
   }
 }

@@ -2,15 +2,16 @@
 
 package org.nlogo.properties
 
-import org.nlogo.api.{ Editable, CompilerServices }
+import java.awt.{ BorderLayout, GridBagConstraints, GridBagLayout }
+import javax.swing.{ JLabel, JPanel }
+import javax.swing.border.TitledBorder
+
+import org.nlogo.api.{ CompilerServices, Editable }
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import javax.swing.border.TitledBorder
-import org.nlogo.window.{WorldViewSettings, OriginConfiguration}
-import java.awt.{GridBagLayout, BorderLayout, GridBagConstraints}
-import javax.swing.{JLabel, JComboBox, JPanel}
-import java.awt.event.{ItemListener, ItemEvent}
-import collection.JavaConverters._
+import org.nlogo.swing.{ ComboBox, Transparent }
+import org.nlogo.theme.InterfaceColors
+import org.nlogo.window.{ OriginConfiguration, OriginType, WorldViewSettings }
 
 class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Colorizer)
   extends EditPanel(widget, compiler, colorizer) {
@@ -18,168 +19,150 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
   private implicit val i18nPrefix = I18N.Prefix("edit.viewSettings")
   private val previewPanel = new WorldPreview(200, 200)
 
-  private var editors:scala.List[IntegerEditor] = Nil
-  private var positionChoices:JComboBox[OriginConfiguration] = null
-  private var edgeChoices:JComboBox[OriginConfiguration] = null
-  private var cornerChoices:JComboBox[OriginConfiguration] = null
+  private var editors: List[IntegerEditor] = Nil
+
+  private val settings = widget.asInstanceOf[WorldViewSettings]
+
+  private val originTypes = new ComboBox[OriginType](settings.originTypes) {
+    addItemListener(_ => selectType)
+  }
+
+  private val originConfigs = new ComboBox[OriginConfiguration] {
+    addItemListener(_ => selectConfig)
+  }
 
   override def init(): PropertyEditor[_] = {
-    setLayout(new BorderLayout())
-    val settings = widget.asInstanceOf[WorldViewSettings]
-    val panelGridbag = new GridBagLayout()
-    val worldPanel = new JPanel(){
-      setBorder(new TitledBorder(I18N.gui("world")))
-      setLayout(new BorderLayout())
+    setLayout(new BorderLayout)
+    val panelGridbag = new GridBagLayout
+    val worldPanel = new JPanel(new BorderLayout) with Transparent {
+      setBorder(new TitledBorder(I18N.gui("world")) {
+        setTitleColor(InterfaceColors.dialogText)
+      })
       add(makeButtonPanel(settings), BorderLayout.WEST)
-      add(new JPanel() {
-        setLayout(new BorderLayout())
+      add(new JPanel(new BorderLayout) with Transparent {
         add(previewPanel, BorderLayout.CENTER)
-        val worldStaticPropertiesPanel = new JPanel() {
-          setLayout(panelGridbag)
-        }
+        val worldStaticPropertiesPanel = new JPanel(panelGridbag) with Transparent
         addProperties(worldStaticPropertiesPanel,
-                      settings.wrappingProperties.asScala,
+                      settings.wrappingProperties,
                       panelGridbag)
         add(worldStaticPropertiesPanel, BorderLayout.SOUTH)
       }, BorderLayout.CENTER)
     }
 
-    val viewPanel = new JPanel() {
-      setBorder(new TitledBorder(I18N.gui("view")))
-      setLayout(panelGridbag)
+    val viewPanel = new JPanel(panelGridbag) with Transparent {
+      setBorder(new TitledBorder(I18N.gui("view")) {
+        setTitleColor(InterfaceColors.dialogText)
+      })
     }
 
-    addProperties(viewPanel, settings.viewProperties.asScala, panelGridbag)
+    addProperties(viewPanel, settings.viewProperties, panelGridbag)
 
-    val modelPanel = new JPanel(){
-      setBorder(new TitledBorder(I18N.gui("tickCounter")))
-      setLayout(panelGridbag)
+    val modelPanel = new JPanel(panelGridbag) with Transparent {
+      setBorder(new TitledBorder(I18N.gui("tickCounter")) {
+        setTitleColor(InterfaceColors.dialogText)
+      })
     }
 
-    addProperties(modelPanel, settings.modelProperties.asScala, panelGridbag)
+    addProperties(modelPanel, settings.modelProperties, panelGridbag)
 
     add(worldPanel, BorderLayout.NORTH)
     add(viewPanel, BorderLayout.CENTER)
     add(modelPanel, BorderLayout.SOUTH)
 
-    positionChoices.setSelectedIndex(settings.getSelectedLocation)
-    selectPosition(
-      positionChoices.getSelectedItem.asInstanceOf[OriginConfiguration], settings.getSelectedConfiguration)
+    originTypes.setSelectedItem(settings.getSelectedType)
+    settings.getSelectedConfig.foreach(originConfigs.setSelectedItem)
 
-    if(! editors(0).isEnabled) editors(1) else editors(0)
+    editors.foreach(_.refresh)
+
+    if (editors(0).isEnabled) editors(0) else editors(1)
   }
 
   private def makeButtonPanel(settings: WorldViewSettings) = {
-    val buttons = new JPanel()
-    val buttonsLayout = new GridBagLayout()
-    val c = new GridBagConstraints()
-    buttons.setLayout(buttonsLayout)
+    val buttonsLayout = new GridBagLayout
+    val buttons = new JPanel(buttonsLayout) with Transparent
+    val c = new GridBagConstraints
 
-    buttons.add(new JLabel(I18N.gui("origin.location") + " "))
-    positionChoices = new JComboBox()
-    for(config <- settings.originConfigurations.asScala)
-       positionChoices.addItem(config)
-    positionChoices.addItemListener(new LocationItemListener())
+    buttons.add(new JLabel(I18N.gui("origin.location") + " ") {
+      setForeground(InterfaceColors.dialogText)
+    }, c)
 
     c.gridwidth = GridBagConstraints.REMAINDER
-    buttonsLayout.setConstraints(positionChoices, c)
-    buttons.add(positionChoices)
+    c.anchor = GridBagConstraints.EAST
 
-    edgeChoices = new JComboBox()
-    for(config <- settings.edgeChoices.asScala)
-      edgeChoices.addItem(config)
-    edgeChoices.addItemListener(new ConfigurationListener())
-    buttonsLayout.setConstraints(edgeChoices, c)
-    buttons.add(edgeChoices)
-    edgeChoices.setVisible(false)
-
-    cornerChoices = new JComboBox()
-    for(config <- settings.cornerChoices.asScala)
-      cornerChoices.addItem(config)
-    cornerChoices.addItemListener(new ConfigurationListener())
-    buttonsLayout.setConstraints(cornerChoices, c)
-    buttons.add(cornerChoices)
-    cornerChoices.setVisible(false)
+    buttons.add(originTypes, c)
+    buttons.add(originConfigs, c)
 
     try
-      addProperties(buttons, settings.dimensionProperties.asScala, buttonsLayout)
+      addProperties(buttons, settings.dimensionProperties, buttonsLayout)
     catch {
       case t: Throwable => t.printStackTrace
     }
 
-    editors =
-      (for(i <- settings.firstEditor to settings.lastEditor) yield
-        propertyEditors(i).asInstanceOf[IntegerEditor]).toList
+    editors = propertyEditors.map(_.asInstanceOf[IntegerEditor]).toList
+
     buttons
   }
 
-  override def previewChanged(field: String, value: Option[Any]) {
-    previewPanel.update(field, value)
-    if(!value.isDefined) return
-    def v = value.get.asInstanceOf[Int]
-    if(positionChoices.getSelectedObjects()(0).toString == I18N.gui("origin.location.center") && editors != Nil) {
-      if(field == "maxPxcor") editors(0).set(0 - v)
-      else if(field == "maxPycor") editors(2).set(0 - v)
-      else if(field == "maxPzcor") editors(4).set(0 - v)
+  override def previewChanged(field: String, value: Option[Any]): Unit = {
+    value match {
+      case Some(i: Int) =>
+        previewPanel.updateInt(field, i)
+
+        if (originTypes.getSelectedItem.exists(_ == OriginType.Center) && editors.nonEmpty) {
+          if (field == "maxPxcor") {
+            editors(0).set(0 - i)
+          } else if (field == "maxPycor") {
+            editors(2).set(0 - i)
+          } else if (field == "maxPzcor") {
+            editors(4).set(0 - i)
+          }
+        }
+
+      case Some(b: Boolean) =>
+        previewPanel.updateBoolean(field, b)
+
+      case None =>
+        if (field == "minPxcor" || field == "maxPxcor" || field == "minPycor" || field == "maxPycor" ||
+            field == "minPzcor" || field == "maxPzcor") {
+          previewPanel.setError(field)
+        }
+
+      case _ =>
     }
   }
 
-  private class LocationItemListener extends ItemListener{
-    def itemStateChanged(e:ItemEvent){
-      if(e.getStateChange() == java.awt.event.ItemEvent.SELECTED){
-        selectPosition(e.getItem().asInstanceOf[OriginConfiguration], 0)
+  override def apply(): Unit = {
+    super.apply()
+    settings.apply()
+  }
+
+  override def revert(): Unit = {
+    super.revert()
+    settings.revert()
+  }
+
+  private def selectType(): Unit = {
+    originTypes.getSelectedItem.foreach { t =>
+      settings.setOriginType(t)
+
+      t match {
+        case OriginType.Corner =>
+          originConfigs.setItems(settings.cornerConfigs)
+          originConfigs.setVisible(true)
+
+        case OriginType.Edge =>
+          originConfigs.setItems(settings.edgeConfigs)
+          originConfigs.setVisible(true)
+
+        case _ =>
+          originConfigs.clearSelection()
+          originConfigs.setVisible(false)
       }
     }
   }
 
-  def enableChoices(corner:Boolean, edge:Boolean){
-    edgeChoices setVisible edge
-    cornerChoices setVisible corner
-  }
-
-  private def selectPosition(selection:OriginConfiguration, index:Int){
-    selectConfiguration(selection)
-    if (selection.toString == I18N.gui("origin.location.corner")){
-      enableChoices(true, false)
-      cornerChoices.setSelectedIndex(index)
-      selectConfiguration(cornerChoices.getSelectedItem().asInstanceOf[OriginConfiguration])
-    }
-    else if (selection.toString == I18N.gui("origin.location.edge")){
-      enableChoices(false, true)
-      edgeChoices.setSelectedIndex(index)
-      selectConfiguration(edgeChoices.getSelectedItem().asInstanceOf[OriginConfiguration])
-    }
-    else{
-      enableChoices(false, false)
-    }
-  }
-
-  private def selectConfiguration(choice:OriginConfiguration){
-    for((editor,i) <- editors.zipWithIndex){
-      if(choice.toString != I18N.gui("origin.location.custom")){
-        editor.refresh()
-      }
-      editor.setEnabled(choice.getEditorEnabled(i))
-    }
-    for((editor,i) <- editors.zipWithIndex){
-      if(choice.setValue(i)){
-        // this is kind of ugly, but we want to add our magnitude
-        // to that of the corresponding field, odd fields are partnered
-        // with the field before and even fields are with the field after.
-        // ev 5/23/06
-        val partner = i + (if ((i % 2) == 0) 1 else -1)
-        val otherguy = editors(partner)
-        otherguy.set(- editor.get.get.intValue + otherguy.get.get.intValue)
-        editor.set(0)
-      }
-    }
-  }
-
-  private class ConfigurationListener extends ItemListener {
-    def itemStateChanged(e:ItemEvent){
-      if(e.getStateChange() == java.awt.event.ItemEvent.SELECTED){
-        selectConfiguration(e.getItem().asInstanceOf[OriginConfiguration])
-      }
-    }
+  private def selectConfig(): Unit = {
+    settings.setOriginConfig(originConfigs.getSelectedItem)
+    settings.configureEditors(editors)
   }
 }

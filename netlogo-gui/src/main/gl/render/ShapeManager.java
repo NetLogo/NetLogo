@@ -213,7 +213,7 @@ class ShapeManager {
     }
 
     // render each element in this shape
-    List<org.nlogo.shape.Element> elements = vShape.getElements();
+    List<org.nlogo.shape.Element> elements = vShape.getElementsJ();
     for (int i = 0; i < elements.size(); i++) {
       org.nlogo.shape.Element element = elements.get(i);
 

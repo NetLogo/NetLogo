@@ -2,30 +2,30 @@
 
 package org.nlogo.properties
 
-import org.nlogo.api.Dump
+import java.awt.{ Color, Dimension, Frame }
+import java.awt.event.{ MouseAdapter, MouseEvent }
+import java.lang.Double
+import javax.swing.{ JLabel, JPanel }
+
 import org.nlogo.api.Approximate.approximate
-import org.nlogo.api.Color.{getClosestColorNumberByARGB, getColorNameByIndex}
-import java.awt.event.{ActionEvent, ActionListener}
-import java.awt.{Graphics, Component, Color}
-import javax.swing.{Icon, JPanel, JButton}
+import org.nlogo.api.{ Color => NLColor, Dump }, NLColor.{ getClosestColorNumberByARGB, getColorNameByIndex }
+import org.nlogo.swing.RoundedBorderPanel
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.ColorDialog
 
-abstract class ColorEditor(accessor: PropertyAccessor[Color], useTooltip: Boolean, frame: java.awt.Frame)
-  extends PropertyEditor(accessor, useTooltip)
-{
+abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
+  extends PropertyEditor(accessor) {
 
-  private val colorIcon = new ColorIcon
-  private val colorButton = new JButton("0 (black)", colorIcon)
+  private val colorButton = new ColorButton
   private val originalColor: Color = accessor.get
 
-  val label = new javax.swing.JLabel(accessor.displayName)
-  tooltipFont(label)
+  private val label = new JLabel(accessor.displayName)
   add(label)
   add(colorButton)
-  colorButton.addActionListener(new SelectColorActionListener())
   setColor(originalColor)
 
   def setColor(color: Color) {
-    colorIcon.setColor(color)
+    colorButton.setColor(color)
     val c = getClosestColorNumberByARGB(color.getRGB)
     val colorString = c match {
       // this logic is duplicated in InputBox
@@ -45,7 +45,7 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], useTooltip: Boolea
   }
 
   override def getMinimumSize = colorButton.getMinimumSize
-  override def get = Some(colorIcon.getColor)
+  override def get = Some(colorButton.getColor)
   override def set(value: Color) { setColor(value) }
   override def requestFocus() { colorButton.requestFocus() }
 
@@ -54,23 +54,50 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], useTooltip: Boolea
     super.revert()
   }
 
-   private class SelectColorActionListener extends ActionListener{
-     def actionPerformed(e: ActionEvent){
-       val colorDialog = new org.nlogo.window.ColorDialog(frame, true)
-       val c = colorDialog.showInputBoxDialog(getClosestColorNumberByARGB(colorIcon.getColor.getRGB))
-       setColor(org.nlogo.api.Color.getColor(c: java.lang.Double))
-     }
-   }
+  override def syncTheme(): Unit = {
+    label.setForeground(InterfaceColors.dialogText)
 
-  private class ColorIcon extends Icon {
-    val color = new JPanel
-    def paintIcon(c:Component, g:Graphics, x:Int, y:Int){
-      g.setColor(getColor)
-      g.fillRect(x, y, getIconWidth, getIconHeight)
+    colorButton.syncTheme()
+  }
+
+  private class ColorButton extends JPanel with RoundedBorderPanel with ThemeSync {
+    private val label = new JLabel("0 (black)")
+    private val panel = new JPanel {
+      setBackground(Color.black)
+      setPreferredSize(new Dimension(10, 10))
     }
-    def getIconWidth = color.getMinimumSize().width
-    def getIconHeight = color.getMinimumSize().height
-    def setColor(c: Color) { color.setBackground(c) }
-    def getColor = color.getBackground
+
+    setDiameter(6)
+    enableHover()
+
+    add(panel)
+    add(label)
+
+    addMouseListener(new MouseAdapter {
+      override def mousePressed(e: MouseEvent) {
+        val colorDialog = new ColorDialog(frame, true)
+        val c = colorDialog.showInputBoxDialog(getClosestColorNumberByARGB(getColor.getRGB))
+        ColorEditor.this.setColor(NLColor.getColor(c: Double))
+      }
+    })
+
+    def setColor(color: Color) {
+      panel.setBackground(color)
+    }
+
+    def getColor: Color =
+      panel.getBackground
+
+    def setText(text: String) {
+      label.setText(text)
+    }
+
+    override def syncTheme(): Unit = {
+      setBackgroundColor(InterfaceColors.toolbarControlBackground)
+      setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
+      setBorderColor(InterfaceColors.toolbarControlBorder)
+
+      label.setForeground(InterfaceColors.toolbarText)
+    }
   }
 }

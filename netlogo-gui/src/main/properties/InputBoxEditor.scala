@@ -2,36 +2,34 @@
 
 package org.nlogo.properties
 
+import java.awt.FlowLayout
+import javax.swing.JLabel
+
 import org.nlogo.api.Options
+import org.nlogo.theme.InterfaceColors
+import org.nlogo.swing.{ CheckBox, ComboBox }
 import org.nlogo.window.InputBox
 
-import java.awt.FlowLayout
-import javax.swing.{ JCheckBox, JComboBox, JLabel }
+abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputType]])
+  extends PropertyEditor(accessor) {
 
-abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputType]], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip)
-{
-
-  private val typeCombo: JComboBox[InputBox#InputType] = new JComboBox[InputBox#InputType]
-  private val multiline: JCheckBox = new JCheckBox("Multi-Line")
   private val options: Options[InputBox#InputType] = accessor.get
+  private val typeCombo = new ComboBox[InputBox#InputType](options.values)
+  private val multiline = new CheckBox("Multi-Line")
   private val originalOption: InputBox#InputType = accessor.get.chosenValue
   private val originalMultiline: Boolean = accessor.get.chosenValue.multiline
 
   setLayout(new FlowLayout(FlowLayout.LEFT))
-  val label = new JLabel(accessor.displayName)
-  tooltipFont(label)
+  private val label = new JLabel(accessor.displayName)
   add(label)
   add(typeCombo)
 
-  for (t <- options.values)
-    typeCombo.addItem(t)
-  typeCombo.addActionListener(_ => multiline.setEnabled(selected.enableMultiline))
+  typeCombo.addItemListener(_ => multiline.setEnabled(selected.map(_.enableMultiline).getOrElse(false)))
 
   multiline.setSelected(originalOption.multiline)
   add(multiline)
 
-  private def selected = typeCombo.getSelectedItem.asInstanceOf[InputBox#InputType]
+  private def selected = typeCombo.getSelectedItem
 
   override def set(value: Options[InputBox#InputType]): Unit = {
     val t: InputBox#InputType = value.chosenValue
@@ -41,7 +39,7 @@ abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputT
   }
 
   override def get = {
-    options.selectByName(selected.displayName)
+    options.selectByName(selected.map(_.displayName).getOrElse(""))
     options.chosenValue.multiline(multiline.isSelected)
     Some(options)
   }
@@ -53,4 +51,11 @@ abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputT
   }
 
   override def requestFocus = typeCombo.requestFocus
+
+  override def syncTheme(): Unit = {
+    label.setForeground(InterfaceColors.dialogText)
+    multiline.setForeground(InterfaceColors.dialogText)
+
+    typeCombo.syncTheme()
+  }
 }

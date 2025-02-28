@@ -2,23 +2,26 @@
 
 package org.nlogo.app
 
-import java.awt._
-import event._
-import javax.swing._
+import java.awt.{ BorderLayout, Dimension, Font, Frame }
+import java.awt.event.{ WindowAdapter, WindowEvent, MouseAdapter, MouseEvent }
 import java.net.URI
+import javax.swing.{ JDialog, JLabel, SwingConstants, Timer, WindowConstants }
+import javax.swing.border.{ EmptyBorder, LineBorder }
 
+import org.nlogo.api.{ APIVersion, FileIO, Version }
+import org.nlogo.awt.{ Fonts, Positioning }
+import org.nlogo.core.I18N
+import org.nlogo.swing.{ BrowserLauncher, RichAction, ScrollPane, TabbedPane, TextArea, Utils }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.util.SysInfo
-import org.nlogo.api.{ FileIO, APIVersion, Version }
-import org.nlogo.swing.{ BrowserLauncher, RichAction }
-import org.nlogo.swing.Utils.icon
 
-class AboutWindow(parent:Frame) extends JDialog(parent,false) {
+class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.about"), false) with ThemeSync {
   private val refreshTimer: Timer = new Timer(2000, _ => refreshSystemText())
-  private val system: JTextArea = new JTextArea() {
-    setFont(new Font(org.nlogo.awt.Fonts.platformMonospacedFont, Font.PLAIN, 12))
+  private val system = new TextArea(0, 0, "") {
+    setFont(new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12))
     setLineWrap(true)
     setWrapStyleWord(true)
-    setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10))
+    setBorder(new EmptyBorder(5, 10, 5, 10))
     setDragEnabled(false)
     setEditable(false)
   }
@@ -30,63 +33,71 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
       SysInfo.getVMInfoString + "\n" +
       SysInfo.getOSInfoString + "\n" +
       SysInfo.getScalaVersionString + "\n"
+  private val label = new JLabel {
+    val year = Version.buildDate.takeRight(4)
+    setText(
+      s"""|<html>
+          |<center>
+          |<b>${Version.versionDropZeroPatch}
+          | (${Version.buildDate})
+          |</b><br><br>
+          |<font size=-1><b>web site</b>
+          |<a href="http://ccl.northwestern.edu/netlogo/">ccl.northwestern.edu/netlogo</a><br><br>
+          |&copy 1999-${year} Uri Wilensky<br><br>
+          |Please cite as:<br>
+          |Wilensky, U. 1999. NetLogo. http://ccl.northwestern.edu/netlogo/.<br>
+          |Center for Connected Learning and Computer-Based Modeling,<br>
+          |Northwestern University. Evanston, IL.
+          |</center> </html>""".stripMargin
+    )
+    setHorizontalAlignment(SwingConstants.CENTER)
+    addMouseListener(new MouseAdapter {
+      override def mouseClicked(e: MouseEvent) {
+        BrowserLauncher.openURI(AboutWindow.this, new URI("http://ccl.northwestern.edu/netlogo/"))
+      }
+    })
+  }
+
+  private val credits = new TextArea(15, 0, FileIO.getResourceAsString("/system/about.txt")) {
+    setFont(new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12))
+    setDragEnabled(false)
+    setLineWrap(true)
+    setWrapStyleWord(true)
+    setEditable(false)
+    setBorder(new EmptyBorder(5, 10, 5, 10))
+  }
+
+  private val creditsScrollPane = new ScrollPane(credits) {
+    setPreferredSize(new Dimension(200, 230))
+  }
+
+  private val systemScrollPane = new ScrollPane(system) {
+    setPreferredSize(new Dimension(200, 230))
+  }
+
+  private val tabs = new TabbedPane {
+    add("Credits", creditsScrollPane)
+    add("System", systemScrollPane)
+  }
+
   locally {
-    setTitle("About NetLogo")
     setResizable(false)
     setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE)
 
-    val label = new JLabel {
-      val year = Version.buildDate.takeRight(4)
-      setText(
-        s"""|<html>
-            |<center>
-            |<b>${Version.versionDropZeroPatch}
-            | <font color="#666666">(${Version.buildDate})</font>
-            |</b><br><br>
-            |<font size=-1><b>web site</b>
-            |<a href="http://ccl.northwestern.edu/netlogo/">ccl.northwestern.edu/netlogo</a><br><br>
-            |<font color="#333333">&copy 1999-${year} Uri Wilensky<br><br>
-            |Please cite as:<br>
-            |Wilensky, U. 1999. NetLogo. http://ccl.northwestern.edu/netlogo/.<br>
-            |Center for Connected Learning and Computer-Based Modeling,<br>
-            |Northwestern University. Evanston, IL.
-            |</center> </html>""".stripMargin
-      )
-      setHorizontalAlignment(SwingConstants.CENTER)
-      addMouseListener(new MouseAdapter {
-        override def mouseClicked(e: MouseEvent) {
-          BrowserLauncher.openURI(AboutWindow.this, new URI("http://ccl.northwestern.edu/netlogo/"))
-        }
-      })
-    }
-
     refreshSystemText()
 
-    getContentPane.setLayout(new BorderLayout(0,10))
-    val graphic = new JLabel(icon("/images/title.jpg")) {
-      setBorder(BorderFactory.createEmptyBorder(10,10,0,10))
+    getContentPane.setLayout(new BorderLayout(0, 10))
+    val graphic = new JLabel(Utils.iconScaled("/images/title.png", 600, 97)) {
+      setBorder(new EmptyBorder(10,10,0,10))
     }
-    getContentPane.add(graphic,BorderLayout.NORTH)
+    getContentPane.add(graphic, BorderLayout.NORTH)
 
-    val credits = new JTextArea(FileIO.getResourceAsString("/system/about.txt"),15,0){
-      setFont(new Font(org.nlogo.awt.Fonts.platformMonospacedFont,Font.PLAIN,12))
-      setDragEnabled(false)
-      setLineWrap(true)
-      setWrapStyleWord(true)
-      setEditable(false)
-      setBorder(BorderFactory.createEmptyBorder(5,10,5,10))
-    }
+    getContentPane.add(label, BorderLayout.CENTER)
+    getContentPane.add(tabs, BorderLayout.SOUTH)
 
-    val tabs = new JTabbedPane(){
-      add("Credits",new JScrollPane(credits){ setPreferredSize(new Dimension(200,230)) })
-      add("System",new JScrollPane(system){ setPreferredSize(new Dimension(200,230)) })
-    }
-    getContentPane.add(label,BorderLayout.CENTER)
-    getContentPane.add(tabs,BorderLayout.SOUTH)
-
-    org.nlogo.swing.Utils.addEscKeyAction(this, RichAction{ _ => dispose() } )
+    Utils.addEscKeyAction(this, RichAction{ _ => dispose() } )
     pack()
-    org.nlogo.awt.Positioning.center(this,null)
+    Positioning.center(this,null)
 
     // Bring the parent frame (the main NetLogo window) to front.
     // Otherwise this will be obscured (sometimes completely) by
@@ -98,9 +109,13 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
 
     refreshTimer.start()
 
-    addWindowListener(new WindowAdapter() {
-      override def windowClosed(evt:WindowEvent){ refreshTimer.stop() }
+    addWindowListener(new WindowAdapter {
+      override def windowClosed(e: WindowEvent) {
+        refreshTimer.stop()
+      }
     })
+
+    syncTheme()
   }
 
   private def refreshSystemText() {
@@ -117,5 +132,22 @@ class AboutWindow(parent:Frame) extends JDialog(parent,false) {
       system.setSelectionStart(start)
       system.setSelectionEnd(end)
     }
+  }
+
+  override def syncTheme(): Unit = {
+    getContentPane.setBackground(InterfaceColors.dialogBackground)
+
+    label.setForeground(InterfaceColors.toolbarText)
+
+    credits.syncTheme()
+    system.syncTheme()
+
+    creditsScrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable))
+    creditsScrollPane.setBackground(InterfaceColors.textAreaBackground)
+
+    systemScrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable))
+    systemScrollPane.setBackground(InterfaceColors.textAreaBackground)
+
+    tabs.syncTheme()
   }
 }

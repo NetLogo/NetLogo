@@ -5,18 +5,23 @@ package org.nlogo.gl.view
 import com.jogamp.opengl.GLProfile
 import com.jogamp.opengl.awt.GLCanvas
 
-import org.nlogo.gl.render.Renderer
-import java.awt.image.BufferedImage
+import java.awt.Frame
 import java.awt.event.{ KeyEvent, KeyAdapter, MouseEvent }
+import java.awt.image.BufferedImage
+
+import org.nlogo.api.Version
+import org.nlogo.gl.render.Renderer
+import org.nlogo.swing.NetLogoIcon
+import org.nlogo.theme.ThemeSync
+import org.nlogo.window.Event.LinkChild
 
 abstract class View(title: String, val viewManager: ViewManager, var renderer: Renderer)
-extends java.awt.Frame(title)
-with org.nlogo.window.Event.LinkChild {
+  extends Frame(title) with LinkChild with ThemeSync with NetLogoIcon {
 
   var canvas: GLCanvas = null
   val picker = new Picker(this)
 
-  if (org.nlogo.api.Version.is3D)
+  if (Version.is3D) {
     if (renderer == null) {
       renderer = new org.nlogo.gl.render.Renderer3D(
         viewManager.world, viewManager.graphicsSettings,
@@ -25,14 +30,18 @@ with org.nlogo.window.Event.LinkChild {
       renderer.cleanUp()
       renderer = new org.nlogo.gl.render.Renderer3D(renderer)
     }
-  else if (renderer == null) {
-    renderer = new Renderer(
-      viewManager.world, viewManager.graphicsSettings,
-      viewManager.workspace, viewManager)
   }
+
   else {
-    renderer.cleanUp()
-    renderer = new org.nlogo.gl.render.Renderer(renderer)
+    if (renderer == null) {
+      renderer = new Renderer(
+        viewManager.world, viewManager.graphicsSettings,
+        viewManager.workspace, viewManager)
+    }
+    else {
+      renderer.cleanUp()
+      renderer = new org.nlogo.gl.render.Renderer(renderer)
+    }
   }
 
   val inputHandler = new MouseMotionHandler(this)

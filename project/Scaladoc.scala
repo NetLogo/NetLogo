@@ -16,7 +16,6 @@ object Scaladoc {
   , "org.nlogo.properties"
   , "org.nlogo.sdm"
   , "org.nlogo.shape"
-  , "org.nlogo.widget"
   , "org.nlogo.window"
   , "org.nlogo.generate"
   , "org.nlogo.lab"

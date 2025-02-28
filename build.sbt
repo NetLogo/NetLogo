@@ -75,7 +75,8 @@ lazy val scalatestSettings = Seq(
   ) }
   // Tests must be forked to get the above `javaOptions`
 , Test / fork := true
-, threed := { System.setProperty("org.nlogo.is3d", "true") }
+, twod   := { System.setProperty("org.nlogo.is3d", "false") }
+, threed := { System.setProperty("org.nlogo.is3d",  "true") }
 , nogen  := { System.setProperty("org.nlogo.noGenerator", "true") }
 , noopt  := { System.setProperty("org.nlogo.noOptimizer", "true") }
 )
@@ -175,22 +176,32 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     Test / unmanagedSourceDirectories      += baseDirectory.value / "src" / "tools",
     Compile / resourceDirectory            := baseDirectory.value / "resources",
     Compile / unmanagedResourceDirectories ++= (sharedResources / Compile / unmanagedResourceDirectories).value,
-    libraryDependencies ++= Seq(
-      "com.formdev" % "flatlaf" % "3.4",
-      "org.picocontainer" % "picocontainer" % "2.15",
-      "javax.media" % "jmf" % "2.1.1e",
-      "commons-codec" % "commons-codec" % "1.16.0",
-      "org.parboiled" %% "parboiled" % "2.5.0",
-      "org.jogamp.jogl" % "jogl-all" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0/jar/jogl-all.jar",
-      "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0/jar/gluegen-rt.jar",
-      "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
-      "org.apache.httpcomponents" % "httpclient" % "4.2",
-      "org.apache.httpcomponents" % "httpmime" % "4.2",
-      "com.googlecode.json-simple" % "json-simple" % "1.1.1",
-      "com.fifesoft" % "rsyntaxtextarea" % "3.3.0",
-      "com.typesafe" % "config" % "1.4.3",
-      "net.lingala.zip4j" % "zip4j" % "2.11.5"
-    ),
+    libraryDependencies ++= {
+      lazy val osName = (System.getProperty("os.name"), System.getProperty("os.arch")) match {
+        case (n, _) if n.startsWith("Linux") => "linux"
+        case (n, arch) if n.startsWith("Mac") && arch == "aarch64" => "mac-aarch64"
+        case (n, _) if n.startsWith("Mac") => "mac"
+        case (n, _) if n.startsWith("Windows") => "win"
+        case _ => throw new Exception("Unknown platform!")
+      }
+      Seq(
+        "com.formdev" % "flatlaf" % "3.4",
+        "org.picocontainer" % "picocontainer" % "2.15",
+        "javax.media" % "jmf" % "2.1.1e",
+        "commons-codec" % "commons-codec" % "1.16.0",
+        "org.parboiled" %% "parboiled" % "2.5.0",
+        "org.jogamp.jogl" % "jogl-all" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0/jar/jogl-all.jar",
+        "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0/jar/gluegen-rt.jar",
+        "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
+        "org.apache.httpcomponents" % "httpclient" % "4.2",
+        "org.apache.httpcomponents" % "httpmime" % "4.2",
+        "com.googlecode.json-simple" % "json-simple" % "1.1.1",
+        "com.fifesoft" % "rsyntaxtextarea" % "3.3.0",
+        "com.typesafe" % "config" % "1.4.3",
+        "net.lingala.zip4j" % "zip4j" % "2.11.5"
+      ) ++ Seq("base", "controls", "graphics", "swing", "web")
+        .map(m => "org.openjfx" % s"javafx-$m" % "21" classifier osName)
+    },
     all := {},
     all := {
       all.dependsOn(
@@ -223,6 +234,7 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     )
   )
 
+lazy val twod   = TaskKey[Unit]("twod", "disable NetLogo 3D")
 lazy val threed = TaskKey[Unit]("threed", "enable NetLogo 3D")
 lazy val nogen = TaskKey[Unit]("nogen", "disable bytecode generator")
 lazy val noopt = TaskKey[Unit]("noopt", "disable compiler optimizations")
@@ -310,9 +322,7 @@ lazy val macApp = project.in(file("mac-app")).
       baseDirectory.value / "natives" / "macosx-universal" / "libjcocoa.dylib") ++
       ((netlogo / baseDirectory).value / "natives" / "macosx-universal" * "*.jnilib").get).mkString(":"),
     Compile / packageBin / artifactPath := target.value / "netlogo-mac-app.jar",
-    javacOptions ++= Seq("-bootclasspath", System.getProperty("java.home") + "/lib/rt.jar",
-//  Needed because MacTabbedPaneUI uses com.apple.laf.AquaTabbedPaneContrastUI
-    "--add-exports", "java.desktop/com.apple.laf=ALL-UNNAMED"))
+    javacOptions ++= Seq("-bootclasspath", System.getProperty("java.home") + "/lib/rt.jar"))
 
 // this project is all about packaging NetLogo for distribution
 lazy val dist = project.in(file("dist")).

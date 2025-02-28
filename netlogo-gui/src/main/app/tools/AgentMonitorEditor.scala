@@ -2,11 +2,9 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Color, FlowLayout, Font, GridBagConstraints, GridBagLayout, Rectangle }
+import java.awt.{ BorderLayout, FlowLayout, Font, GridBagConstraints, GridBagLayout, Insets, Rectangle }
 import java.awt.event.{ FocusEvent, FocusListener, KeyEvent, KeyListener }
-import javax.swing.{ BorderFactory, JLabel, JPanel, JScrollPane, ScrollPaneConstants }
-
-import scala.collection.mutable
+import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
 
 import org.nlogo.agent.{ Agent, AgentSet, Turtle, Patch, Link }
 import org.nlogo.api.{ AgentVariables, Dump }
@@ -14,15 +12,13 @@ import org.nlogo.awt.Fonts
 import org.nlogo.core.{ AgentKind, I18N, Nobody, Widget => CoreWidget }
 import org.nlogo.editor.EditorField
 import org.nlogo.nvm.Procedure
-import org.nlogo.swing.OptionDialog
-import org.nlogo.window.{ EditorColorizer, Events => WindowEvents, InterfaceColors, JobWidget }
+import org.nlogo.swing.{ OptionPane, ScrollPane, Transparent }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.{ EditorColorizer, Events => WindowEvents, JobWidget }
 
-class AgentMonitorEditor(parent: AgentMonitor) extends JPanel {
-  setBackground(InterfaceColors.AGENT_EDITOR_BACKGROUND)
-  setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1))
-
-  private var editor: AgentVarEditor = null
-  private val editors = new mutable.ArrayBuffer[AgentVarEditor]
+class AgentMonitorEditor(parent: AgentMonitor) extends JPanel with ThemeSync {
+  private val noVarLabel = new JLabel(I18N.gui.get("tools.agentMonitor.editor.noVariables"))
+  private var editors: List[AgentVarEditor] = Nil
 
   reset()
 
@@ -36,51 +32,49 @@ class AgentMonitorEditor(parent: AgentMonitor) extends JPanel {
 
   def reset() {
     removeAll()
-    editors.clear()
+    editors = Nil
     if(vars == null || vars.isEmpty) {
       setLayout(new FlowLayout)
-      add(new JLabel(I18N.gui.get("tools.agentMonitor.editor.noVariables")))
+      add(noVarLabel)
     }
     else fill()
+    syncTheme()
   }
 
   private def fill() {
     import scala.collection.JavaConverters._
 
-    val layout = new GridBagLayout
-    setLayout(layout)
+    setLayout(new GridBagLayout)
     val labelConstraints = new GridBagConstraints
+    labelConstraints.gridx = 0
     labelConstraints.anchor = GridBagConstraints.EAST
-    labelConstraints.gridwidth = GridBagConstraints.RELATIVE
+    labelConstraints.insets = new Insets(0, 3, 0, 3)
     val editorConstraints = new GridBagConstraints
+    editorConstraints.gridx = 1
     editorConstraints.fill = GridBagConstraints.HORIZONTAL
-    editorConstraints.weightx = 1.0
-    editorConstraints.gridwidth = GridBagConstraints.REMAINDER
+    editorConstraints.weightx = 1
+    editorConstraints.insets = new Insets(3, 0, 0, 3)
     // add components
-    for(variableName <- vars.asScala) {
+    editors = for (variableName <- vars.asScala.toList) yield {
       val label = new JLabel(variableName.toLowerCase)
-      label.setFont(new Font(Fonts.platformFont, Font.PLAIN, 10))
-      label.setBorder(BorderFactory.createEmptyBorder(0, 1, 0, 1))
       val index =
-        if(agent == null)
+        if (agent == null)
           workspace.world.indexOfVariable(agentKind, variableName)
         else
           workspace.world.indexOfVariable(agent, variableName)
-      editor = new AgentVarEditor(this, index, variableName, label)
+      val editor = new AgentVarEditor(this, index, variableName, label)
       editor.agentKind(agentKind)
-      editors += editor
-      layout.setConstraints(label, labelConstraints)
-      add(label)
-      layout.setConstraints(editor, editorConstraints)
-      add(editor)
+      add(label, labelConstraints)
+      add(editor, editorConstraints)
+      editor
     }
     val fillerConstraints = new GridBagConstraints
+    fillerConstraints.gridx = 0
+    fillerConstraints.gridwidth = 2
     fillerConstraints.fill = GridBagConstraints.BOTH
-    fillerConstraints.weighty = 1.0
-    val fillerPanel = new JPanel
-    fillerPanel.setLayout(new GridBagLayout)
-    layout.setConstraints(fillerPanel, fillerConstraints)
-    add(fillerPanel)
+    fillerConstraints.weighty = 1
+    val fillerPanel = new JPanel with Transparent
+    add(fillerPanel, fillerConstraints)
     revalidate()
   }
 
@@ -89,6 +83,14 @@ class AgentMonitorEditor(parent: AgentMonitor) extends JPanel {
   def agentKind = parent.agentKind
   def setAgent(agent: Agent) { parent.setAgent(agent, 3) }
   def workspace = parent.workspace
+
+  override def syncTheme(): Unit = {
+    setBackground(InterfaceColors.dialogBackground)
+
+    noVarLabel.setForeground(InterfaceColors.dialogText)
+
+    editors.foreach(_.syncTheme())
+  }
 }
 
 // this gets complicated... if there's any way to make it less complicated I'd love to know about it
@@ -102,8 +104,7 @@ extends JobWidget(parent.workspace.world.auxRNG)
 with KeyListener
 with FocusListener
 with WindowEvents.JobRemovedEvent.Handler
-{
-
+with ThemeSync {
   type WidgetModel = org.nlogo.core.Widget
 
   private def specialCase = {
@@ -139,17 +140,13 @@ with WindowEvents.JobRemovedEvent.Handler
   var editorFocus = false
 
   setLayout(new BorderLayout)
-  setBorder(
-    BorderFactory.createLineBorder(InterfaceColors.AGENT_EDITOR_BACKGROUND, 1))
 
-  private val editor = new EditorField(
-    17, new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12),
-    true, new EditorColorizer(workspace))
+  private val editor = new EditorField(17, new Font(Fonts.platformMonospacedFont, Font.PLAIN, 12), true,
+                                       new EditorColorizer(workspace))
   editor.setFont(editor.getFont.deriveFont(10f))
-  add(new JScrollPane(editor,
-    ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-    ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER),
-    BorderLayout.CENTER)
+  private val scrollPane = new ScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
+  add(scrollPane, BorderLayout.CENTER)
   editor.addKeyListener(this)
   editor.addFocusListener(this)
   refresh(true)
@@ -189,9 +186,9 @@ with WindowEvents.JobRemovedEvent.Handler
     super.handle(e)
     if(e.sourceOwner == this) {
       error(e.error)
-      if(error != null) {
-        OptionDialog.showMessage(
-          workspace.getFrame, I18N.gui.get("common.messages.error"), error.getMessage, Array(I18N.gui.get("common.buttons.ok")))
+      if(error() != null) {
+        new OptionPane(workspace.getFrame, I18N.gui.get("common.messages.error"), error().getMessage,
+                       OptionPane.Options.Ok, OptionPane.Icons.Error)
         setEnabled(true)
         editor.setText(get)
         lastTextBeforeUserChangedAnything = editor.getText()
@@ -302,7 +299,7 @@ with WindowEvents.JobRemovedEvent.Handler
       if((enabled || agent == null || agent.id == -1 || agent.getVariable(index) == null) &&
           editor.isEnabled != enabled)
         editor.setEnabled(enabled)
-      label.setForeground(if (enabled) Color.BLACK else Color.DARK_GRAY)
+      syncTheme()
       label.repaint()
     }
   }
@@ -434,4 +431,16 @@ with WindowEvents.JobRemovedEvent.Handler
   override def raiseWidgetRemoved(): Unit = {}
   override def raiseWidgetAdded(): Unit = {}
 
+  override def syncTheme(): Unit = {
+    label.setForeground(
+      if (isEnabled)
+        InterfaceColors.dialogText
+      else
+        InterfaceColors.menuTextDisabled)
+
+    editor.setBackground(InterfaceColors.textAreaBackground)
+    editor.setCaretColor(InterfaceColors.textAreaText)
+
+    scrollPane.setBackground(InterfaceColors.textAreaBackground)
+  }
 }

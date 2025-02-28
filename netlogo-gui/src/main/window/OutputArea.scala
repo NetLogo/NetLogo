@@ -2,18 +2,20 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Component, Dimension, EventQueue, Font }
-import javax.swing.{ JScrollPane, JTextArea, ScrollPaneConstants }
+import java.awt.{ Component, Dimension, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import javax.swing.{ JPanel, ScrollPaneConstants }
 
-import org.nlogo.awt.{ Fonts => NLogoFonts, LineBreaker }
 import org.nlogo.agent.OutputObject
+import org.nlogo.awt.{ Fonts => NLogoFonts, LineBreaker }
+import org.nlogo.swing.{ RoundedBorderPanel, ScrollPane, TextArea }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object OutputArea {
   private val PreferredWidth = 200
   private val PreferredHeight = 45
   private val MinimumWidth = 50
   private val GuessScrollBarWidth = 24
-  class DefaultTextArea extends JTextArea {
+  class DefaultTextArea extends TextArea(0, 0, "") {
     override def getMinimumSize: Dimension = new Dimension(50, (getRowHeight * 1.25).toInt)
   }
   class DefaultTextAreaWithNextFocus(nextComponent: Component) extends DefaultTextArea {
@@ -26,10 +28,16 @@ object OutputArea {
 
 import OutputArea._
 
-class OutputArea(val text: JTextArea) extends javax.swing.JPanel {
-  private val scrollPane: JScrollPane =
-    new javax.swing.JScrollPane(text,
-      ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with ThemeSync {
+  setOpaque(false)
+
+  var zoomFactor = 1.0
+
+  private val scrollPane =
+    new ScrollPane(text, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                   ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED) {
+    setBorder(null)
+  }
 
   // when someone prints something that
   // ends in a carriage return, we don't want to print it immediately,
@@ -42,12 +50,20 @@ class OutputArea(val text: JTextArea) extends javax.swing.JPanel {
 
   // var help: String = null // don't think this is used any longer....
   //
+  text.setEditable(false)
+  text.setDragEnabled(false)
+  fontSize(12)
+  setLayout(new GridBagLayout)
+
   locally {
-    text.setEditable(false)
-    text.setDragEnabled(false)
-    fontSize(12)
-    setLayout(new BorderLayout())
-    add(scrollPane, BorderLayout.CENTER)
+    val c = new GridBagConstraints
+
+    c.weightx = 1
+    c.weighty = 1
+    c.fill = GridBagConstraints.BOTH
+    c.insets = new Insets(3, 3, 3, 3)
+
+    add(scrollPane, c)
   }
 
   def this() = this(new DefaultTextArea())
@@ -74,6 +90,21 @@ class OutputArea(val text: JTextArea) extends javax.swing.JPanel {
 
   override def isFocusable: Boolean = false
 
+  override def paintComponent(g: Graphics) {
+    setDiameter(6 * zoomFactor)
+
+    super.paintComponent(g)
+  }
+
+  override def syncTheme(): Unit = {
+    setBackgroundColor(InterfaceColors.commandOutputBackground)
+    setBorderColor(InterfaceColors.outputBorder)
+
+    text.syncTheme()
+
+    scrollPane.setBackground(InterfaceColors.commandOutputBackground)
+  }
+
   def append(oo: OutputObject, wrapLines: Boolean): Unit = {
     var message = oo.get
     lastTemporaryAddition.foreach { addition =>
@@ -85,16 +116,8 @@ class OutputArea(val text: JTextArea) extends javax.swing.JPanel {
     }
     lastTemporaryAddition = None
     if (wrapLines) {
-      val fontMetrics = getFontMetrics(text.getFont)
-      val messageLines = LineBreaker.breakLines(message, fontMetrics, text.getWidth - GuessScrollBarWidth)
-      val wrappedMessage = new StringBuilder()
-      var i = 0
-      while (i < messageLines.size) {
-        wrappedMessage.append(messageLines.get(i))
-        wrappedMessage.append("\n")
-        i += 1
-      }
-      message = wrappedMessage.toString();
+      message = LineBreaker.breakLines(message, getFontMetrics(text.getFont), text.getWidth - GuessScrollBarWidth)
+                           .mkString("\n")
     }
     val buf = new StringBuilder();
     if (addCarriageReturn) {

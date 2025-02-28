@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import java.awt.{ Color => AWTColor, GridBagConstraints }
+import java.awt.GridBagConstraints
 
 object Property {
 
@@ -38,18 +38,17 @@ object Property {
 }
 
 case class Property(
-  accessString:           String,
-  tpe:                    Property.Type,
-  name:                   String,
-  notes:                  String        = "",
-  gridWidth:              Int           = GridBagConstraints.REMAINDER,
-  optional:               Boolean       = false,
-  focus:                  Boolean       = false,
-  setLive:                Boolean       = false,
-  enabled:                Boolean       = true,
-  collapsible:            Boolean       = false,
-  collapseByDefault:      Boolean       = false,
-  dependentPropertyNames: Set[String]   = Set(),
-  backgroundColor:        AWTColor      = null,
-  borderSize:             Int           = 0
+  accessString: String,
+  tpe: Property.Type,
+  name: String,
+  notes: String = "",
+  gridWidth: Int = GridBagConstraints.REMAINDER,
+  optional: Boolean = false,
+  focus: Boolean = false,
+  setLive: Boolean = false,
+  enabled: Boolean = true,
+  collapsible: Boolean = false,
+  collapseByDefault: Boolean = false,
+  dependentPropertyNames: Set[String] = Set(),
+  borderSize: Int = 0
 )

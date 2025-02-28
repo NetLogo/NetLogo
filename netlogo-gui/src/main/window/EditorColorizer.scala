@@ -2,10 +2,12 @@
 
 package org.nlogo.window
 
-import org.nlogo.core.{ Token, TokenType }
 import java.awt.Color
+
 import org.nlogo.api.CompilerServices
+import org.nlogo.core.{ Token, TokenType }
 import org.nlogo.editor.Colorizer
+import org.nlogo.theme.InterfaceColors
 
 class EditorColorizer(compiler: CompilerServices) extends Colorizer {
 
@@ -14,17 +16,20 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
   private var lastLine = ""
   private var lastColors = Array[Color]()
 
+  // discard cache if the theme changed (Isaac B 11/7/24)
+  private var lastTheme = ""
+
   def reset() {
     lastLine = ""
     lastColors = Array()
   }
 
   def getCharacterColors(line: String): Array[Color] =
-    if (line == lastLine)
+    if (line == lastLine && InterfaceColors.getTheme == lastTheme)
       lastColors
     else {
       val tokens = tokenizeForColorization(line)
-      val result = Array.fill(line.size)(SyntaxColors.DEFAULT_COLOR)
+      val result = Array.fill(line.size)(InterfaceColors.defaultColor)
       for (tok <- tokens) {
         // "breed" can be either a keyword or a turtle variable, which means we can't reliably
         // colorize it correctly; so as a kludge we colorize it as a keyword if it's right at the
@@ -36,7 +41,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
             TokenType.Keyword
           else
             tok.tpe
-        ).getOrElse(SyntaxColors.DEFAULT_COLOR)
+        ).getOrElse(InterfaceColors.defaultColor)
         for (j <- tok.start until tok.end)
           // guard against any bugs in tokenization causing out-of-bounds positions
           if(result.isDefinedAt(j))
@@ -44,6 +49,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
       }
       lastColors = result
       lastLine = line
+      lastTheme = InterfaceColors.getTheme
       result
     }
 
@@ -77,16 +83,16 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
 
   ///
 
-  private val tokenTypeColors = Map[TokenType, java.awt.Color](
-    TokenType.Literal  -> SyntaxColors.CONSTANT_COLOR,
-    TokenType.Command  -> SyntaxColors.COMMAND_COLOR,
-    TokenType.Reporter -> SyntaxColors.REPORTER_COLOR,
-    TokenType.Keyword  -> SyntaxColors.KEYWORD_COLOR,
-    TokenType.Comment  -> SyntaxColors.COMMENT_COLOR
-  )
-
-  private def getTokenColor(tpe: TokenType): Option[java.awt.Color] =
-    tokenTypeColors.get(tpe)
+  private def getTokenColor(tpe: TokenType): Option[java.awt.Color] = {
+    tpe match {
+      case TokenType.Literal  => Some(InterfaceColors.constantColor)
+      case TokenType.Command  => Some(InterfaceColors.commandColor)
+      case TokenType.Reporter => Some(InterfaceColors.reporterColor)
+      case TokenType.Keyword  => Some(InterfaceColors.keywordColor)
+      case TokenType.Comment  => Some(InterfaceColors.commentColor)
+      case _ => None
+    }
+  }
 
   def getTokenAtPosition(text: String, position: Int): Option[String] =
     Option(compiler.getTokenAtPosition(text, position))

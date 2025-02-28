@@ -36,30 +36,30 @@ object ShapeXMLLoader {
       RgbColor((int >> 24) & 255, (int >> 16) & 255, (int >> 8) & 255, int & 255)
     }
 
-    val elements =
-      for (element <- element.children) yield {
-        element.name match {
-          case "circle" =>
-            Circle( colorFromString(element("color")), element("filled").toBoolean, element("marked").toBoolean
-                  , element("x").toInt, element("y").toInt, element("diameter").toInt)
+    val elements: Seq[Element] =
+      element.children.collect {
+        case el @ XMLElement("circle", _, _, _) =>
+          Circle( colorFromString(el("color")), el("filled").toBoolean, el("marked").toBoolean
+                , el("x").toInt, el("y").toInt, el("diameter").toInt)
 
-          case "line" =>
-            Line( colorFromString(element("color")), element("marked").toBoolean, (element("startX").toInt
-                , element("startY").toInt), (element("endX").toInt, element("endY").toInt))
+        case el @ XMLElement("line", _, _, _) =>
+          Line( colorFromString(el("color")), el("marked").toBoolean, (el("startX").toInt
+              , el("startY").toInt), (el("endX").toInt, el("endY").toInt))
 
-          case "polygon" =>
-            Polygon( colorFromString(element("color")), element("filled").toBoolean, element("marked").toBoolean
-                   , element.getChildren("point").map(element => (element("x").toInt, element("y").toInt)).toList)
+        case el @ XMLElement("polygon", _, _, _) =>
+          Polygon( colorFromString(el("color")), el("filled").toBoolean, el("marked").toBoolean
+                 , el.getChildren("point").map(point => (point("x").toInt, point("y").toInt)).toList)
 
-          case "rectangle" =>
-            Rectangle( colorFromString(element("color")), element("filled").toBoolean, element("marked").toBoolean
-                     , (element("startX").toInt, element("startY").toInt)
-                     , (element("endX").toInt, element("endY").toInt))
+        case el @ XMLElement("rectangle", _, _, _) =>
+          Rectangle( colorFromString(el("color")), el("filled").toBoolean, el("marked").toBoolean
+                   , (el("startX").toInt, el("startY").toInt)
+                   , (el("endX").toInt, el("endY").toInt))
 
-        }
+        // ignore other shapes for compatibility with other versions in the future (Isaac B 2/12/25)
+
       }
 
-    VectorShape(element("name"), element("rotatable").toBoolean, element("editableColorIndex").toInt, elements.toList)
+    VectorShape(element("name"), element("rotatable").toBoolean, element("editableColorIndex").toInt, elements)
 
   }
 
@@ -74,59 +74,58 @@ object ShapeXMLLoader {
          , "editableColorIndex" -> shape.editableColorIndex.toString
          )
 
-    val children: List[XMLElement] =
-      for (element <- shape.elements.toList) yield {
-        element match {
+    val children: Seq[XMLElement] =
+      shape.elements.collect {
 
-          case circle: CoreCircle =>
-            val attributes =
-              Map( "color"    -> colorToString(circle.color)
-                 , "filled"   -> circle.filled.toString
-                 , "marked"   -> circle.marked.toString
-                 , "x"        -> circle.x.toString
-                 , "y"        -> circle.y.toString
-                 , "diameter" -> circle.diameter.toString
-                 )
-            XMLElement("circle", attributes, "", Seq())
+        case circle: CoreCircle =>
+          val attributes =
+            Map( "color"    -> colorToString(circle.color)
+                , "filled"   -> circle.filled.toString
+                , "marked"   -> circle.marked.toString
+                , "x"        -> circle.x.toString
+                , "y"        -> circle.y.toString
+                , "diameter" -> circle.diameter.toString
+                )
+          XMLElement("circle", attributes, "", Seq())
 
-          case line: CoreLine =>
-            val attributes =
-              Map( "color"  -> colorToString(line.color)
-                 , "marked" -> line.marked.toString
-                 , "startX" -> line.startPoint._1.toString
-                 , "startY" -> line.startPoint._2.toString
-                 , "endX"   -> line.endPoint._1.toString
-                 , "endY"   -> line.endPoint._2.toString
-                 )
-            XMLElement("line", attributes, "", Seq())
+        case line: CoreLine =>
+          val attributes =
+            Map( "color"  -> colorToString(line.color)
+                , "marked" -> line.marked.toString
+                , "startX" -> line.startPoint._1.toString
+                , "startY" -> line.startPoint._2.toString
+                , "endX"   -> line.endPoint._1.toString
+                , "endY"   -> line.endPoint._2.toString
+                )
+          XMLElement("line", attributes, "", Seq())
 
-          case polygon: CorePolygon =>
-            val attributes =
-              Map( "color"  -> colorToString(polygon.color)
-                 , "filled" -> polygon.filled.toString
-                 , "marked" -> polygon.marked.toString
-                 )
+        case polygon: CorePolygon =>
+          val attributes =
+            Map( "color"  -> colorToString(polygon.color)
+                , "filled" -> polygon.filled.toString
+                , "marked" -> polygon.marked.toString
+                )
 
-            val children =
-              polygon.points.map {
-                case (x, y) => XMLElement("point", Map("x" -> x.toString, "y" -> y.toString), "", Seq())
-              }
+          val children =
+            polygon.points.map {
+              case (x, y) => XMLElement("point", Map("x" -> x.toString, "y" -> y.toString), "", Seq())
+            }
 
-            XMLElement("polygon", attributes, "", children)
+          XMLElement("polygon", attributes, "", children)
 
-          case rectangle: CoreRectangle =>
-            val attributes =
-              Map( "color"  -> colorToString(rectangle.color)
-                 , "filled" -> rectangle.filled.toString
-                 , "marked" -> rectangle.marked.toString
-                 , "startX" -> rectangle.upperLeftCorner._1.toString
-                 , "startY" -> rectangle.upperLeftCorner._2.toString
-                 , "endX"   -> rectangle.lowerRightCorner._1.toString
-                 , "endY"   -> rectangle.lowerRightCorner._2.toString
-                 )
-            XMLElement("rectangle", attributes, "", Seq())
+        case rectangle: CoreRectangle =>
+          val attributes =
+            Map( "color"  -> colorToString(rectangle.color)
+                , "filled" -> rectangle.filled.toString
+                , "marked" -> rectangle.marked.toString
+                , "startX" -> rectangle.upperLeftCorner._1.toString
+                , "startY" -> rectangle.upperLeftCorner._2.toString
+                , "endX"   -> rectangle.lowerRightCorner._1.toString
+                , "endY"   -> rectangle.lowerRightCorner._2.toString
+                )
+          XMLElement("rectangle", attributes, "", Seq())
 
-        }
+        // ignore other sections for compatibility with other versions in the future (Isaac B 2/12/25)
       }
 
     XMLElement("shape", attributes, "", children)

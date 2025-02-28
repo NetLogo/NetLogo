@@ -17,6 +17,8 @@ import java.util.List;
 
 import org.nlogo.api.Options;
 
+import scala.collection.Seq;
+
 public class RateConnection
     extends LineConnection
     implements ModelElementFigure,
@@ -314,7 +316,7 @@ public class RateConnection
     return scala.Option.apply(null);
   }
 
-  public List<Property> propertySet() {
+  public Seq<Property> propertySet() {
     return Properties.rate();
   }
 

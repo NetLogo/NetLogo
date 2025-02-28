@@ -2,24 +2,19 @@
 
 package org.nlogo.properties
 
-import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
-import javax.swing.plaf.basic.BasicArrowButton
+import java.awt.{ BorderLayout, Component, Container }
+import java.awt.event.{ MouseAdapter, MouseEvent, TextListener, TextEvent }
+import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
 
+import org.nlogo.api.DummyEditable
 import org.nlogo.awt.RowLayout
+import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
+import org.nlogo.swing.{ CollapsibleArrow, ScrollPane, Transparent }
+import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.EditorAreaErrorLabel
 
-import javax.swing.ScrollPaneConstants.{HORIZONTAL_SCROLLBAR_AS_NEEDED, VERTICAL_SCROLLBAR_ALWAYS}
-import java.awt.BorderLayout
-import java.awt.Component.{LEFT_ALIGNMENT, TOP_ALIGNMENT}
-import java.awt.event.{TextListener, TextEvent, ActionEvent, ActionListener}
-import javax.swing.{SwingConstants, JLabel, JPanel, JScrollPane}
-import org.nlogo.api.DummyEditable
-
-import scala.language.reflectiveCalls
-import java.awt.Container
-
 object CodeEditor {
-  def apply(displayName: String, useTooltip: Boolean, colorizer: Colorizer,
+  def apply(displayName: String, colorizer: Colorizer,
             collapsible: Boolean = false,
             collapseWhenEmpty: Boolean = false,
             rows: Int = 5, columns: Int = 30,
@@ -30,7 +25,7 @@ object CodeEditor {
     val accessor = new PropertyAccessor[String](new Dummy, displayName, "dummy"){
       override def error = err
     }
-    new CodeEditor(accessor, useTooltip, colorizer, rows=rows, columns=columns,
+    new CodeEditor(accessor, colorizer, rows=rows, columns=columns,
       collapsible=collapsible, collapseWhenEmpty=collapseWhenEmpty){
       def changed{ changedFunc }
     }
@@ -38,47 +33,53 @@ object CodeEditor {
 }
 
 abstract class CodeEditor(accessor: PropertyAccessor[String],
-                              useTooltip: Boolean,
                               colorizer: Colorizer,
                               collapsible: Boolean = false,
                               collapseWhenEmpty: Boolean = false,
                               rows: Int = 5, columns: Int = 30)
-  extends PropertyEditor(accessor, useTooltip){
+  extends PropertyEditor(accessor) {
 
   val editorConfig =
     EditorConfiguration.default(rows, columns, colorizer)
       .withFocusTraversalEnabled(true)
       .withListener(new TextListener() {def textValueChanged(e: TextEvent) {changed()}})
 
-  lazy val editor = new EditorArea(editorConfig)
-  lazy val scrollPane = new JScrollPane(editor, VERTICAL_SCROLLBAR_ALWAYS, HORIZONTAL_SCROLLBAR_AS_NEEDED)
+  protected lazy val editor = new EditorArea(editorConfig)
+  protected lazy val scrollPane = new ScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                                                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   private val errorLabel = new EditorAreaErrorLabel(editor)
   // the panel that should collapse
-  private lazy val collapso = new JPanel(new BorderLayout()) {
+  private lazy val collapso = new JPanel(new BorderLayout) with Transparent {
     add(errorLabel, BorderLayout.NORTH)
     add(scrollPane, BorderLayout.CENTER)
     if (collapseWhenEmpty) setVisible(false)
   }
   private def collapsed = !collapso.isVisible()
-  private def arrowDirection = if (collapsed) SwingConstants.EAST else SwingConstants.SOUTH
-  private val arrow = new BasicArrowButton(arrowDirection) { self =>
-    addActionListener(new ActionListener() {
-      def actionPerformed(e: ActionEvent) { setVisibility(collapsed) }
-    })
-    def updateDirection() { self.setDirection(arrowDirection) }
+  private val arrow = new CollapsibleArrow {
+    setOpen(!collapsed)
   }
 
-  locally{
-    setLayout(new BorderLayout())
-    // add the panel containing the button that forces the collapse, and a label.
-    add(new JPanel(rowLayout(2)) {
-      if (collapsible) add(arrow)
-      val label = new JLabel(accessor.displayName)
-      tooltipFont(label)
-      add(label)
-    }, BorderLayout.NORTH)
-    add(collapso, BorderLayout.CENTER)
+  private val nameLabel = new JLabel(accessor.displayName) {
+    addMouseListener(new MouseAdapter {
+      override def mouseClicked(e: MouseEvent) {
+        setVisibility(collapsed)
+      }
+    })
   }
+
+  setLayout(new BorderLayout)
+  // add the panel containing the button that forces the collapse, and a label.
+  add(new JPanel(new RowLayout(2, Component.LEFT_ALIGNMENT, Component.CENTER_ALIGNMENT)) with Transparent {
+    if (collapsible) add(new JLabel(arrow) {
+      addMouseListener(new MouseAdapter {
+        override def mouseClicked(e: MouseEvent) {
+          setVisibility(collapsed)
+        }
+      })
+    })
+    add(nameLabel)
+  }, BorderLayout.NORTH)
+  add(collapso, BorderLayout.CENTER)
 
   private def setVisibility(newVisibility: Boolean) {
     if (collapsible && collapseWhenEmpty) {
@@ -87,7 +88,7 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
         add(collapso, BorderLayout.CENTER)
       else
         remove(collapso)
-      arrow.updateDirection()
+      arrow.setOpen(!collapsed)
       org.nlogo.awt.Hierarchy.getWindow(this).pack()
       if (!collapsed) editor.requestFocus()
     }
@@ -100,7 +101,6 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     accessor.error.foreach{ errorLabel.setError(_, accessor.target.sourceOffset) }
   }
   override def requestFocus() { editor.requestFocus() }
-  private def rowLayout(rows:Int) = new RowLayout(rows, LEFT_ALIGNMENT, TOP_ALIGNMENT)
   override def getConstraints = {
     val c = super.getConstraints
     c.fill = java.awt.GridBagConstraints.BOTH
@@ -119,5 +119,14 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
     }
     super.setEnabled(state)
     setEnabledRecursive(this, state)
+  }
+
+  override def syncTheme(): Unit = {
+    editor.setBackground(InterfaceColors.textAreaBackground)
+    editor.setCaretColor(InterfaceColors.textAreaText)
+
+    scrollPane.setBackground(InterfaceColors.textAreaBackground)
+
+    nameLabel.setForeground(InterfaceColors.dialogText)
   }
 }

@@ -38,7 +38,7 @@ trait ModelCreator {
 
   def Plot(name: String = "Plot" + counter.next,
     setupCode: String = "", updateCode: String = "", pens: List[core.Pen] = Nil, legendOn: Boolean = false): core.Plot =
-      core.Plot(Some(name), 5, 5, 5, 5, Some("time"), Some("num of turtles"), 0.0, 10.0, 0.0, 10.0, true, legendOn, setupCode, updateCode, pens)
+      core.Plot(Some(name), 5, 5, 5, 5, false, Some("time"), Some("num of turtles"), 0.0, 10.0, 0.0, 10.0, true, legendOn, setupCode, updateCode, pens)
 
   def Pen(name:String = "Pen" + counter.next, setupCode:String = "", updateCode: String = ""): core.Pen =
     core.Pen(name, 1.0, 0, -16777216, true, setupCode, updateCode)
@@ -58,21 +58,21 @@ trait ModelCreator {
                     // this is something we should work out in the future. josh - 3/5/10
                     min: String = "0", max: String = "100", current: String = "50", inc: String = "1",
                     units:String = "NIL", direction: Direction = HORIZONTAL): core.Slider =
-    core.Slider(Some(name), 5, 5, 5, 5, Some(name), min, max, current.toDouble, inc, if (units == "NIL") None else Some(units), if (direction == HORIZONTAL) core.Horizontal else core.Vertical)
+    core.Slider(Some(name), 5, 5, 5, 5, false, Some(name), min, max, current.toDouble, inc, if (units == "NIL") None else Some(units), if (direction == HORIZONTAL) core.Horizontal else core.Vertical)
 
   //
   // Code to create switches
   //
 
   def Switch(name:String = "Switch" + counter.next, on: Boolean = true): core.Switch =
-    core.Switch(Some(name), 5, 5, 5, 5, Some(name), on)
+    core.Switch(Some(name), 5, 5, 5, 5, false, Some(name), on)
 
   //
   // Code to create choosers
   //
 
   def Chooser(name:String = "Chooser" + counter.next, choices:List[AnyRef] = Nil, index:Int = 0): core.Chooser = {
-    core.Chooser(Some(name), 5, 5, 5, 5, Some(name), choices.map(core.Chooseable(_)), index)
+    core.Chooser(Some(name), 5, 5, 5, 5, false, Some(name), choices.map(core.Chooseable(_)), index)
   }
 
   object InputBoxTypes {
@@ -87,10 +87,10 @@ trait ModelCreator {
     value: String = "",
     name: String,
     multiline: Boolean = false): core.InputBox = {
-      core.InputBox(Some(name), 5, 5, 5, 5, core.StringInput(value, label, multiline))
+      core.InputBox(Some(name), 5, 5, 5, 5, false, core.StringInput(value, label, multiline))
   }
 
   def InputBox(label: core.NumericInput.NumericKind, value: Double, name: String): core.InputBox = {
-      core.InputBox(Some(name), 5, 5, 5, 5, core.NumericInput(value, label))
+      core.InputBox(Some(name), 5, 5, 5, 5, false, core.NumericInput(value, label))
   }
 }

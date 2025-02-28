@@ -6,7 +6,7 @@ import java.awt.{ Component, Container, FileDialog => AWTFileDialog }
 import java.io.{ File, IOException }
 import java.net.{ URI, URISyntaxException }
 import java.nio.file.Paths
-import javax.swing.{ Action, JOptionPane }
+import javax.swing.Action
 
 import scala.util.{ Failure, Try }
 
@@ -19,10 +19,12 @@ import org.nlogo.app.tools.{ ModelsLibraryDialog, NetLogoWebSaver }
 import org.nlogo.awt.{ Hierarchy, UserCancelException }
 import org.nlogo.fileformat.{ FailedConversionResult, SuccessfulConversion }
 import org.nlogo.fileformat.FileFormat.ModelConversion
-import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionDialog, UserAction }, UserAction.MenuAction
+import org.nlogo.swing.{ FileDialog, ModalProgressTask, OptionPane, UserAction }, UserAction.MenuAction
 import org.nlogo.window.{ BackgroundFileController, Events, FileController, GUIWorkspace, ReconfigureWorkspaceUI },
-  Events.{AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent, LoadModelEvent, LoadErrorEvent, ModelSavedEvent, OpenModelEvent }
-import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI, OpenModelFromSource, SaveModel, SaveModelAs }
+  Events.{ AboutToCloseFilesEvent, AboutToQuitEvent, AboutToSaveModelEvent, LoadModelEvent, LoadErrorEvent,
+           ModelSavedEvent, OpenModelEvent }
+import org.nlogo.workspace.{ AbstractWorkspaceScala, OpenModel, OpenModelFromURI, OpenModelFromSource, SaveModel,
+                             SaveModelAs }
 
 object FileManager {
   class NewAction(manager: FileManager, parent: Container)
@@ -116,13 +118,11 @@ object FileManager {
       val importPath = org.nlogo.swing.FileDialog.showFiles(
           parent, I18N.gui.get("menu.file.import.hubNetClientInterface"), java.awt.FileDialog.LOAD, null);
       val choice =
-          OptionDialog.showMessage(frame,
-                  I18N.gui.get("menu.file.import.hubNetClientInterface.message"),
-                  I18N.gui.get("menu.file.import.hubNetClientInterface.prompt"),
-                  Array[Object](
-    I18N.gui.get("menu.file.import.hubNetClientInterface.fromInterface"),
-    I18N.gui.get("menu.file.import.hubNetClientInterface.fromClient"),
-    I18N.gui.get("common.buttons.cancel")))
+          new OptionPane(frame, I18N.gui.get("menu.file.import.hubNetClientInterface.message"),
+                         I18N.gui.get("menu.file.import.hubNetClientInterface.prompt"),
+                         List(I18N.gui.get("menu.file.import.hubNetClientInterface.fromInterface"),
+                              I18N.gui.get("menu.file.import.hubNetClientInterface.fromClient"),
+                              I18N.gui.get("common.buttons.cancel")), OptionPane.Icons.Question).getSelectedIndex
 
       if (choice != 2) {
         ModalProgressTask.onUIThread(
@@ -157,10 +157,9 @@ object FileManager {
       val includes = collectIncludes(modelString)
 
       if (includes.nonEmpty &&
-        OptionDialog.showMessage(parent, I18N.gui.get("common.messages.warning"),
-                                          I18N.gui.get("menu.file.nlw.prompt.includesWarning"),
-                                          Array[Object](I18N.gui.get("common.buttons.ok"),
-                                                        I18N.gui.get("common.buttons.cancel"))) == 1)
+        new OptionPane(parent, I18N.gui.get("common.messages.warning"),
+                       I18N.gui.get("menu.file.nlw.prompt.includesWarning"), OptionPane.Options.OkCancel,
+                       OptionPane.Icons.Warning).getSelectedIndex != 0)
         throw new UserCancelException()
 
       saver.save(modelString, exportFile.getName, includes)
@@ -190,16 +189,13 @@ object FileManager {
 
     @throws(classOf[UserCancelException])
     private def userWantsLastSaveExported(): Boolean = {
-      val modelType = workspace.getModelType
       val typeKey =
-        if (modelType == ModelType.Normal) "fromSave" else "fromLibrary"
-      val options = Array[Object](
-        I18N.gui.get("menu.file.nlw.prompt." + typeKey),
-        I18N.gui.get("menu.file.nlw.prompt.fromCurrentCopy"),
-        I18N.gui.get("common.buttons.cancel"))
-      val title   = I18N.gui.get("menu.file.nlw.prompt.title")
-      val message = I18N.gui.get("menu.file.nlw.prompt.message." + typeKey)
-      val choice = OptionDialog.showMessage(parent, title, message, options)
+        if (workspace.getModelType == ModelType.Normal) "fromSave" else "fromLibrary"
+      val choice = new OptionPane(parent, I18N.gui.get("menu.file.nlw.prompt.title"),
+                                  I18N.gui.get("menu.file.nlw.prompt.message." + typeKey),
+                                  List(I18N.gui.get("menu.file.nlw.prompt." + typeKey),
+                                       I18N.gui.get("menu.file.nlw.prompt.fromCurrentCopy"),
+                                       I18N.gui.get("common.buttons.cancel"))).getSelectedIndex
       if (choice == 0)
         true
       else if (choice == 1)
@@ -401,9 +397,8 @@ class FileManager(workspace: AbstractWorkspaceScala,
 
       saver.result match {
         case Some(Failure(e: Throwable)) =>
-          JOptionPane.showMessageDialog(parent,
-            I18N.gui.getN("menu.file.save.error", e.getMessage),
-            "NetLogo", JOptionPane.ERROR_MESSAGE)
+          new OptionPane(parent, I18N.gui.get("common.netlogo"), I18N.gui.getN("menu.file.save.error", e.getMessage),
+                         OptionPane.Options.Ok, OptionPane.Icons.Error)
         case _ =>
       }
     }

@@ -3,12 +3,12 @@
 package org.nlogo.window
 
 import java.awt.{ Color, Dimension, Rectangle }
-import java.util.{ List => JList }
-import javax.swing.BorderFactory
+import javax.swing.border.LineBorder
 
+import org.nlogo.agent.World
 import org.nlogo.api.{ Editable, Property }
 import org.nlogo.core.{ I18N, View => CoreView }
-import org.nlogo.agent.World
+import org.nlogo.theme.InterfaceColors
 
 class DummyViewWidget(val world: World)
     extends SingleErrorWidget
@@ -16,8 +16,7 @@ class DummyViewWidget(val world: World)
 
   type WidgetModel = CoreView
 
-  setBackground(Color.black)
-  setBorder(BorderFactory.createCompoundBorder(widgetBorder, BorderFactory.createMatteBorder(1, 3, 4, 2, Color.black)))
+  setBackgroundColor(Color.BLACK)
 
   private var newWidth = StrictMath.round(world.worldWidth * world.patchSize).toInt
   private var newHeight = StrictMath.round(world.worldHeight * world.patchSize).toInt
@@ -41,7 +40,7 @@ class DummyViewWidget(val world: World)
     newHeight = height
   }
 
-  def propertySet: JList[Property] =
+  def propertySet: Seq[Property] =
     Properties.dummyView
 
   override def editFinished(): Boolean = {
@@ -56,8 +55,6 @@ class DummyViewWidget(val world: World)
   override def getMinimumSize: Dimension =
     new Dimension(world.worldWidth, world.worldHeight)
 
-  override def needsPreferredWidthFudgeFactor: Boolean =
-    false
 
   override def constrainDrag(newBounds: Rectangle,
     originalBounds: Rectangle,
@@ -68,6 +65,10 @@ class DummyViewWidget(val world: World)
   }
 
   override def hasContextMenu: Boolean = false
+
+  override def syncTheme(): Unit = {
+    setBorder(new LineBorder(InterfaceColors.viewBorder, 2))
+  }
 
   /// load & save
   override def model: WidgetModel = {

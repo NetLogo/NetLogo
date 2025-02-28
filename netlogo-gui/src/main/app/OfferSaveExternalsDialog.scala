@@ -2,66 +2,102 @@
 
 package org.nlogo.app
 
-import java.awt.Component
-import javax.swing.{BoxLayout, JLabel, JPanel, JScrollPane, JTable}
-import javax.swing.table.DefaultTableModel
+import java.awt.{ Component, Dimension, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.event.{ MouseAdapter, MouseEvent }
+import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.app.codetab.TemporaryCodeTab
-import org.nlogo.app.common.TabsInterface.Filename
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.swing.OptionDialog
+import org.nlogo.swing.{ CheckBox, CustomOptionPane, ScrollPane, Transparent }
+import org.nlogo.theme.InterfaceColors
+
+import scala.collection.mutable.Map
 
 object OfferSaveExternalsDialog {
   def offer(dirtyExternalFiles: Set[TemporaryCodeTab], parent: Component) = {
     implicit val i18nPrefix = I18N.Prefix("file.save.offer.external")
 
     if (dirtyExternalFiles.nonEmpty) {
-      val panel = new JPanel
-      panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS))
-      panel.add(new JLabel(I18N.gui("filesChanged")))
-      val tableModel = new SaveTableModel(dirtyExternalFiles)
-      val table = new JTable(tableModel)
-      table.setShowGrid(false)
-      table.getTableHeader.setReorderingAllowed(false)
-      table.getTableHeader.setResizingAllowed(false)
-      table.setRowSelectionAllowed(false)
-      table.getColumnModel.getColumn(0)
-        .setMaxWidth(panel.getFontMetrics(panel.getFont).stringWidth(I18N.gui("shouldSave")) * 2)
-      table.validate()
-      panel.add(new JScrollPane(table))
-      val options = Array(I18N.gui("saveSelected"), I18N.gui("discardAll"), I18N.gui.get("common.buttons.cancel"))
-      OptionDialog.showCustom(parent, "NetLogo", panel, options) match {
+      val saveStatus = Map[TemporaryCodeTab, CheckBox]()
+
+      val panel = new JPanel(new GridBagLayout) with Transparent {
+        val c = new GridBagConstraints
+
+        c.gridx = 0
+        c.anchor = GridBagConstraints.WEST
+        c.fill = GridBagConstraints.HORIZONTAL
+        c.weightx = 1
+        c.insets = new Insets(0, 0, 6, 0)
+
+        add(new JLabel(I18N.gui("filesChanged")) {
+          setForeground(InterfaceColors.dialogText)
+        }, c)
+
+        c.insets = new Insets(0, 0, 0, 0)
+
+        val filesPanel = new JPanel(new GridBagLayout) with Transparent {
+          val c = new GridBagConstraints
+
+          c.gridy = 0
+
+          dirtyExternalFiles.foreach(file => {
+            c.gridx = 0
+            c.fill = GridBagConstraints.NONE
+            c.weightx = 0
+            c.insets = new Insets(3, 3, 3, 6)
+
+            val checkBox = new CheckBox
+
+            saveStatus += ((file, checkBox))
+
+            add(checkBox, c)
+
+            c.gridx = 1
+            c.fill = GridBagConstraints.HORIZONTAL
+            c.weightx = 1
+            c.insets = new Insets(3, 0, 3, 3)
+
+            add(new JLabel(file.filename.merge) {
+              setForeground(InterfaceColors.toolbarText)
+
+              addMouseListener(new MouseAdapter {
+                override def mouseClicked(e: MouseEvent) {
+                  checkBox.doClick()
+                }
+              })
+            }, c)
+
+            c.gridy += 1
+          })
+
+          c.gridwidth = 2
+          c.fill = GridBagConstraints.BOTH
+          c.weighty = 1
+
+          add(new JPanel with Transparent, c)
+        }
+
+        add(new ScrollPane(filesPanel) {
+          setBackground(InterfaceColors.toolbarControlBackground)
+
+          override def getPreferredSize: Dimension =
+            new Dimension(super.getPreferredSize.width, 200)
+        }, c)
+      }
+
+      new CustomOptionPane(parent, I18N.gui.get("common.netlogo"), panel,
+                           List(I18N.gui("saveSelected"),
+                                I18N.gui("discardAll"),
+                                I18N.gui.get("common.buttons.cancel"))).getSelectedIndex match {
         case 0 =>
-          tableModel.files
-            .filter (_ (0).asInstanceOf[Boolean])
-            .foreach { row =>
-              dirtyExternalFiles.find(_.filename == row(1).asInstanceOf[Filename]) foreach (_.save(false))
-            }
+          dirtyExternalFiles.foreach(file => {
+            if (saveStatus(file).isSelected)
+              file.save(false)
+          })
         case 1 =>
         case _ => throw new UserCancelException
       }
     }
-  }
-
-  private class SaveTableModel(dirtyExternalFiles: Set[TemporaryCodeTab]) extends DefaultTableModel {
-    implicit val i18nPrefix = I18N.Prefix("file.save.offer.external")
-    val files = (dirtyExternalFiles map (tab => Array[AnyRef](true: java.lang.Boolean, tab.filename))).toArray
-    override def getValueAt(row: Int, col: Int) = col match {
-      case 0 => files(row)(col)
-      case 1 => files(row)(col).asInstanceOf[Filename].merge
-    }
-    override def setValueAt(value: AnyRef, row: Int, col: Int) = files(row)(col) = value
-    override def getRowCount: Int = dirtyExternalFiles.size
-    override def getColumnCount: Int = 2
-    override def getColumnName(i: Int): String = i match {
-      case 0 => I18N.gui("shouldSave")
-      case 1 => I18N.gui("filename")
-    }
-    override def getColumnClass(i: Int): Class[_] = i match {
-      case 0 => classOf[java.lang.Boolean]
-      case 1 => classOf[String]
-    }
-    override def isCellEditable(row: Int, col: Int) = col == 0
   }
 }

@@ -2,28 +2,22 @@
 
 package org.nlogo.window
 
-import java.awt.Component
+import java.awt.{ Dimension, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
-import javax.swing.{ AbstractAction, Action, JButton, JCheckBox, JPanel }
+import javax.swing.{ AbstractAction, Action, JCheckBox, JPanel }
 
-import org.nlogo.awt.{ ColumnLayout, Fonts => NLogoFonts }
-import org.nlogo.swing.ToolBar.Separator
 import org.nlogo.core.I18N, I18N.Prefix
+import org.nlogo.swing.{ Button, Transparent }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.LoadEndEvent
 
-class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCounter: TickCounterLabel)
-    extends JPanel with LoadEndEvent.Handler {
+class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, displaySwitch: JCheckBox,
+                      tickCounter: TickCounterLabel)
+  extends JPanel(new GridBagLayout) with Transparent with LoadEndEvent.Handler with ThemeSync {
+
   implicit val prefix = Prefix("tabs.run")
 
   private val updateModeChooser = new UpdateModeChooser(workspace)
-  private val speedSlider       = new SpeedSliderPanel(workspace)
-  private val sliderTickPanel   = verticallyStackedPanel(speedSlider, tickCounter)
-
-  private val updateModeControlPanel = {
-    val p = verticallyStackedPanel(displaySwitch, updateModeChooser)
-    p.setOpaque(false)
-    p
-  }
 
   private val settingsButton = new SettingsButton(new EditSettings(workspace.viewWidget.settings))
 
@@ -31,11 +25,25 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
 
   updateModeChooser.refreshSelection()
 
-  add(sliderTickPanel)
-  add(updateModeControlPanel)
-  add(new Separator())
-  add(settingsButton)
-  setOpaque(true)
+  locally {
+    val c = new GridBagConstraints
+
+    c.gridy = 0
+    c.insets = new Insets(6, 0, 3, 12)
+
+    add(displaySwitch, c)
+
+    c.gridy = 1
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.insets = new Insets(0, 0, 6, 12)
+
+    add(updateModeChooser, c)
+
+    c.fill = GridBagConstraints.NONE
+    c.insets = new Insets(0, 0, 6, 6)
+
+    add(settingsButton, c)
+  }
 
   override def addNotify(): Unit = {
     super.addNotify()
@@ -47,11 +55,13 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
     speedSlider.setValue(workspace.speedSliderPosition.toInt)
   }
 
-  private def verticallyStackedPanel(components: Component*): JPanel = {
-    val p = new JPanel(new ColumnLayout(0, Component.CENTER_ALIGNMENT, Component.CENTER_ALIGNMENT))
-    components.foreach(NLogoFonts.adjustDefaultFont)
-    components.foreach(p.add)
-    p
+  override def syncTheme(): Unit = {
+    displaySwitch.setForeground(InterfaceColors.toolbarText)
+
+    speedSlider.syncTheme()
+    tickCounter.syncTheme()
+    updateModeChooser.syncTheme()
+    settingsButton.syncTheme()
   }
 
   private class ViewUpdateListener(slider: SpeedSliderPanel) extends ItemListener {
@@ -71,9 +81,9 @@ class ViewUpdatePanel(workspace: GUIWorkspace, displaySwitch: JCheckBox, tickCou
     }
   }
 
-  private class SettingsButton(action: Action) extends JButton(action) {
-    NLogoFonts.adjustDefaultFont(this)
-    setFocusable(false)
+  private class SettingsButton(action: Action) extends Button(action) {
+    override def getPreferredSize: Dimension =
+      new Dimension(super.getPreferredSize.width, updateModeChooser.getPreferredSize.height)
   }
 
   private class EditSettings(settings: WorldViewSettings)

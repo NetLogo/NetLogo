@@ -2,48 +2,52 @@
 
 package org.nlogo.app.codetab
 
+import java.awt.{ BorderLayout, Color, Dimension, Font, Graphics, Insets }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, TextEvent, TextListener }
 import java.awt.print.PageFormat
-import java.awt.{BorderLayout, Component, Dimension, Graphics, Insets}
 import java.io.IOException
 import java.net.MalformedURLException
 import java.util.prefs.Preferences
-import javax.swing.{ AbstractAction, Action, JCheckBox, JComponent, JPanel }
+import javax.swing.{ AbstractAction, Action, JComponent, JPanel }
+
+import org.fife.ui.rsyntaxtextarea.{ Style, SyntaxScheme, TokenTypes }
 
 import org.nlogo.agent.Observer
 import org.nlogo.app.common.{CodeToHtml, EditorFactory, FindDialog, MenuTab, TabsInterface, Events => AppEvents}
 import org.nlogo.core.{ AgentKind, CompilerException, I18N }
-import org.nlogo.editor.DumbIndenter
+import org.nlogo.editor.{ AdvancedEditorArea, DumbIndenter }
 import org.nlogo.ide.FocusedOnlyAction
-import org.nlogo.swing.Utils.icon
-import org.nlogo.swing.{PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction, Printable => NlogoPrintable}
-import org.nlogo.window.{CommentableError, ProceduresInterface, Zoomable, Events => WindowEvents}
+import org.nlogo.swing.{ Button, CheckBox, PrinterManager, ToolBar, ToolBarActionButton, UserAction, WrappedAction,
+                         Printable => NlogoPrintable, Utils }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.{ CommentableError, ProceduresInterface, Zoomable, Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
 
-abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface) extends JPanel
-with ProceduresInterface
-with ProceduresMenuTarget
-with AppEvents.SwitchedTabsEvent.Handler
-with WindowEvents.CompiledEvent.Handler
-with Zoomable
-with NlogoPrintable
-with MenuTab {
+abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
+  extends JPanel
+  with ProceduresInterface
+  with ProceduresMenuTarget
+  with AppEvents.SwitchedTabsEvent.Handler
+  with WindowEvents.CompiledEvent.Handler
+  with Zoomable
+  with NlogoPrintable
+  with MenuTab
+  with ThemeSync {
+
   protected val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
-  private val tabbing: JCheckBox = new JCheckBox(
-    new AbstractAction(I18N.gui.get("tabs.code.indentAutomatically")) {
-      def actionPerformed(e: ActionEvent) {
-        tabs.smartTabbingEnabled = tabbing.isSelected
-      }
-    })
+  private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION_CODE)
+  private val compileButton = new ToolBarActionButton(CompileAction)
 
-  private val separate: JCheckBox = new JCheckBox(
-    new AbstractAction(I18N.gui.get("tabs.code.separateCodeWindow")) {
-      def actionPerformed(e: ActionEvent) {
-        tabs.switchWindow(separate.isSelected, true)
-      }
-    }
-  )
+  private val proceduresMenu = new ProceduresMenu(CodeTab.this)
+
+  private val separate = new CheckBox(I18N.gui.get("tabs.code.separateCodeWindow"), (selected) => {
+    tabs.switchWindow(selected, true)
+  })
+
+  private val prefsButton = new Button(I18N.gui.get("tabs.code.preferences"), () => {
+    tabs.showCodeTabPreferences()
+  })
 
   private var _dirty = false // Has the buffer changed since it was compiled?
   def dirty = _dirty
@@ -76,6 +80,8 @@ with MenuTab {
     editor
   }
 
+  private val includedFilesMenu = new IncludedFilesMenu(getIncludesTable, tabs)
+
   lazy val undoAction: Action = {
     new WrappedAction(text.undoAction,
       UserAction.EditCategory,
@@ -98,6 +104,8 @@ with MenuTab {
   def compiler = workspace
   def program = workspace.world.program
 
+  scrollableEditor.setBorder(null)
+
   locally {
     setLayout(new BorderLayout)
     add(toolBar, BorderLayout.NORTH)
@@ -114,30 +122,23 @@ with MenuTab {
       // This method gets called when the code tab pops in or pops out
       // because org.nlogo.swing.ToolBar overrides addNotify. AAB 10/2020
       if (getActionMap.get("procmenu") == null) {
-        val proceduresMenu = new ProceduresMenu(CodeTab.this)
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(UserAction.KeyBindings.keystroke('G', withMenu = true),
                                                            "procmenu")
         getActionMap.put("procmenu", proceduresMenu.getAction)
 
-        add(new ToolBarActionButton(FindDialog.FIND_ACTION_CODE))
+        add(findButton)
 
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(UserAction.KeyBindings.keystroke('F', withMenu = true), "find")
         getActionMap.put("find", FindDialog.FIND_ACTION_CODE)
 
-        add(new ToolBarActionButton(CompileAction))
-        add(new ToolBar.Separator)
+        add(compileButton)
         add(proceduresMenu)
-        add(new IncludedFilesMenu(getIncludesTable, tabs))
-        val additionalComps = Seq(tabbing, separate) ++ getAdditionalToolBarComponents
-        if (additionalComps.nonEmpty) {
-          add(new ToolBar.Separator)
-          additionalComps foreach add
-        }
+        add(includedFilesMenu)
+        add(separate)
+        add(prefsButton)
       }
     }
   }
-
-  protected def getAdditionalToolBarComponents: Seq[Component] = Seq.empty[Component]
 
   override val permanentMenuActions =
     Seq(new CodeToHtml.Action(workspace, this, () => getText)) ++ editorConfiguration.permanentActions
@@ -212,6 +213,8 @@ with MenuTab {
 
   def select(start: Int, end: Int) = text.select(start, end)
 
+  def selectError(start: Int, end: Int) = text.selectError(start, end)
+
   def classDisplayName = "Code"
 
   @throws(classOf[IOException])
@@ -221,7 +224,6 @@ with MenuTab {
   def setIndenter(isSmart: Boolean): Unit = {
     if(isSmart) text.setIndenter(new SmartIndenter(new EditorAreaWrapper(text), workspace))
     else text.setIndenter(new DumbIndenter(text))
-    tabbing.setSelected(isSmart)
   }
 
   def setSeparate(selected: Boolean): Unit =
@@ -232,14 +234,70 @@ with MenuTab {
 
   def isTextSelected: Boolean = text.getSelectedText != null && !text.getSelectedText.isEmpty
 
-  private object CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
-    putValue(Action.SMALL_ICON, icon("/images/check-gray.gif"))
+  def close() {}
+
+  private object CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) with ThemeSync {
+    private var dirty = false
+
     def actionPerformed(e: ActionEvent) = compile()
-    def setDirty(isDirty: Boolean) = {
-      val iconPath =
-        if (isDirty) "/images/check.gif"
-        else         "/images/check-gray.gif"
-      putValue(Action.SMALL_ICON, icon(iconPath))
+    def setDirty(isDirty: Boolean) {
+      dirty = isDirty
+
+      syncTheme()
     }
+
+    override def syncTheme(): Unit = {
+      putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/check.png", 15, 15,
+                                                            if (dirty)
+                                                              InterfaceColors.checkFilled
+                                                            else
+                                                              InterfaceColors.toolbarImage))
+    }
+  }
+
+  override def syncTheme(): Unit = {
+    def boldStyle(color: Color): Style =
+      new Style(color, Style.DEFAULT_BACKGROUND, text.getFont.deriveFont(Font.BOLD), false)
+
+    setBackground(InterfaceColors.codeBackground)
+
+    toolBar.setBackground(InterfaceColors.toolbarBackground)
+
+    CompileAction.syncTheme()
+
+    proceduresMenu.syncTheme()
+    includedFilesMenu.syncTheme()
+
+    separate.setForeground(InterfaceColors.toolbarText)
+
+    prefsButton.syncTheme()
+
+    text.setBackground(InterfaceColors.codeBackground)
+    text.setCaretColor(InterfaceColors.textAreaText)
+
+    text match {
+      case editor: AdvancedEditorArea =>
+        editor.setCurrentLineHighlightColor(InterfaceColors.codeLineHighlight)
+        editor.setSyntaxScheme(new SyntaxScheme(true) {
+          setStyle(TokenTypes.IDENTIFIER, new Style(InterfaceColors.defaultColor))
+          setStyle(TokenTypes.RESERVED_WORD, boldStyle(InterfaceColors.keywordColor))
+          setStyle(TokenTypes.COMMENT_KEYWORD, new Style(InterfaceColors.commentColor))
+          setStyle(TokenTypes.FUNCTION, new Style(InterfaceColors.reporterColor))
+          setStyle(TokenTypes.LITERAL_BOOLEAN, boldStyle(InterfaceColors.constantColor))
+          setStyle(TokenTypes.LITERAL_NUMBER_FLOAT, new Style(InterfaceColors.constantColor))
+          setStyle(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, new Style(InterfaceColors.constantColor))
+          setStyle(TokenTypes.LITERAL_BACKQUOTE, new Style(InterfaceColors.constantColor))
+          setStyle(TokenTypes.OPERATOR, new Style(InterfaceColors.commandColor))
+          setStyle(TokenTypes.SEPARATOR, new Style(InterfaceColors.defaultColor))
+        })
+    }
+
+    scrollableEditor.setBackground(InterfaceColors.codeBackground)
+    scrollableEditor.getViewport.setBackground(InterfaceColors.codeBackground)
+    scrollableEditor.getHorizontalScrollBar.setBackground(InterfaceColors.codeBackground)
+    scrollableEditor.getVerticalScrollBar.setBackground(InterfaceColors.codeBackground)
+
+    // for code completion popup
+    editorFactory.syncTheme()
   }
 }

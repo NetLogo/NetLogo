@@ -19,21 +19,27 @@ object Depend {
       IO.write(ddfFile, ddfContents)
       import classycle.Analyser
       import classycle.dependency.{ DefaultResultRenderer, DependencyChecker }
-      import java.io.PrintWriter
+      import java.io.{ PrintWriter, StringWriter }
       import java.lang.Object
       import java.util.HashMap
       import scala.io.Source
-      def main() = {
+      // if the output goes straight to System.out, it sometimes doesn't print everything,
+      // so you can't tell what went wrong (Isaac B 2/25/25)
+      val writer = new StringWriter
+      def main(): Boolean = {
         new DependencyChecker(new Analyser(Array(classes)), Source.fromFile(ddfFile).getLines.mkString("\n"),
                               new HashMap[Object, Object],
-                              new DefaultResultRenderer()).check(new PrintWriter(System.out))
+                              new DefaultResultRenderer()).check(new PrintWriter(writer))
       }
-      def test() = {
+      def test(): Boolean = {
         new DependencyChecker(new Analyser(Array(testClasses)), Source.fromFile(ddfFile).getLines.mkString("\n"),
                               new HashMap[Object, Object],
-                              new DefaultResultRenderer()).check(new PrintWriter(System.out))
+                              new DefaultResultRenderer()).check(new PrintWriter(writer))
       }
-      main()
+      val result = main()
+      if (writer.toString.nonEmpty)
+        println(writer.toString)
+      assert(result)
     }
 
   private def ddfContents: String = {
@@ -63,7 +69,7 @@ object Depend {
       "core/prim" -> List("core"),
       "core/model" -> List("core"),
       "drawing" -> List("api"),
-      "editor" -> List("core"),
+      "editor" -> List("core", "swing"),
       "generate" -> List("prim", "prim/dead", "prim/threed"),
       "generate" -> List("prim"), // for headless
       "gl/render" -> List("shape"),
@@ -71,7 +77,7 @@ object Depend {
       "headless" -> List("core/model", "drawing", "fileformat", "shape", "workspace", "headless/test"),
       "headless/hubnet" -> List("headless", "hubnet/protocol"),
       "headless/test" -> List("api", "core"),
-      "hubnet/client" -> List("hubnet/connection", "hubnet/mirroring", "hubnet/protocol", "render", "fileformat", "widget"),
+      "hubnet/client" -> List("hubnet/connection", "hubnet/mirroring", "hubnet/protocol", "render", "fileformat", "window"),
       "hubnet/connection" -> List("api"),
       "hubnet/mirroring" -> List("api"),
       "hubnet/protocol" -> List("api"),
@@ -101,11 +107,11 @@ object Depend {
       "fileformat" -> List("api", "core", "core/model"),
       "sdm" -> List("api", "fileformat"),
       "sdm/gui" -> List("sdm", "window"),
-      "shape" -> List("api"),
+      "shape" -> List("api", "theme"),
       "shape/editor" -> List("shape", "swing"),
-      "swing" -> List("awt", "core"),
+      "swing" -> List("awt", "core", "theme"),
       "util" -> Nil,
-      "widget" -> List("window"),
+      "theme" -> List("api"),
       "window" -> List("core/model", "editor", "fileformat", "log", "shape", "swing", "workspace"),
       "workspace" -> List("fileformat", "nvm", "plot"))
     case class Package(val dir: String, var depends: Set[Package]) {

@@ -2,15 +2,15 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, Dimension, Font, Point, Rectangle }
-import javax.swing.{ JPopupMenu, BorderFactory }
+import java.awt.{ Dimension, Point, Rectangle }
+import javax.swing.border.LineBorder
 
 import org.nlogo.api.{ Approximate, Version }
-import org.nlogo.awt.{ Fonts => NlogoFonts }
 import org.nlogo.core.{ View => CoreView }
+import org.nlogo.swing.PopupMenu
+import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.Events.ResizeViewEvent
 import org.nlogo.window.MouseMode._
-
 
 object ViewWidget {
   private val InsideBorderHeight = 1
@@ -28,12 +28,8 @@ class ViewWidget(workspace: GUIWorkspace)
   val tickCounter = new TickCounterLabel(workspace.world)
   val displaySwitch = new DisplaySwitch(workspace)
 
-  NlogoFonts.adjustDefaultFont(tickCounter)
+  setBackgroundColor(InterfaceColors.Transparent)
 
-  setBackground(InterfaceColors.GRAPHICS_BACKGROUND)
-  setBorder(BorderFactory.createCompoundBorder(
-        widgetBorder,
-        BorderFactory.createMatteBorder(1, 1, 2, 2, InterfaceColors.GRAPHICS_BACKGROUND)))
   setLayout(null)
   add(view)
   val settings: WorldViewSettings =
@@ -85,10 +81,8 @@ class ViewWidget(workspace: GUIWorkspace)
 
   // just returning zeros prevents the "smart" preferred-size
   // code in EditView from getting confused - ST 6/6/02
-  override def getPreferredSize(font: Font): Dimension =
+  override def getPreferredSize: Dimension =
     new Dimension(0, 0)
-
-  override def needsPreferredWidthFudgeFactor: Boolean = false
 
   override def getMinimumSize: Dimension = {
     val gSize = view.getMinimumSize
@@ -191,6 +185,11 @@ class ViewWidget(workspace: GUIWorkspace)
     new Rectangle(newX, newY, newWidth, newHeight)
   }
 
+  override def syncTheme(): Unit = {
+    setBorder(new LineBorder(InterfaceColors.viewBorder, 2))
+    tickCounter.syncTheme()
+  }
+
   /// font handling for turtle and patch labels
 
   private[window] def applyNewFontSize(newFontSize: Int): Unit = {
@@ -198,10 +197,6 @@ class ViewWidget(workspace: GUIWorkspace)
     val zoomDiff = font.getSize - view.fontSize
     view.applyNewFontSize(newFontSize, zoomDiff)
   }
-
-  /// tell the zooming code it's OK to grab our subcomponents and zoom them too
-
-  override def zoomSubcomponents: Boolean = true
 
   /// ViewWidgetInterface
 
@@ -212,8 +207,9 @@ class ViewWidget(workspace: GUIWorkspace)
   override def hasContextMenu: Boolean =
     true;
 
-  override def populateContextMenu(menu: JPopupMenu, p: Point, source: Component): Point =
-    view.populateContextMenu(menu, p, source)
+  override def populateContextMenu(menu: PopupMenu, p: Point) {
+    view.populateContextMenu(menu, p)
+  }
 
   /// display switch
 

@@ -7,8 +7,7 @@ import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.PageFormat
 import java.io.File
 import java.nio.file.Path
-import javax.swing.{ AbstractAction, Action, BorderFactory, JEditorPane, JPanel,
-  JScrollPane, JTextArea, ScrollPaneConstants }
+import javax.swing.{ AbstractAction, Action, BorderFactory, JEditorPane, JPanel, JTextArea, ScrollPaneConstants }
 import javax.swing.event.{ DocumentListener, HyperlinkListener, DocumentEvent, HyperlinkEvent }
 import javax.swing.text.JTextComponent
 import javax.swing.text.html.HTMLDocument
@@ -18,9 +17,10 @@ import org.nlogo.awt.{ Fonts, Hierarchy }
 import org.nlogo.core.I18N
 import org.nlogo.editor.UndoManager
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ OptionDialog, ToolBar, ToolBarButton, ToolBarActionButton,
-  ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, Utils },
-  BrowserLauncher.docPath, Utils.icon
+import org.nlogo.swing.{ OptionPane, ScrollPane, TextArea, ToolBar, ToolBarButton, ToolBarActionButton,
+                         ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, Utils },
+  BrowserLauncher.docPath
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents, Zoomable }
 
 class InfoTab(attachModelDir: String => String)
@@ -31,16 +31,18 @@ class InfoTab(attachModelDir: String => String)
   with HyperlinkListener
   with UndoRedoActions
   with AppEvents.SwitchedTabsEvent.Handler
+  with WindowEvents.LoadBeginEvent.Handler
   with WindowEvents.LoadModelEvent.Handler
   with WindowEvents.ZoomedEvent.Handler
-  with Zoomable {
+  with Zoomable
+  with ThemeSync {
 
   val baseDocPath: Path = docPath("infotab.html")
 
   private val undoManager = new UndoManager
   // 90 columns seems reasonable: wide enough to not waste screen real estate, but narrow enough so
   // as not to cause readability problems if the frame is really wide - ST 10/27/03
-  private val textArea = new JTextArea(0, 90) { self =>
+  private val textArea = new TextArea(0, 90) { self =>
     addFocusListener(new FocusListener {
       def focusGained(fe: FocusEvent) { FindDialog.watch(self); UndoManager.setCurrentManager(undoManager) }
       def focusLost(fe: FocusEvent) {
@@ -66,10 +68,12 @@ class InfoTab(attachModelDir: String => String)
     setContentType("text/html")
     addHyperlinkListener(InfoTab.this)
   }
+
+  private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION)
   private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit")))
   private val helpButton = new ToolBarButton(I18N.gui.get("tabs.info.help"),
-    BrowserLauncher.openPath(this, baseDocPath, "information"))
-  helpButton.setIcon(icon("/images/questionmark.gif"))
+                                             BrowserLauncher.openPath(this, baseDocPath, "information"))
+  helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage))
   helpButton.setVisible(false)
   private def toggleHelpButton(){ helpButton.setVisible(view == textArea) }
 
@@ -79,24 +83,27 @@ class InfoTab(attachModelDir: String => String)
   // there are some funny casts around because of this, and maybe we should clean it up.
   // -JC 9/7/10
   private var view: JTextComponent = editorPane.asInstanceOf[JTextComponent]
-  private val scrollPane = new JScrollPane(view,
-                                           ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
-                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+  private val scrollPane = new ScrollPane(view, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+
+  scrollPane.setBorder(null)
 
   override def zoomTarget = scrollPane
 
   override val activeMenuActions = Seq(undoAction, redoAction)
 
+  private val toolBar = new ToolBar {
+    override def addControls() {
+      this.addAll(findButton, editableButton, helpButton)
+    }
+  }
+
   locally {
     resetBorders()
     setLayout(new BorderLayout)
-    add(new ToolBar() {
-      override def addControls() {
-        this.addAll(new ToolBarActionButton(FindDialog.FIND_ACTION), editableButton, helpButton)
-      }
-    }, BorderLayout.NORTH)
+    add(toolBar, BorderLayout.NORTH)
     scrollPane.getVerticalScrollBar.setUnitIncrement(16)
-    add(scrollPane,BorderLayout.CENTER)
+    add(scrollPane, BorderLayout.CENTER)
   }
 
   private def resetBorders() {
@@ -132,9 +139,7 @@ class InfoTab(attachModelDir: String => String)
   private def updateEditorPane(str: String) {
     if(str != editorPane.getText) {
       editorPane.getDocument.asInstanceOf[HTMLDocument].setBase(new File(attachModelDir(".")).toURI.toURL)
-      val html = InfoFormatter(str, editorPaneFontSize)
-      //println(html)
-      editorPane.setText(html)
+      editorPane.setText(InfoFormatter(str, editorPaneFontSize))
       editorPane.setCaretPosition(0)
     }
     toggleHelpButton()
@@ -149,19 +154,37 @@ class InfoTab(attachModelDir: String => String)
     updateEditorPane()
   }
 
+  override def syncTheme(): Unit = {
+    toolBar.setBackground(InterfaceColors.toolbarBackground)
+
+    editableButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.toolbarImage))
+    helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage))
+
+    scrollPane.setBackground(InterfaceColors.infoBackground)
+    editorPane.setBackground(InterfaceColors.infoBackground)
+
+    textArea.syncTheme()
+
+    updateEditorPane()
+  }
+
   def handle(e: AppEvents.SwitchedTabsEvent) {
     if (e.newTab != this)
       FindDialog.dontWatch(editorPane)
   }
 
-  def handle(e: org.nlogo.window.Events.LoadModelEvent) {
+  def handle(e: WindowEvents.LoadBeginEvent) {
+    undoManager.discardAllEdits()
+  }
+
+  def handle(e: WindowEvents.LoadModelEvent) {
     info(e.model.info)
     resetView()
   }
 
   private var editorPaneFontSize = InfoFormatter.defaultFontSize
   private var originalFontSize = -1
-  override def handle(e: org.nlogo.window.Events.ZoomedEvent) {
+  override def handle(e: WindowEvents.ZoomedEvent) {
     super.handle(e)
     if(originalFontSize == -1)
       originalFontSize = textArea.getFont.getSize
@@ -177,13 +200,11 @@ class InfoTab(attachModelDir: String => String)
   def hyperlinkUpdate(e: HyperlinkEvent) {
     if (e.getEventType == HyperlinkEvent.EventType.ACTIVATED) {
       if (e.getURL == null) {
-        val message =
-          """The URL you just clicked is invalid. This could
-            |mean that it is formatted incorrectly. Click Help
-            |to see documentation on using URLs in the Info Tab.""".stripMargin
-        val selection = OptionDialog.showMessage(Hierarchy.getFrame(InfoTab.this), "Bad URL", message,
-          Array(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.help")))
-        if(selection == 1 /*Help*/) BrowserLauncher.openPath(this, baseDocPath, "links")
+        if (new OptionPane(Hierarchy.getFrame(InfoTab.this), I18N.gui.get("common.messages.error"),
+                           I18N.gui.get("tabs.info.invalidURL"),
+                           List(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.help")),
+                           OptionPane.Icons.Error).getSelectedIndex == 1) // Help
+          BrowserLauncher.openPath(this, baseDocPath, "links")
       }
       else BrowserLauncher.openURI(this, e.getURL.toURI)
     }
@@ -201,7 +222,7 @@ class InfoTab(attachModelDir: String => String)
   }
 
   private class EditableAction(label: String) extends AbstractAction(label) {
-    putValue(Action.SMALL_ICON, icon("/images/edit.gif"))
+    putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.toolbarImage))
     def actionPerformed(e: ActionEvent) {
       val scrollBar = scrollPane.getVerticalScrollBar
       val (min, max) = (scrollBar.getMinimum, scrollBar.getMaximum)

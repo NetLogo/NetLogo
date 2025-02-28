@@ -19,8 +19,6 @@ class ChooserWidget(val compiler: CompilerServices)
 
   def name: String = _name
 
-  setBorder(widgetBorder)
-
   override def propertySet = Properties.chooser
   override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.chooser")
   // don't send an event unless the name of the variable
@@ -40,6 +38,7 @@ class ChooserWidget(val compiler: CompilerServices)
 
   private def name(newName: String, sendEvent: Boolean): Unit = {
     _name = newName
+    label.setText(_name)
     repaint()
     // I don't think anyone ever uses the display name, but let's keep it in sync
     // with the real name, just in case - ST 6/3/02
@@ -71,6 +70,7 @@ class ChooserWidget(val compiler: CompilerServices)
   def setChoices(list: LogoList): Unit = {
     val oldValue: Object = value
     constraint.acceptedValues(list)
+    populate()
     val newIndex: Int = constraint.indexForValue(oldValue)
     if (newIndex == -1) index(0) else index(newIndex)
   }
@@ -103,6 +103,7 @@ class ChooserWidget(val compiler: CompilerServices)
     LogoList(choices.map(_.value): _*)
 
   override def load(model: WidgetModel): AnyRef = {
+    oldSize = model.oldSize
     setSize(model.width, model.height)
     name(model.display.optionToPotentiallyEmptyString)
     choicesWrapper(chooseableListToLogoList(model.choices))
@@ -116,6 +117,7 @@ class ChooserWidget(val compiler: CompilerServices)
     CoreChooser(
       display       = savedName,
       x = b.x, y = b.y, width = b.width, height = b.height,
+      oldSize       = _oldSize,
       variable      = savedName,
       choices       = constraint.acceptedValues.map(Chooseable.apply).toList,
       currentChoice = index)

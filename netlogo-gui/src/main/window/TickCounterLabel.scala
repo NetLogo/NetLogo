@@ -2,11 +2,10 @@
 
 package org.nlogo.window
 
-import java.awt.Dimension
-
 import javax.swing.JLabel
 
 import org.nlogo.api.{ Dump, World }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ AfterLoadEvent, PeriodicUpdateEvent, LoadBeginEvent }
 
 object TickCounterLabel {
@@ -19,17 +18,9 @@ class TickCounterLabel(world: World)
   extends JLabel
   with AfterLoadEvent.Handler
   with LoadBeginEvent.Handler
-  with PeriodicUpdateEvent.Handler {
+  with PeriodicUpdateEvent.Handler
+  with ThemeSync {
   private var _label: String = TickCounterLabelDefault
-
-  override def getPreferredSize: Dimension = getMinimumSize
-
-  override def getMinimumSize: Dimension = {
-    val d = super.getMinimumSize
-    val fontMetrics = getFontMetrics(getFont)
-    d.width = StrictMath.max(d.width, fontMetrics.stringWidth(label + ": 00000000"))
-    d
-  }
 
   def handle(e: LoadBeginEvent): Unit = {
     setText("")
@@ -49,7 +40,7 @@ class TickCounterLabel(world: World)
     val ticks = world.ticks
     val tickText =
         if (ticks == -1) "" else Dump.number(StrictMath.floor(ticks))
-    setText("     " + _label + ": " + tickText)
+    setText(s"${_label}: $tickText".trim)
   }
 
   /// tick counter
@@ -66,4 +57,7 @@ class TickCounterLabel(world: World)
 
   def label: String = _label
 
+  override def syncTheme(): Unit = {
+    setForeground(InterfaceColors.toolbarText)
+  }
 }

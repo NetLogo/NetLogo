@@ -2,17 +2,17 @@
 
 package org.nlogo.app
 
-import java.awt.{ Dimension, Frame, Toolkit }
+import java.awt.{ Dimension, Frame, Toolkit, BorderLayout}
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.prefs.Preferences
-import javax.swing.{ JFrame, JOptionPane, JMenu }
+import javax.swing.{ JFrame, JMenu }
 
 import org.nlogo.agent.{ Agent, World2D, World3D }
 import org.nlogo.api._
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
 import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, FindDialog, SaveModelingCommonsAction }
-import org.nlogo.app.interfacetab.{ InterfaceTab, InterfaceToolBar, WidgetPanel }
+import org.nlogo.app.interfacetab.{ CommandCenter, InterfaceTab, InterfaceWidgetControls, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManagerErrorDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ AgentKind, CompilerException, ExternalResource, I18N, Model,
@@ -22,7 +22,8 @@ import org.nlogo.fileformat.FileFormat
 import org.nlogo.log.{ JsonFileLogger, LogEvents, LogManager }
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
-import org.nlogo.swing.OptionDialog
+import org.nlogo.swing.{ DropdownOptionPane, InputOptionPane, OptionPane, SetSystemLookAndFeel }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
@@ -52,6 +53,7 @@ object App {
   private var logEvents: String = null
   private var logDirectory: String = null
   private var popOutCodeTab = false
+  private var colorTheme: String = null
   /**
    * Should be called once at startup to create the application and
    * start it running.  May not be called more than once.  Once
@@ -150,9 +152,14 @@ object App {
         new ComponentParameter(), new ComponentParameter())
       pico.add(classOf[MenuBar], "org.nlogo.app.MenuBar",
         new ConstantParameter(AbstractWorkspace.isApp))
-      pico.add("org.nlogo.app.interfacetab.CommandCenter")
+      pico.add(classOf[CommandCenter], "org.nlogo.app.interfacetab.CommandCenter", new ComponentParameter(),
+               new ConstantParameter(true))
       pico.add("org.nlogo.app.interfacetab.InterfaceTab")
       pico.addComponent(classOf[AgentMonitorManager])
+
+      System.setProperty("flatlaf.menuBarEmbedded", "false")
+      System.setProperty("sun.awt.noerasebackground", "true") // stops view2.5d and 3d windows from blanking to white until next interaction
+
       app = pico.getComponent(classOf[App])
       // It's pretty silly, but in order for the splash screen to show up
       // for more than a fraction of a second, we want to initialize as
@@ -215,6 +222,15 @@ object App {
                 commandLineMagic == null &&
                 commandLineURL == null)
         commandLineURL = nextToken()
+      }
+      else if (token == "--color-theme") {
+        colorTheme = nextToken()
+
+        colorTheme match {
+          case "classic" =>
+          case "light" =>
+          case _ => throw new IllegalArgumentException(I18N.errors.getN("themes.unknown", colorTheme))
+        }
       }
       else if (token == "--version") printAndExit(Version.version)
       else if (token == "--extension-api-version") printAndExit(APIVersion.version)
@@ -282,11 +298,11 @@ class App extends
   var recentFilesMenu: RecentFilesMenu = null
   private var errorDialogManager: ErrorDialogManager = null
   private val listenerManager = new NetLogoListenerManager
+  private var syncComponents = Set[ThemeSync]()
+  lazy val modelingCommons = pico.getComponent(classOf[ModelingCommonsInterface])
   private val runningInMacWrapper = Option(System.getProperty("org.nlogo.mac.appClassName")).nonEmpty
   private val ImportWorldURLProp = "netlogo.world_state_url"
   private val ImportRawWorldURLProp = "netlogo.raw_world_state_url"
-
-  lazy val modelingCommons                          = pico.getComponent(classOf[ModelingCommonsInterface])
 
   val isMac = System.getProperty("os.name").startsWith("Mac")
 
@@ -303,7 +319,12 @@ class App extends
     frame.addLinkComponent(this)
     pico.addComponent(frame)
 
-    org.nlogo.swing.Utils.setSystemLookAndFeel()
+    if (App.colorTheme == null)
+      App.colorTheme = prefs.get("colorTheme", "light")
+
+    SetSystemLookAndFeel.setSystemLookAndFeel()
+
+    InterfaceColors.setTheme(App.colorTheme)
 
     errorDialogManager = new ErrorDialogManager(frame,
       Map(classOf[MetadataLoadingException] -> new LibraryManagerErrorDialog(frame)))
@@ -316,8 +337,8 @@ class App extends
     val interfaceFactory = new InterfaceFactory() {
       def widgetPanel(workspace: GUIWorkspace): AbstractWidgetPanel =
         new WidgetPanel(workspace)
-      def toolbar(wp: AbstractWidgetPanel, workspace: GUIWorkspace, buttons: List[WidgetInfo], frame: Frame) = {
-        new InterfaceToolBar(wp.asInstanceOf[WidgetPanel], workspace, buttons, frame,
+      def widgetControls(wp: AbstractWidgetPanel, workspace: GUIWorkspace, buttons: List[WidgetInfo], frame: Frame) = {
+        new InterfaceWidgetControls(wp.asInstanceOf[WidgetPanel], workspace, buttons, frame,
           pico.getComponent(classOf[EditDialogFactoryInterface]))
       }
     }
@@ -402,11 +423,10 @@ class App extends
                                  pico.getComponent(classOf[ExternalFileManager]))
 
     frame.addLinkComponent(_tabManager)
-
     controlSet.interfaceTab = Some(_tabManager.interfaceTab)
 
     pico.addComponent(_tabManager.interfaceTab.getInterfacePanel)
-    frame.getContentPane.add(_tabManager.mainTabs, java.awt.BorderLayout.CENTER)
+    frame.getContentPane.add(_tabManager.mainTabs, BorderLayout.CENTER)
 
     frame.addLinkComponent(new CompilerManager(workspace, world, _tabManager.mainCodeTab))
     frame.addLinkComponent(listenerManager)
@@ -427,9 +447,8 @@ class App extends
       val addListener       = (l) => listenerManager.addListener(l)
       val loggerFactory     = (p) => new JsonFileLogger(p)
       LogManager.start(addListener, loggerFactory, finalLogDirectory, events, studentName, () =>
-        OptionDialog.showMessage(frame, I18N.gui.get("common.messages.warning"),
-                                 I18N.gui.get("error.dialog.logDirectory"),
-                                 Array[Object](I18N.gui.get("common.buttons.ok"))))
+        new OptionPane(frame, I18N.gui.get("common.messages.warning"), I18N.gui.get("error.dialog.logDirectory"),
+                       OptionPane.Options.Ok, OptionPane.Icons.Warning))
     }
 
   }
@@ -471,7 +490,7 @@ class App extends
         "org.nlogo.app.FileManager",
         new ComponentParameter(), new ComponentParameter(), new ComponentParameter(),
         new ComponentParameter(), new ComponentParameter(),
-        new ConstantParameter(menuBar), new ConstantParameter(menuBar), new ConstantParameter(_tabManager))
+        new ConstantParameter(menuBar), new ConstantParameter(frame), new ConstantParameter(_tabManager))
       setFileManager(pico.getComponent(classOf[FileManager]))
 
       val viewManager = pico.getComponent(classOf[GLViewManagerInterface])
@@ -493,11 +512,12 @@ class App extends
       frame.pack()
 
       loadDefaultModel()
-      // smartPack respects the command center's current size, rather
-      // than its preferred size, so we have to explicitly set the
-      // command center to the size we want - ST 1/7/05
-      _tabManager.interfaceTab.commandCenter.setSize(_tabManager.interfaceTab.commandCenter.getPreferredSize)
+
+      _tabManager.interfaceTab.packSplitPane()
+
       smartPack(frame.getPreferredSize, true)
+
+      _tabManager.interfaceTab.resetSplitPane()
 
       if (! isMac) { org.nlogo.awt.Positioning.center(frame, null) }
 
@@ -514,6 +534,8 @@ class App extends
       if (popOutCodeTab || prefs.getBoolean("startSeparateCodeTab", false)) {
         _tabManager.switchWindow(true)
       }
+
+      syncWindowThemes()
     }
     catch {
       case ex: java.lang.Throwable =>
@@ -601,9 +623,9 @@ class App extends
       catch {
         case ex: java.net.ConnectException =>
           fileManager.newModel()
-          JOptionPane.showConfirmDialog(null,
-            I18N.gui.getN("file.open.error.unloadable.message", commandLineURL),
-            I18N.gui.get("file.open.error.unloadable.title"), JOptionPane.DEFAULT_OPTION)
+          new OptionPane(null, I18N.gui.get("file.open.error.unloadable.title"),
+                         I18N.gui.getN("file.open.error.unloadable.message", commandLineURL),
+                         OptionPane.Options.OkCancel, OptionPane.Icons.Warning)
       }
 
     } else if (prefs.get("loadLastOnStartup", "false").toBoolean) {
@@ -632,9 +654,13 @@ class App extends
 
   lazy val openPreferencesDialog = new ShowPreferencesDialog(frame, _tabManager)
 
+  lazy val showThemesDialog = new ShowThemesDialog(frame)
+
   lazy val openAboutDialog = new ShowAboutWindow(frame)
 
   lazy val openColorDialog = new OpenColorDialog(frame)
+
+  lazy val openRGBAColorDialog = new OpenRGBAColorDialog(frame)
 
   lazy val openLibrariesDialog = {
     val updateSource =
@@ -653,8 +679,10 @@ class App extends
     val workspaceActions = org.nlogo.window.WorkspaceActions(workspace)
 
     val generalActions = Seq[javax.swing.Action](
+      showThemesDialog,
       openLibrariesDialog,
       openColorDialog,
+      openRGBAColorDialog,
       new ShowShapeManager("turtleShapesEditor", turtleShapesManager),
       new ShowShapeManager("linkShapesEditor",   linkShapesManager),
       new ShowSystemDynamicsModeler(aggregateManager),
@@ -721,20 +749,21 @@ class App extends
     if (matches.isEmpty) commandLater("print \"no models matching \\\"" + name + "\\\" found\"")
     else {
       val fullName =
-        if (matches.size == 1) matches(0)
-        else {
-          val options = matches.map(_.replaceAllLiterally(".nlogox3d", "")
-                                     .replaceAllLiterally(".nlogox", "")).toArray[AnyRef]
-          val i = org.nlogo.swing.OptionDialog.showAsList(frame, I18N.gui.get("tools.magicModelMatcher"),
-                                                          I18N.gui.get("tools.magicModelMathcer.mustChoose"), options)
-          if (i != -1) matches(i) else null
+        if (matches.size == 1) {
+          Some(matches(0))
+        } else {
+          new DropdownOptionPane(frame, I18N.gui.get("tools.magicModelMatcher"),
+                                 I18N.gui.get("tools.magicModelMatcher.mustChoose"),
+                                 matches.map(_.replaceAllLiterally(".nlogox3d", "")
+                                              .replaceAllLiterally(".nlogox", "")).toList)
+            .getSelectedChoice
         }
-      if (fullName != null) {
-        org.nlogo.workspace.ModelsLibrary.getModelPath(fullName).foreach { path =>
+      fullName.foreach(name => {
+        org.nlogo.workspace.ModelsLibrary.getModelPath(name).foreach { path =>
           val source = FileIO.fileToString(path)
           org.nlogo.awt.EventQueue.invokeLater(() => openFromSource(source, path, ModelType.Library))
         }
-      }
+      })
     }
   }
 
@@ -757,6 +786,62 @@ class App extends
         }
       )
     }
+  }
+
+  /// ThemeSync stuff
+
+  def addSyncComponent(ts: ThemeSync) {
+    syncComponents = syncComponents + ts
+  }
+
+  def removeSyncComponent(ts: ThemeSync) {
+    syncComponents = syncComponents - ts
+  }
+
+  def syncWindowThemes() {
+    FindDialog.syncTheme()
+
+    menuBar.syncTheme()
+
+    tabManager.syncTheme()
+    frame.repaint()
+    tabManager.separateTabsWindow.repaint()
+
+    workspace.glView.syncTheme()
+    workspace.glView.repaint()
+
+    monitorManager.syncTheme()
+
+    _turtleShapesManager match {
+      case ts: ThemeSync => ts.syncTheme()
+    }
+
+    _linkShapesManager match {
+      case ts: ThemeSync => ts.syncTheme()
+    }
+
+    labManager.syncTheme()
+
+    openPreferencesDialog.syncTheme()
+    showThemesDialog.syncTheme()
+    openAboutDialog.syncTheme()
+    openColorDialog.syncTheme()
+    openRGBAColorDialog.syncTheme()
+    openLibrariesDialog.syncTheme()
+
+    workspace.hubNetManager match {
+      case Some(manager: ThemeSync) => manager.syncTheme()
+      case _ =>
+    }
+
+    aggregateManager match {
+      case ts: ThemeSync => ts.syncTheme()
+    }
+
+    errorDialogManager.syncTheme()
+
+    // this allows external objects like extension GUIs to sync with the theme (Isaac B 1/12/25)
+    syncComponents.foreach(_.syncTheme())
   }
 
   /**
@@ -801,6 +886,7 @@ class App extends
     if (AbstractWorkspace.isApp)
       setWindowTitles()
     workspace.hubNetManager.foreach(_.closeClientEditor())
+    errorDialogManager.closeAllDialogs()
   }
 
   private var wasAtPreferredSizeBeforeLoadBegan = false
@@ -837,7 +923,7 @@ class App extends
     if(AbstractWorkspace.isApp){
       // if we don't call revalidate() here we don't get up-to-date
       // preferred size information - ST 11/4/03
-      _tabManager.interfaceTab.getInterfacePanel.revalidate()
+      _tabManager.interfaceTab.packSplitPane()
       if(wasAtPreferredSizeBeforeLoadBegan) smartPack(frame.getPreferredSize, true)
       else{
         val currentSize = frame.getSize
@@ -848,10 +934,13 @@ class App extends
         if(preferredSize.height > newHeight) newHeight = preferredSize.height
         if(newWidth != currentSize.width || newHeight != currentSize.height) smartPack(new Dimension(newWidth, newHeight), true)
       }
+      _tabManager.interfaceTab.resetSplitPane()
       preferredSizeAtLoadEndTime = frame.getPreferredSize()
     }
     frame.toFront()
     _tabManager.interfaceTab.requestFocus()
+
+    syncWindowThemes()
   }
 
   def handle(e: LoadModelEvent): Unit = {
@@ -957,9 +1046,8 @@ class App extends
     } catch {
       case ex: UserCancelException => org.nlogo.api.Exceptions.ignore(ex)
       case ex: java.io.IOException =>
-        javax.swing.JOptionPane.showMessageDialog(
-          frame, ex.getMessage,
-          I18N.gui.get("common.messages.error"), javax.swing.JOptionPane.ERROR_MESSAGE)
+        new OptionPane(frame, I18N.gui.get("common.messages.error"), ex.getMessage, OptionPane.Options.Ok,
+                       OptionPane.Icons.Error)
     }
   }
 
@@ -1142,8 +1230,6 @@ class App extends
     val maxX = maxBoundsX + maxWidth
     val maxY = maxBoundsY + maxHeight
 
-    _tabManager.interfaceTab.adjustTargetSize(targetSize)
-
     import StrictMath.{ max, min }
 
     val (currentWidth, currentHeight) = (frame.getWidth, frame.getHeight)
@@ -1171,6 +1257,8 @@ class App extends
     // now do it!
     frame.setBounds(newX, newY, newWidth, newHeight)
     frame.validate()
+
+    frame.setMinimumSize(new Dimension(_tabManager.interfaceTab.getMinimumWidth, 300))
 
     // not sure why this is sometimes necessary - ST 11/24/03
     _tabManager.mainTabs.requestFocus()
@@ -1227,7 +1315,7 @@ class App extends
     val frame = new JFrame()
     frame.setAlwaysOnTop(true)
     val prompt = I18N.gui.get("tools.loggingMode.enterName")
-    val name   = JOptionPane.showInputDialog(frame, prompt, "", JOptionPane.QUESTION_MESSAGE, null, null, "")
+    val name   = new InputOptionPane(frame, "", prompt).getInput
     if (name == null) { "unknown" } else { name.toString.trim() }
   }
 

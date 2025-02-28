@@ -3,11 +3,11 @@
 package org.nlogo.app
 
 import java.awt.Component
-import javax.swing.JOptionPane
 
 import org.nlogo.api.{ ExtensionManager, LibraryInfoDownloader }
 import org.nlogo.app.common.Events.OpenLibrariesDialogEvent
 import org.nlogo.core.I18N
+import org.nlogo.swing.OptionPane
 import org.nlogo.window.Events.CompiledEvent
 
 // A helpful personal assistant who listens for "extension not found" compiler errors and offers to
@@ -33,15 +33,12 @@ class ExtensionAssistant( parent: Component
   }
 
   def confirmInstall(extName: String, extVersion: String): Boolean =
-    0 == JOptionPane.showConfirmDialog(parent,
-      I18N.gui.getN("tabs.code.extension.installable.message", extName, extVersion),
-      I18N.gui.get("tabs.code.extension.installable.title"),
-      javax.swing.JOptionPane.YES_NO_OPTION)
+    new OptionPane(parent, I18N.gui.getN("tabs.code.extension.installable.message", extName, extVersion),
+                   I18N.gui.get("tabs.code.extension.installable.title"),
+                   OptionPane.Options.YesNo).getSelectedIndex == 0
 
   def confirmOpen(extName: String): Boolean =
-    0 == JOptionPane.showConfirmDialog(parent,
-      I18N.gui.getN("tabs.code.extension.notfound.message", extName),
-      I18N.gui.get("tabs.code.extension.notfound.title"),
-      javax.swing.JOptionPane.YES_NO_OPTION)
+    new OptionPane(parent, I18N.gui.getN("tabs.code.extension.notfound.message", extName),
+                   I18N.gui.get("tabs.code.extension.notfound.title"), OptionPane.Options.YesNo).getSelectedIndex == 0
 
 }

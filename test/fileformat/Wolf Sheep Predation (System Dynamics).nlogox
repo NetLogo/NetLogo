@@ -19,10 +19,10 @@ end
 ; Copyright 2005 Uri Wilensky.
 ; See Info tab for full copyright and license.</code>
   <widgets>
-    <view x="195" maxPycor="0" updateMode="1" wrappingAllowedX="true" y="290" frameRate="30.0" minPycor="0" height="17" showTickCounter="true" patchSize="8.0" fontSize="10" wrappingAllowedY="true" width="288" tickCounterLabel="ticks" maxPxcor="17" minPxcor="-17"></view>
-    <button x="14" y="13" height="33" disableUntilTicks="false" forever="false" kind="Observer" width="106">setup</button>
-    <button x="15" y="56" height="33" disableUntilTicks="true" forever="true" kind="Observer" width="105">go</button>
-    <plot x="15" yMax="10.0" y="144" xMin="0.0" height="305" legend="true" xMax="10.0" autoplot="true" yMin="0.0" width="676" display="populations">
+    <view x="195" maxPycor="0" updateMode="1" wrappingAllowedX="true" y="290" frameRate="30.0" minPycor="0" height="13" showTickCounter="true" patchSize="8.0" fontSize="10" wrappingAllowedY="true" width="284" tickCounterLabel="ticks" maxPxcor="17" minPxcor="-17"></view>
+    <button x="14" y="13" height="35" disableUntilTicks="false" forever="false" kind="Observer" width="106">setup</button>
+    <button x="15" y="56" height="35" disableUntilTicks="true" forever="true" kind="Observer" width="105">go</button>
+    <plot sizeVersion="0" x="15" yMax="10.0" y="144" xMin="0.0" height="305" legend="true" xMax="10.0" autoplot="true" yMin="0.0" width="676" display="populations">
       <setup></setup>
       <update></update>
       <pen color="-13345367" legend="true" interval="1.0" mode="0" display="wolves">
@@ -34,8 +34,8 @@ end
         <update></update>
       </pen>
     </plot>
-    <monitor x="194" precision="3" y="15" height="45" fontSize="11" width="96">sheep</monitor>
-    <monitor x="194" precision="3" y="83" height="45" fontSize="11" width="95">wolves</monitor>
+    <monitor sizeVersion="0" x="194" precision="3" y="15" height="45" fontSize="11" width="96">sheep</monitor>
+    <monitor sizeVersion="0" x="194" precision="3" y="83" height="45" fontSize="11" width="95">wolves</monitor>
   </widgets>
   <info><![CDATA[## WHAT IS IT?
 

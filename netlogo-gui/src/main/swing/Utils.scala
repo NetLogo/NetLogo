@@ -2,80 +2,73 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Color, Frame, Insets }
+import java.awt.{ Color, Component, Font, Graphics, Graphics2D, GraphicsEnvironment, Image, RenderingHints }
 import java.awt.event.KeyEvent
+import java.awt.geom.AffineTransform
+import java.awt.image.BufferedImage
+import java.util.prefs.Preferences
+import javax.swing.{ Action, Icon, ImageIcon, InputMap, JComponent, JDialog, JWindow, KeyStroke }
 
-import javax.swing.{ Action, BorderFactory, ImageIcon, InputMap, JComponent, JDialog,
-  JWindow, KeyStroke, UIManager, UnsupportedLookAndFeelException }
+import org.nlogo.core.I18N
 
 final object Utils {
-  val utilsClass = getClass
-  def icon(path: String): ImageIcon = new ImageIcon(utilsClass.getResource(path))
-  def icon(path: String, w: Int, h: Int): ImageIcon = new CenteredImageIcon(icon(path), w, h)
+  private val uiScale = {
+    val devices = GraphicsEnvironment.getLocalGraphicsEnvironment.getScreenDevices
+    val scale = devices(0).getDefaultConfiguration.getDefaultTransform.getScaleX
 
-  def alert(message: String, continueText: String): Unit = {
-    val bogusFrame = new Frame
-    bogusFrame.pack() // otherwise OptionDialog will fail to get font metrics
-    OptionDialog.showMessage(bogusFrame, "Notice", message, Array(continueText))
-  }
+    if (scale > 1.0) {
+      scale
+    } else {
+      val pref = Preferences.userRoot.node("/org/nlogo/NetLogo").getDouble("uiScale", 1.0)
 
-  def alert(title: String, message: String, details: String, continueText: String): Unit = {
-    val bogusFrame = new Frame
-    bogusFrame.pack() // otherwise OptionDialog will fail to get font metrics
-    OptionDialog.showMessage(bogusFrame, title, s"$message\n\n$details", Array(continueText))
-  }
+      System.setProperty("sun.java2d.uiScale", pref.toString)
 
-  /// Swing look & feel
-
-  def setSystemLookAndFeel(): Unit = {
-    try {
-      // this slider thing is a workaround for Java bug parade bug #6465237 - ST 1/20/09
-      UIManager.put("Slider.paintValue", false)
-      if (System.getProperty("os.name").startsWith("Mac")) {
-        val lookAndFeel = System.getProperty("netlogo.swing.laf", UIManager.getSystemLookAndFeelClassName)
-        UIManager.getDefaults.put("TabbedPane.foreground", new Color(0, 0, 0))
-        UIManager.getDefaults.put("TabbedPane.selectedTabPadInsets", new Insets(0,0,-2,0))
-        UIManager.getDefaults.put("TabbedPane.contentBorderInsets", new Insets(0,-10,-13,-9))
-        // The java defaults specify this as black on my system,
-        // which was distractingly bad for the name field of the "PlotPen" JTable when
-        // that field was clicked, moved off and then released - RG 7/1/16
-        UIManager.getDefaults.put("Table.focusCellBackground", new Color(202, 202, 202))
-        UIManager.setLookAndFeel(lookAndFeel)
-      } else if (System.getProperty("os.name").startsWith("Windows")) {
-        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName)
-      } else if (System.getProperty("swing.defaultlaf") == null) {
-        try {
-          // On Linux (the likely system for this switch), or at least on Gnome, when dark
-          // mode is enabled, NetLogo looks very wonky as it's not setup to properly
-          // handle it with all its custom UI elements.  So we need to fall back to good
-          // ol' Nimbus.  -Jeremy B September 2022 SEO: dark mode, dark theme
-          UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel")
-        } catch {
-          case _: Exception => UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName)
-        }
-      }
-      // else do nothing, if swing.defaultlaf is set it should be respected.
-      // this allows Linux/others users to set whatever L&F they want from
-      // netlogo.sh - ST 12/15/09
-    } catch {
-      case ex @ (_:UnsupportedLookAndFeelException | _:IllegalAccessException |
-                 _:ClassNotFoundException | _:InstantiationException) =>
-        throw new IllegalStateException(ex)
+      pref
     }
   }
 
-  /// borders
+  def icon(path: String): ImageIcon = new ImageIcon(getClass.getResource(path))
+  def icon(path: String, w: Int, h: Int): ImageIcon = new CenteredImageIcon(icon(path), w, h)
 
-  private val WidgetBorder = BorderFactory.createCompoundBorder(
-    BorderFactory.createMatteBorder(1, 1, 0, 0, Color.GRAY),
-    BorderFactory.createRaisedBevelBorder)
+  def iconScaled(path: String, width: Int, height: Int): ScalableIcon = {
+    new ScalableIcon(new ImageIcon(icon(path).getImage.getScaledInstance((width * uiScale).toInt,
+                                                                         (height * uiScale).toInt,
+                                                                         Image.SCALE_SMOOTH)), width, height)
+  }
 
-  private val WidgetPressedBorder = BorderFactory.createCompoundBorder(
-    BorderFactory.createMatteBorder(1, 1, 0, 0, java.awt.Color.GRAY),
-    BorderFactory.createLoweredBevelBorder)
+  def iconScaledWithColor(path: String, width: Int, height: Int, color: Color): ScalableIcon = {
+    val image = iconScaled(path, width, height)
+    val buffered = new BufferedImage(width * 2, height * 2, BufferedImage.TYPE_INT_ARGB)
 
-  def createWidgetBorder() = WidgetBorder
-  def createWidgetPressedBorder() = WidgetPressedBorder
+    image.paintIcon(null, buffered.getGraphics, 0, 0)
+
+    for (y <- 0 until buffered.getHeight) {
+      for (x <- 0 until buffered.getWidth) {
+        val c1 = buffered.getRGB(x, y)
+        val c2 = color.getRGB
+
+        val r = ((c1 & 255) * (c2 & 255)) / 255
+        val g = (((c1 >> 8) & 255) * ((c2 >> 8) & 255)) / 255
+        val b = (((c1 >> 16) & 255) * ((c2 >> 16) & 255)) / 255
+        val a = (((c1 >> 24) & 255) * ((c2 >> 24) & 255)) / 255
+
+        buffered.setRGB(x, y, r | (g << 8) | (b << 16) | (a << 24))
+      }
+    }
+
+    new ScalableIcon(new ImageIcon(buffered), width, height)
+  }
+
+  def font(path: String): Font =
+    Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream(path))
+
+  def alert(message: String, continueText: String): Unit = {
+    new OptionPane(null, I18N.gui.get("common.messages.notice"), message, List(continueText), OptionPane.Icons.Info)
+  }
+
+  def alert(title: String, message: String, details: String, continueText: String): Unit = {
+    new OptionPane(null, title, s"$message\n\n$details", List(continueText), OptionPane.Icons.Info)
+  }
 
   /// Esc key handling in dialogs
 
@@ -91,5 +84,34 @@ final object Utils {
   def addEscKeyAction(component: JComponent, inputMap: InputMap, action: Action): Unit = {
     inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false), "ESC_ACTION")
     component.getActionMap.put("ESC_ACTION", action)
+  }
+
+  def initGraphics2D(g: Graphics): Graphics2D = {
+    val g2d = g.asInstanceOf[Graphics2D]
+    g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
+    g2d
+  }
+}
+
+class ScalableIcon(icon: Icon, width: Int, height: Int) extends Icon {
+  override def getIconWidth: Int = width
+  override def getIconHeight: Int = height
+
+  override def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
+    val g2d = Utils.initGraphics2D(g)
+
+    val transform = g2d.getTransform
+    val scaleX = transform.getScaleX
+    val scaleY = transform.getScaleY
+
+    val scaled = transform.clone.asInstanceOf[AffineTransform]
+
+    scaled.concatenate(AffineTransform.getScaleInstance(1.0 / scaleX, 1.0 / scaleY))
+
+    g2d.setTransform(scaled)
+
+    icon.paintIcon(c, g2d, (x * scaleX).toInt, (y * scaleY).toInt)
+
+    g2d.setTransform(transform)
   }
 }

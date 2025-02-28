@@ -72,6 +72,7 @@ object HubNetGenerators {
   } yield Chooser(display = varName,
     x  = pos._1, y    = pos._2,
     width = pos._3 - pos._1, height = pos._4 - pos._2,
+    oldSize = true,
     variable = varName, choices = choices,
     currentChoice = currentChoice)
 
@@ -84,6 +85,7 @@ object HubNetGenerators {
     } yield Monitor(display = display,
       x = pos._1, y = pos._2,
       width = pos._3 - pos._1, height = pos._4 - pos._2,
+      oldSize = true,
       source = source, precision = precision, fontSize = 11)
 
   val sliderWidget: Gen[Slider] =
@@ -100,6 +102,7 @@ object HubNetGenerators {
         Slider(display = name,
           x = pos._1, y = pos._2,
           width = pos._3 - pos._1, height = pos._4 - pos._2,
+          oldSize = true,
           min = min.toString,  max = max.toString,
           variable = name, default = value,
           step = inc.toString, units = units,
@@ -114,6 +117,7 @@ object HubNetGenerators {
       Switch(display = name,
         x = pos._1, y = pos._2,
         width = pos._3 - pos._1, height = pos._4 - pos._2,
+        oldSize = true,
         variable = name, on = isOn)
     }
 
@@ -157,7 +161,7 @@ class HubNetWidgetReadersTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
 
   test("pathological case 1") {
     val chooser =
-      Chooser(None,-2147483648,-185212488,2147483647,859780949,None,List(ChooseableBoolean(true), ChooseableBoolean(true), ChooseableBoolean(false), ChooseableDouble(8.502858506075463E-83)), 10)
+      Chooser(None,-2147483648,-185212488,2147483647,859780949,true,None,List(ChooseableBoolean(true), ChooseableBoolean(true), ChooseableBoolean(false), ChooseableDouble(8.502858506075463E-83)), 10)
     val reader = HubNetChooserReader
     val serialized = reader.format(chooser)
     assert(reader.validate(serialized.linesIterator.toList), "serialized wiget should be valid")

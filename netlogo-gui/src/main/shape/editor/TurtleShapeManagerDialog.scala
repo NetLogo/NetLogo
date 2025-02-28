@@ -3,11 +3,12 @@
 package org.nlogo.shape.editor
 
 import java.awt.{ Component, Frame }
-import javax.swing.{ Box, JButton }
+import javax.swing.Box
 
 import org.nlogo.api.{ AbstractModelLoader, FileIO, World }
 import org.nlogo.shape.{ ShapeConverter, VectorShape },
   ShapeConverter.baseVectorShapeToVectorShape
+import org.nlogo.swing.{ Button, OptionPane }
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape, ShapeList, ShapeParser },
   Shape.{ VectorShape => CoreVectorShape },
   ShapeList.{ isDefaultShapeName, sortShapes },
@@ -28,8 +29,7 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
 
   shapesList.addListSelectionListener(this)
 
-  lazy val libraryButton =
-    new JButton(I18N.gui("importFromLibrary")) {addActionListener(_ => importFromLibrary())}
+  lazy val libraryButton = new Button(I18N.gui("importFromLibrary"), importFromLibrary)
 
   override def shapeKind = AgentKind.Turtle
 
@@ -47,13 +47,13 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
 
   // Load a new shapes editor to let the user create a new shape
   override def newShape(): Unit = {
-    new EditorDialog(shapesList, new VectorShape(), getLocation.x, getLocation.y, true)
+    new EditorDialog(this, shapesList, new VectorShape(), true)
   }
 
   // Edit an existing shape
   override def editShape(): Unit = {
     shapesList.getOneSelected.foreach { shape =>
-      new EditorDialog(shapesList, shape, getLocation.x, getLocation.y, !isDefaultShapeName(shape.name))
+      new EditorDialog(this, shapesList, shape, !isDefaultShapeName(shape.name))
     }
   }
 
@@ -62,7 +62,7 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
     shapesList.getOneSelected.foreach { (shape: VectorShape) =>
       val newShape = shape.clone
       newShape.name = ""
-      new EditorDialog(shapesList, newShape, getLocation.x, getLocation.y, true)
+      new EditorDialog(this, shapesList, newShape, true)
     }
   }
 
@@ -76,10 +76,9 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
         importDialog = Some(new ImportDialog(TurtleShapeManagerDialog.this, this, drawableList))
         shapesList.requestFocus()
       case None =>
-        javax.swing.JOptionPane.showMessageDialog(this,
-          I18N.gui.get("tools.shapesEditor.import.libraryError"),
-          I18N.gui.get("tools.shapesEditor.import"),
-          javax.swing.JOptionPane.WARNING_MESSAGE)
+        new OptionPane(this, I18N.gui.get("tools.shapesEditor.import"),
+                       I18N.gui.get("tools.shapesEditor.import.libraryError"), OptionPane.Options.Ok,
+                       OptionPane.Icons.Error)
     }
   }
 

@@ -6,60 +6,62 @@ import org.nlogo.core.I18N
 
 import java.awt.{ Color, Dimension, GridBagConstraints }
 import java.awt.event.{ ActionEvent, ActionListener }
-import javax.swing.{ JButton, JLabel, JPanel }
+import javax.swing.{ JLabel, JPanel }
 
-import org.nlogo.swing.Utils.icon
+import org.nlogo.swing.{ Button, Utils }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-abstract class RuntimeErrorDisplay(accessor: PropertyAccessor[Option[Exception]], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip, handlesOwnErrors = true) with RuntimeErrorDisplayer {
-    private var dismissed = false
-    layoutErrorPanel()
+abstract class RuntimeErrorDisplay(accessor: PropertyAccessor[Option[Exception]])
+  extends PropertyEditor(accessor, handlesOwnErrors = true) with RuntimeErrorDisplayer {
 
-    private def dismissError(): Unit = {
-      setVisible(false)
-      dismissed = true
-    }
+  private var dismissed = false
 
-    private def displayError(): Unit = {
-      setVisible(true)
-      dismissed = false
-    }
+  layoutErrorPanel()
 
-    override def changed() // abstract
+  private def dismissError(): Unit = {
+    setVisible(false)
+    dismissed = true
+  }
 
-    override def get: Option[Option[Exception]] = {
-      if (dismissed) Some(None) else Some(accessor.get)
-    }
+  private def displayError(): Unit = {
+    setVisible(true)
+    dismissed = false
+  }
 
-    override def exceptionMessage: Option[String] = get.flatten.map(_.getMessage)
+  override def changed() // abstract
 
-    override def actionPerformed(e: ActionEvent): Unit = { dismissError() }
+  override def get: Option[Option[Exception]] = {
+    if (dismissed) Some(None) else Some(accessor.get)
+  }
 
-    override def set(e: Option[Exception]): Unit = {
-      e match {
-        case None => dismissError()
-        case Some(e) => displayError()
-      }
-    }
+  override def exceptionMessage: Option[String] = get.flatten.map(_.getMessage)
 
-    override def getConstraints = {
-      val c = super.getConstraints
-      c.fill = GridBagConstraints.HORIZONTAL
-      c.weightx = 1.0
-      c.weighty = 0
-      c.gridheight = if (dismissed) 0 else 1
-      c
+  override def actionPerformed(e: ActionEvent): Unit = { dismissError() }
+
+  override def set(e: Option[Exception]): Unit = {
+    e match {
+      case None => dismissError()
+      case Some(e) => displayError()
     }
   }
 
+  override def getConstraints = {
+    val c = super.getConstraints
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.weightx = 1.0
+    c.weighty = 0
+    c.gridheight = if (dismissed) 0 else 1
+    c
+  }
+}
 
-trait RuntimeErrorDisplayer extends JPanel with ActionListener {
+trait RuntimeErrorDisplayer extends JPanel with ActionListener with ThemeSync {
 
   def exceptionMessage: Option[String]
 
   lazy val dismissButton = {
     implicit val i18nPrefix = I18N.Prefix("common.buttons")
-    val button = new JButton(I18N.gui("dismiss"))
+    val button = new Button(I18N.gui("dismiss"), () => {})
     button.setToolTipText(I18N.gui("dismiss"))
     button.addActionListener(this)
     button
@@ -68,27 +70,40 @@ trait RuntimeErrorDisplayer extends JPanel with ActionListener {
   lazy val errorLabel = {
     implicit val i18nPrefix = I18N.Prefix("edit.plot.error")
     val label = new JLabel(I18N.gui("runtimeError"))
-    label.setIcon(icon("/images/stop.gif"))
+    label.setIcon(Utils.icon("/images/error.png"))
     label
   }
 
+  lazy val messageLabel = new JLabel
+
   protected def layoutErrorPanel(): Unit = {
     exceptionMessage.foreach { message =>
-      add(errorLabel)
-      add(new JLabel(message))
-      add(dismissButton)
+      messageLabel.setText(message)
 
-      setBackground(Color.yellow)
+      add(errorLabel)
+      add(messageLabel)
+      add(dismissButton)
     }
   }
 
   override def actionPerformed(e: ActionEvent): Unit
+
+  override def syncTheme(): Unit = {
+    setBackground(InterfaceColors.errorLabelBackground)
+
+    errorLabel.setForeground(Color.WHITE)
+    messageLabel.setForeground(Color.WHITE)
+
+    dismissButton.syncTheme()
+  }
 }
 
 class RuntimeErrorPanel(e: Exception, onDismiss: (RuntimeErrorPanel) => Unit = {_ => }) extends RuntimeErrorDisplayer {
 
   layoutErrorPanel()
   setMaximumSize(new Dimension(400, 100))
+
+  syncTheme()
 
   override def exceptionMessage = Some(e.getMessage)
 

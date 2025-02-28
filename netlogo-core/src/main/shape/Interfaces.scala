@@ -2,9 +2,10 @@
 
 package org.nlogo.shape
 
-import org.nlogo.api.GraphicsInterface
 import java.awt.Color
 import java.io.IOException
+
+import org.nlogo.api.GraphicsInterface
 
 trait ShapesManagerInterface {
   def reset(): Unit

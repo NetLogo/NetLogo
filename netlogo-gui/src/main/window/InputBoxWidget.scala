@@ -27,6 +27,7 @@ class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEdito
 
   override def valueObject(value: Any, raiseEvent: Boolean) {
     if (! this.value.contains(toAnyRef(value))) {
+      oldText = text
       text = Dump.logoObject(toAnyRef(value))
       this.value = Option(toAnyRef(value))
       if (!text.equals(textArea.getText())) textArea.setText(text)

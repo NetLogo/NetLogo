@@ -24,8 +24,8 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
     while (figs.hasNextFigure) {
       figs.nextFigure match {
-        case mef: ModelElementFigure if mef.getModelElement != null =>
-          model.addElement(mef.getModelElement)
+        case f: ModelElementFigure if f.getModelElement != null =>
+          model.addElement(f.getModelElement)
         case _ =>
       }
     }
@@ -33,8 +33,9 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
   override def orphan(figure: Figure): Figure = {
     figure match {
-      case mef: ModelElementFigure if mef.getModelElement != null =>
-        model.removeElement(mef.getModelElement)
+      case f: ModelElementFigure if f.getModelElement != null =>
+        model.removeElement(f.getModelElement)
+      case _ =>
     }
 
     super.orphan(figure)
@@ -99,8 +100,7 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
 
         (refs :+ rate, conns + (rate -> ((el("startFigure").toInt, el("endFigure").toInt))))
 
-      case ((refs, conns), el @ XMLElement(otherName, _, _, _)) =>
-        throw new Exception(s"Unable to deserialize SDM node with name: ${otherName}")
+      case ((refs, conns), _) => (refs, conns) // ignore other figures for compatibility with other versions in the future (Isaac B 2/12/25)
 
     }
 

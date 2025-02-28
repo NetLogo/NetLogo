@@ -2,16 +2,18 @@
 
 package org.nlogo.window;
 
-import java.awt.{ Color, Component, Dimension, Rectangle }
+import java.awt.{ Component, Dimension, Rectangle }
 import java.awt.event.{ FocusListener, FocusEvent,
   KeyEvent, KeyAdapter, MouseAdapter, MouseEvent }
 import java.awt.image.BufferedImage
-import javax.swing.{ JLayeredPane, JPopupMenu, JMenuItem }
+import javax.swing.JLayeredPane
 
 import org.nlogo.api.{ CompilerServices, Exceptions, RandomServices, Version }
 import org.nlogo.awt.Images
 import org.nlogo.core.{ Widget => CoreWidget, View => CoreView }
 import org.nlogo.plot.PlotManager
+import org.nlogo.swing.{ MenuItem, PopupMenu }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ LoadWidgetsEvent, OutputEvent }
 import org.nlogo.util.SysInfo
 
@@ -23,7 +25,8 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   with WidgetContainer
   with FocusListener
   with LoadWidgetsEvent.Handler
-  with OutputEvent.Handler {
+  with OutputEvent.Handler
+  with ThemeSync {
 
   // widget name -> Widget
   private val widgets: MutableMap[String, Widget] = MutableMap[String, Widget]()
@@ -34,10 +37,11 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   private var _sliderEventOnReleaseOnly: Boolean = false
 
   setOpaque(true)
-  setBackground(Color.WHITE)
   addFocusListener(this)
   addMouseListener(iPMouseListener)
   addKeyListener(getKeyAdapter)
+
+  syncTheme()
 
   // made protected so that hubnet could override it to implement message throttling. -JC 8/19/10
   protected def getKeyAdapter: KeyAdapter =
@@ -117,19 +121,17 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   override def getPreferredSize: Dimension = {
     var maxX = 0
     var maxY = 0
-    getComponents.foreach {
-      case w: Widget =>
-        val location = w.getLocation()
-        val size = w.getSize()
-        val x = location.x + size.width
-        val y = location.y + size.height
-        if (x > maxX)
-          maxX = x
-        if (y > maxY)
-          maxY = y
-      case _ =>
+    for (component <- getComponents) {
+      val location = component.getLocation
+      val size = component.getSize
+      val x = location.x + size.width
+      val y = location.y + size.height
+      if (x > maxX)
+        maxX = x
+      if (y > maxY)
+        maxY = y
     }
-    new Dimension(maxX, maxY)
+    new Dimension(maxX + 8, maxY + 8)
   }
 
   private def getOutputWidget: OutputWidget =
@@ -161,16 +163,13 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   ///
 
   private def doPopup(e: MouseEvent): Unit = {
-    val menu = new JPopupMenu()
-    def disabledItem(s: String): JMenuItem = {
-      val item = new javax.swing.JMenuItem(s)
-      item.setEnabled(false)
-      item
-    }
-    menu.add(disabledItem(Version.version))
-    menu.add(disabledItem(SysInfo.getOSInfoString))
-    menu.add(disabledItem(SysInfo.getVMInfoString))
-    menu.add(disabledItem(SysInfo.getMemoryInfoString))
+    val menu = new PopupMenu
+
+    menu.add(new MenuItem(Version.version)).setEnabled(false)
+    menu.add(new MenuItem(SysInfo.getOSInfoString)).setEnabled(false)
+    menu.add(new MenuItem(SysInfo.getVMInfoString)).setEnabled(false)
+    menu.add(new MenuItem(SysInfo.getMemoryInfoString)).setEnabled(false)
+
     menu.show(this, e.getX, e.getY)
   }
 
@@ -185,6 +184,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
     moveToFront(widget)
     widget.setLocation(x, y)
     widget.validate()
+    widget.syncTheme()
   }
 
   def hideWidget(widgetName: String): Unit = {
@@ -209,7 +209,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
   private val widgetBuilderMap = Map[String, () => Widget](
     "Monitor"  -> (() => new MonitorWidget(random.auxRNG)),
     "Plot"     -> (() => PlotWidget.apply(plotManager)),
-    "Slider"   -> (() => new SliderWidget(sliderEventOnReleaseOnly, random.auxRNG)),
+    "Slider"   -> (() => new SliderWidget(sliderEventOnReleaseOnly, random.auxRNG, compiler)),
     "Chooser"  -> (() => new ChooserWidget(compiler)),
     "InputBox" -> { () =>
       val singleLineConfig = editorFactory.defaultConfiguration(1, 10)
@@ -275,4 +275,12 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
 
   def interfaceImage: BufferedImage =
     Images.paintToImage(this)
+
+  override def syncTheme(): Unit = {
+    setBackground(InterfaceColors.interfaceBackground)
+
+    getComponents.foreach(_ match {
+      case ts: ThemeSync => ts.syncTheme()
+    })
+  }
 }

@@ -5,17 +5,17 @@ package org.nlogo.app.tools
 import java.awt.{ BorderLayout, Frame }
 import java.awt.event.{ ActionEvent, ItemEvent, ItemListener }
 import java.beans.{ PropertyChangeEvent, PropertyChangeListener }
-import javax.swing.{ AbstractAction, BorderFactory, JButton, JDialog, JPanel }
+import javax.swing.{ AbstractAction, JDialog, JPanel }
 
 import org.nlogo.api.PreviewCommands
-import org.nlogo.awt.{ Fonts, Positioning }
+import org.nlogo.awt.Positioning
 import org.nlogo.core.{ AgentKind, CompilerException, I18N, Model }
-import org.nlogo.swing.Utils.addEscKeyAction
+import org.nlogo.swing.{ Button, Transparent, Utils }
+import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ EditorColorizer, GraphicsPreviewInterface }
 import org.nlogo.workspace.{ Evaluator, WorkspaceFactory }
 import org.nlogo.workspace.ModelsLibrary.getImagePath
 import org.nlogo.workspace.PreviewCommandsRunner.initWorkspace
-
 
 class PreviewCommandsDialog(
   owner: Frame,
@@ -25,7 +25,6 @@ class PreviewCommandsDialog(
   workspaceFactory: WorkspaceFactory,
   graphicsPreview: GraphicsPreviewInterface)
   extends JDialog(owner, title, true) {
-  Fonts.adjustDefaultFont(this)
 
   private val workspace = initWorkspace(workspaceFactory, _.openModel(model))
 
@@ -40,32 +39,32 @@ class PreviewCommandsDialog(
   val editor = editorPanel.editor
   val previewPanel = new PreviewPanel(graphicsPreview)
 
-  val cancelAction = new AbstractAction(I18N.guiJ.get("common.buttons.cancel")) {
+  val cancelAction = new AbstractAction(I18N.gui.get("common.buttons.cancel")) {
     def actionPerformed(evt: ActionEvent): Unit = {
       workspace.dispose()
       setVisible(false)
     }
   }
-  addEscKeyAction(this, cancelAction)
 
-  val okButton = new JButton(new AbstractAction(I18N.guiJ.get("common.buttons.ok")) {
-    def actionPerformed(evt: ActionEvent): Unit =
-      for (previewCommands <- guiState.previewCommands) {
-        _previewCommands = previewCommands
-        workspace.dispose()
-        setVisible(false)
-      }
+  Utils.addEscKeyAction(this, cancelAction)
+
+  val okButton = new Button(I18N.gui.get("common.buttons.ok"), () => {
+    for (previewCommands <- guiState.previewCommands) {
+      _previewCommands = previewCommands
+      workspace.dispose()
+      setVisible(false)
+    }
   })
+
   getRootPane.setDefaultButton(okButton)
 
-  add(new JPanel {
-    setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    setLayout(new BorderLayout)
+  add(new JPanel(new BorderLayout) {
+    setBackground(InterfaceColors.dialogBackground)
     add(editorPanel, BorderLayout.CENTER)
     add(previewPanel, BorderLayout.LINE_END)
-    add(new JPanel {
+    add(new JPanel with Transparent {
       add(okButton)
-      add(new JButton(cancelAction))
+      add(new Button(cancelAction))
     }, BorderLayout.PAGE_END)
   })
 

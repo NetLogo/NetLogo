@@ -7,6 +7,7 @@ import javax.swing.{ JComboBox, JOptionPane }
 
 import org.nlogo.awt.{ Hierarchy, LineBreaker }
 
+// this class is deprecated, use OptionPane instead for theme synchronization (Isaac B 11/16/24)
 class OptionDialog[T <: AnyRef](owner: Frame, title: String, message: String, choices: Array[T], i18n: String => String)
 extends UserDialog(owner, title, i18n) {
   private val options = new JComboBox[T](choices)
@@ -23,11 +24,9 @@ extends UserDialog(owner, title, i18n) {
 
 object OptionDialog {
   def showMessage(owner: Component, title: String, message: String, options: Array[_ <: Object]): Int = {
-    import scala.collection.JavaConverters._
-
     val brokenLines = LineBreaker.breakLines(message,
       owner.getFontMetrics(owner.getFont), UserDialog.DIALOG_WIDTH)
-    showCustom(owner, title, brokenLines.asScala.mkString("\n"), options)
+    showCustom(owner, title, brokenLines.mkString("\n"), options)
   }
 
   def showCustom(owner: Component, title: String, message: AnyRef, options: Array[_ <: Object]): Int = {

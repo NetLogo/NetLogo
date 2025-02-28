@@ -2,18 +2,16 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.{ Editable, Property }
-import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton }
-import org.nlogo.awt.{ Fonts => NlogoFonts }
+import java.awt.{ Dimension, Graphics }
 
-import java.awt.{ Color, Dimension, Font, Graphics }
-import java.util.{ List => JList }
+import org.nlogo.api.{ Editable, Property }
+import org.nlogo.awt.Fonts
+import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton }
+import org.nlogo.theme.InterfaceColors
 
 object DummyButtonWidget {
   private val MinimumWidth = 55
   private val MinimumHeight = 33
-  private val PreferredTextHorizontalPadding = 28
-  private val PreferredTextVertialPadding = 12
 }
 
 class DummyButtonWidget
@@ -24,15 +22,11 @@ class DummyButtonWidget
 
   import DummyButtonWidget._
 
-  setBackground(InterfaceColors.BUTTON_BACKGROUND)
-  setBorder(widgetBorder)
-  org.nlogo.awt.Fonts.adjustDefaultFont(this)
-
   private var _actionKey: Char = '\u0000'
   private var _keyEnabled: Boolean = false
   private var _name: String = ""
 
-  def propertySet: JList[Property] = Properties.dummyButton
+  def propertySet: Seq[Property] = Properties.dummyButton
 
   def actionKey: Char = _actionKey
 
@@ -72,34 +66,23 @@ class DummyButtonWidget
   override def getMinimumSize: Dimension =
     new Dimension(MinimumWidth, MinimumHeight)
 
-  override def getPreferredSize(font: Font): Dimension = {
-    val size = getMinimumSize
-    val fontMetrics = getFontMetrics(font)
-    size.width = StrictMath.max(size.width,
-      fontMetrics.stringWidth(displayName) +
-      PreferredTextHorizontalPadding)
-    size.height = StrictMath.max(size.height,
-      fontMetrics.getMaxDescent +
-      fontMetrics.getMaxAscent +
-      PreferredTextVertialPadding)
-    size
-  }
+  override def getPreferredSize: Dimension =
+    new Dimension(MinimumWidth.max(super.getPreferredSize.width), MinimumHeight.max(super.getPreferredSize.height))
 
   /// painting
 
   override def paintComponent(g: Graphics): Unit = {
-    g.setColor(getBackground)
-    g.fillRect(0, 0, getWidth, getHeight)
+    super.paintComponent(g)
     val size = getSize()
     val fontMetrics = g.getFontMetrics
     val labelHeight =
       fontMetrics.getMaxDescent + fontMetrics.getMaxAscent
     val availableWidth = size.width - 8
     val stringWidth = fontMetrics.stringWidth(displayName)
-    g.setColor(getForeground)
+    g.setColor(InterfaceColors.buttonText)
 
     val shortString =
-      NlogoFonts.shortenStringToFit(displayName, availableWidth, fontMetrics)
+      Fonts.shortenStringToFit(displayName, availableWidth, fontMetrics)
 
     val nx =
       if (stringWidth > availableWidth) 4
@@ -111,12 +94,20 @@ class DummyButtonWidget
     if (actionKeyString != "") {
       val ax = size.width - 4 - fontMetrics.stringWidth(actionKeyString)
       val ay = fontMetrics.getMaxAscent + 2
-      val keyColor =
-        if (keyEnabled) Color.BLACK else Color.GRAY
 
-      g.setColor(keyColor)
+      g.setColor(
+        if (keyEnabled)
+          InterfaceColors.buttonText
+        else
+          InterfaceColors.buttonTextDisabled
+      )
+
       g.drawString(actionKeyString, ax - 1, ay)
     }
+  }
+
+  override def syncTheme(): Unit = {
+    setBackgroundColor(InterfaceColors.buttonBackground)
   }
 
   ///

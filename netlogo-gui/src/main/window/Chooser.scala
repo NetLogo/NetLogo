@@ -2,40 +2,21 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, Font, FontMetrics, Graphics, Graphics2D, Polygon, RenderingHints }
-import java.awt.event.{ ActionEvent, ActionListener, MouseAdapter, MouseEvent, MouseWheelEvent, MouseWheelListener }
-import javax.swing.{ JComponent, JPopupMenu, JMenuItem }
+import java.awt.{ Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets, LinearGradientPaint }
+import java.awt.event.{ MouseWheelEvent, MouseWheelListener }
+import javax.swing.JLabel
 
 import org.nlogo.agent.ChooserConstraint
 import org.nlogo.api.{ CompilerServices, Dump }
-import org.nlogo.awt.{ Fonts => NLogoFonts }
-import org.nlogo.core.LogoList
-import org.nlogo.swing.WrappingPopupMenu
+import org.nlogo.core.{ I18N, LogoList }
+import org.nlogo.swing.{ ComboBox, Utils }
+import org.nlogo.theme.InterfaceColors
 
 object Chooser {
-
   // visual parameters
   private val MinWidth = 92
   private val MinPreferredWidth = 120
   private val ChooserHeight = 45
-  private val Margin = 4
-  private val Padding = 14
-
-  private def filledDownTriangle(g: Graphics, x: Int, y: Int, size: Int): Unit = {
-    val shadowTriangle = new Polygon()
-    shadowTriangle.addPoint(x + size / 2, y + size + 2)
-    shadowTriangle.addPoint(x - 1, y - 1)
-    shadowTriangle.addPoint(x + size + 2, y - 1)
-    g.setColor(Color.DARK_GRAY)
-    g.fillPolygon(shadowTriangle)
-
-    val downTriangle = new Polygon()
-    downTriangle.addPoint(x + size / 2, y + size)
-    downTriangle.addPoint(x, y)
-    downTriangle.addPoint(x + size, y)
-    g.setColor(InterfaceColors.SLIDER_HANDLE)
-    g.fillPolygon(downTriangle)
-  }
 }
 
 import Chooser._
@@ -50,16 +31,51 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   protected var constraint = new ChooserConstraint()
 
   // sub-elements of Switch
-  private val control = new ChooserClickControl()
+  protected val label = new JLabel(I18N.gui.get("edit.chooser.previewName"))
+  private val control = new ComboBox[String] {
+    addItemListener(_ => index(getSelectedIndex))
 
-  locally {
-    setOpaque(true);
-    setBackground(InterfaceColors.SLIDER_BACKGROUND)
-    setLayout(null)
-    add(control)
-    doLayout()
-    NLogoFonts.adjustDefaultFont(this)
-    addMouseWheelListener(this)
+    override def paintComponent(g: Graphics) {
+      setDiameter(6 * zoomFactor)
+
+      super.paintComponent(g)
+    }
+  }
+
+  protected var _oldSize = false
+
+  setLayout(new GridBagLayout)
+
+  addMouseWheelListener(this)
+
+  initGUI()
+
+  // this allows the layout to be reorganized when the oldSize property changes (Isaac B 2/17/25)
+  private def initGUI(): Unit = {
+    removeAll()
+
+    val c = new GridBagConstraints
+
+    c.gridx = 0
+    c.gridwidth = 1
+    c.weightx = 1
+    c.anchor = GridBagConstraints.NORTHWEST
+    c.insets =
+      if (_oldSize)
+        new Insets(3, 6, 0, 6)
+      else
+        new Insets(6, 12, 6, 6)
+
+    add(label, c)
+
+    c.fill = GridBagConstraints.BOTH
+    c.insets =
+      if (_oldSize)
+        new Insets(0, 6, 6, 6)
+      else
+        new Insets(0, 12, 6, 12)
+
+    add(control, c)
   }
 
   /// attributes
@@ -69,6 +85,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   protected def index(index: Int): Unit = {
     constraint.defaultIndex = index
     updateConstraints()
+    control.setSelectedIndex(index)
     repaint()
   }
 
@@ -76,137 +93,84 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     constraint.acceptedValues(acceptedValues)
   }
 
-  def value: AnyRef = {
+  def value: AnyRef =
     constraint.defaultValue
+
+  def oldSize: Boolean = _oldSize
+  def oldSize_=(value: Boolean): Unit = {
+    _oldSize = value
+    initGUI()
+    repaint()
+  }
+
+  def populate() {
+    control.setItems(constraint.acceptedValues.map(Dump.logoObject).toList)
   }
 
   override def updateConstraints(): Unit = {
     if (name.length > 0) {
-      new org.nlogo.window.Events.AddChooserConstraintEvent(name, constraint).raise(this)
+      new Events.AddChooserConstraintEvent(name, constraint).raise(this)
     }
-  }
-
-
-  override def doLayout(): Unit = {
-    val controlHeight = getHeight / 2
-    control.setBounds(Margin, getHeight - Margin - controlHeight,
-      getWidth - 2 * Margin, controlHeight)
   }
 
   /// size calculations
 
   override def getMinimumSize: Dimension =
-    new Dimension(MinWidth, ChooserHeight)
+    if (_oldSize)
+      new Dimension(MinWidth, ChooserHeight)
+    else
+      new Dimension(100, 60)
 
   override def getMaximumSize: Dimension =
-    new Dimension(10000, ChooserHeight)
+    if (_oldSize)
+      new Dimension(10000, ChooserHeight)
+    else
+      new Dimension(10000, 60)
 
-  override def getPreferredSize(font: Font): Dimension = {
-    var width = MinPreferredWidth
-    val metrics = getFontMetrics(font)
-    width = StrictMath.max(width, metrics.stringWidth(name) + 2 * Margin + Padding)
-    // extra 2 for triangle shadow
-    width = StrictMath.max(width,
-      longestChoiceWidth(metrics) + triangleSize + 5 * Margin + Padding + 2)
-    new Dimension(width, ChooserHeight)
-  }
-
-  private def longestChoiceWidth(metrics: FontMetrics): Int = {
-    val acceptedValues = constraint.acceptedValues
-    if (acceptedValues.isEmpty) 0
-    else acceptedValues.map(value => metrics.stringWidth(Dump.logoObject(value))).max
-  }
-
-  private def triangleSize(): Int =
-    control.getBounds().height / 2 - Margin
-
-
-  /// respond to user actions
-
-  def popup(): Unit = {
-    val menu = new WrappingPopupMenu()
-    populate(menu)
-    menu.show(this,
-      control.getBounds().x + 3,   // the 3 aligns us with the inside edge
-      control.getBounds().y + control.getBounds().height);
-  }
-
-  def populate(menu: JPopupMenu): Unit = {
-    if (constraint.acceptedValues.isEmpty) {
-      val nullItem = new JMenuItem("<No Choices>")
-      nullItem.setEnabled(false)
-      menu.add(nullItem)
-    } else {
-      constraint.acceptedValues.zipWithIndex.foreach {
-        case (constraintValue, i) =>
-          val item = new JMenuItem(Dump.logoObject(constraintValue))
-          val actionListener = new ActionListener {
-            override def actionPerformed(e: ActionEvent): Unit = {
-              index(i)
-            }
-          }
-          item.addActionListener(actionListener)
-          menu.add(item)
-      }
-    }
-  }
+  override def getPreferredSize: Dimension =
+    if (_oldSize)
+      new Dimension(MinPreferredWidth, ChooserHeight)
+    else
+      new Dimension(250, 60)
 
   ///
 
-  override def paintComponent(g: Graphics): Unit = {
-    super.paintComponent(g)
-    val size = getSize()
-    val cb = control.getBounds()
-
-    g.setColor(getForeground)
-    val metrics = g.getFontMetrics
-    val fontAscent = metrics.getMaxAscent
-    val fontHeight = fontAscent + metrics.getMaxDescent
-
-    val shortenedName =
-        NLogoFonts.shortenStringToFit(name, size.width - 2 * Margin, metrics)
-    g.drawString(shortenedName, Margin,
-      Margin + (cb.y - Margin - fontHeight) / 2 + fontAscent)
-
-    val shortenedValue =
-        NLogoFonts.shortenStringToFit(
-          Dump.logoObject(value),
-                cb.width - Margin * 3 - triangleSize() - 2, // extra 2 for triangle shadow
-                metrics)
-    g.drawString(shortenedValue,
-            cb.x + Margin,
-            cb.y + (cb.height - fontHeight) / 2 + fontAscent)
-
-    g.asInstanceOf[Graphics2D].setRenderingHint(
-      RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON)
-    filledDownTriangle(g,
-      cb.x + cb.width - Margin - triangleSize - 2,  // extra 2 for triangle shadow
-      cb.y + (cb.height - triangleSize) / 2 + 1,
-      triangleSize)
-
-    setToolTipText(if (shortenedName != name) name else null)
-    val toolTip = if (shortenedValue != Dump.logoObject(value)) Dump.logoObject(value) else null
-    control.setToolTipText(toolTip)
-  }
-
-  class ChooserClickControl extends JComponent {
-    setBackground(InterfaceColors.SLIDER_BACKGROUND)
-    setBorder(widgetBorder)
-    setOpaque(false)
-    addMouseListener(
-      new MouseAdapter() {
-        override def mousePressed(e: MouseEvent): Unit = {
-          popup()
-        }
-      })
-  }
-
   def mouseWheelMoved(e: MouseWheelEvent): Unit = {
-    if (e.getWheelRotation >= 1) {
-      val max = constraint.acceptedValues.size - 1
-      index(StrictMath.min(max, index + 1))
-    } else {
-      index(StrictMath.max(0, index - 1))
+    val i =
+      if (e.getWheelRotation >= 1) {
+        val max = constraint.acceptedValues.size - 1
+        StrictMath.min(max, index + 1)
+      } else {
+        StrictMath.max(0, index - 1)
+      }
+
+    control.setSelectedIndex(i)
+  }
+
+  override def paintComponent(g: Graphics) {
+    super.paintComponent(g)
+
+    if (isHover) {
+      val g2d = Utils.initGraphics2D(g)
+
+      g2d.setPaint(new LinearGradientPaint(control.getX.toFloat, control.getY + 3, control.getX.toFloat,
+                                           control.getY + control.getHeight + 3, Array(0f, 1f),
+                                           Array(InterfaceColors.widgetHoverShadow, InterfaceColors.Transparent)))
+      g2d.fillRoundRect(control.getX, control.getY + 3, control.getWidth, control.getHeight, 6, 6)
     }
+
+    if (label.getPreferredSize.width > label.getWidth)
+      label.setToolTipText(label.getText)
+    else
+      label.setToolTipText(null)
+  }
+
+  override def syncTheme(): Unit = {
+    setBackgroundColor(InterfaceColors.chooserBackground)
+
+    label.setForeground(InterfaceColors.widgetText)
+
+    control.syncTheme()
+    control.setBorderColor(InterfaceColors.chooserBorder)
   }
 }

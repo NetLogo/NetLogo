@@ -1,27 +1,23 @@
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Color, Image }
+import java.awt.{ GridBagConstraints, GridBagLayout, Image, Insets }
 import java.awt.event.ActionEvent
 import java.io.{ File, IOException }
 import javax.imageio.ImageIO
-import javax.swing.{ AbstractAction, Action, BorderFactory, JButton, JLabel, JPanel, SwingConstants }
+import javax.swing.{ AbstractAction, Action, JLabel, JPanel, SwingConstants }
 
 import scala.util.{ Failure, Success }
 
 import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.core.I18N
-import org.nlogo.swing.ModalProgressTask
+import org.nlogo.swing.{ Button, ModalProgressTask, Transparent }
 import org.nlogo.window.GraphicsPreviewInterface
 import org.nlogo.workspace.PreviewCommandsRunner
 
-class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel {
-  setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-  setLayout(new BorderLayout)
-  val button = new JButton
-  graphicsPreview.setBorder(BorderFactory.createLineBorder(Color.DARK_GRAY, 1))
+class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel(new GridBagLayout) with Transparent {
+  val button = new Button(null)
   val imageLabel = new JLabel {
     override val getPreferredSize = graphicsPreview.getPreferredSize
-    setBorder(BorderFactory.createLineBorder(Color.GRAY, 1))
     setHorizontalAlignment(SwingConstants.CENTER)
   }
   def showText(text: String): Unit = {
@@ -88,11 +84,15 @@ class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel {
       def actionPerformed(evt: ActionEvent): Unit = { }
     }
   }
-  add(new JPanel() {
-    add(button)
-  }, BorderLayout.PAGE_START)
-  add(new JPanel() {
-    add(imageLabel)
-    add(graphicsPreview)
-  }, BorderLayout.CENTER)
+
+  locally {
+    val c = new GridBagConstraints
+
+    c.gridx = 0
+    c.insets = new Insets(6, 0, 0, 0)
+
+    add(button, c)
+    add(imageLabel, c)
+    add(graphicsPreview, c)
+  }
 }

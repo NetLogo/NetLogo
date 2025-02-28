@@ -2,11 +2,11 @@
 
 package org.nlogo.window
 
-import java.awt.Color.{ WHITE, YELLOW }
-import javax.swing.{ BorderFactory, JLabel, UIManager }
-import javax.swing.border.{ EmptyBorder, LineBorder }
+import javax.swing.JLabel
+import javax.swing.border.EmptyBorder
 
-import org.nlogo.swing.Utils.icon
+import org.nlogo.swing.Utils
+import org.nlogo.theme.InterfaceColors
 
 class ErrorLabel extends JLabel {
 
@@ -14,14 +14,10 @@ class ErrorLabel extends JLabel {
 
   locally {
     setOpaque(true)
-    setFont(UIManager.getFont("Label.font"))
-    setForeground(UIManager.getColor("Label.foreground"))
-    setBackground(YELLOW)
-    setIcon(icon("/images/stop.gif"))
-    setBorder(BorderFactory.createCompoundBorder(
-      new LineBorder(WHITE, 4) ,
-      new EmptyBorder(4, 24, 4, 4)
-    ))
+    setForeground(InterfaceColors.errorLabelText)
+    setBackground(InterfaceColors.errorLabelBackground)
+    setIcon(Utils.iconScaledWithColor("/images/error.png", 15, 15, InterfaceColors.errorLabelText))
+    setBorder(new EmptyBorder(6, 6, 6, 6))
     setVisible(compilerError.isDefined)
   }
 
@@ -29,7 +25,7 @@ class ErrorLabel extends JLabel {
     compilerError = Option(errorOrNull)
     setVisible(compilerError.isDefined)
     val err = compilerError.map(_.getMessage).getOrElse("")
-    setText("<html>" + encodeHTML(err) + "</html>")
+    setText("<html><b>" + encodeHTML(err) + "</b></html>")
   }
 
   private var originalFontSize = -1
@@ -37,8 +33,7 @@ class ErrorLabel extends JLabel {
   def zoom(zoomFactor: Double) {
     if(originalFontSize == -1)
       originalFontSize = getFont.getSize
-    setFont(getFont.deriveFont(
-      StrictMath.ceil(originalFontSize * zoomFactor).toFloat))
+    setFont(getFont.deriveFont((originalFontSize * zoomFactor).ceil.toFloat))
     repaint()
     revalidate()
   }

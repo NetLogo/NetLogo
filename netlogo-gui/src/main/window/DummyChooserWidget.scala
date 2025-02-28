@@ -6,8 +6,6 @@ import org.nlogo.api.{ CompilerServices, Dump, Editable, Property }
 import org.nlogo.core.{ I18N, LogoList }
 import org.nlogo.core.{ Chooseable, Chooser => CoreChooser, CompilerException }
 
-import java.util.{ List => JList }
-
 class DummyChooserWidget(val compiler: CompilerServices)
     extends Chooser
     with Editable {
@@ -23,8 +21,6 @@ class DummyChooserWidget(val compiler: CompilerServices)
     repaint()
   }
 
-  setBorder(widgetBorder)
-
   override def updateConstraints(): Unit = {
     // we never update constraints in a dummy widget -- CLB
   }
@@ -32,7 +28,7 @@ class DummyChooserWidget(val compiler: CompilerServices)
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.chooser")
 
-  def propertySet: JList[Property] = Properties.dummyChooser
+  def propertySet: Seq[Property] = Properties.dummyChooser
 
   override def editFinished: Boolean = {
     super.editFinished
@@ -69,6 +65,7 @@ class DummyChooserWidget(val compiler: CompilerServices)
 
 
   override def load(model: WidgetModel): AnyRef = {
+    oldSize = model.oldSize
     setSize(model.width, model.height)
     name(model.varName)
     choicesWrapper(model.choices.map(c => Dump.logoObject(c.value, true, false)).mkString("\n"))
@@ -82,6 +79,7 @@ class DummyChooserWidget(val compiler: CompilerServices)
       display  = name.potentiallyEmptyStringToOption,
       x        = b.x,     y      = b.y,
       width    = b.width, height = b.height,
+      oldSize  = _oldSize,
       variable = name.potentiallyEmptyStringToOption,
       choices  = constraint.acceptedValues.map(Chooseable.apply).toList,
       currentChoice = index)

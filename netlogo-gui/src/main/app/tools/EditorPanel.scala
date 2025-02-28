@@ -2,33 +2,35 @@
 
 package org.nlogo.app.tools
 
-import java.awt.{ BorderLayout, Dimension }
+import java.awt.{ Dimension, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.{ FocusEvent, TextEvent, TextListener }
-import javax.swing.{ BorderFactory, DefaultComboBoxModel, JButton,
-  JComboBox, JPanel, JScrollPane }
+import javax.swing.JPanel
+import javax.swing.border.EmptyBorder
 
-import org.nlogo.core.I18N
 import org.nlogo.api.PreviewCommands, PreviewCommands.{ Compilable, Custom, Default, Manual }
 import org.nlogo.editor.{ EditorArea, EditorConfiguration }
-import org.nlogo.swing.{ HasPropertyChangeSupport, Utils},
-  Utils.icon
+import org.nlogo.swing.{ Button, ComboBox, HasPropertyChangeSupport, ScrollPane, Transparent, Utils }
+import org.nlogo.theme.InterfaceColors
 import org.nlogo.util.Implicits.RichString
 import org.nlogo.window.{ EditorAreaErrorLabel, EditorColorizer }
 
-class EditorPanel(colorizer: EditorColorizer) extends JPanel {
-
-  setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-
-  val comboBox = new ComboBox
-  val compileButton = new JButton(
-    I18N.gui.get("tabs.code.checkButton"),
-    icon("/images/check.gif")
-  )
+class EditorPanel(colorizer: EditorColorizer) extends JPanel(new GridBagLayout) with Transparent {
+  val comboBox = new PreviewCommandsComboBox
+  val compileButton = new Button("", () => {
+    if (dirty) {
+      dirty = false
+      updateCompileIcon()
+      comboBox.updateCommands(PreviewCommands(editor.getText()))
+    }
+  }) {
+    setBorder(new EmptyBorder(4, 4, 4, 4))
+  }
 
   private var dirty = false
   val textListener = new TextListener with HasPropertyChangeSupport {
     override def textValueChanged(e: TextEvent): Unit = {
       dirty = true
+      updateCompileIcon()
       // forward the event (which is always null) to whoever is interested
       propertyChangeSupport.firePropertyChange("textValueChanged", null, null)
     }
@@ -38,6 +40,9 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel {
       .withFocusTraversalEnabled(true)
       .withListener(textListener)
   val editor = new EditorArea(configuration) {
+    setBackground(InterfaceColors.codeBackground)
+    setCaretColor(InterfaceColors.textAreaText)
+
     override def getPreferredSize = new Dimension(350, 100)
     override def setText(text: String) = super.setText(text.stripTrailingWhiteSpace + "\n")
     override def getText = super.getText().stripTrailingWhiteSpace + "\n"
@@ -45,54 +50,69 @@ class EditorPanel(colorizer: EditorColorizer) extends JPanel {
       super.focusLost(fe)
       if (dirty) {
         dirty = false
+        updateCompileIcon()
         comboBox.updateCommands(PreviewCommands(getText))
       }
     }
   }
+
+  val errorLabel = new EditorAreaErrorLabel(editor)
+
+  updateCompileIcon()
+
+  locally {
+    val c = new GridBagConstraints
+
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.weightx = 1
+    c.insets = new Insets(6, 6, 6, 6)
+
+    add(comboBox, c)
+
+    c.fill = GridBagConstraints.NONE
+    c.weightx = 0
+    c.insets = new Insets(6, 0, 6, 6)
+
+    add(compileButton, c)
+
+    c.gridy = 1
+    c.gridwidth = 2
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.insets = new Insets(0, 6, 0, 6)
+
+    add(errorLabel, c)
+
+    c.gridy = 2
+    c.fill = GridBagConstraints.BOTH
+    c.weighty = 1
+
+    add(new ScrollPane(editor) {
+      setBackground(InterfaceColors.codeBackground)
+    }, c)
+  }
+
   def update(previewCommands: PreviewCommands): Unit = {
     editor.setText(previewCommands.source)
     editor.setEnabled(previewCommands.isInstanceOf[Compilable])
     dirty = false
+    updateCompileIcon()
   }
-  val errorLabel = new EditorAreaErrorLabel(editor)
 
-  object SourcePanel extends JPanel {
-    setLayout(new BorderLayout)
-    add(new JPanel {
-      setBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0))
-      setLayout(new BorderLayout)
-      add(errorLabel, BorderLayout.PAGE_START)
-      add(new JScrollPane(editor), BorderLayout.CENTER)
-    }, BorderLayout.CENTER)
-  }
-  setLayout(new BorderLayout)
-  add(new JPanel {
-    setLayout(new BorderLayout)
-    add(comboBox, BorderLayout.CENTER)
-    add(compileButton, BorderLayout.LINE_END)
-  }, BorderLayout.PAGE_START)
-  add(SourcePanel, BorderLayout.CENTER)
-}
-
-class PreviewCommandsComboBoxModel(val defaultCustomCommands: Custom = Custom(Default.source))
-  extends DefaultComboBoxModel[PreviewCommands](Array[PreviewCommands](Default, defaultCustomCommands, Manual)) {
-  val customIndex = getIndexOf(defaultCustomCommands)
-  def update(currentCommands: PreviewCommands): Unit = {
-    setSelectedItem(null)
-    val custom = currentCommands match {
-      case Custom(_) => currentCommands
-      case _         => getElementAt(customIndex)
-    }
-    removeElementAt(customIndex)
-    insertElementAt(custom, customIndex)
+  private def updateCompileIcon(): Unit = {
+    compileButton.setIcon(Utils.iconScaledWithColor("/images/check.png", 15, 15,
+                                                    if (dirty) {
+                                                      InterfaceColors.checkFilled
+                                                    } else {
+                                                      InterfaceColors.toolbarImage
+                                                    }))
   }
 }
 
-class ComboBox(val model: PreviewCommandsComboBoxModel = new PreviewCommandsComboBoxModel)
-  extends JComboBox[PreviewCommands](model) {
-  def previewCommands: Option[PreviewCommands] = Option(getItemAt(getSelectedIndex))
+class PreviewCommandsComboBox extends ComboBox[PreviewCommands](List(Default, Custom(Default.source), Manual)) {
   def updateCommands(newPreviewCommands: PreviewCommands): Unit = {
-    model.update(newPreviewCommands)
+    if (newPreviewCommands.isInstanceOf[Custom])
+      setItems(List(Default, newPreviewCommands, Manual))
+
     setSelectedItem(newPreviewCommands)
   }
 }

@@ -2,18 +2,24 @@
 
 package org.nlogo.sdm.gui
 
-import javax.swing.{ JFrame, JMenuBar, JMenuItem, WindowConstants }, WindowConstants.HIDE_ON_CLOSE
-import java.awt.{ Component, Dimension }
+import java.awt.{ Component, Dimension, Graphics }
+import java.awt.event.ActionEvent
+import javax.swing.{ AbstractAction, JFrame, JMenuBar, JMenuItem, JPopupMenu, WindowConstants },
+  WindowConstants.HIDE_ON_CLOSE
+import javax.swing.border.LineBorder
+import javax.swing.plaf.basic.BasicMenuUI
 
 import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, Tool, ViewChangeListener }
+import org.jhotdraw.util.{ Command, CommandMenu, RedoCommand, UndoCommand, UndoManager }
 
-import org.jhotdraw.util.{ CommandMenu, RedoCommand, UndoCommand, UndoManager }
-
-import org.nlogo.core.{ CompilerException, I18N, LiteralParser }
 import org.nlogo.api.{ CompilerServices, Editable, SourceOwner }
+import org.nlogo.awt.EventQueue
+import org.nlogo.core.{ CompilerException, I18N, LiteralParser }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
-import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
+import org.nlogo.swing.{ MenuItem, NetLogoIcon, Utils => SwingUtils }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.{ EditDialogFactoryInterface, Events, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild
 
 object AggregateModelEditor {
@@ -33,7 +39,10 @@ class AggregateModelEditor(
   dialogFactory: EditDialogFactoryInterface) extends JFrame(
     I18N.gui.get("menu.tools.systemDynamicsModeler"), linkParent.getGraphicsConfiguration)
   with DrawingEditor
-  with LinkChild {
+  with LinkChild
+  with Events.LoadBeginEvent.Handler
+  with ThemeSync
+  with NetLogoIcon {
 
   def this(
     linkParent: Component,
@@ -58,13 +67,15 @@ class AggregateModelEditor(
     setDefaultCloseOperation(HIDE_ON_CLOSE)
   }
 
-  val view: DrawingView = new AggregateDrawingView(this, ViewSize.width, ViewSize.height)
+  val view = new AggregateDrawingView(this, ViewSize.width, ViewSize.height)
+
   view.setDrawing(drawing)
 
   private val toolbar: AggregateModelEditorToolBar = new AggregateModelEditorToolBar(this, drawing.getModel)
 
   val tabs: AggregateTabs = {
     val editorTab = new AggregateEditorTab(toolbar, view.asInstanceOf[Component])
+    editorTab.setBorder(null)
     val proceduresTab = new AggregateProceduresTab(colorizer)
     new AggregateTabs(this, editorTab, proceduresTab)
   }
@@ -73,10 +84,11 @@ class AggregateModelEditor(
 
   private val selectionTool = new InspectionTool(this, drawing.getModel)
 
+  private val menuBar: MenuBar = new MenuBar
+
   locally {
     // Build the menu bar. For OS X, we add a bunch of the menus from app
     // so that the screen menu bar looks consistent. - AZS 6/17/05
-    val menuBar: JMenuBar = new JMenuBar()
 
     val isOSX = System.getProperty("os.name").startsWith("Mac");
 
@@ -84,7 +96,8 @@ class AggregateModelEditor(
       menuBar.add(menuBarFactory.createFileMenu);
     }
 
-    val editMenu: CommandMenu = new CommandMenu(I18N.gui.get("menu.edit"))
+    val editMenu = new SyncedCommandMenu(I18N.gui.get("menu.edit"))
+
     editMenu.add(new UndoCommand(I18N.gui.get("menu.edit.undo"), this))
     editMenu.add(new RedoCommand(I18N.gui.get("menu.edit.redo"), this))
 
@@ -117,10 +130,12 @@ class AggregateModelEditor(
     pack()
     setVisible(true)
 
-    org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
+    EventQueue.invokeLater(new Runnable() {
       def run(): Unit = { toFront() }
     })
   }
+
+  syncTheme()
 
   def clearError(): Unit = {
     tabs.clearError()
@@ -216,4 +231,82 @@ class AggregateModelEditor(
    * @see DrawingEditor
    */
   def removeViewChangeListener(vcl: ViewChangeListener): Unit = { }
+
+  def handle(e: Events.LoadBeginEvent) {
+    undoManager.clearUndos()
+    undoManager.clearRedos()
+  }
+
+  override def syncTheme(): Unit = {
+    menuBar.syncTheme()
+    tabs.syncTheme()
+    toolbar.syncTheme()
+    view.syncTheme()
+  }
+
+  private class MenuBar extends JMenuBar with ThemeSync {
+    override def paintComponent(g: Graphics) {
+      val g2d = SwingUtils.initGraphics2D(g)
+
+      g2d.setColor(InterfaceColors.menuBackground)
+      g2d.fillRect(0, 0, getWidth, getHeight)
+    }
+
+    override def paintBorder(g: Graphics) {
+      val g2d = SwingUtils.initGraphics2D(g)
+
+      g2d.setColor(InterfaceColors.menuBarBorder)
+      g2d.drawLine(0, getHeight - 1, getWidth, getHeight - 1)
+    }
+
+    def syncTheme {
+      getComponents.foreach(_ match {
+        case ts: ThemeSync => ts.syncTheme()
+        case _ =>
+      })
+    }
+  }
+
+  private class SyncedCommandMenu(name: String) extends CommandMenu(name) with ThemeSync {
+    private val menuUI = new BasicMenuUI with ThemeSync {
+      override def syncTheme(): Unit = {
+        setForeground(InterfaceColors.toolbarText)
+
+        selectionBackground = InterfaceColors.menuBackgroundHover
+        selectionForeground = InterfaceColors.menuTextHover
+        acceleratorForeground = InterfaceColors.toolbarText
+        acceleratorSelectionForeground = InterfaceColors.menuTextHover
+        disabledForeground = InterfaceColors.menuTextDisabled
+      }
+    }
+
+    setUI(menuUI)
+    syncTheme()
+
+    override def addMenuItem(command: Command, menuItem: JMenuItem) {
+      super.addMenuItem(command, new MenuItem(new AbstractAction(command.name) {
+        def actionPerformed(e: ActionEvent) {
+          command.execute()
+        }
+      }))
+    }
+
+    override def getPopupMenu: JPopupMenu = {
+      val menu = super.getPopupMenu
+
+      menu.setBackground(InterfaceColors.menuBackground)
+      menu.setBorder(new LineBorder(InterfaceColors.menuBorder))
+
+      menu
+    }
+
+    override def syncTheme(): Unit = {
+      menuUI.syncTheme()
+
+      getMenuComponents.foreach(_ match {
+        case ts: ThemeSync => ts.syncTheme()
+        case _ =>
+      })
+    }
+  }
 }

@@ -2,18 +2,27 @@
 
 package org.nlogo.properties
 
-abstract class Label(accessor: PropertyAccessor[String], useTooltip: Boolean)
-  extends PropertyEditor(accessor, useTooltip)
-{
-  setLayout(new java.awt.BorderLayout(BORDER_PADDING, 0))
-  val label = new javax.swing.JLabel(accessor.displayName)
-  tooltipFont(label)
-  add(label, java.awt.BorderLayout.CENTER)
+import java.awt.{ BorderLayout, GridBagConstraints }
+import javax.swing.JLabel
+
+import org.nlogo.theme.InterfaceColors
+
+abstract class Label(accessor: PropertyAccessor[String]) extends PropertyEditor(accessor) {
+  setLayout(new BorderLayout(BORDER_PADDING, 0))
+  setOpaque(true)
+  private val label = new JLabel(accessor.displayName)
+  add(label, BorderLayout.CENTER)
   override def get: Option[String] = Some("")
   override def set(value: String) { }
   override def getConstraints = {
     val c = super.getConstraints
-    c.fill = java.awt.GridBagConstraints.HORIZONTAL
+    c.fill = GridBagConstraints.HORIZONTAL
     c
+  }
+
+  override def syncTheme(): Unit = {
+    setBackground(InterfaceColors.bspaceHintBackground)
+
+    label.setForeground(InterfaceColors.dialogText)
   }
 }

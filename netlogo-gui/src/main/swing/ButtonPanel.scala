@@ -2,27 +2,19 @@
 
 package org.nlogo.swing
 
+import java.awt.Component
+import javax.swing.{ JComponent, JPanel }
+
 import org.nlogo.awt.RowLayout
-import java.awt.Component._
-import javax.swing.{JButton, BorderFactory, JPanel, JComponent}
 
-// handy for putting rows of buttons at the bottom of dialogs,
-// and having them reverse order on Macs
+// handy for putting rows of buttons at the bottom of dialogs
 
-// Mac is Cancel OK, Windows is OK Cancel - JC 4/7/10
-object ButtonPanel {
-  val MAC = System.getProperty("os.name").startsWith("Mac")
-  def apply(buttons: JComponent*) = new ButtonPanel(buttons.toArray)
-  def apply(buttons: List[JButton]) = new ButtonPanel(buttons.toArray)
-}
+class ButtonPanel(buttons: Seq[JComponent])
+  extends JPanel(new RowLayout(10, Component.CENTER_ALIGNMENT, Component.CENTER_ALIGNMENT)) with Transparent {
 
-class ButtonPanel(buttons: Array[JComponent]) extends JPanel {
-  import ButtonPanel.MAC
-  if (MAC) {
-    // avoid grow box in lower right corner of dialog
-    setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 20));
-  }
-  setLayout(new RowLayout(10, if (MAC) RIGHT_ALIGNMENT else CENTER_ALIGNMENT, CENTER_ALIGNMENT))
-
-  (if (MAC) buttons.reverse else buttons).foreach(add)
+  // obey platform standards
+  if (System.getProperty("os.name").contains("Mac"))
+    buttons.reverse.foreach(add)
+  else
+    buttons.foreach(add)
 }

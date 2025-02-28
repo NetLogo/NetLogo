@@ -2,11 +2,11 @@
 
 package org.nlogo.window
 
+import java.awt.{ Dimension, Graphics }
+
 import org.nlogo.api.{ Editable, Property }
 import org.nlogo.core.{ I18N, Monitor => CoreMonitor }
-
-import java.awt.{ Color, Dimension, Graphics, Font }
-import java.util.{ List => JList }
+import org.nlogo.theme.InterfaceColors
 
 object DummyMonitorWidget {
   private val LeftMargin = 5;
@@ -30,14 +30,10 @@ class DummyMonitorWidget
 
   private var _name: String = ""
   private var _decimalPlaces: Int = DefaultDecimalPlaces;
+  private var _oldSize = false
 
   def innerSource = ""
   def fontSize = DefaultFontSize
-
-  setOpaque(true)
-  setBackground(InterfaceColors.MONITOR_BACKGROUND)
-  setBorder(widgetBorder)
-  org.nlogo.awt.Fonts.adjustDefaultFont(this)
 
   def name: String = _name
 
@@ -46,10 +42,16 @@ class DummyMonitorWidget
     displayName = name
   }
 
+  def oldSize: Boolean = _oldSize
+  def oldSize_=(value: Boolean): Unit = {
+    _oldSize = value
+    repaint()
+  }
+
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.monitor")
 
-  def propertySet: JList[Property] =
+  def propertySet: Seq[Property] =
     Properties.dummyMonitor
 
   override def getMinimumSize: Dimension =
@@ -58,9 +60,9 @@ class DummyMonitorWidget
   override def getMaximumSize: Dimension =
     new Dimension(10000, MaxHeight)
 
-  override def getPreferredSize(font: Font): Dimension = {
+  override def getPreferredSize: Dimension = {
     val size = getMinimumSize
-    val fontMetrics = getFontMetrics(font)
+    val fontMetrics = getFontMetrics(getFont)
     size.width = StrictMath.max(size.width, fontMetrics.stringWidth(displayName) + FontPadding)
     size.height = StrictMath.max(size.height, fontMetrics.getMaxDescent + fontMetrics.getMaxAscent + FontPadding)
     size
@@ -71,16 +73,19 @@ class DummyMonitorWidget
     val fm = g.getFontMetrics;
     val labelHeight = fm.getMaxDescent + fm.getMaxAscent
     val d = getSize()
-    g.setColor(getForeground)
     val boxHeight = StrictMath.ceil(labelHeight * 1.4).toInt
 
+    g.setColor(InterfaceColors.widgetText)
     g.drawString(displayName, LeftMargin,
         d.height - BottomMargin - boxHeight - fm.getMaxDescent - 1)
-    g.setColor(Color.WHITE)
 
+    g.setColor(InterfaceColors.displayAreaBackground)
     g.fillRect(LeftMargin, d.height - BottomMargin - boxHeight,
         d.width - LeftMargin - RightMargin - 1, boxHeight)
-    g.setColor(Color.BLACK);
+  }
+
+  override def syncTheme(): Unit = {
+    setBackgroundColor(InterfaceColors.monitorBackground)
   }
 
   def decimalPlaces: Int = _decimalPlaces
@@ -93,6 +98,7 @@ class DummyMonitorWidget
   override def load(monitor: WidgetModel): AnyRef = {
     name(monitor.display.optionToPotentiallyEmptyString)
     decimalPlaces(monitor.precision)
+    oldSize = monitor.oldSize
     setSize(monitor.width, monitor.height)
     this
   }

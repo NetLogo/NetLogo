@@ -2,20 +2,21 @@
 
 package org.nlogo.hubnet.server.gui
 
+import java.awt.Component
+import java.net.{ InetAddress, NetworkInterface }
+
 import org.nlogo.api.{ AbstractModelLoader, ModelType, ViewInterface }
 import org.nlogo.api.HubNetInterface.ClientInterface
-import org.nlogo.core.{ Femto, Model, Widget => CoreWidget }
-import org.nlogo.hubnet.protocol.ComputerInterface
-import org.nlogo.hubnet.connection.{ HubNetException, NetworkUtils }
-import org.nlogo.hubnet.server.{HubNetManager, ClientEventListener, ConnectionManager}
-import org.nlogo.fileformat.FileFormat.ModelConversion
-import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.awt.EventQueue.invokeLater
+import org.nlogo.core.{ Femto, I18N, Model, Widget => CoreWidget }
+import org.nlogo.fileformat.FileFormat.ModelConversion
+import org.nlogo.hubnet.connection.{ HubNetException, NetworkUtils }
+import org.nlogo.hubnet.protocol.ComputerInterface
+import org.nlogo.hubnet.server.{ ClientEventListener, ConnectionManager, HubNetManager }
+import org.nlogo.nvm.DefaultCompilerServices
+import org.nlogo.swing.OptionPane
+import org.nlogo.theme.ThemeSync
 import org.nlogo.window._
-
-import java.net.{ InetAddress, NetworkInterface }
-import java.awt.Component
-import javax.swing.JOptionPane
 
 class GUIHubNetManager(workspace: GUIWorkspace,
                        linkParent: Component,
@@ -23,7 +24,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
                        menuFactory: MenuBarFactory,
                        loader: AbstractModelLoader,
                        modelConverter: ModelConversion)
-  extends HubNetManager(workspace, loader, modelConverter) with ViewInterface {
+  extends HubNetManager(workspace, loader, modelConverter) with ViewInterface with ThemeSync {
 
   private var _clientEditor: HubNetClientEditor = new HubNetClientEditor(workspace, linkParent, ifactory, menuFactory)
   // used in the discovery messages, and displayed in the control center.
@@ -49,13 +50,14 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   /**
    * Launch a local computer client, if there is a session open connect to it.
    */
-  override def newClient(isRobo: Boolean, waitTime: Int) {
+  override def newClient(isRobo: Boolean, waitTime: Int): Option[AnyRef] = {
     val clientApp = Femto.get[ClientAppInterface]("org.nlogo.hubnet.client.ClientApp")
     val host = try Some(InetAddress.getLocalHost.getHostAddress.toString)
     catch {case ex: java.net.UnknownHostException => None}
     // TODO: this seems like a bunch of bugs waiting to happen
     clientApp.startup("", host.orNull, connectionManager.port, true,
       isRobo, waitTime, new DefaultCompilerServices(workspace.compiler))
+    Some(clientApp)
   }
 
   /// client editor
@@ -105,6 +107,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
         new ControlCenter(connectionManager, workspace.getFrame, serverName, workspace.modelNameForDisplay, serverInterface.map(_._2))
       controlCenter.pack()
     }
+    controlCenter.syncTheme()
     controlCenter.setVisible(true)
   }
 
@@ -138,12 +141,12 @@ class GUIHubNetManager(workspace: GUIWorkspace,
       serverName = name
       serverInterface = selectedNetwork
       if (serverInterface.isEmpty) {
-        JOptionPane.showMessageDialog(workspace.getFrame,
-          "Unable to find a suitable network connection for HubNet, please check your network connection")
+        new OptionPane(workspace.getFrame, I18N.gui.get("common.messages.error"),
+                       I18N.gui.get("edit.hubnet.checkNetwork"), OptionPane.Options.Ok, OptionPane.Icons.Error)
       }
       else if (serverInterface.exists(_._1.isLoopback))
-        JOptionPane.showMessageDialog(workspace.getFrame,
-          "Unable to find an external network connection, HubNet will be served locally")
+        new OptionPane(workspace.getFrame, I18N.gui.get("common.messages.error"),
+                       I18N.gui.get("edit.hubnet.noNetwork"), OptionPane.Options.Ok, OptionPane.Icons.Error)
     }
     serverInterface.foreach { nw =>
       connectionManager.startup(serverName, nw)
@@ -180,5 +183,12 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   // JC - 3/31/11
   def sendFromLocalClient(clientName:String, tag: String, content: AnyRef) = {
     Some("unimplemented")
+  }
+
+  override def syncTheme(): Unit = {
+    _clientEditor.syncTheme()
+
+    if (controlCenter != null)
+      controlCenter.syncTheme()
   }
 }

@@ -4,7 +4,8 @@ package org.nlogo.api
 
 trait Editable {
   def helpLink: Option[String]
-  def propertySet: java.util.List[Property]
+  def propertySet: Seq[Property]
+  def liveUpdate: Boolean = false
   def classDisplayName: String
   def editFinished(): Boolean
 
@@ -22,7 +23,7 @@ trait Editable {
 
 trait DummyEditable extends Editable with DummyErrorHandler{
   def helpLink = None
-  override def propertySet = java.util.Collections.emptyList[Property]
+  override def propertySet = Seq()
   override def classDisplayName = ""
   override def editFinished() = true
   override def sourceOffset = 0

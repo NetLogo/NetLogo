@@ -2,29 +2,44 @@
 
 package org.nlogo.lab.gui
 
-import org.nlogo.swing.{ RichAction, OptionDialog }
-import org.nlogo.api.LabProtocol
-import org.nlogo.nvm.Workspace
-import org.nlogo.nvm.LabInterface.ProgressListener
-import org.nlogo.window.{ GUIWorkspace, PlotWidget, SpeedSliderPanel }
-import javax.swing.ScrollPaneConstants._
-import javax.swing._
-import java.awt.Dimension
-import org.nlogo.api.{ Dump, ExportPlotWarningAction, PeriodicUpdateDelay }
-import org.nlogo.plot.DummyPlotManager
-import org.nlogo.core.I18N
+import java.awt.{ Dialog, Dimension, GridBagConstraints, GridBagLayout, Insets, Window }
+import javax.swing.{ JDialog, JPanel, ScrollPaneConstants, Timer, WindowConstants }
+import javax.swing.border.{ EmptyBorder, LineBorder }
 
-private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervisor,
+import org.nlogo.api.{ Dump, ExportPlotWarningAction, LabProtocol, PeriodicUpdateDelay }
+import org.nlogo.awt.Positioning
+import org.nlogo.core.I18N
+import org.nlogo.nvm.LabInterface.ProgressListener
+import org.nlogo.nvm.Workspace
+import org.nlogo.plot.DummyPlotManager
+import org.nlogo.swing.{ Button, CheckBox, OptionPane, RichAction, ScrollPane, TextArea, Transparent }
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.window.{ GUIWorkspace, PlotWidget, SpeedSliderPanel }
+
+private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor,
                                    saveProtocol: (LabProtocol) => Unit)
-              extends JDialog(parent, java.awt.Dialog.DEFAULT_MODALITY_TYPE) with ProgressListener {
+              extends JDialog(parent, Dialog.DEFAULT_MODALITY_TYPE) with ProgressListener with ThemeSync {
   val protocol = supervisor.worker.protocol
   val workspace = supervisor.workspace.asInstanceOf[GUIWorkspace]
   private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace.progressDialog")
   private val totalRuns = protocol.countRuns
-  private val progressArea = new JTextArea(10 min (protocol.valueSets(0).size + 3), 0)
+  private val progressArea = new TextArea(10 min (protocol.valueSets(0).size + 3), 0)
+  private val scrollPane = new ScrollPane(progressArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   private val timer = new Timer(PeriodicUpdateDelay.DelayInMilliseconds, periodicUpdateAction)
-  private val displaySwitch = new JCheckBox(displaySwitchAction)
-  private val plotsAndMonitorsSwitch = new JCheckBox(plotsAndMonitorsSwitchAction)
+  private val displaySwitch = new CheckBox(displaySwitchAction)
+  private val plotsAndMonitorsSwitch = new CheckBox(plotsAndMonitorsSwitchAction)
+  private val pauseAction = RichAction(I18N.gui("pause")) { _ =>
+    if (!supervisor.paused)
+      supervisor.pause()
+      pause()
+  }
+  private val pauseButton = new Button(pauseAction)
+  private val abortAction = RichAction(I18N.gui.get("tools.behaviorSpace.abort")) { _ =>
+    supervisor.abort()
+  }
+  private val abortButton = new Button(abortAction)
+  private val speedSlider = new SpeedSliderPanel(workspace)
 
   private var updatePlots = false
   private var started = 0L
@@ -65,21 +80,19 @@ private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervis
   locally {
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
     addWindowListener(new java.awt.event.WindowAdapter {
-      override def windowClosing(e: java.awt.event.WindowEvent) { abortAction.actionPerformed(null) }
+      override def windowClosing(e: java.awt.event.WindowEvent): Unit = { abortAction.actionPerformed(null) }
     })
     setTitle(I18N.gui("title", protocol.name))
     setResizable(true)
-    val layout = new java.awt.GridBagLayout
-    getContentPane.setLayout(layout)
-    val c = new java.awt.GridBagConstraints
+    getContentPane.setLayout(new GridBagLayout)
+    val c = new GridBagConstraints
 
-    c.gridwidth = java.awt.GridBagConstraints.REMAINDER
-    c.fill = java.awt.GridBagConstraints.BOTH
+    c.gridwidth = GridBagConstraints.REMAINDER
+    c.fill = GridBagConstraints.BOTH
     c.weightx = 1
     c.weighty = 1
-    c.insets = new java.awt.Insets(6, 6, 0, 6)
+    c.insets = new Insets(6, 6, 0, 6)
 
-    val speedSlider = new SpeedSliderPanel(workspace)
     getContentPane.add(speedSlider, c)
 
     c.weighty = 1.0
@@ -89,65 +102,55 @@ private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervis
     }
 
     progressArea.setEditable(false)
-    progressArea.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5))
-    val scrollPane = new JScrollPane(progressArea, VERTICAL_SCROLLBAR_ALWAYS, HORIZONTAL_SCROLLBAR_AS_NEEDED)
+    progressArea.setBorder(new EmptyBorder(5, 5, 5, 5))
+
     getContentPane.add(scrollPane, c)
     updateProgressArea(true)
     scrollPane.setMinimumSize(scrollPane.getPreferredSize())
 
     c.weighty = 0.0
-    c.fill = java.awt.GridBagConstraints.HORIZONTAL
+    c.fill = GridBagConstraints.HORIZONTAL
     getContentPane.add(displaySwitch, c)
 
-    c.insets = new java.awt.Insets(0, 6, 0, 6)
+    c.insets = new Insets(0, 6, 0, 6)
     getContentPane.add(plotsAndMonitorsSwitch, c)
 
-    val buttonPanel = new JPanel
+    val buttonPanel = new JPanel with Transparent
 
-    buttonPanel.add(new JButton(pauseAction))
-    buttonPanel.add(new JButton(abortAction))
+    buttonPanel.add(pauseButton)
+    buttonPanel.add(abortButton)
 
-    c.fill = java.awt.GridBagConstraints.NONE
-    c.anchor = java.awt.GridBagConstraints.EAST
-    c.insets = new java.awt.Insets(6, 6, 6, 6)
+    c.fill = GridBagConstraints.NONE
+    c.anchor = GridBagConstraints.EAST
+    c.insets = new Insets(6, 6, 6, 6)
 
     getContentPane.add(buttonPanel, c)
 
     timer.start()
 
     pack()
-    org.nlogo.awt.Positioning.center(this, parent)
+
+    Positioning.center(this, parent)
   }
 
   override def getMinimumSize = getPreferredSize
   override def getPreferredSize = new Dimension(super.getPreferredSize.width max 450, super.getPreferredSize.height)
 
-  // The following actions are declared lazy so we can use them in the
-  // initialization code above.  Two cheers for Scala. - ST 11/12/08
-
-  lazy val pauseAction = RichAction(I18N.gui("pause")) { _ =>
-    if (!supervisor.paused)
-      supervisor.pause()
-      pause()
-  }
   def pause(): Unit = {
     timer.stop()
     pauseAction.setEnabled(false)
     abortAction.setEnabled(false)
     progressArea.setText(I18N.gui("waiting"))
   }
-  lazy val abortAction = RichAction(I18N.gui.get("tools.behaviorSpace.abort")) { _ =>
-    supervisor.abort()
-  }
   lazy val periodicUpdateAction = RichAction(I18N.gui("updateTime")) { _ =>
     updateProgressArea(false)
     plotWidgetOption.foreach{ plotWidget => if (updatePlots) plotWidget.handle(null) }
   }
   lazy val displaySwitchAction = RichAction(I18N.gui("updateView")) { e =>
-    workspace.displaySwitchOn(e.getSource.asInstanceOf[JCheckBox].isSelected)
+    workspace.displaySwitchOn(e.getSource.asInstanceOf[CheckBox].isSelected)
   }
   lazy val plotsAndMonitorsSwitchAction = RichAction(I18N.gui("updatePlotsAndMonitors")) { e =>
-    updatePlots = e.getSource.asInstanceOf[JCheckBox].isSelected
+    updatePlots = e.getSource.asInstanceOf[CheckBox].isSelected
     if (updatePlots) workspace.setPeriodicUpdatesEnabled(true)
     else {
       workspace.setPeriodicUpdatesEnabled(false)
@@ -189,7 +192,7 @@ private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervis
     plotsAndMonitorsSwitch.setEnabled(enabled)
   }
 
-  def close() {
+  def close(): Unit = {
     timer.stop()
     setVisible(false)
     dispose()
@@ -197,15 +200,21 @@ private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervis
     workspace.setPeriodicUpdatesEnabled(true)
   }
 
-  def writing() {
+  def writing(): Unit = {
     timer.stop()
     progressArea.setText(I18N.gui("writing"))
   }
 
+  override def setVisible(visible: Boolean): Unit = {
+    syncTheme()
+
+    super.setVisible(visible)
+  }
+
   /// ProgressListener implementation
 
-  override def experimentStarted() {started = System.currentTimeMillis}
-  override def runStarted(w: Workspace, runNumber: Int, settings: List[(String, Any)]) {
+  override def experimentStarted(): Unit = {started = System.currentTimeMillis}
+  override def runStarted(w: Workspace, runNumber: Int, settings: List[(String, Any)]): Unit = {
     if (!w.isHeadless) {
       runCount = runNumber
       steps = 0
@@ -216,36 +225,34 @@ private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervis
       updateProgressArea(true)
     }
   }
-  override def stepCompleted(w: Workspace, steps: Int) {
+  override def stepCompleted(w: Workspace, steps: Int): Unit = {
     if (!w.isHeadless) {
       this.steps = steps
       if (workspace.triedToExportPlot && workspace.exportPlotWarningAction == ExportPlotWarningAction.Warn) {
         workspace.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
         org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
-          def run() {
-            OptionDialog.showMessage(
-              workspace.getFrame, I18N.gui("updatingPlotsWarningTitle"),
-              I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
-              Array(I18N.gui.get("common.buttons.continue"))
-            )
+          def run(): Unit = {
+            new OptionPane(workspace.getFrame, I18N.gui("updatingPlotsWarningTitle"),
+                           I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"),
+                           OptionPane.Options.Ok, OptionPane.Icons.Warning)
           }
         })
       }
     }
   }
-  override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]) {
+  override def measurementsTaken(w: Workspace, runNumber: Int, step: Int, values: List[AnyRef]): Unit = {
     if (!w.isHeadless) plotNextPoint(values)
   }
 
   private def invokeAndWait(f: => Unit) =
-    try org.nlogo.awt.EventQueue.invokeAndWait(new Runnable {def run() {f}})
+    try org.nlogo.awt.EventQueue.invokeAndWait(new Runnable {def run(): Unit = {f}})
     catch {
       case ex: InterruptedException =>
         // we may get interrupted if the user aborts the run - ST 10/30/03
         org.nlogo.api.Exceptions.ignore(ex)
     }
 
-  private def resetPlot() {
+  private def resetPlot(): Unit = {
     plotWidgetOption.foreach{ plotWidget => invokeAndWait {
       plotWidget.clear()
       for (metricNumber <- 0 until protocol.metrics.length) yield {
@@ -267,7 +274,7 @@ private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervis
     buf.toString
   }
 
-  private def plotNextPoint(measurements: List[AnyRef]) {
+  private def plotNextPoint(measurements: List[AnyRef]): Unit = {
     plotWidgetOption.foreach { plotWidget => invokeAndWait {
       for (metricNumber <- 0 until protocol.metrics.length) {
         val measurement = measurements(metricNumber)
@@ -280,7 +287,7 @@ private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervis
     }}
   }
 
-  private def updateProgressArea(force: Boolean) {
+  private def updateProgressArea(force: Boolean): Unit = {
     def pad(s: String) = if (s.length == 1) ("0" + s) else s
     val elapsedMillis: Int = ((System.currentTimeMillis - started) / 1000).toInt
     val hours = (elapsedMillis / 3600).toString
@@ -290,12 +297,31 @@ private [gui] class ProgressDialog(parent: java.awt.Window, supervisor: Supervis
     if (force || elapsed != newElapsed) {
       elapsed = newElapsed
       org.nlogo.awt.EventQueue.invokeLater(new Runnable {
-        def run() {
+        def run(): Unit = {
           progressArea.setText(I18N.gui("progressArea", runCount.toString,
             totalRuns.toString, steps.toString, elapsed, settingsString))
           progressArea.setCaretPosition(0)
         }
       })
     }
+  }
+
+  override def syncTheme(): Unit = {
+    getContentPane.setBackground(InterfaceColors.dialogBackground)
+
+    progressArea.syncTheme()
+
+    scrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable))
+    scrollPane.setBackground(InterfaceColors.textAreaBackground)
+
+    displaySwitch.setForeground(InterfaceColors.dialogText)
+    plotsAndMonitorsSwitch.setForeground(InterfaceColors.dialogText)
+
+    speedSlider.syncTheme()
+
+    pauseButton.syncTheme()
+    abortButton.syncTheme()
+
+    plotWidgetOption.foreach(_.syncTheme())
   }
 }

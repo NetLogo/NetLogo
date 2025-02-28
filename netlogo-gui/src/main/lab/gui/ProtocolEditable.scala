@@ -2,11 +2,11 @@
 
 package org.nlogo.lab.gui
 
-import org.nlogo.api.{ LabProtocol, LabVariableParser }
-import org.nlogo.core.I18N
-import org.nlogo.api.{ LabProtocol, RefValueSet }
 import java.awt.{ GridBagConstraints, Window }
-import org.nlogo.api.{ CompilerServices, Editable, Property }
+
+import org.nlogo.api.{ CompilerServices, Editable, LabProtocol, LabVariableParser, Property, RefValueSet }
+import org.nlogo.core.I18N
+import org.nlogo.swing.OptionPane
 
 // normally we'd be package-private but the org.nlogo.properties stuff requires we be public - ST 2/25/09
 
@@ -27,43 +27,41 @@ class ProtocolEditable(protocol: LabProtocol,
   private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace")
 
   val propertySet = {
-    import scala.collection.JavaConverters._
-    List(Property("hint", Property.Label, "<html>"+I18N.gui("hint")+"</html>",
-                  backgroundColor = new java.awt.Color(128, 200, 128, 64), // de york green (light yellow-ish green)
-                  borderSize = 6),
-         Property("name", Property.String, I18N.gui("experimentName"),
-                  "<html>"+I18N.gui("experimentName.info")+"</html>"),
-         Property("valueSets", Property.ReporterOrEmpty,
-                  I18N.gui("vary"), "<html>"+I18N.gui("vary.info")+"</html>"),
-         Property("repetitions", Property.Integer, I18N.gui("repetitions"),
-                  "<html>"+I18N.gui("repetitions.info")+"</html>"),
-         Property("sequentialRunOrder", Property.Boolean, I18N.gui("sequentialRunOrder"),
-                  "<html>"+ I18N.gui("sequentialRunOrder.info") +"</html>"),
-         Property("metrics", Property.ReporterOrEmpty,
-                  I18N.gui("metrics"),
-                  "<html>"+I18N.gui("metrics.info")+"</html>"),
-         Property("runMetricsEveryStep", Property.MetricsBoolean, I18N.gui("runMetricsEveryStep"),
-                  "<html>"+I18N.gui("runMetricsEveryStep.info")+"</html>"),
-         Property("runMetricsCondition", Property.ReporterLine, I18N.gui("runMetricsCondition"),
-                  "<html>"+I18N.gui("runMetricsCondition.info")+"</html>", optional = true, enabled = !protocol.runMetricsEveryStep),
-         Property("preExperimentCommands", Property.Commands, I18N.gui("preExperimentCommands"),
-                  "<html>"+I18N.gui("preExperimentCommands.info")+"</html>",
-                  collapsible=true, collapseByDefault=true),
-         Property("setupCommands", Property.ReporterOrEmpty, I18N.gui("setupCommands"),
-                  "<html>"+I18N.gui("setupCommands.info")+"</html>",
-                  gridWidth = GridBagConstraints.RELATIVE),
-         Property("goCommands", Property.Commands, I18N.gui("goCommands"),
-                  "<html>"+I18N.gui("goCommands.info")+"</html>"),
-         Property("exitCondition", Property.ReporterOrEmpty, I18N.gui("exitCondition"),
-                  "<html>"+I18N.gui("exitCondition.info")+"</html>",
-                  gridWidth = GridBagConstraints.RELATIVE, collapsible=true, collapseByDefault=true),
-         Property("postRunCommands", Property.Commands, I18N.gui("postRunCommands"),
-                  "<html>"+I18N.gui("postRunCommands.info")+"</html>", collapsible=true, collapseByDefault=true),
-         Property("postExperimentCommands", Property.Commands, I18N.gui("postExperimentCommands"),
-                  "<html>"+I18N.gui("postExperimentCommands.info")+"</html>",
-                  collapsible=true, collapseByDefault=true),
-         Property("timeLimit", Property.Integer, I18N.gui("timeLimit"),
-                  "<html>"+I18N.gui("timeLimit.info")+"</html>")).asJava
+    Seq(Property("hint", Property.Label, "<html>" + I18N.gui("hint") + "</html>", borderSize = 6),
+        Property("name", Property.String, I18N.gui("experimentName"),
+                 "<html>"+I18N.gui("experimentName.info")+"</html>", focus = true),
+        Property("valueSets", Property.ReporterOrEmpty,
+                 I18N.gui("vary"), "<html>"+I18N.gui("vary.info")+"</html>"),
+        Property("repetitions", Property.Integer, I18N.gui("repetitions"),
+                 "<html>"+I18N.gui("repetitions.info")+"</html>"),
+        Property("sequentialRunOrder", Property.Boolean, I18N.gui("sequentialRunOrder"),
+                 "<html>"+ I18N.gui("sequentialRunOrder.info") +"</html>"),
+        Property("metrics", Property.ReporterOrEmpty,
+                 I18N.gui("metrics"),
+                 "<html>"+I18N.gui("metrics.info")+"</html>"),
+        Property("runMetricsEveryStep", Property.MetricsBoolean, I18N.gui("runMetricsEveryStep"),
+                 "<html>"+I18N.gui("runMetricsEveryStep.info")+"</html>"),
+        Property("runMetricsCondition", Property.ReporterLine, I18N.gui("runMetricsCondition"),
+                 "<html>"+I18N.gui("runMetricsCondition.info")+"</html>", optional = true,
+                 enabled = !protocol.runMetricsEveryStep),
+        Property("preExperimentCommands", Property.Commands, I18N.gui("preExperimentCommands"),
+                 "<html>"+I18N.gui("preExperimentCommands.info")+"</html>",
+                 collapsible = true, collapseByDefault = true),
+        Property("setupCommands", Property.ReporterOrEmpty, I18N.gui("setupCommands"),
+                 "<html>"+I18N.gui("setupCommands.info")+"</html>",
+                 gridWidth = GridBagConstraints.RELATIVE),
+        Property("goCommands", Property.Commands, I18N.gui("goCommands"),
+                 "<html>"+I18N.gui("goCommands.info")+"</html>"),
+        Property("exitCondition", Property.ReporterOrEmpty, I18N.gui("exitCondition"),
+                 "<html>"+I18N.gui("exitCondition.info")+"</html>",
+                 gridWidth = GridBagConstraints.RELATIVE, collapsible = true, collapseByDefault = true),
+        Property("postRunCommands", Property.Commands, I18N.gui("postRunCommands"),
+                 "<html>"+I18N.gui("postRunCommands.info")+"</html>", collapsible = true, collapseByDefault = true),
+        Property("postExperimentCommands", Property.Commands, I18N.gui("postExperimentCommands"),
+                 "<html>"+I18N.gui("postExperimentCommands.info")+"</html>",
+                 collapsible = true, collapseByDefault = true),
+        Property("timeLimit", Property.Integer, I18N.gui("timeLimit"),
+                 "<html>"+I18N.gui("timeLimit.info")+"</html>"))
   }
   // These are the actual vars the user edits.  Before editing they are copied out of the
   // original LabProtocol; after editing a new LabProtocol is created.
@@ -87,10 +85,10 @@ class ProtocolEditable(protocol: LabProtocol,
   def editFinished: Boolean = get.isDefined
   def get: Option[LabProtocol] = {
     def complain(message: String) {
-      if (!java.awt.GraphicsEnvironment.isHeadless)
-        javax.swing.JOptionPane.showMessageDialog(
-          window, I18N.gui.getN("edit.behaviorSpace.invalidVarySpec", message),
-         I18N.gui("invalid"), javax.swing.JOptionPane.ERROR_MESSAGE)
+      if (!java.awt.GraphicsEnvironment.isHeadless) {
+        new OptionPane(window, I18N.gui("invalid"), I18N.gui.getN("edit.behaviorSpace.invalidVarySpec", message),
+                       OptionPane.Options.Ok, OptionPane.Icons.Error)
+      }
     }
     return LabVariableParser.parseVariables(valueSets, repetitions, worldLock, compiler) match {
       case (Some((constants: List[RefValueSet], subExperiments: List[List[RefValueSet]])), _) =>

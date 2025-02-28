@@ -2,16 +2,19 @@
 
 package org.nlogo.app.common
 
-import java.awt.{BorderLayout, Dimension}
-import java.awt.event.{ActionEvent, ActionListener, KeyEvent, KeyListener}
-import javax.swing.{JScrollPane, KeyStroke, ScrollPaneConstants}
+import java.awt.{ BorderLayout, Dimension, Font }
+import java.awt.event.{ ActionEvent, ActionListener, KeyEvent, KeyListener }
+import javax.swing.{ KeyStroke, ScrollPaneConstants }
 
-import org.nlogo.agent.{Agent, AgentSet, OutputObject}
-import org.nlogo.core.{AgentKind, CompilerException, I18N, Widget => CoreWidget}
+import org.nlogo.agent.{ Agent, AgentSet, OutputObject }
+import org.nlogo.awt.Fonts
+import org.nlogo.core.{ AgentKind, CompilerException, I18N, Widget => CoreWidget }
 import org.nlogo.editor.EditorField
-import org.nlogo.ide.{AutoSuggestAction, CodeCompletionPopup}
+import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup }
+import org.nlogo.swing.{ ScrollPane, Transparent }
+import org.nlogo.theme.InterfaceColors
+import org.nlogo.window.{ CommandCenterInterface, EditorColorizer, JobWidget, Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
-import org.nlogo.window.{CommandCenterInterface, EditorColorizer, JobWidget, Events => WindowEvents}
 
 import scala.collection.immutable.List
 
@@ -54,9 +57,9 @@ class CommandLine(commandCenter: CommandCenterInterface,
     -> new AutoSuggestAction("auto-suggest", codeCompletionPopup))
 
   val textField: EditorField =
-    new org.nlogo.editor.EditorField(30,
-      new java.awt.Font(org.nlogo.awt.Fonts.platformMonospacedFont,
-        java.awt.Font.PLAIN, 12),
+    new EditorField(30,
+      new Font(Fonts.platformMonospacedFont,
+        Font.PLAIN, 12),
       true, new EditorColorizer(workspace), actionMap)
 
   agentKind(AgentKind.Observer)
@@ -66,11 +69,11 @@ class CommandLine(commandCenter: CommandCenterInterface,
 
   setLayout(new BorderLayout)
   displayName(classDisplayName)
-  add(new JScrollPane(textField,
-        ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
-        ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER),
-      java.awt.BorderLayout.CENTER)
 
+  private val scrollPane = new ScrollPane(textField, ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
+                                          ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER) with Transparent
+
+  add(scrollPane, BorderLayout.CENTER)
 
   def agent(agent: Agent): Unit = {
     this.agent = agent
@@ -161,12 +164,12 @@ class CommandLine(commandCenter: CommandCenterInterface,
     if (e.sourceOwner == this) {
       error(e.error)
 
-      error match {
+      error() match {
         case err: CompilerException =>
           val offset = headerSource.length
           // highlight error location
 
-          textField.select(err.start - offset, err.end - offset)
+          textField.selectError(err.start - offset, err.end - offset)
           // print error message
           new WindowEvents.OutputEvent(false,
             new OutputObject("", "ERROR: " + err.getMessage(), true, true),
@@ -247,6 +250,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
     clearList()
     setText("")
     agentKind(AgentKind.Observer)
+    textField.resetUndoHistory()
   }
 
   private[app] def clearList(): Unit = {
@@ -278,4 +282,12 @@ class CommandLine(commandCenter: CommandCenterInterface,
   override def raiseWidgetRemoved(): Unit = {}
   override def raiseWidgetAdded(): Unit = {}
 
+  override def syncTheme(): Unit = {
+    textField.setBackground(InterfaceColors.codeBackground)
+    textField.setCaretColor(InterfaceColors.displayAreaText)
+
+    scrollPane.setBackground(InterfaceColors.codeBackground)
+
+    codeCompletionPopup.syncTheme()
+  }
 }

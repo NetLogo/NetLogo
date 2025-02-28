@@ -4,10 +4,11 @@ package org.nlogo.swing
 
 import java.awt.{ BorderLayout, Component, Frame }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
-import javax.swing.{ AbstractAction, BorderFactory, JButton, JComponent, JDialog,
-  JScrollPane, JTextArea }
+import javax.swing.{ AbstractAction, BorderFactory, JComponent, JDialog }
+import javax.swing.border.{ EmptyBorder, LineBorder }
 
-import org.nlogo.awt.{ Hierarchy, Positioning }
+import org.nlogo.awt.Hierarchy
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object MessageDialog {
   private val DefaultRows    = 15
@@ -16,11 +17,17 @@ object MessageDialog {
 
 import MessageDialog._
 
-class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends JDialog(Hierarchy.getFrame(owner)) {
+class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends JDialog(Hierarchy.getFrame(owner))
+                                                                       with ThemeSync {
   private def parentFrame: Frame = Hierarchy.getFrame(owner)
-  protected val textArea = new JTextArea(DefaultRows, DefaultColumns)
 
-  private var firstShow = true
+  protected val textArea = new TextArea(DefaultRows, DefaultColumns) {
+    setDragEnabled(false)
+    setLineWrap(true)
+    setWrapStyleWord(true)
+    setEditable(false)
+    setBorder(BorderFactory.createEmptyBorder(3, 5, 0, 5))
+  }
 
   val dismissAction =
     new AbstractAction(dismissName) {
@@ -29,27 +36,26 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
       }
     }
 
-  val buttonPanel = ButtonPanel(makeButtons: _*)
+  private val buttonPanel = new ButtonPanel(makeButtons)
 
-  locally {
-    addWindowListener(new WindowAdapter {
-      override def windowClosing(e: WindowEvent): Unit = {
-        setVisible(false)
-      }
-    })
-    getContentPane.setLayout(new BorderLayout());
-    textArea.setDragEnabled(false)
-    textArea.setLineWrap(true)
-    textArea.setWrapStyleWord(true)
-    textArea.setEditable(false)
-    textArea.setBorder(BorderFactory.createEmptyBorder(3, 5, 0, 5))
-    getContentPane.add(new JScrollPane(textArea), BorderLayout.CENTER)
-    getContentPane.add(buttonPanel, BorderLayout.SOUTH)
-    pack()
-  }
+  buttonPanel.setBorder(new EmptyBorder(6, 6, 6, 6))
+
+  addWindowListener(new WindowAdapter {
+    override def windowClosing(e: WindowEvent): Unit = {
+      setVisible(false)
+    }
+  })
+
+  private val scrollPane = new ScrollPane(textArea)
+
+  getContentPane.setLayout(new BorderLayout())
+  getContentPane.add(scrollPane, BorderLayout.CENTER)
+  getContentPane.add(buttonPanel, BorderLayout.SOUTH)
+
+  pack()
 
   def makeButtons(): Seq[JComponent] = {
-    val dismissButton = new JButton(dismissAction)
+    val dismissButton = new Button(dismissAction)
     getRootPane.setDefaultButton(dismissButton)
     Utils.addEscKeyAction(this, dismissAction)
     Seq(dismissButton)
@@ -62,10 +68,21 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
     textArea.setText(message)
     textArea.setCaretPosition(0)
     pack()
-    if (firstShow) {
-      firstShow = false
-      Positioning.center(this, parentFrame)
-    }
+    syncTheme()
+    Positioning.center(this, parentFrame)
     setVisible(true)
+  }
+
+  override def syncTheme(): Unit = {
+    getContentPane.setBackground(InterfaceColors.dialogBackground)
+
+    textArea.syncTheme()
+
+    scrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable))
+    scrollPane.setBackground(InterfaceColors.textAreaBackground)
+
+    buttonPanel.getComponents.foreach(_ match {
+      case ts: ThemeSync => ts.syncTheme()
+    })
   }
 }

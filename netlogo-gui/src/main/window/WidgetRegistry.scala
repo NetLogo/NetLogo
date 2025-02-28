@@ -8,14 +8,14 @@ object WidgetRegistry {
 
   private val map = collection.mutable.Map[String,String]()
 
-  map("Switch")        = "org.nlogo.widget.SwitchWidget"
-  map("Dummy Switch")  = "org.nlogo.widget.DummySwitchWidget"
+  map("Switch")        = "org.nlogo.window.SwitchWidget"
+  map("Dummy Switch")  = "org.nlogo.window.DummySwitchWidget"
 
   // in the GUI, it's "Note"; in saved models, it's "TEXTBOX"
-  map("TextBox")       = "org.nlogo.widget.NoteWidget"
-  map("Note")          = "org.nlogo.widget.NoteWidget"
-  map("Dummy TextBox") = "org.nlogo.widget.NoteWidget"
-  map("Dummy Note")    = "org.nlogo.widget.NoteWidget"
+  map("TextBox")       = "org.nlogo.window.NoteWidget"
+  map("Note")          = "org.nlogo.window.NoteWidget"
+  map("Dummy TextBox") = "org.nlogo.window.NoteWidget"
+  map("Dummy Note")    = "org.nlogo.window.NoteWidget"
 
   map("Dummy Slider")  = "org.nlogo.window.DummySliderWidget"
 

@@ -3,14 +3,11 @@
 package org.nlogo.prim.gui
 
 import org.nlogo.api.{ Dump, ReporterRunnable }
-import org.nlogo.core.I18N
-import org.nlogo.nvm.{ Context, Reporter, RuntimePrimitiveException }
+import org.nlogo.nvm.{ Context, HaltException, Reporter, RuntimePrimitiveException }
+import org.nlogo.swing.InputOptionPane
 import org.nlogo.window.GUIWorkspace
 
 class _userinput extends Reporter {
-
-
-
   override def report(context: Context) = {
     val inputMessage = args(0).report(context)
     workspace match {
@@ -20,16 +17,14 @@ class _userinput extends Reporter {
           new ReporterRunnable[String] {
             override def run() = {
               gw.view.mouseDown(false)
-              new org.nlogo.swing.InputDialog(
-                gw.getFrame, "User Input", Dump.logoObject(inputMessage),
-                I18N.gui.fn, if (args.size > 1) args(1).report(context).toString else "").showInputDialog()
+              new InputOptionPane(gw.getFrame, "User Input", Dump.logoObject(inputMessage),
+                                  if (args.size > 1) args(1).report(context).toString else "").getInput
             }})
         Option(result).getOrElse(
-          throw new org.nlogo.nvm.HaltException(true))
+          throw new HaltException(true))
       case _ =>
         throw new RuntimePrimitiveException(
           context, this, "You can't get user input headless.")
     }
   }
-
 }

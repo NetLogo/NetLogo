@@ -30,6 +30,7 @@ window.ExternalFileSaved - String path
 window.Iconified - java.awt.Frame frame - boolean iconified
 window.InputBoxLoseFocus
 window.InterfaceGlobal - InterfaceGlobalWidget widget - boolean nameChanged - boolean updating - boolean valueChanged - boolean buttonReleased
+window.InterfaceMode - org.nlogo.window.InterfaceMode mode
 window.JobRemoved - org.nlogo.api.JobOwner owner
 window.JobStopping - org.nlogo.api.JobOwner owner
 window.Load3DShapes - String filename
@@ -52,6 +53,7 @@ window.RuntimeError - org.nlogo.api.JobOwner jobOwner - org.nlogo.api.SourceOwne
 window.TickStateChange - boolean tickCounterInitialized
 window.WidgetAdded - Object widget
 window.WidgetEdited - Widget widget
+window.WidgetError - Widget widget - Exception error
 window.WidgetForegrounded - Widget widget
 window.WidgetRemoved - Widget widget
 window.Zoomed - int action

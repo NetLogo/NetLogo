@@ -25,7 +25,7 @@ The source code is hosted here: https://github.com/NetLogo/NetLogo .  Contributi
 ===
 
 NetLogo
-Copyright (C) 1999-2023 Uri Wilensky
+Copyright (C) 1999-2025 Uri Wilensky
 
 This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
 
@@ -35,12 +35,12 @@ You should have received a copy of the GNU General Public License along with thi
 
 ==
 
-Commercial licenses are also available. To inquire about commercial licenses, please contact Uri Wilensky at uri@northwestern.edu.
+Commercial licenses are also available. To inquire about commercial licenses, please contact netlogo-commercial-admin@ccl.northwestern.edu.
 
 ===
 
 NetLogo User Manual
-Copyright (C) 1999-2023 Uri Wilensky
+Copyright (C) 1999-2025 Uri Wilensky
 
 This work is licensed under the Creative Commons Attribution-ShareAlike 3.0 Unported License. To view a copy of this license, visit http://creativecommons.org/licenses/by-sa/3.0/ or send a letter to Creative Commons, 444 Castro Street, Suite 900, Mountain View, California, 94041, USA.
 
