@@ -10,7 +10,8 @@ import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.{ FileIO, LibraryInfoDownloader, LibraryManager }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, ProgressListener, OptionPane, SwingWorker, Transparent }
+import org.nlogo.swing.{ Button, CustomOptionPane, OptionPane, ProgressListener, ScrollPane, SwingWorker, TextArea,
+                         Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class LibrariesDialog( parent:          Frame
@@ -32,8 +33,15 @@ class LibrariesDialog( parent:          Frame
     val msg = s"""${I18N.gui("libPathsExplanation")}
                   |
                   |$mappingsStr""".stripMargin
-    new OptionPane(LibrariesDialog.this, I18N.gui("showLibPaths"), msg, OptionPane.Options.Ok,
-                   OptionPane.Icons.Warning)
+    val textArea = new TextArea(15, 60, msg) {
+      setLineWrap(true)
+      setWrapStyleWord(true)
+      setEditable(false)
+    }
+    val scrollPane = new ScrollPane(textArea) {
+      setBackground(InterfaceColors.textAreaBackground)
+    }
+    new CustomOptionPane(LibrariesDialog.this, I18N.gui("showLibPaths"), scrollPane, OptionPane.Options.Ok)
   })
   private lazy val updateAllButton = new Button(tab.updateAllAction)
 
