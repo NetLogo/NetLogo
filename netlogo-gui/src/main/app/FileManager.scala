@@ -120,9 +120,9 @@ object FileManager {
       val choice =
           new OptionPane(frame, I18N.gui.get("menu.file.import.hubNetClientInterface.message"),
                          I18N.gui.get("menu.file.import.hubNetClientInterface.prompt"),
-                         List(I18N.gui.get("menu.file.import.hubNetClientInterface.fromInterface"),
-                              I18N.gui.get("menu.file.import.hubNetClientInterface.fromClient"),
-                              I18N.gui.get("common.buttons.cancel")), OptionPane.Icons.Question).getSelectedIndex
+                         Seq(I18N.gui.get("menu.file.import.hubNetClientInterface.fromInterface"),
+                             I18N.gui.get("menu.file.import.hubNetClientInterface.fromClient"),
+                             I18N.gui.get("common.buttons.cancel")), OptionPane.Icons.Question).getSelectedIndex
 
       if (choice != 2) {
         ModalProgressTask.onUIThread(
@@ -193,9 +193,10 @@ object FileManager {
         if (workspace.getModelType == ModelType.Normal) "fromSave" else "fromLibrary"
       val choice = new OptionPane(parent, I18N.gui.get("menu.file.nlw.prompt.title"),
                                   I18N.gui.get("menu.file.nlw.prompt.message." + typeKey),
-                                  List(I18N.gui.get("menu.file.nlw.prompt." + typeKey),
-                                       I18N.gui.get("menu.file.nlw.prompt.fromCurrentCopy"),
-                                       I18N.gui.get("common.buttons.cancel"))).getSelectedIndex
+                                  Seq(I18N.gui.get("menu.file.nlw.prompt." + typeKey),
+                                      I18N.gui.get("menu.file.nlw.prompt.fromCurrentCopy"),
+                                      I18N.gui.get("common.buttons.cancel")),
+                                  OptionPane.Icons.Question).getSelectedIndex
       if (choice == 0)
         true
       else if (choice == 1)

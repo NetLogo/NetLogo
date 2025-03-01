@@ -8,7 +8,8 @@ import javax.swing.{ AbstractAction, Icon, JDialog, JLabel, WindowConstants }
 
 import org.nlogo.core.{ I18N, Shape, ShapeList }
 import org.nlogo.shape.{ LinkLine, LinkShape, VectorShape }
-import org.nlogo.swing.{ Button, ButtonPanel, ComboBox, LabeledComponent, OptionPane, TextField, Utils }
+import org.nlogo.swing.{ Button, ButtonPanel, CancelDialogButton, ComboBox, LabeledComponent, OptionPane,
+                         PrimaryDialogButton, TextField, Utils }
 import org.nlogo.theme.InterfaceColors
 
 import scala.util.{ Failure, Success, Try }
@@ -96,8 +97,8 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
         setForeground(InterfaceColors.dialogText)
       }, c)
 
-      val cancel = new Button(I18N.gui.get("common.buttons.cancel"), dispose)
-      val done = new Button(I18N.gui.get("common.buttons.ok"), saveShape)
+      val cancel = new CancelDialogButton(I18N.gui.get("common.buttons.cancel"), () => dispose)
+      val done = new PrimaryDialogButton(I18N.gui.get("common.buttons.ok"), () => saveShape)
 
       add(new ButtonPanel(Seq(done, cancel)), c)
 

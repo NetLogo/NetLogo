@@ -8,7 +8,7 @@ import javax.swing.text.JTextComponent
 import org.nlogo.api.{ LogoException, Version }
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Context, Instruction }
-import org.nlogo.swing.{ BrowserLauncher, Button, CheckBox, MessageDialog }
+import org.nlogo.swing.{ BrowserLauncher, CheckBox, MessageDialog, SecondaryDialogButton }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.util.{ SysInfo, Utils }
 
@@ -120,7 +120,7 @@ class ErrorDialogManager(owner: Component, additionalDialogs: => Map[Class[_ <: 
   }
 }
 
-class CopyButton(textComp: JTextComponent) extends Button(I18N.gui.get("menu.edit.copy"), () => {
+class CopyButton(textComp: JTextComponent) extends SecondaryDialogButton(I18N.gui.get("menu.edit.copy"), () => {
   textComp.select(0, textComp.getText.length)
   textComp.copy()
   textComp.setCaretPosition(0)
@@ -157,7 +157,7 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.unknown")) {
   }
 
   override def makeButtons = {
-    val suppressButton = new Button(I18N.gui.get("error.dialog.suppress"), () => {
+    val suppressButton = new SecondaryDialogButton(I18N.gui.get("error.dialog.suppress"), () => {
       suppressed = true
       setVisible(false)
     })
@@ -195,7 +195,7 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.outOfMemory.title")) {
   }
 
   override def makeButtons = {
-    super.makeButtons :+ new Button(I18N.gui.get("error.dialog.openFAQ"), () => {
+    super.makeButtons :+ new SecondaryDialogButton(I18N.gui.get("error.dialog.openFAQ"), () => {
       BrowserLauncher.openPath(owner, BrowserLauncher.docPath("faq.html"), "howbig")
     })
   }

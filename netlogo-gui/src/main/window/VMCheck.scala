@@ -34,8 +34,8 @@ object VMCheck {
       bogusFrame.pack() // otherwise OptionPane will fail to get font metrics
 
       if (new OptionPane(bogusFrame, I18N.gui.get("common.messages.warning"), I18N.gui.get("warn.dialog.badjvm"),
-                        List(I18N.gui.get("common.buttons.quit"), I18N.gui.get("common.buttons.continue")),
-                        OptionPane.Icons.Warning).getSelectedIndex == 0)
+                         Seq(I18N.gui.get("common.buttons.quit"), I18N.gui.get("common.buttons.continue")),
+                         OptionPane.Icons.Warning).getSelectedIndex == 0)
         System.exit(0)
     }
   }

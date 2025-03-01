@@ -32,7 +32,8 @@ class LibrariesDialog( parent:          Frame
     val msg = s"""${I18N.gui("libPathsExplanation")}
                   |
                   |$mappingsStr""".stripMargin
-    new OptionPane(LibrariesDialog.this, I18N.gui("showLibPaths"), msg, OptionPane.Options.Ok)
+    new OptionPane(LibrariesDialog.this, I18N.gui("showLibPaths"), msg, OptionPane.Options.Ok,
+                   OptionPane.Icons.Warning)
   })
   private lazy val updateAllButton = new Button(tab.updateAllAction)
 

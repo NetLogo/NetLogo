@@ -153,7 +153,12 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     interactButton.setIcon(Utils.iconScaledWithColor("/images/interact.png", 18, 18, InterfaceColors.toolbarImage))
     selectButton.setIcon(Utils.iconScaledWithColor("/images/select.png", 18, 18, InterfaceColors.toolbarImage))
     editButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 18, 18, InterfaceColors.toolbarImage))
-    deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 18, 18, InterfaceColors.toolbarImage))
+
+    if (deleteButton.isEnabled) {
+      deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 18, 18, InterfaceColors.toolbarImage))
+    } else {
+      deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 18, 18, InterfaceColors.toolbarImageDisabled))
+    }
   }
 
   def handle(e: WindowEvents.WidgetRemovedEvent): Unit = {
@@ -182,8 +187,9 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       editTarget = None
     }
 
-    // uncomment this once the colors are fixed (Isaac B 2/25/25)
-    // deleteButton.setEnabled(selectedObjects.forall(_.deleteable))
+    deleteButton.setEnabled(selectedObjects.forall(_.deleteable))
+
+    syncTheme()
   }
 
   def handle(e: WindowEvents.WidgetAddedEvent): Unit = {

@@ -8,7 +8,8 @@ import javax.swing.{ AbstractAction, JDialog }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
 import org.nlogo.core.{ I18N, Shape }
-import org.nlogo.swing.{ Button, ButtonPanel, InputOptionPane, OptionPane, ScrollPane, Utils }
+import org.nlogo.swing.{ ButtonPanel, CancelDialogButton, InputOptionPane, OptionPane, PrimaryDialogButton, ScrollPane,
+                         Utils }
 import org.nlogo.theme.InterfaceColors
 
 class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: DrawableList[_ <: Shape])
@@ -17,8 +18,8 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
   private implicit val i18nPrefix = I18N.Prefix("tools.shapesEditor.import")
 
   locally {
-    val importButton = new Button(I18N.gui.get("tools.shapesEditor.import"), importSelectedShapes)
-    val cancelButton = new Button(I18N.gui.get("common.buttons.cancel"), dispose)
+    val importButton = new PrimaryDialogButton(I18N.gui.get("tools.shapesEditor.import"), () => importSelectedShapes)
+    val cancelButton = new CancelDialogButton(I18N.gui.get("common.buttons.cancel"), () => dispose)
 
     getContentPane.setLayout(new BorderLayout(0, 10))
     getContentPane.add(new ScrollPane(list) {
@@ -64,7 +65,7 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
 
   // Import shapes from another model
   private def importSelectedShapes() {
-    val choices = List(I18N.gui("replace"), I18N.gui("rename"), I18N.gui.get("common.buttons.cancel"))
+    val choices = Seq(I18N.gui("replace"), I18N.gui("rename"), I18N.gui.get("common.buttons.cancel"))
 
     // For each selected shape, add it to the current model's file and the turtledrawer,
     val shapes = for (index <- list.getSelectedIndices) yield {

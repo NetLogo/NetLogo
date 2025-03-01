@@ -87,9 +87,9 @@ object OfferSaveExternalsDialog {
       }
 
       new CustomOptionPane(parent, I18N.gui.get("common.netlogo"), panel,
-                           List(I18N.gui("saveSelected"),
-                                I18N.gui("discardAll"),
-                                I18N.gui.get("common.buttons.cancel"))).getSelectedIndex match {
+                           Seq(I18N.gui("saveSelected"),
+                               I18N.gui("discardAll"),
+                               I18N.gui.get("common.buttons.cancel"))).getSelectedIndex match {
         case 0 =>
           dirtyExternalFiles.foreach(file => {
             if (saveStatus(file).isSelected)

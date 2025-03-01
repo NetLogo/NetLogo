@@ -53,11 +53,11 @@ final object Utils {
     Font.createFont(Font.TRUETYPE_FONT, getClass.getResourceAsStream(path))
 
   def alert(message: String, continueText: String): Unit = {
-    new OptionPane(null, I18N.gui.get("common.messages.notice"), message, List(continueText), OptionPane.Icons.Info)
+    new OptionPane(null, I18N.gui.get("common.messages.notice"), message, Seq(continueText), OptionPane.Icons.Info)
   }
 
   def alert(title: String, message: String, details: String, continueText: String): Unit = {
-    new OptionPane(null, title, s"$message\n\n$details", List(continueText), OptionPane.Icons.Info)
+    new OptionPane(null, title, s"$message\n\n$details", Seq(continueText), OptionPane.Icons.Info)
   }
 
   /// Esc key handling in dialogs

@@ -13,8 +13,8 @@ import org.nlogo.api.{ Color => NLColor }
 import org.nlogo.awt.ColumnLayout
 import org.nlogo.core.{ I18N, Shape }
 import org.nlogo.shape.{ Element, VectorShape }
-import org.nlogo.swing.{ Button, ButtonPanel, CheckBox, ComboBox, MenuItem, OptionPane, TextField, ToggleButton,
-                         Transparent, Utils }
+import org.nlogo.swing.{ Button, ButtonPanel, CancelDialogButton, CheckBox, ComboBox, MenuItem, OptionPane,
+                         PrimaryDialogButton, TextField, ToggleButton, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
 
 sealed trait ElementType
@@ -374,8 +374,8 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   rightPanel.add(flipHorizontalButton)
   rightPanel.add(flipVerticalButton)
 
-  private val cancel = new Button(I18N.gui.get("common.buttons.cancel"), dispose)
-  private val done = new Button(I18N.gui.get("common.buttons.ok"), saveShape)
+  private val cancel = new CancelDialogButton(I18N.gui.get("common.buttons.cancel"), () => dispose)
+  private val done = new PrimaryDialogButton(I18N.gui.get("common.buttons.ok"), () => saveShape)
 
   previews.foreach(shape.addPropertyChangeListener)
 

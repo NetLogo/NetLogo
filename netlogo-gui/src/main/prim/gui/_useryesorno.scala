@@ -21,9 +21,9 @@ class _useryesorno extends Reporter {
               gw.view.mouseDown(false)
               val response = new OptionPane(gw.getFrame, I18N.gui.get("dialog.userYesOrNo"),
                                             Dump.logoObject(yesNoMessage),
-                                            List(I18N.gui.get("common.buttons.yes"),
-                                                 I18N.gui.get("common.buttons.no"),
-                                                 I18N.gui.get("common.buttons.halt")),
+                                            Seq(I18N.gui.get("common.buttons.yes"),
+                                                I18N.gui.get("common.buttons.no"),
+                                                I18N.gui.get("common.buttons.halt")),
                                             OptionPane.Icons.Question).getSelectedIndex
               response match {
                 case 0 => java.lang.Boolean.TRUE

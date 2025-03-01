@@ -39,14 +39,14 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
       val path = Paths.get(file)
 
       val name = new InputOptionPane(parent, I18N.gui.get("resource.name"), I18N.gui.get("resource.name"),
-                                      path.getFileName.toString.split('.')(0)).getInput
+                                     path.getFileName.toString.split('.')(0)).getInput
 
       if (name != null) {
         val trimmed = name.trim
 
         if (trimmed.isEmpty) {
           new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.get("resource.nameEmpty"),
-                          OptionPane.Options.Ok, OptionPane.Icons.Error)
+                         OptionPane.Options.Ok, OptionPane.Icons.Error)
         }
 
         else {
@@ -61,7 +61,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
           else {
             new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.getN("resource.alreadyExists", trimmed),
-                            OptionPane.Options.Ok, OptionPane.Icons.Error)
+                           OptionPane.Options.Ok, OptionPane.Icons.Error)
           }
         }
       }
@@ -92,14 +92,14 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     val resource = manager.getResource(resourceList.getSelectedValue).get
 
     val name = new InputOptionPane(parent, I18N.gui.get("resource.newName"), I18N.gui.get("resource.newName"),
-                                    resource.name).getInput
+                                   resource.name).getInput
 
     if (name != null) {
       val trimmed = name.trim
 
       if (trimmed.isEmpty) {
         new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.get("resource.nameEmpty"),
-                        OptionPane.Options.Ok, OptionPane.Icons.Error)
+                       OptionPane.Options.Ok, OptionPane.Icons.Error)
       }
 
       else if (trimmed != resource.name) {
@@ -115,7 +115,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
           manager.addResource(resource)
 
           new OptionPane(parent, I18N.gui.get("common.messages.error"), I18N.gui.getN("resource.alreadyExists", trimmed),
-                          OptionPane.Options.Ok, OptionPane.Icons.Error)
+                         OptionPane.Options.Ok, OptionPane.Icons.Error)
         }
       }
     }

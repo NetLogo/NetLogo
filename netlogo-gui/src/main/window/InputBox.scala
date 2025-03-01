@@ -18,7 +18,8 @@ import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.awt.{ Hierarchy, Positioning }
 import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, NumericInput, StringInput }
 import org.nlogo.editor.AbstractEditorArea
-import org.nlogo.swing.{ Button, ButtonPanel, OptionPane, RoundedBorderPanel, ScrollPane, Utils }
+import org.nlogo.swing.{ Button, ButtonPanel, CancelDialogButton, OptionPane, PrimaryDialogButton, RoundedBorderPanel,
+                         ScrollPane, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 object InputBox {
@@ -529,7 +530,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     private val label = new JLabel(inputType.toString)
     private val scrollPane = new InputScrollPane(textArea)
 
-    private val okButton = new Button(I18N.gui.get("common.buttons.ok"), () => {
+    private val okButton = new PrimaryDialogButton(I18N.gui.get("common.buttons.ok"), () => {
       try{
         val value = inputType.readValue(textArea.getText)
         inputText(value)
@@ -551,7 +552,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       }
     }
 
-    private val cancelButton = new Button(cancelAction)
+    private val cancelButton = new CancelDialogButton(cancelAction)
 
     locally {
       setResizable(true)

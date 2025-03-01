@@ -20,8 +20,8 @@ class Popup(parentFrame: Frame, title:String, panel: JPanel, cancel: => Unit, ok
   dialog.getContentPane.setBackground(InterfaceColors.dialogBackground)
 
   dialog.add(new ButtonPanel(Seq(
-    new Button(i18n("common.buttons.ok"), () => { if (ok) die() }),
-    new Button(i18n("common.buttons.cancel"), () => { cancel; die() }))),
+    new PrimaryDialogButton(i18n("common.buttons.ok"), () => { if (ok) die() }),
+    new CancelDialogButton(i18n("common.buttons.cancel"), () => { cancel; die() }))),
     BorderLayout.SOUTH)
 
   DialogForegrounder(dialog)

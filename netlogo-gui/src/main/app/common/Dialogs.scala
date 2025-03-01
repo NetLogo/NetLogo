@@ -13,8 +13,8 @@ object Dialogs {
   def userWantsToSaveFirst(file: String, parent: Component) = {
     implicit val i18nPrefix = I18N.Prefix("common.buttons")
     new OptionPane(parent, I18N.gui.get("common.netlogo"), I18N.gui.getN("file.save.offer.confirm", file),
-                   List(I18N.gui("save"), I18N.gui("discard"), I18N.gui("cancel")),
-                   OptionPane.Icons.Info).getSelectedIndex match {
+                   Seq(I18N.gui("save"), I18N.gui("discard"), I18N.gui("cancel")),
+                   OptionPane.Icons.Question).getSelectedIndex match {
       case 0 => true
       case 1 => false
       case _ => throw new UserCancelException
