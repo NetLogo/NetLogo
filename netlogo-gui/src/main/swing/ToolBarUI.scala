@@ -9,10 +9,13 @@ import javax.swing.{ AbstractButton, Action, JButton, JToggleButton }
 import org.nlogo.theme.InterfaceColors
 
 trait AbstractToolBarButton extends AbstractButton with Transparent with HoverDecoration {
-  private var pressedColor: Color = null
+  private var pressedColor: Option[Color] = None
 
-  def setPressedColor(color: Color) {
-    pressedColor = color
+  setFocusable(false)
+  setContentAreaFilled(false)
+
+  def setPressedColor(color: Color): Unit = {
+    pressedColor = Option(color)
   }
 
   override def getPreferredSize: Dimension = {
@@ -21,14 +24,13 @@ trait AbstractToolBarButton extends AbstractButton with Transparent with HoverDe
     new Dimension(dim, dim)
   }
 
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics): Unit = {
     val g2d = Utils.initGraphics2D(g)
 
-    if (isSelected) {
-      if (pressedColor == null)
-        g2d.setColor(InterfaceColors.toolbarButtonPressed)
-      else
-        g2d.setColor(pressedColor)
+    if (!isEnabled) {
+      g2d.setColor(InterfaceColors.Transparent)
+    } else if (isSelected) {
+      g2d.setColor(pressedColor.getOrElse(InterfaceColors.toolbarButtonPressed))
     } else if (isHover) {
       g2d.setColor(InterfaceColors.toolbarButtonHover)
     } else {
@@ -36,6 +38,9 @@ trait AbstractToolBarButton extends AbstractButton with Transparent with HoverDe
     }
 
     g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
+
+    g2d.setColor(InterfaceColors.toolbarControlBorder)
+    g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
 
     setForeground(InterfaceColors.toolbarText)
 

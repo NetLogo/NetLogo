@@ -24,11 +24,13 @@ object InterfaceColors {
   private val LightBlue = new Color(207, 229, 255)
   private val MediumBlue = new Color(6, 112, 237)
   private val MediumBlue2 = new Color(0, 102, 227)
+  private val MediumBlue3 = new Color(0, 92, 217)
   private val DarkBlue = new Color(0, 54, 117)
   private val White2 = new Color(245, 245, 245)
   private val LightGray = new Color(238, 238, 238)
   private val LightGray2 = new Color(215, 215, 215)
   private val MediumGray = new Color(175, 175, 175)
+  private val MediumGray2 = new Color(160, 160, 160)
   private val LightGrayOutline = new Color(120, 120, 120)
   private val DarkGray = new Color(79, 79, 79)
   private val BlueGray = new Color(70, 70, 76)
@@ -422,6 +424,12 @@ object InterfaceColors {
       case "dark" => new Color(168, 170, 194)
     }
 
+  def toolbarImageDisabled =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => new Color(100, 100, 100, 64)
+      case "dark" => new Color(150, 150, 150, 64)
+    }
+
   def toolbarSeparator =
     theme.getOrElse("light") match {
       case "classic" | "light" => MediumGray
@@ -576,7 +584,7 @@ object InterfaceColors {
 
   def dialogBackground =
     theme.getOrElse("light") match {
-      case "classic" | "light" => Color.WHITE
+      case "classic" | "light" => White2
       case "dark" => BlueGray
     }
 
@@ -619,6 +627,58 @@ object InterfaceColors {
       case "classic" | "light" => MediumGray
       case "dark" => LightGrayOutline
     }
+
+  def primaryButtonBackground = MediumBlue
+
+  def primaryButtonBackgroundHover = MediumBlue3
+
+  def primaryButtonBorder = MediumBlue
+
+  def primaryButtonText = Color.WHITE
+
+  def secondaryButtonBackground =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => Color.WHITE
+      case "dark" => DarkBlueGray
+    }
+
+  def secondaryButtonBackgroundHover =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => White2
+      case "dark" => DarkBlueGray2
+    }
+
+  def secondaryButtonBorder =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => MediumBlue
+      case "dark" => new Color(63, 152, 255)
+    }
+
+  def secondaryButtonText =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => MediumBlue
+      case "dark" => new Color(63, 152, 255)
+    }
+
+  def cancelButtonBackground =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => MediumGray
+      case "dark" => LightGrayOutline
+    }
+
+  def cancelButtonBackgroundHover =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => MediumGray2
+      case "dark" => DarkGray
+    }
+
+  def cancelButtonBorder =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => MediumGray
+      case "dark" => LightGrayOutline
+    }
+
+  def cancelButtonText = Color.WHITE
 
   def textAreaBackground =
     theme.getOrElse("light") match {

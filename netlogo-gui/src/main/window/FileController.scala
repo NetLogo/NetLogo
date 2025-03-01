@@ -162,9 +162,9 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
   def showVersionWarningAndGetResponse(version: String): Boolean = {
     val response = new OptionPane(owner, I18N.gui.get("common.messages.warning"),
                                   I18N.gui.getN("file.open.warn.version.older", version, Version.version),
-                                  List(I18N.gui.get("common.buttons.continue"),
-                                       I18N.gui.get("file.open.warn.version.transitionGuide"),
-                                       I18N.gui.get("common.buttons.cancel")),
+                                  Seq(I18N.gui.get("common.buttons.continue"),
+                                      I18N.gui.get("file.open.warn.version.transitionGuide"),
+                                      I18N.gui.get("common.buttons.cancel")),
                                   OptionPane.Icons.Warning).getSelectedIndex
     response match {
       case 0 => true
@@ -208,8 +208,8 @@ class FileController(owner: Component, modelTracker: ModelTracker) extends OpenM
     Version.compatibleVersion(version) || {
       new OptionPane(owner, I18N.gui.get("common.messages.error"),
                      I18N.gui.getN("file.save.warn.savingInNewerVersion", version, Version.version),
-                     List(I18N.gui.get("common.buttons.save"),
-                          I18N.gui.get("common.buttons.cancel")),
+                     Seq(I18N.gui.get("common.buttons.save"),
+                         I18N.gui.get("common.buttons.cancel")),
                      OptionPane.Icons.Error).getSelectedIndex == 0
     }
   }

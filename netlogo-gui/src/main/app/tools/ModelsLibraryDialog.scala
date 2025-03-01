@@ -25,8 +25,8 @@ import javax.swing.event.{ AncestorEvent, AncestorListener, DocumentEvent, Docum
 import org.nlogo.core.I18N
 import org.nlogo.api.FileIO
 import org.nlogo.awt.{ Positioning, UserCancelException }
-import org.nlogo.swing.{ BrowserLauncher, Button, ModalProgressTask, OptionPane, ScrollPane, TextField, Utils },
-  Utils.addEscKeyAction
+import org.nlogo.swing.{ BrowserLauncher, Button, CancelDialogButton, ModalProgressTask, OptionPane,
+                         PrimaryDialogButton, ScrollPane, TextField, Utils }, Utils.addEscKeyAction
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.workspace.ModelsLibrary
 
@@ -247,8 +247,8 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
     }
 
   private val communityButton = new Button(communityAction)
-  private val selectButton = new Button(openAction)
-  private val cancelButton = new Button(cancelAction)
+  private val selectButton = new PrimaryDialogButton(openAction)
+  private val cancelButton = new CancelDialogButton(cancelAction)
 
   private val clearSearchButton = new Button(I18N.gui.get("modelsLibrary.clear"), () => {
     searchField.setText("")

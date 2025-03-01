@@ -4,16 +4,15 @@ package org.nlogo.properties
 
 import java.awt.{ BorderLayout, Dialog, Dimension, Point, Window }
 import java.awt.event.{ WindowAdapter, WindowEvent }
-import javax.swing.{ JButton, JDialog, JPanel, WindowConstants }
+import javax.swing.{ JDialog, JPanel, WindowConstants }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.{ CompilerServices, Editable }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.swing.{ BrowserLauncher, Button, ButtonPanel, Implicits, Transparent, Utils },
-  BrowserLauncher.docPath,
-  Implicits.thunk2action
+import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, CancelDialogButton, Implicits, PrimaryDialogButton,
+                         SecondaryDialogButton, Transparent, Utils }, BrowserLauncher.docPath, Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.WorldViewSettings
 
@@ -54,7 +53,7 @@ abstract class EditDialog(window: Window, target: Editable, useTooltips: Boolean
     else
       new EditPanel(target, compiler, colorizer, useTooltips)
 
-  val okButton = new Button(I18N.gui.get("common.buttons.ok"), () => {
+  val okButton = new PrimaryDialogButton(I18N.gui.get("common.buttons.ok"), () => {
     if (editPanel.valid) {
       editPanel.apply()
 
@@ -64,7 +63,7 @@ abstract class EditDialog(window: Window, target: Editable, useTooltips: Boolean
   })
 
   var sendEditFinishedOnCancel = false
-  val applyButton = new Button(I18N.gui.get("common.buttons.apply"), () => {
+  val applyButton = new SecondaryDialogButton(I18N.gui.get("common.buttons.apply"), () => {
     if (editPanel.valid) {
       sendEditFinishedOnCancel = true
       editPanel.apply()
@@ -72,11 +71,11 @@ abstract class EditDialog(window: Window, target: Editable, useTooltips: Boolean
     }
   })
 
-  val cancelButton = new Button(I18N.gui.get("common.buttons.cancel"), () => {
+  val cancelButton = new CancelDialogButton(I18N.gui.get("common.buttons.cancel"), () => {
     cancel(target)
   })
 
-  val helpButton = new Button(I18N.gui.get("common.buttons.help"), () => {
+  val helpButton = new SecondaryDialogButton(I18N.gui.get("common.buttons.help"), () => {
     val link = target.helpLink.getOrElse("")
     val splitLink = link.split("#")
     val (mainLink, anchor) =
@@ -86,7 +85,7 @@ abstract class EditDialog(window: Window, target: Editable, useTooltips: Boolean
     BrowserLauncher.openPath(this, path, anchor)
   })
 
-  private val buttons: Seq[JButton] = Seq(
+  private val buttons = Seq(
     Some(okButton),
     if (target.liveUpdate) Some(applyButton) else None,
     target.helpLink.map(_ => helpButton),

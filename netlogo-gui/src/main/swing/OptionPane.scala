@@ -47,14 +47,22 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
     c.fill = GridBagConstraints.NONE
     c.insets = new Insets(0, 6, 6, 6)
 
-    add(new ButtonPanel(
-      options.map(option => {
-        new Button(option, () => {
-          selectedOption = Option(option)
+    def selectAction(text: String): Unit = {
+      selectedOption = Option(text)
 
-          OptionPane.this.setVisible(false)
-        })
-      })
+      setVisible(false)
+    }
+
+    add(new ButtonPanel(
+      if (options.size == 1) {
+        Seq(new PrimaryDialogButton(options(0), selectAction(_)))
+      } else if (options.size == 2) {
+        Seq(new PrimaryDialogButton(options(0), selectAction(_)), new CancelDialogButton(options(1), selectAction(_)))
+      } else {
+        new PrimaryDialogButton(options(0), selectAction(_)) +:
+          options.tail.dropRight(1).map(new SecondaryDialogButton(_, selectAction(_))) :+
+          new CancelDialogButton(options.last, selectAction(_))
+      }
     ), c)
 
     packAndCenter()

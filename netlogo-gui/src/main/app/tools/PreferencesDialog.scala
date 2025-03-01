@@ -10,7 +10,7 @@ import javax.swing.{ BorderFactory, SwingConstants }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, ButtonPanel, OptionPane, TextField, TextFieldBox }
+import org.nlogo.swing.{ ButtonPanel, CancelDialogButton, OptionPane, PrimaryDialogButton, TextField, TextFieldBox }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class PreferencesDialog(parent: Frame, preferences: Seq[Preference])
@@ -20,8 +20,8 @@ class PreferencesDialog(parent: Frame, preferences: Seq[Preference])
 
   private lazy val preferencesPanel = new TextFieldBox(SwingConstants.TRAILING)
 
-  private lazy val okButton = new Button(I18N.gui.get("common.buttons.ok"), ok)
-  private lazy val cancelButton = new Button(I18N.gui.get("common.buttons.cancel"), cancel)
+  private lazy val okButton = new PrimaryDialogButton(I18N.gui.get("common.buttons.ok"), () => ok)
+  private lazy val cancelButton = new CancelDialogButton(I18N.gui.get("common.buttons.cancel"), () => cancel)
 
   private def reset() = {
     preferences foreach (_.load(netLogoPrefs))

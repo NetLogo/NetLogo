@@ -56,3 +56,60 @@ class ToggleButton(action: Action) extends JToggleButton(action) with RoundedBor
     setForeground(InterfaceColors.toolbarText)
   }
 }
+
+class PrimaryDialogButton(action: Action) extends Button(action) {
+  def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      function()
+    }
+  })
+
+  def this(text: String, function: (String) => Unit) = this(text, () => function(text))
+
+  syncTheme()
+
+  override def syncTheme(): Unit = {
+    setBackgroundColor(InterfaceColors.primaryButtonBackground)
+    setBackgroundHoverColor(InterfaceColors.primaryButtonBackgroundHover)
+    setBorderColor(InterfaceColors.primaryButtonBorder)
+    setForeground(InterfaceColors.primaryButtonText)
+  }
+}
+
+class SecondaryDialogButton(action: Action) extends Button(action) {
+  def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      function()
+    }
+  })
+
+  def this(text: String, function: (String) => Unit) = this(text, () => function(text))
+
+  syncTheme()
+
+  override def syncTheme(): Unit = {
+    setBackgroundColor(InterfaceColors.secondaryButtonBackground)
+    setBackgroundHoverColor(InterfaceColors.secondaryButtonBackgroundHover)
+    setBorderColor(InterfaceColors.secondaryButtonBorder)
+    setForeground(InterfaceColors.secondaryButtonText)
+  }
+}
+
+class CancelDialogButton(action: Action) extends Button(action) {
+  def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      function()
+    }
+  })
+
+  def this(text: String, function: (String) => Unit) = this(text, () => function(text))
+
+  syncTheme()
+
+  override def syncTheme(): Unit = {
+    setBackgroundColor(InterfaceColors.cancelButtonBackground)
+    setBackgroundHoverColor(InterfaceColors.cancelButtonBackgroundHover)
+    setBorderColor(InterfaceColors.cancelButtonBorder)
+    setForeground(InterfaceColors.cancelButtonText)
+  }
+}

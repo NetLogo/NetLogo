@@ -55,7 +55,7 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
   pack()
 
   def makeButtons(): Seq[JComponent] = {
-    val dismissButton = new Button(dismissAction)
+    val dismissButton = new PrimaryDialogButton(dismissAction)
     getRootPane.setDefaultButton(dismissButton)
     Utils.addEscKeyAction(this, dismissAction)
     Seq(dismissButton)

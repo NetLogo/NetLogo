@@ -636,7 +636,7 @@ class App extends
       catch {
         case ex: java.net.ConnectException =>
           fileManager.newModel()
-          new OptionPane(null, I18N.gui.get("file.open.error.unloadable.title"),
+          new OptionPane(frame, I18N.gui.get("file.open.error.unloadable.title"),
                          I18N.gui.getN("file.open.error.unloadable.message", commandLineURL),
                          OptionPane.Options.OkCancel, OptionPane.Icons.Warning)
       }
@@ -768,7 +768,7 @@ class App extends
           new DropdownOptionPane(frame, I18N.gui.get("tools.magicModelMatcher"),
                                  I18N.gui.get("tools.magicModelMatcher.mustChoose"),
                                  matches.map(_.replaceAllLiterally(".nlogox3d", "")
-                                              .replaceAllLiterally(".nlogox", "")).toList)
+                                              .replaceAllLiterally(".nlogox", "")))
             .getSelectedChoice
         }
       fullName.foreach(name => {

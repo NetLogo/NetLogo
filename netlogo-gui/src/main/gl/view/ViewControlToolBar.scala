@@ -59,8 +59,8 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler) extends J
   fullScreenButton.addActionListener(
     new ActionListener {
       override def actionPerformed(e: ActionEvent) {
-        val options = List(I18N.gui.get("common.buttons.continue"),
-                           I18N.gui.get("common.buttons.cancel"))
+        val options = Seq(I18N.gui.get("common.buttons.continue"),
+                          I18N.gui.get("common.buttons.cancel"))
         val isWindows = System.getProperty("os.name").toLowerCase.startsWith("win")
         if (!isWindows || view.viewManager.warned ||
           (new OptionPane(view, I18N.gui.get("common.messages.warning"), fullScreenWarning, options,

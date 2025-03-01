@@ -8,7 +8,7 @@ import java.util.prefs.{ Preferences => JavaPreferences }
 import javax.swing.{ AbstractAction, ButtonGroup, JPanel }
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, ButtonPanel, Positioning, RadioButton }
+import org.nlogo.swing.{ ButtonPanel, CancelDialogButton, Positioning, PrimaryDialogButton, RadioButton }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "themes") with ThemeSync {
@@ -34,11 +34,11 @@ class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "theme
     }
   })
 
-  private lazy val okButton = new Button(I18N.gui.get("common.buttons.ok"), () => {
+  private lazy val okButton = new PrimaryDialogButton(I18N.gui.get("common.buttons.ok"), () => {
     setVisible(false)
   })
 
-  private lazy val cancelButton = new Button(I18N.gui.get("common.buttons.cancel"), () => {
+  private lazy val cancelButton = new CancelDialogButton(I18N.gui.get("common.buttons.cancel"), () => {
     setTheme(startTheme)
     setSelected(startTheme)
 
