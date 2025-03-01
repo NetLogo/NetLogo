@@ -2,29 +2,19 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Color, Component, Font, Graphics, Graphics2D, GraphicsEnvironment, Image, RenderingHints }
+import java.awt.{ Color, Component, Font, Graphics, Graphics2D, Image, RenderingHints }
 import java.awt.event.KeyEvent
 import java.awt.geom.AffineTransform
 import java.awt.image.BufferedImage
-import java.util.prefs.Preferences
 import javax.swing.{ Action, Icon, ImageIcon, InputMap, JComponent, JDialog, JWindow, KeyStroke }
 
 import org.nlogo.core.I18N
 
 final object Utils {
-  private val uiScale = {
-    val devices = GraphicsEnvironment.getLocalGraphicsEnvironment.getScreenDevices
-    val scale = devices(0).getDefaultConfiguration.getDefaultTransform.getScaleX
+  private var uiScale = 1.0
 
-    if (scale > 1.0) {
-      scale
-    } else {
-      val pref = Preferences.userRoot.node("/org/nlogo/NetLogo").getDouble("uiScale", 1.0)
-
-      System.setProperty("sun.java2d.uiScale", pref.toString)
-
-      pref
-    }
+  def setUIScale(value: Double): Unit = {
+    uiScale = value
   }
 
   def icon(path: String): ImageIcon = new ImageIcon(getClass.getResource(path))

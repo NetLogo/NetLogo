@@ -22,7 +22,7 @@ import org.nlogo.fileformat.FileFormat
 import org.nlogo.log.{ JsonFileLogger, LogEvents, LogManager }
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
-import org.nlogo.swing.{ DropdownOptionPane, InputOptionPane, OptionPane, SetSystemLookAndFeel }
+import org.nlogo.swing.{ DropdownOptionPane, InputOptionPane, OptionPane, SetSystemLookAndFeel, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
@@ -78,6 +78,14 @@ object App {
     }
 
     try {
+      val scalePref = Preferences.userRoot.node("/org/nlogo/NetLogo").getDouble("uiScale", 1.0)
+
+      if (scalePref > 1.0) {
+        System.setProperty("sun.java2d.uiScale", scalePref.toString)
+      }
+
+      Utils.setUIScale(Toolkit.getDefaultToolkit.getScreenResolution / 96.0)
+
       // this call is reflective to avoid complicating dependencies
       appHandler.getClass.getDeclaredMethod("init").invoke(appHandler)
 

@@ -162,5 +162,17 @@ object Preferences {
 
   object StartSeparateCodeTab extends BooleanPreference("startSeparateCodeTab", RequiredAction.None, false) {}
 
-  object UIScale extends StringPreference("uiScale", RequiredAction.Restart, "1.0")
+  object UIScale extends Preference {
+    val i18nKey = "uiScale"
+    val requirement = RequiredAction.Restart
+    val component = new TextField(20, "1.0")
+
+    def load(prefs: JavaPreferences) = {
+      component.setText(prefs.getDouble(i18nKey, 1.0).toString)
+    }
+
+    def save(prefs: JavaPreferences) = {
+      prefs.putDouble(i18nKey, component.getText.toDouble)
+    }
+  }
 }
