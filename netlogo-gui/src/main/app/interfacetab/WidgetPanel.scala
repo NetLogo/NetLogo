@@ -820,6 +820,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
       if (widget != null)
         widget.isNew(false)
+
+      newWidget = None
     })
   }
 
