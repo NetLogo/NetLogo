@@ -471,6 +471,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
   // im not yet sure if it runs anywhere else.
   // that seems like bugs waiting to happen. JC - 12/20/10
   protected def doPopup(point: Point): Unit = {
+    if (interactMode == InterfaceMode.Interact)
+      interceptPane.disableIntercept()
+
     val menu = new PopupMenu
 
     def menuItem(keyName: String, widget: CoreWidget): WidgetCreationMenuItem = {
