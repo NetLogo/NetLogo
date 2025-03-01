@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ Dimension, Frame, Toolkit, BorderLayout}
+import java.awt.{ Dimension, Frame, GraphicsEnvironment, Toolkit, BorderLayout}
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.prefs.Preferences
@@ -82,9 +82,14 @@ object App {
 
       if (scalePref > 1.0) {
         System.setProperty("sun.java2d.uiScale", scalePref.toString)
-      }
 
-      Utils.setUIScale(Toolkit.getDefaultToolkit.getScreenResolution / 96.0)
+        Utils.setUIScale(scalePref)
+      } else {
+        val devices = GraphicsEnvironment.getLocalGraphicsEnvironment.getScreenDevices
+        val scale = devices(0).getDefaultConfiguration.getDefaultTransform.getScaleX
+
+        Utils.setUIScale(scale)
+      }
 
       // this call is reflective to avoid complicating dependencies
       appHandler.getClass.getDeclaredMethod("init").invoke(appHandler)
