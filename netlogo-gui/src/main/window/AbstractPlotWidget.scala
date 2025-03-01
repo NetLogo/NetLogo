@@ -58,8 +58,6 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   private val xAxis = new XAxisLabels()
   private val yAxis = new YAxisLabels()
 
-  protected var _oldSize = false
-
   displayName = plot.name
 
   plot.clear() // set current values to defaults
@@ -68,8 +66,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   initGUI()
 
-  // this allows the layout to be reorganized when the oldSize property changes (Isaac B 2/17/25)
-  private def initGUI(): Unit = {
+  override def initGUI(): Unit = {
     removeAll()
 
     val c = new GridBagConstraints
@@ -226,13 +223,6 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   def yLabel(label: String){
     _yAxisLabel = label
     yAxis.setLabel(_yAxisLabel)
-  }
-
-  def oldSize: Boolean = _oldSize
-  def oldSize_=(value: Boolean) : Unit = {
-    _oldSize = value
-    initGUI()
-    repaint()
   }
 
   def setupCode = plot.setupCode

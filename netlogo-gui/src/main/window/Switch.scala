@@ -22,7 +22,6 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
   import Switch._
 
-  protected var _oldSize = false
   protected var constraint = new BooleanConstraint
   protected val label = new JLabel(I18N.gui.get("edit.switch.previewName"))
   protected val toggle = new Toggle
@@ -50,8 +49,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     toggle.addMouseListener(mouseListener)
   }
 
-  // this allows the layout to be reorganized when the oldSize property changes (Isaac B 2/17/25)
-  private def initGUI(): Unit = {
+  override def initGUI(): Unit = {
     removeAll()
 
     if (_oldSize) {
@@ -103,13 +101,6 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     this._name = name
     displayName(name)
     label.setText(displayName)
-    repaint()
-  }
-
-  def oldSize: Boolean = _oldSize
-  def oldSize_=(value: Boolean): Unit = {
-    _oldSize = value
-    initGUI()
     repaint()
   }
 

@@ -62,6 +62,8 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
 
   protected var zoomFactor = 1.0
 
+  protected var _oldSize = false
+
   def getEditable: Object = this
   def copyable = true // only OutputWidget and ViewWidget are not copyable
   def constrainDrag(newBounds: Rectangle, originalBounds: Rectangle, mouseMode: MouseMode): Rectangle = newBounds
@@ -84,6 +86,14 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
   }
   def getZoomFactor: Double =
     zoomFactor
+  def oldSize: Boolean =
+    _oldSize
+  def oldSize_=(value: Boolean): Unit = {
+    _oldSize = value
+    initGUI()
+    revalidate()
+    repaint()
+  }
   def getDefaultExportName = "output.txt"
   def updateConstraints(): Unit = {}
   def classDisplayName: String = getClass.getName
@@ -106,6 +116,9 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
     new WidgetEditedEvent(this).raise(this)
     true
   }
+
+  // this method is for widgets that need to redo their layout when the size version changes (Isaac B 3/1/25)
+  def initGUI(): Unit = {}
 
   protected def resetSizeInfo(): Unit = {
     if (findWidgetContainer != null) { findWidgetContainer.resetSizeInfo(this) }

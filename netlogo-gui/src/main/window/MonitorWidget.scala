@@ -24,7 +24,6 @@ object MonitorWidget {
     def fontSize: Int
     def innerSource: String
     def name: String
-    def oldSize: Boolean
 
     override def model: CoreMonitor = {
       val b       = getUnzoomedBounds
@@ -33,7 +32,7 @@ object MonitorWidget {
 
       CoreMonitor(display = display,
         x = b.x, y = b.y, width = b.width, height = b.height,
-        oldSize = oldSize,
+        oldSize = _oldSize,
         source   = src, precision = decimalPlaces,
         fontSize = fontSize)
     }
@@ -89,8 +88,6 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   private var _fontSize = DefaultFontSize
 
-  private var _oldSize = false
-
   private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName"))
   private val valueLabel = new JLabel
 
@@ -102,8 +99,7 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   initGUI()
 
-  // this allows the layout to be reorganized when the oldSize property changes (Isaac B 2/17/25)
-  private def initGUI(): Unit = {
+  override def initGUI(): Unit = {
     removeAll()
 
     val c = new GridBagConstraints
@@ -169,13 +165,6 @@ class MonitorWidget(random: MersenneTwisterFast)
   }
 
   def fontSize: Int = _fontSize
-
-  def oldSize: Boolean = _oldSize
-  def oldSize_=(value: Boolean): Unit = {
-    _oldSize = value
-    initGUI()
-    repaint()
-  }
 
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.monitor")

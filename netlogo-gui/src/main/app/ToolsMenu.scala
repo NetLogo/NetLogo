@@ -8,12 +8,13 @@ package org.nlogo.app
 import org.nlogo.app.interfacetab.InterfaceTab
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ Menu, UserAction }, UserAction.{ ToolsDialogsGroup, ToolsMonitorGroup, ToolsHubNetGroup,
-                                                          ToolsSettingsGroup }
+                                                          ToolsSettingsGroup, ToolsWidgetGroup }
 import org.nlogo.window.WorkspaceActions,
   WorkspaceActions.HaltGroup
 
 object ToolsMenu {
-  val sortOrder = Seq(ToolsSettingsGroup, HaltGroup, ToolsMonitorGroup, InterfaceTab.MenuGroup, ToolsDialogsGroup, ToolsHubNetGroup)
+  val sortOrder = Seq(ToolsSettingsGroup, HaltGroup, ToolsMonitorGroup, InterfaceTab.MenuGroup, ToolsDialogsGroup,
+                      ToolsHubNetGroup, ToolsWidgetGroup)
 }
 
 class ToolsMenu

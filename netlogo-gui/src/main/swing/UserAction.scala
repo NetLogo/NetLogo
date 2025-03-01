@@ -46,6 +46,7 @@ object UserAction {
   val ToolsMonitorGroup  = "org.nlogo.swing.ToolsMonitorGroup"
   val ToolsDialogsGroup  = "org.nlogo.swing.ToolsDialogsGroup"
   val ToolsHubNetGroup   = "org.nlogo.swing.ToolsHubNetGroup"
+  val ToolsWidgetGroup   = "org.nlogo.swing.ToolsWidgetGroup"
 
   val DefaultGroup = "UndefinedGroup"
   val DefaultRank  = Double.MaxValue

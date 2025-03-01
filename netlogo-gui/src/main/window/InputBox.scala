@@ -226,15 +226,6 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     this.name(name, false)
   }
 
-  protected var _oldSize = false
-
-  def oldSize: Boolean = _oldSize
-  def oldSize_=(value: Boolean): Unit = {
-    _oldSize = value
-    initGUI()
-    repaint()
-  }
-
   protected var editing = false
   protected def stopEdit(): Unit = {
     editing = false
@@ -276,8 +267,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       }
     })
 
-  // this allows the layout to be reorganized when the oldSize property changes (Isaac B 2/17/25)
-  private def initGUI(): Unit = {
+  override def initGUI(): Unit = {
     removeAll()
 
     val c = new GridBagConstraints
