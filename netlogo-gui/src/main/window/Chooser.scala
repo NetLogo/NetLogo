@@ -42,16 +42,13 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     }
   }
 
-  protected var _oldSize = false
-
   setLayout(new GridBagLayout)
 
   addMouseWheelListener(this)
 
   initGUI()
 
-  // this allows the layout to be reorganized when the oldSize property changes (Isaac B 2/17/25)
-  private def initGUI(): Unit = {
+  override def initGUI(): Unit = {
     removeAll()
 
     val c = new GridBagConstraints
@@ -95,13 +92,6 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
 
   def value: AnyRef =
     constraint.defaultValue
-
-  def oldSize: Boolean = _oldSize
-  def oldSize_=(value: Boolean): Unit = {
-    _oldSize = value
-    initGUI()
-    repaint()
-  }
 
   def populate() {
     control.setItems(constraint.acceptedValues.map(Dump.logoObject).toList)

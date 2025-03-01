@@ -707,7 +707,8 @@ class App extends
         () => pico.getComponent(classOf[ModelSaver]).asInstanceOf[ModelSaver].currentModel),
       new SaveModelingCommonsAction(modelingCommons, menuBar.fileMenu),
       FindDialog.FIND_ACTION,
-      FindDialog.FIND_NEXT_ACTION
+      FindDialog.FIND_NEXT_ACTION,
+      new ConvertWidgetSizes(frame, _tabManager.interfaceTab.iP)
     ) ++
     HelpActions.apply ++
     FileActions(workspace, menuBar.fileMenu) ++

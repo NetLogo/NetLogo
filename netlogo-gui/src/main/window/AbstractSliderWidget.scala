@@ -114,7 +114,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   private var _units = ""
   private var _vertical = false
   private val sliderData = new SliderData(this)
-  protected var _oldSize = false
 
   val nameComponent = new Label(I18N.gui.get("edit.slider.previewName"))
   val valueComponent = new TextField
@@ -249,13 +248,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
         slider.setOrientation(SwingConstants.HORIZONTAL)
       }
     }
-  }
-
-  def oldSize: Boolean = _oldSize
-  def oldSize_=(value: Boolean): Unit = {
-    _oldSize = value
-    revalidate()
-    repaint()
   }
 
   def valueString(num: Double): String = {

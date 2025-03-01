@@ -9,11 +9,12 @@ import javax.swing.{ AbstractAction, JDialog }
 
 import org.nlogo.api.{ AggregateManagerInterface, LibraryManager }
 import org.nlogo.app.common.TabsInterface
+import org.nlogo.app.interfacetab.WidgetPanel
 import org.nlogo.app.tools.{ LibrariesDialog, Preferences, PreferencesDialog, ThemesDialog }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.shape.ShapesManagerInterface
-import org.nlogo.swing.UserAction._
+import org.nlogo.swing.{ OptionPane, UserAction }, UserAction._
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.{ ColorDialog, LinkRoot, RGBAColorDialog }
 import org.nlogo.workspace.AbstractWorkspaceScala
@@ -145,6 +146,21 @@ with MenuAction {
     workspace.getHubNetManager.foreach { mgr =>
       mgr.openClientEditor()
       linkRoot.addLinkComponent(mgr.clientEditor)
+    }
+  }
+}
+
+class ConvertWidgetSizes(frame: Frame, widgetPanel: WidgetPanel)
+  extends AbstractAction(I18N.gui.get("menu.tools.convertWidgetSizes")) with MenuAction {
+
+  category = ToolsCategory
+  group    = ToolsWidgetGroup
+
+  override def actionPerformed(e: ActionEvent): Unit = {
+    if (new OptionPane(frame, I18N.gui.get("common.messages.warning"),
+                       I18N.gui.get("menu.tools.convertWidgetSizes.prompt"), OptionPane.Options.OkCancel,
+                       OptionPane.Icons.Warning).getSelectedIndex == 0) {
+      widgetPanel.convertWidgetSizes()
     }
   }
 }
