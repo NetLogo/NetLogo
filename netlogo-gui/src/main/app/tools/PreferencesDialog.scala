@@ -10,7 +10,7 @@ import javax.swing.{ BorderFactory, SwingConstants }
 import javax.swing.border.EmptyBorder
 
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, ButtonPanel, OptionPane, TextFieldBox }
+import org.nlogo.swing.{ Button, ButtonPanel, OptionPane, TextField, TextFieldBox }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class PreferencesDialog(parent: Frame, preferences: Seq[Preference])
@@ -65,7 +65,7 @@ class PreferencesDialog(parent: Frame, preferences: Seq[Preference])
       }
     }
     try {
-      preferences.find(_.i18nKey == "uiScale").map(_.asInstanceOf[Preferences.StringPreference].component.getText.toDouble)
+      preferences.find(_.i18nKey == "uiScale").foreach(_.component.asInstanceOf[TextField].getText.toDouble)
     } catch {
       case e: NumberFormatException =>
         new OptionPane(this, I18N.gui.get("common.messages.error"), I18N.gui.get("tools.preferences.scaleError"),
