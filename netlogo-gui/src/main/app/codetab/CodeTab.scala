@@ -9,6 +9,7 @@ import java.io.IOException
 import java.net.MalformedURLException
 import java.util.prefs.Preferences
 import javax.swing.{ AbstractAction, Action, JComponent, JPanel }
+import javax.swing.border.EmptyBorder
 
 import org.fife.ui.rsyntaxtextarea.{ Style, SyntaxScheme, TokenTypes }
 
@@ -117,6 +118,8 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   }
 
   def getToolBar = new ToolBar {
+    setBorder(new EmptyBorder(6, 6, 6, 6))
+
     override def addControls() {
       // Only want to add toolbar items once
       // This method gets called when the code tab pops in or pops out

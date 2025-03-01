@@ -8,6 +8,7 @@ import java.awt.print.PageFormat
 import java.io.File
 import java.nio.file.Path
 import javax.swing.{ AbstractAction, Action, BorderFactory, JEditorPane, JPanel, JTextArea, ScrollPaneConstants }
+import javax.swing.border.EmptyBorder
 import javax.swing.event.{ DocumentListener, HyperlinkListener, DocumentEvent, HyperlinkEvent }
 import javax.swing.text.JTextComponent
 import javax.swing.text.html.HTMLDocument
@@ -93,6 +94,8 @@ class InfoTab(attachModelDir: String => String)
   override val activeMenuActions = Seq(undoAction, redoAction)
 
   private val toolBar = new ToolBar {
+    setBorder(new EmptyBorder(6, 6, 6, 6))
+
     override def addControls() {
       this.addAll(findButton, editableButton, helpButton)
     }

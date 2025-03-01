@@ -56,6 +56,9 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   ///
 
   override protected def doPopup(point: Point): Unit = {
+    if (interactMode == InterfaceMode.Interact)
+      interceptPane.disableIntercept()
+
     val menu = new PopupMenu
 
     Seq(WidgetInfo.button,
