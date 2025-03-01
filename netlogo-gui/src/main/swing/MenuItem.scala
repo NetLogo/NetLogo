@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Component, Dimension }
+import java.awt.{ Component, Dimension, Graphics, Rectangle }
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, Action, JCheckBoxMenuItem, JMenuItem }
 import javax.swing.plaf.basic.{ BasicCheckBoxMenuItemUI, BasicMenuItemUI }
@@ -19,6 +19,16 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
   }, true)
 
   private val itemUI = new BasicMenuItemUI with ThemeSync {
+    override def paintText(g: Graphics, menuItem: JMenuItem, rect: Rectangle, text: String): Unit = {
+      super.paintText(g, menuItem, rect, text)
+
+      val icon = getIcon
+
+      if (!isEnabled && icon != null)
+        getIcon.paintIcon(MenuItem.this, g, rect.x - icon.getIconWidth - getIconTextGap,
+                          getHeight / 2 - icon.getIconHeight / 2)
+    }
+
     override def syncTheme(): Unit = {
       setForeground(InterfaceColors.toolbarText)
 
