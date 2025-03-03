@@ -88,8 +88,8 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
       if(path.endsWith(".nls"))
         tabs.openExternalFile(path)
       else
-        new OptionPane(IncludedFilesMenu.this, "", I18N.gui.get("file.open.error.external.suffix"),
-                       OptionPane.Options.Ok, OptionPane.Icons.Error)
+        new OptionPane(IncludedFilesMenu.this, I18N.gui.get("common.messages.error"),
+                       I18N.gui.get("file.open.error.external.suffix"), OptionPane.Options.Ok, OptionPane.Icons.Error)
     }
   }
 }
