@@ -71,7 +71,7 @@ class TestCompiler extends AnyFunSuite with OneInstancePerTest with BeforeAndAft
                "There is already a procedure called A")
   }
   test("LetSameNameAsReporterProcedure2") {
-    declareBad("to b let a 5 end  to-report a end",
+    declareBad("to b let a 5 end  to-report a report 10 end",
                "There is already a procedure called A")
   }
   test("LetSameNameAsGlobal") {
