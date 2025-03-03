@@ -400,6 +400,12 @@ object InterfaceColors {
       case "dark" => LightGrayOutline
     }
 
+  def toolbarControlFocus =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => MediumBlue
+      case "dark" => Color.WHITE
+    }
+
   def toolbarButtonPressed =
     theme.getOrElse("light") match {
       case "classic" | "light" => MediumGray
