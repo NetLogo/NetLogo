@@ -33,13 +33,13 @@ class ExtensionAssistant( parent: Component
   }
 
   def confirmInstall(extName: String, extVersion: String): Boolean =
-    new OptionPane(parent, I18N.gui.getN("tabs.code.extension.installable.message", extName, extVersion),
-                   I18N.gui.get("tabs.code.extension.installable.title"), OptionPane.Options.YesNo,
-                   OptionPane.Icons.Question).getSelectedIndex == 0
+    new OptionPane(parent, I18N.gui.get("tabs.code.extension.installable.title"),
+                   I18N.gui.getN("tabs.code.extension.installable.message", extName, extVersion),
+                   OptionPane.Options.YesNo, OptionPane.Icons.Question).getSelectedIndex == 0
 
   def confirmOpen(extName: String): Boolean =
-    new OptionPane(parent, I18N.gui.getN("tabs.code.extension.notfound.message", extName),
-                   I18N.gui.get("tabs.code.extension.notfound.title"), OptionPane.Options.YesNo,
-                   OptionPane.Icons.Question).getSelectedIndex == 0
+    new OptionPane(parent, I18N.gui.get("tabs.code.extension.notfound.title"),
+                   I18N.gui.getN("tabs.code.extension.notfound.message", extName),
+                   OptionPane.Options.YesNo, OptionPane.Icons.Question).getSelectedIndex == 0
 
 }
