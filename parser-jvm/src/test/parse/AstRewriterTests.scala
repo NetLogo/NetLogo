@@ -36,7 +36,7 @@ class AstRewriterTests extends AnyFunSuite {
   test("preserves complex source") {
     assertPreservesSource("to foo end\n\nto baz end", "", "")
     assertPreservesSource("to foo end\nto baz end", "", "")
-    assertPreservesSource("to-report foo [bar] end\n\nto baz [qux] end", "", "")
+    assertPreservesSource("to-report foo [bar] report 10 end\n\nto baz [qux] end", "", "")
     assertPreservesSource("breed [as a] breed [bs b] globals [glob1] to foo if is-a? glob1 [ create-bs (100 - (count as)) ] end", "", "")
     assertModifiesSource("to foo  \nend", "to foo\nend")
   }
