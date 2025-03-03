@@ -195,7 +195,7 @@ class StructureParser(
           subprogram)
       case Left((msg, token)) =>
         if (token.tpe == TokenType.Keyword) {
-          exception(s"""Keyword "${token.text}" cannot be used in this context.""", token)
+          exception(s"""Keyword ${token.text.toUpperCase} cannot be used in this context.""", token)
         } else {
           exception(msg, token)
         }

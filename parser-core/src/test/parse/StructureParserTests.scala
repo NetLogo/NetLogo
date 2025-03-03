@@ -163,7 +163,7 @@ class StructureParserTests extends AnyFunSuite {
     expectError("globals [", "closing bracket expected") }
   test("missing close bracket in globals") {
     expectError("globals [g turtles-own [t]",
-      "closing bracket expected") }
+      "Keyword TURTLES-OWN cannot be used in this context.") }
   test("constant in globals") {
     expectError("globals [d e f]",
       "Variable name conflicts with a constant.") }
@@ -230,7 +230,7 @@ class StructureParserTests extends AnyFunSuite {
   // https://github.com/NetLogo/NetLogo/issues/414
   test("missing end 1") {
     expectError("to foo to bar",
-      "END expected") }
+      "Keyword TO cannot be used in this context.") }
   test("missing end 2") {
     expectError("to foo fd 1",
       "END expected") }
@@ -242,13 +242,13 @@ class StructureParserTests extends AnyFunSuite {
       "closing bracket expected") }
   test("missing close bracket in formals 1") {
     expectError("to foo [ end",
-      "closing bracket expected") }
+      "Keyword END cannot be used in this context.") }
   test("missing close bracket in formals 2") {
     expectError("to foo [ to",
-      "closing bracket expected") }
+      "Keyword TO cannot be used in this context.") }
   test("declaration after procedure") {
     expectError("to foo end globals []",
-      "TO or TO-REPORT expected") }
+      "Keyword GLOBALS cannot be used in this context.") }
 
   def compileAll(src: String, nlsSrc: String): StructureResults = {
     StructureParser.parseSources(
