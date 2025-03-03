@@ -2,6 +2,7 @@
 
 package org.nlogo.swing
 
+import java.awt.Graphics
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, Action, JButton, JToggleButton }
 import javax.swing.border.EmptyBorder
@@ -66,7 +67,20 @@ class PrimaryDialogButton(action: Action) extends Button(action) {
 
   def this(text: String, function: (String) => Unit) = this(text, () => function(text))
 
+  setFocusable(true)
+
   syncTheme()
+
+  override def paintComponent(g: Graphics): Unit = {
+    super.paintComponent(g)
+
+    if (hasFocus) {
+      val g2d = Utils.initGraphics2D(g)
+
+      g2d.setColor(InterfaceColors.toolbarControlFocus)
+      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, getDiameter, getDiameter)
+    }
+  }
 
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.primaryButtonBackground)
@@ -85,7 +99,20 @@ class SecondaryDialogButton(action: Action) extends Button(action) {
 
   def this(text: String, function: (String) => Unit) = this(text, () => function(text))
 
+  setFocusable(true)
+
   syncTheme()
+
+  override def paintComponent(g: Graphics): Unit = {
+    super.paintComponent(g)
+
+    if (hasFocus) {
+      val g2d = Utils.initGraphics2D(g)
+
+      g2d.setColor(InterfaceColors.toolbarControlFocus)
+      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, getDiameter, getDiameter)
+    }
+  }
 
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.secondaryButtonBackground)
@@ -104,7 +131,20 @@ class CancelDialogButton(action: Action) extends Button(action) {
 
   def this(text: String, function: (String) => Unit) = this(text, () => function(text))
 
+  setFocusable(true)
+
   syncTheme()
+
+  override def paintComponent(g: Graphics): Unit = {
+    super.paintComponent(g)
+
+    if (hasFocus) {
+      val g2d = Utils.initGraphics2D(g)
+
+      g2d.setColor(InterfaceColors.toolbarControlFocus)
+      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, getDiameter, getDiameter)
+    }
+  }
 
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.cancelButtonBackground)
