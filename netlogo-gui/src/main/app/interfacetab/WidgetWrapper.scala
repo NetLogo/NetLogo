@@ -774,41 +774,53 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       if (interfacePanel.multiSelected) {
         menu.addSeparator()
 
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft")) {
-          def actionPerformed(e: ActionEvent): Unit = {
-            interfacePanel.alignLeft()
-          }
-        }))
+        if (interfacePanel.canAlignLeft) {
+          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft")) {
+            def actionPerformed(e: ActionEvent): Unit = {
+              interfacePanel.alignLeft()
+            }
+          }))
+        }
 
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterHorizontal")) {
-          def actionPerformed(e: ActionEvent): Unit = {
-            interfacePanel.alignCenterHorizontal()
-          }
-        }))
+        if (interfacePanel.canAlignCenterHorizontal) {
+          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterHorizontal")) {
+            def actionPerformed(e: ActionEvent): Unit = {
+              interfacePanel.alignCenterHorizontal()
+            }
+          }))
+        }
 
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight")) {
-          def actionPerformed(e: ActionEvent): Unit = {
-            interfacePanel.alignRight()
-          }
-        }))
+        if (interfacePanel.canAlignRight) {
+          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignRight")) {
+            def actionPerformed(e: ActionEvent): Unit = {
+              interfacePanel.alignRight()
+            }
+          }))
+        }
 
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop")) {
-          def actionPerformed(e: ActionEvent): Unit = {
-            interfacePanel.alignTop()
-          }
-        }))
+        if (interfacePanel.canAlignTop) {
+          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignTop")) {
+            def actionPerformed(e: ActionEvent): Unit = {
+              interfacePanel.alignTop()
+            }
+          }))
+        }
 
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterVertical")) {
-          def actionPerformed(e: ActionEvent): Unit = {
-            interfacePanel.alignCenterVertical()
-          }
-        }))
+        if (interfacePanel.canAlignCenterVertical) {
+          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignCenterVertical")) {
+            def actionPerformed(e: ActionEvent): Unit = {
+              interfacePanel.alignCenterVertical()
+            }
+          }))
+        }
 
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom")) {
-          def actionPerformed(e: ActionEvent): Unit = {
-            interfacePanel.alignBottom()
-          }
-        }))
+        if (interfacePanel.canAlignBottom) {
+          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignBottom")) {
+            def actionPerformed(e: ActionEvent): Unit = {
+              interfacePanel.alignBottom()
+            }
+          }))
+        }
 
         menu.addSeparator()
 
@@ -826,29 +838,37 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
         menu.addSeparator()
 
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchLeft")) {
-          def actionPerformed(e: ActionEvent): Unit = {
-            interfacePanel.stretchLeft()
-          }
-        }))
+        if (interfacePanel.canStretchLeft) {
+          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchLeft")) {
+            def actionPerformed(e: ActionEvent): Unit = {
+              interfacePanel.stretchLeft()
+            }
+          }))
+        }
 
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchRight")) {
-          def actionPerformed(e: ActionEvent): Unit = {
-            interfacePanel.stretchRight()
-          }
-        }))
+        if (interfacePanel.canStretchRight) {
+          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchRight")) {
+            def actionPerformed(e: ActionEvent): Unit = {
+              interfacePanel.stretchRight()
+            }
+          }))
+        }
 
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchTop")) {
-          def actionPerformed(e: ActionEvent): Unit = {
-            interfacePanel.stretchTop()
-          }
-        }))
+        if (interfacePanel.canStretchTop) {
+          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchTop")) {
+            def actionPerformed(e: ActionEvent): Unit = {
+              interfacePanel.stretchTop()
+            }
+          }))
+        }
 
-        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchBottom")) {
-          def actionPerformed(e: ActionEvent): Unit = {
-            interfacePanel.stretchBottom()
-          }
-        }))
+        if (interfacePanel.canStretchBottom) {
+          menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchBottom")) {
+            def actionPerformed(e: ActionEvent): Unit = {
+              interfacePanel.stretchBottom()
+            }
+          }))
+        }
       }
     } else {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.select")) {

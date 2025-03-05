@@ -407,18 +407,18 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
-        leftAction.setEnabled(selectedObjects.size > 1)
-        centerHorizontalAction.setEnabled(selectedObjects.size > 1)
-        rightAction.setEnabled(selectedObjects.size > 1)
-        topAction.setEnabled(selectedObjects.size > 1)
-        centerVerticalAction.setEnabled(selectedObjects.size > 1)
-        bottomAction.setEnabled(selectedObjects.size > 1)
+        leftAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignLeft)
+        centerHorizontalAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignCenterHorizontal)
+        rightAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignRight)
+        topAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignTop)
+        centerVerticalAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignCenterVertical)
+        bottomAction.setEnabled(selectedObjects.size > 1 && wPanel.canAlignBottom)
         distributeHorizontalAction.setEnabled(selectedObjects.size > 1)
         distributeVerticalAction.setEnabled(selectedObjects.size > 1)
-        stretchLeftAction.setEnabled(selectedObjects.size > 1)
-        stretchRightAction.setEnabled(selectedObjects.size > 1)
-        stretchTopAction.setEnabled(selectedObjects.size > 1)
-        stretchBottomAction.setEnabled(selectedObjects.size > 1)
+        stretchLeftAction.setEnabled(selectedObjects.size > 1 && wPanel.canStretchLeft)
+        stretchRightAction.setEnabled(selectedObjects.size > 1 && wPanel.canStretchRight)
+        stretchTopAction.setEnabled(selectedObjects.size > 1 && wPanel.canStretchTop)
+        stretchBottomAction.setEnabled(selectedObjects.size > 1 && wPanel.canStretchBottom)
 
         popup.show(AlignmentMenu.this, 0, getHeight)
       }
