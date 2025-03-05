@@ -33,6 +33,11 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
       SysInfo.getVMInfoString + "\n" +
       SysInfo.getOSInfoString + "\n" +
       SysInfo.getScalaVersionString + "\n"
+
+  private val graphic = new JLabel {
+    setBorder(new EmptyBorder(10, 10, 0, 10))
+  }
+
   private val label = new JLabel {
     val year = Version.buildDate.takeRight(4)
     setText(
@@ -87,13 +92,12 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     refreshSystemText()
 
     getContentPane.setLayout(new BorderLayout(0, 10))
-    val graphic = new JLabel(Utils.iconScaled("/images/title.png", 600, 97)) {
-      setBorder(new EmptyBorder(10,10,0,10))
-    }
     getContentPane.add(graphic, BorderLayout.NORTH)
 
     getContentPane.add(label, BorderLayout.CENTER)
     getContentPane.add(tabs, BorderLayout.SOUTH)
+
+    syncTheme()
 
     Utils.addEscKeyAction(this, RichAction{ _ => dispose() } )
     pack()
@@ -114,8 +118,6 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
         refreshTimer.stop()
       }
     })
-
-    syncTheme()
   }
 
   private def refreshSystemText() {
@@ -136,6 +138,12 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
 
   override def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.dialogBackground)
+
+    if (InterfaceColors.getTheme == "dark") {
+      graphic.setIcon(Utils.iconScaled("/images/banner-dark.png", 600, 231))
+    } else {
+      graphic.setIcon(Utils.iconScaled("/images/banner.png", 600, 231))
+    }
 
     label.setForeground(InterfaceColors.toolbarText)
 
