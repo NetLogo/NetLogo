@@ -4,6 +4,7 @@ package org.nlogo.window
 
 import java.awt.{ Component, Container, Dimension, Font, Graphics, Point, Rectangle, event },
                 event.{ MouseAdapter, MouseEvent, MouseListener }
+import java.util.prefs.Preferences
 import javax.swing.{ JPanel, JMenuItem }
 
 import org.nlogo.api.{ CompilerServices, MultiErrorHandler, SingleErrorHandler }
@@ -63,6 +64,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
   protected var zoomFactor = 1.0
 
   protected var _oldSize = false
+  protected var boldName = Preferences.userRoot.node("/org/nlogo/NetLogo").getBoolean("boldWidgetNames", false)
 
   def getEditable: Object = this
   def copyable = true // only OutputWidget and ViewWidget are not copyable

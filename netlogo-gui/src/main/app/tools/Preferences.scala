@@ -162,6 +162,8 @@ object Preferences {
 
   object StartSeparateCodeTab extends BooleanPreference("startSeparateCodeTab", RequiredAction.None, false) {}
 
+  object BoldWidgetNames extends BooleanPreference("boldWidgetNames", RequiredAction.Reload, false) {}
+
   object UIScale extends Preference {
     val i18nKey = "uiScale"
     val requirement = RequiredAction.Restart

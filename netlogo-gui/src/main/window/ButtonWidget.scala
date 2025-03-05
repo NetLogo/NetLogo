@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Cursor, Dimension, Graphics, GridBagLayout, GridBagConstraints, Insets }
+import java.awt.{ Cursor, Dimension, Font, Graphics, GridBagLayout, GridBagConstraints, Insets }
 import java.awt.event.{ MouseEvent, MouseListener, MouseMotionListener }
 import java.awt.image.FilteredImageSource
 import javax.swing.{ ImageIcon, JLabel }
@@ -90,6 +90,9 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   val agentLabel = new JLabel
 
   keyLabel.setFont(keyLabel.getFont.deriveFont(12.0f))
+
+  if (boldName)
+    nameLabel.setFont(nameLabel.getFont.deriveFont(Font.BOLD))
 
   keyLabel.addMouseListener(this)
   nameLabel.addMouseListener(this)
