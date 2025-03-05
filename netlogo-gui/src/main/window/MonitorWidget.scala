@@ -21,6 +21,7 @@ object MonitorWidget {
 
   trait ToMonitorModel { self: Widget with Component =>
     def decimalPlaces: Int
+    def units: String
     def fontSize: Int
     def innerSource: String
     def name: String
@@ -34,7 +35,7 @@ object MonitorWidget {
         x = b.x, y = b.y, width = b.width, height = b.height,
         oldSize = _oldSize,
         source   = src, precision = decimalPlaces,
-        fontSize = fontSize)
+        fontSize = fontSize, units = if (units.isEmpty) None else Option(units))
     }
   }
 }
@@ -81,6 +82,7 @@ class MonitorWidget(random: MersenneTwisterFast)
   private var _value: Option[AnyRef] = Option.empty[AnyRef]
   private var valueString: String = ""
   private var _decimalPlaces: Int = DefaultDecimalPlaces
+  private var _units: String = ""
 
   // This is the same as the button so right-click on a monitor w/ error
   // brings up the popup menu not the edit dialog. ev 1/4/06
@@ -166,6 +168,13 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   def fontSize: Int = _fontSize
 
+  def units: String = _units
+  def units_=(value: String): Unit = {
+    _units = value
+    revalidate()
+    repaint()
+  }
+
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.monitor")
 
@@ -202,10 +211,12 @@ class MonitorWidget(random: MersenneTwisterFast)
     Properties.monitor
 
   def chooseDisplayName() {
+    val suffix = if (_units.isEmpty) "" else (" " + _units)
+
     if (name == null || name == "")
-      displayName(getSourceName)
+      displayName(getSourceName + suffix)
     else
-      displayName(name)
+      displayName(name + suffix)
 
     nameLabel.setText(displayName)
 
@@ -318,6 +329,7 @@ class MonitorWidget(random: MersenneTwisterFast)
   }
 
   override def load(model: WidgetModel): AnyRef = {
+    _units = model.units.getOrElse("")
     name(model.display.getOrElse(""))
     _decimalPlaces = model.precision
     fontSize(model.fontSize)

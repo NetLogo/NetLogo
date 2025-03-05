@@ -72,6 +72,7 @@ object WidgetXMLLoader {
         Some(Monitor( Some(element.text), element("x").toInt, element("y").toInt
                     , element("width").toInt, element("height").toInt, element("sizeVersion", "1").toInt == 0
                     , element.get("display"), element("precision").toInt, element("fontSize").toInt
+                    , element.get("units")
                     ))
 
       case "switch" =>
@@ -231,6 +232,7 @@ object WidgetXMLLoader {
              , "fontSize"  -> monitor.fontSize.toString
              ) ++
           ifDefined(monitor)("display", _.display) ++
+          ifDefined(monitor)("units", _.units)
           (if (monitor.oldSize) Map("sizeVersion" -> "0") else Map())
 
         XMLElement("monitor", attributes, monitor.source.getOrElse(""), Seq())

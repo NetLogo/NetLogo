@@ -114,7 +114,8 @@ case class Monitor(
   oldSize: Boolean,
   display: Option[String],
   precision: Int,
-  fontSize:  Int = 11) extends Widget {
+  fontSize:  Int = 11,
+  units: Option[String] = None) extends Widget {
     override def convertSource(conversion: String => String): Monitor =
       this.copy(source = source.map(conversion))
   }

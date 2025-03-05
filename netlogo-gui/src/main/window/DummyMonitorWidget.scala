@@ -29,7 +29,8 @@ class DummyMonitorWidget
   import DummyMonitorWidget._
 
   private var _name: String = ""
-  private var _decimalPlaces: Int = DefaultDecimalPlaces;
+  private var _decimalPlaces: Int = DefaultDecimalPlaces
+  private var _units: String = ""
 
   def innerSource = ""
   def fontSize = DefaultFontSize
@@ -37,8 +38,16 @@ class DummyMonitorWidget
   def name: String = _name
 
   def name(name: String): Unit = {
-    _name = name
+    val suffix = if (_units.isEmpty) "" else (" " + _units)
+    _name = name + suffix
     displayName = name
+  }
+
+  def units: String = _units
+  def units(value: String): Unit = {
+    _units = value
+    revalidate()
+    repaint()
   }
 
   override def classDisplayName: String =
@@ -89,6 +98,7 @@ class DummyMonitorWidget
   }
 
   override def load(monitor: WidgetModel): AnyRef = {
+    units(monitor.units.getOrElse(""))
     name(monitor.display.optionToPotentiallyEmptyString)
     decimalPlaces(monitor.precision)
     oldSize = monitor.oldSize
