@@ -8,8 +8,7 @@ import javax.swing.{ AbstractAction, JDialog }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 
 import org.nlogo.core.{ I18N, Shape }
-import org.nlogo.swing.{ ButtonPanel, CancelDialogButton, InputOptionPane, OptionPane, PrimaryDialogButton, ScrollPane,
-                         Utils }
+import org.nlogo.swing.{ ButtonPanel, DialogButton, InputOptionPane, OptionPane, ScrollPane, Utils }
 import org.nlogo.theme.InterfaceColors
 
 class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: DrawableList[_ <: Shape])
@@ -18,8 +17,8 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
   private implicit val i18nPrefix = I18N.Prefix("tools.shapesEditor.import")
 
   locally {
-    val importButton = new PrimaryDialogButton(I18N.gui.get("tools.shapesEditor.import"), () => importSelectedShapes)
-    val cancelButton = new CancelDialogButton(I18N.gui.get("common.buttons.cancel"), () => dispose)
+    val importButton = new DialogButton(true, I18N.gui.get("tools.shapesEditor.import"), () => importSelectedShapes)
+    val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => dispose)
 
     getContentPane.setLayout(new BorderLayout(0, 10))
     getContentPane.add(new ScrollPane(list) {

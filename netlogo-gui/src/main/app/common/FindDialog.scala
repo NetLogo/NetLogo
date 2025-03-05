@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.app.common;
+package org.nlogo.app.common
 
 import java.awt.{ BorderLayout, Frame, Toolkit }
 import java.awt.event.{ ActionEvent, ActionListener, FocusEvent }
@@ -10,8 +10,8 @@ import javax.swing.text.{ BadLocationException, JTextComponent, TextAction }
 
 import org.nlogo.core.I18N
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.swing.{ Button, ButtonPanel, CheckBox, NonemptyTextFieldActionEnabler, NonemptyTextFieldButtonEnabler,
-                         TextField, TextFieldBox, Transparent, UserAction, Utils }
+import org.nlogo.swing.{ ButtonPanel, CheckBox, DialogButton, NonemptyTextFieldActionEnabler,
+                         NonemptyTextFieldButtonEnabler, TextField, TextFieldBox, Transparent, UserAction, Utils }
 
 object FindDialog extends ThemeSync {
   class FindAction extends TextAction(I18N.gui.get("menu.edit.find")) {
@@ -195,7 +195,7 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
                                                                                                     with ThemeSync {
   private var target: JTextComponent = null
 
-  private val nextButton = new Button(I18N.gui.get("dialog.find.next"), () => {
+  private val nextButton = new DialogButton(false, I18N.gui.get("dialog.find.next"), () => {
     if (!next(findBox.getText, ignoreCaseCheckBox.isSelected, wrapAroundCheckBox.isSelected)) {
       Toolkit.getDefaultToolkit.beep()
       notFoundLabel.setVisible(true)
@@ -204,7 +204,7 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     }
   })
 
-  private val prevButton = new Button(I18N.gui.get("dialog.find.previous"), () => {
+  private val prevButton = new DialogButton(false, I18N.gui.get("dialog.find.previous"), () => {
     if (!prev(findBox.getText, ignoreCaseCheckBox.isSelected, wrapAroundCheckBox.isSelected)) {
       Toolkit.getDefaultToolkit.beep()
       notFoundLabel.setVisible(true)
@@ -213,11 +213,11 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     }
   })
 
-  private val replaceButton = new Button(I18N.gui.get("dialog.find.replace"), () => {
+  private val replaceButton = new DialogButton(false, I18N.gui.get("dialog.find.replace"), () => {
     replace(replaceBox.getText)
   })
 
-  private val replaceAndFindButton = new Button(I18N.gui.get("dialog.find.replaceAndFind"), () => {
+  private val replaceAndFindButton = new DialogButton(false, I18N.gui.get("dialog.find.replaceAndFind"), () => {
     if (target.getSelectedText != null && (
       if (ignoreCaseCheckBox.isSelected)
         target.getSelectedText.equalsIgnoreCase(findBox.getText)
@@ -235,7 +235,7 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     }
   })
 
-  private val replaceAllButton = new Button(I18N.gui.get("dialog.find.replaceAll"), () => {
+  private val replaceAllButton = new DialogButton(false, I18N.gui.get("dialog.find.replaceAll"), () => {
     replaceAll(findBox.getText, ignoreCaseCheckBox.isSelected, replaceBox.getText)
   })
 

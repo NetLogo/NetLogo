@@ -58,14 +58,14 @@ class ToggleButton(action: Action) extends JToggleButton(action) with RoundedBor
   }
 }
 
-class PrimaryDialogButton(action: Action) extends Button(action) {
-  def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
+class DialogButton(primary: Boolean, action: Action) extends Button(action) {
+  def this(primary: Boolean, text: String, function: () => Unit) = this(primary, new AbstractAction(text) {
     override def actionPerformed(e: ActionEvent): Unit = {
       function()
     }
   })
 
-  def this(text: String, function: (String) => Unit) = this(text, () => function(text))
+  def this(primary: Boolean, text: String, function: (String) => Unit) = this(primary, text, () => function(text))
 
   setFocusable(true)
 
@@ -83,73 +83,16 @@ class PrimaryDialogButton(action: Action) extends Button(action) {
   }
 
   override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.primaryButtonBackground)
-    setBackgroundHoverColor(InterfaceColors.primaryButtonBackgroundHover)
-    setBorderColor(InterfaceColors.primaryButtonBorder)
-    setForeground(InterfaceColors.primaryButtonText)
-  }
-}
-
-class SecondaryDialogButton(action: Action) extends Button(action) {
-  def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
-    override def actionPerformed(e: ActionEvent): Unit = {
-      function()
+    if (primary) {
+      setBackgroundColor(InterfaceColors.primaryButtonBackground)
+      setBackgroundHoverColor(InterfaceColors.primaryButtonBackgroundHover)
+      setBorderColor(InterfaceColors.primaryButtonBorder)
+      setForeground(InterfaceColors.primaryButtonText)
+    } else {
+      setBackgroundColor(InterfaceColors.secondaryButtonBackground)
+      setBackgroundHoverColor(InterfaceColors.secondaryButtonBackgroundHover)
+      setBorderColor(InterfaceColors.secondaryButtonBorder)
+      setForeground(InterfaceColors.secondaryButtonText)
     }
-  })
-
-  def this(text: String, function: (String) => Unit) = this(text, () => function(text))
-
-  setFocusable(true)
-
-  syncTheme()
-
-  override def paintComponent(g: Graphics): Unit = {
-    super.paintComponent(g)
-
-    if (hasFocus) {
-      val g2d = Utils.initGraphics2D(g)
-
-      g2d.setColor(InterfaceColors.toolbarControlFocus)
-      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, getDiameter, getDiameter)
-    }
-  }
-
-  override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.secondaryButtonBackground)
-    setBackgroundHoverColor(InterfaceColors.secondaryButtonBackgroundHover)
-    setBorderColor(InterfaceColors.secondaryButtonBorder)
-    setForeground(InterfaceColors.secondaryButtonText)
-  }
-}
-
-class CancelDialogButton(action: Action) extends Button(action) {
-  def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
-    override def actionPerformed(e: ActionEvent): Unit = {
-      function()
-    }
-  })
-
-  def this(text: String, function: (String) => Unit) = this(text, () => function(text))
-
-  setFocusable(true)
-
-  syncTheme()
-
-  override def paintComponent(g: Graphics): Unit = {
-    super.paintComponent(g)
-
-    if (hasFocus) {
-      val g2d = Utils.initGraphics2D(g)
-
-      g2d.setColor(InterfaceColors.toolbarControlFocus)
-      g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, getDiameter, getDiameter)
-    }
-  }
-
-  override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.cancelButtonBackground)
-    setBackgroundHoverColor(InterfaceColors.cancelButtonBackgroundHover)
-    setBorderColor(InterfaceColors.cancelButtonBorder)
-    setForeground(InterfaceColors.cancelButtonText)
   }
 }

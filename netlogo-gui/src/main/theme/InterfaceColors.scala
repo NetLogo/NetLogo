@@ -32,6 +32,7 @@ object InterfaceColors {
   private val MediumGray = new Color(175, 175, 175)
   private val MediumGray2 = new Color(160, 160, 160)
   private val LightGrayOutline = new Color(120, 120, 120)
+  private val LightGrayOutline2 = new Color(100, 100, 100)
   private val DarkGray = new Color(79, 79, 79)
   private val BlueGray = new Color(70, 70, 76)
   private val MediumBlueGray = new Color(60, 60, 65)
@@ -636,47 +637,23 @@ object InterfaceColors {
 
   def secondaryButtonBackground =
     theme.getOrElse("light") match {
-      case "classic" | "light" => Color.WHITE
-      case "dark" => DarkBlueGray
+      case "classic" | "light" => MediumGray
+      case "dark" => LightGrayOutline
     }
 
   def secondaryButtonBackgroundHover =
     theme.getOrElse("light") match {
-      case "classic" | "light" => White2
-      case "dark" => DarkBlueGray2
+      case "classic" | "light" => MediumGray2
+      case "dark" => LightGrayOutline2
     }
 
   def secondaryButtonBorder =
     theme.getOrElse("light") match {
-      case "classic" | "light" => MediumBlue
-      case "dark" => new Color(63, 152, 255)
-    }
-
-  def secondaryButtonText =
-    theme.getOrElse("light") match {
-      case "classic" | "light" => MediumBlue
-      case "dark" => new Color(63, 152, 255)
-    }
-
-  def cancelButtonBackground =
-    theme.getOrElse("light") match {
       case "classic" | "light" => MediumGray
       case "dark" => LightGrayOutline
     }
 
-  def cancelButtonBackgroundHover =
-    theme.getOrElse("light") match {
-      case "classic" | "light" => MediumGray2
-      case "dark" => DarkGray
-    }
-
-  def cancelButtonBorder =
-    theme.getOrElse("light") match {
-      case "classic" | "light" => MediumGray
-      case "dark" => LightGrayOutline
-    }
-
-  def cancelButtonText = Color.WHITE
+  def secondaryButtonText = Color.WHITE
 
   def textAreaBackground =
     theme.getOrElse("light") match {

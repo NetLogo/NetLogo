@@ -13,7 +13,7 @@ object Dialogs {
   def userWantsToSaveFirst(file: String, parent: Component) = {
     implicit val i18nPrefix = I18N.Prefix("common.buttons")
     new OptionPane(parent, I18N.gui.get("common.netlogo"), I18N.gui.getN("file.save.offer.confirm", file),
-                   Seq(I18N.gui("save"), I18N.gui("discard"), I18N.gui("cancel")),
+                   Seq(I18N.gui("save"), I18N.gui("discard")),
                    OptionPane.Icons.Question).getSelectedIndex match {
       case 0 => true
       case 1 => false

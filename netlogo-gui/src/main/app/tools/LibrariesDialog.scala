@@ -10,8 +10,8 @@ import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.{ FileIO, LibraryInfoDownloader, LibraryManager }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, CustomOptionPane, OptionPane, ProgressListener, ScrollPane, SwingWorker, TextArea,
-                         Transparent }
+import org.nlogo.swing.{ CustomOptionPane, DialogButton, OptionPane, ProgressListener, ScrollPane, SwingWorker,
+                         TextArea, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class LibrariesDialog( parent:          Frame
@@ -28,7 +28,7 @@ class LibrariesDialog( parent:          Frame
   private lazy val bottomPanel     = new JPanel(new BorderLayout)
   private lazy val status          = new JLabel
   private lazy val buttonPanel     = new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 0)) with Transparent
-  private lazy val libPathsButton  = new Button(I18N.gui("showLibPaths"), () => {
+  private lazy val libPathsButton  = new DialogButton(false, I18N.gui("showLibPaths"), () => {
     val mappingsStr = extPathMappings.map { case (k, v) => s"  * $k: $v" }.toSeq.sorted.mkString("\n")
     val msg = s"""${I18N.gui("libPathsExplanation")}
                   |
@@ -43,7 +43,7 @@ class LibrariesDialog( parent:          Frame
     }
     new CustomOptionPane(LibrariesDialog.this, I18N.gui("showLibPaths"), scrollPane, OptionPane.Options.Ok)
   })
-  private lazy val updateAllButton = new Button(tab.updateAllAction)
+  private lazy val updateAllButton = new DialogButton(true, tab.updateAllAction)
 
   protected override def initGUI(): Unit = {
     tabs.add(tab)
