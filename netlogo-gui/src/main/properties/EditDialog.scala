@@ -87,7 +87,7 @@ abstract class EditDialog(window: Window, target: Editable, useTooltips: Boolean
 
   private val buttons = Seq(
     Some(okButton),
-    if (target.liveUpdate) Some(applyButton) else None,
+    if (!target.liveUpdate) Some(applyButton) else None,
     target.helpLink.map(_ => helpButton),
     Some(cancelButton)).flatten
   private val buttonPanel = new ButtonPanel(buttons)

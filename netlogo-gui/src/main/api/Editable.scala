@@ -5,7 +5,7 @@ package org.nlogo.api
 trait Editable {
   def helpLink: Option[String]
   def propertySet: Seq[Property]
-  def liveUpdate: Boolean = false
+  def liveUpdate: Boolean = true
   def classDisplayName: String
   def editFinished(): Boolean
 
