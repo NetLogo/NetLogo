@@ -26,8 +26,8 @@ object WorkspaceActions {
       new SimpleGUIWorkspaceAction(I18N.gui("closeDeadAgentMonitors"), ToolsMonitorGroup, workspace, _.stopInspectingDeadAgents),
     ) ++ (if (Version.is3D) Seq() else Seq(new Open3DViewAction(workspace)))
 
-  def interfaceActions(workspace: GUIWorkspace): Seq[Action] =
-    Seq(new SnapToGridAction(workspace))
+  def interfaceActions(workspace: GUIWorkspace, widgetPanel: AbstractWidgetPanel): Seq[Action] =
+    Seq(new SnapToGridAction(workspace, widgetPanel))
 
   class GUIWorkspaceAction(name: String, workspace: GUIWorkspace) extends AbstractAction(name) with MenuAction {
     def performAction(workspace: GUIWorkspace): Unit = {}
@@ -80,7 +80,7 @@ class HubNetControlCenterAction(workspace: GUIWorkspace)
     }
 }
 
-class SnapToGridAction(workspace: GUIWorkspace)
+class SnapToGridAction(workspace: GUIWorkspace, widgetPanel: AbstractWidgetPanel)
   extends AbstractAction(I18N.gui.get("menu.edit.snapToGrid"))
   with CheckBoxAction
   with MenuAction
@@ -93,6 +93,7 @@ class SnapToGridAction(workspace: GUIWorkspace)
 
   def actionPerformed(e: ActionEvent) = {
     workspace.setSnapOn(! workspace.snapOn)
+    widgetPanel.snapWidgetBounds()
     putValue(Action.SELECTED_KEY, checkedState)
   }
 

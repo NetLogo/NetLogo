@@ -179,6 +179,13 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     }
   }
 
+  def snapBounds(): Unit = {
+    if (interfacePanel.workspace.snapOn) {
+      setBounds(interfacePanel.snapToGrid(getX), interfacePanel.snapToGrid(getY), interfacePanel.snapToGrid(getWidth),
+                interfacePanel.snapToGrid(getHeight))
+    }
+  }
+
   def isForeground: Boolean =
     _isForeground
 
