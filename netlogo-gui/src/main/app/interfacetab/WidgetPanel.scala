@@ -1340,7 +1340,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
         if (w.widget.oldSize) {
           w.widget.oldSize = false
           w.setSize(new Dimension(w.getPreferredSize.width.max(w.getWidth), w.getPreferredSize.height.max(w.getHeight)))
-          w.revalidate()
+          w.snapBounds()
         }
       }
 
@@ -1350,6 +1350,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
           for ((w2, gap) <- gaps) {
             if (w2.getX < w.getX + w.getWidth + gap && w2.getY + w2.getHeight > w.getY && w2.getY < w.getY + w.getHeight)
               w2.setLocation(w.getX + w.getWidth + gap, w2.getY)
+              w2.snapBounds()
           }
       }
 
@@ -1359,6 +1360,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
           for ((w2, gap) <- gaps) {
             if (w2.getY < w.getY + w.getHeight + gap && w2.getX + w2.getWidth > w.getX && w2.getX < w.getX + w.getWidth)
               w2.setLocation(w2.getX, w.getY + w.getHeight + gap)
+              w2.snapBounds()
           }
       }
     } else {
@@ -1367,7 +1369,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
         if (w.widget.oldSize) {
           w.widget.oldSize = false
           w.setSize(new Dimension(w.getPreferredSize.width.max(w.getWidth), w.getPreferredSize.height.max(w.getHeight)))
-          w.revalidate()
+          w.snapBounds()
         }
       }
     }
