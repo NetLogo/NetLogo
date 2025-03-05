@@ -232,7 +232,7 @@ object WidgetXMLLoader {
              , "fontSize"  -> monitor.fontSize.toString
              ) ++
           ifDefined(monitor)("display", _.display) ++
-          ifDefined(monitor)("units", _.units)
+          ifDefined(monitor)("units", _.units) ++
           (if (monitor.oldSize) Map("sizeVersion" -> "0") else Map())
 
         XMLElement("monitor", attributes, monitor.source.getOrElse(""), Seq())
