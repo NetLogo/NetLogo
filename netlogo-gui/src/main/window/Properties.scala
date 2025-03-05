@@ -62,6 +62,7 @@ object Properties {
     P("wrapSource", P.Reporter, I18N.gui("monitor.reporter")),
     P("name", P.String, I18N.gui("monitor.name")),
     P("decimalPlaces", P.Integer, I18N.gui("monitor.decimalPlaces"), I18N.gui.get("edit.monitor.precision"), gridWidth = RELATIVE),
+    P("units", P.String, I18N.gui("monitor.units")),
     P("fontSize", P.Integer, I18N.gui("monitor.fontSize")),
     P("oldSize", P.Boolean, I18N.gui("general.oldSize"))
   )
