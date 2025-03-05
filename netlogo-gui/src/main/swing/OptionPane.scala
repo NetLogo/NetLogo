@@ -54,15 +54,8 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
     }
 
     add(new ButtonPanel(
-      if (options.size == 1) {
-        Seq(new PrimaryDialogButton(options(0), selectAction(_)))
-      } else if (options.size == 2) {
-        Seq(new PrimaryDialogButton(options(0), selectAction(_)), new CancelDialogButton(options(1), selectAction(_)))
-      } else {
-        new PrimaryDialogButton(options(0), selectAction(_)) +:
-          options.tail.dropRight(1).map(new SecondaryDialogButton(_, selectAction(_))) :+
-          new CancelDialogButton(options.last, selectAction(_))
-      }
+      new DialogButton(true, options(0), selectAction(_)) +:
+        options.tail.map(new DialogButton(false, _, selectAction(_)))
     ), c)
 
     packAndCenter()

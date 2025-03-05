@@ -9,7 +9,7 @@ import javax.swing.{ JDialog, JLabel, WindowConstants }
 
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ ButtonPanel, CancelDialogButton, CheckBox, Positioning, PrimaryDialogButton }
+import org.nlogo.swing.{ ButtonPanel, CheckBox, DialogButton, Positioning }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class CodeTabPreferences(parent: Frame, tabs: TabsInterface)
@@ -27,8 +27,8 @@ class CodeTabPreferences(parent: Frame, tabs: TabsInterface)
     tabs.lineNumbersVisible = selected
   })
 
-  private val okButton = new PrimaryDialogButton(I18N.gui.get("common.buttons.ok"), () => apply)
-  private val cancelButton = new CancelDialogButton(I18N.gui.get("common.buttons.cancel"), () => revert)
+  private val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => apply)
+  private val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => revert)
 
   locally {
     setLayout(new GridBagLayout)
