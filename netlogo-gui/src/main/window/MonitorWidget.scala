@@ -262,19 +262,19 @@ class MonitorWidget(random: MersenneTwisterFast)
     if (_oldSize)
       new Dimension(MinWidth, (fontSize * 4) + 1)
     else
-      new Dimension(100, 60)
+      new Dimension(100, 55)
 
   override def getMaximumSize: Dimension =
     if (_oldSize)
       new Dimension(10000, (fontSize * 4) + 1)
     else
-      new Dimension(10000, 60)
+      new Dimension(10000, 55)
 
   override def getPreferredSize: Dimension =
     if (_oldSize)
       new Dimension(100, getMinimumSize.height)
     else
-      new Dimension(100, 60)
+      new Dimension(100, 55)
 
   def decimalPlaces: Int = _decimalPlaces
 
