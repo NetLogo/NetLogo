@@ -18,6 +18,9 @@ object ModelsLibrary {
   val modelIndex = TaskKey[Seq[File]](
     "modelIndex", "builds models/index.txt for use in Models Library dialog")
 
+  val exportResizedModels = TaskKey[Unit](
+    "exportResizedModels", "resize all models to the new widget sizes and export the interface")
+
   val modelParser: Initialize[Parser[Option[Path]]] = {
     import Parser._
     Def.setting {
@@ -56,6 +59,11 @@ object ModelsLibrary {
       makeMainTask("org.nlogo.tools.ModelResaver",
         classpath = (Test / fullClasspath),
         workingDirectory = baseDirectory(_.getParentFile))
+    },
+    exportResizedModels := {
+      makeMainTask("org.nlogo.tools.ExportResizedModels",
+        classpath = (Test / fullClasspath),
+        workingDirectory = baseDirectory(_.getParentFile)).toTask("").value
     }
   )
 
