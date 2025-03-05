@@ -126,7 +126,7 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
 
   def helpLink = Option.empty[String]
 
-  override def liveUpdate: Boolean = true
+  override def liveUpdate: Boolean = false
 
   def minPxcor(minPxcor: Int): Unit = {
     if (minPxcor <= 0) {
