@@ -370,6 +370,20 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
         }
       })
 
+    private val stretchTopAction = new MenuItem(
+      new AbstractAction(I18N.gui.get("tabs.run.widget.stretchTop")) {
+        def actionPerformed(e: ActionEvent): Unit = {
+          wPanel.stretchTop()
+        }
+      })
+
+    private val stretchBottomAction = new MenuItem(
+      new AbstractAction(I18N.gui.get("tabs.run.widget.stretchBottom")) {
+        def actionPerformed(e: ActionEvent): Unit = {
+          wPanel.stretchBottom()
+        }
+      })
+
     private val popup = new PopupMenu
 
     popup.add(new JLabel("Arrange selected widgets") {
@@ -388,6 +402,8 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     popup.addSeparator()
     popup.add(stretchLeftAction)
     popup.add(stretchRightAction)
+    popup.add(stretchTopAction)
+    popup.add(stretchBottomAction)
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent): Unit = {
@@ -401,6 +417,8 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
         distributeVerticalAction.setEnabled(selectedObjects.size > 1)
         stretchLeftAction.setEnabled(selectedObjects.size > 1)
         stretchRightAction.setEnabled(selectedObjects.size > 1)
+        stretchTopAction.setEnabled(selectedObjects.size > 1)
+        stretchBottomAction.setEnabled(selectedObjects.size > 1)
 
         popup.show(AlignmentMenu.this, 0, getHeight)
       }
@@ -427,6 +445,14 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
                                                                    InterfaceColors.toolbarImage))
       distributeVerticalAction.setIcon(Utils.iconScaledWithColor("/images/distribute-vertical.png", 16, 16,
                                                                  InterfaceColors.toolbarImage))
+      stretchLeftAction.setIcon(Utils.iconScaledWithColor("/images/stretch-left.png", 16, 16,
+                                                          InterfaceColors.toolbarImage))
+      stretchRightAction.setIcon(Utils.iconScaledWithColor("/images/stretch-right.png", 16, 16,
+                                                           InterfaceColors.toolbarImage))
+      stretchTopAction.setIcon(Utils.iconScaledWithColor("/images/stretch-top.png", 16, 16,
+                                                         InterfaceColors.toolbarImage))
+      stretchBottomAction.setIcon(Utils.iconScaledWithColor("/images/stretch-bottom.png", 16, 16,
+                                                            InterfaceColors.toolbarImage))
     }
   }
 

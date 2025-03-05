@@ -37,7 +37,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   import WidgetWrapper._
 
   private var _verticallyResizable = false
-  private var horizontallyResizable = false
+  private var _horizontallyResizable = false
   private var _isNew = false
   private var _selected = false
   private var _isForeground = false
@@ -96,6 +96,9 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   def widget(): Widget =
     widget
 
+  def horizontallyResizable: Boolean =
+    _horizontallyResizable
+
   def verticallyResizable: Boolean =
     _verticallyResizable
 
@@ -114,7 +117,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
   def widgetChanged(): Unit = {
     _verticallyResizable = computeVerticallyResizable
-    horizontallyResizable = computeHorizontallyResizable
+    _horizontallyResizable = computeHorizontallyResizable
 
     repaint()
   }
@@ -834,6 +837,18 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
             interfacePanel.stretchRight()
           }
         }))
+
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchTop")) {
+          def actionPerformed(e: ActionEvent): Unit = {
+            interfacePanel.stretchTop()
+          }
+        }))
+
+        menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.stretchBottom")) {
+          def actionPerformed(e: ActionEvent): Unit = {
+            interfacePanel.stretchBottom()
+          }
+        }))
       }
     } else {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.select")) {
@@ -890,7 +905,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
       g2d.drawRect(HandleSize / 2, HandleSize / 2, getWidth - HandleSize, getHeight - HandleSize)
 
-      if (horizontallyResizable) {
+      if (_horizontallyResizable) {
         g2d.fillRect(0, getHeight / 2 - HandleSize / 2, HandleSize, HandleSize)
         g2d.fillRect(getWidth - HandleSize, getHeight / 2 - HandleSize / 2, HandleSize, HandleSize)
       }
@@ -900,7 +915,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         g2d.fillRect(getWidth / 2 - HandleSize / 2, getHeight - HandleSize, HandleSize, HandleSize)
       }
 
-      if (horizontallyResizable && verticallyResizable) {
+      if (_horizontallyResizable && verticallyResizable) {
         g2d.fillRect(0, 0, HandleSize, HandleSize)
         g2d.fillRect(getWidth - HandleSize, 0, HandleSize, HandleSize)
         g2d.fillRect(0, getHeight - HandleSize, HandleSize, HandleSize)
