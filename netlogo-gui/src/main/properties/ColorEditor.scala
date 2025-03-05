@@ -2,14 +2,14 @@
 
 package org.nlogo.properties
 
-import java.awt.{ Color, Dimension, Frame }
+import java.awt.{ Color, Dimension, Frame, GridBagLayout, GridBagConstraints, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import java.lang.Double
 import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.{ Color => NLColor, Dump }, NLColor.{ getClosestColorNumberByARGB, getColorNameByIndex }
-import org.nlogo.swing.RoundedBorderPanel
+import org.nlogo.swing.{ RoundedBorderPanel, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.ColorDialog
 
@@ -20,9 +20,29 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
   private val originalColor: Color = accessor.get
 
   private val label = new JLabel(accessor.displayName)
-  add(label)
-  add(colorButton)
-  setColor(originalColor)
+
+  locally {
+    setLayout(new GridBagLayout)
+
+    val c = new GridBagConstraints
+
+    c.anchor = GridBagConstraints.WEST
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.weightx = 1
+    c.insets = new Insets(0, 0, 0, 6)
+
+    add(new JPanel(new GridBagLayout) with Transparent {
+      add(label, new GridBagConstraints)
+    }, c)
+
+    c.fill = GridBagConstraints.NONE
+    c.weightx = 0
+    c.insets = new Insets(0, 0, 0, 0)
+
+    add(colorButton, c)
+
+    setColor(originalColor)
+  }
 
   def setColor(color: Color) {
     colorButton.setColor(color)
@@ -44,7 +64,6 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
     colorButton.setText(colorString)
   }
 
-  override def getMinimumSize = colorButton.getMinimumSize
   override def get = Some(colorButton.getColor)
   override def set(value: Color) { setColor(value) }
   override def requestFocus() { colorButton.requestFocus() }
@@ -64,7 +83,9 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
     private val label = new JLabel("0 (black)")
     private val panel = new JPanel {
       setBackground(Color.black)
-      setPreferredSize(new Dimension(10, 10))
+
+      override def getPreferredSize: Dimension =
+        new Dimension(10, 10)
     }
 
     setDiameter(6)
