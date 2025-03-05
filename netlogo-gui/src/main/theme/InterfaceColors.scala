@@ -575,16 +575,12 @@ object InterfaceColors {
   def menuBackgroundHover =
     theme.getOrElse("light") match {
       case "classic" | "light" => MediumBlue
-      case "dark" => DarkBlueGray
+      case "dark" => new Color(6, 112, 237, 128)
     }
 
   def menuBorder = MediumGray
 
-  def menuTextHover =
-    theme.getOrElse("light") match {
-      case "classic" | "light" => Color.WHITE
-      case "dark" => MediumGray
-    }
+  def menuTextHover = Color.WHITE
 
   def menuTextDisabled = MediumGray
 
@@ -597,7 +593,7 @@ object InterfaceColors {
   def dialogBackgroundSelected =
     theme.getOrElse("light") match {
       case "classic" | "light" => MediumBlue
-      case "dark" => DarkBlueGray
+      case "dark" => new Color(6, 112, 237, 128)
     }
 
   def dialogText =
@@ -606,11 +602,7 @@ object InterfaceColors {
       case "dark" => Color.WHITE
     }
 
-  def dialogTextSelected =
-    theme.getOrElse("light") match {
-      case "classic" | "light" => Color.WHITE
-      case "dark" => MediumGray
-    }
+  def dialogTextSelected = Color.WHITE
 
   def radioButtonBackground =
     theme.getOrElse("light") match {
