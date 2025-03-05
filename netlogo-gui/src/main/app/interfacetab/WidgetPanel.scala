@@ -226,6 +226,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
   def snapToGrid(value: Int): Int =
     ((value / (5 * zoomFactor)).toInt * 5 * zoomFactor).toInt
 
+  def snapWidgetBounds(): Unit = {
+    setInterfaceMode(InterfaceMode.Interact)
+    getWrappers.foreach(_.snapBounds())
+  }
+
   def getWrapper(widget: Widget): WidgetWrapper =
     widget.getParent.asInstanceOf[WidgetWrapper]
 

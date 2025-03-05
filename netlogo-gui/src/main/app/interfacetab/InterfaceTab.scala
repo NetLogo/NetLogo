@@ -46,7 +46,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   val commandCenterToggleAction = new CommandCenterToggleAction()
 
   override val activeMenuActions =
-    WorkspaceActions.interfaceActions(workspace) ++
+    WorkspaceActions.interfaceActions(workspace, iP) ++
     Seq(iP.undoAction, iP.redoAction, commandCenterToggleAction, new JumpToCommandCenterAction())
 
   var lastFocusedComponent: JComponent = commandCenter
