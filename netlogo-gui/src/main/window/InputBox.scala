@@ -447,7 +447,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     if (_oldSize) {
       new Dimension(MinWidth, MinHeight)
     } else {
-      new Dimension(100, 60)
+      new Dimension(100, 55)
     }
   }
 
@@ -462,7 +462,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
               textArea.getInsets.right + textArea.getInsets.left + 4
       new Dimension(MinWidth.max(result.width), MinHeight.max(result.height))
     } else {
-      new Dimension(250, 60)
+      new Dimension(250, 55)
     }
   }
 
