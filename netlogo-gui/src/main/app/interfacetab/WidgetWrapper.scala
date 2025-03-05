@@ -765,7 +765,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     if (selected) {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.deselect")) {
         def actionPerformed(e: ActionEvent): Unit = {
-          interfacePanel.setInteractMode(InterfaceMode.Select)
+          interfacePanel.setInterfaceMode(InterfaceMode.Select)
           selected(false)
           interfacePanel.setForegroundWrapper()
         }
@@ -853,7 +853,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     } else {
       menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.select")) {
         def actionPerformed(e: ActionEvent): Unit = {
-          interfacePanel.setInteractMode(InterfaceMode.Select)
+          interfacePanel.setInterfaceMode(InterfaceMode.Select)
           selected(true)
           foreground()
         }

@@ -121,7 +121,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   def getInteractMode: InterfaceMode =
     interactMode
 
-  def setInteractMode(mode: InterfaceMode): Unit = {
+  def setInterfaceMode(mode: InterfaceMode): Unit = {
     if (interactMode == InterfaceMode.Add && !placedShadowWidget)
       removeShadowWidget()
 
@@ -342,7 +342,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
           interactMode match {
             case InterfaceMode.Interact =>
               if (NlogoMouse.hasCtrl(e))
-                setInteractMode(InterfaceMode.Select)
+                setInterfaceMode(InterfaceMode.Select)
 
             case InterfaceMode.Select =>
               if (!selectionPane.isVisible) {
@@ -554,7 +554,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
         } else if (e.getButton == MouseEvent.BUTTON1) {
           if (NlogoMouse.hasCtrl(e)) {
             wrapperAtPoint(e.getPoint).foreach { wrapper =>
-              setInteractMode(InterfaceMode.Select)
+              setInterfaceMode(InterfaceMode.Select)
               selectWidget(wrapper, !wrapper.selected)
             }
           } else {
@@ -676,7 +676,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def keyReleased(e: KeyEvent): Unit = {
     if (e.getKeyCode == KeyEvent.VK_ESCAPE) {
-      setInteractMode(InterfaceMode.Interact)
+      setInterfaceMode(InterfaceMode.Interact)
     } else if (interactMode == InterfaceMode.Interact) {
       if (System.getProperty("os.name").contains("Mac")) {
         if (e.getKeyCode == KeyEvent.VK_META)
@@ -795,7 +795,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     zoomer.zoomWidget(wrapper, true, false, 1.0, zoomFactor)
 
-    setInteractMode(InterfaceMode.Add)
+    setInterfaceMode(InterfaceMode.Add)
 
     wrapper.syncTheme()
 
@@ -1083,7 +1083,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
 
   def handle(e: LoadBeginEvent): Unit = {
-    setInteractMode(InterfaceMode.Interact)
+    setInterfaceMode(InterfaceMode.Interact)
     removeAllWidgets()
     zoomer.forgetAllZoomInfo()
     WidgetActions.undoManager.discardAllEdits()
@@ -1205,7 +1205,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
   // x axis and then on the y axis, which although slightly less efficient allows for more accurate
   // repositioning of the widgets. (Isaac B 3/1/25)
   def convertWidgetSizes(reposition: Boolean): Unit = {
-    setInteractMode(InterfaceMode.Interact)
+    setInterfaceMode(InterfaceMode.Interact)
+
+    val originalBounds = getWrappers.map(w => (w, w.getBounds()))
 
     if (reposition) {
       // widgets sorted first by x coordinate, then by y coordinate if x coordinates match
@@ -1283,6 +1285,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
     revalidate()
     repaint()
+
+    WidgetActions.convertWidgetSizes(this, originalBounds)
 
     new DirtyEvent(None).raise(this)
   }

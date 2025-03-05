@@ -82,13 +82,13 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
   class InteractAction extends AbstractAction {
     def actionPerformed(e: ActionEvent): Unit = {
-      wPanel.setInteractMode(InterfaceMode.Interact)
+      wPanel.setInterfaceMode(InterfaceMode.Interact)
     }
   }
 
   class SelectAction extends AbstractAction {
     def actionPerformed(e: ActionEvent): Unit = {
-      wPanel.setInteractMode(InterfaceMode.Select)
+      wPanel.setInterfaceMode(InterfaceMode.Select)
     }
   }
 
@@ -97,7 +97,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       if (editButton.isSelected) {
         new WindowEvents.EditWidgetEvent(null).raise(InterfaceWidgetControls.this)
 
-        wPanel.setInteractMode(InterfaceMode.Edit)
+        wPanel.setInterfaceMode(InterfaceMode.Edit)
       }
 
       else
@@ -109,7 +109,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     def actionPerformed(e: ActionEvent): Unit = {
       if (deleteButton.isSelected) {
         wPanel.deleteSelectedWidgets()
-        wPanel.setInteractMode(InterfaceMode.Delete)
+        wPanel.setInterfaceMode(InterfaceMode.Delete)
       }
 
       else

@@ -4,6 +4,7 @@ import java.awt.Rectangle
 import javax.swing.undo.AbstractUndoableEdit
 
 import org.nlogo.editor.UndoManager
+import org.nlogo.window.InterfaceMode
 
 object WidgetActions {
 
@@ -73,6 +74,12 @@ object WidgetActions {
         ww.setBounds(newBounds)
 
         (ww, oldBounds, newBounds)
+    }))
+  }
+
+  def convertWidgetSizes(widgetPanel: WidgetPanel, wrappers: Seq[(WidgetWrapper, Rectangle)]): Unit = {
+    undoManager.addEdit(new ConvertWidgetSizes(widgetPanel, wrappers.map {
+      case (ww, oldBounds) => (ww, oldBounds, ww.getBounds())
     }))
   }
 
@@ -208,5 +215,29 @@ object WidgetActions {
           removeSelectionMargin(bounds)
       )
     }
+  }
+
+  class ConvertWidgetSizes(widgetPanel: WidgetPanel, wrappers: Seq[(WidgetWrapper, Rectangle, Rectangle)]) extends AbstractUndoableEdit {
+    override def redo {
+      widgetPanel.setInterfaceMode(InterfaceMode.Interact)
+
+      for ((ww, _, bounds) <- wrappers) {
+        if (ww.widget.oldSize) {
+          ww.widget.oldSize = false
+          ww.setBounds(bounds)
+        }
+      }
+    }
+
+    override def undo {
+      widgetPanel.setInterfaceMode(InterfaceMode.Interact)
+
+      for ((ww, bounds, _) <- wrappers) {
+        ww.widget.oldSize = true
+        ww.setBounds(bounds)
+      }
+    }
+
+    override def getPresentationName = "Convert Widget Sizes"
   }
 }
