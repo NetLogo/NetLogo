@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, Graphics, Point }
+import java.awt.{ Dimension, Font, Graphics, Point }
 import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, KeyAdapter, KeyEvent, MouseAdapter,
                         MouseEvent, MouseWheelEvent, MouseWheelListener }
 import java.lang.NumberFormatException
@@ -119,6 +119,11 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   val valueComponent = new TextField
   val unitsComponent = new Label("")
   val slider = new JSlider(0, ((maximum - minimum) / increment).toInt, 50)
+
+  if (boldName) {
+    nameComponent.setFont(nameComponent.getFont.deriveFont(Font.BOLD))
+    unitsComponent.setFont(unitsComponent.getFont.deriveFont(Font.BOLD))
+  }
 
   locally {
     val mouseListener = new MouseAdapter {

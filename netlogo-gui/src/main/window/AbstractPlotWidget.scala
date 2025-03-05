@@ -2,9 +2,9 @@
 
 package org.nlogo.window
 
-import javax.swing.{ JLabel, JPanel, SwingConstants }
-import java.awt.{ Color, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ Color, Dimension, Font, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.image.BufferedImage
+import javax.swing.{ JLabel, JPanel, SwingConstants }
 
 import org.nlogo.api.Editable
 import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot }
@@ -55,8 +55,11 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   private val canvasPanel = new CanvasPanel(canvas)
   private val legend = new PlotLegend(plot)
   private val nameLabel = new JLabel(I18N.gui.get("edit.plot.previewName"))
-  private val xAxis = new XAxisLabels()
-  private val yAxis = new YAxisLabels()
+  private val xAxis = new XAxisLabels(boldName)
+  private val yAxis = new YAxisLabels(boldName)
+
+  if (boldName)
+    nameLabel.setFont(nameLabel.getFont.deriveFont(Font.BOLD))
 
   displayName = plot.name
 
@@ -370,10 +373,16 @@ object AbstractPlotWidget {
   val MIN_SIZE = new Dimension(160, 120)
   val PREF_SIZE = new Dimension(200, 150)
 
-  class XAxisLabels extends javax.swing.JPanel {
+  class XAxisLabels(boldName: Boolean) extends javax.swing.JPanel {
     private val min: JLabel = new JLabel()
     private val label: JLabel = new JLabel("", SwingConstants.CENTER)
     private val max: JLabel = new JLabel()
+
+    if (boldName) {
+      min.setFont(min.getFont.deriveFont(Font.BOLD))
+      label.setFont(label.getFont.deriveFont(Font.BOLD))
+      max.setFont(max.getFont.deriveFont(Font.BOLD))
+    }
 
     val gridbag: GridBagLayout = new GridBagLayout
     setLayout(gridbag)
@@ -419,12 +428,18 @@ object AbstractPlotWidget {
     def getLabel = label.getText
   }
 
-  class YAxisLabels extends javax.swing.JPanel {
+  class YAxisLabels(boldName: Boolean) extends javax.swing.JPanel {
     private val label: JLabel = new JLabel()
     private var labelText: String = ""
     private val max: JLabel = new JLabel()
     private val labelIcon: VTextIcon = new VTextIcon(label, "", org.nlogo.swing.VTextIcon.ROTATE_LEFT)
     private val min: JLabel = new JLabel()
+
+    if (boldName) {
+      min.setFont(min.getFont.deriveFont(Font.BOLD))
+      label.setFont(label.getFont.deriveFont(Font.BOLD))
+      max.setFont(max.getFont.deriveFont(Font.BOLD))
+    }
 
     label.setIcon(labelIcon)
     val gridbag: GridBagLayout = new GridBagLayout

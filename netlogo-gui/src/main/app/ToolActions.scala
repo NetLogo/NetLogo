@@ -51,7 +51,8 @@ with MenuAction {
       Preferences.IncludedFilesMenu,
       Preferences.ProceduresMenuSortOrder,
       Preferences.FocusOnError,
-      Preferences.StartSeparateCodeTab
+      Preferences.StartSeparateCodeTab,
+      Preferences.BoldWidgetNames
     ) ++ (if (System.getProperty("os.name").contains("Linux")) Seq(Preferences.UIScale) else Nil)
   )
 }

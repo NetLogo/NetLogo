@@ -95,6 +95,9 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   private val valuePanel = new ValuePanel(valueLabel)
 
+  if (boldName)
+    nameLabel.setFont(nameLabel.getFont.deriveFont(Font.BOLD))
+
   addMouseListener(this)
 
   setLayout(new GridBagLayout)
