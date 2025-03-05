@@ -666,6 +666,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
         case KeyEvent.VK_DOWN =>
           WidgetActions.moveWidgets(selectedWrappers.map(w => (w, w.getX, w.getY + dist)))
 
+        case KeyEvent.VK_BACK_SPACE | KeyEvent.VK_DELETE =>
+            deleteSelectedWidgets()
+
         case _ =>
       }
     }
