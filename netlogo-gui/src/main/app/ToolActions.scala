@@ -157,10 +157,11 @@ class ConvertWidgetSizes(frame: Frame, widgetPanel: WidgetPanel)
   group    = ToolsWidgetGroup
 
   override def actionPerformed(e: ActionEvent): Unit = {
-    if (new OptionPane(frame, I18N.gui.get("common.messages.warning"),
-                       I18N.gui.get("menu.tools.convertWidgetSizes.prompt"), OptionPane.Options.OkCancel,
-                       OptionPane.Icons.Warning).getSelectedIndex == 0) {
-      widgetPanel.convertWidgetSizes()
-    }
+    val mode = new OptionPane(frame, I18N.gui.get("common.messages.warning"),
+                              I18N.gui.get("menu.tools.convertWidgetSizes.prompt"),
+                              Seq(I18N.gui.get("common.buttons.ok"), I18N.gui.get("menu.tools.convertWidgetSizes.onlyResize")),
+                              OptionPane.Icons.Warning).getSelectedIndex
+
+    widgetPanel.convertWidgetSizes(mode == 0)
   }
 }
