@@ -1008,14 +1008,29 @@ class WidgetPanel(val workspace: GUIWorkspace)
   def stretchLeft(): Unit = {
     val target = selectedWrappers.minBy(_.getX)
 
-    WidgetActions.reboundWidgets(selectedWrappers.map(w =>
+    WidgetActions.reboundWidgets(selectedWrappers.filter(_.horizontallyResizable).map(w =>
       (w, new Rectangle(target.getX, w.getY, w.getX + w.getWidth - target.getX, w.getHeight))))
   }
 
   def stretchRight(): Unit = {
     val target = selectedWrappers.maxBy(w => w.getX + w.getWidth)
 
-    WidgetActions.resizeWidgets(selectedWrappers.map(w => (w, target.getX + target.getWidth - w.getX, w.getHeight)))
+    WidgetActions.resizeWidgets(selectedWrappers.filter(_.horizontallyResizable).map(w =>
+      (w, target.getX + target.getWidth - w.getX, w.getHeight)))
+  }
+
+  def stretchTop(): Unit = {
+    val target = selectedWrappers.minBy(_.getY)
+
+    WidgetActions.reboundWidgets(selectedWrappers.filter(_.verticallyResizable).map(w =>
+      (w, new Rectangle(w.getX, target.getY, w.getWidth, w.getY + w.getHeight - target.getY))))
+  }
+
+  def stretchBottom(): Unit = {
+    val target = selectedWrappers.maxBy(w => w.getY + w.getHeight)
+
+    WidgetActions.resizeWidgets(selectedWrappers.filter(_.verticallyResizable).map(w =>
+      (w, w.getWidth, target.getY + target.getHeight - w.getY)))
   }
 
   def sliderEventOnReleaseOnly(sliderEventOnReleaseOnly: Boolean): Unit = {
