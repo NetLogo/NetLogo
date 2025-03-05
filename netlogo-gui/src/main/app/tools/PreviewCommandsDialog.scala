@@ -71,9 +71,13 @@ class PreviewCommandsDialog(
   comboBox.addItemListener(new ItemListener {
     def itemStateChanged(evt: ItemEvent): Unit =
       if (evt.getStateChange == ItemEvent.SELECTED) {
-        val previewCommands = evt.getItem.asInstanceOf[PreviewCommands]
-        editorPanel.update(previewCommands)
-        guiState.previewCommands = previewCommands
+        evt.getItem match {
+          case Some(pc: PreviewCommands) =>
+            editorPanel.update(pc)
+            guiState.previewCommands = pc
+
+          case _ =>
+        }
       }
   })
 
