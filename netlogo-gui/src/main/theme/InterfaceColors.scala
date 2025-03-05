@@ -288,7 +288,7 @@ object InterfaceColors {
 
   def viewBorder =
     theme.getOrElse("light") match {
-      case "classic" | "light" => Transparent
+      case "classic" | "light" => Color.BLACK
       case "dark" => LightGrayOutline
     }
 

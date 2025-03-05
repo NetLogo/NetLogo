@@ -12,15 +12,9 @@ import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.Events.ResizeViewEvent
 import org.nlogo.window.MouseMode._
 
-object ViewWidget {
-  private val InsideBorderHeight = 1
-}
-
 class ViewWidget(workspace: GUIWorkspace)
     extends Widget
     with ViewWidgetInterface {
-
-  import ViewWidget._
 
   type WidgetModel = CoreView
 
@@ -41,7 +35,7 @@ class ViewWidget(workspace: GUIWorkspace)
   override def classDisplayName: String = "World & View"
 
   final def getExtraHeight: Int =
-    getInsets.top + getInsets.bottom + InsideBorderHeight
+    getInsets.top + getInsets.bottom
 
   def getAdditionalHeight: Int =
     getExtraHeight
@@ -56,9 +50,7 @@ class ViewWidget(workspace: GUIWorkspace)
     // view.setBounds will force the Renderer to a particular size, overriding the
     // calculation the Render makes internally if need be -- CLB
     view.visualPatchSize(patchSize)
-    view.setBounds(getInsets.left,
-      getInsets.top + InsideBorderHeight,
-      availableWidth, graphicsHeight)
+    view.setBounds(getInsets.left, getInsets.top, availableWidth, graphicsHeight)
   }
 
   override def getEditable: AnyRef =
