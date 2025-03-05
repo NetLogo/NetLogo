@@ -2,12 +2,10 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, FlowLayout, Rectangle }
+import java.awt.{ Color, Dimension, GridBagConstraints, GridBagLayout, Insets, Rectangle }
 import javax.swing.JLabel
-import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.{ Editable, Property }
-import org.nlogo.awt.LineBreaker
 import org.nlogo.core.{ TextBox => CoreTextBox }
 import org.nlogo.core.I18N
 import org.nlogo.swing.Transparent
@@ -17,13 +15,21 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 
   type WidgetModel = CoreTextBox
 
-  setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0))
-
   val textLabel = new JLabel
 
-  textLabel.setBorder(new EmptyBorder(0, 4, 0, 4))
+  locally {
+    setLayout(new GridBagLayout)
 
-  add(textLabel)
+    val c = new GridBagConstraints
+
+    c.anchor = GridBagConstraints.NORTHWEST
+    c.fill = GridBagConstraints.HORIZONTAL
+    c.weightx = 1
+    c.weighty = 1
+    c.insets = new Insets(0, 4, 0, 4)
+
+    add(textLabel, c)
+  }
 
   val MIN_WIDTH = 15
   val DEFAULT_WIDTH = 150
@@ -42,8 +48,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   override def isNote = true
 
   private def wrapText(): Unit = {
-    textLabel.setText(s"<html>${LineBreaker.breakLines(_text, getFontMetrics(textLabel.getFont), _width - 8)
-                                           .mkString("<br>")}</html>")
+    textLabel.setText(s"""<html>${_text.replace("\n", "<br>")}</html>""")
     repaint()
   }
 
