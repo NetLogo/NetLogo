@@ -82,7 +82,6 @@ class MonitorWidget(random: MersenneTwisterFast)
   private var _value: Option[AnyRef] = Option.empty[AnyRef]
   private var valueString: String = ""
   private var _decimalPlaces: Int = DefaultDecimalPlaces
-  private var _units: String = ""
 
   // This is the same as the button so right-click on a monitor w/ error
   // brings up the popup menu not the edit dialog. ev 1/4/06
@@ -92,11 +91,15 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   private val nameLabel = new JLabel(I18N.gui.get("edit.monitor.previewName"))
   private val valueLabel = new JLabel
-
   private val valuePanel = new ValuePanel(valueLabel)
+  private val unitsLabel = new JLabel
 
-  if (boldName)
+  if (boldName) {
     nameLabel.setFont(nameLabel.getFont.deriveFont(Font.BOLD))
+    unitsLabel.setFont(unitsLabel.getFont.deriveFont(Font.BOLD))
+  }
+
+  unitsLabel.setVisible(false)
 
   addMouseListener(this)
 
@@ -110,25 +113,45 @@ class MonitorWidget(random: MersenneTwisterFast)
     val c = new GridBagConstraints
 
     c.gridx = 0
+    c.gridwidth = 2
     c.weightx = 1
     c.anchor = GridBagConstraints.NORTHWEST
-    c.insets =
-      if (_oldSize)
+    c.insets = {
+      if (_oldSize) {
         new Insets(3, 6, 0, 6)
-      else
+      } else {
         new Insets(6, 12, 6, 12)
+      }
+    }
 
     add(nameLabel, c)
 
-    c.weighty = 1
+    c.gridwidth = 1
     c.fill = GridBagConstraints.BOTH
-    c.insets =
-      if (_oldSize)
+    c.weighty = 1
+    c.insets = {
+      if (_oldSize) {
         new Insets(0, 6, 6, 6)
-      else
+      } else {
         new Insets(0, 12, 6, 12)
+      }
+    }
 
     add(valuePanel, c)
+
+    c.gridx = 1
+    c.fill = GridBagConstraints.NONE
+    c.weightx = 0
+    c.weighty = 0
+    c.insets = {
+      if (_oldSize) {
+        new Insets(0, 0, 6, 6)
+      } else {
+        new Insets(0, -6, 6, 12)
+      }
+    }
+
+    add(unitsLabel, c)
   }
 
   def name(name: String): Unit = {
@@ -171,9 +194,10 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   def fontSize: Int = _fontSize
 
-  def units: String = _units
+  def units: String = unitsLabel.getText
   def units_=(value: String): Unit = {
-    _units = value
+    unitsLabel.setText(value.trim)
+    unitsLabel.setVisible(value.trim.nonEmpty)
     revalidate()
     repaint()
   }
@@ -214,19 +238,19 @@ class MonitorWidget(random: MersenneTwisterFast)
     Properties.monitor
 
   def chooseDisplayName() {
-    val suffix = if (_units.isEmpty) "" else (" " + _units)
-
-    if (name == null || name == "")
-      displayName(getSourceName + suffix)
-    else
-      displayName(name + suffix)
+    if (name == null || name == "") {
+      displayName(getSourceName)
+    } else {
+      displayName(name)
+    }
 
     nameLabel.setText(displayName)
 
-    if (nameLabel.getPreferredSize.width > nameLabel.getWidth)
+    if (nameLabel.getPreferredSize.width > nameLabel.getWidth) {
       nameLabel.setToolTipText(nameLabel.getText)
-    else
+    } else {
       nameLabel.setToolTipText(null)
+    }
   }
 
   // behold the mighty regular expression
@@ -257,27 +281,34 @@ class MonitorWidget(random: MersenneTwisterFast)
 
     nameLabel.setForeground(InterfaceColors.widgetText)
     valueLabel.setForeground(InterfaceColors.displayAreaText)
+    unitsLabel.setForeground(InterfaceColors.widgetText)
 
     valuePanel.syncTheme()
   }
 
-  override def getMinimumSize: Dimension =
-    if (_oldSize)
+  override def getMinimumSize: Dimension = {
+    if (_oldSize) {
       new Dimension(MinWidth, (fontSize * 4) + 1)
-    else
+    } else {
       new Dimension(100, 55)
+    }
+  }
 
-  override def getMaximumSize: Dimension =
-    if (_oldSize)
+  override def getMaximumSize: Dimension = {
+    if (_oldSize) {
       new Dimension(10000, (fontSize * 4) + 1)
-    else
+    } else {
       new Dimension(10000, 55)
+    }
+  }
 
-  override def getPreferredSize: Dimension =
-    if (_oldSize)
+  override def getPreferredSize: Dimension = {
+    if (_oldSize) {
       new Dimension(100, getMinimumSize.height)
-    else
+    } else {
       new Dimension(100, 55)
+    }
+  }
 
   def decimalPlaces: Int = _decimalPlaces
 
@@ -332,7 +363,7 @@ class MonitorWidget(random: MersenneTwisterFast)
   }
 
   override def load(model: WidgetModel): AnyRef = {
-    _units = model.units.getOrElse("")
+    units = model.units.getOrElse("")
     name(model.display.getOrElse(""))
     _decimalPlaces = model.precision
     fontSize(model.fontSize)
