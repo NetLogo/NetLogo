@@ -45,8 +45,10 @@ case class Model(code: String = "",
 
 object Model {
   val defaultCode = ""
-  lazy val defaultShapes: List[VectorShape] =
-    parseVectorShapes(Resource.lines("/system/defaultShapes.txt").toSeq).toList
+  lazy val defaultShapes: List[VectorShape] = {
+    (parseVectorShapes(Resource.lines("/system/defaultShapes.txt").toSeq) ++
+      parseVectorShapes(Resource.lines("/system/libraryShapes.txt").toSeq)).toSet.toList
+  }
   lazy val defaultLinkShapes: List[LinkShape] =
     parseLinkShapes(Resource.lines("/system/defaultLinkShapes.txt").toSeq).toList
   lazy val defaultView =
