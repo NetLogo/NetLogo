@@ -140,9 +140,9 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     getContentPane.setBackground(InterfaceColors.dialogBackground)
 
     if (InterfaceColors.getTheme == "dark") {
-      graphic.setIcon(Utils.iconScaled("/images/banner-dark.png", 600, 231))
+      graphic.setIcon(Utils.iconScaled("/images/banner-dark-versionless.png", 600, 231))
     } else {
-      graphic.setIcon(Utils.iconScaled("/images/banner.png", 600, 231))
+      graphic.setIcon(Utils.iconScaled("/images/banner-versionless.png", 600, 231))
     }
 
     label.setForeground(InterfaceColors.toolbarText)
