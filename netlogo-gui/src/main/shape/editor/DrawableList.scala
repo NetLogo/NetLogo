@@ -20,12 +20,22 @@ class DrawableList[A <: Shape](shapeTracker: ShapeListTracker, rows: Int, height
   setFixedCellHeight(height)
   setCellRenderer(new ShapeCellRenderer())
 
-  //  Make sure the list of available shapes is up to date
-  def update(): Unit = {
+  //  Make sure the list of available shapes is up to date, filtering by name if provided
+  def update(name: Option[String] = None): Unit = {
     listModel.clear()
-    shapeList.shapes.foreach {
-      case s: A => listModel.addElement(s)
+
+    name match {
+      case Some(str) =>
+        shapeList.shapes.foreach {
+          case s: A if s.name.toLowerCase.contains(str.toLowerCase) => listModel.addElement(s)
+          case _ =>
+        }
+
       case _ =>
+        shapeList.shapes.foreach {
+          case s: A => listModel.addElement(s)
+          case _ =>
+        }
     }
   }
 

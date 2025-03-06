@@ -2,24 +2,19 @@
 
 package org.nlogo.shape.editor
 
-import java.awt.{ Component, Frame }
-import javax.swing.Box
+import java.awt.Frame
 
-import org.nlogo.api.{ AbstractModelLoader, FileIO, World }
+import org.nlogo.api.{ AbstractModelLoader, World }
 import org.nlogo.shape.{ ShapeConverter, VectorShape },
   ShapeConverter.baseVectorShapeToVectorShape
-import org.nlogo.swing.{ Button, OptionPane }
-import org.nlogo.core.{ AgentKind, I18N, Model, Shape, ShapeList, ShapeParser },
+import org.nlogo.core.{ AgentKind, Model, Shape, ShapeList },
   Shape.{ VectorShape => CoreVectorShape },
-  ShapeList.{ isDefaultShapeName, sortShapes },
-  ShapeParser.parseVectorShapes
+  ShapeList.isDefaultShapeName
 
 object TurtleShapeManagerDialog {
   val DefaultShapePath = "/system/defaultShapes.txt"
   val LibraryShapePath = "/system/libraryShapes.txt"
 }
-
-import TurtleShapeManagerDialog._
 
 class TurtleShapeManagerDialog(parentFrame: Frame,
                                world: World,
@@ -29,14 +24,9 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
 
   shapesList.addListSelectionListener(this)
 
-  lazy val libraryButton = new Button(I18N.gui("importFromLibrary"), importFromLibrary)
-
   override def shapeKind = AgentKind.Turtle
 
   override def modelShapes(m: Model): Seq[Shape] = m.turtleShapes
-
-  override def importButtons: Seq[Component] =
-    Seq(libraryButton, Box.createHorizontalStrut(5)) ++ super.importButtons
 
   def displayableShapeFromCoreShape(shape: Shape): Option[VectorShape] = {
     shape match {
@@ -66,30 +56,30 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
     }
   }
 
-  // Import shapes from shapes library
-  private def importFromLibrary(): Unit = {
-    val defaultShapes = FileIO.getResourceAsStringArray(DefaultShapePath)
-    val libraryShapes = FileIO.getResourceAsStringArray(LibraryShapePath)
-    val mergedShapes = defaultShapes.toList ::: ("" :: libraryShapes.toList)
-    drawableListFromImportedShapes(mergedShapes.toArray) match {
-      case Some(drawableList) =>
-        importDialog = Some(new ImportDialog(TurtleShapeManagerDialog.this, this, drawableList))
-        shapesList.requestFocus()
-      case None =>
-        new OptionPane(this, I18N.gui.get("tools.shapesEditor.import"),
-                       I18N.gui.get("tools.shapesEditor.import.libraryError"), OptionPane.Options.Ok,
-                       OptionPane.Icons.Error)
-    }
-  }
+  // // Import shapes from shapes library
+  // private def importFromLibrary(): Unit = {
+  //   val defaultShapes = FileIO.getResourceAsStringArray(DefaultShapePath)
+  //   val libraryShapes = FileIO.getResourceAsStringArray(LibraryShapePath)
+  //   val mergedShapes = defaultShapes.toList ::: ("" :: libraryShapes.toList)
+  //   drawableListFromImportedShapes(mergedShapes.toArray) match {
+  //     case Some(drawableList) =>
+  //       importDialog = Some(new ImportDialog(TurtleShapeManagerDialog.this, this, drawableList))
+  //       shapesList.requestFocus()
+  //     case None =>
+  //       new OptionPane(this, I18N.gui.get("tools.shapesEditor.import"),
+  //                      I18N.gui.get("tools.shapesEditor.import.libraryError"), OptionPane.Options.Ok,
+  //                      OptionPane.Icons.Error)
+  //   }
+  // }
 
-  private def drawableListFromImportedShapes(shapeStrings: Array[String]): Option[DrawableList[VectorShape]] = {
-    try {
-      val parsedShapes = parseVectorShapes(shapeStrings)
-        .map(baseVectorShapeToVectorShape)
-      Some(drawableListFromModelShapes(sortShapes(parsedShapes)))
-    } catch {
-      case e: IllegalArgumentException =>
-        None
-    }
-  }
+  // private def drawableListFromImportedShapes(shapeStrings: Array[String]): Option[DrawableList[VectorShape]] = {
+  //   try {
+  //     val parsedShapes = parseVectorShapes(shapeStrings)
+  //       .map(baseVectorShapeToVectorShape)
+  //     Some(drawableListFromModelShapes(sortShapes(parsedShapes)))
+  //   } catch {
+  //     case e: IllegalArgumentException =>
+  //       None
+  //   }
+  // }
 }
