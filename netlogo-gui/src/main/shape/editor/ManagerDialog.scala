@@ -87,9 +87,9 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
     c.gridwidth = 3
     c.anchor = GridBagConstraints.WEST
     c.fill = GridBagConstraints.HORIZONTAL
-    c.insets = new Insets(6, 0, 6, 0)
+    c.insets = new Insets(12, 0, 12, 0)
 
-    add(new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0)) with Transparent {
+    add(new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0)) with Transparent {
       add(newButton)
       add(modelImportButton)
     }, c)
@@ -97,7 +97,7 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
     c.fill = GridBagConstraints.BOTH
     c.weightx = 1
     c.weighty = 1
-    c.insets = new Insets(0, 6, 6, 6)
+    c.insets = new Insets(0, 12, 12, 12)
 
     add(scrollPane, c)
 
@@ -113,16 +113,16 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
     c.gridx = 1
     c.fill = GridBagConstraints.HORIZONTAL
     c.weightx = 1
-    c.insets = new Insets(0, 0, 6, 6)
+    c.insets = new Insets(0, 0, 12, 0)
 
     add(searchField, c)
 
     c.gridx = 2
     c.anchor = GridBagConstraints.EAST
     c.weightx = 0
-    c.insets = new Insets(0, 0, 6, 0)
+    c.insets = new Insets(0, 0, 12, 0)
 
-    add(new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0)) with Transparent {
+    add(new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0)) with Transparent {
       add(editButton)
       add(duplicateButton)
       add(deleteButton)
