@@ -11,11 +11,6 @@ import org.nlogo.core.{ AgentKind, Model, Shape, ShapeList },
   Shape.{ VectorShape => CoreVectorShape },
   ShapeList.isDefaultShapeName
 
-object TurtleShapeManagerDialog {
-  val DefaultShapePath = "/system/defaultShapes.txt"
-  val LibraryShapePath = "/system/libraryShapes.txt"
-}
-
 class TurtleShapeManagerDialog(parentFrame: Frame,
                                world: World,
                                modelLoader: AbstractModelLoader)
@@ -55,31 +50,4 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
       new EditorDialog(this, shapesList, newShape, true)
     }
   }
-
-  // // Import shapes from shapes library
-  // private def importFromLibrary(): Unit = {
-  //   val defaultShapes = FileIO.getResourceAsStringArray(DefaultShapePath)
-  //   val libraryShapes = FileIO.getResourceAsStringArray(LibraryShapePath)
-  //   val mergedShapes = defaultShapes.toList ::: ("" :: libraryShapes.toList)
-  //   drawableListFromImportedShapes(mergedShapes.toArray) match {
-  //     case Some(drawableList) =>
-  //       importDialog = Some(new ImportDialog(TurtleShapeManagerDialog.this, this, drawableList))
-  //       shapesList.requestFocus()
-  //     case None =>
-  //       new OptionPane(this, I18N.gui.get("tools.shapesEditor.import"),
-  //                      I18N.gui.get("tools.shapesEditor.import.libraryError"), OptionPane.Options.Ok,
-  //                      OptionPane.Icons.Error)
-  //   }
-  // }
-
-  // private def drawableListFromImportedShapes(shapeStrings: Array[String]): Option[DrawableList[VectorShape]] = {
-  //   try {
-  //     val parsedShapes = parseVectorShapes(shapeStrings)
-  //       .map(baseVectorShapeToVectorShape)
-  //     Some(drawableListFromModelShapes(sortShapes(parsedShapes)))
-  //   } catch {
-  //     case e: IllegalArgumentException =>
-  //       None
-  //   }
-  // }
 }
