@@ -93,7 +93,6 @@ class SnapToGridAction(workspace: GUIWorkspace, widgetPanel: AbstractWidgetPanel
 
   def actionPerformed(e: ActionEvent) = {
     workspace.setSnapOn(! workspace.snapOn)
-    widgetPanel.snapWidgetBounds()
     putValue(Action.SELECTED_KEY, checkedState)
   }
 

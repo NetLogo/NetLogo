@@ -11,7 +11,6 @@ abstract class AbstractWidgetPanel extends JLayeredPane with Zoomable with Theme
   def removeAllWidgets()
   def getWidgetsForSaving: Seq[CoreWidget]
   def loadWidgets(widgets: Seq[CoreWidget])
-  def snapWidgetBounds(): Unit
   def hasView: Boolean
   def empty: Boolean
 }
