@@ -61,7 +61,15 @@ object HelpActions {
     new RemoteBrowseAction(I18N.gui.get("menu.help.donate"),
       new URI("http://ccl.northwestern.edu/netlogo/giving.shtml")) {
       putValue(ActionGroupKey, HelpAboutGroup)
-    })
+    },
+    new RemoteBrowseAction(I18N.gui.get("menu.help.forum"),
+      new URI("https://forum.netlogo.org")) {
+      putValue(ActionGroupKey, HelpAboutGroup)
+      },
+    new RemoteBrowseAction(I18N.gui.get("menu.help.contact"),
+      new URI("https://ccl.northwestern.edu/netlogo/contact.shtml")) {
+      putValue(ActionGroupKey, HelpAboutGroup)
+      })
   }
 }
 
