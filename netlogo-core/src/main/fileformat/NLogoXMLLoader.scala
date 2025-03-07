@@ -28,22 +28,24 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
   }
 
   def readModel(uri: URI): Try[Model] = {
-    val text = {
-      val source = {
-        if (uri.getScheme == "jar")
-          Source.fromInputStream(uri.toURL.openStream)
-        else
-          Source.fromURI(uri)
-      }
-
-      val str = source.mkString
-
-      source.close()
-
-      str
+    val source = {
+      if (uri.getScheme == "jar")
+        Source.fromInputStream(uri.toURL.openStream)
+      else
+        Source.fromURI(uri)
     }
 
-    readModel(text, AbstractModelLoader.getURIExtension(uri).getOrElse(""))
+    val text = Try(source.mkString)
+
+    source.close()
+
+    text match {
+      case Success(str) =>
+        readModel(str, AbstractModelLoader.getURIExtension(uri).getOrElse(""))
+
+      case Failure(e) =>
+        Failure(e)
+    }
   }
 
   def readModel(source: String, extension: String): Try[Model] = {
