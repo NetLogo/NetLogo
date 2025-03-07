@@ -46,6 +46,8 @@ lazy val jvmSettings = Seq(
     "-g -deprecation -encoding us-ascii -Werror -Xlint:all -Xlint:-serial -Xlint:-fallthrough -Xlint:-path"
     .split(" ").toSeq,
   javaOptions ++=Seq(
+    "-Dawt.useSystemAAFontSettings=on",
+    "-Dswing.aatext=true",
     //  These add-exports are needed for JOGL
     "--add-exports", "java.base/java.lang=ALL-UNNAMED",
     "--add-exports", "java.desktop/sun.awt=ALL-UNNAMED",
