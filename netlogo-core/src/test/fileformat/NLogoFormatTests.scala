@@ -183,8 +183,8 @@ class VectorShapesComponentTest extends NLogoFormatTest[Seq[VectorShape]] {
   def modelComponent(model: Model): Seq[VectorShape] = model.turtleShapes
   def attachComponent(shapes: Seq[VectorShape]): Model = Model(turtleShapes = shapes)
 
-  testDeserializes("empty shapes to default shapes", Array[String](), Model.defaultShapes)
-  val defaultShape = Model.defaultShapes.find(_.name == "default").get
+  testDeserializes("empty shapes to default shapes", Array[String](), Model.defaultTurtleShapes)
+  val defaultShape = Model.defaultTurtleShapes.find(_.name == "default").get
   testRoundTripsObjectForm("default-only shape list", Seq(defaultShape))
 }
 
