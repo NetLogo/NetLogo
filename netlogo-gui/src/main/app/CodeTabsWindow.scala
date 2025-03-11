@@ -15,7 +15,7 @@ class CodeTabsWindow(parent: Frame, tabs: TabsPanel) extends JFrame with LinkChi
   setJMenuBar(menuBar)
 
   setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE)
-  setSize(new Dimension(600, 400))
+  setSize(new Dimension(675, 400))
   setVisible(false)
 
   add(tabs)
