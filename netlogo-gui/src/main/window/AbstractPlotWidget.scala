@@ -53,7 +53,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   plot.dirtyListener = Some(this)
   val canvas = new PlotCanvas(plot)
   private val canvasPanel = new CanvasPanel(canvas)
-  private val legend = new PlotLegend(plot)
+  private val legend = new PlotLegend(plot, boldName)
   private val nameLabel = new JLabel(I18N.gui.get("edit.plot.previewName"))
   private val xAxis = new XAxisLabels(boldName)
   private val yAxis = new YAxisLabels(boldName)

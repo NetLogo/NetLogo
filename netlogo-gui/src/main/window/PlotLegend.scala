@@ -2,14 +2,14 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, Graphics }
+import java.awt.{ Color, Dimension, Font, Graphics }
 import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.plot.{ Plot, PlotPen }
 import org.nlogo.swing.Transparent
 import org.nlogo.theme.InterfaceColors
 
-class PlotLegend(plot: Plot) extends JPanel {
+class PlotLegend(plot: Plot, boldName: Boolean) extends JPanel {
   setOpaque(false)
 
   var open = false
@@ -43,6 +43,9 @@ class PlotLegend(plot: Plot) extends JPanel {
     })
 
     add(new JLabel(pen.name) {
+      if (boldName)
+        setFont(getFont.deriveFont(Font.BOLD))
+
       override def paintComponent(g: Graphics) {
         setForeground(InterfaceColors.widgetText)
 
