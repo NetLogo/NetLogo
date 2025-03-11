@@ -219,7 +219,7 @@ object WidgetActions {
 
   class ConvertWidgetSizes(widgetPanel: WidgetPanel, wrappers: Seq[(WidgetWrapper, Rectangle, Rectangle)]) extends AbstractUndoableEdit {
     override def redo {
-      widgetPanel.setInterfaceMode(InterfaceMode.Interact)
+      widgetPanel.setInterfaceMode(InterfaceMode.Interact, true)
 
       for ((ww, _, bounds) <- wrappers) {
         if (ww.widget.oldSize) {
@@ -230,7 +230,7 @@ object WidgetActions {
     }
 
     override def undo {
-      widgetPanel.setInterfaceMode(InterfaceMode.Interact)
+      widgetPanel.setInterfaceMode(InterfaceMode.Interact, true)
 
       for ((ww, bounds, _) <- wrappers) {
         ww.widget.oldSize = true
