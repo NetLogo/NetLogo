@@ -703,30 +703,30 @@ object InterfaceColors {
 
   // Syntax highlighting colors
 
-  def commentColor = new Color(90, 90, 90) // gray
+  def commentColor = new Color(150, 150, 150) // light gray
 
   def commandColor =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(0, 0, 170) // blue
-      case "dark" => new Color(107, 107, 237) // lighter blue
+      case "dark" => new Color(6, 183, 255) // sky blue
     }
 
   def reporterColor =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(102, 0, 150) // purple
-      case "dark" => new Color(151, 71, 255) // lighter purple
+      case "dark" => new Color(190, 85, 190) // light purple
     }
 
   def keywordColor =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(0, 127, 105) // bluish green
-      case "dark" => new Color(6, 142, 120) // lighter bluish green
+      case "dark" => new Color(36, 172, 150) // light bluish green
     }
 
   def constantColor =
     theme.getOrElse("light") match {
       case "classic" | "light" => new Color(237, 79, 0) // orange
-      case "dark" => new Color(234, 110, 33) // lighter orange
+      case "dark" => new Color(234, 110, 33) // light orange
     }
 
   def defaultColor =
