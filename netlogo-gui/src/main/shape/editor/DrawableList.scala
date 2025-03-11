@@ -2,18 +2,19 @@
 
 package org.nlogo.shape.editor
 
+import javax.swing.{ DefaultListModel, JList }
+
 import org.nlogo.core.{ I18N, Shape, ShapeList, ShapeListTracker }
 import org.nlogo.swing.OptionPane
 
 import scala.reflect.ClassTag
 
-class DrawableList[A <: Shape](shapeTracker: ShapeListTracker, rows: Int, height: Int, parent: java.awt.Component)(implicit ct: ClassTag[A])
-  extends javax.swing.JList[A]
-  with EditorDialog.VectorShapeContainer {
+class DrawableList[A <: Shape](shapeTracker: ShapeListTracker, rows: Int, height: Int, parent: java.awt.Component)
+  (implicit ct: ClassTag[A]) extends JList[A] with EditorDialog.VectorShapeContainer {
 
   def shapeList = shapeTracker.shapeList
 
-  val listModel = new javax.swing.DefaultListModel[A]()
+  val listModel = new DefaultListModel[A]
 
   setVisibleRowCount(rows)
   setModel(listModel)

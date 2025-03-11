@@ -227,7 +227,7 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
 
   object VectorShapesComponent extends ComponentSerialization[Array[String], A] {
     val componentName = "org.nlogo.modelsection.turtleshapes"
-    override def addDefault = _.copy(turtleShapes = Model.defaultShapes)
+    override def addDefault = _.copy(turtleShapes = Model.defaultTurtleShapes)
     def serialize(m: Model): Array[String] =
       ShapeParser.formatVectorShapes(m.turtleShapes).linesIterator.toArray
     def validationErrors(m: Model): Option[String] = None

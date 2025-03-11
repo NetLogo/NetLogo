@@ -67,14 +67,12 @@ object Shape {
   }
 
   trait VectorShape extends Shape {
-    def name: String
     def rotatable: Boolean
     def editableColorIndex: Int
     def elements: Seq[Element]
   }
 
   trait LinkShape extends Shape {
-    def name: String
     def curviness: Double
     def linkLines: Seq[LinkLine]
     def indicator: VectorShape

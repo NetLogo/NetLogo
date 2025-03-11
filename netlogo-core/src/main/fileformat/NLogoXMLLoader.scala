@@ -58,14 +58,14 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
           element.name match {
             case "model" =>
 
-              import Model.{ defaultCode, defaultShapes, defaultLinkShapes }
+              import Model.{ defaultCode, defaultTurtleShapes, defaultLinkShapes }
 
               val version = element("version")
               val snapToGrid = element("snapToGrid", "false").toBoolean
 
               val settings  = new Section("org.nlogo.modelsection.modelsettings", ModelSettings(snapToGrid))
 
-              val model = Model(defaultCode, List(DummyView), defaultInfo, version, defaultShapes,
+              val model = Model(defaultCode, List(DummyView), defaultInfo, version, defaultTurtleShapes,
                                 defaultLinkShapes, List(settings), Seq())
 
               element.children.foldLeft(Try(model)) {
@@ -250,7 +250,7 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
       val widgets =
         List(Model.defaultView.copy(dimensions = dims))
 
-      Model(Model.defaultCode, widgets, defaultInfo, name, Model.defaultShapes, Model.defaultLinkShapes)
+      Model(Model.defaultCode, widgets, defaultInfo, name, Model.defaultTurtleShapes, Model.defaultLinkShapes)
 
     } else {
       throw new Exception(s"""Unable to create empty model with format "${extension}".""")

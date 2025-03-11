@@ -11,7 +11,7 @@ case class Model(code: String = "",
   widgets: Seq[Widget] = List(View()),
   info: String = "",
   version: String = "NetLogo 7.0.0",
-  turtleShapes: Seq[VectorShape] = Model.defaultShapes,
+  turtleShapes: Seq[VectorShape] = Model.defaultTurtleShapes,
   linkShapes: Seq[LinkShape] = Model.defaultLinkShapes,
   optionalSections: Seq[OptionalSection[_]] = Seq(),
   resources: Seq[ExternalResource] = Seq()) {
@@ -45,12 +45,12 @@ case class Model(code: String = "",
 
 object Model {
   val defaultCode = ""
-  lazy val defaultShapes: List[VectorShape] = {
-    (parseVectorShapes(Resource.lines("/system/defaultShapes.txt").toSeq) ++
-      parseVectorShapes(Resource.lines("/system/libraryShapes.txt").toSeq)).toSet.toList
-  }
-  lazy val defaultLinkShapes: List[LinkShape] =
-    parseLinkShapes(Resource.lines("/system/defaultLinkShapes.txt").toSeq).toList
+  lazy val defaultTurtleShapes: Seq[VectorShape] =
+    parseVectorShapes(Resource.lines("/system/defaultTurtleShapes.txt").toSeq)
+  lazy val libraryTurtleShapes: Seq[VectorShape] =
+    parseVectorShapes(Resource.lines("/system/libraryTurtleShapes.txt").toSeq)
+  lazy val defaultLinkShapes: Seq[LinkShape] =
+    parseLinkShapes(Resource.lines("/system/defaultLinkShapes.txt").toSeq)
   lazy val defaultView =
     View(368, 10, 434, 434, WorldDimensions(-16, 16, -16, 16, 13.0), 10, UpdateMode.Continuous, true, Some("ticks"), 30)
   class InvalidModelError(message: String) extends RuntimeException(message)

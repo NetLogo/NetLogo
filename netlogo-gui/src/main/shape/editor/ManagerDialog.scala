@@ -2,7 +2,7 @@
 
 package org.nlogo.shape.editor
 
-import java.awt.{ FlowLayout, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ FlowLayout, Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.MouseEvent
 import java.nio.file.Paths
 import javax.swing.{ JLabel, JPanel, JDialog }
@@ -11,18 +11,16 @@ import javax.swing.event.{ DocumentEvent, DocumentListener, ListSelectionEvent, 
 import org.nlogo.api.AbstractModelLoader
 import org.nlogo.core.{ AgentKind, I18N, Model, Shape => CoreShape, ShapeList, ShapeListTracker },
   ShapeList.{ shapesToMap, isDefaultShapeName }
-import org.nlogo.swing.{ DialogButton, OptionPane, ScrollPane, TextField, Transparent, Utils }
+import org.nlogo.swing.{ Button, DialogButton, OptionPane, ScrollPane, TextField, Transparent, Utils }
 import org.nlogo.swing.Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import scala.reflect.ClassTag
 import scala.util.{ Failure, Success }
 
-abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
-  modelLoader: AbstractModelLoader,
-  val shapeListTracker: ShapeListTracker)(implicit ct: ClassTag[A])
-  extends JDialog(parentFrame)
-  with ListSelectionListener with ThemeSync {
+abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: AbstractModelLoader,
+                                             shapeListTracker: ShapeListTracker)(implicit ct: ClassTag[A])
+  extends JDialog(parentFrame) with ListSelectionListener with ThemeSync {
 
   implicit val i18nPrefix = I18N.Prefix("tools.shapesEditor")
 
@@ -47,10 +45,10 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
   private val editButton = new DialogButton(false, I18N.gui("edit"), () => editShape)
   private val duplicateButton = new DialogButton(false, I18N.gui("duplicate"), () => duplicateShape)
   private val deleteButton = new DialogButton(false, I18N.gui("delete"), () => {
-      ManagerDialog.this.shapesList.deleteShapes()
+      shapesList.deleteShapes()
       editButton.setEnabled(true) // Since at most one shape is highlighted now, enable edit
       setEnabled(true)
-      val shape = ManagerDialog.this.shapesList.getOneSelected
+      val shape = shapesList.getOneSelected
       // Don't delete the default turtle
       if (shape.map(_.name).exists(isDefaultShapeName)) {
         setEnabled(false)
@@ -92,6 +90,7 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
     add(new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0)) with Transparent {
       add(newButton)
       add(modelImportButton)
+      additionalButton.foreach(add)
     }, c)
 
     c.fill = GridBagConstraints.BOTH
@@ -143,6 +142,8 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
     pack()
   }
 
+  def additionalButton: Option[Button] = None
+
   // Initialize then display the manager
   def init(title: String) {
     shapesList.update(searchOption)
@@ -171,7 +172,7 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
             if (drawableList.shapeList.isEmpty)
               importDialog.foreach(_.sendImportWarning(I18N.gui("import.error")))
             else
-              importDialog = Some(new ImportDialog(ManagerDialog.this, this, drawableList))
+              importDialog = Some(new ImportDialog(this, this, drawableList))
         }
     } catch {
       case e: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(e)
@@ -225,6 +226,8 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: java.awt.Frame,
     duplicateButton.syncTheme()
     deleteButton.syncTheme()
     searchField.syncTheme()
+
+    additionalButton.foreach(_.syncTheme())
 
     searchIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.toolbarImage))
   }

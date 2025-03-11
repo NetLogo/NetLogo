@@ -5,11 +5,11 @@ package org.nlogo.shape.editor
 import java.awt.Frame
 
 import org.nlogo.api.{ AbstractModelLoader, World }
+import org.nlogo.core.{ AgentKind, I18N, Model, Shape, ShapeList },
+  Shape.{ VectorShape => CoreVectorShape }, ShapeList.isDefaultShapeName
 import org.nlogo.shape.{ ShapeConverter, VectorShape },
   ShapeConverter.baseVectorShapeToVectorShape
-import org.nlogo.core.{ AgentKind, Model, Shape, ShapeList },
-  Shape.{ VectorShape => CoreVectorShape },
-  ShapeList.isDefaultShapeName
+import org.nlogo.swing.{ Button, DialogButton }
 
 class TurtleShapeManagerDialog(parentFrame: Frame,
                                world: World,
@@ -22,6 +22,9 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
   override def shapeKind = AgentKind.Turtle
 
   override def modelShapes(m: Model): Seq[Shape] = m.turtleShapes
+
+  override def additionalButton: Option[Button] =
+    Some(new DialogButton(true, I18N.gui.get("tools.shapesEditor.importFromLibrary"), () => importFromLibrary()))
 
   def displayableShapeFromCoreShape(shape: Shape): Option[VectorShape] = {
     shape match {
@@ -49,5 +52,10 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
       newShape.name = ""
       new EditorDialog(this, shapesList, newShape, true)
     }
+  }
+
+  private def importFromLibrary(): Unit = {
+    importDialog = Some(new ImportDialog(this, this, drawableListFromModelShapes(
+      (Model.defaultTurtleShapes ++ Model.libraryTurtleShapes).map(baseVectorShapeToVectorShape))))
   }
 }
