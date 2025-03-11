@@ -26,7 +26,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   extends JPanel(new GridBagLayout)
   with Transparent
   with AppEvents.WidgetSelectedEvent.Handler
-  with WindowEvents.InterfaceModeEvent.Handler
+  with WindowEvents.InterfaceModeChangedEvent.Handler
   with WindowEvents.WidgetForegroundedEvent.Handler
   with WindowEvents.WidgetRemovedEvent.Handler
   with WindowEvents.EditWidgetEvent.Handler
@@ -82,13 +82,13 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
 
   class InteractAction extends AbstractAction {
     def actionPerformed(e: ActionEvent): Unit = {
-      wPanel.setInterfaceMode(InterfaceMode.Interact)
+      wPanel.setInterfaceMode(InterfaceMode.Interact, true)
     }
   }
 
   class SelectAction extends AbstractAction {
     def actionPerformed(e: ActionEvent): Unit = {
-      wPanel.setInterfaceMode(InterfaceMode.Select)
+      wPanel.setInterfaceMode(InterfaceMode.Select, true)
     }
   }
 
@@ -97,7 +97,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       if (editButton.isSelected) {
         new WindowEvents.EditWidgetEvent(null).raise(InterfaceWidgetControls.this)
 
-        wPanel.setInterfaceMode(InterfaceMode.Edit)
+        wPanel.setInterfaceMode(InterfaceMode.Edit, true)
       }
 
       else
@@ -109,7 +109,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     def actionPerformed(e: ActionEvent): Unit = {
       if (deleteButton.isSelected) {
         wPanel.deleteSelectedWidgets()
-        wPanel.setInterfaceMode(InterfaceMode.Delete)
+        wPanel.setInterfaceMode(InterfaceMode.Delete, true)
       }
 
       else
@@ -204,7 +204,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     updateTargets(e.widget)
   }
 
-  def handle(e: WindowEvents.InterfaceModeEvent): Unit = {
+  def handle(e: WindowEvents.InterfaceModeChangedEvent): Unit = {
     e.mode match {
       case InterfaceMode.Interact =>
         interactButton.setSelected(true)

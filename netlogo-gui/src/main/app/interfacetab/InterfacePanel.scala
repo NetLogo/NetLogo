@@ -47,8 +47,8 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   }
 
   override def focusLost(e: FocusEvent): Unit = {
-    if (interactMode == InterfaceMode.Add)
-      setInterfaceMode(InterfaceMode.Interact)
+    if (interfaceMode == InterfaceMode.Add)
+      setInterfaceMode(InterfaceMode.Interact, false)
 
     enableButtonKeys(false)
   }
@@ -56,7 +56,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   ///
 
   override protected def doPopup(point: Point): Unit = {
-    if (interactMode == InterfaceMode.Interact)
+    if (interfaceMode == InterfaceMode.Interact)
       interceptPane.disableIntercept()
 
     val menu = new PopupMenu

@@ -3,7 +3,7 @@
 package org.nlogo.app.common
 
 import java.awt.{ BorderLayout, Dimension, Font }
-import java.awt.event.{ ActionEvent, ActionListener, KeyEvent, KeyListener }
+import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, KeyEvent, KeyListener }
 import javax.swing.{ KeyStroke, ScrollPaneConstants }
 
 import org.nlogo.agent.{ Agent, AgentSet, OutputObject }
@@ -13,7 +13,7 @@ import org.nlogo.editor.EditorField
 import org.nlogo.ide.{ AutoSuggestAction, CodeCompletionPopup }
 import org.nlogo.swing.{ ScrollPane, Transparent }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.{ CommandCenterInterface, EditorColorizer, JobWidget, Events => WindowEvents }
+import org.nlogo.window.{ CommandCenterInterface, EditorColorizer, InterfaceMode, JobWidget, Events => WindowEvents }
 import org.nlogo.workspace.AbstractWorkspace
 
 import scala.collection.immutable.List
@@ -66,6 +66,12 @@ class CommandLine(commandCenter: CommandCenterInterface,
 
   textField.setFont(textField.getFont().deriveFont(fontSize.toFloat))
   textField.addKeyListener(this)
+
+  textField.addFocusListener(new FocusAdapter {
+    override def focusGained(e: FocusEvent): Unit = {
+      new WindowEvents.SetInterfaceModeEvent(InterfaceMode.Interact, false).raise(CommandLine.this)
+    }
+  })
 
   setLayout(new BorderLayout)
   displayName(classDisplayName)
