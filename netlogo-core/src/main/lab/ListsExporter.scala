@@ -4,7 +4,9 @@ package org.nlogo.lab
 
 import org.nlogo.api.{ LabPostProcessorInputFormat, LabExporterType, LabProtocol }
 import org.nlogo.core.WorldDimensions
+
 import scala.collection.mutable.Seq
+import scala.io.Source
 
 class ListsExporter(modelFileName: String,
                     initialDims: WorldDimensions,
@@ -17,7 +19,8 @@ class ListsExporter(modelFileName: String,
     writeExportHeader()
     in match {
       case LabPostProcessorInputFormat.Spreadsheet(fileName) => {
-        var lines = scala.io.Source.fromFile(fileName).getLines
+        val source = Source.fromFile(fileName)
+        var lines = source.getLines
         var runNumbers: List[String] = null
         val first = lines.next
         if (first.contains("BehaviorSpace results")) {
@@ -64,9 +67,11 @@ class ListsExporter(modelFileName: String,
             }
           }
         }
+        source.close()
       }
       case LabPostProcessorInputFormat.Table(fileName) => {
-        var lines = scala.io.Source.fromFile(fileName).getLines
+        val source = Source.fromFile(fileName)
+        var lines = source.getLines
         var header: Array[String] = null
         val first = lines.next
         if (first.contains("BehaviorSpace results")) {
@@ -119,6 +124,7 @@ class ListsExporter(modelFileName: String,
         else {
           out.println()
         }
+        source.close()
       }
     }
     out.close()
