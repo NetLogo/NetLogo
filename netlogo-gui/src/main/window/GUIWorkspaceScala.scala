@@ -42,7 +42,7 @@ with LoadModelEvent.Handler {
   val plotExportControls = new PlotExportControls(plotManager)
 
   // for grid snap
-  private var _snapOn: Boolean = false
+  private var _snapOn: Boolean = true
 
   def setSnapOn(snapOn: Boolean): Unit = {
     _snapOn = snapOn
