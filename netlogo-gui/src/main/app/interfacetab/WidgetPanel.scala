@@ -123,31 +123,33 @@ class WidgetPanel(val workspace: GUIWorkspace)
     interfaceMode
 
   def setInterfaceMode(mode: InterfaceMode, focus: Boolean): Unit = {
-    if (interfaceMode == InterfaceMode.Add && !placedShadowWidget)
-      removeShadowWidget()
+    if (interfaceMode != mode) {
+      if (interfaceMode == InterfaceMode.Add && !placedShadowWidget)
+        removeShadowWidget()
 
-    interfaceMode = mode
+      interfaceMode = mode
 
-    if (mode == InterfaceMode.Interact) {
-      interceptPane.disableIntercept()
-    } else {
-      interceptPane.enableIntercept()
+      if (mode == InterfaceMode.Interact) {
+        interceptPane.disableIntercept()
+      } else {
+        interceptPane.enableIntercept()
 
-      haltIfRunning()
+        haltIfRunning()
+      }
+
+      if (mode == InterfaceMode.Edit || mode == InterfaceMode.Interact || mode == InterfaceMode.Delete)
+        unselectWidgets()
+
+      revalidate()
+      repaint()
+
+      setCursor(mode.cursor)
+
+      if (focus)
+        requestFocus()
+
+      new InterfaceModeChangedEvent(mode).raise(this)
     }
-
-    if (mode == InterfaceMode.Edit || mode == InterfaceMode.Interact || mode == InterfaceMode.Delete)
-      unselectWidgets()
-
-    revalidate()
-    repaint()
-
-    setCursor(mode.cursor)
-
-    if (focus)
-      requestFocus()
-
-    new InterfaceModeChangedEvent(mode).raise(this)
   }
 
   def handle(e: SetInterfaceModeEvent): Unit = {
