@@ -12,15 +12,15 @@ trait WorldIntegerEditor {
 }
 
 abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protected val gWidget: ViewWidget, tickCounter: TickCounterLabel)
-    extends Editable
-    with WorldLoaderInterface
-    with WorldPropertiesInterface {
+  extends Editable
+  with WorldLoaderInterface
+  with WorldPropertiesInterface {
 
   protected var originType: OriginType = OriginType.Center
   protected var originConfig: Option[OriginConfiguration] = None
 
-  private var originalType: OriginType = originType
-  private var originalConfig: Option[OriginConfiguration] = originConfig
+  protected var originalType: OriginType = originType
+  protected var originalConfig: Option[OriginConfiguration] = originConfig
 
   protected var wrappingChanged: Boolean = false
   protected var edgesChanged: Boolean = false
@@ -75,6 +75,39 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
   def setOriginConfig(originConfig: Option[OriginConfiguration]): Unit = {
     this.originConfig = originConfig
   }
+
+  // helper for determining origin info from loaded patch coordinates (Isaac B 3/12/25)
+  def setTypeAndConfig(): Unit = {
+    val (x, y, z) = getNorms
+
+    if (x == 0.5 && y == 0.5 && z == 0.5) {
+      originType = OriginType.Center
+      originConfig = None
+    } else {
+      val corner = cornerConfigs.find(config => config.x == x && config.y == y && config.z == z)
+
+      if (corner.isDefined) {
+        originType = OriginType.Corner
+        originConfig = corner
+      } else {
+        val edge = edgeConfigs.find(config => config.x == x && config.y == y && config.z == z)
+
+        if (edge.isDefined) {
+          originType = OriginType.Edge
+          originConfig = edge
+        } else {
+          originType = OriginType.Custom
+          originConfig = None
+        }
+      }
+    }
+
+    originalType = originType
+    originalConfig = originConfig
+  }
+
+  // calculate normalized origin coordinates, for use in setTypeAndConfig (Isaac B 3/12/25)
+  protected def getNorms: (Float, Float, Float)
 
   def configureEditors(editors: Seq[WorldIntegerEditor]): Unit
 
