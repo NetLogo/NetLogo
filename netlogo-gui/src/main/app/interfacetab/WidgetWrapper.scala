@@ -723,15 +723,6 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     }
   }
 
-  def getSelectedBounds: Rectangle = {
-    if (selected) {
-      getBounds
-    } else {
-      new Rectangle(getX - BorderSize, getY - BorderSize, getWidth + BorderSize + BorderSize,
-                    getHeight + BorderSize + BorderSize)
-    }
-  }
-
   ///
 
   private def doPopup(e: MouseEvent): Unit = {
