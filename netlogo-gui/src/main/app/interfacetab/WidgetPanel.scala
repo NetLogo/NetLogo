@@ -256,23 +256,23 @@ class WidgetPanel(val workspace: GUIWorkspace)
     }
   }
 
-  private[interfacetab] def dragSelectedWidgets(x: Int, y: Int): Unit = {
+  private[interfacetab] def dragSelectedWidgets(x: Int, y: Int, ignoreSnap: Boolean): Unit = {
     if (widgetsBeingDragged.nonEmpty) {
       val p = new Point(x, y)
       val restrictedPoint = widgetsBeingDragged.foldLeft(p) {
-        case (p, w) => restrictDrag(p, w)
+        case (p, w) => restrictDrag(p, w, ignoreSnap)
       }
       widgetsBeingDragged.foreach { w => w.doDrag(restrictedPoint.x, restrictedPoint.y) }
     }
   }
 
-  protected def restrictDrag(p: Point, w: WidgetWrapper): Point = {
+  protected def restrictDrag(p: Point, w: WidgetWrapper, ignoreSnap: Boolean): Point = {
     var x = p.x
     var y = p.y
     val wb = w.originalBounds
     val b = getBounds()
     val newWb = new Rectangle(wb.x + x, wb.y + y, wb.width, wb.height)
-    if (workspace.snapOn) {
+    if (workspace.snapOn && !ignoreSnap) {
       val xGridSnap = newWb.x - snapToGrid(newWb.x)
       val yGridSnap = newWb.y - snapToGrid(newWb.y)
       x -= xGridSnap
@@ -307,7 +307,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
     interfaceMode match {
       case InterfaceMode.Add =>
         newWidget.foreach(widget => {
-          if (workspace.snapOn) {
+          if (workspace.snapOn && !NlogoMouse.hasCtrl(e)) {
             widget.setLocation(snapToGrid(e.getX), snapToGrid(e.getY))
           } else {
             widget.setLocation(e.getX, e.getY)
@@ -373,13 +373,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
               selectionPane.repaint(selectionRect)
 
             case InterfaceMode.Add =>
-              if (workspace.snapOn) {
-                point.x = snapToGrid(point.x)
-                point.y = snapToGrid(point.y)
-              }
-
               newWidget.foreach(widget => {
-                val p2 = restrictDrag(new Point(e.getX - point.x, e.getY - point.y), widget)
+                val p2 = restrictDrag(new Point(e.getX - point.x, e.getY - point.y), widget, NlogoMouse.hasCtrl(e))
 
                 widget.setLocation(point.x + p2.x, point.y + p2.y)
               })
