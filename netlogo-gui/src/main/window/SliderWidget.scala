@@ -135,7 +135,6 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
   // LOADING AND SAVING
 
   override def load(model: WidgetModel): AnyRef = {
-    loading = true
     val min: String = model.min
     val max: String = model.max
     val v = model.default
@@ -154,7 +153,6 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
     defaultValue = v
     oldSize = model.oldSize
     setSize(model.width, model.height)
-    loading = false
     this
   }
 

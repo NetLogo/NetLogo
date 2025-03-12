@@ -108,8 +108,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
   }
 
-  protected var loading = false
-
   protected var _name = ""
   private var _units = ""
   private var _vertical = false
@@ -177,7 +175,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
 
   slider.addChangeListener(new ChangeListener {
     override def stateChanged(e: ChangeEvent): Unit = {
-      if (!loading)
+      if (slider.getValueIsAdjusting)
         value = minimum + slider.getValue * increment
     }
   })
@@ -186,6 +184,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   def setSliderConstraint(con: SliderConstraint) = {
     slider.setMinimum(0)
     slider.setMaximum(((maximum - minimum) / increment).asInstanceOf[Int])
+    slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
     sliderData.setSliderConstraint(con)
   }
   def name = _name
