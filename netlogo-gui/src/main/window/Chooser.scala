@@ -114,12 +114,6 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     else
       new Dimension(100, 55)
 
-  override def getMaximumSize: Dimension =
-    if (_oldSize)
-      new Dimension(10000, ChooserHeight)
-    else
-      new Dimension(10000, 55)
-
   override def getPreferredSize: Dimension =
     if (_oldSize)
       new Dimension(MinPreferredWidth, ChooserHeight)

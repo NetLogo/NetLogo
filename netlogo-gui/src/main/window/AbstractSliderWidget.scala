@@ -347,22 +347,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
   }
 
-  override def getMaximumSize = {
-    if (_oldSize) {
-      if (vertical) {
-        new Dimension(33, 10000)
-      } else {
-        new Dimension(10000, 33)
-      }
-    } else {
-      if (vertical) {
-        new Dimension(55, 10000)
-      } else {
-        new Dimension(10000, 55)
-      }
-    }
-  }
-
   override def getPreferredSize = {
     if (_oldSize) {
       if (vertical) {
