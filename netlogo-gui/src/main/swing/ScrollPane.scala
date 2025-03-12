@@ -31,6 +31,7 @@ class ScrollPane(component: Component, vScroll: Int = ScrollPaneConstants.VERTIC
 class ScrollBar(orientation: Int) extends JScrollBar(orientation) with HoverDecoration {
   private var mouseDown = false
 
+  setUnitIncrement(50)
   setUI(new ScrollBarUI)
 
   addMouseListener(new MouseAdapter {
