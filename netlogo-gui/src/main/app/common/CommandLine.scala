@@ -3,7 +3,7 @@
 package org.nlogo.app.common
 
 import java.awt.{ BorderLayout, Dimension, Font }
-import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, KeyEvent, KeyListener }
+import java.awt.event.{ ActionEvent, ActionListener, KeyEvent, KeyListener }
 import javax.swing.{ KeyStroke, ScrollPaneConstants }
 
 import org.nlogo.agent.{ Agent, AgentSet, OutputObject }
@@ -67,12 +67,6 @@ class CommandLine(commandCenter: CommandCenterInterface,
   textField.setFont(textField.getFont().deriveFont(fontSize.toFloat))
   textField.addKeyListener(this)
 
-  textField.addFocusListener(new FocusAdapter {
-    override def focusGained(e: FocusEvent): Unit = {
-      new WindowEvents.SetInterfaceModeEvent(InterfaceMode.Interact, false).raise(CommandLine.this)
-    }
-  })
-
   setLayout(new BorderLayout)
   displayName(classDisplayName)
 
@@ -120,7 +114,9 @@ class CommandLine(commandCenter: CommandCenterInterface,
 
   def keyTyped(e: KeyEvent): Unit = { }
 
-  def keyPressed(e: KeyEvent): Unit =
+  def keyPressed(e: KeyEvent): Unit = {
+    new WindowEvents.SetInterfaceModeEvent(InterfaceMode.Interact, false).raise(CommandLine.this)
+
     e.getKeyCode match {
       case KeyEvent.VK_ENTER =>
         executeCurrentBuffer()
@@ -134,6 +130,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
         cycleListBack()
       case _ =>
     }
+  }
 
   ///
 
