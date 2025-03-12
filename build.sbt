@@ -60,8 +60,8 @@ lazy val scalatestSettings = Seq(
   Test / testOptions += Tests.Argument(TestFrameworks.ScalaTest, "-oS")
 , Test / testOnly / logBuffered := false
 , libraryDependencies ++= Seq(
-    "org.scalatest"     %% "scalatest"       % "3.2.17"   % Test
-  , "org.scalatestplus" %% "scalacheck-1-16" % "3.2.14.0" % Test
+    "org.scalatest"     %% "scalatest"       % "3.2.19"   % Test
+  , "org.scalatestplus" %% "scalacheck-1-18" % "3.2.19.0" % Test
   )
   // This lets us mock up some Java library classes for testing.
   // -Jeremy B August 2022
@@ -95,7 +95,7 @@ lazy val flexmarkDependencies = {
 }
 
 lazy val mockDependencies = {
-  val mockVersion = "2.12.0"
+  val mockVersion = "2.13.1"
   Seq(
     libraryDependencies ++= Seq(
       // replace byte-buddy as we get a "No code generation strategy found" with the older
@@ -107,14 +107,14 @@ lazy val mockDependencies = {
         exclude ("org.hamcrest", "hamcrest")
     , "org.jmock"     % "jmock-legacy" % mockVersion % "test"
     , "org.jmock"     % "jmock-junit5" % mockVersion % "test"
-    , "net.bytebuddy" % "byte-buddy"   % "1.12.23"   % "test"
+    , "net.bytebuddy" % "byte-buddy"   % "1.17.2"    % "test"
     , "org.hamcrest"  % "hamcrest"     % "2.2"       % "test"
     )
   )
 }
 
 lazy val asmDependencies = {
-  val asmVersion = "9.6"
+  val asmVersion = "9.7.1"
   Seq(
     libraryDependencies ++= Seq(
       "org.ow2.asm" % "asm"         % asmVersion,
@@ -185,18 +185,18 @@ lazy val netlogo = project.in(file("netlogo-gui")).
         case _ => throw new Exception("Unknown platform!")
       }
       Seq(
-        "com.formdev" % "flatlaf" % "3.4",
-        "org.picocontainer" % "picocontainer" % "2.15",
+        "com.formdev" % "flatlaf" % "3.5.4",
+        "org.picocontainer" % "picocontainer" % "2.15.2",
         "javax.media" % "jmf" % "2.1.1e",
-        "commons-codec" % "commons-codec" % "1.16.0",
-        "org.parboiled" %% "parboiled" % "2.5.0",
+        "commons-codec" % "commons-codec" % "1.18.0",
+        "org.parboiled" %% "parboiled" % "2.5.1",
         "org.jogamp.jogl" % "jogl-all" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0/jar/jogl-all.jar",
         "org.jogamp.gluegen" % "gluegen-rt" % "2.4.0" from "https://jogamp.org/deployment/archive/rc/v2.4.0/jar/gluegen-rt.jar",
         "org.jhotdraw" % "jhotdraw" % "6.0b1" % "provided,optional" from cclArtifacts("jhotdraw-6.0b1.jar"),
         "org.apache.httpcomponents" % "httpclient" % "4.2",
         "org.apache.httpcomponents" % "httpmime" % "4.2",
         "com.googlecode.json-simple" % "json-simple" % "1.1.1",
-        "com.fifesoft" % "rsyntaxtextarea" % "3.3.0",
+        "com.fifesoft" % "rsyntaxtextarea" % "3.5.4",
         "com.typesafe" % "config" % "1.4.3",
         "net.lingala.zip4j" % "zip4j" % "2.11.5"
       ) ++ Seq("base", "controls", "graphics", "swing", "web")
@@ -269,11 +269,11 @@ lazy val headless = (project in file ("netlogo-headless")).
     javacOptions ++= Seq("--release", "11"),
     Compile / mainClass         := Some("org.nlogo.headless.Main"),
     libraryDependencies        ++= Seq(
-      "org.parboiled" %% "parboiled" % "2.5.0",
-      "commons-codec" % "commons-codec" % "1.16.0",
+      "org.parboiled" %% "parboiled" % "2.5.1",
+      "commons-codec" % "commons-codec" % "1.18.0",
       "com.typesafe" % "config" % "1.4.3",
       "net.lingala.zip4j" % "zip4j" % "2.11.5",
-      "org.reflections" % "reflections" % "0.9.10" % "test",
+      "org.reflections" % "reflections" % "0.10.2" % "test",
     ),
     (Runtime / fullClasspath)  ++= (parserJVM / Runtime / fullClasspath).value,
     Compile / resourceDirectory := baseDirectory.value / "resources" / "main",
@@ -311,8 +311,8 @@ lazy val macApp = project.in(file("mac-app")).
     },
     Compile / unmanagedJars             += (netlogo / Compile / packageBin).value,
     libraryDependencies                ++= Seq(
-      "net.java.dev.jna" % "jna" % "4.2.2",
-      "ca.weblite" % "java-objc-bridge" % "1.0.0"),
+      "net.java.dev.jna" % "jna" % "4.5.2",
+      "ca.weblite" % "java-objc-bridge" % "1.2.0"),
     libraryDependencies                ++= (netlogo / libraryDependencies).value,
     libraryDependencies                ++= (parserJVM/ libraryDependencies).value,
     Compile / run                       := {
@@ -373,9 +373,9 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
     libraryDependencies ++= {
       import org.scalajs.sbtplugin.ScalaJSPlugin.autoImport._
       Seq(
-        "org.scala-lang.modules" %%% "scala-parser-combinators" %    "2.1.1"
-      ,          "org.scalatest" %%%                "scalatest" %   "3.2.17" % Test
-      ,      "org.scalatestplus" %%%          "scalacheck-1-16" % "3.2.14.0" % Test
+        "org.scala-lang.modules" %%% "scala-parser-combinators" %    "2.4.0"
+      ,          "org.scalatest" %%%                "scalatest" %   "3.2.19" % Test
+      ,      "org.scalatestplus" %%%          "scalacheck-1-18" % "3.2.19.0" % Test
       )
     }).
   jvmConfigure(_.dependsOn(sharedResources % "compile-internal->compile")).
@@ -383,7 +383,7 @@ lazy val parser = crossProject(JSPlatform, JVMPlatform).
   jvmSettings(scalatestSettings: _*).
   jvmSettings(
     javacOptions ++= Seq("--release", "11"),
-    libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.1.1",
+    libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "2.4.0",
     // you can get these included by just depending on the `sharedResources` project directly
     // but then when you publish the parser JVM package, the POM file lists sharedResources
     // as a dependency.  It seems like a weird thing to publish separately, so this just
