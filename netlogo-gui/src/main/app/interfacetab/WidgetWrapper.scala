@@ -265,7 +265,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   def widgetHeight: Int =
     widget.getHeight
 
-  def doResize(x: Int, y: Int): Unit = {
+  def doResize(x: Int, y: Int, ignoreSnap: Boolean): Unit = {
     /* x and y represent the distance from the original click and the dragged cursor position,
         so the widget can resize based on the position of the cursor. Interestingly, the
         x and y can be negative since the difference is calculated from the coordinates.
@@ -324,7 +324,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       case _ => throw new IllegalStateException
     }
 
-    if (interfacePanel.workspace.snapOn)
+    if (interfacePanel.workspace.snapOn && !ignoreSnap)
       enforceGridSnapSize(bounds)
 
     enforceMinimumSize(bounds)
@@ -446,9 +446,9 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         }
       }
 
-      interfacePanel.dragSelectedWidgets(p.x - startPressX, p.y - startPressY)
+      interfacePanel.dragSelectedWidgets(p.x - startPressX, p.y - startPressY, Mouse.hasCtrl(e))
     } else if (mouseMode != MouseMode.IDLE) {
-      doResize(p.x - startPressX, p.y - startPressY)
+      doResize(p.x - startPressX, p.y - startPressY, Mouse.hasCtrl(e))
     }
   }
 
@@ -492,7 +492,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
       minWidgetSize = minWidgetSize match {
         case d: Dimension =>
-          new Dimension(d.width.min(MinWidgetWidth), d.height.min(MinWidgetHeight))
+          new Dimension(d.width.max(MinWidgetWidth), d.height.max(MinWidgetHeight))
 
         case _ =>
           new Dimension(MinWidgetWidth, MinWidgetHeight)
