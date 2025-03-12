@@ -127,14 +127,6 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     }
   }
 
-  override def getMaximumSize: Dimension = {
-    if (_oldSize) {
-      new Dimension(10000, MINHEIGHT)
-    } else {
-      new Dimension(10000, 40)
-    }
-  }
-
   def mouseWheelMoved(e: MouseWheelEvent): Unit = { isOn = ! (e.getWheelRotation >= 1) }
 
   override def syncTheme(): Unit = {

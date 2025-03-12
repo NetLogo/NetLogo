@@ -294,14 +294,6 @@ class MonitorWidget(random: MersenneTwisterFast)
     }
   }
 
-  override def getMaximumSize: Dimension = {
-    if (_oldSize) {
-      new Dimension(10000, (fontSize * 4) + 1)
-    } else {
-      new Dimension(10000, 55)
-    }
-  }
-
   override def getPreferredSize: Dimension = {
     if (_oldSize) {
       new Dimension(100, getMinimumSize.height)

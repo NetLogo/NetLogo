@@ -514,7 +514,6 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   override def exportable = true
   override def getDefaultExportName = "export.txt"
   override def hasContextMenu = true
-  override def getMaximumSize = null
 
   protected class InputDialog(parent: Frame, title: String, inputType: InputType, textArea: AbstractEditorArea)
     extends JDialog(parent, title) with ThemeSync {
