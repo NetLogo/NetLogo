@@ -210,7 +210,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   private def wrapperAtPoint(point: Point): Option[WidgetWrapper] =
-    getWrappers.filter(ww => ww.getSelectedBounds.contains(point)).sortBy(getPosition(_)).headOption
+    getWrappers.filter(ww => ww.getBounds().contains(point)).sortBy(getPosition(_)).headOption
 
   override def empty: Boolean =
     getComponents.exists {
@@ -333,7 +333,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
       val first = widgetsBeingDragged(0)
 
       e.translatePoint(-first.getX, -first.getY)
-
       first.mouseDragged(e)
     } else if (NlogoMouse.hasButton1(e)) {
       startDragPoint match {
@@ -571,10 +570,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
       case InterfaceMode.Select =>
         if (e.getButton == MouseEvent.BUTTON1 && selectionRect == null) {
           if (widgetsBeingDragged.nonEmpty) {
-            wrapperAtPoint(e.getPoint).foreach { w =>
-              e.translatePoint(-w.getX, -w.getY)
-              w.mouseReleased(e)
-            }
+            val first = widgetsBeingDragged(0)
+
+            e.translatePoint(-first.getX, -first.getY)
+            first.mouseReleased(e)
           } else if (widgetBeingResized.isDefined) {
             widgetBeingResized.foreach { w =>
               e.translatePoint(-w.getX, -w.getY)
