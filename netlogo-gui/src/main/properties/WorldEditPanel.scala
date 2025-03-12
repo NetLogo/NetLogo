@@ -69,6 +69,8 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
     add(viewPanel, BorderLayout.CENTER)
     add(modelPanel, BorderLayout.SOUTH)
 
+    settings.setTypeAndConfig()
+
     originTypes.setSelectedItem(settings.getSelectedType)
     settings.getSelectedConfig.foreach(originConfigs.setSelectedItem)
 

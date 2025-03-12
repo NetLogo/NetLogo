@@ -46,6 +46,12 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
     )
   }
 
+  override def getNorms: (Float, Float, Float) = {
+    ((minPxcor.toFloat / (maxPxcor - minPxcor)).abs,
+     (minPycor.toFloat / (maxPycor - minPycor)).abs,
+     0.5f)
+  }
+
   override def configureEditors(editors: Seq[WorldIntegerEditor]): Unit = {
     editors(0).setEnabled(originType == OriginType.Custom || originConfig.map(_.x != 0).getOrElse(false))
     editors(1).setEnabled(originConfig.map(_.x != 1).getOrElse(true))
