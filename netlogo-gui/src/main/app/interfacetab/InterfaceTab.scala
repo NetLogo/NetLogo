@@ -15,8 +15,8 @@ import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable,
                          UserAction, Utils },
                        Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace, SpeedSliderPanel, ViewUpdatePanel, WidgetInfo,
-                          Events => WindowEvents, WorkspaceActions },
+import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace, InterfaceMode, SpeedSliderPanel, ViewUpdatePanel,
+                          WidgetInfo, Events => WindowEvents, WorkspaceActions },
                         WindowEvents.{ Enable2DEvent, LoadBeginEvent, OutputEvent }
 
 object InterfaceTab {
@@ -129,15 +129,14 @@ class InterfaceTab(workspace: GUIWorkspace,
   // the code tab or wherever the cursor was before the user switched - RG 2/16/18
   override def requestFocus() {
     commandCenter.requestFocusInWindow()
-    TrackingFocusListener.lastFocused.getOrElse(commandCenter).requestFocusInWindow()
   }
 
   final def handle(e: SwitchedTabsEvent) {
     commandCenter.requestFocusInWindow()
-    TrackingFocusListener.lastFocused.getOrElse(commandCenter).requestFocusInWindow()
-    if (e.newTab != this) {
+    if (e.oldTab == this)
+      iP.setInterfaceMode(InterfaceMode.Interact, false)
+    if (e.newTab != this)
       monitorManager.refresh()
-    }
   }
 
   def handle(e: LoadBeginEvent) {
