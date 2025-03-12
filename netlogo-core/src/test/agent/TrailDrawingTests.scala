@@ -128,4 +128,35 @@ class TrailDrawingTests extends AnyFunSuite {
     assertResult(LineSeg(-0.43464336890811345, -0.5, -0.5, -0.4248157963894954, Double.box(0.0), 1.0, Turtle.PEN_DOWN))(drawer.lines(1))
     assertResult(LineSeg(0.5, -0.4248157963894954, 0.3439409710094926, -0.24529041977722812, Double.box(0.0), 1.0, Turtle.PEN_DOWN))(drawer.lines(2))
   } }
+
+  test("draws between opposite corners without infinite loop") {
+    // bottom left origin
+    val drawer = new DummyTrailDrawer()
+    var world = makeWorld(new WorldDimensions(0, 4, 0, 4))
+    world.trailDrawer(drawer)
+    var turtle = makeTurtle(world, Array(0, 0))
+    turtle.penMode(Turtle.PEN_DOWN)
+    turtle.xandycor(4.5, 4.5)
+
+    // bottom right origin
+    world = makeWorld(new WorldDimensions(-4, 0, 0, 4))
+    world.trailDrawer(drawer)
+    turtle = makeTurtle(world, Array(0, 0))
+    turtle.penMode(Turtle.PEN_DOWN)
+    turtle.xandycor(-4.5, 4.5)
+
+    // top left origin
+    world = makeWorld(new WorldDimensions(0, 4, -4, 0))
+    world.trailDrawer(drawer)
+    turtle = makeTurtle(world, Array(0, 0))
+    turtle.penMode(Turtle.PEN_DOWN)
+    turtle.xandycor(4.5, -4.5)
+
+    // top right origin
+    world = makeWorld(new WorldDimensions(-4, 0, -4, 0))
+    world.trailDrawer(drawer)
+    turtle = makeTurtle(world, Array(0, 0))
+    turtle.penMode(Turtle.PEN_DOWN)
+    turtle.xandycor(-4.5, -4.5)
+  }
 }
