@@ -52,6 +52,8 @@ object HelpActions {
       docPath("index.html")),
     new LocalBrowseAction(I18N.gui.get("menu.help.netLogoDictionary"),
       docPath("index2.html")),
+    new RemoteBrowseAction(I18N.gui.get("menu.help.news"),
+      new URI("https://ccl.northwestern.edu/netlogo/announce-test.shtml")),
     new RemoteBrowseAction(I18N.gui.get("menu.help.bind"),
       new URI("https://ccl.northwestern.edu/netlogo/bind")),
     new RemoteBrowseAction(I18N.gui.get("menu.help.netLogoUsersGroup"),

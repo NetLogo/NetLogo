@@ -6,8 +6,9 @@ import java.awt.{ BorderLayout, Component, Container, ContainerOrderFocusTravers
                   Graphics2D }
 import java.awt.event.{ ActionEvent, FocusEvent, FocusListener }
 import java.awt.print.{ PageFormat, Printable }
-import javax.swing.{ AbstractAction, Action, JComponent, JPanel, JSplitPane, ScrollPaneConstants }
+import javax.swing.{ AbstractAction, Action, BoxLayout, JComponent, JPanel, JSplitPane, ScrollPaneConstants }
 
+import org.nlogo.api.Announcement
 import org.nlogo.app.common.{Events => AppEvents, MenuTab}, AppEvents.SwitchedTabsEvent
 import org.nlogo.app.tools.AgentMonitorManager
 import org.nlogo.core.I18N
@@ -97,9 +98,21 @@ class InterfaceTab(workspace: GUIWorkspace,
     override def focusLost(e: FocusEvent): Unit = { }
   }
 
+  val northWrapper = new JPanel
+  northWrapper.setLayout(new BoxLayout(northWrapper, BoxLayout.PAGE_AXIS))
+
   private val toolBar = new DynamicToolbar(widgetControls, speedSlider, viewUpdatePanel)
 
-  add(toolBar, BorderLayout.NORTH)
+  northWrapper.add(toolBar)
+
+  private val announcementBar = new AnnouncementBanner()
+
+  northWrapper.add(announcementBar)
+  add(northWrapper, BorderLayout.NORTH)
+
+  def appendAnnouncements(anns: Seq[Announcement]): Unit = {
+    announcementBar.appendData(anns)
+  }
 
   iP.addFocusListener(TrackingFocusListener)
 

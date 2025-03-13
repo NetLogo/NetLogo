@@ -548,7 +548,10 @@ class App extends
         _tabManager.switchWindow(true)
       }
 
+      AnnouncementsInfoDownloader.fetchAndThen(_tabManager.interfaceTab.appendAnnouncements)
+
       syncWindowThemes()
+
     }
     catch {
       case ex: java.lang.Throwable =>

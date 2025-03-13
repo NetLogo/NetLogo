@@ -728,6 +728,25 @@ object InterfaceColors {
       case "classic" | "light" => Color.BLACK
       case "dark" => Color.WHITE
     }
+
+  def announceRelease() =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => new Color(237, 205, 255)
+      case "dark"              => new Color(137, 105, 155)
+    }
+
+  def announceAdvisory() =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => new Color(255, 194, 154)
+      case "dark"              => new Color(155,  94,  54)
+    }
+
+  def announceEvent() =
+    theme.getOrElse("light") match {
+      case "classic" | "light" => new Color(108, 252, 221)
+      case "dark"              => new Color(  8, 152, 121)
+    }
+
 }
 
 trait ThemeSync {
