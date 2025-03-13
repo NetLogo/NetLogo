@@ -5,7 +5,7 @@ package org.nlogo.app.tools
 import java.awt.{ Frame, GridBagConstraints, GridBagLayout, Insets }
 import java.awt.event.ActionEvent
 import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ AbstractAction, ButtonGroup, JPanel }
+import javax.swing.{ AbstractAction, ButtonGroup, JLabel, JPanel }
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ ButtonPanel, DialogButton, Positioning, RadioButton }
@@ -15,6 +15,8 @@ class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "theme
   private lazy val prefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
 
   private lazy val panel = new JPanel(new GridBagLayout)
+
+  private lazy val label = new JLabel(s"<html>${I18N.gui("text")}</html>")
 
   private lazy val classicButton = new RadioButton(new AbstractAction(I18N.gui("classic")) {
     def actionPerformed(e: ActionEvent): Unit = {
@@ -56,10 +58,11 @@ class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "theme
     c.anchor = GridBagConstraints.WEST
     c.insets = new Insets(6, 6, 6, 6)
 
-    panel.add(lightButton, c)
+    panel.add(label, c)
 
     c.insets = new Insets(0, 6, 6, 6)
 
+    panel.add(lightButton, c)
     panel.add(darkButton, c)
     panel.add(classicButton, c)
 
@@ -70,6 +73,8 @@ class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "theme
     themeButtons.add(darkButton)
 
     val buttonPanel = new ButtonPanel(Seq(okButton, cancelButton))
+
+    c.anchor = GridBagConstraints.CENTER
 
     panel.add(buttonPanel, c)
 
@@ -108,6 +113,8 @@ class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "theme
 
   override def syncTheme(): Unit = {
     panel.setBackground(InterfaceColors.dialogBackground)
+
+    label.setForeground(InterfaceColors.dialogText)
 
     lightButton.syncTheme()
     darkButton.syncTheme()
