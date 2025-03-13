@@ -74,7 +74,7 @@ trait Finder extends AnyFunSuite  {
     import org.reflections._
     import collection.JavaConverters._
     override def iterator =
-      new Reflections(path, new scanners.ResourcesScanner())
+      new Reflections(path, scanners.Scanners.Resources)
         .getResources(java.util.regex.Pattern.compile(".*\\.txt"))
         .asScala.toSeq.sorted.iterator
         .map(s =>
