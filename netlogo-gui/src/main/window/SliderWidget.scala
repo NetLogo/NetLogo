@@ -149,7 +149,12 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
     // it needs to be tested more and maybe we can get rid of it. JC - 9/23/10
     minimumCode = min
     incrementCode = inc
-    value_=(v, inc.toDouble)
+    try {
+      value_=(v, inc.toDouble)
+    } catch {
+      case e: NumberFormatException =>
+        value = v
+    }
     defaultValue = v
     oldSize = model.oldSize
     setSize(model.width, model.height)
