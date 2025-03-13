@@ -21,6 +21,8 @@ object ModelsLibrary {
   val exportResizedModels = TaskKey[Unit](
     "exportResizedModels", "resize all models to the new widget sizes and export the interface")
 
+  val convertWidgetSizes = TaskKey[Unit]("convertWidgetSizes", "run widget resize tool on all models in the library")
+
   val modelParser: Initialize[Parser[Option[Path]]] = {
     import Parser._
     Def.setting {
@@ -62,6 +64,11 @@ object ModelsLibrary {
     },
     exportResizedModels := {
       makeMainTask("org.nlogo.tools.ExportResizedModels",
+        classpath = (Test / fullClasspath),
+        workingDirectory = baseDirectory(_.getParentFile)).toTask("").value
+    },
+    convertWidgetSizes := {
+      makeMainTask("org.nlogo.tools.ConvertWidgetSizes",
         classpath = (Test / fullClasspath),
         workingDirectory = baseDirectory(_.getParentFile)).toTask("").value
     }

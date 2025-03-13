@@ -738,6 +738,11 @@ class App extends
     }
   }
 
+  // used by external tools to make GUI automation smoother (Isaac B 3/13/25)
+  def setIgnorePopups(ignore: Boolean): Unit = {
+    tabManager.setIgnoreChanges(ignore)
+  }
+
   // AppEvent stuff (kludgy)
   /**
    * Internal use only.

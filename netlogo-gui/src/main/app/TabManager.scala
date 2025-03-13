@@ -70,6 +70,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   private var movingTabs = true
   private var loadingTabs = false
 
+  private var ignoreChanges = false
+
   addTabWithLabel(mainTabs, I18N.gui.get("tabs.run"), interfaceTab)
   addTabWithLabel(mainTabs, I18N.gui.get("tabs.info"), infoTab)
   addTabWithLabel(mainTabs, I18N.gui.get("tabs.code"), mainCodeTab)
@@ -179,7 +181,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     // at most one thread.
     stopWatcherThread()
 
-    if (modelPath != null) {
+    if (modelPath != null && !ignoreChanges) {
       def f(x: Map[String, String]): List[Path] = x.values.map(Paths.get(_)).toList
       val includes: List[Path] = mainCodeTab.getIncludesTable.map(f).getOrElse(List.empty)
 
@@ -201,6 +203,11 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     } else {
       stopWatcherThread()
     }
+  }
+
+  // used by external tools to prevent the external file changes dialog from spamming (Isaac B 3/13/25)
+  def setIgnoreChanges(ignore: Boolean): Unit = {
+    ignoreChanges = ignore
   }
 
   private def handleFileChange(): Boolean = {
