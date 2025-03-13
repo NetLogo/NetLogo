@@ -111,13 +111,13 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
     locally {
       val c = new GridBagConstraints
 
-      c.insets = new Insets(0, 6, 0, 6)
+      c.insets = new Insets(3, 6, 3, 6)
 
       southPanel.add(prompt, c)
 
       c.weightx = 1
       c.fill = GridBagConstraints.HORIZONTAL
-      c.insets = new Insets(0, 0, 0, 0)
+      c.insets = new Insets(3, 0, 3, 0)
 
       southPanel.add(commandLine, c)
 
