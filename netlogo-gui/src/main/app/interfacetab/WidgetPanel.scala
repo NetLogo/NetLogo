@@ -1069,8 +1069,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def canStretchLeft: Boolean = {
     val target = selectedWrappers.minBy(_.getX)
-
-    selectedWrappers.filter(_.horizontallyResizable).filter(_ != target).nonEmpty
+    selectedWrappers.exists(w => w.horizontallyResizable && w != target)
   }
 
   def stretchLeft(): Unit = {
@@ -1082,8 +1081,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def canStretchRight: Boolean = {
     val target = selectedWrappers.maxBy(w => w.getX + w.getWidth)
-
-    selectedWrappers.filter(_.horizontallyResizable).filter(_ != target).nonEmpty
+    selectedWrappers.exists(w => w.horizontallyResizable && w != target)
   }
 
   def stretchRight(): Unit = {
@@ -1095,8 +1093,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def canStretchTop: Boolean = {
     val target = selectedWrappers.minBy(_.getY)
-
-    selectedWrappers.filter(_.verticallyResizable).filter(_ != target).nonEmpty
+    selectedWrappers.exists(w => w.verticallyResizable && w != target)
   }
 
   def stretchTop(): Unit = {
@@ -1108,8 +1105,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def canStretchBottom: Boolean = {
     val target = selectedWrappers.maxBy(w => w.getY + w.getHeight)
-
-    selectedWrappers.filter(_.verticallyResizable).filter(_ != target).nonEmpty
+    selectedWrappers.exists(w => w.verticallyResizable && w != target)
   }
 
   def stretchBottom(): Unit = {
