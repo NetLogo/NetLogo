@@ -6,8 +6,8 @@ authors:
     given-names: "Uri"
 
 title: "NetLogo"
-version: 6.4.0
-date-released: 2023-11-16
+version: 7.0.0-internal1
+date-released: 2025-03-xx
 
 url: "https://ccl.northwestern.edu/netlogo/"
 repository-code: "https://github.com/NetLogo/NetLogo"
