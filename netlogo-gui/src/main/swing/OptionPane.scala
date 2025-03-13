@@ -53,15 +53,22 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
       setVisible(false)
     }
 
-    add(new ButtonPanel(
-      new DialogButton(true, options(0), selectAction(_)) +:
-        options.tail.map(new DialogButton(false, _, selectAction(_)))
-    ), c)
+    val okButton = new DialogButton(true, options(0), selectAction(_))
+    add(new ButtonPanel(okButton +: options.tail.map(new DialogButton(false, _, selectAction(_)))), c)
 
     packAndCenter()
 
+    getRootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
+                                                                   "OptionPaneOK")
+
     getRootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
                                                                    "OptionPaneCancel")
+
+    getRootPane.getActionMap.put("OptionPaneOK", new AbstractAction {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        okButton.doClick()
+      }
+    })
 
     getRootPane.getActionMap.put("OptionPaneCancel", new AbstractAction {
       override def actionPerformed(e: ActionEvent): Unit = {
