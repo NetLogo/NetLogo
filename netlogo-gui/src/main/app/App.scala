@@ -536,6 +536,11 @@ class App extends
 
       org.nlogo.app.common.FindDialog.init(frame, _tabManager.separateTabsWindow)
 
+      val colorThemeName = Option(InterfaceColors.getTheme).getOrElse("default")
+      val readPref  = (key: String)                => Option(prefs.get(key,  null))
+      val writePref = (key: String, value: String) =>        prefs.put(key, value)
+      Analytics.phoneHome(readPref, writePref, Map("color-theme" -> colorThemeName))
+
       Splash.endSplash()
       frame.setVisible(true)
       if (isMac) {
