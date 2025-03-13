@@ -12,18 +12,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 362.0
+          LDC 362.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -122,7 +122,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 100.0
+          LDC 100.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -281,7 +281,7 @@ reporter procedure BURNING?:[]{-TP-}:
           ATHROW
          L6
          FRAME SAME1 java/lang/Object
-          LDC 11.0
+          LDC 11.0D
          L7
           DSTORE 3
           ASTORE 2
@@ -349,7 +349,7 @@ reporter procedure BURNING?:[]{-TP-}:
           ATHROW
          L13
          FRAME SAME1 java/lang/Object
-          LDC 16.0
+          LDC 16.0D
          L14
           DSTORE 3
           ASTORE 2
@@ -741,7 +741,7 @@ procedure GO:[]{O---}:
           ATHROW
          L3
          FRAME SAME1 java/lang/Object
-          LDC 55.0
+          LDC 55.0D
          L4
           DSTORE 3
           ASTORE 2
@@ -977,7 +977,7 @@ procedure GO:[]{O---}:
           ATHROW
          L3
          FRAME SAME1 java/lang/Object
-          LDC 55.0
+          LDC 55.0D
          L4
           DSTORE 3
           ASTORE 2
@@ -1361,7 +1361,7 @@ procedure GO:[]{O---}:
           ATHROW
          L9
          FRAME SAME1 D
-          LDC 0.3
+          LDC 0.3D
          L10
           DSTORE 4
           DSTORE 2
@@ -1583,7 +1583,7 @@ reporter procedure PERCENT-BURNED:[]{OTPL}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedurepercentburned_report_1.validDouble (DLorg/nlogo/nvm/Context;)D
          L10
-          LDC 100.0
+          LDC 100.0D
          L11
           DSTORE 4
           DSTORE 2
@@ -1931,7 +1931,7 @@ procedure SETUP:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 100
+          LDC 100L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L1
@@ -2209,7 +2209,7 @@ procedure SETUP:[]{O---}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 55.0
+              LDC 55.0D
              L4
               DSTORE 3
               ASTORE 2

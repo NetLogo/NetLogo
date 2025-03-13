@@ -13,18 +13,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 2468.0
+          LDC 2468.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -124,7 +124,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 2000.0
+          LDC 2000.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -380,7 +380,7 @@ procedure SETUP:[]{O---}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L6
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -670,14 +670,14 @@ procedure SETUP-NODES:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetupnodes_setxy_3.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.minPxcor ()I
           I2D
-          LDC 0.5
+          LDC 0.5D
           DSUB
           DSTORE 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupnodes_setxy_3.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.maxPxcor ()I
           I2D
-          LDC 0.5
+          LDC 0.5D
           DADD
           DSTORE 4
           DLOAD 2
@@ -691,7 +691,7 @@ procedure SETUP-NODES:[]{O---}:
           DMUL
           DADD
          L4
-          LDC 0.95
+          LDC 0.95D
          L5
           DSTORE 4
           DSTORE 2
@@ -703,14 +703,14 @@ procedure SETUP-NODES:[]{O---}:
           GETFIELD org/nlogo/prim/_asm_proceduresetupnodes_setxy_3.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.minPycor ()I
           I2D
-          LDC 0.5
+          LDC 0.5D
           DSUB
           DSTORE 2
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupnodes_setxy_3.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.maxPycor ()I
           I2D
-          LDC 0.5
+          LDC 0.5D
           DADD
           DSTORE 4
           DLOAD 2
@@ -724,7 +724,7 @@ procedure SETUP-NODES:[]{O---}:
           DMUL
           DADD
          L7
-          LDC 0.95
+          LDC 0.95D
          L8
           DSTORE 4
           DSTORE 2
@@ -1024,7 +1024,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           DLOAD 4
           DMUL
          L9
-          LDC 2.0
+          LDC 2.0D
          L10
           DSTORE 4
           DSTORE 2
@@ -1163,7 +1163,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L9
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1471,7 +1471,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
              FRAME SAME
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-              LDC -1
+              LDC -1L
               LCMP
               IFNE L5
               NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1702,7 +1702,7 @@ procedure SETUP-SPATIALLY-CLUSTERED-NETWORK:[NUM-LINKS _repeatlocal:1]{OTPL}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 10.0
+          LDC 10.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -3006,7 +3006,7 @@ procedure BECOME-RESISTANT:[]{-T--}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L6
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3580,7 +3580,7 @@ procedure SPREAD-VIRUS:[]{OTPL}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 100.0
+          LDC 100.0D
          L1
           DSTORE 2
           DLOAD 2
@@ -3993,7 +3993,7 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 100
+          LDC 100L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L1
@@ -4082,7 +4082,7 @@ procedure DO-VIRUS-CHECKS:[]{OTPL}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 100
+          LDC 100L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L1
@@ -4504,7 +4504,7 @@ procedure UPDATE-PLOT:[]{OTPL}:
             DLOAD 4
             DDIV
            L9
-            LDC 100.0
+            LDC 100.0D
            L10
             DSTORE 4
             DSTORE 2
@@ -4684,7 +4684,7 @@ procedure UPDATE-PLOT:[]{OTPL}:
             DLOAD 4
             DDIV
            L9
-            LDC 100.0
+            LDC 100.0D
            L10
             DSTORE 4
             DSTORE 2
@@ -4864,7 +4864,7 @@ procedure UPDATE-PLOT:[]{OTPL}:
             DLOAD 4
             DDIV
            L9
-            LDC 100.0
+            LDC 100.0D
            L10
             DSTORE 4
             DSTORE 2

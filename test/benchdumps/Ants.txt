@@ -12,18 +12,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 337.0
+          LDC 337.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -122,7 +122,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 800.0
+          LDC 800.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -350,7 +350,7 @@ reporter procedure CHEMICAL-SCENT:[ANGLE P]{-T--}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L0
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -747,7 +747,7 @@ procedure DO-PLOTTING:[]{OTPL}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 85.0
+              LDC 85.0D
              L4
               DSTORE 3
               ASTORE 2
@@ -897,7 +897,7 @@ procedure DO-PLOTTING:[]{OTPL}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 95.0
+              LDC 95.0D
              L4
               DSTORE 3
               ASTORE 2
@@ -1047,7 +1047,7 @@ procedure DO-PLOTTING:[]{OTPL}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 105.0
+              LDC 105.0D
              L4
               DSTORE 3
               ASTORE 2
@@ -1275,7 +1275,7 @@ reporter procedure GET-NEST-SCENT:[ANGLE P]{-T--}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L0
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1653,7 +1653,7 @@ procedure GO:[]{O---}:
             ATHROW
            L4
            FRAME SAME1 D
-            LDC 100.0
+            LDC 100.0D
            L5
             DSTORE 4
             DSTORE 2
@@ -1852,7 +1852,7 @@ procedure GO-PATCHES:[]{-TP-}:
           ATHROW
          L11
          FRAME SAME1 D
-          LDC 100.0
+          LDC 100.0D
          L12
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduregopatches_setpatchvariable_0.world : Lorg/nlogo/agent/World;
@@ -1898,7 +1898,7 @@ procedure GO-PATCHES:[]{-TP-}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduregopatches_setpatchvariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L16
-          LDC 100.0
+          LDC 100.0D
          L17
           DSTORE 4
           DSTORE 2
@@ -2003,7 +2003,7 @@ procedure GO-TURTLES:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
           DSTORE 2
           DLOAD 2
-          LDC -1.0
+          LDC -1.0D
           DCMPL
           IFNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -2536,7 +2536,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
 [4]_asm_procedurelookforfood_right_4 "rt 180" double => void
       _constdouble:180.0 "180" => double
          L0
-          LDC 180.0
+          LDC 180.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -2615,7 +2615,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           ATHROW
          L3
          FRAME SAME1 java/lang/Object
-          LDC 2.0
+          LDC 2.0D
          L4
           DSTORE 3
           ASTORE 2
@@ -2732,7 +2732,7 @@ procedure LOOK-FOR-FOOD:[]{-T--}:
           ATHROW
          L3
          FRAME SAME1 java/lang/Object
-          LDC 0.05
+          LDC 0.05D
          L4
           DSTORE 3
           ASTORE 2
@@ -2990,7 +2990,7 @@ procedure RETURN-TO-NEST:[]{-T--}:
 [2]_asm_procedurereturntonest_right_2 "rt 180" double => void
       _constdouble:180.0 "180" => double
          L0
-          LDC 180.0
+          LDC 180.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -3208,7 +3208,7 @@ procedure RETURN-TO-NEST:[]{-T--}:
           ATHROW
          L9
          FRAME SAME1 D
-          LDC 1.5
+          LDC 1.5D
          L10
           DSTORE 4
           DSTORE 2
@@ -3525,7 +3525,7 @@ procedure SETUP-FOOD:[]{-TP-}:
         _constdouble:5.0 "5" => double
           // parameter final  context
          L0
-          LDC 0.6
+          LDC 0.6D
          L1
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupfood_if_0.world : Lorg/nlogo/agent/World;
@@ -3558,7 +3558,7 @@ procedure SETUP-FOOD:[]{-TP-}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupfood_if_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L5
-          LDC 5.0
+          LDC 5.0D
          L6
           DSTORE 4
           DSTORE 2
@@ -3634,7 +3634,7 @@ procedure SETUP-FOOD:[]{-TP-}:
           // parameter final  context
           // parameter final  context
          L0
-          LDC -0.6
+          LDC -0.6D
          L1
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupfood_if_2.world : Lorg/nlogo/agent/World;
@@ -3650,7 +3650,7 @@ procedure SETUP-FOOD:[]{-TP-}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupfood_if_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L3
-          LDC -0.6
+          LDC -0.6D
          L4
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupfood_if_2.world : Lorg/nlogo/agent/World;
@@ -3681,7 +3681,7 @@ procedure SETUP-FOOD:[]{-TP-}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupfood_if_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L7
-          LDC 5.0
+          LDC 5.0D
          L8
           DSTORE 4
           DSTORE 2
@@ -3757,7 +3757,7 @@ procedure SETUP-FOOD:[]{-TP-}:
           // parameter final  context
           // parameter final  context
          L0
-          LDC -0.8
+          LDC -0.8D
          L1
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupfood_if_4.world : Lorg/nlogo/agent/World;
@@ -3773,7 +3773,7 @@ procedure SETUP-FOOD:[]{-TP-}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupfood_if_4.validDouble (DLorg/nlogo/nvm/Context;)D
          L3
-          LDC 0.8
+          LDC 0.8D
          L4
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetupfood_if_4.world : Lorg/nlogo/agent/World;
@@ -3804,7 +3804,7 @@ procedure SETUP-FOOD:[]{-TP-}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupfood_if_4.validDouble (DLorg/nlogo/nvm/Context;)D
          L7
-          LDC 5.0
+          LDC 5.0D
          L8
           DSTORE 4
           DSTORE 2
@@ -3966,7 +3966,7 @@ procedure SETUP-FOOD:[]{-TP-}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 2
+          LDC 2L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L5
@@ -4049,7 +4049,7 @@ procedure SETUP-NEST:[]{-TP-}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetupnest_setpatchvariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L6
-          LDC 5.0
+          LDC 5.0D
          L7
           DSTORE 4
           DSTORE 2
@@ -4107,7 +4107,7 @@ procedure SETUP-NEST:[]{-TP-}:
           _constdouble:0.0 "0" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          LDC 200.0
+          LDC 200.0D
          L4
           DCONST_0
          L5
@@ -4477,7 +4477,7 @@ procedure SETUP-TURTLES:[]{O---}:
       _randomfloat "random-float 360" double => double
         _constdouble:360.0 "360" => double
          L0
-          LDC 360.0
+          LDC 360.0D
          L1
           DSTORE 2
           ALOAD 0
@@ -4927,7 +4927,7 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           ATHROW
          L3
          FRAME SAME1 java/lang/Object
-          LDC 2.0
+          LDC 2.0D
          L4
           DSTORE 3
           ASTORE 2
@@ -5021,7 +5021,7 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           ATHROW
          L3
          FRAME SAME1 java/lang/Object
-          LDC 3.0
+          LDC 3.0D
          L4
           DSTORE 3
           ASTORE 2
@@ -5108,7 +5108,7 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
          L8
-          LDC 55.0
+          LDC 55.0D
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -5149,9 +5149,9 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           ATHROW
          L10
          FRAME FULL [org/nlogo/prim/_asm_procedureupdatedisplay_setpatchvariable_11 org/nlogo/nvm/Context java/lang/Object] [D D]
-          LDC 0.1
+          LDC 0.1D
          L11
-          LDC 5.0
+          LDC 5.0D
          L12
           DSTORE 8
           DSTORE 6
@@ -5159,7 +5159,7 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
           DSTORE 2
           DLOAD 2
           INVOKESTATIC org/nlogo/api/Color.findCentralColorNumber (D)D
-          LDC 5.0
+          LDC 5.0D
           DSUB
           DSTORE 2
           DCONST_0
@@ -5234,14 +5234,14 @@ procedure UPDATE-DISPLAY:[]{-TP-}:
          L15
          FRAME SAME
           DLOAD 10
-          LDC 10.0
+          LDC 10.0D
           DMUL
           DSTORE 10
           DLOAD 10
-          LDC 9.9999
+          LDC 9.9999D
           DCMPL
           IFLT L19
-          LDC 9.9999
+          LDC 9.9999D
           DSTORE 10
           GOTO L20
          L19
@@ -5351,7 +5351,7 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L0
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -5970,7 +5970,7 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
 [6]_asm_procedureuphillchemical_right_7 "rt 45" double => void
       _constdouble:45.0 "45" => double
          L0
-          LDC 45.0
+          LDC 45.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -5994,7 +5994,7 @@ procedure UPHILL-CHEMICAL:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
 [8]_asm_procedureuphillchemical_left_9 "lt 45" double => void
       _constdouble:45.0 "45" => double
          L0
-          LDC 45.0
+          LDC 45.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -6066,7 +6066,7 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L0
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6685,7 +6685,7 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
 [6]_asm_procedureuphillnestscent_right_7 "rt 45" double => void
       _constdouble:45.0 "45" => double
          L0
-          LDC 45.0
+          LDC 45.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -6709,7 +6709,7 @@ procedure UPHILL-NEST-SCENT:[SCENT-AHEAD SCENT-RIGHT SCENT-LEFT]{-T--}:
 [8]_asm_procedureuphillnestscent_left_9 "lt 45" double => void
       _constdouble:45.0 "45" => double
          L0
-          LDC 45.0
+          LDC 45.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -6744,14 +6744,14 @@ procedure WIGGLE:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 40
+          LDC 40L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L1
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 40
+          LDC 40L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L2
@@ -6837,7 +6837,7 @@ procedure WIGGLE:[]{-T--}:
 [2]_asm_procedurewiggle_right_3 "rt 180" double => void
       _constdouble:180.0 "180" => double
          L0
-          LDC 180.0
+          LDC 180.0D
          L1
           DSTORE 2
           ALOAD 1

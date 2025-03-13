@@ -12,18 +12,18 @@ procedure BENCHMARK:[]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 471.0
+          LDC 471.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -131,7 +131,7 @@ procedure BENCHMARK:[]{O---}:
           // parameter final  context
           // parameter final  d0
          L0
-          LDC 350.0
+          LDC 350.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -461,7 +461,7 @@ procedure FIND-EMPTY-SPOT:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 360
+          LDC 360L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L4
@@ -572,7 +572,7 @@ procedure FIND-NEW-PILE:[]{-T--}:
           ATHROW
          L3
          FRAME SAME1 java/lang/Object
-          LDC 45.0
+          LDC 45.0D
          L4
           DSTORE 3
           ASTORE 2
@@ -665,7 +665,7 @@ procedure GET-AWAY:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 360
+          LDC 360L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L4
@@ -705,7 +705,7 @@ procedure GET-AWAY:[]{-T--}:
       _constdouble:20.0 "20" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          LDC 20.0
+          LDC 20.0D
          L4
           DSTORE 2
          L0
@@ -916,7 +916,7 @@ procedure SEARCH-FOR-CHIP:[]{-T--}:
           ATHROW
          L3
          FRAME SAME1 java/lang/Object
-          LDC 45.0
+          LDC 45.0D
          L4
           DSTORE 3
           ASTORE 2
@@ -1049,7 +1049,7 @@ procedure SEARCH-FOR-CHIP:[]{-T--}:
       _constdouble:20.0 "20" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          LDC 20.0
+          LDC 20.0D
          L4
           DSTORE 2
          L0
@@ -1191,7 +1191,7 @@ procedure SETUP:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 100
+          LDC 100L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L1
@@ -1461,7 +1461,7 @@ procedure SETUP:[]{O---}:
           GOTO L7
          L6
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setxy_7 org/nlogo/nvm/Context D J] [J]
-          LDC -1
+          LDC -1L
          L7
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setxy_7 org/nlogo/nvm/Context D J] [J J]
           LADD
@@ -1524,7 +1524,7 @@ procedure SETUP:[]{O---}:
           GOTO L14
          L13
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setxy_7 org/nlogo/nvm/Context D J] [D J]
-          LDC -1
+          LDC -1L
          L14
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setxy_7 org/nlogo/nvm/Context D J] [D J J]
           LADD
@@ -1668,7 +1668,7 @@ procedure WIGGLE:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 50
+          LDC 50L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L5
@@ -1684,7 +1684,7 @@ procedure WIGGLE:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 50
+          LDC 50L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L7

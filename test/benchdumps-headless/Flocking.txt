@@ -13,18 +13,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 5454.0
+          LDC 5454.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -124,7 +124,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 700.0
+          LDC 700.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -280,12 +280,12 @@ procedure SETUP:[]{O---}:
           // parameter final  value
           TRYCATCHBLOCK L0 L1 L1 org/nlogo/api/AgentException
          L2
-          LDC 43.0
+          LDC 43.0D
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 7
+          LDC 7L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L4
@@ -446,7 +446,7 @@ procedure SETUP:[]{O---}:
           // parameter final  context
           // parameter final  delta
          L0
-          LDC 360.0
+          LDC 360.0D
          L1
           DSTORE 2
           DLOAD 2
@@ -770,7 +770,7 @@ procedure FLOCK:[]{-T--}:
          FRAME FULL [org/nlogo/prim/_asm_procedureflock_ifelse_3 org/nlogo/nvm/Context org/nlogo/agent/Agent] []
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L8
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1163,7 +1163,7 @@ procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
              FRAME SAME
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-              LDC -1
+              LDC -1L
               LCMP
               IFNE L5
               NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1297,7 +1297,7 @@ procedure SEPARATE:[]{-T--}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L8
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1809,7 +1809,7 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           GOTO L21
          L20
          FRAME SAME
-          LDC 180.0
+          LDC 180.0D
           GOTO L21
          L19
          FRAME SAME
@@ -1823,11 +1823,11 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           I2D
           DCMPL
           IFLE L23
-          LDC 90.0
+          LDC 90.0D
           GOTO L21
          L23
          FRAME SAME
-          LDC 270.0
+          LDC 270.0D
           GOTO L21
          L22
          FRAME SAME
@@ -2074,7 +2074,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
                   ATHROW
                  L3
                  FRAME SAME1 D
-                  LDC 180.0
+                  LDC 180.0D
                  L4
                   DSTORE 4
                   DSTORE 2
@@ -2181,7 +2181,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
                   ATHROW
                  L3
                  FRAME SAME1 D
-                  LDC 180.0
+                  LDC 180.0D
                  L4
                   DSTORE 4
                   DSTORE 2
@@ -2439,7 +2439,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           GOTO L21
          L20
          FRAME SAME
-          LDC 180.0
+          LDC 180.0D
           GOTO L21
          L19
          FRAME SAME
@@ -2453,11 +2453,11 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           I2D
           DCMPL
           IFLE L23
-          LDC 90.0
+          LDC 90.0D
           GOTO L21
          L23
          FRAME SAME
-          LDC 270.0
+          LDC 270.0D
           GOTO L21
          L22
          FRAME SAME
@@ -3250,7 +3250,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DLOAD 2
          L11
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
          L12
           DSTORE 4
           DSTORE 2
@@ -3645,7 +3645,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DLOAD 4
           DSUB
          L9
-          LDC 360.0
+          LDC 360.0D
          L10
           DSTORE 4
           DSTORE 2
@@ -3808,7 +3808,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DLOAD 4
           DSUB
          L9
-          LDC 360.0
+          LDC 360.0D
          L10
           DSTORE 4
           DSTORE 2

@@ -13,18 +13,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 2468.0
+          LDC 2468.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -124,7 +124,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 7000.0
+          LDC 7000.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -941,7 +941,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
          L5
-          LDC 360.0
+          LDC 360.0D
          L6
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setturtlevariable_12.world : Lorg/nlogo/agent/World;
@@ -1040,7 +1040,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  d
          L0
-          LDC 1.75
+          LDC 1.75D
          L1
           DSTORE 2
           ALOAD 1
@@ -2175,7 +2175,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           // parameter final  context
           // parameter final  cond
          L0
-          LDC 100.0
+          LDC 100.0D
          L1
           DSTORE 2
           DLOAD 2
@@ -2563,7 +2563,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           // parameter final  context
           // parameter final  cond
          L0
-          LDC 100.0
+          LDC 100.0D
          L1
           DSTORE 2
           DLOAD 2
@@ -3291,7 +3291,7 @@ procedure PICK-TEAM-MEMBERS:[NEW-TEAM-MEMBER _repeatlocal:1]{O---}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4071,7 +4071,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
               ASTORE 3
               ALOAD 3
               INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-              LDC -1
+              LDC -1L
               LCMP
               IFNE L16
               NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4213,7 +4213,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
               ASTORE 3
               ALOAD 3
               INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-              LDC -1
+              LDC -1L
               LCMP
               IFNE L25
               NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4601,7 +4601,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L16
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4743,7 +4743,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L25
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4992,7 +4992,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L16
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -5134,7 +5134,7 @@ procedure COLOR-COLLABORATIONS:[]{OTPL}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L25
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -5487,7 +5487,7 @@ procedure LAYOUT:[_repeatlocal:0]{OTPL}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 12.0
+          LDC 12.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -5635,7 +5635,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
             DSTORE 2
             DLOAD 2
-            LDC -1.0
+            LDC -1.0D
             DCMPL
             IFNE L1
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -5701,7 +5701,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
                 ATHROW
                L3
                FRAME SAME1 java/lang/Object
-                LDC 15.0
+                LDC 15.0D
                L4
                 DSTORE 3
                 ASTORE 2
@@ -5891,7 +5891,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
             DSTORE 2
             DLOAD 2
-            LDC -1.0
+            LDC -1.0D
             DCMPL
             IFNE L1
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -5939,7 +5939,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
             DSTORE 2
             DLOAD 2
-            LDC -1.0
+            LDC -1.0D
             DCMPL
             IFNE L1
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6005,7 +6005,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
                 ATHROW
                L3
                FRAME SAME1 java/lang/Object
-                LDC 45.0
+                LDC 45.0D
                L4
                 DSTORE 3
                 ASTORE 2
@@ -6195,7 +6195,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
             DSTORE 2
             DLOAD 2
-            LDC -1.0
+            LDC -1.0D
             DCMPL
             IFNE L1
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6243,7 +6243,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
             DSTORE 2
             DLOAD 2
-            LDC -1.0
+            LDC -1.0D
             DCMPL
             IFNE L1
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6309,7 +6309,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
                 ATHROW
                L3
                FRAME SAME1 java/lang/Object
-                LDC 55.0
+                LDC 55.0D
                L4
                 DSTORE 3
                 ASTORE 2
@@ -6499,7 +6499,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
             DSTORE 2
             DLOAD 2
-            LDC -1.0
+            LDC -1.0D
             DCMPL
             IFNE L1
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6547,7 +6547,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
             DSTORE 2
             DLOAD 2
-            LDC -1.0
+            LDC -1.0D
             DCMPL
             IFNE L1
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6613,7 +6613,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
                 ATHROW
                L3
                FRAME SAME1 java/lang/Object
-                LDC 105.0
+                LDC 105.0D
                L4
                 DSTORE 3
                 ASTORE 2
@@ -6803,7 +6803,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
             DSTORE 2
             DLOAD 2
-            LDC -1.0
+            LDC -1.0D
             DCMPL
             IFNE L1
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6870,7 +6870,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
             DSTORE 2
             DLOAD 2
-            LDC -1.0
+            LDC -1.0D
             DCMPL
             IFNE L1
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6979,7 +6979,7 @@ procedure DO-PLOT:[TOTAL]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
             DSTORE 2
             DLOAD 2
-            LDC -1.0
+            LDC -1.0D
             DCMPL
             IFNE L1
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -7646,7 +7646,7 @@ procedure FIND-ALL-COMPONENTS:[START]{OTPL}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException

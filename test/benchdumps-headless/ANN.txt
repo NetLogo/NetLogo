@@ -13,18 +13,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 5342.0
+          LDC 5342.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -144,7 +144,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 20000.0
+          LDC 20000.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -300,7 +300,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L12
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -760,7 +760,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
               INVOKESPECIAL org/nlogo/api/LogoListBuilder.<init> ()V
               DUP
              L3
-              LDC 2.0
+              LDC 2.0D
              L4
               ALOAD 1
               GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -1800,7 +1800,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 ATHROW
                L6
                FRAME SAME1 D
-                LDC 0.5
+                LDC 0.5D
                L7
                 DSTORE 4
                 DSTORE 2
@@ -2189,7 +2189,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 ASTORE 5
                 ALOAD 5
                 INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-                LDC -1
+                LDC -1L
                 LCMP
                 IFNE L7
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -2279,9 +2279,9 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
                 TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
                L4
-                LDC 2.0
+                LDC 2.0D
                L5
-                LDC 0.5
+                LDC 0.5D
                L6
                 ALOAD 1
                 GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -2310,7 +2310,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 ATHROW
                L8
                FRAME FULL [org/nlogo/prim/_asm___lambda1_anonymouscommand1ask1lety205i05layersizemaxpycor$80793689c65a6ee9f9a4f23c28ca84fa$_let_1 org/nlogo/nvm/Context java/lang/Object] [D D D]
-                LDC 0.5
+                LDC 0.5D
                L9
                 DSTORE 4
                 DSTORE 2
@@ -2718,7 +2718,7 @@ procedure SETUP:[LAYER-COUNTS MAX-LAYER-SIZE MAX-X MAX-Y]{O---}:
                 ASTORE 5
                 ALOAD 5
                 INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-                LDC -1
+                LDC -1L
                 LCMP
                 IFNE L7
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3302,7 +3302,7 @@ reporter procedure APPLY-BOOLS:[INPUT RES]{OTPL}:
                 GETFIELD org/nlogo/prim/_asm_procedureapplybools_greaterthan_6.kept2__let : Lorg/nlogo/core/Let;
                 INVOKEVIRTUAL org/nlogo/nvm/Binding.getLet (Lorg/nlogo/core/Let;)Ljava/lang/Object;
                L1
-                LDC 0.5
+                LDC 0.5D
                L2
                 DSTORE 3
                 ASTORE 2
@@ -3539,7 +3539,7 @@ reporter procedure APPLY-REALS:[INPUT]{OTPL}:
                 ASTORE 3
                 ALOAD 3
                 INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-                LDC -1
+                LDC -1L
                 LCMP
                 IFNE L5
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3838,7 +3838,7 @@ procedure SET-INPUT:[INPUT]{OTPL}:
                 ASTORE 5
                 ALOAD 5
                 INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-                LDC -1
+                LDC -1L
                 LCMP
                 IFNE L7
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4248,7 +4248,7 @@ procedure CLICK-INPUT:[]{OTPL}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L6
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4334,7 +4334,7 @@ procedure CLICK-INPUT:[]{OTPL}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 0.5
+              LDC 0.5D
              L4
               DSTORE 3
               ASTORE 2
@@ -4507,7 +4507,7 @@ reporter procedure GET-OUTPUT:[]{OTPL}:
                 ASTORE 3
                 ALOAD 3
                 INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-                LDC -1
+                LDC -1L
                 LCMP
                 IFNE L5
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4598,7 +4598,7 @@ reporter procedure GET-OUTPUT:[]{OTPL}:
                 ATHROW
                L6
                FRAME SAME1 java/lang/Object
-                LDC 0.5
+                LDC 0.5D
                L10
                 DSTORE 3
                 ASTORE 2
@@ -4934,7 +4934,7 @@ procedure PROPOGATE:[]{OTPL}:
                 ASTORE 5
                 ALOAD 5
                 INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-                LDC -1
+                LDC -1L
                 LCMP
                 IFNE L7
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -5386,7 +5386,7 @@ procedure UPDATE-ACTIVATION:[INCOMING]{-T--}:
                 ASTORE 3
                 ALOAD 3
                 INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-                LDC -1
+                LDC -1L
                 LCMP
                 IFNE L13
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6035,7 +6035,7 @@ procedure SET-WEIGHTS:[WEIGHTS]{OTPL}:
                 ASTORE 5
                 ALOAD 5
                 INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-                LDC -1
+                LDC -1L
                 LCMP
                 IFNE L7
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6363,7 +6363,7 @@ procedure SET-BIASES:[BIASES]{OTPL}:
                 ASTORE 5
                 ALOAD 5
                 INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-                LDC -1
+                LDC -1L
                 LCMP
                 IFNE L7
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6496,7 +6496,7 @@ reporter procedure GET-WEIGHTS:[]{OTPL}:
                 ASTORE 3
                 ALOAD 3
                 INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-                LDC -1
+                LDC -1L
                 LCMP
                 IFNE L5
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6828,7 +6828,7 @@ reporter procedure GET-BIASES:[]{OTPL}:
                 ASTORE 3
                 ALOAD 3
                 INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-                LDC -1
+                LDC -1L
                 LCMP
                 IFNE L5
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -7440,7 +7440,7 @@ procedure RECOLOR:[]{-T--}:
           ATHROW
          L3
          FRAME SAME1 java/lang/Object
-          LDC 0.5
+          LDC 0.5D
          L4
           DSTORE 3
           ASTORE 2
@@ -7647,7 +7647,7 @@ procedure RECOLOR:[]{-T--}:
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
          L8
-          LDC 0.5
+          LDC 0.5D
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -7823,7 +7823,7 @@ procedure UPDATE-LINK-LOOK:[W]{---L}:
           ICONST_0
           AALOAD
          L1
-          LDC 0.5
+          LDC 0.5D
          L2
           DSTORE 3
           ASTORE 2
@@ -7965,7 +7965,7 @@ procedure UPDATE-LINK-LOOK:[W]{---L}:
           ICONST_0
           AALOAD
          L1
-          LDC 0.5
+          LDC 0.5D
          L2
           DSTORE 3
           ASTORE 2
@@ -8083,7 +8083,7 @@ procedure UPDATE-LINK-LOOK:[W]{---L}:
           ICONST_0
           AALOAD
          L1
-          LDC 0.5
+          LDC 0.5D
          L2
           DSTORE 3
           ASTORE 2
@@ -8250,7 +8250,7 @@ procedure UPDATE-LINK-LOOK:[W]{---L}:
           ATHROW
          L7
          FRAME SAME1 D
-          LDC 0.5
+          LDC 0.5D
          L8
           DSTORE 4
           DSTORE 2
@@ -8466,7 +8466,7 @@ reporter procedure SIGMOID:[X]{OTPL}:
          L3
           DCONST_1
          L4
-          LDC 2.718281828459045
+          LDC 2.718281828459045D
          L5
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;

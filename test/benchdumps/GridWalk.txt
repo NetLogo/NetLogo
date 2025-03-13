@@ -12,18 +12,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 362.0
+          LDC 362.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -122,7 +122,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 20000.0
+          LDC 20000.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -382,7 +382,7 @@ procedure GO:[]{O---}:
          FRAME FULL [org/nlogo/prim/_asm_procedurego_face_1 org/nlogo/nvm/Context org/nlogo/agent/Agent I] []
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L9
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -586,7 +586,7 @@ procedure SETUP:[]{O---}:
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_face_2 org/nlogo/nvm/Context org/nlogo/agent/Agent I] []
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L9
           NEW org/nlogo/nvm/RuntimePrimitiveException

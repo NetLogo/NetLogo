@@ -12,18 +12,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 4378.0
+          LDC 4378.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -125,7 +125,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 10.0
+          LDC 10.0D
          L1
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurebenchmark_repeatlocal_2.world : Lorg/nlogo/agent/World;
@@ -352,7 +352,7 @@ reporter procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
           DLOAD 2
           INVOKESTATIC java/lang/StrictMath.floor (D)D
          L5
-          LDC 2.0
+          LDC 2.0D
          L6
           DSTORE 4
           DSTORE 2
@@ -517,7 +517,7 @@ reporter procedure BINDIGIT:[NUMBER POWER-OF-TWO]{OTPL}:
           DLOAD 2
           INVOKESTATIC java/lang/StrictMath.floor (D)D
          L8
-          LDC 2.0
+          LDC 2.0D
          L9
           DSTORE 4
           DSTORE 2
@@ -893,7 +893,7 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           ATHROW
          L4
          FRAME SAME1 D
-          LDC 2.0
+          LDC 2.0D
          L5
           DSTORE 4
           DSTORE 2
@@ -998,7 +998,7 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           ATHROW
          L4
          FRAME SAME1 D
-          LDC 4.0
+          LDC 4.0D
          L5
           DSTORE 4
           DSTORE 2
@@ -1103,7 +1103,7 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           ATHROW
          L4
          FRAME SAME1 D
-          LDC 8.0
+          LDC 8.0D
          L5
           DSTORE 4
           DSTORE 2
@@ -1208,7 +1208,7 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           ATHROW
          L4
          FRAME SAME1 D
-          LDC 16.0
+          LDC 16.0D
          L5
           DSTORE 4
           DSTORE 2
@@ -1313,7 +1313,7 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           ATHROW
          L4
          FRAME SAME1 D
-          LDC 32.0
+          LDC 32.0D
          L5
           DSTORE 4
           DSTORE 2
@@ -1418,7 +1418,7 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           ATHROW
          L4
          FRAME SAME1 D
-          LDC 64.0
+          LDC 64.0D
          L5
           DSTORE 4
           DSTORE 2
@@ -1523,7 +1523,7 @@ reporter procedure CALCULATE-RULE:[RRESULT]{OTPL}:
           ATHROW
          L4
          FRAME SAME1 D
-          LDC 128.0
+          LDC 128.0D
          L5
           DSTORE 4
           DSTORE 2
@@ -1854,7 +1854,7 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L0
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -2033,7 +2033,7 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L0
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3714,7 +3714,7 @@ procedure DO-RULE:[LEFT-ON? RIGHT-ON? NEW-VALUE]{-TP-}:
           ASTORE 4
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L10
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4982,7 +4982,7 @@ procedure GO:[]{O---}:
           ASTORE 4
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L5
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -5203,7 +5203,7 @@ procedure GO:[]{O---}:
           ASTORE 4
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L5
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6019,7 +6019,7 @@ procedure PRINT-BLOCK:[STATE _repeatlocal:1]{-T--}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 4.0
+          LDC 4.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -6093,7 +6093,7 @@ procedure PRINT-BLOCK:[STATE _repeatlocal:1]{-T--}:
 [7]_asm_procedureprintblock_right_7 "rt 90" double => void
       _constdouble:90.0 "90" => double
          L0
-          LDC 90.0
+          LDC 90.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -6542,7 +6542,7 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
                 ASTORE 3
                 ALOAD 3
                 INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-                LDC -1
+                LDC -1L
                 LCMP
                 IFNE L0
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6888,7 +6888,7 @@ procedure SETUP-CONTINUE:[ON?-LIST]{O---}:
           ASTORE 4
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L5
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -7446,7 +7446,7 @@ procedure SETUP-RANDOM:[]{O---}:
           ASTORE 4
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L5
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -7505,7 +7505,7 @@ procedure SETUP-RANDOM:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 100
+          LDC 100L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L4
@@ -7729,7 +7729,7 @@ procedure SHOW-RULES:[RULES]{O---}:
               INVOKEVIRTUAL org/nlogo/agent/World.maxPycor ()I
               I2D
              L4
-              LDC 5.0
+              LDC 5.0D
              L5
               DSTORE 4
               DSTORE 2
@@ -8039,7 +8039,7 @@ procedure SHOW-RULES:[RULES]{O---}:
               INVOKEVIRTUAL org/nlogo/agent/World.worldWidth ()I
               I2D
              L14
-              LDC 8.0
+              LDC 8.0D
              L15
               DSTORE 4
               DSTORE 2
@@ -8311,7 +8311,7 @@ procedure SHOW-RULES:[RULES]{O---}:
 [8]_asm_procedureshowrules_fd_10 "fd 18" double => void
       _constdouble:18.0 "18" => double
          L0
-          LDC 18.0
+          LDC 18.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -8726,7 +8726,7 @@ procedure SHOW-RULES:[RULES]{O---}:
 [11]_asm_procedureshowrules_fd_13 "fd 2" double => void
       _constdouble:2.0 "2" => double
          L0
-          LDC 2.0
+          LDC 2.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -9141,7 +9141,7 @@ procedure SHOW-RULES:[RULES]{O---}:
 [14]_asm_procedureshowrules_fd_16 "fd 2" double => void
       _constdouble:2.0 "2" => double
          L0
-          LDC 2.0
+          LDC 2.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -9266,7 +9266,7 @@ procedure SHOW-RULES:[RULES]{O---}:
           DUP
           ICONST_0
          L1
-          LDC 2.0
+          LDC 2.0D
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -9556,7 +9556,7 @@ procedure SHOW-RULES:[RULES]{O---}:
 [17]_asm_procedureshowrules_bk_19 "bk 2" double => void
       _constdouble:2.0 "2" => double
          L0
-          LDC 2.0
+          LDC 2.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -9700,7 +9700,7 @@ procedure SHOW-RULES:[RULES]{O---}:
 [20]_asm_procedureshowrules_fd_22 "fd 2" double => void
       _constdouble:2.0 "2" => double
          L0
-          LDC 2.0
+          LDC 2.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -9859,7 +9859,7 @@ procedure SHOW-RULES:[RULES]{O---}:
           DUP
           ICONST_0
          L1
-          LDC 3.0
+          LDC 3.0D
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -10319,7 +10319,7 @@ procedure SINGLE-CELL:[]{O---}:
           ASTORE 4
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L5
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -10520,7 +10520,7 @@ procedure SINGLE-CELL:[]{O---}:
           ASTORE 4
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L5
           NEW org/nlogo/nvm/RuntimePrimitiveException

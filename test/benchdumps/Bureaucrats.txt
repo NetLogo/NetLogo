@@ -19,11 +19,11 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -122,7 +122,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 5000.0
+          LDC 5000.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -277,7 +277,7 @@ procedure COLORIZE:[]{-TP-}:
           ATHROW
          L3
          FRAME SAME1 java/lang/Object
-          LDC 3.0
+          LDC 3.0D
          L4
           DSTORE 3
           ASTORE 2
@@ -640,7 +640,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
           ASTORE 4
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L6
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -921,7 +921,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 3.0
+              LDC 3.0D
              L4
               DSTORE 3
               ASTORE 2
@@ -1165,7 +1165,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
           ASTORE 4
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L6
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1262,7 +1262,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
           ATHROW
          L9
          FRAME SAME1 D
-          LDC 4.0
+          LDC 4.0D
          L10
           DSTORE 4
           DSTORE 2
@@ -1338,7 +1338,7 @@ procedure GO:[ACTIVE-PATCHES OVERLOADED-PATCHES]{O---}:
           ATHROW
          L7
          FRAME SAME1 D
-          LDC 4.0
+          LDC 4.0D
          L8
           DSTORE 4
           DSTORE 2
@@ -1917,7 +1917,7 @@ procedure SETUP:[]{O---}:
           // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          LDC 2.0
+          LDC 2.0D
          L4
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_4.world : Lorg/nlogo/agent/World;

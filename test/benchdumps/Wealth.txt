@@ -95,7 +95,7 @@ reporter procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedureareaofequalitytriangle_report_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L13
-          LDC 2.0
+          LDC 2.0D
          L14
           DSTORE 4
           DSTORE 2
@@ -147,7 +147,7 @@ reporter procedure AREA-OF-EQUALITY-TRIANGLE:[]{OTPL}:
           ATHROW
          L18
          FRAME FULL [org/nlogo/prim/_asm_procedureareaofequalitytriangle_report_0 org/nlogo/nvm/Context java/lang/Object T D] [D D]
-          LDC 2.0
+          LDC 2.0D
          L19
           DSTORE 4
           DSTORE 2
@@ -274,18 +274,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 48281.0
+          LDC 48281.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -384,7 +384,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 2400.0
+          LDC 2400.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -607,7 +607,7 @@ procedure GO:[]{O---}:
           INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
           DSTORE 2
           DLOAD 2
-          LDC -1.0
+          LDC -1.0D
           DCMPL
           IFNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1105,7 +1105,7 @@ reporter procedure GRAIN-AHEAD:[TOTAL HOW-FAR _repeatlocal:2]{-T--}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L2
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -2871,7 +2871,7 @@ procedure RECOLOR-PATCH:[]{-TP-}:
           TRYCATCHBLOCK L5 L6 L6 java/lang/ClassCastException
           TRYCATCHBLOCK L7 L8 L9 org/nlogo/api/AgentException
          L10
-          LDC 45.0
+          LDC 45.0D
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -2946,7 +2946,7 @@ procedure RECOLOR-PATCH:[]{-TP-}:
           DSTORE 2
           DLOAD 2
           INVOKESTATIC org/nlogo/api/Color.findCentralColorNumber (D)D
-          LDC 5.0
+          LDC 5.0D
           DSUB
           DSTORE 2
           DCONST_0
@@ -3021,14 +3021,14 @@ procedure RECOLOR-PATCH:[]{-TP-}:
          L18
          FRAME SAME
           DLOAD 10
-          LDC 10.0
+          LDC 10.0D
           DMUL
           DSTORE 10
           DLOAD 10
-          LDC 9.9999
+          LDC 9.9999D
           DCMPL
           IFLT L22
-          LDC 9.9999
+          LDC 9.9999D
           DSTORE 10
           GOTO L23
          L22
@@ -3112,7 +3112,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
               ASTORE 3
               ALOAD 3
               INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-              LDC -1
+              LDC -1L
               LCMP
               IFNE L0
               NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3343,7 +3343,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           ATHROW
          L7
          FRAME FULL [org/nlogo/prim/_asm_procedurerecolorturtles_ifelse_3 org/nlogo/nvm/Context java/lang/Object] [java/lang/Object D]
-          LDC 3.0
+          LDC 3.0D
          L8
           DSTORE 4
           DSTORE 2
@@ -3556,7 +3556,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           ATHROW
          L7
          FRAME FULL [org/nlogo/prim/_asm_procedurerecolorturtles_ifelse_6 org/nlogo/nvm/Context java/lang/Object] [java/lang/Object D]
-          LDC 2.0
+          LDC 2.0D
          L8
           DSTORE 4
           DSTORE 2
@@ -3567,7 +3567,7 @@ procedure RECOLOR-TURTLES:[MAX-WEALTH]{OTPL}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerecolorturtles_ifelse_6.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
-          LDC 3.0
+          LDC 3.0D
          L10
           DSTORE 4
           DSTORE 2
@@ -3842,12 +3842,12 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          LDC 90.0
+          LDC 90.0D
          L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 4
+          LDC 4L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L5
@@ -4024,7 +4024,7 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           GOTO L21
          L20
          FRAME FULL [org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_2 org/nlogo/nvm/Context D J] [D J]
-          LDC -1
+          LDC -1L
          L21
          FRAME FULL [org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_2 org/nlogo/nvm/Context D J] [D J J]
           LADD
@@ -4159,7 +4159,7 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           GOTO L11
          L10
          FRAME FULL [org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_3 org/nlogo/nvm/Context D J] [D J]
-          LDC -1
+          LDC -1L
          L11
          FRAME FULL [org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_3 org/nlogo/nvm/Context D J] [D J J]
           LADD
@@ -4289,7 +4289,7 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 50
+          LDC 50L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L10
@@ -4390,7 +4390,7 @@ procedure SET-INITIAL-TURTLE-VARS:[]{-T--}:
           GOTO L11
          L10
          FRAME FULL [org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_5 org/nlogo/nvm/Context D J] [D J]
-          LDC -1
+          LDC -1L
          L11
          FRAME FULL [org/nlogo/prim/_asm_proceduresetinitialturtlevars_setturtlevariable_5 org/nlogo/nvm/Context D J] [D J J]
           LADD
@@ -4702,7 +4702,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           _constdouble:100.0 "100.0" => double
         _observervariable:PERCENT-BEST-LAND "percent-best-land" => Object
          L0
-          LDC 100.0
+          LDC 100.0D
          L1
           DSTORE 2
           ALOAD 0
@@ -4882,7 +4882,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 5.0
+          LDC 5.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -5205,7 +5205,7 @@ procedure SETUP-PATCHES:[_repeatlocal:0 _repeatlocal:1]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 10.0
+          LDC 10.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -5789,7 +5789,7 @@ procedure SETUP-TURTLES:[]{O---}:
           GOTO L12
          L11
          FRAME FULL [org/nlogo/prim/_asm_proceduresetupturtles_setturtlevariable_6 org/nlogo/nvm/Context D J] [J]
-          LDC -1
+          LDC -1L
          L12
          FRAME FULL [org/nlogo/prim/_asm_proceduresetupturtles_setturtlevariable_6 org/nlogo/nvm/Context D J] [J J]
           LADD
@@ -6808,7 +6808,7 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 15.0
+              LDC 15.0D
              L4
               DSTORE 3
               ASTORE 2
@@ -6958,7 +6958,7 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 55.0
+              LDC 55.0D
              L4
               DSTORE 3
               ASTORE 2
@@ -7108,7 +7108,7 @@ procedure UPDATE-CLASS-HISTOGRAM:[]{OTPL}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 105.0
+              LDC 105.0D
              L4
               DSTORE 3
               ASTORE 2
@@ -7274,7 +7274,7 @@ procedure UPDATE-CLASS-PLOT:[]{OTPL}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 15.0
+              LDC 15.0D
              L4
               DSTORE 3
               ASTORE 2
@@ -7423,7 +7423,7 @@ procedure UPDATE-CLASS-PLOT:[]{OTPL}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 55.0
+              LDC 55.0D
              L4
               DSTORE 3
               ASTORE 2
@@ -7572,7 +7572,7 @@ procedure UPDATE-CLASS-PLOT:[]{OTPL}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 105.0
+              LDC 105.0D
              L4
               DSTORE 3
               ASTORE 2
@@ -7738,7 +7738,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
         _observervariable:NUM-PEOPLE "num-people" => Object
             TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
            L2
-            LDC 100.0
+            LDC 100.0D
            L3
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_div_5.world : Lorg/nlogo/agent/World;
@@ -7824,7 +7824,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L0
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -8572,7 +8572,7 @@ procedure UPDATE-LORENZ-AND-GINI-PLOTS:[SORTED-WEALTHS TOTAL-WEALTH WEALTH-SUM-S
             ALOAD 1
             INVOKEVIRTUAL org/nlogo/prim/_asm_procedureupdatelorenzandginiplots_mult_14.validDouble (DLorg/nlogo/nvm/Context;)D
            L10
-            LDC 100.0
+            LDC 100.0D
            L11
             DSTORE 4
             DSTORE 2

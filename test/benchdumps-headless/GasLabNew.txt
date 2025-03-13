@@ -15,18 +15,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 361.0
+          LDC 361.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -126,7 +126,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 17000.0
+          LDC 17000.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -397,7 +397,7 @@ procedure SETUP:[]{O---}:
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
          L5
-          LDC 2.0
+          LDC 2.0D
          L6
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_4.world : Lorg/nlogo/agent/World;
@@ -506,7 +506,7 @@ procedure SETUP:[]{O---}:
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
          L5
-          LDC 2.0
+          LDC 2.0D
          L6
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setobservervariable_5.world : Lorg/nlogo/agent/World;
@@ -931,7 +931,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 55.0
+              LDC 55.0D
              L4
               DSTORE 3
               ASTORE 2
@@ -1125,7 +1125,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 105.0
+              LDC 105.0D
              L4
               DSTORE 3
               ASTORE 2
@@ -1319,7 +1319,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 15.0
+              LDC 15.0D
              L4
               DSTORE 3
               ASTORE 2
@@ -2270,7 +2270,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L13
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -2418,7 +2418,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
           DSTORE 2
           DLOAD 2
-          LDC -1.0
+          LDC -1.0D
           DCMPL
           IFNE L1
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -2490,7 +2490,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
           DSTORE 2
           DLOAD 2
-          LDC -1.0
+          LDC -1.0D
           DCMPL
           IFNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -2515,7 +2515,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
           DSTORE 2
           DLOAD 2
-          LDC -1.0
+          LDC -1.0D
           DCMPL
           IFNE L6
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3112,7 +3112,7 @@ procedure GO:[OLD-CLOCK]{O---}:
           INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
           DSTORE 2
           DLOAD 2
-          LDC -1.0
+          LDC -1.0D
           DCMPL
           IFNE L4
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3128,7 +3128,7 @@ procedure GO:[OLD-CLOCK]{O---}:
          FRAME APPEND [D]
           DLOAD 2
          L5
-          LDC 360.0
+          LDC 360.0D
          L6
           DSTORE 4
           DSTORE 2
@@ -3200,7 +3200,7 @@ procedure GO:[OLD-CLOCK]{O---}:
               INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
               DSTORE 2
               DLOAD 2
-              LDC -1.0
+              LDC -1.0D
               DCMPL
               IFNE L6
               NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3261,7 +3261,7 @@ procedure GO:[OLD-CLOCK]{O---}:
               DLOAD 4
               DSUB
              L9
-              LDC 0.4
+              LDC 0.4D
              L10
               DSTORE 4
               DSTORE 2
@@ -3902,7 +3902,7 @@ procedure CALCULATE-PRESSURE:[]{OTPL}:
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
          L5
-          LDC 15.0
+          LDC 15.0D
          L6
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurecalculatepressure_setobservervariable_0.keptinstr5 : Lorg/nlogo/prim/_breedvariableof;
@@ -4443,7 +4443,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L5
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4578,7 +4578,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L5
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4720,7 +4720,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
                 ASTORE 3
                 ALOAD 3
                 INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-                LDC -1
+                LDC -1L
                 LCMP
                 IFNE L5
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -5450,7 +5450,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
             INVOKESTATIC java/lang/StrictMath.toRadians (D)D
             INVOKESTATIC java/lang/StrictMath.sin (D)D
            L20
-            LDC 2.0
+            LDC 2.0D
            L21
             DSTORE 4
             DSTORE 2
@@ -5734,7 +5734,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           // parameter final  value
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          LDC 180.0
+          LDC 180.0D
          L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -5939,7 +5939,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
             INVOKESTATIC java/lang/StrictMath.toRadians (D)D
             INVOKESTATIC java/lang/StrictMath.cos (D)D
            L20
-            LDC 2.0
+            LDC 2.0D
            L21
             DSTORE 4
             DSTORE 2
@@ -6196,7 +6196,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L6
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6268,7 +6268,7 @@ procedure BOUNCE:[NEW-PATCH NEW-PX NEW-PY]{-T--}:
             INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
             DSTORE 2
             DLOAD 2
-            LDC -1.0
+            LDC -1.0D
             DCMPL
             IFNE L1
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -6748,7 +6748,7 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
                L0
                 ALOAD 2
                 INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-                LDC -1
+                LDC -1L
                 LCMP
                 IFNE L11
                 NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -7444,7 +7444,7 @@ procedure CHECK-FOR-COLLISION:[CANDIDATE]{-T--}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -7634,7 +7634,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L5
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -7746,7 +7746,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 360.0
+          LDC 360.0D
          L1
           DSTORE 2
           DLOAD 2
@@ -8608,7 +8608,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
-          LDC 2.0
+          LDC 2.0D
          L5
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -8711,7 +8711,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
-          LDC 2.0
+          LDC 2.0D
          L5
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -9003,7 +9003,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
             TRYCATCHBLOCK L10 L11 L12 org/nlogo/api/AgentException
             TRYCATCHBLOCK L13 L14 L14 java/lang/ClassCastException
            L15
-            LDC 0.5
+            LDC 0.5D
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -9391,7 +9391,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           GOTO L19
          L18
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
           GOTO L19
          L17
          FRAME SAME1 D
@@ -9405,11 +9405,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           I2D
           DCMPL
           IFLE L21
-          LDC 90.0
+          LDC 90.0D
           GOTO L19
          L21
          FRAME SAME1 D
-          LDC 270.0
+          LDC 270.0D
           GOTO L19
          L20
          FRAME SAME1 D
@@ -9535,7 +9535,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -9848,7 +9848,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -9931,7 +9931,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
             TRYCATCHBLOCK L10 L11 L12 org/nlogo/api/AgentException
             TRYCATCHBLOCK L13 L14 L14 java/lang/ClassCastException
            L15
-            LDC 0.5
+            LDC 0.5D
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -10258,7 +10258,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -10451,7 +10451,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           GOTO L19
          L18
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
           GOTO L19
          L17
          FRAME SAME1 D
@@ -10465,11 +10465,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           I2D
           DCMPL
           IFLE L21
-          LDC 90.0
+          LDC 90.0D
           GOTO L19
          L21
          FRAME SAME1 D
-          LDC 270.0
+          LDC 270.0D
           GOTO L19
          L20
          FRAME SAME1 D
@@ -10623,7 +10623,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -10750,7 +10750,7 @@ procedure RECOLOR:[]{-T--}:
           ATHROW
          L3
          FRAME SAME1 java/lang/Object
-          LDC 5.0
+          LDC 5.0D
          L4
           DSTORE 3
           ASTORE 2
@@ -10914,7 +10914,7 @@ procedure RECOLOR:[]{-T--}:
           ATHROW
          L3
          FRAME SAME1 java/lang/Object
-          LDC 15.0
+          LDC 15.0D
          L4
           DSTORE 3
           ASTORE 2
@@ -11160,7 +11160,7 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
               ATHROW
              L6
              FRAME SAME1 java/lang/Object
-              LDC 45.0
+              LDC 45.0D
              L7
               DSTORE 3
               ASTORE 2
@@ -11492,7 +11492,7 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -11601,7 +11601,7 @@ procedure FADE-PATCHES:[TRACE-PATCHES]{OTPL}:
           ATHROW
          L9
          FRAME SAME1 D
-          LDC 0.4
+          LDC 0.4D
          L10
           DSTORE 4
           DSTORE 2
@@ -12671,7 +12671,7 @@ procedure SETUP-PARTICLE:[]{-T--}:
             TRYCATCHBLOCK L10 L11 L12 org/nlogo/api/AgentException
             TRYCATCHBLOCK L13 L14 L14 java/lang/ClassCastException
            L15
-            LDC 0.5
+            LDC 0.5D
            L0
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -12948,7 +12948,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           DLOAD 4
           DSUB
          L15
-          LDC 2.0
+          LDC 2.0D
          L16
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerandomposition_setxy_0.world : Lorg/nlogo/agent/World;
@@ -12982,7 +12982,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           DLOAD 4
           DMUL
          L19
-          LDC 2.0
+          LDC 2.0D
          L20
           DSTORE 4
           DSTORE 2
@@ -13038,7 +13038,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           DLOAD 4
           DSUB
          L27
-          LDC 2.0
+          LDC 2.0D
          L28
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerandomposition_setxy_0.world : Lorg/nlogo/agent/World;
@@ -13072,7 +13072,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           DLOAD 4
           DMUL
          L31
-          LDC 2.0
+          LDC 2.0D
          L32
           DSTORE 4
           DSTORE 2
@@ -13152,7 +13152,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           // parameter final  value
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          LDC 360.0
+          LDC 360.0D
          L4
           DSTORE 2
           DLOAD 2
@@ -13257,7 +13257,7 @@ procedure SETUP-PLOTZ:[]{OTPL}:
             ATHROW
            L4
            FRAME SAME1 D
-            LDC 6.0
+            LDC 6.0D
            L5
             DSTORE 4
             DSTORE 2
@@ -13353,7 +13353,7 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             ATHROW
            L4
            FRAME SAME1 D
-            LDC 2.0
+            LDC 2.0D
            L5
             DSTORE 4
             DSTORE 2
@@ -13411,7 +13411,7 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             ATHROW
            L4
            FRAME SAME1 D
-            LDC 6.0
+            LDC 6.0D
            L5
             DSTORE 4
             DSTORE 2
@@ -13579,7 +13579,7 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
             TRYCATCHBLOCK L4 L5 L5 java/lang/ClassCastException
            L6
-            LDC 0.5
+            LDC 0.5D
            L7
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduresetuphistograms_mult_15.world : Lorg/nlogo/agent/World;
@@ -13607,7 +13607,7 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             ATHROW
            L9
            FRAME FULL [org/nlogo/prim/_asm_proceduresetuphistograms_mult_15 org/nlogo/nvm/Context java/lang/Object] [D D]
-            LDC 2.0
+            LDC 2.0D
            L10
             DSTORE 4
             DSTORE 2
@@ -13647,7 +13647,7 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             ATHROW
            L14
            FRAME FULL [org/nlogo/prim/_asm_proceduresetuphistograms_mult_15 org/nlogo/nvm/Context java/lang/Object T D] [D D]
-            LDC 2.0
+            LDC 2.0D
            L15
             DSTORE 4
             DSTORE 2
@@ -13743,7 +13743,7 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             ATHROW
            L4
            FRAME SAME1 D
-            LDC 6.0
+            LDC 6.0D
            L5
             DSTORE 4
             DSTORE 2
@@ -13969,7 +13969,7 @@ procedure DO-PLOTTING:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
             DSTORE 2
             DLOAD 2
-            LDC -1.0
+            LDC -1.0D
             DCMPL
             IFNE L1
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -14204,7 +14204,7 @@ procedure DO-PLOTTING:[]{OTPL}:
           INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
           DSTORE 2
           DLOAD 2
-          LDC -1.0
+          LDC -1.0D
           DCMPL
           IFNE L1
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -14264,7 +14264,7 @@ procedure DO-PLOTTING:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
             DSTORE 2
             DLOAD 2
-            LDC -1.0
+            LDC -1.0D
             DCMPL
             IFNE L1
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -14375,7 +14375,7 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
                 ATHROW
                L3
                FRAME SAME1 java/lang/Object
-                LDC 15.0
+                LDC 15.0D
                L4
                 DSTORE 3
                 ASTORE 2
@@ -14553,7 +14553,7 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
                 ATHROW
                L3
                FRAME SAME1 java/lang/Object
-                LDC 55.0
+                LDC 55.0D
                L4
                 DSTORE 3
                 ASTORE 2
@@ -14731,7 +14731,7 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
                 ATHROW
                L3
                FRAME SAME1 java/lang/Object
-                LDC 105.0
+                LDC 105.0D
                L4
                 DSTORE 3
                 ASTORE 2
@@ -14956,7 +14956,7 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
                 ATHROW
                L3
                FRAME SAME1 java/lang/Object
-                LDC 15.0
+                LDC 15.0D
                L4
                 DSTORE 3
                 ASTORE 2
@@ -15134,7 +15134,7 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
                 ATHROW
                L3
                FRAME SAME1 java/lang/Object
-                LDC 55.0
+                LDC 55.0D
                L4
                 DSTORE 3
                 ASTORE 2
@@ -15312,7 +15312,7 @@ procedure PLOT-HISTOGRAMS:[]{OTPL}:
                 ATHROW
                L3
                FRAME SAME1 java/lang/Object
-                LDC 105.0
+                LDC 105.0D
                L4
                 DSTORE 3
                 ASTORE 2
@@ -16025,7 +16025,7 @@ procedure MAKE-CLOCKER:[]{O---}:
           ATHROW
          L9
          FRAME SAME1 D
-          LDC 5.0
+          LDC 5.0D
          L10
           DSTORE 4
           DSTORE 2
@@ -16059,7 +16059,7 @@ procedure MAKE-CLOCKER:[]{O---}:
           ATHROW
          L13
          FRAME FULL [org/nlogo/prim/_asm_proceduremakeclocker_setxy_3 org/nlogo/nvm/Context java/lang/Object T D] [D D]
-          LDC 5.0
+          LDC 5.0D
          L14
           DSTORE 4
           DSTORE 2

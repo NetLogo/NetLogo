@@ -12,18 +12,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 361.0
+          LDC 361.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -122,7 +122,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 20000.0
+          LDC 20000.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -330,7 +330,7 @@ procedure BOUNCE:[]{-T--}:
           ICONST_2
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D
          L11
-          LDC 270.0
+          LDC 270.0D
          L12
           DSTORE 4
           DSTORE 2
@@ -353,7 +353,7 @@ procedure BOUNCE:[]{-T--}:
           ICONST_2
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D
          L17
-          LDC 90.0
+          LDC 90.0D
          L18
           DSTORE 4
           DSTORE 2
@@ -459,7 +459,7 @@ procedure BOUNCE:[]{-T--}:
           ICONST_2
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D
          L36
-          LDC 90.0
+          LDC 90.0D
          L37
           DSTORE 4
           DSTORE 2
@@ -482,7 +482,7 @@ procedure BOUNCE:[]{-T--}:
           ICONST_2
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D
          L42
-          LDC 270.0
+          LDC 270.0D
          L43
           DSTORE 4
           DSTORE 2
@@ -535,7 +535,7 @@ procedure BOUNCE:[]{-T--}:
         _turtlevariabledouble:HEADING "heading" => double
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          LDC 180.0
+          LDC 180.0D
          L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -684,7 +684,7 @@ procedure BOUNCE:[]{-T--}:
           ICONST_2
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D
          L17
-          LDC 180.0
+          LDC 180.0D
          L18
           DSTORE 4
           DSTORE 2
@@ -790,7 +790,7 @@ procedure BOUNCE:[]{-T--}:
           ICONST_2
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D
          L36
-          LDC 180.0
+          LDC 180.0D
          L37
           DSTORE 4
           DSTORE 2
@@ -905,7 +905,7 @@ procedure CALCULATE-VELOCITY-COMPONENTS:[VCM]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 360
+          LDC 360L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L4
@@ -2576,7 +2576,7 @@ procedure CHECK-FOR-COLLISION:[]{-T--}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3010,7 +3010,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
                 ATHROW
                L3
                FRAME SAME1 java/lang/Object
-                LDC 55.0
+                LDC 55.0D
                L4
                 DSTORE 3
                 ASTORE 2
@@ -3143,7 +3143,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ASTORE 3
             ALOAD 3
             INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-            LDC -1
+            LDC -1L
             LCMP
             IFNE L0
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3280,7 +3280,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
                 ATHROW
                L3
                FRAME SAME1 java/lang/Object
-                LDC 105.0
+                LDC 105.0D
                L4
                 DSTORE 3
                 ASTORE 2
@@ -3413,7 +3413,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ASTORE 3
             ALOAD 3
             INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-            LDC -1
+            LDC -1L
             LCMP
             IFNE L0
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3550,7 +3550,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
                 ATHROW
                L3
                FRAME SAME1 java/lang/Object
-                LDC 15.0
+                LDC 15.0D
                L4
                 DSTORE 3
                 ASTORE 2
@@ -3683,7 +3683,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ASTORE 3
             ALOAD 3
             INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-            LDC -1
+            LDC -1L
             LCMP
             IFNE L0
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3911,7 +3911,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
                 ATHROW
                L3
                FRAME SAME1 java/lang/Object
-                LDC 55.0
+                LDC 55.0D
                L4
                 DSTORE 3
                 ASTORE 2
@@ -4044,7 +4044,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ASTORE 3
             ALOAD 3
             INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-            LDC -1
+            LDC -1L
             LCMP
             IFNE L0
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4181,7 +4181,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
                 ATHROW
                L3
                FRAME SAME1 java/lang/Object
-                LDC 105.0
+                LDC 105.0D
                L4
                 DSTORE 3
                 ASTORE 2
@@ -4314,7 +4314,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ASTORE 3
             ALOAD 3
             INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-            LDC -1
+            LDC -1L
             LCMP
             IFNE L0
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4451,7 +4451,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
                 ATHROW
                L3
                FRAME SAME1 java/lang/Object
-                LDC 15.0
+                LDC 15.0D
                L4
                 DSTORE 3
                 ASTORE 2
@@ -4584,7 +4584,7 @@ procedure DO-HISTOGRAMS:[]{OTPL}:
             ASTORE 3
             ALOAD 3
             INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-            LDC -1
+            LDC -1L
             LCMP
             IFNE L0
             NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -5069,7 +5069,7 @@ procedure FADE:[]{-TP-}:
           ATHROW
          L9
          FRAME SAME1 D
-          LDC 0.4
+          LDC 0.4D
          L10
           DSTORE 4
           DSTORE 2
@@ -5168,7 +5168,7 @@ procedure FADE:[]{-TP-}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedurefade_if_2.validDouble (DLorg/nlogo/nvm/Context;)D
          L7
-          LDC 40.0
+          LDC 40.0D
          L8
           DSTORE 4
           DSTORE 2
@@ -5329,7 +5329,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -5494,7 +5494,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -5659,7 +5659,7 @@ procedure GET-TURTLE2-INFO:[]{-T--}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -7168,7 +7168,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L15
-          LDC 2.0
+          LDC 2.0D
          L16
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerandomposition_setxy_0.world : Lorg/nlogo/agent/World;
@@ -7205,7 +7205,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L19
-          LDC 2.0
+          LDC 2.0D
          L20
           DSTORE 4
           DSTORE 2
@@ -7236,7 +7236,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           GOTO L24
          L23
          FRAME FULL [org/nlogo/prim/_asm_procedurerandomposition_setxy_0 org/nlogo/nvm/Context D J] [D J]
-          LDC -1
+          LDC -1L
          L24
          FRAME FULL [org/nlogo/prim/_asm_procedurerandomposition_setxy_0 org/nlogo/nvm/Context D J] [D J J]
           LADD
@@ -7320,7 +7320,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L32
-          LDC 2.0
+          LDC 2.0D
          L33
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerandomposition_setxy_0.world : Lorg/nlogo/agent/World;
@@ -7357,7 +7357,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedurerandomposition_setxy_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L36
-          LDC 2.0
+          LDC 2.0D
          L37
           DSTORE 4
           DSTORE 2
@@ -7388,7 +7388,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           GOTO L41
          L40
          FRAME FULL [org/nlogo/prim/_asm_procedurerandomposition_setxy_0 org/nlogo/nvm/Context D J] [D D J]
-          LDC -1
+          LDC -1L
          L41
          FRAME FULL [org/nlogo/prim/_asm_procedurerandomposition_setxy_0 org/nlogo/nvm/Context D J] [D D J J]
           LADD
@@ -7523,7 +7523,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L0
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -7625,7 +7625,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ATHROW
          L11
          FRAME FULL [org/nlogo/prim/_asm_procedurerecolorturtle_ifelse_0 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
-          LDC 0.5
+          LDC 0.5D
          L15
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerecolorturtle_ifelse_0.world : Lorg/nlogo/agent/World;
@@ -7782,7 +7782,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ASTORE 4
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L6
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -7937,7 +7937,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L0
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -8039,7 +8039,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ATHROW
          L11
          FRAME FULL [org/nlogo/prim/_asm_procedurerecolorturtle_ifelse_5 org/nlogo/nvm/Context java/lang/Object java/lang/Object] [java/lang/Object]
-          LDC 1.5
+          LDC 1.5D
          L15
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_procedurerecolorturtle_ifelse_5.world : Lorg/nlogo/agent/World;
@@ -8196,7 +8196,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ASTORE 4
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L6
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -8383,7 +8383,7 @@ procedure RECOLOR-TURTLE:[THE-TURTLE]{OTPL}:
           ASTORE 4
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L6
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -9103,7 +9103,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           GOTO L25
          L24
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
          L25
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_2 org/nlogo/nvm/Context D D] [D D]
           GOTO L26
@@ -9117,11 +9117,11 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DCONST_0
           DCMPL
           IFLE L28
-          LDC 90.0
+          LDC 90.0D
           GOTO L29
          L28
          FRAME SAME1 D
-          LDC 270.0
+          LDC 270.0D
          L29
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_2 org/nlogo/nvm/Context D D] [D D]
           GOTO L26
@@ -9132,11 +9132,11 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          LDC 360.0D
           DADD
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_2.validDouble (DLorg/nlogo/nvm/Context;)D
-          LDC 360.0
+          LDC 360.0D
           DREM
          L26
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_2 org/nlogo/nvm/Context D D] [D D]
@@ -9411,7 +9411,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ATHROW
          L19
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
          L20
           DSTORE 4
           DSTORE 2
@@ -9533,7 +9533,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           GOTO L27
          L26
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
          L27
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_5 org/nlogo/nvm/Context D D] [D D]
           GOTO L28
@@ -9547,11 +9547,11 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DCONST_0
           DCMPL
           IFLE L30
-          LDC 90.0
+          LDC 90.0D
           GOTO L31
          L30
          FRAME SAME1 D
-          LDC 270.0
+          LDC 270.0D
          L31
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_5 org/nlogo/nvm/Context D D] [D D]
           GOTO L28
@@ -9562,11 +9562,11 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          LDC 360.0D
           DADD
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
-          LDC 360.0
+          LDC 360.0D
           DREM
          L28
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_5 org/nlogo/nvm/Context D D] [D D]
@@ -9841,7 +9841,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ATHROW
          L19
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
          L20
           DSTORE 4
           DSTORE 2
@@ -9963,7 +9963,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           GOTO L27
          L26
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
          L27
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_8 org/nlogo/nvm/Context D D] [D D]
           GOTO L28
@@ -9977,11 +9977,11 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DCONST_0
           DCMPL
           IFLE L30
-          LDC 90.0
+          LDC 90.0D
           GOTO L31
          L30
          FRAME SAME1 D
-          LDC 270.0
+          LDC 270.0D
          L31
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_8 org/nlogo/nvm/Context D D] [D D]
           GOTO L28
@@ -9992,11 +9992,11 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          LDC 360.0D
           DADD
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_8.validDouble (DLorg/nlogo/nvm/Context;)D
-          LDC 360.0
+          LDC 360.0D
           DREM
          L28
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_8 org/nlogo/nvm/Context D D] [D D]
@@ -10378,7 +10378,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           GOTO L25
          L24
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
          L25
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_11 org/nlogo/nvm/Context D D] [D D]
           GOTO L26
@@ -10392,11 +10392,11 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DCONST_0
           DCMPL
           IFLE L28
-          LDC 90.0
+          LDC 90.0D
           GOTO L29
          L28
          FRAME SAME1 D
-          LDC 270.0
+          LDC 270.0D
          L29
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_11 org/nlogo/nvm/Context D D] [D D]
           GOTO L26
@@ -10407,11 +10407,11 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          LDC 360.0D
           DADD
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_11.validDouble (DLorg/nlogo/nvm/Context;)D
-          LDC 360.0
+          LDC 360.0D
           DREM
          L26
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_11 org/nlogo/nvm/Context D D] [D D]
@@ -10774,7 +10774,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ASTORE 4
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L8
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -11200,7 +11200,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           GOTO L25
          L24
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
          L25
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_17 org/nlogo/nvm/Context D D] [D D]
           GOTO L26
@@ -11214,11 +11214,11 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DCONST_0
           DCMPL
           IFLE L28
-          LDC 90.0
+          LDC 90.0D
           GOTO L29
          L28
          FRAME SAME1 D
-          LDC 270.0
+          LDC 270.0D
          L29
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_17 org/nlogo/nvm/Context D D] [D D]
           GOTO L26
@@ -11229,11 +11229,11 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          LDC 360.0D
           DADD
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_17.validDouble (DLorg/nlogo/nvm/Context;)D
-          LDC 360.0
+          LDC 360.0D
           DREM
          L26
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_17 org/nlogo/nvm/Context D D] [D D]
@@ -11508,7 +11508,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ATHROW
          L19
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
          L20
           DSTORE 4
           DSTORE 2
@@ -11630,7 +11630,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           GOTO L27
          L26
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
          L27
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_20 org/nlogo/nvm/Context D D] [D D]
           GOTO L28
@@ -11644,11 +11644,11 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DCONST_0
           DCMPL
           IFLE L30
-          LDC 90.0
+          LDC 90.0D
           GOTO L31
          L30
          FRAME SAME1 D
-          LDC 270.0
+          LDC 270.0D
          L31
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_20 org/nlogo/nvm/Context D D] [D D]
           GOTO L28
@@ -11659,11 +11659,11 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          LDC 360.0D
           DADD
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_20.validDouble (DLorg/nlogo/nvm/Context;)D
-          LDC 360.0
+          LDC 360.0D
           DREM
          L28
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_20 org/nlogo/nvm/Context D D] [D D]
@@ -11938,7 +11938,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ATHROW
          L19
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
          L20
           DSTORE 4
           DSTORE 2
@@ -12060,7 +12060,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           GOTO L27
          L26
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
          L27
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_23 org/nlogo/nvm/Context D D] [D D]
           GOTO L28
@@ -12074,11 +12074,11 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DCONST_0
           DCMPL
           IFLE L30
-          LDC 90.0
+          LDC 90.0D
           GOTO L31
          L30
          FRAME SAME1 D
-          LDC 270.0
+          LDC 270.0D
          L31
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_23 org/nlogo/nvm/Context D D] [D D]
           GOTO L28
@@ -12089,11 +12089,11 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          LDC 360.0D
           DADD
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_23.validDouble (DLorg/nlogo/nvm/Context;)D
-          LDC 360.0
+          LDC 360.0D
           DREM
          L28
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_23 org/nlogo/nvm/Context D D] [D D]
@@ -12475,7 +12475,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           GOTO L25
          L24
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
          L25
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_26 org/nlogo/nvm/Context D D] [D D]
           GOTO L26
@@ -12489,11 +12489,11 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DCONST_0
           DCMPL
           IFLE L28
-          LDC 90.0
+          LDC 90.0D
           GOTO L29
          L28
          FRAME SAME1 D
-          LDC 270.0
+          LDC 270.0D
          L29
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_26 org/nlogo/nvm/Context D D] [D D]
           GOTO L26
@@ -12504,11 +12504,11 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          LDC 360.0D
           DADD
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_26.validDouble (DLorg/nlogo/nvm/Context;)D
-          LDC 360.0
+          LDC 360.0D
           DREM
          L26
          FRAME FULL [org/nlogo/prim/_asm_proceduresetnewspeedandheadings_setturtlevariable_26 org/nlogo/nvm/Context D D] [D D]
@@ -12662,7 +12662,7 @@ procedure SET-NEW-SPEED-AND-HEADINGS:[NEW-NEW-SPEED NEW-HEADING]{-T--}:
           ASTORE 4
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L8
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -12866,7 +12866,7 @@ procedure SETUP:[]{O---}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduresetup_setobservervariable_0.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
-          LDC 100.0
+          LDC 100.0D
          L10
           DSTORE 4
           DSTORE 2
@@ -13193,7 +13193,7 @@ procedure SETUP:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 360
+          LDC 360L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L1
@@ -13519,7 +13519,7 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             ATHROW
            L4
            FRAME SAME1 D
-            LDC 2.0
+            LDC 2.0D
            L5
             DSTORE 4
             DSTORE 2
@@ -13575,7 +13575,7 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             ATHROW
            L4
            FRAME SAME1 D
-            LDC 6.0
+            LDC 6.0D
            L5
             DSTORE 4
             DSTORE 2
@@ -13682,7 +13682,7 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
             TRYCATCHBLOCK L4 L5 L5 java/lang/ClassCastException
            L6
-            LDC 0.5
+            LDC 0.5D
            L7
             ALOAD 0
             GETFIELD org/nlogo/prim/_asm_proceduresetuphistograms_mult_13.world : Lorg/nlogo/agent/World;
@@ -13710,7 +13710,7 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             ATHROW
            L9
            FRAME FULL [org/nlogo/prim/_asm_proceduresetuphistograms_mult_13 org/nlogo/nvm/Context java/lang/Object] [D D]
-            LDC 2.0
+            LDC 2.0D
            L10
             DSTORE 4
             DSTORE 2
@@ -13756,7 +13756,7 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             ATHROW
            L14
            FRAME FULL [org/nlogo/prim/_asm_proceduresetuphistograms_mult_13 org/nlogo/nvm/Context java/lang/Object T D] [D D]
-            LDC 2.0
+            LDC 2.0D
            L15
             DSTORE 4
             DSTORE 2
@@ -13856,7 +13856,7 @@ procedure SETUP-HISTOGRAMS:[]{OTPL}:
             ATHROW
            L4
            FRAME SAME1 D
-            LDC 6.0
+            LDC 6.0D
            L5
             DSTORE 4
             DSTORE 2
@@ -14100,7 +14100,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           TRYCATCHBLOCK L13 L14 L14 java/lang/ClassCastException
           TRYCATCHBLOCK L15 L16 L17 org/nlogo/api/AgentException
          L18
-          LDC 0.5
+          LDC 0.5D
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -14313,7 +14313,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 55.0
+              LDC 55.0D
              L4
               DSTORE 3
               ASTORE 2
@@ -14484,7 +14484,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 105.0
+              LDC 105.0D
              L4
               DSTORE 3
               ASTORE 2
@@ -14655,7 +14655,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
               ATHROW
              L3
              FRAME SAME1 java/lang/Object
-              LDC 15.0
+              LDC 15.0D
              L4
               DSTORE 3
               ASTORE 2
@@ -15122,7 +15122,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
                   ASTORE 3
                   ALOAD 3
                   INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-                  LDC -1
+                  LDC -1L
                   LCMP
                   IFNE L0
                   NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -15253,7 +15253,7 @@ procedure UPDATE-VARIABLES:[]{OTPL}:
           ATHROW
          L6
          FRAME SAME1 D
-          LDC 1.2
+          LDC 1.2D
          L7
           DSTORE 4
           DSTORE 2

@@ -13,18 +13,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 5454.0
+          LDC 5454.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -124,7 +124,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 20.0
+          LDC 20.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -474,7 +474,7 @@ procedure SETUP:[]{O---}:
           TRYCATCHBLOCK L5 L6 L6 java/lang/ClassCastException
           TRYCATCHBLOCK L7 L8 L9 org/nlogo/api/AgentException
          L10
-          LDC 15.0
+          LDC 15.0D
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -549,7 +549,7 @@ procedure SETUP:[]{O---}:
           DSTORE 2
           DLOAD 2
           INVOKESTATIC org/nlogo/api/Color.findCentralColorNumber (D)D
-          LDC 5.0
+          LDC 5.0D
           DSUB
           DSTORE 2
           DCONST_0
@@ -624,14 +624,14 @@ procedure SETUP:[]{O---}:
          L18
          FRAME SAME
           DLOAD 10
-          LDC 10.0
+          LDC 10.0D
           DMUL
           DSTORE 10
           DLOAD 10
-          LDC 9.9999
+          LDC 9.9999D
           DCMPL
           IFLT L22
-          LDC 9.9999
+          LDC 9.9999D
           DSTORE 10
           GOTO L23
          L22
@@ -918,7 +918,7 @@ procedure GO:[]{O---}:
           TRYCATCHBLOCK L5 L6 L6 java/lang/ClassCastException
           TRYCATCHBLOCK L7 L8 L9 org/nlogo/api/AgentException
          L10
-          LDC 15.0
+          LDC 15.0D
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -993,7 +993,7 @@ procedure GO:[]{O---}:
           DSTORE 2
           DLOAD 2
           INVOKESTATIC org/nlogo/api/Color.findCentralColorNumber (D)D
-          LDC 5.0
+          LDC 5.0D
           DSUB
           DSTORE 2
           DCONST_0
@@ -1068,14 +1068,14 @@ procedure GO:[]{O---}:
          L18
          FRAME SAME
           DLOAD 10
-          LDC 10.0
+          LDC 10.0D
           DMUL
           DSTORE 10
           DLOAD 10
-          LDC 9.9999
+          LDC 9.9999D
           DCMPL
           IFLT L22
-          LDC 9.9999
+          LDC 9.9999D
           DSTORE 10
           GOTO L23
          L22

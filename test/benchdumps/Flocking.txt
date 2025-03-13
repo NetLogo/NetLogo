@@ -377,7 +377,7 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           GOTO L21
          L20
          FRAME SAME
-          LDC 180.0
+          LDC 180.0D
          L21
          FRAME SAME1 D
           GOTO L22
@@ -391,11 +391,11 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           DCONST_0
           DCMPL
           IFLE L24
-          LDC 90.0
+          LDC 90.0D
           GOTO L25
          L24
          FRAME SAME
-          LDC 270.0
+          LDC 270.0D
          L25
          FRAME SAME1 D
           GOTO L22
@@ -406,11 +406,11 @@ reporter procedure AVERAGE-FLOCKMATE-HEADING:[]{-T--}:
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          LDC 360.0D
           DADD
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedureaverageflockmateheading_report_0.validDouble (DLorg/nlogo/nvm/Context;)D
-          LDC 360.0
+          LDC 360.0D
           DREM
          L22
          FRAME SAME1 D
@@ -561,7 +561,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
                   ATHROW
                  L3
                  FRAME SAME1 D
-                  LDC 180.0
+                  LDC 180.0D
                  L4
                   DSTORE 4
                   DSTORE 2
@@ -664,7 +664,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
                   ATHROW
                  L3
                  FRAME SAME1 D
-                  LDC 180.0
+                  LDC 180.0D
                  L4
                   DSTORE 4
                   DSTORE 2
@@ -916,7 +916,7 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           GOTO L21
          L20
          FRAME SAME
-          LDC 180.0
+          LDC 180.0D
          L21
          FRAME SAME1 D
           GOTO L22
@@ -930,11 +930,11 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           DCONST_0
           DCMPL
           IFLE L24
-          LDC 90.0
+          LDC 90.0D
           GOTO L25
          L24
          FRAME SAME
-          LDC 270.0
+          LDC 270.0D
          L25
          FRAME SAME1 D
           GOTO L22
@@ -945,11 +945,11 @@ reporter procedure AVERAGE-HEADING-TOWARDS-FLOCKMATES:[]{-T--}:
           DLOAD 4
           INVOKESTATIC java/lang/StrictMath.atan2 (DD)D
           INVOKESTATIC java/lang/StrictMath.toDegrees (D)D
-          LDC 360.0
+          LDC 360.0D
           DADD
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedureaverageheadingtowardsflockmates_report_0.validDouble (DLorg/nlogo/nvm/Context;)D
-          LDC 360.0
+          LDC 360.0D
           DREM
          L22
          FRAME SAME1 D
@@ -1045,18 +1045,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 5454.0
+          LDC 5454.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -1155,7 +1155,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 700.0
+          LDC 700.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -1591,7 +1591,7 @@ procedure FIND-NEAREST-NEIGHBOR:[]{-T--}:
              FRAME SAME
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-              LDC -1
+              LDC -1L
               LCMP
               IFNE L5
               NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1845,7 +1845,7 @@ procedure FLOCK:[]{-T--}:
          FRAME FULL [org/nlogo/prim/_asm_procedureflock_ifelse_3 org/nlogo/nvm/Context org/nlogo/agent/Agent] []
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L8
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -2221,7 +2221,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           DLOAD 2
          L11
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
          L12
           DSTORE 4
           DSTORE 2
@@ -2608,7 +2608,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremysubtractheadings_report_4.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
-          LDC 360.0
+          LDC 360.0D
          L10
           DSTORE 4
           DSTORE 2
@@ -2770,7 +2770,7 @@ reporter procedure MY-SUBTRACT-HEADINGS:[H1 H2]{OTPL}:
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduremysubtractheadings_report_6.validDouble (DLorg/nlogo/nvm/Context;)D
          L9
-          LDC 360.0
+          LDC 360.0D
          L10
           DSTORE 4
           DSTORE 2
@@ -2915,7 +2915,7 @@ procedure SEPARATE:[]{-T--}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3068,12 +3068,12 @@ procedure SETUP:[]{O---}:
           // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          LDC 43.0
+          LDC 43.0D
          L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 7
+          LDC 7L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L5
@@ -3238,7 +3238,7 @@ procedure SETUP:[]{O---}:
       _randomfloat "random-float 360" double => double
         _constdouble:360.0 "360" => double
          L0
-          LDC 360.0
+          LDC 360.0D
          L1
           DSTORE 2
           ALOAD 0

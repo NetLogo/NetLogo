@@ -13,18 +13,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 579.0
+          LDC 579.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -123,7 +123,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 10000.0
+          LDC 10000.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -498,7 +498,7 @@ procedure CATCH-SHEEP:[]{-T--}:
           ASTORE 4
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L8
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -862,7 +862,7 @@ procedure EAT-GRASS:[]{-T--}:
           ATHROW
          L3
          FRAME SAME1 java/lang/Object
-          LDC 55.0
+          LDC 55.0D
          L4
           DSTORE 3
           ASTORE 2
@@ -1977,7 +1977,7 @@ procedure GRAPH:[]{OTPL}:
                 ATHROW
                L3
                FRAME SAME1 java/lang/Object
-                LDC 55.0
+                LDC 55.0D
                L4
                 DSTORE 3
                 ASTORE 2
@@ -2088,7 +2088,7 @@ procedure GRAPH:[]{OTPL}:
             ILOAD 5
             I2D
            L6
-            LDC 4.0
+            LDC 4.0D
            L7
             DSTORE 4
             DSTORE 2
@@ -2157,7 +2157,7 @@ procedure GROW-GRASS:[]{-TP-}:
           ATHROW
          L3
          FRAME SAME1 java/lang/Object
-          LDC 35.0
+          LDC 35.0D
          L4
           DSTORE 3
           ASTORE 2
@@ -2471,14 +2471,14 @@ procedure MOVE:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 50
+          LDC 50L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L1
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 50
+          LDC 50L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L2
@@ -2539,7 +2539,7 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           _constdouble:100.0 "100" => double
         _observervariable:SHEEP-REPRODUCE "sheep-reproduce" => Object
          L0
-          LDC 100.0
+          LDC 100.0D
          L1
           DSTORE 2
           ALOAD 0
@@ -2665,7 +2665,7 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           ATHROW
          L9
          FRAME SAME1 D
-          LDC 2.0
+          LDC 2.0D
          L10
           DSTORE 4
           DSTORE 2
@@ -2745,7 +2745,7 @@ procedure REPRODUCE-SHEEP:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 360
+          LDC 360L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L1
@@ -2805,7 +2805,7 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           _constdouble:100.0 "100" => double
         _observervariable:WOLF-REPRODUCE "wolf-reproduce" => Object
          L0
-          LDC 100.0
+          LDC 100.0D
          L1
           DSTORE 2
           ALOAD 0
@@ -2931,7 +2931,7 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           ATHROW
          L9
          FRAME SAME1 D
-          LDC 2.0
+          LDC 2.0D
          L10
           DSTORE 4
           DSTORE 2
@@ -3011,7 +3011,7 @@ procedure REPRODUCE-WOLVES:[]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 360
+          LDC 360L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L1
@@ -3313,7 +3313,7 @@ procedure SETUP:[]{O---}:
           GOTO L10
          L9
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setpatchvariable_5 org/nlogo/nvm/Context D J] [J]
-          LDC -1
+          LDC -1L
          L10
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setpatchvariable_5 org/nlogo/nvm/Context D J] [J J]
           LADD
@@ -3392,7 +3392,7 @@ procedure SETUP:[]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 2
+          LDC 2L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L1
@@ -3601,7 +3601,7 @@ procedure SETUP:[]{O---}:
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
          L5
-          LDC 2.0
+          LDC 2.0D
          L6
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setturtlevariable_12.world : Lorg/nlogo/agent/World;
@@ -3775,7 +3775,7 @@ procedure SETUP:[]{O---}:
           GOTO L7
          L6
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setxy_14 org/nlogo/nvm/Context D J] [J]
-          LDC -1
+          LDC -1L
          L7
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setxy_14 org/nlogo/nvm/Context D J] [J J]
           LADD
@@ -3838,7 +3838,7 @@ procedure SETUP:[]{O---}:
           GOTO L14
          L13
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setxy_14 org/nlogo/nvm/Context D J] [D J]
-          LDC -1
+          LDC -1L
          L14
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setxy_14 org/nlogo/nvm/Context D J] [D J J]
           LADD
@@ -4066,7 +4066,7 @@ procedure SETUP:[]{O---}:
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L4 org/nlogo/api/AgentException
          L5
-          LDC 2.0
+          LDC 2.0D
          L6
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setturtlevariable_19.world : Lorg/nlogo/agent/World;
@@ -4240,7 +4240,7 @@ procedure SETUP:[]{O---}:
           GOTO L7
          L6
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setxy_21 org/nlogo/nvm/Context D J] [J]
-          LDC -1
+          LDC -1L
          L7
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setxy_21 org/nlogo/nvm/Context D J] [J J]
           LADD
@@ -4303,7 +4303,7 @@ procedure SETUP:[]{O---}:
           GOTO L14
          L13
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setxy_21 org/nlogo/nvm/Context D J] [D J]
-          LDC -1
+          LDC -1L
          L14
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setxy_21 org/nlogo/nvm/Context D J] [D J J]
           LADD

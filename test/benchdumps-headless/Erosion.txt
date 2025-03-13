@@ -13,18 +13,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 19192.0
+          LDC 19192.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -124,7 +124,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 250.0
+          LDC 250.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -480,7 +480,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           // parameter final  arg0
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          LDC -100.0
+          LDC -100.0D
          L4
           DCONST_0
          L5
@@ -530,7 +530,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           DLOAD 4
           DMUL
          L11
-          LDC 100.0
+          LDC 100.0D
          L12
           DSTORE 4
           DSTORE 2
@@ -541,7 +541,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 100
+          LDC 100L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L14
@@ -601,7 +601,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 125
+          LDC 125L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L4
@@ -944,7 +944,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
              FRAME SAME1 org/nlogo/agent/Patch
               INVOKEVIRTUAL org/nlogo/agent/Patch.getNeighbors ()Lorg/nlogo/agent/IndexedAgentSet;
              L4
-              LDC 8.0
+              LDC 8.0D
              L5
               DSTORE 3
               ASTORE 2
@@ -1626,7 +1626,7 @@ procedure SETUP:[_repeatlocal:0]{O---}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1860,7 +1860,7 @@ procedure RECOLOR:[]{-TP-}:
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
          L8
-          LDC 9.9
+          LDC 9.9D
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -1901,9 +1901,9 @@ procedure RECOLOR:[]{-TP-}:
           ATHROW
          L10
          FRAME FULL [org/nlogo/prim/_asm_procedurerecolor_setpatchvariable_1 org/nlogo/nvm/Context java/lang/Object] [D D]
-          LDC -250.0
+          LDC -250.0D
          L11
-          LDC 100.0
+          LDC 100.0D
          L12
           DSTORE 8
           DSTORE 6
@@ -1911,7 +1911,7 @@ procedure RECOLOR:[]{-TP-}:
           DSTORE 2
           DLOAD 2
           INVOKESTATIC org/nlogo/api/Color.findCentralColorNumber (D)D
-          LDC 5.0
+          LDC 5.0D
           DSUB
           DSTORE 2
           DCONST_0
@@ -1986,14 +1986,14 @@ procedure RECOLOR:[]{-TP-}:
          L15
          FRAME SAME
           DLOAD 10
-          LDC 10.0
+          LDC 10.0D
           DMUL
           DSTORE 10
           DLOAD 10
-          LDC 9.9999
+          LDC 9.9999D
           DCMPL
           IFLT L19
-          LDC 9.9999
+          LDC 9.9999D
           DSTORE 10
           GOTO L20
          L19
@@ -2072,7 +2072,7 @@ procedure RECOLOR:[]{-TP-}:
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L5 org/nlogo/api/AgentException
          L6
-          LDC 105.0
+          LDC 105.0D
          L7
           NEW org/nlogo/api/LogoListBuilder
           DUP
@@ -2173,9 +2173,9 @@ procedure RECOLOR:[]{-TP-}:
           ALOAD 5
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
          L17
-          LDC 100.0
+          LDC 100.0D
          L18
-          LDC -10.0
+          LDC -10.0D
          L19
           DSTORE 8
           DSTORE 6
@@ -2183,7 +2183,7 @@ procedure RECOLOR:[]{-TP-}:
           DSTORE 2
           DLOAD 2
           INVOKESTATIC org/nlogo/api/Color.findCentralColorNumber (D)D
-          LDC 5.0
+          LDC 5.0D
           DSUB
           DSTORE 2
           DCONST_0
@@ -2258,14 +2258,14 @@ procedure RECOLOR:[]{-TP-}:
          L22
          FRAME SAME
           DLOAD 10
-          LDC 10.0
+          LDC 10.0D
           DMUL
           DSTORE 10
           DLOAD 10
-          LDC 9.9999
+          LDC 9.9999D
           DCMPL
           IFLT L26
-          LDC 9.9999
+          LDC 9.9999D
           DSTORE 10
           GOTO L27
          L26
@@ -2436,7 +2436,7 @@ procedure SHOW-WATER:[]{OTPL}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -2638,7 +2638,7 @@ procedure HIDE-WATER:[]{OTPL}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -2802,7 +2802,7 @@ procedure GO:[]{O---}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3123,7 +3123,7 @@ procedure GO:[]{O---}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3371,7 +3371,7 @@ procedure GO:[]{O---}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3577,7 +3577,7 @@ procedure GO:[]{O---}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -3906,7 +3906,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
           DUP
          L23
-          LDC 0.5
+          LDC 0.5D
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -4008,7 +4008,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L30
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4147,7 +4147,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L39
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4747,7 +4747,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           INVOKEVIRTUAL org/nlogo/api/LogoListBuilder.add (Ljava/lang/Object;)V
           DUP
          L23
-          LDC 0.5
+          LDC 0.5D
          L3
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -4849,7 +4849,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L30
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4988,7 +4988,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L39
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -5396,7 +5396,7 @@ procedure FLOW:[TARGET AMOUNT EROSION]{-TP-}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException

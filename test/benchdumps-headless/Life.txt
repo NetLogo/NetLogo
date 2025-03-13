@@ -13,18 +13,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 22.0
+          LDC 22.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -124,7 +124,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 500.0
+          LDC 500.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -988,7 +988,7 @@ procedure GO:[]{O---}:
           ATHROW
          L3
          FRAME SAME1 java/lang/Object
-          LDC 3.0
+          LDC 3.0D
          L4
           DSTORE 3
           ASTORE 2
@@ -1088,7 +1088,7 @@ procedure GO:[]{O---}:
           ATHROW
          L3
          FRAME SAME1 java/lang/Object
-          LDC 2.0
+          LDC 2.0D
          L4
           DSTORE 3
           ASTORE 2

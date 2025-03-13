@@ -12,18 +12,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 362.0
+          LDC 362.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -122,7 +122,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 1000.0
+          LDC 1000.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -290,7 +290,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Turtle.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -638,7 +638,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Turtle.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -852,7 +852,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           ICONST_1
           AALOAD
          L1
-          LDC 9.0
+          LDC 9.0D
          L2
           DSTORE 3
           ASTORE 2
@@ -1749,7 +1749,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
           TRYCATCHBLOCK L5 L6 L7 org/nlogo/api/AgentException
          L8
-          LDC 15.0
+          LDC 15.0D
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -1792,7 +1792,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
          FRAME FULL [org/nlogo/prim/_asm_procedurerecolorpatches_setpatchvariable_2 org/nlogo/nvm/Context java/lang/Object] [D D]
           DCONST_0
          L11
-          LDC 500.0
+          LDC 500.0D
          L12
           DSTORE 8
           DSTORE 6
@@ -1800,7 +1800,7 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
           DSTORE 2
           DLOAD 2
           INVOKESTATIC org/nlogo/api/Color.findCentralColorNumber (D)D
-          LDC 5.0
+          LDC 5.0D
           DSUB
           DSTORE 2
           DCONST_0
@@ -1875,14 +1875,14 @@ procedure RECOLOR-PATCHES:[]{OTPL}:
          L15
          FRAME SAME
           DLOAD 10
-          LDC 10.0
+          LDC 10.0D
           DMUL
           DSTORE 10
           DLOAD 10
-          LDC 9.9999
+          LDC 9.9999D
           DCMPL
           IFLT L19
-          LDC 9.9999
+          LDC 9.9999D
           DSTORE 10
           GOTO L20
          L19
@@ -2030,7 +2030,7 @@ procedure SETUP:[]{O---}:
           ASTORE 4
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L5
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -2314,7 +2314,7 @@ procedure SETUP:[]{O---}:
           GOTO L21
          L20
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_6 org/nlogo/nvm/Context D J] [D J]
-          LDC -1
+          LDC -1L
          L21
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_6 org/nlogo/nvm/Context D J] [D J J]
           LADD
@@ -2526,7 +2526,7 @@ procedure SETUP:[]{O---}:
           GOTO L21
          L20
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_7 org/nlogo/nvm/Context D J] [D J]
-          LDC -1
+          LDC -1L
          L21
          FRAME FULL [org/nlogo/prim/_asm_proceduresetup_setturtlevariable_7 org/nlogo/nvm/Context D J] [D J J]
           LADD
@@ -3204,7 +3204,7 @@ procedure STEP:[TARGET]{-T--}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
-          LDC 100
+          LDC 100L
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextLong (J)J
           L2D
          L8

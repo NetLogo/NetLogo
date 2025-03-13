@@ -12,18 +12,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 2929.0
+          LDC 2929.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -130,7 +130,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 2000000.0
+          LDC 2000000.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -378,7 +378,7 @@ procedure FLIP:[]{-TP-}:
           ATHROW
          L12
          FRAME SAME1 D
-          LDC 2.0
+          LDC 2.0D
          L2
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -581,7 +581,7 @@ procedure GO:[]{O---}:
           ASTORE 4
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L8
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1489,7 +1489,7 @@ procedure UPDATE:[EDIFF]{-TP-}:
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
           TRYCATCHBLOCK L3 L4 L4 java/lang/ClassCastException
          L5
-          LDC 2.0
+          LDC 2.0D
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -1963,7 +1963,7 @@ procedure UPDATE-PLOT:[]{OTPL}:
             INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
             DSTORE 2
             DLOAD 2
-            LDC -1.0
+            LDC -1.0D
             DCMPL
             IFNE L1
             NEW org/nlogo/nvm/RuntimePrimitiveException

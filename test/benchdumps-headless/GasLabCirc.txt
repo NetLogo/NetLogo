@@ -13,18 +13,18 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 12345.0
+          LDC 12345.0D
          L1
           DSTORE 2
           DLOAD 2
           D2L
           LSTORE 4
           LLOAD 4
-          LDC -2147483648
+          LDC -2147483648L
           LCMP
           IFLT L2
           LLOAD 4
-          LDC 2147483647
+          LDC 2147483647L
           LCMP
           IFLE L3
          L2
@@ -162,7 +162,7 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           // parameter final  context
           // parameter final  arg0
          L0
-          LDC 3500.0
+          LDC 3500.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -1388,7 +1388,7 @@ procedure GO:[]{O---}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1540,7 +1540,7 @@ procedure GO:[]{O---}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -1921,7 +1921,7 @@ procedure GO:[]{O---}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -2121,7 +2121,7 @@ procedure GO:[]{O---}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -2498,7 +2498,7 @@ procedure GO:[]{O---}:
           INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
           DSTORE 2
           DLOAD 2
-          LDC -1.0
+          LDC -1.0D
           DCMPL
           IFNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -2628,7 +2628,7 @@ procedure GO:[]{O---}:
           INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
           DSTORE 2
           DLOAD 2
-          LDC -1.0
+          LDC -1.0D
           DCMPL
           IFNE L4
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4117,7 +4117,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           ATHROW
          L9
          FRAME SAME1 D
-          LDC 2.0
+          LDC 2.0D
          L10
           DSTORE 4
           DSTORE 2
@@ -4147,7 +4147,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
          L2
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L14
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -4209,7 +4209,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           ATHROW
          L16
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_let_12 org/nlogo/nvm/Context java/lang/Object T D] [D D]
-          LDC 2.0
+          LDC 2.0D
          L17
           DSTORE 4
           DSTORE 2
@@ -4450,7 +4450,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           ATHROW
          L23
          FRAME FULL [org/nlogo/prim/_asm_procedurecheckforparticlecollision_let_13 org/nlogo/nvm/Context java/lang/Object T D] [D D]
-          LDC 2.0
+          LDC 2.0D
          L24
           DSTORE 4
           DSTORE 2
@@ -4519,7 +4519,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           TRYCATCHBLOCK L4 L5 L5 java/lang/ClassCastException
           TRYCATCHBLOCK L6 L7 L7 java/lang/ClassCastException
          L8
-          LDC 2.0
+          LDC 2.0D
          L9
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -4903,7 +4903,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           ATHROW
          L8
          FRAME SAME1 D
-          LDC 2.0
+          LDC 2.0D
          L9
           DSTORE 4
           DSTORE 2
@@ -4914,7 +4914,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_procedurecheckforparticlecollision_let_16.validDouble (DLorg/nlogo/nvm/Context;)D
          L10
-          LDC 4.0
+          LDC 4.0D
          L11
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -5221,7 +5221,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
             DLOAD 4
             DSUB
            L14
-            LDC 2.0
+            LDC 2.0D
            L15
             ALOAD 1
             GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -5419,7 +5419,7 @@ procedure CHECK-FOR-PARTICLE-COLLISION:[MY-X MY-Y MY-PARTICLE-SIZE MY-X-SPEED MY
           INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
           DSTORE 2
           DLOAD 2
-          LDC -1.0
+          LDC -1.0D
           DCMPL
           IFNE L6
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -5927,7 +5927,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           ATHROW
          L4
          FRAME SAME1 D
-          LDC 0.5
+          LDC 0.5D
          L5
           DSTORE 4
           DSTORE 2
@@ -5998,7 +5998,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           DLOAD 2
           DNEG
          L5
-          LDC 0.5
+          LDC 0.5D
          L6
           DSTORE 4
           DSTORE 2
@@ -6062,7 +6062,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           ATHROW
          L4
          FRAME SAME1 D
-          LDC 0.5
+          LDC 0.5D
          L5
           DSTORE 4
           DSTORE 2
@@ -6133,7 +6133,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           DLOAD 2
           DNEG
          L5
-          LDC 0.5
+          LDC 0.5D
          L6
           DSTORE 4
           DSTORE 2
@@ -6185,7 +6185,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           BIPUSH 10
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D
          L2
-          LDC 2.0
+          LDC 2.0D
          L3
           DSTORE 4
           DSTORE 2
@@ -6258,7 +6258,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           BIPUSH 10
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D
          L2
-          LDC 2.0
+          LDC 2.0D
          L3
           DSTORE 4
           DSTORE 2
@@ -6331,7 +6331,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           BIPUSH 10
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D
          L2
-          LDC 2.0
+          LDC 2.0D
          L3
           DSTORE 4
           DSTORE 2
@@ -6404,7 +6404,7 @@ procedure CHECK-FOR-WALL-COLLISION:[X-SPEED Y-SPEED XPOS-PLANE XNEG-PLANE YPOS-P
           BIPUSH 10
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D
          L2
-          LDC 2.0
+          LDC 2.0D
          L3
           DSTORE 4
           DSTORE 2
@@ -8195,7 +8195,7 @@ procedure ASSIGN-COLLIDING-WALL:[TIME-TO-COLLISION WALL COLLIDING-PAIR]{-TPL}:
           INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
           DSTORE 2
           DLOAD 2
-          LDC -1.0
+          LDC -1.0D
           DCMPL
           IFNE L6
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -8982,7 +8982,7 @@ procedure SORT-COLLISIONS:[DT]{OTPL}:
           INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
           DSTORE 2
           DLOAD 2
-          LDC -1.0
+          LDC -1.0D
           DCMPL
           IFNE L5
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -9077,7 +9077,7 @@ procedure SORT-COLLISIONS:[DT]{OTPL}:
           INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
           DSTORE 2
           DLOAD 2
-          LDC -1.0
+          LDC -1.0D
           DCMPL
           IFNE L8
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -9854,7 +9854,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -10181,7 +10181,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -10249,7 +10249,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           // parameter final  value
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          LDC 180.0
+          LDC 180.0D
          L4
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -10410,7 +10410,7 @@ procedure COLLIDE-WINNERS:[]{OTPL}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -10605,7 +10605,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 3
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L5
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -11574,7 +11574,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
-          LDC 2.0
+          LDC 2.0D
          L5
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -11677,7 +11677,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           TRYCATCHBLOCK L0 L1 L1 java/lang/ClassCastException
           TRYCATCHBLOCK L2 L3 L3 java/lang/ClassCastException
          L4
-          LDC 2.0
+          LDC 2.0D
          L5
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -12186,7 +12186,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           GOTO L19
          L18
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
           GOTO L19
          L17
          FRAME SAME1 D
@@ -12200,11 +12200,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           I2D
           DCMPL
           IFLE L21
-          LDC 90.0
+          LDC 90.0D
           GOTO L19
          L21
          FRAME SAME1 D
-          LDC 270.0
+          LDC 270.0D
           GOTO L19
          L20
          FRAME SAME1 D
@@ -12330,7 +12330,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -12750,7 +12750,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -12943,7 +12943,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           GOTO L19
          L18
          FRAME SAME1 D
-          LDC 180.0
+          LDC 180.0D
           GOTO L19
          L17
          FRAME SAME1 D
@@ -12957,11 +12957,11 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           I2D
           DCMPL
           IFLE L21
-          LDC 90.0
+          LDC 90.0D
           GOTO L19
          L21
          FRAME SAME1 D
-          LDC 270.0
+          LDC 270.0D
           GOTO L19
          L20
          FRAME SAME1 D
@@ -13115,7 +13115,7 @@ procedure COLLIDE-WITH:[OTHER-PARTICLE MASS2 SPEED2 HEADING2 THETA V1T V1L V2T V
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -13513,7 +13513,7 @@ procedure RECOLOR-BANDED:[AVG-SPEED]{-T--}:
           ATHROW
          L5
          FRAME SAME1 java/lang/Object
-          LDC 0.5
+          LDC 0.5D
          L6
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -13716,7 +13716,7 @@ procedure RECOLOR-BANDED:[AVG-SPEED]{-T--}:
           ATHROW
          L5
          FRAME SAME1 java/lang/Object
-          LDC 1.5
+          LDC 1.5D
          L6
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -14012,7 +14012,7 @@ procedure RECOLOR-SHADED:[AVG-SPEED]{-T--}:
           ATHROW
          L5
          FRAME SAME1 java/lang/Object
-          LDC 3.0
+          LDC 3.0D
          L6
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -14139,9 +14139,9 @@ procedure RECOLOR-SHADED:[AVG-SPEED]{-T--}:
           TRYCATCHBLOCK L5 L6 L6 java/lang/ClassCastException
           TRYCATCHBLOCK L7 L8 L8 org/nlogo/api/AgentException
          L9
-          LDC 91.999
+          LDC 91.999D
          L10
-          LDC 8.0
+          LDC 8.0D
          L0
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.agent : Lorg/nlogo/agent/Agent;
@@ -14188,7 +14188,7 @@ procedure RECOLOR-SHADED:[AVG-SPEED]{-T--}:
           DLOAD 4
           DMUL
          L13
-          LDC 3.0
+          LDC 3.0D
          L14
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
@@ -15318,7 +15318,7 @@ procedure MAKE-PARTICLES:[]{O---}:
           // parameter final  value
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
-          LDC 360.0
+          LDC 360.0D
          L4
           DSTORE 2
           DLOAD 2
@@ -15591,7 +15591,7 @@ procedure ARRANGE:[PARTICLE-SET]{OTPL}:
           ASTORE 5
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-          LDC -1
+          LDC -1L
           LCMP
           IFNE L7
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -15924,7 +15924,7 @@ reporter procedure OVERLAPPING?:[]{-T--}:
                 DLOAD 4
                 DADD
                L6
-                LDC 2.0
+                LDC 2.0D
                L7
                 DSTORE 4
                 DSTORE 2
@@ -16015,7 +16015,7 @@ reporter procedure OVERLAPPING?:[]{-T--}:
              FRAME SAME
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-              LDC -1
+              LDC -1L
               LCMP
               IFNE L10
               NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -16078,7 +16078,7 @@ reporter procedure OVERLAPPING?:[]{-T--}:
              L0
               ALOAD 2
               INVOKEVIRTUAL org/nlogo/agent/Agent.id ()J
-              LDC -1
+              LDC -1L
               LCMP
               IFNE L16
               NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -16146,7 +16146,7 @@ reporter procedure OVERLAPPING?:[]{-T--}:
               DLOAD 4
               DADD
              L19
-              LDC 2.0
+              LDC 2.0D
              L20
               DSTORE 4
               DSTORE 2
@@ -16540,7 +16540,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           ATHROW
          L17
          FRAME FULL [org/nlogo/prim/_asm_procedurerandomposition_setxy_0 org/nlogo/nvm/Context java/lang/Object I] [D D]
-          LDC 0.5
+          LDC 0.5D
          L18
           DSTORE 4
           DSTORE 2
@@ -16554,7 +16554,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           BIPUSH 10
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D
          L20
-          LDC 2.0
+          LDC 2.0D
          L21
           DSTORE 4
           DSTORE 2
@@ -16681,7 +16681,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           ATHROW
          L32
          FRAME FULL [org/nlogo/prim/_asm_procedurerandomposition_setxy_0 org/nlogo/nvm/Context java/lang/Object I D] [D D D]
-          LDC 0.5
+          LDC 0.5D
          L33
           DSTORE 4
           DSTORE 2
@@ -16695,7 +16695,7 @@ procedure RANDOM-POSITION:[]{-T--}:
           BIPUSH 10
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getTurtleVariableDouble (I)D
          L35
-          LDC 2.0
+          LDC 2.0D
          L36
           DSTORE 4
           DSTORE 2
@@ -16863,7 +16863,7 @@ procedure REVERSE-TIME:[]{OTPL}:
           // parameter final  context
           // parameter final  delta
          L0
-          LDC 180.0
+          LDC 180.0D
          L1
           DSTORE 2
           ALOAD 1
@@ -17066,7 +17066,7 @@ procedure TEST-TIME-REVERSAL:[N OLD-CLOCK]{O---}:
           INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
           DSTORE 2
           DLOAD 2
-          LDC -1.0
+          LDC -1.0D
           DCMPL
           IFNE L1
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -17162,7 +17162,7 @@ procedure TEST-TIME-REVERSAL:[N OLD-CLOCK]{O---}:
           INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
           DSTORE 2
           DLOAD 2
-          LDC -1.0
+          LDC -1.0D
           DCMPL
           IFNE L1
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -17264,7 +17264,7 @@ procedure TEST-TIME-REVERSAL:[N OLD-CLOCK]{O---}:
           INVOKEVIRTUAL org/nlogo/agent/World.ticks ()D
           DSTORE 2
           DLOAD 2
-          LDC -1.0
+          LDC -1.0D
           DCMPL
           IFNE L3
           NEW org/nlogo/nvm/RuntimePrimitiveException
@@ -17280,7 +17280,7 @@ procedure TEST-TIME-REVERSAL:[N OLD-CLOCK]{O---}:
          FRAME APPEND [D]
           DLOAD 2
          L4
-          LDC 2.0
+          LDC 2.0D
          L5
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.activation : Lorg/nlogo/nvm/Activation;
