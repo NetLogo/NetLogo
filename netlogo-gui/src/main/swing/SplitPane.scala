@@ -2,7 +2,7 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Color, Component, Cursor, Graphics, Point }
+import java.awt.{ Color, Component, Cursor, Dimension, Graphics, Point }
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent, MouseMotionAdapter }
 import javax.swing.{ AbstractAction, Action, JButton, JLayeredPane, JPanel, JSplitPane }
 
@@ -221,5 +221,10 @@ class SplitPane(mainComponent: Component, topComponent: Component, commandCenter
       dividerLocation = 0
 
     super.setBounds(x, y, width, height)
+  }
+
+  override def getPreferredSize: Dimension = {
+    new Dimension(mainComponent.getPreferredSize.width,
+                  mainComponent.getPreferredSize.height + topComponent.getPreferredSize.height + dividerSize)
   }
 }
