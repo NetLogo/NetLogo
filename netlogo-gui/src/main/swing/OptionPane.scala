@@ -35,6 +35,9 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
 
   private var selectedOption: Option[String] = None
 
+  // outside locally block to allow subclasses to focus OK button after specific actions (Isaac B 3/14/25)
+  protected val okButton = new DialogButton(true, options(0), selectAction(_))
+
   locally {
     getContentPane.setBackground(InterfaceColors.dialogBackground)
     getContentPane.setLayout(new GridBagLayout)
@@ -47,28 +50,12 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
     c.fill = GridBagConstraints.NONE
     c.insets = new Insets(0, 6, 6, 6)
 
-    def selectAction(text: String): Unit = {
-      selectedOption = Option(text)
-
-      setVisible(false)
-    }
-
-    val okButton = new DialogButton(true, options(0), selectAction(_))
     add(new ButtonPanel(okButton +: options.tail.map(new DialogButton(false, _, selectAction(_)))), c)
 
     packAndCenter()
 
-    getRootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0),
-                                                                   "OptionPaneOK")
-
     getRootPane.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0),
                                                                    "OptionPaneCancel")
-
-    getRootPane.getActionMap.put("OptionPaneOK", new AbstractAction {
-      override def actionPerformed(e: ActionEvent): Unit = {
-        okButton.doClick()
-      }
-    })
 
     getRootPane.getActionMap.put("OptionPaneCancel", new AbstractAction {
       override def actionPerformed(e: ActionEvent): Unit = {
@@ -123,6 +110,12 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
     pack()
 
     Positioning.center(this, parent)
+  }
+
+  private def selectAction(text: String): Unit = {
+    selectedOption = Option(text)
+
+    setVisible(false)
   }
 }
 
@@ -234,7 +227,10 @@ class DropdownOptionPane[T](parent: Component, title: String, message: String, c
       }
     }, c)
 
-    dropdown.addItemListener(_ => packAndCenter)
+    dropdown.addItemListener(_ => {
+      packAndCenter()
+      okButton.requestFocus()
+    })
   }
 }
 
