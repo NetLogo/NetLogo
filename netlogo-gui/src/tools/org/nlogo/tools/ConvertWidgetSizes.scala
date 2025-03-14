@@ -29,7 +29,11 @@ object ConvertWidgetSizes {
           fileManager.openFromPath(path.toString, ModelType.Library)
 
           interfacePanel.convertWidgetSizes(true)
+        })
 
+        Thread.sleep(1000)
+
+        EventQueue.invokeAndWait(() => {
           modelLoader.save(fileManager.currentModel, path.toUri)
         })
       }
