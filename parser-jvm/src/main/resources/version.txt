@@ -1,7 +1,7 @@
-NetLogo 7.0.0
-INTERIM DEVEL BUILD
+NetLogo 7.0.0-internal1
+March 18, 2025
+NetLogo 6.4.0
 NetLogo 6.4
-INTERIM DEVEL BUILD
 NetLogo 6.3
 NetLogo 6.2
 NetLogo 6.1
