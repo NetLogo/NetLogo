@@ -313,7 +313,7 @@ lazy val macApp = project.in(file("mac-app")).
     Compile / unmanagedJars             += (netlogo / Compile / packageBin).value,
     libraryDependencies                ++= Seq(
       "net.java.dev.jna" % "jna" % "4.5.2",
-      "ca.weblite" % "java-objc-bridge" % "1.2.0"),
+      "ca.weblite" % "java-objc-bridge" % "1.2"),
     libraryDependencies                ++= (netlogo / libraryDependencies).value,
     libraryDependencies                ++= (parserJVM/ libraryDependencies).value,
     Compile / run                       := {
