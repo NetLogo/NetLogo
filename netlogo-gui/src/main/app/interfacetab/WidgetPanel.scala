@@ -646,8 +646,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def keyPressed(e: KeyEvent): Unit = {
     if (interfaceMode == InterfaceMode.Interact) {
-      if (System.getProperty("os.name").contains("Mac") && e.getKeyCode == KeyEvent.VK_META) {
-        interceptPane.enableIntercept()
+      if (System.getProperty("os.name").contains("Mac")) {
+        if (e.getKeyCode == KeyEvent.VK_META)
+          interceptPane.enableIntercept()
       } else if (e.getKeyCode == KeyEvent.VK_CONTROL) {
         interceptPane.enableIntercept()
       }
@@ -691,8 +692,9 @@ class WidgetPanel(val workspace: GUIWorkspace)
       dropSelectedWidgets()
       setInterfaceMode(InterfaceMode.Delete, true)
     } else if (interfaceMode == InterfaceMode.Interact) {
-      if (System.getProperty("os.name").contains("Mac") && e.getKeyCode == KeyEvent.VK_META) {
-        interceptPane.disableIntercept()
+      if (System.getProperty("os.name").contains("Mac")) {
+        if (e.getKeyCode == KeyEvent.VK_META)
+          interceptPane.disableIntercept()
       } else if (e.getKeyCode == KeyEvent.VK_CONTROL) {
         interceptPane.disableIntercept()
       }
