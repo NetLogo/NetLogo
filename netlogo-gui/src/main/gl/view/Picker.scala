@@ -101,7 +101,7 @@ class Picker(view: View) extends PickListener with ActionListener {
       super.menuSelectionChanged(isIncluded)
       view.renderer.outlineAgent(if (isIncluded) agent
                                  else null)
-      view.signalViewUpdate()
+      view.display()
     }
   }
 
@@ -123,7 +123,7 @@ class Picker(view: View) extends PickListener with ActionListener {
     override def menuSelectionChanged(isIncluded: Boolean) {
       super.menuSelectionChanged(isIncluded)
       view.renderer.outlineAgent(if (isIncluded) agent else null)
-      view.signalViewUpdate()
+      view.display()
     }
   }
 
@@ -131,7 +131,7 @@ class Picker(view: View) extends PickListener with ActionListener {
     val item = e.getSource.asInstanceOf[AgentMenuItem]
     val observer = view.viewManager.world.observer
     def update() {
-      view.signalViewUpdate()
+      view.display()
     }
     item.action match {
       case Inspect =>

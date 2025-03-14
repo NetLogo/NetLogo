@@ -28,7 +28,7 @@ with java.awt.event.MouseWheelListener {
   def setMovementMode(mode: Mode) {
     if (mode == InterfaceMode) {
       view.renderer.setMouseMode(true)
-      view.signalViewUpdate()
+      view.display()
     }
     else if (movementMode == InterfaceMode)
       view.renderer.setMouseMode(false)
@@ -65,7 +65,7 @@ with java.awt.event.MouseWheelListener {
       view.renderer.mouseDown(false)
     else if (evt.isPopupTrigger)
       view.doPopup(evt)
-    view.signalViewUpdate()
+    view.display()
   }
 
   def mouseWheelMoved(e: MouseWheelEvent) {
@@ -87,7 +87,7 @@ with java.awt.event.MouseWheelListener {
           observer.oycor + (zoomDist * orientation.dy),
           observer.ozcor - (zoomDist * orientation.dz))
     }
-    view.signalViewUpdate()
+    view.display()
   }
 
   /// Implementation of java.awt.event.MouseMotionListener
@@ -143,7 +143,7 @@ with java.awt.event.MouseWheelListener {
             // do nothing
         }
     }
-    view.signalViewUpdate()
+    view.display()
   }
 
   def mouseMoved(evt: MouseEvent) {

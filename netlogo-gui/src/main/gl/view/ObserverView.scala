@@ -2,23 +2,31 @@
 
 package org.nlogo.gl.view
 
+import java.awt.{ BorderLayout, Rectangle }
+import java.awt.event.{ WindowAdapter, WindowEvent }
+
+import org.nlogo.api.Version
 import org.nlogo.gl.render.Renderer
 
-class ObserverView(viewManager: ViewManager, renderer: Renderer, bounds: java.awt.Rectangle)
+class ObserverView(viewManager: ViewManager, renderer: Renderer, bounds: Rectangle)
 extends View("3D View", viewManager, renderer) {
 
   def this(viewManager: ViewManager, renderer: Renderer) =
-    this(viewManager, renderer, new java.awt.Rectangle(600, 600))
+    this(viewManager, renderer, new Rectangle(600, 600))
 
   setBounds(bounds)
   val navBar = new ViewControlToolBar(this, inputHandler)
-  add(navBar, java.awt.BorderLayout.SOUTH)
+  add(navBar, BorderLayout.SOUTH)
   val controlStrip = new ViewControlStrip3D(viewManager.workspace, viewManager.tickCounterLabel)
-  add(controlStrip, java.awt.BorderLayout.NORTH)
+  add(controlStrip, BorderLayout.NORTH)
 
-  addWindowListener(new java.awt.event.WindowAdapter {
-    override def windowClosing(e: java.awt.event.WindowEvent) {
-      if(!org.nlogo.api.Version.is3D)
+  addWindowListener(new WindowAdapter {
+    override def windowOpened(e: WindowEvent): Unit = {
+      repaint()
+    }
+
+    override def windowClosing(e: WindowEvent): Unit = {
+      if (!Version.is3D)
         ObserverView.this.viewManager.close()
     }
   })

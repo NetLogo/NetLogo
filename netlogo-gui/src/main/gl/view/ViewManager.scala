@@ -96,6 +96,7 @@ class ViewManager(val workspace: GUIWorkspace,
         appWindow.setVisible(true)
         gd.setFullScreenWindow(null)
         observerView.setVisible(true)
+        observerView.display()
         observerView.updateRenderer()
         this.fullscreen = false
         currentView = observerView
@@ -153,7 +154,7 @@ class ViewManager(val workspace: GUIWorkspace,
     // in case we get called before init() - ST 2/18/05
     if (currentView != null) {
       workspace.updateManager.beginPainting()
-      currentView.signalViewUpdate()
+      currentView.display()
       workspace.updateManager.donePainting()
       currentView.updatePerspectiveLabel()
       _framesSkipped = false

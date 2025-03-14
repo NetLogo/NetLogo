@@ -97,13 +97,9 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
     renderer.invalidateLinkShape(shape)
   }
 
-  def signalViewUpdate() {
-    canvas.repaint()
-  }
-
   def resetPerspective() {
     viewManager.world.observer.resetPerspective()
-    signalViewUpdate()
+    display()
     updatePerspectiveLabel()
   }
 
