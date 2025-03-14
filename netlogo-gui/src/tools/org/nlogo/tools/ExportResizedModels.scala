@@ -32,6 +32,8 @@ object ExportResizedModels {
           interfacePanel.convertWidgetSizes(true)
         })
 
+        Thread.sleep(1000)
+
         val file = new File(path.toString.stripSuffix(extension) + " (new).png")
 
         EventQueue.invokeAndWait(() => {
