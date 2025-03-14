@@ -10,7 +10,7 @@ import javax.swing.border.EmptyBorder
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.swing.NonemptyTextFieldButtonEnabler
-import org.nlogo.swing.{ Button, CheckBox, ComboBox, TextField, TextFieldBox, Transparent }
+import org.nlogo.swing.{ CheckBox, ComboBox, DialogButton, TextField, TextFieldBox, Transparent }
 import org.nlogo.theme.InterfaceColors
 
 class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)],
@@ -27,7 +27,7 @@ class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)]
   override def getName = nameField.getText
   def isDiscoverySelected = discoveryCheckBox.isSelected
 
-  private val okButton = new Button("Start", () => StartupDialog.this.setVisible(false))
+  private val okButton = new DialogButton(true, "Start", () => StartupDialog.this.setVisible(false))
 
   nameField.addActionListener(_ => okButton.doClick())
 

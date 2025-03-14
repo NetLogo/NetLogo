@@ -10,7 +10,7 @@ import javax.swing.event.{ DocumentEvent, DocumentListener, ListSelectionEvent, 
 import javax.swing.table.{ AbstractTableModel, DefaultTableCellRenderer }
 
 import org.nlogo.hubnet.connection.NetworkUtils
-import org.nlogo.swing.{ Button, ComboBox, NonemptyTextFieldButtonEnabler, ScrollPane, TextField, TextFieldBox,
+import org.nlogo.swing.{ ComboBox, DialogButton, NonemptyTextFieldButtonEnabler, ScrollPane, TextField, TextFieldBox,
                          Transparent }
 import org.nlogo.theme.InterfaceColors
 
@@ -34,7 +34,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
   def server = serverField.getText
   def port = portField.getText.toInt
 
-  private val enterButton = new Button("Enter", () => {
+  private val enterButton = new DialogButton(true, "Enter", () => {
     try this.loginCallback(username, server, port)
     catch {
       case nfex: NumberFormatException =>
