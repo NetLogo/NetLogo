@@ -3,11 +3,11 @@
 package org.nlogo.gl.view
 
 import java.awt.{ Font, GridBagConstraints, GridBagLayout, Insets }
-import javax.swing.{ ButtonGroup, JPanel }
+import javax.swing.{ ButtonGroup, JLabel, JPanel }
 
 import org.nlogo.api.Perspective
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ Button, OptionPane, SelectableJLabel, ToolBarToggleButton, Transparent }
+import org.nlogo.swing.{ Button, OptionPane, ToolBarToggleButton, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InterfaceMode }
@@ -35,8 +35,7 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
     }
   })
 
-  // where to add this to the GUI??
-  private val status = new SelectableJLabel("")
+  private val status = new JLabel
 
   private var perspective: Option[Perspective] = None
 
@@ -77,7 +76,7 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
 
     status.setFont(status.getFont.deriveFont(Font.BOLD))
 
-    orbitButton.doClick() // probably a better way...
+    orbitButton.doClick()
 
     setButtonsEnabled(true)
   }
