@@ -2,26 +2,26 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Color, Dimension, Graphics }
+import java.awt.{ Dimension, Graphics }
 import java.awt.event.{ ActionEvent, ActionListener }
-import javax.swing.{ AbstractButton, Action, JButton, JToggleButton }
+import javax.swing.{ AbstractAction, AbstractButton, Action, JButton, JToggleButton }
 
 import org.nlogo.theme.InterfaceColors
 
 trait AbstractToolBarButton extends AbstractButton with Transparent with HoverDecoration {
-  private var pressedColor: Option[Color] = None
+  protected var square = true
 
   setFocusable(false)
   setContentAreaFilled(false)
 
-  def setPressedColor(color: Color): Unit = {
-    pressedColor = Option(color)
-  }
-
   override def getPreferredSize: Dimension = {
-    val ps = super.getPreferredSize
-    val dim = ps.height max ps.width
-    new Dimension(dim, dim)
+    if (square) {
+      val ps = super.getPreferredSize
+      val dim = ps.height max ps.width
+      new Dimension(dim, dim)
+    } else {
+      super.getPreferredSize
+    }
   }
 
   override def paintComponent(g: Graphics): Unit = {
@@ -30,7 +30,7 @@ trait AbstractToolBarButton extends AbstractButton with Transparent with HoverDe
     if (!isEnabled) {
       g2d.setColor(InterfaceColors.Transparent)
     } else if (isSelected) {
-      g2d.setColor(pressedColor.getOrElse(InterfaceColors.toolbarButtonPressed))
+      g2d.setColor(InterfaceColors.toolbarToolPressed)
     } else if (isHover) {
       g2d.setColor(InterfaceColors.toolbarButtonHover)
     } else {
@@ -48,7 +48,13 @@ trait AbstractToolBarButton extends AbstractButton with Transparent with HoverDe
   }
 }
 
-class ToolBarToggleButton(action: Action) extends JToggleButton(action) with AbstractToolBarButton
+class ToolBarToggleButton(action: Action) extends JToggleButton(action) with AbstractToolBarButton {
+  def this(name: String, function: () => Unit) = this(new AbstractAction(name) {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      function()
+    }
+  })
+}
 
 class ToolBarActionButton(action: Action) extends JButton(action) with AbstractToolBarButton
 

@@ -2,6 +2,8 @@
 
 package org.nlogo.api
 
+import org.nlogo.core.I18N
+
 // it's very tempting to get rid of ride entirely but for the interface
 // "riding turtle 0" I supposed we still need it. ev 4/29/05
 
@@ -16,12 +18,25 @@ abstract sealed class Perspective(val export: Int) {
 }
 
 object Perspective {
-  case object Observe extends Perspective(0)
+  private implicit val i18nPrefix = I18N.Prefix("view.3d")
+
+  case object Observe extends Perspective(0) {
+    override def toString: String = ""
+  }
+
   case class Ride(targetAgent: Agent) extends Perspective(1) with AgentFollowingPerspective {
     def followDistance: Int = 0
+
+    override def toString: String = s"${I18N.gui("riding")} $targetAgent"
   }
-  case class Follow(targetAgent: Agent, followDistance: Int) extends Perspective(2) with AgentFollowingPerspective
-  case class Watch(targetAgent: Agent) extends Perspective(3)
+
+  case class Follow(targetAgent: Agent, followDistance: Int) extends Perspective(2) with AgentFollowingPerspective {
+    override def toString: String = s"${I18N.gui("following")} $targetAgent"
+  }
+
+  case class Watch(targetAgent: Agent) extends Perspective(3) {
+    override def toString: String = s"${I18N.gui("watching")} $targetAgent"
+  }
 }
 
 trait AgentFollowingPerspective {

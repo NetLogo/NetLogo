@@ -407,12 +407,6 @@ object InterfaceColors {
       case "dark" => Color.WHITE
     }
 
-  def toolbarButtonPressed =
-    theme.getOrElse("light") match {
-      case "classic" | "light" => MediumGray
-      case "dark" => DarkBlueGray
-    }
-
   def toolbarButtonHover =
     theme.getOrElse("light") match {
       case "classic" | "light" => LightGray2

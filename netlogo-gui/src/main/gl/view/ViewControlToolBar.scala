@@ -2,141 +2,140 @@
 
 package org.nlogo.gl.view
 
-import java.awt.event.{ ActionEvent, ActionListener }
-import javax.swing.JToolBar
+import java.awt.{ Font, GridBagConstraints, GridBagLayout, Insets }
+import javax.swing.{ ButtonGroup, JPanel }
 
 import org.nlogo.api.Perspective
 import org.nlogo.core.I18N
-import org.nlogo.swing.OptionPane
+import org.nlogo.swing.{ Button, OptionPane, SelectableJLabel, ToolBarToggleButton, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InterfaceMode }
 
-class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler) extends JToolBar with ThemeSync {
-  val orbitAction =
-    new MovementAction(I18N.gui.get("view.3d.orbit"), OrbitMode)
-  val zoomAction =
-    new MovementAction(I18N.gui.get("view.3d.zoom"), ZoomMode)
-  val moveAction =
-    new MovementAction(I18N.gui.get("view.3d.move"), TranslateMode)
-  val interactAction =
-    new MovementAction(I18N.gui.get("view.3d.interact"), InterfaceMode)
+class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
+  extends JPanel(new GridBagLayout) with ThemeSync {
 
-  val fullScreenWarning = I18N.gui.get("view.3d.fullScreenWarning")
+  private implicit val i18nPrefix = I18N.Prefix("view.3d")
 
-  val status = new org.nlogo.swing.SelectableJLabel("")
-  status.setFont(status.getFont.deriveFont(java.awt.Font.BOLD))
+  private val orbitButton = new ModeButton(I18N.gui("orbit"), OrbitMode)
+  private val zoomButton = new ModeButton(I18N.gui("zoom"), ZoomMode)
+  private val moveButton = new ModeButton(I18N.gui("move"), TranslateMode)
+  private val interactButton = new ModeButton(I18N.gui("interact"), InterfaceMode)
 
-  setFloatable(false)
-  val group = new javax.swing.ButtonGroup
-  val orbitButton = new javax.swing.JToggleButton(orbitAction)
-  add(orbitButton)
-  group.add(orbitButton)
-  val zoomButton = new javax.swing.JToggleButton(zoomAction)
-  add(zoomButton)
-  group.add(zoomButton)
-  val moveButton = new javax.swing.JToggleButton(moveAction)
-  add(moveButton)
-  group.add(moveButton)
-  val interactButton = new javax.swing.JToggleButton(interactAction)
-  if (!view.viewManager.workspace.world.program.dialect.is3D) {
-    add(interactButton)
-    group.add(interactButton)
-  }
-  add(javax.swing.Box.createHorizontalStrut(8))
-  add(status)
-  add(javax.swing.Box.createHorizontalGlue)
-  add(javax.swing.Box.createHorizontalStrut(8))
-  val resetButton = new javax.swing.JButton(I18N.gui.get("view.3d.resetPerspective"))
-  resetButton.addActionListener(new ActionListener {
-    override def actionPerformed(e: ActionEvent) {
-      view.resetPerspective()
+  private val resetButton = new Button(I18N.gui("resetPerspective"), view.resetPerspective)
+  private val fullScreenButton = new Button(I18N.gui("fullScreen"), () => {
+    val options = Seq(I18N.gui.get("common.buttons.continue"), I18N.gui.get("common.buttons.cancel"))
+    val isWindows = System.getProperty("os.name").toLowerCase.startsWith("win")
+
+    if (!isWindows || view.viewManager.warned ||
+      (new OptionPane(view, I18N.gui.get("common.messages.warning"), I18N.gui("fullScreenWarning"), options,
+                      OptionPane.Icons.Warning).getSelectedIndex == 0)) {
+      view.viewManager.setFullscreen(true)
+      view.viewManager.warned = true
     }
   })
-  add(resetButton)
-  add(javax.swing.Box.createHorizontalStrut(8))
-  val fullScreenButton = new javax.swing.JButton(I18N.gui.get("view.3d.fullScreen"))
-  fullScreenButton.addActionListener(
-    new ActionListener {
-      override def actionPerformed(e: ActionEvent) {
-        val options = Seq(I18N.gui.get("common.buttons.continue"),
-                          I18N.gui.get("common.buttons.cancel"))
-        val isWindows = System.getProperty("os.name").toLowerCase.startsWith("win")
-        if (!isWindows || view.viewManager.warned ||
-          (new OptionPane(view, I18N.gui.get("common.messages.warning"), fullScreenWarning, options,
-                          OptionPane.Icons.Warning).getSelectedIndex == 0)) {
-          view.viewManager.setFullscreen(true)
-          view.viewManager.warned = true
-        }
-      }
-    })
-  add(fullScreenButton)
-  add(javax.swing.Box.createHorizontalStrut(16))
-  orbitButton.doClick
-  add(javax.swing.Box.createHorizontalStrut(8))
-  setButtonsEnabled(true)
 
-  private var perspective: Perspective = null
+  // where to add this to the GUI??
+  private val status = new SelectableJLabel("")
+
+  private var perspective: Option[Perspective] = None
+
+  locally {
+    val group = new ButtonGroup
+
+    group.add(orbitButton)
+    group.add(zoomButton)
+    group.add(moveButton)
+
+    val c = new GridBagConstraints
+
+    c.gridy = 0
+    c.insets = new Insets(6, 6, 6, 6)
+
+    add(orbitButton, c)
+
+    c.insets = new Insets(6, 0, 6, 6)
+
+    add(zoomButton, c)
+    add(moveButton, c)
+
+    if (!view.viewManager.workspace.world.program.dialect.is3D) {
+      add(interactButton, c)
+      group.add(interactButton)
+    }
+
+    add(status)
+
+    c.weightx = 1
+
+    add(new JPanel with Transparent, c)
+
+    c.weightx = 0
+
+    add(resetButton, c)
+    add(fullScreenButton, c)
+
+    status.setFont(status.getFont.deriveFont(Font.BOLD))
+
+    orbitButton.doClick() // probably a better way...
+
+    setButtonsEnabled(true)
+  }
 
   def setStatus(perspective: Perspective) {
     // don't update if perspective didn't change
-    if (this.perspective != perspective) {
-      this.perspective = perspective
+    if (this.perspective.orNull != perspective) {
+      this.perspective = Option(perspective)
+
+      status.setText(perspective.toString)
 
       perspective match {
         case Perspective.Observe =>
-          status.setText("")
           setButtonsEnabled(true)
+
         case Perspective.Watch(a) =>
-          status.setText(I18N.gui.get("view.3d.watching") + " " + a.toString)
-          orbitAction.setEnabled(true)
-          zoomAction.setEnabled(true)
-          moveAction.setEnabled(false)
+          orbitButton.setEnabled(true)
+          zoomButton.setEnabled(true)
+          moveButton.setEnabled(false)
+
           if (moveButton.isSelected)
             orbitButton.doClick()
+
         case Perspective.Ride(a) =>
-          status.setText(I18N.gui.get("view.3d.riding") + " " + a.toString)
           setButtonsEnabled(false)
-          zoomAction.setEnabled(true)
+          zoomButton.setEnabled(true)
+
           if (!interactButton.isSelected && !zoomButton.isSelected)
             zoomButton.doClick()
+
         case Perspective.Follow(a, _) =>
-          status.setText(I18N.gui.get("view.3d.following") + " " + a.toString)
           setButtonsEnabled(false)
-          zoomAction.setEnabled(true)
-          if (!interactButton.isSelected && !zoomButton.isSelected) {
+          zoomButton.setEnabled(true)
+
+          if (!interactButton.isSelected && !zoomButton.isSelected)
             zoomButton.doClick()
-          }
       }
     }
   }
 
   private def setButtonsEnabled(enabled: Boolean) {
-    orbitAction.setEnabled(enabled)
-    zoomAction.setEnabled(enabled)
-    moveAction.setEnabled(enabled)
-  }
-
-  private def setMovementMode(mode: Mode) {
-    inputHandler.setMovementMode(mode)
-  }
-
-  class MovementAction(label: String, mode: Mode)
-      extends javax.swing.AbstractAction(label) {
-    override def actionPerformed(e: ActionEvent) {
-      setMovementMode(mode)
-    }
+    orbitButton.setEnabled(enabled)
+    zoomButton.setEnabled(enabled)
+    moveButton.setEnabled(enabled)
   }
 
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.toolbarBackground)
 
-    orbitButton.setForeground(InterfaceColors.toolbarText)
-    zoomButton.setForeground(InterfaceColors.toolbarText)
-    moveButton.setForeground(InterfaceColors.toolbarText)
-    interactButton.setForeground(InterfaceColors.toolbarText)
+    status.setForeground(InterfaceColors.toolbarText)
 
-    resetButton.setForeground(InterfaceColors.toolbarText)
-    fullScreenButton.setForeground(InterfaceColors.toolbarText)
+    resetButton.syncTheme()
+    fullScreenButton.syncTheme()
+  }
+
+  private class ModeButton(name: String, mode: Mode)
+    extends ToolBarToggleButton(name, () => inputHandler.setMovementMode(mode)) {
+
+    square = false
   }
 }

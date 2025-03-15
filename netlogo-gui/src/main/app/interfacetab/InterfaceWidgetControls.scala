@@ -145,11 +145,6 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     widgetMenu.syncTheme()
     alignmentMenu.syncTheme()
 
-    interactButton.syncTheme()
-    selectButton.syncTheme()
-    editButton.syncTheme()
-    deleteButton.syncTheme()
-
     interactButton.setIcon(Utils.iconScaledWithColor("/images/interact.png", 18, 18, InterfaceColors.toolbarImage))
     selectButton.setIcon(Utils.iconScaledWithColor("/images/select.png", 18, 18, InterfaceColors.toolbarImage))
     editButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 18, 18, InterfaceColors.toolbarImage))
@@ -456,19 +451,11 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
   }
 
-  class SquareButton(action: Action) extends ToolBarToggleButton(action) with ThemeSync {
-    setFocusable(false)
-
-    syncTheme()
-
+  class SquareButton(action: Action) extends ToolBarToggleButton(action) {
     override def getMinimumSize: Dimension =
       new Dimension(widgetMenu.getPreferredSize.height, widgetMenu.getPreferredSize.height)
 
     override def getPreferredSize: Dimension =
       getMinimumSize
-
-    override def syncTheme(): Unit = {
-      setPressedColor(InterfaceColors.toolbarToolPressed)
-    }
   }
 }
