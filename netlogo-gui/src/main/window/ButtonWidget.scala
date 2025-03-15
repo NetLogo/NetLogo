@@ -15,14 +15,6 @@ import org.nlogo.swing.Utils
 import org.nlogo.theme.InterfaceColors
 
 object ButtonWidget {
-
-  def FOREVER_GRAPHIC = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                                  InterfaceColors.buttonText)
-  def FOREVER_GRAPHIC_PRESSED = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                                          InterfaceColors.buttonTextPressed)
-  def FOREVER_GRAPHIC_DISABLED = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                                           InterfaceColors.buttonTextDisabled)
-
   object ButtonType {
 
     // the 4 possible button types
@@ -82,11 +74,18 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   type WidgetModel = CoreButton
 
+  private var foreverIcon = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+                                                      InterfaceColors.buttonText)
+  private var foreverIconPressed = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+                                                             InterfaceColors.buttonTextPressed)
+  private var foreverIconDisabled = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+                                                              InterfaceColors.buttonTextDisabled)
+
   private var _buttonType: ButtonType = ButtonType.ObserverButton
 
   val keyLabel = new JLabel
   val nameLabel = new JLabel(I18N.gui.get("edit.button.previewName"))
-  val foreverLabel = new JLabel(FOREVER_GRAPHIC)
+  val foreverLabel = new JLabel(foreverIcon)
   val agentLabel = new JLabel
 
   keyLabel.setFont(keyLabel.getFont.deriveFont(12.0f))
@@ -446,7 +445,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
       setBackgroundColor(InterfaceColors.buttonBackgroundDisabled)
       keyLabel.setForeground(InterfaceColors.buttonTextDisabled)
       nameLabel.setForeground(InterfaceColors.buttonTextDisabled)
-      foreverLabel.setIcon(FOREVER_GRAPHIC_DISABLED)
+      foreverLabel.setIcon(foreverIconDisabled)
     } else if (drawAsUp) {
       setBackgroundColor(
         if (hover) {
@@ -464,7 +463,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
           InterfaceColors.widgetTextError
         }
       )
-      foreverLabel.setIcon(FOREVER_GRAPHIC)
+      foreverLabel.setIcon(foreverIcon)
     } else {
       setBackgroundColor(
         if (hover) {
@@ -477,7 +476,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
       keyLabel.setForeground(InterfaceColors.buttonTextPressed)
       if (error() == null)
         nameLabel.setForeground(InterfaceColors.buttonTextPressed)
-      foreverLabel.setIcon(FOREVER_GRAPHIC_PRESSED)
+      foreverLabel.setIcon(foreverIconPressed)
     }
 
     foreverLabel.setVisible(forever)
@@ -503,7 +502,14 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     super.paintComponent(g)
   }
 
-  override def syncTheme(): Unit = {} // everything synced in paintComponent
+  override def syncTheme(): Unit = {
+    foreverIcon = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+                                            InterfaceColors.buttonText)
+    foreverIconPressed = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+                                                   InterfaceColors.buttonTextPressed)
+    foreverIconDisabled = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
+                                                    InterfaceColors.buttonTextDisabled)
+  }
 
   // saving and loading
   override def model: WidgetModel = {

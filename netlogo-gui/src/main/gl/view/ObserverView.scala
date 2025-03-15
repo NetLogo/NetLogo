@@ -21,10 +21,6 @@ extends View("3D View", viewManager, renderer) {
   add(controlStrip, BorderLayout.NORTH)
 
   addWindowListener(new WindowAdapter {
-    override def windowOpened(e: WindowEvent): Unit = {
-      repaint()
-    }
-
     override def windowClosing(e: WindowEvent): Unit = {
       if (!Version.is3D)
         ObserverView.this.viewManager.close()
