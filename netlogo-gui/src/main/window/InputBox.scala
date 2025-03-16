@@ -358,14 +358,15 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
   private class SelectColorActionListener extends ActionListener {
     def actionPerformed(e: ActionEvent): Unit = {
-      val colorDialog = new ColorDialog(org.nlogo.awt.Hierarchy.getFrame(InputBox.this), true)
-      valueObject(colorDialog.showInputBoxDialog(
-        if (value.exists(_.isInstanceOf[Double])) {
-          modulateDouble(value.get.asInstanceOf[Double])
-        } else {
-          0d
-        }
-      ).asInstanceOf[AnyRef], true)
+      JFXColorPicker.launch(DoubleOnly) {
+        (x: Any) =>
+          val marshalled =
+            if (x.isInstanceOf[Int])
+              x.asInstanceOf[Int].toDouble
+            else
+              x.asInstanceOf[Double]
+          valueObject(Double.box(marshalled), true)
+      }
     }
   }
 

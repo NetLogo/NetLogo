@@ -73,3 +73,6 @@
 [submodule "extensions/resource"]
 	path = extensions/resource
 	url = https://github.com/NetLogo/Resource-Extension
+[submodule "netlogo-gui/colorpicker"]
+	path = netlogo-gui/colorpicker
+	url = https://github.com/NetLogo/ColorPicker
