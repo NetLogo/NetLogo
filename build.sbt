@@ -274,6 +274,7 @@ lazy val headless = (project in file ("netlogo-headless")).
       "commons-codec" % "commons-codec" % "1.18.0",
       "com.typesafe" % "config" % "1.4.3",
       "net.lingala.zip4j" % "zip4j" % "2.11.5",
+      "com.googlecode.json-simple" % "json-simple" % "1.1.1",
       "org.reflections" % "reflections" % "0.10.2" % "test",
     ),
     (Runtime / fullClasspath)  ++= (parserJVM / Runtime / fullClasspath).value,
