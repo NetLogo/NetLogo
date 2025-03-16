@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+﻿<!--
   <copyright file="ExitDialog.wxs" company="Outercurve Foundation">
     Copyright (c) 2004, Outercurve Foundation.
     This software is released under Microsoft Reciprocal License (MS-RL).
@@ -7,33 +6,32 @@
     LICENSE.TXT at the root directory of the distribution.
   </copyright>
 -->
-<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-    <Fragment>
-        <UI>
-            <Dialog Id="ShortcutDialog" Width="370" Height="270" Title="!(loc.ExitDialog_Title)">
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <Fragment>
+    <UI>
+      <Dialog Id="ShortcutDialog" Width="370" Height="270" Title="!(loc.ExitDialog_Title)">
+        <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.ShortcutDialogDescription)" />
+        <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.ShortcutDialogTitle)" />
+        <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="!(loc.InstallDirDlgBannerBitmap)" />
+        <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
 
-              <Control Id="Description" Type="Text" X="25" Y="23" Width="280" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.ShortcutDialogDescription)" />
-              <Control Id="Title" Type="Text" X="15" Y="6" Width="200" Height="15" Transparent="yes" NoPrefix="yes" Text="!(loc.ShortcutDialogTitle)" />
-              <Control Id="BannerBitmap" Type="Bitmap" X="0" Y="0" Width="370" Height="44" TabSkip="no" Text="!(loc.InstallDirDlgBannerBitmap)" />
-              <Control Id="BannerLine" Type="Line" X="0" Y="44" Width="370" Height="0" />
+        <Control Id="ChooseStartMenu" Type="Text" X="20" Y="70" Width="320" Height="20" Transparent="yes" NoPrefix="yes" Text="!(loc.ChooseStartMenuLocation)" />
+        <Control Id="StartMenuName" Type="PathEdit" X="20" Y="90" Width="320" Height="20" Property="NETLOGO_STARTMENU_LOCATION" Indirect="yes" />
 
-              <Control Id="ChooseStartMenu" Type="Text" X="20" Y="70" Width="320" Height="20" Transparent="yes" NoPrefix="yes" Text="!(loc.ChooseStartMenuLocation)" />
-              <Control Id="StartMenuName" Type="PathEdit" X="20" Y="90" Width="320" Height="20" Property="NETLOGO_STARTMENU_LOCATION" Indirect="yes" />
+        <Control Id="MiddleLine" Type="Line" X="20" Y="130" Width="350" Height="0" />
 
-              <Control Id="MiddleLine" Type="Line" X="20" Y="130" Width="350" Height="0" />
+        <Control Id="InstallShortcuts" Type="CheckBox" X="20" Y="140" Width="15" Height="15" Property="NETLOGO_INSTALL_DESKTOP_SHORTCUTS" CheckBoxValue="1" />
+        <Control Id="ChooseShortcuts" Type="Text" X="40" Y="140" Width="300" Height="20" Transparent="yes" NoPrefix="yes" Text="!(loc.ShouldInstallDesktopShortcut)" />
 
-              <Control Id="InstallShortcuts" Type="CheckBox" X="20" Y="140" Width="15" Height="15" Property="NETLOGO_INSTALL_DESKTOP_SHORTCUTS" CheckBoxValue="1" />
-              <Control Id="ChooseShortcuts" Type="Text" X="40" Y="140" Width="300" Height="20" Transparent="yes" NoPrefix="yes" Text="!(loc.ShouldInstallDesktopShortcut)" />
-
-              <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
-              <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.WixUINext)">
-                <Publish Event="AddLocal" Value="Shortcuts">NETLOGO_INSTALL_DESKTOP_SHORTCUTS</Publish>
-              </Control>
-              <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Disabled="no" Text="!(loc.WixUIBack)" />
-              <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
-                <Publish Event="SpawnDialog" Value="CancelDlg">1</Publish>
-              </Control>
-            </Dialog>
-        </UI>
-    </Fragment>
+        <Control Id="BottomLine" Type="Line" X="0" Y="234" Width="370" Height="0" />
+        <Control Id="Next" Type="PushButton" X="236" Y="243" Width="56" Height="17" Default="yes" Cancel="yes" Text="!(loc.WixUINext)">
+          <Publish Event="AddLocal" Value="Shortcuts" Condition="NETLOGO_INSTALL_DESKTOP_SHORTCUTS" />
+        </Control>
+        <Control Id="Back" Type="PushButton" X="180" Y="243" Width="56" Height="17" Disabled="no" Text="!(loc.WixUIBack)" />
+        <Control Id="Cancel" Type="PushButton" X="304" Y="243" Width="56" Height="17" Cancel="yes" Text="!(loc.WixUICancel)">
+          <Publish Event="SpawnDialog" Value="CancelDlg" />
+        </Control>
+      </Dialog>
+    </UI>
+  </Fragment>
 </Wix>

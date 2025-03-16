@@ -252,16 +252,6 @@ object NetLogoPackaging {
       val rootFiles    = (packageWinAggregate / aggregateOnlyFiles).value
       val variables    = buildVariables.value
 
-      val icons = Seq(
-        (behaviorsearchProject / baseDirectory).value / "resources" / "Behaviorsearch.ico"
-      , (behaviorsearchProject / baseDirectory).value / "resources" / "behaviorsearch_model.ico"
-      , configDir / "windows" / "NetLogo.ico"
-      , configDir / "windows" / "NetLogo3D.ico"
-      , configDir / "windows" / "HubNet Client.ico"
-      , configDir / "windows" / "model.ico"
-      )
-      icons.foreach( (i) => FileActions.copyFile(i, buildDir / i.getName) )
-
       // $APPDIR on Windows is `./app`, so move one levels up for the extra dirs
       val extraJavaOptions = Seq(
         "-Dnetlogo.extensions.dir=$APPDIR/../extensions"
@@ -285,9 +275,6 @@ object NetLogoPackaging {
       val extraArgs = Seq("--icon", "NetLogo.ico")
       FileActions.remove(destDir)
       val appImageDir = JavaPackager.generateAppImage(log, buildJDK.jpackage.getAbsolutePath, platform, mainLauncher, configDir, buildDir, inputDir, destDir, extraArgs, launchers)
-
-      // this makes the file association icons available for wix
-      icons.foreach( (i) => FileActions.copyFile(i, appImageDir / i.getName) )
 
       val extraDirs = bundledDirs(netlogo, behaviorsearchProject).value(platform, buildJDK.arch)
       JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir, rootFiles)

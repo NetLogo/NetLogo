@@ -14,15 +14,13 @@ object PackageWinAggregate {
   val vars32 = Map[String, String](
     "upgradeCode"                     -> "7DEBD71E-5C9C-44C5-ABBB-B39A797CA851",
     "platformArch"                    -> "x86",
-    "targetDirectory"                 -> "ProgramFilesFolder",
-    "win64"                           -> "no"
+    "bitness"                         -> "always32"
   )
 
   val vars64 = Map[String, String](
     "upgradeCode"                     -> "891140E9-912C-4E62-AC55-97129BD46DEF",
     "platformArch"                    -> "x64",
-    "targetDirectory"                 -> "ProgramFiles64Folder",
-    "win64"                           -> "yes"
+    "bitness"                         -> "always64"
   )
 
   val WiXPath = {
@@ -108,16 +106,16 @@ object PackageWinAggregate {
     }
 
     val winVariables: Map[String, String] =
-      variables ++ (if (arch == "64") vars64 else vars32) ++ archUUIDs
+      variables ++ Seq("iconDir" -> platformConfigDir.toString) ++ (if (arch == "64") vars64 else vars32) ++ archUUIDs
 
     val msiBuildDir = appImageDir.getParentFile
 
     log.info("Generating WiX config files")
     val baseComponentVariables =
       Map[String, AnyRef](
-          "win64"                 -> winVariables("win64"),
+          "bitness"               -> winVariables("bitness"),
           "version"               -> winVariables("version"),
-          "processorArchitecture" -> winVariables("platformArch"))
+          "iconDir"               -> winVariables("iconDir"))
     val componentConfig = Map[String, AnyRef](
       "components" -> Seq(
         Map[String, AnyRef](
@@ -194,22 +192,25 @@ object PackageWinAggregate {
 
     log.info("Running WiX MSI packager")
     val msiName = s"NetLogo-$version-$arch.msi"
-    val candleCommand = Seq[String](wixCommand("candle").getPath, "NetLogo.wxs", "NetLogoApp.wxs", "NetLogoUI.wxs", "ShortcutDialog.wxs", "-sw1026")
-    val lightCommand = Seq[String](
-      wixCommand("light").getPath,
-      "NetLogo.wixobj",
-      "NetLogoUI.wixobj",
-      "NetLogoApp.wixobj",
-      "ShortcutDialog.wixobj",
-      "-cultures:en-us", "-loc", "NetLogoTranslation.wxl",
-      "-ext", "WixUIExtension",
-      "-sw69", "-sw1076",
+    val buildCommand = Seq[String](
+      wixCommand("wix").getPath,
+      "build",
+      "NetLogo.wxs",
+      "NetLogoApp.wxs",
+      "NetLogoUI.wxs",
+      "ShortcutDialog.wxs",
+      "-arch", winVariables("platformArch"),
+      "-culture", "en-us",
+      "-loc", "NetLogoTranslation.wxl",
+      "-ext", "WixToolset.UI.wixext",
+      "-sw69",
+      "-sw1026",
+      "-sw1076",
       "-o", msiName,
       "-b", appImageDir.toString)
 
     val archiveFile  = webDir / msiName
-    Seq(candleCommand, lightCommand)
-      .foreach(command => RunProcess(command, msiBuildDir, command.head))
+    RunProcess(buildCommand, msiBuildDir, buildCommand.head)
 
     log.info("Moving MSI to final location.")
     FileActions.createDirectory(webDir)
