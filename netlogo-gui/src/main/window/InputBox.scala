@@ -360,12 +360,11 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     def actionPerformed(e: ActionEvent): Unit = {
       new JFXColorPicker(Hierarchy.getFrame(InputBox.this), true, DoubleOnly,
         (x: Any) => {
-          val marshalled =
-            if (x.isInstanceOf[Int])
-              x.asInstanceOf[Int].toDouble
-            else
-              x.asInstanceOf[Double]
-          valueObject(Double.box(marshalled), true)
+          val marshalled = x match {
+            case i: Int => i.toDouble
+            case _ => x.asInstanceOf[Double]
+          }
+          valueObject(marshalled, true)
         }
       ).setVisible(true)
     }

@@ -24,6 +24,7 @@ import org.nlogo.theme.ThemeSync
 class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback: (Any) => Unit = _ => {})
   extends JDialog(frame, modal) with ThemeSync {
 
+  private val nlBabyMonitor = new Bridge
   private val panel = new JFXPanel
 
   add(panel)
@@ -49,31 +50,6 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
 
               setTitle(webEngine.getTitle)
 
-              val nlBabyMonitor = new {
-
-                def onPick(x: AnyRef): Unit = {
-                  EventQueue.invokeLater(() => {
-                    callback(x.asInstanceOf[String].toDouble)
-                    setVisible(false)
-                  })
-                }
-
-                def onCopy(x: AnyRef): Unit = {
-                  EventQueue.invokeLater(() => {
-                    val selection = new StringSelection(x.toString())
-                    val clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
-                    clipboard.setContents(selection, selection)
-                  })
-                }
-
-                def onCancel(): Unit = {
-                  EventQueue.invokeLater(() => {
-                    setVisible(false)
-                  })
-                }
-
-              }
-
               webEngine.executeScript("window").asInstanceOf[JSObject].setMember("nlBabyMonitor", nlBabyMonitor)
 
               config match {
@@ -87,7 +63,7 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
       )
 
       val root = new VBox
-      root.getChildren().add(webView)
+      root.getChildren.add(webView)
 
       panel.setScene(new Scene(root))
 
@@ -99,6 +75,28 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
     // do later
   }
 
+  private class Bridge {
+    def onPick(x: AnyRef): Unit = {
+      EventQueue.invokeLater(() => {
+        callback(x.asInstanceOf[String].toDouble)
+        setVisible(false)
+      })
+    }
+
+    def onCopy(x: AnyRef): Unit = {
+      EventQueue.invokeLater(() => {
+        val selection = new StringSelection(x.toString)
+        val clipboard = Toolkit.getDefaultToolkit.getSystemClipboard
+        clipboard.setContents(selection, selection)
+      })
+    }
+
+    def onCancel(): Unit = {
+      EventQueue.invokeLater(() => {
+        setVisible(false)
+      })
+    }
+  }
 }
 
 sealed trait JFXCPConfig {
