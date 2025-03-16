@@ -199,7 +199,6 @@ lazy val netlogo = project.in(file("netlogo-gui")).
         "com.googlecode.json-simple" % "json-simple" % "1.1.1",
         "com.fifesoft" % "rsyntaxtextarea" % "3.5.4",
         "com.typesafe" % "config" % "1.4.3",
-        "org.piwik.java.tracking" % "matomo-java-tracker" % "3.4.0",
         "net.lingala.zip4j" % "zip4j" % "2.11.5"
       ) ++ Seq("base", "controls", "graphics", "swing", "web")
         .map(m => "org.openjfx" % s"javafx-$m" % "21" classifier osName)
