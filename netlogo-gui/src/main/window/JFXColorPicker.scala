@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Dimension, Frame, Toolkit }
+import java.awt.{ Color, Dimension, Frame, Toolkit }
 import java.awt.datatransfer.StringSelection
 
 import javafx.application.Platform
@@ -12,20 +12,22 @@ import javafx.concurrent.Worker.State
 import javafx.embed.swing.JFXPanel
 import javafx.scene.Scene
 import javafx.scene.layout.VBox
-import javafx.scene.web.WebView
+import javafx.scene.web.{ WebEngine, WebView }
 import javax.swing.{ JDialog, WindowConstants }
 
 import netscape.javascript.JSObject
 
 import org.nlogo.awt.EventQueue
 import org.nlogo.swing.Positioning
-import org.nlogo.theme.ThemeSync
+import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback: (Any) => Unit = _ => {})
   extends JDialog(frame, modal) with ThemeSync {
 
   private val nlBabyMonitor = new Bridge
   private val panel = new JFXPanel
+
+  private var webEngine: Option[WebEngine] = None
 
   add(panel)
 
@@ -53,10 +55,13 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
               webEngine.executeScript("window").asInstanceOf[JSObject].setMember("nlBabyMonitor", nlBabyMonitor)
 
               config match {
-                case DoubleOnly => webEngine.executeScript(s"window.useNumberOnlyPicker();")
-                case CopyOnly   => webEngine.executeScript(s"window.useNonPickPicker();")
+                case DoubleOnly => webEngine.executeScript("window.useNumberOnlyPicker()")
+                case CopyOnly   => webEngine.executeScript("window.useNonPickPicker()")
               }
 
+              JFXColorPicker.this.webEngine = Option(webEngine)
+
+              syncTheme()
             }
           }
         }
@@ -72,8 +77,27 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
   )
 
   override def syncTheme(): Unit = {
-    // do later
+    Platform.runLater(() => {
+      webEngine.foreach(_.executeScript(
+        s"""window.syncTheme({
+          "--dialog-background": "${rgbaString(InterfaceColors.dialogBackground)}",
+          "--dialog-text": "${rgbaString(InterfaceColors.dialogText)}",
+          "--tab-background": "${rgbaString(InterfaceColors.tabBackground)}",
+          "--tab-background-selected": "${rgbaString(InterfaceColors.tabBackgroundSelected)}",
+          "--tab-border": "${rgbaString(InterfaceColors.tabBorder)}",
+          "--tab-text": "${rgbaString(InterfaceColors.tabText)}",
+          "--tab-text-selected": "${rgbaString(InterfaceColors.tabTextSelected)}",
+          "--control-background": "${rgbaString(InterfaceColors.toolbarControlBackground)}",
+          "--control-background-hover": "${rgbaString(InterfaceColors.toolbarControlBackgroundHover)}",
+          "--control-border": "${rgbaString(InterfaceColors.toolbarControlBorder)}",
+          "--control-text": "${rgbaString(InterfaceColors.toolbarText)}"
+        })"""
+      ))
+    })
   }
+
+  private def rgbaString(color: Color): String =
+    s"rgba(${color.getRed}, ${color.getGreen}, ${color.getBlue}, ${color.getAlpha})"
 
   private class Bridge {
     def onPick(x: AnyRef): Unit = {
