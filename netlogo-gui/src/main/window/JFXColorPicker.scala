@@ -1,6 +1,8 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.window
 
-import java.awt.{ Dimension, Toolkit }
+import java.awt.{ Dimension, Frame, Toolkit }
 import java.awt.datatransfer.StringSelection
 
 import javafx.application.Platform
@@ -11,85 +13,90 @@ import javafx.embed.swing.JFXPanel
 import javafx.scene.Scene
 import javafx.scene.layout.VBox
 import javafx.scene.web.WebView
-import javax.swing.JFrame
+import javax.swing.{ JDialog, WindowConstants }
 
 import netscape.javascript.JSObject
 
 import org.nlogo.awt.EventQueue
+import org.nlogo.swing.Positioning
+import org.nlogo.theme.ThemeSync
 
-object JFXColorPicker {
+class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback: (Any) => Unit = _ => {})
+  extends JDialog(frame, modal) with ThemeSync {
 
-  def launch(config: JFXCPConfig)(callback: (Any) => Unit): Unit = {
+  private val panel = new JFXPanel
 
-    val frame = new JFrame
-    val panel = new JFXPanel
+  add(panel)
 
-    frame.add(panel)
-    frame.setSize(new Dimension(540, 645))
-    frame.setLocationRelativeTo(null) // Center on screen --Jason B. (3/14/25)
-    frame.setVisible(true)
+  setSize(new Dimension(540, 645))
+  setResizable(false)
+  setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE)
 
-    Platform.runLater(
-      () => {
+  Positioning.center(this, frame)
 
-        val webView   = new WebView()
-        val webEngine = webView.getEngine
-        val url       = this.getClass.getResource("/colorpicker/index.html")
-        webEngine.load(url.toExternalForm)
+  Platform.runLater(
+    () => {
 
-        webEngine.getLoadWorker.stateProperty().addListener(
-          new ChangeListener[State] {
-            override def changed(ov: ObservableValue[_ <: State], oldState: State, newState: State): Unit = {
-              if (newState == State.SUCCEEDED) {
+      val webView   = new WebView()
+      val webEngine = webView.getEngine
+      val url       = getClass.getResource("/colorpicker/index.html")
+      webEngine.load(url.toExternalForm)
 
-                frame.setTitle(webEngine.getTitle)
+      webEngine.getLoadWorker.stateProperty().addListener(
+        new ChangeListener[State] {
+          override def changed(ov: ObservableValue[_ <: State], oldState: State, newState: State): Unit = {
+            if (newState == State.SUCCEEDED) {
 
-                val nlBabyMonitor = new {
+              setTitle(webEngine.getTitle)
 
-                  def onPick(x: AnyRef): Unit = {
-                    EventQueue.invokeLater(() => {
-                      callback(x.asInstanceOf[String].toDouble)
-                      frame.dispose()
-                    })
-                  }
+              val nlBabyMonitor = new {
 
-                  def onCopy(x: AnyRef): Unit = {
-                    EventQueue.invokeLater(() => {
-                      val selection = new StringSelection(x.toString())
-                      val clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
-                      clipboard.setContents(selection, selection)
-                    })
-                  }
-
-                  def onCancel(): Unit = {
-                    EventQueue.invokeLater(() => {
-                      frame.dispose()
-                    })
-                  }
-
+                def onPick(x: AnyRef): Unit = {
+                  EventQueue.invokeLater(() => {
+                    callback(x.asInstanceOf[String].toDouble)
+                    setVisible(false)
+                  })
                 }
 
-                webEngine.executeScript("window").asInstanceOf[JSObject].setMember("nlBabyMonitor", nlBabyMonitor)
+                def onCopy(x: AnyRef): Unit = {
+                  EventQueue.invokeLater(() => {
+                    val selection = new StringSelection(x.toString())
+                    val clipboard = Toolkit.getDefaultToolkit().getSystemClipboard()
+                    clipboard.setContents(selection, selection)
+                  })
+                }
 
-                config match {
-                  case DoubleOnly => webEngine.executeScript(s"window.useNumberOnlyPicker();")
-                  case CopyOnly   => webEngine.executeScript(s"window.useNonPickPicker();")
+                def onCancel(): Unit = {
+                  EventQueue.invokeLater(() => {
+                    setVisible(false)
+                  })
                 }
 
               }
+
+              webEngine.executeScript("window").asInstanceOf[JSObject].setMember("nlBabyMonitor", nlBabyMonitor)
+
+              config match {
+                case DoubleOnly => webEngine.executeScript(s"window.useNumberOnlyPicker();")
+                case CopyOnly   => webEngine.executeScript(s"window.useNonPickPicker();")
+              }
+
             }
           }
-        )
+        }
+      )
 
-        val root = new VBox
-        root.getChildren().add(webView)
+      val root = new VBox
+      root.getChildren().add(webView)
 
-        panel.setScene(new Scene(root))
+      panel.setScene(new Scene(root))
 
-      }
+    }
 
-    )
+  )
 
+  override def syncTheme(): Unit = {
+    // do later
   }
 
 }
