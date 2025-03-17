@@ -23,8 +23,9 @@ public class Renderer3D
   public Renderer3D(WorldWithWorldRenderable world,
                     ViewSettings graphicsSettings,
                     DrawingInterface drawing,
-                    GLViewSettings glSettings) {
-    super(world, graphicsSettings, drawing, glSettings, new ShapeRenderer3D((World3D) world));
+                    GLViewSettings glSettings,
+                    double uiScale) {
+    super(world, graphicsSettings, drawing, glSettings, new ShapeRenderer3D((World3D) world), uiScale);
   }
 
   public Renderer3D(Renderer glrenderer) {

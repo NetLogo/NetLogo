@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage
 
 import org.nlogo.api.Version
 import org.nlogo.gl.render.Renderer
-import org.nlogo.swing.NetLogoIcon
+import org.nlogo.swing.{ NetLogoIcon, Utils }
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.Event.LinkChild
 
@@ -25,7 +25,7 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
     if (renderer == null) {
       renderer = new org.nlogo.gl.render.Renderer3D(
         viewManager.world, viewManager.graphicsSettings,
-        viewManager.workspace, viewManager)
+        viewManager.workspace, viewManager, Utils.getUIScale)
     } else {
       renderer.cleanUp()
       renderer = new org.nlogo.gl.render.Renderer3D(renderer)
@@ -36,7 +36,7 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
     if (renderer == null) {
       renderer = new Renderer(
         viewManager.world, viewManager.graphicsSettings,
-        viewManager.workspace, viewManager)
+        viewManager.workspace, viewManager, Utils.getUIScale)
     }
     else {
       renderer.cleanUp()
