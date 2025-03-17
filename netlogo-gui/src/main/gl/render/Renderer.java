@@ -17,6 +17,7 @@ import org.nlogo.api.ViewSettings;
 import org.nlogo.api.World;
 import org.nlogo.api.WorldWithWorldRenderable;
 import org.nlogo.api.World3D;
+import org.nlogo.swing.Utils;
 
 import com.jogamp.opengl.GL;
 import com.jogamp.opengl.GL2;
@@ -29,6 +30,7 @@ import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
+import javax.swing.text.Utilities;
 
 public class Renderer
     implements GLEventListener {
@@ -227,8 +229,8 @@ public class Renderer
 
   public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height) {
     GL2 gl = (GL2) gLDrawable.getGL();
-    this.width = width;
-    this.height = (height > 0) ? height : 1;
+    this.width = (int)(width * Utils.getUIScale());
+    this.height = (height > 0) ? (int)(height * Utils.getUIScale()) : 1;
     ratio = (float) this.width / (float) this.height;
 
     mainViewport(gl);

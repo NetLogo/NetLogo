@@ -13,6 +13,9 @@ import org.nlogo.core.I18N
 final object Utils {
   private var uiScale = 1.0
 
+  def getUIScale: Double =
+    uiScale
+
   def setUIScale(value: Double): Unit = {
     uiScale = value
   }
