@@ -265,6 +265,9 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   def widgetHeight: Int =
     widget.getHeight
 
+  def widgetBounds: Rectangle =
+    new Rectangle(getX + widget.getX, getY + widget.getY, widget.getWidth, widget.getHeight)
+
   def doResize(x: Int, y: Int, ignoreSnap: Boolean): Unit = {
     /* x and y represent the distance from the original click and the dragged cursor position,
         so the widget can resize based on the position of the cursor. Interestingly, the
@@ -772,12 +775,16 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       if (interfacePanel.multiSelected) {
         menu.addSeparator()
 
+        var added = false
+
         if (interfacePanel.canAlignLeft) {
           menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.alignLeft")) {
             def actionPerformed(e: ActionEvent): Unit = {
               interfacePanel.alignLeft()
             }
           }))
+
+          added = true
         }
 
         if (interfacePanel.canAlignCenterHorizontal) {
@@ -786,6 +793,8 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
               interfacePanel.alignCenterHorizontal()
             }
           }))
+
+          added = true
         }
 
         if (interfacePanel.canAlignRight) {
@@ -794,6 +803,8 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
               interfacePanel.alignRight()
             }
           }))
+
+          added = true
         }
 
         if (interfacePanel.canAlignTop) {
@@ -802,6 +813,8 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
               interfacePanel.alignTop()
             }
           }))
+
+          added = true
         }
 
         if (interfacePanel.canAlignCenterVertical) {
@@ -810,6 +823,8 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
               interfacePanel.alignCenterVertical()
             }
           }))
+
+          added = true
         }
 
         if (interfacePanel.canAlignBottom) {
@@ -818,9 +833,12 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
               interfacePanel.alignBottom()
             }
           }))
+
+          added = true
         }
 
-        menu.addSeparator()
+        if (added)
+          menu.addSeparator()
 
         menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.distributeHorizontal")) {
           def actionPerformed(e: ActionEvent): Unit = {
