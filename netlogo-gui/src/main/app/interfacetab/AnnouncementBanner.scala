@@ -41,7 +41,6 @@ class AnnouncementBanner extends JPanel with HoverDecoration with ThemeSync {
     setHandCursor()
 
     setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, InterfaceColors.viewBorder))
-    setPreferredSize(new Dimension(400, 100))
     setLayout(new GridBagLayout)
 
     Util.modifyFont(annTitle)(_.deriveFont(24f))
@@ -141,6 +140,9 @@ class AnnouncementBanner extends JPanel with HoverDecoration with ThemeSync {
     }
 
   }
+
+  override def getPreferredSize: Dimension =
+    new Dimension(super.getPreferredSize.width, 100)
 
   override def syncTheme(): Unit = {
     renderData()
