@@ -12,6 +12,7 @@ import javafx.concurrent.Worker.State
 import javafx.embed.swing.JFXPanel
 import javafx.scene.Scene
 import javafx.scene.layout.VBox
+import javafx.scene.text.Font
 import javafx.scene.web.{ WebEngine, WebView }
 import javax.swing.{ JDialog, WindowConstants }
 
@@ -39,6 +40,8 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
 
   Platform.runLater(
     () => {
+
+      Font.loadFont(getClass.getResource("/fonts/OpenSans-Variable.ttf").toExternalForm, 12.0)
 
       val webView   = new WebView()
       val webEngine = webView.getEngine
