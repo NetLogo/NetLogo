@@ -237,7 +237,7 @@ public class View
     frameCount++;
     if (frozen || !workspace.world().displayOn()) {
       if (dirty) {
-        g.setColor(InterfaceColors.graphicsBackground());
+        g.setColor(InterfaceColors.viewBackground());
         g.fillRect(0, 0, getWidth(), getHeight());
       } else {
         g.drawImage(offscreenImage, 0, 0, null);

@@ -13,7 +13,7 @@ import org.nlogo.awt.{ Coordinates, Mouse }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ MenuItem, PopupMenu, WrappingPopupMenu, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ InterfaceMode, MouseMode, Widget, WidgetWrapperInterface }
+import org.nlogo.window.{ InterfaceMode, MouseMode, ViewWidget, Widget, WidgetWrapperInterface }
 import org.nlogo.window.Events.{ DirtyEvent, EditWidgetEvent, ExportWidgetEvent, WidgetForegroundedEvent }
 
 object WidgetWrapper {
@@ -932,11 +932,16 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
   }
 
   override def paintComponent(g: Graphics): Unit = {
-    super.paintComponent(g)
+    val g2d = Utils.initGraphics2D(g)
+
+    if (widget.isVisible) {
+      super.paintComponent(g2d)
+    } else {
+      g2d.setColor(widget.getBackgroundColor)
+      g2d.fillRect(widget.getX, widget.getY, widget.getWidth, widget.getHeight)
+    }
 
     if (selected) {
-      val g2d = Utils.initGraphics2D(g)
-
       g2d.setColor(InterfaceColors.widgetHandle)
 
       g2d.drawRect(HandleSize / 2, HandleSize / 2, getWidth - HandleSize, getHeight - HandleSize)
@@ -973,13 +978,18 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       if (interfacePanel.getInterfaceMode != InterfaceMode.Interact &&
           (interfacePanel.getInterfaceMode != InterfaceMode.Add || placing) && !selected && !highlighted && !dragging) {
 
-        if (widget.isNote) {
-          g2d.setColor(InterfaceColors.widgetPreviewCoverNote)
-        } else {
-          g2d.setColor(InterfaceColors.widgetPreviewCover)
-        }
+        g2d.setColor(InterfaceColors.widgetPreviewCover)
 
-        g2d.fillRoundRect(widget.getX, widget.getY, widget.getWidth, widget.getHeight, widget.getDiameter, widget.getDiameter)
+        widget match {
+          case _: ViewWidget =>
+            g2d.fillRect(widget.getX, widget.getY, widget.getWidth, widget.getHeight)
+
+          case _ =>
+            if (widget.isNote)
+              g2d.setColor(InterfaceColors.widgetPreviewCoverNote)
+
+            g2d.fillRoundRect(widget.getX, widget.getY, widget.getWidth, widget.getHeight, widget.getDiameter, widget.getDiameter)
+        }
       }
     }
   }
