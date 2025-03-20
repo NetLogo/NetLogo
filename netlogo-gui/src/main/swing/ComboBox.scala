@@ -157,6 +157,7 @@ class ComboBox[T](private var items: Seq[T] = Seq())
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.toolbarControlBackground)
     setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
+    setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed)
     setBorderColor(InterfaceColors.toolbarControlBorder)
 
     choiceDisplay.syncTheme()

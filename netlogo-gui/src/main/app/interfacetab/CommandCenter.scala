@@ -40,10 +40,12 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
     setFocusable(false)
     setDiameter(6)
     enableHover()
+    enablePressed()
 
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.toolbarControlBackground)
       setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
+      setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed)
       setBorderColor(InterfaceColors.toolbarControlBorder)
     }
   }
@@ -59,10 +61,12 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
     setFocusable(false)
     setDiameter(6)
     enableHover()
+    enablePressed()
 
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.toolbarControlBackground)
       setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
+      setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed)
       setBorderColor(InterfaceColors.toolbarControlBorder)
       setForeground(InterfaceColors.toolbarText)
     }

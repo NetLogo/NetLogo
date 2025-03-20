@@ -10,7 +10,7 @@ import javax.swing.border.EmptyBorder
 import org.nlogo.api.Editable
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ DropdownArrow, HoverDecoration, MenuItem, PopupMenu, RoundedBorderPanel, ToolBarToggleButton,
+import org.nlogo.swing.{ DropdownArrow, MenuItem, MouseUtils, PopupMenu, RoundedBorderPanel, ToolBarToggleButton,
                          Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents, GUIWorkspace, InterfaceMode, JobWidget,
@@ -219,7 +219,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
   }
 
-  class WidgetMenu extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with HoverDecoration {
+  class WidgetMenu extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with MouseUtils {
     private val label = new JLabel(I18N.gui.get("tabs.run.addWidget"))
     private val arrow = new DropdownArrow
 
@@ -275,6 +275,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.toolbarControlBackground)
       setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
+      setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed)
       setBorderColor(InterfaceColors.toolbarControlBorder)
 
       label.setForeground(InterfaceColors.toolbarText)
@@ -283,7 +284,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     }
   }
 
-  class AlignmentMenu extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with HoverDecoration {
+  class AlignmentMenu extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with MouseUtils {
     private val label = new JLabel(I18N.gui.get("tabs.run.alignWidgets"))
     private val arrow = new DropdownArrow
 
@@ -422,6 +423,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.toolbarControlBackground)
       setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
+      setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed)
       setBorderColor(InterfaceColors.toolbarControlBorder)
 
       label.setForeground(InterfaceColors.toolbarText)

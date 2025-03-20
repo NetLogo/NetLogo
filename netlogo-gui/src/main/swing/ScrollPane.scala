@@ -3,7 +3,6 @@
 package org.nlogo.swing
 
 import java.awt.{ Adjustable, Color, Component, Dimension, Graphics, Rectangle }
-import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.{ JButton, JComponent, JScrollBar, JScrollPane, ScrollPaneConstants }
 import javax.swing.plaf.basic.BasicScrollBarUI
 
@@ -28,25 +27,9 @@ class ScrollPane(component: Component, vScroll: Int = ScrollPaneConstants.VERTIC
   }
 }
 
-class ScrollBar(orientation: Int) extends JScrollBar(orientation) with HoverDecoration {
-  private var mouseDown = false
-
+class ScrollBar(orientation: Int) extends JScrollBar(orientation) with MouseUtils {
   setUnitIncrement(50)
   setUI(new ScrollBarUI)
-
-  addMouseListener(new MouseAdapter {
-    override def mousePressed(e: MouseEvent): Unit = {
-      mouseDown = true
-
-      repaint()
-    }
-
-    override def mouseReleased(e: MouseEvent): Unit = {
-      mouseDown = false
-
-      repaint()
-    }
-  })
 
   private class ScrollBarUI extends BasicScrollBarUI {
     override def createDecreaseButton(orientation: Int): JButton = {
@@ -73,7 +56,7 @@ class ScrollBar(orientation: Int) extends JScrollBar(orientation) with HoverDeco
     override def paintThumb(g: Graphics, c: JComponent, bounds: Rectangle): Unit = {
       val g2d = Utils.initGraphics2D(g)
 
-      if (isHover || mouseDown) {
+      if (isHover || isPressed) {
         g2d.setColor(InterfaceColors.scrollBarForegroundHover)
       } else {
         g2d.setColor(InterfaceColors.scrollBarForeground)

@@ -8,7 +8,7 @@ import javax.swing.{ AbstractAction, Action, Icon, JRadioButton }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class RadioButton(action: Action) extends JRadioButton(action) with HoverDecoration with Transparent with ThemeSync {
+class RadioButton(action: Action) extends JRadioButton(action) with MouseUtils with Transparent with ThemeSync {
   def this(text: String, function: () => Unit) = this(new AbstractAction(text) {
     def actionPerformed(e: ActionEvent): Unit = {
       function()

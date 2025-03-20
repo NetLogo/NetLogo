@@ -90,6 +90,7 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
 
     setDiameter(6)
     enableHover()
+    enablePressed()
 
     add(panel)
     add(label)
@@ -116,6 +117,7 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.toolbarControlBackground)
       setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
+      setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed)
       setBorderColor(InterfaceColors.toolbarControlBorder)
 
       label.setForeground(InterfaceColors.toolbarText)

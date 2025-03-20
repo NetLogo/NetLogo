@@ -8,7 +8,7 @@ import javax.swing.{ AbstractAction, AbstractButton, Action, JButton, JToggleBut
 
 import org.nlogo.theme.InterfaceColors
 
-trait AbstractToolBarButton extends AbstractButton with Transparent with HoverDecoration {
+trait AbstractToolBarButton extends AbstractButton with Transparent with MouseUtils {
   protected var square = true
 
   setFocusable(false)
@@ -29,7 +29,7 @@ trait AbstractToolBarButton extends AbstractButton with Transparent with HoverDe
 
     if (!isEnabled) {
       g2d.setColor(InterfaceColors.Transparent)
-    } else if (isSelected) {
+    } else if (isSelected || isPressed) {
       g2d.setColor(InterfaceColors.toolbarToolPressed)
     } else if (isHover) {
       g2d.setColor(InterfaceColors.toolbarButtonHover)

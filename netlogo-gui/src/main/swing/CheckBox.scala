@@ -8,7 +8,7 @@ import javax.swing.{ AbstractAction, Action, Icon, JCheckBox }
 
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class CheckBox(text: String = "") extends JCheckBox(text) with HoverDecoration with ThemeSync {
+class CheckBox(text: String = "") extends JCheckBox(text) with MouseUtils with ThemeSync {
   def this(action: Action) = {
     this(action.getValue(Action.NAME).toString)
 

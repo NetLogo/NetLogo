@@ -9,7 +9,6 @@ class UpdateModeChooser(workspace: GUIWorkspace) extends ComboBox[String] {
   implicit val prefix = I18N.Prefix("tabs.run.viewUpdates")
 
   setToolTipText(I18N.gui("dropdown.tooltip"))
-  setFocusable(false)
 
   setItems(List(I18N.gui("dropdown.continuous"), I18N.gui("dropdown.onticks")))
 

@@ -13,10 +13,10 @@ import javax.swing.border.EmptyBorder
 import javax.swing.BorderFactory
 
 import org.nlogo.api.{ Advisory, Announcement, Event, Release }
-import org.nlogo.swing.{ BrowserLauncher, HoverDecoration, Utils }
+import org.nlogo.swing.{ BrowserLauncher, MouseUtils, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class AnnouncementBanner extends JPanel with HoverDecoration with ThemeSync {
+class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
 
   private val prefs   = Preferences.userRoot.node("/org/nlogo/NetLogo")
   private val prefKey = "announce.latest-read-id"
@@ -167,7 +167,7 @@ private class TextPane(title: Component, text: Component) extends JPanel with Th
 
 }
 
-private class XButton(dismissItem: () => Unit) extends JButton with HoverDecoration with ThemeSync {
+private class XButton(dismissItem: () => Unit) extends JButton with MouseUtils with ThemeSync {
 
   private def defaultXColor() = InterfaceColors.toolbarControlFocus
 
@@ -212,7 +212,7 @@ private class XButton(dismissItem: () => Unit) extends JButton with HoverDecorat
 
 }
 
-private class ComplexXWrapper(dismissItem: () => Unit) extends JPanel with HoverDecoration with ThemeSync {
+private class ComplexXWrapper(dismissItem: () => Unit) extends JPanel with MouseUtils with ThemeSync {
 
   private def defaultWrapperColor() = InterfaceColors.scrollBarBackground
 

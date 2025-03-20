@@ -23,6 +23,7 @@ object InterfaceColors {
   private val MediumBlue = new Color(6, 112, 237)
   private val MediumBlue2 = new Color(0, 102, 227)
   private val MediumBlue3 = new Color(0, 92, 217)
+  private val MediumBlue4 = new Color(0, 72, 197)
   private val DarkBlue = new Color(0, 54, 117)
   private val White2 = new Color(245, 245, 245)
   private val LightGray = new Color(238, 238, 238)
@@ -36,6 +37,7 @@ object InterfaceColors {
   private val MediumBlueGray = new Color(60, 60, 65)
   private val DarkBlueGray = new Color(45, 45, 54)
   private val DarkBlueGray2 = new Color(35, 35, 44)
+  private val DarkBlueGray3 = new Color(25, 25, 34)
   private val LightRed = new Color(251, 96, 85)
 
   val AlmostBlack = new Color(22, 22, 22)
@@ -397,6 +399,12 @@ object InterfaceColors {
       case "dark" => DarkBlueGray2
     }
 
+  def toolbarControlBackgroundPressed =
+    getTheme match {
+      case "classic" | "light" => LightGray2
+      case "dark" => DarkBlueGray3
+    }
+
   def toolbarControlBorder =
     getTheme match {
       case "classic" | "light" => MediumGray
@@ -405,7 +413,7 @@ object InterfaceColors {
 
   def toolbarControlFocus =
     getTheme match {
-      case "classic" | "light" => DarkGray
+      case "classic" | "light" => MediumBlue
       case "dark" => Color.WHITE
     }
 
@@ -627,6 +635,8 @@ object InterfaceColors {
 
   def primaryButtonBackgroundHover = MediumBlue3
 
+  def primaryButtonBackgroundPressed = MediumBlue4
+
   def primaryButtonBorder = MediumBlue
 
   def primaryButtonText = Color.WHITE
@@ -641,6 +651,12 @@ object InterfaceColors {
     getTheme match {
       case "classic" | "light" => MediumGray2
       case "dark" => LightGrayOutline2
+    }
+
+  def secondaryButtonBackgroundPressed =
+    getTheme match {
+      case "classic" | "light" => LightGrayOutline
+      case "dark" => DarkGray
     }
 
   def secondaryButtonBorder =

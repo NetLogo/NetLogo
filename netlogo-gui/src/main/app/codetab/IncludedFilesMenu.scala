@@ -72,6 +72,7 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
   override def syncTheme(): Unit = {
     setBackgroundColor(InterfaceColors.toolbarControlBackground)
     setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
+    setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed)
     setBorderColor(InterfaceColors.toolbarControlBorder)
 
     label.setForeground(InterfaceColors.toolbarText)
