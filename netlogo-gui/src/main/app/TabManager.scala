@@ -361,9 +361,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   }
 
   private def addTabWithLabel(tabsPanel: TabsPanel, title: String, tab: Component): Unit = {
-    tabsPanel.addTab(null, tab)
-
-    tabsPanel.setTabComponentAt(tabsPanel.getTabCount - 1, new TabLabel(tabsPanel, title, tab))
+    tabsPanel.addTabWithLabel(tab, new TabLabel(tabsPanel, title, tab))
 
     tab match {
       case ts: ThemeSync => ts.syncTheme()
@@ -527,8 +525,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       while (mainTabs.getTabCount > 2) {
         val tabLabel = mainTabs.getTabLabelAt(2)
 
-        separateTabs.addTab(null, mainTabs.getComponentAt(2))
-        separateTabs.setTabComponentAt(separateTabs.getTabCount - 1, tabLabel)
+        separateTabs.addTabWithLabel(mainTabs.getComponentAt(2), tabLabel)
 
         tabLabel.setTabsPanel(separateTabs)
       }
@@ -553,8 +550,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       while (separateTabs.getTabCount > 0) {
         val tabLabel = separateTabs.getTabLabelAt(0)
 
-        mainTabs.addTab(null, separateTabs.getComponentAt(0))
-        mainTabs.setTabComponentAt(mainTabs.getTabCount - 1, tabLabel)
+        mainTabs.addTabWithLabel(separateTabs.getComponentAt(0), tabLabel)
 
         tabLabel.setTabsPanel(mainTabs)
       }

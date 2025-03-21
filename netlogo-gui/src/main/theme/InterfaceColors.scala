@@ -355,6 +355,12 @@ object InterfaceColors {
       case "dark" => DarkBlueGray
     }
 
+  def tabBackgroundHover =
+    getTheme match {
+      case "classic" | "light" => LightGray2
+      case "dark" => DarkBlueGray2
+    }
+
   def tabBackgroundSelected = MediumBlue
 
   def tabBackgroundError = LightRed

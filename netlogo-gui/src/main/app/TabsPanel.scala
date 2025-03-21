@@ -2,15 +2,15 @@
 
 package org.nlogo.app
 
-import java.awt.{ Component, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets }
-import java.awt.event.{ MouseAdapter, MouseEvent }
+import java.awt.{ Component, Dimension, Graphics, GridBagConstraints, GridBagLayout, Insets, Point }
+import java.awt.event.{ MouseAdapter, MouseEvent, MouseMotionAdapter }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.{ JComponent, JLabel, JPanel, JTabbedPane, SwingConstants }
 import javax.swing.plaf.basic.BasicTabbedPaneUI
 
 import org.nlogo.app.codetab.{ CodeTab, MainCodeTab }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.swing.{ CloseButton, MouseUtils, Utils }
+import org.nlogo.swing.{ CloseButton, Utils }
 import org.nlogo.theme.InterfaceColors
 
 private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
@@ -61,6 +61,8 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
       } else {
         g2d.setColor(InterfaceColors.tabBackgroundSelected)
       }
+    } else if (tabsPanel.isHover(tabIndex)) {
+      g2d.setColor(InterfaceColors.tabBackgroundHover)
     } else {
       g2d.setColor(InterfaceColors.tabBackground)
     }
@@ -209,7 +211,10 @@ class TabLabel(startPanel: TabsPanel, text: String, tab: Component) extends JPan
 }
 
 class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
-                                            with ChangeListener with MouseUtils {
+                                            with ChangeListener {
+
+  private var mouse = new Point(0, 0)
+
   setUI(new TabsPanelUI(this))
   setFocusable(false)
 
@@ -227,6 +232,19 @@ class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.T
     }
   })
 
+  addMouseMotionListener(new MouseMotionAdapter {
+    override def mouseMoved(e: MouseEvent): Unit = {
+      mouse = e.getPoint
+
+      repaint()
+    }
+  })
+
+  def addTabWithLabel(tab: Component, label: TabLabel): Unit = {
+    addTab(null, tab)
+    setTabComponentAt(getTabCount - 1, label)
+  }
+
   def stateChanged(e: ChangeEvent): Unit =
     tabManager.switchedTabs(getSelectedComponent)
 
@@ -242,4 +260,15 @@ class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.T
 
   def getTabLabelAt(index: Int): TabLabel =
     getTabComponentAt(index).asInstanceOf[TabLabel]
+
+  def isHover(index: Int): Boolean = {
+    if (getTabCount == 0) {
+      false
+    } else {
+      val component = getTabComponentAt(index)
+
+      component.getX - 10 <= mouse.x && component.getX + 10 + component.getWidth >= mouse.x &&
+      component.getY <= mouse.y && component.getY + component.getHeight >= mouse.y
+    }
+  }
 }
