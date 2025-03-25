@@ -109,5 +109,5 @@ class BehaviorsearchLauncher(
   , "-Dfile.encoding=UTF-8"
   ) ++ extraJavaOptions
   def mainJar: String = customMainJar.getOrElse(s"behaviorsearch.jar")
-  def mainClass: String = customMainClass.getOrElse("bsearch.fx.MainGUI")
+  def mainClass: String = customMainClass.getOrElse("bsearch.fx.MainGUIEntry")
 }

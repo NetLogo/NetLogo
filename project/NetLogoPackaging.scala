@@ -376,7 +376,7 @@ object NetLogoPackaging {
         , Some("Behaviorsearch.icns")
         , extraJavaOptions ++ Seq(
             "-Xdock:name=Behaviorsearch"
-          , "-Dorg.nlogo.mac.appClassName=bsearch.fx.MainGUI"
+          , "-Dorg.nlogo.mac.appClassName=bsearch.fx.MainGUIEntry"
           , "-Dbsearch.appfolder={{{ROOTDIR}}}/behaviorsearch"
           , "-Dbsearch.startupfolder={{{ROOTDIR}}}"
           )
