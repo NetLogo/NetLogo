@@ -134,6 +134,7 @@ object PackageMacAggregate {
   def apply(
     log: sbt.util.Logger
   , version: String
+  , arch: String
   , destDir: File
   , bundleDir: File
   , configDir: File
@@ -165,7 +166,7 @@ object PackageMacAggregate {
         case _ => 1
       }
 
-    val dmgName = s"NetLogo-$version.dmg"
+    val dmgName = s"NetLogo-$version-$arch.dmg"
 
     // Apple requires a "hardened" runtime for notarization -Jeremy B July 2020
     val appSigningOptions = Seq("--options", "runtime", "--entitlements", (configDir / "macosx" / "entitlements.xml").toString)

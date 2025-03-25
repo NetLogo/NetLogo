@@ -4,7 +4,7 @@ import sbt.util.Logger
 import Keys.{ artifactPath, dependencyClasspath, packageOptions, packageBin }
 import sbt.io.Using
 import java.nio.file.FileSystems
-import java.nio.file.Files
+import java.nio.file.{ Files, Paths }
 import java.nio.file.attribute.PosixFilePermission
 import java.io.File
 import java.util.jar.Attributes.Name._
@@ -96,7 +96,7 @@ object JavaPackager {
     if (System.getProperty("os.name").contains("Windows"))
       windowsPackagerOptions
     else if (System.getProperty("os.name").contains("Mac"))
-      Seq() // this causes it to use the default
+      macPackagerOptions
     else
       linuxPackagerOptions
   }
@@ -134,6 +134,24 @@ object JavaPackager {
       .filter(_.getName.contains("JDK"))
       .map(_ / "bin" / "jpackage.exe")
       .filter(_.exists)
+  }
+
+  // looks for OpenJDK at a path like /Library/Java/JavaVirtualMachines/jdk-17*.jdk
+  // the architecture can't be specified for the build process, so generate both options and assume developer competency
+  def macPackagerOptions: Seq[BuildJDK] = {
+    val specificJdks = FileActions.listDirectory(Paths.get("/Library/Java/JavaVirtualMachines")).collect {
+      case path if """^jdk-17.*\.jdk$""".r.findFirstIn(path.getFileName.toString).isDefined =>
+        val jpackage = (path / "Contents" / "Home" / "bin" / "jpackage").toFile
+        val home = Some((path / "Contents" / "Home").toString)
+
+        Seq(SpecifiedJDK("x86_64", "17", jpackage, home), SpecifiedJDK("aarch64", "17", jpackage, home))
+    }.flatten
+
+    if (specificJdks.isEmpty) {
+      Seq(PathSpecifiedJDK)
+    } else {
+      specificJdks
+    }
   }
 
   // assumes java installations are named with format bellsoft-java<version>-full-<arch> ,

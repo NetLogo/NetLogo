@@ -29,7 +29,7 @@ object NetLogoPackaging {
   lazy val netLogoRoot             = settingKey[File]("Root directory of NetLogo project")
   lazy val packagedMathematicaLink = taskKey[File]("Mathematica link, ready for packaging")
   lazy val packageLinuxAggregate   = inputKey[File]("package all linux apps into a single directory")
-  lazy val packageMacAggregate     = taskKey[File]("package all mac apps into a dmg")
+  lazy val packageMacAggregate     = inputKey[File]("package all mac apps into a dmg")
   lazy val packageWinAggregate     = inputKey[File]("package all win apps into a single directory")
   lazy val packagingClasspath      = taskKey[Seq[File]]("Jars to include when packaging")
   lazy val packagingMainJar        = taskKey[File]("Main jar to use when packaging")
@@ -301,7 +301,7 @@ object NetLogoPackaging {
     packageMacAggregate := {
       val log          = streams.value.log
       val version      = marketingVersion.value
-      val buildJDK     = PathSpecifiedJDK
+      val buildJDK     = aggregateJDKParser.parsed
       val buildDir     = target.value
       val platform     = "macosx"
       val configDir    = configRoot.value
@@ -418,6 +418,7 @@ object NetLogoPackaging {
       PackageMacAggregate(
         log
       , version
+      , buildJDK.arch
       , destDir
       , bundleDir
       , configDir
