@@ -11,7 +11,7 @@ import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.{ Color => NLColor, Dump }, NLColor.{ getClosestColorNumberByARGB, getColorNameByIndex }
 import org.nlogo.swing.{ RoundedBorderPanel, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.ColorDialog
+import org.nlogo.window.{ DoubleOnly, JFXColorPicker }
 
 abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
   extends PropertyEditor(accessor) {
@@ -97,9 +97,15 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent) {
-        val colorDialog = new ColorDialog(frame, true)
-        val c = colorDialog.showInputBoxDialog(getClosestColorNumberByARGB(getColor.getRGB))
-        ColorEditor.this.setColor(NLColor.getColor(c: Double))
+        new JFXColorPicker(frame, true, DoubleOnly,
+          (x: Any) => {
+            val marshalled = x match {
+              case i: Int => i.toDouble.asInstanceOf[Double]
+              case _ => x.asInstanceOf[Double]
+            }
+            ColorEditor.this.setColor(NLColor.getColor(marshalled))
+          }
+        ).setVisible(true)
       }
     })
 
