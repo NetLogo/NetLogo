@@ -22,7 +22,7 @@ import org.nlogo.awt.EventQueue
 import org.nlogo.swing.Positioning
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback: (Any) => Unit = _ => {})
+class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback: (String) => Unit = _ => {})
   extends JDialog(frame, modal) with ThemeSync {
 
   private val nlBabyMonitor = new Bridge
@@ -60,6 +60,7 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
               config match {
                 case DoubleOnly => webEngine.executeScript("window.useNumberOnlyPicker()")
                 case CopyOnly   => webEngine.executeScript("window.useNonPickPicker()")
+                case RGBAOnly   => webEngine.executeScript("window.useRGBAOnlyPicker()")
               }
 
               JFXColorPicker.this.webEngine = Option(webEngine)
@@ -103,16 +104,16 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
     s"rgba(${color.getRed}, ${color.getGreen}, ${color.getBlue}, ${color.getAlpha})"
 
   private class Bridge {
-    def onPick(x: AnyRef): Unit = {
+    def onPick(x: String): Unit = {
       EventQueue.invokeLater(() => {
-        callback(x.asInstanceOf[String].toDouble)
+        callback(x)
         setVisible(false)
       })
     }
 
-    def onCopy(x: AnyRef): Unit = {
+    def onCopy(x: String): Unit = {
       EventQueue.invokeLater(() => {
-        val selection = new StringSelection(x.toString)
+        val selection = new StringSelection(x)
         val clipboard = Toolkit.getDefaultToolkit.getSystemClipboard
         clipboard.setContents(selection, selection)
       })
@@ -126,9 +127,8 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
   }
 }
 
-sealed trait JFXCPConfig {
-  def isDoubleEnabled: Boolean
-}
+sealed trait JFXCPConfig
 
-case object DoubleOnly extends JFXCPConfig { override def isDoubleEnabled =  true }
-case object CopyOnly   extends JFXCPConfig { override def isDoubleEnabled = false }
+case object DoubleOnly extends JFXCPConfig
+case object CopyOnly   extends JFXCPConfig
+case object RGBAOnly   extends JFXCPConfig

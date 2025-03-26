@@ -11,7 +11,7 @@ import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.{ Color => NLColor, Dump }, NLColor.{ getClosestColorNumberByARGB, getColorNameByIndex }
 import org.nlogo.swing.{ RoundedBorderPanel, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ DoubleOnly, JFXColorPicker }
+import org.nlogo.window.{ JFXColorPicker, RGBAOnly }
 
 abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
   extends PropertyEditor(accessor) {
@@ -97,13 +97,16 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent) {
-        new JFXColorPicker(frame, true, DoubleOnly,
-          (x: Any) => {
-            val marshalled = x match {
-              case i: Int => i.toDouble.asInstanceOf[Double]
-              case _ => x.asInstanceOf[Double]
+        new JFXColorPicker(frame, true, RGBAOnly,
+          (x: String) => {
+            val double = """^([\d.]+)$""".r // simple tab output
+            val rgba = """^\[(\d+) (\d+) (\d+) (\d+)\]$""".r // advanced tab output
+
+            x match {
+              case double(d) => ColorEditor.this.setColor(NLColor.getColor(d.toDouble.asInstanceOf[Double]))
+              case rgba(r, g, b, a) => ColorEditor.this.setColor(new Color(r.toInt, g.toInt, b.toInt, a.toInt))
+              case _ => // this shouldn't happen but better safe than sorry for now (Isaac B 3/25/25)
             }
-            ColorEditor.this.setColor(NLColor.getColor(marshalled))
           }
         ).setVisible(true)
       }
