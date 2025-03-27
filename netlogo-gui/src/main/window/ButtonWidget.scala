@@ -430,9 +430,6 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   override def getMinimumSize =
     new Dimension(55, 35)
 
-  override def getMaximumSize =
-    new Dimension(10000, 10000)
-
   override def getPreferredSize =
     new Dimension(getMinimumSize.width.max(super.getPreferredSize.width),
                   getMinimumSize.height.max(super.getPreferredSize.height))

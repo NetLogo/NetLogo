@@ -252,7 +252,6 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   /// sizing
   override def getMinimumSize = AbstractPlotWidget.MIN_SIZE
   override def getPreferredSize = AbstractPlotWidget.PREF_SIZE
-  override def getMaximumSize: Dimension = null
 
   override def syncTheme(): Unit = {
     canvasPanel.syncTheme()

@@ -2,7 +2,7 @@
 
 package org.nlogo.properties
 
-import java.awt.{ BorderLayout, Component, Dimension, GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ BorderLayout, Component, GridBagConstraints, GridBagLayout, Insets }
 import javax.swing.{ JLabel, JPanel, ToolTipManager }
 
 import org.nlogo.api.{ CompilerServices, Editable, Property }
@@ -97,8 +97,6 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
     // that would be kludgy in itself, and a great deal less simple... - ST 12/22/01
     for(wrapper <- wrapperOption) {
       val prefSize = wrapper.getPreferredSize
-      // Some widgets have no max size, so we use an very large one
-      val maxSize = Option(wrapper.getMaximumSize).getOrElse(new Dimension(10000, 10000))
       if (wrapper.isNew) {
         val currentSize = wrapper.getSize
         if (prefSize.width != currentSize.width)
@@ -108,8 +106,8 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
         wrapper.setSize(prefSize)
       }
       else if (originalPreferredSize != prefSize) {
-        var width = maxSize.width min (prefSize.width max originalSize.width)
-        var height = maxSize.height min (if (wrapper.verticallyResizable)
+        var width = 10000 min (prefSize.width max originalSize.width)
+        var height = 10000 min (if (wrapper.verticallyResizable)
                                            prefSize.height max originalSize.height
                                          else prefSize.height)
         val currentSize = wrapper.getSize

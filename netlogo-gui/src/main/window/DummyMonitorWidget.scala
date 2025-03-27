@@ -59,9 +59,6 @@ class DummyMonitorWidget
   override def getMinimumSize: Dimension =
     new Dimension(MinWidth, MaxHeight)
 
-  override def getMaximumSize: Dimension =
-    new Dimension(10000, MaxHeight)
-
   override def getPreferredSize: Dimension = {
     val size = getMinimumSize
     val fontMetrics = getFontMetrics(getFont)
