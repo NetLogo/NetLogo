@@ -81,27 +81,33 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
   )
 
   override def syncTheme(): Unit = {
+
+    val color = (f: (InterfaceColors.type) => Color) => {
+      val c = f(InterfaceColors)
+      s"rgba(${c.getRed}, ${c.getGreen}, ${c.getBlue}, ${c.getAlpha})"
+    }
+
     Platform.runLater(() => {
       webEngine.foreach(_.executeScript(
         s"""window.syncTheme({
-          "--dialog-background": "${rgbaString(InterfaceColors.dialogBackground)}",
-          "--dialog-text": "${rgbaString(InterfaceColors.dialogText)}",
-          "--tab-background": "${rgbaString(InterfaceColors.tabBackground)}",
-          "--tab-background-selected": "${rgbaString(InterfaceColors.tabBackgroundSelected)}",
-          "--tab-border": "${rgbaString(InterfaceColors.tabBorder)}",
-          "--tab-text": "${rgbaString(InterfaceColors.tabText)}",
-          "--tab-text-selected": "${rgbaString(InterfaceColors.tabTextSelected)}",
-          "--control-background": "${rgbaString(InterfaceColors.toolbarControlBackground)}",
-          "--control-background-hover": "${rgbaString(InterfaceColors.toolbarControlBackgroundHover)}",
-          "--control-border": "${rgbaString(InterfaceColors.toolbarControlBorder)}",
-          "--control-text": "${rgbaString(InterfaceColors.toolbarText)}"
-        })"""
+            |  dialogBackground:        "${color(_.dialogBackground             )}"
+            |, dialogText:              "${color(_.dialogText                   )}"
+            |, tabBackground:           "${color(_.tabBackground                )}"
+            |, tabBackgroundHover:      "${color(_.tabBackgroundHover           )}"
+            |, tabBackgroundSelected:   "${color(_.tabBackgroundSelected        )}"
+            |, tabBorder:               "${color(_.tabBorder                    )}"
+            |, tabText:                 "${color(_.tabText                      )}"
+            |, tabTextSelected:         "${color(_.tabTextSelected              )}"
+            |, controlBackground:       "${color(_.toolbarControlBackground     )}"
+            |, controlBackgroundActive: "${color(_.toolbarControlFocus          )}"
+            |, controlBackgroundHover:  "${color(_.toolbarControlBackgroundHover)}"
+            |, controlBorder:           "${color(_.toolbarControlBorder         )}"
+            |, controlText:             "${color(_.toolbarText                  )}"
+            })""".stripMargin
       ))
     })
-  }
 
-  private def rgbaString(color: Color): String =
-    s"rgba(${color.getRed}, ${color.getGreen}, ${color.getBlue}, ${color.getAlpha})"
+  }
 
   private class Bridge {
     def onPick(x: String): Unit = {
