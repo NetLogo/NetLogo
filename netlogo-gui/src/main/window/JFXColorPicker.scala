@@ -63,6 +63,11 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
                 case RGBAOnly   => webEngine.executeScript("window.useRGBAOnlyPicker()")
               }
 
+              // CSS hacks to fix this stupid JFX browser engine go here! --Jason B. (3/27/25)
+              webEngine.executeScript("""window.injectCSS(`.tab-button:last-child {
+                                                          |  border-right-width: 2px;
+                                                          |}`)""".stripMargin)
+
               JFXColorPicker.this.webEngine = Option(webEngine)
 
               syncTheme()
