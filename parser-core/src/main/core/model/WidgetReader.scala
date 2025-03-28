@@ -358,7 +358,9 @@ object TextBoxReader extends BaseWidgetReader {
                         BooleanLine()        // transparent
                       )
   def asList(textBox: TextBox) = List((), textBox.x, textBox.y, textBox.x + textBox.width, textBox.y + textBox.height,
-                                    textBox.display, textBox.fontSize, Color.getClosestColorNumberByARGB(textBox.textColorLight.getOrElse(-16777216)), false)
+                                      textBox.display, textBox.fontSize,
+                                      Color.getClosestColorNumberByARGB(textBox.textColorLight.getOrElse(-16777216)),
+                                      textBox.backgroundLight.exists(_ == 0))
   def asWidget(vals: List[Any], literalParser: LiteralParser): TextBox = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, display: Option[String] @unchecked, fontSize: Int, color: Double, transparent: Boolean) = vals
     val textColor = Color.getARGBbyPremodulatedColorNumber(Color.modulateDouble(Double.box(color)))
