@@ -145,15 +145,35 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     widgetMenu.syncTheme()
     alignmentMenu.syncTheme()
 
-    interactButton.setIcon(Utils.iconScaledWithColor("/images/interact.png", 18, 18, InterfaceColors.toolbarImage))
-    selectButton.setIcon(Utils.iconScaledWithColor("/images/select.png", 18, 18, InterfaceColors.toolbarImage))
-    editButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 18, 18, InterfaceColors.toolbarImage))
+    interactButton.setIcon(Utils.iconScaledWithColor("/images/interact.png", 18, 18,
+                           if (interactButton.isSelected) {
+                             InterfaceColors.toolbarImageSelected
+                           } else {
+                             InterfaceColors.toolbarImage
+                           }))
 
-    if (deleteButton.isEnabled) {
-      deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 18, 18, InterfaceColors.toolbarImage))
-    } else {
-      deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 18, 18, InterfaceColors.toolbarImageDisabled))
-    }
+    selectButton.setIcon(Utils.iconScaledWithColor("/images/select.png", 18, 18,
+                         if (selectButton.isSelected) {
+                           InterfaceColors.toolbarImageSelected
+                         } else {
+                           InterfaceColors.toolbarImage
+                         }))
+
+    editButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 18, 18,
+                       if (editButton.isSelected) {
+                         InterfaceColors.toolbarImageSelected
+                       } else {
+                         InterfaceColors.toolbarImage
+                       }))
+
+    deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 18, 18,
+                         if (!deleteButton.isEnabled) {
+                           InterfaceColors.toolbarImageDisabled
+                         } else if (deleteButton.isSelected) {
+                           InterfaceColors.toolbarImageSelected
+                         } else {
+                           InterfaceColors.toolbarImage
+                         }))
   }
 
   def handle(e: WindowEvents.WidgetRemovedEvent): Unit = {
@@ -217,6 +237,8 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
         buttonGroup.clearSelection()
 
     }
+
+    syncTheme()
   }
 
   class WidgetMenu extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync with MouseUtils {

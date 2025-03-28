@@ -29,7 +29,9 @@ trait AbstractToolBarButton extends AbstractButton with Transparent with MouseUt
 
     if (!isEnabled) {
       g2d.setColor(InterfaceColors.Transparent)
-    } else if (isSelected || isPressed) {
+    } else if (isSelected) {
+      g2d.setColor(InterfaceColors.toolbarToolSelected)
+    } else if (isPressed) {
       g2d.setColor(InterfaceColors.toolbarToolPressed)
     } else if (isHover) {
       g2d.setColor(InterfaceColors.toolbarButtonHover)

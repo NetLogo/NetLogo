@@ -435,10 +435,22 @@ object InterfaceColors {
       case "dark" => DarkBlueGray2
     }
 
+  def toolbarToolSelected =
+    getTheme match {
+      case "classic" | "light" => MediumBlue
+      case "dark" => MediumBlue2
+    }
+
   def toolbarImage =
     getTheme match {
       case "classic" | "light" => new Color(85, 87, 112)
       case "dark" => new Color(168, 170, 194)
+    }
+
+  def toolbarImageSelected =
+    getTheme match {
+      case "classic" | "light" => Color.WHITE
+      case "dark" => LightGray2
     }
 
   def toolbarImageDisabled =
