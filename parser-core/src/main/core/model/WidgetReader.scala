@@ -2,8 +2,6 @@
 
 package org.nlogo.core.model
 
-import java.awt.{ Color => JColor }
-
 import org.nlogo.core.StringEscaper.unescapeString
 import org.nlogo.core.StringEscaper.escapeString
 import org.nlogo.core._
@@ -365,8 +363,7 @@ object TextBoxReader extends BaseWidgetReader {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, display: Option[String] @unchecked, fontSize: Int, color: Double, transparent: Boolean) = vals
     val textColor = Color.getARGBbyPremodulatedColorNumber(Color.modulateDouble(Double.box(color)))
     if (transparent) {
-      TextBox(display, left, top, right - left, bottom - top, fontSize, Some(textColor), None,
-              Some(new JColor(0, 0, 0, 0).getRGB), Some(new JColor(0, 0, 0, 0).getRGB))
+      TextBox(display, left, top, right - left, bottom - top, fontSize, Some(textColor), None, Some(0), Some(0))
     } else {
       TextBox(display, left, top, right - left, bottom - top, fontSize, Some(textColor))
     }
