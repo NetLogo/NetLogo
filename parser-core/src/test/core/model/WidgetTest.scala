@@ -495,7 +495,7 @@ class WidgetTest extends AnyFunSuite {
                      |0.0
                      |1""".stripMargin.split("\n").toList
     val escapedText = "Note, with\ttabs and\n\nnewlines and\nescaped newlines \"\\n\""
-    val textBoxWidget = TextBox(Some(escapedText), 18, 95, 150, 56, 11, Some(-16777216))
+    val textBoxWidget = TextBox(Some(escapedText), 18, 95, 150, 56, 11, Some(-16777216), None, Some(0), Some(0))
     runSerializationTests(textBox, textBoxWidget, TextBoxReader)
   }
 
