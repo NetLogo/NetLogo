@@ -49,6 +49,8 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
       val url       = getClass.getResource("/colorpicker/index.html")
       webEngine.load(url.toExternalForm)
 
+      webView.setContextMenuEnabled(false)
+
       webEngine.getLoadWorker.stateProperty().addListener(
         new ChangeListener[State] {
           override def changed(ov: ObservableValue[_ <: State], oldState: State, newState: State): Unit = {
