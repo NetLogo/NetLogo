@@ -11,6 +11,7 @@ import javafx.beans.value.ObservableValue
 import javafx.concurrent.Worker.State
 import javafx.embed.swing.JFXPanel
 import javafx.scene.Scene
+import javafx.scene.input.{ KeyCode, KeyEvent }
 import javafx.scene.layout.VBox
 import javafx.scene.text.Font
 import javafx.scene.web.{ WebEngine, WebView }
@@ -87,7 +88,15 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
       val root = new VBox
       root.getChildren.add(webView)
 
-      panel.setScene(new Scene(root))
+      val scene = new Scene(root)
+      panel.setScene(scene)
+
+      val window = scene.getWindow()
+      window.addEventHandler(KeyEvent.KEY_RELEASED, (event: KeyEvent) => {
+        if (KeyCode.ESCAPE == event.getCode()) {
+          JFXColorPicker.this.dispose()
+        }
+      })
 
     }
 
