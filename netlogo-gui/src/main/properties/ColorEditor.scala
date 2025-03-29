@@ -99,14 +99,16 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
       override def mousePressed(e: MouseEvent) {
         new JFXColorPicker(frame, true, RGBAOnly,
           (x: String) => {
-            val double = """^([\d.]+)$""".r // simple tab output
-            val rgba = """^\[(\d+) (\d+) (\d+) (\d+)\]$""".r // advanced tab output
+
+            val SimpleDouble = """^(\d{1,3}(?:\.\d))$""".r
+            val AdvRGBA      = """^\[(\d{1,3}) (\d{1,3}) (\d{1,3}) (\d{1,3})\]$""".r
 
             x match {
-              case double(d) => ColorEditor.this.setColor(NLColor.getColor(d.toDouble.asInstanceOf[Double]))
-              case rgba(r, g, b, a) => ColorEditor.this.setColor(new Color(r.toInt, g.toInt, b.toInt, a.toInt))
-              case _ => // this shouldn't happen but better safe than sorry for now (Isaac B 3/25/25)
+              case SimpleDouble(d)     => ColorEditor.this.setColor(NLColor.getColor(d.toDouble.asInstanceOf[Double]))
+              case AdvRGBA(r, g, b, a) => ColorEditor.this.setColor(new Color(r.toInt, g.toInt, b.toInt, a.toInt))
+              case _                   => throw new Exception(s"Color picker returned unrecognized color format: $x")
             }
+
           }
         ).setVisible(true)
       }
