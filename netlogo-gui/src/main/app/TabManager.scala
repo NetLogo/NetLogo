@@ -336,6 +336,16 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       mainTabs.getTabLabelAt(index).getText
   }
 
+  def getTotalTabIndex(tab: Component): Int = {
+    val index = mainTabs.indexOfComponent(tab)
+
+    if (index == -1) {
+      mainTabs.getTabCount + separateTabs.indexOfComponent(tab)
+    } else {
+      index
+    }
+  }
+
   def getTabWithFilename(filename: Filename): Option[TemporaryCodeTab] =
     getExternalFileTabs.find(_.filename == filename)
 

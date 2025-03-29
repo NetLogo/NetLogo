@@ -243,6 +243,12 @@ class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.T
   def addTabWithLabel(tab: Component, label: TabLabel): Unit = {
     addTab(null, tab)
     setTabComponentAt(getTabCount - 1, label)
+
+    if (System.getProperty("os.name").toLowerCase.startsWith("mac")) {
+      setToolTipTextAt(getTabCount - 1, s"\u2318+${tabManager.getTotalTabIndex(tab) + 1}")
+    } else {
+      setToolTipTextAt(getTabCount - 1, s"Ctrl+${tabManager.getTotalTabIndex(tab) + 1}")
+    }
   }
 
   def stateChanged(e: ChangeEvent): Unit =
