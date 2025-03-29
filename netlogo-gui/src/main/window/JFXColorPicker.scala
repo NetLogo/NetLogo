@@ -67,6 +67,11 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
               // CSS hacks to fix this stupid JFX browser engine go here! --Jason B. (3/27/25)
               webEngine.executeScript("""window.injectCSS(`.tab-button:last-child {
                                                           |  border-right-width: 2px;
+                                                          |}
+                                                          |
+                                                          |.dropdown-arrow {
+                                                          |  right:  -312px;
+                                                          |  bottom: -17px;
                                                           |}`)""".stripMargin)
 
               JFXColorPicker.this.webEngine = Option(webEngine)
@@ -109,7 +114,7 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
             |, controlBackgroundHover:  "${color(_.toolbarControlBackgroundHover)}"
             |, controlBorder:           "${color(_.toolbarControlBorder         )}"
             |, controlText:             "${color(_.toolbarText                  )}"
-            |, dropdownArrow:           "url(\\"data:image/svg+xml;utf8,<svg width='24' height='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5' style='fill: none;stroke: ${color(_.toolbarText)};stroke-width: 1'/></svg>\\")"
+            |, dropdownArrow:           "${color(_.toolbarText                  )}"
             })""".stripMargin
       ))
     })
