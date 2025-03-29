@@ -93,7 +93,7 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
         new JFXColorPicker(frame, true, NumAndRGBA,
           (x: String) => {
 
-            val SimpleDouble = """^(\d{1,3}(?:\.\d){0,1})$""".r
+            val SimpleDouble = """^(\d{1,3}(?:\.\d)?)$""".r
             val AdvRGBA      = """^\[(\d{1,3}) (\d{1,3}) (\d{1,3}) (\d{1,3})\]$""".r
 
             x match {
