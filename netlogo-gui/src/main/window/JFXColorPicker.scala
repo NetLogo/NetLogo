@@ -44,39 +44,40 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
 
       Font.loadFont(getClass.getResource("/fonts/OpenSans-Variable.ttf").toExternalForm, 12.0)
 
-      val webView   = new WebView()
-      val webEngine = webView.getEngine
-      val url       = getClass.getResource("/colorpicker/index.html")
-      webEngine.load(url.toExternalForm)
+      val webView = new WebView()
+      val engine  = webView.getEngine
+      val url     = getClass.getResource("/colorpicker/index.html")
+      engine.load(url.toExternalForm)
 
       webView.setContextMenuEnabled(false)
 
-      webEngine.getLoadWorker.stateProperty().addListener(
+      engine.getLoadWorker.stateProperty().addListener(
         new ChangeListener[State] {
           override def changed(ov: ObservableValue[_ <: State], oldState: State, newState: State): Unit = {
             if (newState == State.SUCCEEDED) {
 
-              webEngine.executeScript("window").asInstanceOf[JSObject].setMember("nlBabyMonitor", nlBabyMonitor)
+              engine.executeScript("window").asInstanceOf[JSObject].setMember("nlBabyMonitor", nlBabyMonitor)
 
               config match {
-                case DoubleOnly => webEngine.executeScript("window.useNumberOnlyPicker()")
-                case CopyOnly   => webEngine.executeScript("window.useNonPickPicker()")
-                case NumAndRGBA => webEngine.executeScript("window.useNumAndRGBAPicker()")
+                case DoubleOnly => engine.executeScript("window.useNumberOnlyPicker()")
+                case CopyOnly   => engine.executeScript("window.useNonPickPicker()")
+                case NumAndRGBA => engine.executeScript("window.useNumAndRGBAPicker()")
               }
 
               // CSS hacks to fix this stupid JFX browser engine go here! --Jason B. (3/27/25)
-              webEngine.executeScript("""window.injectCSS(`.tab-button:last-child {
-                                                          |  border-right-width: 2px;
-                                                          |}
-                                                          |
-                                                          |.dropdown-arrow {
-                                                          |  right:  -312px;
-                                                          |  bottom: -17px;
-                                                          |}`)""".stripMargin)
+              engine.executeScript("""window.injectCSS(`.tab-button:last-child {
+                                                       |  border-right-width: 2px;
+                                                       |}
+                                                       |
+                                                       |.dropdown-arrow {
+                                                       |  right:  -312px;
+                                                       |  bottom: -17px;
+                                                       |}`)""".stripMargin)
 
-              JFXColorPicker.this.webEngine = Option(webEngine)
+              webEngine = Option(engine)
 
               syncTheme()
+
             }
           }
         }
@@ -142,6 +143,7 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
         setVisible(false)
       })
     }
+
   }
 }
 
