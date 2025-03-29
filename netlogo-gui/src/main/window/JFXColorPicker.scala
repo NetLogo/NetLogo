@@ -108,6 +108,7 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
             |, controlBackgroundHover:  "${color(_.toolbarControlBackgroundHover)}"
             |, controlBorder:           "${color(_.toolbarControlBorder         )}"
             |, controlText:             "${color(_.toolbarText                  )}"
+            |, dropdownArrow:           "url(\\"data:image/svg+xml;utf8,<svg width='24' height='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5' style='fill: none;stroke: ${color(_.toolbarText)};stroke-width: 1'/></svg>\\")"
             })""".stripMargin
       ))
     })
