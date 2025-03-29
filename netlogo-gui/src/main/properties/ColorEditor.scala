@@ -11,7 +11,7 @@ import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.{ Color => NLColor, Dump }, NLColor.{ getClosestColorNumberByARGB, getColorNameByIndex }
 import org.nlogo.swing.{ RoundedBorderPanel, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ JFXColorPicker, RGBAOnly }
+import org.nlogo.window.{ JFXColorPicker, NumAndRGBA }
 
 abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
   extends PropertyEditor(accessor) {
@@ -97,7 +97,7 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent) {
-        new JFXColorPicker(frame, true, RGBAOnly,
+        new JFXColorPicker(frame, true, NumAndRGBA,
           (x: String) => {
 
             val SimpleDouble = """^(\d{1,3}(?:\.\d))$""".r

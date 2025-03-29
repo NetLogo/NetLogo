@@ -60,7 +60,7 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
               config match {
                 case DoubleOnly => webEngine.executeScript("window.useNumberOnlyPicker()")
                 case CopyOnly   => webEngine.executeScript("window.useNonPickPicker()")
-                case RGBAOnly   => webEngine.executeScript("window.useRGBAOnlyPicker()")
+                case NumAndRGBA => webEngine.executeScript("window.useNumAndRGBAPicker()")
               }
 
               // CSS hacks to fix this stupid JFX browser engine go here! --Jason B. (3/27/25)
@@ -142,4 +142,4 @@ sealed trait JFXCPConfig
 
 case object DoubleOnly extends JFXCPConfig
 case object CopyOnly   extends JFXCPConfig
-case object RGBAOnly   extends JFXCPConfig
+case object NumAndRGBA extends JFXCPConfig
