@@ -245,7 +245,7 @@ class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.T
     setTabComponentAt(getTabCount - 1, label)
 
     if (System.getProperty("os.name").toLowerCase.startsWith("mac")) {
-      setToolTipTextAt(getTabCount - 1, s"\u2318+${tabManager.getTotalTabIndex(tab) + 1}")
+      setToolTipTextAt(getTabCount - 1, s"Cmd+${tabManager.getTotalTabIndex(tab) + 1}")
     } else {
       setToolTipTextAt(getTabCount - 1, s"Ctrl+${tabManager.getTotalTabIndex(tab) + 1}")
     }
