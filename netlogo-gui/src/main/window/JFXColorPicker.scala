@@ -19,11 +19,12 @@ import javax.swing.{ JDialog, WindowConstants }
 import netscape.javascript.JSObject
 
 import org.nlogo.awt.EventQueue
+import org.nlogo.core.I18N
 import org.nlogo.swing.Positioning
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback: (String) => Unit = _ => {})
-  extends JDialog(frame, modal) with ThemeSync {
+  extends JDialog(frame, I18N.gui.get("tools.colorpicker"), modal) with ThemeSync {
 
   private val nlBabyMonitor = new Bridge
   private val panel = new JFXPanel
@@ -52,8 +53,6 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
         new ChangeListener[State] {
           override def changed(ov: ObservableValue[_ <: State], oldState: State, newState: State): Unit = {
             if (newState == State.SUCCEEDED) {
-
-              setTitle(webEngine.getTitle)
 
               webEngine.executeScript("window").asInstanceOf[JSObject].setMember("nlBabyMonitor", nlBabyMonitor)
 
