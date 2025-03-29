@@ -14,6 +14,7 @@ import javafx.scene.Scene
 import javafx.scene.layout.VBox
 import javafx.scene.text.Font
 import javafx.scene.web.{ WebEngine, WebView }
+
 import javax.swing.{ JDialog, WindowConstants }
 
 import netscape.javascript.JSObject
@@ -27,7 +28,7 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
   extends JDialog(frame, I18N.gui.get("tools.colorpicker"), modal) with ThemeSync {
 
   private val nlBabyMonitor = new Bridge
-  private val panel = new JFXPanel
+  private val panel         = new JFXPanel
 
   private var webEngine: Option[WebEngine] = None
 
