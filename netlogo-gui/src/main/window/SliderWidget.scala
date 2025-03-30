@@ -5,7 +5,7 @@ package org.nlogo.window
 import java.lang.NumberFormatException
 
 import org.nlogo.agent.SliderConstraint
-import org.nlogo.api.{ CompilerServices, Editable, MersenneTwisterFast }
+import org.nlogo.api.{ CompilerServices, MersenneTwisterFast }
 import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical }
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent }
 

@@ -20,7 +20,7 @@ public class ConverterFigure extends DiamondFigure
     implements
     ModelElementFigure,
     org.jhotdraw.util.Storable,
-    org.nlogo.api.Editable {
+    org.nlogo.window.Editable {
   private org.nlogo.sdm.Converter converter;
 
   public ConverterFigure() {

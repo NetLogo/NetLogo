@@ -4,15 +4,15 @@ package org.nlogo.lab.gui
 
 import java.awt.Window
 
-import org.nlogo.api.{ Editable, Property, LabDefaultValues, LabRunOptions }
+import org.nlogo.api.{ Property, LabDefaultValues, LabRunOptions }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.{ I18N }
-import org.nlogo.window.EditDialogFactoryInterface
+import org.nlogo.window.{ Editable, EditDialogFactory }
 
 import java.io.File
 import java.util.prefs.Preferences
 
-class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactoryInterface, filePrefix: String) {
+class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePrefix: String) {
   val userHome = System.getProperty("user.home")
   val spreadsheetFile = s"$filePrefix-spreadsheet.csv"
   val tableFile = s"$filePrefix-table.csv"

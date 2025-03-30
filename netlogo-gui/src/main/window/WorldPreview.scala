@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.properties
+package org.nlogo.window
 
 import java.awt.{ Color, BorderLayout, Dimension, Font, Graphics, GridBagConstraints, GridBagLayout, Insets }
 import javax.swing.{ JLabel, JPanel }

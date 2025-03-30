@@ -1,13 +1,16 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.api
+package org.nlogo.window
+
+import org.nlogo.api.Property
 
 trait Editable {
   def helpLink: Option[String]
-  def propertySet: Seq[Property]
   def liveUpdate: Boolean = true
   def classDisplayName: String
   def editFinished(): Boolean
+
+  def propertySet(): Seq[Property]
 
   def anyErrors: Boolean
   def error(key: Object, e: Exception): Unit

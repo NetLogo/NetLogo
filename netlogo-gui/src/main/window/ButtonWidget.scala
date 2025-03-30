@@ -7,7 +7,7 @@ import java.awt.event.{ MouseEvent, MouseListener, MouseMotionListener }
 import java.awt.image.FilteredImageSource
 import javax.swing.{ ImageIcon, JLabel }
 
-import org.nlogo.api.{ Editable, MersenneTwisterFast, Options }
+import org.nlogo.api.{ MersenneTwisterFast, Options }
 import org.nlogo.awt.{ DarkenImageFilter, Mouse }, Mouse.hasButton1
 import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N }
 import org.nlogo.nvm.Procedure

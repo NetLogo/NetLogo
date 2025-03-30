@@ -9,7 +9,7 @@ import javax.swing.event.ListSelectionListener
 
 import org.nlogo.api.LabProtocol
 import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol }
-import org.nlogo.window.{ EditDialogFactoryInterface, MenuBarFactory }
+import org.nlogo.window.{ EditDialogFactory, MenuBarFactory }
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ Button, FileDialog, OptionPane, ScrollPane, Transparent, Utils }
@@ -18,7 +18,7 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import scala.io.Source
 
 private class ManagerDialog(manager:       LabManager,
-                            dialogFactory: EditDialogFactoryInterface,
+                            dialogFactory: EditDialogFactory,
                             menuFactory:   MenuBarFactory)
   extends JDialog(manager.workspace.getFrame) with ListSelectionListener with ThemeSync {
 

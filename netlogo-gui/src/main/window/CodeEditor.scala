@@ -1,17 +1,15 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.properties
+package org.nlogo.window
 
 import java.awt.{ BorderLayout, Component, Container }
 import java.awt.event.{ MouseAdapter, MouseEvent, TextListener, TextEvent }
 import javax.swing.{ JLabel, JPanel, ScrollPaneConstants }
 
-import org.nlogo.api.DummyEditable
 import org.nlogo.awt.RowLayout
 import org.nlogo.editor.{ Colorizer, EditorArea, EditorConfiguration }
 import org.nlogo.swing.{ CollapsibleArrow, ScrollPane, Transparent }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.EditorAreaErrorLabel
 
 object CodeEditor {
   def apply(displayName: String, colorizer: Colorizer,

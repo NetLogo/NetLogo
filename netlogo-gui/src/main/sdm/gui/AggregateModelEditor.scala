@@ -12,14 +12,14 @@ import javax.swing.plaf.basic.BasicMenuUI
 import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, Tool, ViewChangeListener }
 import org.jhotdraw.util.{ Command, CommandMenu, RedoCommand, UndoCommand, UndoManager }
 
-import org.nlogo.api.{ CompilerServices, Editable, SourceOwner }
+import org.nlogo.api.{ CompilerServices, SourceOwner }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.{ CompilerException, I18N, LiteralParser }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
 import org.nlogo.swing.{ MenuItem, NetLogoIcon, Utils => SwingUtils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ EditDialogFactoryInterface, Events, MenuBarFactory }
+import org.nlogo.window.{ Editable, EditDialogFactory, Events, MenuBarFactory }
 import org.nlogo.window.Event.LinkChild
 
 object AggregateModelEditor {
@@ -36,7 +36,7 @@ class AggregateModelEditor(
   menuBarFactory: MenuBarFactory,
   val drawing: AggregateDrawing,
   compiler: LiteralParser,
-  dialogFactory: EditDialogFactoryInterface) extends JFrame(
+  dialogFactory: EditDialogFactory) extends JFrame(
     I18N.gui.get("menu.tools.systemDynamicsModeler"), linkParent.getGraphicsConfiguration)
   with DrawingEditor
   with LinkChild
@@ -49,7 +49,7 @@ class AggregateModelEditor(
     colorizer: Colorizer,
     menuBarFactory: MenuBarFactory,
     compiler: CompilerServices,
-    dialogFactory: EditDialogFactoryInterface) =
+    dialogFactory: EditDialogFactory) =
       this(linkParent, colorizer, menuBarFactory, new AggregateDrawing(), compiler, dialogFactory)
 
   private val undoManager: UndoManager = new UndoManager()

@@ -1,9 +1,9 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.properties
+package org.nlogo.window
 
-import org.nlogo.api.Editable
 import java.lang.reflect.Method
+
 import scala.reflect.{ classTag, ClassTag }
 
 class PropertyAccessor[T : ClassTag](val target: Editable, val displayName: String, val accessString: String, val notifyOnChange: () => Unit = () => {}) {

@@ -7,13 +7,12 @@ import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, Action, ButtonGroup, JLabel, JPanel }
 import javax.swing.border.EmptyBorder
 
-import org.nlogo.api.Editable
 import org.nlogo.app.common.{ Events => AppEvents }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ DropdownArrow, MenuItem, MouseUtils, PopupMenu, RoundedBorderPanel, ToolBarToggleButton,
                          Transparent, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ EditDialogFactoryInterface, Events => WindowEvents, GUIWorkspace, InterfaceMode, JobWidget,
+import org.nlogo.window.{ Editable, EditDialogFactory, Events => WindowEvents, GUIWorkspace, InterfaceMode, JobWidget,
                           Widget, WidgetInfo }
 
 import scala.collection.mutable.HashSet
@@ -22,7 +21,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
                               workspace: GUIWorkspace,
                               WidgetInfos: List[WidgetInfo],
                               frame: Frame,
-                              dialogFactory: EditDialogFactoryInterface)
+                              dialogFactory: EditDialogFactory)
   extends JPanel(new GridBagLayout)
   with Transparent
   with AppEvents.WidgetSelectedEvent.Handler

@@ -1,17 +1,16 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.properties
+package org.nlogo.window
 
 import java.awt.{ BorderLayout, GridBagConstraints, GridBagLayout }
 import javax.swing.{ JLabel, JPanel }
 import javax.swing.border.TitledBorder
 
-import org.nlogo.api.{ CompilerServices, Editable }
+import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ ComboBox, Transparent }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.{ OriginConfiguration, OriginType, WorldViewSettings }
 
 class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Colorizer)
   extends EditPanel(widget, compiler, colorizer) {

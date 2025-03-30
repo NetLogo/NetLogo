@@ -3,7 +3,6 @@
 package org.nlogo.window
 
 import org.nlogo.agent.{ ConstantSliderConstraint, SliderConstraint }
-import org.nlogo.api.MultiErrorHandler
 import org.nlogo.api.Approximate.approximate
 
 class SliderData(errorHandler: MultiErrorHandler, var minimum:Double = 0, var maximum:Double=100, var increment: Double = 1) {

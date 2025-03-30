@@ -7,7 +7,7 @@ import java.awt.{ Color, Component, EventQueue, Font, Graphics, GridBagConstrain
 import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.core.{ AgentKind, AgentKindJ, I18N, Monitor => CoreMonitor }
-import org.nlogo.api.{ Dump, Editable, MersenneTwisterFast, Property }
+import org.nlogo.api.{ Dump, MersenneTwisterFast, Property }
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.RoundedBorderPanel
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }

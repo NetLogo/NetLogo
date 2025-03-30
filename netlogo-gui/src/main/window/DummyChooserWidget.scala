@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.{ CompilerServices, Dump, Editable, Property }
+import org.nlogo.api.{ CompilerServices, Dump, Property }
 import org.nlogo.core.{ I18N, LogoList }
 import org.nlogo.core.{ Chooseable, Chooser => CoreChooser, CompilerException }
 

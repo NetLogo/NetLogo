@@ -16,7 +16,7 @@ import javax.swing.JLabel
 
 import org.apache.commons.text.StringEscapeUtils
 
-import org.nlogo.api.{ Editable, Property }
+import org.nlogo.api.Property
 import org.nlogo.core.{ TextBox => CoreTextBox }
 import org.nlogo.core.I18N
 import org.nlogo.swing.Transparent

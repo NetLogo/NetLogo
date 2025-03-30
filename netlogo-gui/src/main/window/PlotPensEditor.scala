@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.properties
+package org.nlogo.window
 
 import java.awt.{ BorderLayout, Color, Cursor, Dimension, Font, Graphics, GridBagConstraints }
 import java.awt.event.ActionEvent
@@ -14,7 +14,6 @@ import org.nlogo.editor.{ Colorizer, EditorField }
 import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
 import org.nlogo.swing.{ Button, OptionPane, Popup, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.{ DoubleOnly, JFXColorPicker, NLNumber, PlotWidget, RGBA }
 
 object PlotPensEditor {
   sealed trait CodeType

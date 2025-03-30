@@ -6,14 +6,14 @@ import org.nlogo.api.{ AggregateManagerInterface, CompilerServices }
 import org.nlogo.core.{ AgentKind, LiteralParser, Model => CoreModel }
 import org.nlogo.editor.Colorizer
 import org.nlogo.theme.ThemeSync
-import org.nlogo.window.{ EditDialogFactoryInterface, Event, Events, MenuBarFactory }
+import org.nlogo.window.{ EditDialogFactory, Event, Events, MenuBarFactory }
 
 class GUIAggregateManager(
   linkParent: java.awt.Component,
   menuBarFactory: MenuBarFactory,
   compiler: CompilerServices,
   colorizer: Colorizer,
-  dialogFactory: EditDialogFactoryInterface)
+  dialogFactory: EditDialogFactory)
 extends AggregateManagerInterface
 with Event.LinkChild
 with Events.CompiledEvent.Handler

@@ -2,10 +2,10 @@
 
 package org.nlogo.window
 
+import org.nlogo.api.{ CompilerServices, Dump }
 import org.nlogo.core.{ I18N, LogoList }
 import org.nlogo.core.{ Chooseable, Chooser => CoreChooser }
 import org.nlogo.window.Events.{AfterLoadEvent, PeriodicUpdateEvent, InterfaceGlobalEvent}
-import org.nlogo.api.{ CompilerServices, Dump, Editable }
 
 class ChooserWidget(val compiler: CompilerServices)
   extends Chooser

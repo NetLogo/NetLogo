@@ -11,7 +11,7 @@ import javax.swing.{ AbstractAction, JButton, JDialog, JLabel, JPanel, ScrollPan
 import javax.swing.KeyStroke.getKeyStroke
 import javax.swing.text.EditorKit
 
-import org.nlogo.api.{ CompilerServices, Dump, Editable, Exceptions, LogoException, Options, ValueConstraint }
+import org.nlogo.api.{ CompilerServices, Dump, Exceptions, LogoException, Options, ValueConstraint }
 import org.nlogo.api.Approximate.approximate
 import org.nlogo.api.Color.{ getColor, getColorNameByIndex, modulateDouble }
 import org.nlogo.agent.InputBoxConstraint

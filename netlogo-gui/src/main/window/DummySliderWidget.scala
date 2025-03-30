@@ -2,7 +2,6 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.Editable
 import org.nlogo.agent.ConstantSliderConstraint
 import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical }
 

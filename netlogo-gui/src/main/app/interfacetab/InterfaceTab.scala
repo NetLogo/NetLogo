@@ -16,7 +16,7 @@ import org.nlogo.swing.{ Implicits, PrinterManager, Printable => NlogoPrintable,
                          UserAction, Utils },
                        Implicits.thunk2action, UserAction.{ MenuAction, ToolsCategory }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace, InterfaceMode, SpeedSliderPanel, ViewUpdatePanel,
+import org.nlogo.window.{ EditDialogFactory, GUIWorkspace, InterfaceMode, SpeedSliderPanel, ViewUpdatePanel,
                           WidgetInfo, Events => WindowEvents, WorkspaceActions },
                         WindowEvents.{ Enable2DEvent, LoadBeginEvent, OutputEvent }
 
@@ -28,7 +28,7 @@ import InterfaceTab._
 
 class InterfaceTab(workspace: GUIWorkspace,
                    monitorManager: AgentMonitorManager,
-                   dialogFactory: EditDialogFactoryInterface,
+                   dialogFactory: EditDialogFactory,
                    val commandCenter: CommandCenter) extends JPanel
   with LoadBeginEvent.Handler
   with OutputEvent.Handler

@@ -2,9 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.Editable
-import org.nlogo.core.I18N
-import org.nlogo.core.{ Switch => CoreSwitch }
+import org.nlogo.core.{ I18N, Switch => CoreSwitch }
 
 class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
   with Events.PeriodicUpdateEvent.Handler {

@@ -15,7 +15,7 @@ import org.nlogo.lab.{ Exporter, ListsExporter, PartialData, SpreadsheetExporter
 import org.nlogo.nvm.{ EngineException, Workspace }
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.swing.OptionPane
-import org.nlogo.window.{ EditDialogFactoryInterface, GUIWorkspace }
+import org.nlogo.window.{ EditDialogFactory, GUIWorkspace }
 import org.nlogo.workspace.{ AbstractWorkspace, CurrentModelOpener, WorkspaceFactory }
 
 import scala.collection.mutable.Set
@@ -37,7 +37,7 @@ class Supervisor(
   val workspace: AbstractWorkspace,
   protocol: LabProtocol,
   factory: WorkspaceFactory with CurrentModelOpener,
-  dialogFactory: EditDialogFactoryInterface,
+  dialogFactory: EditDialogFactory,
   saveProtocol: (LabProtocol) => Unit,
   runMode: Supervisor.RunMode
 ) extends Thread("BehaviorSpace Supervisor") {

@@ -102,7 +102,6 @@ object Depend {
       "prim/hubnet" -> List("nvm"),
       "prim/plot" -> List("nvm", "plot"),
       "prim/threed" -> List("nvm"),
-      "properties" -> List("window"),
       "render" -> List("shape"),
       "fileformat" -> List("api", "core", "core/model"),
       "sdm" -> List("api", "fileformat"),

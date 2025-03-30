@@ -6,7 +6,6 @@ import java.awt.{ GridBagConstraints, GridBagLayout, Insets, Point }
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 
-import org.nlogo.api.Editable
 import org.nlogo.core.{ I18N, Output => CoreOutput }
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors

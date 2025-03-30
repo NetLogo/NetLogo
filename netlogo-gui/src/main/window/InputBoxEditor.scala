@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.properties
+package org.nlogo.window
 
 import java.awt.FlowLayout
 import javax.swing.JLabel
@@ -8,7 +8,6 @@ import javax.swing.JLabel
 import org.nlogo.api.Options
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.swing.{ CheckBox, ComboBox }
-import org.nlogo.window.InputBox
 
 abstract class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputType]])
   extends PropertyEditor(accessor) {

@@ -6,7 +6,7 @@ import java.awt.{ Color, Dimension, Rectangle }
 import javax.swing.border.LineBorder
 
 import org.nlogo.agent.World
-import org.nlogo.api.{ Editable, Property }
+import org.nlogo.api.Property
 import org.nlogo.core.{ I18N, View => CoreView }
 import org.nlogo.theme.InterfaceColors
 

@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import java.awt.{ Dimension, Graphics }
 
-import org.nlogo.api.{ Editable, Property }
+import org.nlogo.api.Property
 import org.nlogo.awt.Fonts
 import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton }
 import org.nlogo.theme.InterfaceColors

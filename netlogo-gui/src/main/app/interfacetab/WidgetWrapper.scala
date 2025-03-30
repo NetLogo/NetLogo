@@ -7,13 +7,12 @@ import java.awt.event.{ ActionEvent, InputEvent, MouseAdapter, MouseEvent, Mouse
                         MouseMotionListener }
 import javax.swing.{ AbstractAction, JComponent, JLayeredPane, JPanel }
 
-import org.nlogo.api.Editable
 import org.nlogo.app.common.Events.WidgetSelectedEvent
 import org.nlogo.awt.{ Coordinates, Mouse }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ MenuItem, PopupMenu, WrappingPopupMenu, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ InterfaceMode, MouseMode, ViewWidget, Widget, WidgetWrapperInterface }
+import org.nlogo.window.{ Editable, InterfaceMode, MouseMode, ViewWidget, Widget, WidgetWrapperInterface }
 import org.nlogo.window.Events.{ DirtyEvent, EditWidgetEvent, ExportWidgetEvent, WidgetForegroundedEvent }
 
 object WidgetWrapper {

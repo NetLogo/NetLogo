@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import java.awt.{ Dimension, Graphics }
 
-import org.nlogo.api.{ Editable, Property }
+import org.nlogo.api.Property
 import org.nlogo.core.{ I18N, Monitor => CoreMonitor }
 import org.nlogo.theme.InterfaceColors
 

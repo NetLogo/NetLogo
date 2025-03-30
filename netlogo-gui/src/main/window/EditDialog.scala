@@ -1,20 +1,19 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.properties
+package org.nlogo.window
 
 import java.awt.{ BorderLayout, Dialog, Dimension, Point, Window }
 import java.awt.event.{ WindowAdapter, WindowEvent }
 import javax.swing.{ JDialog, JPanel, WindowConstants }
 import javax.swing.border.EmptyBorder
 
-import org.nlogo.api.{ CompilerServices, Editable }
+import org.nlogo.api.CompilerServices
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Implicits, Transparent, Utils },
   BrowserLauncher.docPath, Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.WorldViewSettings
 
 // An EditDialog contains an EditPanel, plus some buttons at the bottom (OK/Apply/Cancel).
 

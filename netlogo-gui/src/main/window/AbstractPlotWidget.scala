@@ -6,7 +6,6 @@ import java.awt.{ Color, Dimension, Font, Graphics, GridBagConstraints, GridBagL
 import java.awt.image.BufferedImage
 import javax.swing.{ JLabel, JPanel, SwingConstants }
 
-import org.nlogo.api.Editable
 import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot }
 import org.nlogo.plot.{ PlotManagerInterface, PlotLoader, PlotPen, Plot }
 import org.nlogo.swing.{ RoundedBorderPanel, VTextIcon }

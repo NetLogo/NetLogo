@@ -1,13 +1,12 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.properties
-
-import org.nlogo.core.I18N
+package org.nlogo.window
 
 import java.awt.{ Color, Dimension, GridBagConstraints }
 import java.awt.event.{ ActionEvent, ActionListener }
 import javax.swing.{ JLabel, JPanel }
 
+import org.nlogo.core.I18N
 import org.nlogo.swing.{ Button, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 

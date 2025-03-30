@@ -1,6 +1,6 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.properties
+package org.nlogo.window
 
 import java.awt.{ BorderLayout, GridBagConstraints }
 import javax.swing.JLabel
@@ -8,7 +8,6 @@ import javax.swing.JLabel
 import org.nlogo.swing.TextField
 import org.nlogo.swing.Implicits._
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.WorldIntegerEditor
 
 import util.control.Exception.catching
 

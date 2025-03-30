@@ -7,7 +7,6 @@ import java.awt.event.{ ActionEvent, KeyAdapter, KeyEvent, KeyListener, MouseAda
                         MouseMotionAdapter, MouseMotionListener }
 import javax.swing.{ AbstractAction, JComponent, JLayeredPane, SwingUtilities }
 
-import org.nlogo.api.Editable
 import org.nlogo.app.common.EditorFactory
 import org.nlogo.awt.{ Fonts => NlogoFonts, Mouse => NlogoMouse }
 import org.nlogo.core.{ I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox,
@@ -18,8 +17,8 @@ import org.nlogo.log.LogManager
 import org.nlogo.nvm.DefaultCompilerServices
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.{ AbstractWidgetPanel, ButtonWidget, Events => WindowEvents, GUIWorkspace, InterfaceMode,
-                          OutputWidget, Widget, WidgetContainer, WidgetRegistry, DummyChooserWidget,
+import org.nlogo.window.{ AbstractWidgetPanel, ButtonWidget, Editable, Events => WindowEvents, GUIWorkspace,
+                          InterfaceMode, OutputWidget, Widget, WidgetContainer, WidgetRegistry, DummyChooserWidget,
                           DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget, PlotWidget },
   WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, InterfaceModeChangedEvent, LoadBeginEvent,
                  SetInterfaceModeEvent, WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent }

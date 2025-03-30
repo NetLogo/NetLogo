@@ -9,10 +9,11 @@ import org.jhotdraw.framework.{ FigureAttributeConstant, HandleEnumeration }
 import org.jhotdraw.standard.{ HandleEnumerator, NullHandle, RelativeLocator }
 import org.jhotdraw.util.{ StorableInput, StorableOutput }
 
-import org.nlogo.api.{ Editable, Property }
+import org.nlogo.api.Property
 import org.nlogo.sdm.{ ModelElement, Stock }
 import org.nlogo.swing.{ Utils => SwingUtils }
 import org.nlogo.theme.InterfaceColors
+import org.nlogo.window.Editable
 
 import scala.collection.JavaConverters.seqAsJavaList
 

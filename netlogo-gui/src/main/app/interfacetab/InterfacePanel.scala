@@ -7,7 +7,7 @@ import java.awt.event.{ ActionEvent, FocusEvent, FocusListener, KeyEvent }
 import java.awt.image.BufferedImage
 import javax.swing.AbstractAction
 
-import org.nlogo.api.{ Editable, Exceptions, Version }
+import org.nlogo.api.{ Exceptions, Version }
 import org.nlogo.app.common.{ FileActions, UndoRedoActions },
   FileActions.ExportInterfaceAction
 import org.nlogo.awt.Images
@@ -18,7 +18,7 @@ import org.nlogo.core.{
 import org.nlogo.editor.{ EditorArea, UndoManager }
 import org.nlogo.log.LogManager
 import org.nlogo.swing.{ MenuItem, PopupMenu }
-import org.nlogo.window.{ ButtonWidget, ChooserWidget, Events => WindowEvents, GUIWorkspace, InputBoxWidget,
+import org.nlogo.window.{ ButtonWidget, ChooserWidget, Editable, Events => WindowEvents, GUIWorkspace, InputBoxWidget,
                           InterfaceGlobalWidget, InterfaceMode, MonitorWidget, PlotWidget, SliderWidget, ViewWidget,
                           ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
   WindowEvents.{ CompileAllEvent, LoadBeginEvent, LoadWidgetsEvent, RemoveConstraintEvent, WidgetRemovedEvent }

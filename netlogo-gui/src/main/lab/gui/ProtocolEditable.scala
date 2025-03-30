@@ -4,9 +4,10 @@ package org.nlogo.lab.gui
 
 import java.awt.{ GridBagConstraints, Window }
 
-import org.nlogo.api.{ CompilerServices, Editable, LabProtocol, LabVariableParser, Property, RefValueSet }
+import org.nlogo.api.{ CompilerServices, LabProtocol, LabVariableParser, Property, RefValueSet }
 import org.nlogo.core.I18N
 import org.nlogo.swing.OptionPane
+import org.nlogo.window.Editable
 
 // normally we'd be package-private but the org.nlogo.properties stuff requires we be public - ST 2/25/09
 

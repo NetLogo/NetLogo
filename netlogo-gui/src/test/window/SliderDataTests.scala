@@ -6,7 +6,7 @@ import org.scalatest.propspec.AnyPropSpec
 import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 import org.scalacheck.{ Arbitrary, Gen }
 
-import org.nlogo.api.{ LogoException, MultiErrorHandler, ReporterLogoThunk }
+import org.nlogo.api.{ LogoException, ReporterLogoThunk }
 import org.nlogo.agent.{ ConstantSliderConstraint, DynamicSliderConstraint }
 
 import scala.util.{ Failure, Success, Try }

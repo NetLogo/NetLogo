@@ -1,16 +1,15 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 
-package org.nlogo.properties
+package org.nlogo.window
 
 import java.awt.{ BorderLayout, Component, GridBagConstraints, GridBagLayout, Insets }
 import javax.swing.{ JLabel, JPanel, ToolTipManager }
 
-import org.nlogo.api.{ CompilerServices, Editable, Property }
+import org.nlogo.api.{ CompilerServices, Property }
 import org.nlogo.core.{ CompilerException, I18N, LogoList, Nobody }
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ OptionPane, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.WidgetWrapperInterface
 
 import scala.reflect.ClassTag
 

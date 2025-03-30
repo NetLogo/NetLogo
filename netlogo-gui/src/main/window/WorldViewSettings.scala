@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.{ Editable, Property, WorldPropertiesInterface }
+import org.nlogo.api.{ Property, WorldPropertiesInterface }
 import org.nlogo.core.{ CompilerException, UpdateMode, View => CoreView, WorldDimensions }
 import org.nlogo.workspace.WorldLoaderInterface
 

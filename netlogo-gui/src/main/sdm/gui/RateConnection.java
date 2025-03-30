@@ -22,7 +22,7 @@ import scala.collection.Seq;
 public class RateConnection
     extends LineConnection
     implements ModelElementFigure,
-    org.nlogo.api.Editable {
+    org.nlogo.window.Editable {
   static final int ICON_SIZE = 25;
 
   private org.nlogo.sdm.Rate rate;

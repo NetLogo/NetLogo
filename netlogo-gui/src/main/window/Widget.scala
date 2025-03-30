@@ -7,7 +7,7 @@ import java.awt.{ Component, Container, Dimension, Font, Graphics, Point, Rectan
 import java.util.prefs.Preferences
 import javax.swing.{ JPanel, JMenuItem }
 
-import org.nlogo.api.{ CompilerServices, MultiErrorHandler, SingleErrorHandler }
+import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ TokenType, Widget => CoreWidget }
 import org.nlogo.swing.{ PopupMenu, RoundedBorderPanel }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }

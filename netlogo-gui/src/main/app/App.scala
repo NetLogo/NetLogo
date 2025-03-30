@@ -140,7 +140,7 @@ object App {
               new ComponentParameter(), new ComponentParameter(),
               new ComponentParameter(), new ComponentParameter()))
       pico.add("org.nlogo.lab.gui.LabManager")
-      pico.add("org.nlogo.properties.EditDialogFactory")
+      pico.addComponent(classOf[EditDialogFactory])
       // we need to make HeadlessWorkspace objects for BehaviorSpace to use.
       // HeadlessWorkspace uses picocontainer too, but it could get confusing
       // to use the same container in both places, so I'm going to keep the
@@ -358,7 +358,7 @@ class App extends
         new WidgetPanel(workspace)
       def widgetControls(wp: AbstractWidgetPanel, workspace: GUIWorkspace, buttons: List[WidgetInfo], frame: Frame) = {
         new InterfaceWidgetControls(wp.asInstanceOf[WidgetPanel], workspace, buttons, frame,
-          pico.getComponent(classOf[EditDialogFactoryInterface]))
+          pico.getComponent(classOf[EditDialogFactory]))
       }
     }
     pico.add(classOf[HubNetManagerFactory], "org.nlogo.hubnet.server.gui.HubNetManagerFactory",
