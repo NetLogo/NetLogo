@@ -22,12 +22,11 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
   private var _keyEnabled: Boolean = false
   private var _name: String = ""
 
-  override def editPanel: EditPanel =
-    null
+  override def editPanel: EditPanel = new DummyButtonEditPanel(this)
 
   def actionKey: Char = _actionKey
 
-  def actionKey(actionKey: Char): Unit = {
+  def setActionKey(actionKey: Char): Unit = {
     _actionKey = actionKey
   }
 
@@ -53,7 +52,7 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
 
   def name: String = _name
 
-  def name(name: String): Unit = {
+  def setDisplayName(name: String): Unit = {
     _name = name
     displayName(name)
   }
@@ -121,8 +120,8 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
   }
 
   override def load(button: WidgetModel): AnyRef = {
-    button.actionKey.foreach(k => actionKey(k))
-    name(button.display.optionToPotentiallyEmptyString)
+    button.actionKey.foreach(k => setActionKey(k))
+    setDisplayName(button.display.optionToPotentiallyEmptyString)
     setSize(button.width, button.height)
     this
   }
