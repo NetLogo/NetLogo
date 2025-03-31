@@ -29,12 +29,11 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
 
   add(outputArea, c)
 
-  override def editPanel: EditPanel =
-    null
+  override def editPanel: EditPanel = new OutputEditPanel(this)
 
   originalFont = outputArea.getFont
   def fontSize = originalFont.getSize
-  def fontSize_=(newSize: Int): Unit = {
+  def setFontSize(newSize: Int): Unit = {
     val zoomDiff = outputArea.fontSize - fontSize
     outputArea.fontSize(newSize + zoomDiff)
     originalFont = originalFont.deriveFont(newSize.toFloat)
@@ -84,7 +83,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
 
   override def load(model: WidgetModel): AnyRef = {
     setSize(model.width, model.height)
-    fontSize = model.fontSize
+    setFontSize(model.fontSize)
     this
   }
 
