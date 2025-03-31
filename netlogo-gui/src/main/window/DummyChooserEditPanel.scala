@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ GridBagConstraints, Insets }
 import javax.swing.JLabel
 
 import org.nlogo.api.CompilerServices
@@ -46,8 +46,6 @@ class DummyChooserEditPanel(target: DummyChooserWidget, compiler: CompilerServic
         () => apply))
 
   locally {
-    setLayout(new GridBagLayout)
-
     val c = new GridBagConstraints
 
     c.gridx = 0

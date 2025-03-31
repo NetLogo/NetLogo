@@ -2,7 +2,7 @@
 
 package org.nlogo.lab.gui
 
-import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ GridBagConstraints, Insets }
 import javax.swing.JLabel
 
 import org.nlogo.core.I18N
@@ -92,8 +92,6 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
   }
 
   locally {
-    setLayout(new GridBagLayout)
-
     val c = new GridBagConstraints
 
     c.gridx = 0

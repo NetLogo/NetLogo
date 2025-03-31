@@ -2,6 +2,7 @@
 
 package org.nlogo.window
 
+import java.awt.GridBagLayout
 import javax.swing.JPanel
 
 import org.nlogo.core.I18N
@@ -10,6 +11,8 @@ import org.nlogo.theme.ThemeSync
 
 // This is the contents of an EditDialog, except for the buttons at the bottom (OK/Apply/Cancel).
 abstract class EditPanel(target: Editable) extends JPanel with Transparent with ThemeSync {
+  setLayout(new GridBagLayout)
+
   def propertyEditors: Seq[PropertyEditor[_]]
 
   def previewChanged(field: String, value: Option[Any]) { }  // overridden in WorldEditPanel

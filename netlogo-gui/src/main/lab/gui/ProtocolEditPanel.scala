@@ -2,7 +2,7 @@
 
 package org.nlogo.lab.gui
 
-import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ GridBagConstraints, Insets }
 import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.api.CompilerServices
@@ -202,8 +202,6 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
     }
 
   locally {
-    setLayout(new GridBagLayout)
-
     val c = new GridBagConstraints
 
     c.gridx = 0

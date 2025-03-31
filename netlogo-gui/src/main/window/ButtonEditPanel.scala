@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ GridBagConstraints, Insets }
 
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
@@ -64,8 +64,6 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
         () => apply()))
 
   locally {
-    setLayout(new GridBagLayout)
-
     val c = new GridBagConstraints
 
     c.gridy = 0

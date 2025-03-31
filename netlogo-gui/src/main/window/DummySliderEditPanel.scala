@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ GridBagConstraints, Insets }
 
 import org.nlogo.core.I18N
 
@@ -80,8 +80,6 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
         () => apply()))
 
   locally {
-    setLayout(new GridBagLayout)
-
     val c = new GridBagConstraints
 
     c.gridy = 0

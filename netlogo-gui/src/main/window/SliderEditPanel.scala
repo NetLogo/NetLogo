@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, GridBagLayout, Insets }
+import java.awt.{ GridBagConstraints, Insets }
 import java.lang.NumberFormatException
 import javax.swing.JLabel
 
@@ -95,8 +95,6 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         () => apply()))
 
   locally {
-    setLayout(new GridBagLayout)
-
     val c = new GridBagConstraints
 
     c.gridy = 0
