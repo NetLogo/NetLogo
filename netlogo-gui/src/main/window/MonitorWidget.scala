@@ -6,8 +6,9 @@ import java.awt.event.MouseEvent
 import java.awt.{ Color, Component, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets, Dimension }
 import javax.swing.{ JLabel, JPanel }
 
-import org.nlogo.api.{ Dump, MersenneTwisterFast }
+import org.nlogo.api.{ CompilerServices, Dump, MersenneTwisterFast }
 import org.nlogo.core.{ AgentKind, AgentKindJ, I18N, Monitor => CoreMonitor }
+import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.RoundedBorderPanel
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -42,7 +43,7 @@ object MonitorWidget {
 
 import MonitorWidget._
 
-class MonitorWidget(random: MersenneTwisterFast)
+class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, colorizer: Colorizer)
     extends JobWidget(random)
     with Editable
     with ToMonitorModel
@@ -154,7 +155,7 @@ class MonitorWidget(random: MersenneTwisterFast)
     add(unitsLabel, c)
   }
 
-  def name(name: String): Unit = {
+  def setDisplayName(name: String): Unit = {
     _name = name
     chooseDisplayName()
     repaint()
@@ -162,7 +163,7 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   def name: String = _name
 
-  def fontSize(size: Int): Unit = {
+  def setFontSize(size: Int): Unit = {
     _fontSize = size
     // If we are zoomed, we need to zoom the input font size and then
     // set that as our widget font
@@ -195,7 +196,7 @@ class MonitorWidget(random: MersenneTwisterFast)
   def fontSize: Int = _fontSize
 
   def units: String = unitsLabel.getText
-  def units_=(value: String): Unit = {
+  def setUnits(value: String): Unit = {
     unitsLabel.setText(value.trim)
     unitsLabel.setVisible(value.trim.nonEmpty)
     revalidate()
@@ -205,8 +206,7 @@ class MonitorWidget(random: MersenneTwisterFast)
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.monitor")
 
-  override def editPanel: EditPanel =
-    null
+  override def editPanel: EditPanel = new MonitorEditPanel(this, compiler, colorizer)
 
   override def kind: AgentKind = AgentKindJ.Observer
 
@@ -304,10 +304,10 @@ class MonitorWidget(random: MersenneTwisterFast)
 
   def decimalPlaces: Int = _decimalPlaces
 
-  def decimalPlaces(decimalPlaces: Int): Unit = {
+  def setDecimalPlaces(decimalPlaces: Int): Unit = {
     if (decimalPlaces != _decimalPlaces) {
       _decimalPlaces = decimalPlaces
-      wrapSource(innerSource)
+      setWrapSource(innerSource)
     }
   }
 
@@ -316,7 +316,7 @@ class MonitorWidget(random: MersenneTwisterFast)
     chooseDisplayName()
   }
 
-  def wrapSource(innerSource: String): Unit = {
+  def setWrapSource(innerSource: String): Unit = {
     if (innerSource.trim == "") {
       source("", "", "")
       halt()
@@ -355,12 +355,12 @@ class MonitorWidget(random: MersenneTwisterFast)
   }
 
   override def load(model: WidgetModel): AnyRef = {
-    units = model.units.getOrElse("")
-    name(model.display.getOrElse(""))
+    setUnits(model.units.getOrElse(""))
+    setDisplayName(model.display.getOrElse(""))
     _decimalPlaces = model.precision
-    fontSize(model.fontSize)
+    setFontSize(model.fontSize)
 
-    model.source.foreach(wrapSource)
+    model.source.foreach(setWrapSource)
 
     oldSize(model.oldSize)
     setSize(model.width, model.height)

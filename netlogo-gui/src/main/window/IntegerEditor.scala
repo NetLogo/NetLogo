@@ -2,6 +2,7 @@
 
 package org.nlogo.window
 
+import java.awt.BorderLayout
 import javax.swing.JLabel
 
 import org.nlogo.swing.TextField
@@ -16,8 +17,10 @@ class IntegerEditor(accessor: PropertyAccessor[Int]) extends PropertyEditor(acce
     getDocument.addDocumentListener(() => accessor.changed())
   }
 
-  add(label)
-  add(editor)
+  setLayout(new BorderLayout(6, 0))
+
+  add(label, BorderLayout.WEST)
+  add(editor, BorderLayout.CENTER)
 
   override def get: Option[Int] =
     catching(classOf[NumberFormatException]).opt(editor.getText.toInt)

@@ -112,7 +112,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
       case c: CoreChooser  => new ChooserWidget(workspace, colorizer)
       case b: CoreButton   => new ButtonWidget(workspace.world.mainRNG, colorizer)
       case p: CorePlot     => PlotWidget(workspace.plotManager)
-      case m: CoreMonitor  => new MonitorWidget(workspace.world.auxRNG)
+      case m: CoreMonitor  => new MonitorWidget(workspace.world.auxRNG, workspace, colorizer)
       case s: CoreSlider =>
         new SliderWidget(workspace.world.auxRNG, workspace, colorizer) {
           override def sourceOffset: Int =
