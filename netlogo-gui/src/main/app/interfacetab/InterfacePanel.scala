@@ -109,7 +109,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     if (fromRegistry != null)
       fromRegistry
     else coreWidget match {
-      case c: CoreChooser  => new ChooserWidget(workspace)
+      case c: CoreChooser  => new ChooserWidget(workspace, colorizer)
       case b: CoreButton   => new ButtonWidget(workspace.world.mainRNG, colorizer)
       case p: CorePlot     => PlotWidget(workspace.plotManager)
       case m: CoreMonitor  => new MonitorWidget(workspace.world.auxRNG)

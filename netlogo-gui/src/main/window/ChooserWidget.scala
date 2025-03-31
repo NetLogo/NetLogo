@@ -4,9 +4,10 @@ package org.nlogo.window
 
 import org.nlogo.api.{ CompilerServices, Dump }
 import org.nlogo.core.{ I18N, Chooseable, Chooser => CoreChooser, LogoList }
+import org.nlogo.editor.Colorizer
 import org.nlogo.window.Events.{AfterLoadEvent, PeriodicUpdateEvent, InterfaceGlobalEvent}
 
-class ChooserWidget(val compiler: CompilerServices)
+class ChooserWidget(val compiler: CompilerServices, colorizer: Colorizer)
   extends Chooser with Editable with InterfaceGlobalWidget with PeriodicUpdateEvent.Handler {
 
   type WidgetModel = CoreChooser
@@ -17,8 +18,7 @@ class ChooserWidget(val compiler: CompilerServices)
 
   override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.chooser")
 
-  override def editPanel: EditPanel =
-    null
+  override def editPanel: EditPanel = new ChooserEditPanel(this, compiler, colorizer)
 
   // don't send an event unless the name of the variable
   // defined changes, which is the only case in which we
@@ -45,9 +45,8 @@ class ChooserWidget(val compiler: CompilerServices)
     if (sendEvent) {new InterfaceGlobalEvent(this, true, false, false, false).raise(this)}
   }
 
-  def nameWrapper: String = name
   // name needs a wrapper because we don't want to recompile until editFinished()
-  def nameWrapper(newName: String): Unit = {
+  def setNameWrapper(newName: String): Unit = {
     nameChanged = _name != newName || nameChanged
     name(newName, false)
   }
@@ -55,13 +54,15 @@ class ChooserWidget(val compiler: CompilerServices)
   def choicesWrapper =
     constraint.acceptedValues.map(v => Dump.logoObject(v, true, false)).mkString("\n")
 
-  def choicesWrapper(choicesString: String) {
-    val obj: Object = compiler.readFromString("[ " + choicesString + " ]")
-    if (obj.isInstanceOf[LogoList]) { setChoices(obj.asInstanceOf[LogoList]) }
+  def setChoicesWrapper(choicesString: String) {
+    compiler.readFromString(s"[ $choicesString ]") match {
+      case list: LogoList => setChoices(list)
+      case _ =>
+    }
     updateConstraints()
   }
 
-  def choicesWrapper(choices: LogoList) {
+  def setChoicesWrapper(choices: LogoList) {
     setChoices(choices)
     updateConstraints()
   }
@@ -105,7 +106,7 @@ class ChooserWidget(val compiler: CompilerServices)
     oldSize(model.oldSize)
     setSize(model.width, model.height)
     name(model.display.optionToPotentiallyEmptyString)
-    choicesWrapper(chooseableListToLogoList(model.choices))
+    setChoicesWrapper(chooseableListToLogoList(model.choices))
     index(model.currentChoice)
     this
   }

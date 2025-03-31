@@ -210,7 +210,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
     "Monitor"  -> (() => new MonitorWidget(random.auxRNG)),
     "Plot"     -> (() => PlotWidget.apply(plotManager)),
     "Slider"   -> (() => new SliderWidget(sliderEventOnReleaseOnly, random.auxRNG, compiler, editorFactory.colorizer)),
-    "Chooser"  -> (() => new ChooserWidget(compiler)),
+    "Chooser"  -> (() => new ChooserWidget(compiler, editorFactory.colorizer)),
     "InputBox" -> { () =>
       val singleLineConfig = editorFactory.defaultConfiguration(1, 10)
         .withFocusTraversalEnabled(true)
