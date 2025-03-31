@@ -32,14 +32,14 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
 
   def name: String = _name
 
-  def name(name: String): Unit = {
+  def setDisplayName(name: String): Unit = {
     val suffix = if (_units.isEmpty) "" else (" " + _units)
     _name = name + suffix
     displayName = name
   }
 
   def units: String = _units
-  def units(value: String): Unit = {
+  def setUnits(value: String): Unit = {
     _units = value
     revalidate()
     repaint()
@@ -48,8 +48,7 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.monitor")
 
-  override def editPanel: EditPanel =
-    null
+  override def editPanel: EditPanel = new DummyMonitorEditPanel(this)
 
   override def getMinimumSize: Dimension =
     new Dimension(MinWidth, MaxHeight)
@@ -84,18 +83,17 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
 
   def decimalPlaces: Int = _decimalPlaces
 
-  def decimalPlaces(decimalPlaces: Int): Unit = {
+  def setDecimalPlaces(decimalPlaces: Int): Unit = {
     if (decimalPlaces != _decimalPlaces)
       _decimalPlaces = decimalPlaces
   }
 
   override def load(monitor: WidgetModel): AnyRef = {
-    units(monitor.units.getOrElse(""))
-    name(monitor.display.optionToPotentiallyEmptyString)
-    decimalPlaces(monitor.precision)
+    setUnits(monitor.units.getOrElse(""))
+    setDisplayName(monitor.display.optionToPotentiallyEmptyString)
+    setDecimalPlaces(monitor.precision)
     oldSize(monitor.oldSize)
     setSize(monitor.width, monitor.height)
     this
   }
 }
-
