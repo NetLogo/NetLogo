@@ -4,10 +4,11 @@ package org.nlogo.lab.gui
 
 import java.awt.Window
 
-import org.nlogo.api.{ Property, LabDefaultValues, LabRunOptions }
+import org.nlogo.api.{ CompilerServices, LabDefaultValues, LabRunOptions }
 import org.nlogo.awt.UserCancelException
-import org.nlogo.core.{ I18N }
-import org.nlogo.window.{ Editable, EditDialogFactory }
+import org.nlogo.core.I18N
+import org.nlogo.editor.Colorizer
+import org.nlogo.window.{ Editable, EditDialogFactory, EditPanel }
 
 import java.io.File
 import java.util.prefs.Preferences
@@ -100,21 +101,25 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
     var threadCount = Prefs.updateThreadCount
     val classDisplayName = I18N.gui("title")
 
-    val propertySet = {
-      Seq(
-        Property("spreadsheet", Property.FilePath(spreadsheetFile), I18N.gui("spreadsheet")),
-        Property("table", Property.FilePath(tableFile), I18N.gui("table")),
-        Property("stats", Property.FilePath(statsFile), I18N.gui("stats")),
-        Property("lists", Property.FilePath(listsFile), I18N.gui("lists")),
-        Property("updateView", Property.Boolean, I18N.gui("updateview")),
-        Property("updatePlotsAndMonitors", Property.Boolean, I18N.gui("updateplotsandmonitors"),
-                 "<html>" + I18N.gui("updateplotsandmonitors.info") + "</html>"),
-        Property("threadCount", Property.Integer, I18N.gui("simultaneousruns"),
-                 "<html>" + I18N.gui("simultaneousruns.info",
-                                defaultProcessors.toString,
-                                (totalProcessors.toString))
-                + "</html>"))
-    }
+    // val propertySet = {
+    //   Seq(
+    //     Property("spreadsheet", Property.FilePath(spreadsheetFile), I18N.gui("spreadsheet")),
+    //     Property("table", Property.FilePath(tableFile), I18N.gui("table")),
+    //     Property("stats", Property.FilePath(statsFile), I18N.gui("stats")),
+    //     Property("lists", Property.FilePath(listsFile), I18N.gui("lists")),
+    //     Property("updateView", Property.Boolean, I18N.gui("updateview")),
+    //     Property("updatePlotsAndMonitors", Property.Boolean, I18N.gui("updateplotsandmonitors"),
+    //              "<html>" + I18N.gui("updateplotsandmonitors.info") + "</html>"),
+    //     Property("threadCount", Property.Integer, I18N.gui("simultaneousruns"),
+    //              "<html>" + I18N.gui("simultaneousruns.info",
+    //                             defaultProcessors.toString,
+    //                             (totalProcessors.toString))
+    //             + "</html>"))
+    // }
+
+    override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+      null
+
     def get = LabRunOptions(threadCount, table, spreadsheet, stats, lists, updateView, updatePlotsAndMonitors, false)
     // boilerplate for Editable
     def helpLink = None

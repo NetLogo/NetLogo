@@ -3,15 +3,12 @@
 package org.nlogo.window
 
 import org.nlogo.api.{ CompilerServices, Dump }
-import org.nlogo.core.{ I18N, LogoList }
-import org.nlogo.core.{ Chooseable, Chooser => CoreChooser }
+import org.nlogo.core.{ I18N, Chooseable, Chooser => CoreChooser, LogoList }
+import org.nlogo.editor.Colorizer
 import org.nlogo.window.Events.{AfterLoadEvent, PeriodicUpdateEvent, InterfaceGlobalEvent}
 
 class ChooserWidget(val compiler: CompilerServices)
-  extends Chooser
-  with Editable
-  with InterfaceGlobalWidget
-  with PeriodicUpdateEvent.Handler {
+  extends Chooser with Editable with InterfaceGlobalWidget with PeriodicUpdateEvent.Handler {
 
   type WidgetModel = CoreChooser
 
@@ -19,8 +16,11 @@ class ChooserWidget(val compiler: CompilerServices)
 
   def name: String = _name
 
-  override def propertySet = Properties.chooser
   override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.chooser")
+
+  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+    null
+
   // don't send an event unless the name of the variable
   // defined changes, which is the only case in which we
   // want a recompile. ev 6/15/05
@@ -103,7 +103,7 @@ class ChooserWidget(val compiler: CompilerServices)
     LogoList(choices.map(_.value): _*)
 
   override def load(model: WidgetModel): AnyRef = {
-    oldSize = model.oldSize
+    oldSize(model.oldSize)
     setSize(model.width, model.height)
     name(model.display.optionToPotentiallyEmptyString)
     choicesWrapper(chooseableListToLogoList(model.choices))

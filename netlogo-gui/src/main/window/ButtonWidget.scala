@@ -7,9 +7,10 @@ import java.awt.event.{ MouseEvent, MouseListener, MouseMotionListener }
 import java.awt.image.FilteredImageSource
 import javax.swing.{ ImageIcon, JLabel }
 
-import org.nlogo.api.{ MersenneTwisterFast, Options }
+import org.nlogo.api.{ CompilerServices, MersenneTwisterFast, Options }
 import org.nlogo.awt.{ DarkenImageFilter, Mouse }, Mouse.hasButton1
 import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N }
+import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.Utils
 import org.nlogo.theme.InterfaceColors
@@ -67,8 +68,8 @@ object ButtonWidget {
   }
 }
 class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
-        with Editable with MouseListener with MouseMotionListener
-        with Events.JobRemovedEvent.Handler with Events.TickStateChangeEvent.Handler {
+  with Editable with MouseListener with MouseMotionListener
+  with Events.JobRemovedEvent.Handler with Events.TickStateChangeEvent.Handler {
 
   import ButtonWidget._
 
@@ -130,6 +131,9 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   addMouseListener(this)
   addMouseMotionListener(this)
+
+  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+    null
 
   def buttonType_=(bt: ButtonType): Unit = {
     _buttonType = bt
@@ -286,7 +290,6 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   /// editability
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.button")
-  def propertySet = Properties.button
 
   /// compilation & jobs
   var running = false

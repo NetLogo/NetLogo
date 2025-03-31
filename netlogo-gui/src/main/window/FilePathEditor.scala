@@ -2,95 +2,85 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Component, FileDialog => JFileDialog, GridBagConstraints }
+import java.awt.{ Component, FileDialog => JFileDialog }
 import java.io.File
+import java.nio.file.Path
 import javax.swing.{ JLabel, JToolBar }
 
 import org.nlogo.awt.UserCancelException
-import org.nlogo.swing.Implicits._
+import org.nlogo.swing.Implicits.thunk2documentListener
 import org.nlogo.swing.{ Button, FileDialog, TextField, Transparent }
 import org.nlogo.theme.InterfaceColors
 
-abstract class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, suggestedFile: String)
+class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, suggestedFile: Option[String])
   extends PropertyEditor(accessor) {
 
-  val suggestedFileName = if (suggestedFile != null && suggestedFile.trim() != "") {
-    suggestedFile
-  } else {
-    s"${accessor.displayName}-export.csv"
-  }
-  val homePath = (new File(System.getProperty("user.home"))).toPath.toAbsolutePath
+  private val suggestedFileName: String = suggestedFile.map(_.trim).filter(_.nonEmpty).getOrElse(s"${accessor.name}-export.csv")
+  private val homePath: Path = (new File(System.getProperty("user.home"))).toPath.toAbsolutePath
 
-  private val editor = new TextField(12)
-  setLayout(new BorderLayout(BORDER_PADDING, 0))
-  private val label = new JLabel(accessor.displayName)
-  add(label, BorderLayout.WEST)
-  editor.getDocument().addDocumentListener({ () => changed() })
-  add(editor, BorderLayout.CENTER)
-  private val toolbar = new JToolBar with Transparent
-  toolbar.setFloatable(false)
+  private val label = new JLabel(accessor.name)
+  private val editor = new TextField(12) {
+    getDocument.addDocumentListener(() => accessor.changed())
+  }
+
   private val browseButton = new Button("Browse...", () => {
     try {
-      val currentText = getCurrentText()
-      val filePath    = asPath(currentText)
+      val filePath = asPath(getCurrentText)
       FileDialog.setDirectory(filePath.getParent.toString)
-      val outName = FileDialog.showFiles(parent, s"${accessor.displayName} export", JFileDialog.SAVE, filePath.getFileName.toString)
-      this.set(outName.trim())
+      val outName = FileDialog.showFiles(parent, s"${accessor.name} export", JFileDialog.SAVE,
+                                         filePath.getFileName.toString)
+      this.set(outName.trim)
     } catch {
       case ex: UserCancelException =>
-        println(s"User canceled the ${accessor.displayName} file browser.")
     }
   })
-  toolbar.add(browseButton)
-  private val disableButton = new Button("Disable", () => {
-    set("")
-  })
-  toolbar.add(disableButton)
-  add(toolbar, BorderLayout.EAST)
 
-  private def asPath(currentText: String) = {
-    val currentFile = new File(currentText)
-    val currentPath = currentFile.toPath
+  private val disableButton = new Button("Disable", () => set(""))
+
+  private val toolbar = new JToolBar with Transparent {
+    setFloatable(false)
+
+    add(browseButton)
+    add(disableButton)
+  }
+
+  add(label)
+  add(editor)
+  add(toolbar)
+
+  private def asPath(currentText: String): Path = {
+    val currentPath = new File(currentText).toPath
     val path = if (currentPath.isAbsolute) {
       currentPath
     } else {
       homePath.resolve(currentPath)
     }
     if (path.toFile.isDirectory) {
-      val suggestedPath = path.resolve(suggestedFileName)
-      suggestedPath
+      path.resolve(suggestedFileName)
     } else {
       path
     }
   }
 
-  private def getCurrentText() = {
-    val currentTextMaybe = editor.getText
-    val currentText      = if (currentTextMaybe == null) { "" } else { currentTextMaybe.trim }
-    currentText
-  }
-
-  override def get = {
-    val currentText = getCurrentText()
-    if (currentText == "") {
-      Option(currentText)
-    } else {
-      val filePath   = asPath(currentText)
-      val pathString = filePath.toString
-      Option(pathString)
+  private def getCurrentText: String = {
+    Option(editor.getText) match {
+      case Some(text) => text.trim
+      case None => ""
     }
   }
 
-  override def set(value: String) { editor.setText(value) }
+  override def get: Option[String] = {
+    val currentText = getCurrentText
+    if (currentText == "") {
+      Option(currentText)
+    } else {
+      Option(asPath(currentText).toString)
+    }
+  }
+
+  override def set(value: String): Unit = { editor.setText(value) }
 
   override def requestFocus() { editor.requestFocus() }
-
-  override def getConstraints = {
-    val c = super.getConstraints
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 0.25
-    c
-  }
 
   override def syncTheme(): Unit = {
     label.setForeground(InterfaceColors.dialogText())

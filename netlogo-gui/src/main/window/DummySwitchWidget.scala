@@ -2,14 +2,17 @@
 
 package org.nlogo.window
 
+import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ I18N, Switch => CoreSwitch }
+import org.nlogo.editor.Colorizer
 
 class DummySwitchWidget extends Switch with Editable {
-
   type WidgetModel = CoreSwitch
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.switch")
-  def propertySet = Properties.dummySwitch
+
+  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+    null
 
   // we never update constraints in a dummy widget -- CLB
   override def updateConstraints() {}
@@ -21,7 +24,7 @@ class DummySwitchWidget extends Switch with Editable {
   override def load(model: WidgetModel): AnyRef = {
     super.name = model.varName
     isOn = model.on
-    oldSize = model.oldSize
+    oldSize(model.oldSize)
     setSize(model.width, model.height)
     this
   }

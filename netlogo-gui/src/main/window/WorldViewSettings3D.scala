@@ -3,7 +3,6 @@
 package org.nlogo.window
 
 import org.nlogo.agent.World3D
-import org.nlogo.api.Property
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions, WorldDimensions3D }
 import org.nlogo.swing.ModalProgressTask
@@ -48,15 +47,6 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
     newWrapZ = value
     wrappingChanged ||= newWrapZ != world.wrappingAllowedInZ
   }
-
-  override def dimensionProperties: Seq[Property] =
-    Properties.dims3D
-
-  override def wrappingProperties: Seq[Property] =
-    Properties.wrap3D
-
-  override def viewProperties: Seq[Property] =
-    Properties.view2D ++ Properties.view3D
 
   override def cornerConfigs: Seq[OriginConfiguration] = {
     Seq(

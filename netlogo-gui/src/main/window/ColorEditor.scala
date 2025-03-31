@@ -9,13 +9,10 @@ import javax.swing.{ JLabel, JPanel }
 import org.nlogo.swing.{ RoundedBorderPanel, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
-  extends PropertyEditor(accessor) {
-
+class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame) extends PropertyEditor(accessor) {
   private val colorButton = new ColorButton
-  private val originalColor: Color = accessor.get
 
-  private val label = new JLabel(accessor.displayName)
+  private val label = new JLabel(accessor.name)
 
   locally {
     setLayout(new GridBagLayout)
@@ -34,7 +31,7 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
 
     add(colorButton, c)
 
-    setColor(originalColor)
+    setColor(originalValue)
   }
 
   def setColor(color: Color): Unit = {
@@ -46,7 +43,7 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
   override def requestFocus() { colorButton.requestFocus() }
 
   override def revert() {
-    setColor(originalColor)
+    setColor(originalValue)
     super.revert()
   }
 
@@ -115,7 +112,7 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
 
     })
 
-    def setColor(color: Color) {
+    def setColor(color: Color): Unit = {
       this.color = color
 
       repaint()

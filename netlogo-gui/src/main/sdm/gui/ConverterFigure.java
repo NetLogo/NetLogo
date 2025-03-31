@@ -8,7 +8,11 @@ import org.jhotdraw.framework.HandleEnumeration;
 import org.jhotdraw.standard.HandleEnumerator;
 import org.jhotdraw.standard.NullHandle;
 import org.jhotdraw.standard.RelativeLocator;
-import org.nlogo.api.Property;
+import org.nlogo.api.CompilerServices;
+import org.nlogo.editor.Colorizer;
+import org.nlogo.window.Editable;
+import org.nlogo.window.EditPanel;
+
 import java.util.List;
 import java.util.ArrayList;
 
@@ -20,7 +24,7 @@ public class ConverterFigure extends DiamondFigure
     implements
     ModelElementFigure,
     org.jhotdraw.util.Storable,
-    org.nlogo.window.Editable {
+    Editable {
   private org.nlogo.sdm.Converter converter;
 
   public ConverterFigure() {
@@ -112,8 +116,8 @@ public class ConverterFigure extends DiamondFigure
     return scala.Option.apply(null);
   }
 
-  public Seq<Property> propertySet() {
-    return Properties.converter();
+  public EditPanel createEditPanel(CompilerServices compiler, Colorizer colorizer) {
+    return null;
   }
 
   public String classDisplayName() {

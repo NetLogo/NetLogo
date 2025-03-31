@@ -2,7 +2,6 @@
 
 package org.nlogo.window
 
-import java.awt.{ GridBagConstraints, Insets }
 import javax.swing.JPanel
 
 import org.nlogo.swing.Transparent
@@ -11,25 +10,14 @@ import org.nlogo.theme.ThemeSync
 abstract class PropertyEditor[T](val accessor: PropertyAccessor[T], val handlesOwnErrors: Boolean = false)
   extends JPanel with Transparent with ThemeSync {
 
-  def changed() // abstract
+  protected val originalValue: T = accessor.getter()
 
-  val BORDER_PADDING = 5
-
-  private val originalValue: T = accessor.get
-
-  def revert() { accessor.set(originalValue) }
-  def refresh() { set(accessor.get) }
+  def revert() { accessor.setter(originalValue) }
+  def refresh() { set(accessor.getter()) }
+  def apply() { get.foreach(accessor.setter) }
 
   def get: Option[T]
   def set(value: T): Unit
-  def apply() { get.foreach(accessor.set) }
-
-  def getConstraints = {
-    val c = new GridBagConstraints
-    c.anchor = GridBagConstraints.WEST
-    c.insets = new Insets(3, 3, 3, 3)
-    c
-  }
 
   def setTooltip(text: String) = setToolTipText(text)
 }

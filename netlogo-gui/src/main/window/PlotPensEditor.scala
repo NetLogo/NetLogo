@@ -2,12 +2,13 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Color, Cursor, Dimension, Font, Graphics, GridBagConstraints }
+import java.awt.{ BorderLayout, Color, Cursor, Dimension, Font, Frame, Graphics }
 import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, AbstractCellEditor, GroupLayout, JButton, JLabel, JPanel, JTable, LayoutStyle }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 import javax.swing.table.{ DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, TableCellRenderer }
 
+import org.nlogo.awt.Hierarchy
 import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.{ Colorizer, EditorField }
@@ -75,21 +76,22 @@ object PlotPensEditor {
   }
 }
 
-class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Colorizer)
-        extends PropertyEditor(accessor, handlesOwnErrors = true) {
+class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Colorizer, target: PlotWidget)
+  extends PropertyEditor(accessor, true) {
 
   import PlotPensEditor._
+
   private implicit val i18nPrefix = I18N.Prefix("edit.plot.pen")
 
-  val plot = accessor.target.asInstanceOf[PlotWidget].plot
-  val plotManager = accessor.target.asInstanceOf[PlotWidget].plotManager
-  val table = new PlotPensTable()
+  private val plot = target.plot
+  private val plotManager = target.plotManager
+  private val table = new PlotPensTable()
 
   private val scrollPane = new ScrollPane(table)
 
-  private val addButton = new Button(I18N.gui("add"), () => { table.newPen })
+  private val addButton = new Button(I18N.gui("add"), () => table.newPen())
 
-  override def apply() {
+  override def apply(): Unit = {
     super.apply()
     plotManager.compilePlot(plot)
     table.initializePens()
@@ -104,13 +106,12 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     add(addButton)
   }, BorderLayout.SOUTH)
 
-  def changed() {} // seemingly no need to do anything here
-  def set(value: List[PlotPen]) {} // seemingly no need to do anything here either
+  def set(value: List[PlotPen]): Unit = {} // seemingly no need to do anything here
 
-  private def frame = org.nlogo.awt.Hierarchy.getFrame(this)
+  private def frame: Frame = Hierarchy.getFrame(this)
 
   override def get: Option[List[PlotPen]] = {
-    if(table.isEditing) table.getCellEditor.stopCellEditing
+    if (table.isEditing) table.getCellEditor.stopCellEditing
     val names = table.model.pens.map(_.name)
     // It was an intentional decision made Q2 2011 to allow multiple pens with
     // a blank name. - RG 2/21/2018
@@ -122,15 +123,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
                                    duplicateNames.map(_._1.toUpperCase).mkString(", ")), OptionPane.Options.Ok,
                      OptionPane.Icons.Error)
       None
-    } else Some(table.getPlotPens)
-  }
-
-  override def getConstraints = {
-    val c = super.getConstraints
-    c.fill = GridBagConstraints.BOTH
-    c.gridheight = 1
-    c.weighty = 1.0
-    c
+    } else {
+      Some(table.getPlotPens)
+    }
   }
 
   override def syncTheme(): Unit = {

@@ -485,7 +485,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       case e@(_:CompilerException|_:ValueConstraint.Violation|_:LogoException) =>
         setValue(model.boxedValue.default)
     }
-    oldSize = model.oldSize
+    oldSize(model.oldSize)
     setSize(model.width, model.height)
     this
   }

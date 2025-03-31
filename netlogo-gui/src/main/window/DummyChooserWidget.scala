@@ -2,14 +2,11 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.{ CompilerServices, Dump, Property }
-import org.nlogo.core.{ I18N, LogoList }
-import org.nlogo.core.{ Chooseable, Chooser => CoreChooser, CompilerException }
+import org.nlogo.api.{ CompilerServices, Dump }
+import org.nlogo.core.{ I18N, Chooseable, Chooser => CoreChooser, CompilerException, LogoList }
+import org.nlogo.editor.Colorizer
 
-class DummyChooserWidget(val compiler: CompilerServices)
-    extends Chooser
-    with Editable {
-
+class DummyChooserWidget(val compiler: CompilerServices) extends Chooser with Editable {
   type WidgetModel = CoreChooser
 
   private var _name = ""
@@ -28,7 +25,8 @@ class DummyChooserWidget(val compiler: CompilerServices)
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.chooser")
 
-  def propertySet: Seq[Property] = Properties.dummyChooser
+  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+    null
 
   override def editFinished: Boolean = {
     super.editFinished
@@ -65,7 +63,7 @@ class DummyChooserWidget(val compiler: CompilerServices)
 
 
   override def load(model: WidgetModel): AnyRef = {
-    oldSize = model.oldSize
+    oldSize(model.oldSize)
     setSize(model.width, model.height)
     name(model.varName)
     choicesWrapper(model.choices.map(c => Dump.logoObject(c.value, true, false)).mkString("\n"))

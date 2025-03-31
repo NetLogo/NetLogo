@@ -28,7 +28,7 @@ class EditDialogFactory(compiler: CompilerServices, colorizer: Colorizer) extend
     }).canceled
   }
 
-  //used for non-modal dialog
+  // used for non-modal dialog
   def create(window: Window, target: Editable, finish: (Boolean) => Unit, useTooltips: Boolean): Unit = {
     dialog = Some(
       new EditDialog(window, target, useTooltips, false, compiler, colorizer) {

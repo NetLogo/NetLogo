@@ -6,8 +6,9 @@ import java.awt.event.MouseEvent
 import java.awt.{ Color, Component, EventQueue, Font, Graphics, GridBagConstraints, GridBagLayout, Insets, Dimension }
 import javax.swing.{ JLabel, JPanel }
 
+import org.nlogo.api.{ CompilerServices, Dump, MersenneTwisterFast }
 import org.nlogo.core.{ AgentKind, AgentKindJ, I18N, Monitor => CoreMonitor }
-import org.nlogo.api.{ Dump, MersenneTwisterFast, Property }
+import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.RoundedBorderPanel
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -205,6 +206,9 @@ class MonitorWidget(random: MersenneTwisterFast)
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.monitor")
 
+  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+    null
+
   override def kind: AgentKind = AgentKindJ.Observer
 
   override def ownsPrimaryJobs: Boolean =
@@ -233,9 +237,6 @@ class MonitorWidget(random: MersenneTwisterFast)
       repaint()
     }
   }
-
-  def propertySet: Seq[Property] =
-    Properties.monitor
 
   def chooseDisplayName() {
     if (name == null || name == "") {
@@ -362,7 +363,7 @@ class MonitorWidget(random: MersenneTwisterFast)
 
     model.source.foreach(wrapSource)
 
-    oldSize = model.oldSize
+    oldSize(model.oldSize)
     setSize(model.width, model.height)
     chooseDisplayName()
     this

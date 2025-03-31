@@ -54,9 +54,4 @@ class DummyPlotWidget(plot: Plot, plotManager: PlotManager) extends AbstractPlot
       }
     }
   }
-
-  override def propertySet = {
-    nameOptions = createNameOptions
-    Properties.dummyPlot
-  }
 }

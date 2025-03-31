@@ -12,9 +12,7 @@ class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
   extends JPanel(new BorderLayout) with ThemeSync {
 
   private val titleLabel = new JLabel(title)
-  private val arrow = new CollapsibleArrow
-
-  arrow.setOpen(element.isVisible)
+  private val arrow = new CollapsibleArrow(element.isVisible)
 
   titleLabel.setIcon(arrow)
 

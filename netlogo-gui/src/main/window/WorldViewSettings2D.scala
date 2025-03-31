@@ -2,7 +2,6 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.Property
 import org.nlogo.awt.Hierarchy
 import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions }
 import org.nlogo.swing.{ ModalProgressTask, OptionPane }
@@ -18,15 +17,6 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
   import WorldViewSettings2D._
 
   protected val world = workspace.world
-
-  override def dimensionProperties: Seq[Property] =
-    Properties.dims2D
-
-  override def wrappingProperties: Seq[Property] =
-    Properties.wrap2D
-
-  override def viewProperties: Seq[Property] =
-    Properties.view2D
 
   override def cornerConfigs: Seq[OriginConfiguration] = {
     Seq(

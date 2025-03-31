@@ -2,31 +2,28 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, GridBagConstraints }
+import java.awt.BorderLayout
 import javax.swing.JLabel
 
 import org.nlogo.swing.TextField
-import org.nlogo.swing.Implicits._
+import org.nlogo.swing.Implicits.thunk2documentListener
 import org.nlogo.theme.InterfaceColors
 
-abstract class StringEditor(accessor: PropertyAccessor[String])
-  extends PropertyEditor(accessor) {
-
-  private val editor = new TextField(12)
-  setLayout(new BorderLayout(BORDER_PADDING, 0))
-  private val label = new JLabel(accessor.displayName)
-  add(label, BorderLayout.WEST)
-  editor.getDocument.addDocumentListener({ () => changed })
-  add(editor, BorderLayout.CENTER)
-  override def get = Option(editor.getText)
-  override def set(value: String) { editor.setText(value) }
-  override def requestFocus() { editor.requestFocus() }
-  override def getConstraints = {
-    val c = super.getConstraints
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 0.25
-    c
+class StringEditor(accessor: PropertyAccessor[String]) extends PropertyEditor(accessor) {
+  private val label = new JLabel(accessor.name)
+  private val editor = new TextField(12) {
+    getDocument.addDocumentListener(() => accessor.changed())
   }
+
+  setLayout(new BorderLayout(6, 0))
+
+  add(label, BorderLayout.WEST)
+  add(editor, BorderLayout.CENTER)
+
+  override def get: Option[String] = Option(editor.getText)
+  override def set(value: String): Unit = { editor.setText(value) }
+
+  override def requestFocus(): Unit = { editor.requestFocus() }
 
   override def syncTheme(): Unit = {
     label.setForeground(InterfaceColors.dialogText())

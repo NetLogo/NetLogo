@@ -4,9 +4,10 @@ package org.nlogo.window
 
 import java.awt.{ Dimension, Graphics }
 
-import org.nlogo.api.Property
+import org.nlogo.api.CompilerServices
 import org.nlogo.awt.Fonts
 import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton }
+import org.nlogo.editor.Colorizer
 import org.nlogo.theme.InterfaceColors
 
 object DummyButtonWidget {
@@ -14,10 +15,7 @@ object DummyButtonWidget {
   private val MinimumHeight = 33
 }
 
-class DummyButtonWidget
-  extends SingleErrorWidget
-  with Editable {
-
+class DummyButtonWidget extends SingleErrorWidget with Editable {
   type WidgetModel = CoreButton
 
   import DummyButtonWidget._
@@ -26,7 +24,8 @@ class DummyButtonWidget
   private var _keyEnabled: Boolean = false
   private var _name: String = ""
 
-  def propertySet: Seq[Property] = Properties.dummyButton
+  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+    null
 
   def actionKey: Char = _actionKey
 

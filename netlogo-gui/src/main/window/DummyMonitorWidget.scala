@@ -4,8 +4,9 @@ package org.nlogo.window
 
 import java.awt.{ Dimension, Graphics }
 
-import org.nlogo.api.Property
+import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ I18N, Monitor => CoreMonitor }
+import org.nlogo.editor.Colorizer
 import org.nlogo.theme.InterfaceColors
 
 object DummyMonitorWidget {
@@ -19,11 +20,7 @@ object DummyMonitorWidget {
   private val DefaultFontSize = 11
 }
 
-class DummyMonitorWidget
-  extends SingleErrorWidget
-  with MonitorWidget.ToMonitorModel
-  with Editable {
-
+class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorModel with Editable {
   type WidgetModel = CoreMonitor
 
   import DummyMonitorWidget._
@@ -53,8 +50,8 @@ class DummyMonitorWidget
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.monitor")
 
-  def propertySet: Seq[Property] =
-    Properties.dummyMonitor
+  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+    null
 
   override def getMinimumSize: Dimension =
     new Dimension(MinWidth, MaxHeight)
@@ -98,7 +95,7 @@ class DummyMonitorWidget
     units(monitor.units.getOrElse(""))
     name(monitor.display.optionToPotentiallyEmptyString)
     decimalPlaces(monitor.precision)
-    oldSize = monitor.oldSize
+    oldSize(monitor.oldSize)
     setSize(monitor.width, monitor.height)
     this
   }

@@ -2,34 +2,39 @@
 
 package org.nlogo.window
 
-import java.awt.FlowLayout
 import javax.swing.JLabel
 
 import org.nlogo.api.Options
 import org.nlogo.swing.ComboBox
 import org.nlogo.theme.InterfaceColors
 
-abstract class OptionsEditor[T](accessor: PropertyAccessor[Options[T]]) extends PropertyEditor(accessor) {
-  private val options: Options[T] = accessor.get
-  private val combo = new ComboBox[String](options.names)
-  setLayout(new FlowLayout(FlowLayout.LEFT))
-  private val label = new JLabel(accessor.displayName)
+class OptionsEditor[T](accessor: PropertyAccessor[Options[T]]) extends PropertyEditor(accessor) {
+  private val options: Options[T] = accessor.getter()
+  private val originalOption: T = options.chosenValue
+
+  private val label = new JLabel(accessor.name)
+  private val combo = new ComboBox[String](options.names) {
+    addItemListener(_ => accessor.changed())
+  }
+
   add(label)
   add(combo)
-  private val originalOption: T = options.chosenValue
-  combo.addItemListener(_ => changed())
-  override def get = {
+
+  override def get: Option[Options[T]] = {
     options.selectByName(combo.getSelectedItem.getOrElse(""))
     Some(options)
   }
-  override def set(value: Options[T]) {
+
+  override def set(value: Options[T]): Unit = {
     combo.setSelectedItem(value.chosenName)
   }
-  override def revert() {
+
+  override def revert(): Unit = {
     options.selectValue(originalOption)
     super.revert()
   }
-  override def requestFocus() {
+
+  override def requestFocus(): Unit = {
     combo.requestFocus()
   }
 

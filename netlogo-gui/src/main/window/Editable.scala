@@ -2,7 +2,8 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.Property
+import org.nlogo.api.CompilerServices
+import org.nlogo.editor.Colorizer
 
 trait Editable {
   def helpLink: Option[String]
@@ -10,14 +11,13 @@ trait Editable {
   def classDisplayName: String
   def editFinished(): Boolean
 
-  def propertySet(): Seq[Property]
+  def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel
 
   def anyErrors: Boolean
   def error(key: Object, e: Exception): Unit
   // could be null
   def error(key: Object): Exception
-  def invalidSettings: Seq[(String, String)] =
-    Seq.empty[(String, String)]
+  def invalidSettings: Seq[(String, String)] = Seq()
 
   // it's kind of lame to put this here but it'll require a bunch of changes all over the properties
   // package otherwise it seems not worth the effort ev 6/10/08
@@ -26,7 +26,6 @@ trait Editable {
 
 trait DummyEditable extends Editable with DummyErrorHandler{
   def helpLink = None
-  override def propertySet = Seq()
   override def classDisplayName = ""
   override def editFinished() = true
   override def sourceOffset = 0

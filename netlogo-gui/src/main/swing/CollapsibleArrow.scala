@@ -7,9 +7,7 @@ import javax.swing.Icon
 
 import org.nlogo.theme.InterfaceColors
 
-class CollapsibleArrow extends Icon {
-  private var isOpen = false
-
+class CollapsibleArrow(private var isOpen: Boolean) extends Icon {
   def getIconWidth = 9
   def getIconHeight = 9
 

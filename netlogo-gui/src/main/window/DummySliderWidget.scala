@@ -3,7 +3,9 @@
 package org.nlogo.window
 
 import org.nlogo.agent.ConstantSliderConstraint
+import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical }
+import org.nlogo.editor.Colorizer
 
 // This widget works iff the slider has a ConstantSliderConstraint
 // object.  Since this is only being used to construct HubNet client
@@ -13,9 +15,10 @@ import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical }
 class DummySliderWidget extends AbstractSliderWidget with Editable {
   type WidgetModel = CoreSlider
 
-  override def classDisplayName =  I18N.gui.get("tabs.run.widgets.slider")
+  override def classDisplayName = I18N.gui.get("tabs.run.widgets.slider")
 
-  def propertySet = Properties.dummySlider
+  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+    null
 
   // this sets the value in the current constraint and then ensures
   // cached values are updated -- CLB
@@ -42,7 +45,7 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
     con.defaultValue = value
     setSliderConstraint(con)  // ensure cached values are updated
     super.value = value
-    oldSize = model.oldSize
+    oldSize(model.oldSize)
     setSize(model.width, model.height)
     this
   }

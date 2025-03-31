@@ -6,7 +6,9 @@ import java.awt.{ Color, Dimension, Font, Graphics, GridBagConstraints, GridBagL
 import java.awt.image.BufferedImage
 import javax.swing.{ JLabel, JPanel, SwingConstants }
 
+import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot }
+import org.nlogo.editor.Colorizer
 import org.nlogo.plot.{ PlotManagerInterface, PlotLoader, PlotPen, Plot }
 import org.nlogo.swing.{ RoundedBorderPanel, VTextIcon }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -188,7 +190,10 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     if(fullyConstructed) canvas.makeDirty()
   }
   override def helpLink = Some("programming.html#plotting")
-  def propertySet = Properties.plot
+
+  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+    null
+
   def showLegend = legend.open
   def showLegend(open: Boolean){ legend.open=open }
 
@@ -271,7 +276,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   }
 
   override def load(corePlot: WidgetModel): Object = {
-    oldSize = corePlot.oldSize
+    oldSize(corePlot.oldSize)
     setSize(corePlot.width, corePlot.height)
     xLabel(corePlot.xAxis.optionToPotentiallyEmptyString)
     yLabel(corePlot.yAxis.optionToPotentiallyEmptyString)

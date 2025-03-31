@@ -6,14 +6,12 @@ import java.awt.{ Color, Dimension, Rectangle }
 import javax.swing.border.LineBorder
 
 import org.nlogo.agent.World
-import org.nlogo.api.Property
+import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ I18N, View => CoreView }
+import org.nlogo.editor.Colorizer
 import org.nlogo.theme.InterfaceColors
 
-class DummyViewWidget(val world: World)
-    extends SingleErrorWidget
-    with Editable {
-
+class DummyViewWidget(val world: World) extends SingleErrorWidget with Editable {
   type WidgetModel = CoreView
 
   setBackgroundColor(Color.BLACK)
@@ -22,9 +20,11 @@ class DummyViewWidget(val world: World)
   private var newHeight = StrictMath.round(world.worldHeight * world.patchSize).toInt
   setSize(newWidth, newHeight)
 
-  @Override
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.view")
+
+  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+    null
 
   // nullary method to prevent conflict with Component.width
   def width(): Int = newWidth
@@ -39,9 +39,6 @@ class DummyViewWidget(val world: World)
   def height(height: Int): Unit = {
     newHeight = height
   }
-
-  def propertySet: Seq[Property] =
-    Properties.dummyView
 
   override def editFinished(): Boolean = {
     if (newWidth != getWidth || newHeight != getHeight) {

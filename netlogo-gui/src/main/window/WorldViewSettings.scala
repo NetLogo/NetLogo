@@ -2,8 +2,9 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.{ Property, WorldPropertiesInterface }
+import org.nlogo.api.{ CompilerServices, WorldPropertiesInterface }
 import org.nlogo.core.{ CompilerException, UpdateMode, View => CoreView, WorldDimensions }
+import org.nlogo.editor.Colorizer
 import org.nlogo.workspace.WorldLoaderInterface
 
 trait WorldIntegerEditor {
@@ -11,10 +12,9 @@ trait WorldIntegerEditor {
   def set(value: Int): Unit
 }
 
-abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protected val gWidget: ViewWidget, tickCounter: TickCounterLabel)
-  extends Editable
-  with WorldLoaderInterface
-  with WorldPropertiesInterface {
+abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protected val gWidget: ViewWidget,
+                                 tickCounter: TickCounterLabel)
+  extends Editable with WorldLoaderInterface with WorldPropertiesInterface {
 
   protected var originType: OriginType = OriginType.Center
   protected var originConfig: Option[OriginConfiguration] = None
@@ -47,18 +47,13 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
 
   def model: CoreView
 
-  def dimensionProperties: Seq[Property]
-  def wrappingProperties: Seq[Property]
-  def viewProperties: Seq[Property]
-  def modelProperties: Seq[Property] = Properties.model
-
   val originTypes: Seq[OriginType] = Seq(OriginType.Center, OriginType.Corner, OriginType.Edge, OriginType.Custom)
 
   def cornerConfigs: Seq[OriginConfiguration]
   def edgeConfigs: Seq[OriginConfiguration]
 
-  // the properties are manually added in WorldEditPanel (Isaac B 2/14/25)
-  def propertySet = Seq[Property]()
+  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+    new WorldEditPanel(this)
 
   def getSelectedType: OriginType =
     originType

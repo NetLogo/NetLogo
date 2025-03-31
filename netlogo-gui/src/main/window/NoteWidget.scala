@@ -16,9 +16,9 @@ import javax.swing.JLabel
 
 import org.apache.commons.text.StringEscapeUtils
 
-import org.nlogo.api.Property
-import org.nlogo.core.{ TextBox => CoreTextBox }
-import org.nlogo.core.I18N
+import org.nlogo.api.CompilerServices
+import org.nlogo.core.{ I18N, TextBox => CoreTextBox }
+import org.nlogo.editor.Colorizer
 import org.nlogo.swing.Transparent
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme }
 
@@ -77,8 +77,11 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     (HtmlRenderer.builder(opts).build(), Parser.builder(opts).build())
   }
 
-  override def propertySet: Seq[Property] = Properties.text
   override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.note")
+
+  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+    null
+
   override def isNote = true
 
   private val css = """<head>

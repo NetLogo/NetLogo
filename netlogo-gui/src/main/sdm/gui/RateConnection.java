@@ -6,23 +6,25 @@ import org.jhotdraw.figures.LineConnection;
 import org.jhotdraw.framework.Connector;
 import org.jhotdraw.framework.Figure;
 import org.jhotdraw.util.Geom;
-import org.nlogo.api.Property;
+import org.nlogo.api.CompilerServices;
+import org.nlogo.api.Options;
+import org.nlogo.editor.Colorizer;
 import org.nlogo.sdm.ModelElement;
 import org.nlogo.sdm.Reservoir;
 import org.nlogo.sdm.Stock;
+import org.nlogo.window.Editable;
+import org.nlogo.window.EditPanel;
 
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.List;
 
-import org.nlogo.api.Options;
 
 import scala.collection.Seq;
 
 public class RateConnection
     extends LineConnection
-    implements ModelElementFigure,
-    org.nlogo.window.Editable {
+    implements ModelElementFigure, Editable {
   static final int ICON_SIZE = 25;
 
   private org.nlogo.sdm.Rate rate;
@@ -316,8 +318,8 @@ public class RateConnection
     return scala.Option.apply(null);
   }
 
-  public Seq<Property> propertySet() {
-    return Properties.rate();
+  public EditPanel createEditPanel(CompilerServices compiler, Colorizer colorizer) {
+    return null;
   }
 
   private boolean dirty = false;

@@ -9,11 +9,12 @@ import org.jhotdraw.framework.{ FigureAttributeConstant, HandleEnumeration }
 import org.jhotdraw.standard.{ HandleEnumerator, NullHandle, RelativeLocator }
 import org.jhotdraw.util.{ StorableInput, StorableOutput }
 
-import org.nlogo.api.Property
+import org.nlogo.api.CompilerServices
+import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.{ ModelElement, Stock }
 import org.nlogo.swing.{ Utils => SwingUtils }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.Editable
+import org.nlogo.window.{ Editable, EditPanel }
 
 import scala.collection.JavaConverters.seqAsJavaList
 
@@ -107,11 +108,11 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
   def helpLink: Option[String] =
     None
 
-  def propertySet: Seq[Property] =
-    Properties.stock
-
   def classDisplayName: String =
     "Stock"
+
+  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+    null
 
   def editFinished(): Boolean =
     true

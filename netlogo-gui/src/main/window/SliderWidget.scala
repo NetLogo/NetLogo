@@ -7,6 +7,7 @@ import java.lang.NumberFormatException
 import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ CompilerServices, MersenneTwisterFast }
 import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical }
+import org.nlogo.editor.Colorizer
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent }
 
 class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
@@ -24,7 +25,9 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
   var defaultValue = 1d
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.slider")
-  override def propertySet = Properties.slider
+
+  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+    null
 
   override def invalidSettings: Seq[(String, String)] = {
     // if everything can be parsed as a number, might as well check that the range is valid
@@ -156,7 +159,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
         value = v
     }
     defaultValue = v
-    oldSize = model.oldSize
+    oldSize(model.oldSize)
     setSize(model.width, model.height)
     this
   }

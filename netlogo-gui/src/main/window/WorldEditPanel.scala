@@ -6,23 +6,17 @@ import java.awt.{ BorderLayout, GridBagConstraints, GridBagLayout }
 import javax.swing.{ JLabel, JPanel }
 import javax.swing.border.TitledBorder
 
-import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
-import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ ComboBox, Transparent }
 import org.nlogo.theme.InterfaceColors
 
-class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Colorizer)
-  extends EditPanel(widget, compiler, colorizer) {
-
+class WorldEditPanel(target: WorldViewSettings) extends EditPanel(target) {
   private implicit val i18nPrefix = I18N.Prefix("edit.viewSettings")
   private val previewPanel = new WorldPreview(200, 200)
 
   private var editors: List[IntegerEditor] = Nil
 
-  private val settings = widget.asInstanceOf[WorldViewSettings]
-
-  private val originTypes = new ComboBox[OriginType](settings.originTypes) {
+  private val originTypes = new ComboBox[OriginType](target.originTypes) {
     addItemListener(_ => selectType)
   }
 
@@ -30,20 +24,22 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
     addItemListener(_ => selectConfig)
   }
 
-  override def init(): PropertyEditor[_] = {
+  override def propertyEditors: Seq[PropertyEditor[_]] = Seq()
+
+  def init(): PropertyEditor[_] = {
     setLayout(new BorderLayout)
     val panelGridbag = new GridBagLayout
     val worldPanel = new JPanel(new BorderLayout) with Transparent {
       setBorder(new TitledBorder(I18N.gui("world")) {
         setTitleColor(InterfaceColors.dialogText())
       })
-      add(makeButtonPanel(settings), BorderLayout.WEST)
+      add(makeButtonPanel(target), BorderLayout.WEST)
       add(new JPanel(new BorderLayout) with Transparent {
         add(previewPanel, BorderLayout.CENTER)
         val worldStaticPropertiesPanel = new JPanel(panelGridbag) with Transparent
-        addProperties(worldStaticPropertiesPanel,
-                      settings.wrappingProperties,
-                      panelGridbag)
+        // addProperties(worldStaticPropertiesPanel,
+        //               target.wrappingProperties,
+        //               panelGridbag)
         add(worldStaticPropertiesPanel, BorderLayout.SOUTH)
       }, BorderLayout.CENTER)
     }
@@ -54,7 +50,7 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
       })
     }
 
-    addProperties(viewPanel, settings.viewProperties, panelGridbag)
+    // addProperties(viewPanel, target.viewProperties, panelGridbag)
 
     val modelPanel = new JPanel(panelGridbag) with Transparent {
       setBorder(new TitledBorder(I18N.gui("tickCounter")) {
@@ -62,23 +58,23 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
       })
     }
 
-    addProperties(modelPanel, settings.modelProperties, panelGridbag)
+    // addProperties(modelPanel, target.modelProperties, panelGridbag)
 
     add(worldPanel, BorderLayout.NORTH)
     add(viewPanel, BorderLayout.CENTER)
     add(modelPanel, BorderLayout.SOUTH)
 
-    settings.setTypeAndConfig()
+    target.setTypeAndConfig()
 
-    originTypes.setSelectedItem(settings.getSelectedType)
-    settings.getSelectedConfig.foreach(originConfigs.setSelectedItem)
+    originTypes.setSelectedItem(target.getSelectedType)
+    target.getSelectedConfig.foreach(originConfigs.setSelectedItem)
 
-    editors.foreach(_.refresh)
+    // editors.foreach(_.refresh)
 
     if (editors(0).isEnabled) editors(0) else editors(1)
   }
 
-  private def makeButtonPanel(settings: WorldViewSettings) = {
+  private def makeButtonPanel(target: WorldViewSettings) = {
     val buttonsLayout = new GridBagLayout
     val buttons = new JPanel(buttonsLayout) with Transparent
     val c = new GridBagConstraints
@@ -93,11 +89,11 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
     buttons.add(originTypes, c)
     buttons.add(originConfigs, c)
 
-    try
-      addProperties(buttons, settings.dimensionProperties, buttonsLayout)
-    catch {
-      case t: Throwable => t.printStackTrace
-    }
+    // try
+    //   addProperties(buttons, target.dimensionProperties, buttonsLayout)
+    // catch {
+    //   case t: Throwable => t.printStackTrace
+    // }
 
     editors = propertyEditors.map(_.asInstanceOf[IntegerEditor]).toList
 
@@ -134,25 +130,25 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
 
   override def apply(): Unit = {
     super.apply()
-    settings.apply()
+    target.apply()
   }
 
   override def revert(): Unit = {
     super.revert()
-    settings.revert()
+    target.revert()
   }
 
   private def selectType(): Unit = {
     originTypes.getSelectedItem.foreach { t =>
-      settings.setOriginType(t)
+      target.setOriginType(t)
 
       t match {
         case OriginType.Corner =>
-          originConfigs.setItems(settings.cornerConfigs)
+          originConfigs.setItems(target.cornerConfigs)
           originConfigs.setVisible(true)
 
         case OriginType.Edge =>
-          originConfigs.setItems(settings.edgeConfigs)
+          originConfigs.setItems(target.edgeConfigs)
           originConfigs.setVisible(true)
 
         case _ =>
@@ -163,7 +159,9 @@ class WorldEditPanel(widget: Editable, compiler: CompilerServices, colorizer: Co
   }
 
   private def selectConfig(): Unit = {
-    settings.setOriginConfig(originConfigs.getSelectedItem)
-    settings.configureEditors(editors)
+    target.setOriginConfig(originConfigs.getSelectedItem)
+    target.configureEditors(editors)
   }
+
+  override def syncTheme(): Unit = {}
 }

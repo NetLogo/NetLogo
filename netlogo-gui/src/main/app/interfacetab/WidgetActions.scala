@@ -223,7 +223,7 @@ object WidgetActions {
 
       for ((ww, _, bounds) <- wrappers) {
         if (ww.widget.oldSize) {
-          ww.widget.oldSize = false
+          ww.widget.oldSize(false)
           ww.setBounds(bounds)
         }
       }
@@ -233,7 +233,7 @@ object WidgetActions {
       widgetPanel.setInterfaceMode(InterfaceMode.Interact, true)
 
       for ((ww, bounds, _) <- wrappers) {
-        ww.widget.oldSize = true
+        ww.widget.oldSize(true)
         ww.setBounds(bounds)
       }
     }

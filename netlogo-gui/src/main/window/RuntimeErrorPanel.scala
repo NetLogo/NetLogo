@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, GridBagConstraints }
+import java.awt.{ Color, Dimension }
 import java.awt.event.{ ActionEvent, ActionListener }
 import javax.swing.{ JLabel, JPanel }
 
@@ -10,8 +10,8 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ Button, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-abstract class RuntimeErrorDisplay(accessor: PropertyAccessor[Option[Exception]])
-  extends PropertyEditor(accessor, handlesOwnErrors = true) with RuntimeErrorDisplayer {
+class RuntimeErrorDisplay(accessor: PropertyAccessor[Option[Exception]])
+  extends PropertyEditor(accessor, true) with RuntimeErrorDisplayer {
 
   private var dismissed = false
 
@@ -27,10 +27,12 @@ abstract class RuntimeErrorDisplay(accessor: PropertyAccessor[Option[Exception]]
     dismissed = false
   }
 
-  override def changed() // abstract
-
   override def get: Option[Option[Exception]] = {
-    if (dismissed) Some(None) else Some(accessor.get)
+    if (dismissed) {
+      Some(None)
+    } else {
+      Some(accessor.getter())
+    }
   }
 
   override def exceptionMessage: Option[String] = get.flatten.map(_.getMessage)
@@ -42,15 +44,6 @@ abstract class RuntimeErrorDisplay(accessor: PropertyAccessor[Option[Exception]]
       case None => dismissError()
       case Some(e) => displayError()
     }
-  }
-
-  override def getConstraints = {
-    val c = super.getConstraints
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1.0
-    c.weighty = 0
-    c.gridheight = if (dismissed) 0 else 1
-    c
   }
 }
 
@@ -104,7 +97,7 @@ class RuntimeErrorPanel(e: Exception, onDismiss: (RuntimeErrorPanel) => Unit = {
 
   syncTheme()
 
-  override def exceptionMessage = Some(e.getMessage)
+  override def exceptionMessage: Option[String] = Some(e.getMessage)
 
   override def actionPerformed(e: ActionEvent): Unit = {
     onDismiss(this)

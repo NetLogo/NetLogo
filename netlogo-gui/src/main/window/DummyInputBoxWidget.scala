@@ -2,14 +2,15 @@
 
 package org.nlogo.window
 
-import org.nlogo.editor.AbstractEditorArea
-import org.nlogo.api.CompilerServices
 import java.awt.Component
+
+import org.nlogo.api.CompilerServices
+import org.nlogo.editor.{ AbstractEditorArea, Colorizer }
 
 class DummyInputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEditorArea,
                           nextComponent: Component, compiler: CompilerServices) extends
   InputBox(textArea, dialogTextArea, compiler, nextComponent) {
 
-  override def propertySet = Properties.dummyInput
+  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+    null
 }
-
