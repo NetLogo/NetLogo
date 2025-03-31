@@ -9,16 +9,19 @@ import org.nlogo.core.I18N
 
 class SwitchEditPanel(target: SwitchWidget, compiler: CompilerServices) extends WidgetEditPanel(target) {
   private val name =
-    new StringEditor(
+    new IdentifierEditor(
       PropertyAccessor(
+        target,
         I18N.gui.get("edit.switch.globalVar"),
         () => target.nameWrapper,
-        s => target.nameWrapper(s.trim),
-        () => apply()))
+        target.setNameWrapper(_),
+        () => apply()),
+      compiler)
 
   private val oldSize =
     new BooleanEditor(
       PropertyAccessor(
+        target,
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
         target.oldSize(_),
@@ -46,22 +49,6 @@ class SwitchEditPanel(target: SwitchWidget, compiler: CompilerServices) extends 
 
   override def propertyEditors: Seq[PropertyEditor[_]] =
     Seq(name, oldSize)
-
-  override def errorString: Option[String] = {
-    name.get match {
-      case Some(str) =>
-        if (str.isEmpty) {
-          Some(I18N.gui.get("edit.switch.globalVarEmpty"))
-        } else if (!compiler.isValidIdentifier(str)) {
-          Some(I18N.gui.get("edit.switch.globalVarInvalid"))
-        } else {
-          None
-        }
-
-      case None =>
-        Some(I18N.gui.get("edit.switch.globalVarInvalid"))
-    }
-  }
 
   override def syncTheme(): Unit = {
     name.syncTheme()

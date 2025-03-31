@@ -898,7 +898,7 @@ public abstract class GUIWorkspace
     } catch (SliderConstraint.ConstraintExceptionHolder ex) {
       for (SliderConstraint.SliderConstraintException cce :
              JavaConversions.asJavaIterable(ex.getErrors())) {
-        e.slider.error((Object) cce.spec().fieldName(), (java.lang.Exception) cce);
+        e.slider.error((Object) cce.spec().displayName(), (java.lang.Exception) cce);
       }
     }
   }

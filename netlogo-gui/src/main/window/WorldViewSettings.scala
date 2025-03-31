@@ -51,8 +51,7 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
   def cornerConfigs: Seq[OriginConfiguration]
   def edgeConfigs: Seq[OriginConfiguration]
 
-  override def editPanel: EditPanel =
-    new WorldEditPanel(this)
+  override def editPanel: EditPanel = new WorldEditPanel(this)
 
   def getSelectedType: OriginType =
     originType
@@ -280,9 +279,9 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
     error(e)
   }
 
-  def error: Exception = _error.orNull
+  def error(): Option[Exception] = _error
 
-  def error(a: AnyRef): Exception = _error.orNull
+  def error(a: AnyRef): Option[Exception] = _error
 
   def setSize(x: Int, y: Int): Unit = {
     gWidget.setSize(x, y)

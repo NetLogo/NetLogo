@@ -14,8 +14,7 @@ class SwitchWidget(compiler: CompilerServices) extends Switch with Editable with
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.switch")
 
-  override def editPanel: EditPanel =
-    new SwitchEditPanel(this, compiler)
+  override def editPanel: EditPanel = new SwitchEditPanel(this, compiler)
 
   def valueObject: AnyRef = constraint.defaultValue
   def valueObject(value: AnyRef) {
@@ -28,7 +27,7 @@ class SwitchWidget(compiler: CompilerServices) extends Switch with Editable with
   }
 
   def nameWrapper = this._name
-  def nameWrapper(newName: String) {
+  def setNameWrapper(newName: String) {
     nameChanged = newName != this._name || nameChanged
     name(newName, false)
   }

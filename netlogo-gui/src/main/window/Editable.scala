@@ -11,9 +11,8 @@ trait Editable {
   def editPanel: EditPanel
 
   def anyErrors: Boolean
+  def error(key: Object): Option[Exception]
   def error(key: Object, e: Exception): Unit
-  // could be null
-  def error(key: Object): Exception
   def invalidSettings: Seq[(String, String)] = Seq()
 
   // it's kind of lame to put this here but it'll require a bunch of changes all over the properties
@@ -21,32 +20,33 @@ trait Editable {
   def sourceOffset: Int
 }
 
-trait DummyEditable extends Editable with DummyErrorHandler{
+class DummyEditable extends Editable with DummyErrorHandler {
   def helpLink = None
   override def classDisplayName = ""
   override def editFinished() = true
+  override def editPanel: EditPanel = null
   override def sourceOffset = 0
 }
 
 trait DummyErrorHandler {
-  def error(key: Object) = null
-  def error(key: Object, e: Exception){}
+  def error(key: Object): Option[Exception] = None
+  def error(key: Object, e: Exception): Unit = {}
   def anyErrors = false
 }
 
 trait MultiErrorHandler {
   private val errors = scala.collection.mutable.Map[Object, Exception]()
-  def anyErrors = !errors.isEmpty
-  def removeAllErrors() = errors.clear()
-  def error(key: Object): Exception = errors.get(key).orNull
-  def error(key: Object, e: Exception) {errors(key) = e}
+  def anyErrors: Boolean = errors.nonEmpty
+  def removeAllErrors(): Unit = { errors.clear() }
+  def error(key: Object): Option[Exception] = Option(errors.get(key)).flatten
+  def error(key: Object, e: Exception): Unit = { errors(key) = e }
 }
 
 trait SingleErrorHandler {
   private var _error: Option[Exception] = None
-  def anyErrors = _error.isDefined
-  def error(key: Object): Exception = _error.orNull
-  def error(key: Object, e: Exception) { _error = Option(e) }
-  def error() = _error.orNull
-  def error(e: Exception){ _error = Option(e) }
+  def anyErrors: Boolean = _error.isDefined
+  def error(key: Object): Option[Exception] = _error
+  def error(key: Object, e: Exception): Unit = { _error = Option(e) }
+  def error(): Option[Exception] = _error
+  def error(e: Exception): Unit = { _error = Option(e) }
 }

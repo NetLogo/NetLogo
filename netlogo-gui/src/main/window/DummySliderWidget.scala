@@ -36,13 +36,13 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
     val max = model.max.toDouble
     val value = model.default
     val inc = model.step.toDouble
-    units = model.units.optionToPotentiallyEmptyString
-    vertical = model.direction == Vertical
-    name = model.display.optionToPotentiallyEmptyString
+    setUnits(model.units.optionToPotentiallyEmptyString)
+    setVertical(model.direction == Vertical)
+    setName2(model.display.optionToPotentiallyEmptyString)
     val con = ConstantSliderConstraint(min, max, inc)
     con.defaultValue = value
     setSliderConstraint(con)  // ensure cached values are updated
-    super.value = value
+    setValue(value)
     oldSize(model.oldSize)
     setSize(model.width, model.height)
     this

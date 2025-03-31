@@ -11,50 +11,56 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
   private val agentOptions =
     new OptionsEditor[String](
       new PropertyAccessor(
+        target,
         I18N.gui.get("edit.button.agents"),
         () => target.agentOptions,
-        target.agentOptions(_),
+        target.setAgentOptions(_),
         () => apply()))
 
   private val forever =
     new BooleanEditor(
       new PropertyAccessor(
+        target,
         I18N.gui.get("edit.button.forever"),
         () => target.forever,
-        target.forever(_),
+        target.setForever(_),
         () => apply()))
 
   private val goTime =
     new BooleanEditor(
       new PropertyAccessor(
+        target,
         I18N.gui.get("edit.button.disable"),
         () => target.goTime,
-        target.goTime(_),
+        target.setGoTime(_),
         () => apply()))
 
   private val wrapSource =
     new CodeEditor(
       new PropertyAccessor(
+        target,
         I18N.gui.get("edit.button.commands"),
         () => target.wrapSource,
-        target.wrapSource(_),
+        target.setWrapSource(_),
         () => apply()),
       colorizer)
 
   private val name =
     new StringEditor(
       new PropertyAccessor(
+        target,
         I18N.gui.get("edit.button.displayName"),
         () => target.name,
-        target.name(_),
+        target.setVarName(_),
         () => apply()))
 
   private val actionKey =
     new KeyEditor(
       new PropertyAccessor(
+        target,
         I18N.gui.get("edit.button.actionKey"),
         () => target.actionKey,
-        target.actionKey(_),
+        target.setActionKey(_),
         () => apply()))
 
   locally {

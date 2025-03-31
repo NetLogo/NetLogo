@@ -7,7 +7,7 @@ import java.awt.Window
 import org.nlogo.api.{ LabDefaultValues, LabRunOptions }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.window.{ Editable, EditDialogFactory, EditPanel }
+import org.nlogo.window.{ DummyErrorHandler, Editable, EditDialogFactory, EditPanel }
 
 import java.io.File
 import java.util.prefs.Preferences
@@ -89,7 +89,7 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
     Prefs.updateFrom(runOptions)
     runOptions
   }
-  class EditableRunOptions extends Editable {
+  class EditableRunOptions extends Editable with DummyErrorHandler {
     private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace.runoptions")
     var spreadsheet = Prefs.spreadsheet
     var table = Prefs.table
@@ -122,9 +122,6 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
     def get = LabRunOptions(threadCount, table, spreadsheet, stats, lists, updateView, updatePlotsAndMonitors, false)
     // boilerplate for Editable
     def helpLink = None
-    def error(key:Object) = null
-    def error(key:Object, e: Exception){}
-    def anyErrors = false
     val sourceOffset = 0
     def editFinished = true
   }

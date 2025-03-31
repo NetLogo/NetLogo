@@ -3,16 +3,16 @@
 package org.nlogo.agent
 
 import org.nlogo.api.{ CompilerServices, LogoException, LogoThunkFactory, ReporterLogoThunk, ValueConstraint }
-import org.nlogo.core.CompilerException
+import org.nlogo.core.{ CompilerException, I18N }
 
 import scala.util.{ Failure, Success, Try }
 
 object SliderConstraint {
 
   case class Spec(fieldName: String, displayName:String)
-  val Min = Spec("minimumCode", "Minimum")
-  val Max = Spec("maximumCode", "Maximum")
-  val Inc = Spec("incrementCode", "Increment")
+  val Min = Spec("minimumCode", I18N.gui.get("edit.slider.minimum"))
+  val Max = Spec("maximumCode", I18N.gui.get("edit.slider.maximum"))
+  val Inc = Spec("incrementCode", I18N.gui.get("edit.slider.increment"))
 
   trait SliderConstraintException extends Exception { val spec: Spec }
   class ConstraintCompilerException(val spec: Spec, ex: CompilerException) extends

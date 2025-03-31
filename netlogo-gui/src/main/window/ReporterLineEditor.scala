@@ -12,8 +12,8 @@ import org.nlogo.swing.ScrollPane
 class ReporterLineEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, optional: Boolean)
   extends CodeEditor(accessor, colorizer, false, false) {
 
-  override val editor = new EditorField(30, new Font(platformMonospacedFont, Font.PLAIN, 12), true, colorizer)
-  override val scrollPane = new ScrollPane(
+  override lazy val editor = new EditorField(30, new Font(platformMonospacedFont, Font.PLAIN, 12), true, colorizer)
+  override lazy val scrollPane = new ScrollPane(
     editor,
     ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER,
     ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)

@@ -132,8 +132,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
   addMouseListener(this)
   addMouseMotionListener(this)
 
-  override def editPanel: EditPanel =
-    new ButtonEditPanel(this, colorizer)
+  override def editPanel: EditPanel = new ButtonEditPanel(this, colorizer)
 
   def buttonType_=(bt: ButtonType): Unit = {
     _buttonType = bt
@@ -150,7 +149,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
   override def agentKind(c: AgentKind): Unit = { /* ignoring, no one should call this. */ }
 
   def agentOptions: Options[String] = buttonType.toAgentOptions
-  def agentOptions(newAgentOptions: Options[String]): Unit = {
+  def setAgentOptions(newAgentOptions: Options[String]): Unit = {
     if (newAgentOptions.chosenValue != this.agentOptions.chosenValue) {
       buttonType = ButtonType(newAgentOptions.chosenValue)
       recompile()
@@ -176,7 +175,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
 
   protected var _forever = false
   def forever: Boolean = _forever
-  def forever(newForever: Boolean): Unit = {
+  def setForever(newForever: Boolean): Unit = {
     if (newForever != _forever) {
       _forever = newForever
       stopping = false
@@ -187,14 +186,14 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
 
   private var _goTime = false
   def goTime: Boolean = _goTime
-  def goTime(value: Boolean): Unit = {
+  def setGoTime(value: Boolean): Unit = {
     _goTime = value
   }
 
   /// keyboard stuff
   private var _actionKey: Option[Char] = None
   def actionKey = _actionKey.getOrElse(0.toChar)
-  def actionKey(newActionKey:Char): Unit = {
+  def setActionKey(newActionKey:Char): Unit = {
     _actionKey = newActionKey match {
       case 0 => None
       case _ => Some(newActionKey)
@@ -305,7 +304,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
   override def isLinkForeverButton = buttonType == ButtonType.LinkButton && forever
   private var _name = ""
   def name = _name
-  def name(newName:String){
+  def setVarName(newName:String){
     _name = newName
     chooseDisplayName()
   }
@@ -419,7 +418,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
 
   def wrapSource: String = innerSource
 
-  def wrapSource(newInnerSource:String): Unit = {
+  def setWrapSource(newInnerSource:String): Unit = {
     if (newInnerSource != innerSource) {
       this.innerSource = newInnerSource
       recompile()
@@ -530,15 +529,15 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
   }
 
   override def load(button: WidgetModel): Object = {
-    forever(button.forever)
+    setForever(button.forever)
     buttonType = ButtonType(button.buttonKind)
 
-    button.actionKey.foreach(k => actionKey(k))
+    button.actionKey.foreach(k => setActionKey(k))
 
-    goTime(button.disableUntilTicksStart)
-    name(button.display.optionToPotentiallyEmptyString)
+    setGoTime(button.disableUntilTicksStart)
+    setVarName(button.display.optionToPotentiallyEmptyString)
 
-    button.source.foreach(wrapSource)
+    button.source.foreach(setWrapSource)
 
     setSize(button.width, button.height)
     chooseDisplayName()

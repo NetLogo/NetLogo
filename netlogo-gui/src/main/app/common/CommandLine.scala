@@ -168,7 +168,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
       error(e.error)
 
       error() match {
-        case err: CompilerException =>
+        case Some(err: CompilerException) =>
           val offset = headerSource.length
           // highlight error location
 
@@ -177,7 +177,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
           new WindowEvents.OutputEvent(false,
             new OutputObject("", "ERROR: " + err.getMessage(), true, true),
             true, true).raise(this)
-        case e if e == null =>
+        case None =>
           setText("")
           var outStr = innerSource
           if (!outStr.trim.equals("")) {

@@ -319,12 +319,12 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   protected def recolor() {
     nameLabel.setForeground(if (anyErrors) InterfaceColors.widgetTextError() else InterfaceColors.widgetText())
 
-    if (error("setupCode") != null)
+    if (error("setupCode").isDefined)
       new WidgetErrorEvent(this, error("setupCode")).raise(this)
-    else if (error("updateCode") != null)
+    else if (error("updateCode").isDefined)
       new WidgetErrorEvent(this, error("updateCode")).raise(this)
     else
-      new WidgetErrorEvent(this, null).raise(this)
+      new WidgetErrorEvent(this, None).raise(this)
   }
 
   def handle(e: AfterLoadEvent){
@@ -344,12 +344,12 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   // error handling
   def anyErrors: Boolean = plotManager.hasErrors(plot)
   def removeAllErrors() = throw new UnsupportedOperationException
-  def error(key: Object): Exception = (key match {
+  def error(key: Object): Option[Exception] = (key match {
     case "setupCode" => plotManager.getPlotSetupError(plot)
     case "updateCode" => plotManager.getPlotUpdateError(plot)
-  }).orNull
+  })
 
-  def error(key: Object, e: Exception) { throw new UnsupportedOperationException }
+  def error(key: Object, e: Exception): Unit = { throw new UnsupportedOperationException }
 
   override def invalidSettings: Seq[(String, String)] = {
     val hasDuplicatedName =

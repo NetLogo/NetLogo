@@ -30,15 +30,25 @@ abstract class EditPanel(target: Editable) extends JPanel with Transparent with 
   protected def errorString: Option[String] = None
 
   def valid: Boolean = {
-    errorString match {
-      case Some(error) =>
-        new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"), error, OptionPane.Options.Ok,
+    propertyEditors.find(editor => editor.get.isEmpty && !editor.handlesOwnErrors) match {
+      case Some(editor) =>
+        new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"),
+                       I18N.gui.getN("edit.general.invalidValue", editor.accessor.name), OptionPane.Options.Ok,
                        OptionPane.Icons.Error)
 
         false
 
       case None =>
-        true
+        (errorString match {
+          case Some(error) =>
+            new OptionPane(this, I18N.gui.get("edit.general.invalidSettings"), error, OptionPane.Options.Ok,
+                          OptionPane.Icons.Error)
+
+            false
+
+          case None =>
+            true
+        })
     }
   }
 }

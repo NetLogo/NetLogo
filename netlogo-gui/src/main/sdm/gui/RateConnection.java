@@ -10,6 +10,7 @@ import org.nlogo.api.Options;
 import org.nlogo.sdm.ModelElement;
 import org.nlogo.sdm.Reservoir;
 import org.nlogo.sdm.Stock;
+import org.nlogo.window.DummyErrorHandler;
 import org.nlogo.window.Editable;
 import org.nlogo.window.EditPanel;
 
@@ -56,8 +57,8 @@ public class RateConnection
   public void error(Object o, Exception e) {
   }
 
-  public Exception error(Object key) {
-    return null;
+  public scala.Option<Exception> error(Object key) {
+    return scala.Option.apply(null);
   }
 
   public int sourceOffset() {

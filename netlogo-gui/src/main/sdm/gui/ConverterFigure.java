@@ -44,8 +44,8 @@ public class ConverterFigure extends DiamondFigure
   public void error(Object o, Exception e) {
   }
 
-  public Exception error(Object o) {
-    return null;
+  public scala.Option<Exception> error(Object o) {
+    return scala.Option.apply(null);
   }
 
   public int sourceOffset() {

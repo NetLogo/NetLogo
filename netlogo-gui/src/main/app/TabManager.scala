@@ -708,14 +708,16 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       case w =>
         var changed = false
 
-        if (e.error == null) {
-          changed = widgetErrors.contains(w)
+        e.error match {
+          case Some(err) =>
+            changed = !widgetErrors.contains(w)
 
-          widgetErrors -= w
-        } else {
-          changed = !widgetErrors.contains(w)
+            widgetErrors += w
 
-          widgetErrors += w
+          case None =>
+            changed = widgetErrors.contains(w)
+
+            widgetErrors -= w
         }
 
         if (changed) {

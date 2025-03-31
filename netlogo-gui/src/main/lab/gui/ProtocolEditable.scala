@@ -7,7 +7,7 @@ import java.awt.Window
 import org.nlogo.api.{ CompilerServices, LabProtocol, LabVariableParser, RefValueSet }
 import org.nlogo.core.I18N
 import org.nlogo.swing.OptionPane
-import org.nlogo.window.{ Editable, EditPanel }
+import org.nlogo.window.{ DummyErrorHandler, Editable, EditPanel }
 
 // normally we'd be package-private but the org.nlogo.properties stuff requires we be public - ST 2/25/09
 
@@ -16,13 +16,10 @@ class ProtocolEditable(protocol: LabProtocol,
                        compiler: CompilerServices,
                        worldLock: AnyRef,
                        experimentNames: Seq[String] = Seq[String]())
-  extends Editable {
+  extends Editable with DummyErrorHandler {
   // these are for Editable
   def helpLink = Some("behaviorspace.html#creating-an-experiment-setup")
   val classDisplayName = "Experiment"
-  def error(key:Object) = null
-  def error(key:Object, e: Exception){}
-  def anyErrors = false
   val sourceOffset = 0
 
   private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace")

@@ -2,6 +2,7 @@
 
 package org.nlogo.window
 
+import java.awt.BorderLayout
 import javax.swing.JLabel
 
 import org.nlogo.api.Dump
@@ -17,8 +18,10 @@ class DoubleEditor(accessor: PropertyAccessor[Double]) extends PropertyEditor(ac
     getDocument.addDocumentListener(() => accessor.changed())
   }
 
-  add(label)
-  add(editor)
+  setLayout(new BorderLayout(6, 0))
+
+  add(label, BorderLayout.WEST)
+  add(editor, BorderLayout.CENTER)
 
   override def setEnabled(enabled: Boolean): Unit = {
     super.setEnabled(enabled)

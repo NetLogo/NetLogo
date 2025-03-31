@@ -12,11 +12,11 @@ import org.jhotdraw.util.{ StorableInput, StorableOutput }
 import org.nlogo.sdm.{ ModelElement, Stock }
 import org.nlogo.swing.{ Utils => SwingUtils }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.{ Editable, EditPanel }
+import org.nlogo.window.{ DummyErrorHandler, Editable, EditPanel }
 
 import scala.collection.JavaConverters.seqAsJavaList
 
-class StockFigure extends RectangleFigure with ModelElementFigure with Editable {
+class StockFigure extends RectangleFigure with ModelElementFigure with Editable with DummyErrorHandler {
   private var stock: Option[Stock] = Some(new Stock)
 
   private var _dirty = false
@@ -25,14 +25,6 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
 
   def getModelElement: ModelElement =
     stock.orNull
-
-  def anyErrors: Boolean =
-    false
-
-  def error(o: Object, e: Exception): Unit = {}
-
-  def error(key: Object): Exception =
-    null
 
   def sourceOffset: Int =
     0

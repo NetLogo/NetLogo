@@ -16,7 +16,7 @@ object CodeEditor {
             collapseWhenEmpty: Boolean = false, rows: Int = 5, columns: Int = 30, err: Option[Exception] = None,
             changedFunc: => Unit = {}): CodeEditor = {
 
-    val accessor = new PropertyAccessor[String](displayName, () => "", _ => {}, () => changedFunc)
+    val accessor = new PropertyAccessor[String](new DummyEditable, displayName, () => "", _ => {}, () => changedFunc)
 
     new CodeEditor(accessor, colorizer, collapsible, collapseWhenEmpty, rows, columns)
   }
@@ -31,8 +31,8 @@ class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, colla
       .withFocusTraversalEnabled(true)
       .withListener(new TextListener { def textValueChanged(e: TextEvent) { accessor.changed() } })
 
-  protected val editor = new EditorArea(editorConfig)
-  protected val scrollPane = new ScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
+  protected lazy val editor = new EditorArea(editorConfig)
+  protected lazy val scrollPane = new ScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                             ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED)
   private val errorLabel = new EditorAreaErrorLabel(editor)
 
@@ -96,7 +96,7 @@ class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, colla
     editor setText value
     setVisibility(value.nonEmpty)
     editor.select(0, 0)
-    // accessor.error.foreach { errorLabel.setError(_, accessor.target.sourceOffset) }
+    accessor.target.error(accessor.name).foreach(errorLabel.setError(_, accessor.target.sourceOffset))
   }
 
   override def requestFocus(): Unit = { editor.requestFocus() }

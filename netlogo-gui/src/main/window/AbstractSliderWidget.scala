@@ -38,7 +38,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     addActionListener(new ActionListener {
       def actionPerformed(e: ActionEvent): Unit = {
         try {
-          value = getText.toDouble
+          setValue(getText.toDouble)
         } catch {
           case e: NumberFormatException =>
         }
@@ -189,27 +189,33 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
     sliderData.setSliderConstraint(con)
   }
-  def name = _name
-  def name_=(name:String): Unit = { _name = name; repaint() }
-  def minimum = sliderData.minimum
-  def maximum = sliderData.maximum
-  def effectiveMaximum = sliderData.effectiveMaximum
-  def increment = sliderData.increment
-  def value = sliderData.value
-  def value_=(d: Double): Unit = {
+  def name: String = _name
+  // 2 so it doesn't conflict with java.awt.Component method setName
+  def setName2(name: String): Unit = {
+    _name = name
+    repaint()
+  }
+
+  def minimum: Double = sliderData.minimum
+  def maximum: Double = sliderData.maximum
+  def effectiveMaximum: Double = sliderData.effectiveMaximum
+  def increment: Double = sliderData.increment
+
+  def value: Double = sliderData.value
+  def setValue(d: Double): Unit = {
     sliderData.value = d
     valueComponent.setText(valueString(value))
     slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
     repaint()
     new Events.WidgetEditedEvent(this).raise(this)
   }
-  def value_=(d: Double, inc: Double): Unit = {
+  def setValue(d: Double, inc: Double): Unit = {
     sliderData.value = d
     valueComponent.setText(valueString(value))
     slider.setValue(((value - minimum) / inc).round.asInstanceOf[Int])
     repaint()
   }
-  def value_=(d: Double, buttonRelease: Boolean): Unit = {
+  def setValue(d: Double, buttonRelease: Boolean): Unit = {
     sliderData.value_=(d, buttonRelease)
     valueComponent.setText(valueString(value))
     slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
@@ -227,11 +233,11 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   // sets the internal value based on the slider position
   // used for alternative input methods like keys, scrolling, and clicking (Isaac B 4/4/25)
   def updateValue(): Unit = {
-    value = minimum + slider.getValue * increment
+    setValue(minimum + slider.getValue * increment)
   }
 
   def units = _units
-  def units_=(units: String): Unit = {
+  def setUnits(units: String): Unit = {
     _units = units.trim
     unitsComponent.setText(units.trim)
     revalidate()
@@ -249,7 +255,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   }
 
   def vertical: Boolean = _vertical
-  def vertical_=(vert: Boolean): Unit = {
+  def setVertical(vert: Boolean): Unit = {
     if (vert != vertical) {
       _vertical = vert
       resetZoomInfo()

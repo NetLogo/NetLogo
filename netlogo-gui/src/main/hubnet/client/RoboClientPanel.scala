@@ -69,10 +69,15 @@ private class RoboClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       // will always be at least waitTime apart.
       invokeAndWait(() => {
         val (name, value) = widget match {
-          case s:SliderWidget =>
-            if(s.value == s.maximum) s.value = s.minimum else s.value = s.value + s.increment
-            (s.nameWrapper, Some(s.value))
-          case b: ButtonWidget => (widget.displayName, Some(if(b.foreverOn) true else false))
+          case s: SliderWidget =>
+            if (s.value == s.maximum) {
+              s.setValue(s.minimum)
+            } else {
+              s.setValue(s.value + s.increment)
+            }
+            (s.name, Some(s.value))
+          case b: ButtonWidget =>
+            (widget.displayName, Some(b.foreverOn))
           case s: SwitchWidget =>
             s.isOn = !s.isOn
             (widget.displayName, Some(s.isOn))

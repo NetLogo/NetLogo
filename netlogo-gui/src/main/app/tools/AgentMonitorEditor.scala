@@ -186,8 +186,8 @@ with ThemeSync {
     super.handle(e)
     if(e.sourceOwner == this) {
       error(e.error)
-      if(error() != null) {
-        new OptionPane(workspace.getFrame, I18N.gui.get("common.messages.error"), error().getMessage,
+      error().foreach { e =>
+        new OptionPane(workspace.getFrame, I18N.gui.get("common.messages.error"), e.getMessage,
                        OptionPane.Options.Ok, OptionPane.Icons.Error)
         setEnabled(true)
         editor.setText(get)
