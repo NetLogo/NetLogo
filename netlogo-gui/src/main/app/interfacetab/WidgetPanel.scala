@@ -517,7 +517,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
     } else {
       widget match {
         case v: CoreView    => new DummyViewWidget(workspace.world)
-        case c: CoreChooser => new DummyChooserWidget(new DefaultCompilerServices(workspace.compiler))
+        case c: CoreChooser =>
+          new DummyChooserWidget(new DefaultCompilerServices(workspace.compiler), editorFactory.colorizer)
         case p: CorePlot    =>
           // note that plots on the HubNet client must have the name of a plot
           // on the server, thus, feed the dummy plot widget the names of

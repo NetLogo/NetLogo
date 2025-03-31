@@ -4,15 +4,16 @@ package org.nlogo.window
 
 import org.nlogo.api.{ CompilerServices, Dump }
 import org.nlogo.core.{ I18N, Chooseable, Chooser => CoreChooser, CompilerException, LogoList }
+import org.nlogo.editor.Colorizer
 
-class DummyChooserWidget(val compiler: CompilerServices) extends Chooser with Editable {
+class DummyChooserWidget(val compiler: CompilerServices, colorizer: Colorizer) extends Chooser with Editable {
   type WidgetModel = CoreChooser
 
   private var _name = ""
 
   def name: String = _name
 
-  def name(newName: String): Unit = {
+  def setVarName(newName: String): Unit = {
     _name = newName
     repaint()
   }
@@ -24,12 +25,11 @@ class DummyChooserWidget(val compiler: CompilerServices) extends Chooser with Ed
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.chooser")
 
-  override def editPanel: EditPanel =
-    null
+  override def editPanel: EditPanel = new DummyChooserEditPanel(this, compiler, colorizer)
 
   override def editFinished: Boolean = {
     super.editFinished
-    name(name)
+    setVarName(name)
     true
   }
 
@@ -38,7 +38,7 @@ class DummyChooserWidget(val compiler: CompilerServices) extends Chooser with Ed
       .map(v => Dump.logoObject(v, true, false))
       .mkString("", "\n", "\n")
 
-  def choicesWrapper(choicesString: String): Unit = {
+  def setChoicesWrapper(choicesString: String): Unit = {
     try {
       val oldValue = value
       val newChoices =
@@ -64,8 +64,8 @@ class DummyChooserWidget(val compiler: CompilerServices) extends Chooser with Ed
   override def load(model: WidgetModel): AnyRef = {
     oldSize(model.oldSize)
     setSize(model.width, model.height)
-    name(model.varName)
-    choicesWrapper(model.choices.map(c => Dump.logoObject(c.value, true, false)).mkString("\n"))
+    setVarName(model.varName)
+    setChoicesWrapper(model.choices.map(c => Dump.logoObject(c.value, true, false)).mkString("\n"))
     index(model.currentChoice)
     this
   }

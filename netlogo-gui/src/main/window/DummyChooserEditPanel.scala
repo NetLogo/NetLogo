@@ -10,18 +10,17 @@ import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.theme.InterfaceColors
 
-class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colorizer: Colorizer)
+class DummyChooserEditPanel(target: DummyChooserWidget, compiler: CompilerServices, colorizer: Colorizer)
   extends WidgetEditPanel(target) {
 
-  private val nameWrapper =
-    new IdentifierEditor(
+  private val name =
+    new StringEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.chooser.globalVar"),
+        I18N.gui.get("edit.hubnet.tag"),
         () => target.name,
-        target.setNameWrapper(_),
-        () => apply()),
-      compiler)
+        target.setVarName(_),
+        () => apply()))
 
   private val choicesWrapper =
     new LogoListEditor(
@@ -56,7 +55,7 @@ class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colori
     c.weightx = 1
     c.insets = new Insets(6, 6, 6, 6)
 
-    add(nameWrapper, c)
+    add(name, c)
 
     c.insets = new Insets(0, 6, 3, 6)
 
@@ -67,16 +66,16 @@ class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colori
     add(choicesLabel, c)
     add(oldSize, c)
 
-    nameWrapper.requestFocus()
+    name.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[_]] =
-    Seq(nameWrapper, choicesWrapper, oldSize)
+    Seq(name, choicesWrapper, oldSize)
 
   override def isResizable: Boolean = true
 
   override def syncTheme(): Unit = {
-    nameWrapper.syncTheme()
+    name.syncTheme()
     choicesWrapper.syncTheme()
     oldSize.syncTheme()
 
