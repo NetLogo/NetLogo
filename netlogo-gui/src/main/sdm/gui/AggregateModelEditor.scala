@@ -14,7 +14,7 @@ import org.jhotdraw.util.{ Command, CommandMenu, RedoCommand, UndoCommand, UndoM
 
 import org.nlogo.api.{ CompilerServices, SourceOwner }
 import org.nlogo.awt.EventQueue
-import org.nlogo.core.{ CompilerException, I18N, LiteralParser }
+import org.nlogo.core.{ CompilerException, I18N }
 import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.Translator
 import org.nlogo.swing.{ MenuItem, NetLogoIcon, Utils => SwingUtils }
@@ -35,7 +35,7 @@ class AggregateModelEditor(
   colorizer: Colorizer,
   menuBarFactory: MenuBarFactory,
   val drawing: AggregateDrawing,
-  compiler: LiteralParser,
+  compiler: CompilerServices,
   dialogFactory: EditDialogFactory) extends JFrame(
     I18N.gui.get("menu.tools.systemDynamicsModeler"), linkParent.getGraphicsConfiguration)
   with DrawingEditor
@@ -153,6 +153,14 @@ class AggregateModelEditor(
   def inspectFigure(f: Figure): Unit = {
     f match {
       case target: Editable =>
+        // for some reason it only works to set the compiler and colorizer right before the edit dialog opens... (Isaac B 3/31/25)
+        target match {
+          case f: ConverterFigure => f.setCompilerAndColorizer(compiler, colorizer)
+          case f: StockFigure => f.setCompilerAndColorizer(compiler, colorizer)
+          case f: RateConnection => f.setCompilerAndColorizer(compiler, colorizer)
+          case _ =>
+        }
+
         // makes a dialog and returns a boolean result. we ignore the result - ST 3/2/09
         dialogFactory.canceled(this, target)
 

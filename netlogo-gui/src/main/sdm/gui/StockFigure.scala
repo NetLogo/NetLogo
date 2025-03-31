@@ -9,6 +9,8 @@ import org.jhotdraw.framework.{ FigureAttributeConstant, HandleEnumeration }
 import org.jhotdraw.standard.{ HandleEnumerator, NullHandle, RelativeLocator }
 import org.jhotdraw.util.{ StorableInput, StorableOutput }
 
+import org.nlogo.api.CompilerServices
+import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.{ ModelElement, Stock }
 import org.nlogo.swing.{ Utils => SwingUtils }
 import org.nlogo.theme.InterfaceColors
@@ -20,6 +22,15 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
   private var stock: Option[Stock] = Some(new Stock)
 
   private var _dirty = false
+
+  private var compiler: CompilerServices = null
+  private var colorizer: Colorizer = null
+
+  // if these go in the constructor it messes up the old deserialization code (Isaac B 3/31/25)
+  def setCompilerAndColorizer(compiler: CompilerServices, colorizer: Colorizer) {
+    this.compiler = compiler
+    this.colorizer = colorizer
+  }
 
   setAttribute(FigureAttributeConstant.FILL_COLOR, InterfaceColors.stockBackground())
 
@@ -101,8 +112,7 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
   def classDisplayName: String =
     "Stock"
 
-  override def editPanel: EditPanel =
-    null
+  override def editPanel: EditPanel = new StockEditPanel(this, compiler, colorizer)
 
   def editFinished(): Boolean =
     true

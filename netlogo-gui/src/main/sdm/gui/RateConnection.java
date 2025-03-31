@@ -7,6 +7,8 @@ import org.jhotdraw.framework.Connector;
 import org.jhotdraw.framework.Figure;
 import org.jhotdraw.util.Geom;
 import org.nlogo.api.Options;
+import org.nlogo.api.CompilerServices;
+import org.nlogo.editor.Colorizer;
 import org.nlogo.sdm.ModelElement;
 import org.nlogo.sdm.Reservoir;
 import org.nlogo.sdm.Stock;
@@ -29,11 +31,20 @@ public class RateConnection
   private org.nlogo.sdm.Rate rate;
   private String name;
 
+  private transient CompilerServices compiler;
+  private transient Colorizer colorizer;
+
   public RateConnection() {
     setEndDecoration(null);
     setStartDecoration(null);
     rate = new org.nlogo.sdm.Rate();
     rate.setSelected("Select");
+  }
+
+  // if these go in the constructor it messes up the old deserialization code (Isaac B 3/31/25)
+  public void setCompilerAndColorizer(CompilerServices compiler, Colorizer colorizer) {
+    this.compiler = compiler;
+    this.colorizer = colorizer;
   }
 
   public final String getName() {
@@ -318,7 +329,7 @@ public class RateConnection
   }
 
   public EditPanel editPanel() {
-    return null;
+    return new RateEditPanel(this, compiler, colorizer);
   }
 
   private boolean dirty = false;

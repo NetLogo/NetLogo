@@ -3,7 +3,7 @@
 package org.nlogo.sdm.gui
 
 import org.nlogo.api.{ AggregateManagerInterface, CompilerServices }
-import org.nlogo.core.{ AgentKind, LiteralParser, Model => CoreModel }
+import org.nlogo.core.{ AgentKind, Model => CoreModel }
 import org.nlogo.editor.Colorizer
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.{ EditDialogFactory, Event, Events, MenuBarFactory }
@@ -45,7 +45,7 @@ with ThemeSync {
     load(e.model, compiler)
   }
 
-  override def load(model: CoreModel, compiler: LiteralParser) = {
+  override def load(model: CoreModel, compiler: CompilerServices) = {
     model.optionalSectionValue[AggregateDrawing]("org.nlogo.modelsection.systemdynamics.gui")
       .foreach { drawing =>
         editor = new AggregateModelEditor(
