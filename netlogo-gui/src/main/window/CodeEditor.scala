@@ -53,7 +53,7 @@ class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, colla
     })
   }
 
-  setLayout(new BorderLayout)
+  setLayout(new BorderLayout(0, 3))
 
   add(new JPanel(new RowLayout(2, Component.LEFT_ALIGNMENT, Component.CENTER_ALIGNMENT)) with Transparent {
     if (collapsible) {

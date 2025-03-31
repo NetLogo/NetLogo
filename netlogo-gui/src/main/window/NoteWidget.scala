@@ -77,8 +77,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 
   override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.note")
 
-  override def editPanel: EditPanel =
-    null
+  override def editPanel: EditPanel = new NoteEditPanel(this)
 
   override def isNote = true
 
@@ -101,14 +100,14 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   }
 
   def text: String = _text
-  def text_=(newText: String): Unit = {
+  def setText(newText: String): Unit = {
     _text = newText
     displayName = newText
     wrapText()
   }
 
   def fontSize: Int = _fontSize
-  def fontSize_=(size: Int): Unit = {
+  def setFontSize(size: Int): Unit = {
     _fontSize = size
     if (isZoomed && originalFont != null) {
       val zoomDiff: Int = getFont.getSize - originalFont.getSize
@@ -123,31 +122,31 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   }
 
   def textColorLight: Color = _textColorLight
-  def textColorLight_=(color: Color): Unit = {
+  def setTextColorLight(color: Color): Unit = {
     _textColorLight = color
     syncTheme()
   }
 
   def textColorDark: Color = _textColorDark
-  def textColorDark_=(color: Color): Unit = {
+  def setTextColorDark(color: Color): Unit = {
     _textColorDark = color
     syncTheme()
   }
 
   def backgroundLight: Color = _backgroundLight
-  def backgroundLight_=(color: Color): Unit = {
+  def setBackgroundLight(color: Color): Unit = {
     _backgroundLight = color
     syncTheme()
   }
 
   def backgroundDark: Color = _backgroundDark
-  def backgroundDark_=(color: Color): Unit = {
+  def setBackgroundDark(color: Color): Unit = {
     _backgroundDark = color
     syncTheme()
   }
 
   def markdown: Boolean = _markdown
-  def markdown_=(value: Boolean): Unit = {
+  def setMarkdown(value: Boolean): Unit = {
     _markdown = value
     wrapText()
   }
@@ -197,13 +196,13 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   }
 
   override def load(model: WidgetModel): AnyRef = {
-    text = model.display.getOrElse("")
-    fontSize = model.fontSize
-    markdown = model.markdown
-    model.textColorLight.foreach { c => textColorLight = new Color(c, true) }
-    model.textColorDark.foreach { c => textColorDark = new Color(c, true) }
-    model.backgroundLight.foreach { c => backgroundLight = new Color(c, true) }
-    model.backgroundDark.foreach { c => backgroundDark = new Color(c, true) }
+    setText(model.display.getOrElse(""))
+    setFontSize(model.fontSize)
+    setMarkdown(model.markdown)
+    model.textColorLight.foreach { c => setTextColorLight(new Color(c, true)) }
+    model.textColorDark.foreach { c => setTextColorDark(new Color(c, true)) }
+    model.backgroundLight.foreach { c => setBackgroundLight(new Color(c, true)) }
+    model.backgroundDark.foreach { c => setBackgroundDark(new Color(c, true)) }
     syncTheme()
     setSize(model.width, model.height)
     this

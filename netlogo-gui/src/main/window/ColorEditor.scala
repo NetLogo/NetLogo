@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, Frame, Graphics, GridBagLayout, GridBagConstraints, Insets }
+import java.awt.{ BorderLayout, Color, Dimension, Frame, Graphics }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import javax.swing.{ JLabel, JPanel }
 
@@ -10,29 +10,15 @@ import org.nlogo.swing.{ RoundedBorderPanel, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame) extends PropertyEditor(accessor) {
+  private val label = new JLabel(accessor.name)
   private val colorButton = new ColorButton
 
-  private val label = new JLabel(accessor.name)
+  setLayout(new BorderLayout(6, 0))
 
-  locally {
-    setLayout(new GridBagLayout)
+  add(label, BorderLayout.CENTER)
+  add(colorButton, BorderLayout.EAST)
 
-    val c = new GridBagConstraints
-
-    c.anchor = GridBagConstraints.WEST
-    c.fill = GridBagConstraints.HORIZONTAL
-    c.weightx = 1
-    c.insets = new Insets(0, 0, 0, 6)
-
-    add(label, c)
-
-    c.fill = GridBagConstraints.NONE
-    c.insets = new Insets(0, 0, 0, 0)
-
-    add(colorButton, c)
-
-    setColor(originalValue)
-  }
+  setColor(originalValue)
 
   def setColor(color: Color): Unit = {
     colorButton.setColor(color)

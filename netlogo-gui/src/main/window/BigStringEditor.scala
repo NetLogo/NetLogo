@@ -25,18 +25,18 @@ class BigStringEditor(accessor: PropertyAccessor[String]) extends PropertyEditor
   private val scrollPane = new ScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
                                           ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
 
-  setLayout(new BorderLayout(6, 0))
+  setLayout(new BorderLayout(0, 3))
 
   add(label, BorderLayout.NORTH)
   add(scrollPane, BorderLayout.CENTER)
 
-  override def get = Option(editor.getText())
-  override def set(value: String) {
+  override def get: Option[String] = Option(editor.getText())
+  override def set(value: String): Unit = {
     editor.setText(value)
     editor.select(0, 0)
   }
 
-  override def requestFocus() { editor.requestFocus() }
+  override def requestFocus(): Unit = { editor.requestFocus() }
 
   override def syncTheme(): Unit = {
     label.setForeground(InterfaceColors.dialogText())
