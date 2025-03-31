@@ -11,6 +11,5 @@ class DummyInputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: Abstract
                           nextComponent: Component, compiler: CompilerServices) extends
   InputBox(textArea, dialogTextArea, compiler, nextComponent) {
 
-  override def editPanel: EditPanel =
-    null
+  override def editPanel: EditPanel = new DummyInputEditPanel(this)
 }
