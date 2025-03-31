@@ -20,8 +20,7 @@ object DummyPlotWidget {
 class DummyPlotWidget(plot: Plot, plotManager: PlotManager) extends AbstractPlotWidget(plot, plotManager) {
   var nameOptions = createNameOptions()
 
-  override def editPanel: EditPanel =
-    null
+  override def editPanel: EditPanel = new DummyPlotEditPanel(this)
 
   override def load(model: WidgetModel): AnyRef = {
     super.load(model)
@@ -34,7 +33,7 @@ class DummyPlotWidget(plot: Plot, plotManager: PlotManager) extends AbstractPlot
 
   override def handle(e: AfterLoadEvent): Unit = {}
 
-  def nameOptions(nameOptions: Options[Plot]): Unit = {
+  def setNameOptions(nameOptions: Options[Plot]): Unit = {
     this.nameOptions = nameOptions
     setPlotName(nameOptions.chosenName)
   }
