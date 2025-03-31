@@ -8,13 +8,15 @@ import org.nlogo.api.Options
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.swing.{ CheckBox, ComboBox }
 
-class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputType]]) extends PropertyEditor(accessor) {
-  private val options: Options[InputBox#InputType] = accessor.getter()
-  private val originalOption: InputBox#InputType = accessor.getter().chosenValue
+class InputBoxEditor[InputType <: InputBox#InputType](accessor: PropertyAccessor[Options[InputType]])
+  extends PropertyEditor(accessor) {
+
+  private val options: Options[InputType] = accessor.getter()
+  private val originalOption: InputType = accessor.getter().chosenValue
   private val originalMultiline: Boolean = originalOption.multiline
 
   private val label = new JLabel(accessor.name)
-  private val typeCombo = new ComboBox[InputBox#InputType](options.values) {
+  private val typeCombo = new ComboBox[InputType](options.values) {
     addItemListener(_ => multiline.setEnabled(selected.map(_.enableMultiline).getOrElse(false)))
   }
 
@@ -26,16 +28,16 @@ class InputBoxEditor(accessor: PropertyAccessor[Options[InputBox#InputType]]) ex
   add(typeCombo)
   add(multiline)
 
-  private def selected: Option[InputBox#InputType] = typeCombo.getSelectedItem
+  private def selected: Option[InputType] = typeCombo.getSelectedItem
 
-  override def set(value: Options[InputBox#InputType]): Unit = {
-    val t: InputBox#InputType = value.chosenValue
+  override def set(value: Options[InputType]): Unit = {
+    val t: InputType = value.chosenValue
     typeCombo.setSelectedItem(t)
     multiline.setEnabled(t.enableMultiline)
     multiline.setSelected(t.multiline)
   }
 
-  override def get: Option[Options[InputBox#InputType]] = {
+  override def get: Option[Options[InputType]] = {
     options.selectByName(selected.map(_.displayName).getOrElse(""))
     options.chosenValue.multiline(multiline.isSelected)
     Some(options)

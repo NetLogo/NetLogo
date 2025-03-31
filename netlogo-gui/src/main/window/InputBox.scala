@@ -186,7 +186,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   }
 
   def nameWrapper = name
-  def nameWrapper(name: String): Unit = {
+  def setNameWrapper(name: String): Unit = {
     nameChanged = name != this.name || nameChanged
     this.name(name, false)
   }
@@ -404,7 +404,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     true
   }
 
-  def typeOptions(typeOptions: org.nlogo.api.Options[InputType]): Unit = {
+  def setTypeOptions(typeOptions: org.nlogo.api.Options[InputType]): Unit = {
     this.typeOptions = typeOptions
     if (inputType.displayName != typeOptions.chosenValue.displayName) {
       inputType = typeOptions.chosenValue

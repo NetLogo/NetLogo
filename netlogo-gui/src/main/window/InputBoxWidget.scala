@@ -14,8 +14,7 @@ class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEdito
   with InterfaceGlobalWidget
   with PeriodicUpdateEvent.Handler {
 
-  override def editPanel: EditPanel =
-    null
+  override def editPanel: EditPanel = new InputEditPanel(this, compiler)
 
   override def name(name: String, sendEvent: Boolean): Unit = {
     this.name_=(name)

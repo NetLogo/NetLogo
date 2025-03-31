@@ -10,7 +10,7 @@ import org.nlogo.theme.InterfaceColors
 class BooleanEditor(accessor: PropertyAccessor[Boolean]) extends PropertyEditor(accessor) {
   private val checkbox = new CheckBox(accessor.name, _ => accessor.changed())
 
-  setLayout(new BorderLayout)
+  setLayout(new BorderLayout(0, 0))
 
   add(checkbox, BorderLayout.CENTER)
 
