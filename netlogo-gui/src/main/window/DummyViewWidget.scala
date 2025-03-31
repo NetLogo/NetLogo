@@ -21,20 +21,19 @@ class DummyViewWidget(val world: World) extends SingleErrorWidget with Editable 
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.view")
 
-  override def editPanel: EditPanel =
-    null
+  override def editPanel: EditPanel = new DummyViewEditPanel(this)
 
   // nullary method to prevent conflict with Component.width
   def width(): Int = newWidth
 
-  def width(width: Int): Unit = {
+  def setWidth(width: Int): Unit = {
     newWidth = width
   }
 
   // nullary method prevents conflict with Component.height
   def height(): Int = newHeight
 
-  def height(height: Int): Unit = {
+  def setHeight(height: Int): Unit = {
     newHeight = height
   }
 
