@@ -15,18 +15,17 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.slider")
 
-  override def editPanel: EditPanel =
-    null
+  override def editPanel: EditPanel = new DummySliderEditPanel(this)
 
   // this sets the value in the current constraint and then ensures
   // cached values are updated -- CLB
-  def min( d: Double ){ if(setSliderConstraint(con.copy(min=d))) repaint() }
+  def setMin( d: Double ){ if(setSliderConstraint(con.copy(min=d))) repaint() }
   def min = minimum.doubleValue
 
-  def max( d: Double ){ if(setSliderConstraint(con.copy(max=d))) repaint() }
+  def setMax( d: Double ){ if(setSliderConstraint(con.copy(max=d))) repaint() }
   def max = maximum.doubleValue
 
-  def inc( d: Double ){ if(setSliderConstraint(con.copy(inc=d))) repaint() }
+  def setInc( d: Double ){ if(setSliderConstraint(con.copy(inc=d))) repaint() }
   def inc = increment.doubleValue
 
   private def con = constraint.asInstanceOf[ConstantSliderConstraint]
@@ -38,7 +37,7 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
     val inc = model.step.toDouble
     setUnits(model.units.optionToPotentiallyEmptyString)
     setVertical(model.direction == Vertical)
-    setName2(model.display.optionToPotentiallyEmptyString)
+    setVarName(model.display.optionToPotentiallyEmptyString)
     val con = ConstantSliderConstraint(min, max, inc)
     con.defaultValue = value
     setSliderConstraint(con)  // ensure cached values are updated

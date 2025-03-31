@@ -190,8 +190,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     sliderData.setSliderConstraint(con)
   }
   def name: String = _name
-  // 2 so it doesn't conflict with java.awt.Component method setName
-  def setName2(name: String): Unit = {
+  def setVarName(name: String): Unit = {
     _name = name
     repaint()
   }

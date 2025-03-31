@@ -81,7 +81,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
     setName(n, false)
   }
 
-  override def setName2(n: String): Unit = {
+  override def setVarName(n: String): Unit = {
     setName(n, true)
     repaint()
   }
@@ -139,7 +139,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
     setUnits(model.units.optionToPotentiallyEmptyString)
     setVertical(model.direction == Vertical)
 
-    setName2(model.display.optionToPotentiallyEmptyString)
+    setVarName(model.display.optionToPotentiallyEmptyString)
     setMinimumCode(min)
     setMaximumCode(max)
     // i think this next line is here because of some weird bounds checking
