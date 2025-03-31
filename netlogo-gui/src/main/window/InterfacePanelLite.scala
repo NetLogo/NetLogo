@@ -208,7 +208,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
 
   private val widgetBuilderMap = Map[String, () => Widget](
     "Monitor"  -> (() => new MonitorWidget(random.auxRNG, compiler, editorFactory.colorizer)),
-    "Plot"     -> (() => PlotWidget.apply(plotManager)),
+    "Plot"     -> (() => PlotWidget.apply(plotManager, editorFactory.colorizer)),
     "Slider"   -> (() => new SliderWidget(sliderEventOnReleaseOnly, random.auxRNG, compiler, editorFactory.colorizer)),
     "Chooser"  -> (() => new ChooserWidget(compiler, editorFactory.colorizer)),
     "InputBox" -> { () =>

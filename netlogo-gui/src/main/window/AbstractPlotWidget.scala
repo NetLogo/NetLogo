@@ -189,20 +189,17 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   }
   override def helpLink = Some("programming.html#plotting")
 
-  override def editPanel: EditPanel =
-    null
-
   def showLegend = legend.open
-  def showLegend(open: Boolean){ legend.open=open }
+  def setShowLegend(open: Boolean){ legend.open=open }
 
   def runtimeError: Option[Exception] = plot.runtimeError
-  def runtimeError(e: Option[Exception]): Unit = {
+  def setRuntimeError(e: Option[Exception]): Unit = {
     plot.runtimeError = e
   }
 
   /// some stuff relating to plot pen editing
   def editPlotPens: List[PlotPen] = plot.pens
-  def editPlotPens(pens: List[PlotPen]){
+  def setEditPlotPens(pens: List[PlotPen]){
     if(! (plot.pens eq pens)) plot.pens = pens
   }
 
@@ -212,7 +209,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   /// these exist to support editing
   def plotName = plot.name
-  def plotName(name: String){
+  def setPlotName(name: String){
     plot.name(name)
     displayName = plot.name
     nameLabel.setText(name)
@@ -220,41 +217,41 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   private var _xAxisLabel: String = ""
   def xLabel = xAxis.getLabel
-  def xLabel(label: String){
+  def setXLabel(label: String){
     _xAxisLabel = label
     xAxis.setLabel(_xAxisLabel)
   }
 
   private var _yAxisLabel: String = ""
   def yLabel = yAxis.getLabel
-  def yLabel(label: String){
+  def setYLabel(label: String){
     _yAxisLabel = label
     yAxis.setLabel(_yAxisLabel)
   }
 
   def setupCode = plot.setupCode
-  def setupCode(setupCode: String){ plot.setupCode=setupCode }
+  def setSetupCode(setupCode: String){ plot.setupCode=setupCode }
 
   def updateCode = plot.updateCode
-  def updateCode(updateCode: String){ plot.updateCode=updateCode }
+  def setUpdateCode(updateCode: String){ plot.updateCode=updateCode }
 
   def defaultXMin = plot.defaultXMin
-  def defaultXMin(defaultXMin: Double){ plot.defaultXMin=defaultXMin }
+  def setDefaultXMin(defaultXMin: Double){ plot.defaultXMin=defaultXMin }
 
   def defaultYMin = plot.defaultYMin
-  def defaultYMin(defaultYMin: Double){ plot.defaultYMin=defaultYMin }
+  def setDefaultYMin(defaultYMin: Double){ plot.defaultYMin=defaultYMin }
 
   def defaultXMax = plot.defaultXMax
-  def defaultXMax(defaultXMax: Double){ plot.defaultXMax=defaultXMax }
+  def setDefaultXMax(defaultXMax: Double){ plot.defaultXMax=defaultXMax }
 
   def defaultYMax = plot.defaultYMax
-  def defaultYMax(defaultYMax: Double){ plot.defaultYMax=defaultYMax }
+  def setDefaultYMax(defaultYMax: Double){ plot.defaultYMax=defaultYMax }
 
   def defaultAutoPlotX = plot.defaultAutoPlotX
-  def defaultAutoPlotX(defaultAutoPlotX: Boolean){ plot.defaultAutoPlotX = defaultAutoPlotX }
+  def setDefaultAutoPlotX(defaultAutoPlotX: Boolean){ plot.defaultAutoPlotX = defaultAutoPlotX }
 
   def defaultAutoPlotY = plot.defaultAutoPlotY
-  def defaultAutoPlotY(defaultAutoPlotY: Boolean){ plot.defaultAutoPlotY = defaultAutoPlotY }
+  def setDefaultAutoPlotY(defaultAutoPlotY: Boolean){ plot.defaultAutoPlotY = defaultAutoPlotY }
 
   /// sizing
   override def getMinimumSize = AbstractPlotWidget.MIN_SIZE
@@ -276,11 +273,11 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   override def load(corePlot: WidgetModel): Object = {
     oldSize(corePlot.oldSize)
     setSize(corePlot.width, corePlot.height)
-    xLabel(corePlot.xAxis.optionToPotentiallyEmptyString)
-    yLabel(corePlot.yAxis.optionToPotentiallyEmptyString)
+    setXLabel(corePlot.xAxis.optionToPotentiallyEmptyString)
+    setYLabel(corePlot.yAxis.optionToPotentiallyEmptyString)
     legend.open = corePlot.legendOn
     PlotLoader.loadPlot(corePlot, plot)
-    plotName(plot.name)
+    setPlotName(plot.name)
     clear()
     this
   }
@@ -344,10 +341,15 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   // error handling
   def anyErrors: Boolean = plotManager.hasErrors(plot)
   def removeAllErrors() = throw new UnsupportedOperationException
-  def error(key: Object): Option[Exception] = (key match {
-    case "setupCode" => plotManager.getPlotSetupError(plot)
-    case "updateCode" => plotManager.getPlotUpdateError(plot)
-  })
+  def error(key: Object): Option[Exception] = {
+    if (key == I18N.gui.get("edit.plot.setupCode")) {
+      plotManager.getPlotSetupError(plot)
+    } else if (key == I18N.gui.get("edit.plot.updateCode")) {
+      plotManager.getPlotUpdateError(plot)
+    } else {
+      None
+    }
+  }
 
   def error(key: Object, e: Exception): Unit = { throw new UnsupportedOperationException }
 

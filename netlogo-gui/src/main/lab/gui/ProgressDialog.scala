@@ -9,6 +9,7 @@ import javax.swing.border.{ EmptyBorder, LineBorder }
 import org.nlogo.api.{ Dump, ExportPlotWarningAction, LabProtocol, PeriodicUpdateDelay }
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
+import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.LabInterface.ProgressListener
 import org.nlogo.nvm.Workspace
 import org.nlogo.plot.DummyPlotManager
@@ -16,7 +17,7 @@ import org.nlogo.swing.{ Button, CheckBox, OptionPane, RichAction, ScrollPane, T
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ GUIWorkspace, PlotWidget, SpeedSliderPanel }
 
-private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor,
+private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, colorizer: Colorizer,
                                    saveProtocol: (LabProtocol) => Unit)
               extends JDialog(parent, Dialog.DEFAULT_MODALITY_TYPE) with ProgressListener with ThemeSync {
   val protocol = supervisor.worker.protocol
@@ -61,15 +62,15 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor,
       // cause anything to happen to this plot.
       // except of course, for the measurements that this plot is displaying.
       // JC - 4/4/11
-      val plotWidget = PlotWidget(I18N.gui("plot.title"), new DummyPlotManager)
+      val plotWidget = PlotWidget(I18N.gui("plot.title"), new DummyPlotManager, colorizer)
       plotWidget.plot.defaultXMin = 0
       plotWidget.plot.defaultYMin = 0
       plotWidget.plot.defaultXMax = 1
       plotWidget.plot.defaultYMax = 1
       plotWidget.plot.defaultAutoPlotX = true
       plotWidget.plot.defaultAutoPlotY = true
-      plotWidget.xLabel(I18N.gui("plot.time"))
-      plotWidget.yLabel(I18N.gui("plot.behavior"))
+      plotWidget.setXLabel(I18N.gui("plot.time"))
+      plotWidget.setYLabel(I18N.gui("plot.behavior"))
       plotWidget.clear()
       plotWidget.plot.pens=Nil // make sure to start with no pens. plotWidget adds one by default.
       plotWidget.togglePenList()

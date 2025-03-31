@@ -111,7 +111,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     else coreWidget match {
       case c: CoreChooser  => new ChooserWidget(workspace, colorizer)
       case b: CoreButton   => new ButtonWidget(workspace.world.mainRNG, colorizer)
-      case p: CorePlot     => PlotWidget(workspace.plotManager)
+      case p: CorePlot     => PlotWidget(workspace.plotManager, colorizer)
       case m: CoreMonitor  => new MonitorWidget(workspace.world.auxRNG, workspace, colorizer)
       case s: CoreSlider =>
         new SliderWidget(workspace.world.auxRNG, workspace, colorizer) {
