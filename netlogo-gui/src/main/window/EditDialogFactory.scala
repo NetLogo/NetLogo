@@ -22,16 +22,16 @@ class EditDialogFactory(compiler: CompilerServices, val colorizer: Colorizer) ex
   private var dialog: Option[EditDialog] = None
 
   // used for modal dialog
-  def canceled(window: Window, target: Editable, useTooltips: Boolean): Boolean = {
-    (new EditDialog(window, target, useTooltips, true) {
+  def canceled(window: Window, target: Editable): Boolean = {
+    (new EditDialog(window, target, true) {
       override def getPreferredSize = limit(super.getPreferredSize)
     }).canceled
   }
 
   // used for non-modal dialog
-  def create(window: Window, target: Editable, finish: (Boolean) => Unit, useTooltips: Boolean): Unit = {
+  def create(window: Window, target: Editable, finish: (Boolean) => Unit): Unit = {
     dialog = Some(
-      new EditDialog(window, target, useTooltips, false) {
+      new EditDialog(window, target, false) {
         override def getPreferredSize = limit(super.getPreferredSize)
 
         addWindowListener(new WindowAdapter {

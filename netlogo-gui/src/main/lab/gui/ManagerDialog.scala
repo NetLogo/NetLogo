@@ -193,7 +193,7 @@ private class ManagerDialog(manager:       LabManager,
     if (!isNew) editIndex = selectedIndex
     update()
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
-                                        manager.workspace, manager.workspace.world,
+                                        manager.workspace, dialogFactory.colorizer, manager.workspace.world,
                                         manager.protocols.map(_.name).filter(isNew || _ != protocol.name))
     dialogFactory.create(this, editable, success => {
       blockActions = false
@@ -210,7 +210,7 @@ private class ManagerDialog(manager:       LabManager,
       } else {
         update()
       }
-    }, true)
+    })
   }
   private def delete(): Unit = {
     val selected = jlist.getSelectedIndices

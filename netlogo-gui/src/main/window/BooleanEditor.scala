@@ -23,7 +23,9 @@ class BooleanEditor(accessor: PropertyAccessor[Boolean]) extends PropertyEditor(
     checkbox.setEnabled(enabled)
   }
 
-  override def setTooltip(text: String): Unit = { checkbox.setToolTipText(text) }
+  override def setToolTipText(text: String): Unit = {
+    checkbox.setToolTipText(text)
+  }
 
   override def syncTheme(): Unit = {
     checkbox.setForeground(InterfaceColors.dialogText())

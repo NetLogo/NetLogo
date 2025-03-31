@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, FileDialog => JFileDialog }
+import java.awt.{ BorderLayout, Component, FileDialog => JFileDialog }
 import java.io.File
 import java.nio.file.Path
 import javax.swing.{ JLabel, JToolBar }
@@ -38,15 +38,18 @@ class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, sugg
   private val disableButton = new Button("Disable", () => set(""))
 
   private val toolbar = new JToolBar with Transparent {
+    setLayout(new BorderLayout(6, 0))
     setFloatable(false)
 
-    add(browseButton)
-    add(disableButton)
+    add(browseButton, BorderLayout.WEST)
+    add(disableButton, BorderLayout.CENTER)
   }
 
-  add(label)
-  add(editor)
-  add(toolbar)
+  setLayout(new BorderLayout(6, 0))
+
+  add(label, BorderLayout.WEST)
+  add(editor, BorderLayout.CENTER)
+  add(toolbar, BorderLayout.EAST)
 
   private def asPath(currentText: String): Path = {
     val currentPath = new File(currentText).toPath

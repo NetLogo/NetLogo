@@ -18,6 +18,4 @@ abstract class PropertyEditor[T](val accessor: PropertyAccessor[T], val handlesO
 
   def get: Option[T]
   def set(value: T): Unit
-
-  def setTooltip(text: String) = setToolTipText(text)
 }

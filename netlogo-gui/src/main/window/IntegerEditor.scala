@@ -26,6 +26,10 @@ class IntegerEditor(accessor: PropertyAccessor[Int]) extends PropertyEditor(acce
     catching(classOf[NumberFormatException]).opt(editor.getText.toInt)
   override def set(value: Int): Unit = { editor.setText(value.toString) }
 
+  override def setToolTipText(text: String): Unit = {
+    label.setToolTipText(text)
+  }
+
   override def requestFocus(): Unit = { editor.requestFocus() }
   override def setEnabled(enabled: Boolean): Unit = {
     super.setEnabled(enabled)

@@ -23,6 +23,10 @@ class StringEditor(accessor: PropertyAccessor[String]) extends PropertyEditor(ac
   override def get: Option[String] = Option(editor.getText)
   override def set(value: String): Unit = { editor.setText(value) }
 
+  override def setToolTipText(text: String): Unit = {
+    label.setToolTipText(text)
+  }
+
   override def requestFocus(): Unit = { editor.requestFocus() }
 
   override def syncTheme(): Unit = {

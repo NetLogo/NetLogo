@@ -133,7 +133,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       }
       wPanel.haltIfRunning()
       suppress(true)
-      wPanel.editWidgetFinished(target, dialogFactory.canceled(frame, target, false))
+      wPanel.editWidgetFinished(target, dialogFactory.canceled(frame, target))
       suppress(false)
     }
   }

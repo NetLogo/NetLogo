@@ -99,6 +99,10 @@ class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, colla
     accessor.target.error(accessor.name).foreach(errorLabel.setError(_, accessor.target.sourceOffset))
   }
 
+  override def setToolTipText(text: String): Unit = {
+    nameLabel.setToolTipText(text)
+  }
+
   override def requestFocus(): Unit = { editor.requestFocus() }
   override def setEnabled(state: Boolean): Unit = {
     def setEnabledRecursive(component: Container, state: Boolean): Unit = {

@@ -83,7 +83,7 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
   }
   def get = {
     val editable = new EditableRunOptions
-    if (dialogFactory.canceled(parent, editable, false))
+    if (dialogFactory.canceled(parent, editable))
       throw new UserCancelException
     val runOptions = editable.get
     Prefs.updateFrom(runOptions)
@@ -91,33 +91,52 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
   }
   class EditableRunOptions extends Editable with DummyErrorHandler {
     private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace.runoptions")
-    var spreadsheet = Prefs.spreadsheet
-    var table = Prefs.table
-    var stats = Prefs.stats
-    var lists = Prefs.lists
-    var updateView = Prefs.updateView
-    var updatePlotsAndMonitors = Prefs.updatePlotsAndMonitors
-    var threadCount = Prefs.updateThreadCount
+    private var _spreadsheet = Prefs.spreadsheet
+    private var _table = Prefs.table
+    private var _stats = Prefs.stats
+    private var _lists = Prefs.lists
+    private var _updateView = Prefs.updateView
+    private var _updatePlotsAndMonitors = Prefs.updatePlotsAndMonitors
+    private var _threadCount = Prefs.updateThreadCount
     val classDisplayName = I18N.gui("title")
 
-    // val propertySet = {
-    //   Seq(
-    //     Property("spreadsheet", Property.FilePath(spreadsheetFile), I18N.gui("spreadsheet")),
-    //     Property("table", Property.FilePath(tableFile), I18N.gui("table")),
-    //     Property("stats", Property.FilePath(statsFile), I18N.gui("stats")),
-    //     Property("lists", Property.FilePath(listsFile), I18N.gui("lists")),
-    //     Property("updateView", Property.Boolean, I18N.gui("updateview")),
-    //     Property("updatePlotsAndMonitors", Property.Boolean, I18N.gui("updateplotsandmonitors"),
-    //              "<html>" + I18N.gui("updateplotsandmonitors.info") + "</html>"),
-    //     Property("threadCount", Property.Integer, I18N.gui("simultaneousruns"),
-    //              "<html>" + I18N.gui("simultaneousruns.info",
-    //                             defaultProcessors.toString,
-    //                             (totalProcessors.toString))
-    //             + "</html>"))
-    // }
+    def spreadsheet: String = _spreadsheet
+    def setSpreadsheet(s: String): Unit = {
+      _spreadsheet = s
+    }
 
-    override def editPanel: EditPanel =
-      null
+    def table: String = _table
+    def setTable(s: String): Unit = {
+      _table = s
+    }
+
+    def stats: String = _stats
+    def setStats(s: String): Unit = {
+      _stats = s
+    }
+
+    def lists: String = _lists
+    def setLists(s: String): Unit = {
+      _lists = s
+    }
+
+    def updateView: Boolean = _updateView
+    def setUpdateView(b: Boolean): Unit = {
+      _updateView = b
+    }
+
+    def updatePlotsAndMonitors: Boolean = _updatePlotsAndMonitors
+    def setUpdatePlotsAndMonitors(b: Boolean): Unit = {
+      _updatePlotsAndMonitors = b
+    }
+
+    def threadCount: Int = _threadCount
+    def setThreadCount(i: Int): Unit = {
+      _threadCount = i
+    }
+
+    override def editPanel: EditPanel = new RunOptionsEditPanel(this, spreadsheetFile, tableFile, statsFile, listsFile,
+                                                                defaultProcessors.toString, totalProcessors.toString)
 
     def get = LabRunOptions(threadCount, table, spreadsheet, stats, lists, updateView, updatePlotsAndMonitors, false)
     // boilerplate for Editable
