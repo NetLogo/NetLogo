@@ -6,9 +6,7 @@ import java.awt.{ Color, Dimension, Font, Graphics, GridBagConstraints, GridBagL
 import java.awt.image.BufferedImage
 import javax.swing.{ JLabel, JPanel, SwingConstants }
 
-import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot }
-import org.nlogo.editor.Colorizer
 import org.nlogo.plot.{ PlotManagerInterface, PlotLoader, PlotPen, Plot }
 import org.nlogo.swing.{ RoundedBorderPanel, VTextIcon }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -191,7 +189,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   }
   override def helpLink = Some("programming.html#plotting")
 
-  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+  override def editPanel: EditPanel =
     null
 
   def showLegend = legend.open

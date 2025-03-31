@@ -27,7 +27,7 @@ class EditDialog(window: Window, target: Editable, useTooltips: Boolean, modal: 
   var canceled = false
 
   private val mainPanel = new JPanel(new BorderLayout) with Transparent
-  private val editPanel = target.createEditPanel(compiler, colorizer)
+  private val editPanel = target.editPanel
 
   val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => {
     if (editPanel.valid) {

@@ -9,8 +9,6 @@ import org.jhotdraw.framework.{ FigureAttributeConstant, HandleEnumeration }
 import org.jhotdraw.standard.{ HandleEnumerator, NullHandle, RelativeLocator }
 import org.jhotdraw.util.{ StorableInput, StorableOutput }
 
-import org.nlogo.api.CompilerServices
-import org.nlogo.editor.Colorizer
 import org.nlogo.sdm.{ ModelElement, Stock }
 import org.nlogo.swing.{ Utils => SwingUtils }
 import org.nlogo.theme.InterfaceColors
@@ -111,7 +109,7 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
   def classDisplayName: String =
     "Stock"
 
-  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+  override def editPanel: EditPanel =
     null
 
   def editFinished(): Boolean =

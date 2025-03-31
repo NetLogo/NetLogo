@@ -6,9 +6,7 @@ import org.jhotdraw.figures.LineConnection;
 import org.jhotdraw.framework.Connector;
 import org.jhotdraw.framework.Figure;
 import org.jhotdraw.util.Geom;
-import org.nlogo.api.CompilerServices;
 import org.nlogo.api.Options;
-import org.nlogo.editor.Colorizer;
 import org.nlogo.sdm.ModelElement;
 import org.nlogo.sdm.Reservoir;
 import org.nlogo.sdm.Stock;
@@ -318,7 +316,7 @@ public class RateConnection
     return scala.Option.apply(null);
   }
 
-  public EditPanel createEditPanel(CompilerServices compiler, Colorizer colorizer) {
+  public EditPanel editPanel() {
     return null;
   }
 

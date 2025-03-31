@@ -6,9 +6,7 @@ import java.awt.{ GridBagConstraints, GridBagLayout, Insets, Point }
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 
-import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ I18N, Output => CoreOutput }
-import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
 
@@ -31,7 +29,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
 
   add(outputArea, c)
 
-  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+  override def editPanel: EditPanel =
     null
 
   originalFont = outputArea.getFont

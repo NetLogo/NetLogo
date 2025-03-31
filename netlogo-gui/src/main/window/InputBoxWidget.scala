@@ -5,7 +5,7 @@ package org.nlogo.window
 import java.awt.Component
 
 import org.nlogo.api.{ CompilerServices, Dump }
-import org.nlogo.editor.{ AbstractEditorArea, Colorizer }
+import org.nlogo.editor.AbstractEditorArea
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, PeriodicUpdateEvent, WidgetEditedEvent }
 
 class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEditorArea,
@@ -14,7 +14,7 @@ class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEdito
   with InterfaceGlobalWidget
   with PeriodicUpdateEvent.Handler {
 
-  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+  override def editPanel: EditPanel =
     null
 
   override def name(name: String, sendEvent: Boolean): Unit = {

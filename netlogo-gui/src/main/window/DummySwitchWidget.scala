@@ -2,16 +2,14 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ I18N, Switch => CoreSwitch }
-import org.nlogo.editor.Colorizer
 
 class DummySwitchWidget extends Switch with Editable {
   type WidgetModel = CoreSwitch
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.switch")
 
-  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+  override def editPanel: EditPanel =
     null
 
   // we never update constraints in a dummy widget -- CLB

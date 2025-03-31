@@ -4,10 +4,8 @@ package org.nlogo.window
 
 import java.awt.{ Dimension, Graphics }
 
-import org.nlogo.api.CompilerServices
 import org.nlogo.awt.Fonts
 import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton }
-import org.nlogo.editor.Colorizer
 import org.nlogo.theme.InterfaceColors
 
 object DummyButtonWidget {
@@ -24,7 +22,7 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
   private var _keyEnabled: Boolean = false
   private var _name: String = ""
 
-  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+  override def editPanel: EditPanel =
     null
 
   def actionKey: Char = _actionKey

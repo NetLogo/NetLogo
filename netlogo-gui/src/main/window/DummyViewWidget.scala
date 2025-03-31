@@ -6,9 +6,7 @@ import java.awt.{ Color, Dimension, Rectangle }
 import javax.swing.border.LineBorder
 
 import org.nlogo.agent.World
-import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ I18N, View => CoreView }
-import org.nlogo.editor.Colorizer
 import org.nlogo.theme.InterfaceColors
 
 class DummyViewWidget(val world: World) extends SingleErrorWidget with Editable {
@@ -23,7 +21,7 @@ class DummyViewWidget(val world: World) extends SingleErrorWidget with Editable 
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.view")
 
-  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+  override def editPanel: EditPanel =
     null
 
   // nullary method to prevent conflict with Component.width

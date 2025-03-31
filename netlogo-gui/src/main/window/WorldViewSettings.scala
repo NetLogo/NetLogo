@@ -2,9 +2,8 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.{ CompilerServices, WorldPropertiesInterface }
+import org.nlogo.api.WorldPropertiesInterface
 import org.nlogo.core.{ CompilerException, UpdateMode, View => CoreView, WorldDimensions }
-import org.nlogo.editor.Colorizer
 import org.nlogo.workspace.WorldLoaderInterface
 
 trait WorldIntegerEditor {
@@ -52,7 +51,7 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
   def cornerConfigs: Seq[OriginConfiguration]
   def edgeConfigs: Seq[OriginConfiguration]
 
-  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+  override def editPanel: EditPanel =
     new WorldEditPanel(this)
 
   def getSelectedType: OriginType =

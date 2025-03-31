@@ -13,14 +13,14 @@ import org.nlogo.app.common.{ FileActions, UndoRedoActions },
 import org.nlogo.awt.Images
 import org.nlogo.core.{
   AgentKind, I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor,
-  Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider, TextBox => CoreTextBox, View => CoreView,
-  Widget => CoreWidget }
+  Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox,
+  View => CoreView, Widget => CoreWidget }
 import org.nlogo.editor.{ EditorArea, UndoManager }
 import org.nlogo.log.LogManager
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.window.{ ButtonWidget, ChooserWidget, Editable, Events => WindowEvents, GUIWorkspace, InputBoxWidget,
-                          InterfaceGlobalWidget, InterfaceMode, MonitorWidget, PlotWidget, SliderWidget, ViewWidget,
-                          ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
+                          InterfaceGlobalWidget, InterfaceMode, MonitorWidget, PlotWidget, SliderWidget, SwitchWidget,
+                          ViewWidget, ViewWidgetInterface, Widget, WidgetInfo, WidgetRegistry },
   WindowEvents.{ CompileAllEvent, LoadBeginEvent, LoadWidgetsEvent, RemoveConstraintEvent, WidgetRemovedEvent }
 import org.nlogo.workspace.Evaluator
 
@@ -118,6 +118,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
           override def sourceOffset: Int =
             Evaluator.sourceOffset(AgentKind.Observer, false)
         }
+      case s: CoreSwitch => new SwitchWidget(workspace)
       case i: CoreInputBox =>
         val textArea       = new EditorArea(textEditorConfiguration)
         val dialogTextArea = new EditorArea(dialogEditorConfiguration)

@@ -6,7 +6,6 @@ import java.awt.Window
 
 import org.nlogo.api.{ CompilerServices, LabProtocol, LabVariableParser, RefValueSet }
 import org.nlogo.core.I18N
-import org.nlogo.editor.Colorizer
 import org.nlogo.swing.OptionPane
 import org.nlogo.window.{ Editable, EditPanel }
 
@@ -66,7 +65,7 @@ class ProtocolEditable(protocol: LabProtocol,
   //                "<html>"+I18N.gui("timeLimit.info")+"</html>"))
   // }
 
-  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+  override def editPanel: EditPanel =
     null
 
   // These are the actual vars the user edits.  Before editing they are copied out of the

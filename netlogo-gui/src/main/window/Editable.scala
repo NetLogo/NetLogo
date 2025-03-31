@@ -2,16 +2,13 @@
 
 package org.nlogo.window
 
-import org.nlogo.api.CompilerServices
-import org.nlogo.editor.Colorizer
-
 trait Editable {
   def helpLink: Option[String]
   def liveUpdate: Boolean = true
   def classDisplayName: String
   def editFinished(): Boolean
 
-  def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel
+  def editPanel: EditPanel
 
   def anyErrors: Boolean
   def error(key: Object, e: Exception): Unit

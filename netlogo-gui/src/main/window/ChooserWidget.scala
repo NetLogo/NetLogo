@@ -4,7 +4,6 @@ package org.nlogo.window
 
 import org.nlogo.api.{ CompilerServices, Dump }
 import org.nlogo.core.{ I18N, Chooseable, Chooser => CoreChooser, LogoList }
-import org.nlogo.editor.Colorizer
 import org.nlogo.window.Events.{AfterLoadEvent, PeriodicUpdateEvent, InterfaceGlobalEvent}
 
 class ChooserWidget(val compiler: CompilerServices)
@@ -18,7 +17,7 @@ class ChooserWidget(val compiler: CompilerServices)
 
   override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.chooser")
 
-  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+  override def editPanel: EditPanel =
     null
 
   // don't send an event unless the name of the variable

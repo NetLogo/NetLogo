@@ -6,16 +6,15 @@ import java.lang.{ Boolean => JBoolean}
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ I18N, Switch => CoreSwitch }
-import org.nlogo.editor.Colorizer
 
-class SwitchWidget extends Switch with Editable with InterfaceGlobalWidget
+class SwitchWidget(compiler: CompilerServices) extends Switch with Editable with InterfaceGlobalWidget
   with Events.PeriodicUpdateEvent.Handler {
 
   type WidgetModel = CoreSwitch
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.switch")
 
-  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+  override def editPanel: EditPanel =
     new SwitchEditPanel(this, compiler)
 
   def valueObject: AnyRef = constraint.defaultValue

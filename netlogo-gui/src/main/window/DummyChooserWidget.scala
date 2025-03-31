@@ -4,7 +4,6 @@ package org.nlogo.window
 
 import org.nlogo.api.{ CompilerServices, Dump }
 import org.nlogo.core.{ I18N, Chooseable, Chooser => CoreChooser, CompilerException, LogoList }
-import org.nlogo.editor.Colorizer
 
 class DummyChooserWidget(val compiler: CompilerServices) extends Chooser with Editable {
   type WidgetModel = CoreChooser
@@ -25,7 +24,7 @@ class DummyChooserWidget(val compiler: CompilerServices) extends Chooser with Ed
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.chooser")
 
-  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+  override def editPanel: EditPanel =
     null
 
   override def editFinished: Boolean = {

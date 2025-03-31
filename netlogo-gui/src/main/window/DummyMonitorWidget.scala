@@ -4,9 +4,7 @@ package org.nlogo.window
 
 import java.awt.{ Dimension, Graphics }
 
-import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ I18N, Monitor => CoreMonitor }
-import org.nlogo.editor.Colorizer
 import org.nlogo.theme.InterfaceColors
 
 object DummyMonitorWidget {
@@ -50,7 +48,7 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
   override def classDisplayName: String =
     I18N.gui.get("tabs.run.widgets.monitor")
 
-  override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+  override def editPanel: EditPanel =
     null
 
   override def getMinimumSize: Dimension =

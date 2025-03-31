@@ -4,10 +4,9 @@ package org.nlogo.lab.gui
 
 import java.awt.Window
 
-import org.nlogo.api.{ CompilerServices, LabDefaultValues, LabRunOptions }
+import org.nlogo.api.{ LabDefaultValues, LabRunOptions }
 import org.nlogo.awt.UserCancelException
 import org.nlogo.core.I18N
-import org.nlogo.editor.Colorizer
 import org.nlogo.window.{ Editable, EditDialogFactory, EditPanel }
 
 import java.io.File
@@ -117,7 +116,7 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
     //             + "</html>"))
     // }
 
-    override def createEditPanel(compiler: CompilerServices, colorizer: Colorizer): EditPanel =
+    override def editPanel: EditPanel =
       null
 
     def get = LabRunOptions(threadCount, table, spreadsheet, stats, lists, updateView, updatePlotsAndMonitors, false)

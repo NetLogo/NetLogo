@@ -8,8 +8,6 @@ import org.jhotdraw.framework.HandleEnumeration;
 import org.jhotdraw.standard.HandleEnumerator;
 import org.jhotdraw.standard.NullHandle;
 import org.jhotdraw.standard.RelativeLocator;
-import org.nlogo.api.CompilerServices;
-import org.nlogo.editor.Colorizer;
 import org.nlogo.window.Editable;
 import org.nlogo.window.EditPanel;
 
@@ -116,7 +114,7 @@ public class ConverterFigure extends DiamondFigure
     return scala.Option.apply(null);
   }
 
-  public EditPanel createEditPanel(CompilerServices compiler, Colorizer colorizer) {
+  public EditPanel editPanel() {
     return null;
   }
 
