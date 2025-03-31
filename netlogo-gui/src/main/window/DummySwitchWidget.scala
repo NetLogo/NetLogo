@@ -9,8 +9,7 @@ class DummySwitchWidget extends Switch with Editable {
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.switch")
 
-  override def editPanel: EditPanel =
-    null
+  override def editPanel: EditPanel = new DummySwitchEditPanel(this)
 
   // we never update constraints in a dummy widget -- CLB
   override def updateConstraints() {}
@@ -20,7 +19,7 @@ class DummySwitchWidget extends Switch with Editable {
 
   /// load and save
   override def load(model: WidgetModel): AnyRef = {
-    super.name = model.varName
+    super.setVarName(model.varName)
     isOn = model.on
     oldSize(model.oldSize)
     setSize(model.width, model.height)

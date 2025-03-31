@@ -41,7 +41,7 @@ class SwitchWidget(compiler: CompilerServices) extends Switch with Editable with
   }
 
   def name(newName: String, sendEvent: Boolean) {
-    super.name = newName
+    super.setVarName(newName)
     if (sendEvent) {
       new Events.InterfaceGlobalEvent(this, true, true, false, false).raise(this)
     }

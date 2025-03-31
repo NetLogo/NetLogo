@@ -102,7 +102,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   }
 
   def name: String = _name
-  def name_=(name: String): Unit = {
+  def setVarName(name: String): Unit = {
     this._name = name
     displayName(name)
     label.setText(displayName)
