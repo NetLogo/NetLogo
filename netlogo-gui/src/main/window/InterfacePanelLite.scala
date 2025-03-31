@@ -218,7 +218,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
       new InputBoxWidget(editorFactory.newEditor(singleLineConfig),
        editorFactory.newEditor(multiLineConfig), compiler, this)
     },
-    "Button"   -> (() => new ButtonWidget(random.mainRNG)),
+    "Button"   -> (() => new ButtonWidget(random.mainRNG, editorFactory.colorizer)),
     "Output"   -> (() => new OutputWidget()))
 
   override def allWidgets: Seq[CoreWidget] =

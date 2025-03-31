@@ -42,7 +42,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   setFocusTraversalPolicy(new InterfaceTabFocusTraversalPolicy)
   private val locationToggleAction = new CommandCenterLocationToggleAction
   commandCenter.locationToggleAction = locationToggleAction
-  val iP = new InterfacePanel(workspace.viewWidget, workspace)
+  val iP = new InterfacePanel(workspace.viewWidget, workspace, dialogFactory.colorizer)
 
   val commandCenterToggleAction = new CommandCenterToggleAction()
 

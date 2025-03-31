@@ -15,7 +15,7 @@ import org.nlogo.core.{
   AgentKind, I18N, Button => CoreButton, Chooser => CoreChooser, InputBox => CoreInputBox, Monitor => CoreMonitor,
   Output => CoreOutput, Plot => CorePlot, Slider => CoreSlider, Switch => CoreSwitch, TextBox => CoreTextBox,
   View => CoreView, Widget => CoreWidget }
-import org.nlogo.editor.{ EditorArea, UndoManager }
+import org.nlogo.editor.{ Colorizer, EditorArea, UndoManager }
 import org.nlogo.log.LogManager
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.window.{ ButtonWidget, ChooserWidget, Editable, Events => WindowEvents, GUIWorkspace, InputBoxWidget,
@@ -24,7 +24,7 @@ import org.nlogo.window.{ ButtonWidget, ChooserWidget, Editable, Events => Windo
   WindowEvents.{ CompileAllEvent, LoadBeginEvent, LoadWidgetsEvent, RemoveConstraintEvent, WidgetRemovedEvent }
 import org.nlogo.workspace.Evaluator
 
-class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspace)
+class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspace, colorizer: Colorizer)
   extends WidgetPanel(workspace)
   with FocusListener
   with LoadWidgetsEvent.Handler
@@ -110,7 +110,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
       fromRegistry
     else coreWidget match {
       case c: CoreChooser  => new ChooserWidget(workspace)
-      case b: CoreButton   => new ButtonWidget(workspace.world.mainRNG)
+      case b: CoreButton   => new ButtonWidget(workspace.world.mainRNG, colorizer)
       case p: CorePlot     => PlotWidget(workspace.plotManager)
       case m: CoreMonitor  => new MonitorWidget(workspace.world.auxRNG)
       case s: CoreSlider =>

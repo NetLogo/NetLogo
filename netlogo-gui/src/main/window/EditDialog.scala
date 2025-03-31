@@ -7,17 +7,14 @@ import java.awt.event.{ WindowAdapter, WindowEvent }
 import javax.swing.{ JDialog, JPanel, WindowConstants }
 import javax.swing.border.EmptyBorder
 
-import org.nlogo.api.CompilerServices
 import org.nlogo.awt.Positioning
 import org.nlogo.core.I18N
-import org.nlogo.editor.Colorizer
 import org.nlogo.swing.{ BrowserLauncher, ButtonPanel, DialogButton, Implicits, Transparent, Utils },
   BrowserLauncher.docPath, Implicits.thunk2action
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 // contains an EditPanel, plus some buttons at the bottom (OK/Apply/Help/Cancel).
-class EditDialog(window: Window, target: Editable, useTooltips: Boolean, modal: Boolean,
-                          compiler: CompilerServices, colorizer: Colorizer)
+class EditDialog(window: Window, target: Editable, useTooltips: Boolean, modal: Boolean)
   extends JDialog(window, target.classDisplayName,
                   if (modal)
                     Dialog.ModalityType.APPLICATION_MODAL

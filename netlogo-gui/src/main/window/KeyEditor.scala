@@ -2,7 +2,7 @@
 
 package org.nlogo.window
 
-import java.awt.EventQueue
+import java.awt.{ BorderLayout, EventQueue }
 import javax.swing.JLabel
 import javax.swing.event.{ DocumentEvent, DocumentListener }
 
@@ -37,8 +37,10 @@ class KeyEditor(accessor: PropertyAccessor[Char]) extends PropertyEditor(accesso
     getDocument.addDocumentListener(listener)
   }
 
-  add(label)
-  add(editor)
+  setLayout(new BorderLayout(6, 0))
+
+  add(label, BorderLayout.WEST)
+  add(editor, BorderLayout.CENTER)
 
   override def get: Option[Char] = Some(
     if (editor.getText.isEmpty) '\u0000'

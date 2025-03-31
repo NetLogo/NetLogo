@@ -2,6 +2,7 @@
 
 package org.nlogo.window
 
+import java.awt.BorderLayout
 import javax.swing.JLabel
 
 import org.nlogo.api.Options
@@ -17,8 +18,10 @@ class OptionsEditor[T](accessor: PropertyAccessor[Options[T]]) extends PropertyE
     addItemListener(_ => accessor.changed())
   }
 
-  add(label)
-  add(combo)
+  setLayout(new BorderLayout(6, 0))
+
+  add(label, BorderLayout.WEST)
+  add(combo, BorderLayout.CENTER)
 
   override def get: Option[Options[T]] = {
     options.selectByName(combo.getSelectedItem.getOrElse(""))

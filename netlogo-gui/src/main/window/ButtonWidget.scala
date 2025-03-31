@@ -10,6 +10,7 @@ import javax.swing.{ ImageIcon, JLabel }
 import org.nlogo.api.{ MersenneTwisterFast, Options }
 import org.nlogo.awt.{ DarkenImageFilter, Mouse }, Mouse.hasButton1
 import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N }
+import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.Utils
 import org.nlogo.theme.InterfaceColors
@@ -66,7 +67,7 @@ object ButtonWidget {
     }
   }
 }
-class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
+class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends JobWidget(random)
   with Editable with MouseListener with MouseMotionListener
   with Events.JobRemovedEvent.Handler with Events.TickStateChangeEvent.Handler {
 
@@ -132,7 +133,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   addMouseMotionListener(this)
 
   override def editPanel: EditPanel =
-    null
+    new ButtonEditPanel(this, colorizer)
 
   def buttonType_=(bt: ButtonType): Unit = {
     _buttonType = bt
@@ -146,10 +147,11 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   // agentKind from outside of this class anyway.
   // the ui edits work through agent options, which now just set the button type
   override def kind = buttonType.agentKind
-  override def agentKind(c:AgentKind): Unit = { /* ignoring, no one should call this. */ }
-  def agentOptions = buttonType.toAgentOptions
-  def agentOptions(newAgentOptions:Options[String]){
-    if (newAgentOptions.chosenValue != this.agentOptions.chosenValue){
+  override def agentKind(c: AgentKind): Unit = { /* ignoring, no one should call this. */ }
+
+  def agentOptions: Options[String] = buttonType.toAgentOptions
+  def agentOptions(newAgentOptions: Options[String]): Unit = {
+    if (newAgentOptions.chosenValue != this.agentOptions.chosenValue) {
       buttonType = ButtonType(newAgentOptions.chosenValue)
       recompile()
       repaint()
@@ -157,7 +159,6 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   }
 
   var foreverOn = false
-  var goTime = false
   var setupFinished = false
 
   private var _buttonUp = true
@@ -174,9 +175,9 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   }
 
   protected var _forever = false
-  def forever = _forever
-  def forever_=(newForever: Boolean){
-    if(newForever != _forever){
+  def forever: Boolean = _forever
+  def forever(newForever: Boolean): Unit = {
+    if (newForever != _forever) {
       _forever = newForever
       stopping = false
       recompile()
@@ -184,10 +185,16 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     }
   }
 
+  private var _goTime = false
+  def goTime: Boolean = _goTime
+  def goTime(value: Boolean): Unit = {
+    _goTime = value
+  }
+
   /// keyboard stuff
   private var _actionKey: Option[Char] = None
   def actionKey = _actionKey.getOrElse(0.toChar)
-  def actionKey_=(newActionKey:Char): Unit = {
+  def actionKey(newActionKey:Char): Unit = {
     _actionKey = newActionKey match {
       case 0 => None
       case _ => Some(newActionKey)
@@ -298,7 +305,7 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   override def isLinkForeverButton = buttonType == ButtonType.LinkButton && forever
   private var _name = ""
   def name = _name
-  def name_=(newName:String){
+  def name(newName:String){
     _name = newName
     chooseDisplayName()
   }
@@ -523,13 +530,13 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   }
 
   override def load(button: WidgetModel): Object = {
-    forever = button.forever
+    forever(button.forever)
     buttonType = ButtonType(button.buttonKind)
 
-    button.actionKey.foreach(k => actionKey = k)
+    button.actionKey.foreach(k => actionKey(k))
 
-    goTime = button.disableUntilTicksStart
-    name = button.display.optionToPotentiallyEmptyString
+    goTime(button.disableUntilTicksStart)
+    name(button.display.optionToPotentiallyEmptyString)
 
     button.source.foreach(wrapSource)
 
