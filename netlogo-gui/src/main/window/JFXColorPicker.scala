@@ -74,6 +74,10 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
                                                        |.dropdown-arrow {
                                                        |  right:  -312px;
                                                        |  bottom: -17px;
+                                                       |}
+                                                       |
+                                                       |.repr-controls-wrapper {
+                                                       |  margin-top: 0;
                                                        |}`)""".stripMargin)
 
               webEngine = Option(engine)
