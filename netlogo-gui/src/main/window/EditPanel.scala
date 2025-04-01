@@ -52,4 +52,13 @@ abstract class EditPanel(target: Editable) extends JPanel with Transparent with 
         })
     }
   }
+
+  // helper for any EditPanel that has GUI components that aren't PropertyEditors (Isaac B 3/31/25)
+  def syncExtraComponents(): Unit = {}
+
+  override def syncTheme(): Unit = {
+    propertyEditors.foreach(_.syncTheme())
+
+    syncExtraComponents()
+  }
 }

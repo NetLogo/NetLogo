@@ -30,8 +30,4 @@ class OutputEditPanel(target: OutputWidget) extends WidgetEditPanel(target) {
 
   override def propertyEditors: Seq[PropertyEditor[_]] =
     Seq(fontSize)
-
-  override def syncTheme(): Unit = {
-    fontSize.syncTheme()
-  }
 }

@@ -72,11 +72,7 @@ class DummyChooserEditPanel(target: DummyChooserWidget, compiler: CompilerServic
 
   override def isResizable: Boolean = true
 
-  override def syncTheme(): Unit = {
-    name.syncTheme()
-    choicesWrapper.syncTheme()
-    oldSize.syncTheme()
-
+  override def syncExtraComponents(): Unit = {
     choicesLabel.setForeground(InterfaceColors.dialogText)
   }
 }

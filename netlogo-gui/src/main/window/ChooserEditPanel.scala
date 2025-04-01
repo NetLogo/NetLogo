@@ -73,11 +73,7 @@ class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colori
 
   override def isResizable: Boolean = true
 
-  override def syncTheme(): Unit = {
-    nameWrapper.syncTheme()
-    choicesWrapper.syncTheme()
-    oldSize.syncTheme()
-
+  override def syncExtraComponents(): Unit = {
     choicesLabel.setForeground(InterfaceColors.dialogText)
   }
 }

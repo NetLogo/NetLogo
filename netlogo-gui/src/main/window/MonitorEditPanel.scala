@@ -121,14 +121,7 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
 
   override def isResizable: Boolean = true
 
-  override def syncTheme(): Unit = {
-    wrapSource.syncTheme()
-    name.syncTheme()
-    decimalPlaces.syncTheme()
-    units.syncTheme()
-    fontSize.syncTheme()
-    oldSize.syncTheme()
-
+  override def syncExtraComponents(): Unit = {
     decimalLabel.setForeground(InterfaceColors.dialogText)
   }
 }

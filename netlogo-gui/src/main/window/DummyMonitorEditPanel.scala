@@ -58,10 +58,4 @@ class DummyMonitorEditPanel(target: DummyMonitorWidget) extends WidgetEditPanel(
     Seq(name, decimalPlaces, oldSize)
 
   override def isResizable: Boolean = true
-
-  override def syncTheme(): Unit = {
-    name.syncTheme()
-    decimalPlaces.syncTheme()
-    oldSize.syncTheme()
-  }
 }

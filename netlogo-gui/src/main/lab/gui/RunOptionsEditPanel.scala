@@ -130,15 +130,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
   override def propertyEditors: Seq[PropertyEditor[_]] =
     Seq(spreadsheet, table, stats, lists, updateView, updatePlotsAndMonitors, threadCount)
 
-  override def syncTheme(): Unit = {
-    spreadsheet.syncTheme()
-    table.syncTheme()
-    stats.syncTheme()
-    lists.syncTheme()
-    updateView.syncTheme()
-    updatePlotsAndMonitors.syncTheme()
-    threadCount.syncTheme()
-
+  override def syncExtraComponents(): Unit = {
     updateLabel.setForeground(InterfaceColors.dialogText)
     threadCountLabel.setForeground(InterfaceColors.dialogText)
   }

@@ -66,10 +66,4 @@ class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices) extends
 
   override def propertyEditors: Seq[PropertyEditor[_]] =
     Seq(nameWrapper, typeOptions, oldSize)
-
-  override def syncTheme(): Unit = {
-    nameWrapper.syncTheme()
-    typeOptions.syncTheme()
-    oldSize.syncTheme()
-  }
 }

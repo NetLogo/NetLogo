@@ -68,10 +68,4 @@ class StockEditPanel(target: StockFigure, compiler: CompilerServices, colorizer:
     Seq(nameWrapper, initialValueExpressionWrapper, allowNegative)
 
   override def isResizable: Boolean = true
-
-  override def syncTheme(): Unit = {
-    nameWrapper.syncTheme()
-    initialValueExpressionWrapper.syncTheme()
-    allowNegative.syncTheme()
-  }
 }

@@ -109,13 +109,4 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
     Seq(text, fontSize, textColorLight, textColorDark, backgroundLight, backgroundDark)
 
   override def isResizable: Boolean = true
-
-  override def syncTheme(): Unit = {
-    text.syncTheme()
-    fontSize.syncTheme()
-    textColorLight.syncTheme()
-    textColorDark.syncTheme()
-    backgroundLight.syncTheme()
-    backgroundDark.syncTheme()
-  }
 }

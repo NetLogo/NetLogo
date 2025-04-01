@@ -70,10 +70,4 @@ class RateEditPanel(target: RateConnection, compiler: CompilerServices, colorize
     Seq(nameWrapper, inputs, expressionWrapper)
 
   override def isResizable: Boolean = true
-
-  override def syncTheme(): Unit = {
-    nameWrapper.syncTheme()
-    inputs.syncTheme()
-    expressionWrapper.syncTheme()
-  }
 }

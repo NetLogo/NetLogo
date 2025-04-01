@@ -44,9 +44,4 @@ class DummyButtonEditPanel(target: DummyButtonWidget) extends WidgetEditPanel(ta
 
   override def propertyEditors: Seq[PropertyEditor[_]] =
     Seq(name, actionKey)
-
-  override def syncTheme(): Unit = {
-    name.syncTheme()
-    actionKey.syncTheme()
-  }
 }

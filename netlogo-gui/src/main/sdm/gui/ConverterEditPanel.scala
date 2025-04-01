@@ -70,10 +70,4 @@ class ConverterEditPanel(target: ConverterFigure, compiler: CompilerServices, co
     Seq(nameWrapper, inputs, expressionWrapper)
 
   override def isResizable: Boolean = true
-
-  override def syncTheme(): Unit = {
-    nameWrapper.syncTheme()
-    inputs.syncTheme()
-    expressionWrapper.syncTheme()
-  }
 }

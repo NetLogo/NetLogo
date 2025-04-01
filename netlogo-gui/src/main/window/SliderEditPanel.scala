@@ -155,16 +155,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
 
   override def isResizable: Boolean = true
 
-  override def syncTheme(): Unit = {
-    nameWrapper.syncTheme()
-    minimumCode.syncTheme()
-    incrementCode.syncTheme()
-    maximumCode.syncTheme()
-    value.syncTheme()
-    units.syncTheme()
-    vertical.syncTheme()
-    oldSize.syncTheme()
-
+  override def syncExtraComponents(): Unit = {
     minimumLabel.setForeground(InterfaceColors.dialogText)
   }
 }

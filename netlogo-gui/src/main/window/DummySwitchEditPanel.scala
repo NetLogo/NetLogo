@@ -45,9 +45,4 @@ class DummySwitchEditPanel(target: DummySwitchWidget) extends WidgetEditPanel(ta
 
   override def propertyEditors: Seq[PropertyEditor[_]] =
     Seq(name, oldSize)
-
-  override def syncTheme(): Unit = {
-    name.syncTheme()
-    oldSize.syncTheme()
-  }
 }

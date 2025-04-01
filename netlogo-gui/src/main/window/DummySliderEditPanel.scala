@@ -125,15 +125,4 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
 
   override def propertyEditors: Seq[PropertyEditor[_]] =
     Seq(name, min, inc, max, value, units, vertical, oldSize)
-
-  override def syncTheme(): Unit = {
-    name.syncTheme()
-    min.syncTheme()
-    inc.syncTheme()
-    max.syncTheme()
-    value.syncTheme()
-    units.syncTheme()
-    vertical.syncTheme()
-    oldSize.syncTheme()
-  }
 }

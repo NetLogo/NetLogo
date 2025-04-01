@@ -104,13 +104,4 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
     Seq(agentOptions, forever, goTime, wrapSource, name, actionKey)
 
   override def isResizable: Boolean = true
-
-  override def syncTheme(): Unit = {
-    agentOptions.syncTheme()
-    forever.syncTheme()
-    goTime.syncTheme()
-    wrapSource.syncTheme()
-    name.syncTheme()
-    actionKey.syncTheme()
-  }
 }

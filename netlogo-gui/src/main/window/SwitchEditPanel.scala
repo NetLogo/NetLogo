@@ -47,9 +47,4 @@ class SwitchEditPanel(target: SwitchWidget, compiler: CompilerServices) extends 
 
   override def propertyEditors: Seq[PropertyEditor[_]] =
     Seq(name, oldSize)
-
-  override def syncTheme(): Unit = {
-    name.syncTheme()
-    oldSize.syncTheme()
-  }
 }

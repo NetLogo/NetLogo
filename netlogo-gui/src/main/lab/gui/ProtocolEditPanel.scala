@@ -257,22 +257,7 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
         preExperimentCommands, setupCommands, goCommands, exitCondition, postRunCommands, postExperimentCommands,
         timeLimit)
 
-  override def syncTheme(): Unit = {
-    name.syncTheme()
-    valueSets.syncTheme()
-    repetitions.syncTheme()
-    sequentialRunOrder.syncTheme()
-    metrics.syncTheme()
-    runMetricsEveryStep.syncTheme()
-    runMetricsCondition.syncTheme()
-    preExperimentCommands.syncTheme()
-    setupCommands.syncTheme()
-    goCommands.syncTheme()
-    exitCondition.syncTheme()
-    postRunCommands.syncTheme()
-    postExperimentCommands.syncTheme()
-    timeLimit.syncTheme()
-
+  override def syncExtraComponents(): Unit = {
     hintPanel.setBackground(InterfaceColors.bspaceHintBackground)
     hintLabel.setForeground(InterfaceColors.dialogText)
   }

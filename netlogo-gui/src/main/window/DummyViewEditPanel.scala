@@ -44,9 +44,4 @@ class DummyViewEditPanel(target: DummyViewWidget) extends WidgetEditPanel(target
 
   override def propertyEditors: Seq[PropertyEditor[_]] =
     Seq(width, height)
-
-  override def syncTheme(): Unit = {
-    width.syncTheme()
-    height.syncTheme()
-  }
 }

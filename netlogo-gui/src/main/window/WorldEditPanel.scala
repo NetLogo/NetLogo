@@ -162,6 +162,4 @@ class WorldEditPanel(target: WorldViewSettings) extends EditPanel(target) {
     target.setOriginConfig(originConfigs.getSelectedItem)
     target.configureEditors(editors)
   }
-
-  override def syncTheme(): Unit = {}
 }

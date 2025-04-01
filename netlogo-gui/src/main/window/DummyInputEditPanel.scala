@@ -64,10 +64,4 @@ class DummyInputEditPanel(target: DummyInputBoxWidget) extends WidgetEditPanel(t
 
   override def propertyEditors: Seq[PropertyEditor[_]] =
     Seq(name, typeOptions, oldSize)
-
-  override def syncTheme(): Unit = {
-    name.syncTheme()
-    typeOptions.syncTheme()
-    oldSize.syncTheme()
-  }
 }
