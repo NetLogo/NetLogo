@@ -140,19 +140,16 @@ class ProtocolEditable(protocol: LabProtocol,
     }
   }
 
-  override def invalidSettings: Seq[(String,String)] = {
+  override def errorString: Option[String] = {
     if (name.trim.isEmpty) {
-      return Seq(I18N.gui.get("edit.behaviorSpace.variable")
-        -> I18N.gui.get("edit.behaviorSpace.name.empty"))
+      Some(I18N.gui.get("edit.behaviorSpace.name.empty"))
+    } else if (experimentNames.contains(name.trim)) {
+      Some(I18N.gui.getN("edit.behaviorSpace.name.duplicate", name.trim))
+    } else {
+      LabVariableParser.parseVariables(valueSets, repetitions, worldLock, compiler) match {
+        case (None, message: String) => Some(message)
+        case _ => None
+      }
     }
-    if (experimentNames.contains(name.trim)) {
-      return Seq(I18N.gui.get("edit.behaviorSpace.variable")
-        -> I18N.gui.getN("edit.behaviorSpace.name.duplicate", name.trim))
-    }
-    LabVariableParser.parseVariables(valueSets, repetitions, worldLock, compiler) match {
-      case (None, message: String) => return Seq(I18N.gui.get("edit.behaviorSpace.variable") -> message)
-      case _ =>
-    }
-    Seq.empty[(String, String)]
   }
 }

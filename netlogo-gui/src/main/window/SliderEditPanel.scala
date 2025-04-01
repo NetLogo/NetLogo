@@ -3,7 +3,6 @@
 package org.nlogo.window
 
 import java.awt.{ GridBagConstraints, Insets }
-import java.lang.NumberFormatException
 import javax.swing.JLabel
 
 import org.nlogo.api.CompilerServices
@@ -155,27 +154,6 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
     Seq(nameWrapper, minimumCode, incrementCode, maximumCode, value, units, vertical, oldSize)
 
   override def isResizable: Boolean = true
-
-  override def errorString: Option[String] = {
-    // if everything can be parsed as a number, might as well check that the range is valid
-    // otherwise, it's probably code, so ignore it and let the compiler figure it out
-    // (Isaac B 2/11/25)
-    try {
-      if (target.checkRecursive(compiler, minimumCode.get.get, target.name) ||
-          target.checkRecursive(compiler, maximumCode.get.get, target.name) ||
-          target.checkRecursive(compiler, incrementCode.get.get, target.name)) {
-        return Some(I18N.gui.get("edit.general.recursive"))
-      } else if (minimumCode.get.get.toDouble >= maximumCode.get.get.toDouble) {
-        return Some(I18N.gui.get("edit.slider.invalidBounds"))
-      } else if (incrementCode.get.get.toDouble > maximumCode.get.get.toDouble - minimumCode.get.get.toDouble) {
-        return Some(I18N.gui.get("edit.slider.invalidIncrement"))
-      }
-    } catch {
-      case e: NumberFormatException =>
-    }
-
-    None
-  }
 
   override def syncTheme(): Unit = {
     nameWrapper.syncTheme()

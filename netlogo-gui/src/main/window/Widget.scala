@@ -220,7 +220,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
     resetMouseState()
   }
 
-  def checkRecursive(compiler: CompilerServices, source: String, name: String): Boolean =
+  protected def checkRecursive(compiler: CompilerServices, source: String, name: String): Boolean =
     compiler.tokenizeForColorization(source).exists(token => token.tpe == TokenType.Ident && token.text == name)
 
   implicit class RichStringOption(s: Option[String]) {

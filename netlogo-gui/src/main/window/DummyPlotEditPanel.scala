@@ -70,13 +70,22 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
         target.setDefaultYMax(_),
         () => apply()))
 
-  private val autoPlotOn =
+  private val autoPlotX =
     new BooleanEditor(
       new PropertyAccessor(
         target,
-        I18N.gui.get("edit.plot.autoScale"),
-        () => target.defaultAutoPlotOn,
-        target.setDefaultAutoPlotOn(_),
+        I18N.gui.get("edit.plot.autoScaleX"),
+        () => target.defaultAutoPlotX,
+        target.setDefaultAutoPlotX(_),
+        () => apply()))
+
+  private val autoPlotY =
+    new BooleanEditor(
+      new PropertyAccessor(
+        target,
+        I18N.gui.get("edit.plot.autoScaleY"),
+        () => target.defaultAutoPlotY,
+        target.setDefaultAutoPlotY(_),
         () => apply()))
 
   private val showLegend =
@@ -132,10 +141,11 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
     c.gridy = 3
     c.insets = new Insets(0, 6, 6, 6)
 
-    add(autoPlotOn, c)
+    add(autoPlotX, c)
 
     c.insets = new Insets(0, 0, 6, 6)
 
+    add(autoPlotY, c)
     add(showLegend, c)
 
     c.gridy = 4
@@ -149,7 +159,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
   }
 
   override def propertyEditors: Seq[PropertyEditor[_]] =
-    Seq(nameOptions, xLabel, xMin, xMax, yLabel, yMin, yMax, autoPlotOn, showLegend, oldSize)
+    Seq(nameOptions, xLabel, xMin, xMax, yLabel, yMin, yMax, autoPlotX, autoPlotY, showLegend, oldSize)
 
   override def isResizable: Boolean = true
 
@@ -161,7 +171,8 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
     yLabel.syncTheme()
     yMin.syncTheme()
     yMax.syncTheme()
-    autoPlotOn.syncTheme()
+    autoPlotX.syncTheme()
+    autoPlotY.syncTheme()
     showLegend.syncTheme()
     oldSize.syncTheme()
   }

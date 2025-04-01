@@ -118,6 +118,27 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
     new AddSliderConstraintEvent(this, name, minimumCode, maximumCode, incrementCode, defaultValue).raise(this)
   }
 
+  override def errorString: Option[String] = {
+    // if everything can be parsed as a number, might as well check that the range is valid
+    // otherwise, it's probably code, so ignore it and let the compiler figure it out
+    // (Isaac B 2/11/25)
+    try {
+      if (checkRecursive(compiler, minimumCode, name) ||
+          checkRecursive(compiler, maximumCode, name) ||
+          checkRecursive(compiler, incrementCode, name)) {
+        return Some(I18N.gui.get("edit.general.recursive"))
+      } else if (minimumCode.toDouble >= maximumCode.toDouble) {
+        return Some(I18N.gui.get("edit.slider.invalidBounds"))
+      } else if (incrementCode.toDouble > maximumCode.toDouble - minimumCode.toDouble) {
+        return Some(I18N.gui.get("edit.slider.invalidIncrement"))
+      }
+    } catch {
+      case e: NumberFormatException =>
+    }
+
+    None
+  }
+
   // EVENT HANDLING
   def handle(e: AfterLoadEvent): Unit = {
     updateConstraints()
