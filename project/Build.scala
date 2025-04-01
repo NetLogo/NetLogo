@@ -19,7 +19,7 @@ object NetLogoBuild {
 
   val settings = Seq(
     marketingVersion        := "7.0.0",
-    numericMarketingVersion := "7.0.0",
+    numericMarketingVersion := "7.0.0-internal1",
     buildDate := {
       val dateFormat =
         new java.text.SimpleDateFormat("MMMMMMMMMMMMMMM d, yyyy")
