@@ -4,10 +4,11 @@ package org.nlogo.lab.gui
 
 import org.scalatest.funsuite.AnyFunSuite
 
-import org.nlogo.api.{ FileIO, DummyCompilerServices, NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
+import org.nlogo.api.{ DummyCompilerServices, FileIO, NetLogoLegacyDialect, NetLogoThreeDDialect, Version }
+import org.nlogo.core.{ Femto, LiteralParser }
 import org.nlogo.fileformat.NLogoLabFormat
 import org.nlogo.nvm.PresentationCompilerInterface
-import org.nlogo.core.{ Femto, LiteralParser }
+import org.nlogo.window.EditorColorizer
 
 class ProtocolEditableTests extends AnyFunSuite {
   val compiler = Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
@@ -27,7 +28,8 @@ class ProtocolEditableTests extends AnyFunSuite {
     val protocolLines = FileIO.fileToString("test/lab/protocols.xml").linesIterator.toArray
     val protocols = new NLogoLabFormat(literalParser).load(protocolLines, None).get
     protocols.foreach { protocol =>
-      val editedProtocol = new ProtocolEditable(protocol, null, workspace, new AnyRef).get.get
+      val editedProtocol = new ProtocolEditable(protocol, null, workspace, new EditorColorizer(workspace), new AnyRef,
+                                                Seq()).get.get
       assert(protocol == editedProtocol)
     }
   }
