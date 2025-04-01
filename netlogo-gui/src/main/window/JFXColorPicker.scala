@@ -20,12 +20,14 @@ import javax.swing.{ JDialog, WindowConstants }
 
 import netscape.javascript.JSObject
 
+import org.nlogo.api.{ Color => NLColor }
 import org.nlogo.awt.EventQueue
 import org.nlogo.core.I18N
 import org.nlogo.swing.Positioning
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback: (String) => Unit = _ => {})
+class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initialValue: Option[NLColorValue] = None
+                    , callback: (String) => Unit = _ => {})
   extends JDialog(frame, I18N.gui.get("tools.colorpicker"), modal) with ThemeSync {
 
   private val nlBabyMonitor = new Bridge
@@ -79,6 +81,14 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
                                                        |.repr-controls-wrapper {
                                                        |  margin-top: 0;
                                                        |}`)""".stripMargin)
+
+              initialValue.foreach {
+                value =>
+                  engine.executeScript(s"""window.setValue(${value.toJSArgs})""")
+                  if (!value.isInstanceOf[NLNumber]) {
+                    engine.executeScript("window.switchToAdvPicker()")
+                  }
+              }
 
               webEngine = Option(engine)
 
@@ -137,6 +147,7 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
   }
 
   private class Bridge {
+
     def onPick(x: String): Unit = {
       EventQueue.invokeLater(() => {
         callback(x)
@@ -159,7 +170,29 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
     }
 
   }
+
 }
+
+sealed trait NLColorValue {
+  def toColor:  Color
+  def toJSArgs: String
+}
+
+case class NLNumber(value: Double) extends NLColorValue {
+  override def toColor  = NLColor.getColor(Double.box(value))
+  override def toJSArgs = s""""number", ${value}"""
+}
+
+case class RGB(r: Double, g: Double, b: Double) extends NLColorValue {
+  override def toColor  = new Color(r.toInt, g.toInt, b.toInt)
+  override def toJSArgs = s""""rgb", { red: $r, green: $g, blue: $b }"""
+}
+
+case class RGBA(r: Double, g: Double, b: Double, a: Double) extends NLColorValue {
+  override def toColor  = new Color(r.toInt, g.toInt, b.toInt, a.toInt)
+  override def toJSArgs = s""""rgba", { red: $r, green: $g, blue: $b, alpha: ${Math.round(a / 255 * 100)} }"""
+}
+
 
 sealed trait JFXCPConfig
 

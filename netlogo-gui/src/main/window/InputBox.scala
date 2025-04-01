@@ -357,9 +357,14 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   }
 
   private class SelectColorActionListener extends ActionListener {
+    private var lastValue = Option.empty[NLColorValue]
     def actionPerformed(e: ActionEvent): Unit = {
-      new JFXColorPicker(Hierarchy.getFrame(InputBox.this), true, DoubleOnly,
-        (x: String) => valueObject(x.toDouble, true)
+      new JFXColorPicker(Hierarchy.getFrame(InputBox.this), true, DoubleOnly, lastValue,
+        (x: String) => {
+          val num = x.toDouble
+          valueObject(num, true)
+          lastValue = Option(NLNumber(num))
+        }
       ).setVisible(true)
     }
   }

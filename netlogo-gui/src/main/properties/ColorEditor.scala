@@ -4,13 +4,11 @@ package org.nlogo.properties
 
 import java.awt.{ Color, Dimension, Frame, Graphics, GridBagLayout, GridBagConstraints, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent }
-import java.lang.Double
 import javax.swing.{ JLabel, JPanel }
 
-import org.nlogo.api.{ Color => NLColor }
 import org.nlogo.swing.{ RoundedBorderPanel, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ JFXColorPicker, NumAndRGBA }
+import org.nlogo.window.{ JFXColorPicker, NLColorValue, NLNumber, NumAndRGBA, RGB, RGBA }
 
 abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
   extends PropertyEditor(accessor) {
@@ -89,22 +87,36 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
     add(panel)
 
     addMouseListener(new MouseAdapter {
+
+      private var lastValue = Option.empty[NLColorValue]
+
       override def mousePressed(e: MouseEvent) {
-        new JFXColorPicker(frame, true, NumAndRGBA,
+        new JFXColorPicker(frame, true, NumAndRGBA, lastValue,
           (x: String) => {
 
             val SimpleDouble = """^(\d{1,3}(?:\.\d)?)$""".r
+            val AdvRGB       = """^\[(\d{1,3}) (\d{1,3}) (\d{1,3})\]$""".r
             val AdvRGBA      = """^\[(\d{1,3}) (\d{1,3}) (\d{1,3}) (\d{1,3})\]$""".r
 
-            x match {
-              case SimpleDouble(d)     => ColorEditor.this.setColor(NLColor.getColor(d.toDouble.asInstanceOf[Double]))
-              case AdvRGBA(r, g, b, a) => ColorEditor.this.setColor(new Color(r.toInt, g.toInt, b.toInt, a.toInt))
-              case _                   => throw new Exception(s"Color picker returned unrecognized color format: $x")
-            }
+            val thisValue =
+              x match {
+                case SimpleDouble(d) =>
+                  NLNumber(d.toDouble)
+                case AdvRGB(r, g, b) =>
+                  RGB(r.toInt, g.toInt, b.toInt)
+                case AdvRGBA(r, g, b, a) =>
+                  RGBA(r.toInt, g.toInt, b.toInt, a.toInt)
+                case _ =>
+                  throw new Exception(s"Color picker returned unrecognized color format: $x")
+              }
+
+            ColorEditor.this.setColor(thisValue.toColor)
+            lastValue = Option(thisValue)
 
           }
         ).setVisible(true)
       }
+
     })
 
     def setColor(color: Color) {
