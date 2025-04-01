@@ -11,28 +11,31 @@ import javafx.beans.value.ObservableValue
 import javafx.concurrent.Worker.State
 import javafx.embed.swing.JFXPanel
 import javafx.scene.Scene
+import javafx.scene.input.{ KeyCode, KeyEvent }
 import javafx.scene.layout.VBox
 import javafx.scene.text.Font
 import javafx.scene.web.{ WebEngine, WebView }
+
 import javax.swing.{ JDialog, WindowConstants }
 
 import netscape.javascript.JSObject
 
 import org.nlogo.awt.EventQueue
+import org.nlogo.core.I18N
 import org.nlogo.swing.Positioning
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback: (String) => Unit = _ => {})
-  extends JDialog(frame, modal) with ThemeSync {
+  extends JDialog(frame, I18N.gui.get("tools.colorpicker"), modal) with ThemeSync {
 
   private val nlBabyMonitor = new Bridge
-  private val panel = new JFXPanel
+  private val panel         = new JFXPanel
 
   private var webEngine: Option[WebEngine] = None
 
   add(panel)
 
-  setSize(new Dimension(540, 645))
+  setSize(new Dimension(396, 500))
   setResizable(false)
   setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE)
 
@@ -43,29 +46,40 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
 
       Font.loadFont(getClass.getResource("/fonts/OpenSans-Variable.ttf").toExternalForm, 12.0)
 
-      val webView   = new WebView()
-      val webEngine = webView.getEngine
-      val url       = getClass.getResource("/colorpicker/index.html")
-      webEngine.load(url.toExternalForm)
+      val webView = new WebView()
+      val engine  = webView.getEngine
+      val url     = getClass.getResource("/colorpicker/index.html")
+      engine.load(url.toExternalForm)
 
-      webEngine.getLoadWorker.stateProperty().addListener(
+      webView.setContextMenuEnabled(false)
+
+      engine.getLoadWorker.stateProperty().addListener(
         new ChangeListener[State] {
           override def changed(ov: ObservableValue[_ <: State], oldState: State, newState: State): Unit = {
             if (newState == State.SUCCEEDED) {
 
-              setTitle(webEngine.getTitle)
-
-              webEngine.executeScript("window").asInstanceOf[JSObject].setMember("nlBabyMonitor", nlBabyMonitor)
+              engine.executeScript("window").asInstanceOf[JSObject].setMember("nlBabyMonitor", nlBabyMonitor)
 
               config match {
-                case DoubleOnly => webEngine.executeScript("window.useNumberOnlyPicker()")
-                case CopyOnly   => webEngine.executeScript("window.useNonPickPicker()")
-                case RGBAOnly   => webEngine.executeScript("window.useRGBAOnlyPicker()")
+                case DoubleOnly => engine.executeScript("window.useNumberOnlyPicker()")
+                case CopyOnly   => engine.executeScript("window.useNonPickPicker()")
+                case NumAndRGBA => engine.executeScript("window.useNumAndRGBAPicker()")
               }
 
-              JFXColorPicker.this.webEngine = Option(webEngine)
+              // CSS hacks to fix this stupid JFX browser engine go here! --Jason B. (3/27/25)
+              engine.executeScript("""window.injectCSS(`.tab-button:last-child {
+                                                       |  border-right-width: 2px;
+                                                       |}
+                                                       |
+                                                       |.dropdown-arrow {
+                                                       |  right:  -312px;
+                                                       |  bottom: -17px;
+                                                       |}`)""".stripMargin)
+
+              webEngine = Option(engine)
 
               syncTheme()
+
             }
           }
         }
@@ -74,7 +88,15 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
       val root = new VBox
       root.getChildren.add(webView)
 
-      panel.setScene(new Scene(root))
+      val scene = new Scene(root)
+      panel.setScene(scene)
+
+      val window = scene.getWindow()
+      window.addEventHandler(KeyEvent.KEY_RELEASED, (event: KeyEvent) => {
+        if (KeyCode.ESCAPE == event.getCode()) {
+          JFXColorPicker.this.dispose()
+        }
+      })
 
     }
 
@@ -103,6 +125,7 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
             |, controlBackgroundHover:  "${color(_.toolbarControlBackgroundHover)}"
             |, controlBorder:           "${color(_.toolbarControlBorder         )}"
             |, controlText:             "${color(_.toolbarText                  )}"
+            |, dropdownArrow:           "${color(_.toolbarText                  )}"
             })""".stripMargin
       ))
     })
@@ -130,6 +153,7 @@ class JFXColorPicker(frame: Frame, modal: Boolean, config: JFXCPConfig, callback
         setVisible(false)
       })
     }
+
   }
 }
 
@@ -137,4 +161,4 @@ sealed trait JFXCPConfig
 
 case object DoubleOnly extends JFXCPConfig
 case object CopyOnly   extends JFXCPConfig
-case object RGBAOnly   extends JFXCPConfig
+case object NumAndRGBA extends JFXCPConfig

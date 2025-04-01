@@ -2,16 +2,15 @@
 
 package org.nlogo.properties
 
-import java.awt.{ Color, Dimension, Frame, GridBagLayout, GridBagConstraints, Insets }
+import java.awt.{ Color, Dimension, Frame, Graphics, GridBagLayout, GridBagConstraints, Insets }
 import java.awt.event.{ MouseAdapter, MouseEvent }
 import java.lang.Double
 import javax.swing.{ JLabel, JPanel }
 
-import org.nlogo.api.Approximate.approximate
-import org.nlogo.api.{ Color => NLColor, Dump }, NLColor.{ getClosestColorNumberByARGB, getColorNameByIndex }
-import org.nlogo.swing.{ RoundedBorderPanel, Transparent }
+import org.nlogo.api.{ Color => NLColor }
+import org.nlogo.swing.{ RoundedBorderPanel, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ JFXColorPicker, RGBAOnly }
+import org.nlogo.window.{ JFXColorPicker, NumAndRGBA }
 
 abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
   extends PropertyEditor(accessor) {
@@ -31,12 +30,9 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
     c.weightx = 1
     c.insets = new Insets(0, 0, 0, 6)
 
-    add(new JPanel(new GridBagLayout) with Transparent {
-      add(label, new GridBagConstraints)
-    }, c)
+    add(label, c)
 
     c.fill = GridBagConstraints.NONE
-    c.weightx = 0
     c.insets = new Insets(0, 0, 0, 0)
 
     add(colorButton, c)
@@ -44,24 +40,8 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
     setColor(originalColor)
   }
 
-  def setColor(color: Color) {
+  def setColor(color: Color): Unit = {
     colorButton.setColor(color)
-    val c = getClosestColorNumberByARGB(color.getRGB)
-    val colorString = c match {
-      // this logic is duplicated in InputBox
-      // black and white are special cases
-      case 0 => "0 (black)"
-      case 9.9 => "9.9 (white)"
-      case _ =>
-        val index = (c / 10).toInt
-        val baseColor = index * 10 + 5
-        Dump.number(c) + " (" + getColorNameByIndex(index) + (
-          if (c > baseColor) {" + " + Dump.number(approximate(c - baseColor, 1))}
-          else if (c < baseColor) {" - "} + Dump.number(approximate(baseColor - c, 1))
-          else ""
-        ) + ")"
-    }
-    colorButton.setText(colorString)
   }
 
   override def get = Some(colorButton.getColor)
@@ -80,12 +60,26 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
   }
 
   private class ColorButton extends JPanel with RoundedBorderPanel with ThemeSync {
-    private val label = new JLabel("0 (black)")
-    private val panel = new JPanel {
-      setBackground(Color.black)
+    private var color = Color.BLACK
 
+    private val panel = new JPanel {
       override def getPreferredSize: Dimension =
-        new Dimension(10, 10)
+        new Dimension(16, 16)
+
+      override def paintComponent(g: Graphics): Unit = {
+        val g2d = Utils.initGraphics2D(g)
+
+        g2d.setColor(Color.WHITE)
+        g2d.fillRect(0, 0, getWidth / 2, getHeight / 2)
+        g2d.fillRect(getWidth / 2, getHeight / 2, getWidth / 2, getHeight / 2)
+
+        g2d.setColor(new Color(200, 200, 200))
+        g2d.fillRect(getWidth / 2, 0, getWidth / 2, getHeight / 2)
+        g2d.fillRect(0, getHeight / 2, getWidth / 2, getHeight / 2)
+
+        g2d.setColor(color)
+        g2d.fillRect(0, 0, getWidth, getHeight)
+      }
     }
 
     setDiameter(6)
@@ -93,43 +87,40 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
     enablePressed()
 
     add(panel)
-    add(label)
 
     addMouseListener(new MouseAdapter {
       override def mousePressed(e: MouseEvent) {
-        new JFXColorPicker(frame, true, RGBAOnly,
+        new JFXColorPicker(frame, true, NumAndRGBA,
           (x: String) => {
-            val double = """^([\d.]+)$""".r // simple tab output
-            val rgba = """^\[(\d+) (\d+) (\d+) (\d+)\]$""".r // advanced tab output
+
+            val SimpleDouble = """^(\d{1,3}(?:\.\d)?)$""".r
+            val AdvRGBA      = """^\[(\d{1,3}) (\d{1,3}) (\d{1,3}) (\d{1,3})\]$""".r
 
             x match {
-              case double(d) => ColorEditor.this.setColor(NLColor.getColor(d.toDouble.asInstanceOf[Double]))
-              case rgba(r, g, b, a) => ColorEditor.this.setColor(new Color(r.toInt, g.toInt, b.toInt, a.toInt))
-              case _ => // this shouldn't happen but better safe than sorry for now (Isaac B 3/25/25)
+              case SimpleDouble(d)     => ColorEditor.this.setColor(NLColor.getColor(d.toDouble.asInstanceOf[Double]))
+              case AdvRGBA(r, g, b, a) => ColorEditor.this.setColor(new Color(r.toInt, g.toInt, b.toInt, a.toInt))
+              case _                   => throw new Exception(s"Color picker returned unrecognized color format: $x")
             }
+
           }
         ).setVisible(true)
       }
     })
 
     def setColor(color: Color) {
-      panel.setBackground(color)
+      this.color = color
+
+      repaint()
     }
 
     def getColor: Color =
-      panel.getBackground
-
-    def setText(text: String) {
-      label.setText(text)
-    }
+      color
 
     override def syncTheme(): Unit = {
       setBackgroundColor(InterfaceColors.toolbarControlBackground)
       setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
       setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed)
       setBorderColor(InterfaceColors.toolbarControlBorder)
-
-      label.setForeground(InterfaceColors.toolbarText)
     }
   }
 }

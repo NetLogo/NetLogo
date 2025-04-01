@@ -116,7 +116,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 
   override def getMinimumSize = new Dimension(MIN_WIDTH, MIN_HEIGHT)
   override def getPreferredSize: Dimension =
-    new Dimension(MIN_WIDTH.max(_width), MIN_HEIGHT.max(textLabel.getHeight + 8))
+    new Dimension(MIN_WIDTH.max(_width), MIN_HEIGHT.max(textLabel.getPreferredSize.height + 8))
 
   override def syncTheme(): Unit = {
     InterfaceColors.getTheme match {

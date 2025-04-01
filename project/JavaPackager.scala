@@ -101,7 +101,7 @@ object JavaPackager {
       linuxPackagerOptions
   }
 
-  // expects folder structures like `C:\Program Files\BellSoft\Liberica-17-Full`
+  // expects folder structures like `C:\Program Files\Java\jdk-17*'
   // searches 64 and 32 bit program directories on each drive letter
   def windowsPackagerOptions: Seq[BuildJDK] = {
     val is64 = System.getenv("PROCESSOR_ARCHITECTURE") == "AMD64"
@@ -109,7 +109,7 @@ object JavaPackager {
     val specificJdks = jpackageFiles.map { jpackageFile =>
       val jdkRootFile = jpackageFile.getParentFile.getParentFile
       val arch        = if (is64 && ! jpackageFile.getAbsolutePath.contains("(x86)")) "64" else "32"
-      val jdkVersion  = s"java${jdkRootFile.getName.split("-")(1)}"
+      val jdkVersion  = s"java${jdkRootFile.getName.split("-")(1).split("\\.")(0)}"
       SpecifiedJDK(arch, jdkVersion, jpackageFile, javaHome = Some(jdkRootFile.getAbsolutePath))
     }
 
@@ -126,12 +126,11 @@ object JavaPackager {
 
     val fs = FileSystems.getDefault
     fs.getRootDirectories.asScala.toSeq.flatMap(r =>
-      Seq(fs.getPath(r.toString, "Program Files", "BellSoft"),
-        fs.getPath(r.toString, "Program Files (x86)", "BellSoft")))
+      Seq(fs.getPath(r.toString, "Program Files", "Java"),
+        fs.getPath(r.toString, "Program Files (x86)", "Java")))
       .map(_.toFile)
       .filter(f => f.exists && f.isDirectory)
       .flatMap(_.listFiles)
-      .filter(_.getName.contains("JDK"))
       .map(_ / "bin" / "jpackage.exe")
       .filter(_.exists)
   }

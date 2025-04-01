@@ -177,6 +177,11 @@ lazy val netlogo = project.in(file("netlogo-gui")).
     Test / unmanagedSourceDirectories      += baseDirectory.value / "src" / "tools",
     Compile / resourceDirectory            := baseDirectory.value / "resources",
     Compile / unmanagedResourceDirectories ++= (sharedResources / Compile / unmanagedResourceDirectories).value,
+    Compile / resourceGenerators           += Def.task {
+      import scala.sys.process.Process
+      Process("bash" :: "stage.sh" :: Nil, baseDirectory.value / "colorpicker").!
+      Seq(baseDirectory.value / "colorpicker" / "out")
+    }.taskValue,
     libraryDependencies ++= {
       lazy val osName = (System.getProperty("os.name"), System.getProperty("os.arch")) match {
         case (n, _) if n.startsWith("Linux") => "linux"
