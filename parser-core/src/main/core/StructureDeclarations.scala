@@ -17,4 +17,11 @@ object StructureDeclarations {
   case class Procedure(name: Identifier, isReporter: Boolean, inputs: Seq[Identifier], tokens: Seq[Token])
       extends Declaration
   case class Identifier(name: String, token: Token)
+
+  case class Libraries(token: Token, entries: Seq[LibraryEntry])
+      extends Declaration
+  case class LibraryEntry(name: String, options: Seq[LibraryOption], token: Token)
+  sealed trait LibraryOption
+  case class LibraryAlias(name: String, token: Token)
+      extends LibraryOption
 }

@@ -9,7 +9,8 @@ case class StructureResults(program: Program,
                         procedureTokens: Map[String, Iterable[Token]] = Map(),
                         includes: Seq[Token] = Seq(),
                         includedSources: Seq[String] = Seq(),
-                        extensions: Seq[Token] = Seq())
+                        extensions: Seq[Token] = Seq(),
+                        libraries: Seq[Token] = Seq())
 
 object StructureResults {
   val empty = StructureResults(Program.empty())

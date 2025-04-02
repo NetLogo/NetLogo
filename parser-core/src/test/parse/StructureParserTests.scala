@@ -104,6 +104,13 @@ class StructureParserTests extends AnyFunSuite {
     assertResult("reporter procedure FOO:[]{OTPL}:\n")(proc.dump)
   }
 
+  test("libraries") {
+    val results = compile("libraries [[foo [alias bar]]]")
+    assertResult(0)(results.procedures.size)
+    assertResult(1)(results.libraries.size)
+    assertResult("FOO")(results.libraries.head)
+  }
+
   test("includes") {
     val results = compile("__includes [\"foo.nls\"]")
     assertResult(0)(results.procedures.size)
