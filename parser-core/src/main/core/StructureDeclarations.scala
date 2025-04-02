@@ -30,4 +30,15 @@ object StructureDeclarations {
   }
 
   case class Identifier(name: String, token: Token)
+
+  case class Libraries(token: Token, entries: Seq[LibraryEntry])
+      extends Declaration {
+
+      override val start: Token = token
+      override val end: Token = token
+  }
+  case class LibraryEntry(name: String, options: Seq[LibraryOption], token: Token)
+  sealed trait LibraryOption
+  case class LibraryAlias(name: String, token: Token)
+      extends LibraryOption
 }
