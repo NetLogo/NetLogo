@@ -57,7 +57,8 @@ case class LibraryInfo(
   bundled: Boolean,
   installedVersionOpt: Option[String],
   minNetLogoVersion: Option[String],
-  rootURL: URL
+  rootURL: URL,
+  isExtension: Boolean
 ) {
 
 

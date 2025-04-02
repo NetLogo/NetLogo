@@ -178,14 +178,15 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
               val longDesc    = c.getString("longDescription")
               val version     = c.getString("version")
               val homepage    = new URL(c.getString("homepage"))
-
               val installedVersionPath = s"""$category."$codeName".installedVersion"""
               val installedVersion     = getStringOption(installedLibsConf, installedVersionPath)
               val bundled              = useBundled && bundledsConfig.hasPath(installedVersionPath) && installedVersion.isEmpty
               val minNetLogoVersion    = getStringOption(c, "minNetLogoVersion")
+              // Defaults to true for backwards compatibility.
+              val isExtension = if (c.hasPath("isExtension")) c.getBoolean("isExtension") else true
 
               LibraryInfo(name, codeName, shortDesc, longDesc, version, homepage, bundled, installedVersion,
-                          minNetLogoVersion, branchURL)
+                          minNetLogoVersion, branchURL, isExtension)
 
           }.toSeq
 

@@ -87,7 +87,7 @@ extends scala.util.parsing.combinator.Parsers {
     rep(declaration | procedure) <~ (eof | failure("keyword expected"))
 
   def declaration: Parser[Declaration] =
-    includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
+    libraries | includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
       variables("GLOBALS") | variables("TURTLES-OWN") | variables("PATCHES-OWN") |
       variables("LINKS-OWN") | breedVariables
 
@@ -95,6 +95,33 @@ extends scala.util.parsing.combinator.Parsers {
     keyword("__INCLUDES") ~! stringList ^^ {
       case token ~ (names ~ closeBracket) =>
         Includes(token, names, closeBracket) }
+
+  def libraries: Parser[Libraries] =
+    keyword("LIBRARIES") ~! librariesBlock ^^ {
+      case token ~ entries =>
+        Libraries(token, entries) }
+
+  def librariesBlock: Parser[Seq[LibraryEntry]] =
+    openBracket ~> commit(rep(libraryEntry)) <~ closeBracket
+
+  def libraryEntry: Parser[LibraryEntry] =
+    openBracket ~> identifier ~ rep(libraryOption) <~ closeBracket ^^ {
+      case ident ~ options =>
+        LibraryEntry(ident.name, options, ident.token)
+    }
+
+  def libraryOption: Parser[LibraryOption] =
+    libraryAlias
+
+  def libraryAlias: Parser[LibraryAlias] =
+    openBracket ~> libraryAliasKeyword ~> identifier <~ closeBracket ^^ {
+      case ident =>
+        LibraryAlias(ident.name, ident.token) }
+
+  def libraryAliasKeyword: Parser[Token] =
+    acceptMatch("ALIAS", {
+      case token @ Token(_, TokenType.Ident, "ALIAS") =>
+        token })
 
   def extensions: Parser[Extensions] =
     keyword("EXTENSIONS") ~! identifierList ^^ {
