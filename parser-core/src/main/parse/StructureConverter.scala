@@ -15,6 +15,10 @@ object StructureConverter {
               displayName: Option[String],
               oldResults: StructureResults,
               subprogram: Boolean): StructureResults = {
+    val ls = declarations.collect {
+      case l: Libraries =>
+        l.entries.map(_.token)
+    }.flatten
     val is = declarations.collect {
       case i: Includes =>
         i.names
@@ -38,7 +42,8 @@ object StructureConverter {
         declarations.collect {
           case e: Extensions =>
             e.names.map(_.token)
-        }.flatten)
+        }.flatten,
+      libraries = oldResults.libraries ++ ls)
   }
 
   def buildProcedure(p: Procedure, displayName: Option[String]): (FrontEndProcedure, Iterable[Token]) = {
