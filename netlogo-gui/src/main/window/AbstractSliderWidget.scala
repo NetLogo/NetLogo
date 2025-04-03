@@ -7,7 +7,6 @@ import java.awt.event.{ ActionEvent, ActionListener, FocusAdapter, FocusEvent, K
                         MouseEvent, MouseWheelEvent, MouseWheelListener }
 import java.lang.NumberFormatException
 import javax.swing.{ BorderFactory, JLabel, JSlider, JTextField, SwingConstants }
-import javax.swing.event.{ ChangeEvent, ChangeListener }
 import javax.swing.text.{ AttributeSet, PlainDocument }
 
 import org.nlogo.agent.SliderConstraint
@@ -116,7 +115,14 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   val nameComponent = new Label(I18N.gui.get("edit.slider.previewName"))
   val valueComponent = new TextField
   val unitsComponent = new Label("")
-  val slider = new JSlider(0, ((maximum - minimum) / increment).toInt, 50)
+  val slider = new JSlider(0, ((maximum - minimum) / increment).toInt, 50) {
+    override def setValue(value: Int): Unit = {
+      super.setValue(value)
+
+      if (getValueIsAdjusting)
+        AbstractSliderWidget.this.value = minimum + value * increment
+    }
+  }
 
   if (boldName) {
     nameComponent.setFont(nameComponent.getFont.deriveFont(Font.BOLD))
@@ -140,6 +146,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     val mouseWheelListener = new MouseWheelListener {
       def mouseWheelMoved(e: MouseWheelEvent): Unit = {
         slider.setValue(slider.getValue - e.getWheelRotation)
+        value = minimum + slider.getValue * increment
       }
     }
 
@@ -152,8 +159,10 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
       override def keyPressed(e: KeyEvent): Unit = {
         if (e.getKeyCode == KeyEvent.VK_LEFT) {
           slider.setValue(slider.getValue - 1)
+          value = minimum + slider.getValue * increment
         } else if (e.getKeyCode == KeyEvent.VK_RIGHT) {
           slider.setValue(slider.getValue + 1)
+          value = minimum + slider.getValue * increment
         }
       }
     }
@@ -172,13 +181,6 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   add(valueComponent)
   add(unitsComponent)
   add(slider)
-
-  slider.addChangeListener(new ChangeListener {
-    override def stateChanged(e: ChangeEvent): Unit = {
-      if (slider.getValueIsAdjusting)
-        value = minimum + slider.getValue * increment
-    }
-  })
 
   def constraint = sliderData.constraint
   def setSliderConstraint(con: SliderConstraint) = {
