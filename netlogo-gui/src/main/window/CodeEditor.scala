@@ -128,3 +128,10 @@ class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, colla
     nameLabel.setForeground(InterfaceColors.dialogText())
   }
 }
+
+class NonEmptyCodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer)
+  extends CodeEditor(accessor, colorizer) {
+
+  override def get: Option[String] =
+    super.get.map(_.trim).filter(_.nonEmpty)
+}
