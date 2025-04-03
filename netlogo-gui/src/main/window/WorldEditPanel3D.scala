@@ -93,6 +93,7 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
     setFont(getFont.deriveFont(9.0f))
   }
 
+  // the wrapping properties are here to control the variables but they are not added to the GUI (Isaac B 4/2/25)
   private val wrappingX: BooleanEditor =
     new BooleanEditor(
       new PropertyAccessor(
@@ -286,26 +287,8 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
       add(maxPzcorLabel, c)
     }
 
-    val previewContainer = new JPanel(new GridBagLayout) with Transparent {
-      val c = new GridBagConstraints
-
-      c.gridx = 0
-      c.fill = GridBagConstraints.BOTH
-      c.weightx = 1
-      c.weighty = 1
-      c.insets = new Insets(6, 6, 6, 6)
-
-      add(previewPanel, c)
-
-      c.anchor = GridBagConstraints.WEST
-      c.fill = GridBagConstraints.NONE
-      c.weightx = 0
-      c.weighty = 0
-      c.insets = new Insets(0, 6, 6, 6)
-
-      add(wrappingX, c)
-      add(wrappingY, c)
-      add(wrappingZ, c)
+    val previewContainer = new JPanel with Transparent {
+      add(previewPanel)
     }
 
     val worldPanel = new JPanel(new BorderLayout) with Transparent {
