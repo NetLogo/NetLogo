@@ -55,7 +55,7 @@ abstract class JobWidget(val random: MersenneTwisterFast)
       error(e.error)
     }
 
-    if (error() == null) {
+    if (error().isEmpty) {
       setForeground(java.awt.Color.BLACK)
     } else {
       setForeground(java.awt.Color.RED)

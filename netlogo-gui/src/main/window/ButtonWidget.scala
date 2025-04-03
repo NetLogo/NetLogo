@@ -213,7 +213,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
   }
 
   def keyTriggered(){
-    if (error() == null){
+    if (error().isEmpty){
       buttonUp = false
       respondToClick(true)
     }
@@ -230,7 +230,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
   private var lastMousePressedWasPopupTrigger = false
 
   def mouseReleased(e:MouseEvent){
-    if (error() == null && ! e.isPopupTrigger() && isEnabled() &&
+    if (error().isEmpty && ! e.isPopupTrigger() && isEnabled() &&
             ! lastMousePressedWasPopupTrigger && ! disabledWaitingForSetup){
       e.translatePoint(getX(), getY())
       respondToClick(getBounds().contains(e.getPoint()))
@@ -242,7 +242,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
   private def respondToClick(inBounds: Boolean): Unit = {
     if(disabledWaitingForSetup){
       buttonUp = true
-    } else if (error() == null) {
+    } else if (error().isEmpty) {
       if (forever) {
         if (inBounds) {
           foreverOn = !foreverOn
@@ -261,11 +261,11 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
   def mousePressed(e: MouseEvent): Unit = {
     new Events.InputBoxLoseFocusEvent().raise(this)
     lastMousePressedWasPopupTrigger = e.isPopupTrigger()
-    if (error() == null && !e.isPopupTrigger && hasButton1(e) && isEnabled && !disabledWaitingForSetup) buttonUp = false
+    if (error().isEmpty && !e.isPopupTrigger && hasButton1(e) && isEnabled && !disabledWaitingForSetup) buttonUp = false
   }
 
   def mouseDragged(e: MouseEvent): Unit = {
-    if (error() == null){
+    if (error().isEmpty){
       if (hasButton1(e) && isEnabled) {
         e.translatePoint(getX(), getY())
         if (getBounds().contains(e.getPoint()) && !e.isPopupTrigger && ! disabledWaitingForSetup) {
@@ -314,7 +314,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
   }
 
   def action(): Unit = {
-    if (error() == null) {
+    if (error().isEmpty) {
       // warning, confusing code ahead. not sure if there's a
       // clearer way to write this hard to know without trying.
       // it looks like maybe the forever button and the once button
@@ -462,7 +462,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
 
       keyLabel.setForeground(InterfaceColors.buttonText())
       nameLabel.setForeground(
-        if (error() == null) {
+        if (error().isEmpty) {
           InterfaceColors.buttonText()
         } else {
           InterfaceColors.widgetTextError()
@@ -479,7 +479,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
       )
 
       keyLabel.setForeground(InterfaceColors.buttonTextPressed())
-      if (error() == null)
+      if (error().isEmpty)
         nameLabel.setForeground(InterfaceColors.buttonTextPressed())
       foreverLabel.setIcon(foreverIconPressed)
     }
