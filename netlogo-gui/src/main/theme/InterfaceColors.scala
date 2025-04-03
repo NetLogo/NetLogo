@@ -659,6 +659,12 @@ object InterfaceColors {
 
   def primaryButtonText = Color.WHITE
 
+  def primaryButtonFocus =
+    getTheme match {
+      case "classic" | "light" => MediumBlue
+      case "dark" => Color.WHITE
+    }
+
   def secondaryButtonBackground =
     getTheme match {
       case "classic" | "light" => MediumGray
@@ -684,6 +690,12 @@ object InterfaceColors {
     }
 
   def secondaryButtonText = Color.WHITE
+
+  def secondaryButtonFocus =
+    getTheme match {
+      case "classic" | "light" => MediumBlue
+      case "dark" => Color.WHITE
+    }
 
   def textAreaBackground =
     getTheme match {
