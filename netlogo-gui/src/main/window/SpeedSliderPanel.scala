@@ -6,6 +6,7 @@ import java.awt.{ Color, Component, Dimension, Graphics, GridBagConstraints, Gri
 import java.awt.event.{ MouseEvent, MouseListener, MouseWheelEvent, MouseWheelListener }
 import javax.swing.{ JLabel, JPanel, JSlider, SwingConstants }
 import javax.swing.event.{ ChangeEvent, ChangeListener }
+import javax.swing.plaf.basic.BasicSliderUI
 
 import org.nlogo.core.I18N
 import org.nlogo.log.LogManager
@@ -162,8 +163,13 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
   }
 
   class SpeedSlider(defaultSpeed: Int) extends JSlider(-110, 112, defaultSpeed) with MouseWheelListener {
+    private val sliderUI = new SpeedSliderUI
+    private var lastThumbLocation = 0
+
     setExtent(1)
     setToolTipText(I18N.gui("tooltip"))
+    setUI(sliderUI)
+
     addMouseWheelListener(this)
 
     override def getPreferredSize: Dimension =
@@ -180,6 +186,12 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
       setValue(getValue - e.getWheelRotation)
     }
 
+    override def setValue(value: Int): Unit = {
+      lastThumbLocation = sliderUI.getThumbLocation
+
+      super.setValue(value)
+    }
+
     override def paintComponent(g: Graphics): Unit = {
       val g2d = Utils.initGraphics2D(g)
 
@@ -187,6 +199,48 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
       g2d.drawLine(getWidth / 2 - 1, getHeight / 4, getWidth / 2 - 1, getHeight * 3 / 4)
 
       super.paintComponent(g)
+    }
+
+    private class SpeedSliderUI extends BasicSliderUI(this) {
+      def getThumbLocation: Int =
+        thumbRect.x
+
+      override def getThumbSize: Dimension =
+        new Dimension(12, 12)
+
+      override def paintTrack(g: Graphics): Unit = {
+        val g2d = Utils.initGraphics2D(g)
+
+        val startY = trackRect.y + trackRect.height / 2 - 1
+
+        if (isEnabled) {
+          g2d.setColor(InterfaceColors.speedSliderBarBackgroundFilled)
+        } else {
+          g2d.setColor(InterfaceColors.speedSliderBarBackground)
+        }
+
+        g2d.fillRoundRect(trackRect.x, startY, thumbRect.x, 2, 2, 2)
+        g2d.setColor(InterfaceColors.speedSliderBarBackground)
+        g2d.fillRoundRect(thumbRect.x, startY, trackRect.width - thumbRect.x, 2, 2, 2)
+      }
+
+      override def paintThumb(g: Graphics): Unit = {
+        if (!isEnabled)
+          setThumbLocation(lastThumbLocation, 0)
+
+        val g2d = Utils.initGraphics2D(g)
+
+        val width = getThumbSize.width
+        val startY = thumbRect.getCenterY.toInt - width / 2
+
+        if (isEnabled) {
+          g2d.setColor(InterfaceColors.speedSliderThumb)
+        } else {
+          g2d.setColor(InterfaceColors.speedSliderThumbDisabled)
+        }
+
+        g2d.fillOval(thumbRect.x + thumbRect.width / 2 - width / 2, startY, width, width)
+      }
     }
   }
 }

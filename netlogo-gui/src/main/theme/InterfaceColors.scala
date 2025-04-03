@@ -146,6 +146,14 @@ object InterfaceColors {
       case "dark" => new Color(204, 204, 204)
     }
 
+  def speedSliderBarBackground = MediumGray
+
+  def speedSliderBarBackgroundFilled = MediumBlue
+
+  def speedSliderThumb = MediumBlue
+
+  def speedSliderThumbDisabled = MediumGray
+
   def buttonBackground =
     getTheme match {
       case "classic" => ClassicLavender
