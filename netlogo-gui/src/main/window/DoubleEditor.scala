@@ -41,3 +41,8 @@ class DoubleEditor(accessor: PropertyAccessor[Double]) extends PropertyEditor(ac
     editor.syncTheme()
   }
 }
+
+class StrictlyPositiveDoubleEditor(accessor: PropertyAccessor[Double]) extends DoubleEditor(accessor) {
+  override def get: Option[Double] =
+    super.get.filter(_ > 0)
+}

@@ -18,6 +18,8 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
 
   protected var newWrapZ: Boolean = _
 
+  override def editPanel: EditPanel = new WorldEditPanel3D(this)
+
   def minPzcor(minPzcor: Int): Unit = {
     if (minPzcor <= 0) {
       newMinZ = minPzcor

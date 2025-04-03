@@ -18,6 +18,8 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
 
   protected val world = workspace.world
 
+  override def editPanel: EditPanel = new WorldEditPanel2D(this)
+
   override def cornerConfigs: Seq[OriginConfiguration] = {
     Seq(
       OriginConfiguration(I18N.gui.get("edit.viewSettings.origin.location.corner.bottomLeft"), 0, 0),

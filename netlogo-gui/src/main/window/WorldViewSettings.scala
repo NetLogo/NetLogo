@@ -51,8 +51,6 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
   def cornerConfigs: Seq[OriginConfiguration]
   def edgeConfigs: Seq[OriginConfiguration]
 
-  override def editPanel: EditPanel = new WorldEditPanel(this)
-
   def getSelectedType: OriginType =
     originType
 

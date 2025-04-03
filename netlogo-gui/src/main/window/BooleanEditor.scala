@@ -8,7 +8,9 @@ import org.nlogo.swing.CheckBox
 import org.nlogo.theme.InterfaceColors
 
 class BooleanEditor(accessor: PropertyAccessor[Boolean]) extends PropertyEditor(accessor) {
-  private val checkbox = new CheckBox(accessor.name, _ => accessor.changed())
+  private val checkbox = new CheckBox(accessor.name) {
+    addItemListener(_ => accessor.changed())
+  }
 
   setLayout(new BorderLayout(0, 0))
 

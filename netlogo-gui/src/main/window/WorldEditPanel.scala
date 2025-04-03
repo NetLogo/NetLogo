@@ -2,105 +2,23 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, GridBagConstraints, GridBagLayout }
-import javax.swing.{ JLabel, JPanel }
-import javax.swing.border.TitledBorder
+import org.nlogo.swing.ComboBox
 
-import org.nlogo.core.I18N
-import org.nlogo.swing.{ ComboBox, Transparent }
-import org.nlogo.theme.InterfaceColors
+abstract class WorldEditPanel(target: WorldViewSettings) extends EditPanel(target) {
+  protected val previewPanel = new WorldPreview(200, 200)
 
-class WorldEditPanel(target: WorldViewSettings) extends EditPanel(target) {
-  private implicit val i18nPrefix = I18N.Prefix("edit.viewSettings")
-  private val previewPanel = new WorldPreview(200, 200)
-
-  private var editors: List[IntegerEditor] = Nil
-
-  private val originTypes = new ComboBox[OriginType](target.originTypes) {
+  protected val originTypes = new ComboBox[OriginType](target.originTypes) {
     addItemListener(_ => selectType)
   }
 
-  private val originConfigs = new ComboBox[OriginConfiguration] {
+  protected val originConfigs = new ComboBox[OriginConfiguration] {
     addItemListener(_ => selectConfig)
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] = Seq()
+  protected def editors: Seq[IntegerEditor]
 
-  def init(): PropertyEditor[_] = {
-    setLayout(new BorderLayout)
-    val panelGridbag = new GridBagLayout
-    val worldPanel = new JPanel(new BorderLayout) with Transparent {
-      setBorder(new TitledBorder(I18N.gui("world")) {
-        setTitleColor(InterfaceColors.dialogText())
-      })
-      add(makeButtonPanel(target), BorderLayout.WEST)
-      add(new JPanel(new BorderLayout) with Transparent {
-        add(previewPanel, BorderLayout.CENTER)
-        val worldStaticPropertiesPanel = new JPanel(panelGridbag) with Transparent
-        // addProperties(worldStaticPropertiesPanel,
-        //               target.wrappingProperties,
-        //               panelGridbag)
-        add(worldStaticPropertiesPanel, BorderLayout.SOUTH)
-      }, BorderLayout.CENTER)
-    }
-
-    val viewPanel = new JPanel(panelGridbag) with Transparent {
-      setBorder(new TitledBorder(I18N.gui("view")) {
-        setTitleColor(InterfaceColors.dialogText())
-      })
-    }
-
-    // addProperties(viewPanel, target.viewProperties, panelGridbag)
-
-    val modelPanel = new JPanel(panelGridbag) with Transparent {
-      setBorder(new TitledBorder(I18N.gui("tickCounter")) {
-        setTitleColor(InterfaceColors.dialogText())
-      })
-    }
-
-    // addProperties(modelPanel, target.modelProperties, panelGridbag)
-
-    add(worldPanel, BorderLayout.NORTH)
-    add(viewPanel, BorderLayout.CENTER)
-    add(modelPanel, BorderLayout.SOUTH)
-
-    target.setTypeAndConfig()
-
-    originTypes.setSelectedItem(target.getSelectedType)
-    target.getSelectedConfig.foreach(originConfigs.setSelectedItem)
-
-    // editors.foreach(_.refresh)
-
-    if (editors(0).isEnabled) editors(0) else editors(1)
-  }
-
-  private def makeButtonPanel(target: WorldViewSettings) = {
-    val buttonsLayout = new GridBagLayout
-    val buttons = new JPanel(buttonsLayout) with Transparent
-    val c = new GridBagConstraints
-
-    buttons.add(new JLabel(I18N.gui("origin.location") + " ") {
-      setForeground(InterfaceColors.dialogText())
-    }, c)
-
-    c.gridwidth = GridBagConstraints.REMAINDER
-    c.anchor = GridBagConstraints.EAST
-
-    buttons.add(originTypes, c)
-    buttons.add(originConfigs, c)
-
-    // try
-    //   addProperties(buttons, target.dimensionProperties, buttonsLayout)
-    // catch {
-    //   case t: Throwable => t.printStackTrace
-    // }
-
-    editors = propertyEditors.map(_.asInstanceOf[IntegerEditor]).toList
-
-    buttons
-  }
-
-  override def previewChanged(field: String, value: Option[Any]): Unit = {
+  // this is weird old code that probably could be improved, it's just here for compatibility with other old code (Isaac B 4/2/25)
+  protected def previewChanged(field: String, value: Option[Any]): Unit = {
     value match {
       case Some(i: Int) =>
         previewPanel.updateInt(field, i)

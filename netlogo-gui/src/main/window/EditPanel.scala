@@ -15,8 +15,6 @@ abstract class EditPanel(target: Editable) extends JPanel with Transparent with 
 
   def propertyEditors: Seq[PropertyEditor[_]]
 
-  def previewChanged(field: String, value: Option[Any]) { }  // overridden in WorldEditPanel
-
   def isResizable: Boolean = false
 
   def apply() {

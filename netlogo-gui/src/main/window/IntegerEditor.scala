@@ -43,3 +43,13 @@ class IntegerEditor(accessor: PropertyAccessor[Int]) extends PropertyEditor(acce
     editor.syncTheme()
   }
 }
+
+class NegativeIntegerEditor(accessor: PropertyAccessor[Int]) extends IntegerEditor(accessor) {
+  override def get: Option[Int] =
+    super.get.filter(_ <= 0)
+}
+
+class PositiveIntegerEditor(accessor: PropertyAccessor[Int]) extends IntegerEditor(accessor) {
+  override def get: Option[Int] =
+    super.get.filter(_ >= 0)
+}
