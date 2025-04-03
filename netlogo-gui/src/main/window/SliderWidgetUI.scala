@@ -87,25 +87,25 @@ class SliderWidgetUI(widget: AbstractSliderWidget, slider: JSlider) extends Basi
     if (widget.vertical) {
       val height = (getThumbSize.height * widget.getZoomFactor).toInt
       val startX = thumbRect.getCenterX.toInt - height / 2
+      g2d.setColor(InterfaceColors.sliderThumbBorder)
+      g2d.fillOval(startX, thumbRect.y + thumbRect.height / 2 - height / 2, height, height)
       if (pressed) {
         g2d.setColor(InterfaceColors.sliderThumbBackgroundPressed)
       } else {
         g2d.setColor(InterfaceColors.sliderThumbBackground)
       }
-      g2d.fillOval(startX, thumbRect.y + thumbRect.height / 2 - height / 2, height, height)
-      g2d.setColor(InterfaceColors.sliderThumbBorder)
-      g2d.drawOval(startX, thumbRect.y + thumbRect.height / 2 - height / 2, height - 1, height - 1)
+      g2d.fillOval(startX + 1, thumbRect.y + thumbRect.height / 2 - height / 2 + 1, height - 2, height - 2)
     } else {
       val width = (getThumbSize.width * widget.getZoomFactor).toInt
       val startY = thumbRect.getCenterY.toInt - width / 2
+      g2d.setColor(InterfaceColors.sliderThumbBorder)
+      g2d.fillOval(thumbRect.x + thumbRect.width / 2 - width / 2, startY, width, width)
       if (pressed) {
         g2d.setColor(InterfaceColors.sliderThumbBackgroundPressed)
       } else {
         g2d.setColor(InterfaceColors.sliderThumbBackground)
       }
-      g2d.fillOval(thumbRect.x + thumbRect.width / 2 - width / 2, startY, width, width)
-      g2d.setColor(InterfaceColors.sliderThumbBorder)
-      g2d.drawOval(thumbRect.x + thumbRect.width / 2 - width / 2, startY, width - 1, width - 1)
+      g2d.fillOval(thumbRect.x + thumbRect.width / 2 - width / 2 + 1, startY + 1, width - 2, width - 2)
     }
   }
 
