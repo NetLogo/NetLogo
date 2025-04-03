@@ -234,8 +234,13 @@ public class Renderer
 
   public void reshape(GLAutoDrawable gLDrawable, int x, int y, int width, int height) {
     GL2 gl = (GL2) gLDrawable.getGL();
-    this.width = (int)(width * uiScale);
-    this.height = (height > 0) ? (int)(height * uiScale) : 1;
+    if (System.getProperty("os.name").toLowerCase().startsWith("linux")) {
+      this.width = (int)(width * uiScale);
+      this.height = (height > 0) ? (int)(height * uiScale) : 1;
+    } else {
+      this.width = width;
+      this.height = height > 0 ? height : 1;
+    }
     ratio = (float) this.width / (float) this.height;
 
     mainViewport(gl);
