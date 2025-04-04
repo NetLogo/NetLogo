@@ -3,12 +3,10 @@
 package org.nlogo.window
 
 import java.awt.{ GridBagConstraints, Insets }
-import javax.swing.JLabel
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.theme.InterfaceColors
 
 class DummyChooserEditPanel(target: DummyChooserWidget, compiler: CompilerServices, colorizer: Colorizer)
   extends WidgetEditPanel(target) {
@@ -32,9 +30,7 @@ class DummyChooserEditPanel(target: DummyChooserWidget, compiler: CompilerServic
         () => apply()),
       compiler, colorizer)
 
-  private val choicesLabel = new JLabel(I18N.gui.get("edit.chooser.example")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val choicesLabeled = new LabeledEditor(choicesWrapper, I18N.gui.get("edit.chooser.example"))
 
   private val oldSize =
     new BooleanEditor(
@@ -55,13 +51,9 @@ class DummyChooserEditPanel(target: DummyChooserWidget, compiler: CompilerServic
 
     add(name, c)
 
-    c.insets = new Insets(0, 6, 3, 6)
-
-    add(choicesWrapper, c)
-
     c.insets = new Insets(0, 6, 6, 6)
 
-    add(choicesLabel, c)
+    add(choicesLabeled, c)
     add(oldSize, c)
 
     name.requestFocus()
@@ -73,6 +65,6 @@ class DummyChooserEditPanel(target: DummyChooserWidget, compiler: CompilerServic
   override def isResizable: Boolean = true
 
   override def syncExtraComponents(): Unit = {
-    choicesLabel.setForeground(InterfaceColors.dialogText)
+    choicesLabeled.syncTheme()
   }
 }

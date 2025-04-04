@@ -3,12 +3,10 @@
 package org.nlogo.window
 
 import java.awt.{ GridBagConstraints, Insets }
-import javax.swing.JLabel
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.theme.InterfaceColors
 
 class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colorizer: Colorizer)
   extends WidgetEditPanel(target) {
@@ -50,9 +48,7 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
         target.setUnits(_),
         () => apply()))
 
-  private val decimalLabel = new JLabel(I18N.gui.get("edit.monitor.precision")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val decimalLabeled = new LabeledEditor(decimalPlaces, I18N.gui.get("edit.monitor.precision"))
 
   private val fontSize =
     new IntegerEditor(
@@ -91,25 +87,21 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
 
     c.gridy = 2
     c.gridwidth = 1
-    c.insets = new Insets(0, 6, 3, 6)
+    c.insets = new Insets(0, 6, 6, 6)
 
-    add(decimalPlaces, c)
+    add(decimalLabeled, c)
 
-    c.insets = new Insets(0, 0, 3, 6)
+    c.insets = new Insets(0, 0, 6, 6)
 
     add(units, c)
 
     c.gridy = 3
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(decimalLabel, c)
-
-    c.gridy = 4
     c.gridwidth = 2
+    c.insets = new Insets(0, 6, 6, 6)
 
     add(fontSize, c)
 
-    c.gridy = 5
+    c.gridy = 4
 
     add(oldSize, c)
 
@@ -122,6 +114,6 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
   override def isResizable: Boolean = true
 
   override def syncExtraComponents(): Unit = {
-    decimalLabel.setForeground(InterfaceColors.dialogText)
+    decimalLabeled.syncTheme()
   }
 }

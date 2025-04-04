@@ -3,12 +3,10 @@
 package org.nlogo.window
 
 import java.awt.{ GridBagConstraints, Insets }
-import javax.swing.JLabel
 
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
-import org.nlogo.theme.InterfaceColors
 
 class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorizer: Colorizer)
   extends WidgetEditPanel(target) {
@@ -33,9 +31,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         () => apply()),
       colorizer, false)
 
-  private val minimumLabel = new JLabel(I18N.gui.get("edit.slider.minmax.message")) {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val minimumLabeled = new LabeledEditor(minimumCode, I18N.gui.get("edit.slider.minmax.message"))
 
   private val incrementCode =
     new ReporterLineEditor(
@@ -106,27 +102,23 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
 
     c.gridy = 1
     c.gridwidth = 1
+    c.anchor = GridBagConstraints.NORTHWEST
     c.fill = GridBagConstraints.NONE
     c.weightx = 0
-    c.insets = new Insets(0, 6, 3, 6)
+    c.insets = new Insets(0, 6, 6, 6)
 
-    add(minimumCode, c)
+    add(minimumLabeled, c)
 
-    c.insets = new Insets(0, 0, 3, 6)
+    c.insets = new Insets(0, 0, 6, 6)
 
     add(incrementCode, c)
     add(maximumCode, c)
 
     c.gridy = 2
-    c.anchor = GridBagConstraints.WEST
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(minimumLabel, c)
-
-    c.gridy = 3
     c.gridwidth = 2
     c.fill = GridBagConstraints.HORIZONTAL
     c.weightx = 1
+    c.insets = new Insets(0, 6, 6, 6)
 
     add(value, c)
 
@@ -137,7 +129,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
 
     add(units, c)
 
-    c.gridy = 4
+    c.gridy = 3
     c.gridwidth = 3
     c.fill = GridBagConstraints.HORIZONTAL
     c.weightx = 1
@@ -145,7 +137,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
 
     add(vertical, c)
 
-    c.gridy = 5
+    c.gridy = 4
 
     add(oldSize, c)
   }
@@ -156,6 +148,6 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
   override def isResizable: Boolean = true
 
   override def syncExtraComponents(): Unit = {
-    minimumLabel.setForeground(InterfaceColors.dialogText)
+    minimumLabeled.syncTheme()
   }
 }

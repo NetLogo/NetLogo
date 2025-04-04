@@ -3,11 +3,10 @@
 package org.nlogo.lab.gui
 
 import java.awt.{ GridBagConstraints, Insets }
-import javax.swing.JLabel
 
 import org.nlogo.core.I18N
-import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.{ BooleanEditor, EditPanel, FilePathEditor, IntegerEditor, PropertyAccessor, PropertyEditor }
+import org.nlogo.window.{ BooleanEditor, EditPanel, FilePathEditor, IntegerEditor, LabeledEditor, PropertyAccessor,
+                          PropertyEditor }
 
 class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadsheetFile: String, tableFile: String,
                           statsFile: String, listsFile: String, defaultProcessors: String, totalProcessors: String)
@@ -71,11 +70,9 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
         target.setUpdatePlotsAndMonitors(_),
         () => apply()))
 
-  private val updateLabel = new JLabel(s"<html>${
-    I18N.gui.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.info")}</html>") {
-
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val updateLabeled =
+    new LabeledEditor(updatePlotsAndMonitors,
+                      s"<html>${I18N.gui.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.info")}</html>")
 
   private val threadCount =
     new IntegerEditor(
@@ -86,10 +83,9 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
         target.setThreadCount(_),
         () => apply()))
 
-  private val threadCountLabel = new JLabel(s"<html>${I18N.gui.getN("tools.behaviorSpace.runoptions.simultaneousruns.info", defaultProcessors,
-                                                      totalProcessors)}</html>") {
-    setFont(getFont.deriveFont(9.0f))
-  }
+  private val threadCountLabeled =
+    new LabeledEditor(threadCount, s"<html>${I18N.gui.getN("tools.behaviorSpace.runoptions.simultaneousruns.info",
+                                                           defaultProcessors, totalProcessors)}</html>")
 
   locally {
     val c = new GridBagConstraints
@@ -107,22 +103,8 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
     add(stats, c)
     add(lists, c)
     add(updateView, c)
-
-    c.insets = new Insets(0, 6, 3, 6)
-
-    add(updatePlotsAndMonitors, c)
-
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(updateLabel, c)
-
-    c.insets = new Insets(0, 6, 3, 6)
-
-    add(threadCount, c)
-
-    c.insets = new Insets(0, 6, 6, 6)
-
-    add(threadCountLabel, c)
+    add(updateLabeled, c)
+    add(threadCountLabeled, c)
 
     spreadsheet.requestFocus()
   }
@@ -131,7 +113,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
     Seq(spreadsheet, table, stats, lists, updateView, updatePlotsAndMonitors, threadCount)
 
   override def syncExtraComponents(): Unit = {
-    updateLabel.setForeground(InterfaceColors.dialogText)
-    threadCountLabel.setForeground(InterfaceColors.dialogText)
+    updateLabeled.syncTheme()
+    threadCountLabeled.syncTheme()
   }
 }
