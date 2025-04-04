@@ -120,7 +120,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
       super.setValue(value)
 
       if (getValueIsAdjusting)
-        AbstractSliderWidget.this.value = minimum + value * increment
+        updateValue()
     }
   }
 
@@ -146,7 +146,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     val mouseWheelListener = new MouseWheelListener {
       def mouseWheelMoved(e: MouseWheelEvent): Unit = {
         slider.setValue(slider.getValue - e.getWheelRotation)
-        value = minimum + slider.getValue * increment
+        updateValue()
       }
     }
 
@@ -159,11 +159,11 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
       override def keyPressed(e: KeyEvent): Unit = {
         if (e.getKeyCode == KeyEvent.VK_LEFT) {
           slider.setValue(slider.getValue - 1)
-          value = minimum + slider.getValue * increment
         } else if (e.getKeyCode == KeyEvent.VK_RIGHT) {
           slider.setValue(slider.getValue + 1)
-          value = minimum + slider.getValue * increment
         }
+
+        updateValue()
       }
     }
 
@@ -222,6 +222,12 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     slider.setValue(((value - minimum) / increment).round.asInstanceOf[Int])
     repaint()
     ret
+  }
+
+  // sets the internal value based on the slider position
+  // used for alternative input methods like keys, scrolling, and clicking (Isaac B 4/4/25)
+  def updateValue(): Unit = {
+    value = minimum + slider.getValue * increment
   }
 
   def units = _units

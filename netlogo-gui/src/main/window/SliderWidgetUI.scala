@@ -130,6 +130,8 @@ class SliderWidgetUI(widget: AbstractSliderWidget, slider: JSlider) extends Basi
           } else {
             slider.setValue(valueForXPosition(e.getPoint.x))
           }
+
+          widget.updateValue()
         }
       }
     }
