@@ -819,8 +819,6 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   private def placeShadowWidget(): Unit = {
-    interceptPane.disableIntercept()
-
     newWidget.foreach(widget => {
       widget.selected(true)
       widget.foreground()
@@ -828,6 +826,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
       widget.setPlacing(false)
 
       placedShadowWidget = true
+
+      setInterfaceMode(InterfaceMode.Interact, false)
 
       widget.widget.getEditable match {
         case e: Editable =>
@@ -850,6 +850,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       removeWidget(widget)
       newWidget = None
       revalidate()
+      repaint()
     })
   }
 
