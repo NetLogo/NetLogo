@@ -96,13 +96,14 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
     // with the widget itself, but the alternative is to make a new event just to handle this, but
     // that would be kludgy in itself, and a great deal less simple... - ST 12/22/01
     for(wrapper <- wrapperOption) {
+      val borderPad = wrapper.getBorderSize * 2
       val prefSize = wrapper.getPreferredSize
       if (wrapper.isNew) {
         val currentSize = wrapper.getSize
         if (prefSize.width != currentSize.width)
-          prefSize.width = wrapper.snapToGrid(prefSize.width)
+          prefSize.width = wrapper.snapToGrid(prefSize.width - borderPad) + borderPad
         if (prefSize.height != currentSize.height)
-          prefSize.height = wrapper.snapToGrid(prefSize.height)
+          prefSize.height = wrapper.snapToGrid(prefSize.height - borderPad) + borderPad
         wrapper.setSize(prefSize)
       }
       else if (originalPreferredSize != prefSize) {
@@ -112,9 +113,9 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
                                          else prefSize.height)
         val currentSize = wrapper.getSize
         if (width != currentSize.width)
-          width = wrapper.snapToGrid(width)
+          width = wrapper.snapToGrid(width - borderPad) + borderPad
         if (prefSize.height != currentSize.height)
-          height = wrapper.snapToGrid(height)
+          height = wrapper.snapToGrid(height - borderPad) + borderPad
         wrapper.setSize(width, height)
         originalPreferredSize = wrapper.getPreferredSize
       }

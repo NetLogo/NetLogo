@@ -122,6 +122,9 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     repaint()
   }
 
+  def getBorderSize: Int =
+    BorderSize
+
   override def isValidateRoot: Boolean =
     true
 
@@ -176,13 +179,6 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     if (sizeChanged) {
       doLayout()
       revalidateInterfacePanel()
-    }
-  }
-
-  def snapBounds(): Unit = {
-    if (interfacePanel.workspace.snapOn) {
-      setBounds(interfacePanel.snapToGrid(getX), interfacePanel.snapToGrid(getY), interfacePanel.snapToGrid(getWidth),
-                interfacePanel.snapToGrid(getHeight))
     }
   }
 

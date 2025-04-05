@@ -9,6 +9,8 @@ trait WidgetWrapperInterface {
   def getPreferredSize: Dimension
   def getMaximumSize: Dimension
 
+  def getBorderSize: Int
+
   def getUnselectedLocation: Point
 
   def setLocation(p: Point): Unit
