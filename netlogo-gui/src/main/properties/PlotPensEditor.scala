@@ -2,8 +2,9 @@
 
 package org.nlogo.properties
 
-import java.awt.{ BorderLayout, Color, Cursor, Dimension, Font, GridBagConstraints }
-import javax.swing.{ AbstractCellEditor, GroupLayout, JLabel, JPanel, JTable, LayoutStyle }
+import java.awt.{ BorderLayout, Color, Cursor, Dimension, Font, Graphics, GridBagConstraints }
+import java.awt.event.ActionEvent
+import javax.swing.{ AbstractAction, AbstractCellEditor, GroupLayout, JButton, JLabel, JPanel, JTable, LayoutStyle }
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 import javax.swing.table.{ DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, TableCellRenderer }
 
@@ -230,33 +231,31 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     class ColorEditor extends AbstractCellEditor with TableCellEditor {
 
       private var currentColor = ColorInfo(Color.BLACK)
-      private val button: Button = new Button("", () => {
+      private val button = new JButton(new AbstractAction {
+        override def actionPerformed(e: ActionEvent): Unit = {
+          new JFXColorPicker(frame, true, DoubleOnly, Option(RGBA.fromMask(currentColor.rgb)),
+            (x: String) => {
+              val num = x.toDouble
+              currentColor = ColorInfo(NLNumber(num).toColor)
+              fireEditingStopped()
+            }, () => {
+              fireEditingStopped()
+            }
+          ).setVisible(true)
+        }
+      }) {
+        override def paintComponent(g: Graphics): Unit = {
+          val g2d = Utils.initGraphics2D(g)
 
-        button.setBackground(model.pens(getSelectedRow).color.color)
-
-        new JFXColorPicker(frame, true, DoubleOnly, Option(RGBA.fromMask(currentColor.rgb)),
-          (x: String) => {
-            val num   = x.toDouble
-            currentColor = ColorInfo(NLNumber(num).toColor)
-            fireEditingStopped()
-          }, () => {
-            fireEditingStopped()
-          }
-        ).setVisible(true)
-
-      })
-      button.setOpaque(true)
-      button.setBorderPainted(false)
+          g2d.setColor(currentColor.color)
+          g2d.fillRect(0, 0, getWidth, getHeight)
+        }
+      }
 
       def getCellEditorValue = currentColor
 
-      def getTableCellEditorComponent(table: JTable, value: Object, isSelected: Boolean, row: Int, col: Int) = {
-        if (value != null) {
-          currentColor = value.asInstanceOf[ColorInfo]
-          button.setBackground(currentColor.color)
-        }
+      def getTableCellEditorComponent(table: JTable, value: Object, isSelected: Boolean, row: Int, col: Int) =
         button
-      }
     }
 
     // used to display the name. displays in red if there are errors associated with the pen.
