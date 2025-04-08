@@ -13,7 +13,7 @@ import org.nlogo.editor.{ Colorizer, EditorField }
 import org.nlogo.plot.{ Plot, PlotManagerInterface, PlotPen }
 import org.nlogo.swing.{ Button, OptionPane, Popup, ScrollPane, Transparent, Utils }
 import org.nlogo.theme.InterfaceColors
-import org.nlogo.window.{ ColorDialog, PlotWidget }
+import org.nlogo.window.{ DoubleOnly, JFXColorPicker, NLNumber, PlotWidget, RGBA }
 
 object PlotPensEditor {
   sealed trait CodeType
@@ -228,13 +228,22 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     // pops up the color swatch when the user clicks the cell
     class ColorEditor extends AbstractCellEditor with TableCellEditor {
-      var currentColor = ColorInfo(Color.BLACK)
-      val button: Button = new Button("", () => {
+
+      private var currentColor = ColorInfo(Color.BLACK)
+      private val button: Button = new Button("", () => {
+
         button.setBackground(model.pens(getSelectedRow).color.color)
-        val plotPenColorDialog = new ColorDialog(null, true)
-        val newColor = plotPenColorDialog.showPlotPenDialog(currentColor.color)
-        if (newColor != null) { currentColor = ColorInfo(newColor) }
-        fireEditingStopped()
+
+        new JFXColorPicker(frame, true, DoubleOnly, Option(RGBA.fromMask(currentColor.rgb)),
+          (x: String) => {
+            val num   = x.toDouble
+            currentColor = ColorInfo(NLNumber(num).toColor)
+            fireEditingStopped()
+          }, () => {
+            fireEditingStopped()
+          }
+        ).setVisible(true)
+
       })
       button.setOpaque(true)
       button.setBorderPainted(false)
