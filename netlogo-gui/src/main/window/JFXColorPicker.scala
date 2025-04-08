@@ -27,7 +27,7 @@ import org.nlogo.swing.Positioning
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initialValue: Option[NLColorValue] = None
-                    , callback: (String) => Unit = _ => {})
+                    , pickCallback: (String) => Unit = (_ => {}), cancelCallback: () => Unit = (() => {}))
   extends JDialog(frame, I18N.gui.get("tools.colorpicker"), modal) with ThemeSync {
 
   private val nlBabyMonitor = new Bridge
@@ -150,7 +150,7 @@ class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initial
 
     def onPick(x: String): Unit = {
       EventQueue.invokeLater(() => {
-        callback(x)
+        pickCallback(x)
         setVisible(false)
       })
     }
@@ -165,6 +165,7 @@ class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initial
 
     def onCancel(): Unit = {
       EventQueue.invokeLater(() => {
+        cancelCallback()
         setVisible(false)
       })
     }
@@ -186,6 +187,18 @@ case class NLNumber(value: Double) extends NLColorValue {
 case class RGB(r: Double, g: Double, b: Double) extends NLColorValue {
   override def toColor  = new Color(r.toInt, g.toInt, b.toInt)
   override def toJSArgs = s""""rgb", { red: $r, green: $g, blue: $b }"""
+}
+
+object RGBA {
+
+  def fromJavaColor(color: Color): RGBA = {
+    RGBA(color.getRed, color.getGreen, color.getBlue, color.getAlpha)
+  }
+
+  def fromMask(rgbMask: Int): RGBA = {
+    fromJavaColor(new Color(rgbMask))
+  }
+
 }
 
 case class RGBA(r: Double, g: Double, b: Double, a: Double) extends NLColorValue {
