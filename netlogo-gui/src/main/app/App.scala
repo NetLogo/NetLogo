@@ -674,8 +674,6 @@ class App extends
 
   lazy val openAboutDialog = new ShowAboutWindow(frame)
 
-  lazy val openColorDialog = new OpenColorDialog(frame)
-
   lazy val openRGBAColorDialog = new OpenRGBAColorDialog(frame)
 
   lazy val openLibrariesDialog = {
@@ -697,7 +695,6 @@ class App extends
     val generalActions = Seq[javax.swing.Action](
       showThemesDialog,
       openLibrariesDialog,
-      openColorDialog,
       openRGBAColorDialog,
       new ShowShapeManager("turtleShapesEditor", turtleShapesManager),
       new ShowShapeManager("linkShapesEditor",   linkShapesManager),
@@ -847,7 +844,6 @@ class App extends
     openPreferencesDialog.syncTheme()
     showThemesDialog.syncTheme()
     openAboutDialog.syncTheme()
-    openColorDialog.syncTheme()
     openRGBAColorDialog.syncTheme()
     openLibrariesDialog.syncTheme()
 
