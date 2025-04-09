@@ -75,7 +75,7 @@ class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initial
                                                        |
                                                        |.dropdown-arrow {
                                                        |  right:  -312px;
-                                                       |  bottom: -17px;
+                                                       |  bottom: -15px;
                                                        |}
                                                        |
                                                        |.repr-controls-wrapper {
