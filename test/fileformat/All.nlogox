@@ -37,7 +37,7 @@ a
 string</input>
     <input sizeVersion="0" x="13" multiline="false" y="310" height="60" variable="color-input" type="color" width="155">117.0</input>
     <monitor sizeVersion="0" x="181" precision="5" y="310" height="33" fontSize="8" width="57" display="slides">slides</monitor>
-    <plot sizeVersion="0" x="213" yMax="66.6666" yAxis="number" y="15" xMin="-10.0" height="150" legend="false" xMax="20.0" autoplot="true" yMin="-33.3333" width="200" xAxis="choice" display="c hoice-plotter">
+    <plot sizeVersion="0" x="213" yMax="66.6666" yAxis="number" y="15" xMin="-10.0" height="150" legend="false" xMax="20.0" autoPlotX="true" autoPlotY="true" yMin="-33.3333" width="200" xAxis="choice" display="c hoice-plotter">
       <setup>
         print "the plot has been set up"
       </setup>

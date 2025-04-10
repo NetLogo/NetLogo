@@ -163,7 +163,7 @@ end
     <slider sizeVersion="0" x="40" step="1" y="100" height="33" min="0" direction="Horizontal" max="100" default="30.0" variable="grass-regrowth-time" width="212" display="grass-regrowth-time"></slider>
     <button x="40" y="140" height="35" disableUntilTicks="false" forever="false" kind="Observer" width="69" display="setup">setup</button>
     <button x="115" y="140" height="35" disableUntilTicks="true" forever="true" kind="Observer" width="75" display="go">go</button>
-    <plot sizeVersion="0" x="10" yMax="100.0" yAxis="pop." y="360" xMin="0.0" height="170" legend="true" xMax="100.0" autoplot="true" yMin="0.0" width="340" xAxis="time" display="populations">
+    <plot sizeVersion="0" x="10" yMax="100.0" yAxis="pop." y="360" xMin="0.0" height="170" legend="true" xMax="100.0" autoPlotX="true" autoPlotY="true" yMin="0.0" width="340" xAxis="time" display="populations">
       <setup></setup>
       <update></update>
       <pen color="-612749" legend="true" interval="1.0" mode="0" display="sheep">

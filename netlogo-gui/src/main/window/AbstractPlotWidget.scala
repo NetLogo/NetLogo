@@ -246,8 +246,11 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   def defaultYMax = plot.defaultYMax
   def defaultYMax(defaultYMax: Double){ plot.defaultYMax=defaultYMax }
 
-  def defaultAutoPlotOn = plot.defaultAutoPlotOn
-  def defaultAutoPlotOn(defaultAutoPlotOn: Boolean){ plot.defaultAutoPlotOn=defaultAutoPlotOn }
+  def defaultAutoPlotX = plot.defaultAutoPlotX
+  def defaultAutoPlotX(defaultAutoPlotX: Boolean){ plot.defaultAutoPlotX = defaultAutoPlotX }
+
+  def defaultAutoPlotY = plot.defaultAutoPlotY
+  def defaultAutoPlotY(defaultAutoPlotY: Boolean){ plot.defaultAutoPlotY = defaultAutoPlotY }
 
   /// sizing
   override def getMinimumSize = AbstractPlotWidget.MIN_SIZE
@@ -297,7 +300,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
       xAxis = savedXLabel, yAxis = savedYLabel,
       xmin = plot.defaultXMin, xmax = plot.defaultXMax,
       ymin = plot.defaultYMin, ymax = plot.defaultYMax,
-      autoPlotOn = plot.defaultAutoPlotOn, legendOn = legend.open,
+      autoPlotX = plot.defaultAutoPlotX, autoPlotY = plot.defaultAutoPlotY, legendOn = legend.open,
       setupCode = plot.setupCode, updateCode = plot.updateCode,
       pens = pens.toList)
   }

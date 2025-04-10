@@ -48,7 +48,8 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
   private var _defaultXMax = 10.0
   private var _defaultYMin = 0.0
   private var _defaultYMax = 10.0
-  private var _defaultAutoPlotOn = true
+  private var _defaultAutoPlotX = true
+  private var _defaultAutoPlotY = true
   var setupCode: String = ""
   var updateCode: String = ""
 
@@ -120,16 +121,24 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
     plotListener.foreach(_.defaultYMax(defaultYMax))
   }
 
-  def defaultAutoPlotOn = _defaultAutoPlotOn
-  def defaultAutoPlotOn_=(defaultAutoPlotOn: Boolean){
-    _defaultAutoPlotOn = defaultAutoPlotOn
-    plotListener.foreach(_.defaultAutoPlotOn(defaultAutoPlotOn))
+  def defaultAutoPlotX = _defaultAutoPlotX
+  def defaultAutoPlotX_=(defaultAutoPlotX: Boolean){
+    _defaultAutoPlotX = defaultAutoPlotX
+    plotListener.foreach(_.defaultAutoPlotX(defaultAutoPlotX))
+  }
+
+  def defaultAutoPlotY = _defaultAutoPlotY
+  def defaultAutoPlotY_=(defaultAutoPlotY: Boolean){
+    _defaultAutoPlotY = defaultAutoPlotY
+    plotListener.foreach(_.defaultAutoPlotY(defaultAutoPlotY))
   }
 
   /// current properties
   /// (will be copied from defaults at construction time - ST 2/28/06)
 
-  def autoPlotOn = state.autoPlotOn
+  def autoPlotX = state.autoPlotX
+
+  def autoPlotY = state.autoPlotY
 
   def xMin = state.xMin
 
@@ -174,7 +183,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
     pens = pens.filterNot(_.temporary)
     currentPen = pens.headOption
     pens.foreach(_.hardReset())
-    state = PlotState(defaultAutoPlotOn, defaultXMin, defaultXMax, defaultYMin, defaultYMax)
+    state = PlotState(defaultAutoPlotX, defaultAutoPlotY, defaultXMin, defaultXMax, defaultYMin, defaultYMax)
     runtimeError = None
     backgroundColor = Color.getARGBbyPremodulatedColorNumber(White)
     makeDirty()
@@ -194,19 +203,23 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
   // At some point, this and client code should be changed to use this method properly.
   def histogramActions(pen: PlotPenInterface, values: Seq[Double]): scala.collection.immutable.Seq[PlotAction] = ???
 
-  def perhapsGrowRanges(pen:PlotPen, x:Double, y: Double){
-    if(autoPlotOn){
-      if(pen.mode == PlotPen.BAR_MODE){
+  def perhapsGrowRanges(pen: PlotPen, x: Double, y: Double): Unit = {
+    if (autoPlotX) {
+      if (pen.mode == PlotPen.BAR_MODE) {
         // allow extra room on the right for bar
-        growRanges(x + pen.interval, y)
+        growRangeX(x + pen.interval)
       }
+
       // calling growRanges() twice is sometimes redundant,
       // but it's the easiest way to ensure that both the
       // left and right edges of the bar become visible
       // (consider the case where the bar is causing the
       // min to decrease) - ST 2/23/06
-      growRanges(x, y)
+      growRangeX(x)
     }
+
+    if (autoPlotY)
+      growRangeY(y)
   }
 
   private def prettyRange(range: Double): Double = {
@@ -217,9 +230,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
       val tmag = pow(10, log10(-range).floor - 1) * 2
 
       (range / tmag).floor * tmag
-    }
-
-    else {
+    } else {
       if (range < 1)
         return 1
 
@@ -229,13 +240,18 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
     }
   }
 
-  private def growRanges(x: Double, y: Double) {
+  private def growRangeX(x: Double): Unit = {
     if (x > xMax)
       state = state.copy(xMax = prettyRange(x))
+
     if (x < xMin)
       state = state.copy(xMin = prettyRange(x))
+  }
+
+  private def growRangeY(y: Double): Unit = {
     if (y > yMax)
       state = state.copy(yMax = prettyRange(y))
+
     if (y < yMin)
       state = state.copy(yMin = prettyRange(y))
   }
@@ -260,59 +276,32 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
 
   // this leaves the pen down, regardless of its previous state
   // historgram cannot be None when entering this method, or boom. - Josh 11/2/09
-  def endHistogram(pen:PlotPen){
+  def endHistogram(pen: PlotPen): Unit = {
     pen.softReset()
-    if(autoPlotOn){
+
+    if (autoPlotY) {
       // note that we pass extraRoom as false; we know the exact height
       // of the histogram so there's no point in leaving any extra empty
       // space like we normally do when growing the ranges;
       // note also that we never grow the x range, only the y range,
       // because it's the current x range that determined the extent
       // of the histogram in the first place - ST 2/23/06
-      growRanges(xMin, histogram.get.ceiling)
+      growRangeY(histogram.get.ceiling)
     }
+
     for((bar, barNumber) <- histogram.get.bars.zipWithIndex) {
       // there is a design decision here not to generate points corresponding to empty bins.  not
       // sure what the right thing is in general, but in the GasLab models we use the histogram
       // command three times to produce a histogram with three different bar colors, and it looks
       // funny in that model if the bars we aren't histogramming have a horizontal line along the
       // axis - ST 2/24/06
-      if(bar > 0)
+      if (bar > 0)
         // compute the x coordinates by multiplication instead of repeated adding so that floating
         // point error doesn't accumulate - ST 2/23/06
         pen.plot(xMin + barNumber * pen.interval, bar)
     }
-    histogram = None
-  }
 
-  @throws(classOf[java.io.IOException])
-  private def writeObject(out:java.io.ObjectOutputStream){
-    out.writeObject(name)
-    out.writeBoolean(autoPlotOn)
-    out.writeDouble(xMin)
-    out.writeDouble(xMax)
-    out.writeDouble(yMin)
-    out.writeDouble(yMax)
-    out.writeObject(pens)
-    out.writeObject(currentPen.map(_.name))
-  }
-
-  @throws(classOf[java.io.IOException])
-  @throws(classOf[ClassNotFoundException])
-  private def readObject(in:java.io.ObjectInputStream){
-    name = in.readObject().toString
-    val autoPlotOn = in.readBoolean()
-    val xMin = in.readDouble()
-    val xMax = in.readDouble()
-    val yMin = in.readDouble()
-    val yMax = in.readDouble()
-    state = PlotState(autoPlotOn, xMin, xMax, yMin, yMax)
-    plotListener = None
-    pens = in.readObject().asInstanceOf[List[PlotPen]]
-    val currentPenName = in.readObject().asInstanceOf[Option[String]]
-    currentPenName.foreach{ name => _currentPen = pens.find(_.name == name) }
     histogram = None
-    pens.foreach(_.plot = this)
   }
 }
 

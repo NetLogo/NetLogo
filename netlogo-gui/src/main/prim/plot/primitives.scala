@@ -83,13 +83,41 @@ class _clearplot extends PlotCommand {
 }
 class _autoplotoff extends PlotCommand {
   override def perform(context: Context) {
-    currentPlot(context).state = currentPlot(context).state.copy(autoPlotOn = false)
+    currentPlot(context).state = currentPlot(context).state.copy(autoPlotX = false, autoPlotY = false)
     context.ip = next
   }
 }
 class _autoploton extends PlotCommand {
   override def perform(context: Context) {
-    currentPlot(context).state = currentPlot(context).state.copy(autoPlotOn = true)
+    currentPlot(context).state = currentPlot(context).state.copy(autoPlotX = true, autoPlotY = true)
+    context.ip = next
+  }
+}
+
+class _autoplotxoff extends PlotCommand {
+  override def perform(context: Context) {
+    currentPlot(context).state = currentPlot(context).state.copy(autoPlotX = false)
+    context.ip = next
+  }
+}
+
+class _autoplotxon extends PlotCommand {
+  override def perform(context: Context) {
+    currentPlot(context).state = currentPlot(context).state.copy(autoPlotX = true)
+    context.ip = next
+  }
+}
+
+class _autoplotyoff extends PlotCommand {
+  override def perform(context: Context) {
+    currentPlot(context).state = currentPlot(context).state.copy(autoPlotY = false)
+    context.ip = next
+  }
+}
+
+class _autoplotyon extends PlotCommand {
+  override def perform(context: Context) {
+    currentPlot(context).state = currentPlot(context).state.copy(autoPlotY = true)
     context.ip = next
   }
 }
@@ -252,7 +280,15 @@ class _exportplots extends PlotCommand {
 
 class _autoplot extends PlotReporter {
   override def report(context: Context) =
-    Boolean.box(currentPlot(context).autoPlotOn)
+    Boolean.box(currentPlot(context).autoPlotX && currentPlot(context).autoPlotY)
+}
+class _autoplotx extends PlotReporter {
+  override def report(context: Context) =
+    Boolean.box(currentPlot(context).autoPlotX)
+}
+class _autoploty extends PlotReporter {
+  override def report(context: Context) =
+    Boolean.box(currentPlot(context).autoPlotY)
 }
 class _plotname extends PlotReporter {
   override def report(context: Context) =

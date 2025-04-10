@@ -101,6 +101,26 @@ class _autoploton extends PlotActionCommand() {
     PlotAction.AutoPlot(currentPlot(context).name, on = true)
 }
 
+class _autoplotxoff extends PlotActionCommand() {
+  override def action(context: Context) =
+    PlotAction.AutoPlotX(currentPlot(context).name, on = false)
+}
+
+class _autoplotxon extends PlotActionCommand() {
+  override def action(context: Context) =
+    PlotAction.AutoPlotX(currentPlot(context).name, on = true)
+}
+
+class _autoplotyoff extends PlotActionCommand() {
+  override def action(context: Context) =
+    PlotAction.AutoPlotY(currentPlot(context).name, on = false)
+}
+
+class _autoplotyon extends PlotActionCommand() {
+  override def action(context: Context) =
+    PlotAction.AutoPlotY(currentPlot(context).name, on = true)
+}
+
 class SetPlotRangeCommand(isX: Boolean) extends PlotActionCommand(Syntax.NumberType, Syntax.NumberType) {
   override def action(context: Context) = {
     val min = argEvalDoubleValue(context, 0)
@@ -173,7 +193,15 @@ class _exportplots extends PlotCommand(Syntax.StringType) {
 
 class _autoplot extends PlotReporter(Syntax.BooleanType) {
   override def report(context: Context): java.lang.Boolean =
-    Boolean.box(currentPlotState(context).autoPlotOn)
+    Boolean.box(currentPlotState(context).autoPlotX && currentPlotState(context).autoPlotY)
+}
+class _autoplotx extends PlotReporter(Syntax.BooleanType) {
+  override def report(context: Context): java.lang.Boolean =
+    Boolean.box(currentPlotState(context).autoPlotX)
+}
+class _autoploty extends PlotReporter(Syntax.BooleanType) {
+  override def report(context: Context): java.lang.Boolean =
+    Boolean.box(currentPlotState(context).autoPlotY)
 }
 class _plotname extends PlotReporter(Syntax.StringType) {
   override def report(context: Context): String =

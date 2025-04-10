@@ -57,6 +57,10 @@ C ask _ask
 C ask-concurrent _askconcurrent
 C auto-plot-off plot._autoplotoff
 C auto-plot-on plot._autoploton
+C auto-plot-x-off plot._autoplotxoff
+C auto-plot-x-on plot._autoplotxon
+C auto-plot-y-off plot._autoplotyoff
+C auto-plot-y-on plot._autoplotyon
 C back _bk
 C beep gui._beep
 C bk _bk
@@ -285,6 +289,8 @@ R asin etc._asin
 R at-points etc._atpoints
 R atan etc._atan
 R autoplot? plot._autoplot
+R autoplotx? plot._autoplotx
+R autoploty? plot._autoploty
 R base-colors etc._basecolors
 R behaviorspace-experiment-name etc._behaviorspaceexperimentname
 R behaviorspace-run-number etc._behaviorspacerunnumber

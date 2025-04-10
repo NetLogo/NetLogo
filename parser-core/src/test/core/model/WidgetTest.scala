@@ -417,7 +417,7 @@ class WidgetTest extends AnyFunSuite {
                   |"wolves" 1.0 0 -2674135 true "" "plot count wolves"
                   |"grass / 4" 1.0 0 -10899396 true "" ";; divide by four to keep it within similar\n;; range as wolf and sheep populations\nplot count patches with [ pcolor = green ] / 4" """.stripMargin.split("\n").toList
     val plotWidget =
-      Plot(Some("populations"), 33, 265, 336, 143, true, Some("time"), Some("pop."), 0.0, 100.0, 0.0, 100.0, true, true, "", "",
+      Plot(Some("populations"), 33, 265, 336, 143, true, Some("time"), Some("pop."), 0.0, 100.0, 0.0, 100.0, true, true, true, "", "",
         List(Pen("sheep", 1.0, 0, -13345367, true, "", "plot count sheep"),
           Pen("wolves", 1.0, 0, -2674135, true, "", "plot count wolves"),
           Pen("grass / 4", 1.0, 0, -10899396, true, "", ";; divide by four to keep it within similar\n;; range as wolf and sheep populations\nplot count patches with [ pcolor = green ] / 4")))

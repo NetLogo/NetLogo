@@ -20,8 +20,10 @@ class PlotTests extends SimplePlotTest {
     val plot = new Plot("test")
     assertResult("test")(plot.name)
     assertResult(0)(plot.pens.size) // no pens
-    assert(plot.defaultState.autoPlotOn)
-    assert(plot.state.autoPlotOn)
+    assert(plot.defaultState.autoPlotX)
+    assert(plot.state.autoPlotX)
+    assert(plot.defaultState.autoPlotY)
+    assert(plot.state.autoPlotY)
   }
 
   testPlot("ClearRemovesTemporaryPens") { plot =>

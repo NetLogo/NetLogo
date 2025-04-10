@@ -112,7 +112,8 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
         xMax = readNumber(line(1)),
         yMin = readNumber(line(2)),
         yMax = readNumber(line(3)),
-        autoPlotOn = readBoolean(line(4)))
+        autoPlotX = readBoolean(line(4)),
+        autoPlotY = readBoolean(line(4)))
       plot.legendIsOpen_=(readBoolean(line(6)))
       (readNumber(line(7)).toInt, Option(readString(line(5))))
     }

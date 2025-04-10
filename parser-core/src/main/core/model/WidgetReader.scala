@@ -289,14 +289,14 @@ object PlotReader extends BaseWidgetReader {
                       )
   def asList(plot: Plot) = List((), plot.x, plot.y, plot.x + plot.width, plot.y + plot.height, plot.display,
                                     plot.xAxis, plot.yAxis, plot.xmin, plot.xmax, plot.ymin, plot.ymax,
-                                    plot.autoPlotOn, plot.legendOn,
+                                    plot.autoPlotX && plot.autoPlotY, plot.legendOn,
                                     "\"" + escapeString(plot.setupCode) + "\" \"" + escapeString(plot.updateCode) + "\"")
   def asWidget(vals: List[Any], literalParser: LiteralParser): Plot = {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, display: Option[String] @unchecked,
       xAxis: Option[String] @unchecked, yAxis: Option[String] @unchecked, xmin: Double, xmax: Double, ymin: Double, ymax: Double,
       autoPlotOn: Boolean, legendOn: Boolean, code: String, pens: List[Pen] @unchecked) = vals
     val List(setupCode: String, updateCode: String) = PenReader.parseStringLiterals(code)
-    Plot(display, left, top, right - left, bottom - top, true, xAxis, yAxis, xmin, xmax, ymin, ymax, autoPlotOn, legendOn,
+    Plot(display, left, top, right - left, bottom - top, true, xAxis, yAxis, xmin, xmax, ymin, ymax, autoPlotOn, autoPlotOn, legendOn,
          unescapeString(setupCode), unescapeString(updateCode), pens)
   }
 

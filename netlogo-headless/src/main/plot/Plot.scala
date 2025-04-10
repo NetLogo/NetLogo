@@ -103,19 +103,23 @@ extends PlotInterface {
       perhapsGrowRanges(pen, x, y)
   }
 
-  def perhapsGrowRanges(pen: PlotPen, x: Double, y: Double){
-    if(state.autoPlotOn){
-      if(pen.state.mode == PlotPenInterface.BarMode){
+  def perhapsGrowRanges(pen: PlotPen, x: Double, y: Double): Unit = {
+    if (state.autoPlotX) {
+      if (pen.state.mode == PlotPenInterface.BarMode) {
         // allow extra room on the right for bar
-        growRanges(x + pen.state.interval, y)
+        growRangeX(x + pen.state.interval)
       }
+
       // calling growRanges() twice is sometimes redundant,
       // but it's the easiest way to ensure that both the
       // left and right edges of the bar become visible
       // (consider the case where the bar is causing the
       // min to decrease) - ST 2/23/06
-      growRanges(x, y)
+      growRangeX(x)
     }
+
+    if (state.autoPlotY)
+      growRangeY(y)
   }
 
   private def prettyRange(range: Double): Double = {
@@ -126,9 +130,7 @@ extends PlotInterface {
       val tmag = pow(10, log10(-range).floor - 1) * 2
 
       (range / tmag).floor * tmag
-    }
-
-    else {
+    } else {
       if (range < 1)
         return 1
 
@@ -138,13 +140,18 @@ extends PlotInterface {
     }
   }
 
-  def growRanges(x: Double, y: Double) {
+  def growRangeX(x: Double): Unit = {
     if (x > state.xMax)
       state = state.copy(xMax = prettyRange(x))
+
     if (x < state.xMin)
       state = state.copy(xMin = prettyRange(x))
+  }
+
+  def growRangeY(y: Double): Unit = {
     if (y > state.yMax)
       state = state.copy(yMax = prettyRange(y))
+
     if (y < state.yMin)
       state = state.copy(yMin = prettyRange(y))
   }
@@ -154,14 +161,14 @@ extends PlotInterface {
     values.foreach(histogram.nextValue)
     val actions = new VectorBuilder[PlotAction]
     actions += SoftResetPen(this.name, pen.name)
-    if (state.autoPlotOn)
+    if (state.autoPlotY)
       // note that we pass extraRoom as false; we know the exact height
       // of the histogram so there's no point in leaving any extra empty
       // space like we normally do when growing the ranges;
       // note also that we never grow the x range, only the y range,
       // because it's the current x range that determined the extent
       // of the histogram in the first place - ST 2/23/06
-      growRanges(state.xMin, histogram.ceiling)
+      growRangeY(histogram.ceiling)
     actions ++= (for {
       (barHeight, barNumber) <- histogram.bars.zipWithIndex
       // there is a design decision here not to generate points corresponding to empty bins.  not

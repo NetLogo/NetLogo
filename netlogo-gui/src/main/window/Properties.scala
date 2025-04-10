@@ -21,7 +21,8 @@ object Properties {
     P("yLabel", P.String, I18N.gui("plot.yLabel"), gridWidth = 1),
     P("defaultYMin", P.Double, I18N.gui("plot.ymin"), gridWidth = RELATIVE),
     P("defaultYMax", P.Double, I18N.gui("plot.ymax")),
-    P("defaultAutoPlotOn", P.Boolean, I18N.gui("plot.autoScale"), gridWidth = 1),
+    P("defaultAutoPlotX", P.Boolean, I18N.gui("plot.autoScaleX"), gridWidth = 1),
+    P("defaultAutoPlotY", P.Boolean, I18N.gui("plot.autoScaleY"), gridWidth = 1),
     P("showLegend", P.Boolean, I18N.gui("plot.showLegend")),
     P("runtimeError", P.Error, I18N.gui("plot.error.runtimeError")),
     P("setupCode", P.Commands, I18N.gui("plot.setupCode"), collapsible = true, collapseByDefault = true),
@@ -159,7 +160,8 @@ object Properties {
     P("yLabel", P.String, I18N.gui("plot.yLabel"), gridWidth = 1),
     P("defaultYMin", P.Double, I18N.gui("plot.ymin"), gridWidth = RELATIVE),
     P("defaultYMax", P.Double, I18N.gui("plot.ymax")),
-    P("defaultAutoPlotOn", P.Boolean, I18N.gui("plot.autoScale")),
+    P("defaultAutoPlotX", P.Boolean, I18N.gui("plot.autoScaleX")),
+    P("defaultAutoPlotY", P.Boolean, I18N.gui("plot.autoScaleY")),
     P("showLegend", P.Boolean, I18N.gui("plot.showLegend")),
     P("oldSize", P.Boolean, I18N.gui("general.oldSize"))
   )

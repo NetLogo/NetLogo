@@ -10,8 +10,8 @@ class PlotExporterTests extends SimplePlotTest {
 
   val EXPORT_RESULT =
     "\"test plot\"\n" +
-    "\"x min\",\"x max\",\"y min\",\"y max\",\"autoplot?\",\"current pen\",\"legend open?\",\"number of pens\"\n" +
-    "\"0.0\",\"10.0\",\"0.0\",\"18.0\",\"true\",\"test pen\",\"false\",\"1\"\n" +
+    "\"x min\",\"x max\",\"y min\",\"y max\",\"autoplot x?\",\"autoplot y?\",\"current pen\",\"legend open?\",\"number of pens\"\n" +
+    "\"0.0\",\"10.0\",\"0.0\",\"18.0\",\"true\",\"true\",\"test pen\",\"false\",\"1\"\n" +
     "\n" +
     "\"pen name\",\"pen down?\",\"mode\",\"interval\",\"color\",\"x\"\n" +
     "\"test pen\",\"true\",\"0\",\"1.0\",\"0.0\",\"2.0\"\n" +

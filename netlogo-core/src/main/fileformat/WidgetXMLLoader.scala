@@ -92,8 +92,9 @@ object WidgetXMLLoader {
         Some(Plot( element.get("display"), element("x").toInt, element("y").toInt, element("width").toInt
                  , element("height").toInt, element("sizeVersion", "1").toInt == 0, element.get("xAxis")
                  , element.get("yAxis"), element("xMin").toDouble, element("xMax").toDouble
-                 , element("yMin").toDouble, element("yMax").toDouble, element("autoplot").toBoolean
-                 , element("legend").toBoolean, element.getChild("setup").text, element.getChild("update").text, pens
+                 , element("yMin").toDouble, element("yMax").toDouble, element("autoPlotX").toBoolean
+                 , element("autoPlotY").toBoolean, element("legend").toBoolean, element.getChild("setup").text
+                 , element.getChild("update").text, pens
                  ))
 
       case "chooser" =>
@@ -262,7 +263,8 @@ object WidgetXMLLoader {
              , "xMax"     -> plot.xmax.toString
              , "yMin"     -> plot.ymin.toString
              , "yMax"     -> plot.ymax.toString
-             , "autoplot" -> plot.autoPlotOn.toString
+             , "autoPlotX" -> plot.autoPlotX.toString
+             , "autoPlotY" -> plot.autoPlotY.toString
              , "legend"   -> plot.legendOn.toString
              ) ++
           ifDefined(plot)("display", _.display) ++

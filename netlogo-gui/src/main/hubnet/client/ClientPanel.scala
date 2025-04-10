@@ -187,9 +187,17 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
             plotWidget.makeDirty()
             plotWidget.repaintIfNeeded()
           case 'n' =>
-            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotOn = true)
+            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotX = true, autoPlotY = true)
           case 'f' =>
-            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotOn = false)
+            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotX = false, autoPlotY = false)
+          case 'x' =>
+            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotX = true)
+          case 'z' =>
+            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotX = false)
+          case 'y' =>
+            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotY = true)
+          case 'w' =>
+            plotWidget.plot.state = plotWidget.plot.state.copy(autoPlotY = false)
           case _ => throw new IllegalStateException()
         } catch {case ex: RuntimeException => org.nlogo.api.Exceptions.handle(ex)}
       }
