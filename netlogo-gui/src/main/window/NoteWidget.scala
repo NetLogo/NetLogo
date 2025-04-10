@@ -40,8 +40,8 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   private var _fontSize: Int = textLabel.getFont.getSize
   private var _textColorLight = Color.BLACK
   private var _textColorDark = Color.WHITE
-  private var _backgroundLight = Color.WHITE
-  private var _backgroundDark = InterfaceColors.AlmostBlack
+  private var _backgroundLight = InterfaceColors.Transparent
+  private var _backgroundDark = InterfaceColors.Transparent
 
   override def propertySet: Seq[Property] = Properties.text
   override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.note")
