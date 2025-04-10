@@ -29,7 +29,6 @@ object InterfaceColors {
   private val LightGray = new Color(238, 238, 238)
   private val LightGray2 = new Color(215, 215, 215)
   private val MediumGray = new Color(175, 175, 175)
-  private val MediumGray2 = new Color(160, 160, 160)
   private val LightGrayOutline = new Color(120, 120, 120)
   private val LightGrayOutline2 = new Color(100, 100, 100)
   private val DarkGray = new Color(79, 79, 79)
@@ -675,29 +674,29 @@ object InterfaceColors {
 
   def secondaryButtonBackground =
     getTheme match {
-      case "classic" | "light" => MediumGray
-      case "dark" => LightGrayOutline
+      case "classic" | "light" => Color.WHITE
+      case "dark" => DarkBlueGray
     }
 
   def secondaryButtonBackgroundHover =
     getTheme match {
-      case "classic" | "light" => MediumGray2
-      case "dark" => LightGrayOutline2
+      case "classic" | "light" => White2
+      case "dark" => DarkBlueGray2
     }
 
   def secondaryButtonBackgroundPressed =
     getTheme match {
-      case "classic" | "light" => LightGrayOutline
-      case "dark" => DarkGray
+      case "classic" | "light" => LightGray2
+      case "dark" => DarkBlueGray3
     }
 
-  def secondaryButtonBorder =
+  def secondaryButtonBorder = MediumGray
+
+  def secondaryButtonText =
     getTheme match {
-      case "classic" | "light" => MediumGray
-      case "dark" => LightGrayOutline
+      case "classic" | "light" => Color.BLACK
+      case "dark" => Color.WHITE
     }
-
-  def secondaryButtonText = Color.WHITE
 
   def secondaryButtonFocus =
     getTheme match {
