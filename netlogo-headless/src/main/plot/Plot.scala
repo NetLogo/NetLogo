@@ -87,20 +87,22 @@ extends PlotInterface {
     currentPen.foreach(plot(_, y))
   }
 
-  def plot(pen: PlotPen, y: Double) {
-    pen.plot(y)
-    if (pen.state.isDown)
+  def plot(pen: PlotPen, y: Double): Unit = {
+    if (pen.state.isDown) {
+      pen.plot(y)
       perhapsGrowRanges(pen, pen.state.x, y)
+    }
   }
 
   override def plot(x: Double, y: Double) {
     currentPen.foreach(plot(_, x, y))
   }
 
-  def plot(pen: PlotPen, x: Double, y: Double) {
-    pen.plot(x, y)
-    if (pen.state.isDown)
+  def plot(pen: PlotPen, x: Double, y: Double): Unit = {
+    if (pen.state.isDown) {
+      pen.plot(x, y)
       perhapsGrowRanges(pen, x, y)
+    }
   }
 
   def perhapsGrowRanges(pen: PlotPen, x: Double, y: Double){
