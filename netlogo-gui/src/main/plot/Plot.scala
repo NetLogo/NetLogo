@@ -158,18 +158,16 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
     }
   }
 
-  def plot(pen: PlotPen, y: Double): Unit = {
-    if (pen.state.isDown) {
-      pen.plot(y)
+  def plot(pen: PlotPen, y: Double) {
+    pen.plot(y)
+    if (pen.state.isDown)
       perhapsGrowRanges(pen, pen.state.x, y)
-    }
   }
 
-  def plot(pen: PlotPen, x: Double, y: Double): Unit = {
-    if (pen.state.isDown) {
-      pen.plot(x, y)
+  def plot(pen: PlotPen, x: Double, y: Double) {
+    pen.plot(x, y)
+    if (pen.state.isDown)
       perhapsGrowRanges(pen, x, y)
-    }
   }
 
   def clear() {

@@ -87,7 +87,8 @@ class PlotPainter(plot: Plot) {
           // but we don't want a 2x2 pixel point, otherwise we get
           // little hangnails at the beginning of a series of
           // connected segments - ST 9/18/03
-          drawEdge(gOff, next, next)
+          if (next.isDown)
+            drawEdge(gOff, next, next)
         }
         else{
           // check: can we coalesce?
