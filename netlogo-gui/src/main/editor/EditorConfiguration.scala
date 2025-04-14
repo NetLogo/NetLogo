@@ -5,7 +5,7 @@ package org.nlogo.editor
 import java.awt.{ Font, GraphicsEnvironment }
 import java.awt.event.{ ActionEvent, KeyEvent, TextEvent, TextListener }
 import java.awt.event.InputEvent.{ ALT_DOWN_MASK => AltKey, CTRL_DOWN_MASK => CtrlKey, SHIFT_DOWN_MASK => ShiftKey }
-import javax.swing.{ Action, KeyStroke }
+import javax.swing.{ Action, InputMap, KeyStroke }
 import javax.swing.text.{ DefaultEditorKit, TextAction }
 
 import org.fife.ui.rtextarea.RTextAreaEditorKit
@@ -159,6 +159,18 @@ case class EditorConfiguration(
     }
 
     editor.getInputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, CtrlKey), new CorrectDeleteNextWordAction(editor))
+
+    // there doesn't seem to be a way to directly remove an undesired action if it's in a parent map,
+    // so recursively search through the parents to find the correct map to remove it from (Isaac B 4/13/25)
+    def removeQuote(map: InputMap): Unit = {
+      if (map.keys != null && map.keys.exists(_.getKeyChar == '"')) {
+        map.remove(KeyStroke.getKeyStroke('"'))
+      } else if (map.getParent != null) {
+        removeQuote(map.getParent)
+      }
+    }
+
+    removeQuote(editor.getInputMap)
   }
 
   def permanentActions: Seq[Action] = additionalActions.values.toSeq ++ menuActions
