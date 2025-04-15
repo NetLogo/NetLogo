@@ -64,7 +64,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
       if (_oldSize)
         new Insets(3, 6, 0, 6)
       else
-        new Insets(6, 12, 6, 6)
+        new Insets(4, 12, 4, 6)
 
     add(label, c)
 

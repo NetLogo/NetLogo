@@ -282,7 +282,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       if (_oldSize) {
         new Insets(3, 6, 6, 6)
       } else {
-        new Insets(6, 12, 6, 12)
+        new Insets(4, 12, 4, 12)
       }
 
     add(widgetLabel, c)
