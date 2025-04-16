@@ -5,6 +5,8 @@ package org.nlogo.window
 import java.awt.{ Color, Component, Dimension, Font, Frame, Graphics, GridBagConstraints, GridBagLayout, Insets,
                   LinearGradientPaint }
 import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, WindowAdapter, WindowEvent }
+import java.lang.{ Double => JDouble }
+
 import javax.swing.{ AbstractAction, JButton, JDialog, JLabel, JPanel, ScrollPaneConstants }
 import javax.swing.KeyStroke.getKeyStroke
 import javax.swing.text.EditorKit
@@ -15,7 +17,7 @@ import org.nlogo.api.Color.{ getColor, getColorNameByIndex, modulateDouble }
 import org.nlogo.agent.InputBoxConstraint
 import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.awt.{ Hierarchy, Positioning }
-import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, NumericInput, StringInput }
+import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, LogoList, NumericInput, StringInput }
 import org.nlogo.editor.AbstractEditorArea
 import org.nlogo.swing.{ Button, ButtonPanel, DialogButton, OptionPane, RoundedBorderPanel,
                          ScrollPane, Utils }
@@ -321,15 +323,38 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   }
 
   private class SelectColorActionListener extends ActionListener {
-    private var lastValue = Option.empty[NLColorValue]
     def actionPerformed(e: ActionEvent): Unit = {
-      new JFXColorPicker(Hierarchy.getFrame(InputBox.this), true, DoubleOnly, lastValue,
+
+      val currValue =
+        valueObject match {
+
+          case list: LogoList if (list.length > 2) && list.toVector.take(3).forall(_.isInstanceOf[Double]) =>
+
+            val Seq(r, g, b) = list.take(3).asInstanceOf[Seq[Double]]
+
+            val a =
+              if (list.length > 3 && list(3).isInstanceOf[Double]) {
+                list(3).asInstanceOf[Double]
+              } else {
+                RGBA.MaxAlpha
+              }
+
+            RGBA(r, g, b, a)
+
+          case num: JDouble =>
+            NLNumber(num)
+
+          case _            =>
+            throw new Exception(s"Invalid color format: $valueObject")
+
+        }
+
+      new JFXColorPicker(Hierarchy.getFrame(InputBox.this), true, DoubleOnly, Option(currValue),
         (x: String) => {
-          val num = x.toDouble
-          valueObject(num, true)
-          lastValue = Option(NLNumber(num))
+          valueObject(x.toDouble, true)
         }
       ).setVisible(true)
+
     }
   }
 

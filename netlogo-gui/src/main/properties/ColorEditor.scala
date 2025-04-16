@@ -8,7 +8,7 @@ import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.swing.{ RoundedBorderPanel, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ JFXColorPicker, NLColorValue, NLNumber, NumAndRGBA, RGB, RGBA }
+import org.nlogo.window.{ JFXColorPicker, NLNumber, NumAndRGBA, RGB, RGBA }
 
 abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
   extends PropertyEditor(accessor) {
@@ -88,10 +88,8 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
 
     addMouseListener(new MouseAdapter {
 
-      private var lastValue = Option.empty[NLColorValue]
-
       override def mousePressed(e: MouseEvent) {
-        new JFXColorPicker(frame, true, NumAndRGBA, lastValue,
+        new JFXColorPicker(frame, true, NumAndRGBA, Option(RGBA.fromJavaColor(color)),
           (x: String) => {
 
             val SimpleDouble = """^(\d{1,3}(?:\.\d)?)$""".r
@@ -111,7 +109,6 @@ abstract class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame)
               }
 
             ColorEditor.this.setColor(thisValue.toColor)
-            lastValue = Option(thisValue)
 
           }
         ).setVisible(true)

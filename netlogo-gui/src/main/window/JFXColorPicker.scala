@@ -22,7 +22,7 @@ import netscape.javascript.JSObject
 
 import org.nlogo.api.{ Color => NLColor }
 import org.nlogo.awt.EventQueue
-import org.nlogo.core.I18N
+import org.nlogo.core.{ Color => CoreColor, I18N, LogoList }
 import org.nlogo.swing.Positioning
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
@@ -182,6 +182,22 @@ sealed trait NLColorValue {
 case class NLNumber(value: Double) extends NLColorValue {
   override def toColor  = NLColor.getColor(Double.box(value))
   override def toJSArgs = s""""number", ${value}"""
+}
+
+object NLNumber {
+
+  def fromJavaColor(color: Color): NLNumber = {
+    val vec      = Vector(color.getRed, color.getGreen, color.getBlue, color.getAlpha)
+    val list     = LogoList.fromVector(vec.map(Int.box _))
+    val argbMask = CoreColor.getARGBIntByRGBAList(list)
+    val colorNum = CoreColor.getClosestColorNumberByARGB(argbMask)
+    NLNumber(colorNum)
+  }
+
+  def fromMask(rgbMask: Int): NLNumber = {
+    fromJavaColor(new Color(rgbMask))
+  }
+
 }
 
 case class RGB(r: Double, g: Double, b: Double) extends NLColorValue {
