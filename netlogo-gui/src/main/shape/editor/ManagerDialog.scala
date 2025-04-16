@@ -39,8 +39,8 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
 
   def shapeKind: AgentKind
 
-  private val newButton = new DialogButton(true, I18N.gui("new"), () => newShape)
-  private val modelImportButton = new DialogButton(true, I18N.gui("importFromModel"), () => importFromModel)
+  private val newButton = new DialogButton(false, I18N.gui("new"), () => newShape)
+  private val modelImportButton = new DialogButton(false, I18N.gui("importFromModel"), () => importFromModel)
 
   private val editButton = new DialogButton(false, I18N.gui("edit"), () => editShape)
   private val duplicateButton = new DialogButton(false, I18N.gui("duplicate"), () => duplicateShape)

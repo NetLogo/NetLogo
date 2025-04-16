@@ -24,7 +24,7 @@ class TurtleShapeManagerDialog(parentFrame: Frame,
   override def modelShapes(m: Model): Seq[Shape] = m.turtleShapes
 
   override def additionalButton: Option[Button] =
-    Some(new DialogButton(true, I18N.gui.get("tools.shapesEditor.importFromLibrary"), () => importFromLibrary()))
+    Some(new DialogButton(false, I18N.gui.get("tools.shapesEditor.importFromLibrary"), () => importFromLibrary()))
 
   def displayableShapeFromCoreShape(shape: Shape): Option[VectorShape] = {
     shape match {
