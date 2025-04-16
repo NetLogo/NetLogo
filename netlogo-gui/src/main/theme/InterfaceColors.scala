@@ -45,7 +45,7 @@ object InterfaceColors {
   def widgetText =
     getTheme match {
       case "classic" => Color.BLACK
-      case "light" => new Color(85, 87, 112)
+      case "light" => new Color(53, 54, 74)
       case "dark" => Color.WHITE
     }
 
