@@ -189,7 +189,15 @@ case class RGB(r: Double, g: Double, b: Double) extends NLColorValue {
   override def toJSArgs = s""""rgb", { red: $r, green: $g, blue: $b }"""
 }
 
+// All components are in [0, 255] --Jason B. (4/16/25)
+case class RGBA(r: Double, g: Double, b: Double, a: Double) extends NLColorValue {
+  override def toColor  = new Color(r.toInt, g.toInt, b.toInt, a.toInt)
+  override def toJSArgs = s""""rgba", { red: $r, green: $g, blue: $b, alpha: ${Math.round(a / RGBA.MaxAlpha * 100)} }"""
+}
+
 object RGBA {
+
+  val MaxAlpha = 255
 
   def fromJavaColor(color: Color): RGBA = {
     RGBA(color.getRed, color.getGreen, color.getBlue, color.getAlpha)
@@ -199,11 +207,6 @@ object RGBA {
     fromJavaColor(new Color(rgbMask))
   }
 
-}
-
-case class RGBA(r: Double, g: Double, b: Double, a: Double) extends NLColorValue {
-  override def toColor  = new Color(r.toInt, g.toInt, b.toInt, a.toInt)
-  override def toJSArgs = s""""rgba", { red: $r, green: $g, blue: $b, alpha: ${Math.round(a / 255 * 100)} }"""
 }
 
 
