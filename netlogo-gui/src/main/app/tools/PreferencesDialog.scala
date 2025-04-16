@@ -86,6 +86,8 @@ class PreferencesDialog(parent: Frame, preferences: Seq[Preference])
 
     buttonPanel.setBorder(new EmptyBorder(6, 6, 6, 6))
 
+    getRootPane.setDefaultButton(okButton)
+
     add(preferencesPanel, BorderLayout.CENTER)
     add(buttonPanel, BorderLayout.SOUTH)
 

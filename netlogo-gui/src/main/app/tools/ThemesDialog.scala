@@ -74,6 +74,8 @@ class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "theme
 
     val buttonPanel = new ButtonPanel(Seq(okButton, cancelButton))
 
+    getRootPane.setDefaultButton(okButton)
+
     c.anchor = GridBagConstraints.CENTER
 
     panel.add(buttonPanel, c)

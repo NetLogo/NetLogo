@@ -50,6 +50,8 @@ class CodeTabPreferences(parent: Frame, tabs: TabsInterface)
 
     add(new ButtonPanel(Seq(okButton, cancelButton)), c)
 
+    getRootPane.setDefaultButton(okButton)
+
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
 
     addWindowListener(new WindowAdapter {
