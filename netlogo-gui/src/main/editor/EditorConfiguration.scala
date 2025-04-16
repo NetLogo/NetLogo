@@ -125,6 +125,8 @@ case class EditorConfiguration(
       editor.getActionMap.put(DefaultEditorKit.selectWordAction, new CorrectSelectWordAction(editor))
       editor.getActionMap.put(DefaultEditorKit.deletePrevWordAction, new CorrectDeletePrevWordAction(editor))
       editor.getActionMap.put(DefaultEditorKit.deleteNextWordAction, new CorrectDeleteNextWordAction(editor))
+      editor.getActionMap.put(DefaultEditorKit.backwardAction, new CorrectBackwardAction(editor))
+      editor.getActionMap.put(DefaultEditorKit.forwardAction, new CorrectForwardAction(editor))
     }
 
   def configureAdvancedEditorArea(editor: AbstractEditorArea) = {
@@ -240,6 +242,26 @@ case class EditorConfiguration(
       new CorrectNextWordAction(editor, true).actionPerformed(e)
 
       editor.replaceSelection(null)
+    }
+  }
+
+  private class CorrectBackwardAction(editor: AbstractEditorArea) extends TextAction("caret backward") {
+    def actionPerformed(e: ActionEvent): Unit = {
+      if (editor.getSelectionStart == editor.getSelectionEnd) {
+        editor.setCaretPosition((editor.getCaretPosition - 1).max(0))
+      } else {
+        editor.setCaretPosition(editor.getSelectionStart)
+      }
+    }
+  }
+
+  private class CorrectForwardAction(editor: AbstractEditorArea) extends TextAction("caret backward") {
+    def actionPerformed(e: ActionEvent): Unit = {
+      if (editor.getSelectionStart == editor.getSelectionEnd) {
+        editor.setCaretPosition((editor.getCaretPosition + 1).min(editor.getText.size))
+      } else {
+        editor.setCaretPosition(editor.getSelectionEnd)
+      }
     }
   }
 }
