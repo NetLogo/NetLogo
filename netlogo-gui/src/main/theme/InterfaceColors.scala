@@ -774,7 +774,7 @@ object InterfaceColors {
 
   def constantColor =
     getTheme match {
-      case "classic" | "light" => new Color(237, 79, 0) // orange
+      case "classic" | "light" => new Color(150, 55, 0) // dark orange
       case "dark" => new Color(234, 110, 33) // light orange
     }
 
