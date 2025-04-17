@@ -37,7 +37,18 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   protected val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
-  private val compileButton = new ToolBarActionButton(CompileAction)
+  private val compileButton = new ToolBarActionButton(new AbstractAction(I18N.gui.get("tabs.code.checkButton")) {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      compile()
+    }
+  }) {
+    override def syncTheme(): Unit = {
+      super.syncTheme()
+
+      setIcon(Utils.iconScaledWithColor("/images/check.png", 15, 15, InterfaceColors.toolbarImage))
+    }
+  }
+
   private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION_CODE)
 
   private val proceduresMenu = new ProceduresMenu(CodeTab.this)
@@ -54,7 +65,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   def dirty = _dirty
 
   protected def dirty_=(b: Boolean) = {
-    CompileAction.setDirty(b)
+    compileButton.setEnabled(b)
     _dirty = b
   }
 
@@ -194,7 +205,10 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   def handle(e: WindowEvents.CompiledEvent) = {
     dirty = false
-    if (e.sourceOwner == this) errorLabel.setError(e.error, headerSource.length)
+    if (e.sourceOwner == this) {
+      errorLabel.setError(e.error, headerSource.length)
+      compileButton.setEnabled(true)
+    }
     // this was needed to get extension colorization showing up reliably in the editor area - RG 23/3/16
     text.revalidate()
   }
@@ -239,25 +253,6 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   def close() {}
 
-  private object CompileAction extends AbstractAction(I18N.gui.get("tabs.code.checkButton")) with ThemeSync {
-    private var dirty = false
-
-    def actionPerformed(e: ActionEvent) = compile()
-    def setDirty(isDirty: Boolean) {
-      dirty = isDirty
-
-      syncTheme()
-    }
-
-    override def syncTheme(): Unit = {
-      putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/check.png", 15, 15,
-                                                            if (dirty)
-                                                              InterfaceColors.checkFilled
-                                                            else
-                                                              InterfaceColors.toolbarImage))
-    }
-  }
-
   override def syncTheme(): Unit = {
     def boldStyle(color: Color): Style =
       new Style(color, Style.DEFAULT_BACKGROUND, text.getFont.deriveFont(Font.BOLD), false)
@@ -268,8 +263,6 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
     compileButton.syncTheme()
     findButton.syncTheme()
-
-    CompileAction.syncTheme()
 
     proceduresMenu.syncTheme()
     includedFilesMenu.syncTheme()
