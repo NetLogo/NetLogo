@@ -3,7 +3,9 @@
 package org.nlogo.gl.view
 
 import java.awt.{ Font, GridBagConstraints, GridBagLayout, Insets }
-import javax.swing.{ ButtonGroup, JLabel, JPanel }
+import java.awt.event.ActionEvent
+import javax.swing.{ AbstractAction, ButtonGroup, JLabel, JPanel }
+import javax.swing.border.EmptyBorder
 
 import org.nlogo.api.Perspective
 import org.nlogo.core.I18N
@@ -133,8 +135,11 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
   }
 
   private class ModeButton(name: String, mode: Mode)
-    extends ToolBarToggleButton(name, () => inputHandler.setMovementMode(mode)) {
-
-    square = false
-  }
+    extends ToolBarToggleButton(new AbstractAction(name) {
+      override def actionPerformed(e: ActionEvent): Unit = {
+        inputHandler.setMovementMode(mode)
+      }
+    }) {
+      setBorder(new EmptyBorder(3, 12, 3, 12))
+    }
 }

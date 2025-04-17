@@ -476,6 +476,8 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   }
 
   class SquareButton(action: Action) extends ToolBarToggleButton(action) {
+    setBorder(null)
+
     override def getMinimumSize: Dimension =
       new Dimension(widgetMenu.getPreferredSize.height, widgetMenu.getPreferredSize.height)
 

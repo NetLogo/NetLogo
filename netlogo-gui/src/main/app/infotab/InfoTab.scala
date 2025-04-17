@@ -18,8 +18,8 @@ import org.nlogo.awt.{ Fonts, Hierarchy }
 import org.nlogo.core.I18N
 import org.nlogo.editor.UndoManager
 import org.nlogo.swing.Implicits._
-import org.nlogo.swing.{ OptionPane, ScrollPane, TextArea, ToolBar, ToolBarButton, ToolBarActionButton,
-                         ToolBarToggleButton, Printable, PrinterManager, BrowserLauncher, Utils },
+import org.nlogo.swing.{ OptionPane, ScrollPane, TextArea, ToolBar, ToolBarActionButton, ToolBarToggleButton,
+                         Printable, PrinterManager, BrowserLauncher, Utils },
   BrowserLauncher.docPath
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.{ Events => WindowEvents, Zoomable }
@@ -72,8 +72,11 @@ class InfoTab(attachModelDir: String => String)
 
   private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION)
   private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit")))
-  private val helpButton = new ToolBarButton(I18N.gui.get("tabs.info.help"),
-                                             BrowserLauncher.openPath(this, baseDocPath, "information"))
+  private val helpButton = new ToolBarActionButton(new AbstractAction(I18N.gui.get("tabs.info.help")) {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      BrowserLauncher.openPath(InfoTab.this, baseDocPath, "information")
+    }
+  })
   helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage))
   helpButton.setVisible(false)
   private def toggleHelpButton(){ helpButton.setVisible(view == textArea) }
@@ -94,7 +97,7 @@ class InfoTab(attachModelDir: String => String)
   override val activeMenuActions = Seq(undoAction, redoAction)
 
   private val toolBar = new ToolBar {
-    setBorder(new EmptyBorder(6, 6, 6, 6))
+    setBorder(new EmptyBorder(24, 6, 12, 6))
 
     override def addControls() {
       this.addAll(findButton, editableButton, helpButton)
@@ -159,6 +162,9 @@ class InfoTab(attachModelDir: String => String)
 
   override def syncTheme(): Unit = {
     toolBar.setBackground(InterfaceColors.toolbarBackground)
+
+    findButton.syncTheme()
+    helpButton.syncTheme()
 
     editableButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.toolbarImage))
     helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage))

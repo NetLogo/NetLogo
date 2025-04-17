@@ -37,8 +37,8 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   protected val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
-  private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION_CODE)
   private val compileButton = new ToolBarActionButton(CompileAction)
+  private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION_CODE)
 
   private val proceduresMenu = new ProceduresMenu(CodeTab.this)
 
@@ -118,7 +118,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   }
 
   def getToolBar = new ToolBar {
-    setBorder(new EmptyBorder(6, 6, 6, 6))
+    setBorder(new EmptyBorder(24, 6, 12, 6))
 
     override def addControls() {
       // Only want to add toolbar items once
@@ -129,12 +129,12 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
                                                            "procmenu")
         getActionMap.put("procmenu", proceduresMenu.getAction)
 
+        add(compileButton)
         add(findButton)
 
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(UserAction.KeyBindings.keystroke('F', withMenu = true), "find")
         getActionMap.put("find", FindDialog.FIND_ACTION_CODE)
 
-        add(compileButton)
         add(proceduresMenu)
         add(includedFilesMenu)
         add(separate)
@@ -265,6 +265,9 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     setBackground(InterfaceColors.codeBackground)
 
     toolBar.setBackground(InterfaceColors.toolbarBackground)
+
+    compileButton.syncTheme()
+    findButton.syncTheme()
 
     CompileAction.syncTheme()
 

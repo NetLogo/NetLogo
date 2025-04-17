@@ -2,9 +2,10 @@
 
 package org.nlogo.swing
 
+import java.awt.{ Color, Component, Dimension, Graphics }
+import javax.swing.{ JComponent, JToolBar }
+
 import org.nlogo.awt.RowLayout
-import java.awt.{Graphics,Dimension,Component, Color}
-import javax.swing.{SwingConstants,JCheckBox,AbstractButton,JComponent,JToolBar}
 
 object ToolBar {
   // It'd be easier to just use JToolBar.Separator,but at least
@@ -32,17 +33,8 @@ abstract class ToolBar extends JToolBar {
 
   // we add the controls at addNotify time so that subclasses have the chance to fully construct
   // themselves before addControls() is called - ST 9/2/03
-  override def addNotify(){
+  override def addNotify(): Unit = {
     super.addNotify()
     addControls()
-    for(comp<-getComponents) {
-      comp.setFocusable(false)
-    }
-    // kinda kludgy but we don't want to have the text below
-    // the checker in the checkbox in the Code tab ev 8/24/06
-    for(comp<-getComponents.collect{case b:AbstractButton => b}; if(!comp.isInstanceOf[JCheckBox])){
-      comp.setVerticalTextPosition(SwingConstants.BOTTOM)
-      comp.setHorizontalTextPosition(SwingConstants.CENTER)
-    }
   }
 }

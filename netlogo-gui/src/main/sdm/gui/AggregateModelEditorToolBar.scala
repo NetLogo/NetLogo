@@ -4,7 +4,7 @@ package org.nlogo.sdm.gui
 
 import java.awt.FlowLayout
 import java.awt.event.{ ActionEvent, MouseEvent }
-import javax.swing.{ Action, AbstractAction, ButtonGroup, JLabel, JPanel, JToggleButton }
+import javax.swing.{ Action, AbstractAction, ButtonGroup, JLabel, JPanel, JToggleButton, SwingConstants }
 import javax.swing.JToolBar.Separator
 
 import org.jhotdraw.framework.{ DrawingEditor, DrawingView, Figure, FigureSelectionListener, Tool }
@@ -24,16 +24,38 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
   private var dtLabel: JLabel = null
   private var dtButton: Button = null
 
+  private val compileAction = new MyAction("Check", "/images/check.png", enableMe = true) {
+    def actionPerformed(e: ActionEvent) {new org.nlogo.window.Events.CompileAllEvent().raise(editor)}
+  }
+  private val editAction = new MyAction("Edit", "/images/edit.png", enableMe = false) {
+    def actionPerformed(e: ActionEvent) {editor.inspectFigure(editor.view.selection.nextFigure)}
+  }
+  private val deleteAction = new MyAction("Delete", "/images/delete.png", enableMe = false) {
+    def actionPerformed(e: ActionEvent) {
+      new DeleteCommand(I18N.gui("delete"), editor).execute()
+      new org.nlogo.window.Events.CompileAllEvent().raise(editor)
+      new org.nlogo.window.Events.DirtyEvent(None).raise(editor)
+    }
+  }
+
+  private val editButton = new ToolBarActionButton(editAction)
+  private val deleteButton = new ToolBarActionButton(deleteAction)
+  private val compileButton = new ToolBarActionButton(compileAction)
+
   override def addControls() {
-    add(new ToolBarActionButton(editAction))
-    add(new ToolBarActionButton(deleteAction))
+    add(editButton)
+    add(deleteButton)
     add(new Separator)
-    add(new ToolBarActionButton(compileAction))
+    add(compileButton)
     add(new Separator)
 
     def makeButton(name:String, image:String, tool:Tool) = {
-      new ToolBarToggleButton(new ToolAction(I18N.gui(name.toLowerCase), image, tool))
+      new ToolBarToggleButton(new ToolAction(I18N.gui(name.toLowerCase), image, tool)) {
+        setVerticalTextPosition(SwingConstants.BOTTOM)
+        setHorizontalTextPosition(SwingConstants.CENTER)
+      }
     }
+
     val stockButton = makeButton("Stock", "/images/stock.gif", new StockFigureCreationTool(model, editor))
     val variablButton = makeButton("Variable", "/images/converter.gif", new ConverterFigureCreationTool(model, editor))
     val flowButton = makeButton("Flow", "/images/rate.gif", new RateConnectionTool(model, editor, new RateConnection()))
@@ -69,6 +91,10 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
 
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.toolbarBackground)
+
+    editButton.syncTheme()
+    deleteButton.syncTheme()
+    compileButton.syncTheme()
 
     if (dtLabel != null)
       dtLabel.setForeground(InterfaceColors.toolbarText)
@@ -109,24 +135,10 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
     override def mouseDrag(e: MouseEvent, x: Int, y: Int) {}
   }
 
-  /// Actions
   abstract class MyAction(name:String, image:String, enableMe: Boolean)
           extends AbstractAction(I18N.gui(name.toLowerCase)) {
     putValue(Action.SMALL_ICON, SwingUtils.iconScaledWithColor(image, 15, 15, InterfaceColors.toolbarImage))
     setEnabled(enableMe)
-  }
-  val compileAction = new MyAction("Check", "/images/check.png", enableMe = true) {
-    def actionPerformed(e: ActionEvent) {new org.nlogo.window.Events.CompileAllEvent().raise(editor)}
-  }
-  val editAction = new MyAction("Edit", "/images/edit.png", enableMe = false) {
-    def actionPerformed(e: ActionEvent) {editor.inspectFigure(editor.view.selection.nextFigure)}
-  }
-  val deleteAction = new MyAction("Delete", "/images/delete.png", enableMe = false) {
-    def actionPerformed(e: ActionEvent) {
-      new DeleteCommand(I18N.gui("delete"), editor).execute()
-      new org.nlogo.window.Events.CompileAllEvent().raise(editor)
-      new org.nlogo.window.Events.DirtyEvent(None).raise(editor)
-    }
   }
   val changeDTAction = new AbstractAction(I18N.gui("edit")) {
     def actionPerformed(e: ActionEvent) {
