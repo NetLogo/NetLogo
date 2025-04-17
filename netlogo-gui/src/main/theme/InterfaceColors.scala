@@ -424,6 +424,12 @@ object InterfaceColors {
       case "dark" => LightGrayOutline
     }
 
+  def toolbarControlBorderSelected =
+    getTheme match {
+      case "classic" | "light" => Transparent
+      case "dark" => LightGrayOutline
+    }
+
   def toolbarControlFocus =
     getTheme match {
       case "classic" | "light" => MediumBlue
