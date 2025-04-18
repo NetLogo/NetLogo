@@ -5,6 +5,8 @@ package org.nlogo.window
 import java.awt.{ Color, Dimension, GridBagConstraints, GridBagLayout, Insets, Rectangle }
 import javax.swing.JLabel
 
+import org.apache.commons.text.StringEscapeUtils
+
 import org.nlogo.api.{ Editable, Property }
 import org.nlogo.core.{ TextBox => CoreTextBox }
 import org.nlogo.core.I18N
@@ -48,7 +50,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   override def isNote = true
 
   private def wrapText(): Unit = {
-    textLabel.setText(s"""<html>${_text.replace("\n", "<br>")}</html>""")
+    textLabel.setText(s"""<html>${StringEscapeUtils.escapeHtml4(_text.replace("\n", "<br>"))}</html>""")
     repaint()
   }
 
