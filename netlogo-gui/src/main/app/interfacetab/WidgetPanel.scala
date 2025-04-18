@@ -923,8 +923,14 @@ class WidgetPanel(val workspace: GUIWorkspace)
   // returns the widgets that can be moved without creating a new collision (Isaac B 2/12/25)
   private def validWrappers(wrappers: Seq[WidgetWrapper], bounds: (WidgetWrapper) => Rectangle): Seq[WidgetWrapper] = {
     wrappers.foldLeft(Seq[WidgetWrapper]()) {
-      case (existing, w) if collisions(w.widgetBounds, existing) == collisions(bounds(w), existing) => existing :+ w
-      case (existing, _) => existing
+      case (existing, w) =>
+        val old = collisions(w.widgetBounds, existing)
+
+        if (collisions(bounds(w), existing).forall(old.contains)) {
+          existing :+ w
+        } else {
+          existing
+        }
     }
   }
 
