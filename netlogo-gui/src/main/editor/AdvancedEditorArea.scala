@@ -103,6 +103,31 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
     select(start, end)
   }
 
+  override def setSelectionStart(i: Int): Unit = {
+    Option(getFoldManager.getFoldForLine(getFoldManager.getVisibleLineAbove(getLineOfOffset(i))))
+      .foreach(_.setCollapsed(false))
+
+    super.setSelectionStart(i)
+  }
+
+  override def setSelectionEnd(i: Int): Unit = {
+    Option(getFoldManager.getFoldForLine(getFoldManager.getVisibleLineAbove(getLineOfOffset(i))))
+      .foreach(_.setCollapsed(false))
+
+    super.setSelectionEnd(i)
+  }
+
+  override def select(start: Int, end: Int): Unit = {
+    for (i <- 0 until getFoldManager.getFoldCount) {
+      val fold = getFoldManager.getFold(i)
+
+      if (fold.getStartOffset < end && fold.getEndOffset > start)
+        fold.setCollapsed(false)
+    }
+
+    super.select(start, end)
+  }
+
   addMouseListener(new MouseAdapter {
     override def mousePressed(e: MouseEvent) {
       setSelectionColor(defaultSelectionColor)
