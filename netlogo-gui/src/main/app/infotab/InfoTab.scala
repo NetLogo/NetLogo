@@ -71,7 +71,16 @@ class InfoTab(attachModelDir: String => String)
   }
 
   private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION)
-  private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit")))
+  private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit"))) with ThemeSync {
+    override def syncTheme(): Unit = {
+      setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15,
+              if (isSelected) {
+                InterfaceColors.toolbarImageSelected
+              } else {
+                InterfaceColors.toolbarImage
+              }))
+    }
+  }
   private val helpButton = new ToolBarActionButton(new AbstractAction(I18N.gui.get("tabs.info.help")) {
     override def actionPerformed(e: ActionEvent): Unit = {
       BrowserLauncher.openPath(InfoTab.this, baseDocPath, "information")
@@ -164,9 +173,9 @@ class InfoTab(attachModelDir: String => String)
     toolBar.setBackground(InterfaceColors.toolbarBackground)
 
     findButton.syncTheme()
+    editableButton.syncTheme()
     helpButton.syncTheme()
 
-    editableButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.toolbarImage))
     helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage))
 
     scrollPane.setBackground(InterfaceColors.infoBackground)
@@ -247,6 +256,7 @@ class InfoTab(attachModelDir: String => String)
       toggleHelpButton()
       requestFocus()
       org.nlogo.awt.EventQueue.invokeLater(() => scrollBar.setValue((ratio * (max - min)).toInt))
+      editableButton.syncTheme()
     }
   }
 }

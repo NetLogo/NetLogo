@@ -44,7 +44,11 @@ class ToolBarToggleButton(action: Action) extends JToggleButton(action) with Tra
 
     g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
 
-    setForeground(InterfaceColors.toolbarText)
+    if (isSelected) {
+      setForeground(InterfaceColors.toolbarTextSelected)
+    } else {
+      setForeground(InterfaceColors.toolbarText)
+    }
 
     super.paintComponent(g)
   }

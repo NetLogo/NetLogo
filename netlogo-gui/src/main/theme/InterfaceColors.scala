@@ -400,6 +400,8 @@ object InterfaceColors {
       case "dark" => Color.WHITE
     }
 
+  def toolbarTextSelected = Color.WHITE
+
   def toolbarControlBackground =
     getTheme match {
       case "classic" | "light" => Color.WHITE
