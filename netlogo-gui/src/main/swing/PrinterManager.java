@@ -37,23 +37,27 @@ public final class PrinterManager {
       throws java.awt.print.PrinterAbortException, java.awt.print.PrinterException {
     java.awt.print.PrinterJob printerJob =
         java.awt.print.PrinterJob.getPrinterJob();
-    final PrinterManager printer = new PrinterManager(fileName);
-    printerJob.setPrintable(new java.awt.print.Printable() {
-      public int print(java.awt.Graphics g,
-                       java.awt.print.PageFormat pageFormat, int pageIndex)
-          throws java.awt.print.PrinterException {
-        // for now set the font in the graphics object manually
-        // there's apparently some Apple bug where it doesn't get
-        // set ev 5/14/08
-        if (System.getProperty("os.name").startsWith("Mac")
-            && System.getProperty("os.version").startsWith("10.5")) {
-          g.setFont(printer.printFont);
+    java.awt.print.PageFormat defaultPageFormat = printerJob.defaultPage();
+    java.awt.print.PageFormat newPageFormat = printerJob.pageDialog(defaultPageFormat);
+    if (newPageFormat != defaultPageFormat) {
+      final PrinterManager printer = new PrinterManager(fileName);
+      printerJob.setPrintable(new java.awt.print.Printable() {
+        public int print(java.awt.Graphics g,
+                        java.awt.print.PageFormat pageFormat, int pageIndex)
+            throws java.awt.print.PrinterException {
+          // for now set the font in the graphics object manually
+          // there's apparently some Apple bug where it doesn't get
+          // set ev 5/14/08
+          if (System.getProperty("os.name").startsWith("Mac")
+              && System.getProperty("os.version").startsWith("10.5")) {
+            g.setFont(printer.printFont);
+          }
+          return p.print(g, pageFormat, pageIndex, printer);
         }
-        return p.print(g, pageFormat, pageIndex, printer);
+      }, newPageFormat);
+      if (printerJob.printDialog()) {
+        printerJob.print();
       }
-    }, printerJob.pageDialog(printerJob.defaultPage()));
-    if (printerJob.printDialog()) {
-      printerJob.print();
     }
   }
 
