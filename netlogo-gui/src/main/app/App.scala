@@ -1237,49 +1237,51 @@ class App extends
       .getOrElse{throw new IllegalArgumentException(
         "button '" + name + "' not found")}
 
-  def smartPack(targetSize:Dimension, allowShrink: Boolean) {
-    val gc = frame.getGraphicsConfiguration
-    val maxBounds = gc.getBounds
-    val insets = Toolkit.getDefaultToolkit.getScreenInsets(gc)
-    val maxWidth = maxBounds.width - insets.left - insets.right
-    val maxHeight = maxBounds.height - insets.top - insets.bottom
-    val maxBoundsX = maxBounds.x + insets.left
-    val maxBoundsY = maxBounds.y + insets.top
-    val maxX = maxBoundsX + maxWidth
-    val maxY = maxBoundsY + maxHeight
+  def smartPack(targetSize: Dimension, allowShrink: Boolean): Unit = {
+    if (frame.getExtendedState != Frame.MAXIMIZED_BOTH) {
+      val gc = frame.getGraphicsConfiguration
+      val maxBounds = gc.getBounds
+      val insets = Toolkit.getDefaultToolkit.getScreenInsets(gc)
+      val maxWidth = maxBounds.width - insets.left - insets.right
+      val maxHeight = maxBounds.height - insets.top - insets.bottom
+      val maxBoundsX = maxBounds.x + insets.left
+      val maxBoundsY = maxBounds.y + insets.top
+      val maxX = maxBoundsX + maxWidth
+      val maxY = maxBoundsY + maxHeight
 
-    import StrictMath.{ max, min }
+      import StrictMath.{ max, min }
 
-    val (currentWidth, currentHeight) = (frame.getWidth, frame.getHeight)
+      val (currentWidth, currentHeight) = (frame.getWidth, frame.getHeight)
 
-    // Maybe grow the window, but never shrink it
-    var newWidth  = min(targetSize.width, maxWidth)
-    var newHeight = min(targetSize.height, maxHeight)
-    if (!allowShrink) {
-      newWidth = max(newWidth, currentWidth)
-      newHeight = max(newHeight, currentHeight)
+      // Maybe grow the window, but never shrink it
+      var newWidth  = min(targetSize.width, maxWidth)
+      var newHeight = min(targetSize.height, maxHeight)
+      if (!allowShrink) {
+        newWidth = max(newWidth, currentWidth)
+        newHeight = max(newHeight, currentHeight)
+      }
+
+      // move up/left to get more room if possible and necessary
+      val moveLeft = max(0, frame.getLocation().x + newWidth  - maxX)
+      val moveUp   = max(0, frame.getLocation().y + newHeight - maxY)
+
+      // now we can compute our new position
+      val newX = max(maxBoundsX, frame.getLocation().x - moveLeft)
+      val newY = max(maxBoundsY, frame.getLocation().y - moveUp)
+
+      // and now that we know our position, we can compute our new size
+      newWidth  = min(newWidth, maxX - newX)
+      newHeight = min(newHeight, maxY - newY)
+
+      // now do it!
+      frame.setBounds(newX, newY, newWidth, newHeight)
+      frame.validate()
+
+      frame.setMinimumSize(new Dimension(_tabManager.interfaceTab.getMinimumWidth, 300))
+
+      // not sure why this is sometimes necessary - ST 11/24/03
+      _tabManager.mainTabs.requestFocus()
     }
-
-    // move up/left to get more room if possible and necessary
-    val moveLeft = max(0, frame.getLocation().x + newWidth  - maxX)
-    val moveUp   = max(0, frame.getLocation().y + newHeight - maxY)
-
-    // now we can compute our new position
-    val newX = max(maxBoundsX, frame.getLocation().x - moveLeft)
-    val newY = max(maxBoundsY, frame.getLocation().y - moveUp)
-
-    // and now that we know our position, we can compute our new size
-    newWidth  = min(newWidth, maxX - newX)
-    newHeight = min(newHeight, maxY - newY)
-
-    // now do it!
-    frame.setBounds(newX, newY, newWidth, newHeight)
-    frame.validate()
-
-    frame.setMinimumSize(new Dimension(_tabManager.interfaceTab.getMinimumWidth, 300))
-
-    // not sure why this is sometimes necessary - ST 11/24/03
-    _tabManager.mainTabs.requestFocus()
   }
 
   /**
