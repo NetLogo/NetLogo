@@ -210,7 +210,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
         growRangeX(x + pen.interval)
       }
 
-      // calling growRanges() twice is sometimes redundant,
+      // calling growRangeX() twice is sometimes redundant,
       // but it's the easiest way to ensure that both the
       // left and right edges of the bar become visible
       // (consider the case where the bar is causing the
@@ -280,10 +280,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
     pen.softReset()
 
     if (autoPlotY) {
-      // note that we pass extraRoom as false; we know the exact height
-      // of the histogram so there's no point in leaving any extra empty
-      // space like we normally do when growing the ranges;
-      // note also that we never grow the x range, only the y range,
+      // note that we never grow the x range, only the y range,
       // because it's the current x range that determined the extent
       // of the histogram in the first place - ST 2/23/06
       growRangeY(histogram.get.ceiling)

@@ -86,8 +86,9 @@ class ServerPlotManager(workspace: AbstractWorkspaceScala, connectionManager: Co
   def defaultYMax(defaultYMax: Double) {yMax(defaultYMax)}
   def defaultAutoPlotX(defaultAutoPlotX: Boolean) {autoPlotX(defaultAutoPlotX)}
   def defaultAutoPlotY(defaultAutoPlotY: Boolean) {autoPlotY(defaultAutoPlotY)}
-  // Sends the java.lang.Character 'n' or 'f', indicating a auto-plot-on and auto-plot-off respectively
+  // Sends the java.lang.Character 'x' or 'z', indicating a auto-plot-x-on and auto-plot-x-off respectively
   def autoPlotX(flag: Boolean) { if (flag) broadcastToClients('x') else broadcastToClients('z') }
+  // Sends the java.lang.Character 'y' or 'w', indicating a auto-plot-y-on and auto-plot-y-off respectively
   def autoPlotY(flag: Boolean) { if (flag) broadcastToClients('y') else broadcastToClients('w') }
   // Sends a java.lang.Short, which is the current plot-pen-mode
   def plotPenMode(plotPenMode: Int) {broadcastToClients(plotPenMode.toShort)}
