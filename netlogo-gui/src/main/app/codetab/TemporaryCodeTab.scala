@@ -67,6 +67,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
 
   setSeparate(separateCodeWindow)
   lineNumbersVisible = tabs.lineNumbersVisible
+  setIndenter(tabs.smartTabbingEnabled)
 
   override val activeMenuActions = {
     Seq(undoAction, redoAction) ++
