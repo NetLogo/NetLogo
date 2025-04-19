@@ -380,7 +380,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   }
 
   def openTempFiles: Seq[String] =
-    getExternalFileTabs.filter(_.isInstanceOf[TemporaryCodeTab]).map(_.filename.toOption.get)
+    getExternalFileTabs.filter(_.isInstanceOf[TemporaryCodeTab]).map(_.filename.toOption).flatten
 
   def setSelectedIndex(index: Int): Unit = {
     if (index >= mainTabs.getTabCount) {
