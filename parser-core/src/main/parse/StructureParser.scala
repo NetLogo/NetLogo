@@ -19,12 +19,13 @@ package org.nlogo.parse
 // include further files.)
 
 import java.util.Locale
-
-import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N,
+import scala.collection.immutable.ListMap
+import org.nlogo.core.{ Breed, CompilationEnvironment, CompilationOperand, CompilerException, ErrorSource, I18N,
                         ProcedureSyntax, Program, StructureResults, Token, TokenizerInterface, TokenType }
 import org.nlogo.core.Fail._
 import org.nlogo.core.FrontEndInterface.ProceduresMap
 import org.nlogo.core.LibraryStatus.CanInstall
+import org.nlogo.core.Library
 import org.nlogo.util.PathUtils
 
 object StructureParser {
@@ -41,25 +42,124 @@ object StructureParser {
             case (results, (filename, source)) =>
               parseOne(tokenizer, structureParser, source, filename, results)
           }
+
         if (subprogram)
           firstResults
         else {
           Iterator.iterate(firstResults) { results =>
-            val suppliedPath = resolveIncludePath(results.includes.head.value.asInstanceOf[String])
-            cAssert(suppliedPath.endsWith(".nls"), IncludeFilesEndInNLS, results.includes.head)
-            includeFile(compilationEnvironment, suppliedPath) match {
-              case Some((path, fileContents)) =>
-                parseOne(tokenizer, structureParser, fileContents, path,
-                  results.copy(includes = results.includes.tail,
-                    includedSources = results.includedSources :+ suppliedPath))
-              case None =>
-                exception(I18N.errors.getN("compiler.StructureParser.includeNotFound", suppliedPath), results.includes.head)
+            var newResults: StructureResults = results
+
+            // Handle libraries
+            if (newResults.libraryTokens.nonEmpty) {
+              val suppliedPath = resolveIncludePath(newResults.libraryTokens.head.value.asInstanceOf[String].toLowerCase + ".nls")
+
+              val maybeCurrentLibrary = newResults.libraries.headOption
+              val previousResults = newResults
+
+              newResults = includeFile(compilationEnvironment, suppliedPath) match {
+
+                case Some((path, fileContents)) =>
+                  parseOne(tokenizer, structureParser, fileContents, path,
+                    newResults.copy(libraryTokens = newResults.libraryTokens.tail,
+                      libraries = newResults.libraries.tail,
+                      includedSources = newResults.includedSources :+ suppliedPath))
+                case None =>
+                  exception(I18N.errors.getN("compiler.StructureParser.libraryNotFound", suppliedPath), newResults.libraryTokens.head)
+              }
+
+              val prefix: String = (for {
+                currentLibrary <- maybeCurrentLibrary
+                alias = currentLibrary.options.flatMap((x) =>
+                  x match {
+                    case Library.LibraryAlias(name) =>
+                      Some(name)
+                  }).headOption
+                } yield alias.getOrElse(currentLibrary.name)).get + ":"
+
+              newResults = newResults.copy(
+                program = prefixProgramChanges(previousResults.program, newResults.program, prefix),
+                procedures = prefixChangedProcedures(previousResults.procedures, newResults.procedures, prefix),
+                procedureTokens = prefixChangedProcedureTokens(previousResults.procedureTokens, newResults.procedureTokens, prefix))
             }
-          }.dropWhile(_.includes.nonEmpty).next()
+
+            // Handle includes
+            if (newResults.includes.nonEmpty) {
+              val suppliedPath = resolveIncludePath(newResults.includes.head.value.asInstanceOf[String])
+              cAssert(suppliedPath.endsWith(".nls"), IncludeFilesEndInNLS, newResults.includes.head)
+              newResults = includeFile(compilationEnvironment, suppliedPath) match {
+                case Some((path, fileContents)) =>
+                  parseOne(tokenizer, structureParser, fileContents, path,
+                    newResults.copy(includes = newResults.includes.tail,
+                      includedSources = newResults.includedSources :+ suppliedPath))
+                case None =>
+                  exception(I18N.errors.getN("compiler.StructureParser.includeNotFound", suppliedPath), newResults.includes.head)
+              }
+            }
+
+            newResults
+          }.dropWhile(x => x.includes.nonEmpty || x.libraryTokens.nonEmpty).next()
         }
       }
   }
 
+  private def prefixProgramChanges(oldProgram: Program, newProgram: Program, prefix: String): Program = {
+    val oldUserGlobalsCount = oldProgram.userGlobals.size
+    val oldTurtleVarsCount = oldProgram.turtleVars.size
+    val oldPatchVarsCount = oldProgram.patchVars.size
+
+    val (oldUserGlobals, changedUserGlobals) = newProgram.userGlobals.splitAt(oldUserGlobalsCount)
+    val (oldTurtleVars, changedTurtleVars) = newProgram.turtleVars.splitAt(oldTurtleVarsCount)
+    val (oldPatchVars, changedPatchVars) = newProgram.patchVars.splitAt(oldPatchVarsCount)
+
+    newProgram.copy(
+      userGlobals = oldUserGlobals ++ changedUserGlobals.map(prefix + _),
+      turtleVars = oldTurtleVars ++ changedTurtleVars.map {case (k, v) => prefix + k -> v},
+      patchVars = oldPatchVars ++ changedPatchVars.map {case (k, v) => prefix + k -> v},
+      breeds = prefixChangedBreeds(oldProgram.breeds, newProgram.breeds, prefix),
+      linkBreeds = prefixChangedBreeds(oldProgram.linkBreeds, newProgram.linkBreeds, prefix))
+  }
+
+  private def prefixChangedBreeds(oldBreeds: ListMap[String, Breed], newBreeds: ListMap[String, Breed], prefix: String): ListMap[String, Breed] = {
+    val oldBreeds_ = oldBreeds.zip(newBreeds.values).map {case ((k, oldBreed), newBreed) =>
+      k -> prefixChangedBreedOwns(oldBreed, newBreed, prefix)
+    }.to(ListMap)
+    val newBreeds_ = newBreeds.drop(oldBreeds.size).map {case (k, v) =>
+      prefix + k -> v.copy(
+        name = prefix + v.name,
+        singular = prefix + v.singular,
+        owns = v.owns.map(prefix + _))
+    }.to(ListMap)
+
+    oldBreeds_ ++ newBreeds_
+  }
+
+  private def prefixChangedBreedOwns(oldBreed: Breed, newBreed: Breed, prefix: String): Breed = {
+    val changedOwns = newBreed.owns.diff(oldBreed.owns)
+    newBreed.copy(owns = oldBreed.owns ++ changedOwns.map(prefix + _))
+  }
+
+  private def prefixChangedProcedures(oldProcedures: ProceduresMap, newProcedures: ProceduresMap, prefix: String): ProceduresMap = {
+    val changedProcedures = newProcedures.drop(oldProcedures.size).map{case (name, proc) =>
+      val decl = proc.procedureDeclaration
+      val newName = prefix.toUpperCase + proc.name
+      val newToken: Token = decl.name.token.copy(text = prefix + proc.name, value = prefix.toUpperCase + decl.name.token.value)(decl.name.token.sourceLocation)
+      val newTokens = decl.tokens.updated(1, newToken) // The token at index 1 is the name of the procedure
+      val newDecl = decl.copy(name = decl.name.copy(name = newName, token = newToken), tokens = newTokens)
+
+      prefix.toUpperCase + name -> new RawProcedure(newDecl, None)}
+
+    oldProcedures ++ changedProcedures
+  }
+
+  private def prefixChangedProcedureTokens(oldProcedureTokens: Map[String, Iterable[Token]], newProcedureTokens: Map[String, Iterable[Token]], prefix: String): Map[String, Iterable[Token]] = {
+    val changedProcedureTokens = newProcedureTokens.drop(oldProcedureTokens.size).map{case (name, proc) =>
+      prefix.toUpperCase + name -> proc
+    }
+
+    oldProcedureTokens ++ changedProcedureTokens
+  }
+
+  // TODO: extend to work with modules
   private def parsingWithExtensions(compilationData: CompilationOperand)
                                    (results: => StructureResults): StructureResults = {
     if (compilationData.subprogram)
@@ -169,16 +269,17 @@ object StructureParser {
   }
 
   // TODO
+  @throws(classOf[CompilerException])
   def findLibraries(tokens: Iterator[Token]): Seq[String] = {
     val libraryPositionedTokens =
       tokens.dropWhile(! _.text.equalsIgnoreCase("library"))
     if (libraryPositionedTokens.isEmpty)
       Seq()
     else {
-      libraryPositionedTokens.next
+      libraryPositionedTokens.next()
       val libraryWithoutComments = libraryPositionedTokens.filter(_.tpe != TokenType.Comment)
-      if (libraryWithoutComments.next.tpe != TokenType.OpenBracket)
-        exception("Did not find expected open bracket for libraries declaration", tokens.next)
+      if (libraryWithoutComments.next().tpe != TokenType.OpenBracket)
+        exception("Did not find expected open bracket for libraries declaration", tokens.next())
       else
         libraryWithoutComments
           .takeWhile(_.tpe != TokenType.CloseBracket)
