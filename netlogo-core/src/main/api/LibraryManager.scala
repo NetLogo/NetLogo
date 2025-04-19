@@ -96,6 +96,8 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
 
   def getExtensionInfos = libraries
 
+  // TODO: maybe add methods for looking up modules and add it to the LibraryManager trait (in parser-core)
+
   override def lookupExtension(name: String, version: String): Option[LibraryInfo] =
     libraries.find(ext => ext.codeName == name)
 
