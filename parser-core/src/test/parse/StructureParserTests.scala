@@ -309,6 +309,10 @@ class StructureParserTests extends AnyFunSuite {
     assert(results.libraries.nonEmpty || results.includedSources.nonEmpty)
   }
 
+  test("libraries syntax detects duplicate imports") {
+    expectParseAllError("libraries [ [foo] [bar] [foo [alias baz]] ]", "Attempted to import a library multiple times")
+  }
+
   test("libraries syntax default alias") {
     val src = """libraries [[foo]]"""
     val nlsSrc = """
