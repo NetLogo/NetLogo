@@ -46,6 +46,15 @@ object StructureParser {
         if (subprogram)
           firstResults
         else {
+          val (maybeDuplicateToken, _) = firstResults.libraryTokens.foldLeft((None: Option[Token], Set(): Set[Token])) {
+            case ((None, previousTokens), x) => (if (previousTokens.contains(x)) Some(x) else None, previousTokens + x)
+
+            // No need to update previousTokens now that we've found something
+            case ((token @ Some(_), previousTokens), _) => (token, previousTokens)
+          }
+
+          maybeDuplicateToken.foreach(exception(I18N.errors.get("compiler.StructureParser.libraryMultipleImports"), _))
+
           Iterator.iterate(firstResults) { results =>
             var newResults: StructureResults = results
 
