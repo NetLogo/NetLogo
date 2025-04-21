@@ -10,7 +10,7 @@ import java.nio.file.{ Path, Paths }
 import java.util.prefs.Preferences
 import javax.swing.{ AbstractAction, Action, JComponent, JFrame }
 
-import org.nlogo.api.{ Exceptions, XMLElement, XMLReader, XMLWriter }
+import org.nlogo.api.Exceptions
 import org.nlogo.app.codetab.{ CodeTab, CodeTabPreferences, ExternalFileManager, MainCodeTab, TemporaryCodeTab }
 import org.nlogo.app.common.{ CommandLine, ExceptionCatchingAction, MenuTab, TabsInterface }
 import org.nlogo.app.common.Events.SwitchedTabsEvent
@@ -764,47 +764,35 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     prefsDialog.foreach(_.syncTheme())
   }
 
-  private def tabFilePath: Option[String] =
-    Option(workspace.getModelFileName).map(name =>
-      Paths.get(System.getProperty("user.home"), ".nlogo", name + ".tmp").toString)
+  private def tabFilePath: Option[Path] =
+    Option(workspace.getModelPath).map(ModelConfig.getModelConfigPath(_).resolve("openTempFiles.txt"))
 
   private def loadOpenTabs(): Unit = {
     loadingTabs = true
 
-    tabFilePath.foreach(path => {
-      if (new File(path).exists) {
-        XMLReader.read(Source.fromFile(path).getLines.mkString("\n")).foreach(el => {
-          if (el.name == "model") {
-            el.getOptionalChild("openTempFiles").foreach(_.getChildren("file").foreach(
-              _.get("path").foreach(openExternalFile(_))))
-          }
-        })
-      }
-    })
+    tabFilePath.filter(_.toFile.exists).foreach { path =>
+      val storedLastModified = ModelConfig.getLastModified(workspace.getModelPath).orNull
+      val actualLastModified = new File(workspace.getModelPath).lastModified.toString
+
+      if (path.toFile.exists && storedLastModified == actualLastModified)
+        Source.fromFile(path.toFile).getLines.foreach(openExternalFile(_))
+    }
 
     loadingTabs = false
   }
 
-  private def saveOpenTabs(): Unit = {
+  def saveOpenTabs(): Unit = {
     if (!loadingTabs) {
-      tabFilePath.foreach(path => {
-        val file = new File(path)
+      tabFilePath.foreach { path =>
+        val file = path.toFile
 
-        file.getParentFile.mkdirs()
+        if (!file.exists)
+          file.getParentFile.mkdirs()
 
-        val writer = new XMLWriter(new PrintWriter(file))
-
-        writer.startDocument()
-        writer.startElement("model")
-        writer.startElement("openTempFiles")
-
-        openTempFiles.foreach(path => writer.element(XMLElement("file", Map("path" -> path), "", Seq())))
-
-        writer.endElement("openTempFiles")
-        writer.endElement("model")
-        writer.endDocument()
-        writer.close()
-      })
+        new PrintWriter(file) {
+          openTempFiles.foreach(this.println)
+        }.close()
+      }
     }
   }
 }

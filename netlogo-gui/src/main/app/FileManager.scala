@@ -401,6 +401,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
           new OptionPane(parent, I18N.gui.get("common.netlogo"), I18N.gui.getN("menu.file.save.error", e.getMessage),
                          OptionPane.Options.Ok, OptionPane.Icons.Error)
         case _ =>
+          ModelConfig.setLastModified(workspace.getModelPath)
       }
     }
   }
@@ -469,6 +470,8 @@ class FileManager(workspace: AbstractWorkspaceScala,
             case tempTab: TemporaryCodeTab => tempTab.save(saveAs)
             case _ => saveModel(saveAs)
           }
+
+          tabManager.saveOpenTabs()
         }
       }
 
