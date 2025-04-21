@@ -65,6 +65,8 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
       }
     })
 
+    getRootPane.setDefaultButton(okButton)
+
     setResizable(false)
     setVisible(true)
   }
