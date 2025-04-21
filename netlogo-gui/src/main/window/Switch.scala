@@ -64,9 +64,10 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
       add(label, c)
 
-      c.insets = new Insets(0, 0, 0, 6)
-      c.fill = GridBagConstraints.NONE
+      c.insets = new Insets(6, 0, 6, 6)
+      c.fill = GridBagConstraints.VERTICAL
       c.weightx = 0
+      c.weighty = 1
       c.anchor = GridBagConstraints.EAST
 
       add(toggle, c)
@@ -79,9 +80,10 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
 
       add(label, c)
 
-      c.insets = new Insets(0, 0, 0, 12)
-      c.fill = GridBagConstraints.NONE
+      c.insets = new Insets(6, 0, 6, 12)
+      c.fill = GridBagConstraints.VERTICAL
       c.weightx = 0
+      c.weighty = 1
       c.anchor = GridBagConstraints.EAST
 
       add(toggle, c)
@@ -138,18 +140,14 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   protected class Toggle extends JPanel {
     private var hover = false
 
-    locally {
-      val size =
-        if (_oldSize) {
-          new Dimension(10, 20)
-        } else {
-          new Dimension(10, 25)
-        }
+    override def getMinimumSize: Dimension =
+      new Dimension((10 * zoomFactor).toInt, super.getPreferredSize.height)
 
-      setPreferredSize(size)
-      setMinimumSize(size)
-      setMaximumSize(size)
-    }
+    override def getPreferredSize: Dimension =
+      getMinimumSize
+
+    override def getMaximumSize: Dimension =
+      getMinimumSize
 
     setOpaque(false)
 
