@@ -70,7 +70,6 @@ class InfoTab(attachModelDir: String => String)
     addHyperlinkListener(InfoTab.this)
   }
 
-  private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION)
   private val editableButton = new ToolBarToggleButton(new EditableAction(I18N.gui.get("tabs.info.edit"))) with ThemeSync {
     override def syncTheme(): Unit = {
       setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15,
@@ -81,6 +80,7 @@ class InfoTab(attachModelDir: String => String)
               }))
     }
   }
+  private val findButton = new ToolBarActionButton(FindDialog.FIND_ACTION)
   private val helpButton = new ToolBarActionButton(new AbstractAction(I18N.gui.get("tabs.info.help")) {
     override def actionPerformed(e: ActionEvent): Unit = {
       BrowserLauncher.openPath(InfoTab.this, baseDocPath, "information")
@@ -109,7 +109,7 @@ class InfoTab(attachModelDir: String => String)
     setBorder(new EmptyBorder(24, 6, 12, 6))
 
     override def addControls() {
-      this.addAll(findButton, editableButton, helpButton)
+      this.addAll(editableButton, findButton, helpButton)
     }
   }
 
