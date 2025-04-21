@@ -213,7 +213,7 @@ class TabLabel(startPanel: TabsPanel, text: String, tab: Component) extends JPan
 class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.TOP, JTabbedPane.SCROLL_TAB_LAYOUT)
                                             with ChangeListener {
 
-  private var mouse = new Point(0, 0)
+  private var mouse: Option[Point] = None
 
   setUI(new TabsPanelUI(this))
   setFocusable(false)
@@ -230,11 +230,17 @@ class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.T
         }
       }
     }
+
+    override def mouseExited(e: MouseEvent): Unit = {
+      mouse = None
+
+      repaint()
+    }
   })
 
   addMouseMotionListener(new MouseMotionAdapter {
     override def mouseMoved(e: MouseEvent): Unit = {
-      mouse = e.getPoint
+      mouse = Option(e.getPoint)
 
       repaint()
     }
@@ -268,13 +274,14 @@ class TabsPanel(val tabManager: TabManager) extends JTabbedPane(SwingConstants.T
     getTabComponentAt(index).asInstanceOf[TabLabel]
 
   def isHover(index: Int): Boolean = {
-    if (getTabCount == 0) {
-      false
-    } else {
-      val component = getTabComponentAt(index)
+    mouse match {
+      case Some(point) if getTabCount > 0 =>
+        val component = getTabComponentAt(index)
 
-      component.getX - 10 <= mouse.x && component.getX + 10 + component.getWidth >= mouse.x &&
-      component.getY <= mouse.y && component.getY + component.getHeight >= mouse.y
+        component.getX - 10 <= point.x && component.getX + 10 + component.getWidth >= point.x &&
+        component.getY <= point.y && component.getY + component.getHeight >= point.y
+
+      case _ => false
     }
   }
 }
