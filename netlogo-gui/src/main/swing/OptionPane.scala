@@ -35,9 +35,6 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
 
   private var selectedOption: Option[String] = None
 
-  // outside locally block to allow subclasses to focus OK button after specific actions (Isaac B 3/14/25)
-  protected val okButton = new DialogButton(true, options(0), selectAction(_))
-
   locally {
     getContentPane.setBackground(InterfaceColors.dialogBackground)
     getContentPane.setLayout(new GridBagLayout)
@@ -49,6 +46,8 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
     c.gridx = 0
     c.fill = GridBagConstraints.NONE
     c.insets = new Insets(0, 6, 6, 6)
+
+    val okButton = new DialogButton(true, options(0), selectAction(_))
 
     add(new ButtonPanel(okButton +: options.tail.map(new DialogButton(false, _, selectAction(_)))), c)
 
@@ -231,7 +230,6 @@ class DropdownOptionPane[T](parent: Component, title: String, message: String, c
 
     dropdown.addItemListener(_ => {
       packAndCenter()
-      okButton.requestFocus()
     })
   }
 }
