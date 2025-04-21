@@ -82,7 +82,7 @@ class RecentFiles {
   val key = if (Version.is3D) "recent_files_3d" else "recent_files"
   val maxEntries = 8
 
-  loadFromPrefs()
+  loadFromPrefs(true)
 
   private var _models: List[ModelEntry] = _
   def models = _models
@@ -104,8 +104,9 @@ class RecentFiles {
     try Some(ModelEntry(new File(modelEntry.path).getCanonicalPath(), modelEntry.modelType))
     catch { case _: java.io.IOException => None }
 
-  def loadFromPrefs() {
-    models = prefs.get(key, "").linesIterator.toList.map(new ModelEntry(_)).filter(entry => new File(entry.path).exists)
+  def loadFromPrefs(filter: Boolean = false): Unit = {
+    models = prefs.get(key, "").linesIterator.toList.map(new ModelEntry(_))
+                                                    .filter(entry => !filter || new File(entry.path).exists)
   }
 
   def add(modelEntry: ModelEntry) {
