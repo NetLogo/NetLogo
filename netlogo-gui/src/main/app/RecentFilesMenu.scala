@@ -4,6 +4,7 @@ package org.nlogo.app
 
 import java.awt.Component
 import java.awt.event.ActionEvent
+import java.io.File
 import java.util.prefs.Preferences
 import javax.swing.{ AbstractAction, Action }
 
@@ -100,11 +101,11 @@ class RecentFiles {
    * e.g., paths that are too long. NP 2014-01-29.
    */
   private def ensureCanonicalPath(modelEntry: ModelEntry): Option[ModelEntry] =
-    try Some(ModelEntry(new java.io.File(modelEntry.path).getCanonicalPath(), modelEntry.modelType))
+    try Some(ModelEntry(new File(modelEntry.path).getCanonicalPath(), modelEntry.modelType))
     catch { case _: java.io.IOException => None }
 
   def loadFromPrefs() {
-    models = prefs.get(key, "").linesIterator.toList.map(new ModelEntry(_))
+    models = prefs.get(key, "").linesIterator.toList.map(new ModelEntry(_)).filter(entry => new File(entry.path).exists)
   }
 
   def add(modelEntry: ModelEntry) {
