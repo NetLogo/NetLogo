@@ -23,5 +23,7 @@ object Splash {
     splashWindow = null
   }
 
-  val splash = new JLabel(Utils.iconScaled("/images/banner.png", 3680 / 5, 2008 / 5))
+  private def scale(x: Int) = (x / 7.2).toInt
+
+  val splash = new JLabel(Utils.iconScaled("/images/banner.png", scale(3680), scale(2008)))
 }
