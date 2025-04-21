@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import java.awt.{ Graphics, RadialGradientPaint }
-import java.awt.event.{ MouseAdapter, MouseEvent, MouseMotionAdapter }
+import java.awt.event.{ InputEvent, MouseAdapter, MouseEvent, MouseMotionAdapter }
 import javax.swing.JSlider
 import javax.swing.plaf.basic.BasicSliderUI
 
@@ -120,9 +120,21 @@ class SliderWidgetUI(widget: AbstractSliderWidget, slider: JSlider) extends Basi
   override def createTrackListener(slider: JSlider): TrackListener =
     new TrackListener {
       override def mousePressed(e: MouseEvent): Unit = {
-        if (thumbRect.contains(e.getPoint)) {
-          super.mousePressed(e)
-        } else if (e.getButton == MouseEvent.BUTTON1) {
+        if (e.getButton == MouseEvent.BUTTON1) {
+          slider.requestFocus()
+
+          if (widget.vertical) {
+            slider.setValue(valueForYPosition(e.getPoint.y))
+          } else {
+            slider.setValue(valueForXPosition(e.getPoint.x))
+          }
+
+          widget.updateValue()
+        }
+      }
+
+      override def mouseDragged(e: MouseEvent): Unit = {
+        if ((e.getModifiersEx & InputEvent.BUTTON1_DOWN_MASK) == InputEvent.BUTTON1_DOWN_MASK) {
           slider.requestFocus()
 
           if (widget.vertical) {
