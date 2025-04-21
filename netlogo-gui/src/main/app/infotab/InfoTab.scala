@@ -109,7 +109,7 @@ class InfoTab(attachModelDir: String => String)
     setBorder(new EmptyBorder(24, 6, 12, 6))
 
     override def addControls() {
-      this.addAll(editableButton, findButton, helpButton)
+      this.addAll(findButton, editableButton, helpButton)
     }
   }
 
