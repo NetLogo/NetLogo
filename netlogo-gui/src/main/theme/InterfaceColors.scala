@@ -760,7 +760,11 @@ object InterfaceColors {
 
   // Syntax highlighting colors
 
-  def commentColor = new Color(150, 150, 150) // light gray
+  def commentColor =
+    getTheme match {
+      case "classic" | "light" => new Color(120, 120, 120) // medium gray
+      case "dark" => new Color(150, 150, 150) // light gray
+    }
 
   def commandColor =
     getTheme match {
