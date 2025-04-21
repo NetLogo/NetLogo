@@ -61,8 +61,8 @@ object InterfaceColors {
 
   def widgetPreviewCoverNote =
     getTheme match {
-      case "classic" | "light" => new Color(225, 225, 225, 75)
-      case "dark" => new Color(30, 30, 30, 75)
+      case "classic" | "light" => new Color(175, 175, 175, 75)
+      case "dark" => new Color(100, 100, 100, 75)
     }
 
   def widgetHandle =
