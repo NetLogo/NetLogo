@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ Dimension, Frame, GraphicsEnvironment, Toolkit, BorderLayout}
+import java.awt.{ Dimension, EventQueue, Frame, GraphicsEnvironment, Toolkit, BorderLayout}
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.prefs.Preferences
@@ -759,8 +759,19 @@ class App extends
   private def reload() {
     val modelType = workspace.getModelType
     val path = workspace.getModelPath
-    if (modelType != ModelType.New && path != null) openFromSource(FileIO.fileToString(path), path, modelType)
+    if (modelType != ModelType.New && path != null) tryOpenFromSource(path, modelType)
     else commandLater("print \"can't, new model\"")
+  }
+
+  private def tryOpenFromSource(path: String, modelType: ModelType): Unit = {
+    val source = FileIO.fileToString(path)
+    // sometimes the filesystem does weird things and the file is empty for a moment,
+    // so we keep trying until the file contents are resolved (Isaac B 4/22/25)
+    if (source.isEmpty) {
+      EventQueue.invokeLater(() => tryOpenFromSource(path, modelType))
+    } else {
+      openFromSource(source, path, modelType)
+    }
   }
 
   private def magicOpen(name: String) {

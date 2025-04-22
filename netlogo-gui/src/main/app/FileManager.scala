@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ Component, Container, FileDialog => AWTFileDialog }
+import java.awt.{ Component, Container, FileDialog => AWTFileDialog, KeyboardFocusManager }
 import java.io.{ File, IOException }
 import java.net.{ URI, URISyntaxException }
 import java.nio.file.Paths
@@ -347,20 +347,31 @@ class FileManager(workspace: AbstractWorkspaceScala,
   }
 
   private def loadModel(uri: URI, openModel: (OpenModel.Controller) => Option[Model]): Option[Model] = {
-    val result = ModalProgressTask.runForResultOnBackgroundThread(
-      Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"),
-      (dialog) => new BackgroundFileController(dialog, controller),
-      (fileController: BackgroundFileController) =>
-        try {
-          openModel(fileController)
-        } catch {
-          case e: Exception => println("Exception in FileMenu.loadModel: " + e)
+    // if NetLogo isn't currently focused, don't open the progress dialog or it will refocus NetLogo (Isaac B 4/22/25)
+    if (KeyboardFocusManager.getCurrentKeyboardFocusManager.getActiveWindow == null) {
+      try {
+        openModel(controller)
+      } catch {
+        case e: Exception =>
+          println("Exception in FileMenu.loadModel: " + e)
           None
-        })
-    if (result.isEmpty) {
-      new LoadErrorEvent().raise(eventRaiser)
+      }
+    } else {
+      val result = ModalProgressTask.runForResultOnBackgroundThread(
+        Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"),
+        (dialog) => new BackgroundFileController(dialog, controller),
+        (fileController: BackgroundFileController) =>
+          try {
+            openModel(fileController)
+          } catch {
+            case e: Exception => println("Exception in FileMenu.loadModel: " + e)
+            None
+          })
+      if (result.isEmpty) {
+        new LoadErrorEvent().raise(eventRaiser)
+      }
+      result
     }
-    result
   }
 
   @throws(classOf[UserCancelException])
@@ -387,7 +398,7 @@ class FileManager(workspace: AbstractWorkspaceScala,
     // if there's no thunk, the user canceled the save
     saveThunk.foreach { thunk =>
       val saver = new Saver(thunk)
-      val focusOwner = java.awt.KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner()
+      val focusOwner = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner()
       val tempParent = if (focusOwner == null) parent else focusOwner
 
       ModalProgressTask.onUIThread(Hierarchy.getFrame(tempParent),
@@ -417,8 +428,14 @@ class FileManager(workspace: AbstractWorkspaceScala,
           runLoad(parent, uri, model, modelType, shouldAutoInstallLibs)
         }
       }
-      ModalProgressTask.onUIThread(
-        Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"), loader)
+
+      // if NetLogo isn't currently focused, don't open the progress dialog or it will refocus NetLogo (Isaac B 4/22/25)
+      if (KeyboardFocusManager.getCurrentKeyboardFocusManager.getActiveWindow == null) {
+        loader.run()
+      } else {
+        ModalProgressTask.onUIThread(
+          Hierarchy.getFrame(parent), I18N.gui.get("dialog.interface.loading.task"), loader)
+      }
     }
   }
 
