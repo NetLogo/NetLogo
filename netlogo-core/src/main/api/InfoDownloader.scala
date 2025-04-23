@@ -35,7 +35,7 @@ trait InfoDownloader {
         val localHash = prefs.getByteArray(urlToFullHash(url), null)
         val newHash   = md.digest
 
-        if (true || !Arrays.equals(localHash, newHash)) {
+        if (!Arrays.equals(localHash, newHash)) {
           prefs.putByteArray(urlToFullHash(url), newHash)
           callback(new File(FileIO.perUserFile(urlToHash(url))))
         }
