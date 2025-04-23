@@ -5,7 +5,7 @@ package org.nlogo.prim
 import scala.collection.mutable.Map
 
 import org.nlogo.api.Dump
-import org.nlogo.core.LogoList
+import org.nlogo.core.{ I18N, LogoList }
 import org.nlogo.nvm.{ Context, Command, RuntimePrimitiveException, Workspace }
 
 case class NestException(list: LogoList) extends Throwable
@@ -23,10 +23,10 @@ private class NestedListIter(private var list: LogoList) {
   def nest(totalNeeded: Int): Unit = {
     values.head match {
       case l: LogoList =>
-        if (l.size != totalNeeded)
+        if (l.size < totalNeeded)
           throw NestException(l)
 
-        values = l.toList ++ values.tail
+        values = l.toList.take(totalNeeded) ++ values.tail
 
       case _ => // error, expected list
     }
@@ -75,7 +75,7 @@ class _multiassign(private[this] val name: String, private[this] val totalNeeded
 
   def perform_1(context: Context, list: LogoList): Unit = {
     if (totalNeeded > list.size) {
-      val message = s"The list of values for $name must be at least as long as the list of names.  We need $totalNeeded value(s) but only got ${list.size} from the list ${Dump.logoObject(list)}."
+      val message = I18N.errors.getN("compiler.MultiAssign.tooFewValues", name, totalNeeded.toString, list.size.toString, Dump.logoObject(list))
       throw new RuntimePrimitiveException(context, this, message)
     }
     MultiAssign.setCurrentList(context.job.workspace, list)

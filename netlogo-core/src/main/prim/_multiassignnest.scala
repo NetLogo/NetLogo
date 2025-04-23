@@ -2,15 +2,18 @@
 
 package org.nlogo.prim
 
+import org.nlogo.api.Dump
+import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 
-class _multiassignnest(totalNeeded: Int) extends Command {
+class _multiassignnest(private[this] val name: String, totalNeeded: Int) extends Command {
   override def perform(context: Context): Unit = {
     try {
       MultiAssign.nest(context.job.workspace, totalNeeded)
     } catch {
       case NestException(list) =>
-        throw new RuntimePrimitiveException(context, this, s"Expected list of length ${totalNeeded}, got ${list}")
+        val message = I18N.errors.getN("compiler.MultiAssign.tooFewValues", name, totalNeeded.toString, list.size.toString, Dump.logoObject(list))
+        throw new RuntimePrimitiveException(context, this, message)
     }
 
     context.ip = next

@@ -2,7 +2,7 @@
 
 package org.nlogo.parse
 
-import org.nlogo.core.{ Token, TokenType }
+import org.nlogo.core.{ I18N, Token, TokenType }
 import org.nlogo.core.Fail._
 import org.nlogo.core.prim.{ _abstractset, _multiset, _set }
 
@@ -49,7 +49,7 @@ object SplitSet {
     }
 
     if (sets.length == 0)
-      exception("The list of variables names given to SET must contain at least one item.", token)
+      exception(I18N.errors.getN("compiler.MultiAssign.emptyVarList", "SET"), token)
 
     val multi = _multiset(sets)
 
