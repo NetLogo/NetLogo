@@ -84,7 +84,7 @@ package org.nlogo.parse
 //    LetScoper, but it would result in having to change the syntax of the _let primitive,
 //    seems awkward and confusing.
 
-import org.nlogo.core.{ Reporter, Token, TokenType, Let }
+import org.nlogo.core.{ I18N, Let, Reporter, Token, TokenType }
 import org.nlogo.core.Fail._
 import org.nlogo.core.prim.{ _abstractlet, _let, _multilet }
 
@@ -165,7 +165,7 @@ object LetScope {
     }
 
     if (lets.length == 0)
-      exception("The list of variables names given to LET must contain at least one item.", token)
+      exception(I18N.errors.getN("compiler.MultiAssign.emptyVarList", "LET"), token)
 
     val multi = _multilet(lets)
 

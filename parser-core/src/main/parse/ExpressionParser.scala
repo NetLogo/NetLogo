@@ -61,7 +61,7 @@ object ExpressionParser {
                 b += letStatement
 
               case let @ core.prim._multilet(lets) =>
-                val enter = new core.prim._multiassignnest(lets.size)
+                val enter = new core.prim._multiassignnest("LET", lets.size)
 
                 enter.token = let.token
 
@@ -119,7 +119,7 @@ object ExpressionParser {
                 b += new core.Statement(set, setArgs, set.token.sourceLocation)
 
               case set @ core.prim._multiset(sets) =>
-                val enter = new core.prim._multiassignnest(sets.size)
+                val enter = new core.prim._multiassignnest("SET", sets.size)
 
                 enter.token = set.token
 

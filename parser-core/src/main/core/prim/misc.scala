@@ -254,7 +254,7 @@ case class _multiassignitem() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(ret = Syntax.WildcardType, right = List(Syntax.ListType))
 }
-case class _multiassignnest(totalNeeded: Int) extends Command {
+case class _multiassignnest(prim: String, totalNeeded: Int) extends Command {
   override def syntax =
     Syntax.commandSyntax()
 }

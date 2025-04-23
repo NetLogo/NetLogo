@@ -172,10 +172,5 @@ MultiNestFromReporter
 
 MultiNestLengthErrorLess
   globals [ g1 g2 g3 g4 ]
-  O> let [ a [ b c d ] ] [ 1 [ 2 3 ] ] => ERROR Expected list of length 3, got [2.0, 3.0]
-  O> set [ g1 [ g2 g3 g4 ] ] [ 1 [ 2 3 ] ] => ERROR Expected list of length 3, got [2.0, 3.0]
-
-MultiNestLengthErrorGreater
-  globals [ g1 g2 g3 ]
-  O> let [ a [ b c ] ] [ 1 [ 2 3 4 ] ] => ERROR Expected list of length 2, got [2.0, 3.0, 4.0]
-  O> set [ g1 [ g2 g3 ] ] [ 1 [ 2 3 4 ] ] => ERROR Expected list of length 2, got [2.0, 3.0, 4.0]
+  O> let [ a [ b c d ] ] [ 1 [ 2 3 ] ] => ERROR The list of values for LET must be at least as long as the list of names.  We need 3 value(s) but only got 2 from the list [2 3].
+  O> set [ g1 [ g2 g3 g4 ] ] [ 1 [ 2 3 ] ] => ERROR The list of values for SET must be at least as long as the list of names.  We need 3 value(s) but only got 2 from the list [2 3].
