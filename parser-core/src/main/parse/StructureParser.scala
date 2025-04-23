@@ -55,6 +55,8 @@ object StructureParser {
 
           maybeDuplicateToken.foreach(exception(I18N.errors.get("compiler.StructureParser.libraryMultipleImports"), _))
 
+          var processedLibraries: Set[String] = Set()
+
           Iterator.iterate(firstResults) { results =>
             var newResults: StructureResults = results
 
@@ -62,7 +64,6 @@ object StructureParser {
             if (newResults.libraryTokens.nonEmpty) {
               val suppliedPath = resolveIncludePath(newResults.libraryTokens.head.value.asInstanceOf[String].toLowerCase + ".nls")
 
-              val maybeCurrentLibrary = newResults.libraries.headOption
               val previousResults = newResults
 
               newResults = includeFile(compilationEnvironment, suppliedPath) match {
@@ -76,8 +77,19 @@ object StructureParser {
                   exception(I18N.errors.getN("compiler.StructureParser.libraryNotFound", suppliedPath), newResults.libraryTokens.head)
               }
 
+              results.libraries.headOption match {
+                case Some(x) =>
+                  if (processedLibraries.contains(x.name)) {
+                    exception(I18N.errors.getN("compiler.StructureParser.libraryImportLoop"), results.libraryTokens.headOption.get)
+                  } else {
+                    processedLibraries += x.name
+                  }
+                case None =>
+                  ()
+              }
+
               val prefix: String = (for {
-                currentLibrary <- maybeCurrentLibrary
+                currentLibrary <- results.libraries.headOption
                 alias = currentLibrary.options.flatMap((x) =>
                   x match {
                     case Library.LibraryAlias(name) =>
