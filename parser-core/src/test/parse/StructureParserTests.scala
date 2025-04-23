@@ -285,17 +285,22 @@ class StructureParserTests extends AnyFunSuite {
     expectError("breed [ cats cats ]", "A breed cannot have the same plural and singular name")
   }
 
-  def compileAll(src: String, nlsSrc: String): StructureResults = {
+  def compileAll(src: String, nlsSrc1: String, nlsSrc2: String = ""): StructureResults = {
     StructureParser.parseSources(
       tokenizer,
       CompilationOperand( Map("" -> src), new DummyExtensionManager, new DummyLibraryManager
                         , new DummyCompilationEnvironment, subprogram = false),
-      (_, name) => if (name == "foo.nls") Some(("foo.nls", nlsSrc)) else None)
+      (_, name) =>
+        name match {
+          case "foo.nls" => Some(("foo.nls", nlsSrc1))
+          case "bar.nls" if nlsSrc2.nonEmpty => Some(("bar.nls", nlsSrc2))
+          case _ => None
+        })
   }
 
-  def expectParseAllError(src: String, error: String, nlsSrc: String = "") = {
+  def expectParseAllError(src: String, error: String, nlsSrc1: String = "", nlsSrc2: String = "") = {
     val e = intercept[CompilerException] {
-      compileAll(src, nlsSrc)
+      compileAll(src, nlsSrc1, nlsSrc2)
     }
     assertResult(error)(e.getMessage.takeWhile(_ != ','))
   }
@@ -311,6 +316,14 @@ class StructureParserTests extends AnyFunSuite {
 
   test("libraries syntax detects duplicate imports") {
     expectParseAllError("libraries [ [foo] [bar] [foo [alias baz]] ]", "Attempted to import a library multiple times")
+  }
+
+  test("libraries syntax detects import loops") {
+    expectParseAllError(
+      "libraries [ [foo] ]",
+      "Found a loop in the library import chain",
+      "libraries [[bar]]",
+      "libraries [[foo]]")
   }
 
   test("libraries syntax default alias") {
