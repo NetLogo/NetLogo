@@ -54,7 +54,7 @@ string</input>
       </pen>
     </plot>
     <output x="13" y="383" height="54" fontSize="8" width="240"></output>
-    <note x="214" y="181" height="42" textColorDark="-1" backgroundDark="-13791810" textColorLight="-16777216" backgroundLight="-13791810" fontSize="25" width="150">nota bene</note>
+    <note x="214" y="181" height="42" textColorDark="-1" backgroundDark="-13791810" textColorLight="-16777216" backgroundLight="-13791810" fontSize="25" width="150" markdown="false">nota bene</note>
   </widgets>
   <info>## WHAT IS IT?
 
