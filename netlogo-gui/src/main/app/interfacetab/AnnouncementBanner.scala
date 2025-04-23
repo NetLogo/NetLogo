@@ -52,6 +52,7 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
         announcements.headOption.foreach {
           ann =>
             BrowserLauncher.openURI(new URI(s"https://ccl.northwestern.edu/netlogo/announce.shtml#news-item-${ann.id}"))
+            ggGoNext()
         }
       }
 
