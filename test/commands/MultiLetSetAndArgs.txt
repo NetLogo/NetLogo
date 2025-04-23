@@ -153,7 +153,7 @@ MultiNestLiteral
 
 MultiNestFromReporter
   globals [ g1 g2 g3 g4 g5 g6 ]
-  to-report get-values report [ 123 [ 22.5 67 [ 42 -33 ] -99.9999 ] ] end
+  to-report get-values report [ 123 [ 22.5 67 [ 42 -33 99 ] -99.9999 22 ] ] end
   O> let [ a [ b c [ d f ] g ] ] get-values set g1 a set g2 b set g3 c set g4 d set g5 f set g6 g
   g1 => 123
   g2 => 22.5
