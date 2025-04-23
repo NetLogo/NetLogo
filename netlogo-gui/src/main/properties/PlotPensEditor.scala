@@ -254,8 +254,14 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
       def getCellEditorValue = currentColor
 
-      def getTableCellEditorComponent(table: JTable, value: Object, isSelected: Boolean, row: Int, col: Int) =
+      def getTableCellEditorComponent(table: JTable, value: Object, isSelected: Boolean, row: Int, col: Int) = {
+        if (value != null) {
+          currentColor = value.asInstanceOf[ColorInfo]
+          button.setBackground(currentColor.color)
+        }
         button
+      }
+
     }
 
     // used to display the name. displays in red if there are errors associated with the pen.
