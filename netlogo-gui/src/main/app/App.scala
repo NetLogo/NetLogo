@@ -2,7 +2,7 @@
 
 package org.nlogo.app
 
-import java.awt.{ Dimension, EventQueue, Frame, GraphicsEnvironment, Toolkit, BorderLayout}
+import java.awt.{ Dimension, EventQueue, Frame, GraphicsEnvironment, KeyboardFocusManager, Toolkit, BorderLayout}
 import java.awt.event.ActionEvent
 import java.io.File
 import java.util.prefs.Preferences
@@ -966,8 +966,11 @@ class App extends
       _tabManager.interfaceTab.resetSplitPane()
       preferredSizeAtLoadEndTime = frame.getPreferredSize()
     }
-    frame.toFront()
-    _tabManager.interfaceTab.requestFocus()
+
+    if (KeyboardFocusManager.getCurrentKeyboardFocusManager.getActiveWindow != null) {
+      frame.toFront()
+      _tabManager.interfaceTab.requestFocus()
+    }
 
     syncWindowThemes()
   }
