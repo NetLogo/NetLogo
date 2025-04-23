@@ -43,8 +43,8 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
     setBorder(BorderFactory.createMatteBorder(1, 0, 1, 0, InterfaceColors.viewBorder))
     setLayout(new GridBagLayout)
 
-    Util.modifyFont(annTitle)(_.deriveFont(24f))
-    Util.modifyFont(annText )(_.deriveFont(18f))
+    Util.modifyFont(annTitle)(_.deriveFont(20f))
+    Util.modifyFont(annText )(_.deriveFont(16f))
 
     addMouseListener(new MouseAdapter() {
 
@@ -142,7 +142,7 @@ class AnnouncementBanner extends JPanel with MouseUtils with ThemeSync {
   }
 
   override def getPreferredSize: Dimension =
-    new Dimension(super.getPreferredSize.width, 100)
+    new Dimension(super.getPreferredSize.width, 80)
 
   override def syncTheme(): Unit = {
     renderData()
@@ -171,7 +171,7 @@ private class XButton(dismissItem: () => Unit) extends JButton with MouseUtils w
 
   private def defaultXColor() = InterfaceColors.toolbarControlFocus
 
-  private val setXColor = (color: Color) => setIcon(Utils.iconScaledWithColor("/images/close-light.png", 20, 20, color))
+  private val setXColor = (color: Color) => setIcon(Utils.iconScaledWithColor("/images/close-light.png", 18, 18, color))
 
   setBorderPainted(false)
   setContentAreaFilled(false)
@@ -222,7 +222,7 @@ private class ComplexXWrapper(dismissItem: () => Unit) extends JPanel with Mouse
   setOpaque(false)
   setBorder(new EmptyBorder(2, 12, 2, 12))
 
-  Util.modifyFont(complexXNum)(_.deriveFont(20f))
+  Util.modifyFont(complexXNum)(_.deriveFont(16f))
   complexXNum.setBorder(new EmptyBorder(0, 0, 0, 7))
 
   complexX.setIcon(Utils.iconScaledWithColor("/images/chevron-right.png", 10, 10, InterfaceColors.toolbarControlFocus))
