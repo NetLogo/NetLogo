@@ -55,7 +55,7 @@ case class Button(source: Option[String],
 case class TextBox(display: Option[String],
   x: Int = 0, y: Int = 0,
   width: Int = 5, height: Int = 5,
-  fontSize: Int,
+  fontSize: Int, markdown: Boolean = false,
   textColorLight: Option[Int] = None, textColorDark: Option[Int] = None,
   backgroundLight: Option[Int] = None, backgroundDark: Option[Int] = None) extends Widget {
 

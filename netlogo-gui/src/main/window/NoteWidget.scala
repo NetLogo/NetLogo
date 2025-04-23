@@ -2,8 +2,19 @@
 
 package org.nlogo.window
 
+import com.vladsch.flexmark.Extension
+import com.vladsch.flexmark.html.HtmlRenderer
+import com.vladsch.flexmark.parser.{ Parser, ParserEmulationProfile }
+import com.vladsch.flexmark.util.options.MutableDataSet
+import com.vladsch.flexmark.ext.escaped.character.EscapedCharacterExtension
+import com.vladsch.flexmark.ext.autolink.AutolinkExtension
+import com.vladsch.flexmark.ext.typographic.TypographicExtension
+
 import java.awt.{ Color, Dimension, GridBagConstraints, GridBagLayout, Insets, Rectangle }
+import java.util.ArrayList
 import javax.swing.JLabel
+
+import org.apache.commons.text.StringEscapeUtils
 
 import org.nlogo.api.{ Editable, Property }
 import org.nlogo.core.{ TextBox => CoreTextBox }
@@ -42,13 +53,41 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   private var _textColorDark = Color.WHITE
   private var _backgroundLight = InterfaceColors.Transparent
   private var _backgroundDark = InterfaceColors.Transparent
+  private var _markdown = false
+
+  private val (renderer: HtmlRenderer, parser: Parser) = {
+    val extensions = new ArrayList[Extension]
+
+    extensions.add(EscapedCharacterExtension.create())
+    extensions.add(TypographicExtension.create())
+    extensions.add(AutolinkExtension.create())
+
+    val options = new MutableDataSet
+
+    options.setFrom(ParserEmulationProfile.PEGDOWN)
+    options.set(HtmlRenderer.SOFT_BREAK, "<br />\n")
+    options.set(HtmlRenderer.HARD_BREAK, "<br />\n")
+    options.set(TypographicExtension.ENABLE_QUOTES, Boolean.box(true))
+    options.set(TypographicExtension.ENABLE_SMARTS, Boolean.box(true))
+    options.set(Parser.MATCH_CLOSING_FENCE_CHARACTERS, Boolean.box(false))
+    options.set(Parser.EXTENSIONS, extensions)
+
+    val opts = options.toImmutable
+
+    (HtmlRenderer.builder(opts).build(), Parser.builder(opts).build())
+  }
 
   override def propertySet: Seq[Property] = Properties.text
   override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.note")
   override def isNote = true
 
   private def wrapText(): Unit = {
-    textLabel.setText(s"""<html>${_text.replace("\n", "<br>")}</html>""")
+    if (_markdown) {
+      textLabel.setText(s"""<html>${renderer.render(parser.parse(_text))}</html>""")
+    } else {
+      textLabel.setText(s"""<html>${StringEscapeUtils.escapeHtml4(_text).replaceAll("\n", "<br>")}</html>""")
+    }
+
     repaint()
   }
 
@@ -98,6 +137,12 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     syncTheme()
   }
 
+  def markdown: Boolean = _markdown
+  def markdown_=(value: Boolean): Unit = {
+    _markdown = value
+    wrapText()
+  }
+
   override def setBounds(r: Rectangle): Unit = {
     if (r.width > 0) _width = r.width
     super.setBounds(r)
@@ -137,7 +182,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     val txt = if (text != null && text.trim != "") Some(text) else None
     CoreTextBox(display = txt,
       x = b.x, y = b.y, width = b.width, height = b.height,
-      fontSize = fontSize,
+      fontSize = fontSize, markdown = markdown,
       textColorLight = Some(textColorLight.getRGB), textColorDark = Some(textColorDark.getRGB),
       backgroundLight = Some(backgroundLight.getRGB), backgroundDark = Some(backgroundDark.getRGB))
   }
@@ -145,6 +190,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   override def load(model: WidgetModel): AnyRef = {
     text = model.display.getOrElse("")
     fontSize = model.fontSize
+    markdown = model.markdown
     model.textColorLight.foreach { c => textColorLight = new Color(c, true) }
     model.textColorDark.foreach { c => textColorDark = new Color(c, true) }
     model.backgroundLight.foreach { c => backgroundLight = new Color(c, true) }

@@ -81,7 +81,8 @@ object Properties {
     P("textColorLight", P.Color, I18N.gui("text.textLight"), gridWidth = RELATIVE),
     P("textColorDark", P.Color, I18N.gui("text.textDark")),
     P("backgroundLight", P.Color, I18N.gui("text.backgroundLight"), gridWidth = RELATIVE),
-    P("backgroundDark", P.Color, I18N.gui("text.backgroundDark"))
+    P("backgroundDark", P.Color, I18N.gui("text.backgroundDark")),
+    P("markdown", P.Boolean, I18N.gui("text.markdown"))
   )
   val switch = Seq(
     P("nameWrapper", P.Identifier, I18N.gui("switch.globalVar")),

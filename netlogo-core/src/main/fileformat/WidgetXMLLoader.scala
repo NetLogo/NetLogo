@@ -142,9 +142,9 @@ object WidgetXMLLoader {
 
       case "note" =>
         Some(TextBox( Some(element.text), element("x").toInt, element("y").toInt, element("width").toInt
-                    , element("height").toInt, element("fontSize").toInt, element.get("textColorLight").map(_.toInt)
-                    , element.get("textColorDark").map(_.toInt), element.get("backgroundLight").map(_.toInt)
-                    , element.get("backgroundDark").map(_.toInt)
+                    , element("height").toInt, element("fontSize").toInt, element("markdown").toBoolean
+                    , element.get("textColorLight").map(_.toInt), element.get("textColorDark").map(_.toInt)
+                    , element.get("backgroundLight").map(_.toInt), element.get("backgroundDark").map(_.toInt)
                     ))
 
       case _ => None // ignore other widgets for compatibility with other versions in the future (Isaac B 2/12/25)
@@ -375,6 +375,7 @@ object WidgetXMLLoader {
              , "width" -> note.width.toString
              , "height" -> note.height.toString
              , "fontSize" -> note.fontSize.toString
+             , "markdown" -> note.markdown.toString
              ) ++
           ifDefined(note)("textColorLight",   _.textColorLight) ++
           ifDefined(note)("textColorDark",     _.textColorDark) ++

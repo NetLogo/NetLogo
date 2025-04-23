@@ -365,9 +365,9 @@ object TextBoxReader extends BaseWidgetReader {
     val List(_, left: Int, top: Int, right: Int, bottom: Int, display: Option[String] @unchecked, fontSize: Int, color: Double, transparent: Boolean) = vals
     val textColor = Color.getARGBbyPremodulatedColorNumber(Color.modulateDouble(Double.box(color)))
     if (transparent) {
-      TextBox(display, left, top, right - left, bottom - top, fontSize, Some(textColor), None, Some(0), Some(0))
+      TextBox(display, left, top, right - left, bottom - top, fontSize, false, Some(textColor), None, Some(0), Some(0))
     } else {
-      TextBox(display, left, top, right - left, bottom - top, fontSize, Some(textColor))
+      TextBox(display, left, top, right - left, bottom - top, fontSize, false, Some(textColor))
     }
   }
 }
