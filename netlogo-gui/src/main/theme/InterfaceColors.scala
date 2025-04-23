@@ -797,6 +797,24 @@ object InterfaceColors {
       case "dark" => Color.WHITE
     }
 
+  def announceX() =
+    getTheme match {
+      case "classic" | "light" => DarkGray
+      case "dark"              => White2
+    }
+
+  def announceXHovered() =
+    getTheme match {
+      case "classic" | "light" => LightGrayOutline
+      case "dark"              => MediumGray
+    }
+
+  def announceXPressed() =
+    getTheme match {
+      case "classic" | "light" => MediumGray
+      case "dark"              => DarkGray
+    }
+
   def announceRelease() =
     getTheme match {
       case "classic" | "light" => new Color(237, 205, 255)
