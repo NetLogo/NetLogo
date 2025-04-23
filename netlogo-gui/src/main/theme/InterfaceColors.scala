@@ -168,7 +168,8 @@ object InterfaceColors {
   def buttonBackgroundPressed =
     getTheme match {
       case "classic" => Color.BLACK
-      case "light" | "dark" => new Color(9, 89, 183)
+      case "light" => new Color(5, 69, 143)
+      case "dark" => new Color(9, 89, 183)
     }
 
   def buttonBackgroundPressedHover =
