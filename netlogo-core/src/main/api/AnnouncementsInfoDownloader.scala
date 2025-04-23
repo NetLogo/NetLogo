@@ -7,6 +7,7 @@ import java.net.URL
 import java.time.LocalDate
 
 import scala.io.Source
+import scala.concurrent.{ ExecutionContext, Future }
 
 import org.json.simple.{ JSONObject, JSONArray }
 import org.json.simple.parser.JSONParser
@@ -18,8 +19,11 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
 
   val defaultURL = new URL("https://ccl.northwestern.edu/netlogo/announce.json")
 
-  def fetchAndThen(f: (Seq[Announcement]) => Unit): Unit = {
-    this.apply(defaultURL, parse _ andThen f)
+  def fetch(): Future[Seq[Announcement]] = {
+    import ExecutionContext.Implicits.global
+    this.apply(defaultURL).map(
+      _.fold(Seq.empty[Announcement]) { case (file, _) => parse(file) }
+    )
   }
 
   def parse(file: File): Seq[Announcement] = {

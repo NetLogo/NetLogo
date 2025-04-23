@@ -8,6 +8,8 @@ import java.io.File
 import java.util.prefs.Preferences
 import javax.swing.{ JFrame, JMenu }
 
+import scala.concurrent.ExecutionContext
+
 import org.nlogo.agent.{ Agent, World2D, World3D }
 import org.nlogo.api._
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
@@ -548,7 +550,8 @@ class App extends
         _tabManager.switchWindow(true)
       }
 
-      AnnouncementsInfoDownloader.fetchAndThen(_tabManager.interfaceTab.appendAnnouncements)
+      import ExecutionContext.Implicits.global
+      AnnouncementsInfoDownloader.fetch.foreach(_tabManager.interfaceTab.appendAnnouncements)
 
       syncWindowThemes()
 

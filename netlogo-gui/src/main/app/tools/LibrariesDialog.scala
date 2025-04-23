@@ -3,15 +3,15 @@
 package org.nlogo.app.tools
 
 import java.awt.{ BorderLayout, FlowLayout, Frame }
-import java.io.File
 import java.nio.file.Path
 import javax.swing.{ JLabel, JPanel }
 import javax.swing.border.EmptyBorder
 
-import org.nlogo.api.{ FileIO, LibraryInfoDownloader, LibraryManager }
+import scala.concurrent.ExecutionContext
+
+import org.nlogo.api.{ LibraryInfoDownloader, LibraryManager }
 import org.nlogo.core.I18N
-import org.nlogo.swing.{ CustomOptionPane, DialogButton, OptionPane, ProgressListener, ScrollPane, SwingWorker,
-                         TextArea, Transparent }
+import org.nlogo.swing.{ CustomOptionPane, DialogButton, OptionPane, ProgressListener, ScrollPane, TextArea, Transparent }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class LibrariesDialog( parent:          Frame
@@ -70,23 +70,17 @@ class LibrariesDialog( parent:          Frame
 
       listener.start()
 
-      (new SwingWorker[Any, Any] {
-
-        private var changed = false
-
-        override def doInBackground(): Unit = {
-          LibraryInfoDownloader(manager.metadataURL, (_: File) => { changed = true })
-        }
-
-        override def onComplete(): Unit = {
-          if (changed) {
-            val hash = LibraryInfoDownloader.urlToHash(manager.metadataURL)
-            manager.updateLists(new File(FileIO.perUserFile(hash)))
+      import ExecutionContext.Implicits.global
+      LibraryInfoDownloader(manager.metadataURL).foreach {
+        pairOpt =>
+          pairOpt.foreach {
+            case (file, didRewrite) =>
+              if (didRewrite) {
+                manager.updateLists(file)
+              }
           }
           listener.finish()
-        }
-
-      }).execute()
+      }
 
       buttonPanel.getComponents.foreach(c => buttonPanel.remove(c))
 
