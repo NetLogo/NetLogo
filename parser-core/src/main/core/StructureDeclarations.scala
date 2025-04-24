@@ -31,7 +31,7 @@ object StructureDeclarations {
 
   case class Identifier(name: String, token: Token)
 
-  case class Libraries(token: Token, entries: Seq[LibraryEntry])
+  case class Library(name: String, options: Seq[LibraryOption], token: Token)
       extends Declaration {
 
       override val start: Token = token
