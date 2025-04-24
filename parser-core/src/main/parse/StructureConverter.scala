@@ -10,27 +10,23 @@ import org.nlogo.core,
 object StructureConverter {
 
   import core.Library
-  import core.StructureDeclarations._
-
-  private def convertLibraryEntry(library: LibraryEntry): Library = {
-    val options = library.options.map((x) => x match {
-      case LibraryAlias(name, _) => Library.LibraryAlias(name)
-    })
-    Library(library.name, options)
-  }
+  import core.StructureDeclarations.{Library => LibraryDecl, _}
 
   def convert(declarations: Seq[Declaration],
               displayName: Option[String],
               oldResults: StructureResults,
               subprogram: Boolean): StructureResults = {
     val lts = declarations.collect {
-      case l: Libraries =>
-        l.entries.map(_.token)
-    }.flatten
+      case l: LibraryDecl =>
+        l.token
+    }
     val ls = declarations.collect {
-      case l: Libraries =>
-        l.entries.map(convertLibraryEntry)
-    }.flatten
+      case l: LibraryDecl =>
+        val options = l.options.map((x) => x match {
+          case LibraryAlias(name, _) => Library.LibraryAlias(name)
+        })
+        Library(l.name, options)
+    }
     val is = declarations.collect {
       case i: Includes =>
         i.names
