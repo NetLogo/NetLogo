@@ -90,7 +90,7 @@ extends scala.util.parsing.combinator.Parsers {
           decs ++ procs }
 
   def declaration: Parser[Declaration] =
-    libraries | includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
+    library | includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
       variables("GLOBALS") | variables("TURTLES-OWN") | variables("PATCHES-OWN") |
       variables("LINKS-OWN") | breedVariables
 
@@ -99,18 +99,10 @@ extends scala.util.parsing.combinator.Parsers {
       case token ~ names =>
         Includes(token, names) }
 
-  def libraries: Parser[Libraries] =
-    keyword("LIBRARIES") ~! librariesBlock ^^ {
-      case token ~ entries =>
-        Libraries(token, entries) }
-
-  def librariesBlock: Parser[Seq[LibraryEntry]] =
-    openBracket ~> commit(rep(libraryEntry)) <~ closeBracket
-
-  def libraryEntry: Parser[LibraryEntry] =
-    openBracket ~> identifier ~ rep(libraryOption) <~ closeBracket ^^ {
+  def library: Parser[Library] =
+    keyword("LIBRARY") ~! openBracket ~> identifier ~ rep(libraryOption) <~ closeBracket ^^ {
       case ident ~ options =>
-        LibraryEntry(ident.name, options, ident.token)
+        Library(ident.name, options, ident.token)
     }
 
   def libraryOption: Parser[LibraryOption] =

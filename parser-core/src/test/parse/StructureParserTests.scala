@@ -104,16 +104,16 @@ class StructureParserTests extends AnyFunSuite {
     assertResult("reporter procedure FOO:[]{OTPL}:\n")(proc.dump)
   }
 
-  test("libraries") {
-    val results = compile("libraries [[foo]]")
+  test("library") {
+    val results = compile("library [foo]")
     assertResult(0)(results.procedures.size)
     assertResult(1)(results.libraries.size)
     assertResult("FOO")(results.libraries.head.name)
     assertResult(0)(results.libraries.head.options.size)
   }
 
-  test("libraries with alias") {
-    val results = compile("libraries [[foo [alias bar]]]")
+  test("library with alias") {
+    val results = compile("library [foo [alias bar]]")
     assertResult(0)(results.procedures.size)
     assertResult(1)(results.libraries.size)
     assertResult("FOO")(results.libraries.head.name)
@@ -305,29 +305,29 @@ class StructureParserTests extends AnyFunSuite {
     assertResult(error)(e.getMessage.takeWhile(_ != ','))
   }
 
-  test("nonexistent libraries") {
-    expectParseAllError("""libraries [ [foobar] ]""", "Could not find foobar.nls")
+  test("nonexistent library") {
+    expectParseAllError("""library [foobar]""", "Could not find foobar.nls")
   }
 
-  test("libraries syntax returns correct results") {
-    val results = compileAll("""libraries [ [foo] ]""", "")
+  test("library syntax returns correct results") {
+    val results = compileAll("""library [foo]""", "")
     assert(results.libraries.nonEmpty || results.includedSources.nonEmpty)
   }
 
-  test("libraries syntax detects duplicate imports") {
-    expectParseAllError("libraries [ [foo] [bar] [foo [alias baz]] ]", "Attempted to import a library multiple times")
+  test("library syntax detects duplicate imports") {
+    expectParseAllError("library [foo] library [bar] library [foo [alias baz]]", "Attempted to import a library multiple times")
   }
 
-  test("libraries syntax detects import loops") {
+  test("library syntax detects import loops") {
     expectParseAllError(
-      "libraries [ [foo] ]",
+      "library [foo]",
       "Found a loop in the library import chain",
-      "libraries [[bar]]",
-      "libraries [[foo]]")
+      "library [bar]",
+      "library [foo]")
   }
 
   test("libraries syntax default alias") {
-    val src = """libraries [[foo]]"""
+    val src = """library [foo]"""
     val nlsSrc = """
 to test
   show 12345
@@ -339,8 +339,8 @@ end
     }
   }
 
-  test("libraries syntax custom alias") {
-    val src = """libraries [[foo [alias bar]]]"""
+  test("library syntax custom alias") {
+    val src = """library [foo [alias bar]]"""
     val nlsSrc = """
 to test
   show 12345
@@ -352,8 +352,8 @@ end
     }
   }
 
-  test("libraries syntax merges globals and turtle vars") {
-    val src = """libraries [[foo [alias bar]]] globals [ a b c ] breed [ mice mouse ] turtles-own [ t1 t2 ] mice-own [ m1 m2 ]"""
+  test("library syntax merges globals and turtle vars") {
+    val src = """library [foo [alias bar]] globals [ a b c ] breed [ mice mouse ] turtles-own [ t1 t2 ] mice-own [ m1 m2 ]"""
     val nlsSrc = "globals [ d f g ] turtles-own [ t3 t4 ] mice-own [ m3 m4 ]"
     val results = compileAll(src, nlsSrc)
     val expected = """globals [A B C BAR:D BAR:F BAR:G]
