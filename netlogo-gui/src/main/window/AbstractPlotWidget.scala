@@ -76,11 +76,13 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
     //ROW1
     //-----------------------------------------
-    c.insets =
-      if (_oldSize)
+    c.insets = {
+      if (_oldSize) {
         new Insets(3, 6, 6, 6)
-      else
-        new Insets(6, 12, 6, 12)
+      } else {
+        new Insets(8, 10, 8, 10)
+      }
+    }
 
     c.gridx = 0
     c.gridy = 0
@@ -148,7 +150,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     c.gridwidth = GridBagConstraints.REMAINDER
     c.weightx = 1
     c.anchor = GridBagConstraints.CENTER
-    c.insets = new Insets(0, 0, 0, 0)
+    c.insets = new Insets(2, 10, 8, 10)
 
     add(legend, c)
 

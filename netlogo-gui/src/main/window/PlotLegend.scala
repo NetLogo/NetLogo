@@ -2,15 +2,15 @@
 
 package org.nlogo.window
 
-import java.awt.{ Color, Dimension, Font, Graphics }
+import java.awt.{ Color, Dimension, FlowLayout, Font, Graphics }
 import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.plot.{ Plot, PlotPen }
 import org.nlogo.swing.Transparent
 import org.nlogo.theme.InterfaceColors
 
-class PlotLegend(plot: Plot, boldName: Boolean) extends JPanel {
-  setOpaque(false)
+class PlotLegend(plot: Plot, boldName: Boolean)
+  extends JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0)) with Transparent {
 
   var open = false
 
@@ -34,7 +34,7 @@ class PlotLegend(plot: Plot, boldName: Boolean) extends JPanel {
     revalidate()
   }
 
-  private class LegendItem(pen: PlotPen) extends JPanel with Transparent {
+  private class LegendItem(pen: PlotPen) extends JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0)) with Transparent {
     add(new JPanel {
       setBackground(new Color(pen.color))
 
