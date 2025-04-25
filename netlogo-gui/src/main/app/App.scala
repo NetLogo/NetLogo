@@ -1294,7 +1294,7 @@ class App extends
       frame.setBounds(newX, newY, newWidth, newHeight)
       frame.validate()
 
-      frame.setMinimumSize(new Dimension(_tabManager.interfaceTab.getMinimumWidth, 300))
+      frame.setMinimumSize(new Dimension(_tabManager.interfaceTab.getMinimumWidth / 2, 300))
 
       // not sure why this is sometimes necessary - ST 11/24/03
       _tabManager.mainTabs.requestFocus()
