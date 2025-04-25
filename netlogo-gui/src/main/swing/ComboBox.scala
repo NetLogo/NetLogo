@@ -56,11 +56,14 @@ class ComboBox[T](private var items: Seq[T] = Seq())
 
     add(choiceDisplay, c)
 
-    c.fill = GridBagConstraints.NONE
+    c.fill = GridBagConstraints.VERTICAL
     c.weightx = 0
-    c.insets = new Insets(3, 0, 3, 6)
+    c.weighty = 1
+    c.insets = new Insets(0, 0, 0, 6)
 
-    add(arrow, c)
+    add(new JPanel(new GridBagLayout) with Transparent {
+      add(arrow, new GridBagConstraints)
+    }, c)
 
     addMouseListener(mouseListener)
     addMouseWheelListener(wheelListener)
