@@ -120,7 +120,7 @@ class MonitorWidget(random: MersenneTwisterFast)
       if (_oldSize) {
         new Insets(3, 6, 0, 6)
       } else {
-        new Insets(6, 12, 6, 12)
+        new Insets(6, 8, 6, 8)
       }
     }
 
@@ -133,7 +133,7 @@ class MonitorWidget(random: MersenneTwisterFast)
       if (_oldSize) {
         new Insets(0, 6, 6, 6)
       } else {
-        new Insets(0, 12, 6, 12)
+        new Insets(0, 8, 8, 8)
       }
     }
 
@@ -147,7 +147,7 @@ class MonitorWidget(random: MersenneTwisterFast)
       if (_oldSize) {
         new Insets(0, 0, 6, 6)
       } else {
-        new Insets(0, -6, 6, 12)
+        new Insets(0, 0, 8, 8)
       }
     }
 
@@ -290,7 +290,7 @@ class MonitorWidget(random: MersenneTwisterFast)
     if (_oldSize) {
       new Dimension(MinWidth, (fontSize * 4) + 1)
     } else {
-      new Dimension(100, 55)
+      new Dimension(100, 60)
     }
   }
 
@@ -298,7 +298,7 @@ class MonitorWidget(random: MersenneTwisterFast)
     if (_oldSize) {
       new Dimension(100, getMinimumSize.height)
     } else {
-      new Dimension(100, 55)
+      new Dimension(100, 60)
     }
   }
 
