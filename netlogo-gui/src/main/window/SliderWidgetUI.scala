@@ -130,6 +130,11 @@ class SliderWidgetUI(widget: AbstractSliderWidget, slider: JSlider) extends Basi
           }
 
           widget.updateValue()
+
+          hover = true
+          pressed = true
+
+          widget.repaint()
         }
       }
 
