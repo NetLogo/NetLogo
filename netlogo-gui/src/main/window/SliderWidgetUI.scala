@@ -55,15 +55,15 @@ class SliderWidgetUI(widget: AbstractSliderWidget, slider: JSlider) extends Basi
     if (widget.vertical) {
       val startX = trackRect.x + trackRect.width / 2 - thickness / 2
       g2d.setColor(InterfaceColors.sliderBarBackgroundFilled)
-      g2d.fillRoundRect(startX, thumbRect.y, thickness, trackRect.height - thumbRect.y, thickness, thickness)
+      g2d.fillRoundRect(startX, thumbRect.y, thickness, slider.getHeight - thumbRect.y, thickness, thickness)
       g2d.setColor(InterfaceColors.sliderBarBackground)
-      g2d.fillRoundRect(startX, trackRect.y, thickness, thumbRect.y, thickness, thickness)
+      g2d.fillRoundRect(startX, 0, thickness, thumbRect.y + getThumbSize.width / 2, thickness, thickness)
     } else {
       val startY = trackRect.y + trackRect.height / 2 - thickness / 2
       g2d.setColor(InterfaceColors.sliderBarBackgroundFilled)
-      g2d.fillRoundRect(trackRect.x, startY, thumbRect.x, thickness, thickness, thickness)
+      g2d.fillRoundRect(0, startY, thumbRect.x + getThumbSize.width / 2, thickness, thickness, thickness)
       g2d.setColor(InterfaceColors.sliderBarBackground)
-      g2d.fillRoundRect(thumbRect.x, startY, trackRect.width - thumbRect.x, thickness, thickness, thickness)
+      g2d.fillRoundRect(thumbRect.x, startY, slider.getWidth - thumbRect.x, thickness, thickness, thickness)
     }
   }
 

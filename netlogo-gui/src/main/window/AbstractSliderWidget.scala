@@ -284,61 +284,83 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   override def doLayout(): Unit = {
     if (_oldSize) {
       if (vertical) {
-        nameComponent.setBounds(getWidth / 2 - nameComponent.getPreferredSize.height,
-                                getHeight - 6, nameComponent.getPreferredSize.width.min(
-                                  getHeight - unitsComponent.getPreferredSize.width -
-                                  valueComponent.getPreferredSize.width - 18),
+        nameComponent.setBounds(2, getHeight - 6, nameComponent.getPreferredSize.width.min(
+                                                    getHeight - unitsComponent.getPreferredSize.width -
+                                                    valueComponent.getPreferredSize.width - 18),
                                 nameComponent.getPreferredSize.height)
-        unitsComponent.setBounds(getWidth / 2 - unitsComponent.getPreferredSize.height,
-                                 unitsComponent.getPreferredSize.width + 6, unitsComponent.getPreferredSize.width,
+        unitsComponent.setBounds(2, unitsComponent.getPreferredSize.width + 6, unitsComponent.getPreferredSize.width,
                                  unitsComponent.getPreferredSize.height)
-        valueComponent.setBounds(getWidth / 2 - valueComponent.getPreferredSize.height + 2,
-                                 unitsComponent.getPreferredSize.width + valueComponent.getPreferredSize.width + 12,
-                                 valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
-        slider.setBounds(getWidth / 2 - 2, 0, (slider.getPreferredSize.width * zoomFactor).toInt, getHeight)
+
+        if (unitsComponent.getPreferredSize.width == 0) {
+          valueComponent.setBounds(2, valueComponent.getPreferredSize.width + 6,
+                                   valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
+        } else {
+          valueComponent.setBounds(2, unitsComponent.getPreferredSize.width +
+                                        valueComponent.getPreferredSize.width + 12,
+                                   valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
+        }
+
+        slider.setBounds(getWidth - (slider.getPreferredSize.width * zoomFactor).toInt + 1, 6,
+                         (slider.getPreferredSize.width * zoomFactor).toInt, getHeight - 12)
       } else {
-        nameComponent.setBounds(6, getHeight / 2 - nameComponent.getPreferredSize.height,
-                                nameComponent.getPreferredSize.width.min(
-                                  getWidth - unitsComponent.getPreferredSize.width -
-                                  valueComponent.getPreferredSize.width - 18),
+        nameComponent.setBounds(6, 2, nameComponent.getPreferredSize.width.min(
+                                        getWidth - unitsComponent.getPreferredSize.width -
+                                        valueComponent.getPreferredSize.width - 18),
                                 nameComponent.getPreferredSize.height)
-        unitsComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width - 6,
-                                 getHeight / 2 - unitsComponent.getPreferredSize.height,
+        unitsComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width - 6, 2,
                                  unitsComponent.getPreferredSize.width, unitsComponent.getPreferredSize.height)
-        valueComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width -
-                                 valueComponent.getPreferredSize.width - 12,
-                                 getHeight / 2 - valueComponent.getPreferredSize.height + 2,
-                                 valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
-        slider.setBounds(0, getHeight / 2 - 2, getWidth, (slider.getPreferredSize.height * zoomFactor).toInt)
+
+        if (unitsComponent.getPreferredSize.width == 0) {
+          valueComponent.setBounds(getWidth - valueComponent.getPreferredSize.width - 6, 2,
+                                   valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
+        } else {
+          valueComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width -
+                                   valueComponent.getPreferredSize.width - 12, 2,
+                                   valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
+        }
+
+        slider.setBounds(6, getHeight - (slider.getPreferredSize.height * zoomFactor).toInt + 1, getWidth - 12,
+                         (slider.getPreferredSize.height * zoomFactor).toInt)
       }
     } else {
       if (vertical) {
-        nameComponent.setBounds(getWidth / 2 - nameComponent.getPreferredSize.height - 5,
-                                getHeight - 12, nameComponent.getPreferredSize.width.min(
-                                  getHeight - unitsComponent.getPreferredSize.width -
-                                  valueComponent.getPreferredSize.width - 30),
+        nameComponent.setBounds(8, getHeight - 8, nameComponent.getPreferredSize.width.min(
+                                                    getHeight - unitsComponent.getPreferredSize.width -
+                                                    valueComponent.getPreferredSize.width - 24),
                                 nameComponent.getPreferredSize.height)
-        unitsComponent.setBounds(getWidth / 2 - unitsComponent.getPreferredSize.height - 5,
-                                 unitsComponent.getPreferredSize.width + 12, unitsComponent.getPreferredSize.width,
+        unitsComponent.setBounds(8, unitsComponent.getPreferredSize.width + 8, unitsComponent.getPreferredSize.width,
                                  unitsComponent.getPreferredSize.height)
-        valueComponent.setBounds(getWidth / 2 - valueComponent.getPreferredSize.height - 5,
-                                 unitsComponent.getPreferredSize.width + valueComponent.getPreferredSize.width + 18,
-                                 valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
-        slider.setBounds(getWidth / 2 + 2, 6, (slider.getPreferredSize.width * zoomFactor).toInt, getHeight - 12)
+
+        if (unitsComponent.getPreferredSize.width == 0) {
+          valueComponent.setBounds(8, valueComponent.getPreferredSize.width + 8, valueComponent.getPreferredSize.width,
+                                   valueComponent.getPreferredSize.height)
+        } else {
+          valueComponent.setBounds(8, unitsComponent.getPreferredSize.width +
+                                        valueComponent.getPreferredSize.width + 12,
+                                   valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
+        }
+
+        slider.setBounds(getWidth - (slider.getPreferredSize.width * zoomFactor).toInt - 2, 8,
+                         (slider.getPreferredSize.width * zoomFactor).toInt, getHeight - 16)
       } else {
-        nameComponent.setBounds(12, getHeight / 2 - nameComponent.getPreferredSize.height - 5,
-                                nameComponent.getPreferredSize.width.min(
-                                  getWidth - unitsComponent.getPreferredSize.width -
-                                  valueComponent.getPreferredSize.width - 36),
+        nameComponent.setBounds(8, 8, nameComponent.getPreferredSize.width.min(
+                                        getWidth - unitsComponent.getPreferredSize.width -
+                                        valueComponent.getPreferredSize.width - 24),
                                 nameComponent.getPreferredSize.height)
-        unitsComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width - 12,
-                                 getHeight / 2 - unitsComponent.getPreferredSize.height - 5,
+        unitsComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width - 8, 8,
                                  unitsComponent.getPreferredSize.width, unitsComponent.getPreferredSize.height)
-        valueComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width -
-                                   valueComponent.getPreferredSize.width - 18,
-                                 getHeight / 2 - valueComponent.getPreferredSize.height - 5,
-                                 valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
-        slider.setBounds(6, getHeight / 2 + 2, getWidth - 12, (slider.getPreferredSize.height * zoomFactor).toInt)
+
+        if (unitsComponent.getPreferredSize.width == 0) {
+          valueComponent.setBounds(getWidth - valueComponent.getPreferredSize.width - 8, 8,
+                                   valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
+        } else {
+          valueComponent.setBounds(getWidth - unitsComponent.getPreferredSize.width -
+                                   valueComponent.getPreferredSize.width - 12, 8,
+                                   valueComponent.getPreferredSize.width, valueComponent.getPreferredSize.height)
+        }
+
+        slider.setBounds(8, getHeight - (slider.getPreferredSize.height * zoomFactor).toInt - 2, getWidth - 16,
+                         (slider.getPreferredSize.height * zoomFactor).toInt)
       }
     }
 
@@ -358,9 +380,9 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
       }
     } else {
       if (vertical) {
-        new Dimension(55, 150)
+        new Dimension(50, 150)
       } else {
-        new Dimension(150, 55)
+        new Dimension(150, 50)
       }
     }
   }
@@ -374,9 +396,9 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
       }
     } else {
       if (vertical) {
-        new Dimension(55, 250)
+        new Dimension(50, 250)
       } else {
-        new Dimension(250, 55)
+        new Dimension(250, 50)
       }
     }
   }
