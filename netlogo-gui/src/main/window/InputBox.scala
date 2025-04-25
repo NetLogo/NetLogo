@@ -278,24 +278,26 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     c.gridy = 0
     c.weightx = 1
     c.anchor = GridBagConstraints.NORTHWEST
-    c.insets =
+    c.insets = {
       if (_oldSize) {
         new Insets(3, 6, 6, 6)
       } else {
-        new Insets(4, 12, 4, 12)
+        new Insets(6, 8, 6, 8)
       }
+    }
 
     add(widgetLabel, c)
 
     c.gridx = 1
     c.weightx = 0
     c.anchor = GridBagConstraints.EAST
-    c.insets =
+    c.insets = {
       if (_oldSize) {
         new Insets(3, 0, 6, 6)
       } else {
-        new Insets(6, 0, 6, 12)
+        new Insets(8, 0, 6, 8)
       }
+    }
 
     add(changeButton, c)
 
@@ -306,12 +308,13 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     c.gridwidth = GridBagConstraints.REMAINDER
     c.fill = GridBagConstraints.BOTH
     c.anchor = GridBagConstraints.WEST
-    c.insets =
+    c.insets = {
       if (_oldSize) {
         new Insets(0, 6, 6, 6)
       } else {
-        new Insets(0, 12, 6, 12)
+        new Insets(0, 8, 8, 8)
       }
+    }
 
     add(scroller, c)
     add(colorSwatch, c)
@@ -449,7 +452,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     if (_oldSize) {
       new Dimension(MinWidth, MinHeight)
     } else {
-      new Dimension(100, 55)
+      new Dimension(100, 60)
     }
   }
 
@@ -464,7 +467,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
               textArea.getInsets.right + textArea.getInsets.left + 4
       new Dimension(MinWidth.max(result.width), MinHeight.max(result.height))
     } else {
-      new Dimension(250, 55)
+      new Dimension(250, 60)
     }
   }
 
