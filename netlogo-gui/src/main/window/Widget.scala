@@ -11,7 +11,8 @@ import org.nlogo.api.{ CompilerServices, MultiErrorHandler, SingleErrorHandler }
 import org.nlogo.core.{ TokenType, Widget => CoreWidget }
 import org.nlogo.swing.{ PopupMenu, RoundedBorderPanel }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.Events.{ WidgetAddedEvent, WidgetEditedEvent, WidgetErrorEvent, WidgetRemovedEvent }
+import org.nlogo.window.Events.{ InterfaceModeChangedEvent, WidgetAddedEvent, WidgetEditedEvent, WidgetErrorEvent,
+                                 WidgetRemovedEvent }
 
 object Widget {
   trait LoadHelper {
@@ -50,7 +51,7 @@ abstract class MultiErrorWidget extends Widget with MultiErrorHandler {
   }
 }
 
-abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
+abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with InterfaceModeChangedEvent.Handler {
 
   type WidgetModel <: CoreWidget
 
@@ -208,6 +209,10 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync {
   }
   def raiseWidgetAdded(): Unit = {
     new WidgetAddedEvent(this).raise(this)
+  }
+
+  def handle(e: InterfaceModeChangedEvent): Unit = {
+    resetMouseState()
   }
 
   protected def checkRecursive(compiler: CompilerServices, source: String, name: String): Boolean =

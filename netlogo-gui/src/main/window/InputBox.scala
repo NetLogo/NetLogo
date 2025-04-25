@@ -4,8 +4,7 @@ package org.nlogo.window
 
 import java.awt.{ Color, Component, Dimension, Font, Frame, Graphics, GridBagConstraints, GridBagLayout, Insets,
                   LinearGradientPaint }
-import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, MouseEvent, MouseAdapter,
-                        WindowAdapter, WindowEvent }
+import java.awt.event.{ ActionEvent, ActionListener, FocusEvent, FocusListener, KeyEvent, WindowAdapter, WindowEvent }
 import javax.swing.{ AbstractAction, JButton, JDialog, JLabel, JPanel, ScrollPaneConstants }
 import javax.swing.KeyStroke.getKeyStroke
 import javax.swing.text.EditorKit
@@ -34,8 +33,6 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
   import InputBox._
 
-  private var hover = false
-
   protected class ColorButton extends JButton with RoundedBorderPanel with ThemeSync {
     private var color = Color.black
 
@@ -43,24 +40,6 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     setFont(getFont.deriveFont(9.0f))
 
     addActionListener(new SelectColorActionListener)
-
-    addMouseListener(new MouseAdapter {
-      override def mouseEntered(e: MouseEvent): Unit = {
-        if (isVisible) {
-          hover = true
-
-          getParent.repaint()
-        }
-      }
-
-      override def mouseExited(e: MouseEvent): Unit = {
-        if (isVisible && !contains(e.getPoint)) {
-          hover = false
-
-          getParent.repaint()
-        }
-      }
-    })
 
     override def paintComponent(g: Graphics): Unit = {
       setBackgroundColor(color)
@@ -97,24 +76,6 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     c.insets = new Insets(3, 3, 3, 3)
 
     add(scrollPane, c)
-
-    addMouseListener(new MouseAdapter {
-      override def mouseEntered(e: MouseEvent): Unit = {
-        if (isVisible) {
-          hover = true
-
-          getParent.repaint()
-        }
-      }
-
-      override def mouseExited(e: MouseEvent): Unit = {
-        if (isVisible && !contains(e.getPoint)) {
-          hover = false
-
-          getParent.repaint()
-        }
-      }
-    })
 
     override def paintComponent(g: Graphics): Unit = {
       // this mostly fixes some weird horizontal scrollbar issues (Isaac B 8/7/24)
@@ -333,7 +294,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       widgetLabel.setToolTipText(null)
     }
 
-    if (hover) {
+    if (isHover) {
       val g2d = Utils.initGraphics2D(g)
 
       if (colorSwatch.isVisible) {

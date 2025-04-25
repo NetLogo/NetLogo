@@ -51,6 +51,11 @@ trait MouseUtils extends Component {
     useHandCursor = true
   }
 
+  def resetMouseState(): Unit = {
+    hover = false
+    pressed = false
+  }
+
   def isHover: Boolean =
     hover
 
