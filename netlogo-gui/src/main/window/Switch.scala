@@ -74,13 +74,13 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     } else {
       val c = new GridBagConstraints
 
-      c.insets = new Insets(0, 12, 0, 12)
+      c.insets = new Insets(0, 8, 0, 8)
       c.fill = GridBagConstraints.HORIZONTAL
       c.weightx = 1
 
       add(label, c)
 
-      c.insets = new Insets(6, 0, 6, 12)
+      c.insets = new Insets(8, 0, 8, 8)
       c.fill = GridBagConstraints.VERTICAL
       c.weightx = 0
       c.weighty = 1
