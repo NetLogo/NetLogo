@@ -19,13 +19,13 @@ trait BaseParserTest { this: AnyFunSuite =>
       case (procs, _) =>
         procs.map(_.statements)
     }
-  def testParse(input: String, result: String, preamble: String = PREAMBLE) {
+  def testParse(input: String, result: String, preamble: String = PREAMBLE): Unit = {
     assertResult(cleanJsNumbers(result))(cleanJsNumbers(compile(input, preamble).mkString))
   }
-  def runFailure(input: String, message: String, start: Int, end: Int, preamble: String = PREAMBLE) {
+  def runFailure(input: String, message: String, start: Int, end: Int, preamble: String = PREAMBLE): Unit = {
     doFailure(input, message, start, end, preamble)
   }
-  def doFailure(input: String, message: String, start: Int, end: Int, preamble: String = PREAMBLE) {
+  def doFailure(input: String, message: String, start: Int, end: Int, preamble: String = PREAMBLE): Unit = {
     val e = intercept[CompilerException] { compile(input, preamble = preamble) }
     assertResult(message)(e.getMessage)
     val programText = preamble + input + POSTAMBLE

@@ -22,8 +22,8 @@ extends org.nlogo.api.TurtleStamp3D {
   override def getBreedIndex = 0
   override def world = null
   override def getPatchHere = null
-  override def jump(d: Double) {}
-  override def heading(d: Double) {}
+  override def jump(d: Double): Unit = {}
+  override def heading(d: Double): Unit = {}
   override def classDisplayName = ""
   override def dx = 0
   override def dy = 0

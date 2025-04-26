@@ -11,7 +11,7 @@ private class ShapeRenderer3D(world: World3D) extends ShapeRenderer(world) {
                                   label: String, labelColor: AnyRef,
                                   x: Double, y: Double, z: Double, height: Float,
                                   patchSize: Double, fontSize: Int, outline: Boolean,
-                                  lineScale: Double, orientation: Array[Double]) {
+                                  lineScale: Double, orientation: Array[Double]): Unit = {
     val maxx = world.maxPxcor + 0.5
     val minx = world.minPxcor - 0.5
     val maxy = world.maxPycor + 0.5

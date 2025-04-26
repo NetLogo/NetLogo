@@ -47,7 +47,7 @@ trait AllPrimitivesTester extends AnyFunSuite {
                   .replaceAll(".class$", ""))
       .asInstanceOf[PrimClass]
 
-  def processClass(c: PrimClass) {
+  def processClass(c: PrimClass): Unit = {
     val reader = PrimitiveCache.getClassReader(c)
     for(method <- BytecodeUtils.getMethods(c)) {
       val visitor = new EmptyClassVisitor {

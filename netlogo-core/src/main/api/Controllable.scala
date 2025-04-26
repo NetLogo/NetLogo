@@ -11,7 +11,7 @@ import org.nlogo.core.CompilerException
  */
 trait Controllable {
 
-  def command(source: String)
+  def command(source: String): Unit
 
   def report(source: String): AnyRef
 

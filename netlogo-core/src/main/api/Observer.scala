@@ -9,7 +9,7 @@ trait Observer extends Agent {
 
   /** Returns the current perspective */
   def perspective: Perspective
-  def setPerspective(p: Perspective)
+  def setPerspective(p: Perspective): Unit
 
   def oxcor: Double
   def oycor: Double

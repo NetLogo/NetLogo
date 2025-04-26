@@ -19,7 +19,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
   // discard cache if the theme changed (Isaac B 11/7/24)
   private var lastTheme: Option[ColorTheme] = None
 
-  def reset() {
+  def reset(): Unit = {
     lastLine = ""
     lastColors = Array()
   }
@@ -57,7 +57,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
   // colorization, so we don't need to bother with the TYPE_KEYWORD hack for "breed" here.
   // - ST 7/11/06
   def getCharacterTokenTypes(line: String): java.util.List[TokenType] = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.SeqHasAsJava
 
     val result = new Array[TokenType](line.size)
     val tokens = tokenizeForColorization(line)
@@ -98,7 +98,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
     Option(compiler.getTokenAtPosition(text, position))
       .map(_.text)
 
-  def doHelp(comp: java.awt.Component, name: String) {
+  def doHelp(comp: java.awt.Component, name: String): Unit = {
     QuickHelp.doHelp(comp, name)
   }
 

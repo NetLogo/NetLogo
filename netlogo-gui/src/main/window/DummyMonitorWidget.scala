@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import java.awt.{ Dimension, Graphics }
 
-import org.nlogo.core.{ I18N, Monitor => CoreMonitor }
+import org.nlogo.core.{ I18N, Monitor => CoreMonitor, Widget => CoreWidget }
 import org.nlogo.theme.InterfaceColors
 
 object DummyMonitorWidget {
@@ -19,8 +19,6 @@ object DummyMonitorWidget {
 }
 
 class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorModel with Editable {
-  type WidgetModel = CoreMonitor
-
   import DummyMonitorWidget._
 
   private var _name: String = ""
@@ -88,12 +86,16 @@ class DummyMonitorWidget extends SingleErrorWidget with MonitorWidget.ToMonitorM
       _decimalPlaces = decimalPlaces
   }
 
-  override def load(monitor: WidgetModel): AnyRef = {
-    setUnits(monitor.units.getOrElse(""))
-    setDisplayName(monitor.display.optionToPotentiallyEmptyString)
-    setDecimalPlaces(monitor.precision)
-    oldSize(monitor.oldSize)
-    setSize(monitor.width, monitor.height)
-    this
+  override def load(model: CoreWidget): Unit = {
+    model match {
+      case monitor: CoreMonitor =>
+        setUnits(monitor.units.getOrElse(""))
+        setDisplayName(monitor.display.optionToPotentiallyEmptyString)
+        setDecimalPlaces(monitor.precision)
+        oldSize(monitor.oldSize)
+        setSize(monitor.width, monitor.height)
+
+      case _ =>
+    }
   }
 }

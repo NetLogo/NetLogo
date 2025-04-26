@@ -7,7 +7,7 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _print extends Command {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     workspace.outputObject(
       args(0).report(context), null, true, false,
       OutputDestination.Normal)

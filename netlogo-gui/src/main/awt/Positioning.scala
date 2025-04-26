@@ -8,7 +8,7 @@ import java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment
 object Positioning {
 
   /** for centering frames and dialogs */
-  def center(window: Window, parent: Window) {
+  def center(window: Window, parent: Window): Unit = {
     val (x, y) =
       if (parent == null) {
         val center = getLocalGraphicsEnvironment.getCenterPoint
@@ -30,7 +30,7 @@ object Positioning {
   }
 
   /** Moves c1 next to c2. Usually on the right, but if there isn't enough room, left or below. */
-  def moveNextTo(c1: Component, c2: Component) {
+  def moveNextTo(c1: Component, c2: Component): Unit = {
     val Space = 4
     val right = c2.getBounds.x + c2.getBounds.width  + Space
     val below = c2.getBounds.y + c2.getBounds.height + Space

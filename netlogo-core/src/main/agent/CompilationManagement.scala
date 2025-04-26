@@ -48,7 +48,7 @@ trait CompilationManagement extends CoreWorld { this: AgentManagement =>
 
   def newProgram: Program = Program.fromDialect(defaultDialect)
 
-  def newProgram(interfaceGlobals: scala.collection.Seq[String]): Program =
+  def newProgram(interfaceGlobals: Seq[String]): Program =
     newProgram.copy(interfaceGlobals = interfaceGlobals)
 
   def rememberOldProgram(): Unit = {

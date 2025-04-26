@@ -29,7 +29,7 @@ object InfoFormatter {
   /**
    * for standalone use, for example on a web server
    */
-  def main(argv: Array[String]) {
+  def main(argv: Array[String]): Unit = {
     println(apply(read(System.in)))
   }
 

@@ -14,7 +14,7 @@ class PlotLegend(widget: AbstractPlotWidget, boldName: Boolean)
 
   var open = false
 
-  def addPen(pen: PlotPen) {
+  def addPen(pen: PlotPen): Unit = {
     if (open) {
       if (pen.inLegend)
         add(new LegendItem(pen))
@@ -23,11 +23,11 @@ class PlotLegend(widget: AbstractPlotWidget, boldName: Boolean)
     }
   }
 
-  def toggle() { open = !open; refresh() }
-  def refresh() { clearGUI(); if (open) fillGUI() }
-  def clearGUI() { removeAll(); revalidate() }
+  def toggle(): Unit = { open = !open; refresh() }
+  def refresh(): Unit = { clearGUI(); if (open) fillGUI() }
+  def clearGUI(): Unit = { removeAll(); revalidate() }
 
-  private def fillGUI() {
+  private def fillGUI(): Unit = {
     for (pen <- widget.plot.pens; if (pen.inLegend))
       add(new LegendItem(pen))
 
@@ -46,7 +46,7 @@ class PlotLegend(widget: AbstractPlotWidget, boldName: Boolean)
       if (boldName)
         setFont(getFont.deriveFont(Font.BOLD))
 
-      override def paintComponent(g: Graphics) {
+      override def paintComponent(g: Graphics): Unit = {
         setForeground(InterfaceColors.widgetText())
 
         super.paintComponent(g)

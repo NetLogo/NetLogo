@@ -52,7 +52,7 @@ class Namer(
     }
   }
 
-  private def checkName(token: Token) {
+  private def checkName(token: Token): Unit = {
     val newVal = processOne(token).map(_.value).get
     val ok = newVal.isInstanceOf[core.prim._call] ||
     newVal.isInstanceOf[core.prim._callreport] ||

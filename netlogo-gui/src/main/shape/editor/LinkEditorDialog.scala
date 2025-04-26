@@ -16,7 +16,7 @@ import scala.util.{ Failure, Success, Try }
 class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: LinkShape)
   extends JDialog(parent, I18N.gui.get("tools.linkEditor"), true) with EditorDialog.VectorShapeContainer {
 
-  private implicit val i18nPrefix = I18N.Prefix("tools.linkEditor")
+  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.linkEditor")
 
   private val name = new TextField(10, shape.name)
   private val curviness = new TextField(10, shape.curviness.toString)
@@ -38,7 +38,7 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
     setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
 
     addWindowListener(new WindowAdapter {
-      override def windowClosing(e: WindowEvent) {
+      override def windowClosing(e: WindowEvent): Unit = {
         saveShape()
         dispose()
         setVisible(false)
@@ -46,7 +46,7 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
     })
 
     Utils.addEscKeyAction(this, new AbstractAction {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         if (originalShape.toString != getCurrentShape.toString ||
             new OptionPane(LinkEditorDialog.this, I18N.gui.get("tools.shapesEditor.confirmCancel"),
                           I18N.gui.get("tools.shapesEditor.confirmCancel.message"), OptionPane.Options.YesNo,
@@ -96,7 +96,7 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
         setForeground(InterfaceColors.dialogText())
       }, c)
 
-      val done = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => saveShape)
+      val done = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => saveShape())
       val cancel = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => dispose)
 
       add(new ButtonPanel(Seq(done, cancel)), c)
@@ -128,7 +128,7 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
   def exists(name: String): Boolean =
     false
 
-  private def saveShape() {
+  private def saveShape(): Unit = {
     val nameStr = name.getText.trim.toLowerCase
 
     // Make sure the shape has a name
@@ -188,7 +188,7 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
         def getIconWidth = 85
         def getIconHeight = 18
 
-        def paintIcon(c: Component, g: Graphics, x: Int, y: Int) {
+        def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
           if (item(0) != 0) {
             val g2d = Utils.initGraphics2D(g)
 

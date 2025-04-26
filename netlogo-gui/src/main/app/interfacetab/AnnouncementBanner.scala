@@ -286,7 +286,7 @@ private object Util {
 
   def handleUnderline(shouldUnderline: Boolean, c: Component): Unit = {
 
-    import scala.collection.JavaConverters.mapAsJavaMapConverter
+    import scala.jdk.CollectionConverters.MapHasAsJava
 
     val underlineValue = if (shouldUnderline) 1 else -1
     Util.modifyFont(c) {

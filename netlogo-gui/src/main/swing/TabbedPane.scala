@@ -18,7 +18,7 @@ class TabbedPane extends JTabbedPane with ThemeSync {
       new Insets(0, 0, 0, 0)
 
     override def paintTabBackground(g: Graphics, tabPlacement: Int, tabIndex: Int, x: Int, y: Int, w: Int, h: Int,
-                                    isSelected: Boolean) {
+                                    isSelected: Boolean): Unit = {
       val g2d = Utils.initGraphics2D(g)
 
       if (isSelected)
@@ -30,15 +30,15 @@ class TabbedPane extends JTabbedPane with ThemeSync {
     }
 
     override def paintTabBorder(g: Graphics, tabPlacement: Int, tabIndex: Int, x: Int, y: Int, w: Int, h: Int,
-                                isSelected: Boolean) {
+                                isSelected: Boolean): Unit = {
       // no tab border
     }
 
-    override def paintContentBorder(g: Graphics, tabPlacement: Int, selectedIndex: Int) {
+    override def paintContentBorder(g: Graphics, tabPlacement: Int, selectedIndex: Int): Unit = {
       // no content border
     }
 
-    override def paint(g: Graphics, c: JComponent) {
+    override def paint(g: Graphics, c: JComponent): Unit = {
       val g2d = Utils.initGraphics2D(g)
 
       g2d.setColor(InterfaceColors.toolbarBackground())
@@ -61,12 +61,12 @@ class TabbedPane extends JTabbedPane with ThemeSync {
   setFocusable(false)
 
   addChangeListener(new ChangeListener {
-    def stateChanged(e: ChangeEvent) {
+    def stateChanged(e: ChangeEvent): Unit = {
       setTabForegrounds()
     }
   })
 
-  protected def setTabForegrounds() {
+  protected def setTabForegrounds(): Unit = {
     for (i <- 0 until getTabCount) {
       if (i == getSelectedIndex)
         setForegroundAt(i, InterfaceColors.tabbedPaneTextSelected())

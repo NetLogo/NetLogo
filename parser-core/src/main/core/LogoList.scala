@@ -11,7 +11,7 @@ object LogoList {
   val Empty = new LogoList(Vector[AnyRef]())
   def apply(objs: AnyRef*) = new LogoList(Vector[AnyRef]() ++ objs)
   def fromJava(objs: java.lang.Iterable[_ <: AnyRef]) = {
-    import collection.JavaConverters._
+    import scala.jdk.CollectionConverters.IteratorHasAsScala
     fromIterator(objs.iterator.asScala)
   }
   def fromIterator(it: scala.Iterator[_ <: AnyRef]) =
@@ -36,7 +36,6 @@ class LogoList private (private val v: Vector[AnyRef])
   override def iterator: collection.Iterator[AnyRef] =
     v.iterator
   def get(index: Int) = v(index)
-  override def size = v.size
   def javaIterator: java.util.Iterator[AnyRef] =
     new Iterator(v)
   def javaIterable: java.lang.Iterable[AnyRef] =
@@ -75,7 +74,7 @@ class LogoList private (private val v: Vector[AnyRef])
     private val it = v.iterator
     override def hasNext = it.hasNext
     override def hasPrevious = unsupported
-    override def next = it.next
+    override def next = it.next()
     override def add(obj: Object) = unsupported
     override def set(obj: Object) = unsupported
     override def previousIndex = unsupported
@@ -104,7 +103,7 @@ class LogoList private (private val v: Vector[AnyRef])
       }
       i += 1
     }
-    LogoList.fromVector(builder.result)
+    LogoList.fromVector(builder.result())
   }
 
 }

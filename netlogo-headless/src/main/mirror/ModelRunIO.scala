@@ -13,7 +13,7 @@ import javax.imageio.ImageIO
 
 trait SavableRun {
   self: ModelRun =>
-  def save(outputStream: OutputStream) {
+  def save(outputStream: OutputStream): Unit = {
     val out = new ObjectOutputStream(outputStream)
     // Area is not serializable so we save a shape instead:
     val viewAreaShape = java.awt.geom.AffineTransform

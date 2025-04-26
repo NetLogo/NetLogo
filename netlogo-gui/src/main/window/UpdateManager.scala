@@ -54,24 +54,24 @@ abstract class UpdateManager extends UpdateManagerInterface {
   private var tickGap = 1.0
   private var frameRateGap = 0L // nanoseconds
 
-  def reset() {
+  def reset(): Unit = {
     lastUpdateTicks = ForeverAgo
     pseudoTicks = 0
     lastUpdateNanos = 0
   }
 
-  def pseudoTick() { pseudoTicks += 1 }
+  def pseudoTick(): Unit = { pseudoTicks += 1 }
 
   def shouldUpdateNow = updatePolicy.shouldUpdateNow(nanoTime)
 
   def shouldComeUpForAirAgain = updatePolicy.shouldComeUpForAirAgain
 
-  def beginPainting() {
+  def beginPainting(): Unit = {
     if(updatePolicy.frameDoneWhenPaintingBegins)
       frameDone()
   }
 
-  def donePainting() {
+  def donePainting(): Unit = {
     if(!updatePolicy.frameDoneWhenPaintingBegins)
       frameDone()
   }
@@ -97,7 +97,7 @@ abstract class UpdateManager extends UpdateManagerInterface {
     }
   }
 
-  private def frameDone() {
+  private def frameDone(): Unit = {
     val now = nanoTime
     timeSmoothingWillBeDone = now + updatePolicy.smoothingPause(now)
     lastUpdateNanos = nanoTime
@@ -108,13 +108,13 @@ abstract class UpdateManager extends UpdateManagerInterface {
   // ranges from -50 to 50
   private var _speed = 0.0
   def speed = _speed
-  def speed_=(speed: Double) {
+  def speed_=(speed: Double): Unit = {
     _speed = speed
     recompute()
     // println(debugInfo)
   }
 
-  def recompute() {
+  def recompute(): Unit = {
     nanoGap = updatePolicy.nanoGap
     tickGap = updatePolicy.tickGap
     frameRateGap = updatePolicy.frameRateGap
@@ -123,8 +123,8 @@ abstract class UpdateManager extends UpdateManagerInterface {
   // Suppose we're pausing after a view update, then suddenly the user moves the speed slider to a
   // faster setting.  The pause should end early.  That's the purpose of the following code.
   // These are the only two methods that use the UpdateManager object as a lock. - ST 8/16/07
-  def nudgeSleeper() { synchronized { notifyAll() } }
-  private def sleep(nanos: Long) {
+  def nudgeSleeper(): Unit = { synchronized { notifyAll() } }
+  private def sleep(nanos: Long): Unit = {
     synchronized {
       try wait(nanos / 1000000, (nanos % 1000000).toInt)
       catch { case ex: InterruptedException =>
@@ -135,12 +135,12 @@ abstract class UpdateManager extends UpdateManagerInterface {
     }
   }
   // this one runs on the job thread
-  def pause() {
+  def pause(): Unit = {
     val now = nanoTime
     pauseUntil(() => now + updatePolicy.slowdown)
   }
   // here we might be on either thread, depending on which kind of pause this is - ST 8/10/11
-  private def pauseUntil(deadline: () => Long) {
+  private def pauseUntil(deadline: () => Long): Unit = {
     var remaining = deadline() - nanoTime
     synchronized {
       // There are two reasons that sleep() might return -- because it timed out, or because

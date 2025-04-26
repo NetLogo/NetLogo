@@ -11,11 +11,11 @@ class _recursefast(original: _call) extends Command {
   override def toString =
     super.toString + ":" + offset
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     perform_1(context)
   }
 
-  def perform_1(context: Context) {
+  def perform_1(context: Context): Unit = {
     if (context.atTopActivation)
       context.ip = offset
     else

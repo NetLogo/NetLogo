@@ -29,7 +29,7 @@ class LegacyModelLoaderComponent extends AbstractAdapter[AbstractModelLoader](cl
 
   override def getComponentInstance(container: PicoContainer, into: java.lang.reflect.Type) = {
 
-    import scala.collection.JavaConverters.iterableAsScalaIterableConverter
+    import scala.jdk.CollectionConverters.IterableHasAsScala
 
     val compiler             = container.getComponent(classOf[PresentationCompilerInterface])
     val compilerServices     = new DefaultCompilerServices(compiler)

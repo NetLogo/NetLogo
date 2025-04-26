@@ -18,7 +18,7 @@ import scala.collection.mutable.{Buffer, Map => MMap}
  */
 private class Assembler {
   private val code = new collection.mutable.ArrayBuffer[Command]
-  def assemble(procdef: ProcedureDefinition) {
+  def assemble(procdef: ProcedureDefinition): Unit = {
     val proc = procdef.procedure
     assembleStatements(procdef.statements)
     val ret =
@@ -62,7 +62,7 @@ private class Assembler {
     // Label -> Position
     private val labels: MMap[Int, Int] = MMap.empty[Int, Int]
 
-    def add(cmd: Command) {
+    def add(cmd: Command): Unit = {
       if (cmd eq stmt.command)
         if (branchMark == -1) branchMark = code.size
         else stmt.command.offset = branchMark - code.size
@@ -81,7 +81,7 @@ private class Assembler {
           gt.offset = code.size - pos
       })
     }
-    def block() { block(stmt.args.size - 1) }
+    def block(): Unit = { block(stmt.args.size - 1) }
 
     def block(pos: Int): Unit = stmt.args(pos) match {
       case block: CommandBlock => assembleStatements(block.statements)
@@ -100,17 +100,17 @@ private class Assembler {
       )
     }
 
-    def removeArg(i: Int) {
+    def removeArg(i: Int): Unit = {
       stmt.command.args = (stmt.command.args.take(i) ++ stmt.command.args.drop(i + 1)).toArray
     }
-    def resume() {
+    def resume(): Unit = {
       if (branchMark == -1) branchMark = code.size
-      else stmt.command.offset = offset
+      else stmt.command.offset = offset()
     }
-    def offset =
+    def offset() =
       if (branchMark == -1) throw new IllegalStateException
       else code.size - branchMark
-    def done() { code += new _done }
+    def done(): Unit = { code += new _done }
     def next: Int = code.size
   }
 }

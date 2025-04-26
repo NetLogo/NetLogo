@@ -8,7 +8,7 @@ class _zoom extends Command {
   switches = true
 
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val observer = world.observer
     // don't zoom past the point you are looking at.  maybe this should be an error?
     val orientation = observer.orientation.get

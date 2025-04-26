@@ -7,7 +7,7 @@ import scala.util.Try
 class DummyLogoThunkFactory extends LogoThunkFactory {
   def makeReporterThunk(code: String, ownerName: String): ReporterLogoThunk = {
     return new ReporterLogoThunk {
-      def call: Try[AnyRef] = {
+      def call(): Try[AnyRef] = {
         throw new UnsupportedOperationException
       }
     }
@@ -19,7 +19,7 @@ class DummyLogoThunkFactory extends LogoThunkFactory {
 
   def makeCommandThunk(code: String, jobOwnerName: String): CommandLogoThunk = {
     return new CommandLogoThunk {
-      def call: Try[Boolean] = {
+      def call(): Try[Boolean] = {
         throw new UnsupportedOperationException
       }
     }

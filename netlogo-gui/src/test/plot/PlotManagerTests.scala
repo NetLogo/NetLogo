@@ -10,7 +10,7 @@ class PlotManagerTests extends SimplePlotTest {
   def newPlotManager() =
     new PlotManager(normalThunkFactory, new MersenneTwisterFast())
 
-  def normalThunkFactory = new DummyLogoThunkFactory() {
+  def normalThunkFactory = new DummyLogoThunkFactory(): Unit = {
     override def makeCommandThunk(code: String, jobOwnerName: String): CommandLogoThunk = {
       return new CommandLogoThunk {
         def call: Try[Boolean] = {
@@ -19,7 +19,7 @@ class PlotManagerTests extends SimplePlotTest {
       }
     }
   }
-  def errorThunkFactory = new DummyLogoThunkFactory() {
+  def errorThunkFactory = new DummyLogoThunkFactory(): Unit = {
     override def makeCommandThunk(code: String, jobOwnerName: String): CommandLogoThunk = {
       return new CommandLogoThunk {
         def call: Try[Boolean] = {

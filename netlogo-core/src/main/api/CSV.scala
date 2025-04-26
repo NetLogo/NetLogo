@@ -40,10 +40,10 @@ class CSV(dump: Any => String) {
     def escape(c: Char) =
       if(c == '"') "\"\"" else c.toString
     val ss = Option(s).getOrElse("null")
-    '"' + ss.flatMap(escape) + '"'
+    "\"" + ss.flatMap(escape) + "\""
   }
 
-  def stringToCSV(writer: java.io.PrintWriter, text: String) {
+  def stringToCSV(writer: java.io.PrintWriter, text: String): Unit = {
     val CellWidth = 10000
     val MaxColumns = 2
     var i = 0
@@ -63,8 +63,8 @@ class CSV(dump: Any => String) {
   }
 
   def variableNameRow(v: JList[String]): String = {
-    import collection.JavaConverters._
-    variableNameRow(v.asScala)
+    import scala.jdk.CollectionConverters.ListHasAsScala
+    variableNameRow(v.asScala.toSeq)
   }
 
   def variableNameRow(names: Seq[String]): String =

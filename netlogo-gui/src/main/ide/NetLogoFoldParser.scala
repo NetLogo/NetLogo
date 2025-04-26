@@ -29,27 +29,27 @@ object NetLogoFoldParser {
     def takeUntilCloseBracketOrKeyword(acc: Seq[Token]): Seq[Token] =
       if (! tokens.hasNext) acc
       else tokens.head.tpe match {
-        case TokenType.CloseBracket                  => tokens.next +: acc
+        case TokenType.CloseBracket                  => tokens.next() +: acc
         case TokenType.OpenBracket if acc.length > 1 => acc
         case TokenType.Ident if tokens.head.text.equalsIgnoreCase("BREED") => acc
         case TokenType.Keyword | TokenType.Eof       => acc
-        case _ => takeUntilCloseBracketOrKeyword(tokens.next +: acc)
+        case _ => takeUntilCloseBracketOrKeyword(tokens.next() +: acc)
       }
 
     @tailrec
     def takeUntilEnd(acc: Seq[Token]): Seq[Token] =
       if (! tokens.hasNext) acc
       else tokens.head.tpe match {
-        case TokenType.Keyword if (tokens.head.value == "END") => tokens.next +: acc
+        case TokenType.Keyword if (tokens.head.value == "END") => tokens.next() +: acc
         case TokenType.Keyword | TokenType.Eof => acc
-        case _ => takeUntilEnd(tokens.next +: acc)
+        case _ => takeUntilEnd(tokens.next() +: acc)
       }
 
     @tailrec
     def takeUntilNonComment(acc: Seq[Token]): Seq[Token] =
       if (! tokens.hasNext) acc
       else tokens.head.tpe match {
-        case TokenType.Comment => takeUntilNonComment(tokens.next +: acc)
+        case TokenType.Comment => takeUntilNonComment(tokens.next() +: acc)
         case _                 => acc
       }
 
@@ -57,17 +57,17 @@ object NetLogoFoldParser {
       if (! tokens.hasNext || tokens.head.tpe == TokenType.Eof) acc
       else {
         val next = tokens.head.tpe match {
-          case TokenType.OpenBracket => takeUntilCloseBracketOrKeyword(Seq(tokens.next))
+          case TokenType.OpenBracket => takeUntilCloseBracketOrKeyword(Seq(tokens.next()))
           case TokenType.Keyword if tokens.head.value == "TO" || tokens.head.value == "TO-REPORT" =>
-            takeUntilEnd(Seq(tokens.next))
+            takeUntilEnd(Seq(tokens.next()))
           case TokenType.Keyword =>
-            takeUntilCloseBracketOrKeyword(Seq(tokens.next))
+            takeUntilCloseBracketOrKeyword(Seq(tokens.next()))
           case TokenType.Comment =>
-            takeUntilNonComment(Seq(tokens.next))
+            takeUntilNonComment(Seq(tokens.next()))
           case TokenType.Ident if tokens.head.text.equalsIgnoreCase("BREED") =>
-            takeUntilCloseBracketOrKeyword(Seq(tokens.next))
+            takeUntilCloseBracketOrKeyword(Seq(tokens.next()))
           case _ =>
-            takeUntilEnd(Seq(tokens.next))
+            takeUntilEnd(Seq(tokens.next()))
         }
         takeUntilEof(next.reverse +: acc)
       }
@@ -80,7 +80,7 @@ import NetLogoFoldParser.sections
 
 class NetLogoFoldParser extends FoldParser {
   override def getFolds(textArea: RSyntaxTextArea): JList[Fold] = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.SeqHasAsJava
 
     val text = textArea.getText
     val parsedSections = sections(text)

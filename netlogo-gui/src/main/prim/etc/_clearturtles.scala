@@ -8,7 +8,7 @@ class _clearturtles extends Command {
 
 
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     world.clearTurtles()
     context.ip = next
   }

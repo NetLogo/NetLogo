@@ -20,11 +20,11 @@ class _setpatchvariable(_vn: Int) extends Command {
   // so we must keep vn and _vn separate - ST 9/22/12
   def vn = _vn
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     perform_1(context, args(0).report(context))
   }
 
-  def perform_1(context: Context, arg0: AnyRef) {
+  def perform_1(context: Context, arg0: AnyRef): Unit = {
     try context.agent.setPatchVariable(_vn, arg0)
     catch { case ex: AgentException =>
       throw new RuntimePrimitiveException(context, this, ex.getMessage) }

@@ -53,8 +53,6 @@ abstract class MultiErrorWidget extends Widget with MultiErrorHandler {
 
 abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with InterfaceModeChangedEvent.Handler {
 
-  type WidgetModel <: CoreWidget
-
   def helpLink: Option[String] = None
   var originalFont: Font = null
   var displayName: String = ""
@@ -72,9 +70,9 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
   def constrainDrag(newBounds: Rectangle, originalBounds: Rectangle, mouseMode: MouseMode): Rectangle = newBounds
   def isZoomed: Boolean = if (findWidgetContainer != null) findWidgetContainer.isZoomed else false
 
-  def model: WidgetModel
+  def model: CoreWidget
   def reAdd(): Unit = { }
-  def load(widget: WidgetModel): Object
+  def load(widget: CoreWidget): Unit
   def sourceOffset = 0
   def hasContextMenuInApplet = false
   def getUnzoomedPreferredSize: Dimension = getPreferredSize

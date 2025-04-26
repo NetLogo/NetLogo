@@ -9,19 +9,19 @@ import org.nlogo.core.{ CompilerException, I18N }
 class TestCompiler extends AnyFunSuite with OneInstancePerTest with BeforeAndAfterEach {
 
   var workspace: HeadlessWorkspace = _
-  override def beforeEach() { workspace = HeadlessWorkspace.newInstance }
-  override def afterEach() { workspace.dispose() }
+  override def beforeEach(): Unit = { workspace = HeadlessWorkspace.newInstance }
+  override def afterEach(): Unit = { workspace.dispose() }
 
-  def declare(source:String) {
+  def declare(source:String): Unit = {
     workspace.initForTesting(5, source)
   }
-  def declareBad(source:String,expectedError:String) {
+  def declareBad(source:String,expectedError:String): Unit = {
     val exception = intercept[CompilerException] {
       declare(source)
     }
     assertResult(expectedError)(exception.getMessage)
   }
-  def badCommand(command:String,expectedError:String) {
+  def badCommand(command:String,expectedError:String): Unit = {
     val exception = intercept[CompilerException] {
       workspace.command(command)
     }

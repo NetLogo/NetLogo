@@ -54,8 +54,8 @@ class _sortby extends Reporter {
             case b: java.lang.Boolean =>
               if (b.booleanValue) 1
               else reporter.report(context, Array(o1, o2)) match {
-                case b: java.lang.Boolean =>
-                  if(b.booleanValue) -1
+                case bool: java.lang.Boolean =>
+                  if(bool.booleanValue) -1
                   else 0
                 case o => die(o)
               }

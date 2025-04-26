@@ -19,7 +19,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
                                                                               with ChangeListener
                                                                               with LoadBeginEvent.Handler
                                                                               with ThemeSync {
-  implicit val prefix = I18N.Prefix("tabs.run.speedslider")
+  implicit val prefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.run.speedslider")
 
   val speedSlider = {
     val slider = new SpeedSlider(workspace.speedSliderPosition.toInt)
@@ -37,7 +37,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
     override def getPreferredSize: Dimension =
       new Dimension(19, 19)
 
-    override def paintComponent(g: Graphics) {
+    override def paintComponent(g: Graphics): Unit = {
       super.paintComponent(g)
 
       val g2d = Utils.initGraphics2D(g)
@@ -51,7 +51,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
     override def getPreferredSize: Dimension =
       new Dimension(19, 19)
 
-    override def paintComponent(g: Graphics) {
+    override def paintComponent(g: Graphics): Unit = {
       super.paintComponent(g)
 
       val g2d = Utils.initGraphics2D(g)
@@ -183,7 +183,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
     }
 
     def mouseWheelMoved(e: MouseWheelEvent): Unit = {
-      setValue(getValue - e.getWheelRotation)
+      setValue(this.getValue - e.getWheelRotation)
     }
 
     override def setValue(value: Int): Unit = {
@@ -225,7 +225,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
       }
 
       override def paintThumb(g: Graphics): Unit = {
-        if (!isEnabled)
+        if (!SpeedSlider.this.isEnabled)
           setThumbLocation(lastThumbLocation, 0)
 
         val g2d = Utils.initGraphics2D(g)

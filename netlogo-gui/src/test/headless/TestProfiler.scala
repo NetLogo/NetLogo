@@ -21,8 +21,8 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   // since they tend to fail intermittently if CPU load is high. - ST 6/10/10
   private val timingSensitiveOK = false
 
-  override def beforeEach() { init() }
-  override def afterEach() { workspace.dispose() }
+  override def beforeEach(): Unit = { init() }
+  override def afterEach(): Unit = { workspace.dispose() }
 
   val useGenerator = org.nlogo.api.Version.useGenerator
   if(!useGenerator)

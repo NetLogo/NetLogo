@@ -13,28 +13,28 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
   extends LabInterface.Worker
 {
   val listeners = new collection.mutable.ListBuffer[ProgressListener]
-  def addListener(listener: ProgressListener) {
+  def addListener(listener: ProgressListener): Unit = {
     listeners += listener
   }
-  def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter) {
+  def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter): Unit = {
     addListener(new SpreadsheetExporter(modelFileName, initialDims, protocol, w))
   }
-  def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter) {
+  def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter): Unit = {
     addListener(new TableExporter(modelFileName, initialDims, protocol, w))
   }
   def addStatsWriter(modelFileName: String, initialDims: WorldDimensions,
-                      w: java.io.PrintWriter, in: LabPostProcessorInputFormat.Format) {
+                      w: java.io.PrintWriter, in: LabPostProcessorInputFormat.Format): Unit = {
     addListener(new StatsExporter(modelFileName, initialDims, protocol, w, in))
   }
   def addListsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter,
-                     in: LabPostProcessorInputFormat.Format) {
+                     in: LabPostProcessorInputFormat.Format): Unit = {
     addListener(new ListsExporter(modelFileName, initialDims, protocol, w, in))
   }
   var runners: Seq[Runner] = null
   // we only want to compile stuff once per workspace, so use this
   // (should use a Scala collection not a Java one, but oh well, too lazy today - ST 8/13/09)
   val proceduresMap = new java.util.WeakHashMap[Workspace, Procedures]
-  def run(initialWorkspace: Workspace, fn: ()=>Workspace, threads: Int, finish: () => Unit = () => {}) {
+  def run(initialWorkspace: Workspace, fn: ()=>Workspace, threads: Int, finish: () => Unit = () => {}): Unit = {
     val globals = initialWorkspace.world.program.interfaceGlobals
     val initialState = collection.mutable.Map[String, AnyRef]()
     for (g <- globals) {
@@ -53,10 +53,10 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
         listeners.foreach(_.runtimeError(initialWorkspace, 0, ex))
       }
       runners =
-        (for((settings, runNumber) <- (protocol.refElements zip Stream.from(1).iterator).drop(protocol.runsCompleted))
+        (for((settings, runNumber) <- (protocol.refElements zip LazyList.from(1).iterator).drop(protocol.runsCompleted))
          yield new Runner(runNumber, settings, fn)).toSeq
       val futures = {
-        import collection.JavaConverters._
+        import scala.jdk.CollectionConverters.{ ListHasAsScala, SeqHasAsJava }
         // The explicit use of JavaConversions here with a type parameter, instead of just plain
         // "asJava", is required to compile against Java 5 - ST 8/17/11
         executor.invokeAll(runners.asJava).asScala
@@ -93,8 +93,8 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
   // result discarded -- we just want to see if compilation succeeds.
   // used in TestCompileAll, also used before the start of the
   // experiment in the GUI so if something doesn't compile we can fail early.
-  def compile(w: Workspace) { new Procedures(w) }
-  def abort() {
+  def compile(w: Workspace): Unit = { new Procedures(w) }
+  def abort(): Unit = {
     if (runners != null) runners.foreach(_.aborted = true)
     supervisorWriting()
   }
@@ -124,14 +124,14 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
     @volatile var aborted = false
     // each Runner is on its own thread, but all the Runners share a ProgressListener,
     // so we need to synchronize
-    def eachListener(fn: (ProgressListener)=>Unit) {
+    def eachListener(fn: (ProgressListener)=>Unit): Unit = {
       listeners.synchronized { listeners.foreach(fn) }
     }
-    def call() {
+    def call(): Unit = {
       // not clear why this check would be necessary, but perhaps it will
       // keep bug #1203 from happening - ST 2/16/11
       if (!aborted) {
-        val workspace = fn.apply
+        val workspace = fn.apply()
         if (workspace != null) {
           try callHelper(workspace)
           catch { case t: Throwable =>
@@ -139,7 +139,7 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
         }
       }
     }
-    def callHelper(ws: Workspace) {
+    def callHelper(ws: Workspace): Unit = {
       val procedures =
         if (proceduresMap.containsKey(ws))
           proceduresMap.get(ws)
@@ -150,7 +150,7 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
         }
       var lastMeasuredStep = -1
       import procedures._
-      def setVariables(settings: List[(String, AnyRef)]) {
+      def setVariables(settings: List[(String, AnyRef)]): Unit = {
         val world = ws.world
         var d = world.getDimensions
         for((name, value) <- settings) {
@@ -198,7 +198,7 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
       def shouldTakeMeasurements(): Boolean = {
         runMetricsConditionProcedure match {
           case None => false
-          case Some(procedure) => 
+          case Some(procedure) =>
             ws.runCompiledReporter(owner(ws.world.mainRNG.clone), procedure) match {
               case t: Throwable => {
                 throw new FailedException("Metrics condition reporter encountered an error: " + t)
@@ -239,8 +239,8 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
         exportCommandFound
       }
 
-      def checkForPlotExport() {
-        if (!ws.shouldUpdatePlots &&
+      def checkForPlotExport(): Unit = {
+        if (!ws.shouldUpdatePlots() &&
             (checkForPlotExportCommand(preExperimentProcedure.code) ||
              checkForPlotExportCommand(postRunProcedure.code) ||
              checkForPlotExportCommand(goProcedure.code) ||
@@ -248,7 +248,7 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
              checkForPlotExportCommand(postExperimentProcedure.code))) {
           import ExportPlotWarningAction._
           ws.setTriedToExportPlot(true)
-          ws.exportPlotWarningAction match {
+          ws.exportPlotWarningAction() match {
             case Output => {
               ws.setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
               println(I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"))
@@ -257,7 +257,7 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
           }
         }
       }
-      def checkForRuntimeError() {
+      def checkForRuntimeError(): Unit = {
         if (ws.lastLogoException != null) {
           val ex = ws.lastLogoException
           ws.clearLastLogoException()

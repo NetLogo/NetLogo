@@ -7,7 +7,7 @@ import com.jogamp.opengl.{ GL, GL2, GL2GL3, GL2ES3 }
 private[render] object Rectangle {
 
   // symmetric over axes
-  def renderRectangularPrism(gl: GL2, edgeX: Float, edgeY: Float, edgeZ: Float, invert: Boolean) {
+  def renderRectangularPrism(gl: GL2, edgeX: Float, edgeY: Float, edgeZ: Float, invert: Boolean): Unit = {
     if (invert)
       renderRectangularPrism(gl, edgeX, -edgeX, edgeY, -edgeY, edgeZ, -edgeZ, false, true, true)
     else
@@ -18,7 +18,7 @@ private[render] object Rectangle {
   def renderRectangularPrism(gl: GL2, left: Float, right: Float,
                              back: Float, front: Float,
                              bottom: Float, top: Float, hollow: Boolean,
-                             hasBottom: Boolean, hasSides: Boolean) {
+                             hasBottom: Boolean, hasSides: Boolean): Unit = {
 
     if (hollow)
       gl.glPolygonMode(GL.GL_FRONT_AND_BACK, GL2GL3.GL_LINE)

@@ -352,7 +352,7 @@ class World3D extends World
   private[nlogo] def drawLine(
     x0: Double, y0: Double,
     x1: Double, y1: Double,
-    color: AnyRef, size: Double, mode: String) {
+    color: AnyRef, size: Double, mode: String): Unit = {
     drawing.drawLine(x0, y0, 0, x1, y1, 0, size, color)
   }
 

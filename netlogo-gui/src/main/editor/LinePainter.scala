@@ -21,7 +21,7 @@ class LinePainter(private var component: JTextComponent) extends Highlighter.Hig
     p0: Int,
     p1: Int,
     bounds: Shape,
-    c: JTextComponent) {
+    c: JTextComponent): Unit = {
       try {
         val r = c.modelToView2D(c.getCaretPosition)
         g.setColor(color)
@@ -32,7 +32,7 @@ class LinePainter(private var component: JTextComponent) extends Highlighter.Hig
       }
   }
 
-  private def resetHighlight() {
+  private def resetHighlight(): Unit = {
     try {
       val offset = component.getCaretPosition
       val currentView = component.modelToView2D(offset)
@@ -45,7 +45,7 @@ class LinePainter(private var component: JTextComponent) extends Highlighter.Hig
     }
   }
 
-  def caretUpdate(e: CaretEvent) {
+  def caretUpdate(e: CaretEvent): Unit = {
     resetHighlight()
   }
 }

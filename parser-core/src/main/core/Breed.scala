@@ -11,6 +11,6 @@ case class Breed(name: String,
                  isDirected: Boolean = false) {
 
   override def toString =
-    Seq(name, singular, owns.mkString(" "), isDirected)
+    Seq[Any](name, singular, owns.mkString(" "), isDirected)
       .mkString("Breed(", ", ", ")")
 }

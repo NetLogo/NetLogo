@@ -61,7 +61,7 @@ case class LabProtocol(name: String = LabDefaultValues.getDefaultName,
               else m :+ set.variableName -> v))
       }
     if (sequentialRunOrder) {
-      valueSets.map(combinations(_).flatMap(x => Iterator.fill(repetitions)(x))).flatten.toIterator
+      valueSets.map(combinations(_).flatMap(x => Iterator.fill(repetitions)(x))).flatten.iterator
     }
     else {
       Iterator.fill(repetitions)(valueSets.map(x => combinations(x.reverse)).flatten).flatten

@@ -14,7 +14,7 @@ trait Controllable {
 
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
-  def command(source: String)
+  def command(source: String): Unit
 
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])

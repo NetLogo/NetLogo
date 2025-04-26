@@ -11,11 +11,11 @@ object Fail {
   // different names for the two methods), but choosing to leave it for now. - ST 10/4/12
 
   // "assert" is in Predef, so...
-  def cAssert(condition: Boolean, desc: =>String, locatable: SourceLocatable) {
+  def cAssert(condition: Boolean, desc: =>String, locatable: SourceLocatable): Unit = {
     if(!condition)
       exception(desc, locatable)
   }
-  def cAssert(condition: Boolean, desc: =>String, location: SourceLocation) {
+  def cAssert(condition: Boolean, desc: =>String, location: SourceLocation): Unit = {
     if(!condition)
       exception(desc, location)
   }

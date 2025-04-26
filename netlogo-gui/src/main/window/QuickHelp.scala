@@ -44,11 +44,11 @@ object QuickHelp {
   private def docPath(docName: String): Path =
     BrowserLauncher.docPath(docName)
 
-  private def openDictionary(comp: Component, word: String, words: Map[String, String]) {
+  private def openDictionary(comp: Component, word: String, words: Map[String, String]): Unit = {
     BrowserLauncher.openPath(comp, docPath(s"dict/${words(word)}"), null)
   }
 
-  def doHelp(comp: Component, token: String) {
+  def doHelp(comp: Component, token: String): Unit = {
     if (token == null)
       return
 

@@ -25,7 +25,7 @@ object Menu {
       implicitly[Ordering[Double]].compare(getRank(x), getRank(y))
   }
 
-  implicit val menuOrdering = Menu.MenuOrdering
+  implicit val menuOrdering: org.nlogo.swing.Menu.MenuOrdering.type = Menu.MenuOrdering
 
   def model = new MenuModel[Action, String]
 

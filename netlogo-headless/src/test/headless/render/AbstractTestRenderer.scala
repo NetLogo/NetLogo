@@ -40,7 +40,7 @@ abstract class AbstractTestRenderer(worldType: WorldType = Torus) extends TestUs
     }
   }
 
-  def testOperations(g: MockGraphics, expecteds: List[Operation]) {
+  def testOperations(g: MockGraphics, expecteds: List[Operation]): Unit = {
 //    info("expected: " + expecteds.mkString("\n"))
 //    info("actual: " + g.operations.mkString("\n"))
     assert(expecteds.mkString("\n") === g.toString)

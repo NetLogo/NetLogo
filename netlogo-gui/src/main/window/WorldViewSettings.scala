@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.api.WorldPropertiesInterface
-import org.nlogo.core.{ CompilerException, UpdateMode, View => CoreView, WorldDimensions }
+import org.nlogo.core.{ CompilerException, UpdateMode, View => CoreView, Widget => CoreWidget, WorldDimensions }
 import org.nlogo.workspace.WorldLoaderInterface
 
 trait WorldIntegerEditor {
@@ -44,7 +44,7 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
 
   def resizeWithProgress(showProgress: Boolean): Unit
 
-  def model: CoreView
+  def model: CoreWidget
 
   val originTypes: Seq[OriginType] = Seq(OriginType.Center, OriginType.Corner, OriginType.Edge, OriginType.Custom)
 
@@ -112,15 +112,15 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
     originConfig = originalConfig
   }
 
-  def load(view: CoreView): AnyRef = {
+  def load(view: CoreWidget): AnyRef = {
     workspace.world.displayOn(false)
-    workspace.loadWorld(view, this)
+    workspace.loadWorld(view.asInstanceOf[CoreView], this)
     // we can't clearAll here because the globals may not
     // be allocated yet ev 7/12/06
     // note that we clear turtles inside the load method so
     // it can happen before we set the topology ev 7/19/06
-    workspace.world.tickCounter.clear
-    workspace.world.clearPatches
+    workspace.world.tickCounter.clear()
+    workspace.world.clearPatches()
     workspace.world.displayOn(true)
     this
   }
@@ -287,7 +287,7 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
 
   def getMinimumWidth: Int = gWidget.getMinimumSize.width
 
-  def insetWidth: Int = gWidget.insetWidth
+  def insetWidth(): Int = gWidget.insetWidth
 
   def computePatchSize(width: Int, numPatches: Int): Double =
     gWidget.computePatchSize(width, numPatches)

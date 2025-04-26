@@ -10,7 +10,7 @@ class _followme extends Command {
 
 
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val turtle = context.agent.asInstanceOf[Turtle]
     // the following code is duplicated in _follow and _followme - ST 6/28/05
     val distance = (turtle.size * 5).toInt

@@ -103,12 +103,12 @@ object HarvestResources {
 
     private def idSafe(s: String): String = {
       // Replace $ with . to make scaladoc pages look different
-      idIllegalCharacters.replaceAllIn(s, "").replaceAllLiterally("$", ".").takeRight(72)
+      idIllegalCharacters.replaceAllIn(s, "").replace("$", ".").takeRight(72)
     }
 
     private def nameSafe(s: String): String = {
       // $ must be replaced by $$ for WiX to find it
-      s.replaceAllLiterally("$", "$$")
+      s.replace("$", "$$")
     }
 
     private def generateUUID: String = java.util.UUID.randomUUID.toString.toUpperCase

@@ -11,7 +11,7 @@ import org.nlogo.nvm.RuntimePrimitiveException;
 
 import java.util.Iterator;
 
-import static scala.collection.JavaConversions.asScalaBuffer;
+import scala.jdk.javaapi.CollectionConverters;
 
 public final class _hubnetsendclearoutput
     extends HubNetCommand {
@@ -42,7 +42,7 @@ public final class _hubnetsendclearoutput
           (context, this, 0, Syntax.ListType() | Syntax.StringType(), clients);
     }
 
-    hubNetManager().get().clearText(asScalaBuffer(nodes));
+    hubNetManager().get().clearText(CollectionConverters.asScala(nodes).toList());
     context.ip = next;
   }
 

@@ -21,7 +21,7 @@ class ErrorLabel extends JLabel {
     setVisible(compilerError.isDefined)
   }
 
-  def setError(errorOrNull: Exception, offset: Int) {
+  def setError(errorOrNull: Exception, offset: Int): Unit = {
     compilerError = Option(errorOrNull)
     setVisible(compilerError.isDefined)
     val err = compilerError.map(_.getMessage).getOrElse("")
@@ -30,7 +30,7 @@ class ErrorLabel extends JLabel {
 
   private var originalFontSize = -1
 
-  def zoom(zoomFactor: Double) {
+  def zoom(zoomFactor: Double): Unit = {
     if(originalFontSize == -1)
       originalFontSize = getFont.getSize
     setFont(getFont.deriveFont((originalFontSize * zoomFactor).ceil.toFloat))

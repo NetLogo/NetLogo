@@ -13,22 +13,22 @@ trait PlotActionRunner extends ActionRunner[PlotAction] {
   def maybeGetPlot(name: String): Option[Plot]
   def getPlotPen(plotName: String, penName: String): Option[PlotPen]
 
-  def withPlot(plotName: String)(f: (Plot) => Unit) {
+  def withPlot(plotName: String)(f: (Plot) => Unit): Unit = {
     maybeGetPlot(plotName).foreach(f)
   }
 
-  def withPen(plotName: String, penName: String)(f: (PlotPen) => Unit) {
+  def withPen(plotName: String, penName: String)(f: (PlotPen) => Unit): Unit = {
     getPlotPen(plotName, penName).foreach(f)
   }
 
-  def withPlotAndPen(plotName: String, penName: String)(f: (Plot, PlotPen) => Unit) {
+  def withPlotAndPen(plotName: String, penName: String)(f: (Plot, PlotPen) => Unit): Unit = {
     for {
       plot <- maybeGetPlot(plotName)
       pen <- plot.getPen(penName)
     } f(plot, pen)
   }
 
-  override def run(action: PlotAction) {
+  override def run(action: PlotAction): Unit = {
 
     // any action on a plot makes it dirty
     withPlot(action.plotName) {

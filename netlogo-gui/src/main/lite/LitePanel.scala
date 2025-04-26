@@ -61,12 +61,12 @@ with ControlSet {
   addLinkComponent(procedures)
   addLinkComponent(new CompilerManager(workspace, world, procedures))
   addLinkComponent(new CompiledEvent.Handler {
-    override def handle(e: CompiledEvent) {
+    override def handle(e: CompiledEvent): Unit = {
       if (e.error != null)
         e.error.printStackTrace()
   }})
   addLinkComponent(new LoadModelEvent.Handler {
-    override def handle(e: LoadModelEvent) {
+    override def handle(e: LoadModelEvent): Unit = {
       workspace.aggregateManager.load(e.model, workspace)
   }})
   workspace.setWidgetContainer(iP)
@@ -81,7 +81,7 @@ with ControlSet {
     throw new UnsupportedOperationException
 
   /** LitePanel passes the focus request to the InterfacePanel */
-  override def requestFocus() {
+  override def requestFocus(): Unit = {
     if (iP != null)
       iP.requestFocus()
   }
@@ -90,7 +90,7 @@ with ControlSet {
     new InterfacePanelLite(workspace.viewWidget, workspace, workspace, workspace.plotManager, liteEditorFactory)
 
   /** internal use only */
-  def setAdVisible(visible: Boolean) {
+  def setAdVisible(visible: Boolean): Unit = {
     panel.setVisible(visible)
   }
 
@@ -99,19 +99,19 @@ with ControlSet {
    *
    * @param url the directory as java.net.URL
    */
-  def setPrefix(url: java.net.URL) {
+  def setPrefix(url: java.net.URL): Unit = {
     workspace.fileManager.setPrefix(url)
   }
 
   /** internal use only */
-  def handle(throwable: Throwable) {
+  def handle(throwable: Throwable): Unit = {
     try {
       if (!throwable.isInstanceOf[LogoException])
         throwable.printStackTrace(System.err)
       val thread = Thread.currentThread
       org.nlogo.awt.EventQueue.invokeLater(
         new Runnable {
-          override def run() {
+          override def run(): Unit = {
             errorDialogManager.show(null, null, thread, throwable)
           }})
     }
@@ -134,7 +134,7 @@ with ControlSet {
    * @see #commandLater
    */
   @throws(classOf[CompilerException])
-  def command(source: String) {
+  def command(source: String): Unit = {
     org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateCommands(defaultOwner, source)
   }
@@ -150,7 +150,7 @@ with ControlSet {
    * @see #command
    */
   @throws(classOf[CompilerException])
-  def commandLater(source: String) {
+  def commandLater(source: String): Unit = {
     workspace.evaluateCommands(defaultOwner, source, false)
   }
 
@@ -202,7 +202,7 @@ with ControlSet {
    *               in the same format as it would be stored in a file.
    */
   @throws(classOf[InvalidVersionException])
-  def openFromURI(uri: URI) {
+  def openFromURI(uri: URI): Unit = {
     iP.reset()
     // I haven't thoroughly searched for all the places where the type of model matters, but it
     // seems to me like it ought to be OK; the main thing the model type affects in the engine (as

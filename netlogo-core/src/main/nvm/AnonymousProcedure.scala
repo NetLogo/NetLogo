@@ -112,6 +112,7 @@ case class AnonymousReporter(
     context match {
       case e: ExtensionContext => report(e.nvmContext, args)
       case c: Context          => report(c, args)
+      case _                   => throw new Exception(s"Unexpected context: $context")
     }
 
   def report(context: Context, args: Array[AnyRef]): AnyRef = {
@@ -178,14 +179,15 @@ extends AnonymousProcedure with org.nlogo.api.AnonymousCommand {
     AnonymousProcedure.displayString("command", source)
   // anonymous commands are allowed to take more than the number of arguments (hence repeatable-type)
 
-  def perform(context: api.Context, args: Array[AnyRef]) {
+  def perform(context: api.Context, args: Array[AnyRef]): Unit = {
     context match {
       case e: ExtensionContext => perform(e.nvmContext, args)
       case c: Context          => perform(c, args)
+      case _                   =>
     }
   }
 
-  def perform(context: Context, args: Array[AnyRef]) {
+  def perform(context: Context, args: Array[AnyRef]): Unit = {
     checkAgentClass(context, syntax.agentClassString)
     val performFormals = argsHandler.updateRuntimeArgs(formals, args)
 

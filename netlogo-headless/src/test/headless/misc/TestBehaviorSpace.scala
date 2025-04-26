@@ -31,7 +31,7 @@ class TestBehaviorSpace extends AnyFunSuite
     HeadlessWorkspace.newLab.newWorker(protocol)
   }
 
-  override def afterEach() { workspaces.foreach(_.dispose()) }
+  override def afterEach(): Unit = { workspaces.foreach(_.dispose()) }
 
   // first 6 lines of results are header lines. we'll need to discard them
   def withoutFirst6Lines(s: String) =
@@ -51,7 +51,7 @@ class TestBehaviorSpace extends AnyFunSuite
     runExperiment(
       View.square(worldSize),
       declarations, name)
-  def runParallelExperiment(name: String, declarations: String = "") {
+  def runParallelExperiment(name: String, declarations: String = ""): Unit = {
     def workspace = {
       val w = newWorkspace()
       w.openModel(Model(code = declarations))
@@ -62,7 +62,7 @@ class TestBehaviorSpace extends AnyFunSuite
         threads = Runtime.getRuntime.availableProcessors)(
         workspace _, () => newWorker(name))
   }
-  def runExperimentFromModel(modelPath: String, experimentName: String, filename: String, threads: Int = 1, wantSpreadsheet: Boolean = true, wantTable: Boolean = true) {
+  def runExperimentFromModel(modelPath: String, experimentName: String, filename: String, threads: Int = 1, wantSpreadsheet: Boolean = true, wantTable: Boolean = true): Unit = {
     val time = System.nanoTime
     new java.io.File("tmp").mkdir()
     new java.io.File("tmp/TestBehaviorSpace").mkdir()
@@ -84,7 +84,7 @@ class TestBehaviorSpace extends AnyFunSuite
   def run(filename: String, threads: Int = 1, wantTable: Boolean = true, wantSpreadsheet: Boolean = true)
          (fn: () => Workspace, fn2: () => LabInterface.Worker) {
     val dims = fn.apply.world.getDimensions
-    def runHelper(fns: List[(String, (LabInterface.Worker, java.io.StringWriter) => Unit)]) {
+    def runHelper(fns: List[(String, (LabInterface.Worker, java.io.StringWriter) => Unit)]): Unit = {
       val worker = fn2.apply
       val writers = fns.map(_ => new java.io.StringWriter)
       for (((_, fn), writer) <- fns zip writers)
@@ -98,10 +98,10 @@ class TestBehaviorSpace extends AnyFunSuite
         }
       }
     }
-    def table(worker: LabInterface.Worker, writer: java.io.StringWriter) {
+    def table(worker: LabInterface.Worker, writer: java.io.StringWriter): Unit = {
       worker.addTableWriter(filename, dims, new java.io.PrintWriter(writer))
     }
-    def spreadsheet(worker: LabInterface.Worker, writer: java.io.StringWriter) {
+    def spreadsheet(worker: LabInterface.Worker, writer: java.io.StringWriter): Unit = {
       worker.addSpreadsheetWriter(filename, dims, new java.io.PrintWriter(writer))
     }
     runHelper(List(("-table.csv", table _), ("-spreadsheet.csv", spreadsheet _))

@@ -51,7 +51,7 @@ object StructureParser {
               case None =>
                 exception(I18N.errors.getN("compiler.StructureParser.includeNotFound", suppliedPath), results.includes.head)
             }
-          }.dropWhile(_.includes.nonEmpty).next
+          }.dropWhile(_.includes.nonEmpty).next()
         }
       }
   }
@@ -149,10 +149,10 @@ object StructureParser {
     if (includesPositionedTokens.isEmpty)
       Seq()
     else {
-      includesPositionedTokens.next
+      includesPositionedTokens.next()
       val includesWithoutComments = includesPositionedTokens.filter(_.tpe != TokenType.Comment)
-      if (includesWithoutComments.next.tpe != TokenType.OpenBracket)
-        exception("Did not find expected open bracket for __includes declaration", tokens.next)
+      if (includesWithoutComments.next().tpe != TokenType.OpenBracket)
+        exception("Did not find expected open bracket for __includes declaration", tokens.next())
       else
         includesWithoutComments
           .takeWhile(_.tpe != TokenType.CloseBracket)

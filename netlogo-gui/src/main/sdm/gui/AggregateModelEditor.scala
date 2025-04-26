@@ -240,7 +240,7 @@ class AggregateModelEditor(
    */
   def removeViewChangeListener(vcl: ViewChangeListener): Unit = { }
 
-  def handle(e: Events.LoadBeginEvent) {
+  def handle(e: Events.LoadBeginEvent): Unit = {
     undoManager.clearUndos()
     undoManager.clearRedos()
   }
@@ -253,21 +253,21 @@ class AggregateModelEditor(
   }
 
   private class MenuBar extends JMenuBar with ThemeSync {
-    override def paintComponent(g: Graphics) {
+    override def paintComponent(g: Graphics): Unit = {
       val g2d = SwingUtils.initGraphics2D(g)
 
       g2d.setColor(InterfaceColors.menuBackground())
       g2d.fillRect(0, 0, getWidth, getHeight)
     }
 
-    override def paintBorder(g: Graphics) {
+    override def paintBorder(g: Graphics): Unit = {
       val g2d = SwingUtils.initGraphics2D(g)
 
       g2d.setColor(InterfaceColors.menuBarBorder())
       g2d.drawLine(0, getHeight - 1, getWidth, getHeight - 1)
     }
 
-    def syncTheme {
+    def syncTheme(): Unit = {
       getComponents.foreach(_ match {
         case ts: ThemeSync => ts.syncTheme()
         case _ =>
@@ -291,9 +291,9 @@ class AggregateModelEditor(
     setUI(menuUI)
     syncTheme()
 
-    override def addMenuItem(command: Command, menuItem: JMenuItem) {
+    override def addMenuItem(command: Command, menuItem: JMenuItem): Unit = {
       super.addMenuItem(command, new MenuItem(new AbstractAction(command.name) {
-        def actionPerformed(e: ActionEvent) {
+        def actionPerformed(e: ActionEvent): Unit = {
           command.execute()
         }
       }))

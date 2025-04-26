@@ -44,7 +44,7 @@ class TestPatchLabels extends AbstractTestRenderer {
     override def toString = (p, labelSize).toString
     def command = s"ask patch ${p.x} ${p.y} [ set plabel 123 ]"
     def expectedResults = drawnAt.expectedResults(labelSize)
-    override def setup(g: MockGraphics) {
+    override def setup(g: MockGraphics): Unit = {
       g.allowingLabels(labelSize)
     }
   }
@@ -123,7 +123,7 @@ class TestRendererForTurtleLabels extends AbstractTestRenderer {
     def expectedResults =
       turtleDrawnAt.expectedResults(t.size) :::
         labelDrawnAt.expectedResults(labelSize)
-    override def setup(g: MockGraphics) {
+    override def setup(g: MockGraphics): Unit = {
       g.allowingLabels(labelSize)
     }
   }

@@ -7,11 +7,11 @@ import org.nlogo.workspace.{ AbstractWorkspace, Benchmarker }
 
 class _bench extends Command {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val minTime = argEvalIntValue(context, 0)
     val maxTime = argEvalIntValue(context, 1)
     new Thread("__bench") {
-      override def run() {
+      override def run(): Unit = {
         Benchmarker.benchmark(
           workspace.asInstanceOf[AbstractWorkspace], minTime, maxTime)
       }

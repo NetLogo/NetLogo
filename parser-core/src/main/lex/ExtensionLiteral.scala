@@ -11,9 +11,9 @@ class ExtensionLiteral(start: Int, filename: String) {
 
   def isFinished = nestingLevel == 0
 
-  def add(s: String) { builder.append(s) }
-  def push() { nestingLevel += 1 }
-  def pop() { nestingLevel -= 1 }
+  def add(s: String): Unit = { builder.append(s) }
+  def push(): Unit = { nestingLevel += 1 }
+  def pop(): Unit = { nestingLevel -= 1 }
 
   def token(): Token = {
     val text = builder.toString

@@ -9,7 +9,6 @@ import org.nlogo.api.{ LogoException, NetLogoLegacyDialect, NetLogoThreeDDialect
 import org.nlogo.core.{ Button, CompilerException, ConstraintSpecification, LogoList, Model, Monitor, Program }
 import org.nlogo.plot.PlotLoader
 import org.nlogo.core.Shape.{ LinkShape => CoreLinkShape, VectorShape => CoreVectorShape }
-import org.nlogo.shape.{LinkShape, VectorShape}
 import org.nlogo.api.PreviewCommands
 
 import org.nlogo.shape.{ShapeConverter, LinkShape, VectorShape}
@@ -23,7 +22,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
 
   @throws(classOf[CompilerException])
   @throws(classOf[LogoException])
-  def openFromModel(model: Model, shouldAutoInstallLibs: Boolean = false) {
+  def openFromModel(model: Model, shouldAutoInstallLibs: Boolean = false): Unit = {
     // get out if the model is opened. (WHY? - JC 10/27/09)
     if (ws.modelOpened) throw new IllegalStateException
     ws.setOpenModel(model)
@@ -72,7 +71,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
         model.widgets.collect { case b: Button => b },
         model.widgets.collect { case m: Monitor => m })
     else
-      finish(model.constraints, results.program, model.interfaceGlobalCommands.mkString("\n"), ws.getPlotCompilationErrorAction)
+      finish(model.constraints, results.program, model.interfaceGlobalCommands.mkString("\n"), ws.getPlotCompilationErrorAction())
   }
 
   private def attachWorldShapes(turtleShapes: Seq[CoreVectorShape], linkShapes: Seq[CoreLinkShape]) = {
@@ -89,7 +88,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
  *  @param plotCompilationErrorAction  action to take if a plot compilation error occurs
  */
 private def finish(constraints: Map[String, ConstraintSpecification], program: Program,
-                      interfaceGlobalCommands: String, plotCompilationErrorAction: PlotCompilationErrorAction) {
+                      interfaceGlobalCommands: String, plotCompilationErrorAction: PlotCompilationErrorAction): Unit = {
     ws.world.realloc()
 
     val errors = ws.plotManager.compileAllPlots()
@@ -116,6 +115,7 @@ private def finish(constraints: Map[String, ConstraintSpecification], program: P
         case BooleanConstraintSpecification(default) => new BooleanConstraint(default)
         case StringInputConstraintSpecification(typeName, default) => new InputBoxConstraint(typeName, default)
         case NumericInputConstraintSpecification(typeName, default) => new InputBoxConstraint(typeName, default)
+        case _ => throw new Exception(s"Unexpected constraint: $spec")
       }
       ws.world.observer.setConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)
     }
@@ -123,7 +123,7 @@ private def finish(constraints: Map[String, ConstraintSpecification], program: P
     ws.command(interfaceGlobalCommands)
   }
 
-  private def testCompileWidgets(buttons: Seq[Button], monitors: Seq[Monitor]) {
+  private def testCompileWidgets(buttons: Seq[Button], monitors: Seq[Monitor]): Unit = {
     val errors = ws.plotManager.compileAllPlots()
     if(errors.nonEmpty) throw errors(0)
     for {

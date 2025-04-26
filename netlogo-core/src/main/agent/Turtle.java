@@ -1123,7 +1123,7 @@ public abstract class Turtle
 
     for (Link link : links) {
       if (checkAllBreeds || (isBreedSet ? linkSet == link.getBreed() : linkSet.contains(link))) {
-        Agent otherEnd = (link.end1 == this) ? link.end2 : link.end1;
+        Agent otherEnd = (link._end1 == this) ? link._end2 : link._end1;
         if (otherEnd == dest) {
           return true;
         }
@@ -1144,11 +1144,11 @@ public abstract class Turtle
     for (Link link : links) {
       if (checkAllBreeds || (isBreedSet ? linkSet == link.getBreed() : linkSet.contains(link))) {
         if (link.isDirectedLink()) {
-          if (link.end1 == this && link.end2 == dest) {
+          if (link._end1 == this && link._end2 == dest) {
             return true;
           }
         } else {
-          Agent otherEnd = (link.end1 == this) ? link.end2 : link.end1;
+          Agent otherEnd = (link._end1 == this) ? link._end2 : link._end1;
           if (otherEnd == dest) {
             return true;
           }
@@ -1193,8 +1193,8 @@ public abstract class Turtle
       if (allBreeds || linkSet == link.getBreed() || (notBreedSet && linkSet.contains(link))) {
         // check directedness -- note that undirected links are *always* returned.
         if ((out && in) ||
-            (out && link.end1 == this) ||
-            (in  && link.end2 == this) ||
+            (out && link._end1 == this) ||
+            (in  && link._end2 == this) ||
             !link.isDirectedLink()) {
           result[writeTo] = link;
           writeTo++;

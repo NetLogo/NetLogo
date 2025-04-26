@@ -17,14 +17,14 @@ import MouseMotionHandler.{ Mode, OrbitMode, ZoomMode, TranslateMode, InterfaceM
 class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
   extends JPanel(new GridBagLayout) with ThemeSync {
 
-  private implicit val i18nPrefix = I18N.Prefix("view.3d")
+  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("view.3d")
 
   private val orbitButton = new ModeButton(I18N.gui("orbit"), OrbitMode)
   private val zoomButton = new ModeButton(I18N.gui("zoom"), ZoomMode)
   private val moveButton = new ModeButton(I18N.gui("move"), TranslateMode)
   private val interactButton = new ModeButton(I18N.gui("interact"), InterfaceMode)
 
-  private val resetButton = new Button(I18N.gui("resetPerspective"), view.resetPerspective)
+  private val resetButton = new Button(I18N.gui("resetPerspective"), view.resetPerspective _)
   private val fullScreenButton = new Button(I18N.gui("fullScreen"), () => {
     val options = Seq(I18N.gui.get("common.buttons.continue"), I18N.gui.get("common.buttons.cancel"))
     val isWindows = System.getProperty("os.name").toLowerCase.startsWith("win")
@@ -83,7 +83,7 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
     setButtonsEnabled(true)
   }
 
-  def setStatus(perspective: Perspective) {
+  def setStatus(perspective: Perspective): Unit = {
     // don't update if perspective didn't change
     if (this.perspective.orNull != perspective) {
       this.perspective = Option(perspective)
@@ -119,7 +119,7 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
     }
   }
 
-  private def setButtonsEnabled(enabled: Boolean) {
+  private def setButtonsEnabled(enabled: Boolean): Unit = {
     orbitButton.setEnabled(enabled)
     zoomButton.setEnabled(enabled)
     moveButton.setEnabled(enabled)

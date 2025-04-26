@@ -5,13 +5,13 @@ package org.nlogo.prim.etc
 import org.nlogo.nvm.{ Context, Command }
 
 class _stopinspecting extends Command {
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     context.ip = next
   }
 }
 
 class _stopinspectingdeadagents extends Command {
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     context.ip = next
   }
 }

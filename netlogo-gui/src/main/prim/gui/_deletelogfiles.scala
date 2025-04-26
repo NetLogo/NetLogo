@@ -8,7 +8,7 @@ import org.nlogo.nvm.{ Command, Context }
 class _deletelogfiles extends Command {
   switches = true
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     LogManager.deleteLogFiles()
     context.ip = next
   }

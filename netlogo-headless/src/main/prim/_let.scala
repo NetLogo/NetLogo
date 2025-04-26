@@ -9,11 +9,11 @@ class _let(private[this] val _let: Let) extends Command {
 
   def let: Let = _let
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     perform_1(context, args(0).report(context))
   }
 
-  def perform_1(context: Context, arg0: AnyRef) {
+  def perform_1(context: Context, arg0: AnyRef): Unit = {
     context.activation.binding.let(_let, arg0)
     context.ip = next
   }

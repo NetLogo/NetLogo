@@ -100,7 +100,7 @@ trait Finder extends AnyFunSuite  {
 
   def withFixture[T](name: String)(body: AbstractFixture => T): T
 
-  def runTest(t: LanguageTest, mode: TestMode) {
+  def runTest(t: LanguageTest, mode: TestMode): Unit = {
     withFixture(s"${t.fullName} ($mode)") {
       fixture =>
         val nonDecls = t.entries.filterNot(_.isInstanceOf[Declaration])

@@ -1,14 +1,17 @@
 // (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
 package org.nlogo.shape
 
-import org.nlogo.api.GraphicsInterface
 import java.awt.{ Color, Point, Polygon => AwtPolygon, Rectangle => AwtRectangle }
+
+import org.nlogo.api.GraphicsInterface
 import org.nlogo.core.Shape.{ Polygon => BasePolygon }
+
+import scala.collection.immutable.ArraySeq
 
 @SerialVersionUID(0L)
 class Polygon(color: Color) extends Curve(color) with BasePolygon with Cloneable {
 
-  override def points: Seq[(Int, Int)] = xcoords zip ycoords
+  override def points: Seq[(Int, Int)] = (xcoords zip ycoords).toIndexedSeq
 
   private var modifiedPointIndex: Int = -1
 
@@ -28,7 +31,7 @@ class Polygon(color: Color) extends Curve(color) with BasePolygon with Cloneable
     modifiedPointIndex += 2
   }
 
-  def this(color: Color, filled: Boolean, marked: Boolean, points: List[Point]) {
+  def this(color: Color, filled: Boolean, marked: Boolean, points: List[Point]) = {
     this(color)
     this.filled = filled
     this.marked = marked
@@ -37,8 +40,8 @@ class Polygon(color: Color) extends Curve(color) with BasePolygon with Cloneable
 
   override def clone: AnyRef = {
     val newPoly: Polygon = super.clone.asInstanceOf[Polygon]
-    newPoly.xcoords = Array(newPoly.xcoords: _*)
-    newPoly.ycoords = Array(newPoly.ycoords: _*)
+    newPoly.xcoords = Array(ArraySeq.unsafeWrapArray(newPoly.xcoords): _*)
+    newPoly.ycoords = Array(ArraySeq.unsafeWrapArray(newPoly.ycoords): _*)
     newPoly
   }
 

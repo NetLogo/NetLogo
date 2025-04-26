@@ -27,7 +27,7 @@ object EditorConfiguration {
   val defaultFont = new Font(platformMonospacedFont, Font.PLAIN, 12)
 
   private val emptyListener =
-    new TextListener() { override def textValueChanged(e: TextEvent) { } }
+    new TextListener() { override def textValueChanged(e: TextEvent): Unit = { } }
 
   def defaultContextActions(colorizer: Colorizer): Seq[Action] =
     Seq(new MouseQuickHelpAction(colorizer))

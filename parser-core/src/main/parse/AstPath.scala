@@ -22,6 +22,7 @@ object AstPath {
       case app: ReporterApp => RepArg(index)
       case cb: CommandBlock => CmdBlk(index)
       case rb: ReporterBlock => RepBlk(index)
+      case e => throw new Exception(s"Unexpected expression: $e")
     }
   }
 }
@@ -93,6 +94,8 @@ trait PositionalAstFolder[A] {
         visitCommandBlock(cb, position / CmdBlk(index))
       case rb: ReporterBlock =>
         visitReporterBlock(rb, position / RepBlk(index))
+      case e =>
+        throw new Exception(s"Unexpected expression: $e")
     }
   }
 

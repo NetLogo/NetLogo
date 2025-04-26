@@ -86,7 +86,7 @@ object Dump extends CDump {
         buf.toString
       }
     else {
-      import scala.collection.JavaConverters._
+      import scala.jdk.CollectionConverters.IterableHasAsScala
 
       val buf = new StringBuilder
       buf += '{'
@@ -142,7 +142,7 @@ object Dump extends CDump {
       val (open, close) =
         if(exporting) ('{', '}')
         else ('(', ')')
-      open + agent.toString + close
+      open.toString + agent.toString + close
     }
 
   // not clear typeName really belongs here, but not sure where else to put it either - ST 6/27/11

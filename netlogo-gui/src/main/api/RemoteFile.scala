@@ -27,7 +27,7 @@ class RemoteFile(filepath: String) extends File {
       .openStream())
 
   @throws(classOf[java.io.IOException])
-  override def open(mode: FileMode) {
+  override def open(mode: FileMode): Unit = {
     if (reader != null)
       throw new java.io.IOException(
         "Attempted to open an already open file")
@@ -56,10 +56,10 @@ class RemoteFile(filepath: String) extends File {
   @throws(classOf[java.io.IOException])
   override def println() = unsupported
 
-  override def flush() { }
+  override def flush(): Unit = { }
 
   @throws(classOf[java.io.IOException])
-  override def close(ok: Boolean) {
+  override def close(ok: Boolean): Unit = {
     mode match {
       case FileMode.Read =>
         reader.close()

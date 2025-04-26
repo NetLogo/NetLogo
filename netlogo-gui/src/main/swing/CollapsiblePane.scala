@@ -22,7 +22,7 @@ class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
 
   locally {
     val mouseListener = new MouseAdapter {
-      override def mouseClicked(e: MouseEvent) {
+      override def mouseClicked(e: MouseEvent): Unit = {
         setOpen(!isOpen)
       }
     }

@@ -32,7 +32,7 @@ extends javax.swing.JPanel {
     override def getMaximumSize = rotate(super.getMaximumSize)
     override def getMinimumSize = rotate(super.getMinimumSize)
 
-    override def paintComponent(g: Graphics) {
+    override def paintComponent(g: Graphics): Unit = {
       val g2d = g.asInstanceOf[Graphics2D]
       g2d.rotate(StrictMath.toRadians(90.0))
       g2d.drawString(getText, 2, -5)
@@ -47,7 +47,7 @@ extends javax.swing.JPanel {
     override def getMaximumSize = rotate(super.getMaximumSize)
     override def getMinimumSize = rotate(super.getMinimumSize)
 
-    override def paintComponent(g: Graphics) {
+    override def paintComponent(g: Graphics): Unit = {
       val g2d = g.asInstanceOf[Graphics2D]
       g2d.rotate(StrictMath.toRadians(90.0))
       getIcon.paintIcon(this, g, 2, (-getWidth) + 2)

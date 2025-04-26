@@ -6,7 +6,7 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _clearoutput extends Command {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     workspace.clearOutput()
     context.ip = next
   }

@@ -13,7 +13,7 @@ import
 
 object AbstractExporter {
 
-  def exportHeader(writer: PrintWriter, tpe: String, modelFileName: String, extraHeader: String) {
+  def exportHeader(writer: PrintWriter, tpe: String, modelFileName: String, extraHeader: String): Unit = {
     import writer.println
     println(csv.header("export-" + tpe + " data (" + Version.version + ")"))
     println(csv.header(modelFileName))
@@ -37,10 +37,10 @@ object AbstractExporter {
 abstract class AbstractExporter(filename: String) {
 
   @throws(classOf[IOException])
-  def export(writer: PrintWriter) // abstract
+  def `export`(writer: PrintWriter): Unit // abstract
 
   @throws(classOf[IOException])
-  def export(tpe: String, modelFileName: String, extraHeader: String) {
+  def `export`(tpe: String, modelFileName: String, extraHeader: String): Unit = {
     val file = new org.nlogo.api.LocalFile(filename)
     try {
       file.open(FileMode.Write)

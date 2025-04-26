@@ -8,7 +8,7 @@ class _foreverbuttonend extends Command {
 
   switches = true
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     context.job.buttonTurnIsOver = true
     // remember, the stopping flag on jobs is for the user stopping a forever button by clicking it;
     // the stopping flag on contexts is for the forever button stopped because the procedure invoked

@@ -59,7 +59,7 @@ class LibrariesTab( category:        String
   private val uninstall       = manager.uninstallExtension _
   private val updateLists     = () => manager.reloadMetadata()
 
-  implicit val i18nPrefix = I18N.Prefix("tools.libraries")
+  implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.libraries")
 
   private val baseListModel = new DefaultListModel[LibraryInfo]
 
@@ -338,7 +338,7 @@ class LibrariesTab( category:        String
   private def selectedValue: LibraryInfo = libraryList.getSelectedValue
 
   private def selectedValues: Buffer[LibraryInfo] = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.ListHasAsScala
     libraryList.getSelectedValuesList.asScala
   }
 
@@ -360,7 +360,7 @@ class LibrariesTab( category:        String
       actionIsInProgress = true
       new Worker(opName, fn, selectedValue, multiple = false, { () => actionIsInProgress = false; finishManagement() }).execute()
     } else {
-      val libs = selectedValues.filter(checkIsTarget)
+      val libs = selectedValues.filter(checkIsTarget).toSeq
       numOperatedLibs = libs.length
       updateMultipleOperationStatus(opName)
       runAllWorkersAndThen(opName, fn, libs, multiple = true)(() => finishManagement())

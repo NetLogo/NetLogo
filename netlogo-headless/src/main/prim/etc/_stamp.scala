@@ -6,7 +6,7 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _stamp extends Command {
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     world.stamp(context.agent, false)
     context.ip = next
   }

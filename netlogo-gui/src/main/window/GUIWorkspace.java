@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.plaf.OptionPaneUI;
 
-import scala.collection.JavaConversions;
+import scala.jdk.javaapi.CollectionConverters;
 
 public abstract class GUIWorkspace
     extends GUIWorkspaceScala
@@ -897,8 +897,8 @@ public abstract class GUIWorkspace
       }
     } catch (SliderConstraint.ConstraintExceptionHolder ex) {
       for (SliderConstraint.SliderConstraintException cce :
-             JavaConversions.asJavaIterable(ex.getErrors())) {
-        e.slider.error((Object) cce.spec().displayName(), (java.lang.Exception) cce);
+             CollectionConverters.asJava(ex.getErrors())) {
+        e.slider.error((Object) cce.spec().fieldName(), (java.lang.Exception) cce);
       }
     }
   }
@@ -946,7 +946,7 @@ public abstract class GUIWorkspace
   }
 
   @Override
-  protected void sendOutput(final org.nlogo.agent.OutputObject oo,
+  public void sendOutput(final org.nlogo.agent.OutputObject oo,
                             final boolean toOutputArea) {
     final org.nlogo.window.Events.OutputEvent event =
         new org.nlogo.window.Events.OutputEvent

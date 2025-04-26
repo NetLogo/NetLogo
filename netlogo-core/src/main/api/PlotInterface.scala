@@ -10,11 +10,11 @@ trait PlotInterface {
   def getPen(pen: String): Option[PlotPenInterface]
   def currentPen: Option[PlotPenInterface]
   def currentPenByName: String
-  def currentPenByName_=(pen: String)
+  def currentPenByName_=(pen: String): Unit
   def legendIsOpen: Boolean
-  def legendIsOpen_=(open: Boolean)
+  def legendIsOpen_=(open: Boolean): Unit
   var state: PlotState
-  def plot(y: Double)
-  def plot(x: Double, y: Double)
+  def plot(y: Double): Unit
+  def plot(x: Double, y: Double): Unit
   def histogramActions(pen: PlotPenInterface, values: Seq[Double]): immutable.Seq[PlotAction]
 }

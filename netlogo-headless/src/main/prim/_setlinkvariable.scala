@@ -20,11 +20,11 @@ class _setlinkvariable(_vn: Int) extends Command {
   // so we must keep vn and _vn separate - ST 9/22/12
   def vn = _vn
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     perform_1(context, args(0).report(context))
   }
 
-  def perform_1(context: Context, value: AnyRef) {
+  def perform_1(context: Context, value: AnyRef): Unit = {
     try context.agent.setLinkVariable(_vn, value)
     catch { case ex: AgentException =>
       throw new RuntimePrimitiveException(context, this, ex.getMessage) }

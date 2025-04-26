@@ -16,11 +16,11 @@ class _setturtleorlinkvariable(_varName: String, _vnTurtle: Int, _vnLink: Int) e
   // so we must keep varName and _varName separate - ST 9/22/12
   def varName = _varName
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     perform_1(context, args(0).report(context))
   }
 
-  def perform_1(context: Context, value: AnyRef) {
+  def perform_1(context: Context, value: AnyRef): Unit = {
     val a = context.agent
     try {
       a.agentBit match {

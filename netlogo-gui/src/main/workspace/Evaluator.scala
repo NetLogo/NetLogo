@@ -57,7 +57,7 @@ class Evaluator(workspace: AbstractWorkspace) {
 
   ///
 
-  private[workspace] def withContext(context: Context)(f: => Unit) {
+  private[workspace] def withContext(context: Context)(f: => Unit): Unit = {
     val oldContext = ProcedureRunner.context
     ProcedureRunner.context = context
     try f
@@ -115,7 +115,6 @@ class Evaluator(workspace: AbstractWorkspace) {
       }
     }
 
-  @throws(classOf[CompilerException])
   private class MyLogoThunk(source: String, agent: Agent, owner: JobOwner, command: Boolean, val procedure: Procedure) {
     val agentset = AgentSet.fromAgent(agent)
     procedure.topLevel = false

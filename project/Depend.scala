@@ -44,7 +44,7 @@ object Depend {
 
   private def ddfContents: String = {
     val buf = new StringBuilder
-    def println(s: String) { buf ++= s + "\n" }
+    def println(s: String): Unit = { buf ++= s + "\n" }
 
     // this needs to be manually kept in sync with dist/depend.graffle
     val packageDefs = Map(
@@ -119,7 +119,7 @@ object Depend {
     val allPackages: Set[Package] = Set() ++ packageDefs.keys.map(Package(_,Set()))
     for(p <- allPackages)
       p.depends = allPackages.filter(p2 => packageDefs(p.dir).contains(p2.dir))
-    def generate(p: Package) {
+    def generate(p: Package): Unit = {
       val name = p.dir.replaceAll("/",".")
       println(s"[$name] = org.nlogo.$name.* excluding org.nlogo.$name.*.*")
       println(s"[$name+] = [$name]" + p.depends.map(p2 => "[" + p2.dir.replaceAll("/",".") + "+]").mkString(" "," ",""))
@@ -127,7 +127,7 @@ object Depend {
       println(s"check [$name] independentOf [$name-]")
       println("")
     }
-    def generateFooter() {
+    def generateFooter(): Unit = {
       println("""
 ### HubNet client dependencies
 

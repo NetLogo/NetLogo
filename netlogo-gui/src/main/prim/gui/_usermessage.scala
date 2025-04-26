@@ -12,14 +12,14 @@ class _usermessage extends Command {
 
 
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val message = Dump.logoObject(args(0).report(context))
     workspace match {
       case gw: GUIWorkspace =>
         gw.updateUI()
         val canceled = workspace.waitForResult(
           new ReporterRunnable[java.lang.Boolean] {
-            override def run = {
+            override def run() = {
               gw.view.mouseDown(false)
               Boolean.box(new OptionPane(gw.getFrame, I18N.gui.get("common.messages.userMessage"), message,
                                          List(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.halt")),

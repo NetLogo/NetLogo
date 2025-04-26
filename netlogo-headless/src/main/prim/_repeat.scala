@@ -14,11 +14,11 @@ class _repeat(_token: Token) extends Command with CustomAssembled with CompilerS
   private[this] val _let = Let(s"~${_token.text}_${_token.start}")
   def let = _let
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     perform_1(context, argEvalDoubleValue(context, 0))
   }
 
-  def perform_1(context: Context, d0: Double) {
+  def perform_1(context: Context, d0: Double): Unit = {
     context.activation.binding.let(_let, new MutableLong(validLong(d0, context)))
     context.ip = offset
   }
@@ -26,7 +26,7 @@ class _repeat(_token: Token) extends Command with CustomAssembled with CompilerS
   override def toString =
     super.toString + ":+" + offset
 
-  override def assemble(a: AssemblerAssistant) {
+  override def assemble(a: AssemblerAssistant): Unit = {
     a.add(this)
     a.block()
     a.resume()

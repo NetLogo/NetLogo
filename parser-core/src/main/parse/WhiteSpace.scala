@@ -6,6 +6,8 @@ import org.nlogo.core.{ prim, CommandBlock, ProcedureDefinition,
   ReporterApp, ReporterBlock, SourceLocatable, SourceLocation, Statement, Token, TokenType, TokenizerInterface },
   prim.{ _commandlambda, _const, _constcodeblock, _reporterlambda }
 
+import scala.collection.BufferedIterator
+
 object WhiteSpace {
   sealed trait Placement { def default: String }
   case object Leading     extends Placement { val default = "" }
@@ -164,9 +166,9 @@ object WhiteSpace {
           val afterArrow = rest.tail
           c1.addWhitespace(path, FrontMargin, (frontMargin :+ arrowToken).map(_.text).mkString(""))
             .updatePosition(path, arrowToken.sourceLocation)
-            .copy(tokenIterators = c1.tokenIterators.updated(app.filename, (afterArrow.toIterator ++ c1.tokenIterators(app.filename)).buffered))
+            .copy(tokenIterators = c1.tokenIterators.updated(app.filename, (afterArrow.iterator ++ c1.tokenIterators(app.filename)).buffered))
         case None =>
-          c1.copy(tokenIterators = c1.tokenIterators.updated(app.filename, (ts.toIterator ++ c1.tokenIterators(app.filename)).buffered))
+          c1.copy(tokenIterators = c1.tokenIterators.updated(app.filename, (ts.iterator ++ c1.tokenIterators(app.filename)).buffered))
       }
     }
     override def visitStatement(stmt: Statement, path: AstPath)(implicit c: Context): Context = {

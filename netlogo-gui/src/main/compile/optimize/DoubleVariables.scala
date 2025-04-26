@@ -8,7 +8,7 @@ import org.nlogo.compile.api.{ RewritingReporterMunger, Match }
 
 class DialectPatchVariableDouble(dialect: Dialect) extends RewritingReporterMunger {
   val clazz = classOf[_patchvariable]
-  def munge(root: Match) {
+  def munge(root: Match): Unit = {
     val vn = root.reporter.asInstanceOf[_patchvariable].vn
     if(org.nlogo.api.AgentVariables.isDoublePatchVariable(vn, dialect.is3D)) {
       root.replace(classOf[_patchvariabledouble])
@@ -18,7 +18,7 @@ class DialectPatchVariableDouble(dialect: Dialect) extends RewritingReporterMung
 }
 class DialectTurtleVariableDouble(dialect: Dialect) extends RewritingReporterMunger {
   val clazz = classOf[_turtlevariable]
-  def munge(root: Match) {
+  def munge(root: Match): Unit = {
     val vn = root.reporter.asInstanceOf[_turtlevariable].vn
     if(org.nlogo.api.AgentVariables.isDoubleTurtleVariable(vn, dialect.is3D)) {
       root.replace(classOf[_turtlevariabledouble])

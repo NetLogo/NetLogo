@@ -13,5 +13,6 @@ class _neighbors6 extends Reporter {
         t.getPatchHere.asInstanceOf[Patch3D]
       case p: Patch3D =>
         p
+      case a => throw new Exception(s"Unexpected agent: $a")
     }).getNeighbors6
 }

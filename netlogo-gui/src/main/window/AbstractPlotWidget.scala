@@ -6,7 +6,7 @@ import java.awt.{ Color, Dimension, Font, Graphics, GridBagConstraints, GridBagL
 import java.awt.image.BufferedImage
 import javax.swing.{ JLabel, JPanel, SwingConstants }
 
-import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot }
+import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot, Widget => CoreWidget }
 import org.nlogo.plot.{ PlotManagerInterface, PlotLoader, PlotPen, Plot }
 import org.nlogo.swing.{ RoundedBorderPanel, VTextIcon }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -17,8 +17,6 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
                 org.nlogo.window.Events.AfterLoadEvent.Handler with
                 org.nlogo.window.Events.WidgetRemovedEvent.Handler with
                 org.nlogo.window.Events.CompiledEvent.Handler {
-
-  type WidgetModel = CorePlot
 
   import AbstractPlotWidget._
 
@@ -36,7 +34,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
       add(canvas, c)
     }
 
-    override def paintComponent(g: Graphics) {
+    override def paintComponent(g: Graphics): Unit = {
       setDiameter(zoom(6))
 
       super.paintComponent(g)
@@ -168,7 +166,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
       if (nameLabel.getPreferredSize.width > nameLabel.getSize().width) plotName else null)
   }
 
-  def refreshGUI() {
+  def refreshGUI(): Unit = {
     def getLabel(d:Double) = if(d.toString.endsWith(".0")) d.toString.dropRight(2) else d.toString
     xAxis.setMin(getLabel(plot.xMin))
     xAxis.setMax(getLabel(plot.xMax))
@@ -182,7 +180,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   /// satisfy the usual obligations of top-level widgets
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.plot")
-  def makeDirty(){
+  def makeDirty(): Unit ={
     // yuck! plot calls makeDirty when its being constructed.
     // but canvas isnt created yet.
     if(fullyConstructed) canvas.makeDirty()
@@ -190,7 +188,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   override def helpLink = Some("programming.html#plotting")
 
   def showLegend = legend.open
-  def setShowLegend(open: Boolean){ legend.open=open }
+  def setShowLegend(open: Boolean): Unit = { legend.open = open }
 
   def runtimeError: Option[Exception] = plot.runtimeError
   def setRuntimeError(e: Option[Exception]): Unit = {
@@ -199,17 +197,17 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   /// some stuff relating to plot pen editing
   def editPlotPens: List[PlotPen] = plot.pens
-  def setEditPlotPens(pens: List[PlotPen]){
+  def setEditPlotPens(pens: List[PlotPen]): Unit = {
     if(! (plot.pens eq pens)) plot.pens = pens
   }
 
   ///
-  def togglePenList(){ legend.toggle }
-  def clear(){ plot.clear; legend.refresh }
+  def togglePenList(): Unit ={ legend.toggle() }
+  def clear(): Unit ={ plot.clear(); legend.refresh() }
 
   /// these exist to support editing
   def plotName = plot.name
-  def setPlotName(name: String){
+  def setPlotName(name: String): Unit = {
     plot.name(name)
     displayName = plot.name
     nameLabel.setText(name)
@@ -217,41 +215,41 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
   private var _xAxisLabel: String = ""
   def xLabel = xAxis.getLabel
-  def setXLabel(label: String){
+  def setXLabel(label: String): Unit = {
     _xAxisLabel = label
     xAxis.setLabel(_xAxisLabel)
   }
 
   private var _yAxisLabel: String = ""
   def yLabel = yAxis.getLabel
-  def setYLabel(label: String){
+  def setYLabel(label: String): Unit = {
     _yAxisLabel = label
     yAxis.setLabel(_yAxisLabel)
   }
 
   def setupCode = plot.setupCode
-  def setSetupCode(setupCode: String){ plot.setupCode=setupCode }
+  def setSetupCode(setupCode: String): Unit = { plot.setupCode=setupCode }
 
   def updateCode = plot.updateCode
-  def setUpdateCode(updateCode: String){ plot.updateCode=updateCode }
+  def setUpdateCode(updateCode: String): Unit = { plot.updateCode=updateCode }
 
   def defaultXMin = plot.defaultXMin
-  def setDefaultXMin(defaultXMin: Double){ plot.defaultXMin=defaultXMin }
+  def setDefaultXMin(defaultXMin: Double): Unit = { plot.defaultXMin=defaultXMin }
 
   def defaultYMin = plot.defaultYMin
-  def setDefaultYMin(defaultYMin: Double){ plot.defaultYMin=defaultYMin }
+  def setDefaultYMin(defaultYMin: Double): Unit = { plot.defaultYMin=defaultYMin }
 
   def defaultXMax = plot.defaultXMax
-  def setDefaultXMax(defaultXMax: Double){ plot.defaultXMax=defaultXMax }
+  def setDefaultXMax(defaultXMax: Double): Unit = { plot.defaultXMax=defaultXMax }
 
   def defaultYMax = plot.defaultYMax
-  def setDefaultYMax(defaultYMax: Double){ plot.defaultYMax=defaultYMax }
+  def setDefaultYMax(defaultYMax: Double): Unit = { plot.defaultYMax=defaultYMax }
 
   def defaultAutoPlotX = plot.defaultAutoPlotX
-  def setDefaultAutoPlotX(defaultAutoPlotX: Boolean){ plot.defaultAutoPlotX = defaultAutoPlotX }
+  def setDefaultAutoPlotX(defaultAutoPlotX: Boolean): Unit = { plot.defaultAutoPlotX = defaultAutoPlotX }
 
   def defaultAutoPlotY = plot.defaultAutoPlotY
-  def setDefaultAutoPlotY(defaultAutoPlotY: Boolean){ plot.defaultAutoPlotY = defaultAutoPlotY }
+  def setDefaultAutoPlotY(defaultAutoPlotY: Boolean): Unit = { plot.defaultAutoPlotY = defaultAutoPlotY }
 
   /// sizing
   override def getMinimumSize = AbstractPlotWidget.MIN_SIZE
@@ -261,7 +259,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     canvasPanel.syncTheme()
   }
 
-  def savePens(s: StringBuilder){
+  def savePens(s: StringBuilder): Unit ={
     import org.nlogo.api.StringUtils.escapeString
     for (pen <- plot.pens; if (!pen.temporary)) {
       s.append("\"" + escapeString(pen.name) + "\" " +
@@ -270,19 +268,23 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     }
   }
 
-  override def load(corePlot: WidgetModel): Object = {
-    oldSize(corePlot.oldSize)
-    setSize(corePlot.width, corePlot.height)
-    setXLabel(corePlot.xAxis.optionToPotentiallyEmptyString)
-    setYLabel(corePlot.yAxis.optionToPotentiallyEmptyString)
-    legend.open = corePlot.legendOn
-    PlotLoader.loadPlot(corePlot, plot)
-    setPlotName(plot.name)
-    clear()
-    this
+  override def load(model: CoreWidget): Unit = {
+    model match {
+      case corePlot: CorePlot =>
+        oldSize(corePlot.oldSize)
+        setSize(corePlot.width, corePlot.height)
+        setXLabel(corePlot.xAxis.optionToPotentiallyEmptyString)
+        setYLabel(corePlot.yAxis.optionToPotentiallyEmptyString)
+        legend.open = corePlot.legendOn
+        PlotLoader.loadPlot(corePlot, plot)
+        setPlotName(plot.name)
+        clear()
+
+      case _ =>
+    }
   }
 
-  override def model: WidgetModel = {
+  override def model: CoreWidget = {
     val b = getUnzoomedBounds
 
     val displayName = plotName.potentiallyEmptyStringToOption
@@ -313,7 +315,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     image
   }
 
-  protected def recolor() {
+  protected def recolor(): Unit = {
     nameLabel.setForeground(if (anyErrors) InterfaceColors.widgetTextError() else InterfaceColors.widgetText())
 
     if (error("setupCode").isDefined)
@@ -324,14 +326,14 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
       new WidgetErrorEvent(this, None).raise(this)
   }
 
-  def handle(e: AfterLoadEvent){
+  def handle(e: AfterLoadEvent): Unit ={
     plotManager.compilePlot(plot)
     recolor()
   }
 
-  def handle(e: WidgetRemovedEvent){ if(e.widget == this){ plotManager.forgetPlot(plot) } }
+  def handle(e: WidgetRemovedEvent): Unit ={ if(e.widget == this){ plotManager.forgetPlot(plot) } }
 
-  def handle(e:org.nlogo.window.Events.CompiledEvent){
+  def handle(e:org.nlogo.window.Events.CompiledEvent): Unit ={
     if(e.sourceOwner.isInstanceOf[ProceduresInterface]){
       plotManager.compilePlot(plot)
       recolor()
@@ -365,8 +367,8 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     }
   }
 
-  override def editFinished: Boolean = {
-    super.editFinished
+  override def editFinished(): Boolean = {
+    super.editFinished()
     plotManager.compilePlot(plot)
     nameLabel.setText(plot.name)
     xAxis.setLabel(_xAxisLabel)
@@ -490,10 +492,10 @@ object AbstractPlotWidget {
       super.paintComponent(g)
     }
 
-    def setMin(text: String) {min.setText(text)}
+    def setMin(text: String): Unit = {min.setText(text)}
     def setMax(text: String): Unit = {max.setText(text)}
     def getLabel = labelText
-    def setLabel(text: String) {
+    def setLabel(text: String): Unit = {
       labelText = text
       labelIcon.setLabel(labelText)
       label.repaint()

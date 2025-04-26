@@ -19,7 +19,7 @@ import org.nlogo.compile.api.{ DefaultAstVisitor, ReporterApp, Statement }
 class SetVisitor(program: Program) extends DefaultAstVisitor {
   private lazy val INVALID_SET =
     core.I18N.errors.get("compiler.SetVisitor.notSettable")
-  override def visitStatement(stmt: Statement) {
+  override def visitStatement(stmt: Statement): Unit = {
     super.visitStatement(stmt)
     if(stmt.command.isInstanceOf[_set]) {
       val rApp = stmt.args.head.asInstanceOf[ReporterApp]

@@ -14,12 +14,12 @@ import org.nlogo.compile.api.{ DefaultAstVisitor, ReporterApp, ReporterBlock }
 // This could be done in Optimizer instead, but this code is nice and simple and we already have it,
 // so why not keep it? - ST 2/8/09
 class SimpleOfVisitor extends DefaultAstVisitor {
-  override def visitReporterApp(app: ReporterApp) {
+  override def visitReporterApp(app: ReporterApp): Unit = {
     if(app.reporter.isInstanceOf[prim._of])
       process(app)
     super.visitReporterApp(app)
   }
-  private def process(app: ReporterApp) {
+  private def process(app: ReporterApp): Unit = {
     for(r <- convert(app.args(0).asInstanceOf[ReporterBlock].app.reporter)) {
       r.copyMetadataFrom(app.reporter)
       app.reporter = r

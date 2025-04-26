@@ -17,7 +17,7 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
   def getModel: Model =
     model
 
-  def synchronizeModel() {
+  def synchronizeModel(): Unit = {
     model.elements.clear()
 
     val figs = figures
@@ -193,6 +193,9 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
               )
           XMLElement("rate", attributes, rate.expressionWrapper, Seq())
 
+        case _ =>
+          throw new Exception(s"Unexpected figure: $figure")
+
       }
 
     }
@@ -200,11 +203,11 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
     figs = figures
 
     def iterateFigures: PartialFunction[Kids, Kids] = {
-      case (children: Kids) =>
+      case (kids: Kids) =>
         if (figs.hasNextFigure)
-          iterateFigures(children :+ processFigure(figs.nextFigure))
+          iterateFigures(kids :+ processFigure(figs.nextFigure))
         else
-          children
+          kids
     }
 
     val attributes    = Map("dt" -> model.dt.toString)

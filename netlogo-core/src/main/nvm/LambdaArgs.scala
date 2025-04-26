@@ -11,7 +11,7 @@ object LambdaArgs {
 
   def fromFormals(formals: Array[Let]): LambdaArgs = {
     val args = formals.map( (f) => (f.name, Syntax.WildcardType) ).unzip
-    LambdaArgs(args._1, args._2)
+    LambdaArgs(args._1.toIndexedSeq, args._2.toIndexedSeq)
   }
 }
 

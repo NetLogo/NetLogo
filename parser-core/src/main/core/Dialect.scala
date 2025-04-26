@@ -16,7 +16,7 @@ trait Dialect extends LowPriorityDialect {
 object Dialect extends LowPriorityDialect
 
 trait LowPriorityDialect {
-  implicit val dialect = NetLogoCore
+  implicit val dialect: org.nlogo.core.NetLogoCore.type = NetLogoCore
 }
 
 case object NetLogoCore extends Dialect {

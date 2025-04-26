@@ -5,7 +5,7 @@ package org.nlogo.hubnet
 import org.nlogo.hubnet.protocol.TestClient
 
 object HubNetClientMayhem {
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     val random = new util.Random()
     val messages = List("left", "right", "up", "down")
     val clients = for (i <- 1 to 300) yield new TestClient(i.toString)

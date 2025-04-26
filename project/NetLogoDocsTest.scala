@@ -14,10 +14,10 @@ object NetLogoDocsTest {
   val hrefRegex = new Regex("""(.*/)?([^/#]+)?(#.*)?""")
   def anchorRegex(anchor: String) = {
     val escapedAnchor = anchor
-      .replaceAllLiterally("?", "\\?")
-      .replaceAllLiterally("*", "\\*")
-      .replaceAllLiterally("+", "\\+")
-        
+      .replace("?", "\\?")
+      .replace("*", "\\*")
+      .replace("+", "\\+")
+
     new Regex(s"""<[^<>]+id="$escapedAnchor"[^<>]*>""")
   }
 

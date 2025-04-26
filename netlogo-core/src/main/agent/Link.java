@@ -26,16 +26,16 @@ public class Link
 
   /// ends
 
-  final Turtle end1;
+  final Turtle _end1;
 
   public Turtle end1() {
-    return end1;
+    return _end1;
   }
 
-  final Turtle end2;
+  final Turtle _end2;
 
   public Turtle end2() {
-    return end2;
+    return _end1;
   }
 
   /// id
@@ -70,8 +70,8 @@ public class Link
     Object[] variables = new Object[arraySize];
     variables[VAR_END1] = end1;
     variables[VAR_END2] = end2;
-    this.end1 = end1;
-    this.end2 = end2;
+    this._end1 = end1;
+    this._end2 = end2;
 
     for (int i = 2; i < variables.length; i++) {
       variables[i] = World.Zero();
@@ -97,8 +97,8 @@ public class Link
 
     setVariables(variables);
 
-    this.end1 = end1;
-    this.end2 = end2;
+    this._end1 = end1;
+    this._end2 = end2;
 
     variables[VAR_BREED] = breed;
     world.links().add(this);
@@ -126,7 +126,7 @@ public class Link
     _world.linkManager().cleanupLink(this);
     Long oldId = this.id();
     setId(-1);
-    LogManager.linkRemoved(oldId, breed.printName(), end1.id(), end2.id());
+    LogManager.linkRemoved(oldId, breed.printName(), _end1.id(), _end2.id());
   }
 
   ///
@@ -303,11 +303,11 @@ public class Link
             if (breed != _world.links() && !_world.isLinkBreed(breed)) {
               throw new AgentException(I18N.errorsJ().get("org.nlogo.agent.Link.cantSetBreedToNonLinkBreedAgentSet"));
             }
-            if (_world.getLink(end1.agentKey(), end2.agentKey(), breed) != null) {
+            if (_world.getLink(_end1.agentKey(), _end2.agentKey(), breed) != null) {
               throw new AgentException("there is already a "
                   + _world.getLinkBreedSingular(breed)
                   + " with endpoints "
-                  + end1.toString() + " and " + end2.toString());
+                  + _end1.toString() + " and " + _end2.toString());
             }
             if (!_world.linkManager().checkBreededCompatibility(breed == _world.links())) {
               throw new AgentException
@@ -446,19 +446,19 @@ public class Link
   ///
 
   public double x1() {
-    return end1.xcor();
+    return _end1.xcor();
   }
 
   public double y1() {
-    return end1.ycor();
+    return _end1.ycor();
   }
 
   public double x2() {
-    return _world.topology().shortestPathX(end1.xcor(), end2.xcor());
+    return _world.topology().shortestPathX(_end1.xcor(), _end2.xcor());
   }
 
   public double y2() {
-    return _world.topology().shortestPathY(end1.ycor(), end2.ycor());
+    return _world.topology().shortestPathY(_end1.ycor(), _end2.ycor());
   }
 
   public double midpointX() {
@@ -477,7 +477,7 @@ public class Link
 
   public double heading() {
     try {
-      return _world.protractor().towards(end1, end2, true);
+      return _world.protractor().towards(_end1, _end2, true);
     } catch (AgentException e) {
       return 0;
     }
@@ -496,11 +496,11 @@ public class Link
   }
 
   public double linkDestinationSize() {
-    return end2.size();
+    return _end2.size();
   }
 
   public double size() {
-    return _world.protractor().distance(end1, end2, true);
+    return _world.protractor().distance(_end1, _end2, true);
   }
 
   public String shape() {
@@ -559,7 +559,7 @@ public class Link
   }
 
   public AgentSet bothEnds() {
-    return AgentSet.fromArray(AgentKindJ.Turtle(), new Turtle[] {end1, end2});
+    return AgentSet.fromArray(AgentKindJ.Turtle(), new Turtle[] {_end1, _end2});
   }
 
   @Override
@@ -615,7 +615,7 @@ public class Link
   @Override
   public String toString() {
     return _world.getLinkBreedSingular(getBreed()).toLowerCase() + " " +
-        end1._id + " " + end2._id;
+        _end1._id + " " + _end2._id;
   }
 
   @Override
@@ -676,16 +676,16 @@ public class Link
       return 0;
     }
     Link otherLink = (Link) a;
-    if (end1._id < otherLink.end1._id) {
+    if (_end1._id < otherLink._end1._id) {
       return -1;
     }
-    if (end1._id > otherLink.end1._id) {
+    if (_end1._id > otherLink._end1._id) {
       return 1;
     }
-    if (end2._id < otherLink.end2._id) {
+    if (_end2._id < otherLink._end2._id) {
       return -1;
     }
-    if (end2._id > otherLink.end2._id) {
+    if (_end2._id > otherLink._end2._id) {
       return 1;
     }
     if (getBreed() == otherLink.getBreed()) {
@@ -707,6 +707,6 @@ public class Link
   }
 
   public Turtle otherEnd(Turtle parent) {
-    return end1 == parent ? end2 : end1;
+    return _end1 == parent ? _end2 : _end1;
   }
 }

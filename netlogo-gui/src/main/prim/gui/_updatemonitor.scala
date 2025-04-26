@@ -10,7 +10,7 @@ class _updatemonitor extends Command {
 
 
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     context.job.owner.asInstanceOf[MonitorWidget]
       .value(args(0).report(context))
     context.ip = next

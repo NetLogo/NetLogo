@@ -72,7 +72,7 @@ object FileIO {
     getResourceLines(path).mkString("", "\n", "\n")
 
   @throws(classOf[java.io.IOException])
-  def writeFile(path: String, text: String) {
+  def writeFile(path: String, text: String): Unit = {
     writeFile(path, text, false)
   }
 
@@ -107,7 +107,7 @@ object FileIO {
   }
 
   @throws(classOf[java.io.IOException])
-  def writeFile(path: String, text: String, convertToPlatformLineBreaks: Boolean) {
+  def writeFile(path: String, text: String, convertToPlatformLineBreaks: Boolean): Unit = {
     val file = new LocalFile(path)
     try {
       file.open(FileMode.Write)
@@ -142,7 +142,10 @@ object FileIO {
 
   private def perUserPath(path: String): String = {
     val minorVersionRegex = """(\d+\.\d+).*""".r
-    val minorVersionRegex(version) = Version.version.stripPrefix("NetLogo ").stripPrefix("3D ")
+    val version = Version.version.stripPrefix("NetLogo ").stripPrefix("3D ") match {
+      case minorVersionRegex(v) => v
+      case v => throw new Exception(s"Unexpected version format: $v")
+    }
     val os = System.getProperty("os.name").toUpperCase
     val appData =
       if (os.contains("WIN"))

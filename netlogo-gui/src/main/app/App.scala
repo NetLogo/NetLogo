@@ -68,11 +68,11 @@ object App {
    * @param args Should be empty. (Passing non-empty arguments
    *             is not currently documented.)
    */
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     mainWithAppHandler(args, NullAppHandler)
   }
 
-  def mainWithAppHandler(args: Array[String], appHandler: Object) {
+  def mainWithAppHandler(args: Array[String], appHandler: Object): Unit = {
     val lowerArgs = args.map(_.trim.toLowerCase)
     if (lowerArgs.contains("--headless") || lowerArgs.contains("--help")) {
       org.nlogo.headless.Main.main(args)
@@ -195,8 +195,8 @@ object App {
 
   }
 
-  private def processCommandLineArguments(args: Array[String]) {
-    def printAndExit(s: String) {
+  private def processCommandLineArguments(args: Array[String]): Unit = {
+    def printAndExit(s: String): Unit = {
       println(s)
       sys.exit(0)
     }
@@ -328,7 +328,7 @@ class App extends
   // part of controlling API; used by e.g. the Mathematica-NetLogo link
   // - ST 8/21/07
   @throws(classOf[UserCancelException])
-  def quit(){ fileManager.quit() }
+  def quit(): Unit ={ fileManager.quit() }
 
   locally {
     frame.addLinkComponent(this)
@@ -350,7 +350,7 @@ class App extends
 
     org.nlogo.api.Exceptions.setHandler(this)
     Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-      def uncaughtException(t: Thread, e: Throwable) { org.nlogo.api.Exceptions.handle(e) }
+      def uncaughtException(t: Thread, e: Throwable): Unit = { org.nlogo.api.Exceptions.handle(e) }
     })
 
     val interfaceFactory = new InterfaceFactory() {
@@ -389,11 +389,11 @@ class App extends
         override def updateMode = _workspace.updateMode
       }
       def aggregateManager: AggregateManagerInterface = App.this.aggregateManager
-      def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) {
+      def inspectAgent(agent: org.nlogo.api.Agent, radius: Double): Unit = {
         val a = agent.asInstanceOf[org.nlogo.agent.Agent]
         monitorManager.inspect(a.kind, a, radius)
       }
-      override def inspectAgent(agentClass: AgentKind, agent: Agent, radius: Double) {
+      override def inspectAgent(agentClass: AgentKind, agent: Agent, radius: Double): Unit = {
         monitorManager.inspect(agentClass, agent, radius)
       }
       override def stopInspectingAgent(agent: Agent): Unit = {
@@ -402,7 +402,7 @@ class App extends
       override def stopInspectingDeadAgents(): Unit = {
         monitorManager.stopInspectingDeadAgents()
       }
-      override def closeAgentMonitors() { monitorManager.closeAll() }
+      override def closeAgentMonitors(): Unit = { monitorManager.closeAll() }
       override def newRenderer: RendererInterface = {
         // yikes, it's really ugly that we do this stuff
         // way inside here (should be top level). not sure
@@ -472,7 +472,7 @@ class App extends
 
   }
 
-  private def finishStartup(appHandler: Object) {
+  private def finishStartup(appHandler: Object): Unit = {
     try {
       val app = pico.getComponent(classOf[App])
       val currentModelAsString = {() =>
@@ -555,7 +555,7 @@ class App extends
       }
 
       import ExecutionContext.Implicits.global
-      AnnouncementsInfoDownloader.fetch.foreach(_tabManager.interfaceTab.appendAnnouncements)
+      AnnouncementsInfoDownloader.fetch().foreach(_tabManager.interfaceTab.appendAnnouncements)
 
       syncWindowThemes()
 
@@ -587,7 +587,7 @@ class App extends
     def createZoomMenu:  JMenu = new ZoomMenu
   }
 
-  private def loadDefaultModel() {
+  private def loadDefaultModel(): Unit = {
     if (commandLineModel != null) {
       if (commandLineModelIsLaunch) { // --launch through InstallAnywhere?
         // open up the blank model first so in case
@@ -667,11 +667,11 @@ class App extends
 
   /// zooming
 
-  def handle(e: ZoomedEvent) {
+  def handle(e: ZoomedEvent): Unit = {
     smartPack(frame.getPreferredSize, false)
   }
 
-  def resetZoom() {
+  def resetZoom(): Unit = {
     new ZoomedEvent(0).raise(this)
   }
 
@@ -754,7 +754,7 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(e: AppEvent) {
+  def handle(e: AppEvent): Unit = {
     import AppEventType._
     e.`type` match {
       case RELOAD => reload()
@@ -763,7 +763,7 @@ class App extends
     }
   }
 
-  private def reload() {
+  private def reload(): Unit = {
     val modelType = workspace.getModelType
     val path = workspace.getModelPath
     if (modelType != ModelType.New && path != null) tryOpenFromSource(path, modelType)
@@ -781,7 +781,7 @@ class App extends
     }
   }
 
-  private def magicOpen(name: String) {
+  private def magicOpen(name: String): Unit = {
     val matches = org.nlogo.workspace.ModelsLibrary.findModelsBySubstring(name)
     if (matches.isEmpty) commandLater("print \"no models matching \\\"" + name + "\\\" found\"")
     else {
@@ -791,8 +791,8 @@ class App extends
         } else {
           new DropdownOptionPane(frame, I18N.gui.get("tools.magicModelMatcher"),
                                  I18N.gui.get("tools.magicModelMatcher.mustChoose"),
-                                 matches.map(_.replaceAllLiterally(".nlogox3d", "")
-                                              .replaceAllLiterally(".nlogox", "")))
+                                 matches.map(_.replace(".nlogox3d", "")
+                                              .replace(".nlogox", "")))
             .getSelectedChoice
         }
       fullName.foreach(name => {
@@ -806,7 +806,7 @@ class App extends
 
   ///
 
-  def setWindowTitles() {
+  def setWindowTitles(): Unit = {
     if (tabManager.separateTabsWindow.isVisible) {
       frame.setTitle(modelTitle())
       tabManager.separateTabsWindow.setTitle(
@@ -827,15 +827,15 @@ class App extends
 
   /// ThemeSync stuff
 
-  def addSyncComponent(ts: ThemeSync) {
+  def addSyncComponent(ts: ThemeSync): Unit = {
     syncComponents = syncComponents + ts
   }
 
-  def removeSyncComponent(ts: ThemeSync) {
+  def removeSyncComponent(ts: ThemeSync): Unit = {
     syncComponents = syncComponents - ts
   }
 
-  def syncWindowThemes() {
+  def syncWindowThemes(): Unit = {
     FindDialog.syncTheme()
 
     menuBar.syncTheme()
@@ -851,10 +851,12 @@ class App extends
 
     _turtleShapesManager match {
       case ts: ThemeSync => ts.syncTheme()
+      case _ =>
     }
 
     _linkShapesManager match {
       case ts: ThemeSync => ts.syncTheme()
+      case _ =>
     }
 
     labManager.syncTheme()
@@ -872,6 +874,7 @@ class App extends
 
     aggregateManager match {
       case ts: ThemeSync => ts.syncTheme()
+      case _ =>
     }
 
     errorDialogManager.syncTheme()
@@ -931,7 +934,7 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(e: BeforeLoadEvent) {
+  def handle(e: BeforeLoadEvent): Unit = {
     wasAtPreferredSizeBeforeLoadBegan =
             preferredSizeAtLoadEndTime == null ||
             frame.getSize == preferredSizeAtLoadEndTime ||
@@ -951,7 +954,7 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(e: LoadEndEvent) {
+  def handle(e: LoadEndEvent): Unit = {
     turtleShapesManager.reset()
     linkShapesManager.reset()
     workspace.view.repaint()
@@ -989,7 +992,7 @@ class App extends
   /**
    * Internal use only.
    */
-  def handle(e: AboutToQuitEvent) {
+  def handle(e: AboutToQuitEvent): Unit = {
     LogManager.stop()
   }
 
@@ -1112,7 +1115,7 @@ class App extends
   }
 
   @throws(classOf[java.io.IOException])
-  def libraryOpen(path: String) {
+  def libraryOpen(path: String): Unit = {
     dispatchThreadOrBust(fileManager.openFromPath(path, ModelType.Library))
   }
 
@@ -1122,12 +1125,12 @@ class App extends
    * @param source The complete model, including widgets and so forth,
    *               in the same format as it would be stored in a file.
    */
-  def openFromSource(name:String, source:String){
+  def openFromSource(name:String, source:String): Unit ={
     // I'm not positive that NORMAL is right here.
     openFromSource(source, name, ModelType.Normal)
   }
 
-  def openFromSource(source:String, path:String, modelType:ModelType){
+  def openFromSource(source:String, path:String, modelType:ModelType): Unit ={
     import java.nio.file.Paths
     dispatchThreadOrBust(
       try fileManager.openFromSource(Paths.get(path).toUri, source, modelType)
@@ -1145,7 +1148,7 @@ class App extends
    * @see #commandLater
    */
   @throws(classOf[CompilerException])
-  def command(source: String) {
+  def command(source: String): Unit = {
     org.nlogo.awt.EventQueue.cantBeEventDispatchThread()
     workspace.evaluateCommands(owner, source)
   }
@@ -1159,7 +1162,7 @@ class App extends
    * @see #command
    */
   @throws(classOf[CompilerException])
-  def commandLater(source: String){
+  def commandLater(source: String): Unit ={
     workspace.evaluateCommands(owner, source, false)
   }
 
@@ -1193,14 +1196,14 @@ class App extends
    * @param source new contents
    * @see #compile
    */
-  def setProcedures(source:String) { dispatchThreadOrBust(_tabManager.mainCodeTab.innerSource = source) }
+  def setProcedures(source:String): Unit = { dispatchThreadOrBust(_tabManager.mainCodeTab.innerSource = source) }
 
   /**
    * Recompiles the model.  Useful after calling
    * <code>setProcedures()</code>.
    * @see #setProcedures
    */
-  def compile(){ dispatchThreadOrBust(new CompileAllEvent().raise(this)) }
+  def compile(): Unit ={ dispatchThreadOrBust(new CompileAllEvent().raise(this)) }
 
   /**
    * Recompiles the model after any other events in progress have finished.  Useful if you interrupt
@@ -1208,7 +1211,7 @@ class App extends
    * from the library.
    * @see #compile
    */
-  def compileLater(){ dispatchThreadOrBust(new CompileAllEvent().raiseLater(this)) }
+  def compileLater(): Unit ={ dispatchThreadOrBust(new CompileAllEvent().raiseLater(this)) }
 
   /**
    * Not currently supported.  For now, use <code>command</code>
@@ -1217,7 +1220,7 @@ class App extends
    * @see #command
    * @see #commandLater
    */
-  def pressButton(name:String) {
+  def pressButton(name:String): Unit = {
     if (java.awt.EventQueue.isDispatchThread()) throw new IllegalStateException("can't call on event thread")
     val button = findButton(name)
     if (button.forever) {
@@ -1244,7 +1247,7 @@ class App extends
    * in the same (undocumented) format found in a saved model.
    * @param text the widget specification
    */
-  def makeWidget(text:String) {
+  def makeWidget(text:String): Unit = {
     dispatchThreadOrBust(
       _tabManager.interfaceTab.getInterfacePanel.loadWidget(WidgetReader.read(text.linesIterator.toList, workspace, FileFormat.nlogoReaders(Version.is3D))))
   }

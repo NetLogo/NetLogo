@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.awt.Hierarchy
-import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions }
+import org.nlogo.core.{ I18N, View => CoreView, Widget => CoreWidget, WorldDimensions }
 import org.nlogo.swing.{ ModalProgressTask, OptionPane }
 
 object WorldViewSettings2D {
@@ -152,7 +152,7 @@ class WorldViewSettings2D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
     }
   }
 
-  override def model: CoreView = {
+  override def model: CoreWidget = {
     val b = gWidget.getUnzoomedBounds
     val dimensions = WorldDimensions(
       world.minPxcor, world.maxPxcor,

@@ -22,8 +22,8 @@ class CodeTabsWindow(parent: Frame, tabs: TabsPanel) extends JFrame with LinkChi
 
   def getLinkParent = parent
 
-  def open() {
-    setLocation(findWindowLocation)
+  def open(): Unit = {
+    setLocation(findWindowLocation())
     setVisible(true)
   }
 

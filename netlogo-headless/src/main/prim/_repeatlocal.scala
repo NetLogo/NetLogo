@@ -9,16 +9,16 @@ class _repeatlocal(vn: Int) extends Command with CustomAssembled {
   override def toString =
     super.toString + ":" + vn + ",+" + offset
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     perform_1(context, argEvalDoubleValue(context, 0))
   }
 
-  def perform_1(context: Context, arg0: Double) {
+  def perform_1(context: Context, arg0: Double): Unit = {
     context.activation.args(vn) = new MutableLong(validLong(arg0, context))
     context.ip = offset
   }
 
-  override def assemble(a: AssemblerAssistant) {
+  override def assemble(a: AssemblerAssistant): Unit = {
     a.add(this)
     a.block()
     a.resume()

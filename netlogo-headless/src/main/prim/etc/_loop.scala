@@ -7,12 +7,12 @@ import org.nlogo.nvm.{ AssemblerAssistant, Command, CompilerScoping, Context, Cu
 class _loop extends Command with CustomAssembled with CompilerScoping {
   def scopedBlockIndex: Int = 0
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     // we get custom-assembled out of existence
     throw new IllegalStateException()
   }
 
-  override def assemble(a: AssemblerAssistant) {
+  override def assemble(a: AssemblerAssistant): Unit = {
     a.comeFrom()
     a.block()
     a.goTo()

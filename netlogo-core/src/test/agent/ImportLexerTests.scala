@@ -5,10 +5,10 @@ package org.nlogo.agent
 import org.scalatest.funsuite.AnyFunSuite
 
 class ImportLexerTests extends AnyFunSuite {
-  def testSimple(source: String, expectedFields: List[String]) {
+  def testSimple(source: String, expectedFields: List[String]): Unit = {
     assertResult(expectedFields)(ImportLexer.lex(source).toList)
   }
-  def testInvalid(source: String, messageStart: String) {
+  def testInvalid(source: String, messageStart: String): Unit = {
     val e = intercept[ImportLexer.LexerException] {
       ImportLexer.lex(source)
     }

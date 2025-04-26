@@ -9,7 +9,7 @@ class _pendown extends Command {
 
 
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     context.agent.asInstanceOf[Turtle].penMode(Turtle.PEN_DOWN)
     context.ip = next
   }

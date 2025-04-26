@@ -28,13 +28,13 @@ class ModelRun(
   var stillRecording = true
   private var _dirty: Boolean = true
   def dirty = _dirty
-  def dirty_=(value: Boolean) { _dirty = value }
+  def dirty_=(value: Boolean): Unit = { _dirty = value }
 
   def generalNotes = _generalNotes
-  def generalNotes_=(text: String) { _generalNotes = text; _dirty = true }
+  def generalNotes_=(text: String): Unit = { _generalNotes = text; _dirty = true }
 
   def indexedNotes = _indexedNotes
-  def indexedNotes_=(notes: List[IndexedNote]) { _indexedNotes = notes; _dirty = true }
+  def indexedNotes_=(notes: List[IndexedNote]): Unit = { _indexedNotes = notes; _dirty = true }
 
   private var _deltas = IndexedSeq[Delta]()
   def deltas = _deltas
@@ -47,7 +47,7 @@ class ModelRun(
 
   override def toString = (if (_dirty) "* " else "") + name
 
-  def load(deltas: Seq[Delta]) {
+  def load(deltas: Seq[Delta]): Unit = {
     deltas.foreach(appendFrame)
     stillRecording = false
   }

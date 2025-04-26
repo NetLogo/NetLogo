@@ -170,14 +170,14 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     private val scrollPane = new ScrollPane(clientsList) with Transparent
 
     private val kickButton = new Button(I18N.gui.get("menu.tools.hubnetControlCenter.kick"), () => {
-      import scala.collection.JavaConverters._
+      import scala.jdk.CollectionConverters.ListHasAsScala
 
       clientsList.getSelectedValuesList.asScala.foreach(client => kickClient(client.toString))
     }) {
       setEnabled(false)
     }
 
-    private val newClientButton = new Button(I18N.gui.get("menu.tools.hubnetControlCenter.local"), launchNewClient)
+    private val newClientButton = new Button(I18N.gui.get("menu.tools.hubnetControlCenter.local"), launchNewClient _)
 
     private val reloadButton = new Button(I18N.gui.get("menu.tools.hubnetControlCenter.reset"), () => {
       kickAllClients()
@@ -238,7 +238,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
    */
   class MessagePanel extends JPanel with Transparent with ThemeSync {
     private val inputField = new TextField {
-      addActionListener(_ => beginBroadcast)
+      addActionListener(_ => beginBroadcast())
     }
 
     private val messageTextArea = new TextArea(4, 0) {
@@ -252,7 +252,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     // Format for message timestamp
     private val dateFormatter = new SimpleDateFormat(I18N.gui.get("menu.tools.hubnetControlCenter.dateFormat"))
 
-    private val broadcastButton = new Button(I18N.gui.get("menu.tools.hubnetControlCenter.broadcastMessage"), beginBroadcast)
+    private val broadcastButton = new Button(I18N.gui.get("menu.tools.hubnetControlCenter.broadcastMessage"), beginBroadcast _)
 
     private[gui] val buttonEnabler = new NonemptyTextFieldButtonEnabler(broadcastButton, List(inputField))
 
@@ -349,7 +349,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
         if (!InetAddress.getLocalHost.isLoopbackAddress) {
           InetAddress.getLocalHost.getHostAddress
         } else {
-          import scala.collection.JavaConverters._
+          import scala.jdk.CollectionConverters.EnumerationHasAsScala
           NetworkInterface.getNetworkInterfaces.asScala.toSeq flatMap {
             _.getInetAddresses.asScala.toSeq
           } collectFirst {

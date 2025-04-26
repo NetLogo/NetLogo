@@ -19,7 +19,7 @@ object ClientApp {
   private var localClientIndex = 0
 
   // called by App.main()
-  def mainHelper(args: Array[String], workspace: CompilerServices) {
+  def mainHelper(args: Array[String], workspace: CompilerServices): Unit = {
     try {
       val app = new ClientApp()
       SetSystemLookAndFeel.setSystemLookAndFeel()
@@ -67,7 +67,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     val editorFactory = new DefaultEditorFactory(compiler)
     EventQueue.invokeLater(() => {
       Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-        def uncaughtException(t: Thread, e: Throwable) {
+        def uncaughtException(t: Thread, e: Throwable): Unit = {
           org.nlogo.api.Exceptions.handle(e)
         }
       })
@@ -112,21 +112,21 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     })
   }
 
-  private def doLogin() {
+  private def doLogin(): Unit = {
     /// arggh.  isn't there some way around keeping this flag??
     /// grumble. ev 7/29/08
     if (!isLocal){
       loginDialog.go(new LoginCallback {
-        def apply(user: String, host: String, port: Int) { login(user, host, port) }
+        def apply(user: String, host: String, port: Int): Unit = { login(user, host, port) }
       })
     }
   }
 
-  def completeLogin() {
+  def completeLogin(): Unit = {
     setVisible(true)
   }
 
-  private def login(userid: String, hostip: String, port: Int) {
+  private def login(userid: String, hostip: String, port: Int): Unit = {
     var exs: Option[String] = None
     ModalProgressTask.onUIThread(Hierarchy.getFrame(this), "Entering...", () => {
       exs = clientPanel.login(userid, hostip, port)
@@ -147,7 +147,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
                    OptionPane.Icons.Info).getSelectedIndex == 0
   }
 
-  def handleDisconnect(activityName: String, connected: Boolean, reason:String) {
+  def handleDisconnect(activityName: String, connected: Boolean, reason:String): Unit = {
     EventQueue.mustBeEventDispatchThread()
     if (isLocal) this.dispose()
     else if (connected) {
@@ -160,14 +160,14 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     }
   }
 
-  def handleLoginFailure(errorMessage: String) {
+  def handleLoginFailure(errorMessage: String): Unit = {
     EventQueue.mustBeEventDispatchThread()
     new OptionPane(ClientApp.this, I18N.gui.get("edit.hubnet.loginFailed"), errorMessage, OptionPane.Options.Ok,
                    OptionPane.Icons.Error)
     loginDialog.setVisible(true)
   }
 
-  def handleExit() {
+  def handleExit(): Unit = {
     EventQueue.mustBeEventDispatchThread()
     if (showExitMessage(I18N.gui.get("edit.hubnet.exit"), I18N.gui.get("edit.hubnet.exit.message"))) {
       clientPanel.logout()
@@ -177,7 +177,7 @@ class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterfa
     }
   }
 
-  def handleQuit() {
+  def handleQuit(): Unit = {
     EventQueue.mustBeEventDispatchThread()
     val shouldExit = showExitMessage(I18N.gui.get("edit.hubnet.quit"), I18N.gui.get("edit.hubnet.quit.message"))
     if (shouldExit) System.exit(0)

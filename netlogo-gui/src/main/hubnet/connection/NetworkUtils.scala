@@ -5,7 +5,7 @@ package org.nlogo.hubnet.connection
 import java.net.{ InetAddress, Inet4Address, NetworkInterface }
 import java.util.prefs.{ Preferences => JavaPreferences }
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters.EnumerationHasAsScala
 
 object NetworkUtils {
   private val hubnetPrefs = JavaPreferences.userRoot.node("/org/nlogo/HubNet")

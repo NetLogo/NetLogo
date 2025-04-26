@@ -16,21 +16,21 @@ class ImporterTests extends AnyFunSuite with OneInstancePerTest {
     }
   val IMPORTER_USER =
     new ImporterUser() {
-      def setDimensions(d: WorldDimensions) {
+      def setDimensions(d: WorldDimensions): Unit = {
         world.createPatches(d.minPxcor, d.maxPxcor, d.minPycor, d.maxPycor)
       }
-      def setDimensions(d: WorldDimensions, patchSize: Double) {
+      def setDimensions(d: WorldDimensions, patchSize: Double): Unit = {
         world.createPatches(d.minPxcor, d.maxPxcor, d.minPycor, d.maxPycor)
         world.patchSize(patchSize)
       }
-      def patchSize(patchSize: Double) {
+      def patchSize(patchSize: Double): Unit = {
         world.patchSize(patchSize)
       }
-      def setOutputAreaContents(text: String) { }
-      def resizeView() { }
-      def currentPlot(plot: String) { }
+      def setOutputAreaContents(text: String): Unit = { }
+      def resizeView(): Unit = { }
+      def currentPlot(plot: String): Unit = { }
       def getPlot(plot: String): PlotInterface = null
-      def importExtensionData(name: String, data: java.util.List[Array[String]], handler: org.nlogo.api.ImportErrorHandler) { }
+      def importExtensionData(name: String, data: java.util.List[Array[String]], handler: org.nlogo.api.ImportErrorHandler): Unit = { }
       def isExtensionName(name: String) = false
     }
   class StringReaderTest extends ImporterJ.StringReader {
@@ -46,11 +46,11 @@ class ImporterTests extends AnyFunSuite with OneInstancePerTest {
   world.realloc()
   val importer = new Importer(IGNORE_ERROR_HANDLER, world,
                               IMPORTER_USER, new StringReaderTest())
-  def testGetTokenValue(testString: String, turtleBreedVar: Boolean, expected: AnyRef) {
+  def testGetTokenValue(testString: String, turtleBreedVar: Boolean, expected: AnyRef): Unit = {
     val result = importer.getTokenValue(testString, turtleBreedVar, false)
     assertResult(expected)(result)
   }
-  def testInvalidGetTokenValue(testString: String, turtleBreedVar: Boolean) {
+  def testInvalidGetTokenValue(testString: String, turtleBreedVar: Boolean): Unit = {
     val result = importer.getTokenValue(testString, turtleBreedVar, false)
     if(turtleBreedVar)
       assertResult(world.turtles)(result)

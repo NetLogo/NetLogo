@@ -114,7 +114,7 @@ class EditorArea(val configuration: EditorConfiguration)
   private def getRowHeight: Int =
     getFontMetrics(getFont).getHeight
 
-  def resetUndoHistory() {
+  def resetUndoHistory(): Unit = {
     undoManager.discardAllEdits()
   }
 
@@ -148,20 +148,20 @@ class EditorArea(val configuration: EditorConfiguration)
     _selectionActive = s
   }
 
-  def selectError(start: Int, end: Int) {
+  def selectError(start: Int, end: Int): Unit = {
     setSelectionColor(InterfaceColors.errorHighlight())
 
     select(start, end)
   }
 
   addMouseListener(new MouseAdapter {
-    override def mousePressed(e: MouseEvent) {
+    override def mousePressed(e: MouseEvent): Unit = {
       setSelectionColor(defaultSelectionColor)
     }
   })
 
   addKeyListener(new KeyAdapter {
-    override def keyPressed(e: KeyEvent) {
+    override def keyPressed(e: KeyEvent): Unit = {
       setSelectionColor(defaultSelectionColor)
     }
   })
@@ -239,7 +239,7 @@ class EditorArea(val configuration: EditorConfiguration)
       }
       // Let's turn all tabs into spaces, because tabs are icky
       // and smartTabbing isn't happy with them. ~Forrest (10/4/2006)
-      selection = selection.replaceAllLiterally("\t", "  ")
+      selection = selection.replace("\t", "  ")
       super.replaceSelection(selection)
       indenter.foreach(_.handleInsertion(selection))
     }

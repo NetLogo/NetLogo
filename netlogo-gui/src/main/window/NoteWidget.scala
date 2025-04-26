@@ -16,14 +16,11 @@ import javax.swing.JLabel
 
 import org.apache.commons.text.StringEscapeUtils
 
-import org.nlogo.core.{ I18N, TextBox => CoreTextBox }
+import org.nlogo.core.{ I18N, TextBox => CoreTextBox, Widget => CoreWidget }
 import org.nlogo.swing.Transparent
 import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme }
 
 class NoteWidget extends SingleErrorWidget with Transparent with Editable {
-
-  type WidgetModel = CoreTextBox
-
   val textLabel = new JLabel
 
   locally {
@@ -185,7 +182,7 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
     repaint()
   }
 
-  override def model: WidgetModel = {
+  override def model: CoreWidget = {
     val b = getUnzoomedBounds
     val txt = if (text != null && text.trim != "") Some(text) else None
     CoreTextBox(display = txt,
@@ -195,16 +192,20 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
       backgroundLight = Some(backgroundLight.getRGB), backgroundDark = Some(backgroundDark.getRGB))
   }
 
-  override def load(model: WidgetModel): AnyRef = {
-    setText(model.display.getOrElse(""))
-    setFontSize(model.fontSize)
-    setMarkdown(model.markdown)
-    model.textColorLight.foreach { c => setTextColorLight(new Color(c, true)) }
-    model.textColorDark.foreach { c => setTextColorDark(new Color(c, true)) }
-    model.backgroundLight.foreach { c => setBackgroundLight(new Color(c, true)) }
-    model.backgroundDark.foreach { c => setBackgroundDark(new Color(c, true)) }
-    syncTheme()
-    setSize(model.width, model.height)
-    this
+  override def load(model: CoreWidget): Unit = {
+    model match {
+      case note: CoreTextBox =>
+        setText(note.display.getOrElse(""))
+        setFontSize(note.fontSize)
+        setMarkdown(note.markdown)
+        note.textColorLight.foreach { c => setTextColorLight(new Color(c, true)) }
+        note.textColorDark.foreach { c => setTextColorDark(new Color(c, true)) }
+        note.backgroundLight.foreach { c => setBackgroundLight(new Color(c, true)) }
+        note.backgroundDark.foreach { c => setBackgroundDark(new Color(c, true)) }
+        syncTheme()
+        setSize(note.width, note.height)
+
+      case _ =>
+    }
   }
 }

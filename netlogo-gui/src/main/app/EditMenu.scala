@@ -18,7 +18,7 @@ object EditMenu {
 
 class EditMenu extends Menu(I18N.gui.get("menu.edit"), Menu.model(EditMenu.sortOrder)) {
 
-  implicit val i18nName = I18N.Prefix("menu.edit")
+  implicit val i18nName: org.nlogo.core.I18N.Prefix = I18N.Prefix("menu.edit")
 
   private var refreshables = Set.empty[Refreshable]
 

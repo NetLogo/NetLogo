@@ -41,7 +41,7 @@ abstract class Instruction extends InstructionJ with TokenHolder {
   var fullSource: String = null // contains the source of this instruction and all arguments
 
   var disassembly = new Thunk[String]() {
-    override def compute = ""
+    override def compute() = ""
   }
 
   // Note:  We are not caching these for efficiency
@@ -73,7 +73,7 @@ abstract class Instruction extends InstructionJ with TokenHolder {
       context, this, Instruction.agentKindError(kind, allowedKinds))
   }
 
-  def init(workspace: Workspace) {
+  def init(workspace: Workspace): Unit = {
     if (workspace != null) {
       this.workspace = workspace
       world = workspace.world.asInstanceOf[org.nlogo.agent.World]
@@ -83,7 +83,7 @@ abstract class Instruction extends InstructionJ with TokenHolder {
     agentBits = AgentBit.fromAgentClassString(agentClassString)
   }
 
-  def copyFieldsFrom(sourceInstr: Instruction) {
+  def copyFieldsFrom(sourceInstr: Instruction): Unit = {
     this.workspace = sourceInstr.workspace
     this.world = sourceInstr.world
     token = sourceInstr.token

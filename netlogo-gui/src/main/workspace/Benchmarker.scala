@@ -11,7 +11,7 @@ object Benchmarker {
   private val Z           = 2.3263  // z value for 98% confidence, according to the standard normal table
   private val TOLERANCE   = 0.003   // goal: get within 0.3%
   private val formatter   = new java.text.DecimalFormat("0.000")
-  def benchmark(workspace:AbstractWorkspace,minTime:Int,maxTime:Int) {
+  def benchmark(workspace:AbstractWorkspace,minTime:Int,maxTime:Int): Unit = {
     val times = new collection.mutable.ListBuffer[Double]
     val goProcedure = workspace.compileCommands("ca benchmark")
     val resultProcedure = workspace.compileReporter("result")
@@ -27,7 +27,7 @@ object Benchmarker {
     def squareOfDifference = times.map(time => math.pow(time - average, 2)).sum
     def stddev = math.sqrt(squareOfDifference / times.size)
     def runs = 2 max math.ceil(math.pow(Z * stddev / (TOLERANCE * average),2)).toInt
-    def warmUp() {
+    def warmUp(): Unit = {
       println("(" + workspace.modelNameForDisplay + ")")
       System.gc()
       val startTime = System.currentTimeMillis
@@ -36,15 +36,15 @@ object Benchmarker {
     }
     def done = total > minTime && (times.size >= runs || total >= maxTime)
     var lastChatterTime = 0L
-    def chatter() {
+    def chatter(): Unit = {
       if(System.currentTimeMillis - lastChatterTime > 10000) { // every 10 seconds
         println(
-          times.size + "/" + runs + " (mean=" + formatter.format(average) +
+          times.size.toString + "/" + runs + " (mean=" + formatter.format(average) +
           ", stddev=" + formatter.format(stddev) + ")")
         lastChatterTime = System.currentTimeMillis
       }
     }
-    def debrief() {
+    def debrief(): Unit = {
       lastChatterTime = 0L
       chatter()
       println("@@@ " + workspace.modelNameForDisplay + ": " + formatter.format(average) +

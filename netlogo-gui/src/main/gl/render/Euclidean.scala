@@ -36,6 +36,8 @@ private class Euclidean(observer: Observer) extends Comparator[Agent] {
         ((l.x1 + l.x2) / 2, (l.y1 + l.y2) / 2, (l.z1 + l.z2) / 2)
       case l: Link =>
         ((l.x1 + l.x2) / 2, (l.y1 + l.y2) / 2, 0d)
+      case _ =>
+        throw new Exception(s"Unexpected agent: $agent")
     }
     val (oxcor, oycor, ozcor) =
       (observer.oxcor, observer.oycor, observer.ozcor)

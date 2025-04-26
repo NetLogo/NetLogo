@@ -2,11 +2,11 @@
 
 package org.nlogo.agent
 
-import org.nlogo.api.AgentException
+import org.nlogo.api.{ AgentException, Link3D => ApiLink3D }
 
 class Link3D(world: World, end1: Turtle, end2: Turtle, breed: AgentSet)
-extends Link(world, end1, end2, breed)
-with org.nlogo.api.Link3D {
+  extends Link(world, end1, end2, breed) with ApiLink3D {
+
   def z1 = end1.asInstanceOf[Turtle3D].zcor
   def z2 = world.topology.asInstanceOf[Topology3D]
     .shortestPathZ(end1.asInstanceOf[Turtle3D].zcor,

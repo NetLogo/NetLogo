@@ -14,7 +14,7 @@ object TypeNames {
 
   def name(mask: Int): String = {
     var remainingMask = mask
-    def subtract(bits: Int) {
+    def subtract(bits: Int): Unit = {
       remainingMask -= (remainingMask & bits)
     }
     def compatible(bits: Int) =

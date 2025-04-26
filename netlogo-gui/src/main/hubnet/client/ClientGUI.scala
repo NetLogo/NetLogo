@@ -24,7 +24,7 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
 
     class ClientGUIButtonKeyAdapter extends ButtonKeyAdapter {
       val map = new collection.mutable.HashMap[ButtonWidget,Long]
-      override def buttonKeyed(button: ButtonWidget) {
+      override def buttonKeyed(button: ButtonWidget): Unit = {
         val currentTime = System.currentTimeMillis
         val lastMessageTime = map.getOrElse(button, 0L)
         // only send the message for this button if it hasnt been pressed in the last 100 ms.
@@ -48,14 +48,14 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
   syncTheme()
 
   override def getInsets = new Insets(5, 5, 5, 5)
-  override def requestFocus() { if (interfacePanel != null) interfacePanel.requestFocus() }
+  override def requestFocus(): Unit = { if (interfacePanel != null) interfacePanel.requestFocus() }
   def getInterfaceComponents = interfacePanel.getComponents
-  def setStatus(username: String, activity: String, server: String, port: Int) {
+  def setStatus(username: String, activity: String, server: String, port: Int): Unit = {
     statusPanel.setStatus(username, activity, server, port)
   }
-  def addMessage(message: String) {messagePanel.addMessage(message)}
-  def clearMessages() {messagePanel.clear()}
-  def setChoices(chooserChoices: Map[String, org.nlogo.core.LogoList]) {
+  def addMessage(message: String): Unit = {messagePanel.addMessage(message)}
+  def clearMessages(): Unit = {messagePanel.clear()}
+  def setChoices(chooserChoices: Map[String, org.nlogo.core.LogoList]): Unit = {
     def getWidget(name: String): ChooserWidget = {
       getInterfaceComponents.collect{case w:ChooserWidget => w}.find(_.displayName == name) match {
         case Some(w) => w
@@ -72,7 +72,7 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
     messageTextArea.setDragEnabled(false)
     messageTextArea.setEditable(false)
 
-    def addMessage(message: String) {
+    def addMessage(message: String): Unit = {
       setVisible(true)
       messageTextArea.append(message + "\n")
       // windows seems to need this to scroll to the end
@@ -82,7 +82,7 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
       if (frame != null) frame.pack()
     }
 
-    def clear() {
+    def clear(): Unit = {
       messageTextArea.setText("")
     }
 
@@ -95,7 +95,9 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
   }
 
   private class StatusPanel extends JPanel with Transparent with ThemeSync {
-    private val List(username, server, port) = List("User name", "Server", "Port").map(new StatusField(_, ""))
+    private val username = new StatusField("User name", "")
+    private val server = new StatusField("Server", "")
+    private val port = new StatusField("Port", "")
 
     setLayout(new BoxLayout(this, BoxLayout.X_AXIS))
 
@@ -104,7 +106,7 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
     add(server)
     add(port)
 
-    def setStatus(u: String, activity: String, s: String, p: Int) {
+    def setStatus(u: String, activity: String, s: String, p: Int): Unit = {
       username.setText(u)
       server.setText(s)
       port.setText(p.toString)
@@ -135,7 +137,7 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
     add(label)
     add(value)
 
-    def setText(text: String) {
+    def setText(text: String): Unit = {
       value.setText(text)
     }
 

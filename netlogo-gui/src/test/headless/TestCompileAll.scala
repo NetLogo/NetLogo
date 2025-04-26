@@ -41,7 +41,7 @@ class TestCompileAll extends AnyFunSuite with SlowTest {
     }
   }
 
-  def compile(path: String) {
+  def compile(path: String): Unit = {
     val workspace = HeadlessWorkspace.newInstance
     // this keeps patches from being created, which we don't need,
     // and which was slowing things down - ST 1/13/05

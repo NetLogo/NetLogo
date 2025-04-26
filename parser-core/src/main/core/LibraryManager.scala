@@ -36,13 +36,11 @@ object LibraryInfo {
 
   def parseVersion(version: String): (Int, Int, Int, String) = {
     val versionRegex = new Regex("(\\d+)\\.(\\d+)(?:\\.(\\d+))?(.*)?")
-    val versionRegex(major, minor, patch, extra) = version
-    (
-      major.toInt
-    , minor.toInt
-    , Option(patch).map(_.toInt).getOrElse(0)
-    , Option(extra).getOrElse("")
-    )
+    version match {
+      case versionRegex(major, minor, patch, extra) =>
+        (major.toInt, minor.toInt, Option(patch).map(_.toInt).getOrElse(0), Option(extra).getOrElse(""))
+      case _ => throw new Exception(s"Unexpected version format: $version")
+    }
   }
 }
 

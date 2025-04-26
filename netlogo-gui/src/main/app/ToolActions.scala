@@ -22,7 +22,7 @@ import org.nlogo.workspace.AbstractWorkspaceScala
 abstract class ShowDialogAction(name: String) extends AbstractAction(name) with ThemeSync {
   protected def createDialog(): JDialog with ThemeSync
 
-  lazy protected val createdDialog = createDialog
+  lazy protected val createdDialog = createDialog()
 
   override def actionPerformed(e: ActionEvent): Unit = {
     createdDialog.toFront()
@@ -40,7 +40,7 @@ with MenuAction {
   category = ToolsCategory
   group    = ToolsSettingsGroup
 
-  override def createDialog = new PreferencesDialog(frame,
+  override def createDialog() = new PreferencesDialog(frame,
     Seq(
       Preferences.Language,
       Preferences.LoadLastOnStartup,
@@ -63,7 +63,7 @@ class ShowThemesDialog(frame: Frame with ThemeSync)
   category = ToolsCategory
   group = ToolsSettingsGroup
 
-  override def createDialog = new ThemesDialog(frame)
+  override def createDialog() = new ThemesDialog(frame)
 }
 
 class OpenLibrariesDialog( frame:              Frame
@@ -87,7 +87,7 @@ class OpenRGBAColorDialog(frame: Frame) extends ShowDialogAction(I18N.gui.get("m
 
   def createDialog() = new JFXColorPicker(frame, false, CopyOnly)
 
-  override def actionPerformed(e: ActionEvent) {
+  override def actionPerformed(e: ActionEvent): Unit = {
     Positioning.center(createdDialog, frame)
 
     super.actionPerformed(e)
@@ -100,7 +100,7 @@ with MenuAction {
   category = ToolsCategory
   group    = ToolsDialogsGroup
 
-  override def actionPerformed(e: ActionEvent) {
+  override def actionPerformed(e: ActionEvent): Unit = {
     shapeManager.init(I18N.gui.get(s"menu.tools.$key"))
   }
 }
@@ -112,7 +112,7 @@ with MenuAction {
   group       = ToolsDialogsGroup
   accelerator = KeyBindings.keystroke('D', withMenu = true, withShift = true)
 
-  override def actionPerformed(e: ActionEvent) {
+  override def actionPerformed(e: ActionEvent): Unit = {
     aggregateManager.showEditor()
   }
 }
@@ -123,7 +123,7 @@ with MenuAction {
   category = ToolsCategory
   group    = ToolsHubNetGroup
 
-  override def actionPerformed(e: ActionEvent) {
+  override def actionPerformed(e: ActionEvent): Unit = {
     workspace.getHubNetManager.foreach { mgr =>
       mgr.openClientEditor()
       linkRoot.addLinkComponent(mgr.clientEditor)

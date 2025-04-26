@@ -54,7 +54,7 @@ class ShowUsageBox(colorizer: Colorizer) {
   usageTable.getColumnModel.getColumn(0).setMinWidth(40)
   usageTable.setShowGrid(false)
 
-  def init(editorArea: AbstractEditorArea) {
+  def init(editorArea: AbstractEditorArea): Unit = {
     if(this.editorArea == null) {
       this.editorArea = editorArea
 
@@ -128,7 +128,7 @@ class ShowUsageBox(colorizer: Colorizer) {
       iter :+= t
       prevLineNo = document.offsetToLine(t.start)
     }
-    iter
+    iter.toSeq
   }
 
   class LineRenderer(boldedString: Option[String]) extends TableCellRenderer {

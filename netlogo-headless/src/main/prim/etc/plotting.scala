@@ -35,7 +35,7 @@ extends Command with PlotHelpers {
 
 abstract class PlotActionCommand(args: Int*)
 extends PlotCommand(args: _*) {
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     plotManager.publish(action(context))
     context.ip = next
   }
@@ -51,7 +51,7 @@ extends Reporter with PlotHelpers {
 //
 
 class _clearallplots extends PlotCommand() {
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     for (name <- plotManager.getPlotNames)
       plotManager.publish(PlotAction.ClearPlot(name))
     context.ip = next
@@ -60,20 +60,20 @@ class _clearallplots extends PlotCommand() {
 
 class _setupplots extends PlotCommand() {
   override def callsOtherCode = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     workspace.setupPlots(context)
     context.ip = next
   }
 }
 class _updateplots extends PlotCommand() {
   override def callsOtherCode = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     workspace.updatePlots(context)
     context.ip = next
   }
 }
 class _setcurrentplot extends PlotCommand(Syntax.StringType) {
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val name = argEvalString(context, 0)
     if (!plotManager.hasPlot(name))
       throw new RuntimePrimitiveException(context, this,
@@ -145,7 +145,7 @@ class _createtemporaryplotpen extends PlotActionCommand(Syntax.StringType) {
 }
 
 class _exportplot extends PlotCommand(Syntax.StringType, Syntax.StringType) {
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val name = argEvalString(context, 0)
     val path = argEvalString(context, 1)
     if (plotManager.hasPlot(name))
@@ -153,7 +153,7 @@ class _exportplot extends PlotCommand(Syntax.StringType, Syntax.StringType) {
         context, this, "no such plot: \"" + name + "\"")
     // Workspace.waitFor() switches to the event thread if we're running with a GUI - ST 12/17/04
     workspace.waitFor(new api.CommandRunnable {
-      def run() {
+      def run(): Unit = {
         try workspace.exportPlot(name, workspace.fileManager.attachPrefix(path))
         catch {
           case ex: java.io.IOException =>
@@ -168,13 +168,13 @@ class _exportplot extends PlotCommand(Syntax.StringType, Syntax.StringType) {
 
 // this also requires only the PlotManager, but it seems better to put it here next to exportplot.
 class _exportplots extends PlotCommand(Syntax.StringType) {
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val path = argEvalString(context, 0)
     if (plotManager.getPlotNames.isEmpty)
       throw new RuntimePrimitiveException(context, this, "there are no plots to export")
     // Workspace.waitFor() switches to the event thread if we're running with a GUI - ST 12/17/04
     workspace.waitFor(new api.CommandRunnable {
-      def run() {
+      def run(): Unit = {
         try workspace.exportAllPlots(workspace.fileManager.attachPrefix(path))
         catch {
           case ex: java.io.IOException =>
@@ -250,7 +250,7 @@ class _plotxy extends PlotActionCommand(Syntax.NumberType, Syntax.NumberType) {
 }
 
 class _histogram extends PlotCommand(Syntax.ListType) {
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val list = argEvalList(context, 0)
     val pen = currentPen(context)
     if (pen.state.interval <= 0)
@@ -348,7 +348,7 @@ class _setplotpencolor extends PlotActionCommand(Syntax.NumberType) {
 }
 
 class _setcurrentplotpen extends PlotCommand(Syntax.StringType) {
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val name = argEvalString(context, 0)
     if (!currentPlot(context).getPen(name).isDefined)
       throw new RuntimePrimitiveException(context, this,

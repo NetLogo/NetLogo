@@ -19,7 +19,7 @@ extends Command with CustomGenerated {
   override def toString =
     super.toString + ":" + procedure.name
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val newActivation = new Activation(procedure, context.activation, next)
     var i = 0
     val limit = procedure.args.size - procedure.localsCount

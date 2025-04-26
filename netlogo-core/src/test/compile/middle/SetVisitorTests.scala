@@ -13,7 +13,7 @@ import org.nlogo.compile.api.{ ReporterApp, Statement }
 
 class SetVisitorTests extends AnyFunSuite {
   val emptyLocation = SourceLocation(0, 0, "")
-  def tester(r: Reporter, spec: String, setterClass: Class[_ <: Command]) {
+  def tester(r: Reporter, spec: String, setterClass: Class[_ <: Command]): Unit = {
     val args = Seq(new ReporterApp(null, r, emptyLocation),
       new ReporterApp(null, new _constdouble(Double.box(5)), emptyLocation))
     val stmt = new Statement(null, new _set, args, emptyLocation)

@@ -24,13 +24,13 @@ private[render] object AgentRenderer {
     gl.glColor3fv(java.nio.FloatBuffer.wrap(rgb))
     gl.glDisable(GLL.GL_LIGHTING)
     gl.glScalef(scale, scale, 3.0f)
-    val strwidth: Float = glut.glutStrokeLength(GLUT.STROKE_ROMAN, lines(0))
+    val strwidth: Float = (glut.glutStrokeLength(GLUT.STROKE_ROMAN, lines(0))).toFloat
     gl.glTranslatef(-strwidth / -2.0f, 0.0f, 0.0f)
     lines.foreach { l =>
       glut.glutStrokeString(GLUT.STROKE_ROMAN, l)
       // Why -120.0f and not, like, 1.0f? TBH I don't know. The glScalef takes care of factoring out font and patch
       // size, so it makes sense this would be a constant. But beyond that, this just seemed to work...
-      gl.glTranslatef(-glut.glutStrokeLength(GLUT.STROKE_ROMAN, l), -120.0f, 0.0f)
+      gl.glTranslatef((-glut.glutStrokeLength(GLUT.STROKE_ROMAN, l)).toFloat, -120.0f, 0.0f)
     }
     gl.glEnable(GLL.GL_LIGHTING)
   }

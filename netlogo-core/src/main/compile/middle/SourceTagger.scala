@@ -33,7 +33,7 @@ private class SourceTagger(existingSources: Map[String, String], compilationEnvi
     resultingSources
   }
 
-  override def visitStatement(stmt:Statement) {
+  override def visitStatement(stmt:Statement): Unit = {
     val argSources = captureInternalSources(() => super.visitStatement(stmt))
     addInstructionPositions(stmt.command, stmt.command.token.start, stmt.command.token.end)
     instructionsOwnSource(stmt.command, stmt.command.token.start, stmt.command.token.end).foreach { src =>
@@ -44,7 +44,7 @@ private class SourceTagger(existingSources: Map[String, String], compilationEnvi
     }
   }
 
-  override def visitReporterApp(app:ReporterApp) {
+  override def visitReporterApp(app:ReporterApp): Unit = {
     val capturedSources = captureInternalSources(() => super.visitReporterApp(app))
     val ((start, end), prefix, argSources) = app.reporter match {
       case ct: org.nlogo.prim._reporterlambda => ((app.start, app.end), "", Seq())

@@ -33,13 +33,13 @@ class TestHalt extends AnyFunSuite with SlowTest {
       workspace.initForTesting(0, 0, 0, 0, "globals [x]")
       var ex: LogoException = null
       val thread = new Thread("TestHalt.testHalt") {
-        override def run() {
+        override def run(): Unit = {
           try workspace.command("loop [ set x x + 1 ]")
           catch { case e: LogoException => ex = e }
         }
       }
       thread.start()
-      def loop() {
+      def loop(): Unit = {
         if (ex != null) throw ex
         if (workspace.report("x").asInstanceOf[Double] < 10) {
           Thread.sleep(5)

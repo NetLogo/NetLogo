@@ -26,13 +26,13 @@ class Popup(parentFrame: Frame, title:String, panel: JPanel, cancel: => Unit, ok
 
   DialogForegrounder(dialog)
 
-  def show() {
+  def show(): Unit = {
     dialog.pack()
     org.nlogo.awt.Positioning.center(dialog, parentFrame)
     dialog.setVisible(true)
   }
 
-  def die() {
+  def die(): Unit = {
     dialog.setVisible(false)
     dialog.dispose()
   }

@@ -65,17 +65,17 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
 
   override def toString = "Plot(" + name + ")"
 
-  def setPlotListener(plotListener:PlotListener){
+  def setPlotListener(plotListener:PlotListener): Unit ={
     if(plotListener == null) sys.error("null plotListener")
     this.plotListener = Some(plotListener)
   }
-  def removePlotListener(){ this.plotListener = None }
+  def removePlotListener(): Unit ={ this.plotListener = None }
 
-  def name(newName:String){ name = newName }
+  def name(newName:String): Unit ={ name = newName }
 
-  def makeDirty(){ dirtyListener.foreach{_.makeDirty() }}
+  def makeDirty(): Unit ={ dirtyListener.foreach{_.makeDirty() }}
   def pens = _pens
-  def pens_=(pens:List[PlotPen]){
+  def pens_=(pens:List[PlotPen]): Unit ={
     _pens = pens
     currentPen = pens.headOption
   }
@@ -98,37 +98,37 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
   def currentPenByName_=(penName: String): Unit = { currentPen=(getPen(penName)) }
   def getPen(penName: String): Option[PlotPen] = pens.find(_.name.toLowerCase==penName.toLowerCase)
   def defaultXMin = _defaultXMin
-  def defaultXMin_=(defaultXMin: Double){
+  def defaultXMin_=(defaultXMin: Double): Unit ={
     _defaultXMin = defaultXMin
     plotListener.foreach(_.defaultXMin(defaultXMin))
   }
 
   def defaultXMax = _defaultXMax
-  def defaultXMax_=(defaultXMax: Double){
+  def defaultXMax_=(defaultXMax: Double): Unit ={
     _defaultXMax = defaultXMax
     plotListener.foreach(_.defaultXMax(defaultXMax))
   }
 
   def defaultYMin = _defaultYMin
-  def defaultYMin_=(defaultYMin: Double) {
+  def defaultYMin_=(defaultYMin: Double): Unit = {
     _defaultYMin = defaultYMin
     plotListener.foreach(_.defaultYMin(defaultYMin))
   }
 
   def defaultYMax = _defaultYMax
-  def defaultYMax_=(defaultYMax: Double){
+  def defaultYMax_=(defaultYMax: Double): Unit ={
     _defaultYMax = defaultYMax
     plotListener.foreach(_.defaultYMax(defaultYMax))
   }
 
   def defaultAutoPlotX = _defaultAutoPlotX
-  def defaultAutoPlotX_=(defaultAutoPlotX: Boolean){
+  def defaultAutoPlotX_=(defaultAutoPlotX: Boolean): Unit ={
     _defaultAutoPlotX = defaultAutoPlotX
     plotListener.foreach(_.defaultAutoPlotX(defaultAutoPlotX))
   }
 
   def defaultAutoPlotY = _defaultAutoPlotY
-  def defaultAutoPlotY_=(defaultAutoPlotY: Boolean){
+  def defaultAutoPlotY_=(defaultAutoPlotY: Boolean): Unit ={
     _defaultAutoPlotY = defaultAutoPlotY
     plotListener.foreach(_.defaultAutoPlotY(defaultAutoPlotY))
   }
@@ -160,26 +160,26 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
     }
   }
 
-  override def plot(x: Double, y: Double) {
+  override def plot(x: Double, y: Double): Unit = {
     currentPen.foreach { p =>
       plot(p, x, y)
       makeDirty()
     }
   }
 
-  def plot(pen: PlotPen, y: Double) {
+  def plot(pen: PlotPen, y: Double): Unit = {
     pen.plot(y)
     if (pen.state.isDown)
       perhapsGrowRanges(pen, pen.state.x, y)
   }
 
-  def plot(pen: PlotPen, x: Double, y: Double) {
+  def plot(pen: PlotPen, x: Double, y: Double): Unit = {
     pen.plot(x, y)
     if (pen.state.isDown)
       perhapsGrowRanges(pen, x, y)
   }
 
-  def clear() {
+  def clear(): Unit = {
     pens = pens.filterNot(_.temporary)
     currentPen = pens.headOption
     pens.foreach(_.hardReset())
@@ -187,7 +187,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
     runtimeError = None
     backgroundColor = Color.getARGBbyPremodulatedColorNumber(White)
     makeDirty()
-    plotListener.foreach(_.clear)
+    plotListener.foreach(_.clear())
     pensDirty = true
   }
 
@@ -257,18 +257,18 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
   }
 
   /// histograms
-  def setHistogramNumBars(pen: PlotPen, numBars: Int) {
+  def setHistogramNumBars(pen: PlotPen, numBars: Int): Unit = {
     pen.interval = (xMax - xMin) / numBars
     plotListener.foreach(_.setHistogramNumBars(numBars))
   }
 
   var histogram: Option[Histogram] = None
 
-  def beginHistogram(pen:PlotPen) {
+  def beginHistogram(pen:PlotPen): Unit = {
     histogram = Some(new Histogram(xMin, xMax, pen.interval))
   }
 
-  def beginHistogram(pen:PlotPen, bars:Array[Int]){
+  def beginHistogram(pen:PlotPen, bars:Array[Int]): Unit ={
     histogram = Some(new Histogram(xMin, pen.interval, bars))
   }
 

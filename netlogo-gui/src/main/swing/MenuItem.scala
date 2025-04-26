@@ -11,11 +11,11 @@ import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(action) with ThemeSync {
   def this(text: String, showIcon: Boolean) = this(new AbstractAction(text) {
-    def actionPerformed(e: ActionEvent) {}
+    def actionPerformed(e: ActionEvent): Unit = {}
   }, showIcon)
 
   def this(text: String) = this(new AbstractAction(text) {
-    def actionPerformed(e: ActionEvent) {}
+    def actionPerformed(e: ActionEvent): Unit = {}
   }, true)
 
   private val itemUI = new BasicMenuItemUI with ThemeSync {

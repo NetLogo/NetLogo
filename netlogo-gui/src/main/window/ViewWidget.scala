@@ -6,7 +6,7 @@ import java.awt.{ Dimension, Point, Rectangle }
 import javax.swing.border.LineBorder
 
 import org.nlogo.api.{ Approximate, Version }
-import org.nlogo.core.{ View => CoreView }
+import org.nlogo.core.{Widget=>CoreWidget}
 import org.nlogo.swing.PopupMenu
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.Events.ResizeViewEvent
@@ -15,8 +15,6 @@ import org.nlogo.window.MouseMode._
 class ViewWidget(workspace: GUIWorkspace)
     extends Widget
     with ViewWidgetInterface {
-
-  type WidgetModel = CoreView
 
   val view = new View(workspace)
   val tickCounter = new TickCounterLabel(workspace.world)
@@ -141,7 +139,7 @@ class ViewWidget(workspace: GUIWorkspace)
     workspace.world.patchSize(newPatchSize)
     view.setSize(worldWidth, worldHeight, newPatchSize)
 
-    view.renderer.trailDrawer.rescaleDrawing
+    view.renderer.trailDrawer.rescaleDrawing()
 
     val newWidth = ((newPatchSize * worldWidth) + insetWidth).toInt
     val newHeight = ((newPatchSize * worldHeight) + getExtraHeight).toInt
@@ -198,7 +196,7 @@ class ViewWidget(workspace: GUIWorkspace)
   override def hasContextMenu: Boolean =
     true;
 
-  override def populateContextMenu(menu: PopupMenu, p: Point) {
+  override def populateContextMenu(menu: PopupMenu, p: Point): Unit = {
     view.populateContextMenu(menu, p)
   }
 
@@ -211,10 +209,10 @@ class ViewWidget(workspace: GUIWorkspace)
 
   /// load & save
 
-  override def model: WidgetModel =
+  override def model: CoreWidget =
     settings.model
 
-  override def load(view: WidgetModel): AnyRef =
+  override def load(view: CoreWidget): Unit =
     settings.load(view)
 
   override def copyable: Boolean = false

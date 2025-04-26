@@ -15,16 +15,16 @@ class _bk(_token: Token) extends Command with CustomAssembled {
 
   def let = _let
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     perform_1(context, argEvalDoubleValue(context, 0))
   }
 
-  def perform_1(context: Context, d: Double) {
+  def perform_1(context: Context, d: Double): Unit = {
     context.activation.binding.let(_let, new MutableDouble(-d))
     context.ip = next
   }
 
-  def assemble(a: AssemblerAssistant) {
+  def assemble(a: AssemblerAssistant): Unit = {
     a.add(this)
     a.add(new _fdinternal(this))
   }

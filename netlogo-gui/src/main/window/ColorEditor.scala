@@ -25,10 +25,10 @@ class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame) extends Prope
   }
 
   override def get = Some(colorButton.getColor)
-  override def set(value: Color) { setColor(value) }
-  override def requestFocus() { colorButton.requestFocus() }
+  override def set(value: Color): Unit = { setColor(value) }
+  override def requestFocus(): Unit = { colorButton.requestFocus() }
 
-  override def revert() {
+  override def revert(): Unit = {
     setColor(originalValue)
     super.revert()
   }
@@ -70,7 +70,7 @@ class ColorEditor(accessor: PropertyAccessor[Color], frame: Frame) extends Prope
 
     addMouseListener(new MouseAdapter {
 
-      override def mousePressed(e: MouseEvent) {
+      override def mousePressed(e: MouseEvent): Unit = {
         new JFXColorPicker(frame, true, NumAndRGBA, Option(RGBA.fromJavaColor(color)),
           (x: String) => {
 

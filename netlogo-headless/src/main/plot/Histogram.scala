@@ -10,7 +10,7 @@ class Histogram(xMin: Double, interval: Double, val bars: Array[Int]) {
     this(xMin, interval, Array.fill(StrictMath.floor((xMax - xMin) / interval).toInt)(0))
   private var _ceiling = 0
   def ceiling = _ceiling
-  def nextValue(value: Double) {
+  def nextValue(value: Double): Unit = {
     val bar = StrictMath.floor(((value - xMin) / interval)
                                // the division might produce a result like 5.99999999999997,
                                // putting something in bar 5 that should be in bar 6,  so... - ST

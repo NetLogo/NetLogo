@@ -17,7 +17,7 @@ class PopupMenu(title: String = "") extends JPopupMenu(title) with ThemeSync {
 
   syncTheme()
 
-  override def addSeparator() {
+  override def addSeparator(): Unit = {
     add(new Separator)
   }
 

@@ -22,9 +22,9 @@ class TestSourcePositions extends AnyFunSuite {
       NoProcedures,
       new DummyExtensionManager, new DummyLibraryManager, new DummyCompilationEnvironment
     ).head.code.head.fullSource
-  def reporter(s: String) { assertResult(s)(compileReporter(s)) }
-  def command(s: String) { assertResult(s)(compileCommand(s)) }
-  def command(expected: String, s: String) { assertResult(expected)(compileCommand(s)) }
+  def reporter(s: String): Unit = { assertResult(s)(compileReporter(s)) }
+  def command(s: String): Unit = { assertResult(s)(compileCommand(s)) }
+  def command(expected: String, s: String): Unit = { assertResult(expected)(compileCommand(s)) }
   if (useGenerator) {
     /// reporters
     test("one") { reporter("timer") }

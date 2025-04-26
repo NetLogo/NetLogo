@@ -28,7 +28,7 @@ trait ClassManager {
    * (In the NetLogo GUI, it is called on the AWT event thread.
    */
   @throws(classOf[ExtensionException])
-  def runOnce(em: ExtensionManager)
+  def runOnce(em: ExtensionManager): Unit
 
   /**
    * Loads the primitives in the extension. This is called each time a model that uses this
@@ -37,14 +37,14 @@ trait ClassManager {
    * @param primManager The manager to transport the primitives to NetLogo
    */
   @throws(classOf[ExtensionException])
-  def load(primManager: PrimitiveManager)
+  def load(primManager: PrimitiveManager): Unit
 
   /**
    * Cleans up the extension. This is called once before <code>load</code> is called and once
    * before NetLogo is closed or another model is opened.
    */
   @throws(classOf[ExtensionException])
-  def unload(em: ExtensionManager)
+  def unload(em: ExtensionManager): Unit
 
   /**
    * Return a new NetLogo ExtensionObject
@@ -71,12 +71,12 @@ trait ClassManager {
    * @param handler An interface that allows the extensions to report non-fatal errors during the import
    */
   @throws(classOf[ExtensionException])
-  def importWorld(lines: JList[Array[String]], reader: ExtensionManager, handler: ImportErrorHandler)
+  def importWorld(lines: JList[Array[String]], reader: ExtensionManager, handler: ImportErrorHandler): Unit
 
   /**
    * Clear any stored state
    */
-  def clearAll()
+  def clearAll(): Unit
 
   @deprecated("Only used by applets, no longer needed", "10/2015")
   def additionalJars: JList[String]

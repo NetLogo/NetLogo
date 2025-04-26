@@ -43,7 +43,7 @@ class NLogoFormatIOTest extends AnyFunSuite {
     assert(format.sections(antsBenchmarkPath.toUri).isSuccess)
   }
   test("saves specified sections to a given URI") {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.IteratorHasAsScala
 
     val sections =
       format.sections(antsBenchmarkPath.toUri).get

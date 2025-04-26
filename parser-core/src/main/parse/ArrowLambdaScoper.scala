@@ -35,6 +35,7 @@ object ArrowLambdaScoper {
     case Token("->", _, _) +: _ if depth == 1 => true
     case _ +: tail => hasArrow(tail, depth)
     case Seq() => false
+    case ts => throw new Exception(s"Unexpected token sequence: $ts")
   }
 
   def gatherArguments(toks: Seq[Token], usedNames: SymbolTable): Option[(Arguments, Seq[Token], SymbolTable)] = {

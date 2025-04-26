@@ -90,6 +90,8 @@ import org.nlogo.core.prim.{ _abstractlet, _let, _multilet }
 
 import org.nlogo.core
 
+import scala.collection.BufferedIterator
+
 import SymbolType.LocalVariable
 
 object LetScope {

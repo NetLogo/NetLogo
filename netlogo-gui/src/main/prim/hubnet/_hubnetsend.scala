@@ -11,7 +11,7 @@ import org.nlogo.nvm.RuntimePrimitiveException
 
 class _hubnetsend extends Command with HubNetPrim {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val nodesArg = args(0).report(context)
     val tag = argEvalString(context, 1)
     val message = args(2).report(context)
@@ -37,7 +37,7 @@ class _hubnetsend extends Command with HubNetPrim {
           context, this, 0, Syntax.ListType | Syntax.StringType, nodesArg)
     }
     message match {
-      case m: JSerializable => hubnetManager.send(nodes, tag, m)
+      case m: JSerializable => hubnetManager.send(nodes.toSeq, tag, m)
       case _                =>
         throw new RuntimePrimitiveException(
           context, this,

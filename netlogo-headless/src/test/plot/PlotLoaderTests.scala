@@ -338,7 +338,7 @@ PENS
 trait TestPlotLoaderHelper extends AnyFunSuite {
   private val literalParser = Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities")
 
-  def testPlotsFromModels(model:String, plots:List[String]) {
+  def testPlotsFromModels(model:String, plots:List[String]): Unit = {
     plots.zipWithIndex.foreach{ case (lines,i) =>
       test(model+" plots without exploding: " + i) { load(lines) }
     }

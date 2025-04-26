@@ -85,14 +85,14 @@ class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
     // it may grow.  The use of mutable state in this way is characteristic
     // of the Visitor pattern.
 
-    override def visitProcedureDefinition(procdef: ProcedureDefinition) {
+    override def visitProcedureDefinition(procdef: ProcedureDefinition): Unit = {
       super.visitProcedureDefinition(procdef)
       // after we've seen the whole procedure, store the result there
       procdef.procedure.agentClassString = agentClassString
     }
 
     // visitStatement and visitReporterApp are clones of each other
-    override def visitStatement(stmt: Statement) {
+    override def visitStatement(stmt: Statement): Unit = {
       val c = stmt.command
       agentClassString = typeCheck(c, agentClassString)
 
@@ -107,7 +107,7 @@ class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
     }
 
     // visitStatement and visitReporterApp are clones of each other
-    override def visitReporterApp(app: ReporterApp) {
+    override def visitReporterApp(app: ReporterApp): Unit = {
       val r = app.reporter
       agentClassString = typeCheck(r, agentClassString)
 
@@ -136,7 +136,7 @@ class AgentTypeChecker(defs: Seq[ProcedureDefinition]) {
       }
     }
 
-    private def chooseVisitorAndContinue(blockAgentClassString: String, exps: Seq[Expression]) {
+    private def chooseVisitorAndContinue(blockAgentClassString: String, exps: Seq[Expression]): Unit = {
       exps.foreach { exp =>
         val visitor = exp match {
           case _: CommandBlock | _: ReporterBlock =>

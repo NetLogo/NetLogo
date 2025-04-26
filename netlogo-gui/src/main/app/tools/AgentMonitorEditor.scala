@@ -22,15 +22,15 @@ class AgentMonitorEditor(parent: AgentMonitor) extends JPanel with ThemeSync {
 
   reset()
 
-  override def requestFocus() {
+  override def requestFocus(): Unit = {
     editors.headOption.foreach(_.requestFocus())
   }
 
-  def refresh() {
+  def refresh(): Unit = {
     editors.foreach(_.refresh(false))
   }
 
-  def reset() {
+  def reset(): Unit = {
     removeAll()
     editors = Nil
     if(vars == null || vars.isEmpty) {
@@ -41,8 +41,8 @@ class AgentMonitorEditor(parent: AgentMonitor) extends JPanel with ThemeSync {
     syncTheme()
   }
 
-  private def fill() {
-    import scala.collection.JavaConverters._
+  private def fill(): Unit = {
+    import scala.jdk.CollectionConverters.ListHasAsScala
 
     setLayout(new GridBagLayout)
     val labelConstraints = new GridBagConstraints
@@ -81,7 +81,7 @@ class AgentMonitorEditor(parent: AgentMonitor) extends JPanel with ThemeSync {
   def vars = parent.vars
   def agent = parent.agent
   def agentKind = parent.agentKind
-  def setAgent(agent: Agent) { parent.setAgent(agent, 3) }
+  def setAgent(agent: Agent): Unit = { parent.setAgent(agent, 3) }
   def workspace = parent.workspace
 
   override def syncTheme(): Unit = {
@@ -105,8 +105,6 @@ with KeyListener
 with FocusListener
 with WindowEvents.JobRemovedEvent.Handler
 with ThemeSync {
-  type WidgetModel = org.nlogo.core.Widget
-
   private def specialCase = {
     parent.agentKind match {
       case AgentKind.Turtle if AgentVariables.isSpecialTurtleVariable(index) =>
@@ -169,20 +167,20 @@ with ThemeSync {
   override def isCommandCenter = true
 
   // this is how we're notified when we've been recompiled
-  override def procedure_=(procedure: Procedure) {
+  override def procedure_=(procedure: Procedure): Unit = {
     super.procedure_=(procedure)
     if (procedure != null)
       new WindowEvents.AddJobEvent(this, agents, procedure).raise(this)
   }
 
   // our job has finished, so we can fetch a new value for our variable
-  def handle(e: WindowEvents.JobRemovedEvent)
+  def handle(e: WindowEvents.JobRemovedEvent): Unit =
   {
     if(e.owner eq this)
       refresh(true)
   }
 
-  override def handle(e: WindowEvents.CompiledEvent) {
+  override def handle(e: WindowEvents.CompiledEvent): Unit = {
     super.handle(e)
     if(e.sourceOwner == this) {
       error(e.error)
@@ -199,7 +197,7 @@ with ThemeSync {
 
   // put together a full procedure definition. calling source at the end causes JobWidget and
   // CompileMoreSourceEvent stuff to call the compiler and add a job if compilation succeeds
-  def wrapSource(innerSource: String) {
+  def wrapSource(innerSource: String): Unit = {
     setEnabled(false)
     this.innerSource = innerSource
     var header = "to __agentvareditor [] "
@@ -225,9 +223,9 @@ with ThemeSync {
 
   ///
 
-  def keyReleased(e: KeyEvent) { }
-  def keyTyped(e: KeyEvent) { }
-  def keyPressed(e: KeyEvent) {
+  def keyReleased(e: KeyEvent): Unit = { }
+  def keyTyped(e: KeyEvent): Unit = { }
+  def keyPressed(e: KeyEvent): Unit = {
     e.getKeyCode match {
       case KeyEvent.VK_ENTER =>
         action()
@@ -246,18 +244,18 @@ with ThemeSync {
     }
   }
 
-  def focusGained(e: FocusEvent) {
+  def focusGained(e: FocusEvent): Unit = {
     editorFocus = true
     lastTextBeforeUserChangedAnything = editor.getText()
   }
 
-  def focusLost(e: FocusEvent) {
+  def focusLost(e: FocusEvent): Unit = {
     editorFocus = false
     if(editor.getText() != lastTextBeforeUserChangedAnything)
       action()
   }
 
-  override def requestFocus() {
+  override def requestFocus(): Unit = {
     editor.requestFocus()
   }
 
@@ -265,7 +263,7 @@ with ThemeSync {
 
   // without this, the scrollpane in AgentMonitor scrolls every time a variable changes for any
   // reason, which is very annoying - ST 8/17/03
-  override def scrollRectToVisible(rect: Rectangle) {
+  override def scrollRectToVisible(rect: Rectangle): Unit = {
     if(editorFocus)
       super.scrollRectToVisible(rect)
   }
@@ -275,7 +273,7 @@ with ThemeSync {
   // The "force" flag is so if a new value comes in at periodic update time, we don't interrupt the
   // user in the middle of typing something.  true means go ahead and interrupt the user if
   // necessary, false means refrain. - ST 8/17/03
-  def refresh(force: Boolean) {
+  def refresh(force: Boolean): Unit = {
     if(force || isEnabled) {
       setEnabled((agent != null && agent.id != -1 && agent.getVariable(index) != null) ||
                   specialCase == TURTLE_WHO ||
@@ -293,7 +291,7 @@ with ThemeSync {
     }
   }
 
-  override def setEnabled(enabled: Boolean) {
+  override def setEnabled(enabled: Boolean): Unit = {
     if(enabled != isEnabled) {
       super.setEnabled(enabled)
       if((enabled || agent == null || agent.id == -1 || agent.getVariable(index) == null) &&
@@ -311,7 +309,7 @@ with ThemeSync {
       Dump.logoObject(agent.getVariable(index), true, false)
     }
 
-  private def action() {
+  private def action(): Unit = {
     if(isEnabled)
       if(editor.getText().trim.isEmpty) {
         editor.setText(get)
@@ -326,7 +324,7 @@ with ThemeSync {
       }
   }
 
-  private def doAgentSwitch() {
+  private def doAgentSwitch(): Unit = {
     val newAgent = try {
       workspace.world.synchronized {
         specialCase match {
@@ -342,6 +340,8 @@ with ThemeSync {
                 case Patch.VAR_PYCOR =>
                   (if (agent == null) 0 else agent.asInstanceOf[Patch].pxcor,
                    editor.getText().toInt)
+                case _ =>
+                  throw new Exception(s"Unexpected index: $index")
               }
             workspace.world.getPatchAt(pxcor, pycor)
           case LINK_WHO =>
@@ -365,6 +365,8 @@ with ThemeSync {
                   agent.setLinkVariable(index, breed)
                   agent
                 }
+              case _ =>
+                throw new Exception(s"Unexpected index: $index")
             }
         }
       }
@@ -421,7 +423,7 @@ with ThemeSync {
 
   /// load and save are inapplicable
 
-  override def load(model: CoreWidget): AnyRef =
+  override def load(model: CoreWidget): Unit =
     throw new UnsupportedOperationException
 
   override def model: CoreWidget =

@@ -90,7 +90,7 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
 
   override def isFocusable: Boolean = false
 
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics): Unit = {
     setDiameter(6 * zoomFactor)
 
     super.paintComponent(g)

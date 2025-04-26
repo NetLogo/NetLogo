@@ -17,7 +17,7 @@ import org.nlogo.core.CompilerException
 
 class LoggingListener(private val events: LogEvents, private[log] var logger: FileLogger) extends NetLogoAdapter {
 
-  override def codeTabCompiled(code: String, error: CompilerException) {
+  override def codeTabCompiled(code: String, error: CompilerException): Unit = {
     if (events.compile) {
       val eventInfo = if (error == null) {
         Map[String, Any](
@@ -37,7 +37,7 @@ class LoggingListener(private val events: LogEvents, private[log] var logger: Fi
     }
   }
 
-  override def commandEntered(owner: String, code: String, agentType: Char, error: CompilerException) {
+  override def commandEntered(owner: String, code: String, agentType: Char, error: CompilerException): Unit = {
     if (events.commandCenter && !owner.startsWith("Slider")) {
       val eventInfo = if (error == null) {
         Map[String, Any](
@@ -61,7 +61,7 @@ class LoggingListener(private val events: LogEvents, private[log] var logger: Fi
     }
   }
 
-  override def buttonPressed(buttonName: String) {
+  override def buttonPressed(buttonName: String): Unit = {
     if (events.button) {
       val eventInfo = Map[String, Any](
         "buttonName" -> buttonName
@@ -71,7 +71,7 @@ class LoggingListener(private val events: LogEvents, private[log] var logger: Fi
     }
   }
 
-  override def buttonStopped(buttonName: String) {
+  override def buttonStopped(buttonName: String): Unit = {
     if (events.button) {
       val eventInfo = Map[String, Any](
         "buttonName" -> buttonName
@@ -81,7 +81,7 @@ class LoggingListener(private val events: LogEvents, private[log] var logger: Fi
     }
   }
 
-  override def chooserChanged(globalName: String, newValue: AnyRef, valueChanged: Boolean) {
+  override def chooserChanged(globalName: String, newValue: AnyRef, valueChanged: Boolean): Unit = {
     if (events.chooser) {
       val eventInfo = Map[String, Any](
         "globalName"   -> globalName
@@ -92,7 +92,7 @@ class LoggingListener(private val events: LogEvents, private[log] var logger: Fi
     }
   }
 
-  override def inputBoxChanged(globalName: String, newValue: AnyRef, valueChanged: Boolean) {
+  override def inputBoxChanged(globalName: String, newValue: AnyRef, valueChanged: Boolean): Unit = {
     if (events.inputBox) {
       val eventInfo = Map[String, Any](
         "globalName"   -> globalName
@@ -103,7 +103,7 @@ class LoggingListener(private val events: LogEvents, private[log] var logger: Fi
     }
   }
 
-  override def modelOpened(name: String) {
+  override def modelOpened(name: String): Unit = {
     if (events.modelOpen) {
       val eventInfo = Map[String, Any](
         "name" -> name
@@ -112,7 +112,7 @@ class LoggingListener(private val events: LogEvents, private[log] var logger: Fi
     }
   }
 
-  override def sliderChanged(globalName: String, newValue: Double, min: Double, inc: Double, max: Double, valueChanged: Boolean, buttonReleased: Boolean) {
+  override def sliderChanged(globalName: String, newValue: Double, min: Double, inc: Double, max: Double, valueChanged: Boolean, buttonReleased: Boolean): Unit = {
     if (events.slider) {
       val eventInfo = Map[String, Any](
         "globalName"     -> globalName
@@ -127,7 +127,7 @@ class LoggingListener(private val events: LogEvents, private[log] var logger: Fi
     }
   }
 
-  override def switchChanged(globalName: String, newValue: Boolean, valueChanged: Boolean) {
+  override def switchChanged(globalName: String, newValue: Boolean, valueChanged: Boolean): Unit = {
     if (events.switch) {
       val eventInfo = Map[String, Any](
         "globalName"   -> globalName
@@ -138,7 +138,7 @@ class LoggingListener(private val events: LogEvents, private[log] var logger: Fi
     }
   }
 
-  override def tickCounterChanged(ticks: Double) {
+  override def tickCounterChanged(ticks: Double): Unit = {
     if (events.tick) {
       val eventInfo = Map[String, Any](
         "ticks" -> ticks

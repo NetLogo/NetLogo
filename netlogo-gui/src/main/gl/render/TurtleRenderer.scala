@@ -21,10 +21,10 @@ extends AgentRenderer(world, shapeRenderer) {
       (world.worldWidth max world.worldHeight) * 1.5 / distance
   }
 
-  def renderTurtles(gl: GL2, glu: GLU, fontSize: Int, patchSize: Double, outlineAgent: Agent) {
+  def renderTurtles(gl: GL2, glu: GLU, fontSize: Int, patchSize: Double, outlineAgent: Agent): Unit = {
     if (world.turtles == null)
       return
-    import collection.JavaConverters._
+    import scala.jdk.CollectionConverters.IterableHasAsScala
     for(turtle <- world.turtles.agents.asScala.map(_.asInstanceOf[Turtle]))
       if ((! world.observer.perspective.isInstanceOf[Perspective.Ride] || world.observer.targetAgent != turtle)
           && !turtle.hidden)
@@ -32,7 +32,7 @@ extends AgentRenderer(world, shapeRenderer) {
   }
 
   def renderWrappedTurtle(gl: GL2, turtle: Turtle, fontSize: Int,
-                          patchSize: Double, outline: Boolean, lineScale: Double) {
+                          patchSize: Double, outline: Boolean, lineScale: Double): Unit = {
     val shape3D = shapeRenderer.getShape(turtle.shape)
     val height = shapeRenderer.getShapeHeight(turtle.shape, shape3D, turtle.size)
     val coords = getAgentCoords(turtle, height)
@@ -43,7 +43,7 @@ extends AgentRenderer(world, shapeRenderer) {
       getOrientation(turtle))
   }
 
-  def renderHighlight(gl: GL2, agent: Turtle) {
+  def renderHighlight(gl: GL2, agent: Turtle): Unit = {
     shapeRenderer.renderHighlight(
       gl, agent, getAgentCoords(agent, 1), getOrientation(agent))
   }

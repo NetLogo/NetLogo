@@ -11,7 +11,7 @@ class _resizeworld extends Command {
 
 
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
 
     val newMinX = argEvalIntValue(context, 0)
     val newMaxX = argEvalIntValue(context, 1)
@@ -40,7 +40,7 @@ class _resizeworld extends Command {
                                              newMinZ, newMaxZ))
       workspace.waitFor(
         new org.nlogo.api.CommandRunnable {
-          override def run() { workspace.resizeView() }})
+          override def run(): Unit = { workspace.resizeView() }})
     }
     context.ip = next
   }

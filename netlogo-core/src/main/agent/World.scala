@@ -5,6 +5,7 @@ package org.nlogo.agent
 import java.lang.{Double => JDouble, Integer => JInteger}
 import java.util.{Arrays, List => JList, Map => JMap}
 
+import org.nlogo.agent.{ InRadiusOrCone => AgentInRadiusOrCone }
 import org.nlogo.agent.ImporterJ.{ErrorHandler => ImporterErrorHandler, StringReader => ImporterStringReader}
 import org.nlogo.api.{AgentException, Color, ImporterUser, MersenneTwisterFast, RandomSeedGenerator, Timer}
 import org.nlogo.core.{AgentKind, Program, WorldDimensions}
@@ -113,7 +114,7 @@ abstract class World
   with AgentManagement
   with WatcherManagement {
 
-  def inRadiusOrCone: World.InRadiusOrCone
+  def inRadiusOrCone: InRadiusOrCone
   def clearDrawing(): Unit
   def protractor: Protractor
   def diffuse(param: Double, vn: Int): Unit
@@ -152,7 +153,7 @@ class World2D extends World with CompilationManagement {
   protected val dimensionVariableNames =
     Seq("MIN-PXCOR", "MAX-PXCOR", "MIN-PYCOR", "MAX-PYCOR", "WORLD-WIDTH", "WORLD-HEIGHT")
 
-  val inRadiusOrCone: InRadiusOrCone = new InRadiusOrCone(this)
+  val inRadiusOrCone: InRadiusOrCone = new AgentInRadiusOrCone(this)
 
   /// observer/turtles/patches
   changeTopology(true, true)

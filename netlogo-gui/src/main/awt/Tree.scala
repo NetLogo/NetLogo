@@ -13,13 +13,13 @@ object Tree {
    *
    * @param root where to begin
    */
-  def printComponentTree(root: Component) {
+  def printComponentTree(root: Component): Unit = {
     walkComponentTree(root, 0, printWalker)
   }
 
   val printWalker =
     new ComponentTreeWalker {
-      override def touch(comp: Component, level: Int) {
+      override def touch(comp: Component, level: Int): Unit = {
         println(indent(level * 2) + comp.getClass + ", " + "bounds: " + comp.getBounds)
       }}
 
@@ -29,10 +29,10 @@ object Tree {
     List.fill(n)(' ').mkString
 
   trait ComponentTreeWalker {
-    def touch(comp: Component, level: Int);
+    def touch(comp: Component, level: Int): Unit;
   }
 
-  def walkComponentTree(comp: Component, level: Int, walker: ComponentTreeWalker) {
+  def walkComponentTree(comp: Component, level: Int, walker: ComponentTreeWalker): Unit = {
     walker.touch(comp, level)
     comp match {
       case container: Container =>

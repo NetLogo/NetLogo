@@ -211,7 +211,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
     }
 
     // someone pressed the delete button in the pens row.
-    def removePen(index: Int) {model.removePen(index)}
+    def removePen(index: Int): Unit = {model.removePen(index)}
 
     // shows the pens color as a colored rectangle
     class ColorRenderer extends JLabel with TableCellRenderer {
@@ -291,7 +291,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       }, I18N.gui.get _).show()
     }
 
-    def openAdvancedPenEditor(editingPen: Pen) {
+    def openAdvancedPenEditor(editingPen: Pen): Unit = {
       showEditorPopup(editingPen, new PlotPenEditorAdvanced(editingPen, colorizer, plotManager))
     }
 
@@ -407,7 +407,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
         }
       }
 
-      override def setValueAt(value: Object, row: Int, col: Int) {
+      override def setValueAt(value: Object, row: Int, col: Int): Unit = {
         if (row < pens.size) {
           val p = pens(row)
           columnNames(col) match {
@@ -420,9 +420,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
         }
       }
 
-      def addPen(p: Pen) {pens += p; fireTableDataChanged}
+      def addPen(p: Pen): Unit = {pens += p; fireTableDataChanged}
 
-      def removePen(index: Int) {
+      def removePen(index: Int): Unit = {
         if (index != -1) {
           pens.remove(index)
           fireTableRowsDeleted(index, index)
@@ -435,7 +435,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     var lastColumn = 0
     private class RowListener extends ListSelectionListener {
-      def valueChanged(event: ListSelectionEvent) {
+      def valueChanged(event: ListSelectionEvent): Unit = {
         if (!event.getValueIsAdjusting && getSelectedRow != -1) {
           if(table.getSelectedColumn == 2) {
             if(model.pens(getSelectedRow).updateCode.contains("\n"))
@@ -446,7 +446,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       }
     }
     private class ColumnListener extends ListSelectionListener {
-      def valueChanged(event: ListSelectionEvent) {
+      def valueChanged(event: ListSelectionEvent): Unit = {
         if (!event.getValueIsAdjusting && getSelectedRow != -1) {
           if(table.getSelectedColumn == 2 && lastColumn != 2)
             if(model.pens(getSelectedRow).updateCode.contains("\n"))

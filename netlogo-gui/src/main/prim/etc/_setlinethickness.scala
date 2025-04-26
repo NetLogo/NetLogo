@@ -9,7 +9,7 @@ class _setlinethickness extends Command {
 
 
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     world.setLineThickness(
       context.agent,
       argEvalDoubleValue(context, 0))

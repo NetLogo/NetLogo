@@ -20,8 +20,8 @@ class PreferencesDialog(parent: Frame, preferences: Seq[Preference])
 
   private lazy val preferencesPanel = new TextFieldBox(SwingConstants.TRAILING)
 
-  private lazy val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => ok)
-  private lazy val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => cancel)
+  private lazy val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => ok())
+  private lazy val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => cancel())
 
   private def reset() = {
     preferences foreach (_.load(netLogoPrefs))

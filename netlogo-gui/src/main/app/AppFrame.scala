@@ -20,14 +20,14 @@ class AppFrame extends JFrame with LinkParent with LinkRoot with NetLogoIcon wit
   getContentPane.setLayout(new BorderLayout)
 
   addWindowListener(new WindowAdapter() {
-    override def windowClosing(e: WindowEvent) {
+    override def windowClosing(e: WindowEvent): Unit = {
       try App.app.fileManager.quit()
       catch { case ex: UserCancelException => Exceptions.ignore(ex) }
     }
-    override def windowIconified(e: WindowEvent) {
+    override def windowIconified(e: WindowEvent): Unit = {
       new IconifiedEvent(AppFrame.this, true).raise(App.app)
     }
-    override def windowDeiconified(e: WindowEvent) {
+    override def windowDeiconified(e: WindowEvent): Unit = {
       new IconifiedEvent(AppFrame.this, false).raise(App.app)
     }
   })

@@ -24,7 +24,7 @@ import java.util.Properties
 
 object NativeLibraryPath {
 
-  def setLibraryPath(myClass: Class[_], dirName: String) {
+  def setLibraryPath(myClass: Class[_], dirName: String): Unit = {
     // Reset the "sys_paths" field of the ClassLoader to null.
     val filesep = System.getProperty("file.separator")
     val basedir = new java.io.File(myClass.getProtectionDomain.getCodeSource.getLocation.getFile)
@@ -56,7 +56,7 @@ object NativeLibraryPath {
     add(new java.io.File(libdir))
   }
 
-  def add(path: java.io.File) {
+  def add(path: java.io.File): Unit = {
     // Append the specified path to the existing java.library.path (if there is one already)
     var newLibraryPath = System.getProperty("java.library.path")
     if (!Option(newLibraryPath).exists(_.nonEmpty))

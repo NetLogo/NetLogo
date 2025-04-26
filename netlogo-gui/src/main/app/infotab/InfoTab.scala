@@ -45,8 +45,8 @@ class InfoTab(attachModelDir: String => String)
   // as not to cause readability problems if the frame is really wide - ST 10/27/03
   private val textArea = new TextArea(0, 90) { self =>
     addFocusListener(new FocusListener {
-      def focusGained(fe: FocusEvent) { FindDialog.watch(self); UndoManager.setCurrentManager(undoManager) }
-      def focusLost(fe: FocusEvent) {
+      def focusGained(fe: FocusEvent): Unit = { FindDialog.watch(self); UndoManager.setCurrentManager(undoManager) }
+      def focusLost(fe: FocusEvent): Unit = {
         if (!fe.isTemporary) { FindDialog.dontWatch(self); UndoManager.setCurrentManager(null) }
       }
     })
@@ -60,8 +60,8 @@ class InfoTab(attachModelDir: String => String)
   }
   private val editorPane = new JEditorPane { self =>
     addFocusListener(new FocusListener {
-      def focusGained(fe: FocusEvent) { FindDialog.watch(self) }
-      def focusLost(fe: FocusEvent) { if (!fe.isTemporary) { FindDialog.dontWatch(self) } }
+      def focusGained(fe: FocusEvent): Unit = { FindDialog.watch(self) }
+      def focusLost(fe: FocusEvent): Unit = { if (!fe.isTemporary) { FindDialog.dontWatch(self) } }
     })
     setDragEnabled(false)
     setEditable(false)
@@ -88,7 +88,7 @@ class InfoTab(attachModelDir: String => String)
   })
   helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage()))
   helpButton.setVisible(false)
-  private def toggleHelpButton(){ helpButton.setVisible(view == textArea) }
+  private def toggleHelpButton(): Unit ={ helpButton.setVisible(view == textArea) }
 
   // this object is used as the html display and the editor
   // it starts off as the html display. when edit is clicked, it becomes the editor.
@@ -108,7 +108,7 @@ class InfoTab(attachModelDir: String => String)
   private val toolBar = new ToolBar {
     setBorder(new EmptyBorder(24, 6, 12, 6))
 
-    override def addControls() {
+    override def addControls(): Unit = {
       this.addAll(findButton, editableButton, helpButton)
     }
   }
@@ -121,13 +121,13 @@ class InfoTab(attachModelDir: String => String)
     add(scrollPane, BorderLayout.CENTER)
   }
 
-  private def resetBorders() {
+  private def resetBorders(): Unit = {
     val border = BorderFactory.createEmptyBorder(4, 7, 4, 7)
     textArea.setBorder(border)
     editorPane.setBorder(border)
   }
 
-  override def doLayout() {
+  override def doLayout(): Unit = {
     // we need to call resetBorders first, otherwise borders left over from last time we laid out
     // may affect the answer returned by textArea.getPreferredScrollableViewportSize, causing the
     // layout to jump around - ST 10/7/09
@@ -138,10 +138,10 @@ class InfoTab(attachModelDir: String => String)
     super.doLayout()
   }
 
-  override def requestFocus() { view.requestFocus() }
+  override def requestFocus(): Unit = { view.requestFocus() }
 
   def info = textArea.getText
-  def info(str: String) {
+  def info(str: String): Unit = {
     if(str != info) {
       textArea.setText(str)
       textArea.setCaretPosition(0)
@@ -149,9 +149,9 @@ class InfoTab(attachModelDir: String => String)
     undoManager.discardAllEdits()
   }
 
-  private def updateEditorPane() { updateEditorPane(textArea.getText) }
+  private def updateEditorPane(): Unit = { updateEditorPane(textArea.getText) }
 
-  private def updateEditorPane(str: String) {
+  private def updateEditorPane(str: String): Unit = {
     if(str != editorPane.getText) {
       editorPane.getDocument.asInstanceOf[HTMLDocument].setBase(new File(attachModelDir(".")).toURI.toURL)
       editorPane.setText(InfoFormatter(str, editorPaneFontSize))
@@ -160,7 +160,7 @@ class InfoTab(attachModelDir: String => String)
     toggleHelpButton()
   }
 
-  def resetView() {
+  def resetView(): Unit = {
     if (view.isInstanceOf[JTextArea]) {
       scrollPane.setViewportView(editorPane)
       view = editorPane
@@ -186,23 +186,23 @@ class InfoTab(attachModelDir: String => String)
     updateEditorPane()
   }
 
-  def handle(e: AppEvents.SwitchedTabsEvent) {
+  def handle(e: AppEvents.SwitchedTabsEvent): Unit = {
     if (e.newTab != this)
       FindDialog.dontWatch(editorPane)
   }
 
-  def handle(e: WindowEvents.LoadBeginEvent) {
+  def handle(e: WindowEvents.LoadBeginEvent): Unit = {
     undoManager.discardAllEdits()
   }
 
-  def handle(e: WindowEvents.LoadModelEvent) {
+  def handle(e: WindowEvents.LoadModelEvent): Unit = {
     info(e.model.info)
     resetView()
   }
 
   private var editorPaneFontSize = InfoFormatter.defaultFontSize
   private var originalFontSize = -1
-  override def handle(e: WindowEvents.ZoomedEvent) {
+  override def handle(e: WindowEvents.ZoomedEvent): Unit = {
     super.handle(e)
     if(originalFontSize == -1)
       originalFontSize = textArea.getFont.getSize
@@ -215,7 +215,7 @@ class InfoTab(attachModelDir: String => String)
   override def getPreferredSize = new Dimension(100, 100)
 
   /// Hyperlink listener
-  def hyperlinkUpdate(e: HyperlinkEvent) {
+  def hyperlinkUpdate(e: HyperlinkEvent): Unit = {
     if (e.getEventType == HyperlinkEvent.EventType.ACTIVATED) {
       if (e.getURL == null) {
         if (new OptionPane(Hierarchy.getFrame(InfoTab.this), I18N.gui.get("common.messages.error"),
@@ -229,10 +229,10 @@ class InfoTab(attachModelDir: String => String)
   }
 
   /// DocumentListener
-  def changedUpdate(e: DocumentEvent) { changed() }
-  def insertUpdate(e: DocumentEvent) { changed() }
-  def removeUpdate(e: DocumentEvent) { changed() }
-  private def changed() { new org.nlogo.window.Events.DirtyEvent(None).raise(this) }
+  def changedUpdate(e: DocumentEvent): Unit = { changed() }
+  def insertUpdate(e: DocumentEvent): Unit = { changed() }
+  def removeUpdate(e: DocumentEvent): Unit = { changed() }
+  private def changed(): Unit = { new org.nlogo.window.Events.DirtyEvent(None).raise(this) }
 
   /// Printing
   def print(g: Graphics, pageFormat: PageFormat, pageIndex: Int, printer: PrinterManager) = {
@@ -241,7 +241,7 @@ class InfoTab(attachModelDir: String => String)
 
   private class EditableAction(label: String) extends AbstractAction(label) {
     putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.toolbarImage()))
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       val scrollBar = scrollPane.getVerticalScrollBar
       val (min, max) = (scrollBar.getMinimum, scrollBar.getMaximum)
       val ratio = ((scrollBar.getValue - min).asInstanceOf[Double] / (max - min).asInstanceOf[Double])

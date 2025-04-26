@@ -15,17 +15,17 @@ class ListsExporter(modelFileName: String,
                     in: LabPostProcessorInputFormat.Format)
   extends Exporter(modelFileName, initialDims, protocol, out, exporterType=LabExporterType.LISTS)
 {
-  def finish() {
+  def finish(): Unit = {
     writeExportHeader()
     in match {
       case LabPostProcessorInputFormat.Spreadsheet(fileName) => {
         val source = Source.fromFile(fileName)
-        var lines = source.getLines
+        var lines = source.getLines()
         var runNumbers: List[String] = null
-        val first = lines.next
+        val first = lines.next()
         if (first.contains("BehaviorSpace results")) {
           lines = lines.drop(5)
-          runNumbers = lines.next.split(",").tail.toList
+          runNumbers = lines.next().split(",").tail.toList
         }
         else
           runNumbers = first.split(",").tail.toList
@@ -45,7 +45,7 @@ class ListsExporter(modelFileName: String,
           out.close()
           return
         }
-        val reporters = lines.next.split(",").tail.toList
+        val reporters = lines.next().split(",").tail.toList
         val data = lines.filter(!_.replace(",", "").isEmpty).map(_.split(",").tail.toList).toList
         val count = data.map(_.filter(_.contains("[")).map(_.split(" ").length)).flatten
         if (count.length > 0) {
@@ -71,12 +71,12 @@ class ListsExporter(modelFileName: String,
       }
       case LabPostProcessorInputFormat.Table(fileName) => {
         val source = Source.fromFile(fileName)
-        var lines = source.getLines
+        var lines = source.getLines()
         var header: Array[String] = null
-        val first = lines.next
+        val first = lines.next()
         if (first.contains("BehaviorSpace results")) {
           lines = lines.drop(5)
-          header = lines.next.split(",")
+          header = lines.next().split(",")
         }
         else
           header = first.split(",")
@@ -126,10 +126,12 @@ class ListsExporter(modelFileName: String,
         }
         source.close()
       }
+      case _ =>
+        throw new Exception(s"Unexpected input format: $in")
     }
     out.close()
   }
 
-  override def experimentCompleted() { finish() }
-  override def experimentAborted() { finish() }
+  override def experimentCompleted(): Unit = { finish() }
+  override def experimentAborted(): Unit = { finish() }
 }

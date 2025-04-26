@@ -102,12 +102,12 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
 
   // these two used by input boxes
   @throws(classOf[CompilerException])
-  def checkCommandSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment) {
+  def checkCommandSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment): Unit = {
     checkSyntax("to __bogus-name " + source + "\nend",
                 true, program, procedures, extensionManager, parse, compilationEnv)
   }
   @throws(classOf[CompilerException])
-  def checkReporterSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment) {
+  def checkReporterSyntax(source: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment): Unit = {
     checkSyntax("to-report __bogus-name report " + source + "\nend",
                 true, program, procedures, extensionManager, parse, compilationEnv)
   }
@@ -118,7 +118,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   // Additionally, the compiler doesn't currently work for 3D prims, so that will also need to be fixed.
   // this also always parses, which probably isn't desirable, but we don't have an option at this point
   @throws(classOf[CompilerException])
-  private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment) {
+  private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment): Unit = {
 
     val oldProceduresListMap = ListMap[String, Procedure](oldProcedures.toSeq: _*)
     val (topLevelDefs, feStructureResults) =

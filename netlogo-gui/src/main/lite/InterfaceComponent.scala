@@ -25,7 +25,7 @@ import org.nlogo.swing.BrowserLauncher
 class InterfaceComponent(frame: java.awt.Frame)
 extends LitePanel(frame,
                     new java.awt.event.MouseAdapter {
-                      override def mouseClicked(e: java.awt.event.MouseEvent) {
+                      override def mouseClicked(e: java.awt.event.MouseEvent): Unit = {
                         BrowserLauncher.openURI(frame, new URI("http://ccl.northwestern.edu/netlogo/"))
                       }})
 with Event.LinkChild {
@@ -43,7 +43,7 @@ with Event.LinkChild {
    *
    * @see #setProcedures
    */
-  def compile() {
+  def compile(): Unit = {
     EventQueue.mustBeEventDispatchThread()
     (new org.nlogo.window.Events.CompileAllEvent).raise(this)
   }
@@ -54,7 +54,7 @@ with Event.LinkChild {
    *
    * @param text the widget specification
    */
-  def makeWidget(widget: CoreWidget) {
+  def makeWidget(widget: CoreWidget): Unit = {
     EventQueue.mustBeEventDispatchThread()
     iP.loadWidget(widget)
   }
@@ -69,7 +69,7 @@ with Event.LinkChild {
    * @param name the display name of the widget to hide.
    * @see #hideWidget
    */
-  def hideWidget(name: String) {
+  def hideWidget(name: String): Unit = {
     EventQueue.mustBeEventDispatchThread()
     iP.hideWidget(name)
   }
@@ -84,7 +84,7 @@ with Event.LinkChild {
    * @param name the display name of the widget to reveal.
    * @see #hideWidget
    */
-  def showWidget(name: String) {
+  def showWidget(name: String): Unit = {
     EventQueue.mustBeEventDispatchThread()
     iP.showWidget(name)
   }
@@ -96,7 +96,7 @@ with Event.LinkChild {
    */
   @throws(classOf[java.io.IOException])
   @throws(classOf[org.nlogo.window.InvalidVersionException])
-  def open(path: String) {
+  def open(path: String): Unit = {
     EventQueue.mustBeEventDispatchThread()
     openFromURI(Paths.get(path).toUri)
   }
@@ -106,7 +106,7 @@ with Event.LinkChild {
    * If the button is a "once" button, this method does not return until the button has popped back
    * up.  (For "forever" buttons, it returns immediately.)
    */
-  def pressButton(name: String) {
+  def pressButton(name: String): Unit = {
     EventQueue.mustBeEventDispatchThread()
     val button = findWidget(name, classOf[ButtonWidget]).asInstanceOf[ButtonWidget]
     button.keyTriggered()
@@ -151,9 +151,9 @@ with Event.LinkChild {
    * <em>This method may be called from any thread, including the AWT Event
    * Thread.</em>
    */
-  def reportAndCallback(code: String, handler: InterfaceComponent.InvocationListener) {
+  def reportAndCallback(code: String, handler: InterfaceComponent.InvocationListener): Unit = {
     new Thread("InterfaceComponent.reportAndCallback") {
-      override def run() {
+      override def run(): Unit = {
         try handler.handleResult(report(code))
         catch {
           case e: CompilerException =>
@@ -167,8 +167,8 @@ object InterfaceComponent {
   /** Callback interface used by <code>reportAndCallback()</code> */
   trait InvocationListener extends java.util.EventListener {
     /** Called by <code>reportAndCallback()</code> if the request completes successfully. */
-    def handleResult(value: AnyRef)
+    def handleResult(value: AnyRef): Unit
     /** Called by <code>reportAndCallback()</code> if the code did not compile. */
-    def handleError(error: CompilerException)
+    def handleError(error: CompilerException): Unit
   }
 }

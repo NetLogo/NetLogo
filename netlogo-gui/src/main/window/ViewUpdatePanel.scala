@@ -15,7 +15,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
                       tickCounter: TickCounterLabel)
   extends JPanel(new GridBagLayout) with Transparent with LoadEndEvent.Handler with ThemeSync {
 
-  implicit val prefix = Prefix("tabs.run")
+  implicit val prefix: org.nlogo.core.I18N.Prefix = Prefix("tabs.run")
 
   private val updateModeChooser = new UpdateModeChooser(workspace)
 
@@ -89,7 +89,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
   private class EditSettings(settings: WorldViewSettings)
     extends AbstractAction(I18N.gui("settingsButton")) {
     putValue(Action.SHORT_DESCRIPTION, I18N.gui("settingsButton.tooltip"))
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       new Events.EditWidgetEvent(settings).raise(e.getSource)
     }
   }

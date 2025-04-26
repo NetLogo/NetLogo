@@ -23,7 +23,7 @@ with ThemeSync {
 
   private var editor: AggregateModelEditor = null
 
-  override def showEditor() {
+  override def showEditor(): Unit = {
     // if it's the first time, make a new aggregate model editor
     if (editor == null)
       editor = new AggregateModelEditor(
@@ -34,14 +34,14 @@ with ThemeSync {
 
   override def getLinkParent = linkParent
 
-  override def handle(e: org.nlogo.window.Events.BeforeLoadEvent) {
+  override def handle(e: org.nlogo.window.Events.BeforeLoadEvent): Unit = {
     if (editor != null) {
       editor.dispose()
       editor = null
     }
   }
 
-  override def handle(e: org.nlogo.window.Events.LoadModelEvent) {
+  override def handle(e: org.nlogo.window.Events.LoadModelEvent): Unit = {
     load(e.model, compiler)
   }
 
@@ -65,7 +65,7 @@ with ThemeSync {
 
   override def isLoaded: Boolean = editor != null
 
-  override def handle(e: org.nlogo.window.Events.CompiledEvent) {
+  override def handle(e: org.nlogo.window.Events.CompiledEvent): Unit = {
     if (editor != null)
       editor.setError(
         this,
@@ -86,7 +86,7 @@ with ThemeSync {
   override def source = innerSource
   override def innerSource =
     Option(editor).map(_.toNetLogoCode).getOrElse("")
-  override def innerSource_=(s: String) { }
+  override def innerSource_=(s: String): Unit = { }
   override def headerSource = ""
 
 }

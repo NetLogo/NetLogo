@@ -87,7 +87,7 @@ object PackageWinAggregate {
 
     log.info("Generating Windows UUIDs")
     val uuidArchiveFileName =
-      variables("version").replaceAllLiterally("-", "").replaceAllLiterally(".", "") + ".properties"
+      variables("version").replace("-", "").replace(".", "") + ".properties"
     val uuidArchiveFile = platformConfigDir / "archive" / uuidArchiveFileName
     val uuids =
       if (! uuidArchiveFile.exists) {

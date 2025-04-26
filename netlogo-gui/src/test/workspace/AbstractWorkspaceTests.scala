@@ -7,7 +7,7 @@ import org.scalatest.{ BeforeAndAfterEach, OneInstancePerTest }
 
 class AbstractWorkspaceTests extends AnyFunSuite with BeforeAndAfterEach with OneInstancePerTest {
   val workspace = new DummyAbstractWorkspace
-  override def afterEach() { workspace.dispose() }
+  override def afterEach(): Unit = { workspace.dispose() }
 ///
   test("GuessExportName1") {
     workspace.setModelPath("foo.nlogox")

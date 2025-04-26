@@ -6,10 +6,7 @@ import org.nlogo.agent.World
 import org.nlogo.core.{ ShapeEvent, ShapeAdded, ShapeRemoved }
 
 object ShapeChangeListener {
-  def listen(workspace: GUIWorkspace, world: World) {
-    val turtleShapeTracker = world.turtleShapes
-    val linkShapeTracker = world.linkShapes
-
+  def listen(workspace: GUIWorkspace, world: World): Unit = {
     def handleShapeEvent(event: ShapeEvent): Unit = {
       event match {
         case ShapeAdded(newShape, oldShapeOption, _) =>
@@ -21,19 +18,7 @@ object ShapeChangeListener {
       }
     }
 
-    val turtleListener = new turtleShapeTracker.Sub {
-      def notify(pub: turtleShapeTracker.Pub, event: ShapeEvent): Unit = {
-        handleShapeEvent(event)
-      }
-    }
-
-    val linkListener = new linkShapeTracker.Sub {
-      def notify(pub: linkShapeTracker.Pub, event: ShapeEvent): Unit = {
-        handleShapeEvent(event)
-      }
-    }
-
-    turtleShapeTracker.subscribe(turtleListener)
-    linkShapeTracker.subscribe(linkListener)
+    world.turtleShapes.subscribe(handleShapeEvent _)
+    world.linkShapes.subscribe(handleShapeEvent _)
   }
 }

@@ -19,7 +19,7 @@ object OutputCommand {
 import OutputCommand._
 
 abstract class OutputCommand(options: Options) extends nvm.Command {
-  override def perform(context: nvm.Context) {
+  override def perform(context: nvm.Context): Unit = {
     workspace.outputObject(
       args(0).report(context),
       owner = if (options.withOwner) context.agent else null,

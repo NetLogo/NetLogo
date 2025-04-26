@@ -10,10 +10,10 @@ class _setprocedurevariable(vn: Int, name: String) extends Command {
 
   override def toString =
     super.toString + ":" + name
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     perform_1(context, args(0).report(context))
   }
-  def perform_1(context: Context, arg0: AnyRef) {
+  def perform_1(context: Context, arg0: AnyRef): Unit = {
     context.activation.args(vn) = arg0
     context.ip = next
   }

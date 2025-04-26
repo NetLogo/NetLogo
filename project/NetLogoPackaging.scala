@@ -132,7 +132,7 @@ object NetLogoPackaging {
       }
 
       val downloadSizes = downloadLocations.map {
-        case (name, f) => name.replaceAllLiterally("Installer", "Size") ->
+        case (name, f) => name.replace("Installer", "Size") ->
             ((f.length / 1000000).toString + " MB")
       }
 
@@ -501,7 +501,7 @@ object NetLogoPackaging {
       val res = Process(args, workingDirectory).!
       if (res != 0) {
         sys.error(s"$taskName failed!\n" +
-          args.map(_.replaceAllLiterally(" ", "\\ ")).mkString(" "))
+          args.map(_.replace(" ", "\\ ")).mkString(" "))
       }
     }
   }

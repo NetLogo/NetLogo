@@ -24,7 +24,7 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: AbstractM
   // load is called from HeadlessModelOpener
   // save should never be called.
   var widgets: Seq[CoreWidget] = Seq()
-  def load(m: Model) {
+  def load(m: Model): Unit = {
     m.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient").foreach { ws =>
       widgets = ws
     }
@@ -39,26 +39,26 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: AbstractM
 
   // should we be logging or doing something else here besides just println? JC - 12/28/10
   private val listener = new ClientEventListener() {
-    def addClient(clientId: String, remoteAddress: String) {
+    def addClient(clientId: String, remoteAddress: String): Unit = {
       //println("added client: " + clientId + " on: " + remoteAddress)
     }
-    def clientDisconnect(clientId: String) {
+    def clientDisconnect(clientId: String): Unit = {
       //println("client disconnected: " + clientId)
     }
-    def logMessage(message:String) {
+    def logMessage(message:String): Unit = {
       //println(message)
     }
   }
   val connectionManager = new ConnectionManager(this, listener, this.workspace)
 
   /// connection management
-  def disconnect() {
+  def disconnect(): Unit = {
     connectionManager.shutdown()
     messagesList.clear()
   }
 
   @throws(classOf[HubNetException])
-  def reset() {
+  def reset(): Unit = {
     if (connectionManager.isRunning) {
       connectionManager.shutdown()
       // when we reset, make sure to get rid of any locally connected clients.
@@ -80,12 +80,12 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: AbstractM
   def clientEditor: AnyRef = null
   def getInterfaceWidth = 0
   def getInterfaceHeight = 0
-  def openClientEditor() {}
-  def closeClientEditor() {}
+  def openClientEditor(): Unit = {}
+  def closeClientEditor(): Unit = {}
 
   // other no-op gui related stuff
-  def setTitle(name: String, dir: String, modelType: ModelType) {}
-  def importClientInterface(model: Model, client: Boolean) {} // only called from the File menu.
+  def setTitle(name: String, dir: String, modelType: ModelType): Unit = {}
+  def importClientInterface(model: Model, client: Boolean): Unit = {} // only called from the File menu.
 
   private val clientIds = Iterator.from(0)
   private val clientsAddedViaNewClient = ListBuffer[TestClient]()
@@ -120,5 +120,5 @@ class HeadlessHubNetManager(workspace: AbstractWorkspaceScala, loader: AbstractM
     }
   }
 
-  def showControlCenter() {} // maybe we could log a message here.
+  def showControlCenter(): Unit = {} // maybe we could log a message here.
 }

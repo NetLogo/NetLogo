@@ -9,7 +9,7 @@ class ColorizerTests extends AnyFunSuite {
 
   import Colorizer.Colors
 
-  def simple(s: String, color: Color) {
+  def simple(s: String, color: Color): Unit = {
     assertResult(Vector.fill(s.length)(color)) {
       Colorizer.colorizeLine(s)
     }

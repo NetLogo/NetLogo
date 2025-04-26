@@ -10,7 +10,7 @@ import org.nlogo.nvm.Instruction
 
 class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisitor, bgen: Generator#InstructionGenerator[_], instrUID: Int) {
   private val errorLog = new StringBuilder
-  def writeTransformedBytecode() {
+  def writeTransformedBytecode(): Unit = {
     val reader = PrimitiveCache.getClassReader(instr.getClass)
     val extractor = new MethodExtractorClassAdapter
     // When we switched to Java 6, the following line started throwing
@@ -30,7 +30,7 @@ class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisitor, bge
   }
   private class MethodTransformerAdapter extends MethodVisitor(ASM5, mvOut) {
     val endOfMethodLabel = new Label
-    override def visitFieldInsn(opcode: Int, owner: String, name: String, desc: String) {
+    override def visitFieldInsn(opcode: Int, owner: String, name: String, desc: String): Unit = {
       if (owner != Type.getInternalName(instr.getClass))
         mvOut.visitFieldInsn(opcode, owner, name, desc)
       else opcode match {
@@ -80,7 +80,7 @@ class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisitor, bge
         case _ => // do nothing
       }
     }
-    override def visitMethodInsn(opcode: Int, owner: String, name: String, desc: String, itf: Boolean) {
+    override def visitMethodInsn(opcode: Int, owner: String, name: String, desc: String, itf: Boolean): Unit = {
       if (name == "displayName") {
         mvOut.visitInsn(POP)
         mvOut.visitLdcInsn(instr.displayName)
@@ -107,7 +107,7 @@ class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisitor, bge
         errorLog.append("MethodRipper says: Java class " + instr.getClass() +
           " not allowed to call method '" + name + "' in a report_X()/perform_X() method.\n")
     }
-    override def visitInsn(opcode: Int) {
+    override def visitInsn(opcode: Int): Unit = {
       // We need to change "returns" to "jump-to-end-method"
       opcode match {
         case RETURN | ARETURN | IRETURN | DRETURN | FRETURN | LRETURN =>
@@ -116,12 +116,12 @@ class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisitor, bge
       }
     }
     // strip out the visitations that we don't want to pass on
-    override def visitCode() {}
-    override def visitEnd() { visitLabel(endOfMethodLabel) }
-    override def visitMaxs(maxStack: Int, maxLocals: Int) {}
-    override def visitLocalVariable(name: String, desc: String, signature: String, start: Label, end: Label, index: Int) {}
-    override def visitLineNumber(line: Int, start: Label) {}
-    override def visitTryCatchBlock(start: Label, end: Label, handler: Label, tpe: String) {
+    override def visitCode(): Unit = {}
+    override def visitEnd(): Unit = { visitLabel(endOfMethodLabel) }
+    override def visitMaxs(maxStack: Int, maxLocals: Int): Unit = {}
+    override def visitLocalVariable(name: String, desc: String, signature: String, start: Label, end: Label, index: Int): Unit = {}
+    override def visitLineNumber(line: Int, start: Label): Unit = {}
+    override def visitTryCatchBlock(start: Label, end: Label, handler: Label, tpe: String): Unit = {
       mvOut.visitTryCatchBlock(start, end, handler, tpe)
     }
   }

@@ -3,7 +3,7 @@
 package org.nlogo.prim
 
 import org.nlogo.core.AgentKind
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters.IterableHasAsScala
 
 import org.nlogo.agent.{ AgentSet, Patch }
 import org.nlogo.api.{ AgentException}

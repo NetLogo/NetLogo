@@ -4,8 +4,8 @@ package org.nlogo.api
 
 trait WorldRenderable {
   def patchColorsDirty: Boolean
-  def markPatchColorsDirty()
-  def markPatchColorsClean()
+  def markPatchColorsDirty(): Unit
+  def markPatchColorsClean(): Unit
 
   /**
    * Returns true if there is at least one partially transparent turtle, patch, link, or 3D stamp

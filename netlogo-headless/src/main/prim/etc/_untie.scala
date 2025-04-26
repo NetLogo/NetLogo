@@ -7,7 +7,7 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _untie extends Command {
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     context.agent.asInstanceOf[Link].mode(Link.MODE_NONE)
     context.ip = next
   }

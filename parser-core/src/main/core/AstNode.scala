@@ -164,7 +164,7 @@ class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation) ex
    * code from the old parser.
    */
   def reportedType(): Int = {
-    val appType = app.reportedType
+    val appType = app.reportedType()
     import Syntax._
     appType match {
       case BooleanType => BooleanBlockType

@@ -113,6 +113,7 @@ with LoadModelEvent.Handler {
                 ExportControls.displayExportError(Hierarchy.getFrame(ib),
                   I18N.gui.get("menu.file.export.failed"),
                   I18N.gui.getN("tabs.input.export.error", ex.getMessage))
+              case _ =>
             })(SwingUnlockedExecutionContext)
         case _ =>
       }

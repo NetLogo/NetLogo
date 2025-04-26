@@ -22,7 +22,7 @@ object ModelsLibraryIndexReader {
   // and the project itself, so it's copied.  Since extension sample models cannot pre-generate their blurbs,
   // we do it live.  -Jeremy B October 2020
   def getWhatIsIt(path: Path): Option[String] = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.ListHasAsScala
     val info = try {
       val sourceReader = new StringReader(Files.readAllLines(path).asScala.mkString("\n"))
       val reader = {
@@ -59,7 +59,7 @@ object ModelsLibraryIndexReader {
   }
 
   def readInfoMap: Map[String, String] = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.ListHasAsScala
 
     val parsingConfiguration = ConfigParseOptions.defaults.setSyntax(ConfigSyntax.CONF)
     val index = ConfigFactory.parseFile(new File(ModelsLibrary.modelsRoot, "index.conf"), parsingConfiguration)

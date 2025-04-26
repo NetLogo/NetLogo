@@ -37,7 +37,7 @@ class StatsExporter(modelFileName: String,
   val listMetrics = HashSet[String]()
   val invalidMetrics = HashSet[String]()
 
-  def writeExperimentHeader() {
+  def writeExperimentHeader(): Unit = {
     val metrics = ListBuffer[String]()
     for (m <- protocol.metrics) {
       if (!(invalidMetrics contains m)) {
@@ -50,7 +50,7 @@ class StatsExporter(modelFileName: String,
     out.flush()
   }
 
-  def writeTableRow(params: List[Any], stats: List[Any], step: Int) {
+  def writeTableRow(params: List[Any], stats: List[Any], step: Int): Unit = {
     val writeValues = (params :+ step) ::: stats
     out.println(writeValues.map(csv.data).mkString(","))
     out.flush()
@@ -64,7 +64,7 @@ class StatsExporter(modelFileName: String,
       }
   }
 
-  def process() {
+  def process(): Unit = {
     val d = extractData()
     d match {
       case Some(data) => {
@@ -307,6 +307,6 @@ class StatsExporter(modelFileName: String,
     data
   }
 
-  override def experimentCompleted() { process() }
-  override def experimentAborted() { process() }
+  override def experimentCompleted(): Unit = { process() }
+  override def experimentAborted(): Unit = { process() }
 }

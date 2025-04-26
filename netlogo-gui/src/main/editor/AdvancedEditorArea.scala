@@ -50,11 +50,13 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
         case menu: JMenu => add(new Menu(menu.getText) {
           menu.getMenuComponents.foreach(_ match {
             case item: JMenuItem => add(new MenuItem(item.getAction))
+            case _ =>
           })
           add(new MenuItem(new ToggleFoldsAction(AdvancedEditorArea.this)))
         })
         case item: JMenuItem => add(new MenuItem(item.getAction))
         case separator: JPopupMenu.Separator => addSeparator()
+        case _ =>
       })
 
       addSeparator()
@@ -63,7 +65,7 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
 
       addPopupMenuListener(new SuspendCaretPopupListener(AdvancedEditorArea.this))
 
-      override def show(component: Component, x: Int, y: Int) {
+      override def show(component: Component, x: Int, y: Int): Unit = {
         setBackground(InterfaceColors.menuBackground())
 
         getComponents.foreach(_ match {
@@ -84,9 +86,7 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   // This method will receive null input if a partial accent character is entered in the editor, e.g., via Option+e on
   // MacOS. This also occurs when int'l keyboards enter "^" -- BCH 12/31/2016, RGG 1/3/17
   override def replaceSelection(s: String): Unit = if (s != null) {
-    val selection =
-      s.dropWhile(c => Character.getType(c) == Character.FORMAT)
-        .replaceAllLiterally("\t", "  ")
+    val selection = s.dropWhile(c => Character.getType(c) == Character.FORMAT).replace("\t", "  ")
     super.replaceSelection(s)
     indenter.foreach(_.handleInsertion(selection))
   } else {
@@ -97,7 +97,7 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   // with this editor area
   def setSelection(s: Boolean): Unit = { }
 
-  def selectError(start: Int, end: Int) {
+  def selectError(start: Int, end: Int): Unit = {
     setSelectionColor(InterfaceColors.errorHighlight())
 
     select(start, end)
@@ -129,13 +129,13 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   }
 
   addMouseListener(new MouseAdapter {
-    override def mousePressed(e: MouseEvent) {
+    override def mousePressed(e: MouseEvent): Unit = {
       setSelectionColor(defaultSelectionColor)
     }
   })
 
   addKeyListener(new KeyAdapter {
-    override def keyPressed(e: KeyEvent) {
+    override def keyPressed(e: KeyEvent): Unit = {
       setSelectionColor(defaultSelectionColor)
     }
   })

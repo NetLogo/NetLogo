@@ -12,7 +12,7 @@ class PlotPainter(plot: Plot) {
   private var height = 0
   private var width = 0
 
-  def setupOffscreenImage(width: Int, height: Int) {
+  def setupOffscreenImage(width: Int, height: Int): Unit = {
     if(offScreenImage == null || this.width != width || this.height != height) {
       this.width = width
       this.height = height
@@ -33,9 +33,9 @@ class PlotPainter(plot: Plot) {
     }
   }
 
-  def drawImage(g: java.awt.Graphics) { g.drawImage(offScreenImage, 0, 0, null) }
+  def drawImage(g: java.awt.Graphics): Unit = { g.drawImage(offScreenImage, 0, 0, null) }
 
-  def refresh() {
+  def refresh(): Unit = {
     gOff.setColor(new Color(plot.backgroundColor))
     gOff.fillRect(0, 0, offScreenImage.getWidth, offScreenImage.getHeight)
     for(pen <- plot.pens; if(! pen.hidden)) {
@@ -48,20 +48,22 @@ class PlotPainter(plot: Plot) {
   private def collectPointsForPainting(pen: PlotPen): Seq[PlotPoint] = {
     pen.mode match {
       case PlotPen.POINT_MODE | PlotPen.LINE_MODE =>
-        pen.points
+        pen.points.toSeq
       case PlotPen.BAR_MODE =>
         pen.points.flatMap(old =>
           Seq(old.copy(y = 0, isDown = true),
               old.copy(isDown = true),
               old.copy(x = old.x + pen.interval, isDown = true),
-              old.copy(x = old.x + pen.interval, y = 0, isDown = true)))
+              old.copy(x = old.x + pen.interval, y = 0, isDown = true))).toSeq
+      case m =>
+        throw new Exception(s"Unexpected mode: $m")
     }
   }
 
   // In a model that plots a very large number of points, this
   // method can account for a substantial amount of the runtime,
   // so it's worth considering even small efficiency issues here. - ST 8/16/07
-  private def refreshPen(pen: PlotPen, pointsToPlot: Seq[PlotPoint]) {
+  private def refreshPen(pen: PlotPen, pointsToPlot: Seq[PlotPoint]): Unit = {
     var last: PlotPoint = null
     // used to cut down on unnecessary setColor() calls - ST 9/17/03
     var color = 0
@@ -139,11 +141,11 @@ class PlotPainter(plot: Plot) {
 
   /// private helpers
 
-  private def drawPoint(g: java.awt.Graphics, p: PlotPoint) {
+  private def drawPoint(g: java.awt.Graphics, p: PlotPoint): Unit = {
     g.drawRect(screenX(p.x), screenY(p.y), 1, 1)
   }
 
-  private def drawEdge(g: java.awt.Graphics, p1: PlotPoint, p2: PlotPoint) {
+  private def drawEdge(g: java.awt.Graphics, p1: PlotPoint, p2: PlotPoint): Unit = {
     val x1 = screenX(p1.x)
     val y1 = screenY(p1.y)
     val x2 = screenX(p2.x)

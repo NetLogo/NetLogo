@@ -300,7 +300,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
       throw new ExtensionManagerException(UserHalted)
   }
 
-  def exportWorld(writer: PrintWriter) {
+  def exportWorld(writer: PrintWriter): Unit = {
     writer.println(Dump.csv.encode("EXTENSIONS"))
     writer.println()
     for (container <- jars.values.toList.sortWith((c1, c2) => c1.extensionName < c2.extensionName)) {
@@ -314,7 +314,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
   }
 
   @throws(classOf[org.nlogo.api.ExtensionException])
-  def importExtensionData(name: String, data: JList[Array[String]], handler: ImportErrorHandler) {
+  def importExtensionData(name: String, data: JList[Array[String]], handler: ImportErrorHandler): Unit = {
     val jar = getJarContainerByIdentifier(name).getOrElse(
       throw new ExtensionException(s"there is no extension named $name in this model"))
     jar.classManager.importWorld(data, this, handler)

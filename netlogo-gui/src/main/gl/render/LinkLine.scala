@@ -20,7 +20,7 @@ private class LinkLine(xcor: Double, dashIndex: Int) {
   private val lineStipple: Short = LinkLine.dashChoices(dashIndex)
 
   def render(gl:GL2, x1: Float, y1: Float, z1: Float,
-             x2: Float, y2: Float, z2: Float, curviness: Double, stroke: Float, distance: Int) {
+             x2: Float, y2: Float, z2: Float, curviness: Double, stroke: Float, distance: Int): Unit = {
     gl.glLineStipple(distance, lineStipple)
     if(curviness == 0)
       renderLine(gl, x1, y1, z1, x2, y2, z2, stroke)
@@ -31,7 +31,7 @@ private class LinkLine(xcor: Double, dashIndex: Int) {
   private def renderCurve(gl: GL2,
                           _x1: Float, _y1: Float, _z1: Float,
                           _x2: Float, _y2: Float, _z2: Float,
-                          curviness: Double, stroke: Float) {
+                          curviness: Double, stroke: Float): Unit = {
     var (x1, y1, z1) = (_x1, _y1, _z1)
     var (x2, y2, z2) = (_x2, _y2, _z2)
     val xd = x1 - x2
@@ -65,7 +65,7 @@ private class LinkLine(xcor: Double, dashIndex: Int) {
   private def renderLine(gl: GL2,
                          _x1: Float, _y1: Float, _z1: Float,
                          _x2: Float, _y2: Float, _z2: Float,
-                         stroke: Float) {
+                         stroke: Float): Unit = {
     var (x1, y1, z1) = (_x1, _y1, _z1)
     var (x2, y2, z2) = (_x2, _y2, _z2)
     if(xcor != 0) {

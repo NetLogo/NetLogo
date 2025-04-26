@@ -37,7 +37,7 @@ trait AgentManagement
 
   protected var breedsOwnCache: JHashMap[String, Integer] = new JHashMap[String, Integer]()
 
-  def createPatches(minPx: Int, maxPx: Int, minPy: Int, maxPy: Int)
+  def createPatches(minPx: Int, maxPx: Int, minPy: Int, maxPy: Int): Unit
   @throws(classOf[AgentException])
   def getPatchAt(x: Double, y: Double): Patch
   def fastGetPatchAt(xc: Int, yc: Int): Patch
@@ -102,7 +102,7 @@ trait AgentManagement
 
   def indexOfVariable(agent: Agent, name: String): Int = {
     agent match {
-      case observer: Observer => observerOwnsIndexOf(name)
+      case _: Observer => observerOwnsIndexOf(name)
       case turtle: Turtle =>
         val breed = turtle.getBreed
         if (breed == _turtles) turtlesOwnIndexOf(name)
@@ -143,7 +143,7 @@ trait AgentManagement
   // copyAgents is a "deep copy" of the world intended to capture the relevant features
   // of world for displaying it to the user.
   def copyAgents(other: AgentManagement, newWorld: World): Unit = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.MapHasAsScala
 
     // begin by copying breeds
     breeds.asScala.foreach {
@@ -162,7 +162,7 @@ trait AgentManagement
     val newPatchArray = new Array[Agent](worldHeight * worldWidth)
     var i: Int = 0
     while (patchIter.hasNext) {
-      val patch = patchIter.next.asInstanceOf[Patch]
+      val patch = patchIter.next().asInstanceOf[Patch]
       val newPatch = new Patch(newWorld, patch.id.toInt, patch.pxcor, patch.pycor, patch.variables.length)
       System.arraycopy(patch.variables, 0, newPatch.variables, 0, patch.variables.length)
       newPatchArray(i) = newPatch

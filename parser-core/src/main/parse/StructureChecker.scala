@@ -18,7 +18,7 @@ import SymbolType._
 
 object StructureChecker {
 
-  def rejectMisplacedConstants(declarations: Seq[Declaration]) {
+  def rejectMisplacedConstants(declarations: Seq[Declaration]): Unit = {
     for (declaration <- declarations) {
       declaration match {
         case Variables(_, names) =>
@@ -38,7 +38,7 @@ object StructureChecker {
     }
   }
 
-  def rejectDuplicateDeclarations(declarations: Seq[Declaration]) {
+  def rejectDuplicateDeclarations(declarations: Seq[Declaration]): Unit = {
 
     // O(n^2) -- maybe we should fold instead --ST
     def checkPair(decl1: Declaration, decl2: Declaration): Option[(String, Token)] =
@@ -70,9 +70,9 @@ object StructureChecker {
 
   }
 
-  def rejectDuplicateNames(declarations: Seq[Declaration], usedNames: SymbolTable) {
+  def rejectDuplicateNames(declarations: Seq[Declaration], usedNames: SymbolTable): Unit = {
 
-    def checkForInconsistentIDs(usageIdentifier: String, usageType: SymbolType, occ: Occurrence) {
+    def checkForInconsistentIDs(usageIdentifier: String, usageType: SymbolType, occ: Occurrence): Unit = {
       cAssert(
         usageDoesNotClashWithOccurence(usageIdentifier, usageType, occ),
         duplicateOf(usageType, occ.identifier.name),
@@ -209,7 +209,7 @@ object StructureChecker {
     I18N.errors.getN("compiler.StructureChecker.breedOverrides", s"[${breed.plural.name} ${breed.singular.name}]", duplicatedName, typeName)
   }
 
-  private def checkNotArrow(ident: Identifier) {
+  private def checkNotArrow(ident: Identifier): Unit = {
     cAssert(ident.name != "->", I18N.errors.get("compiler.StructureChecker.invalidArrow"), ident.token)
   }
 

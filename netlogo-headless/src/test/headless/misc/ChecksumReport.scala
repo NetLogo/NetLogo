@@ -14,7 +14,7 @@ object ChecksumReport {
   val tester = new ChecksumTester(println _)
   import tester.info
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     val entries = Checksums.load().values
     val results =
       for {
@@ -39,7 +39,7 @@ object ChecksumReport {
         None
     }
 
-  def printReport(runTimes: Map[String, Long]) {
+  def printReport(runTimes: Map[String, Long]): Unit = {
     val numWinners = 30
     info(s"\n$numWinners slowest models:")
     val sorted =

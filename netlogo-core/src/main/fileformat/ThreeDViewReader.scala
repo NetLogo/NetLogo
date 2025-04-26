@@ -148,6 +148,6 @@ object ThreeDViewReader extends WidgetReader with BaseWidgetParser with ConstWid
       t.updateMode.save.toString,
       if (t.showTickCounter) "1" else "0",
       t.tickCounterLabel.getOrElse("NIL"),
-      t.frameRate).mkString("", "\n", "\n")
+      t.frameRate.toString).mkString("", "\n", "\n")
   }
 }

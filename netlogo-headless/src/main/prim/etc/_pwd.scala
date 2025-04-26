@@ -6,7 +6,7 @@ import org.nlogo.api.OutputDestination
 import org.nlogo.nvm.{ Command, Context }
 
 class _pwd extends Command {
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val path =
       Option(workspace.getModelPath)
         .getOrElse("no model loaded!")

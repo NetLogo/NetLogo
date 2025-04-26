@@ -41,8 +41,8 @@ object Serializer {
     bytes.toByteArray
   }
 
-  def serialize(update: Update, data: DataOutput) {
-    def writeValue(x: AnyRef) {
+  def serialize(update: Update, data: DataOutput): Unit = {
+    def writeValue(x: AnyRef): Unit = {
       x match {
         case s: String =>
           data.writeByte(StringType)
@@ -93,7 +93,7 @@ object Serializer {
           }
       }
     }
-    def writeSeq(xs: Seq[AnyRef]) {
+    def writeSeq(xs: Seq[AnyRef]): Unit = {
       data.writeInt(xs.size)
       xs.foreach(writeValue)
     }

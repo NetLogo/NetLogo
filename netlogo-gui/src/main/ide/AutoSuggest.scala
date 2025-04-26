@@ -66,7 +66,7 @@ class AutoSuggest(val primitiveNames: Set[String], extensionPrimNames: () => Set
     if(word.length > 1) {
       trie.findByAcronym(word).foreach(suggestion => suggestions ++= trie.findByPrefix(suggestion))
     }
-    suggestions
+    suggestions.toSeq
   }
 
   /**
@@ -76,9 +76,9 @@ class AutoSuggest(val primitiveNames: Set[String], extensionPrimNames: () => Set
     def apply() : Trie = new TrieNode()
   }
 
-  sealed trait Trie extends Traversable[String] {
+  sealed trait Trie extends Iterable[String] {
 
-    def append(key : String)
+    def append(key : String): Unit
     def findByPrefix(prefix: String): scala.collection.Seq[String]
     def contains(word: String): Boolean
     def remove(word : String) : Boolean
@@ -88,7 +88,7 @@ class AutoSuggest(val primitiveNames: Set[String], extensionPrimNames: () => Set
   class TrieNode(val char : Option[Char] = None, var word: Option[String] = None) extends Trie {
 
     val children: mutable.Map[Char, TrieNode] = {
-        import scala.collection.JavaConverters._
+        import scala.jdk.CollectionConverters.MapHasAsScala
         new java.util.TreeMap[Char, TrieNode]().asScala
     }
 
@@ -245,6 +245,9 @@ class AutoSuggest(val primitiveNames: Set[String], extensionPrimNames: () => Set
 
       helper(new ListBuffer[TrieNode](), 0, this)
     }
+
+    // unused, but required to migrate from Traversable, which has been deprecated (Isaac B 4/24/25)
+    override def iterator: Iterator[String] = ???
 
     override def toString() : String = s"Trie(char=${char},word=${word})"
 

@@ -14,13 +14,13 @@ class _every extends Command with nvm.CustomAssembled {
   override def toString =
     super.toString + ":+" + offset
 
-  override def assemble(a: nvm.AssemblerAssistant) {
+  override def assemble(a: nvm.AssemblerAssistant): Unit = {
     a.add(this)
     a.block()
     a.resume()
   }
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     // current time is given in nanoseconds, so we must multiply by 1000000000 to get
     // the delay.  treat negative numbers the same as zero
     val delay =

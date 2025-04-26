@@ -11,11 +11,11 @@ class _repeatlocalinternal(vn: Int, _offset: Int) extends Command {
   override def toString =
     super.toString + ":" + offset + "," + vn
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     perform_1(context)
   }
 
-  def perform_1(context: Context) {
+  def perform_1(context: Context): Unit = {
     val counter = context.activation.args(vn).asInstanceOf[MutableLong]
     if (counter.value <= 0)
       context.ip = next

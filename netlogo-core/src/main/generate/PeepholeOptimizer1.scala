@@ -20,14 +20,14 @@ class PeepholeOptimizer1(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv
   private var extra: Option[Label] = None
 
   // when match fails, flush saved pieces of the pattern before moving on
-  override def restartMatch() {
+  override def restartMatch(): Unit = {
     goto.foreach(mv.visitJumpInsn(GOTO, _))
     extra.foreach(mv.visitLabel(_))
     goto = None
     extra = None
   }
 
-  override def visitJumpInsn(opcode: Int, label: Label) {
+  override def visitJumpInsn(opcode: Int, label: Label): Unit = {
     if (goto.isDefined)
       restartMatch()
     opcode match {
@@ -38,7 +38,7 @@ class PeepholeOptimizer1(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv
     }
   }
 
-  override def visitLabel(label: Label) {
+  override def visitLabel(label: Label): Unit = {
     (goto, extra) match {
       case (Some(`label`), _) =>
         // omit the goto, keep the label

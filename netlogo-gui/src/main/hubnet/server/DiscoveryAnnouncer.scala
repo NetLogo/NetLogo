@@ -16,14 +16,14 @@ import org.nlogo.hubnet.protocol.DiscoveryMessage
 class DiscoveryAnnouncer(uniqueId: String, modelName: String, portNumber: Int, address: InetAddress) extends Thread {
   private val message = DiscoveryMessage(uniqueId, modelName, portNumber)
   @volatile private var shouldRun = true
-  def shutdown() { shouldRun = false }
+  def shutdown(): Unit = { shouldRun = false }
 
   /**
    * Broadcasts messages on the multicast group
    * as long as <code> shouldRun </code> is true.
    **/
   override def run(): Unit = {
-    def dump(err: String, ex: Exception) {
+    def dump(err: String, ex: Exception): Unit = {
       System.err.println("@ " + new java.util.Date() + " : ")
       System.err.println("Error: " + err + "\n\t" + ex)
     }

@@ -62,6 +62,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
     val superClassFullName = original match {
       case _: Command => "org/nlogo/generate/GeneratedCommand"
       case _: Reporter => "org/nlogo/generate/GeneratedReporter"
+      case _ => throw new Exception(s"Unexpected instruction: $original")
     }
     // keep track of the "number" of the instruction we are processing useful for uniquely naming
     // fields that were inlined/kept, and used to drop fake linenumbers into the bytecode, to use to
@@ -95,10 +96,12 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
       val methodName = original match {
         case _: Command => "perform"
         case _: Reporter => "report"
+        case _ => throw new Exception(s"Unexpected instruction: $original")
       }
       val methodDescriptor = original match {
         case _: Command => "(Lorg/nlogo/nvm/Context;)V"
         case _: Reporter => "(Lorg/nlogo/nvm/Context;)Ljava/lang/Object;"
+        case _ => throw new Exception(s"Unexpected instruction: $original")
       }
       var mv = cw.visitMethod(REPORT_PERFORM_ACCESS_CODES, methodName, methodDescriptor,
         null, Array("org/nlogo/api/LogoException"))
@@ -117,7 +120,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
       result.chosenMethod = original.chosenMethod
       result
     }
-    def generateConstructor() {
+    def generateConstructor(): Unit = {
       val constructor = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null)
       constructor.visitCode()
       constructor.visitVarInsn(ALOAD, 0)
@@ -126,7 +129,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
       constructor.visitMaxs(0, 0)
       constructor.visitEnd()
     }
-    def generateBodyMethod() {
+    def generateBodyMethod(): Unit = {
       nlgen.visitCode()
       original match {
         case _: Command =>
@@ -135,13 +138,14 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
         case _: Reporter =>
           generateInstruction(original, classOf[Object], 0, null, 0)
           nlgen.visitInsn(ARETURN)
+        case _ =>
       }
       nlgen.visitLabel(debugEndOfMethodLabel)
       nlgen.visitMaxs(0, 0)
       nlgen.visitEnd()
     }
     def generateInstruction(instr: Instruction, retTypeWanted: Class[_], parentInstrUID: Int,
-                            parentInstr: Instruction, argIndex: Int) {
+                            parentInstr: Instruction, argIndex: Int): Unit = {
       curInstructionUID += 1
       // need to save the curInstructionUID value in a local var, since curInstructionUID gets
       // changed as a result of generating the children.
@@ -160,6 +164,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
             case Syntax.StringType => classOf[String]
             case Syntax.WildcardType => classOf[Object]
             case Syntax.VoidType => java.lang.Void.TYPE
+            case t => throw new Exception(s"Unexpected return type: $t")
           }
           nlgen.generateConversion(actualReturnType, retTypeWanted, parentInstr, argIndex)
         case _ =>
@@ -213,7 +218,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
       }
     }
     def generateOldStyleCall(instr: Instruction, retTypeWanted: Class[_], parentInstrUID: Int,
-                             parentInstr: Instruction, argIndex: Int) {
+                             parentInstr: Instruction, argIndex: Int): Unit = {
       keepAndLoadInstruction(instr, curInstructionUID)
       nlgen.loadContext()
       instr match {
@@ -225,6 +230,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
         case _: Command =>
           nlgen.visitMethodInsn(INVOKEVIRTUAL, Type.getInternalName(instr.getClass),
             "perform", "(Lorg/nlogo/nvm/Context;)V", false)
+        case _ =>
       }
       // now, we want to recursively try to generate all args[] of instr
       instr.args = instr.args.map(recurse(_))
@@ -236,7 +242,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
      * inlining of everything.  (Remember that any Instructions that are called "old-style" with
      * report() need to be inited too...) ~Forrest (3/12/2006)
      */
-    def generateInitMethod() {
+    def generateInitMethod(): Unit = {
       val mv = cw.visitMethod(ACC_PUBLIC, "init", "(Lorg/nlogo/nvm/Workspace;)V", null, null)
       mv.visitCode()
       // first invoke super.init()
@@ -312,7 +318,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
     def keepAndLoadReporter(obj: Instruction, instrUID: Int) =
       loadKept(keepInstructionWithType(obj, instrUID, Type.getType(classOf[Reporter])))
 
-    def keep(fieldName: String, obj: Object, tpe: Type, accessCode: Int) {
+    def keep(fieldName: String, obj: Object, tpe: Type, accessCode: Int): Unit = {
       keptThings.put(fieldName, obj)
       keptThingsTypes.put(fieldName, tpe)
       keptThingsAccessCodes.put(fieldName, Int.box(accessCode))
@@ -326,7 +332,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
 
     def remapFieldName(originalName: String, instrUID: Int) =
       "kept" + instrUID + "_" + originalName
-    def translateGetField(origFieldName: String, instrUID: Int, obj: Object, tpe: Type, accessCode: Int) {
+    def translateGetField(origFieldName: String, instrUID: Int, obj: Object, tpe: Type, accessCode: Int): Unit = {
       // Note: The POPs are generated to cancel out the ALOAD 0 which preceded the GETFIELD
       // instruction.  These ALOAD/POP pairs will then be swept away by a peep-hole optimizer that
       // streamlines the bytecode.
@@ -341,17 +347,17 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
         nlgen.visitFieldInsn(GETFIELD, fullClassName, fieldName, tpe.getDescriptor)
       }
     }
-    def translateGetStatic(origFieldName: String, instrUID: Int, obj: Object, tpe: Type, accessCode: Int) {
+    def translateGetStatic(origFieldName: String, instrUID: Int, obj: Object, tpe: Type, accessCode: Int): Unit = {
       val fieldName = remapFieldName(origFieldName, instrUID)
       keep(fieldName, obj, tpe, accessCode)
       nlgen.visitFieldInsn(GETSTATIC, fullClassName, fieldName, tpe.getDescriptor)
     }
-    def translatePutStatic(origFieldName: String, instrUID: Int, descriptor: String) {
+    def translatePutStatic(origFieldName: String, instrUID: Int, descriptor: String): Unit = {
       nlgen.visitFieldInsn(PUTSTATIC, fullClassName, remapFieldName(origFieldName, instrUID),
         descriptor)
     }
-    def generateKeptFields() {
-      import collection.JavaConverters._
+    def generateKeptFields(): Unit = {
+      import scala.jdk.CollectionConverters.SetHasAsScala
       for (fieldName <- keptThings.keySet.asScala) {
         val descriptor = keptThingsTypes.get(fieldName).getDescriptor
         var accessCode = keptThingsAccessCodes.get(fieldName).intValue
@@ -360,8 +366,8 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
         cw.visitField(accessCode, fieldName, descriptor, null, null).visitEnd()
       }
     }
-    def setAllKeptFields(resultInstr: Instruction) {
-      import collection.JavaConverters._
+    def setAllKeptFields(resultInstr: Instruction): Unit = {
+      import scala.jdk.CollectionConverters.SetHasAsScala
       for (fieldName <- keptThings.keySet.asScala) {
         val f = resultInstr.getClass.getDeclaredField(fieldName)
         f.setAccessible(true)
@@ -373,7 +379,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
      * like "Turtle.class" ~Forrest (7/16/2006)
      */
     var staticClassMethodAlreadyGenerated = false
-    def generateStaticClassMethod(methodName: String) {
+    def generateStaticClassMethod(methodName: String): Unit = {
       // we don't want to generate it twice!
       if (staticClassMethodAlreadyGenerated) return
       staticClassMethodAlreadyGenerated = true

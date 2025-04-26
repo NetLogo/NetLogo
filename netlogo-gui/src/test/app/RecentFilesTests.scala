@@ -12,7 +12,7 @@ class RecentFilesTests extends AnyFunSuite {
   val extraModel = ModelEntry(makePath(rf.maxEntries + 1), api.ModelType.Normal)
   def makePath(n: Int) = "/" + n + (if (api.Version.is3D) ".nlogo3d" else ".nlogo")
 
-  def putAndLoad(models: List[ModelEntry]) {
+  def putAndLoad(models: List[ModelEntry]): Unit = {
     rf.prefs.put(rf.key, models.mkString("\n"))
     rf.loadFromPrefs()
   }

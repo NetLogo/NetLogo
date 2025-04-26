@@ -7,7 +7,7 @@ import org.nlogo.nvm.HaltException
 
 object ThreadUtils {
   /// asking for stuff to happen on the event thread
-  val DO_NOTHING = new CommandRunnable() {def run() {}}
+  val DO_NOTHING = new CommandRunnable() {def run(): Unit = {}}
 
   @throws(classOf[LogoException])
   def waitForQueuedEvents(workspace: GUIWorkspace): Unit = {waitFor(workspace, DO_NOTHING)}
@@ -25,7 +25,7 @@ object ThreadUtils {
   }
 
   @throws(classOf[LogoException])
-  def waitFor(workspace: GUIWorkspace, runnable: CommandRunnable) {
+  def waitFor(workspace: GUIWorkspace, runnable: CommandRunnable): Unit = {
     waitForResult(workspace, reporter(runnable.run _))
   }
 
@@ -45,7 +45,7 @@ object ThreadUtils {
     // - ST 8/13/03,8/16/03
     try {
       org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
-        def run() {
+        def run(): Unit = {
           try result.value = runnable.run()
           catch {
             case ex: LogoException => result.ex = ex

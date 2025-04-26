@@ -12,5 +12,5 @@ trait AnnouncementListener {
   /**
    * Called when a HubNet server announcement is received
    */
-  def announcementReceived(message: DiscoveryMessage)
+  def announcementReceived(message: DiscoveryMessage): Unit
 }

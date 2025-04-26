@@ -23,7 +23,7 @@ class HeadingSmoother {
     firstPersonOldHeading
   }
 
-  private def thirdPersonUpdate(agent: org.nlogo.api.Agent) {
+  private def thirdPersonUpdate(agent: org.nlogo.api.Agent): Unit = {
     val heading = agent match {
       case t: org.nlogo.api.Turtle => t.heading
       case _ => 0d

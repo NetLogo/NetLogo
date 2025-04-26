@@ -6,7 +6,7 @@ import org.nlogo.core.TokenType
 import org.nlogo.api.{ ExtensionManager => ApiExtensionManager }
 
 trait ExtensionManager extends ApiExtensionManager {
-  def dumpExtensionPrimitives: String
+  def dumpExtensionPrimitives(): String
   def dumpExtensions: String
   def reset(): Unit
 

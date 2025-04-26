@@ -8,7 +8,7 @@ import org.nlogo.nvm.RuntimePrimitiveException
 
 class _setdefaultshape extends Command {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val breed = argEvalAgentSet(context, 0)
     val shape = argEvalString(context, 1)
 

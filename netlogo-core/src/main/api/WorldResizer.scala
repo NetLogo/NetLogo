@@ -8,8 +8,8 @@ import org.nlogo.core
   * experiment varies the world size */
 
 trait WorldResizer {
-  def resizeView()
-  def patchSize(patchSize: Double)
-  def setDimensions(dim: core.WorldDimensions)
-  def setDimensions(dim: core.WorldDimensions, patchSize: Double)
+  def resizeView(): Unit
+  def patchSize(patchSize: Double): Unit
+  def setDimensions(dim: core.WorldDimensions): Unit
+  def setDimensions(dim: core.WorldDimensions, patchSize: Double): Unit
 }

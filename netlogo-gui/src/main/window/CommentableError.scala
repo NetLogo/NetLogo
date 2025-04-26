@@ -14,7 +14,7 @@ import org.nlogo.swing.InputOptionPane
 class CommentableError(val editorArea: AbstractEditorArea) {
   private val errorLabel = new EditorAreaErrorLabel(editorArea)
   private val commentAction = new AbstractAction(I18N.gui.get("tools.loggingMode.errorComment.button")) {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       val comment = new InputOptionPane(null, "", I18N.gui.get("tools.loggingMode.errorComment.label")).getInput
       if (comment != null && !comment.trim().isEmpty()) {
         LogManager.userComment(comment)
@@ -39,15 +39,15 @@ class CommentableError(val editorArea: AbstractEditorArea) {
     errorLabel.setError(compilerError, offset)
   }
 
-  def zoom(zoomFactor: Double) {
+  def zoom(zoomFactor: Double): Unit = {
     errorLabel.zoom(zoomFactor)
   }
 
-  def setVisible(isVisible: Boolean) {
+  def setVisible(isVisible: Boolean): Unit = {
     component.setVisible(isVisible)
   }
 
-  def setText(text: String) {
+  def setText(text: String): Unit = {
     errorLabel.setText(text)
   }
 

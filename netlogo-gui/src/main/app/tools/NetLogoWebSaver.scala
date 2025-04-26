@@ -42,8 +42,8 @@ class NetLogoWebSaver(loader: NLWTemplateLoader, saveFunction: String => Unit) {
   def templateHTML(htmlTemplate: String, model: String, modelName: String): String = {
     if (htmlTemplate.contains(ModelContents))
       htmlTemplate
-        .replaceAllLiterally(ModelContents, model)
-        .replaceAllLiterally(ModelName, modelName.stripSuffix(".html") + ".nlogox")
+        .replace(ModelContents, model)
+        .replace(ModelName, modelName.stripSuffix(".html") + ".nlogox")
     else
       throw new IllegalArgumentException("Invalid HTML Template")
   }

@@ -54,7 +54,7 @@ class TestLiteralParser extends AnyFunSuite {
     result
   }
 
-  def testError(input: String, error: String, isImport: Boolean = true) {
+  def testError(input: String, error: String, isImport: Boolean = true): Unit = {
     val e = intercept[CompilerException] {
       toLiteral(input, isImport)
     }

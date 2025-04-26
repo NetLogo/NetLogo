@@ -44,13 +44,13 @@ class MockGraphics(mockTest:MockSuite) extends GraphicsInterface {
   protected var color = java.awt.Color.black
   protected var transform = new AffineTransform
 
-  def drawLine(x1: Double, y1: Double, x2: Double, y2: Double) {
+  def drawLine(x1: Double, y1: Double, x2: Double, y2: Double): Unit = {
     operations += Line(loc(x1, y1),loc(x2, y2))
   }
   def drawLabel(s: String, x: Double, y: Double, patchSize: Double){
     operations += Label(loc(x, y))
   }
-  def draw(shape: java.awt.Shape) {
+  def draw(shape: java.awt.Shape): Unit = {
     operations += Shape(shape.getClass.getName, loc(0, 0), false)
   }
   def drawCircle(x: Double, y: Double, xDiameter: Double, yDiameter: Double, scale: Double, angle: Double){
@@ -62,7 +62,7 @@ class MockGraphics(mockTest:MockSuite) extends GraphicsInterface {
   def drawImage(image: java.awt.Image, x: Int, y: Int, width: Int, height: Int){
     operations += Image(loc(x, y),size(width, height))
   }
-  def drawImage(image: BufferedImage) {
+  def drawImage(image: BufferedImage): Unit = {
     operations += Image(loc(0, 0), size(image.getWidth, image.getHeight))
   }
   def fillPolygon(xcors: Array[Int], ycors: Array[Int], length: Int){

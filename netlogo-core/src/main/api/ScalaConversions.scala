@@ -25,7 +25,7 @@ object ScalaConversions {
     LogoList.fromVector(seq.map(toLogoObject).toVector)
 
   def toLogoList[T](arr: Array[T]): LogoList =
-    toLogoList(arr: Seq[T]) // trigger implicit conversion
+    toLogoList(arr.toSeq)
 
   def toLogoList(ll: LogoList): LogoList =
     LogoList.fromVector(ll.toVector.map(toLogoObject))
@@ -46,7 +46,7 @@ object ScalaConversions {
     case x: Int => Double.box(x)
     case x: Float => Double.box(x)
     case x: Double => Double.box(x)
-    case x: Long => Double.box(x)
+    case x: Long => Double.box(x.toDouble)
 
     // netlogo types
     case x: ExtensionObject => x

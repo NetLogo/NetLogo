@@ -101,7 +101,7 @@ case class CodeCompletionPopup(autoSuggest: AutoSuggest,
     * @param eA
     * @param autoSuggestDocumentListener
     */
-  def autoCompleteSuggestion(eA: JTextComponent, autoSuggestDocumentListener: AutoSuggestDocumentListener) {
+  def autoCompleteSuggestion(eA: JTextComponent, autoSuggestDocumentListener: AutoSuggestDocumentListener): Unit = {
     isPopupEnabled = false
     val suggestion = suggestionDisplaylist.getSelectedValue
     lastSuggested = suggestion

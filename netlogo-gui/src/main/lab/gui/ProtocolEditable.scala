@@ -10,6 +10,8 @@ import org.nlogo.editor.Colorizer
 import org.nlogo.swing.OptionPane
 import org.nlogo.window.{ DummyErrorHandler, Editable, EditPanel }
 
+import scala.util.{ Success, Failure }
+
 // normally we'd be package-private but the org.nlogo.properties stuff requires we be public - ST 2/25/09
 
 class ProtocolEditable(protocol: LabProtocol,
@@ -24,7 +26,7 @@ class ProtocolEditable(protocol: LabProtocol,
   val classDisplayName = "Experiment"
   val sourceOffset = 0
 
-  private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace")
+  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
 
   override def editPanel: EditPanel = new ProtocolEditPanel(this, compiler, colorizer)
 
@@ -118,24 +120,24 @@ class ProtocolEditable(protocol: LabProtocol,
   }
 
   // make a new LabProtocol based on what user entered
-  def editFinished: Boolean = get.isDefined
+  def editFinished(): Boolean = get.isDefined
   def get: Option[LabProtocol] = {
-    def complain(message: String) {
+    def complain(message: String): Unit = {
       if (!java.awt.GraphicsEnvironment.isHeadless) {
         new OptionPane(window, I18N.gui("invalid"), I18N.gui.getN("edit.behaviorSpace.invalidVarySpec", message),
                        OptionPane.Options.Ok, OptionPane.Icons.Error)
       }
     }
-    return LabVariableParser.parseVariables(valueSets, repetitions, worldLock, compiler) match {
-      case (Some((constants: List[RefValueSet], subExperiments: List[List[RefValueSet]])), _) =>
+    LabVariableParser.parseVariables(valueSets, repetitions, worldLock, compiler) match {
+      case Success((constants, subExperiments)) =>
         Some(new LabProtocol(
           name.trim, preExperimentCommands.trim, setupCommands.trim, goCommands.trim,
           postRunCommands.trim, postExperimentCommands.trim, repetitions, sequentialRunOrder, runMetricsEveryStep,
           runMetricsCondition.trim, timeLimit, exitCondition.trim,
           metrics.split("\n", 0).map(_.trim).filter(!_.isEmpty).toList,
           constants, subExperiments, runsCompleted))
-      case (None, message: String) =>
-        complain(message)
+      case Failure(t) =>
+        complain(t.getMessage)
         None
     }
   }
@@ -147,7 +149,7 @@ class ProtocolEditable(protocol: LabProtocol,
       Some(I18N.gui.getN("edit.behaviorSpace.name.duplicate", name.trim))
     } else {
       LabVariableParser.parseVariables(valueSets, repetitions, worldLock, compiler) match {
-        case (None, message: String) => Some(message)
+        case Failure(t) => Some(t.getMessage)
         case _ => None
       }
     }

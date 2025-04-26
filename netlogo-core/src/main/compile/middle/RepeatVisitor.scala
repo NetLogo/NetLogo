@@ -15,13 +15,13 @@ private class RepeatVisitor extends DefaultAstVisitor {
   private var askNestingLevel = 0
   private var vn = 0   // used when converting _repeat to _repeatlocal
 
-  override def visitProcedureDefinition(procdef: ProcedureDefinition) {
+  override def visitProcedureDefinition(procdef: ProcedureDefinition): Unit = {
     procedure = Some(procdef.procedure)
     super.visitProcedureDefinition(procdef)
     procedure = None
   }
 
-  override def visitStatement(stmt: Statement) {
+  override def visitStatement(stmt: Statement): Unit = {
     stmt.command match {
       case _: _ask | _: _askconcurrent =>
         askNestingLevel += 1

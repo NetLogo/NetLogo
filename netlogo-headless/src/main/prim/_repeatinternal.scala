@@ -12,11 +12,11 @@ class _repeatinternal (_offset: Int, let: Let) extends Command {
   override def toString =
     super.toString + ":" + offset
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     perform_1(context)
   }
 
-  def perform_1(context: Context) {
+  def perform_1(context: Context): Unit = {
     val counter = context.activation.binding.getLet(let).asInstanceOf[MutableLong]
     if (counter.value <= 0)
       context.ip = next

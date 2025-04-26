@@ -58,7 +58,7 @@ class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv
   private var labelE: Label = null
 
   // When match fails, flush saved pieces of pattern before moving on
-  def restartMatch() {
+  def restartMatch(): Unit = {
     state match {
       case 0 => // do nothing, because nothing to flush
       case 1 => mv.visitVarInsn(storeOpcodeA, localVarB)
@@ -84,7 +84,7 @@ class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv
     state = 0
   }
 
-  private def matchSucceeded() {
+  private def matchSucceeded(): Unit = {
     mv.visitLabel(PeepholeOptimizer3.PEEPHOLE_FLAG_LABEL)
     mv.visitLabel(labelC)
     mv.visitLineNumber(lineNumberD, labelC)
@@ -100,7 +100,7 @@ class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv
       case (ASTORE, ALOAD) => true
       case _ => false
     }
-  override def visitVarInsn(opcode: Int, variable: Int) {
+  override def visitVarInsn(opcode: Int, variable: Int): Unit = {
     if (state == 0)
       if (List(ISTORE, DSTORE, LSTORE, FSTORE, ASTORE).contains(opcode)) {
         storeOpcodeA = opcode
@@ -115,7 +115,7 @@ class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv
       visitVarInsn(opcode, variable)
     }
   }
-  override def visitLabel(label: Label) {
+  override def visitLabel(label: Label): Unit = {
     (state, label) match {
       case (1, PeepholeOptimizer3.PEEPHOLE_FLAG_LABEL) => state += 1
       case (2, _) => labelC = label; state += 1
@@ -125,7 +125,7 @@ class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv
         mv.visitLabel(label)
     }
   }
-  override def visitLineNumber(line: Int, start: Label) {
+  override def visitLineNumber(line: Int, start: Label): Unit = {
     if (state == 3 && start == labelC) {
       lineNumberD = line
       state += 1
@@ -153,7 +153,7 @@ class PeepholeOptimizer3(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv
  */
 
 class PeepholeOptimizer3B(mv: MethodVisitor) extends MethodVisitor(ASM5, mv) {
-  override def visitLabel(label: Label) {
+  override def visitLabel(label: Label): Unit = {
     if (label != PeepholeOptimizer3.PEEPHOLE_FLAG_LABEL)
       mv.visitLabel(label)
   }

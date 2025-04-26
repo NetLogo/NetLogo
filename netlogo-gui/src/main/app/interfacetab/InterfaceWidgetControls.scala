@@ -121,7 +121,7 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   def handle(e: WindowEvents.EditWidgetEvent): Unit = {
     // this is to support the "Edit..." button in the view control strip - ST 7/18/03
     val targetOption = Option(e.widget).orElse {
-      if (!editButton.isEnabled) return
+      if (!editButton.isEnabled) None
       editTarget
     }.filter(wPanel.contains)
     for (target <- targetOption) {

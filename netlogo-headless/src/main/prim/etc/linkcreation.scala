@@ -22,7 +22,7 @@ trait LinkCreationCommand extends Command with nvm.CustomAssembled with SelfScop
     super.toString + ":" + breedName + ",+" + offset
 
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val breed =
       if (breedName.isEmpty)
         world.links
@@ -34,14 +34,14 @@ trait LinkCreationCommand extends Command with nvm.CustomAssembled with SelfScop
       context.runExclusiveJob(newAgents, next)
     context.ip = offset
   }
-  override def assemble(a: nvm.AssemblerAssistant) {
+  override def assemble(a: nvm.AssemblerAssistant): Unit = {
     a.add(this)
     a.block()
     a.done()
     a.resume()
   }
   // helpers
-  def checkForBreedCompatibility(context: Context, breed: AgentSet) {
+  def checkForBreedCompatibility(context: Context, breed: AgentSet): Unit = {
     if (!world.linkManager.checkBreededCompatibility(breed eq world.links))
       throw new RuntimePrimitiveException(
         context, this, core.I18N.errors.get(
@@ -94,7 +94,7 @@ trait Multiple extends LinkCreationCommand {
 }
 
 trait Directed extends LinkCreationCommand {
-  override def checkDirectedness(context: Context, breed: AgentSet) {
+  override def checkDirectedness(context: Context, breed: AgentSet): Unit = {
     for(err <- LinkManager.mustNotBeUndirected(breed))
       throw new RuntimePrimitiveException(context, this, err)
     checkForBreedCompatibility(context, breed)
@@ -111,7 +111,7 @@ trait DirectedFrom extends Directed {
 }
 
 trait Undirected extends LinkCreationCommand {
-  override def checkDirectedness(context: Context, breed: AgentSet) {
+  override def checkDirectedness(context: Context, breed: AgentSet): Unit = {
     for(err <- LinkManager.mustNotBeDirected(breed))
       throw new RuntimePrimitiveException(context, this, err)
     checkForBreedCompatibility(context, breed)

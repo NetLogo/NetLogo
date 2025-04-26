@@ -23,7 +23,7 @@ with WindowEvents.LoadModelEvent.Handler
     }
   }
 
-  def handle(e: WindowEvents.LoadModelEvent) {
+  def handle(e: WindowEvents.LoadModelEvent): Unit = {
     innerSource = e.model.code
     compile()
   }

@@ -40,7 +40,7 @@ class PlotExportControls(plotManager: PlotManager) {
       I18N.gui.get("menu.file.export.plot.failed"))
   }
 
-  def sorryNoPlots(frame: Frame) {
+  def sorryNoPlots(frame: Frame): Unit = {
     new OptionPane(frame, I18N.gui.get("menu.file.export.plot"), I18N.gui.get("menu.file.export.noPlots"),
                    OptionPane.Options.Ok, OptionPane.Icons.Info)
   }

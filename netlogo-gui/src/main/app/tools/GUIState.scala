@@ -1,3 +1,5 @@
+// (C) Uri Wilensky. https://github.com/NetLogo/NetLogo
+
 package org.nlogo.app.tools
 
 import scala.util.{ Failure, Success, Try }
@@ -20,7 +22,7 @@ class GUIState(
   def previewCommands: Option[PreviewCommands] =
     _previewCommands
   def previewCommandsRunnable: Option[PreviewCommandsRunner#Runnable] =
-    _previewCommandsRunner.flatMap(_.right.toOption.map(_.runnable))
+    _previewCommandsRunner.flatMap(_.toOption.map(_.runnable))
   def compilerException: Option[CompilerException] =
     _previewCommandsRunner.flatMap(_.left.toOption)
 

@@ -38,9 +38,9 @@ class LabLoader(literalParser: LiteralParser) {
     factory.setValidating(true)
     val builder = factory.newDocumentBuilder
     builder.setErrorHandler(new sax.ErrorHandler {
-      def error(ex: sax.SAXParseException) { throw ex }
-      def fatalError(ex: sax.SAXParseException) { throw ex }
-      def warning(ex: sax.SAXParseException) { throw ex }
+      def error(ex: sax.SAXParseException): Unit = { throw ex }
+      def fatalError(ex: sax.SAXParseException): Unit = { throw ex }
+      def warning(ex: sax.SAXParseException): Unit = { throw ex }
     })
     builder.parse(inputSource)
       .getElementsByTagName("experiment")
@@ -53,8 +53,12 @@ class LabLoader(literalParser: LiteralParser) {
       element.getElementsByTagName(name).head.getAttribute(attr)
     def readAll(name: String) =
       element.getElementsByTagName(name).map(_.getLastChild.getNodeValue)
-    def readOptional(name: String) =
-      readAll(name) match { case List(x) => x ; case Nil => "" }
+    def readOptional(name: String): String = {
+      readAll(name) match {
+        case List(x) => x
+        case _ => ""
+      }
+    }
     def exists(name: String) =
       !element.getElementsByTagName(name).isEmpty
     def readSteppedValueSetElement(e: dom.Element) = {
@@ -106,7 +110,7 @@ class LabLoader(literalParser: LiteralParser) {
       readOptional("postExperiment"),
       element.getAttribute("repetitions").toInt,
       { val defaultOrder = element.getAttribute("sequentialRunOrder").toString
-        if (defaultOrder == "") true else defaultOrder == "true"  
+        if (defaultOrder == "") true else defaultOrder == "true"
       },
       element.getAttribute("runMetricsEveryStep") == "true",
       readOptional("runMetricsCondition"),

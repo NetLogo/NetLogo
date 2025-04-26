@@ -18,7 +18,7 @@ trait ExportRenderer extends Renderer with GLEventListener {
   }
 
 
-  override def display(gLDrawable: GLAutoDrawable) {
+  override def display(gLDrawable: GLAutoDrawable): Unit = {
     init(gLDrawable)
     val gl = gLDrawable.getGL().asInstanceOf[GL2]
     gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT)
@@ -28,7 +28,7 @@ trait ExportRenderer extends Renderer with GLEventListener {
     exportGraphics(gLDrawable)
   }
 
-  private def exportGraphics(drawable: GLAutoDrawable) {
+  private def exportGraphics(drawable: GLAutoDrawable): Unit = {
     width = drawable.getSurfaceWidth
     height = drawable.getSurfaceHeight
     val pixelsRGB = Buffers.newDirectByteBuffer(width * height * 3)

@@ -24,7 +24,10 @@ class ToggleComments
     val (startLine, endLine) =
       document.selectionLineRange(component.getSelectionStart, component.getSelectionEnd)
 
-    for(currentLine <- startLine to endLine) {
+    var currentLine = startLine
+    var break = false
+
+    while (currentLine <= endLine && !break) {
       val lineStart = document.lineToStartOffset(currentLine)
       val lineEnd = document.lineToEndOffset(currentLine)
       val text = document.getText(lineStart, lineEnd - lineStart)
@@ -33,9 +36,14 @@ class ToggleComments
         .forall(i => Character.isWhitespace(text.charAt(i)))
         if (!allSpaces || semicolonPos == -1) {
           document.insertBeforeLinesInRange(startLine, endLine, ";")
-          return
+          break = true
         }
+      currentLine += 1
     }
+
+    if (break)
+      return
+
     // Logic to uncomment the selected section
     for (line <- startLine to endLine) {
       val lineStart = document.lineToStartOffset(line)

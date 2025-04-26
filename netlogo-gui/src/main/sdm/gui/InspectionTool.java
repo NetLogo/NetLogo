@@ -10,8 +10,9 @@ import org.jhotdraw.framework.DrawingView;
 
 import java.util.List;
 import java.util.ArrayList;
-import scala.collection.JavaConverters;
 import java.awt.event.MouseEvent;
+
+import scala.jdk.javaapi.CollectionConverters;
 
 class InspectionTool
     extends org.jhotdraw.standard.SelectionTool {
@@ -59,9 +60,9 @@ class InspectionTool
      }
    } // END while
     if (figure instanceof ConverterFigure) {
-      ((ConverterFigure) figure).inputs(JavaConverters.collectionAsScalaIterable(lst).toList());
+      ((ConverterFigure) figure).inputs(CollectionConverters.asScala(lst).toList());
     } else if (figure instanceof RateConnection) {
-      ((RateConnection) figure).inputs(JavaConverters.collectionAsScalaIterable(lst).toList());
+      ((RateConnection) figure).inputs(CollectionConverters.asScala(lst).toList());
     }
   }
 

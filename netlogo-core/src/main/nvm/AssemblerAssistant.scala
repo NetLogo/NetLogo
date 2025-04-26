@@ -65,18 +65,18 @@ package org.nlogo.nvm
 //  - ST 2/22/08
 
 trait AssemblerAssistant {
-  def add(cmd: Command)
-  def block()
-  def block(pos: Int)
-  def done()
+  def add(cmd: Command): Unit
+  def block(): Unit
+  def block(pos: Int): Unit
+  def done(): Unit
   def argCount: Int
   def arg(i: Int): Reporter
-  def removeArg(i: Int)
+  def removeArg(i: Int): Unit
   def goTo(): Unit = goTo(0)
-  def goTo(label: Int)
+  def goTo(label: Int): Unit
   def comeFrom(): Unit = comeFrom(0)
-  def comeFrom(label: Int)
-  def resume()
+  def comeFrom(label: Int): Unit
+  def resume(): Unit
   def offset(): Int
 
   /**

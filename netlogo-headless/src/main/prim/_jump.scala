@@ -8,10 +8,10 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _jump extends Command {
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     perform_1(context, argEvalDoubleValue(context, 0))
   }
-  def perform_1(context: Context, distance: Double) {
+  def perform_1(context: Context, distance: Double): Unit = {
     try context.agent.asInstanceOf[Turtle].jump(distance)
     catch {
       case e: AgentException => // ignore

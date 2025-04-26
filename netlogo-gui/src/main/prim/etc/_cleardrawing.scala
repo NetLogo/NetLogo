@@ -8,7 +8,7 @@ class _cleardrawing extends Command {
 
 
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     workspace.clearDrawing()
     context.ip = next
   }

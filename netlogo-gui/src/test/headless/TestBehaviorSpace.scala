@@ -28,8 +28,8 @@ with OneInstancePerTest with BeforeAndAfterEach {
     HeadlessWorkspace.newLab.newWorker(protocol)
   }
 
-  override def beforeEach() { }
-  override def afterEach() { workspaces.foreach(_.dispose()) }
+  override def beforeEach(): Unit = { }
+  override def afterEach(): Unit = { workspaces.foreach(_.dispose()) }
 
   // first 6 lines of results are header lines. we'll need to discard them
   def withoutFirst6Lines(s: String) =
@@ -53,12 +53,12 @@ with OneInstancePerTest with BeforeAndAfterEach {
       wantStats = wantStats, wantLists = wantLists)(() => workspace, () => newWorker(name))
     workspace
   }
-  def run3DExperiment(name: String) {
+  def run3DExperiment(name: String): Unit = {
     val workspace = newWorkspace()
     workspace.initForTesting(0)
     run("test/lab/" + name)(() => workspace, () => newWorker(name))
   }
-  def runParallelExperiment(name: String, declarations: String = "") {
+  def runParallelExperiment(name: String, declarations: String = ""): Unit = {
     def workspace = {
       val w = newWorkspace()
       w.initForTesting(0, declarations)
@@ -117,7 +117,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
           wantStats: Boolean = false, wantLists: Boolean = false)
           (fn: () => Workspace, fn2: () => LabInterface.Worker) {
     val dims = fn.apply.world.getDimensions
-    def runHelper(fns: List[(String, (LabInterface.Worker, java.io.StringWriter) => Unit)]) {
+    def runHelper(fns: List[(String, (LabInterface.Worker, java.io.StringWriter) => Unit)]): Unit = {
       val worker = fn2.apply
       val writers = fns.map(_ => new java.io.StringWriter)
       for (((_, fn), writer) <- fns zip writers)
@@ -157,13 +157,13 @@ with OneInstancePerTest with BeforeAndAfterEach {
       }
     }
 
-    def table(worker: LabInterface.Worker, writer: java.io.StringWriter) {
+    def table(worker: LabInterface.Worker, writer: java.io.StringWriter): Unit = {
       worker.addTableWriter(filename, dims, new java.io.PrintWriter(writer))
     }
-    def spreadsheet(worker: LabInterface.Worker, writer: java.io.StringWriter) {
+    def spreadsheet(worker: LabInterface.Worker, writer: java.io.StringWriter): Unit = {
       worker.addSpreadsheetWriter(filename, dims, new java.io.PrintWriter(writer))
     }
-    def stats(worker: LabInterface.Worker, writer: java.io.StringWriter) {
+    def stats(worker: LabInterface.Worker, writer: java.io.StringWriter): Unit = {
       if (wantTable || wantSpreadsheet) {
         worker.addStatsWriter(filename, dims, new java.io.PrintWriter(writer), {
           if (wantTable) LabPostProcessorInputFormat.Table(filename + "-table.csv")
@@ -171,7 +171,7 @@ with OneInstancePerTest with BeforeAndAfterEach {
         })
       }
     }
-    def lists(worker: LabInterface.Worker, writer: java.io.StringWriter) {
+    def lists(worker: LabInterface.Worker, writer: java.io.StringWriter): Unit = {
       if (wantTable) {
         worker.addListsWriter(filename, dims, new java.io.PrintWriter(writer),
                               LabPostProcessorInputFormat.Table(filename + "-table.csv"))

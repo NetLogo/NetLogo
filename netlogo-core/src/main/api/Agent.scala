@@ -40,7 +40,7 @@ trait Agent {
     */
   @throws(classOf[LogoException])
   @throws(classOf[AgentException])
-  def setVariable(vn: Int, value: AnyRef)
+  def setVariable(vn: Int, value: AnyRef): Unit
 
   /** Returns the value of the variable in the given position of the agent variable array
     * @param vn the index into the agent variable array

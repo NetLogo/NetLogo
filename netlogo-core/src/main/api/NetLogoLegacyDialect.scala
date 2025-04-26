@@ -37,9 +37,9 @@ trait DelegatingMapper extends CoreTokenMapperInterface {
     for {
       line <- Resource.lines(path)
       if !line.startsWith("#")
-      Array(tpe, primName, className) = line.split(" ")
-      if tpe == entryType
-    } yield primName.toUpperCase -> (s"$pkgName.$className")
+      split = line.split(" ")
+      if split(0) == entryType
+    } yield split(1).toUpperCase -> (s"$pkgName.${split(2)}")
 
   lazy val commands  = entries("C").toMap
   lazy val reporters = entries("R").toMap

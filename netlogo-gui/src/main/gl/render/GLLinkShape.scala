@@ -30,7 +30,7 @@ private class GLLinkShape(shape: LinkShape, val directionIndicator: GLShape) {
              x2: Float, y2: Float, z2: Float,
              stroke: Float, isDirected: Boolean, link: Link,
              shapeRenderer: ShapeRenderer, outline: Boolean,
-             color: java.awt.Color, world: World) {
+             color: java.awt.Color, world: World): Unit = {
     for(line <- lines) {
       gl.glColor4fv(java.nio.FloatBuffer.wrap(color.getRGBComponents(null)))
       line.render(gl,
@@ -55,7 +55,7 @@ private class GLLinkShape(shape: LinkShape, val directionIndicator: GLShape) {
                                x1: Double, y1: Double, z1: Double,
                                x2: Double, y2: Double, z2: Double,
                                link: Link, color: java.awt.Color, outline: Boolean,
-                               stroke: Float, world: World) {
+                               stroke: Float, world: World): Unit = {
     val size = link.size
     val indicatorSize = 1.0 max (stroke / 2)
     val trans = shape.directionIndicatorTransform(

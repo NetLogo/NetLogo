@@ -57,7 +57,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     )
     setHorizontalAlignment(SwingConstants.CENTER)
     addMouseListener(new MouseAdapter {
-      override def mouseClicked(e: MouseEvent) {
+      override def mouseClicked(e: MouseEvent): Unit = {
         BrowserLauncher.openURI(AboutWindow.this, new URI("http://ccl.northwestern.edu/netlogo/"))
       }
     })
@@ -114,13 +114,13 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
     refreshTimer.start()
 
     addWindowListener(new WindowAdapter {
-      override def windowClosed(e: WindowEvent) {
+      override def windowClosed(e: WindowEvent): Unit = {
         refreshTimer.stop()
       }
     })
   }
 
-  private def refreshSystemText() {
+  private def refreshSystemText(): Unit = {
     val newGraphicsInfo = SysInfo.getMemoryInfoString + "\n\n" +
             SysInfo.getJOGLInfoString + "\n" +SysInfo.getGLInfoString + "\n"
     if (!newGraphicsInfo.equals(graphicsInfo)) {

@@ -18,8 +18,8 @@ with Event.LinkChild with Events.LoadModelEvent.Handler
   override def headerSource = ""
   override def innerSource = text
   override def source = headerSource + innerSource
-  override def innerSource_=(text: String) { this.text = text }
-  override def handle(e: Events.LoadModelEvent) {
+  override def innerSource_=(text: String): Unit = { this.text = text }
+  override def handle(e: Events.LoadModelEvent): Unit = {
     innerSource = e.model.code
     (new Events.CompileAllEvent).raise(this)
   }

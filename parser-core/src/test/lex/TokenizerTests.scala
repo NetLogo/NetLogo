@@ -166,7 +166,7 @@ class TokenizerTests extends AnyFunSuite {
   testWhitespace("skips beginning and end whitespace", "  123   ", Seq("123"), Seq(5))
   testWhitespace("skips whitespace on multiple tokens", "  123  456 ", Seq("123", "456"), Seq(4, 1))
 
-  def testWhitespace(condition: String, text: String, expectedTexts: Seq[String], expectedSkips: Seq[Int]) {
+  def testWhitespace(condition: String, text: String, expectedTexts: Seq[String], expectedSkips: Seq[Int]): Unit = {
     test(s"Tokenize with skip whitespace $condition") {
         val tokens = tokenizeSkippingWhitespace(text)
         assert(tokens.map(_._1.text) == expectedTexts)

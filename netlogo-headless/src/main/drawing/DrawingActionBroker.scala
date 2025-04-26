@@ -45,9 +45,9 @@ class DrawingActionBroker(
 
   }
 
-  override def sendPixels(dirty: Boolean) { publish(SendPixels(dirty)) }
+  override def sendPixels(dirty: Boolean): Unit = { publish(SendPixels(dirty)) }
 
-  override def stamp(agent: api.Agent, erase: Boolean) {
+  override def stamp(agent: api.Agent, erase: Boolean): Unit = {
 
     /*
      * The way TrailDrawer.stamp currently works, it is too dependent on
@@ -79,10 +79,10 @@ class DrawingActionBroker(
 
   }
 
-  override def clearDrawing() { publish(ClearDrawing) }
-  override def rescaleDrawing() { publish(RescaleDrawing) }
-  override def markClean() { publish(MarkClean) }
-  override def markDirty() { publish(MarkDirty) }
+  override def clearDrawing(): Unit = { publish(ClearDrawing) }
+  override def rescaleDrawing(): Unit = { publish(RescaleDrawing) }
+  override def markClean(): Unit = { publish(MarkClean) }
+  override def markDirty(): Unit = { publish(MarkDirty) }
 
   override def getAndCreateDrawing(dirty: Boolean): BufferedImage = {
     publish(CreateDrawing(dirty))
@@ -134,7 +134,7 @@ class DrawingActionBroker(
   override def isBlank: Boolean = trailDrawer.isBlank
 
   // This one does have side effects, but we don't want to record it. Or do we?
-  override def exportDrawingToCSV(writer: PrintWriter) {
+  override def exportDrawingToCSV(writer: PrintWriter): Unit = {
     trailDrawer.exportDrawingToCSV(writer)
   }
 

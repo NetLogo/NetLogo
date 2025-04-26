@@ -6,7 +6,7 @@ import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 import org.nlogo.window.GUIWorkspace
 
 class _exportinterface extends Command {
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     workspace match {
       case gw: GUIWorkspace =>
         gw.updateUI()

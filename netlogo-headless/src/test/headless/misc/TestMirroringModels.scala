@@ -23,7 +23,7 @@ class TestMirroringModels extends AnyFunSuite  {
   // (old.nabble.com/get-rid-of-%22Could-not-find-mediaLib-accelerator-wrapper-classes%22-td11025745.html)
   System.setProperty("com.sun.media.jai.disableMediaLib", "true")
 
-  def modelRenderingTest(path: String) {
+  def modelRenderingTest(path: String): Unit = {
     withWorkspace { (ws, mirrorables) =>
       val drawingActionBuffer = new api.ActionBuffer(ws.drawingActionBroker)
       drawingActionBuffer.activate()

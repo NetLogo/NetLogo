@@ -13,7 +13,7 @@ import org.nlogo.workspace.AbstractWorkspace
 
 object CodeToHtml {
   // for standalone use, for example on a web server
-  def main(argv:Array[String]) {
+  def main(argv:Array[String]): Unit = {
     val input = io.Source.fromInputStream(System.in).mkString
     println(newInstance.convert(input))
   }

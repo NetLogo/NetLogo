@@ -13,8 +13,8 @@ import org.nlogo.util.SlowTest  // depends on array extension
 
 class TestDuplicateNames extends FixtureSuite  {
 
-  def testBadName(name: String, error: String, declarations: String = "") {
-    def check(source: String, note: String) {
+  def testBadName(name: String, error: String, declarations: String = ""): Unit = {
+    def check(source: String, note: String): Unit = {
       test(s"$name - $note", SlowTest.Tag) { fixture =>
         import fixture._
         val ex = intercept[CompilerException] {

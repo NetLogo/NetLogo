@@ -219,21 +219,19 @@ class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel w
 
   // Find which element the user pressed the mouse button inside
   private def checkElements(start: Point): Unit = {
-    selectedElement.foreach(element => {
-      val index = checkHandles(start)
+    val index = checkHandles(start)
 
-      if (index != -1) {
-        selectHandle(index, element)
+    if (index != -1 && selectedElement.isDefined) {
+      selectHandle(index, selectedElement.get)
 
-        return
-      }
-    })
+      return
+    }
 
     // the elements are stored in back-to-front order, but we want
     // to favor front elements over back elements here, so we
     // scan the list backwards - SAB/ST 6/11/04
-    shape.getElements.reverse.foreach(element => {
-      if (element.contains(start)) {
+    shape.getElements.reverse.find(_.contains(start)) match {
+      case Some(element) =>
         draggingElement = true
 
         selectedElement.foreach(_.deselect())
@@ -248,8 +246,9 @@ class ShapeView(editorDialog: EditorDialog, shape: VectorShape) extends JPanel w
         repaint()
 
         return
-      }
-    })
+
+      case _ =>
+    }
 
     // if clicked on nothing, treat that as a request to deselect all
     deselectAll()

@@ -9,7 +9,7 @@ import javax.swing.{ ImageIcon, JLabel }
 
 import org.nlogo.api.{ MersenneTwisterFast, Options }
 import org.nlogo.awt.{ DarkenImageFilter, Mouse }, Mouse.hasButton1
-import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N }
+import org.nlogo.core.{ AgentKind, Button => CoreButton, I18N, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.Utils
@@ -47,7 +47,7 @@ object ButtonWidget {
 
     // used for the dropdown in the button editor in the UI.
     def defaultAgentOptions = new Options[String](){
-      implicit val i18nPrefix = I18N.Prefix("common")
+      implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("common")
       addOption(I18N.gui("observer"), ButtonType.ObserverButton.name)
       addOption(I18N.gui("turtles"), ButtonType.TurtleButton.name)
       addOption(I18N.gui("patches"), ButtonType.PatchButton.name)
@@ -72,8 +72,6 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
   with Events.JobRemovedEvent.Handler with Events.TickStateChangeEvent.Handler {
 
   import ButtonWidget._
-
-  type WidgetModel = CoreButton
 
   private var foreverIcon = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
                                                       InterfaceColors.buttonText())
@@ -162,7 +160,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
 
   private var _buttonUp = true
   def buttonUp = _buttonUp
-  def buttonUp_=(newButtonUp:Boolean){
+  def buttonUp_=(newButtonUp:Boolean): Unit ={
     if(newButtonUp) foreverOn = false
     _buttonUp = newButtonUp
     if (!buttonUp) {
@@ -205,14 +203,14 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
 
   private var _keyEnabled = false
   def keyEnabled = _keyEnabled
-  def keyEnabled(newKeyEnabled:Boolean){
+  def keyEnabled(newKeyEnabled:Boolean): Unit ={
     if(_keyEnabled != newKeyEnabled){
       _keyEnabled = newKeyEnabled
       repaint()
     }
   }
 
-  def keyTriggered(){
+  def keyTriggered(): Unit = {
     if (error().isEmpty){
       buttonUp = false
       respondToClick(true)
@@ -229,7 +227,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
   // a normal click. - ST 1/3/06
   private var lastMousePressedWasPopupTrigger = false
 
-  def mouseReleased(e:MouseEvent){
+  def mouseReleased(e: MouseEvent): Unit = {
     if (error().isEmpty && ! e.isPopupTrigger() && isEnabled() &&
             ! lastMousePressedWasPopupTrigger && ! disabledWaitingForSetup){
       e.translatePoint(getX(), getY())
@@ -304,7 +302,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
   override def isLinkForeverButton = buttonType == ButtonType.LinkButton && forever
   private var _name = ""
   def name = _name
-  def setVarName(newName:String){
+  def setVarName(newName: String): Unit = {
     _name = newName
     chooseDisplayName()
   }
@@ -413,7 +411,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
 
   override def innerSource_=(newInnerSource:String): Unit = {
     super.innerSource_=(newInnerSource)
-    chooseDisplayName
+    chooseDisplayName()
   }
 
   def wrapSource: String = innerSource
@@ -425,7 +423,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
     }
   }
 
-  def recompile(){
+  def recompile(): Unit ={
     val header = "to __button [] " + buttonType.toHeaderCode + (if(forever) " loop [ " else "")
     val footer = "\n" + // protect against comments
       (if(forever) "__foreverbuttonend ] " else "__done ") + "end"
@@ -517,7 +515,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
   }
 
   // saving and loading
-  override def model: WidgetModel = {
+  override def model: CoreWidget = {
     val b              = getUnzoomedBounds
     val savedActionKey = if (actionKey == 0 || actionKey == ' ') None else Some(actionKey)
     CoreButton(
@@ -528,19 +526,23 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
       actionKey = savedActionKey, disableUntilTicksStart = goTime)
   }
 
-  override def load(button: WidgetModel): Object = {
-    setForever(button.forever)
-    buttonType = ButtonType(button.buttonKind)
+  override def load(model: CoreWidget): Unit = {
+    model match {
+      case button: CoreButton =>
+        setForever(button.forever)
+        buttonType = ButtonType(button.buttonKind)
 
-    button.actionKey.foreach(k => setActionKey(k))
+        button.actionKey.foreach(setActionKey(_))
 
-    setGoTime(button.disableUntilTicksStart)
-    setVarName(button.display.optionToPotentiallyEmptyString)
+        setGoTime(button.disableUntilTicksStart)
+        setVarName(button.display.optionToPotentiallyEmptyString)
 
-    button.source.foreach(setWrapSource)
+        button.source.foreach(wrapSource)
 
-    setSize(button.width, button.height)
-    chooseDisplayName()
-    this
+        setSize(button.width, button.height)
+        chooseDisplayName()
+
+      case _ =>
+    }
   }
 }

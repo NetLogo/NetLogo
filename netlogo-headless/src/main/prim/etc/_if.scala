@@ -10,17 +10,17 @@ class _if extends Command with nvm.CustomAssembled {
   override def toString =
     super.toString + ":+" + offset
 
-  def assemble(a: nvm.AssemblerAssistant) {
+  def assemble(a: nvm.AssemblerAssistant): Unit = {
     a.add(this)
     a.block()
     a.resume()
   }
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     perform_1(context, argEvalBooleanValue(context, 0))
   }
 
-  def perform_1(context: Context, arg0: Boolean) {
+  def perform_1(context: Context, arg0: Boolean): Unit = {
     context.ip = if (arg0) next else offset
   }
 

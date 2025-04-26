@@ -8,7 +8,7 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _followme extends Command {
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val turtle = context.agent.asInstanceOf[Turtle]
     world.observer.setPerspective(Perspective.Follow(turtle, 5))
     context.ip = next

@@ -61,7 +61,7 @@ class HubNetManagerTests extends AnyFunSuite {
     testValidTag(m, cm)(validTag=false, useSend=true, clientsExist=false)
   }
 
-  def hubnetTest(name: String)(f: (HubNetManager, MockConnectionManager) => Unit) {
+  def hubnetTest(name: String)(f: (HubNetManager, MockConnectionManager) => Unit): Unit = {
     test(name){
       val workspace = new DummyAbstractWorkspace
       val loader = new ConfigurableModelLoader()

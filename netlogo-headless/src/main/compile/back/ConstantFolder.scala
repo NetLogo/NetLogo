@@ -26,7 +26,7 @@ import org.nlogo.core.Fail._
 import org.nlogo.compile.api.{ DefaultAstVisitor, Expression, ReporterApp }
 
 private class ConstantFolder extends DefaultAstVisitor {
-  override def visitReporterApp(app: ReporterApp) {
+  override def visitReporterApp(app: ReporterApp): Unit = {
     super.visitReporterApp(app)
     if (app.reporter.isInstanceOf[Pure] && !app.args.isEmpty && app.args.forall(isConstant)) {
       val newReporter = Literals.makeLiteralReporter(applyReporter(app))

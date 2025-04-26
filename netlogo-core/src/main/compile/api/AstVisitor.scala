@@ -9,12 +9,12 @@ package org.nlogo.compile.api
  * pattern with double-dispatch.
  */
 trait AstVisitor {
-  def visitProcedureDefinition(proc: ProcedureDefinition)
-  def visitCommandBlock(block: CommandBlock)
-  def visitReporterApp(app: ReporterApp)
-  def visitReporterBlock(block: ReporterBlock)
-  def visitStatement(stmt: Statement)
-  def visitStatements(stmts: Statements)
+  def visitProcedureDefinition(proc: ProcedureDefinition): Unit
+  def visitCommandBlock(block: CommandBlock): Unit
+  def visitReporterApp(app: ReporterApp): Unit
+  def visitReporterBlock(block: ReporterBlock): Unit
+  def visitStatement(stmt: Statement): Unit
+  def visitStatements(stmts: Statements): Unit
 }
 
 /**
@@ -24,12 +24,12 @@ trait AstVisitor {
  * strategies.
  */
 class DefaultAstVisitor extends AstVisitor {
-  def visitProcedureDefinition(proc: ProcedureDefinition) { proc.statements.accept(this) }
-  def visitCommandBlock(block: CommandBlock) { block.statements.accept(this) }
-  def visitReporterApp(app: ReporterApp) { app.args.foreach(_.accept(this)) }
-  def visitReporterBlock(block: ReporterBlock) { block.app.accept(this) }
-  def visitStatement(stmt: Statement) { stmt.args.foreach(_.accept(this)) }
-  def visitStatements(stmts: Statements) { stmts.stmts.foreach(_.accept(this)) }
+  def visitProcedureDefinition(proc: ProcedureDefinition): Unit = { proc.statements.accept(this) }
+  def visitCommandBlock(block: CommandBlock): Unit = { block.statements.accept(this) }
+  def visitReporterApp(app: ReporterApp): Unit = { app.args.foreach(_.accept(this)) }
+  def visitReporterBlock(block: ReporterBlock): Unit = { block.app.accept(this) }
+  def visitStatement(stmt: Statement): Unit = { stmt.args.foreach(_.accept(this)) }
+  def visitStatements(stmts: Statements): Unit = { stmts.stmts.foreach(_.accept(this)) }
 }
 
 /**
@@ -50,6 +50,8 @@ trait AstTransformer {
         visitCommandBlock(cb)
       case rb: ReporterBlock =>
         visitReporterBlock(rb)
+      case _ =>
+        throw new Exception(s"Unexpected expression: $exp")
     }
   }
   def visitReporterApp(app: ReporterApp): ReporterApp = {
@@ -78,6 +80,7 @@ trait AstFolder[A] {
       case app: ReporterApp  => visitReporterApp(app)
       case cb: CommandBlock  => visitCommandBlock(cb)
       case rb: ReporterBlock => visitReporterBlock(rb)
+      case _ => throw new Exception(s"Unexpected expression: $exp")
     }
 
   def visitReporterApp(app: ReporterApp)(implicit a: A): A =

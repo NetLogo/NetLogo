@@ -9,7 +9,7 @@ class _extern(command: api.Command) extends nvm.Command with nvm.CustomAssembled
   override def toString =
     super.toString + ":+" + offset
 
-  override def perform(context: nvm.Context) {
+  override def perform(context: nvm.Context): Unit = {
     val arguments =
       Array.tabulate[api.Argument](args.length)(i => new nvm.Argument(context, args(i)))
     try command.perform(
@@ -26,7 +26,7 @@ class _extern(command: api.Command) extends nvm.Command with nvm.CustomAssembled
     context.ip = offset
   }
 
-  override def assemble(a: nvm.AssemblerAssistant) {
+  override def assemble(a: nvm.AssemblerAssistant): Unit = {
     a.add(this)
     command match {
       case ca: nvm.CustomAssembled =>

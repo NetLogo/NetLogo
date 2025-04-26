@@ -21,7 +21,7 @@ import java.awt.Rectangle;
 import java.util.List;
 
 
-import scala.collection.Seq;
+import scala.collection.immutable.Seq;
 
 public class RateConnection
     extends LineConnection

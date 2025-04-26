@@ -17,7 +17,7 @@ class AgentMonitorManager(val workspace: GUIWorkspace) extends Event.LinkChild w
   private val emptyMonitorWindows = mutable.Map[AgentKind, AgentMonitorWindow]()
   private val monitorList         = collection.mutable.Buffer[Agent]()
 
-  def closeAll() {
+  def closeAll(): Unit = {
     monitorWindows.values.foreach( (w) => {
       w.setVisible(false)
       w.dispose()
@@ -34,7 +34,7 @@ class AgentMonitorManager(val workspace: GUIWorkspace) extends Event.LinkChild w
     monitorList.clear()
   }
 
-  def closeTopMonitor() {
+  def closeTopMonitor(): Unit = {
     for (topMonitor <- monitorList.headOption.map(monitorWindows)) {
       topMonitor.setVisible(false)
       topMonitor.dispose()
@@ -52,7 +52,7 @@ class AgentMonitorManager(val workspace: GUIWorkspace) extends Event.LinkChild w
     list.toArray
   }
 
-  def agentChangeNotify(window: AgentMonitorWindow, oldAgent: Agent) {
+  def agentChangeNotify(window: AgentMonitorWindow, oldAgent: Agent): Unit = {
     if (oldAgent == null) {
       if (window.agent != null) {
         emptyMonitorWindows.remove(window.agent.kind)
@@ -67,7 +67,7 @@ class AgentMonitorManager(val workspace: GUIWorkspace) extends Event.LinkChild w
     }
   }
 
-  def remove(window: AgentMonitorWindow) {
+  def remove(window: AgentMonitorWindow): Unit = {
     if (window.agent != null) {
       monitorWindows -= window.agent
       monitorList    -= window.agent
@@ -94,7 +94,7 @@ class AgentMonitorManager(val workspace: GUIWorkspace) extends Event.LinkChild w
     window
   }
 
-  def inspect(agentKind: AgentKind, a0: Agent, radius: Double) {
+  def inspect(agentKind: AgentKind, a0: Agent, radius: Double): Unit = {
     val agent = if (a0 == null && agentKind == AgentKind.Observer) {
       workspace.world.observer
     } else {
@@ -117,7 +117,7 @@ class AgentMonitorManager(val workspace: GUIWorkspace) extends Event.LinkChild w
     }
   }
 
-  def stopInspecting(agent: Agent) {
+  def stopInspecting(agent: Agent): Unit = {
     if (agent != null) {
       monitorWindows.get(agent).collect {
         case window: AgentMonitorWindow =>
@@ -128,7 +128,7 @@ class AgentMonitorManager(val workspace: GUIWorkspace) extends Event.LinkChild w
     }
   }
 
-  def stopInspectingDeadAgents() {
+  def stopInspectingDeadAgents(): Unit = {
     monitorWindows.keys.foreach { case agent =>
       if (agent.id == -1) {
         stopInspecting(agent)
@@ -136,10 +136,10 @@ class AgentMonitorManager(val workspace: GUIWorkspace) extends Event.LinkChild w
     }
   }
 
-  def showAll() { showOrHideAll(show = true) }
-  def hideAll() { showOrHideAll(show = false) }
+  def showAll(): Unit = { showOrHideAll(show = true) }
+  def hideAll(): Unit = { showOrHideAll(show = false) }
 
-  private def showOrHideAll(show: Boolean) {
+  private def showOrHideAll(show: Boolean): Unit = {
     monitorWindows.values.foreach(monitor => {
       monitor.syncTheme()
       monitor.setVisible(show)
@@ -151,7 +151,7 @@ class AgentMonitorManager(val workspace: GUIWorkspace) extends Event.LinkChild w
     monitorWindows.values.exists(_.isVisible()) || emptyMonitorWindows.values.exists(_.isVisible())
   }
 
-  def refresh() {
+  def refresh(): Unit = {
     monitorWindows.values.foreach(_.refresh())
   }
 

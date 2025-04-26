@@ -70,7 +70,7 @@ extends PlotInterface {
   /// clearing
   clear() // finally after all fields have been initialized, clear. unsure why...
 
-  def clear() {
+  def clear(): Unit = {
     pens = pens.filterNot(_.temporary)
     currentPen = pens.headOption
     pens.foreach(_.hardReset())
@@ -83,21 +83,21 @@ extends PlotInterface {
     pen
   }
 
-  override def plot(y: Double) {
+  override def plot(y: Double): Unit = {
     currentPen.foreach(plot(_, y))
   }
 
-  def plot(pen: PlotPen, y: Double) {
+  def plot(pen: PlotPen, y: Double): Unit = {
     pen.plot(y)
     if (pen.state.isDown)
       perhapsGrowRanges(pen, pen.state.x, y)
   }
 
-  override def plot(x: Double, y: Double) {
+  override def plot(x: Double, y: Double): Unit = {
     currentPen.foreach(plot(_, x, y))
   }
 
-  def plot(pen: PlotPen, x: Double, y: Double) {
+  def plot(pen: PlotPen, x: Double, y: Double): Unit = {
     pen.plot(x, y)
     if (pen.state.isDown)
       perhapsGrowRanges(pen, x, y)

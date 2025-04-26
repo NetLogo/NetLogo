@@ -21,7 +21,7 @@ abstract class AbstractConnection(name: String, connectionStreams: Streamable) e
   private var keepListening = true
   @volatile private var keepWriting = true
 
-  override def run() {
+  override def run(): Unit = {
     writingThread.start()
     while (keepListening) {
       try receiveData(input.readObject())
@@ -35,17 +35,17 @@ abstract class AbstractConnection(name: String, connectionStreams: Streamable) e
     disconnect("Shutting down.")
   }
 
-  def receiveData(a: AnyRef)
-  def handleEx(e: Exception, sendingEx: Boolean)
+  def receiveData(a: AnyRef): Unit
+  def handleEx(e: Exception, sendingEx: Boolean): Unit
 
   // this should only be called if you need to wait for the send to
   // be completed it bypasses the writeQueue CB 09/28/2004
   @throws(classOf[java.io.IOException])
-  def waitForSendData(a: Any) {send(a)}
+  def waitForSendData(a: Any): Unit = {send(a)}
 
   // use this method if you don't need to wait for the send to complete
   // this should only be used before stopWriting() is called.
-  def sendData(a: Any) {
+  def sendData(a: Any): Unit = {
     // Note that the writingThread may be dead already at this point,
     // but it doesn't matter... the caller is *never* guaranteed that
     // messages are going to get through, since the client could vanish
@@ -55,15 +55,15 @@ abstract class AbstractConnection(name: String, connectionStreams: Streamable) e
 
   // after a call to this, you should only call waitForSendData()
   // and not sendData() since the writingThread will be dead
-  def stopWriting() { keepWriting = false }
+  def stopWriting(): Unit = { keepWriting = false }
 
-  def disconnect(reason:String) {
+  def disconnect(reason:String): Unit = {
     if (keepListening) {
       keepListening = false
       stopWriting()
       new Thread("SocketListener disconnect") {
-        override def run() {
-          def warn(body: => Unit) {
+        override def run(): Unit = {
+          def warn(body: => Unit): Unit = {
             Exceptions.warning(classOf[java.io.IOException]) { body }
           }
           Exceptions.handling(classOf[RuntimeException]) {
@@ -79,7 +79,7 @@ abstract class AbstractConnection(name: String, connectionStreams: Streamable) e
   def getSendQueueSize = writeQueue.size
 
   @throws(classOf[java.io.IOException])
-  private def send(a: Any) {
+  private def send(a: Any): Unit = {
     output.synchronized {
       output.writeObject(a)
       // we're not sure if this call to flush is absolutely necessary.
@@ -102,7 +102,7 @@ abstract class AbstractConnection(name: String, connectionStreams: Streamable) e
   }
 
   private class WritingThread(name: String) extends Thread("WritingThread:" + name) {
-    override def run() {
+    override def run(): Unit = {
       while (keepWriting) {
         try
           try {

@@ -27,7 +27,7 @@ class _whoarenot extends Reporter {
     val result = new AgentSetBuilder(source.kind, source.count)
     val iterator = source.iterator
     while (iterator.hasNext) {
-      val a = iterator.next
+      val a = iterator.next()
       if (agent != a) {
         result.add(a)
       }
@@ -39,7 +39,7 @@ class _whoarenot extends Reporter {
     val result = new AgentSetBuilder(source.kind, source.count)
     val iterator = source.iterator
     while (iterator.hasNext) {
-      val a = iterator.next
+      val a = iterator.next()
       if (!set.contains(a)) {
         result.add(a)
       }

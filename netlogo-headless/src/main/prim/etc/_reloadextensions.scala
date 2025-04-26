@@ -6,7 +6,7 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _reloadextensions extends Command {
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     workspace.getExtensionManager.reset()
   }
 }

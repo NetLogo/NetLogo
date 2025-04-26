@@ -15,11 +15,11 @@ object ModelReader {
     sourceConversion: String => String = identity): Model = {
     var sections = Vector[Vector[String]]()
     var sectionContents = Vector[String]()
-    def sectionDone() {
+    def sectionDone(): Unit = {
       sections :+= sectionContents
       sectionContents = Vector()
     }
-    for(line <- io.Source.fromString(model).getLines)
+    for(line <- io.Source.fromString(model).getLines())
       if(line.startsWith(SEPARATOR))
         sectionDone()
       else
@@ -30,15 +30,13 @@ object ModelReader {
       throw new RuntimeException(
         "Models must have 12 sections, this had " + sections.size)
 
-    val Vector(code, interface, info, turtleShapeLines, version, previewCommands, systemDynamics,
-             behaviorSpace, hubNetClient, linkShapeLines, modelSettings, deltaTick) = sections
-    val turtleShapes = ShapeParser.parseVectorShapes(turtleShapeLines)
-    val linkShapes   = ShapeParser.parseLinkShapes(linkShapeLines)
+    val turtleShapes = ShapeParser.parseVectorShapes(sections(3))
+    val linkShapes   = ShapeParser.parseLinkShapes(sections(9))
     new Model(
-      code            = code.mkString("\n"),
-      widgets         = WidgetReader.readInterface(interface.toList, parser, additionalWidgetReaders, sourceConversion),
-      info            = info.mkString("\n"),
-      version         = version.head,
+      code            = sections(0).mkString("\n"),
+      widgets         = WidgetReader.readInterface(sections(1).toList, parser, additionalWidgetReaders, sourceConversion),
+      info            = sections(2).mkString("\n"),
+      version         = sections(4).head,
       turtleShapes    = turtleShapes.toList,
       linkShapes      = linkShapes.toList)
 

@@ -15,7 +15,7 @@ import org.nlogo.theme.InterfaceColors
 class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, plotManager: PlotManagerInterface)
   extends JPanel(new GridBagLayout) with Transparent {
 
-  private implicit val i18nPrefix = I18N.Prefix("edit.plot.pen")
+  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("edit.plot.pen")
 
   // pieces of the UI
   private val intervalField = new TextField(8)
@@ -69,7 +69,7 @@ class PlotPenEditorAdvanced(inputPen: PlotPensEditor.Pen, colorizer: Colorizer, 
       else None
   }
 
-  private def addWidgets() {
+  private def addWidgets(): Unit = {
     showPenInLegend.setForeground(InterfaceColors.dialogText())
 
     penModes.syncTheme()

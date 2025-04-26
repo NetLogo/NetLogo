@@ -68,7 +68,7 @@ class Fixture(name: String) extends AbstractFixture {
   // tempted to DRY runReporter and runCommand together since they're so similar, but refraining
   // since there are many little differences, too - ST 8/15/13
 
-  def runReporter(reporter: Reporter, mode: TestMode = NormalMode) {
+  def runReporter(reporter: Reporter, mode: TestMode = NormalMode): Unit = {
     require(workspace.modelOpened)
     try {
       workspace.clearLastLogoException()
@@ -94,7 +94,7 @@ class Fixture(name: String) extends AbstractFixture {
     catch catcher(s"$mode: reporter: $reporter", reporter.result)
   }
 
-  def runCommand(command: Command, mode: TestMode = NormalMode) {
+  def runCommand(command: Command, mode: TestMode = NormalMode): Unit = {
     require(workspace.modelOpened)
     try {
       workspace.clearLastLogoException()

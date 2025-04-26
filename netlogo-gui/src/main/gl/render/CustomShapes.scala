@@ -2,10 +2,13 @@
 
 package org.nlogo.gl.render
 
-import java.util.{ List => JList, Map => JMap }
 import com.jogamp.opengl.{ GL, GL2, GL2ES3 }
+
+import java.util.{ List => JList, Map => JMap }
+
 import org.nlogo.shape.InvalidShapeDescriptionException
-import collection.JavaConverters._
+
+import scala.jdk.CollectionConverters.{ ListHasAsScala, MapHasAsScala, SeqHasAsJava }
 
 private object CustomShapes {
 

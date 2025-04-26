@@ -13,5 +13,5 @@ class _randomconst(private[this] val _n: Long) extends Reporter {
     report_1(context)
 
   def report_1(context: Context): Double =
-    context.job.random.nextLong(_n)
+    context.job.random.nextLong(_n).toDouble
 }

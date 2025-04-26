@@ -23,15 +23,15 @@ class DummyPlotManager extends PlotManagerInterface {
   override def nextName: String = names.next()
   override def newPlot(name: String) = new Plot(name)
   override def compilePlot(plot: Plot) = Nil
-  override def forgetPlot(plot: Plot) {}
+  override def forgetPlot(plot: Plot): Unit = {}
   override def hasErrors(plot: Plot) = false
   override def getPlotSetupError(plot: Plot)= None
   override def getPlotUpdateError(plot: Plot) = None
   override def getPenSetupError(pen: PlotPen) = None
   override def getPenUpdateError(pen: PlotPen) = None
   override def currentPlot = None
-  override def publish(action: PlotAction) { }
-  override def setCurrentPlot(name: String) { }
+  override def publish(action: PlotAction): Unit = { }
+  override def setCurrentPlot(name: String): Unit = { }
   override def hasPlot(name: String) = false
   override def maybeGetPlot(name: String) = None
   override def getPlotNames = Seq()

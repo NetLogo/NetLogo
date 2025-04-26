@@ -8,7 +8,7 @@ import AbstractWorkspace.makeModelNameForDisplay
 
 class AbstractWorkspaceTests extends AnyFunSuite with BeforeAndAfterEach {
   val workspace = new DummyAbstractWorkspace
-  override def afterEach() { workspace.dispose() }
+  override def afterEach(): Unit = { workspace.dispose() }
   test("MakeModelNameForDisplay") {
     assertResult("there")(makeModelNameForDisplay("there.nlogox"))
   }

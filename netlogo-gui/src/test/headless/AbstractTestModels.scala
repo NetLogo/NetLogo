@@ -88,7 +88,7 @@ trait AbstractTestModels extends AnyFunSuite with ModelCreator {
   def runModelFromFile(path: String)(f: => Unit) = run(ws => ws.open(path)){ f }
 
   // run a model
-  private def run(openModel: HeadlessWorkspace => Unit)(f: => Unit) {
+  private def run(openModel: HeadlessWorkspace => Unit)(f: => Unit): Unit = {
     if (!Version.is3D) {
       _workspace.withValue(HeadlessWorkspace.newInstance) {
         try {
@@ -101,7 +101,7 @@ trait AbstractTestModels extends AnyFunSuite with ModelCreator {
     }
   }
 
-  def checkError(commands: String) {
+  def checkError(commands: String): Unit = {
     intercept[LogoException] {
       workspace.command(commands)
     }

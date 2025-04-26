@@ -11,7 +11,6 @@ import org.nlogo.{ api, core },
   api.{ ImporterUser, PlotInterface, PlotPenInterface, PlotState }
 
 import collection.immutable.ListMap
-import ImporterJ.Junk
 
 class Importer(_errorHandler: ImporterJ.ErrorHandler,
                _world: World,
@@ -59,13 +58,13 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
   }
 
   def getAllVars(breeds: ListMap[String, Breed]): java.util.List[String] = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.SeqHasAsJava
     breeds.values.flatMap(_.owns).toSeq.asJava
   }
 
   /// plots
 
-  def importPlots() {
+  def importPlots(): Unit = {
     if (hasMoreLines(false)) {
       val firstLine = nextLine()
       val currentPlot = firstLine(0)
@@ -118,13 +117,11 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
       (readNumber(line(7)).toInt, Option(readString(line(5))))
     }
 
-  def importPens(plot: PlotInterface, numPens: Int) {
+  def importPens(plot: PlotInterface, numPens: Int): Unit = {
     if (hasMoreLines(false))
       for (i <- 0 until numPens; if hasMoreLines(false)) {
         val line = nextLine()
         getTokenValue(line(0), false, false) match {
-          case _: Junk =>
-            return
           case name: String =>
             plot.getPen(name) match {
               case Some(pen) =>
@@ -143,11 +140,13 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
                   nextLine()
                 }
             }
+
+          case _ =>
         }
       }
   }
 
-  def importPoints(plot: PlotInterface) {
+  def importPoints(plot: PlotInterface): Unit = {
     if (hasMoreLines(false)) {
       val line = nextLine()
       val penCount = ((line.size - 1) / 4) + 1
@@ -177,7 +176,7 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
     }
   }
 
-  private def importPointHelper(plot: PlotInterface, pen: PlotPenInterface, data: Array[String], i: Int) {
+  private def importPointHelper(plot: PlotInterface, pen: PlotPenInterface, data: Array[String], i: Int): Unit = {
     try {
       pen.state = pen.state.copy(
         color = org.nlogo.api.Color.getARGBbyPremodulatedColorNumber(readNumber(data(i * 4 + 2))),
@@ -197,23 +196,23 @@ extends ImporterJ(_errorHandler, _world, _importerUser, _stringReader) {
     getTokenValue(line, false, false) match {
       case d: java.lang.Double =>
         d.doubleValue
-      case _: Junk =>
+      case _ =>
         0
     }
 
-  private def readBoolean(line: String) =
+  private def readBoolean(line: String): Boolean =
     getTokenValue(line, false, false) match {
       case b: java.lang.Boolean =>
         b.booleanValue
-      case _: Junk =>
+      case _ =>
         false
     }
 
-  private def readString(line: String) =
+  private def readString(line: String): String =
     getTokenValue(line, false, false) match {
       case s: String =>
         s
-      case _: Junk =>
+      case _ =>
         null
     }
 

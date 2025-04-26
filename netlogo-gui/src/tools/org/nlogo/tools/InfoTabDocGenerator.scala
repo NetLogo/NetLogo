@@ -12,7 +12,7 @@ import java.io.{ FileInputStream, FileOutputStream }
  * really.
  */
 object InfoTabDocGenerator {
-  def main(args:Array[String]) {
+  def main(args:Array[String]): Unit = {
     val model = FileIO.fileToString("./models/Code Examples/Info Tab Example.nlogo")
     val info = model.split("\\@\\#\\$\\#\\@\\#\\$\\#\\@(\r)?\n")(2)
     val pre = Preprocessor.convert(info)
@@ -22,7 +22,7 @@ object InfoTabDocGenerator {
     println("writing ./docs/infotab.html")
     FileIO.writeFile("./docs/infotab.html", start + post + "\n")
 
-    def copy(from: String, to: String) {
+    def copy(from: String, to: String): Unit = {
       val (in, out) = (new FileInputStream(from), new FileOutputStream(to))
       val buffer = new Array[Byte](1024)
       Iterator.continually(in.read(buffer)).takeWhile(_ != -1).foreach { out.write(buffer, 0, _) }

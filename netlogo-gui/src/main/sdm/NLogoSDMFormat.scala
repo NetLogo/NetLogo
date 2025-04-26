@@ -23,7 +23,7 @@ abstract class AbstractNLogoSDMFormat[A <: ModelFormat[Array[String], A]]
 
   override def serialize(m: CoreModel): Array[String] =
     m.optionalSectionValue[Model](componentName)
-      .map(sdm => sdm.getDt + "\n" + sdm.serializedGUI)
+      .map(sdm => sdm.getDt.toString + "\n" + sdm.serializedGUI)
       .toArray[String]
 
   override def validationErrors(m: CoreModel): Option[String] =

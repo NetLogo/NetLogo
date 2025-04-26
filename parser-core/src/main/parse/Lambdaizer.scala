@@ -178,6 +178,8 @@ class ConvertConciseVariables(nesting: Int) extends PositionalAstFolder[AstEdit]
         val convertedTaskVariableName = varName(nesting, name.tail.toInt)
         val leadingSpace = if (ctx.text.endsWith(" ")) "" else " "
         ctx.appendText(leadingSpace + convertedTaskVariableName + " ")
+      case n =>
+        throw new Exception(s"Unexpected node: $n")
     }
   }
 

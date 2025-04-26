@@ -358,8 +358,8 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
     if (e.getClickCount == 2) {
       widget.getEditable match {
-        case e: Editable =>
-          new EditWidgetEvent(e).raise(this)
+        case ed: Editable =>
+          new EditWidgetEvent(ed).raise(this)
 
         case _ =>
       }

@@ -9,27 +9,27 @@ import java.io.PrintWriter
 // the checksummer calculate separate checksums for the separate sections. - ST 7/15/10
 
 class ChecksummerTests extends AnyFunSuite {
-  def foo(fn: PrintWriter) {
+  def foo(fn: PrintWriter): Unit = {
     fn.println("FOO")
     fn.println("hi there")
   }
-  def bar(fn: PrintWriter) {
+  def bar(fn: PrintWriter): Unit = {
     fn.println("BAR")
     fn.println("how are you")
     fn.println("fine thank you")
   }
-  def emptySection(fn: PrintWriter) {
+  def emptySection(fn: PrintWriter): Unit = {
     fn.println("EMPTY")
   }
   test("one section") {
-    def tester(fn: PrintWriter) {
+    def tester(fn: PrintWriter): Unit = {
       foo(fn)
     }
     assertResult("41ECD0D21169ED248C8499E22CF3CF636F5DADC1")(
       Checksummer.calculateChecksum(tester _))
   }
   test("two sections") {
-    def tester(fn: PrintWriter) {
+    def tester(fn: PrintWriter): Unit = {
       foo(fn)
       fn.println()
       bar(fn)
@@ -38,7 +38,7 @@ class ChecksummerTests extends AnyFunSuite {
       Checksummer.calculateChecksum(tester _))
   }
   test("three sections") {
-    def tester(fn: PrintWriter) {
+    def tester(fn: PrintWriter): Unit = {
       foo(fn)
       fn.println()
       bar(fn)
@@ -49,7 +49,7 @@ class ChecksummerTests extends AnyFunSuite {
       Checksummer.calculateChecksum(tester _))
   }
   test("two empty sections") {
-    def tester(fn: PrintWriter) {
+    def tester(fn: PrintWriter): Unit = {
       emptySection(fn)
       fn.println()
       emptySection(fn)

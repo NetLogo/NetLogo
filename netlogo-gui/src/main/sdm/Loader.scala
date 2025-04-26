@@ -12,7 +12,7 @@ object Loader {
   def load(input: String): Option[Model] = {
     val lines =
       io.Source.fromString(mungeClassNames(input))
-        .getLines
+        .getLines()
         .map(_.trim)
         .filter(_.nonEmpty)
         .toSeq
@@ -116,7 +116,7 @@ object Loader {
         None
     }
 
-  private def setSourceSink(rate: Rate, tokens: Tokenizer, lineMap: LineMap) {
+  private def setSourceSink(rate: Rate, tokens: Tokenizer, lineMap: LineMap): Unit = {
     tokens.next() match {
       case WordToken("REF") =>
         rate.setSource(getSourceOrSink(tokens, lineMap))

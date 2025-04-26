@@ -16,15 +16,10 @@ trait GeneratedInstruction extends Instruction {
     def safelyGetField(id: Int) =
       try { Some(getClass.getField(Generator.KEPT_INSTRUCTION_PREFIX + id)) }
       catch { case _: NoSuchFieldException => None }
-    for {
-      elem <- ex.getStackTrace
-      if elem.getClassName.containsSlice("_asm_")
-      id = elem.getLineNumber // in bytecode LineNumbers delineate instruction boundaries
-      if id > 0
-      field <- safelyGetField(id)
-    } return field.get(this).asInstanceOf[Instruction]
     // the GeneratedInstruction itself is the default culprit. ~Forrest 5/22/06
-    this
+    ex.getStackTrace.dropWhile { elem =>
+      !elem.getClassName.containsSlice("_asm_") || elem.getLineNumber <= 0
+    }.headOption.flatMap(elem => safelyGetField(elem.getLineNumber)).map(_.get(this).asInstanceOf[Instruction]).getOrElse(this)
   }
   override def dump(indentLevel: Int): String = {
     val buf = new StringBuilder
@@ -39,7 +34,7 @@ trait GeneratedInstruction extends Instruction {
 // this could be done at compile time (I believe) but it isn't speed-critical
 // RG 10/21/15
 abstract class GeneratedCommand extends Command with GeneratedInstruction {
-  override def init(workspace: Workspace) {
+  override def init(workspace: Workspace): Unit = {
     super.init(workspace)
     switches = original.asInstanceOf[Command].switches
   }

@@ -13,7 +13,7 @@ import org.nlogo.workspace.ModelsLibrary
 // in test/benchdumps, or dump the whole models library to tmp/dumps. - ST 2/11/09, 8/21/13
 
 object Dump {
-  def main(argv:Array[String]) {
+  def main(argv:Array[String]): Unit = {
     argv match {
       case Array() => println("usage: dump all, dump bench, dump Fire, dump foo/bar/Fire.nlogox")
       case Array("all") => dumpAll()
@@ -34,12 +34,12 @@ object Dump {
     finally { workspace.dispose() }
   }
   def benchPath(name:String) = "models/test/benchmarks/" + name + " Benchmark.nlogox"
-  def dumpBenchmarks() {
+  def dumpBenchmarks(): Unit = {
     for(name <- ChecksumsAndPreviews.allBenchmarks)
       writeFile(DumpsPath + name + ".txt",
                 dump(benchPath(name)))
   }
-  def dumpAll() {
+  def dumpAll(): Unit = {
     Runtime.getRuntime().exec("rm -r target/dumps").waitFor()
     Runtime.getRuntime().exec("mkdir -p target/dumps").waitFor()
     //
@@ -53,7 +53,7 @@ object Dump {
     }
     println
   }
-  def writeFile(path:String,s:String) {
+  def writeFile(path:String,s:String): Unit = {
     val w = new java.io.FileWriter(path)
     w.write(s)
     w.close()

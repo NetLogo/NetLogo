@@ -50,9 +50,9 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
   add(canvas, java.awt.BorderLayout.CENTER)
   canvas.setCursor(new java.awt.Cursor(java.awt.Cursor.CROSSHAIR_CURSOR))
 
-  def updatePerspectiveLabel() { }
+  def updatePerspectiveLabel(): Unit = { }
 
-  def createCanvas(antiAliasing: Boolean) {
+  def createCanvas(antiAliasing: Boolean): Unit = {
     val capabilities = new com.jogamp.opengl.GLCapabilities(GLProfile.get(GLProfile.GL2))
     capabilities.setSampleBuffers(antiAliasing)
     capabilities.setNumSamples(4)
@@ -66,7 +66,7 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
   }
 
   class KeyInputHandler extends KeyAdapter {
-    override def keyPressed(e: KeyEvent) {
+    override def keyPressed(e: KeyEvent): Unit = {
       if (e.getKeyCode == KeyEvent.VK_ESCAPE) {
         viewManager.setFullscreen(false)
       }
@@ -75,29 +75,29 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
 
   override def getLinkParent = viewManager
 
-  def updateRenderer() {
+  def updateRenderer(): Unit = {
     renderer.update()
   }
 
-  def setVisible() {
+  def setVisible(): Unit = {
     super.setVisible(true)
     toFront()
     canvas.requestFocus()
   }
 
-  def display() {
+  def display(): Unit = {
     canvas.display()
   }
 
-  def invalidateTurtleShape(shape: String) {
+  def invalidateTurtleShape(shape: String): Unit = {
     renderer.invalidateTurtleShape(shape)
   }
 
-  def invalidateLinkShape(shape: String) {
+  def invalidateLinkShape(shape: String): Unit = {
     renderer.invalidateLinkShape(shape)
   }
 
-  def resetPerspective() {
+  def resetPerspective(): Unit = {
     viewManager.world.observer.resetPerspective()
     display()
     updatePerspectiveLabel()
@@ -123,7 +123,7 @@ abstract class View(title: String, val viewManager: ViewManager, var renderer: R
     true
   }
 
-  def doPopup(e: MouseEvent) {
+  def doPopup(e: MouseEvent): Unit = {
     renderer.queuePick(e.getPoint, picker)
     e.consume()
   }

@@ -58,7 +58,7 @@ class ChecksumTester(val info: String => Unit, versionMismatch: () => Unit = () 
     finally ws.dispose()
   }
 
-  def testChecksum(model: String, variant: String, expectedWorldSum: String, expectedGraphicsSum: String, expectedRevision: String) {
+  def testChecksum(model: String, variant: String, expectedWorldSum: String, expectedGraphicsSum: String, expectedRevision: String): Unit = {
     withWorkspace { workspace =>
       val actualRevision = ChecksumsAndPreviews.Checksums.getRevisionNumber(model)
       val revisionMatches = expectedRevision == actualRevision
@@ -104,7 +104,7 @@ class ChecksumTester(val info: String => Unit, versionMismatch: () => Unit = () 
     }
   }
 
-  def exportWorld(workspace: HeadlessWorkspace, model: String) {
+  def exportWorld(workspace: HeadlessWorkspace, model: String): Unit = {
     new java.io.File("tmp").mkdir()
     new java.io.File("tmp/TestChecksums").mkdir()
     val path = "tmp/TestChecksums/" + new java.io.File(model).getName + ".csv"

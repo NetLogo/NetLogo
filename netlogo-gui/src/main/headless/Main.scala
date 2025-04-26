@@ -42,12 +42,12 @@ Here is an example of running an experiment already defined and saved within a m
 See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo User Manual for more information and examples.
 """
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     setHeadlessProperty()
     parseArgs(args).foreach(runExperiment(_))
   }
 
-  def runExperiment(settings: Settings, finish: () => Unit = () => {}) {
+  def runExperiment(settings: Settings, finish: () => Unit = () => {}): Unit = {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
     var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
     def newWorkspace = {
@@ -75,7 +75,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     }
   }
 
-  def runExperimentWithProtocol(settings: Settings, protocol: LabProtocol, finish: () => Unit = () => {}) {
+  def runExperimentWithProtocol(settings: Settings, protocol: LabProtocol, finish: () => Unit = () => {}): Unit = {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
     var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
     def newWorkspace = {
@@ -89,10 +89,10 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       w
     }
     val lab = HeadlessWorkspace.newLab
-    lab.run(settings, protocol, newWorkspace _, finish)
+    lab.run(settings, protocol, () => newWorkspace, finish)
   }
 
-  def setHeadlessProperty() {
+  def setHeadlessProperty(): Unit = {
     // force headless mode if it is not set.  This is necessary for the headless workspace to run
     // on most platforms when a display is not available. --CLB
     // note that since our check is for null, so the user can still force the property to false and
@@ -121,7 +121,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     var updatePlots = false
     val it = args.iterator
 
-    def die(msg: String) {
+    def die(msg: String): Unit = {
       System.err.println(msg)
       System.exit(1)
     }
@@ -130,7 +130,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       if (path == "-") {
         new PrintWriter(System.out) {
           // don't close System.out - ST 6/9/09
-          override def close() { }
+          override def close(): Unit = { }
         }
       } else {
         new PrintWriter(new FileWriter(path.trim))
@@ -141,7 +141,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     while (it.hasNext) {
       val arg = it.next().toLowerCase
 
-      def requireHasNext() {
+      def requireHasNext(): Unit = {
         if (!it.hasNext)
           die("missing argument after " + arg)
       }
@@ -214,7 +214,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
       } else if (arg == "--lists") {
         requireHasNext()
-        listsWriter = Some((path2writer(it.next), outputPath))
+        listsWriter = Some((path2writer(it.next()), outputPath))
 
       } else if (arg == "--stats") {
         requireHasNext()

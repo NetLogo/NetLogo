@@ -19,9 +19,9 @@ import org.nlogo.hubnet.connection.{Streamable, ConnectionTypes, Ports, HubNetEx
 // HeadlessHNM uses it to simply print events.
 // GUIHNM uses it to update the gui.
 trait ClientEventListener {
-  def addClient(clientId: String, remoteAddress: String)
-  def clientDisconnect(clientId: String)
-  def logMessage(message:String)
+  def addClient(clientId: String, remoteAddress: String): Unit
+  def clientDisconnect(clientId: String): Unit
+  def logMessage(message:String): Unit
 }
 
 // ConnectionManager implements this so that we can pass this to ServerSideConnection
@@ -31,11 +31,11 @@ trait ConnectionManagerInterface {
   def isSupportedClientType(clientType: String): Boolean
   def finalizeConnection(c: ServerSideConnection, desiredClientId: String): Boolean
   def createHandshakeMessage(clientType: String): HandshakeFromServer
-  def fullViewUpdate()
-  def putClientData(messageEnvelope: MessageEnvelope)
+  def fullViewUpdate(): Unit
+  def putClientData(messageEnvelope: MessageEnvelope): Unit
   def removeClient(userid: String, notifyClient: Boolean, reason: String): Boolean
-  def logMessage(message:String)
-  def sendPlots(clientId:String)
+  def logMessage(message:String): Unit
+  def sendPlots(clientId:String): Unit
 }
 
 class ConnectionManager(val connection: ConnectionInterface,
@@ -56,7 +56,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   @volatile private var socket: ServerSocket = null
   private var _port = -1
   def port = _port
-  private def port_=(p:Int){ _port = p }
+  private def port_=(p:Int): Unit ={ _port = p }
   // the run method polls this to know when to stop.
   // set to true in startup, false in shutdown.
   @volatile private var serverOn: Boolean = false
@@ -163,9 +163,9 @@ class ConnectionManager(val connection: ConnectionInterface,
    * be accessed by the NetLogo code when <code>hubnet-fetch-message</code>
    * and <code>hubnet-message-waiting?</code> called.
    */
-  def enqueueMessage(message:MessageEnvelope) { connection.enqueueMessage(message) }
+  def enqueueMessage(message:MessageEnvelope): Unit = { connection.enqueueMessage(message) }
 
-  def run() {
+  def run(): Unit = {
     try {
       while (serverOn) {
         try waitForConnection()
@@ -220,12 +220,12 @@ class ConnectionManager(val connection: ConnectionInterface,
   }
 
   /// client Interface code
-  def reloadClientInterface() {
+  def reloadClientInterface(): Unit = {
     setClientInterface(ConnectionTypes.COMP_CONNECTION, List())
     plotManager.initPlotListeners()
   }
 
-  def setClientInterface(interfaceType: ClientType, interfaceInfo: Iterable[ClientInterface]) {
+  def setClientInterface(interfaceType: ClientType, interfaceInfo: Iterable[ClientInterface]): Unit = {
     // we set this when hubnet-reset is called now, instead
     // of forcing users to call hubnet-set-client-interface "COMPUTER" []
     // however, if they still want to call it, we should just update it here anyway.
@@ -245,7 +245,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   /**
    * Enqueues a message from the client to the manager.
    */
-  def putClientData(messageEnvelope:MessageEnvelope) { enqueueMessage(messageEnvelope) }
+  def putClientData(messageEnvelope:MessageEnvelope): Unit = { enqueueMessage(messageEnvelope) }
 
   /**
    * Returns a handshake message containing the current Interface specification.
@@ -282,28 +282,28 @@ class ConnectionManager(val connection: ConnectionInterface,
   }
 
   @throws(classOf[HubNetException])
-  def broadcast(obj: Any) {
+  def broadcast(obj: Any): Unit = {
     if (obj.isInstanceOf[String]) broadcastMessage(new Text(obj.toString, Text.MessageType.TEXT))
     else if (obj.isInstanceOf[Plot]) broadcastMessage(new PlotUpdate(obj.asInstanceOf[Plot]))
     else throw new HubNetException(VALID_SEND_TYPES_MESSAGE)
   }
 
   @throws(classOf[HubNetException])
-  def broadcastPlotControl(a:Any, plotName:String){
+  def broadcastPlotControl(a:Any, plotName:String): Unit ={
     broadcastMessage(new PlotControl(a.asInstanceOf[AnyRef], plotName))
   }
 
   @throws(classOf[HubNetException])
-  def sendPlotControl(userId: String, a:Any, plotName:String){
+  def sendPlotControl(userId: String, a:Any, plotName:String): Unit ={
     sendUserMessage(userId, new PlotControl(a.asInstanceOf[AnyRef], plotName))
   }
 
-  def broadcastClearTextMessage() { broadcastMessage(new Text(null, Text.MessageType.CLEAR)) }
+  def broadcastClearTextMessage(): Unit = { broadcastMessage(new Text(null, Text.MessageType.CLEAR)) }
 
   /**
    * Broadcasts a message to all clients.
    */
-  private def broadcastMessage(msg:Message) {
+  private def broadcastMessage(msg:Message): Unit = {
     clients.synchronized { for (connection <- clients.values) { connection.sendData(msg) } }
   }
 
@@ -320,10 +320,10 @@ class ConnectionManager(val connection: ConnectionInterface,
     c.isDefined
   }
 
-  def broadcastUserMessage(text:String) { broadcastMessage(new Text(text, Text.MessageType.USER)) }
+  def broadcastUserMessage(text:String): Unit = { broadcastMessage(new Text(text, Text.MessageType.USER)) }
 
   // called from control center
-  def removeAllClients() {
+  def removeAllClients(): Unit = {
     clients.synchronized {
       for(conn <- clients.values){
         disconnectClient(conn, true, "Kicked from Control Center.")
@@ -350,7 +350,7 @@ class ConnectionManager(val connection: ConnectionInterface,
   /**
    * Disconnects the client and removes it from the control center.
    */
-  private def disconnectClient(c:ServerSideConnection, notifyClient:Boolean, reason:String) {
+  private def disconnectClient(c:ServerSideConnection, notifyClient:Boolean, reason:String): Unit = {
     if (c != null) {
       c.disconnect(notifyClient, reason)
       clientEventListener.clientDisconnect(c.clientId)
@@ -368,26 +368,26 @@ class ConnectionManager(val connection: ConnectionInterface,
     sendUserMessage(client, new OverrideMessage(new ClearOverride(agentKind, varName, overrides), true))
   }
 
-  def clearOverrideLists(client:String) { sendUserMessage(client, ClearOverrideMessage) }
+  def clearOverrideLists(client:String): Unit = { sendUserMessage(client, ClearOverrideMessage) }
 
   def sendAgentPerspective(client:String, perspective:Int, agentKind: AgentKind,
-                                    id: Long, radius: Double, serverMode: Boolean) {
+                                    id: Long, radius: Double, serverMode: Boolean): Unit = {
     sendUserMessage(client, new AgentPerspectiveMessage(
       new AgentPerspective(agentKind, id, perspective, radius, serverMode).toByteArray))
   }
 
   private var lastPatches: AgentSet = null
 
-  def fullViewUpdate() {
+  def fullViewUpdate(): Unit = {
     doViewUpdate(true) /* reset the world before sending the update */
   }
 
-  def incrementalViewUpdate() {
+  def incrementalViewUpdate(): Unit = {
     // update the entire world if the patches have changed (do to a world resizing)
     doViewUpdate(lastPatches != world.patches)
   }
 
-  private def doViewUpdate(resetWorld:Boolean) {
+  private def doViewUpdate(resetWorld:Boolean): Unit = {
     if (resetWorld) {
       // create a new world buffer, which will force a full update.
       worldBuffer = new ServerWorld(worldProps)
@@ -397,16 +397,16 @@ class ConnectionManager(val connection: ConnectionInterface,
     if (!buf.isEmpty) broadcastMessage(new ViewUpdate(buf.toByteArray))
   }
 
-  def setViewEnabled(mirror:Boolean) {
+  def setViewEnabled(mirror:Boolean): Unit = {
     if (mirror) incrementalViewUpdate() else broadcastMessage(DisableView)
   }
 
-  def sendPlot(clientId:String, plot:PlotInterface) {
+  def sendPlot(clientId:String, plot:PlotInterface): Unit = {
     val c = clients.get(clientId)
     if (c.isDefined) c.get.sendData(new PlotUpdate(plot))
   }
 
-  def sendPlots(clientId:String){ plotManager.sendPlots(clientId) }
+  def sendPlots(clientId:String): Unit ={ plotManager.sendPlots(clientId) }
 
   def clientSendQueueSizes: Iterable[Int] = clients.synchronized{ clients.values.map(_.getSendQueueSize)}
 

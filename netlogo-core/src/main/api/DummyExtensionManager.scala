@@ -9,7 +9,7 @@ import org.nlogo.core.{ DummyExtensionManager => CoreDummyExtensionManager }
 // to override a few methods. - ST 11/5/11
 
 class DummyExtensionManager extends CoreDummyExtensionManager with ExtensionManager {
-  override def storeObject(obj: AnyRef) { }
+  override def storeObject(obj: AnyRef): Unit = { }
   override def retrieveObject: AnyRef = unsupported
   override def readExtensionObject(extname: String, typeName: String, value: String): ExtensionObject = unsupported
   override def readFromString(src: String): AnyRef = unsupported

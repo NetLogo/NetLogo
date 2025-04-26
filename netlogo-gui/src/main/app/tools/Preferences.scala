@@ -95,7 +95,7 @@ object Preferences {
         add(textField)
 
         private val browseButton = new Button(new AbstractAction("Browse...") {
-          def actionPerformed(e: ActionEvent) {
+          def actionPerformed(e: ActionEvent): Unit = {
             askForConfigFile(textField.getText).foreach(textField.setText)
           }
         })

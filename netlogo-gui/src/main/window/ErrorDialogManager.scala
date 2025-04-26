@@ -111,7 +111,7 @@ class ErrorDialogManager(owner: Component, additionalDialogs: => Map[Class[_ <: 
     }
   }
 
-  def closeAllDialogs() {
+  def closeAllDialogs(): Unit = {
     dialogs.foreach(_._2.setVisible(false))
   }
 
@@ -131,7 +131,7 @@ extends MessageDialog(owner, I18N.gui.get("common.buttons.dismiss")) {
   protected var message = ""
   protected var details = ""
 
-  def show(errorInfo: ErrorInfo, debugInfo: DebuggingInfo)
+  def show(errorInfo: ErrorInfo, debugInfo: DebuggingInfo): Unit
 
   protected def doShow(showDetails: Boolean): Unit = {
     val text = if (showDetails) message + "\n\n" + details else message
@@ -156,12 +156,12 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.unknown")) {
     doShow(true)
   }
 
-  override def makeButtons = {
+  override def makeButtons() = {
     val suppressButton = new DialogButton(false, I18N.gui.get("error.dialog.suppress"), () => {
       suppressed = true
       setVisible(false)
     })
-    super.makeButtons ++ Seq(new CopyButton(textArea), suppressButton)
+    super.makeButtons() ++ Seq(new CopyButton(textArea), suppressButton)
   }
 }
 
@@ -177,7 +177,7 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.logo")) {
     doShow(checkbox.isSelected)
   }
 
-  override def makeButtons = super.makeButtons ++ Seq(new CopyButton(textArea), checkbox)
+  override def makeButtons() = super.makeButtons() ++ Seq(new CopyButton(textArea), checkbox)
 
   override def syncTheme(): Unit = {
     super.syncTheme()
@@ -194,8 +194,8 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.outOfMemory.title")) {
     doShow(false)
   }
 
-  override def makeButtons = {
-    super.makeButtons :+ new DialogButton(false, I18N.gui.get("error.dialog.openFAQ"), () => {
+  override def makeButtons() = {
+    super.makeButtons() :+ new DialogButton(false, I18N.gui.get("error.dialog.openFAQ"), () => {
       BrowserLauncher.openPath(owner, BrowserLauncher.docPath("faq.html"), "howbig")
     })
   }

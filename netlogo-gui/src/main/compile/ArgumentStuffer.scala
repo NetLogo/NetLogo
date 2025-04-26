@@ -9,11 +9,11 @@ import org.nlogo.nvm.Reporter
 import org.nlogo.compile.api.{ DefaultAstVisitor, Expression, Statement, ReporterApp, ReporterBlock }
 
 private class ArgumentStuffer extends DefaultAstVisitor {
-  override def visitStatement(stmt:Statement) {
+  override def visitStatement(stmt:Statement): Unit = {
     stmt.command.args = gatherArgs(stmt.args)
     super.visitStatement(stmt)
   }
-  override def visitReporterApp(app:ReporterApp) {
+  override def visitReporterApp(app:ReporterApp): Unit = {
     app.reporter.args = gatherArgs(app.args)
     super.visitReporterApp(app)
   }

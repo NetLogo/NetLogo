@@ -4,7 +4,7 @@ package org.nlogo.window
 
 import org.nlogo.agent.World3D
 import org.nlogo.awt.Hierarchy
-import org.nlogo.core.{ I18N, View => CoreView, WorldDimensions, WorldDimensions3D }
+import org.nlogo.core.{ I18N, View => CoreView, Widget => CoreWidget, WorldDimensions, WorldDimensions3D }
 import org.nlogo.swing.ModalProgressTask
 import org.nlogo.window.Events.RemoveAllJobsEvent
 
@@ -208,7 +208,7 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
     }
   }
 
-  override def model: CoreView = {
+  override def model: CoreWidget = {
     val dimensions = new WorldDimensions3D(
       world.minPxcor, world.maxPxcor,
       world.minPycor, world.maxPycor,

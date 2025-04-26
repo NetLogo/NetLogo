@@ -8,7 +8,7 @@ class _clearticks extends Command {
 
 
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     workspace.clearTicks()
     context.ip = next
   }

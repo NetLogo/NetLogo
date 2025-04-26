@@ -3,14 +3,12 @@
 package org.nlogo.prim.gui
 
 import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
-import org.nlogo.shape.InvalidShapeDescriptionException
 import org.nlogo.window.GUIWorkspace
 
 class _load3Dshapes extends Command {
 
-
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val filename = argEvalString(context, 0)
     workspace match {
       case gw: GUIWorkspace =>
@@ -18,8 +16,6 @@ class _load3Dshapes extends Command {
         catch {
           case e: java.io.IOException =>
             throw new RuntimePrimitiveException(context, this, e.getMessage)
-          case e: InvalidShapeDescriptionException =>
-            throw new RuntimePrimitiveException(context, this, "Invalid shape file")
         }
       case _ =>
         // ok to just ignore, I guess - ST 5/17/11

@@ -11,16 +11,16 @@ abstract class File {
   // abstract methods
   def getPrintWriter: java.io.PrintWriter
   @throws(classOf[java.io.IOException])
-  def open(mode: FileMode)
+  def open(mode: FileMode): Unit
   @throws(classOf[java.io.IOException])
-  def print(str: String)
+  def print(str: String): Unit
   @throws(classOf[java.io.IOException])
-  def println(line: String)
+  def println(line: String): Unit
   @throws(classOf[java.io.IOException])
-  def println()
-  def flush()
+  def println(): Unit
+  def flush(): Unit
   @throws(classOf[java.io.IOException])
-  def close(ok: Boolean)
+  def close(ok: Boolean): Unit
   @throws(classOf[java.io.IOException])
   def getInputStream: java.io.InputStream
   def getAbsolutePath: String

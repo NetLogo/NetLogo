@@ -9,7 +9,7 @@ import org.nlogo.nvm.{ Activation, AnonymousProcedure, ArgumentTypeException, Co
 
 class _run extends Command {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     args(0).report(context) match {
       case s: String =>
         if(args.size > 1)

@@ -22,7 +22,10 @@ class TokenMapper(path: String, prefix: String) extends TokenMapperInterface {
     for {
       line <- Resource.lines(path)
       if !line.startsWith("#")
-      Array(tpe, primName, className) = line.split(" ")
+      split = line.split(" ")
+      tpe = split(0)
+      primName = split(1)
+      className = split(2)
       if tpe == entryType
     } yield primName.toUpperCase -> (prefix + className)
   private val commands = entries("C").toMap
@@ -35,7 +38,7 @@ class TokenMapper(path: String, prefix: String) extends TokenMapperInterface {
   // for integration testing
   def allCommandClassNames = commands.values.toSet
   def allReporterClassNames = reporters.values.toSet
-  def checkInstructionMaps() {
+  def checkInstructionMaps(): Unit = {
     commands.keySet.foreach(getCommand)
     reporters.keySet.foreach(getReporter)
   }

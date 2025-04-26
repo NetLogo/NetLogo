@@ -25,7 +25,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
     setCellRenderer(new ResourceCellRenderer)
 
     addListSelectionListener(new ListSelectionListener {
-      def valueChanged(e: ListSelectionEvent) {
+      def valueChanged(e: ListSelectionEvent): Unit = {
         enableButtons()
       }
     })
@@ -166,13 +166,13 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
 
   syncTheme()
 
-  private def refreshList() {
+  private def refreshList(): Unit = {
     resourceList.setListData(manager.getResources.map(_.name).toArray)
 
     enableButtons()
   }
 
-  private def enableButtons() {
+  private def enableButtons(): Unit = {
     exportButton.setEnabled(!resourceList.isSelectionEmpty)
     renameButton.setEnabled(!resourceList.isSelectionEmpty)
     removeButton.setEnabled(!resourceList.isSelectionEmpty)

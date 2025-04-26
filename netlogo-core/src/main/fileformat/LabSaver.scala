@@ -2,7 +2,7 @@
 
 package org.nlogo.fileformat
 
-import org.nlogo.api.{ EnumeratedValueSet, LabProtocol, RefEnumeratedValueSet, RefValueSet, SteppedValueSet }
+import org.nlogo.api.{ LabProtocol, RefEnumeratedValueSet, RefValueSet, SteppedValueSet }
 import javax.xml.transform
 import transform.{OutputKeys,TransformerFactory}
 import transform.sax.{SAXTransformerFactory,TransformerHandler}
@@ -39,22 +39,22 @@ object LabSaver {
   }
   def attributes(specs: (String,String)*) = {
     val result = new AttributesImpl
-    for((name,value) <- specs if name != "sequentialRunOrder" || 
+    for((name,value) <- specs if name != "sequentialRunOrder" ||
         (name == "sequentialRunOrder" && value == "false"))
       result.addAttribute("", "", name, "CDATA", value)
     result
   }
-  def saveProtocol(hd: TransformerHandler, protocol: LabProtocol) {
-    def element(name: String, value: String) {
+  def saveProtocol(hd: TransformerHandler, protocol: LabProtocol): Unit = {
+    def element(name: String, value: String): Unit = {
       hd.startElement("","",name,attributes())
       hd.characters(value.toCharArray,0,value.length)
       hd.endElement("","",name)
     }
-    def elementWithAttributes(name: String, attributes: AttributesImpl) {
+    def elementWithAttributes(name: String, attributes: AttributesImpl): Unit = {
       hd.startElement("", "", name, attributes)
       hd.endElement("", "", name)
     }
-    def matchValueSet(valueSet: RefValueSet) {
+    def matchValueSet(valueSet: RefValueSet): Unit = {
       valueSet match {
         case steppedValueSet:SteppedValueSet =>
           elementWithAttributes(
@@ -63,14 +63,6 @@ object LabSaver {
                        ("first", Dump.number(steppedValueSet.firstValue.toDouble)),
                        ("step", Dump.number(steppedValueSet.step.toDouble)),
                        ("last", Dump.number(steppedValueSet.lastValue.toDouble))))
-        case enumeratedValueSet: EnumeratedValueSet =>
-          hd.startElement("", "", "enumeratedValueSet",
-                          attributes(("variable", valueSet.variableName)))
-          for(value <- enumeratedValueSet)
-            elementWithAttributes("value",
-                                  attributes(("value", Dump.logoObject(
-                                    value.asInstanceOf[AnyRef],true,false))))
-          hd.endElement("", "", "enumeratedValueSet")
         case enumeratedValueSet: RefEnumeratedValueSet =>
           hd.startElement("", "", "enumeratedValueSet",
             attributes(("variable", valueSet.variableName)))

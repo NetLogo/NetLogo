@@ -5,7 +5,7 @@ import org.nlogo.api.{ SimpleChangeEvent, SimpleChangeEventPublisher }
 class SimpleChangeEventCounter(pub: SimpleChangeEventPublisher) extends SimpleChangeEventPublisher#Sub {
   pub.subscribe(this)
   var eventCount: Int = 0
-  override def notify(pub: SimpleChangeEventPublisher#Pub, event: SimpleChangeEvent.type) {
+  override def notify(pub: SimpleChangeEventPublisher#Pub, event: SimpleChangeEvent.type): Unit = {
     eventCount += 1
   }
 }

@@ -82,7 +82,7 @@ class TestCompileAll extends AnyFunSuite  {
       assert(Version.compatibleVersion(version))
     }
 
-  def readWriteRead(path: String, text: String) {
+  def readWriteRead(path: String, text: String): Unit = {
     val loader = FileFormat.standardAnyLoader(true, literalParser)
     val model = loader.readModel(text, ModelReader.modelSuffix).get
     val newModel = loader.readModel(loader.sourceString(model, ModelReader.modelSuffix).get,
@@ -96,7 +96,7 @@ class TestCompileAll extends AnyFunSuite  {
     assertResult(model.optionalSections)(model.optionalSections)
   }
 
-  def compile(path: String, text: String) {
+  def compile(path: String, text: String): Unit = {
     val workspace = HeadlessWorkspace.newInstance
     // compilerTestingMode keeps patches from being created, which we don't need (and which was
     // slowing things down), and has some other effects too - ST 1/13/05, 12/6/07

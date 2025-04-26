@@ -8,7 +8,7 @@ class _orbitleft extends Command {
 
 
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     world.observer.orbitRight(-argEvalDoubleValue(context, 0))
     context.ip = next
   }

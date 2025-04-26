@@ -9,7 +9,7 @@ class _showturtle extends Command {
 
 
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     context.agent.asInstanceOf[Turtle].hidden(false)
     context.ip = next
   }

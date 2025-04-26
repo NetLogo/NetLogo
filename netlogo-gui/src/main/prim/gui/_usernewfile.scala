@@ -38,6 +38,8 @@ class _usernewfile extends Reporter {
         b
       case s: String =>
         s
+      case _ =>
+        throw new Exception(s"Unexpected result: $result")
     }
   }
 

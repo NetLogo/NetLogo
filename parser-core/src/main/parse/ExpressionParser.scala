@@ -11,6 +11,7 @@ import org.nlogo.core.Syntax.compatible
 import org.nlogo.core.prim.Lambda
 
 import scala.annotation.tailrec
+import scala.collection.BufferedIterator
 import collection.mutable.Buffer
 
 /**
@@ -126,6 +127,9 @@ object ExpressionParser {
                 b += new core.Statement(enter, set.token.sourceLocation)
 
                 sets.foreach(recurseSets)
+
+              case c =>
+                throw new Exception(s"Unexpected command: $c")
             }
           }
 
@@ -229,7 +233,7 @@ object ExpressionParser {
     val types = syntax.right
     while (formal1 < types.length && !compatible(Syntax.RepeatableType, types(formal1))) {
       if (formal1 == types.length - 1 && untypedArgs.size == types.length - 1 && compatible(Syntax.OptionalType, types(formal1)))
-        return scala.collection.immutable.Seq[core.Expression](typedArgs: _*)
+        return typedArgs.toSeq
       cAssert(untypedArgs.size > actual1, missingInput(syntax, displayName, true), location)
       typedArgs.update(actual1, resolveType(types(formal1), untypedArgs(actual1), displayName, scope))
       formal1 += 1
@@ -251,7 +255,7 @@ object ExpressionParser {
         actual1 += 1
       }
     }
-    scala.collection.immutable.Seq[core.Expression](typedArgs: _*)
+    typedArgs.toSeq
   }
 
   /**
@@ -386,15 +390,15 @@ object ExpressionParser {
       case block: DelayedBlock => parseDelayedBlock(block, goalType, scope)
       case _ => originalArg
     }
-    cAssert(compatible(goalType, arg.reportedType), {
+    cAssert(compatible(goalType, arg.reportedType()), {
       // remove reference type from message unless it's part of the goalType, confusing to see
       // "expected a variable or a number"
       val displayedReportedType =
         if ((goalType & Syntax.ReferenceType) == 0 &&
-          ((arg.reportedType & ~Syntax.ReferenceType) != 0))
-          arg.reportedType & ~Syntax.ReferenceType
+          ((arg.reportedType() & ~Syntax.ReferenceType) != 0))
+          arg.reportedType() & ~Syntax.ReferenceType
         else
-          arg.reportedType
+          arg.reportedType()
       s"$instruction expected this input to be ${core.TypeNames.aName(goalType)}, but got ${core.TypeNames.aName(displayedReportedType)} instead"
     },
     arg)
@@ -757,7 +761,7 @@ object ExpressionParser {
     // checking here to make sure that at the very least, parenthesis and brackets are matched up
     // without being mixed and matched.  FD 8/19/2015
     @tailrec
-    def check(remaining: Seq[Token], stack: Seq[Token] = Seq()) {
+    def check(remaining: Seq[Token], stack: Seq[Token] = Seq()): Unit = {
       if(remaining.isEmpty) {
         if(!stack.isEmpty) {
           if(stack.head.tpe == TokenType.OpenParen) {
@@ -791,6 +795,7 @@ object ExpressionParser {
     val tokens = block match {
       case alb: ArrowLambdaBlock => alb.allTokens
       case adl: AmbiguousDelayedBlock => adl.tokens
+      case b => throw new Exception(s"Unexpected block: $b")
     }
 
     check(tokens.dropRight(2)) // Drops two because of the EOF

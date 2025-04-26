@@ -16,10 +16,10 @@ trait Workspace extends ApiWorkspace with JobManagerOwner {
   def compiler: CompilerInterface
 
   def procedures: Procedure.ProceduresMap
-  def procedures_=(procedures: Procedure.ProceduresMap)
+  def procedures_=(procedures: Procedure.ProceduresMap): Unit
 
-  def tick(c: Context, originalInstruction: Instruction)
-  def resetTicks(c: Context)
+  def tick(c: Context, originalInstruction: Instruction): Unit
+  def resetTicks(c: Context): Unit
 
   @throws(classOf[java.net.MalformedURLException])
   def attachModelDir(filePath: String): String
@@ -74,13 +74,13 @@ trait Workspace extends ApiWorkspace with JobManagerOwner {
   def setExportPlotWarningAction(action: ExportPlotWarningAction): Unit
 
   /* job controls */
-  def addJobFromJobThread(job: Job)
-  def joinForeverButtons(agent: Agent)
+  def addJobFromJobThread(job: Job): Unit
+  def joinForeverButtons(agent: Agent): Unit
 
   /* controls for things outside of nvm */
   def breathe(context: Context): Unit
-  def requestDisplayUpdate(force: Boolean)
-  def inspectAgent(agent: ApiAgent, radius: Double)
+  def requestDisplayUpdate(force: Boolean): Unit
+  def inspectAgent(agent: ApiAgent, radius: Double): Unit
   def inspectAgent(agentKind: AgentKind, agent: Agent, radius: Double): Unit
   def stopInspectingAgent(agent: org.nlogo.agent.Agent): Unit
   def stopInspectingDeadAgents(): Unit

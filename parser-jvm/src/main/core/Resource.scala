@@ -8,7 +8,7 @@ object Resource {
     io.Source.fromURL(getClass.getResource(path))
 
   def lines(path: String): Iterator[String] =
-    get(path).getLines
+    get(path).getLines()
 
   def asString(path: String): String =
     get(path).mkString

@@ -13,7 +13,7 @@ class BooleanConstraint(var defaultValue: java.lang.Boolean) extends ValueConstr
   def this() = this(java.lang.Boolean.FALSE)
 
   @throws(classOf[ValueConstraint.Violation])
-  def assertConstraint(value: AnyRef) {
+  def assertConstraint(value: AnyRef): Unit = {
     if(!value.isInstanceOf[java.lang.Boolean])
       throw new ValueConstraint.Violation(I18N.errors.get("org.nlogo.agent.BooleanConstraint.bool"))
   }

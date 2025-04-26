@@ -10,7 +10,7 @@ package org.nlogo.agent
 // Letting it slide for now. - ST 8/10/11
 
 import org.nlogo.core.LogoList
-import collection.JavaConverters._
+import scala.jdk.CollectionConverters.IteratorHasAsScala
 
 object AllStoredValues {
   def apply(world: CoreWorld): Iterator[AnyRef] = {

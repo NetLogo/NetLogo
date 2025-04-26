@@ -15,7 +15,8 @@ case class XMLElement(val name: String, val attributes: Map[String, String], val
 
   private val childHashes: Map[Int, Map[XMLElement, Int]] = {
     val grouped = children.groupBy(_.hash)
-    val counts  = grouped.mapValues(_.foldLeft(Map[XMLElement, Int]())((acc, x) => acc + (x -> (acc.getOrElse(x, 0) + 1))))
+    val counts  = grouped.view.mapValues(_.foldLeft(Map[XMLElement, Int]())
+                    ((acc, x) => acc + (x -> (acc.getOrElse(x, 0) + 1)))).toMap
     counts
   }
 

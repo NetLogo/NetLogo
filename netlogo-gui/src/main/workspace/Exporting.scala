@@ -9,13 +9,13 @@ import java.io.{IOException,PrintWriter}
 
 trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
 
-  def exportDrawingToCSV(writer:PrintWriter)
-  def exportOutputAreaToCSV(writer:PrintWriter)
+  def exportDrawingToCSV(writer:PrintWriter): Unit
+  def exportOutputAreaToCSV(writer:PrintWriter): Unit
 
   @throws(classOf[IOException])
-  def exportWorld(filename: String) {
+  def exportWorld(filename: String): Unit = {
     new AbstractExporter(filename) {
-      def export(writer: PrintWriter): Unit = {
+      def `export`(writer: PrintWriter): Unit = {
         exportWorldNoMeta(writer)
       }
     }.export("world", modelFileName, "")
@@ -51,9 +51,9 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
   }
 
   @throws(classOf[IOException])
-  def exportPlot(plotName: String, filename: String) {
+  def exportPlot(plotName: String, filename: String): Unit = {
     new AbstractExporter(filename) {
-      override def export(writer: PrintWriter) {
+      override def `export`(writer: PrintWriter): Unit = {
         exportInterfaceGlobals(writer)
         new CorePlotExporter(
           plotManager
@@ -75,9 +75,9 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
   }
 
   @throws(classOf[IOException])
-  def exportAllPlots(filename: String) {
+  def exportAllPlots(filename: String): Unit = {
     new AbstractExporter(filename) {
-      override def export(writer: PrintWriter) {
+      override def `export`(writer: PrintWriter): Unit = {
         exportInterfaceGlobals(writer)
 
         plotManager.getPlotNames.foreach { name =>

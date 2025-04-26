@@ -91,7 +91,7 @@ with MenuAction with ThemeSync {
       case None =>
         aboutWindow = Some(new AboutWindow(frame) {
           addWindowListener(new WindowAdapter {
-            override def windowClosed(e: WindowEvent) {
+            override def windowClosed(e: WindowEvent): Unit = {
               aboutWindow = None
             }
           })

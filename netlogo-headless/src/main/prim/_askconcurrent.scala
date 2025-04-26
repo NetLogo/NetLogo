@@ -14,7 +14,7 @@ class _askconcurrent extends Command with CustomAssembled with SelfScoping {
   override def toString =
     super.toString + ":+" + offset
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val agentset = argEvalAgentSet(context, 0)
     if (!context.agent.isInstanceOf[Observer]) {
       if (agentset eq world.turtles)
@@ -35,7 +35,7 @@ class _askconcurrent extends Command with CustomAssembled with SelfScoping {
     context.ip = offset
   }
 
-  override def assemble(a: AssemblerAssistant) {
+  override def assemble(a: AssemblerAssistant): Unit = {
     a.add(this)
     a.block()
     a.done()

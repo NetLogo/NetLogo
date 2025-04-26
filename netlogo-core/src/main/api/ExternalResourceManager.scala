@@ -29,7 +29,7 @@ class ExternalResourceManager {
   def getResources: Seq[ExternalResource] =
     resources.toSeq
 
-  def setResources(rs: Seq[ExternalResource]) {
+  def setResources(rs: Seq[ExternalResource]): Unit = {
     resources.clear()
     resources ++= rs
   }
@@ -48,7 +48,7 @@ class ExternalResourceManager {
       false
   }
 
-  def removeResource(name: String) {
+  def removeResource(name: String): Unit = {
     val index = resources.indexWhere(_.name == name)
 
     if (index != -1)
