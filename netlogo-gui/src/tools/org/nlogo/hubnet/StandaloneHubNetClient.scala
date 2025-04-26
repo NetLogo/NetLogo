@@ -11,7 +11,7 @@ import org.nlogo.theme.InterfaceColors
 
 object StandaloneHubNetClient {
 
-  def main(args:Array[String]){ new ConnectionGUI().go() }
+  def main(args:Array[String]): Unit ={ new ConnectionGUI().go() }
 
   class ConnectionGUI extends JFrame {
     getContentPane.setBackground(InterfaceColors.dialogBackground())

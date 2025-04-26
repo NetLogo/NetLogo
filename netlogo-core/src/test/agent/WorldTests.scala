@@ -45,12 +45,13 @@ class WorldTests extends AnyFunSuite with AbstractTestWorld {
     w
   }
 
-  def changeProgram(w: World, program: Program) = {
+  def changeProgram(w: World, program: Program): Unit = {
     w match {
       case world: CompilationManagement =>
         world.rememberOldProgram()
         world.program(program)
         world.realloc()
+      case _ =>
     }
   }
 
@@ -85,13 +86,13 @@ class WorldTests extends AnyFunSuite with AbstractTestWorld {
     testChangePublishedAfterWorldResize(worldSquare, worldRectangle)
   }
   test("saves turtles between recompiles") {
-    val world = makeWorld(worldRectangle, Program.empty)
+    val world = makeWorld(worldRectangle, Program.empty())
     for (i <- 1 to 100) { makeTurtle(world, Array(0, 0)) }
-    changeProgram(world, Program.empty)
+    changeProgram(world, Program.empty())
     assertResult(100)(world.turtles.count)
   }
   test("saves breeds between recompiles") {
-    val breedProgram = Program.empty.copy(breeds = ListMap("FOOS" -> Breed("FOOS", "FOO", "foos", "foo")))
+    val breedProgram = Program.empty().copy(breeds = ListMap("FOOS" -> Breed("FOOS", "FOO", "foos", "foo")))
     val world = makeWorld(worldRectangle, breedProgram)
     for (i <- 1 to 100) { makeBreededTurtle(world, "FOOS") }
     changeProgram(world,
@@ -101,7 +102,7 @@ class WorldTests extends AnyFunSuite with AbstractTestWorld {
     assertResult(0)(world.getBreed("BARS").count)
   }
   test("saves link breeds between recompiles") {
-    val lbProgram = Program.empty.copy(linkBreeds = ListMap("FOOS" -> Breed("FOOS", "FOO", "foos", "foo", isLinkBreed = true)))
+    val lbProgram = Program.empty().copy(linkBreeds = ListMap("FOOS" -> Breed("FOOS", "FOO", "foos", "foo", isLinkBreed = true)))
     val world = makeWorld(worldRectangle, lbProgram)
     for (i <- 1 to 100) { makeTurtle(world, Array(0, 0)) }
     for (i <- 1 to 99) { makeBreededLink(world, "FOOS", i - 1, i) }
@@ -112,14 +113,14 @@ class WorldTests extends AnyFunSuite with AbstractTestWorld {
     assertResult(0)(world.getLinkBreed("BARS").count)
   }
   test("breedsOwnIndexOf returns the index for the breed variable") {
-    val program = Program.empty.copy(breeds = ListMap("FOOS" -> Breed("FOOS", "FOO", "foos", "foo", owns = Seq("A", "B"))))
+    val program = Program.empty().copy(breeds = ListMap("FOOS" -> Breed("FOOS", "FOO", "foos", "foo", owns = Seq("A", "B"))))
     val world = makeWorld(worldRectangle, program)
     assertResult(13)(world.breedsOwnIndexOf(world.getBreed("FOOS"), "A"))
     assertResult(14)(world.breedsOwnIndexOf(world.getBreed("FOOS"), "B"))
     assertResult(-1)(world.breedsOwnIndexOf(world.getBreed("FOOS"), "C"))
   }
   test("linkBreedsOwnIndexOf returns the index for link breed variable") {
-    val program = Program.empty.copy(linkBreeds = ListMap("FOOS" -> Breed("FOOS", "FOO", "foos", "foo", owns = Seq("A", "B"), isLinkBreed = true)))
+    val program = Program.empty().copy(linkBreeds = ListMap("FOOS" -> Breed("FOOS", "FOO", "foos", "foo", owns = Seq("A", "B"), isLinkBreed = true)))
     val world = makeWorld(worldRectangle, program)
     assertResult(10)(world.linkBreedsOwnIndexOf(world.getLinkBreed("FOOS"), "A"))
     assertResult(11)(world.linkBreedsOwnIndexOf(world.getLinkBreed("FOOS"), "B"))
@@ -132,18 +133,18 @@ class WorldTests extends AnyFunSuite with AbstractTestWorld {
   }
 
   test("worlds can be copied") {
-    val program = Program.empty.copy(linkBreeds = ListMap("FOOS" -> Breed("FOOS", "FOO", "foos", "foo", owns = Seq("A", "B"), isLinkBreed = true)))
+    val program = Program.empty().copy(linkBreeds = ListMap("FOOS" -> Breed("FOOS", "FOO", "foos", "foo", owns = Seq("A", "B"), isLinkBreed = true)))
     val world = makeWorld(worldRectangle, program)
     val t1 = world.createTurtle(world.turtles)
     t1.xandycor(1, 2)
     world.createTurtle(world.turtles)
-    val copiedWorld = world.copy
+    val copiedWorld = world.copy()
     assert(world.turtles.count == copiedWorld.turtles.count)
     assert(copiedWorld.getTurtle(0).xcor == 1)
     assert(copiedWorld.getTurtle(0).ycor == 2)
   }
   test("first link created after calling getLink has id 0") {
-    val world = makeWorld(worldRectangle, Program.empty)
+    val world = makeWorld(worldRectangle, Program.empty())
     val t1 = world.createTurtle(world.turtles)
     val t2 = world.createTurtle(world.turtles)
     world.linkManager.getLink(t1, t2, world.links)
@@ -156,7 +157,7 @@ class WorldTests extends AnyFunSuite with AbstractTestWorld {
 
     import org.nlogo.core.LogoList
 
-    val world = makeWorld(worldRectangle, Program.empty)
+    val world = makeWorld(worldRectangle, Program.empty())
     assert(world.patchesAllBlack)
 
     world.clearPatches()

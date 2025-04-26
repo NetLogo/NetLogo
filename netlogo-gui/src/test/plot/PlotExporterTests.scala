@@ -30,7 +30,7 @@ class PlotExporterTests extends SimplePlotTest {
     pen.plot(5)
     pen.plot(8)
     pen.plot(17)
-    val export = exportPlotToString(plot)
+    val `export` = exportPlotToString(plot)
     assert(EXPORT_RESULT === export.replaceAll("\r\n","\n"))
   }
 

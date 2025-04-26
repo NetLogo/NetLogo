@@ -4,12 +4,13 @@ package org.nlogo.workspace
 
 import org.nlogo.api.{ ExtensionManager => APIEM, ExtensionException }
 import org.nlogo.core.TokenType
-import ExtensionManager.ExtensionLoader
 
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funsuite.AnyFunSuite
 
-import scala.jdk.CollectionConverters.ListHasAsScala
+import scala.jdk.CollectionConverters.{ IterableHasAsScala, SeqHasAsJava }
+
+import ExtensionManager.ExtensionLoader
 
 class ExtensionManagerTests extends AnyFunSuite with BeforeAndAfter {
   before {
@@ -158,7 +159,7 @@ class ExtensionManagerTests extends AnyFunSuite with BeforeAndAfter {
   }
 
   test("dumpExtensionPrimitives prints an empty table when no extensions are loaded") {
-    assert(emptyManager.dumpExtensionPrimitives ==
+    assert(emptyManager.dumpExtensionPrimitives() ==
       s"""|EXTENSION${tab}PRIMITIVE${tab}TYPE
           |---------${tab}---------${tab}----
           |""".stripMargin)
@@ -166,7 +167,7 @@ class ExtensionManagerTests extends AnyFunSuite with BeforeAndAfter {
 
   test("dumpExtensionPrimitives prints a table with all loaded primitives") {
     new WithLoadedArrayExtension {
-      assert(loadedManager.dumpExtensionPrimitives ==
+      assert(loadedManager.dumpExtensionPrimitives() ==
         s"""|EXTENSION${tab}PRIMITIVE${tab}TYPE
             |---------${tab}---------${tab}----
             |array${tab}TO-LIST${tab}Reporter

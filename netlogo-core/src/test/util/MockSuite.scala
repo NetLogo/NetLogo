@@ -136,7 +136,7 @@ trait MockSuite extends AnyFunSuite {
   def a[T : ClassTag]: Matcher[T] = aMatcher
   def an[T : ClassTag]: Matcher[T] = aMatcher
   def aNonNull[T : ClassTag]: Matcher[T] = aMatcher
-  private def aMatcher[T: ClassTag]: Matcher[T] = new BaseMatcher[T](): Unit = {
+  private def aMatcher[T: ClassTag]: Matcher[T] = new BaseMatcher[T]() {
     def describeTo(description: Description): Unit = {
       description.appendText("<" + erasure[T].toString + ">")
     }
@@ -204,7 +204,7 @@ trait MockSuite extends AnyFunSuite {
   def inSequence(sequence: Sequence) = expectations.inSequence(sequence)
 
   /** this class allows an expectation to declare that another expectation should follow */
-  implicit def after(v: =>Any) = new InSequenceThen(v)
+  implicit def after(v: =>Any): MockSuite.this.InSequenceThen = new InSequenceThen(v)
 
   /** this class allows an expectation to declare that another expectation should follow */
   class InSequenceThen(firstExpectation: =>Any) {

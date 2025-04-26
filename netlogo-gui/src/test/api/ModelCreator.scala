@@ -28,7 +28,7 @@ trait ModelCreator {
   class Model(code: String, widgets: List[core.Widget]) extends core.Model(code = code, widgets = widgets)
 
   val counter = Iterator.from(0)
-  def quoted(s:String) = '"' + s + '"'
+  def quoted(s:String) = s"\"$s\""
 
   //
   // Code to create plots
@@ -36,11 +36,11 @@ trait ModelCreator {
 
   def Pens(pens: core.Pen*): List[core.Pen] = pens.toList
 
-  def Plot(name: String = "Plot" + counter.next,
+  def Plot(name: String = "Plot" + counter.next(),
     setupCode: String = "", updateCode: String = "", pens: List[core.Pen] = Nil, legendOn: Boolean = false): core.Plot =
       core.Plot(Some(name), 5, 5, 5, 5, false, Some("time"), Some("num of turtles"), 0.0, 10.0, 0.0, 10.0, true, true, legendOn, setupCode, updateCode, pens)
 
-  def Pen(name:String = "Pen" + counter.next, setupCode:String = "", updateCode: String = ""): core.Pen =
+  def Pen(name:String = "Pen" + counter.next(), setupCode:String = "", updateCode: String = ""): core.Pen =
     core.Pen(name, 1.0, 0, -16777216, true, setupCode, updateCode)
 
   //
@@ -51,7 +51,7 @@ trait ModelCreator {
   case object HORIZONTAL extends Direction
   case object VERTICAL extends Direction
 
-  def Slider(name: String = "Slider" + counter.next,
+  def Slider(name: String = "Slider" + counter.next(),
                     // all of these should be something other than string. however,
                     // constraints can be foo + 30, so we need to allow for that.
                     // so we currently, clients use "10" even though they want just 10.
@@ -64,14 +64,14 @@ trait ModelCreator {
   // Code to create switches
   //
 
-  def Switch(name:String = "Switch" + counter.next, on: Boolean = true): core.Switch =
+  def Switch(name:String = "Switch" + counter.next(), on: Boolean = true): core.Switch =
     core.Switch(Some(name), 5, 5, 5, 5, false, Some(name), on)
 
   //
   // Code to create choosers
   //
 
-  def Chooser(name:String = "Chooser" + counter.next, choices:List[AnyRef] = Nil, index:Int = 0): core.Chooser = {
+  def Chooser(name:String = "Chooser" + counter.next(), choices:List[AnyRef] = Nil, index:Int = 0): core.Chooser = {
     core.Chooser(Some(name), 5, 5, 5, 5, false, Some(name), choices.map(core.Chooseable(_)), index)
   }
 

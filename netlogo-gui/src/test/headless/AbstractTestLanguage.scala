@@ -70,18 +70,18 @@ trait AbstractTestLanguage extends Assertions {
     // as Logo values, and as printed representations.  Most of the time these checks will come out
     // the same, but it's good to have a both, partially as a way of giving both
     // Utils.recursivelyEqual() and Dump.logoObject() lots of testing! - ST 5/8/03
-    withClue(mode + ": not equals(): reporter \"" + reporter + "\"") {
+    withClue(s"$mode: not equals(): reporter \"$reporter\"") {
       assertResult(expectedResult)(
         org.nlogo.api.Dump.logoObject(actualResult, true, false))
     }
     assert(Equality.equals(actualResult,
                            compiler.readFromString(expectedResult)),
-           mode + ": not recursivelyEqual(): reporter \"" + reporter + "\"")
+           s"$mode: not recursivelyEqual(): reporter \"$reporter\"")
   }
   private def privateTestReporterError(reporter: String,
                                        expectedError: String,
                                        actualError: => Option[String],
-                                       mode: TestMode) {
+                                       mode: TestMode): Unit = {
     try {
       testReporter(reporter, expectedError, mode)
       fail(s"failed to cause runtime error: `$reporter")
@@ -96,7 +96,7 @@ trait AbstractTestLanguage extends Assertions {
         fail(s"expected runtime error, got compile error: ${ex.getMessage}")
 
       case ex: Throwable =>
-        withClue(mode + ": reporter: " + reporter) {
+        withClue(s"$mode: reporter: $reporter") {
           if (actualError.isEmpty)
             fail(s"expected to find an error, but none found for `$reporter`")
 
@@ -114,7 +114,7 @@ trait AbstractTestLanguage extends Assertions {
   }
   def testCommand(command: String,
                   agentClass: AgentKind = AgentKind.Observer,
-                  mode: TestMode = NormalMode) {
+                  mode: TestMode = NormalMode): Unit = {
     workspace.lastLogoException = null
     workspace.evaluateCommands(owner,
       if(mode == NormalMode) command
@@ -125,35 +125,35 @@ trait AbstractTestLanguage extends Assertions {
   }
   def testCommandError(command: String, error: String,
                        agentClass: AgentKind = AgentKind.Observer,
-                       mode: TestMode = NormalMode) {
+                       mode: TestMode = NormalMode): Unit = {
     try {
       testCommand(command, agentClass, mode)
       fail(s"failed to cause runtime error: `$command`")
     }
     catch {
       case ex: LogoException =>
-        withClue(mode + ": command: " + command) {
+        withClue(s"$mode: command: $command") {
           assertResult(error)(ex.getMessage)
         }
     }
   }
   def testCommandErrorStackTrace(command: String, stackTrace: String,
                        agentClass: AgentKind = AgentKind.Observer,
-                       mode: TestMode = NormalMode) {
+                       mode: TestMode = NormalMode): Unit = {
     try {
       testCommand(command, agentClass, mode)
       fail(s"failed to cause runtime error: `$command`")
     }
     catch {
       case ex: LogoException =>
-        withClue(mode + ": command: " + command) {
+        withClue(s"$mode: command: $command") {
           // println(workspace.lastErrorReport.stackTrace.get)
           assertResult(stackTrace)(workspace.lastErrorReport.stackTrace.get)
         }
     }
   }
   def testCommandCompilerErrorMessage(command: String, errorMessage: String,
-                                      agentClass: AgentKind = AgentKind.Observer)
+                                      agentClass: AgentKind = AgentKind.Observer): Unit =
   {
     try {
       workspace.compileCommands(command, agentClass)

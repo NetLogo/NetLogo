@@ -43,8 +43,8 @@ class CharacterIteratorInputTest extends AnyFunSuite {
 
   test("iterator input - assemble token") { new Helper {
     text = "a"
-    val Some((res, nextInput)) =
-      input.assembleToken(LexOperations.characterMatching(c => c == 'a'), (s) => Some((s, TokenType.Ident, null)))
+    val (res, nextInput) = input.assembleToken(LexOperations.characterMatching(c => c == 'a'),
+                                               (s) => Some((s, TokenType.Ident, null))).get
     assert(res.start == 0)
     assert(res.end == 1)
     assert(res.tpe == TokenType.Ident)

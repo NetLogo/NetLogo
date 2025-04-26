@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.scalatest.funsuite.AnyFunSuite
-import org.nlogo.core.{ Button => CoreButton, Femto }
+import org.nlogo.core.{ Femto, Widget => CoreWidget }
 import org.nlogo.api.{ JobOwner, MersenneTwisterFast, NetLogoLegacyDialect }
 import org.nlogo.agent.{ CompilationManagement, World }
 import org.nlogo.nvm.PresentationCompilerInterface
@@ -70,13 +70,13 @@ class CompilerManagerTests extends AnyFunSuite {
 
   test("compiler manager set its own widgets and world program") { new Helper {
     source = ""
-    loadWidgets()
+    this.loadWidgets()
     assert(compilerManager.widgets.isEmpty)
     assert(workspace.world.program != null)
   } }
 
   test("given no widgets, the compiler manager emits one CompiledEvent for empty widgets, one CompiledEvent for code tab") { new Helper {
-    loadWidgets()
+    this.loadWidgets()
     assert(workspace.world.program.userGlobals == Seq("A", "B", "C"))
     assert(workspace.procedures.get("FOO").nonEmpty)
     assert(workspace.procedures.apply("FOO").owner == compilerManager.proceduresInterface)
@@ -88,7 +88,7 @@ class CompilerManagerTests extends AnyFunSuite {
 
   test("compiler manager emits a CompiledEvent for each widget with source and one for the code tab") { new Helper {
     widgets = Seq(new DummyWidget("show 5"))
-    loadWidgets()
+    this.loadWidgets()
     assert(compilerManager.widgets.size == 1)
     assert(events.length == 3)
     assert(events(0).isInstanceOf[Events.RemoveAllJobsEvent])
@@ -99,7 +99,7 @@ class CompilerManagerTests extends AnyFunSuite {
   test("compiler manager handles CompileMoreSource after loading ends by recompiling widgets") { new Helper {
     val widget = new DummyWidget("set a 5")
     widgets = Seq(widget)
-    loadWidgets()
+    this.loadWidgets()
     widget.sourceCode = "set a 10"
     compilerManager.handle(new CompileMoreSourceEvent(widget))
     assert(events.length == 4)
@@ -108,12 +108,12 @@ class CompilerManagerTests extends AnyFunSuite {
 
   test("compiler manager clears the world at the end of loading") { new Helper {
     workspace.world.createTurtle(workspace.world.turtles)
-    loadWidgets()
+    this.loadWidgets()
     assert(workspace.world.turtles.isEmpty)
   } }
 
   test("compiler widget compiles the command center source and emits a compiled event") { new Helper {
-    loadWidgets()
+    this.loadWidgets()
     val ccWidget = new DummyWidget("", true)
     compilerManager.handle(new CompileMoreSourceEvent(ccWidget))
     assert(events.length == 4)
@@ -123,7 +123,7 @@ class CompilerManagerTests extends AnyFunSuite {
   test("handles interface global event where widget name changed by compiling everything") { new Helper {
     val widget = new DummyIGWidget("bar")
     widgets = Seq(widget)
-    loadWidgets()
+    this.loadWidgets()
     val nameChanged = new InterfaceGlobalEvent(widget, true, false, false, false)
     compilerManager.handle(nameChanged)
     assert(events.length == 6)
@@ -136,7 +136,7 @@ class CompilerManagerTests extends AnyFunSuite {
     val widget = new DummyIGWidget("")
     widgets = Seq(widget)
     source = "globals [ig]"
-    loadWidgets()
+    this.loadWidgets()
     workspace.world.setObserverVariableByName("ig", Double.box(10))
     val updateIGValue = new InterfaceGlobalEvent(widget, false, true, false, false)
     compilerManager.handle(updateIGValue)
@@ -147,7 +147,7 @@ class CompilerManagerTests extends AnyFunSuite {
     val widget = new DummyIGWidget("", Double.box(0))
     widgets = Seq(widget)
     source = "globals [ig]"
-    loadWidgets()
+    this.loadWidgets()
     workspace.world.setObserverVariableByName("ig", Double.box(10))
     val updateIGValue = new InterfaceGlobalEvent(widget, false, true, false, false)
     compilerManager.handle(updateIGValue)
@@ -158,7 +158,7 @@ class CompilerManagerTests extends AnyFunSuite {
     val widget = new DummyTeSliderWidget("", Double.box(0))
     widgets = Seq(widget)
     source = "globals [te]"
-    loadWidgets()
+    this.loadWidgets()
     workspace.world.setObserverVariableByName("te", Double.box(10))
     val updateIGValue = new InterfaceGlobalEvent(widget, false, true, false, false)
     compilerManager.handle(updateIGValue)
@@ -169,7 +169,7 @@ class CompilerManagerTests extends AnyFunSuite {
     val widget = new DummyTeSliderWidget("", Double.box(20))
     widgets = Seq(widget)
     source = "globals [te]"
-    loadWidgets()
+    this.loadWidgets()
     widget.value = Double.box(0)
     compilerManager.handle(new CompileAllEvent)
     assert(workspace.world.getObserverVariableByName("te") == Double.box(0))
@@ -182,7 +182,7 @@ class CompilerManagerTests extends AnyFunSuite {
     val widget = new DummyTeSliderWidget("", Double.box(0))
     widgets = Seq(widget)
     source = "globals [te]"
-    loadWidgets()
+    this.loadWidgets()
     widget.value = Double.box(20)
     assert(workspace.world.getObserverVariableByName("te") == Double.box(0))
     compilerManager.handle(new CompileAllEvent)
@@ -193,7 +193,7 @@ class CompilerManagerTests extends AnyFunSuite {
     val widget = new DummyTeSliderWidget("", Double.box(20))
     widgets = Seq(widget)
     source = "globals [te]"
-    loadWidgets()
+    this.loadWidgets()
     val updateIGValue = new InterfaceGlobalEvent(widget, false, false, false, false)
     widget.value = Double.box(0)
     compilerManager.handle(updateIGValue)
@@ -208,7 +208,7 @@ class CompilerManagerTests extends AnyFunSuite {
     val widget = new DummyTeSliderWidget("", Double.box(20))
     widgets = Seq(widget)
     source = "globals [te]"
-    loadWidgets()
+    this.loadWidgets()
     val updateIGValue = new InterfaceGlobalEvent(widget, false, true, false, false)
     widget.value = Double.box(0)
     compilerManager.handle(updateIGValue)
@@ -225,7 +225,7 @@ class CompilerManagerTests extends AnyFunSuite {
     val widget = new DummyIGWidget("")
     val sWidget = new DummyTeSliderWidget("")
     widgets = Seq(widget, sWidget)
-    loadWidgets()
+    this.loadWidgets()
     assert(compilerManager.widgets.contains(widget))
     assert(compilerManager.widgets.contains(sWidget))
   } }
@@ -234,7 +234,7 @@ class CompilerManagerTests extends AnyFunSuite {
     val widget = new DummyIGWidget("", Double.box(10))
     widgets = Seq(widget)
     source = "globals [ig]"
-    loadWidgets()
+    this.loadWidgets()
     val igValueChange = new InterfaceGlobalEvent(widget, false, false, false, false)
     compilerManager.handle(igValueChange)
     assert(workspace.world.getObserverVariableByName("IG") == Double.box(10))
@@ -244,7 +244,7 @@ class CompilerManagerTests extends AnyFunSuite {
     val igWidget = new DummyIGWidget("", Double.box(10))
     val jobWidget = new DummyJobWidget("", null)
     widgets = Seq(igWidget, jobWidget)
-    loadWidgets()
+    this.loadWidgets()
     assert(compilerManager.widgets.contains(jobWidget))
     assert(compilerManager.widgets.contains(igWidget))
   } }
@@ -252,16 +252,16 @@ class CompilerManagerTests extends AnyFunSuite {
   test("adds interface global widgets to it's globalWidget set") { new Helper {
     val igWidget = new DummyIGWidget("", Double.box(10))
     widgets = Seq(igWidget)
-    loadWidgets()
+    this.loadWidgets()
     compilerManager.handle(new InterfaceGlobalEvent(igWidget, false, false, false, false))
     assert(compilerManager.globalWidgets.contains(igWidget))
   } }
 
   test("compiler manager clears the old program completely when loading begins") { new Helper {
     source = "breed [ as a ]"
-    loadWidgets()
+    this.loadWidgets()
     source = "breed [ bs b ]"
-    loadWidgets()
+    this.loadWidgets()
     assert(workspace.world.program.breeds.get("BS").isDefined)
     assert(workspace.world.getBreed("BS") != null)
     assert(workspace.world.getBreed("BS").isInstanceOf[org.nlogo.api.AgentSet])
@@ -272,7 +272,7 @@ class CompilerManagerTests extends AnyFunSuite {
   test("compiler manager does not emit an event for a widget when recompiling all source if that widget has no source") { new Helper {
     val widget = new DummyWidget("")
     widgets = Seq(widget)
-    loadWidgets()
+    this.loadWidgets()
     val compiledEvents = events.collect {
       case e: CompiledEvent => e
     }
@@ -283,7 +283,7 @@ class CompilerManagerTests extends AnyFunSuite {
     val igWidget = new DummyIGWidget("", Double.box(10))
     widgets = Seq(igWidget)
     source = "to foo show y end"
-    loadWidgets()
+    this.loadWidgets()
     assert(compilerManager.globalWidgets.contains(igWidget))
     assert(workspace.world.program.interfaceGlobals.contains("ig"))
   } }
@@ -317,12 +317,8 @@ class DummyWidget(var sourceCode: String, val isCommandCenter: Boolean = false) 
 }
 
 class DummyJobWidget(source: String, rand: MersenneTwisterFast) extends JobWidget(rand) {
-  def load(widget: CoreButton): AnyRef = {
-    null
-  }
-  def model: CoreButton = {
-    null
-  }
+  def load(widget: CoreWidget): Unit = {}
+  def model: CoreWidget = null
   override def syncTheme(): Unit = {}
 }
 
@@ -332,7 +328,7 @@ class DummyIGWidget(source: String, var value: AnyRef = Double.box(0)) extends D
   def valueObject(x: AnyRef): Unit = x match {
     case a: AnyRef => value = a
   }
-  def valueObject: AnyRef = value
+  def valueObject(): AnyRef = value
 }
 
 class DummyTeSliderWidget(source: String, var value: AnyRef = Double.box(0)) extends DummyWidget(source) with InterfaceGlobalWidget {
@@ -344,8 +340,8 @@ class DummyTeSliderWidget(source: String, var value: AnyRef = Double.box(0)) ext
   var increment = 1.0
   var maximum = 100.0
   var minimum = 0.0
-  def valueObject: AnyRef = value
-  def min( d: Double ){ increment = d}
-  def max( d: Double ){ maximum = d }
-  def inc( d: Double ){ increment = d }
+  def valueObject(): AnyRef = value
+  def min( d: Double ): Unit ={ increment = d}
+  def max( d: Double ): Unit ={ maximum = d }
+  def inc( d: Double ): Unit ={ increment = d }
 }

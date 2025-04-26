@@ -111,8 +111,9 @@ class SmartIndenterTests extends AnyFunSuite {
                   Array[String](name,
                                 spec.map(spec2in).mkString("\n"),
                                 spec.map(spec2out).mkString("\n"))
+                case _ => throw new Exception(s"Invalid path: $path")
               }
-            }
+            }.toIndexedSeq
   }
 
   val compiler = new DefaultCompilerServices(

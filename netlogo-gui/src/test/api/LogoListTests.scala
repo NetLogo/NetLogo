@@ -8,7 +8,7 @@ import org.scalatest.funsuite.AnyFunSuite
 class LogoListTests extends AnyFunSuite {
   test("iteratorNextThrowsException") {
     intercept[java.util.NoSuchElementException] {
-      LogoList().iterator.next
+      LogoList().iterator.next()
     }
   }
 }

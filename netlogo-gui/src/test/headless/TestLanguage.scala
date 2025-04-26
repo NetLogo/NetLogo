@@ -119,7 +119,7 @@ abstract class TestLanguage(files: Iterable[File]) extends AnyFunSuite with Slow
 
   for(t:LanguageTest <- TestParser.parseFiles(files); if(t.shouldRun))
     test(t.fullName, (additionalTags ++ Seq(new Tag(t.suiteName){}, new Tag(t.fullName){}, tag)): _*) {
-      t.run
+      t.run()
     }
 }
 

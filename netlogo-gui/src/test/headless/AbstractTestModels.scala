@@ -65,7 +65,7 @@ trait AbstractTestModels extends AnyFunSuite with ModelCreator {
   object ShovelableObserver { def >>(s: String) = workspace.command(s) }
   val observer = ShovelableObserver
 
-  def testError(f: => Unit, message:String){
+  def testError(f: => Unit, message:String): Unit ={
     val e = intercept[LogoException]{f}
     assert(e.getMessage === message)
   }

@@ -76,13 +76,13 @@ class HubNetManagerTests extends AnyFunSuite {
     }
   }
   def testBroadcastValidTag(manager: HubNetManager, connectionManager: MockConnectionManager)
-                           (validTag: Boolean, useSend: Boolean) {
+                           (validTag: Boolean, useSend: Boolean): Unit = {
     // broadcasts always attempt to send the message to all the clients,
     // so clientExist should be true for all broadcasts
     testValidTag(manager, connectionManager)(validTag, useSend, true)
   }
   def testValidTag(manager: HubNetManager, connectionManager: MockConnectionManager)
-                  (validTag: Boolean, useSend: Boolean, clientsExist: Boolean) {
+                  (validTag: Boolean, useSend: Boolean, clientsExist: Boolean): Unit = {
     connectionManager.validTag=validTag
     try {
       if(useSend) manager.send(if(clientsExist) List("foo") else List(), "fish", "bar")

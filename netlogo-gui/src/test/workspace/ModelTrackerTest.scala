@@ -11,7 +11,7 @@ class ModelTrackerTest extends AnyFunSuite {
     _modelFileName = modelName
     setModelType(modelType)
     def compiler = Femto.get("org.nlogo.compile.Compiler", NetLogoLegacyDialect)
-    def getExtensionManager = null
+    def getExtensionManager() = null
   }
 
   def makeModelNameForDisplay(modelType: ModelType = ModelType.Normal, name: String = "foo.nlogox"): String = {

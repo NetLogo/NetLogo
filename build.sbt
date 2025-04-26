@@ -32,7 +32,7 @@ lazy val scalaSettings = Seq(
   Test / scalaSource    := baseDirectory.value / "src" / "test",
   crossPaths            := false, // don't cross-build for different Scala versions
   scalacOptions ++=
-    "-deprecation -unchecked -feature -quickfix:any -Xcheckinit -encoding us-ascii -release 11 -opt:l:method -Xlint -Xfatal-warnings"
+    "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -release 11 -opt:l:method -Xlint -Xfatal-warnings"
       .split(" ").toSeq
 )
 
@@ -205,7 +205,8 @@ lazy val netlogo = project.in(file("netlogo-gui")).
         "com.fifesoft" % "rsyntaxtextarea" % "3.5.4",
         "com.typesafe" % "config" % "1.4.3",
         "net.lingala.zip4j" % "zip4j" % "2.11.5",
-        "org.apache.commons" % "commons-text" % "1.13.1"
+        "org.apache.commons" % "commons-text" % "1.13.1",
+        "org.scala-lang.modules" %% "scala-parallel-collections" % "1.2.0"
       ) ++ Seq("base", "controls", "graphics", "swing", "web")
         .map(m => "org.openjfx" % s"javafx-$m" % "21.0.6" classifier osName)
     },

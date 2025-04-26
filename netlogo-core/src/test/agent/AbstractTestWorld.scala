@@ -64,7 +64,7 @@ trait AbstractTestWorld extends Assertions {
     val iter = world.turtles.shufflerator(world.mainRNG)
     for(who <- Seq(4, 3, 2, 0, 1)) {
       assert(iter.hasNext)
-      assertResult(who)(iter.next.id)
+      assertResult(who)(iter.next().id)
     }
     assert(!iter.hasNext)
   }

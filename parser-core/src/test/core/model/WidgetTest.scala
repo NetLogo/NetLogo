@@ -29,7 +29,7 @@ object SimpleLiteralParser extends LiteralParser {
       readNumberFromString(s)
 
   override def readNumberFromString(source: String): AnyRef = {
-    NumberParser.parse(source).right.getOrElse(
+    NumberParser.parse(source).getOrElse(
       throw new CompilerException(source, 0, 1, s"invalid number: $source"))
   }
 }
@@ -82,9 +82,9 @@ class WidgetTest extends AnyFunSuite {
     assert(!AllLineTest.validate(fullAllLineTest.updated(6, "0")))
     assert(!AllLineTest.validate(fullAllLineTest.updated(7, "8")))
     assert(AllLineTest.validate(fullAllLineTest))
-    assert((List((), 2, 3, "4a", 5.0, true, true, true, true, ()) ==
+    assert((List[Any]((), 2, 3, "4a", 5.0, true, true, true, true, ()) ==
             AllLineTest.parse(fullAllLineTest, literalParser).vals))
-    assert((List((), 2, 3, "4a", 6.0, true, true, true, true, ()) !=
+    assert((List[Any]((), 2, 3, "4a", 6.0, true, true, true, true, ()) !=
             AllLineTest.parse(fullAllLineTest, literalParser).vals))
 
   }
@@ -119,13 +119,13 @@ class WidgetTest extends AnyFunSuite {
     val minimalAllLineTest = """|B""".stripMargin.split("\n").toList
 
     assert(AllLineTest.validate(fullAllLineTest))
-    assert((List((), 5, "6b", 7.0, false, false, false, false) ==
+    assert((List[Any]((), 5, "6b", 7.0, false, false, false, false) ==
             AllLineTest.parse(fullAllLineTest, literalParser).vals))
     assert(AllLineTest.validate(partialAllLineTest))
-    assert((List((), 5, "6b", 3.0, true, true, true, true) ==
+    assert((List[Any]((), 5, "6b", 3.0, true, true, true, true) ==
             AllLineTest.parse(partialAllLineTest, literalParser).vals))
     assert(AllLineTest.validate(minimalAllLineTest))
-    assert((List((), 1, "2", 3.0, true, true, true, true) ==
+    assert((List[Any]((), 1, "2", 3.0, true, true, true, true) ==
             AllLineTest.parse(minimalAllLineTest, literalParser).vals))
   }
 

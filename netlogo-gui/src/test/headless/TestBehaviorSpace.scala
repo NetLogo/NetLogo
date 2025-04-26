@@ -67,10 +67,10 @@ with OneInstancePerTest with BeforeAndAfterEach {
     // only get spreadsheet results, since parallel table results are in scrambled order - ST 3/4/09
     run("test/lab/" + name, wantTable = false,
         threads = Runtime.getRuntime.availableProcessors)(
-        workspace _, () => newWorker(name))
+        () => workspace, () => newWorker(name))
   }
   def runExperimentFromModel(modelPath: String, experimentName: String, filename: String, threads: Int = 1,
-  wantSpreadsheet: Boolean = true, wantTable: Boolean = true, wantStats: Boolean = false, wantLists: Boolean = false) {
+  wantSpreadsheet: Boolean = true, wantTable: Boolean = true, wantStats: Boolean = false, wantLists: Boolean = false): Unit = {
     val time = System.nanoTime
     new java.io.File("tmp").mkdir()
     new java.io.File("tmp/TestBehaviorSpace").mkdir()
@@ -115,14 +115,14 @@ with OneInstancePerTest with BeforeAndAfterEach {
   // whatnot. it should be redone - ST 8/19/09
   def run(filename: String, threads: Int = 1, wantTable: Boolean = true, wantSpreadsheet: Boolean = true,
           wantStats: Boolean = false, wantLists: Boolean = false)
-          (fn: () => Workspace, fn2: () => LabInterface.Worker) {
-    val dims = fn.apply.world.getDimensions
+          (fn: () => Workspace, fn2: () => LabInterface.Worker): Unit = {
+    val dims = fn.apply().world.getDimensions
     def runHelper(fns: List[(String, (LabInterface.Worker, java.io.StringWriter) => Unit)]): Unit = {
-      val worker = fn2.apply
+      val worker = fn2.apply()
       val writers = fns.map(_ => new java.io.StringWriter)
       for (((_, fn), writer) <- fns zip writers)
         fn(worker, writer)
-      worker.run(fn.apply, fn, threads)
+      worker.run(fn.apply(), fn, threads)
       for (((suffix, _), writer) <- fns zip writers) {
         val resultsPath = filename + suffix
         withClue(resultsPath) {

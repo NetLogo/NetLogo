@@ -10,7 +10,7 @@ class TestLibrary extends AnyFunSuite {
     val exclusions = Set("project", "src", "target")
       .map("/models/" + _ + "/")
     val emptyLeafFolders = scanForModelsAtRoot("models", false)
-      .getOrElse(fail)
+      .getOrElse(fail())
       .breadthFirstIterable
       .collect { case node: ModelsLibrary.Node => node }
       .filterNot { node => exclusions.exists(node.path.contains) }

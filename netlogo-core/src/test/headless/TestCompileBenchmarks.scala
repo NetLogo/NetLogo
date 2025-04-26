@@ -33,7 +33,7 @@ class TestCompileBenchmarks extends AnyFunSuite with SlowTest {
         }
         val source =
           io.Source.fromFile(DumpsPath + name + ".txt")
-        assert(dump === source.getLines.mkString("","\n","\n"))
+        assert(dump === source.getLines().mkString("","\n","\n"))
       }
   }
 }

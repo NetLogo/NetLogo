@@ -4,6 +4,8 @@ package org.nlogo.hubnet
 
 import org.nlogo.headless.HeadlessWorkspace
 
+import scala.jdk.CollectionConverters.CollectionHasAsScala
+
 object HeadlessServerExample {
 
   def main(args: Array[String]): Unit = {
@@ -22,14 +24,13 @@ object HeadlessServerExample {
   class CommandLineThread(workspace: HeadlessWorkspace) extends Thread {
     val queuedCommands = new java.util.concurrent.ArrayBlockingQueue[String](10)
     start()
-    override def run {
+    override def run: Unit = {
       print("enter command> ")
       while(true){
         queuedCommands put scala.io.StdIn.readLine()
       }
     }
     def runAll(): Unit = {
-      import scala.jdk.CollectionConverters.ListHasAsScala
       queuedCommands.asScala.foreach { c =>
         println("executing command: " + c)
         try workspace.command(c)

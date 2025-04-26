@@ -45,7 +45,7 @@ trait TestMultiThreadedModels extends AbstractTestModels {
   /**
    * Run the threads, and throw any errors after all threads are completed.
    */
-  private def testWithThreads(threadCount:Int)(f: => Unit){
+  private def testWithThreads(threadCount:Int)(f: => Unit): Unit ={
     class MyThread extends Thread("testParallelOperation") {
       var exception: Option[Exception] = None
       override def run(): Unit = {

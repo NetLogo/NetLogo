@@ -13,7 +13,7 @@ class TestAllStoredValues extends FixtureSuite {
     import fixture.workspace.world
     fixture.declare("")
     fixture.testCommand("crt 10 [ create-links-with other turtles ]")
-    val vals = world.allStoredValues.toStream
+    val vals = world.allStoredValues.to(LazyList)
     assertResult(1) {
       vals.collect{case o: Observer => o}.size
     }
@@ -38,7 +38,7 @@ class TestAllStoredValues extends FixtureSuite {
   test("inside nested list") { implicit fixture =>
     fixture.declare("")
     fixture.testCommand("ask one-of patches [ set plabel [[[[\"foo\"]]]] ]")
-    val vals = fixture.workspace.world.allStoredValues.toStream
+    val vals = fixture.workspace.world.allStoredValues.to(LazyList)
     assertResult(4) {
       vals.collect{case l: LogoList => l}.size
     }

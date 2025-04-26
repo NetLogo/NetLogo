@@ -135,7 +135,7 @@ object HubNetGenerators {
   val hubNetWidgets: Gen[Widget] =
     Gen.oneOf(buttonWidget, chooserWidget, monitorWidget, sliderWidget, switchWidget, viewWidget)
 
-  implicit val arbWidget = Arbitrary(hubNetWidgets)
+  implicit val arbWidget: org.scalacheck.Arbitrary[org.nlogo.core.Widget] = Arbitrary(hubNetWidgets)
 
   val classyReaders =
     HubNetWidgetReaders.additionalReaders

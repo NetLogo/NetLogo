@@ -37,7 +37,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
   def roundTripHelper(setup: String,
                       model: String = "",
-                      worldSize: Int = 0) {
+                      worldSize: Int = 0): Unit = {
     val filename = getUniqueFilename()
 
     // get ready
@@ -70,7 +70,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
   }
 
   def dropLines(s: String, n: Int): String =
-    io.Source.fromString(s).getLines.drop(n).mkString("\n")
+    io.Source.fromString(s).getLines().drop(n).mkString("\n")
 
   /// tests that use roundTripHelper
 
