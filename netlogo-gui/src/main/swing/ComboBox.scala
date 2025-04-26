@@ -190,6 +190,8 @@ class ComboBox[T](private var items: Seq[T] = Seq())
         case a =>
           val child = new JLabel(a.toString)
 
+          child.setFont(getFont)
+
           add(child, c)
 
           child.addMouseListener(mouseListener)
