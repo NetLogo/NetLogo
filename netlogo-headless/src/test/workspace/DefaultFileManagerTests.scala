@@ -168,9 +168,9 @@ class DefaultFileManagerTests extends AnyFunSuite with OneInstancePerTest {
   }
 
   test("setPrefix canonicalizes the prefix") {
-    val f = new java.io.File(java.io.File.separatorChar + "tmp" + java.io.File.separatorChar + "foobar")
-    fileManager.setPrefix("tmp" + java.io.File.separatorChar + "foobar")
-    assert(fileManager.prefix == f.getCanonicalPath + java.io.File.separatorChar)
+    val f = new java.io.File(s"${java.io.File.separatorChar}tmp${java.io.File.separatorChar}foobar")
+    fileManager.setPrefix(s"tmp${java.io.File.separatorChar}foobar")
+    assert(fileManager.prefix == f.getCanonicalPath + java.io.File.separatorChar.toString)
   }
 
   test("readLine throws an IO Exception if the file is at EOF") {

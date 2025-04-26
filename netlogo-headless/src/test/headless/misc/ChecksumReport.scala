@@ -3,6 +3,8 @@
 package org.nlogo.headless
 package misc
 
+import scala.collection.parallel.CollectionConverters.IterableIsParallelizable
+
 // The purpose here is to run all the model checksums (in parallel!) and report
 // what the slowest models were, so we can try to shorten their runtimes so the
 // whole thing won't take so long.

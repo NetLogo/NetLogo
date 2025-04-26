@@ -9,9 +9,10 @@ import org.scalatest.funsuite.AnyFunSuite
 class ConstantFolderTests extends AnyFunSuite {
 
   def compile(source: String): String = {
-    val procdef +: _ =
-      Scaffold.apply(
-        "to-report __test report " + source + "\nend")
+    val procdef = Scaffold.apply("to-report __test report " + source + "\nend") match {
+      case Seq(p, _) => p
+      case s => throw new Exception(s"Unexpected scaffold: $s")
+    }
     procdef.accept(new ConstantFolder)
     procdef.statements.stmts.head.args.head.toString
   }

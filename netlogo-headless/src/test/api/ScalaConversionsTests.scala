@@ -92,7 +92,7 @@ class ScalaConversionsTests extends AnyFunSuite {
   }
 
   test("HeterogenousSeq") {
-    testConversion(List(1, "test", 'c') -> LogoList(Double.box(1.0), "test", "c"))
+    testConversion(List[Any](1, "test", 'c') -> LogoList(Double.box(1.0), "test", "c"))
   }
 
   test("NonConvertableObject") {

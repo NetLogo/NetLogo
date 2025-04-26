@@ -15,6 +15,7 @@ object I18N {
       (args zip (0 until args.length)).foldLeft(templateString) {
         case (templatedString, (substitution: String, i: Int)) =>
           templatedString.replaceAll(s"\\{${i.toString}\\}", substitution)
+        case (s, _) => s
       }
     }
   }

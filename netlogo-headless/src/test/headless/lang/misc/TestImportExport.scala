@@ -39,7 +39,7 @@ class TestImportExport extends FixtureSuite  {
 
   def roundTripHelper(setup: String,
                       model: String = "",
-                      worldSize: Int = 0)(implicit fixture: Fixture) {
+                      worldSize: Int = 0)(implicit fixture: Fixture): Unit = {
     import fixture._
     val filename = getUniqueFilename()
 
@@ -73,7 +73,7 @@ class TestImportExport extends FixtureSuite  {
   }
 
   def dropLines(s: String, n: Int): String =
-    io.Source.fromString(s).getLines.drop(n).mkString("\n")
+    io.Source.fromString(s).getLines().drop(n).mkString("\n")
 
   /// tests that use roundTripHelper
 
@@ -251,7 +251,7 @@ class TestImportExport extends FixtureSuite  {
 
   test("ImportSubject", SlowTest.Tag) { implicit fixture =>
     import fixture.{ declare, testReporter, testCommand, workspace }
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.IteratorHasAsScala
     val filename = getUniqueFilename()
     declare(Model())
     exportWorld(filename)

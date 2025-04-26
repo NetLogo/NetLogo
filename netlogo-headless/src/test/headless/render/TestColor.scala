@@ -71,7 +71,7 @@ class TestColor extends AbstractTestRenderer {
       }
     }
     // for sanity only, dump the world to an image in order to look at it.
-    def dumpWorldToImage(){
+    def dumpWorldToImage(): Unit ={
       workspace.command("export-view \"test.png\"")
     }
   }

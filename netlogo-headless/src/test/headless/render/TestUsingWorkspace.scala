@@ -24,7 +24,7 @@ trait TestUsingWorkspace extends MockSuite {
 
   def testUsingWorkspace(testName: String, radius: Int = 5,
                          worldType: api.WorldType = api.WorldType.Torus)
-                        (f: HeadlessWorkspace => Unit) {
+                        (f: HeadlessWorkspace => Unit): Unit = {
     test(testName) {
       runWorkspaceTest(radius, worldType){ f }
     }
@@ -32,14 +32,14 @@ trait TestUsingWorkspace extends MockSuite {
 
   def mockTestUsingWorkspace(name:String, radius: Int = 5,
                              worldType: api.WorldType = api.WorldType.Torus)
-                            (f: HeadlessWorkspace => Unit){
+                            (f: HeadlessWorkspace => Unit): Unit ={
     mockTest(name){
       runWorkspaceTest(radius, worldType){ f }
     }
   }
 
   def runWorkspaceTest(radius: Int = 5, worldType: api.WorldType = api.WorldType.Torus)
-                      (f: HeadlessWorkspace => Unit) {
+                      (f: HeadlessWorkspace => Unit): Unit = {
     val workspace: HeadlessWorkspace = HeadlessWorkspace.newInstance
     workspace.silent = true
     try {

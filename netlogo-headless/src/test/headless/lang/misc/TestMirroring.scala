@@ -22,7 +22,7 @@ class TestMirroring extends FixtureSuite {
   def checkAllAgents(state: State)(implicit fixture: Fixture): Unit = {
     def check[A <: api.Agent](agentSet: api.AgentSet, kind: Kind, toMirrorable: A => MirrorableAgent[A]): Unit = {
       assertResult(agentSet.count) { state.count(_._1.kind == kind) }
-      import collection.JavaConverters._
+      import scala.jdk.CollectionConverters.IterableHasAsScala
       for (agent <- agentSet.agents.asScala) {
         val m = toMirrorable(agent.asInstanceOf[A])
         val mirrorVars = state(AgentKey(kind, agent.id))

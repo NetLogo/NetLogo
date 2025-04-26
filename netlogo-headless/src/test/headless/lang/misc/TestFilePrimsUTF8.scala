@@ -43,11 +43,11 @@ class TestFilePrimsUTF8 extends FixtureSuite {
   test("file-read") { implicit fixture =>
     import fixture._
     declare(code)
-    testReporter("""read-string "utf8-file.txt"""", '"' + expected + '"')
+    testReporter("""read-string "utf8-file.txt"""", s"\"$expected\"")
     testCommand(s"""set utf-string "$expected"""")
     testCommand("write-out")
     testReporter("""read-string "utf8-file-written-by-test.txt"""",
-      '"' + expected + '"')
+      s"\"$expected\"")
   }
 
   test("file-read-line") { implicit fixture =>

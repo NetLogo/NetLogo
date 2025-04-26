@@ -11,12 +11,12 @@ trait AbstractFixture {
   import org.scalatest.Assertions._
   def defaultView: core.View
   def declare(code: String): Unit = declare(Model(code = code, widgets = List(defaultView)))
-  def declare(model: Model = Model(widgets = List(defaultView)))
-  def open(path: String, shouldAutoInstallLibs: Boolean = false)
-  def openModel(model: Model, shouldAutoInstallLibs: Boolean = false)
-  def checkCompile(model: Model, compile: Compile)
-  def runCommand(command: Command, mode: TestMode)
-  def runReporter(reporter: Reporter, mode: TestMode)
+  def declare(model: Model = Model(widgets = List(defaultView))): Unit
+  def open(path: String, shouldAutoInstallLibs: Boolean = false): Unit
+  def openModel(model: Model, shouldAutoInstallLibs: Boolean = false): Unit
+  def checkCompile(model: Model, compile: Compile): Unit
+  def runCommand(command: Command, mode: TestMode): Unit
+  def runReporter(reporter: Reporter, mode: TestMode): Unit
   def readFromString(literal: String): AnyRef
   def checkResult(mode: TestMode, reporter: String, expectedResult: String, actualResult: AnyRef): Unit = {
     // To be as safe as we can, let's do two separate checks here...  we'll compare the results both

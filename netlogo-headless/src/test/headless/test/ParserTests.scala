@@ -8,7 +8,10 @@ class ParserTests extends AnyFunSuite {
 
   // simple regex tests
   test(" command regex") {
-    val Parser.CommandRegex(agent, command) = "O> crt 1"
+    val (agent, command) = "O> crt 1" match {
+      case Parser.CommandRegex(a, c) => (a, c)
+      case _ => throw new Exception(s"Unexpected regex: ${Parser.CommandRegex}")
+    }
     assertResult("O")(agent)
     assertResult("crt 1")(command)
   }

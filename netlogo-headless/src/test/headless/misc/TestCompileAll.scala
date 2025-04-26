@@ -24,7 +24,7 @@ object TestCompileAll {
   def badPath(path: String): Boolean = {
     import java.io.File.separatorChar
     def pathMatches(bad: String) =
-      path.toUpperCase.containsSlice(separatorChar + bad + separatorChar)
+      path.toUpperCase.containsSlice(s"${separatorChar}bad$separatorChar")
     pathMatches("SYSTEM DYNAMICS") ||
       pathMatches("GIS") ||
       pathMatches("QUICKTIME EXTENSION") ||
