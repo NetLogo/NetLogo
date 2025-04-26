@@ -78,13 +78,13 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
     resourceManager
 
   private var _shouldUpdatePlots: Boolean = true
-  def shouldUpdatePlots: Boolean = this._shouldUpdatePlots
+  def shouldUpdatePlots(): Boolean = this._shouldUpdatePlots
   def setShouldUpdatePlots(update: Boolean) = {
     this._shouldUpdatePlots = update
   }
 
-  def triedToExportPlot: Boolean = false
-  def setTriedToExportPlot(triedToExport: Boolean) = Unit
+  def triedToExportPlot(): Boolean = false
+  def setTriedToExportPlot(triedToExport: Boolean) = ()
 
   private var _exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
   def exportPlotWarningAction(): ExportPlotWarningAction = this._exportPlotWarningAction
@@ -116,7 +116,7 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
       throw new RuntimePrimitiveException(context, originalInstruction,
         "The tick counter has not been started yet. Use RESET-TICKS.")
     world.tickCounter.tick()
-    if (shouldUpdatePlots) {
+    if (shouldUpdatePlots()) {
       updatePlots(context)
     }
     requestDisplayUpdate(true)
@@ -147,7 +147,7 @@ with ExtendableWorkspace with ExtensionCompilationEnvironment with APIConformant
     plotRNG.setSeed(seed)
   }
 
-  def openString(modelContents: String)
+  def openString(modelContents: String): Unit
 
   override def getCompilationEnvironment = {
     import java.net.MalformedURLException
@@ -246,12 +246,12 @@ object AbstractWorkspaceTraits {
 
   trait Exporting extends Plotting { this: AbstractWorkspace with Evaluating =>
 
-    def exportDrawingToCSV(writer:PrintWriter)
-    def exportOutputAreaToCSV(writer:PrintWriter)
+    def exportDrawingToCSV(writer:PrintWriter): Unit
+    def exportOutputAreaToCSV(writer:PrintWriter): Unit
 
     def checkPlotUpdates(): Unit = {
       import ExportPlotWarningAction._
-      exportPlotWarningAction match {
+      exportPlotWarningAction() match {
         case Warn => {
           setExportPlotWarningAction(ExportPlotWarningAction.Ignore)
           throw new Exception(I18N.shared.get("tools.behaviorSpace.runoptions.updateplotsandmonitors.error"))
@@ -267,7 +267,7 @@ object AbstractWorkspaceTraits {
     @throws(classOf[IOException])
     def exportWorld(filename: String): Unit = {
       new AbstractExporter(filename) {
-        def export(writer: PrintWriter): Unit = {
+        def `export`(writer: PrintWriter): Unit = {
           exportWorldNoMeta(writer)
         }
       }.export("world", getModelFileName, "")
@@ -300,7 +300,7 @@ object AbstractWorkspaceTraits {
     @throws(classOf[IOException])
     def exportPlot(plotName: String,filename: String): Unit = {
       new AbstractExporter(filename) {
-        override def export(writer: PrintWriter): Unit = {
+        override def `export`(writer: PrintWriter): Unit = {
           exportInterfaceGlobals(writer)
           new CorePlotExporter(plotManager.maybeGetPlot(plotName).orNull, Dump.csv).export(writer)
         }
@@ -310,7 +310,7 @@ object AbstractWorkspaceTraits {
     @throws(classOf[IOException])
     def exportAllPlots(filename: String): Unit = {
       new AbstractExporter(filename) {
-        override def export(writer: PrintWriter): Unit = {
+        override def `export`(writer: PrintWriter): Unit = {
           exportInterfaceGlobals(writer)
 
           plotManager.getPlotNames.foreach { name =>
@@ -377,12 +377,12 @@ object AbstractWorkspaceTraits {
       evaluator.evaluateCommands(owner, source, world.observers, waitForCompletion)
     }
     def evaluateCommands(owner: JobOwner, source: String, agent: Agent,
-                         waitForCompletion: Boolean) {
+                         waitForCompletion: Boolean): Unit = {
       evaluator.evaluateCommands(owner, source,
         AgentSet.fromAgent(agent), waitForCompletion)
     }
     def evaluateCommands(owner: JobOwner, source: String, agents: AgentSet,
-                         waitForCompletion: Boolean) {
+                         waitForCompletion: Boolean): Unit = {
       evaluator.evaluateCommands(owner, source, agents, waitForCompletion)
     }
     def evaluateReporter(owner: JobOwner, source: String) =
@@ -601,10 +601,10 @@ object AbstractWorkspaceTraits {
 
   trait OutputArea { this: AbstractWorkspace =>
 
-    def clearOutput()
+    def clearOutput(): Unit
 
     // called from job thread - ST 10/1/03
-    def sendOutput(oo: agent.OutputObject, toOutputArea: Boolean)
+    def sendOutput(oo: agent.OutputObject, toOutputArea: Boolean): Unit
 
     /// importing
     def setOutputAreaContents(text: String): Unit = {
@@ -643,7 +643,7 @@ object AbstractWorkspaceTraits {
 
     abstract class FileImporter(val filename: String) {
       @throws(classOf[java.io.IOException])
-      def doImport(reader: File)
+      def doImport(reader: File): Unit
     }
 
     def importerErrorHandler: agent.ImporterJ.ErrorHandler
@@ -685,7 +685,10 @@ object AbstractWorkspaceTraits {
     @throws(classOf[java.io.IOException])
     def importDrawingBase64(base64: String): Unit = {
       val MimeRegex = "data:(.*);base64".r
-      val Array(MimeRegex(contentType), byteString) = base64.split(",")
+      val (contentType, byteString) = base64.split(",") match {
+        case Array(MimeRegex(c), b) => (c, b)
+        case _ => throw new Exception(s"Unexpected input: $base64")
+      }
       val bytes = Base64.getDecoder.decode(byteString)
       importDrawing(new ByteArrayInputStream(bytes), Option(contentType))
     }

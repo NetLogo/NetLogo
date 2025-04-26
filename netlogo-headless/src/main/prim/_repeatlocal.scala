@@ -22,7 +22,7 @@ class _repeatlocal(vn: Int) extends Command with CustomAssembled {
     a.add(this)
     a.block()
     a.resume()
-    a.add(new _repeatlocalinternal(vn, 1 - a.offset))
+    a.add(new _repeatlocalinternal(vn, 1 - a.offset()))
   }
 
 }

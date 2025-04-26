@@ -2,13 +2,13 @@
 
 package org.nlogo.mirror
 
-import scala.collection.JavaConverters.iterableAsScalaIterableConverter
-import scala.language.implicitConversions
 import org.nlogo.{ api, core }
 import org.nlogo.api.AgentVariableNumbers._
 import org.nlogo.core.AgentVariables.implicitLinkVariables
 import org.nlogo.core.AgentVariables.implicitPatchVariables
 import org.nlogo.core.AgentVariables.implicitTurtleVariables
+
+import scala.jdk.CollectionConverters.IterableHasAsScala
 
 object Mirrorables {
 
@@ -72,7 +72,7 @@ object Mirrorables {
     val Variables = WidgetVariables
   }
 
-  implicit def agentKindToMirrorKind(agentKind: core.AgentKind) = agentKind match {
+  def agentKindToMirrorKind(agentKind: core.AgentKind): Product with org.nlogo.mirror.Kind with java.io.Serializable = agentKind match {
     case core.AgentKind.Observer => Observer
     case core.AgentKind.Turtle => Turtle
     case core.AgentKind.Patch => Patch
@@ -81,7 +81,7 @@ object Mirrorables {
 
   abstract class MirrorableAgent[T <: api.Agent](agent: T) extends Mirrorable {
     override def getVariable(index: Int) = variables.getOrElse(index, agent.getVariable(index))
-    override val agentKey = AgentKey(agent.kind, agent.id)
+    override val agentKey = AgentKey(agentKindToMirrorKind(agent.kind), agent.id)
   }
 
   object MirrorableTurtle {
@@ -125,7 +125,7 @@ object Mirrorables {
     override def kind = Observer
     private def targetAgent =
       Option(observer.targetAgent)
-        .map(agent => (Serializer.agentKindToInt(agent.kind), agent.id))
+        .map(agent => (Serializer.agentKindToInt(agentKindToMirrorKind(agent.kind)), agent.id))
     override val variables = Map(
       TargetAgent.id -> targetAgent,
       Perspective.id -> Int.box(observer.perspective.export))
@@ -159,7 +159,6 @@ object Mirrorables {
   }
 
   def allMirrorables(world: api.World): Iterable[Mirrorable] = {
-    import collection.JavaConverters._
     val turtles = world.turtles.agents.asScala.map(t => new MirrorableTurtle(t.asInstanceOf[api.Turtle]))
     val patches = world.patches.agents.asScala.map(p => new MirrorablePatch(p.asInstanceOf[api.Patch]))
     val links = world.links.agents.asScala.map(l => new MirrorableLink(l.asInstanceOf[api.Link]))

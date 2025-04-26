@@ -15,6 +15,8 @@ import
     api.LocalFile,
     nvm.{ FileManager, ImportHandler }
 
+import scala.collection.BufferedIterator
+
 private[workspace] final class DefaultFileManager(private val workspace: AbstractWorkspace) extends FileManager {
 
   private            var openFiles:    Map[String, File] = Map[String, File]()

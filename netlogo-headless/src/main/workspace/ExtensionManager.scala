@@ -14,7 +14,7 @@ import java.lang.{ ClassLoader, Iterable => JIterable }
 import java.io.{ IOException, PrintWriter }
 import java.util.{ List => JList }
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters.{ IterableHasAsJava, IteratorHasAsScala }
 
 /**
  * Some simple notes on loading and unloading extensions:
@@ -200,7 +200,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
 
   def clearAll(): Unit =
     for (jar <- jars.values) {
-      jar.classManager.clearAll
+      jar.classManager.clearAll()
     }
 
   @throws(classOf[CompilerException])
@@ -223,7 +223,10 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
   def replaceIdentifier(name: String): Primitive = {
     val (primName, isRelevantJar) =
       if (name.contains(':')) {
-        val Array(prefix, pname) = name.split(":")
+        val (prefix, pname) = name.split(":") match {
+          case Array(pr, pn) => (pr, pn)
+          case _ => throw new Exception(s"Unexpected name: $name")
+        }
         (pname, { (jc: JarContainer) => prefix.toUpperCase == jc.normalizedName })
       } else
         (name,  { (jc: JarContainer) => jc.primManager.autoImportPrimitives })
@@ -245,10 +248,10 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
   /**
    * Returns a String describing all the loaded extensions.
    */
-  def dumpExtensionPrimitives: String = tabulate(
+  def dumpExtensionPrimitives(): String = tabulate(
     Seq("EXTENSION", "PRIMITIVE", "TYPE"),
     { jarContainer =>
-      jarContainer.primManager.getPrimitiveNames.asScala.map { n =>
+      jarContainer.primManager.getPrimitiveNames().asScala.map { n =>
         val p = jarContainer.primManager.getPrimitive(n)
         Seq(jarContainer.extensionName, n, if (p.isInstanceOf[Reporter]) "Reporter" else "Command")
       }.toSeq

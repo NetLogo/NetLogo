@@ -6,5 +6,5 @@ import org.nlogo.nvm.{ Context, Reporter }
 
 class _dumpextensionprims extends Reporter {
   override def report(context: Context): String =
-    workspace.getExtensionManager.dumpExtensionPrimitives
+    workspace.getExtensionManager.dumpExtensionPrimitives()
 }

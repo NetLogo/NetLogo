@@ -33,7 +33,7 @@ trait FrameCache {
       val keepers = cache.keys.toSeq
         .sortBy(-utility(_, index))
         .take(minFrameCacheSize)
-      cache = cache.filterKeys(keepers.contains)
+      cache = cache.view.filterKeys(keepers.contains).toMap
     }
   }
 

@@ -61,7 +61,7 @@ object Main {
       w
     }
     val lab = HeadlessWorkspace.newLab
-    lab.run(settings, protocol, newWorkspace _, finish)
+    lab.run(settings, protocol, () => newWorkspace, finish)
   }
 
   def setHeadlessProperty(): Unit = {

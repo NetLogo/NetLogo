@@ -25,7 +25,7 @@ class DrawingActionBroker(
 
   override def drawLine(
     x1: Double, y1: Double, x2: Double, y2: Double,
-    color: AnyRef, size: Double, mode: String) {
+    color: AnyRef, size: Double, mode: String): Unit = {
     publish(DrawLine(x1, y1, x2, y2, color, size, mode))
   }
 
@@ -72,6 +72,8 @@ class DrawingActionBroker(
           import t._
           TurtleStamp(xcor, ycor, size, heading, color, shape,
                       if (erase) "erase" else "normal")
+        case _ =>
+          throw new Exception(s"Unexpected agent: $agent")
       }
 
     // Actually running the Action would needlessly re-apply the bitmap.

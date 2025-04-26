@@ -31,13 +31,13 @@ object Mirroring {
     for (i <- was.indices if was(i) != now(i))
       yield Change(i, now(i))
 
-  def diffs(oldState: State, mirrorables: TraversableOnce[Mirrorable]): (State, Update) = {
+  def diffs(oldState: State, mirrorables: IterableOnce[Mirrorable]): (State, Update) = {
     var births: Vector[Birth] = Vector()
     var deaths: Vector[Death] = Vector()
     var changes: Map[AgentKey, Seq[Change]] = Map()
     var newState: State = oldState
     var seen: Set[AgentKey] = Set()
-    for (obj <- mirrorables) {
+    for (obj <- mirrorables.iterator) {
       val key = obj.agentKey
       seen += key
       val vars = obj.kind.Variables.values.toSeq.map(v => obj.getVariable(v.id))

@@ -20,6 +20,8 @@ class _breedhere(breedName: String) extends Reporter {
         t.getPatchHere
       case p: Patch =>
         p
+      case a =>
+        throw new Exception(s"Unexpected agent: $a")
     }
     val builder = new AgentSetBuilder(AgentKind.Turtle, patch.turtleCount)
     val breed = world.getBreed(breedName)

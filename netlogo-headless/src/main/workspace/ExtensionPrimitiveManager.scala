@@ -14,7 +14,7 @@ class ExtensionPrimitiveManager(val name: String) extends org.nlogo.api.Primitiv
    * Returns the names of all imported primitives.
    */
   def getPrimitiveNames(): java.util.Iterator[String] = {
-    import collection.JavaConverters._
+    import scala.jdk.CollectionConverters.IteratorHasAsJava
     importedPrimitives.keySet.iterator.asJava
   }
   /**

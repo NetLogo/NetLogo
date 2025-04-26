@@ -1,8 +1,9 @@
 package org.nlogo.prim.etc
 
-import scala.collection.JavaConverters._
 import org.nlogo.core.Pure
 import org.nlogo.nvm.{ Context, Reporter }
+
+import scala.jdk.CollectionConverters.ListHasAsScala
 
 class _block extends Reporter with Pure {
 

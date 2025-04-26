@@ -22,18 +22,16 @@ trait SavableRun {
     val interfaceImageBytes = imageToBytes(interfaceImage)
     val savableInitialPlots = initialPlots.map(SavablePlot.fromPlot)
     val initialDrawingImageBytes = imageToBytes(initialDrawingImage)
-    val thingsToSave = Seq(
-      name,
-      modelString,
-      viewAreaShape,
-      fixedViewSettings,
-      interfaceImageBytes,
-      deltas,
-      savableInitialPlots,
-      initialDrawingImageBytes,
-      generalNotes,
-      indexedNotes)
-    thingsToSave.foreach(out.writeObject)
+    out.writeObject(name)
+    out.writeObject(modelString)
+    out.writeObject(viewAreaShape)
+    out.writeObject(fixedViewSettings)
+    out.writeObject(interfaceImageBytes)
+    out.writeObject(deltas)
+    out.writeObject(savableInitialPlots)
+    out.writeObject(initialDrawingImageBytes)
+    out.writeObject(generalNotes)
+    out.writeObject(indexedNotes)
     out.close()
   }
 }
@@ -46,13 +44,13 @@ object ModelRunIO {
     val name = read[String]()
     val modelString = read[String]()
     val viewArea = new java.awt.geom.Area(read[java.awt.Shape]())
-    val fixedViewSettings = read[FixedViewSettings]
+    val fixedViewSettings = read[FixedViewSettings]()
     val interfaceImage = imageFromBytes(read[Array[Byte]]())
     val deltas = read[Seq[Delta]]()
-    val initialPlots = read[Seq[SavablePlot]].map(_.toPlot)
+    val initialPlots = read[Seq[SavablePlot]]().map(_.toPlot)
     val initialDrawingImage = imageFromBytes(read[Array[Byte]]())
     val generalNotes = read[String]()
-    val indexedNotes = read[List[IndexedNote]]
+    val indexedNotes = read[List[IndexedNote]]()
     in.close()
     val run = new ModelRun(
       name, modelString, viewArea, fixedViewSettings,

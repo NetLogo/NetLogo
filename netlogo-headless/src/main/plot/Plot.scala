@@ -25,16 +25,16 @@ extends PlotInterface {
 
   override def toString = "Plot(" + name + ")"
 
-  def name(newName:String){ name = newName }
+  def name(newName:String): Unit ={ name = newName }
 
   var _pens = List[PlotPen]()
   def pens = _pens
-  def pens_=(pens:List[PlotPen]){
+  def pens_=(pens:List[PlotPen]): Unit ={
     _pens = pens
     currentPen = pens.headOption
   }
 
-  def addPen(p:PlotPen){
+  def addPen(p:PlotPen): Unit ={
     pens = pens :+ p
   }
 
@@ -178,7 +178,7 @@ extends PlotInterface {
       // point error doesn't accumulate - ST 2/23/06
       x = state.xMin + barNumber * pen.state.interval
     } yield PlotXY(this.name, pen.name, x, barHeight))
-    actions.result
+    actions.result()
   }
 
   override def clone = {

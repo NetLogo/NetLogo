@@ -30,7 +30,7 @@ class _repeat(_token: Token) extends Command with CustomAssembled with CompilerS
     a.add(this)
     a.block()
     a.resume()
-    a.add(new _repeatinternal(1 - a.offset, let))
+    a.add(new _repeatinternal(1 - a.offset(), let))
   }
 
 }

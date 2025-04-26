@@ -13,7 +13,7 @@ class _useryesorno extends Reporter {
     val result =
       workspace.waitForResult(
         new ReporterRunnable[Option[Boolean]] {
-          override def run =
+          override def run() =
             workspace.userYesOrNo(message)
         })
     result.map(Boolean.box).getOrElse(

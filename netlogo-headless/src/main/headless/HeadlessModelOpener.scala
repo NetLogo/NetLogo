@@ -45,7 +45,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     val results = {
       val code = model.code
       ws.compiler.compileProgram(
-        code, Program.empty.copy(interfaceGlobals = model.interfaceGlobals),
+        code, Program.empty().copy(interfaceGlobals = model.interfaceGlobals),
         ws.getExtensionManager, ws.getLibraryManager, ws.compilationEnvironment,
         shouldAutoInstallLibs, ws.flags)
     }
@@ -67,7 +67,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
         model.widgets.collect { case b: Button => b },
         model.widgets.collect { case m: Monitor => m })
     else
-      finish(model.constraints, results.program, model.interfaceGlobalCommands.mkString("\n"), ws.getPlotCompilationErrorAction)
+      finish(model.constraints, results.program, model.interfaceGlobalCommands.mkString("\n"), ws.getPlotCompilationErrorAction())
     }
 
 
@@ -88,7 +88,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
  *  @param plotCompilationErrorAction  action to take if a plot compilation error occurs
  */
 private def finish(constraints: Map[String, ConstraintSpecification], program: Program,
-                      interfaceGlobalCommands: String, plotCompilationErrorAction: PlotCompilationErrorAction) {
+                      interfaceGlobalCommands: String, plotCompilationErrorAction: PlotCompilationErrorAction): Unit = {
     ws.world.realloc()
 
     val errors = ws.plotManager.compileAllPlots()
@@ -110,6 +110,7 @@ private def finish(constraints: Map[String, ConstraintSpecification], program: P
         case BooleanConstraintSpecification(default) => new BooleanConstraint(default)
         case StringInputConstraintSpecification(typeName, default) => new InputBoxConstraint(typeName, default)
         case NumericInputConstraintSpecification(typeName, default) => new InputBoxConstraint(typeName, default)
+        case _ => throw new Exception(s"Unexpected constraint: $spec")
       }
       ws.world.observer.setConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)
     }

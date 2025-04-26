@@ -32,6 +32,7 @@ class _patchvariabledouble(private[this] var _vn: Int) extends Reporter {
     val patch = context.agent match {
       case t: Turtle => t.getPatchHere
       case p: Patch => p
+      case a => throw new Exception(s"Unexpected agent: $a")
     }
     patch.getPatchVariableDouble(_vn)
   }

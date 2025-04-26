@@ -44,7 +44,10 @@ class DrawingActionRunner(val trailDrawer: TrailDrawerInterface) extends ActionR
 
   private def base64ToBytes(base64: String): (Array[Byte], String) = {
     val MimeRegex = "data:(.*);base64".r
-    val Array(MimeRegex(contentType), byteString) = base64.split(",")
+    val (contentType, byteString) = base64.split(",") match {
+      case Array(MimeRegex(c), b) => (c, b)
+      case _ => throw new Exception(s"Unexpected input: $base64")
+    }
     val bytes = Base64.getDecoder.decode(byteString)
     (bytes, contentType)
   }

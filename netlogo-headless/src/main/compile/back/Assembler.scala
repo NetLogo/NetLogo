@@ -105,9 +105,9 @@ private[compile] class Assembler {
     }
     def resume(): Unit = {
       if (branchMark == -1) branchMark = code.size
-      else stmt.command.offset = offset
+      else stmt.command.offset = offset()
     }
-    def offset =
+    def offset() =
       if (branchMark == -1) throw new IllegalStateException
       else code.size - branchMark
     def done(): Unit = { code += new _done }

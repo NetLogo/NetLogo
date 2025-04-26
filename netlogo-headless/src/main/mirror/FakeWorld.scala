@@ -145,7 +145,7 @@ class FakeWorld(state: State) extends api.World {
       .sortBy(_.id)
     new FakeAgentSet(core.AgentKind.Link, agentSeq, worldVar[Boolean](UnbreededLinksAreDirected.id)) {
       override val agents =
-        (agentSeq.sortBy(l => (l.end1.id, l.end2.id)): Iterable[api.Agent]).asJava
+        (this.agentSeq.sortBy(l => (l.end1.id, l.end2.id)): Iterable[api.Agent]).asJava
     }
   }
 
@@ -158,6 +158,7 @@ class FakeWorld(state: State) extends api.World {
             case Turtle => turtles.agentSeq.find(_.id == id)
             case Link => links.agentSeq.find(_.id == id)
             case Patch => patches.agentSeq.find(_.id == id)
+            case a => throw new Exception(s"Unexpected agent: $a")
           }
       }.orNull
     }
@@ -197,7 +198,7 @@ class FakeWorld(state: State) extends api.World {
       worldVar[collection.immutable.Seq[String]](breedsVar).map(breedName =>
         breedName -> Breed(breedName, "", breedName, "", Seq(), false)
       ).foldLeft(ListMap.empty[String, Breed])((lm, kv) => lm + kv)
-    Program.empty.copy(
+    Program.empty().copy(
       breeds = makeBreedMap(TurtleBreeds.id),
       linkBreeds = makeBreedMap(LinkBreeds.id)
     )

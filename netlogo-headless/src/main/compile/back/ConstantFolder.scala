@@ -32,7 +32,7 @@ private class ConstantFolder extends DefaultAstVisitor {
       val newReporter = Literals.makeLiteralReporter(applyReporter(app))
       newReporter.copyMetadataFrom(app.reporter)
       app.reporter = newReporter
-      app.clearArgs
+      app.clearArgs()
     }
   }
   private def isConstant(e: Expression) =

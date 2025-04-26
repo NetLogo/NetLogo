@@ -53,8 +53,8 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast)
     maybeGetPlot(plotName).flatMap(_.getPen(penName))
 
   // used for letting the user choose which plot to export
-  def getPlotNames = _plots.map(_.name)
-  def nextName = Stream.from(1).map("plot " + _).find(maybeGetPlot(_).isEmpty).get
+  def getPlotNames: Seq[String] = _plots.map(_.name).toSeq
+  def nextName: String = LazyList.from(1).map("plot " + _).find(maybeGetPlot(_).isEmpty).get
 
   def forgetPlot(goner: Plot): Unit = {
     if (currentPlot == Some(goner)) currentPlot = None
