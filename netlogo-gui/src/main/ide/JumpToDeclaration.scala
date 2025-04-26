@@ -30,36 +30,36 @@ object JumpToDeclaration {
   def getDeclaration(token: Token, source: String): Option[Token] = {
     val tokens = Femto.scalaSingleton[TokenizerInterface]("org.nlogo.lex.Tokenizer").tokenizeString(source).filter(t => t.tpe != TokenType.Comment).toSeq
     val (globals, owns, functions) = parseOuterScope(tokens)
+    var i = tokens.indexWhere(t => t.start == token.start)
     var stack = 0
-    tokens.takeWhile(_.start != token.start).zipWithIndex.foldRight(Option[Token](null)) {
-      // if we already found the result, skip the remaining elements (Isaac B 4/25/25)
-      case (_, Some(t)) =>
-        Some(t)
-
-      case ((tok, i), None) =>
-        if (tok.tpe == TokenType.CloseBracket) {
-          stack -= 1
-        } else if (tok.tpe == TokenType.OpenBracket) {
-          stack += 1
-        }
-
-        if (stack >= 0 && tok.text.equalsIgnoreCase(token.text) && i > 0 && tokens(i - 1).text.equalsIgnoreCase("let")) {
-          Some(tok)
-        } else if (tok.text.equalsIgnoreCase("to") || tok.text.equalsIgnoreCase("to-report")) {
-          // i + 1 is the function name
-          if (i + 2 < tokens.length && tokens(i + 2).tpe == TokenType.OpenBracket) {
-            tokens.drop(3).dropWhile { t =>
-              t.tpe != TokenType.CloseBracket && !t.text.equalsIgnoreCase(token.text)
-            }.headOption.filter(_.tpe != TokenType.CloseBracket)
-             .orElse(globals.get(token.text.toUpperCase) orElse owns.get(token.text.toUpperCase) orElse
-                     functions.get(token.text.toUpperCase))
-          } else {
-            globals.get(token.text.toUpperCase) orElse owns.get(token.text.toUpperCase) orElse functions.get(token.text.toUpperCase)
+    while (i >= 0) {
+      val tok = tokens(i)
+      if (tok.tpe == TokenType.CloseBracket) {
+        stack -= 1
+      }
+      if (tok.tpe == TokenType.OpenBracket) {
+        stack += 1
+      }
+      if(stack >= 0 && tok.text.equalsIgnoreCase(token.text) && i > 0 && tokens(i - 1).text.equalsIgnoreCase("let")) {
+        return Some(tok)
+      }
+      if(tok.text.equalsIgnoreCase("to") || tok.text.equalsIgnoreCase("to-report")) {
+        // i + 1 is the function name
+        if(i + 2 < tokens.length && tokens(i + 2).tpe == TokenType.OpenBracket) {
+          // Arguments found
+          var argIndex = i + 3
+          while(argIndex < tokens.length && tokens(argIndex).tpe != TokenType.CloseBracket) {
+            if(tokens(argIndex).text.equalsIgnoreCase(token.text)) {
+              return Some(tokens(argIndex))
+            }
+            argIndex += 1
           }
-        } else {
-          None
         }
-    }.orElse(globals.get(token.text.toUpperCase) orElse owns.get(token.text.toUpperCase) orElse functions.get(token.text.toUpperCase))
+        return globals.get(token.text.toUpperCase) orElse owns.get(token.text.toUpperCase) orElse functions.get(token.text.toUpperCase)
+      }
+      i -= 1
+    }
+    globals.get(token.text.toUpperCase) orElse owns.get(token.text.toUpperCase) orElse functions.get(token.text.toUpperCase)
   }
 
   /**
