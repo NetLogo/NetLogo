@@ -48,7 +48,7 @@ trait AbstractOptimizerTest extends AnyFunSuite {
 
     def compile(source: String, optimizations: Optimizations): ProcedureDefinition = {
       val procdef = Scaffold(SourceHeader + " " + source) match {
-        case Seq(p, _) => p
+        case p +: tail => p
         case _ => throw new IllegalStateException
       }
       procdef.accept(new Optimizer(optimizations))

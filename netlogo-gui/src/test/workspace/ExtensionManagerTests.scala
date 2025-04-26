@@ -170,11 +170,11 @@ class ExtensionManagerTests extends AnyFunSuite with BeforeAndAfter {
       assert(loadedManager.dumpExtensionPrimitives() ==
         s"""|EXTENSION${tab}PRIMITIVE${tab}TYPE
             |---------${tab}---------${tab}----
-            |array${tab}TO-LIST${tab}Reporter
-            |array${tab}SET${tab}Command
             |array${tab}ITEM${tab}Reporter
-            |array${tab}LENGTH${tab}Reporter
+            |array${tab}SET${tab}Command
             |array${tab}FROM-LIST${tab}Reporter
+            |array${tab}LENGTH${tab}Reporter
+            |array${tab}TO-LIST${tab}Reporter
             |""".stripMargin)
     }
   }

@@ -12,7 +12,7 @@ import scala.util.{ Failure, Success, Try }
 
 class MockFormat(val model: Model, error: Option[Exception]) extends ModelFormat[String, MockFormat] {
   type Section = String
-  def name: String = if(model.version.contains("3D")) "nlogo3d" else "nlogo"
+  def name: String = if(model.version.contains("3D")) "nlogox3d" else "nlogox"
   def isCompatible(source: String) = true
   def isCompatible(uri: java.net.URI) = true
   def isCompatible(model: Model) = true
