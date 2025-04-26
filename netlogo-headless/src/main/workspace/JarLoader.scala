@@ -86,7 +86,7 @@ class JarLoader(workspace: ExtendableWorkspace) extends ExtensionManager.Extensi
         .filter(file => file.isFile && file.getName.toUpperCase.endsWith(".JAR"))
         .map(f => Try(f.toURI.toURL).recover {
           case ex: MalformedURLException => throw new IllegalStateException(ex)
-        }.get)
+        }.get).toIndexedSeq
     else
       Seq[URL]()
 }

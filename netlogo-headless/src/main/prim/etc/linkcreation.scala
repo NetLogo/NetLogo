@@ -13,7 +13,7 @@ trait LinkCreationCommand extends Command with nvm.CustomAssembled with SelfScop
   def breedName: String
   def inputType: Int
   def swapEnds(me: Turtle, other: Turtle): Boolean
-  def checkDirectedness(context: Context, breed: AgentSet)
+  def checkDirectedness(context: Context, breed: AgentSet): Unit
   def linkAlreadyExists(src: Turtle, dest: Turtle, breed: AgentSet): Boolean =
     world.linkManager.getLink(src, dest, breed).nonEmpty
   def create(context: Context, breed: AgentSet, me: Turtle): AgentSet

@@ -16,7 +16,7 @@ class Evaluator(workspace: AbstractWorkspace) {
                        source: String,
                        agentSet: AgentSet = workspace.world.observers,
                        waitForCompletion: Boolean = true,
-                       flags: CompilerFlags = workspace.flags) {
+                       flags: CompilerFlags = workspace.flags): Unit = {
     val procedure = invokeCompiler(source, None, true, agentSet.kind, flags)
     workspace.jobManager.addJob(
       workspace.jobManager.makeConcurrentJob(owner, agentSet, workspace, procedure),

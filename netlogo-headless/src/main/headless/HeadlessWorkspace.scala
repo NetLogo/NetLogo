@@ -157,7 +157,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
   override def showTickCounter(showTickCounter: Boolean): Unit = { _showTickCounter = showTickCounter }
 
   override def getMinimumWidth = 0
-  override def insetWidth = 0
+  override def insetWidth() = 0
   override def computePatchSize(width: Int, numPatches: Int): Double =
     width.toDouble / numPatches
   override def calculateHeight(worldHeight: Int, patchSize: Double) =
@@ -197,7 +197,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
       println(agent)
     }
   }
-  override def getAndCreateDrawing =
+  override def getAndCreateDrawing() =
     drawingActionBroker.getAndCreateDrawing(true)
   override def importDrawing(is: InputStream, mimeTypeOpt: Option[String] = None): Unit = {
     drawingActionBroker.importDrawing(is, mimeTypeOpt)
@@ -354,7 +354,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
    * Internal use only.
    */
   def runtimeError(owner: org.nlogo.api.JobOwner, context: Context,
-                   instruction: org.nlogo.nvm.Instruction, ex: Exception) {
+                   instruction: org.nlogo.nvm.Instruction, ex: Exception): Unit = {
     ex match {
       case le: LogoException =>
         _lastLogoException = le

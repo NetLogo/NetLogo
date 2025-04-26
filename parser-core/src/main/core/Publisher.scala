@@ -5,7 +5,7 @@ package org.nlogo.core
 import scala.collection.mutable.Set
 
 // this class replaces scala.collection.mutable.Publisher, which has been deprecated (Isaac B 4/24/25)
-class Publisher[T] {
+trait Publisher[T] {
   private val listeners = Set[Listener[T]]()
 
   def subscribe(listener: Listener[T]): Unit = {

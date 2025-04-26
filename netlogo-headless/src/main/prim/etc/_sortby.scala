@@ -2,13 +2,13 @@
 
 package org.nlogo.prim.etc
 
-import scala.collection.mutable
-import scala.math.Ordering
 import org.nlogo.agent.AgentSet
-import org.nlogo.api.{ LogoException, AnonymousReporter }
+import org.nlogo.api.{ AnonymousReporter, LogoException }
 import org.nlogo.core.{ LogoList, Syntax }
-import org.nlogo.nvm.{ AnonymousProcedure, ArgumentTypeException, Context, Reporter }
-import org.nlogo.nvm.RuntimePrimitiveException
+import org.nlogo.nvm.{ AnonymousProcedure, ArgumentTypeException, Context, Reporter, RuntimePrimitiveException }
+
+import scala.collection.mutable.ListBuffer
+import scala.math.Ordering
 
 class _sortby extends Reporter {
 
@@ -25,9 +25,9 @@ class _sortby extends Reporter {
     val input = obj match {
       case list: LogoList => list
       case agents: AgentSet =>
-        val list = mutable.MutableList[AnyRef]()
+        val list = ListBuffer[AnyRef]()
         val it = agents.shufflerator(context.job.random)
-        while(it.hasNext)
+        while (it.hasNext)
           list += it.next()
         list
       case _ =>
@@ -56,8 +56,8 @@ class _sortby extends Reporter {
             case b: java.lang.Boolean =>
               if (b.booleanValue) 1
               else task.report(context, Array(o1, o2)) match {
-                case b: java.lang.Boolean =>
-                  if(b.booleanValue) -1
+                case bool: java.lang.Boolean =>
+                  if (bool.booleanValue) -1
                   else 0
                 case o => die(o)
               }

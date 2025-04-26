@@ -16,6 +16,7 @@ class _patchwest extends Reporter {
       context.agent match {
         case p: Patch => p
         case t: Turtle => t.getPatchHere
+        case a => throw new Exception(s"Unexpected agent: $a")
       })
     if (result == null) Nobody
     else result

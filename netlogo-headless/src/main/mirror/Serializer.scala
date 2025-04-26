@@ -176,10 +176,11 @@ object Serializer {
             },
             ShapeList.shapesToMap(parser(readValues().mkString("\n\n").split("\n"))))
           result
+        case i =>
+          throw new Exception(s"Unexpected value: $i")
       }
     def readValues(): Vector[AnyRef] =
-      (for(_ <- 0 until data.readInt())
-       yield readValue())(collection.breakOut)
+      (0 until data.readInt()).map(_ => readValue()).toVector
     def readAgentKey(): AgentKey =
       AgentKey(kind = agentKindFromInt(data.readByte().toInt),
                id = data.readLong())
@@ -216,6 +217,7 @@ object Serializer {
       case Mirrorables.Link => 3
       case Mirrorables.World => 4
       case Mirrorables.WidgetValue => 5
+      case _ => throw new Exception(s"Unexpected kind: $kind")
     }
 
 }

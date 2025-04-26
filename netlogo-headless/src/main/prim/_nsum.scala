@@ -20,6 +20,7 @@ class _nsum(vn: Int) extends Reporter {
     val patch = context.agent match {
       case t: Turtle => t.getPatchHere
       case p: Patch => p
+      case a => throw new Exception(s"Unexpected agent: $a")
     }
     var sum = 0d
     val it = patch.getNeighbors.iterator

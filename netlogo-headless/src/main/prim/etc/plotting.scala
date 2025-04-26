@@ -328,7 +328,7 @@ class _setplotpenmode extends PlotActionCommand(Syntax.NumberType) {
     val mode = argEvalIntValue(context, 0)
     if (mode < PlotPenModes.MinMode || mode > PlotPenModes.MaxMode) {
       throw new RuntimePrimitiveException(context, this,
-        mode + " is not a valid plot pen mode (valid modes are 0, 1, and 2)")
+        s"$mode is not a valid plot pen mode (valid modes are 0, 1, and 2)")
     }
     val plotName = currentPlot(context).name
     val penName = currentPen(context).name

@@ -38,7 +38,7 @@ object WorldLoader {
     val widgetWidth = world.calculateWidth(d.width, d.patchSize)
     val minWidth = world.getMinimumWidth
     if(widgetWidth < minWidth)
-      world.computePatchSize(minWidth - world.insetWidth, d.width)
+      world.computePatchSize(minWidth - world.insetWidth(), d.width)
     else
       d.patchSize
   }

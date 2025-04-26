@@ -53,6 +53,8 @@ class PlotPainter(plot: Plot) {
               old.copy(isDown = true),
               old.copy(x = old.x + pen.state.interval, isDown = true),
               old.copy(x = old.x + pen.state.interval, y = 0, isDown = true)))
+      case m =>
+        throw new Exception(s"Unexpected mode: $m")
     }
   }
 

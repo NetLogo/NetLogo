@@ -38,7 +38,7 @@ object Benchmarker {
     def chatter(): Unit = {
       if(System.currentTimeMillis - lastChatterTime > 10000) { // every 10 seconds
         println(
-          times.size + "/" + runs + " (mean=" + formatter.format(average) +
+          times.size.toString + "/" + runs + " (mean=" + formatter.format(average) +
           ", stddev=" + formatter.format(stddev) + ")")
         lastChatterTime = System.currentTimeMillis
       }

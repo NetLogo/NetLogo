@@ -14,7 +14,7 @@ class BreedIdentifierHandlerTests extends AnyFunSuite {
 
   def tester(handler: BreedIdentifierHandler.BreedPrimSpec, code: String, tokenString: String): (String, String, TokenType) = {
     val program =
-      Program.empty.copy(
+      Program.empty().copy(
         breeds = ListMap("FROGS" -> Breed("FROGS", "FROG", "frogs", "frog")),
         linkBreeds = ListMap(
           "AS" -> Breed("AS", "A", "as", "a", isDirected = true),

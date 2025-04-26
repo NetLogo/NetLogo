@@ -18,7 +18,7 @@ class _breedsingular(_breedName: String) extends Reporter {
     val id = validLong(idDouble, context)
     if (id != idDouble)
       throw new RuntimePrimitiveException(
-        context, this, idDouble + " is not an integer")
+        context, this, s"$idDouble is not an integer")
     val turtle = world.getTurtle(id)
     if (turtle == null)
       Nobody
