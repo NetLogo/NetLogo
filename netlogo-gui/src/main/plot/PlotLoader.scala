@@ -99,7 +99,7 @@ object PlotLoader {
     val (rest1, rest2) = rest.span(_ != '"')
     val (interval, mode, color, inLegend) = rest1.trim.split("\\s+") match {
       case Array(i, m, c, l) => (i, m, c, l)
-      case a => throw new Exception(s"Incorrect line format: $a")
+      case a => throw new IllegalStateException
     }
     require(PlotPen.isValidPlotPenMode(mode.toInt))
     // optional; pre-5.0 models don't have them

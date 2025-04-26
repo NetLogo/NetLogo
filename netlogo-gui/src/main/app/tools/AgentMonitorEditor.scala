@@ -341,7 +341,7 @@ with ThemeSync {
                   (if (agent == null) 0 else agent.asInstanceOf[Patch].pxcor,
                    editor.getText().toInt)
                 case _ =>
-                  throw new Exception(s"Unexpected index: $index")
+                  throw new IllegalStateException
               }
             workspace.world.getPatchAt(pxcor, pycor)
           case LINK_WHO =>
@@ -366,7 +366,7 @@ with ThemeSync {
                   agent
                 }
               case _ =>
-                throw new Exception(s"Unexpected index: $index")
+                throw new IllegalStateException
             }
         }
       }

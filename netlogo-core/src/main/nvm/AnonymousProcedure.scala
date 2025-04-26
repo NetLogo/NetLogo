@@ -112,7 +112,7 @@ case class AnonymousReporter(
     context match {
       case e: ExtensionContext => report(e.nvmContext, args)
       case c: Context          => report(c, args)
-      case _                   => throw new Exception(s"Unexpected context: $context")
+      case _                   => throw new IllegalStateException
     }
 
   def report(context: Context, args: Array[AnyRef]): AnyRef = {

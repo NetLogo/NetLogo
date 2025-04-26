@@ -31,7 +31,7 @@ object ShapeParser {
     lines.foldLeft(List[List[String]](List[String]())) {
       case (otherShapes, l: String) if l == "" => List[String]()::otherShapes
       case (currentShape::otherShapes, l: String) => (currentShape :+ l)::otherShapes
-      case (l, s) => throw new Exception(s"Unexpected shape list: $l")
+      case (l, s) => throw new IllegalStateException
     }.foldLeft(List[List[String]]()) {
       case (l::otherShapes, Nil) => ("" +: l)::otherShapes
       case (otherShapes, l) => l::otherShapes
@@ -119,7 +119,7 @@ object ShapeParser {
           r.upperLeftCorner._1, r.upperLeftCorner._2,
           r.lowerRightCorner._1, r.lowerRightCorner._2).mkString(" ")
       case e =>
-        throw new Exception(s"Unexpected element: $e")
+        throw new IllegalStateException
     }
 
   private def formatColor(color: RgbColor): String =

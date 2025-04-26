@@ -45,7 +45,7 @@ class CustomGenerator(profilingEnabled: Boolean) {
       case instr: _word =>
         generateWord(instr, nlgen, thisInstrUID)
       case _ =>
-        throw new Exception(s"Unexpected instruction: $instr")
+        throw new IllegalStateException
     }
   }
 

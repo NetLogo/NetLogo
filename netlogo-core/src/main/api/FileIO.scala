@@ -144,7 +144,7 @@ object FileIO {
     val minorVersionRegex = """(\d+\.\d+).*""".r
     val version = Version.version.stripPrefix("NetLogo ").stripPrefix("3D ") match {
       case minorVersionRegex(v) => v
-      case v => throw new Exception(s"Unexpected version format: $v")
+      case v => throw new IllegalStateException
     }
     val os = System.getProperty("os.name").toUpperCase
     val appData =

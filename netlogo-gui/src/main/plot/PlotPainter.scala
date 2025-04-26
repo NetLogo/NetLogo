@@ -56,7 +56,7 @@ class PlotPainter(plot: Plot) {
               old.copy(x = old.x + pen.interval, isDown = true),
               old.copy(x = old.x + pen.interval, y = 0, isDown = true))).toSeq
       case m =>
-        throw new Exception(s"Unexpected mode: $m")
+        throw new IllegalStateException
     }
   }
 

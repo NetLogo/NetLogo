@@ -36,7 +36,7 @@ object ThreeDViewReader extends WidgetReader with BaseWidgetParser with ConstWid
     def dimensionTransform[B <: WorldDimensions3D](f: WorldDimensions3D => WorldDimensions3D)(v: View): View = {
       v.dimensions match {
         case w: WorldDimensions3D => v.copy(dimensions = f(w))
-        case _ => throw new Exception("Error parsing 3D view!")
+        case _ => throw new IllegalStateException
       }
     }
 

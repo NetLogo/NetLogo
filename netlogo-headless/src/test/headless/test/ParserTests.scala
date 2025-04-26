@@ -10,7 +10,7 @@ class ParserTests extends AnyFunSuite {
   test(" command regex") {
     val (agent, command) = "O> crt 1" match {
       case Parser.CommandRegex(a, c) => (a, c)
-      case _ => throw new Exception(s"Unexpected regex: ${Parser.CommandRegex}")
+      case _ => throw new IllegalStateException
     }
     assertResult("O")(agent)
     assertResult("crt 1")(command)

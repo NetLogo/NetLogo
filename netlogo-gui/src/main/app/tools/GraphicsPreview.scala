@@ -42,7 +42,7 @@ class GraphicsPreview
           case 1.0          => (400, 400)
           case r if r < 1.0 => ((400 * r).toInt, 400)
           case r if r > 1.0 => (400, (400 * (1 / r)).toInt)
-          case _            => throw new Exception(s"Unexpected ratio: $ratio")
+          case _            => throw new IllegalStateException
         }
         val x = (400 - w) / 2
         val y = (400 - h) / 2

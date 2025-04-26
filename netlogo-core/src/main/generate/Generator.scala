@@ -62,7 +62,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
     val superClassFullName = original match {
       case _: Command => "org/nlogo/generate/GeneratedCommand"
       case _: Reporter => "org/nlogo/generate/GeneratedReporter"
-      case _ => throw new Exception(s"Unexpected instruction: $original")
+      case _ => throw new IllegalStateException
     }
     // keep track of the "number" of the instruction we are processing useful for uniquely naming
     // fields that were inlined/kept, and used to drop fake linenumbers into the bytecode, to use to
@@ -96,12 +96,12 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
       val methodName = original match {
         case _: Command => "perform"
         case _: Reporter => "report"
-        case _ => throw new Exception(s"Unexpected instruction: $original")
+        case _ => throw new IllegalStateException
       }
       val methodDescriptor = original match {
         case _: Command => "(Lorg/nlogo/nvm/Context;)V"
         case _: Reporter => "(Lorg/nlogo/nvm/Context;)Ljava/lang/Object;"
-        case _ => throw new Exception(s"Unexpected instruction: $original")
+        case _ => throw new IllegalStateException
       }
       var mv = cw.visitMethod(REPORT_PERFORM_ACCESS_CODES, methodName, methodDescriptor,
         null, Array("org/nlogo/api/LogoException"))
@@ -164,7 +164,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
             case Syntax.StringType => classOf[String]
             case Syntax.WildcardType => classOf[Object]
             case Syntax.VoidType => java.lang.Void.TYPE
-            case t => throw new Exception(s"Unexpected return type: $t")
+            case t => throw new IllegalStateException
           }
           nlgen.generateConversion(actualReturnType, retTypeWanted, parentInstr, argIndex)
         case _ =>

@@ -102,7 +102,7 @@ private[render] class ShapeRenderer(world: World) {
                  shape3D: GLShape, highlight: Boolean, orientation: Array[Double]): Unit = {
     val (heading, pitch, roll) = orientation match {
       case Array(h, p, r) => (h, p, r)
-      case _ => throw new Exception(s"Unexpected orientation: $orientation")
+      case _ => throw new IllegalStateException
     }
     val observerOrientation = world.observer.orientation.get
     gl.glTranslated(xcor, ycor, zcor)

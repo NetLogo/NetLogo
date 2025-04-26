@@ -110,7 +110,7 @@ private def finish(constraints: Map[String, ConstraintSpecification], program: P
         case BooleanConstraintSpecification(default) => new BooleanConstraint(default)
         case StringInputConstraintSpecification(typeName, default) => new InputBoxConstraint(typeName, default)
         case NumericInputConstraintSpecification(typeName, default) => new InputBoxConstraint(typeName, default)
-        case _ => throw new Exception(s"Unexpected constraint: $spec")
+        case _ => throw new IllegalStateException
       }
       ws.world.observer.setConstraint(ws.world.observerOwnsIndexOf(vname.toUpperCase), con)
     }

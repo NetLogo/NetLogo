@@ -145,7 +145,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     value match {
       case d: Double => Double.box(d)
       case a: AnyRef => a
-      case v => throw new Exception(s"Unexpected value: $v")
+      case v => throw new IllegalStateException
     }
   }
 

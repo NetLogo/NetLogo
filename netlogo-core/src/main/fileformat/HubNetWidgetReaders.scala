@@ -266,7 +266,7 @@ object HubNetSliderReader extends BaseWidgetParser with ConstWidgetParser with W
       direction: Direction): Slider = {
         val (min, max, value, inc) = sliderParams match {
           case Seq(mi, ma, v, i) => (mi, ma, v, i)
-          case _ => throw new Exception(s"Unexpected parameters: $sliderParams")
+          case _ => throw new IllegalStateException
         }
         Slider(
           display = name.map(restoreLines),

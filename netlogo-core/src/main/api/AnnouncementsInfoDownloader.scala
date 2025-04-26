@@ -53,7 +53,7 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
 
             val (months, days, years) = dateStr.split("/") match {
               case Array(m, d, y) => (m, d, y)
-              case a => throw new Exception(s"Invalid date format: $a")
+              case a => throw new IllegalStateException
             }
             val date                       = LocalDate.of(2000 + years.toInt, months.toInt, days.toInt)
 
@@ -62,7 +62,7 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
                 case "release"  => Release
                 case "event"    => Event
                 case "advisory" => Advisory
-                case _          => throw new Exception(s"Unknown announcement type: ${typeStr}")
+                case _          => throw new IllegalStateException
               }
 
             val endDate =
@@ -74,7 +74,7 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
             Announcement(id, title, date, endDate, annType, summary, desc)
 
           case o =>
-            throw new Exception(s"Unexpected object: $o")
+            throw new IllegalStateException
 
         }
 

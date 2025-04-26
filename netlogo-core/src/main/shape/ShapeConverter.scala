@@ -67,7 +67,7 @@ object ShapeConverter {
         rect.marked = br.marked
         rect
       case _ =>
-        throw new Exception(s"Unexpected element: $e")
+        throw new IllegalStateException
     }
 
   def coreLinkLineToLinkLine(l: BaseLinkLine): LinkLine = {

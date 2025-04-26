@@ -19,7 +19,7 @@ object TokenClasses {
         case l: String =>
           l.split(' ') match {
             case Array(tpe, primName, className) => (tpe, primName.toUpperCase, className)
-            case _ => throw new Exception(s"Unexpected input: $l")
+            case _ => throw new IllegalStateException
           }
       }
 
@@ -100,11 +100,11 @@ object TokenClasses {
                       params.head.typeSignature =:= typeOf[String])
                   case _ => false
                 }
-            case _ => throw new Exception("Unexpected state.")
+            case _ => throw new IllegalStateException
           }.map {
             case (cp: ClassSymbol, _) =>
               q"""${cp.fullName} -> ((s: String) => new $cp(s))"""
-            case _ => throw new Exception("Unexpected state.")
+            case _ => throw new IllegalStateException
           }
           q"Map(..$constructorClosures)"
         } catch {

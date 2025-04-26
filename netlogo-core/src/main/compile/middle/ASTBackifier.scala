@@ -25,7 +25,7 @@ class ASTBackifier(backifier: ApiBackifier, procedures: ListMap[String, Procedur
       case cb: core.CommandBlock => backify(cb)
       case rb: core.ReporterBlock => backify(rb)
       case ra: core.ReporterApp => backify(ra)
-      case _ => throw new Exception(s"Unexpected expression: $expr")
+      case _ => throw new IllegalStateException
     }
 
   def backify(stmts: core.Statements): Statements =

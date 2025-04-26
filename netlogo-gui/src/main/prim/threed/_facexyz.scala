@@ -21,7 +21,7 @@ class _facexyz extends Command {
                       argEvalDoubleValue(context, 1),
                       argEvalDoubleValue(context, 2))
       case a =>
-        throw new Exception(s"Unexpected agent: $a")
+        throw new IllegalStateException
     }
     context.ip = next
   }

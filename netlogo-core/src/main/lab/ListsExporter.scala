@@ -127,7 +127,7 @@ class ListsExporter(modelFileName: String,
         source.close()
       }
       case _ =>
-        throw new Exception(s"Unexpected input format: $in")
+        throw new IllegalStateException
     }
     out.close()
   }

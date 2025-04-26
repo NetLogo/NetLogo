@@ -121,7 +121,7 @@ trait ProgramGenerator extends ScalaCheckDrivenPropertyChecks {
         case Breed(tpe, plural, singular, _) => s"[ $plural $singular ]"
         case BracketedElement(keyword, elems) => elems.mkString("[ ", " ", " ]")
         case p@Procedure(procType, _, _, _) => p.programText.replace(procType, "")
-        case _ => throw new Exception(s"Unexpected element: $originalElement")
+        case _ => throw new IllegalStateException
       }
     }
   }

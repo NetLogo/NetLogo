@@ -24,7 +24,7 @@ trait AstVisitor {
       case rb: ReporterBlock =>
         visitReporterBlock(rb)
       case e =>
-        throw new Exception(s"Unexpected expression: $e")
+        throw new IllegalStateException
     }
   }
   def visitReporterApp(app: ReporterApp): Unit = {
@@ -60,7 +60,7 @@ trait AstTransformer {
       case rb: ReporterBlock =>
         visitReporterBlock(rb)
       case e =>
-        throw new Exception(s"Unexpected expression: $e")
+        throw new IllegalStateException
     }
   }
   def visitReporterApp(app: ReporterApp): ReporterApp = {
@@ -89,7 +89,7 @@ trait AstFolder[A] {
       case app: ReporterApp  => visitReporterApp(app)
       case cb: CommandBlock  => visitCommandBlock(cb)
       case rb: ReporterBlock => visitReporterBlock(rb)
-      case e => throw new Exception(s"Unexpected expression: $e")
+      case e => throw new IllegalStateException
     }
 
   def visitReporterApp(app: ReporterApp)(implicit a: A): A =

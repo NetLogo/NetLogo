@@ -77,7 +77,7 @@ extends (Iterator[Token] => AnyRef)  // returns Agent or AgentSet
         case SET_TYPE_ALLTURTLES => world.turtles
         case SET_TYPE_ALLLINKS => world.links
         case SET_TYPE_ALLPATCHES => world.patches
-        case s => throw new Exception(s"Unexpected type: $s")
+        case s => throw new IllegalStateException
       }
     }
     else if(agentsetTypeString.equalsIgnoreCase(SET_TYPE_OBSERVER)) {
