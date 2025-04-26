@@ -62,7 +62,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
 
   setBorderColor(InterfaceColors.Transparent)
 
-  protected var zoomFactor = 1.0
+  private var zoomFactor = 1.0
 
   protected var _oldSize = false
   protected var boldName = Preferences.userRoot.node("/org/nlogo/NetLogo").getBoolean("boldWidgetNames", false)
@@ -86,9 +86,14 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
   def exportable = false
   def setZoomFactor(zoomFactor: Double): Unit = {
     this.zoomFactor = zoomFactor
+    initGUI()
+    revalidate()
+    repaint()
   }
   def getZoomFactor: Double =
     zoomFactor
+  def zoom(d: Double): Int =
+    (zoomFactor * d).toInt
   def oldSize: Boolean =
     _oldSize
   def oldSize_=(value: Boolean): Unit = {

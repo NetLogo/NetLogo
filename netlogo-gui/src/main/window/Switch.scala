@@ -58,13 +58,13 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     if (_oldSize) {
       val c = new GridBagConstraints
 
-      c.insets = new Insets(0, 6, 0, 6)
+      c.insets = new Insets(0, zoom(6), 0, zoom(6))
       c.fill = GridBagConstraints.HORIZONTAL
       c.weightx = 1
 
       add(label, c)
 
-      c.insets = new Insets(6, 0, 6, 6)
+      c.insets = new Insets(zoom(6), 0, zoom(6), zoom(6))
       c.fill = GridBagConstraints.VERTICAL
       c.weightx = 0
       c.weighty = 1
@@ -74,13 +74,13 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     } else {
       val c = new GridBagConstraints
 
-      c.insets = new Insets(0, 8, 0, 8)
+      c.insets = new Insets(0, zoom(8), 0, zoom(8))
       c.fill = GridBagConstraints.HORIZONTAL
       c.weightx = 1
 
       add(label, c)
 
-      c.insets = new Insets(8, 0, 8, 8)
+      c.insets = new Insets(zoom(8), 0, zoom(8), zoom(8))
       c.fill = GridBagConstraints.VERTICAL
       c.weightx = 0
       c.weighty = 1
@@ -141,7 +141,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     private var hover = false
 
     override def getMinimumSize: Dimension =
-      new Dimension((10 * zoomFactor).toInt, super.getPreferredSize.height)
+      new Dimension(zoom(10), super.getPreferredSize.height)
 
     override def getPreferredSize: Dimension =
       getMinimumSize

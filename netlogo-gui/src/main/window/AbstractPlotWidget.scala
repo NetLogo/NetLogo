@@ -32,13 +32,13 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
       c.weightx = 1
       c.weighty = 1
       c.fill = GridBagConstraints.BOTH
-      c.insets = new Insets(3, 3, 3, 3)
+      c.insets = new Insets(zoom(3), zoom(3), zoom(3), zoom(3))
 
       add(canvas, c)
     }
 
     override def paintComponent(g: Graphics) {
-      setDiameter(6 * zoomFactor)
+      setDiameter(zoom(6))
 
       super.paintComponent(g)
     }
@@ -53,10 +53,10 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   plot.dirtyListener = Some(this)
   val canvas = new PlotCanvas(plot)
   private val canvasPanel = new CanvasPanel(canvas)
-  private val legend = new PlotLegend(plot, boldName)
+  private val legend = new PlotLegend(this, boldName)
   private val nameLabel = new JLabel(I18N.gui.get("edit.plot.previewName"))
-  private val xAxis = new XAxisLabels(boldName)
-  private val yAxis = new YAxisLabels(boldName)
+  private val xAxis = new XAxisLabels(this)
+  private val yAxis = new YAxisLabels(this)
 
   if (boldName)
     nameLabel.setFont(nameLabel.getFont.deriveFont(Font.BOLD))
@@ -78,9 +78,9 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     //-----------------------------------------
     c.insets = {
       if (_oldSize) {
-        new Insets(3, 6, 6, 6)
+        new Insets(zoom(3), zoom(6), zoom(6), zoom(6))
       } else {
-        new Insets(8, 10, 8, 10)
+        new Insets(zoom(8), zoom(10), zoom(8), zoom(10))
       }
     }
 
@@ -95,7 +95,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
     //ROW2
     //-----------------------------------------
-    c.insets = new Insets(0, 3, 3, 3)
+    c.insets = new Insets(0, zoom(3), zoom(3), zoom(3))
 
     c.gridx = GridBagConstraints.RELATIVE
     c.gridy = 1
@@ -116,7 +116,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
     //ROW3
     //-----------------------------------------
-    c.insets = new Insets(0, 3, 3, 3)
+    c.insets = new Insets(0, zoom(3), zoom(3), zoom(3))
     c.gridy = 2
 
     c.weightx = 0.0
@@ -150,7 +150,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
     c.gridwidth = GridBagConstraints.REMAINDER
     c.weightx = 1
     c.anchor = GridBagConstraints.CENTER
-    c.insets = new Insets(2, 10, 8, 10)
+    c.insets = new Insets(zoom(2), zoom(10), zoom(8), zoom(10))
 
     add(legend, c)
 
@@ -377,12 +377,12 @@ object AbstractPlotWidget {
   val MIN_SIZE = new Dimension(160, 120)
   val PREF_SIZE = new Dimension(200, 150)
 
-  class XAxisLabels(boldName: Boolean) extends javax.swing.JPanel {
+  class XAxisLabels(plot: AbstractPlotWidget) extends javax.swing.JPanel {
     private val min: JLabel = new JLabel()
     private val label: JLabel = new JLabel("", SwingConstants.CENTER)
     private val max: JLabel = new JLabel()
 
-    if (boldName) {
+    if (plot.boldName) {
       min.setFont(min.getFont.deriveFont(Font.BOLD))
       label.setFont(label.getFont.deriveFont(Font.BOLD))
       max.setFont(max.getFont.deriveFont(Font.BOLD))
@@ -391,7 +391,7 @@ object AbstractPlotWidget {
     val gridbag: GridBagLayout = new GridBagLayout
     setLayout(gridbag)
     val c: GridBagConstraints = new GridBagConstraints
-    c.insets = new Insets(0, 0, 0, 3)
+    c.insets = new Insets(0, 0, 0, plot.zoom(3))
     c.gridheight = 1
     c.weighty = 0.0
     c.fill = java.awt.GridBagConstraints.NONE
@@ -432,14 +432,14 @@ object AbstractPlotWidget {
     def getLabel = label.getText
   }
 
-  class YAxisLabels(boldName: Boolean) extends javax.swing.JPanel {
+  class YAxisLabels(plot: AbstractPlotWidget) extends javax.swing.JPanel {
     private val label: JLabel = new JLabel()
     private var labelText: String = ""
     private val max: JLabel = new JLabel()
     private val labelIcon: VTextIcon = new VTextIcon(label, "", org.nlogo.swing.VTextIcon.ROTATE_LEFT)
     private val min: JLabel = new JLabel()
 
-    if (boldName) {
+    if (plot.boldName) {
       min.setFont(min.getFont.deriveFont(Font.BOLD))
       label.setFont(label.getFont.deriveFont(Font.BOLD))
       max.setFont(max.getFont.deriveFont(Font.BOLD))
@@ -449,7 +449,7 @@ object AbstractPlotWidget {
     val gridbag: GridBagLayout = new GridBagLayout
     setLayout(gridbag)
     val c: GridBagConstraints = new GridBagConstraints
-    c.insets = new Insets(3, 0, 0, 0)
+    c.insets = new Insets(plot.zoom(3), 0, 0, 0)
     c.gridwidth = GridBagConstraints.REMAINDER
     c.gridheight = 1
     c.weightx = 1.0

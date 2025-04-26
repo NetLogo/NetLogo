@@ -43,7 +43,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
     override def paintComponent(g: Graphics): Unit = {
       setBackgroundColor(color)
-      setDiameter(6 * zoomFactor)
+      setDiameter(zoom(6))
 
       super.paintComponent(g)
     }
@@ -73,7 +73,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     c.weightx = 1
     c.weighty = 1
     c.fill = GridBagConstraints.BOTH
-    c.insets = new Insets(3, 3, 3, 3)
+    c.insets = new Insets(zoom(3), zoom(3), zoom(3), zoom(3))
 
     add(scrollPane, c)
 
@@ -81,7 +81,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       // this mostly fixes some weird horizontal scrollbar issues (Isaac B 8/7/24)
       textArea.setSize(scrollPane.getWidth - 10, scrollPane.getHeight)
 
-      setDiameter(6 * zoomFactor)
+      setDiameter(zoom(6))
 
       super.paintComponent(g)
     }
@@ -241,9 +241,9 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     c.anchor = GridBagConstraints.NORTHWEST
     c.insets = {
       if (_oldSize) {
-        new Insets(3, 6, 6, 6)
+        new Insets(zoom(3), zoom(6), zoom(6), zoom(6))
       } else {
-        new Insets(6, 8, 6, 8)
+        new Insets(zoom(6), zoom(8), zoom(6), zoom(8))
       }
     }
 
@@ -254,9 +254,9 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     c.anchor = GridBagConstraints.EAST
     c.insets = {
       if (_oldSize) {
-        new Insets(3, 0, 6, 6)
+        new Insets(zoom(3), 0, zoom(6), zoom(6))
       } else {
-        new Insets(8, 0, 6, 8)
+        new Insets(zoom(8), 0, zoom(6), zoom(8))
       }
     }
 
@@ -271,9 +271,9 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     c.anchor = GridBagConstraints.WEST
     c.insets = {
       if (_oldSize) {
-        new Insets(0, 6, 6, 6)
+        new Insets(0, zoom(6), zoom(6), zoom(6))
       } else {
-        new Insets(0, 8, 8, 8)
+        new Insets(0, zoom(8), zoom(8), zoom(8))
       }
     }
 
@@ -519,7 +519,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
 
       val c = new GridBagConstraints
 
-      c.insets = new Insets(3, 3, 3, 3)
+      c.insets = new Insets(zoom(3), zoom(3), zoom(3), zoom(3))
       c.gridwidth = GridBagConstraints.REMAINDER
       c.anchor = GridBagConstraints.WEST
 

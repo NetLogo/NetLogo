@@ -26,7 +26,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   c.weightx = 1
   c.weighty = 1
   c.fill = GridBagConstraints.BOTH
-  c.insets = new Insets(8, 8, 8, 8)
+  c.insets = new Insets(zoom(8), zoom(8), zoom(8), zoom(8))
 
   add(outputArea, c)
 
