@@ -108,7 +108,7 @@ object Polygons {
           case b: java.lang.Boolean =>
             gl.glEdgeFlag(b.booleanValue)
           case _ =>
-            throw new Exception(s"Unexpected element: $element")
+            throw new IllegalStateException
         }
       gl.glEnd()
     }

@@ -687,7 +687,7 @@ object AbstractWorkspaceTraits {
       val MimeRegex = "data:(.*);base64".r
       val (contentType, byteString) = base64.split(",") match {
         case Array(MimeRegex(c), b) => (c, b)
-        case _ => throw new Exception(s"Unexpected input: $base64")
+        case _ => throw new IllegalStateException
       }
       val bytes = Base64.getDecoder.decode(byteString)
       importDrawing(new ByteArrayInputStream(bytes), Option(contentType))

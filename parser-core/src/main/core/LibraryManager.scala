@@ -39,7 +39,7 @@ object LibraryInfo {
     version match {
       case versionRegex(major, minor, patch, extra) =>
         (major.toInt, minor.toInt, Option(patch).map(_.toInt).getOrElse(0), Option(extra).getOrElse(""))
-      case _ => throw new Exception(s"Unexpected version format: $version")
+      case _ => throw new IllegalStateException
     }
   }
 }

@@ -177,7 +177,7 @@ object Serializer {
             ShapeList.shapesToMap(parser(readValues().mkString("\n\n").split("\n"))))
           result
         case i =>
-          throw new Exception(s"Unexpected value: $i")
+          throw new IllegalStateException
       }
     def readValues(): Vector[AnyRef] =
       (0 until data.readInt()).map(_ => readValue()).toVector
@@ -217,7 +217,7 @@ object Serializer {
       case Mirrorables.Link => 3
       case Mirrorables.World => 4
       case Mirrorables.WidgetValue => 5
-      case _ => throw new Exception(s"Unexpected kind: $kind")
+      case _ => throw new IllegalStateException
     }
 
 }

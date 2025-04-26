@@ -147,7 +147,7 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
     val MimeRegex = "data:(.*);base64".r
     val (contentType, byteString) = base64.split(",") match {
       case Array(MimeRegex(tpe), str) => (tpe, str)
-      case _ => throw new Exception(s"Unexpected string format: $base64")
+      case _ => throw new IllegalStateException
     }
     val bytes = Base64.getDecoder.decode(byteString)
     importDrawing(new ByteArrayInputStream(bytes), Option(contentType))

@@ -158,7 +158,7 @@ class FakeWorld(state: State) extends api.World {
             case Turtle => turtles.agentSeq.find(_.id == id)
             case Link => links.agentSeq.find(_.id == id)
             case Patch => patches.agentSeq.find(_.id == id)
-            case a => throw new Exception(s"Unexpected agent: $a")
+            case a => throw new IllegalStateException
           }
       }.orNull
     }

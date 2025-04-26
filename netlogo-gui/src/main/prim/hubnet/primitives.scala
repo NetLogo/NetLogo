@@ -265,7 +265,7 @@ class _hubnetclearoverride extends Command with HubNetPrim {
     val set = target match {
       case agent: Agent => AgentSet.fromAgent(agent)
       case set: AgentSet => set
-      case _ => throw new Exception(s"Unexpected target: $target")
+      case _ => throw new IllegalStateException
     }
     if(!hubNetManager.exists(_.isOverridable(set.kind, varName)))
       throw new RuntimePrimitiveException(context, this,

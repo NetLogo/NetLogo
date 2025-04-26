@@ -73,7 +73,7 @@ class DrawingActionBroker(
           TurtleStamp(xcor, ycor, size, heading, color, shape,
                       if (erase) "erase" else "normal")
         case _ =>
-          throw new Exception(s"Unexpected agent: $agent")
+          throw new IllegalStateException
       }
 
     // Actually running the Action would needlessly re-apply the bitmap.

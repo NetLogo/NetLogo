@@ -24,7 +24,7 @@ class _patchatheadingpitchanddistance extends Reporter {
           argEvalDoubleValue(context, 1),
           argEvalDoubleValue(context, 2))
       case a =>
-        throw new Exception(s"Unexpected agent: $a")
+        throw new IllegalStateException
     }
     catch { case _: AgentException => Nobody }
 }

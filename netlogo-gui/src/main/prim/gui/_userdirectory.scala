@@ -41,7 +41,7 @@ class _userdirectory extends Reporter {
             context, this, "This directory doesn't exist")
         result
       case _ =>
-        throw new Exception(s"Unexpected result: $result")
+        throw new IllegalStateException
     }
   }
 

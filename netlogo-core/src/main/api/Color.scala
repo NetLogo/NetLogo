@@ -55,7 +55,7 @@ object Color extends CColor {
                            list.get(2).asInstanceOf[Number].intValue,
                            list.get(3).asInstanceOf[Number].intValue)
       case _ =>
-        throw new Exception(s"Unexpected color: $color")
+        throw new IllegalStateException
     }
   }
 

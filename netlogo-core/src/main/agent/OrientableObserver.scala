@@ -180,7 +180,7 @@ trait OrientatableObserver { this: Observer =>
           false
         }
       case _ =>
-        throw new Exception(s"Unexpected perspective: $perspective")
+        throw new IllegalStateException
     }
 
   }

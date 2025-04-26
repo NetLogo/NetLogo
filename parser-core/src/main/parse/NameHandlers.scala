@@ -79,7 +79,7 @@ class ExtensionPrimitiveHandler(extensionManager: ExtensionManager) extends Name
       case r: PrimitiveReporter =>
         new core.prim._externreport(r.getSyntax)
       case p =>
-        throw new Exception(s"Unexpected primitive: $p")
+        throw new IllegalStateException
     }
 }
 

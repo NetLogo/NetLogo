@@ -39,7 +39,7 @@ class _usernewfile extends Reporter {
       case s: String =>
         s
       case _ =>
-        throw new Exception(s"Unexpected result: $result")
+        throw new IllegalStateException
     }
   }
 

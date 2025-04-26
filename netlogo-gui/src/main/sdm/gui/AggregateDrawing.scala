@@ -194,7 +194,7 @@ class AggregateDrawing extends StandardDrawing with AggregateDrawingInterface {
           XMLElement("rate", attributes, rate.expressionWrapper, Seq())
 
         case _ =>
-          throw new Exception(s"Unexpected figure: $figure")
+          throw new IllegalStateException
 
       }
 

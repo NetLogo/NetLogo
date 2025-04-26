@@ -20,7 +20,7 @@ object Dump {
       case Array("bench") => dumpBenchmarks()
       case Array(path:String) if path.endsWith(".nlogox") => print(dump(path))
       case Array(name:String) => print(dump(benchPath(name)))
-      case _ => throw new Exception(s"Unexpected arguments: $argv")
+      case _ => throw new IllegalStateException
     }
   }
   def dump(path:String) = {

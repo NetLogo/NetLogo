@@ -216,7 +216,7 @@ object ButtonReader extends BaseWidgetReader {
                 actionKey: Option[Char] @unchecked, _, _, enabledBeforeTicks: Int) =>
         Button(source, left, top, right - left, bottom - top, rawDisplay, forever, buttonKind, actionKey,
                enabledBeforeTicks == 0)
-      case l => throw new Exception(s"Incorrect line format: $l")
+      case l => throw new IllegalStateException
     }
   }
 }
@@ -253,7 +253,7 @@ object PenReader {
     val (rest1, rest2) = rest.span(_ != '"')
     val (interval, mode, color, inLegend) = rest1.trim.split("\\s+") match {
       case Array(i, m, c, l) => (i, m, c, l)
-      case a => throw new Exception(s"Incorrect line format: $a")
+      case a => throw new IllegalStateException
     }
     require(PlotPenInterface.isValidPlotPenMode(mode.toInt))
     // optional; pre-5.0 models don't have them
@@ -306,9 +306,9 @@ object PlotReader extends BaseWidgetReader {
           case List(setupCode: String, updateCode: String) =>
             Plot(display, left, top, right - left, bottom - top, true, xAxis, yAxis, xmin, xmax, ymin, ymax,
                  autoPlotOn, autoPlotOn, legendOn, unescapeString(setupCode), unescapeString(updateCode), pens)
-          case l => throw new Exception(s"Incorrect code format: $l")
+          case l => throw new IllegalStateException
         }
-      case l => throw new Exception(s"Incorrect line format: $l")
+      case l => throw new IllegalStateException
     }
   }
 
@@ -354,7 +354,7 @@ object SliderReader extends BaseWidgetReader {
                 varName: Option[String] @unchecked, min: String, max: String, default: Double, step: String, _,
                 units: Option[String] @unchecked, direction: Direction) =>
         Slider(varName, left, top, right - left, bottom - top, true, display, min, max, default, step, units, direction)
-      case l => throw new Exception(s"Incorrect line format: $l")
+      case l => throw new IllegalStateException
     }
   }
 }
@@ -387,7 +387,7 @@ object TextBoxReader extends BaseWidgetReader {
         } else {
           TextBox(display, left, top, right - left, bottom - top, fontSize, false, Some(textColor))
         }
-      case l => throw new Exception(s"Incorrect line format: $l")
+      case l => throw new IllegalStateException
     }
   }
 }
@@ -414,7 +414,7 @@ object SwitchReader extends BaseWidgetReader {
       case List(_, left: Int, top: Int, right: Int, bottom: Int, display: Option[String] @unchecked,
                 varName: Option[String] @unchecked, on: Boolean, _, _) =>
         Switch(varName, left, top, right - left, bottom - top, true, display, on)
-      case l => throw new Exception(s"Incorrect line format: $l")
+      case l => throw new IllegalStateException
     }
   }
 }
@@ -452,7 +452,7 @@ object ChooserReader extends BaseWidgetReader {
 
         Chooser(variable, left, top, right - left, bottom - top, true, display,
           choices.map(convertAllNobodies).map(Chooseable(_)).toList, currentChoice)
-      case l => throw new Exception(s"Incorrect line format: $l")
+      case l => throw new IllegalStateException
     }
   }
 }
@@ -479,7 +479,7 @@ object MonitorReader extends BaseWidgetReader {
       case List(_, left: Int, top: Int, right: Int, bottom: Int, rawDisplay: Option[String] @unchecked,
                 source: Option[String] @unchecked, precision: Int, _, fontSize: Int) =>
         Monitor(source, left, top, right - left, bottom - top, true, rawDisplay, precision, fontSize)
-      case l => throw new Exception(s"Incorrect line format: $l")
+      case l => throw new IllegalStateException
     }
   }
 }
@@ -501,7 +501,7 @@ object OutputReader extends BaseWidgetReader {
     vals match {
       case List(_, left: Int, top: Int, right: Int, bottom: Int, fontSize: Int) =>
         Output(left, top, right - left, bottom - top, fontSize)
-      case l => throw new Exception(s"Incorrect line format: $l")
+      case l => throw new IllegalStateException
     }
   }
 }
@@ -538,7 +538,7 @@ object InputBoxReader extends BaseWidgetReader {
             throw new RuntimeException("Couldn't find corresponding input box type for " + inputBoxTypeStr)
         }
         InputBox(variable, left, top, right - left, bottom - top, true, inputBoxValue)
-      case l => throw new Exception(s"Incorrect line format: $l")
+      case l => throw new IllegalStateException
     }
   }
 }

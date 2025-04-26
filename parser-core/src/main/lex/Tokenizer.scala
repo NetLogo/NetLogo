@@ -33,7 +33,7 @@ object Tokenizer extends TokenizerInterface {
         case Seq(a, b) if a.end    <= position && ! interestingTokenTypes.contains(b.tpe) => a
         case Seq(a, b) if position <  a.end => a
         case Seq(a, b)                      => b
-        case ts => throw new Exception(s"Unexpected token sequence: $ts")
+        case ts => throw new IllegalStateException
       }
   }
 

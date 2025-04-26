@@ -225,7 +225,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
       if (name.contains(':')) {
         val (prefix, pname) = name.split(":") match {
           case Array(pr, pn) => (pr, pn)
-          case _ => throw new Exception(s"Unexpected name: $name")
+          case _ => throw new IllegalStateException
         }
         (pname, { (jc: JarContainer) => prefix.toUpperCase == jc.normalizedName })
       } else

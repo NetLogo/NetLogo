@@ -129,7 +129,7 @@ object ExpressionParser {
                 sets.foreach(recurseSets)
 
               case c =>
-                throw new Exception(s"Unexpected command: $c")
+                throw new IllegalStateException
             }
           }
 
@@ -795,7 +795,7 @@ object ExpressionParser {
     val tokens = block match {
       case alb: ArrowLambdaBlock => alb.allTokens
       case adl: AmbiguousDelayedBlock => adl.tokens
-      case b => throw new Exception(s"Unexpected block: $b")
+      case b => throw new IllegalStateException
     }
 
     check(tokens.dropRight(2)) // Drops two because of the EOF
