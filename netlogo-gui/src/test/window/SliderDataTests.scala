@@ -56,7 +56,7 @@ class SliderDataTests extends AnyPropSpec with ScalaCheckPropertyChecks {
     forAll(genPosOddInt) { (r) =>
       whenever (r >= 0 && (r % 2 == 1)) {
         // use 1.r
-        val min      = (1 + "." + r).toDouble
+        val min      = s"1.$r".toDouble
         val result   = new SliderData(dummyErrorHandler, minimum = min).precision
         val expected = r.toString.length
         assertResult(expected)(result)

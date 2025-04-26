@@ -178,9 +178,9 @@ object LocalizationReport {
       // print all the data in this report.
       // the code isn't that difficult to follow
       def printReport(): Unit = {
-        def printWrapped[A](seq: scala.collection.TraversableOnce[A], message: String)(f: => Unit): Unit = {
-          if(seq.size > 0 || verbose){
-            println("======= " + seq.size + " " + message + " =======")
+        def printWrapped[A](seq: IterableOnce[A], message: String)(f: => Unit): Unit = {
+          if(seq.iterator.size > 0 || verbose){
+            println("======= " + seq.iterator.size + " " + message + " =======")
             f
             println()
           }

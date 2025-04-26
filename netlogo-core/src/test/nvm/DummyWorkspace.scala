@@ -34,7 +34,7 @@ class DummyWorkspace extends Workspace {
   override def exportOutput(path: String) = unsupported
   override def exportPlot(plotName: String, path: String) = unsupported
   override def exportAllPlots(path: String) = unsupported
-  override def getAndCreateDrawing = unsupported
+  override def getAndCreateDrawing() = unsupported
   override def waitForQueuedEvents() = unsupported
   override def outputObject(obj: AnyRef, owner: AnyRef, addNewline: Boolean, readable: Boolean,
                    destination: OutputDestination) = unsupported
@@ -106,7 +106,7 @@ class DummyWorkspace extends Workspace {
 
   override def tick(c:Context, i:Instruction) = unsupported
   override def resetTicks(c:Context) = unsupported
-  override def clearTicks = unsupported
+  override def clearTicks() = unsupported
   override def plotRNG = unsupported
   override def setupPlots(c:Context) = unsupported
   override def updatePlots(c:Context) = unsupported

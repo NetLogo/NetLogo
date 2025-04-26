@@ -46,43 +46,43 @@ class MockGraphics(mockTest:MockSuite) extends GraphicsInterface {
   def drawLine(x1: Double, y1: Double, x2: Double, y2: Double): Unit = {
     operations += Line(loc(x1, y1),loc(x2, y2))
   }
-  def drawLabel(s: String, x: Double, y: Double, patchSize: Double){
+  def drawLabel(s: String, x: Double, y: Double, patchSize: Double): Unit ={
     operations += Label(loc(x, y))
   }
   def draw(shape: java.awt.Shape): Unit = {
     operations += Shape(shape.getClass.getName, loc(0, 0), false)
   }
-  def drawCircle(x: Double, y: Double, xDiameter: Double, yDiameter: Double, scale: Double, angle: Double){
+  def drawCircle(x: Double, y: Double, xDiameter: Double, yDiameter: Double, scale: Double, angle: Double): Unit ={
     operations += Circle(loc(x, y), size(xDiameter, yDiameter), false)
   }
-  def fillRect(x: Double, y: Double, width: Double, height: Double, scale: Double, angle: Double){
+  def fillRect(x: Double, y: Double, width: Double, height: Double, scale: Double, angle: Double): Unit ={
     operations += Rect(loc(x, y), size(width, height), filled=true)
   }
-  def drawImage(image: java.awt.Image, x: Int, y: Int, width: Int, height: Int){
+  def drawImage(image: java.awt.Image, x: Int, y: Int, width: Int, height: Int): Unit ={
     operations += Image(loc(x, y),size(width, height))
   }
   def drawImage(image: BufferedImage): Unit = {
     operations += Image(loc(0, 0), size(image.getWidth, image.getHeight))
   }
-  def fillPolygon(xcors: Array[Int], ycors: Array[Int], length: Int){
+  def fillPolygon(xcors: Array[Int], ycors: Array[Int], length: Int): Unit ={
     operations += Polygon(poly(xcors, ycors), filled=true)
   }
-  def fill(shape: java.awt.Shape){
+  def fill(shape: java.awt.Shape): Unit ={
     operations += Shape(shape.getClass.getName,loc(0, 0), filled=true)
   }
-  def drawPolyline(xcors: Array[Int], ycors: Array[Int], length: Int){
+  def drawPolyline(xcors: Array[Int], ycors: Array[Int], length: Int): Unit ={
     operations += PolyLine(poly(xcors, ycors))
   }
-  def drawRect(x: Double, y: Double, width: Double, height: Double, scale: Double, angle: Double){
+  def drawRect(x: Double, y: Double, width: Double, height: Double, scale: Double, angle: Double): Unit ={
     operations += Rect(loc(x, y),size(width, height), filled=false)
   }
-  def fillCircle(x: Double, y: Double, xDiameter: Double, yDiameter: Double, scale: Double, angle: Double){
+  def fillCircle(x: Double, y: Double, xDiameter: Double, yDiameter: Double, scale: Double, angle: Double): Unit ={
     operations += Circle(loc(x, y),size(xDiameter, yDiameter), filled=true)
   }
-  def fillRect(x: Int, y: Int, width: Int, height: Int){
+  def fillRect(x: Int, y: Int, width: Int, height: Int): Unit ={
     operations += Rect(loc(x, y),size(width, height), filled=true)
   }
-  def drawPolygon(xcors: Array[Int], ycors: Array[Int], length: Int){
+  def drawPolygon(xcors: Array[Int], ycors: Array[Int], length: Int): Unit ={
     operations += Polygon(poly(xcors, ycors), filled=false)
   }
 
@@ -98,29 +98,29 @@ class MockGraphics(mockTest:MockSuite) extends GraphicsInterface {
   }
   private def size(width: Double, height: Double) = Size(transform.getScaleX * width, transform.getScaleY * height)
 
-  def pop{ transform = transforms.head; transforms = transforms.tail }
-  def dispose{}
-  def setStroke(width: Float, dashes: Array[Float]){ stroke = width }
-  def setStroke(width: Double){ stroke = width }
-  def setStrokeFromLineThickness(lineThickness: Double, scale: Double, cellSize: Double, shapeWidth: Double){
+  def pop(): Unit ={ transform = transforms.head; transforms = transforms.tail }
+  def dispose(): Unit ={}
+  def setStroke(width: Float, dashes: Array[Float]): Unit ={ stroke = width }
+  def setStroke(width: Double): Unit ={ stroke = width }
+  def setStrokeFromLineThickness(lineThickness: Double, scale: Double, cellSize: Double, shapeWidth: Double): Unit ={
     stroke = ((shapeWidth / scale) *
             (if (lineThickness == 0) 1 else StrictMath.max(1, lineThickness * cellSize))).asInstanceOf[Float]
   }
-  def setColor(c: java.awt.Color){ color = c }
-  def antiAliasing(on: Boolean){ antialiasing = on }
-  def setStrokeControl{}
-  def rotate(theta: Double){ transform.rotate(theta) }
-  def rotate(theta: Double, x: Double, y: Double){ transform.rotate(theta, x, y) }
-  def rotate(theta: Double, x: Double, y: Double, offset: Double){
+  def setColor(c: java.awt.Color): Unit ={ color = c }
+  def antiAliasing(on: Boolean): Unit ={ antialiasing = on }
+  def setStrokeControl(): Unit ={}
+  def rotate(theta: Double): Unit ={ transform.rotate(theta) }
+  def rotate(theta: Double, x: Double, y: Double): Unit ={ transform.rotate(theta, x, y) }
+  def rotate(theta: Double, x: Double, y: Double, offset: Double): Unit ={
     transform.rotate(theta, x + offset / 2, y + offset / 2)
   }
-  def scale(x: Double, y: Double){ transform.scale(x, y) }
-  def scale(x: Double, y: Double, shapeWidth: Double){ transform.scale(x / shapeWidth, y / shapeWidth) }
-  def translate(x: Double, y: Double){ transform.translate(x, y) }
-  def setInterpolation{}
-  def push{ transforms = transform.clone.asInstanceOf[AffineTransform]::transforms }
+  def scale(x: Double, y: Double): Unit ={ transform.scale(x, y) }
+  def scale(x: Double, y: Double, shapeWidth: Double): Unit ={ transform.scale(x / shapeWidth, y / shapeWidth) }
+  def translate(x: Double, y: Double): Unit ={ transform.translate(x, y) }
+  def setInterpolation(): Unit ={}
+  def push(): Unit ={ transforms = transform.clone.asInstanceOf[AffineTransform]::transforms }
 
-  def setComposite(comp: Composite){
+  def setComposite(comp: Composite): Unit ={
     composite = if (comp == java.awt.AlphaComposite.Src) "src"
     else if (comp == java.awt.AlphaComposite.Clear) "clear"
     else throw new IllegalStateException
@@ -130,9 +130,9 @@ class MockGraphics(mockTest:MockSuite) extends GraphicsInterface {
             (transform.getTranslateY() + (y * transform.getScaleY() ) ) + ")"
 
   private var fm: Option[FontMetrics] = None
-  private def setFontMetrics(fm: FontMetrics){ this.fm = Option(fm) }
+  private def setFontMetrics(fm: FontMetrics): Unit ={ this.fm = Option(fm) }
   def getFontMetrics: FontMetrics = fm.get
-  def allowingLabels(labelSize:LabelSize){
+  def allowingLabels(labelSize:LabelSize): Unit ={
     import mockTest._
     val mockFontMetrics = mock[FontMetrics]
     setFontMetrics(mockFontMetrics)

@@ -13,7 +13,7 @@ class AssemblerTests extends AnyFunSuite {
     assertResult(1)(procdefs.size)
     val procedure = procdefs.head.procedure
     procedure.displayName = "procedure FOO"
-    for (procdef <- procdefs): Unit = {
+    for (procdef <- procdefs) {
       procdef.accept(new ArgumentStuffer)
       new Assembler().assemble(procdef)
     }

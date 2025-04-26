@@ -14,7 +14,7 @@ class XMLTester extends AnyFunSuite {
     new NLogoXMLLoader(false, Femto.scalaSingleton[LiteralParser]("org.nlogo.parse.CompilerUtilities"), false)
 
   protected def loadString(path: String): String =
-    Source.fromFile(path, "UTF-8").getLines.mkString("\n")
+    Source.fromFile(path, "UTF-8").getLines().mkString("\n")
 
   protected def roundTripString(source: String): String =
     loader.readModel(source, "nlogox").map(loader.sourceString(_, "nlogox").get).get

@@ -56,7 +56,6 @@ class OpenModelTests extends AnyFunSuite {
 
   test("if the version doesn't start with NetLogo, notifies the user it is invalid") { new OpenTest {
     override def modelChanges = _.copy(version = "foobarbaz")
-    val _ = openedModel
     assertResult(testURI)(controller.invalidURI)
     assertResult("foobarbaz")(controller.invalidVersion)
   } }

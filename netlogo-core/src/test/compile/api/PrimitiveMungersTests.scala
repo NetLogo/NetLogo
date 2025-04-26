@@ -87,7 +87,7 @@ class PrimitiveMungersTests extends AnyFunSuite with Inside {
   test("matchEmptyCommandBlockIsLastArg fails on non-empty block") {
     new TestCommand {
       val emptyBlock = new StatementsBuilder {
-        statement(new DummyCoreCommand(), new DummyCommand())
+        this.statement(new DummyCoreCommand(), new DummyCommand())
       }
       val m = newMatch(statement(new DummyCoreCommand(Syntax.CommandBlockType), command, emptyBlock.buildBlock))
       intercept[MatchFailedException] {
@@ -170,7 +170,7 @@ class PrimitiveMungersTests extends AnyFunSuite with Inside {
   test("removeLastArg fails when argument is removed") {
     new TestCommand with TestReporter {
       val m = newMatch(statement(new DummyCoreCommand(), command, testReporter))
-      m.removeLastArg
+      m.removeLastArg()
       intercept[MatchFailedException] {
         m.matchArg(0, classOf[DummyCommand])
       }
@@ -181,7 +181,7 @@ class PrimitiveMungersTests extends AnyFunSuite with Inside {
     new TestCommand with TestReporter {
       val repBlock = new ReporterBuilder { }
       val m = newMatch(repBlock.buildBlock)
-      m.matchReporterBlock
+      m.matchReporterBlock()
     }
   }
 } 

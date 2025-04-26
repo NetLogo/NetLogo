@@ -20,6 +20,7 @@ object Dump {
       case Array("bench") => dumpBenchmarks()
       case Array(path:String) if path.endsWith(".nlogox") => print(dump(path))
       case Array(name:String) => print(dump(benchPath(name)))
+      case _ => throw new Exception(s"Unexpected arguments: $argv")
     }
   }
   def dump(path:String) = {
@@ -50,7 +51,7 @@ object Dump {
       print('.')
       writeFile(DumpsPath + name + ".txt",dump(path))
     }
-    println
+    println()
   }
 
   def writeFile(path:String,s:String): Unit = {

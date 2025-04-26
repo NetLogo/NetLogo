@@ -76,6 +76,8 @@ trait ProgramGenerator extends ScalaCheckDrivenPropertyChecks {
       otherElems = (program.elems.toSet - elem).map(Right(_)).toSeq
     } yield MangledProgram(corruptedElem +: otherElems)
 
+  // this is marked nowarn because ScalaCheck's interface uses Stream, but Scala 2.13 deprecated it in favor of LazyList (Isaac B 4/25/25)
+  @annotation.nowarn
   implicit def shrinkProgramElements(implicit shrinkSeq: Shrink[Seq[String]]): Shrink[ProgramElement] =
     Shrink.apply((e: ProgramElement) =>
         e match {
@@ -119,6 +121,7 @@ trait ProgramGenerator extends ScalaCheckDrivenPropertyChecks {
         case Breed(tpe, plural, singular, _) => s"[ $plural $singular ]"
         case BracketedElement(keyword, elems) => elems.mkString("[ ", " ", " ]")
         case p@Procedure(procType, _, _, _) => p.programText.replace(procType, "")
+        case _ => throw new Exception(s"Unexpected element: $originalElement")
       }
     }
   }

@@ -166,7 +166,7 @@ class NvmTests extends AnyFunSuite {
 
     val bEqualsTwo = new ReporterBuilder() {
       withReporter(_coreequal(), new _equal())
-      withArg(new ReporterApp(_coreletvariable(b), new _letvariable(b), loc))
+      withArg(new ReporterApp(_coreletvariable(b), new _letvariable(b), this.loc))
       withArg(two)
     }
 

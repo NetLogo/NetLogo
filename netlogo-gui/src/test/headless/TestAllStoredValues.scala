@@ -8,7 +8,7 @@ import org.nlogo.core.LogoList
 class TestAllStoredValues extends AbstractTestModels {
   testModel("all agents included", Model()) {
     observer>> "crt 10 [ create-links-with other turtles ]"
-    val vals = world.allStoredValues.toStream
+    val vals = world.allStoredValues.to(LazyList)
     assertResult(1) {
       vals.collect{case o: Observer => o}.size
     }
@@ -30,7 +30,7 @@ class TestAllStoredValues extends AbstractTestModels {
   }
   testModel("inside nested list", Model()) {
     observer>> "ask one-of patches [ set plabel [[[[\"foo\"]]]] ]"
-    val vals = world.allStoredValues.toStream
+    val vals = world.allStoredValues.to(LazyList)
     assertResult(4) {
       vals.collect{case l: LogoList => l}.size
     }

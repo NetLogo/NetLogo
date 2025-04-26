@@ -76,7 +76,7 @@ object TestChecksums extends ChecksumTester(println _) {
     executor.awaitTermination(java.lang.Integer.MAX_VALUE, TimeUnit.SECONDS)
     // print report of longest runtimes (so we can alter preview commands to not take so long)
     val n = 30
-    println(n + " slowest models:")
+    println(s"$n slowest models:")
     val keys = checksums.keySet.toSeq.sortBy(runTimes.apply).reverse.take(n)
     for (key <- keys)
       println("  " + key + " " + runTimes(key) / 1000 + " seconds")

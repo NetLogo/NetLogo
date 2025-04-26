@@ -63,7 +63,7 @@ class TestRenderer extends AbstractTestRenderer {
 
   testUsingWorkspace("More links", radius=16){ workspace: HeadlessWorkspace =>
     workspace.command("create-nodes 2 [ ht setxy ((who - 1) * 5) 0 ] ask node 0 [ create-link-with node 1 ]")
-    val node = workspace.world.turtles.iterator.next
+    val node = workspace.world.turtles.iterator.next()
     val g = new MockGraphics(this)
     workspace.renderer.paint(g,
       SimpleViewSettings(patchSize=61.285714285714285, viewOffsetX=13,viewOffsetY= -13, renderPerspective=true, perspective=Perspective.Follow(node, 5)))
@@ -88,7 +88,7 @@ class TestRenderer extends AbstractTestRenderer {
     workspace.command("create-turtles 1 [ ht setxy -6 0 ] " +
                                "create-turtles 1 [ ht setxy 6 0 ] " +
                                "ask turtle 0 [ create-link-with turtle 1 ]")
-    val turtle = workspace.world.turtles.iterator.next
+    val turtle = workspace.world.turtles.iterator.next()
     val g = new MockGraphics(this)
     workspace.renderer.paint(g, SimpleViewSettings(patchSize=10, viewOffsetX=3,viewOffsetY= -3,
       renderPerspective=true, perspective=Perspective.Follow(turtle, 5)))
@@ -168,7 +168,7 @@ class TestColorRendering extends AbstractTestRenderer {
       }
     }
     // for sanity only, dump the world to an image in order to look at it.
-    def dumpWorldToImage(){
+    def dumpWorldToImage(): Unit ={
       workspace.command("export-view \"test.png\"")
     }
   }
@@ -211,7 +211,7 @@ class TestRendererForPatchLabels extends AbstractTestRenderer{
   case class Test(p:Patch, labelSize: LabelSize, drawnAt:LabelDrawnAt) extends BaseTest{
     def command = "ask patch "+p.x+" "+p.y+" [set plabel 123]"
     def expectedResults = drawnAt.expectedResults(labelSize)
-    override def setup(g:MockGraphics){ g.allowingLabels(labelSize) }
+    override def setup(g:MockGraphics): Unit ={ g.allowingLabels(labelSize) }
   }
 }
 
@@ -333,7 +333,7 @@ class TestRendererForTurtleLabels extends AbstractTestRenderer{
     def command =
       "crt 1[ set shape \"circle\" setxy " + t.at._1 + " " + t.at._2 + " set size " + t.size + " set label 123]"
     def expectedResults = turtleDrawnAt.expectedResults(t.size) ::: labelDrawnAt.expectedResults(labelSize)
-    override def setup(g:MockGraphics){ g.allowingLabels(labelSize) }
+    override def setup(g:MockGraphics): Unit ={ g.allowingLabels(labelSize) }
   }
 }
 
@@ -364,7 +364,10 @@ class TestRendererPatchLabelsBehaveSameAsTurtleLabels extends AbstractTestRender
       workspace.command("ask patches [ set plabel 123 sprout 1 [ set label 123 ]]")
       val g = new MockGraphics(this){ allowingLabels(LabelSize(10,10)) }
       workspace.renderer.paint(g, SimpleViewSettings(patchSize = 13))
-      g.labels.sorted.grouped(2).toList.foreach{ case Seq(a,b) => assert(a===b) }
+      g.labels.sorted.grouped(2).toList.foreach {
+        case Seq(a, b) => assert(a === b)
+        case _ =>
+      }
     }
   }
 }

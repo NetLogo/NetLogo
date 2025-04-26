@@ -4,10 +4,10 @@ package org.nlogo.util
 
 class MockSuiteTests extends MockSuite{
   trait X{
-    def i(i:Int)
-    def d(d:Double)
-    def c(c:Char)
-    def a(a:Any)
+    def i(i:Int): Unit
+    def d(d:Double): Unit
+    def c(c:Char): Unit
+    def a(a:Any): Unit
   }
   mockTest("primitive arguments"){
     val x = mock[X]
