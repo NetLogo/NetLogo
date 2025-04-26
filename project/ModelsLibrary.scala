@@ -77,7 +77,7 @@ object ModelsLibrary {
   private def generateIndex(modelsPath: File, logger: Logger): String = {
     import scala.collection.JavaConverters._
     val buf = new StringBuilder
-    def println(s: String) { buf ++= s + "\n" }
+    def println(s: String): Unit = { buf ++= s + "\n" }
     val paths = FileActions
       .enumeratePaths(modelsPath.toPath)
       .filterNot(p => p.toString.contains("test"))

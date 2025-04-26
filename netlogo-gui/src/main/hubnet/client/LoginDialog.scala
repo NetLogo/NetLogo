@@ -15,7 +15,7 @@ import org.nlogo.swing.{ ComboBox, DialogButton, NonemptyTextFieldButtonEnabler,
 import org.nlogo.theme.InterfaceColors
 
 abstract class LoginCallback{
-  def apply(user:String, host:String, port:Int)
+  def apply(user:String, host:String, port:Int): Unit
 }
 
 /**
@@ -77,7 +77,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
     // Set up server table
     val serverTablePane = new ScrollPane(serverTable) {
       setPreferredSize(new Dimension(100, 88))
-      setVisible(false)
+      this.setVisible(false)
 
       setBackground(InterfaceColors.dialogBackground())
     }
@@ -91,7 +91,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
     serverField.getDocument.addDocumentListener(this)
     // Allow double clicks on server entries
     serverTable.addMouseListener(new MouseAdapter() {
-      override def mouseClicked(e: MouseEvent) {
+      override def mouseClicked(e: MouseEvent): Unit = {
         if (e.getClickCount == 2)
           if (enterButton.isEnabled) enterButton.doClick()
           else nameField.requestFocus()
@@ -114,7 +114,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
    * for the first text field. Called by swing
    * when this panel gets a parent component.
    **/
-  override def addNotify() {
+  override def addNotify(): Unit = {
     super.addNotify()
     getRootPane.setDefaultButton(enterButton)
     // requestFocus doesn't seem to work here unless
@@ -128,7 +128,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
    * of the selected server entry into the text Fields.
    * From interface ListSelectionListener.
    **/
-  def valueChanged(e: ListSelectionEvent) {
+  def valueChanged(e: ListSelectionEvent): Unit = {
     if (!e.getValueIsAdjusting) {
       val i = serverTable.getSelectionModel.getMinSelectionIndex
       if (i > -1) {
@@ -144,12 +144,12 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
 
   // Clears selections in the server table.
   // Called when the server or port field is edited.
-  def changedUpdate(e: DocumentEvent) {fieldChangeUpdate()}
-  def insertUpdate(e:DocumentEvent){ fieldChangeUpdate() }
-  def removeUpdate(e:DocumentEvent){ fieldChangeUpdate() }
+  def changedUpdate(e: DocumentEvent): Unit = {fieldChangeUpdate()}
+  def insertUpdate(e:DocumentEvent): Unit ={ fieldChangeUpdate() }
+  def removeUpdate(e:DocumentEvent): Unit ={ fieldChangeUpdate() }
 
   // Clears the selection in the server table if the entry has been changed.
-  private def fieldChangeUpdate() {
+  private def fieldChangeUpdate(): Unit = {
     if (!isServerTableSelectingValue) {
       val i = serverTable.getSelectionModel.getMinSelectionIndex
       if (i > -1) {
@@ -161,7 +161,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
   }
 
   private var loginCallback: LoginCallback = null
-  def go(callback:LoginCallback) {
+  def go(callback:LoginCallback): Unit = {
     this.loginCallback = callback
     setVisible (true)
   }
@@ -170,7 +170,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
    * Overrides <code>component.setVisible(...)</code> to make sure
    * server table threads are off when this is not visible.
    **/
-  override def setVisible(visible: Boolean) {
+  override def setVisible(visible: Boolean): Unit = {
     if (serverTable != null) serverTable.setActive(visible)
     super.setVisible(visible)
   }
@@ -240,7 +240,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
      * Turns this table on or off. Toggles the DiscoveryListener
      * and the expiration thread.
      **/
-    def setActive(active: Boolean) {
+    def setActive(active: Boolean): Unit = {
       if (active != this.active) {
         this.active = active
         if (active) {
@@ -262,7 +262,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
     /**
      * Handles server announcement events. From interface AnnoucementListener.
      **/
-    def announcementReceived(m: DiscoveryMessage) {
+    def announcementReceived(m: DiscoveryMessage): Unit = {
       if (activeServers.add(m)) getModel.asInstanceOf[ServerTableModel].fireTableDataChanged()
     }
 
@@ -270,7 +270,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
      * Expires inactive server entries. From interface runnable.
      * Executed on the AWT thread.
      **/
-    def run() {
+    def run(): Unit = {
       if (activeServers.expire() > 0) getModel.asInstanceOf[ServerTableModel].fireTableDataChanged()
     }
 
@@ -301,7 +301,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
      * we should be totally threadsafe.
      **/
     private class ExpirationThread extends Thread {
-      override def run() {
+      override def run(): Unit = {
         while (active) {
           try {
             Thread.sleep(EXPIRE_SERVER_FREQUENCY)

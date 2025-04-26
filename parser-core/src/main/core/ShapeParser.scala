@@ -31,6 +31,7 @@ object ShapeParser {
     lines.foldLeft(List[List[String]](List[String]())) {
       case (otherShapes, l: String) if l == "" => List[String]()::otherShapes
       case (currentShape::otherShapes, l: String) => (currentShape :+ l)::otherShapes
+      case (l, s) => throw new Exception(s"Unexpected shape list: $l")
     }.foldLeft(List[List[String]]()) {
       case (l::otherShapes, Nil) => ("" +: l)::otherShapes
       case (otherShapes, l) => l::otherShapes
@@ -44,7 +45,7 @@ object ShapeParser {
     }
 
   private def formatShape(shape: CoreVectorShape): String =
-    (Seq(shape.name, shape.rotatable, shape.editableColorIndex) ++ shape.elements.map(formatElement)).mkString("\n")
+    (Seq[Any](shape.name, shape.rotatable, shape.editableColorIndex) ++ shape.elements.map(formatElement)).mkString("\n")
 
   private def parseLink(lines: List[String]): LinkShape =
     lines.toList match {
@@ -55,11 +56,11 @@ object ShapeParser {
     }
 
   private def formatLink(link: CoreLinkShape): String =
-    Seq(link.name, link.curviness, link.linkLines.map(formatLinkLine).mkString("\n"), formatShape(link.indicator)).mkString("\n")
+    Seq[Any](link.name, link.curviness, link.linkLines.map(formatLinkLine).mkString("\n"), formatShape(link.indicator)).mkString("\n")
 
   private def parseLinkLine(line: String): LinkLine =
     line.split(' ').toList match {
-      case xcor::"1"::dashChoices if CoreLinkLine.dashChoices.contains(dashChoices.map(_.toFloat).toArray) =>
+      case xcor::"1"::dashChoices if CoreLinkLine.dashChoices.contains(dashChoices.map(_.toFloat)) =>
         LinkLine(xcor.toDouble, true, dashChoices.map(_.toFloat))
       case xcor::"1"::dashChoices => LinkLine(xcor.toDouble, true, Seq(1.0f, 0.0f))
       case xcor::"0"::dashChoices => LinkLine(xcor.toDouble, false, Seq(0.0f, 1.0f))
@@ -68,7 +69,7 @@ object ShapeParser {
 
   private def formatLinkLine(ll: CoreLinkLine): String = {
     val visibleString = if (ll.isVisible) "1" else "0"
-    (Seq(ll.xcor, visibleString) ++ ll.dashChoices).mkString(" ")
+    (Seq[Any](ll.xcor, visibleString) ++ ll.dashChoices).mkString(" ")
   }
 
   private def parseElement(s: String): Element =
@@ -107,16 +108,18 @@ object ShapeParser {
   private def formatElement(e: Element): String =
     e match {
       case c: CoreCircle    =>
-        Seq("Circle", formatColor(c.color), c.filled, c.marked, c.x, c.y, c.diameter).mkString(" ")
+        Seq[Any]("Circle", formatColor(c.color), c.filled, c.marked, c.x, c.y, c.diameter).mkString(" ")
       case l: CoreLine      =>
-        Seq("Line", formatColor(l.color), l.marked, l.startPoint._1, l.startPoint._2, l.endPoint._1, l.endPoint._2).mkString(" ")
+        Seq[Any]("Line", formatColor(l.color), l.marked, l.startPoint._1, l.startPoint._2, l.endPoint._1, l.endPoint._2).mkString(" ")
       case p: CorePolygon   =>
-        (Seq("Polygon", formatColor(p.color), p.filled, p.marked) ++
+        (Seq[Any]("Polygon", formatColor(p.color), p.filled, p.marked) ++
           p.points.flatMap(p => Seq(p._1, p._2))).mkString(" ")
       case r: CoreRectangle =>
-        Seq("Rectangle", formatColor(r.color), r.filled, r.marked,
+        Seq[Any]("Rectangle", formatColor(r.color), r.filled, r.marked,
           r.upperLeftCorner._1, r.upperLeftCorner._2,
           r.lowerRightCorner._1, r.lowerRightCorner._2).mkString(" ")
+      case e =>
+        throw new Exception(s"Unexpected element: $e")
     }
 
   private def formatColor(color: RgbColor): String =

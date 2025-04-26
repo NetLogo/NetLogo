@@ -19,7 +19,7 @@ class ExtensionAssistant( parent: Component
                         , installExt: (String, String) => Unit
                         ) extends CompiledEvent.Handler {
 
-  def handle(e: CompiledEvent) {
+  def handle(e: CompiledEvent): Unit = {
     if (LibraryInfoDownloader.enabled && Option(e.error).exists(_.getMessage.startsWith(ExtensionManager.extensionNotFoundStr))) {
       val missingExtName = e.error.getMessage.stripPrefix(ExtensionManager.extensionNotFoundStr)
       if (extExists(missingExtName)) {

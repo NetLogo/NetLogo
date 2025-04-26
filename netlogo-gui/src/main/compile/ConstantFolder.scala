@@ -34,13 +34,13 @@ private class ConstantFolder extends DefaultAstVisitor {
       case _                   => throw new IllegalArgumentException(value.getClass.getName)
     }
 
-  override def visitReporterApp(app:ReporterApp) {
+  override def visitReporterApp(app:ReporterApp): Unit = {
     super.visitReporterApp(app)
     if(app.reporter.isInstanceOf[Pure] && !app.args.isEmpty && app.args.forall(isConstant)) {
       val newReporter = makeConstantReporter(applyReporter(app))
       newReporter.copyMetadataFrom(app.reporter)
       app.reporter = newReporter
-      app.clearArgs
+      app.clearArgs()
     }
   }
   private def isConstant(e:Expression) =

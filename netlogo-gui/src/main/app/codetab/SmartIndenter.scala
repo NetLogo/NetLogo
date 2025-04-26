@@ -6,6 +6,8 @@ import org.nlogo.api.{ CompilerServices, EditorAreaInterface}
 import org.nlogo.core.{ Token, TokenType }
 import org.nlogo.editor.Indenter
 
+import scala.collection.BufferedIterator
+
 class SmartIndenter(code: EditorAreaInterface, compiler: CompilerServices)
 extends Indenter {
 

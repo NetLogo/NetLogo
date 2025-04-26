@@ -9,7 +9,7 @@ object InRadiusSimple {
 
   def apply(world: World)(agent: Agent, sourceSet: AgentSet, radius: Double, wrap: Boolean): JList[Agent] = {
 
-    import scala.collection.JavaConverters.{ iterableAsScalaIterableConverter, seqAsJavaListConverter }
+    import scala.jdk.CollectionConverters.{ IterableHasAsScala, SeqHasAsJava }
 
     val getAgentXAndY: PartialFunction[Agent, (Double, Double)] = {
       case t: Turtle => (t.xcor,  t.ycor)
@@ -25,7 +25,7 @@ object InRadiusSimple {
 
     // `collect` is used in place of `map`ping to `Agent` and `filter`ing, in
     // order to reduce iterations over the collection. --JAB (6/19/14)
-    val newAgents = sourceSet.agents.asScala.collect { case agent: Agent if isInRadius(agent) => agent }
+    val newAgents = sourceSet.agents.asScala.collect { case a: Agent if isInRadius(a) => a }
     newAgents.toSeq.asJava
 
   }

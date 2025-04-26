@@ -7,14 +7,14 @@ import org.nlogo.nvm.{ Command, Context}
 import org.nlogo.nvm.RuntimePrimitiveException
 
 class _exportinterface extends Command {
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val path =
       workspace.fileManager.attachPrefix(
         argEvalString(context, 0))
     workspace.updateUI()
     workspace.waitFor(
       new CommandRunnable() {
-        override def run() {
+        override def run(): Unit = {
           try workspace.exportInterface(path)
           catch {
             case e: java.io.IOException =>

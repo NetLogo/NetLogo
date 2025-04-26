@@ -22,7 +22,7 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, color
               extends JDialog(parent, Dialog.DEFAULT_MODALITY_TYPE) with ProgressListener with ThemeSync {
   val protocol = supervisor.worker.protocol
   val workspace = supervisor.workspace.asInstanceOf[GUIWorkspace]
-  private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace.progressDialog")
+  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.behaviorSpace.progressDialog")
   private val totalRuns = protocol.countRuns
   private val progressArea = new TextArea(10 min (protocol.valueSets(0).size + 3), 0)
   private val scrollPane = new ScrollPane(progressArea, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -267,7 +267,7 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, color
   // this is only called when we KNOW we have a plot, so plotWidgetOption.get is ok
   private def getPenName(metricNumber: Int): String = {
     val buf = new StringBuilder()
-    if (protocol.metrics.length > 1) buf.append(metricNumber + " ")
+    if (protocol.metrics.length > 1) buf.append(metricNumber.toString + " ")
     buf.append(org.nlogo.awt.Fonts.shortenStringToFit(
       protocol.metrics(metricNumber).trim.replaceAll("\\s+", " "),
       100, // an arbitrary limit to keep the pen names from getting too wide

@@ -8,7 +8,7 @@ import org.objectweb.asm, asm.ClassReader, asm.util.TraceClassVisitor
 class DisassemblyThunk(bytecode: Array[Byte]) extends Thunk[String] {
   def isBoring(line: String) =
     List("\\s*LINENUMBER.*", "\\s*MAXSTACK.*", "\\s*MAXLOCALS.*").exists(line.matches(_))
-  def compute = {
+  def compute() = {
     val sw = new java.io.StringWriter
     new ClassReader(bytecode).accept(new TraceClassVisitor(new java.io.PrintWriter(sw)), 0)
     val codeString = sw.getBuffer.toString

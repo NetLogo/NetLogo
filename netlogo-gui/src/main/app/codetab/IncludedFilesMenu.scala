@@ -21,7 +21,7 @@ import org.nlogo.window.{ Events => WindowEvents }
 class IncludedFilesMenu(includesTable: => Option[Map[String, String]], tabs: TabsInterface)
 extends ToolBarMenu(I18N.gui.get("tabs.code.includedFiles"))
 with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
-  implicit val i18nPrefix = I18N.Prefix("tabs.code.includedFiles")
+  implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.code.includedFiles")
 
   val alwaysVisible = Preferences.userRoot.node("/org/nlogo/NetLogo").get("includedFilesMenu", "false").toBoolean
   // If we're empty, we have no size, are invisible and don't affect our parent's layout
@@ -60,8 +60,8 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
         menu.add(new MenuItem(I18N.gui.get("common.menus.empty"))).setEnabled(false)
     }
     menu.addSeparator()
-    menu.add(new MenuItem(NewSourceEditorAction))
-    menu.add(new MenuItem(OpenSourceEditorAction))
+    menu.add(new MenuItem(new NewSourceEditorAction))
+    menu.add(new MenuItem(new OpenSourceEditorAction))
   }
 
   private def sizeIfVisible(size: => Dimension) = if (alwaysVisible || !isEmpty) size else new Dimension(0,0)
@@ -78,11 +78,11 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
     label.setForeground(InterfaceColors.toolbarText())
   }
 
-  private object NewSourceEditorAction extends AbstractAction(I18N.gui("new")) {
+  private class NewSourceEditorAction extends AbstractAction(I18N.gui("new")) {
     override def actionPerformed(e: ActionEvent) = tabs.newExternalFile()
   }
 
-  private object OpenSourceEditorAction extends AbstractAction(I18N.gui("open") + Ellipsis) {
+  private class OpenSourceEditorAction extends AbstractAction(I18N.gui("open") + Ellipsis) {
     override def actionPerformed(e: ActionEvent): Unit = ignoring(classOf[UserCancelException]) {
       val path = SwingFileDialog.showFiles(IncludedFilesMenu.this, I18N.gui("open"), FileDialog.LOAD, null)
         .replace(File.separatorChar, '/')

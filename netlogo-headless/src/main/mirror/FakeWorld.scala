@@ -9,8 +9,9 @@ import org.nlogo.{ api, core },
   core.{ ShapeList, ShapeListTracker }
 import Mirrorables._
 import Mirroring.State
-import collection.JavaConverters._
 import api.AgentVariableNumbers._
+
+import scala.jdk.CollectionConverters.IterableHasAsJava
 
 class FakeWorld(state: State) extends api.World {
 

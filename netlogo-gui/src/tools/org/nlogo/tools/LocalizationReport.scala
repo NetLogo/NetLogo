@@ -12,7 +12,7 @@ import org.nlogo.core.I18N.BundleKind
  *   just to make sure it doesnt' completely bomb.
  */
 object LocalizationReport {
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     if (args.length == 1) testLocalization(new Locale(args(0)), false)
     if (args.length == 2) testLocalization(new Locale(args(0), args(1)), false)
     if (args.length == 3) testLocalization(new Locale(args(0), args(1)), args(3).toBoolean)
@@ -157,7 +157,7 @@ object LocalizationReport {
   ))
 
   // this is the main function of this class. it runs everything.
-  def testLocalization(otherLanguageLocale: Locale, verbose: Boolean) {
+  def testLocalization(otherLanguageLocale: Locale, verbose: Boolean): Unit = {
     val english = new Locale("en", "US")
     trait TranslationStatus
     case class Good(result: String) extends TranslationStatus
@@ -177,15 +177,15 @@ object LocalizationReport {
                       extraKeysInOtherLangugeFileMissingFromEnglishFile: Set[String]) {
       // print all the data in this report.
       // the code isn't that difficult to follow
-      def printReport() {
-        def printWrapped[A](seq: scala.collection.TraversableOnce[A], message: String)(f: => Unit) {
+      def printReport(): Unit = {
+        def printWrapped[A](seq: scala.collection.TraversableOnce[A], message: String)(f: => Unit): Unit = {
           if(seq.size > 0 || verbose){
             println("======= " + seq.size + " " + message + " =======")
             f
             println()
           }
         }
-        def printKeys(message: String, keys: List[TranslationReport]) {
+        def printKeys(message: String, keys: List[TranslationReport]): Unit = {
           printWrapped(keys, message){
             for (((kaa, exp), engRes, otherRes) <- keys) {
               println("translated '" + kaa.key + "' with args: (" + kaa.args.mkString(",") + ")")

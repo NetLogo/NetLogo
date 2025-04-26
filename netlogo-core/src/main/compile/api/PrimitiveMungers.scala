@@ -10,7 +10,7 @@ import org.nlogo.nvm.{ Command, Instruction, Reporter }
 private class MatchFailedException extends Exception
 
 trait OptimizeMunger[-A <: AstNode, +B <: Instruction] {
-  def munge(stmt: A)
+  def munge(stmt: A): Unit
   val clazz: Class[_ <: B]
 }
 
@@ -18,19 +18,19 @@ trait CommandMunger extends OptimizeMunger[Statement, Command]
 trait ReporterMunger extends OptimizeMunger[ReporterApp, Reporter]
 
 trait RewritingCommandMunger extends CommandMunger {
-  def munge(stmt: Statement) {
+  def munge(stmt: Statement): Unit = {
     try munge(Match(stmt))
     catch { case _: MatchFailedException => }
   }
-  def munge(root: Match)
+  def munge(root: Match): Unit
 }
 
 trait RewritingReporterMunger extends ReporterMunger {
-  def munge(app: ReporterApp) {
+  def munge(app: ReporterApp): Unit = {
     try munge(Match(app))
     catch { case _: MatchFailedException => }
   }
-  def munge(root: Match)
+  def munge(root: Match): Unit
 }
 
 object Match {
@@ -129,24 +129,24 @@ class CommandMatch(val node: Statement) extends Match {
     }
   }
 
-  override def strip() {
+  override def strip(): Unit = {
     while (!node.args.isEmpty) node.removeArgument(0)
   }
 
-  override def graftArg(newArg: Match) {
+  override def graftArg(newArg: Match): Unit = {
     node.addArgument(newArg.node.asInstanceOf[Expression])
   }
 
-  override def removeLastArg() {
+  override def removeLastArg(): Unit = {
     node.removeArgument(node.args.size - 1)
   }
 
-  override def replace(newGuy: Instruction) {
+  override def replace(newGuy: Instruction): Unit = {
     newGuy.copyMetadataFrom(node.command)
     node.command = newGuy.asInstanceOf[Command]
   }
 
-  override def replace(theClass: Class[_ <: Instruction], constructorArgs: Any*) {
+  override def replace(theClass: Class[_ <: Instruction], constructorArgs: Any*): Unit = {
     val newGuy = Instantiator.newInstance[Instruction](theClass, constructorArgs: _*)
     newGuy.copyMetadataFrom(node.command)
     node.command = newGuy.asInstanceOf[Command]
@@ -179,24 +179,24 @@ class ReporterAppMatch(val node: ReporterApp) extends Match {
     }
   }
 
-  override def strip() {
+  override def strip(): Unit = {
     while(!node.args.isEmpty) node.removeArgument(0)
   }
 
-  override def graftArg(newArg: Match) {
+  override def graftArg(newArg: Match): Unit = {
     node.addArgument(newArg.node.asInstanceOf[Expression])
   }
 
-  override def removeLastArg() {
+  override def removeLastArg(): Unit = {
     node.removeArgument(node.args.size - 1)
   }
 
-  override def replace(newGuy: Instruction) {
+  override def replace(newGuy: Instruction): Unit = {
     newGuy.copyMetadataFrom(node.reporter)
     node.reporter = newGuy.asInstanceOf[Reporter]
   }
 
-  override def replace(theClass: Class[_ <: Instruction], constructorArgs: Any*) {
+  override def replace(theClass: Class[_ <: Instruction], constructorArgs: Any*): Unit = {
     val newGuy = Instantiator.newInstance[Instruction](theClass, constructorArgs: _*)
     newGuy.copyMetadataFrom(node.reporter)
     node.reporter = newGuy.asInstanceOf[Reporter]

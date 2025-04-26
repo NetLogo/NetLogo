@@ -15,7 +15,7 @@ abstract class DefaultClassManager extends ClassManager {
 
   /** Empty implementation. */
   @throws(classOf[ExtensionException])
-  override def runOnce(em: ExtensionManager) { }
+  override def runOnce(em: ExtensionManager): Unit = { }
 
   /**
    * Loads the primitives in the extension. This is called once per model compilation.
@@ -23,11 +23,11 @@ abstract class DefaultClassManager extends ClassManager {
    * @param primManager The manager to transport the primitives to NetLogo
    */
   @throws(classOf[ExtensionException])
-  override def load(primManager: PrimitiveManager)
+  override def load(primManager: PrimitiveManager): Unit
 
   /** Empty implementation. */
   @throws(classOf[ExtensionException])
-  override def unload(em: ExtensionManager) { }
+  override def unload(em: ExtensionManager): Unit = { }
 
   /** Default exports nothing, returns empty builder. */
   override def exportWorld: java.lang.StringBuilder =
@@ -35,10 +35,10 @@ abstract class DefaultClassManager extends ClassManager {
 
   /** Default loads nothing. */
   @throws(classOf[ExtensionException])
-  override def importWorld(lines: JList[Array[String]], reader: ExtensionManager, handler: ImportErrorHandler) { }
+  override def importWorld(lines: JList[Array[String]], reader: ExtensionManager, handler: ImportErrorHandler): Unit = { }
 
   /** Default does nothing. */
-  override def clearAll() { }
+  override def clearAll(): Unit = { }
 
   /** Default defines no extension objects, thus, we cannot read any extension objects. */
   @throws(classOf[ExtensionException])

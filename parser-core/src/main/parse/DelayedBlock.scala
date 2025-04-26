@@ -25,7 +25,7 @@ object DelayedBlock {
 
 trait DelayedBlock extends Expression {
   def openBracket: Token
-  def reportedType = throw new UnsupportedOperationException
+  def reportedType() = throw new UnsupportedOperationException
   def tokens: Seq[Token]
   def isCommand: Boolean
   def isArrowLambda: Boolean

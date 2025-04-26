@@ -90,11 +90,8 @@ object Tiler {
   }
 
   private def emptyLocation(otherWindows: JList[Window], window: Window, x: Int, y: Int): Boolean = {
-    import scala.collection.JavaConverters._
-    for(otherWindow <- otherWindows.asScala)
-      if (window != otherWindow && overlap(otherWindow, window, x, y))
-        return false
-    true
+    import scala.jdk.CollectionConverters.ListHasAsScala
+    otherWindows.asScala.forall(otherWindow => window == otherWindow || !overlap(otherWindow, window, x, y))
   }
 
   private def overlap(otherWindow: Window, window: Window, x: Int, y: Int): Boolean =

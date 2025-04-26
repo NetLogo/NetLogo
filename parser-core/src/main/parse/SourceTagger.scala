@@ -22,6 +22,7 @@ class SourceTagger(compilationOperand: CompilationOperand) extends AstTransforme
         val newPrim = l match {
           case r: _reporterlambda => r.copy(source = Some(source))
           case c: _commandlambda  => c.copy(source = Some(source))
+          case p => throw new Exception(s"Unexpected primitive: $p")
         }
         newApp.copy(reporter = newPrim)
       case _ => super.visitReporterApp(app)

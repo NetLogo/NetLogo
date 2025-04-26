@@ -17,9 +17,9 @@ object StandaloneHubNetClient {
     getContentPane.setBackground(InterfaceColors.dialogBackground())
     getContentPane.add(new ConnectionPanel)
     addWindowListener(new WindowAdapter() {
-      override def windowClosing(e: WindowEvent) {ConnectionGUI.this.dispose()}
+      override def windowClosing(e: WindowEvent): Unit = {ConnectionGUI.this.dispose()}
     })
-    def go() { pack(); setVisible(true) }
+    def go(): Unit = { pack(); setVisible(true) }
     class ConnectionPanel extends JPanel with Transparent {
       private val name = new TextField(20, "robot")
       private val ip = new TextField(20, "localhost")
@@ -52,12 +52,12 @@ object StandaloneHubNetClient {
       getContentPane.setBackground(InterfaceColors.dialogBackground())
       getContentPane.add(new ConnectionPanel)
       addWindowListener(new WindowAdapter() {
-        override def windowClosing(e: WindowEvent) {
+        override def windowClosing(e: WindowEvent): Unit = {
           connection.close("Window closed.")
           ClientFrame.this.dispose()
         }
       })
-      def go() { pack(); setVisible(true) }
+      def go(): Unit = { pack(); setVisible(true) }
       class ConnectionPanel extends JPanel with Transparent {
         class MessageButton(message: String) extends Button(message, () => sendMessage(message))
         add(new MessageButton("left"))
@@ -66,7 +66,7 @@ object StandaloneHubNetClient {
         add(new MessageButton("right"))
       }
     }
-    def sendMessage(message: String) {
+    def sendMessage(message: String): Unit = {
       connection.sendActivityCommand(message, false.asInstanceOf[AnyRef])
     }
   }

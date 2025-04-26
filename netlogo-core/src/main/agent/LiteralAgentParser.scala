@@ -77,6 +77,7 @@ extends (Iterator[Token] => AnyRef)  // returns Agent or AgentSet
         case SET_TYPE_ALLTURTLES => world.turtles
         case SET_TYPE_ALLLINKS => world.links
         case SET_TYPE_ALLPATCHES => world.patches
+        case s => throw new Exception(s"Unexpected type: $s")
       }
     }
     else if(agentsetTypeString.equalsIgnoreCase(SET_TYPE_OBSERVER)) {
@@ -114,7 +115,7 @@ extends (Iterator[Token] => AnyRef)  // returns Agent or AgentSet
         builder.add(world.getOrCreateTurtle(value.asInstanceOf[java.lang.Double].intValue))
         token = tokens.next()
       }
-      builder.build
+      builder.build()
     }
     else if(token.value == "LINKS") {
       // we have an agentset of links. parse arguments...
@@ -134,7 +135,7 @@ extends (Iterator[Token] => AnyRef)  // returns Agent or AgentSet
         if(link != null) builder.add(link)
         token = tokens.next()
       }
-      builder.build
+      builder.build()
     }
     else if(token.value == "PATCHES") {
       // we have an agentset of patches. parse arguments...
@@ -158,7 +159,7 @@ extends (Iterator[Token] => AnyRef)  // returns Agent or AgentSet
         builder.add(getPatchAt(token, doubledPatchSet: _*))
         token = tokens.next()
       }
-      builder.build
+      builder.build()
     }
     else if (List("TURTLE", "PATCH", "LINK").contains(token.value)) {
       // we have a single agent

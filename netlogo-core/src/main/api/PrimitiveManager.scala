@@ -13,7 +13,7 @@ trait PrimitiveManager {
    * @param name the name of the primitive that will be use in NetLogo code
    * @param prim an instance of <code>Primitive</code> to associate with <code>name</code>
    */
-  def addPrimitive(name: String, prim: Primitive)
+  def addPrimitive(name: String, prim: Primitive): Unit
 
   /**
    * Should the primitives be automatically imported into the top-level NetLogo namespace.  If
@@ -21,6 +21,6 @@ trait PrimitiveManager {
    * they may also optionally be referred to simply as "primitive".  The default is false.
    */
   def autoImportPrimitives: Boolean
-  def autoImportPrimitives_=(value: Boolean)
+  def autoImportPrimitives_=(value: Boolean): Unit
 
 }

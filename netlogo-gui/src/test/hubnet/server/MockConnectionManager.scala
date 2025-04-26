@@ -12,7 +12,7 @@ import java.net.{ InetAddress, NetworkInterface }
 import java.io.{ Serializable => JSerializable }
 
 class MockControlCenter extends ClientEventListener() {
-  def addClient(clientId: String, remoteAddress: String) {  }
+  def addClient(clientId: String, remoteAddress: String): Unit = {  }
   def clientDisconnect(clientId: String){  }
   def logMessage(message: String){ }
 }
@@ -23,7 +23,7 @@ class MockConnectionManager(connection: ConnectionInterface, workspace: Abstract
   var _nodesHaveView = false
   override def nodesHaveView = _nodesHaveView
   var validTag = false
-  override def incrementalViewUpdate() {results+="UPDATE"}
+  override def incrementalViewUpdate(): Unit = {results+="UPDATE"}
   override def sendOverrideList(client: String, agentClass: AgentKind, varName: String,
                                 overrides: Map[java.lang.Long, AnyRef]) = true
   override def clearOverride(client: String, agentClass: AgentKind, varName: String,
@@ -41,12 +41,12 @@ class MockConnectionManager(connection: ConnectionInterface, workspace: Abstract
   override def sendPlot(clientId:String, plot:PlotInterface){}
   override def sendTextMessage(node:String, text:String) = true
   override def sendClearTextMessage(node:String) = true
-  override def broadcastClearTextMessage() {}
+  override def broadcastClearTextMessage(): Unit = {}
   override def sendUserMessage(node:String,text:String) = true
   override def broadcastUserMessage(text:String){}
   override def broadcast(msg:Any){}
   override def broadcastPlotControl(a:Any, plotName:String){}
-  override def broadcast(tag: String, message: Any) {
+  override def broadcast(tag: String, message: Any): Unit = {
     if (!validTag) throw new HubNetException(tag + " is an invalid tag")
   }
   def getResults = results.mkString("[", " ", "]")

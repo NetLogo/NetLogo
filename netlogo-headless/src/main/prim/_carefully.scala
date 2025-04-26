@@ -11,11 +11,11 @@ class _carefully(let: Let) extends Command with CustomAssembled with SelfScoping
   override def toString =
     super.toString + ":+" + offset
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     perform_1(context)
   }
 
-  def perform_1(context: Context) {
+  def perform_1(context: Context): Unit = {
     val agentset = AgentSet.fromAgent(context.agent)
     val oldBinding = context.activation.binding.copy
     try {
@@ -31,7 +31,7 @@ class _carefully(let: Let) extends Command with CustomAssembled with SelfScoping
     }
   }
 
-  override def assemble(a: AssemblerAssistant) {
+  override def assemble(a: AssemblerAssistant): Unit = {
     a.add(this)
     a.goTo()
     a.block(0)

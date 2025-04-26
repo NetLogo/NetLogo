@@ -20,7 +20,7 @@ class MenuModel[A, B](var groupOrder: Seq[String] = Seq())(implicit leafOrdering
     case Leaf(item, _) => item
   }
 
-  implicit val nodeOrdering = NodeOrdering
+  implicit val nodeOrdering: MenuModel.this.NodeOrdering.type = NodeOrdering
 
   def addGroup(groupName: String): Unit = {
     if (! groupOrder.contains(groupName))

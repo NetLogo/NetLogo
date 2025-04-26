@@ -27,8 +27,8 @@ class CodeTabPreferences(parent: Frame, tabs: TabsInterface)
     tabs.lineNumbersVisible = selected
   })
 
-  private val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => apply)
-  private val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => revert)
+  private val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => apply())
+  private val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => revert())
 
   locally {
     setLayout(new GridBagLayout)

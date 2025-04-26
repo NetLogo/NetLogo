@@ -53,7 +53,7 @@ with SaveModel.Controller
     App.app.setWindowTitles()
   }
 
-  def handle(e: AboutToQuitEvent) {
+  def handle(e: AboutToQuitEvent): Unit = {
     new java.io.File(DirtyMonitor.autoSaveFileName).delete()
     Exceptions.ignoring(classOf[IOException]) {
       priorTempFile.foreach(Files.deleteIfExists)
@@ -61,7 +61,7 @@ with SaveModel.Controller
   }
 
   private var lastTimeAutoSaved = 0L
-  private def doAutoSave() {
+  private def doAutoSave(): Unit = {
     // autoSave when we get a dirty event but no more than once a minute I have no idea if this is a
     // good number or even the right ballpark.  feel free to change it. ev 8/22/06
     if (!modelDirty || (System.currentTimeMillis() - lastTimeAutoSaved) < 60000)
@@ -120,7 +120,7 @@ with SaveModel.Controller
   object TempFileModelTracker extends ModelTracker {
     val delegate = modelTracker
     def compiler: org.nlogo.nvm.PresentationCompilerInterface = delegate.compiler
-    def getExtensionManager(): org.nlogo.workspace.ExtensionManager = delegate.getExtensionManager
+    def getExtensionManager(): org.nlogo.workspace.ExtensionManager = delegate.getExtensionManager()
     override def getModelType = delegate.getModelType
     override def getModelFileUri: Option[URI] = {
       delegate.getModelFileUri.map { u =>

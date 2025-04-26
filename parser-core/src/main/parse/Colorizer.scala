@@ -12,9 +12,8 @@ import
 object Colorizer extends TokenColorizer {
 
   // for standalone use, for example on a web server
-  def main(argv: Array[String]) {
-    val lines = io.Source.fromInputStream(System.in).getLines
-    for (line <- lines)
+  def main(argv: Array[String]): Unit = {
+    for (line <- io.Source.fromInputStream(System.in).getLines())
       println(Colorizer.toHtml(line))
   }
 
@@ -63,7 +62,7 @@ object Colorizer extends TokenColorizer {
     val colorGroups = group(colorizeLine(line).toList)
     // use a mutable StringBuilder and tail recursion so we don't blow the stack - ST 6/30/09
     val result = new StringBuilder
-    def loop(source: String, colorGroups: List[List[Color]]) {
+    def loop(source: String, colorGroups: List[List[Color]]): Unit = {
       if (!colorGroups.isEmpty) {
         val group = colorGroups.head
         result ++= encode(source.take(group.size), group.head)
@@ -71,7 +70,7 @@ object Colorizer extends TokenColorizer {
       }
     }
     loop(line, colorGroups)
-    result.replaceAllLiterally("\n", "<br />").toString
+    result.toString.replace("\n", "<br />")
   }
 
   def colorizeLine(line: String): Vector[Color] = {

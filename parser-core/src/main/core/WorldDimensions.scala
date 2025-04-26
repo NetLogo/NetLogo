@@ -8,7 +8,7 @@ case class WorldDimensions(
     patchSize: Double = 12.0,
     wrappingAllowedInX: Boolean = true,
     wrappingAllowedInY: Boolean = true) {
-  def this(minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int) {
+  def this(minPxcor: Int, maxPxcor: Int, minPycor: Int, maxPycor: Int) = {
     this(minPxcor, maxPxcor, minPycor, maxPycor, 12.0, true, true)
   }
   def width = maxPxcor - minPxcor + 1

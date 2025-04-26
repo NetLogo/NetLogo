@@ -21,22 +21,22 @@ class Model(modelName: String,
 
   def getDt = dt
   @throws(classOf[Model.ModelException])
-  def setDt(dt: Double) {
+  def setDt(dt: Double): Unit = {
     // it doesn't make sense for dt to be <= 0
     if(dt <= 0.0)
       throw new Model.ModelException("dt cannot be less than or equal to 0.")
     this.dt = dt
   }
-  def addElement(element: ModelElement) {
+  def addElement(element: ModelElement): Unit = {
     elements += element
   }
   @throws(classOf[Model.ModelException])
-  def addElement(element: EvaluatedModelElement) {
+  def addElement(element: EvaluatedModelElement): Unit = {
     if(elementWithName(element.name) != null)
       throw new Model.ModelException("Already element with named " + element.name)
     elements += element
   }
-  def removeElement(element: ModelElement) {
+  def removeElement(element: ModelElement): Unit = {
     elements -= element
   }
   def elementWithName(name: String): ModelElement =

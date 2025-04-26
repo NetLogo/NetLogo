@@ -6,7 +6,7 @@ import java.awt.{ BorderLayout, Container, Frame }
 import java.awt.event.{ ActionEvent, WindowAdapter, WindowEvent }
 import javax.swing.{ AbstractAction, JDialog, LayoutFocusTraversalPolicy }
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters.SeqHasAsJava
 
 import org.nlogo.agent.{ Agent, Link, Observer, Turtle }
 import org.nlogo.core.{ AgentKind, I18N }
@@ -46,7 +46,7 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
     })
   SwingUtils.addEscKeyAction(
     getRootPane, new AbstractAction {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         close()
       }})
   setTitle(getUpdatedTitle)
@@ -58,21 +58,21 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
   // Make sure the window is fully removed
   addWindowListener(
     new WindowAdapter {
-      override def windowClosing(e: WindowEvent) {
+      override def windowClosing(e: WindowEvent): Unit = {
         close()
       }})
 
-  override def requestFocus() {
+  override def requestFocus(): Unit = {
     monitor.requestFocus()
   }
 
   def agent = monitor.agent
 
-  def radius(radius: Double) {
+  def radius(radius: Double): Unit = {
     monitor.radius(radius)
   }
 
-  def close() {
+  def close(): Unit = {
     setVisible(false)
     monitor.close()
     manager.remove(this)
@@ -80,7 +80,7 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
     Event.rehash()
   }
 
-  def refresh() {
+  def refresh(): Unit = {
     if(!dead && agent != null && agent.id == -1) {
       dead = true
       setTitle(getUpdatedTitle)
@@ -113,16 +113,16 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
   }
 
   // KLUDGE
-  def agentChangeNotify(oldAgent: Agent) {
+  def agentChangeNotify(oldAgent: Agent): Unit = {
     dead = agent != null && agent.id == -1
     setTitle(getUpdatedTitle)
     manager.agentChangeNotify(this, oldAgent)
     pack()
   }
 
-  def handle(e: WindowEvents.LoadBeginEvent) { close() }
-  def handle(e: WindowEvents.PeriodicUpdateEvent) { refresh() }
-  def handle(e: WindowEvents.PatchesCreatedEvent) {
+  def handle(e: WindowEvents.LoadBeginEvent): Unit = { close() }
+  def handle(e: WindowEvents.PeriodicUpdateEvent): Unit = { refresh() }
+  def handle(e: WindowEvents.PatchesCreatedEvent): Unit = {
     if(!agent.isInstanceOf[Observer])
       close()
   }
@@ -130,7 +130,7 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
   class ObserverMonitor(window: JDialog)
   extends AgentMonitor(manager.workspace, window) {
     override def agentKind = AgentKind.Observer
-    override def repaintPrompt() { }
+    override def repaintPrompt(): Unit = { }
     override def vars = {
       val allGlobals = workspace.world.program.globals
       allGlobals
@@ -142,11 +142,11 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
   class TurtleMonitor(window: JDialog)
   extends AgentMonitor(manager.workspace, window){
     override def agentKind = AgentKind.Turtle
-    override def repaintPrompt() { }
+    override def repaintPrompt(): Unit = { }
     override def vars = {
       val turtleVars = workspace.world.program.turtlesOwn
       val allVars: Seq[String] =
-        Option(agent) match {
+        Option(this.agent) match {
           case Some(t: Turtle) if t.getBreed != workspace.world.turtles =>
             turtleVars ++ workspace.world.program.breeds.get(t.getBreed.printName).map(_.owns).getOrElse(Seq())
           case _ => turtleVars
@@ -158,18 +158,18 @@ class AgentMonitorWindow(val agentKind: AgentKind, _agent: Agent, radius: Double
   class PatchMonitor(window: JDialog)
   extends AgentMonitor(manager.workspace, window) {
     override def agentKind = AgentKind.Patch
-    override def repaintPrompt() { }
+    override def repaintPrompt(): Unit = { }
     override def vars = workspace.world.program.patchesOwn.asJava
   }
 
   class LinkMonitor(window: JDialog)
   extends AgentMonitor(manager.workspace, window) {
     override def agentKind = AgentKind.Link
-    override def repaintPrompt() { }
+    override def repaintPrompt(): Unit = { }
     override def vars = {
       val linkVars = workspace.world.program.linksOwn
       val allVars: Seq[String] =
-        Option(agent) match {
+        Option(this.agent) match {
           case Some(l: Link) if l.getBreed != workspace.world.links =>
             linkVars ++ workspace.world.program.linkBreeds
               .get(l.getBreed.printName)

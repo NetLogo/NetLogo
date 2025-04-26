@@ -18,7 +18,7 @@ trait AbstractFixture {
   def runCommand(command: Command, mode: TestMode)
   def runReporter(reporter: Reporter, mode: TestMode)
   def readFromString(literal: String): AnyRef
-  def checkResult(mode: TestMode, reporter: String, expectedResult: String, actualResult: AnyRef) {
+  def checkResult(mode: TestMode, reporter: String, expectedResult: String, actualResult: AnyRef): Unit = {
     // To be as safe as we can, let's do two separate checks here...  we'll compare the results both
     // as values and as printed representations.  Most of the time these checks will come out
     // the same, but it might be good to have both, partially as a way of giving both Equality and

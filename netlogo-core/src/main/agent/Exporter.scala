@@ -9,7 +9,7 @@ import org.nlogo.{ core, api },
   api.Dump,
     Dump.csv,
   core.Nobody
-import collection.JavaConverters._
+import scala.jdk.CollectionConverters.{ CollectionHasAsScala, SeqHasAsJava }
 
 // I converted this from Java without (for now, at least) making any effort to clean it up and make
 // it more Scalatastic. - ST 4/12/11
@@ -18,7 +18,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
 
   import writer.{ print, println }
 
-  def exportWorld(full: Boolean) {
+  def exportWorld(full: Boolean): Unit = {
     exportRandomState()
     exportGlobals()
     if(full) {
@@ -28,7 +28,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     }
   }
 
-  private def exportLinks() {
+  private def exportLinks(): Unit = {
     println(csv.encode("LINKS"))
     val allLinkVars = new ArrayList[String]
     for(v <- world.program.linksOwn)
@@ -49,7 +49,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     // checksums.
     val it = world.links.iterator
     while(it.hasNext) {
-      val link = it.next.asInstanceOf[Link]
+      val link = it.next().asInstanceOf[Link]
       val breed = link.getLinkVariable(Link.VAR_BREED).asInstanceOf[AgentSet]
       val key = breed.printName
       var breedOwns: Seq[String] = null
@@ -84,13 +84,13 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     println()
   }
 
-  private def exportRandomState() {
+  private def exportRandomState(): Unit = {
     println(csv.encode("RANDOM STATE"))
     println(csv.encode(world.mainRNG.save()))
     println()
   }
 
-  protected def exportGlobals() {
+  protected def exportGlobals(): Unit = {
     println(csv.encode("GLOBALS"))
     print(csv.encode("min-pxcor") + ","
           + csv.encode("max-pxcor") + ","
@@ -111,8 +111,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     // we want to make sure to export the globals in alphabetical order so that the world files are
     // exactly the same everytime which is important for checksums in particular.  ev 6/15/05
     Collections.sort(sortedGlobals)
-    val subject =
-      Option(world.observer.targetAgent).getOrElse(Nobody)
+    val subject: Any = Option(world.observer.targetAgent).getOrElse(Nobody)
     if (! sortedGlobals.isEmpty) {
       print("," + csv.variableNameRow(sortedGlobals))
     }
@@ -136,7 +135,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     println()
   }
 
-  protected def exportTurtles() {
+  protected def exportTurtles(): Unit = {
     println(csv.encode("TURTLES"))
     val allTurtleVars = new ArrayList[String](world.program.turtlesOwn.asJava)
     val turtlesVarSize = world.program.turtlesOwn.size
@@ -190,7 +189,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     println()
   }
 
-  private def exportPatches() {
+  private def exportPatches(): Unit = {
     println(csv.encode("PATCHES"))
     val vars = world.program.patchesOwn
     println(csv.variableNameRow(vars))
@@ -207,7 +206,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
     println()
   }
 
-  protected def sortIndicesAndVars(vars: Array[String], indices: Array[Int]) {
+  protected def sortIndicesAndVars(vars: Array[String], indices: Array[Int]): Unit = {
     val (sortedVars, sortedIndices) = (vars zip indices).sortBy(_._2).unzip
     sortedVars.copyToArray(vars)
     sortedIndices.copyToArray(indices)

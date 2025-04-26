@@ -25,7 +25,7 @@ class Zoomer(container: Container) {
 
   ///
 
-  def zoomWidgets(newZoom: Double) {
+  def zoomWidgets(newZoom: Double): Unit = {
     for (component <- container.getComponents) {
       component match {
         case w: WidgetWrapperInterface => zoomWidget(w, false, false, _zoomFactor, newZoom)
@@ -37,17 +37,17 @@ class Zoomer(container: Container) {
   }
 
   def zoomWidget(wrapper: WidgetWrapperInterface, newWidget: Boolean, loadingWidget: Boolean, oldZoom: Double,
-                 newZoom: Double) {
+                 newZoom: Double): Unit = {
     if (oldZoom != newZoom) {
       zoomWidgetSize(wrapper, newWidget, loadingWidget, oldZoom, newZoom)
       zoomWidgetLocation(wrapper, newWidget, loadingWidget, oldZoom, newZoom)
-      zoomWidgetFont(wrapper, wrapper.widget, newWidget, loadingWidget, oldZoom, newZoom)
+      zoomWidgetFont(wrapper, wrapper.widget(), newWidget, loadingWidget, oldZoom, newZoom)
     }
   }
 
   def zoomWidgetSize(wrapper: WidgetWrapperInterface, newWidget: Boolean, loadingWidget: Boolean, oldZoom: Double,
-                     newZoom: Double) {
-    val component = wrapper.widget
+                     newZoom: Double): Unit = {
+    val component = wrapper.widget()
     var originalSize = sizes.get(component)
     var originalZoom = sizeZooms.get(component)
 
@@ -64,7 +64,7 @@ class Zoomer(container: Container) {
     if (!newWidget || loadingWidget)
       wrapper.setSize(zoomSize(originalSize.get, originalZoom.get, newZoom))
 
-    wrapper.widget.setZoomFactor(newZoom)
+    wrapper.widget().setZoomFactor(newZoom)
   }
 
   def zoomSize(originalSize: Dimension, oldZoom: Double, newZoom: Double): Dimension =
@@ -75,8 +75,8 @@ class Zoomer(container: Container) {
     zoomSize(originalSize, 1.0, zoomFactor)
 
   def zoomWidgetLocation(wrapper: WidgetWrapperInterface, newWidget: Boolean, loadingWidget: Boolean, oldZoom: Double,
-                         newZoom: Double) {
-    val component = wrapper.widget
+                         newZoom: Double): Unit = {
+    val component = wrapper.widget()
     var originalLocation = locations.get(component)
     var originalZoom = locationZooms.get(component)
 
@@ -102,7 +102,7 @@ class Zoomer(container: Container) {
    * but when we are used by CommandCenter, there is no wrapper - ST 7/13/04
    */
   def zoomWidgetFont(wrapper: WidgetWrapperInterface, widget: Widget, newWidget: Boolean, loadingWidget: Boolean,
-                     oldZoom: Double, newZoom: Double) {
+                     oldZoom: Double, newZoom: Double): Unit = {
     if (!fonts.contains(widget))
       storeComponentFont(widget, true, newWidget, loadingWidget, oldZoom)
 
@@ -113,7 +113,7 @@ class Zoomer(container: Container) {
   }
 
   private def storeComponentFont(component: Component, recursive: Boolean, newWidget: Boolean, loadingWidget: Boolean,
-                                 oldZoom: Double) {
+                                 oldZoom: Double): Unit = {
     // note that we usually ignore newWidget and loadingWidget flags -- we always
     // want to remember what the font size at the 100% zoom level is, because
     // font sizes are so small that rounding error will mess us up unless we
@@ -134,7 +134,7 @@ class Zoomer(container: Container) {
     }
   }
 
-  def scaleComponentFont(component: Component, newZoom: Double, oldZoom: Double, recursive: Boolean) {
+  def scaleComponentFont(component: Component, newZoom: Double, oldZoom: Double, recursive: Boolean): Unit = {
     if (!fonts.contains(component))
       storeComponentFont(component, recursive, false, false, oldZoom)
 
@@ -152,7 +152,7 @@ class Zoomer(container: Container) {
     }
   }
 
-  def forgetAllZoomInfo() {
+  def forgetAllZoomInfo(): Unit = {
     sizes.clear()
     sizeZooms.clear()
     locations.clear()
@@ -168,7 +168,7 @@ class Zoomer(container: Container) {
     }
   }
 
-  def updateZoomInfo(component: Component) {
+  def updateZoomInfo(component: Component): Unit = {
     component.getParent match {
       case wrapper: WidgetWrapperInterface =>
         sizes.get(component).foreach(size =>

@@ -41,6 +41,8 @@ class _userfile extends Reporter {
           throw new RuntimePrimitiveException(
             context, this, "This file doesn't exist")
         result
+      case _ =>
+        throw new Exception(s"Unexpected result: $result")
     }
   }
 

@@ -32,13 +32,13 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   private var serverInterface = Option.empty[(NetworkInterface, InetAddress)]
 
   private val listener = new ClientEventListener() {
-    def addClient(clientId: String, remoteAddress: String) {
+    def addClient(clientId: String, remoteAddress: String): Unit = {
       invokeLater(() => controlCenter.addClient(clientId, remoteAddress))
     }
-    def clientDisconnect(clientId: String) {
+    def clientDisconnect(clientId: String): Unit = {
       invokeLater(() => controlCenter.clientDisconnect(clientId))
     }
-    def logMessage(message:String) {
+    def logMessage(message:String): Unit = {
       invokeLater(() => controlCenter.logMessage(message))
     }
   }
@@ -69,7 +69,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   def clientEditor: AnyRef = _clientEditor
   def getInterfaceWidth = _clientEditor.interfacePanel.getPreferredSize.width
   def getInterfaceHeight = _clientEditor.interfacePanel.getPreferredSize.height
-  def load(model: Model) {
+  def load(model: Model): Unit = {
     model.optionalSectionValue[Seq[CoreWidget]]("org.nlogo.modelsection.hubnetclient").foreach { hubNetWidgets =>
       _clientEditor.load(hubNetWidgets)
     }
@@ -86,7 +86,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
   def defaultComponent = Seq()
 
   @throws(classOf[java.io.IOException])
-  def importClientInterface(model: Model, client: Boolean) {
+  def importClientInterface(model: Model, client: Boolean): Unit = {
     _clientEditor.close()
     val widgets: Seq[CoreWidget] =
       if (client)
@@ -97,11 +97,11 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     openClientEditor()
   }
 
-  def setTitle(name: String, dir: String, modelType: ModelType) {
+  def setTitle(name: String, dir: String, modelType: ModelType): Unit = {
     _clientEditor.setTitle(name, dir, modelType)
   }
 
-  def showControlCenter() {
+  def showControlCenter(): Unit = {
     if (controlCenter == null) {
       controlCenter =
         new ControlCenter(connectionManager, workspace.getFrame, serverName, workspace.modelNameForDisplay, serverInterface.map(_._2))
@@ -111,27 +111,27 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     controlCenter.setVisible(true)
   }
 
-  private def closeControlCenter(){
+  private def closeControlCenter(): Unit ={
     // the hubnet manager is created in AbstractWorkspace, but the control center
     // isn't started unless showControlCenter is called.
     if(controlCenter != null) controlCenter.dispose()
   }
 
   /// client editor
-  def openClientEditor() {
+  def openClientEditor(): Unit = {
     org.nlogo.awt.Positioning.moveNextTo(_clientEditor, linkParent)
     _clientEditor.setVisible(true)
     _clientEditor.setSize(_clientEditor.getPreferredSize)
   }
 
-  def closeClientEditor() {
+  def closeClientEditor(): Unit = {
      _clientEditor.close()
      _clientEditor.dispose()
      _clientEditor = new HubNetClientEditor(workspace, linkParent, ifactory, menuFactory)
   }
 
   @throws(classOf[HubNetException])
-  def reset() {
+  def reset(): Unit = {
     if(connectionManager.isRunning) {
       connectionManager.shutdown()
       closeControlCenter()
@@ -172,7 +172,7 @@ class GUIHubNetManager(workspace: GUIWorkspace,
     }
   }
 
-  def disconnect() {
+  def disconnect(): Unit = {
     connectionManager.shutdown()
     closeControlCenter()
     messagesList.clear()

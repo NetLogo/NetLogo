@@ -8,7 +8,7 @@ import java.lang.{ Double => JDouble, Integer => JInteger, Long => JLong }
 import org.nlogo.api.Dump
 import org.nlogo.core.Nobody
 import Dump.csv
-import collection.JavaConverters._
+import scala.jdk.CollectionConverters.{ ListHasAsScala, SeqHasAsJava }
 
 // This is just a bunch of copy-and-pasted code from the 2D version, with little 3D tweaks embedded
 // in it.  It really ought to be redone to eliminate the copy-and-paste. - ST 4/11/11
@@ -20,13 +20,13 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
 
   import writer.{ print, println }
 
-  override def exportWorld(full: Boolean) {
+  override def exportWorld(full: Boolean): Unit = {
     super.exportWorld(full)
     if(full)
       exportDrawing()
   }
 
-  def exportDrawing() {
+  def exportDrawing(): Unit = {
     println(csv.encode("DRAWING"))
     println(csv.encode("x0")  + ","
             + csv.encode("y0")  + ","
@@ -104,7 +104,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
     println()
   }
 
-  override def exportGlobals() {
+  override def exportGlobals(): Unit = {
     println(csv.encode("GLOBALS"))
     print(csv.encode("min-pxcor") + ","
                   + csv.encode("max-pxcor") + ","
@@ -127,7 +127,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
     // we want to make sure to export the globals in alphabetical order so that the world files are
     // exactly the same everytime which is important for checksums in particular.  ev 6/15/05
     Collections.sort(sortedGlobals)
-    val subject = Option(world.observer.targetAgent).getOrElse(Nobody)
+    val subject: Any = Option(world.observer.targetAgent).getOrElse(Nobody)
     print("," + csv.variableNameRow(sortedGlobals))
     println()
     print(csv.encode(Integer.toString(world.minPxcor)) + ","
@@ -153,7 +153,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
     println()
   }
 
-  override def exportTurtles() {
+  override def exportTurtles(): Unit = {
     println(csv.encode("TURTLES"))
     val allTurtleVars = new ArrayList[String](world.program.turtlesOwn.asJava)
     val turtlesVarSize = world.program.turtlesOwn.size
@@ -169,7 +169,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
     println(csv.variableNameRow(allTurtleVars))
     val it = world.turtles.iterator
     while(it.hasNext) {
-      val turtle = it.next.asInstanceOf[Turtle]
+      val turtle = it.next().asInstanceOf[Turtle]
       print(csv.data(turtle.getTurtleVariable(Turtle.VAR_WHO)))
       val breed = turtle.getTurtleVariable(Turtle3D.VAR_BREED3D).asInstanceOf[AgentSet]
       val key = breed.printName

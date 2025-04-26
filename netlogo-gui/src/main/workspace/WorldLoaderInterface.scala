@@ -18,7 +18,7 @@ trait WorldLoaderInterface {
   def insetWidth(): Int
   def tickCounterLabel(label: String): Unit
   def tickCounterLabel: String
-  def showTickCounter(visible: Boolean)
+  def showTickCounter(visible: Boolean): Unit
   def showTickCounter: Boolean
   def frameRate: Double
   def frameRate(rate: Double): Unit

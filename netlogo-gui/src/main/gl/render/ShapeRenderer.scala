@@ -19,7 +19,7 @@ private[render] class ShapeRenderer(world: World) {
                          label: String, labelColor: AnyRef,
                          x: Double, y: Double, z: Double, height: Float,
                          patchSize: Double, fontSize: Int, outline: Boolean,
-                         lineThickness: Double, orientation: Array[Double]) {
+                         lineThickness: Double, orientation: Array[Double]): Unit = {
     val maxx = world.maxPxcor + 0.5
     val minx = world.minPxcor - 0.5
     val maxy = world.maxPycor + 0.5
@@ -80,7 +80,7 @@ private[render] class ShapeRenderer(world: World) {
 
   def renderAgent(gl: GL2, shape3D: GLShape, color: java.awt.Color, size: Double,
                   xcor: Double, ycor: Double, zcor: Double,
-                  stroke: Float, outline: Boolean, orientation: Array[Double]) {
+                  stroke: Float, outline: Boolean, orientation: Array[Double]): Unit = {
     gl.glPushMatrix()
     alignAgent(gl, size,
       xcor * Renderer.WORLD_SCALE,
@@ -99,8 +99,11 @@ private[render] class ShapeRenderer(world: World) {
   }
 
   def alignAgent(gl: GL2, size: Double, xcor: Double, ycor: Double, zcor: Double,
-                 shape3D: GLShape, highlight: Boolean, orientation: Array[Double]) {
-    val Array(heading, pitch, roll) = orientation
+                 shape3D: GLShape, highlight: Boolean, orientation: Array[Double]): Unit = {
+    val (heading, pitch, roll) = orientation match {
+      case Array(h, p, r) => (h, p, r)
+      case _ => throw new Exception(s"Unexpected orientation: $orientation")
+    }
     val observerOrientation = world.observer.orientation.get
     gl.glTranslated(xcor, ycor, zcor)
     // non-rotatable shapes always face the viewpoint
@@ -129,7 +132,7 @@ private[render] class ShapeRenderer(world: World) {
     gl.glScaled(size, size, size)
   }
 
-  def doOutline(gl: GL2, shape3D: GLShape, rgb: Array[Float]) {
+  def doOutline(gl: GL2, shape3D: GLShape, rgb: Array[Float]): Unit = {
     if (stencilSupport) {
       // This highlighting code was borrowed from
       // http://www.flipcode.com/articles/article_objectoutline.shtml
@@ -195,7 +198,7 @@ private[render] class ShapeRenderer(world: World) {
     else
       size.toFloat
 
-  def renderHighlight(gl: GL2, agent: Agent, coords: Array[Double], orientation: Array[Double]) {
+  def renderHighlight(gl: GL2, agent: Agent, coords: Array[Double], orientation: Array[Double]): Unit = {
     gl.glPushMatrix()
     val shape = shapeManager.getShape(agent.shape)
     alignAgent(gl, agent.size,
@@ -209,7 +212,7 @@ private[render] class ShapeRenderer(world: World) {
 
   def renderLabel(gl: GL2, label: String, labelColor: AnyRef,
                   xcor: Float, ycor: Float, zcor: Float,
-                  height: Float, fontSize: Int, patchSize: Double) {
+                  height: Float, fontSize: Int, patchSize: Double): Unit = {
     val observer = world.observer
     val orientation = observer.orientation.get
     gl.glPushMatrix()
@@ -229,7 +232,7 @@ private[render] class ShapeRenderer(world: World) {
     gl.glPopMatrix()
   }
 
-  def renderHalo(gl: GL2, isTurtle: Boolean, diameter: Double) {
+  def renderHalo(gl: GL2, isTurtle: Boolean, diameter: Double): Unit = {
     val haloShape = shapeManager.getShape("@@@HALO@@@")
     val width = world.worldWidth
     val height = world.worldHeight

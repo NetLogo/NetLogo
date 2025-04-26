@@ -108,6 +108,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
 
     widgetControls match {
       case ts: ThemeSync => ts.syncTheme()
+      case _ =>
     }
 
     toolbar.setBackground(InterfaceColors.toolbarBackground())

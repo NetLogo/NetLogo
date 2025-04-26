@@ -40,8 +40,6 @@ class CommandLine(commandCenter: CommandCenterInterface,
     with WindowEvents.CompiledEvent.Handler {
   import CommandLine._
 
-  type WidgetModel = CoreWidget
-
   // this is needed for if we're embedded in an agent monitor instead
   // of the command center - ST 7/30/03
   var agent: Agent = null
@@ -273,7 +271,7 @@ class CommandLine(commandCenter: CommandCenterInterface,
     textField.setEnabled(enabled)
   }
 
-  override def load(model: CoreWidget): Object = {
+  override def load(model: CoreWidget): Unit = {
     throw new UnsupportedOperationException()
   }
 

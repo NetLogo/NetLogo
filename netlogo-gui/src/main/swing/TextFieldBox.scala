@@ -11,7 +11,7 @@ object TextFieldBox {
   /**
    * For testing. *
    */
-  def main(argv: List[String]) {
+  def main(argv: List[String]): Unit = {
     val fb = new TextFieldBox(SwingConstants.LEFT)
 
     fb.addField("Name:", new TextField(20))

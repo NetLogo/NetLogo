@@ -17,7 +17,8 @@ import org.nlogo.api.Color.{ getColor, getColorNameByIndex, modulateDouble }
 import org.nlogo.agent.InputBoxConstraint
 import org.nlogo.awt.Fonts.platformMonospacedFont
 import org.nlogo.awt.{ Hierarchy, Positioning }
-import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, LogoList, NumericInput, StringInput }
+import org.nlogo.core.{ BoxedValue, CompilerException, I18N, InputBox => CoreInputBox, LogoList, NumericInput,
+                        StringInput, Widget => CoreWidget }
 import org.nlogo.editor.AbstractEditorArea
 import org.nlogo.swing.{ Button, ButtonPanel, DialogButton, OptionPane, RoundedBorderPanel,
                          ScrollPane, Utils }
@@ -31,7 +32,6 @@ object InputBox {
 abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: AbstractEditorArea,
                         compiler: CompilerServices, nextComponent: Component)
   extends SingleErrorWidget with Editable with Events.InputBoxLoseFocusEvent.Handler {
-  type WidgetModel = CoreInputBox
 
   import InputBox._
 
@@ -109,7 +109,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   // grab the current editor kit from the editor area
   // everyone but string will use it but we need to
   // keep it around so we know what to set it to.
-  private val codeEditorKit: EditorKit = textArea.getEditorKit
+  private val codeEditorKit: EditorKit = textArea.getEditorKit()
   protected var inputType: InputType = new StringInputType()
   private val constraint: InputBoxConstraint = new InputBoxConstraint(inputType.baseName, inputType.defaultValue)
   protected val changeButton = new Button("Change", () => {
@@ -132,7 +132,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   protected var oldText = ""
   protected var value: Option[AnyRef] = None
   def valueText = text
-  def valueObject = value.orNull
+  def valueObject() = value.orNull
   def valueObject(value: AnyRef): Unit = {valueObject(value, false)}
   def valueObject(value: Any, raiseEvent: Boolean): Unit = {
     oldText = text
@@ -145,6 +145,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     value match {
       case d: Double => Double.box(d)
       case a: AnyRef => a
+      case v => throw new Exception(s"Unexpected value: $v")
     }
   }
 
@@ -369,12 +370,12 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
   }
 
-  def handle(e:Events.InputBoxLoseFocusEvent){
+  def handle(e:Events.InputBoxLoseFocusEvent): Unit ={
     if(_hasFocus) transferFocus()
   }
 
   private class CancelAction extends AbstractAction {
-    def actionPerformed(e:ActionEvent){
+    def actionPerformed(e:ActionEvent): Unit ={
       textArea.setText(text)
       stopEdit()
     }
@@ -457,40 +458,44 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
   }
 
-  override def load(model: WidgetModel): AnyRef = {
-    name(model.varName)
-    multiline(model.multiline)
+  override def load(model: CoreWidget): Unit = {
+    model match {
+      case input: CoreInputBox =>
+        name(input.varName)
+        multiline(input.multiline)
 
-    def setType(i: BoxedValue): Unit = {
-      this.inputType = InputType.create(i)
-      textArea.setEditorKit(this.inputType.getEditorKit)
-      textArea.setFont(this.inputType.getFont)
-      textArea.enableBracketMatcher(this.inputType.enableBracketMatcher)
-      typeOptions.selectByName(inputType.displayName)
-      constraint.setType(this.inputType.baseName, this.inputType.defaultValue)
-      changeButton.setVisible(this.inputType.changeVisible)
+        def setType(i: BoxedValue): Unit = {
+          this.inputType = InputType.create(i)
+          textArea.setEditorKit(this.inputType.getEditorKit)
+          textArea.setFont(this.inputType.getFont)
+          textArea.enableBracketMatcher(this.inputType.enableBracketMatcher)
+          typeOptions.selectByName(inputType.displayName)
+          constraint.setType(this.inputType.baseName, this.inputType.defaultValue)
+          changeButton.setVisible(this.inputType.changeVisible)
+        }
+
+        def setValue(i: BoxedValue): Unit = {
+          i match {
+            case NumericInput(value, _) => valueObject(value, true)
+            case StringInput(value, _, _) => valueObject(value, true)
+          }
+        }
+
+        setType(input.boxedValue)
+
+        try setValue(input.boxedValue)
+        catch{
+          case e@(_:CompilerException|_:ValueConstraint.Violation|_:LogoException) =>
+            setValue(input.boxedValue.default)
+        }
+        oldSize = input.oldSize
+        setSize(input.width, input.height)
+
+      case _ =>
     }
-
-    def setValue(i: BoxedValue): Unit = {
-      i match {
-        case NumericInput(value, _) => valueObject(value, true)
-        case StringInput(value, _, _) => valueObject(value, true)
-      }
-    }
-
-    setType(model.boxedValue)
-
-    try setValue(model.boxedValue)
-    catch{
-      case e@(_:CompilerException|_:ValueConstraint.Violation|_:LogoException) =>
-        setValue(model.boxedValue.default)
-    }
-    oldSize(model.oldSize)
-    setSize(model.width, model.height)
-    this
   }
 
-  override def model: WidgetModel = {
+  override def model: CoreWidget = {
     val b = getUnzoomedBounds
     val boxedValue = inputType.boxValue(text)
     CoreInputBox(
@@ -614,7 +619,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
           new StringInputType()
       }
 
-    def addTypeOptions(options:Options[InputType]){
+    def addTypeOptions(options:Options[InputType]): Unit ={
       BoxedValue.Defaults.map { tpe =>
         val t = create(tpe)
         options.addOption(t.displayName, t)
@@ -674,7 +679,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
 
     override def boxValue(text: String): BoxedValue =
-      StringInput(text, StringInput.ReporterLabel, multiline)
+      StringInput(text, StringInput.ReporterLabel, this.multiline)
   }
 
   private class CommandInputType(kit: EditorKit) extends InputType("String (commands)", "string.commands", kit, plainFont) {
@@ -690,7 +695,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
 
     override def boxValue(text: String): BoxedValue =
-      StringInput(text, StringInput.CommandLabel, multiline)
+      StringInput(text, StringInput.CommandLabel, this.multiline)
   }
 
   private class NumberInputType(kit: EditorKit) extends InputType("Number", "number", kit, plainFont) {

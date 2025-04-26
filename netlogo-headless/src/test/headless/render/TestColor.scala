@@ -55,11 +55,11 @@ class TestColor extends AbstractTestRenderer {
   }
 
   implicit class RichWorkspace(val workspace: HeadlessWorkspace){
-    def setShapes(shapes: VectorShape*) {
+    def setShapes(shapes: VectorShape*): Unit = {
       workspace.world.turtleShapes.replaceShapes(shapes)
     }
     // test that the entire world is a particular color.
-    def testColors(r: Int, g: Int, b: Int, a: Int = 255) {
+    def testColors(r: Int, g: Int, b: Int, a: Int = 255): Unit = {
       val image = workspace.exportView
       // why cut off the borders here?
       // a turtle of size 15 almost fills the screen, but leaves some black border. remove it.

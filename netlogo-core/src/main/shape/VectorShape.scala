@@ -72,7 +72,7 @@ class VectorShape
   override def clone: VectorShape =
     try {
       val newShape = super.clone.asInstanceOf[VectorShape]
-      newShape.elementList = ArrayBuffer(elementList.map(_.clone.asInstanceOf[Element]): _*)
+      newShape.elementList = elementList.map(_.clone.asInstanceOf[Element])
       newShape
     } catch {
       case ex: CloneNotSupportedException => throw new IllegalStateException(ex)
@@ -82,8 +82,8 @@ class VectorShape
     elementList.foreach(_.filled = false)
 
   def getElementsJ: java.util.List[Element] = {
-    import scala.collection.JavaConverters._
-    elementList.toList.asJava
+    import scala.jdk.CollectionConverters.SeqHasAsJava
+    elementList.asJava
   }
 
   def getElements: Seq[Element] =
@@ -150,7 +150,7 @@ class VectorShape
   }
 
   def remove(element: Element) =
-    modifyingElements { elementList - element }
+    elementList -= element
 
   def removeLast() =
     modifyingElements { elementList.dropRight(1) }
@@ -209,11 +209,7 @@ class VectorShape
     s"Shape $name:\n${elementList.map(_.toString)}"
 
   override def toString: String =
-    (Seq(
-      name,
-      rotatable,
-      editableColorIndex) ++
-      elementList.filter(_.shouldSave).map(_.toString)).mkString("\n")
+    s"$name\n$rotatable\n$editableColorIndex\n${elementList.filter(_.shouldSave).map(_.toString).mkString("\n")}"
 
   def addElement(element: Element) =
     if (element != null)

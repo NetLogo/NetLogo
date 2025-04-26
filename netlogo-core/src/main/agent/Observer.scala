@@ -22,7 +22,7 @@ with api.Observer with OrientatableObserver with Constraints {
   def variableIndex(name: String): Int = varNames.indexOf(name)
 
   @throws(classOf[api.AgentException])
-  override def setVariable(vn: Int, value: AnyRef) {
+  override def setVariable(vn: Int, value: AnyRef): Unit = {
     assertConstraint(vn, value)
     variables(vn) = value
     world.notifyWatchers(this, vn, value)
@@ -118,55 +118,55 @@ with api.Observer with OrientatableObserver with Constraints {
       "the observer can't access a patch variable without specifying which patch")
 
   @throws(classOf[api.AgentException])
-  override def setTurtleVariable(vn: Int, value: AnyRef) {
+  override def setTurtleVariable(vn: Int, value: AnyRef): Unit = {
     throw new api.AgentException(
       "the observer can't set a turtle variable without specifying which turtle")
   }
 
   @throws(classOf[api.AgentException])
-  override def setTurtleVariable(vn: Int, value: Double) {
+  override def setTurtleVariable(vn: Int, value: Double): Unit = {
     throw new api.AgentException(
       "the observer can't set a turtle variable without specifying which turtle")
   }
 
   @throws(classOf[api.AgentException])
-  override def setBreedVariable(name: String, value: AnyRef) {
+  override def setBreedVariable(name: String, value: AnyRef): Unit = {
     throw new api.AgentException(
       "the observer can't set a turtle variable without specifying which turtle")
   }
 
   @throws(classOf[api.AgentException])
-  override def setPatchVariable(vn: Int, value: AnyRef) {
+  override def setPatchVariable(vn: Int, value: AnyRef): Unit = {
     throw new api.AgentException(
       "the observer can't set a patch variable without specifying which turtle")
   }
 
   @throws(classOf[api.AgentException])
-  override def setPatchVariable(vn: Int, value: Double) {
+  override def setPatchVariable(vn: Int, value: Double): Unit = {
     throw new api.AgentException(
       "the observer can't set a patch variable without specifying which turtle")
   }
 
   @throws(classOf[api.AgentException])
-  override def setLinkVariable(vn: Int, value: AnyRef) {
+  override def setLinkVariable(vn: Int, value: AnyRef): Unit = {
     throw new api.AgentException(
       "the observer can't access a link variable without specifying which link")
   }
 
   @throws(classOf[api.AgentException])
-  override def setLinkVariable(vn: Int, value: Double) {
+  override def setLinkVariable(vn: Int, value: Double): Unit = {
     throw new api.AgentException(
       "the observer can't access a link variable without specifying which link")
   }
 
   @throws(classOf[api.AgentException])
-  override def setLinkBreedVariable(name: String, value: AnyRef) {
+  override def setLinkBreedVariable(name: String, value: AnyRef): Unit = {
     throw new api.AgentException(
       "the observer can't access a link variable without specifying which link")
   }
 
   @throws(classOf[api.AgentException])
-  override def setTurtleOrLinkVariable(varName: String, value: AnyRef) {
+  override def setTurtleOrLinkVariable(varName: String, value: AnyRef): Unit = {
     throw new api.AgentException(
       "the observer can't access a turtle or link variable without specifying which agent")
   }

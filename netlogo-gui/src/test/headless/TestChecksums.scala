@@ -44,17 +44,17 @@ class TestChecksums extends funsuite.AnyFunSuite {
 object TestChecksums extends ChecksumTester(println _) {
   val checksums = ChecksumsAndPreviews.Checksums.load()
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
 
     val runTimes = new scala.collection.parallel.mutable.ParHashMap[String, Long]
     val executor = Executors.newFixedThreadPool(Runtime.getRuntime.availableProcessors)
 
     val checksums = this.checksums
 
-    implicit def thunk2runnable(fn: () => Unit): Runnable = new Runnable {def run() {fn()}}
+    implicit def thunk2runnable(fn: () => Unit): Runnable = new Runnable {def run(): Unit = {fn()}}
 
     for (entry <- checksums.values) {
-      def doit() {
+      def doit(): Unit = {
         try {
           print(".")
           runTimes.update(entry.path, System.currentTimeMillis)
@@ -93,7 +93,7 @@ class ChecksumTester(info: String => Unit) {
   // it's time to abstract - ST 2/12/09  maybe using ExecutorServices.invokeAll - ST 3/29/09
   val failures = new StringBuilder
 
-  def testChecksum(model: String, variant: String, expectedWorldSum: String, expectedGraphicsSum: String, revision: String) {
+  def testChecksum(model: String, variant: String, expectedWorldSum: String, expectedGraphicsSum: String, revision: String): Unit = {
     val workspace = HeadlessWorkspace.newInstance
     workspace.silent = true
     val revisionMatches = revision == ChecksumsAndPreviews.Checksums.getRevisionNumber(model)
@@ -134,7 +134,7 @@ class ChecksumTester(info: String => Unit) {
     workspace.dispose()
   }
 
-  def exportWorld(workspace: HeadlessWorkspace, model: String) {
+  def exportWorld(workspace: HeadlessWorkspace, model: String): Unit = {
     new java.io.File("tmp").mkdir()
     new java.io.File("tmp/TestChecksums").mkdir()
     val path = "tmp/TestChecksums/" + new java.io.File(model).getName + ".csv"

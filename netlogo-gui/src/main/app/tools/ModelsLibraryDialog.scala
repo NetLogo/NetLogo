@@ -144,8 +144,8 @@ object ModelsLibraryDialog {
     override def toString: String = name
   }
 
-  implicit def asNodeIterator[A](enum: Enumeration[A]): Iterator[Node] = {
-    import scala.collection.JavaConverters._
+  implicit def asNodeIterator[A](`enum`: Enumeration[A]): Iterator[Node] = {
+    import scala.jdk.CollectionConverters.EnumerationHasAsScala
     enum.asScala.collect { case n: Node => n }
   }
 }
@@ -222,7 +222,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
   private val cancelAction: Action =
     new AbstractAction(I18N.gui.get("common.buttons.cancel")) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         sourceURI = None
         setVisible(false)
       }
@@ -240,7 +240,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
 
   private val focusSearchBoxAction: Action =
     new AbstractAction() {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         searchField.requestFocusInWindow()
         searchField.selectAll()
       }
@@ -657,17 +657,14 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       } else {
         val node = parent.asInstanceOf[Node]
         var index = -1
-        node.children.foreach { (child: Node) =>
+        node.children.dropWhile { child =>
           if (child.isFolder && hasChildren(child)) {
             index += 1
           } else if (matchesSearchText(child)) {
             index += 1
           }
-          if (index == childIndex) {
-            return child
-          }
-        }
-        null
+          index != childIndex
+        }.nextOption().orNull
       }
     }
 
@@ -697,15 +694,20 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       } else {
         val node = parent.asInstanceOf[Node]
         var result = 0
-        node.children.foreach { (c: Node) =>
+        node.children.dropWhile { c =>
           if (c == child) {
-            return result
+            false
+          } else {
+            if ((c.isFolder && getChildCount(c) > 0) || matchesSearchText(c)) {
+              result += 1
+            }
+
+            true
           }
-          if ((c.isFolder && getChildCount(c) > 0) || matchesSearchText(c)) {
-            result += 1
-          }
+        }.size match {
+          case 0 => -1
+          case _ => result
         }
-        return -1
       }
     }
 

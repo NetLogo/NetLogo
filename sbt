@@ -8,7 +8,7 @@ if [ -z "$JAVA_VERSION_NUMBER" ] ; then
 fi
 
 if [ -z "$SBT_LAUNCH_VERSION" ] ; then
-  SBT_LAUNCH_VERSION=1.9.7
+  SBT_LAUNCH_VERSION=1.10.11
 fi
 
 

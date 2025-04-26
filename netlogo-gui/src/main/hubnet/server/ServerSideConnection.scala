@@ -33,7 +33,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
   @volatile private var disconnecting = false
   var clientId: String = null
 
-  override def receiveData(a:AnyRef) {
+  override def receiveData(a:AnyRef): Unit = {
     a match {
       // note: if clientId is null, that means that we haven't yet had a successful login yet.
       // so, this string we received must be the version of the client.
@@ -55,7 +55,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
   }
 
   trait MessageHandler{
-    def handleMessage(message:Message)
+    def handleMessage(message:Message): Unit
   }
 
   /**
@@ -67,7 +67,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
    * we ought to have a nice state machine here.
    * JC 1/1/11
    */
-  private def handleMessage(message:Message) {
+  private def handleMessage(message:Message): Unit = {
     message match {
       case HandshakeFromClient(userId, clientType) =>
         if(userId == null || userId.trim == ""){
@@ -134,7 +134,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
   // TODO...this absolutely HAS to be cleaned up before 4.2 final.
   // also, its not even really dying hard, its dying hard if it needs to.
   // but whatever, it will all be ripped out soon.
-  private def dieHard(reason:String) {
+  private def dieHard(reason:String): Unit = {
     if(! server.removeClient(clientId, notifyClient=true, reason)){
       waitForSendData(ExitMessage(reason))
       stopWriting()
@@ -144,7 +144,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
     }
   }
 
-  override def disconnect(reason:String) {
+  override def disconnect(reason:String): Unit = {
     if(!disconnecting) {
       disconnecting = true
       if (!server.removeClient(clientId, false, reason)) {
@@ -154,7 +154,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
     }
   }
 
-  def disconnect(notifyClient:Boolean, reason:String) {
+  def disconnect(notifyClient:Boolean, reason:String): Unit = {
     disconnecting = true
     if (clientId != null) {
       server.putClientData(ExitMessageEnvelope(clientId))
@@ -164,7 +164,7 @@ class ServerSideConnection(connectionStreams:Streamable, val remoteAddress: Stri
     super.disconnect(reason)
   }
 
-  override def handleEx(e:Exception, sendingEx:Boolean) {
+  override def handleEx(e:Exception, sendingEx:Boolean): Unit = {
     if(!disconnecting) {
       disconnecting = true
       if (clientId != null)

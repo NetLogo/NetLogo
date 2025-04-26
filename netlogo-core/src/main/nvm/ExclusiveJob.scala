@@ -13,9 +13,9 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspac
   override def exclusive = true
 
   // we are not suspendable. we run to the end and that's it
-  override def step() { throw new UnsupportedOperationException() }
+  override def step(): Unit = { throw new UnsupportedOperationException() }
 
-  def run() {
+  def run(): Unit = {
     // Note that this relies on shufflerators making a copy, which might change in a future
     // implementation. The cases where it matters are those where something happens that changes the
     // agentset as we're iterating through it, for example if we're iterating through all turtles

@@ -29,7 +29,7 @@ extends View("3D View", viewManager, renderer) {
 
   viewManager.addLinkComponent(this)
 
-  override def updatePerspectiveLabel() {
+  override def updatePerspectiveLabel(): Unit = {
     navBar.setStatus(viewManager.world.observer.perspective)
   }
 

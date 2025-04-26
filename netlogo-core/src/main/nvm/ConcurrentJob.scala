@@ -14,7 +14,7 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspac
 
   private[this] var contexts: Array[Context] = null
 
-  private def initialize() {
+  private def initialize(): Unit = {
     contexts = new Array[Context](agentset.count)
     var count = 0
     val iter = agentset.shufflerator(random)
@@ -24,7 +24,7 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspac
     }
   }
 
-  def newAgentJoining(agent: Agent, initialCount: Int, address: Int) {
+  def newAgentJoining(agent: Agent, initialCount: Int, address: Int): Unit = {
     var count = initialCount
     val activation =
       if (parentContext == null)
@@ -49,7 +49,7 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspac
     contexts(count) = context
   }
 
-  override def step() {
+  override def step(): Unit = {
     if (contexts == null)
       initialize()
     // this is a very tight loop, so we pull as many calls out of the loop as possible
@@ -84,7 +84,7 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspac
       finish()
   }
 
-  override def finish() {
+  override def finish(): Unit = {
     super.finish()
     if (contexts != null) {
       val max = contexts.length

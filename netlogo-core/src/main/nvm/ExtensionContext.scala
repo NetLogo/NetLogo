@@ -33,7 +33,7 @@ extends api.Context {
   def attachModelDir(filePath: String): String =
     workspace.attachModelDir(filePath)
 
-  def importPcolors(image: BufferedImage, asNetLogoColors: Boolean) {
+  def importPcolors(image: BufferedImage, asNetLogoColors: Boolean): Unit = {
     org.nlogo.agent.ImportPatchColors.doImport(
       image, workspace.world.asInstanceOf[agent.World], asNetLogoColors)
   }

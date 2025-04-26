@@ -157,7 +157,7 @@ object HubNetLoginFuzzing extends App {
       }
     }
 
-    override def run() {
+    override def run(): Unit = {
       makeConnection().foreach {
         case (socket, out, in) =>
           try {

@@ -187,7 +187,7 @@ class DropdownOptionPane[T](parent: Component, title: String, message: String, c
 
   def getChoiceIndex: Int = {
     if (getSelectedIndex == 0) {
-      choices.indexOf(dropdown.getSelectedItem)
+      dropdown.getSelectedItem.map(choices.indexOf).getOrElse(-1)
     } else {
       -1
     }

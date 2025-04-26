@@ -10,14 +10,14 @@ class ClearOverride(agentKind: AgentKind, varName:String, var agents: Seq[java.l
         extends OverrideList(agentKind, varName) with JSerializable {
 
   @throws(classOf[java.io.IOException])
-  private def writeObject(out:java.io.ObjectOutputStream){
+  private def writeObject(out:java.io.ObjectOutputStream): Unit ={
     out.writeInt( agents.size )
     agents.foreach(a => out.writeLong(a.longValue))
   }
 
   @throws(classOf[java.io.IOException])
   @throws(classOf[ClassNotFoundException])
-  private def readObject(in:java.io.ObjectInputStream){
+  private def readObject(in:java.io.ObjectInputStream): Unit ={
     val numOverrides = in.readInt()
     agents = (for(i <- 0 until numOverrides)
               yield Long.box(in.readLong()))

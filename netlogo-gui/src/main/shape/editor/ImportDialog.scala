@@ -14,10 +14,10 @@ import org.nlogo.theme.InterfaceColors
 class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: DrawableList[_ <: Shape])
   extends JDialog(parent, I18N.gui.get("tools.shapesEditor.importFromLibrary"), true) with ListSelectionListener {
 
-  private implicit val i18nPrefix = I18N.Prefix("tools.shapesEditor.import")
+  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.shapesEditor.import")
 
   locally {
-    val importButton = new DialogButton(true, I18N.gui.get("tools.shapesEditor.import"), () => importSelectedShapes)
+    val importButton = new DialogButton(true, I18N.gui.get("tools.shapesEditor.import"), () => importSelectedShapes())
     val cancelButton = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => dispose)
 
     getContentPane.setLayout(new BorderLayout(0, 10))
@@ -30,7 +30,7 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
   }
 
   Utils.addEscKeyAction(this, new AbstractAction {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       dispose()
     }
   })
@@ -41,7 +41,7 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
 
   list.addMouseListener(new MouseAdapter {
     // Listen for double-clicks, and edit the selected shape
-    override def mouseClicked(e: MouseEvent) {
+    override def mouseClicked(e: MouseEvent): Unit = {
       if (e.getClickCount > 1)
         importSelectedShapes()
     }
@@ -55,7 +55,7 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
   setVisible(true)
 
   // Listen for changes in list selection, and make the edit and delete buttons inoperative if necessary
-  def valueChanged(e: ListSelectionEvent) {
+  def valueChanged(e: ListSelectionEvent): Unit = {
     val selected = list.getSelectedIndices
 
     if (selected.length == 1)
@@ -63,47 +63,55 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
   }
 
   // Import shapes from another model
-  private def importSelectedShapes() {
+  private def importSelectedShapes(): Unit = {
     val choices = Seq(I18N.gui("replace"), I18N.gui("rename"), I18N.gui.get("common.buttons.cancel"))
 
-    // For each selected shape, add it to the current model's file and the turtledrawer,
-    val shapes = for (index <- list.getSelectedIndices) yield {
-      val shape = list.getShape(index).get
-      var choice = -1
+    // For each selected shape, add it to the current model's file and the turtledrawer
+    val shapes: Option[Seq[Shape]] = list.getSelectedIndices.foldLeft(Option(Seq[Shape]())) {
+      // if the user already canceled, skip the rest of the selected shapes (Isaac B 4/25/25)
+      case (None, _) =>
+        None
 
-      // If the shape exists, give the user the chance to overwrite or rename
-      while (manager.shapesList.exists(shape.name) && choice != 0) {
-        choice = new OptionPane(this, I18N.gui.get("tools.shapesEditor.import"),
-                                    I18N.gui("nameConflict", shape.name), choices,
-                                    OptionPane.Icons.Warning).getSelectedIndex
+      case (Some(s), index) =>
+        val shape = list.getShape(index).get
+        var choice = -1
 
-        if (choice == 1) { // rename
-          val name = new InputOptionPane(this, I18N.gui("importShapes"), I18N.gui("importAs")).getInput
+        // If the shape exists, give the user the chance to overwrite or rename
+        if (manager.shapesList.exists(shape.name)) {
+          choice = new OptionPane(this, I18N.gui.get("tools.shapesEditor.import"),
+                                  I18N.gui("nameConflict", shape.name), choices,
+                                  OptionPane.Icons.Warning).getSelectedIndex
 
-          // if the user cancels the inputdialog, then name could
-          // be null causing a nullpointerexception later on
-          if (name != null)
-            shape.name = name
+          if (choice == 1) { // rename
+            val name = new InputOptionPane(this, I18N.gui("importShapes"), I18N.gui("importAs")).getInput
+
+            // if the user cancels the inputdialog, then name could
+            // be null causing a nullpointerexception later on
+            if (name != null)
+              shape.name = name
+          }
         }
 
-        else if (choice != 0) // 0 == overwrite
-          return
-      }
-
-      shape
+        if (choice == -1 || choice == 2) {
+          None
+        } else {
+          Some(s :+ shape)
+        }
     }
 
-    shapes.foreach(manager.shapesList.addShape)
+    shapes.foreach { s =>
+      s.foreach(manager.shapesList.addShape)
 
-    // Now update the shapes manager's list and quit this window
-    manager.shapesList.update()
-    manager.shapesList.selectShapeName("default")
+      // Now update the shapes manager's list and quit this window
+      manager.shapesList.update()
+      manager.shapesList.selectShapeName("default")
 
-    dispose()
+      dispose()
+    }
   }
 
   // Show a warning dialog to indicate something went wrong when importing
-  def sendImportWarning(message: String) {
+  def sendImportWarning(message: String): Unit = {
     new OptionPane(this, I18N.gui.get("tools.shapesEditor.import"), message, OptionPane.Options.Ok,
                    OptionPane.Icons.Warning)
   }

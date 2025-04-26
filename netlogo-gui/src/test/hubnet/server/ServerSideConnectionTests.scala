@@ -160,7 +160,7 @@ class ServerSideConnectionTests extends MockSuite {
 
   class TestableConnection(streamable: Streamable, server: ConnectionManagerInterface)
     extends ServerSideConnection(streamable, "test:4242", server) {
-      override def waitForSendData(a: Any) {
+      override def waitForSendData(a: Any): Unit = {
         writeQueue.add(a)
       }
       def nextOutgoingMessage = {

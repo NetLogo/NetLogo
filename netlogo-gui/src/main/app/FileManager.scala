@@ -242,7 +242,7 @@ object FileManager {
 
     override def action(): Unit = {
       for {
-        name <- tab.filename.right.toOption
+        name <- tab.filename.toOption
         path <- FileIO.resolvePath(name, Paths.get(workspace.getModelPath))
       } {
         convertIncludeFile.apply(path, modelSaver.currentModel, tab.innerSource) match {
@@ -263,7 +263,7 @@ object FileManager {
     group = UserAction.FileResourcesGroup
     rank = 1
 
-    override def action() {
+    override def action(): Unit = {
       new ResourceManagerDialog(workspace.asInstanceOf[GUIWorkspace].getFrame, workspace).setVisible(true)
     }
   }

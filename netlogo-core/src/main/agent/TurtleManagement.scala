@@ -51,7 +51,7 @@ trait TurtleManagement extends WorldKernel { this: CoreWorld =>
       program.breeds.get(breed.printName).map(_.singular).getOrElse("TURTLE")
 
   def getTurtle(id: Long): Turtle =
-    _turtles.getAgent(JDouble.valueOf(id)).asInstanceOf[Turtle]
+    _turtles.getAgent(JDouble.valueOf(id.toDouble)).asInstanceOf[Turtle]
 
   def nextTurtleIndex(nextTurtleIndex: Long): Unit = {
     _nextTurtleIndex = nextTurtleIndex
@@ -87,7 +87,7 @@ trait TurtleManagement extends WorldKernel { this: CoreWorld =>
     r
   }
 
-  abstract override def clearAll() {
+  abstract override def clearAll(): Unit = {
     super.clearAll()
     clearTurtles()
   }

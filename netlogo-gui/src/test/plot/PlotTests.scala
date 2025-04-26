@@ -6,7 +6,7 @@ import org.scalatest.funsuite.AnyFunSuite
 
 trait SimplePlotTest extends AnyFunSuite {
 
-  def testPlot(name: String)(f: Plot => Unit) {
+  def testPlot(name: String)(f: Plot => Unit): Unit = {
     test(name) {
       f(new Plot(name))
     }

@@ -9,7 +9,7 @@ import com.jogamp.opengl.glu.{ GLU, GLUtessellator }
 object Polygons {
 
   def renderPolygon(gl: GL2, glu: GLU, tessellator: Tessellator, tess: GLUtessellator,
-                    offset: Int, poly: Polygon, rotatable: Boolean, is3D: Boolean) {
+                    offset: Int, poly: Polygon, rotatable: Boolean, is3D: Boolean): Unit = {
     val zDepth = 0.01f + offset * 0.0001f
     // this is more complex than it looks, primarily because OpenGL cannot render concave polygons
     // directly but must "tessellate" the polygon into simple convex triangles first - jrn 6/13/05
@@ -65,7 +65,7 @@ object Polygons {
                               data: Tessellator.TessDataObject,
                               xcoords: Seq[Int],
                               ycoords: Seq[Int],
-                              zDepth: Float, rotatable: Boolean) {
+                              zDepth: Float, rotatable: Boolean): Unit = {
     GLU.gluTessBeginPolygon(tess, data)
     GLU.gluTessBeginContour(tess)
     for(i <- 0 until xcoords.size) {
@@ -83,7 +83,7 @@ object Polygons {
                               data: Tessellator.TessDataObject,
                               xcoords: Seq[Int],
                               ycoords: Seq[Int],
-                              zDepth: Float, rotatable: Boolean) {
+                              zDepth: Float, rotatable: Boolean): Unit = {
     GLU.gluTessBeginPolygon(tess, data)
     GLU.gluTessBeginContour(tess)
     // render top
@@ -97,7 +97,7 @@ object Polygons {
     GLU.gluTessEndContour(tess)
     GLU.gluTessEndPolygon(tess)
     if(rotatable) {
-      import scala.collection.JavaConverters._
+      import scala.jdk.CollectionConverters.ListHasAsScala
 
       gl.glBegin(data.tpe)
       gl.glNormal3f(0f, 0f, -1f)
@@ -107,6 +107,8 @@ object Polygons {
             data.gl.glVertex3d(coords(0), coords(1), -zDepth)
           case b: java.lang.Boolean =>
             gl.glEdgeFlag(b.booleanValue)
+          case _ =>
+            throw new Exception(s"Unexpected element: $element")
         }
       gl.glEnd()
     }

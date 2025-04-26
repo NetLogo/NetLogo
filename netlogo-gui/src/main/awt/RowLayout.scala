@@ -8,8 +8,8 @@ class RowLayout(hGap: Int, hAlign: Float, vAlign: Float) extends java.awt.Layout
 
   // not implemented. it's not clear to me why we're getting away with that.
   // if we "throw new UnsupportedOperationException" it definitely blows up. - ST 4/21/11
-  override def addLayoutComponent(name: String, comp: Component) { }
-  override def removeLayoutComponent(comp: Component) { }
+  override def addLayoutComponent(name: String, comp: Component): Unit = { }
+  override def removeLayoutComponent(comp: Component): Unit = { }
 
   override def layoutContainer(target: java.awt.Container) = {
     val size = target.getSize

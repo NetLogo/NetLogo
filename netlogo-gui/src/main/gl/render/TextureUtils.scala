@@ -7,7 +7,7 @@ import java.nio.{ ByteBuffer, IntBuffer }
 
 object TextureUtils {
 
-  def makeTexture(gl: GL2, size: Int) {
+  def makeTexture(gl: GL2, size: Int): Unit = {
     gl.glTexImage2D(
       GL.GL_TEXTURE_2D, 0, GL.GL_RGBA, size, size,
       0, GL.GL_RGBA, GL.GL_UNSIGNED_BYTE, null)
@@ -50,7 +50,7 @@ object TextureUtils {
     // ...and is a power of two
     Iterator.iterate(64)(_ * 2)
       .dropWhile(size => (width > size || height > size) && size < ((2 + maxTextureSize) / 2))
-      .next
+      .next()
   }
 
   def createTileArray(width: Int, height: Int, textureSize: Int): Array[Array[Byte]] = {
@@ -60,7 +60,7 @@ object TextureUtils {
     Array.fill(numTiles)(Array[Byte]())
   }
 
-  def setParameters(gl: GL2) {
+  def setParameters(gl: GL2): Unit = {
     // We want our patches to have nice sharp edges, not blurry fuzzy edges (that would take longer
     // to render anyway). - ST 2/9/05
     gl.glTexParameteri(GL.GL_TEXTURE_2D, GL.GL_TEXTURE_MIN_FILTER, GL.GL_NEAREST)
@@ -122,7 +122,7 @@ object TextureUtils {
     bytes
   }
 
-  def renderEmptyPlane(gl: GL2, _sideX: Float, _sideY: Float, _sideZ: Float) {
+  def renderEmptyPlane(gl: GL2, _sideX: Float, _sideY: Float, _sideZ: Float): Unit = {
     val sideX = _sideX * (Renderer.WORLD_SCALE / 2)
     val sideY = _sideY * (Renderer.WORLD_SCALE / 2)
     val sideZ = _sideZ * (Renderer.WORLD_SCALE / 2)

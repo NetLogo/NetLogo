@@ -40,40 +40,40 @@ class LabManager(val workspace:        GUIWorkspace,
     protocols.clear()
   }
   private lazy val dialog = new ManagerDialog(this, dialogFactory, menuFactory)
-  def show() {
+  def show(): Unit = {
     Positioning.center(dialog, workspace.getFrame)
     dialog.update()
     dialog.setVisible(true)
   }
-  def close() {
+  def close(): Unit = {
     dialogFactory.clearDialog()
     dialog.setVisible(false)
   }
-  def dirty() { new DirtyEvent(None).raise(this) }
+  def dirty(): Unit = { new DirtyEvent(None).raise(this) }
   /// Event.LinkChild -- lets us get events out to rest of app
   val getLinkParent = workspace
   /// loading & saving
-  def handle(e:LoadBeginEvent) {
+  def handle(e:LoadBeginEvent): Unit = {
     close()
     protocols.clear()
     lastCompileAllWasSuccessful = false
   }
-  def handle(e:LoadModelEvent) {
+  def handle(e:LoadModelEvent): Unit = {
     protocols ++= e.model
       .optionalSectionValue[Seq[LabProtocol]]("org.nlogo.modelsection.behaviorspace")
       .getOrElse(Seq[LabProtocol]())
     workspace.setBehaviorSpaceExperiments(protocols.toList)
   }
   override def updateModel(m: Model): Model =
-    m.withOptionalSection("org.nlogo.modelsection.behaviorspace", Some(protocols), Seq())
+    m.withOptionalSection("org.nlogo.modelsection.behaviorspace", Some(protocols.toSeq), Seq())
 
   /// making sure everything gets compiled before an experiment run
   private var lastCompileAllWasSuccessful = false
-  def handle(e:CompiledEvent) {
+  def handle(e:CompiledEvent): Unit = {
     if(e.sourceOwner.isInstanceOf[org.nlogo.window.ProceduresInterface])
       lastCompileAllWasSuccessful = e.error == null
   }
-  def prepareForRun() {
+  def prepareForRun(): Unit = {
     (new CompileAllEvent).raise(this)
     if(!lastCompileAllWasSuccessful)
       throw new org.nlogo.awt.UserCancelException
@@ -90,7 +90,7 @@ class LabManager(val workspace:        GUIWorkspace,
     group       = ToolsDialogsGroup
     accelerator = KeyBindings.keystroke('B', withMenu = true, withShift = true)
 
-    override def actionPerformed(e: ActionEvent) {
+    override def actionPerformed(e: ActionEvent): Unit = {
       show()
     }
   }

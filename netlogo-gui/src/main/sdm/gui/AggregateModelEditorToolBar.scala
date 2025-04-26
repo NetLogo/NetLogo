@@ -17,7 +17,7 @@ import org.nlogo.swing.{ Button, InputOptionPane, OptionPane, ToolBar, ToolBarAc
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
 class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) extends ToolBar with ThemeSync {
-  implicit val i18nPrefix = I18N.Prefix("tools.sdm")
+  implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.sdm")
 
   // Invisible button allows no selection in visible buttongroup
   private val noToolButton = new JToggleButton("")
@@ -25,13 +25,13 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
   private var dtButton: Button = null
 
   private val compileAction = new MyAction("Check", "/images/check.png", enableMe = true) {
-    def actionPerformed(e: ActionEvent) {new org.nlogo.window.Events.CompileAllEvent().raise(editor)}
+    def actionPerformed(e: ActionEvent): Unit = {new org.nlogo.window.Events.CompileAllEvent().raise(editor)}
   }
   private val editAction = new MyAction("Edit", "/images/edit.png", enableMe = false) {
-    def actionPerformed(e: ActionEvent) {editor.inspectFigure(editor.view.selection.nextFigure)}
+    def actionPerformed(e: ActionEvent): Unit = {editor.inspectFigure(editor.view.selection.nextFigure)}
   }
   private val deleteAction = new MyAction("Delete", "/images/delete.png", enableMe = false) {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       new DeleteCommand(I18N.gui("delete"), editor).execute()
       new org.nlogo.window.Events.CompileAllEvent().raise(editor)
       new org.nlogo.window.Events.DirtyEvent(None).raise(editor)
@@ -42,7 +42,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
   private val deleteButton = new ToolBarActionButton(deleteAction)
   private val compileButton = new ToolBarActionButton(compileAction)
 
-  override def addControls() {
+  override def addControls(): Unit = {
     add(editButton)
     add(deleteButton)
     add(new Separator)
@@ -78,7 +78,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
     })
     // Event listeners
     editor.view.addFigureSelectionListener(new FigureSelectionListener() {
-      def figureSelectionChanged(view: DrawingView) {
+      def figureSelectionChanged(view: DrawingView): Unit = {
         editAction.setEnabled(view.selectionCount == 1)
         deleteAction.setEnabled(view.selectionCount == 1)
       }
@@ -87,7 +87,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
     syncTheme()
   }
 
-  def popButtons() {noToolButton.setSelected(true)}
+  def popButtons(): Unit = {noToolButton.setSelected(true)}
 
   override def syncTheme(): Unit = {
     setBackground(InterfaceColors.toolbarBackground())
@@ -118,21 +118,21 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
   private class ConverterFigureCreationTool(model: Model, editor: DrawingEditor) extends ModelElementCreationTool(model, editor, new ConverterFigure()) {
     // We override these to create a fixed-size shape, rather than allow
     // user to drag out the size
-    override def mouseDown(e: MouseEvent, x: Int, y: Int) {
+    override def mouseDown(e: MouseEvent, x: Int, y: Int): Unit = {
       super.mouseDown(e, x, y)
       super.mouseDrag(e, x + 50, y + 50)
     }
-    override def mouseDrag(e: MouseEvent, x: Int, y: Int) {}
+    override def mouseDrag(e: MouseEvent, x: Int, y: Int): Unit = {}
   }
 
   private class StockFigureCreationTool(model: Model, editor: DrawingEditor) extends ModelElementCreationTool(model, editor, new StockFigure()) {
     // We override these to create a fixed-size shape, rather than allow
     // user to drag out the size
-    override def mouseDown(e: MouseEvent, x: Int, y: Int) {
+    override def mouseDown(e: MouseEvent, x: Int, y: Int): Unit = {
       super.mouseDown(e, x, y)
       super.mouseDrag(e, x + 60, y + 40)
     }
-    override def mouseDrag(e: MouseEvent, x: Int, y: Int) {}
+    override def mouseDrag(e: MouseEvent, x: Int, y: Int): Unit = {}
   }
 
   abstract class MyAction(name:String, image:String, enableMe: Boolean)
@@ -141,7 +141,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
     setEnabled(enableMe)
   }
   val changeDTAction = new AbstractAction(I18N.gui("edit")) {
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       val newDt = new InputOptionPane(editor, "", "dt", model.getDt.toString).getInput
       try if (newDt != null) {
         model.setDt(newDt.toDouble)
@@ -161,6 +161,6 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
   }
   class ToolAction(toolName: String, iconName: String, tool: Tool) extends AbstractAction(toolName) {
     putValue(Action.SMALL_ICON, SwingUtils.icon(iconName))
-    def actionPerformed(e: ActionEvent) {editor.setTool(tool)}
+    def actionPerformed(e: ActionEvent): Unit = {editor.setTool(tool)}
   }
 }

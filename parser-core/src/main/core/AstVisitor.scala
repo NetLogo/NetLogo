@@ -9,13 +9,13 @@ package org.nlogo.core
  * strategies.
  */
 trait AstVisitor {
-  def visitProcedureDefinition(proc: ProcedureDefinition) {
+  def visitProcedureDefinition(proc: ProcedureDefinition): Unit = {
     visitStatements(proc.statements)
   }
-  def visitCommandBlock(block: CommandBlock) {
+  def visitCommandBlock(block: CommandBlock): Unit = {
     visitStatements(block.statements)
   }
-  def visitExpression(exp: Expression) {
+  def visitExpression(exp: Expression): Unit = {
     exp match {
       case app: ReporterApp =>
         visitReporterApp(app)
@@ -23,18 +23,20 @@ trait AstVisitor {
         visitCommandBlock(cb)
       case rb: ReporterBlock =>
         visitReporterBlock(rb)
+      case e =>
+        throw new Exception(s"Unexpected expression: $e")
     }
   }
-  def visitReporterApp(app: ReporterApp) {
+  def visitReporterApp(app: ReporterApp): Unit = {
     app.args.foreach(visitExpression)
   }
-  def visitReporterBlock(block: ReporterBlock) {
+  def visitReporterBlock(block: ReporterBlock): Unit = {
     visitReporterApp(block.app)
   }
-  def visitStatement(stmt: Statement) {
+  def visitStatement(stmt: Statement): Unit = {
     stmt.args.foreach(visitExpression)
   }
-  def visitStatements(stmts: Statements) {
+  def visitStatements(stmts: Statements): Unit = {
     stmts.stmts.foreach(visitStatement)
   }
 }
@@ -57,6 +59,8 @@ trait AstTransformer {
         visitCommandBlock(cb)
       case rb: ReporterBlock =>
         visitReporterBlock(rb)
+      case e =>
+        throw new Exception(s"Unexpected expression: $e")
     }
   }
   def visitReporterApp(app: ReporterApp): ReporterApp = {
@@ -85,6 +89,7 @@ trait AstFolder[A] {
       case app: ReporterApp  => visitReporterApp(app)
       case cb: CommandBlock  => visitCommandBlock(cb)
       case rb: ReporterBlock => visitReporterBlock(rb)
+      case e => throw new Exception(s"Unexpected expression: $e")
     }
 
   def visitReporterApp(app: ReporterApp)(implicit a: A): A =

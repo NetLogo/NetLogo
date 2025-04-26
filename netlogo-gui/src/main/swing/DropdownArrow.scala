@@ -11,7 +11,7 @@ class DropdownArrow extends JPanel {
   setOpaque(false)
   setPreferredSize(new Dimension(9, 5))
 
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics): Unit = {
     val g2d = Utils.initGraphics2D(g)
 
     g2d.setColor(InterfaceColors.toolbarText())

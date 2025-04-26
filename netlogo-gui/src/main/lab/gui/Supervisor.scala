@@ -26,7 +26,7 @@ object Supervisor {
   case object GUI extends RunMode
   case object Extension extends RunMode
 
-  def runFromExtension(protocol: LabProtocol, workspace: AbstractWorkspace, saveProtocol: (LabProtocol) => Unit) {
+  def runFromExtension(protocol: LabProtocol, workspace: AbstractWorkspace, saveProtocol: (LabProtocol) => Unit): Unit = {
     new Supervisor(workspace.asInstanceOf[GUIWorkspace].getFrame, workspace, protocol, null, null, saveProtocol,
                    Extension).start()
   }
@@ -41,22 +41,22 @@ class Supervisor(
   saveProtocol: (LabProtocol) => Unit,
   runMode: Supervisor.RunMode
 ) extends Thread("BehaviorSpace Supervisor") {
-  private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace")
+  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
   var options = protocol.runOptions
-  val worker = new Worker(protocol, writing)
+  val worker = new Worker(protocol, writing _)
   val headlessWorkspaces = new ListBuffer[Workspace]
   val queue = new collection.mutable.Queue[Workspace]
   val completed = Set[Int]()
   var highestCompleted = protocol.runsCompleted
   val listener =
     new ProgressListener {
-      override def runCompleted(w: Workspace, runNumber: Int, step: Int) {
+      override def runCompleted(w: Workspace, runNumber: Int, step: Int): Unit = {
         completed += runNumber
         while (completed.contains(highestCompleted + 1))
           highestCompleted += 1
         queue.synchronized { if (!paused) queue.enqueue(w) }
       }
-      override def runtimeError(w: Workspace, runNumber: Int, e: Throwable) {
+      override def runtimeError(w: Workspace, runNumber: Int, e: Throwable): Unit = {
         e match {
           case ee: EngineException =>
             val msg = ee.runtimeErrorMessage
@@ -78,8 +78,8 @@ class Supervisor(
   var aborted = false
 
   def nextWorkspace = queue.synchronized { if (queue.isEmpty) null else queue.dequeue() }
-  val runnable = new Runnable { override def run() {
-    worker.run(workspace, nextWorkspace _, options.threadCount)
+  val runnable = new Runnable { override def run(): Unit = {
+    worker.run(workspace, () => nextWorkspace, options.threadCount)
   } }
   private val workerThread = new Thread(runnable, "BehaviorSpace Worker")
   private val progressDialog = new ProgressDialog(parent, this, dialogFactory.colorizer, saveProtocol)
@@ -90,14 +90,14 @@ class Supervisor(
   private var tableFileName: String = null
   private var statsExporter: StatsExporter = null
   worker.addListener(progressDialog)
-  def addExporter(exporter: Exporter) {
+  def addExporter(exporter: Exporter): Unit = {
     if (!exporters.contains(exporter)) {
       exporters += exporter
       worker.addListener(exporter)
     }
   }
 
-  override def start() {
+  override def start(): Unit = {
     EventQueue.mustBeEventDispatchThread()
     workspace.jobManager.haltSecondary()
     workspace.jobManager.haltPrimary()
@@ -113,9 +113,13 @@ class Supervisor(
       options =
         try {
           new RunOptionsDialog(parent, dialogFactory, workspace.guessExportName(worker.protocol.name)).get
+        } catch {
+          case ex: UserCancelException => null
         }
-        catch { case ex: UserCancelException => return }
     }
+
+    if (options == null)
+      return
 
     if (options.spreadsheet != null && options.spreadsheet.trim() != "") {
       val fileName = options.spreadsheet.trim()
@@ -124,27 +128,27 @@ class Supervisor(
           val partialData = new PartialData
           if (protocol.runsCompleted > 0) {
             var data = scala.io.Source.fromFile(fileName).getLines().drop(6).toList
-            partialData.runNumbers = ',' + data.head.split(",", 2)(1)
+            partialData.runNumbers = "," + data.head.split(",", 2)(1)
             data = data.tail
             while (!data.head.contains("[")) {
-              partialData.variables = partialData.variables :+ ',' + data.head.split(",", 2)(1)
+              partialData.variables = partialData.variables :+ "," + data.head.split(",", 2)(1)
               data = data.tail
             }
             if (data.head.contains("[reporter]")) {
-              partialData.reporters = ',' + data.head.split(",", 2)(1)
+              partialData.reporters = "," + data.head.split(",", 2)(1)
               data = data.tail
-              partialData.finals =  ',' + data.head.split(",", 2)(1)
+              partialData.finals =  "," + data.head.split(",", 2)(1)
               data = data.tail
-              partialData.mins = ',' + data.head.split(",", 2)(1)
+              partialData.mins = "," + data.head.split(",", 2)(1)
               data = data.tail
-              partialData.maxes = ',' + data.head.split(",", 2)(1)
+              partialData.maxes = "," + data.head.split(",", 2)(1)
               data = data.tail
-              partialData.means = ',' + data.head.split(",", 2)(1)
+              partialData.means = "," + data.head.split(",", 2)(1)
               data = data.tail
             }
-            partialData.steps = ',' + data.head.split(",", 2)(1)
+            partialData.steps = "," + data.head.split(",", 2)(1)
             data = data.tail.tail
-            partialData.dataHeaders = ',' + data.head.split(",", 2)(1)
+            partialData.dataHeaders = "," + data.head.split(",", 2)(1)
             partialData.data = data.tail
           }
           spreadsheetExporter = new SpreadsheetExporter(
@@ -250,17 +254,17 @@ class Supervisor(
     super.start()
   }
 
-  override def run() {
+  override def run(): Unit = {
     try {
       workerThread.setUncaughtExceptionHandler(
         new Thread.UncaughtExceptionHandler {
-          def uncaughtException(t: Thread, e: Throwable) {
-            EventQueue.invokeLater(new Runnable() { def run() { failure(e) } })
+          def uncaughtException(t: Thread, e: Throwable): Unit = {
+            EventQueue.invokeLater(new Runnable() { def run(): Unit = { failure(e) } })
           }
         }
       )
       workerThread.start()
-      EventQueue.invokeLater(new Runnable() { def run() {
+      EventQueue.invokeLater(new Runnable() { def run(): Unit = {
         progressDialog.setVisible(true)
       }})
       workerThread.join()
@@ -272,20 +276,20 @@ class Supervisor(
     finally { bailOut() }
   }
 
-  def pause() {
+  def pause(): Unit = {
     paused = true
   }
 
-  def abort() {
+  def abort(): Unit = {
     aborted = true
     interrupt()
   }
 
-  def writing() {
+  def writing(): Unit = {
     progressDialog.writing()
   }
 
-  private def bailOut() {
+  private def bailOut(): Unit = {
     worker.abort()
     workspace.jobManager.haltPrimary()
     workerThread.interrupt()
@@ -297,7 +301,7 @@ class Supervisor(
       }
     }
     EventQueue.invokeLater(
-      new Runnable { def run() {
+      new Runnable { def run(): Unit = {
         workspace.jobManager.haltPrimary()
         workspace.jobManager.haltSecondary()
         workspace.behaviorSpaceRunNumber(0)
@@ -312,7 +316,7 @@ class Supervisor(
     headlessWorkspaces.foreach(_.dispose())
   }
 
-  private def failure(t: Throwable) {
+  private def failure(t: Throwable): Unit = {
     EventQueue.mustBeEventDispatchThread()
     t match {
       case ex: CompilerException => guiError(I18N.gui("error.compilation") + "\n" + ex.getMessage)
@@ -322,7 +326,7 @@ class Supervisor(
     }
   }
 
-  private def guiError(message: String) {
+  private def guiError(message: String): Unit = {
     if (runMode == Supervisor.GUI) {
       new OptionPane(workspace.asInstanceOf[GUIWorkspace].getFrame, I18N.gui("error.title"), message,
                      OptionPane.Options.Ok, OptionPane.Icons.Error)

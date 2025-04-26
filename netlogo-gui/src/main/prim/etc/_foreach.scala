@@ -7,7 +7,7 @@ import org.nlogo.nvm.{ AnonymousProcedure, Command, Context, NonLocalExit, Runti
 
 class _foreach extends Command {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     var size = 0
     val n = args.length - 1
     val cmd = argEvalAnonymousCommand(context, n)

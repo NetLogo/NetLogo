@@ -7,14 +7,14 @@ import org.nlogo.core.Primitive
 class ExtensionPrimitiveManager(val name: String) extends org.nlogo.api.PrimitiveManager {
   private[workspace] val importedPrimitives = collection.mutable.HashMap[String, Primitive]()
   var autoImportPrimitives = false
-  def addPrimitive(name: String, prim: Primitive) {
+  def addPrimitive(name: String, prim: Primitive): Unit = {
     importedPrimitives.put(name.toUpperCase, prim)
   }
   /**
    * Returns the names of all imported primitives.
    */
   def getPrimitiveNames(): java.util.Iterator[String] = {
-    import collection.JavaConverters._
+    import scala.jdk.CollectionConverters.IteratorHasAsJava
     importedPrimitives.keySet.iterator.asJava
   }
   /**

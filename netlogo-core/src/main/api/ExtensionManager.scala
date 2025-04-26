@@ -18,7 +18,7 @@ trait ExtensionManager extends CoreManager {
    *
    * @param obj the object to be stored
    */
-  def storeObject(obj: AnyRef)
+  def storeObject(obj: AnyRef): Unit
 
   /** @return the stored object */
   def retrieveObject: AnyRef
@@ -31,7 +31,7 @@ trait ExtensionManager extends CoreManager {
    * Instructs any loaded extensions to unload. Should be called previous
    * to a new model load.
    */
-  def reset()
+  def reset(): Unit
 
   /** uses java.lang.Iterable for easy access from Java */
   def loadedExtensions: java.lang.Iterable[ClassManager]

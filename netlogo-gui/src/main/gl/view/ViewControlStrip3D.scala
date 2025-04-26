@@ -23,7 +23,7 @@ class ViewControlStrip3D(workspace: GUIWorkspace, val tickCounter: TickCounterLa
 
   updateTicks()
 
-  def updateTicks() {
+  def updateTicks(): Unit = {
     val width = tickCounter.getMinimumSize.width
     // don't think this should be necessary but I couldn't get it to work otherwise ev 8/28/07
     if (width != getMinimumSize.width)

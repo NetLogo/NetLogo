@@ -13,7 +13,7 @@ import java.lang.{
 import java.nio.file.Path
 import java.time.LocalDateTime
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters.{ MapHasAsJava, SeqHasAsJava }
 
 import org.json.simple.JSONValue
 
@@ -47,7 +47,7 @@ class JsonFileLogger(private val logDirectoryPath: Path) extends FileLogger {
   writer.write("[\n")
   private var first = true
 
-  override def log(event: String, eventInfo: Map[String, Any]) {
+  override def log(event: String, eventInfo: Map[String, Any]): Unit = {
     warning(classOf[Exception]) {
       if (first) {
         first = false
@@ -96,7 +96,7 @@ class JsonFileLogger(private val logDirectoryPath: Path) extends FileLogger {
     }
   }
 
-  override def close() {
+  override def close(): Unit = {
     writer.write("]")
     writer.flush()
     writer.close()

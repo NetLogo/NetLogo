@@ -12,7 +12,7 @@ object LineBreaker {
     var text = _text
     val result = collection.mutable.Buffer[String]()
     def nonEmptyResult = {
-      import scala.collection.JavaConverters._
+      import scala.jdk.CollectionConverters.{ BufferHasAsJava, SeqHasAsJava }
 
       if (result.isEmpty) List("").asJava
       else result.asJava
@@ -53,7 +53,7 @@ object LineBreaker {
   }
 
   def breakLines(_text: String, metrics: FontMetrics, width: Int): Seq[String] = {
-    import scala.collection.JavaConverters.iterableAsScalaIterableConverter
+    import scala.jdk.CollectionConverters.IterableHasAsScala
 
     breakLinesJ(_text, metrics, width).asScala.toSeq
   }

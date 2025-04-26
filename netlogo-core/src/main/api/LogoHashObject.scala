@@ -58,7 +58,7 @@ class LogoHashObject(val sourceObject: AnyRef) {
           31 * result + (if (next == null) 0 else new LogoHashObject(next).hashCode)}
 
       case set: AgentSet =>
-        import collection.JavaConverters._
+        import scala.jdk.CollectionConverters.IterableHasAsScala
         MurmurHash3.unorderedHash(set.agents.asScala.map(new LogoHashObject(_)))
 
       case _ =>

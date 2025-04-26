@@ -15,7 +15,7 @@ class _hatch(val breedName: String) extends Command with CustomAssembled with Se
   override def toString =
     super.toString + ":" + breedName + ",+" + offset
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val count = argEvalIntValue(context, 0)
     if (count > 0) {
       val parent = context.agent.asInstanceOf[Turtle]
@@ -35,7 +35,7 @@ class _hatch(val breedName: String) extends Command with CustomAssembled with Se
     context.ip = offset
   }
 
-  def assemble(a: AssemblerAssistant) {
+  def assemble(a: AssemblerAssistant): Unit = {
     a.add(this)
     a.block()
     a.done()

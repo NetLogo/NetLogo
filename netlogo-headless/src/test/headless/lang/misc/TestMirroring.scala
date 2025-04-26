@@ -19,8 +19,8 @@ class TestMirroring extends FixtureSuite {
   def sizes(u: Update) =
     (u.births.size, u.deaths.size, u.changes.size)
 
-  def checkAllAgents(state: State)(implicit fixture: Fixture) {
-    def check[A <: api.Agent](agentSet: api.AgentSet, kind: Kind, toMirrorable: A => MirrorableAgent[A]) {
+  def checkAllAgents(state: State)(implicit fixture: Fixture): Unit = {
+    def check[A <: api.Agent](agentSet: api.AgentSet, kind: Kind, toMirrorable: A => MirrorableAgent[A]): Unit = {
       assertResult(agentSet.count) { state.count(_._1.kind == kind) }
       import collection.JavaConverters._
       for (agent <- agentSet.agents.asScala) {

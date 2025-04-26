@@ -12,7 +12,7 @@ class NumericConstraint(var defaultValue: java.lang.Double) extends ValueConstra
   def this() = this(World.Zero)
 
   @throws(classOf[ValueConstraint.Violation])
-  def assertConstraint(value: AnyRef) {
+  def assertConstraint(value: AnyRef): Unit = {
     if(!value.isInstanceOf[java.lang.Double])
       throw new ValueConstraint.Violation("Value must be a number.")
   }

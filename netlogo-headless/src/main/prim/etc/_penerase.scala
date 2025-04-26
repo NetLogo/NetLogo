@@ -7,7 +7,7 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _penerase extends Command {
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     context.agent.asInstanceOf[Turtle].penMode(Turtle.PEN_ERASE)
     context.ip = next
   }

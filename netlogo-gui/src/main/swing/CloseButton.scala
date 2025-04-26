@@ -9,7 +9,7 @@ class CloseButton extends JPanel with Transparent {
   override def getPreferredSize: Dimension =
     new Dimension(8, 8)
 
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics): Unit = {
     val g2d = Utils.initGraphics2D(g)
 
     g2d.setColor(getForeground)

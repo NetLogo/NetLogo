@@ -249,7 +249,7 @@ object HubNetMonitorReader extends BaseWidgetParser with ConstWidgetParser with 
       (monitor.y + monitor.height).toString,
       monitor.display.map(saveNillableString).getOrElse("NIL"),
       monitor.source.map(saveNillableString).getOrElse("NIL"),
-      monitor.precision,
+      monitor.precision.toString,
       "1").mkString("", "\n", "\n")
   }
 }
@@ -264,7 +264,10 @@ object HubNetSliderReader extends BaseWidgetParser with ConstWidgetParser with W
       sliderParams: Seq[Double],
       units: Option[String],
       direction: Direction): Slider = {
-        val Seq(min, max, value, inc) = sliderParams
+        val (min, max, value, inc) = sliderParams match {
+          case Seq(mi, ma, v, i) => (mi, ma, v, i)
+          case _ => throw new Exception(s"Unexpected parameters: $sliderParams")
+        }
         Slider(
           display = name.map(restoreLines),
           x = pos._1, y = pos._2,

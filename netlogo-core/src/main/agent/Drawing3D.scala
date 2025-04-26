@@ -4,7 +4,7 @@ package org.nlogo.agent
 
 import org.nlogo.api.AgentException
 import collection.mutable.ArrayBuffer
-import collection.JavaConverters._
+import scala.jdk.CollectionConverters.BufferHasAsJava
 
 class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
 
@@ -15,7 +15,7 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
   private val _linkStamps = ArrayBuffer[org.nlogo.api.LinkStamp3D]()
   def linkStamps = _linkStamps.asJava
 
-  def clear() {
+  def clear(): Unit = {
     lines.clear()
     turtleStamps.clear()
     linkStamps.clear()
@@ -28,18 +28,19 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
   private def pitch(x0: Double, y0: Double, z0: Double, x1: Double, y1: Double, z1: Double) =
     world.protractor.towardsPitch(x0, y0, z0, x1, y1, z1, true)
 
-  def stamp(agent: Agent) {
+  def stamp(agent: Agent): Unit = {
     agent match {
       case t: Turtle3D =>
         turtleStamps.add(new TurtleStamp3D(t))
       case l: Link3D =>
         linkStamps.add(new LinkStamp3D(l))
+      case _ =>
     }
   }
 
   def drawLine(x0: Double, y0: Double, z0: Double,
                x1: Double, y1: Double, z1: Double,
-               width: Double, color: AnyRef) {
+               width: Double, color: AnyRef): Unit = {
     wrap(DrawingLine3D(
       x0, y0, z0, x1, y1, z1,
       heading(x0, y0, x1, y1),
@@ -49,7 +50,7 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
 
   def addLine(x0: Double, y0: Double, z0: Double,
               x1: Double, y1: Double, z1: Double,
-              width: Double, color: AnyRef) {
+              width: Double, color: AnyRef): Unit = {
     lines.add(DrawingLine3D(
       x0, y0, z0, x1, y1, z1,
       heading(x0, y0, x1, y1),
@@ -58,19 +59,19 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
   }
 
   def addStamp(shape: String, xcor: Double, ycor: Double, zcor: Double, size: Double,
-               heading: Double, pitch: Double, roll: Double, color: AnyRef, lineThickness: Double) {
+               heading: Double, pitch: Double, roll: Double, color: AnyRef, lineThickness: Double): Unit = {
     turtleStamps.add(
       new TurtleStamp3D(shape, xcor, ycor, zcor, size, heading, pitch, roll, color, lineThickness))
   }
 
   def addStamp(shape: String, x1: Double, y1: Double, z1: Double, x2: Double, y2: Double, z2: Double,
                color: AnyRef, lineThickness: Double, directedLink: Boolean, destSize: Double,
-               heading: Double, pitch: Double) {
+               heading: Double, pitch: Double): Unit = {
      linkStamps.add(new LinkStamp3D(shape, x1, y1, z1, x2, y2, z2, color,
                                     lineThickness, directedLink, destSize, heading, pitch))
   }
 
-  private def wrap(l: DrawingLine3D) {
+  private def wrap(l: DrawingLine3D): Unit = {
     var startX = l.x0
     var startY = l.y0
     var endX = l.x0

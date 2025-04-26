@@ -6,8 +6,8 @@ package org.nlogo.core
 // to override a few methods. - ST 11/5/11
 
 class DummyExtensionManager extends ExtensionManager {
-  override def startFullCompilation() { }
-  override def finishFullCompilation() { }
+  override def startFullCompilation(): Unit = { }
+  override def finishFullCompilation(): Unit = { }
   override def anyExtensionsLoaded = false
   override def replaceIdentifier(name: String): Primitive = null
   override def importExtension(jarPath: String, errors: ErrorSource): Unit = unsupported

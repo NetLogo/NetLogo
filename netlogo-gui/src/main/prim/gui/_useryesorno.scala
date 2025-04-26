@@ -17,7 +17,7 @@ class _useryesorno extends Reporter {
         gw.updateUI()
         val result: java.lang.Boolean = workspace.waitForResult(
           new ReporterRunnable[java.lang.Boolean] {
-            override def run = {
+            override def run() = {
               gw.view.mouseDown(false)
               val response = new OptionPane(gw.getFrame, I18N.gui.get("dialog.userYesOrNo"),
                                             Dump.logoObject(yesNoMessage),

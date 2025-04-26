@@ -32,7 +32,7 @@ object CompilerUtilities extends CompilerUtilitiesInterface {
 
   private def numberOrElse[A >: java.lang.Double](source: String, importHandler: LiteralImportHandler,
                                                   parseProcedure: => LiteralParser => Iterator[core.Token] => A): A =
-    core.NumberParser.parse(source).right.getOrElse(
+    core.NumberParser.parse(source).getOrElse(
       parseProcedure(literalParser(importHandler))(
         tokenizer.tokenizeString(source).map(Namer0)))
 
@@ -64,7 +64,7 @@ object CompilerUtilities extends CompilerUtilitiesInterface {
         new Namer(program, procedures ++ results.procedures, proc, extensionManager)
       namer.validateProcedure()
       val tokens = TransformableTokenStream(results.procedureTokens(proc.name).iterator, namer)
-      tokens.toStream
+      tokens.to(LazyList)
         .drop(1)  // skip _report
         .dropWhile(_.tpe == core.TokenType.OpenParen)
         .headOption

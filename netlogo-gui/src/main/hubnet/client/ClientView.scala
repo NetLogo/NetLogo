@@ -8,32 +8,29 @@ import java.io.{ ByteArrayInputStream, DataInputStream }
 import javax.swing.border.LineBorder
 
 import org.nlogo.api.{ Perspective, Graphics2DWrapper, ViewSettings }
-import org.nlogo.core.{ View => CoreView }
+import org.nlogo.core.{ View => CoreView, Widget => CoreWidget }
 import org.nlogo.hubnet.mirroring._
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ ViewMouseHandler, ViewWidgetInterface, Widget }
 
 // The view widget in the client.
 class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterface with ViewSettings {
-
-  type WidgetModel = CoreView
-
   val world = new ClientWorld()
   val renderer = new ClientRenderer(world)
   def isHeadless = false
   private var _displayOn = false
-  def setDisplayOn(on: Boolean) { _displayOn = on; repaint() }
+  def setDisplayOn(on: Boolean): Unit = { _displayOn = on; repaint() }
 
   setBackground(InterfaceColors.Transparent)
 
   locally {
     world.setTrailDrawer(renderer.trailDrawer())
     val mouser = new ViewMouseHandler(this, world, this) {
-      override def mousePressed(e: MouseEvent) {
+      override def mousePressed(e: MouseEvent): Unit = {
         super.mousePressed(e)
         if (_displayOn && mouseInside) clientPanel.sendMouseMessage(mouseXCor, mouseYCor, true)
       }
-      override def mouseReleased(e: MouseEvent) {
+      override def mouseReleased(e: MouseEvent): Unit = {
         super.mouseReleased(e)
         if (_displayOn && mouseInside) clientPanel.sendMouseMessage(mouseXCor, mouseYCor, false)
       }
@@ -43,7 +40,7 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   }
 
   // PAINTING
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics): Unit = {
     this.synchronized {
       setFontSize(g)
       if (!_displayOn || world == null) {
@@ -59,13 +56,13 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
     }
   }
 
-  private def setFontSize(g: Graphics) {
+  private def setFontSize(g: Graphics): Unit = {
     val font = g.getFont()
     g.setFont(new Font(font.getName(), font.getStyle(), world.fontSize()))
   }
 
   //Updates the world and draws it.
-  def updateDisplay(worldData: Array[Byte]) {
+  def updateDisplay(worldData: Array[Byte]): Unit = {
     this.synchronized {
       if (world != null) {
         try {
@@ -80,18 +77,18 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
     }
   }
 
-  def handleOverrideList(list: OverrideList, clear: Boolean) {
+  def handleOverrideList(list: OverrideList, clear: Boolean): Unit = {
     if (clear) world.updateOverrides(list.asInstanceOf[ClearOverride])
     else world.updateOverrides(list.asInstanceOf[SendOverride])
     if (_displayOn) repaint()
   }
 
-  def clearOverrides() {
+  def clearOverrides(): Unit = {
     world.clearOverrides()
     if (_displayOn) repaint()
   }
 
-  def handleAgentPerspective(data: Array[Byte]) {
+  def handleAgentPerspective(data: Array[Byte]): Unit = {
     world.updateClientPerspective(new AgentPerspective(new DataInputStream(new ByteArrayInputStream(data))))
     if (_displayOn) repaint()
   }
@@ -102,19 +99,23 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
 
   /// satisfy ViewWidgetInterface
 
-  override def load(view: WidgetModel): AnyRef = {
-    setBounds(view.x, view.y, view.width, view.height)
-    world.viewWidth(getWidth)
-    world.viewHeight(getHeight)
-    world.setWorldSize(
-      view.dimensions.minPxcor, view.dimensions.maxPxcor,
-      view.dimensions.minPycor, view.dimensions.maxPycor)
-    if (getWidth > getHeight) world.patchSize(getWidth.toDouble / world.worldWidth)
-    else world.patchSize(getHeight.toDouble / world.worldHeight)
-    this
+  override def load(model: CoreWidget): Unit = {
+    model match {
+      case view: CoreView =>
+        setBounds(view.x, view.y, view.width, view.height)
+        world.viewWidth(getWidth)
+        world.viewHeight(getHeight)
+        world.setWorldSize(
+          view.dimensions.minPxcor, view.dimensions.maxPxcor,
+          view.dimensions.minPycor, view.dimensions.maxPycor)
+        if (getWidth > getHeight) world.patchSize(getWidth.toDouble / world.worldWidth)
+        else world.patchSize(getHeight.toDouble / world.worldHeight)
+
+      case _ =>
+    }
   }
 
-  override def model: WidgetModel = {
+  override def model: CoreWidget = {
     val b = getUnzoomedBounds
     CoreView(
       x = b.x, y = b.y, width = b.width, height = b.height,

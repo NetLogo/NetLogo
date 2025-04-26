@@ -5,7 +5,7 @@ import
 
 object Realloc {
   def realloc(world: AgentManagement with CompilationManagement, oldProgram: Program, newProgram: Program): Unit = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.SetHasAsScala
     // remove agentsets for breeds that no longer exist, if any
     for(name <- world.breeds.keySet.asScala.toList)
       if(!newProgram.breeds.contains(name))

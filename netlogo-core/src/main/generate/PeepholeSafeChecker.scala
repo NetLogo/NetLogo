@@ -46,7 +46,7 @@ class PeepholeSafeChecker(profilingEnabled: Boolean = false) {
   private val methodSafeTable = new collection.mutable.HashMap[String, Boolean]
   private def getHashKey(m: Method): String =
     m.getDeclaringClass.getName + "." + m.getName
-  private def processClass(c: Class[_]) {
+  private def processClass(c: Class[_]): Unit = {
     val reader = PrimitiveCache.getClassReader(c)
     for (m <- BytecodeUtils.getMethods(c, profilingEnabled)) {
       reader.accept(new MethodExtractorClassAdapter(m), ClassReader.SKIP_DEBUG)
@@ -62,7 +62,7 @@ class PeepholeSafeChecker(profilingEnabled: Boolean = false) {
     private var thisMethodFailedTest = false
     val paramLocalsCount = Type.getArgumentTypes(method).map(_.getSize).sum
     val alreadyLoaded = Array.fill(paramLocalsCount)(false)
-    override def visitVarInsn(opcode: Int, variable: Int) {
+    override def visitVarInsn(opcode: Int, variable: Int): Unit = {
       val check =
         !thisMethodFailedTest &&
           List(ILOAD, DLOAD, LLOAD, FLOAD, ALOAD).contains(opcode) &&
@@ -74,7 +74,7 @@ class PeepholeSafeChecker(profilingEnabled: Boolean = false) {
         } else alreadyLoaded(variable - 2) = true
       }
     }
-    override def visitEnd() {
+    override def visitEnd(): Unit = {
       if (!thisMethodFailedTest)
         methodSafeTable(getHashKey(method)) = true
     }

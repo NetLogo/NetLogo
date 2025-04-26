@@ -9,7 +9,7 @@ import org.nlogo.swing.Utils
 object Splash {
   private var splashWindow: JWindow = null
 
-  def beginSplash() {
+  def beginSplash(): Unit = {
     splashWindow = new JWindow
     splashWindow.getContentPane.add(splash)
     splashWindow.pack()
@@ -17,7 +17,7 @@ object Splash {
     splashWindow.setVisible(true)
   }
 
-  def endSplash() {
+  def endSplash(): Unit = {
     splashWindow.setVisible(false)
     splashWindow.dispose()
     splashWindow = null

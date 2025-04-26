@@ -37,7 +37,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     val oldFilename = _filename
     _filename = newName
     if (oldFilename.isRight && oldFilename != newName) {
-      externalFileManager.nameChanged(oldFilename.right.get, newName.right.get)
+      externalFileManager.nameChanged(oldFilename.getOrElse(null), newName.getOrElse(null))
     } else if (oldFilename.isLeft) {
       externalFileManager.add(this)
     }
@@ -46,7 +46,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
   def reload: Boolean = {
     var loaded: Boolean = false
 
-    filename.right foreach { path =>
+    filename foreach { path =>
       try {
         innerSource = FileIO.fileToString(path).replaceAll("\r\n", "\n")
         dirty = false // Has the buffer changed since it was compiled?
@@ -84,12 +84,12 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     }
   }
 
-  def filenameForDisplay = (filename.right map TemporaryCodeTab.stripPath).merge
+  def filenameForDisplay = (filename map TemporaryCodeTab.stripPath).merge
 
   def save(saveAs: Boolean) = {
     if (saveAs || filename.isLeft)
       filename = Right(userChooseSavePath())
-    FileIO.writeFile(filename.right.get, text.getText)
+    FileIO.writeFile(filename.getOrElse(null), text.getText)
     saveNeeded = false
     compileIfDirty()
     dirty = false
@@ -97,7 +97,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     new WindowEvents.ExternalFileSavedEvent(filename.merge).raise(this)
   }
 
-  override def close() {
+  override def close(): Unit = {
     if (saveNeeded) {
       if (Dialogs.userWantsToSaveFirst(filenameForDisplay, this)) {
         // The user is saving the file with its current name
@@ -108,7 +108,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
     tabs.closeExternalFile(_filename)
   }
 
-  def compileIfDirty() {
+  def compileIfDirty(): Unit = {
     if (dirty)
       compile()
   }
@@ -118,7 +118,7 @@ class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
 
     dirty = false
     e.sourceOwner match {
-      case file: ExternalFileInterface if file.getFileName == filename.right.get => setErrorLabel()
+      case file: ExternalFileInterface if file.getFileName == filename.getOrElse(null) => setErrorLabel()
       // if the Code tab compiles then get rid of the error ev 7/26/07
       case tab: CodeTab if e.error == null                                       => setErrorLabel()
       case _ =>

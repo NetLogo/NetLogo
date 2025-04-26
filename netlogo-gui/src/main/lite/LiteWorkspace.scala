@@ -22,14 +22,14 @@ extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null
   }
   val aggregateManager =
     Femto.get[AggregateManagerInterface]("org.nlogo.sdm.AggregateManagerLite")
-  override def doImport(importer: BufferedReaderImporter) {
+  override def doImport(importer: BufferedReaderImporter): Unit = {
     super.doImport(importer)
   }
-  override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double) { }
-  override def inspectAgent(agentClass: AgentKind, agent: Agent, radius: Double) { }
+  override def inspectAgent(agent: org.nlogo.api.Agent, radius: Double): Unit = { }
+  override def inspectAgent(agentClass: AgentKind, agent: Agent, radius: Double): Unit = { }
   override def stopInspectingAgent(agent: org.nlogo.agent.Agent): Unit = { }
   override def stopInspectingDeadAgents(): Unit = { }
-  override def closeAgentMonitors() { }
+  override def closeAgentMonitors(): Unit = { }
   override def newRenderer = Femto.get[RendererInterface]("org.nlogo.render.Renderer", world)
   override def updateModel(m: Model): Model = m
 }

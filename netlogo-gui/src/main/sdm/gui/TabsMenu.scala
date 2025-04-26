@@ -14,7 +14,7 @@ object TabsMenu {
       category    = TabsCategory
       rank        = index
       accelerator = KeyBindings.keystroke(('1' + index).toChar, withMenu = true)
-      override def actionPerformed(e: ActionEvent) {
+      override def actionPerformed(e: ActionEvent): Unit = {
         tabs.setSelectedIndex(index)
       }
     }

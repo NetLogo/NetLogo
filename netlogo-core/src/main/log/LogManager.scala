@@ -7,7 +7,7 @@ import java.net.{ InetAddress, UnknownHostException }
 import java.nio.file.{ Path, Paths }
 import java.util.zip.{ ZipEntry, ZipOutputStream }
 
-import collection.JavaConverters._
+import scala.jdk.CollectionConverters.SeqHasAsJava
 
 import org.nlogo.api.{ Equality, NetLogoAdapter, Version }
 import org.nlogo.api.Exceptions.{ ignoring, warning }
@@ -89,7 +89,7 @@ object LogManager {
   private var directoryWarning: () => Unit     = () => {}
 
   def start(addListener: (NetLogoAdapter) => Unit, loggerFactory: (Path) => FileLogger, logDirectory: File,
-            eventsSet: Set[String], studentName: String, directoryWarning: () => Unit) {
+            eventsSet: Set[String], studentName: String, directoryWarning: () => Unit): Unit = {
     if (LogManager.isStarted) {
       throw new IllegalStateException("Logging should only be started once.")
     }
@@ -102,7 +102,7 @@ object LogManager {
 
     // We don't actually start logging until a model is opened and `restart()` is called.
     val restartListener = new NetLogoAdapter {
-      override def modelOpened(modelName: String) {
+      override def modelOpened(modelName: String): Unit = {
         LogManager.modelName = modelName
         LogManager.restart()
       }
@@ -111,7 +111,7 @@ object LogManager {
     addListener(LogManager.loggingListener)
   }
 
-  def stop() {
+  def stop(): Unit = {
     LogManager.logStop()
     warning(classOf[Exception]) {
       LogManager.logger.close()
@@ -120,7 +120,7 @@ object LogManager {
     LogManager.loggingListener.logger = LogManager.logger
   }
 
-  private def restart(thunk: () => Unit = () => {}) {
+  private def restart(thunk: () => Unit = () => {}): Unit = {
     LogManager.stop()
     thunk()
     // If the logger blows up for any reason (security, disk full, etc), just ignore it and output to the error stream
@@ -134,7 +134,7 @@ object LogManager {
     LogManager.logStart(modelName)
   }
 
-  def zipLogFiles(zipFileName: String) {
+  def zipLogFiles(zipFileName: String): Unit = {
     if (LogManager.isStarted) {
       val fileNameFilter = LogManager.logger.fileNameFilter
       LogManager.restart( () => {
@@ -166,7 +166,7 @@ object LogManager {
     }
   }
 
-  def deleteLogFiles() {
+  def deleteLogFiles(): Unit = {
     if (LogManager.isStarted) {
       val fileNameFilter = LogManager.logger.fileNameFilter
       LogManager.restart( () => {
@@ -188,16 +188,16 @@ object LogManager {
     }
   }
 
-  private def log(event: String, eventInfo: Map[String, Any] = Map()) {
+  private def log(event: String, eventInfo: Map[String, Any] = Map()): Unit = {
     // We do not check for any IO exceptions from the logger here, we expect it to handle those internally.  That
     // prevents us from running a try/catch for events that won't be logged when it is not enabled, which is most of the
     // time.  -Jeremy B February 2024
     LogManager.logger.log(event, eventInfo)
   }
 
-  private def logStart(modelName: String) {
+  private def logStart(modelName: String): Unit = {
     val loginName = System.getProperty("user.name")
-    val ipAddress = LogManager.getIpAddress
+    val ipAddress = LogManager.getIpAddress()
     val startInfo = Map[String, Any](
       "loginName"   -> loginName
     , "studentName" -> LogManager.state.studentName
@@ -209,11 +209,11 @@ object LogManager {
     LogManager.log(LogEvents.Types.start, startInfo)
   }
 
-  private def logStop() {
+  private def logStop(): Unit = {
     LogManager.log(LogEvents.Types.stop)
   }
 
-  def globalChanged(globalName: String, newValue: AnyRef, oldValue: AnyRef) {
+  def globalChanged(globalName: String, newValue: AnyRef, oldValue: AnyRef): Unit = {
     if (LogManager.state.events.global && !Equality.equals(newValue, oldValue)) {
       val eventInfo = Map[String, Any](
         "globalName" -> globalName
@@ -224,7 +224,7 @@ object LogManager {
     }
   }
 
-  def linkCreated(id: Long, breedName: String, end1: Long, end2: Long) {
+  def linkCreated(id: Long, breedName: String, end1: Long, end2: Long): Unit = {
     if (LogManager.state.events.link) {
       val eventInfo = Map[String, Any](
         "action"    -> "created"
@@ -237,7 +237,7 @@ object LogManager {
     }
   }
 
-  def linkRemoved(id: Long, breedName: String, end1: Long, end2: Long) {
+  def linkRemoved(id: Long, breedName: String, end1: Long, end2: Long): Unit = {
     if (LogManager.state.events.link) {
       val eventInfo = Map[String, Any](
         "action"    -> "removed"
@@ -250,7 +250,7 @@ object LogManager {
     }
   }
 
-  def speedSliderChanged(newSpeed: Double) {
+  def speedSliderChanged(newSpeed: Double): Unit = {
     if (LogManager.state.events.speedSlider) {
       val eventInfo = Map[String, Any](
         "newSpeed" -> newSpeed
@@ -259,7 +259,7 @@ object LogManager {
     }
   }
 
-  def turtleCreated(who: Long, breedName: String) {
+  def turtleCreated(who: Long, breedName: String): Unit = {
     if (LogManager.state.events.turtle) {
       val eventInfo = Map[String, Any](
         "action"    -> "created"
@@ -270,7 +270,7 @@ object LogManager {
     }
   }
 
-  def turtleRemoved(who: Long, breedName: String) {
+  def turtleRemoved(who: Long, breedName: String): Unit = {
     if (LogManager.state.events.turtle) {
       val eventInfo = Map[String, Any](
         "action"    -> "removed"
@@ -281,7 +281,7 @@ object LogManager {
     }
   }
 
-  def userComment(comment: String) {
+  def userComment(comment: String): Unit = {
     if (LogManager.state.events.comment) {
       val eventInfo = Map[String, Any](
         "comment" -> comment
@@ -290,7 +290,7 @@ object LogManager {
     }
   }
 
-  def widgetAdded(isLoading: Boolean, widgetType: String, name: String) {
+  def widgetAdded(isLoading: Boolean, widgetType: String, name: String): Unit = {
     if (LogManager.state.events.widgetEdit && !isLoading) {
       val eventInfo = Map[String, Any](
         "action"     -> "added"
@@ -301,7 +301,7 @@ object LogManager {
     }
   }
 
-  def widgetRemoved(isUnloading: Boolean, widgetType: String, name: String) {
+  def widgetRemoved(isUnloading: Boolean, widgetType: String, name: String): Unit = {
     if (LogManager.state.events.widgetEdit && !isUnloading) {
       val eventInfo = Map[String, Any](
         "action"     -> "removed"

@@ -16,7 +16,7 @@ import org.nlogo.swing.{ Utils => SwingUtils }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ DummyErrorHandler, Editable, EditPanel }
 
-import scala.collection.JavaConverters.seqAsJavaList
+import scala.jdk.CollectionConverters.SeqHasAsJava
 
 class StockFigure extends RectangleFigure with ModelElementFigure with Editable with DummyErrorHandler {
   private var stock: Option[Stock] = Some(new Stock)
@@ -50,10 +50,10 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
         g.setColor(Color.RED)
 
       val name =
-        if (s.getName.trim.isEmpty) {
+        if (s.getName().trim.isEmpty) {
           "?"
         } else {
-          s.getName.trim
+          s.getName().trim
         }
 
       g.setFont(g.getFont.deriveFont(Font.BOLD))
@@ -84,12 +84,12 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
 
   // Return no resize handles
   override def handles: HandleEnumeration = {
-    new HandleEnumerator(seqAsJavaList(Seq(
+    new HandleEnumerator(Seq(
       new NullHandle(this, RelativeLocator.southEast),
       new NullHandle(this, RelativeLocator.southWest),
       new NullHandle(this, RelativeLocator.northEast),
       new NullHandle(this, RelativeLocator.northWest)
-    )))
+    ).asJava)
   }
 
   override def write(dw: StorableOutput): Unit = {
@@ -122,32 +122,32 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
 
   def nameWrapper(name: String): Unit = {
     stock.foreach(s => {
-      _dirty = _dirty || s.getName != name
+      _dirty = _dirty || s.getName() != name
 
       s.setName(name)
     })
   }
 
   def nameWrapper: String =
-    stock.map(_.getName).orNull
+    stock.map(_.getName()).orNull
 
   def initialValueExpressionWrapper(expression: String): Unit = {
     stock.foreach(s => {
-      _dirty = _dirty || s.getInitialValueExpression != expression
+      _dirty = _dirty || s.getInitialValueExpression() != expression
 
       s.setInitialValueExpression(expression)
     })
   }
 
   def initialValueExpressionWrapper: String =
-    stock.map(_.getInitialValueExpression).orNull
+    stock.map(_.getInitialValueExpression()).orNull
 
   def allowNegative: Boolean =
-    !stock.map(_.isNonNegative).getOrElse(false)
+    !stock.map(_.isNonNegative()).getOrElse(false)
 
   def allowNegative(allow: Boolean): Unit = {
     stock.foreach(s => {
-      _dirty = _dirty || s.isNonNegative == allow
+      _dirty = _dirty || s.isNonNegative() == allow
 
       s.setNonNegative(!allow)
     })

@@ -37,7 +37,7 @@ class AggregateProceduresTab(colorizer: Colorizer) extends JPanel(new GridBagLay
     add(scrollableEditor, c)
   }
 
-  def setError(e: CompilerException, offset: Int) {
+  def setError(e: CompilerException, offset: Int): Unit = {
     errorLabel.setError(e, offset)
   }
 
@@ -45,7 +45,7 @@ class AggregateProceduresTab(colorizer: Colorizer) extends JPanel(new GridBagLay
     errorLabel.setError(null, 0)
   }
 
-  def setText(newText: String) {
+  def setText(newText: String): Unit = {
     text.setText(newText)
   }
 

@@ -10,7 +10,7 @@ class _tiltdown extends Command {
   switches = true
 
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val delta = argEvalDoubleValue(context, 0)
     val turtle = context.agent.asInstanceOf[Turtle3D]
     val v = Vect.toVectors(turtle.heading,

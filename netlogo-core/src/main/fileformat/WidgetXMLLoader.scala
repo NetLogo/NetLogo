@@ -384,6 +384,9 @@ object WidgetXMLLoader {
 
         XMLElement("note", attributes, note.display.getOrElse(""), Seq())
 
+      case _ =>
+        throw new Exception(s"Unexpected widget: $widget")
+
     }
 
   }

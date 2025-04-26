@@ -11,7 +11,7 @@ import org.nlogo.util.SlowTest
 class TestImportExport extends AnyFunSuite with AbstractTestLanguage
 with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
 
-  override def beforeEach() {
+  override def beforeEach(): Unit = {
     init()
     // the default error handler just spits something to stdout or stderr or somewhere.
     // we want to fail hard. - ST 7/21/10
@@ -22,7 +22,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
       }
   }
 
-  override def afterEach() { workspace.dispose() }
+  override def afterEach(): Unit = { workspace.dispose() }
 
   def getUniqueFilename() = {
     new java.io.File("tmp").mkdir()
@@ -243,7 +243,7 @@ with BeforeAndAfterEach with OneInstancePerTest with SlowTest {
     }
 
   test("testImportSubject", SlowTest.Tag) {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.IterableHasAsScala
 
     val filename = getUniqueFilename()
     workspace.initForTesting(10)

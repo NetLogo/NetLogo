@@ -12,7 +12,7 @@ class AssemblerTests extends AnyFunSuite {
     val defs = Scaffold.apply(
       keyword + " foo " + source + "\nend")
     assertResult(1)(defs.size)
-    for (procdef <- defs) {
+    for (procdef <- defs): Unit = {
       procdef.accept(new ArgumentStuffer)
       procdef.procedure.displayName = "procedure FOO"
       new Assembler().assemble(procdef)

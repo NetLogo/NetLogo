@@ -10,7 +10,7 @@ import org.nlogo.nvm.Procedure
 trait Evaluating { this: AbstractWorkspace =>
   var lastLogoException: LogoException = null
 
-  override def clearLastLogoException() { lastLogoException = null }
+  override def clearLastLogoException(): Unit = { lastLogoException = null }
 
   @throws(classOf[CompilerException])
   def makeReporterThunk(source: String, jobOwnerName: String): ReporterLogoThunk =

@@ -128,7 +128,7 @@ class TestConstraintModels extends FixtureSuite {
     checkError("set x-loc false")
   }
 
-  def checkError(commands: String)(implicit fixture: Fixture) {
+  def checkError(commands: String)(implicit fixture: Fixture): Unit = {
     intercept[api.LogoException] {
       fixture.workspace.command(commands)
     }

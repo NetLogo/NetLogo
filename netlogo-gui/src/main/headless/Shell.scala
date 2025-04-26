@@ -14,7 +14,7 @@ object Shell {
       .takeWhile(_ != null)
   }
 
-  def main(argv: Array[String]) {
+  def main(argv: Array[String]): Unit = {
     Main.setHeadlessProperty()
     System.err.println(Version.fullVersion)
     val workspace = HeadlessWorkspace.newInstance
@@ -28,7 +28,7 @@ object Shell {
     workspace.dispose()
   }
 
-  def run(workspace: HeadlessWorkspace, line: String) {
+  def run(workspace: HeadlessWorkspace, line: String): Unit = {
     val command =
       if (workspace.isReporter(line))
         "print " + line

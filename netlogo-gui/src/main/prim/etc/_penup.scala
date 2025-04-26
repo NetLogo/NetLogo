@@ -9,7 +9,7 @@ class _penup extends Command {
 
 
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     context.agent.asInstanceOf[Turtle].penMode(Turtle.PEN_UP)
     context.ip = next
   }

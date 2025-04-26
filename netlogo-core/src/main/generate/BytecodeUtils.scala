@@ -27,6 +27,7 @@ object BytecodeUtils {
     val name = i match {
       case _: Command => "perform"
       case _: Reporter => "report"
+      case _ => throw new Exception(s"Unexpected instruction: $i")
     }
     // if report() has been overridden to have a more specific type than Object,
     // then both the override and the original will be included in the result

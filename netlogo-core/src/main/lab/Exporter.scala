@@ -26,7 +26,7 @@ abstract class Exporter(modelFileName: String,
     case i: java.lang.Integer => i.toString
     case x => Dump.logoObject(x.asInstanceOf[AnyRef], false, true)
   })
-  def writeExportHeader() {
+  def writeExportHeader(): Unit = {
     out.println(
       csv.headerRow(
         Array("BehaviorSpace results (" + Version.version + ")", exporterType + " version " + LabExporterVersion.version)))

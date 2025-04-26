@@ -9,7 +9,7 @@ class _watchme extends Command {
 
 
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     world.observer.home()
     world.observer.setPerspective(Perspective.Watch(context.agent))
     context.ip = next

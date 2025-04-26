@@ -65,7 +65,7 @@ import scala.language.implicitConversions
 trait MockSuite extends AnyFunSuite {
 
   // this is the main test method provided by this trait.
-  def mockTest(name: String)(f: => Unit) {
+  def mockTest(name: String)(f: => Unit): Unit = {
     test(name) {
       _context.withValue(new JUnit5Mockery() {
         private val synchroniser = new Synchroniser()
@@ -83,14 +83,14 @@ trait MockSuite extends AnyFunSuite {
   def mock[T : ClassTag]: T = context.mock(erasure[T])
 
   // use this method to set up expectations on the mock objects
-  def expecting(f: => Unit) {
+  def expecting(f: => Unit): Unit = {
     f
     context.checking(expectations)
   }
 
   // use this method to call into the objects under test
   // at the end, it makes sure that all the expectations were met.
-  def when(f: => Unit) {f; context.assertIsSatisfied()}
+  def when(f: => Unit): Unit = {f; context.assertIsSatisfied()}
 
   //
   // the following functions are used in setting up expectations
@@ -136,8 +136,8 @@ trait MockSuite extends AnyFunSuite {
   def a[T : ClassTag]: Matcher[T] = aMatcher
   def an[T : ClassTag]: Matcher[T] = aMatcher
   def aNonNull[T : ClassTag]: Matcher[T] = aMatcher
-  private def aMatcher[T: ClassTag]: Matcher[T] = new BaseMatcher[T]() {
-    def describeTo(description: Description) {
+  private def aMatcher[T: ClassTag]: Matcher[T] = new BaseMatcher[T](): Unit = {
+    def describeTo(description: Description): Unit = {
       description.appendText("<" + erasure[T].toString + ">")
     }
     override def matches(a: Any) = {

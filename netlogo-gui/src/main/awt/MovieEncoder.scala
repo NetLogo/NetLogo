@@ -16,7 +16,7 @@ trait MovieEncoder {
    * @param frameRate frames per second.
    */
   @throws(classOf[java.io.IOException])
-  def setFrameRate(frameRate: Float)
+  def setFrameRate(frameRate: Float): Unit
 
   /**
    * Returns the frame rate.
@@ -37,7 +37,7 @@ trait MovieEncoder {
    * Adds an image to the movie.
    */
   @throws(classOf[java.io.IOException])
-  def add(image: BufferedImage)
+  def add(image: BufferedImage): Unit
 
   /**
    * Returns true if this encoder has been set up.
@@ -47,12 +47,12 @@ trait MovieEncoder {
   /**
    * Stops the movie and writes it to a file.
    */
-  def stop()
+  def stop(): Unit
 
   /**
    * Cancels the current movie.
    */
-  def cancel()
+  def cancel(): Unit
 
   /**
    * Returns the number of frames recorded so far.

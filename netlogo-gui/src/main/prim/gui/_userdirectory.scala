@@ -40,6 +40,8 @@ class _userdirectory extends Reporter {
           throw new RuntimePrimitiveException(
             context, this, "This directory doesn't exist")
         result
+      case _ =>
+        throw new Exception(s"Unexpected result: $result")
     }
   }
 

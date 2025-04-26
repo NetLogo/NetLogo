@@ -6,7 +6,7 @@ import java.lang.NumberFormatException
 
 import org.nlogo.agent.SliderConstraint
 import org.nlogo.api.{ CompilerServices, MersenneTwisterFast }
-import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical }
+import org.nlogo.core.{ Horizontal, I18N, Slider => CoreSlider, Vertical, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, AfterLoadEvent, PeriodicUpdateEvent, AddSliderConstraintEvent }
 
@@ -14,8 +14,6 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
                    compiler: CompilerServices, colorizer: Colorizer)
   extends MultiErrorWidget with AbstractSliderWidget with InterfaceGlobalWidget with Editable
   with PeriodicUpdateEvent.Handler with AfterLoadEvent.Handler {
-
-  type WidgetModel = CoreSlider
 
   def this(random: MersenneTwisterFast, compiler: CompilerServices, colorizer: Colorizer) =
     this(false, random, compiler, colorizer)
@@ -94,8 +92,8 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
   }
 
   // EDITING, CONSTRAINTS, AND ERROR HANDLING
-  override def editFinished: Boolean = {
-    super.editFinished
+  override def editFinished(): Boolean = {
+    super.editFinished()
     removeAllErrors()
     setName(name, nameChanged)
     nameChanged = false
@@ -152,35 +150,39 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
 
   // LOADING AND SAVING
 
-  override def load(model: WidgetModel): AnyRef = {
-    val min: String = model.min
-    val max: String = model.max
-    val v = model.default
-    val inc: String = model.step
-    setUnits(model.units.optionToPotentiallyEmptyString)
-    setVertical(model.direction == Vertical)
+  override def load(model: CoreWidget): Unit = {
+    model match {
+      case s: CoreSlider =>
+        val min: String = s.min
+        val max: String = s.max
+        val v = s.default
+        val inc: String = s.step
+        setUnits(s.units.optionToPotentiallyEmptyString)
+        setVertical(s.direction == Vertical)
 
-    setVarName(model.display.optionToPotentiallyEmptyString)
-    setMinimumCode(min)
-    setMaximumCode(max)
-    // i think this next line is here because of some weird bounds checking
-    // it needs to be tested more and maybe we can get rid of it. JC - 9/23/10
-    setMinimumCode(min)
-    setIncrementCode(inc)
-    try {
-      setValue(v, inc.toDouble)
-    } catch {
-      case e: NumberFormatException =>
-        setValue(v)
+        setVarName(s.display.optionToPotentiallyEmptyString)
+        setMinimumCode(min)
+        setMaximumCode(max)
+        // i think this next line is here because of some weird bounds checking
+        // it needs to be tested more and maybe we can get rid of it. JC - 9/23/10
+        setMinimumCode(min)
+        setIncrementCode(inc)
+        try {
+          value_=(v, inc.toDouble)
+        } catch {
+          case e: NumberFormatException =>
+            value = v
+        }
+        defaultValue = v
+        oldSize(s.oldSize)
+        setSize(s.width, s.height)
+
+      case _ =>
     }
-    defaultValue = v
-    oldSize(model.oldSize)
-    setSize(model.width, model.height)
-    this
   }
 
-  override def model: WidgetModel = {
-    val savedName = super.name.potentiallyEmptyStringToOption
+  override def model: CoreWidget = {
+    val savedName = name.potentiallyEmptyStringToOption
     val savedUnits = units.potentiallyEmptyStringToOption
     val dir = if (vertical) Vertical else Horizontal
     val b = getUnzoomedBounds

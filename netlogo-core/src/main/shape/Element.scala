@@ -40,17 +40,17 @@ abstract class Element(var awtColor: Color = null) extends BaseElement with java
 
   def toReadableString: String
 
-  def modify(start: Point, last: Point)
+  def modify(start: Point, last: Point): Unit
 
-  def draw(g: GraphicsInterface, turtleColor: Color, scale: Double, angle: Double)
+  def draw(g: GraphicsInterface, turtleColor: Color, scale: Double, angle: Double): Unit
 
-  def rotateLeft()
+  def rotateLeft(): Unit
 
-  def rotateRight()
+  def rotateRight(): Unit
 
-  def flipHorizontal()
+  def flipHorizontal(): Unit
 
-  def flipVertical()
+  def flipVertical(): Unit
 
   override def clone: AnyRef =
     try {
@@ -59,13 +59,13 @@ abstract class Element(var awtColor: Color = null) extends BaseElement with java
       case ex: CloneNotSupportedException => throw new IllegalStateException(ex)
     }
 
-  def reshapeElement(oldPoint: Point, newPoint: Point)
+  def reshapeElement(oldPoint: Point, newPoint: Point): Unit
 
-  def setModifiedPoint(modified: Point)
+  def setModifiedPoint(modified: Point): Unit
 
   def contains(p: Point): Boolean
 
-  def moveElement(xOffset: Int, yOffset: Int)
+  def moveElement(xOffset: Int, yOffset: Int): Unit
 
   private[shape] def shouldSave: Boolean = {
     true

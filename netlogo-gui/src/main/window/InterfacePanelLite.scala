@@ -251,7 +251,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
             }).orElse(Option(WidgetRegistry(name)))
 
         newGuy.foreach { w =>
-          w.load(coreWidget.asInstanceOf[w.WidgetModel])
+          w.load(coreWidget)
           addWidget(w, x, y)
         }
         newGuy.orNull
@@ -281,6 +281,7 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
 
     getComponents.foreach(_ match {
       case ts: ThemeSync => ts.syncTheme()
+      case _ =>
     })
   }
 }

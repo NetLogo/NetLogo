@@ -6,7 +6,7 @@ import org.nlogo.headless.HeadlessWorkspace
 
 object HeadlessServerExample {
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     val workspace = HeadlessWorkspace.newInstance
     val commandLine = new CommandLineThread(workspace)
     workspace.open("models/HubNet Activities/Code Examples/Template.nlogox")
@@ -28,8 +28,8 @@ object HeadlessServerExample {
         queuedCommands put scala.io.StdIn.readLine()
       }
     }
-    def runAll() {
-      import collection.JavaConverters._
+    def runAll(): Unit = {
+      import scala.jdk.CollectionConverters.ListHasAsScala
       queuedCommands.asScala.foreach { c =>
         println("executing command: " + c)
         try workspace.command(c)

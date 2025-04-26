@@ -30,7 +30,7 @@ class GraphicsPreview
     repaint()
   }
 
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics): Unit = {
     image match {
       case None => super.paintComponent(g)
       case Some(image) =>
@@ -42,6 +42,7 @@ class GraphicsPreview
           case 1.0          => (400, 400)
           case r if r < 1.0 => ((400 * r).toInt, 400)
           case r if r > 1.0 => (400, (400 * (1 / r)).toInt)
+          case _            => throw new Exception(s"Unexpected ratio: $ratio")
         }
         val x = (400 - w) / 2
         val y = (400 - h) / 2

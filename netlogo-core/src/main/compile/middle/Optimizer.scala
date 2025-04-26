@@ -9,14 +9,14 @@ import org.nlogo.compile.api.{ DefaultAstVisitor, Optimizations, ReporterApp, St
 
 class Optimizer(optimizations: Optimizations) extends DefaultAstVisitor {
 
-  override def visitStatement(stmt: Statement) {
+  override def visitStatement(stmt: Statement): Unit = {
     super.visitStatement(stmt)
     val oldCommand = stmt.command
     commandMungers.filter(_.clazz eq oldCommand.getClass)
       .find{munger => munger.munge(stmt); stmt.command != oldCommand}
   }
 
-  override def visitReporterApp(app: ReporterApp) {
+  override def visitReporterApp(app: ReporterApp): Unit = {
     super.visitReporterApp(app)
     val oldReporter = app.reporter
     reporterMungers.filter(_.clazz eq oldReporter.getClass)

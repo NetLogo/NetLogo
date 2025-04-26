@@ -132,7 +132,7 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
 
   private def updateList(config: Config, installedLibsConf: Config, category: String, useBundled: Boolean) = {
 
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.ListHasAsScala
 
     def getStringOption(c: Config, path: String, default: Option[String] = None): Option[String] =
       if (c.hasPath(path)) Option(c.getString(path)) else default
@@ -156,7 +156,7 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
 
           LibraryInfo(name, codeName, shortDesc, longDesc, version, homepage, downloadURL, bundled, installedVersion, minNetLogoVersion)
 
-      }
+      }.toSeq
 
     infoChangeCallbacks.foreach(_.apply(libraries))
 

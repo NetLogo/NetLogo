@@ -10,7 +10,7 @@ class AgentSetBuilder(kind: core.AgentKind, capacity: Int) {
     this(kind, 1)
   private[this] var buf =
     new collection.mutable.ArrayBuffer[Agent](capacity)
-  def add(agent: Agent) {
+  def add(agent: Agent): Unit = {
     buf += agent
   }
   def contains(agent: Agent) =

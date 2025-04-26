@@ -11,7 +11,7 @@ import org.nlogo.nvm.RuntimePrimitiveException;
 
 import java.util.Iterator;
 
-import static scala.collection.JavaConversions.asScalaBuffer;
+import scala.jdk.javaapi.CollectionConverters;
 
 public final class _hubnetsendusermessage
     extends HubNetCommand {
@@ -43,7 +43,7 @@ public final class _hubnetsendusermessage
           (context, this, 0, Syntax.ListType() | Syntax.StringType(), clients);
     }
 
-    hubNetManager().get().sendUserMessage(asScalaBuffer(nodes), Dump.logoObject(data));
+    hubNetManager().get().sendUserMessage(CollectionConverters.asScala(nodes).toList(), Dump.logoObject(data));
     context.ip = next;
   }
 

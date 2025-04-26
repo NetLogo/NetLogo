@@ -17,28 +17,28 @@ trait TestMultiThreadedModels extends AbstractTestModels {
   /**
    * run a model test in 10 threads, using the given model
    */
-  override def testModel(testName: String, model: Model)(f: => Unit) {
+  override def testModel(testName: String, model: Model)(f: => Unit): Unit = {
     testModelWithThreads(defaultNumberThreads, testName, model){ f }
   }
 
   /**
    * run a model test in 10 threads, loading the model from the given file
    */
-  override def testModelFile(testName: String, path: String)(f: => Unit) {
+  override def testModelFile(testName: String, path: String)(f: => Unit): Unit = {
     testModelFileWithThreads(defaultNumberThreads, testName, path){ f }
   }
 
   /**
    * run a model test in N threads, using the given model
    */
-  def testModelWithThreads(threads:Int, testName: String, model: Model)(f: => Unit) {
+  def testModelWithThreads(threads:Int, testName: String, model: Model)(f: => Unit): Unit = {
     test(testName, SlowTest.Tag){ testWithThreads(threads){ runModel(model){ f } } }
   }
 
   /**
    * run a model test in N threads, loading the model from the given file
    */
-  def testModelFileWithThreads(threads:Int, testName: String, path: String)(f: => Unit) {
+  def testModelFileWithThreads(threads:Int, testName: String, path: String)(f: => Unit): Unit = {
     test(testName, SlowTest.Tag){ testWithThreads(threads){ runModelFromFile(path){ f } } }
   }
 
@@ -48,7 +48,7 @@ trait TestMultiThreadedModels extends AbstractTestModels {
   private def testWithThreads(threadCount:Int)(f: => Unit){
     class MyThread extends Thread("testParallelOperation") {
       var exception: Option[Exception] = None
-      override def run() {
+      override def run(): Unit = {
         try f
         catch {case e: Exception => exception = Some(e)}
       }

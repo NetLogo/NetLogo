@@ -142,6 +142,6 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
     // boilerplate for Editable
     def helpLink = None
     val sourceOffset = 0
-    def editFinished = true
+    def editFinished() = true
   }
 }

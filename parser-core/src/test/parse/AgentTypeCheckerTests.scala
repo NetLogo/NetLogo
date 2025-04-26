@@ -13,14 +13,14 @@ class AgentTypeCheckerTests extends AnyFunSuite {
     coreDefs
   }
 
-  def testOne(source: String, expected: String) {
+  def testOne(source: String, expected: String): Unit = {
     val defs = compile(source)
     assertResult(expected)(
       defs.map { pd: ProcedureDefinition =>
           pd.procedure.name + ":" + pd.procedure.agentClassString }
         .mkString(" "))
   }
-  def testError(source: String, error: String) {
+  def testError(source: String, error: String): Unit = {
     val e = intercept[CompilerException] {
       compile(source)
     }

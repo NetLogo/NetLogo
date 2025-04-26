@@ -9,7 +9,7 @@ class _rollleft extends Command {
 
 
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val delta = argEvalDoubleValue(context, 0)
     val t = context.agent.asInstanceOf[Turtle3D]
     t.roll(t.roll - delta)

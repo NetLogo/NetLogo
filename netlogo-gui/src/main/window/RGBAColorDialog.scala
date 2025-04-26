@@ -19,7 +19,7 @@ import org.nlogo.theme.ThemeSync
 
 class RGBAColorDialog(parent: Frame, returnColor: Boolean) extends JDialog(parent) with ThemeSync {
   private class Bridge {
-    def selectColor(color: AnyRef) {
+    def selectColor(color: AnyRef): Unit = {
       println(color)
     }
   }

@@ -7,7 +7,7 @@ import java.awt.{ Color, Component, EventQueue, Font, Graphics, GridBagConstrain
 import javax.swing.{ JLabel, JPanel }
 
 import org.nlogo.api.{ CompilerServices, Dump, MersenneTwisterFast }
-import org.nlogo.core.{ AgentKind, AgentKindJ, I18N, Monitor => CoreMonitor }
+import org.nlogo.core.{ AgentKind, AgentKindJ, I18N, Monitor => CoreMonitor, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 import org.nlogo.nvm.Procedure
 import org.nlogo.swing.RoundedBorderPanel
@@ -27,7 +27,7 @@ object MonitorWidget {
     def innerSource: String
     def name: String
 
-    override def model: CoreMonitor = {
+    override def model: CoreWidget = {
       val b       = getUnzoomedBounds
       val display = name.potentiallyEmptyStringToOption
       val src     = innerSource.potentiallyEmptyStringToOption
@@ -52,8 +52,6 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
     with JobRemovedEvent.Handler
     with java.awt.event.MouseListener {
 
-  type WidgetModel = CoreMonitor
-
   private class ValuePanel(label: JLabel) extends JPanel(new GridBagLayout) with RoundedBorderPanel with ThemeSync {
     locally {
       val c = new GridBagConstraints
@@ -65,7 +63,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
       add(label, c)
     }
 
-    override def paintComponent(g: Graphics) {
+    override def paintComponent(g: Graphics): Unit = {
       setDiameter(zoom(6))
 
       super.paintComponent(g)
@@ -237,7 +235,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
     }
   }
 
-  def chooseDisplayName() {
+  def chooseDisplayName(): Unit = {
     if (name == null || name == "") {
       displayName(getSourceName)
     } else {
@@ -354,18 +352,22 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
     new RemoveJobEvent(this).raise(this)
   }
 
-  override def load(model: WidgetModel): AnyRef = {
-    setUnits(model.units.getOrElse(""))
-    setDisplayName(model.display.getOrElse(""))
-    _decimalPlaces = model.precision
-    setFontSize(model.fontSize)
+  override def load(model: CoreWidget): Unit = {
+    model match {
+      case monitor: CoreMonitor =>
+        setUnits(monitor.units.getOrElse(""))
+        setVarName(monitor.display.getOrElse(""))
+        _decimalPlaces = monitor.precision
+        setFontSize(monitor.fontSize)
 
-    model.source.foreach(setWrapSource)
+        monitor.source.foreach(setWrapSource)
 
-    oldSize(model.oldSize)
-    setSize(model.width, model.height)
-    chooseDisplayName()
-    this
+        oldSize(monitor.oldSize)
+        setSize(monitor.width, monitor.height)
+        chooseDisplayName()
+
+      case _ =>
+    }
   }
 
   def mouseClicked(e: MouseEvent): Unit = {

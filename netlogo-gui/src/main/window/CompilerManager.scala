@@ -103,7 +103,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
       // note that we do this even if e.updating() is true -- that's because
       // the widget may not have accepted the new value as is - ST 8/17/03
       try {
-        val widgetValue = widget.valueObject
+        val widgetValue = widget.valueObject()
 
         // Only set the global if the value has changed.  This prevents
         // us from firing our constraint code all the time.
@@ -239,7 +239,7 @@ class CompilerManager(val workspace: AbstractWorkspace,
         // variable names existing - Jeremy B August 2019
         val index = world.observerOwnsIndexOf(widget.name.toUpperCase)
         if (index != -1) {
-          world.observer.setVariable(index, widget.valueObject)
+          world.observer.setVariable(index, widget.valueObject())
         }
       } catch {
         case ex@(_: AgentException | _: LogoException) =>

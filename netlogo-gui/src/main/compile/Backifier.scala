@@ -190,6 +190,7 @@ class Backifier(program: Program,
           case l: core.LogoList      => new nvmprim._constlist(l)
           case core.Nobody           => new nvmprim._nobody()
           case s: String             => new nvmprim._conststring(s)
+          case _                     => throw new Exception(s"Unexpected value: $value")
         }
 
       case core.prim._constcodeblock(toks) =>

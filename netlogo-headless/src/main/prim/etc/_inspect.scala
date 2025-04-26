@@ -7,7 +7,7 @@ import org.nlogo.nvm.{ Command, Context}
 import org.nlogo.nvm.RuntimePrimitiveException
 
 class _inspect extends Command {
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val agent = argEvalAgent(context, 0)
     if (agent.id == -1)
       throw new RuntimePrimitiveException(context, this,

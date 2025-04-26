@@ -52,7 +52,7 @@ class TieManager(links: TreeAgentSet, linkManager: LinkManager, protractor: Prot
   private[agent] def turtleTurned(root: Turtle, newHeading: Double, oldHeading: Double): Unit =
     turtleTurned(root, newHeading, oldHeading, Set(root))
 
-  private[agent] def turtleTurned(root: Turtle, newHeading: Double, oldHeading: Double, seenTurtles: Set[Turtle]) {
+  private[agent] def turtleTurned(root: Turtle, newHeading: Double, oldHeading: Double, seenTurtles: Set[Turtle]): Unit = {
 
     val isLinkedFixedly = (t: Turtle) => linkManager.linksTo(root, t, links)
                                                           .find( _.mode == Link.MODE_FIXED)

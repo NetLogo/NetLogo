@@ -93,7 +93,7 @@ object Markdown {
             else if (link.getUrl.indexOf('/') != -1)
               attrs.replaceValue("target", "_blank")
             else if (ext && link.getUrl.startsWith(extAnchorPrefix)) {
-              val anchor = link.getUrl.toString.replaceAllLiterally(extAnchorPrefix, extAnchorPrefix + ':')
+              val anchor = link.getUrl.toString.replace(extAnchorPrefix, extAnchorPrefix + ':')
               attrs.replaceValue("href", anchor)
             }
           case img: WikiImage if part == AttributablePart.LINK =>

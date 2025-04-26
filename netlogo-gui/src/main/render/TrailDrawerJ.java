@@ -46,14 +46,14 @@ public abstract class TrailDrawerJ
   }
 
   public boolean sendPixels() {
-    return sendPixels;
+    return _sendPixels;
   }
 
   public void sendPixels(boolean dirty) {
-    sendPixels = dirty;
+    _sendPixels = dirty;
   }
 
-  protected boolean sendPixels = false;
+  protected boolean _sendPixels = false;
 
   public boolean isDirty() {
     return drawingDirty;

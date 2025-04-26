@@ -157,7 +157,7 @@ object ModelsLibrary {
     val fileList = Files.list(directory)
 
     try {
-      import scala.collection.JavaConverters._
+      import scala.jdk.CollectionConverters.IteratorHasAsScala
       // use `toList` to force so that we can close the file iterator
       fileList.iterator.asScala.toList
     } catch {
@@ -178,7 +178,7 @@ object ModelsLibrary {
           .filterNot(p => isBadName(p.getFileName.toString))
           .flatMap { (p: Path) =>
             if (Files.isDirectory(p)) {
-              scanDirectory(p, exclusive)
+              scanDirectory(p, exclusive, nameOverride)
             } else {
               val fileName = p.getFileName.toString.toUpperCase
               if (fileName.endsWith(".NLOGO") || fileName.endsWith(".NLOGO3D") ||
@@ -310,7 +310,7 @@ object ModelsLibrary {
   }
 
   object Tree {
-    implicit val defaultOrdering = NLogoModelOrdering
+    implicit val defaultOrdering: org.nlogo.workspace.ModelsLibrary.NLogoModelOrdering.type = NLogoModelOrdering
   }
 
   case class Tree(name: String, path: String, children: Seq[Node])(implicit childOrdering: Ordering[String]) extends Node {

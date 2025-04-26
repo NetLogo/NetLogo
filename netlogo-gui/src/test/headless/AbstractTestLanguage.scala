@@ -32,7 +32,7 @@ trait AbstractTestLanguage extends Assertions {
 
   def owner: JobOwner = workspace.defaultOwner
 
-  def init() {
+  def init(): Unit = {
     workspace.initForTesting(
       if(Version.is3D)
         new WorldDimensions3D(-5, 5, -5, 5, -5, 5)
@@ -42,7 +42,7 @@ trait AbstractTestLanguage extends Assertions {
 
   def newProgram: Program = Program.fromDialect(dialect)
 
-  def defineProcedures(source: String) {
+  def defineProcedures(source: String): Unit = {
     val results = {
       compiler.compileProgram(
         HeadlessWorkspace.TestDeclarations + source, newProgram, workspace.getExtensionManager(),
@@ -58,7 +58,7 @@ trait AbstractTestLanguage extends Assertions {
     workspace.openModel(model.copy(version = Version.version))
   }
 
-  def testReporter(reporter: String, expectedResult: String, mode: TestMode = NormalMode) {
+  def testReporter(reporter: String, expectedResult: String, mode: TestMode = NormalMode): Unit = {
     workspace.lastLogoException = null
     val actualResult = workspace.evaluateReporter(owner,
       if (mode == NormalMode) reporter
@@ -106,10 +106,10 @@ trait AbstractTestLanguage extends Assertions {
 
     }
   }
-  def testReporterError(reporter: String, error: String, mode: TestMode) {
+  def testReporterError(reporter: String, error: String, mode: TestMode): Unit = {
     privateTestReporterError(reporter, error, Option(workspace.lastLogoException).map(_.getMessage), mode)
   }
-  def testReporterErrorStackTrace(reporter: String, stackTrace: String, mode: TestMode) {
+  def testReporterErrorStackTrace(reporter: String, stackTrace: String, mode: TestMode): Unit = {
     privateTestReporterError(reporter, stackTrace, Option(workspace.lastErrorReport).flatMap(_.stackTrace), mode)
   }
   def testCommand(command: String,

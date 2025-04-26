@@ -25,7 +25,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
   setDiameter(6)
   enableHover()
 
-  override def populate(menu: PopupMenu) {
+  override def populate(menu: PopupMenu): Unit = {
     val procsTable = {
       target.compiler.findProcedurePositions(target.getText)
     }
@@ -47,7 +47,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
       val namePos = procsTable(proc).identifier.start
       val end  = procsTable(proc).endKeyword.end
       new MenuItem(new AbstractAction(proc) {
-        def actionPerformed(e: ActionEvent) {
+        def actionPerformed(e: ActionEvent): Unit = {
           // invokeLater for the scrolling behavior we want. we scroll twice: first bring the end into
           // view, then bring the beginning into view, so then we can see both, if they fit - ST 11/4/04
           target.select(end, end)
@@ -124,7 +124,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
     menu.getSubElements.collect{case (it: JMenuItem) => it}.foreach(menu.remove)
     val visibleItems =
       if (query.isEmpty) items // So they aren't sorted
-      else items.zip(items.map(it => fuzzyMatch(query, it.getText, lastMatch = true))) // score
+      else items.zip(items.map(it => fuzzyMatch(query, it.getText, true))) // score
         .collect{case (it, Some(score)) => (it, score)}
         .sortBy(-_._2)
         .map(_._1)
@@ -148,15 +148,15 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
     *                  character a bonus.
     * @return The number of subsequent matching characters or None if the query contains characters not in the target.
     */
-  private def fuzzyMatch(query: String, target: String, lastMatch: Boolean = true): Option[Int] = {
+  private def fuzzyMatch(query: String, target: String, lastMatch: Boolean): Option[Int] = {
     if (query.isEmpty) {
       Some(0)
     } else if (target.isEmpty) {
       None
     } else {
-      val noMatchScore = fuzzyMatch(query, target.tail, lastMatch = false)
+      val noMatchScore = fuzzyMatch(query, target.tail, false)
       val matchScore = if (query.head == target.head)
-        fuzzyMatch(query.tail, target.tail).map(_ + (if(lastMatch) 1 else 0))
+        fuzzyMatch(query.tail, target.tail, true).map(_ + (if(lastMatch) 1 else 0))
       else None
       (noMatchScore, matchScore) match {
         case (None, None) => None

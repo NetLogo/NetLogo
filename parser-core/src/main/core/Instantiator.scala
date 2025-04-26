@@ -14,7 +14,7 @@ object Instantiator {
       case f: Float => classOf[Float]
       case d: Double => classOf[Double]
       case c: Char => classOf[Char]
-      case a: AnyRef => a.getClass
+      case a => a.getClass
     }
     val boxedArgs = args.map(_.asInstanceOf[AnyRef])
     clazz.getConstructor(boxedArgs.map(getClassOfAny): _*)

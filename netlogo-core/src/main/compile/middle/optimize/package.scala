@@ -2,7 +2,6 @@
 
 package org.nlogo.compile.middle
 
-import org.nlogo.prim._
 
 import org.nlogo.{ api => nlogoApi }
 import org.nlogo.agent.Patch
@@ -16,7 +15,7 @@ package optimize {
   /// now for the individual optimizations
   object Fd1 extends RewritingCommandMunger {
     val clazz = classOf[_fd]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       if (root.matchArg(0, classOf[_constdouble]).reporter.asInstanceOf[_constdouble].primitiveValue == 1) {
         root.strip()
         root.replace(classOf[_fd1])
@@ -25,7 +24,7 @@ package optimize {
   }
   object FdLessThan1 extends RewritingCommandMunger {
     val clazz = classOf[_fd]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val d = root.matchArg(0, classOf[_constdouble]).reporter.asInstanceOf[_constdouble].primitiveValue
       if(d < 1 && d > -1) {
         root.replace(classOf[_jump])
@@ -34,7 +33,7 @@ package optimize {
   }
   object HatchFast extends RewritingCommandMunger {
     val clazz = classOf[_hatch]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       root.matchEmptyCommandBlockIsLastArg
       root.removeLastArg()
       root.replace(classOf[_hatchfast],
@@ -43,7 +42,7 @@ package optimize {
   }
   object SproutFast extends RewritingCommandMunger {
     val clazz = classOf[_sprout]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       root.matchEmptyCommandBlockIsLastArg
       root.removeLastArg()
       root.replace(classOf[_sproutfast],
@@ -52,7 +51,7 @@ package optimize {
   }
   object CrtFast extends RewritingCommandMunger {
     val clazz = classOf[_createturtles]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       root.matchEmptyCommandBlockIsLastArg
       root.removeLastArg()
       root.replace(classOf[_crtfast],
@@ -61,7 +60,7 @@ package optimize {
   }
   object CroFast extends RewritingCommandMunger {
     val clazz = classOf[_createorderedturtles]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       root.matchEmptyCommandBlockIsLastArg
       root.removeLastArg()
       root.replace(classOf[_crofast],
@@ -70,7 +69,7 @@ package optimize {
   }
   object PatchAt extends RewritingReporterMunger {
     val clazz = classOf[_patchat]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val x = root.matchArg(0, classOf[_constdouble]).reporter.asInstanceOf[_constdouble].primitiveValue
       val y = root.matchArg(1, classOf[_constdouble]).reporter.asInstanceOf[_constdouble].primitiveValue
       val newClass = (x, y) match {
@@ -92,7 +91,7 @@ package optimize {
   // _with(_patches, _equal(_constdouble, _px/ycor)) => _patchcol/_patchrow
   object With extends RewritingReporterMunger {
     val clazz = classOf[_with]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       // This optimization works only in 2D AAB Feb-21-2020
       if (org.nlogo.api.Version.is3D) return
       root.matchArg(0, classOf[_patches])
@@ -114,7 +113,7 @@ package optimize {
   // _oneof(_with) => _oneofwith
   object OneOfWith extends RewritingReporterMunger {
     val clazz = classOf[_oneof]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val arg0 = root.matchArg(0, classOf[_with])
       root.strip()
       root.replace(classOf[_oneofwith])
@@ -124,7 +123,7 @@ package optimize {
   }
   object Nsum extends RewritingReporterMunger {
     val clazz = classOf[_sum]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val arg0 = root.matchArg(0, classOf[_patchvariableof])
       arg0.matchArg(0, classOf[_neighbors])
       root.strip()
@@ -134,7 +133,7 @@ package optimize {
   }
   object Nsum4 extends RewritingReporterMunger {
     val clazz = classOf[_sum]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val arg0 = root.matchArg(0, classOf[_patchvariableof])
       arg0.matchArg(0, classOf[_neighbors4])
       root.strip()
@@ -145,7 +144,7 @@ package optimize {
   // _count(_with) => _countwith
   object CountWith extends RewritingReporterMunger {
     val clazz = classOf[_count]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val arg0 = root.matchArg(0, classOf[_with])
       root.strip()
       root.replace(classOf[_countwith])
@@ -158,7 +157,7 @@ package optimize {
   // _with(_other(*), *) => _otherwith(*, *)
   object OtherWith extends RewritingReporterMunger {
     val clazz = classOf[_other]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val arg0 = root.matchArg(0, classOf[_with])
       root.strip()
       root.replace(classOf[_otherwith])
@@ -169,7 +168,7 @@ package optimize {
   }
   object WithOther extends RewritingReporterMunger {
     val clazz = classOf[_with]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val arg0 = root.matchArg(0, classOf[_other])
       val arg1 = root.matchArg(1)
       root.replace(classOf[_otherwith])
@@ -181,7 +180,7 @@ package optimize {
   // _any(_other(*)) => _anyother(*)
   object AnyOther extends RewritingReporterMunger {
     val clazz = classOf[_any]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val arg = root.matchArg(0, classOf[_other])
       root.strip()
       root.replace(classOf[_anyother])
@@ -191,7 +190,7 @@ package optimize {
   // _any(_otherwith(*, *)) => _anyotherwith(*, *)
   object AnyOtherWith extends RewritingReporterMunger {
     val clazz = classOf[_any]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val arg = root.matchArg(0, classOf[_otherwith])
       root.strip()
       root.replace(classOf[_anyotherwith])
@@ -203,7 +202,7 @@ package optimize {
   // _any(_turtleson(*)) => _anyturtleson(*)
   object AnyTurtlesOn extends RewritingReporterMunger {
     val clazz = classOf[_any]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val arg = root.matchArg(0, classOf[_turtleson])
       root.strip()
       root.replace(classOf[_anyturtleson])
@@ -213,7 +212,7 @@ package optimize {
   // _any(_breedon(*)) => _anybreedon(*)
   object AnyBreedOn extends RewritingReporterMunger {
     val clazz = classOf[_any]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val arg = root.matchArg(0, classOf[_breedon])
       root.strip()
       root.replace(classOf[_anybreedon], (arg.reporter.asInstanceOf[_breedon]).breedName)
@@ -223,7 +222,7 @@ package optimize {
   // _count(_other(*)) => _countother(*)
   object CountOther extends RewritingReporterMunger {
     val clazz = classOf[_count]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val arg = root.matchArg(0, classOf[_other])
       root.strip()
       root.replace(classOf[_countother])
@@ -233,7 +232,7 @@ package optimize {
   // _count(_otherwith(*, *)) => _countotherwith(*, *)
   object CountOtherWith extends RewritingReporterMunger {
     val clazz = classOf[_count]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val arg = root.matchArg(0, classOf[_otherwith])
       root.strip()
       root.replace(classOf[_countotherwith])
@@ -245,7 +244,7 @@ package optimize {
   // _any(_with) => _anywith
   object AnyWith1 extends RewritingReporterMunger {
     val clazz = classOf[_any]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val arg0 = root.matchArg(0, classOf[_with])
       root.strip()
       root.replace(classOf[_anywith])
@@ -256,7 +255,7 @@ package optimize {
   // _notequal(_countwith(*, *), _constdouble: 0.0) => _anywith(*, *)
   object AnyWith2 extends RewritingReporterMunger {
     val clazz = classOf[_notequal]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val count = root.matchOneArg(classOf[_countwith])
       if(root.matchOtherArg(count, classOf[_constdouble]).reporter.asInstanceOf[_constdouble]
            .primitiveValue == 0)
@@ -271,7 +270,7 @@ package optimize {
   // _greaterthan(_countwith(*, *), _constdouble: 0.0) => _anywith(*, *)
   object AnyWith3 extends RewritingReporterMunger {
     val clazz = classOf[_greaterthan]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val count = root.matchArg(0, classOf[_countwith])
       if(root.matchArg(1, classOf[_constdouble]).reporter.asInstanceOf[_constdouble]
            .primitiveValue == 0)
@@ -286,7 +285,7 @@ package optimize {
   // _lessthan(_constdouble: 0.0, _countwith(*, *)) => _anywith(*, *)
   object AnyWith4 extends RewritingReporterMunger {
     val clazz = classOf[_lessthan]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val count = root.matchArg(1, classOf[_countwith])
       if(root.matchArg(0, classOf[_constdouble]).reporter.asInstanceOf[_constdouble]
            .primitiveValue == 0)
@@ -301,7 +300,7 @@ package optimize {
   // _equal(_countwith(*, *), _constdouble: 0.0) => _not(_anywith(*, *))
   object AnyWith5 extends RewritingReporterMunger {
     val clazz = classOf[_equal]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val count = root.matchOneArg(classOf[_countwith])
       if(root.matchOtherArg(count, classOf[_constdouble]).reporter.asInstanceOf[_constdouble]
            .primitiveValue == 0)
@@ -321,7 +320,7 @@ package optimize {
     def isDoubleVariable(vn: Int) =
       vn == nlogoApi.AgentVariableNumbers.VAR_PXCOR ||
       vn == nlogoApi.AgentVariableNumbers.VAR_PYCOR
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val vn = root.reporter.asInstanceOf[_patchvariable].vn
       if(isDoubleVariable(vn)) {
         root.replace(classOf[_patchvariabledouble])
@@ -336,7 +335,7 @@ package optimize {
       import nlogoApi.AgentVariableNumbers._
       Set(VAR_WHO, VAR_HEADING, VAR_XCOR, VAR_YCOR, VAR_SIZE, VAR_PENSIZE)
     }
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val vn = root.reporter.asInstanceOf[_turtlevariable].vn
       if(isDoubleVariable(vn)) {
         root.replace(classOf[_turtlevariabledouble])
@@ -347,7 +346,7 @@ package optimize {
   // _random(_constdouble) => _randomconst  (if argument is a positive integer)
   object RandomConst extends RewritingReporterMunger {
     val clazz = classOf[_random]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val d = root.matchArg(0, classOf[_constdouble])
                   .reporter.asInstanceOf[_constdouble].primitiveValue
       if(d > 0 && d == d.toLong && nlogoApi.Numbers.isValidLong(d)) {
@@ -359,7 +358,7 @@ package optimize {
   // _equal(_count, _constdouble: n) => _optimizecount(*, n)
   object HasEqual extends RewritingReporterMunger {
     val clazz = classOf[_equal]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val count = root.matchOneArg(classOf[_count])
       val constDouble = root.matchOtherArg(count, classOf[_constdouble])
       root.strip()
@@ -371,7 +370,7 @@ package optimize {
   // _greaterthan(_count, _constdouble: n) => _optimizecount(*, n)
   object HasGreaterThan extends RewritingReporterMunger {
     val clazz = classOf[_greaterthan]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val count = root.matchOneArg(classOf[_count])
       val constDouble = root.matchOtherArg(count, classOf[_constdouble])
       if (root.matchArg(0).reporter.isInstanceOf[_constdouble])
@@ -386,7 +385,7 @@ package optimize {
   // _lessthan(_count, _constdouble: n) => _optimizecount(*, n)
   object HasLessThan extends RewritingReporterMunger {
     val clazz = classOf[_lessthan]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val count = root.matchOneArg(classOf[_count])
       val constDouble = root.matchOtherArg(count, classOf[_constdouble])
       if (root.matchArg(0).reporter.isInstanceOf[_constdouble])
@@ -401,7 +400,7 @@ package optimize {
   // _notequal(_count, _constdouble: n) => _optimizecount(*, n)
   object HasNotEqual extends RewritingReporterMunger {
     val clazz = classOf[_notequal]
-    def munge(root: Match) {
+    def munge(root: Match): Unit = {
       val count = root.matchOneArg(classOf[_count])
       val constDouble = root.matchOtherArg(count, classOf[_constdouble])
       root.strip()

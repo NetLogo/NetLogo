@@ -9,7 +9,6 @@ import java.io.{ObjectInputStream, ObjectOutputStream, DataOutputStream,
   Serializable => JSerializable }
 
 // Message between hubnet clients and hubnet servers
-@SerialVersionUID(0)
 trait Message extends JSerializable
 
 // Messages sent to establish handshake between client and server

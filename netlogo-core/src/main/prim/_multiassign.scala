@@ -43,7 +43,7 @@ object MultiAssign {
   // multiple across workspaces so we track them this way.  -Jeremy B February 2024
   private val currentLists: Map[Workspace, NestedListIter] = Map()
 
-  def setCurrentList(workspace: Workspace, list: LogoList) {
+  def setCurrentList(workspace: Workspace, list: LogoList): Unit = {
     if (MultiAssign.currentLists.contains(workspace)) {
       val iter = MultiAssign.currentLists.getOrElse(workspace, throw new IllegalStateException("No list for multi-assign?"))
       iter.reset(list)

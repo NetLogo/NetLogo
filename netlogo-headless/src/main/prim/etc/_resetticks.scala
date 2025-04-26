@@ -7,7 +7,7 @@ import org.nlogo.nvm.{ Command, Context }
 class _resetticks extends Command {
   switches = true
   override def callsOtherCode = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     workspace.resetTicks(context)
     context.ip = next
   }

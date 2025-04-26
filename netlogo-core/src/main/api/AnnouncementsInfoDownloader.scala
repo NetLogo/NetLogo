@@ -28,7 +28,7 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
 
   def parse(file: File): Seq[Announcement] = {
 
-    import scala.collection.JavaConverters.asScalaIteratorConverter
+    import scala.jdk.CollectionConverters.IteratorHasAsScala
 
     val contents = Source.fromFile(file).mkString
 
@@ -51,7 +51,10 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
             val summary  = obj.get( "summary").asInstanceOf[String]
             val desc     = obj.get(    "desc").asInstanceOf[String]
 
-            val Array(months, days, years) = dateStr.split("/")
+            val (months, days, years) = dateStr.split("/") match {
+              case Array(m, d, y) => (m, d, y)
+              case a => throw new Exception(s"Invalid date format: $a")
+            }
             val date                       = LocalDate.of(2000 + years.toInt, months.toInt, days.toInt)
 
             val annType =
@@ -69,6 +72,9 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
                 Option(date.plusDays(lifespan))
 
             Announcement(id, title, date, endDate, annType, summary, desc)
+
+          case o =>
+            throw new Exception(s"Unexpected object: $o")
 
         }
 

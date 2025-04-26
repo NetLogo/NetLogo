@@ -30,7 +30,7 @@ abstract class Agent(world: World) extends AgentJ(world) with ApiAgent with Comp
     _variables = v
   }
 
-  private[agent] def agentKey: AnyRef = Double.box(_id)
+  private[agent] def agentKey: AnyRef = Double.box(_id.toDouble)
 
   override def compareTo(a: Agent): Int =
     id compareTo a.id
@@ -47,7 +47,7 @@ abstract class Agent(world: World) extends AgentJ(world) with ApiAgent with Comp
   def variableName(vn: Int): String
 
   @throws(classOf[AgentException])
-  def setVariable(vn: Int, value: AnyRef)
+  def setVariable(vn: Int, value: AnyRef): Unit
 
   @throws(classOf[AgentException])
   def getTurtleVariable(vn: Int): AnyRef
@@ -68,31 +68,31 @@ abstract class Agent(world: World) extends AgentJ(world) with ApiAgent with Comp
   def getTurtleOrLinkVariable(varName: String): AnyRef
 
   @throws(classOf[AgentException])
-  def setTurtleVariable(vn: Int, value: AnyRef)
+  def setTurtleVariable(vn: Int, value: AnyRef): Unit
 
   @throws(classOf[AgentException])
-  def setTurtleVariable(vn: Int, value: Double)
+  def setTurtleVariable(vn: Int, value: Double): Unit
 
   @throws(classOf[AgentException])
-  def setLinkVariable(vn: Int, value: AnyRef)
+  def setLinkVariable(vn: Int, value: AnyRef): Unit
 
   @throws(classOf[AgentException])
-  def setLinkVariable(vn: Int, value: Double)
+  def setLinkVariable(vn: Int, value: Double): Unit
 
   @throws(classOf[AgentException])
-  def setBreedVariable(name: String, value: AnyRef)
+  def setBreedVariable(name: String, value: AnyRef): Unit
 
   @throws(classOf[AgentException])
-  def setLinkBreedVariable(name: String, value: AnyRef)
+  def setLinkBreedVariable(name: String, value: AnyRef): Unit
 
   @throws(classOf[AgentException])
-  def setPatchVariable(vn: Int, value: AnyRef)
+  def setPatchVariable(vn: Int, value: AnyRef): Unit
 
   @throws(classOf[AgentException])
-  def setPatchVariable(vn: Int, value: Double)
+  def setPatchVariable(vn: Int, value: Double): Unit
 
   @throws(classOf[AgentException])
-  def setTurtleOrLinkVariable(varName: String, value: AnyRef)
+  def setTurtleOrLinkVariable(varName: String, value: AnyRef): Unit
 
   @throws(classOf[AgentException])
   def getPatchAtOffsets(dx: Double, dy: Double): Patch
@@ -102,7 +102,7 @@ abstract class Agent(world: World) extends AgentJ(world) with ApiAgent with Comp
   def agentBit: Int
 
   @throws(classOf[AgentException])
-  private[agent] def wrongTypeForVariable(name: String, expectedClass: Class[_], value: AnyRef) {
+  private[agent] def wrongTypeForVariable(name: String, expectedClass: Class[_], value: AnyRef): Unit = {
     throw new AgentException(I18N.errors.getN("org.nlogo.agent.Agent.wrongTypeOnSetError",
         classDisplayName, name, api.Dump.typeName(expectedClass), api.Dump.logoObject(value)))
   }

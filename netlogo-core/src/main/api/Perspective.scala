@@ -13,12 +13,12 @@ import org.nlogo.core.I18N
 
 // "class" not "trait" otherwise we won't get a static forwarder for Perspective.load() - ST 7/27/11
 
-abstract sealed class Perspective(val export: Int) {
+abstract sealed class Perspective(val `export`: Int) {
   def kind: Int = export
 }
 
 object Perspective {
-  private implicit val i18nPrefix = I18N.Prefix("view.3d")
+  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("view.3d")
 
   case object Observe extends Perspective(0) {
     override def toString: String = ""

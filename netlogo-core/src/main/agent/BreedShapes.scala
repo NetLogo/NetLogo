@@ -2,7 +2,7 @@
 
 package org.nlogo.agent
 
-import org.nlogo.core.{ AllShapesReplaced, Breed, Shape, ShapeList, ShapeEvent, ShapeRemoved, ShapeListTracker }
+import org.nlogo.core.{ AllShapesReplaced, Breed, Shape, ShapeList, ShapeRemoved, ShapeListTracker }
 
 import java.util.{ Map => JMap }
 import java.util.concurrent.ConcurrentHashMap
@@ -12,19 +12,13 @@ import java.util.concurrent.ConcurrentHashMap
 class BreedShapes(val genericBreedName: String, tracker: ShapeListTracker){
   private val shapes = new ConcurrentHashMap[String, String]()
 
-  private val subscriber = new tracker.Sub {
-    override def notify(pub: tracker.Pub, evt: ShapeEvent): Unit = {
-      evt match {
-        case ShapeRemoved(shape: Shape, newShapeList: ShapeList) =>
-          removeFromBreedShapes(shape.name)
-        case AllShapesReplaced(oldShapeList: ShapeList, newShapeList: ShapeList) =>
-          (oldShapeList.names -- newShapeList.names).foreach(removeFromBreedShapes)
-        case _ =>
-      }
-    }
-  }
-
-  tracker.subscribe(subscriber)
+  tracker.subscribe(_ match {
+    case ShapeRemoved(shape: Shape, newShapeList: ShapeList) =>
+      removeFromBreedShapes(shape.name)
+    case AllShapesReplaced(oldShapeList: ShapeList, newShapeList: ShapeList) =>
+      (oldShapeList.names -- newShapeList.names).foreach(removeFromBreedShapes)
+    case _ =>
+  })
 
   def setUpBreedShapes(clear: Boolean, breeds: Map[String, Breed]): Unit = {
     if (clear) {
@@ -40,7 +34,7 @@ class BreedShapes(val genericBreedName: String, tracker: ShapeListTracker){
   }
 
   def setUpBreedShapes(clear: Boolean, breedsOrNull: JMap[String, _ <: AgentSet]): Unit = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.MapHasAsScala
 
     if (clear) {
       shapes.clear()

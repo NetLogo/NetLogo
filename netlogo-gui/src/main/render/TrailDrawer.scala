@@ -97,7 +97,7 @@ class TrailDrawer(world: World, turtleDrawer: TurtleDrawer, linkDrawer: LinkDraw
     drawingImage.createGraphics.drawImage(scaledImage, xOffset, yOffset, null)
     markDirty()
 
-    sendPixels = true
+    sendPixels(true)
 
   }
 
@@ -126,7 +126,7 @@ class TrailDrawer(world: World, turtleDrawer: TurtleDrawer, linkDrawer: LinkDraw
 
     drawingBlank = false
     drawingDirty = true
-    sendPixels   = true
+    sendPixels(true)
 
   }
 

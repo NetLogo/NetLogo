@@ -26,7 +26,7 @@ class NetworkUtilsTest extends AnyFunSuite {
   }
 
   test("an interface can be recalled after it has been remembered") {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.EnumerationHasAsScala
 
     NetworkUtils.forgetNetworkInterface()
     val ni = NetworkInterface.getNetworkInterfaces.asScala.next()

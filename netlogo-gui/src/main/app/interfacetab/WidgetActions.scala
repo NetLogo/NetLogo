@@ -27,7 +27,7 @@ object WidgetActions {
     undoManager.addEdit(new RemoveMultipleWidgets(widgetPanel, wws))
   }
 
-  def moveWidgets(moves: Seq[(WidgetWrapper, Int, Int)]) {
+  def moveWidgets(moves: Seq[(WidgetWrapper, Int, Int)]): Unit = {
     undoManager.addEdit(new MoveWidgets(moves.map(move => {
       val oldBounds = move._1.getBounds()
       val newBounds = new Rectangle(move._2, move._3, move._1.getWidth, move._1.getHeight)
@@ -41,10 +41,10 @@ object WidgetActions {
   def moveSelectedWidgets(widgetPanel: WidgetPanel): Unit = {
     val initialMap: Map[WidgetWrapper, Rectangle] = widgetPanel.widgetsBeingDragged.map(a => a -> {
       addSelectionMargin(a.originalBounds)
-    })(collection.breakOut)
+    }).toMap
     val widgets = widgetPanel.widgetsBeingDragged
     widgetPanel.dropSelectedWidgets()
-    val finalMap: Map[WidgetWrapper, Rectangle] = widgets.map(a => a -> a.getBounds())(collection.breakOut)
+    val finalMap: Map[WidgetWrapper, Rectangle] = widgets.map(a => a -> a.getBounds()).toMap
     undoManager.addEdit(new MoveSelectedWidgets(widgetPanel, widgets, initialMap, finalMap))
   }
 
@@ -54,7 +54,7 @@ object WidgetActions {
     undoManager.addEdit(new ResizeWidget(widgetWrapper, initialBounds, widgetWrapper.getBounds()))
   }
 
-  def resizeWidgets(wrappers: Seq[(WidgetWrapper, Int, Int)]) {
+  def resizeWidgets(wrappers: Seq[(WidgetWrapper, Int, Int)]): Unit = {
     undoManager.addEdit(new ReboundWidgets(wrappers.map {
       case (ww, width, height) =>
         val oldBounds = ww.getBounds()
@@ -66,7 +66,7 @@ object WidgetActions {
     }))
   }
 
-  def reboundWidgets(wrappers: Seq[(WidgetWrapper, Rectangle)]) {
+  def reboundWidgets(wrappers: Seq[(WidgetWrapper, Rectangle)]): Unit = {
     undoManager.addEdit(new ReboundWidgets(wrappers.map {
       case (ww, newBounds) =>
         val oldBounds = ww.getBounds()
@@ -128,19 +128,19 @@ object WidgetActions {
   }
 
   class MoveWidgets(moves: Seq[(WidgetWrapper, Rectangle, Rectangle)]) extends AbstractUndoableEdit {
-    override def redo {
+    override def redo: Unit = {
       for (move <- moves)
         setBounds(move._1, move._3)
     }
 
-    override def undo {
+    override def undo: Unit = {
       for (move <- moves)
         setBounds(move._1, move._2)
     }
 
     override def getPresentationName = "Widget Movement"
 
-    private def setBounds(widgetWrapper: WidgetWrapper, bounds: Rectangle) {
+    private def setBounds(widgetWrapper: WidgetWrapper, bounds: Rectangle): Unit = {
       widgetWrapper.setBounds(
         if (widgetWrapper.selected)
           bounds
@@ -195,19 +195,19 @@ object WidgetActions {
   }
 
   class ReboundWidgets(wrappers: Seq[(WidgetWrapper, Rectangle, Rectangle)]) extends AbstractUndoableEdit {
-    override def redo {
+    override def redo: Unit = {
       for ((ww, _, bounds) <- wrappers)
         setBounds(ww, bounds)
     }
 
-    override def undo {
+    override def undo: Unit = {
       for ((ww, bounds, _) <- wrappers)
         setBounds(ww, bounds)
     }
 
     override def getPresentationName = "Widget Stretching"
 
-    private def setBounds(widgetWrapper: WidgetWrapper, bounds: Rectangle) {
+    private def setBounds(widgetWrapper: WidgetWrapper, bounds: Rectangle): Unit = {
       widgetWrapper.setBounds(
         if (widgetWrapper.selected)
           bounds
@@ -218,22 +218,22 @@ object WidgetActions {
   }
 
   class ConvertWidgetSizes(widgetPanel: WidgetPanel, wrappers: Seq[(WidgetWrapper, Rectangle, Rectangle)]) extends AbstractUndoableEdit {
-    override def redo {
+    override def redo: Unit = {
       widgetPanel.setInterfaceMode(InterfaceMode.Interact, true)
 
       for ((ww, _, bounds) <- wrappers) {
-        if (ww.widget.oldSize) {
-          ww.widget.oldSize(false)
+        if (ww.widget().oldSize) {
+          ww.widget().oldSize(false)
           ww.setBounds(bounds)
         }
       }
     }
 
-    override def undo {
+    override def undo: Unit = {
       widgetPanel.setInterfaceMode(InterfaceMode.Interact, true)
 
       for ((ww, bounds, _) <- wrappers) {
-        ww.widget.oldSize(true)
+        ww.widget().oldSize(true)
         ww.setBounds(bounds)
       }
     }

@@ -102,11 +102,11 @@ class ScalaConversionsTests extends AnyFunSuite {
     }
   }
 
-  private def testConversion(vals: Tuple2[Any, Any]) {
+  private def testConversion(vals: Tuple2[Any, Any]): Unit = {
     testConversion(vals._1, vals._2)
   }
 
-  private def testConversion(input: Any, expected: Any) {
+  private def testConversion(input: Any, expected: Any): Unit = {
     val actual = input.toLogoObject
     assertResult(expected)(actual)
   }

@@ -11,7 +11,7 @@ object BackEnd extends BackEndInterface {
 
   def backEnd(defs: Seq[ProcedureDefinition], program: Program,
       profilingEnabled: Boolean, flags: nvm.CompilerFlags): nvm.CompilerResults = {
-    for(procdef <- defs) {
+    for(procdef <- defs): Unit = {
       if (flags.foldConstants)
         procdef.accept(new ConstantFolder)  // en.wikipedia.org/wiki/Constant_folding
       assemble(procdef, flags.useGenerator, profilingEnabled)

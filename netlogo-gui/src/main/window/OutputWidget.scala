@@ -6,13 +6,12 @@ import java.awt.{ GridBagConstraints, GridBagLayout, Insets, Point }
 import java.awt.event.ActionEvent
 import javax.swing.AbstractAction
 
-import org.nlogo.core.{ I18N, Output => CoreOutput }
+import org.nlogo.core.{ I18N, Output => CoreOutput, Widget => CoreWidget }
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
 
 class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   Events.ExportWorldEvent.Handler with Editable {
-  type WidgetModel = CoreOutput
 
   displayName(I18N.gui.get("tabs.run.widgets.output"))
 
@@ -40,7 +39,7 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   }
 
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.output")
-  override def setZoomFactor(zoomFactor: Double) {
+  override def setZoomFactor(zoomFactor: Double): Unit = {
     super.setZoomFactor(zoomFactor)
 
     outputArea.zoomFactor = zoomFactor
@@ -53,14 +52,14 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
 
   // satisfy CommandCenterInterface, which we must implement in order
   // to be used in NetLogoComponent - ST 9/13/04
-  def repaintPrompt(){}
-  def cycleAgentType(forward:Boolean){}
+  def repaintPrompt(): Unit ={}
+  def cycleAgentType(forward:Boolean): Unit ={}
 
-  override def populateContextMenu(menu: PopupMenu, p: Point) {
+  override def populateContextMenu(menu: PopupMenu, p: Point): Unit = {
     // at least on Macs, Command-C to copy may not work, so this
     // is needed - ST 4/21/05
     menu.add(new MenuItem(new AbstractAction(I18N.gui.get("tabs.run.widget.copyselectedtext")) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         outputArea.text.copy
       }
     }))
@@ -75,19 +74,23 @@ class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
   // these are copied from the TrailDrawer, as is this code for breaking up
   // possible very long text into multiple cells and rows for Excel
   // CLB 7/15/05
-  def handle(e:org.nlogo.window.Events.ExportWorldEvent){
+  def handle(e:org.nlogo.window.Events.ExportWorldEvent): Unit ={
     import org.nlogo.api.Dump
     e.writer.println(Dump.csv.encode("OUTPUT"))
     Dump.csv.stringToCSV(e.writer, outputArea.text.getText())
   }
 
-  override def load(model: WidgetModel): AnyRef = {
-    setSize(model.width, model.height)
-    setFontSize(model.fontSize)
-    this
+  override def load(model: CoreWidget): Unit = {
+    model match {
+      case output: CoreOutput =>
+        setSize(output.width, output.height)
+        setFontSize(output.fontSize)
+
+      case _ =>
+    }
   }
 
-  override def model: WidgetModel = {
+  override def model: CoreWidget = {
     val b = getUnzoomedBounds
     CoreOutput(
       x = b.x, y = b.y, width = b.width, height = b.height,

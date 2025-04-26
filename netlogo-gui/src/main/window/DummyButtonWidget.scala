@@ -5,7 +5,7 @@ package org.nlogo.window
 import java.awt.{ Dimension, Graphics }
 
 import org.nlogo.awt.Fonts
-import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton }
+import org.nlogo.core.{ AgentKind, I18N, Button => CoreButton, Widget => CoreWidget }
 import org.nlogo.theme.InterfaceColors
 
 object DummyButtonWidget {
@@ -14,8 +14,6 @@ object DummyButtonWidget {
 }
 
 class DummyButtonWidget extends SingleErrorWidget with Editable {
-  type WidgetModel = CoreButton
-
   import DummyButtonWidget._
 
   private var _actionKey: Char = '\u0000'
@@ -108,7 +106,7 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
 
   ///
 
-  override def model: WidgetModel = {
+  override def model: CoreWidget = {
     val b = getUnzoomedBounds
     val savedActionKey =
       if (actionKey == 0 || actionKey == ' ') None else Some(actionKey)
@@ -119,12 +117,14 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
       buttonKind = AgentKind.Observer, actionKey  = savedActionKey)
   }
 
-  override def load(button: WidgetModel): AnyRef = {
-    button.actionKey.foreach(k => setActionKey(k))
-    setDisplayName(button.display.optionToPotentiallyEmptyString)
-    setSize(button.width, button.height)
-    this
+  override def load(model: CoreWidget): Unit = {
+    model match {
+      case button: CoreButton =>
+        button.actionKey.foreach(setActionKey(_))
+        setDisplayName(button.display.optionToPotentiallyEmptyString)
+        setSize(button.width, button.height)
+
+      case _ =>
+    }
   }
-
 }
-

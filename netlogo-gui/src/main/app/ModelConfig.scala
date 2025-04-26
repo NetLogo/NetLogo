@@ -17,7 +17,7 @@ object ModelConfig {
     val file = getModelConfigPath(modelPath).resolve("lastModified.txt").toFile
 
     if (file.exists) {
-      Option(Source.fromFile(file).getLines.next.trim)
+      Option(Source.fromFile(file).getLines().next().trim)
     } else {
       None
     }

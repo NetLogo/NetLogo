@@ -41,7 +41,7 @@ object SmartIndenterTests {
       }
     }
 
-    def selectAll() { selectionStart = 0; selectionEnd = text.size }
+    def selectAll(): Unit = { selectionStart = 0; selectionEnd = text.size }
 
     def offsetToLine(offset: Int): Int = lines.indices.find(lineToEndOffset(_) > offset)
             .getOrElse(lines.size - 1)
@@ -57,9 +57,9 @@ object SmartIndenterTests {
 
     def getText(start: Int, len: Int) = text.substring(start, start + len)
 
-    def insertString(pos: Int, str: String) { text = text.substring(0, pos) + str + text.substring(pos, text.length) }
+    def insertString(pos: Int, str: String): Unit = { text = text.substring(0, pos) + str + text.substring(pos, text.length) }
 
-    def replaceSelection(str: String) {
+    def replaceSelection(str: String): Unit = {
       text = text.take(selectionStart) + str + text.drop(selectionEnd)
       val originalStart = selectionStart
       _caretPosition = selectionStart + str.length
@@ -67,7 +67,7 @@ object SmartIndenterTests {
       selectionEnd   = originalStart + str.length
     }
 
-    def remove(start: Int, len: Int) { text = text.substring(0, start) + text.substring(start + len, text.length) }
+    def remove(start: Int, len: Int): Unit = { text = text.substring(0, start) + text.substring(start + len, text.length) }
 
     def replace(start: Int, len: Int, str: String): Unit = {
       text = text.substring(0, start) + str + text.substring(start + len, text.length)

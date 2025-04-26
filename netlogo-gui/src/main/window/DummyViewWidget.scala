@@ -6,12 +6,10 @@ import java.awt.{ Color, Dimension, Rectangle }
 import javax.swing.border.LineBorder
 
 import org.nlogo.agent.World
-import org.nlogo.core.{ I18N, View => CoreView }
+import org.nlogo.core.{ I18N, View => CoreView, Widget => CoreWidget }
 import org.nlogo.theme.InterfaceColors
 
 class DummyViewWidget(val world: World) extends SingleErrorWidget with Editable {
-  type WidgetModel = CoreView
-
   setBackgroundColor(Color.BLACK)
 
   private var newWidth = StrictMath.round(world.worldWidth * world.patchSize).toInt
@@ -65,19 +63,17 @@ class DummyViewWidget(val world: World) extends SingleErrorWidget with Editable 
   }
 
   /// load & save
-  override def model: WidgetModel = {
+  override def model: CoreWidget = {
     val b = getUnzoomedBounds
     CoreView(
       x = b.x, y = b.y, width = b.width, height = b.height,
       dimensions = world.getDimensions)
   }
 
-  override def load(view: WidgetModel): AnyRef = {
+  override def load(view: CoreWidget): Unit = {
     setBounds(view.x, view.y, view.width, view.height)
 
     newWidth = getWidth
     newHeight = getHeight
-
-    return this
   }
 }

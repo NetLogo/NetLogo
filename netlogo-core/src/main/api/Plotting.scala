@@ -4,9 +4,9 @@ package org.nlogo.api
 
 trait PlotManagerInterface {
   def nextName: String
-  def publish(action: PlotAction)
+  def publish(action: PlotAction): Unit
   def currentPlot: Option[PlotInterface]
-  def setCurrentPlot(name: String)
+  def setCurrentPlot(name: String): Unit
   def hasPlot(name: String): Boolean
   def getPlotNames: Seq[String]
   // `maybeGetPlot()` to avoid conflicting with the concrete `PlotManager` implementations' `getPlot()` methods.

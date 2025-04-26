@@ -8,7 +8,7 @@ import org.nlogo.app.App
 import org.nlogo.fileformat.FileFormat
 import org.nlogo.workspace.ModelsLibrary
 
-import scala.collection.JavaConverters.asScalaIteratorConverter
+import scala.jdk.CollectionConverters.IteratorHasAsScala
 
 object ConvertWidgetSizes {
   def main(args: Array[String]): Unit = {

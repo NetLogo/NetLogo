@@ -8,7 +8,7 @@ class _stamperase extends Command {
 
 
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     world.stamp(context.agent, true)
     context.ip = next
   }

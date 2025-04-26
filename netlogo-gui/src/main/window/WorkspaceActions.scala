@@ -11,7 +11,7 @@ import org.nlogo.core.{ I18N, AgentKind }
 import org.nlogo.swing.UserAction._
 
 object WorkspaceActions {
-  implicit val i18nName = I18N.Prefix("menu.tools")
+  implicit val i18nName: org.nlogo.core.I18N.Prefix = I18N.Prefix("menu.tools")
 
   val HaltGroup     = "org.nlogo.window.WorkspaceActions.Halt"
 
@@ -23,7 +23,7 @@ object WorkspaceActions {
       new SimpleGUIWorkspaceAction(I18N.gui("patchMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Patch)),
       new SimpleGUIWorkspaceAction(I18N.gui("linkMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Link)),
       new SimpleGUIWorkspaceAction(I18N.gui("closeAllAgentMonitors"), ToolsMonitorGroup, workspace, _.closeAgentMonitors),
-      new SimpleGUIWorkspaceAction(I18N.gui("closeDeadAgentMonitors"), ToolsMonitorGroup, workspace, _.stopInspectingDeadAgents),
+      new SimpleGUIWorkspaceAction(I18N.gui("closeDeadAgentMonitors"), ToolsMonitorGroup, workspace, _.stopInspectingDeadAgents()),
     ) ++ (if (Version.is3D) Seq() else Seq(new Open3DViewAction(workspace)))
 
   def interfaceActions(workspace: GUIWorkspace, widgetPanel: AbstractWidgetPanel): Seq[Action] =
@@ -76,7 +76,7 @@ class HubNetControlCenterAction(workspace: GUIWorkspace)
     accelerator = KeyBindings.keystroke('H', withMenu = true, withShift = true)
 
     override def actionPerformed(e: ActionEvent): Unit = {
-      workspace.hubNetManager.get.showControlCenter
+      workspace.hubNetManager.get.showControlCenter()
     }
 }
 

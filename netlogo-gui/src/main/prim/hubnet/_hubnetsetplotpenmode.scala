@@ -8,16 +8,16 @@ import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 
 class _hubnetsetplotpenmode extends Command with HubNetPrim {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val name = argEvalString(context, 0)
     val mode = argEvalIntValue(context, 1)
     workspace.waitFor(
       new CommandRunnable {
-        override def run() {
+        override def run(): Unit = {
           if (mode < PlotPenInterface.MinMode || mode > PlotPenInterface.MaxMode)
             throw new RuntimePrimitiveException(
               context, _hubnetsetplotpenmode.this,
-              mode + " is not a valid plot pen mode (valid modes are 0, 1, and 2)")
+              mode.toString + " is not a valid plot pen mode (valid modes are 0, 1, and 2)")
           hubNetManager.foreach(_.setPlotPenMode(name, mode))
         }})
     context.ip = next

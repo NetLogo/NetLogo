@@ -85,8 +85,8 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     editor.setMargin(new Insets(4, 7, 4, 7))
 
     editor.addFocusListener(new FocusListener {
-      def focusGained(fe: FocusEvent) { FindDialog.watch(editor, true) }
-      def focusLost(fe: FocusEvent) {}
+      def focusGained(fe: FocusEvent): Unit = { FindDialog.watch(editor, true) }
+      def focusLost(fe: FocusEvent): Unit = {}
     })
 
     editor
@@ -131,7 +131,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   def getToolBar = new ToolBar {
     setBorder(new EmptyBorder(24, 6, 12, 6))
 
-    override def addControls() {
+    override def addControls(): Unit = {
       // Only want to add toolbar items once
       // This method gets called when the code tab pops in or pops out
       // because org.nlogo.swing.ToolBar overrides addNotify. AAB 10/2020
@@ -165,20 +165,22 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   override def getPreferredSize: Dimension = toolBar.getPreferredSize
 
   def getIncludesTable: Option[Map[String, String]] = {
-    val path = Option(workspace.getModelPath).getOrElse{
+    Option(workspace.getModelPath).orElse {
       // we create an arbitrary model name for checking include paths when we don't have an actual
       // modelPath or directory
-      try workspace.attachModelDir("foo.nlogox")
-      catch {
+      try {
+        Option(workspace.attachModelDir("foo.nlogox"))
+      } catch {
         case ex: MalformedURLException =>
           // if we can't even figure out where we are, we certainly can't have includes
-          return None
+          None
       }
-    }
-    try {
-      workspace.compiler.findIncludes(path, getText, workspace.getCompilationEnvironment)
-    } catch {
-      case e: CompilerException => None
+    }.flatMap { path =>
+      try {
+        workspace.compiler.findIncludes(path, getText, workspace.getCompilationEnvironment)
+      } catch {
+        case e: CompilerException => None
+      }
     }
   }
 
@@ -186,7 +188,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   def kind = AgentKind.Observer
 
-  def handle(e: AppEvents.SwitchedTabsEvent) {
+  def handle(e: AppEvents.SwitchedTabsEvent): Unit = {
     if (e.oldTab == this && dirty)
       compile()
     if (!e.newTab.isInstanceOf[CodeTab])
@@ -194,7 +196,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
   }
 
   private var originalFontSize = -1
-  override def handle(e: WindowEvents.ZoomedEvent) {
+  override def handle(e: WindowEvents.ZoomedEvent): Unit = {
     super.handle(e)
     if (originalFontSize == -1)
       originalFontSize = text.getFont.getSize
@@ -251,7 +253,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
 
   def isTextSelected: Boolean = text.getSelectedText != null && !text.getSelectedText.isEmpty
 
-  def close() {}
+  def close(): Unit = {}
 
   override def syncTheme(): Unit = {
     def boldStyle(color: Color): Style =
@@ -289,6 +291,8 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
           setStyle(TokenTypes.OPERATOR, new Style(InterfaceColors.commandColor()))
           setStyle(TokenTypes.SEPARATOR, new Style(InterfaceColors.defaultColor()))
         })
+
+      case _ =>
     }
 
     scrollableEditor.setBackground(InterfaceColors.codeBackground())

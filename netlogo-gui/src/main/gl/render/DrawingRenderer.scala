@@ -9,14 +9,14 @@ import org.nlogo.api.{ DrawingInterface, World }
 private class DrawingRenderer(world: World, drawing: DrawingInterface)
         extends TextureRenderer(world) with DrawingRendererInterface {
 
-  def init(gl: GL2) { }
+  def init(gl: GL2): Unit = { }
 
-  def renderDrawing(gl: GL2) {
+  def renderDrawing(gl: GL2): Unit = {
     calculateTextureSize(gl, drawing.isBlank)
     renderTexture(gl, drawing.isBlank)
   }
 
-  private def renderTexture(gl: GL2, blank: Boolean) {
+  private def renderTexture(gl: GL2, blank: Boolean): Unit = {
     val width = drawing.getWidth
     val height = drawing.getHeight
     gl.glEnable(GL.GL_TEXTURE_2D);
@@ -50,7 +50,7 @@ private class DrawingRenderer(world: World, drawing: DrawingInterface)
   private var drawingWidth = 0
   private var drawingHeight = 0
 
-  private def calculateTextureSize(gl: GL2, blank: Boolean) {
+  private def calculateTextureSize(gl: GL2, blank: Boolean): Unit = {
     var newSize = 0
     if(!blank && (drawing.getWidth != drawingWidth || drawing.getHeight != drawingHeight) ||
        textureSize == 0) {
@@ -64,7 +64,7 @@ private class DrawingRenderer(world: World, drawing: DrawingInterface)
     }
   }
 
-  def clear() {
+  def clear(): Unit = {
     deleteTexture()
   }
 

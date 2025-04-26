@@ -10,7 +10,7 @@ import
 
 import org.nlogo.compile.api.{ DefaultAstVisitor, ProcedureDefinition, ReporterApp, Statement }
 
-import scala.collection.immutable.Stack
+import scala.collection.mutable.Stack
 
 // This replaces _lambdavariable with _letvariable everywhere.  And we need
 //   to know which Let object to connect each occurrence to.
@@ -46,18 +46,18 @@ private object LambdaVariableVisitor {
 import LambdaVariableVisitor._
 
 class LambdaVariableVisitor extends DefaultAstVisitor {
-  private var lambdaStack = Stack[FormalProvider]()
+  private val lambdaStack = Stack[FormalProvider]()
   private var procedure = Option.empty[nvm.Procedure]
 
-  override def visitProcedureDefinition(procdef: ProcedureDefinition) {
+  override def visitProcedureDefinition(procdef: ProcedureDefinition): Unit = {
     procedure = Some(procdef.procedure)
     if (procdef.procedure.isLambda)
-      lambdaStack = lambdaStack.push(LiftedLambda(procdef))
+      lambdaStack.push(LiftedLambda(procdef))
 
     super.visitProcedureDefinition(procdef)
 
     if (procdef.procedure.isLambda)
-      lambdaStack = lambdaStack.pop
+      lambdaStack.pop()
   }
 
   override def visitStatement(stmt: Statement): Unit = {
@@ -82,16 +82,16 @@ class LambdaVariableVisitor extends DefaultAstVisitor {
     }
   }
 
-  override def visitReporterApp(expr: ReporterApp) {
+  override def visitReporterApp(expr: ReporterApp): Unit = {
     expr.reporter match {
       case l: prim._reporterlambda =>
-        lambdaStack = lambdaStack.push(ReporterLambda(l))
+        lambdaStack.push(ReporterLambda(l))
         super.visitReporterApp(expr)
-        lambdaStack = lambdaStack.pop
+        lambdaStack.pop()
       case c: prim._commandlambda =>
-        lambdaStack = lambdaStack.push(CommandLambda(c))
+        lambdaStack.push(CommandLambda(c))
         super.visitReporterApp(expr)
-        lambdaStack = lambdaStack.pop
+        lambdaStack.pop()
       case lv: prim._lambdavariable =>
         val letsForVariable = lambdaStack.flatMap(_.letForName(lv.varName))
         letsForVariable.headOption match {

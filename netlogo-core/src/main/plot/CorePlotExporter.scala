@@ -9,13 +9,13 @@ import collection.mutable.Buffer
 // that name and a similar constructor in place in GUI for deprecation.
 // -Jeremy B November 2020
 class CorePlotExporter(private val plot: PlotInterface, private val csv: CSV) {
-  def export(writer: java.io.PrintWriter) {
+  def `export`(writer: java.io.PrintWriter): Unit = {
     exportIntro(writer)
     exportPens(writer)
     exportPoints(writer)
   }
 
-  private def exportIntro(writer: java.io.PrintWriter) {
+  private def exportIntro(writer: java.io.PrintWriter): Unit = {
     writer.println(csv.data(plot.name))
     writer.println(csv.headerRow(Array(
       "x min", "x max", "y min", "y max",
@@ -35,7 +35,7 @@ class CorePlotExporter(private val plot: PlotInterface, private val csv: CSV) {
   }
 
 
-  private def exportPens(writer: java.io.PrintWriter) {
+  private def exportPens(writer: java.io.PrintWriter): Unit = {
     writer.println(csv.headerRow(Array(
       "pen name", "pen down?", "mode", "interval",
       "color", "x")))
@@ -51,7 +51,7 @@ class CorePlotExporter(private val plot: PlotInterface, private val csv: CSV) {
     writer.println()
   }
 
-  private def exportPoints(writer: java.io.PrintWriter) {
+  private def exportPoints(writer: java.io.PrintWriter): Unit = {
     /// Output header row of pen names
     var numPens = 0
     for (pen <- plot.pens) {
@@ -64,7 +64,7 @@ class CorePlotExporter(private val plot: PlotInterface, private val csv: CSV) {
     // Output data row headers
     val pointHeaders = Buffer[String]()
     for (i <- 0 until numPens)
-      pointHeaders += ("x", "y", "color", "pen down?")
+      pointHeaders ++= Array("x", "y", "color", "pen down?")
     writer.println(csv.headerRow(pointHeaders.toArray))
 
     // Output data rows

@@ -54,11 +54,11 @@ trait AuxiliaryCompilerInterface {
 
   @throws(classOf[CompilerException])
   def checkCommandSyntax(source: String, program: Program, procedures: ListMap[String, Procedure],
-                         extensionManager: ApiExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment)
+                         extensionManager: ApiExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment): Unit
 
   @throws(classOf[CompilerException])
   def checkReporterSyntax(source: String, program: Program, procedures: ListMap[String, Procedure],
-                          extensionManager: ApiExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment)
+                          extensionManager: ApiExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment): Unit
 }
 
 trait PresentationCompilerInterface extends CompilerInterface with AuxiliaryCompilerInterface

@@ -41,7 +41,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
                    nameEditable: Boolean) extends JDialog(parent, I18N.gui.get("tools.shapesEditor"), true)
                                           with PropertyChangeListener {
 
-  private implicit val i18nPrefix = I18N.Prefix("tools.shapesEditor")
+  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.shapesEditor")
 
   private val shape = originalShape.clone()
   private val shapeView = new ShapeView(this, shape)
@@ -374,7 +374,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   rightPanel.add(flipHorizontalButton)
   rightPanel.add(flipVerticalButton)
 
-  private val done = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => saveShape)
+  private val done = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => saveShape())
   private val cancel = new DialogButton(false, I18N.gui.get("common.buttons.cancel"), () => dispose)
 
   previews.foreach(shape.addPropertyChangeListener)
@@ -570,7 +570,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     private val label = {
       val name = NLColor.getColorNameByIndex(index)
 
-      new JLabel(name(0).toUpper + name.substring(1))
+      new JLabel(name(0).toUpper.toString + name.substring(1))
     }
 
     add(new JPanel {

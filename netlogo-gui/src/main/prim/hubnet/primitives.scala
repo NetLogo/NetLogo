@@ -58,7 +58,7 @@ class _hubnetclientslist extends Reporter with HubNetPrim {
 
 class _hubnetkickclient extends Command with HubNetPrim {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     hubNetManager.foreach(_.kick(argEvalString(context, 0)))
     context.ip = next
   }
@@ -69,7 +69,7 @@ class _hubnetkickallclients extends Command with HubNetPrim {
 
 
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     hubNetManager.foreach(_.kickAll())
     context.ip = next
   }
@@ -89,7 +89,7 @@ class _hubnetoutqsize extends Reporter with HubNetPrim {
 
 class _hubnetcreateclient extends Command with HubNetPrim {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     hubNetManager.map(_.newClient(false,0)).get
     context.ip = next
   }
@@ -97,7 +97,7 @@ class _hubnetcreateclient extends Command with HubNetPrim {
 
 class _hubnetsendfromlocalclient extends Command with HubNetPrim {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val clientId = argEvalString(context, 0)
     val messageTag = argEvalString(context, 1)
     val payload = args(2).report(context)
@@ -112,7 +112,7 @@ class _hubnetwaitforclients extends Command with HubNetPrim {
   //   1) number of clients to wait for.
   //   2) timeout (milliseconds)
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val numClients = argEvalDoubleValue(context, 0).toInt
     val timeout = argEvalDoubleValue(context, 1).toLong
     val (ok, numConnected) =
@@ -130,7 +130,7 @@ class _hubnetwaitformessages extends Command with HubNetPrim {
   //   1) number of messages to wait for.
   //   2) timeout (milliseconds)
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val numMessages = argEvalDoubleValue(context, 0).toInt
     val timeout = argEvalDoubleValue(context, 1).toLong
     val (ok, numReceived) =
@@ -145,7 +145,7 @@ class _hubnetwaitformessages extends Command with HubNetPrim {
 
 class _hubnetsetviewmirroring extends Command with HubNetPrim {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     hubNetManager.foreach(_.setViewMirroring(argEvalBooleanValue(context, 0)))
     context.ip = next
   }
@@ -153,7 +153,7 @@ class _hubnetsetviewmirroring extends Command with HubNetPrim {
 
 class _hubnetsetplotmirroring extends Command with HubNetPrim {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     hubNetManager.foreach(_.setPlotMirroring(argEvalBooleanValue(context, 0)))
     context.ip = next
   }
@@ -161,7 +161,7 @@ class _hubnetsetplotmirroring extends Command with HubNetPrim {
 
 class _hubnetfetchmessage extends Command with HubNetPrim {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     hubNetManager.foreach(_.fetchMessage())
     context.ip = next
   }
@@ -169,10 +169,10 @@ class _hubnetfetchmessage extends Command with HubNetPrim {
 
 class _hubnetreset extends Command with HubNetPrim {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     workspace.waitFor(
       new CommandRunnable {
-        override def run() {
+        override def run(): Unit = {
           hubNetManager.foreach(_.reset())
         }})
     context.ip = next
@@ -181,7 +181,7 @@ class _hubnetreset extends Command with HubNetPrim {
 
 class _hubnetresetperspective extends Command with HubNetPrim {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val client = argEvalString(context, 0)
     val agent = world.observer.targetAgent
     val agentKind =
@@ -189,7 +189,7 @@ class _hubnetresetperspective extends Command with HubNetPrim {
     val id = Option(agent).map(_.id).getOrElse(0L)
     workspace.waitFor(
       new CommandRunnable {
-        override def run() {
+        override def run(): Unit = {
           hubNetManager.foreach(_.sendAgentPerspective(
             client, world.observer.perspective.export,
             agentKind, id, ((world.worldWidth - 1).toDouble / 2), true))
@@ -200,7 +200,7 @@ class _hubnetresetperspective extends Command with HubNetPrim {
 
 class _hubnetbroadcast extends Command with HubNetPrim {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val variableName = argEvalString(context, 0)
     val data = args(1).report(context)
     hubNetManager.foreach(_.broadcast(variableName, data))
@@ -210,7 +210,7 @@ class _hubnetbroadcast extends Command with HubNetPrim {
 
 class _hubnetbroadcastclearoutput extends Command with HubNetPrim {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     hubNetManager.foreach(_.broadcastClearText())
     context.ip = next
   }
@@ -218,7 +218,7 @@ class _hubnetbroadcastclearoutput extends Command with HubNetPrim {
 
 class _hubnetbroadcastmessage extends Command with HubNetPrim {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val data = args(0).report(context)
     hubNetManager.foreach(_.broadcast(Dump.logoObject(data) + "\n"))
     context.ip = next
@@ -227,7 +227,7 @@ class _hubnetbroadcastmessage extends Command with HubNetPrim {
 
 class _hubnetbroadcastusermessage extends Command with HubNetPrim {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val data = args(0).report(context)
     hubNetManager.foreach(_.broadcastUserMessage(Dump.logoObject(data)))
     context.ip = next
@@ -236,7 +236,7 @@ class _hubnetbroadcastusermessage extends Command with HubNetPrim {
 
 class _hubnetroboclient extends Command with HubNetPrim {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     hubNetManager.foreach(_.newClient(true, argEvalIntValue(context, 0)))
     context.ip = next
   }
@@ -244,11 +244,11 @@ class _hubnetroboclient extends Command with HubNetPrim {
 
 class _hubnetclearoverrides extends Command with HubNetPrim {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val client = argEvalString(context, 0)
     workspace.waitFor(
       new CommandRunnable {
-        override def run() {
+        override def run(): Unit = {
           hubNetManager.foreach(_.clearOverrideLists(client))
         }})
     context.ip = next
@@ -257,7 +257,7 @@ class _hubnetclearoverrides extends Command with HubNetPrim {
 
 class _hubnetclearoverride extends Command with HubNetPrim {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     import org.nlogo.agent.{ Agent, AgentSet }
     val client = argEvalString(context, 0)
     val target = args(1).report(context)
@@ -265,6 +265,7 @@ class _hubnetclearoverride extends Command with HubNetPrim {
     val set = target match {
       case agent: Agent => AgentSet.fromAgent(agent)
       case set: AgentSet => set
+      case _ => throw new Exception(s"Unexpected target: $target")
     }
     if(!hubNetManager.exists(_.isOverridable(set.kind, varName)))
       throw new RuntimePrimitiveException(context, this,
@@ -275,9 +276,9 @@ class _hubnetclearoverride extends Command with HubNetPrim {
       overrides += Long.box(iter.next().id)
     workspace.waitFor(
       new CommandRunnable() {
-        override def run() {
+        override def run(): Unit = {
           hubNetManager.foreach(_.clearOverride(
-            client, set.kind, varName, overrides))}})
+            client, set.kind, varName, overrides.toSeq))}})
     context.ip = next
   }
 }

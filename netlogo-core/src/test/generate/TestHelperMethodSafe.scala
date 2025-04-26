@@ -13,7 +13,7 @@ import org.nlogo.nvm.Instruction
 class TestHelperMethodSafe extends AnyFunSuite with AllPrimitivesTester {
   override def makeVisitor(method: Method) =
     new EmptyMethodVisitor {
-      override def visitMethodInsn(opcode: Int, owner: String, name: String, desc: String) {
+      override def visitMethodInsn(opcode: Int, owner: String, name: String, desc: String): Unit = {
         assert(name == "displayName" ||
                owner != Type.getInternalName(method.getDeclaringClass) ||
                opcode == INVOKESTATIC ||

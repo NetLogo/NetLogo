@@ -5,7 +5,7 @@ package org.nlogo.app
 import java.nio.file.{ FileSystems, Path, WatchKey, WatchService }
 import java.nio.file.StandardWatchEventKinds.ENTRY_MODIFY
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters.ListHasAsScala
 
 private class FileWatcherThread(paths: List[Path], callback: () => Boolean) extends Thread {
   private val watchService: WatchService = FileSystems.getDefault.newWatchService
@@ -14,7 +14,7 @@ private class FileWatcherThread(paths: List[Path], callback: () => Boolean) exte
   private def f(x: Path): (WatchKey, Path) = x.register(watchService, ENTRY_MODIFY) -> x
   private val keyPathMap: Map[WatchKey, Path] = parentSet.map(f).toMap
 
-  override def run() {
+  override def run(): Unit = {
     try {
       var done: Boolean = false
 

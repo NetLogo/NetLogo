@@ -48,8 +48,8 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
   def getPlot(name: String): Plot = _plots.find(_.name.equalsIgnoreCase(name)).orNull
 
   // used for letting the user choose which plot to export
-  def getPlotNames: Seq[String] = _plots.map(_.name)
-  def nextName = Stream.from(1).map("plot " + _).find(maybeGetPlot(_) == None).get
+  def getPlotNames: Seq[String] = _plots.map(_.name).toSeq
+  def nextName = LazyList.from(1).map("plot " + _).find(maybeGetPlot(_) == None).get
 
   // these are for api compatibility - Jeremy B Octover 2020
   def hasPlot(name: String): Boolean = _plots.exists(_.name == name)
@@ -57,17 +57,17 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
   def publish(action: PlotAction): Unit = ???
   def setCurrentPlot(name: String): Unit = currentPlot = maybeGetPlot(name)
 
-  def forgetPlot(goner: Plot) {
+  def forgetPlot(goner: Plot): Unit = {
     if (currentPlot == Some(goner)) currentPlot = None
     _plots -= goner
   }
-  def forgetAll() {
+  def forgetAll(): Unit = {
     _plots.clear()
     plotThunks.clear()
     penThunks.clear()
     currentPlot = None
   }
-  def clearAll() {
+  def clearAll(): Unit = {
     _plots.foreach(_.clear())
     if (listener != null) listener.clearAll()
   }
@@ -124,10 +124,10 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast) extend
   // code to run code in plots
   //
 
-  def setupPlots() { runCode(Setup) }
-  def updatePlots() { runCode(Update) }
+  def setupPlots(): Unit = { runCode(Setup) }
+  def updatePlots(): Unit = { runCode(Update) }
 
-  private def runCode(codeType: CodeType) {
+  private def runCode(codeType: CodeType): Unit = {
     // save the currently selected plot
     val oldCurrentPlot = currentPlot
     for (plot <- _plots) {

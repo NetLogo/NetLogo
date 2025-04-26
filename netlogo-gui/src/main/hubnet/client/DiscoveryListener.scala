@@ -34,7 +34,7 @@ class DiscoveryListener(@volatile var interfaceAddress: Option[InetAddress]) ext
    * Sets the specified announcement listener to receive messages from this discovery listener.
    * @param listener the announcement listener
    */
-  def setAnnouncementListener(listener: AnnouncementListener) {
+  def setAnnouncementListener(listener: AnnouncementListener): Unit = {
     synchronized {this.listener = listener}
   }
 
@@ -43,20 +43,20 @@ class DiscoveryListener(@volatile var interfaceAddress: Option[InetAddress]) ext
    * no longer receives messages from this discovery listener.
    * @param listener the announcement listener
    */
-  def removeAnnouncementListener(listener: AnnouncementListener) {
+  def removeAnnouncementListener(listener: AnnouncementListener): Unit = {
     synchronized {if (listener == this.listener) this.listener = null}
   }
 
   /**
    * Stops the discovery listener from listening for messages on the multicast group.
    */
-  def stopListening() {shouldKeepListening = false}
+  def stopListening(): Unit = {shouldKeepListening = false}
 
   /**
    * Notifies the registered announcement listener that a
    * message has been received.
    */
-  private def notifyListeners(m: DiscoveryMessage) {
+  private def notifyListeners(m: DiscoveryMessage): Unit = {
     if (listener != null) listener.synchronized {listener.announcementReceived(m)}
   }
 
@@ -64,7 +64,7 @@ class DiscoveryListener(@volatile var interfaceAddress: Option[InetAddress]) ext
    * Joins a multicast group and listens for packets
    * until <code> stopListening() </code> is called.
    */
-  override def run() {
+  override def run(): Unit = {
     // arbitrary, but possibly larger than many MTUs, but this doesn't
     // really matter on the client, unless zero termination matters...
     val receiptBuffer = Array.ofDim[Byte](1024)

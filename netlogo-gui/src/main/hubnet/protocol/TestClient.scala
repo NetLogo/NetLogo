@@ -8,10 +8,11 @@ import org.nlogo.api.HubNetInterface.ClientInterface
 import java.io.{IOException, ObjectOutputStream}
 import org.nlogo.util.ClassLoaderObjectInputStream
 import java.util.concurrent.{Executors, ExecutorService, TimeUnit, LinkedBlockingQueue}
-import collection.JavaConverters._
+
+import scala.jdk.CollectionConverters._
 
 object TestClient{
-  implicit val pool = Executors.newCachedThreadPool()
+  implicit val pool: java.util.concurrent.ExecutorService = Executors.newCachedThreadPool()
   // just putting this hear because i'm anticipating calling it from java (android)
   // if we don't use it, it can be removed later.
   // really, id like to figure out how to write android apps in scala.
@@ -32,11 +33,11 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
   val (activityName, interfaceSpec) = handshake()
   lazy val messagesReceived = new LinkedBlockingQueue[Message]
 
-  def sendActivityCommand(message:String, content: Any){
+  def sendActivityCommand(message:String, content: Any): Unit ={
     send(new ActivityCommand(message, content.asInstanceOf[AnyRef]))
   }
 
-  def close(reason:String){ send(ExitMessage(reason)) }
+  def close(reason:String): Unit ={ send(ExitMessage(reason)) }
   def getWidgetControls: List[WidgetControl] =
     messagesReceived.asScala.collect{ case wc: WidgetControl => wc }.toList
   def getViewUpdates: List[ViewUp] =
@@ -71,7 +72,7 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
   // sends a message to the server
   protected def send(a: AnyRef) = { rawSend(a) }
 
-  protected def rawSend(a: AnyRef){
+  protected def rawSend(a: AnyRef): Unit ={
     out.writeObject(a)
     out.flush()
   }
@@ -83,7 +84,7 @@ case class TestClient(userId: String, clientType: String="COMPUTER", ip:String="
   // instead, when we need the next message, we can just read it off the socket.
   // we could then get rid of the exector altogether..
   private class Receiver extends Runnable {
-    override def run() {
+    override def run(): Unit = {
       try {
         messagesReceived.put(in.readObject.asInstanceOf[Message])
         executor.submit(this)

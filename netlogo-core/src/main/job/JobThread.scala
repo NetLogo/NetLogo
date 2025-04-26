@@ -44,7 +44,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
   start()
 
   @throws(classOf[InterruptedException])
-  def die() {
+  def die(): Unit = {
     // In the days of applets, this used to ignore NPE and AccessControlException
     // when thrown by `setPriority`. In the modern Java 8 world
     // (where applets are dead), I think it would be better to go ahead
@@ -61,7 +61,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
     join()
   }
 
-  override def run() {
+  override def run(): Unit = {
     handling(classOf[RuntimeException]) {
       while (!dying) {
         compact(primaryJobs)
@@ -78,7 +78,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
             } } } }
   }
 
-  def maybeRunSecondaryJobs() {
+  def maybeRunSecondaryJobs(): Unit = {
     // our owner will tell us when it's time - ST 8/10/03
     if (isTimeToRunSecondaryJobs) {
       val now = System.currentTimeMillis()
@@ -98,7 +98,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
   }
 
   // this and runSecondaryJobs() differ only in a few details
-  private def runPrimaryJobs() {
+  private def runPrimaryJobs(): Unit = {
     var i = 0
     while(i < primaryJobs.size) {
       val job = primaryJobs.get(i)
@@ -152,7 +152,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
   //  - secondary jobs do not cause display updates
   //  - here we don't need all the buttonTurnIsOver/activeButton stuff that makes
   //    buttons take turns
-  private def runSecondaryJobs() {
+  private def runSecondaryJobs(): Unit = {
     var i = 0
     while(i < secondaryJobs.size) {
       val job = secondaryJobs.get(i)
@@ -180,7 +180,7 @@ extends Thread(null, null, "JobThread", JobThread.stackSize * 1024 * 1024) {
 
   /// helpers
 
-  private def compact(list: JList[Job]) {
+  private def compact(list: JList[Job]): Unit = {
     list.synchronized {
       val iter = list.iterator
       while(iter.hasNext)

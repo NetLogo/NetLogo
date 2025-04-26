@@ -7,14 +7,14 @@ import org.nlogo.window.{ Event, VMCheck }
 import org.nlogo.workspace.AbstractWorkspace
 
 object AppletTester {
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     System.setProperty("apple.awt.graphics.UseQuartz", "true")
     System.setProperty("apple.awt.showGrowBox", "true")
     VMCheck.detectBadJVMs()
     val (eventsArgs, otherArgs) = args.partition(_ == "--events")
     Event.logEvents = eventsArgs.nonEmpty
     val path = otherArgs.headOption.getOrElse(chooseModel)
-    invokeLater(new Runnable() { def run() {
+    invokeLater(new Runnable() { def run(): Unit = {
       open(path) } })
   }
   def chooseModel = {
@@ -25,7 +25,7 @@ object AppletTester {
       System.exit(0)
     dialog.getDirectory + dialog.getFile
   }
-  def open(path: String) {
+  def open(path: String): Unit = {
     val frame = new javax.swing.JFrame("NetLogo Model")
     val panel = new LitePanel(frame, new java.awt.event.MouseAdapter() { }) {
       override def getFileURL(filename: String) =
@@ -36,7 +36,7 @@ object AppletTester {
     frame.setResizable(false)
     frame.addWindowListener(
       new java.awt.event.WindowAdapter() {
-        override def windowClosing(e: java.awt.event.WindowEvent) {
+        override def windowClosing(e: java.awt.event.WindowEvent): Unit = {
           frame.setVisible(false)
           frame.dispose()
           open(chooseModel)

@@ -7,7 +7,6 @@ import java.awt.event.ActionEvent
 import javax.swing.{ AbstractAction, JDialog, JLabel, JList, JMenuBar, JPanel, ListCellRenderer }
 import javax.swing.event.ListSelectionListener
 
-import org.nlogo.api.LabProtocol
 import org.nlogo.api.{ RefEnumeratedValueSet, LabProtocol }
 import org.nlogo.window.{ EditDialogFactory, MenuBarFactory }
 
@@ -29,7 +28,7 @@ private class ManagerDialog(manager:       LabManager,
   }
   private val jlist = new JList[LabProtocol]
   private val listModel = new javax.swing.DefaultListModel[LabProtocol]
-  private implicit val i18NPrefix = I18N.Prefix("tools.behaviorSpace")
+  private implicit val i18NPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.behaviorSpace")
 
   /// actions
   private def makeAction(name: String, fn: () => Unit) = {
@@ -40,15 +39,15 @@ private class ManagerDialog(manager:       LabManager,
     }
   }
 
-  private val editAction = makeAction(I18N.gui("edit"), edit)
-  private val newAction = makeAction(I18N.gui("new"), makeNew)
-  private val deleteAction = makeAction(I18N.gui("delete"), delete)
-  private val duplicateAction = makeAction(I18N.gui("duplicate"), duplicate)
-  private val importAction = makeAction(I18N.gui("import"), importnl)
-  private val exportAction = makeAction(I18N.gui("export"), export)
-  private val closeAction = makeAction(I18N.gui("close"), manager.close)
-  private val abortAction = makeAction(I18N.gui("abort"), abort)
-  private val runAction = makeAction(I18N.gui("run"), run)
+  private val editAction = makeAction(I18N.gui("edit"), edit _)
+  private val newAction = makeAction(I18N.gui("new"), makeNew _)
+  private val deleteAction = makeAction(I18N.gui("delete"), delete _)
+  private val duplicateAction = makeAction(I18N.gui("duplicate"), duplicate _)
+  private val importAction = makeAction(I18N.gui("import"), importnl _)
+  private val exportAction = makeAction(I18N.gui("export"), export _)
+  private val closeAction = makeAction(I18N.gui("close"), manager.close _)
+  private val abortAction = makeAction(I18N.gui("abort"), abort _)
+  private val runAction = makeAction(I18N.gui("run"), run _)
 
   private var blockActions = false
   private var editIndex = 0
@@ -194,7 +193,7 @@ private class ManagerDialog(manager:       LabManager,
     update()
     val editable = new ProtocolEditable(protocol, manager.workspace.getFrame,
                                         manager.workspace, dialogFactory.colorizer, manager.workspace.world,
-                                        manager.protocols.map(_.name).filter(isNew || _ != protocol.name))
+                                        manager.protocols.map(_.name).filter(isNew || _ != protocol.name).toSeq)
     dialogFactory.create(this, editable, success => {
       blockActions = false
       if (success) {
@@ -254,11 +253,11 @@ private class ManagerDialog(manager:       LabManager,
       dialog.setMultipleMode(true)
       dialog.setVisible(true)
 
-      for (file <- dialog.getFiles)
-      {
+      for (file <- dialog.getFiles) {
         try {
           manager.modelLoader.readExperiments(Source.fromFile(file).mkString, true,
-                                              manager.protocols.map(_.name).to[Set]).foreach(_._1.foreach(manager.addProtocol(_)))
+                                              manager.protocols.map(_.name).toSet)
+                             .foreach(_._1.foreach(manager.addProtocol(_)))
         } catch {
           case e: org.xml.sax.SAXParseException => {
             if (!java.awt.GraphicsEnvironment.isHeadless) {
@@ -274,7 +273,7 @@ private class ManagerDialog(manager:       LabManager,
       case e: org.nlogo.awt.UserCancelException => org.nlogo.api.Exceptions.ignore(e)
     }
   }
-  private def export(): Unit = {
+  private def `export`(): Unit = {
     try {
       val indices = jlist.getSelectedIndices
 
@@ -324,8 +323,12 @@ private class ManagerDialog(manager:       LabManager,
     jlist.setSelectedIndices(Array(index))
     jlist.ensureIndexIsVisible(index)
   }
-  private def selectedIndex =
-    jlist.getSelectedIndices match { case Array(i: Int) => i }
+  private def selectedIndex: Int = {
+    jlist.getSelectedIndices match {
+      case Array(i: Int) => i
+      case _ => -1
+    }
+  }
   private def selectedProtocol =
     manager.protocols(jlist.getSelectedIndices()(0))
 

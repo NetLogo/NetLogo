@@ -27,8 +27,8 @@ class DummyCompilerServices extends CompilerServices {
       case e: Exception => throw new CompilerException(
         "not a constant recognized by DummyCompilerServices", 0, source.size, "")
     }
-  def checkReporterSyntax(source: String) { }
-  def checkCommandSyntax(source: String) { }
+  def checkReporterSyntax(source: String): Unit = { }
+  def checkCommandSyntax(source: String): Unit = { }
   def isConstant(s: String): Boolean = unsupported
   def isValidIdentifier(s: String): Boolean = unsupported
   def isReporter(s: String): Boolean = unsupported

@@ -61,11 +61,11 @@ object LabXMLLoader {
         Option(
           if (name.nonEmpty)
             if (existingNames.contains(name))
-              s"$name (${Stream.from(1).dropWhile(x => existingNames.contains(s"$name ($x)")).head})"
+              s"$name (${LazyList.from(1).dropWhile(x => existingNames.contains(s"$name ($x)")).head})"
             else
               name
           else if (existingNames.contains("no name"))
-            s"no name (${Stream.from(1).dropWhile(x => existingNames.contains(s"no name ($x)")).head})"
+            s"no name (${LazyList.from(1).dropWhile(x => existingNames.contains(s"no name ($x)")).head})"
           else
             "no name"
         )

@@ -43,8 +43,8 @@ public abstract class AbstractWorkspace
   public final org.nlogo.agent.World _world;
 
   public final org.nlogo.nvm.JobManagerInterface jobManager;
-  protected final Evaluator evaluator;
-  protected final ExtensionManager extensionManager;
+  public final Evaluator evaluator;
+  public final ExtensionManager extensionManager;
 
   protected final ExternalResourceManager resourceManager;
 
@@ -250,7 +250,7 @@ public abstract class AbstractWorkspace
   /// output
 
   // called from job thread - ST 10/1/03
-  protected abstract void sendOutput(org.nlogo.agent.OutputObject oo,
+  public abstract void sendOutput(org.nlogo.agent.OutputObject oo,
                                      boolean toOutputArea)
       throws LogoException;
 

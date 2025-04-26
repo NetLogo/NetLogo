@@ -28,7 +28,7 @@ class BlockQuoteRenderer extends HtmlRendererExtension {
   }
 
   private class BlockQuoteRenderer extends CustomNodeRenderer[BlockQuote] {
-    def render(node: BlockQuote, context: NodeRendererContext, writer: HtmlWriter) {
+    def render(node: BlockQuote, context: NodeRendererContext, writer: HtmlWriter): Unit = {
       writer.withAttr.tagIndent("blockquote", () => {
         writer.withAttr.tagIndent("div", () => {
           context.renderChildren(node)
@@ -37,9 +37,9 @@ class BlockQuoteRenderer extends HtmlRendererExtension {
     }
   }
 
-  def extend(builder: Builder, rendererType: String) {
+  def extend(builder: Builder, rendererType: String): Unit = {
     builder.nodeRendererFactory(new RendererFactory)
   }
 
-  def rendererOptions(options: MutableDataHolder) {}
+  def rendererOptions(options: MutableDataHolder): Unit = {}
 }

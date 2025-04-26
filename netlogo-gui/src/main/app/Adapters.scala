@@ -23,7 +23,7 @@ object Adapters {
 
     override def getComponentInstance(container: PicoContainer, into: JType): AbstractModelLoader = {
 
-      import scala.collection.JavaConverters.iterableAsScalaIterableConverter
+      import scala.jdk.CollectionConverters.IterableHasAsScala
 
       val compiler = container.getComponent(classOf[PresentationCompilerInterface])
       val compilerServices = new DefaultCompilerServices(compiler)
@@ -64,7 +64,7 @@ object Adapters {
 
     override def getComponentInstance(container: PicoContainer, into: JType): AbstractModelLoader = {
 
-      import scala.collection.JavaConverters.iterableAsScalaIterableConverter
+      import scala.jdk.CollectionConverters.IterableHasAsScala
 
       val compiler             = container.getComponent(classOf[PresentationCompilerInterface])
       val compilerServices     = new DefaultCompilerServices(compiler)
@@ -90,7 +90,7 @@ object Adapters {
 
     override def getComponentInstance(container: PicoContainer, into: JType): ModelConversion = {
 
-      import scala.collection.JavaConverters.iterableAsScalaIterableConverter
+      import scala.jdk.CollectionConverters.IterableHasAsScala
 
       val workspace = container.getComponent(classOf[ApiWorkspace])
 

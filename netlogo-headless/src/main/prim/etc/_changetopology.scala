@@ -5,7 +5,7 @@ package org.nlogo.prim.etc
 import org.nlogo.nvm.{ Command, Context }
 
 class _changetopology extends Command {
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     workspace.changeTopology(
       argEvalBooleanValue(context, 0),
       argEvalBooleanValue(context, 1))

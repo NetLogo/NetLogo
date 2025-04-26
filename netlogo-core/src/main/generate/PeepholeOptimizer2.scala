@@ -28,14 +28,14 @@ class PeepholeOptimizer2(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv
     mv.visitLabel(label)
   }
 
-  override def restartMatch() {
+  override def restartMatch(): Unit = {
     if (seenAload0) {
       mv.visitVarInsn(ALOAD, 0)
       seenAload0 = false
     }
   }
 
-  override def visitVarInsn(opcode: Int, variable: Int) {
+  override def visitVarInsn(opcode: Int, variable: Int): Unit = {
     restartMatch()
     if (opcode == ALOAD && variable == 0)
       seenAload0 = true
@@ -43,7 +43,7 @@ class PeepholeOptimizer2(mv: MethodVisitor) extends AbstractPeepholeOptimizer(mv
       mv.visitVarInsn(opcode, variable)
   }
 
-  override def visitInsn(opcode: Int) {
+  override def visitInsn(opcode: Int): Unit = {
     if (seenAload0 && opcode == POP)
       seenAload0 = false
     else super.visitInsn(opcode)

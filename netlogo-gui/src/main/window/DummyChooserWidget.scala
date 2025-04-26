@@ -7,8 +7,6 @@ import org.nlogo.core.{ I18N, Chooseable, Chooser => CoreChooser, CompilerExcept
 import org.nlogo.editor.Colorizer
 
 class DummyChooserWidget(val compiler: CompilerServices, colorizer: Colorizer) extends Chooser with Editable {
-  type WidgetModel = CoreChooser
-
   private var _name = ""
 
   def name: String = _name
@@ -61,16 +59,20 @@ class DummyChooserWidget(val compiler: CompilerServices, colorizer: Colorizer) e
   }
 
 
-  override def load(model: WidgetModel): AnyRef = {
-    oldSize(model.oldSize)
-    setSize(model.width, model.height)
-    setVarName(model.varName)
-    setChoicesWrapper(model.choices.map(c => Dump.logoObject(c.value, true, false)).mkString("\n"))
-    index(model.currentChoice)
-    this
+  override def load(model: CoreWidget): Unit = {
+    model match {
+      case chooser: CoreChooser =>
+        oldSize(chooser.oldSize)
+        setSize(chooser.width, chooser.height)
+        setVarName(chooser.varName)
+        setChoicesWrapper(chooser.choices.map(c => Dump.logoObject(c.value, true, false)).mkString("\n"))
+        index(chooser.currentChoice)
+
+      case _ =>
+    }
   }
 
-  override def model: WidgetModel = {
+  override def model: CoreWidget = {
     val b = getUnzoomedBounds
     CoreChooser(
       display  = name.potentiallyEmptyStringToOption,

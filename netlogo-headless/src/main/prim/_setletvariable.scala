@@ -11,7 +11,7 @@ class _setletvariable(val let: Let) extends Command {
 
   override def toString =
     s"${super.toString}:${let.name}"
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     context.activation.binding.setLet(let, args(0).report(context))
     context.ip = next
   }

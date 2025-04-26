@@ -2,7 +2,9 @@
 
 package org.nlogo.api
 
-import scala.collection.mutable.{ ArrayBuffer, Publisher, Subscriber }
+import org.nlogo.core.{ Listener, Publisher }
+
+import scala.collection.mutable.ArrayBuffer
 
 trait Action
 
@@ -10,10 +12,10 @@ trait ActionRunner[A <: Action] {
   def run(action: A): Unit
 }
 
-trait ActionBroker[A <: Action]
-  extends Publisher[A] {
+trait ActionBroker[A <: Action] extends Publisher[A] {
   val runner: ActionRunner[A]
-  override def publish(action: A) {
+
+  override def publish(action: A): Unit = {
     super.publish(action)
     runner.run(action)
   }
@@ -27,7 +29,7 @@ trait ActionBroker[A <: Action]
    * a hack and I wish we had another way of handling stamping so we
    * could (amongst other things) get rid of this method. NP 2013-02-04
    */
-  def publishWithoutRunning(action: A) {
+  def publishWithoutRunning(action: A): Unit = {
     super.publish(action)
   }
 }
@@ -37,22 +39,25 @@ trait ActionBroker[A <: Action]
  * ActionBroker. Actions can be grabbed (which clears the buffer)
  * and the buffer can be cleared independently. NP 2013-01-25.
  */
-class ActionBuffer[A <: Action](broker: ActionBroker[A])
-  extends Subscriber[A, Publisher[A]] {
-  broker.subscribe(this)
-  suspend() // subscription needs to be explicitly turned on later
-
+class ActionBuffer[A <: Action](broker: ActionBroker[A]) extends Listener[A] {
   private val buffer = ArrayBuffer[A]()
 
-  def suspend() { broker.suspendSubscription(this) }
-  def activate() { broker.activateSubscription(this) }
+  def suspend(): Unit = {
+    broker.unsubscribe(this)
+  }
 
-  override def notify(pub: Publisher[A], action: A) {
+  def activate(): Unit = {
+    broker.subscribe(this)
+  }
+
+  override def handle(action: A): Unit = {
     buffer += action
   }
 
   /** Removes all actions in the buffer */
-  def clear() { buffer.clear() }
+  def clear(): Unit = {
+    buffer.clear()
+  }
 
   /** Returns a vector of actions in the buffer and clears the buffer */
   def grab(): Vector[A] = {

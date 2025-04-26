@@ -8,7 +8,7 @@ import org.nlogo.workspace, workspace.AbstractWorkspace.setHeadlessProperty
 
 object Shell extends workspace.Shell {
 
-  def main(argv: Array[String]) {
+  def main(argv: Array[String]): Unit = {
     setHeadlessProperty()
     System.err.println(Version.fullVersion)
     val workspace = HeadlessWorkspace.newInstance
@@ -23,7 +23,7 @@ object Shell extends workspace.Shell {
     workspace.dispose()
   }
 
-  def run(workspace: HeadlessWorkspace, line: String) {
+  def run(workspace: HeadlessWorkspace, line: String): Unit = {
     val command =
       if (workspace.isReporter(line))
         "print " + line

@@ -19,7 +19,7 @@ class TestAllSyntaxes extends AnyFunSuite {
     shorten(i) + " " + i.syntax.dump
   def instruction(name: String) =
     (mapper.getCommand(name) orElse mapper.getReporter(name)).get
-  def doTest(names: Set[String], expected: String) {
+  def doTest(names: Set[String], expected: String): Unit = {
     val actual = names.map(instruction).map(entry).toSeq.sorted.mkString("\n")
     assertResult(expected)(actual)
   }

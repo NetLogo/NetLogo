@@ -61,7 +61,7 @@ object ModalProgressTask {
 
   private class Worker[A, B](window: Window, data: A, runInBackground: A => B, promise: Promise[B]) extends
     Thread("ModalProgressTask#Worker") {
-    override def run() {
+    override def run(): Unit = {
       try {
         promise.success(runInBackground(data))
       } catch {

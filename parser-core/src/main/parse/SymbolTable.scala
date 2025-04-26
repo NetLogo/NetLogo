@@ -2,32 +2,25 @@
 
 package org.nlogo.parse
 
-import scala.collection.immutable.{ Map => ImmutableMap }
-import scala.collection.generic.{ CanBuildFrom, FilterMonadic }
-import scala.collection.GenTraversableOnce
+import scala.collection.{ Iterable, IterableOnce, WithFilter }
 
 object SymbolTable {
-  def empty = new SymbolTable(ImmutableMap[String, SymbolType]())
-  def apply(pairs: (String, SymbolType)*) = new SymbolTable(ImmutableMap[String, SymbolType](pairs: _*))
+  def empty = new SymbolTable(Map[String, SymbolType]())
+  def apply(pairs: (String, SymbolType)*) = new SymbolTable(Map[String, SymbolType](pairs: _*))
 }
 
-class SymbolTable(private val syms: ImmutableMap[String, SymbolType], private val uniqueVarID: Int = 0) extends FilterMonadic[(String, SymbolType), SymbolTable] {
-  def flatMap[B, That](f: ((String, SymbolType)) => GenTraversableOnce[B])(implicit bf: CanBuildFrom[SymbolTable,B,That]): That = {
-    val builder = bf()
-    syms.flatMap(f).foreach(builder += _)
-    builder.result
-  }
+class SymbolTable(private val syms: Map[String, SymbolType], private val uniqueVarID: Int = 0) extends WithFilter[(String, SymbolType), Iterable] {
+  def flatMap[B](f: ((String, SymbolType)) => IterableOnce[B]): Iterable[B] =
+    syms.flatMap(f)
 
-  def map[B, That](f: ((String, SymbolType)) => B)(implicit bf: CanBuildFrom[SymbolTable,B,That]): That = {
-    val builder = bf()
-    builder ++= syms.map(f)
-    builder.result
-  }
+  def map[B](f: ((String, SymbolType)) => B): Iterable[B] =
+    syms.map(f)
 
-  def withFilter(p: ((String, SymbolType)) => Boolean): FilterMonadic[(String, SymbolType), SymbolTable] =
+  def withFilter(p: ((String, SymbolType)) => Boolean): WithFilter[(String, SymbolType), Iterable] =
     new SymbolTable(syms.filter(p), uniqueVarID)
 
-  def foreach[U](f: ((String, SymbolType)) => U): Unit = syms.foreach(f)
+  def foreach[U](f: ((String, SymbolType)) => U): Unit =
+    syms.foreach(f)
 
   def addSymbols(symNames: Iterable[String], tpe: SymbolType): SymbolTable =
     new SymbolTable(syms ++ symNames.map(_.toUpperCase -> tpe).toMap, uniqueVarID)
@@ -57,7 +50,7 @@ class SymbolTable(private val syms: ImmutableMap[String, SymbolType], private va
       else foundSymbolAndID = Some((potentialName, currentVarID))
     }
 
-    val Some((symbolName, symbolID)) = foundSymbolAndID
+    val (symbolName, symbolID) = foundSymbolAndID.get
     (symbolName, new SymbolTable(syms + (symbolName -> symType), symbolID + 1))
   }
 

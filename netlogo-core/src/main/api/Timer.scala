@@ -6,6 +6,6 @@ import System.currentTimeMillis
 
 class Timer {
   private var timer = currentTimeMillis
-  def reset() { timer = currentTimeMillis }
+  def reset(): Unit = { timer = currentTimeMillis }
   def read = (currentTimeMillis - timer) / 1000.0
 }

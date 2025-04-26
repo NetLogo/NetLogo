@@ -26,7 +26,7 @@ object Fonts {
   lazy val monospacedFont: Font =
     new Font(platformMonospacedFont, Font.PLAIN, 12)
 
-  def adjustDefaultMonospacedFont(comp: Component) {
+  def adjustDefaultMonospacedFont(comp: Component): Unit = {
     if (os("Mac"))
       comp.setFont(new Font(platformMonospacedFont, Font.PLAIN, 12))
   }

@@ -18,15 +18,13 @@ class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOr
     val centerPatch = agent match {
       case t: Turtle => t.currentPatch
       case p: Patch => p
+      case _ => throw new Exception(s"Unexpected agent: $agent")
     }
     // set agent coordinates startX, startY, patchX, patchY
     val (startX, startY, patchX, patchY) = agent match {
-      case t: Turtle => {
-        (t.xcor, t.ycor, centerPatch.pxcor, centerPatch.pycor)
-      }
-      case p: Patch => {
-        (p.pxcor.toDouble, p.pycor.toDouble, p.pxcor, p.pycor)
-      }
+      case t: Turtle => (t.xcor, t.ycor, centerPatch.pxcor, centerPatch.pycor)
+      case p: Patch => (p.pxcor.toDouble, p.pycor.toDouble, p.pxcor, p.pycor)
+      case _ => throw new Exception(s"Unexpected agent: $agent")
     }
 
     val cachedIDs = initCachedIDs(sourceSet)

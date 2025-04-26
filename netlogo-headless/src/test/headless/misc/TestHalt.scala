@@ -23,7 +23,7 @@ class TestHalt extends AnyFunSuite  {
   // it's a local variable rather than a top-level class member - ST 1/8/13
   var workspace: HeadlessWorkspace = null
 
-  def withWorkspace(body: => Unit) {
+  def withWorkspace(body: => Unit): Unit = {
     import TestHalt._
     val cleaner = Cleaner.create()
     finalized = false
@@ -56,7 +56,7 @@ class TestHalt extends AnyFunSuite  {
   test("halt 2", SlowTest.Tag) {
     var ex: api.LogoException = null
     val thread = new Thread("TestHalt.testHalt") {
-      override def run() {
+      override def run(): Unit = {
         try workspace.command("loop [ set x x + 1 ]")
         catch { case e: api.LogoException => ex = e }
       }
@@ -64,7 +64,7 @@ class TestHalt extends AnyFunSuite  {
     withWorkspace {
       workspace.openModel(core.Model(code = "globals [x]"))
       thread.start()
-      def loop() {
+      def loop(): Unit = {
         if (ex != null) throw ex
         if (workspace.report("x").asInstanceOf[Double] < 10) {
           Thread.sleep(5)

@@ -62,7 +62,7 @@ object OfferSaveExternalsDialog {
               setForeground(InterfaceColors.toolbarText())
 
               addMouseListener(new MouseAdapter {
-                override def mouseClicked(e: MouseEvent) {
+                override def mouseClicked(e: MouseEvent): Unit = {
                   checkBox.doClick()
                 }
               })

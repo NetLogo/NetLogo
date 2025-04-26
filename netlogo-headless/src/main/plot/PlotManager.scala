@@ -25,7 +25,7 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast)
   // the currently selected plot.
   // needed for backwards comp with pre 5.0 plotting style.
   var currentPlot: Option[Plot] = None
-  override def setCurrentPlot(name: String) {
+  override def setCurrentPlot(name: String): Unit = {
     currentPlot = maybeGetPlot(name)
   }
 
@@ -56,11 +56,11 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast)
   def getPlotNames = _plots.map(_.name)
   def nextName = Stream.from(1).map("plot " + _).find(maybeGetPlot(_).isEmpty).get
 
-  def forgetPlot(goner: Plot) {
+  def forgetPlot(goner: Plot): Unit = {
     if (currentPlot == Some(goner)) currentPlot = None
     _plots -= goner
   }
-  def forgetAll() {
+  def forgetAll(): Unit = {
     _plots.clear()
     currentPlot = None
     // not strictly necessary to clear the thunk maps since the references
@@ -69,7 +69,7 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast)
     penThunks.clear()
     plotThunks.clear()
   }
-  def clearAll() {
+  def clearAll(): Unit = {
     _plots.foreach(_.clear())
   }
 
@@ -125,10 +125,10 @@ class PlotManager(factory: LogoThunkFactory, random: MersenneTwisterFast)
   // code to run code in plots
   //
 
-  def setupPlots() { runCode(Setup) }
-  def updatePlots() { runCode(Update) }
+  def setupPlots(): Unit = { runCode(Setup) }
+  def updatePlots(): Unit = { runCode(Update) }
 
-  private def runCode(codeType: CodeType) {
+  private def runCode(codeType: CodeType): Unit = {
     // save the currently selected plot
     val oldCurrentPlot = currentPlot
     for (plot <- _plots) {

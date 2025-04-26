@@ -30,7 +30,7 @@ import org.nlogo.prim.{ _and, _call, _callreport, _list, _or, _word }
 
 class CustomGenerator(profilingEnabled: Boolean) {
 
-  def generate(instr: CustomGenerated, nlgen: GeneratorAdapter, thisInstrUID: Int, ip: Int) {
+  def generate(instr: CustomGenerated, nlgen: GeneratorAdapter, thisInstrUID: Int, ip: Int): Unit = {
     instr match {
       case instr: _and =>
         generateAnd(instr, nlgen, thisInstrUID)
@@ -44,10 +44,12 @@ class CustomGenerator(profilingEnabled: Boolean) {
         generateList(instr, nlgen, thisInstrUID)
       case instr: _word =>
         generateWord(instr, nlgen, thisInstrUID)
+      case _ =>
+        throw new Exception(s"Unexpected instruction: $instr")
     }
   }
 
-  private def generateAnd(instr: _and, mv: GeneratorAdapter, thisInstrUID: Int) {
+  private def generateAnd(instr: _and, mv: GeneratorAdapter, thisInstrUID: Int): Unit = {
     mv.generateArgument(instr, 0, java.lang.Boolean.TYPE, thisInstrUID)
     val l1 = new Label
     mv.visitJumpInsn(IFEQ, l1)
@@ -59,7 +61,7 @@ class CustomGenerator(profilingEnabled: Boolean) {
     mv.visitLabel(lEnd)
   }
 
-  private def generateOr(instr: _or, mv: GeneratorAdapter, thisInstrUID: Int) {
+  private def generateOr(instr: _or, mv: GeneratorAdapter, thisInstrUID: Int): Unit = {
     mv.generateArgument(instr, 0, java.lang.Boolean.TYPE, thisInstrUID)
     val l1 = new Label
     mv.visitJumpInsn(IFNE, l1)
@@ -85,7 +87,7 @@ class CustomGenerator(profilingEnabled: Boolean) {
      workspace.profilingTracer().openCallRecord(context, newActivation)
    }
    */
-  private def generateCall(instr: _call, mv: GeneratorAdapter, thisInstrUID: Int) {
+  private def generateCall(instr: _call, mv: GeneratorAdapter, thisInstrUID: Int): Unit = {
     mv.keepField("procedure", instr.procedure, thisInstrUID)
     mv.visitTypeInsn(NEW, "org/nlogo/nvm/Activation")
     // stack: Activation
@@ -160,7 +162,7 @@ class CustomGenerator(profilingEnabled: Boolean) {
      workspace.profilingTracer().openCallRecord(context, newActivation)
    }
    */
-  private def generateCallReport(instr: _callreport, mv: GeneratorAdapter, thisInstrUID: Int, ip: Int) {
+  private def generateCallReport(instr: _callreport, mv: GeneratorAdapter, thisInstrUID: Int, ip: Int): Unit = {
     mv.keepField("procedure", instr.procedure, thisInstrUID)
     mv.visitTypeInsn(NEW, "org/nlogo/nvm/Activation")
     // stack: Activation
@@ -256,7 +258,7 @@ class CustomGenerator(profilingEnabled: Boolean) {
      return list.toLogoList()
    }
    */
-  private def generateList(instr: _list, mv: GeneratorAdapter, thisInstrUID: Int) {
+  private def generateList(instr: _list, mv: GeneratorAdapter, thisInstrUID: Int): Unit = {
     mv.visitTypeInsn(NEW, "org/nlogo/api/LogoListBuilder")
     mv.visitInsn(DUP)
     mv.visitMethodInsn(INVOKESPECIAL, "org/nlogo/api/LogoListBuilder", "<init>", "()V", false)
@@ -280,7 +282,7 @@ class CustomGenerator(profilingEnabled: Boolean) {
    //...
    return result.toString()
    }*/
-  private def generateWord(instr: _word, mv: GeneratorAdapter, thisInstrUID: Int) {
+  private def generateWord(instr: _word, mv: GeneratorAdapter, thisInstrUID: Int): Unit = {
     mv.visitTypeInsn(NEW, "java/lang/StringBuilder")
     mv.visitInsn(DUP)
     mv.visitMethodInsn(INVOKESPECIAL, "java/lang/StringBuilder", "<init>", "()V", false)

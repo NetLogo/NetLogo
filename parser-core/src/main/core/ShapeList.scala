@@ -3,15 +3,13 @@
 package org.nlogo.core
 
 import java.util.{ Collection => JCollection }
-import scala.collection.mutable.Publisher
 
 object ShapeList {
   val DefaultShapeName = "default"
   def isDefaultShapeName(name: String) =
     name == DefaultShapeName
   def sortShapes(unsortedShapes: Seq[Shape]): Seq[Shape] =
-    collection.mutable.ArrayBuffer(unsortedShapes: _*)
-      .sortBy(_.name)
+    unsortedShapes.sortBy(_.name)
   def shapesToMap(collection: Iterable[Shape]): Map[String, Shape] =
     collection.map(s => (s.name -> s)).toMap
 }
@@ -72,7 +70,7 @@ class ShapeListTracker(private var _shapeList: ShapeList) extends Publisher[Shap
   }
 
   def replaceShapes(newShapes: JCollection[_ <: Shape]): Unit = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.CollectionHasAsScala
     replaceShapes(newShapes.asScala)
   }
 

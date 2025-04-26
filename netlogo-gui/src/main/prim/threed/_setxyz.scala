@@ -9,7 +9,7 @@ class _setxyz extends Command {
   switches = true
 
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     context.agent match {
       case turtle: Turtle3D =>
         var newx = argEvalDouble(context, 0)
@@ -48,6 +48,8 @@ class _setxyz extends Command {
         val rotationPoint = observer.rotationPoint
         observer.oxyandzcor(xcor, ycor, zcor)
         observer.face(rotationPoint.x, rotationPoint.y, rotationPoint.z)
+
+      case _ =>
     }
     context.ip = next
   }

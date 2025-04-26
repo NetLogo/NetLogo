@@ -8,7 +8,7 @@ class InputBoxConstraint(var typeName: String, _defaultValue: AnyRef)
   extends ValueConstraint
 {
   var defaultValue = coerceValue(_defaultValue)
-  def setType(typeName: String, defaultValue: AnyRef) {
+  def setType(typeName: String, defaultValue: AnyRef): Unit = {
     this.typeName = typeName
     this.defaultValue = coerceValue(defaultValue)
   }
@@ -18,7 +18,7 @@ class InputBoxConstraint(var typeName: String, _defaultValue: AnyRef)
       case _ => obj.isInstanceOf[String]
     }
   @throws(classOf[ValueConstraint.Violation])
-  def assertConstraint(value: AnyRef) {
+  def assertConstraint(value: AnyRef): Unit = {
     if(!correctType(value))
       throw new ValueConstraint.Violation("You can't set this to " + value)
   }

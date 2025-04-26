@@ -118,7 +118,7 @@ trait ProgramGenerator extends ScalaCheckDrivenPropertyChecks {
         case Breed(tpe, plural, singular, owns) if owns.nonEmpty => s"[ $plural $singular ] $plural-own " + owns.mkString("[ ", " ", " ]")
         case Breed(tpe, plural, singular, _) => s"[ $plural $singular ]"
         case BracketedElement(keyword, elems) => elems.mkString("[ ", " ", " ]")
-        case p@Procedure(procType, _, _, _) => p.programText.replaceAllLiterally(procType, "")
+        case p@Procedure(procType, _, _, _) => p.programText.replace(procType, "")
       }
     }
   }
@@ -133,10 +133,10 @@ trait ProgramGenerator extends ScalaCheckDrivenPropertyChecks {
 
     case class DeleteLastSyntax(originalElement: ProgramElement) extends MangledProgramElement {
       def mangledText = originalElement match {
-        case p: Procedure => originalText.replaceAllLiterally("end", "")
+        case p: Procedure => originalText.replace("end", "")
         case Breed(tpe, plural, singular, owns) if owns.nonEmpty => s"$tpe [ $plural $singular ] $plural-own " + owns.mkString("[ ", " ", "")
         case Breed(tpe, plural, singular, _) => s"$tpe [ $plural $singular"
-        case o            => originalText.replaceAllLiterally("]", "")
+        case o            => originalText.replace("]", "")
       }
     }
   }

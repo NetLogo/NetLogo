@@ -179,6 +179,8 @@ trait OrientatableObserver { this: Observer =>
         else {
           false
         }
+      case _ =>
+        throw new Exception(s"Unexpected perspective: $perspective")
     }
 
   }

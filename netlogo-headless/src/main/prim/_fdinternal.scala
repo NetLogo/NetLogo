@@ -14,11 +14,11 @@ class _fdinternal(let: Let) extends Command {
 
   switches = true
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     perform_1(context)
   }
 
-  def perform_1(context: Context) {
+  def perform_1(context: Context): Unit = {
     val turtle = context.agent.asInstanceOf[Turtle]
     val countdown = context.activation.binding.getLet(let).asInstanceOf[MutableDouble]
     val distance = countdown.value

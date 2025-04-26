@@ -14,7 +14,7 @@ object ToolBar {
   class Separator extends JComponent {
     override def getMinimumSize = new Dimension(19,25)
     override def getPreferredSize = getMinimumSize
-    override def paintComponent(g:Graphics) {
+    override def paintComponent(g:Graphics): Unit = {
       g.setColor(Color.GRAY)
       for(i<-0 until 3) {
         g.drawLine(getWidth / 2 + i, 0, getWidth / 2 + i, getHeight - 2)

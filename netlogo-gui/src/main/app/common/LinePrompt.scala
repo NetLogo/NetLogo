@@ -16,25 +16,25 @@ class LinePrompt(commandLine: CommandLine) extends JLabel {
   private var mouseInBounds = false
 
   addMouseListener(new MouseAdapter {
-    override def mouseEntered(e: MouseEvent) {
+    override def mouseEntered(e: MouseEvent): Unit = {
       mouseInBounds = true
 
       repaint()
     }
 
-    override def mouseExited(e: MouseEvent) {
+    override def mouseExited(e: MouseEvent): Unit = {
       mouseInBounds = false
 
       repaint()
     }
 
-    override def mousePressed(e: MouseEvent)  {
+    override def mousePressed(e: MouseEvent): Unit =  {
       if (isEnabled) {
         val popMenu = new PopupMenu("Ask who?")
 
-        def addItem(name: String, clazz: AgentKind) {
+        def addItem(name: String, clazz: AgentKind): Unit = {
           popMenu.add(new MenuItem(new AbstractAction(name) {
-            def actionPerformed(e: ActionEvent) {
+            def actionPerformed(e: ActionEvent): Unit = {
               commandLine.agentKind(clazz)
               LinePrompt.this.repaint()
               commandLine.requestFocus()
@@ -61,7 +61,7 @@ class LinePrompt(commandLine: CommandLine) extends JLabel {
     }
   }
 
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics): Unit = {
     setText(getPrompt)
 
     if (mouseInBounds)

@@ -31,7 +31,7 @@ class TestArgumentInjection extends FixtureSuite {
 
   // making callers
 
-  def substituteArgs(instr: nvm.Instruction, args: AnyRef*) {
+  def substituteArgs(instr: nvm.Instruction, args: AnyRef*): Unit = {
     for(i <- args.indices) {
       instr.args(i) = instr.workspace.compiler.makeLiteralReporter(args(i))
       instr.args(i).init(instr.workspace)
@@ -60,7 +60,7 @@ class TestArgumentInjection extends FixtureSuite {
   def is(i: nvm.Instruction, name: String) =
     i.getClass.getSimpleName == name
 
-  def runCommandCaller(owner: api.JobOwner, caller: nvm.Procedure, args: AnyRef*) {
+  def runCommandCaller(owner: api.JobOwner, caller: nvm.Procedure, args: AnyRef*): Unit = {
     val call = caller.code.find(is(_, "_call")).get
     substituteArgs(call, args: _*)
     call.workspace.runCompiledCommands(owner, caller)
@@ -111,7 +111,7 @@ class TestArgumentInjection extends FixtureSuite {
     import fixture._
     declare("to make-network [n] ca cro n [ create-links-with other turtles ] end")
     val caller = makeCommandCaller(workspace, "make-network")
-    def check(n: Int) {
+    def check(n: Int): Unit = {
       runCommandCaller(owner(), caller, Double.box(n))
       assertResult(Double.box(n * (n - 1).toDouble / 2))(
         workspace.report("count links"))

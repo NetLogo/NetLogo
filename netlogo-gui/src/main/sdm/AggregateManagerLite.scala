@@ -9,7 +9,7 @@ class AggregateManagerLite extends AggregateManagerInterface {
 
   private def unsupported = throw new UnsupportedOperationException
 
-  def load(model: CoreModel, compiler: CompilerServices) {
+  def load(model: CoreModel, compiler: CompilerServices): Unit = {
     model.optionalSectionValue[Model]("org.nlogo.modelsection.systemdynamics")
       .foreach { (m: Model) =>
         source = new Translator(m, compiler).source

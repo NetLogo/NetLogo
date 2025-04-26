@@ -97,23 +97,23 @@ class SourcePositionTests extends AnyFunSuite with BaseParserTest {
       visitor.buf.toString
     }).mkString
   /// helper
-  def testStartAndEnd(source: String, preorderDump: String) {
+  def testStartAndEnd(source: String, preorderDump: String): Unit = {
     assertResult(preorderDump)(statementsToString(compile(source), source))
   }
   // preorder traversal
   class PositionsCheckVisitor(source: String) extends core.AstVisitor {
     val buf = new StringBuilder()
-    override def visitCommandBlock(node: core.CommandBlock) { visit(node); super.visitCommandBlock(node) }
-    override def visitReporterApp(node: core.ReporterApp) { visit(node); super.visitReporterApp(node) }
-    override def visitReporterBlock(node: core.ReporterBlock) { visit(node); super.visitReporterBlock(node) }
-    override def visitStatement(node: core.Statement) { visit(node); super.visitStatement(node) }
-    override def visitStatements(node: core.Statements) {
+    override def visitCommandBlock(node: core.CommandBlock): Unit = { visit(node); super.visitCommandBlock(node) }
+    override def visitReporterApp(node: core.ReporterApp): Unit = { visit(node); super.visitReporterApp(node) }
+    override def visitReporterBlock(node: core.ReporterBlock): Unit = { visit(node); super.visitReporterBlock(node) }
+    override def visitStatement(node: core.Statement): Unit = { visit(node); super.visitStatement(node) }
+    override def visitStatements(node: core.Statements): Unit = {
       if (node.stmts.isEmpty)
         buf.append(node.getClass.getSimpleName + " '' ")
       else visit(node)
       super.visitStatements(node)
     }
-    def visit(node: core.AstNode) {
+    def visit(node: core.AstNode): Unit = {
       val start = node.start - PREAMBLE.length
       val end = node.end - PREAMBLE.length
       val text =

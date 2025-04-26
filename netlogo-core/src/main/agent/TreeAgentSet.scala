@@ -50,7 +50,7 @@ extends AgentSet(kind, printName) {
    * It is the caller's responsibility not to add an agent that
    * is already in the set.
    */
-  def add(agent: Agent) {
+  def add(agent: Agent): Unit = {
     require(kind == agent.kind)
     _agents.put(agent.agentKey, agent)
     nextIndex = nextIndex max (agent._id + 1)
@@ -58,12 +58,12 @@ extends AgentSet(kind, printName) {
   }
 
   // made public for mutable agentset operations
-  def remove(key: AnyRef) {
+  def remove(key: AnyRef): Unit = {
     _agents.remove(key)
     simpleChangeEventPublisher.publish()
   }
 
-  def clear() {
+  def clear(): Unit = {
     _agents.clear()
     simpleChangeEventPublisher.publish()
   }
@@ -164,7 +164,7 @@ extends AgentSet(kind, printName) {
       fetch()
       result
     }
-    private def fetch() {
+    private def fetch(): Unit = {
       if (i >= copy.length)
         _next = null
       else {

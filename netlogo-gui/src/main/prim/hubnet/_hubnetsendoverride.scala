@@ -7,7 +7,7 @@ import org.nlogo.api.{ CommandRunnable, Dump }
 import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 
 class _hubnetsendoverride extends Command with HubNetPrim {
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val client = argEvalString(context, 0)
     val target = args(1).report(context)
     val varName = argEvalString(context, 2)
@@ -29,7 +29,7 @@ class _hubnetsendoverride extends Command with HubNetPrim {
     val overrides = new collection.mutable.HashMap[java.lang.Long,AnyRef]()
     val it = set.iterator
     while(it.hasNext) {
-      val agent = it.next
+      val agent = it.next()
       overrides(agent.id) = {
         val value = freshContext.evaluateReporter(agent, args(3))
         // gross to special case this, and not even clear where to put the special-case
@@ -42,7 +42,7 @@ class _hubnetsendoverride extends Command with HubNetPrim {
     }
 
     workspace.waitFor(new CommandRunnable() {
-      def run() { hubNetManager.foreach(
+      def run(): Unit = { hubNetManager.foreach(
       _.sendOverrideList(client, set.kind, varName, overrides.toMap)) }
     })
     context.ip = next

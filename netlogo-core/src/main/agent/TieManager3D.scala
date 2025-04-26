@@ -54,7 +54,7 @@ class TieManager3D(links: TreeAgentSet, linkManager: LinkManager, protractor: Pr
       case link if link.isTied => link.otherEnd(root)
     }.collect {
       case t: Turtle3D if t.id != -1 && ! seenTurtles.contains(t) => t
-    }
+    }.toIndexedSeq
   }
 
   override def turtleTurned(root: Turtle, newHeading: Double, originalHeading: Double): Unit = {
@@ -64,7 +64,7 @@ class TieManager3D(links: TreeAgentSet, linkManager: LinkManager, protractor: Pr
 
   protected def turtleOrientationChanged(root: Turtle3D,
        newHeading: Double, newPitch: Double, newRoll: Double,
-       oldHeading: Double, oldPitch: Double, oldRoll: Double) {
+       oldHeading: Double, oldPitch: Double, oldRoll: Double): Unit = {
     var weroot = false
     try {
       if (seenTurtles.isEmpty) {

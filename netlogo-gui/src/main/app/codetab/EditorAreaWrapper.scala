@@ -20,8 +20,8 @@ class EditorAreaWrapper(text: JTextComponent) extends EditorAreaInterface {
   def getText(start: Int, len: Int) = text.getDocument.getText(start, len)
   def getSelectionStart = text.getSelectionStart
   def getSelectionEnd = text.getSelectionEnd
-  def setSelectionStart(pos: Int) { text.setSelectionStart(pos) }
-  def setSelectionEnd(pos: Int) { text.setSelectionEnd(pos) }
+  def setSelectionStart(pos: Int): Unit = { text.setSelectionStart(pos) }
+  def setSelectionEnd(pos: Int): Unit = { text.setSelectionEnd(pos) }
   def offsetToLine(offset: Int) =
     text.getDocument.getDefaultRootElement.getElementIndex(offset)
   def lineToStartOffset(line: Int) =
@@ -29,10 +29,10 @@ class EditorAreaWrapper(text: JTextComponent) extends EditorAreaInterface {
   def lineToEndOffset(line: Int) = {
     text.getDocument.getDefaultRootElement.getElement(line).getEndOffset
   }
-  def insertString(pos: Int, spaces: String) {
+  def insertString(pos: Int, spaces: String): Unit = {
     text.getDocument.insertString(pos, spaces, null)
   }
-  def replaceSelection(s: String) { text.replaceSelection(s) }
+  def replaceSelection(s: String): Unit = { text.replaceSelection(s) }
   def replace(start: Int, len: Int, str: String): Unit = {
     try {
       text match {
@@ -54,7 +54,7 @@ class EditorAreaWrapper(text: JTextComponent) extends EditorAreaInterface {
         throw ex
     }
   }
-  def remove(start: Int, len: Int) {
+  def remove(start: Int, len: Int): Unit = {
     try {
       text.getDocument.remove(start, len)
     } catch {

@@ -6,6 +6,8 @@ import org.nlogo.core.{ I18N, Token, TokenType }
 import org.nlogo.core.Fail._
 import org.nlogo.core.prim.{ _abstractset, _multiset, _set }
 
+import scala.collection.BufferedIterator
+
 object SplitSet {
   def apply(s: _set, tokens: BufferedIterator[Token]): _abstractset = {
     tokens.head match {

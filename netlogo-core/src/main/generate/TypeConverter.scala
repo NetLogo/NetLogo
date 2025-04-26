@@ -24,7 +24,7 @@ object TypeConverter {
    *   we need this, so we can create ArgumentTypeExceptions pointing to the
    *   correct culprit.
    */
-  def generateConversion(typeFrom: Class[_], typeTo: Class[_], mv: MethodVisitor, firstFreeJVMLocal: Int, parentInstr: Instruction, argIndex: Int) {
+  def generateConversion(typeFrom: Class[_], typeTo: Class[_], mv: MethodVisitor, firstFreeJVMLocal: Int, parentInstr: Instruction, argIndex: Int): Unit = {
     if (typeFrom == java.lang.Boolean.TYPE && (typeTo == classOf[Object] || typeTo == classOf[java.lang.Boolean]))
       frombooleantoObject(mv)
     else if (typeFrom == java.lang.Double.TYPE && (typeTo == classOf[Object] || typeTo == classOf[java.lang.Double]))
@@ -55,10 +55,10 @@ object TypeConverter {
   // method fromXtoY assumes that the top jvm stack value is of type X
   // the method generates code to convert the top stack value to type Y
   //   ~Forrest (5/16/2006)
-  private def fromDoubletodouble(mv: MethodVisitor) {
+  private def fromDoubletodouble(mv: MethodVisitor): Unit = {
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Double", "doubleValue", "()D", false)
   }
-  private def fromObjecttodouble(mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int) {
+  private def fromObjecttodouble(mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int): Unit = {
     mv.visitVarInsn(ASTORE, firstFreeJVMLocal)
     val l0 = new Label
     val l1 = new Label
@@ -83,10 +83,10 @@ object TypeConverter {
     mv.visitInsn(ATHROW)
     mv.visitLabel(lEnd)
   }
-  private def fromBooleantoboolean(mv: MethodVisitor) {
+  private def fromBooleantoboolean(mv: MethodVisitor): Unit = {
     mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/Boolean", "booleanValue", "()Z", false)
   }
-  private def fromObjecttoboolean(mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int) {
+  private def fromObjecttoboolean(mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int): Unit = {
     mv.visitVarInsn(ASTORE, firstFreeJVMLocal)
     val l0 = new Label
     val l1 = new Label
@@ -111,14 +111,14 @@ object TypeConverter {
     mv.visitInsn(ATHROW)
     mv.visitLabel(lEnd)
   }
-  private def fromdoubletoObject(mv: MethodVisitor, firstFreeJVMLocal: Int) {
+  private def fromdoubletoObject(mv: MethodVisitor, firstFreeJVMLocal: Int): Unit = {
     mv.visitVarInsn(DSTORE, firstFreeJVMLocal)
     mv.visitTypeInsn(NEW, "java/lang/Double")
     mv.visitInsn(DUP)
     mv.visitVarInsn(DLOAD, firstFreeJVMLocal)
     mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Double", "<init>", "(D)V", false)
   }
-  private def frombooleantoObject(mv: MethodVisitor) {
+  private def frombooleantoObject(mv: MethodVisitor): Unit = {
     // Code, roughly speaking:  bval ? Boolean.TRUE : Boolean.FALSE
     val l1 = new Label
     mv.visitJumpInsn(IFEQ, l1)
@@ -129,7 +129,7 @@ object TypeConverter {
     mv.visitFieldInsn(GETSTATIC, "java/lang/Boolean", "FALSE", "Ljava/lang/Boolean;")
     mv.visitLabel(l2)
   }
-  private def castObjectToObject(typeTo: Class[_], mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int) {
+  private def castObjectToObject(typeTo: Class[_], mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int): Unit = {
     mv.visitVarInsn(ASTORE, firstFreeJVMLocal)
     val l0 = new Label
     val l1 = new Label

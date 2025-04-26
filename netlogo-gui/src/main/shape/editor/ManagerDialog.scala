@@ -22,16 +22,16 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
                                              shapeListTracker: ShapeListTracker)(implicit ct: ClassTag[A])
   extends JDialog(parentFrame) with ListSelectionListener with ThemeSync {
 
-  implicit val i18nPrefix = I18N.Prefix("tools.shapesEditor")
+  implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.shapesEditor")
 
   val shapesList = new DrawableList(shapeListTracker, 10, 34, this)
 
   protected var importDialog: Option[ImportDialog] = None
 
   // abstract defs
-  def newShape()
-  def editShape()
-  def duplicateShape()
+  def newShape(): Unit
+  def editShape(): Unit
+  def duplicateShape(): Unit
 
   def displayableShapeFromCoreShape(shape: CoreShape): Option[A]
 
@@ -39,11 +39,11 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
 
   def shapeKind: AgentKind
 
-  private val newButton = new DialogButton(false, I18N.gui("new"), () => newShape)
-  private val modelImportButton = new DialogButton(false, I18N.gui("importFromModel"), () => importFromModel)
+  private val newButton = new DialogButton(false, I18N.gui("new"), () => newShape())
+  private val modelImportButton = new DialogButton(false, I18N.gui("importFromModel"), () => importFromModel())
 
-  private val editButton = new DialogButton(false, I18N.gui("edit"), () => editShape)
-  private val duplicateButton = new DialogButton(false, I18N.gui("duplicate"), () => duplicateShape)
+  private val editButton = new DialogButton(false, I18N.gui("edit"), () => editShape())
+  private val duplicateButton = new DialogButton(false, I18N.gui("duplicate"), () => duplicateShape())
   private val deleteButton = new DialogButton(false, I18N.gui("delete"), () => {
       shapesList.deleteShapes()
       editButton.setEnabled(true) // Since at most one shape is highlighted now, enable edit
@@ -145,14 +145,14 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
   def additionalButton: Option[Button] = None
 
   // Initialize then display the manager
-  def init(title: String) {
+  def init(title: String): Unit = {
     shapesList.update(searchOption)
     shapesList.selectShapeName("default")
     setTitle(title)
     setVisible(true)
   }
 
-  def reset() {
+  def reset(): Unit = {
     shapesList.update(searchOption)
     shapesList.selectShapeName("default")
   }
@@ -187,7 +187,7 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
   }
 
   // Listen for changes in list selection, and make the edit and delete buttons inoperative if necessary
-  def valueChanged(e: ListSelectionEvent) {
+  def valueChanged(e: ListSelectionEvent): Unit = {
     val selected = shapesList.getSelectedIndices()
     // Only one shape can be edited or copied at a time
     if (selected.length != 1) {

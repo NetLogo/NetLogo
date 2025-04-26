@@ -4,6 +4,8 @@ package org.nlogo.parse
 
 import org.nlogo.core.Token
 
+import scala.collection.BufferedIterator
+
 trait TokenTransformer[A] {
   def initialState: A
   def transform(t: Token, state: A): (Token, A)

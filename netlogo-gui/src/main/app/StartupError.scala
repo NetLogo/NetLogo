@@ -18,7 +18,7 @@ import org.nlogo.theme.InterfaceColors
 // 2023
 
 object StartupError {
-  def report(ex: Throwable) {
+  def report(ex: Throwable): Unit = {
     System.err.println("NetLogo Startup Error")
     ex.printStackTrace()
 
@@ -29,7 +29,7 @@ object StartupError {
 
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
     frame.addWindowListener(new WindowAdapter() {
-      override def windowClosing(e: WindowEvent) {
+      override def windowClosing(e: WindowEvent): Unit = {
         sys.exit(1)
       }
     })

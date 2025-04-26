@@ -16,11 +16,11 @@ import org.nlogo.theme.InterfaceColors
 
 class Picker(view: View) extends PickListener with ActionListener {
 
-  def pick(mousePt: java.awt.Point, agents: JList[Agent]) {
+  def pick(mousePt: java.awt.Point, agents: JList[Agent]): Unit = {
     val menu = new WrappingPopupMenu
 
     menu.add(new MenuItem(new AbstractAction("Edit...") {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         new org.nlogo.window.Events.EditWidgetEvent(
           view.viewManager.workspace.viewWidget.settings)
         .raise(view)
@@ -30,14 +30,14 @@ class Picker(view: View) extends PickListener with ActionListener {
     menu.addSeparator()
 
     menu.add(new MenuItem(new AbstractAction("Copy View") {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         Toolkit.getDefaultToolkit.getSystemClipboard.setContents(
           new ImageSelection(view.exportView), null)
       }
     }))
 
     menu.add(new MenuItem(new AbstractAction("Export View...") {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         view.viewManager.workspace.doExportView(view.viewManager)
       }
     }))
@@ -45,7 +45,7 @@ class Picker(view: View) extends PickListener with ActionListener {
     menu.addSeparator()
 
     menu.add(new MenuItem(new AbstractAction("inspect globals") {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         view.viewManager.workspace.inspectAgent(AgentKind.Observer)
       }
     }))
@@ -54,7 +54,7 @@ class Picker(view: View) extends PickListener with ActionListener {
 
     val resetItem = new MenuItem(new AbstractAction(
         "<html>" + colorize("reset-perspective", InterfaceColors.commandColor())) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         view.resetPerspective()
       }
     })
@@ -67,7 +67,7 @@ class Picker(view: View) extends PickListener with ActionListener {
     }
 
     var last: Class[_] = null
-    import collection.JavaConverters._
+    import scala.jdk.CollectionConverters.ListHasAsScala
     for(agent <- agents.asScala) {
       if (last == null || !last.isInstance(agent)) {
         menu.addSeparator()
@@ -97,7 +97,7 @@ class Picker(view: View) extends PickListener with ActionListener {
 
   private class AgentMenu(agent: Agent) extends Menu(agent.toString) {
     var action: AgentAction = null
-    override def menuSelectionChanged(isIncluded: Boolean) {
+    override def menuSelectionChanged(isIncluded: Boolean): Unit = {
       super.menuSelectionChanged(isIncluded)
       view.renderer.outlineAgent(if (isIncluded) agent
                                  else null)
@@ -120,17 +120,17 @@ class Picker(view: View) extends PickListener with ActionListener {
   private class AgentMenuItem(val agent: Agent, val action: AgentAction, caption: String)
   extends MenuItem(htmlString(agent, caption)) {
     addActionListener(Picker.this)
-    override def menuSelectionChanged(isIncluded: Boolean) {
+    override def menuSelectionChanged(isIncluded: Boolean): Unit = {
       super.menuSelectionChanged(isIncluded)
       view.renderer.outlineAgent(if (isIncluded) agent else null)
       view.display()
     }
   }
 
-  def actionPerformed(e: ActionEvent) {
+  def actionPerformed(e: ActionEvent): Unit = {
     val item = e.getSource.asInstanceOf[AgentMenuItem]
     val observer = view.viewManager.world.observer
-    def update() {
+    def update(): Unit = {
       view.display()
     }
     item.action match {

@@ -15,7 +15,7 @@ class _setlinkbreedvariable(name: String) extends Command {
   override def toString =
     super.toString + ":" + name
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val value = args(0).report(context)
     try context.agent.setLinkBreedVariable(name, value)
     catch { case ex: AgentException =>

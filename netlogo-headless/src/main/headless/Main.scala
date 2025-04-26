@@ -10,7 +10,7 @@ import org.nlogo.api.PlotCompilationErrorAction
 object Main {
   class CancelException extends RuntimeException
 
-  def main(args: Array[String]) {
+  def main(args: Array[String]): Unit = {
     try {
       setHeadlessProperty()
       parseArgs(args).foreach(runExperiment(_))
@@ -19,7 +19,7 @@ object Main {
     }
   }
 
-  def runExperiment(settings: Settings, finish: () => Unit = () => {}) {
+  def runExperiment(settings: Settings, finish: () => Unit = () => {}): Unit = {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
     var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
     def newWorkspace = {
@@ -47,7 +47,7 @@ object Main {
     }
   }
 
-  def runExperimentWithProtocol(settings: Settings, protocol: LabProtocol, finish: () => Unit = () => {}) {
+  def runExperimentWithProtocol(settings: Settings, protocol: LabProtocol, finish: () => Unit = () => {}): Unit = {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
     var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
     def newWorkspace = {
@@ -64,7 +64,7 @@ object Main {
     lab.run(settings, protocol, newWorkspace _, finish)
   }
 
-  def setHeadlessProperty() {
+  def setHeadlessProperty(): Unit = {
     // force headless mode if it is not set.  This is necessary for the headless workspace to run
     // on most platforms when a display is not available. --CLB
     // note that since our check is for null, so the user can still force the property to false and
@@ -89,18 +89,18 @@ object Main {
     var suppressErrors = false
     var updatePlots = false
     val it = args.iterator
-    def die(msg: String) { Console.err.println(msg); throw new CancelException }
+    def die(msg: String): Unit = { Console.err.println(msg); throw new CancelException }
     def path2writer(path: String) =
       if(path == "-")
         new java.io.PrintWriter(Console.out) {
           // don't close Console.out - ST 6/9/09
-          override def close() { } }
+          override def close(): Unit = { } }
       else
         new java.io.PrintWriter(new java.io.FileWriter(path.trim))
     var outputPath = ""
     while(it.hasNext) {
       val arg = it.next()
-      def requireHasNext() {
+      def requireHasNext(): Unit = {
         if (!it.hasNext)
           die("missing argument after " + arg)
       }

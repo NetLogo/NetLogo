@@ -2,8 +2,6 @@
 
 package org.nlogo.plot
 
-import collection.mutable.Buffer
-
 import java.io.{ Serializable => JSerializable }
 
 import org.nlogo.api.PlotPenInterface
@@ -64,10 +62,10 @@ extends PlotPenInterface with JSerializable {
     hidden = s.hidden
   }
 
-  var points: Buffer[PlotPoint] = Buffer()
+  var points: Seq[PlotPoint] = Seq()
 
   def color = _color
-  def color_=(newColor: Int) {
+  def color_=(newColor: Int): Unit = {
     if(_color != newColor) {
       _color = newColor
       plot.pensDirty = true
@@ -76,13 +74,13 @@ extends PlotPenInterface with JSerializable {
   }
 
   def interval = _interval
-  def interval_=(newInterval: Double) {
+  def interval_=(newInterval: Double): Unit = {
     _interval = newInterval
     plot.plotListener.foreach(_.setInterval(newInterval))
   }
 
   def hidden = _hidden
-  def hidden_=(newIsHidden: Boolean) {
+  def hidden_=(newIsHidden: Boolean): Unit = {
     if(_hidden != newIsHidden) {
       _hidden = newIsHidden
       plot.pensDirty = true
@@ -90,13 +88,13 @@ extends PlotPenInterface with JSerializable {
   }
 
   def isDown = _isDown
-  def isDown_=(newIsDown: Boolean) {
+  def isDown_=(newIsDown: Boolean): Unit = {
     _isDown = newIsDown
     plot.plotListener.foreach(_.penDown(newIsDown))
   }
 
   def mode = _mode
-  def mode_=(newMode: Int) {
+  def mode_=(newMode: Int): Unit = {
     if( mode != newMode ) {
       penModeChanged = true
       _mode = newMode
@@ -105,15 +103,15 @@ extends PlotPenInterface with JSerializable {
     }
   }
 
-  def setupCode(code:String) { setupCode = if(code == null) "" else code }
-  def updateCode(code:String) { updateCode = if(code == null) "" else code }
+  def setupCode(code:String): Unit = { setupCode = if(code == null) "" else code }
+  def updateCode(code:String): Unit = { updateCode = if(code == null) "" else code }
   def saveString = {
     import org.nlogo.api.StringUtils.escapeString
     "\"" + escapeString(setupCode.trim) + "\"" + " " + "\"" + escapeString(updateCode.trim) + "\""
   }
 
   /// actual functionality
-  def hardReset() {
+  def hardReset(): Unit = {
     softReset()
     // temporary pens don't have defaults, so there's no difference between a soft and hard reset
     // for a temporary pen - ST 2/24/06
@@ -126,39 +124,39 @@ extends PlotPenInterface with JSerializable {
 
   // move this out of hard reset because sometimes hardReset is used as part of a multi-step process
   // and we don't want this to happen until the end ev 1/18/07
-  def plotListenerReset(hardReset: Boolean) {
+  def plotListenerReset(hardReset: Boolean): Unit = {
     plot.plotListener.foreach(_.resetPen(hardReset))
   }
 
-  def softReset() {
+  def softReset(): Unit = {
     x = 0.0
     isDown = true
-    points = Buffer()
+    points = Seq()
     runtimeError = None
   }
 
-  def plot(y: Double) {
+  def plot(y: Double): Unit = {
     if (points.nonEmpty) x += interval
     plot(x, y)
   }
 
-  def plot(x: Double, y: Double) {
+  def plot(x: Double, y: Double): Unit = {
     this.x = x
     // note that we add the point even if the pen is up; this may
     // seem useless but it simplifies the painting logic - ST 2/23/06
-    points += PlotPoint(x, y, isDown, color)
+    points = points :+ PlotPoint(x, y, isDown, color)
     if (isDown) plot.perhapsGrowRanges(this, x, y)
     plot.plotListener.foreach(_.plot(x, y))
   }
 
-  def plot(x: Double, y: Double, color: Int, isDown: Boolean) {
-    points += PlotPoint(x, y, isDown, color)
+  def plot(x: Double, y: Double, color: Int, isDown: Boolean): Unit = {
+    points = points :+ PlotPoint(x, y, isDown, color)
   }
 
   // serialization is for HubNet plot mirroring
 
   @throws(classOf[java.io.IOException])
-  private def writeObject(out: java.io.ObjectOutputStream) {
+  private def writeObject(out: java.io.ObjectOutputStream): Unit = {
     out.writeObject(name)
     out.writeBoolean(temporary)
     out.writeDouble(x)
@@ -171,7 +169,7 @@ extends PlotPenInterface with JSerializable {
 
   @throws(classOf[java.io.IOException])
   @throws(classOf[ClassNotFoundException])
-  private def readObject(in:java.io.ObjectInputStream) {
+  private def readObject(in:java.io.ObjectInputStream): Unit = {
     name = in.readObject().asInstanceOf[String]
     temporary = in.readBoolean()
     x = in.readDouble()
@@ -185,7 +183,7 @@ extends PlotPenInterface with JSerializable {
   @throws(classOf[java.io.IOException])
   @throws(classOf[ClassNotFoundException])
   def readPointList(in:java.io.ObjectInputStream) =
-    in.readObject().asInstanceOf[Buffer[PlotPoint]]
+    in.readObject().asInstanceOf[Seq[PlotPoint]]
 
   def runtimeError: Option[Exception] = _runtimeError
   def runtimeError_=(e: Option[Exception]): Unit = {

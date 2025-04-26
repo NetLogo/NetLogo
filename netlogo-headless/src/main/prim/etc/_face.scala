@@ -9,10 +9,10 @@ import org.nlogo.nvm.RuntimePrimitiveException
 
 class _face extends Command {
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     perform_1(context, argEvalAgent(context, 0))
   }
-  def perform_1(context: Context, target: Agent) {
+  def perform_1(context: Context, target: Agent): Unit = {
     if(target.isInstanceOf[Link])
       throw new RuntimePrimitiveException(context, this,
         I18N.errors.get("org.nlogo.prim.etc.$common.expectedTurtleOrPatchButGotLink"))

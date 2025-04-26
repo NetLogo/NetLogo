@@ -9,7 +9,7 @@ class _tie extends Command {
 
 
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     context.agent.asInstanceOf[Link].mode(Link.MODE_FIXED)
     context.ip = next
   }

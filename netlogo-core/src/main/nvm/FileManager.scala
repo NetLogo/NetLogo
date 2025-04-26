@@ -9,28 +9,28 @@ trait FileManager {
   @throws(classOf[java.net.MalformedURLException])
   def attachPrefix(filename: String): String
   def prefix: String
-  def setPrefix(newPrefix: String)
-  def setPrefix(newPrefix: java.net.URL)
+  def setPrefix(newPrefix: String): Unit
+  def setPrefix(newPrefix: java.net.URL): Unit
   @throws(classOf[java.io.IOException])
   def eof: Boolean
   def currentFile: Option[File]
   def findOpenFile(fileName: String): Option[File]
   def hasCurrentFile: Boolean
   @throws(classOf[java.io.IOException])
-  def closeCurrentFile()
+  def closeCurrentFile(): Unit
   @throws(classOf[java.io.IOException])
-  def flushCurrentFile()
+  def flushCurrentFile(): Unit
   @throws(classOf[java.io.IOException])
-  def deleteFile(filename: String)
+  def deleteFile(filename: String): Unit
   @throws(classOf[java.io.IOException])
-  def closeAllFiles()
+  def closeAllFiles(): Unit
   @throws(classOf[java.io.IOException])
   def fileExists(filePath: String): Boolean
   @throws(classOf[java.io.IOException])
-  def openFile(newFileName: String)
+  def openFile(newFileName: String): Unit
   def getFile(newFileName: String): File
   @throws(classOf[java.io.IOException])
-  def ensureMode(openMode: FileMode)
+  def ensureMode(openMode: FileMode): Unit
   @throws(classOf[java.io.IOException])
   def getErrorInfo: String
   @throws(classOf[java.io.IOException])
@@ -39,6 +39,6 @@ trait FileManager {
   def readLine(): String
   @throws(classOf[java.io.IOException])
   def readChars(num: Int): String
-  def handleModelChange()
-  def writeOutputObject(oo: OutputObject)
+  def handleModelChange(): Unit
+  def writeOutputObject(oo: OutputObject): Unit
 }

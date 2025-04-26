@@ -116,20 +116,20 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   iP.addFocusListener(TrackingFocusListener)
 
-  commandCenter.getDefaultComponentForFocus.addFocusListener(TrackingFocusListener)
+  commandCenter.getDefaultComponentForFocus().addFocusListener(TrackingFocusListener)
 
   Utils.addEscKeyAction(this, () => InterfaceTab.this.monitorManager.closeTopMonitor())
 
   private class InterfaceTabFocusTraversalPolicy extends ContainerOrderFocusTraversalPolicy {
     override def getComponentAfter(focusCycleRoot: Container, aComponent: Component) =
       if (aComponent == iP) {
-        commandCenter.getDefaultComponentForFocus
+        commandCenter.getDefaultComponentForFocus()
       } else {
         super.getComponentAfter(focusCycleRoot, aComponent)
       }
     override def getComponentBefore(focusCycleRoot: Container, aComponent: Component) =
       if (aComponent == iP) {
-        commandCenter.getDefaultComponentForFocus
+        commandCenter.getDefaultComponentForFocus()
       } else {
         super.getComponentBefore(focusCycleRoot, aComponent)
       }
@@ -140,11 +140,11 @@ class InterfaceTab(workspace: GUIWorkspace,
   // When we get focus, we want to focus the command center first
   // to prevent keyboard shortcuts (copy, cut, paste) from affecting
   // the code tab or wherever the cursor was before the user switched - RG 2/16/18
-  override def requestFocus() {
+  override def requestFocus(): Unit = {
     commandCenter.requestFocusInWindow()
   }
 
-  final def handle(e: SwitchedTabsEvent) {
+  final def handle(e: SwitchedTabsEvent): Unit = {
     commandCenter.requestFocusInWindow()
     if (e.oldTab == this)
       iP.setInterfaceMode(InterfaceMode.Interact, false)
@@ -152,7 +152,7 @@ class InterfaceTab(workspace: GUIWorkspace,
       monitorManager.refresh()
   }
 
-  def handle(e: LoadBeginEvent) {
+  def handle(e: LoadBeginEvent): Unit = {
     scrollPane.getHorizontalScrollBar.setValue(0)
     scrollPane.getVerticalScrollBar.setValue(0)
   }
@@ -161,13 +161,13 @@ class InterfaceTab(workspace: GUIWorkspace,
 
   def getOutputArea = Option(iP.getOutputWidget).map(_.outputArea).getOrElse(commandCenter.output)
 
-  def handle(e: OutputEvent) {
+  def handle(e: OutputEvent): Unit = {
     val outputArea = if(e.toCommandCenter) commandCenter.output else getOutputArea
     if(e.clear && iP.getOutputWidget != null) outputArea.clear()
     if(e.outputObject != null) outputArea.append(e.outputObject, e.wrapLines)
   }
 
-  def handle(e: Enable2DEvent) {
+  def handle(e: Enable2DEvent): Unit = {
     speedSlider.setVisible(e.enabled)
     viewUpdatePanel.setVisible(e.enabled)
     viewUpdatePanel.handle(null)
@@ -202,13 +202,13 @@ class InterfaceTab(workspace: GUIWorkspace,
                                                   max(speedSlider.getPreferredSize.height).
                                                   max(viewUpdatePanel.getPreferredSize.height) + 16)
 
-    override def addControls() {
+    override def addControls(): Unit = {
       add(widgetControls)
       add(speedSlider)
       add(viewUpdatePanel)
     }
 
-    override def doLayout() {
+    override def doLayout(): Unit = {
       if (speedSlider.isVisible) {
         val left = (getWidth / 2 - speedSlider.getPreferredSize.width / 2 -
                     widgetControls.getPreferredSize.width - 180).max(0)
@@ -229,7 +229,7 @@ class InterfaceTab(workspace: GUIWorkspace,
       }
     }
 
-    override def paintComponent(g: Graphics) {
+    override def paintComponent(g: Graphics): Unit = {
       super.paintComponent(g)
 
       val gap = speedSlider.getX - (widgetControls.getX + widgetControls.getWidth)
@@ -258,7 +258,7 @@ class InterfaceTab(workspace: GUIWorkspace,
   /// command center stuff
 
   private class CommandCenterLocationToggleAction extends AbstractAction with ThemeSync {
-    override def actionPerformed(e: ActionEvent) {
+    override def actionPerformed(e: ActionEvent): Unit = {
       splitPane.getOrientation match {
         case JSplitPane.VERTICAL_SPLIT => splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT)
         case JSplitPane.HORIZONTAL_SPLIT => splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT)
@@ -292,7 +292,7 @@ class InterfaceTab(workspace: GUIWorkspace,
     group       = MenuGroup
     accelerator = UserAction.KeyBindings.keystroke('/', withMenu = true)
 
-    override def actionPerformed(e: ActionEvent) {
+    override def actionPerformed(e: ActionEvent): Unit = {
       if (splitPane.getDividerLocation < splitPane.maxClosedDividerLocation) {
         splitPane.setDividerLocation(splitPane.maxClosedDividerLocation)
         if (iP.isFocusable) iP.requestFocus()
@@ -309,15 +309,15 @@ class InterfaceTab(workspace: GUIWorkspace,
     group       = MenuGroup
     accelerator = UserAction.KeyBindings.keystroke('C', withMenu = true, withShift = true)
 
-    override def actionPerformed(e: ActionEvent) {
-      if (! commandCenter.getDefaultComponentForFocus.isFocusOwner) {
+    override def actionPerformed(e: ActionEvent): Unit = {
+      if (! commandCenter.getDefaultComponentForFocus().isFocusOwner) {
         showCommandCenter()
         commandCenter.requestFocusInWindow()
       }
     }
   }
 
-  def packSplitPane() {
+  def packSplitPane(): Unit = {
     splitPane.setPreferredSize(
       splitPane.getOrientation match {
         case JSplitPane.HORIZONTAL_SPLIT =>
@@ -331,7 +331,7 @@ class InterfaceTab(workspace: GUIWorkspace,
     splitPane.revalidate()
   }
 
-  def resetSplitPane() {
+  def resetSplitPane(): Unit = {
     splitPane.resetToPreferredSizes()
   }
 

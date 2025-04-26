@@ -19,7 +19,7 @@ object Approximate {
       if (places > 0)
         result
       else
-        StrictMath.round(result)
+        StrictMath.round(result).toDouble
     }
 
   def approximateCeiling(n: Double, places: Int): Double =
@@ -31,7 +31,7 @@ object Approximate {
       if (places > 0)
         result
       else
-        StrictMath.round(result)
+        StrictMath.round(result).toDouble
     }
 
   def approximateFloor(n: Double, places: Int) =
@@ -43,7 +43,7 @@ object Approximate {
       if (places > 0)
         result
       else
-        StrictMath.round(result)
+        StrictMath.round(result).toDouble
     }
 
 }

@@ -27,7 +27,7 @@ object VMCheck {
   // We don't know about any of those in any of Apple's Java 1.5 releases,
   // so it seems OK to let it slide. - ST 2/25/08
 
-  def detectBadJVMs() {
+  def detectBadJVMs(): Unit = {
     if (SysInfo.isLibgcj) {
       val bogusFrame = new Frame
 

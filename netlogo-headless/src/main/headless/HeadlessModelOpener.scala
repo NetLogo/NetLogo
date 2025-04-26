@@ -27,7 +27,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       case c => c.toString
     }
 
-  def openFromModel(model: Model, shouldAutoInstallLibs: Boolean = false) {
+  def openFromModel(model: Model, shouldAutoInstallLibs: Boolean = false): Unit = {
     require(!ws.modelOpened, "HeadlessWorkspace can only open one model")
     ws.setOpenModel(model)
 
@@ -71,7 +71,7 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     }
 
 
-  private def parseShapes(turtleShapes: Seq[CoreVectorShape], linkShapes: Seq[CoreLinkShape]) {
+  private def parseShapes(turtleShapes: Seq[CoreVectorShape], linkShapes: Seq[CoreLinkShape]): Unit = {
     ws.world.turtleShapes.replaceShapes(
       turtleShapes.map(ShapeConverter.baseVectorShapeToVectorShape))
     if (turtleShapes.isEmpty)
@@ -117,7 +117,7 @@ private def finish(constraints: Map[String, ConstraintSpecification], program: P
     ws.command(interfaceGlobalCommands)
   }
 
-  private def testCompileWidgets(program: Program, buttons: Seq[Button], monitors: Seq[Monitor]) {
+  private def testCompileWidgets(program: Program, buttons: Seq[Button], monitors: Seq[Monitor]): Unit = {
     val errors = ws.plotManager.compileAllPlots()
     if(errors.nonEmpty) throw errors(0)
 

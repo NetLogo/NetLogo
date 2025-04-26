@@ -20,7 +20,7 @@ class Tessellator extends com.jogamp.opengl.glu.GLUtessellatorCallbackAdapter {
   def createTessDataObject(gl: GL2) =
     new TessDataObject(gl)
 
-  override def beginData(tpe: Int, polygonData: AnyRef) {
+  override def beginData(tpe: Int, polygonData: AnyRef): Unit = {
     val data = polygonData.asInstanceOf[TessDataObject]
     data.gl.glBegin(tpe)
     data.tpe = tpe
@@ -29,25 +29,25 @@ class Tessellator extends com.jogamp.opengl.glu.GLUtessellatorCallbackAdapter {
   }
 
   override def combineData(coords: Array[Double], data: Array[AnyRef], weight: Array[Float],
-                           outData: Array[AnyRef], polygonData: Object) {
+                           outData: Array[AnyRef], polygonData: Object): Unit = {
     // not sure if this is right...
     outData(0) = Array[Double](coords(0), coords(1), coords(2) )
   }
 
-  override def edgeFlagData(boundaryEdge: Boolean, polygonData: AnyRef) {
+  override def edgeFlagData(boundaryEdge: Boolean, polygonData: AnyRef): Unit = {
     val data = polygonData.asInstanceOf[TessDataObject]
     data.gl.glEdgeFlag(boundaryEdge)
     data.shapeData.add(boundaryEdge: java.lang.Boolean)
   }
 
-  override def endData(polygonData: Object) {
+  override def endData(polygonData: Object): Unit = {
     val data = polygonData.asInstanceOf[TessDataObject]
     data.gl.glEnd()
   }
 
-  override def errorData(errnum: Int, polygonData: AnyRef) { }
+  override def errorData(errnum: Int, polygonData: AnyRef): Unit = { }
 
-  override def vertexData(vertexData: AnyRef, polygonData: AnyRef) {
+  override def vertexData(vertexData: AnyRef, polygonData: AnyRef): Unit = {
     val data = polygonData.asInstanceOf[TessDataObject]
     data.gl.glVertex3dv(
       java.nio.DoubleBuffer.wrap(

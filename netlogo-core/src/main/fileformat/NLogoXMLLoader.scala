@@ -15,7 +15,7 @@ import scala.util.{ Failure, Success, Try }
 
 class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames: Boolean) extends AbstractModelLoader {
 
-  private implicit val codec = Codec.UTF8
+  private implicit val codec: scala.io.Codec = Codec.UTF8
 
   private lazy val defaultInfo: String = FileIO.url2String("/system/empty-info.md")
 
@@ -128,7 +128,7 @@ class NLogoXMLLoader(headless: Boolean, literalParser: LiteralParser, editNames:
 
   }
 
-  def saveToWriter(model: Model, destWriter: Writer) {
+  def saveToWriter(model: Model, destWriter: Writer): Unit = {
 
     val writer = new XMLWriter(destWriter)
 

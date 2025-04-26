@@ -16,11 +16,11 @@ class XMLWriter(dest: Writer) {
   private var indentLevel = 0
   private var lastStart = ""
 
-  def startDocument() {
+  def startDocument(): Unit = {
     writer.writeStartDocument("utf-8", "1.0")
   }
 
-  def startElement(name: String) {
+  def startElement(name: String): Unit = {
     writer.writeCharacters("\n")
 
     for (i <- 0 until indentLevel)
@@ -33,18 +33,18 @@ class XMLWriter(dest: Writer) {
     lastStart = name
   }
 
-  def attribute(name: String, value: String) {
+  def attribute(name: String, value: String): Unit = {
     writer.writeAttribute(name, value)
   }
 
-  def escapedText(text: String) {
+  def escapedText(text: String): Unit = {
     if (text.contains('<') || text.contains('>') || text.contains('&'))
       writer.writeCData("]]>".r.replaceAllIn(text, s"]]${XMLElement.CDataEscape}>"))
     else
       writer.writeCharacters(text)
   }
 
-  def endElement(name: String) {
+  def endElement(name: String): Unit = {
     indentLevel -= 1
 
     if (lastStart != name) {
@@ -57,7 +57,7 @@ class XMLWriter(dest: Writer) {
     writer.writeEndElement()
   }
 
-  def element(el: XMLElement) {
+  def element(el: XMLElement): Unit = {
     startElement(el.name)
 
     for ((key, value) <- el.attributes)
@@ -71,12 +71,12 @@ class XMLWriter(dest: Writer) {
     endElement(el.name)
   }
 
-  def endDocument() {
+  def endDocument(): Unit = {
     writer.writeEndDocument()
     writer.writeCharacters("\n")
   }
 
-  def close() {
+  def close(): Unit = {
     writer.close()
   }
 }

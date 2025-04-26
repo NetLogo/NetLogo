@@ -17,7 +17,7 @@ trait World {
   def wrap(pos: Double, min: Double, max: Double): Double
   def ticks: Double
   def observer: Observer
-  def clearGlobals()
+  def clearGlobals(): Unit
   def getPatch(i: Int): Patch
   @throws(classOf[AgentException])
   def getPatchAt(x: Double, y: Double): Patch
@@ -42,7 +42,7 @@ trait World {
   def getDrawing: AnyRef
   def trailDrawer: TrailDrawerInterface
   def sendPixels: Boolean
-  def markDrawingClean()
+  def markDrawingClean(): Unit
   def protractor: Protractor
   def wrappedObserverX(x: Double): Double
   def wrappedObserverY(y: Double): Double
@@ -54,7 +54,7 @@ trait World {
   def turtlesOwnNameAt(i: Int): String
   def breedsOwnNameAt(breed: AgentSet, i: Int): String
   def allStoredValues: Iterator[AnyRef]
-  def realloc()
+  def realloc(): Unit
   def getDimensions: core.WorldDimensions
   def isDimensionVariable(variableName: String): Boolean
   def equalDimensions(d: core.WorldDimensions): Boolean
@@ -62,6 +62,6 @@ trait World {
   def auxRNG: MersenneTwisterFast
   def observerOwnsIndexOf(name: String): Int
   @throws(classOf[AgentException])
-  def setObserverVariableByName(variableName: String, value: AnyRef)
+  def setObserverVariableByName(variableName: String, value: AnyRef): Unit
   def timer: Timer
 }

@@ -7,7 +7,7 @@ import Serializer.{ toBytes, fromBytes }
 
 class SerializerTests extends AnyFunSuite {
 
-  def roundTrip(update: Update) {
+  def roundTrip(update: Update): Unit = {
     assertResult(update) { fromBytes(toBytes(update)) }
   }
 

@@ -6,7 +6,7 @@ import org.nlogo.core.{ I18N, UpdateMode }
 import org.nlogo.swing.ComboBox
 
 class UpdateModeChooser(workspace: GUIWorkspace) extends ComboBox[String] {
-  implicit val prefix = I18N.Prefix("tabs.run.viewUpdates")
+  implicit val prefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.run.viewUpdates")
 
   setToolTipText(I18N.gui("dropdown.tooltip"))
 

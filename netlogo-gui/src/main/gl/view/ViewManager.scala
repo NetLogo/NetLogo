@@ -29,12 +29,12 @@ class ViewManager(val workspace: GUIWorkspace,
 
   var paintingImmediately = false
   private var _framesSkipped = false
-  override def framesSkipped() { _framesSkipped = true }
+  override def framesSkipped(): Unit = { _framesSkipped = true }
 
   override def getLinkParent = appWindow
 
   @throws(classOf[JOGLLoadingException])
-  def open() {
+  def open(): Unit = {
     if (observerView != null) {
       observerView.toFront()
       observerView.updatePerspectiveLabel()
@@ -55,7 +55,7 @@ class ViewManager(val workspace: GUIWorkspace,
     syncTheme()
   }
 
-  def init() {
+  def init(): Unit = {
     // if we have a frame already, dispose of it
     Option(observerView).foreach(_.dispose())
 
@@ -74,7 +74,7 @@ class ViewManager(val workspace: GUIWorkspace,
     }
   }
 
-  def setFullscreen(fullscreen: Boolean) {
+  def setFullscreen(fullscreen: Boolean): Unit = {
     if (fullscreen != isFullscreen) {
       val gd = java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment.getDefaultScreenDevice
       // this is necessary in order to force PatchRenderer to make a new texture, since the old one
@@ -107,7 +107,7 @@ class ViewManager(val workspace: GUIWorkspace,
 
   def isFullscreen = fullscreen
 
-  def editFinished() {
+  def editFinished(): Unit = {
     if (currentView != null)
       currentView.editFinished()
   }
@@ -116,7 +116,7 @@ class ViewManager(val workspace: GUIWorkspace,
 
   def isDead = false
 
-  def close() {
+  def close(): Unit = {
     if(currentView != null) {
       workspace.set2DViewEnabled(true)
       currentView.dispose()
@@ -127,12 +127,12 @@ class ViewManager(val workspace: GUIWorkspace,
 
   private val paintRunnable =
     new Runnable() {
-      override def run() {
+      override def run(): Unit = {
         incrementalUpdateFromEventThread()
       }
     }
 
-  def incrementalUpdateFromJobThread() {
+  def incrementalUpdateFromJobThread(): Unit = {
     try org.nlogo.awt.EventQueue.invokeAndWait(paintRunnable)
     catch {
       case ex: InterruptedException =>
@@ -140,7 +140,7 @@ class ViewManager(val workspace: GUIWorkspace,
     }
   }
 
-  def incrementalUpdateFromEventThread() {
+  def incrementalUpdateFromEventThread(): Unit = {
     // in case we get called before init() - ST 2/18/05
     if (currentView != null) {
       workspace.updateManager.beginPainting()
@@ -150,7 +150,7 @@ class ViewManager(val workspace: GUIWorkspace,
     }
   }
 
-  def repaint() {
+  def repaint(): Unit = {
     // in case we get called before init() - ST 2/18/05
     if (currentView != null) {
       workspace.updateManager.beginPainting()
@@ -163,7 +163,7 @@ class ViewManager(val workspace: GUIWorkspace,
 
   private var antiAliasing = true
 
-  def antiAliasingOn(antiAliasing: Boolean) {
+  def antiAliasingOn(antiAliasing: Boolean): Unit = {
     this.antiAliasing = antiAliasing
     if (currentView != null) {
       world.markPatchColorsDirty()
@@ -178,7 +178,7 @@ class ViewManager(val workspace: GUIWorkspace,
 
   var wireframeOn = true
 
-  def paintImmediately(force: Boolean) {
+  def paintImmediately(force: Boolean): Unit = {
     if (viewIsVisible && (_framesSkipped || force)) {
       paintingImmediately = true
       repaint()
@@ -193,19 +193,19 @@ class ViewManager(val workspace: GUIWorkspace,
 
   def exportView = currentView.exportView
 
-  override def addLinkComponent(c: AnyRef) {
+  override def addLinkComponent(c: AnyRef): Unit = {
     linkComponents.clear()
     super.addLinkComponent(c)
   }
 
-  def handle(e: org.nlogo.window.Events.PeriodicUpdateEvent) {
+  def handle(e: org.nlogo.window.Events.PeriodicUpdateEvent): Unit = {
     if (observerView != null)
       observerView.controlStrip.updateTicks()
   }
 
   def displayOn = workspace.displaySwitchOn
 
-  def displayOn(displayOn: Boolean) {
+  def displayOn(displayOn: Boolean): Unit = {
     workspace.displaySwitchOn(displayOn)
   }
 
@@ -218,7 +218,7 @@ class ViewManager(val workspace: GUIWorkspace,
   def mouseYCor =
     Option(currentView).map(_.renderer.mouseYCor).getOrElse(0f)
 
-  def resetMouseCors() {
+  def resetMouseCors(): Unit = {
     if (currentView != null)
       currentView.renderer.resetMouseCors()
   }
@@ -228,7 +228,7 @@ class ViewManager(val workspace: GUIWorkspace,
 
   def mouseInside = currentView.renderer.mouseInside
 
-  def shapeChanged(shape: Shape) {
+  def shapeChanged(shape: Shape): Unit = {
     if (currentView != null) {
       shape match {
         case _: Shape.VectorShape =>
@@ -242,11 +242,11 @@ class ViewManager(val workspace: GUIWorkspace,
 
   @throws(classOf[java.io.IOException])
   @throws(classOf[org.nlogo.shape.InvalidShapeDescriptionException])
-  def addCustomShapes(filename: String) {
+  def addCustomShapes(filename: String): Unit = {
     currentView.renderer.addCustomShapes(filename)
   }
 
-  def displaySwitch(on: Boolean) {
+  def displaySwitch(on: Boolean): Unit = {
     observerView.controlStrip.displaySwitch.setOn(on)
   }
 
@@ -255,7 +255,7 @@ class ViewManager(val workspace: GUIWorkspace,
 
   // I think the 3D renderer grabs it's font size directly from the main view so we don't need to
   // keep track of it here.
-  def applyNewFontSize(fontSize: Int, zoom: Int) {}
+  def applyNewFontSize(fontSize: Int, zoom: Int): Unit = {}
 
   var warned = false
 

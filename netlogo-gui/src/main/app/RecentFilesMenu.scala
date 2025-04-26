@@ -14,7 +14,7 @@ import org.nlogo.swing.{ OptionPane, UserAction }, UserAction.{ Menu => ActionMe
 import org.nlogo.window.Events._
 
 case class ModelEntry(path: String, modelType: ModelType) {
-  def this(line: String) {
+  def this(line: String) = {
     this(line.drop(1), (line(0) match {
                           case 'N' => ModelType.Normal
                           case 'L' => ModelType.Library
@@ -86,7 +86,7 @@ class RecentFiles {
 
   private var _models: List[ModelEntry] = _
   def models = _models
-  def models_=(newModels: List[ModelEntry]) {
+  def models_=(newModels: List[ModelEntry]): Unit = {
     _models = newModels
       .flatMap(ensureCanonicalPath)
       .distinct
@@ -109,11 +109,11 @@ class RecentFiles {
                                                     .filter(entry => !filter || new File(entry.path).exists)
   }
 
-  def add(modelEntry: ModelEntry) {
+  def add(modelEntry: ModelEntry): Unit = {
     models = (modelEntry :: _models)
   }
 
-  def clear() {
+  def clear(): Unit = {
     models = Nil
   }
 }
@@ -133,7 +133,7 @@ class RecentFilesMenu(frame: AppFrame, fileManager: FileManager)
   }
 
   // Add models to list when the current model is saved
-  def handle(e: ModelSavedEvent) {
+  def handle(e: ModelSavedEvent): Unit = {
     for (p <- Option(e.modelPath)) {
       recentFiles.add(ModelEntry(p, ModelType.Normal))
       refreshMenu()
@@ -141,7 +141,7 @@ class RecentFilesMenu(frame: AppFrame, fileManager: FileManager)
   }
 
   // Add models to list when new models are opened
-  def handle(e: BeforeLoadEvent) {
+  def handle(e: BeforeLoadEvent): Unit = {
     if (e.modelType != ModelType.New) {
       for (p <- e.modelPath) {
         recentFiles.add(ModelEntry(p, e.modelType))
@@ -152,13 +152,13 @@ class RecentFilesMenu(frame: AppFrame, fileManager: FileManager)
 
   def computeActions: Seq[Action] = {
     val fileActions =
-    if (recentFiles.models.isEmpty) Seq(EmptyAction)
+    if (recentFiles.models.isEmpty) Seq(new EmptyAction)
     else (for ((modelEntry, i) <- recentFiles.models.zipWithIndex)
       yield new OpenRecentFileAction(modelEntry, fileManager, i))
     fileActions :+ new ClearItems()
   }
 
-  def refreshMenu() {
+  def refreshMenu(): Unit = {
     val oldActions = currentActions
     currentActions = computeActions
     menu.foreach { m =>
@@ -167,7 +167,7 @@ class RecentFilesMenu(frame: AppFrame, fileManager: FileManager)
     }
   }
 
-  object EmptyAction extends AbstractAction(I18N.gui.get("common.menus.empty"))
+  class EmptyAction extends AbstractAction(I18N.gui.get("common.menus.empty"))
   with MenuAction {
     category    = UserAction.FileCategory
     subcategory = UserAction.FileRecentSubcategory

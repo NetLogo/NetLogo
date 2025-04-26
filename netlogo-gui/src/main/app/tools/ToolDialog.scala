@@ -14,7 +14,7 @@ import org.nlogo.swing.Utils.addEscKeyAction
 abstract class ToolDialog(frame: Frame, i18nKey: String)
 extends JDialog(frame, I18N.gui.get(s"tools.$i18nKey"), false) {
   /** Makes it easy for tools to access their own i18n keys with I18N.gui(...) */
-  protected implicit val i18nPrefix = I18N.Prefix(s"tools.$i18nKey")
+  protected implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix(s"tools.$i18nKey")
 
   initGUI()
   addWindowListener(() => onClose())

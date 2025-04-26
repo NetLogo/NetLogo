@@ -14,7 +14,7 @@ import org.nlogo.{ core, nvm }, core.SourceLocation
  * always reasonable.
  */
 trait AstNode extends core.AstNode {
-  def accept(v: AstVisitor)
+  def accept(v: AstVisitor): Unit
 }
 
 /**
@@ -47,7 +47,7 @@ trait Application extends AstNode {
  */
 class ProcedureDefinition(val procedure: nvm.Procedure, val statements: Statements) extends AstNode {
   val sourceLocation = SourceLocation(procedure.pos, procedure.end, procedure.filename)
-  def accept(v: AstVisitor) { v.visitProcedureDefinition(this) }
+  def accept(v: AstVisitor): Unit = { v.visitProcedureDefinition(this) }
   def copy(procedure: nvm.Procedure = procedure, statements: Statements = statements) =
     new ProcedureDefinition(procedure, statements)
 }
@@ -65,11 +65,11 @@ class Statements(var stmts: scala.collection.mutable.Seq[Statement], var sourceL
   /**
    * a List of the actual Statement objects.
    */
-  def body: Seq[Statement] = stmts
+  def body: Seq[Statement] = stmts.toSeq
   override def toString = stmts.mkString(" ")
-  def accept(v: AstVisitor) { v.visitStatements(this) }
-  def copy(stmts: Seq[Statement] = stmts, sourceLocation: SourceLocation = sourceLocation): Statements =
-    new Statements(scala.collection.mutable.Seq[Statement](stmts: _*), sourceLocation)
+  def accept(v: AstVisitor): Unit = { v.visitStatements(this) }
+  def copy(stmts: scala.collection.mutable.Seq[Statement] = stmts, sourceLocation: SourceLocation = sourceLocation): Statements =
+    new Statements(scala.collection.mutable.Seq[Statement](stmts.toSeq: _*), sourceLocation)
 
 }
 
@@ -91,7 +91,7 @@ class Statement(
   def nvmInstruction = command // for Application
   def coreInstruction = coreCommand // for Application
   override def toString = command.toString + "[" + args.mkString(", ") + "]"
-  def accept(v: AstVisitor) { v.visitStatement(this) }
+  def accept(v: AstVisitor): Unit = { v.visitStatement(this) }
 
   // should try to remove
   def addArgument(arg: Expression) = {
@@ -118,7 +118,7 @@ class Statement(
 class CommandBlock(val statements: Statements, val sourceLocation: SourceLocation) extends Expression {
   def reportedType() = core.Syntax.CommandBlockType
   override def toString = "[" + statements.toString + "]"
-  def accept(v: AstVisitor) { v.visitCommandBlock(this) }
+  def accept(v: AstVisitor): Unit = { v.visitCommandBlock(this) }
 
   def copy(statements: Statements = statements, sourceLocation: SourceLocation = sourceLocation): CommandBlock =
     new CommandBlock(statements, sourceLocation)
@@ -132,7 +132,7 @@ class CommandBlock(val statements: Statements, val sourceLocation: SourceLocatio
 class CodeBlock(val code: String, val sourceLocation: SourceLocation) extends Expression {
   def reportedType() = core.Syntax.CodeBlockType
   override def toString = "[" + code + "]"
-  def accept(v: AstVisitor) {}
+  def accept(v: AstVisitor): Unit = {}
 }
 
 /**
@@ -144,14 +144,14 @@ class CodeBlock(val code: String, val sourceLocation: SourceLocation) extends Ex
  */
 class ReporterBlock(val app: ReporterApp, val sourceLocation: SourceLocation) extends Expression {
   override def toString = "[" + app.toString() + "]"
-  def accept(v: AstVisitor) { v.visitReporterBlock(this) }
+  def accept(v: AstVisitor): Unit = { v.visitReporterBlock(this) }
   /**
    * computes the type of this block. Reporter block types are
    * determined in a somewhat complicated way. This is derived from
    * code from the old parser.
    */
   def reportedType(): Int = {
-    val appType = app.reportedType
+    val appType = app.reportedType()
     import core.Syntax._
     appType match {
       case BooleanType => BooleanBlockType
@@ -188,15 +188,15 @@ extends Expression with Application {
   /**
    * the args for this application.
    */
-  override def args: Seq[Expression] = _args
+  override def args: Seq[Expression] = _args.toSeq
   def coreInstruction = coreReporter // for Application
   def nvmInstruction = reporter // for Application
   def reportedType() = coreReporter.syntax.ret
-  def accept(v: AstVisitor) { v.visitReporterApp(this) }
-  def removeArgument(index: Int) { _args.remove(index) }
-  def addArgument(arg: Expression) { _args.append(arg) }
-  def replaceArg(index: Int, expr: Expression) { _args(index) = expr }
-  def clearArgs() { _args.clear() }
+  def accept(v: AstVisitor): Unit = { v.visitReporterApp(this) }
+  def removeArgument(index: Int): Unit = { _args.remove(index) }
+  def addArgument(arg: Expression): Unit = { _args.append(arg) }
+  def replaceArg(index: Int, expr: Expression): Unit = { _args(index) = expr }
+  def clearArgs(): Unit = { _args.clear() }
   override def toString = reporter.toString + "[" + args.mkString(", ") + "]"
 
   def copy(coreReporter: core.Reporter = coreReporter,

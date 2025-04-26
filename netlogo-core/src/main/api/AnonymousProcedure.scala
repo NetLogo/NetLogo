@@ -56,5 +56,5 @@ trait AnonymousCommand extends AnonymousProcedure {
     * @param c The [[org.nlogo.api.Context]] in which the command is being run.
     * @param args The arguments to the command
     */
-  def perform(c: Context, args: Array[AnyRef])
+  def perform(c: Context, args: Array[AnyRef]): Unit
 }

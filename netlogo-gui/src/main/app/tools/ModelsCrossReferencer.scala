@@ -17,8 +17,8 @@ object ModelCrossReferencer {
   val DefaultPath = ModelsLibrary.modelsRoot + File.separator + "crossReference.conf"
 
   def addReference(t: Tree, source: String, dest: String): Tree = {
-    findTargetNode(t, source.split("/"))
-      .map(n => insertNode(t, n, dest.split("/")))
+    findTargetNode(t, source.split("/").toIndexedSeq)
+      .map(n => insertNode(t, n, dest.split("/").toIndexedSeq))
       .getOrElse(t)
   }
 
@@ -26,11 +26,11 @@ object ModelCrossReferencer {
   // Node. I don't consider this to be speed-critical, but it could easily be optimized to be
   // something like O(n)
   def addDirectoryReference(t: Tree, source: String, dest: String): Tree = {
-    findTargetNode(t, source.split("/"))
+    findTargetNode(t, source.split("/").toIndexedSeq)
       .flatMap {
         case Tree(_, _, children) =>
           Some(children.foldLeft(t) {
-            case (t, child: Leaf) => insertNode(t, child, dest.split("/"))
+            case (t, child: Leaf) => insertNode(t, child, dest.split("/").toIndexedSeq)
             case (t, _) => t
           })
         case _ => None
@@ -38,21 +38,21 @@ object ModelCrossReferencer {
   }
 
   def addDirectoryReferenceRecursive(t: Tree, source: String, dest: String): Tree = {
-    findTargetNode(t, source.split("/"))
+    findTargetNode(t, source.split("/").toIndexedSeq)
       .flatMap {
         case Tree(_, _, children) =>
           Some(children.foldLeft(t) {
             case (t, child: Tree) =>
-              val xRefAdded = insertNode(t, Tree(child.name, "xref", Seq()), dest.split("/"))
+              val xRefAdded = insertNode(t, Tree(child.name, "xref", Seq()), dest.split("/").toIndexedSeq)
               addDirectoryReferenceRecursive(xRefAdded, source + "/" + child.name, dest + "/" + child.name)
-            case (t, child: Leaf) => insertNode(t, child, dest.split("/"))
+            case (t, child: Leaf) => insertNode(t, child, dest.split("/").toIndexedSeq)
           })
         case _ => None
       }.getOrElse(t)
   }
 
   def applyConfig(original: Tree, config: Config): Tree = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.ListHasAsScala
 
     implicit class RichConfig(c: Config) {
       def tryString(key: String): Try[String] =

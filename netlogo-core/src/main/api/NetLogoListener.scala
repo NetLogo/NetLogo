@@ -17,7 +17,7 @@ trait NetLogoListener extends java.util.EventListener {
    *
    * @param name name of the model that was opened
    */
-  def modelOpened(name: String)
+  def modelOpened(name: String): Unit
 
   /**
    * Called when the user presses a button in the NetLogo model.
@@ -26,7 +26,7 @@ trait NetLogoListener extends java.util.EventListener {
    * later.  Use <code>buttonStopped()</code> if you need to know when the button's action has
    * completed.
    */
-  def buttonPressed(buttonName: String)
+  def buttonPressed(buttonName: String): Unit
 
   /**
    * Called when a button in the NetLogo model has finished running and pops back up.
@@ -36,7 +36,7 @@ trait NetLogoListener extends java.util.EventListener {
    * back up when clicked for a second time by the user.  (Some forever buttons may also pop back up
    * automatically, if the model is written that way.)
    */
-  def buttonStopped(buttonName: String)
+  def buttonStopped(buttonName: String): Unit
 
   /**
    * Called when the value of a slider changes.  Usually if the slider changes it is because the
@@ -44,28 +44,28 @@ trait NetLogoListener extends java.util.EventListener {
    * or code typed into the command center.
    */
   def sliderChanged(name: String, value: Double, min: Double, increment: Double, max: Double,
-                    valueChanged: Boolean, buttonReleased: Boolean)
+                    valueChanged: Boolean, buttonReleased: Boolean): Unit
 
   /**
    * Called when the value of a switch changes.  Usually if the switch changes it is because the
    * user has changed it using the mouse, but the change may also be the result of code in the model
    * or code typed into the command center.
    */
-  def switchChanged(name: String, value: Boolean, valueChanged: Boolean)
+  def switchChanged(name: String, value: Boolean, valueChanged: Boolean): Unit
 
   /**
    * Called when the value of a chooser changes.  Usually if the chooser changes it is because the
    * user has changed it using the mouse, but the change may also be the result of code in the model
    * or code typed into the command center.
    */
-  def chooserChanged(name: String, value: AnyRef, valueChanged: Boolean)
+  def chooserChanged(name: String, value: AnyRef, valueChanged: Boolean): Unit
 
   /**
    * Called when the value of an input box changes.  Usually if the input box changes it is because
    * the user has changed it using the mouse, but the change may also be the result of code in the
    * model or code typed into the command center.
    */
-  def inputBoxChanged(name: String, value: AnyRef, valueChanged: Boolean)
+  def inputBoxChanged(name: String, value: AnyRef, valueChanged: Boolean): Unit
 
   /**
    * Called when the user enters text into the command center (and presses return).  Note that at
@@ -77,7 +77,7 @@ trait NetLogoListener extends java.util.EventListener {
    *                  addressing the observer, turtles, or patches
    * @param errorMsg  message the user receives if there is a compiler error, or null
    */
-  def commandEntered(owner: String, text: String, agentType: Char, errorMsg: CompilerException)
+  def commandEntered(owner: String, text: String, agentType: Char, errorMsg: CompilerException): Unit
 
   /**
    * Called when the Code tab is recompiled.
@@ -85,20 +85,20 @@ trait NetLogoListener extends java.util.EventListener {
    * @param text      the contents of the Code tab
    * @param errorMsg  message the user receives if there is a compiler error, or null
    */
-  def codeTabCompiled(text: String, errorMsg: CompilerException)
+  def codeTabCompiled(text: String, errorMsg: CompilerException): Unit
 
   /**
    * Called when the tick counter changes, either by being advanced, or by being reset to 0.
    *
    * @param ticks new value of the tick counter
    */
-  def tickCounterChanged(ticks: Double)
+  def tickCounterChanged(ticks: Double): Unit
 
   /**
    * Called when the engine potentially schedules a view update.  "Potentially" because an actual
    * update might not take place for any number of reasons (view updates are off, the speed slider
    * is sped up, etc.).
    */
-  def possibleViewUpdate()
+  def possibleViewUpdate(): Unit
 
 }

@@ -23,7 +23,7 @@ class Line(color: Color) extends Element(color) with BaseLine with Cloneable {
     end = last
   }
 
-  def this(color: Color, marked: Boolean, start: Point, end: Point) {
+  def this(color: Color, marked: Boolean, start: Point, end: Point) = {
     this(start, end, color)
     this.marked = marked
   }

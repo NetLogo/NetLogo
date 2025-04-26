@@ -23,17 +23,17 @@ object LinkManager {
 
 trait LinkManager {
 
-  def reset()
+  def reset(): Unit
 
-  def cleanupTurtle(turtle: Turtle)
-  def cleanupLink(link: Link)
+  def cleanupTurtle(turtle: Turtle): Unit
+  def cleanupLink(link: Link): Unit
 
   def checkBreededCompatibility(unbreeded: Boolean): Boolean
 
   def createLink(src: Turtle, dest: Turtle, linkBreed: AgentSet): Link
 
-  def addLink(link: Link)
-  def removeLink(link: Link)
+  def addLink(link: Link): Unit
+  def removeLink(link: Link): Unit
 
   /**
     * Gets a specific link for the given turtles and link breed.
@@ -104,10 +104,13 @@ class LinkManagerImpl[W <: World](world: W, linkFactory: LinkFactory[W]) extends
 
   private var unbreededLinkCount = 0
 
-  def reset() {
-    world.links.agents.forEach { case l: Link =>
-      l.end1.removeLink(l)
-      l.end2.removeLink(l)
+  def reset(): Unit = {
+    world.links.agents.forEach {
+      case l: Link =>
+        l.end1.removeLink(l)
+        l.end2.removeLink(l)
+
+      case _ =>
     }
     world.tieManager.reset()
     unbreededLinkCount = 0

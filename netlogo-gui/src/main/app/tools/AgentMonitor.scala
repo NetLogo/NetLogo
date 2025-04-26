@@ -18,7 +18,7 @@ import org.nlogo.window.{ CommandCenterInterface, GUIWorkspace }
 abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
   extends JPanel(new BorderLayout) with CommandCenterInterface with ThemeSync {
 
-  private implicit val i18nPrefix = I18N.Prefix("tools.agentMonitor")
+  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.agentMonitor")
 
   private var _agent: Agent = null
   def agent: Agent = _agent
@@ -112,7 +112,7 @@ abstract class AgentMonitor(val workspace: GUIWorkspace, window: JDialog)
 
   override def requestFocus(): Unit = {
     if (commandLine.isEnabled) {
-      commandLine.requestFocus
+      commandLine.requestFocus()
     } else {
       agentEditor.requestFocus
     }

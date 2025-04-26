@@ -11,7 +11,7 @@ class _crtfast(breedName: String) extends Command {
   override def toString =
     super.toString + ":" + breedName
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val count = argEvalIntValue(context, 0)
     if (count > 0) {
       val breed =

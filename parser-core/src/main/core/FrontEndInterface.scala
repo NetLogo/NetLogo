@@ -29,7 +29,7 @@ case class CompilationOperand(
   extensionManager: ExtensionManager,
   libraryManager: LibraryManager,
   compilationEnvironment: CompilationEnvironment,
-  containingProgram: Program = Program.empty,
+  containingProgram: Program = Program.empty(),
   oldProcedures: ProceduresMap = NoProcedures,
   subprogram: Boolean = true,
   // displayName is only used by reporters in slider widgets.

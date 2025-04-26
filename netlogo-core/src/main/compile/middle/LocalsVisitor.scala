@@ -24,7 +24,7 @@ extends DefaultAstVisitor {
   private var procedure: Option[Procedure] = Option.empty[Procedure]
   private var localEligibility: Map[Let, Boolean] = Map()
 
-  override def visitProcedureDefinition(procdef: ProcedureDefinition) {
+  override def visitProcedureDefinition(procdef: ProcedureDefinition): Unit = {
     // this transformation only applies to non-lambdas at the moment
     if (! procdef.procedure.isLambda) {
       procedure = Some(procdef.procedure)
@@ -91,7 +91,7 @@ extends DefaultAstVisitor {
     }
   }
 
-  override def visitStatement(stmt: Statement) {
+  override def visitStatement(stmt: Statement): Unit = {
     stmt.command match {
       case l: _let =>
         // Using "__let" instead of "let" to indicates that this is a let we don't want converted
@@ -115,7 +115,7 @@ extends DefaultAstVisitor {
     }
   }
 
-  override def visitReporterApp(expr: ReporterApp) {
+  override def visitReporterApp(expr: ReporterApp): Unit = {
     expr.reporter match {
       case l: _letvariable =>
         for {

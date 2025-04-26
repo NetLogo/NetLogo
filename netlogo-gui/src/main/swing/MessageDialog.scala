@@ -31,12 +31,12 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
 
   val dismissAction =
     new AbstractAction(dismissName) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         setVisible(false)
       }
     }
 
-  private val buttonPanel = new ButtonPanel(makeButtons)
+  private val buttonPanel = new ButtonPanel(makeButtons())
 
   buttonPanel.setBorder(new EmptyBorder(6, 6, 6, 6))
 
@@ -83,6 +83,7 @@ class MessageDialog(owner: Component, dismissName: String = "Dismiss") extends J
 
     buttonPanel.getComponents.foreach(_ match {
       case ts: ThemeSync => ts.syncTheme()
+      case _ =>
     })
   }
 }

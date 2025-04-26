@@ -18,7 +18,7 @@ trait LinkShapesManagerInterface extends ShapesManagerInterface
 
 trait DrawableShape {
   def isRotatable: Boolean
-  def paint(g: GraphicsInterface, color: Color, x: Int, y: Int, cellSize: Double, angle: Int)
+  def paint(g: GraphicsInterface, color: Color, x: Int, y: Int, cellSize: Double, angle: Int): Unit
   def getEditableColorIndex: Int
 }
 

@@ -13,7 +13,7 @@ extends GLLinkShape(shape, directionIndicator) {
                                         x1: Double, y1: Double, z1: Double,
                                         x2: Double, y2: Double, z2: Double,
                                         link: Link, color: java.awt.Color, outline: Boolean,
-                                        stroke: Float, world: World) {
+                                        stroke: Float, world: World): Unit = {
     val size = link.size
     val indicatorSize = 1.0 max (stroke / 2)
     val trans = getDirectionIndicatorTransform(

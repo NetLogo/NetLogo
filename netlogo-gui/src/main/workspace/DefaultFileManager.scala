@@ -15,6 +15,8 @@ import
     api.LocalFile,
     nvm.{ FileManager, ImportHandler }
 
+import scala.collection.BufferedIterator
+
 private[workspace] final class DefaultFileManager(private val workspace: ModelTracker) extends FileManager {
 
   private            var openFiles:    Map[String, File] = Map[String, File]()
@@ -162,7 +164,7 @@ private[workspace] final class DefaultFileManager(private val workspace: ModelTr
   }
 
   def read(world: World): AnyRef = {
-    val importHandler = new ImportHandler(world, workspace.getExtensionManager)
+    val importHandler = new ImportHandler(world, workspace.getExtensionManager())
     val readLiteral = { (file: File) =>
       val oldPos = file.pos
       try {

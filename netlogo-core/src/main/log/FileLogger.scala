@@ -5,8 +5,8 @@ package org.nlogo.log
 import java.io.{ File, FilenameFilter }
 
 trait FileLogger {
-  def close() {}
-  def log(event: String, eventInfo: Map[String, Any]) {}
+  def close(): Unit = {}
+  def log(event: String, eventInfo: Map[String, Any]): Unit = {}
   val fileNameFilter: FilenameFilter
 }
 

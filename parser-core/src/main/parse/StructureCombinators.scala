@@ -31,12 +31,32 @@ import
 
 object StructureCombinators {
   def parse(tokens: Iterator[Token]): Either[(String, Token), Seq[Declaration]] = {
-    val reader = new SeqReader[Token](tokens.toStream, _.start)
+    val reader = new SeqReader[Token](tokens.to(LazyList), _.start)
     val combinators = new StructureCombinators
     combinators.program(reader) match {
       case combinators.Success(declarations, _) =>
         Right(declarations)
       case combinators.NoSuccess(msg, rest) =>
+        val token =
+          if (rest.atEnd)
+            if (tokens.hasNext)
+              tokens.next()
+            else
+              Token.Eof
+          else
+            rest.first
+        Left((msg, token))
+      case combinators.Error(msg, rest) =>
+        val token =
+          if (rest.atEnd)
+            if (tokens.hasNext)
+              tokens.next()
+            else
+              Token.Eof
+          else
+            rest.first
+        Left((msg, token))
+      case combinators.Failure(msg, rest) =>
         val token =
           if (rest.atEnd)
             if (tokens.hasNext)

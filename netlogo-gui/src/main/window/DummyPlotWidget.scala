@@ -3,6 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.api.Options
+import org.nlogo.core.{Widget=>CoreWidget}
 import org.nlogo.plot.{ Plot, PlotManager }
 import org.nlogo.window.Events.AfterLoadEvent
 

@@ -35,7 +35,7 @@ class PlotWidget(plot: Plot, plotManager: PlotManagerInterface, colorizer: Color
 
   override def editPanel: EditPanel = new PlotEditPanel(this, colorizer)
 
-  def handle(e: PeriodicUpdateEvent){ repaintIfNeeded() }
+  def handle(e: PeriodicUpdateEvent): Unit ={ repaintIfNeeded() }
 
   override def hasContextMenu = true
   override def exportable = true
@@ -50,9 +50,9 @@ class PlotWidget(plot: Plot, plotManager: PlotManagerInterface, colorizer: Color
     image
   }
 
-  override def populateContextMenu(menu: PopupMenu, p: Point) {
+  override def populateContextMenu(menu: PopupMenu, p: Point): Unit = {
     menu.add(new MenuItem(new AbstractAction(I18N.gui.get("edit.plot.copyimage")) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         Toolkit.getDefaultToolkit.getSystemClipboard.setContents(new ImageSelection(exportGraphics), null)
       }
     }))
@@ -60,13 +60,13 @@ class PlotWidget(plot: Plot, plotManager: PlotManagerInterface, colorizer: Color
 
   override def extraMenuItems: List[JMenuItem] = List(
     new MenuItem(new AbstractAction(I18N.gui.get("edit.plot.clearplot")) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         clear()
       }
     })
   )
 
-  def repaintIfNeeded(){
+  def repaintIfNeeded(): Unit ={
     canvas.repaintIfNeeded()
     refreshGUI()
     recolor()

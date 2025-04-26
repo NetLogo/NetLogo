@@ -6,7 +6,7 @@ import org.nlogo.nvm.{ Command, Context }
 
 class _beep extends Command {
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     java.awt.Toolkit.getDefaultToolkit().beep()
     context.ip = next
   }

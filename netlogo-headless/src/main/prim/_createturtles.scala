@@ -18,7 +18,7 @@ class _createturtles(val breedName: String)
   override def toString =
     super.toString + ":" + breedName + ",+" + offset
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     val count = argEvalIntValue(context, 0)
     if (count > 0) {
       val builder = new AgentSetBuilder(AgentKind.Turtle, count)
@@ -39,7 +39,7 @@ class _createturtles(val breedName: String)
     context.ip = offset
   }
 
-  def assemble(a: AssemblerAssistant) {
+  def assemble(a: AssemblerAssistant): Unit = {
     a.add(this)
     a.block()
     a.done()

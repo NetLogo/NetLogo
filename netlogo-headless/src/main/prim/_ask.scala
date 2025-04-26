@@ -17,11 +17,11 @@ class _ask
   override def toString =
     super.toString + ":+" + offset
 
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     perform_1(context, args(0).report(context))
   }
 
-  def perform_1(context: Context, target: AnyRef) {
+  def perform_1(context: Context, target: AnyRef): Unit = {
     val agents = target match {
       case agents: AgentSet =>
         if (!context.agent.isInstanceOf[Observer]) {
@@ -49,7 +49,7 @@ class _ask
     context.ip = offset
   }
 
-  def perform_2(context: Context, agents: AgentSet) {
+  def perform_2(context: Context, agents: AgentSet): Unit = {
     if (!context.agent.isInstanceOf[Observer]) {
       if (agents eq world.turtles)
         throw new RuntimePrimitiveException(
@@ -64,7 +64,7 @@ class _ask
     context.ip = offset
   }
 
-  def perform_3(context: Context, agent: Agent) {
+  def perform_3(context: Context, agent: Agent): Unit = {
     if (agent.id == -1)
       throw new RuntimePrimitiveException(
         context, this, I18N.errors.getN(
@@ -73,7 +73,7 @@ class _ask
     context.ip = offset
   }
 
-  override def assemble(a: AssemblerAssistant) {
+  override def assemble(a: AssemblerAssistant): Unit = {
     a.add(this)
     a.block()
     a.done()

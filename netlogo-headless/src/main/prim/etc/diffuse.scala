@@ -36,7 +36,7 @@ abstract class DiffuseCommand extends nvm.Command with nvm.Referencer {
 
   def diffuse(amount: Double) // abstract
 
-  override def perform(context: nvm.Context) {
+  override def perform(context: nvm.Context): Unit = {
     val amount = argEvalDoubleValue(context, 0)
     if (amount < 0.0 || amount > 1.0)
       throw new nvm.RuntimePrimitiveException(

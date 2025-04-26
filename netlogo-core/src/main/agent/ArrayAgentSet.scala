@@ -77,7 +77,7 @@ extends IndexedAgentSet(kind, printName) {
 
   // assumes we've already checked for equal counts - ST 7/6/06
   override def containsSameAgents(otherSet: api.AgentSet) = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters.IterableHasAsScala
 
     val set = collection.mutable.HashSet[api.Agent]()
     val iter = iterator
@@ -234,7 +234,7 @@ extends IndexedAgentSet(kind, printName) {
       fetch()
       result
     }
-    private def fetch() {
+    private def fetch(): Unit = {
       if (i >= copy.length)
         nextOne = null
       else {

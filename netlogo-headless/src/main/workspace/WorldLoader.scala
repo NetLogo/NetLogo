@@ -5,7 +5,7 @@ package org.nlogo.workspace
 import org.nlogo.core.{WorldDimensions, View}
 
 object WorldLoader {
-  def load(view: View, worldInterface: WorldLoaderInterface) {
+  def load(view: View, worldInterface: WorldLoaderInterface): Unit = {
     val d = view.dimensions
 
     worldInterface.tickCounterLabel(view.tickCounterLabel.getOrElse(""))

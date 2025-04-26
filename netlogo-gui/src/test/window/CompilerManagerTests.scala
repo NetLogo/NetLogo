@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.scalatest.funsuite.AnyFunSuite
-import org.nlogo.core.Femto
+import org.nlogo.core.{ Button => CoreButton, Femto }
 import org.nlogo.api.{ JobOwner, MersenneTwisterFast, NetLogoLegacyDialect }
 import org.nlogo.agent.{ CompilationManagement, World }
 import org.nlogo.nvm.PresentationCompilerInterface
@@ -317,11 +317,10 @@ class DummyWidget(var sourceCode: String, val isCommandCenter: Boolean = false) 
 }
 
 class DummyJobWidget(source: String, rand: MersenneTwisterFast) extends JobWidget(rand) {
-  type WidgetModel = org.nlogo.core.Button
-  def load(widget: WidgetModel): AnyRef = {
+  def load(widget: CoreButton): AnyRef = {
     null
   }
-  def model: org.nlogo.window.DummyJobWidget#WidgetModel = {
+  def model: CoreButton = {
     null
   }
   override def syncTheme(): Unit = {}

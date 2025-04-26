@@ -54,6 +54,8 @@ object Color extends CColor {
                            list.get(1).asInstanceOf[Number].intValue,
                            list.get(2).asInstanceOf[Number].intValue,
                            list.get(3).asInstanceOf[Number].intValue)
+      case _ =>
+        throw new Exception(s"Unexpected color: $color")
     }
   }
 
@@ -191,8 +193,8 @@ object Color extends CColor {
   }
 
   @throws(classOf[AgentException])
-  def validRGBList(rgb: LogoList, allowAlpha: Boolean) {
-    def validRGB(c: Int) {
+  def validRGBList(rgb: LogoList, allowAlpha: Boolean): Unit = {
+    def validRGB(c: Int): Unit = {
       if (c < 0 || c > 255)
         throw new AgentException(I18N.errors.get(
           "org.nlogo.agent.Agent.rgbValueError"))
@@ -220,7 +222,7 @@ object Color extends CColor {
   private val ColorTranslations = "/system/color-translation.txt";
   private lazy val colorTranslations = {
     val map = collection.mutable.HashMap[Double, Int]()
-    val lines = Resource.get(ColorTranslations).getLines
+    val lines = Resource.get(ColorTranslations).getLines()
     for(line <- lines.map(_.trim).filter(_.nonEmpty).filter(_.head != '#')) {
       val strs = line.split("\\s+")
       val index = strs.head.toInt

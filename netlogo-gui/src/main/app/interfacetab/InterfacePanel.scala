@@ -74,17 +74,17 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     .map(i => i.displayName -> i.widgetThunk)
     .foreach {
         case (displayName, widgetThunk) =>
-          menu.add(new WidgetCreationMenuItem(displayName, widgetThunk()))
+          menu.add(new WidgetCreationMenuItemIP(displayName, widgetThunk()))
     }
 
     // add all the widgets
-    val outputItem = new WidgetCreationMenuItem(I18N.gui.get("tabs.run.widgets.output"), CoreOutput(0, 0, 0, 0, 11))
+    val outputItem = new WidgetCreationMenuItemIP(I18N.gui.get("tabs.run.widgets.output"), CoreOutput(0, 0, 0, 0, 11))
     if (getOutputWidget != null) {
       outputItem.setEnabled(false)
     }
     menu.add(outputItem)
 
-    menu.add(new WidgetCreationMenuItem(I18N.gui.get("tabs.run.widgets.note"), CoreTextBox(None, fontSize = 11)))
+    menu.add(new WidgetCreationMenuItemIP(I18N.gui.get("tabs.run.widgets.note"), CoreTextBox(None, fontSize = 11)))
 
     // add extra stuff
     menu.addSeparator()
@@ -93,9 +93,9 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     menu.show(this, point.x, point.y)
   }
 
-  class WidgetCreationMenuItem(val displayName: String, val coreWidget: CoreWidget)
+  class WidgetCreationMenuItemIP(val displayName: String, val coreWidget: CoreWidget)
     extends MenuItem(new AbstractAction(displayName) {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         unselectWidgets()
         createShadowWidget(coreWidget)
       }
@@ -133,7 +133,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     var needsRecompile: Boolean = false
     for (wrapper <- hitList) {
       removeWidget(wrapper)
-      wrapper.widget match {
+      wrapper.widget() match {
         case _: InterfaceGlobalWidget => needsRecompile = true
         case _ =>
       }
@@ -154,9 +154,9 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     // the observer variables and constraints might not get reallocated in which case
     // if we try to add a different widget with the same name we get a constraint violation
     // from the old constraint. yuck.  ev 11/27/07
-    new RemoveConstraintEvent(wrapper.widget.displayName).raise(this)
+    new RemoveConstraintEvent(wrapper.widget().displayName).raise(this)
 
-    LogManager.widgetRemoved(true, wrapper.widget.classDisplayName, wrapper.widget.displayName)
+    LogManager.widgetRemoved(true, wrapper.widget().classDisplayName, wrapper.widget().displayName)
   }
 
   /// loading and saving
@@ -176,7 +176,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
       case view: CoreView =>
         // the graphics widget (and the command center) are special cases because
         // they are not recreated at load time, but reused
-        viewWidget.asInstanceOf[ViewWidget].load(view)
+        viewWidget.load(view)
         // in 3D we don't add the viewWidget to the interface panel
         // so don't worry about all the sizing junk ev 7/5/07
         val parent = viewWidget.asWidget.getParent
@@ -204,8 +204,8 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     // automatically add the view widget since it isn't in
     // the components list in 3D - ev 7/5/07
     (viewWidget.model +: getComponents.reverse.collect {
-      case wrapper: WidgetWrapper => wrapper.widget.model
-    }).distinct
+      case wrapper: WidgetWrapper => wrapper.widget().model
+    }).distinct.toIndexedSeq
 
   override private[app] def contains(w: Editable): Boolean =
     if (w == viewWidget.asInstanceOf[Widget].getEditable)
@@ -241,7 +241,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
       setVisible(false)
       for (component <- getComponents) {
         component match {
-          case w: WidgetWrapper if w.widget != viewWidget =>
+          case w: WidgetWrapper if w.widget() != viewWidget =>
             removeWidget(w)
           case _ =>
         }
@@ -256,17 +256,16 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
   /// buttons
 
   private def findActionButton(key: Char): ButtonWidget = {
-    import java.lang.Character.toUpperCase
     getComponents.collect {
-      case w: WidgetWrapper => w.widget
+      case w: WidgetWrapper => w.widget()
     }.collect {
-      case b: ButtonWidget if toUpperCase(b.actionKey) == toUpperCase(key) => b
+      case b: ButtonWidget if b.actionKey.toUpper == key.toUpper => b
     }.headOption.orNull
   }
 
   private def enableButtonKeys(enabled: Boolean): Unit =
     getComponents.collect {
-      case w: WidgetWrapper => w.widget
+      case w: WidgetWrapper => w.widget()
     }.foreach {
       case b: ButtonWidget => b.keyEnabled(enabled)
       case _ =>

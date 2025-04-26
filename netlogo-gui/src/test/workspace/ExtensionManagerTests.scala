@@ -9,7 +9,7 @@ import ExtensionManager.ExtensionLoader
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funsuite.AnyFunSuite
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters.ListHasAsScala
 
 class ExtensionManagerTests extends AnyFunSuite with BeforeAndAfter {
   before {

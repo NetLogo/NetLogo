@@ -9,7 +9,7 @@ import org.nlogo.app.App
 import org.nlogo.awt.EventQueue
 import org.nlogo.workspace.ModelsLibrary
 
-import scala.collection.JavaConverters.asScalaIteratorConverter
+import scala.jdk.CollectionConverters.IteratorHasAsScala
 
 object ExportResizedModels {
   def main(args: Array[String]): Unit = {

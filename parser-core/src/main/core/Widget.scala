@@ -33,7 +33,7 @@ trait DeclaresGlobalCommand extends NamedWidget {
     case b: Boolean => if(b) "true" else "false"
     case l: List[Any] => l.map(asNetLogoString).mkString("[", " ", "]")
     case ll: LogoList => ll.toList.map(asNetLogoString).mkString("[" , " ", "]")
-    case o: AnyRef => o.toString
+    case a => a.toString
   }
   def command: String = "set " + varName + " " + asNetLogoString(default)
 }
@@ -97,9 +97,9 @@ case class Slider(variable: Option[String],
   override def varName = variable.getOrElse("")
   override val constraint =
     (for {
-      minBound <- NumberParser.parse(min).right
-      maxBound <- NumberParser.parse(max).right
-      increment <- NumberParser.parse(step).right
+      minBound <- NumberParser.parse(min)
+      maxBound <- NumberParser.parse(max)
+      increment <- NumberParser.parse(step)
     } yield BoundedNumericConstraintSpecification(minBound, default, maxBound, increment))
       .getOrElse(NumericConstraintSpecification(default))
 

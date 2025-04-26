@@ -93,7 +93,7 @@ class EditorFactory(compiler: CompilerServices, extensionManager: ExtensionManag
             Option(getGutter).foreach(_.setLineNumberFont(f))
           }
 
-          override def paintComponent(g: Graphics) {
+          override def paintComponent(g: Graphics): Unit = {
             getGutter.setBackground(InterfaceColors.codeBackground())
             getGutter.setBorderColor(InterfaceColors.codeSeparator())
           }

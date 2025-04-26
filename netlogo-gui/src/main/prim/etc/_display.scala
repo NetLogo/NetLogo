@@ -8,7 +8,7 @@ class _display extends Command {
 
 
   switches = true
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     world.displayOn(true)
     workspace.requestDisplayUpdate(true)
     context.ip = next

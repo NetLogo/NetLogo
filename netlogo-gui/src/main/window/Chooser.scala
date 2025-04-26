@@ -35,7 +35,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   private val control = new ComboBox[String] {
     addItemListener(_ => index(getSelectedIndex))
 
-    override def paintComponent(g: Graphics) {
+    override def paintComponent(g: Graphics): Unit = {
       setDiameter(zoom(6))
 
       super.paintComponent(g)
@@ -101,7 +101,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
   def value: AnyRef =
     constraint.defaultValue
 
-  def populate() {
+  def populate(): Unit = {
     control.setItems(constraint.acceptedValues.map(Dump.logoObject).toList)
   }
 
@@ -143,7 +143,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     control.setSelectedIndex(i)
   }
 
-  override def paintComponent(g: Graphics) {
+  override def paintComponent(g: Graphics): Unit = {
     super.paintComponent(g)
 
     if (isHover) {

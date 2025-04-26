@@ -27,12 +27,12 @@ lazy val commonSettings = Seq(
 // These settings are common to all builds involving scala
 // Any scala-specific settings should change here (and thus for all projects at once)
 lazy val scalaSettings = Seq(
-  scalaVersion          := "2.12.18",
+  scalaVersion          := "2.13.16",
   Compile / scalaSource := baseDirectory.value / "src" / "main",
   Test / scalaSource    := baseDirectory.value / "src" / "test",
   crossPaths            := false, // don't cross-build for different Scala versions
   scalacOptions ++=
-    "-deprecation -unchecked -feature -Xcheckinit -encoding us-ascii -release 11 -opt:l:method -Xlint -Xfatal-warnings"
+    "-deprecation -unchecked -feature -quickfix:any -Xcheckinit -encoding us-ascii -release 11 -opt:l:method -Xlint -Xfatal-warnings"
       .split(" ").toSeq
 )
 

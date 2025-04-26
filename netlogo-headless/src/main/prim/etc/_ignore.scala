@@ -9,7 +9,7 @@ import org.nlogo.nvm.{ Command, Context }
 // don't want extra stuff in the output. - ST 2/6/09
 
 class _ignore extends Command {
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     args(0).report(context)
     context.ip = next
   }

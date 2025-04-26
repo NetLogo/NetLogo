@@ -5,7 +5,7 @@ package org.nlogo.prim.dead
 import org.nlogo.nvm.{ Command, Context, Reporter }
 
 trait DeadCommand extends Command {
-  override def perform(context: Context) {
+  override def perform(context: Context): Unit = {
     throw new IllegalStateException
   }
 }

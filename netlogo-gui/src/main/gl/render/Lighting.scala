@@ -33,11 +33,11 @@ class LightManager {
   implicit def getGL: GL2 = glInstance.getOrElse(
     sys.error("Handle to OpenGL interface is not set. Make sure init() got called."))
 
-  def init(gl: GL2) {
+  def init(gl: GL2): Unit = {
     glInstance = Some(gl)
   }
 
-  def addLight(light: Light) {
+  def addLight(light: Light): Unit = {
     require(lights.size < 8,
             "Failed to add light: Only a maximum of 8 lights is supported in OpenGL.")
 
@@ -53,7 +53,7 @@ class LightManager {
    * This should be called on every frame (or just once, but be sure that no other parts of the application
    * change the lighting in that case).
    */
-  def applyLighting() {
+  def applyLighting(): Unit = {
     lights.foreach(_.applyLight())
   }
 
@@ -65,7 +65,7 @@ class LightManager {
    * this method will approximate the source of the light by rendering it outside of the world.
    */
   final def showLights(glu: GLU, world: World3D, worldScale: Float, observerDistance: Double,
-                 shapeRenderer: ShapeRenderer) {
+                 shapeRenderer: ShapeRenderer): Unit = {
     lights.foreach(_.showLight(glu, world, worldScale, observerDistance, shapeRenderer))
   }
 
@@ -93,7 +93,7 @@ abstract class Light {
   private var _isOn = true
   def isOn: Boolean = _isOn
 
-  def turnOn() {
+  def turnOn(): Unit = {
     assertValidLightNumber()
     _isOn = true
     val gl = getGL
@@ -104,13 +104,13 @@ abstract class Light {
     gl.glEnable(glLightNumber)
   }
 
-  def turnOff() {
+  def turnOff(): Unit = {
     assertValidLightNumber()
     _isOn = false
     getGL.glDisable(glLightNumber)
   }
 
-  def toggle() {
+  def toggle(): Unit = {
     if (isOn) turnOff() else turnOn()
   }
 
@@ -118,20 +118,20 @@ abstract class Light {
    * Makes the light effective by setting the appropriate OpenGL state variables. Be sure
    * that the light is on by calling turnOn(), but note that it is on by default.
    */
-  def applyLight();
+  def applyLight(): Unit;
 
   /**
    * Shows the light's position in 3D space. This is intended as a debugging aid.
    */
   private[render] def showLight(glu: GLU, world: World3D, worldScale: Float, observerDistance: Double,
-                  shapeRenderer: ShapeRenderer)
+                  shapeRenderer: ShapeRenderer): Unit
 
   /**
    * Helps visualize the light's position in 3D space by drawing some lines. This is intended as a debugging aid.
    */
   def renderPositionHintLines(x: JFloat, y: JFloat, z: JFloat,
                               minX: JFloat, minY: JFloat, minZ: JFloat,
-                              maxX: JFloat, maxY: JFloat, maxZ: JFloat) {
+                              maxX: JFloat, maxY: JFloat, maxZ: JFloat): Unit = {
 
     val gl = getGL
 
@@ -201,7 +201,7 @@ abstract class Light {
    * modelview matrix, pointing in the direction specified by the vector (xdir, ydir, zdir). This is used
    * for rendering directional lights.
    */
-  def render3DArrow(glu: GLU, xdir: Double, ydir: Double, zdir: Double) {
+  def render3DArrow(glu: GLU, xdir: Double, ydir: Double, zdir: Double): Unit = {
     val gl = getGL
 
     val RADDEG = 57.29578
@@ -227,7 +227,7 @@ abstract class Light {
     gl.glEnable(GL.GL_CULL_FACE)
   }
 
-  def assertValidLightNumber() {
+  def assertValidLightNumber(): Unit = {
     assert (glLightNumber >= GLL.GL_LIGHT0 || glLightNumber <= GLL.GL_LIGHT7,
       { sys.error("Invalid OpenGL light number: " + glLightNumber
           + ". Light number needs to be between " + GLL.GL_LIGHT0 + " and " + GLL.GL_LIGHT7
@@ -248,7 +248,7 @@ class DirectionalLight(val direction: Direction) extends Light {
 
   def typeLabel = "Directional"
 
-  def applyLight() {
+  def applyLight(): Unit = {
     val gl = getGL
     gl.glEnable(GL_LIGHTING)
     if (isOn) {
@@ -260,7 +260,7 @@ class DirectionalLight(val direction: Direction) extends Light {
   }
 
   final def showLight(glu: GLU, world: World3D, worldScale: Float, observerDistance: Double,
-                  shapeRenderer: ShapeRenderer) {
+                  shapeRenderer: ShapeRenderer): Unit = {
     val gl = getGL
 
     gl.glDisable(GL_LIGHTING)
@@ -302,7 +302,7 @@ class PositionalLight(val position: Position) extends Light {
 
   def typeLabel = "Positional"
 
-  def applyLight() {
+  def applyLight(): Unit = {
     val gl = getGL
     gl.glEnable(GL_LIGHTING)
     if (isOn) {
@@ -314,7 +314,7 @@ class PositionalLight(val position: Position) extends Light {
   }
 
   final def showLight(glu: GLU, world: World3D, worldScale: Float, observerDistance: Double,
-                  shapeRenderer: ShapeRenderer) {
+                  shapeRenderer: ShapeRenderer): Unit = {
     val gl = getGL
 
     gl.glDisable(GL_LIGHTING)

@@ -8,22 +8,22 @@ import org.nlogo.api.{ Patch, Patch3D, World, World3D, WorldRenderable, Color, D
 private class PatchRenderer3D(world: World3D with WorldRenderable, drawing: DrawingInterface, shapeRenderer: ShapeRenderer)
 extends PatchRenderer(world, drawing, shapeRenderer) {
 
-  override def renderPatchTexture(gl: GL2)
+  override def renderPatchTexture(gl: GL2): Unit =
   {
     super.renderPatches(gl)
   }
 
-  override def renderLabels(gl: GL2, fontSize: Int, patchSize: Double) {
+  override def renderLabels(gl: GL2, fontSize: Int, patchSize: Double): Unit = {
     if(world.patchesAllBlack)
       super.renderLabels(gl, fontSize, patchSize)
   }
 
-  override def renderIndividualLabels(gl: GL2, patch: Patch3D, fontSize: Int, patchSize: Double) {
+  override def renderIndividualLabels(gl: GL2, patch: Patch3D, fontSize: Int, patchSize: Double): Unit = {
     if(world.patchesAllBlack)
       super.renderIndividualLabels(gl, patch, fontSize, patchSize)
   }
 
-  def renderIndividualPatch(gl: GL2, patch: Patch3D, fontSize: Int, patchSize: Double) {
+  def renderIndividualPatch(gl: GL2, patch: Patch3D, fontSize: Int, patchSize: Double): Unit = {
     if(!world.patchesAllBlack) {
       var flag = true
       gl.glPushMatrix()
@@ -47,7 +47,7 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
     }
   }
 
-  override def renderPatches(gl: GL2, fontSize: Int, patchSize: Double) {
+  override def renderPatches(gl: GL2, fontSize: Int, patchSize: Double): Unit = {
     if(!world.patchesAllBlack || world.patchesWithLabels != 0) {
       gl.glPushMatrix()
       val numPatches = world.patchColors.length
@@ -75,7 +75,7 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
   }
 
   def renderWrappedPatch(gl: GL2, patch: Patch3D, shape: GLShape,
-                        fontSize: Int, patchSize: Double, outline: Boolean) {
+                        fontSize: Int, patchSize: Double, outline: Boolean): Unit = {
     shapeRenderer.renderWrappedAgent(
       gl, shape,
       1.0, Color.getColor(patch.pcolor),
@@ -88,19 +88,19 @@ extends PatchRenderer(world, drawing, shapeRenderer) {
 
   def getDimensions(world: World) = {
     val w = world.asInstanceOf[World3D]
-    Array[Float](w.worldWidth, w.worldHeight, w.worldDepth)
+    Array[Float](w.worldWidth.toFloat, w.worldHeight.toFloat, w.worldDepth.toFloat)
   }
 
   override def getPatchCoords(patch: Patch) = {
     val p = patch.asInstanceOf[Patch3D]
-    val coords = Array[Float](p.pxcor, p.pycor, p.pzcor)
+    val coords = Array[Float](p.pxcor.toFloat, p.pycor.toFloat, p.pzcor.toFloat)
     coords(0) = world.wrappedObserverX(coords(0)).toFloat
     coords(1) = world.wrappedObserverY(coords(1)).toFloat
     coords(2) = world.wrappedObserverZ(coords(2)).toFloat
     coords
   }
 
-  override def renderOutline(gl: GL2, patch: Patch) {
+  override def renderOutline(gl: GL2, patch: Patch): Unit = {
     val shape = shapeRenderer.getShape("@@@PATCH@@@")
     val rgb = Color.getColor(patch.pcolor).getRGBColorComponents(null)
     gl.glPushMatrix()

@@ -42,6 +42,9 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   private val focusManager = KeyboardFocusManager.getCurrentKeyboardFocusManager
 
+  private val saveAllAction = new SaveAllAction
+  private val printAction = new PrintAction
+
   val infoTab = new InfoTab(workspace.attachModelDir(_))
   val mainCodeTab = new MainCodeTab(workspace, this, null)
 
@@ -81,7 +84,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   workspace.getFrame.addWindowFocusListener(new WindowFocusListener {
     def windowGainedFocus(e: WindowEvent): Unit = {
       if (separateTabs.getSelectedComponent != null) {
-        mainTabs.focusSelected
+        mainTabs.focusSelected()
 
         setMenuActions(separateTabs.getSelectedComponent, mainTabs.getSelectedComponent)
 
@@ -126,7 +129,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   separateTabsWindow.addWindowFocusListener(new WindowFocusListener {
     def windowGainedFocus(e: WindowEvent): Unit = {
-      separateTabs.focusSelected
+      separateTabs.focusSelected()
 
       setMenuActions(mainTabs.getSelectedComponent, separateTabs.getSelectedComponent)
 
@@ -185,7 +188,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       def f(x: Map[String, String]): List[Path] = x.values.map(Paths.get(_)).toList
       val includes: List[Path] = mainCodeTab.getIncludesTable.map(f).getOrElse(List.empty)
 
-      watcherThread = new FileWatcherThread(Paths.get(modelPath) :: includes, handleFileChange)
+      watcherThread = new FileWatcherThread(Paths.get(modelPath) :: includes, handleFileChange _)
       watcherThread.start
     }
   }
@@ -243,7 +246,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     dirty
   }
 
-  object SaveAllAction extends ExceptionCatchingAction(I18N.gui.get("menu.file.saveAll"), workspace.getFrame)
+  class SaveAllAction extends ExceptionCatchingAction(I18N.gui.get("menu.file.saveAll"), workspace.getFrame)
                        with UserAction.MenuAction {
     category    = UserAction.FileCategory
     group       = UserAction.FileSaveGroup
@@ -257,7 +260,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     }
   }
 
-  object PrintAction extends AbstractAction(I18N.gui.get("menu.file.print")) with UserAction.MenuAction {
+  class PrintAction extends AbstractAction(I18N.gui.get("menu.file.print")) with UserAction.MenuAction {
     category = UserAction.FileCategory
     group = "org.nlogo.app.Tabs.Print"
     accelerator = UserAction.KeyBindings.keystroke('P', withMenu = true)
@@ -269,20 +272,24 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
           catch {
             case abortEx: PrinterAbortException => Exceptions.ignore(abortEx)
           }
+
+        case _ =>
       }
   }
 
   def permanentMenuActions: Seq[Action] =
     mainCodeTab.permanentMenuActions ++ interfaceTab.permanentMenuActions ++ interfaceTab.activeMenuActions ++
-      fileManager.saveModelActions(workspace.getFrame) :+ PrintAction
+      fileManager.saveModelActions(workspace.getFrame) :+ printAction
 
   def setMenuActions(oldTab: Component, newTab: Component): Unit = {
     oldTab match {
       case mt: MenuTab => mt.activeMenuActions.foreach(revokeAction)
+      case _ =>
     }
 
     newTab match {
       case mt: MenuTab => mt.activeMenuActions.foreach(offerAction)
+      case _ =>
     }
   }
 
@@ -385,20 +392,20 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   def setSelectedIndex(index: Int): Unit = {
     if (index >= mainTabs.getTabCount) {
       separateTabs.setSelectedIndex(index - mainTabs.getTabCount)
-      separateTabs.focusSelected
+      separateTabs.focusSelected()
     } else {
       mainTabs.setSelectedIndex(index)
-      mainTabs.focusSelected
+      mainTabs.focusSelected()
     }
   }
 
   def setSelectedTab(tab: Component): Unit = {
     if (mainTabs.indexOfComponent(tab) == -1) {
       separateTabs.setSelectedComponent(tab)
-      separateTabs.focusSelected
+      separateTabs.focusSelected()
     } else {
       mainTabs.setSelectedComponent(tab)
-      mainTabs.focusSelected
+      mainTabs.focusSelected()
     }
   }
 
@@ -428,7 +435,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
 
   private def addExternalFile(name: Filename, focus: Boolean): Unit = {
     if (getExternalFileTabs.isEmpty)
-      offerAction(SaveAllAction)
+      offerAction(saveAllAction)
 
     val tab = new TemporaryCodeTab(workspace, this, name, externalFileManager, fileManager.convertTabAction(_),
                                    separateTabsWindow.isVisible)
@@ -451,7 +458,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     saveOpenTabs()
   }
 
-  def newExternalFile: Unit = {
+  def newExternalFile(): Unit = {
     addExternalFile(Left(I18N.gui.getN("tabs.external.new", newFileNumber: Integer)), true)
 
     newFileNumber += 1
@@ -512,7 +519,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
     externalFileManager.remove(tab)
 
     if (getExternalFileTabs.isEmpty)
-      revokeAction(SaveAllAction)
+      revokeAction(saveAllAction)
 
     updateTabActions()
     saveOpenTabs()
@@ -662,7 +669,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   }
 
   def handle(e: CompiledEvent): Unit = {
-    def clearErrors() {
+    def clearErrors(): Unit = {
       if (separateTabsWindow.isVisible) {
         for (i <- 0 until separateTabs.getTabCount)
           separateTabs.setError(i, false)
@@ -777,7 +784,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       val actualLastModified = new File(workspace.getModelPath).lastModified.toString
 
       if (path.toFile.exists && storedLastModified == actualLastModified)
-        Source.fromFile(path.toFile).getLines.foreach(openExternalFile(_))
+        Source.fromFile(path.toFile).getLines().foreach(openExternalFile(_))
     }
 
     loadingTabs = false

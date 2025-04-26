@@ -21,7 +21,7 @@ object FindDialog extends ThemeSync {
 
     setEnabled(false)
 
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       val codeInstance = getCodeInstance
 
       if (codeInstance.isVisible)
@@ -54,7 +54,7 @@ object FindDialog extends ThemeSync {
 
     setEnabled(false)
 
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       if (!getInstance.next(getInstance.findBox.getText, getInstance.ignoreCaseCheckBox.isSelected,
                             getInstance.wrapAroundCheckBox.isSelected))
         Toolkit.getDefaultToolkit.beep()
@@ -67,7 +67,7 @@ object FindDialog extends ThemeSync {
 
     setEnabled(false)
 
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       val instance = getInstance
 
       if (instance.isVisible)
@@ -100,7 +100,7 @@ object FindDialog extends ThemeSync {
 
     setEnabled(false)
 
-    def actionPerformed(e: ActionEvent) {
+    def actionPerformed(e: ActionEvent): Unit = {
       if (!getCodeInstance.next(getCodeInstance.findBox.getText, getCodeInstance.ignoreCaseCheckBox.isSelected,
                                 getCodeInstance.wrapAroundCheckBox.isSelected))
         Toolkit.getDefaultToolkit.beep()
@@ -108,12 +108,12 @@ object FindDialog extends ThemeSync {
   }
 
   class FocusListener extends java.awt.event.FocusListener {
-    def focusGained(e: FocusEvent) {
+    def focusGained(e: FocusEvent): Unit = {
       if (e.getSource.isInstanceOf[JTextComponent])
         watch(e.getSource.asInstanceOf[JTextComponent])
     }
 
-    def focusLost(e: FocusEvent) {
+    def focusLost(e: FocusEvent): Unit = {
       if (!e.isTemporary && e.getSource.isInstanceOf[JTextComponent])
         dontWatch(e.getSource.asInstanceOf[JTextComponent])
     }
@@ -128,7 +128,7 @@ object FindDialog extends ThemeSync {
   private var instance: FindDialog = null
   private var codeInstance: FindDialog = null
 
-  def init(frame: Frame, codeFrame: Frame) {
+  def init(frame: Frame, codeFrame: Frame): Unit = {
     instance = new FindDialog(frame)
     codeInstance = new FindDialog(codeFrame)
   }
@@ -147,7 +147,7 @@ object FindDialog extends ThemeSync {
     codeInstance
   }
 
-  def watch(target: JTextComponent, code: Boolean = false) {
+  def watch(target: JTextComponent, code: Boolean = false): Unit = {
     if (code) {
       FIND_ACTION_CODE.setEnabled(true)
       getCodeInstance.target = target
@@ -161,7 +161,7 @@ object FindDialog extends ThemeSync {
     }
   }
 
-  def dontWatch(target: JTextComponent, code: Boolean = false) {
+  def dontWatch(target: JTextComponent, code: Boolean = false): Unit = {
     if (code) {
       getCodeInstance.setVisible(false)
       FIND_ACTION_CODE.setEnabled(false)
@@ -312,12 +312,12 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
 
   Utils.addEscKeyAction(this,
     new AbstractAction {
-      def actionPerformed(e: ActionEvent) {
+      def actionPerformed(e: ActionEvent): Unit = {
         setVisible(false)
       }
     })
 
-  def actionPerformed(e: ActionEvent) {
+  def actionPerformed(e: ActionEvent): Unit = {
     e.getSource match {
       case `findBox` =>
         if (!next(findBox.getText, ignoreCaseCheckBox.isSelected, wrapAroundCheckBox.isSelected)) {
@@ -384,7 +384,7 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     }
   }
 
-  private def replace(replacement: String) {
+  private def replace(replacement: String): Unit = {
     if (target.getSelectedText == null || target.getSelectedText.isEmpty) {
       Toolkit.getDefaultToolkit.beep()
 
@@ -435,7 +435,7 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     }
   }
 
-  private def setReplaceEnabled(enabled: Boolean) {
+  private def setReplaceEnabled(enabled: Boolean): Unit = {
     replaceEnabler.setEnabled(enabled)
     replaceAndFindEnabler.setEnabled(enabled)
     replaceAllEnabler.setEnabled(enabled)
