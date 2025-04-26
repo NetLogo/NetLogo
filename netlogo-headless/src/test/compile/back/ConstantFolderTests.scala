@@ -10,8 +10,8 @@ class ConstantFolderTests extends AnyFunSuite {
 
   def compile(source: String): String = {
     val procdef = Scaffold.apply("to-report __test report " + source + "\nend") match {
-      case Seq(p, _) => p
-      case s => throw new IllegalStateException
+      case p +: tail => p
+      case _ => throw new IllegalStateException
     }
     procdef.accept(new ConstantFolder)
     procdef.statements.stmts.head.args.head.toString
