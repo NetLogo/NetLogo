@@ -35,7 +35,7 @@ public class Link
   final Turtle _end2;
 
   public Turtle end2() {
-    return _end1;
+    return _end2;
   }
 
   /// id
