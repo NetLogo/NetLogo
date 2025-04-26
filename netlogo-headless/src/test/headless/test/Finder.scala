@@ -72,7 +72,7 @@ trait Finder extends AnyFunSuite  {
 
   case class TxtsInResources(path: String) extends Iterable[(String, String)] {
     import org.reflections._
-    import collection.JavaConverters._
+    import scala.jdk.CollectionConverters.SetHasAsScala
     override def iterator =
       new Reflections(path, scanners.Scanners.Resources)
         .getResources(java.util.regex.Pattern.compile(".*\\.txt"))

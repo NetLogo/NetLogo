@@ -16,10 +16,14 @@ class TestPlotModels extends FixtureSuite {
 
   def onlyPlot(implicit fixture: Fixture) =
     fixture.workspace.plotManager.plots match {
-      case Seq(plot) => plot }
+      case Seq(plot) => plot
+      case p => throw new Exception(s"Unexpected plots: $p")
+    }
   def onlyPen(implicit fixture: Fixture) =
     onlyPlot.pens match {
-      case Seq(pen) => pen }
+      case Seq(pen) => pen
+      case p => throw new Exception(s"Unexpected pens: $p")
+    }
 
   val modelCode =
     """|breed [dogs dog]

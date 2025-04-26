@@ -17,8 +17,10 @@ object TokenClasses {
       .toSeq
       .map {
         case l: String =>
-          val List(tpe, primName, className) = l.split(' ').toList
-          (tpe, primName.toUpperCase, className)
+          l.split(' ') match {
+            case Array(tpe, primName, className) => (tpe, primName.toUpperCase, className)
+            case _ => throw new Exception(s"Unexpected input: $l")
+          }
       }
 
   def compiledReporters[T](packagePrefix: String): Map[String, () => T] =
@@ -98,9 +100,11 @@ object TokenClasses {
                       params.head.typeSignature =:= typeOf[String])
                   case _ => false
                 }
+            case _ => throw new Exception("Unexpected state.")
           }.map {
             case (cp: ClassSymbol, _) =>
               q"""${cp.fullName} -> ((s: String) => new $cp(s))"""
+            case _ => throw new Exception("Unexpected state.")
           }
           q"Map(..$constructorClosures)"
         } catch {

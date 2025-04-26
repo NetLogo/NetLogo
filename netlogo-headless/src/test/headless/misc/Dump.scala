@@ -52,7 +52,7 @@ object Dump {
       print('.')
       writeFile("target/dumps/" + name + ".txt",dump(path))
     }
-    println
+    println()
   }
   def writeFile(path:String,s:String): Unit = {
     val w = new java.io.FileWriter(path)

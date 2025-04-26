@@ -283,6 +283,7 @@ lazy val headless = (project in file ("netlogo-headless")).
       "net.lingala.zip4j" % "zip4j" % "2.11.5",
       "com.googlecode.json-simple" % "json-simple" % "1.1.1",
       "org.reflections" % "reflections" % "0.10.2" % "test",
+      "org.scala-lang.modules" %% "scala-parallel-collections" % "1.2.0"
     ),
     (Runtime / fullClasspath)  ++= (parserJVM / Runtime / fullClasspath).value,
     Compile / resourceDirectory := baseDirectory.value / "resources" / "main",

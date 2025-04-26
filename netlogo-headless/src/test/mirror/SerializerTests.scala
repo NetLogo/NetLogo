@@ -31,7 +31,7 @@ class SerializerTests extends AnyFunSuite {
 
   test("a change") {
     roundTrip(Update(changes = Seq((AgentKey(kind = Mirrorables.Link, id = 5),
-                                    Array(Change(3, "red"))))))
+                                    Seq(Change(3, "red"))))))
   }
 
 }

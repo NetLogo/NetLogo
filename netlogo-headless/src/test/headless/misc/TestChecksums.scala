@@ -51,57 +51,51 @@ class ChecksumTester(val info: String => Unit, versionMismatch: () => Unit = () 
   def addFailure(s: String) = failures.synchronized {failures ++= s}
   val failures = new StringBuilder
 
-  def withWorkspace[T](body: HeadlessWorkspace => T): T = {
-    val ws = HeadlessWorkspace.newInstance
-    ws.silent = true
-    try body(ws)
-    finally ws.dispose()
-  }
-
   def testChecksum(model: String, variant: String, expectedWorldSum: String, expectedGraphicsSum: String, expectedRevision: String): Unit = {
-    withWorkspace { workspace =>
-      val actualRevision = ChecksumsAndPreviews.Checksums.getRevisionNumber(model)
-      val revisionMatches = expectedRevision == actualRevision
-      if (!revisionMatches) {
-        versionMismatch()
-        info(s"checksums.txt has $expectedRevision but model is $actualRevision")
-      }
-      workspace.open(model)
-      Checksummer.initModelForChecksumming(workspace, variant)
-      val actual = Checksummer.calculateWorldChecksum(workspace)
-      if (expectedWorldSum != actual) {
-        val message = model + "\n  expected world checksum " + expectedWorldSum + "\n  but got " + actual + "\n"
-        if (revisionMatches) {
-          addFailure(message)
-          info("\n" + message)
-          exportWorld(workspace, model)
-        }
-        else {
-          info("version mismatch, ignoring: " + message)
-          return
-        }
-      }
-      // test view contents checksum
-      val actual2 = Checksummer.calculateGraphicsChecksum(workspace)
-      if (expectedGraphicsSum != actual2) {
-        val message = model + "\n  expected graphics checksum " + expectedGraphicsSum + "\n  but got " + actual2 + "\n"
-        if (revisionMatches) {
-          addFailure(message)
-          info("\n" + message)
-        }
-        else {
-          info("version mismatch, ignoring: " + message)
-          return
-        }
-      }
-      new java.io.File("tmp").mkdir()
-      new java.io.File("tmp/TestChecksums").mkdir()
-      val name = model.substring(
-        model.lastIndexOf('/'),
-        model.lastIndexOf(".nlogox"))
-      workspace.exportView("tmp/TestChecksums/" + name + ".png",
-        "PNG")
+    val workspace = HeadlessWorkspace.newInstance
+    workspace.silent = true
+    val actualRevision = ChecksumsAndPreviews.Checksums.getRevisionNumber(model)
+    val revisionMatches = expectedRevision == actualRevision
+    if (!revisionMatches) {
+      versionMismatch()
+      info(s"checksums.txt has $expectedRevision but model is $actualRevision")
     }
+    workspace.open(model)
+    Checksummer.initModelForChecksumming(workspace, variant)
+    val actual = Checksummer.calculateWorldChecksum(workspace)
+    if (expectedWorldSum != actual) {
+      val message = model + "\n  expected world checksum " + expectedWorldSum + "\n  but got " + actual + "\n"
+      if (revisionMatches) {
+        addFailure(message)
+        info("\n" + message)
+        exportWorld(workspace, model)
+      }
+      else {
+        info("version mismatch, ignoring: " + message)
+        return
+      }
+    }
+    // test view contents checksum
+    val actual2 = Checksummer.calculateGraphicsChecksum(workspace)
+    if (expectedGraphicsSum != actual2) {
+      val message = model + "\n  expected graphics checksum " + expectedGraphicsSum + "\n  but got " + actual2 + "\n"
+      if (revisionMatches) {
+        addFailure(message)
+        info("\n" + message)
+      }
+      else {
+        info("version mismatch, ignoring: " + message)
+        return
+      }
+    }
+    new java.io.File("tmp").mkdir()
+    new java.io.File("tmp/TestChecksums").mkdir()
+    val name = model.substring(
+      model.lastIndexOf('/'),
+      model.lastIndexOf(".nlogox"))
+    workspace.exportView("tmp/TestChecksums/" + name + ".png",
+      "PNG")
+    workspace.dispose()
   }
 
   def exportWorld(workspace: HeadlessWorkspace, model: String): Unit = {

@@ -10,7 +10,11 @@ class TurtleTestsDrawer extends MockSuite {
 
   val cachableSizes = List(1,1.5,2)
   val testSizes = List(0.5, 1, 1.1, 1.5, 1.75, 2, 5)
-  val colors@List(white, red, blue, green) = List("white", "red", "blue", "green").map(color)
+  val white = color("white")
+  val red = color("red")
+  val blue = color("blue")
+  val green = color("green")
+  val colors = List(white, red, blue, green)
 
   // these tests have the same results independent of recolorable and size
   for(recolorable<-List(true, false); size<-testSizes){

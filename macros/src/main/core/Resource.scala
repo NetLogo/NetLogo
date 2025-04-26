@@ -25,8 +25,8 @@ object Resource {
     import c.universe._
     resourcePath match {
       case q"${resource: String}" =>
-        val lines = getResource(resource).getLines.map(s => q"$s").toList
-        q"Seq(..$lines).toIterator"
+        val lines = getResource(resource).getLines().map(s => q"$s").toList
+        q"Seq(..$lines).iterator"
       case _ => c.abort(c.enclosingPosition, "Must supply a string literal to Resource.lines")
     }
   }

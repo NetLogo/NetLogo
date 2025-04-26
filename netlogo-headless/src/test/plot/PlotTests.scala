@@ -107,7 +107,7 @@ class PlotTests extends SimplePlotTest {
     plot.state = plot.state.copy(yMax = 5)
     val pen = plot.createPlotPen("test", false)
     val runner = new BasicPlotActionRunner(Seq(plot))
-    def zeros = Stream.continually(0.0)
+    def zeros = LazyList.continually(0.0)
     plot
       .histogramActions(pen, zeros.take(5))
       .foreach(runner.run)
