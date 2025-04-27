@@ -252,6 +252,16 @@ object NetLogoPackaging {
       val rootFiles    = (packageWinAggregate / aggregateOnlyFiles).value
       val variables    = buildVariables.value
 
+      val icons = Seq(
+        (behaviorsearchProject / baseDirectory).value / "resources" / "Behaviorsearch.ico",
+        (behaviorsearchProject / baseDirectory).value / "resources" / "behaviorsearch_model.ico",
+        configDir / "windows" / "NetLogo.ico",
+        configDir / "windows" / "HubNet Client.ico",
+        configDir / "windows" / "model.ico"
+      )
+
+      icons.foreach(i => FileActions.copyFile(i, buildDir / i.getName))
+
       // $APPDIR on Windows is `./app`, so move one levels up for the extra dirs
       val extraJavaOptions = Seq(
         "-Dnetlogo.extensions.dir=$APPDIR/../extensions"
