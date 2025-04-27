@@ -282,8 +282,8 @@ class InterfaceTab(workspace: GUIWorkspace,
   }
 
   private def showCommandCenter(): Unit = {
-    if (splitPane.getDividerLocation >= splitPane.maxDividerLocation)
-      splitPane.resetToPreferredSizes()
+    if (splitPane.getDividerLocation >= splitPane.maxClosedDividerLocation)
+      splitPane.resetToLastOpenSizes()
   }
 
   class CommandCenterToggleAction extends AbstractAction(I18N.gui.get("menu.tools.hideCommandCenter"))
@@ -293,8 +293,8 @@ class InterfaceTab(workspace: GUIWorkspace,
     accelerator = UserAction.KeyBindings.keystroke('/', withMenu = true)
 
     override def actionPerformed(e: ActionEvent) {
-      if (splitPane.getDividerLocation < splitPane.maxDividerLocation) {
-        splitPane.setDividerLocation(splitPane.maxDividerLocation)
+      if (splitPane.getDividerLocation < splitPane.maxClosedDividerLocation) {
+        splitPane.setDividerLocation(splitPane.maxClosedDividerLocation)
         if (iP.isFocusable) iP.requestFocus()
       } else {
         showCommandCenter()
