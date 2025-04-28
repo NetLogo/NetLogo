@@ -2,13 +2,11 @@
 
 package org.nlogo.swing
 
-import java.awt.{ Color, FlowLayout }
+import java.awt.FlowLayout
 import java.awt.event.{ ActionEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ AbstractAction, JButton, JLabel }
 
-abstract class ToolBarMenu(name: String) extends JButton {
-  setOpaque(false)
-  setBackground(new Color(0, 0, 0, 0))
+abstract class ToolBarMenu(name: String) extends JButton with Transparent {
   setBorder(null)
 
   setLayout(new FlowLayout)

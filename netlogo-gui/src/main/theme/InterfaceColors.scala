@@ -14,34 +14,6 @@ object InterfaceColors {
   def getTheme: ColorTheme =
     theme
 
-  val ClassicLavender = new Color(188, 188, 230)
-  val ClassicLightGreen = new Color(130, 188, 183)
-  val ClassicDarkGreen = new Color(65, 94, 91)
-  val ClassicOrange = new Color(200, 103, 103)
-  val ClassicBeige = new Color(225, 225, 182)
-
-  val LightBlue = new Color(207, 229, 255)
-  val MediumBlue = new Color(6, 112, 237)
-  val MediumBlue2 = new Color(0, 102, 227)
-  val MediumBlue3 = new Color(0, 92, 217)
-  val MediumBlue4 = new Color(0, 72, 197)
-  val DarkBlue = new Color(0, 54, 117)
-  val White2 = new Color(245, 245, 245)
-  val LightGray = new Color(238, 238, 238)
-  val LightGray2 = new Color(215, 215, 215)
-  val MediumGray = new Color(175, 175, 175)
-  val LightGrayOutline = new Color(120, 120, 120)
-  val LightGrayOutline2 = new Color(100, 100, 100)
-  val DarkGray = new Color(79, 79, 79)
-  val BlueGray = new Color(70, 70, 76)
-  val MediumBlueGray = new Color(60, 60, 65)
-  val DarkBlueGray = new Color(45, 45, 54)
-  val DarkBlueGray2 = new Color(35, 35, 44)
-  val DarkBlueGray3 = new Color(25, 25, 34)
-  val DarkBlueGray4 = new Color(10, 10, 20)
-  val LightRed = new Color(251, 96, 85)
-  val AlmostBlack = new Color(22, 22, 22)
-
   val Transparent = new Color(0, 0, 0, 0)
 
   def widgetText: Color = theme.widgetText
@@ -205,6 +177,34 @@ object InterfaceColors {
 }
 
 trait ColorTheme {
+  protected val ClassicLavender = new Color(188, 188, 230)
+  protected val ClassicLightGreen = new Color(130, 188, 183)
+  protected val ClassicDarkGreen = new Color(65, 94, 91)
+  protected val ClassicOrange = new Color(200, 103, 103)
+  protected val ClassicBeige = new Color(225, 225, 182)
+
+  protected val LightBlue = new Color(207, 229, 255)
+  protected val MediumBlue = new Color(6, 112, 237)
+  protected val MediumBlue2 = new Color(0, 102, 227)
+  protected val MediumBlue3 = new Color(0, 92, 217)
+  protected val MediumBlue4 = new Color(0, 72, 197)
+  protected val DarkBlue = new Color(0, 54, 117)
+  protected val White2 = new Color(245, 245, 245)
+  protected val LightGray = new Color(238, 238, 238)
+  protected val LightGray2 = new Color(215, 215, 215)
+  protected val MediumGray = new Color(175, 175, 175)
+  protected val LightGrayOutline = new Color(120, 120, 120)
+  protected val LightGrayOutline2 = new Color(100, 100, 100)
+  protected val DarkGray = new Color(79, 79, 79)
+  protected val BlueGray = new Color(70, 70, 76)
+  protected val MediumBlueGray = new Color(60, 60, 65)
+  protected val DarkBlueGray = new Color(45, 45, 54)
+  protected val DarkBlueGray2 = new Color(35, 35, 44)
+  protected val DarkBlueGray3 = new Color(25, 25, 34)
+  protected val DarkBlueGray4 = new Color(10, 10, 20)
+  protected val LightRed = new Color(251, 96, 85)
+  protected val AlmostBlack = new Color(22, 22, 22)
+
   def widgetText: Color
   def widgetTextError: Color
   def widgetHoverShadow: Color
@@ -366,8 +366,6 @@ trait ColorTheme {
 }
 
 object ClassicTheme extends ColorTheme {
-  import InterfaceColors._
-
   override def widgetText: Color = Color.BLACK
   override def widgetTextError: Color = Color.RED
   override def widgetHoverShadow: Color = new Color(75, 75, 75)
@@ -439,7 +437,7 @@ object ClassicTheme extends ColorTheme {
   override def toolbarControlBackgroundHover: Color = White2
   override def toolbarControlBackgroundPressed: Color = LightGray2
   override def toolbarControlBorder: Color = MediumGray
-  override def toolbarControlBorderSelected: Color = Transparent
+  override def toolbarControlBorderSelected: Color = InterfaceColors.Transparent
   override def toolbarControlFocus: Color = MediumBlue
   override def toolbarButtonHover: Color = LightGray2
   override def toolbarToolPressed: Color = MediumGray
@@ -529,8 +527,6 @@ object ClassicTheme extends ColorTheme {
 }
 
 object LightTheme extends ColorTheme {
-  import InterfaceColors._
-
   override def widgetText: Color = new Color(53, 54, 74)
   override def widgetTextError: Color = Color.RED
   override def widgetHoverShadow: Color = new Color(75, 75, 75)
@@ -602,7 +598,7 @@ object LightTheme extends ColorTheme {
   override def toolbarControlBackgroundHover: Color = White2
   override def toolbarControlBackgroundPressed: Color = LightGray2
   override def toolbarControlBorder: Color = MediumGray
-  override def toolbarControlBorderSelected: Color = Transparent
+  override def toolbarControlBorderSelected: Color = InterfaceColors.Transparent
   override def toolbarControlFocus: Color = MediumBlue
   override def toolbarButtonHover: Color = LightGray2
   override def toolbarToolPressed: Color = MediumGray
@@ -692,8 +688,6 @@ object LightTheme extends ColorTheme {
 }
 
 object DarkTheme extends ColorTheme {
-  import InterfaceColors._
-
   override def widgetText: Color = Color.WHITE
   override def widgetTextError: Color = Color.RED
   override def widgetHoverShadow: Color = new Color(75, 75, 75)
