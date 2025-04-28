@@ -7,7 +7,7 @@ import java.awt.Color
 import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ Token, TokenType }
 import org.nlogo.editor.Colorizer
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.theme.{ ColorTheme, InterfaceColors }
 
 class EditorColorizer(compiler: CompilerServices) extends Colorizer {
 
@@ -17,7 +17,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
   private var lastColors = Array[Color]()
 
   // discard cache if the theme changed (Isaac B 11/7/24)
-  private var lastTheme = ""
+  private var lastTheme: Option[ColorTheme] = None
 
   def reset() {
     lastLine = ""
@@ -25,7 +25,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
   }
 
   def getCharacterColors(line: String): Array[Color] =
-    if (line == lastLine && InterfaceColors.getTheme == lastTheme)
+    if (line == lastLine && lastTheme.exists(_ == InterfaceColors.getTheme))
       lastColors
     else {
       val tokens = tokenizeForColorization(line)
@@ -49,7 +49,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
       }
       lastColors = result
       lastLine = line
-      lastTheme = InterfaceColors.getTheme
+      lastTheme = Option(InterfaceColors.getTheme)
       result
     }
 

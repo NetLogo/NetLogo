@@ -25,7 +25,7 @@ import org.nlogo.log.{ JsonFileLogger, LogEvents, LogManager }
 import org.nlogo.nvm.{ PresentationCompilerInterface, Workspace }
 import org.nlogo.shape.{ LinkShapesManagerInterface, ShapesManagerInterface, TurtleShapesManagerInterface }
 import org.nlogo.swing.{ DropdownOptionPane, InputOptionPane, OptionPane, SetSystemLookAndFeel, Utils }
-import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
@@ -339,7 +339,11 @@ class App extends
 
     SetSystemLookAndFeel.setSystemLookAndFeel()
 
-    InterfaceColors.setTheme(App.colorTheme)
+    InterfaceColors.setTheme(App.colorTheme match {
+      case "classic" => ClassicTheme
+      case "light" => LightTheme
+      case "dark" => DarkTheme
+    })
 
     errorDialogManager = new ErrorDialogManager(frame,
       Map(classOf[MetadataLoadingException] -> new LibraryManagerErrorDialog(frame)))

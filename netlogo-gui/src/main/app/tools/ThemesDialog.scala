@@ -9,7 +9,7 @@ import javax.swing.{ AbstractAction, ButtonGroup, JLabel, JPanel }
 
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ ButtonPanel, DialogButton, Positioning, RadioButton }
-import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.theme.{ ClassicTheme, ColorTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
 
 class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "themes") with ThemeSync {
   private lazy val prefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
@@ -20,19 +20,19 @@ class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "theme
 
   private lazy val classicButton = new RadioButton(new AbstractAction(I18N.gui("classic")) {
     def actionPerformed(e: ActionEvent): Unit = {
-      setTheme("classic")
+      setTheme(ClassicTheme)
     }
   })
 
   private lazy val lightButton = new RadioButton(new AbstractAction(I18N.gui("light")) {
     def actionPerformed(e: ActionEvent): Unit = {
-      setTheme("light")
+      setTheme(LightTheme)
     }
   })
 
   private lazy val darkButton = new RadioButton(new AbstractAction(I18N.gui("dark")) {
     def actionPerformed(e: ActionEvent): Unit = {
-      setTheme("dark")
+      setTheme(DarkTheme)
     }
   })
 
@@ -47,7 +47,7 @@ class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "theme
     setVisible(false)
   })
 
-  private var startTheme = "light"
+  private var startTheme: ColorTheme = LightTheme
 
   override def initGUI(): Unit = {
     setResizable(false)
@@ -97,19 +97,23 @@ class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "theme
     super.setVisible(visible)
   }
 
-  private def setTheme(theme: String): Unit = {
+  private def setTheme(theme: ColorTheme): Unit = {
     InterfaceColors.setTheme(theme)
 
-    prefs.put("colorTheme", theme)
+    prefs.put("colorTheme", theme match {
+      case ClassicTheme => "classic"
+      case LightTheme => "light"
+      case DarkTheme => "dark"
+    })
 
     frame.syncTheme()
   }
 
-  private def setSelected(theme: String): Unit = {
+  private def setSelected(theme: ColorTheme): Unit = {
     theme match {
-      case "classic" => classicButton.setSelected(true)
-      case "light" => lightButton.setSelected(true)
-      case "dark" => darkButton.setSelected(true)
+      case ClassicTheme => classicButton.setSelected(true)
+      case LightTheme => lightButton.setSelected(true)
+      case DarkTheme => darkButton.setSelected(true)
     }
   }
 

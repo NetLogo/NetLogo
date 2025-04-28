@@ -20,7 +20,7 @@ import org.nlogo.api.{ Editable, Property }
 import org.nlogo.core.{ TextBox => CoreTextBox }
 import org.nlogo.core.I18N
 import org.nlogo.swing.Transparent
-import org.nlogo.theme.InterfaceColors
+import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme }
 
 class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 
@@ -173,11 +173,11 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
 
   override def syncTheme(): Unit = {
     InterfaceColors.getTheme match {
-      case "light" | "classic" =>
+      case ClassicTheme | LightTheme =>
         setBackgroundColor(_backgroundLight)
         textLabel.setForeground(_textColorLight)
 
-      case "dark" =>
+      case DarkTheme =>
         setBackgroundColor(_backgroundDark)
         textLabel.setForeground(_textColorDark)
     }

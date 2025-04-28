@@ -12,7 +12,7 @@ import org.nlogo.api.{ APIVersion, FileIO, Version }
 import org.nlogo.awt.{ Fonts, Positioning }
 import org.nlogo.core.I18N
 import org.nlogo.swing.{ BrowserLauncher, RichAction, ScrollPane, TabbedPane, TextArea, Utils }
-import org.nlogo.theme.{ InterfaceColors, ThemeSync }
+import org.nlogo.theme.{ DarkTheme, InterfaceColors, ThemeSync }
 import org.nlogo.util.SysInfo
 
 class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.about"), false) with ThemeSync {
@@ -139,7 +139,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
   override def syncTheme(): Unit = {
     getContentPane.setBackground(InterfaceColors.dialogBackground)
 
-    if (InterfaceColors.getTheme == "dark") {
+    if (InterfaceColors.getTheme == DarkTheme) {
       graphic.setIcon(Utils.iconScaled("/images/banner-dark-versionless.png", 600, 231))
     } else {
       graphic.setIcon(Utils.iconScaled("/images/banner-versionless.png", 600, 231))
