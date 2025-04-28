@@ -81,9 +81,17 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
   override def classDisplayName: String = I18N.gui.get("tabs.run.widgets.note")
   override def isNote = true
 
+  private val css = """<head>
+                      |  <style type="text/css">
+                      |    ul, ol {
+                      |      margin-left: 8px;
+                      |    }
+                      |  </style>
+                      |</head>""".stripMargin
+
   private def wrapText(): Unit = {
     if (_markdown) {
-      textLabel.setText(s"""<html>${renderer.render(parser.parse(_text))}</html>""")
+      textLabel.setText(s"""<html>$css${renderer.render(parser.parse(_text))}</html>""")
     } else {
       textLabel.setText(s"""<html>${StringEscapeUtils.escapeHtml4(_text).replaceAll("\n", "<br>")}</html>""")
     }
