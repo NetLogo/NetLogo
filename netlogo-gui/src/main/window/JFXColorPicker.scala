@@ -37,7 +37,7 @@ class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initial
 
   add(panel)
 
-  setSize(new Dimension(396, 500))
+  setSize(new Dimension(1000, 600))
   setResizable(false)
   setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE)
 
@@ -69,18 +69,19 @@ class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initial
               }
 
               // CSS hacks to fix this stupid JFX browser engine go here! --Jason B. (3/27/25)
-              engine.executeScript("""window.injectCSS(`.tab-button:last-child {
-                                                       |  border-right-width: 2px;
+              engine.executeScript("""window.injectCSS(`.dropdown-arrow {
+                                                       |  right:   0px;
+                                                       |  bottom: -2px;
                                                        |}
                                                        |
-                                                       |.dropdown-arrow {
-                                                       |  right:  -312px;
-                                                       |  bottom: -15px;
+                                                       |.hue .slider-knob {
+                                                       |  left: -1px;
                                                        |}
                                                        |
-                                                       |.repr-controls-wrapper {
-                                                       |  margin-top: 0;
-                                                       |}`)""".stripMargin)
+                                                       |.copy-button {
+                                                       |  border-radius: 0;
+                                                       |}
+                                                       |`)""".stripMargin)
 
               initialValue.foreach {
                 value =>
@@ -126,20 +127,34 @@ class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initial
     Platform.runLater(() => {
       webEngine.foreach(_.executeScript(
         s"""window.syncTheme({
-            |  dialogBackground:        "${color(_.dialogBackground             )}"
-            |, dialogText:              "${color(_.dialogText                   )}"
-            |, tabBackground:           "${color(_.tabBackground                )}"
-            |, tabBackgroundHover:      "${color(_.tabBackgroundHover           )}"
-            |, tabBackgroundSelected:   "${color(_.tabBackgroundSelected        )}"
-            |, tabBorder:               "${color(_.tabBorder                    )}"
-            |, tabText:                 "${color(_.tabText                      )}"
-            |, tabTextSelected:         "${color(_.tabTextSelected              )}"
-            |, controlBackground:       "${color(_.toolbarControlBackground     )}"
-            |, controlBackgroundActive: "${color(_.toolbarControlFocus          )}"
-            |, controlBackgroundHover:  "${color(_.toolbarControlBackgroundHover)}"
-            |, controlBorder:           "${color(_.toolbarControlBorder         )}"
-            |, controlText:             "${color(_.toolbarText                  )}"
-            |, dropdownArrow:           "${color(_.toolbarText                  )}"
+            |  dialogBackground:            "${color(_.toolbarBackground            )}"
+            |, dialogText:                  "${color(_.dialogText                   )}"
+            |, tabBackground:               "${color(_.tabBackground                )}"
+            |, tabBackgroundHover:          "${color(_.tabBackgroundHover           )}"
+            |, tabBackgroundSelected:       "${color(_.tabBackgroundSelected        )}"
+            |, tabBorder:                   "${color(_.tabBorder                    )}"
+            |, tabText:                     "${color(_.tabText                      )}"
+            |, tabTextSelected:             "${color(_.tabTextSelected              )}"
+            |, controlBackground:           "${color(_.toolbarControlBackground     )}"
+            |, controlBackgroundActive:     "${color(_.toolbarControlFocus          )}"
+            |, controlBackgroundHover:      "${color(_.toolbarControlBackgroundHover)}"
+            |, controlBorder:               "${color(_.toolbarControlBorder         )}"
+            |, controlText:                 "${color(_.toolbarText                  )}"
+            |, dropdownArrow:               "${color(_.toolbarText                  )}"
+            |, genericBorder:               "${color(_.plotBorder                   )}"
+            |, outputBackground:            "${color(_.colorPickerOutputBackground())}"
+            |, checkmarkColor:              "${color(_.colorPickerCheckmark())}"
+            |, copyHover:                   "${color(_.colorPickerCopyHover())}"
+            |, okButtonBackground:          "${color(_.primaryButtonBackground)}"
+            |, okButtonBackgroundHover:     "${color(_.primaryButtonBackgroundHover)}"
+            |, okButtonBorder:              "${color(_.primaryButtonBorder)}"
+            |, okButtonText:                "${color(_.primaryButtonText)}"
+            |, okButtonActive:              "${color(_.primaryButtonBackgroundPressed)}"
+            |, cancelButtonBackground:      "${color(_.secondaryButtonBackground)}"
+            |, cancelButtonBackgroundHover: "${color(_.secondaryButtonBackgroundHover)}"
+            |, cancelButtonBorder:          "${color(_.secondaryButtonBorder)}"
+            |, cancelButtonText:            "${color(_.secondaryButtonText)}"
+            |, cancelButtonActive:          "${color(_.secondaryButtonBackgroundPressed)}"
             })""".stripMargin
       ))
     })

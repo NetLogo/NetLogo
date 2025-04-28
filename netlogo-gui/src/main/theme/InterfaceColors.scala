@@ -833,6 +833,24 @@ object InterfaceColors {
       case "dark"              => new Color(  8, 152, 121)
     }
 
+  def colorPickerOutputBackground() =
+    getTheme match {
+      case "classic" | "light" => new Color(125, 125, 125)
+      case "dark"              => DarkBlueGray
+    }
+
+  def colorPickerCheckmark() =
+    getTheme match {
+      case "classic" | "light" => new Color(62, 184, 79)
+      case "dark"              => new Color(62, 184, 79)
+    }
+
+  def colorPickerCopyHover() =
+    getTheme match {
+      case "classic" | "light" => new Color(197, 197, 197)
+      case "dark"              => new Color(57, 57, 57)
+    }
+
 }
 
 trait ThemeSync {
