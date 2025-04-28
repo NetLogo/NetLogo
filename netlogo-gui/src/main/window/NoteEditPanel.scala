@@ -68,6 +68,15 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
         () => apply()),
       frame)
 
+  private val markdown =
+    new BooleanEditor(
+      new PropertyAccessor(
+        target,
+        I18N.gui.get("edit.text.markdown"),
+        () => target.markdown,
+        target.setMarkdown(_),
+        () => apply()))
+
   locally {
     val c = new GridBagConstraints
 
@@ -102,11 +111,16 @@ class NoteEditPanel(target: NoteWidget) extends WidgetEditPanel(target) {
 
     add(backgroundDark, c)
 
+    c.gridy = 4
+    c.insets = new Insets(0, 6, 6, 6)
+
+    add(markdown, c)
+
     text.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[_]] =
-    Seq(text, fontSize, textColorLight, textColorDark, backgroundLight, backgroundDark)
+    Seq(text, fontSize, textColorLight, textColorDark, backgroundLight, backgroundDark, markdown)
 
   override def isResizable: Boolean = true
 }
