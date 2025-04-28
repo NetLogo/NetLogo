@@ -37,6 +37,7 @@ object InterfaceColors {
   private val DarkBlueGray = new Color(45, 45, 54)
   private val DarkBlueGray2 = new Color(35, 35, 44)
   private val DarkBlueGray3 = new Color(25, 25, 34)
+  private val DarkBlueGray4 = new Color(10, 10, 20)
   private val LightRed = new Color(251, 96, 85)
   private val AlmostBlack = new Color(22, 22, 22)
 
@@ -690,13 +691,13 @@ object InterfaceColors {
   def secondaryButtonBackgroundHover =
     getTheme match {
       case "classic" | "light" => White2
-      case "dark" => DarkBlueGray2
+      case "dark" => DarkBlueGray3
     }
 
   def secondaryButtonBackgroundPressed =
     getTheme match {
       case "classic" | "light" => LightGray2
-      case "dark" => DarkBlueGray3
+      case "dark" => DarkBlueGray4
     }
 
   def secondaryButtonBorder = MediumGray
