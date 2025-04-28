@@ -289,26 +289,29 @@ object StructureParser {
     }
   }
 
-  // TODO
   @throws(classOf[CompilerException])
   def findLibraries(tokens: Iterator[Token]): Seq[String] = {
     val libraryPositionedTokens =
       tokens.dropWhile(! _.text.equalsIgnoreCase("library"))
-    if (libraryPositionedTokens.isEmpty)
-      Seq()
-    else {
-      libraryPositionedTokens.next()
-      val libraryWithoutComments = libraryPositionedTokens.filter(_.tpe != TokenType.Comment)
-      if (libraryWithoutComments.next().tpe != TokenType.OpenBracket)
-        exception("Did not find expected open bracket for libraries declaration", tokens.next())
-      else
-        libraryWithoutComments
-          .takeWhile(_.tpe != TokenType.CloseBracket)
-          .filter(_.tpe == TokenType.Literal)
-          .map(_.value)
-          .collect {
-            case s: String => resolveIncludePath(s)
-          }.toSeq
+    val result =
+      if (libraryPositionedTokens.isEmpty)
+        Seq()
+      else {
+        libraryPositionedTokens.next()
+        val libraryWithoutComments = libraryPositionedTokens.filter(_.tpe != TokenType.Comment)
+        if (libraryWithoutComments.next().tpe != TokenType.OpenBracket)
+          exception("Did not find expected open bracket for library declaration", tokens.next())
+        else
+          libraryWithoutComments
+            .takeWhile((x) => x.tpe != TokenType.OpenBracket && x.tpe != TokenType.CloseBracket)
+            .filter(_.tpe == TokenType.Ident)
+            .map(_.value.toString)
+            .toSeq
+      }
+    if (result.isEmpty) {
+      result
+    } else {
+      result ++ findLibraries(tokens)
     }
   }
 
