@@ -59,7 +59,7 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
 
     setLayout(new GridBagLayout)
 
-    getContentPane.setBackground(InterfaceColors.dialogBackground)
+    getContentPane.setBackground(InterfaceColors.dialogBackground())
 
     locally {
       val c = new GridBagConstraints
@@ -69,7 +69,7 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
       c.insets = new Insets(6, 6, 6, 6)
 
       add(new LabeledComponent(I18N.gui("name"), name) {
-        setForeground(InterfaceColors.dialogText)
+        setForeground(InterfaceColors.dialogText())
       }, c)
 
       c.insets = new Insets(0, 6, 6, 6)
@@ -77,23 +77,23 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
       add(new LabeledComponent(I18N.gui("direction"), new Button(I18N.gui("edit"), () => {
         new EditorDialog(LinkEditorDialog.this, LinkEditorDialog.this, shape.directionIndicator, false)
       })) {
-        setForeground(InterfaceColors.dialogText)
+        setForeground(InterfaceColors.dialogText())
       }, c)
 
       add(new LabeledComponent(I18N.gui("curviness"), curviness) {
-        setForeground(InterfaceColors.dialogText)
+        setForeground(InterfaceColors.dialogText())
       }, c)
 
       add(new LabeledComponent(I18N.gui("leftLine"), dashes(2)) {
-        setForeground(InterfaceColors.dialogText)
+        setForeground(InterfaceColors.dialogText())
       }, c)
 
       add(new LabeledComponent(I18N.gui("middleLine"), dashes(1)) {
-        setForeground(InterfaceColors.dialogText)
+        setForeground(InterfaceColors.dialogText())
       }, c)
 
       add(new LabeledComponent(I18N.gui("rightLine"), dashes(0)) {
-        setForeground(InterfaceColors.dialogText)
+        setForeground(InterfaceColors.dialogText())
       }, c)
 
       val done = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => saveShape)
@@ -192,7 +192,7 @@ class LinkEditorDialog(parent: JDialog, list: DrawableList[LinkShape], shape: Li
           if (item(0) != 0) {
             val g2d = Utils.initGraphics2D(g)
 
-            g2d.setColor(InterfaceColors.toolbarText)
+            g2d.setColor(InterfaceColors.toolbarText())
             g2d.setStroke(new BasicStroke(1, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 1, item, 0))
             g2d.drawLine(x, y + getIconHeight / 2, x + getIconWidth, y + getIconHeight / 2)
           }

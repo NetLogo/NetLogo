@@ -140,39 +140,39 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
   }
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.toolbarBackground)
+    setBackground(InterfaceColors.toolbarBackground())
 
     widgetMenu.syncTheme()
     alignmentMenu.syncTheme()
 
     interactButton.setIcon(Utils.iconScaledWithColor("/images/interact.png", 18, 18,
                            if (interactButton.isSelected) {
-                             InterfaceColors.toolbarImageSelected
+                             InterfaceColors.toolbarImageSelected()
                            } else {
-                             InterfaceColors.toolbarImage
+                             InterfaceColors.toolbarImage()
                            }))
 
     selectButton.setIcon(Utils.iconScaledWithColor("/images/select.png", 18, 18,
                          if (selectButton.isSelected) {
-                           InterfaceColors.toolbarImageSelected
+                           InterfaceColors.toolbarImageSelected()
                          } else {
-                           InterfaceColors.toolbarImage
+                           InterfaceColors.toolbarImage()
                          }))
 
     editButton.setIcon(Utils.iconScaledWithColor("/images/edit.png", 18, 18,
                        if (editButton.isSelected) {
-                         InterfaceColors.toolbarImageSelected
+                         InterfaceColors.toolbarImageSelected()
                        } else {
-                         InterfaceColors.toolbarImage
+                         InterfaceColors.toolbarImage()
                        }))
 
     deleteButton.setIcon(Utils.iconScaledWithColor("/images/delete.png", 18, 18,
                          if (!deleteButton.isEnabled) {
-                           InterfaceColors.toolbarImageDisabled
+                           InterfaceColors.toolbarImageDisabled()
                          } else if (deleteButton.isSelected) {
-                           InterfaceColors.toolbarImageSelected
+                           InterfaceColors.toolbarImageSelected()
                          } else {
-                           InterfaceColors.toolbarImage
+                           InterfaceColors.toolbarImage()
                          }))
   }
 
@@ -295,12 +295,12 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
       WidgetInfos.find(_.displayName == chosenItem).get.coreWidget
 
     override def syncTheme(): Unit = {
-      setBackgroundColor(InterfaceColors.toolbarControlBackground)
-      setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
-      setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed)
-      setBorderColor(InterfaceColors.toolbarControlBorder)
+      setBackgroundColor(InterfaceColors.toolbarControlBackground())
+      setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
+      setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
+      setBorderColor(InterfaceColors.toolbarControlBorder())
 
-      label.setForeground(InterfaceColors.toolbarText)
+      label.setForeground(InterfaceColors.toolbarText())
 
       popup.syncTheme()
     }
@@ -443,35 +443,35 @@ class InterfaceWidgetControls(wPanel: WidgetPanel,
     })
 
     override def syncTheme(): Unit = {
-      setBackgroundColor(InterfaceColors.toolbarControlBackground)
-      setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
-      setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed)
-      setBorderColor(InterfaceColors.toolbarControlBorder)
+      setBackgroundColor(InterfaceColors.toolbarControlBackground())
+      setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
+      setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
+      setBorderColor(InterfaceColors.toolbarControlBorder())
 
-      label.setForeground(InterfaceColors.toolbarText)
+      label.setForeground(InterfaceColors.toolbarText())
 
       popup.syncTheme()
 
-      leftAction.setIcon(Utils.iconScaledWithColor("/images/align-left.png", 16, 16, InterfaceColors.toolbarImage))
+      leftAction.setIcon(Utils.iconScaledWithColor("/images/align-left.png", 16, 16, InterfaceColors.toolbarImage()))
       centerHorizontalAction.setIcon(Utils.iconScaledWithColor("/images/align-horizontal-center.png", 16, 16,
-                                                               InterfaceColors.toolbarImage))
-      rightAction.setIcon(Utils.iconScaledWithColor("/images/align-right.png", 16, 16, InterfaceColors.toolbarImage))
-      topAction.setIcon(Utils.iconScaledWithColor("/images/align-top.png", 16, 16, InterfaceColors.toolbarImage))
+                                                               InterfaceColors.toolbarImage()))
+      rightAction.setIcon(Utils.iconScaledWithColor("/images/align-right.png", 16, 16, InterfaceColors.toolbarImage()))
+      topAction.setIcon(Utils.iconScaledWithColor("/images/align-top.png", 16, 16, InterfaceColors.toolbarImage()))
       centerVerticalAction.setIcon(Utils.iconScaledWithColor("/images/align-vertical-center.png", 16, 16,
-                                                             InterfaceColors.toolbarImage))
-      bottomAction.setIcon(Utils.iconScaledWithColor("/images/align-bottom.png", 16, 16, InterfaceColors.toolbarImage))
+                                                             InterfaceColors.toolbarImage()))
+      bottomAction.setIcon(Utils.iconScaledWithColor("/images/align-bottom.png", 16, 16, InterfaceColors.toolbarImage()))
       distributeHorizontalAction.setIcon(Utils.iconScaledWithColor("/images/distribute-horizontal.png", 16, 16,
-                                                                   InterfaceColors.toolbarImage))
+                                                                   InterfaceColors.toolbarImage()))
       distributeVerticalAction.setIcon(Utils.iconScaledWithColor("/images/distribute-vertical.png", 16, 16,
-                                                                 InterfaceColors.toolbarImage))
+                                                                 InterfaceColors.toolbarImage()))
       stretchLeftAction.setIcon(Utils.iconScaledWithColor("/images/stretch-left.png", 16, 16,
-                                                          InterfaceColors.toolbarImage))
+                                                          InterfaceColors.toolbarImage()))
       stretchRightAction.setIcon(Utils.iconScaledWithColor("/images/stretch-right.png", 16, 16,
-                                                           InterfaceColors.toolbarImage))
+                                                           InterfaceColors.toolbarImage()))
       stretchTopAction.setIcon(Utils.iconScaledWithColor("/images/stretch-top.png", 16, 16,
-                                                         InterfaceColors.toolbarImage))
+                                                         InterfaceColors.toolbarImage()))
       stretchBottomAction.setIcon(Utils.iconScaledWithColor("/images/stretch-bottom.png", 16, 16,
-                                                            InterfaceColors.toolbarImage))
+                                                            InterfaceColors.toolbarImage()))
     }
   }
 

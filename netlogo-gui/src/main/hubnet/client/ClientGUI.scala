@@ -87,8 +87,8 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
     }
 
     override def syncTheme(): Unit = {
-      setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable))
-      setBackground(InterfaceColors.textAreaBackground)
+      setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable()))
+      setBackground(InterfaceColors.textAreaBackground())
 
       messageTextArea.syncTheme()
     }
@@ -140,8 +140,8 @@ class ClientGUI(editorFactory: EditorFactory, clientView: ClientView, plotManage
     }
 
     override def syncTheme(): Unit = {
-      label.setForeground(InterfaceColors.dialogText)
-      value.setForeground(InterfaceColors.dialogText)
+      label.setForeground(InterfaceColors.dialogText())
+      value.setForeground(InterfaceColors.dialogText())
     }
   }
 

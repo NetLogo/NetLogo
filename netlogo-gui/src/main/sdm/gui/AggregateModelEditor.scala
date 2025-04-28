@@ -248,14 +248,14 @@ class AggregateModelEditor(
     override def paintComponent(g: Graphics) {
       val g2d = SwingUtils.initGraphics2D(g)
 
-      g2d.setColor(InterfaceColors.menuBackground)
+      g2d.setColor(InterfaceColors.menuBackground())
       g2d.fillRect(0, 0, getWidth, getHeight)
     }
 
     override def paintBorder(g: Graphics) {
       val g2d = SwingUtils.initGraphics2D(g)
 
-      g2d.setColor(InterfaceColors.menuBarBorder)
+      g2d.setColor(InterfaceColors.menuBarBorder())
       g2d.drawLine(0, getHeight - 1, getWidth, getHeight - 1)
     }
 
@@ -270,13 +270,13 @@ class AggregateModelEditor(
   private class SyncedCommandMenu(name: String) extends CommandMenu(name) with ThemeSync {
     private val menuUI = new BasicMenuUI with ThemeSync {
       override def syncTheme(): Unit = {
-        setForeground(InterfaceColors.toolbarText)
+        setForeground(InterfaceColors.toolbarText())
 
-        selectionBackground = InterfaceColors.menuBackgroundHover
-        selectionForeground = InterfaceColors.menuTextHover
-        acceleratorForeground = InterfaceColors.toolbarText
-        acceleratorSelectionForeground = InterfaceColors.menuTextHover
-        disabledForeground = InterfaceColors.menuTextDisabled
+        selectionBackground = InterfaceColors.menuBackgroundHover()
+        selectionForeground = InterfaceColors.menuTextHover()
+        acceleratorForeground = InterfaceColors.toolbarText()
+        acceleratorSelectionForeground = InterfaceColors.menuTextHover()
+        disabledForeground = InterfaceColors.menuTextDisabled()
       }
     }
 
@@ -294,8 +294,8 @@ class AggregateModelEditor(
     override def getPopupMenu: JPopupMenu = {
       val menu = super.getPopupMenu
 
-      menu.setBackground(InterfaceColors.menuBackground)
-      menu.setBorder(new LineBorder(InterfaceColors.menuBorder))
+      menu.setBackground(InterfaceColors.menuBackground())
+      menu.setBorder(new LineBorder(InterfaceColors.menuBorder()))
 
       menu
     }

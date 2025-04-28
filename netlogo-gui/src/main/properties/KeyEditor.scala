@@ -53,7 +53,7 @@ abstract class KeyEditor(accessor: PropertyAccessor[Char])
   }
 
   override def syncTheme(): Unit = {
-    label.setForeground(InterfaceColors.dialogText)
+    label.setForeground(InterfaceColors.dialogText())
 
     editor.syncTheme()
   }

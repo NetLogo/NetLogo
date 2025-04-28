@@ -104,13 +104,13 @@ class HubNetClientEditor(workspace: GUIWorkspace,
   override def syncTheme(): Unit = {
     interfacePanel.syncTheme()
 
-    scrollPane.setBackground(InterfaceColors.interfaceBackground)
+    scrollPane.setBackground(InterfaceColors.interfaceBackground())
 
     widgetControls match {
       case ts: ThemeSync => ts.syncTheme()
     }
 
-    toolbar.setBackground(InterfaceColors.toolbarBackground)
+    toolbar.setBackground(InterfaceColors.toolbarBackground())
 
     repaint()
   }

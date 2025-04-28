@@ -47,7 +47,7 @@ class PlotLegend(widget: AbstractPlotWidget, boldName: Boolean)
         setFont(getFont.deriveFont(Font.BOLD))
 
       override def paintComponent(g: Graphics) {
-        setForeground(InterfaceColors.widgetText)
+        setForeground(InterfaceColors.widgetText())
 
         super.paintComponent(g)
       }

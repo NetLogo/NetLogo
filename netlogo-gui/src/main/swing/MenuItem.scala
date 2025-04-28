@@ -30,13 +30,13 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
     }
 
     override def syncTheme(): Unit = {
-      setForeground(InterfaceColors.toolbarText)
+      setForeground(InterfaceColors.toolbarText())
 
-      selectionBackground = InterfaceColors.menuBackgroundHover
-      selectionForeground = InterfaceColors.menuTextHover
-      acceleratorForeground = InterfaceColors.toolbarText
-      acceleratorSelectionForeground = InterfaceColors.menuTextHover
-      disabledForeground = InterfaceColors.menuTextDisabled
+      selectionBackground = InterfaceColors.menuBackgroundHover()
+      selectionForeground = InterfaceColors.menuTextHover()
+      acceleratorForeground = InterfaceColors.toolbarText()
+      acceleratorSelectionForeground = InterfaceColors.menuTextHover()
+      disabledForeground = InterfaceColors.menuTextDisabled()
     }
   }
 
@@ -54,13 +54,13 @@ class MenuItem(action: Action, showIcon: Boolean = true) extends JMenuItem(actio
 class PopupCheckBoxMenuItem(action: Action) extends JCheckBoxMenuItem(action) with ThemeSync {
   private val itemUI = new BasicCheckBoxMenuItemUI with ThemeSync {
     override def syncTheme(): Unit = {
-      setForeground(InterfaceColors.toolbarText)
+      setForeground(InterfaceColors.toolbarText())
 
-      selectionBackground = InterfaceColors.menuBackgroundHover
-      selectionForeground = InterfaceColors.menuTextHover
-      acceleratorForeground = InterfaceColors.toolbarText
-      acceleratorSelectionForeground = InterfaceColors.menuTextHover
-      disabledForeground = InterfaceColors.menuTextDisabled
+      selectionBackground = InterfaceColors.menuBackgroundHover()
+      selectionForeground = InterfaceColors.menuTextHover()
+      acceleratorForeground = InterfaceColors.toolbarText()
+      acceleratorSelectionForeground = InterfaceColors.menuTextHover()
+      disabledForeground = InterfaceColors.menuTextDisabled()
     }
   }
 

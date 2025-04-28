@@ -108,7 +108,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
   }
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.dialogBackground)
+    getContentPane.setBackground(InterfaceColors.dialogBackground())
 
     serverPanel.syncTheme()
     clientsPanel.syncTheme()
@@ -142,13 +142,13 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
         label.setText(value)
 
         if (isSelected) {
-          setBackground(InterfaceColors.dialogBackgroundSelected)
+          setBackground(InterfaceColors.dialogBackgroundSelected())
 
-          label.setForeground(InterfaceColors.dialogTextSelected)
+          label.setForeground(InterfaceColors.dialogTextSelected())
         } else {
-          setBackground(InterfaceColors.dialogBackground)
+          setBackground(InterfaceColors.dialogBackground())
 
-          label.setForeground(InterfaceColors.dialogText)
+          label.setForeground(InterfaceColors.dialogText())
         }
 
         this
@@ -226,9 +226,9 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       newClientButton.syncTheme()
       reloadButton.syncTheme()
 
-      clientsLabel.setForeground(InterfaceColors.dialogText)
-      scrollPane.setBackground(InterfaceColors.toolbarControlBackground)
-      clientsList.setBackground(InterfaceColors.dialogBackground)
+      clientsLabel.setForeground(InterfaceColors.dialogText())
+      scrollPane.setBackground(InterfaceColors.toolbarControlBackground())
+      clientsList.setBackground(InterfaceColors.dialogBackground())
     }
   }
 
@@ -296,8 +296,8 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       inputField.syncTheme()
       messageTextArea.syncTheme()
 
-      scrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable))
-      scrollPane.setBackground(InterfaceColors.textAreaBackground)
+      scrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable()))
+      scrollPane.setBackground(InterfaceColors.textAreaBackground())
     }
   }
 
@@ -361,13 +361,13 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       }
 
     override def syncTheme(): Unit = {
-      mirrorViewCheckBox.setForeground(InterfaceColors.dialogText)
-      mirrorPlotsCheckBox.setForeground(InterfaceColors.dialogText)
-      settingsLabel.setForeground(InterfaceColors.dialogText)
-      idLabel.setForeground(InterfaceColors.dialogText)
-      activityLabel.setForeground(InterfaceColors.dialogText)
-      addressLabel.setForeground(InterfaceColors.dialogText)
-      portLabel.setForeground(InterfaceColors.dialogText)
+      mirrorViewCheckBox.setForeground(InterfaceColors.dialogText())
+      mirrorPlotsCheckBox.setForeground(InterfaceColors.dialogText())
+      settingsLabel.setForeground(InterfaceColors.dialogText())
+      idLabel.setForeground(InterfaceColors.dialogText())
+      activityLabel.setForeground(InterfaceColors.dialogText())
+      addressLabel.setForeground(InterfaceColors.dialogText())
+      portLabel.setForeground(InterfaceColors.dialogText())
 
       fields.syncTheme()
     }

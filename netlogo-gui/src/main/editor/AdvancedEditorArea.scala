@@ -64,7 +64,7 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
       addPopupMenuListener(new SuspendCaretPopupListener(AdvancedEditorArea.this))
 
       override def show(component: Component, x: Int, y: Int) {
-        setBackground(InterfaceColors.menuBackground)
+        setBackground(InterfaceColors.menuBackground())
 
         getComponents.foreach(_ match {
           case ts: ThemeSync => ts.syncTheme()
@@ -98,7 +98,7 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   def setSelection(s: Boolean): Unit = { }
 
   def selectError(start: Int, end: Int) {
-    setSelectionColor(InterfaceColors.errorHighlight)
+    setSelectionColor(InterfaceColors.errorHighlight())
 
     select(start, end)
   }

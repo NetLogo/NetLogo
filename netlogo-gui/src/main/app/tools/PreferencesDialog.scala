@@ -100,8 +100,8 @@ class PreferencesDialog(parent: Frame, preferences: Seq[Preference])
   override def onClose() = reset()
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.dialogBackground)
-    preferencesPanel.setBackground(InterfaceColors.dialogBackground)
+    getContentPane.setBackground(InterfaceColors.dialogBackground())
+    preferencesPanel.setBackground(InterfaceColors.dialogBackground())
 
     okButton.syncTheme()
     cancelButton.syncTheme()

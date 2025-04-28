@@ -39,6 +39,6 @@ class AggregateEditorTab(toolbar: AggregateModelEditorToolBar, contents: Compone
   }
 
   override def syncTheme(): Unit = {
-    scrollPane.setBackground(InterfaceColors.interfaceBackground)
+    scrollPane.setBackground(InterfaceColors.interfaceBackground())
   }
 }

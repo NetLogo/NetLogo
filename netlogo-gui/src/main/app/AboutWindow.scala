@@ -137,7 +137,7 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
   }
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.dialogBackground)
+    getContentPane.setBackground(InterfaceColors.dialogBackground())
 
     if (InterfaceColors.getTheme == DarkTheme) {
       graphic.setIcon(Utils.iconScaled("/images/banner-dark-versionless.png", 600, 231))
@@ -145,16 +145,16 @@ class AboutWindow(parent: Frame) extends JDialog(parent, I18N.gui.get("dialog.ab
       graphic.setIcon(Utils.iconScaled("/images/banner-versionless.png", 600, 231))
     }
 
-    label.setForeground(InterfaceColors.toolbarText)
+    label.setForeground(InterfaceColors.toolbarText())
 
     credits.syncTheme()
     system.syncTheme()
 
-    creditsScrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable))
-    creditsScrollPane.setBackground(InterfaceColors.textAreaBackground)
+    creditsScrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable()))
+    creditsScrollPane.setBackground(InterfaceColors.textAreaBackground())
 
-    systemScrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable))
-    systemScrollPane.setBackground(InterfaceColors.textAreaBackground)
+    systemScrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable()))
+    systemScrollPane.setBackground(InterfaceColors.textAreaBackground())
 
     tabs.syncTheme()
   }

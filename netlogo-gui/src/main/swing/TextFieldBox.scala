@@ -96,6 +96,6 @@ class TextFieldBox(labelAlignment: Int = SwingConstants.LEFT, labelFont: Option[
   }
 
   override def syncTheme(): Unit = {
-    labels.foreach(_.setForeground(InterfaceColors.dialogText))
+    labels.foreach(_.setForeground(InterfaceColors.dialogText()))
   }
 }

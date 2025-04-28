@@ -16,7 +16,7 @@ class CollapsibleArrow extends Icon {
   def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
     val g2d = Utils.initGraphics2D(g)
 
-    g2d.setColor(InterfaceColors.dialogText)
+    g2d.setColor(InterfaceColors.dialogText())
 
     if (isOpen) {
       g2d.drawLine(x, y + 2, x + 4, y + 6)

@@ -135,9 +135,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
   }
 
   override def syncTheme(): Unit = {
-    scrollPane.setBackground(InterfaceColors.dialogBackground)
-    table.setBackground(InterfaceColors.dialogBackground)
-    table.setGridColor(InterfaceColors.dialogText)
+    scrollPane.setBackground(InterfaceColors.dialogBackground())
+    table.setBackground(InterfaceColors.dialogBackground())
+    table.setGridColor(InterfaceColors.dialogText())
 
     addButton.syncTheme()
   }
@@ -270,13 +270,13 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
                                         isSelected: Boolean, hasFocus: Boolean, row: Int, col: Int) = {
         val c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, col)
         if (isSelected)
-          c.setBackground(InterfaceColors.dialogBackgroundSelected)
+          c.setBackground(InterfaceColors.dialogBackgroundSelected())
         else
-          c.setBackground(InterfaceColors.dialogBackground)
+          c.setBackground(InterfaceColors.dialogBackground())
         if (model.pens(row).hasErrors)
           c.setForeground(Color.RED)
         else
-          c.setForeground(InterfaceColors.dialogText)
+          c.setForeground(InterfaceColors.dialogText())
         c
       }
     }
@@ -299,9 +299,9 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
     // renders the delete and edit buttons for each column
     class ButtonCellEditor extends AbstractCellEditor with TableCellRenderer with TableCellEditor {
-      val EditIcon   = Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.toolbarImage)
+      val EditIcon   = Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.toolbarImage())
       val AlertIcon  = Utils.iconScaled("/images/edit-error.png", 15, 15)
-      val DeleteIcon = Utils.iconScaledWithColor("/images/delete.png", 15, 15, InterfaceColors.toolbarImage)
+      val DeleteIcon = Utils.iconScaledWithColor("/images/delete.png", 15, 15, InterfaceColors.toolbarImage())
 
       val editButton = new Button("", () => {
         openAdvancedPenEditor(model.pens(getSelectedRow))
@@ -359,8 +359,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
         if (value != null) {
           editor.setText(value.asInstanceOf[String])
         }
-        editor.setBackground(InterfaceColors.textAreaBackground)
-        editor.setCaretColor(InterfaceColors.textAreaText)
+        editor.setBackground(InterfaceColors.textAreaBackground())
+        editor.setCaretColor(InterfaceColors.textAreaText())
         editor
       }
     }
@@ -370,8 +370,8 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       val editor = new EditorField(30, goodFont, true, colorizer)
       def getTableCellEditorComponent(table: JTable, value: Object, isSelected: Boolean, row: Int, col: Int) = {
         editor.setText(value.asInstanceOf[String])
-        editor.setBackground(InterfaceColors.textAreaBackground)
-        editor.setCaretColor(InterfaceColors.textAreaText)
+        editor.setBackground(InterfaceColors.textAreaBackground())
+        editor.setCaretColor(InterfaceColors.textAreaText())
         editor
       }
       def getCellEditorValue = editor.getText()

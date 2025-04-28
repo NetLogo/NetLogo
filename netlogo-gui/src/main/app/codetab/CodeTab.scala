@@ -45,7 +45,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     override def syncTheme(): Unit = {
       super.syncTheme()
 
-      setIcon(Utils.iconScaledWithColor("/images/check.png", 15, 15, InterfaceColors.toolbarImage))
+      setIcon(Utils.iconScaledWithColor("/images/check.png", 15, 15, InterfaceColors.toolbarImage()))
     }
   }
 
@@ -257,9 +257,9 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     def boldStyle(color: Color): Style =
       new Style(color, Style.DEFAULT_BACKGROUND, text.getFont.deriveFont(Font.BOLD), false)
 
-    setBackground(InterfaceColors.codeBackground)
+    setBackground(InterfaceColors.codeBackground())
 
-    toolBar.setBackground(InterfaceColors.toolbarBackground)
+    toolBar.setBackground(InterfaceColors.toolbarBackground())
 
     compileButton.syncTheme()
     findButton.syncTheme()
@@ -267,34 +267,34 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     proceduresMenu.syncTheme()
     includedFilesMenu.syncTheme()
 
-    separate.setForeground(InterfaceColors.toolbarText)
+    separate.setForeground(InterfaceColors.toolbarText())
 
     prefsButton.syncTheme()
 
-    text.setBackground(InterfaceColors.codeBackground)
-    text.setCaretColor(InterfaceColors.textAreaText)
+    text.setBackground(InterfaceColors.codeBackground())
+    text.setCaretColor(InterfaceColors.textAreaText())
 
     text match {
       case editor: AdvancedEditorArea =>
-        editor.setCurrentLineHighlightColor(InterfaceColors.codeLineHighlight)
+        editor.setCurrentLineHighlightColor(InterfaceColors.codeLineHighlight())
         editor.setSyntaxScheme(new SyntaxScheme(true) {
-          setStyle(TokenTypes.IDENTIFIER, new Style(InterfaceColors.defaultColor))
-          setStyle(TokenTypes.RESERVED_WORD, boldStyle(InterfaceColors.keywordColor))
-          setStyle(TokenTypes.COMMENT_KEYWORD, new Style(InterfaceColors.commentColor))
-          setStyle(TokenTypes.FUNCTION, new Style(InterfaceColors.reporterColor))
-          setStyle(TokenTypes.LITERAL_BOOLEAN, boldStyle(InterfaceColors.constantColor))
-          setStyle(TokenTypes.LITERAL_NUMBER_FLOAT, new Style(InterfaceColors.constantColor))
-          setStyle(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, new Style(InterfaceColors.constantColor))
-          setStyle(TokenTypes.LITERAL_BACKQUOTE, new Style(InterfaceColors.constantColor))
-          setStyle(TokenTypes.OPERATOR, new Style(InterfaceColors.commandColor))
-          setStyle(TokenTypes.SEPARATOR, new Style(InterfaceColors.defaultColor))
+          setStyle(TokenTypes.IDENTIFIER, new Style(InterfaceColors.defaultColor()))
+          setStyle(TokenTypes.RESERVED_WORD, boldStyle(InterfaceColors.keywordColor()))
+          setStyle(TokenTypes.COMMENT_KEYWORD, new Style(InterfaceColors.commentColor()))
+          setStyle(TokenTypes.FUNCTION, new Style(InterfaceColors.reporterColor()))
+          setStyle(TokenTypes.LITERAL_BOOLEAN, boldStyle(InterfaceColors.constantColor()))
+          setStyle(TokenTypes.LITERAL_NUMBER_FLOAT, new Style(InterfaceColors.constantColor()))
+          setStyle(TokenTypes.LITERAL_STRING_DOUBLE_QUOTE, new Style(InterfaceColors.constantColor()))
+          setStyle(TokenTypes.LITERAL_BACKQUOTE, new Style(InterfaceColors.constantColor()))
+          setStyle(TokenTypes.OPERATOR, new Style(InterfaceColors.commandColor()))
+          setStyle(TokenTypes.SEPARATOR, new Style(InterfaceColors.defaultColor()))
         })
     }
 
-    scrollableEditor.setBackground(InterfaceColors.codeBackground)
-    scrollableEditor.getViewport.setBackground(InterfaceColors.codeBackground)
-    scrollableEditor.getHorizontalScrollBar.setBackground(InterfaceColors.codeBackground)
-    scrollableEditor.getVerticalScrollBar.setBackground(InterfaceColors.codeBackground)
+    scrollableEditor.setBackground(InterfaceColors.codeBackground())
+    scrollableEditor.getViewport.setBackground(InterfaceColors.codeBackground())
+    scrollableEditor.getHorizontalScrollBar.setBackground(InterfaceColors.codeBackground())
+    scrollableEditor.getVerticalScrollBar.setBackground(InterfaceColors.codeBackground())
 
     // for code completion popup
     editorFactory.syncTheme()

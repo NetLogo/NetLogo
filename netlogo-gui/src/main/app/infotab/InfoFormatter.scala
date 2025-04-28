@@ -41,23 +41,23 @@ object InfoFormatter {
   def styleSheet(fontSize: Int): CSS = "<style type=\"text/css\">\n<!--\n"+
           styleSheetFile.
             replace("{BODY-FONT-SIZE}", fontSize.toString).
-            replace("{H1-BACKGROUND}", colorString(InterfaceColors.infoH1Background)).
-            replace("{H1-COLOR}", colorString(InterfaceColors.infoH1Color)).
+            replace("{H1-BACKGROUND}", colorString(InterfaceColors.infoH1Background())).
+            replace("{H1-COLOR}", colorString(InterfaceColors.infoH1Color())).
             replace("{H1-FONT-SIZE}", (fontSize * 2).toInt.toString).
-            replace("{H2-BACKGROUND}", colorString(InterfaceColors.infoH2Background)).
-            replace("{H2-COLOR}", colorString(InterfaceColors.infoH2Color)).
+            replace("{H2-BACKGROUND}", colorString(InterfaceColors.infoH2Background())).
+            replace("{H2-COLOR}", colorString(InterfaceColors.infoH2Color())).
             replace("{H2-FONT-SIZE}", (fontSize * 1.75).toInt.toString).
-            replace("{H3-COLOR}", colorString(InterfaceColors.infoH3Color)).
+            replace("{H3-COLOR}", colorString(InterfaceColors.infoH3Color())).
             replace("{H3-FONT-SIZE}", (fontSize * 1.5).toInt.toString).
-            replace("{H4-COLOR}", colorString(InterfaceColors.infoH4Color)).
+            replace("{H4-COLOR}", colorString(InterfaceColors.infoH4Color())).
             replace("{H4-FONT-SIZE}", (fontSize * 1.28).toString).
             replace("{H5-FONT-SIZE}", (fontSize * 1.14).toString).
             replace("{H6-FONT-SIZE}", fontSize.toString).
-            replace("{P-COLOR}", colorString(InterfaceColors.infoPColor)).
-            replace("{CODE-BACKGROUND}", colorString(InterfaceColors.infoCodeBackground)).
-            replace("{BLOCK-BAR}", colorString(InterfaceColors.infoBlockBar)).
-            replace("{INFO-BACKGROUND}", colorString(InterfaceColors.infoBackground)).
-            replace("{LINK-COLOR}", colorString(InterfaceColors.infoLink)) + "\n-->\n</style>"
+            replace("{P-COLOR}", colorString(InterfaceColors.infoPColor())).
+            replace("{CODE-BACKGROUND}", colorString(InterfaceColors.infoCodeBackground())).
+            replace("{BLOCK-BAR}", colorString(InterfaceColors.infoBlockBar())).
+            replace("{INFO-BACKGROUND}", colorString(InterfaceColors.infoBackground())).
+            replace("{LINK-COLOR}", colorString(InterfaceColors.infoLink())) + "\n-->\n</style>"
 
   def apply(content: String, fontSize: Int = defaultFontSize) = {
     wrapHtml(toInnerHtml(content), fontSize)

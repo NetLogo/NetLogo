@@ -14,7 +14,7 @@ object StandaloneHubNetClient {
   def main(args:Array[String]){ new ConnectionGUI().go() }
 
   class ConnectionGUI extends JFrame {
-    getContentPane.setBackground(InterfaceColors.dialogBackground)
+    getContentPane.setBackground(InterfaceColors.dialogBackground())
     getContentPane.add(new ConnectionPanel)
     addWindowListener(new WindowAdapter() {
       override def windowClosing(e: WindowEvent) {ConnectionGUI.this.dispose()}
@@ -28,7 +28,7 @@ object StandaloneHubNetClient {
       def makePanel(name: String, tf: TextField) = {
         new JPanel with Transparent {
           add(new JLabel(name) {
-            setForeground(InterfaceColors.dialogText)
+            setForeground(InterfaceColors.dialogText())
           })
           add(tf)
         }
@@ -49,7 +49,7 @@ object StandaloneHubNetClient {
   class ClientGUI(connection:TestClient) {
     def run() = { new ClientFrame().go() }
     class ClientFrame extends JFrame {
-      getContentPane.setBackground(InterfaceColors.dialogBackground)
+      getContentPane.setBackground(InterfaceColors.dialogBackground())
       getContentPane.add(new ConnectionPanel)
       addWindowListener(new WindowAdapter() {
         override def windowClosing(e: WindowEvent) {

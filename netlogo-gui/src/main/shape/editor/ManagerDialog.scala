@@ -74,7 +74,7 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
   }
 
   private val searchIcon = new JLabel(Utils.iconScaledWithColor("/images/find.png", 15, 15,
-                                      InterfaceColors.toolbarImage))
+                                      InterfaceColors.toolbarImage()))
 
   locally {
     getContentPane.setLayout(new GridBagLayout)
@@ -216,9 +216,9 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
   }
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.dialogBackground)
-    scrollPane.setBackground(InterfaceColors.dialogBackground)
-    shapesList.setBackground(InterfaceColors.dialogBackground)
+    getContentPane.setBackground(InterfaceColors.dialogBackground())
+    scrollPane.setBackground(InterfaceColors.dialogBackground())
+    shapesList.setBackground(InterfaceColors.dialogBackground())
 
     newButton.syncTheme()
     modelImportButton.syncTheme()
@@ -229,6 +229,6 @@ abstract class ManagerDialog[A <: CoreShape](parentFrame: Frame, modelLoader: Ab
 
     additionalButton.foreach(_.syncTheme())
 
-    searchIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.toolbarImage))
+    searchIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.toolbarImage()))
   }
 }

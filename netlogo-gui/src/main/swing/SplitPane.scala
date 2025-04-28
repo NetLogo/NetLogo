@@ -72,7 +72,7 @@ private class SplitPaneDivider(splitPane: SplitPane) extends JPanel(null) {
   add(expandButton)
   add(contractButton)
 
-  setBackground(InterfaceColors.splitPaneDividerBackground)
+  setBackground(InterfaceColors.splitPaneDividerBackground())
 
   private val dragRadius = 3
 

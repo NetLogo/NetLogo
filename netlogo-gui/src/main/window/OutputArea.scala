@@ -97,12 +97,12 @@ class OutputArea(val text: TextArea) extends JPanel with RoundedBorderPanel with
   }
 
   override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.commandOutputBackground)
-    setBorderColor(InterfaceColors.outputBorder)
+    setBackgroundColor(InterfaceColors.commandOutputBackground())
+    setBorderColor(InterfaceColors.outputBorder())
 
     text.syncTheme()
 
-    scrollPane.setBackground(InterfaceColors.commandOutputBackground)
+    scrollPane.setBackground(InterfaceColors.commandOutputBackground())
   }
 
   def append(oo: OutputObject, wrapLines: Boolean): Unit = {

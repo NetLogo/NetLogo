@@ -74,9 +74,9 @@ class InfoTab(attachModelDir: String => String)
     override def syncTheme(): Unit = {
       setIcon(Utils.iconScaledWithColor("/images/edit.png", 15, 15,
               if (isSelected) {
-                InterfaceColors.toolbarImageSelected
+                InterfaceColors.toolbarImageSelected()
               } else {
-                InterfaceColors.toolbarImage
+                InterfaceColors.toolbarImage()
               }))
     }
   }
@@ -86,7 +86,7 @@ class InfoTab(attachModelDir: String => String)
       BrowserLauncher.openPath(InfoTab.this, baseDocPath, "information")
     }
   })
-  helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage))
+  helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage()))
   helpButton.setVisible(false)
   private def toggleHelpButton(){ helpButton.setVisible(view == textArea) }
 
@@ -170,16 +170,16 @@ class InfoTab(attachModelDir: String => String)
   }
 
   override def syncTheme(): Unit = {
-    toolBar.setBackground(InterfaceColors.toolbarBackground)
+    toolBar.setBackground(InterfaceColors.toolbarBackground())
 
     findButton.syncTheme()
     editableButton.syncTheme()
     helpButton.syncTheme()
 
-    helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage))
+    helpButton.setIcon(Utils.iconScaledWithColor("/images/help.png", 15, 15, InterfaceColors.toolbarImage()))
 
-    scrollPane.setBackground(InterfaceColors.infoBackground)
-    editorPane.setBackground(InterfaceColors.infoBackground)
+    scrollPane.setBackground(InterfaceColors.infoBackground())
+    editorPane.setBackground(InterfaceColors.infoBackground())
 
     textArea.syncTheme()
 
@@ -240,7 +240,7 @@ class InfoTab(attachModelDir: String => String)
   }
 
   private class EditableAction(label: String) extends AbstractAction(label) {
-    putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.toolbarImage))
+    putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/edit.png", 15, 15, InterfaceColors.toolbarImage()))
     def actionPerformed(e: ActionEvent) {
       val scrollBar = scrollPane.getVerticalScrollBar
       val (min, max) = (scrollBar.getMinimum, scrollBar.getMaximum)

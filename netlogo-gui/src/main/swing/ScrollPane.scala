@@ -49,7 +49,7 @@ class ScrollBar(orientation: Int) extends JScrollBar(orientation) with MouseUtil
     override def paintTrack(g: Graphics, c: JComponent, bounds: Rectangle): Unit = {
       val g2d = Utils.initGraphics2D(g)
 
-      g2d.setColor(InterfaceColors.scrollBarBackground)
+      g2d.setColor(InterfaceColors.scrollBarBackground())
       g2d.fillRect(bounds.x, bounds.y, bounds.width, bounds.height)
     }
 
@@ -57,9 +57,9 @@ class ScrollBar(orientation: Int) extends JScrollBar(orientation) with MouseUtil
       val g2d = Utils.initGraphics2D(g)
 
       if (isHover || isPressed) {
-        g2d.setColor(InterfaceColors.scrollBarForegroundHover)
+        g2d.setColor(InterfaceColors.scrollBarForegroundHover())
       } else {
-        g2d.setColor(InterfaceColors.scrollBarForeground)
+        g2d.setColor(InterfaceColors.scrollBarForeground())
       }
 
       val radius = bounds.width.min(bounds.height)

@@ -38,7 +38,7 @@ abstract class DoubleEditor(accessor: PropertyAccessor[Double])
   }
 
   override def syncTheme(): Unit = {
-    label.setForeground(InterfaceColors.dialogText)
+    label.setForeground(InterfaceColors.dialogText())
 
     editor.syncTheme()
   }

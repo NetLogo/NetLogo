@@ -25,29 +25,29 @@ class ToolBarToggleButton(action: Action) extends JToggleButton(action) with Tra
     if (!isEnabled) {
       g2d.setColor(InterfaceColors.Transparent)
     } else if (isSelected) {
-      g2d.setColor(InterfaceColors.toolbarToolSelected)
+      g2d.setColor(InterfaceColors.toolbarToolSelected())
     } else if (isPressed) {
-      g2d.setColor(InterfaceColors.toolbarControlBackgroundPressed)
+      g2d.setColor(InterfaceColors.toolbarControlBackgroundPressed())
     } else if (isHover) {
-      g2d.setColor(InterfaceColors.toolbarControlBackgroundHover)
+      g2d.setColor(InterfaceColors.toolbarControlBackgroundHover())
     } else {
-      g2d.setColor(InterfaceColors.toolbarControlBackground)
+      g2d.setColor(InterfaceColors.toolbarControlBackground())
     }
 
     g2d.fillRoundRect(0, 0, getWidth, getHeight, 6, 6)
 
     if (isSelected) {
-      g2d.setColor(InterfaceColors.toolbarControlBorderSelected)
+      g2d.setColor(InterfaceColors.toolbarControlBorderSelected())
     } else {
-      g2d.setColor(InterfaceColors.toolbarControlBorder)
+      g2d.setColor(InterfaceColors.toolbarControlBorder())
     }
 
     g2d.drawRoundRect(0, 0, getWidth - 1, getHeight - 1, 6, 6)
 
     if (isSelected) {
-      setForeground(InterfaceColors.toolbarTextSelected)
+      setForeground(InterfaceColors.toolbarTextSelected())
     } else {
-      setForeground(InterfaceColors.toolbarText)
+      setForeground(InterfaceColors.toolbarText())
     }
 
     super.paintComponent(g)

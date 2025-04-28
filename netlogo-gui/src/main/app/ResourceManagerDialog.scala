@@ -179,11 +179,11 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
   }
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.dialogBackground)
+    getContentPane.setBackground(InterfaceColors.dialogBackground())
 
-    scrollPane.setBackground(InterfaceColors.dialogBackground)
+    scrollPane.setBackground(InterfaceColors.dialogBackground())
 
-    resourceList.setBackground(InterfaceColors.dialogBackground)
+    resourceList.setBackground(InterfaceColors.dialogBackground())
 
     addButton.syncTheme()
     exportButton.syncTheme()
@@ -210,15 +210,15 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
       label.setText(value)
 
       if (isSelected) {
-        setBackground(InterfaceColors.dialogBackgroundSelected)
+        setBackground(InterfaceColors.dialogBackgroundSelected())
 
-        label.setForeground(InterfaceColors.dialogTextSelected)
+        label.setForeground(InterfaceColors.dialogTextSelected())
       }
 
       else {
-        setBackground(InterfaceColors.dialogBackground)
+        setBackground(InterfaceColors.dialogBackground())
 
-        label.setForeground(InterfaceColors.dialogText)
+        label.setForeground(InterfaceColors.dialogText())
       }
 
       this

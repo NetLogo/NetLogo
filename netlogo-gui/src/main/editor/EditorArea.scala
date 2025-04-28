@@ -149,7 +149,7 @@ class EditorArea(val configuration: EditorConfiguration)
   }
 
   def selectError(start: Int, end: Int) {
-    setSelectionColor(InterfaceColors.errorHighlight)
+    setSelectionColor(InterfaceColors.errorHighlight())
 
     select(start, end)
   }

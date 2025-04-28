@@ -54,7 +54,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
   // this is all really crazy... - JC 8/21/10
   locally {
     setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE)
-    setBackground(InterfaceColors.dialogBackground)
+    setBackground(InterfaceColors.dialogBackground())
 
     // Layout the main components
     setLayout(new BorderLayout)
@@ -79,7 +79,7 @@ class LoginDialog(parent: Frame, defaultUserId: String, defaultServerName: Strin
       setPreferredSize(new Dimension(100, 88))
       setVisible(false)
 
-      setBackground(InterfaceColors.dialogBackground)
+      setBackground(InterfaceColors.dialogBackground())
     }
     centerPanel.add(serverTablePane)
     if (interfaceChooser.itemCount > 1) {

@@ -59,7 +59,7 @@ class PreviewCommandsDialog(
   getRootPane.setDefaultButton(okButton)
 
   add(new JPanel(new BorderLayout) {
-    setBackground(InterfaceColors.dialogBackground)
+    setBackground(InterfaceColors.dialogBackground())
     add(editorPanel, BorderLayout.CENTER)
     add(previewPanel, BorderLayout.LINE_END)
     add(new JPanel with Transparent {

@@ -34,10 +34,10 @@ object StartupError {
       }
     })
 
-    frame.getContentPane.setBackground(InterfaceColors.dialogBackground)
+    frame.getContentPane.setBackground(InterfaceColors.dialogBackground())
 
     val title = new JLabel("NetLogo encountered an error while starting to run.  See the details below.") {
-      setForeground(InterfaceColors.dialogText)
+      setForeground(InterfaceColors.dialogText())
     }
     title.setFont(title.getFont().deriveFont(16f))
     frame.add(title, BorderLayout.NORTH)
@@ -49,8 +49,8 @@ object StartupError {
     }
 
     val scrollPane = new ScrollPane(report) {
-      setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable))
-      setBackground(InterfaceColors.textAreaBackground)
+      setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable()))
+      setBackground(InterfaceColors.textAreaBackground())
     }
 
     frame.add(scrollPane)

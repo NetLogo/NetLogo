@@ -48,7 +48,7 @@ class EditPanel(val target: Editable, val compiler: CompilerServices, colorizer:
           } else {
             add(new JLabel(property.notes) {
               setFont(getFont.deriveFont(9.0f))
-              setForeground(InterfaceColors.dialogText)
+              setForeground(InterfaceColors.dialogText())
             }, BorderLayout.SOUTH)
           }
       }

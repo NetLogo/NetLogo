@@ -17,9 +17,9 @@ class TextArea(rows: Int, columns: Int, text: String = "")
   syncTheme()
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.textAreaBackground)
-    setForeground(InterfaceColors.textAreaText)
-    setCaretColor(InterfaceColors.textAreaText)
+    setBackground(InterfaceColors.textAreaBackground())
+    setForeground(InterfaceColors.textAreaText())
+    setCaretColor(InterfaceColors.textAreaText())
   }
 
   private class CorrectBackwardAction extends TextAction("caret backward") {

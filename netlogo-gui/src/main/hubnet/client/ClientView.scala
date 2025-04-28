@@ -47,7 +47,7 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
     this.synchronized {
       setFontSize(g)
       if (!_displayOn || world == null) {
-        g.setColor(InterfaceColors.viewBackground)
+        g.setColor(InterfaceColors.viewBackground())
         g.fillRect(0, 0, getWidth, getHeight)
       }
       else {
@@ -97,7 +97,7 @@ class ClientView(clientPanel: ClientPanel) extends Widget with ViewWidgetInterfa
   }
 
   override def syncTheme(): Unit = {
-    setBorder(new LineBorder(InterfaceColors.viewBorder, 2))
+    setBorder(new LineBorder(InterfaceColors.viewBorder(), 2))
   }
 
   /// satisfy ViewWidgetInterface

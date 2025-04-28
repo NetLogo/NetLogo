@@ -29,6 +29,6 @@ abstract class BooleanEditor(accessor: PropertyAccessor[Boolean])
   override def setTooltip(text: String) = checkbox.setToolTipText(text)
 
   override def syncTheme(): Unit = {
-    checkbox.setForeground(InterfaceColors.dialogText)
+    checkbox.setForeground(InterfaceColors.dialogText())
   }
 }

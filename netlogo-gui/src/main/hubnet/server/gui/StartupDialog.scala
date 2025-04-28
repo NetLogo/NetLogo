@@ -20,7 +20,7 @@ class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)]
   private val nameField = new TextField(14, System.getProperty("user.name", ""))
 
   private val discoveryCheckBox = new CheckBox("Broadcast server location") {
-    setForeground(InterfaceColors.dialogText)
+    setForeground(InterfaceColors.dialogText())
     setSelected(true)
   }
 
@@ -58,7 +58,7 @@ class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)]
     val content = new JPanel {
       setLayout(new BoxLayout(this, BoxLayout.Y_AXIS))
       setBorder(new EmptyBorder(8, 8, 8, 8))
-      setBackground(InterfaceColors.dialogBackground)
+      setBackground(InterfaceColors.dialogBackground())
       add(Box.createVerticalStrut(12))
       add(new TextFieldBox {
         addField("Session name:", nameField)
@@ -69,7 +69,7 @@ class StartupDialog(parent: Frame, choices: Seq[(NetworkInterface, InetAddress)]
       if (networkChoices.size > 1) {
         add(Box.createVerticalStrut(12))
         add(new JLabel("Broadcast network connection on:") {
-          setForeground(InterfaceColors.dialogText)
+          setForeground(InterfaceColors.dialogText())
         })
         add(Box.createVerticalStrut(4))
         add(networkSelection)

@@ -41,7 +41,7 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
     val y = getTabAreaInsets(tabPlacement).top
     val height = calculateTabHeight(tabPlacement, 0, getFontMetrics.getHeight)
 
-    g2d.setColor(InterfaceColors.tabSeparator)
+    g2d.setColor(InterfaceColors.tabSeparator())
 
     for (i <- 1 until tabsPanel.getTabCount) {
       if (i != selectedIndex && i != selectedIndex + 1)
@@ -57,14 +57,14 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
 
     if (isSelected) {
       if (tabsPanel.getError(tabIndex)) {
-        g2d.setColor(InterfaceColors.tabBackgroundError)
+        g2d.setColor(InterfaceColors.tabBackgroundError())
       } else {
-        g2d.setColor(InterfaceColors.tabBackgroundSelected)
+        g2d.setColor(InterfaceColors.tabBackgroundSelected())
       }
     } else if (tabsPanel.isHover(tabIndex)) {
-      g2d.setColor(InterfaceColors.tabBackgroundHover)
+      g2d.setColor(InterfaceColors.tabBackgroundHover())
     } else {
-      g2d.setColor(InterfaceColors.tabBackground)
+      g2d.setColor(InterfaceColors.tabBackground())
     }
 
     if (tabsPanel.getTabCount == 1) {
@@ -85,7 +85,7 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
     if (!isSelected) {
       val g2d = Utils.initGraphics2D(g)
 
-      g2d.setColor(InterfaceColors.tabBorder)
+      g2d.setColor(InterfaceColors.tabBorder())
 
       if (tabIndex == 0) {
         g2d.drawArc(x, y, 10, 10, 90, 90)
@@ -113,7 +113,7 @@ private class TabsPanelUI(tabsPanel: TabsPanel) extends BasicTabbedPaneUI {
   override def paint(g: Graphics, c: JComponent): Unit = {
     val g2d = Utils.initGraphics2D(g)
 
-    g2d.setColor(InterfaceColors.toolbarBackground)
+    g2d.setColor(InterfaceColors.toolbarBackground())
     g2d.fillRect(0, 0, tabsPanel.getWidth, tabsPanel.getHeight)
 
     super.paint(g, c)
@@ -190,20 +190,20 @@ class TabLabel(startPanel: TabsPanel, text: String, tab: Component) extends JPan
 
   override def paintComponent(g: Graphics): Unit = {
     if (tab == tabsPanel.getSelectedComponent) {
-      textLabel.setForeground(InterfaceColors.tabTextSelected)
+      textLabel.setForeground(InterfaceColors.tabTextSelected())
       textLabel.setText("<html><b>" + rawText + "</b></html>")
 
-      closeButton.foreach(_.setForeground(InterfaceColors.tabTextSelected))
+      closeButton.foreach(_.setForeground(InterfaceColors.tabTextSelected()))
     } else if (tabsPanel.getError(tabsPanel.indexOfComponent(tab))) {
-      textLabel.setForeground(InterfaceColors.tabTextError)
+      textLabel.setForeground(InterfaceColors.tabTextError())
       textLabel.setText("<html><b>" + rawText + "</b></html>")
 
-      closeButton.foreach(_.setForeground(InterfaceColors.tabTextError))
+      closeButton.foreach(_.setForeground(InterfaceColors.tabTextError()))
     } else {
-      textLabel.setForeground(InterfaceColors.tabText)
+      textLabel.setForeground(InterfaceColors.tabText())
       textLabel.setText(rawText)
 
-      closeButton.foreach(_.setForeground(InterfaceColors.tabText))
+      closeButton.foreach(_.setForeground(InterfaceColors.tabText()))
     }
 
     super.paintComponent(g)

@@ -55,7 +55,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
 
     override def syncTheme(): Unit = {
-      setBorderColor(InterfaceColors.inputBorder)
+      setBorderColor(InterfaceColors.inputBorder())
     }
   }
 
@@ -89,13 +89,13 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
 
     override def syncTheme(): Unit = {
-      setBackgroundColor(InterfaceColors.displayAreaBackground)
-      setBorderColor(InterfaceColors.inputBorder)
+      setBackgroundColor(InterfaceColors.displayAreaBackground())
+      setBorderColor(InterfaceColors.inputBorder())
 
-      textArea.setForeground(InterfaceColors.displayAreaText)
-      textArea.setCaretColor(InterfaceColors.displayAreaText)
+      textArea.setForeground(InterfaceColors.displayAreaText())
+      textArea.setCaretColor(InterfaceColors.displayAreaText())
 
-      scrollPane.setBackground(InterfaceColors.displayAreaBackground)
+      scrollPane.setBackground(InterfaceColors.displayAreaBackground())
     }
   }
 
@@ -284,9 +284,9 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   }
 
   override def paintComponent(g: Graphics) = {
-    setBackgroundColor(InterfaceColors.inputBackground)
+    setBackgroundColor(InterfaceColors.inputBackground())
 
-    widgetLabel.setForeground(InterfaceColors.widgetText)
+    widgetLabel.setForeground(InterfaceColors.widgetText())
 
     super.paintComponent(g)
 
@@ -302,12 +302,12 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       if (colorSwatch.isVisible) {
         g2d.setPaint(new LinearGradientPaint(colorSwatch.getX.toFloat, colorSwatch.getY + 3, colorSwatch.getX.toFloat,
                                             colorSwatch.getY + colorSwatch.getHeight + 3, Array(0f, 1f),
-                                            Array(InterfaceColors.widgetHoverShadow, InterfaceColors.Transparent)))
+                                            Array(InterfaceColors.widgetHoverShadow(), InterfaceColors.Transparent)))
         g2d.fillRoundRect(colorSwatch.getX, colorSwatch.getY + 3, colorSwatch.getWidth, colorSwatch.getHeight, 6, 6)
       } else {
         g2d.setPaint(new LinearGradientPaint(scroller.getX.toFloat, scroller.getY + 3, scroller.getX.toFloat,
                                             scroller.getY + scroller.getHeight + 3, Array(0f, 1f),
-                                            Array(InterfaceColors.widgetHoverShadow, InterfaceColors.Transparent)))
+                                            Array(InterfaceColors.widgetHoverShadow(), InterfaceColors.Transparent)))
         g2d.fillRoundRect(scroller.getX, scroller.getY + 3, scroller.getWidth, scroller.getHeight, 6, 6)
       }
     }
@@ -584,13 +584,13 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     }
 
     override def syncTheme(): Unit = {
-      getContentPane.setBackground(InterfaceColors.dialogBackground)
+      getContentPane.setBackground(InterfaceColors.dialogBackground())
 
-      label.setForeground(InterfaceColors.dialogText)
+      label.setForeground(InterfaceColors.dialogText())
 
-      textArea.setBackground(InterfaceColors.textAreaBackground)
-      textArea.setForeground(InterfaceColors.textAreaText)
-      textArea.setCaretColor(InterfaceColors.textAreaText)
+      textArea.setBackground(InterfaceColors.textAreaBackground())
+      textArea.setForeground(InterfaceColors.textAreaText())
+      textArea.setCaretColor(InterfaceColors.textAreaText())
 
       scrollPane.syncTheme()
 

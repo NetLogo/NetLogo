@@ -19,10 +19,10 @@ object OptionPane {
 
   object Icons {
     val None: Icon = null
-    val Info = Utils.iconScaledWithColor("/images/exclamation-circle.png", 30, 30, InterfaceColors.infoIcon)
-    val Question = Utils.iconScaledWithColor("/images/question.png", 30, 30, InterfaceColors.infoIcon)
-    val Warning = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 30, 30, InterfaceColors.warningIcon)
-    val Error = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 30, 30, InterfaceColors.errorIcon)
+    val Info = Utils.iconScaledWithColor("/images/exclamation-circle.png", 30, 30, InterfaceColors.infoIcon())
+    val Question = Utils.iconScaledWithColor("/images/question.png", 30, 30, InterfaceColors.infoIcon())
+    val Warning = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 30, 30, InterfaceColors.warningIcon())
+    val Error = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 30, 30, InterfaceColors.errorIcon())
   }
 }
 
@@ -36,7 +36,7 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
   private var selectedOption: Option[String] = None
 
   locally {
-    getContentPane.setBackground(InterfaceColors.dialogBackground)
+    getContentPane.setBackground(InterfaceColors.dialogBackground())
     getContentPane.setLayout(new GridBagLayout)
 
     addContents()
@@ -98,7 +98,7 @@ class OptionPane(parent: Component, title: String, message: String, options: Seq
         c.insets = new Insets(0, 0, 0, 0)
 
         add(new JLabel(getWrappedMessage) {
-          setForeground(InterfaceColors.dialogText)
+          setForeground(InterfaceColors.dialogText())
         }, c)
       }
     }, c)
@@ -158,7 +158,7 @@ class InputOptionPane(parent: Component, title: String, message: String, startin
         c.insets = new Insets(0, 0, 6, 0)
 
         add(new JLabel(getWrappedMessage) {
-          setForeground(InterfaceColors.dialogText)
+          setForeground(InterfaceColors.dialogText())
         }, c)
 
         c.insets = new Insets(0, 0, 0, 0)
@@ -217,7 +217,7 @@ class DropdownOptionPane[T](parent: Component, title: String, message: String, c
         c.insets = new Insets(0, 0, 6, 0)
 
         add(new JLabel(getWrappedMessage) {
-          setForeground(InterfaceColors.dialogText)
+          setForeground(InterfaceColors.dialogText())
         }, c)
 
         c.insets = new Insets(0, 0, 0, 0)

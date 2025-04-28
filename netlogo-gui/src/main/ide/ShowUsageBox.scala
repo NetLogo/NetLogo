@@ -27,7 +27,7 @@ class ShowUsageBox(colorizer: Colorizer) {
   }
   val usageTable = new JTable(dataModel)
   val scrollPane = new ScrollPane(usageTable) {
-    setBackground(InterfaceColors.menuBackground)
+    setBackground(InterfaceColors.menuBackground())
   }
   usageBox.add(scrollPane)
   usageBox.setUndecorated(true)
@@ -104,7 +104,7 @@ class ShowUsageBox(colorizer: Colorizer) {
           dataModel.addRow(Array[AnyRef](t, line.trim))
         }
         if (dataModel.getRowCount != 0) {
-          usageTable.setBackground(InterfaceColors.menuBackground)
+          usageTable.setBackground(InterfaceColors.menuBackground())
           usageTable.setDefaultRenderer(classOf[String], new LineRenderer(Some(token.text)))
           usageTable.setPreferredScrollableViewportSize(usageTable.getPreferredSize())
           usageTable.setFillsViewportHeight(true)
@@ -136,9 +136,9 @@ class ShowUsageBox(colorizer: Colorizer) {
                                                row: Int, column: Int): Component = {
       new JEditorPane {
         if (isSelected)
-          setBackground(InterfaceColors.menuBackgroundHover)
+          setBackground(InterfaceColors.menuBackgroundHover())
         else
-          setBackground(InterfaceColors.menuBackground)
+          setBackground(InterfaceColors.menuBackground())
 
         setEditorKit(
           boldedString match {
@@ -159,13 +159,13 @@ class ShowUsageBox(colorizer: Colorizer) {
       val cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
 
       if (isSelected) {
-        cell.setBackground(InterfaceColors.menuBackgroundHover)
-        cell.setForeground(InterfaceColors.menuTextHover)
+        cell.setBackground(InterfaceColors.menuBackgroundHover())
+        cell.setForeground(InterfaceColors.menuTextHover())
       }
 
       else {
-        cell.setBackground(InterfaceColors.menuBackground)
-        cell.setForeground(InterfaceColors.toolbarText)
+        cell.setBackground(InterfaceColors.menuBackground())
+        cell.setForeground(InterfaceColors.toolbarText())
       }
 
       cell

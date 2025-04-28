@@ -74,17 +74,17 @@ class DummyMonitorWidget
     val d = getSize()
     val boxHeight = StrictMath.ceil(labelHeight * 1.4).toInt
 
-    g.setColor(InterfaceColors.widgetText)
+    g.setColor(InterfaceColors.widgetText())
     g.drawString(displayName, LeftMargin,
         d.height - BottomMargin - boxHeight - fm.getMaxDescent - 1)
 
-    g.setColor(InterfaceColors.displayAreaBackground)
+    g.setColor(InterfaceColors.displayAreaBackground())
     g.fillRect(LeftMargin, d.height - BottomMargin - boxHeight,
         d.width - LeftMargin - RightMargin - 1, boxHeight)
   }
 
   override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.monitorBackground)
+    setBackgroundColor(InterfaceColors.monitorBackground())
   }
 
   def decimalPlaces: Int = _decimalPlaces

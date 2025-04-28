@@ -53,7 +53,7 @@ class Picker(view: View) extends PickListener with ActionListener {
     menu.addSeparator()
 
     val resetItem = new MenuItem(new AbstractAction(
-        "<html>" + colorize("reset-perspective", InterfaceColors.commandColor)) {
+        "<html>" + colorize("reset-perspective", InterfaceColors.commandColor())) {
       def actionPerformed(e: ActionEvent) {
         view.resetPerspective()
       }
@@ -113,9 +113,9 @@ class Picker(view: View) extends PickListener with ActionListener {
 
   def htmlString(agent: Agent, caption: String) =
     "<html>" +
-    colorize(caption, InterfaceColors.commandColor) + " "  +
-    colorize(agent.classDisplayName, InterfaceColors.reporterColor) +
-    colorize(agent.toString.drop(agent.classDisplayName.size), InterfaceColors.constantColor)
+    colorize(caption, InterfaceColors.commandColor()) + " "  +
+    colorize(agent.classDisplayName, InterfaceColors.reporterColor()) +
+    colorize(agent.toString.drop(agent.classDisplayName.size), InterfaceColors.constantColor())
 
   private class AgentMenuItem(val agent: Agent, val action: AgentAction, caption: String)
   extends MenuItem(htmlString(agent, caption)) {

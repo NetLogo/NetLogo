@@ -122,11 +122,11 @@ abstract class CodeEditor(accessor: PropertyAccessor[String],
   }
 
   override def syncTheme(): Unit = {
-    editor.setBackground(InterfaceColors.textAreaBackground)
-    editor.setCaretColor(InterfaceColors.textAreaText)
+    editor.setBackground(InterfaceColors.textAreaBackground())
+    editor.setCaretColor(InterfaceColors.textAreaText())
 
-    scrollPane.setBackground(InterfaceColors.textAreaBackground)
+    scrollPane.setBackground(InterfaceColors.textAreaBackground())
 
-    nameLabel.setForeground(InterfaceColors.dialogText)
+    nameLabel.setForeground(InterfaceColors.dialogText())
   }
 }

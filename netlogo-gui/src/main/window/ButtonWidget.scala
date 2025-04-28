@@ -75,11 +75,11 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
   type WidgetModel = CoreButton
 
   private var foreverIcon = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                                      InterfaceColors.buttonText)
+                                                      InterfaceColors.buttonText())
   private var foreverIconPressed = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                                             InterfaceColors.buttonTextPressed)
+                                                             InterfaceColors.buttonTextPressed())
   private var foreverIconDisabled = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                                              InterfaceColors.buttonTextDisabled)
+                                                              InterfaceColors.buttonTextDisabled())
 
   private var _buttonType: ButtonType = ButtonType.ObserverButton
 
@@ -439,40 +439,40 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
     val drawAsUp = buttonUp && !running
 
     if (disabledWaitingForSetup) {
-      setBackgroundColor(InterfaceColors.buttonBackgroundDisabled)
-      keyLabel.setForeground(InterfaceColors.buttonTextDisabled)
-      nameLabel.setForeground(InterfaceColors.buttonTextDisabled)
+      setBackgroundColor(InterfaceColors.buttonBackgroundDisabled())
+      keyLabel.setForeground(InterfaceColors.buttonTextDisabled())
+      nameLabel.setForeground(InterfaceColors.buttonTextDisabled())
       foreverLabel.setIcon(foreverIconDisabled)
     } else if (drawAsUp) {
       setBackgroundColor(
         if (hover) {
-          InterfaceColors.buttonBackgroundHover
+          InterfaceColors.buttonBackgroundHover()
         } else {
-          InterfaceColors.buttonBackground
+          InterfaceColors.buttonBackground()
         }
       )
 
-      keyLabel.setForeground(InterfaceColors.buttonText)
+      keyLabel.setForeground(InterfaceColors.buttonText())
       nameLabel.setForeground(
         if (error() == null) {
-          InterfaceColors.buttonText
+          InterfaceColors.buttonText()
         } else {
-          InterfaceColors.widgetTextError
+          InterfaceColors.widgetTextError()
         }
       )
       foreverLabel.setIcon(foreverIcon)
     } else {
       setBackgroundColor(
         if (hover) {
-          InterfaceColors.buttonBackgroundPressedHover
+          InterfaceColors.buttonBackgroundPressedHover()
         } else {
-          InterfaceColors.buttonBackgroundPressed
+          InterfaceColors.buttonBackgroundPressed()
         }
       )
 
-      keyLabel.setForeground(InterfaceColors.buttonTextPressed)
+      keyLabel.setForeground(InterfaceColors.buttonTextPressed())
       if (error() == null)
-        nameLabel.setForeground(InterfaceColors.buttonTextPressed)
+        nameLabel.setForeground(InterfaceColors.buttonTextPressed())
       foreverLabel.setIcon(foreverIconPressed)
     }
 
@@ -501,11 +501,11 @@ class ButtonWidget(random:MersenneTwisterFast) extends JobWidget(random)
 
   override def syncTheme(): Unit = {
     foreverIcon = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                            InterfaceColors.buttonText)
+                                            InterfaceColors.buttonText())
     foreverIconPressed = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                                   InterfaceColors.buttonTextPressed)
+                                                   InterfaceColors.buttonTextPressed())
     foreverIconDisabled = Utils.iconScaledWithColor("/images/forever.png", 15, 15,
-                                                    InterfaceColors.buttonTextDisabled)
+                                                    InterfaceColors.buttonTextDisabled())
   }
 
   // saving and loading

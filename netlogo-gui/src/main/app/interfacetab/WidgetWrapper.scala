@@ -938,7 +938,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
     }
 
     if (selected) {
-      g2d.setColor(InterfaceColors.widgetHandle)
+      g2d.setColor(InterfaceColors.widgetHandle())
 
       g2d.drawRect(HandleSize / 2, HandleSize / 2, getWidth - HandleSize, getHeight - HandleSize)
 
@@ -974,7 +974,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
       if (interfacePanel.getInterfaceMode != InterfaceMode.Interact &&
           (interfacePanel.getInterfaceMode != InterfaceMode.Add || placing) && !selected && !highlighted && !dragging) {
 
-        g2d.setColor(InterfaceColors.widgetPreviewCover)
+        g2d.setColor(InterfaceColors.widgetPreviewCover())
 
         widget match {
           case _: ViewWidget =>
@@ -982,7 +982,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
 
           case _ =>
             if (widget.isNote)
-              g2d.setColor(InterfaceColors.widgetPreviewCoverNote)
+              g2d.setColor(InterfaceColors.widgetPreviewCoverNote())
 
             g2d.fillRoundRect(widget.getX, widget.getY, widget.getWidth, widget.getHeight, widget.getDiameter, widget.getDiameter)
         }

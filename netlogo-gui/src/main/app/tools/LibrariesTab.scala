@@ -376,10 +376,10 @@ class LibrariesTab( category:        String
 
   private class CellRenderer extends JPanel(new GridBagLayout) with ListCellRenderer[LibraryInfo] {
     private val noIcon        = new ScalableIcon(new EmptyIcon(24, 24), 24, 24)
-    private val upToDateIcon  = Utils.iconScaledWithColor("/images/check.png", 24, 24, InterfaceColors.checkFilled)
+    private val upToDateIcon  = Utils.iconScaledWithColor("/images/check.png", 24, 24, InterfaceColors.checkFilled())
     private val warningIcon   = Utils.iconScaledWithColor("/images/exclamation-triangle.png", 24, 24,
-                                                          InterfaceColors.warningIcon)
-    private val canUpdateIcon = Utils.iconScaledWithColor("/images/update.png", 24, 24, InterfaceColors.updateIcon)
+                                                          InterfaceColors.warningIcon())
+    private val canUpdateIcon = Utils.iconScaledWithColor("/images/update.png", 24, 24, InterfaceColors.updateIcon())
 
     private val iconLabel = new JLabel
     private val nameLabel = new JLabel
@@ -420,15 +420,15 @@ class LibrariesTab( category:        String
       descLabel.setText(value.shortDescription)
 
       if (isSelected) {
-        setBackground(InterfaceColors.dialogBackgroundSelected)
+        setBackground(InterfaceColors.dialogBackgroundSelected())
 
-        nameLabel.setForeground(InterfaceColors.dialogTextSelected)
-        descLabel.setForeground(InterfaceColors.dialogTextSelected)
+        nameLabel.setForeground(InterfaceColors.dialogTextSelected())
+        descLabel.setForeground(InterfaceColors.dialogTextSelected())
       } else {
-        setBackground(InterfaceColors.dialogBackground)
+        setBackground(InterfaceColors.dialogBackground())
 
-        nameLabel.setForeground(InterfaceColors.dialogText)
-        descLabel.setForeground(InterfaceColors.dialogText)
+        nameLabel.setForeground(InterfaceColors.dialogText())
+        descLabel.setForeground(InterfaceColors.dialogText())
       }
 
       this
@@ -489,32 +489,32 @@ class LibrariesTab( category:        String
   }
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.dialogBackground)
+    setBackground(InterfaceColors.dialogBackground())
 
-    topPanel.setBackground(InterfaceColors.dialogBackground)
+    topPanel.setBackground(InterfaceColors.dialogBackground())
 
-    magIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.toolbarImage))
+    magIcon.setIcon(Utils.iconScaledWithColor("/images/find.png", 15, 15, InterfaceColors.toolbarImage()))
 
     filterField.syncTheme()
 
-    libraryScroll.setBackground(InterfaceColors.dialogBackground)
-    libraryList.setBackground(InterfaceColors.dialogBackground)
+    libraryScroll.setBackground(InterfaceColors.dialogBackground())
+    libraryList.setBackground(InterfaceColors.dialogBackground())
 
     installButton.syncTheme()
     addToCodeTabButton.syncTheme()
     homepageButton.syncTheme()
     uninstallButton.syncTheme()
 
-    installedVersionLabel.setForeground(InterfaceColors.dialogText)
-    latestVersionLabel.setForeground(InterfaceColors.dialogText)
-    minNetLogoVersionLabel.setForeground(InterfaceColors.dialogText)
+    installedVersionLabel.setForeground(InterfaceColors.dialogText())
+    latestVersionLabel.setForeground(InterfaceColors.dialogText())
+    minNetLogoVersionLabel.setForeground(InterfaceColors.dialogText())
 
-    installedVersion.setForeground(InterfaceColors.dialogText)
-    latestVersion.setForeground(InterfaceColors.dialogText)
-    minNetLogoVersion.setForeground(InterfaceColors.dialogText)
+    installedVersion.setForeground(InterfaceColors.dialogText())
+    latestVersion.setForeground(InterfaceColors.dialogText())
+    minNetLogoVersion.setForeground(InterfaceColors.dialogText())
 
-    infoScroll.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable))
-    infoScroll.setBackground(InterfaceColors.textAreaBackground)
+    infoScroll.setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable()))
+    infoScroll.setBackground(InterfaceColors.textAreaBackground())
 
     info.syncTheme()
   }

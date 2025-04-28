@@ -80,7 +80,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
       shapeView.selfFinishPolygon(true)
     }
   }) {
-    setIcon(Utils.iconScaledWithColor("/images/shapes-editor/arrow.png", 15, 15, InterfaceColors.toolbarText))
+    setIcon(Utils.iconScaledWithColor("/images/shapes-editor/arrow.png", 15, 15, InterfaceColors.toolbarText()))
     setSelected(false)
   }
 
@@ -264,7 +264,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   private val snapToGridButton = new CheckBox(I18N.gui("snapToGrid"), (selected) => {
     snapToGrid = selected
   }) {
-    setForeground(InterfaceColors.dialogText)
+    setForeground(InterfaceColors.dialogText())
     setSelected(true)
   }
 
@@ -277,7 +277,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
     shapeView.repaint()
   }) {
-    setForeground(InterfaceColors.dialogText)
+    setForeground(InterfaceColors.dialogText())
     setSelected(shapeRotatable)
   }
 
@@ -358,7 +358,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   leftPanel.add(colorGrid)
   leftPanel.add(Box.createVerticalStrut(10))
   leftPanel.add(new JLabel(I18N.gui("colorChanges")) {
-    setForeground(InterfaceColors.dialogText)
+    setForeground(InterfaceColors.dialogText())
   })
   leftPanel.add(Box.createVerticalStrut(3))
   leftPanel.add(colorSelection)
@@ -406,7 +406,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
   private val buttonPanel = new ButtonPanel(Seq(done, cancel))
   private val nameLabel = new JLabel(I18N.gui("name")) {
-    setForeground(InterfaceColors.dialogText)
+    setForeground(InterfaceColors.dialogText())
   }
 
   private val namePanel = new JPanel with Transparent {
@@ -420,7 +420,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
   }
 
   getContentPane.setLayout(new BoxLayout(getContentPane, BoxLayout.Y_AXIS))
-  getContentPane.setBackground(InterfaceColors.dialogBackground)
+  getContentPane.setBackground(InterfaceColors.dialogBackground())
 
   getContentPane.add(Box.createVerticalStrut(10))
   getContentPane.add(namePanel)
@@ -582,8 +582,8 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
 
     override def paintComponent(g: Graphics): Unit = {
       getParent match {
-        case item: MenuItem if item.isArmed => label.setForeground(InterfaceColors.menuTextHover)
-        case _ => label.setForeground(InterfaceColors.toolbarText)
+        case item: MenuItem if item.isArmed => label.setForeground(InterfaceColors.menuTextHover())
+        case _ => label.setForeground(InterfaceColors.toolbarText())
       }
 
       super.paintComponent(g)
@@ -597,7 +597,7 @@ class EditorDialog(parent: JDialog, container: EditorDialog.VectorShapeContainer
     extends AbstractAction(name) {
 
     putValue(Action.SMALL_ICON, Utils.iconScaledWithColor("/images/shapes-editor/" + name + ".png", 15, 15,
-                                                          InterfaceColors.toolbarText))
+                                                          InterfaceColors.toolbarText()))
     putValue(Action.SHORT_DESCRIPTION, I18N.gui(name))
 
     def actionPerformed(e: ActionEvent): Unit = {

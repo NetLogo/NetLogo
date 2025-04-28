@@ -50,9 +50,9 @@ class AggregateProceduresTab(colorizer: Colorizer) extends JPanel(new GridBagLay
   }
 
   override def syncTheme(): Unit = {
-    text.setBackground(InterfaceColors.codeBackground)
-    text.setCaretColor(InterfaceColors.textAreaText)
+    text.setBackground(InterfaceColors.codeBackground())
+    text.setCaretColor(InterfaceColors.textAreaText())
 
-    scrollableEditor.setBackground(InterfaceColors.codeBackground)
+    scrollableEditor.setBackground(InterfaceColors.codeBackground())
   }
 }

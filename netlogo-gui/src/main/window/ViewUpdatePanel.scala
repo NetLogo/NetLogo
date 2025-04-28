@@ -56,7 +56,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
   }
 
   override def syncTheme(): Unit = {
-    displaySwitch.setForeground(InterfaceColors.toolbarText)
+    displaySwitch.setForeground(InterfaceColors.toolbarText())
 
     speedSlider.syncTheme()
     tickCounter.syncTheme()

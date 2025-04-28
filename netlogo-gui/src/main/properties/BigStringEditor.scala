@@ -40,11 +40,11 @@ abstract class BigStringEditor(accessor: PropertyAccessor[String])
   }
 
   override def syncTheme(): Unit = {
-    label.setForeground(InterfaceColors.dialogText)
+    label.setForeground(InterfaceColors.dialogText())
 
     editor.syncTheme()
 
-    scrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderEditable))
-    scrollPane.setBackground(InterfaceColors.textAreaBackground)
+    scrollPane.setBorder(new LineBorder(InterfaceColors.textAreaBorderEditable()))
+    scrollPane.setBackground(InterfaceColors.textAreaBackground())
   }
 }

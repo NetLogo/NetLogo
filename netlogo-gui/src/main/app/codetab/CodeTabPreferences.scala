@@ -90,11 +90,11 @@ class CodeTabPreferences(parent: Frame, tabs: TabsInterface)
   }
 
   override def syncTheme(): Unit = {
-    getContentPane.setBackground(InterfaceColors.dialogBackground)
+    getContentPane.setBackground(InterfaceColors.dialogBackground())
 
-    message.setForeground(InterfaceColors.toolbarText)
-    tabbing.setForeground(InterfaceColors.toolbarText)
-    lineNumbers.setForeground(InterfaceColors.toolbarText)
+    message.setForeground(InterfaceColors.toolbarText())
+    tabbing.setForeground(InterfaceColors.toolbarText())
+    lineNumbers.setForeground(InterfaceColors.toolbarText())
 
     okButton.syncTheme()
     cancelButton.syncTheme()

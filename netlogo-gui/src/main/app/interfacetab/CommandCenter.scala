@@ -43,10 +43,10 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
     enablePressed()
 
     override def syncTheme(): Unit = {
-      setBackgroundColor(InterfaceColors.toolbarControlBackground)
-      setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
-      setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed)
-      setBorderColor(InterfaceColors.toolbarControlBorder)
+      setBackgroundColor(InterfaceColors.toolbarControlBackground())
+      setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
+      setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
+      setBorderColor(InterfaceColors.toolbarControlBorder())
     }
   }
 
@@ -64,11 +64,11 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
     enablePressed()
 
     override def syncTheme(): Unit = {
-      setBackgroundColor(InterfaceColors.toolbarControlBackground)
-      setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
-      setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed)
-      setBorderColor(InterfaceColors.toolbarControlBorder)
-      setForeground(InterfaceColors.toolbarText)
+      setBackgroundColor(InterfaceColors.toolbarControlBackground())
+      setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
+      setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
+      setBorderColor(InterfaceColors.toolbarControlBorder())
+      setForeground(InterfaceColors.toolbarText())
     }
   }
 
@@ -183,9 +183,9 @@ class CommandCenter(workspace: AbstractWorkspace, showToggle: Boolean) extends J
   }
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.commandCenterBackground)
+    setBackground(InterfaceColors.commandCenterBackground())
 
-    titleLabel.setForeground(InterfaceColors.commandCenterText)
+    titleLabel.setForeground(InterfaceColors.commandCenterText())
 
     locationToggleButton.syncTheme()
     clearButton.syncTheme()

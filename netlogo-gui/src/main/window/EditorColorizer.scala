@@ -29,7 +29,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
       lastColors
     else {
       val tokens = tokenizeForColorization(line)
-      val result = Array.fill(line.size)(InterfaceColors.defaultColor)
+      val result = Array.fill(line.size)(InterfaceColors.defaultColor())
       for (tok <- tokens) {
         // "breed" can be either a keyword or a turtle variable, which means we can't reliably
         // colorize it correctly; so as a kludge we colorize it as a keyword if it's right at the
@@ -41,7 +41,7 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
             TokenType.Keyword
           else
             tok.tpe
-        ).getOrElse(InterfaceColors.defaultColor)
+        ).getOrElse(InterfaceColors.defaultColor())
         for (j <- tok.start until tok.end)
           // guard against any bugs in tokenization causing out-of-bounds positions
           if(result.isDefinedAt(j))
@@ -85,11 +85,11 @@ class EditorColorizer(compiler: CompilerServices) extends Colorizer {
 
   private def getTokenColor(tpe: TokenType): Option[java.awt.Color] = {
     tpe match {
-      case TokenType.Literal  => Some(InterfaceColors.constantColor)
-      case TokenType.Command  => Some(InterfaceColors.commandColor)
-      case TokenType.Reporter => Some(InterfaceColors.reporterColor)
-      case TokenType.Keyword  => Some(InterfaceColors.keywordColor)
-      case TokenType.Comment  => Some(InterfaceColors.commentColor)
+      case TokenType.Literal  => Some(InterfaceColors.constantColor())
+      case TokenType.Command  => Some(InterfaceColors.commandColor())
+      case TokenType.Reporter => Some(InterfaceColors.reporterColor())
+      case TokenType.Keyword  => Some(InterfaceColors.keywordColor())
+      case TokenType.Comment  => Some(InterfaceColors.commentColor())
       case _ => None
     }
   }

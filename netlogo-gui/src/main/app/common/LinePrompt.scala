@@ -67,7 +67,7 @@ class LinePrompt(commandLine: CommandLine) extends JLabel {
     if (mouseInBounds)
       setForeground(Color.BLUE)
     else
-      setForeground(InterfaceColors.commandCenterText)
+      setForeground(InterfaceColors.commandCenterText())
 
     super.paintComponent(g)
   }

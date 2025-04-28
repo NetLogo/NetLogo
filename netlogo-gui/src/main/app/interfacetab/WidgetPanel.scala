@@ -1391,7 +1391,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.interfaceBackground)
+    setBackground(InterfaceColors.interfaceBackground())
 
     setCursor(interfaceMode.cursor)
 

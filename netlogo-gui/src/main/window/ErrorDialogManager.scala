@@ -182,7 +182,7 @@ extends ErrorDialog(owner, I18N.gui.get("error.dialog.logo")) {
   override def syncTheme(): Unit = {
     super.syncTheme()
 
-    checkbox.setForeground(InterfaceColors.dialogText)
+    checkbox.setForeground(InterfaceColors.dialogText())
   }
 }
 

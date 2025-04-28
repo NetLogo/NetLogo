@@ -176,8 +176,8 @@ class ViewWidget(workspace: GUIWorkspace)
   }
 
   override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.viewBackground)
-    setBorder(new LineBorder(InterfaceColors.viewBorder, 2))
+    setBackgroundColor(InterfaceColors.viewBackground())
+    setBorder(new LineBorder(InterfaceColors.viewBorder(), 2))
     tickCounter.syncTheme()
   }
 

@@ -54,15 +54,15 @@ class SliderWidgetUI(widget: AbstractSliderWidget, slider: JSlider) extends Basi
     val thickness = (6 * widget.getZoomFactor).toInt
     if (widget.vertical) {
       val startX = trackRect.x + trackRect.width / 2 - thickness / 2
-      g2d.setColor(InterfaceColors.sliderBarBackgroundFilled)
+      g2d.setColor(InterfaceColors.sliderBarBackgroundFilled())
       g2d.fillRoundRect(startX, thumbRect.y, thickness, slider.getHeight - thumbRect.y, thickness, thickness)
-      g2d.setColor(InterfaceColors.sliderBarBackground)
+      g2d.setColor(InterfaceColors.sliderBarBackground())
       g2d.fillRoundRect(startX, 0, thickness, thumbRect.y + getThumbSize.width / 2, thickness, thickness)
     } else {
       val startY = trackRect.y + trackRect.height / 2 - thickness / 2
-      g2d.setColor(InterfaceColors.sliderBarBackgroundFilled)
+      g2d.setColor(InterfaceColors.sliderBarBackgroundFilled())
       g2d.fillRoundRect(0, startY, thumbRect.x + getThumbSize.width / 2, thickness, thickness, thickness)
-      g2d.setColor(InterfaceColors.sliderBarBackground)
+      g2d.setColor(InterfaceColors.sliderBarBackground())
       g2d.fillRoundRect(thumbRect.x, startY, slider.getWidth - thumbRect.x, thickness, thickness, thickness)
     }
   }
@@ -73,13 +73,13 @@ class SliderWidgetUI(widget: AbstractSliderWidget, slider: JSlider) extends Basi
       if (widget.vertical) {
         g2d.setPaint(new RadialGradientPaint(thumbRect.getCenterX.toInt, thumbRect.getCenterY.toInt + 3,
                                             getThumbSize.height / 2f, Array[Float](0, 1),
-                                            Array(InterfaceColors.widgetHoverShadow, InterfaceColors.Transparent)))
+                                            Array(InterfaceColors.widgetHoverShadow(), InterfaceColors.Transparent)))
         g2d.fillOval(thumbRect.x, thumbRect.y + getThumbSize.width / 2 - getThumbSize.height / 2 + 3,
                     getThumbSize.height, getThumbSize.height)
       } else {
         g2d.setPaint(new RadialGradientPaint(thumbRect.getCenterX.toInt, thumbRect.getCenterY.toInt + 3,
                                             getThumbSize.width / 2f, Array[Float](0, 1),
-                                            Array(InterfaceColors.widgetHoverShadow, InterfaceColors.Transparent)))
+                                            Array(InterfaceColors.widgetHoverShadow(), InterfaceColors.Transparent)))
         g2d.fillOval(thumbRect.x, thumbRect.y + getThumbSize.height / 2 - getThumbSize.width / 2 + 3,
                     getThumbSize.width, getThumbSize.width)
       }
@@ -87,23 +87,23 @@ class SliderWidgetUI(widget: AbstractSliderWidget, slider: JSlider) extends Basi
     if (widget.vertical) {
       val height = (getThumbSize.height * widget.getZoomFactor).toInt
       val startX = thumbRect.getCenterX.toInt - height / 2
-      g2d.setColor(InterfaceColors.sliderThumbBorder)
+      g2d.setColor(InterfaceColors.sliderThumbBorder())
       g2d.fillOval(startX, thumbRect.y + thumbRect.height / 2 - height / 2, height, height)
       if (pressed) {
-        g2d.setColor(InterfaceColors.sliderThumbBackgroundPressed)
+        g2d.setColor(InterfaceColors.sliderThumbBackgroundPressed())
       } else {
-        g2d.setColor(InterfaceColors.sliderThumbBackground)
+        g2d.setColor(InterfaceColors.sliderThumbBackground())
       }
       g2d.fillOval(startX + 1, thumbRect.y + thumbRect.height / 2 - height / 2 + 1, height - 2, height - 2)
     } else {
       val width = (getThumbSize.width * widget.getZoomFactor).toInt
       val startY = thumbRect.getCenterY.toInt - width / 2
-      g2d.setColor(InterfaceColors.sliderThumbBorder)
+      g2d.setColor(InterfaceColors.sliderThumbBorder())
       g2d.fillOval(thumbRect.x + thumbRect.width / 2 - width / 2, startY, width, width)
       if (pressed) {
-        g2d.setColor(InterfaceColors.sliderThumbBackgroundPressed)
+        g2d.setColor(InterfaceColors.sliderThumbBackgroundPressed())
       } else {
-        g2d.setColor(InterfaceColors.sliderThumbBackground)
+        g2d.setColor(InterfaceColors.sliderThumbBackground())
       }
       g2d.fillOval(thumbRect.x + thumbRect.width / 2 - width / 2 + 1, startY + 1, width - 2, width - 2)
     }

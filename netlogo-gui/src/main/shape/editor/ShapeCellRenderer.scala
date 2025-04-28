@@ -65,17 +65,17 @@ class ShapeCellRenderer extends JPanel with ListCellRenderer[Shape] {
     shapeName.setText(value.name)
 
     if (isSelected) {
-      setBackground(InterfaceColors.dialogBackgroundSelected)
-      shapeName.setForeground(InterfaceColors.dialogTextSelected)
-      shapeComponent.setBackground(InterfaceColors.dialogBackgroundSelected)
-      shapeComponent.setForeground(InterfaceColors.dialogTextSelected)
+      setBackground(InterfaceColors.dialogBackgroundSelected())
+      shapeName.setForeground(InterfaceColors.dialogTextSelected())
+      shapeComponent.setBackground(InterfaceColors.dialogBackgroundSelected())
+      shapeComponent.setForeground(InterfaceColors.dialogTextSelected())
     }
 
     else {
-      setBackground(InterfaceColors.dialogBackground)
-      shapeName.setForeground(InterfaceColors.dialogText)
-      shapeComponent.setBackground(InterfaceColors.dialogBackground)
-      shapeComponent.setForeground(InterfaceColors.dialogText)
+      setBackground(InterfaceColors.dialogBackground())
+      shapeName.setForeground(InterfaceColors.dialogText())
+      shapeComponent.setBackground(InterfaceColors.dialogBackground())
+      shapeComponent.setForeground(InterfaceColors.dialogText())
     }
 
     this

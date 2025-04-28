@@ -126,9 +126,9 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
   }
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.toolbarBackground)
+    setBackground(InterfaceColors.toolbarBackground())
 
-    status.setForeground(InterfaceColors.toolbarText)
+    status.setForeground(InterfaceColors.toolbarText())
 
     resetButton.syncTheme()
     fullScreenButton.syncTheme()

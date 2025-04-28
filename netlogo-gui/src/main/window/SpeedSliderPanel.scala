@@ -42,7 +42,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
 
       val g2d = Utils.initGraphics2D(g)
 
-      g2d.setColor(InterfaceColors.toolbarText)
+      g2d.setColor(InterfaceColors.toolbarText())
       g2d.fillRect(6, 9, 7, 1)
     }
   }
@@ -56,7 +56,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
 
       val g2d = Utils.initGraphics2D(g)
 
-      g2d.setColor(InterfaceColors.toolbarText)
+      g2d.setColor(InterfaceColors.toolbarText())
       g2d.fillRect(6, 9, 7, 1)
       g2d.fillRect(9, 6, 1, 7)
     }
@@ -159,7 +159,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
     slower.syncTheme()
     faster.syncTheme()
 
-    modelSpeed.setForeground(InterfaceColors.toolbarText)
+    modelSpeed.setForeground(InterfaceColors.toolbarText())
   }
 
   class SpeedSlider(defaultSpeed: Int) extends JSlider(-110, 112, defaultSpeed) with MouseWheelListener {
@@ -214,13 +214,13 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
         val startY = trackRect.y + trackRect.height / 2 - 1
 
         if (isEnabled) {
-          g2d.setColor(InterfaceColors.speedSliderBarBackgroundFilled)
+          g2d.setColor(InterfaceColors.speedSliderBarBackgroundFilled())
         } else {
-          g2d.setColor(InterfaceColors.speedSliderBarBackground)
+          g2d.setColor(InterfaceColors.speedSliderBarBackground())
         }
 
         g2d.fillRoundRect(trackRect.x, startY, thumbRect.x, 2, 2, 2)
-        g2d.setColor(InterfaceColors.speedSliderBarBackground)
+        g2d.setColor(InterfaceColors.speedSliderBarBackground())
         g2d.fillRoundRect(thumbRect.x, startY, trackRect.width - thumbRect.x, 2, 2, 2)
       }
 
@@ -234,9 +234,9 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
         val startY = thumbRect.getCenterY.toInt - width / 2
 
         if (isEnabled) {
-          g2d.setColor(InterfaceColors.speedSliderThumb)
+          g2d.setColor(InterfaceColors.speedSliderThumb())
         } else {
-          g2d.setColor(InterfaceColors.speedSliderThumbDisabled)
+          g2d.setColor(InterfaceColors.speedSliderThumbDisabled())
         }
 
         g2d.fillOval(thumbRect.x + thumbRect.width / 2 - width / 2, startY, width, width)

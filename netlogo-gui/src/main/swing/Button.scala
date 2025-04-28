@@ -25,11 +25,11 @@ class Button(action: Action) extends JButton(action) with RoundedBorderPanel wit
   syncTheme()
 
   override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.toolbarControlBackground)
-    setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
-    setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed)
-    setBorderColor(InterfaceColors.toolbarControlBorder)
-    setForeground(InterfaceColors.toolbarText)
+    setBackgroundColor(InterfaceColors.toolbarControlBackground())
+    setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
+    setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
+    setBorderColor(InterfaceColors.toolbarControlBorder())
+    setForeground(InterfaceColors.toolbarText())
   }
 }
 
@@ -53,11 +53,11 @@ class ToggleButton(action: Action) extends JToggleButton(action) with RoundedBor
     super.isHover || isSelected
 
   override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.toolbarControlBackground)
-    setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
-    setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed)
-    setBorderColor(InterfaceColors.toolbarControlBorder)
-    setForeground(InterfaceColors.toolbarText)
+    setBackgroundColor(InterfaceColors.toolbarControlBackground())
+    setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
+    setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
+    setBorderColor(InterfaceColors.toolbarControlBorder())
+    setForeground(InterfaceColors.toolbarText())
   }
 }
 
@@ -76,17 +76,17 @@ class DialogButton(primary: Boolean, action: Action) extends Button(action) {
 
   override def syncTheme(): Unit = {
     if (primary) {
-      setBackgroundColor(InterfaceColors.primaryButtonBackground)
-      setBackgroundHoverColor(InterfaceColors.primaryButtonBackgroundHover)
-      setBackgroundPressedColor(InterfaceColors.primaryButtonBackgroundPressed)
-      setBorderColor(InterfaceColors.primaryButtonBorder)
-      setForeground(InterfaceColors.primaryButtonText)
+      setBackgroundColor(InterfaceColors.primaryButtonBackground())
+      setBackgroundHoverColor(InterfaceColors.primaryButtonBackgroundHover())
+      setBackgroundPressedColor(InterfaceColors.primaryButtonBackgroundPressed())
+      setBorderColor(InterfaceColors.primaryButtonBorder())
+      setForeground(InterfaceColors.primaryButtonText())
     } else {
-      setBackgroundColor(InterfaceColors.secondaryButtonBackground)
-      setBackgroundHoverColor(InterfaceColors.secondaryButtonBackgroundHover)
-      setBackgroundPressedColor(InterfaceColors.secondaryButtonBackgroundPressed)
-      setBorderColor(InterfaceColors.secondaryButtonBorder)
-      setForeground(InterfaceColors.secondaryButtonText)
+      setBackgroundColor(InterfaceColors.secondaryButtonBackground())
+      setBackgroundHoverColor(InterfaceColors.secondaryButtonBackgroundHover())
+      setBackgroundPressedColor(InterfaceColors.secondaryButtonBackgroundPressed())
+      setBorderColor(InterfaceColors.secondaryButtonBorder())
+      setForeground(InterfaceColors.secondaryButtonText())
     }
   }
 }

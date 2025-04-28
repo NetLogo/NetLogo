@@ -70,12 +70,12 @@ with WindowEvents.CompiledEvent.Handler with RoundedBorderPanel with ThemeSync {
   override def getPreferredSize = sizeIfVisible(super.getPreferredSize)
 
   override def syncTheme(): Unit = {
-    setBackgroundColor(InterfaceColors.toolbarControlBackground)
-    setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover)
-    setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed)
-    setBorderColor(InterfaceColors.toolbarControlBorder)
+    setBackgroundColor(InterfaceColors.toolbarControlBackground())
+    setBackgroundHoverColor(InterfaceColors.toolbarControlBackgroundHover())
+    setBackgroundPressedColor(InterfaceColors.toolbarControlBackgroundPressed())
+    setBorderColor(InterfaceColors.toolbarControlBorder())
 
-    label.setForeground(InterfaceColors.toolbarText)
+    label.setForeground(InterfaceColors.toolbarText())
   }
 
   private object NewSourceEditorAction extends AbstractAction(I18N.gui("new")) {

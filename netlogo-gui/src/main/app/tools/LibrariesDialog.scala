@@ -39,7 +39,7 @@ class LibrariesDialog( parent:          Frame
       setEditable(false)
     }
     val scrollPane = new ScrollPane(textArea) {
-      setBackground(InterfaceColors.textAreaBackground)
+      setBackground(InterfaceColors.textAreaBackground())
     }
     new CustomOptionPane(LibrariesDialog.this, I18N.gui("showLibPaths"), scrollPane, OptionPane.Options.Ok)
   })
@@ -94,11 +94,11 @@ class LibrariesDialog( parent:          Frame
   override def syncTheme(): Unit = {
     tab.syncTheme()
 
-    bottomPanel.setBackground(InterfaceColors.dialogBackground)
+    bottomPanel.setBackground(InterfaceColors.dialogBackground())
 
     libPathsButton.syncTheme()
     updateAllButton.syncTheme()
 
-    status.setForeground(InterfaceColors.dialogText)
+    status.setForeground(InterfaceColors.dialogText())
   }
 }

@@ -70,8 +70,8 @@ with LoadModelEvent.Handler {
         setEditable(false)
       }
       val scrollPane = new ScrollPane(textArea) {
-        setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable))
-        setBackground(InterfaceColors.textAreaBackground)
+        setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable()))
+        setBackground(InterfaceColors.textAreaBackground())
       }
       new CustomOptionPane(getFrame, title, scrollPane, options).getSelectedIndex == 0
     }

@@ -16,7 +16,7 @@ class WorldPreview(width: Int, height: Int) extends JPanel(new BorderLayout) wit
   private var errors = Set[String]()
 
   private val shapeLabel = new JLabel("Torus") {
-    setForeground(InterfaceColors.dialogText)
+    setForeground(InterfaceColors.dialogText())
   }
 
   add(new PreviewPanel, BorderLayout.NORTH)

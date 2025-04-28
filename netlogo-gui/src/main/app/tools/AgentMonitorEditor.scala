@@ -85,9 +85,9 @@ class AgentMonitorEditor(parent: AgentMonitor) extends JPanel with ThemeSync {
   def workspace = parent.workspace
 
   override def syncTheme(): Unit = {
-    setBackground(InterfaceColors.dialogBackground)
+    setBackground(InterfaceColors.dialogBackground())
 
-    noVarLabel.setForeground(InterfaceColors.dialogText)
+    noVarLabel.setForeground(InterfaceColors.dialogText())
 
     editors.foreach(_.syncTheme())
   }
@@ -434,13 +434,13 @@ with ThemeSync {
   override def syncTheme(): Unit = {
     label.setForeground(
       if (isEnabled)
-        InterfaceColors.dialogText
+        InterfaceColors.dialogText()
       else
-        InterfaceColors.menuTextDisabled)
+        InterfaceColors.menuTextDisabled())
 
-    editor.setBackground(InterfaceColors.textAreaBackground)
-    editor.setCaretColor(InterfaceColors.textAreaText)
+    editor.setBackground(InterfaceColors.textAreaBackground())
+    editor.setCaretColor(InterfaceColors.textAreaText())
 
-    scrollPane.setBackground(InterfaceColors.textAreaBackground)
+    scrollPane.setBackground(InterfaceColors.textAreaBackground())
   }
 }

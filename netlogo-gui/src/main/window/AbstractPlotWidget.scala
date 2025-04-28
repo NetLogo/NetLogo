@@ -45,7 +45,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
 
     override def syncTheme(): Unit = {
       setBackgroundColor(Color.WHITE)
-      setBorderColor(InterfaceColors.plotBorder)
+      setBorderColor(InterfaceColors.plotBorder())
     }
   }
 
@@ -160,7 +160,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   }
 
   override def paintComponent(g: Graphics) = {
-    setBackgroundColor(InterfaceColors.plotBackground)
+    setBackgroundColor(InterfaceColors.plotBackground())
 
     recolor()
 
@@ -315,7 +315,7 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   }
 
   protected def recolor() {
-    nameLabel.setForeground(if (anyErrors) InterfaceColors.widgetTextError else InterfaceColors.widgetText)
+    nameLabel.setForeground(if (anyErrors) InterfaceColors.widgetTextError() else InterfaceColors.widgetText())
 
     if (error("setupCode") != null)
       new WidgetErrorEvent(this, error("setupCode")).raise(this)
@@ -414,11 +414,11 @@ object AbstractPlotWidget {
     add(max)
 
     override def paintComponent(g: Graphics) = {
-      setBackground(InterfaceColors.plotBackground)
+      setBackground(InterfaceColors.plotBackground())
 
-      min.setForeground(InterfaceColors.widgetText)
-      label.setForeground(InterfaceColors.widgetText)
-      max.setForeground(InterfaceColors.widgetText)
+      min.setForeground(InterfaceColors.widgetText())
+      label.setForeground(InterfaceColors.widgetText())
+      max.setForeground(InterfaceColors.widgetText())
 
       label.setToolTipText(
         if (label.getPreferredSize.width > label.getSize().width) getLabel else null)
@@ -469,11 +469,11 @@ object AbstractPlotWidget {
     add(min)
 
     override def paintComponent(g: Graphics) = {
-      setBackground(InterfaceColors.plotBackground)
+      setBackground(InterfaceColors.plotBackground())
 
-      min.setForeground(InterfaceColors.widgetText)
-      label.setForeground(InterfaceColors.widgetText)
-      max.setForeground(InterfaceColors.widgetText)
+      min.setForeground(InterfaceColors.widgetText())
+      label.setForeground(InterfaceColors.widgetText())
+      max.setForeground(InterfaceColors.widgetText())
 
       if (label.getPreferredSize.width > label.getWidth)
         label.setToolTipText(label.getText)

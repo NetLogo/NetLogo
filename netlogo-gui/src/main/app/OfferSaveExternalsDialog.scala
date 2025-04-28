@@ -31,7 +31,7 @@ object OfferSaveExternalsDialog {
         c.insets = new Insets(0, 0, 6, 0)
 
         add(new JLabel(I18N.gui("filesChanged")) {
-          setForeground(InterfaceColors.dialogText)
+          setForeground(InterfaceColors.dialogText())
         }, c)
 
         c.insets = new Insets(0, 0, 0, 0)
@@ -59,7 +59,7 @@ object OfferSaveExternalsDialog {
             c.insets = new Insets(3, 0, 3, 3)
 
             add(new JLabel(file.filename.merge) {
-              setForeground(InterfaceColors.toolbarText)
+              setForeground(InterfaceColors.toolbarText())
 
               addMouseListener(new MouseAdapter {
                 override def mouseClicked(e: MouseEvent) {
@@ -79,7 +79,7 @@ object OfferSaveExternalsDialog {
         }
 
         add(new ScrollPane(filesPanel) {
-          setBackground(InterfaceColors.toolbarControlBackground)
+          setBackground(InterfaceColors.toolbarControlBackground())
 
           override def getPreferredSize: Dimension =
             new Dimension(super.getPreferredSize.width, 200)

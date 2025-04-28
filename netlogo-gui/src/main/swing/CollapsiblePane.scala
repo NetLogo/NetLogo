@@ -46,8 +46,8 @@ class CollapsiblePane(title: String, element: JComponent, parent: JDialog)
   def isOpen = element.isVisible
 
   override def syncTheme(): Unit = {
-    titlePanel.setBackground(InterfaceColors.dialogBackground)
-    titleLabel.setForeground(InterfaceColors.dialogText)
+    titlePanel.setBackground(InterfaceColors.dialogBackground())
+    titleLabel.setForeground(InterfaceColors.dialogText())
 
     element match {
       case ts: ThemeSync => ts.syncTheme()
