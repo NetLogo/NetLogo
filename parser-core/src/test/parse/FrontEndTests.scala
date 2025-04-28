@@ -206,9 +206,9 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
   }
 
   /// duplicate name tests
-  def frontEndError(src: String, error: String) = {
+  def frontEndError(find: String => Seq[String], src: String, error: String) = {
     val e = intercept[CompilerException] {
-        FrontEnd.findIncludes(src)
+        find(src)
       }
       assertResult(error)(e.getMessage.takeWhile(_ != ','))
   }
@@ -216,12 +216,23 @@ class FrontEndTests extends AnyFunSuite with BaseParserTest {
   test("findIncludes lists all includes when there is a valid includes statement") {
     assertResult(Seq())(FrontEnd.findIncludes(""))
     assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes ;; comment\n;; com2\n [\"foo.nls\"]"))
-    frontEndError("__includes \"foo.nls\"]", "Did not find expected open bracket for __includes declaration")
+    frontEndError(FrontEnd.findIncludes, "__includes \"foo.nls\"]", "Did not find expected open bracket for __includes declaration")
     assertResult(Seq())(FrontEnd.findIncludes("__includes [ ]"))
     assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes [\"foo.nls\"]"))
     assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes [\"foo.nls\"] to foo show \"bar\" end"))
     assertResult(Seq("foo.nls"))(FrontEnd.findIncludes("__includes [\"foo.nls\"] foo \"bar\" end"))
     assertResult(Seq("foo.nls", "bar"))(FrontEnd.findIncludes("__includes [\"foo.nls\" foo \"bar\" end"))
+  }
+
+  test("findLibraries lists all libraries when there is a valid library statement") {
+    assertResult(Seq())(FrontEnd.findLibraries(""))
+    assertResult(Seq("FOO"))(FrontEnd.findLibraries("library ;; comment\n;; com2\n [foo]"))
+    frontEndError(FrontEnd.findLibraries, "library foo]", "Did not find expected open bracket for library declaration")
+    assertResult(Seq("FOO"))(FrontEnd.findLibraries("library [foo]"))
+    assertResult(Seq("FOO"))(FrontEnd.findLibraries("library [foo [alias bar]]"))
+    assertResult(Seq("FOO"))(FrontEnd.findLibraries("library [foo] to foo show \"bar\" end"))
+    assertResult(Seq("FOO"))(FrontEnd.findLibraries("library [foo] foo \"bar\" end"))
+    assertResult(Seq("FOO", "BAZ"))(FrontEnd.findLibraries("library [foo [alias bar]] to foo show \"bar\" end library [baz [alias qaz]]"))
   }
 
   test("findProcedurePositions maps procedures to their critical syntax tokens") {
