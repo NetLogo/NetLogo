@@ -2,9 +2,11 @@
 
 package org.nlogo.window
 
-import java.awt.{ BorderLayout, Color, Cursor, Dimension, Font, Frame, Graphics }
+import java.awt.{ BorderLayout, Color, Cursor, Dimension, Font, Frame, Graphics, GridBagConstraints, GridBagLayout,
+                  Insets }
 import java.awt.event.ActionEvent
-import javax.swing.{ AbstractAction, AbstractCellEditor, GroupLayout, JButton, JLabel, JPanel, JTable, LayoutStyle }
+import javax.swing.{ AbstractAction, AbstractCellEditor, JButton, JLabel, JPanel, JTable }
+import javax.swing.border.EmptyBorder
 import javax.swing.event.{ ListSelectionEvent, ListSelectionListener }
 import javax.swing.table.{ DefaultTableCellRenderer, AbstractTableModel, TableCellEditor, TableCellRenderer }
 
@@ -175,10 +177,12 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       updateCommandsColumn.setCellEditor(new CodeCellEditor)
       updateCommandsColumn.setMinWidth(250)
 
-      buttonsColumn.setCellRenderer(new ButtonCellEditor)
-      buttonsColumn.setCellEditor(new ButtonCellEditor)
-      buttonsColumn.setMaxWidth(120)
-      buttonsColumn.setMinWidth(120)
+      val buttonCell = new ButtonCellEditor
+
+      buttonsColumn.setCellRenderer(buttonCell)
+      buttonsColumn.setCellEditor(buttonCell)
+      buttonsColumn.setMaxWidth(buttonCell.buttonPanel.getPreferredSize.width)
+      buttonsColumn.setMinWidth(buttonCell.buttonPanel.getPreferredSize.width)
       buttonsColumn.setHeaderValue("")
 
       // finally add all the actual plot pens to the table
@@ -301,6 +305,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
         openAdvancedPenEditor(model.pens(getSelectedRow))
       }) {
         setIcon(EditIcon)
+        setBorder(new EmptyBorder(6, 6, 6, 6))
       }
       val deleteButton = new Button("", () => {
         val index = getSelectedRow
@@ -309,18 +314,22 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
         removePen(index)
       }) {
         setIcon(DeleteIcon)
+        setBorder(new EmptyBorder(6, 6, 6, 6))
       }
       editButton.putClientProperty("JComponent.sizeVariant", "small")
       deleteButton.putClientProperty("JComponent.sizeVariant", "small")
-      val buttonPanel = new JPanel with Transparent
-      val layout = new GroupLayout(buttonPanel)
-      layout.setAutoCreateGaps(true)
-      layout.setVerticalGroup(layout.createParallelGroup().addComponent(editButton).addComponent(deleteButton))
-      layout.setHorizontalGroup(layout.createSequentialGroup()
-        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MaxValue)
-        .addComponent(editButton).addComponent(deleteButton)
-        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MaxValue))
-      buttonPanel.setLayout(layout)
+
+      val buttonPanel = new JPanel(new GridBagLayout) with Transparent {
+        val c = new GridBagConstraints
+
+        c.insets = new Insets(6, 6, 6, 6)
+
+        add(editButton, c)
+
+        c.insets = new Insets(6, 0, 6, 6)
+
+        add(deleteButton, c)
+      }
 
       def showRow(row: Int): JPanel = {
         if (model.pens.length > row) {
