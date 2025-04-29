@@ -33,17 +33,15 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           DUP
           ALOAD 1
           ALOAD 0
-          NEW java/lang/StringBuilder
-          DUP
-          LDC 75
-          INVOKESPECIAL java/lang/StringBuilder.<init> (I)V
           GETSTATIC org/nlogo/api/Dump$.MODULE$ : Lorg/nlogo/api/Dump$;
           DLOAD 2
           INVOKEVIRTUAL org/nlogo/api/Dump$.number (D)Ljava/lang/String;
-          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-          LDC " is not in the allowable range for random seeds (-2147483648 to 2147483647)"
-          INVOKEVIRTUAL java/lang/StringBuilder.append (Ljava/lang/String;)Ljava/lang/StringBuilder;
-          INVOKEVIRTUAL java/lang/StringBuilder.toString ()Ljava/lang/String;
+          INVOKEDYNAMIC makeConcatWithConstants(Ljava/lang/String;)Ljava/lang/String; [
+            // handle kind 0x6 : INVOKESTATIC
+            java/lang/invoke/StringConcatFactory.makeConcatWithConstants(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;
+            // arguments:
+            "\u0001 is not in the allowable range for random seeds (-2147483648 to 2147483647)"
+          ]
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -350,7 +348,7 @@ procedure SETUP:[]{O---}:
           GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
           INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
           LDC "org.nlogo.$common.thatAgentIsDead"
-          GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_1
           ANEWARRAY java/lang/Object
           DUP
@@ -358,8 +356,8 @@ procedure SETUP:[]{O---}:
           ALOAD 5
           INVOKEVIRTUAL org/nlogo/agent/Agent.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L6
@@ -2248,7 +2246,7 @@ procedure STEP:[TARGET]{-T--}:
           GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
           INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
           LDC "org.nlogo.prim._greaterthan.cannotCompareParameters"
-          GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_2
           ANEWARRAY java/lang/Object
           DUP
@@ -2264,8 +2262,8 @@ procedure STEP:[TARGET]{-T--}:
           INVOKESTATIC scala/runtime/BoxesRunTime.boxToDouble (D)Ljava/lang/Double;
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L11
@@ -2601,7 +2599,7 @@ reporter procedure FIND-TARGET:[]{-T--}:
           GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
           INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
           LDC "org.nlogo.prim._lessthan.cantUseLessthanOnDifferentArgs"
-          GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_2
           ANEWARRAY java/lang/Object
           DUP
@@ -2616,8 +2614,8 @@ reporter procedure FIND-TARGET:[]{-T--}:
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/api/TypeNames$.aName (Ljava/lang/Object;)Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L9
@@ -2661,10 +2659,9 @@ reporter procedure FIND-TARGET:[]{-T--}:
               GOTO L2
              L3
              FRAME SAME
-              NEW scala/MatchError
+              NEW java/lang/IllegalStateException
               DUP
-              ALOAD 2
-              INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
+              INVOKESPECIAL java/lang/IllegalStateException.<init> ()V
               ATHROW
              L2
              FRAME SAME1 org/nlogo/agent/Patch
@@ -2799,10 +2796,9 @@ reporter procedure FIND-TARGET:[]{-T--}:
               GOTO L2
              L3
              FRAME SAME
-              NEW scala/MatchError
+              NEW java/lang/IllegalStateException
               DUP
-              ALOAD 2
-              INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
+              INVOKESPECIAL java/lang/IllegalStateException.<init> ()V
               ATHROW
              L2
              FRAME SAME1 org/nlogo/agent/Patch
@@ -2980,7 +2976,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
           INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
           LDC "org.nlogo.$common.thatAgentIsDead"
-          GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_1
           ANEWARRAY java/lang/Object
           DUP
@@ -2988,8 +2984,8 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Turtle.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -3022,57 +3018,49 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           DUP
           IFNONNULL L7
           POP
-          ALOAD 5
-          IFNULL L8
-          GOTO L9
+          GOTO L8
          L7
          FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_1 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/AgentSet org/nlogo/core/AgentKind$Turtle$] [org/nlogo/core/AgentKind]
           ALOAD 5
           INVOKEVIRTUAL java/lang/Object.equals (Ljava/lang/Object;)Z
-          IFEQ L9
-         L8
-         FRAME SAME
+          IFEQ L8
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z (itf)
           GOTO L4
-         L9
+         L8
          FRAME SAME
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
           GETSTATIC org/nlogo/core/AgentKind$Patch$.MODULE$ : Lorg/nlogo/core/AgentKind$Patch$;
           ASTORE 6
           DUP
-          IFNONNULL L10
+          IFNONNULL L9
           POP
-          ALOAD 6
-          IFNULL L11
-          GOTO L12
-         L10
+          GOTO L10
+         L9
          FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_1 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/AgentSet org/nlogo/core/AgentKind$Turtle$ org/nlogo/core/AgentKind$Patch$] [org/nlogo/core/AgentKind]
           ALOAD 6
           INVOKEVIRTUAL java/lang/Object.equals (Ljava/lang/Object;)Z
-          IFEQ L12
-         L11
-         FRAME SAME
+          IFEQ L10
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
           ASTORE 7
-         L13
+         L11
          FRAME APPEND [org/nlogo/agent/AgentIterator]
           ALOAD 7
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z (itf)
-          IFEQ L12
+          IFEQ L10
           ALOAD 7
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent; (itf)
           CHECKCAST org/nlogo/agent/Patch
           INVOKEVIRTUAL org/nlogo/agent/Patch.turtlesHere ()Ljava/lang/Iterable;
           INVOKEINTERFACE java/lang/Iterable.iterator ()Ljava/util/Iterator; (itf)
           INVOKEINTERFACE java/util/Iterator.hasNext ()Z (itf)
-          IFEQ L13
+          IFEQ L11
           ICONST_1
           GOTO L4
-         L12
+         L10
          FRAME CHOP 1
           ICONST_0
           GOTO L4
@@ -3101,27 +3089,27 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
          FRAME SAME1 I
           ISTORE 2
           ILOAD 2
-          IFNE L14
+          IFNE L12
           ICONST_1
-          GOTO L15
-         L14
+          GOTO L13
+         L12
          FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_1 org/nlogo/nvm/Context I] []
           ICONST_0
-         L15
+         L13
          FRAME SAME1 I
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L16
+          IFEQ L14
           ICONST_2
-          GOTO L17
-         L16
+          GOTO L15
+         L14
          FRAME SAME1 org/nlogo/nvm/Context
           ICONST_4
-         L17
+         L15
          FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_1 org/nlogo/nvm/Context I] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L18
+         L16
           RETURN
 [2]_moveto "move-to target"
       _asm_procedurebugmove_procedurevariable_2 "target" => Object
@@ -3273,10 +3261,9 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           GOTO L2
          L3
          FRAME SAME
-          NEW scala/MatchError
+          NEW java/lang/IllegalStateException
           DUP
-          ALOAD 2
-          INVOKESPECIAL scala/MatchError.<init> (Ljava/lang/Object;)V
+          INVOKESPECIAL java/lang/IllegalStateException.<init> ()V
           ATHROW
          L2
          FRAME SAME1 org/nlogo/agent/Patch
@@ -3352,7 +3339,7 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           GETSTATIC org/nlogo/core/I18N$.MODULE$ : Lorg/nlogo/core/I18N$;
           INVOKEVIRTUAL org/nlogo/core/I18N$.errors ()Lorg/nlogo/core/I18N$BundleKind;
           LDC "org.nlogo.$common.thatAgentIsDead"
-          GETSTATIC scala/Predef$.MODULE$ : Lscala/Predef$;
+          GETSTATIC scala/runtime/ScalaRunTime$.MODULE$ : Lscala/runtime/ScalaRunTime$;
           ICONST_1
           ANEWARRAY java/lang/Object
           DUP
@@ -3360,8 +3347,8 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           ALOAD 3
           INVOKEVIRTUAL org/nlogo/agent/Turtle.classDisplayName ()Ljava/lang/String;
           AASTORE
-          INVOKEVIRTUAL scala/Predef$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/mutable/WrappedArray;
-          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/Seq;)Ljava/lang/String;
+          INVOKEVIRTUAL scala/runtime/ScalaRunTime$.wrapRefArray ([Ljava/lang/Object;)Lscala/collection/immutable/ArraySeq;
+          INVOKEVIRTUAL org/nlogo/core/I18N$BundleKind.getN (Ljava/lang/String;Lscala/collection/immutable/Seq;)Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
          L3
@@ -3394,57 +3381,49 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
           DUP
           IFNONNULL L7
           POP
-          ALOAD 5
-          IFNULL L8
-          GOTO L9
+          GOTO L8
          L7
          FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_7 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/AgentSet org/nlogo/core/AgentKind$Turtle$] [org/nlogo/core/AgentKind]
           ALOAD 5
           INVOKEVIRTUAL java/lang/Object.equals (Ljava/lang/Object;)Z
-          IFEQ L9
-         L8
-         FRAME SAME
+          IFEQ L8
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z (itf)
           GOTO L4
-         L9
+         L8
          FRAME SAME
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.kind ()Lorg/nlogo/core/AgentKind;
           GETSTATIC org/nlogo/core/AgentKind$Patch$.MODULE$ : Lorg/nlogo/core/AgentKind$Patch$;
           ASTORE 6
           DUP
-          IFNONNULL L10
+          IFNONNULL L9
           POP
-          ALOAD 6
-          IFNULL L11
-          GOTO L12
-         L10
+          GOTO L10
+         L9
          FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_7 org/nlogo/nvm/Context java/lang/Object T org/nlogo/agent/AgentSet org/nlogo/core/AgentKind$Turtle$ org/nlogo/core/AgentKind$Patch$] [org/nlogo/core/AgentKind]
           ALOAD 6
           INVOKEVIRTUAL java/lang/Object.equals (Ljava/lang/Object;)Z
-          IFEQ L12
-         L11
-         FRAME SAME
+          IFEQ L10
           ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.iterator ()Lorg/nlogo/agent/AgentIterator;
           ASTORE 7
-         L13
+         L11
          FRAME APPEND [org/nlogo/agent/AgentIterator]
           ALOAD 7
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.hasNext ()Z (itf)
-          IFEQ L12
+          IFEQ L10
           ALOAD 7
           INVOKEINTERFACE org/nlogo/agent/AgentIterator.next ()Lorg/nlogo/agent/Agent; (itf)
           CHECKCAST org/nlogo/agent/Patch
           INVOKEVIRTUAL org/nlogo/agent/Patch.turtlesHere ()Ljava/lang/Iterable;
           INVOKEINTERFACE java/lang/Iterable.iterator ()Ljava/util/Iterator; (itf)
           INVOKEINTERFACE java/util/Iterator.hasNext ()Z (itf)
-          IFEQ L13
+          IFEQ L11
           ICONST_1
           GOTO L4
-         L12
+         L10
          FRAME CHOP 1
           ICONST_0
           GOTO L4
@@ -3473,27 +3452,27 @@ procedure BUG-MOVE:[TARGET TRIES]{-T--}:
          FRAME SAME1 I
           ISTORE 2
           ILOAD 2
-          IFNE L14
+          IFNE L12
           ICONST_1
-          GOTO L15
-         L14
+          GOTO L13
+         L12
          FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_7 org/nlogo/nvm/Context I] []
           ICONST_0
-         L15
+         L13
          FRAME SAME1 I
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L16
+          IFEQ L14
           BIPUSH 8
-          GOTO L17
-         L16
+          GOTO L15
+         L14
          FRAME SAME1 org/nlogo/nvm/Context
           BIPUSH 10
-         L17
+         L15
          FRAME FULL [org/nlogo/prim/_asm_procedurebugmove_if_7 org/nlogo/nvm/Context I] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L18
+         L16
           RETURN
 [8]_moveto "move-to target"
       _asm_procedurebugmove_procedurevariable_8 "target" => Object
