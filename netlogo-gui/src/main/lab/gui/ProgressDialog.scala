@@ -90,14 +90,13 @@ private [gui] class ProgressDialog(parent: Window, supervisor: Supervisor, color
     val c = new GridBagConstraints
 
     c.gridwidth = GridBagConstraints.REMAINDER
-    c.fill = GridBagConstraints.BOTH
     c.weightx = 1
     c.weighty = 1
     c.insets = new Insets(6, 6, 0, 6)
 
     getContentPane.add(speedSlider, c)
 
-    c.weighty = 1.0
+    c.fill = GridBagConstraints.BOTH
 
     plotWidgetOption.foreach{ plotWidget =>
       getContentPane.add(plotWidget, c)
