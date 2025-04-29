@@ -161,6 +161,10 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
           slider.setValue(slider.getValue - 1)
         } else if (e.getKeyCode == KeyEvent.VK_RIGHT) {
           slider.setValue(slider.getValue + 1)
+        } else if (e.getKeyCode == KeyEvent.VK_UP) {
+          slider.setValue(slider.getValue + 1)
+        } else if (e.getKeyCode == KeyEvent.VK_DOWN) {
+          slider.setValue(slider.getValue - 1)
         }
 
         updateValue()
@@ -171,6 +175,20 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     nameComponent.addKeyListener(keyListener)
     unitsComponent.addKeyListener(keyListener)
     slider.addKeyListener(keyListener)
+
+    val keyListenerUpDown = new KeyAdapter {
+      override def keyPressed(e: KeyEvent): Unit = {
+        if (e.getKeyCode == KeyEvent.VK_UP) {
+          slider.setValue(slider.getValue + 1)
+        } else if (e.getKeyCode == KeyEvent.VK_DOWN) {
+          slider.setValue(slider.getValue - 1)
+        }
+
+        updateValue()
+      }
+    }
+
+    valueComponent.addKeyListener(keyListenerUpDown)
   }
 
   slider.setUI(new SliderWidgetUI(this, slider))
