@@ -2,7 +2,8 @@
 
 package org.nlogo.swing
 
-import javax.swing.{ Action, JMenu, JMenuItem, JPopupMenu }
+import java.awt.{ Component, Graphics }
+import javax.swing.{ Action, Icon, JMenu, JMenuItem, JPopupMenu }
 import javax.swing.border.LineBorder
 import javax.swing.plaf.basic.BasicMenuUI
 
@@ -37,6 +38,24 @@ class Menu(text: String, var menuModel: MenuModel[Action, String]) extends JMenu
   def this(text: String) = this(text, Menu.model)
 
   private val menuUI = new BasicMenuUI with ThemeSync {
+    arrowIcon = new Icon {
+      override def getIconWidth: Int = 5
+      override def getIconHeight: Int = 9
+
+      override def paintIcon(c: Component, g: Graphics, x: Int, y: Int): Unit = {
+        val g2d = Utils.initGraphics2D(g)
+
+        if (isSelected) {
+          g2d.setColor(InterfaceColors.toolbarTextSelected())
+        } else {
+          g2d.setColor(InterfaceColors.toolbarText())
+        }
+
+        g2d.drawLine(x, y + 1, x + getIconWidth - 1, y + getIconHeight / 2 + 1)
+        g2d.drawLine(x + getIconWidth - 1, y + getIconHeight / 2 + 1, x, y + getIconHeight)
+      }
+    }
+
     override def syncTheme(): Unit = {
       setForeground(InterfaceColors.toolbarText())
 
