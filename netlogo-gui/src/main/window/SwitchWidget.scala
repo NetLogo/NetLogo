@@ -14,7 +14,7 @@ class SwitchWidget(compiler: CompilerServices) extends Switch with Editable with
 
   override def editPanel: EditPanel = new SwitchEditPanel(this, compiler)
 
-  def valueObject: AnyRef = constraint.defaultValue
+  def valueObject(): AnyRef = constraint.defaultValue
   def valueObject(value: AnyRef): Unit = {
     value match {
       case b: JBoolean =>

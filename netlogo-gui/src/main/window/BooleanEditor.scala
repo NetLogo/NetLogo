@@ -19,8 +19,8 @@ class BooleanEditor(accessor: PropertyAccessor[Boolean]) extends PropertyEditor(
   override def get: Option[Boolean] = Some(checkbox.isSelected)
   override def set(value: Boolean): Unit = { checkbox.setSelected(value) }
 
-  override def requestFocus() { checkbox.requestFocus() }
-  override def setEnabled(enabled: Boolean) {
+  override def requestFocus(): Unit = { checkbox.requestFocus() }
+  override def setEnabled(enabled: Boolean): Unit = {
     super.setEnabled(enabled)
     checkbox.setEnabled(enabled)
   }

@@ -155,9 +155,9 @@ class AggregateModelEditor(
       case target: Editable =>
         // for some reason it only works to set the compiler and colorizer right before the edit dialog opens... (Isaac B 3/31/25)
         target match {
-          case f: ConverterFigure => f.setCompilerAndColorizer(compiler, colorizer)
-          case f: StockFigure => f.setCompilerAndColorizer(compiler, colorizer)
-          case f: RateConnection => f.setCompilerAndColorizer(compiler, colorizer)
+          case c: ConverterFigure => c.setCompilerAndColorizer(compiler, colorizer)
+          case s: StockFigure => s.setCompilerAndColorizer(compiler, colorizer)
+          case r: RateConnection => r.setCompilerAndColorizer(compiler, colorizer)
           case _ =>
         }
 

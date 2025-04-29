@@ -3,7 +3,7 @@
 package org.nlogo.window
 
 import org.nlogo.api.{ CompilerServices, Dump }
-import org.nlogo.core.{ I18N, Chooseable, Chooser => CoreChooser, CompilerException, LogoList }
+import org.nlogo.core.{ I18N, Chooseable, Chooser => CoreChooser, CompilerException, LogoList, Widget => CoreWidget }
 import org.nlogo.editor.Colorizer
 
 class DummyChooserWidget(val compiler: CompilerServices, colorizer: Colorizer) extends Chooser with Editable {
@@ -25,8 +25,8 @@ class DummyChooserWidget(val compiler: CompilerServices, colorizer: Colorizer) e
 
   override def editPanel: EditPanel = new DummyChooserEditPanel(this, compiler, colorizer)
 
-  override def editFinished: Boolean = {
-    super.editFinished
+  override def editFinished(): Boolean = {
+    super.editFinished()
     setVarName(name)
     true
   }

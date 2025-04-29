@@ -27,7 +27,7 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
   private var colorizer: Colorizer = null
 
   // if these go in the constructor it messes up the old deserialization code (Isaac B 3/31/25)
-  def setCompilerAndColorizer(compiler: CompilerServices, colorizer: Colorizer) {
+  def setCompilerAndColorizer(compiler: CompilerServices, colorizer: Colorizer): Unit = {
     this.compiler = compiler
     this.colorizer = colorizer
   }

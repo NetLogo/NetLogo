@@ -90,7 +90,7 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
     runOptions
   }
   class EditableRunOptions extends Editable with DummyErrorHandler {
-    private implicit val i18nPrefix = I18N.Prefix("tools.behaviorSpace.runoptions")
+    private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.behaviorSpace.runoptions")
     private var _spreadsheet = Prefs.spreadsheet
     private var _table = Prefs.table
     private var _stats = Prefs.stats

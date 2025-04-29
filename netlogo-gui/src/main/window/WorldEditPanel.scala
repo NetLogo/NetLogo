@@ -8,11 +8,11 @@ abstract class WorldEditPanel(target: WorldViewSettings) extends EditPanel(targe
   protected val previewPanel = new WorldPreview(200, 200)
 
   protected val originTypes = new ComboBox[OriginType](target.originTypes) {
-    addItemListener(_ => selectType)
+    addItemListener(_ => selectType())
   }
 
   protected val originConfigs = new ComboBox[OriginConfiguration] {
-    addItemListener(_ => selectConfig)
+    addItemListener(_ => selectConfig())
   }
 
   protected def editors: Seq[IntegerEditor]

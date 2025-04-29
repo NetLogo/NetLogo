@@ -177,6 +177,8 @@ class NoteWidget extends SingleErrorWidget with Transparent with Editable {
       case DarkTheme =>
         setBackgroundColor(_backgroundDark)
         textLabel.setForeground(_textColorDark)
+
+      case _ => throw new IllegalStateException
     }
 
     repaint()

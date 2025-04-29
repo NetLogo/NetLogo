@@ -1371,13 +1371,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
     } else {
       // only resize widgets, no positions will be adjusted
       getWrappers.foreach { w =>
-<<<<<<< HEAD
-        if (w.widget.oldSize) {
-          w.widget.oldSize(false)
-=======
         if (w.widget().oldSize) {
-          w.widget().oldSize = false
->>>>>>> 7484d8d39 (Initial draft conversion of netlogo-gui)
+          w.widget().oldSize(false)
           w.setSize(new Dimension(w.getPreferredSize.width.max(w.getWidth), w.getPreferredSize.height.max(w.getHeight)))
         }
       }

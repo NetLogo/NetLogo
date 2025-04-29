@@ -213,7 +213,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
 
         val startY = trackRect.y + trackRect.height / 2 - 1
 
-        if (isEnabled) {
+        if (SpeedSlider.this.isEnabled) {
           g2d.setColor(InterfaceColors.speedSliderBarBackgroundFilled())
         } else {
           g2d.setColor(InterfaceColors.speedSliderBarBackground())
@@ -233,7 +233,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
         val width = getThumbSize.width
         val startY = thumbRect.getCenterY.toInt - width / 2
 
-        if (isEnabled) {
+        if (SpeedSlider.this.isEnabled) {
           g2d.setColor(InterfaceColors.speedSliderThumb())
         } else {
           g2d.setColor(InterfaceColors.speedSliderThumbDisabled())

@@ -4,7 +4,7 @@ package org.nlogo.lab.gui
 
 import java.awt.Window
 
-import org.nlogo.api.{ CompilerServices, LabProtocol, LabVariableParser, RefValueSet }
+import org.nlogo.api.{ CompilerServices, LabProtocol, LabVariableParser}
 import org.nlogo.core.I18N
 import org.nlogo.editor.Colorizer
 import org.nlogo.swing.OptionPane

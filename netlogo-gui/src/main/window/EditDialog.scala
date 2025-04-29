@@ -27,7 +27,7 @@ class EditDialog(window: Window, target: Editable, modal: Boolean)
   private val editPanel = target.editPanel
 
   val okButton = new DialogButton(true, I18N.gui.get("common.buttons.ok"), () => {
-    if (editPanel.valid()) {
+    if (editPanel.valid) {
       editPanel.apply()
 
       if (target.editFinished())
@@ -37,7 +37,7 @@ class EditDialog(window: Window, target: Editable, modal: Boolean)
 
   var sendEditFinishedOnCancel = false
   val applyButton = new DialogButton(false, I18N.gui.get("common.buttons.apply"), () => {
-    if (editPanel.valid()) {
+    if (editPanel.valid) {
       sendEditFinishedOnCancel = true
       editPanel.apply()
       target.editFinished()
@@ -81,12 +81,12 @@ class EditDialog(window: Window, target: Editable, modal: Boolean)
   setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
 
   addWindowListener(new WindowAdapter {
-    override def windowClosing(e: WindowEvent) {
+    override def windowClosing(e: WindowEvent): Unit = {
       if (sendEditFinishedOnCancel) {
         if (editPanel.valid) {
           editPanel.apply()
 
-          if (target.editFinished)
+          if (target.editFinished())
             bye()
         }
       } else {

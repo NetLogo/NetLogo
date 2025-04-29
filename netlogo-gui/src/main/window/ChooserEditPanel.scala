@@ -40,7 +40,7 @@ class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colori
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
         target.oldSize(_),
-        () => apply))
+        () => apply()))
 
   locally {
     val c = new GridBagConstraints

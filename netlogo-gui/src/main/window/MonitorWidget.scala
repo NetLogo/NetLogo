@@ -356,7 +356,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
     model match {
       case monitor: CoreMonitor =>
         setUnits(monitor.units.getOrElse(""))
-        setVarName(monitor.display.getOrElse(""))
+        setDisplayName(monitor.display.getOrElse(""))
         _decimalPlaces = monitor.precision
         setFontSize(monitor.fontSize)
 

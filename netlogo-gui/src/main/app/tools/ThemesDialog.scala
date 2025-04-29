@@ -104,6 +104,7 @@ class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "theme
       case ClassicTheme => "classic"
       case LightTheme => "light"
       case DarkTheme => "dark"
+      case _ => throw new IllegalStateException
     })
 
     frame.syncTheme()

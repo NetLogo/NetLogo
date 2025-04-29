@@ -301,13 +301,13 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
       val g2d = Utils.initGraphics2D(g)
 
       if (colorSwatch.isVisible) {
-        g2d.setPaint(new LinearGradientPaint(colorSwatch.getX.toFloat, colorSwatch.getY + 3, colorSwatch.getX.toFloat,
-                                            colorSwatch.getY + colorSwatch.getHeight + 3, Array(0f, 1f),
+        g2d.setPaint(new LinearGradientPaint(colorSwatch.getX.toFloat, (colorSwatch.getY + 3).toFloat, colorSwatch.getX.toFloat,
+                                            (colorSwatch.getY + colorSwatch.getHeight + 3).toFloat, Array(0f, 1f),
                                             Array(InterfaceColors.widgetHoverShadow(), InterfaceColors.Transparent)))
         g2d.fillRoundRect(colorSwatch.getX, colorSwatch.getY + 3, colorSwatch.getWidth, colorSwatch.getHeight, 6, 6)
       } else {
-        g2d.setPaint(new LinearGradientPaint(scroller.getX.toFloat, scroller.getY + 3, scroller.getX.toFloat,
-                                            scroller.getY + scroller.getHeight + 3, Array(0f, 1f),
+        g2d.setPaint(new LinearGradientPaint(scroller.getX.toFloat, (scroller.getY + 3).toFloat, scroller.getX.toFloat,
+                                            (scroller.getY + scroller.getHeight + 3).toFloat, Array(0f, 1f),
                                             Array(InterfaceColors.widgetHoverShadow(), InterfaceColors.Transparent)))
         g2d.fillRoundRect(scroller.getX, scroller.getY + 3, scroller.getWidth, scroller.getHeight, 6, 6)
       }
@@ -327,11 +327,14 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     def actionPerformed(e: ActionEvent): Unit = {
 
       val currValue =
-        valueObject match {
+        valueObject() match {
 
           case list: LogoList if (list.length > 2) && list.toVector.take(3).forall(_.isInstanceOf[Double]) =>
 
-            val Seq(r, g, b) = list.take(3).asInstanceOf[Seq[Double]]
+            val (r, g, b) = list.take(3).asInstanceOf[Seq[Double]] match {
+              case Seq(r, g, b) => (r, g, b)
+              case _ => throw new IllegalStateException
+            }
 
             val a =
               if (list.length > 3 && list(3).isInstanceOf[Double]) {
@@ -346,7 +349,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
             NLNumber(num)
 
           case _            =>
-            throw new Exception(s"Invalid color format: $valueObject")
+            throw new Exception(s"Invalid color format: ${valueObject()}")
 
         }
 
@@ -488,7 +491,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
           case e@(_:CompilerException|_:ValueConstraint.Violation|_:LogoException) =>
             setValue(input.boxedValue.default)
         }
-        oldSize = input.oldSize
+        oldSize(input.oldSize)
         setSize(input.width, input.height)
 
       case _ =>
