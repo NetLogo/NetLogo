@@ -115,6 +115,7 @@ class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "theme
       case ClassicTheme => classicButton.setSelected(true)
       case LightTheme => lightButton.setSelected(true)
       case DarkTheme => darkButton.setSelected(true)
+      case _ =>
     }
   }
 
