@@ -29,7 +29,7 @@ class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, colla
   val editorConfig =
     EditorConfiguration.default(rows, columns, colorizer)
       .withFocusTraversalEnabled(true)
-      .withListener(new TextListener { def textValueChanged(e: TextEvent) { accessor.changed() } })
+      .withListener(new TextListener { def textValueChanged(e: TextEvent): Unit = { accessor.changed() } })
 
   protected lazy val editor = new EditorArea(editorConfig)
   protected lazy val scrollPane = new ScrollPane(editor, ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS,
@@ -107,11 +107,12 @@ class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, colla
   override def setEnabled(state: Boolean): Unit = {
     def setEnabledRecursive(component: Container, state: Boolean): Unit = {
       component.getComponents().foreach(c => {
-          c.setEnabled(state)
+        c.setEnabled(state)
 
-          c match {
-            case con: Container => setEnabledRecursive(con, state)
-          }
+        c match {
+          case con: Container => setEnabledRecursive(con, state)
+          case _ =>
+        }
       })
     }
 

@@ -12,7 +12,7 @@ class DummyViewEditPanel(target: DummyViewWidget) extends WidgetEditPanel(target
       new PropertyAccessor(
         target,
         I18N.gui.get("edit.hubnet.view.width"),
-        () => target.width,
+        () => target.width(),
         target.setWidth(_),
         () => apply()))
 
@@ -21,7 +21,7 @@ class DummyViewEditPanel(target: DummyViewWidget) extends WidgetEditPanel(target
       new PropertyAccessor(
         target,
         I18N.gui.get("edit.hubnet.view.height"),
-        () => target.width,
+        () => target.width(),
         target.setWidth(_),
         () => apply()))
 

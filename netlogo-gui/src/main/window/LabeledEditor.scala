@@ -21,6 +21,6 @@ class LabeledEditor(editor: PropertyEditor[_], text: String)
   override def syncTheme(): Unit = {
     editor.syncTheme()
 
-    label.setForeground(InterfaceColors.dialogText)
+    label.setForeground(InterfaceColors.dialogText())
   }
 }

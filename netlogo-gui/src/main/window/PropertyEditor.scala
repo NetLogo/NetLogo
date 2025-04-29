@@ -12,9 +12,9 @@ abstract class PropertyEditor[T](val accessor: PropertyAccessor[T], val handlesO
 
   protected val originalValue: T = accessor.getter()
 
-  def revert() { accessor.setter(originalValue) }
-  def refresh() { set(accessor.getter()) }
-  def apply() { get.foreach(accessor.setter) }
+  def revert(): Unit = { accessor.setter(originalValue) }
+  def refresh(): Unit = { set(accessor.getter()) }
+  def apply(): Unit = { get.foreach(accessor.setter) }
 
   def get: Option[T]
   def set(value: T): Unit

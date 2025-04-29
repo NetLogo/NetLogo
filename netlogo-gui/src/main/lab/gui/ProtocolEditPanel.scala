@@ -258,7 +258,7 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
         timeLimit)
 
   override def syncExtraComponents(): Unit = {
-    hintPanel.setBackground(InterfaceColors.bspaceHintBackground)
-    hintLabel.setForeground(InterfaceColors.dialogText)
+    hintPanel.setBackground(InterfaceColors.bspaceHintBackground())
+    hintLabel.setForeground(InterfaceColors.dialogText())
   }
 }

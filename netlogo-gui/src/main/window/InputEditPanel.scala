@@ -34,7 +34,7 @@ class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices) extends
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
         target.oldSize(_),
-        () => apply))
+        () => apply()))
 
   locally {
     val c = new GridBagConstraints

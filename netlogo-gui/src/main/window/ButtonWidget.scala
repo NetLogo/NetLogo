@@ -537,7 +537,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
         setGoTime(button.disableUntilTicksStart)
         setVarName(button.display.optionToPotentiallyEmptyString)
 
-        button.source.foreach(wrapSource)
+        button.source.foreach(setWrapSource)
 
         setSize(button.width, button.height)
         chooseDisplayName()

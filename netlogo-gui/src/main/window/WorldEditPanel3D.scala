@@ -11,7 +11,7 @@ import org.nlogo.swing.Transparent
 import org.nlogo.theme.InterfaceColors
 
 class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(target) {
-  private implicit val i18nPrefix = I18N.Prefix("edit.viewSettings")
+  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("edit.viewSettings")
 
   private val locationLabel = new JLabel(I18N.gui("origin.location"))
 
@@ -393,23 +393,23 @@ class WorldEditPanel3D(target: WorldViewSettings3D) extends WorldEditPanel(targe
     Seq(minPxcor, maxPxcor, minPycor, maxPycor, minPzcor, maxPzcor)
 
   override def syncExtraComponents(): Unit = {
-    worldBorder.setTitleColor(InterfaceColors.dialogText)
-    viewBorder.setTitleColor(InterfaceColors.dialogText)
-    modelBorder.setTitleColor(InterfaceColors.dialogText)
+    worldBorder.setTitleColor(InterfaceColors.dialogText())
+    viewBorder.setTitleColor(InterfaceColors.dialogText())
+    modelBorder.setTitleColor(InterfaceColors.dialogText())
 
-    locationLabel.setForeground(InterfaceColors.dialogText)
+    locationLabel.setForeground(InterfaceColors.dialogText())
 
-    minPxcorLabel.setForeground(InterfaceColors.dialogText)
-    maxPxcorLabel.setForeground(InterfaceColors.dialogText)
-    minPycorLabel.setForeground(InterfaceColors.dialogText)
-    maxPycorLabel.setForeground(InterfaceColors.dialogText)
-    minPzcorLabel.setForeground(InterfaceColors.dialogText)
-    maxPzcorLabel.setForeground(InterfaceColors.dialogText)
+    minPxcorLabel.setForeground(InterfaceColors.dialogText())
+    maxPxcorLabel.setForeground(InterfaceColors.dialogText())
+    minPycorLabel.setForeground(InterfaceColors.dialogText())
+    maxPycorLabel.setForeground(InterfaceColors.dialogText())
+    minPzcorLabel.setForeground(InterfaceColors.dialogText())
+    maxPzcorLabel.setForeground(InterfaceColors.dialogText())
 
-    patchSizeLabel.setForeground(InterfaceColors.dialogText)
-    fontSizeLabel.setForeground(InterfaceColors.dialogText)
-    frameRateLabel.setForeground(InterfaceColors.dialogText)
-    smoothLabel.setForeground(InterfaceColors.dialogText)
-    wireframeLabel.setForeground(InterfaceColors.dialogText)
+    patchSizeLabel.setForeground(InterfaceColors.dialogText())
+    fontSizeLabel.setForeground(InterfaceColors.dialogText())
+    frameRateLabel.setForeground(InterfaceColors.dialogText())
+    smoothLabel.setForeground(InterfaceColors.dialogText())
+    wireframeLabel.setForeground(InterfaceColors.dialogText())
   }
 }

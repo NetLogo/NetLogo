@@ -83,7 +83,7 @@ class FilePathEditor(accessor: PropertyAccessor[String], parent: Component, sugg
 
   override def set(value: String): Unit = { editor.setText(value) }
 
-  override def requestFocus() { editor.requestFocus() }
+  override def requestFocus(): Unit = { editor.requestFocus() }
 
   override def syncTheme(): Unit = {
     label.setForeground(InterfaceColors.dialogText())

@@ -17,11 +17,11 @@ abstract class EditPanel(target: Editable) extends JPanel with Transparent with 
 
   def isResizable: Boolean = false
 
-  def apply() {
+  def apply(): Unit = {
     propertyEditors.foreach(_.apply())
   }
 
-  def revert() {
+  def revert(): Unit = {
     propertyEditors.foreach { editor =>
       editor.revert()
       editor.refresh()

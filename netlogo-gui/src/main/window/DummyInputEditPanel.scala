@@ -32,7 +32,7 @@ class DummyInputEditPanel(target: DummyInputBoxWidget) extends WidgetEditPanel(t
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
         target.oldSize(_),
-        () => apply))
+        () => apply()))
 
   locally {
     val c = new GridBagConstraints

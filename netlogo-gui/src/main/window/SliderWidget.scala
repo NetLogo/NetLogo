@@ -44,7 +44,7 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
   override def editPanel: EditPanel = new SliderEditPanel(this, compiler, colorizer)
 
   // VALUE RELATED METHODS
-  def valueObject: Object = super.value.asInstanceOf[AnyRef]
+  def valueObject(): Object = super.value.asInstanceOf[AnyRef]
 
   override def setValue(v: Double): Unit = {
     if (!anyErrors && (v != value || v < minimum || v > effectiveMaximum)) {
@@ -168,10 +168,10 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
         setMinimumCode(min)
         setIncrementCode(inc)
         try {
-          value_=(v, inc.toDouble)
+          setValue(v, inc.toDouble)
         } catch {
           case e: NumberFormatException =>
-            value = v
+            setValue(v)
         }
         defaultValue = v
         oldSize(s.oldSize)

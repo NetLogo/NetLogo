@@ -149,8 +149,8 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     if (isHover) {
       val g2d = Utils.initGraphics2D(g)
 
-      g2d.setPaint(new LinearGradientPaint(control.getX.toFloat, control.getY + 3, control.getX.toFloat,
-                                           control.getY + control.getHeight + 3, Array(0f, 1f),
+      g2d.setPaint(new LinearGradientPaint(control.getX.toFloat, (control.getY + 3).toFloat, control.getX.toFloat,
+                                           (control.getY + control.getHeight + 3).toFloat, Array(0f, 1f),
                                            Array(InterfaceColors.widgetHoverShadow(), InterfaceColors.Transparent)))
       g2d.fillRoundRect(control.getX, control.getY + 3, control.getWidth, control.getHeight, 6, 6)
     }

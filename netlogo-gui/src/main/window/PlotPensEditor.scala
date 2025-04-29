@@ -83,7 +83,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
 
   import PlotPensEditor._
 
-  private implicit val i18nPrefix = I18N.Prefix("edit.plot.pen")
+  private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("edit.plot.pen")
 
   private val plot = target.plot
   private val plotManager = target.plotManager

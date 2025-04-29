@@ -41,7 +41,7 @@ class DummySliderWidget extends AbstractSliderWidget with Editable {
         val con = ConstantSliderConstraint(min, max, inc)
         con.defaultValue = value
         setSliderConstraint(con)  // ensure cached values are updated
-        super.value = value
+        super.setValue(value)
         oldSize(s.oldSize)
         setSize(s.width, s.height)
 
