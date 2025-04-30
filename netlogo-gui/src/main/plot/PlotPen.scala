@@ -62,7 +62,7 @@ extends PlotPenInterface with JSerializable {
     hidden = s.hidden
   }
 
-  var points: Seq[PlotPoint] = Seq()
+  var points: Vector[PlotPoint] = Vector()
 
   def color = _color
   def color_=(newColor: Int): Unit = {
@@ -131,7 +131,7 @@ extends PlotPenInterface with JSerializable {
   def softReset(): Unit = {
     x = 0.0
     isDown = true
-    points = Seq()
+    points = Vector()
     runtimeError = None
   }
 
@@ -174,7 +174,7 @@ extends PlotPenInterface with JSerializable {
     temporary = in.readBoolean()
     x = in.readDouble()
     _color = in.readInt()
-    points = readPointList(in)
+    points = readPointList(in).toVector
     _interval = in.readDouble()
     _isDown = in.readBoolean()
     _mode = in.readInt()
