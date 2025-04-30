@@ -209,7 +209,7 @@ class VectorShape
     s"Shape $name:\n${elementList.map(_.toString)}"
 
   override def toString: String =
-    s"$name\n$rotatable\n$editableColorIndex\n${elementList.filter(_.shouldSave).map(_.toString).mkString("\n")}"
+    (Seq[Any](name, rotatable, editableColorIndex) ++ elementList.filter(_.shouldSave).map(_.toString)).mkString("\n")
 
   def addElement(element: Element) =
     if (element != null)
