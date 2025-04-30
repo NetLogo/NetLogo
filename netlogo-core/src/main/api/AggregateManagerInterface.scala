@@ -2,10 +2,10 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.Model
+import org.nlogo.core.{ LiteralParser, Model }
 
 trait AggregateManagerInterface extends SourceOwner with ModelSections.ModelSaveable {
-  def load(model: Model, compiler: CompilerServices): Unit
+  def load(model: Model, compiler: LiteralParser): Unit
   def isLoaded: Boolean
   def showEditor(): Unit
 }

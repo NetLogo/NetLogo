@@ -5,7 +5,7 @@ import org.nlogo.workspace
 import workspace.WorldLoader
 import org.nlogo.plot.PlotLoader
 import org.nlogo.agent.{BooleanConstraint, ChooserConstraint, CompilationManagement, InputBoxConstraint, NumericConstraint}
-import org.nlogo.api.{PreviewCommands, ValueConstraint, Version}
+import org.nlogo.api.{ PreviewCommands, SourceOwner, ValueConstraint, Version }
 import org.nlogo.core.{ Button, CompilerException, ConstraintSpecification,
   LogoList, Model, Monitor, Program, Shape },
   ConstraintSpecification._,
@@ -41,13 +41,17 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
     for(plot <- model.plots)
       PlotLoader.loadPlot(plot, ws.plotManager.newPlot(""))
 
+    // load system dynamics model (if present)
+    ws.aggregateManager.load(model, ws)
+
     // read procedures, compile them.
     val results = {
+      val additionalSources: Seq[SourceOwner] = if (ws.aggregateManager.isLoaded) Seq(ws.aggregateManager) else Seq()
       val code = model.code
       ws.compiler.compileProgram(
-        code, Program.empty().copy(interfaceGlobals = model.interfaceGlobals),
+        code, additionalSources, Program.empty().copy(interfaceGlobals = model.interfaceGlobals),
         ws.getExtensionManager, ws.getLibraryManager, ws.compilationEnvironment,
-        shouldAutoInstallLibs, ws.flags)
+        shouldAutoInstallLibs)
     }
     ws.procedures = results.proceduresMap
     ws.clearRunCache()

@@ -9,7 +9,8 @@ package org.nlogo.headless
 import
   org.nlogo.{ agent, api, core, drawing, fileformat, nvm, workspace },
     agent.{ Agent, World, World2D },
-    api.{ CommandRunnable, FileIO, LogoException, ModelReader, RendererInterface, ReporterRunnable, SimpleJobOwner },
+    api.{ AggregateManagerInterface, CommandRunnable, FileIO, LogoException, ModelReader, RendererInterface,
+          ReporterRunnable, SimpleJobOwner },
       ModelReader.modelSuffix,
     core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, Output, UpdateMode, WorldDimensions },
     drawing.DrawingActionBroker,
@@ -40,7 +41,9 @@ object HeadlessWorkspace {
       Femto.scalaSingleton[CompilerInterface](
         "org.nlogo.compile.Compiler"),
       Femto.get[RendererInterface](
-        "org.nlogo.render.Renderer", world))
+        "org.nlogo.render.Renderer", world),
+      Femto.get[AggregateManagerInterface](
+        "org.nlogo.sdm.AggregateManagerLite"))
   }
 
   def newLab: LabInterface = Femto.get("org.nlogo.lab.Lab")
@@ -67,7 +70,8 @@ object HeadlessWorkspace {
 class HeadlessWorkspace(
   _world: World,
   val compiler: CompilerInterface,
-  val renderer: RendererInterface)
+  val renderer: RendererInterface,
+  val aggregateManager: AggregateManagerInterface)
 extends AbstractWorkspace(_world)
 with org.nlogo.workspace.WorldLoaderInterface {
 

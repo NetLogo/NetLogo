@@ -7,15 +7,7 @@ import java.lang.ref.Cleaner
 
 import org.scalatest.funsuite.AnyFunSuite
 import org.nlogo.util.SlowTest
-import org.nlogo.{ core, api, agent, nvm }
-
-object TestHalt {
-  // This is ugly, but since we use reflection to instantiate HeadlessWorkspace it's hard to
-  // subclass.  Oh well, this is only test code. - ST 3/4/09
-  class MyWorkspace(world: agent.World, compiler: nvm.CompilerInterface,
-    renderer: api.RendererInterface)
-  extends HeadlessWorkspace(world, compiler, renderer)
-}
+import org.nlogo.{ core, api, nvm }
 
 class TestHalt extends AnyFunSuite  {
   @volatile var finalized = false
@@ -24,10 +16,9 @@ class TestHalt extends AnyFunSuite  {
   var workspace: HeadlessWorkspace = null
 
   def withWorkspace(body: => Unit): Unit = {
-    import TestHalt._
     val cleaner = Cleaner.create()
     finalized = false
-    workspace = HeadlessWorkspace.newInstance(classOf[MyWorkspace])
+    workspace = HeadlessWorkspace.newInstance
     cleaner.register(workspace, new Runnable() {
       override def run(): Unit = {
         finalized = true
