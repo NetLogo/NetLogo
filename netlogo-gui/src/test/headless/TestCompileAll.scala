@@ -23,7 +23,9 @@ class TestCompileAll extends AnyFunSuite with SlowTest {
       path.contains(s"${sep}time${sep}") || // the time extension includes some non-standard testing models that break here
       path.endsWith("5.x.nlogo") || // This is a LS model specifically for testing version problems.
       path.endsWith("LS-Widgets.nlogo")) || // This is a LS model designed to test widgets with errors.
-      path.contains("Calorimetry") // this model contains references to non-bundled extensions that don't work with Scala 2.13 yet
+      // the following models contain references to import-a, which doesn't work with Scala 2.13 yet
+      path.contains("Calorimetry") ||
+      path.contains("Resource Example")
   }
 
   // and those are exempt from having their preview commands tested:
