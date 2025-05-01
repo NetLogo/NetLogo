@@ -166,26 +166,26 @@ Incone360DiffTestForPatches_3D
   [pcolor] of patch 1 2 0 = red => true
 
 InconeManyTurtlesCountingTorus_2D
-  O> __change-topology true true
+  O> set-topology true true
   P> sprout 1 [ set heading 0 ]
   length remove-duplicates [count patches in-cone 10 30] of turtles => 1
   remove-duplicates [count turtles in-cone 10 30] of turtles => [27]
 
 InconeManyTurtlesCountingTorus_3D
-  O> __change-topology true true
+  O> set-topology true true
   P> sprout 1 [ set heading 0 ]
   length remove-duplicates [count patches in-cone 10 30] of turtles => 1
   remove-duplicates [count turtles in-cone 10 30] of turtles => [67]
 
 InconeManyTurtlesCounting_2D
   P> sprout 1 [ set heading 0 ]
-  O> __change-topology false false
+  O> set-topology false false
   length remove-duplicates [count patches in-cone 10 30] of turtles => 20
   length remove-duplicates [count turtles in-cone 10 30] of turtles => 20
-  O> __change-topology true false
+  O> set-topology true false
   length remove-duplicates [count patches in-cone 10 30] of turtles => 11
   length remove-duplicates [count turtles in-cone 10 30] of turtles => 11
-  O> __change-topology false true
+  O> set-topology false true
   length remove-duplicates [count patches in-cone 10 30] of turtles => 3
   length remove-duplicates [count turtles in-cone 10 30] of turtles => 3
 
@@ -580,7 +580,7 @@ InConeBreeds_2D
 
 InCone_Unwrapped_OppositeCorners1_2D
   O> resize-world -50 50 -50 50
-  O> __change-topology false false
+  O> set-topology false false
   O> create-turtles 1 [ setxy -48 -48 set heading 225 ]
   O> create-turtles 1 [ setxy 48 48 ]
   [ distance turtle 1 ] of turtle 0 => 135.7645019878171
@@ -594,7 +594,7 @@ InCone_Unwrapped_OppositeCorners1_2D
 
 InCone_Unwrapped_OppositeCorners2_2D
   O> resize-world -50 50 -50 50
-  O> __change-topology false false
+  O> set-topology false false
   O> create-turtles 1 [ setxy -48 48 set heading 315 ]
   O> create-turtles 1 [ setxy 48 -48 ]
   [ distance turtle 1 ] of turtle 0 => 135.7645019878171
@@ -611,7 +611,7 @@ InCone_Tortoise_1_2D
   breed [frogs frog]
   O> clear-all
   O> resize-world -4 3 -2 6
-  O> __change-topology true true
+  O> set-topology true true
   O> random-seed 0
   O> create-mice 50 [ setxy random-xcor random-ycor set color grey ]
   O> create-frogs 50 [ setxy random-xcor random-ycor set color grey ]

@@ -195,6 +195,6 @@ NoWrapMultiBreedHere_2D
   breed [ particles particle ]
   breed [ walls wall ]
   to go ca ask patches with [ (pycor = min-pycor or pycor = max-pycor or pxcor = min-pxcor or pxcor = max-pxcor) ] [ sprout-walls 1 [ set hidden? true ] ] create-particles 50 [ hatch 1 [ create-link-from myself [tie] ] ] repeat 2 [ ask particles [ fd 1 if (any? walls-here) [ home ] ] ] end
-  O> resize-world -2 2 -2 2 __change-topology false false
+  O> resize-world -2 2 -2 2 set-topology false false
   O> random-seed 10 go
   (sum [count (walls-here)] of particles) = (sum [count (particles-here)] of walls) => true

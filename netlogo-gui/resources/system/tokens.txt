@@ -1,6 +1,5 @@
 C __apply etc._apply
 C __bench gui._bench
-C __change-topology etc._changetopology
 C __clear-all-and-reset-ticks etc._clearallandresetticks
 C __delete-log-files gui._deletelogfiles
 C __done _done
@@ -207,6 +206,7 @@ C set-plot-pen-interval plot._setplotpeninterval
 C set-plot-pen-mode plot._setplotpenmode
 C set-plot-x-range plot._setplotxrange
 C set-plot-y-range plot._setplotyrange
+C set-topology etc._settopology
 C setup-plots plot._setupplots
 C setxy etc._setxy
 C setxyz threed._setxyz

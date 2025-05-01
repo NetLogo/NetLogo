@@ -90,11 +90,6 @@ case class _ceil() extends Reporter with Pure {
       right = List(Syntax.NumberType),
       ret = Syntax.NumberType)
 }
-case class _changetopology() extends Command {
-  override def syntax =
-    Syntax.commandSyntax(
-      right = List(Syntax.BooleanType, Syntax.BooleanType))
-}
 case class _checksum() extends Reporter {
   override def syntax =
     Syntax.reporterSyntax(
@@ -926,6 +921,11 @@ case class _setlinethickness() extends Command {
     Syntax.commandSyntax(
       right = List(Syntax.NumberType),
       agentClassString = "-T--")
+}
+case class _settopology() extends Command {
+  override def syntax =
+    Syntax.commandSyntax(
+      right = List(Syntax.BooleanType, Syntax.BooleanType))
 }
 case class _shapes() extends Reporter {
   override def syntax =

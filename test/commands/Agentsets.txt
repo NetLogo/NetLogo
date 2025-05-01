@@ -123,7 +123,7 @@ Agentsets4_3D
   link-set [turtles with [false]] of patches with [pzcor = 0] => ERROR List inputs to LINK-SET must only contain link, link agentset, or list elements.  The list [(agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles) (agentset, 0 turtles)] contained a different type agentset: (agentset, 0 turtles).
 
 Agentsets5Torus
-  O> __change-topology true true
+  O> set-topology true true
   O> random-seed 3782
   O> ask patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] [ set pcolor 1 ]
   [pcolor] of patches at-points [[0 0] [1 1] [2 2]] => [1 1 1]
@@ -137,7 +137,7 @@ Agentsets5Torus
   count patches with [ pcolor != blue ] => 0
 
 Agentsets5Box_2D
-  O> __change-topology false false
+  O> set-topology false false
   O> random-seed 3782
   O> ask patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] [ set pcolor 1 ]
   [pcolor] of patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] => [1 1 1]
@@ -153,7 +153,7 @@ Agentsets5Box_2D
   count patches with [ pcolor != green ] => 21
 
 Agentsets5VCylind_2D
-  O> __change-topology true false
+  O> set-topology true false
   O> random-seed 3782
   O> ask patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] [ set pcolor 1 ]
   [pcolor] of patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] => [1 1 1]
@@ -169,7 +169,7 @@ Agentsets5VCylind_2D
   count patches with [ pcolor != green ] => 11
 
 Agentsets5HCylind_2D
-  O> __change-topology false true
+  O> set-topology false true
   O> random-seed 3782
   O> ask patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] [ set pcolor 1 ]
   [pcolor] of patches at-points [ [ 0 0 ] [ 1 1 ] [ 2 2 ] ] => [1 1 1]
@@ -241,19 +241,19 @@ Agentsets11
   count mice at-points [[0 0] [0 0] [0.5 0.5]] => 20
 
 Agentsets12_2D
-  O> __change-topology true true
+  O> set-topology true true
   count patches at-points [[2 7] [2 7] [1 6] [1.1 5.8]] => 2
-  O> __change-topology false false
+  O> set-topology false false
   count patches at-points [[2 7] [2 7] [1 6] [1.1 5.8]] => 0
-  O> __change-topology true false
+  O> set-topology true false
   count patches at-points [[2 7] [2 7] [1 6] [1.1 5.8]] => 0
   count patches at-points [[2 7] [2 7] [1 6] [5.8 1.1]] => 1
-  O> __change-topology false true
+  O> set-topology false true
   count patches at-points [[2 7] [2 7] [1 6] [1.1 5.8]] => 2
   count patches at-points [[2 7] [2 7] [6 1] [5.8 1.1]] => 1
 
 Agentsets12_3D
-  O> __change-topology true true
+  O> set-topology true true
   count patches at-points [[2 7] [2 7] [1 6] [1.1 5.8]] => 2
 
 Agentsets13

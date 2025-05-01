@@ -8199,6 +8199,33 @@ ask cats [ set breed dogs ]
           These commands will produce a runtime error if the current plot has not been set.
         </p>
       </div>
+      <div class="dict_entry" id="set-topology">
+        <h3>
+          <a>set-topology<span class="since">7.0</span></a>
+        </h3>
+        <h4>
+          <span class="prim_example">set-topology <i>wraps-in-x? wraps-in-y?</i></span>
+        </h4>
+        <p>
+          Sets the wrapping behavior of the world, such that X coordinates wrap
+          if the first argument was <i>true</i> and Y coordinates wrap if the
+          second argument was <i>true</i>.
+        </p>
+        <p>
+          Equivalent to adjusting the "World wraps horizontally" and "World wraps
+          vertically" checkboxes in the "Model Settings" window.
+        </p>
+        <pre>
+set-topology true true
+;; wrapping in both directions (torus)
+set-topology true false
+;; wrapping only in the X direction (vertical cylinder)
+set-topology false true
+;; wrapping only in the Y direction (horizontal cylinder)
+set-topology false false
+;; no wrapping (box)
+</pre>
+      </div>
       <div class="dict_entry" id="setxy">
         <h3>
           <a>setxy<span class="since">1.0</span></a>

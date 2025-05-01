@@ -43,7 +43,7 @@ InSanityRadius_Patches_2D
     set wrap-x wx /
     set wrap-y wy /
     resize-world (-1 * x) x (-1 * y) y /
-    __change-topology wrap-x wrap-y /
+    set-topology wrap-x wrap-y /
   end
 
   O> assert [ patches in-radius 5 = temp-in-radius patches 5 ] of patch 0 0
@@ -153,7 +153,7 @@ InSanityRadius_Turtles_2D
     set wrap-x wx /
     set wrap-y wy /
     resize-world (-1 * x) x (-1 * y) y /
-    __change-topology wrap-x wrap-y /
+    set-topology wrap-x wrap-y /
     clear-turtles /
     create-turtles 100 [ /
       set xcor random-xcor /
@@ -281,7 +281,7 @@ InSanityRadius_TurtleBreeds_2D
     set wrap-x wx /
     set wrap-y wy /
     resize-world (-1 * x) x (-1 * y) y /
-    __change-topology wrap-x wrap-y /
+    set-topology wrap-x wrap-y /
     clear-turtles /
     create-mice 50 [ /
       set xcor random-xcor /

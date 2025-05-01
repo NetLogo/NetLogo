@@ -41,7 +41,7 @@ PatchLeftAndAhead
   any? turtles with [label = nobody and xcor < ( max-pxcor - 0.5 ) and xcor > ( min-pxcor + 0.5 ) and ( ycor < max-pycor - 0.5 ) and ycor > ( min-pycor + 0.5 ) ] => false
 
 PatchAtHeadingAndDistanceTorus
-  O> __change-topology true true
+  O> set-topology true true
   O> random-seed 28222
   P> if (patch-at-heading-and-distance 48734 38923) != nobody [ ask (patch-at-heading-and-distance 48734 38923) [ set pcolor red ] ]
   any? patches with [pcolor != red] => false
@@ -49,7 +49,7 @@ PatchAtHeadingAndDistanceTorus
   any? patches with [pcolor != blue] => false
 
 PatchAtHeadingAndDistanceBox_2D
-  O> __change-topology false false
+  O> set-topology false false
   O> random-seed 28222
   P> if (patch-at-heading-and-distance 48734 38923) != nobody [ ask (patch-at-heading-and-distance 48734 38923) [ set pcolor red ] ]
   count patches with [pcolor != red] => 121

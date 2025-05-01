@@ -86,25 +86,25 @@ Turtles4
   count turtles => 0
 
 Turtles5Torus
-  O> __change-topology true true
+  O> set-topology true true
   O> cro 4
   T> fd 5.5
   map [[t] -> list [xcor] of t [ycor] of t] sort turtles => [[0 -5.5] [-5.5 0] [0 -5.5] [-5.5 0]]
 
 Turtles5Box_2D
-  O> __change-topology false false
+  O> set-topology false false
   O> cro 4
   T> fd 5.5
   map [[t] -> list [xcor] of t [ycor] of t] sort turtles => [[0 5] [5 0] [0 -5.5] [-5.5 0]]
 
 Turtles5VCylind_2D
-  O> __change-topology true false
+  O> set-topology true false
   O> cro 4
   T> fd 5.5
   map [[t] -> list [xcor] of t [ycor] of t] sort turtles => [[0 5] [-5.5 0] [0 -5.5] [-5.5 0]]
 
 Turtles5HCylind_2D
-  O> __change-topology false true
+  O> set-topology false true
   O> cro 4
   T> fd 5.5
   map [[t] -> list [xcor] of t [ycor] of t] sort turtles => [[0 -5.5] [5 0] [0 -5.5] [-5.5 0]]
@@ -113,7 +113,7 @@ Turtles5HCylind_2D
 # the optimizer is on, we can only insist on a certain number
 # of decimal places here - ST 3/9/06
 Turtles6Torus
-  O> __change-topology true true
+  O> set-topology true true
   O> cro 1000
   T> fd who mod 37
   precision (sum [xcor] of turtles) 11 => 43.39618111125
@@ -121,7 +121,7 @@ Turtles6Torus
 
 # ditto - ST 3/9/06
 Turtles6Box_2D
-  O> __change-topology false false
+  O> set-topology false false
   O> cro 1000
   T> fd who mod 37
   precision (sum [xcor] of turtles) 11 => 3.74490034643
@@ -190,12 +190,12 @@ EmptyHatch
   count turtles => 1
 
 ForwardToBoundary1_2D
-  O> __change-topology true false
+  O> set-topology true false
   O> cro 1 [ fd max-pycor + 0.6 bk max-pycor]
   [list precision xcor 10 precision ycor 10] of turtles => [[0 0]]
 
 ForwardToBoundary2_2D
-  O> __change-topology true false
+  O> set-topology true false
   O> cro 1 [ fd (max-pycor * 10) + 0.1 bk max-pycor ]
   [list precision xcor 10 precision ycor 10] of turtles => [[0 0]]
 
@@ -254,7 +254,7 @@ HatchInheritOrientation_3D
   [(list precision heading 12 precision pitch 12 precision roll 12)]  of turtle 1 =>  [42.180779225595 8.285726273243 34.676049813587]
 
 SetPosition_2D
-  O> __change-topology false false
+  O> set-topology false false
   O> create-turtles 100
   O> ask one-of turtles [ set heading (towards one-of other turtles) ] => ERROR No heading is defined from a point (0,0) to that same point.
   O> ask turtles [ set xcor random 100 ] => ERROR Cannot move turtle beyond the world's edge.

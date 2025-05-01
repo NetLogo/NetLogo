@@ -1,27 +1,27 @@
 DistanceWrapping_2D
-  O> __change-topology true true
+  O> set-topology true true
   [ distancexy -5 -5 ] of patch 5 5 => 1.4142135623730951
   [ distancexy 5 5 ] of patch -5 -5 => 1.4142135623730951
   [ distancexy 5 -5 ] of patch 5 5 => 1
   [ distancexy -5 5 ] of patch 5 5 => 1
-  O> __change-topology false false
+  O> set-topology false false
   [ distancexy -5 -5 ] of patch 5 5 => 14.142135623730951
   [ distancexy 5 5 ] of patch -5 -5 => 14.142135623730951
   [ distancexy 5 -5 ] of patch 5 5 => 10
   [ distancexy -5 5 ] of patch 5 5 => 10
-  O> __change-topology true false
+  O> set-topology true false
   [ distancexy -5 -5 ] of patch 5 5 => 10.04987562112089
   [ distancexy 5 5 ] of patch -5 -5 => 10.04987562112089
   [ distancexy 5 -5 ] of patch 5 5 => 10
   [ distancexy -5 5 ] of patch 5 5 => 1
-  O> __change-topology false true
+  O> set-topology false true
   [ distancexy -5 -5 ] of patch 5 5 => 10.04987562112089
   [ distancexy 5 5 ] of patch -5 -5 => 10.04987562112089
   [ distancexy 5 -5 ] of patch 5 5 => 1
   [ distancexy -5 5 ] of patch 5 5 => 10
 
 DistanceWrapping_3D
-  O> __change-topology true true
+  O> set-topology true true
   [ distancexy -5 -5 ] of patch 5 5 0 => 1.4142135623730951
   [ distancexy 5 5 ] of patch -5 -5 0 => 1.4142135623730951
   [ distancexy 5 -5 ] of patch 5 5 0 => 1
@@ -29,25 +29,25 @@ DistanceWrapping_3D
 
 DistanceWrappingAsymetrical_2D
   O> resize-world 0 10 0 10
-  O> __change-topology true true
+  O> set-topology true true
   [ distancexy 0 0 ] of patch 10 10 => 1.4142135623730951
   [ distancexy 10 10 ] of patch 0 0 => 1.4142135623730951
   [ distancexy 9 10 ] of patch 0 0 => 2.23606797749979
   [ distancexy 10 0 ] of patch 10 10 => 1
   [ distancexy 0 10 ] of patch 10 10 => 1
-  O> __change-topology false false
+  O> set-topology false false
   [ distancexy 0 0 ] of patch 10 10 => 14.142135623730951
   [ distancexy 10 10 ] of patch 0 0 => 14.142135623730951
   [ distancexy 9 10 ] of patch 0 0 => 13.45362404707371
   [ distancexy 10 0 ] of patch 10 10 => 10
   [ distancexy 0 10 ] of patch 10 10 => 10
-  O> __change-topology true false
+  O> set-topology true false
   [ distancexy 0 0 ] of patch 10 10 => 10.04987562112089
   [ distancexy 10 10 ] of patch 0 0 => 10.04987562112089
   [ distancexy 9 10 ] of patch 0 0 => 10.198039027185569
   [ distancexy 10 0 ] of patch 10 10 => 10
   [ distancexy 0 10 ] of patch 10 10 => 1
-  O> __change-topology false true
+  O> set-topology false true
   [ distancexy 0 0 ] of patch 10 10 => 10.04987562112089
   [ distancexy 10 10 ] of patch 0 0 => 10.04987562112089
   [ distancexy 9 10 ] of patch 0 0 => 9.055385138137417
@@ -56,7 +56,7 @@ DistanceWrappingAsymetrical_2D
 
 DistanceWrappingAsymetrical_3D
   O> resize-world 0 10 0 10 0 10
-  O> __change-topology true true
+  O> set-topology true true
   [ distancexyz 0 0 0] of patch 10 10 0 => 1.4142135623730951
   [ distancexyz 10 10 0] of patch 0 0 0 => 1.4142135623730951
   [ distancexyz 9 10 0] of patch 0 0 0 => 2.23606797749979

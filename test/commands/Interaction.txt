@@ -1,23 +1,23 @@
 Interaction1Torus
-  O> __change-topology true true
+  O> set-topology true true
   O> cro 200 [ fd who set pcolor red ]
   count turtles with [pcolor != red] => 0
   count patches with [pcolor = red] => 93
 
 Interaction1Box_2D
-  O> __change-topology false false
+  O> set-topology false false
   O> cro 200 [ fd who set pcolor red ]
   count turtles with [pcolor != red] => 0
   count patches with [pcolor = red] => 45
 
 Interaction1VCylind_2D
-  O> __change-topology true false
+  O> set-topology true false
   O> cro 200 [ fd who set pcolor red ]
   count turtles with [pcolor != red] => 0
   count patches with [pcolor = red] => 34
 
 Interaction1HCylind_2D
-  O> __change-topology false true
+  O> set-topology false true
   O> cro 200 [ fd who set pcolor red ]
   count turtles with [pcolor != red] => 0
   count patches with [pcolor = red] => 38

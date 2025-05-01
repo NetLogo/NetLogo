@@ -303,7 +303,6 @@ class TestAllSyntaxes extends AnyFunSuite {
                     |_bench number/number,O---,None,0,2,2
                     |_bk number,-T--,None,0,1,1
                     |_carefully command block/command block,OTPL,None,0,2,2
-                    |_changetopology TRUE/FALSE/TRUE/FALSE,OTPL,None,0,2,2
                     |_clearall ,O---,None,0,0,0
                     |_clearallandresetticks ,O---,None,0,0,0
                     |_clearallplots ,OTPL,None,0,0,0
@@ -478,6 +477,7 @@ class TestAllSyntaxes extends AnyFunSuite {
                     |_setplotpenmode number,OTPL,None,0,1,1
                     |_setplotxrange number/number,OTPL,None,0,2,2
                     |_setplotyrange number/number,OTPL,None,0,2,2
+                    |_settopology TRUE/FALSE/TRUE/FALSE,OTPL,None,0,2,2
                     |_setupplots ,OTPL,None,0,0,0
                     |_setxy number/number,-T--,None,0,2,2
                     |_show anything,OTPL,None,0,1,1

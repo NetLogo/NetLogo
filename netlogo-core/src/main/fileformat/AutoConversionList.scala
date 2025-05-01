@@ -76,6 +76,14 @@ object AutoConversionList {
         ),
         Seq("cf")
       )
+    },
+    "NetLogo 7.0" -> {
+      changeAllCode("Promote and rename experimental `__change-topology` to canonical `set-topology`",
+        Seq(
+          _.replaceToken("__change-topology", "set-topology"),
+        ),
+        Seq("__change-topology")
+      )
     }
   )
 }
