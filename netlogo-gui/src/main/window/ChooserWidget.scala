@@ -35,11 +35,15 @@ class ChooserWidget(val compiler: CompilerServices, colorizer: Colorizer)
 
   private def name(newName: String, sendEvent: Boolean): Unit = {
     _name = newName
-    label.setText(_name)
-    repaint()
+    if (_name == "") {
+      displayName(I18N.gui.get("edit.chooser.previewName"))
+    } else {
+      displayName(newName)
+    }
+    label.setText(displayName)
     // I don't think anyone ever uses the display name, but let's keep it in sync
     // with the real name, just in case - ST 6/3/02
-    displayName(newName)
+    repaint()
     if (sendEvent) {new InterfaceGlobalEvent(this, true, false, false, false).raise(this)}
   }
 

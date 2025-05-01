@@ -396,7 +396,11 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
   /// source code
   private def chooseDisplayName(): Unit = {
     if (name == "") {
-      displayName(getSourceName)
+      if (getSourceName == "") {
+        displayName(I18N.gui.get("edit.button.previewName"))
+      } else {
+        displayName(getSourceName)
+      }
     } else {
       displayName(name)
     }

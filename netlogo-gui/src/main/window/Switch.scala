@@ -104,7 +104,11 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
   def name: String = _name
   def setVarName(name: String): Unit = {
     this._name = name
-    displayName(name)
+    if (name == "") {
+      displayName(I18N.gui.get("edit.switch.previewName"))
+    } else {
+      displayName(name)
+    }
     label.setText(displayName)
     repaint()
   }

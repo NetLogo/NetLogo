@@ -182,8 +182,12 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
     this.name = name
     // I don't think anyone ever uses the display name, but let's keep it in sync
     // with the real name, just in case - ST 6/3/02
-    displayName(name)
-    widgetLabel.setText(name)
+    if (name == "") {
+      displayName(I18N.gui.get("edit.input.previewName"))
+    } else {
+      displayName(name)
+    }
+    widgetLabel.setText(displayName)
   }
 
   def nameWrapper = name

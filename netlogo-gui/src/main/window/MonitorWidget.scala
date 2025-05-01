@@ -237,7 +237,11 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
 
   def chooseDisplayName(): Unit = {
     if (name == null || name == "") {
-      displayName(getSourceName)
+      if (getSourceName == "") {
+        displayName(I18N.gui.get("edit.monitor.previewName"))
+      } else {
+        displayName(getSourceName)
+      }
     } else {
       displayName(name)
     }

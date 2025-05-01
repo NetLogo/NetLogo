@@ -5,6 +5,7 @@ package org.nlogo.window
 import java.awt.Component
 
 import org.nlogo.api.{ CompilerServices, Dump }
+import org.nlogo.core.I18N
 import org.nlogo.editor.AbstractEditorArea
 import org.nlogo.window.Events.{ InterfaceGlobalEvent, PeriodicUpdateEvent, WidgetEditedEvent }
 
@@ -20,9 +21,13 @@ class InputBoxWidget(textArea: AbstractEditorArea, dialogTextArea: AbstractEdito
     this.name_=(name)
     // I don't think anyone ever uses the display name, but let's keep it in sync
     // with the real name, just in case - ST 6/3/02
-    displayName(name)
+    if (name == "") {
+      displayName(I18N.gui.get("edit.input.previewName"))
+    } else {
+      displayName(name)
+    }
     if (sendEvent) new InterfaceGlobalEvent(this, true, false, false, false).raise(this)
-    widgetLabel.setText(name)
+    widgetLabel.setText(displayName)
   }
 
   def handle(e: PeriodicUpdateEvent): Unit = {
