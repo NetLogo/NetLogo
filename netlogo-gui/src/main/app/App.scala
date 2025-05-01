@@ -1273,29 +1273,27 @@ class App extends
       val maxX = maxBoundsX + maxWidth
       val maxY = maxBoundsY + maxHeight
 
-      import StrictMath.{ max, min }
-
       val (currentWidth, currentHeight) = (frame.getWidth, frame.getHeight)
 
       // Maybe grow the window, but never shrink it
-      var newWidth  = min(targetSize.width, maxWidth)
-      var newHeight = min(targetSize.height, maxHeight)
+      var newWidth  = targetSize.width.max(tabManager.interfaceTab.getMinimumWidth).min(maxWidth)
+      var newHeight = targetSize.height.min(maxHeight)
       if (!allowShrink) {
-        newWidth = max(newWidth, currentWidth)
-        newHeight = max(newHeight, currentHeight)
+        newWidth = newWidth.max(currentWidth)
+        newHeight = newHeight.max(currentHeight)
       }
 
       // move up/left to get more room if possible and necessary
-      val moveLeft = max(0, frame.getLocation().x + newWidth  - maxX)
-      val moveUp   = max(0, frame.getLocation().y + newHeight - maxY)
+      val moveLeft = 0.max(frame.getLocation().x + newWidth  - maxX)
+      val moveUp   = 0.max(frame.getLocation().y + newHeight - maxY)
 
       // now we can compute our new position
-      val newX = max(maxBoundsX, frame.getLocation().x - moveLeft)
-      val newY = max(maxBoundsY, frame.getLocation().y - moveUp)
+      val newX = maxBoundsX.max(frame.getLocation().x - moveLeft)
+      val newY = maxBoundsY.max(frame.getLocation().y - moveUp)
 
       // and now that we know our position, we can compute our new size
-      newWidth  = min(newWidth, maxX - newX)
-      newHeight = min(newHeight, maxY - newY)
+      newWidth  = newWidth.min(maxX - newX)
+      newHeight = newHeight.min(maxY - newY)
 
       // now do it!
       frame.setBounds(newX, newY, newWidth, newHeight)
