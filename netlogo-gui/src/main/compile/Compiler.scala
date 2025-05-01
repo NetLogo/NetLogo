@@ -174,20 +174,26 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   def findIncludes(sourceFileName: String, source: String,
     compilationEnvironment: CompilationEnvironment): Option[Map[String, String]] = {
     val includes = frontEnd.findIncludes(source)
-    if (includes.isEmpty) { // this allows the includes menu to be displayed for __includes []
-      // This is a workaround for slow tokenizing/parsing when looking for `__includes`.  We do a quick/basic regex
-      // check and do not do the big parsing if the declaration doesn't exist in the file.  A better way is probably
-      // to update the `findIncludes()` API to return `Some(Seq())` when `__includes []` exists and `None` when it does
-      // not, but I don't want to make that big a change at the moment.  -Jeremy B November 2020
-      if (!FrontEndInterface.hasIncludes(source)) {
-        None
-      } else {
-        parserTokenizer.tokenizeString(source)
-          .find(t => t.text.equalsIgnoreCase("__includes"))
-          .map(_ => Map.empty[String, String])
-      }
-    } else
-      Some((includes zip includes.map(i => PathUtils.standardize(compilationEnvironment.resolvePath(i)))).toMap)
+    val includesMap =
+      if (includes.isEmpty) { // this allows the includes menu to be displayed for __includes []
+        // This is a workaround for slow tokenizing/parsing when looking for `__includes`.  We do a quick/basic regex
+        // check and do not do the big parsing if the declaration doesn't exist in the file.  A better way is probably
+        // to update the `findIncludes()` API to return `Some(Seq())` when `__includes []` exists and `None` when it does
+        // not, but I don't want to make that big a change at the moment.  -Jeremy B November 2020
+        if (!FrontEndInterface.hasIncludes(source)) {
+          None
+        } else {
+          parserTokenizer.tokenizeString(source)
+            .find(t => t.text.equalsIgnoreCase("__includes"))
+            .map(_ => Map.empty[String, String])
+        }
+      } else
+        Some((includes zip includes.map(i => PathUtils.standardize(compilationEnvironment.resolvePath(i)))).toMap)
+
+    val libraries = frontEnd.findLibraries(source).map(_.toLowerCase + ".nls")
+    val librariesMap = Some((libraries zip libraries.map(compilationEnvironment.resolvePath)).toMap)
+
+    Some(includesMap.getOrElse(Map.empty[String, String]) ++ librariesMap.getOrElse(Map.empty[String, String]))
   }
 
   // used by IdentifierEditor (Isaac B 7/15/25)
