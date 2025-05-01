@@ -246,8 +246,8 @@ class AutoSuggest(val primitiveNames: Set[String], extensionPrimNames: () => Set
       helper(new ListBuffer[TrieNode](), 0, this)
     }
 
-    // unused, but required to migrate from Traversable, which has been deprecated (Isaac B 4/24/25)
-    override def iterator: Iterator[String] = ???
+    override def iterator: Iterator[String] =
+       Iterator(word).flatten ++ children.values.flatMap(_.iterator)
 
     override def toString() : String = s"Trie(char=${char},word=${word})"
 
