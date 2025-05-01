@@ -147,7 +147,7 @@ class WidgetTest extends AnyFunSuite {
                     |NIL
                     |1""".stripMargin.split("\n").toList
     val buttonWidget =
-      Button(Some("go"),202,101,69,33,Some("go"),true)
+      Button(Some("go"), 202, 101, 69, 33, true, Some("go"), true)
     runSerializationTests(button, buttonWidget, ButtonReader)
   }
 
@@ -169,7 +169,7 @@ class WidgetTest extends AnyFunSuite {
                     |NIL
                     |1""".stripMargin.split("\n").toList
     val buttonWidget =
-      Button(Some("go"),202,101,69,33,None,true)
+      Button(Some("go"), 202, 101, 69, 33, true, None, true)
     runSerializationTests(button, buttonWidget, ButtonReader)
   }
 
@@ -190,7 +190,7 @@ class WidgetTest extends AnyFunSuite {
                     |NIL
                     |NIL
                     |1""".stripMargin.split("\n").toList
-    val buttonWidget = Button(Some("\"bar\""),202,101,69,33,None,true)
+    val buttonWidget = Button(Some("\"bar\""), 202, 101, 69, 33, true, None, true)
     runSerializationTests(button, buttonWidget, ButtonReader)
   }
 
@@ -211,7 +211,7 @@ class WidgetTest extends AnyFunSuite {
                     |NIL
                     |NIL
                     |1""".stripMargin.split("\n").toList
-    val buttonWidget = Button(Some("bar"),0,0,5,5,None,true, actionKey = Some('I'))
+    val buttonWidget = Button(Some("bar"), 0, 0, 5, 5, true, None, true, actionKey = Some('I'))
     runSerializationTests(button, buttonWidget, ButtonReader)
   }
   test("button disabled until ticks start") {
@@ -231,7 +231,7 @@ class WidgetTest extends AnyFunSuite {
                     |NIL
                     |NIL
                     |0""".stripMargin.split("\n").toList
-    val buttonWidget = Button(Some("\"bar\""),202,101,69,33,None,true,disableUntilTicksStart = true)
+    val buttonWidget = Button(Some("\"bar\""), 202, 101, 69, 33, true, None, true, disableUntilTicksStart = true)
     runSerializationTests(button, buttonWidget, ButtonReader, {(button: Button) => assert(button.display == None)})
   }
 
@@ -252,7 +252,7 @@ class WidgetTest extends AnyFunSuite {
                     |NIL
                     |NIL
                     |1""".stripMargin.split("\n").toList
-    val buttonWidget = Button(Some("\"bar\"\"bar\""),202,101,69,33,None,true)
+    val buttonWidget = Button(Some("\"bar\"\"bar\""), 202, 101, 69, 33, true, None, true)
     val deserializedWidget = WidgetReader.read(button, literalParser, conversion = (x => x + x))
     assertResult(buttonWidget)(deserializedWidget)
   }

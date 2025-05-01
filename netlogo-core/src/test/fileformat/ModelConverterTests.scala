@@ -40,7 +40,7 @@ class ModelConverterTests extends AnyFunSuite with ConversionHelper {
     }
 
     test("if a model component doesn't compile, returns a component failure") {
-      val model = Model(widgets = Seq(View(), Button(Some("fd 1 foobar"), 0, 0, 0, 0)))
+      val model = Model(widgets = Seq(View(), Button(Some("fd 1 foobar"), 0, 0, 0, 0, true)))
       tryConvert(model, conversion(name = "fd to back", otherCodeConversions = Seq(_.replaceCommand("fd" -> "bk {0}")), targets = Seq("fd"))) match {
         case ConversionWithErrors(_, m, e) =>
           assert(e.head.componentDescription === "NetLogo interface")
@@ -59,7 +59,7 @@ class ModelConverterTests extends AnyFunSuite with ConversionHelper {
     }
 
     test("if a button contains the affected prims, runs the code tab rewrites on the code tab") {
-      val model = Model(widgets = Seq(View(), Button(Some("fd 1"), 0, 0, 0, 0)))
+      val model = Model(widgets = Seq(View(), Button(Some("fd 1"), 0, 0, 0, 0, true)))
       assertResult("globals [foo]")(convert(model, conversion(codeTabConversions = Seq(_.addGlobal("foo")), targets = Seq("fd"))).code)
     }
 
@@ -84,17 +84,17 @@ class ModelConverterTests extends AnyFunSuite with ConversionHelper {
     }
 
     test("if a widget contains the affected prims, runs the source rewrites on the widget") {
-      val model = Model(widgets = Seq(View(), Button(Some("fd 1"), 0, 0, 0, 0)))
+      val model = Model(widgets = Seq(View(), Button(Some("fd 1"), 0, 0, 0, 0, true)))
       assertResult("bk 1")(convert(model, conversion(otherCodeConversions = Seq((_.replaceCommand("fd" -> "bk 1"))), targets = Seq("fd"))).widgets(1).asInstanceOf[Button].source.get)
     }
 
     test("if the model has a widgets which don't compile, converts all compiling widgets") {
-      val model = Model(widgets = Seq(View(), Button(Some("fd 1"), 0, 0, 0, 0), Button(Some("qux"), 0, 0, 0, 0)))
+      val model = Model(widgets = Seq(View(), Button(Some("fd 1"), 0, 0, 0, 0, true), Button(Some("qux"), 0, 0, 0, 0, true)))
       assertResult("bk 1")(convert(model, conversion(otherCodeConversions = Seq((_.replaceCommand("fd" -> "bk 1"))), targets = Seq("fd"))).widgets(1).asInstanceOf[Button].source.get)
     }
 
     test("converts widgets which reference code tab code") {
-      val model = Model(code = "to qux rt 30 end", widgets = Seq(View(), Button(Some("fd 1"), 0, 0, 0, 0), Button(Some("qux fd 2"), 0, 0, 0, 0)))
+      val model = Model(code = "to qux rt 30 end", widgets = Seq(View(), Button(Some("fd 1"), 0, 0, 0, 0, true), Button(Some("qux fd 2"), 0, 0, 0, 0, true)))
       assertResult("bk 1")(convert(model, conversion(otherCodeConversions = Seq(_.replaceCommand("fd" -> "bk 1")), targets = Seq("fd"))).widgets(1).asInstanceOf[Button].source.get)
       assertResult("qux bk 1")(convert(model, conversion(otherCodeConversions = Seq((_.replaceCommand("fd" -> "bk 1"))), targets = Seq("fd"))).widgets(2).asInstanceOf[Button].source.get)
     }
@@ -105,7 +105,7 @@ class ModelConverterTests extends AnyFunSuite with ConversionHelper {
     }
 
     test("if the model has a widgets which don't compile, continues to convert the code tab") {
-      val model = Model(code = "to baz fd 1 end", widgets = Seq(View(), Button(Some("bar"), 0, 0, 0, 0)))
+      val model = Model(code = "to baz fd 1 end", widgets = Seq(View(), Button(Some("bar"), 0, 0, 0, 0, true)))
       assertResult("globals [foo]\nto baz fd 1 end")(convert(model, conversion(codeTabConversions = Seq(_.addGlobal("foo")), targets = Seq("fd"))).code)
     }
 

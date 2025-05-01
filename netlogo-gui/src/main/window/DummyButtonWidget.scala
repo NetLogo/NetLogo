@@ -112,7 +112,7 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
       if (actionKey == 0 || actionKey == ' ') None else Some(actionKey)
     CoreButton(
       display    = name.potentiallyEmptyStringToOption,
-      x = b.x, y = b.y, width = b.width, height = b.height,
+      x = b.x, y = b.y, width = b.width, height = b.height, oldSize = _oldSize,
       source     = None,               forever    = false,
       buttonKind = AgentKind.Observer, actionKey  = savedActionKey)
   }
@@ -122,6 +122,7 @@ class DummyButtonWidget extends SingleErrorWidget with Editable {
       case button: CoreButton =>
         button.actionKey.foreach(setActionKey(_))
         setDisplayName(button.display.optionToPotentiallyEmptyString)
+        oldSize(button.oldSize)
         setSize(button.width, button.height)
 
       case _ =>

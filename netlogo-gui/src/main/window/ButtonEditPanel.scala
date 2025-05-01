@@ -63,6 +63,15 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
         target.setActionKey(_),
         () => apply()))
 
+  private val oldSize =
+    new BooleanEditor(
+      new PropertyAccessor(
+        target,
+        I18N.gui.get("edit.general.oldSize"),
+        () => target.oldSize,
+        target.oldSize(_),
+        () => apply()))
+
   locally {
     val c = new GridBagConstraints
 
@@ -98,10 +107,14 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
     c.fill = GridBagConstraints.NONE
 
     add(actionKey, c)
+
+    c.gridy = 5
+
+    add(oldSize, c)
   }
 
   override def propertyEditors: Seq[PropertyEditor[_]] =
-    Seq(agentOptions, forever, goTime, wrapSource, name, actionKey)
+    Seq(agentOptions, forever, goTime, wrapSource, name, actionKey, oldSize)
 
   override def isResizable: Boolean = true
 }

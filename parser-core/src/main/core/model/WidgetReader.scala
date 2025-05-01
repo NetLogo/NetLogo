@@ -214,7 +214,7 @@ object ButtonReader extends BaseWidgetReader {
       case List(_, left: Int, top: Int, right: Int, bottom: Int, rawDisplay: Option[String] @unchecked,
                 source: Option[String] @unchecked, forever: Boolean, _, _, buttonKind: AgentKind, _,
                 actionKey: Option[Char] @unchecked, _, _, enabledBeforeTicks: Int) =>
-        Button(source, left, top, right - left, bottom - top, rawDisplay, forever, buttonKind, actionKey,
+        Button(source, left, top, right - left, bottom - top, true, rawDisplay, forever, buttonKind, actionKey,
                enabledBeforeTicks == 0)
       case l => throw new IllegalStateException
     }

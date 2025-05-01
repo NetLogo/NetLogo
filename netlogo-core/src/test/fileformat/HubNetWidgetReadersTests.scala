@@ -49,6 +49,7 @@ object HubNetGenerators {
   } yield Button(display = display,
     x  = pos._1, y    = pos._2,
     width = pos._3 - pos._1, height = pos._4 - pos._2,
+    oldSize = true,
     source = None, forever = false, actionKey = actionKey)
 
   val escapedChars = Gen.oneOf('\n', '\t', '\r', '\\', '"')

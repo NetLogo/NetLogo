@@ -176,7 +176,7 @@ class InterfaceComponentTest extends NLogoFormatTest[Seq[Widget]] {
 
   testErrorsOnDeserialization("empty widgets section", Array[String](), "Every model must have at least a view...")
   testRoundTripsObjectForm("default view", Seq(View()))
-  testRoundTripsObjectForm("view and button", Seq(View(), Button(source = Some("abc"), 0, 0, 0, 0)))
+  testRoundTripsObjectForm("view and button", Seq(View(), Button(source = Some("abc"), 0, 0, 0, 0, true)))
 }
 
 class VectorShapesComponentTest extends NLogoFormatTest[Seq[VectorShape]] {

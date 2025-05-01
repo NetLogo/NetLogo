@@ -26,8 +26,8 @@ object WidgetXMLLoader {
             case "Turtle"   => AgentKind.Turtle
             case "Link"     => AgentKind.Link
           }
-        Some(Button( source, element("x").toInt, element("y").toInt
-                   , element("width").toInt, element("height").toInt, element.get("display")
+        Some(Button( source, element("x").toInt, element("y").toInt, element("width").toInt, element("height").toInt
+                   , element("sizeVersion", "1").toInt == 0, element.get("display")
                    , element("forever").toBoolean, kind, element.get("actionKey").map(_.head)
                    , element("disableUntilTicks").toBoolean
                    ))
@@ -170,7 +170,8 @@ object WidgetXMLLoader {
              , "disableUntilTicks" -> button.disableUntilTicksStart.toString
              ) ++
           ifDefined(button)(  "display",   _.display) ++
-          ifDefined(button)("actionKey", _.actionKey)
+          ifDefined(button)("actionKey", _.actionKey) ++
+          (if (button.oldSize) Map("sizeVersion" -> "0") else Map())
 
         XMLElement("button", attributes, button.source.getOrElse(""), Seq())
 

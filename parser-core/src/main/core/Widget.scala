@@ -41,13 +41,12 @@ trait DeclaresGlobalCommand extends NamedWidget {
 case class Button(source: Option[String],
   x: Int, y: Int,
   width: Int, height: Int,
+  oldSize: Boolean = false,
   display: Option[String] = None,
   forever: Boolean = false,
   buttonKind: AgentKind = AgentKind.Observer,
   actionKey: Option[Char] = None,
   disableUntilTicksStart: Boolean = false) extends Widget {
-    def oldSize: Boolean = false
-
     override def convertSource(conversion: String => String): Button =
       this.copy(source = source.map(conversion))
   }

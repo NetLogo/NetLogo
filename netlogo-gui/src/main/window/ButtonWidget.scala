@@ -433,8 +433,13 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
   }
 
   /// sizing
-  override def getMinimumSize =
-    new Dimension(55, 35)
+  override def getMinimumSize: Dimension = {
+    if (_oldSize) {
+      new Dimension(55, 33)
+    } else {
+      new Dimension(55, 35)
+    }
+  }
 
   override def getPreferredSize =
     new Dimension(getMinimumSize.width.max(super.getPreferredSize.width),
@@ -520,7 +525,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
     val savedActionKey = if (actionKey == 0 || actionKey == ' ') None else Some(actionKey)
     CoreButton(
       display = name.potentiallyEmptyStringToOption,
-      x = b.x, y = b.y, width = b.width, height = b.height,
+      x = b.x, y = b.y, width = b.width, height = b.height, oldSize = _oldSize,
       source    = innerSource.potentiallyEmptyStringToOption,
       forever   = forever,        buttonKind             = buttonType.agentKind,
       actionKey = savedActionKey, disableUntilTicksStart = goTime)
@@ -539,7 +544,9 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
 
         button.source.foreach(setWrapSource)
 
+        oldSize(button.oldSize)
         setSize(button.width, button.height)
+
         chooseDisplayName()
 
       case _ =>
