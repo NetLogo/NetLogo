@@ -161,8 +161,8 @@ end
     <slider sizeVersion="0" x="183" step="1.0" y="195" height="33" min="0.0" direction="Horizontal" max="100.0" default="20.0" variable="wolf-gain-from-food" width="165" display="wolf-gain-from-food"></slider>
     <slider sizeVersion="0" x="183" step="1.0" y="231" height="33" min="0.0" direction="Horizontal" max="20.0" default="5.0" variable="wolf-reproduce" units="%" width="165" display="wolf-reproduce"></slider>
     <slider sizeVersion="0" x="40" step="1" y="100" height="33" min="0" direction="Horizontal" max="100" default="30.0" variable="grass-regrowth-time" width="212" display="grass-regrowth-time"></slider>
-    <button x="40" y="140" height="35" disableUntilTicks="false" forever="false" kind="Observer" width="69" display="setup">setup</button>
-    <button x="115" y="140" height="35" disableUntilTicks="true" forever="true" kind="Observer" width="75" display="go">go</button>
+    <button sizeVersion="0" x="40" y="140" height="35" disableUntilTicks="false" forever="false" kind="Observer" width="69" display="setup">setup</button>
+    <button sizeVersion="0" x="115" y="140" height="35" disableUntilTicks="true" forever="true" kind="Observer" width="75" display="go">go</button>
     <plot sizeVersion="0" x="10" yMax="100.0" yAxis="pop." y="360" xMin="0.0" height="170" legend="true" xMax="100.0" autoPlotX="true" autoPlotY="true" yMin="0.0" width="340" xAxis="time" display="populations">
       <setup></setup>
       <update></update>
@@ -182,8 +182,8 @@ end
     <monitor sizeVersion="0" x="41" precision="3" y="308" height="45" fontSize="11" width="70" display="sheep">count sheep</monitor>
     <monitor sizeVersion="0" x="115" precision="3" y="308" height="45" fontSize="11" width="70" display="wolves">count wolves</monitor>
     <monitor sizeVersion="0" x="191" precision="0" y="308" height="45" fontSize="11" width="65" display="grass">count grass / 4</monitor>
-    <note x="20" y="178" height="18" textColorDark="-1" backgroundDark="-15329770" textColorLight="-16777216" backgroundLight="-1" fontSize="11" width="140" markdown="false">Sheep settings</note>
-    <note x="198" y="176" height="18" textColorDark="-1" backgroundDark="-15329770" textColorLight="-16777216" backgroundLight="-1" fontSize="11" width="113" markdown="false">Wolf settings</note>
+    <note markdown="false" x="20" y="178" height="18" textColorDark="-1" backgroundDark="-15329770" textColorLight="-16777216" backgroundLight="-1" fontSize="11" width="140" markdown="false">Sheep settings</note>
+    <note markdown="false" x="198" y="176" height="18" textColorDark="-1" backgroundDark="-15329770" textColorLight="-16777216" backgroundLight="-1" fontSize="11" width="113" markdown="false">Wolf settings</note>
     <switch sizeVersion="0" x="105" y="270" height="33" on="false" variable="show-energy?" width="136" display="show-energy?"></switch>
     <chooser sizeVersion="0" x="5" y="10" height="45" variable="model-version" current="0" width="345" display="model-version">
       <choice type="string" value="sheep-wolves"></choice>

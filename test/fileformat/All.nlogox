@@ -5,7 +5,7 @@
 end</code>
   <widgets>
     <view x="435" maxPycor="16" updateMode="0" wrappingAllowedX="true" y="19" frameRate="30.0" minPycor="-16" height="434" showTickCounter="true" patchSize="13.0" fontSize="10" wrappingAllowedY="true" width="433" tickCounterLabel="ticks" maxPxcor="16" minPxcor="-16"></view>
-    <button x="12" actionKey="P" y="15" height="35" disableUntilTicks="false" forever="false" kind="Observer" width="83" display="print-test">print "test"</button>
+    <button sizeVersion="0" x="12" actionKey="P" y="15" height="35" disableUntilTicks="false" forever="false" kind="Observer" width="83" display="print-test">print "test"</button>
     <slider sizeVersion="0" x="13" step="1" y="64" height="150" min="-100" direction="Vertical" max="100" default="0.0" variable="slides" units="slides" width="33" display="slides"></slider>
     <switch sizeVersion="0" x="59" y="64" height="33" on="true" variable="switching" width="106" display="switching"></switch>
     <chooser sizeVersion="0" x="60" y="113" height="45" variable="choice" current="0" width="138" display="choice">
@@ -54,7 +54,7 @@ string</input>
       </pen>
     </plot>
     <output x="13" y="383" height="54" fontSize="8" width="240"></output>
-    <note x="214" y="181" height="42" textColorDark="-1" backgroundDark="-13791810" textColorLight="-16777216" backgroundLight="-13791810" fontSize="25" width="150" markdown="false">nota bene</note>
+    <note markdown="false" x="214" y="181" height="42" textColorDark="-1" backgroundDark="-13791810" textColorLight="-16777216" backgroundLight="-13791810" fontSize="25" width="150" markdown="false">nota bene</note>
   </widgets>
   <info>## WHAT IS IT?
 
