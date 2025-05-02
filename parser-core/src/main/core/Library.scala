@@ -7,3 +7,10 @@ case class Library(
   alias: Option[String],
   token: Token
 )
+
+case class DefineLibrary(
+  name: String,
+  version: String,
+  exportedNames: Seq[String],
+  token: Token
+)
