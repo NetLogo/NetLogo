@@ -23,7 +23,6 @@ import org.nlogo.core.{ Breed, CompilationEnvironment, CompilationOperand, Compi
 import org.nlogo.core.Fail._
 import org.nlogo.core.FrontEndInterface.ProceduresMap
 import org.nlogo.core.LibraryStatus.CanInstall
-import org.nlogo.core.Library
 
 
 object StructureParser {
@@ -44,7 +43,7 @@ object StructureParser {
         if (subprogram)
           firstResults
         else {
-          val (maybeDuplicateToken, _) = firstResults.libraryTokens.foldLeft((None: Option[Token], Set(): Set[Token])) {
+          val (maybeDuplicateToken, _) = firstResults.libraries.map(_.token).foldLeft((None: Option[Token], Set(): Set[Token])) {
             case ((None, previousTokens), x) => (if (previousTokens.contains(x)) Some(x) else None, previousTokens + x)
 
             // No need to update previousTokens now that we've found something
@@ -59,8 +58,9 @@ object StructureParser {
             var newResults: StructureResults = results
 
             // Handle libraries
-            if (newResults.libraryTokens.nonEmpty) {
-              val suppliedPath = resolveIncludePath(newResults.libraryTokens.head.value.asInstanceOf[String].toLowerCase + ".nls")
+            if (newResults.libraries.nonEmpty) {
+              val filename = newResults.libraries.head.name.toLowerCase + ".nls"
+              val suppliedPath = resolveIncludePath(filename)
 
               val previousResults = newResults
 
@@ -68,17 +68,16 @@ object StructureParser {
 
                 case Some((path, fileContents)) =>
                   parseOne(tokenizer, structureParser, fileContents, path,
-                    newResults.copy(libraryTokens = newResults.libraryTokens.tail,
-                      libraries = newResults.libraries.tail,
+                    newResults.copy(libraries = newResults.libraries.tail,
                       includedSources = newResults.includedSources :+ suppliedPath))
                 case None =>
-                  exception(I18N.errors.getN("compiler.StructureParser.libraryNotFound", suppliedPath), newResults.libraryTokens.head)
+                  exception(I18N.errors.getN("compiler.StructureParser.libraryNotFound", suppliedPath), newResults.libraries.head.token)
               }
 
               results.libraries.headOption match {
                 case Some(x) =>
                   if (processedLibraries.contains(x.name)) {
-                    exception(I18N.errors.getN("compiler.StructureParser.libraryImportLoop"), results.libraryTokens.headOption.get)
+                    exception(I18N.errors.getN("compiler.StructureParser.libraryImportLoop"), results.libraries.head.token)
                   } else {
                     processedLibraries += x.name
                   }
@@ -87,13 +86,8 @@ object StructureParser {
               }
 
               val prefix: String = (for {
-                currentLibrary <- results.libraries.headOption
-                alias = currentLibrary.options.flatMap((x) =>
-                  x match {
-                    case Library.LibraryAlias(name) =>
-                      Some(name)
-                  }).headOption
-                } yield alias.getOrElse(currentLibrary.name)).get + ":"
+                  currentLibrary <- results.libraries.headOption
+                } yield currentLibrary.alias.getOrElse(currentLibrary.name)).get + ":"
 
               newResults = newResults.copy(
                 program = prefixProgramChanges(previousResults.program, newResults.program, prefix),
@@ -116,7 +110,7 @@ object StructureParser {
             }
 
             newResults
-          }.dropWhile(x => x.includes.nonEmpty || x.libraryTokens.nonEmpty).next()
+          }.dropWhile(x => x.includes.nonEmpty || x.libraries.nonEmpty).next()
         }
       }
   }
