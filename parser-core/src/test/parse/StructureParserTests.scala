@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment, DummyExtensionManager,
-  DummyLibraryManager, CompilerException, Femto, StructureResults, Library }
+  DummyLibraryManager, CompilerException, Femto, StructureResults }
 
 import org.nlogo._
 import org.scalatest.funsuite.AnyFunSuite
@@ -109,7 +109,7 @@ class StructureParserTests extends AnyFunSuite {
     assertResult(0)(results.procedures.size)
     assertResult(1)(results.libraries.size)
     assertResult("FOO")(results.libraries.head.name)
-    assertResult(0)(results.libraries.head.options.size)
+    assertResult(None)(results.libraries.head.alias)
   }
 
   test("library with alias") {
@@ -117,12 +117,7 @@ class StructureParserTests extends AnyFunSuite {
     assertResult(0)(results.procedures.size)
     assertResult(1)(results.libraries.size)
     assertResult("FOO")(results.libraries.head.name)
-    assertResult(1)(results.libraries.head.options.size)
-
-    results.libraries.head.options.head match {
-      case Library.LibraryAlias(name) => assertResult("BAR")(name)
-      case _ => fail()
-    }
+    assertResult(Some("BAR"))(results.libraries.head.alias)
   }
 
   test("includes") {

@@ -16,16 +16,12 @@ object StructureConverter {
               displayName: Option[String],
               oldResults: StructureResults,
               subprogram: Boolean): StructureResults = {
-    val lts = declarations.collect {
-      case l: LibraryDecl =>
-        l.token
-    }
     val ls = declarations.collect {
       case l: LibraryDecl =>
-        val options = l.options.map((x) => x match {
-          case LibraryAlias(name, _) => Library.LibraryAlias(name)
-        })
-        Library(l.name, options)
+        val maybeAlias = l.options.map((x) => x match {
+          case LibraryAlias(name, _) => Some(name)
+        }).find(_.isDefined).flatten
+        Library(l.name, maybeAlias, l.token)
     }
     val is = declarations.collect {
       case i: Includes =>
@@ -51,8 +47,7 @@ object StructureConverter {
           case e: Extensions =>
             e.names.map(_.token)
         }.flatten,
-      libraries = oldResults.libraries ++ ls,
-      libraryTokens = oldResults.libraryTokens ++ lts)
+      libraries = oldResults.libraries ++ ls)
   }
 
   def buildProcedure(p: Procedure, displayName: Option[String]): (FrontEndProcedure, Iterable[Token]) = {
