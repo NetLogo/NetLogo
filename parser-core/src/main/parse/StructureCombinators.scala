@@ -100,18 +100,18 @@ extends scala.util.parsing.combinator.Parsers {
         Includes(token, names) }
 
   def library: Parser[Library] =
-    keyword("LIBRARY") ~! openBracket ~> identifier ~ rep(libraryOption) <~ closeBracket ^^ {
-      case ident ~ options =>
-        Library(ident.name, options, ident.token)
+    keyword("LIBRARY") ~! openBracket ~! identifier ~! rep(libraryOption) <~ closeBracket ^^ {
+      case keyword ~ _ ~ ident ~ options =>
+        Library(ident.name, options, keyword)
     }
 
   def libraryOption: Parser[LibraryOption] =
     libraryAlias
 
   def libraryAlias: Parser[LibraryAlias] =
-    openBracket ~> libraryAliasKeyword ~> identifier <~ closeBracket ^^ {
-      case ident =>
-        LibraryAlias(ident.name, ident.token) }
+    openBracket ~> libraryAliasKeyword ~! identifier <~ closeBracket ^^ {
+      case keyword ~ ident =>
+        LibraryAlias(ident.name, keyword) }
 
   def libraryAliasKeyword: Parser[Token] =
     acceptMatch("ALIAS", {
