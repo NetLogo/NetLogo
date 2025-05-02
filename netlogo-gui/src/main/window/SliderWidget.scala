@@ -81,17 +81,10 @@ class SliderWidget(eventOnReleaseOnly: Boolean, random: MersenneTwisterFast,
 
   override def setVarName(n: String): Unit = {
     setName(n, true)
-    repaint()
   }
 
   private def setName(name: String, sendEvent: Boolean): Unit = {
-    this._name = name
-    if (name == "") {
-      displayName(I18N.gui.get("edit.slider.previewName"))
-    } else {
-      displayName(name)
-    }
-    nameComponent.setText(displayName)
+    super.setVarName(name)
     if (sendEvent) new InterfaceGlobalEvent(this, true, false, false, false).raise(this)
   }
 

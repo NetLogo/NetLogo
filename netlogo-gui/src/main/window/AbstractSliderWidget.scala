@@ -203,13 +203,19 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
   def constraint = sliderData.constraint
   def setSliderConstraint(con: SliderConstraint) = {
     slider.setMinimum(0)
-    slider.setMaximum(((maximum - minimum) / increment).asInstanceOf[Int])
-    slider.setValue(((value - minimum) / increment).asInstanceOf[Int])
+    slider.setMaximum(((con.maximum.get - con.minimum.get) / con.increment.get).asInstanceOf[Int])
+    slider.setValue(((value - con.minimum.get) / con.increment.get).asInstanceOf[Int])
     sliderData.setSliderConstraint(con)
   }
   def name: String = _name
   def setVarName(name: String): Unit = {
     _name = name
+    if (name == "") {
+      displayName(I18N.gui.get("edit.slider.previewName"))
+    } else {
+      displayName(name)
+    }
+    nameComponent.setText(displayName)
     repaint()
   }
 
