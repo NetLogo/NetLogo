@@ -71,14 +71,14 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         target.setUnits(_),
         () => apply()))
 
-  private val vertical =
+  private val vertical: BooleanEditor =
     new BooleanEditor(
       new PropertyAccessor(
         target,
         I18N.gui.get("edit.slider.vertical"),
         () => target.vertical,
         target.setVertical(_),
-        () => apply()))
+        () => apply(vertical.get.exists(_ != vertical.originalValue))))
 
   private val oldSize =
     new BooleanEditor(

@@ -11,10 +11,10 @@ abstract class WidgetEditPanel(target: Widget with Editable) extends EditPanel(t
   private val originalSize: Dimension = wrapper.getSize
   private var originalPreferredSize: Dimension = wrapper.getPreferredSize
 
-  override def apply(): Unit = {
-    super.apply()
+  override def apply(swapSizes: Boolean): Unit = {
+    super.apply(swapSizes)
 
-    resizeWidget()
+    resizeWidget(swapSizes)
   }
 
   override def revert(): Unit = {
@@ -23,7 +23,7 @@ abstract class WidgetEditPanel(target: Widget with Editable) extends EditPanel(t
     wrapper.setSize(originalSize)
   }
 
-  private def resizeWidget(): Unit = {
+  private def resizeWidget(swapSizes: Boolean): Unit = {
     // this is kinda kludgy because of the need to deal with the WidgetWrapperInterface rather than
     // with the widget itself, but the alternative is to make a new event just to handle this, but
     // that would be kludgy in itself, and a great deal less simple... - ST 12/22/01
@@ -40,9 +40,9 @@ abstract class WidgetEditPanel(target: Widget with Editable) extends EditPanel(t
 
       wrapper.setSize(prefSize)
     } else if (originalPreferredSize != prefSize) {
-      var width = 10000 min (prefSize.width max originalSize.width)
+      var width = 10000 min (prefSize.width max (if (swapSizes) originalSize.height else originalSize.width))
       var height = 10000 min (if (wrapper.verticallyResizable)
-                                prefSize.height max originalSize.height
+                                prefSize.height max (if (swapSizes) originalSize.width else originalSize.height)
                               else
                                 prefSize.height)
       val currentSize = wrapper.getSize

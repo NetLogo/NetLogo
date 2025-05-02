@@ -17,7 +17,8 @@ abstract class EditPanel(target: Editable) extends JPanel with Transparent with 
 
   def isResizable: Boolean = false
 
-  def apply(): Unit = {
+  // allows slider edit panel to indicate whether the vertical property was changed (Isaac B 5/1/25)
+  def apply(swapSizes: Boolean = false): Unit = {
     propertyEditors.foreach(_.apply())
   }
 

@@ -10,7 +10,7 @@ import org.nlogo.theme.ThemeSync
 abstract class PropertyEditor[T](val accessor: PropertyAccessor[T], val handlesOwnErrors: Boolean = false)
   extends JPanel with Transparent with ThemeSync {
 
-  protected val originalValue: T = accessor.getter()
+  val originalValue: T = accessor.getter()
 
   def revert(): Unit = { accessor.setter(originalValue) }
   def refresh(): Unit = { set(accessor.getter()) }

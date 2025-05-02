@@ -46,8 +46,8 @@ abstract class WorldEditPanel(target: WorldViewSettings) extends EditPanel(targe
     }
   }
 
-  override def apply(): Unit = {
-    super.apply()
+  override def apply(swapSizes: Boolean): Unit = {
+    super.apply(swapSizes)
     target.apply()
   }
 
