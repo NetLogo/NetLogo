@@ -19,23 +19,23 @@ end
 ; Copyright 2005 Uri Wilensky.
 ; See Info tab for full copyright and license.</code>
   <widgets>
-    <view x="195" maxPycor="0" updateMode="1" wrappingAllowedX="true" y="290" frameRate="30.0" minPycor="0" height="13" showTickCounter="true" patchSize="8.0" fontSize="10" wrappingAllowedY="true" width="284" tickCounterLabel="ticks" maxPxcor="17" minPxcor="-17"></view>
-    <button sizeVersion="0" x="14" y="13" height="35" disableUntilTicks="false" forever="false" kind="Observer" width="106">setup</button>
-    <button sizeVersion="0" x="15" y="56" height="35" disableUntilTicks="true" forever="true" kind="Observer" width="105">go</button>
-    <plot sizeVersion="0" x="15" yMax="10.0" y="144" xMin="0.0" height="305" legend="true" xMax="10.0" autoPlotX="true" autoPlotY="true" yMin="0.0" width="676" display="populations">
+    <view x="195" wrappingAllowedX="true" y="290" frameRate="30.0" minPycor="0" height="12" showTickCounter="true" patchSize="8.0" fontSize="10" wrappingAllowedY="true" width="284" tickCounterLabel="ticks" maxPycor="0" updateMode="1" maxPxcor="17" minPxcor="-17"></view>
+    <button x="14" y="13" height="33" disableUntilTicks="false" forever="false" kind="Observer" width="106" sizeVersion="0">setup</button>
+    <button x="15" y="56" height="33" disableUntilTicks="true" forever="true" kind="Observer" width="105" sizeVersion="0">go</button>
+    <plot x="15" autoPlotX="true" yMax="10.0" autoPlotY="true" y="144" xMin="0.0" height="305" legend="true" xMax="10.0" yMin="0.0" display="populations" width="676" sizeVersion="0">
       <setup></setup>
       <update></update>
-      <pen color="-13345367" legend="true" interval="1.0" mode="0" display="wolves">
+      <pen interval="1.0" mode="0" display="wolves" color="-13345367" legend="true">
         <setup></setup>
         <update></update>
       </pen>
-      <pen color="-2674135" legend="true" interval="1.0" mode="0" display="sheep">
+      <pen interval="1.0" mode="0" display="sheep" color="-2674135" legend="true">
         <setup></setup>
         <update></update>
       </pen>
     </plot>
-    <monitor sizeVersion="0" x="194" precision="3" y="15" height="45" fontSize="11" width="96">sheep</monitor>
-    <monitor sizeVersion="0" x="194" precision="3" y="83" height="45" fontSize="11" width="95">wolves</monitor>
+    <monitor x="194" precision="3" y="15" height="45" fontSize="11" width="96" sizeVersion="0">sheep</monitor>
+    <monitor x="194" precision="3" y="83" height="45" fontSize="11" width="95" sizeVersion="0">wolves</monitor>
   </widgets>
   <info><![CDATA[## WHAT IS IT?
 
@@ -97,9 +97,11 @@ Copyright 2005 Uri Wilensky.
 
 ![CC BY-NC-SA 3.0](http://ccl.northwestern.edu/images/creativecommons/byncsa.png)
 
-This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License.  To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.
+This model is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License.  To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.
 
-Commercial licenses are also available. To inquire about commercial licenses, please contact Uri Wilensky at uri@northwestern.edu.
+NetLogo itself is free software for non-commercial use under the terms of the GNU General Public License ([see full license information here](https://ccl.northwestern.edu/netlogo/docs/copyright.html)).
+
+To inquire about commercial licenses for either NetLogo or specific models from the models library, please contact netlogo-commercial-admin@ccl.northwestern.edu.
 
 <!-- 2005 -->]]></info>
   <turtleShapes>

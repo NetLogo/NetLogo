@@ -153,39 +153,39 @@ end
 ; Copyright 1997 Uri Wilensky.
 ; See Info tab for full copyright and license.]]></code>
   <widgets>
-    <view x="355" maxPycor="25" updateMode="1" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-25" height="515" showTickCounter="true" patchSize="10.0" fontSize="14" wrappingAllowedY="true" width="514" tickCounterLabel="ticks" maxPxcor="25" minPxcor="-25"></view>
-    <slider sizeVersion="0" x="5" step="1" y="60" height="33" min="0" direction="Horizontal" max="250" default="100.0" variable="initial-number-sheep" width="174" display="initial-number-sheep"></slider>
-    <slider sizeVersion="0" x="5" step="1.0" y="196" height="33" min="0.0" direction="Horizontal" max="50.0" default="4.0" variable="sheep-gain-from-food" width="174" display="sheep-gain-from-food"></slider>
-    <slider sizeVersion="0" x="5" step="1.0" y="231" height="33" min="1.0" direction="Horizontal" max="20.0" default="4.0" variable="sheep-reproduce" units="%" width="174" display="sheep-reproduce"></slider>
-    <slider sizeVersion="0" x="185" step="1" y="60" height="33" min="0" direction="Horizontal" max="250" default="50.0" variable="initial-number-wolves" width="165" display="initial-number-wolves"></slider>
-    <slider sizeVersion="0" x="183" step="1.0" y="195" height="33" min="0.0" direction="Horizontal" max="100.0" default="20.0" variable="wolf-gain-from-food" width="165" display="wolf-gain-from-food"></slider>
-    <slider sizeVersion="0" x="183" step="1.0" y="231" height="33" min="0.0" direction="Horizontal" max="20.0" default="5.0" variable="wolf-reproduce" units="%" width="165" display="wolf-reproduce"></slider>
-    <slider sizeVersion="0" x="40" step="1" y="100" height="33" min="0" direction="Horizontal" max="100" default="30.0" variable="grass-regrowth-time" width="212" display="grass-regrowth-time"></slider>
-    <button sizeVersion="0" x="40" y="140" height="35" disableUntilTicks="false" forever="false" kind="Observer" width="69" display="setup">setup</button>
-    <button sizeVersion="0" x="115" y="140" height="35" disableUntilTicks="true" forever="true" kind="Observer" width="75" display="go">go</button>
-    <plot sizeVersion="0" x="10" yMax="100.0" yAxis="pop." y="360" xMin="0.0" height="170" legend="true" xMax="100.0" autoPlotX="true" autoPlotY="true" yMin="0.0" width="340" xAxis="time" display="populations">
+    <view x="355" wrappingAllowedX="true" y="10" frameRate="30.0" minPycor="-25" height="514" showTickCounter="true" patchSize="10.0" fontSize="14" wrappingAllowedY="true" width="514" tickCounterLabel="ticks" maxPycor="25" updateMode="1" maxPxcor="25" minPxcor="-25"></view>
+    <slider x="5" step="1" y="60" max="250" display="initial-number-sheep" height="33" min="0" direction="Horizontal" default="100.0" variable="initial-number-sheep" width="174" sizeVersion="0"></slider>
+    <slider x="5" step="1.0" y="196" max="50.0" display="sheep-gain-from-food" height="33" min="0.0" direction="Horizontal" default="4.0" variable="sheep-gain-from-food" width="174" sizeVersion="0"></slider>
+    <slider x="5" step="1.0" y="231" max="20.0" display="sheep-reproduce" height="33" min="1.0" direction="Horizontal" default="4.0" variable="sheep-reproduce" units="%" width="174" sizeVersion="0"></slider>
+    <slider x="185" step="1" y="60" max="250" display="initial-number-wolves" height="33" min="0" direction="Horizontal" default="50.0" variable="initial-number-wolves" width="165" sizeVersion="0"></slider>
+    <slider x="183" step="1.0" y="195" max="100.0" display="wolf-gain-from-food" height="33" min="0.0" direction="Horizontal" default="20.0" variable="wolf-gain-from-food" width="165" sizeVersion="0"></slider>
+    <slider x="183" step="1.0" y="231" max="20.0" display="wolf-reproduce" height="33" min="0.0" direction="Horizontal" default="5.0" variable="wolf-reproduce" units="%" width="165" sizeVersion="0"></slider>
+    <slider x="40" step="1" y="100" max="100" display="grass-regrowth-time" height="33" min="0" direction="Horizontal" default="30.0" variable="grass-regrowth-time" width="212" sizeVersion="0"></slider>
+    <button x="40" y="140" height="33" disableUntilTicks="false" forever="false" kind="Observer" display="setup" width="69" sizeVersion="0">setup</button>
+    <button x="115" y="140" height="33" disableUntilTicks="true" forever="true" kind="Observer" display="go" width="75" sizeVersion="0">go</button>
+    <plot x="10" autoPlotX="true" yMax="100.0" autoPlotY="true" yAxis="pop." y="360" xMin="0.0" height="170" legend="true" xMax="100.0" yMin="0.0" xAxis="time" display="populations" width="340" sizeVersion="0">
       <setup></setup>
       <update></update>
-      <pen color="-612749" legend="true" interval="1.0" mode="0" display="sheep">
+      <pen interval="1.0" mode="0" display="sheep" color="-612749" legend="true">
         <setup></setup>
         <update>plot count sheep</update>
       </pen>
-      <pen color="-16449023" legend="true" interval="1.0" mode="0" display="wolves">
+      <pen interval="1.0" mode="0" display="wolves" color="-16449023" legend="true">
         <setup></setup>
         <update>plot count wolves</update>
       </pen>
-      <pen color="-10899396" legend="true" interval="1.0" mode="0" display="grass / 4">
+      <pen interval="1.0" mode="0" display="grass / 4" color="-10899396" legend="true">
         <setup></setup>
         <update>if model-version = "sheep-wolves-grass" [ plot count grass / 4 ]</update>
       </pen>
     </plot>
-    <monitor sizeVersion="0" x="41" precision="3" y="308" height="45" fontSize="11" width="70" display="sheep">count sheep</monitor>
-    <monitor sizeVersion="0" x="115" precision="3" y="308" height="45" fontSize="11" width="70" display="wolves">count wolves</monitor>
-    <monitor sizeVersion="0" x="191" precision="0" y="308" height="45" fontSize="11" width="65" display="grass">count grass / 4</monitor>
-    <note markdown="false" x="20" y="178" height="18" textColorDark="-1" backgroundDark="-15329770" textColorLight="-16777216" backgroundLight="-1" fontSize="11" width="140" markdown="false">Sheep settings</note>
-    <note markdown="false" x="198" y="176" height="18" textColorDark="-1" backgroundDark="-15329770" textColorLight="-16777216" backgroundLight="-1" fontSize="11" width="113" markdown="false">Wolf settings</note>
-    <switch sizeVersion="0" x="105" y="270" height="33" on="false" variable="show-energy?" width="136" display="show-energy?"></switch>
-    <chooser sizeVersion="0" x="5" y="10" height="45" variable="model-version" current="0" width="345" display="model-version">
+    <monitor x="41" precision="3" y="308" height="45" fontSize="11" display="sheep" width="70" sizeVersion="0">count sheep</monitor>
+    <monitor x="115" precision="3" y="308" height="45" fontSize="11" display="wolves" width="70" sizeVersion="0">count wolves</monitor>
+    <monitor x="191" precision="0" y="308" height="45" fontSize="11" display="grass" width="65" sizeVersion="0">count grass / 4</monitor>
+    <note x="20" y="178" backgroundDark="0" fontSize="11" width="140" markdown="false" height="18" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Sheep settings</note>
+    <note x="198" y="176" backgroundDark="0" fontSize="11" width="113" markdown="false" height="18" textColorDark="-1" textColorLight="-16777216" backgroundLight="0">Wolf settings</note>
+    <switch x="105" y="270" height="33" on="false" variable="show-energy?" display="show-energy?" width="136" sizeVersion="0"></switch>
+    <chooser x="5" y="10" height="45" variable="model-version" current="0" display="model-version" width="345" sizeVersion="0">
       <choice type="string" value="sheep-wolves"></choice>
       <choice type="string" value="sheep-wolves-grass"></choice>
     </chooser>
@@ -357,9 +357,11 @@ Copyright 1997 Uri Wilensky.
 
 ![CC BY-NC-SA 3.0](http://ccl.northwestern.edu/images/creativecommons/byncsa.png)
 
-This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License.  To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.
+This model is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 License.  To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305, USA.
 
-Commercial licenses are also available. To inquire about commercial licenses, please contact Uri Wilensky at uri@northwestern.edu.
+NetLogo itself is free software for non-commercial use under the terms of the GNU General Public License ([see full license information here](https://ccl.northwestern.edu/netlogo/docs/copyright.html)).
+
+To inquire about commercial licenses for either NetLogo or specific models from the models library, please contact netlogo-commercial-admin@ccl.northwestern.edu.
 
 This model was created as part of the project: CONNECTED MATHEMATICS: MAKING SENSE OF COMPLEX PHENOMENA THROUGH BUILDING OBJECT-BASED PARALLEL MODELS (OBPML).  The project gratefully acknowledges the support of the National Science Foundation (Applications of Advanced Technologies Program) -- grant numbers RED #9552950 and REC #9632612.
 
