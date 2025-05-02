@@ -61,7 +61,8 @@ object StructureParser {
             // Handle libraries
             // TODO: Make resolveIncludePath case insensitive
             if (newResults.libraryTokens.nonEmpty) {
-              val suppliedPath = resolveIncludePath(newResults.libraryTokens.head.value.asInstanceOf[String].toLowerCase + ".nls")
+              val filename = newResults.libraries.head.name.toLowerCase + ".nls"
+              val suppliedPath = resolveIncludePath(filename)
 
               val previousResults = newResults
 
