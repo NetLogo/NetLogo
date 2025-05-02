@@ -7,4 +7,4 @@ object Library {
   case class LibraryAlias(name: String) extends LibraryOption
 }
 
-case class Library(name: String, options: Seq[Library.LibraryOption])
+case class Library(name: String, options: Seq[Library.LibraryOption], token: Token)
