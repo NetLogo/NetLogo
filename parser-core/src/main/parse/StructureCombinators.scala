@@ -87,7 +87,7 @@ extends scala.util.parsing.combinator.Parsers {
     rep(declaration | procedure) <~ (eof | failure("keyword expected"))
 
   def declaration: Parser[Declaration] =
-    library | includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
+    defineLibrary | library | includes | extensions | breed | directedLinkBreed | undirectedLinkBreed |
       variables("GLOBALS") | variables("TURTLES-OWN") | variables("PATCHES-OWN") |
       variables("LINKS-OWN") | breedVariables
 
@@ -95,6 +95,24 @@ extends scala.util.parsing.combinator.Parsers {
     keyword("__INCLUDES") ~! stringList ^^ {
       case token ~ (names ~ closeBracket) =>
         Includes(token, names, closeBracket) }
+
+  def defineLibrary: Parser[DefineLibrary] =
+    keyword("DEFINE-LIBRARY") ~! openBracket ~> identifier ~ string ~ exportSpecList <~ closeBracket ^^ {
+      case ident ~ version ~ specs =>
+        DefineLibrary(ident.name, version.text, specs, ident.token)
+    }
+
+  def exportSpecList: Parser[Seq[ExportSpec]] =
+    openBracket ~> rep(exportSpec) <~ closeBracket
+
+  def exportSpec: Parser[ExportSpec] =
+    simpleExport
+
+  def simpleExport: Parser[SimpleExport] =
+    identifier ^^ {
+      case ident =>
+        SimpleExport(ident.name)
+    }
 
   def library: Parser[Library] =
     keyword("LIBRARY") ~! openBracket ~! identifier ~! rep(libraryOption) <~ closeBracket ^^ {
