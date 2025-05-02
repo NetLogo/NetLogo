@@ -37,7 +37,19 @@ class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initial
 
   add(panel)
 
-  setSize(new Dimension(1000, 600))
+  val osName = System.getProperty("os.name").toLowerCase
+
+  // Window height on Ubuntu doesn't count the title bar, while, on Mac and Windows,
+  // it does.  And they have different title bar heights, of course.  Fun, fun! --Jason B. (5/2/25)
+  val addedHeight =
+    if (osName.contains("win"))
+      32
+    else if (osName.contains("mac"))
+      27
+    else
+      0
+
+  setSize(new Dimension(1000, 600 + addedHeight))
   setResizable(false)
   setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE)
 
@@ -69,19 +81,19 @@ class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initial
               }
 
               // CSS hacks to fix this stupid JFX browser engine go here! --Jason B. (3/27/25)
-              engine.executeScript("""window.injectCSS(`.dropdown-arrow {
-                                                       |  right:   0px;
-                                                       |  bottom: -2px;
-                                                       |}
-                                                       |
-                                                       |.hue .slider-knob {
-                                                       |  left: -1px;
-                                                       |}
-                                                       |
-                                                       |.copy-button {
-                                                       |  border-radius: 0;
-                                                       |}
-                                                       |`)""".stripMargin)
+              engine.executeScript(s"""window.injectCSS(`.dropdown-arrow {
+                                                        |  right:   0px;
+                                                        |  bottom: -2px;
+                                                        |}
+                                                        |
+                                                        |.hue .slider-knob {
+                                                        |  left: -1px;
+                                                        |}
+                                                        |
+                                                        |.copy-button {
+                                                        |  border-radius: 0;
+                                                        |}
+                                                        |`)""".stripMargin)
 
               initialValue.foreach {
                 value =>
