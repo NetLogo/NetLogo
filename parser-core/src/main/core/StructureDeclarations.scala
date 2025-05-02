@@ -18,6 +18,12 @@ object StructureDeclarations {
       extends Declaration
   case class Identifier(name: String, token: Token)
 
+  case class DefineLibrary(name: String, version: String, exportSpecs: Seq[ExportSpec], token: Token)
+      extends Declaration
+  sealed trait ExportSpec
+  case class SimpleExport(name: String)
+      extends ExportSpec
+
   case class Library(name: String, options: Seq[LibraryOption], token: Token)
       extends Declaration
   sealed trait LibraryOption

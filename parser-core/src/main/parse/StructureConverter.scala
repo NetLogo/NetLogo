@@ -9,8 +9,9 @@ import org.nlogo.core,
 
 object StructureConverter {
 
-  import core.Library
-  import core.StructureDeclarations.{Library => LibraryDecl, _}
+  import org.nlogo.core.Fail.exception
+  import core.{Library, DefineLibrary}
+  import core.StructureDeclarations.{Library => LibraryDecl, DefineLibrary => DefineLibraryDecl, _}
 
   def convert(declarations: Seq[Declaration],
               displayName: Option[String],
@@ -23,6 +24,13 @@ object StructureConverter {
         }).find(_.isDefined).flatten
         Library(l.name, maybeAlias, l.token)
     }
+    val dls = declarations.collect {
+      case dl: DefineLibraryDecl =>
+        val exportedNames = dl.exportSpecs.map((x) => x match {
+          case SimpleExport(name) => Some(name)
+        }).flatten
+        DefineLibrary(dl.name, dl.version, exportedNames, dl.token)
+    }
     val is = declarations.collect {
       case i: Includes =>
         i.names
@@ -32,6 +40,9 @@ object StructureConverter {
         buildProcedure(p, displayName)
     }
     ps.foreach(_._1.topLevel = subprogram)
+    if (dls.size > 1) {
+      exception(I18N.errors.get("compiler.StructureParser.libraryMultipleDefines"), dls(1).token)
+    }
     StructureResults(
       program =
         updateProgram(oldResults.program, declarations),
@@ -47,7 +58,8 @@ object StructureConverter {
           case e: Extensions =>
             e.names.map(_.token)
         }.flatten,
-      libraries = oldResults.libraries ++ ls)
+      libraries = oldResults.libraries ++ ls,
+      defineLibrary = dls.headOption)
   }
 
   def buildProcedure(p: Procedure, displayName: Option[String]): (FrontEndProcedure, Iterable[Token]) = {
