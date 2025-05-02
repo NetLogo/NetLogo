@@ -10,7 +10,8 @@ case class StructureResults(program: Program,
                         includes: Seq[Token] = Seq(),
                         includedSources: Seq[String] = Seq(),
                         extensions: Seq[Token] = Seq(),
-                        libraries: Seq[Library] = Seq())
+                        libraries: Seq[Library] = Seq(),
+                        defineLibrary: Option[DefineLibrary] = None)
 
 object StructureResults {
   val empty = StructureResults(Program.empty())
