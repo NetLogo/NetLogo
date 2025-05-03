@@ -23,7 +23,6 @@ import org.nlogo.core.{ Breed, CompilationEnvironment, CompilationOperand, Compi
 import org.nlogo.core.Fail._
 import org.nlogo.core.FrontEndInterface.ProceduresMap
 import org.nlogo.core.LibraryStatus.CanInstall
-import org.nlogo.core.Library
 
 
 object StructureParser {
@@ -88,15 +87,8 @@ object StructureParser {
               }
 
               val prefix: String = (for {
-                currentLibrary <- results.libraries.headOption
-                alias = currentLibrary.options.flatMap((x) =>
-                  x match {
-                    case Library.LibraryAlias(name) =>
-                      Some(name)
-                    case _ =>
-                      None
-                  }).headOption
-                } yield alias.getOrElse(currentLibrary.name)).get + ":"
+                  currentLibrary <- results.libraries.headOption
+                } yield currentLibrary.alias.getOrElse(currentLibrary.name)).get + ":"
 
               newResults = newResults.copy(
                 program = prefixProgramChanges(previousResults.program, newResults.program, prefix),
