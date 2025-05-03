@@ -65,6 +65,7 @@ object StructureParser {
               val suppliedPath = resolveIncludePath(filename)
 
               val previousResults = newResults
+              val currentLibrary = results.libraries.head
 
               newResults = includeFile(compilationEnvironment, suppliedPath) match {
 
@@ -73,23 +74,16 @@ object StructureParser {
                     newResults.copy(libraries = newResults.libraries.tail,
                       includedSources = newResults.includedSources :+ suppliedPath))
                 case None =>
-                  exception(I18N.errors.getN("compiler.StructureParser.libraryNotFound", suppliedPath), newResults.libraries.head.token)
+                  exception(I18N.errors.getN("compiler.StructureParser.libraryNotFound", suppliedPath), currentLibrary.token)
               }
 
-              results.libraries.headOption match {
-                case Some(x) =>
-                  if (processedLibraries.contains(x.name)) {
-                    exception(I18N.errors.getN("compiler.StructureParser.libraryImportLoop"), results.libraries.head.token)
-                  } else {
-                    processedLibraries += x.name
-                  }
-                case None =>
-                  ()
+              if (processedLibraries.contains(currentLibrary.name)) {
+                exception(I18N.errors.getN("compiler.StructureParser.libraryImportLoop"), currentLibrary.token)
+              } else {
+                processedLibraries += currentLibrary.name
               }
 
-              val prefix: String = (for {
-                  currentLibrary <- results.libraries.headOption
-                } yield currentLibrary.alias.getOrElse(currentLibrary.name)).get + ":"
+              val prefix = currentLibrary.alias.getOrElse(currentLibrary.name) + ":"
 
               newResults = newResults.copy(
                 program = prefixProgramChanges(previousResults.program, newResults.program, prefix),
