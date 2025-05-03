@@ -18,10 +18,11 @@ object StructureConverter {
               subprogram: Boolean): StructureResults = {
     val ls = declarations.collect {
       case l: LibraryDecl =>
-        val options = l.options.map((x) => x match {
-          case LibraryAlias(name, _) => Library.LibraryAlias(name)
-        })
-        Library(l.name, options, l.token)
+        val maybeAlias = l.options.map((x) => x match {
+          case LibraryAlias(name, _) => Some(name)
+          case _ => None
+        }).find(_.isDefined).flatten
+        Library(l.name, maybeAlias, l.token)
     }
     val is = declarations.collect {
       case i: Includes =>
