@@ -19,22 +19,32 @@ object LibraryManager {
   private val bundledsConfig   = ConfigFactory.parseResources("system/bundled-libraries.conf")
   private val metadataURL      = getMetadataURL()
 
-  private def getMetadataURL(): URL = {
-    if (LibraryInfoDownloader.enabled) {
-      val locationURL    = new URL(s"$libsLocationSite/$libsLocation")
-      LibraryInfoDownloader(locationURL)
-      val locationPath   = FileIO.perUserFile(libsLocation)
-      val locationConfig = ConfigFactory.parseFile(new File(locationPath))
-      val location       = try {
-        locationConfig.getString("location")
-      } catch {
-        case ex: ConfigException => bundledsConfig.getString("fallback-libraries-location")
+  private lazy val branchURL: URL = {
+
+    val baseURL =
+      if (LibraryInfoDownloader.enabled) {
+
+        val locationURL    = new URL(s"$libsLocationSite/$libsLocation")
+        LibraryInfoDownloader(locationURL)
+        val locationPath   = FileIO.perUserFile(libsLocation)
+        val locationConfig = ConfigFactory.parseFile(new File(locationPath))
+
+        try {
+          locationConfig.getString("location")
+        } catch {
+          case ex: ConfigException => bundledsConfig.getString("fallback-libraries-location")
+        }
+
+      } else {
+        bundledsConfig.getString("fallback-libraries-location")
       }
-      new URL(s"$location/${APIVersion.version}/$allLibsName")
-    } else {
-      val location = bundledsConfig.getString("fallback-libraries-location")
-      new URL(s"$location/${APIVersion.version}/$allLibsName")
-    }
+
+    new URL(s"$baseURL/${APIVersion.version}")
+
+  }
+
+  private def getMetadataURL(): URL = {
+    new URL(s"${branchURL}/$allLibsName")
   }
 
   private var loadedOnce = false
@@ -147,14 +157,14 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
           val longDesc    = c.getString("longDescription")
           val version     = c.getString("version")
           val homepage    = new URL(c.getString("homepage"))
-          val downloadURL = new URL(c.getString("downloadURL"))
 
           val installedVersionPath = s"""$category."$codeName".installedVersion"""
           val installedVersion     = getStringOption(installedLibsConf, installedVersionPath)
           val bundled              = useBundled && bundledsConfig.hasPath(installedVersionPath) && installedVersion.isEmpty
           val minNetLogoVersion    = getStringOption(c, "minNetLogoVersion")
 
-          LibraryInfo(name, codeName, shortDesc, longDesc, version, homepage, downloadURL, bundled, installedVersion, minNetLogoVersion)
+          LibraryInfo( name, codeName, shortDesc, longDesc, version, homepage, bundled, installedVersion
+                     , minNetLogoVersion, LibraryManager.branchURL)
 
       }.toSeq
 
