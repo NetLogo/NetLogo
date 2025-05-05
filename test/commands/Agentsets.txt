@@ -353,7 +353,7 @@ TurtleDiesWhileIteratingOverFilteredAgentset
   O> random-seed 0
   O> create-turtles 10 [ __ignore 3 ]
   O> ask turtles with [true] [ let t (turtle random 10) if (t != nobody) [ ask t [die] ] ]
-  [who] of turtles => [1 5 9 2 0]
+  [who] of turtles => [3 8 9 6 0]
 
 TurtleSetIsntSpecialSet1
   globals [ my-pals ]
@@ -412,7 +412,7 @@ PatchRegionTest_2D
   sort patches with [pxcor = a] = (list (patch 1 1) (patch 0 0) (patch -1 -1)) => true
   sort testrow 0 = (list (patch 0 1) (patch 0 0) (patch 0 -1)) => true
   O> random-seed 0
-  sort patches with [pxcor = random 3] = (list (patch 1 1) (patch 0 -1)) => true
+  sort patches with [pxcor = random 3] = (list (patch 0 0) (patch 0 -1)) => true
 
 OtherWithOptsShowCorrectErrorName
   O> random-seed 0

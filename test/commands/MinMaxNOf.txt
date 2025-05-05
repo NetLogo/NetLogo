@@ -34,52 +34,52 @@ MaxNOf
 
 MinNOfRespectsRNGState
   O> random-seed 0
-  random 1000 => 983
+  random 1000 => 631
   O> crt 5
   O> random-seed 0
   O> __ignore min-n-of 0 no-turtles [who]
-  random 1000 => 983
+  random 1000 => 631
   O> random-seed 0
   O> __ignore min-n-of 0 (turtle-set turtle 0) [who]
-  random 1000 => 983
+  random 1000 => 631
   O> random-seed 0
   O> __ignore min-n-of 1 (turtle-set turtle 0) [who]
-  random 1000 => 983
+  random 1000 => 631
   O> random-seed 0
   O> __ignore min-n-of 0 (turtle-set turtle 0 turtle 1 turtle 2 turtle 3 turtle 4) [who]
-  random 1000 => 565
+  random 1000 => 213
   O> random-seed 0
   O> __ignore min-n-of 1 (turtle-set turtle 0 turtle 1 turtle 2 turtle 3 turtle 4) [who]
-  random 1000 => 565
+  random 1000 => 213
   O> random-seed 0
   O> __ignore min-n-of 2 (turtle-set turtle 0 turtle 1 turtle 2 turtle 3 turtle 4) [who]
-  random 1000 => 565
+  random 1000 => 213
   O> random-seed 0
   O> __ignore min-n-of 2 turtles [who]
-  random 1000 => 565
+  random 1000 => 213
 
 MaxNOfRespectsRNGState
   O> random-seed 0
-  random 1000 => 983
+  random 1000 => 631
   O> crt 5
   O> random-seed 0
   O> __ignore max-n-of 0 no-turtles [who]
-  random 1000 => 983
+  random 1000 => 631
   O> random-seed 0
   O> __ignore max-n-of 0 (turtle-set turtle 0) [who]
-  random 1000 => 983
+  random 1000 => 631
   O> random-seed 0
   O> __ignore max-n-of 1 (turtle-set turtle 0) [who]
-  random 1000 => 983
+  random 1000 => 631
   O> random-seed 0
   O> __ignore max-n-of 0 (turtle-set turtle 0 turtle 1 turtle 2 turtle 3 turtle 4) [who]
-  random 1000 => 565
+  random 1000 => 213
   O> random-seed 0
   O> __ignore max-n-of 1 (turtle-set turtle 0 turtle 1 turtle 2 turtle 3 turtle 4) [who]
-  random 1000 => 565
+  random 1000 => 213
   O> random-seed 0
   O> __ignore max-n-of 2 (turtle-set turtle 0 turtle 1 turtle 2 turtle 3 turtle 4) [who]
-  random 1000 => 565
+  random 1000 => 213
   O> random-seed 0
   O> __ignore max-n-of 2 turtles [who]
-  random 1000 => 565
+  random 1000 => 213

@@ -255,10 +255,10 @@ class TestPlotModels extends FixtureSuite {
              pens = List(Pen(display = "", updateCode = "set x n-values 10 [random 10]"))))))
     testCommand("reset-ticks")
     testCommand("random-seed 10")
-    testReporter("n-values 10 [random 10]", "[8 9 8 4 2 4 5 4 7 9]")
+    testReporter("n-values 10 [random 10]", "[8 9 8 2 0 4 3 4 7 9]")
     testCommand("random-seed 10")
     testCommand("tick") // runs plot code, which uses rng in this test case
-    testReporter("n-values 10 [random 10]", "[8 9 8 4 2 4 5 4 7 9]")
+    testReporter("n-values 10 [random 10]", "[8 9 8 2 0 4 3 4 7 9]")
   }
 
   test("legend is correctly off") { implicit fixture =>

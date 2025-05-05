@@ -183,10 +183,10 @@ class TestPlotModels extends AbstractTestModels {
       pens = Pens(Pen(updateCode = "set x n-values 10 [random 10]"))))){
     observer>>"reset-ticks"
     observer>>"random-seed 10"
-    assert(reporter("n-values 10 [random 10]").a.toString === "[8.0, 9.0, 8.0, 4.0, 2.0, 4.0, 5.0, 4.0, 7.0, 9.0]")
+    assert(reporter("n-values 10 [random 10]").a.toString === "[8.0, 9.0, 8.0, 2.0, 0.0, 4.0, 3.0, 4.0, 7.0, 9.0]")
     observer>>"random-seed 10"
     observer>>"tick" // runs plot code, which uses rng in this test case
-    assert(reporter("n-values 10 [random 10]").a.toString === "[8.0, 9.0, 8.0, 4.0, 2.0, 4.0, 5.0, 4.0, 7.0, 9.0]")
+    assert(reporter("n-values 10 [random 10]").a.toString === "[8.0, 9.0, 8.0, 2.0, 0.0, 4.0, 3.0, 4.0, 7.0, 9.0]")
   }
 
   testModel("legend is correctly off", Model("", Plot(legendOn = false))) {

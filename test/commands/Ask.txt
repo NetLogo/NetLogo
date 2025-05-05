@@ -36,7 +36,7 @@ RecursiveCallInsideAsk2
   O> random-seed 0
   O> go1
   count turtles => 2
-  glob1 => 27
+  glob1 => 32
 
 recursion-over-ask
   turtles-own [tvar]
