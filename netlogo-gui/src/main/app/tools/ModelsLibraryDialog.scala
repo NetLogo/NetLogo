@@ -231,7 +231,7 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
   private val communityAction: Action =
     new AbstractAction(I18N.gui.get("modelsLibrary.community")) {
       def actionPerformed(e: ActionEvent): Unit = {
-        val uri = BrowserLauncher.makeURI(me, "http://ccl.northwestern.edu/netlogo/models/community/")
+        val uri = BrowserLauncher.makeURI(me, "https://ccl.northwestern.edu/netlogo/more-models.shtml")
         if (uri != null) {
           BrowserLauncher.openURI(me, uri)
         }
