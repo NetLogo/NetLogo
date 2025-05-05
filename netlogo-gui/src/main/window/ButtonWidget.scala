@@ -92,6 +92,8 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
   if (boldName)
     nameLabel.setFont(nameLabel.getFont.deriveFont(Font.BOLD))
 
+  agentLabel.setVisible(false)
+
   keyLabel.addMouseListener(this)
   nameLabel.addMouseListener(this)
   foreverLabel.addMouseListener(this)
@@ -109,7 +111,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
     add(agentLabel, c)
 
     c.weightx = 1
-    c.insets = new Insets(3, 0, 3, 3)
+    c.insets = new Insets(3, 6, 3, 3)
 
     add(nameLabel, c)
 
@@ -134,7 +136,13 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
 
   def buttonType_=(bt: ButtonType): Unit = {
     _buttonType = bt
-    agentLabel.setIcon(_buttonType.img(false).getOrElse(null))
+    _buttonType.img(false) match {
+      case None =>
+        agentLabel.setVisible(false)
+      case Some(img) =>
+        agentLabel.setVisible(true)
+        agentLabel.setIcon(img)
+    }
     repaint()
   }
 
