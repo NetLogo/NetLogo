@@ -87,7 +87,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
         I18N.gui.get("edit.general.oldSize"),
         () => target.oldSize,
         target.oldSize(_),
-        () => apply()))
+        () => apply(vertical.get.exists(_ != vertical.originalValue))))
 
   locally {
     val c = new GridBagConstraints
