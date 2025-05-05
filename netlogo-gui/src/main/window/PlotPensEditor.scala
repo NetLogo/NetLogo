@@ -180,7 +180,6 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
       val buttonCell = new ButtonCellEditor
 
       buttonsColumn.setCellRenderer(buttonCell)
-      buttonsColumn.setCellEditor(buttonCell)
       buttonsColumn.setMaxWidth(buttonCell.buttonPanel.getPreferredSize.width)
       buttonsColumn.setMinWidth(buttonCell.buttonPanel.getPreferredSize.width)
       buttonsColumn.setHeaderValue("")
