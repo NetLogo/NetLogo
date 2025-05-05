@@ -74,10 +74,10 @@ class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: Dr
 
       case (Some(s), index) =>
         val shape = list.getShape(index).get
-        var choice = -1
+        var choice = 1
 
         // If the shape exists, give the user the chance to overwrite or rename
-        if (manager.shapesList.exists(shape.name)) {
+        while (manager.shapesList.exists(shape.name) && choice == 1) {
           choice = new OptionPane(this, I18N.gui.get("tools.shapesEditor.import"),
                                   I18N.gui("nameConflict", shape.name), choices,
                                   OptionPane.Icons.Warning).getSelectedIndex
