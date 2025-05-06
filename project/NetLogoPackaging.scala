@@ -14,7 +14,7 @@ import scala.sys.process.Process
 
 object NetLogoPackaging {
 
-  lazy val aggregateJDKParser      = settingKey[State => Parser[BuildJDK]]("parser for packageApp settings")
+  lazy val aggregateJDKParser      = settingKey[State => Parser[JDK]]("parser for packageApp settings")
   lazy val aggregateOnlyFiles      = taskKey[Seq[File]]("Files to be included in the aggregate root")
   lazy val buildNetLogo            = taskKey[Unit]("build NetLogo")
   lazy val buildVariables          = taskKey[Map[String, String]]("NetLogo template variables")
@@ -58,10 +58,13 @@ object NetLogoPackaging {
     Seq("scalatest", "scalacheck", "jmock", "junit", "hamcrest")
       .exists(f.getName.contains)
 
-  lazy val jdkParser: Parser[BuildJDK] =
-    (mapToParserOpt(JavaPackager.systemPackagerOptions.map(j => (j.version + "-" + j.arch -> j)).toMap)
-      .map(p => (" " ~> p))
-      .getOrElse(Parser.success(PathSpecifiedJDK)))
+  lazy val jdkParser: Parser[JDK] =
+    mapToParserOpt(
+      JavaPackager.jdks.map {
+        jdk => (s"${jdk.vendor}_${jdk.version}_${jdk.architecture}" -> jdk)
+      }.toMap
+    ).map(p => (" " ~> p))
+    .getOrElse(Parser.failure("Add at least one JDK to '.jdks.yaml' at the root of the NetLogo repository."))
 
   def settings(netlogo: Project, macApp: Project, behaviorsearchProject: Project): Seq[Setting[?]] = Seq(
     netLogoRoot     := (netlogo / baseDirectory).value,
@@ -220,18 +223,18 @@ object NetLogoPackaging {
       )
 
       val inputDir = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
-      val destDir  = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.arch}"
+      val destDir  = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.architecture}"
       FileActions.remove(destDir)
-      val appImageDir = JavaPackager.generateAppImage(log, buildJDK.jpackage.getAbsolutePath, platform, mainLauncher, configDir, buildDir, inputDir, destDir, Seq(), launchers)
+      val appImageDir = JavaPackager.generateAppImage(log, buildJDK.jpackage, platform, mainLauncher, configDir, buildDir, inputDir, destDir, Seq(), launchers)
 
-      val extraDirs = bundledDirs(netlogo, behaviorsearchProject).value(platform, buildJDK.arch)
-      JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir, rootFiles)
+      val extraDirs = bundledDirs(netlogo, behaviorsearchProject).value(platform, buildJDK.architecture)
+      JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.architecture, appImageDir, appImageDir, rootFiles)
       JavaPackager.createScripts(log, appImageDir, appImageDir / "lib" / "app", configDir, "netlogo-headless.sh", "netlogo-gui.sh", variables)
 
       PackageLinuxAggregate(
         log
       , version
-      , buildJDK.arch
+      , buildJDK.architecture
       , configDir
       , destDir / "NetLogo"
       , webTarget.value
@@ -281,13 +284,13 @@ object NetLogoPackaging {
       )
 
       val inputDir  = JavaPackager.setupAppImageInput(log, version, buildJDK, buildDir, netLogoJar, dependencies)
-      val destDir   = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.arch}"
+      val destDir   = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.architecture}"
       val extraArgs = Seq("--icon", "NetLogo.ico")
       FileActions.remove(destDir)
-      val appImageDir = JavaPackager.generateAppImage(log, buildJDK.jpackage.getAbsolutePath, platform, mainLauncher, configDir, buildDir, inputDir, destDir, extraArgs, launchers)
+      val appImageDir = JavaPackager.generateAppImage(log, buildJDK.jpackage, platform, mainLauncher, configDir, buildDir, inputDir, destDir, extraArgs, launchers)
 
-      val extraDirs = bundledDirs(netlogo, behaviorsearchProject).value(platform, buildJDK.arch)
-      JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir, rootFiles)
+      val extraDirs = bundledDirs(netlogo, behaviorsearchProject).value(platform, buildJDK.architecture)
+      JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.architecture, appImageDir, appImageDir, rootFiles)
       JavaPackager.createScripts(log, appImageDir, appImageDir / "app", configDir / platform, "netlogo-headless.bat", "netlogo-gui.bat", variables)
 
       // clean up unwanted icon files
@@ -299,7 +302,7 @@ object NetLogoPackaging {
       PackageWinAggregate(
         log
       , version
-      , buildJDK.arch
+      , buildJDK.architecture
       , configDir
       , destDir / "NetLogo"
       , webTarget.value
@@ -403,19 +406,19 @@ object NetLogoPackaging {
         FileActions.copyFile(dep, inputDir / dep.getName)
       })
 
-      val destDir = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.arch}"
+      val destDir = buildDir / s"${platform}-dest-${buildJDK.version}-${buildJDK.architecture}"
       FileActions.remove(destDir)
 
       launchers.foreach( (launcher) => {
         val extraArgs  = Seq("--icon", launcher.icon.getOrElse(""))
-        val appPackage = JavaPackager.generateAppImage(log, "jpackage", platform, launcher, configDir, buildDir, inputDir, destDir, extraArgs, Seq())
+        val appPackage = JavaPackager.generateAppImage(log, buildJDK.jpackage, platform, launcher, configDir, buildDir, inputDir, destDir, extraArgs, Seq())
         FileActions.copyFile(configDir / "macosx" / "Model.icns", destDir / s"${launcher.name}.app" / "Contents" / "Resources" / "Model.icns")
       })
 
       val appImageDir = destDir / s"NetLogo ${version}"
       FileActions.remove(appImageDir)
-      val extraDirs = bundledDirs(netlogo, behaviorsearchProject).value(platform, buildJDK.arch)
-      JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.arch, appImageDir, appImageDir, rootFiles)
+      val extraDirs = bundledDirs(netlogo, behaviorsearchProject).value(platform, buildJDK.architecture)
+      JavaPackager.copyExtraFiles(log, extraDirs, platform, buildJDK.architecture, appImageDir, appImageDir, rootFiles)
       val bundleDir = PackageMacAggregate.createBundleDir(log, version, destDir, configDir, launchers)
       JavaPackager.createScripts(log, bundleDir, bundleDir / "app", configDir, "netlogo-headless.sh", "netlogo-gui.sh", variables + ("javaOptions" -> "--add-exports=java.desktop/com.apple.laf=ALL-UNNAMED"))
 
@@ -428,7 +431,7 @@ object NetLogoPackaging {
       PackageMacAggregate(
         log
       , version
-      , buildJDK.arch
+      , buildJDK.architecture
       , destDir
       , bundleDir
       , configDir

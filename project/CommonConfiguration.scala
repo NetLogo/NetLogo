@@ -10,5 +10,5 @@ case class CommonConfiguration(
   rootFiles:     Seq[File], // manual, readme, etc.
   configRoot:    File,
   version:       String,
-  jdk:           BuildJDK,
+  jdk:           JDK,
   webDirectory:  File)

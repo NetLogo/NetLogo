@@ -1,3 +1,7 @@
+import io.circe
+
+import scala.io.Source
+
 import sbt._
 import sbt.util.Logger
 
@@ -92,108 +96,21 @@ object JavaPackager {
     )
   }
 
-  def systemPackagerOptions: Seq[BuildJDK] = {
-    if (System.getProperty("os.name").contains("Windows"))
-      windowsPackagerOptions
-    else if (System.getProperty("os.name").contains("Mac"))
-      macPackagerOptions
-    else
-      linuxPackagerOptions
-  }
+  def jdks: Seq[JDK] = {
 
-  // expects folder structures like `C:\Program Files\Java\jdk-17*'
-  // searches 64 and 32 bit program directories on each drive letter
-  def windowsPackagerOptions: Seq[BuildJDK] = {
-    val is64 = System.getenv("PROCESSOR_ARCHITECTURE") == "AMD64"
-    val jpackageFiles = windowsJavaPackagers
-    val specificJdks = jpackageFiles.map { jpackageFile =>
-      val jdkRootFile = jpackageFile.getParentFile.getParentFile
-      val arch        = if (is64 && ! jpackageFile.getAbsolutePath.contains("(x86)")) "64" else "32"
-      val jdkVersion  = s"java${jdkRootFile.getName.split("-")(1).split("\\.")(0)}"
-      SpecifiedJDK(arch, jdkVersion, jpackageFile, javaHome = Some(jdkRootFile.getAbsolutePath))
-    }
+    import circe.generic.auto._
 
-    if (specificJdks.isEmpty) {
-      Seq(PathSpecifiedJDK)
-    } else {
-      specificJdks
-    }
+    val text = Source.fromFile(".jdks.yaml").mkString
+
+    circe.yaml.parser.parse(text).flatMap(_.as[Seq[JDK]]).fold(
+      (e) => Seq()
+    , identity
+    )
 
   }
 
-  def windowsJavaPackagers: Seq[File] = {
-    import scala.collection.JavaConverters._
-
-    val fs = FileSystems.getDefault
-    fs.getRootDirectories.asScala.toSeq.flatMap(r =>
-      Seq(fs.getPath(r.toString, "Program Files", "Java"),
-        fs.getPath(r.toString, "Program Files (x86)", "Java")))
-      .map(_.toFile)
-      .filter(f => f.exists && f.isDirectory)
-      .flatMap(_.listFiles)
-      .map(_ / "bin" / "jpackage.exe")
-      .filter(_.exists)
-  }
-
-  // looks for OpenJDK at a path like /Library/Java/JavaVirtualMachines/jdk-17*.jdk
-  // the architecture can't be specified for the build process, so generate both options and assume developer competency
-  def macPackagerOptions: Seq[BuildJDK] = {
-    val specificJdks = FileActions.listDirectory(Paths.get("/Library/Java/JavaVirtualMachines")).collect {
-      case path if """^jdk-17.*\.jdk$""".r.findFirstIn(path.getFileName.toString).isDefined =>
-        val jpackage = (path / "Contents" / "Home" / "bin" / "jpackage").toFile
-        val home = Some((path / "Contents" / "Home").toString)
-
-        Seq(SpecifiedJDK("x86_64", "17", jpackage, home), SpecifiedJDK("aarch64", "17", jpackage, home))
-    }.flatten
-
-    if (specificJdks.isEmpty) {
-      Seq(PathSpecifiedJDK)
-    } else {
-      specificJdks
-    }
-  }
-
-  // assumes java installations are named with format bellsoft-java<version>-full-<arch> ,
-  // and installed in the alternatives system, which is accessible via
-  // `update-alternatives`.  Additionally, if the jdk name contains '64', it will be
-  // labelled as a 64-bit build. YMMV.
-  def linuxPackagerOptions: Seq[BuildJDK] = {
-    val alternatives =
-      try {
-        Process("update-alternatives --list javac".split(" ")).!!
-      } catch {
-        // This command may not work on all distros, just use path-specified
-        case ex: java.lang.RuntimeException => ""
-        case ex: java.io.IOException => ""
-      }
-
-    val jpackageFiles = alternatives
-      .split("\n")
-      .filterNot(_ == "")
-      .map( (javacPath) => file(javacPath).getParentFile / "jpackage" )
-      .filter(_.exists)
-
-    val specificJdks = jpackageFiles.flatMap( (jpackageFile) => {
-      val jdkRootFile = jpackageFile.getParentFile.getParentFile
-      val jdkName     = jdkRootFile.getName
-      if (jdkName.startsWith("bellsoft-java") || jdkName.startsWith("zulu")) {
-        val jdkVersion = jdkName.split("-")(1)
-        val arch       = if (jdkName.contains("64")) "64" else "32"
-        Some(SpecifiedJDK(arch, jdkVersion, jpackageFile, javaHome = Some(jdkRootFile.getAbsolutePath.toString)))
-      } else {
-        None
-      }
-    })
-
-    if (specificJdks.isEmpty) {
-      Seq(PathSpecifiedJDK)
-    } else {
-      specificJdks
-    }
-  }
-
-  def setupAppImageInput(log: Logger, version: String, buildJDK: BuildJDK, buildDir: File, netLogoJar: File, dependencies: Seq[File]) = {
-    val inputDir = buildDir / s"input-${buildJDK.version}-${buildJDK.arch}"
+  def setupAppImageInput(log: Logger, version: String, buildJDK: JDK, buildDir: File, netLogoJar: File, dependencies: Seq[File]) = {
+    val inputDir = buildDir / s"input-${buildJDK.majorVersion}-${buildJDK.architecture}"
     log.info(s"Setting up jpackage input director: $inputDir")
     FileActions.remove(inputDir)
     FileActions.createDirectory(inputDir)
@@ -208,7 +125,7 @@ object JavaPackager {
     inputDir
   }
 
-  def generateAppImage(log: Logger, jpackage: String, platform: String, mainLauncher: Launcher, configDir: File, buildDir: File, inputDir: File, destDir: File, extraJpackageArgs: Seq[String], extraLaunchers: Seq[Launcher]) = {
+  def generateAppImage(log: Logger, jpackage: File, platform: String, mainLauncher: Launcher, configDir: File, buildDir: File, inputDir: File, destDir: File, extraJpackageArgs: Seq[String], extraLaunchers: Seq[Launcher]) = {
 
     val extraLauncherArgs = extraLaunchers.flatMap( (settings) => {
       val inFile  = configDir / s"extra-launcher.properties.mustache"
@@ -221,8 +138,11 @@ object JavaPackager {
       Seq("--java-options", option)
     })
 
+    val jpVersion = Process(Seq[String](jpackage.getAbsolutePath, "--version")).!!
+    log.info(s"Using jpackage version: ${jpVersion}")
+
     val args = Seq[String](
-      jpackage
+      jpackage.getAbsolutePath
     , "--verbose"
     , "--resource-dir", buildDir.getAbsolutePath
     , "--name",         mainLauncher.name

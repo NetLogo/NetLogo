@@ -43,6 +43,7 @@ tmp/
 # other
 /.ensime
 /.ensime_lucene/
+/.jdks.yaml
 /build/
 /.idea/workspace.xml
 /.idea/tasks.xml
