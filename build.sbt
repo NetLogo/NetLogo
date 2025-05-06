@@ -290,7 +290,7 @@ lazy val headless = (project in file ("netlogo-headless")).
     Compile / unmanagedResourceDirectories ++= (sharedResources / Compile / unmanagedResourceDirectories).value,
     Test / resourceDirectory    := baseDirectory.value.getParentFile / "test",
     dumpClassName               := "org.nlogo.headless.misc.Dump",
-    excludedExtensions          := Seq("arduino", "bitmap", "csv", "gis", "gogo", "ls", "nw", "palette", "py", "sound", "time", "vid", "view2.5d"),
+    excludedExtensions          := Seq("arduino", "bitmap", "csv", "gis", "gogo", "ls", "nw", "palette", "py", "resource", "sound", "time", "vid", "view2.5d"),
     all := { val _ = (
       (Compile / packageBin).value,
       (Test / packageBin).value,
