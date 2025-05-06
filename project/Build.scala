@@ -18,8 +18,8 @@ object NetLogoBuild {
   lazy val numericMarketingVersion = settingKey[String]("Numeric-only version attached to the build for end-user identification")
 
   val settings = Seq(
-    marketingVersion        := "7.0.0",
-    numericMarketingVersion := "7.0.0-internal1",
+    marketingVersion        := "7.0.0-beta0",
+    numericMarketingVersion := "7.0.0-beta0",
     buildDate := {
       val dateFormat =
         new java.text.SimpleDateFormat("MMMMMMMMMMMMMMM d, yyyy")
