@@ -4,129 +4,155 @@ For help running models made in old versions, see the
 [Transition Guide](transition.html).
 
 [TOC]
-## Version 7.0.0 beta0 (May 2025)
+## Version 7.0-beta0 (May 2025)
+### Changes to the NetLogo GUI
+- See the [transition guide document](https://nuwildcat-my.sharepoint.com/:w:/r/personal/aab1638_ads_northwestern_edu/_layouts/15/Doc.aspx?sourcedoc=%7B55969F49-9892-48F9-99EA-E83F7FCAD807%7D&file=NetLogo%207%20Guide%20Version%207%20-%20TOC.docx&action=default&mobileredirect=true) for more details. 
+- User interface elements (widgets) have a flat modern look with a new color scheme.
+- Users have a choice of color themes: Light, Dark and Classic.
+    - The classic color theme is similar to the light theme, except the widgets have the pre-NetLogo 7 colors.
+- Widget sizes have been adjusted for better aesthetics and readability.
+    - All widgets now open with the new widget *styles*, but pre-NetLogo 7 models will open with the old widget *sizes* by default.  The new widget styles are not designed to look or function well with the old widget sizes, however, so model authors are strongly encouraged to update their models to use the new widget.
+    - There is a tool to automatically update the layout of a model to better support the new widget sizes.
+    - Users can set widgets to have their pre-7.0.0 default sizes if they want.
+- An option to delete all selected widgets has been added to the right-click menu.
+- A preview is shown when widgets are added.
+- Buttons have new icons for observer, turtle, patch and link.
+- Sliders now display their values in an editable box.
+- For Monitors, users can specify the units represented by numbers.
+- The font and background colors for Notes can include transparency, and are specified separately for Light and Dark Modes.
+- The Interface Toolbar has been updated for usability.
+    - With the Interaction tool, users can interact with widgets much as they did before NetLogo 7.
+    - With the Selection tool, users can select and move widgets by clicking on them.
+    - With the Edit tool, users can edit widgets after a single clicking (no previous selection required).
+    - With the Delete tool, users can delete widgets by clicking (no previous selection required).
+- There are new tools to align, distribute and stretch widgets. These have a menu in the Interface Toolbar.
+- Icons for the Interface, Info and Code Tabs have been updated.
+- The icons for moving the command center from the bottom of the Interface Tab to its right side and back are now more intuitive.
+- The widget pull-down menu is easier to read.
+- The Model Speed slider now has buttons to increase and decrease model speed.
+- Code Tabs for included (.nls) files can be closed by clicking on the tab.
+- Code Tabs for included files have checkboxes for opening a separate code window.
+- Headers in the Info Tab have been redesigned.
+- The color themes are color blind friendly. 
+- The shapes list in the Turtle Shapes Editor and the Link Shapes Editor is now searchable.
+- Color Swatches has been replaced by a more powerful Color picker.
 
-A premier feature in this release is a modernization of the NetLogo Graphical User Interface (GUI).
+### Changes to the NetLogo File format
+- The extension of model files is now .nlogox or .nlogox3d.
+- Existing .nlogo model files will be converted to .nlogox files.
+- NetLogo 7 only saves models as .nlogox files.
+- The .nlogox files are XML files.
+  - Any third-party scripts that processed `.nlogo` files are not expected to function correctly on `.nlogox` files
+- The .nlogox format allows the saving of model-specific information.
+- The .nlogox format allows the saving of user interface element specific information.
+    - For example a user interface element can appear in the new larger size, or the original size.
+- The .nlogox format is extensible and will allow new types of data to be stored in the future.
+    - This makes it easier to add capabilities and keep models backwards compatible.
+    - Resources needed for a model may be stored in the .nlogox file in the future.
 
-Another important change is that NetLogo models are now stored in a new format with the extension .nlogox.
+### Changes for Customizability
+- Widgets that have changed size for NetLogo 7 have a checkbox that allows users to switch between the previous size and the new larger size.
+- The  `Auto indent` and `Show line numbers` global preferences can be set directly from the Code Tab.
+- There are changes to the Preferences dialog which let you customize various NetLogo settings. 
+    - External editor support: Users can enable a feature that checks the open model for changes made outside of NetLogo to the model file and to any included files. When a change is detected, the file is updated in NetLogo. This feature can be enabled or disabled using the preferences dialog. It is disabled by default.
+    - There is a new preference option that prevents compilation errors from stealing focus from the current tab. By default, it is not enabled.
+    - There is a new preference option that causes a separate code tab to be opened when NetLogo starts. By default, it is not enabled.
+    - There is a Linux-only UI Scale preference that matches NetLogo graphics to the system UI scale.
 
-Changes to the NetLogo GUI
-See the interim documentation for more details.
-User interface elements (widgets) have a flat modern look with a new color scheme.
-Users have a choice of color themes: Light, Dark and Classic.
-The classic color theme is similar to the light theme, except the widgets have the pre-NetLogo 7 colors.
-Widget sizes have been adjusted for greater readability.
-A preference allows widgets to have their pre-7.0.0 default sizes.
-There is a tool to automatically update the layout of a model to better support the new widget sizes.
-A "shadow" is used to indicate when a user is hovering over a widget.
-The widget pull-down menu is easier to read.
-An option to delete all selected widgets has been added to the right-click menu.
-A preview is shown when widgets are added.
-New iconography for observer, turtle, patch and link has been introduced for buttons.
-Sliders now display their values in an editable box.
-Monitors can include units.
-The font and background colors for Notes can include transparancy, and are specified separately for Light and Dark Modes.
-The Interface Tool Bar has been updated for usability.
-The Interaction icon allows the pre-7.0.0 ways of interacting with widgets.
-The Selection icon allows widgets to be selected by clicking.
-The Edit icon allows widgets to be edited by clicking (no previous selection required).
-The Delete icon allows sequential deletion of widgets by clicking (no previous selection required).
-There are new tools to align, distribute and stretch widgets. These have a menu in the Interface Toolbar.
-Icons for the Interface, Info and Code Tabs have been updated.
-The icons for moving the command center from the bottom of the Interface Tab to its right side and back are now more intuitive.
-The Auto indent and Show line numbers global preferences can be set in a new Code Tab Preferences Menu.
-Code Tabs for included (.nls) files can be closed by clicking on the tab.
-Code Tabs for included files have checkboxes for opening a separate code window.
-Headers in the Info Tab have been redesigned.
-The color themes are color blind friendly.
-The Turtle Shapes Editor now includes all the shapes that used to be included in the "Import from Library" option, and the shapes list is now searchable.
-Color Swatches has been replaced by a more powerful Color Picker.
-Features and Enhancements
-The NetLogo Graphical User Interface (GUI) has been throughly modernized.
-The model file format has become extensible.
-Brief timely messages can now be displayed in a banner on the Interface Tab. Users can click a link for more details.
-Users can enable a feature that checks the open model for changes made outside of NetLogo to the model file and to any included files. When a change is detected, the file is updated in NetLogo. This feature can be enabled or disabled using the preferences dialog. It is disabled by default.
-There is a new preference option that prevents compilation errors from stealing focus from the current tab. By default, it is not enabled.
-There is a new preference option that causes a separate code tab to be opened when NetLogo starts. By default, it is not enabled.
-The separate code tab has a full NetLogo menu bar.
-There is a new tab in the color picker that enables easy selection of richer colors, and can output colors in many different formats.
-Changes to the NetLogo File format
-The extension of model files is now .nlogox.
-Existing .nlogo model files will be converted to .nlogox files.
-NetLogo 7 only saves models as .nlogox files.
-The .nlogox files are XML files.
-Any third-party scripts that processed .nlogo files are not expected to function correctly on .nlogox files
-The .nlogox format allows the saving of model-specific information.
-The .nlogox format allows the saving of user interface element specific information.
-For example a user interface element can appear in the new larger size, or the original size.
-The .nlogox format is extensible and will allow new types of data to be stored in the future.
-This makes it easier to add capabilities and keep models backwards compatible.
-Resources needed for a model may be stored in the .nlogox file in the future.
-Language Changes
-The user-input primitive has a new optional argument for a default input value.
-Bug Fixes and Changes
-Multi-assign with let and set can use arbitrarily nested lists to "destructure" variables. For example let [[corner1-x corner1-y corner2-x corner2-y] player-name score] get-current-player-info.
-The primitive auto-plot? has been restored.
-An optimization speeds up the execution of the constructs any turtles-on and any <breeds>-on.
-An __includes statement not followed by brackets no longer causes an exception.
-Reporter procedures without a report statement, run or runresult now throw a compile time error.
-The user receives a specific message when keywords such as globals, turtles-own, to or end are used in an incorrect context.
-A helpful error message results when a constant such as e or pi is used as a global variable name.
-Unmatched closing parentheses, brackets and braces result in a meaningful error message.
-When a runtime error occurs the user is asked for information that would allow us to reproduce and fix the problem. This is in addition to the stack trace plus system information currently requested.
-Save as NetLogo Web adds the contents of any included files to the model code.
-One can now import a world that has an array containing strings with curly braces.
-The Recent Files lists now appropriately contains only 2D or 3D models.
-The Reload the last model on startup preference now appropriately opens only 2D or 3D models.
-When the user does a Save As non-NetLogo files are greyed out and cannot be selected on Windows and Linux. It is a MacOS feature that users can still select a greyed-out file. If a user selects a non-NetLogo file on MacOS they are warned that a .nlogox or .nlogox3d extension will be added.
-The Tools menu now displays the correct Show/Hide Command Center option no matter how the command center is made visible or hidden.
-The process of selecting a log directory has been improved to allow a directory to be created, and to display an error message if the logging directory does not exist when the model is loaded.
-The preferences dialog shows an error dialog and prevents the user from closing it if logging is enabled but no log directory is specified, or if the specified log directory does not exist or if NetLogo does not have the necessary permissions to write to the directory.
-Input widget values of the wrong type, e.g. string values in numeric input widgets, are now rejected.
-Creating a number input box and leaving the value empty no longer causes errors or crashes.
-When the value of a an interface element is changed outside of the Edit dialog, the user will be prompted to save the model when closing it.
-An empty link monitor now allows a who number to be entered as an end value.
-The value of the Indent Automatically checkbox now persists between sessions.
-Shortcuts for Previous word, Select previous word, Next word, Select next word, Select word, Delete previous word, and Delete next word should work as expected in the code tab and in other text editors.
-Command tasks now jump to the code when a runtime error occurs.
-A tilde at the begining of an included file path is interpreted as referring to the user's home directory on MacOS and Linux.
-Included files are now recompiled when they are closed without saving the changes.
-Leaving and returning to a "dirty" Code Tab no longer causes compilation.
-There is no exception when reopening an included file that was saved in separate code tab.
-An included file being edited in separate window can be saved.
-Opening a separate code tab that contains a compilation error no longer causes an exception.
-The Save hot-key works for included files in a separate code tab.
-During text search a separate code tab does not go behind the interface window if they overlap. (This was a MacOS-only issue.)
-Changes in focus happen correctly when moving between separate and non-separate tabs.
-Multi-assign with let and set now works with BehaviorSpace.
-BehaviorSpace no longer produces a runtime error when the following conditions hold: 1) the user specifies a Run metrics when reporter, 2) the reporter is never true, and 3) the user has specified both Table and Spreadsheet output.
-BehaviorSpace error messages are improved.
-When a BehaviorSpace experiment is run with one or more specified output files that are open in another program, it now aborts the experiment and shows a useful error message.
-Invalid variable specifications in BehaviorSpace result in useful messages.
-BehaviorSpace output files can now be deleted once an experiment ends. NetLogo does not need to be exited.
-Right clicking the blank space in a new Systems Dynamics Model no longer causes an exception.
-Extension Updates
-The gogo extension supports the GoGo board 6.
-The dialog extension user-input primitive allows an optional default value argument.
-Documentation Updates
-Grammar was improved for NetLogo Tutorial 2.
-The link to the book "An Introduction to Agent-Based Modeling" was updated.
-The BehaviorSpace error message about undefined parameter values is easier to interpret.
-The BehaviorSpace documentation for the subexperiment syntax is improved and uses examples for the Wolf Sheep Predation Model.
-Models Library Changes
-New Sample Models:
-Chloroplasts and Food
-New Code Examples
-The Ordered Agent Drawing Example model demonstrates how to sort turtles for display using stamp when precise drawing order is needed.
-The Patch Outlines Example model demonstrates how to outline patches in a reasonably simple way using stamp.
-Sample Model Changes
-The Moths model was updated with information about new research into why moths circle lights. The idea that this could be modeled with NetLogo 3D was added as a suggestion for further exploration.
-The correct label is used after hatching in the Plant Speciation model.
-The Discrete Event Mousetrap has additions to the Extending the Model section.
-When the bar is crowded in the El Farol model the patch label is now appropriately yellow.
-An inaccurate comment in Small Worlds model was corrected.
-Multi-line code input widgets were enabled for PNoM 2 Diffusion Sensor Sandbox. Previously single line widgets were incorrectly used.
-The Radical Polymerization model was updated to fix a bug in which in which Km was used instead of Kr for probability of termination.
+- Users can switch between Light, Dark and Classic color themes using an item in the Tools menu.
+- A new Color Picker replaces Color Swatches. Users can still select NetLogo colors from a grid of rectangles. The Color Picker has a second tab that allows users to specify colors in most common formats,  and that enables easy selection of a more extensive set of colors.
+
+### Features and Enhancements
+- The NetLogo Graphical User Interface (GUI) has been thoroughly [modernized](#changes-to-the-netlogo-gui).
+- The model file format has become [extensible](#changes-to-the-netlogo-file-format).
+- Brief timely messages can now be displayed in a banner on the Interface Tab. Users can click a link for more details.
+- Notes on the interface tab can now render markdown/html.
+- Plots can now be scaled independently for the x and y axes via checkboxes in the Plot widget.
+- The separate code tab has a full NetLogo menu bar.
+- There is a new File -> Manage Bundled Resources dialog that allows you to view, add, or remove files that are bundled with the current NetLogo model.
+- The Help Menu now has a link to the NetLogo Forum, a website to ask/answer questions and have discussions about NetLogo.
+
+### Language Changes
+- The `user-input` primitive has a new optional argument for a default input value.
+- The new primitives `auto-plot-x-on`, `auto-plot-y-on`, `auto-plot-x-off`, and `auto-plot-y-off` allow plots to be scaled independently for the x and y axes.
+- The new primitive `set-topology` replaces the "hidden" command `__change-topology`.
+
+### Bug Fixes and Changes
+- Multi-assign with `let` and `set` can use arbitrarily nested lists to "destructure" variables. For example `let [[corner1-x corner1-y corner2-x corner2-y] player-name score] get-current-player-info`.
+- The primitive `auto-plot?` has been restored.
+- An optimization speeds up the execution of the constructs `any turtles-on` and `any <breeds>-on`.
+- An `__includes` statement not followed by brackets no longer causes an exception.
+- Reporter procedures without a `report` statement, `run` or `runresult` now throw a compile time error.
+- The user receives a specific message when keywords such as `globals`, `turtles-own`, `to` or `end` are used in an incorrect context.
+- A helpful error message results when a constant such as `e` or `pi` is used as a global variable name.
+- Unmatched closing parentheses, brackets and braces result in a meaningful error message.
+- When a runtime error occurs the user is asked for information that would allow us to reproduce and fix the problem. This is in addition to the stack trace plus system information currently requested.
+- `Save as NetLogo Web` adds the contents of any included files to the model code.
+- One can now import a world that has an array containing strings with curly braces.
+- The Recent Files lists now appropriately contains only 2D or 3D models.
+- The `Reload the last model on startup` preference now appropriately opens only 2D or 3D models.
+- When the user does a `Save As`, non-NetLogo files are greyed out and cannot be selected on Windows and Linux. It is a MacOS feature that users can still select a greyed-out file. If a user selects a non-NetLogo file on MacOS they are warned that a .nlogox or .nlogox3d extension will be added.
+- The Tools menu now displays the correct Show/Hide Command Center option no matter how the command center is made visible or hidden.
+- The process of selecting a log directory has been improved to allow a directory to be created, and to display an error message if the logging directory does not exist when the model is loaded.
+- The preferences dialog shows an error dialog and prevents the user from closing it if logging is enabled but no log directory is specified, or if the specified log directory does not exist or if NetLogo does not have the necessary permissions to write to the directory.
+- Input widget values of the wrong type, e.g. string values in numeric input widgets, are now rejected.
+- Creating a number input box and leaving the value empty no longer causes errors or crashes.
+- When the value of an interface element is changed outside of the Edit dialog, the user will be prompted to save the model when closing it.
+- An empty link monitor now allows a `who` number to be entered as an end value.
+- The value of the `Auto indent` checkbox now persists between sessions.
+- Shortcuts for `Previous word`, `Select previous word`, `Next word`, `Select next word`, `Select word`, `Delete previous word`, and `Delete next word` should work as expected in the code tab and in other text editors.
+- Command tasks now jump to the code when a runtime error occurs.
+- A tilde at the begining of an included file path is interpreted as referring to the user's home directory on MacOS and Linux.
+- Included files are now recompiled when they are closed without saving the changes.
+- Leaving and returning to a "dirty" Code Tab no longer causes compilation.
+- There is no exception when reopening an included file that was saved in a separate code tab.
+- An included file being edited in a separate window can be saved.
+- Opening a separate code tab that contains a compilation error no longer causes an exception.
+- The `Save` hot-key works for included files in a separate code tab.
+- Doing a text search in a separate code tab that overlaps an interface window will no longer bring the interface window to the front, covering part of the separate code tab. (This was a MacOS-only issue.)
+- Changes in focus happen correctly when moving between separate and non-separate tabs.
+- Multi-assign with `let` and `set` now works with BehaviorSpace.
+- BehaviorSpace no longer produces a runtime error when the following conditions hold: 1) the user specifies a *Run metrics when* reporter, 2) the reporter is never true, and 3) the user has specified both Table and Spreadsheet output.
+- BehaviorSpace error messages are improved.
+- When a BehaviorSpace experiment is run with one or more specified output files that are open in another program, it now aborts the experiment and shows a useful error message.
+- Invalid variable specifications in BehaviorSpace result in useful messages.
+- BehaviorSpace output files can now be deleted once an experiment ends. NetLogo does not need to be exited.
+- Right clicking the blank space in a new Systems Dynamics Model no longer causes an exception.
+- NetLogo no longer hangs moving through a corner with wrapped coordinates and pen-down.
+- Number input boxes without a value no longer keep other input boxes or the command center from gaining focus.
+- The Page Setup dialog opened when a user wants to Print now closes when its Cancel button is pressed.
+- When a procedure in the Code Tab is "folded," so that only the line with the name is visible, an action that needs to move to inside the code causes it to be "unfolded," so it is fully visible. This can be a result of a search, find-and-replace or jumping to code with a compilation error.
+- Plot pens always take account of `plot-pen-up` and `plot-pen-down`.
+- The padding and location of internal components of widgets now change proportionally when zooming.
+
+### Extension Updates
+- The gogo extension supports the GoGo board 6.
+- The dialog extension `user-input` primitive allows an optional default value argument. 
+
+### Documentation Updates
+- Grammar was improved for NetLogo Tutorial 2.
+- The link to the book "An Introduction to Agent-Based Modeling" was updated.
+- The BehaviorSpace error message about undefined parameter values is easier to interpret.
+- The BehaviorSpace documentation for the subexperiment syntax is improved and uses examples for the Wolf Sheep Predation Model.
+
+### Models Library Changes
+
+#### New Sample Models:
+- 
+
+#### New Code Examples
+- The Ordered Agent Drawing Example model demonstrates how to sort turtles for display using `stamp` when precise drawing order is needed.
+- The Patch Outlines Example model demonstrates how to outline patches in a reasonably simple way using `stamp`.
+
+#### Sample Model Changes
+- The Moths model was updated with information about new research into why moths circle lights. The idea that this could be modeled with NetLogo 3D was added as a suggestion for further exploration.
+- The correct label is used after `hatch`ing in the Plant Speciation model.
+- The Discrete Event Mousetrap has additions to the Extending the Model section.
+- When the bar is crowded in the El Farol model the patch label is now appropriately yellow.
+- An inaccurate comment in Small Worlds model was corrected.
+- Multi-line code input widgets were enabled for PNoM 2 Diffusion Sensor Sandbox. Previously single line widgets were incorrectly used.
+- The Radical Polymerization model was updated to fix a bug in which in which Km was used instead of Kr for probability of termination.
+- A new library folder, conic sections was added to the mathematics section of the library. Two former sample models, conic-sections 1  and conic-sections 2 had substantial changes made to them and were renamed “ellipse” and "hyperbola”.
 
 ## Version 6.4.0 (November 2023)
 
