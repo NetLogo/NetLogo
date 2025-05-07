@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<model version="NetLogo 7.0.0-beta0" snapToGrid="true">
+<model version="NetLogo 7.0.0-beta1" snapToGrid="true">
   <code><![CDATA[globals [ max-sheep ]  ; don't let the sheep population grow too large
 
 ; Sheep and wolves are both breeds of turtles
