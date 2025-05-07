@@ -26,7 +26,9 @@ private[agent] object PenLineMaker {
     if (dist == 0.0) Array() else Array(new Trail(x0, y0, x1, y1, dist))
   }
 
-  private def helper(x: Double, y: Double, jumpDist: Double, context: HelperContext, acc: Set[Trail] = Set()): Seq[Trail] = {
+  import scala.collection.mutable.LinkedHashSet
+
+  private def helper(x: Double, y: Double, jumpDist: Double, context: HelperContext, acc: LinkedHashSet[Trail] = LinkedHashSet()): Seq[Trail] = {
 
     val HelperContext(makeTrailsBy, lazyWrapX, lazyWrapY) = context
 
