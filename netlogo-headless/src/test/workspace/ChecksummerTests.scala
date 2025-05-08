@@ -26,7 +26,7 @@ class ChecksummerTests extends AnyFunSuite {
       foo(fn)
     }
     assertResult("41ECD0D21169ED248C8499E22CF3CF636F5DADC1")(
-      Checksummer.calculateChecksum(tester _))
+      Checksummer.calculateChecksum(tester))
   }
   test("two sections") {
     def tester(fn: PrintWriter): Unit = {
@@ -35,7 +35,7 @@ class ChecksummerTests extends AnyFunSuite {
       bar(fn)
     }
     assertResult("046F28A95D201F85B8C5664C36FDECF24D23213D")(
-      Checksummer.calculateChecksum(tester _))
+      Checksummer.calculateChecksum(tester))
   }
   test("three sections") {
     def tester(fn: PrintWriter): Unit = {
@@ -46,7 +46,7 @@ class ChecksummerTests extends AnyFunSuite {
       emptySection(fn)
     }
     assertResult("EA4F5E16376F2FC7242F9BF28328CC00B5A8190D")(
-      Checksummer.calculateChecksum(tester _))
+      Checksummer.calculateChecksum(tester))
   }
   test("two empty sections") {
     def tester(fn: PrintWriter): Unit = {
@@ -55,6 +55,6 @@ class ChecksummerTests extends AnyFunSuite {
       emptySection(fn)
     }
     assertResult("376368FF0F759FD60F473E56EA58D5E7D8305E0F")(
-      Checksummer.calculateChecksum(tester _))
+      Checksummer.calculateChecksum(tester))
   }
 }

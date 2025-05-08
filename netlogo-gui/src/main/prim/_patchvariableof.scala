@@ -7,7 +7,7 @@ import org.nlogo.api.{ AgentException, LogoListBuilder }
 import org.nlogo.core.{ I18N, Syntax }
 import org.nlogo.nvm.{ ArgumentTypeException, Context, Reporter, RuntimePrimitiveException }
 
-class _patchvariableof(private val _vn: Int) extends Reporter {
+class _patchvariableof(_vn: Int) extends Reporter {
   def vn = _vn
 
   override def toString: String =

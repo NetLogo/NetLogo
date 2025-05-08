@@ -6,6 +6,7 @@ package misc
 
 import org.nlogo.agent.SimpleChangeEventCounter
 import org.nlogo.agent.TreeAgentSet
+import org.nlogo.api.SimpleChangeEventPublisher
 import org.scalatest.GivenWhenThen
 
 class TestTreeAgentSet extends FixtureSuite with GivenWhenThen {
@@ -14,7 +15,7 @@ class TestTreeAgentSet extends FixtureSuite with GivenWhenThen {
 
     import fixture.{workspace => ws}
     import scala.language.implicitConversions
-    implicit def anyToPub(agentSet: org.nlogo.agent.AgentSet) =
+    implicit def anyToPub(agentSet: org.nlogo.agent.AgentSet): SimpleChangeEventPublisher =
       agentSet.asInstanceOf[TreeAgentSet].simpleChangeEventPublisher
 
     fixture.declare(

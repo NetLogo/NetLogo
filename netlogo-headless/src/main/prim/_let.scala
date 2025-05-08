@@ -5,7 +5,7 @@ package org.nlogo.prim
 import org.nlogo.core.Let
 import org.nlogo.nvm.{ Command, Context }
 
-class _let(private val _let: Let) extends Command {
+class _let(_let: Let) extends Command {
 
   def let: Let = _let
 

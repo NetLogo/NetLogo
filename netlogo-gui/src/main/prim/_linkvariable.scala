@@ -5,7 +5,7 @@ package org.nlogo.prim
 import org.nlogo.api.AgentException
 import org.nlogo.nvm.{ Context, Reporter, RuntimePrimitiveException }
 
-class _linkvariable(private val _vn: Int) extends Reporter {
+class _linkvariable(_vn: Int) extends Reporter {
 
 
   override def toString =

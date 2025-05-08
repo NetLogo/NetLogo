@@ -5,7 +5,7 @@ package org.nlogo.prim
 import org.nlogo.api.LogoException
 import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled, MutableLong }
 
-class _repeatlocal(private val vn: Int) extends Command with CustomAssembled {
+class _repeatlocal(vn: Int) extends Command with CustomAssembled {
   override def toString: String = s"${super.toString}:${vn},+$offset"
 
   @throws(classOf[LogoException])

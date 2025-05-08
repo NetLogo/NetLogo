@@ -5,7 +5,7 @@ package org.nlogo.prim
 import org.nlogo.core.Let
 import org.nlogo.nvm.{ Command, Context, MutableLong }
 
-class _repeatinternal(_offset: Int, private val _let: Let) extends Command {
+class _repeatinternal(_offset: Int, _let: Let) extends Command {
   offset = _offset
   def let = _let
 

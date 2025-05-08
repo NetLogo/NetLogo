@@ -4,7 +4,7 @@ package org.nlogo.prim
 
 import org.nlogo.nvm.{ Command, Context, MutableLong }
 
-class _repeatlocalinternal(private val _vn: Int, _offset: Int) extends Command {
+class _repeatlocalinternal(_vn: Int, _offset: Int) extends Command {
   offset = _offset
 
   override def toString: String =
