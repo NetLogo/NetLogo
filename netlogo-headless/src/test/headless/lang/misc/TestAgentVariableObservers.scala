@@ -106,7 +106,7 @@ class TestAgentVariableObservers extends FixtureSuite with GivenWhenThen {
     assertResult(world.turtles.count)(watcher.queue.size)
     And("those responses contain the new value")
     watcher.queue.foreach {
-      case (t: Turtle, vn: String, value: AnyRef) => assertResult(t.id)(value)
+      case (t: Turtle, vn: String, value: AnyRef) => assertResult(t.id)(value.asInstanceOf[Long])
       case _ => fail("Got response from non-turtle")
     }
     watcher.queue.clear()
@@ -117,7 +117,7 @@ class TestAgentVariableObservers extends FixtureSuite with GivenWhenThen {
     assertResult(world.getBreed("DOGS").count)(watcher.queue.size)
     And("those responses contain the new value")
     watcher.queue.foreach {
-      case (t: Turtle, vn: String, value: AnyRef) => assertResult(t.id)(value)
+      case (t: Turtle, vn: String, value: AnyRef) => assertResult(t.id)(value.asInstanceOf[Long])
       case _ => fail("Got response from non-turtle")
     }
     watcher.queue.clear()
@@ -129,7 +129,9 @@ class TestAgentVariableObservers extends FixtureSuite with GivenWhenThen {
     assertResult(world.getBreed("DOGS").count + world.getBreed("CATS").count)(watcher.queue.size)
     And("those responses contain the new value")
     watcher.queue.foreach {
-      case (t: Turtle, vn: String, value: AnyRef) => { assertResult(t.id)(value); assertResult("MY-SHARED-VAR")(vn) }
+      case (t: Turtle, vn: String, value: AnyRef) =>
+        assertResult(t.id)(value.asInstanceOf[Long])
+        assertResult("MY-SHARED-VAR")(vn)
       case _ => fail("Got response from non-turtle")
     }
     watcher.queue.clear()
@@ -140,7 +142,7 @@ class TestAgentVariableObservers extends FixtureSuite with GivenWhenThen {
     assertResult(world.links.count)(watcher.queue.size)
     And("those responses contain the new value")
     watcher.queue.foreach {
-      case (l: Link, vn: String, value: AnyRef) => assertResult(l.end1)(value)
+      case (l: Link, vn: String, value: AnyRef) => assertResult(l.end1)(value.asInstanceOf[Int])
       case _ => fail("Got response from non-link")
     }
     watcher.queue.clear()
@@ -151,7 +153,7 @@ class TestAgentVariableObservers extends FixtureSuite with GivenWhenThen {
     assertResult(world.patches.count)(watcher.queue.size)
     And("those responses contain the new value")
     watcher.queue.foreach {
-      case (p: Patch, vn: String, value: AnyRef) => assertResult(p.pxcor)(value)
+      case (p: Patch, vn: String, value: AnyRef) => assertResult(p.pxcor)(value.asInstanceOf[Int])
       case _ => fail("Got response from non-patch")
     }
     watcher.queue.clear()

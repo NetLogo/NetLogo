@@ -67,7 +67,7 @@ object MultiAssign {
   }
 }
 
-class _multiassign(private val name: String, private val totalNeeded: Int) extends Command {
+class _multiassign(name: String, totalNeeded: Int) extends Command {
   override def perform(context: Context): Unit = {
     val list = argEvalList(context, 0)
     perform_1(context, list)

@@ -13,7 +13,7 @@ import ChecksumsAndPreviews.Checksums
 
 object ChecksumReport {
 
-  val tester = new ChecksumTester(println _)
+  val tester = new ChecksumTester(println)
   import tester.info
 
   def main(args: Array[String]): Unit = {

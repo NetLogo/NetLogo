@@ -11,7 +11,7 @@ class _constdouble(_primitiveValue: Double) extends Reporter with Pure {
   val primitiveValue = _primitiveValue
 
   override def toString =
-    super.toString + ":" + primitiveValue
+    super.toString + ":" + _primitiveValue
 
   override def report(context: Context): java.lang.Double =
     report_1(context)
