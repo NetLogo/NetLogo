@@ -86,7 +86,7 @@ class FakeWorld(state: State) extends api.World {
     override def heading(d: Double) = unsupported
   }
 
-  override val turtles =
+  override val turtles: FakeAgentSet[FakeTurtle] =
     new FakeAgentSet(core.AgentKind.Turtle, turtleStates.map {
       case (id, vars) => new FakeTurtle(id, vars)
     }.sortBy(_.id))
@@ -106,7 +106,7 @@ class FakeWorld(state: State) extends api.World {
     override def size = 1
   }
 
-  override val patches =
+  override val patches: FakeAgentSet[FakePatch] =
     new FakeAgentSet(core.AgentKind.Patch, patchStates.map {
       case (id, vars) => new FakePatch(id, vars)
     }.sortBy(_.id))
@@ -139,7 +139,7 @@ class FakeWorld(state: State) extends api.World {
     override def toString = "link " + end1.id + " " + end2.id // TODO: get breed name in there
   }
 
-  override val links = {
+  override val links: FakeAgentSet[FakeLink] = {
     val agentSeq = linkStates
       .map { case (id, vars) => new FakeLink(id, vars) }
       .sortBy(_.id)
