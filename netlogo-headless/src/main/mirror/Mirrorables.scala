@@ -13,20 +13,20 @@ import scala.jdk.CollectionConverters.IterableHasAsScala
 object Mirrorables {
 
   case object Patch extends Kind {
-    object PatchVariables extends Enumeration {
+    class PatchVariables extends Enumeration {
       implicitPatchVariables.foreach(Value)
     }
-    val Variables = PatchVariables
+    val Variables: PatchVariables = new PatchVariables
   }
   case object Turtle extends Kind {
-    object TurtleVariables extends Enumeration {
+    class TurtleVariables extends Enumeration {
       implicitTurtleVariables.foreach(Value)
       val LineThickness = Value("lineThickness")
     }
-    val Variables = TurtleVariables
+    val Variables: TurtleVariables = new TurtleVariables
   }
   case object Link extends Kind {
-    object LinkVariables extends Enumeration {
+    class LinkVariables extends Enumeration {
       implicitLinkVariables.foreach(Value)
       val Size = Value("size")
       val Heading = Value("heading")
@@ -34,17 +34,17 @@ object Mirrorables {
       val MidpointY = Value("midpointY")
       val IsDirected = Value("isDirected")
     }
-    val Variables = LinkVariables
+    val Variables: LinkVariables = new LinkVariables
   }
   case object Observer extends Kind {
-    object ObserverVariables extends Enumeration {
+    class ObserverVariables extends Enumeration {
       val TargetAgent = Value("targetAgent")
       val Perspective = Value("perspective")
     }
-    val Variables = ObserverVariables
+    val Variables: ObserverVariables = new ObserverVariables
   }
   case object World extends Kind {
-    object WorldVariables extends Enumeration {
+    class WorldVariables extends Enumeration {
       val Ticks = Value("ticks")
       val PatchesWithLabels = Value("patchesWithLabels")
       val TurtleShapeList = Value("turtleShapeList")
@@ -63,7 +63,7 @@ object Mirrorables {
       val LinkBreeds = Value("linkBreeds")
       val UnbreededLinksAreDirected = Value("unbreededLinksAreDirected")
     }
-    val Variables = WorldVariables
+    val Variables: WorldVariables = new WorldVariables
   }
   case object WidgetValue extends Kind {
     object WidgetVariables extends Enumeration {
@@ -72,7 +72,7 @@ object Mirrorables {
     val Variables = WidgetVariables
   }
 
-  def agentKindToMirrorKind(agentKind: core.AgentKind): Product & org.nlogo.mirror.Kind with java.io.Serializable = agentKind match {
+  def agentKindToMirrorKind(agentKind: core.AgentKind): Product & org.nlogo.mirror.Kind & java.io.Serializable = agentKind match {
     case core.AgentKind.Observer => Observer
     case core.AgentKind.Turtle => Turtle
     case core.AgentKind.Patch => Patch

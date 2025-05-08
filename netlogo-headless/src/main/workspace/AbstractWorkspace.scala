@@ -275,7 +275,7 @@ object AbstractWorkspaceTraits {
 
     @throws(classOf[IOException])
     def exportWorld(writer: PrintWriter): Unit = {
-      AbstractExporter.exportWithHeader(writer, "world", getModelFileName, "")(exportWorldNoMeta _)
+      AbstractExporter.exportWithHeader(writer, "world", getModelFileName, "")(exportWorldNoMeta)
     }
 
     private def exportWorldNoMeta(writer: PrintWriter): Unit = {
@@ -439,7 +439,7 @@ object AbstractWorkspaceTraits {
       _extensionManager.importExtensionData(name, data, handler)
     }
 
-    private val libraryManager = new LibraryManager(APIEM.userExtensionsPath, _extensionManager.reset _)
+    private val libraryManager = new LibraryManager(APIEM.userExtensionsPath, _extensionManager.reset)
 
     override def getLibraryManager = libraryManager
 

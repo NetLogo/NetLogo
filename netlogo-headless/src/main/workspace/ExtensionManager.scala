@@ -206,7 +206,7 @@ class ExtensionManager(val workspace: ExtendableWorkspace, loader: ExtensionLoad
   @throws(classOf[CompilerException])
   def readExtensionObject(extName: String, typeName: String, value: String): ExtensionObject = {
     val upcaseExtName = extName.toUpperCase
-    def catchExtensionException(f: JarContainer => ExtensionObject): JarContainer => ExtensionObject = { j: JarContainer =>
+    def catchExtensionException(f: JarContainer => ExtensionObject): JarContainer => ExtensionObject = { (j: JarContainer) =>
       try { f(j) }
       catch {
         case ex: ExtensionException =>

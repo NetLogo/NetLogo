@@ -18,7 +18,7 @@ object Checksummer {
   }
 
   def calculateWorldChecksum(workspace: Workspace): String =
-    calculateChecksum(workspace.exportWorld _, stripMetaSection)
+    calculateChecksum(workspace.exportWorld, stripMetaSection)
 
   def calculateGraphicsChecksum(workspace: Workspace): String =
     calculateChecksum{writer =>

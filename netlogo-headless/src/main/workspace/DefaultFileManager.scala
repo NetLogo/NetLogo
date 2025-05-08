@@ -150,7 +150,7 @@ private[workspace] final class DefaultFileManager(private val workspace: Abstrac
       else
         acc
 
-    _currentFile.map(asReadableFile _                  andThen
+    _currentFile.map(asReadableFile                   andThen
                     asFileNotAtEof                    andThen
                     (new BufferedFileCharIterator(_)) andThen
                     (readToNewLineOrEof(_)))
@@ -160,7 +160,7 @@ private[workspace] final class DefaultFileManager(private val workspace: Abstrac
 
   def readChars(num: Int): String = {
     val takeCharsFromFile = (file: File) => new BufferedFileCharIterator(file).take(num).mkString
-    _currentFile.map(asReadableFile _ andThen asFileNotAtEof andThen takeCharsFromFile).getOrElse(throwNoOpenFile())
+    _currentFile.map(asReadableFile andThen asFileNotAtEof andThen takeCharsFromFile).getOrElse(throwNoOpenFile())
   }
 
   def read(world: World): AnyRef = {
@@ -175,11 +175,11 @@ private[workspace] final class DefaultFileManager(private val workspace: Abstrac
           throw ex
       }
     }
-    _currentFile.map(asReadableFile _ andThen asFileNotAtEof andThen readLiteral).getOrElse(throwNoOpenFile())
+    _currentFile.map(asReadableFile andThen asFileNotAtEof andThen readLiteral).getOrElse(throwNoOpenFile())
   }
 
   def eof: Boolean =
-    _currentFile.map(asReadableFile _ andThen updateFileEof andThen (_.eof)).getOrElse(throwNoOpenFile())
+    _currentFile.map(asReadableFile andThen updateFileEof andThen (_.eof)).getOrElse(throwNoOpenFile())
 
   def closeAllFiles(): Unit = {
     openFiles.values foreach closeFile
