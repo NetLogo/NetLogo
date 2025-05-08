@@ -30,19 +30,19 @@ class CompilerManagerTests extends AnyFunSuite {
 
   def manager(workspace: AbstractWorkspace, procedures: DummyProcedures, eventSink: (Event, Object) => Unit): CompilerManager = {
     new CompilerManager(workspace,
-      workspace.world.asInstanceOf[World with CompilationManagement],
+      workspace.world.asInstanceOf[World & CompilationManagement],
       procedures, eventSink)
   }
 
   def testCompilerManager(run: (CompilerManager) => Unit)(
-      assertions: (AbstractWorkspace, CompilerManager, Seq[Event]) => Unit): Unit = {
-        val procedures = new DummyProcedures()
-        val workspace = newWorkspace
-        var events: Seq[Event] = Seq()
-        val compilerManager = manager(workspace, procedures, ((e, o) => (events = events :+ e)))
-        run(compilerManager)
-        assertions(workspace, compilerManager, events)
-      }
+    assertions: (AbstractWorkspace, CompilerManager, Seq[Event]) => Unit): Unit = {
+      val procedures = new DummyProcedures()
+      val workspace = newWorkspace
+      var events: Seq[Event] = Seq()
+      val compilerManager = manager(workspace, procedures, ((e, o) => { events = events :+ e }))
+      run(compilerManager)
+      assertions(workspace, compilerManager, events)
+    }
 
   trait Helper {
     var widgets: Seq[JobOwner] = Seq.empty[JobOwner]
@@ -154,81 +154,92 @@ class CompilerManagerTests extends AnyFunSuite {
     assert(widget.value == Double.box(10))
   } }
 
- test("sets an updating interface global widget to the value of the same-named (te)") { new Helper {
-    val widget = new DummyTeSliderWidget("", Double.box(0))
-    widgets = Seq(widget)
-    source = "globals [te]"
-    this.loadWidgets()
-    workspace.world.setObserverVariableByName("te", Double.box(10))
-    val updateIGValue = new InterfaceGlobalEvent(widget, false, true, false, false)
-    compilerManager.handle(updateIGValue)
-    assert(widget.value == Double.box(10))
- } }
+  test("sets an updating interface global widget to the value of the same-named (te)") {
+    new Helper {
+      val widget = new DummyTeSliderWidget("", Double.box(0))
+      widgets = Seq(widget)
+      source = "globals [te]"
+      this.loadWidgets()
+      workspace.world.setObserverVariableByName("te", Double.box(10))
+      val updateIGValue = new InterfaceGlobalEvent(widget, false, true, false, false)
+      compilerManager.handle(updateIGValue)
+      assert(widget.value == Double.box(10))
+    }
+  }
 
- test("sets a widget to value 0 and 20 and the environment should change after compiling") { new Helper {
-    val widget = new DummyTeSliderWidget("", Double.box(20))
-    widgets = Seq(widget)
-    source = "globals [te]"
-    this.loadWidgets()
-    widget.value = Double.box(0)
-    compilerManager.handle(new CompileAllEvent)
-    assert(workspace.world.getObserverVariableByName("te") == Double.box(0))
-    widget.value = Double.box(20)
-    compilerManager.handle(new CompileAllEvent)
-    assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
- } }
+  test("sets a widget to value 0 and 20 and the environment should change after compiling") {
+    new Helper {
+      val widget = new DummyTeSliderWidget("", Double.box(20))
+      widgets = Seq(widget)
+      source = "globals [te]"
+      this.loadWidgets()
+      widget.value = Double.box(0)
+      compilerManager.handle(new CompileAllEvent)
+      assert(workspace.world.getObserverVariableByName("te") == Double.box(0))
+      widget.value = Double.box(20)
+      compilerManager.handle(new CompileAllEvent)
+      assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
+    }
+  }
 
- test("sets a widget to value 20 and the environment should change after compiling (snd)") { new Helper {
-    val widget = new DummyTeSliderWidget("", Double.box(0))
-    widgets = Seq(widget)
-    source = "globals [te]"
-    this.loadWidgets()
-    widget.value = Double.box(20)
-    assert(workspace.world.getObserverVariableByName("te") == Double.box(0))
-    compilerManager.handle(new CompileAllEvent)
-    assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
- } }
+  test("sets a widget to value 20 and the environment should change after compiling (snd)") {
+    new Helper {
+      val widget = new DummyTeSliderWidget("", Double.box(0))
+      widgets = Seq(widget)
+      source = "globals [te]"
+      this.loadWidgets()
+      widget.value = Double.box(20)
+      assert(workspace.world.getObserverVariableByName("te") == Double.box(0))
+      compilerManager.handle(new CompileAllEvent)
+      assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
+    }
+  }
 
- test("sets a widget to value 0 and 20 and the environment should change after interface with no name change or updating") { new Helper {
-    val widget = new DummyTeSliderWidget("", Double.box(20))
-    widgets = Seq(widget)
-    source = "globals [te]"
-    this.loadWidgets()
-    val updateIGValue = new InterfaceGlobalEvent(widget, false, false, false, false)
-    widget.value = Double.box(0)
-    compilerManager.handle(updateIGValue)
-    assert(workspace.world.getObserverVariableByName("te") == Double.box(0))
-    widget.value = Double.box(20)
-    assert(workspace.world.getObserverVariableByName("te") == Double.box(0))
-    compilerManager.handle(updateIGValue)
-    assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
- } }
+  test("sets a widget to value 0 and 20 and the environment should change after interface with no name change or updating") {
+    new Helper {
+      val widget = new DummyTeSliderWidget("", Double.box(20))
+      widgets = Seq(widget)
+      source = "globals [te]"
+      this.loadWidgets()
+      val updateIGValue = new InterfaceGlobalEvent(widget, false, false, false, false)
+      widget.value = Double.box(0)
+      compilerManager.handle(updateIGValue)
+      assert(workspace.world.getObserverVariableByName("te") == Double.box(0))
+      widget.value = Double.box(20)
+      assert(workspace.world.getObserverVariableByName("te") == Double.box(0))
+      compilerManager.handle(updateIGValue)
+      assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
+    }
+  }
 
- test("sets a widget to value 0 and 20 and the environment should change after interface with name changes") { new Helper {
-    val widget = new DummyTeSliderWidget("", Double.box(20))
-    widgets = Seq(widget)
-    source = "globals [te]"
-    this.loadWidgets()
-    val updateIGValue = new InterfaceGlobalEvent(widget, false, true, false, false)
-    widget.value = Double.box(0)
-    compilerManager.handle(updateIGValue)
-    assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
-    widget.value = Double.box(30)
-    compilerManager.handle(updateIGValue)
-    assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
-    compilerManager.handle(new CompileAllEvent)
-    assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
- } }
+  test("sets a widget to value 0 and 20 and the environment should change after interface with name changes") {
+    new Helper {
+      val widget = new DummyTeSliderWidget("", Double.box(20))
+      widgets = Seq(widget)
+      source = "globals [te]"
+      this.loadWidgets()
+      val updateIGValue = new InterfaceGlobalEvent(widget, false, true, false, false)
+      widget.value = Double.box(0)
+      compilerManager.handle(updateIGValue)
+      assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
+      widget.value = Double.box(30)
+      compilerManager.handle(updateIGValue)
+      assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
+      compilerManager.handle(new CompileAllEvent)
+      assert(workspace.world.getObserverVariableByName("te") == Double.box(20))
+    }
+  }
 
- test("sets a widgets variable to contain a sequence of IGWidget and TeSliderWidget")
- { new Helper {
-    val widget = new DummyIGWidget("")
-    val sWidget = new DummyTeSliderWidget("")
-    widgets = Seq(widget, sWidget)
-    this.loadWidgets()
-    assert(compilerManager.widgets.contains(widget))
-    assert(compilerManager.widgets.contains(sWidget))
-  } }
+  test("sets a widgets variable to contain a sequence of IGWidget and TeSliderWidget") {
+    new Helper {
+      val widget = new DummyIGWidget("")
+      val sWidget = new DummyTeSliderWidget("")
+      widgets = Seq(widget, sWidget)
+      this.loadWidgets()
+      assert(compilerManager.widgets.contains(widget))
+      assert(compilerManager.widgets.contains(sWidget))
+    }
+  }
 
   test("handles an interface global event where the value has changed by setting the global to the value of the widget") { new Helper {
     val widget = new DummyIGWidget("", Double.box(10))

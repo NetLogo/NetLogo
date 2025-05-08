@@ -26,7 +26,7 @@ class MethodSelectorTests extends AnyFunSuite {
     parms + m.getReturnType.getSimpleName
   }
   // janky that we need actual prims at runtime to run the tests, but oh well - ST 5/4/13
-  def instantiate[T](name: String) = {
+  def instantiate[T](name: String): T = {
     import scala.language.existentials
     val klass =
       try Class.forName("org.nlogo.prim.etc." + name)
@@ -34,7 +34,7 @@ class MethodSelectorTests extends AnyFunSuite {
         case e: ClassNotFoundException =>
           Class.forName("org.nlogo.prim." + name)
       }
-      klass.getDeclaredConstructor().newInstance().asInstanceOf[T]
+    klass.getDeclaredConstructor().newInstance().asInstanceOf[T]
   }
   // make sure our cost metric prefers specific types.  there is no actual conversion cost, but
   // presumably the method that knows to handle the specific type will be more efficient than the

@@ -2,7 +2,8 @@
 
 package org.nlogo.api
 
-trait HubNetWorkspaceInterface extends CompilerServices with DisplayModelName {
+trait HubNetWorkspaceInterface extends CompilerServices {
   def getPropertiesInterface: WorldPropertiesInterface
   def hubNetRunning_=(running: Boolean): Unit
+  def modelNameForDisplay: String
 }

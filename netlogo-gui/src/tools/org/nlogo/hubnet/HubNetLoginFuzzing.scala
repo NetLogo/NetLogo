@@ -63,11 +63,11 @@ object HubNetLoginFuzzing extends App {
   val actions: Iterable[ActionRunnable] =
     Iterator
       .continually(makeActions(random))
-      .map(makeActionRunnables _)
+      .map(makeActionRunnables)
       .take(actionCount)
       .toSeq
 
-  actions.foreach(threadPool.submit _)
+  actions.foreach(threadPool.submit)
 
   threadPool.shutdown()
 
@@ -178,14 +178,14 @@ object HubNetLoginFuzzing extends App {
                       out.writeObject(ExitMessage("DONE!")); out.flush()
                   }
                   events = Sent(send) :: events.tail
-                    case WaitOneMessage =>
-                      try {
-                        val obj = in.readObject()
-                        events = Received(obj) :: events
-                      } catch {
-                        case to: java.net.SocketTimeoutException =>
-                          events = Timeout :: events
-                      }
+                case WaitOneMessage =>
+                  try {
+                    val obj = in.readObject()
+                    events = Received(obj) :: events
+                  } catch {
+                    case to: java.net.SocketTimeoutException =>
+                      events = Timeout :: events
+                  }
               }
               remainingActions = remainingActions.tail
             }

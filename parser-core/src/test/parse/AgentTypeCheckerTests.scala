@@ -16,7 +16,7 @@ class AgentTypeCheckerTests extends AnyFunSuite {
   def testOne(source: String, expected: String): Unit = {
     val defs = compile(source)
     assertResult(expected)(
-      defs.map { pd: ProcedureDefinition =>
+      defs.map { (pd: ProcedureDefinition) =>
           pd.procedure.name + ":" + pd.procedure.agentClassString }
         .mkString(" "))
   }

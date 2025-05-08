@@ -101,7 +101,7 @@ trait MockSuite extends AnyFunSuite {
   //
 
   // one: The invocation is expected once and once only. (we like the shorter name better - ST 6/23/10)
-  def one[T] = expectations.oneOf[T] _
+  def one[T] = expectations.oneOf[T]
   // exactly(n).of: The invocation is expected exactly n times. Note: one is a convenient shorthand for exactly(1).
   def exactly(n:Int) = expectations.exactly(n)
   // atLeast(n).of: The invocation is expected at least n times.
@@ -111,11 +111,11 @@ trait MockSuite extends AnyFunSuite {
   // between(min, max).of: The invocation is expected at least min times and at most max times.
   def between(min:Int, max:Int) = expectations.between(min, max)
   //allowing: The invocation is allowed any number of times but does not have to happen.
-  def allowing[T] = expectations.allowing[T] _
+  def allowing[T] = expectations.allowing[T]
   //ignoring: The same as allowing. Allowing or ignoring should be chosen to make the test code clearly express intent.
-  def ignoring[T] = expectations.ignoring[T] _
+  def ignoring[T] = expectations.ignoring[T]
   //never: The invocation is not expected at all. This is used to make tests more explicit and so easier to understand.
-  def never[T] = expectations.never[T] _
+  def never[T] = expectations.never[T]
 
   //
   //  Argument Matchers
