@@ -104,7 +104,7 @@ class TestBehaviorSpace extends AnyFunSuite
     def spreadsheet(worker: LabInterface.Worker, writer: java.io.StringWriter): Unit = {
       worker.addSpreadsheetWriter(filename, dims, new java.io.PrintWriter(writer))
     }
-    runHelper(List(("-table.csv", table _), ("-spreadsheet.csv", spreadsheet _))
+    runHelper(List(("-table.csv", table), ("-spreadsheet.csv", spreadsheet))
       .filter {
         case (suffix, _) =>
           suffix == "-table.csv" && wantTable ||

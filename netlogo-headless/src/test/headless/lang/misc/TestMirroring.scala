@@ -147,11 +147,11 @@ class TestMirroring extends FixtureSuite {
     ws.command("reset-ticks tick")
     val (m1, u1) = diffs(m0, mirrorables)
     assertResult((3, (0, 0, 1))) { (m1.size, sizes(u1)) }
-    assertResult(1.0)(m1(AgentKey(World, 0))(Mirrorables.World.Variables.Ticks.id))
+    assertResult(1.0)(m1(AgentKey(World, 0))(Mirrorables.World.Variables.Ticks.id).asInstanceOf[Double])
     ws.command("tick-advance 0.1")
     val (m2, u2) = diffs(m1, mirrorables)
     assertResult((3, (0, 0, 1))) { (m2.size, sizes(u2)) }
-    assertResult(1.1)(m2(AgentKey(World, 0))(Mirrorables.World.Variables.Ticks.id))
+    assertResult(1.1)(m2(AgentKey(World, 0))(Mirrorables.World.Variables.Ticks.id).asInstanceOf[Double])
   }
 
   test("labels are mirrored as strings") { implicit fixture =>

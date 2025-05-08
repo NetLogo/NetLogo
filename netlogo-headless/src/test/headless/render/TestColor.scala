@@ -8,7 +8,7 @@ import org.nlogo.shape.TestHelpers._
 
 class TestColor extends AbstractTestRenderer {
 
-  testUsingWorkspace("non-recolorable shapes dont respond to 'set color' with no alpha"){ workspace: HeadlessWorkspace =>
+  testUsingWorkspace("non-recolorable shapes dont respond to 'set color' with no alpha"){ (workspace: HeadlessWorkspace) =>
     workspace.setShapes(makeSquarePolygon(recolorable = false))
     // size 15 fills up almost the entire world.
     workspace.command("crt 1 [ set shape \"test\" set heading 0 set size 15]")
@@ -19,7 +19,7 @@ class TestColor extends AbstractTestRenderer {
     workspace.testColors(255, 255, 255)
   }
 
-  testUsingWorkspace("non-recolorable shapes do respond to 'set color' with alpha"){ workspace: HeadlessWorkspace =>
+  testUsingWorkspace("non-recolorable shapes do respond to 'set color' with alpha"){ (workspace: HeadlessWorkspace) =>
     workspace.setShapes(makeSquarePolygon(recolorable = false))
     // size 15 fills up almost the entire world.
     workspace.command("crt 1 [ set shape \"test\" set heading 0 set size 15]")
@@ -32,7 +32,7 @@ class TestColor extends AbstractTestRenderer {
     workspace.testColors(127,127,127,255)
   }
 
-  testUsingWorkspace("recolorable shapes respond to 'set color'"){ workspace: HeadlessWorkspace =>
+  testUsingWorkspace("recolorable shapes respond to 'set color'"){ (workspace: HeadlessWorkspace) =>
     workspace.setShapes(makeSquarePolygon(recolorable = true))
     // size 15 fills up almost the entire world.
     workspace.command("crt 1 [ set shape \"test\" set heading 0 set size 15 set color white]")
@@ -44,7 +44,7 @@ class TestColor extends AbstractTestRenderer {
     workspace.testColors(215, 50, 41)
   }
 
-  testUsingWorkspace("recolorable shapes also respond to 'set color' with alpha"){ workspace: HeadlessWorkspace =>
+  testUsingWorkspace("recolorable shapes also respond to 'set color' with alpha"){ (workspace: HeadlessWorkspace) =>
     workspace.setShapes(makeSquarePolygon(recolorable = true))
     // size 15 fills up almost the entire world.
     workspace.command("crt 1 [ set shape \"test\" set heading 0 set size 15 set color red]")
