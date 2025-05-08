@@ -460,7 +460,7 @@ public class View
       }
     }, true));
 
-    menu.add(new MenuItem(workspace.switchTo3DViewAction, true));
+    menu.add(new MenuItem(workspace.getSwitchTo3DViewAction(), true));
 
     menu.addSeparator();
 

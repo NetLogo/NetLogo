@@ -28,7 +28,7 @@ extends PlotInterface {
   def name(newName:String): Unit ={ name = newName }
 
   var _pens = List[PlotPen]()
-  def pens = _pens
+  def pens: List[PlotPen] = _pens
   def pens_=(pens:List[PlotPen]): Unit ={
     _pens = pens
     currentPen = pens.headOption

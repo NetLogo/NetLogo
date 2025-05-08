@@ -118,6 +118,9 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
       open3DView()
   }
 
+  def getSwitchTo3DViewAction: Action =
+    switchTo3DViewAction
+
   hubNetControlCenterAction.setEnabled(false)
 
   viewManager.setPrimary(view)

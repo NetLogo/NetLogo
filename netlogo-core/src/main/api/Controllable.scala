@@ -9,7 +9,11 @@ import org.nlogo.core.CompilerException
  * methods independent of App.app and headless.HeadlessWorkspace.  This is useful for making java
  * software that can run NetLogo in both GUI and Headless mode.
  */
-trait Controllable extends Controller {
+trait Controllable {
+
+  def command(source: String): Unit
+
+  def report(source: String): AnyRef
 
   @throws(classOf[java.io.IOException])
   def open(path: String): Unit = open(path, false)
