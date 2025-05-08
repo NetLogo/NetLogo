@@ -41,7 +41,7 @@ class ArrowLambdaBlock(
   val internalScope:  SymbolTable,
   val sourceLocation: SourceLocation) extends DelayedBlock {
 
-    val argNames = arguments.argumentNames
+  val argNames = arguments.argumentNames
 
   def this(
     openBracket:    Token,
@@ -82,15 +82,16 @@ class AmbiguousDelayedBlock(
   val internalScope:  SymbolTable,
   val sourceLocation: SourceLocation)
   extends DelayedBlock {
-    def this(
-      openBracket: Token,
-      unterminatedTokens: Seq[Token],
-      internalScope: SymbolTable) =
-      this(openBracket,
-        unterminatedTokens,
-        internalScope,
-        openBracket.sourceLocation.copy(end = unterminatedTokens.lastOption.map(_.end)
-          .getOrElse(openBracket.end)))
+
+  def this(
+    openBracket: Token,
+    unterminatedTokens: Seq[Token],
+    internalScope: SymbolTable) =
+    this(openBracket,
+      unterminatedTokens,
+      internalScope,
+      openBracket.sourceLocation.copy(end = unterminatedTokens.lastOption.map(_.end)
+        .getOrElse(openBracket.end)))
 
   lazy val tokens = openBracket +: unterminatedTokens :+ Token.Eof
 

@@ -46,9 +46,9 @@ trait WidgetConverter extends AutoConvertable {
     Try {
       w match {
         case cWidget@(_: Button | _: Plot) =>
-          cWidget.convertSource(autoConverter.convertStatement _)
+          cWidget.convertSource(autoConverter.convertStatement)
         case rWidget@(_: Monitor | _: Slider) =>
-          rWidget.convertSource(autoConverter.convertReporterExpression _)
+          rWidget.convertSource(autoConverter.convertReporterExpression)
         case _ => w
       }
     }

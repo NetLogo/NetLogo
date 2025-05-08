@@ -7,7 +7,7 @@ import org.nlogo.nvm.{ AssemblerAssistant, Command, Context, CustomAssembled, Mu
 
 class _wait extends Command with CustomAssembled {
 
-  private[this] val let = Let("~WAITCOUNTER")
+  private val let = Let("~WAITCOUNTER")
 
   override def perform(context: Context): Unit = {
     val now = System.nanoTime()

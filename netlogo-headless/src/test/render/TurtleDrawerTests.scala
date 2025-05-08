@@ -60,13 +60,13 @@ class TurtleTestsDrawer extends MockSuite {
     mockTest("same shape different color should " +
             "add shape (recolorable:true) (size:"+size+")") {
       val turtles = colors.map(c => TestTurtle(size=size, color=c))
-      val tester = CacheTester(testShapeIsRecolorable = true, turtles:_*)
+      val tester = CacheTester(testShapeIsRecolorable = true, turtles*)
       assert(tester.cacheSize == (if(cachableSizes contains size) turtles.size else 0))
     }
     mockTest("changing color shouldn't " +
             "add when not recolorable (size:" + size + ")") {
       val turtles = colors.map(c => TestTurtle(size=size, color=c))
-      val tester = CacheTester(testShapeIsRecolorable = false, turtles:_*)
+      val tester = CacheTester(testShapeIsRecolorable = false, turtles*)
       // we should only add one shape, regardless of how many turtles there are.
       assert(tester.cacheSize == (if (cachableSizes contains size) 1 else 0))
     }
@@ -78,13 +78,13 @@ class TurtleTestsDrawer extends MockSuite {
     mockTest("three different cachable sizes should " +
             "add shapes (recolorable:"+recolorable+")") {
       val turtles = cachableSizes.map(s => TestTurtle(size = s))
-      val tester = CacheTester(testShapeIsRecolorable = recolorable, turtles:_*)
+      val tester = CacheTester(testShapeIsRecolorable = recolorable, turtles*)
       assert(tester.cacheSize == 3)
     }
     mockTest("lots of different sizes should " +
             "add some shapes (recolorable:"+recolorable+")") {
       val turtles = testSizes.map(s => TestTurtle(size = s)) // only 3 of these sizes are cachable
-      val tester = CacheTester(testShapeIsRecolorable = recolorable, turtles:_*)
+      val tester = CacheTester(testShapeIsRecolorable = recolorable, turtles*)
       assert(tester.cacheSize == 3) // so only 3 shapes should be in the cache.
     }
   }

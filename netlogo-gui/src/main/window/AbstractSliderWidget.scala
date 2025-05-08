@@ -124,7 +124,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     }
   }
 
-  if (boldName) {
+  if (_boldName) {
     nameComponent.setFont(nameComponent.getFont.deriveFont(Font.BOLD))
     unitsComponent.setFont(unitsComponent.getFont.deriveFont(Font.BOLD))
   }

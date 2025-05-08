@@ -57,7 +57,6 @@ class TokenLexer {
       case ((Some('}'), n), '}')         => ((None, n - 1), Accept)
       case ((Some(c), 0), _) if c != '{' => ((None, 0), Error) // may be able to clean this up
       case ((_, n), c)                   => ((Some(c), n), Accept)
-      case _                             => ((None, 0), Error)
     }
 
     def apply(c: Char): LexStates =
@@ -174,5 +173,5 @@ object WhitespaceTokenizingLexer extends TokenLexer {
     whitespace +: super.lexerOrdering
 
   def whitespace: (LexPredicate, TokenGenerator) =
-    (oneOrMore(Character.isWhitespace _), (s) => if (s.nonEmpty) Some((s, TokenType.Whitespace, s)) else None)
+    (oneOrMore(Character.isWhitespace), (s) => if (s.nonEmpty) Some((s, TokenType.Whitespace, s)) else None)
 }

@@ -14,7 +14,7 @@ trait DimensionManagement { this: WorldJ =>
 
   protected val dimensionVariableNames: Seq[String]
 
-  private[agent] var rootsTable: RootsTable = _
+  private[agent] var rootsTable: RootsTable = null
 
   // world geometry. The _...Boxed versions are for efficiency
   private def worldWidth(i: Int) = { _worldWidth = i }

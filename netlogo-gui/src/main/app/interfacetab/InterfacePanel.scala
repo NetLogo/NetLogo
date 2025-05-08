@@ -133,7 +133,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     var needsRecompile: Boolean = false
     for (wrapper <- hitList) {
       removeWidget(wrapper)
-      wrapper.widget() match {
+      wrapper.widget match {
         case _: InterfaceGlobalWidget => needsRecompile = true
         case _ =>
       }
@@ -154,9 +154,9 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     // the observer variables and constraints might not get reallocated in which case
     // if we try to add a different widget with the same name we get a constraint violation
     // from the old constraint. yuck.  ev 11/27/07
-    new RemoveConstraintEvent(wrapper.widget().displayName).raise(this)
+    new RemoveConstraintEvent(wrapper.widget.displayName).raise(this)
 
-    LogManager.widgetRemoved(true, wrapper.widget().classDisplayName, wrapper.widget().displayName)
+    LogManager.widgetRemoved(true, wrapper.widget.classDisplayName, wrapper.widget.displayName)
   }
 
   /// loading and saving
@@ -204,7 +204,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
     // automatically add the view widget since it isn't in
     // the components list in 3D - ev 7/5/07
     (viewWidget.model +: getComponents.reverse.collect {
-      case wrapper: WidgetWrapper => wrapper.widget().model
+      case wrapper: WidgetWrapper => wrapper.widget.model
     }).distinct.toIndexedSeq
 
   override private[app] def contains(w: Editable): Boolean =
@@ -241,7 +241,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
       setVisible(false)
       for (component <- getComponents) {
         component match {
-          case w: WidgetWrapper if w.widget() != viewWidget =>
+          case w: WidgetWrapper if w.widget != viewWidget =>
             removeWidget(w)
           case _ =>
         }
@@ -257,7 +257,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   private def findActionButton(key: Char): ButtonWidget = {
     getComponents.collect {
-      case w: WidgetWrapper => w.widget()
+      case w: WidgetWrapper => w.widget
     }.collect {
       case b: ButtonWidget if b.actionKey.toUpper == key.toUpper => b
     }.headOption.orNull
@@ -265,7 +265,7 @@ class InterfacePanel(val viewWidget: ViewWidgetInterface, workspace: GUIWorkspac
 
   private def enableButtonKeys(enabled: Boolean): Unit =
     getComponents.collect {
-      case w: WidgetWrapper => w.widget()
+      case w: WidgetWrapper => w.widget
     }.foreach {
       case b: ButtonWidget => b.keyEnabled(enabled)
       case _ =>

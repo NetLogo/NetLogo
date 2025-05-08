@@ -13,7 +13,7 @@ import org.objectweb.asm.ClassReader
  */
 object PrimitiveCache {
   private val cache = new collection.mutable.HashMap[String, ClassReader]
-  def getClassReader(c: Class[_]) =
+  def getClassReader(c: Class[?]) =
     synchronized { // be threadsafe - ST 2/25/08
       def read = {
         val in = Thread.currentThread

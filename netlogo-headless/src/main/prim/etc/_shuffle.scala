@@ -12,13 +12,13 @@ import scala.jdk.CollectionConverters.BufferHasAsJava
 
 class _shuffle extends Reporter {
   def report(context: Context): AnyRef = {
-    val result: JList[AnyRef] = ListBuffer(argEvalList(context, 0).toVector: _*).asJava
+    val result: JList[AnyRef] = ListBuffer(argEvalList(context, 0).toVector*).asJava
     Collections.shuffle(result, context.job.random)
     LogoList.fromJava(result)
   }
 
   def report_1(context: Context, l0: LogoList): LogoList = {
-    val result: JList[AnyRef] = ListBuffer(l0.toVector: _*).asJava
+    val result: JList[AnyRef] = ListBuffer(l0.toVector*).asJava
     Collections.shuffle(result, context.job.random)
     LogoList.fromJava(result)
   }

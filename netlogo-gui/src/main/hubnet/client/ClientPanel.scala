@@ -30,12 +30,9 @@ import scala.concurrent.Future
 // moved, so we use events.  - ST 8/24/03
 class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
                   errorHandler:ErrorHandler,
-                  compiler:CompilerServices) extends JPanel(new BorderLayout) with Transparent with
-        AddJobEvent.Handler with
-        ExportPlotEvent.Handler with
-        InterfaceGlobalEvent.Handler with
-        AddSliderConstraintEvent.Handler with
-        ThemeSync {
+                  compiler:CompilerServices)
+  extends JPanel(new BorderLayout) with Transparent with AddJobEvent.Handler with ExportPlotEvent.Handler
+  with InterfaceGlobalEvent.Handler with AddSliderConstraintEvent.Handler with ThemeSync {
 
   var clientGUI:ClientGUI = null
   var viewWidget:ClientView = null
@@ -95,13 +92,13 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
            .foreach({ filename =>
              try new AbstractExporter(filename) {
                override def `export`(writer: PrintWriter): Unit = {
-                 new CorePlotExporter(plot, Dump.csv).export(writer)
+                 new CorePlotExporter(plot, Dump.csv).`export`(writer)
                }
-             }.export("plot", "HubNet Client", "")
+             }.`export`("plot", "HubNet Client", "")
              catch {
                case ex: IOException => org.nlogo.api.Exceptions.handle(ex)
              }
-           })(NetLogoExecutionContext.backgroundExecutionContext)
+           })(using NetLogoExecutionContext.backgroundExecutionContext)
         }
     }
   }
@@ -209,7 +206,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       // This instance changes the plot-pen-interval
       case d:Double => plotWidget.plot.currentPen.get.interval = d
       // This instance is used for anything that has a lot of data
-      case list: List[_] => list(0) match {
+      case list: List[?] => list(0) match {
         case 'x' =>
           val min: Double = list(1).asInstanceOf[Double]
           val max: Double = list(2).asInstanceOf[Double]

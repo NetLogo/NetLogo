@@ -25,7 +25,7 @@ object WidgetWrapper {
 }
 
 // public for widget extension - ST 6/12/08
-class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
+class WidgetWrapper(val widget: Widget, val interfacePanel: WidgetPanel)
   extends JLayeredPane
   with WidgetWrapperInterface
   with MouseListener
@@ -91,9 +91,6 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         doPopup(e)
     }
   })
-
-  def widget(): Widget =
-    widget
 
   def horizontallyResizable: Boolean =
     _horizontallyResizable
@@ -488,13 +485,7 @@ class WidgetWrapper(widget: Widget, val interfacePanel: WidgetPanel)
         case _ =>
       }
 
-      minWidgetSize = minWidgetSize match {
-        case d: Dimension =>
-          new Dimension(d.width.max(MinWidgetWidth), d.height.max(MinWidgetHeight))
-
-        case _ =>
-          new Dimension(MinWidgetWidth, MinWidgetHeight)
-      }
+      minWidgetSize = new Dimension(minWidgetSize.width.max(MinWidgetWidth), minWidgetSize.height.max(MinWidgetHeight))
 
       mouseMode match {
         case MouseMode.S =>

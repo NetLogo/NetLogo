@@ -19,7 +19,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
   // Locale-aware, case-insensitive ordering for optional alphabetic sorting of procedures:
   private lazy val ordering = {
     val locale = I18N.localeFromPreferences.getOrElse(I18N.gui.defaultLocale)
-    Ordering.comparatorToOrdering(Collator.getInstance(locale))
+    Ordering.comparatorToOrdering(using Collator.getInstance(locale))
   }
 
   setDiameter(6)
@@ -36,7 +36,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
       val sort: Seq[String] => Seq[String] =
         prefs.get("proceduresMenuSortOrder", "default") match {
           // Sort procedures by alphabetical order if requested in preferences
-          case AlphaSort => _.sorted(ordering)
+          case AlphaSort => _.sorted(using ordering)
           // Otherwise, sort procedures by order of appearance in the code tab
           case default => _.sortBy(procsTable(_).identifier.start)
         }
@@ -81,7 +81,7 @@ extends ToolBarMenu(I18N.gui.get("tabs.code.procedures")) with RoundedBorderPane
         r.repaint()
       })
 
-      addKeyListener { e: KeyEvent =>
+      addKeyListener { (e: KeyEvent) =>
         // Although it seems like you should just be able to do:
         // MenuSelectionManager.defaultManager().processKeyEvent(e)
         // here and have arrow keys and enter work, this is not the case.

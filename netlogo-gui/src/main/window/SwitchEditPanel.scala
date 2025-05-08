@@ -45,6 +45,6 @@ class SwitchEditPanel(target: SwitchWidget, compiler: CompilerServices) extends 
     name.requestFocus()
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(name, oldSize)
 }

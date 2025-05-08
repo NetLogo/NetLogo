@@ -26,17 +26,17 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
   protected var patchSizeChanged: Boolean = false
   protected var fontSizeChanged: Boolean = false
 
-  protected var newPatchSize: Double = _
+  protected var newPatchSize: Double = 0
 
-  protected var newMinX: Int = _
-  protected var newMaxX: Int = _
-  protected var newMinY: Int = _
-  protected var newMaxY: Int = _
+  protected var newMinX: Int = 0
+  protected var newMaxX: Int = 0
+  protected var newMinY: Int = 0
+  protected var newMaxY: Int = 0
 
-  protected var newWrapX: Boolean = _
-  protected var newWrapY: Boolean = _
+  protected var newWrapX: Boolean = false
+  protected var newWrapY: Boolean = false
 
-  protected var newFontSize: Int = _
+  protected var newFontSize: Int = 0
 
   protected var _error: Option[CompilerException] = None
 
@@ -137,7 +137,7 @@ abstract class WorldViewSettings(protected val workspace: GUIWorkspace, protecte
 
   def wireframe(on: Boolean): Unit = {
     if (on != wireframe) {
-      workspace.glView.wireframeOn_=(on)
+      workspace.glView.setWireframeOn(on)
       workspace.glView.repaint()
     }
   }

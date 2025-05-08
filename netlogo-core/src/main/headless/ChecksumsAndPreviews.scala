@@ -12,6 +12,7 @@ import scala.io.Source
 import org.nlogo.api.{ FileIO, Version }
 import org.nlogo.core.CompilerException
 import org.nlogo.headless.ChecksumsAndPreviewsSettings.ChecksumsFilePath
+import org.nlogo.nvm.Workspace
 import org.nlogo.workspace.{ Checksummer, ModelsLibrary, PreviewCommandsRunner }
 
 object ChecksumsAndPreviews {
@@ -84,9 +85,9 @@ object ChecksumsAndPreviews {
       case Array("--previews") =>
         paths(Previews.okPath, false).foreach(Previews.remake)
       case Array("--checksum-export", path) =>
-        ChecksumExports.export(List(path))
+        ChecksumExports.`export`(List(path))
       case Array("--checksum-exports") =>
-        ChecksumExports.export(paths(Checksums.okPath, includeBenchmarks = !Version.is3D))
+        ChecksumExports.`export`(paths(Checksums.okPath, includeBenchmarks = !Version.is3D))
       case _ =>
         throw new Exception(s"Unexpected input arguments: $argv")
     }
@@ -96,7 +97,7 @@ object ChecksumsAndPreviews {
   object Previews {
 
     def needsManualPreview(previewCommands: String) =
-      previewCommands contains "need-to-manually-make-preview-for-this-model"
+      previewCommands.contains("need-to-manually-make-preview-for-this-model")
 
     // NW is only included temporarily until extension compiles correctly - AAB 7-2022
     def okPath(path: String) =
@@ -110,7 +111,9 @@ object ChecksumsAndPreviews {
       }
       val previewPath = path.replaceFirst(".nlogox", ".png")
       try {
-        val runner = PreviewCommandsRunner.fromModelPath(new WorkspaceFactory, path)
+        val runner = PreviewCommandsRunner.fromModelPath(new WorkspaceFactory {
+          def openCurrentModelIn(workspace: Workspace): Unit = {}
+        }, path)
         println("making preview for: " + path)
         FileIO.writeImageFile(runner.previewImage.get, previewPath, "PNG")
       } catch {

@@ -112,7 +112,7 @@ with Event.LinkChild {
     button.keyTriggered()
   }
 
-  def findWidget(name: String, tpe: Class[_]): Widget = {
+  def findWidget(name: String, tpe: Class[?]): Widget = {
     EventQueue.mustBeEventDispatchThread()
     def matches(comp: java.awt.Component) =
       comp.getClass() == tpe && comp.asInstanceOf[Widget].displayName == name

@@ -12,9 +12,9 @@ import java.awt.EventQueue
 abstract class JobWidget(val random: MersenneTwisterFast)
   extends SingleErrorWidget with JobOwner with CompiledEvent.Handler {
 
-  private var suppressRecompiles: Boolean = _
+  private var suppressRecompiles: Boolean = false
 
-  private var recompilePending: Boolean = _
+  private var recompilePending: Boolean = false
 
   var agentKind: AgentKind = null
 

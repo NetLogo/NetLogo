@@ -5,7 +5,7 @@ package org.nlogo.prim
 import org.nlogo.nvm.{ Command, Context, EditorWorkspace }
 
 class _magicopen(_name: Option[String]) extends Command {
-  private[this] val name = _name
+  private val name = _name
 
   switches = true
 

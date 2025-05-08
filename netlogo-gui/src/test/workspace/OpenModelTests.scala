@@ -534,10 +534,10 @@ class OpenModelTests extends AnyFunSuite {
 
 class MockController extends OpenModel.Controller {
   var invalidURI: URI = new java.net.URI("")
-  var invalidVersion: String = _
+  var invalidVersion: String = ""
   var notifiedModelArity: Int = 0
-  var notifiedModelVersion: String = _
-  var notifiedException: Exception = _
+  var notifiedModelVersion: String = ""
+  var notifiedException: Exception = null
   var notifiedVersionUnknown: Boolean = false
   var willOpenModel = false
 

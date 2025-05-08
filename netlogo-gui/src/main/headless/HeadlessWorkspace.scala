@@ -32,12 +32,12 @@ object HeadlessWorkspace {
 
   def newInstance(is3d: Boolean): HeadlessWorkspace = newInstance(classOf[HeadlessWorkspace], is3d)
 
-  def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = newInstance(subclass, Version.is3D)
+  def newInstance(subclass: Class[? <: HeadlessWorkspace]): HeadlessWorkspace = newInstance(subclass, Version.is3D)
 
   /**
    * If you derive your own subclass of HeadlessWorkspace, use this method to instantiate it.
    */
-  def newInstance(subclass: Class[_ <: HeadlessWorkspace], is3d: Boolean): HeadlessWorkspace = {
+  def newInstance(subclass: Class[? <: HeadlessWorkspace], is3d: Boolean): HeadlessWorkspace = {
     val pico = new Pico
     pico.addComponent(if (is3d) classOf[World3D] else classOf[World2D])
     pico.add("org.nlogo.compile.Compiler")
@@ -109,7 +109,7 @@ object HeadlessWorkspace {
  * HeadlessWorkspace.newInstance instead.
  */
 class HeadlessWorkspace(
-  _world: World with CompilationManagement,
+  _world: World & CompilationManagement,
   val compiler: PresentationCompilerInterface,
   val renderer: RendererInterface,
   val aggregateManager: AggregateManagerInterface,
@@ -126,7 +126,7 @@ with org.nlogo.api.ViewSettings {
    */
   def modelOpened = _openModel.nonEmpty
 
-  private[this] var _openModel = Option.empty[Model]
+  private var _openModel = Option.empty[Model]
   def setOpenModel(model: Model): Unit = {
     _openModel = Some(model)
 

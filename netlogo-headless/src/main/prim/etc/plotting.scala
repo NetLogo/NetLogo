@@ -34,7 +34,7 @@ extends Command with PlotHelpers {
 }
 
 abstract class PlotActionCommand(args: Int*)
-extends PlotCommand(args: _*) {
+extends PlotCommand(args*) {
   override def perform(context: Context): Unit = {
     plotManager.publish(action(context))
     context.ip = next

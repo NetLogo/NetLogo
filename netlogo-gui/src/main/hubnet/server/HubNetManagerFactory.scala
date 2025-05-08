@@ -12,7 +12,7 @@ class HeadlessHubNetManagerFactory extends HubNetManagerFactory {
                                         , workspace.getLibraryManager
                                         , workspace.getCompilationEnvironment
                                         , workspace
-                                        , FileFormat.defaultAutoConvertables) _
+                                        , FileFormat.defaultAutoConvertables)
     new HeadlessHubNetManager(workspace, FileFormat.standardAnyLoader(true, workspace), converter(workspace.world.program.dialect))
   }
 }

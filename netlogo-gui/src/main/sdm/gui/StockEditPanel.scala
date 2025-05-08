@@ -64,7 +64,7 @@ class StockEditPanel(target: StockFigure, compiler: CompilerServices, colorizer:
     nameWrapper.requestFocus()
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameWrapper, initialValueExpressionWrapper, allowNegative)
 
   override def isResizable: Boolean = true

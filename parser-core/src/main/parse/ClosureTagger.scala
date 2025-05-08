@@ -11,12 +11,12 @@ class ClosureTagger extends AstTransformer {
       case r: _reporterlambda =>
         val newExp = super.visitReporterApp(app)
         val finder = new ClosedVariableFinder(r.argumentNames)
-        val allClosedVariables = finder.visitExpression(newExp.args(0))(Set())
+        val allClosedVariables = finder.visitExpression(newExp.args(0))(using Set())
         newExp.copy(reporter = r.copy(closedVariables = allClosedVariables))
       case c: _commandlambda =>
         val newExp = super.visitReporterApp(app)
         val finder = new ClosedVariableFinder(c.argumentNames)
-        val allClosedVariables = finder.visitExpression(newExp.args(0))(Set())
+        val allClosedVariables = finder.visitExpression(newExp.args(0))(using Set())
         newExp.copy(reporter = c.copy(closedVariables = allClosedVariables))
       case _ => super.visitReporterApp(app)
     }

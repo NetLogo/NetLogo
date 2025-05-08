@@ -60,74 +60,74 @@ case class EditorConfiguration(
   is3Dlanguage:         Boolean,
   menu:                 EditorMenu) {
 
-    def withFont(font: Font) =
-      copy(font = font)
-    def withListener(listener: TextListener) =
-      copy(listener = listener)
-    def withFocusTraversalEnabled(isEnabled: Boolean) =
-      copy(enableFocusTraversal = isEnabled)
-    def withCurrentLineHighlighted(isHighlighted: Boolean) =
-      copy(highlightCurrentLine = isHighlighted)
-    def withLineNumbers(show: Boolean) =
-      copy(showLineNumbers = show)
-    def withContextActions(actions: Seq[Action]) =
-      copy(contextActions = contextActions ++ actions)
-    def withMenuActions(actions: Seq[Action]) =
-      copy(menuActions = menuActions ++ actions)
-    def forThreeDLanguage(is3D: Boolean) =
-      copy(is3Dlanguage = is3D)
-    def addKeymap(key: KeyStroke, action: TextAction) =
-      copy(additionalActions = additionalActions + (key -> action))
-    def withKeymap(keymap: Map[KeyStroke, TextAction]) =
-      copy(additionalActions = keymap)
-    def withMenu(newMenu: EditorMenu) =
-      copy(menu = newMenu)
+  def withFont(font: Font) =
+    copy(font = font)
+  def withListener(listener: TextListener) =
+    copy(listener = listener)
+  def withFocusTraversalEnabled(isEnabled: Boolean) =
+    copy(enableFocusTraversal = isEnabled)
+  def withCurrentLineHighlighted(isHighlighted: Boolean) =
+    copy(highlightCurrentLine = isHighlighted)
+  def withLineNumbers(show: Boolean) =
+    copy(showLineNumbers = show)
+  def withContextActions(actions: Seq[Action]) =
+    copy(contextActions = contextActions ++ actions)
+  def withMenuActions(actions: Seq[Action]) =
+    copy(menuActions = menuActions ++ actions)
+  def forThreeDLanguage(is3D: Boolean) =
+    copy(is3Dlanguage = is3D)
+  def addKeymap(key: KeyStroke, action: TextAction) =
+    copy(additionalActions = additionalActions + (key -> action))
+  def withKeymap(keymap: Map[KeyStroke, TextAction]) =
+    copy(additionalActions = keymap)
+  def withMenu(newMenu: EditorMenu) =
+    copy(menu = newMenu)
 
-    def configureEditorArea(editor: EditorArea) = {
+  def configureEditorArea(editor: EditorArea) = {
 
-      editor.setEditorKit(new HighlightEditorKit(colorizer))
+    editor.setEditorKit(new HighlightEditorKit(colorizer))
 
-      val editorListener = new EditorListener(e => listener.textValueChanged(null))
-      editorListener.install(editor)
-      DocumentProperties.install(editor)
+    val editorListener = new EditorListener(e => listener.textValueChanged(null))
+    editorListener.install(editor)
+    DocumentProperties.install(editor)
 
-      val indenter = new DumbIndenter(editor)
-      editor.setIndenter(indenter)
+    val indenter = new DumbIndenter(editor)
+    editor.setIndenter(indenter)
 
-      if (highlightCurrentLine) {
-        new LinePainter(editor)
-      }
-
-      editor.setFont(font)
-      editor.setFocusTraversalKeysEnabled(enableFocusTraversal)
-
-      if (enableFocusTraversal) {
-        val focusTraversalListener = new FocusTraversalListener(editor)
-        editor.addFocusListener(focusTraversalListener)
-        editor.addMouseListener(focusTraversalListener)
-        editor.getInputMap.put(keystroke(KeyEvent.VK_TAB),           new TransferFocusAction())
-        editor.getInputMap.put(keystroke(KeyEvent.VK_TAB, ShiftKey), new TransferFocusBackwardAction())
-      }
-
-      additionalActions.foreach {
-        case (k, v) => editor.getInputMap.put(k, v)
-      }
-
-      (contextActions ++ menuActions).foreach {
-        case e: InstallableAction => e.install(editor)
-        case _ =>
-      }
-
-      editor.getActionMap.put(DefaultEditorKit.previousWordAction, new CorrectPreviousWordAction(editor, false))
-      editor.getActionMap.put(DefaultEditorKit.selectionPreviousWordAction, new CorrectPreviousWordAction(editor, true))
-      editor.getActionMap.put(DefaultEditorKit.nextWordAction, new CorrectNextWordAction(editor, false))
-      editor.getActionMap.put(DefaultEditorKit.selectionNextWordAction, new CorrectNextWordAction(editor, true))
-      editor.getActionMap.put(DefaultEditorKit.selectWordAction, new CorrectSelectWordAction(editor))
-      editor.getActionMap.put(DefaultEditorKit.deletePrevWordAction, new CorrectDeletePrevWordAction(editor))
-      editor.getActionMap.put(DefaultEditorKit.deleteNextWordAction, new CorrectDeleteNextWordAction(editor))
-      editor.getActionMap.put(DefaultEditorKit.backwardAction, new CorrectBackwardAction(editor))
-      editor.getActionMap.put(DefaultEditorKit.forwardAction, new CorrectForwardAction(editor))
+    if (highlightCurrentLine) {
+      new LinePainter(editor)
     }
+
+    editor.setFont(font)
+    editor.setFocusTraversalKeysEnabled(enableFocusTraversal)
+
+    if (enableFocusTraversal) {
+      val focusTraversalListener = new FocusTraversalListener(editor)
+      editor.addFocusListener(focusTraversalListener)
+      editor.addMouseListener(focusTraversalListener)
+      editor.getInputMap.put(keystroke(KeyEvent.VK_TAB),           new TransferFocusAction())
+      editor.getInputMap.put(keystroke(KeyEvent.VK_TAB, ShiftKey), new TransferFocusBackwardAction())
+    }
+
+    additionalActions.foreach {
+      case (k, v) => editor.getInputMap.put(k, v)
+    }
+
+    (contextActions ++ menuActions).foreach {
+      case e: InstallableAction => e.install(editor)
+      case _ =>
+    }
+
+    editor.getActionMap.put(DefaultEditorKit.previousWordAction, new CorrectPreviousWordAction(editor, false))
+    editor.getActionMap.put(DefaultEditorKit.selectionPreviousWordAction, new CorrectPreviousWordAction(editor, true))
+    editor.getActionMap.put(DefaultEditorKit.nextWordAction, new CorrectNextWordAction(editor, false))
+    editor.getActionMap.put(DefaultEditorKit.selectionNextWordAction, new CorrectNextWordAction(editor, true))
+    editor.getActionMap.put(DefaultEditorKit.selectWordAction, new CorrectSelectWordAction(editor))
+    editor.getActionMap.put(DefaultEditorKit.deletePrevWordAction, new CorrectDeletePrevWordAction(editor))
+    editor.getActionMap.put(DefaultEditorKit.deleteNextWordAction, new CorrectDeleteNextWordAction(editor))
+    editor.getActionMap.put(DefaultEditorKit.backwardAction, new CorrectBackwardAction(editor))
+    editor.getActionMap.put(DefaultEditorKit.forwardAction, new CorrectForwardAction(editor))
+  }
 
   def configureAdvancedEditorArea(editor: AbstractEditorArea) = {
     DocumentProperties.install(editor)

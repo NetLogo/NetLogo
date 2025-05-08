@@ -13,7 +13,7 @@ object ThreadUtils {
   def waitForQueuedEvents(workspace: GUIWorkspace): Unit = {waitFor(workspace, DO_NOTHING)}
 
   def waitFor(workspace: GUIWorkspace, runnable: Runnable): Unit = {
-    try waitForResult(workspace, reporter(runnable.run _))
+    try waitForResult(workspace, reporter(runnable.run))
     catch {
       case ex: HaltException => org.nlogo.api.Exceptions.ignore(ex)
       case ex: LogoException => throw new IllegalStateException(ex)
@@ -26,12 +26,12 @@ object ThreadUtils {
 
   @throws(classOf[LogoException])
   def waitFor(workspace: GUIWorkspace, runnable: CommandRunnable): Unit = {
-    waitForResult(workspace, reporter(runnable.run _))
+    waitForResult(workspace, reporter(runnable.run))
   }
 
   private class Result[T] {
     @volatile var done = false // NOPMD pmd doesn't like 'volatile'
-    var value: T = _
+    var value: Option[T] = None
     var ex: Exception = null
   }
 
@@ -46,7 +46,7 @@ object ThreadUtils {
     try {
       org.nlogo.awt.EventQueue.invokeLater(new Runnable() {
         def run(): Unit = {
-          try result.value = runnable.run()
+          try result.value = Option(runnable.run())
           catch {
             case ex: LogoException => result.ex = ex
             case ex: RuntimeException => result.ex = ex
@@ -70,7 +70,7 @@ object ThreadUtils {
       }
       if(result.ex != null)
         throw result.ex
-      result.value
+      result.value.get
     }
     catch {
       case ex: InterruptedException =>

@@ -39,7 +39,7 @@ class TestMirroringModels extends AnyFunSuite  {
       // should I test that m0 and state are identical? maybe have a separate test for that
       val dummy = new FakeWorld(state)
       val renderer = dummy.newRenderer
-      renderer.renderLabelsAsRectangles_=(true)
+      renderer.setRenderLabelsAsRectangles(true)
 
       val runner = new DrawingActionRunner(renderer.trailDrawer)
       drawingActionBuffer.grab().foreach(runner.run)

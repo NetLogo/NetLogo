@@ -60,7 +60,7 @@ class ProcedureDefinition(val procedure: nvm.Procedure, val statements: Statemen
  */
 class Statements(var stmts: scala.collection.mutable.Seq[Statement], var sourceLocation: SourceLocation) extends AstNode {
   def this(stmts: Seq[Statement], sourceLocation: SourceLocation) =
-    this(scala.collection.mutable.Seq[Statement](stmts: _*), sourceLocation)
+    this(scala.collection.mutable.Seq[Statement](stmts*), sourceLocation)
 
   /**
    * a List of the actual Statement objects.
@@ -69,7 +69,7 @@ class Statements(var stmts: scala.collection.mutable.Seq[Statement], var sourceL
   override def toString = stmts.mkString(" ")
   def accept(v: AstVisitor): Unit = { v.visitStatements(this) }
   def copy(stmts: scala.collection.mutable.Seq[Statement] = stmts, sourceLocation: SourceLocation = sourceLocation): Statements =
-    new Statements(scala.collection.mutable.Seq[Statement](stmts.toSeq: _*), sourceLocation)
+    new Statements(scala.collection.mutable.Seq[Statement](stmts.toSeq*), sourceLocation)
 
 }
 
@@ -85,7 +85,7 @@ class Statement(
     extends Application {
 
   def this(coreCommand: core.Command, command: nvm.Command, args: Seq[Expression], sourceLocation: SourceLocation) =
-    this(coreCommand, command, collection.mutable.Buffer[Expression](args: _*), sourceLocation)
+    this(coreCommand, command, collection.mutable.Buffer[Expression](args*), sourceLocation)
 
   def args: Seq[Expression] = _args.toSeq
   def nvmInstruction = command // for Application
@@ -180,7 +180,7 @@ class ReporterApp(var coreReporter: core.Reporter, var reporter: nvm.Reporter,
 extends Expression with Application {
 
   def this(coreReporter: core.Reporter, reporter: nvm.Reporter, args: Seq[Expression], sourceLocation: SourceLocation) =
-    this(coreReporter, reporter, collection.mutable.Buffer[Expression](args: _*), sourceLocation)
+    this(coreReporter, reporter, collection.mutable.Buffer[Expression](args*), sourceLocation)
 
   def this(coreReporter: core.Reporter, reporter: nvm.Reporter, sourceLocation: SourceLocation) =
     this(coreReporter, reporter, collection.mutable.Buffer[Expression](), sourceLocation)
@@ -203,7 +203,7 @@ extends Expression with Application {
     reporter: nvm.Reporter = reporter,
     args: Seq[Expression] = args,
     sourceLocation: SourceLocation = sourceLocation): ReporterApp =
-      new ReporterApp(coreReporter, reporter, scala.collection.mutable.Buffer[Expression](args: _*), sourceLocation)
+      new ReporterApp(coreReporter, reporter, scala.collection.mutable.Buffer[Expression](args*), sourceLocation)
 }
 
 object ReporterApp {

@@ -103,7 +103,7 @@ class PreviewCommandsDialog(
 
   guiState.addPropertyChangeListener("compilerException", new PropertyChangeListener {
     override def propertyChange(evt: PropertyChangeEvent): Unit = {
-      val setError = editorPanel.errorLabel.setError _
+      val setError = editorPanel.errorLabel.setError
       evt.getNewValue match {
         case Some(e: CompilerException) =>
           setError(e, Evaluator.sourceOffset(AgentKind.Observer, true))

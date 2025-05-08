@@ -12,7 +12,7 @@ class _repeat(_token: Token) extends Command with CustomAssembled with CompilerS
 
   def scopedBlockIndex: Int = 1
 
-  private[this] val _let: Let = new Let("~" + _token.text + "_" + _token.start.toString)
+  private val _let: Let = new Let("~" + _token.text + "_" + _token.start.toString)
 
   def let = _let
 

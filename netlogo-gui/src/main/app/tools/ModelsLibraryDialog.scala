@@ -64,7 +64,7 @@ object ModelsLibraryDialog {
     this.me = me
     me.syncTheme()
     me.setVisible(true)
-    me.searchField.selectAll()
+    me.selectAll()
     me.sourceURI.foreach(onSelect)
   }
 
@@ -74,7 +74,7 @@ object ModelsLibraryDialog {
     ModelsLibrary.scanForModels(false)
     val crossReferencedNode =
       for {
-        rootNode@ModelsLibrary.Tree(_, _, _) <- ModelsLibrary.rootNode
+        case rootNode@ModelsLibrary.Tree(_, _, _) <- ModelsLibrary.rootNode
         xRefConfig <- ModelCrossReferencer.loadConfig()
       } yield ModelCrossReferencer.applyConfig(rootNode, xRefConfig)
     (crossReferencedNode orElse ModelsLibrary.rootNode)
@@ -146,7 +146,7 @@ object ModelsLibraryDialog {
 
   implicit def asNodeIterator[A](`enum`: Enumeration[A]): Iterator[Node] = {
     import scala.jdk.CollectionConverters.EnumerationHasAsScala
-    enum.asScala.collect { case n: Node => n }
+    `enum`.asScala.collect { case n: Node => n }
   }
 }
 
@@ -392,6 +392,8 @@ class ModelsLibraryDialog(parent: Frame, node: Node)
       }
     })
   }
+
+  def selectAll(): Unit = searchField.selectAll
 
   def setSearchText(newText: String): Unit = {
     val savedSelectionPath = tree.getSelectionPath()

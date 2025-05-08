@@ -53,7 +53,7 @@ class _hubnetexitmessage extends Reporter with HubNetPrim {
 class _hubnetclientslist extends Reporter with HubNetPrim {
 
   override def report(context: Context): AnyRef =
-    LogoList(hubNetManager.map(_.clients.toSeq.map(_.asInstanceOf[AnyRef])).get: _*)
+    LogoList(hubNetManager.map(_.clients.toSeq.map(_.asInstanceOf[AnyRef])).get*)
 }
 
 class _hubnetkickclient extends Command with HubNetPrim {
@@ -191,7 +191,7 @@ class _hubnetresetperspective extends Command with HubNetPrim {
       new CommandRunnable {
         override def run(): Unit = {
           hubNetManager.foreach(_.sendAgentPerspective(
-            client, world.observer.perspective.export,
+            client, world.observer.perspective.`export`,
             agentKind, id, ((world.worldWidth - 1).toDouble / 2), true))
         }})
     context.ip = next

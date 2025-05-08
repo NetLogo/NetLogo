@@ -173,7 +173,7 @@ class ModelConverterTests extends AnyFunSuite with ConversionHelper {
       val conversionSet = AutoConversionList.conversions
         .filter(t => t._1 == "NetLogo 6.0-RC1" || t._1 == "NetLogo 6.0-M9")
         .map(_._2)
-        assertResult(originalSource)(convert(Model(code = originalSource), conversionSet: _*).code)
+        assertResult(originalSource)(convert(Model(code = originalSource), conversionSet*).code)
     }
 
     test("converts movie prims in the presence of tasks") {
@@ -197,7 +197,7 @@ class ModelConverterTests extends AnyFunSuite with ConversionHelper {
       val conversionSet = AutoConversionList.conversions
         .filter(t => t._1 == "NetLogo 6.0-RC1" || t._1 == "NetLogo 6.0-M9")
         .map(_._2)
-        assertResult(convertedSource)(convert(Model(code = originalSource), conversionSet: _*).code)
+        assertResult(convertedSource)(convert(Model(code = originalSource), conversionSet*).code)
     }
     test("lambda-izes") {
       val conversionSet= AutoConversionList.conversions.filter(_._1 == "NetLogo 6.0-RC1").map(_._2).head

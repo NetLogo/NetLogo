@@ -15,8 +15,8 @@ trait Neighbors {
   def getPSW(source: Patch): Patch
   def getPNW(source: Patch): Patch
 
-  private val getters4 = Seq(getPN _, getPE _, getPS _, getPW _)
-  private val getters8 = getters4 ++ Seq(getPNE _, getPSE _, getPSW _, getPNW _)
+  private val getters4 = Seq(getPN, getPE, getPS, getPW)
+  private val getters8 = getters4 ++ Seq(getPNE, getPSE, getPSW, getPNW)
 
   // this is very general and therefore has poor performance,
   // but we don't care because Patch caches the results - ST 3/29/13

@@ -57,7 +57,7 @@ extends WorldRenderer(world, patchRenderer, drawing, turtleRenderer, linkRendere
           pitch =
             try -world.protractor.towardsPitch(x, y, z, oldx, oldy, oldz, false)
             catch { case ex: AgentException => 0 }
-            roll = 0
+          roll = 0
         }
       case _ =>
     }

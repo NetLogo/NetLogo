@@ -36,7 +36,7 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
   with Plotting
   with Extensions {
 
-  private val libraryManager = new LibraryManager(APIEM.userExtensionsPath, extensionManager.reset _)
+  private val libraryManager = new LibraryManager(APIEM.userExtensionsPath, extensionManager.reset)
 
   def isHeadless: Boolean
 
@@ -114,7 +114,7 @@ abstract class AbstractWorkspaceScala(val world: World, val hubNetManagerFactory
  *   AbstractMethodError when overriding java method with default implementation
  *   implementation is "muted" in inherited interface Issue Issue #12224 scala/bug
  */
-  private[this] var _plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Throw
+  private var _plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Throw
 
   override def getPlotCompilationErrorAction() = _plotCompilationErrorAction
   override def setPlotCompilationErrorAction(plotCompilationErrorAction: PlotCompilationErrorAction): Unit = { _plotCompilationErrorAction = plotCompilationErrorAction }
@@ -192,7 +192,7 @@ object AbstractWorkspaceTraits {
     }
   }
 
-  trait Checksums { this: AbstractWorkspace with APIWorkspace =>
+  trait Checksums { this: AbstractWorkspace & APIWorkspace =>
     override def worldChecksum =
       Checksummer.calculateWorldChecksum(this)
     override def graphicsChecksum =
@@ -319,8 +319,6 @@ object AbstractWorkspaceTraits {
   }
 
   trait HubNetManager extends AbstractWorkspace with Components { self: AbstractWorkspaceScala =>
-    def hubNetManagerFactory: HubNetManagerFactory
-
     private var _hubNetRunning: Boolean = false
 
     if (hubNetManagerFactory != null) {

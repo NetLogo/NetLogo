@@ -2,7 +2,9 @@
 
 package org.nlogo.workspace
 
-trait ExtendableWorkspace {
+import org.nlogo.core.StringReader
+
+trait ExtendableWorkspace extends StringReader {
   def setProfilingTracer(tracer: org.nlogo.nvm.Tracer): Unit
   def compilerTestingMode: Boolean
   def profilingEnabled: Boolean
@@ -10,5 +12,4 @@ trait ExtendableWorkspace {
   @throws(classOf[java.net.MalformedURLException])
   def attachModelDir(filePath: String): String
   def warningMessage(message: String): Boolean
-  def readFromString(path: String): AnyRef
 }

@@ -23,13 +23,13 @@ extends UserDialog(owner, title, i18n) {
 }
 
 object OptionDialog {
-  def showMessage(owner: Component, title: String, message: String, options: Array[_ <: Object]): Int = {
+  def showMessage(owner: Component, title: String, message: String, options: Array[? <: Object]): Int = {
     val brokenLines = LineBreaker.breakLines(message,
       owner.getFontMetrics(owner.getFont), UserDialog.DIALOG_WIDTH)
     showCustom(owner, title, brokenLines.mkString("\n"), options)
   }
 
-  def showCustom(owner: Component, title: String, message: AnyRef, options: Array[_ <: Object]): Int = {
+  def showCustom(owner: Component, title: String, message: AnyRef, options: Array[? <: Object]): Int = {
     val parent: Component = Hierarchy.getWindow(owner)
     JOptionPane.showOptionDialog(parent, message, title,
       JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null,
@@ -38,7 +38,7 @@ object OptionDialog {
 
   def showIgnoringCloseBox(owner: Component, title: String, message: String, options: Array[AnyRef], asList: Boolean) = {
     val showDialog = {
-      val showFunction = if (asList) showAsList _ else showMessage _
+      val showFunction = if (asList) showAsList else showMessage
       () => showFunction(owner, title, message, options)
     }
     var result = -1

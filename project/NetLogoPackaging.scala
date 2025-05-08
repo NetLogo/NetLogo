@@ -63,7 +63,7 @@ object NetLogoPackaging {
       .map(p => (" " ~> p))
       .getOrElse(Parser.success(PathSpecifiedJDK)))
 
-  def settings(netlogo: Project, macApp: Project, behaviorsearchProject: Project): Seq[Setting[_]] = Seq(
+  def settings(netlogo: Project, macApp: Project, behaviorsearchProject: Project): Seq[Setting[?]] = Seq(
     netLogoRoot     := (netlogo / baseDirectory).value,
     mathematicaRoot := netLogoRoot.value.getParentFile / "Mathematica-Link",
     configRoot      := baseDirectory.value / "configuration",

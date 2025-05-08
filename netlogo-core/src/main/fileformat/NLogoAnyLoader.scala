@@ -63,7 +63,7 @@ class NLogoAnyLoader(loaders: List[AbstractModelLoader]) extends ConfigurableMod
     new NLogoAnyLoader(loaders.map(loader => {
       loader match {
         case loader: ConfigurableModelLoader =>
-          loader.addSerializers[A, B](ss)(aTag, bTag, matchingFormat)
+          loader.addSerializers[A, B](ss)(using aTag, bTag, matchingFormat)
         case x => x
       }
     }))

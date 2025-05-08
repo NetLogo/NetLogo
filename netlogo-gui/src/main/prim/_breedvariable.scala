@@ -5,7 +5,7 @@ package org.nlogo.prim
 import org.nlogo.api.AgentException
 import org.nlogo.nvm.{ Context, Reporter, RuntimePrimitiveException }
 
-class _breedvariable(private[this] val _name: String) extends Reporter {
+class _breedvariable(private val _name: String) extends Reporter {
 
   override def toString: String = s"${super.toString}:$name"
 

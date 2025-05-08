@@ -59,7 +59,7 @@ class ShapeCellRenderer extends JPanel with ListCellRenderer[Shape] {
   add(Box.createHorizontalGlue)
 
   // Method that actually renders the item
-  override def getListCellRendererComponent(list: JList[_ <: Shape], value: Shape, index: Int, isSelected: Boolean,
+  override def getListCellRendererComponent(list: JList[? <: Shape], value: Shape, index: Int, isSelected: Boolean,
                                             cellHasFocus: Boolean): Component = {
     shape = Option(value.asInstanceOf[DrawableShape])
     shapeName.setText(value.name)

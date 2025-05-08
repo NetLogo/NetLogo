@@ -8,7 +8,7 @@ class AgentSetBuilder(kind: core.AgentKind, capacity: Int) {
   // for convenience from Java
   def this(kind: core.AgentKind) =
     this(kind, 1)
-  private[this] var buf =
+  private var buf =
     new collection.mutable.ArrayBuffer[Agent](capacity)
   def add(agent: Agent): Unit = {
     buf += agent

@@ -86,7 +86,7 @@ trait ModelFormat[Section, Format <: ModelFormat[Section, Format]] {
     modelTry: Try[Model], component: ComponentSerialization[Section, Format]): Try[Model] = {
       val addComponent = sections
         .get(component.componentName)
-        .map(component.deserialize _)
+        .map(component.deserialize)
         .getOrElse((m: Model) => Success(component.addDefault(m)))
       modelTry.flatMap(addComponent)
   }

@@ -72,7 +72,7 @@ public abstract class AbstractRenderer
 
   private boolean _renderLabelsAsRectangles = false;
   public boolean renderLabelsAsRectangles() { return _renderLabelsAsRectangles; }
-  public void renderLabelsAsRectangles_$eq(boolean b) { _renderLabelsAsRectangles = b; }
+  public void setRenderLabelsAsRectangles(boolean b) { _renderLabelsAsRectangles = b; }
 
   public AbstractRenderer(org.nlogo.api.World world, ShapeListTracker turtleShapes, ShapeListTracker linkShapes) {
     this.world = world;

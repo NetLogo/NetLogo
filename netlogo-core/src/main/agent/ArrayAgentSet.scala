@@ -17,7 +17,7 @@ class ArrayAgentSet(
   private[agent] val array: Array[Agent])
 extends IndexedAgentSet(kind, printName) {
 
-  private[this] val arraySize = array.size
+  private val arraySize = array.size
 
   /// conversions
 
@@ -190,10 +190,10 @@ extends IndexedAgentSet(kind, printName) {
 
   /// iterator implementations
 
-  private final class Iterator(private[this] val array: Array[Agent])
+  private final class Iterator(private val array: Array[Agent])
   extends AgentIterator {
-    private[this] var index: Int = 0
-    private[this] val arraySize = array.size
+    private var index: Int = 0
+    private val arraySize = array.size
     override def hasNext = index < arraySize
     override def next() = {
       val result = array(index)
@@ -203,10 +203,10 @@ extends IndexedAgentSet(kind, printName) {
   }
 
   // extended to skip dead agents
-  private final class DeadSkippingIterator(private[this] val array: Array[Agent])
+  private final class DeadSkippingIterator(private val array: Array[Agent])
   extends AgentIterator {
-    private[this] var index: Int = 0
-    private[this] val arraySize = array.size
+    private var index: Int = 0
+    private val arraySize = array.size
     // skip initial dead agents
     while (index < arraySize && array(index)._id == -1)
       index += 1
@@ -214,16 +214,18 @@ extends IndexedAgentSet(kind, printName) {
     override def next() = {
       val result = index
       // skip to next live agent
-      do index += 1
-      while (index < arraySize && array(index)._id == -1)
+      while
+        index += 1
+        index < arraySize && array(index)._id == -1
+      do ()
       array(result)
     }
   }
 
   private final class Shufflerator(rng: MersenneTwisterFast, a: Array[Agent]) extends AgentIterator {
-    private[this] var i = 0
-    private[this] val copy = a.clone
-    private[this] var nextOne: Agent = null
+    private var i = 0
+    private val copy = a.clone
+    private var nextOne: Agent = null
     while (i < copy.length && copy(i) == null)
       i += 1
     fetch()

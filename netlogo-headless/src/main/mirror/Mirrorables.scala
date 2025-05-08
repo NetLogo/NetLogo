@@ -72,7 +72,7 @@ object Mirrorables {
     val Variables = WidgetVariables
   }
 
-  def agentKindToMirrorKind(agentKind: core.AgentKind): Product with org.nlogo.mirror.Kind with java.io.Serializable = agentKind match {
+  def agentKindToMirrorKind(agentKind: core.AgentKind): Product & org.nlogo.mirror.Kind with java.io.Serializable = agentKind match {
     case core.AgentKind.Observer => Observer
     case core.AgentKind.Turtle => Turtle
     case core.AgentKind.Patch => Patch
@@ -128,7 +128,7 @@ object Mirrorables {
         .map(agent => (Serializer.agentKindToInt(agentKindToMirrorKind(agent.kind)), agent.id))
     override val variables = Map(
       TargetAgent.id -> targetAgent,
-      Perspective.id -> Int.box(observer.perspective.export))
+      Perspective.id -> Int.box(observer.perspective.`export`))
   }
 
   class MirrorableWorld(world: api.World) extends Mirrorable {

@@ -10,13 +10,13 @@ import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot, Widget => CoreWi
 import org.nlogo.plot.{ PlotManagerInterface, PlotLoader, PlotPen, Plot }
 import org.nlogo.swing.{ RoundedBorderPanel, VTextIcon }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.Events.{ WidgetRemovedEvent, AfterLoadEvent, WidgetErrorEvent }
+import org.nlogo.window.Events.{ AfterLoadEvent, CompiledEvent, WidgetErrorEvent, WidgetRemovedEvent }
 
 abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInterface)
-        extends Widget with Editable with Plot.DirtyListener with
-                org.nlogo.window.Events.AfterLoadEvent.Handler with
-                org.nlogo.window.Events.WidgetRemovedEvent.Handler with
-                org.nlogo.window.Events.CompiledEvent.Handler {
+  extends Widget with Editable with Plot.DirtyListener
+  with AfterLoadEvent.Handler
+  with WidgetRemovedEvent.Handler
+  with CompiledEvent.Handler {
 
   import AbstractPlotWidget._
 
@@ -50,12 +50,12 @@ abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInt
   plot.dirtyListener = Some(this)
   val canvas = new PlotCanvas(plot)
   private val canvasPanel = new CanvasPanel(canvas)
-  private val legend = new PlotLegend(this, boldName)
+  private val legend = new PlotLegend(this, _boldName)
   private val nameLabel = new JLabel(I18N.gui.get("edit.plot.previewName"))
   private val xAxis = new XAxisLabels(this)
   private val yAxis = new YAxisLabels(this)
 
-  if (boldName)
+  if (_boldName)
     nameLabel.setFont(nameLabel.getFont.deriveFont(Font.BOLD))
 
   displayName = plot.name

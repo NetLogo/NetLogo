@@ -33,7 +33,7 @@ trait ConversionHelper {
     converter(_ => conversions)(model, modelPath)
 
   def convert(model: Model, conversions: ConversionSet*): Model =
-    tryConvert(model, conversions: _*).model
+    tryConvert(model, conversions*).model
 
   def writeNls(name: String, contents: String): Unit = {
     Files.write(tempDir.resolve(name), contents.getBytes)

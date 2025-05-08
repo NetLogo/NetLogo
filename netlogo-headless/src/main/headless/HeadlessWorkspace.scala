@@ -35,7 +35,7 @@ object HeadlessWorkspace {
   /**
    * If you derive your own subclass of HeadlessWorkspace, use this method to instantiate it.
    */
-  def newInstance(subclass: Class[_ <: HeadlessWorkspace]): HeadlessWorkspace = {
+  def newInstance(subclass: Class[? <: HeadlessWorkspace]): HeadlessWorkspace = {
     val world = new World2D
     Femto.get(subclass, world,
       Femto.scalaSingleton[CompilerInterface](
@@ -90,7 +90,7 @@ with org.nlogo.workspace.WorldLoaderInterface {
    */
   def modelOpened = _openModel.nonEmpty
 
-  private[this] var _openModel = Option.empty[Model]
+  private var _openModel = Option.empty[Model]
   def setOpenModel(model: Model): Unit = {
     _openModel = Some(model)
 

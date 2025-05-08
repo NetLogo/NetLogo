@@ -98,8 +98,6 @@ class NetLogoFoldParser extends FoldParser {
       }.toSeq.asJava
   }
 
-  private def singleLineDeclaration(text: String)(toks: Seq[Token]): Boolean = {
-    val slice =  text.slice(toks.head.start, toks.last.end)
-    ! slice.contains("\n")
-  }
+  private def singleLineDeclaration(text: String)(toks: Seq[Token]): Boolean =
+    !text.slice(toks.head.start, toks.last.end).contains("\n")
 }

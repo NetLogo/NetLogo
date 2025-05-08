@@ -59,8 +59,8 @@ class TieManager(links: TreeAgentSet, linkManager: LinkManager, protractor: Prot
                                                           .nonEmpty
     val getCoords       = (t: Turtle) => (t.xcor(), t.ycor())
     val squash          = (x: Double) => if (StrictMath.abs(x) < Infinitesimal) 0 else x
-    val squashedSin     = StrictMath.toRadians _ andThen StrictMath.sin andThen squash
-    val squashedCos     = StrictMath.toRadians _ andThen StrictMath.cos andThen squash
+    val squashedSin     = StrictMath.toRadians andThen StrictMath.sin andThen squash
+    val squashedCos     = StrictMath.toRadians andThen StrictMath.cos andThen squash
 
     val dh             = Turtle.subtractHeadings(newHeading, oldHeading)
     val (x, y)         = getCoords(root)

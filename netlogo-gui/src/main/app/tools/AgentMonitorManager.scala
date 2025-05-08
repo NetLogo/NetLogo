@@ -47,7 +47,7 @@ class AgentMonitorManager(val workspace: GUIWorkspace) extends Event.LinkChild w
 
   /// Event.LinkParent -- lets events pass through us to MonitorWindows
   def getLinkChildren = {
-    val list = collection.mutable.ListBuffer[AnyRef](monitorWindows.values.toSeq: _*)
+    val list = collection.mutable.ListBuffer[AnyRef](monitorWindows.values.toSeq*)
     emptyMonitorWindows.values.foreach( (w) => list += w )
     list.toArray
   }

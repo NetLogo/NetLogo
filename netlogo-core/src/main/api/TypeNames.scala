@@ -52,7 +52,7 @@ object TypeNames {
         obj.getClass.getName
     }
 
-  def getTypeConstant(clazz: Class[_]): Int =
+  def getTypeConstant(clazz: Class[?]): Int =
     if (classOf[Agent].isAssignableFrom(clazz))
       AgentType
     else if (classOf[AgentSet].isAssignableFrom(clazz))

@@ -9,7 +9,7 @@ object MethodSelector {
   // the Long is the total cost of using the method, including the costs of all its arguments
   type Result = List[(Method, Long)]
 
-  def select(i: Instruction, returnType: Class[_], profilingEnabled: Boolean): Option[Method] =
+  def select(i: Instruction, returnType: Class[?], profilingEnabled: Boolean): Option[Method] =
     if (!BytecodeUtils.isRejiggered(i)) None
     else {
       val result = cheapestOption(returnType, evaluate(i, profilingEnabled)).map(_._1)
@@ -45,7 +45,7 @@ object MethodSelector {
     else Some(costOptions.flatten.sum)
   }
 
-  private def cheapestOption(typeTo: Class[_], arg: Result): Option[(Method, Long)] = {
+  private def cheapestOption(typeTo: Class[?], arg: Result): Option[(Method, Long)] = {
     val results = for ((method, cost1) <- arg; cost2 <- conversionCost(method.getReturnType, typeTo))
       yield (method, cost1 + cost2)
     if (results.isEmpty) None
@@ -53,7 +53,7 @@ object MethodSelector {
   }
 
   // non-private for unit testing
-  def conversionCost(typeFrom: Class[_], typeTo: Class[_]): Option[Long] =
+  def conversionCost(typeFrom: Class[?], typeTo: Class[?]): Option[Long] =
     if (typeTo == typeFrom || typeTo == classOf[Reporter]) Some(0)
     else if (isUnboxingConversion(typeFrom, typeTo)) Some(100)
     else if (typeTo.isAssignableFrom(typeFrom)) Some(10000 * countInheritanceLevels(typeFrom, typeTo))
@@ -61,22 +61,22 @@ object MethodSelector {
     else if (isConversionPossible(typeFrom, typeTo)) Some(100000000L)
     else None
 
-  private def isBoxingConversion(typeFrom: Class[_], typeTo: Class[_]) =
+  private def isBoxingConversion(typeFrom: Class[?], typeTo: Class[?]) =
     (typeFrom, typeTo) == ((java.lang.Boolean.TYPE, classOf[java.lang.Boolean])) ||
       (typeFrom, typeTo) == ((java.lang.Boolean.TYPE, classOf[Object])) ||
       (typeFrom, typeTo) == ((java.lang.Double.TYPE, classOf[java.lang.Double])) ||
       (typeFrom, typeTo) == ((java.lang.Double.TYPE, classOf[Object]))
 
-  private def isUnboxingConversion(typeFrom: Class[_], typeTo: Class[_]) =
+  private def isUnboxingConversion(typeFrom: Class[?], typeTo: Class[?]) =
     (typeFrom, typeTo) == ((classOf[java.lang.Double], java.lang.Double.TYPE)) ||
       (typeFrom, typeTo) == ((classOf[java.lang.Boolean], java.lang.Boolean.TYPE))
 
-  private def isConversionPossible(typeFrom: Class[_], typeTo: Class[_]) =
+  private def isConversionPossible(typeFrom: Class[?], typeTo: Class[?]) =
     typeFrom.isAssignableFrom(typeTo) ||
       isBoxingConversion(typeTo, typeFrom) ||
       isUnboxingConversion(typeTo, typeFrom)
 
-  private def countInheritanceLevels(child: Class[_], ancestor: Class[_]): Int =
+  private def countInheritanceLevels(child: Class[?], ancestor: Class[?]): Int =
     if (child == ancestor) 0
     else 1 + countInheritanceLevels(child.getSuperclass, ancestor)
 

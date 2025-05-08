@@ -48,7 +48,7 @@ abstract class Switch extends MultiErrorWidget with MouseWheelListener
     label.addMouseListener(mouseListener)
     toggle.addMouseListener(mouseListener)
 
-    if (boldName)
+    if (_boldName)
       label.setFont(label.getFont.deriveFont(Font.BOLD))
   }
 

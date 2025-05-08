@@ -29,7 +29,7 @@ import org.nlogo.theme.{ ClassicTheme, DarkTheme, InterfaceColors, LightTheme, T
 import org.nlogo.util.{ NullAppHandler, Pico }
 import org.nlogo.window._
 import org.nlogo.window.Events._
-import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controllable, CurrentModelOpener, HubNetManagerFactory, WorkspaceFactory }
+import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, Controllable, HubNetManagerFactory, WorkspaceFactory }
 
 import org.picocontainer.parameters.{ ComponentParameter, ConstantParameter }
 import org.picocontainer.Parameter
@@ -147,7 +147,7 @@ object App {
       // containers separate and just use Plain Old Java Reflection to
       // call HeadlessWorkspace's newInstance() method. - ST 3/11/09
       // And we'll conveniently reuse it for the preview commands editor! - NP 2015-11-18
-      val factory = new WorkspaceFactory() with CurrentModelOpener {
+      val factory = new WorkspaceFactory {
         def newInstance: AbstractWorkspaceScala =
           Class.forName("org.nlogo.headless.HeadlessWorkspace")
             .getMethod("newInstance").invoke(null).asInstanceOf[AbstractWorkspaceScala]
@@ -275,21 +275,20 @@ object App {
   }
 }
 
-class App extends
-    org.nlogo.window.Event.LinkChild with
-    org.nlogo.api.Exceptions.Handler with
-    AppEvent.Handler with
-    BeforeLoadEvent.Handler with
-    LoadBeginEvent.Handler with
-    LoadEndEvent.Handler with
-    LoadModelEvent.Handler with
-    ModelSavedEvent.Handler with
-    ModelSections with
-    AppEvents.SwitchedTabsEvent.Handler with
-    AppEvents.OpenLibrariesDialogEvent.Handler with
-    AboutToQuitEvent.Handler with
-    ZoomedEvent.Handler with
-    Controllable {
+class App extends org.nlogo.window.Event.LinkChild
+  with org.nlogo.api.Exceptions.Handler
+  with AppEvent.Handler
+  with BeforeLoadEvent.Handler
+  with LoadBeginEvent.Handler
+  with LoadEndEvent.Handler
+  with LoadModelEvent.Handler
+  with ModelSavedEvent.Handler
+  with ModelSections
+  with AppEvents.SwitchedTabsEvent.Handler
+  with AppEvents.OpenLibrariesDialogEvent.Handler
+  with AboutToQuitEvent.Handler
+  with ZoomedEvent.Handler
+  with Controllable {
 
   private val prefs = Preferences.userRoot.node("/org/nlogo/NetLogo")
 
@@ -373,7 +372,7 @@ class App extends
 
     pico.addComponent(world)
     _workspace = new GUIWorkspace(world,
-      GUIWorkspace.KioskLevel.NONE,
+      GUIWorkspace.KioskLevel.None,
       frame,
       frame,
       pico.getComponent(classOf[HubNetManagerFactory]),
@@ -417,6 +416,8 @@ class App extends
       def updateModel(model: Model): Model = {
         model.withOptionalSection("org.nlogo.modelsection.modelsettings", Some(ModelSettings(snapOn)), Some(ModelSettings(false)))
       }
+
+      override def dispose(): Unit = super.dispose()
     }
 
     ShapeChangeListener.listen(_workspace, world)
@@ -623,7 +624,7 @@ class App extends
 
             import java.util.zip.GZIPInputStream, java.io.{ ByteArrayInputStream, InputStreamReader }, scala.io.{ Codec, Source }
 
-            val source = Source.fromURL(url)(Codec.ISO8859)
+            val source = Source.fromURL(url)(using Codec.ISO8859)
             val bytes  = source.map(_.toByte).toArray
             val bais   = new ByteArrayInputStream(bytes)
             val gis    = new GZIPInputStream(bais)
@@ -759,7 +760,6 @@ class App extends
     e.`type` match {
       case RELOAD => reload()
       case MAGIC_OPEN => magicOpen(e.args(0).toString)
-      case _ =>
     }
   }
 
@@ -1236,7 +1236,7 @@ class App extends
         button.action()
       })
       while (button.running) {
-        try Thread sleep 100
+        try Thread.sleep(100)
         catch { case ex: InterruptedException => org.nlogo.api.Exceptions.ignore(ex) }
       }
     }

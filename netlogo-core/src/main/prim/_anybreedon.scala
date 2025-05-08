@@ -6,7 +6,7 @@ import org.nlogo.agent.{ AgentSet, Patch, Turtle }
 import org.nlogo.core.{ AgentKind, I18N, Syntax }
 import org.nlogo.nvm.{ ArgumentTypeException, Context, Reporter, RuntimePrimitiveException }
 
-class _anybreedon(private[this] val _breedName: String) extends Reporter {
+class _anybreedon(private val _breedName: String) extends Reporter {
 
   def breedName = _breedName
 
@@ -20,7 +20,7 @@ class _anybreedon(private[this] val _breedName: String) extends Reporter {
     agentOrSet match {
       case turtle: Turtle =>
         if(turtle.id == -1)
-          throw new RuntimePrimitiveException(context, this, 
+          throw new RuntimePrimitiveException(context, this,
             I18N.errors.getN("org.nlogo.$common.thatAgentIsDead", turtle.classDisplayName))
         val itr = turtle.getPatchHere.turtlesHere.iterator
         while (itr.hasNext) {
@@ -61,9 +61,9 @@ class _anybreedon(private[this] val _breedName: String) extends Reporter {
             }
             return false
           }
-          false
+          return false
         }
-        false
+        return false
       case _ =>
         throw new ArgumentTypeException(
           context, this, 0,

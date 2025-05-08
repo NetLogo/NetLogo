@@ -15,7 +15,6 @@ object Instruction {
         case AgentKind.Turtle   => "turtle"
         case AgentKind.Patch    => "patch"
         case AgentKind.Link     => "link"
-        case _                  => null
       }
     if (key == null) null
     else I18N.errors.get("org.nlogo.prim.$common.agentKind." + key)

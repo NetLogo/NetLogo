@@ -90,12 +90,12 @@ trait OrientatableObserver { this: Observer =>
   def face(agent: org.nlogo.api.Agent): Unit = {
     import org.nlogo.api.Version
     try {
-      heading(world.protractor.towards(this, agent, false))
+      heading(_world.protractor.towards(this, agent, false))
     } catch {
       case ex: AgentException => heading(0.0)
     }
     try {
-      pitch(-world.protractor.towardsPitch(this, agent, false))
+      pitch(-_world.protractor.towardsPitch(this, agent, false))
     } catch {
       case ex: AgentException => pitch(0.0)
       case ex: UnsupportedOperationException if ! Version.is3D => // hack: 3D not implemented
@@ -106,12 +106,12 @@ trait OrientatableObserver { this: Observer =>
 
   def face(x: Double, y: Double): Unit = {
     try {
-      heading(world.protractor.towards(this, x, y, false))
+      heading(_world.protractor.towards(this, x, y, false))
     } catch {
       case ex: AgentException => heading(0.0)
     }
     try {
-      pitch(-world.protractor.towardsPitch(this, x, y, 0, false));
+      pitch(-_world.protractor.towardsPitch(this, x, y, 0, false));
     } catch {
       case ex: AgentException => pitch(0.0)
     }

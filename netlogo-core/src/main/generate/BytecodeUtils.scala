@@ -45,7 +45,7 @@ object BytecodeUtils {
     }
   }
 
-  def getMethods(instrClass: Class[_], profilingEnabled: Boolean = false): List[Method] = {
+  def getMethods(instrClass: Class[?], profilingEnabled: Boolean = false): List[Method] = {
     // If profiling is enabled, we search first for profiling methods and use them.  If you
     // provide ANY profiling methods, you need to make sure that you provide one for each
     // perform_/report_ variant.
@@ -61,7 +61,7 @@ object BytecodeUtils {
       m.getName.startsWith("perform_"))
   }
 
-  def checkClassHasMethod(c: Class[_], name: String, descriptor: String): Boolean =
+  def checkClassHasMethod(c: Class[?], name: String, descriptor: String): Boolean =
     c != null &&
       (c.getDeclaredMethods.exists(method => method.getName == name &&
         Type.getMethodDescriptor(method) == descriptor)

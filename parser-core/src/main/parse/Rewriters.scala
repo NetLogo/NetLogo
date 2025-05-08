@@ -27,7 +27,7 @@ class RemovalVisitor(droppedCommand: String) extends PositionalAstFolder[AstEdit
 
   override def visitStatement(stmt: Statement, position: AstPath)(implicit edits: AstEdit): AstEdit = {
     if (stmt.command.token.text.equalsIgnoreCase(droppedCommand))
-      super.visitStatement(stmt, position)(edits.addOperation(position, delete _))
+      super.visitStatement(stmt, position)(using edits.addOperation(position, delete))
     else
       super.visitStatement(stmt, position)
   }
@@ -44,7 +44,7 @@ class ReplaceReporterVisitor(alteration: (String, String)) extends PositionalAst
 
   override def visitReporterApp(app: ReporterApp, position: AstPath)(implicit edits: AstEdit): AstEdit = {
     if (app.reporter.token.text.equalsIgnoreCase(alteration._1))
-      super.visitReporterApp(app, position)(edits.addOperation(position, replace _))
+      super.visitReporterApp(app, position)(using edits.addOperation(position, replace))
     else
       super.visitReporterApp(app, position)
   }
@@ -59,10 +59,10 @@ class AddVisitor(val addition: (String, String)) extends StatementManipulationVi
         val newArgs = addedArgument.map(id => Seq(stmt.args(id))).getOrElse(Seq())
         val newStmt = stmt.copy(command = newCmd, args = newArgs)
         val c1 =
-          formatter.visitStatement(newStmt, position / AstPath.Stmt(-1))(ctx.copy(
+          formatter.visitStatement(newStmt, position / AstPath.Stmt(-1))(using ctx.copy(
             text = ctx.text + " ",
             operations = ctx.operations - position))
-        formatter.visitStatement(stmt, position)(c1.copy(
+        formatter.visitStatement(stmt, position)(using c1.copy(
           text = c1.text + ctx.wsMap.trailing(position),
           operations = ctx.operations - position))
       case _               => ctx
@@ -79,7 +79,7 @@ class ReplaceVisitor(val addition: (String, String)) extends StatementManipulati
         val newStmt =
           if (addedArgument.isEmpty) stmt.copy(args = Seq())
           else stmt.copy(args = Seq(stmt.args(addedArgument.get)))
-        val stmtAdded = formatter.visitStatement(newStmt, position / AstPath.Stmt(-1))(
+        val stmtAdded = formatter.visitStatement(newStmt, position / AstPath.Stmt(-1))(using
           ctx.copy(operations = ctx.operations - position))
         afterCommand
           .map(afterText => stmtAdded.copy(text = stmtAdded.text + afterText))
@@ -119,7 +119,7 @@ trait StatementManipulationVisitor extends PositionalAstFolder[AstEdit] {
       wsMap ++ new WhitespaceMap(newPositions)
     }.getOrElse(wsMap)
 
- def manipulate(formatter: Formatter, astNode: AstNode, position: AstPath, ctx: AstFormat): AstFormat
+  def manipulate(formatter: Formatter, astNode: AstNode, position: AstPath, ctx: AstFormat): AstFormat
 
   override def visitStatement(stmt: Statement, position: AstPath)(implicit edits: AstEdit): AstEdit = {
     if (stmt.command.token.text.equalsIgnoreCase(targetCommand)) {
@@ -129,9 +129,9 @@ trait StatementManipulationVisitor extends PositionalAstFolder[AstEdit] {
             .filter { case ((k, _), _) => k == position }
             .map { case ((k, p), v) => (k.repath(position, position / AstPath.Stmt(-1)), p) -> v }
           )
-      super.visitStatement(stmt, position)(
+      super.visitStatement(stmt, position)(using
         edits
-          .addOperation(position, manipulate _)
+          .addOperation(position, manipulate)
           .copy(wsMap = newWsMap(edits.wsMap, position, stmt) ++ repositionedWs))
     } else
       super.visitStatement(stmt, position)

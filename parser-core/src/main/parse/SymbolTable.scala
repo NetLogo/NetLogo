@@ -6,7 +6,7 @@ import scala.collection.{ Iterable, IterableOnce, WithFilter }
 
 object SymbolTable {
   def empty = new SymbolTable(Map[String, SymbolType]())
-  def apply(pairs: (String, SymbolType)*) = new SymbolTable(Map[String, SymbolType](pairs: _*))
+  def apply(pairs: (String, SymbolType)*) = new SymbolTable(Map[String, SymbolType](pairs*))
 }
 
 class SymbolTable(private val syms: Map[String, SymbolType], private val uniqueVarID: Int = 0) extends WithFilter[(String, SymbolType), Iterable] {

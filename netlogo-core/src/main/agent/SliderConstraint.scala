@@ -72,7 +72,7 @@ abstract class SliderConstraint extends ValueConstraint {
   def minimum: Try[Double]
   def increment: Try[Double]
   def maximum: Try[Double]
-  var defaultValue = World.Zero
+  var defaultValue: JDouble = World.Zero
   def assertConstraint(o: Object): Unit = {
     if (!(o.isInstanceOf[Double])) { throw new ValueConstraint.Violation("Value must be a number.") }
   }

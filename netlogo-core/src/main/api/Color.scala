@@ -39,7 +39,7 @@ object Color extends CColor {
     ColorNumbers(index)
 
   val BaseColors = LogoList(
-    (0 to 13).map(n => Double.box(n * 10 + 5)): _*)
+    (0 to 13).map(n => Double.box(n * 10 + 5))*)
 
   def getColor(color: AnyRef): JColor = {
     color match {

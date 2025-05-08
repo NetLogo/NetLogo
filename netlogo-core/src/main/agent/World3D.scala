@@ -23,7 +23,7 @@ class World3D extends World
 
   def protractor3D: org.nlogo.api.Protractor3D = protractor
 
-  private var _patchScratch3d: Array[Array[Array[Double]]] = _
+  private var _patchScratch3d = Array[Array[Array[Double]]]()
 
   override val linkManager = new LinkManagerImpl(this,
     { (world: World3D, src: Turtle, dest: Turtle, breed: AgentSet) =>
@@ -42,9 +42,9 @@ class World3D extends World
   protected val dimensionVariableNames =
     Seq("MIN-PXCOR", "MAX-PXCOR", "MIN-PYCOR", "MAX-PYCOR", "MIN-PZCOR", "MAX-PZCOR", "WORLD-WIDTH", "WORLD-HEIGHT", "WORLD-DEPTH")
 
-  var _worldDepth: Int = _
-  var _maxPzcor: Int = _
-  var _minPzcor: Int = _
+  var _worldDepth: Int = 0
+  var _maxPzcor: Int = 0
+  var _minPzcor: Int = 0
 
   def worldDepth: Int = _worldDepth
   def minPzcor: Int = _minPzcor

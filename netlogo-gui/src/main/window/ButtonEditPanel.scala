@@ -113,7 +113,7 @@ class ButtonEditPanel(target: ButtonWidget, colorizer: Colorizer) extends Widget
     add(oldSize, c)
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(agentOptions, forever, goTime, wrapSource, name, actionKey, oldSize)
 
   override def isResizable: Boolean = true

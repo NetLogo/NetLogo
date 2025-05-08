@@ -33,7 +33,7 @@ object FileActions {
   }
 
   class ExportWorldAction(workspace: GUIWorkspace, parent: Component)
-  extends ExportAction("world", workspace.guessExportName("world.csv"), parent, workspace.exportWorld _)
+  extends ExportAction("world", workspace.guessExportName("world.csv"), parent, workspace.exportWorld)
   with MenuAction {
     category    = FileCategory
     subcategory = FileExportSubcategory

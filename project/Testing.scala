@@ -77,7 +77,7 @@ object Testing {
         te -> testExtensionsClass,
         tm -> testModelsClass).flatMap {
           case (ik, classNameSetting) =>
-            Seq[Setting[_]](ik := taggedTest(classNameSetting).evaluated)
+            Seq[Setting[?]](ik := taggedTest(classNameSetting).evaluated)
         }))
 
   def taggedTest(className: SettingKey[String]): Def.Initialize[InputTask[Unit]] =

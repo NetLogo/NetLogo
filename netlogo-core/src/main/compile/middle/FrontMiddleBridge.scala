@@ -21,7 +21,7 @@ object FrontMiddleBridge extends FrontMiddleBridgeInterface {
     val newProcedures = structureResults.procedures.map {
       case (k, p) => k -> fromApiProcedure(p)
     }.toMap
-    val astBackifier = new middle.ASTBackifier(backifier, ListMap((newProcedures ++ oldProcedures).toSeq: _*))
+    val astBackifier = new middle.ASTBackifier(backifier, ListMap((newProcedures ++ oldProcedures).toSeq*))
     newProcedures.values.lazyZip(topLevelDefs)
       .map(astBackifier.backify)
       .toSeq

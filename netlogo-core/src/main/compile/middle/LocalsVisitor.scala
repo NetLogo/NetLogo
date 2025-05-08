@@ -62,11 +62,11 @@ extends DefaultAstVisitor {
       stmt.command match {
         case _: _ask | _: _askconcurrent =>
           val (_, newMap) =
-            super.visitStatement(stmt)((askNestingLevel + 1, eligibilityMap))
+            super.visitStatement(stmt)(using (askNestingLevel + 1, eligibilityMap))
           (askNestingLevel, newMap)
         case l: _let if askNestingLevel == 0 && ! l.token.text.equalsIgnoreCase("__LET") =>
             val newEligibility = eligibilityMap.getOrElse(l.let, true)
-            super.visitStatement(stmt)((askNestingLevel, eligibilityMap + (l.let -> newEligibility)))
+            super.visitStatement(stmt)(using (askNestingLevel, eligibilityMap + (l.let -> newEligibility)))
         case _ => super.visitStatement(stmt)
       }
     }
@@ -82,9 +82,9 @@ extends DefaultAstVisitor {
       }
       app.reporter match {
         case cl: _commandlambda =>
-          super.visitReporterApp(app)((askNestingLevel, addLets(eligibilityMap, cl.closedVariables)))
+          super.visitReporterApp(app)(using (askNestingLevel, addLets(eligibilityMap, cl.closedVariables)))
         case rl: _reporterlambda =>
-          super.visitReporterApp(app)((askNestingLevel, addLets(eligibilityMap, rl.closedVariables)))
+          super.visitReporterApp(app)(using (askNestingLevel, addLets(eligibilityMap, rl.closedVariables)))
         case _ =>
           super.visitReporterApp(app)
       }

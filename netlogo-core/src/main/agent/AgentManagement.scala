@@ -17,12 +17,9 @@ trait AgentManagement
   extends TurtleManagement
   with LinkManagement
   with ObserverManagement
-  with WorldKernel { this: CoreWorld with GrossWorldState =>
+  with WorldKernel { this: CoreWorld & GrossWorldState =>
 
   def program: Program
-  def patches: IndexedAgentSet
-  def turtles: TreeAgentSet
-  def links: TreeAgentSet
 
   val noTurtles: AgentSet = AgentSet.emptyTurtleSet
   val noPatches: AgentSet = AgentSet.emptyPatchSet

@@ -34,7 +34,7 @@ object NetLogoBuild {
         .stripPrefix("NetLogo ")
     })
 
-  def includeInPackaging(project: Project): Seq[Setting[_]] =
+  def includeInPackaging(project: Project): Seq[Setting[?]] =
     Seq(Compile / sources ++= (project / Compile / sources).value) ++
     Seq(packageBin, packageSrc, packageDoc).flatMap(task => inTask(task)(
       Compile / mappings ++= {
@@ -59,7 +59,7 @@ object NetLogoBuild {
         libraryDependencies ++= (project / libraryDependencies).value)
 
 
-  def shareSourceDirectory(path: String): Seq[Setting[_]] = {
+  def shareSourceDirectory(path: String): Seq[Setting[?]] = {
     Seq(
       Compile / unmanagedSourceDirectories += baseDirectory.value.getParentFile / path / "src" / "main",
       Test / unmanagedSourceDirectories    += baseDirectory.value.getParentFile / path / "src" / "test"

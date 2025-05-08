@@ -7,7 +7,7 @@ import javax.swing.{ JComponent, JLabel, JPanel }
 
 import org.nlogo.theme.ThemeSync
 
-class LabeledComponent(text: String, component: JComponent with ThemeSync)
+class LabeledComponent(text: String, component: JComponent & ThemeSync)
   extends JPanel(new GridBagLayout) with Transparent with ThemeSync {
 
   // if this isn't lazy, setForeground gets called too early and throws an exception (Isaac B 2/15/25)

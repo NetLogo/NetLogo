@@ -120,7 +120,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
   @throws(classOf[CompilerException])
   private def checkSyntax(source: String, subprogram: Boolean, program: Program, oldProcedures: ProceduresMap, extensionManager: ExtensionManager, parse: Boolean, compilationEnv: CompilationEnvironment): Unit = {
 
-    val oldProceduresListMap = ListMap[String, Procedure](oldProcedures.toSeq: _*)
+    val oldProceduresListMap = ListMap[String, Procedure](oldProcedures.toSeq*)
     val (topLevelDefs, feStructureResults) =
       frontEnd.frontEnd(source, None, program, subprogram, oldProceduresListMap, extensionManager)
   }
@@ -185,7 +185,7 @@ class Compiler(dialect: Dialect) extends PresentationCompilerInterface {
 
   // used by CommandLine
   def isReporter(s: String, program: Program, procedures: ProceduresMap, extensionManager: ExtensionManager, compilationEnv: CompilationEnvironment) = {
-    val proceduresListMap = ListMap[String, Procedure](procedures.toSeq: _*)
+    val proceduresListMap = ListMap[String, Procedure](procedures.toSeq*)
     utilities.isReporter(s, program, proceduresListMap, extensionManager)
   }
 

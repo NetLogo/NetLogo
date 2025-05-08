@@ -61,7 +61,7 @@ class ListsExporter(modelFileName: String,
                 out.print(s"${reporters(i + j)},${runNumbers(i)},")
                 if (parameters.length > 0)
                   out.print(parameters.map(_(i / runWidth + 1)).mkString(",") + ",")
-                out.println(s"${data(k)(i)},${data(k)(i + j).replaceAll("[\"\\[\\]]", "").split(" ").map(csv.header _)
+                out.println(s"${data(k)(i)},${data(k)(i + j).replaceAll("[\"\\[\\]]", "").split(" ").map(csv.header)
                             .mkString(",")}")
               }
             }
@@ -93,7 +93,7 @@ class ListsExporter(modelFileName: String,
                                              parameterIndices.map(els(_)).mkString(","),
                                              els(stepIndex).replaceAll("\\D", "").toInt,
                                              els(i).replaceAll("[\"\\[\\]]", "").split(" ")
-                                             .map(csv.header _).mkString(",")))
+                                             .map(csv.header).mkString(",")))
             }
           }
         }
