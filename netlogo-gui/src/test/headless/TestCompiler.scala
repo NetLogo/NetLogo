@@ -8,7 +8,7 @@ import org.nlogo.core.{ CompilerException, I18N }
 
 class TestCompiler extends AnyFunSuite with OneInstancePerTest with BeforeAndAfterEach {
 
-  var workspace: HeadlessWorkspace = _
+  var workspace: HeadlessWorkspace = null
   override def beforeEach(): Unit = { workspace = HeadlessWorkspace.newInstance }
   override def afterEach(): Unit = { workspace.dispose() }
 

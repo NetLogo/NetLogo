@@ -67,7 +67,7 @@ usually after the `createScripts()` to finalize the package.
 */
 
 object JavaPackager {
-  def mainArtifactSettings: Seq[Setting[_]] =
+  def mainArtifactSettings: Seq[Setting[?]] =
     Seq(
       Compile / packageBin / packageOptions += {
         Package.ManifestAttributes(CLASS_PATH.toString ->

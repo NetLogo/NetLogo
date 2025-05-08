@@ -71,13 +71,13 @@ class SliderWidgetUI(widget: AbstractSliderWidget, slider: JSlider) extends Basi
     val g2d = Utils.initGraphics2D(g)
     if (hover) {
       if (widget.vertical) {
-        g2d.setPaint(new RadialGradientPaint(thumbRect.getCenterX.toInt.toFloat, thumbRect.getCenterY.toInt + 3,
+        g2d.setPaint(new RadialGradientPaint(thumbRect.getCenterX.toFloat, thumbRect.getCenterY.toFloat + 3,
                                             getThumbSize.height / 2f, Array[Float](0, 1),
                                             Array(InterfaceColors.widgetHoverShadow(), InterfaceColors.Transparent)))
         g2d.fillOval(thumbRect.x, thumbRect.y + getThumbSize.width / 2 - getThumbSize.height / 2 + 3,
                     getThumbSize.height, getThumbSize.height)
       } else {
-        g2d.setPaint(new RadialGradientPaint(thumbRect.getCenterX.toInt.toFloat, thumbRect.getCenterY.toInt + 3,
+        g2d.setPaint(new RadialGradientPaint(thumbRect.getCenterX.toFloat, thumbRect.getCenterY.toFloat + 3,
                                             getThumbSize.width / 2f, Array[Float](0, 1),
                                             Array(InterfaceColors.widgetHoverShadow(), InterfaceColors.Transparent)))
         g2d.fillOval(thumbRect.x, thumbRect.y + getThumbSize.height / 2 - getThumbSize.width / 2 + 3,

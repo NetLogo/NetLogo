@@ -15,7 +15,7 @@ import scala.unchecked
  */
 class Argument(context: Context, arg: Reporter) extends api.Argument {
 
-  private[this] var cached: AnyRef = null
+  private var cached: AnyRef = null
 
   def get = {
     unsafeGet match {

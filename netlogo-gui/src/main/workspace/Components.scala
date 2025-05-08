@@ -20,7 +20,7 @@ class ComponentPair[A <: AnyRef](
 
   def fetchClass[B](ofKlass: Class[B]): Option[B] = {
     if (klass == ofKlass)
-      fetch().map(ofKlass.cast _)
+      fetch().map(ofKlass.cast)
     else
       None
   }
@@ -32,32 +32,5 @@ class ComponentPair[A <: AnyRef](
     } lc.dispose(comp)
 
     component = None
-  }
-}
-
-/** Components manages components which are dynamically registered with the Workspace
- *
- *  At the moment, it just holds and returns those components. Perhaps in the future
- *  we could have a more advanced component lifecycle where components could be
- *  initialized, disposed, and made aware of workspace events (like ticks)
- */
-trait Components extends AbstractWorkspace {
-  private var componentPairs = List.empty[ComponentPair[_]]
-
-  def addLifecycle[A <: AnyRef](lifecycle: ComponentLifecycle[A]): Unit =
-    componentPairs :+= new ComponentPair(lifecycle.klass, Some(lifecycle), None)
-
-  def addComponent[A <: AnyRef](componentClass: Class[A], component: A): Unit =
-    componentPairs :+= new ComponentPair(componentClass, None, Some(component))
-
-  def getComponent[A <: AnyRef](componentClass: Class[A]): Option[A] = {
-    componentPairs.flatMap(_.fetchClass(componentClass)).headOption
-  }
-
-  @throws(classOf[InterruptedException])
-  abstract override def dispose(): Unit = {
-    super.dispose()
-    componentPairs.foreach(_.dispose())
-    componentPairs = List.empty[ComponentPair[_]]
   }
 }

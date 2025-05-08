@@ -237,7 +237,7 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
 
   private val replaceAllButton = new DialogButton(false, I18N.gui.get("dialog.find.replaceAll"), () => {
     replaceAll(findBox.getText, ignoreCaseCheckBox.isSelected, replaceBox.getText)
-  })
+  }: Unit)
 
   private val findBox = new TextField(25)
   private val replaceBox = new TextField(25)
@@ -407,14 +407,16 @@ class FindDialog(val owner: Frame) extends JDialog(owner, I18N.gui.get("dialog.f
     if (next(search, ignoreCase, false)) {
       var i = 1
 
-      do {
+      while {
         replace(replacement)
 
         i += 1
 
         if (i > 50000)
           throw new IllegalStateException("Replace All replaced too many items.")
-      } while (next(search, ignoreCase, false)) // never wrap around on replace all
+
+        next(search, ignoreCase, false) // never wrap around on replace all
+      } do ()
 
       i
     } else 0

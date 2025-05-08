@@ -42,6 +42,6 @@ class DummyButtonEditPanel(target: DummyButtonWidget) extends WidgetEditPanel(ta
     add(actionKey, c)
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(name, actionKey)
 }

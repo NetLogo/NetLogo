@@ -92,7 +92,7 @@ object StructureConverter {
       def orderPreservingUpdate(breedMap: BreedMap, breed: core.Breed): BreedMap = {
         val keys = breedMap.keys.toSeq
         val newMapInWrongOrder = breedMap.updated(breed.name, breed)
-        val result = ListMap(keys.map { k => (k, newMapInWrongOrder(k))}.toSeq: _*)
+        val result = ListMap(keys.map { k => (k, newMapInWrongOrder(k))}.toSeq*)
         assert(keys sameElements result.keys.toSeq)
         result
       }

@@ -13,10 +13,10 @@ class WorldViewSettings3D(workspace: GUIWorkspace, gw: ViewWidget, tickCounter: 
 
   protected val world: World3D = workspace.world.asInstanceOf[World3D]
 
-  protected var newMinZ: Int = _
-  protected var newMaxZ: Int = _
+  protected var newMinZ: Int = 0
+  protected var newMaxZ: Int = 0
 
-  protected var newWrapZ: Boolean = _
+  protected var newWrapZ: Boolean = false
 
   override def editPanel: EditPanel = new WorldEditPanel3D(this)
 

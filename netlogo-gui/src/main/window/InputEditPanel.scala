@@ -64,6 +64,6 @@ class InputEditPanel(target: InputBoxWidget, compiler: CompilerServices) extends
     nameWrapper.requestFocus()
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameWrapper, typeOptions, oldSize)
 }

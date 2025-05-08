@@ -45,7 +45,7 @@ abstract class AbstractExporter(filename: String) {
     try {
       file.open(FileMode.Write)
       val writer = file.getPrintWriter
-      AbstractExporter.exportWithHeader(writer, tpe, modelFileName, extraHeader)(export)
+      AbstractExporter.exportWithHeader(writer, tpe, modelFileName, extraHeader)(`export`)
     }
     finally ignoring(classOf[IOException]) {
       file.close(false)

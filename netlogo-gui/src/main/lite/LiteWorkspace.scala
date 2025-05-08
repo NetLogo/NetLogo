@@ -12,7 +12,7 @@ import org.nlogo.window.{ ErrorDialogManager, GUIWorkspace, NetLogoListenerManag
 import org.nlogo.workspace.BufferedReaderImporter
 
 class LiteWorkspace(LitePanel: LitePanel, world: World, frame: Frame, listenerManager: NetLogoListenerManager, errorDialogManager: ErrorDialogManager, controlSet: ControlSet)
-extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null, null, listenerManager, errorDialogManager, controlSet) {
+extends GUIWorkspace(world, GUIWorkspace.KioskLevel.Moderate, frame, frame, null, null, listenerManager, errorDialogManager, controlSet) {
   val compiler = Femto.get[PresentationCompilerInterface]("org.nlogo.compile.Compiler", if (Version.is3D) NetLogoThreeDDialect else NetLogoLegacyDialect)
   // lazy to avoid initialization order snafu - ST 3/1/11
   lazy val updateManager = new UpdateManager() {
@@ -32,4 +32,5 @@ extends GUIWorkspace(world, GUIWorkspace.KioskLevel.MODERATE, frame, frame, null
   override def closeAgentMonitors(): Unit = { }
   override def newRenderer = Femto.get[RendererInterface]("org.nlogo.render.Renderer", world)
   override def updateModel(m: Model): Model = m
+  override def dispose(): Unit = super.dispose()
 }

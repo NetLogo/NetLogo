@@ -28,7 +28,7 @@ object StructureParser {
 
   /// main entry point.  handles gritty extensions stuff and includes stuff.
   def parseSources(tokenizer: TokenizerInterface, compilationData: CompilationOperand,
-    includeFile: (CompilationEnvironment, String) => Option[(String, String)] = IncludeFile.apply _): StructureResults = {
+    includeFile: (CompilationEnvironment, String) => Option[(String, String)] = IncludeFile.apply): StructureResults = {
       import compilationData.{ compilationEnvironment, displayName, oldProcedures, subprogram, sources, containingProgram => program }
       parsingWithExtensions(compilationData) {
         val structureParser = new StructureParser(displayName, subprogram)
@@ -69,7 +69,7 @@ object StructureParser {
         val text = token.text.toLowerCase
         if (compilationData.shouldAutoInstallLibs) {
           val lm = compilationData.libraryManager
-          lm.lookupExtension(text, "").filter(_.status == CanInstall).foreach(lm.installExtension _)
+          lm.lookupExtension(text, "").filter(_.status == CanInstall).foreach(lm.installExtension)
         }
         compilationData.extensionManager.importExtension(text, new ErrorSource(token))
       }

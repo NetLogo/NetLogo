@@ -54,7 +54,7 @@ class DummyMonitorEditPanel(target: DummyMonitorWidget) extends WidgetEditPanel(
     name.requestFocus()
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(name, decimalPlaces, oldSize)
 
   override def isResizable: Boolean = true

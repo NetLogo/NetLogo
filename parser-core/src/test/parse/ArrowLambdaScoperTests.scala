@@ -84,7 +84,7 @@ class ArrowLambdaScoperTests extends AnyFunSuite {
   }
 
   def testArgError(args: Seq[Token], expectedError: String, bindings: (String, SymbolType)*): Unit = {
-    val symTable = SymbolTable(bindings: _*)
+    val symTable = SymbolTable(bindings*)
     val ex = intercept[CompilerException] { scope(Seq(`[`, `[`) ++ args ++ Seq(`]`, `->`, `]`), symTable) }
     assert(ex.getMessage.contains(expectedError))
   }

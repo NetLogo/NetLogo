@@ -96,10 +96,10 @@ object LabSaver {
       element("metric", metric)
     if (!protocol.runMetricsCondition.isEmpty)
       element("runMetricsCondition", protocol.runMetricsCondition)
-    protocol.constants.foreach(matchValueSet _)
+    protocol.constants.foreach(matchValueSet)
     for (subExperiment <- protocol.subExperiments) {
       hd.startElement("", "", "subExperiment", attributes())
-      subExperiment.foreach(matchValueSet _)
+      subExperiment.foreach(matchValueSet)
       hd.endElement("", "", "subExperiment")
     }
     hd.endElement("", "", "experiment")

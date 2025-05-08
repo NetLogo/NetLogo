@@ -20,7 +20,7 @@ abstract class HillCommand(sign: Int) extends nvm.Command with nvm.Referencer {
 
   override def referenceIndex: Int = 0
 
-  private[this] var reference: Reference = null
+  private var reference: Reference = null
 
   override def applyReference(ref: Reference): nvm.Command = {
     reference = ref

@@ -9,7 +9,7 @@ import org.nlogo.util.HexString
 object Checksummer {
 
   def initModelForChecksumming(workspace: Workspace, variant: String): Unit = {
-    workspace.renderer.renderLabelsAsRectangles_=(true)
+    workspace.renderer.setRenderLabelsAsRectangles(true)
     val commands = workspace.previewCommands match {
       case PreviewCommands.Custom(source) => source
       case _ => PreviewCommands.Default.source // may or may not compile, but we'll try

@@ -51,7 +51,7 @@ object Colorizer extends TokenColorizer {
           .map(_(token))
           .collectFirst{
             case Some ((tpe, _)) =>
-              token.copy(tpe = tpe)}
+              token.copy(tpe = tpe)()}
           .getOrElse(Namer0(token))
   }
 

@@ -20,7 +20,7 @@ object TemporaryCodeTab {
   private[app] def stripPath(filename: String): String = filename.split(Regex.quote(File.separator)).last
 }
 
-class TemporaryCodeTab(workspace: AbstractWorkspace with ModelTracker,
+class TemporaryCodeTab(workspace: AbstractWorkspace & ModelTracker,
   tabs:                           TabsInterface,
   private var _filename:          TabsInterface.Filename,
   externalFileManager:            ExternalFileManager,

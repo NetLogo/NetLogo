@@ -11,7 +11,7 @@ object Formatter {
   def context(
     text:                String,
     operations:          Map[AstPath, AstFormat.Operation],
-    instructionToString: Instruction => String = instructionString _,
+    instructionToString: Instruction => String = instructionString,
     wsMap:               FormattingWhitespace  = WhitespaceMap.empty): AstFormat =
       AstFormat(text, operations, instructionString, wsMap)
 
@@ -59,22 +59,22 @@ class Formatter extends PositionalAstFolder[AstFormat] {
     if (block.synthetic && block.statements.stmts.isEmpty)
       c.appendText(c.wsMap.leading(position))
     else if (block.synthetic)
-      visitBlock(block, position, c1 => super.visitCommandBlock(block, position)(c1),
-        beginSyntheticBlock _, closeSyntheticBlock _)
+      visitBlock(block, position, c1 => super.visitCommandBlock(block, position)(using c1),
+        beginSyntheticBlock, closeSyntheticBlock)
     else
-      visitBlock(block, position, c1 => super.visitCommandBlock(block, position)(c1))
+      visitBlock(block, position, c1 => super.visitCommandBlock(block, position)(using c1))
   }
 
   override def visitReporterBlock(block: ReporterBlock, position: AstPath)(implicit c: AstFormat): AstFormat = {
-    visitBlock(block, position, c1 => super.visitReporterBlock(block, position)(c1))
+    visitBlock(block, position, c1 => super.visitReporterBlock(block, position)(using c1))
   }
 
   private def normalBeginBlock(ws: FormattingWhitespace)(p: AstPath): String = ws.leading(p)
   private def normalEndBlock(ws: FormattingWhitespace)(p: AstPath): String = ws.backMargin(p)
 
   private def visitBlock(block: AstNode, position: AstPath, visit: AstFormat => AstFormat,
-    beginBlock: FormattingWhitespace => AstPath => String = normalBeginBlock _,
-    endBlock:   FormattingWhitespace => AstPath => String = normalEndBlock _)
+    beginBlock: FormattingWhitespace => AstPath => String = normalBeginBlock,
+    endBlock:   FormattingWhitespace => AstPath => String = normalEndBlock)
     (implicit c: AstFormat): AstFormat = {
     c.operations.get(position)
       .map(op => op(this, block, position, c.appendText(leadingWhitespace(position))))
@@ -89,7 +89,7 @@ class Formatter extends PositionalAstFolder[AstFormat] {
       .getOrElse {
         val ws = leadingWhitespace(position)
         val newContext = c.appendText(ws + c.instructionToString(stmt.command))
-        super.visitStatement(stmt, position)(newContext).copy(instructionToString = c.instructionToString)
+        super.visitStatement(stmt, position)(using newContext).copy(instructionToString = c.instructionToString)
       }
   }
 
@@ -100,23 +100,23 @@ class Formatter extends PositionalAstFolder[AstFormat] {
         val ws = leadingWhitespace(position)
         (app.reporter.syntax.isInfix, app.reporter) match {
           case (true, i) =>
-            val c2 = visitExpression(app.args.head, position, 0)(c)
+            val c2 = visitExpression(app.args.head, position, 0)(using c)
             app.args.zipWithIndex.tail.foldLeft(c2.appendText(ws + c.instructionToString(i))) {
-              case (ctx, (arg, i)) => visitExpression(arg, position, i)(ctx)
+              case (ctx, (arg, i)) => visitExpression(arg, position, i)(using ctx)
             }
 
           case (_, b: _constcodeblock) =>
-            super.visitReporterApp(app, position)(
+            super.visitReporterApp(app, position)(using
               c.appendText(leadingWhitespace(position) + c.wsMap.content(position)))
 
           case (false, con: _const) =>
-            super.visitReporterApp(app, position)(
+            super.visitReporterApp(app, position)(using
               c.appendText(leadingWhitespace(position) + c.wsMap.content(position)))
 
           case (false, l: Lambda) =>
             val frontPadding = if (c.text.lastOption.forall(_ == ' ')) "" else " "
             val body =
-              super.visitReporterApp(app, position)(context("", c.operations, wsMap = c.wsMap)).text
+              super.visitReporterApp(app, position)(using context("", c.operations, wsMap = c.wsMap)).text
             val args = l.arguments match {
               case Lambda.NoArguments(true)        => "[ ->"
               case Lambda.NoArguments(false)       => "["
@@ -146,7 +146,7 @@ class Formatter extends PositionalAstFolder[AstFormat] {
             c
 
           case (false, reporter) =>
-            super.visitReporterApp(app, position)(c.appendText(ws + c.instructionToString(reporter)))
+            super.visitReporterApp(app, position)(using c.appendText(ws + c.instructionToString(reporter)))
               .copy(instructionToString = c.instructionToString)
         }
       }

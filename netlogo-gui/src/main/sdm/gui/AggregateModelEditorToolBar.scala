@@ -103,7 +103,7 @@ class AggregateModelEditorToolBar(editor: AggregateModelEditor, model: Model) ex
       dtButton.syncTheme()
   }
 
-  private class ModelElementCreationTool(model: Model, editor: DrawingEditor, figure: ModelElementFigure with Figure)
+  private class ModelElementCreationTool(model: Model, editor: DrawingEditor, figure: ModelElementFigure & Figure)
     extends CreationTool(editor, figure) {
       override protected def setAddedFigure(newAddedFigure: Figure): Unit = {
         super.setAddedFigure(newAddedFigure)

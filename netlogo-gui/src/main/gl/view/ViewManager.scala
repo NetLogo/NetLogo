@@ -178,6 +178,10 @@ class ViewManager(val workspace: GUIWorkspace,
 
   var wireframeOn = true
 
+  def setWireframeOn(on: Boolean): Unit = {
+    wireframeOn = on
+  }
+
   def paintImmediately(force: Boolean): Unit = {
     if (viewIsVisible && (_framesSkipped || force)) {
       paintingImmediately = true

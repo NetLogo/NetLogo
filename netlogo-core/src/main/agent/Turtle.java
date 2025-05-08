@@ -1019,13 +1019,14 @@ public abstract class Turtle
 
   // returns the index of the breed of this turtle, 0 means just a turtle
   // this is super kludge. is there a better way? -AZS 10/28/04
+  @SuppressWarnings("unchecked")
   public int getBreedIndex() {
     AgentSet mybreed = getBreed();
     if (mybreed == _world.turtles()) {
       return 0;
     }
     int j = 0;
-    for (Iterator<TreeAgentSet> iter = _world.breeds().values().iterator(); iter.hasNext(); j++) {
+    for (Iterator<TreeAgentSet> iter = (Iterator<TreeAgentSet>)_world.breeds().values().iterator(); iter.hasNext(); j++) {
       if (mybreed == iter.next()) {
         return j;
       }

@@ -2,11 +2,12 @@
 
 package org.nlogo.workspace
 
+import org.nlogo.api.CompilerServices
 import org.nlogo.core.{ CompilerException, ProcedureSyntax, Token }
 
 // This trait implements all the api.CompilerServices methods *except* readFromString, which
 // is in the Evaluating trait - RG 5/23/2017
-trait Compiling { this: AbstractWorkspace =>
+trait Compiling extends CompilerServices { this: AbstractWorkspace =>
   def dialect = world.program.dialect
 
   def isConstant(s: String): Boolean = {

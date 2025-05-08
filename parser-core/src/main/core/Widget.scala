@@ -72,7 +72,7 @@ case class Switch(variable: Option[String],
   with DeclaresConstraint {
   override def varName = variable.getOrElse("")
   override def default = on
-  override def constraint = BooleanConstraintSpecification(default)
+  override def constraint = BooleanConstraintSpecification(default.asInstanceOf[Boolean])
 }
 
 sealed trait Direction

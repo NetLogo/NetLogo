@@ -39,15 +39,15 @@ private class ManagerDialog(manager:       LabManager,
     }
   }
 
-  private val editAction = makeAction(I18N.gui("edit"), edit _)
-  private val newAction = makeAction(I18N.gui("new"), makeNew _)
-  private val deleteAction = makeAction(I18N.gui("delete"), delete _)
-  private val duplicateAction = makeAction(I18N.gui("duplicate"), duplicate _)
-  private val importAction = makeAction(I18N.gui("import"), importnl _)
-  private val exportAction = makeAction(I18N.gui("export"), export _)
-  private val closeAction = makeAction(I18N.gui("close"), manager.close _)
-  private val abortAction = makeAction(I18N.gui("abort"), abort _)
-  private val runAction = makeAction(I18N.gui("run"), run _)
+  private val editAction = makeAction(I18N.gui("edit"), edit)
+  private val newAction = makeAction(I18N.gui("new"), makeNew)
+  private val deleteAction = makeAction(I18N.gui("delete"), delete)
+  private val duplicateAction = makeAction(I18N.gui("duplicate"), duplicate)
+  private val importAction = makeAction(I18N.gui("import"), importnl)
+  private val exportAction = makeAction(I18N.gui("export"), `export`)
+  private val closeAction = makeAction(I18N.gui("close"), manager.close)
+  private val abortAction = makeAction(I18N.gui("abort"), abort)
+  private val runAction = makeAction(I18N.gui("run"), run)
 
   private var blockActions = false
   private var editIndex = 0
@@ -355,7 +355,7 @@ private class ManagerDialog(manager:       LabManager,
 
     add(label)
 
-    def getListCellRendererComponent(list: JList[_ <: LabProtocol], proto: LabProtocol, index: Int,
+    def getListCellRendererComponent(list: JList[? <: LabProtocol], proto: LabProtocol, index: Int,
                                      isSelected: Boolean, cellHasFocus: Boolean): Component = {
       label.setText(
         if (proto.runsCompleted != 0) {

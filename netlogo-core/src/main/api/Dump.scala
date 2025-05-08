@@ -155,7 +155,7 @@ object Dump extends CDump {
         typeName(obj.getClass)
     }
 
-  def typeName(clazz: Class[_]): String =
+  def typeName(clazz: Class[?]): String =
     clazz match {
       case _ if clazz eq classOf[java.lang.Boolean] =>
         "true/false"

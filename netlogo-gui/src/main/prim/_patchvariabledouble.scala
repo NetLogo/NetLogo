@@ -7,7 +7,7 @@ import org.nlogo.api.AgentException
 import org.nlogo.nvm.{ Context, Reporter, RuntimePrimitiveException }
 
 class _patchvariabledouble extends Reporter {
-  private[this] var _vn: Int = 0
+  private var _vn: Int = 0
   def vn = _vn
   def vn_=(new_vn: Int) = _vn = new_vn
 

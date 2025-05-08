@@ -42,7 +42,7 @@ class LibrariesDialog( parent:          Frame
       setBackground(InterfaceColors.textAreaBackground())
     }
     new CustomOptionPane(LibrariesDialog.this, I18N.gui("showLibPaths"), scrollPane, OptionPane.Options.Ok)
-  })
+  }: Unit)
   private lazy val updateAllButton = new DialogButton(true, tab.updateAllAction)
 
   protected override def initGUI(): Unit = {

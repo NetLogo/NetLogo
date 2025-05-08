@@ -66,7 +66,7 @@ class RateEditPanel(target: RateConnection, compiler: CompilerServices, colorize
     nameWrapper.requestFocus()
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameWrapper, inputs, expressionWrapper)
 
   override def isResizable: Boolean = true

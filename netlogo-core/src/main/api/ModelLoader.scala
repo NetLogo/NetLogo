@@ -73,9 +73,9 @@ class FormatterPair[A, B <: ModelFormat[A, B]](
   }
 
 trait ModelLoader extends AbstractModelLoader {
-  def formats: Seq[FormatterPair[_, _]]
+  def formats: Seq[FormatterPair[?, ?]]
 
-  def uriCompatible(uri: URI): Option[FormatterPair[_, _]] =
+  def uriCompatible(uri: URI): Option[FormatterPair[?, ?]] =
     formats.find(_.isCompatible(uri))
 
   def readModel(uri: URI): Try[Model] = {
@@ -138,7 +138,7 @@ trait ModelLoader extends AbstractModelLoader {
   }
 }
 
-class ConfigurableModelLoader(val formats: Seq[FormatterPair[_, _]] = Seq()) extends ModelLoader {
+class ConfigurableModelLoader(val formats: Seq[FormatterPair[?, ?]] = Seq()) extends ModelLoader {
   override def readModel(uri: URI): Try[Model] = {
     if (uri.getScheme == "file") {
       val path = Paths.get(uri)

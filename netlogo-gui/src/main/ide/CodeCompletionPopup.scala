@@ -229,7 +229,7 @@ class SuggestionListRenderer(dialect: Dialect, extensionManager: Option[Extensio
 
   var font: Font = Fonts.monospacedFont
 
-  override def getListCellRendererComponent(list: JList[_ <: String], value: String, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component = {
+  override def getListCellRendererComponent(list: JList[? <: String], value: String, index: Int, isSelected: Boolean, cellHasFocus: Boolean): Component = {
     val label = new JLabel(value)
 
     val fgColor =

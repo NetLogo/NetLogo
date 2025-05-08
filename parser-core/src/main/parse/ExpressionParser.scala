@@ -217,7 +217,7 @@ object ExpressionParser {
     location: SourceLocation,
     displayName: String,
     scope: SymbolTable): Seq[core.Expression] = {
-    val typedArgs = scala.collection.mutable.Seq[core.Expression](untypedArgs: _*)
+    val typedArgs = scala.collection.mutable.Seq[core.Expression](untypedArgs*)
     var actual1 = 0
     // first look at left arg, if any
     if (syntax.isInfix) {

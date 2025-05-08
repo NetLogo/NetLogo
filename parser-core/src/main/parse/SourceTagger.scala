@@ -16,8 +16,8 @@ class SourceTagger(compilationOperand: CompilationOperand) extends AstTransforme
         val newApp = super.visitReporterApp(app)
         val f = new Formatter()
         val source =
-          f.visitReporterApp(newApp, AstPath())(
-            AstFormat("", Map(), Formatter.instructionString _, new LambdaWhitespace(app)))
+          f.visitReporterApp(newApp, AstPath())(using
+            AstFormat("", Map(), Formatter.instructionString, new LambdaWhitespace(app)))
               .text.trim
         val newPrim = l match {
           case r: _reporterlambda => r.copy(source = Some(source))

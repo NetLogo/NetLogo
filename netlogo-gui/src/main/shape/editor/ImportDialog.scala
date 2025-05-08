@@ -11,7 +11,7 @@ import org.nlogo.core.{ I18N, Shape }
 import org.nlogo.swing.{ ButtonPanel, DialogButton, InputOptionPane, OptionPane, ScrollPane, Utils }
 import org.nlogo.theme.InterfaceColors
 
-class ImportDialog(parent: JDialog, manager: ManagerDialog[_ <: Shape], list: DrawableList[_ <: Shape])
+class ImportDialog(parent: JDialog, manager: ManagerDialog[? <: Shape], list: DrawableList[? <: Shape])
   extends JDialog(parent, I18N.gui.get("tools.shapesEditor.importFromLibrary"), true) with ListSelectionListener {
 
   private implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.shapesEditor.import")

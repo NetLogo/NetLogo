@@ -5,7 +5,7 @@ package org.nlogo.window
 import java.awt.Dimension
 
 // helper class for auto-resizing widgets, gets rid of icky wrapperOption that was here before (Isaac B 3/31/25)
-abstract class WidgetEditPanel(target: Widget with Editable) extends EditPanel(target) {
+abstract class WidgetEditPanel(target: Widget & Editable) extends EditPanel(target) {
   private val wrapper: WidgetWrapperInterface = target.getParent.asInstanceOf[WidgetWrapperInterface]
 
   private val originalSize: Dimension = wrapper.getSize

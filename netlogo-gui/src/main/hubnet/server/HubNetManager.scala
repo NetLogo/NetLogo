@@ -99,7 +99,7 @@ abstract class HubNetManager( workspace: AbstractWorkspaceScala, modelLoader: Ab
    * string node ids.
    */
   @throws(classOf[HubNetException])
-  def send(nodes: Seq[String], tag: String, message: JSerializable with AnyRef): Unit = {
+  def send(nodes: Seq[String], tag: String, message: JSerializable & AnyRef): Unit = {
     checkRunningStatus()
     for (node <- nodes) if (!send(node, tag, message)) { simulateFailedExitMessage(node) }
   }
@@ -112,7 +112,7 @@ abstract class HubNetManager( workspace: AbstractWorkspaceScala, modelLoader: Ab
    * sends a message to a specific node (by String ID).
    */
   @throws(classOf[HubNetException])
-  override def send(node: String, tag: String, message: JSerializable with AnyRef): Boolean =
+  override def send(node: String, tag: String, message: JSerializable & AnyRef): Boolean =
     connectionManager.send(node, tag, message)
 
   def sendUserMessage(nodes: Seq[String], text: String): Unit = {

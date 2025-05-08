@@ -15,9 +15,9 @@ private[agent] object PenLineMaker {
     if (jumpDist == 0)
       Array.empty
     else {
-      val makeTrailsBy = makeTrails(heading, minX, maxX, minY, maxY) _
-      val lazyWrapX    = lazyWrapValue(minX, maxX) _
-      val lazyWrapY    = lazyWrapValue(minY, maxY) _
+      val makeTrailsBy = makeTrails(heading, minX, maxX, minY, maxY)
+      val lazyWrapX    = lazyWrapValue(minX, maxX)
+      val lazyWrapY    = lazyWrapValue(minY, maxY)
       helper(x, y, jumpDist, HelperContext(makeTrailsBy, lazyWrapX, lazyWrapY)).toArray
     }
 
@@ -63,9 +63,9 @@ private[agent] object PenLineMaker {
 
     val squash = (x: Double) => if (StrictMath.abs(x) < Numbers.Infinitesimal) 0 else x
 
-    val xcomp = (StrictMath.toRadians _ andThen StrictMath.sin andThen squash)(heading)
-    val ycomp = (StrictMath.toRadians _ andThen StrictMath.cos andThen squash)(heading)
-    val tan   = (StrictMath.toRadians _ andThen StrictMath.tan andThen squash)(heading)
+    val xcomp = (StrictMath.toRadians andThen StrictMath.sin andThen squash)(heading)
+    val ycomp = (StrictMath.toRadians andThen StrictMath.cos andThen squash)(heading)
+    val tan   = (StrictMath.toRadians andThen StrictMath.tan andThen squash)(heading)
 
     val rawX = x + xcomp * jumpDist
     val rawY = y + ycomp * jumpDist
@@ -82,15 +82,14 @@ private[agent] object PenLineMaker {
         val dy         = dx / tan
         val interceptY = y + dy
         makeTrailComponent(maxX, interceptY, dx, dy)
-      }
-      else if (rawX < minX) {
+      } else if (rawX < minX) {
         val dx         = x - minX
         val dy         = dx / tan
         val interceptY = y - dy
         makeTrailComponent(minX, interceptY, dx, dy)
+      } else {
+        None
       }
-    else
-      None
 
     val xInterceptTrails =
       if (rawY > maxY) {
@@ -98,15 +97,14 @@ private[agent] object PenLineMaker {
         val dx         = dy * tan
         val interceptX = x + dx
         makeTrailComponent(interceptX, maxY, dx, dy)
-      }
-      else if (rawY < minY) {
+      } else if (rawY < minY) {
         val dy         = y - minY
         val dx         = dy * tan
         val interceptX = x - dx
         makeTrailComponent(interceptX, minY, dx, dy)
+      } else {
+        None
       }
-    else
-      None
 
     (baseTrails ++ xInterceptTrails ++ yInterceptTrails).toSeq
 

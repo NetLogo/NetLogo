@@ -7,7 +7,7 @@ import org.nlogo.nvm.{ Context, Reporter }
 
 class _constdouble(_primitiveValue: Double) extends Reporter with Pure {
 
-  private[this] val value = Double.box(_primitiveValue)
+  private val value = Double.box(_primitiveValue)
   val primitiveValue = _primitiveValue
 
   override def toString =

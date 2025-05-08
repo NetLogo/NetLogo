@@ -12,7 +12,7 @@ import org.nlogo.nvm.Reporter
 class MethodSelectorTests extends AnyFunSuite {
   import MethodSelector._
   /// helpers
-  def cost(c1: Class[_], c2: Class[_]) =
+  def cost(c1: Class[?], c2: Class[?]) =
     conversionCost(c1, c2).get
   def dump(rs: Result) =
     rs.map{case (method, cost) =>

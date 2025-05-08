@@ -6,7 +6,7 @@ import org.nlogo.api.Dump
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ Command, Context, RuntimePrimitiveException }
 
-class _multiassignnest(private[this] val name: String, totalNeeded: Int) extends Command {
+class _multiassignnest(private val name: String, totalNeeded: Int) extends Command {
   override def perform(context: Context): Unit = {
     try {
       MultiAssign.nest(context.job.workspace, totalNeeded)

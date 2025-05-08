@@ -64,7 +64,7 @@ class Namer(
     handlers.flatMap(_(token))
       .headOption
       .map{case (tpe, instr) =>
-        val newToken = token.copy(tpe = tpe, value = instr)
+        val newToken = token.copy(tpe = tpe, value = instr)()
         instr.token = newToken
         newToken
       }
@@ -90,20 +90,20 @@ object Namer {
       if (tok.tpe == TokenType.Ident)
         f(tok) match {
           case Some((tpe, v: Instruction)) => tok.refine(v, tpe = tpe)
-          case Some((tpe, v: AnyRef)) => tok.copy(tpe = tpe, value = v)
+          case Some((tpe, v: AnyRef)) => tok.copy(tpe = tpe, value = v)()
           case None                   => tok
         }
       else
         tok
 
-    (Namer0.nameKeywordsAndConstants _)             andThen
-    (makeToken(new ReporterHandler(dialect.tokenMapper)) _) andThen
-    (makeToken(new CommandHandler(dialect.tokenMapper)) _)  andThen
-    (makeToken(new ExtensionPrimitiveHandler(extensionManager)) _)  andThen
-    (makeToken(new BuiltInAgentVariableReporterHandler(dialect.agentVariables)) _)  andThen
+    (Namer0.nameKeywordsAndConstants)             andThen
+    (makeToken(new ReporterHandler(dialect.tokenMapper))) andThen
+    (makeToken(new CommandHandler(dialect.tokenMapper)))  andThen
+    (makeToken(new ExtensionPrimitiveHandler(extensionManager)))  andThen
+    (makeToken(new BuiltInAgentVariableReporterHandler(dialect.agentVariables)))  andThen
     ((t: Token) =>
         if (t.tpe == TokenType.Reporter && t.value.isInstanceOf[core.prim._symbol])
-          t.copy(tpe = TokenType.Ident, value = t.value)
+          t.copy(tpe = TokenType.Ident, value = t.value)()
         else
           t)
   }

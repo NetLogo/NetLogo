@@ -34,14 +34,14 @@ object Exceptions
   // very late in the game for NetLogo 5.0, so it seems safer not to rock the boat on this
   // at the moment. - ST 8/5/11
 
-  def ignoring(cs: Class[_]*)(body: =>Unit): Unit = {
-    util.control.Exception.catchingPromiscuously(cs: _*).withApply(ignore) { body }
+  def ignoring(cs: Class[?]*)(body: =>Unit): Unit = {
+    util.control.Exception.catchingPromiscuously(cs*).withApply(ignore) { body }
   }
-  def handling(cs: Class[_]*)(body: =>Unit): Unit = {
-    util.control.Exception.catchingPromiscuously(cs: _*).withApply(handle) { body }
+  def handling(cs: Class[?]*)(body: =>Unit): Unit = {
+    util.control.Exception.catchingPromiscuously(cs*).withApply(handle) { body }
   }
-  def warning(cs: Class[_]*)(body: =>Unit): Unit = {
-    util.control.Exception.catchingPromiscuously(cs: _*).withApply(warn) { body }
+  def warning(cs: Class[?]*)(body: =>Unit): Unit = {
+    util.control.Exception.catchingPromiscuously(cs*).withApply(warn) { body }
   }
 
 }

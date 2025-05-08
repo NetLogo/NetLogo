@@ -7,10 +7,7 @@ import org.nlogo.api.AgentException
 
 // imagine a cylinder lying on its side
 
-class HorizCylinder(world2d: World2D)
-extends Topology(world2d, xWraps = false, yWraps = true)
-with XBlocks with YWraps{
-
+class HorizCylinder(world2d: World2D) extends Topology(world2d) with XBlocks with YWraps {
   @throws(classOf[AgentException])
   override def wrapX(x: Double): Double = {
     val max = world.maxPxcor + 0.5

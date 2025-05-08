@@ -69,7 +69,7 @@ class JFXColorPicker( frame: Frame, modal: Boolean, config: JFXCPConfig, initial
 
       engine.getLoadWorker.stateProperty().addListener(
         new ChangeListener[State] {
-          override def changed(ov: ObservableValue[_ <: State], oldState: State, newState: State): Unit = {
+          override def changed(ov: ObservableValue[? <: State], oldState: State, newState: State): Unit = {
             if (newState == State.SUCCEEDED) {
 
               engine.executeScript("window").asInstanceOf[JSObject].setMember("nlBabyMonitor", nlBabyMonitor)
@@ -215,7 +215,7 @@ object NLNumber {
 
   def fromJavaColor(color: Color): NLNumber = {
     val vec      = Vector(color.getRed, color.getGreen, color.getBlue, color.getAlpha)
-    val list     = LogoList.fromVector(vec.map(Int.box _))
+    val list     = LogoList.fromVector(vec.map(Int.box))
     val argbMask = CoreColor.getARGBIntByRGBAList(list)
     val colorNum = CoreColor.getClosestColorNumberByARGB(argbMask)
     NLNumber(colorNum)

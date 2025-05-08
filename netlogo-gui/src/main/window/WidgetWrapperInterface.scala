@@ -28,5 +28,5 @@ trait WidgetWrapperInterface {
 
   def isNew: Boolean
 
-  def widget(): Widget
+  def widget: Widget
 }

@@ -81,7 +81,7 @@ trait CoreWorld
     protected val _links: TreeAgentSet
     def links: TreeAgentSet = _links
 
-    private[agent] var _topology: Topology = _
+    private[agent] var _topology: Topology = null
     def topology: Topology = { _topology }
 
     def getLinkVariablesArraySize(breed: AgentSet): Int
@@ -140,7 +140,7 @@ class World2D extends World with CompilationManagement {
   val protractor: Protractor = new Protractor(this)
 
   val linkManager: LinkManager =
-    new LinkManagerImpl(this,
+    new LinkManagerImpl[World](this,
       { (world: World, src: Turtle, dest: Turtle, breed: AgentSet) =>
         val l = new Link(world, src, dest, breed)
         l.setId(newLinkId())
@@ -357,6 +357,6 @@ class World2D extends World with CompilationManagement {
   }
 
   def sprout(patch: Patch, breed: AgentSet): Turtle = {
-    new Turtle2D(this, breed, patch.pxcor, patch.pycor)
+    new Turtle2D(this, breed, patch.pxcor.toDouble, patch.pycor.toDouble)
   }
 }

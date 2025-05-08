@@ -31,14 +31,14 @@ class PlotExporterTests extends SimplePlotTest {
     plot.plot(pen, 8)
     plot.plot(pen, 17)
     val `export` = exportPlotToString(plot)
-    assert(EXPORT_RESULT === export.replaceAll("\r\n","\n"))
+    assert(EXPORT_RESULT === `export`.replaceAll("\r\n","\n"))
   }
 
   def exportPlotToString(plot:Plot) = {
     val stringWriter = new java.io.StringWriter
     val printWriter = new java.io.PrintWriter(stringWriter)
     val exporter = new CorePlotExporter(plot,csv)
-    exporter.export(printWriter)
+    exporter.`export`(printWriter)
     printWriter.flush()
     stringWriter.toString
   }

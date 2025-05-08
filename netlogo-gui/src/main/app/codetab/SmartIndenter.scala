@@ -162,7 +162,7 @@ extends Indenter {
     // _2: Option[TokenizedLine] - priorLine. The priorLine is sometimes needed to compute line spaces.
     // _3: Seq[LineIndent] - accumulator of line indents. This is accumulated last->first and reversed after folding
     val initialFoldParams = (List.empty[Int], Option.empty[TokenizedLine], Seq.empty[LineIndent])
-    val (_, _, lineIndents) = tokLineIter.foldLeft(initialFoldParams)(foldLineIndentations _)
+    val (_, _, lineIndents) = tokLineIter.foldLeft(initialFoldParams)(foldLineIndentations)
     lineIndents.reverse.dropWhile(_.lineEnd < startOffset)
   }
 

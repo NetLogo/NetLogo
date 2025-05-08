@@ -22,7 +22,7 @@ package org.nlogo.generate
 class CustomClassLoader(normalClassLoader: ClassLoader) extends ClassLoader {
   var className: String = null
   var bytecode: Array[Byte] = null
-  override def loadClass(name: String): Class[_] =
+  override def loadClass(name: String): Class[?] =
     if (className == name)
       super.defineClass(className, bytecode, 0, bytecode.length)
     else normalClassLoader.loadClass(name)

@@ -24,7 +24,7 @@ object TypeConverter {
    *   we need this, so we can create ArgumentTypeExceptions pointing to the
    *   correct culprit.
    */
-  def generateConversion(typeFrom: Class[_], typeTo: Class[_], mv: MethodVisitor, firstFreeJVMLocal: Int, parentInstr: Instruction, argIndex: Int): Unit = {
+  def generateConversion(typeFrom: Class[?], typeTo: Class[?], mv: MethodVisitor, firstFreeJVMLocal: Int, parentInstr: Instruction, argIndex: Int): Unit = {
     if (typeFrom == java.lang.Boolean.TYPE && (typeTo == classOf[Object] || typeTo == classOf[java.lang.Boolean]))
       frombooleantoObject(mv)
     else if (typeFrom == java.lang.Double.TYPE && (typeTo == classOf[Object] || typeTo == classOf[java.lang.Double]))
@@ -129,7 +129,7 @@ object TypeConverter {
     mv.visitFieldInsn(GETSTATIC, "java/lang/Boolean", "FALSE", "Ljava/lang/Boolean;")
     mv.visitLabel(l2)
   }
-  private def castObjectToObject(typeTo: Class[_], mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int): Unit = {
+  private def castObjectToObject(typeTo: Class[?], mv: MethodVisitor, firstFreeJVMLocal: Int, argIndex: Int): Unit = {
     mv.visitVarInsn(ASTORE, firstFreeJVMLocal)
     val l0 = new Label
     val l1 = new Label

@@ -21,7 +21,7 @@ class ShowUsageBox(colorizer: Colorizer) {
   def document = editorArea.getDocument
   val dataModel = new DefaultTableModel(){
     override def isCellEditable(row: Int, column: Int): Boolean = false
-    override def getColumnClass(columnIndex: Int): Class[_] = {
+    override def getColumnClass(columnIndex: Int): Class[?] = {
       if(columnIndex == 0) classOf[Token] else classOf[String]
     }
   }
@@ -202,13 +202,9 @@ class ShowUsageBox(colorizer: Colorizer) {
       }
 
       override def drawText(g: java.awt.Graphics2D, x: Float, y: Float, p0: Int, p1: Int, isSelected: Boolean): Float = {
-        g match {
-          case g2d: java.awt.Graphics2D =>
-            g2d.setRenderingHint(
-                      java.awt.RenderingHints.KEY_TEXT_ANTIALIASING,
-                      java.awt.RenderingHints.VALUE_TEXT_ANTIALIAS_GASP)
-          case _ =>
-        }
+        g.setRenderingHint(
+          java.awt.RenderingHints.KEY_TEXT_ANTIALIASING,
+          java.awt.RenderingHints.VALUE_TEXT_ANTIALIAS_GASP)
         var endX = super.drawText(g, x, y, p0, boldingRanges.head.start, isSelected)
         val originalFont = g.getFont
         val boldFont = originalFont.deriveFont(java.awt.Font.BOLD)

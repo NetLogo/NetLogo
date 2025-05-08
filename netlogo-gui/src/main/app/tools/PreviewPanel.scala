@@ -53,7 +53,7 @@ class PreviewPanel(graphicsPreview: GraphicsPreviewInterface) extends JPanel(new
       showText("")
     }
   def loadManualPreviewAction(imagePath: Option[String]) = {
-    imagePath.map(loadImageAction _).getOrElse(dummyLoadImageAction)
+    imagePath.map(loadImageAction).getOrElse(dummyLoadImageAction)
   }
   def loadImageAction(path: String): Action =
     new AbstractAction {

@@ -52,7 +52,7 @@ class ViewUpdatePanel(workspace: GUIWorkspace, speedSlider: SpeedSliderPanel, di
 
   def handle(e: LoadEndEvent): Unit = {
     updateModeChooser.refreshSelection()
-    speedSlider.setValue(workspace.speedSliderPosition.toInt)
+    speedSlider.setValue(workspace.speedSliderPosition().toInt)
   }
 
   override def syncTheme(): Unit = {

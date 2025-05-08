@@ -7,23 +7,11 @@ import java.nio.file.Path
 import scala.util.{ Failure, Success, Try }
 import scala.util.matching.Regex
 
-import org.nlogo.core.{
-  CompilationEnvironment
-, CompilationOperand
-, Dialect
-, ExtensionManager
-, Femto
-, FrontEndInterface
-, LibraryManager
-, LiteralParser
-, Model
-, Program
-, SourceRewriter
-, StructureResults
-, VersionUtils
-}
-import org.nlogo.core.FrontEndInterface.ProceduresMap
 import org.nlogo.api.{ AutoConverter, AutoConvertable, FileIO }
+import org.nlogo.core.{ CompilationEnvironment, CompilationOperand, Dialect, ExtensionManager, Femto,
+                        FrontEndInterface, LibraryManager, LiteralParser, Model, Program, SourceRewriter,
+                        StructureResults, VersionUtils }
+import org.nlogo.core.FrontEndInterface.ProceduresMap
 
 import FileFormat.ModelConversion
 
@@ -126,7 +114,6 @@ class ModelConverter(
                 Program.fromDialect(aggregateConversionDialect).copy(interfaceGlobals = model.interfaceGlobals)
               val newCode = conversion(rewriter(converted.code, newProgram))
               SuccessfulConversion(original, model.copy(code = newCode))
-            case (other, _) => other
           }
         }.recover {
           case e: Exception => ErroredConversion(model, ConversionError(e, "code tab", conversionName))
@@ -148,7 +135,7 @@ class ModelConverter(
         newStructure(conversionRes.model.code) match {
           case Success(convertedStructure) =>
             val converter =
-              new SnippetConverter( otherCodeConversions, containsAnyTargets(targets), rewriterOp _
+              new SnippetConverter( otherCodeConversions, containsAnyTargets(targets), rewriterOp
                                   , convertedStructure, extensionManager, libManager, compilationEnv)
 
             components.foldLeft(conversionRes) {
@@ -188,13 +175,13 @@ class ModelConverter(
       convertWrappedSource(compilationOp)(procedure)
 
     def convertStatement(statement: String): String =
-      convertUnwrappedSource(compilationOp, cmd _, uncmd _)(statement)
+      convertUnwrappedSource(compilationOp, cmd, uncmd)(statement)
 
     def convertReporterProcedure(reporterProc: String): String =
       convertWrappedSource(compilationOp)(reporterProc)
 
     def convertReporterExpression(expression: String): String =
-      convertUnwrappedSource(compilationOp, rep _, unrep _)(expression)
+      convertUnwrappedSource(compilationOp, rep, unrep)(expression)
 
     def appliesToSource(source: String): Boolean =
       containsAnyTargets(source)

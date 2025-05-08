@@ -60,7 +60,7 @@ object BehaviorSpaceCoordinator {
       , workspace.getLibraryManager
       , workspace.getCompilationEnvironment
       , literalParser
-      , allAutoConvertables) _
+      , allAutoConvertables)
     val loader = FileFormat.standardAnyLoader(true, literalParser)
     val modelConverter = converter(workspace.world.program.dialect)
 

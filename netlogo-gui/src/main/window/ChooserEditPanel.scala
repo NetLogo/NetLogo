@@ -60,7 +60,7 @@ class ChooserEditPanel(target: ChooserWidget, compiler: CompilerServices, colori
     nameWrapper.requestFocus()
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameWrapper, choicesWrapper, oldSize)
 
   override def isResizable: Boolean = true

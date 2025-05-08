@@ -8,7 +8,7 @@ import com.jogamp.opengl.GL2
 object Tessellator {
   // see com.jogamp.opengl.glu.GLUtessellatorCallback
   class TessDataObject(val gl: GL2) {
-    var tpe: Int = _
+    var tpe: Int = 0
     val shapeData: JList[AnyRef] = new ArrayList[AnyRef]
   }
 }

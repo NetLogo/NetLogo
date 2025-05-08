@@ -11,9 +11,9 @@ import org.nlogo.nvm.Instruction
 trait AllPrimitivesTester extends AnyFunSuite {
 
   def makeVisitor(m: Method): MethodVisitor
-  def filter(c: Class[_]): Boolean = true
+  def filter(c: Class[?]): Boolean = true
 
-  type PrimClass = Class[_ <: Instruction]
+  type PrimClass = Class[? <: Instruction]
 
   // not all primitives are listed in tokens.txt, because some of them are only used internally so
   // they only have an internal name.  so we have to actually look on disk. - ST 2/12/09

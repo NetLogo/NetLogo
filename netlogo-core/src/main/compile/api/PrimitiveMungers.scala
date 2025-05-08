@@ -11,7 +11,7 @@ private class MatchFailedException extends Exception
 
 trait OptimizeMunger[-A <: AstNode, +B <: Instruction] {
   def munge(stmt: A): Unit
-  val clazz: Class[_ <: B]
+  val clazz: Class[? <: B]
 }
 
 trait CommandMunger extends OptimizeMunger[Statement, Command]
@@ -46,7 +46,7 @@ object Match {
 trait Match {
   val node: AstNode
 
-  def matchit(theClass: Class[_ <: Instruction]): Match = throw new MatchFailedException
+  def matchit(theClass: Class[? <: Instruction]): Match = throw new MatchFailedException
 
   def command: Command = throw new MatchFailedException
 
@@ -56,20 +56,23 @@ trait Match {
 
   def matchArg(index: Int): Match = throw new MatchFailedException
 
-  def matchArg(index: Int, classes: Class[_ <: Instruction]*): Match = throw new MatchFailedException //{
+  def matchArg(index: Int, classes: Class[? <: Instruction]*): Match = throw new MatchFailedException //{
 
   def matchReporterBlock(): Match = throw new MatchFailedException
 
-  def matchOneArg(theClass: Class[_ <: Instruction]) = {
+  def matchOneArg(theClass: Class[? <: Instruction]) = {
     try matchArg(0, theClass)
     catch { case _: MatchFailedException => matchArg(1, theClass) }
   }
-  def matchOtherArg(alreadyMatched: Match, classes: Class[_ <: Instruction]*): Match = {
+  def matchOtherArg(alreadyMatched: Match, classes: Class[? <: Instruction]*): Match = {
     val result: Match =
-      try matchArg(0, classes: _*)
-      catch { case _: MatchFailedException => return matchArg(1, classes: _*) }
-      if(result.node eq alreadyMatched.node) matchArg(1, classes: _*)
-      else result
+      try matchArg(0, classes*)
+      catch { case _: MatchFailedException => return matchArg(1, classes*) }
+    if (result.node eq alreadyMatched.node) {
+      matchArg(1, classes*)
+    } else {
+      result
+    }
   }
 
   def report =
@@ -84,9 +87,9 @@ trait Match {
 
   def replace(newGuy: Instruction): Unit = throw new MatchFailedException
 
-  def replace(theClass: Class[_ <: Instruction], constructorArgs: Any*): Unit = throw new MatchFailedException
+  def replace(theClass: Class[? <: Instruction], constructorArgs: Any*): Unit = throw new MatchFailedException
 
-  def addArg(theClass: Class[_ <: Reporter], original: ReporterApp): Match = {
+  def addArg(theClass: Class[? <: Reporter], original: ReporterApp): Match = {
     val newGuy = Instantiator.newInstance[Reporter](theClass)
     newGuy.copyMetadataFrom(original.reporter)
     val result = Match(new ReporterApp(original.coreReporter, newGuy, original.sourceLocation))
@@ -106,7 +109,7 @@ class CommandMatch(val node: Statement) extends Match {
     }
   }
 
-  override def matchit(theClass: Class[_ <: Instruction]) =
+  override def matchit(theClass: Class[? <: Instruction]) =
     if (theClass.isInstance(node.command)) this
     else throw new MatchFailedException
 
@@ -120,7 +123,7 @@ class CommandMatch(val node: Statement) extends Match {
     }
   }
 
-  override def matchArg(index: Int, classes: Class[_ <: Instruction]*) = {
+  override def matchArg(index: Int, classes: Class[? <: Instruction]*) = {
     val args = node.args
     if (index >= args.size) throw new MatchFailedException
     args(index) match {
@@ -146,8 +149,8 @@ class CommandMatch(val node: Statement) extends Match {
     node.command = newGuy.asInstanceOf[Command]
   }
 
-  override def replace(theClass: Class[_ <: Instruction], constructorArgs: Any*): Unit = {
-    val newGuy = Instantiator.newInstance[Instruction](theClass, constructorArgs: _*)
+  override def replace(theClass: Class[? <: Instruction], constructorArgs: Any*): Unit = {
+    val newGuy = Instantiator.newInstance[Instruction](theClass, constructorArgs*)
     newGuy.copyMetadataFrom(node.command)
     node.command = newGuy.asInstanceOf[Command]
   }
@@ -156,7 +159,7 @@ class CommandMatch(val node: Statement) extends Match {
 class ReporterAppMatch(val node: ReporterApp) extends Match {
   override def reporter = node.reporter
 
-  override def matchit(theClass: Class[_ <: Instruction]) =
+  override def matchit(theClass: Class[? <: Instruction]) =
     if (theClass.isInstance(node.reporter)) this
     else throw new MatchFailedException
 
@@ -170,7 +173,7 @@ class ReporterAppMatch(val node: ReporterApp) extends Match {
     }
   }
 
-  override def matchArg(index: Int, classes: Class[_ <: Instruction]*) = {
+  override def matchArg(index: Int, classes: Class[? <: Instruction]*) = {
     val args = node.args
     if (index >= args.size) throw new MatchFailedException
     args(index) match {
@@ -196,8 +199,8 @@ class ReporterAppMatch(val node: ReporterApp) extends Match {
     node.reporter = newGuy.asInstanceOf[Reporter]
   }
 
-  override def replace(theClass: Class[_ <: Instruction], constructorArgs: Any*): Unit = {
-    val newGuy = Instantiator.newInstance[Instruction](theClass, constructorArgs: _*)
+  override def replace(theClass: Class[? <: Instruction], constructorArgs: Any*): Unit = {
+    val newGuy = Instantiator.newInstance[Instruction](theClass, constructorArgs*)
     newGuy.copyMetadataFrom(node.reporter)
     node.reporter = newGuy.asInstanceOf[Reporter]
   }

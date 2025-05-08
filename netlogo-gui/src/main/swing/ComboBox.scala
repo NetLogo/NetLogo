@@ -179,7 +179,7 @@ class ComboBox[T](private var items: Seq[T] = Seq())
       removeAll()
 
       item.foreach(_ match {
-        case comp: Component with ComboBox.Clone =>
+        case comp: (Component & ComboBox.Clone) =>
           val child = comp.getClone
 
           add(child, c)

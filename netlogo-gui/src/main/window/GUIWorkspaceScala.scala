@@ -97,24 +97,24 @@ with LoadModelEvent.Handler {
           new ExportPlotEvent(PlotWidgetExport.ExportSinglePlot(pw.plot), exportPath, {() => }).raise(pw)
         case ow: OutputWidget =>
           exportToPath
-            .map((filename: String) => (filename, ow.valueText))(SwingUnlockedExecutionContext)
+            .map((filename: String) => (filename, ow.valueText))(using SwingUnlockedExecutionContext)
             .onComplete({
               case Success((filename: String, text: String)) =>
                 ExportOutput.silencingErrors(filename, text)
               case Failure(_) =>
-            })(NetLogoExecutionContext.backgroundExecutionContext)
+            })(using NetLogoExecutionContext.backgroundExecutionContext)
         case ib: InputBox =>
           exportToPath
-            .map((filename: String) => (filename, ib.valueText))(SwingUnlockedExecutionContext)
+            .map((filename: String) => (filename, ib.valueText))(using SwingUnlockedExecutionContext)
             .map[Unit]({ // background
               case (filename: String, text: String) => FileIO.writeFile(filename, text, true); ()
-            })(NetLogoExecutionContext.backgroundExecutionContext).failed.foreach({ // on UI Thread
+            })(using NetLogoExecutionContext.backgroundExecutionContext).failed.foreach({ // on UI Thread
               case ex: java.io.IOException =>
                 ExportControls.displayExportError(Hierarchy.getFrame(ib),
                   I18N.gui.get("menu.file.export.failed"),
                   I18N.gui.getN("tabs.input.export.error", ex.getMessage))
               case _ =>
-            })(SwingUnlockedExecutionContext)
+            })(using SwingUnlockedExecutionContext)
         case _ =>
       }
     } catch {
@@ -145,13 +145,13 @@ with LoadModelEvent.Handler {
             runAndComplete(
               () => super.exportAllPlots(e.exportFilename),
               (ex) => plotExportControls.allPlotExportFailed(getFrame, e.exportFilename, ex))
-          } (new LockedBackgroundExecutionContext(world))
+          } (using new LockedBackgroundExecutionContext(world))
       case PlotWidgetExport.ExportSinglePlot(plot) =>
         Future {
           runAndComplete(
             () => super.exportPlot(plot.name, e.exportFilename),
             (ex) => plotExportControls.singlePlotExportFailed(getFrame, e.exportFilename, plot, ex))
-        } (new LockedBackgroundExecutionContext(world))
+        } (using new LockedBackgroundExecutionContext(world))
     }
   }
 
@@ -169,7 +169,7 @@ with LoadModelEvent.Handler {
   def exportView(filename: String, format: String): Unit = {
     if (jobManager.onJobThread) {
       val viewFuture =
-        Future(viewManager.getPrimary.exportView)(new SwingLockedExecutionContext(world))
+        Future(viewManager.getPrimary.exportView)(using new SwingLockedExecutionContext(world))
       val image = awaitFutureFromJobThread(viewFuture)
       FileIO.writeImageFile(image, filename, format)
     } else {
@@ -180,7 +180,7 @@ with LoadModelEvent.Handler {
   @throws(classOf[java.io.IOException])
   def exportViewFromUIThread(filename: String, format: String, onCompletion: () => Unit = {() => }): Unit = {
     val f =
-      Future[BufferedImage](viewManager.getPrimary.exportView)(new SwingLockedExecutionContext(world))
+      Future[BufferedImage](viewManager.getPrimary.exportView)(using new SwingLockedExecutionContext(world))
     f.foreach({ image =>
       try {
         FileIO.writeImageFile(image, filename, format)
@@ -191,7 +191,7 @@ with LoadModelEvent.Handler {
       } finally {
         onCompletion()
       }
-    })(NetLogoExecutionContext.backgroundExecutionContext)
+    })(using NetLogoExecutionContext.backgroundExecutionContext)
   }
 
   def doExportView(exportee: LocalViewInterface): Unit = {
@@ -265,7 +265,7 @@ with LoadModelEvent.Handler {
       } finally {
         onCompletion()
       }
-    })(NetLogoExecutionContext.backgroundExecutionContext)
+    })(using NetLogoExecutionContext.backgroundExecutionContext)
   }
 
   @throws(classOf[IOException])

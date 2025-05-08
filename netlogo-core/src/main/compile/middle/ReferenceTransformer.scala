@@ -82,7 +82,7 @@ class ReferenceTransformer extends AstTransformer {
   }
 
   private def refReporterApp(
-    referenceable: core.Referenceable with core.Reporter,
+    referenceable: core.Referenceable & core.Reporter,
     referenceIndex: Int,
     args: Seq[Expression]): ReporterApp = {
     new ReporterApp(referenceable,

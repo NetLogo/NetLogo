@@ -6,7 +6,7 @@ import org.nlogo.api.LogoException
 import org.nlogo.core.Let
 import org.nlogo.nvm.{AssemblerAssistant, Command, Context, CustomAssembled, SelfScoping}
 
-final class _carefully(private[this] val let: Let)
+final class _carefully(private val let: Let)
   extends Command
   with CustomAssembled
   with SelfScoping {

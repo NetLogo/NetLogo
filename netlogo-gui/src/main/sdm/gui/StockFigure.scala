@@ -50,10 +50,10 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
         g.setColor(Color.RED)
 
       val name =
-        if (s.getName().trim.isEmpty) {
+        if (s.name.trim.isEmpty) {
           "?"
         } else {
-          s.getName().trim
+          s.name.trim
         }
 
       g.setFont(g.getFont.deriveFont(Font.BOLD))
@@ -122,34 +122,34 @@ class StockFigure extends RectangleFigure with ModelElementFigure with Editable 
 
   def nameWrapper(name: String): Unit = {
     stock.foreach(s => {
-      _dirty = _dirty || s.getName() != name
+      _dirty = _dirty || s.name != name
 
-      s.setName(name)
+      s.name = name
     })
   }
 
   def nameWrapper: String =
-    stock.map(_.getName()).orNull
+    stock.map(_.name).orNull
 
   def initialValueExpressionWrapper(expression: String): Unit = {
     stock.foreach(s => {
-      _dirty = _dirty || s.getInitialValueExpression() != expression
+      _dirty = _dirty || s.initialValueExpression != expression
 
-      s.setInitialValueExpression(expression)
+      s.initialValueExpression = expression
     })
   }
 
   def initialValueExpressionWrapper: String =
-    stock.map(_.getInitialValueExpression()).orNull
+    stock.map(_.initialValueExpression).orNull
 
   def allowNegative: Boolean =
-    !stock.map(_.isNonNegative()).getOrElse(false)
+    !stock.map(_.nonNegative).getOrElse(false)
 
   def allowNegative(allow: Boolean): Unit = {
     stock.foreach(s => {
-      _dirty = _dirty || s.isNonNegative() == allow
+      _dirty = _dirty || s.nonNegative == allow
 
-      s.setNonNegative(!allow)
+      s.nonNegative = !allow
     })
   }
 }

@@ -17,7 +17,7 @@ class Lab extends LabInterface {
     val queue = new collection.mutable.Queue[Workspace]
     workspaces.foreach(queue.enqueue(_))
     try {
-      queue.foreach(w => dims.foreach(w.setDimensions _))
+      queue.foreach(w => dims.foreach(w.setDimensions))
       def modelDims = queue.head.world.getDimensions
       val worker = newWorker(protocol)
       tableWriter.foreach(

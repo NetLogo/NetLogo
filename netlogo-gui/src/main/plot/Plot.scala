@@ -74,19 +74,19 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
   def name(newName:String): Unit ={ name = newName }
 
   def makeDirty(): Unit ={ dirtyListener.foreach{_.makeDirty() }}
-  def pens = _pens
+  def pens: List[PlotPen] = _pens
   def pens_=(pens:List[PlotPen]): Unit ={
     _pens = pens
-    currentPen = pens.headOption
+    currentPen = _pens.headOption
   }
 
   def addPen(p:PlotPen) = {
-    pens = pens :+ p
+    pens = _pens :+ p
     pensDirty = true
   }
 
   // take the first pen if there is no current pen set
-  override def currentPen: Option[PlotPen] = _currentPen.orElse(pens.headOption)
+  override def currentPen: Option[PlotPen] = _currentPen.orElse(_pens.headOption)
   def currentPen_=(p: PlotPen): Unit = currentPen=(if(p==null) None else Some(p))
   def currentPen_=(p: Option[PlotPen]): Unit = {
     this._currentPen = p
@@ -96,7 +96,7 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
 
   def currentPenByName: String = currentPen.map(_.name).getOrElse(null)
   def currentPenByName_=(penName: String): Unit = { currentPen=(getPen(penName)) }
-  def getPen(penName: String): Option[PlotPen] = pens.find(_.name.toLowerCase==penName.toLowerCase)
+  def getPen(penName: String): Option[PlotPen] = _pens.find(_.name.toLowerCase==penName.toLowerCase)
   def defaultXMin = _defaultXMin
   def defaultXMin_=(defaultXMin: Double): Unit ={
     _defaultXMin = defaultXMin
@@ -180,9 +180,9 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
   }
 
   def clear(): Unit = {
-    pens = pens.filterNot(_.temporary)
-    currentPen = pens.headOption
-    pens.foreach(_.hardReset())
+    pens = _pens.filterNot(_.temporary)
+    currentPen = _pens.headOption
+    _pens.foreach(_.hardReset())
     state = PlotState(defaultAutoPlotX, defaultAutoPlotY, defaultXMin, defaultXMax, defaultYMin, defaultYMax)
     runtimeError = None
     backgroundColor = Color.getARGBbyPremodulatedColorNumber(White)

@@ -46,7 +46,7 @@ class PeepholeSafeChecker(profilingEnabled: Boolean = false) {
   private val methodSafeTable = new collection.mutable.HashMap[String, Boolean]
   private def getHashKey(m: Method): String =
     m.getDeclaringClass.getName + "." + m.getName
-  private def processClass(c: Class[_]): Unit = {
+  private def processClass(c: Class[?]): Unit = {
     val reader = PrimitiveCache.getClassReader(c)
     for (m <- BytecodeUtils.getMethods(c, profilingEnabled)) {
       reader.accept(new MethodExtractorClassAdapter(m), ClassReader.SKIP_DEBUG)

@@ -13,7 +13,7 @@ import java.net.{URL, URLClassLoader}
  */
 
 object Plugins {
-  def load(pico: Pico): Seq[(String, Component)] =
+  def load(pico: Pico): Seq[(String, Component)] = {
     for {
       dirs <- Option(new java.io.File("plugins").listFiles).toSeq
       dir <- dirs
@@ -38,9 +38,9 @@ object Plugins {
       val component = pico.getComponent(className).asInstanceOf[java.awt.Component]
       (tabName, component)
     }
+  }
 
-    class PluginClassLoader(url: URL) extends URLClassLoader(Array(url), Thread.currentThread.getContextClassLoader) {
-      def load(x: String) = findClass(x)  // findClass is protected
-    }
-
+  class PluginClassLoader(url: URL) extends URLClassLoader(Array(url), Thread.currentThread.getContextClassLoader) {
+    def load(x: String) = findClass(x)  // findClass is protected
+  }
 }

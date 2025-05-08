@@ -14,7 +14,7 @@ trait WidgetLine[T] {
   def parse(line: String): T
   def format(v: T): String
   def valid(v: String): Boolean
-  def default(): Option[T] = None
+  def default: Option[T] = None
 }
 
 case class IntLine(override val default: Option[Int] = None) extends WidgetLine[Int] {
@@ -104,18 +104,18 @@ trait WidgetReader {
 }
 
 object WidgetReader {
-    val defaultReaders = Map[String, WidgetReader](
-      "BUTTON"          -> ButtonReader,
-      "SLIDER"          -> SliderReader,
-      "GRAPHICS-WINDOW" -> ViewReader,
-      "MONITOR"         -> MonitorReader,
-      "SWITCH"          -> SwitchReader,
-      "PLOT"            -> PlotReader,
-      "CHOOSER"         -> ChooserReader,
-      "OUTPUT"          -> OutputReader,
-      "TEXTBOX"         -> TextBoxReader,
-      "INPUTBOX"        -> InputBoxReader
-    )
+  val defaultReaders = Map[String, WidgetReader](
+    "BUTTON"          -> ButtonReader,
+    "SLIDER"          -> SliderReader,
+    "GRAPHICS-WINDOW" -> ViewReader,
+    "MONITOR"         -> MonitorReader,
+    "SWITCH"          -> SwitchReader,
+    "PLOT"            -> PlotReader,
+    "CHOOSER"         -> ChooserReader,
+    "OUTPUT"          -> OutputReader,
+    "TEXTBOX"         -> TextBoxReader,
+    "INPUTBOX"        -> InputBoxReader
+  )
 
   def read(lines: List[String], parser: LiteralParser,
     additionalReaders: Map[String, WidgetReader] = Map(),
@@ -165,7 +165,7 @@ object WidgetReader {
 
 abstract class BaseWidgetReader extends WidgetReader {
   type T <: Widget
-  def definition: List[WidgetLine[_]]
+  def definition: List[WidgetLine[?]]
   def asList(t: T): List[Any]
   def asWidget(vals: List[Any], literalParser: LiteralParser): T
   def format(t: T): String = {
@@ -173,13 +173,13 @@ abstract class BaseWidgetReader extends WidgetReader {
   }
   def validate(lines: List[String]): Boolean = {
     (lines.size == definition.size ||
-     (definition.indexWhere(_.default().nonEmpty) != -1 &&
-      lines.size >= definition.indexWhere(_.default().nonEmpty))) &&
+     (definition.indexWhere(_.default.nonEmpty) != -1 &&
+      lines.size >= definition.indexWhere(_.default.nonEmpty))) &&
     (definition zip lines).forall{case (d, l) => d.valid(l)}
   }
   def parse(lines: List[String], literalParser: LiteralParser): T =
     asWidget(definition.asInstanceOf[List[WidgetLine[AnyRef]]].zipWithIndex.map{case (d, idx) =>
-      if(idx < lines.size) d.parse(lines(idx)) else d.default().get }, literalParser)
+      if(idx < lines.size) d.parse(lines(idx)) else d.default.get }, literalParser)
 }
 
 object ButtonReader extends BaseWidgetReader {
@@ -322,7 +322,7 @@ object PlotReader extends BaseWidgetReader {
     val (plotLines, penLines) = lines.span(_ != "PENS")
     val pens = if (penLines.size > 1) penLines.tail.map(PenReader.parse(_, literalParser)) else Nil
     asWidget(definition.asInstanceOf[List[WidgetLine[AnyRef]]].zipWithIndex.map{case (d, idx) =>
-      if(idx < plotLines.size) d.parse(plotLines(idx)) else d.default().get } :+ pens, literalParser)
+      if(idx < plotLines.size) d.parse(plotLines(idx)) else d.default.get } :+ pens, literalParser)
   }
 }
 
@@ -446,7 +446,7 @@ object ChooserReader extends BaseWidgetReader {
 
         def convertAllNobodies(l: AnyRef): AnyRef = l match {
           case Nobody       => "nobody"
-          case ll: LogoList => LogoList(ll.map(convertAllNobodies): _*)
+          case ll: LogoList => LogoList(ll.map(convertAllNobodies)*)
           case other        => other
         }
 

@@ -250,11 +250,11 @@ class InterfacePanelLite(val viewWidget: ViewWidgetInterface, compiler: Compiler
                 None
             }).orElse(Option(WidgetRegistry(name)))
 
-        newGuy.foreach { w =>
-          w.load(coreWidget)
-          addWidget(w, x, y)
-        }
-        newGuy.orNull
+          newGuy.foreach { w =>
+            w.load(coreWidget)
+            addWidget(w, x, y)
+          }
+          newGuy.orNull
       }
     } catch {
       case ex: RuntimeException =>

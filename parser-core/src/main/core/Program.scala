@@ -41,7 +41,7 @@ case class Program(
 
   // for testing/debugging
   def dump = {
-    def seq(xs: Seq[_]) =
+    def seq(xs: Seq[?]) =
       xs.mkString("[", " ", "]")
     def map[K, V](xs: collection.Map[K, V]) =
       xs.map{case (k, v) => s"$k = $v"}

@@ -12,7 +12,7 @@ private class LinkRenderer(world: World, shapeRenderer: ShapeRenderer)
   private def lineScale = {
     val distance =
       world.observer.perspective match {
-        case afp: AgentFollowingPerspective => afp.followDistance
+        case afp: AgentFollowingPerspective => afp.followDistance.toDouble
         case _                              => world.observer.orientation.get.dist
       }
     if(distance == 0)

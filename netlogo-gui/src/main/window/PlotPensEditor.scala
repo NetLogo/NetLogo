@@ -287,7 +287,7 @@ class PlotPensEditor(accessor: PropertyAccessor[List[PlotPen]], colorizer: Color
             true
           case _ => false
         }
-      }, I18N.gui.get _).show()
+      }, I18N.gui.get).show()
     }
 
     def openAdvancedPenEditor(editingPen: Pen): Unit = {

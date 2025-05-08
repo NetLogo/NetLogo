@@ -109,7 +109,7 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
     spreadsheet.requestFocus()
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(spreadsheet, table, stats, lists, updateView, updatePlotsAndMonitors, threadCount)
 
   override def syncExtraComponents(): Unit = {

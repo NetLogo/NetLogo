@@ -11,7 +11,7 @@ import org.nlogo.core.I18N
 import org.nlogo.swing.{ ButtonPanel, DialogButton, Positioning, RadioButton }
 import org.nlogo.theme.{ ClassicTheme, ColorTheme, DarkTheme, InterfaceColors, LightTheme, ThemeSync }
 
-class ThemesDialog(frame: Frame with ThemeSync) extends ToolDialog(frame, "themes") with ThemeSync {
+class ThemesDialog(frame: Frame & ThemeSync) extends ToolDialog(frame, "themes") with ThemeSync {
   private lazy val prefs = JavaPreferences.userRoot.node("/org/nlogo/NetLogo")
 
   private lazy val panel = new JPanel(new GridBagLayout)

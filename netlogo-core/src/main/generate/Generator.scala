@@ -144,7 +144,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
       nlgen.visitMaxs(0, 0)
       nlgen.visitEnd()
     }
-    def generateInstruction(instr: Instruction, retTypeWanted: Class[_], parentInstrUID: Int,
+    def generateInstruction(instr: Instruction, retTypeWanted: Class[?], parentInstrUID: Int,
                             parentInstr: Instruction, argIndex: Int): Unit = {
       curInstructionUID += 1
       // need to save the curInstructionUID value in a local var, since curInstructionUID gets
@@ -217,7 +217,7 @@ class Generator(procedure: Procedure, profilingEnabled: Boolean) extends Generat
           }
       }
     }
-    def generateOldStyleCall(instr: Instruction, retTypeWanted: Class[_], parentInstrUID: Int,
+    def generateOldStyleCall(instr: Instruction, retTypeWanted: Class[?], parentInstrUID: Int,
                              parentInstr: Instruction, argIndex: Int): Unit = {
       keepAndLoadInstruction(instr, curInstructionUID)
       nlgen.loadContext()
