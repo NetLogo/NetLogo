@@ -7,6 +7,7 @@ package org.nlogo.headless
 // See https://github.com/NetLogo/NetLogo/commit/9f35a477f071b746bea225b2294813970b04daf0#commitcomment-3793507.
 
 import org.nlogo.agent.{ SimpleChangeEventCounter, TreeAgentSet }
+import org.nlogo.api.SimpleChangeEventPublisher
 import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.GivenWhenThen
 
@@ -16,7 +17,7 @@ class TreeAgentSetTests extends AnyFunSuite with GivenWhenThen with TestUsingWor
 
   testUsingWorkspace("TreeAgentSet should trigger SimpleChangeEvent") { ws =>
 
-    implicit def anyToPub(agentSet: AnyRef) =
+    implicit def anyToPub(agentSet: AnyRef): SimpleChangeEventPublisher =
       agentSet.asInstanceOf[TreeAgentSet].simpleChangeEventPublisher
 
     Given("a subscriber to turtles")

@@ -45,7 +45,7 @@ class AstRewriterTests extends AnyFunSuite {
     val singleFileOp = compilationOp("to foo bar end\nto baz tick end")
     val multiFileOp = singleFileOp.copy(sources = singleFileOp.sources + ("other" -> "to bar tick end"))
     val rw = new AstRewriter(tokenizer, multiFileOp)
-    val rewrittenSource = rw.rewrite(NoopFolder, rw.preserveBody _)
+    val rewrittenSource = rw.rewrite(NoopFolder, rw.preserveBody)
     assertResult("to foo bar end\nto baz tick end")(rewrittenSource)
   }
 
@@ -244,13 +244,13 @@ class AstRewriterTests extends AnyFunSuite {
   def assertPreservesSource(source: String, header: String = "TO FOO ", footer: String = " END"): Unit = {
     val rewrittenSource =
       trimmedRewriteCommand(source,
-        r => r.rewrite(NoopFolder, r.preserveBody _), header, footer)
+        r => r.rewrite(NoopFolder, r.preserveBody), header, footer)
     assert(source.trim == rewrittenSource, s"""expected: "${source.trim}", got: "${rewrittenSource}"""")
   }
 
   def assertModifiesSource(source: String, expectedSource: String): Unit = {
     val rewrittenSource =
-      trimmedRewriteCommand(source, r => r.rewrite(NoopFolder, r.preserveBody _), "", "")
+      trimmedRewriteCommand(source, r => r.rewrite(NoopFolder, r.preserveBody), "", "")
     assert(expectedSource == rewrittenSource, s"""expected: "${expectedSource}", got: "$rewrittenSource"""")
   }
 
