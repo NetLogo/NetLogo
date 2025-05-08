@@ -10,7 +10,7 @@ class NLogoPreviewCommandsFormatTest extends NLogoFormatTest[PreviewCommands] {
   def subject = new NLogoPreviewCommandsFormat
 
   def modelComponent(model: Model): PreviewCommands =
-    model.optionalSectionValue("org.nlogo.modelsection.previewcommands").get
+    model.optionalSectionValue("org.nlogo.modelsection.previewcommands").get.asInstanceOf[PreviewCommands]
 
   def attachComponent(preview: PreviewCommands): Model =
     Model().withOptionalSection("org.nlogo.modelsection.previewcommands", Some(preview), PreviewCommands.Default)

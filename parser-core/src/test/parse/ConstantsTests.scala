@@ -12,7 +12,7 @@ class ConstantsTests extends AnyFunSuite {
   test("OneIsConstant2") { assert(isConstant("false")) }
   test("OneConstant1") { assertResult(java.lang.Boolean.FALSE)(get("FALSE")) }
   test("OneConstant2") { assertResult(java.lang.Boolean.FALSE)(get("false")) }
-  test("ColorConstant1") { assertResult(105d)(get("blue")) }
-  test("ColorConstant2") { assertResult(105d)(get("BLUE")) }
+  test("ColorConstant1") { assertResult(Double.box(105d))(get("blue")) }
+  test("ColorConstant2") { assertResult(Double.box(105d))(get("BLUE")) }
   test("GrayAndGrey") { assertResult(get("grey"))(get("GRAY")) }
 }

@@ -17,7 +17,7 @@ class TopologyDiffusionTests extends AnyFunSuite {
       world.changeTopology(worldType.xWrap, worldType.yWrap)
       world.createPatches(-x, x, -y, y)
       for(a <- world.patches.agents.asScala)
-        a.setVariable(Patch.VAR_PLABEL, random.nextInt(100): java.lang.Double)
+        a.setVariable(Patch.VAR_PLABEL, random.nextInt(100).toDouble: java.lang.Double)
       world.diffuse(0.5, Patch.VAR_PLABEL)
     }
   }

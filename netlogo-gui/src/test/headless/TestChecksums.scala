@@ -41,7 +41,7 @@ class TestChecksums extends funsuite.AnyFunSuite {
   }
 }
 
-object TestChecksums extends ChecksumTester(println _) {
+object TestChecksums extends ChecksumTester(println) {
   val checksums = ChecksumsAndPreviews.Checksums.load()
 
   def main(args: Array[String]): Unit = {
@@ -70,7 +70,7 @@ object TestChecksums extends ChecksumTester(println _) {
             addFailure(entry.path + ": " + t.getMessage)
         }
       }
-      executor.execute(thunk2runnable(doit _))
+      executor.execute(thunk2runnable(doit))
     }
     executor.shutdown()
     executor.awaitTermination(java.lang.Integer.MAX_VALUE, TimeUnit.SECONDS)

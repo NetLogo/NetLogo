@@ -8,7 +8,7 @@ import org.nlogo.shape.ShapeConverter
 import org.nlogo.core.Model
 
 trait TestUsingWorkspace extends MockSuite {
-    case class SimpleViewSettings(
+  case class SimpleViewSettings(
     fontSize: Int = 10,
     patchSize:Double = 13,
     viewWidth: Double = 33,

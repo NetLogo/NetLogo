@@ -183,9 +183,9 @@ with OneInstancePerTest with BeforeAndAfterEach {
       }
     }
     if (wantStats) {
-      runHelper(List(("-stats.csv", stats _)))
+      runHelper(List(("-stats.csv", stats)))
     } else {
-      runHelper(List(("-table.csv", table _), ("-spreadsheet.csv", spreadsheet _), ("-lists.csv", lists _))
+      runHelper(List(("-table.csv", table), ("-spreadsheet.csv", spreadsheet), ("-lists.csv", lists))
             .filter {
               case (suffix, _) =>
                 suffix == "-table.csv" && wantTable ||

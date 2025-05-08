@@ -114,7 +114,7 @@ class MockSuiteTests extends MockSuite{
   mockTest("andThen accepts correct ordering") {
     val x = mock[X]
     expecting {
-      one(x).i(10) andThen one(x).i(20)
+      one(x).i(10).andThen(one(x).i(20))
     }
     when {
       x.i(10)
@@ -125,7 +125,7 @@ class MockSuiteTests extends MockSuite{
   mockTest("andThen rejects incorrect ordering") {
     val x = mock[X]
     expecting {
-      one(x).i(10) andThen one(x).i(20)
+      one(x).i(10).andThen(one(x).i(20))
     }
     val e = intercept[AssertionError] {
       when {
