@@ -18,7 +18,7 @@ object ShapeChangeListener {
       }
     }
 
-    world.turtleShapes.subscribe(handleShapeEvent _)
-    world.linkShapes.subscribe(handleShapeEvent _)
+    world.turtleShapes.subscribe(handleShapeEvent)
+    world.linkShapes.subscribe(handleShapeEvent)
   }
 }

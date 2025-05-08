@@ -10,7 +10,7 @@ import javax.swing.{ Action, Icon, ImageIcon, InputMap, JComponent, JDialog, JWi
 
 import org.nlogo.core.I18N
 
-final object Utils {
+object Utils {
   private var uiScale = 1.0
 
   def getUIScale: Double =

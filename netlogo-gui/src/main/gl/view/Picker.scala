@@ -66,7 +66,7 @@ class Picker(view: View) extends PickListener with ActionListener {
       resetItem.setText("reset-perspective")
     }
 
-    var last: Class[_] = null
+    var last: Class[?] = null
     import scala.jdk.CollectionConverters.ListHasAsScala
     for(agent <- agents.asScala) {
       if (last == null || !last.isInstance(agent)) {

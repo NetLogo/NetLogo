@@ -45,8 +45,8 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   private val saveAllAction = new SaveAllAction
   private val printAction = new PrintAction
 
-  val infoTab = new InfoTab(workspace.attachModelDir(_))
-  val mainCodeTab = new MainCodeTab(workspace, this, null)
+  val infoTab: InfoTab = new InfoTab(workspace.attachModelDir(_))
+  val mainCodeTab: MainCodeTab = new MainCodeTab(workspace, this, null)
 
   val mainTabs = new TabsPanel(this)
   val separateTabs = new TabsPanel(this)
@@ -188,7 +188,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
       def f(x: Map[String, String]): List[Path] = x.values.map(Paths.get(_)).toList
       val includes: List[Path] = mainCodeTab.getIncludesTable.map(f).getOrElse(List.empty)
 
-      watcherThread = new FileWatcherThread(Paths.get(modelPath) :: includes, handleFileChange _)
+      watcherThread = new FileWatcherThread(Paths.get(modelPath) :: includes, handleFileChange)
       watcherThread.start
     }
   }
@@ -600,7 +600,7 @@ class TabManager(val workspace: GUIWorkspace, val interfaceTab: InterfaceTab,
   def reload(): Unit = {
     if (!reloading) {
       reloading = true
-      workspace.reload
+      workspace.reload()
     }
   }
 

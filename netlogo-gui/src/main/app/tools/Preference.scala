@@ -22,8 +22,8 @@ object RequiredAction {
 
 trait Preference {
   val i18nKey: String
-  val component: JComponent with ThemeSync
   val requirement: RequiredAction
+  def component: JComponent & ThemeSync
   def load(prefs: JavaPreferences): Unit
   def save(prefs: JavaPreferences): Unit
 }

@@ -28,6 +28,6 @@ class OutputEditPanel(target: OutputWidget) extends WidgetEditPanel(target) {
     fontSize.requestFocus()
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(fontSize)
 }

@@ -12,7 +12,7 @@ import scala.collection.immutable.ListMap
 // HubNet client is one such context; also various testing contexts; also when reading
 // BehaviorSpace XML. - ST 2/23/09, 3/4/09
 
-class DefaultCompilerServices(compiler: CompilerInterface with AuxiliaryCompilerInterface) extends CompilerServices {
+class DefaultCompilerServices(compiler: CompilerInterface & AuxiliaryCompilerInterface) extends CompilerServices {
   def dialect: Dialect = compiler.defaultDialect
   def emptyProgram = Program.fromDialect(compiler.defaultDialect)
   def autoConvert(modelVersion: String)(source: String) = source

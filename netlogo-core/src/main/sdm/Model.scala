@@ -57,9 +57,9 @@ class Model(modelName: String,
       case ((refs, conns), el @ XMLElement("stock", _, text, _)) =>
         val stock = new Stock
 
-        stock.setName(el("name"))
-        stock.setInitialValueExpression(text)
-        stock.setNonNegative(!el("allowNegative").toBoolean)
+        stock.name = el("name")
+        stock.initialValueExpression = text
+        stock.nonNegative = !el("allowNegative").toBoolean
 
         addElement(stock)
 
@@ -68,8 +68,8 @@ class Model(modelName: String,
       case ((refs, conns), el @ XMLElement("converter", _, text, _)) =>
         val converter = new Converter
 
-        converter.setName(el("name"))
-        converter.setExpression(text)
+        converter.name = el("name")
+        converter.expression = text
 
         addElement(converter)
 
@@ -78,8 +78,8 @@ class Model(modelName: String,
       case ((refs, conns), el @ XMLElement("rate", _, text, _)) =>
         val rate = new Rate
 
-        rate.setName(el("name"))
-        rate.setExpression(text)
+        rate.name = el("name")
+        rate.expression = text
 
         addElement(rate)
 
@@ -99,8 +99,8 @@ class Model(modelName: String,
 
     conns.foreach {
       case (rate, conn) =>
-        rate.setSource(refs(conn._1).asInstanceOf[Stock])
-        rate.setSink(refs(conn._2).asInstanceOf[Stock])
+        rate.source = refs(conn._1).asInstanceOf[Stock]
+        rate.sink = refs(conn._2).asInstanceOf[Stock]
     }
 
     this

@@ -41,13 +41,13 @@ class Zoomer(container: Container) {
     if (oldZoom != newZoom) {
       zoomWidgetSize(wrapper, newWidget, loadingWidget, oldZoom, newZoom)
       zoomWidgetLocation(wrapper, newWidget, loadingWidget, oldZoom, newZoom)
-      zoomWidgetFont(wrapper, wrapper.widget(), newWidget, loadingWidget, oldZoom, newZoom)
+      zoomWidgetFont(wrapper, wrapper.widget, newWidget, loadingWidget, oldZoom, newZoom)
     }
   }
 
   def zoomWidgetSize(wrapper: WidgetWrapperInterface, newWidget: Boolean, loadingWidget: Boolean, oldZoom: Double,
                      newZoom: Double): Unit = {
-    val component = wrapper.widget()
+    val component = wrapper.widget
     var originalSize = sizes.get(component)
     var originalZoom = sizeZooms.get(component)
 
@@ -64,7 +64,7 @@ class Zoomer(container: Container) {
     if (!newWidget || loadingWidget)
       wrapper.setSize(zoomSize(originalSize.get, originalZoom.get, newZoom))
 
-    wrapper.widget().setZoomFactor(newZoom)
+    wrapper.widget.setZoomFactor(newZoom)
   }
 
   def zoomSize(originalSize: Dimension, oldZoom: Double, newZoom: Double): Dimension =
@@ -76,7 +76,7 @@ class Zoomer(container: Container) {
 
   def zoomWidgetLocation(wrapper: WidgetWrapperInterface, newWidget: Boolean, loadingWidget: Boolean, oldZoom: Double,
                          newZoom: Double): Unit = {
-    val component = wrapper.widget()
+    val component = wrapper.widget
     var originalLocation = locations.get(component)
     var originalZoom = locationZooms.get(component)
 

@@ -20,11 +20,11 @@ public final class Observer3D
   @Override
   public void home() {
     super.home();
-    World3D w = (World3D) _world;
+    World3D w = (World3D) world();
     double zOff = w.minPzcor() + ((w.maxPzcor() - w.minPzcor()) / 2.0);
     ozcor(zOff + (StrictMath.max
-        (_world.worldWidth(),
-         StrictMath.max(_world.worldHeight(), w.worldDepth())) * 2));
+        (world().worldWidth(),
+         StrictMath.max(world().worldHeight(), w.worldDepth())) * 2));
 
     setRotationPoint(new Vect(oxcor(), oycor(), zOff));
     right = new Vect(1, 0, 0);
@@ -94,7 +94,7 @@ public final class Observer3D
 
   public double followOffsetZ() {
     if (perspective() instanceof AgentFollowingPerspective) {
-      World3D w = (World3D) _world;
+      World3D w = (World3D) world();
       return ozcor() - ((w.minPzcor() + w.maxPzcor()) / 2.0);
     }
 
@@ -103,12 +103,12 @@ public final class Observer3D
 
   public void face(double x, double y, double z) {
     try {
-      heading(_world.protractor().towards(this, x, y, false));
+      heading(world().protractor().towards(this, x, y, false));
     } catch (AgentException ex) {
       heading(0.0);
     }
     try {
-      pitch(-_world.protractor().towardsPitch(this, x, y, z, false));
+      pitch(-world().protractor().towardsPitch(this, x, y, z, false));
     } catch (AgentException ex) {
       pitch(0.0);
     }
@@ -133,7 +133,7 @@ public final class Observer3D
 
   public Patch3D getPatchAtOffsets(double dx, double dy, double dz)
       throws AgentException {
-    return ((World3D) _world).getPatchAt(dx, dy, dz);
+    return ((World3D) world()).getPatchAt(dx, dy, dz);
   }
 
   @Override
@@ -236,5 +236,15 @@ public final class Observer3D
         (rotationPoint().x() + ortho.x() * thetaY * 0.1,
          rotationPoint().y() + ortho.y() * thetaY * 0.1,
          rotationPoint().z() - ortho.z() * thetaY * 0.1));
+  }
+
+  @Override
+  public void setPerspective(org.nlogo.api.Perspective perspective) {
+    super.setPerspective(perspective);
+  }
+
+  @Override @SuppressWarnings("unchecked")
+  public scala.Option<org.nlogo.api.ObserverOrientation> orientation() {
+    return super.orientation();
   }
 }

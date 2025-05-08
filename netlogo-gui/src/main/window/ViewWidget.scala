@@ -12,10 +12,7 @@ import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.Events.ResizeViewEvent
 import org.nlogo.window.MouseMode._
 
-class ViewWidget(workspace: GUIWorkspace)
-    extends Widget
-    with ViewWidgetInterface {
-
+class ViewWidget(workspace: GUIWorkspace) extends Widget with ViewWidgetInterface {
   val view = new View(workspace)
   val tickCounter = new TickCounterLabel(workspace.world)
   val displaySwitch = new DisplaySwitch(workspace)
@@ -118,10 +115,9 @@ class ViewWidget(workspace: GUIWorkspace)
     setBounds(bounds.x, bounds.y, bounds.width, bounds.height)
   }
 
-  override def constrainDrag(newBounds: Rectangle,
-    originalBounds: Rectangle,
-    mouseMode: MouseMode): Rectangle = {
-      import workspace.world.{ worldWidth, worldHeight }
+  override def constrainDrag(newBounds: Rectangle, originalBounds: Rectangle, mouseMode: MouseMode): Rectangle = {
+    import workspace.world.{ worldWidth, worldHeight }
+
     val patchSizeBasedOnNewWidth =
       computePatchSize(newBounds.width - getInsets.left + getInsets.right, worldWidth)
     val patchSizeBasedOnNewHeight =

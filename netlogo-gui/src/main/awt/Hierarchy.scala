@@ -32,10 +32,10 @@ object Hierarchy {
       .collectFirst{case w: Window => w}
       .getOrElse(null)
 
-  def hasAncestorOfClass(comp: Component, clazz: Class[_]) =
+  def hasAncestorOfClass(comp: Component, clazz: Class[?]) =
     findAncestorOfClass(comp, clazz).isDefined
 
-  def findAncestorOfClass(comp: Component, clazz: Class[_]): Option[Component] =
+  def findAncestorOfClass(comp: Component, clazz: Class[?]): Option[Component] =
     Iterator.iterate(comp)(_.getParent)
       .takeWhile(_ != null)
       .find(clazz.isInstance)

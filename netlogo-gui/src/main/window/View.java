@@ -60,17 +60,17 @@ public class View
   }
 
   public boolean displayOn() {
-    return (!workspace.glView.isFullscreen() &&
+    return (!workspace.getGlView().isFullscreen() &&
         workspace.world().displayOn() &&
         workspace.displaySwitchOn());
   }
 
   public void displaySwitch(boolean on) {
-    workspace.viewWidget.displaySwitch().setOn(on);
+    workspace.getViewWidget().displaySwitch().setOn(on);
   }
 
   public boolean displaySwitch() {
-    return workspace.viewWidget.displaySwitch().isSelected();
+    return workspace.getViewWidget().displaySwitch().isSelected();
   }
 
   private final Runnable paintRunnable =
@@ -383,7 +383,7 @@ public class View
   }
 
   public java.awt.Component getExportWindowFrame() {
-    return workspace.viewWidget;
+    return workspace.getViewWidget();
   }
 
   protected double patchSize = 13.0;

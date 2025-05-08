@@ -7,10 +7,10 @@ import org.nlogo.api.{ Color, TrailDrawerInterface }
 // The vars and methods in this track the rendering state of the world.
 // They should be considered transient.  Their values should *not* effect
 // world equality.
-trait GrossWorldState extends WorldKernel { this: CoreWorld with WorldJ =>
+trait GrossWorldState extends WorldKernel { this: CoreWorld & WorldJ =>
   // possibly need another array for 3D colors
   // since it seems messy to collapse 3D array into 2D
-  protected var _patchColors: Array[Int] = _
+  protected var _patchColors = Array[Int]()
   def patchColors: Array[Int] = _patchColors
 
   // this is used by the OpenGL texture code to decide whether
@@ -33,7 +33,7 @@ trait GrossWorldState extends WorldKernel { this: CoreWorld with WorldJ =>
 
   /// patch scratch
   //  a scratch area that can be used by commands such as _diffuse
-  protected var _patchScratch: Array[Array[Double]] = _
+  protected var _patchScratch = Array[Array[Double]]()
   def getPatchScratch: Array[Array[Double]] = {
     if (_patchScratch == null) {
       _patchScratch = Array.ofDim[Double](_worldWidth, _worldHeight)

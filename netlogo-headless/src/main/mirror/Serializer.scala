@@ -65,7 +65,7 @@ object Serializer {
         case xs: LogoList =>
           data.writeByte(LogoListType)
           writeSeq(xs.toVector)
-        case xs: Seq[_] =>
+        case xs: Seq[?] =>
           data.writeByte(SeqType)
           writeSeq(xs.asInstanceOf[Seq[AnyRef]])
         case xs: ListMap[_, _] =>
@@ -152,7 +152,7 @@ object Serializer {
         case LogoListType =>
           LogoList.fromVector(readValues())
         case ListMapType =>
-          ListMap(readValues().asInstanceOf[Seq[(_, _)]]: _*)
+          ListMap(readValues().asInstanceOf[Seq[(_, _)]]*)
         case ByteArrayType =>
           val size = data.readInt()
           val bytes = new Array[Byte](size)

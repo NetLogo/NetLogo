@@ -13,7 +13,7 @@ object PreviewCommandsRunner {
     extends IllegalStateException("Preview commands must be compilable")
 
   def fromFactory(
-    workspaceFactory: WorkspaceFactory with CurrentModelOpener): PreviewCommandsRunner = {
+    workspaceFactory: WorkspaceFactory): PreviewCommandsRunner = {
     this(workspaceFactory, workspaceFactory.openCurrentModelIn)
   }
 

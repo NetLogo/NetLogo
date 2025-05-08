@@ -54,7 +54,7 @@ object StructureChecker {
       }
 
     for {
-      Procedure(_, _, inputs, _) <- declarations
+      case Procedure(_, _, inputs, _) <- declarations
       input                      <- inputs
     } {
       checkNotArrow(input)
@@ -81,7 +81,7 @@ object StructureChecker {
 
     val occurrences = occurrencesFromDeclarations(declarations)
 
-    for { usage@Occurrence(Breed(_, _, _, _), _, _, _) <- occurrences.iterator } {
+    for { case usage@Occurrence(Breed(_, _, _, _), _, _, _) <- occurrences.iterator } {
       checkForBreedPrimsDuplicatingBuiltIn(usage, usedNames)
     }
 
@@ -137,7 +137,7 @@ object StructureChecker {
       case breed@Breed(_, _, _, _) =>
         val matchedPrimAndType =
           BreedIdentifierHandler.breedCommands(breed).filter(c => usedNames.contains(c.toUpperCase)).map(i => (i, BreedCommand)) ++
-        BreedIdentifierHandler.breedReporters(breed).filter(r => usedNames.contains(r.toUpperCase)).map(i => (i, BreedReporter))
+          BreedIdentifierHandler.breedReporters(breed).filter(r => usedNames.contains(r.toUpperCase)).map(i => (i, BreedReporter))
         matchedPrimAndType.foreach {
           case (p, st) => exception(breedOverridesBuiltIn(breed, usedNames(p.toUpperCase), p), usage.identifier.token)
         }

@@ -9,11 +9,7 @@ import org.nlogo.core.CompilerException
  * methods independent of App.app and headless.HeadlessWorkspace.  This is useful for making java
  * software that can run NetLogo in both GUI and Headless mode.
  */
-trait Controllable {
-
-  def command(source: String): Unit
-
-  def report(source: String): AnyRef
+trait Controllable extends Controller {
 
   @throws(classOf[java.io.IOException])
   def open(path: String): Unit = open(path, false)
@@ -34,7 +30,7 @@ trait Controllable {
  * For Behaviorspace we will set _plotCompilationErrorAction so that the errors are
  * are output for the first thread and ignored in subsequent threads.
  */
-  private[this] var _plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Throw
+  private var _plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Throw
 
 /**
  * @return  plotCompilationErrorAction  action to take if a plot compilation error occurs

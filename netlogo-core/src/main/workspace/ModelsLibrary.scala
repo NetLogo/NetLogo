@@ -130,7 +130,7 @@ object ModelsLibrary {
         case Some(Tree(name, _, children)) if useExtensionExamples => {
           val extensionsNode = getExtensionExamples()
           val allChildren    = children ++ extensionsNode.map((en) => Seq(en)).getOrElse(Seq())
-          Some(Tree(name = name, path = "", children = allChildren)(new TopLevelOrdering(exclusive)))
+          Some(Tree(name = name, path = "", children = allChildren)(using new TopLevelOrdering(exclusive)))
         }
         case rn => rn
       }
@@ -174,7 +174,7 @@ object ModelsLibrary {
     } else {
 
       val children =
-        getChildPaths(directory).sortBy(_.getFileName.toString)(NLogoModelOrdering)
+        getChildPaths(directory).sortBy(_.getFileName.toString)(using NLogoModelOrdering)
           .filterNot(p => isBadName(p.getFileName.toString))
           .flatMap { (p: Path) =>
             if (Files.isDirectory(p)) {
@@ -194,7 +194,7 @@ object ModelsLibrary {
       if (children.nonEmpty) {
         val path        = directory.toString + File.separator
         val displayName = nameOverride.getOrElse(directory.getFileName.toString)
-        Some(Tree(displayName, path, children.toSeq)(NLogoModelOrdering))
+        Some(Tree(displayName, path, children.toSeq)(using NLogoModelOrdering))
       } else {
         None
       }
@@ -333,6 +333,6 @@ object ModelsLibrary {
       traverseBreadthFirstRec(Nil, elems).reverse
     }
     def updateChildren(f: Seq[Node] => Seq[Node]) =
-      copy(name, path, children = f(children).sortBy(_.name)(childOrdering))
+      copy(name, path, children = f(children).sortBy(_.name)(using childOrdering))
   }
 }

@@ -16,7 +16,7 @@ trait ModelCreator {
 
   object Model {
     def apply(widgets: core.Widget*): Model =
-      apply(code = "", widgets: _*)
+      apply(code = "", widgets*)
 
     def apply(code: String,widgets: core.Widget*): Model =
       if (widgets.exists(_.isInstanceOf[core.View]))

@@ -33,7 +33,7 @@ class BreedShapes(val genericBreedName: String, tracker: ShapeListTracker){
     shapes.put(genericBreedName, shapes.getOrDefault(genericBreedName, "default"))
   }
 
-  def setUpBreedShapes(clear: Boolean, breedsOrNull: JMap[String, _ <: AgentSet]): Unit = {
+  def setUpBreedShapes(clear: Boolean, breedsOrNull: JMap[String, ? <: AgentSet]): Unit = {
     import scala.jdk.CollectionConverters.MapHasAsScala
 
     if (clear) {

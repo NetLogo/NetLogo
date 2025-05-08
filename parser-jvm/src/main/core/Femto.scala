@@ -7,23 +7,23 @@ package org.nlogo.core
 
 object Femto {
   def get[T](className: String, args: Any*): T =
-    get(Class.forName(className), args: _*)
-  def get[T](clazz: Class[_], args: Any*): T = {
+    get(Class.forName(className), args*)
+  def get[T](clazz: Class[?], args: Any*): T = {
     val constructors =
       clazz.getConstructors.filter(_.getParameterTypes.size == args.size)
     assert(constructors.size == 1)
     constructors.head
-      .newInstance(args.map(_.asInstanceOf[AnyRef]): _*)
+      .newInstance(args.map(_.asInstanceOf[AnyRef])*)
       .asInstanceOf[T]
   }
 
   // used by java to avoid trouble with scala generics
-  def getJ[T](clazz: Class[_], implementationClassName: String, args: Array[AnyRef]): T = {
+  def getJ[T](clazz: Class[?], implementationClassName: String, args: Array[AnyRef]): T = {
     val runtimeClazz = Class.forName(implementationClassName)
     val constructors =
       runtimeClazz.getConstructors.filter(_.getParameterTypes.size == args.size)
     assert(constructors.size == 1)
-    constructors.head.newInstance(args: _*).asInstanceOf[T]
+    constructors.head.newInstance(args*).asInstanceOf[T]
   }
 
   def scalaSingleton[T](className: String): T =

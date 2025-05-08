@@ -20,7 +20,7 @@ object MonitorWidget {
   private val DefaultDecimalPlaces = 17
   private val DefaultFontSize = 11
 
-  trait ToMonitorModel { self: Widget with Component =>
+  trait ToMonitorModel { self: Widget & Component =>
     def decimalPlaces: Int
     def units: String
     def fontSize: Int
@@ -93,7 +93,7 @@ class MonitorWidget(random: MersenneTwisterFast, compiler: CompilerServices, col
   private val valuePanel = new ValuePanel(valueLabel)
   private val unitsLabel = new JLabel
 
-  if (boldName) {
+  if (_boldName) {
     nameLabel.setFont(nameLabel.getFont.deriveFont(Font.BOLD))
     unitsLabel.setFont(unitsLabel.getFont.deriveFont(Font.BOLD))
   }

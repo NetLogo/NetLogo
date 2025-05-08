@@ -86,7 +86,7 @@ class NLogoFormatConversionTest extends AnyFunSuite with ConversionHelper {
     def tryReadAndConvertModel(m: Model, conversions: Seq[ConversionSet]): ConversionResult = {
       val loader = testLoader
       val readModel = loader.readModel(loader.sourceString(m, "nlogo").get, "nlogo").get
-      tryConvert(readModel, conversions: _*)
+      tryConvert(readModel, conversions*)
     }
 
     def readAndConvertModel(m: Model, conversions: Seq[ConversionSet]): Model =

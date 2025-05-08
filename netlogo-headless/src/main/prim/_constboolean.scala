@@ -7,7 +7,7 @@ import org.nlogo.nvm.{ Context, Reporter }
 
 class _constboolean(_primitiveValue: Boolean) extends Reporter with Pure {
 
-  private[this] val value = Boolean.box(_primitiveValue)
+  private val value = Boolean.box(_primitiveValue)
   val primitiveValue = _primitiveValue
 
   override def toString =

@@ -14,10 +14,10 @@ object Namer0 extends (Token => Token) {
 
   def nameKeywordsAndConstants(token: Token): Token =
     if (Keywords.isKeyword(token.text))
-      token.copy(tpe = TokenType.Keyword)
+      token.copy(tpe = TokenType.Keyword)()
     else Constants.get(token.text) match {
       case Some(value) =>
-        token.copy(tpe = TokenType.Literal, value = value)
+        token.copy(tpe = TokenType.Literal, value = value)()
       case None =>
         token
     }

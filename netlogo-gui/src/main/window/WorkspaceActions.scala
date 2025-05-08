@@ -22,7 +22,7 @@ object WorkspaceActions {
       new SimpleGUIWorkspaceAction(I18N.gui("turtleMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Turtle)),
       new SimpleGUIWorkspaceAction(I18N.gui("patchMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Patch)),
       new SimpleGUIWorkspaceAction(I18N.gui("linkMonitor"), ToolsMonitorGroup, workspace, _.inspectAgent(AgentKind.Link)),
-      new SimpleGUIWorkspaceAction(I18N.gui("closeAllAgentMonitors"), ToolsMonitorGroup, workspace, _.closeAgentMonitors),
+      new SimpleGUIWorkspaceAction(I18N.gui("closeAllAgentMonitors"), ToolsMonitorGroup, workspace, _.closeAgentMonitors()),
       new SimpleGUIWorkspaceAction(I18N.gui("closeDeadAgentMonitors"), ToolsMonitorGroup, workspace, _.stopInspectingDeadAgents()),
     ) ++ (if (Version.is3D) Seq() else Seq(new Open3DViewAction(workspace)))
 
@@ -39,8 +39,9 @@ object WorkspaceActions {
 
   class SimpleGUIWorkspaceAction(name: String, menuGroup: String, workspace: GUIWorkspace, action: GUIWorkspace => Unit)
     extends GUIWorkspaceAction(name, workspace) {
-      category = ToolsCategory
-      group    = menuGroup
+
+    category = ToolsCategory
+    group    = menuGroup
 
     override def performAction(workspace: GUIWorkspace): Unit = {
       action(workspace)

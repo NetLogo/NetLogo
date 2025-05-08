@@ -8,7 +8,7 @@ import org.objectweb.asm
 import asm.{ ClassReader, Label, MethodVisitor, Type }
 import org.nlogo.nvm.Instruction
 
-class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisitor, bgen: Generator#InstructionGenerator[_], instrUID: Int) {
+class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisitor, bgen: Generator#InstructionGenerator[?], instrUID: Int) {
   private val errorLog = new StringBuilder
   def writeTransformedBytecode(): Unit = {
     val reader = PrimitiveCache.getClassReader(instr.getClass)
@@ -39,7 +39,7 @@ class MethodRipper(method: Method, instr: Instruction, mvOut: MethodVisitor, bge
             mvOut.visitFieldInsn(opcode, bgen.fullClassName, name, desc)
           else try {
             // It'd be nice if we could just use Class.getField, but that only finds public stuff. - ST 2/3/09
-            def getField(c: Class[_]): Field =
+            def getField(c: Class[?]): Field =
               try { c.getDeclaredField(name) }
               catch { case _: NoSuchFieldException => getField(c.getSuperclass) }
             val field = getField(instr.getClass)

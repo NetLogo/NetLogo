@@ -6,7 +6,7 @@ import java.io.{ObjectStreamClass, ObjectInputStream, InputStream}
 
 case class ClassLoaderObjectInputStream(classLoader: ClassLoader,
                                         inputStream: InputStream) extends ObjectInputStream(inputStream) {
-  override def resolveClass(objectStreamClass: ObjectStreamClass): Class[_] = {
+  override def resolveClass(objectStreamClass: ObjectStreamClass): Class[?] = {
     val clazz = Class.forName(objectStreamClass.getName, false, classLoader)
     if (clazz != null) clazz
     else super.resolveClass(objectStreamClass)

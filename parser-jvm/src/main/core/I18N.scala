@@ -66,7 +66,7 @@ object I18N {
     private val englishBundle = getBundle(Locale.US)
     def getBundle(locale: Locale) = ResourceBundle.getBundle(name, locale)
     def apply(key: String)(implicit prefix: Prefix) = get(prefix.name + "." + key)
-    def apply(key: String, args: AnyRef*)(implicit prefix: Prefix) = getN(prefix.name + "." + key, args: _*)
+    def apply(key: String, args: AnyRef*)(implicit prefix: Prefix) = getN(prefix.name + "." + key, args*)
     override def get(key: String) = getN(key)
     override def getN(key: String, args: AnyRef*) = {
       def getFromBundle(bundle: ResourceBundle): Option[String] =
@@ -79,7 +79,7 @@ object I18N {
           .getOrElse(
             throw new IllegalArgumentException(s"internal error, bad translation key: $key for $name"))
       }
-      java.text.MessageFormat.format(preformattedText, args: _*)
+      java.text.MessageFormat.format(preformattedText, args*)
     }
     // internal use only
     def withLanguage[T](locale: Locale)(f: => T): T = {
@@ -100,7 +100,7 @@ object I18N {
       defaultBundle = getBundle(locale)
 
     // for use in Java classes that we don't want to depend on I18N
-    override val fn = get _
+    override val fn = get
   }
 
   lazy val errors = new BundleKind("i18n.Errors")

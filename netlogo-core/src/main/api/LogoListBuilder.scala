@@ -11,10 +11,10 @@ class LogoListBuilder {
   def add(obj: AnyRef): Unit = {
     b += obj
   }
-  def addAll(objs: scala.Iterable[_ <: AnyRef]): Unit = {
+  def addAll(objs: scala.Iterable[? <: AnyRef]): Unit = {
     b ++= objs
   }
-  def addAll(objs: java.lang.Iterable[_ <: AnyRef]): Unit = {
+  def addAll(objs: java.lang.Iterable[? <: AnyRef]): Unit = {
     val it = objs.iterator
     while(it.hasNext)
       b += it.next()

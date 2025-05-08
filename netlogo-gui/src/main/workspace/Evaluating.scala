@@ -3,11 +3,14 @@
 package org.nlogo.workspace
 
 import org.nlogo.agent.{ Agent, AgentSet }
-import org.nlogo.core.{ AgentKind, CompilerException }
-import org.nlogo.api.{ CommandLogoThunk, JobOwner, LogoException, MersenneTwisterFast, ReporterLogoThunk, SimpleJobOwner }
-import org.nlogo.nvm.Procedure
+import org.nlogo.core.{ AgentKind, CompilerException, StringReader }
+import org.nlogo.api.{ CommandLogoThunk, Controllable, JobOwner, LastLogoException, LogoException, LogoThunkFactory,
+                       MersenneTwisterFast, ReporterLogoThunk, SimpleJobOwner }
+import org.nlogo.nvm.{ BasicEvaluator, CompilerRunner, Procedure }
 
-trait Evaluating { this: AbstractWorkspace =>
+trait Evaluating extends Controllable with StringReader with CompilerRunner with BasicEvaluator
+  with LogoThunkFactory with LastLogoException { this: AbstractWorkspace =>
+
   var lastLogoException: LogoException = null
 
   override def clearLastLogoException(): Unit = { lastLogoException = null }

@@ -56,11 +56,11 @@ import org.nlogo.api.FileIO.fileToString
 // -Jeremy B 2022
 
 case class LoggerState(
-  addListener:   (NetLogoAdapter) => Unit
-, loggerFactory: (Path) => FileLogger
-, logDirectory:  File
-, events:        LogEvents
-, studentName:   String
+  addListener:   (NetLogoAdapter) => Unit,
+  loggerFactory: (Path) => FileLogger,
+  logDirectory:  File,
+  events:        LogEvents,
+  studentName:   String
 ) {
   val logDirectoryPath = logDirectory.toPath
 }

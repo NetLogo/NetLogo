@@ -54,7 +54,7 @@ object HubNetSwitchReader extends BaseWidgetParser with ConstWidgetParser with W
       NillableString ~ NewLine ~
       BooleanDigit ~ NewLine ~
       IgnoredLine ~
-      IgnoredText ~> parserToSwitch _
+      IgnoredText ~> parserToSwitch
     }
 
     def SwitchHeader: Rule0 = rule { "SWITCH" }
@@ -102,7 +102,7 @@ object HubNetViewReader extends BaseWidgetParser with ConstWidgetParser with Wid
       PositionInformation ~
       12.times(IgnoredLine) ~
       3.times(IntValue ~ NewLine) ~
-      IntValue ~> parserToView _
+      IntValue ~> parserToView
     }
 
     def ViewHeader: Rule0 = rule { "VIEW" }
@@ -167,7 +167,7 @@ object HubNetButtonReader extends BaseWidgetParser with ConstWidgetParser with W
       PositionInformation ~
       NillableString ~ NewLine ~
       6.times(IgnoredLine) ~
-      NillableString ~> parserToButton _
+      NillableString ~> parserToButton
     }
 
     def ButtonHeader: Rule0 = rule { "BUTTON" }
@@ -225,7 +225,7 @@ object HubNetMonitorReader extends BaseWidgetParser with ConstWidgetParser with 
       NillableString ~ NewLine ~
       NillableString ~ NewLine ~
       IntValue ~ NewLine ~
-      IntDigits ~> parserToMonitor _
+      IntDigits ~> parserToMonitor
     }
 
     def MonitorHeader: Rule0 = rule { "MONITOR" }
@@ -291,7 +291,7 @@ object HubNetSliderReader extends BaseWidgetParser with ConstWidgetParser with W
       4.times(DoubleValue ~ NewLine) ~
       IgnoredLine ~
       NillableString ~ NewLine ~
-      Direction ~> parserToSlider _
+      Direction ~> parserToSlider
     }
 
     def Direction: Rule1[Direction] = rule {
@@ -357,7 +357,7 @@ object HubNetChooserReader extends BaseWidgetParser with WidgetReader {
       NillableString ~ NewLine ~
       IgnoredLine ~
       LogoListRule ~ NewLine ~
-      NonNegativeIntValue ~> parserToChooser _
+      NonNegativeIntValue ~> parserToChooser
     }
 
     def LogoListRule: Rule1[List[Chooseable]] =

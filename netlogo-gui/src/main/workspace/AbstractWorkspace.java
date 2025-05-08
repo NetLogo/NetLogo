@@ -9,7 +9,12 @@ import java.util.List;
 import java.util.Map;
 import scala.collection.mutable.WeakHashMap;
 import org.nlogo.agent.Agent;
-import org.nlogo.api.*;
+import org.nlogo.api.AggregateManagerInterface;
+import org.nlogo.api.ExportPlotWarningAction;
+import org.nlogo.api.ExportPlotWarningActionJ;
+import org.nlogo.api.ExternalResourceManager;
+import org.nlogo.api.LogoException;
+import org.nlogo.api.PreviewCommands;
 import org.nlogo.core.CompilerException;
 import org.nlogo.core.Femto;
 import org.nlogo.core.FileModeJ;
@@ -66,7 +71,7 @@ public abstract class AbstractWorkspace
     this._triedToExportPlot = triedToExport;
   }
 
-  private ExportPlotWarningAction _exportPlotWarningAction = ExportPlotWarningActionJ$.MODULE$.WARN();
+  private ExportPlotWarningAction _exportPlotWarningAction = ExportPlotWarningActionJ.WARN();
   public ExportPlotWarningAction exportPlotWarningAction() {
     return this._exportPlotWarningAction;
   }
@@ -79,7 +84,7 @@ public abstract class AbstractWorkspace
   // `ChecksumsAndPreviews` can be moved into core.  We cannot put this on `Workspace`
   // because it's read-only there and changing it would be breaking in many places.
   // -Jeremy B April 2016
-  private PreviewCommands _previewCommands = PreviewCommands$.MODULE$.DEFAULT();
+  private PreviewCommands _previewCommands = PreviewCommands.DEFAULT();
   public PreviewCommands previewCommands() {
     return this._previewCommands;
   }

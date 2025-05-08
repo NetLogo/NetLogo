@@ -11,7 +11,7 @@ class _repeat(_token: Token) extends Command with CustomAssembled with CompilerS
   def scopedBlockIndex: Int = 1
 
   // MethodRipper won't let us call a public method from perform_1() - ST 7/20/12
-  private[this] val _let = Let(s"~${_token.text}_${_token.start}")
+  private val _let = Let(s"~${_token.text}_${_token.start}")
   def let = _let
 
   override def perform(context: Context): Unit = {

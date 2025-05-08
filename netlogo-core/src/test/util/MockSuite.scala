@@ -169,11 +169,11 @@ trait MockSuite extends AnyFunSuite {
   // had to add ClassTag here only because if its not there the two methods
   // have the same signature after erasure, and wont compile. nasty hack, but it works.
   // same for allOf below. - JC 6/24/10
-  def anyOf[T : ClassTag](ts:T*) = org.hamcrest.core.AnyOf.anyOf(ts.map(equal(_)):_*)
-  def anyOf[T](ts:Matcher[T]*) = org.hamcrest.core.AnyOf.anyOf(ts:_*)
+  def anyOf[T : ClassTag](ts:T*) = org.hamcrest.core.AnyOf.anyOf(ts.map(equal(_))*)
+  def anyOf[T](ts:Matcher[T]*) = org.hamcrest.core.AnyOf.anyOf(ts*)
   //  allOf(m1, m2, ..., mn): The argument matches all of the Matchers m1 to mn.
-  def allOf[T : ClassTag](ts:T*) = org.hamcrest.core.AllOf.allOf(ts.map(equal(_)):_*)
-  def allOf[T](ts:Matcher[T]*) = org.hamcrest.core.AllOf.allOf(ts:_*)
+  def allOf[T : ClassTag](ts:T*) = org.hamcrest.core.AllOf.allOf(ts.map(equal(_))*)
+  def allOf[T](ts:Matcher[T]*) = org.hamcrest.core.AllOf.allOf(ts*)
 
 
   // "with" is a keyword in Scala, so call it arg instead - ST 6/23/10

@@ -42,7 +42,7 @@ class RGBAColorDialog(parent: Frame, returnColor: Boolean) extends JDialog(paren
       // webView.getEngine.load(getClass.getResource("/web/color-picker/index.html").toString)
 
       webView.getEngine.getLoadWorker.stateProperty.addListener(
-        (value: ObservableValue[_ <: State], oldState: State, newState: State) => {
+        (value: ObservableValue[? <: State], oldState: State, newState: State) => {
           webView.getEngine.executeScript("window").asInstanceOf[JSObject].setMember("bridge", bridge)
           webView.getEngine.executeScript("initWithMode(\"RGBA\")")
 

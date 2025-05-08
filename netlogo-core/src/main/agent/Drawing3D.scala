@@ -16,9 +16,9 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
   def linkStamps = _linkStamps.asJava
 
   def clear(): Unit = {
-    lines.clear()
-    turtleStamps.clear()
-    linkStamps.clear()
+    _lines.clear()
+    _turtleStamps.clear()
+    _linkStamps.clear()
   }
 
   private def heading(x0: Double, y0: Double, x1: Double, y1: Double) =
@@ -31,9 +31,9 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
   def stamp(agent: Agent): Unit = {
     agent match {
       case t: Turtle3D =>
-        turtleStamps.add(new TurtleStamp3D(t))
+        _turtleStamps += (new TurtleStamp3D(t))
       case l: Link3D =>
-        linkStamps.add(new LinkStamp3D(l))
+        _linkStamps += (new LinkStamp3D(l))
       case _ =>
     }
   }
@@ -51,7 +51,7 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
   def addLine(x0: Double, y0: Double, z0: Double,
               x1: Double, y1: Double, z1: Double,
               width: Double, color: AnyRef): Unit = {
-    lines.add(DrawingLine3D(
+    _lines += (DrawingLine3D(
       x0, y0, z0, x1, y1, z1,
       heading(x0, y0, x1, y1),
       pitch(x0, y0, z0, x1, y1, z1),
@@ -60,14 +60,14 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
 
   def addStamp(shape: String, xcor: Double, ycor: Double, zcor: Double, size: Double,
                heading: Double, pitch: Double, roll: Double, color: AnyRef, lineThickness: Double): Unit = {
-    turtleStamps.add(
+    _turtleStamps += (
       new TurtleStamp3D(shape, xcor, ycor, zcor, size, heading, pitch, roll, color, lineThickness))
   }
 
   def addStamp(shape: String, x1: Double, y1: Double, z1: Double, x2: Double, y2: Double, z2: Double,
                color: AnyRef, lineThickness: Double, directedLink: Boolean, destSize: Double,
                heading: Double, pitch: Double): Unit = {
-     linkStamps.add(new LinkStamp3D(shape, x1, y1, z1, x2, y2, z2, color,
+    _linkStamps += (new LinkStamp3D(shape, x1, y1, z1, x2, y2, z2, color,
                                     lineThickness, directedLink, destSize, heading, pitch))
   }
 
@@ -110,7 +110,7 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
     val minz = world.minPzcor - 0.5
     val pixelSize = 1 / world.patchSize
 
-    do {
+    while {
       endX = startX + distX
       endY = startY + distY
       endZ = startZ + distZ
@@ -211,11 +211,11 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
           newStartX = minx
       }
 
-      lines.add(DrawingLine3D(startX, startY, startZ,
-                              endX, endY, endZ,
-                              heading(startX, startY, endX, endY),
-                              pitch(startX, startY, startZ, endX, endY, endZ),
-                              l.width, l.color))
+      _lines += (DrawingLine3D(startX, startY, startZ,
+                               endX, endY, endZ,
+                               heading(startX, startY, endX, endY),
+                               pitch(startX, startY, startZ, endX, endY, endZ),
+                               l.width, l.color))
 
       distX -= (endX - startX)
       distY -= (endY - startY)
@@ -224,9 +224,9 @@ class Drawing3D(world: World3D) extends org.nlogo.api.Drawing3D {
       startX = newStartX
       startY = newStartY
       startZ = newStartZ
-    } while (StrictMath.abs(distY) >= pixelSize
-             || StrictMath.abs(distX) >= pixelSize
-             || StrictMath.abs(distZ) >= pixelSize)
+
+      StrictMath.abs(distY) >= pixelSize || StrictMath.abs(distX) >= pixelSize || StrictMath.abs(distZ) >= pixelSize
+    } do ()
   }
 
 }

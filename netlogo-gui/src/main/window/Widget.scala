@@ -63,7 +63,7 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
   private var zoomFactor = 1.0
 
   protected var _oldSize = false
-  protected var boldName = Preferences.userRoot.node("/org/nlogo/NetLogo").getBoolean("boldWidgetNames", false)
+  protected var _boldName = Preferences.userRoot.node("/org/nlogo/NetLogo").getBoolean("boldWidgetNames", false)
 
   def getEditable: Object = this
   def copyable = true // only OutputWidget and ViewWidget are not copyable
@@ -100,6 +100,8 @@ abstract class Widget extends JPanel with RoundedBorderPanel with ThemeSync with
     revalidate()
     repaint()
   }
+  def boldName: Boolean =
+    _boldName
   def getDefaultExportName = "output.txt"
   def updateConstraints(): Unit = {}
   def classDisplayName: String = getClass.getName

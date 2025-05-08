@@ -13,7 +13,7 @@ import scala.util.Try
  * Fills in the source of all of Instructions in the Procedure.
  */
 private class SourceTagger(existingSources: Map[String, String], compilationEnvironment: CompilationEnvironment) extends DefaultAstVisitor {
-  var sources: Map[String, String] = Map(existingSources.toSeq: _*)
+  var sources: Map[String, String] = Map(existingSources.toSeq*)
   var internalSources = Seq[String]()
 
   override def visitProcedureDefinition(proc: ProcedureDefinition): Unit = {

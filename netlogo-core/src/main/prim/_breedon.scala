@@ -6,7 +6,7 @@ import org.nlogo.agent.{ Agent, AgentSet, AgentSetBuilder, Patch, Turtle }
 import org.nlogo.core.{ AgentKind, I18N, Syntax }
 import org.nlogo.nvm.{ ArgumentTypeException, Context, Reporter, RuntimePrimitiveException }
 
-class _breedon(private[this] val _breedName: String) extends Reporter {
+class _breedon(private val _breedName: String) extends Reporter {
 
   def breedName = _breedName
 

@@ -17,5 +17,5 @@ trait Activation {
   /**
    * Parent activation
    */
-  def parent: Option[_ <: Activation]
+  def parent: Option[? <: Activation]
 }

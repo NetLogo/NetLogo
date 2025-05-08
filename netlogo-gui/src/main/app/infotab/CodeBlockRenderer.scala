@@ -40,18 +40,18 @@ class CodeBlockRenderer extends Parser.ParserExtension with HtmlRenderer.HtmlRen
   }
 
   class NetLogoCodeBlockProcessorFactory extends BlockPreProcessorFactory {
-    override def getBlockTypes(): JSet[Class[_ <: Block]] = {
-      val set = new JHashSet[Class[_ <: Block]]()
+    override def getBlockTypes(): JSet[Class[? <: Block]] = {
+      val set = new JHashSet[Class[? <: Block]]()
       set.add(classOf[FencedCodeBlock])
       set.add(classOf[IndentedCodeBlock])
       set
     }
     def create(state: ParserState): BlockPreProcessor = new NetLogoCodeBlockProcessor(state.getProperties)
     def affectsGlobalScope(): Boolean = true
-    def getAfterDependents(): JSet[Class[_ <: BlockPreProcessorFactory]] = {
+    def getAfterDependents(): JSet[Class[? <: BlockPreProcessorFactory]] = {
       null
     }
-    def getBeforeDependents(): JSet[Class[_ <: BlockPreProcessorFactory]] = {
+    def getBeforeDependents(): JSet[Class[? <: BlockPreProcessorFactory]] = {
       null
     }
   }
@@ -62,8 +62,8 @@ class CodeBlockRenderer extends Parser.ParserExtension with HtmlRenderer.HtmlRen
 
   class Renderer(options: DataHolder) extends NodeRenderer {
 
-    override def getNodeRenderingHandlers: java.util.Set[NodeRenderingHandler[_]] = {
-      val set = new JHashSet[NodeRenderingHandler[_]]()
+    override def getNodeRenderingHandlers: java.util.Set[NodeRenderingHandler[?]] = {
+      val set = new JHashSet[NodeRenderingHandler[?]]()
       set.add(
         new NodeRenderingHandler[NetLogoCodeBlock](classOf[NetLogoCodeBlock], new CustomNodeRenderer[NetLogoCodeBlock]() {
           override def render(node: NetLogoCodeBlock, context: NodeRendererContext, html: HtmlWriter): Unit = {

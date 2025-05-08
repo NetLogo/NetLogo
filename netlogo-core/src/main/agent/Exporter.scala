@@ -120,7 +120,7 @@ private[agent] class Exporter(world: World, writer: PrintWriter) {
           + csv.encode(world.maxPxcor.toString) + ","
           + csv.encode(world.minPycor.toString) + ","
           + csv.encode(world.maxPycor.toString) + ","
-          + csv.encode(world.observer.perspective.export.toString) + ","
+          + csv.encode(world.observer.perspective.`export`.toString) + ","
           + csv.data(subject) + ","
           + csv.encode(JLong.toString(world.nextTurtleIndex)) + ","
           + csv.data(if (world.links.isDirected) "DIRECTED" else

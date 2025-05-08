@@ -34,7 +34,7 @@ class SetVisitor(program: Program) extends DefaultAstVisitor {
   }
 
   val programClasses: Map[SetVisitor.ReporterClass, SetVisitor.CommandTransformer] =
-    Map(classOf[_turtleorlinkvariable] -> turtleOrLinkVariable _)
+    Map(classOf[_turtleorlinkvariable] -> turtleOrLinkVariable)
   private def turtleOrLinkVariable(rep: nvm.Reporter): nvm.Command = {
     rep match {
       case v: _turtleorlinkvariable =>
@@ -47,8 +47,8 @@ class SetVisitor(program: Program) extends DefaultAstVisitor {
 }
 
 object SetVisitor {
-  type ReporterClass = Class[_ <: nvm.Reporter]
-  type CommandClass = Class[_ <: nvm.Command]
+  type ReporterClass = Class[? <: nvm.Reporter]
+  type CommandClass = Class[? <: nvm.Command]
   type CommandTransformer = nvm.Reporter => nvm.Command
 
   def transformer(klass: CommandClass): CommandTransformer = {

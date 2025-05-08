@@ -73,10 +73,10 @@ object Mirroring {
 
   private def mergeValues(oldValues: Seq[AnyRef], changes: Seq[Change]): Seq[AnyRef] = {
     // Important: make sure newValues is a *copy* of oldValues.
-    // (Using oldValues.toArray instead of Array(oldValues: _*),
+    // (Using oldValues.toArray instead of Array(oldValues*),
     // for example, would return a reference to it and the process
     // would mess up the old values.) NP 2013-01-08.
-    val newValues = Array(oldValues: _*)
+    val newValues = Array(oldValues*)
     for (Change(variable, value) <- changes)
       newValues(variable) = value
     newValues.toSeq

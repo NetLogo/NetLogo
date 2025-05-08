@@ -7,7 +7,7 @@ import org.nlogo.api.{ AgentException, LogoListBuilder }
 import org.nlogo.core.{ I18N, LogoList, Syntax }
 import org.nlogo.nvm.{ ArgumentTypeException, Context, Reporter, RuntimePrimitiveException }
 
-class _linkvariableof(private[this] val _vn: Int) extends Reporter {
+class _linkvariableof(private val _vn: Int) extends Reporter {
 
 
   override def toString =

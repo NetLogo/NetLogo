@@ -40,7 +40,7 @@ object ShapeParser {
   private def parseShape(lines: List[String]): VectorShape =
     lines.toList match {
       case name :: rotatable :: editableColorIndex :: elements =>
-        VectorShape(name, rotatable == "true", editableColorIndex.toInt, elements.map(parseElement): _*)
+        VectorShape(name, rotatable == "true", editableColorIndex.toInt, elements.map(parseElement)*)
       case _ => throw new IllegalStateException(s"Invalid vector shape:\n ${lines.mkString("\n")}")
     }
 
@@ -97,7 +97,7 @@ object ShapeParser {
               case (s, (x, y)) if s.length > 0 && s.head == ((x, y)) => (x, y) +: s
               case (s, (x, y)) => (x, y) +: s
             }.reverse
-          Polygon(color(colorString.toInt), filled.toBoolean, marked.toBoolean, points: _*)
+          Polygon(color(colorString.toInt), filled.toBoolean, marked.toBoolean, points*)
         case _ => throw new IllegalStateException(s"Invalid shape format in file: $s")
       }
     } catch {

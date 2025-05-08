@@ -55,9 +55,9 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
   def sections(location: URI) =
     Try {
       if (location.getScheme == "jar") {
-        Source.fromInputStream(location.toURL.openStream)(UTF8)
+        Source.fromInputStream(location.toURL.openStream)(using UTF8)
       } else {
-        Source.fromURI(location)(UTF8)
+        Source.fromURI(location)(using UTF8)
       }
     }.flatMap { s =>
       val sections = sectionsFromSource(s.mkString)
@@ -204,17 +204,20 @@ trait AbstractNLogoFormat[A <: ModelFormat[Array[String], A]] extends ModelForma
     private def parseWidgets(lines: Array[String]): List[List[String]] = {
       val widgets = new collection.mutable.ListBuffer[List[String]]
       val widget = new collection.mutable.ListBuffer[String]
-      for(line <- lines)
-        if(line.nonEmpty)
+      for (line <- lines) {
+        if (line.nonEmpty) {
           widget += line
-        else {
+        } else {
           if(!widget.forall(_.isEmpty))
             widgets += widget.toList
           widget.clear()
         }
-        if(!widget.isEmpty)
-          widgets += widget.toList
+      }
+      if (widget.isEmpty) {
         widgets.toList
+      } else {
+        widgets.toList ++ List(widget.toList)
+      }
     }
 
     override def deserialize(s: Array[String]) = {(m: Model) =>

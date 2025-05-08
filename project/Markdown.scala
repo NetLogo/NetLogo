@@ -141,7 +141,7 @@ object Markdown {
         def create(options: DataHolder) = new NodeRenderer {
           import scala.collection.JavaConverters._
 
-          def getNodeRenderingHandlers = Set[NodeRenderingHandler[_]](
+          def getNodeRenderingHandlers = Set[NodeRenderingHandler[?]](
             new NodeRenderingHandler(classOf[WikiLink], PrimLinkRenderer)).asJava
         }
       }
@@ -166,7 +166,7 @@ object Markdown {
         def create(options: DataHolder) = new NodeRenderer {
           import scala.collection.JavaConverters._
 
-          def getNodeRenderingHandlers = Set[NodeRenderingHandler[_]](
+          def getNodeRenderingHandlers = Set[NodeRenderingHandler[?]](
             new NodeRenderingHandler(classOf[AsideBlock], QuestionRenderer)).asJava
         }
       }

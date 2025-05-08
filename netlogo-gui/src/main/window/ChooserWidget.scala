@@ -102,7 +102,7 @@ class ChooserWidget(val compiler: CompilerServices, colorizer: Colorizer)
   }
 
   private def chooseableListToLogoList(choices: List[Chooseable]): LogoList =
-    LogoList(choices.map(_.value): _*)
+    LogoList(choices.map(_.value)*)
 
   override def load(model: CoreWidget): Unit = {
     model match {

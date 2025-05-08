@@ -17,13 +17,13 @@ object Token {
 
 case class Token(text: String, tpe: TokenType, value: AnyRef)(val sourceLocation: SourceLocation) extends SourceLocatable {
   // the automatically generated `copy` method wouldn't copy the auxiliary fields
-  def copy(text: String = text, tpe: TokenType = tpe, value: AnyRef = value): Token =
+  def copy(text: String = text, tpe: TokenType = tpe, value: AnyRef = value)(sourceLocation: SourceLocation = sourceLocation): Token =
     new Token(text, tpe, value)(sourceLocation)
 
   def refine(newPrim: Instruction, text: String = text, tpe: TokenType = tpe): Token = {
     // usual ugliness here because prim instances and tokens
     // have mutual references - ST 9/24/14
-    val result = copy(text, tpe, value = newPrim)
+    val result = copy(text, tpe, value = newPrim)()
     newPrim.token = result
     result
   }

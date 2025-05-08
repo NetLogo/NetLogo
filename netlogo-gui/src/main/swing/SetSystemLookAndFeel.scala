@@ -7,7 +7,7 @@ import com.formdev.flatlaf.{ FlatLaf, FlatLightLaf }
 import java.awt.{ Color, Font, GraphicsEnvironment, Insets }
 import javax.swing.{ UIManager, UnsupportedLookAndFeelException }
 
-final object SetSystemLookAndFeel {
+object SetSystemLookAndFeel {
 
   /// Swing look & feel
 

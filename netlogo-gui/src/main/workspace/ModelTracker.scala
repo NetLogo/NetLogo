@@ -6,7 +6,7 @@ import java.io.{ File, IOException }
 import java.net.URI
 import java.nio.file.Paths
 
-import org.nlogo.api.ModelType
+import org.nlogo.api.{ DisplayModelName, ModelPath, ModelType, NormalConverter }
 import org.nlogo.nvm.{ PresentationCompilerInterface, FileManager }
 
 /** This trait holds the state of the workspace with respect to
@@ -22,7 +22,7 @@ import org.nlogo.nvm.{ PresentationCompilerInterface, FileManager }
  *  but only because nothing in the workspace needs it directly.
  *  RG 5/12/16
  */
-trait ModelTracker {
+trait ModelTracker extends DisplayModelName with ModelPath with NormalConverter {
 
   def compiler: PresentationCompilerInterface
 

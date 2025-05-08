@@ -18,7 +18,7 @@ class _downhill extends Command with Referencer {
     this
   }
 
-  private[this] var reference: Reference = null
+  private var reference: Reference = null
 
   override def toString: String = {
     if (world != null && reference != null)

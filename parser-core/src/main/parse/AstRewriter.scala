@@ -23,27 +23,27 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand) ext
     header + procedures + footer
 
   def remove(dropCommand: String): String = {
-    rewrite(new RemovalVisitor(dropCommand), preserveBody _)
+    rewrite(new RemovalVisitor(dropCommand), preserveBody)
   }
 
   def addCommand(addCommand: (String, String)): String = {
-    rewrite(new AddVisitor(addCommand), preserveBody _)
+    rewrite(new AddVisitor(addCommand), preserveBody)
   }
 
   def replaceCommand(replaceCommand: (String, String)): String = {
-    rewrite(new ReplaceVisitor(replaceCommand), preserveBody _)
+    rewrite(new ReplaceVisitor(replaceCommand), preserveBody)
   }
 
   def replaceReporter(replaceReporter: (String, String)): String = {
-    rewrite(new ReplaceReporterVisitor(replaceReporter), preserveBody _)
+    rewrite(new ReplaceReporterVisitor(replaceReporter), preserveBody)
   }
 
   def customRewrite(className: String): String = {
-    rewrite(Femto.get(className), preserveBody _)
+    rewrite(Femto.get(className), preserveBody)
   }
 
   def runVisitor(folder: PositionalAstFolder[AstEdit]): String = {
-    rewrite(folder, preserveBody _)
+    rewrite(folder, preserveBody)
   }
 
   def replaceToken(original: String, replacement: String): String = {
@@ -152,7 +152,7 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand) ext
         .orElse(IncludeFile(op.compilationEnvironment, filename).map(_._2))
         .getOrElse(throw new Exception("Unable to find file: " + filename))
 
-    val (wsMap, fileHeaders, fileFooters) = trackWhitespace(getSource _, procs)
+    val (wsMap, fileHeaders, fileFooters) = trackWhitespace(getSource, procs)
 
     val procsToRewrite = procs.filter(_.filename == sourceName)
 

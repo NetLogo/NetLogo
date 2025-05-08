@@ -117,7 +117,7 @@ class AutoSuggest(val primitiveNames: Set[String], extensionPrimNames: () => Set
       def foreachHelper(nodes: TrieNode*): Unit = {
         if (nodes.size != 0) {
           nodes.foreach(node => node.word.foreach(f))
-          foreachHelper(nodes.flatMap(node => node.children.values): _*)
+          foreachHelper(nodes.flatMap(node => node.children.values)*)
         }
       }
 

@@ -40,7 +40,6 @@ object ButtonWidget {
       buttonTypes.find(_.name == name).getOrElse(ObserverButton) //TODO or should we say error("bad agent name")
     }
     def getAgentClass(name:String) = {
-      if(name == "NIL") ObserverButton.agentKind
       //TODO or should we say error("bad agent name")
       buttonTypes.find(_.name == name).map(_.agentKind).getOrElse(ObserverButton.agentKind)
     }
@@ -89,7 +88,7 @@ class ButtonWidget(random: MersenneTwisterFast, colorizer: Colorizer) extends Jo
 
   keyLabel.setFont(keyLabel.getFont.deriveFont(12.0f))
 
-  if (boldName)
+  if (_boldName)
     nameLabel.setFont(nameLabel.getFont.deriveFont(Font.BOLD))
 
   agentLabel.setVisible(false)

@@ -69,7 +69,7 @@ class ShapeListTracker(private var _shapeList: ShapeList) extends Publisher[Shap
     publish(AllShapesReplaced(oldShapeList, _shapeList))
   }
 
-  def replaceShapes(newShapes: JCollection[_ <: Shape]): Unit = {
+  def replaceShapes(newShapes: JCollection[? <: Shape]): Unit = {
     import scala.jdk.CollectionConverters.CollectionHasAsScala
     replaceShapes(newShapes.asScala)
   }

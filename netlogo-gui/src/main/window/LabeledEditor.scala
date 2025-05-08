@@ -8,7 +8,7 @@ import javax.swing.{ JLabel, JPanel }
 import org.nlogo.swing.Transparent
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 
-class LabeledEditor(editor: PropertyEditor[_], text: String)
+class LabeledEditor(editor: PropertyEditor[?], text: String)
   extends JPanel(new BorderLayout(0, 3)) with Transparent with ThemeSync {
 
   private val label = new JLabel(text) {

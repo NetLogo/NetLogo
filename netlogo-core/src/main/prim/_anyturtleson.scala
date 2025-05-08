@@ -36,10 +36,10 @@ class _anyturtleson extends Reporter {
 
           }
 
-          false
+          return false
         }
 
-        false
+        return false
 
       case _ =>
         throw new ArgumentTypeException(

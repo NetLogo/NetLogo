@@ -207,7 +207,7 @@ class FakeWorld(state: State) extends api.World {
   private def makeBreeds[A <: FakeAgent](
     breeds: Iterable[Breed],
     allAgents: FakeAgentSet[A],
-    breedVariableIndex: Int): Map[String, FakeAgentSet[_]] =
+    breedVariableIndex: Int): Map[String, FakeAgentSet[?]] =
     breeds.map { breed =>
       val agentSeq = allAgents.agentSeq.filter(_.vars(breedVariableIndex) == breed.name)
       breed.name -> new FakeAgentSet[A](allAgents.kind, agentSeq, breed.isDirected)

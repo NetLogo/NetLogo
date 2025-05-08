@@ -78,7 +78,7 @@ object AnnouncementsInfoDownloader extends InfoDownloader {
 
         }
 
-        announcements.filter((x) => x.endDate.map(_.isAfter(LocalDate.now())).getOrElse(true))
+      announcements.filter((x) => x.endDate.map(_.isAfter(LocalDate.now())).getOrElse(true))
 
     } catch {
       case ex: ParseException =>

@@ -63,7 +63,7 @@ object ModelsLibraryIndexReader {
 
     val parsingConfiguration = ConfigParseOptions.defaults.setSyntax(ConfigSyntax.CONF)
     val index = ConfigFactory.parseFile(new File(ModelsLibrary.modelsRoot, "index.conf"), parsingConfiguration)
-    val indexItems: JList[_ <: Config] =
+    val indexItems: JList[? <: Config] =
       try {
         index.getConfigList("models.indexes")
       } catch {

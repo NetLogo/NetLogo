@@ -298,7 +298,7 @@ class WorldEditPanel2D(target: WorldViewSettings2D) extends WorldEditPanel(targe
     editors.foreach(_.refresh())
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(minPxcor, maxPxcor, minPycor, maxPycor, wrappingX, wrappingY, patchSize, fontSize, frameRate, showTickCounter,
         tickCounterLabel)
 

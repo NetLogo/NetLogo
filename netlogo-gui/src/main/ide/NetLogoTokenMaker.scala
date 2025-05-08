@@ -42,7 +42,7 @@ trait NetLogoTokenMaker extends TokenMakerBase {
         case TokenType.Ident =>
           extensionManager.flatMap { manager =>
             manager.cachedType(t.text.toUpperCase)
-              .map(tokenType => t.copy(tpe = tokenType))
+              .map(tokenType => t.copy(tpe = tokenType)())
           }.getOrElse(t)
         case _ => named
       }

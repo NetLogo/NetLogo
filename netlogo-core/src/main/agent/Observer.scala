@@ -25,7 +25,7 @@ with api.Observer with OrientatableObserver with Constraints {
   override def setVariable(vn: Int, value: AnyRef): Unit = {
     assertConstraint(vn, value)
     variables(vn) = value
-    world.notifyWatchers(this, vn, value)
+    _world.notifyWatchers(this, vn, value)
   }
 
   override def realloc(oldProgram: Program, newProgram: Program): Agent = {
@@ -75,7 +75,7 @@ with api.Observer with OrientatableObserver with Constraints {
 
   @throws(classOf[api.AgentException])
   def getPatchAtOffsets(dx: Double, dy: Double): Patch =
-    world.getPatchAt(dx, dy)
+    _world.getPatchAt(dx, dy)
 
   override def toString = "observer"
   override def classDisplayName = "observer"

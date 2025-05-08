@@ -82,7 +82,7 @@ class Binding(var head: ChildBinding, val parent: Binding, var size: Int = 0) {
   @tailrec
   private def removeLet(b: ChildBinding, let: Let, removed: ChildBinding): (ChildBinding, Boolean) = {
     if (b.let eq let)
-      (removed concat b.next, true)
+      (removed.concat(b.next), true)
     else if (b.next ne b)
       removeLet(b.next, let, b.withNext(removed))
     else

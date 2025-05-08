@@ -20,12 +20,12 @@ trait Finder extends TestFinder {
 
 trait TaggedLanguageTest extends Finder {
   override def test(name: String, otherTags: Tag*)(testFun: => Any)(implicit pos: Position) =
-    super.test(name, (LanguageTestTag +: otherTags):_*)(testFun)
+    super.test(name, (LanguageTestTag +: otherTags)*)(testFun)
 }
 
 trait TaggedSlowTest extends Finder {
   override def test(name: String, otherTags: Tag*)(testFun: => Any)(implicit pos: Position) = {
-    super.test(name, (SlowTest.Tag +: otherTags):_*)(testFun)
+    super.test(name, (SlowTest.Tag +: otherTags)*)(testFun)
   }
 }
 

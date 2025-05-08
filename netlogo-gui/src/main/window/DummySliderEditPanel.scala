@@ -123,6 +123,6 @@ class DummySliderEditPanel(target: DummySliderWidget) extends WidgetEditPanel(ta
     add(oldSize, c)
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(name, min, inc, max, value, units, vertical, oldSize)
 }

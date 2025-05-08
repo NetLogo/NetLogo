@@ -68,7 +68,7 @@ object ModelCrossReferencer {
           Failure(missing)
       }
 
-    def warnNoReference(config: Config, key: String): Option[List[_ <: Config]] =
+    def warnNoReference(config: Config, key: String): Option[List[? <: Config]] =
       try {
         Some(config.getConfigList(key).asScala.toList)
       } catch {

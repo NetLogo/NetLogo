@@ -49,10 +49,10 @@ class OpenRecentFileAction(modelEntry: ModelEntry, fileManager: FileManager, ind
   extends AbstractAction(trimForDisplay(modelEntry.path))
   with MenuAction {
 
-    category    = UserAction.FileCategory
-    subcategory = UserAction.FileRecentSubcategory
-    group       = FilesGroup
-    rank        = index.toDouble
+  category    = UserAction.FileCategory
+  subcategory = UserAction.FileRecentSubcategory
+  group       = FilesGroup
+  rank        = index.toDouble
 
   override def actionPerformed(e: ActionEvent): Unit = {
     val sourceComponent = e.getSource match {
@@ -84,7 +84,7 @@ class RecentFiles {
 
   loadFromPrefs(true)
 
-  private var _models: List[ModelEntry] = _
+  private var _models = List[ModelEntry]()
   def models = _models
   def models_=(newModels: List[ModelEntry]): Unit = {
     _models = newModels

@@ -4,7 +4,7 @@ package org.nlogo.prim
 
 import org.nlogo.nvm.{ Context, Reporter }
 
-class _randomconst(private[this] val _n: Long) extends Reporter {
+class _randomconst(private val _n: Long) extends Reporter {
   def n = _n
 
   override def toString: String = super.toString + ":" + n

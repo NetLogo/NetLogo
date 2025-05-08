@@ -55,7 +55,7 @@ trait BaseWidgetParser {
   trait DefaultRule { this: Parser =>
     def defaultRule: Rule1[ParsedWidget]
   }
-  type InternalParser <: Parser with DefaultRule
+  type InternalParser <: Parser & DefaultRule
 
   def parser(lines: List[String], literalParser: LiteralParser): InternalParser
 

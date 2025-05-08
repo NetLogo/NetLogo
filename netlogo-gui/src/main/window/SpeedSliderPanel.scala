@@ -22,7 +22,7 @@ class SpeedSliderPanel(workspace: GUIWorkspace, ticksLabel: Component = null) ex
   implicit val prefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tabs.run.speedslider")
 
   val speedSlider = {
-    val slider = new SpeedSlider(workspace.speedSliderPosition.toInt)
+    val slider = new SpeedSlider(workspace.speedSliderPosition().toInt)
     slider.setFocusable(false)
     slider.addChangeListener(this)
     slider.addMouseListener(this)
