@@ -14,7 +14,6 @@ trait SimplePlotTest extends AnyFunSuite {
 }
 
 class PlotTests extends SimplePlotTest {
-
   test("Constructor") {
     val plot = new Plot("test")
     assertResult("test")(plot.name)
@@ -50,8 +49,8 @@ class PlotTests extends SimplePlotTest {
   testPlot("AutoPlotGrowMin") { plot =>
     val pen = plot.createPlotPen("test", false)
     pen.plot(-0.0001, -0.0001)
-    assertResult(-1.0)(plot.xMin)
-    assertResult(-1.0)(plot.yMin)
+    assertResult(-2.0)(plot.xMin)
+    assertResult(-2.0)(plot.yMin)
     assertResult(10.0)(plot.xMax)
     assertResult(10.0)(plot.yMax)
   }
@@ -64,6 +63,69 @@ class PlotTests extends SimplePlotTest {
     pen.plot(10.0001, 10.0001)
     assertResult(12.0)(plot.xMax)
     assertResult(12.0)(plot.yMax)
+  }
+  testPlot("AutoPlotExpandWithMinOverZero") { plot =>
+    plot.defaultXMax = 20
+    plot.defaultXMin = 10
+    plot.clear()
+    val pen = plot.createPlotPen("test", false)
+    pen.plot(25.7, 0)
+    assertResult(10.0)(plot.xMin)
+    assertResult(26.0)(plot.xMax)
+    pen.plot(75.3, 0)
+    assertResult(10.0)(plot.xMin)
+    assertResult(76.0)(plot.xMax)
+    pen.plot(155.5, 0)
+    assertResult(10.0)(plot.xMin)
+    assertResult(170.0)(plot.xMax)
+    pen.plot(1055.9, 0)
+    assertResult(10.0)(plot.xMin)
+    assertResult(1210.0)(plot.xMax)
+    pen.plot(105005.117, 0)
+    assertResult(10.0)(plot.xMin)
+    assertResult(120000.0)(plot.xMax)
+  }
+  testPlot("AutoPlotExpandWithMaxUnderZero") { plot =>
+    plot.defaultXMax = -100
+    plot.defaultXMin = -200
+    plot.clear()
+    val pen = plot.createPlotPen("test", false)
+    pen.plot(-175, 0)
+    assertResult(-200.0)(plot.xMin)
+    assertResult(-100.0)(plot.xMax)
+    pen.plot(-99.8, 0)
+    assertResult(-200.0)(plot.xMin)
+    assertResult(-80.0)(plot.xMax)
+    pen.plot(-75, 0)
+    assertResult(-200.0)(plot.xMin)
+    assertResult(-60.0)(plot.xMax)
+    pen.plot(-1.9123123, 0)
+    assertResult(-200.0)(plot.xMin)
+    assertResult(0.0)(plot.xMax)
+    pen.plot(105005.117, 105005.117)
+    assertResult(-200.0)(plot.xMin)
+    assertResult(119800.0)(plot.xMax)
+  }
+  testPlot("AutoPlotExpandSmallRange") { plot =>
+    plot.defaultXMax = 0.010
+    plot.defaultXMin = 0.001
+    plot.clear()
+    val pen = plot.createPlotPen("test", false)
+    pen.plot(0.005, 0)
+    assertResult(0.001)(plot.xMin)
+    assertResult(0.010)(plot.xMax)
+    pen.plot(0.011, 0)
+    assertResult(0.001)(plot.xMin)
+    assertResult(0.011)(plot.xMax)
+    pen.plot(0.020, 0)
+    assertResult(0.001)(plot.xMin)
+    assertResult(0.021)(plot.xMax)
+    pen.plot(0.0005, 0)
+    assertResult(-0.001)(plot.xMin)
+    assertResult(0.021)(plot.xMax)
+    pen.plot(105005.117, 0)
+    assertResult(-0.001)(plot.xMin)
+    assertResult(120000.0)(plot.xMax)
   }
   testPlot("AutoPlotGrowExtraRoomForBar") { plot =>
     val pen = plot.createPlotPen("test", false)

@@ -12,8 +12,6 @@ import
 import
   java.io.{ Serializable => JSerializable }
 
-import scala.math.{ log10, pow }
-
 // normally, to create a new Plot, you have to go through PlotManager.newPlot
 // this makes sense because the PlotManager then controls compilation
 // and running of code, and it needs to know about all the Plots.
@@ -222,38 +220,20 @@ class Plot private[nlogo] (var name:String) extends PlotInterface with JSerializ
       growRangeY(y)
   }
 
-  private def prettyRange(range: Double): Double = {
-    if (range < 0) {
-      if (range > -1)
-        return -1
-
-      val tmag = pow(10, log10(-range).floor - 1) * 2
-
-      (range / tmag).floor * tmag
-    } else {
-      if (range < 1)
-        return 1
-
-      val tmag = pow(10, log10(range).floor - 1) * 2
-
-      (range / tmag).ceil * tmag
-    }
-  }
-
   private def growRangeX(x: Double): Unit = {
     if (x > xMax)
-      state = state.copy(xMax = prettyRange(x))
+      state = state.copy(xMax = PlotHelper.expandRange(xMin, xMax, x))
 
     if (x < xMin)
-      state = state.copy(xMin = prettyRange(x))
+      state = state.copy(xMin = PlotHelper.expandRange(xMin, xMax, x))
   }
 
   private def growRangeY(y: Double): Unit = {
     if (y > yMax)
-      state = state.copy(yMax = prettyRange(y))
+      state = state.copy(yMax = PlotHelper.expandRange(yMin, yMax, y))
 
     if (y < yMin)
-      state = state.copy(yMin = prettyRange(y))
+      state = state.copy(yMin = PlotHelper.expandRange(yMin, yMax, y))
   }
 
   /// histograms
