@@ -11,3 +11,30 @@ CreateTemporaryPlotPen
   plot-pen-exists? "foobar" => false
   O> set-current-plot-pen "foobar" => ERROR There is no pen named "foobar" in the current plot
   O> set-current-plot-pen "pen1"
+
+AutoPlotTrickery
+  O> set-current-plot "plot1"
+  O> create-temporary-plot-pen "foobar"
+  autoplot? => true
+  autoplotx? => true
+  autoploty? => true
+  O> auto-plot-off
+  autoplot? => false
+  autoplotx? => false
+  autoploty? => false
+  O> auto-plot-x-on
+  autoplot? => false
+  autoplotx? => true
+  autoploty? => false
+  O> auto-plot-y-on
+  autoplot? => true
+  autoplotx? => true
+  autoploty? => true
+  O> auto-plot-x-off
+  autoplot? => false
+  autoplotx? => false
+  autoploty? => true
+  O> auto-plot-y-off
+  autoplot? => false
+  autoplotx? => false
+  autoploty? => false

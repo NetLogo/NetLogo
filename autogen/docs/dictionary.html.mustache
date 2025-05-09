@@ -656,8 +656,14 @@
     </h3>
     <p>
       <a href="#autoplot">autoplot?</a>
+      <a href="#autoplot">autoplotx?</a>
+      <a href="#autoplot">autoploty?</a>
       <a href="#auto-plot-status">auto-plot-off</a>
+      <a href="#auto-plot-status">auto-plot-x-off</a>
+      <a href="#auto-plot-status">auto-plot-y-off</a>
       <a href="#auto-plot-status">auto-plot-on</a>
+      <a href="#auto-plot-status">auto-plot-x-on</a>
+      <a href="#auto-plot-status">auto-plot-y-on</a>
       <a href="#clear-all-plots">clear-all-plots</a>
       <a href="#clear-plot">clear-plot</a>
       <a href="#create-temporary-plot-pen">create-temporary-plot-pen</a>
@@ -1235,37 +1241,49 @@ end
       <div class="dict_entry" id="autoplot">
         <h3>
           <a>autoplot?<span class="since">1.0</span></a>
+          <a>autoplotx?<span class="since">7.0</span></a>
+          <a>autoploty?<span class="since">7.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">autoplot?</span>
+          <span class="prim_example">autoplotx?</span>
+          <span class="prim_example">autoploty?</span>
         </h4>
         <p>
-          Reports true if auto-plotting is on for the current plot, false
+          Reports true if auto-plotting is on for the current plot or plot axis, false
           otherwise.
         </p>
       </div>
       <div class="dict_entry" id="auto-plot-status">
         <h3>
           <a>auto-plot-off<span class="since">1.0</span></a>
+          <a>auto-plot-x-off<span class="since">7.0</span></a>
+          <a>auto-plot-y-off<span class="since">7.0</span></a>
           <a>auto-plot-on<span class="since">1.0</span></a>
+          <a>auto-plot-x-on<span class="since">7.0</span></a>
+          <a>auto-plot-y-on<span class="since">7.0</span></a>
         </h3>
         <h4>
           <span class="prim_example">auto-plot-off</span>
+          <span class="prim_example">auto-plot-x-off</span>
+          <span class="prim_example">auto-plot-y-off</span>
           <span class="prim_example">auto-plot-on</span>
+          <span class="prim_example">auto-plot-x-on</span>
+          <span class="prim_example">auto-plot-y-on</span>
         </h4>
         <p>
-          This pair of commands is used to control the NetLogo feature of
+          These pairs of commands are used to control the NetLogo feature of
           auto-plotting in the current plot. Auto-plotting will automatically
           update the x and y axes of the plot whenever the current pen
           exceeds these boundaries when adding a new point with <code>plot</code>
           or <code>plotxy</code>.  When using <code>histogram</code> to plot
           values, only the y axis will automatically update its ranges, the x
           axis will be unchanged.
-          Each plot has an auto-plotting setting called
-          <i>Auto Scale?</i> in the user interface that determines if the plot
-          will enable auto-plotting when the model starts.
-          Auto-plotting is useful when wanting to show all plotted values in
-          the current plot, regardless of the current plot ranges.
+          Each plot has an auto-plotting settings called
+          <i>Auto xcale x-axis?</i> and <i>Auto scale y-axis?</i> in the user
+          interface that determines if the plot will enable auto-plotting when
+          the model starts.  Auto-plotting is useful when wanting to show all
+          plotted values in the current plot, regardless of the current plot ranges.
         </p>
         <p>
           These commands will produce a runtime error if the current plot has not been set.
