@@ -67,7 +67,7 @@ class NvmTests extends AnyFunSuite {
 
     def commandProcedure(name: String, i: Int = 0): Procedure = {
       val args = (0 until i).map(j => "PROCEDUREVAR" + j)
-      val p = new Procedure(false, name.toUpperCase, token(name.toUpperCase), args.map(token _), null)
+      val p = new Procedure(false, name.toUpperCase, token(name.toUpperCase), args.map(token), null)
       p.args = args.toVector
       p.topLevel = true
       p

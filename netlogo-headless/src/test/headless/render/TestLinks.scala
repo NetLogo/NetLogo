@@ -8,7 +8,7 @@ import MockGraphics._
 
 class TestLinks extends AbstractTestRenderer {
 
-  testUsingWorkspace("Links") { workspace: HeadlessWorkspace =>
+  testUsingWorkspace("Links") { (workspace: HeadlessWorkspace) =>
     workspace.command("cro 2 [ create-links-with other turtles fd 1 ]")
     val g = new MockGraphics(this)
     workspace.renderer.resetCache( 12.0 )
@@ -19,7 +19,7 @@ class TestLinks extends AbstractTestRenderer {
                           Image(Location(60.0, 72.0), Size(12.0, 12.0))))
   }
 
-  testUsingWorkspace("More links", radius=16){ workspace: HeadlessWorkspace =>
+  testUsingWorkspace("More links", radius=16){ (workspace: HeadlessWorkspace) =>
     workspace.command("create-turtles 2 [ ht setxy ((who - 1) * 5) 0 ] ask turtle 0 [ create-link-with turtle 1 ]")
     val g = new MockGraphics(this)
     val agent = workspace.world.turtles.getAgent(0: java.lang.Double)
@@ -30,7 +30,7 @@ class TestLinks extends AbstractTestRenderer {
       Line(Location(-91.92857142857143,214.5),Location(214.5,214.5))))
   }
 
-  testUsingWorkspace("Draw link with no mini view", radius=10){ workspace: HeadlessWorkspace =>
+  testUsingWorkspace("Draw link with no mini view", radius=10){ (workspace: HeadlessWorkspace) =>
     workspace.command("create-turtles 1 [ ht setxy -6 0 ] " +
                                "create-turtles 1 [ ht setxy 6 0 ] " +
                                "ask turtle 0 [ create-link-with turtle 1 ]")
@@ -42,7 +42,7 @@ class TestLinks extends AbstractTestRenderer {
       Line(Location(255.0,105.0),Location(165.0,105.0))))
   }
 
-  testUsingWorkspace("Links in Mini view (10)", radius=10){ workspace: HeadlessWorkspace =>
+  testUsingWorkspace("Links in Mini view (10)", radius=10){ (workspace: HeadlessWorkspace) =>
     workspace.command("create-turtles 1 [ ht setxy -6 0 ] " +
                                "create-turtles 1 [ ht setxy 6 0 ] " +
                                "ask turtle 0 [ create-link-with turtle 1 ]")

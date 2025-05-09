@@ -10,4 +10,3 @@ trait TokenMapperInterface {
   def allCommandNames: Set[String]
   def allReporterNames: Set[String]
 }
-

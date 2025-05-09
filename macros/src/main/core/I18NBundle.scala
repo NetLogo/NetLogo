@@ -2,25 +2,32 @@
 
 package org.nlogo.core
 
-import scala.language.experimental.macros
-import scala.reflect.macros.blackbox.{ Context => BlackBoxContext}
-
 import java.util.{ Locale, ResourceBundle }
 
-object I18NBundle {
-  def errorBundle: Map[String, String] = macro i18nbundle
+import scala.quoted.*
 
-  def i18nbundle(c: BlackBoxContext): c.Tree = {
-    import c.universe._
+object I18NBundle {
+
+  inline def errorBundle: Map[String, String] = ${ i18nbundle }
+
+  private def i18nbundle(using Quotes): Expr[Map[String, String]] = {
+
+    import scala.jdk.CollectionConverters.SetHasAsScala
+
     // Limitation - this is US-only at the moment
     // It can be made more robust, but we need some way to feed in
     // the current locale that doesn't rely on java.util.Locale
-    import scala.jdk.CollectionConverters.SetHasAsScala
     val bundle = ResourceBundle.getBundle("i18n.Errors", Locale.US)
-    val localizedStringMap = bundle
-      .keySet
-      .asScala
-      .map(k => q"$k -> ${bundle.getString(k)}")
-    q"Map(..$localizedStringMap)"
+
+    val localizedStringMap =
+      bundle
+        .keySet
+        .asScala
+        .map(k => k -> bundle.getString(k))
+        .toMap
+
+    Expr(localizedStringMap)
+
   }
+
 }

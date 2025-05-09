@@ -11,7 +11,7 @@ import org.scalatestplus.scalacheck.ScalaCheckPropertyChecks
 class UtilsTests extends AnyFunSuite {
   test("getStackTrace") {
     val expected = "java.lang.Throwable\n" +
-      " at org.nlogo.util.UtilsTests.$anonfun$new$1(UtilsTests.scala:"
+      " at org.nlogo.util.UtilsTests.testFun$proxy1$1(UtilsTests.scala:"
     assert(Utils.getStackTrace(new Throwable).filter(_!='\r').take(expected.size) === expected)
   }
 }

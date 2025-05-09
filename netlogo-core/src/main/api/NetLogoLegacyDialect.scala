@@ -2,8 +2,8 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.{ AgentVariableSet, DefaultTokenMapper, Dialect, Resource,
-  TokenMapperInterface => CoreTokenMapperInterface, Command => CoreCommand, Instruction => CoreInstruction, Reporter => CoreReporter, Syntax }
+import org.nlogo.core.{ AgentVariableSet, Command, Dialect, Femto, Instruction, Reporter, Resource, Syntax,
+                        TokenMapperInterface }
 
 import scala.collection.immutable.ListMap
 
@@ -19,7 +19,7 @@ object NetLogoLegacyDialect extends Dialect {
 
   def isAvailable = getClass.getResource(NetLogoLegacyDialectTokenMapper.path) != null
 
-  case class _magicopen(name: Option[String]) extends CoreCommand {
+  case class _magicopen(name: Option[String]) extends Command {
     def syntax = Syntax.commandSyntax(
       agentClassString = "O---",
       right = name.map(_ => List()).getOrElse(List(Syntax.StringType)))
@@ -28,8 +28,8 @@ object NetLogoLegacyDialect extends Dialect {
 
 import NetLogoLegacyDialect._magicopen
 
-trait DelegatingMapper extends CoreTokenMapperInterface {
-  def defaultMapper: CoreTokenMapperInterface
+trait DelegatingMapper extends TokenMapperInterface {
+  def defaultMapper: TokenMapperInterface
   def path:    String
   def pkgName: String
 
@@ -50,7 +50,7 @@ trait DelegatingMapper extends CoreTokenMapperInterface {
   private def instantiate[T](name: String) =
     Class.forName(name).getDeclaredConstructor().newInstance().asInstanceOf[T]
 
-  private def magicOpenToken(s: String): Option[CoreCommand] =
+  private def magicOpenToken(s: String): Option[Command] =
     if (s.startsWith("___") && s.length > 3)
       Some(_magicopen(Some(s.stripPrefix("___"))))
     else if (s.equalsIgnoreCase("_magic-open"))
@@ -58,23 +58,23 @@ trait DelegatingMapper extends CoreTokenMapperInterface {
     else
       None
 
-  def overrideBreedInstruction(primName: String, breedName: String): Option[CoreInstruction] = None
+  def overrideBreedInstruction(primName: String, breedName: String): Option[Instruction] = None
 
-  def getCommand(s: String): Option[CoreCommand] =
-    commands.get(s.toUpperCase).map(instantiate[CoreCommand]) orElse
+  def getCommand(s: String): Option[Command] =
+    commands.get(s.toUpperCase).map(instantiate[Command]) orElse
       magicOpenToken(s) orElse defaultMapper.getCommand(s)
 
-  def getReporter(s: String): Option[CoreReporter] =
-    reporters.get(s.toUpperCase).map(instantiate[CoreReporter]) orElse
+  def getReporter(s: String): Option[Reporter] =
+    reporters.get(s.toUpperCase).map(instantiate[Reporter]) orElse
       defaultMapper.getReporter(s)
 
-  def breedInstruction(primName: String, breedName: String): Option[CoreInstruction] =
+  def breedInstruction(primName: String, breedName: String): Option[Instruction] =
     overrideBreedInstruction(primName, breedName) orElse
       defaultMapper.breedInstruction(primName, breedName)
 }
 
 object NetLogoLegacyDialectTokenMapper extends DelegatingMapper {
-  val defaultMapper = DefaultTokenMapper
+  val defaultMapper = Femto.get[TokenMapperInterface]("org.nlogo.parse.TokenMapper")
   val path = "/system/tokens-legacy.txt"
   val pkgName = "org.nlogo.compile.prim"
 }

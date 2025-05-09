@@ -2,35 +2,43 @@
 
 package org.nlogo.window
 
-import java.awt.{ Component, EventQueue => AWTEventQueue, Frame }
+import java.awt.{ Component, EventQueue => AWTEventQueue, FileDialog => AwtFileDialog, Frame }
 import java.awt.event.ActionEvent
 import java.awt.image.BufferedImage
-import java.io.{ InputStream, Reader }
+import java.io.{ IOException, InputStream, PrintWriter, Reader }
 import java.lang.Thread
 import java.net.MalformedURLException
+import java.nio.file.Paths
+import java.util.concurrent.TimeoutException
 import javax.swing.{ AbstractAction, Action, Timer }
+import javax.swing.border.LineBorder
 
-import org.nlogo.agent.{ Agent, AgentSet, BooleanConstraint, Observer, OutputObject, SliderConstraint, World }
+import org.nlogo.agent.{ Agent, AgentSet, BooleanConstraint, ImporterJ, Observer, OutputObject, SliderConstraint,
+                         World }
 import org.nlogo.api.{ Agent => ApiAgent, AgentFollowingPerspective, CommandRunnable, ControlSet, DrawingInterface,
-                       Exceptions, FileIO, JobOwner, LogoException, ModelSections, ModelType, Perspective,
-                       PreviewCommands, RendererInterface, ReporterRunnable, SimpleJobOwner, TrailDrawerInterface,
-                       WorldPropertiesInterface }
-import org.nlogo.awt.EventQueue
+                       Exceptions, FileIO, JobOwner, LogoException, ModelReader, ModelSections, ModelSettings,
+                       ModelType, Perspective, PreviewCommands, RendererInterface, ReporterRunnable, SimpleJobOwner,
+                       TrailDrawerInterface, WorldPropertiesInterface }
+import org.nlogo.awt.{ EventQueue, Hierarchy, UserCancelException }
 import org.nlogo.core.{ AgentKind, CompilerException, File, I18N, Model, Shape, ShapeParser, UpdateMode,
                         WorldDimensions }
 import org.nlogo.nvm.{ Context, HaltException, Instruction, Procedure, Workspace }
 import org.nlogo.shape.ShapeConverter
-import org.nlogo.swing.{ ModalProgressTask, OptionPane, Utils }
+import org.nlogo.swing.{ CustomOptionPane, FileDialog, ModalProgressTask, OptionPane, ScrollPane, TextArea, Utils }
+import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.Event.LinkChild
 import org.nlogo.window.Events.{ AboutToQuitEvent, AddBooleanConstraintEvent, AddChooserConstraintEvent,
                                  AddInputBoxConstraintEvent, AddJobEvent, AddSliderConstraintEvent, AfterLoadEvent,
-                                 AppEvent, BeforeLoadEvent, CompiledEvent, Enable2DEvent, JobRemovedEvent,
-                                 JobStoppingEvent, OpenModelEvent, OutputEvent, PatchesCreatedEvent,
-                                 PeriodicUpdateEvent, RemoveConstraintEvent, RemoveAllJobsEvent, RemoveJobEvent,
-                                 RuntimeErrorEvent, TickStateChangeEvent }
-import org.nlogo.workspace.HubNetManagerFactory
+                                 AppEvent, BeforeLoadEvent, CompiledEvent, Enable2DEvent, ExportPlotEvent,
+                                 ExportWidgetEvent, JobRemovedEvent, JobStoppingEvent, LoadModelEvent, OpenModelEvent,
+                                 OutputEvent,  PatchesCreatedEvent, PeriodicUpdateEvent, RemoveConstraintEvent,
+                                 RemoveAllJobsEvent, RemoveJobEvent, RuntimeErrorEvent, TickStateChangeEvent }
+import org.nlogo.workspace.{ AbstractWorkspaceScala, ExportOutput, HubNetManagerFactory }
 
 import scala.collection.immutable.ListMap
+import scala.concurrent.{ Await, Future }
+import scala.concurrent.duration.{ Duration, MILLISECONDS }
+import scala.util.{ Failure, Success }
 
 object GUIWorkspace {
   sealed trait KioskLevel
@@ -45,12 +53,19 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
                             hubNetManagerFactory: HubNetManagerFactory, externalFileManager: ExternalFileManager,
                             listenerManager: NetLogoListenerManager, errorDialogManager: ErrorDialogManager,
                             controlSet: ControlSet)
-  extends GUIWorkspaceScala(world, hubNetManagerFactory, frame, externalFileManager, controlSet)
+  extends AbstractWorkspaceScala(world, hubNetManagerFactory)
   with LinkChild with AboutToQuitEvent.Handler with AddJobEvent.Handler with AfterLoadEvent.Handler
   with BeforeLoadEvent.Handler with JobStoppingEvent.Handler with RemoveAllJobsEvent.Handler
   with RemoveJobEvent.Handler with AddSliderConstraintEvent.Handler with RemoveConstraintEvent.Handler
   with AddBooleanConstraintEvent.Handler with AddChooserConstraintEvent.Handler with AddInputBoxConstraintEvent.Handler
-  with CompiledEvent.Handler with TrailDrawerInterface with DrawingInterface with ModelSections.ModelSaveable {
+  with CompiledEvent.Handler with ExportPlotEvent.Handler with ExportWidgetEvent.Handler with LoadModelEvent.Handler
+  with TrailDrawerInterface with DrawingInterface with ModelSections.ModelSaveable {
+
+  val viewManager = new ViewManager
+
+  val plotExportControls = new PlotExportControls(plotManager)
+
+  private var _snapOn: Boolean = true
 
   val viewWidget = new ViewWidget(this)
 
@@ -132,12 +147,17 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
   repaintTimer.start()
   lifeguard.start()
 
-  def getViewWidget: ViewWidget =
-    viewWidget
+  def getFrame: Frame =
+    frame
 
-  def init(glView: GLViewManagerInterface): Unit = {
+  def setSnapOn(snapOn: Boolean): Unit =
+    _snapOn = snapOn
+
+  def snapOn: Boolean =
+    _snapOn
+
+  def init(glView: GLViewManagerInterface): Unit =
     this.glView = glView
-  }
 
   def getGlView: GLViewManagerInterface =
     glView
@@ -185,8 +205,39 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
   override def importDrawingBase64(base64: String): Unit =
     view.renderer.trailDrawer.importDrawingBase64(base64)
 
+  override def importerErrorHandler: ImporterJ.ErrorHandler = new ImporterJ.ErrorHandler {
+    def showError(title: String, errorDetails: String, fatalError: Boolean): Boolean = {
+      EventQueue.mustBeEventDispatchThread()
+
+      val options = {
+        if (fatalError) {
+          OptionPane.Options.Ok
+        } else {
+          OptionPane.Options.OkCancel
+        }
+      }
+
+      val textArea = new TextArea(0, 0, errorDetails) {
+        setEditable(false)
+      }
+
+      val scrollPane = new ScrollPane(textArea) {
+        setBorder(new LineBorder(InterfaceColors.textAreaBorderNoneditable()))
+        setBackground(InterfaceColors.textAreaBackground())
+      }
+
+      new CustomOptionPane(getFrame, title, scrollPane, options).getSelectedIndex == 0
+    }
+  }
+
   override def exportDrawing(filename: String, format: String): Unit =
     FileIO.writeImageFile(view.renderer.trailDrawer.getAndCreateDrawing(true), filename, format)
+
+  override def exportDrawingToCSV(writer: PrintWriter): Unit =
+    view.renderer.trailDrawer.exportDrawingToCSV(writer)
+
+  override def exportOutputAreaToCSV(writer: PrintWriter): Unit =
+    new Events.ExportWorldEvent(writer).raise(this)
 
   def getAndCreateDrawing(): BufferedImage =
     getAndCreateDrawing(true)
@@ -803,6 +854,232 @@ abstract class GUIWorkspace(world: World, kioskLevel: GUIWorkspace.KioskLevel, f
 
   def handle(e: CompiledEvent): Unit =
     codeBits.clear()
+
+  def handle(e: LoadModelEvent): Unit = {
+    loadFromModel(e.model)
+
+    world.turtleShapes.replaceShapes(e.model.turtleShapes.map(ShapeConverter.baseShapeToShape))
+    world.linkShapes.replaceShapes(e.model.linkShapes.map(ShapeConverter.baseLinkShapeToLinkShape))
+
+    e.model.optionalSectionValue[ModelSettings]("org.nlogo.modelsection.modelsettings") match {
+      case Some(settings: ModelSettings) => setSnapOn(settings.snapToGrid)
+      case _ =>
+    }
+  }
+
+  def handle(e: ExportWidgetEvent): Unit = {
+    try {
+      val guessedName = guessExportName(e.widget.getDefaultExportName)
+      val exportPath = FileDialog.showFiles(e.widget, I18N.gui.get("menu.file.export"), AwtFileDialog.SAVE, guessedName)
+      val exportToPath = Future.successful(exportPath)
+
+      e.widget match {
+        case pw: PlotWidget =>
+          new ExportPlotEvent(PlotWidgetExport.ExportSinglePlot(pw.plot), exportPath, {() => }).raise(pw)
+
+        case ow: OutputWidget =>
+          exportToPath
+            .map((filename: String) => (filename, ow.valueText))(using SwingUnlockedExecutionContext)
+            .onComplete({
+              case Success((filename: String, text: String)) =>
+                ExportOutput.silencingErrors(filename, text)
+              case Failure(_) =>
+            })(using NetLogoExecutionContext.backgroundExecutionContext)
+
+        case ib: InputBox =>
+          exportToPath
+            .map((filename: String) => (filename, ib.valueText))(using SwingUnlockedExecutionContext)
+            .map[Unit]({ // background
+              case (filename: String, text: String) => FileIO.writeFile(filename, text, true); ()
+            })(using NetLogoExecutionContext.backgroundExecutionContext).failed.foreach({ // on UI Thread
+              case ex: java.io.IOException =>
+                ExportControls.displayExportError(Hierarchy.getFrame(ib),
+                  I18N.gui.get("menu.file.export.failed"),
+                  I18N.gui.getN("tabs.input.export.error", ex.getMessage))
+              case _ =>
+            })(using SwingUnlockedExecutionContext)
+
+        case _ =>
+      }
+    } catch {
+      case uce: UserCancelException => Exceptions.ignore(uce)
+    }
+  }
+
+  private def plotExportOperation(e: ExportPlotEvent): Future[Unit] = {
+    def runAndComplete(f: () => Unit, onError: IOException => Unit): Unit = {
+      try {
+        f()
+      } catch {
+        case ex: IOException =>
+          e.onCompletion.run()
+          onError(ex)
+      } finally {
+        e.onCompletion.run()
+      }
+    }
+
+    e.plotExport match {
+      case PlotWidgetExport.ExportAllPlots =>
+        if (plotManager.getPlotNames.isEmpty) {
+          plotExportControls.sorryNoPlots(getFrame)
+          e.onCompletion.run()
+          Future.successful(())
+        } else
+          Future {
+            runAndComplete(
+              () => super.exportAllPlots(e.exportFilename),
+              (ex) => plotExportControls.allPlotExportFailed(getFrame, e.exportFilename, ex))
+          } (using new LockedBackgroundExecutionContext(world))
+
+      case PlotWidgetExport.ExportSinglePlot(plot) =>
+        Future {
+          runAndComplete(
+            () => super.exportPlot(plot.name, e.exportFilename),
+            (ex) => plotExportControls.singlePlotExportFailed(getFrame, e.exportFilename, plot, ex))
+        } (using new LockedBackgroundExecutionContext(world))
+    }
+  }
+
+  def handle(e: ExportPlotEvent): Unit =
+    plotExportOperation(e)
+
+  def getExportWindowFrame: Component =
+    viewManager.getPrimary.getExportWindowFrame
+
+  def exportView: BufferedImage =
+    viewManager.getPrimary.exportView
+
+  def exportView(filename: String, format: String): Unit = {
+    if (jobManager.onJobThread) {
+      val viewFuture = Future(viewManager.getPrimary.exportView)(using new SwingLockedExecutionContext(world))
+      val image = awaitFutureFromJobThread(viewFuture)
+
+      FileIO.writeImageFile(image, filename, format)
+    } else {
+      exportViewFromUIThread(filename, format)
+    }
+  }
+
+  def exportViewFromUIThread(filename: String, format: String, onCompletion: () => Unit = {() => }): Unit = {
+    val f = Future[BufferedImage](viewManager.getPrimary.exportView)(using new SwingLockedExecutionContext(world))
+
+    f.foreach { image =>
+      try {
+        FileIO.writeImageFile(image, filename, format)
+      } catch {
+        case ex: java.io.IOException =>
+          onCompletion()
+          ExportControls.displayExportError(getExportWindowFrame, ex.getMessage)
+      } finally {
+        onCompletion()
+      }
+    }(using NetLogoExecutionContext.backgroundExecutionContext)
+  }
+
+  def doExportView(exportee: LocalViewInterface): Unit = {
+    val exportPathOption =
+      try {
+        val userPath      = FileDialog.showFiles(getExportWindowFrame, I18N.gui.get("menu.file.export.view"),
+                                                 AwtFileDialog.SAVE, guessExportName("view.png"))
+        val extensionPath = FileIO.ensureExtension(userPath, "png")
+        val path          = Paths.get(extensionPath)
+
+        if (!path.toFile.exists || userPath == extensionPath) {
+          Some(extensionPath)
+        } else {
+          FileDialog.confirmFileOverwrite(frame, extensionPath)
+        }
+
+      } catch {
+        case ex: UserCancelException =>
+          Exceptions.ignore(ex)
+          None
+      }
+
+    exportPathOption.foreach { exportPath =>
+      ModalProgressTask.onBackgroundThreadWithUIData(
+        getFrame, I18N.gui.get("dialog.interface.export.task"), () => (exportee.exportView, exportPath),
+        { (data: (BufferedImage, String)) =>
+          data match {
+            case (exportedView, path) =>
+              try {
+                FileIO.writeImageFile(exportedView, path, "png")
+              } catch {
+                case ex: IOException =>
+                  ExportControls.displayExportError(getExportWindowFrame, ex.getMessage)
+              }
+        } })
+    }
+  }
+
+  private def awaitFutureFromJobThread[A](future: Future[A]): A = {
+    var res: Option[A] = None
+
+    while (res.isEmpty) {
+      world.synchronized { world.wait(50) }
+
+      try {
+        res = Some(awaitFuture(future, 1))
+      } catch {
+        case e: TimeoutException => // ignore
+      }
+    }
+
+    res.get
+  }
+
+  private def awaitFuture[A](future: Future[A], millis: Long): A =
+    Await.result(future, Duration(millis, MILLISECONDS))
+
+  def exportInterface(filename: String): Unit = {
+    if (jobManager.onJobThread) {
+      // we treat the job thread differently because it will be holding the world lock
+      FileIO.writeImageFile(awaitFutureFromJobThread(controlSet.userInterface), filename, "png")
+    } else {
+      exportInterfaceFromUIThread(filename)
+    }
+  }
+
+  def exportInterfaceFromUIThread(filename: String, onCompletion: () => Unit = { () => }): Unit = {
+    controlSet.userInterface.foreach { uiImage =>
+      try {
+        FileIO.writeImageFile(uiImage, filename, "png")
+      } catch {
+        case ex: IOException =>
+          onCompletion()
+          ExportControls.displayExportError(getExportWindowFrame, ex.getMessage)
+      } finally {
+        onCompletion()
+      }
+    }(using NetLogoExecutionContext.backgroundExecutionContext)
+  }
+
+  def exportOutput(filename: String): Unit = {
+    if (jobManager.onJobThread) {
+      val text = awaitFutureFromJobThread(controlSet.userOutput)
+      ExportOutput.throwingErrors(filename, text)
+    } else {
+      ModalProgressTask.onBackgroundThreadWithUIData(frame, I18N.gui.get("dialog.interface.export.task"),
+        () => controlSet.userOutput,
+        (textFuture: Future[String]) => ExportOutput.silencingErrors(filename, awaitFuture(textFuture, 1000)))
+    }
+  }
+
+  override def getSource(filename: String): String = {
+    if (filename == "")
+      throw new IllegalArgumentException("cannot provide source for empty filename")
+
+    externalFileManager.getSource(filename).getOrElse(super.getSource(filename))
+  }
+
+  override def guessExportName(defaultName: String): String = {
+    if (Option(getModelFileName).contains("empty." + ModelReader.modelSuffix)) {
+      defaultName
+    } else {
+      super.guessExportName(defaultName)
+    }
+  }
 
   /// agents
 

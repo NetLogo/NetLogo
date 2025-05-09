@@ -52,8 +52,9 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          GETSTATIC scala/Int$.MODULE$ : Lscala/Int$;
           ILOAD 6
-          I2L
+          INVOKEVIRTUAL scala/Int$.int2long (I)J
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -85,8 +86,9 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.workspace : Lorg/nlogo/nvm/Workspace;
           INVOKEINTERFACE org/nlogo/nvm/Workspace.plotRNG ()Lorg/nlogo/api/MersenneTwisterFast; (itf)
+          GETSTATIC scala/Int$.MODULE$ : Lscala/Int$;
           ILOAD 6
-          I2L
+          INVOKEVIRTUAL scala/Int$.int2long (I)J
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
          L4
          FRAME CHOP 1
@@ -262,6 +264,8 @@ procedure CATCH-SHEEP:[]{-T--}:
           IFEQ L4
           ALOAD 3
           CHECKCAST org/nlogo/agent/Turtle
+          ASTORE 4
+          ALOAD 4
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getPatchHere ()Lorg/nlogo/agent/Patch;
           GOTO L5
          L4
@@ -271,9 +275,13 @@ procedure CATCH-SHEEP:[]{-T--}:
           IFEQ L6
           ALOAD 3
           CHECKCAST org/nlogo/agent/Patch
+          ASTORE 5
+          ALOAD 5
           GOTO L5
          L6
          FRAME SAME
+          ALOAD 3
+          ASTORE 6
           NEW java/lang/IllegalStateException
           DUP
           INVOKESPECIAL java/lang/IllegalStateException.<init> ()V
@@ -285,50 +293,53 @@ procedure CATCH-SHEEP:[]{-T--}:
           GETFIELD org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0.world : Lorg/nlogo/agent/World;
           LDC "SHEEP"
           INVOKEVIRTUAL org/nlogo/agent/World.getBreed (Ljava/lang/String;)Lorg/nlogo/agent/TreeAgentSet;
-          ASTORE 4
+          ASTORE 7
           NEW org/nlogo/agent/AgentSetBuilder
           DUP
           GETSTATIC org/nlogo/core/AgentKind$Turtle$.MODULE$ : Lorg/nlogo/core/AgentKind$Turtle$;
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Patch.turtleCount ()I
           INVOKESPECIAL org/nlogo/agent/AgentSetBuilder.<init> (Lorg/nlogo/core/AgentKind;I)V
-          ASTORE 5
+          ASTORE 8
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Patch.turtlesHere ()Ljava/lang/Iterable;
           INVOKEINTERFACE java/lang/Iterable.iterator ()Ljava/util/Iterator; (itf)
-          ASTORE 6
+          ASTORE 9
          L7
-         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent org/nlogo/agent/TreeAgentSet org/nlogo/agent/AgentSetBuilder java/util/Iterator] []
-          ALOAD 6
+         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/Patch org/nlogo/agent/Agent T T T org/nlogo/agent/TreeAgentSet org/nlogo/agent/AgentSetBuilder java/util/Iterator] []
+          ALOAD 9
           INVOKEINTERFACE java/util/Iterator.hasNext ()Z (itf)
           IFEQ L8
-          ALOAD 6
+          ALOAD 9
           INVOKEINTERFACE java/util/Iterator.next ()Ljava/lang/Object; (itf)
           CHECKCAST org/nlogo/agent/Turtle
-          ASTORE 7
-          ALOAD 7
+          ASTORE 10
+          ALOAD 10
           INVOKEVIRTUAL org/nlogo/agent/Turtle.getBreed ()Lorg/nlogo/agent/TreeAgentSet;
-          ALOAD 4
-          IF_ACMPNE L7
-          ALOAD 5
           ALOAD 7
+          IF_ACMPNE L9
+          ALOAD 8
+          ALOAD 10
           INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.add (Lorg/nlogo/agent/Agent;)V
           GOTO L7
-         L8
-         FRAME SAME
-          ALOAD 5
-          INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.build ()Lorg/nlogo/agent/IndexedAgentSet;
          L9
+         FRAME APPEND [org/nlogo/agent/Turtle]
+          GOTO L7
+         L8
+         FRAME CHOP 1
+          ALOAD 8
+          INVOKEVIRTUAL org/nlogo/agent/AgentSetBuilder.build ()Lorg/nlogo/agent/IndexedAgentSet;
+         L10
           ASTORE 2
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.count ()I
           ISTORE 3
           ILOAD 3
-          IFNE L10
+          IFNE L11
           GETSTATIC org/nlogo/core/Nobody$.MODULE$ : Lorg/nlogo/core/Nobody$;
-          GOTO L11
-         L10
-         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet I org/nlogo/agent/TreeAgentSet org/nlogo/agent/AgentSetBuilder java/util/Iterator] []
+          GOTO L12
+         L11
+         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context org/nlogo/agent/IndexedAgentSet I T T T org/nlogo/agent/TreeAgentSet org/nlogo/agent/AgentSetBuilder java/util/Iterator] []
           ALOAD 2
           ILOAD 3
           ALOAD 1
@@ -337,7 +348,7 @@ procedure CATCH-SHEEP:[]{-T--}:
           ILOAD 3
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.nextInt (I)I
           INVOKEVIRTUAL org/nlogo/agent/AgentSet.randomOne (II)Lorg/nlogo/agent/Agent;
-         L11
+         L12
          FRAME SAME1 java/lang/Object
           ASTORE 2
          L0
@@ -347,9 +358,9 @@ procedure CATCH-SHEEP:[]{-T--}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setTurtleVariable (ILjava/lang/Object;)V
          L1
-          GOTO L12
+          GOTO L13
          L2
-         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context java/lang/Object I org/nlogo/agent/TreeAgentSet org/nlogo/agent/AgentSetBuilder java/util/Iterator] [org/nlogo/api/AgentException]
+         FRAME FULL [org/nlogo/prim/_asm_procedurecatchsheep_setturtlevariable_0 org/nlogo/nvm/Context java/lang/Object I T T T org/nlogo/agent/TreeAgentSet org/nlogo/agent/AgentSetBuilder java/util/Iterator] [org/nlogo/api/AgentException]
           ASTORE 3
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -359,12 +370,12 @@ procedure CATCH-SHEEP:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L12
+         L13
          FRAME SAME
           ALOAD 1
           ICONST_1
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L13
+         L14
           RETURN
 [1]_asm_procedurecatchsheep_if_1 "if prey != nobody ask prey [ set energy -1 ] [ set energy energy + wolf-metabolism ]" boolean => void
       _notequal "prey != nobody" Object,Object => boolean
@@ -857,41 +868,46 @@ procedure EAT-GRASS:[]{-T--}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L3
-         FRAME SAME1 java/lang/Object
-          LDC 55.0D
          L4
+         FRAME FULL [] [java/lang/Throwable]
+          NOP
+          NOP
+          ATHROW
+         L3
+         FRAME FULL [org/nlogo/prim/_asm_procedureeatgrass_if_0 org/nlogo/nvm/Context] [java/lang/Object]
+          LDC 55.0D
+         L5
           DSTORE 3
           ASTORE 2
           ALOAD 2
           INSTANCEOF java/lang/Double
-          IFEQ L5
+          IFEQ L6
           DLOAD 3
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DCMPL
-          IFNE L5
+          IFNE L6
           ICONST_1
-          GOTO L6
-         L5
+          GOTO L7
+         L6
          FRAME APPEND [java/lang/Object D]
           ICONST_0
-         L6
+         L7
          FRAME SAME1 I
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L7
+          IFEQ L8
           ICONST_1
-          GOTO L8
-         L7
+          GOTO L9
+         L8
          FRAME FULL [org/nlogo/prim/_asm_procedureeatgrass_if_0 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context]
           ICONST_3
-         L8
+         L9
          FRAME FULL [org/nlogo/prim/_asm_procedureeatgrass_if_0 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L9
+         L10
           RETURN
 [1]_asm_procedureeatgrass_setpatchvariable_1 "set pcolor brown" Object => void
       _constdouble:35.0 "brown" => Double
@@ -1972,35 +1988,40 @@ procedure GRAPH:[]{OTPL}:
                 INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
                 INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
                 ATHROW
-               L3
-               FRAME SAME1 java/lang/Object
-                LDC 55.0D
                L4
+               FRAME FULL [] [java/lang/Throwable]
+                NOP
+                NOP
+                ATHROW
+               L3
+               FRAME FULL [org/nlogo/prim/_asm_proceduregraph_equal_7 org/nlogo/nvm/Context] [java/lang/Object]
+                LDC 55.0D
+               L5
                 DSTORE 3
                 ASTORE 2
                 ALOAD 2
                 INSTANCEOF java/lang/Double
-                IFEQ L5
+                IFEQ L6
                 DLOAD 3
                 ALOAD 2
                 CHECKCAST java/lang/Double
                 INVOKEVIRTUAL java/lang/Double.doubleValue ()D
                 DCMPL
-                IFNE L5
+                IFNE L6
                 ICONST_1
-                GOTO L6
-               L5
+                GOTO L7
+               L6
                FRAME APPEND [java/lang/Object D]
                 ICONST_0
-               L6
-               FRAME SAME1 I
-                IFEQ L7
-                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
-                GOTO L8
                L7
+               FRAME SAME1 I
+                IFEQ L8
+                GETSTATIC java/lang/Boolean.TRUE : Ljava/lang/Boolean;
+                GOTO L9
+               L8
                FRAME SAME
                 GETSTATIC java/lang/Boolean.FALSE : Ljava/lang/Boolean;
-               L8
+               L9
                FRAME SAME1 java/lang/Boolean
                 ARETURN
         _constdouble:4.0 "4" => double
@@ -2152,41 +2173,46 @@ procedure GROW-GRASS:[]{-TP-}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L3
-         FRAME SAME1 java/lang/Object
-          LDC 35.0D
          L4
+         FRAME FULL [] [java/lang/Throwable]
+          NOP
+          NOP
+          ATHROW
+         L3
+         FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_if_0 org/nlogo/nvm/Context] [java/lang/Object]
+          LDC 35.0D
+         L5
           DSTORE 3
           ASTORE 2
           ALOAD 2
           INSTANCEOF java/lang/Double
-          IFEQ L5
+          IFEQ L6
           DLOAD 3
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DCMPL
-          IFNE L5
+          IFNE L6
           ICONST_1
-          GOTO L6
-         L5
+          GOTO L7
+         L6
          FRAME APPEND [java/lang/Object D]
           ICONST_0
-         L6
+         L7
          FRAME SAME1 I
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L7
+          IFEQ L8
           ICONST_1
-          GOTO L8
-         L7
+          GOTO L9
+         L8
          FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_if_0 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context]
           BIPUSH 6
-         L8
+         L9
          FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_if_0 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L9
+         L10
           RETURN
 [1]_asm_proceduregrowgrass_ifelse_1 "(ifelse countdown <= 0 set pcolor green [ set countdown grass-delay ] [ set countdown countdown - 1 ])" boolean => void
       _lessorequal "countdown <= 0" Object,double => boolean
@@ -2214,30 +2240,35 @@ procedure GROW-GRASS:[]{-TP-}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L3
-         FRAME SAME1 java/lang/Object
-          DCONST_0
          L4
+         FRAME FULL [] [java/lang/Throwable]
+          NOP
+          NOP
+          ATHROW
+         L3
+         FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_ifelse_1 org/nlogo/nvm/Context] [java/lang/Object]
+          DCONST_0
+         L5
           DSTORE 3
           ASTORE 2
           ALOAD 2
           INSTANCEOF java/lang/Double
-          IFEQ L5
+          IFEQ L6
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DLOAD 3
           DCMPG
-          IFGT L6
+          IFGT L7
           ICONST_1
-          GOTO L7
-         L6
+          GOTO L8
+         L7
          FRAME APPEND [java/lang/Object D]
           ICONST_0
-         L7
+         L8
          FRAME SAME1 I
-          GOTO L8
-         L5
+          GOTO L9
+         L6
          FRAME SAME
           NEW org/nlogo/nvm/RuntimePrimitiveException
           DUP
@@ -2261,21 +2292,21 @@ procedure GROW-GRASS:[]{-TP-}:
           INVOKEINTERFACE org/nlogo/core/I18NJava.getN (Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String; (itf)
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L8
+         L9
          FRAME SAME1 I
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L9
+          IFEQ L10
           ICONST_2
-          GOTO L10
-         L9
+          GOTO L11
+         L10
          FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_ifelse_1 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context]
           ICONST_5
-         L10
+         L11
          FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_ifelse_1 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L11
+         L12
           RETURN
 [2]_asm_proceduregrowgrass_setpatchvariable_2 "set pcolor green" Object => void
       _constdouble:55.0 "green" => Double
@@ -2382,14 +2413,19 @@ procedure GROW-GRASS:[]{-TP-}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
+         L9
+         FRAME FULL [] [java/lang/Throwable]
+          NOP
+          NOP
+          ATHROW
          L8
-         FRAME SAME1 java/lang/Object
+         FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_setpatchvariable_5 org/nlogo/nvm/Context] [java/lang/Object]
           ASTORE 2
          L3
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
-          GOTO L9
+          GOTO L10
          L4
          FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_setpatchvariable_5 org/nlogo/nvm/Context java/lang/Object] [java/lang/ClassCastException]
           POP
@@ -2402,10 +2438,10 @@ procedure GROW-GRASS:[]{-TP-}:
           ALOAD 2
           INVOKESPECIAL org/nlogo/nvm/ArgumentTypeException.<init> (Lorg/nlogo/nvm/Context;Lorg/nlogo/nvm/Instruction;IILjava/lang/Object;)V
           ATHROW
-         L9
+         L10
          FRAME SAME1 D
           DCONST_1
-         L10
+         L11
           DSTORE 4
           DSTORE 2
           ALOAD 0
@@ -2414,7 +2450,7 @@ procedure GROW-GRASS:[]{-TP-}:
           DSUB
           ALOAD 1
           INVOKEVIRTUAL org/nlogo/prim/_asm_proceduregrowgrass_setpatchvariable_5.validDouble (DLorg/nlogo/nvm/Context;)D
-         L11
+         L12
           DSTORE 2
           NEW java/lang/Double
           DUP
@@ -2428,7 +2464,7 @@ procedure GROW-GRASS:[]{-TP-}:
           ALOAD 2
           INVOKEVIRTUAL org/nlogo/agent/Agent.setPatchVariable (ILjava/lang/Object;)V
          L6
-          GOTO L12
+          GOTO L13
          L7
          FRAME FULL [org/nlogo/prim/_asm_proceduregrowgrass_setpatchvariable_5 org/nlogo/nvm/Context java/lang/Double T D] [org/nlogo/api/AgentException]
           ASTORE 3
@@ -2440,12 +2476,12 @@ procedure GROW-GRASS:[]{-TP-}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L12
+         L13
          FRAME SAME
           ALOAD 1
           BIPUSH 6
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L13
+         L14
           RETURN
 [6]_asm_proceduregrowgrass_return_6 => void
          L0
@@ -3747,10 +3783,11 @@ procedure SETUP:[]{O---}:
           // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
+          GETSTATIC scala/Int$.MODULE$ : Lscala/Int$;
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setxy_14.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.worldWidth ()I
-          I2D
+          INVOKEVIRTUAL scala/Int$.int2double (I)D
          L4
           DSTORE 2
           ALOAD 0
@@ -3810,10 +3847,11 @@ procedure SETUP:[]{O---}:
           DCONST_0
          L9
          FRAME SAME1 D
+          GETSTATIC scala/Int$.MODULE$ : Lscala/Int$;
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setxy_14.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.worldHeight ()I
-          I2D
+          INVOKEVIRTUAL scala/Int$.int2double (I)D
          L11
           DSTORE 2
           ALOAD 0
@@ -4212,10 +4250,11 @@ procedure SETUP:[]{O---}:
           // parameter final  context
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
+          GETSTATIC scala/Int$.MODULE$ : Lscala/Int$;
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setxy_21.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.worldWidth ()I
-          I2D
+          INVOKEVIRTUAL scala/Int$.int2double (I)D
          L4
           DSTORE 2
           ALOAD 0
@@ -4275,10 +4314,11 @@ procedure SETUP:[]{O---}:
           DCONST_0
          L9
          FRAME SAME1 D
+          GETSTATIC scala/Int$.MODULE$ : Lscala/Int$;
           ALOAD 0
           GETFIELD org/nlogo/prim/_asm_proceduresetup_setxy_21.world : Lorg/nlogo/agent/World;
           INVOKEVIRTUAL org/nlogo/agent/World.worldHeight ()I
-          I2D
+          INVOKEVIRTUAL scala/Int$.int2double (I)D
          L11
           DSTORE 2
           ALOAD 0

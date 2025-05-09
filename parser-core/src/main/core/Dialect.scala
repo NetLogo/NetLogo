@@ -22,7 +22,7 @@ trait LowPriorityDialect {
 case object NetLogoCore extends Dialect {
   val is3D           = false
   val agentVariables = AgentVariables
-  val tokenMapper    = DefaultTokenMapper
+  val tokenMapper    = Femto.get[TokenMapperInterface]("org.nlogo.parse.TokenMapper")
 }
 
 trait AgentVariableSet {

@@ -5,7 +5,7 @@ package org.nlogo.prim.etc
 import org.nlogo.agent.{AgentSet, Turtle}
 import org.nlogo.nvm.{Context, Reporter}
 
-class _outlinkneighbor(private val breedName: String) extends Reporter {
+class _outlinkneighbor(breedName: String) extends Reporter {
   def this() = this(null)
 
   override def toString: String = s"${super.toString}:$breedName"

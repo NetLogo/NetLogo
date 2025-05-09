@@ -17,8 +17,10 @@ object JumpToDeclaration {
 
   def jumpToDeclaration(cursorPosition: Int, editorArea: JTextComponent): Unit = {
     findTokenContainingPosition(editorArea.getText(), cursorPosition).foreach { token =>
-      if (token.tpe == TokenType.Ident && !DefaultTokenMapper.allCommandNames.contains(token.text) &&
-          !DefaultTokenMapper.allReporterNames.contains(token.text)) {
+      val mapper = Femto.get[TokenMapperInterface]("org.nlogo.parse.TokenMapper")
+
+      if (token.tpe == TokenType.Ident && !mapper.allCommandNames.contains(token.text) &&
+          !mapper.allReporterNames.contains(token.text)) {
         val t = getDeclaration(token, editorArea.getText)
         t.foreach(token => {
           editorArea.select(token.start, token.end)

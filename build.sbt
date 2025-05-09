@@ -349,8 +349,7 @@ lazy val macros = (project in file("macros")).
   dependsOn(sharedResources).
   settings(commonSettings: _*).
   settings(scalaSettings: _*).
-  settings(scalastyleSettings: _*).
-  settings(libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value)
+  settings(scalastyleSettings: _*)
 
 lazy val parser = crossProject(JSPlatform, JVMPlatform).
   crossType(new CrossType {

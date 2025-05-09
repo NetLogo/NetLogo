@@ -2,35 +2,25 @@
 
 package org.nlogo.core
 
-import scala.language.experimental.macros
-import scala.reflect.macros.blackbox.{ Context => BlackBoxContext}
+import scala.quoted.*
+
+import scala.io.Source
 
 object Resource {
 
-  def asString(resourcePath: String): String = macro getString
+  def getResource(path: String): Source =
+    Source.fromURL(getClass.getResource(path))
 
-  def lines(resourcePath: String): Iterator[String] = macro getLines
+  inline def asString(resourcePath: String): String = ${ getString('resourcePath) }
 
-  def getString(c: BlackBoxContext)(resourcePath: c.Tree): c.Tree = {
-    import c.universe._
-    resourcePath match {
-      case q"${resource: String}" =>
-        val stringVal: String = getResource(resource).mkString
-        q"$stringVal"
-      case _ => c.abort(c.enclosingPosition, "Must supply a string literal to Resource.asString")
-    }
+  inline def lines(resourcePath: String): Seq[String] = ${ getLines('resourcePath) }
+
+  private def getString(using Quotes)(resourcePath: Expr[String]): Expr[String] = {
+    Expr(getResource(resourcePath.valueOrAbort).mkString)
   }
 
-  def getLines(c: BlackBoxContext)(resourcePath: c.Tree): c.Tree = {
-    import c.universe._
-    resourcePath match {
-      case q"${resource: String}" =>
-        val lines = getResource(resource).getLines().map(s => q"$s").toList
-        q"Seq(..$lines).iterator"
-      case _ => c.abort(c.enclosingPosition, "Must supply a string literal to Resource.lines")
-    }
+  private def getLines(using Quotes)(resourcePath: Expr[String]): Expr[Seq[String]] = {
+    Expr(getResource(resourcePath.valueOrAbort).getLines().toSeq)
   }
 
-  def getResource(path: String): io.Source =
-    io.Source.fromURL(getClass.getResource(path))
 }
