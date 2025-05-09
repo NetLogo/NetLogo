@@ -2,32 +2,26 @@
 
 package org.nlogo.core
 
-import scala.language.experimental.macros
-import scala.reflect.macros.blackbox.{ Context => BlackBoxContext}
+import scala.quoted.*
 
 object Femto {
-  def scalaSingleton[T](klass: String): T = macro dynamicCompanionObject[T]
 
-  def get[T](klass: String, args: Any*): T = macro dynamicConstructor[T]
+  inline def scalaSingleton[T](name: String): T = ${ dynamicCompanionObject[T]('name) }
 
-  def dynamicConstructor[T: c.WeakTypeTag](c: BlackBoxContext)(klass: c.Tree, args: c.Expr[Any]*): c.Tree = {
-    import c.universe._
-    klass match {
-      case q"${ objectName: String }" =>
-        val staticClass = c.mirror.staticClass(objectName)
-        q"new $staticClass(..$args)"
-      case other =>
-        q"""throw new IllegalStateException("Must supply a string literal to scalaSingleton")"""
-    }
+  inline def get[T](name: String, args: Any*): T = ??? // ${ dynamicConstructor[T]('name, 'args) }
+
+  def dynamicCompanionObject[T](name: Expr[String])(using Type[T])(using q: Quotes): Expr[T] = {
+    import q.reflect.*
+    Ref(Symbol.classSymbol(name.valueOrAbort + "$").companionModule).asExprOf[T]
   }
 
-  def dynamicCompanionObject[T: c.WeakTypeTag](c: BlackBoxContext)(klass: c.Tree): c.Tree = {
-    import c.universe._
-    klass match {
-      case q"${ objectName: String }" =>
-        val pkg = c.mirror.staticModule(objectName)
-        q"$pkg"
-      case _ => c.abort(c.enclosingPosition, "Must supply a string literal to scalaSingleton")
-    }
+  def dynamicConstructor[T](name: Expr[String], args: Expr[Seq[Any]])(using Type[T])(using q: Quotes): Expr[T] = {
+    import q.reflect.*
+
+    val clazz = Symbol.classSymbol(name.valueOrAbort)
+    val ctor  = clazz.primaryConstructor
+    New(TypeTree.ref(clazz)).select(ctor).appliedTo(args.asTerm).asExprOf[T]
+    // TODO: I think I should be using `appliedToArgs`, but I'm not sure how to turn `args` inside out
   }
+
 }
