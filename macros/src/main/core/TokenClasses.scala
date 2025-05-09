@@ -37,6 +37,44 @@ object TokenClasses {
 
     import q.reflect.*
 
+    //val pp = $packagePrefix
+    //fileEntries.collect {
+    //  case (primName, className, true) =>
+
+    //    def newTOf(typ: Expr[Symbol]): Expr[T] =
+    //      New(TypeTree.ref($typ)).select($typ.primaryConstructor).appliedToNone.asExprOf[T]
+
+    //    val fullName = s"${pp}.${className}"
+    //    val clazz    = Symbol.classSymbol(fullName)
+
+    //    val lambda = (() => ${ newTOf('clazz) })
+
+    //    primName -> lambda
+
+    //}.toMap
+
+    //fileEntries.collect {
+    //  case (primName, className, true) =>
+
+    //    val lambdaType =
+    //      MethodType(List())(_ => TypeRepr.of[T])
+
+    //    val lambda =
+    //      Lambda(
+    //        owner = Symbol.spliceOwner
+    //      , tpe   = lambdaType
+    //      , rhsFn =
+    //        (sym, params) => {
+    //          val clazz = Symbol.classSymbol(${$packagePrefix} + "." + ${className})
+    //          val ctor  = clazz.primaryConstructor
+    //          New(TypeTree.ref(clazz)).select(ctor).appliedToNone
+    //        }
+    //      )
+
+    //    primName -> lambda.asExprOf[() => T]
+
+    //}.toMap
+
     //'{
     //  fileEntries.collect {
     //    case (primName, className, true) =>
@@ -44,7 +82,7 @@ object TokenClasses {
     //        (() => ${
     //          val clazz = Symbol.classSymbol(${$packagePrefix} + "." + ${className})
     //          val ctor  = clazz.primaryConstructor
-    //          //New(TypeTree.ref(clazz)).select(ctor).appliedToNone.asExprOf[T]
+    //          New(TypeTree.ref(clazz)).select(ctor).appliedToNone.asExprOf[T]
     //        })
     //      primName -> lambda
     //  }.toMap
