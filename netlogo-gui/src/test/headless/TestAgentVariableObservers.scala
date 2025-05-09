@@ -76,7 +76,7 @@ class TestAgentVariableObservers extends AbstractTestModels with GivenWhenThen {
     assertResult(world.turtles.count)(watcher.queue.size)
     And("those responses contain the new value")
     watcher.queue.foreach {
-      case (t: Turtle, vn: String, value: AnyRef) => assertResult(t.id)(value.asInstanceOf[Long])
+      case (t: Turtle, vn: String, value: Number) => assertResult(t.id)(value)
       case _ => fail("got response from non-turtle")
     }
     watcher.queue.clear()
@@ -87,7 +87,7 @@ class TestAgentVariableObservers extends AbstractTestModels with GivenWhenThen {
     assertResult(1)(watcher.queue.size)
     And("that response contains the new value")
     watcher.queue.foreach {
-      case (t: Turtle, vn: String, value: AnyRef) => assertResult(20)(value.asInstanceOf[Long])
+      case (t: Turtle, vn: String, value: Number) => assertResult(20)(value)
       case _ => fail("got response from non-turtle")
     }
     watcher.queue.clear()
@@ -98,7 +98,7 @@ class TestAgentVariableObservers extends AbstractTestModels with GivenWhenThen {
     assertResult(world.turtles.count)(watcher.queue.size)
     And("those responses contain the new value")
     watcher.queue.foreach {
-      case (t: Turtle, vn: String, value: AnyRef) => assertResult(t.id)(value.asInstanceOf[Long])
+      case (t: Turtle, vn: String, value: Number) => assertResult(t.id)(value)
       case _ => fail("Got response from non-turtle")
     }
     watcher.queue.clear()
@@ -109,7 +109,7 @@ class TestAgentVariableObservers extends AbstractTestModels with GivenWhenThen {
     assertResult(world.getBreed("DOGS").count)(watcher.queue.size)
     And("those responses contain the new value")
     watcher.queue.foreach {
-      case (t: Turtle, vn: String, value: AnyRef) => assertResult(t.id)(value.asInstanceOf[Long])
+      case (t: Turtle, vn: String, value: Number) => assertResult(t.id)(value)
       case _ => fail("Got response from non-turtle")
     }
     watcher.queue.clear()
@@ -121,8 +121,8 @@ class TestAgentVariableObservers extends AbstractTestModels with GivenWhenThen {
     assertResult(world.getBreed("DOGS").count + world.getBreed("CATS").count)(watcher.queue.size)
     And("those responses contain the new value")
     watcher.queue.foreach {
-      case (t: Turtle, vn: String, value: AnyRef) =>
-        assertResult(t.id)(value.asInstanceOf[Long])
+      case (t: Turtle, vn: String, value: Number) =>
+        assertResult(t.id)(value)
         assertResult("MY-SHARED-VAR")(vn)
       case _ => fail("Got response from non-turtle")
     }
@@ -145,7 +145,7 @@ class TestAgentVariableObservers extends AbstractTestModels with GivenWhenThen {
     assertResult(world.patches.count)(watcher.queue.size)
     And("those responses contain the new value")
     watcher.queue.foreach {
-      case (p: Patch, vn: String, value: AnyRef) => assertResult(p.pxcor)(value.asInstanceOf[Long])
+      case (p: Patch, vn: String, value: Number) => assertResult(p.pxcor)(value)
       case _ => fail("Got response from non-patch")
     }
     watcher.queue.clear()

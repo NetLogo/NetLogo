@@ -53,6 +53,7 @@ abstract class ExtensionTests extends Finder {
 // don't use FixtureSuite here because we may need two fixtures, not just
 // one, and FixtureSuite assumes one - ST 8/7/13
 trait Finder extends AnyFunSuite  {
+  def extraTags: Seq[Tag] = Seq()
   def files: Iterable[(String, String)]
   def suiteName(f: File): String =
     if (f.getName == "tests.txt")
@@ -89,7 +90,7 @@ trait Finder extends AnyFunSuite  {
   for (t <- files.flatMap(Function.tupled(parseFile)) if isHeadlessTest(t))
     // by tagging each test with both its suite name and its full name,
     // we support both e.g. `tc Lists` and `tc Lists::Remove`
-    test(t.fullName, new Tag(t.suiteName){}, new Tag(t.fullName){}) {
+    test(t.fullName, Seq(new Tag(t.suiteName), new Tag(t.fullName)) ++ extraTags*) {
       for (mode <- t.modes)
         if (shouldRun(t, mode))
           runTest(t, mode)
