@@ -3,7 +3,7 @@
 package org.nlogo.parse
 
 import org.nlogo.core.{ CompilationOperand, DummyCompilationEnvironment, DummyExtensionManager,
-  DummyLibraryManager, CompilerException, Femto, StructureResults}
+  DummyLibraryManager, CompilerException, Femto, StructureResults }
 
 import org.nlogo._
 import org.scalatest.funsuite.AnyFunSuite
@@ -102,6 +102,22 @@ class StructureParserTests extends AnyFunSuite {
     val proc = results.procedures("FOO")
     assertResult(true)(proc.isReporter)
     assertResult("reporter procedure FOO:[]{OTPL}:\n")(proc.dump)
+  }
+
+  test("library") {
+    val results = compile("library [foo]")
+    assertResult(0)(results.procedures.size)
+    assertResult(1)(results.libraries.size)
+    assertResult("FOO")(results.libraries.head.name)
+    assertResult(None)(results.libraries.head.alias)
+  }
+
+  test("library with alias") {
+    val results = compile("library [foo [alias bar]]")
+    assertResult(0)(results.procedures.size)
+    assertResult(1)(results.libraries.size)
+    assertResult("FOO")(results.libraries.head.name)
+    assertResult(Some("BAR"))(results.libraries.head.alias)
   }
 
   test("includes") {
@@ -250,19 +266,85 @@ class StructureParserTests extends AnyFunSuite {
     expectError("to foo end globals []",
       "Keyword GLOBALS cannot be used in this context.") }
 
-  def compileAll(src: String, nlsSrc: String): StructureResults = {
+  def compileAll(src: String, nlsSrc1: String, nlsSrc2: String = ""): StructureResults = {
     StructureParser.parseSources(
       tokenizer,
       CompilationOperand( Map("" -> src), new DummyExtensionManager, new DummyLibraryManager
                         , new DummyCompilationEnvironment, subprogram = false),
-      (_, name) => if (name == "foo.nls") Some(("foo.nls", nlsSrc)) else None)
+      (_, name) =>
+        name match {
+          case "foo.nls" => Some(("foo.nls", nlsSrc1))
+          case "bar.nls" if nlsSrc2.nonEmpty => Some(("bar.nls", nlsSrc2))
+          case _ => None
+        })
   }
 
-  def expectParseAllError(src: String, error: String, nlsSrc: String = "") = {
+  def expectParseAllError(src: String, error: String, nlsSrc1: String = "", nlsSrc2: String = "") = {
     val e = intercept[CompilerException] {
-      compileAll(src, nlsSrc)
+      compileAll(src, nlsSrc1, nlsSrc2)
     }
     assertResult(error)(e.getMessage.takeWhile(_ != ','))
+  }
+
+  test("nonexistent library") {
+    expectParseAllError("""library [foobar]""", "Could not find foobar.nls")
+  }
+
+  test("library syntax returns correct results") {
+    val results = compileAll("""library [foo]""", "")
+    assert(results.libraries.nonEmpty || results.includedSources.nonEmpty)
+  }
+
+  test("library syntax detects duplicate imports") {
+    expectParseAllError("library [foo] library [bar] library [foo [alias baz]]", "Attempted to import a library multiple times")
+  }
+
+  test("library syntax detects import loops") {
+    expectParseAllError(
+      "library [foo]",
+      "Found a loop in the library import chain",
+      "library [bar]",
+      "library [foo]")
+  }
+
+  test("libraries syntax default alias") {
+    val src = """library [foo]"""
+    val nlsSrc = """
+to test
+  show 12345
+end
+    """
+    val results = compileAll(src, nlsSrc)
+    if (!results.procedures.contains("FOO:TEST")) {
+      fail()
+    }
+  }
+
+  test("library syntax custom alias") {
+    val src = """library [foo [alias bar]]"""
+    val nlsSrc = """
+to test
+  show 12345
+end
+    """
+    val results = compileAll(src, nlsSrc)
+    if (!results.procedures.contains("BAR:TEST")) {
+      fail()
+    }
+  }
+
+  test("library syntax merges globals and turtle vars") {
+    val src = """library [foo [alias bar]] globals [ a b c ] breed [ mice mouse ] turtles-own [ t1 t2 ] mice-own [ m1 m2 ]"""
+    val nlsSrc = "globals [ d f g ] turtles-own [ t3 t4 ] mice-own [ m3 m4 ]"
+    val results = compileAll(src, nlsSrc)
+    val expected = """globals [A B C BAR:D BAR:F BAR:G]
+interfaceGlobals []
+turtles-own [WHO COLOR HEADING XCOR YCOR SHAPE LABEL LABEL-COLOR BREED HIDDEN? SIZE PEN-SIZE PEN-MODE T1 T2 BAR:T3 BAR:T4]
+patches-own [PXCOR PYCOR PCOLOR PLABEL PLABEL-COLOR]
+links-own [END1 END2 COLOR LABEL LABEL-COLOR HIDDEN? BREED THICKNESS SHAPE TIE-MODE]
+breeds MICE = Breed(MICE, MOUSE, M1 M2 BAR:M3 BAR:M4, false)
+link-breeds"""
+    assertResult(expected)(results.program.dump.trim)
   }
 
   test("invalid included file") {

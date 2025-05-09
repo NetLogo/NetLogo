@@ -89,6 +89,8 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
 
   def getExtensionInfos = libraries
 
+  // TODO: maybe add methods for looking up modules and add it to the LibraryManager trait (in parser-core)
+
   override def lookupExtension(name: String, version: String): Option[LibraryInfo] =
     libraries.find(ext => ext.codeName == name)
 
@@ -163,8 +165,11 @@ class LibraryManager(userExtPath: Path, unloadExtensions: () => Unit) extends Co
           val bundled              = useBundled && bundledsConfig.hasPath(installedVersionPath) && installedVersion.isEmpty
           val minNetLogoVersion    = getStringOption(c, "minNetLogoVersion")
 
+          // Defaults to true for backwards compatibility.
+          val isExtension = if (c.hasPath("isExtension")) c.getBoolean("isExtension") else true
+
           LibraryInfo( name, codeName, shortDesc, longDesc, version, homepage, bundled, installedVersion
-                     , minNetLogoVersion, LibraryManager.branchURL)
+                     , minNetLogoVersion, LibraryManager.branchURL, isExtension)
 
       }.toSeq
 
