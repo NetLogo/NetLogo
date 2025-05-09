@@ -7,7 +7,6 @@ import PlotAction.{ PlotXY, SoftResetPen }
 import org.nlogo.core.PlotPenInterface
 import scala.collection.immutable
 import scala.collection.immutable.VectorBuilder
-import scala.math.{ log10, pow }
 
 // normally, to create a new Plot, you have to go through PlotManager.newPlot
 // this makes sense because the PlotManager then controls compilation
@@ -122,38 +121,20 @@ extends PlotInterface {
       growRangeY(y)
   }
 
-  private def prettyRange(range: Double): Double = {
-    if (range < 0) {
-      if (range > -1)
-        return -1
-
-      val tmag = pow(10, log10(-range).floor - 1) * 2
-
-      (range / tmag).floor * tmag
-    } else {
-      if (range < 1)
-        return 1
-
-      val tmag = pow(10, log10(range).floor - 1) * 2
-
-      (range / tmag).ceil * tmag
-    }
-  }
-
   def growRangeX(x: Double): Unit = {
     if (x > state.xMax)
-      state = state.copy(xMax = prettyRange(x))
+      state = state.copy(xMax = PlotHelper.expandRange(state.xMin, state.xMax, x))
 
     if (x < state.xMin)
-      state = state.copy(xMin = prettyRange(x))
+      state = state.copy(xMin = PlotHelper.expandRange(state.xMin, state.xMax, x))
   }
 
   def growRangeY(y: Double): Unit = {
     if (y > state.yMax)
-      state = state.copy(yMax = prettyRange(y))
+      state = state.copy(yMax = PlotHelper.expandRange(state.yMin, state.yMax, y))
 
     if (y < state.yMin)
-      state = state.copy(yMin = prettyRange(y))
+      state = state.copy(yMin = PlotHelper.expandRange(state.yMin, state.yMax, y))
   }
 
   def histogramActions(pen: PlotPenInterface, values: Seq[Double]): immutable.Seq[PlotAction] = {
