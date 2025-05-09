@@ -7,7 +7,9 @@ import org.nlogo.api.AgentException
 import org.nlogo.nvm.{ Context, Reporter }
 import org.nlogo.nvm.RuntimePrimitiveException
 
-class _patchvariabledouble(private var _vn: Int) extends Reporter {
+class _patchvariabledouble(vnInit: Int) extends Reporter {
+  // this used to be inlined in the constructor, but that confused MethodRipper for some reason (Isaac B 5/9/25)
+  private var _vn = vnInit
 
   def this() = this(0)
 
