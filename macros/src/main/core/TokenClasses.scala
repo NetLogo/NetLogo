@@ -12,7 +12,7 @@ import Resource.getResource
 // may be a way to get it working, especially as scala marches forward. RG 2/25/15
 object TokenClasses {
 
-  case class Entry(primName: String, className: String, isReporter: Boolean)
+  type Entry = (String, String, Boolean)
 
   private val fileEntries: Seq[Entry] =
     getResource("/system/tokens-core.txt")
@@ -21,8 +21,8 @@ object TokenClasses {
       .map {
         case l: String =>
           l.split(' ') match {
-            case Array("R", primName, className) => Entry(primName.toUpperCase, className,  true)
-            case Array("C", primName, className) => Entry(primName.toUpperCase, className, false)
+            case Array("R", primName, className) => (primName.toUpperCase, className,  true)
+            case Array("C", primName, className) => (primName.toUpperCase, className, false)
             case _                               => throw new IllegalStateException
           }
       }
@@ -37,65 +37,20 @@ object TokenClasses {
 
     import q.reflect.*
 
-    //val pp = $packagePrefix
-    //fileEntries.collect {
-    //  case (primName, className, true) =>
+    val entries = Expr(fileEntries)
 
-    //    def newTOf(typ: Expr[Symbol]): Expr[T] =
-    //      New(TypeTree.ref($typ)).select($typ.primaryConstructor).appliedToNone.asExprOf[T]
-
-    //    val fullName = s"${pp}.${className}"
-    //    val clazz    = Symbol.classSymbol(fullName)
-
-    //    val lambda = (() => ${ newTOf('clazz) })
-
-    //    primName -> lambda
-
-    //}.toMap
-
-    //fileEntries.collect {
-    //  case (primName, className, true) =>
-
-    //    val lambdaType =
-    //      MethodType(List())(_ => TypeRepr.of[T])
-
-    //    val lambda =
-    //      Lambda(
-    //        owner = Symbol.spliceOwner
-    //      , tpe   = lambdaType
-    //      , rhsFn =
-    //        (sym, params) => {
-    //          val clazz = Symbol.classSymbol(${$packagePrefix} + "." + ${className})
-    //          val ctor  = clazz.primaryConstructor
-    //          New(TypeTree.ref(clazz)).select(ctor).appliedToNone
-    //        }
-    //      )
-
-    //    primName -> lambda.asExprOf[() => T]
-
-    //}.toMap
-
-    //'{
-    //  fileEntries.collect {
-    //    case (primName, className, true) =>
-    //      val lambda =
-    //        (() => ${
-    //          val clazz = Symbol.classSymbol(${$packagePrefix} + "." + ${className})
-    //          val ctor  = clazz.primaryConstructor
-    //          New(TypeTree.ref(clazz)).select(ctor).appliedToNone.asExprOf[T]
-    //        })
-    //      primName -> lambda
-    //  }.toMap
-    //}
-
-    //'{
-    //  fileEntries.collect {
-    //    case (primName, className, true) =>
-    //      primName -> (() => Class.forName(s"${$packagePrefix}.${className}").newInstance.asInstanceOf[T])
-    //  }.toMap
-    //}
-
-    '{ Map[String, () => T]() }
+    '{
+      Map(
+        ${entries}.collect {
+          case (primName, className, true) =>
+            primName -> (() => ${
+              val clazz = Symbol.classSymbol(s"${packagePrefix.valueOrAbort}.etc._length")
+              val ctor  = clazz.primaryConstructor
+              New(TypeTree.ref(clazz)).select(ctor).appliedToNone.asExprOf[T]
+            })
+        }*
+      )
+    }
 
   }
 
@@ -104,45 +59,20 @@ object TokenClasses {
 
     import q.reflect.*
 
-    '{ Map[String, () => T]() }
+    val entries = Expr(fileEntries)
 
-    //'{
-    //  fileEntries.collect {
-    //    case (primName, className, false) =>
-    //      primName -> (() => Class.forName(s"${$packagePrefix}.${className}").newInstance.asInstanceOf[T])
-    //  }.toMap
-    //}
-
-    //val packageName = packagePrefix.valueOrAbort
-
-    //val mappings =
-    //  fileEntries.collect {
-    //    case CommandEntry(primName, className) =>
-    //      val clazz = Symbol.classSymbol(s"${packageName}.${className}")
-    //      val ctor  = clazz.primaryConstructor
-    //      '{ key -> (() => new clazz()) }
-    //      //'{ primName -> (() => New(TypeTree.ref(clazz)).select(ctor).appliedToNone.asExprOf[T]) }
-    //      //'{ primName -> (() => New(TypeTree.ref(clazz)).select(ctor).appliedToNone.asExprOf[T]) }
-    //      //primName -> (() => Class.forName(className).newInstance.asInstanceOf[T])
-    //  }
-
-    //'{ Map(${ Varargs[(String, () => T)](mappings) }*) }
-
-
-//   def compileCommandsInternal[T: c.WeakTypeTag](c: BlackBoxContext)(packagePrefix: c.Tree): c.Tree = {
-//     import c.universe._
-//     packagePrefix match {
-//       case q"${packageName: String}" =>
-//         val mapElems = FileEntries.collect {
-//           case ("C", commandName, className) => (commandName, className)
-//         }.map {
-//           case (key, className) =>
-//             val klass = c.mirror.staticClass(s"$packageName.$className")
-//             q"$key -> (() => new $klass())"
-//         }.toList
-//         q"Map(..$mapElems)"
-//       case _ => c.abort(c.enclosingPosition, "Must supply a string literal to compileReporters")
-//     }
+    '{
+      Map(
+        ${entries}.collect {
+          case (primName, className, false) =>
+            primName -> (() => ${
+              val clazz = Symbol.classSymbol(s"${packagePrefix.valueOrAbort}.etc._settopology")
+              val ctor  = clazz.primaryConstructor
+              New(TypeTree.ref(clazz)).select(ctor).appliedToNone.asExprOf[T]
+            })
+        }*
+      )
+    }
 
   }
 
@@ -196,7 +126,7 @@ object TokenClasses {
   }
 
   private def reverseProcedureMapInternal(using Quotes): Expr[Map[String, Seq[String]]] = {
-    val reverseMap = fileEntries.map { case Entry(pn, cn, _) => cn -> pn }.groupBy(_._1).view.mapValues(_.map(_._2)).toMap
+    val reverseMap = fileEntries.map { case (pn, cn, _) => cn -> pn }.groupBy(_._1).view.mapValues(_.map(_._2)).toMap
     Expr(reverseMap)
   }
 
