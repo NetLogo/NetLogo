@@ -2,7 +2,7 @@
 
 package org.nlogo.api
 
-import org.nlogo.core.{ AgentVariableSet, DefaultTokenMapper, Dialect, Resource,
+import org.nlogo.core.{ AgentVariableSet, TokenMapper, Dialect, Resource,
   TokenMapperInterface => CoreTokenMapperInterface, Command => CoreCommand, Instruction => CoreInstruction, Reporter => CoreReporter, Syntax }
 
 import scala.collection.immutable.ListMap
@@ -74,7 +74,7 @@ trait DelegatingMapper extends CoreTokenMapperInterface {
 }
 
 object NetLogoLegacyDialectTokenMapper extends DelegatingMapper {
-  val defaultMapper = DefaultTokenMapper
+  val defaultMapper = TokenMapper
   val path = "/system/tokens-legacy.txt"
   val pkgName = "org.nlogo.compile.prim"
 }

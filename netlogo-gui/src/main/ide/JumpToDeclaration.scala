@@ -17,8 +17,8 @@ object JumpToDeclaration {
 
   def jumpToDeclaration(cursorPosition: Int, editorArea: JTextComponent): Unit = {
     findTokenContainingPosition(editorArea.getText(), cursorPosition).foreach { token =>
-      if (token.tpe == TokenType.Ident && !DefaultTokenMapper.allCommandNames.contains(token.text) &&
-          !DefaultTokenMapper.allReporterNames.contains(token.text)) {
+      if (token.tpe == TokenType.Ident && !TokenMapper.allCommandNames.contains(token.text) &&
+          !TokenMapper.allReporterNames.contains(token.text)) {
         val t = getDeclaration(token, editorArea.getText)
         t.foreach(token => {
           editorArea.select(token.start, token.end)
