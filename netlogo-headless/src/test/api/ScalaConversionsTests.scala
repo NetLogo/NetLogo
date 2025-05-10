@@ -46,12 +46,12 @@ class ScalaConversionsTests extends AnyFunSuite {
   //case x: java.lang.Long => Double.box(x.doubleValue)
   test("JavaLong") { testConversion(Long.box(7.toLong) -> 7d) }
 
-  //case x: Array[_] => new LogoList(x map {toLogoObject _}: _*)
+  //case x: Array[?] => new LogoList(x map {toLogoObject _}*)
   test("ArrayOfInts") {
     testConversion(Array(1, 2, 3) -> LogoList(Double.box(1.0), Double.box(2.0), Double.box(3.0)))
   }
 
-  //case x: Seq[_] => new LogoList(x map {toLogoObject _}: _*)
+  //case x: Seq[?] => new LogoList(x map {toLogoObject _}*)
   test("SeqOfInts") {
     testConversion(List(1, 2, 3) -> LogoList(Double.box(1.0), Double.box(2.0), Double.box(3.0)))
   }

@@ -95,7 +95,7 @@ object WhiteSpace {
       }
 
       c.seq(
-        tagFunctionHeader _,
+        tagFunctionHeader,
         super.visitProcedureDefinition(proc)(_)
       ).through(
           sourceToPoint(proc.filename, proc.end),
@@ -116,27 +116,27 @@ object WhiteSpace {
 
       if (app.reporter.syntax.isInfix) {
         c.exitAnonymousProcedure.seq(
-          visitExpression(app.args.head, path, 0)(_),
+          visitExpression(app.args.head, path, 0)(using _),
           tagLeadingWhitespace(path, app.reporter.token.sourceLocation),
           app.args.zipWithIndex.tail.foldLeft(_) {
-            case (ctx, (arg, i)) => visitExpression(arg, path, i)(ctx)
+            case (ctx, (arg, i)) => visitExpression(arg, path, i)(using ctx)
           })
       } else if (app.reporter.isInstanceOf[_reporterlambda]) {
         c.enterAnonymousProcedure.seq(
           tagLeadingWhitespace(path, app.reporter.token.sourceLocation),
           arrowFrontMargin(app, path),
-          super.visitReporterApp(app, path)(_),
+          super.visitReporterApp(app, path)(using _),
           tagTrailingWhitespace(app, path)).exitAnonymousProcedure
       } else if (app.reporter.isInstanceOf[_commandlambda] && app.reporter.asInstanceOf[_commandlambda].argumentNames.nonEmpty) {
         c.enterAnonymousProcedure.seq(
           tagLeadingWhitespace(path, app.reporter.token.sourceLocation),
           arrowFrontMargin(app, path),
-          super.visitReporterApp(app, path)(_),
+          super.visitReporterApp(app, path)(using _),
           tagTrailingWhitespace(app, path)).exitAnonymousProcedure
       } else if (app.reporter.isInstanceOf[_commandlambda]) {
         c.enterAnonymousProcedure.seq(
           tagLeadingWhitespace(path, reporterSourceLocation(app)),
-          super.visitReporterApp(app, path)(_))
+          super.visitReporterApp(app, path)(using _))
       } else if (app.reporter.isInstanceOf[_const]) {
         c.through(
           sourceToPoint(app.filename, app.start, _ => true),
@@ -154,7 +154,7 @@ object WhiteSpace {
       } else {
         c.exitAnonymousProcedure.seq(
           tagLeadingWhitespace(path, reporterSourceLocation(app)),
-          super.visitReporterApp(app, path)(_))
+          super.visitReporterApp(app, path)(using _))
       }
     }
 
@@ -175,15 +175,15 @@ object WhiteSpace {
       def statementStart(s: Statement) = s.start max s.command.token.start
       c.seq(
         tagLeadingWhitespace(path, stmt.command.token.sourceLocation.copy(start = statementStart(stmt))),
-        super.visitStatement(stmt, path)(_))
+        super.visitStatement(stmt, path)(using _))
     }
 
     override def visitCommandBlock(blk: CommandBlock, path: AstPath)(implicit c: Context): Context = {
       val (leadBracket, tailBracket) = if (blk.synthetic || c.isAnonymousProcedureBlock) ("", "") else ("[", "]")
       c.seq(
         tagLeadingWhitespace(path, SourceLocation(blk.start, blk.start, blk.filename), leadBracket),
-        removeOpenBracket(blk) _,
-        (c2) => super.visitCommandBlock(blk, path)(c2.exitAnonymousProcedure),
+        removeOpenBracket(blk),
+        (c2) => super.visitCommandBlock(blk, path)(using c2.exitAnonymousProcedure),
         tagTrailingWhitespace(blk, path, tailBracket)(_))
     }
 
@@ -191,8 +191,8 @@ object WhiteSpace {
       val (leadBracket, tailBracket) = if (c.isAnonymousProcedureBlock) ("", "") else ("[", "]")
       c.seq(
         tagLeadingWhitespace(path, SourceLocation(blk.start, blk.start, blk.filename), leadBracket),
-        removeOpenBracket(blk) _,
-        (c2) => super.visitReporterBlock(blk, path)(c2),
+        removeOpenBracket(blk),
+        (c2) => super.visitReporterBlock(blk, path)(using c2),
         tagTrailingWhitespace(blk, path, tailBracket)(_))
     }
 
@@ -225,7 +225,7 @@ object WhiteSpace {
     private def sourceToPoint(
       filename: String,
       targetPoint: Int,
-      includeOnly: Token => Boolean = notBracket _)(c: Context): (String, Context) = {
+      includeOnly: Token => Boolean = notBracket)(c: Context): (String, Context) = {
       val (toks, c1) = tokensToPoint(filename, targetPoint)(c)
       val source = toks.filter(includeOnly).map(_.text).mkString("")
       (source, c1)

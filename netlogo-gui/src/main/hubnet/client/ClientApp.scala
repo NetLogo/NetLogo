@@ -55,9 +55,9 @@ object ClientApp {
 class ClientApp extends JFrame("HubNet") with ErrorHandler with ClientAppInterface {
   import ClientApp.localClientIndex
 
-  private var clientPanel: ClientPanel = _
-  private var loginDialog: LoginDialog = _
-  private var isLocal: Boolean = _
+  private var clientPanel: ClientPanel = null
+  private var loginDialog: LoginDialog = null
+  private var isLocal: Boolean = false
 
   setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE)
   setResizable(false)

@@ -40,7 +40,7 @@ private[compile] object CompilerMain {
     shouldAutoInstallLibs: Boolean = false
   ): (ListMap[String, Procedure], Program) = {
 
-    val oldProceduresListMap = ListMap[String, Procedure](oldProcedures.toSeq: _*)
+    val oldProceduresListMap = ListMap[String, Procedure](oldProcedures.toSeq*)
     val (topLevelDefs, feStructureResults) =
       frontEnd.frontEnd(CompilationOperand( sources, extensionManager, libManager, compilationEnv, program
                                           , oldProceduresListMap, subprogram, displayName
@@ -66,7 +66,7 @@ private[compile] object CompilerMain {
         .filterNot(_.isLambda)
         .map(p => p.name -> p)
 
-    val returnedProcedures = ListMap(newProcedures: _*) ++ oldProcedures
+    val returnedProcedures = ListMap(newProcedures*) ++ oldProcedures
     // only return top level procedures.
     // anonymous procedures can be reached via the children field on Procedure.
     (returnedProcedures, feStructureResults.program)

@@ -45,10 +45,10 @@ object PreviewCommands {
   def apply(source: String): PreviewCommands = {
     val strippedSource = source.stripTrailingWhiteSpace
     strippedSource.toLowerCase match {
-      case ""                              => Default
-      case Default.source                  => Default
-      case s if s startsWith Manual.source => Manual
-      case _                               => Custom(strippedSource)
+      case ""                               => Default
+      case Default.source                   => Default
+      case s if s.startsWith(Manual.source) => Manual
+      case _                                => Custom(strippedSource)
     }
   }
   def DEFAULT = Default // for access through GUIWorkspace.java

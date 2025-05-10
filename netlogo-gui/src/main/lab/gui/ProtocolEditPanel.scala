@@ -252,7 +252,7 @@ class ProtocolEditPanel(target: ProtocolEditable, compiler: CompilerServices, co
     name.requestFocus()
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(name, valueSets, repetitions, sequentialRunOrder, metrics, runMetricsEveryStep, runMetricsCondition,
         preExperimentCommands, setupCommands, goCommands, exitCondition, postRunCommands, postExperimentCommands,
         timeLimit)

@@ -142,7 +142,7 @@ class SliderEditPanel(target: SliderWidget, compiler: CompilerServices, colorize
     add(oldSize, c)
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameWrapper, minimumCode, incrementCode, maximumCode, value, units, vertical, oldSize)
 
   override def isResizable: Boolean = true

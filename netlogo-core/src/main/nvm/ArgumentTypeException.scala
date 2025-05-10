@@ -26,7 +26,7 @@ object ArgumentTypeException {
     badValue match {
       // if badValue is a Class object, then it's not REALLY a value at all -- it's just something
       // to tell us what kind of bad value was returned.
-      case c: Class[_] =>
+      case c: Class[?] =>
         Some(TypeNames.aName(ApiTypeNames.getTypeConstant(c)))
       case Nobody =>
         Some("NOBODY")

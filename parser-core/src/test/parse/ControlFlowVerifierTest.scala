@@ -5,7 +5,7 @@ package org.nlogo.parse
 import
   org.nlogo.core.{ Command, CommandBlock, Expression,
     Femto, FrontEndProcedure, prim, ProcedureDefinition,
-    SourceLocation, Statement, Statements, StructureDeclarations, Token, TokenDSL },
+    SourceLocation, Statement, Statements, StructureDeclarations, Token, TokenDSL, TokenMapping },
     prim.{ _ask, _carefully, _createturtles => _crt, _fd, _report, _run, _stop }
 
 import
@@ -55,16 +55,16 @@ class ControlFlowVerifierTest extends AnyFunSuite with ScalaCheckDrivenPropertyC
     new Statement(prim, args, SourceLocation(0, 0, "foo.nlogox"))
 
   def _if: Command =
-    Femto.get[Command]("org.nlogo.core.prim.etc._if")
+    TokenMapping.commandClassToInstance("org.nlogo.core.prim.etc._if").get
 
   def _ifelse: Command =
-    Femto.get[Command]("org.nlogo.core.prim.etc._ifelse")
+    TokenMapping.commandClassToInstance("org.nlogo.core.prim.etc._ifelse").get
 
   def _foreach: Command =
-    Femto.get[Command]("org.nlogo.core.prim.etc._foreach")
+    TokenMapping.commandClassToInstance("org.nlogo.core.prim.etc._foreach").get
 
   def _die: Command =
-    Femto.get[Command]("org.nlogo.core.prim.etc._die")
+    TokenMapping.commandClassToInstance("org.nlogo.core.prim.etc._die").get
 
   val genNestingPrim: Gen[Command] =
     Gen.oneOf(_if, _ifelse, _foreach)

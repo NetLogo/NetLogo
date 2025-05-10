@@ -12,14 +12,14 @@ import org.nlogo.swing.UserAction.{ ToolsCategory, ToolsDialogsGroup, KeyBinding
 import org.nlogo.theme.ThemeSync
 import org.nlogo.window.{ GUIWorkspace, EditDialogFactory, LabManagerInterface, MenuBarFactory }
 import org.nlogo.window.Events._
-import org.nlogo.workspace.{ CurrentModelOpener, WorkspaceFactory }
+import org.nlogo.workspace.WorkspaceFactory
 
 import scala.collection.mutable.ListBuffer
 
 class LabManager(val workspace:        GUIWorkspace,
                  dialogFactory:        EditDialogFactory,
                  menuFactory:          MenuBarFactory,
-                 val workspaceFactory: WorkspaceFactory with CurrentModelOpener,
+                 val workspaceFactory: WorkspaceFactory,
                  val modelLoader:      AbstractModelLoader)
   extends LabManagerInterface
   with CompiledEvent.Handler

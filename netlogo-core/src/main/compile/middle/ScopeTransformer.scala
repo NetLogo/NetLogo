@@ -18,8 +18,8 @@ class ScopeTransformer extends AstTransformer {
       case s: CompilerScoping if stmt.args.length > s.scopedBlockIndex =>
         stmt.args(s.scopedBlockIndex) match {
           case c: CommandBlock =>
-            val introducedLets = IntroducedLetFolder.visitExpression(c)(Set[Let]())
-            val closedLets = ClosedLetFolder.visitExpression(c)(Set[Let]())
+            val introducedLets = IntroducedLetFolder.visitExpression(c)(using Set[Let]())
+            val closedLets = ClosedLetFolder.visitExpression(c)(using Set[Let]())
             def tag[A <: TokenHolder](cmd: A): A = {
               val emptyToken =
                 Token("", TokenType.Command, cmd.getClass.getName)(SourceLocation(c.start, c.start, c.filename))
@@ -53,7 +53,7 @@ class ScopeTransformer extends AstTransformer {
 object IntroducedLetFolder extends AstFolder[Set[Let]] {
   override def visitStatement(stmt: Statement)(implicit lets: Set[Let]): Set[Let] = {
     stmt.command match {
-      case l: prim._let => super.visitStatement(stmt)(lets + l.let)
+      case l: prim._let => super.visitStatement(stmt)(using lets + l.let)
       case s: Scoping => lets
       case _ => super.visitStatement(stmt)
     }
@@ -64,12 +64,12 @@ object ClosedLetFolder extends AstFolder[Set[Let]] {
   override def visitReporterApp(app: ReporterApp)(implicit lets: Set[Let]): Set[Let] = {
     app.reporter match {
       case l: prim._commandlambda =>
-        super.visitReporterApp(app)(
+        super.visitReporterApp(app)(using
           lets ++ l.closedVariables.collect {
             case ClosedLet(let) => let
           })
       case l: prim._reporterlambda =>
-        super.visitReporterApp(app)(
+        super.visitReporterApp(app)(using
           lets ++ l.closedVariables.collect {
             case ClosedLet(let) => let
           })

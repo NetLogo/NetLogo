@@ -41,8 +41,9 @@ object Topology {
 
 }
 
-abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boolean)
-  extends Neighbors {
+trait Topology(val world: World) extends Neighbors {
+  def xWraps: Boolean
+  def yWraps: Boolean
 
   @throws(classOf[AgentException])
   def wrapX(x: Double): Double
@@ -308,7 +309,7 @@ abstract class Topology(val world: World, val xWraps: Boolean, val yWraps: Boole
 }
 
 trait XWraps extends Topology {
-  override val xWraps = true
+  val xWraps = true
 
   override def wrapX(x: Double): Double =
     Topology.wrap(x, world._minPxcor - 0.5, world._maxPxcor + 0.5)
@@ -345,7 +346,7 @@ trait XWraps extends Topology {
 }
 
 trait XBlocks extends Topology {
-  override val xWraps = false
+  val xWraps = false
 
   override def diffuseXBorder(amount: Double, vn: Int, fourWay: Boolean, scratch: Array[Array[Double]]): Unit = {
     val ww = world.worldWidth
@@ -380,7 +381,7 @@ trait XBlocks extends Topology {
 }
 
 trait YWraps extends Topology {
-  override val yWraps = true
+  val yWraps = true
 
   override def wrapY(y: Double): Double =
     Topology.wrap(y, world._minPycor - 0.5, world._maxPycor + 0.5)
@@ -419,7 +420,7 @@ trait YWraps extends Topology {
 }
 
 trait YBlocks extends Topology {
-  override val yWraps = false
+  val yWraps = false
 
   override def diffuseYBorder(amount: Double, vn: Int, fourWay: Boolean, scratch: Array[Array[Double]]): Unit = {
     val ww = world.worldWidth

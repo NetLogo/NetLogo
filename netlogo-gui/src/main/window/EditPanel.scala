@@ -13,7 +13,7 @@ import org.nlogo.theme.ThemeSync
 abstract class EditPanel(target: Editable) extends JPanel with Transparent with ThemeSync {
   setLayout(new GridBagLayout)
 
-  def propertyEditors: Seq[PropertyEditor[_]]
+  def propertyEditors: Seq[PropertyEditor[?]]
 
   def isResizable: Boolean = false
 

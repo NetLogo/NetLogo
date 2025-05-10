@@ -215,7 +215,7 @@ object AbstractWorkspaceTraits {
   }
 
 
-  trait Plotting { this: AbstractWorkspace with Evaluating =>
+  trait Plotting { this: AbstractWorkspace & Evaluating =>
 
     val plotRNG = this.world.mainRNG.clone
 
@@ -244,7 +244,7 @@ object AbstractWorkspaceTraits {
 
   }
 
-  trait Exporting extends Plotting { this: AbstractWorkspace with Evaluating =>
+  trait Exporting extends Plotting { this: AbstractWorkspace & Evaluating =>
 
     def exportDrawingToCSV(writer:PrintWriter): Unit
     def exportOutputAreaToCSV(writer:PrintWriter): Unit
@@ -270,12 +270,12 @@ object AbstractWorkspaceTraits {
         def `export`(writer: PrintWriter): Unit = {
           exportWorldNoMeta(writer)
         }
-      }.export("world", getModelFileName, "")
+      }.`export`("world", getModelFileName, "")
     }
 
     @throws(classOf[IOException])
     def exportWorld(writer: PrintWriter): Unit = {
-      AbstractExporter.exportWithHeader(writer, "world", getModelFileName, "")(exportWorldNoMeta _)
+      AbstractExporter.exportWithHeader(writer, "world", getModelFileName, "")(exportWorldNoMeta)
     }
 
     private def exportWorldNoMeta(writer: PrintWriter): Unit = {
@@ -292,7 +292,7 @@ object AbstractWorkspaceTraits {
         Dump.csv.encode(
           plotManager.currentPlot.map(_.name).getOrElse("")))
       plotManager.getPlotNames.foreach { name =>
-        new CorePlotExporter(plotManager.maybeGetPlot(name).orNull, Dump.csv).export(writer)
+        new CorePlotExporter(plotManager.maybeGetPlot(name).orNull, Dump.csv).`export`(writer)
         writer.println()
       }
     }
@@ -302,9 +302,9 @@ object AbstractWorkspaceTraits {
       new AbstractExporter(filename) {
         override def `export`(writer: PrintWriter): Unit = {
           exportInterfaceGlobals(writer)
-          new CorePlotExporter(plotManager.maybeGetPlot(plotName).orNull, Dump.csv).export(writer)
+          new CorePlotExporter(plotManager.maybeGetPlot(plotName).orNull, Dump.csv).`export`(writer)
         }
-      }.export("plot",getModelFileName,"")
+      }.`export`("plot",getModelFileName,"")
     }
 
     @throws(classOf[IOException])
@@ -314,11 +314,11 @@ object AbstractWorkspaceTraits {
           exportInterfaceGlobals(writer)
 
           plotManager.getPlotNames.foreach { name =>
-            new CorePlotExporter(plotManager.maybeGetPlot(name).orNull, Dump.csv).export(writer)
+            new CorePlotExporter(plotManager.maybeGetPlot(name).orNull, Dump.csv).`export`(writer)
             writer.println()
           }
         }
-      }.export("plots",getModelFileName,"")
+      }.`export`("plots",getModelFileName,"")
     }
 
     def exportInterfaceGlobals(writer: java.io.PrintWriter): Unit = {
@@ -439,7 +439,7 @@ object AbstractWorkspaceTraits {
       _extensionManager.importExtensionData(name, data, handler)
     }
 
-    private val libraryManager = new LibraryManager(APIEM.userExtensionsPath, _extensionManager.reset _)
+    private val libraryManager = new LibraryManager(APIEM.userExtensionsPath, _extensionManager.reset)
 
     override def getLibraryManager = libraryManager
 
@@ -734,7 +734,7 @@ object AbstractWorkspaceTraits {
 
   }
 
-  trait ExtensionCompilationEnvironment { this: Paths with Profiling =>
+  trait ExtensionCompilationEnvironment { this: Paths & Profiling =>
     import java.io.{ File => JFile }
     import java.net.MalformedURLException
     import java.net.URL

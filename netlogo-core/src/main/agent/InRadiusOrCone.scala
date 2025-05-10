@@ -7,8 +7,8 @@ import org.nlogo.core.AgentKind
 import java.util.{ArrayList, LinkedHashSet, HashSet => JHashSet, List => JList}
 
 class InRadiusOrCone private[agent](val world: World2D) extends World.InRadiusOrCone {
-  private[this] var patches: Array[Patch] = null // world.patches is not defined when this class is initiated
-  private[this] var end: Int = 0
+  private var patches: Array[Patch] = null // world.patches is not defined when this class is initiated
+  private var end: Int = 0
 
   override def inRadius(agent: Agent, sourceSet: AgentSet, radius: Double, wrap: Boolean): JList[Agent] = {
     val (worldWidth, worldHeight) = (world.worldWidth, world.worldHeight)

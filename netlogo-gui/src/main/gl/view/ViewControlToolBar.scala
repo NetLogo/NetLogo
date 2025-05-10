@@ -24,7 +24,7 @@ class ViewControlToolBar(view: View, inputHandler: MouseMotionHandler)
   private val moveButton = new ModeButton(I18N.gui("move"), TranslateMode)
   private val interactButton = new ModeButton(I18N.gui("interact"), InterfaceMode)
 
-  private val resetButton = new Button(I18N.gui("resetPerspective"), view.resetPerspective _)
+  private val resetButton = new Button(I18N.gui("resetPerspective"), view.resetPerspective)
   private val fullScreenButton = new Button(I18N.gui("fullScreen"), () => {
     val options = Seq(I18N.gui.get("common.buttons.continue"), I18N.gui.get("common.buttons.cancel"))
     val isWindows = System.getProperty("os.name").toLowerCase.startsWith("win")

@@ -223,8 +223,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   private[app] def getOutputWidget: OutputWidget = {
     getComponents.collect {
-      case w: WidgetWrapper if w.widget().isInstanceOf[OutputWidget] =>
-        w.widget().asInstanceOf[OutputWidget]
+      case w: WidgetWrapper if w.widget.isInstanceOf[OutputWidget] =>
+        w.widget.asInstanceOf[OutputWidget]
     }.headOption.orNull
   }
 
@@ -317,7 +317,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
         getWrappers.foreach(wrapper => wrapper.setHighlight(wrapper == topWrapper))
 
       case InterfaceMode.Delete =>
-        val topWrapper = wrapperAtPoint(e.getPoint).filter(_.widget().deleteable).getOrElse(null)
+        val topWrapper = wrapperAtPoint(e.getPoint).filter(_.widget.deleteable).getOrElse(null)
 
         getWrappers.foreach(wrapper => wrapper.setHighlight(wrapper == topWrapper))
 
@@ -380,7 +380,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
               getWrappers.foreach(wrapper => wrapper.setHighlight(wrapper == topWrapper))
 
             case InterfaceMode.Delete =>
-              val topWrapper = wrapperAtPoint(e.getPoint).filter(_.widget().deleteable).getOrElse(null)
+              val topWrapper = wrapperAtPoint(e.getPoint).filter(_.widget.deleteable).getOrElse(null)
 
               getWrappers.foreach(wrapper => wrapper.setHighlight(wrapper == topWrapper))
           }
@@ -602,7 +602,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
       case InterfaceMode.Edit =>
         if (e.getButton == MouseEvent.BUTTON1) {
-          wrapperAtPoint(e.getPoint).foreach(_.widget().getEditable match {
+          wrapperAtPoint(e.getPoint).foreach(_.widget.getEditable match {
             case e: Editable =>
               new EditWidgetEvent(e).raise(this)
 
@@ -623,7 +623,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       case InterfaceMode.Delete =>
         if (e.getButton == MouseEvent.BUTTON1) {
           wrapperAtPoint(e.getPoint).foreach { wrapper =>
-            if (wrapper.widget().deleteable)
+            if (wrapper.widget.deleteable)
               WidgetActions.removeWidget(this, wrapper)
           }
         } else {
@@ -779,11 +779,11 @@ class WidgetPanel(val workspace: GUIWorkspace)
     widgetWrapper.validate()
     widgetWrapper.syncTheme()
     widgetWrapper.setVisible(true)
-    widgetWrapper.widget().reAdd()
+    widgetWrapper.widget.reAdd()
 
     zoomer.zoomWidget(widgetWrapper, true, false, 1.0, zoomFactor)
     new CompileAllEvent().raise(this)
-    LogManager.widgetAdded(false, widgetWrapper.widget().classDisplayName, widgetWrapper.widget().displayName)
+    LogManager.widgetAdded(false, widgetWrapper.widget.classDisplayName, widgetWrapper.widget.displayName)
     widgetWrapper
   }
 
@@ -825,7 +825,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
       setInterfaceMode(InterfaceMode.Interact, false)
 
-      widget.widget().getEditable match {
+      widget.widget.getEditable match {
         case e: Editable =>
           new EditWidgetEvent(e).raise(this)
 
@@ -868,7 +868,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
             case ww: WidgetWrapper =>
               WidgetActions.addWidget(this, ww)
 
-              LogManager.widgetAdded(false, ww.widget().classDisplayName, ww.widget().displayName)
+              LogManager.widgetAdded(false, ww.widget.classDisplayName, ww.widget.displayName)
             case _ =>
           }
         case _ =>
@@ -879,8 +879,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   def deleteSelectedWidgets(): Unit = {
     val hitList = selectedWrappers.filter {
-      case w: WidgetWrapper => w.selected && w.widget().deleteable
-      case _ => false
+      case w: WidgetWrapper => w.selected && w.widget.deleteable
     }
     WidgetActions.removeWidgets(this, hitList)
   }
@@ -897,10 +896,10 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   protected def removeWidget(wrapper: WidgetWrapper): Unit = {
-    if (wrapper.widget() eq view)
+    if (wrapper.widget eq view)
       view = null
     remove(wrapper)
-    LogManager.widgetRemoved(false, wrapper.widget().classDisplayName, wrapper.widget().displayName)
+    LogManager.widgetRemoved(false, wrapper.widget.classDisplayName, wrapper.widget.displayName)
   }
 
   private[interfacetab] def multiSelected: Boolean =
@@ -1171,7 +1170,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
         // ev 1/18/07
         getComponents.foreach {
           case w: WidgetWrapper =>
-            if (w.widget().isInstanceOf[DummyPlotWidget] && e.widget.displayName == w.widget().displayName)
+            if (w.widget.isInstanceOf[DummyPlotWidget] && e.widget.displayName == w.widget.displayName)
               removeWidget(w)
           case _ =>
         }
@@ -1200,7 +1199,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   override def getWidgetsForSaving: Seq[CoreWidget] =
     getComponents.reverse.collect {
-      case w: WidgetWrapper => w.widget().model
+      case w: WidgetWrapper => w.widget.model
     }.distinct.toSeq
 
   override def allWidgets: Seq[CoreWidget] =
@@ -1219,7 +1218,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
   private[app] def contains(w: Editable): Boolean = {
     val isContained = getComponents.exists {
-      case ww: WidgetWrapper => ww.widget().getEditable == w
+      case ww: WidgetWrapper => ww.widget.getEditable == w
       case _                 => false
     }
     isContained
@@ -1288,7 +1287,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
   }
 
   def haltIfRunning(): Unit = {
-    if (getWrappers.exists(_.widget() match {
+    if (getWrappers.exists(_.widget match {
       case b: ButtonWidget if b.running => true
       case _ => false
     })) {
@@ -1345,8 +1344,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
 
       // resize all the widgets, must happen first or things can happen out of order for more complex layouts
       getWrappers.foreach { w =>
-        if (w.widget().oldSize) {
-          w.widget().oldSize(false)
+        if (w.widget.oldSize) {
+          w.widget.oldSize(false)
           w.setSize(new Dimension(w.getPreferredSize.width.max(w.getWidth), w.getPreferredSize.height.max(w.getHeight)))
         }
       }
@@ -1371,8 +1370,8 @@ class WidgetPanel(val workspace: GUIWorkspace)
     } else {
       // only resize widgets, no positions will be adjusted
       getWrappers.foreach { w =>
-        if (w.widget().oldSize) {
-          w.widget().oldSize(false)
+        if (w.widget.oldSize) {
+          w.widget.oldSize(false)
           w.setSize(new Dimension(w.getPreferredSize.width.max(w.getWidth), w.getPreferredSize.height.max(w.getHeight)))
         }
       }

@@ -26,7 +26,7 @@ object LexOperations {
       case (activePredicates, c)                  =>
         val results             = activePredicates.map(_(c))
         val remainingPredicates = (activePredicates zip results).filter(_._2 == Accept).map(_._1)
-        (remainingPredicates, results.reduce(_ or _))
+        (remainingPredicates, results.reduce(_.or(_)))
     }
 
   def chain(ds: LexPredicate*): LexPredicate = {

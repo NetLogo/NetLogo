@@ -86,19 +86,19 @@ object Loader {
     name match {
       case "org.nlogo.sdm.gui.WrappedStock" =>
         val stock = new Stock
-        stock.setName(tokens.string())
-        stock.setInitialValueExpression(tokens.string())
-        stock.setNonNegative(tokens.boolean())
+        stock.name = tokens.string()
+        stock.initialValueExpression = tokens.string()
+        stock.nonNegative = tokens.boolean()
         Some(stock)
       case "org.nlogo.sdm.gui.WrappedRate" =>
         val rate = new Rate
-        rate.setExpression(tokens.string())
-        rate.setName(tokens.string())
+        rate.expression = tokens.string()
+        rate.name = tokens.string()
         Some(rate)
       case "org.nlogo.sdm.gui.WrappedConverter" =>
         val converter = new Converter
-        converter.setExpression(tokens.string())
-        converter.setName(tokens.string())
+        converter.expression = tokens.string()
+        converter.name = tokens.string()
         Some(converter)
       case "org.nlogo.sdm.gui.AggregateDrawing" =>
         val model = new Model("Test Model", 1)
@@ -119,19 +119,20 @@ object Loader {
   private def setSourceSink(rate: Rate, tokens: Tokenizer, lineMap: LineMap): Unit = {
     tokens.next() match {
       case WordToken("REF") =>
-        rate.setSource(getSourceOrSink(tokens, lineMap))
-        rate.setSink(
+        rate.source = getSourceOrSink(tokens, lineMap)
+        rate.sink = {
           tokens.next() match {
             case WordToken("REF") =>
               getSourceOrSink(tokens, lineMap)
             case _ =>
               new Reservoir
-          })
+          }
+        }
       case _ =>
         tokens.next()
         tokens.next()
-        rate.setSink(getSourceOrSink(tokens, lineMap))
-        rate.setSource(getSourceOrSink(tokens, lineMap))
+        rate.sink = getSourceOrSink(tokens, lineMap)
+        rate.source = getSourceOrSink(tokens, lineMap)
     }
   }
 

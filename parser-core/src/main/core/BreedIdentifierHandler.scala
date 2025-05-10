@@ -60,13 +60,13 @@ object BreedIdentifierHandler {
     handlers.to(LazyList).flatMap(_.process(token, program)).headOption
 
   def breedCommands(breed: DeclBreed): Seq[String] =
-    handlers.collect(breedPrimitivesMatching(breed, Command) andThen refineName(breed) _)
+    handlers.collect(breedPrimitivesMatching(breed, Command) andThen refineName(breed))
 
   def breedReporters(breed: DeclBreed): Seq[String] =
-    handlers.collect(breedPrimitivesMatching(breed, Reporter) andThen refineName(breed) _)
+    handlers.collect(breedPrimitivesMatching(breed, Reporter) andThen refineName(breed))
 
   def breedHomonymProcedures(breed: DeclBreed): Seq[String] =
-    handlers.collect(primitivesNamedLike(breed) andThen refineName(breed) _).distinct
+    handlers.collect(primitivesNamedLike(breed) andThen refineName(breed)).distinct
 
   private def breedPrimitivesMatching(breed: DeclBreed, tokenType: TokenType): SpecMatcher =
     breedPrimsMatching(tokenType, breed, !matchesBreedName(_))

@@ -232,7 +232,7 @@ object LocalizationReport {
             // by applying the aruments
             arg.bundle.withLanguage(locale){
               try {
-                val translation = arg.bundle.getN(kaa.key, kaa.args: _*)
+                val translation = arg.bundle.getN(kaa.key, kaa.args*)
                 // check to see if the result contains any unapploed arguments (this form {N})
                 // if it does...well, thats funny. either we didnt apply enough arguments/
                 // or something else just went wrong, but no exception was thrown.

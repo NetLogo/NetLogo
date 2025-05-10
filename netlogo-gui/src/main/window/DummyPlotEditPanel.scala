@@ -158,7 +158,7 @@ class DummyPlotEditPanel(target: DummyPlotWidget) extends WidgetEditPanel(target
     nameOptions.requestFocus()
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(nameOptions, xLabel, xMin, xMax, yLabel, yMin, yMax, autoPlotX, autoPlotY, showLegend, oldSize)
 
   override def isResizable: Boolean = true

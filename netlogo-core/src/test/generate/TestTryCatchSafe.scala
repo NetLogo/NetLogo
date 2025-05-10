@@ -11,7 +11,7 @@ import org.nlogo.nvm.Reporter
 // Commands can have any try/catch blocks, but in Reporters use of them is restricted.
 
 class TestTryCatchSafe extends AnyFunSuite with AllPrimitivesTester {
-  override def filter(c: Class[_]) =
+  override def filter(c: Class[?]) =
     classOf[Reporter].isAssignableFrom(c)
   override def makeVisitor(method: Method): MethodVisitor =
     new EmptyMethodVisitor {

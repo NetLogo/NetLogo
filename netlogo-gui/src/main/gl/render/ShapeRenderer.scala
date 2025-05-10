@@ -13,7 +13,7 @@ private[render] class ShapeRenderer(world: World) {
   // supports the buffer and implement a workaround if not. - AZS 6/22/05
   var stencilSupport = false
 
-  var shapeManager: ShapeManager = _
+  var shapeManager: ShapeManager = null
 
   def renderWrappedAgent(gl: GL2, shape3D: GLShape, size: Double, color: java.awt.Color,
                          label: String, labelColor: AnyRef,

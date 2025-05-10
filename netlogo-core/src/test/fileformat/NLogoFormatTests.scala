@@ -86,7 +86,7 @@ class NLogoFormatConversionTest extends AnyFunSuite with ConversionHelper {
     def tryReadAndConvertModel(m: Model, conversions: Seq[ConversionSet]): ConversionResult = {
       val loader = testLoader
       val readModel = loader.readModel(loader.sourceString(m, "nlogo").get, "nlogo").get
-      tryConvert(readModel, conversions: _*)
+      tryConvert(readModel, conversions*)
     }
 
     def readAndConvertModel(m: Model, conversions: Seq[ConversionSet]): Model =
@@ -202,7 +202,7 @@ class LinkShapesComponentTest extends NLogoFormatTest[Seq[LinkShape]] {
 class ModelSettingsComponentTest extends NLogoFormatTest[ModelSettings] {
   def subject = NLogoModelSettings
   def modelComponent(model: Model): ModelSettings =
-    model.optionalSectionValue(NLogoModelSettings.componentName).get
+    model.optionalSectionValue(NLogoModelSettings.componentName).get.asInstanceOf[ModelSettings]
   def attachComponent(settings: ModelSettings): Model =
     Model().withOptionalSection(NLogoModelSettings.componentName, Some(settings), ModelSettings(false))
 

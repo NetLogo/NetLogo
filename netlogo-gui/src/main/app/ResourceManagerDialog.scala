@@ -205,7 +205,7 @@ class ResourceManagerDialog(parent: Frame, workspace: Workspace)
       add(label, c)
     }
 
-    def getListCellRendererComponent(list: JList[_ <: String], value: String, index: Int, isSelected: Boolean,
+    def getListCellRendererComponent(list: JList[? <: String], value: String, index: Int, isSelected: Boolean,
                                      hasFocus: Boolean): Component = {
       label.setText(value)
 

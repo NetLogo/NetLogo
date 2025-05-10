@@ -40,8 +40,8 @@ class Polygon(color: Color) extends Curve(color) with BasePolygon with Cloneable
 
   override def clone: AnyRef = {
     val newPoly: Polygon = super.clone.asInstanceOf[Polygon]
-    newPoly.xcoords = Array(ArraySeq.unsafeWrapArray(newPoly.xcoords): _*)
-    newPoly.ycoords = Array(ArraySeq.unsafeWrapArray(newPoly.ycoords): _*)
+    newPoly.xcoords = Array(ArraySeq.unsafeWrapArray(newPoly.xcoords)*)
+    newPoly.ycoords = Array(ArraySeq.unsafeWrapArray(newPoly.ycoords)*)
     newPoly
   }
 

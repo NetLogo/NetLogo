@@ -102,7 +102,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
   /// be editable
   override def classDisplayName = I18N.gui.get("tabs.run.widgets.input")
   protected val widgetLabel = new JLabel(I18N.gui.get("edit.input.previewName"))
-  if (boldName)
+  if (_boldName)
     widgetLabel.setFont(widgetLabel.getFont.deriveFont(Font.BOLD))
   protected var dialog: InputDialog = null
   private var _hasFocus = false
@@ -344,7 +344,7 @@ abstract class InputBox(textArea: AbstractEditorArea, editDialogTextArea: Abstra
               if (list.length > 3 && list(3).isInstanceOf[Double]) {
                 list(3).asInstanceOf[Double]
               } else {
-                RGBA.MaxAlpha
+                RGBA.MaxAlpha.toDouble
               }
 
             RGBA(r, g, b, a)

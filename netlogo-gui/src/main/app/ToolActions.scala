@@ -20,7 +20,7 @@ import org.nlogo.window.{ CopyOnly, JFXColorPicker, LinkRoot }
 import org.nlogo.workspace.AbstractWorkspaceScala
 
 abstract class ShowDialogAction(name: String) extends AbstractAction(name) with ThemeSync {
-  protected def createDialog(): JDialog with ThemeSync
+  protected def createDialog(): JDialog & ThemeSync
 
   lazy protected val createdDialog = createDialog()
 
@@ -57,7 +57,7 @@ with MenuAction {
   )
 }
 
-class ShowThemesDialog(frame: Frame with ThemeSync)
+class ShowThemesDialog(frame: Frame & ThemeSync)
   extends ShowDialogAction(I18N.gui.get("menu.tools.themes")) with MenuAction {
 
   category = ToolsCategory

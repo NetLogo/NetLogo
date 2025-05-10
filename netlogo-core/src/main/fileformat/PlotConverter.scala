@@ -148,38 +148,39 @@ class PlotConverter(
     literalParser,
     baseDialect,
     components,
-    PlotConverter.plotCodeConversions _) {
-      import PlotConverter._
+    PlotConverter.plotCodeConversions) {
 
-      override def apply(model: Model, modelPath: Path): ConversionResult = {
-        val plotRenames = determinePlotSubstitutions(allPlotNames(model))
-        val penRenames: Seq[(String, Seq[(String,String)])] = determinePenSubstitutions(allKeyedPenNames(model))
-        (plotRenames, penRenames) match {
-          case (Seq(), Seq()) => super.apply(model, modelPath)
-          case _ => { val conversion = super.apply(model, modelPath)
-            val convertPandPN: Model = convertPlotAndPenNames(conversion.model, plotRenames.toMap, penRenames.toMap)
-            conversion.updateModel(convertPandPN)
-          }
-        }
-      }
+  import PlotConverter._
 
-   private def convertPlotAndPenNames(
-      model:       Model,
-      plotRenames: Map[String, String],
-      penRenames:  Map[String, Seq[(String, String)]]): Model = {
-      val updatedWidgets = model.widgets.map{
-        case p: Plot => {
-          val newDisplay = p.display.map(currentName => plotRenames.getOrElse(currentName, currentName))
-          val localRenames = penRenames.getOrElse((p.display.getOrElse("")), Seq()).toMap
-          val newPens = p.pens.map {
-            pen =>
-              val newPenName = localRenames.getOrElse(pen.display, pen.display)
-              pen.copy(display = newPenName)
-          }
-          p.copy(display = newDisplay, pens = newPens)
-        }
-        case w => w
+  override def apply(model: Model, modelPath: Path): ConversionResult = {
+    val plotRenames = determinePlotSubstitutions(allPlotNames(model))
+    val penRenames: Seq[(String, Seq[(String,String)])] = determinePenSubstitutions(allKeyedPenNames(model))
+    (plotRenames, penRenames) match {
+      case (Seq(), Seq()) => super.apply(model, modelPath)
+      case _ => { val conversion = super.apply(model, modelPath)
+        val convertPandPN: Model = convertPlotAndPenNames(conversion.model, plotRenames.toMap, penRenames.toMap)
+        conversion.updateModel(convertPandPN)
       }
-     model.copy(widgets = updatedWidgets)
-   }
+    }
+  }
+
+  private def convertPlotAndPenNames(
+    model:       Model,
+    plotRenames: Map[String, String],
+    penRenames:  Map[String, Seq[(String, String)]]): Model = {
+    val updatedWidgets = model.widgets.map{
+      case p: Plot => {
+        val newDisplay = p.display.map(currentName => plotRenames.getOrElse(currentName, currentName))
+        val localRenames = penRenames.getOrElse((p.display.getOrElse("")), Seq()).toMap
+        val newPens = p.pens.map {
+          pen =>
+            val newPenName = localRenames.getOrElse(pen.display, pen.display)
+            pen.copy(display = newPenName)
+        }
+        p.copy(display = newDisplay, pens = newPens)
+      }
+      case w => w
+    }
+    model.copy(widgets = updatedWidgets)
+  }
 }

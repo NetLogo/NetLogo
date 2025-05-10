@@ -10,6 +10,6 @@ case class CompilerResults(procedures: Seq[Procedure], program: Program) {
     this(proceduresMap.values.toSeq, program)
 
   def proceduresMap: ListMap[String, Procedure] =
-    ListMap(procedures.map(proc => (proc.name, proc)): _*)
+    ListMap(procedures.map(proc => (proc.name, proc))*)
   def head = procedures.head
 }

@@ -10,11 +10,11 @@ import scala.language.implicitConversions
 object LogoList {
   val Empty = new LogoList(Vector[AnyRef]())
   def apply(objs: AnyRef*) = new LogoList(Vector[AnyRef]() ++ objs)
-  def fromJava(objs: java.lang.Iterable[_ <: AnyRef]) = {
+  def fromJava(objs: java.lang.Iterable[? <: AnyRef]) = {
     import scala.jdk.CollectionConverters.IteratorHasAsScala
     fromIterator(objs.iterator.asScala)
   }
-  def fromIterator(it: scala.Iterator[_ <: AnyRef]) =
+  def fromIterator(it: scala.Iterator[? <: AnyRef]) =
     new LogoList(it.toVector)
   def fromVector(v: Vector[AnyRef]) =
     new LogoList(v)

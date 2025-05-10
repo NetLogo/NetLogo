@@ -60,17 +60,17 @@ public class View
   }
 
   public boolean displayOn() {
-    return (!workspace.glView.isFullscreen() &&
+    return (!workspace.getGlView().isFullscreen() &&
         workspace.world().displayOn() &&
         workspace.displaySwitchOn());
   }
 
   public void displaySwitch(boolean on) {
-    workspace.viewWidget.displaySwitch().setOn(on);
+    workspace.viewWidget().displaySwitch().setOn(on);
   }
 
   public boolean displaySwitch() {
-    return workspace.viewWidget.displaySwitch().isSelected();
+    return workspace.viewWidget().displaySwitch().isSelected();
   }
 
   private final Runnable paintRunnable =
@@ -383,7 +383,7 @@ public class View
   }
 
   public java.awt.Component getExportWindowFrame() {
-    return workspace.viewWidget;
+    return workspace.viewWidget();
   }
 
   protected double patchSize = 13.0;
@@ -460,7 +460,7 @@ public class View
       }
     }, true));
 
-    menu.add(new MenuItem(workspace.switchTo3DViewAction, true));
+    menu.add(new MenuItem(workspace.getSwitchTo3DViewAction(), true));
 
     menu.addSeparator();
 

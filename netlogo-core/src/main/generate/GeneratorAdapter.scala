@@ -6,7 +6,7 @@ import org.objectweb.asm.Opcodes._
 import org.nlogo.nvm.Instruction
 import org.objectweb.asm.{ Label, MethodVisitor, Type }
 
-class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, desc: String, igen: Generator#InstructionGenerator[_])
+class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, desc: String, igen: Generator#InstructionGenerator[?])
     extends org.objectweb.asm.commons.GeneratorAdapter(ASM5, mv, access, name, desc) {
   // We need to know what the lowest JVM local variable that we can play with is.  var 0 = "this",
   // and var 1 = "context", so we can't mess with these.  It could be in the future, we'll want to
@@ -21,7 +21,7 @@ class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, desc: Strin
   def loadKeptField(fieldName: String, thisInstrUID: Int): Unit = {
     igen.loadKept(igen.remapFieldName(fieldName, thisInstrUID))
   }
-  def generateArgument(instr: Instruction, argIndex: Int, retTypeWanted: Class[_], thisInstrUID: Int): Unit = {
+  def generateArgument(instr: Instruction, argIndex: Int, retTypeWanted: Class[?], thisInstrUID: Int): Unit = {
     igen.generateInstruction(instr.args(argIndex), retTypeWanted, thisInstrUID, instr, argIndex)
     markLineNumber(thisInstrUID)
   }
@@ -44,7 +44,7 @@ class GeneratorAdapter(mv: MethodVisitor, access: Int, name: String, desc: Strin
     throw new IllegalStateException("Don't write line numbers to the NetLogoGeneratorAdapter -- line number info " +
       "is reserved for runtime error handling uses.")
   }
-  def generateConversion(typeFrom: Class[_], typeTo: Class[_], parentInstr: Instruction, argIndex: Int): Unit = {
+  def generateConversion(typeFrom: Class[?], typeTo: Class[?], parentInstr: Instruction, argIndex: Int): Unit = {
     TypeConverter.generateConversion(typeFrom, typeTo, this, FIRST_FREE_JVM_LOCAL, parentInstr, argIndex)
   }
   /**

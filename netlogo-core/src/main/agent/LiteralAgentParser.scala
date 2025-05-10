@@ -156,7 +156,7 @@ extends (Iterator[Token] => AnyRef)  // returns Agent or AgentSet
             cAssert(other.isInstanceOf[java.lang.Double], ERR_BAD_PATCH_SET_ARGS, token)
             0
         }.toSeq
-        builder.add(getPatchAt(token, doubledPatchSet: _*))
+        builder.add(getPatchAt(token, doubledPatchSet*))
         token = tokens.next()
       }
       builder.build()

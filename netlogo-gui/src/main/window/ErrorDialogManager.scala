@@ -56,7 +56,7 @@ case class DebuggingInfo(var className: String, var threadName: String, var mode
 // SwitchedTabsEvent and handling it. This is why `dialogs` is a lazy val and
 // `additionalDialogs` is passed by name -- EL 2018-07-27
 
-class ErrorDialogManager(owner: Component, additionalDialogs: => Map[Class[_ <: Throwable], ErrorDialog] = Map())
+class ErrorDialogManager(owner: Component, additionalDialogs: => Map[Class[? <: Throwable], ErrorDialog] = Map())
   extends ThemeSync {
 
   private val debuggingInfo = DebuggingInfo("", "", "", "", "")

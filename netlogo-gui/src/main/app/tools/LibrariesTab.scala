@@ -55,8 +55,8 @@ class LibrariesTab( category:        String
   import LibrariesTab._
 
   private val libraries       = manager.getExtensionInfos
-  private val install         = manager.installExtension _
-  private val uninstall       = manager.uninstallExtension _
+  private val install         = manager.installExtension
+  private val uninstall       = manager.uninstallExtension
   private val updateLists     = () => manager.reloadMetadata()
 
   implicit val i18nPrefix: org.nlogo.core.I18N.Prefix = I18N.Prefix("tools.libraries")
@@ -412,7 +412,7 @@ class LibrariesTab( category:        String
       nameLabel.setFont(nameLabel.getFont.deriveFont(14.0f).deriveFont(Font.BOLD))
     }
 
-    override def getListCellRendererComponent(list: JList[_ <: LibraryInfo], value: LibraryInfo, index: Int,
+    override def getListCellRendererComponent(list: JList[? <: LibraryInfo], value: LibraryInfo, index: Int,
                                               isSelected: Boolean, hasFocus: Boolean): Component = {
 
       iconLabel.setIcon(statusIcon(value.status, value.codeName))

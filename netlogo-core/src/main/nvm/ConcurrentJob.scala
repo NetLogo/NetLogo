@@ -12,7 +12,7 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspac
 
   override def exclusive = false
 
-  private[this] var contexts: Array[Context] = null
+  private var contexts: Array[Context] = null
 
   private def initialize(): Unit = {
     contexts = new Array[Context](agentset.count)

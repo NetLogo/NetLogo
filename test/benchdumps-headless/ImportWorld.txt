@@ -52,8 +52,9 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          GETSTATIC scala/Int$.MODULE$ : Lscala/Int$;
           ILOAD 6
-          I2L
+          INVOKEVIRTUAL scala/Int$.int2long (I)J
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -85,8 +86,9 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.workspace : Lorg/nlogo/nvm/Workspace;
           INVOKEINTERFACE org/nlogo/nvm/Workspace.plotRNG ()Lorg/nlogo/api/MersenneTwisterFast; (itf)
+          GETSTATIC scala/Int$.MODULE$ : Lscala/Int$;
           ILOAD 6
-          I2L
+          INVOKEVIRTUAL scala/Int$.int2long (I)J
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
          L4
          FRAME CHOP 1
@@ -192,12 +194,17 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
+         L6
+         FRAME FULL [] [java/lang/Throwable]
+          NOP
+          NOP
+          ATHROW
          L5
-         FRAME SAME
+         FRAME APPEND [org/nlogo/prim/_asm_procedurebenchmark_setpatchvariable_2 org/nlogo/nvm/Context java/lang/Double]
           ALOAD 1
           ICONST_3
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L7
           RETURN
 [3]_asm_procedurebenchmark_setpatchvariable_3 "set p2 random 100" Object => void
       _randomconst:100 "random 100" => double
@@ -238,12 +245,17 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
+         L6
+         FRAME FULL [] [java/lang/Throwable]
+          NOP
+          NOP
+          ATHROW
          L5
-         FRAME SAME
+         FRAME APPEND [org/nlogo/prim/_asm_procedurebenchmark_setpatchvariable_3 org/nlogo/nvm/Context java/lang/Double]
           ALOAD 1
           ICONST_4
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L7
           RETURN
 [4]_asm_procedurebenchmark_setpatchvariable_4 "set pcolor one-of base-colors" Object => void
       _oneof "one-of base-colors" LogoList => Object
@@ -313,12 +325,17 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
+         L8
+         FRAME FULL [] [java/lang/Throwable]
+          NOP
+          NOP
+          ATHROW
          L7
-         FRAME SAME
+         FRAME FULL [org/nlogo/prim/_asm_procedurebenchmark_setpatchvariable_4 org/nlogo/nvm/Context java/lang/Object I] []
           ALOAD 1
           ICONST_5
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L8
+         L9
           RETURN
 [5]_asm_procedurebenchmark_done_5 => void
           // parameter final  context
@@ -425,8 +442,9 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          GETSTATIC scala/Int$.MODULE$ : Lscala/Int$;
           ILOAD 6
-          I2L
+          INVOKEVIRTUAL scala/Int$.int2long (I)J
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -458,8 +476,9 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.workspace : Lorg/nlogo/nvm/Workspace;
           INVOKEINTERFACE org/nlogo/nvm/Workspace.plotRNG ()Lorg/nlogo/api/MersenneTwisterFast; (itf)
+          GETSTATIC scala/Int$.MODULE$ : Lscala/Int$;
           ILOAD 6
-          I2L
+          INVOKEVIRTUAL scala/Int$.int2long (I)J
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
          L4
          FRAME CHOP 1
@@ -614,12 +633,17 @@ procedure BENCHMARK:[NAME SALT]{O---}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
+         L6
+         FRAME FULL [] [java/lang/Throwable]
+          NOP
+          NOP
+          ATHROW
          L5
-         FRAME SAME
+         FRAME APPEND [org/nlogo/prim/_asm_procedurebenchmark_setobservervariable_14 org/nlogo/nvm/Context java/lang/Double]
           ALOAD 1
           BIPUSH 16
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L6
+         L7
           RETURN
 [16]_asm_procedurebenchmark_return_15 => void
           // parameter final  context

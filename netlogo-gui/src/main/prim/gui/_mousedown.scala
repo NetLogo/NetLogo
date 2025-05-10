@@ -10,7 +10,7 @@ class _mousedown extends Reporter {
   override def report(context: Context): java.lang.Boolean =
     workspace match {
       case gw: GUIWorkspace =>
-        gw.mouseDown()
+        gw.mouseDown
       case _ =>
         false
     }

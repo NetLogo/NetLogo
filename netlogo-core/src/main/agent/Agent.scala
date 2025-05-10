@@ -9,9 +9,7 @@ import
 
 import scala.collection.immutable.Set
 
-abstract class Agent(world: World) extends AgentJ(world) with ApiAgent with Comparable[Agent] {
-  def world = _world
-
+abstract class Agent(val world: World) extends AgentJ(world) with ApiAgent with Comparable[Agent] {
   // We have setter weirdness for "id" and "variables" primarily because these
   // methods are called frequently in java classes (the agent subclasses).
   def id = _id
@@ -33,7 +31,7 @@ abstract class Agent(world: World) extends AgentJ(world) with ApiAgent with Comp
   private[agent] def agentKey: AnyRef = Double.box(_id.toDouble)
 
   override def compareTo(a: Agent): Int =
-    id compareTo a.id
+    id.compareTo(a.id)
 
   @throws(classOf[AgentException])
   private[agent] def realloc(oldProgram: Program, newProgram: Program): Agent
@@ -102,7 +100,7 @@ abstract class Agent(world: World) extends AgentJ(world) with ApiAgent with Comp
   def agentBit: Int
 
   @throws(classOf[AgentException])
-  private[agent] def wrongTypeForVariable(name: String, expectedClass: Class[_], value: AnyRef): Unit = {
+  private[agent] def wrongTypeForVariable(name: String, expectedClass: Class[?], value: AnyRef): Unit = {
     throw new AgentException(I18N.errors.getN("org.nlogo.agent.Agent.wrongTypeOnSetError",
         classDisplayName, name, api.Dump.typeName(expectedClass), api.Dump.logoObject(value)))
   }

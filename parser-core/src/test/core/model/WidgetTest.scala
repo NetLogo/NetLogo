@@ -258,20 +258,20 @@ class WidgetTest extends AnyFunSuite {
   }
 
   test("slider") {
-     val slider = """|SLIDER
-                     |20
-                     |65
-                     |201
-                     |98
-                     |initial-sheep-stride
-                     |initial-sheep-stride
-                     |0
-                     |1
-                     |0.2
-                     |0.1
-                     |1
-                     |NIL
-                     |HORIZONTAL""".stripMargin.split("\n").toList
+    val slider = """|SLIDER
+                    |20
+                    |65
+                    |201
+                    |98
+                    |initial-sheep-stride
+                    |initial-sheep-stride
+                    |0
+                    |1
+                    |0.2
+                    |0.1
+                    |1
+                    |NIL
+                    |HORIZONTAL""".stripMargin.split("\n").toList
     val sliderWidget = Slider(Some("initial-sheep-stride"), 20, 65, 181, 33, true, Some("initial-sheep-stride"), "0", "1", 0.2, "0.1", None, Horizontal)
     runSerializationTests(slider, sliderWidget, SliderReader)
     assertResult(sliderWidget.constraint)(BoundedNumericConstraintSpecification(Double.box(0), Double.box(0.2), Double.box(1), Double.box(0.1)))
@@ -590,7 +590,7 @@ class WidgetTest extends AnyFunSuite {
     runSerializationTests(inputBox, inputBoxWidget, InputBoxReader)
   }
 
-  def runSerializationTests[W <: Widget](serializedLines: List[String], widget: W, reader: WidgetReader, extraAssertions: W => Unit = {w: W => })(implicit ev: reader.T =:= W) = {
+  def runSerializationTests[W <: Widget](serializedLines: List[String], widget: W, reader: WidgetReader, extraAssertions: W => Unit = { (w: W) => })(implicit ev: reader.T =:= W) = {
     assert(reader.validate(serializedLines))
     val deserializedWidget =
       reader.parse(serializedLines, literalParser)

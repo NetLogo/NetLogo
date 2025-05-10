@@ -59,7 +59,7 @@ class DummyChooserEditPanel(target: DummyChooserWidget, compiler: CompilerServic
     name.requestFocus()
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(name, choicesWrapper, oldSize)
 
   override def isResizable: Boolean = true

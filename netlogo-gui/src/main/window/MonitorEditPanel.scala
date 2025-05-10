@@ -108,7 +108,7 @@ class MonitorEditPanel(target: MonitorWidget, compiler: CompilerServices, colori
     wrapSource.requestFocus()
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(wrapSource, name, decimalPlaces, units, fontSize, oldSize)
 
   override def isResizable: Boolean = true

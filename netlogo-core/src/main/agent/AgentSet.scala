@@ -10,7 +10,7 @@ import java.util.{Iterator => JIterator}
 object AgentSet {
   def fromAgent(agent: Agent): IndexedAgentSet =
     new ArrayAgentSet(agent.kind, null, Array(agent))
-  def fromArray(kind: AgentKind, agents: Array[_ <: Agent]): IndexedAgentSet =
+  def fromArray(kind: AgentKind, agents: Array[? <: Agent]): IndexedAgentSet =
     new ArrayAgentSet(kind, null, agents.asInstanceOf[Array[Agent]])
 
   val emptyTurtleSet = AgentSet.fromArray(AgentKind.Turtle, Array.empty[Agent])
@@ -69,7 +69,7 @@ abstract class AgentSet(
 
   def agents: java.lang.Iterable[api.Agent] =
     new java.lang.Iterable[api.Agent] {
-      private[this] val it = AgentSet.this.iterator
+      private val it = AgentSet.this.iterator
       override def iterator: JIterator[api.Agent] =
         new JIterator[api.Agent] {
           override def hasNext = it.hasNext

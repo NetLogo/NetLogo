@@ -57,8 +57,8 @@ object ScalaConversions {
     case ll: LogoList => toLogoList(ll)
     // Seqs turn into LogoList. their elements are recursively converted.
     // also recurse into LogoLists.
-    case a: Array[_] => toLogoList(a)
-    case s: Seq[_] => toLogoList(s)
+    case a: Array[?] => toLogoList(a)
+    case s: Seq[?] => toLogoList(s)
 
     // unconvertible type
     case _ =>

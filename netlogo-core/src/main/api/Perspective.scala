@@ -14,7 +14,7 @@ import org.nlogo.core.I18N
 // "class" not "trait" otherwise we won't get a static forwarder for Perspective.load() - ST 7/27/11
 
 abstract sealed class Perspective(val `export`: Int) {
-  def kind: Int = export
+  def kind: Int = `export`
 }
 
 object Perspective {

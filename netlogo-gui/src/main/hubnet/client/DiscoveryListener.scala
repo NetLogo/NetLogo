@@ -27,7 +27,7 @@ class DiscoveryListener(@volatile var interfaceAddress: Option[InetAddress]) ext
   // general java idiom.
 
   // The announcement listener to be notified if a message is received.
-  private var listener: AnnouncementListener = _
+  private var listener: AnnouncementListener = null
   private var shouldKeepListening = true
 
   /**

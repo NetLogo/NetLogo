@@ -75,7 +75,7 @@ class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, colla
 
   private def setVisibility(newVisibility: Boolean): Unit = {
     if (collapsible && collapseWhenEmpty) {
-      collapso setVisible newVisibility
+      collapso.setVisible(newVisibility)
 
       if (newVisibility) {
         add(collapso, BorderLayout.CENTER)
@@ -93,7 +93,7 @@ class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, colla
 
   override def get: Option[String] = Option(editor.getText)
   override def set(value: String): Unit = {
-    editor setText value
+    editor.setText(value)
     setVisibility(value.nonEmpty)
     editor.select(0, 0)
     accessor.target.error(accessor.name).foreach(errorLabel.setError(_, accessor.target.sourceOffset))

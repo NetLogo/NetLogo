@@ -2,10 +2,7 @@
 
 package org.nlogo.agent
 
-class Torus(_world: World)
-extends Topology(_world, xWraps = true, yWraps = true)
-with XWraps with YWraps {
-
+class Torus(_world: World) extends Topology(_world) with XWraps with YWraps {
   override def wrapX(x: Double): Double =
     Topology.wrap(x, world._minPxcor - 0.5, world._maxPxcor + 0.5)
 

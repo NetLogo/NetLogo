@@ -58,13 +58,13 @@ object InfoTabDocGenerator {
 
     // create links to all the header sections.
     private val createTOC = (s:String) => {
-       val toc = "<ul>" + {
-         s.split("\n").filter(_.startsWith("## ")).map{ line =>
-           val header = line.substring(3)
-           val name = header.replace(' ', '_').toLowerCase
-           "<li><a href=\"#" + name + "\">" + header + "</a></li>"
-         }
-       }.mkString("\n") + "</ul>"
+      val toc = "<ul>" + {
+        s.split("\n").filter(_.startsWith("## ")).map{ line =>
+          val header = line.substring(3)
+          val name = header.replace(' ', '_').toLowerCase
+          "<li><a href=\"#" + name + "\">" + header + "</a></li>"
+        }
+      }.mkString("\n") + "</ul>"
       toc + "\n\n" + s
     }
   }

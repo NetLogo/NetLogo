@@ -35,7 +35,7 @@ class _sortby extends Reporter {
           context, this, 0, Syntax.ListType | Syntax.AgentsetType, obj)
     }
     try {
-      val sorted = input.sortBy(identity)(new SortOrdering(context, task))
+      val sorted = input.sortBy(identity)(using new SortOrdering(context, task))
       LogoList.fromIterator(sorted.iterator)
     }
     catch {

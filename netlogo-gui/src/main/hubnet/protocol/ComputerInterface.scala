@@ -20,7 +20,7 @@ case class ComputerInterface(
       "ALL PLOTS" :: widgets.map {
         case v: CoreView => "VIEW"
         case c: CoreChooser =>
-          chooserChoices(c.varName) = LogoList(c.choices.map(_.value): _*)
+          chooserChoices(c.varName) = LogoList(c.choices.map(_.value)*)
           c.display.getOrElse("")
         case m: CoreMonitor => m.display.getOrElse("")
         case w: NamedWidget => w.varName
@@ -34,6 +34,6 @@ case class ComputerInterface(
 
   override def toString =
     "ClientInterface(\n\t" + "TURTLE SHAPES = " + turtleShapes + "\n\t" +
-  "LINK SHAPES = " + linkShapes + "\n\t" +
-  "WIDGETS = " + widgets.mkString("\n") + ")"
+    "LINK SHAPES = " + linkShapes + "\n\t" +
+    "WIDGETS = " + widgets.mkString("\n") + ")"
 }

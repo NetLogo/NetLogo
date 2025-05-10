@@ -62,7 +62,7 @@ class TestArgumentInjection extends FixtureSuite {
 
   def runCommandCaller(owner: api.JobOwner, caller: nvm.Procedure, args: AnyRef*): Unit = {
     val call = caller.code.find(is(_, "_call")).get
-    substituteArgs(call, args: _*)
+    substituteArgs(call, args*)
     call.workspace.runCompiledCommands(owner, caller)
   }
 
@@ -70,7 +70,7 @@ class TestArgumentInjection extends FixtureSuite {
     val call =
       caller.code.find(is(_, "_report")).get
         .args.find(is(_, "_callreport")).get
-    substituteArgs(call, args: _*)
+    substituteArgs(call, args*)
     call.workspace.runCompiledReporter(owner, caller)
   }
 

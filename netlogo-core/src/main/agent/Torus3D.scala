@@ -158,12 +158,13 @@ class Torus3D(_world3d: World3D) extends Torus(_world3d) with Topology3D {
   def distanceWrap(_dx: Double, _dy: Double, _dz: Double,
     x1: Double, y1: Double, z1: Double,
     x2: Double, y2: Double, z2: Double): Double = {
-      val dx2 =
-        if (x1 > x2) (x2 + world.worldWidth) - x1
-        else         (x2 - world.worldWidth) - x1
-      val dx =
-        if (StrictMath.abs(dx2) < StrictMath.abs(_dx)) dx2
-        else _dx
+
+    val dx2 =
+      if (x1 > x2) (x2 + world.worldWidth) - x1
+      else         (x2 - world.worldWidth) - x1
+    val dx =
+      if (StrictMath.abs(dx2) < StrictMath.abs(_dx)) dx2
+      else _dx
 
     val dy2 =
       if (y1 > y2) (y2 + world.worldHeight) - y1

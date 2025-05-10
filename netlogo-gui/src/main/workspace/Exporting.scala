@@ -18,12 +18,12 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
       def `export`(writer: PrintWriter): Unit = {
         exportWorldNoMeta(writer)
       }
-    }.export("world", modelFileName, "")
+    }.`export`("world", modelFileName, "")
   }
 
   @throws(classOf[IOException])
   def exportWorld(writer: PrintWriter): Unit = {
-    AbstractExporter.exportWithHeader(writer, "world", modelFileName, "")(exportWorldNoMeta _)
+    AbstractExporter.exportWithHeader(writer, "world", modelFileName, "")(exportWorldNoMeta)
   }
 
   private def exportWorldNoMeta(writer: PrintWriter): Unit = {
@@ -45,7 +45,7 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
           .maybeGetPlot(name)
           .getOrElse(throw new Exception("plot manager gave a name for a plot that doesn't exist?"))
       , Dump.csv
-      ).export(writer)
+      ).`export`(writer)
       writer.println()
     }
   }
@@ -60,9 +60,9 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
             .maybeGetPlot(plotName)
             .getOrElse(throw new Exception("plot with given name not found..."))
         , Dump.csv
-        ).export(writer)
+        ).`export`(writer)
       }
-    }.export("plot",modelFileName,"")
+    }.`export`("plot",modelFileName,"")
   }
 
   def exportInterfaceGlobals(writer: PrintWriter): Unit = {
@@ -86,9 +86,9 @@ trait Exporting extends Plotting with ModelTracker { this: AbstractWorkspace =>
               .maybeGetPlot(name)
               .getOrElse(throw new Exception("plot manager gave a name for a plot that doesn't exist?"))
           , Dump.csv
-          ).export(writer)
+          ).`export`(writer)
         }
       }
-    }.export("plots",modelFileName,"")
+    }.`export`("plots",modelFileName,"")
   }
 }

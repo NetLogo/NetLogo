@@ -137,7 +137,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
         add(label, c)
       }
 
-      def getListCellRendererComponent(list: JList[_ <: String], value: String, index: Int, isSelected: Boolean,
+      def getListCellRendererComponent(list: JList[? <: String], value: String, index: Int, isSelected: Boolean,
                                        hasFocus: Boolean): Component = {
         label.setText(value)
 
@@ -177,7 +177,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
       setEnabled(false)
     }
 
-    private val newClientButton = new Button(I18N.gui.get("menu.tools.hubnetControlCenter.local"), launchNewClient _)
+    private val newClientButton = new Button(I18N.gui.get("menu.tools.hubnetControlCenter.local"), launchNewClient)
 
     private val reloadButton = new Button(I18N.gui.get("menu.tools.hubnetControlCenter.reset"), () => {
       kickAllClients()
@@ -252,7 +252,7 @@ class ControlCenter(server: ConnectionManager, frame: Frame, serverId: String, a
     // Format for message timestamp
     private val dateFormatter = new SimpleDateFormat(I18N.gui.get("menu.tools.hubnetControlCenter.dateFormat"))
 
-    private val broadcastButton = new Button(I18N.gui.get("menu.tools.hubnetControlCenter.broadcastMessage"), beginBroadcast _)
+    private val broadcastButton = new Button(I18N.gui.get("menu.tools.hubnetControlCenter.broadcastMessage"), beginBroadcast)
 
     private[gui] val buttonEnabler = new NonemptyTextFieldButtonEnabler(broadcastButton, List(inputField))
 

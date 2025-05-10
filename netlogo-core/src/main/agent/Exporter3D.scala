@@ -8,7 +8,7 @@ import java.lang.{ Double => JDouble, Integer => JInteger, Long => JLong }
 import org.nlogo.api.Dump
 import org.nlogo.core.Nobody
 import Dump.csv
-import scala.jdk.CollectionConverters.{ ListHasAsScala, SeqHasAsJava }
+import scala.jdk.CollectionConverters.{ IterableHasAsScala, ListHasAsScala, SeqHasAsJava }
 
 // This is just a bunch of copy-and-pasted code from the 2D version, with little 3D tweaks embedded
 // in it.  It really ought to be redone to eliminate the copy-and-paste. - ST 4/11/11
@@ -136,7 +136,7 @@ private[agent] class Exporter3D(world: World3D, writer: PrintWriter) extends Exp
                   + csv.encode(Integer.toString(world.maxPycor)) + ","
                   + csv.encode(Integer.toString(world.minPzcor)) + ","
                   + csv.encode(Integer.toString(world.maxPzcor)) + ","
-                  + csv.encode(Integer.toString(world.observer.perspective.export)) + ","
+                  + csv.encode(Integer.toString(world.observer.perspective.`export`)) + ","
                   + csv.data(subject) + ","
                   + csv.encode(JLong.toString(world.nextTurtleIndex)) + ","
                   + csv.data(if(world.links.isDirected) "DIRECTED" else

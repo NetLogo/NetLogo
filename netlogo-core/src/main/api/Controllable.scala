@@ -34,7 +34,7 @@ trait Controllable {
  * For Behaviorspace we will set _plotCompilationErrorAction so that the errors are
  * are output for the first thread and ignored in subsequent threads.
  */
-  private[this] var _plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Throw
+  private var _plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Throw
 
 /**
  * @return  plotCompilationErrorAction  action to take if a plot compilation error occurs

@@ -5,10 +5,7 @@ package org.nlogo.agent
 import org.nlogo.api.AgentException
 import org.nlogo.core.I18N
 
-class Box(world2d: World2D)
-extends Topology(world2d, xWraps = false, yWraps = false)
-with XBlocks with YBlocks {
-
+class Box(world2d: World2D) extends Topology(world2d) with XBlocks with YBlocks {
   @throws(classOf[AgentException])
   override def wrapX(x: Double): Double  = {
     val max = world.maxPxcor + 0.5

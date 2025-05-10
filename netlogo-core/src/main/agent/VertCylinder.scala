@@ -7,10 +7,7 @@ import org.nlogo.api.AgentException
 
 // imagine a cylinder standing on end.
 
-class VertCylinder(world2d: World2D)
-extends Topology(world2d, xWraps = true, yWraps = false)
-with XWraps with YBlocks {
-
+class VertCylinder(world2d: World2D) extends Topology(world2d) with XWraps with YBlocks {
   override def wrapX(x: Double): Double =
     Topology.wrap(x, world.minPxcor - 0.5, world.maxPxcor + 0.5)
 

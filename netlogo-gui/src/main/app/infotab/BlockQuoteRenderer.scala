@@ -18,8 +18,8 @@ class BlockQuoteRenderer extends HtmlRendererExtension {
   }
 
   private class Renderer extends NodeRenderer {
-    def getNodeRenderingHandlers: Set[NodeRenderingHandler[_]] = {
-      val set = new HashSet[NodeRenderingHandler[_]]
+    def getNodeRenderingHandlers: Set[NodeRenderingHandler[?]] = {
+      val set = new HashSet[NodeRenderingHandler[?]]
 
       set.add(new NodeRenderingHandler[BlockQuote](classOf[BlockQuote], new BlockQuoteRenderer))
 

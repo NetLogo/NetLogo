@@ -218,7 +218,7 @@ class PlotEditPanel(target: PlotWidget, colorizer: Colorizer) extends WidgetEdit
     plotName.requestFocus()
   }
 
-  override def propertyEditors: Seq[PropertyEditor[_]] =
+  override def propertyEditors: Seq[PropertyEditor[?]] =
     Seq(plotName, xLabel, xMin, xMax, yLabel, yMin, yMax, autoPlotX, autoPlotY, showLegend, runtimeError, setupCode,
         updateCode, editPlotPens, oldSize)
 

@@ -57,7 +57,7 @@ class TestClientInterface extends TestUsingWorkspace {
 
   test("test roundTripSerialization method"){
     assert("s" == roundTripSerialization("s"))
-    assert(7.asInstanceOf[AnyRef] == roundTripSerialization(7))
+    assert(7 == roundTripSerialization(7))
   }
 }
 

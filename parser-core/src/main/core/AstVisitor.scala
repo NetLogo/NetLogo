@@ -79,7 +79,7 @@ trait AstTransformer {
 
 trait AstFolder[A] {
   def visitProcedureDefinition(proc: ProcedureDefinition)(a: A): A =
-    visitStatements(proc.statements)(a)
+    visitStatements(proc.statements)(using a)
 
   def visitCommandBlock(block: CommandBlock)(implicit a: A): A =
     visitStatements(block.statements)
@@ -93,16 +93,16 @@ trait AstFolder[A] {
     }
 
   def visitReporterApp(app: ReporterApp)(implicit a: A): A =
-    app.args.foldLeft(a) { case (acc, arg) => visitExpression(arg)(acc) }
+    app.args.foldLeft(a) { case (acc, arg) => visitExpression(arg)(using acc) }
 
   def visitReporterBlock(block: ReporterBlock)(implicit a: A): A =
     visitReporterApp(block.app)
 
   def visitStatement(stmt: Statement)(implicit a: A): A =
-    stmt.args.foldLeft(a) { case (acc, arg) => visitExpression(arg)(acc) }
+    stmt.args.foldLeft(a) { case (acc, arg) => visitExpression(arg)(using acc) }
 
   def visitStatements(statements: Statements)(implicit a: A): A =
     statements.stmts.foldLeft(a) {
-      case (acc, arg) => visitStatement(arg)(acc)
+      case (acc, arg) => visitStatement(arg)(using acc)
     }
 }

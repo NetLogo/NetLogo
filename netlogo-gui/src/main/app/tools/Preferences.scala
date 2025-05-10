@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent
 import java.io.File
 import java.util.Locale
 import java.util.prefs.{ Preferences => JavaPreferences }
-import javax.swing.{ AbstractAction, JFileChooser, JPanel }
+import javax.swing.{ AbstractAction, JComponent, JFileChooser, JPanel }
 
 import org.nlogo.app.common.TabsInterface
 import org.nlogo.core.I18N
@@ -16,28 +16,32 @@ import org.nlogo.theme.ThemeSync
 
 object Preferences {
   abstract class BooleanPreference(val i18nKey: String, val requirement: RequiredAction, default: Boolean) extends Preference {
-    val component = new CheckBox
+    private val checkBox = new CheckBox
+
+    override def component: CheckBox = checkBox
 
     def load(prefs: JavaPreferences) = {
       val value = prefs.get(i18nKey, default.toString).toBoolean
-      component.setSelected(value)
+      checkBox.setSelected(value)
     }
 
     def save(prefs: JavaPreferences) = {
-      prefs.put(i18nKey, component.isSelected.toString)
+      prefs.put(i18nKey, checkBox.isSelected.toString)
     }
   }
 
   abstract class StringPreference(val i18nKey: String, val requirement: RequiredAction, default: String) extends Preference {
-    val component = new TextField(20, default)
+    val textField = new TextField(20, default)
+
+    def component: JComponent & ThemeSync = textField
 
     def load(prefs: JavaPreferences) = {
       val value = prefs.get(i18nKey, default)
-      component.setText(value)
+      textField.setText(value)
     }
 
     def save(prefs: JavaPreferences) = {
-      prefs.put(i18nKey, component.getText)
+      prefs.put(i18nKey, textField.getText)
     }
   }
 
@@ -49,16 +53,18 @@ object Preferences {
     val languages = I18N.availableLocales map (LocaleWrapper(_)) sortBy (_.toString)
 
     val i18nKey = "uiLanguage"
-    val component = new ComboBox(languages.toList)
+    val comboBox = new ComboBox(languages.toList)
     val requirement = RequiredAction.Restart
+
+    def component: JComponent & ThemeSync = comboBox
 
     def load(prefs: JavaPreferences): Unit = {
       val locale = I18N.localeFromPreferences.getOrElse(I18N.gui.defaultLocale)
-      component.setSelectedItem(LocaleWrapper(locale))
+      comboBox.setSelectedItem(LocaleWrapper(locale))
     }
 
     def save(prefs: JavaPreferences): Unit = {
-      component.getSelectedItem.foreach { w =>
+      comboBox.getSelectedItem.foreach { w =>
         prefs.put("user.language", w.locale.getLanguage)
         prefs.put("user.country", w.locale.getCountry)
       }
@@ -69,16 +75,18 @@ object Preferences {
 
   class ReloadOnExternalChanges(tabs: TabsInterface) extends Preference {
     val i18nKey = "reloadOnExternalChanges"
-    val component = new CheckBox
+    val checkBox = new CheckBox
     val requirement = RequiredAction.None
+
+    def component: JComponent & ThemeSync = checkBox
 
     def load(prefs: JavaPreferences) = {
       val enabled = prefs.get("reloadOnExternalChanges", "false").toBoolean
-      component.setSelected(enabled)
+      checkBox.setSelected(enabled)
     }
 
     def save(prefs: JavaPreferences) = {
-      val enabled = component.isSelected
+      val enabled = checkBox.isSelected
       prefs.put("reloadOnExternalChanges", enabled.toString)
       tabs.watchingFiles = enabled
     }
@@ -145,16 +153,18 @@ object Preferences {
       I18N.gui.get("tools.preferences.proceduresSortAlphabetical")
     )
 
-    val component = new ComboBox(options)
+    val comboBox = new ComboBox(options)
     val requirement = RequiredAction.None
+
+    def component: JComponent & ThemeSync = comboBox
 
     def load(prefs: JavaPreferences): Unit = {
       val sortOrder = prefs.get("proceduresMenuSortOrder", options(0))
-      component.setSelectedItem(sortOrder)
+      comboBox.setSelectedItem(sortOrder)
     }
 
     def save(prefs: JavaPreferences): Unit = {
-      component.getSelectedItem.foreach(prefs.put("proceduresMenuSortOrder", _))
+      comboBox.getSelectedItem.foreach(prefs.put("proceduresMenuSortOrder", _))
     }
   }
 
@@ -167,14 +177,16 @@ object Preferences {
   object UIScale extends Preference {
     val i18nKey = "uiScale"
     val requirement = RequiredAction.Restart
-    val component = new TextField(20, "1.0")
+    val textField = new TextField(20, "1.0")
+
+    def component: JComponent & ThemeSync = textField
 
     def load(prefs: JavaPreferences) = {
-      component.setText(prefs.getDouble(i18nKey, 1.0).toString)
+      textField.setText(prefs.getDouble(i18nKey, 1.0).toString)
     }
 
     def save(prefs: JavaPreferences) = {
-      prefs.putDouble(i18nKey, component.getText.toDouble)
+      prefs.putDouble(i18nKey, textField.getText.toDouble)
     }
   }
 }

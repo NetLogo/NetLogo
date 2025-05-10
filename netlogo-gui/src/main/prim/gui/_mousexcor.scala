@@ -10,7 +10,7 @@ class _mousexcor extends Reporter {
   override def report(context: Context): java.lang.Double =
     workspace match {
       case gw: GUIWorkspace =>
-        gw.mouseXCor()
+        gw.mouseXCor
       case _ =>
         0
     }

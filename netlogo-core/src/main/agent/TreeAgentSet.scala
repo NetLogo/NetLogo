@@ -136,7 +136,7 @@ extends AgentSet(kind, printName) {
 
   // parent enumeration class
   final private class Iterator extends AgentIterator {
-    private[this] val iter = _agents.values.iterator
+    private val iter = _agents.values.iterator
     override def hasNext = iter.hasNext
     override def next() = iter.next()
   }
@@ -154,9 +154,9 @@ extends AgentSet(kind, printName) {
 
   final private class Shufflerator(rng: MersenneTwisterFast)
   extends AgentIterator {
-    private[this] var i = 0
-    private[this] val copy = _agents.values.toArray(new Array[Agent](_agents.size))
-    private[this] var _next: Agent = null
+    private var i = 0
+    private val copy = _agents.values.toArray(new Array[Agent](_agents.size))
+    private var _next: Agent = null
     fetch()
     def hasNext = _next != null
     def next() = {

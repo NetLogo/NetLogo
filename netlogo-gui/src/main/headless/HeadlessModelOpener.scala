@@ -84,11 +84,11 @@ class HeadlessModelOpener(ws: HeadlessWorkspace) {
       ws.world.linkShapes.add(LinkShape.getDefaultLinkShape)
   }
 
-/**
- *  @param plotCompilationErrorAction  action to take if a plot compilation error occurs
- */
-private def finish(constraints: Map[String, ConstraintSpecification], program: Program,
-                      interfaceGlobalCommands: String, plotCompilationErrorAction: PlotCompilationErrorAction): Unit = {
+  /**
+  *  @param plotCompilationErrorAction  action to take if a plot compilation error occurs
+  */
+  private def finish(constraints: Map[String, ConstraintSpecification], program: Program,
+                     interfaceGlobalCommands: String, plotCompilationErrorAction: PlotCompilationErrorAction): Unit = {
     ws.world.realloc()
 
     val errors = ws.plotManager.compileAllPlots()

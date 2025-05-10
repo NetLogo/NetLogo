@@ -57,12 +57,13 @@ trait FrameCache {
     def value = 1.0 / sqrt(abs(target - index))
     def cost = {
       val predecessors = cache.keys.filter(_ < index)
-      if (predecessors.isEmpty)
+      if (predecessors.isEmpty) {
         Double.PositiveInfinity
-      else
+      } else {
         (predecessors.max until index)
           .map(deltas(_).size)
-          .sum
+          .sum.toDouble
+      }
     }
     pow(cost, 2) * value
   }

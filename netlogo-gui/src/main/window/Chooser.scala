@@ -42,7 +42,7 @@ trait Chooser extends SingleErrorWidget with MouseWheelListener {
     }
   }
 
-  if (boldName)
+  if (_boldName)
     label.setFont(label.getFont.deriveFont(Font.BOLD))
 
   setLayout(new GridBagLayout)

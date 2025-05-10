@@ -655,13 +655,14 @@ public class Link
 
   // returns the index of the breed of this link, 0 means a generic link;
   // this is super kludge. is there a better way? -AZS 10/28/04, ST 7/21/07
+  @SuppressWarnings("unchecked")
   public int getBreedIndex() {
     AgentSet mybreed = getBreed();
     if (mybreed == _world.links()) {
       return 0;
     }
     int j = 1;
-    for (Iterator<TreeAgentSet> iter = _world.linkBreeds().values().iterator(); iter.hasNext();) {
+    for (Iterator<TreeAgentSet> iter = (Iterator<TreeAgentSet>)_world.linkBreeds().values().iterator(); iter.hasNext();) {
       if (mybreed == iter.next()) {
         return j;
       }

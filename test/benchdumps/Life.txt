@@ -51,8 +51,9 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.random : Lorg/nlogo/api/MersenneTwisterFast;
+          GETSTATIC scala/Int$.MODULE$ : Lscala/Int$;
           ILOAD 6
-          I2L
+          INVOKEVIRTUAL scala/Int$.int2long (I)J
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
           ALOAD 1
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
@@ -84,8 +85,9 @@ procedure BENCHMARK:[_repeatlocal:0]{O---}:
           GETFIELD org/nlogo/nvm/Context.job : Lorg/nlogo/nvm/Job;
           GETFIELD org/nlogo/nvm/Job.workspace : Lorg/nlogo/nvm/Workspace;
           INVOKEINTERFACE org/nlogo/nvm/Workspace.plotRNG ()Lorg/nlogo/api/MersenneTwisterFast; (itf)
+          GETSTATIC scala/Int$.MODULE$ : Lscala/Int$;
           ILOAD 6
-          I2L
+          INVOKEVIRTUAL scala/Int$.int2long (I)J
           INVOKEVIRTUAL org/nlogo/api/MersenneTwisterFast.setSeed (J)V
          L4
          FRAME CHOP 1
@@ -489,8 +491,13 @@ procedure GO:[]{O---}:
               INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
               INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
               ATHROW
+             L4
+             FRAME FULL [] [java/lang/Throwable]
+              NOP
+              NOP
+              ATHROW
              L3
-             FRAME SAME1 java/lang/Object
+             FRAME FULL [org/nlogo/prim/_asm_procedurego_patchvariable_2 org/nlogo/nvm/Context] [java/lang/Object]
               ARETURN
           TRYCATCHBLOCK L0 L1 L2 org/nlogo/api/AgentException
          L3
@@ -707,41 +714,46 @@ procedure GO:[]{O---}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L3
-         FRAME SAME1 java/lang/Object
-          LDC 3.0D
          L4
+         FRAME FULL [] [java/lang/Throwable]
+          NOP
+          NOP
+          ATHROW
+         L3
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_ifelse_5 org/nlogo/nvm/Context] [java/lang/Object]
+          LDC 3.0D
+         L5
           DSTORE 3
           ASTORE 2
           ALOAD 2
           INSTANCEOF java/lang/Double
-          IFEQ L5
+          IFEQ L6
           DLOAD 3
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DCMPL
-          IFNE L5
+          IFNE L6
           ICONST_1
-          GOTO L6
-         L5
+          GOTO L7
+         L6
          FRAME APPEND [java/lang/Object D]
           ICONST_0
-         L6
+         L7
          FRAME SAME1 I
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L7
+          IFEQ L8
           ICONST_5
-          GOTO L8
-         L7
+          GOTO L9
+         L8
          FRAME FULL [org/nlogo/prim/_asm_procedurego_ifelse_5 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context]
           BIPUSH 7
-         L8
+         L9
          FRAME FULL [org/nlogo/prim/_asm_procedurego_ifelse_5 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L9
+         L10
           RETURN
 [5]_asm_procedurego_call_6 "cell-birth"
          L0
@@ -795,43 +807,48 @@ procedure GO:[]{O---}:
           INVOKEVIRTUAL org/nlogo/api/AgentException.getMessage ()Ljava/lang/String;
           INVOKESPECIAL org/nlogo/nvm/RuntimePrimitiveException.<init> (Lorg/nlogo/api/Context;Lorg/nlogo/nvm/Instruction;Ljava/lang/String;)V
           ATHROW
-         L3
-         FRAME SAME1 java/lang/Object
-          LDC 2.0D
          L4
+         FRAME FULL [] [java/lang/Throwable]
+          NOP
+          NOP
+          ATHROW
+         L3
+         FRAME FULL [org/nlogo/prim/_asm_procedurego_if_8 org/nlogo/nvm/Context] [java/lang/Object]
+          LDC 2.0D
+         L5
           DSTORE 3
           ASTORE 2
           ALOAD 2
           INSTANCEOF java/lang/Double
-          IFEQ L5
+          IFEQ L6
           DLOAD 3
           ALOAD 2
           CHECKCAST java/lang/Double
           INVOKEVIRTUAL java/lang/Double.doubleValue ()D
           DCMPL
-          IFEQ L6
-         L5
+          IFEQ L7
+         L6
          FRAME APPEND [java/lang/Object D]
           ICONST_1
-          GOTO L7
-         L6
+          GOTO L8
+         L7
          FRAME SAME
           ICONST_0
-         L7
+         L8
          FRAME SAME1 I
           ISTORE 2
           ALOAD 1
           ILOAD 2
-          IFEQ L8
+          IFEQ L9
           BIPUSH 8
-          GOTO L9
-         L8
+          GOTO L10
+         L9
          FRAME FULL [org/nlogo/prim/_asm_procedurego_if_8 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context]
           BIPUSH 9
-         L9
+         L10
          FRAME FULL [org/nlogo/prim/_asm_procedurego_if_8 org/nlogo/nvm/Context I D] [org/nlogo/nvm/Context I]
           PUTFIELD org/nlogo/nvm/Context.ip : I
-         L10
+         L11
           RETURN
 [8]_asm_procedurego_call_9 "cell-death"
          L0

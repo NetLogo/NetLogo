@@ -9,7 +9,7 @@ import org.nlogo.nvm.{ Context, ReferencerReporter, Reporter, RuntimePrimitiveEx
 class _reference extends Reporter with ReferencerReporter {
   override def referenceIndex = 0
 
-  private[this] var reference: Reference = null
+  private var reference: Reference = null
 
   override def applyReference(ref: Reference): Reporter = {
     reference = ref

@@ -33,7 +33,7 @@ extends DrawingRendererInterface {
     // Link stamps
     for(stamp <- drawing.linkStamps.asScala) {
       val distance = world.observer.perspective match {
-        case afp: AgentFollowingPerspective => afp.followDistance
+        case afp: AgentFollowingPerspective => afp.followDistance.toDouble
         case _                              => world.observer.orientation.get.dist
       }
       var lineScale: Double = 0

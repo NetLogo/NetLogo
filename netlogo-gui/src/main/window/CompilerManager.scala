@@ -15,7 +15,7 @@ import org.nlogo.window.Events.{
 import scala.collection.mutable.HashSet
 
 class CompilerManager(val workspace: AbstractWorkspace,
-  val world: org.nlogo.agent.World with org.nlogo.agent.CompilationManagement = null,
+  val world: org.nlogo.agent.World & org.nlogo.agent.CompilationManagement = null,
   val proceduresInterface: ProceduresInterface,
   eventRaiser: (Event, Object) => Unit = (e:Event, o:Object) => e.raise(o))
     extends LinkChild

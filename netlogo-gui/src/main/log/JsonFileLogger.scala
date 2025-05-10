@@ -5,10 +5,10 @@ package org.nlogo.log
 
 import java.io.{ File, FilenameFilter, FileWriter, PrintWriter }
 import java.lang.{
-  Boolean => BoxedBoolean
-, Double  => BoxedDouble
-, Integer => BoxedInt
-, Long    => BoxedLong
+  Boolean => BoxedBoolean,
+  Double  => BoxedDouble,
+  Integer => BoxedInt,
+  Long    => BoxedLong
 }
 import java.nio.file.Path
 import java.time.LocalDateTime
@@ -88,7 +88,7 @@ class JsonFileLogger(private val logDirectoryPath: Path) extends FileLogger {
       case l: BoxedLong    => l
       case d: BoxedDouble  => d
       case b: BoxedBoolean => b
-      case a: Array[_]     => a
+      case a: Array[?]     => a
       case s: String       => s
       case l: LogoList     => l.map(formatAnyRef(_)).asJava
       case null            => null

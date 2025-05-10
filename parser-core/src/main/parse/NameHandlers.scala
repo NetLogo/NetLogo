@@ -42,13 +42,13 @@ abstract class PrimitiveHandler extends NameHandler {
 class CommandHandler(tokenMapper: TokenMapperInterface) extends PrimitiveHandler {
   type InstructionType = Command
   override def apply(token: Token) =
-    lookup(token, tokenMapper.getCommand  _, TokenType.Command)
+    lookup(token, tokenMapper.getCommand, TokenType.Command)
 }
 
 class ReporterHandler(tokenMapper: TokenMapperInterface) extends PrimitiveHandler {
   type InstructionType = Reporter
   override def apply(token: Token) =
-    lookup(token, tokenMapper.getReporter  _, TokenType.Reporter)
+    lookup(token, tokenMapper.getReporter, TokenType.Reporter)
 }
 
 // replaces an identifier token with its imported implementation, if necessary
@@ -126,11 +126,12 @@ class AgentVariableReporterHandler(program: Program) extends NameHandler {
 // a complete program
 class BuiltInAgentVariableReporterHandler(agentVariables: AgentVariableSet)
   extends NameHandler {
-    val variableMap = Map[Seq[String], Int => core.Reporter](
-      agentVariables.implicitObserverVariableTypeMap.keys.toSeq -> (i => new core.prim._observervariable(i)),
-      agentVariables.implicitTurtleVariableTypeMap.keys.toSeq   -> (i => new core.prim._turtlevariable(i)),
-      agentVariables.implicitPatchVariableTypeMap.keys.toSeq    -> (i => new core.prim._patchvariable(i)),
-      agentVariables.implicitLinkVariableTypeMap.keys.toSeq     -> (i => new core.prim._linkvariable(i)))
+
+  val variableMap = Map[Seq[String], Int => core.Reporter](
+    agentVariables.implicitObserverVariableTypeMap.keys.toSeq -> (i => new core.prim._observervariable(i)),
+    agentVariables.implicitTurtleVariableTypeMap.keys.toSeq   -> (i => new core.prim._turtlevariable(i)),
+    agentVariables.implicitPatchVariableTypeMap.keys.toSeq    -> (i => new core.prim._patchvariable(i)),
+    agentVariables.implicitLinkVariableTypeMap.keys.toSeq     -> (i => new core.prim._linkvariable(i)))
 
   override def apply(token: Token) =
     variableMap.find {

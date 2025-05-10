@@ -10,8 +10,8 @@ import org.nlogo.core.{ I18N, Output => CoreOutput, Widget => CoreWidget }
 import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
 
-class OutputWidget extends SingleErrorWidget with CommandCenterInterface with
-  Events.ExportWorldEvent.Handler with Editable {
+class OutputWidget extends SingleErrorWidget with CommandCenterInterface
+  with Events.ExportWorldEvent.Handler with Editable {
 
   displayName(I18N.gui.get("tabs.run.widgets.output"))
 

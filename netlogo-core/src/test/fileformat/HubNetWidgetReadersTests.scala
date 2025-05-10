@@ -63,7 +63,7 @@ object HubNetGenerators {
         Arbitrary.arbDouble.arbitrary.map(d => ChooseableDouble(Double.box(d))),
         Arbitrary.arbBool.arbitrary.map(b => ChooseableBoolean(Boolean.box(b))),
         chooserAcceptableString.map(ChooseableString.apply),
-        Gen.listOf(Gen.identifier).map(l => ChooseableList(LogoList(l: _*)))))
+        Gen.listOf(Gen.identifier).map(l => ChooseableList(LogoList(l*)))))
 
   val chooserWidget: Gen[Chooser] = for {
     pos           <- genPos

@@ -113,7 +113,7 @@ class Backifier(program: Program,
   }
 
   private def fallback[T1 <: core.Instruction, T2 <: nvm.Instruction](i: T1): T2 = {
-    BreedIdentifierHandler.process(i.token.copy(value = i.token.text.toUpperCase), program) match {
+    BreedIdentifierHandler.process(i.token.copy(value = i.token.text.toUpperCase)(), program) match {
       case None =>
         try {
           val klass = Class.forName(backifyName(i.getClass.getName))

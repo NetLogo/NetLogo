@@ -11,7 +11,7 @@ class _fd(_token: Token) extends Command with CustomAssembled {
   token_=(_token)
 
   // MethodRipper won't let us call a public method from perform_1() - ST 7/20/12
-  private[this] val _let = Let(s"~${_token.text}_${_token.start}")
+  private val _let = Let(s"~${_token.text}_${_token.start}")
 
   def let = _let
 

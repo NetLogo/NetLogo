@@ -30,10 +30,10 @@ object AstPath {
 import AstPath.Component
 
 case class AstPath(components: Component*) {
-  def /(c: Component) = AstPath((components :+ c): _*)
+  def /(c: Component) = AstPath((components :+ c)*)
 
   // this is probably "too cute"
-  def `../`: AstPath = AstPath(components.dropRight(1): _*)
+  def `../`: AstPath = AstPath(components.dropRight(1)*)
 
   def last = components.last
 
@@ -42,7 +42,7 @@ case class AstPath(components: Component*) {
       other.components.take(components.length) == components
 
   def repath(fromRoot: AstPath, toRoot: AstPath): AstPath =
-    AstPath((toRoot.components ++ components.drop(fromRoot.components.length)): _*)
+    AstPath((toRoot.components ++ components.drop(fromRoot.components.length))*)
 
   def traverse(astNode: AstNode): Option[AstNode] = {
     import AstPath._
@@ -81,7 +81,7 @@ case class AstPath(components: Component*) {
 trait PositionalAstFolder[A] {
   import AstPath._
   def visitProcedureDefinition(proc: ProcedureDefinition)(a: A): A = {
-    visitStatements(proc.statements, AstPath(Proc(proc.procedure.name.toUpperCase)))(a)
+    visitStatements(proc.statements, AstPath(Proc(proc.procedure.name.toUpperCase)))(using a)
   }
   def visitCommandBlock(block: CommandBlock, position: AstPath)(implicit a: A): A = {
     visitStatements(block.statements, position)
@@ -101,7 +101,7 @@ trait PositionalAstFolder[A] {
 
   def visitReporterApp(app: ReporterApp, position: AstPath)(implicit a: A): A = {
     app.args.zipWithIndex.foldLeft(a) {
-      case (acc, (arg, i)) => visitExpression(arg, position, i)(acc)
+      case (acc, (arg, i)) => visitExpression(arg, position, i)(using acc)
     }
   }
 
@@ -111,13 +111,13 @@ trait PositionalAstFolder[A] {
 
   def visitStatement(stmt: Statement, position: AstPath)(implicit a: A): A = {
     stmt.args.zipWithIndex.foldLeft(a) {
-      case (acc, (arg, i)) => visitExpression(arg, position, i)(acc)
+      case (acc, (arg, i)) => visitExpression(arg, position, i)(using acc)
     }
   }
 
   def visitStatements(statements: Statements, position: AstPath)(implicit a: A): A = {
     statements.stmts.zipWithIndex.foldLeft(a) {
-      case (acc, (arg, i)) => visitStatement(arg, position / Stmt(i))(acc)
+      case (acc, (arg, i)) => visitStatement(arg, position / Stmt(i))(using acc)
     }
   }
 }

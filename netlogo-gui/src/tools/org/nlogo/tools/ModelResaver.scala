@@ -58,7 +58,7 @@ object ModelResaver {
   }
 
   def resaveAllModels(): Unit = {
-    traverseModels(Paths.get(modelsRoot), resaveModel _)
+    traverseModels(Paths.get(modelsRoot), resaveModel)
   }
 
   lazy val literalParser =
@@ -69,7 +69,7 @@ object ModelResaver {
     try {
       val converter =
         FileFormat.converter(ws.getExtensionManager, ws.getLibraryManager, ws.getCompilationEnvironment,
-          literalParser, FileFormat.defaultAutoConvertables :+ SDMAutoConvertable) _
+          literalParser, FileFormat.defaultAutoConvertables :+ SDMAutoConvertable)
       val modelLoader =
         FileFormat.standardAnyLoader(false, ws.compiler.utilities)
           .addSerializer[Array[String], NLogoFormat](new NLogoGuiSDMFormat())
