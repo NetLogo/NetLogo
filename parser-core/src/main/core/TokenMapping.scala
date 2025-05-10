@@ -2,471 +2,473 @@
 
 package org.nlogo.core
 
-private val file = """C __apply etc._apply
-C __bench etc._bench
-C __clear-all-and-reset-ticks etc._clearallandresetticks
-C __done _done
-C __experimentstepend etc._experimentstepend
-C __export-drawing etc._exportdrawing
-C __foreverbuttonend etc._foreverbuttonend
-C __ignore etc._ignore
-C __let _let
-C __linkcode etc._linkcode
-C __mkdir etc._mkdir
-C __observercode etc._observercode
-C __patchcode etc._patchcode
-C __plot-pen-hide etc._plotpenhide
-C __plot-pen-show etc._plotpenshow
-C __pwd etc._pwd
-C __reload-extensions etc._reloadextensions
-C __set-line-thickness etc._setlinethickness
-C __stderr etc._stderr
-C __stdout etc._stdout
-C __thunk-did-finish etc._thunkdidfinish
-C __turtlecode etc._turtlecode
-C ask _ask
-C ask-concurrent _askconcurrent
-C auto-plot-off etc._autoplotoff
-C auto-plot-on etc._autoploton
-C auto-plot-x-off etc._autoplotxoff
-C auto-plot-x-on etc._autoplotxon
-C auto-plot-y-off etc._autoplotyoff
-C auto-plot-y-on etc._autoplotyon
-C back _bk
-C beep etc._beep
-C bk _bk
-C ca etc._clearall
-C carefully _carefully
-C cd etc._cleardrawing
-C clear-all etc._clearall
-C clear-all-plots etc._clearallplots
-C clear-drawing etc._cleardrawing
-C clear-globals etc._clearglobals
-C clear-links etc._clearlinks
-C clear-output etc._clearoutput
-C clear-patches etc._clearpatches
-C clear-plot etc._clearplot
-C clear-ticks etc._clearticks
-C clear-turtles etc._clearturtles
-C cp etc._clearpatches
-C create-link-from etc._createlinkfrom
-C create-link-to etc._createlinkto
-C create-link-with etc._createlinkwith
-C create-links-from etc._createlinksfrom
-C create-links-to etc._createlinksto
-C create-links-with etc._createlinkswith
-C create-ordered-turtles _createorderedturtles
-C create-temporary-plot-pen etc._createtemporaryplotpen
-C create-turtles _createturtles
-C cro _createorderedturtles
-C crt _createturtles
-C ct etc._clearturtles
-C die etc._die
-C diffuse etc._diffuse
-C diffuse4 etc._diffuse4
-C display etc._display
-C downhill etc._downhill
-C downhill4 etc._downhill4
-C error etc._error
-C every etc._every
-C export-all-plots etc._exportplots
-C export-interface etc._exportinterface
-C export-output etc._exportoutput
-C export-plot etc._exportplot
-C export-view etc._exportview
-C export-world etc._exportworld
-C face etc._face
-C facexy etc._facexy
-C fd _fd
-C file-close etc._fileclose
-C file-close-all etc._filecloseall
-C file-delete etc._filedelete
-C file-flush etc._fileflush
-C file-open etc._fileopen
-C file-print etc._fileprint
-C file-show etc._fileshow
-C file-type etc._filetype
-C file-write etc._filewrite
-C follow etc._follow
-C follow-me etc._followme
-C foreach etc._foreach
-C forward _fd
-C hatch _hatch
-C hide-link etc._hidelink
-C hide-turtle etc._hideturtle
-C histogram etc._histogram
-C home etc._home
-C ht etc._hideturtle
-C hubnet-broadcast hubnet._hubnetbroadcast
-C hubnet-broadcast-clear-output hubnet._hubnetbroadcastclearoutput
-C hubnet-broadcast-message hubnet._hubnetbroadcastmessage
-C hubnet-clear-override hubnet._hubnetclearoverride
-C hubnet-clear-overrides hubnet._hubnetclearoverrides
-C hubnet-fetch-message hubnet._hubnetfetchmessage
-C hubnet-kick-all-clients hubnet._hubnetkickallclients
-C hubnet-kick-client hubnet._hubnetkickclient
-C hubnet-reset hubnet._hubnetreset
-C hubnet-reset-perspective hubnet._hubnetresetperspective
-C hubnet-send hubnet._hubnetsend
-C hubnet-send-clear-output hubnet._hubnetsendclearoutput
-C hubnet-send-follow hubnet._hubnetsendfollow
-C hubnet-send-message hubnet._hubnetsendmessage
-C hubnet-send-override hubnet._hubnetsendoverride
-C hubnet-send-watch hubnet._hubnetsendwatch
-C if etc._if
-C if-else etc._ifelse
-C ifelse etc._ifelse
-C import-drawing etc._importdrawing
-C import-pcolors etc._importpatchcolors
-C import-pcolors-rgb etc._importpcolorsrgb
-C import-world etc._importworld
-C inspect etc._inspect
-C jump _jump
-C layout-circle etc._layoutcircle
-C layout-radial etc._layoutradial
-C layout-spring etc._layoutspring
-C layout-tutte etc._layouttutte
-C left etc._left
-C let _let
-C loop etc._loop
-C lt etc._left
-C move-to etc._moveto
-C no-display etc._nodisplay
-C output-print etc._outputprint
-C output-show etc._outputshow
-C output-type etc._outputtype
-C output-write etc._outputwrite
-C pd etc._pendown
-C pe etc._penerase
-C pen-down etc._pendown
-C pen-erase etc._penerase
-C pen-up etc._penup
-C pendown etc._pendown
-C penup etc._penup
-C plot etc._plot
-C plot-pen-down etc._plotpendown
-C plot-pen-reset etc._plotpenreset
-C plot-pen-up etc._plotpenup
-C plotxy etc._plotxy
-C print etc._print
-C pu etc._penup
-C random-seed etc._randomseed
-C repeat _repeat
-C report _report
-C reset-perspective etc._resetperspective
-C reset-ticks etc._resetticks
-C reset-timer etc._resettimer
-C resize-world etc._resizeworld
-C ride etc._ride
-C ride-me etc._rideme
-C right etc._right
-C rp etc._resetperspective
-C rt etc._right
-C run _run
-C set _set
-C set-current-directory etc._setcurdir
-C set-current-plot etc._setcurrentplot
-C set-current-plot-pen etc._setcurrentplotpen
-C set-default-shape etc._setdefaultshape
-C set-histogram-num-bars etc._sethistogramnumbars
-C set-patch-size etc._setpatchsize
-C set-plot-pen-color etc._setplotpencolor
-C set-plot-pen-interval etc._setplotpeninterval
-C set-plot-pen-mode etc._setplotpenmode
-C set-plot-x-range etc._setplotxrange
-C set-plot-y-range etc._setplotyrange
-C set-topology etc._settopology
-C setup-plots etc._setupplots
-C setxy etc._setxy
-C show etc._show
-C show-link etc._showlink
-C show-turtle etc._showturtle
-C sprout _sprout
-C st etc._showturtle
-C stamp etc._stamp
-C stamp-erase etc._stamperase
-C stop _stop
-C stop-inspecting etc._stopinspecting
-C stop-inspecting-dead-agents etc._stopinspectingdeadagents
-C tick etc._tick
-C tick-advance etc._tickadvance
-C tie etc._tie
-C type etc._type
-C untie etc._untie
-C update-plots etc._updateplots
-C uphill etc._uphill
-C uphill4 etc._uphill4
-C user-message etc._usermessage
-C wait etc._wait
-C watch etc._watch
-C watch-me etc._watchme
-C while etc._while
-C with-local-randomness etc._withlocalrandomness
-C without-interruption etc._withoutinterruption
-C write etc._write
-R != _notequal
-R * etc._mult
-R + etc._plus
-R - _minus
-R / etc._div
-R < _lessthan
-R <= etc._lessorequal
-R = _equal
-R > _greaterthan
-R >= etc._greaterorequal
-R ^ etc._pow
-R __apply-result etc._applyresult
-R __boom etc._boom
-R __block etc._block
-R __check-syntax etc._checksyntax
-R __checksum etc._checksum
-R __dump etc._dump
-R __dump-extension-prims etc._dumpextensionprims
-R __dump-extensions etc._dumpextensions
-R __dump1 etc._dump1
-R __nano-time etc._nanotime
-R __processors etc._processors
-R __random-state etc._randomstate
-R __reference etc._reference
-R __stack-trace etc._stacktrace
-R __symbol etc._symbolstring
-R __to-string etc._tostring
-R abs etc._abs
-R acos etc._acos
-R all? etc._all
-R and _and
-R any? _any
-R approximate-hsb etc._approximatehsb
-R approximate-rgb etc._approximatergb
-R asin etc._asin
-R at-points etc._atpoints
-R atan etc._atan
-R autoplot? etc._autoplot
-R autoplotx? etc._autoplotx
-R autoploty? etc._autoploty
-R base-colors etc._basecolors
-R behaviorspace-experiment-name etc._behaviorspaceexperimentname
-R behaviorspace-run-number etc._behaviorspacerunnumber
-R bf etc._butfirst
-R bl etc._butlast
-R both-ends etc._bothends
-R but-first etc._butfirst
-R but-last etc._butlast
-R butfirst etc._butfirst
-R butlast etc._butlast
-R can-move? etc._canmove
-R ceiling etc._ceil
-R cos etc._cos
-R count _count
-R date-and-time etc._dateandtime
-R distance etc._distance
-R distancexy etc._distancexy
-R dx etc._dx
-R dy etc._dy
-R empty? etc._empty
-R error-message _errormessage
-R exp etc._exp
-R extract-hsb etc._extracthsb
-R extract-rgb etc._extractrgb
-R file-at-end? etc._fileatend
-R file-exists? etc._fileexists
-R file-read etc._fileread
-R file-read-characters etc._filereadchars
-R file-read-line etc._filereadline
-R filter etc._filter
-R first etc._first
-R floor etc._floor
-R fput etc._fput
-R home-directory _homedirectory
-R hsb etc._hsb
-R hubnet-clients-list hubnet._hubnetclientslist
-R hubnet-enter-message? hubnet._hubnetentermessage
-R hubnet-exit-message? hubnet._hubnetexitmessage
-R hubnet-message hubnet._hubnetmessage
-R hubnet-message-source hubnet._hubnetmessagesource
-R hubnet-message-tag hubnet._hubnetmessagetag
-R hubnet-message-waiting? hubnet._hubnetmessagewaiting
-R ifelse-value etc._ifelsevalue
-R in-cone etc._incone
-R in-link-from etc._inlinkfrom
-R in-link-neighbor? etc._inlinkneighbor
-R in-link-neighbors etc._inlinkneighbors
-R in-radius _inradius
-R insert-item etc._insertitem
-R int etc._int
-R is-agent? etc._isagent
-R is-agentset? etc._isagentset
-R is-anonymous-command? etc._isanonymouscommand
-R is-anonymous-reporter? etc._isanonymousreporter
-R is-boolean? etc._isboolean
-R is-directed-link? etc._isdirectedlink
-R is-link-set? etc._islinkset
-R is-link? etc._islink
-R is-list? etc._islist
-R is-number? etc._isnumber
-R is-patch-set? etc._ispatchset
-R is-patch? etc._ispatch
-R is-string? etc._isstring
-R is-turtle-set? etc._isturtleset
-R is-turtle? etc._isturtle
-R is-undirected-link? etc._isundirectedlink
-R item etc._item
-R last etc._last
-R length etc._length
-R link etc._link
-R link-heading etc._linkheading
-R link-length etc._linklength
-R link-neighbor? etc._linkneighbor
-R link-neighbors etc._linkneighbors
-R link-set etc._linkset
-R link-shapes etc._linkshapes
-R link-with etc._linkwith
-R links etc._links
-R list _list
-R ln etc._ln
-R log etc._log
-R lput etc._lput
-R map etc._map
-R max etc._max
-R max-n-of etc._maxnof
-R max-one-of etc._maxoneof
-R max-pxcor etc._maxpxcor
-R max-pycor etc._maxpycor
-R mean etc._mean
-R median etc._median
-R member? etc._member
-R min etc._min
-R min-n-of etc._minnof
-R min-one-of etc._minoneof
-R min-pxcor etc._minpxcor
-R min-pycor etc._minpycor
-R mod etc._mod
-R modes etc._modes
-R mouse-down? etc._mousedown
-R mouse-inside? etc._mouseinside
-R mouse-xcor etc._mousexcor
-R mouse-ycor etc._mouseycor
-R my-in-links etc._myinlinks
-R my-links etc._mylinks
-R my-out-links etc._myoutlinks
-R myself etc._myself
-R n-of etc._nof
-R n-values etc._nvalues
-R neighbors _neighbors
-R neighbors4 _neighbors4
-R netlogo-applet? etc._netlogoapplet
-R netlogo-version etc._netlogoversion
-R netlogo-web? etc._netlogoweb
-R new-seed etc._newseed
-R no-links etc._nolinks
-R no-patches etc._nopatches
-R no-turtles etc._noturtles
-R not _not
-R of _of
-R one-of _oneof
-R or _or
-R other _other
-R other-end etc._otherend
-R out-link-neighbor? etc._outlinkneighbor
-R out-link-neighbors etc._outlinkneighbors
-R out-link-to etc._outlinkto
-R patch etc._patch
-R patch-ahead etc._patchahead
-R patch-at _patchat
-R patch-at-heading-and-distance etc._patchatheadinganddistance
-R patch-here etc._patchhere
-R patch-left-and-ahead etc._patchleftandahead
-R patch-right-and-ahead etc._patchrightandahead
-R patch-set etc._patchset
-R patch-size etc._patchsize
-R patches _patches
-R plot-name etc._plotname
-R plot-pen-exists? etc._plotpenexists
-R plot-x-max etc._plotxmax
-R plot-x-min etc._plotxmin
-R plot-y-max etc._plotymax
-R plot-y-min etc._plotymin
-R position etc._position
-R precision etc._precision
-R random _random
-R random-exponential etc._randomexponential
-R random-float etc._randomfloat
-R random-gamma etc._randomgamma
-R random-normal etc._randomnormal
-R random-poisson etc._randompoisson
-R random-pxcor etc._randompxcor
-R random-pycor etc._randompycor
-R random-xcor etc._randomxcor
-R random-ycor etc._randomycor
-R range etc._range
-R read-from-string etc._readfromstring
-R reduce etc._reduce
-R remainder etc._remainder
-R remove etc._remove
-R remove-duplicates etc._removeduplicates
-R remove-item etc._removeitem
-R replace-item etc._replaceitem
-R reverse etc._reverse
-R rgb etc._rgb
-R round etc._round
-R run-result etc._runresult
-R runresult etc._runresult
-R scale-color etc._scalecolor
-R se _sentence
-R self etc._self
-R sentence _sentence
-R shade-of? etc._shadeof
-R shapes etc._shapes
-R shuffle etc._shuffle
-R sin etc._sin
-R sort etc._sort
-R sort-by etc._sortby
-R sort-on etc._sorton
-R sqrt etc._sqrt
-R standard-deviation etc._standarddeviation
-R subject etc._subject
-R sublist etc._sublist
-R substring etc._substring
-R subtract-headings etc._subtractheadings
-R sum _sum
-R tan etc._tan
-R ticks etc._ticks
-R timer etc._timer
-R towards etc._towards
-R towardsxy etc._towardsxy
-R turtle _turtle
-R turtle-set etc._turtleset
-R turtles _turtles
-R turtles-at etc._turtlesat
-R turtles-here etc._turtleshere
-R turtles-on _turtleson
-R up-to-n-of etc._uptonof
-R user-directory etc._userdirectory
-R user-file etc._userfile
-R user-input etc._userinput
-R user-new-file etc._usernewfile
-R user-one-of etc._useroneof
-R user-yes-or-no? etc._useryesorno
-R variance etc._variance
-R who-are-not _whoarenot
-R with _with
-R with-max etc._withmax
-R with-min etc._withmin
-R word _word
-R world-height etc._worldheight
-R world-width etc._worldwidth
-R wrap-color etc._wrapcolor
-R xor etc._xor"""
+object TokenMapping {
+  val commandClassNames: Map[String, String] = Map(
+    "__APPLY" -> "org.nlogo.core.prim.etc._apply",
+    "__BENCH" -> "org.nlogo.core.prim.etc._bench",
+    "__CLEAR-ALL-AND-RESET-TICKS" -> "org.nlogo.core.prim.etc._clearallandresetticks",
+    "__DONE" -> "org.nlogo.core.prim._done",
+    "__EXPERIMENTSTEPEND" -> "org.nlogo.core.prim.etc._experimentstepend",
+    "__EXPORT-DRAWING" -> "org.nlogo.core.prim.etc._exportdrawing",
+    "__FOREVERBUTTONEND" -> "org.nlogo.core.prim.etc._foreverbuttonend",
+    "__IGNORE" -> "org.nlogo.core.prim.etc._ignore",
+    "__LET" -> "org.nlogo.core.prim._let",
+    "__LINKCODE" -> "org.nlogo.core.prim.etc._linkcode",
+    "__MKDIR" -> "org.nlogo.core.prim.etc._mkdir",
+    "__OBSERVERCODE" -> "org.nlogo.core.prim.etc._observercode",
+    "__PATCHCODE" -> "org.nlogo.core.prim.etc._patchcode",
+    "__PLOT-PEN-HIDE" -> "org.nlogo.core.prim.etc._plotpenhide",
+    "__PLOT-PEN-SHOW" -> "org.nlogo.core.prim.etc._plotpenshow",
+    "__PWD" -> "org.nlogo.core.prim.etc._pwd",
+    "__RELOAD-EXTENSIONS" -> "org.nlogo.core.prim.etc._reloadextensions",
+    "__SET-LINE-THICKNESS" -> "org.nlogo.core.prim.etc._setlinethickness",
+    "__STDERR" -> "org.nlogo.core.prim.etc._stderr",
+    "__STDOUT" -> "org.nlogo.core.prim.etc._stdout",
+    "__THUNK-DID-FINISH" -> "org.nlogo.core.prim.etc._thunkdidfinish",
+    "__TURTLECODE" -> "org.nlogo.core.prim.etc._turtlecode",
+    "ASK" -> "org.nlogo.core.prim._ask",
+    "ASK-CONCURRENT" -> "org.nlogo.core.prim._askconcurrent",
+    "AUTO-PLOT-OFF" -> "org.nlogo.core.prim.etc._autoplotoff",
+    "AUTO-PLOT-ON" -> "org.nlogo.core.prim.etc._autoploton",
+    "AUTO-PLOT-X-OFF" -> "org.nlogo.core.prim.etc._autoplotxoff",
+    "AUTO-PLOT-X-ON" -> "org.nlogo.core.prim.etc._autoplotxon",
+    "AUTO-PLOT-Y-OFF" -> "org.nlogo.core.prim.etc._autoplotyoff",
+    "AUTO-PLOT-Y-ON" -> "org.nlogo.core.prim.etc._autoplotyon",
+    "BACK" -> "org.nlogo.core.prim._bk",
+    "BEEP" -> "org.nlogo.core.prim.etc._beep",
+    "BK" -> "org.nlogo.core.prim._bk",
+    "CA" -> "org.nlogo.core.prim.etc._clearall",
+    "CAREFULLY" -> "org.nlogo.core.prim._carefully",
+    "CD" -> "org.nlogo.core.prim.etc._cleardrawing",
+    "CLEAR-ALL" -> "org.nlogo.core.prim.etc._clearall",
+    "CLEAR-ALL-PLOTS" -> "org.nlogo.core.prim.etc._clearallplots",
+    "CLEAR-DRAWING" -> "org.nlogo.core.prim.etc._cleardrawing",
+    "CLEAR-GLOBALS" -> "org.nlogo.core.prim.etc._clearglobals",
+    "CLEAR-LINKS" -> "org.nlogo.core.prim.etc._clearlinks",
+    "CLEAR-OUTPUT" -> "org.nlogo.core.prim.etc._clearoutput",
+    "CLEAR-PATCHES" -> "org.nlogo.core.prim.etc._clearpatches",
+    "CLEAR-PLOT" -> "org.nlogo.core.prim.etc._clearplot",
+    "CLEAR-TICKS" -> "org.nlogo.core.prim.etc._clearticks",
+    "CLEAR-TURTLES" -> "org.nlogo.core.prim.etc._clearturtles",
+    "CP" -> "org.nlogo.core.prim.etc._clearpatches",
+    "CREATE-LINK-FROM" -> "org.nlogo.core.prim.etc._createlinkfrom",
+    "CREATE-LINK-TO" -> "org.nlogo.core.prim.etc._createlinkto",
+    "CREATE-LINK-WITH" -> "org.nlogo.core.prim.etc._createlinkwith",
+    "CREATE-LINKS-FROM" -> "org.nlogo.core.prim.etc._createlinksfrom",
+    "CREATE-LINKS-TO" -> "org.nlogo.core.prim.etc._createlinksto",
+    "CREATE-LINKS-WITH" -> "org.nlogo.core.prim.etc._createlinkswith",
+    "CREATE-ORDERED-TURTLES" -> "org.nlogo.core.prim._createorderedturtles",
+    "CREATE-TEMPORARY-PLOT-PEN" -> "org.nlogo.core.prim.etc._createtemporaryplotpen",
+    "CREATE-TURTLES" -> "org.nlogo.core.prim._createturtles",
+    "CRO" -> "org.nlogo.core.prim._createorderedturtles",
+    "CRT" -> "org.nlogo.core.prim._createturtles",
+    "CT" -> "org.nlogo.core.prim.etc._clearturtles",
+    "DIE" -> "org.nlogo.core.prim.etc._die",
+    "DIFFUSE" -> "org.nlogo.core.prim.etc._diffuse",
+    "DIFFUSE4" -> "org.nlogo.core.prim.etc._diffuse4",
+    "DISPLAY" -> "org.nlogo.core.prim.etc._display",
+    "DOWNHILL" -> "org.nlogo.core.prim.etc._downhill",
+    "DOWNHILL4" -> "org.nlogo.core.prim.etc._downhill4",
+    "ERROR" -> "org.nlogo.core.prim.etc._error",
+    "EVERY" -> "org.nlogo.core.prim.etc._every",
+    "EXPORT-ALL-PLOTS" -> "org.nlogo.core.prim.etc._exportplots",
+    "EXPORT-INTERFACE" -> "org.nlogo.core.prim.etc._exportinterface",
+    "EXPORT-OUTPUT" -> "org.nlogo.core.prim.etc._exportoutput",
+    "EXPORT-PLOT" -> "org.nlogo.core.prim.etc._exportplot",
+    "EXPORT-VIEW" -> "org.nlogo.core.prim.etc._exportview",
+    "EXPORT-WORLD" -> "org.nlogo.core.prim.etc._exportworld",
+    "FACE" -> "org.nlogo.core.prim.etc._face",
+    "FACEXY" -> "org.nlogo.core.prim.etc._facexy",
+    "FD" -> "org.nlogo.core.prim._fd",
+    "FILE-CLOSE" -> "org.nlogo.core.prim.etc._fileclose",
+    "FILE-CLOSE-ALL" -> "org.nlogo.core.prim.etc._filecloseall",
+    "FILE-DELETE" -> "org.nlogo.core.prim.etc._filedelete",
+    "FILE-FLUSH" -> "org.nlogo.core.prim.etc._fileflush",
+    "FILE-OPEN" -> "org.nlogo.core.prim.etc._fileopen",
+    "FILE-PRINT" -> "org.nlogo.core.prim.etc._fileprint",
+    "FILE-SHOW" -> "org.nlogo.core.prim.etc._fileshow",
+    "FILE-TYPE" -> "org.nlogo.core.prim.etc._filetype",
+    "FILE-WRITE" -> "org.nlogo.core.prim.etc._filewrite",
+    "FOLLOW" -> "org.nlogo.core.prim.etc._follow",
+    "FOLLOW-ME" -> "org.nlogo.core.prim.etc._followme",
+    "FOREACH" -> "org.nlogo.core.prim.etc._foreach",
+    "FORWARD" -> "org.nlogo.core.prim._fd",
+    "HATCH" -> "org.nlogo.core.prim._hatch",
+    "HIDE-LINK" -> "org.nlogo.core.prim.etc._hidelink",
+    "HIDE-TURTLE" -> "org.nlogo.core.prim.etc._hideturtle",
+    "HISTOGRAM" -> "org.nlogo.core.prim.etc._histogram",
+    "HOME" -> "org.nlogo.core.prim.etc._home",
+    "HT" -> "org.nlogo.core.prim.etc._hideturtle",
+    "HUBNET-BROADCAST" -> "org.nlogo.core.prim.hubnet._hubnetbroadcast",
+    "HUBNET-BROADCAST-CLEAR-OUTPUT" -> "org.nlogo.core.prim.hubnet._hubnetbroadcastclearoutput",
+    "HUBNET-BROADCAST-MESSAGE" -> "org.nlogo.core.prim.hubnet._hubnetbroadcastmessage",
+    "HUBNET-CLEAR-OVERRIDE" -> "org.nlogo.core.prim.hubnet._hubnetclearoverride",
+    "HUBNET-CLEAR-OVERRIDES" -> "org.nlogo.core.prim.hubnet._hubnetclearoverrides",
+    "HUBNET-FETCH-MESSAGE" -> "org.nlogo.core.prim.hubnet._hubnetfetchmessage",
+    "HUBNET-KICK-ALL-CLIENTS" -> "org.nlogo.core.prim.hubnet._hubnetkickallclients",
+    "HUBNET-KICK-CLIENT" -> "org.nlogo.core.prim.hubnet._hubnetkickclient",
+    "HUBNET-RESET" -> "org.nlogo.core.prim.hubnet._hubnetreset",
+    "HUBNET-RESET-PERSPECTIVE" -> "org.nlogo.core.prim.hubnet._hubnetresetperspective",
+    "HUBNET-SEND" -> "org.nlogo.core.prim.hubnet._hubnetsend",
+    "HUBNET-SEND-CLEAR-OUTPUT" -> "org.nlogo.core.prim.hubnet._hubnetsendclearoutput",
+    "HUBNET-SEND-FOLLOW" -> "org.nlogo.core.prim.hubnet._hubnetsendfollow",
+    "HUBNET-SEND-MESSAGE" -> "org.nlogo.core.prim.hubnet._hubnetsendmessage",
+    "HUBNET-SEND-OVERRIDE" -> "org.nlogo.core.prim.hubnet._hubnetsendoverride",
+    "HUBNET-SEND-WATCH" -> "org.nlogo.core.prim.hubnet._hubnetsendwatch",
+    "IF" -> "org.nlogo.core.prim.etc._if",
+    "IF-ELSE" -> "org.nlogo.core.prim.etc._ifelse",
+    "IFELSE" -> "org.nlogo.core.prim.etc._ifelse",
+    "IMPORT-DRAWING" -> "org.nlogo.core.prim.etc._importdrawing",
+    "IMPORT-PCOLORS" -> "org.nlogo.core.prim.etc._importpatchcolors",
+    "IMPORT-PCOLORS-RGB" -> "org.nlogo.core.prim.etc._importpcolorsrgb",
+    "IMPORT-WORLD" -> "org.nlogo.core.prim.etc._importworld",
+    "INSPECT" -> "org.nlogo.core.prim.etc._inspect",
+    "JUMP" -> "org.nlogo.core.prim._jump",
+    "LAYOUT-CIRCLE" -> "org.nlogo.core.prim.etc._layoutcircle",
+    "LAYOUT-RADIAL" -> "org.nlogo.core.prim.etc._layoutradial",
+    "LAYOUT-SPRING" -> "org.nlogo.core.prim.etc._layoutspring",
+    "LAYOUT-TUTTE" -> "org.nlogo.core.prim.etc._layouttutte",
+    "LEFT" -> "org.nlogo.core.prim.etc._left",
+    "LET" -> "org.nlogo.core.prim._let",
+    "LOOP" -> "org.nlogo.core.prim.etc._loop",
+    "LT" -> "org.nlogo.core.prim.etc._left",
+    "MOVE-TO" -> "org.nlogo.core.prim.etc._moveto",
+    "NO-DISPLAY" -> "org.nlogo.core.prim.etc._nodisplay",
+    "OUTPUT-PRINT" -> "org.nlogo.core.prim.etc._outputprint",
+    "OUTPUT-SHOW" -> "org.nlogo.core.prim.etc._outputshow",
+    "OUTPUT-TYPE" -> "org.nlogo.core.prim.etc._outputtype",
+    "OUTPUT-WRITE" -> "org.nlogo.core.prim.etc._outputwrite",
+    "PD" -> "org.nlogo.core.prim.etc._pendown",
+    "PE" -> "org.nlogo.core.prim.etc._penerase",
+    "PEN-DOWN" -> "org.nlogo.core.prim.etc._pendown",
+    "PEN-ERASE" -> "org.nlogo.core.prim.etc._penerase",
+    "PEN-UP" -> "org.nlogo.core.prim.etc._penup",
+    "PENDOWN" -> "org.nlogo.core.prim.etc._pendown",
+    "PENUP" -> "org.nlogo.core.prim.etc._penup",
+    "PLOT" -> "org.nlogo.core.prim.etc._plot",
+    "PLOT-PEN-DOWN" -> "org.nlogo.core.prim.etc._plotpendown",
+    "PLOT-PEN-RESET" -> "org.nlogo.core.prim.etc._plotpenreset",
+    "PLOT-PEN-UP" -> "org.nlogo.core.prim.etc._plotpenup",
+    "PLOTXY" -> "org.nlogo.core.prim.etc._plotxy",
+    "PRINT" -> "org.nlogo.core.prim.etc._print",
+    "PU" -> "org.nlogo.core.prim.etc._penup",
+    "RANDOM-SEED" -> "org.nlogo.core.prim.etc._randomseed",
+    "REPEAT" -> "org.nlogo.core.prim._repeat",
+    "REPORT" -> "org.nlogo.core.prim._report",
+    "RESET-PERSPECTIVE" -> "org.nlogo.core.prim.etc._resetperspective",
+    "RESET-TICKS" -> "org.nlogo.core.prim.etc._resetticks",
+    "RESET-TIMER" -> "org.nlogo.core.prim.etc._resettimer",
+    "RESIZE-WORLD" -> "org.nlogo.core.prim.etc._resizeworld",
+    "RIDE" -> "org.nlogo.core.prim.etc._ride",
+    "RIDE-ME" -> "org.nlogo.core.prim.etc._rideme",
+    "RIGHT" -> "org.nlogo.core.prim.etc._right",
+    "RP" -> "org.nlogo.core.prim.etc._resetperspective",
+    "RT" -> "org.nlogo.core.prim.etc._right",
+    "RUN" -> "org.nlogo.core.prim._run",
+    "SET" -> "org.nlogo.core.prim._set",
+    "SET-CURRENT-DIRECTORY" -> "org.nlogo.core.prim.etc._setcurdir",
+    "SET-CURRENT-PLOT" -> "org.nlogo.core.prim.etc._setcurrentplot",
+    "SET-CURRENT-PLOT-PEN" -> "org.nlogo.core.prim.etc._setcurrentplotpen",
+    "SET-DEFAULT-SHAPE" -> "org.nlogo.core.prim.etc._setdefaultshape",
+    "SET-HISTOGRAM-NUM-BARS" -> "org.nlogo.core.prim.etc._sethistogramnumbars",
+    "SET-PATCH-SIZE" -> "org.nlogo.core.prim.etc._setpatchsize",
+    "SET-PLOT-PEN-COLOR" -> "org.nlogo.core.prim.etc._setplotpencolor",
+    "SET-PLOT-PEN-INTERVAL" -> "org.nlogo.core.prim.etc._setplotpeninterval",
+    "SET-PLOT-PEN-MODE" -> "org.nlogo.core.prim.etc._setplotpenmode",
+    "SET-PLOT-X-RANGE" -> "org.nlogo.core.prim.etc._setplotxrange",
+    "SET-PLOT-Y-RANGE" -> "org.nlogo.core.prim.etc._setplotyrange",
+    "SET-TOPOLOGY" -> "org.nlogo.core.prim.etc._settopology",
+    "SETUP-PLOTS" -> "org.nlogo.core.prim.etc._setupplots",
+    "SETXY" -> "org.nlogo.core.prim.etc._setxy",
+    "SHOW" -> "org.nlogo.core.prim.etc._show",
+    "SHOW-LINK" -> "org.nlogo.core.prim.etc._showlink",
+    "SHOW-TURTLE" -> "org.nlogo.core.prim.etc._showturtle",
+    "SPROUT" -> "org.nlogo.core.prim._sprout",
+    "ST" -> "org.nlogo.core.prim.etc._showturtle",
+    "STAMP" -> "org.nlogo.core.prim.etc._stamp",
+    "STAMP-ERASE" -> "org.nlogo.core.prim.etc._stamperase",
+    "STOP" -> "org.nlogo.core.prim._stop",
+    "STOP-INSPECTING" -> "org.nlogo.core.prim.etc._stopinspecting",
+    "STOP-INSPECTING-DEAD-AGENTS" -> "org.nlogo.core.prim.etc._stopinspectingdeadagents",
+    "TICK" -> "org.nlogo.core.prim.etc._tick",
+    "TICK-ADVANCE" -> "org.nlogo.core.prim.etc._tickadvance",
+    "TIE" -> "org.nlogo.core.prim.etc._tie",
+    "TYPE" -> "org.nlogo.core.prim.etc._type",
+    "UNTIE" -> "org.nlogo.core.prim.etc._untie",
+    "UPDATE-PLOTS" -> "org.nlogo.core.prim.etc._updateplots",
+    "UPHILL" -> "org.nlogo.core.prim.etc._uphill",
+    "UPHILL4" -> "org.nlogo.core.prim.etc._uphill4",
+    "USER-MESSAGE" -> "org.nlogo.core.prim.etc._usermessage",
+    "WAIT" -> "org.nlogo.core.prim.etc._wait",
+    "WATCH" -> "org.nlogo.core.prim.etc._watch",
+    "WATCH-ME" -> "org.nlogo.core.prim.etc._watchme",
+    "WHILE" -> "org.nlogo.core.prim.etc._while",
+    "WITH-LOCAL-RANDOMNESS" -> "org.nlogo.core.prim.etc._withlocalrandomness",
+    "WITHOUT-INTERRUPTION" -> "org.nlogo.core.prim.etc._withoutinterruption",
+    "WRITE" -> "org.nlogo.core.prim.etc._write"
+  )
 
-object TokenMapping1 {
-  val reporters: Map[String, String] = file.split("\n").filter(_.startsWith("R")).map((line) => line.split(" ").tail).map { case Array(x, y) => x.toUpperCase -> s"org.nlogo.core.prim.${y}" }.toMap
-  val  commands: Map[String, String] = file.split("\n").filter(_.startsWith("C")).map((line) => line.split(" ").tail).map { case Array(x, y) => x.toUpperCase -> s"org.nlogo.core.prim.${y}" }.toMap
-}
+  val reporterClassNames: Map[String, String] = Map(
+    "!=" -> "org.nlogo.core.prim._notequal",
+    "*" -> "org.nlogo.core.prim.etc._mult",
+    "+" -> "org.nlogo.core.prim.etc._plus",
+    "-" -> "org.nlogo.core.prim._minus",
+    "/" -> "org.nlogo.core.prim.etc._div",
+    "<" -> "org.nlogo.core.prim._lessthan",
+    "<=" -> "org.nlogo.core.prim.etc._lessorequal",
+    "=" -> "org.nlogo.core.prim._equal",
+    ">" -> "org.nlogo.core.prim._greaterthan",
+    ">=" -> "org.nlogo.core.prim.etc._greaterorequal",
+    "^" -> "org.nlogo.core.prim.etc._pow",
+    "__APPLY-RESULT" -> "org.nlogo.core.prim.etc._applyresult",
+    "__BOOM" -> "org.nlogo.core.prim.etc._boom",
+    "__BLOCK" -> "org.nlogo.core.prim.etc._block",
+    "__CHECK-SYNTAX" -> "org.nlogo.core.prim.etc._checksyntax",
+    "__CHECKSUM" -> "org.nlogo.core.prim.etc._checksum",
+    "__DUMP" -> "org.nlogo.core.prim.etc._dump",
+    "__DUMP-EXTENSION-PRIMS" -> "org.nlogo.core.prim.etc._dumpextensionprims",
+    "__DUMP-EXTENSIONS" -> "org.nlogo.core.prim.etc._dumpextensions",
+    "__DUMP1" -> "org.nlogo.core.prim.etc._dump1",
+    "__NANO-TIME" -> "org.nlogo.core.prim.etc._nanotime",
+    "__PROCESSORS" -> "org.nlogo.core.prim.etc._processors",
+    "__RANDOM-STATE" -> "org.nlogo.core.prim.etc._randomstate",
+    "__REFERENCE" -> "org.nlogo.core.prim.etc._reference",
+    "__STACK-TRACE" -> "org.nlogo.core.prim.etc._stacktrace",
+    "__SYMBOL" -> "org.nlogo.core.prim.etc._symbolstring",
+    "__TO-STRING" -> "org.nlogo.core.prim.etc._tostring",
+    "ABS" -> "org.nlogo.core.prim.etc._abs",
+    "ACOS" -> "org.nlogo.core.prim.etc._acos",
+    "ALL?" -> "org.nlogo.core.prim.etc._all",
+    "AND" -> "org.nlogo.core.prim._and",
+    "ANY?" -> "org.nlogo.core.prim._any",
+    "APPROXIMATE-HSB" -> "org.nlogo.core.prim.etc._approximatehsb",
+    "APPROXIMATE-RGB" -> "org.nlogo.core.prim.etc._approximatergb",
+    "ASIN" -> "org.nlogo.core.prim.etc._asin",
+    "AT-POINTS" -> "org.nlogo.core.prim.etc._atpoints",
+    "ATAN" -> "org.nlogo.core.prim.etc._atan",
+    "AUTOPLOT?" -> "org.nlogo.core.prim.etc._autoplot",
+    "AUTOPLOTX?" -> "org.nlogo.core.prim.etc._autoplotx",
+    "AUTOPLOTY?" -> "org.nlogo.core.prim.etc._autoploty",
+    "BASE-COLORS" -> "org.nlogo.core.prim.etc._basecolors",
+    "BEHAVIORSPACE-EXPERIMENT-NAME" -> "org.nlogo.core.prim.etc._behaviorspaceexperimentname",
+    "BEHAVIORSPACE-RUN-NUMBER" -> "org.nlogo.core.prim.etc._behaviorspacerunnumber",
+    "BF" -> "org.nlogo.core.prim.etc._butfirst",
+    "BL" -> "org.nlogo.core.prim.etc._butlast",
+    "BOTH-ENDS" -> "org.nlogo.core.prim.etc._bothends",
+    "BUT-FIRST" -> "org.nlogo.core.prim.etc._butfirst",
+    "BUT-LAST" -> "org.nlogo.core.prim.etc._butlast",
+    "BUTFIRST" -> "org.nlogo.core.prim.etc._butfirst",
+    "BUTLAST" -> "org.nlogo.core.prim.etc._butlast",
+    "CAN-MOVE?" -> "org.nlogo.core.prim.etc._canmove",
+    "CEILING" -> "org.nlogo.core.prim.etc._ceil",
+    "COS" -> "org.nlogo.core.prim.etc._cos",
+    "COUNT" -> "org.nlogo.core.prim._count",
+    "DATE-AND-TIME" -> "org.nlogo.core.prim.etc._dateandtime",
+    "DISTANCE" -> "org.nlogo.core.prim.etc._distance",
+    "DISTANCEXY" -> "org.nlogo.core.prim.etc._distancexy",
+    "DX" -> "org.nlogo.core.prim.etc._dx",
+    "DY" -> "org.nlogo.core.prim.etc._dy",
+    "EMPTY?" -> "org.nlogo.core.prim.etc._empty",
+    "ERROR-MESSAGE" -> "org.nlogo.core.prim._errormessage",
+    "EXP" -> "org.nlogo.core.prim.etc._exp",
+    "EXTRACT-HSB" -> "org.nlogo.core.prim.etc._extracthsb",
+    "EXTRACT-RGB" -> "org.nlogo.core.prim.etc._extractrgb",
+    "FILE-AT-END?" -> "org.nlogo.core.prim.etc._fileatend",
+    "FILE-EXISTS?" -> "org.nlogo.core.prim.etc._fileexists",
+    "FILE-READ" -> "org.nlogo.core.prim.etc._fileread",
+    "FILE-READ-CHARACTERS" -> "org.nlogo.core.prim.etc._filereadchars",
+    "FILE-READ-LINE" -> "org.nlogo.core.prim.etc._filereadline",
+    "FILTER" -> "org.nlogo.core.prim.etc._filter",
+    "FIRST" -> "org.nlogo.core.prim.etc._first",
+    "FLOOR" -> "org.nlogo.core.prim.etc._floor",
+    "FPUT" -> "org.nlogo.core.prim.etc._fput",
+    "HOME-DIRECTORY" -> "org.nlogo.core.prim._homedirectory",
+    "HSB" -> "org.nlogo.core.prim.etc._hsb",
+    "HUBNET-CLIENTS-LIST" -> "org.nlogo.core.prim.hubnet._hubnetclientslist",
+    "HUBNET-ENTER-MESSAGE?" -> "org.nlogo.core.prim.hubnet._hubnetentermessage",
+    "HUBNET-EXIT-MESSAGE?" -> "org.nlogo.core.prim.hubnet._hubnetexitmessage",
+    "HUBNET-MESSAGE" -> "org.nlogo.core.prim.hubnet._hubnetmessage",
+    "HUBNET-MESSAGE-SOURCE" -> "org.nlogo.core.prim.hubnet._hubnetmessagesource",
+    "HUBNET-MESSAGE-TAG" -> "org.nlogo.core.prim.hubnet._hubnetmessagetag",
+    "HUBNET-MESSAGE-WAITING?" -> "org.nlogo.core.prim.hubnet._hubnetmessagewaiting",
+    "IFELSE-VALUE" -> "org.nlogo.core.prim.etc._ifelsevalue",
+    "IN-CONE" -> "org.nlogo.core.prim.etc._incone",
+    "IN-LINK-FROM" -> "org.nlogo.core.prim.etc._inlinkfrom",
+    "IN-LINK-NEIGHBOR?" -> "org.nlogo.core.prim.etc._inlinkneighbor",
+    "IN-LINK-NEIGHBORS" -> "org.nlogo.core.prim.etc._inlinkneighbors",
+    "IN-RADIUS" -> "org.nlogo.core.prim._inradius",
+    "INSERT-ITEM" -> "org.nlogo.core.prim.etc._insertitem",
+    "INT" -> "org.nlogo.core.prim.etc._int",
+    "IS-AGENT?" -> "org.nlogo.core.prim.etc._isagent",
+    "IS-AGENTSET?" -> "org.nlogo.core.prim.etc._isagentset",
+    "IS-ANONYMOUS-COMMAND?" -> "org.nlogo.core.prim.etc._isanonymouscommand",
+    "IS-ANONYMOUS-REPORTER?" -> "org.nlogo.core.prim.etc._isanonymousreporter",
+    "IS-BOOLEAN?" -> "org.nlogo.core.prim.etc._isboolean",
+    "IS-DIRECTED-LINK?" -> "org.nlogo.core.prim.etc._isdirectedlink",
+    "IS-LINK-SET?" -> "org.nlogo.core.prim.etc._islinkset",
+    "IS-LINK?" -> "org.nlogo.core.prim.etc._islink",
+    "IS-LIST?" -> "org.nlogo.core.prim.etc._islist",
+    "IS-NUMBER?" -> "org.nlogo.core.prim.etc._isnumber",
+    "IS-PATCH-SET?" -> "org.nlogo.core.prim.etc._ispatchset",
+    "IS-PATCH?" -> "org.nlogo.core.prim.etc._ispatch",
+    "IS-STRING?" -> "org.nlogo.core.prim.etc._isstring",
+    "IS-TURTLE-SET?" -> "org.nlogo.core.prim.etc._isturtleset",
+    "IS-TURTLE?" -> "org.nlogo.core.prim.etc._isturtle",
+    "IS-UNDIRECTED-LINK?" -> "org.nlogo.core.prim.etc._isundirectedlink",
+    "ITEM" -> "org.nlogo.core.prim.etc._item",
+    "LAST" -> "org.nlogo.core.prim.etc._last",
+    "LENGTH" -> "org.nlogo.core.prim.etc._length",
+    "LINK" -> "org.nlogo.core.prim.etc._link",
+    "LINK-HEADING" -> "org.nlogo.core.prim.etc._linkheading",
+    "LINK-LENGTH" -> "org.nlogo.core.prim.etc._linklength",
+    "LINK-NEIGHBOR?" -> "org.nlogo.core.prim.etc._linkneighbor",
+    "LINK-NEIGHBORS" -> "org.nlogo.core.prim.etc._linkneighbors",
+    "LINK-SET" -> "org.nlogo.core.prim.etc._linkset",
+    "LINK-SHAPES" -> "org.nlogo.core.prim.etc._linkshapes",
+    "LINK-WITH" -> "org.nlogo.core.prim.etc._linkwith",
+    "LINKS" -> "org.nlogo.core.prim.etc._links",
+    "LIST" -> "org.nlogo.core.prim._list",
+    "LN" -> "org.nlogo.core.prim.etc._ln",
+    "LOG" -> "org.nlogo.core.prim.etc._log",
+    "LPUT" -> "org.nlogo.core.prim.etc._lput",
+    "MAP" -> "org.nlogo.core.prim.etc._map",
+    "MAX" -> "org.nlogo.core.prim.etc._max",
+    "MAX-N-OF" -> "org.nlogo.core.prim.etc._maxnof",
+    "MAX-ONE-OF" -> "org.nlogo.core.prim.etc._maxoneof",
+    "MAX-PXCOR" -> "org.nlogo.core.prim.etc._maxpxcor",
+    "MAX-PYCOR" -> "org.nlogo.core.prim.etc._maxpycor",
+    "MEAN" -> "org.nlogo.core.prim.etc._mean",
+    "MEDIAN" -> "org.nlogo.core.prim.etc._median",
+    "MEMBER?" -> "org.nlogo.core.prim.etc._member",
+    "MIN" -> "org.nlogo.core.prim.etc._min",
+    "MIN-N-OF" -> "org.nlogo.core.prim.etc._minnof",
+    "MIN-ONE-OF" -> "org.nlogo.core.prim.etc._minoneof",
+    "MIN-PXCOR" -> "org.nlogo.core.prim.etc._minpxcor",
+    "MIN-PYCOR" -> "org.nlogo.core.prim.etc._minpycor",
+    "MOD" -> "org.nlogo.core.prim.etc._mod",
+    "MODES" -> "org.nlogo.core.prim.etc._modes",
+    "MOUSE-DOWN?" -> "org.nlogo.core.prim.etc._mousedown",
+    "MOUSE-INSIDE?" -> "org.nlogo.core.prim.etc._mouseinside",
+    "MOUSE-XCOR" -> "org.nlogo.core.prim.etc._mousexcor",
+    "MOUSE-YCOR" -> "org.nlogo.core.prim.etc._mouseycor",
+    "MY-IN-LINKS" -> "org.nlogo.core.prim.etc._myinlinks",
+    "MY-LINKS" -> "org.nlogo.core.prim.etc._mylinks",
+    "MY-OUT-LINKS" -> "org.nlogo.core.prim.etc._myoutlinks",
+    "MYSELF" -> "org.nlogo.core.prim.etc._myself",
+    "N-OF" -> "org.nlogo.core.prim.etc._nof",
+    "N-VALUES" -> "org.nlogo.core.prim.etc._nvalues",
+    "NEIGHBORS" -> "org.nlogo.core.prim._neighbors",
+    "NEIGHBORS4" -> "org.nlogo.core.prim._neighbors4",
+    "NETLOGO-APPLET?" -> "org.nlogo.core.prim.etc._netlogoapplet",
+    "NETLOGO-VERSION" -> "org.nlogo.core.prim.etc._netlogoversion",
+    "NETLOGO-WEB?" -> "org.nlogo.core.prim.etc._netlogoweb",
+    "NEW-SEED" -> "org.nlogo.core.prim.etc._newseed",
+    "NO-LINKS" -> "org.nlogo.core.prim.etc._nolinks",
+    "NO-PATCHES" -> "org.nlogo.core.prim.etc._nopatches",
+    "NO-TURTLES" -> "org.nlogo.core.prim.etc._noturtles",
+    "NOT" -> "org.nlogo.core.prim._not",
+    "OF" -> "org.nlogo.core.prim._of",
+    "ONE-OF" -> "org.nlogo.core.prim._oneof",
+    "OR" -> "org.nlogo.core.prim._or",
+    "OTHER" -> "org.nlogo.core.prim._other",
+    "OTHER-END" -> "org.nlogo.core.prim.etc._otherend",
+    "OUT-LINK-NEIGHBOR?" -> "org.nlogo.core.prim.etc._outlinkneighbor",
+    "OUT-LINK-NEIGHBORS" -> "org.nlogo.core.prim.etc._outlinkneighbors",
+    "OUT-LINK-TO" -> "org.nlogo.core.prim.etc._outlinkto",
+    "PATCH" -> "org.nlogo.core.prim.etc._patch",
+    "PATCH-AHEAD" -> "org.nlogo.core.prim.etc._patchahead",
+    "PATCH-AT" -> "org.nlogo.core.prim._patchat",
+    "PATCH-AT-HEADING-AND-DISTANCE" -> "org.nlogo.core.prim.etc._patchatheadinganddistance",
+    "PATCH-HERE" -> "org.nlogo.core.prim.etc._patchhere",
+    "PATCH-LEFT-AND-AHEAD" -> "org.nlogo.core.prim.etc._patchleftandahead",
+    "PATCH-RIGHT-AND-AHEAD" -> "org.nlogo.core.prim.etc._patchrightandahead",
+    "PATCH-SET" -> "org.nlogo.core.prim.etc._patchset",
+    "PATCH-SIZE" -> "org.nlogo.core.prim.etc._patchsize",
+    "PATCHES" -> "org.nlogo.core.prim._patches",
+    "PLOT-NAME" -> "org.nlogo.core.prim.etc._plotname",
+    "PLOT-PEN-EXISTS?" -> "org.nlogo.core.prim.etc._plotpenexists",
+    "PLOT-X-MAX" -> "org.nlogo.core.prim.etc._plotxmax",
+    "PLOT-X-MIN" -> "org.nlogo.core.prim.etc._plotxmin",
+    "PLOT-Y-MAX" -> "org.nlogo.core.prim.etc._plotymax",
+    "PLOT-Y-MIN" -> "org.nlogo.core.prim.etc._plotymin",
+    "POSITION" -> "org.nlogo.core.prim.etc._position",
+    "PRECISION" -> "org.nlogo.core.prim.etc._precision",
+    "RANDOM" -> "org.nlogo.core.prim._random",
+    "RANDOM-EXPONENTIAL" -> "org.nlogo.core.prim.etc._randomexponential",
+    "RANDOM-FLOAT" -> "org.nlogo.core.prim.etc._randomfloat",
+    "RANDOM-GAMMA" -> "org.nlogo.core.prim.etc._randomgamma",
+    "RANDOM-NORMAL" -> "org.nlogo.core.prim.etc._randomnormal",
+    "RANDOM-POISSON" -> "org.nlogo.core.prim.etc._randompoisson",
+    "RANDOM-PXCOR" -> "org.nlogo.core.prim.etc._randompxcor",
+    "RANDOM-PYCOR" -> "org.nlogo.core.prim.etc._randompycor",
+    "RANDOM-XCOR" -> "org.nlogo.core.prim.etc._randomxcor",
+    "RANDOM-YCOR" -> "org.nlogo.core.prim.etc._randomycor",
+    "RANGE" -> "org.nlogo.core.prim.etc._range",
+    "READ-FROM-STRING" -> "org.nlogo.core.prim.etc._readfromstring",
+    "REDUCE" -> "org.nlogo.core.prim.etc._reduce",
+    "REMAINDER" -> "org.nlogo.core.prim.etc._remainder",
+    "REMOVE" -> "org.nlogo.core.prim.etc._remove",
+    "REMOVE-DUPLICATES" -> "org.nlogo.core.prim.etc._removeduplicates",
+    "REMOVE-ITEM" -> "org.nlogo.core.prim.etc._removeitem",
+    "REPLACE-ITEM" -> "org.nlogo.core.prim.etc._replaceitem",
+    "REVERSE" -> "org.nlogo.core.prim.etc._reverse",
+    "RGB" -> "org.nlogo.core.prim.etc._rgb",
+    "ROUND" -> "org.nlogo.core.prim.etc._round",
+    "RUN-RESULT" -> "org.nlogo.core.prim.etc._runresult",
+    "RUNRESULT" -> "org.nlogo.core.prim.etc._runresult",
+    "SCALE-COLOR" -> "org.nlogo.core.prim.etc._scalecolor",
+    "SE" -> "org.nlogo.core.prim._sentence",
+    "SELF" -> "org.nlogo.core.prim.etc._self",
+    "SENTENCE" -> "org.nlogo.core.prim._sentence",
+    "SHADE-OF?" -> "org.nlogo.core.prim.etc._shadeof",
+    "SHAPES" -> "org.nlogo.core.prim.etc._shapes",
+    "SHUFFLE" -> "org.nlogo.core.prim.etc._shuffle",
+    "SIN" -> "org.nlogo.core.prim.etc._sin",
+    "SORT" -> "org.nlogo.core.prim.etc._sort",
+    "SORT-BY" -> "org.nlogo.core.prim.etc._sortby",
+    "SORT-ON" -> "org.nlogo.core.prim.etc._sorton",
+    "SQRT" -> "org.nlogo.core.prim.etc._sqrt",
+    "STANDARD-DEVIATION" -> "org.nlogo.core.prim.etc._standarddeviation",
+    "SUBJECT" -> "org.nlogo.core.prim.etc._subject",
+    "SUBLIST" -> "org.nlogo.core.prim.etc._sublist",
+    "SUBSTRING" -> "org.nlogo.core.prim.etc._substring",
+    "SUBTRACT-HEADINGS" -> "org.nlogo.core.prim.etc._subtractheadings",
+    "SUM" -> "org.nlogo.core.prim._sum",
+    "TAN" -> "org.nlogo.core.prim.etc._tan",
+    "TICKS" -> "org.nlogo.core.prim.etc._ticks",
+    "TIMER" -> "org.nlogo.core.prim.etc._timer",
+    "TOWARDS" -> "org.nlogo.core.prim.etc._towards",
+    "TOWARDSXY" -> "org.nlogo.core.prim.etc._towardsxy",
+    "TURTLE" -> "org.nlogo.core.prim._turtle",
+    "TURTLE-SET" -> "org.nlogo.core.prim.etc._turtleset",
+    "TURTLES" -> "org.nlogo.core.prim._turtles",
+    "TURTLES-AT" -> "org.nlogo.core.prim.etc._turtlesat",
+    "TURTLES-HERE" -> "org.nlogo.core.prim.etc._turtleshere",
+    "TURTLES-ON" -> "org.nlogo.core.prim._turtleson",
+    "UP-TO-N-OF" -> "org.nlogo.core.prim.etc._uptonof",
+    "USER-DIRECTORY" -> "org.nlogo.core.prim.etc._userdirectory",
+    "USER-FILE" -> "org.nlogo.core.prim.etc._userfile",
+    "USER-INPUT" -> "org.nlogo.core.prim.etc._userinput",
+    "USER-NEW-FILE" -> "org.nlogo.core.prim.etc._usernewfile",
+    "USER-ONE-OF" -> "org.nlogo.core.prim.etc._useroneof",
+    "USER-YES-OR-NO?" -> "org.nlogo.core.prim.etc._useryesorno",
+    "VARIANCE" -> "org.nlogo.core.prim.etc._variance",
+    "WHO-ARE-NOT" -> "org.nlogo.core.prim._whoarenot",
+    "WITH" -> "org.nlogo.core.prim._with",
+    "WITH-MAX" -> "org.nlogo.core.prim.etc._withmax",
+    "WITH-MIN" -> "org.nlogo.core.prim.etc._withmin",
+    "WORD" -> "org.nlogo.core.prim._word",
+    "WORLD-HEIGHT" -> "org.nlogo.core.prim.etc._worldheight",
+    "WORLD-WIDTH" -> "org.nlogo.core.prim.etc._worldwidth",
+    "WRAP-COLOR" -> "org.nlogo.core.prim.etc._wrapcolor",
+    "XOR" -> "org.nlogo.core.prim.etc._xor"
+  )
 
-object TokenMapping2 {
+  def commandPrimToInstance(name: String): Option[Command] =
+    commandClassNames.get(name).flatMap(commandClassToInstance)
 
-  def command(name: String): Command = {
-    name match {
+  def commandClassToInstance(name: String): Option[Command] = {
+    Option(name match {
       case "org.nlogo.core.prim._askconcurrent"                     => new org.nlogo.core.prim._askconcurrent
       case "org.nlogo.core.prim._ask"                               => new org.nlogo.core.prim._ask
       case "org.nlogo.core.prim._bk"                                => new org.nlogo.core.prim._bk
@@ -649,12 +651,15 @@ object TokenMapping2 {
       case "org.nlogo.core.prim._set"                               => new org.nlogo.core.prim._set
       case "org.nlogo.core.prim._sprout"                            => new org.nlogo.core.prim._sprout
       case "org.nlogo.core.prim._stop"                              => new org.nlogo.core.prim._stop
-    }
-
+      case _                                                        => null
+    })
   }
 
-  def reporter(name: String): Reporter = {
-    name match {
+  def reporterPrimToInstance(name: String): Option[Reporter] =
+    reporterClassNames.get(name).flatMap(reporterClassToInstance)
+
+  def reporterClassToInstance(name: String): Option[Reporter] = {
+    Option(name match {
       case "org.nlogo.core.prim._and"                             => new org.nlogo.core.prim._and
       case "org.nlogo.core.prim._any"                             => new org.nlogo.core.prim._any
       case "org.nlogo.core.prim._count"                           => new org.nlogo.core.prim._count
@@ -902,11 +907,12 @@ object TokenMapping2 {
       case "org.nlogo.core.prim._whoarenot"                       => new org.nlogo.core.prim._whoarenot
       case "org.nlogo.core.prim._with"                            => new org.nlogo.core.prim._with
       case "org.nlogo.core.prim._word"                            => new org.nlogo.core.prim._word
-    }
+      case _                                                      => null
+    })
   }
 
-  def breeded(primName: String, breedName: String): Option[Instruction] = {
-    ({
+  def bred(primName: String, breedName: String): Option[Instruction] = {
+    Option(primName match {
       case "_createorderedturtles"  => new org.nlogo.core.prim._createorderedturtles(breedName)
       case "_createturtles"         => new org.nlogo.core.prim._createturtles(breedName)
       case "_hatch"                 => new org.nlogo.core.prim._hatch(breedName)
@@ -937,8 +943,7 @@ object TokenMapping2 {
       case "etc._outlinkneighbor"   => new org.nlogo.core.prim.etc._outlinkneighbor(breedName)
       case "etc._outlinkneighbors"  => new org.nlogo.core.prim.etc._outlinkneighbors(breedName)
       case "etc._outlinkto"         => new org.nlogo.core.prim.etc._outlinkto(breedName)
-
-    }: PartialFunction[String, Instruction]).lift(primName)
+      case _                        => null
+    })
   }
-
 }
