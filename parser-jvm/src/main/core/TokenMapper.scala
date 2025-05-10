@@ -7,16 +7,11 @@ object DefaultTokenMapper extends
 
 class TokenMapper(path: String, prefix: String) extends TokenMapperInterface {
   def getCommand(s: String): Option[Command] =
-    commands.get(s.toUpperCase).map(instantiate[Command])
+    commands.get(s.toUpperCase).map(c => TokenMapping2.command(c))
   def getReporter(s: String): Option[Reporter] =
-    reporters.get(s.toUpperCase).map(instantiate[Reporter])
+    reporters.get(s.toUpperCase).map(r => TokenMapping2.reporter(r))
   def breedInstruction(primName: String, breedName: String): Option[Instruction] =
-    try {
-      Some(Instantiator.newInstance[Instruction](
-        Class.forName(s"org.nlogo.core.prim.$primName"), breedName))
-    } catch {
-      case e: ClassNotFoundException => None
-    }
+    TokenMapping2.breeded(primName, breedName)
 
   private def entries(entryType: String): Iterator[(String, String)] =
     for {
@@ -32,9 +27,6 @@ class TokenMapper(path: String, prefix: String) extends TokenMapperInterface {
   private val reporters = entries("R").toMap
   def allCommandNames = commands.keySet
   def allReporterNames = reporters.keySet
-  /// private helper
-  private def instantiate[T](name: String) =
-    Class.forName(name).getDeclaredConstructor().newInstance().asInstanceOf[T]
   // for integration testing
   def allCommandClassNames = commands.values.toSet
   def allReporterClassNames = reporters.values.toSet
