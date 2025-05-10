@@ -7,18 +7,14 @@ object DefaultTokenMapper extends
 
 class TokenMapper(location: String, prefix: String) extends TokenMapperInterface {
   def getCommand(s: String): Option[Command] =
-    commands.get(s.toUpperCase).map(_())
+    commands.get(s.toUpperCase).map(c => TokenMapping2.command(c))
   def getReporter(s: String): Option[Reporter] =
-    reporters.get(s.toUpperCase).map(_())
+    reporters.get(s.toUpperCase).map(r => TokenMapping2.reporter(r))
   def breedInstruction(primName: String, breedName: String): Option[Instruction] =
-    breedConstructorPool.get(s"org.nlogo.core.prim.$primName").map(_(breedName))
+    TokenMapping2.breeded(primName, breedName)
 
-  val breedConstructorPool: Map[String, String => Instruction] =
-    TokenClasses.packageConstructors[Instruction]("org.nlogo.core.prim")
-  val reporters:Map[String, () => Reporter] =
-    TokenClasses.compiledReporters[Reporter]("org.nlogo.core.prim")
-  val commands:Map[String, () => Command] =
-    TokenClasses.compiledCommands[Command]("org.nlogo.core.prim")
+  val reporters:Map[String, String] = TokenMapping1.reporters
+  val commands:Map[String, String] = TokenMapping1.commands
 
   def allCommandNames = commands.keySet
   def allReporterNames = reporters.keySet
