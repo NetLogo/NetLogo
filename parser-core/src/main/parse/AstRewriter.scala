@@ -38,8 +38,8 @@ class AstRewriter(val tokenizer: TokenizerInterface, op: CompilationOperand) ext
     rewrite(new ReplaceReporterVisitor(replaceReporter), preserveBody)
   }
 
-  def customRewrite(className: String): String = {
-    rewrite(Femto.get(className), preserveBody)
+  def lambdaize(): String = {
+    rewrite(new Lambdaizer, preserveBody)
   }
 
   def runVisitor(folder: PositionalAstFolder[AstEdit]): String = {

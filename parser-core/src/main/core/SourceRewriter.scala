@@ -12,5 +12,5 @@ trait SourceRewriter {
   def addCommand(sourceAndNewCommand: (String, String)): String
   def replaceCommand(sourceAndDestCommand: (String, String)): String
   def replaceReporter(sourceAndDestReporter: (String, String)): String
-  def customRewrite(className: String): String
+  def lambdaize(): String
 }
