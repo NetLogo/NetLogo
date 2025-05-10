@@ -66,11 +66,11 @@ public class View
   }
 
   public void displaySwitch(boolean on) {
-    workspace.getViewWidget().displaySwitch().setOn(on);
+    workspace.viewWidget().displaySwitch().setOn(on);
   }
 
   public boolean displaySwitch() {
-    return workspace.getViewWidget().displaySwitch().isSelected();
+    return workspace.viewWidget().displaySwitch().isSelected();
   }
 
   private final Runnable paintRunnable =
@@ -383,7 +383,7 @@ public class View
   }
 
   public java.awt.Component getExportWindowFrame() {
-    return workspace.getViewWidget();
+    return workspace.viewWidget();
   }
 
   protected double patchSize = 13.0;
