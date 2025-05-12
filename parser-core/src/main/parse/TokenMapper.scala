@@ -19,7 +19,7 @@ class TokenMapper extends TokenMapperInterface {
   def getReporter(s: String): Option[Reporter] =
     TokenMapping.reporterPrimToInstance(s.toUpperCase)
   def breedInstruction(primName: String, breedName: String): Option[Instruction] =
-    TokenMapping.bred(primName, breedName)
+    TokenMapping.breeded(breedName)(primName)
 
   def checkInstructionMaps(): Unit = {
     commands.keySet.foreach(getCommand)
