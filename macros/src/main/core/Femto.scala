@@ -16,17 +16,20 @@ object Femto {
   }
 
   private def dynamicConstructor[T: Type](name: Expr[String], argsExpr: Expr[Seq[Any]])(using Quotes): Expr[T] = {
+
     import quotes.reflect.*
 
-    val clazz = Symbol.requiredClass(name.valueOrAbort)
-    val ctor = Select(New(TypeIdent(clazz)), clazz.primaryConstructor)
+    val args =
+      argsExpr match {
+        case Varargs(as) => as.map(_.asTerm).toList
+        case _           => List()
+      }
 
-    val args = argsExpr match {
-      case Varargs(as) => as.map(_.asTerm).toList
-      case _ => List()
-    }
+    val clazz  = Symbol.classSymbol(name.valueOrAbort)
+    val ctor   = clazz.primaryConstructor
 
-    Apply(ctor, args).asExprOf[T]
+    New(TypeTree.ref(clazz)).select(ctor).appliedToArgs(args).asExprOf[T]
+
   }
 
 }
