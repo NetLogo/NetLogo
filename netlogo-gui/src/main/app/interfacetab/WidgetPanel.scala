@@ -865,7 +865,7 @@ class WidgetPanel(val workspace: GUIWorkspace)
       target match {
         case comp: Component =>
           comp.getParent match {
-            case ww: WidgetWrapper =>
+            case ww: WidgetWrapper if ww.isNew =>
               WidgetActions.addWidget(this, ww)
 
               LogManager.widgetAdded(false, ww.widget.classDisplayName, ww.widget.displayName)
