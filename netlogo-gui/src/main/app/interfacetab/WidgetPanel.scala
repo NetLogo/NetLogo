@@ -1346,7 +1346,16 @@ class WidgetPanel(val workspace: GUIWorkspace)
       getWrappers.foreach { w =>
         if (w.widget.oldSize) {
           w.widget.oldSize(false)
-          w.setSize(new Dimension(w.getPreferredSize.width.max(w.getWidth), w.getPreferredSize.height.max(w.getHeight)))
+
+          val width = w.getPreferredSize.width.max(w.getWidth)
+          val height = w.getPreferredSize.height.max(w.getHeight)
+
+          // add some extra height so that the increase in padding doesn't decrease the internal plot size (Isaac B 5/13/25)
+          if (w.widget.isInstanceOf[PlotWidget]) {
+            w.setSize(new Dimension(width, height + 7))
+          } else {
+            w.setSize(new Dimension(width, height))
+          }
         }
       }
 
@@ -1372,7 +1381,16 @@ class WidgetPanel(val workspace: GUIWorkspace)
       getWrappers.foreach { w =>
         if (w.widget.oldSize) {
           w.widget.oldSize(false)
-          w.setSize(new Dimension(w.getPreferredSize.width.max(w.getWidth), w.getPreferredSize.height.max(w.getHeight)))
+
+          val width = w.getPreferredSize.width.max(w.getWidth)
+          val height = w.getPreferredSize.height.max(w.getHeight)
+
+          // add some extra height so that the increase in padding doesn't decrease the internal plot size (Isaac B 5/13/25)
+          if (w.widget.isInstanceOf[PlotWidget]) {
+            w.setSize(new Dimension(width, height + 7))
+          } else {
+            w.setSize(new Dimension(width, height))
+          }
         }
       }
     }
