@@ -87,6 +87,15 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
     new LabeledEditor(threadCount, s"<html>${I18N.gui.getN("tools.behaviorSpace.runoptions.simultaneousruns.info",
                                                            defaultProcessors, totalProcessors)}</html>")
 
+  private val mirrorHeadlessOutput =
+    new BooleanEditor(
+      new PropertyAccessor(
+        target,
+        I18N.gui.get("tools.behaviorSpace.runoptions.mirrorHeadlessOutput"),
+        () => target.mirrorHeadlessOutput,
+        target.setMirrorHeadlessOutput(_),
+        () => apply()))
+
   locally {
     val c = new GridBagConstraints
 
@@ -105,12 +114,13 @@ class RunOptionsEditPanel(target: RunOptionsDialog#EditableRunOptions, spreadshe
     add(updateView, c)
     add(updateLabeled, c)
     add(threadCountLabeled, c)
+    add(mirrorHeadlessOutput, c)
 
     spreadsheet.requestFocus()
   }
 
   override def propertyEditors: Seq[PropertyEditor[?]] =
-    Seq(spreadsheet, table, stats, lists, updateView, updatePlotsAndMonitors, threadCount)
+    Seq(spreadsheet, table, stats, lists, updateView, updatePlotsAndMonitors, threadCount, mirrorHeadlessOutput)
 
   override def syncExtraComponents(): Unit = {
     updateLabeled.syncTheme()
