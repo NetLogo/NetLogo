@@ -40,14 +40,16 @@ object Main {
     }
     proto match {
       case Some(protocol) =>
-        runExperimentWithProtocol(settings, protocol, finish)
+        runExperimentWithProtocol(settings, protocol, _ => {}, finish)
 
       case None =>
         throw new IllegalArgumentException("Invalid run, specify experiment name or setup file")
     }
   }
 
-  def runExperimentWithProtocol(settings: Settings, protocol: LabProtocol, finish: () => Unit = () => {}): Unit = {
+  // used in bspace extension
+  def runExperimentWithProtocol(settings: Settings, protocol: LabProtocol, assignWorker: Worker => Unit,
+                                finish: () => Unit = () => {}): Unit = {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
     var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
     def newWorkspace = {
@@ -61,7 +63,9 @@ object Main {
       w
     }
     val lab = HeadlessWorkspace.newLab
-    lab.run(settings, protocol, () => newWorkspace, finish)
+    val worker = lab.newWorker(protocol)
+    assignWorker(worker)
+    lab.run(settings, worker, () => newWorkspace, finish)
   }
 
   def setHeadlessProperty(): Unit = {
@@ -169,7 +173,7 @@ object Main {
       else
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
-    Some(new Settings(model.get, experiment, setupFile, tableWriter,
-                      spreadsheetWriter, statsWriter, listsWriter, dims, threads, suppressErrors, updatePlots))
+    Some(new Settings(model.get, experiment, setupFile, tableWriter, spreadsheetWriter, statsWriter, listsWriter, dims,
+                      threads, suppressErrors, updatePlots, None)) // mainWorkspace
   }
 }

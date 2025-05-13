@@ -10,4 +10,5 @@ case class LabRunOptions(threadCount: Int = LabDefaultValues.getDefaultThreads,
                          lists: String = LabDefaultValues.getDefaultLists,
                          updateView: Boolean = LabDefaultValues.getDefaultUpdateView,
                          updatePlotsAndMonitors: Boolean = LabDefaultValues.getDefaultUpdatePlotsAndMonitors,
+                         mirrorHeadlessOutput: Boolean = LabDefaultValues.getDefaultMirrorHeadlessOutput,
                          firstRun: Boolean = true)

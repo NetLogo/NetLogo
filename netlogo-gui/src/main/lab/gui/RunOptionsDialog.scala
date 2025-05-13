@@ -19,6 +19,7 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
   val listsFile = s"$filePrefix-lists.csv"
   val totalProcessors = Runtime.getRuntime.availableProcessors
   val defaultProcessors = LabDefaultValues.getDefaultThreads
+  val mirrorHeadlessOutput = LabDefaultValues.getDefaultMirrorHeadlessOutput
 
   object Prefs {
     // to match the behavior we had before (just boolean spreadsheet/table), if we had a
@@ -69,6 +70,7 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
     def updateView = NetLogoPreferences.getBoolean("updateView", true)
     def updatePlotsAndMonitors = NetLogoPreferences.getBoolean("updatePlotsAndMonitors", true)
     def updateThreadCount = NetLogoPreferences.getInt("threadCount", defaultProcessors)
+    def mirrorHeadlessOutput = NetLogoPreferences.getBoolean("mirrorHeadlessOutput", false)
     def updateFrom(runOptions: LabRunOptions): Unit = {
       NetLogoPreferences.put("spreadsheet", parentDirectory(runOptions.spreadsheet))
       NetLogoPreferences.put("table", parentDirectory(runOptions.table))
@@ -77,6 +79,7 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
       NetLogoPreferences.putBoolean("updateView", runOptions.updateView)
       NetLogoPreferences.putBoolean("updatePlotsAndMonitors", runOptions.updatePlotsAndMonitors)
       NetLogoPreferences.putInt("threadCount", runOptions.threadCount)
+      NetLogoPreferences.putBoolean("mirrorHeadlessOutput", runOptions.mirrorHeadlessOutput)
     }
   }
   def get = {
@@ -95,7 +98,9 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
     private var _lists = Prefs.lists
     private var _updateView = Prefs.updateView
     private var _updatePlotsAndMonitors = Prefs.updatePlotsAndMonitors
-    private var _threadCount = Prefs.updateThreadCount
+    private var _threadCount = Prefs.threadCount
+    private var _mirrorHeadlessOutput = Prefs.mirrorHeadlessOutput
+
     val classDisplayName = I18N.gui("title")
 
     def spreadsheet: String = _spreadsheet
@@ -133,10 +138,16 @@ class RunOptionsDialog(parent: Window, dialogFactory: EditDialogFactory, filePre
       _threadCount = i
     }
 
+    def mirrorHeadlessOutput: Boolean = _mirrorHeadlessOutput
+    def setMirrorHeadlessOutput(b: Boolean): Unit = {
+      _mirrorHeadlessOutput = b
+    }
+
     override def editPanel: EditPanel = new RunOptionsEditPanel(this, spreadsheetFile, tableFile, statsFile, listsFile,
                                                                 defaultProcessors.toString, totalProcessors.toString)
 
-    def get = LabRunOptions(threadCount, table, spreadsheet, stats, lists, updateView, updatePlotsAndMonitors, false)
+    def get = LabRunOptions(threadCount, table, spreadsheet, stats, lists, updateView, updatePlotsAndMonitors,
+                            mirrorHeadlessOutput, false)
     // boilerplate for Editable
     def helpLink = Some("behaviorspace.html#running-an-experiment")
     val sourceOffset = 0
