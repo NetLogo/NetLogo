@@ -75,6 +75,7 @@ class DummyWorkspace extends Workspace {
   override def behaviorSpaceRunNumber(n: Int) = unsupported
   override def getBehaviorSpaceExperiments = List[LabProtocol]()
   override def setBehaviorSpaceExperiments(experiments: List[LabProtocol]) = unsupported
+  override def setMainWorkspace(workspace: Workspace): Unit = unsupported
   override def previewCommands = unsupported
 
   // from ImporterUser

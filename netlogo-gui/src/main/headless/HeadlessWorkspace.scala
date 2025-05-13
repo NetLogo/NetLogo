@@ -415,8 +415,11 @@ with org.nlogo.api.ViewSettings {
     if (!silent)
       print(oo.get)
     // we also need to record it if it headed for the Output Area widget
-    if (toOutputArea)
+    if (toOutputArea) {
       outputAreaBuffer.append(oo.get)
+    } else {
+      forwardOutput(oo)
+    }
   }
 
   /**
