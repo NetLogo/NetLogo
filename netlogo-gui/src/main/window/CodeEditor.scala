@@ -18,12 +18,12 @@ object CodeEditor {
 
     val accessor = new PropertyAccessor[String](new DummyEditable, displayName, () => "", _ => {}, () => changedFunc)
 
-    new CodeEditor(accessor, colorizer, collapsible, collapseWhenEmpty, rows, columns)
+    new CodeEditor(accessor, colorizer, collapsible, collapseWhenEmpty, rows, columns, err)
   }
 }
 
 class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, collapsible: Boolean = false,
-                 collapseWhenEmpty: Boolean = false, rows: Int = 5, columns: Int = 30)
+                 collapseWhenEmpty: Boolean = false, rows: Int = 5, columns: Int = 30, err: Option[Exception] = None)
   extends PropertyEditor(accessor) {
 
   val editorConfig =
@@ -96,7 +96,7 @@ class CodeEditor(accessor: PropertyAccessor[String], colorizer: Colorizer, colla
     editor.setText(value)
     setVisibility(value.nonEmpty)
     editor.select(0, 0)
-    accessor.target.error(accessor.name).foreach(errorLabel.setError(_, accessor.target.sourceOffset))
+    err.foreach(errorLabel.setError(_, accessor.target.sourceOffset))
   }
 
   override def setToolTipText(text: String): Unit = {
