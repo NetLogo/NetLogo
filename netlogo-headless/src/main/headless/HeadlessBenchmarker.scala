@@ -2,26 +2,35 @@
 
 package org.nlogo.headless
 
+import java.io.File
+
 import org.nlogo.api.Version
-import org.nlogo.workspace.{ AbstractWorkspace, Benchmarker }
+import org.nlogo.workspace.Benchmarker
 
 object HeadlessBenchmarker {
-  def main(argv:Array[String]): Unit = {
-    AbstractWorkspace.setHeadlessProperty()
-    val (name,minTime,maxTime) = argv match {
-      case Array(name)         => (name,60,300)
-      case Array(name,min)     => (name,min.toInt,min.toInt)
-      case Array(name,min,max) => (name,min.toInt,max.toInt)
-      case _ => throw new IllegalArgumentException("expected: name | name min | name min max")
-    }
+  def main(argv: Array[String]): Unit = {
+    System.setProperty("java.awt.headless", "true")
+
+    val minTime = 60
+    val maxTime = 300
+
     println("@@@@@@ benchmarking " + Version.fullVersion)
     println("@@@@@@ warmup " + minTime + " seconds, min " + minTime + " seconds, max " + maxTime + " seconds")
-    val workspace = HeadlessWorkspace.newInstance
-    workspace.silent = true
-    try {
-      workspace.open("../models/test/benchmarks/" + name + " Benchmark.nlogox")
-      Benchmarker.benchmark(workspace,minTime,maxTime)
+
+    (new File("models/test/benchmarks")).listFiles.foreach { file =>
+      if (file.isFile && file.getName.endsWith(".nlogox")) {
+        println("@@@@@@ running " + file.toString)
+
+        val workspace = HeadlessWorkspace.newInstance
+
+        workspace.silent = true
+
+        try {
+          workspace.open(file.toString)
+
+          Benchmarker.benchmark(workspace, minTime, maxTime)
+        } finally { workspace.dispose() }
+      }
     }
-    finally { workspace.dispose() }
   }
 }
