@@ -8,9 +8,11 @@ import javax.swing.{ JLabel, JPanel, SwingConstants }
 
 import org.nlogo.core.{ I18N, Pen => CorePen, Plot => CorePlot, Widget => CoreWidget }
 import org.nlogo.plot.{ PlotManagerInterface, PlotLoader, PlotPen, Plot }
-import org.nlogo.swing.{ RoundedBorderPanel, VTextIcon }
+import org.nlogo.swing.{ RoundedBorderPanel, Utils }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
 import org.nlogo.window.Events.{ AfterLoadEvent, CompiledEvent, WidgetErrorEvent, WidgetRemovedEvent }
+
+import scala.math.Pi
 
 abstract class AbstractPlotWidget(val plot:Plot, val plotManager: PlotManagerInterface)
   extends Widget with Editable with Plot.DirtyListener
@@ -386,7 +388,7 @@ object AbstractPlotWidget {
   val MIN_SIZE = new Dimension(160, 120)
   val PREF_SIZE = new Dimension(200, 150)
 
-  class XAxisLabels(plot: AbstractPlotWidget) extends javax.swing.JPanel {
+  class XAxisLabels(plot: AbstractPlotWidget) extends JPanel {
     private val min: JLabel = new JLabel()
     private val label: JLabel = new JLabel("", SwingConstants.CENTER)
     private val max: JLabel = new JLabel()
@@ -441,11 +443,9 @@ object AbstractPlotWidget {
     def getLabel = label.getText
   }
 
-  class YAxisLabels(plot: AbstractPlotWidget) extends javax.swing.JPanel {
-    private val label: JLabel = new JLabel()
-    private var labelText: String = ""
+  class YAxisLabels(plot: AbstractPlotWidget) extends JPanel {
+    private val label = new VerticalLabel
     private val max: JLabel = new JLabel()
-    private val labelIcon: VTextIcon = new VTextIcon(label, "", org.nlogo.swing.VTextIcon.ROTATE_LEFT)
     private val min: JLabel = new JLabel()
 
     if (plot.boldName) {
@@ -454,7 +454,6 @@ object AbstractPlotWidget {
       max.setFont(max.getFont.deriveFont(Font.BOLD))
     }
 
-    label.setIcon(labelIcon)
     val gridbag: GridBagLayout = new GridBagLayout
     setLayout(gridbag)
     val c: GridBagConstraints = new GridBagConstraints
@@ -481,7 +480,6 @@ object AbstractPlotWidget {
       setBackground(InterfaceColors.plotBackground())
 
       min.setForeground(InterfaceColors.widgetText())
-      label.setForeground(InterfaceColors.widgetText())
       max.setForeground(InterfaceColors.widgetText())
 
       if (label.getPreferredSize.width > label.getWidth)
@@ -494,12 +492,50 @@ object AbstractPlotWidget {
 
     def setMin(text: String): Unit = {min.setText(text)}
     def setMax(text: String): Unit = {max.setText(text)}
-    def getLabel = labelText
+    def getLabel: String = label.getText
     def setLabel(text: String): Unit = {
-      labelText = text
-      labelIcon.setLabel(labelText)
+      label.setText(text)
+      label.revalidate()
       label.repaint()
     }
   }
 
+  private class VerticalLabel extends JPanel {
+    private var text = ""
+
+    def getText: String = text
+    def setText(text: String): Unit = {
+      this.text = text
+    }
+
+    override def getPreferredSize: Dimension =
+      new Dimension(getFont.getSize, super.getPreferredSize.height)
+
+    override def paintComponent(g: Graphics): Unit = {
+      val g2d = Utils.initGraphics2D(g)
+
+      g2d.setColor(InterfaceColors.widgetText())
+      g2d.setFont(getFont)
+
+      val metrics = g2d.getFontMetrics
+
+      g2d.rotate(-Pi / 2)
+      g2d.translate(-getHeight, metrics.getAscent - metrics.getDescent)
+
+      val finalText = {
+        if (metrics.stringWidth(text) > getHeight) {
+          var shortened = text
+
+          while (shortened.nonEmpty && metrics.stringWidth(shortened + "...") > getHeight)
+            shortened = shortened.dropRight(1)
+
+          shortened + "..."
+        } else {
+          text
+        }
+      }
+
+      g2d.drawString(finalText, getHeight / 2 - metrics.stringWidth(finalText) / 2, 0)
+    }
+  }
 }
