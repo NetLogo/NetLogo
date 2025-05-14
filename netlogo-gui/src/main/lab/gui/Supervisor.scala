@@ -221,8 +221,6 @@ class Supervisor(
     queue.enqueue(workspace)
     (2 to options.threadCount).foreach{num =>
       val w = factory.newInstance
-      if (options.mirrorHeadlessOutput)
-        w.setMainWorkspace(w)
       // We want to print any plot compilation errors for just one of
       // the headless workspaces.
       if (num == 2) {

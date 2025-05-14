@@ -112,7 +112,7 @@ class Evaluator(workspace: AbstractWorkspace) {
           // Submitting jobs through the job manager is supposed to be the only way that NetLogo code
           // is ever run. - ST 1/8/10
           val job = new ExclusiveJob(owner, agentset, procedure, 0, null, workspace, owner.random)
-          val context = new Context(job, agent, 0, null)
+          val context = new Context(job, agent, 0, null, workspace)
           Try(context.callReporterProcedure(new Activation(procedure, null, 0)))
         }
       }

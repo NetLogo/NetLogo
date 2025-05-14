@@ -33,7 +33,7 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspac
         val parent = parentContext.activation
         new Activation(parent.procedure, parent.parent, parent.args, parent.returnAddress, new Binding(parent.binding))
       }
-    val context = new Context(this, agent, address, activation)
+    val context = new Context(this, agent, address, activation, workspace)
     if (count == -1) { // this whole -1 as a special value business is a bit kludgey - ST
       if (contexts == null)
         initialize()

@@ -603,9 +603,6 @@ object AbstractWorkspaceTraits {
 
     def clearOutput(): Unit
 
-    // called from job thread - ST 10/1/03
-    def sendOutput(oo: agent.OutputObject, toOutputArea: Boolean): Unit
-
     /// importing
     def setOutputAreaContents(text: String): Unit = {
       try {
@@ -635,19 +632,6 @@ object AbstractWorkspaceTraits {
         case _ =>
           sendOutput(oo, destination == api.OutputDestination.OutputArea)
       }
-    }
-
-    private var mainWorkspace: Option[AbstractWorkspace] = None
-
-    def setMainWorkspace(workspace: Workspace): Unit = {
-      workspace match {
-        case aw: AbstractWorkspace => mainWorkspace = Option(aw)
-        case _ =>
-      }
-    }
-
-    def forwardOutput(oo: agent.OutputObject) {
-      mainWorkspace.foreach(_.sendOutput(oo, false))
     }
   }
 

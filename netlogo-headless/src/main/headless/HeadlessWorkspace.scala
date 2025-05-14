@@ -8,14 +8,14 @@ package org.nlogo.headless
 
 import
   org.nlogo.{ agent, api, core, drawing, fileformat, nvm, workspace },
-    agent.{ Agent, World, World2D },
+    agent.{ Agent, OutputObject, World, World2D },
     api.{ AggregateManagerInterface, CommandRunnable, FileIO, LogoException, ModelReader, RendererInterface,
           ReporterRunnable, SimpleJobOwner },
       ModelReader.modelSuffix,
     core.{ AgentKind, CompilerException, Femto, File, FileMode, Model, Output, UpdateMode, WorldDimensions },
     drawing.DrawingActionBroker,
     fileformat.{ FileFormat, NLogoFormat, NLogoPreviewCommandsFormat },
-    nvm.{ CompilerInterface, Context, LabInterface },
+    nvm.{ CompilerInterface, Context, LabInterface, Workspace },
     workspace.AbstractWorkspace
 
 import java.io.InputStream
@@ -74,6 +74,8 @@ class HeadlessWorkspace(
   val aggregateManager: AggregateManagerInterface)
 extends AbstractWorkspace(_world)
 with org.nlogo.workspace.WorldLoaderInterface {
+
+  val primaryWorkspace: Option[Workspace] = None
 
   def parser = compiler.utilities
 
@@ -309,16 +311,13 @@ with org.nlogo.workspace.WorldLoaderInterface {
   /**
    * Internal use only. Called from job thread.
    */
-  override def sendOutput(oo: org.nlogo.agent.OutputObject, toOutputArea: Boolean): Unit = {
+  override def sendOutput(oo: OutputObject, toOutputArea: Boolean): Unit = {
     // output always goes to stdout in headless mode
     if (!silent)
       print(oo.get)
     // we also need to record it if it headed for the Output Area widget
-    if (toOutputArea) {
+    if (toOutputArea)
       outputAreaBuffer.append(oo.get)
-    } else {
-      forwardOutput(oo)
-    }
   }
 
   /**

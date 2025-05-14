@@ -274,22 +274,6 @@ public abstract class AbstractWorkspace
                                      boolean toOutputArea)
       throws LogoException;
 
-  private AbstractWorkspace mainWorkspace = null;
-
-  public void setMainWorkspace(Workspace workspace) {
-    if (workspace instanceof AbstractWorkspace) {
-      mainWorkspace = (AbstractWorkspace)workspace;
-    }
-  }
-
-
-  // used by HeadlessWorkspace to mirror headless BehaviorSpace experiment output on the main thread (Isaac B 5/13/25)
-  public void forwardOutput(org.nlogo.agent.OutputObject oo) {
-    if (mainWorkspace != null) {
-      mainWorkspace.sendOutput(oo, false);
-    }
-  }
-
   /// importing
 
   public void setOutputAreaContents(String text) {

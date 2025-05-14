@@ -22,7 +22,7 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspac
     // and one of them hatches; the hatched turtle must not be returned by the shufflerator.
     // - ST 12/5/05, 3/15/06
     val it = agentset.shufflerator(random)
-    val context = new Context(this, null, 0, null)
+    val context = new Context(this, null, 0, null, workspace)
     // if the Job was created by Evaluator, then we may have no parent context - ST 7/11/06
     val runActivation =
       if (parentContext == null)
@@ -45,7 +45,7 @@ extends Job(owner, agentset, topLevelProcedure, address, parentContext, workspac
 
   // used by Evaluator.MyThunk
   def callReporterProcedure() =
-    new Context(this, agentset.iterator.next(), 0, null)
+    new Context(this, agentset.iterator.next(), 0, null, workspace)
      .callReporterProcedure(new Activation(topLevelProcedure, null, 0))
 
 }

@@ -7,6 +7,7 @@ import java.io.{ File, FileWriter, PrintWriter }
 import org.nlogo.core.WorldDimensions
 import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultValues, LabProtocol, PlotCompilationErrorAction,
                        Version }
+import org.nlogo.nvm.Workspace
 import org.nlogo.nvm.LabInterface.{ Settings, Worker }
 
 object Main {
@@ -68,7 +69,7 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     }
     proto match {
       case Some(protocol) =>
-        runExperimentWithProtocol(settings, protocol, _ => {}, finish)
+        runExperimentWithProtocol(settings, protocol, _ => {}, finish, None)
 
       case None =>
         throw new IllegalArgumentException("Invalid run, specify experiment name or setup file")
@@ -77,11 +78,11 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
 
   // used in bspace extension
   def runExperimentWithProtocol(settings: Settings, protocol: LabProtocol, assignWorker: Worker => Unit,
-                                finish: () => Unit = () => {}): Unit = {
+                                finish: () => Unit, primaryWorkspace: Option[Workspace]): Unit = {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
     var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
     def newWorkspace = {
-      val w = HeadlessWorkspace.newInstance
+      val w = HeadlessWorkspace.newInstance(primaryWorkspace)
       w.setPlotCompilationErrorAction(plotCompilationErrorAction)
       w.setExportPlotWarningAction(exportPlotWarningAction)
       w.open(settings.modelPath)
@@ -283,7 +284,6 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     , threads
     , suppressErrors
     , updatePlots
-    , None // mainWorkspace
     ))
   }
 }

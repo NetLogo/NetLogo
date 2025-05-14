@@ -5,7 +5,7 @@ package org.nlogo.workspace
 import java.io.InputStream
 
 import org.nlogo.agent.{ Agent, World2D }
-import org.nlogo.nvm, nvm.CompilerInterface
+import org.nlogo.nvm, nvm.{ CompilerInterface, Workspace }
 import org.nlogo.api
 import org.nlogo.core, org.nlogo.core.{File, Model}
 
