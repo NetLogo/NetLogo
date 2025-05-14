@@ -20,7 +20,6 @@ object StructureConverter {
       case l: LibraryDecl =>
         val maybeAlias = l.options.map((x) => x match {
           case LibraryAlias(name, _) => Some(name)
-          case _ => None
         }).find(_.isDefined).flatten
         Library(l.name, maybeAlias, l.token)
     }
