@@ -5,11 +5,13 @@ package org.nlogo.nvm
 import org.nlogo.core.{ AgentKind, CompilerException }
 import org.nlogo.api.{ Agent => ApiAgent, ExportPlotWarningAction, JobOwner, Workspace => ApiWorkspace, MersenneTwisterFast }
 
-import org.nlogo.agent.{ Agent, AgentSet, World }
+import org.nlogo.agent.{ Agent, AgentSet, OutputObject, World }
 
 import collection.mutable.WeakHashMap
 
 trait Workspace extends ApiWorkspace with JobManagerOwner {
+  // This method returns the primary GUI workspace if it exists, for use by its headless children (Isaac B 5/14/25)
+  def primaryWorkspace: Option[Workspace] = None
 
   def world: World
 
@@ -24,10 +26,11 @@ trait Workspace extends ApiWorkspace with JobManagerOwner {
   @throws(classOf[java.net.MalformedURLException])
   def attachModelDir(filePath: String): String
 
+  // called from job thread - ST 10/1/03
+  def sendOutput(oo: OutputObject, toOutputArea: Boolean): Unit
+
   def behaviorSpaceExperimentName: String
   def behaviorSpaceExperimentName(name: String): Unit
-
-  def setMainWorkspace(workspace: Workspace): Unit
 
   def getComponent[A <: AnyRef](componentClass: Class[A]): Option[A]
 

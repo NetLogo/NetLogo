@@ -4,7 +4,7 @@ package org.nlogo.headless
 
 import org.nlogo.core.WorldDimensions
 import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultValues, LabProtocol, Version }
-import org.nlogo.nvm.LabInterface.Settings
+import org.nlogo.nvm.LabInterface.{ Settings, Worker }
 import org.nlogo.api.PlotCompilationErrorAction
 
 object Main {
@@ -174,6 +174,6 @@ object Main {
         Some(new WorldDimensions(minPxcor.get.toInt, maxPxcor.get.toInt,
                                  minPycor.get.toInt, maxPycor.get.toInt))
     Some(new Settings(model.get, experiment, setupFile, tableWriter, spreadsheetWriter, statsWriter, listsWriter, dims,
-                      threads, suppressErrors, updatePlots, None)) // mainWorkspace
+                      threads, suppressErrors, updatePlots))
   }
 }

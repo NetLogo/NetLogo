@@ -2,6 +2,7 @@
 
 package org.nlogo.headless
 
+import java.awt.EventQueue
 import java.io.InputStream
 import java.nio.file.Paths
 
@@ -14,9 +15,9 @@ import org.nlogo.api.{ ComponentSerialization, Version, RendererInterface, Aggre
   NetLogoThreeDDialect, CommandRunnable, ReporterRunnable }, ModelReader.modelSuffix
 import org.nlogo.core.{ AgentKind, CompilerException, Femto, Model, Output, Program, UpdateMode, WorldDimensions,
   WorldDimensions3D }
-import org.nlogo.agent.{ CompilationManagement, World, World2D, World3D }
-import org.nlogo.nvm.{ LabInterface, DefaultCompilerServices, PresentationCompilerInterface }
-import org.nlogo.workspace.{ AbstractWorkspaceScala, HubNetManagerFactory }
+import org.nlogo.agent.{ CompilationManagement, OutputObject, World, World2D, World3D }
+import org.nlogo.nvm.{ LabInterface, DefaultCompilerServices, PresentationCompilerInterface, Workspace }
+import org.nlogo.workspace.{ AbstractWorkspace, AbstractWorkspaceScala, HubNetManagerFactory }
 import org.nlogo.fileformat.{ FileFormat, NLogoFormat, NLogoThreeDFormat }
 import org.nlogo.util.Pico
 
@@ -30,20 +31,26 @@ object HeadlessWorkspace {
    */
   def newInstance: HeadlessWorkspace = newInstance(Version.is3D)
 
-  def newInstance(is3d: Boolean): HeadlessWorkspace = newInstance(classOf[HeadlessWorkspace], is3d)
+  def newInstance(is3d: Boolean): HeadlessWorkspace = newInstance(classOf[HeadlessWorkspace], is3d, None)
 
-  def newInstance(subclass: Class[? <: HeadlessWorkspace]): HeadlessWorkspace = newInstance(subclass, Version.is3D)
+  def newInstance(subclass: Class[? <: HeadlessWorkspace]): HeadlessWorkspace =
+    newInstance(subclass, Version.is3D, None)
+
+  def newInstance(primaryWorkspace: Option[Workspace]): HeadlessWorkspace =
+    newInstance(classOf[HeadlessWorkspace], Version.is3D, primaryWorkspace)
 
   /**
    * If you derive your own subclass of HeadlessWorkspace, use this method to instantiate it.
    */
-  def newInstance(subclass: Class[? <: HeadlessWorkspace], is3d: Boolean): HeadlessWorkspace = {
+  def newInstance(subclass: Class[? <: HeadlessWorkspace], is3d: Boolean,
+                  primaryWorkspace: Option[Workspace]): HeadlessWorkspace = {
     val pico = new Pico
     pico.addComponent(if (is3d) classOf[World3D] else classOf[World2D])
     pico.add("org.nlogo.compile.Compiler")
     if (is3d) pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect") else pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
     pico.add("org.nlogo.sdm.AggregateManagerLite")
     pico.add("org.nlogo.render.Renderer")
+    pico.addConfig("primaryWorkspace", primaryWorkspace)
     pico.addComponent(subclass)
     pico.addAdapter(new LegacyModelLoaderComponent())
     pico.add(classOf[HubNetManagerFactory], "org.nlogo.hubnet.server.HeadlessHubNetManagerFactory")
@@ -113,7 +120,8 @@ class HeadlessWorkspace(
   val compiler: PresentationCompilerInterface,
   val renderer: RendererInterface,
   val aggregateManager: AggregateManagerInterface,
-  hubNetManagerFactory: HubNetManagerFactory)
+  hubNetManagerFactory: HubNetManagerFactory,
+  primaryWorkspace: Option[Workspace])
 extends AbstractWorkspaceScala(_world, hubNetManagerFactory)
 with org.nlogo.workspace.Controllable
 with org.nlogo.workspace.WorldLoaderInterface
@@ -410,7 +418,7 @@ with org.nlogo.api.ViewSettings {
   /**
    * Internal use only. Called from job thread.
    */
-  override def sendOutput(oo: org.nlogo.agent.OutputObject, toOutputArea: Boolean): Unit = {
+  override def sendOutput(oo: OutputObject, toOutputArea: Boolean): Unit = {
     // output always goes to stdout in headless mode
     if (!silent)
       print(oo.get)
@@ -418,7 +426,9 @@ with org.nlogo.api.ViewSettings {
     if (toOutputArea) {
       outputAreaBuffer.append(oo.get)
     } else {
-      forwardOutput(oo)
+      EventQueue.invokeLater(() => {
+        primaryWorkspace.foreach(_.sendOutput(oo, false))
+      })
     }
   }
 
