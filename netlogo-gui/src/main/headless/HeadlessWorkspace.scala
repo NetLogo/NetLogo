@@ -65,17 +65,8 @@ object HeadlessWorkspace {
     */
   def newLab: LabInterface = newLab(Version.is3D)
 
-  def newLab(is3d: Boolean): LabInterface = {
-    val pico = new Pico
-    pico.add("org.nlogo.compile.Compiler")
-    if (is3d)
-      pico.addScalaObject("org.nlogo.api.NetLogoThreeDDialect")
-    else
-      pico.addScalaObject("org.nlogo.api.NetLogoLegacyDialect")
-    pico.add("org.nlogo.lab.Lab")
-    pico.addComponent(classOf[DefaultCompilerServices])
-    pico.getComponent(classOf[LabInterface])
-  }
+  def newLab(is3d: Boolean): LabInterface =
+    Femto.get[LabInterface]("org.nlogo.lab.Lab")
 
   /**
    * Internal use only.
