@@ -10,10 +10,10 @@ import org.nlogo.nvm.{EngineException,LabInterface,Workspace}
 class Lab extends LabInterface {
   def newWorker(protocol: LabProtocol) =
     new Worker(protocol)
-  def run(settings: LabInterface.Settings, worker: LabInterface.Worker, fn: () => Workspace, finish: () => Unit = () => {}): Unit = {
+  def run(settings: LabInterface.Settings, worker: LabInterface.Worker, fn: () => Workspace): Unit = {
     import settings._
     // pool of workspaces, same size as thread pool
-    val workspaces = (1 to threads).map(_ => fn.apply()).toList
+    val workspaces = (1 to threads.min(worker.protocol.repetitions)).map(_ => fn.apply()).toList
     val queue = new collection.mutable.Queue[Workspace]
     workspaces.foreach(queue.enqueue)
     try {
@@ -62,7 +62,7 @@ class Lab extends LabInterface {
               }
           } } )
       def nextWorkspace = queue.synchronized { queue.dequeue() }
-      worker.run(workspaces.head, () => nextWorkspace, threads, finish)
+      worker.run(workspaces.head, () => nextWorkspace, threads)
     }
     finally { workspaces.foreach(_.dispose()) }
   }
