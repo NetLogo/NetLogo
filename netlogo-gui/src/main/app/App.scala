@@ -13,7 +13,7 @@ import scala.concurrent.ExecutionContext
 import org.nlogo.agent.{ Agent, World2D, World3D }
 import org.nlogo.api._
 import org.nlogo.app.codetab.{ ExternalFileManager, TemporaryCodeTab }
-import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, FindDialog, SaveModelingCommonsAction }
+import org.nlogo.app.common.{ CodeToHtml, Events => AppEvents, FileActions, FindDialog }
 import org.nlogo.app.interfacetab.{ CommandCenter, InterfaceTab, InterfaceWidgetControls, WidgetPanel }
 import org.nlogo.app.tools.{ AgentMonitorManager, GraphicsPreview, LibraryManagerErrorDialog, PreviewCommandsEditor }
 import org.nlogo.awt.UserCancelException
@@ -713,7 +713,6 @@ class App extends org.nlogo.window.Event.LinkChild
         pico.getComponent(classOf[PreviewCommandsEditorInterface]),
         workspace,
         () => pico.getComponent(classOf[ModelSaver]).asInstanceOf[ModelSaver].currentModel),
-      new SaveModelingCommonsAction(modelingCommons, menuBar.fileMenu),
       FindDialog.FIND_ACTION,
       FindDialog.FIND_NEXT_ACTION,
       new ConvertWidgetSizes(frame, _tabManager.interfaceTab.iP)

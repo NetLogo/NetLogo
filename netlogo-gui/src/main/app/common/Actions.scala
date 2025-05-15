@@ -147,17 +147,3 @@ abstract class ImportAction(taskName: String, parent: Component, performImport: 
     exception.foreach(throw _)
   }
 }
-
-import org.nlogo.api.ModelingCommonsInterface
-
-class SaveModelingCommonsAction(modelingCommons: ModelingCommonsInterface, parent: Component)
-  extends ExceptionCatchingAction(I18N.gui.get("menu.file.uploadMc"), parent)
-  with MenuAction {
-  category = UserAction.FileCategory
-  group    = UserAction.FileShareGroup
-
-  @throws(classOf[UserCancelException])
-  override def action(): Unit = {
-    modelingCommons.saveToModelingCommons()
-  }
-}
