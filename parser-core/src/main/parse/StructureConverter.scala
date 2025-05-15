@@ -9,12 +9,20 @@ import org.nlogo.core,
 
 object StructureConverter {
 
-  import core.StructureDeclarations._
+  import core.Library
+  import core.StructureDeclarations.{Library => LibraryDecl, _}
 
   def convert(declarations: Seq[Declaration],
               displayName: Option[String],
               oldResults: StructureResults,
               subprogram: Boolean): StructureResults = {
+    val ls = declarations.collect {
+      case l: LibraryDecl =>
+        val maybeAlias = l.options.map((x) => x match {
+          case LibraryAlias(name, _) => Some(name)
+        }).find(_.isDefined).flatten
+        Library(l.name, maybeAlias, l.token)
+    }
     val is = declarations.collect {
       case i: Includes =>
         i.names
@@ -38,7 +46,8 @@ object StructureConverter {
         declarations.collect {
           case e: Extensions =>
             e.names.map(_.token)
-        }.flatten)
+        }.flatten,
+      libraries = oldResults.libraries ++ ls)
   }
 
   def buildProcedure(p: Procedure, displayName: Option[String]): (FrontEndProcedure, Iterable[Token]) = {
