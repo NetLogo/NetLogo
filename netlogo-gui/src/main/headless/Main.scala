@@ -94,7 +94,8 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     val lab = HeadlessWorkspace.newLab
     val worker = lab.newWorker(protocol)
     assignWorker(worker)
-    lab.run(settings, worker, () => newWorkspace, finish)
+    lab.run(settings, worker, () => newWorkspace)
+    finish()
   }
 
   def setHeadlessProperty(): Unit = {

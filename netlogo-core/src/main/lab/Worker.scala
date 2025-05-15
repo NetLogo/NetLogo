@@ -37,7 +37,7 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
   // we only want to compile stuff once per workspace, so use this
   // (should use a Scala collection not a Java one, but oh well, too lazy today - ST 8/13/09)
   val proceduresMap = new java.util.WeakHashMap[Workspace, Procedures]
-  def run(initialWorkspace: Workspace, fn: ()=>Workspace, threads: Int, finish: () => Unit = () => {}): Unit = {
+  def run(initialWorkspace: Workspace, fn: () => Workspace, threads: Int): Unit = {
     val globals = initialWorkspace.world.program.interfaceGlobals
     val initialState = collection.mutable.Map[String, AnyRef]()
     for (g <- globals) {
@@ -94,7 +94,6 @@ class Worker(val protocol: LabProtocol, val supervisorWriting: () => Unit = () =
         initialWorkspace.world.setObserverVariableByName(g, initialState(g))
       }
     }
-    finish()
   }
   // result discarded -- we just want to see if compilation succeeds.
   // used in TestCompileAll, also used before the start of the

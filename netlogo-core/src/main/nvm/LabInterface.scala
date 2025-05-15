@@ -7,13 +7,14 @@ import org.nlogo.core.WorldDimensions
 
 object LabInterface {
   trait Worker {
+    def protocol: LabProtocol
     def addListener(l: ProgressListener): Unit
     def addTableWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter): Unit
     def addSpreadsheetWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter): Unit
     def addStatsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter, in: LabPostProcessorInputFormat.Format): Unit
     def addListsWriter(modelFileName: String, initialDims: WorldDimensions, w: java.io.PrintWriter,
                        in: LabPostProcessorInputFormat.Format): Unit
-    def run(testWorkspace: Workspace, fn: ()=>Workspace, threads: Int, finish: () => Unit = () => {}): Unit
+    def run(testWorkspace: Workspace, fn: () => Workspace, threads: Int): Unit
     def compile(w: Workspace): Unit // only for testing purposes
   }
   trait ProgressListener {
@@ -42,5 +43,5 @@ object LabInterface {
 trait LabInterface {
   import LabInterface._
   def newWorker(protocol: LabProtocol): Worker
-  def run(settings: Settings, worker: Worker, fn: () => Workspace, finish: () => Unit = () => {}): Unit
+  def run(settings: Settings, worker: Worker, fn: () => Workspace): Unit
 }
