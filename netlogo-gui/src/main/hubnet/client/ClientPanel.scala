@@ -19,8 +19,10 @@ import org.nlogo.awt.EventQueue.invokeLater
 import org.nlogo.awt.Hierarchy.getFrame
 import org.nlogo.swing.{ OptionPane, Transparent }
 import org.nlogo.theme.ThemeSync
-import org.nlogo.window.{ PlotWidgetExport, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget, NetLogoExecutionContext }
-import org.nlogo.window.Events.{ AddJobEvent, AddSliderConstraintEvent, AfterLoadEvent, ExportPlotEvent, InterfaceGlobalEvent, LoadWidgetsEvent }
+import org.nlogo.window.{ PlotWidgetExport, MonitorWidget, InterfaceGlobalWidget, Widget, ButtonWidget, PlotWidget,
+                          NetLogoExecutionContext, WidgetSizes }
+import org.nlogo.window.Events.{ AddJobEvent, AddSliderConstraintEvent, AfterLoadEvent, ExportPlotEvent,
+                                 InterfaceGlobalEvent, LoadWidgetsEvent }
 
 import scala.concurrent.Future
 
@@ -242,7 +244,7 @@ class ClientPanel(editorFactory:org.nlogo.window.EditorFactory,
       case _                    => throw new IllegalStateException()
     }
     val widgets = clientInterface.widgets
-    new LoadWidgetsEvent(widgets).raise(this)
+    new LoadWidgetsEvent(widgets, WidgetSizes.Skip).raise(this)
     // so that constrained widgets can initialize themselves -- CLB
     new AfterLoadEvent().raise(this)
     clientGUI.setChoices(clientInterface.chooserChoices.toMap)

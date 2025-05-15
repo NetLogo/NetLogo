@@ -19,7 +19,7 @@ import org.nlogo.swing.{ MenuItem, PopupMenu }
 import org.nlogo.theme.InterfaceColors
 import org.nlogo.window.{ AbstractWidgetPanel, ButtonWidget, Editable, Events => WindowEvents, GUIWorkspace,
                           InterfaceMode, OutputWidget, Widget, WidgetContainer, WidgetRegistry, DummyChooserWidget,
-                          DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget, PlotWidget },
+                          DummyInputBoxWidget, DummyPlotWidget, DummyViewWidget, PlotWidget, WidgetSizes },
   WindowEvents.{ CompileAllEvent, DirtyEvent, EditWidgetEvent, InterfaceModeChangedEvent, LoadBeginEvent,
                  SetInterfaceModeEvent, WidgetEditedEvent, WidgetRemovedEvent, ZoomedEvent }
 
@@ -1185,13 +1185,23 @@ class WidgetPanel(val workspace: GUIWorkspace)
     WidgetActions.undoManager.discardAllEdits()
   }
 
-  override def loadWidgets(widgets: Seq[CoreWidget]): Unit = {
+  override def loadWidgets(widgets: Seq[CoreWidget], widgetSizesOption: WidgetSizes): Unit = {
     try {
       if (widgets.nonEmpty) {
         setVisible(false)
         widgets.foreach(loadWidget)
       }
     } finally {
+      widgetSizesOption match {
+        case WidgetSizes.ResizeAndAdjust =>
+          convertWidgetSizes(true)
+
+        case WidgetSizes.OnlyResize =>
+          convertWidgetSizes(false)
+
+        case _ =>
+      }
+
       setVisible(true)
       revalidate()
     }

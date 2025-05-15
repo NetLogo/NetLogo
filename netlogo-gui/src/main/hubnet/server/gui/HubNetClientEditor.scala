@@ -9,7 +9,8 @@ import org.nlogo.api.ModelType
 import org.nlogo.core.{ I18N, Widget => CoreWidget }
 import org.nlogo.swing.{ NetLogoIcon, ScrollPane, ToolBar }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
-import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel }
+import org.nlogo.window.{ WidgetInfo, MenuBarFactory, InterfaceFactory, GUIWorkspace, AbstractWidgetPanel,
+                          WidgetSizes }
 
 class HubNetClientEditor(workspace: GUIWorkspace,
                          linkParent: Component,
@@ -81,7 +82,7 @@ class HubNetClientEditor(workspace: GUIWorkspace,
     interfacePanel.getWidgetsForSaving
 
   def load(widgets: Seq[CoreWidget]): Unit = {
-    interfacePanel.loadWidgets(widgets)
+    interfacePanel.loadWidgets(widgets, WidgetSizes.Skip)
     setSize(getPreferredSize)
   }
 
