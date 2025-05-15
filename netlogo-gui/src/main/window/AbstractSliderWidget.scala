@@ -56,7 +56,7 @@ trait AbstractSliderWidget extends MultiErrorWidget with ThemeSync {
     })
 
     override def getPreferredSize: Dimension =
-      new Dimension(25.max(getFontMetrics(getFont).stringWidth(getText) + 6), super.getPreferredSize.height)
+      new Dimension(25.max(getFontMetrics(getFont).stringWidth(getText) + 8), super.getPreferredSize.height)
 
     protected override def createDefaultModel =
       new PlainDocument {
