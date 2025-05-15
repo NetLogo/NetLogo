@@ -5,9 +5,10 @@ package org.nlogo.headless
 import java.io.{ File, FileWriter, PrintWriter }
 
 import org.nlogo.core.WorldDimensions
-import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultValues, LabProtocol, Version }
-import org.nlogo.nvm.LabInterface.Settings
- import org.nlogo.api.PlotCompilationErrorAction
+import org.nlogo.api.{ APIVersion, ExportPlotWarningAction, LabDefaultValues, LabProtocol, PlotCompilationErrorAction,
+                       Version }
+import org.nlogo.nvm.Workspace
+import org.nlogo.nvm.LabInterface.{ Settings, Worker }
 
 object Main {
 
@@ -68,18 +69,20 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
     }
     proto match {
       case Some(protocol) =>
-        runExperimentWithProtocol(settings, protocol, finish)
+        runExperimentWithProtocol(settings, protocol, _ => {}, finish, None)
 
       case None =>
         throw new IllegalArgumentException("Invalid run, specify experiment name or setup file")
     }
   }
 
-  def runExperimentWithProtocol(settings: Settings, protocol: LabProtocol, finish: () => Unit = () => {}): Unit = {
+  // used in bspace extension
+  def runExperimentWithProtocol(settings: Settings, protocol: LabProtocol, assignWorker: Worker => Unit,
+                                finish: () => Unit, primaryWorkspace: Option[Workspace]): Unit = {
     var plotCompilationErrorAction: PlotCompilationErrorAction = PlotCompilationErrorAction.Output
     var exportPlotWarningAction: ExportPlotWarningAction = ExportPlotWarningAction.Output
     def newWorkspace = {
-      val w = HeadlessWorkspace.newInstance
+      val w = HeadlessWorkspace.newInstance(primaryWorkspace)
       w.setPlotCompilationErrorAction(plotCompilationErrorAction)
       w.setExportPlotWarningAction(exportPlotWarningAction)
       w.open(settings.modelPath)
@@ -89,7 +92,10 @@ See the Advanced Usage section of the BehaviorSpace documentation in the NetLogo
       w
     }
     val lab = HeadlessWorkspace.newLab
-    lab.run(settings, protocol, () => newWorkspace, finish)
+    val worker = lab.newWorker(protocol)
+    assignWorker(worker)
+    lab.run(settings, worker, () => newWorkspace)
+    finish()
   }
 
   def setHeadlessProperty(): Unit = {
