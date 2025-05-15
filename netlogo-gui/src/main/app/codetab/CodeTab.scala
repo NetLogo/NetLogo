@@ -279,6 +279,7 @@ abstract class CodeTab(val workspace: AbstractWorkspace, tabs: TabsInterface)
     text match {
       case editor: AdvancedEditorArea =>
         editor.setCurrentLineHighlightColor(InterfaceColors.codeLineHighlight())
+        editor.setDefaultSelectionColor(InterfaceColors.codeSelection())
         editor.setSyntaxScheme(new SyntaxScheme(true) {
           setStyle(TokenTypes.IDENTIFIER, new Style(InterfaceColors.defaultColor()))
           setStyle(TokenTypes.RESERVED_WORD, boldStyle(InterfaceColors.keywordColor()))

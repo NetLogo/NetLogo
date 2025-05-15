@@ -2,13 +2,13 @@
 
 package org.nlogo.editor
 
-import java.awt.Component
+import java.awt.{ Color, Component }
 import java.awt.event.{ KeyAdapter, KeyEvent, MouseAdapter, MouseEvent }
 import javax.swing.{ Action, JMenu, JMenuItem, JPopupMenu }
 import javax.swing.text.EditorKit
 
 import org.fife.ui.rtextarea.RTextArea
-import org.fife.ui.rsyntaxtextarea.{ RSyntaxTextArea, Theme }
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea
 
 import org.nlogo.swing.{ Menu, MenuItem, PopupMenu }
 import org.nlogo.theme.{ InterfaceColors, ThemeSync }
@@ -22,11 +22,7 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
   setSyntaxEditingStyle(if (configuration.is3Dlanguage) "netlogo3d" else "netlogo")
   setCodeFoldingEnabled(true)
 
-  val theme =
-    Theme.load(getClass.getResourceAsStream("/system/netlogo-editor-style.xml"))
-  theme.apply(this)
-
-  private val defaultSelectionColor = getSelectionColor
+  private var defaultSelectionColor = getSelectionColor
 
   configuration.configureAdvancedEditorArea(this)
 
@@ -126,6 +122,12 @@ class AdvancedEditorArea(val configuration: EditorConfiguration)
     }
 
     super.select(start, end)
+  }
+
+  def setDefaultSelectionColor(color: Color): Unit = {
+    defaultSelectionColor = color
+
+    setSelectionColor(color)
   }
 
   addMouseListener(new MouseAdapter {
