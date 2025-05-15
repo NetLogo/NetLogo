@@ -82,9 +82,10 @@ class RecentFiles {
   val key = if (Version.is3D) "recent_files_3d" else "recent_files"
   val maxEntries = 8
 
+  private var _models = List[ModelEntry]()
+
   loadFromPrefs(true)
 
-  private var _models = List[ModelEntry]()
   def models = _models
   def models_=(newModels: List[ModelEntry]): Unit = {
     _models = newModels
